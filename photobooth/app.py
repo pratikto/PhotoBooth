@@ -1,333 +1,211 @@
-# Thread runs the Google Drive upload in the background.
-# This keeps the camera preview and the application window responsive
-# while the photo is being sent over the internet.
-from threading import Thread
+"""
+Application controller for the PhotoBooth project.
 
-# tkinter provides the application window, labels, frames, and buttons.
+This module connects the main parts of the application:
+
+* ``Camera`` reads frames from the connected camera.
+* ``PhotoBoothUI`` creates the Tkinter window and displays the interface.
+* ``photo_storage`` saves each captured photo on this computer.
+* ``drive_storage`` uploads the saved photo to Google Drive through the
+  configured web app.
+* ``qr_code`` creates a QR image from the uploaded photo's Drive URL.
+
+The user interface is deliberately kept in ``ui_tkinter.py``. This class
+controls the application workflow and asks the UI object to display things,
+but it does not create individual Tkinter labels, buttons, or pop-up windows.
+"""
+
+from threading import Thread
 import tkinter as tk
 
-# messagebox displays popup messages when an upload or QR operation fails.
-from tkinter import messagebox
-
-# OpenCV reads images from the camera and converts their color format.
 import cv2
+from PIL import Image
 
-# Pillow converts camera frames and QR images into images Tkinter can display.
-from PIL import Image, ImageTk
-
-# Camera manages opening, reading, and closing the camera device.
 from photobooth.camera import Camera
-
-# upload_photo sends a local photo to Apps Script and returns its Drive URL.
-# DriveUploadError is the expected error type when that upload fails.
 from photobooth.drive_storage import DriveUploadError, upload_photo
-
-# save_photo writes a captured frame into the local photos folder.
 from photobooth.photo_storage import save_photo
-
-# create_qr_image converts the Google Drive URL into a QR code image.
 from photobooth.qr_code import create_qr_image
+from photobooth.ui_tkinter import PhotoBoothUI
 
 
 class PhotoBoothApp:
-    """
-    Main application class for the photo booth.
-
-    This class creates the Tkinter window, displays the live camera preview,
-    handles photo capture, uploads photos to Google Drive, and displays
-    a QR code for each successfully uploaded photo.
-    """
+    """Coordinate the camera, interface, local storage, and Drive upload."""
 
     def __init__(self):
-        # Create the main Tkinter window.
-        # This is the parent window for the preview, button, and status label.
+        """Prepare the app's shared objects and schedule camera startup.
+
+        The Tkinter root window must be created before ``PhotoBoothUI`` can
+        use it. The camera and ``current_frame`` also belong to the application
+        controller because they are used by the capture and preview workflow.
+        """
+
+        # Create the single main Tkinter window.
+        # PhotoBoothUI receives this existing window and adds the interface to it.
         self.root = tk.Tk()
 
-        # Set the text shown in the window's title bar.
-        self.root.title("Photo Booth")
+        # Create the camera controller. Camera() uses the default camera device
+        # configured by photobooth/camera.py (commonly camera index 0).
+        self.camera = Camera()
 
-        # Set the initial window size in pixels: width x height.
-        self.root.geometry("900x700")
-
-        # Give the main window a dark background color.
-        self.root.configure(bg="#111827")
-
-        # Create a Camera object for camera device index 0.
-        # Index 0 is usually the laptop's built-in camera or the first USB camera.
-        self.camera = Camera(camera_index=0)
-
-        # Store the newest unmodified camera frame here.
-        # The capture button uses this frame to save the photo.
-        # None means that the camera has not provided a frame yet.
+        # No frame is available until the camera is opened and the first frame
+        # is successfully read by _update_preview().
         self.current_frame = None
 
-        # Tkinter needs a persistent reference to images displayed in labels.
-        # This variable keeps the current preview image from being removed
-        # by Python's automatic memory cleanup.
-        self.preview_image = None
-
-        # This flag tells background work not to schedule GUI updates
-        # after the user has closed the application.
+        # Background upload work must not schedule new UI updates after shutdown.
         self._is_closing = False
 
-        # Create the visible parts of the application:
-        # the title, camera preview, capture button, and status text.
-        self._create_widgets()
+        # Create the user interface and connect its button/window events to
+        # the application actions defined in this class.
+        self.ui = PhotoBoothUI(
+            root=self.root,
+            on_capture=self._capture_photo,
+            on_close=self.close,
+        )
 
-        # Bind the Escape key to the close method.
-        # Tkinter passes a keyboard event to the callback, so the lambda
-        # accepts "event" and then calls close().
-        self.root.bind("<Escape>", lambda event: self.close())
-
-        # Also call close() when the user clicks the X button
-        # in the title bar.
-        self.root.protocol("WM_DELETE_WINDOW", self.close)
-
-        # Wait 100 milliseconds before opening the camera.
-        # This gives Tkinter a moment to draw the window first.
+        # Wait briefly before opening the camera. This gives Tkinter time to
+        # create and draw the main window before camera setup begins.
         self.root.after(100, self._connect_camera)
 
-    def _create_widgets(self):
-        """
-        Create and position the labels, preview area, and capture button.
-        """
-
-        # Create the main heading at the top of the window.
-        title = tk.Label(
-            self.root,
-            text="PHOTO BOOTH",
-            font=("Arial", 28, "bold"),
-            fg="white",
-            bg="#111827",
-        )
-
-        # Display the heading and add vertical spacing around it.
-        title.pack(pady=(30, 10))
-
-        # Create a fixed-size frame that will hold the camera preview.
-        # The frame has a dark background while the camera is connecting.
-        preview = tk.Frame(
-            self.root,
-            width=700,
-            height=380,
-            bg="#1f2937",
-            highlightthickness=1,
-            highlightbackground="#374151",
-        )
-
-        # Place the preview frame in the center of the window.
-        preview.pack(pady=20)
-
-        # By default, Tkinter may resize a frame to fit its contents.
-        # Disable that behavior so the preview remains 700 x 380 pixels.
-        preview.pack_propagate(False)
-
-        # Create the label that will show either a connection message
-        # or the current camera image.
-        self.preview_label = tk.Label(
-            preview,
-            text="CONNECTING TO CAMERA...",
-            font=("Arial", 16, "bold"),
-            fg="#9ca3af",
-            bg="#1f2937",
-        )
-
-        # Center the preview label inside its frame.
-        self.preview_label.pack(expand=True)
-
-        # Create the button that captures and uploads a photo.
-        # It starts disabled and becomes active after the camera connects.
-        self.capture_button = tk.Button(
-            self.root,
-            text="TAKE PHOTO",
-            command=self._capture_photo,
-            font=("Arial", 16, "bold"),
-            fg="white",
-            bg="#2563eb",
-            activebackground="#1d4ed8",
-            activeforeground="white",
-            disabledforeground="#9ca3af",
-            relief=tk.FLAT,
-            padx=30,
-            pady=12,
-            state=tk.DISABLED,
-        )
-
-        # Display the capture button beneath the preview.
-        self.capture_button.pack(pady=5)
-
-        # Create a label for short messages such as camera status,
-        # upload progress, or the name of the saved photo.
-        self.status_label = tk.Label(
-            self.root,
-            text="Starting photo booth...",
-            font=("Arial", 11),
-            fg="#9ca3af",
-            bg="#111827",
-        )
-
-        # Display the status label below the capture button.
-        self.status_label.pack(pady=10)
-
     def _connect_camera(self):
-        """
-        Open the camera and start the live preview if it is available.
+        """Open the camera and begin updating the live preview.
+
+        This method is scheduled by Tkinter after the main window is created.
+        If the camera cannot be opened, the UI explains the problem and leaves
+        the Capture button disabled.
         """
 
-        # If the app was closed before this scheduled method ran,
-        # there is no reason to continue opening the camera.
+        # The scheduled callback may run after shutdown was requested.
+        # In that case, do not try to access the camera or update the interface.
         if self._is_closing:
             return
 
-        # Tell the user that the app is currently trying to open the camera.
-        self.status_label.config(text="Connecting to camera...")
+        # Let the user know that the application is trying to open the camera.
+        self.ui.set_status("Connecting to camera...")
 
-        # Ask the Camera object to open the selected camera device.
-        # If open() returns False, the camera could not be opened.
+        # Ask the Camera object to open the configured camera device.
+        # Camera.open() is expected to return True on success and False on failure.
         if not self.camera.open():
-            # Show an error in the status area.
-            self.status_label.config(
-                text="Camera not detected. Check the camera connection."
+            # Display a clear message in both the status area and preview area.
+            self.ui.set_status(
+                "Camera not detected. Check the camera connection."
             )
+            self.ui.show_preview_message("CAMERA NOT DETECTED")
 
-            # Replace the connection message in the preview area with an error.
-            # Setting image="" removes any image currently shown by the label.
-            self.preview_label.config(
-                text="CAMERA NOT DETECTED",
-                image="",
-            )
-
-            # Stop this method. The capture button stays disabled.
+            # Capturing is not possible until a camera is available.
+            self.ui.set_capture_enabled(False)
             return
 
-        # Tell the user that the camera connection succeeded.
-        self.status_label.config(text="Camera connected. Ready to take a photo.")
+        # The camera is ready, so allow the user to take a photo.
+        self.ui.set_status("Camera connected. Ready to take a photo.")
+        self.ui.set_capture_enabled(True)
 
-        # The camera is ready, so allow the user to capture a photo.
-        self.capture_button.config(state=tk.NORMAL)
-
-        # Start the repeating process that reads and displays camera frames.
+        # Start the repeating camera-read and preview-display cycle.
         self._update_preview()
 
     def _update_preview(self):
-        """
-        Read one camera frame, display it, and schedule the next frame update.
+        """Read one camera frame, display it, and schedule the next frame.
+
+        Tkinter's ``after`` method schedules the next update without blocking
+        the GUI event loop. That allows the window to keep responding to clicks
+        while the camera preview is refreshed.
         """
 
-        # Stop if the app is closing; do not read or schedule more camera frames.
+        # Stop the preview loop when the user closes the application.
         if self._is_closing:
             return
 
-        # Ask the Camera object for the newest frame from the camera.
-        # A successful frame is an image represented as a NumPy array.
+        # Read the newest frame from the camera. The Camera class returns a
+        # NumPy array on success, or None when no frame is currently available.
         frame = self.camera.read()
 
-        # If the camera did not provide a frame, show a status message
-        # and try again shortly.
         if frame is None:
-            self.status_label.config(text="Waiting for a frame from the camera...")
-
-            # Try reading again in 250 milliseconds.
-            # root.after schedules the retry without pausing the whole GUI.
+            # A temporary missing frame can happen while a camera starts up.
+            # Show a short status message and retry after a small delay.
+            self.ui.set_status("Waiting for a frame from the camera...")
             self.root.after(250, self._update_preview)
             return
 
-        # Keep the latest camera frame for the capture button.
-        # OpenCV supplies the original frame in BGR color order.
+        # Keep the most recent frame so the Capture button can save it.
+        # OpenCV represents camera images in BGR color order by default.
         self.current_frame = frame
 
-        # Tkinter/Pillow display colors in RGB order.
-        # Convert BGR to RGB so the preview colors look correct.
+        # Pillow and Tkinter expect the usual RGB color order. Convert the frame
+        # before displaying it so red and blue are not swapped in the preview.
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-        # Convert the NumPy array into a Pillow image.
+        # Convert the RGB NumPy array to a Pillow image. The UI class handles
+        # resizing the image to fit its preview area and displaying it.
         preview_image = Image.fromarray(frame_rgb)
+        self.ui.show_preview(preview_image)
 
-        # Shrink the preview image, if needed, to fit inside the preview frame.
-        # This changes only the displayed copy; current_frame remains full-size.
-        preview_image.thumbnail((700, 380))
-
-        # Convert the Pillow image into a Tkinter-compatible image.
-        self.preview_image = ImageTk.PhotoImage(preview_image)
-
-        # Tell the preview label to display the new image.
-        # Setting text="" removes the earlier connection message.
-        self.preview_label.config(
-            image=self.preview_image,
-            text="",
-        )
-
-        # Schedule the next preview update in 15 milliseconds.
-        # This keeps the video preview moving while allowing Tkinter
-        # to process button clicks and other window events.
+        # Schedule the next preview frame. A 15 ms interval aims for a smooth
+        # preview while still giving Tkinter time to process other events.
         self.root.after(15, self._update_preview)
 
     def _capture_photo(self):
-        """
-        Save the newest camera frame locally, then start its Drive upload.
+        """Save the latest camera frame locally and start its Drive upload.
+
+        This method runs on Tkinter's main thread because it is called by the
+        Capture button. The network upload itself is started on a background
+        thread so a slow connection does not freeze the window or preview.
         """
 
-        # Do not capture if the camera has not supplied any frame yet.
+        # Do not try to save an image before the camera has provided a frame.
         if self.current_frame is None:
-            self.status_label.config(text="No photo is available yet.")
+            self.ui.set_status("No photo is available yet.")
             return
 
-        # Save a copy of the newest frame to the local photos folder.
-        # Using copy() keeps the saved image separate from the live preview frame.
+        # Save a copy so later camera updates cannot change the image being saved.
+        # save_photo() returns a path on success, or None if saving failed.
         photo_path = save_photo(self.current_frame.copy())
 
-        # save_photo() returns None if writing the file failed.
-        # If so, there is no local photo to upload.
         if photo_path is None:
-            self.status_label.config(text="Could not save the photo locally.")
+            # The image could not be written to local storage, so there is
+            # nothing available to upload. Keep the app ready for another try.
+            self.ui.set_status("Could not save the photo locally.")
             return
 
-        # Disable the button while this photo is being uploaded.
-        # This prevents multiple uploads from starting at the same time.
-        self.capture_button.config(state=tk.DISABLED)
+        # Disable the Capture button until this upload finishes. This prevents
+        # a second click from starting another upload at the same time.
+        self.ui.set_capture_enabled(False)
 
-        # Tell the user that the local save succeeded and upload has started.
-        self.status_label.config(
-            text=f"Photo saved locally. Uploading {photo_path.name}..."
+        # Confirm that the local copy exists and tell the user which file is
+        # currently being uploaded.
+        self.ui.set_status(
+            f"Photo saved locally. Uploading {photo_path.name}..."
         )
 
-        # Create a background thread for the internet upload.
-        # Without this thread, a slow upload could freeze the camera preview
-        # and make the app appear unresponsive.
+        # Network requests can take a while. Run the upload in a daemon thread
+        # so the Tkinter event loop remains free to update the screen. A daemon
+        # thread will not keep the Python process alive after the app closes.
         upload_thread = Thread(
-            # Run this method in the new thread.
             target=self._upload_photo_in_background,
-
-            # Pass the local photo path to the method.
             args=(photo_path,),
-
-            # Let the thread stop when the app closes.
             daemon=True,
         )
-
-        # Start uploading in the background.
         upload_thread.start()
 
     def _upload_photo_in_background(self, photo_path):
-        """
-        Upload the photo without blocking the Tkinter event loop.
+        """Upload one local photo and schedule the result for the UI thread.
+
+        Tkinter widgets should only be changed by the thread running Tkinter's
+        event loop. Therefore, this worker method performs the network request,
+        then asks ``_schedule_ui_update`` to run the appropriate result handler.
         """
 
-        # Call upload_photo() from drive_storage.py.
-        # It sends the image to Apps Script and returns the Drive link.
         try:
+            # upload_photo() sends the local file to the configured web app and
+            # returns the resulting Google Drive URL when it succeeds.
             file_url = upload_photo(photo_path)
 
         except DriveUploadError as error:
-            # This is an expected upload failure, such as a network error,
-            # incorrect token, missing setting, or Drive rejection.
+            # DriveUploadError represents an expected upload problem, such as
+            # a network issue, invalid configuration, or a rejected request.
             error_message = str(error)
 
-            # Do not change Tkinter widgets directly from this worker thread.
-            # Schedule the error handling on Tkinter's main event loop instead.
-            #
-            # The lambda's default arguments keep these values available
-            # until Tkinter runs the callback.
+            # Queue the error handling on Tkinter's main thread. Default values
+            # in the lambda preserve the current path and message until the
+            # callback runs.
             self._schedule_ui_update(
                 lambda message=error_message, path=photo_path:
                     self._show_upload_error(path, message)
@@ -335,162 +213,130 @@ class PhotoBoothApp:
             return
 
         except Exception as error:
-            # Catch unexpected errors so the thread does not stop without
-            # informing the user.
+            # Handle unexpected errors too, so the user is not left with a
+            # disabled button and no explanation if another failure occurs.
             error_message = f"Unexpected error: {error}"
 
-            # Schedule the error popup and status update on the GUI thread.
+            # The error dialog and status message must be shown on the Tkinter
+            # thread, so schedule the existing UI handler rather than calling
+            # it directly from this worker thread.
             self._schedule_ui_update(
                 lambda message=error_message, path=photo_path:
                     self._show_upload_error(path, message)
             )
             return
 
-        # The upload succeeded. Ask the GUI thread to create and show
-        # the QR code for the returned Drive URL.
+        # The upload succeeded. Schedule QR creation and display on the GUI
+        # thread because displaying the QR code uses Tkinter UI components.
         self._schedule_ui_update(
             lambda url=file_url, path=photo_path:
                 self._show_qr_code(path, url)
         )
 
     def _schedule_ui_update(self, callback):
-        """
-        Ask Tkinter to run a callback through the main GUI event loop.
+        """Queue a callback to run in Tkinter's main event loop.
+
+        This helper is used by the background upload thread. Calling Tkinter
+        widgets directly from a worker thread can cause intermittent errors,
+        so the callback is handed back to the main window with ``after``.
         """
 
-        # Do not queue GUI work after the user has closed the application.
+        # Ignore results that arrive after the user has closed the application.
         if self._is_closing:
             return
 
-        # root.after(0, callback) puts the callback into Tkinter's event queue.
-        # Tkinter will run it as part of the main GUI loop.
         try:
+            # A delay of zero means Tkinter should run the callback as soon as
+            # it can process it on the main GUI event loop.
             self.root.after(0, callback)
 
         except (tk.TclError, RuntimeError):
-            # The window might have closed while the upload was finishing.
-            # In that case, Tkinter can reject the callback; nothing else
-            # needs to be done because the user has already closed the app.
+            # The window may have been destroyed just as the upload completed.
+            # In that case, Tkinter cannot accept the callback and no UI update
+            # is needed because the application is already closing.
             pass
 
     def _show_qr_code(self, photo_path, file_url):
-        """
-        Create a QR code from the Drive URL and display it in a popup window.
+        """Create and display a QR code for the successfully uploaded photo.
+
+        This callback runs on Tkinter's main thread. ``PhotoBoothUI`` creates
+        the QR pop-up; this method only prepares the image and updates status.
         """
 
-        # Convert the Drive URL into a QR image, then into an image
-        # that can be displayed by Tkinter.
         try:
+            # Convert the Drive URL into a QR-code image that Pillow can handle.
             qr_image = create_qr_image(file_url)
-            qr_photo = ImageTk.PhotoImage(qr_image)
+
+            # Ask the UI class to create its QR pop-up and show the image.
+            self.ui.show_qr_code(qr_image)
 
         except Exception as error:
-            # The photo was uploaded, but QR creation or display failed.
-            # Re-enable the capture button so the user can continue.
-            self.status_label.config(
-                text="Photo uploaded, but the QR code could not be displayed."
+            # The photo has already uploaded, but QR generation or display did
+            # not work. Keep the Drive link available to the user as a fallback.
+            self.ui.set_status(
+                "Photo uploaded, but the QR code could not be displayed."
             )
-            self.capture_button.config(state=tk.NORMAL)
-
-            # Show the link so the photo can still be opened manually.
-            messagebox.showerror(
+            self.ui.set_capture_enabled(True)
+            self.ui.show_error(
                 "QR code could not be displayed",
-                f"The photo was uploaded, but the QR code could not be created.\n\n"
+                "The photo was uploaded, but the QR code could not be created.\n\n"
                 f"Details: {error}\n\n"
                 f"Photo link:\n{file_url}",
             )
             return
 
-        # Create a separate popup window for this photo's QR code.
-        # The main window and camera preview remain open behind it.
-        qr_window = tk.Toplevel(self.root)
-        qr_window.title("Scan to view your photo")
-        qr_window.configure(bg="#111827")
-        qr_window.resizable(False, False)
-
-        # Add a heading to tell the user that the photo is ready.
-        title = tk.Label(
-            qr_window,
-            text="YOUR PHOTO IS READY",
-            font=("Arial", 18, "bold"),
-            fg="white",
-            bg="#111827",
-        )
-        title.pack(padx=24, pady=(20, 10))
-
-        # Create a label that will display the QR image.
-        qr_label = tk.Label(
-            qr_window,
-            image=qr_photo,
-            bg="white",
-        )
-
-        # Keep a reference to qr_photo on the label.
-        # Without a saved reference, Python might delete the image from memory,
-        # causing Tkinter to show a blank area instead of the QR code.
-        qr_label.image = qr_photo
-
-        # Display the QR image below the heading.
-        qr_label.pack(padx=24, pady=10)
-
-        # Tell the guest how to use the QR code.
-        instructions = tk.Label(
-            qr_window,
-            text="Scan this code with your phone to view the photo.",
-            font=("Arial", 11),
-            fg="white",
-            bg="#111827",
-        )
-        instructions.pack(padx=24, pady=(10, 20))
-
-        # Update the main window's status message.
-        self.status_label.config(
-            text=f"Photo uploaded: {photo_path.name}"
-        )
-
-        # The upload is finished, so allow the user to take another photo.
-        self.capture_button.config(state=tk.NORMAL)
+        # Tell the user which photo was uploaded and allow another capture.
+        self.ui.set_status(f"Photo uploaded: {photo_path.name}")
+        self.ui.set_capture_enabled(True)
 
     def _show_upload_error(self, photo_path, error_message):
-        """
-        Tell the user that upload failed while keeping the local photo.
+        """Show an upload failure while preserving the local photo copy.
+
+        This method is scheduled on Tkinter's main thread. The local image was
+        saved before uploading began, so an upload failure does not delete it.
         """
 
-        # The photo was saved locally before upload began.
-        # Show its name so the user knows that the local copy still exists.
-        self.status_label.config(
-            text=f"Upload failed. Local copy kept: {photo_path.name}"
+        # Make clear that the photo is still available on this computer.
+        self.ui.set_status(
+            f"Upload failed. Local copy kept: {photo_path.name}"
         )
 
-        # Allow the user to continue using the photo booth.
-        self.capture_button.config(state=tk.NORMAL)
+        # Re-enable capture so the user can continue using the photo booth.
+        self.ui.set_capture_enabled(True)
 
-        # Display the reason for the failure and the local file path.
-        messagebox.showerror(
+        # Display both the reason for the upload failure and the local path.
+        self.ui.show_error(
             "Photo upload failed",
             f"{error_message}\n\n"
             f"The photo is still saved locally at:\n{photo_path}",
         )
 
     def close(self):
-        """
-        Stop background UI updates, release the camera, and close the window.
-        """
+        """Stop future updates, release the camera, and close the window."""
 
-        # Tell preview and upload callbacks that the app is closing.
+        # Make shutdown idempotent: if close is requested more than once,
+        # do not try to release the camera or destroy the window a second time.
+        if self._is_closing:
+            return
+
+        # Tell preview callbacks and upload-result callbacks to stop scheduling
+        # work for a window that is about to be destroyed.
         self._is_closing = True
 
-        # Release the camera so another program can use it after this app exits.
-        self.camera.close()
-
-        # Destroy the main Tkinter window and end the GUI session.
-        self.root.destroy()
+        try:
+            # Release the camera device so another application can use it.
+            self.camera.close()
+        finally:
+            # Always close the Tkinter window, even if camera cleanup fails.
+            try:
+                self.root.destroy()
+            except tk.TclError:
+                # The root may already have been destroyed by Tkinter.
+                pass
 
     def run(self):
-        """
-        Start Tkinter's event loop and keep the window responsive.
-        """
+        """Start Tkinter's event loop and keep the application running."""
 
-        # mainloop waits for events such as button clicks, key presses,
-        # and scheduled camera preview updates.
+        # mainloop() waits for user actions and scheduled callbacks. It also
+        # allows the camera preview and upload-result callbacks to be processed.
         self.root.mainloop()
