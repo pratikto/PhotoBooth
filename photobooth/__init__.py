@@ -1,1 +1,1 @@
-"""Modul untuk aplikasi PhotoBooth."""
+"""Modules for the PhotoBooth application."""

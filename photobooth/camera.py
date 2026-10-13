@@ -4,24 +4,24 @@ import cv2
 
 
 class Camera:
-    """Membuka kamera dan menyediakan frame terbaru."""
+    """Open a camera and provide its latest frame."""
 
     def __init__(self, camera_index=0):
         self.camera_index = camera_index
         self.capture = None
 
     def open(self):
-        """Buka kamera. Kembalikan True jika berhasil."""
+        """Open the camera. Return True if it is available."""
         self.close()
 
         if sys.platform.startswith("win"):
-            # DirectShow sering membantu pada webcam Windows.
+            # DirectShow can work well with webcams on Windows.
             self.capture = cv2.VideoCapture(
                 self.camera_index,
                 cv2.CAP_DSHOW,
             )
 
-            # Jika DirectShow gagal, coba backend default OpenCV.
+            # Fall back to OpenCV's default backend if DirectShow fails.
             if not self.capture.isOpened():
                 self.capture.release()
                 self.capture = cv2.VideoCapture(self.camera_index)
@@ -35,7 +35,7 @@ class Camera:
         return True
 
     def read(self):
-        """Baca satu frame. Kembalikan None jika frame gagal dibaca."""
+        """Read one frame. Return None if the frame cannot be read."""
         if self.capture is None or not self.capture.isOpened():
             return None
 
@@ -47,7 +47,7 @@ class Camera:
         return frame
 
     def close(self):
-        """Lepaskan kamera ketika aplikasi ditutup."""
+        """Release the camera when the application closes."""
         if self.capture is not None:
             self.capture.release()
             self.capture = None

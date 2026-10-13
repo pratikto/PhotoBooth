@@ -1,34 +1,45 @@
 # PhotoBooth
 
-Aplikasi photo booth sederhana dengan Python, Tkinter, dan OpenCV.
+A simple photo booth application built with Python, Tkinter, and OpenCV.
 
-## Fitur
+## Features
 
-- Menampilkan preview langsung dari webcam.
-- Mengambil satu foto saat tombol AMBIL FOTO ditekan.
-- Menyimpan foto JPG ke folder photos.
-- Menutup koneksi kamera saat aplikasi ditutup atau tombol Escape ditekan.
+- Shows a live preview from a webcam.
+- Captures a photo when you press the TAKE PHOTO button.
+- Saves JPG photos in the photos folder.
+- Releases the camera when the application closes or you press Escape.
 
-## Menjalankan aplikasi
+## Requirements
 
-Buka terminal di folder project, lalu jalankan:
+- Python 3
+- A built-in or USB webcam
+
+## Setup
+
+Open a terminal in the project folder and install the required packages:
 
     python -m pip install -r requirements.txt
+
+## Run the application
+
+From the project folder, run:
+
     python main.py
 
-## Jika kamera tidak terdeteksi
+The photos folder is created automatically when you take the first photo.
 
-Program memakai indeks kamera 0 secara default. Jika menggunakan webcam USB dan tidak muncul, coba ganti nilai camera_index=0 menjadi camera_index=1 di photobooth/app.py.
+## Troubleshooting
 
-Di Windows, pastikan izin kamera untuk aplikasi desktop sudah diaktifkan di Settings > Privacy & security > Camera. Tutup aplikasi lain seperti Zoom, Teams, atau Camera jika sedang memakai webcam.
+The application uses camera index 0 by default. If your USB webcam is not detected, change camera_index=0 to camera_index=1 in photobooth/app.py.
 
-## Susunan kode
+On Windows, allow desktop applications to access the camera in Settings > Privacy & security > Camera. Close other applications that may be using the webcam, such as Zoom, Teams, or Camera.
 
-- main.py memulai aplikasi.
-- photobooth/app.py mengatur jendela, preview, dan tombol.
-- photobooth/camera.py mengatur koneksi dan pembacaan frame kamera.
-- photobooth/photo_storage.py menyimpan frame sebagai file JPG.
-- requirements.txt mencatat library yang dibutuhkan.
-- Folder photos dibuat otomatis saat foto pertama diambil.
+## Project structure
 
-Folder photos dan file sementara Python tidak disimpan di GitHub.
+- main.py starts the application.
+- photobooth/app.py manages the window, preview, and photo button.
+- photobooth/camera.py manages the camera connection and frame capture.
+- photobooth/photo_storage.py saves photos as JPG files.
+- requirements.txt lists the required Python packages.
+
+The photos folder and temporary Python files are excluded from Git.

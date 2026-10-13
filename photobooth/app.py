@@ -8,7 +8,7 @@ from photobooth.photo_storage import save_photo
 
 
 class PhotoBoothApp:
-    """Mengatur jendela, preview kamera, dan tombol ambil foto."""
+    """Manage the window, camera preview, and photo button."""
 
     def __init__(self):
         self.root = tk.Tk()
@@ -47,7 +47,7 @@ class PhotoBoothApp:
 
         self.preview_label = tk.Label(
             preview,
-            text="MENGHUBUNGKAN KE KAMERA...",
+            text="CONNECTING TO CAMERA...",
             font=("Arial", 18),
             fg="#9ca3af",
             bg="#1f2937",
@@ -56,7 +56,7 @@ class PhotoBoothApp:
 
         self.capture_button = tk.Button(
             self.root,
-            text="AMBIL FOTO",
+            text="TAKE PHOTO",
             font=("Arial", 18, "bold"),
             command=self._capture_photo,
             padx=30,
@@ -80,24 +80,24 @@ class PhotoBoothApp:
         self.status_label.pack(pady=10)
 
     def _connect_camera(self):
-        self.status_label.config(text="Menghubungkan ke kamera...")
+        self.status_label.config(text="Connecting to camera...")
 
         if not self.camera.open():
             self.status_label.config(
                 text=(
-                    "Kamera tidak ditemukan. Periksa izin kamera "
-                    "atau coba indeks kamera lain."
+                    "Camera not detected. Check camera permissions "
+                    "or try a different camera index."
                 )
             )
             self.preview_label.config(
                 image="",
-                text="KAMERA TIDAK TERDETEKSI",
+                text="CAMERA NOT DETECTED",
                 fg="#fca5a5",
             )
             return
 
         self.status_label.config(
-            text="Kamera terhubung. Tekan AMBIL FOTO untuk memotret."
+            text="Camera connected. Press TAKE PHOTO to capture an image."
         )
         self.capture_button.config(state=tk.NORMAL)
         self._update_preview()
@@ -107,14 +107,14 @@ class PhotoBoothApp:
 
         if frame is None:
             self.status_label.config(
-                text="Kamera terhubung, tetapi gambar belum terbaca."
+                text="Camera is connected, but no frame could be read."
             )
             self.root.after(250, self._update_preview)
             return
 
         self.current_frame = frame
 
-        # OpenCV memakai BGR; Pillow perlu RGB untuk warna yang benar.
+        # OpenCV returns BGR, while Pillow expects RGB for correct colors.
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         image = Image.fromarray(frame_rgb)
         image.thumbnail((700, 380))
@@ -122,22 +122,22 @@ class PhotoBoothApp:
         self.preview_image = ImageTk.PhotoImage(image)
         self.preview_label.config(image=self.preview_image, text="")
 
-        # Tkinter perlu menyimpan referensi ke gambar preview.
+        # Keep a reference to the image so Tkinter can continue displaying it.
         self.root.after(15, self._update_preview)
 
     def _capture_photo(self):
         if self.current_frame is None:
-            self.status_label.config(text="Belum ada gambar dari kamera.")
+            self.status_label.config(text="No camera frame is available yet.")
             return
 
         photo_path = save_photo(self.current_frame.copy())
 
         if photo_path is None:
-            self.status_label.config(text="Foto gagal disimpan.")
+            self.status_label.config(text="Failed to save the photo.")
             return
 
         self.status_label.config(
-            text=f"Foto tersimpan: photos/{photo_path.name}"
+            text=f"Photo saved: photos/{photo_path.name}"
         )
 
     def close(self):
