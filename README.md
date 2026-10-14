@@ -44,18 +44,21 @@ The QRIS payment code and the folder-access QR code are different codes and must
 
 ### 3. Assign one transaction folder
 
-Use this folder-name pattern:
+Use an incrementing transaction ID for the folder name:
 
-**PB001_yymmdd_hhmmss**
+**PB001_00000001**
+
+- **PB001** identifies the booth.
+- **00000001** is an eight-digit transaction sequence, incremented for each new transaction.
+
+Assign the next ID when a pre-created folder slot is claimed for a transaction, before taking photos. Store the counter and the assigned transaction ID durably on the internal SD card so they remain available offline and survive application restarts. Allocate each ID only once; never reuse it after cancellation, failure, or restart. Gaps in the sequence are acceptable.
 
 The transaction folder contains both:
 
 - The raw photos captured by the camera.
 - The final photo output for each template session.
 
-A folder slot must be created before the transaction timestamp is known. When a slot is claimed, record the final transaction name against its Drive folder ID. If the booth is offline, keep that rename request locally and apply it when the connection returns. Keep using the cached Drive folder ID and URL as the stable folder-link destination for the QR.
-
-The application should handle same-second name collisions safely; the Drive folder ID and the local transaction record should remain the unique identifiers.
+The Drive folder slot exists before it has a transaction ID. When a slot is claimed, record the assigned ID and final folder name against its Drive folder ID. If the booth is offline, keep that rename request locally and apply it when the connection returns. Keep using the cached Drive folder ID and URL as the stable folder-link destination for the QR.
 
 ### 4. Take photos and allow retakes per session
 
