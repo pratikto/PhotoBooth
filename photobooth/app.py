@@ -1,12 +1,12 @@
-"""Application controller for the first local PhotoBooth workflow.
+"""Application controller for the procedure's capture and Drive workflow.
 
-This milestone implements template quantities, independent photo sessions,
-three captures, one retake per session, local compositions, and transaction
-folders. QRIS payment, printing, and Google Drive synchronization are not part
-of this runnable stage.
+Payment and printing are left out until those integrations are ready. When
+Drive credentials are configured, transactions use pre-verified folder slots,
+show the cached folder QR, and synchronize files in the background.
 """
 
 import os
+import json
 from pathlib import Path
 import tkinter as tk
 
@@ -15,6 +15,10 @@ from PIL import Image
 
 from photobooth.camera import Camera
 from photobooth.catalog import compose_result, get_templates
+from photobooth.drive_pool import DriveSlotPool
+from photobooth.drive_storage import DriveApiError, GoogleDriveClient
+from photobooth.drive_sync import DriveSyncWorker
+from photobooth.qr_code import create_qr_image
 from photobooth.transaction_store import LocalTransaction, TransactionStore
 from photobooth.ui_tkinter import PhotoBoothUI
 from photobooth.workflow import PhotoSession, SessionPlan, build_session_plans
@@ -34,11 +38,30 @@ class PhotoBoothApp:
         self.root = tk.Tk()
         self.templates = get_templates()
         self.camera = Camera(camera_index=CAMERA_INDEX)
+        self.photos_root = PROJECT_ROOT / "photos"
         self.store = TransactionStore(
-            photos_root=PROJECT_ROOT / "photos",
+            photos_root=self.photos_root,
             state_path=PROJECT_ROOT / "data" / "booth_state.json",
             booth_id=BOOTH_ID,
         )
+        self.drive_pool = DriveSlotPool(
+            photos_root=self.photos_root,
+            state_path=PROJECT_ROOT / "data" / "drive_pool.json",
+            booth_id=BOOTH_ID,
+        )
+        self.drive_client = GoogleDriveClient.from_environment()
+        self.local_only_mode = os.environ.get("PHOTOBOOTH_LOCAL_ONLY", "0").lower() in {
+            "1",
+            "true",
+            "yes",
+        }
+        self.drive_worker = (
+            DriveSyncWorker(self.photos_root, self.drive_client, self.drive_pool)
+            if self.drive_client is not None
+            else None
+        )
+        if self.drive_worker is not None:
+            self.drive_worker.start()
 
         self.current_frame = None
         self.camera_ready = False
@@ -54,6 +77,7 @@ class PhotoBoothApp:
         self._completion_remaining = 0
         self._completion_after_id: str | None = None
         self._preview_after_id: str | None = None
+        self._drive_status_after_id: str | None = None
 
         self.ui = PhotoBoothUI(
             root=self.root,
@@ -70,6 +94,7 @@ class PhotoBoothApp:
         )
         self.ui.show_welcome(False, "Kamera sedang diperiksa...")
         self.root.after(100, self._connect_camera)
+        self._schedule_drive_status_update()
 
     def run(self) -> None:
         """Start Tkinter's event loop."""
@@ -92,7 +117,7 @@ class PhotoBoothApp:
         if self.camera_ready:
             self.ui.show_welcome(
                 True,
-                "Kamera terhubung. Hasil sesi akan disimpan di perangkat.",
+                self._storage_status_message(),
             )
             self._update_preview()
         else:
@@ -136,7 +161,8 @@ class PhotoBoothApp:
             return
         self.ui.show_template_selection(
             camera_ready=True,
-            status_message="Kamera siap. Pembayaran dan cetak belum digunakan pada tahap ini.",
+            storage_ready=(self.drive_pool.has_ready_slot() or self.local_only_mode),
+            status_message=self._storage_status_message(),
         )
 
     def _start_transaction(self, quantities: dict[str, int]) -> None:
@@ -152,8 +178,24 @@ class PhotoBoothApp:
                     "Pilih minimal satu sesi template untuk melanjutkan.",
                 )
                 return
-            self.transaction = self.store.start_transaction(plans)
-        except (OSError, RuntimeError, ValueError) as error:
+            if self.drive_pool.has_ready_slot():
+                transaction_id = self.store.reserve_transaction_id()
+                slot = self.drive_pool.claim(transaction_id)
+                self.transaction = self.store.start_transaction(
+                    plans,
+                    transaction_id=transaction_id,
+                    folder_path=Path(slot.staging_path),
+                    drive_slot=slot.to_manifest(),
+                )
+                if self.drive_worker is not None:
+                    self.drive_worker.kick()
+            elif self.local_only_mode:
+                self.transaction = self.store.start_transaction(plans)
+            else:
+                raise DriveApiError(
+                    "Tidak ada slot folder Google Drive yang siap. Transaksi baru dihentikan."
+                )
+        except (DriveApiError, OSError, RuntimeError, ValueError) as error:
             self.ui.show_error(
                 "Transaksi tidak dapat dimulai",
                 f"Data transaksi tidak dapat disiapkan.\n\n{error}",
@@ -405,7 +447,19 @@ class PhotoBoothApp:
             transaction_id=transaction.transaction_id,
             has_next_session=has_next,
             seconds_remaining=seconds_remaining,
+            qr_image=(
+                create_qr_image(transaction.manifest["drive_folder_url"])
+                if self._should_show_result_qr()
+                else None
+            ),
+            qr_pending=bool(
+                transaction.manifest.get("drive_folder_url")
+                and not self._should_show_result_qr()
+            ),
+            upload_message=self._upload_status_message(),
         )
+        if self.drive_worker is not None:
+            self.drive_worker.kick()
         if not has_next:
             self._start_completion_countdown()
 
@@ -456,12 +510,110 @@ class PhotoBoothApp:
         self.session_index = 0
         self.ui.show_welcome(
             self.camera_ready,
-            "Kamera siap. Hasil foto disimpan di perangkat.",
+            self._storage_status_message(),
         )
 
     def _frame_to_image(self, frame) -> Image.Image:
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         return Image.fromarray(rgb_frame)
+
+    def _storage_status_message(self) -> str:
+        ready = self.drive_pool.ready_count
+        if self.local_only_mode and ready == 0:
+            return "Mode lokal aktif untuk pengembangan. Hasil hanya tersimpan di perangkat."
+        if ready:
+            if self.drive_pool.last_error or self.drive_client is None:
+                return f"Offline. {ready} slot folder tersimpan dan siap dipakai."
+            return f"Drive siap · {ready} slot folder tersedia. QR folder tersedia saat offline."
+        if self.drive_pool.last_error:
+            return f"Slot Drive perlu diperiksa: {self.drive_pool.last_error}"
+        if self.drive_client is None:
+            return "Drive belum dikonfigurasi. Siapkan koneksi dan slot folder sebelum menerima transaksi."
+        return "Menyiapkan folder Google Drive. Transaksi baru akan aktif setelah tersedia slot."
+
+    def _upload_status_message(self) -> str:
+        transaction = self.transaction
+        if transaction is None or not transaction.manifest.get("drive_folder_id"):
+            return "Hasil digital tersimpan di perangkat ini."
+        status = transaction.manifest.get("upload_status")
+        if status == "UPLOAD_COMPLETE":
+            return "Foto sudah diunggah dan diverifikasi di Google Drive."
+        if status == "ACTION_REQUIRED":
+            return "Unggahan perlu bantuan petugas. Salinan foto tetap tersimpan di perangkat."
+        if self._current_session_upload_verified():
+            return "Foto sesi ini sudah diunggah dan diverifikasi di folder transaksi."
+        if status == "UPLOAD_RETRY" or self.drive_pool.last_error or self.drive_client is None:
+            return "Internet terputus. QR membuka folder tujuan; foto akan muncul setelah upload dilanjutkan."
+        if status == "UPLOADING":
+            return "Foto sedang diunggah ke folder transaksi."
+        return "Foto tersimpan di perangkat dan menunggu upload ke folder transaksi."
+
+    def _schedule_drive_status_update(self) -> None:
+        if self.is_closing:
+            return
+        if self.ui.current_screen == "templates":
+            self.ui.set_storage_status(
+                self.drive_pool.has_ready_slot() or self.local_only_mode,
+                self._storage_status_message(),
+            )
+        elif self.ui.current_screen == "result":
+            if self.transaction is not None:
+                try:
+                    self.transaction.manifest = json.loads(
+                        self.transaction.manifest_path.read_text(encoding="utf-8")
+                    )
+                except (OSError, json.JSONDecodeError):
+                    pass
+            self.ui.set_result_upload_status(self._upload_status_message())
+            if self.transaction is not None:
+                folder_url = self.transaction.manifest.get("drive_folder_url")
+                show_qr = bool(folder_url and self._should_show_result_qr())
+                self.ui.set_result_qr(
+                    create_qr_image(folder_url) if show_qr else None,
+                    pending=bool(folder_url and not show_qr),
+                )
+        self._drive_status_after_id = self.root.after(1500, self._schedule_drive_status_update)
+
+    def _should_show_result_qr(self) -> bool:
+        transaction = self.transaction
+        session = self.current_session
+        if transaction is None or session is None:
+            return False
+        manifest = transaction.manifest
+        if not manifest.get("drive_folder_url"):
+            return False
+        if self.drive_client is None or self.drive_pool.last_error:
+            return True
+        if manifest.get("upload_status") in {
+            "UPLOAD_RETRY",
+            "ACTION_REQUIRED",
+            "UPLOAD_COMPLETE",
+        }:
+            return True
+        return self._current_session_upload_verified()
+
+    def _current_session_upload_verified(self) -> bool:
+        transaction = self.transaction
+        session = self.current_session
+        if transaction is None or session is None:
+            return False
+        record = next(
+            (
+                item
+                for item in transaction.manifest.get("sessions", [])
+                if item.get("session_id") == session.plan.session_id
+            ),
+            None,
+        )
+        if record is None:
+            return False
+        paths = [photo["path"] for photo in record.get("raw_photos", [])]
+        if record.get("output_path"):
+            paths.append(record["output_path"])
+        upload_files = transaction.manifest.get("upload_files", {})
+        return bool(paths) and all(
+            upload_files.get(path, {}).get("status") == "VERIFIED" for path in paths
+        )
 
     def _cancel_after(self, after_id: str | None) -> None:
         if after_id is not None:
@@ -482,9 +634,13 @@ class PhotoBoothApp:
         self._cancel_after(self._countdown_after_id)
         self._cancel_after(self._completion_after_id)
         self._cancel_after(self._preview_after_id)
+        self._cancel_after(self._drive_status_after_id)
         self._countdown_after_id = None
         self._completion_after_id = None
         self._preview_after_id = None
+        self._drive_status_after_id = None
+        if self.drive_worker is not None:
+            self.drive_worker.stop()
         self.camera.close()
         try:
             self.root.destroy()

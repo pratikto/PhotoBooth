@@ -6,6 +6,7 @@ handled by PhotoBoothApp and the workflow/storage modules.
 
 from pathlib import Path
 from typing import Callable, Sequence
+import hashlib
 import tkinter as tk
 from tkinter import messagebox
 
@@ -62,6 +63,11 @@ class PhotoBoothUI:
         self.current_screen = "welcome"
         self._image_refs: list[ImageTk.PhotoImage] = []
         self._camera_ready = False
+        self._storage_ready = False
+        self.result_status_label: tk.Label | None = None
+        self.result_qr_host: tk.Frame | None = None
+        self.result_qr_title: tk.Label | None = None
+        self._result_qr_signature: tuple[bool, bool, str] | None = None
         self._configure_window()
         self._build_shell()
         self.root.bind("<Escape>", lambda _event: self._on_close())
@@ -164,6 +170,10 @@ class PhotoBoothUI:
     ) -> tk.Frame:
         self.current_screen = screen_name
         self._image_refs = []
+        self.result_status_label = None
+        self.result_qr_host = None
+        self.result_qr_title = None
+        self._result_qr_signature = None
         self._set_active_nav(screen_name)
         for child in self.content.winfo_children():
             child.destroy()
@@ -293,6 +303,7 @@ class PhotoBoothUI:
         self,
         camera_ready: bool,
         status_message: str,
+        storage_ready: bool = True,
     ) -> None:
         self.set_camera_status(camera_ready)
         page = self._reset(
@@ -474,8 +485,15 @@ class PhotoBoothUI:
         )
         self.start_button.pack(fill=tk.X, padx=24, pady=(0, 22))
         self._camera_ready = camera_ready
+        self._storage_ready = storage_ready
         self._on_order_change()
         self.status_label.config(text=status_message)
+
+    def set_storage_status(self, ready: bool, message: str) -> None:
+        self._storage_ready = ready
+        if self.current_screen == "templates" and hasattr(self, "start_button"):
+            self._on_order_change()
+        self.set_status(message)
 
     def _change_quantity(self, template_id: str, delta: int) -> None:
         if template_id not in getattr(self, "_quantity_vars", {}):
@@ -510,7 +528,7 @@ class PhotoBoothUI:
                     highlightthickness=3 if quantity > 0 else 1,
                 )
         self.session_total.config(text=f"{session_count} sesi")
-        enabled = self._camera_ready and session_count > 0
+        enabled = self._camera_ready and self._storage_ready and session_count > 0
         self.start_button.config(state=tk.NORMAL if enabled else tk.DISABLED)
 
     def _start_selected(self) -> None:
@@ -768,6 +786,9 @@ class PhotoBoothUI:
         transaction_id: str,
         has_next_session: bool,
         seconds_remaining: int | None = None,
+        qr_image: Image.Image | None = None,
+        qr_pending: bool = False,
+        upload_message: str = "",
     ) -> None:
         title = "Sesi selesai" if has_next_session else "Sesi terakhir selesai"
         page = self._reset("result", title, session_label)
@@ -841,6 +862,33 @@ class PhotoBoothUI:
             bg=WHITE,
         ).pack(anchor="w", padx=30, pady=(0, 20))
 
+        share = tk.Frame(details, bg=WHITE)
+        share.pack(fill=tk.X, padx=30, pady=(0, 10))
+        self.result_qr_host = tk.Frame(share, bg=PALE_BLUE, width=160, height=160)
+        self.result_qr_host.pack_propagate(False)
+        self.result_qr_host.pack(side=tk.LEFT, padx=(0, 16))
+        share_copy = tk.Frame(share, bg=WHITE)
+        share_copy.pack(side=tk.LEFT, fill=tk.X, expand=True)
+        self.result_qr_title = tk.Label(
+            share_copy,
+            text="",
+            font=("Arial", 12, "bold"),
+            fg=NAVY,
+            bg=WHITE,
+        )
+        self.result_qr_title.pack(anchor="w", pady=(8, 6))
+        self.set_result_qr(qr_image, qr_pending)
+        self.result_status_label = tk.Label(
+            share_copy,
+            text=upload_message,
+            font=("Arial", 11),
+            fg=MUTED,
+            bg=WHITE,
+            wraplength=280,
+            justify=tk.LEFT,
+        )
+        self.result_status_label.pack(anchor="w")
+
         button_row = tk.Frame(details, bg=WHITE)
         button_row.pack(fill=tk.X, side=tk.BOTTOM, padx=30, pady=30)
         if has_next_session:
@@ -895,6 +943,49 @@ class PhotoBoothUI:
         if hasattr(self, "completion_label") and self.completion_label.winfo_exists():
             minutes, seconds = divmod(max(0, seconds_remaining), 60)
             self.completion_label.config(text=f"{minutes:02d}:{seconds:02d}")
+
+    def set_result_upload_status(self, message: str) -> None:
+        if self.result_status_label is not None and self.result_status_label.winfo_exists():
+            self.result_status_label.config(text=message)
+
+    def set_result_qr(self, qr_image: Image.Image | None, pending: bool = False) -> None:
+        if self.result_qr_host is None or not self.result_qr_host.winfo_exists():
+            return
+        digest = hashlib.md5(qr_image.tobytes()).hexdigest() if qr_image is not None else ""
+        signature = (qr_image is not None, pending, digest)
+        if signature == self._result_qr_signature:
+            return
+        self._result_qr_signature = signature
+        for child in self.result_qr_host.winfo_children():
+            child.destroy()
+        if qr_image is not None:
+            qr_preview = qr_image.copy()
+            qr_preview.thumbnail((156, 156))
+            qr_photo = ImageTk.PhotoImage(qr_preview)
+            self._image_refs.append(qr_photo)
+            tk.Label(self.result_qr_host, image=qr_photo, bg=WHITE).pack(
+                fill=tk.BOTH,
+                expand=True,
+                padx=2,
+                pady=2,
+            )
+            title = "QR folder transaksi"
+        else:
+            placeholder = (
+                "Menyiapkan QR folder..." if pending else "QR Drive belum tersedia"
+            )
+            tk.Label(
+                self.result_qr_host,
+                text=placeholder,
+                font=("Arial", 11, "bold"),
+                fg=MUTED,
+                bg=PALE_BLUE,
+                wraplength=130,
+                justify=tk.CENTER,
+            ).pack(fill=tk.BOTH, expand=True, padx=8, pady=8)
+            title = "Menyiapkan QR" if pending else "Hasil lokal"
+        if self.result_qr_title is not None and self.result_qr_title.winfo_exists():
+            self.result_qr_title.config(text=title)
 
     def show_error(self, title: str, message: str) -> None:
         messagebox.showerror(title, message, parent=self.root)

@@ -1,8 +1,8 @@
 # PhotoBooth
 
-A Python photo booth application built with Tkinter, OpenCV, and Pillow. The attached procedure document is the functional source of truth. The code is being implemented in milestones; this README separates the working local MVP from features that remain planned.
+A Python photo booth application built with Tkinter, OpenCV, and Pillow. The attached procedure document is the functional source of truth. QRIS and printing are intentionally out of the current implementation until those integrations are ready.
 
-## Current MVP: local photo flow
+## Current implementation: photo and Drive flow
 
 The first implementation milestone includes:
 
@@ -10,13 +10,15 @@ The first implementation milestone includes:
 - Four sample template cards. Their artwork is illustrative and should be replaced with the final template designs.
 - Quantity means separate sessions. Each session captures three new photos and receives one retake of a selected photo.
 - A five-second countdown before each capture.
-- A final digital photo strip saved locally for each session.
-- One transaction folder for all sessions in an order, named with the booth ID and an incrementing eight-digit counter, such as PB001_00000001.
-- A local manifest that records session photos, the retake choice, and the final output.
+- A final digital photo composition saved locally for each session.
+- One transaction folder slot for all sessions in an order, named with the booth ID and an incrementing eight-digit counter, such as PB001_00000001.
+- A persistent local pool targeting at least 25 verified, pre-created Drive folders. New transactions are blocked when no ready slot is available.
+- A cached folder ID and URL for each slot, so an assigned transaction can continue offline and show the same folder QR.
+- A local manifest and resumable upload queue. Uploads are identified by transaction-relative path, checked by size and checksum, and retained locally until verified in Drive.
 
-This milestone deliberately does not include QRIS payment or printing. Google Drive folder reservation, QR links, uploads, and offline synchronization are also still planned; the current output remains on the device.
+QRIS payment and printing are not implemented. The bundled template artwork is illustrative and should be replaced with the final designs before operating the booth.
 
-The complete workflow below remains the target behavior from the procedure document. A feature listed there is not necessarily implemented in the current MVP.
+Payment and printing sections below describe the procedure's target behavior and are not part of this implementation.
 
 ## Agreed product workflow
 
@@ -133,7 +135,16 @@ Install the Python dependencies from the project folder:
 
     python -m pip install -r requirements.txt
 
-The local photo-flow MVP does not require a Drive URL, upload token, or payment-provider credentials. Configure a non-default booth ID with the PHOTOBOOTH_ID environment variable, and choose a camera with PHOTOBOOTH_CAMERA_INDEX if needed.
+Configure these environment variables for the booth:
+
+- `PHOTOBOOTH_ID` — booth code, default `PB001`.
+- `PHOTOBOOTH_DRIVE_PARENT_ID` — Drive folder ID where the application creates its slot folders.
+- `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`, and `GOOGLE_OAUTH_REFRESH_TOKEN` — OAuth credentials authorized for Google Drive API access.
+- `PHOTOBOOTH_CAMERA_INDEX` — camera index, default `0`.
+
+Enable the Google Drive API and authorize the OAuth refresh token with Drive access for the intended account. The account needs permission to create folders, set link sharing, rename folders, and upload files under the configured parent. Keep OAuth credentials outside the repository. On startup, the app verifies the cached pool, creates and validates folders to restore the target of 25 ready slots, and resumes pending folder renames and uploads.
+
+For UI and camera development without Drive credentials, set `PHOTOBOOTH_LOCAL_ONLY=1`. This mode stores results only on the device and does not produce a Drive QR; do not use it for booth operations.
 
 Run the local MVP with:
 
@@ -144,8 +155,10 @@ Run the local MVP with:
 - The application uses camera index 0 by default. If the USB camera is not detected, check the camera index configured in `photobooth/camera.py`.
 - On Windows, allow desktop applications to access the camera in Settings > Privacy & security > Camera.
 - Close other applications that may be using the camera, such as Zoom, Teams, or Camera.
-- The current MVP saves files under photos/<transaction-id>. The next transaction counter is stored in data/booth_state.json and must be preserved with the transaction ledger.
-- Google Drive upload, QR-folder display, QRIS, and printer integration are not connected to the current UI.
+- Photos and transaction manifests are stored under `photos/<transaction-id>`. Preserve `data/booth_state.json` and `data/drive_pool.json` with the transaction ledger and folder-link cache.
+- If there are no ready Drive slots, check internet access, OAuth credentials, the configured parent folder, Drive API access, and available storage quota. New transactions remain disabled until a slot is verified.
+- An `ACTION_REQUIRED` upload or slot remains on the device for staff attention; the application does not delete Drive content or pending local files.
+- QRIS and printer integration are not connected to the current UI.
 
 ## Project structure
 
@@ -156,6 +169,9 @@ Run the local MVP with:
 - photobooth/workflow.py expands quantities into sessions and enforces one retake per session.
 - photobooth/transaction_store.py reserves transaction IDs and writes local photos and manifests.
 - photobooth/camera.py manages the camera connection and frame capture.
-- photobooth/drive_storage.py and photobooth/qr_code.py are legacy integration modules and are not called by the current MVP.
+- photobooth/drive_storage.py handles Drive folder creation, sharing, resumable uploads, and verification.
+- photobooth/drive_pool.py maintains the local cache of ready and assigned Drive slots.
+- photobooth/drive_sync.py resumes folder renames and pending transaction uploads in the background.
+- photobooth/qr_code.py creates the transaction folder QR shown on the result screen.
 - requirements.txt lists the Python packages used by the project.
 - photos/, data/, local configuration, and temporary Python files are excluded from Git.

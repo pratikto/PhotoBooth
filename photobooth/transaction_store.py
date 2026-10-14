@@ -11,6 +11,7 @@ from typing import Any, Sequence
 
 from PIL import Image
 
+from photobooth.manifest_io import manifest_lock
 from photobooth.workflow import SessionPlan
 
 
@@ -41,21 +42,32 @@ class TransactionStore:
         if not re.fullmatch(r"[A-Za-z0-9]+", self.booth_id):
             raise ValueError("Booth ID may contain letters and numbers only.")
 
-    def start_transaction(self, plans: Sequence[SessionPlan]) -> LocalTransaction:
+    def reserve_transaction_id(self) -> str:
+        """Persist and return the next ID before a Drive folder is assigned."""
+        return self._reserve_transaction_id()
+
+    def start_transaction(
+        self,
+        plans: Sequence[SessionPlan],
+        *,
+        transaction_id: str | None = None,
+        folder_path: Path | None = None,
+        drive_slot: dict[str, Any] | None = None,
+    ) -> LocalTransaction:
         if not plans:
             raise ValueError("Select at least one template session first.")
 
         self.photos_root.mkdir(parents=True, exist_ok=True)
-
-        while True:
+        if transaction_id is None:
             transaction_id = self._reserve_transaction_id()
-            folder_path = self.photos_root / transaction_id
-            try:
-                folder_path.mkdir(parents=False, exist_ok=False)
-                break
-            except FileExistsError:
-                # Treat an unexpected folder as already allocated and skip it.
-                continue
+        folder_path = Path(folder_path) if folder_path is not None else self.photos_root / transaction_id
+        if folder_path.resolve().parent != self.photos_root.resolve():
+            raise ValueError("Transaction folders must be direct children of the photo storage root.")
+        if folder_path.exists():
+            if not folder_path.is_dir() or any(folder_path.iterdir()):
+                raise FileExistsError(f"Transaction folder is not empty: {folder_path}")
+        else:
+            folder_path.mkdir(parents=False, exist_ok=False)
 
         manifest_path = folder_path / "manifest.json"
         sessions = [
@@ -83,6 +95,11 @@ class TransactionStore:
             "booth_id": self.booth_id,
             "created_at": datetime.now(timezone.utc).isoformat(),
             "status": "IN_PROGRESS",
+            "drive_folder_id": drive_slot.get("folder_id") if drive_slot else None,
+            "drive_folder_url": drive_slot.get("folder_url") if drive_slot else None,
+            "drive_slot_key": drive_slot.get("slot_key") if drive_slot else None,
+            "upload_status": "ASSIGNED" if drive_slot else "LOCAL_ONLY",
+            "upload_files": {},
             "sessions": sessions,
         }
         transaction = LocalTransaction(
@@ -125,6 +142,15 @@ class TransactionStore:
             if existing["path"] != relative_path.as_posix()
         ]
         session_record["raw_photos"].append(photo_record)
+        relative_string = relative_path.as_posix()
+        transaction.manifest["upload_files"][relative_string] = {
+            "path": relative_string,
+            "status": "PENDING_UPLOAD" if transaction.manifest.get("drive_folder_id") else "LOCAL_ONLY",
+            "size_bytes": photo_path.stat().st_size,
+            "drive_file_id": None,
+            "md5_checksum": None,
+            "upload_session_url": None,
+        }
         self._write_manifest(transaction)
         return photo_path
 
@@ -160,13 +186,27 @@ class TransactionStore:
         session_record["final_photos"] = [
             self._relative_path(transaction, path) for path in final_photos
         ]
-        session_record["output_path"] = self._relative_path(transaction, output_path)
+        output_relative = self._relative_path(transaction, output_path)
+        session_record["output_path"] = output_relative
         session_record["status"] = "COMPLETED"
+        transaction.manifest["upload_files"][output_relative] = {
+            "path": output_relative,
+            "status": "PENDING_UPLOAD" if transaction.manifest.get("drive_folder_id") else "LOCAL_ONLY",
+            "size_bytes": output_path.stat().st_size,
+            "drive_file_id": None,
+            "md5_checksum": None,
+            "upload_session_url": None,
+        }
         self._write_manifest(transaction)
 
     def complete_transaction(self, transaction: LocalTransaction) -> None:
         transaction.manifest["status"] = "COMPLETED"
         transaction.manifest["completed_at"] = datetime.now(timezone.utc).isoformat()
+        if transaction.manifest.get("drive_folder_id") and transaction.manifest.get("upload_status") not in {
+            "UPLOAD_COMPLETE",
+            "ACTION_REQUIRED",
+        }:
+            transaction.manifest["upload_status"] = "PENDING_UPLOAD"
         self._write_manifest(transaction)
 
     def _reserve_transaction_id(self) -> str:
@@ -214,7 +254,41 @@ class TransactionStore:
             raise ValueError("Transaction files must remain inside their transaction folder.") from error
 
     def _write_manifest(self, transaction: LocalTransaction) -> None:
-        self._atomic_write_json(transaction.manifest_path, transaction.manifest)
+        with manifest_lock(transaction.manifest_path):
+            if transaction.manifest_path.exists():
+                try:
+                    persisted = json.loads(
+                        transaction.manifest_path.read_text(encoding="utf-8")
+                    )
+                    if persisted.get("transaction_id") == transaction.transaction_id:
+                        persisted_files = persisted.get("upload_files", {})
+                        current_files = transaction.manifest.setdefault("upload_files", {})
+                        for relative_path, record in persisted_files.items():
+                            current = current_files.setdefault(relative_path, {})
+                            current.update(record)
+                        statuses = [
+                            record.get("status")
+                            for record in current_files.values()
+                        ]
+                        if "ACTION_REQUIRED" in statuses:
+                            transaction.manifest["upload_status"] = "ACTION_REQUIRED"
+                        elif statuses and all(status == "VERIFIED" for status in statuses):
+                            transaction.manifest["upload_status"] = (
+                                "UPLOAD_COMPLETE"
+                                if transaction.manifest.get("status") == "COMPLETED"
+                                else "PENDING_UPLOAD"
+                            )
+                        elif "UPLOADING" in statuses:
+                            transaction.manifest["upload_status"] = "UPLOADING"
+                        elif "UPLOAD_RETRY" in statuses:
+                            transaction.manifest["upload_status"] = "UPLOAD_RETRY"
+                        elif transaction.manifest.get("drive_folder_id"):
+                            transaction.manifest["upload_status"] = "PENDING_UPLOAD"
+                except (OSError, json.JSONDecodeError, TypeError):
+                    # The current in-memory transaction remains the source if the
+                    # last atomic manifest write cannot be read.
+                    pass
+            self._atomic_write_json(transaction.manifest_path, transaction.manifest)
 
     @staticmethod
     def _atomic_write_json(path: Path, data: dict[str, Any]) -> None:
