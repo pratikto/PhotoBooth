@@ -24,6 +24,7 @@ class DriveSlot:
     staging_path: str
     transaction_id: str | None = None
     rename_pending: bool = False
+    claim_pending: bool = False
     issue: str | None = None
 
     def to_manifest(self) -> dict[str, Any]:
@@ -36,6 +37,7 @@ class DriveSlot:
             "staging_path": self.staging_path,
             "transaction_id": self.transaction_id,
             "rename_pending": self.rename_pending,
+            "claim_pending": self.claim_pending,
         }
 
 
@@ -81,7 +83,7 @@ class DriveSlotPool:
                 if current.status in {"ASSIGNED", "CLAIMING"} or (
                     current.status == "ACTION_REQUIRED" and current.transaction_id
                 ):
-                    # Local assignment survives an offline Drive rename.
+                    # Local assignment survives offline use and remote sync.
                     merged[folder_id] = current
                     continue
                 if remote is not None and remote.verified and remote.status == "READY":
@@ -152,12 +154,18 @@ class DriveSlotPool:
     def has_ready_slot(self) -> bool:
         return self.ready_count > 0
 
-    def claim(self, transaction_id: str) -> DriveSlot:
-        """Atomically consume one ready slot and move its staging directory to the transaction ID."""
+    def claim(self) -> DriveSlot:
+        """Consume a ready slot whose final transaction ID is already assigned."""
         with self._lock:
             slot = next((candidate for candidate in self._slots if candidate.status == "READY"), None)
             if slot is None:
                 raise DriveApiError("No verified Drive folder slots are available.")
+            transaction_id = slot.transaction_id
+            if not transaction_id or slot.folder_name != transaction_id:
+                slot.status = "ACTION_REQUIRED"
+                slot.issue = "Drive slot has no preassigned final transaction ID."
+                self._save()
+                raise DriveApiError(slot.issue)
             source = Path(slot.staging_path)
             target = self.photos_root / transaction_id
             if target.exists():
@@ -166,9 +174,8 @@ class DriveSlotPool:
                 if not source.is_dir() or any(source.iterdir()):
                     raise OSError("The local staging folder is missing or not empty.")
                 slot.status = "CLAIMING"
-                slot.transaction_id = transaction_id
-                slot.folder_name = transaction_id
-                slot.rename_pending = True
+                slot.claim_pending = True
+                slot.rename_pending = False
                 self._save()
                 os.replace(source, target)
                 slot.staging_path = str(target)
@@ -182,7 +189,7 @@ class DriveSlotPool:
                 self._save()
                 raise DriveApiError(f"Could not prepare the local transaction folder: {error}") from error
 
-    def pending_renames(self) -> list[DriveSlot]:
+    def recover_incomplete_claims(self) -> None:
         with self._lock:
             recovered = False
             for slot in self._slots:
@@ -196,7 +203,8 @@ class DriveSlotPool:
                     if target.is_dir():
                         slot.staging_path = str(target)
                         slot.status = "ASSIGNED"
-                        slot.rename_pending = True
+                        slot.rename_pending = False
+                        slot.claim_pending = True
                     else:
                         slot.status = "ACTION_REQUIRED"
                         slot.issue = "A folder slot was claimed before restart and needs staff review."
@@ -206,13 +214,20 @@ class DriveSlotPool:
                 recovered = True
             if recovered:
                 self._save()
-            return [DriveSlot(**asdict(slot)) for slot in self._slots if slot.status == "ASSIGNED" and slot.rename_pending]
 
-    def mark_renamed(self, folder_id: str) -> None:
+    def pending_assignments(self) -> list[DriveSlot]:
+        with self._lock:
+            return [
+                DriveSlot(**asdict(slot))
+                for slot in self._slots
+                if slot.status == "ASSIGNED" and slot.claim_pending
+            ]
+
+    def mark_assigned(self, folder_id: str) -> None:
         with self._lock:
             slot = self._get(folder_id)
-            slot.rename_pending = False
-            slot.folder_name = slot.transaction_id or slot.folder_name
+            slot.claim_pending = False
+            slot.issue = None
             self._save()
 
     def record_refresh_error(self, error: Exception) -> None:

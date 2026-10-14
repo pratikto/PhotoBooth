@@ -6,15 +6,17 @@ variables. No credential file or access token is written to the repository.
 
 from __future__ import annotations
 
+import base64
 from dataclasses import dataclass
 import hashlib
 import json
+import mimetypes
 import os
 from pathlib import Path
+import re
 import time
 from typing import Any, Callable
 from urllib.parse import urlencode
-import uuid
 
 import requests
 
@@ -271,11 +273,24 @@ class GoogleDriveClient:
         folders = self._list_files(query, fields)
         slots: dict[str, RemoteDriveSlot] = {}
         ready_count = 0
+        next_sequence = 1
         for folder in folders:
             props = folder.get("appProperties", {})
             status = props.get("photoboothStatus", "ACTION_REQUIRED")
+            transaction_id = props.get("photoboothTransactionId")
+            if not transaction_id:
+                match = re.fullmatch(rf"{re.escape(booth_id)}_(\d{{8}})", folder.get("name", ""))
+                transaction_id = f"{booth_id}_{match.group(1)}" if match else None
+            if transaction_id and transaction_id.startswith(f"{booth_id}_"):
+                try:
+                    next_sequence = max(next_sequence, int(transaction_id.rsplit("_", 1)[1]) + 1)
+                except ValueError:
+                    pass
             if status == "READY":
                 verified, issue, url = self._validate_slot(folder)
+                if not transaction_id:
+                    verified = False
+                    issue = "Drive slot has no preassigned transaction ID."
                 if verified:
                     ready_count += 1
                 slots[folder["id"]] = RemoteDriveSlot(
@@ -284,7 +299,7 @@ class GoogleDriveClient:
                     slot_key=props.get("photoboothSlotKey", folder["id"]),
                     status="READY" if verified else "ACTION_REQUIRED",
                     folder_name=folder.get("name", ""),
-                    transaction_id=props.get("photoboothTransactionId"),
+                    transaction_id=transaction_id,
                     verified=verified,
                     issue=issue,
                 )
@@ -295,14 +310,16 @@ class GoogleDriveClient:
                     slot_key=props.get("photoboothSlotKey", folder["id"]),
                     status=status,
                     folder_name=folder.get("name", ""),
-                    transaction_id=props.get("photoboothTransactionId"),
+                    transaction_id=transaction_id,
                     verified=False,
                 )
 
         while ready_count < target_ready:
-            slot_key = uuid.uuid4().hex
+            transaction_id = f"{booth_id}_{next_sequence:08d}"
+            next_sequence += 1
+            slot_key = transaction_id
             metadata = {
-                "name": f"PHOTOBOOTH_SLOT_{slot_key[:8]}",
+                "name": transaction_id,
                 "mimeType": FOLDER_MIME_TYPE,
                 "parents": [self.parent_folder_id],
                 "appProperties": {
@@ -310,6 +327,7 @@ class GoogleDriveClient:
                     "photoboothSlotKey": slot_key,
                     "photoboothBoothId": booth_id,
                     "photoboothStatus": "READY",
+                    "photoboothTransactionId": transaction_id,
                 },
             }
             folder = self._request(
@@ -325,6 +343,7 @@ class GoogleDriveClient:
                 slot_key=slot_key,
                 status="READY" if verified else "ACTION_REQUIRED",
                 folder_name=folder.get("name", ""),
+                transaction_id=transaction_id,
                 verified=verified,
                 issue=issue,
             )
@@ -343,12 +362,22 @@ class GoogleDriveClient:
         booth_id: str,
         slot_key: str,
     ) -> None:
+        # Kept as a compatibility shim for existing callers. Folder slots are
+        # created with their final transaction IDs, so assignment never renames.
+        self.assign_slot(folder_id, transaction_id, booth_id, slot_key)
+
+    def assign_slot(
+        self,
+        folder_id: str,
+        transaction_id: str,
+        booth_id: str,
+        slot_key: str,
+    ) -> None:
         self._request(
             "PATCH",
             f"{API_ROOT}/files/{folder_id}",
-            params={"fields": "id,name,appProperties", "supportsAllDrives": "true"},
+            params={"fields": "id,appProperties", "supportsAllDrives": "true"},
             json_body={
-                "name": transaction_id,
                 "appProperties": {
                     "photoboothSlot": "true",
                     "photoboothSlotKey": slot_key,
@@ -560,3 +589,176 @@ class GoogleDriveClient:
         if int(metadata.get("size", -1)) != expected_size or metadata.get("md5Checksum") != expected_checksum:
             raise DriveApiError("Drive upload verification did not match the local file.")
         return metadata
+
+
+class AppsScriptDriveClient:
+    """Drive client that uses the booth's existing Google Apps Script Web App.
+
+    The Web App URL and upload token remain in the ignored local_settings.py
+    file, or can be supplied through environment variables. The Apps Script
+    project must expose the transaction-folder actions in apps_script/Code.gs.
+    """
+
+    def __init__(
+        self,
+        web_app_url: str,
+        upload_token: str,
+        *,
+        session: requests.Session | None = None,
+    ) -> None:
+        self.web_app_url = web_app_url.strip()
+        self.upload_token = upload_token.strip()
+        if not self.web_app_url.startswith("https://") or not self.web_app_url.endswith("/exec"):
+            raise ValueError("Apps Script Web App URL must be an HTTPS /exec URL.")
+        if not self.upload_token or "PASTE_" in self.upload_token:
+            raise ValueError("Apps Script upload token is not configured.")
+        self.session = session or requests.Session()
+
+    @classmethod
+    def from_configuration(cls) -> AppsScriptDriveClient | None:
+        """Read the existing local Apps Script settings without exposing them."""
+        web_app_url = os.environ.get("PHOTOBOOTH_WEB_APP_URL", "").strip()
+        upload_token = os.environ.get("PHOTOBOOTH_UPLOAD_TOKEN", "").strip()
+        if not web_app_url or not upload_token:
+            try:
+                from photobooth.local_settings import UPLOAD_TOKEN, WEB_APP_URL
+
+                web_app_url = web_app_url or str(WEB_APP_URL).strip()
+                upload_token = upload_token or str(UPLOAD_TOKEN).strip()
+            except (ImportError, AttributeError):
+                pass
+        if not web_app_url or not upload_token or "PASTE_" in web_app_url or "PASTE_" in upload_token:
+            return None
+        return cls(web_app_url, upload_token)
+
+    def _post(self, payload: dict[str, Any]) -> dict[str, Any]:
+        request_body = {"token": self.upload_token, **payload}
+        try:
+            response = self.session.post(
+                self.web_app_url,
+                json=request_body,
+                timeout=(10, 120),
+            )
+            if response.status_code >= 400:
+                raise DriveApiError(
+                    f"Apps Script Web App returned HTTP {response.status_code}.",
+                    response.status_code,
+                )
+            result = response.json()
+        except DriveApiError:
+            raise
+        except requests.Timeout as error:
+            raise DriveApiError("Apps Script request timed out; it is safe to retry.", 503) from error
+        except requests.RequestException as error:
+            raise DriveApiError("Could not reach the Apps Script Web App.", 503) from error
+        except ValueError as error:
+            raise DriveApiError("Apps Script returned an invalid JSON response.", 502) from error
+
+        if not isinstance(result, dict) or result.get("ok") is not True:
+            code = result.get("code") if isinstance(result, dict) else None
+            message = result.get("error", "Apps Script request failed.") if isinstance(result, dict) else "Unexpected Apps Script response."
+            status_code = int(code) if isinstance(code, int) else 400
+            raise DriveApiError(str(message), status_code)
+        return result
+
+    def ensure_folder_pool(
+        self,
+        booth_id: str,
+        target_ready: int = 25,
+    ) -> list[RemoteDriveSlot]:
+        result = self._post(
+            {
+                "action": "ensure_folder_pool",
+                "booth_id": booth_id,
+                "target_ready": target_ready,
+            }
+        )
+        remote_slots: list[RemoteDriveSlot] = []
+        for item in result.get("slots", []):
+            if not isinstance(item, dict):
+                continue
+            remote_slots.append(
+                RemoteDriveSlot(
+                    folder_id=str(item.get("folder_id", "")),
+                    folder_url=str(item.get("folder_url", "")),
+                    slot_key=str(item.get("slot_key", "")),
+                    status=str(item.get("status", "ACTION_REQUIRED")),
+                    folder_name=str(item.get("folder_name", "")),
+                    transaction_id=item.get("transaction_id"),
+                    verified=bool(item.get("verified", False)),
+                    issue=item.get("issue"),
+                )
+            )
+        return remote_slots
+
+    def assign_slot(
+        self,
+        folder_id: str,
+        transaction_id: str,
+        booth_id: str,
+        slot_key: str,
+    ) -> None:
+        self._post(
+            {
+                "action": "assign_slot",
+                "folder_id": folder_id,
+                "transaction_id": transaction_id,
+                "booth_id": booth_id,
+                "slot_key": slot_key,
+            }
+        )
+
+    def rename_assigned_folder(
+        self,
+        folder_id: str,
+        transaction_id: str,
+        booth_id: str,
+        slot_key: str,
+    ) -> None:
+        """Compatibility alias; assignment only changes slot state, never its name."""
+        self.assign_slot(folder_id, transaction_id, booth_id, slot_key)
+
+    def upload_file(
+        self,
+        folder_id: str,
+        transaction_id: str,
+        relative_path: str,
+        local_path: Path,
+        *,
+        resume_url: str | None = None,
+        on_session_url: Callable[[str | None], None] | None = None,
+    ) -> dict[str, Any]:
+        del resume_url
+        local_path = Path(local_path)
+        if not local_path.is_file():
+            raise DriveApiError(f"Upload file is missing: {local_path}")
+        data = local_path.read_bytes()
+        checksum = hashlib.md5(data).hexdigest()
+        mime_type = mimetypes.guess_type(local_path.name)[0] or "application/octet-stream"
+        if on_session_url is not None:
+            on_session_url(None)
+        result = self._post(
+            {
+                "action": "upload_file",
+                "folder_id": folder_id,
+                "transaction_id": transaction_id,
+                "relative_path": relative_path,
+                "filename": local_path.name,
+                "mime_type": mime_type,
+                "size_bytes": len(data),
+                "md5_checksum": checksum,
+                "image_base64": base64.b64encode(data).decode("ascii"),
+            }
+        )
+        remote_file = result.get("file", {})
+        if (
+            not remote_file.get("id")
+            or int(remote_file.get("size_bytes", -1)) != len(data)
+            or remote_file.get("md5_checksum") != checksum
+        ):
+            raise DriveApiError("Apps Script upload verification did not match the local file.")
+        return {
+            "id": remote_file["id"],
+            "size": str(remote_file["size_bytes"]),
+            "md5Checksum": remote_file["md5_checksum"],
+        }

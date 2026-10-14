@@ -46,6 +46,37 @@ class TransactionStore:
         """Persist and return the next ID before a Drive folder is assigned."""
         return self._reserve_transaction_id()
 
+    def advance_counter_past(self, transaction_id: str) -> None:
+        """Keep local-only IDs ahead of IDs already preallocated to Drive slots."""
+        prefix = f"{self.booth_id}_"
+        if not transaction_id.startswith(prefix):
+            raise ValueError("Transaction ID belongs to another booth.")
+        suffix = transaction_id[len(prefix):]
+        if not suffix.isdigit() or len(suffix) != 8:
+            raise ValueError("Transaction ID must end with an eight-digit sequence.")
+        minimum_next = int(suffix) + 1
+        self.state_path.parent.mkdir(parents=True, exist_ok=True)
+        if self.state_path.exists():
+            try:
+                state = json.loads(self.state_path.read_text(encoding="utf-8"))
+                if state.get("booth_id") != self.booth_id:
+                    raise ValueError("The saved transaction counter belongs to another booth.")
+                next_sequence = int(state["next_sequence"])
+            except (json.JSONDecodeError, KeyError, TypeError, ValueError) as error:
+                raise RuntimeError(
+                    f"Transaction counter is invalid at {self.state_path}. "
+                    "Stop new sessions and restore the counter before continuing."
+                ) from error
+        else:
+            next_sequence = 1
+        if next_sequence < 1:
+            raise RuntimeError("The next transaction sequence must be positive.")
+        if next_sequence < minimum_next:
+            self._atomic_write_json(
+                self.state_path,
+                {"booth_id": self.booth_id, "next_sequence": minimum_next},
+            )
+
     def start_transaction(
         self,
         plans: Sequence[SessionPlan],

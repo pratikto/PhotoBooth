@@ -16,7 +16,7 @@ from PIL import Image
 from photobooth.camera import Camera
 from photobooth.catalog import compose_result, get_templates
 from photobooth.drive_pool import DriveSlotPool
-from photobooth.drive_storage import DriveApiError, GoogleDriveClient
+from photobooth.drive_storage import AppsScriptDriveClient, DriveApiError, GoogleDriveClient
 from photobooth.drive_sync import DriveSyncWorker
 from photobooth.qr_code import create_qr_image
 from photobooth.transaction_store import LocalTransaction, TransactionStore
@@ -49,7 +49,12 @@ class PhotoBoothApp:
             state_path=PROJECT_ROOT / "data" / "drive_pool.json",
             booth_id=BOOTH_ID,
         )
-        self.drive_client = GoogleDriveClient.from_environment()
+        # Reuse the Apps Script URL/token configured for the existing booth.
+        # OAuth remains available as a fallback for installations that use it.
+        self.drive_client = (
+            AppsScriptDriveClient.from_configuration()
+            or GoogleDriveClient.from_environment()
+        )
         self.local_only_mode = os.environ.get("PHOTOBOOTH_LOCAL_ONLY", "0").lower() in {
             "1",
             "true",
@@ -179,8 +184,11 @@ class PhotoBoothApp:
                 )
                 return
             if self.drive_pool.has_ready_slot():
-                transaction_id = self.store.reserve_transaction_id()
-                slot = self.drive_pool.claim(transaction_id)
+                slot = self.drive_pool.claim()
+                transaction_id = slot.transaction_id
+                if not transaction_id:
+                    raise DriveApiError("Drive slot has no preassigned transaction ID.")
+                self.store.advance_counter_past(transaction_id)
                 self.transaction = self.store.start_transaction(
                     plans,
                     transaction_id=transaction_id,
@@ -528,8 +536,8 @@ class PhotoBoothApp:
         if self.drive_pool.last_error:
             return f"Slot Drive perlu diperiksa: {self.drive_pool.last_error}"
         if self.drive_client is None:
-            return "Drive belum dikonfigurasi. Siapkan koneksi dan slot folder sebelum menerima transaksi."
-        return "Menyiapkan folder Google Drive. Transaksi baru akan aktif setelah tersedia slot."
+            return "Apps Script Web App atau OAuth Drive belum dikonfigurasi. Periksa konfigurasi lokal."
+        return "Menyiapkan folder transaksi Google Drive. Tombol aktif setelah slot tersedia."
 
     def _upload_status_message(self) -> str:
         transaction = self.transaction

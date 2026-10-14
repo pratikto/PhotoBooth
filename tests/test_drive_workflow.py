@@ -21,7 +21,7 @@ from photobooth.workflow import build_session_plans
 
 
 class DriveSlotPoolTests(unittest.TestCase):
-    def test_cached_ready_slot_is_claimed_once_and_rename_survives_restart(self):
+    def test_cached_ready_slot_keeps_its_preassigned_name_and_survives_restart(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             photos_root = root / "photos"
@@ -36,14 +36,15 @@ class DriveSlotPoolTests(unittest.TestCase):
                             folder_url="https://drive.google.com/drive/folders/drive-folder-1",
                             slot_key="slot-1",
                             status="READY",
-                            folder_name="PHOTOBOOTH_SLOT_1",
+                            folder_name="PB001_00000001",
+                            transaction_id="PB001_00000001",
                             verified=True,
                         )
                     ]
 
             pool.refresh(FakeDrive())
             self.assertEqual(pool.ready_count, 1)
-            slot = pool.claim("PB001_00000001")
+            slot = pool.claim()
             self.assertEqual(slot.status, "ASSIGNED")
             self.assertEqual(Path(slot.staging_path), photos_root / "PB001_00000001")
             self.assertTrue(Path(slot.staging_path).is_dir())
@@ -51,8 +52,8 @@ class DriveSlotPoolTests(unittest.TestCase):
 
             restarted = DriveSlotPool(photos_root, state_path, "PB001", target_ready=1)
             self.assertEqual(restarted.ready_count, 0)
-            self.assertEqual(restarted.pending_renames()[0].folder_id, "drive-folder-1")
-            self.assertEqual(restarted.pending_renames()[0].transaction_id, "PB001_00000001")
+            self.assertEqual(restarted.pending_assignments()[0].folder_id, "drive-folder-1")
+            self.assertEqual(restarted.pending_assignments()[0].transaction_id, "PB001_00000001")
 
 
 class DriveUploadTests(unittest.TestCase):

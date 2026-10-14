@@ -96,6 +96,10 @@ class TransactionStoreTests(unittest.TestCase):
         state = json.loads(self.state_path.read_text(encoding="utf-8"))
         self.assertEqual(state["next_sequence"], 3)
 
+    def test_preallocated_drive_ids_advance_the_local_counter(self):
+        self.store.advance_counter_past("PB001_00000025")
+        self.assertEqual(self.store.reserve_transaction_id(), "PB001_00000026")
+
     def test_manifest_tracks_raw_retake_and_composed_output(self):
         transaction = self.store.start_transaction(self.plans)
         plan = self.plans[0]

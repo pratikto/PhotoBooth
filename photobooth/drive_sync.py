@@ -158,7 +158,8 @@ class DriveSyncWorker:
 
     def _run(self) -> None:
         while not self._stop.is_set():
-            self._process_pending_renames()
+            self.pool.recover_incomplete_claims()
+            self._process_pending_assignments()
             self._process_pending_uploads()
             if self.pool.ready_count < self.pool.target_ready:
                 try:
@@ -168,18 +169,18 @@ class DriveSyncWorker:
             self._wake.wait(self.interval_seconds)
             self._wake.clear()
 
-    def _process_pending_renames(self) -> None:
-        for slot in self.pool.pending_renames():
+    def _process_pending_assignments(self) -> None:
+        for slot in self.pool.pending_assignments():
             if not slot.transaction_id:
                 continue
             try:
-                self.client.rename_assigned_folder(
+                self.client.assign_slot(
                     slot.folder_id,
                     slot.transaction_id,
                     self.pool.booth_id,
                     slot.slot_key,
                 )
-                self.pool.mark_renamed(slot.folder_id)
+                self.pool.mark_assigned(slot.folder_id)
             except DriveApiError as error:
                 self.pool.record_refresh_error(error)
 
