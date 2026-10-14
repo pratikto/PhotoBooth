@@ -3,5 +3,6 @@ venv/
 __pycache__/
 *.py[cod]
 photos/
+data/
 photobooth/local_settings.py
 *.docx

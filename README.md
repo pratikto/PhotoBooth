@@ -1,18 +1,22 @@
 # PhotoBooth
 
-A Python photo booth application built with Tkinter and OpenCV. The repository currently contains an early single-photo prototype; the transaction workflow below documents the agreed product behavior that the application is intended to grow into.
+A Python photo booth application built with Tkinter, OpenCV, and Pillow. The attached procedure document is the functional source of truth. The code is being implemented in milestones; this README separates the working local MVP from features that remain planned.
 
-## Current prototype
+## Current MVP: local photo flow
 
-The code currently:
+The first implementation milestone includes:
 
-- Shows a live preview from a built-in or USB camera.
-- Captures the current camera frame and saves it as a local JPEG.
-- Attempts to upload each captured photo to Google Drive through a Google Apps Script web app.
-- Displays a QR code for the individual photo after its upload succeeds.
-- Keeps the local photo and displays an error if upload fails.
+- A welcome screen and a template picker with a cart-style session summary.
+- Four sample template cards. Their artwork is illustrative and should be replaced with the final template designs.
+- Quantity means separate sessions. Each session captures three new photos and receives one retake of a selected photo.
+- A five-second countdown before each capture.
+- A final digital photo strip saved locally for each session.
+- One transaction folder for all sessions in an order, named with the booth ID and an incrementing eight-digit counter, such as PB001_00000001.
+- A local manifest that records session photos, the retake choice, and the final output.
 
-The complete multi-template, payment, printing, transaction-folder, and offline-reservation flow described below is not implemented yet. In particular, the current QR points to one uploaded photo, not to a transaction folder.
+This milestone deliberately does not include QRIS payment or printing. Google Drive folder reservation, QR links, uploads, and offline synchronization are also still planned; the current output remains on the device.
+
+The complete workflow below remains the target behavior from the procedure document. A feature listed there is not necessarily implemented in the current MVP.
 
 ## Agreed product workflow
 
@@ -129,9 +133,9 @@ Install the Python dependencies from the project folder:
 
     python -m pip install -r requirements.txt
 
-The current prototype uses a local configuration file, `photobooth/local_settings.py`, for the Google Apps Script web app URL and upload token. That file is ignored by Git; keep its credentials private and do not commit it.
+The local photo-flow MVP does not require a Drive URL, upload token, or payment-provider credentials. Configure a non-default booth ID with the PHOTOBOOTH_ID environment variable, and choose a camera with PHOTOBOOTH_CAMERA_INDEX if needed.
 
-Run the current prototype with:
+Run the local MVP with:
 
     python main.py
 
@@ -140,16 +144,18 @@ Run the current prototype with:
 - The application uses camera index 0 by default. If the USB camera is not detected, check the camera index configured in `photobooth/camera.py`.
 - On Windows, allow desktop applications to access the camera in Settings > Privacy & security > Camera.
 - Close other applications that may be using the camera, such as Zoom, Teams, or Camera.
-- If Drive upload fails, the current prototype keeps the JPEG locally and reports the error. Its offline queue and reserved transaction-folder behavior are planned requirements, not current functionality.
+- The current MVP saves files under photos/<transaction-id>. The next transaction counter is stored in data/booth_state.json and must be preserved with the transaction ledger.
+- Google Drive upload, QR-folder display, QRIS, and printer integration are not connected to the current UI.
 
 ## Project structure
 
-- `main.py` starts the application.
-- `photobooth/app.py` coordinates the camera, UI, local photo saving, Drive upload, and QR display.
-- `photobooth/camera.py` manages the camera connection and frame capture.
-- `photobooth/photo_storage.py` saves captured photos locally.
-- `photobooth/drive_storage.py` uploads the current prototype's individual photos through Apps Script.
-- `photobooth/qr_code.py` creates QR-code images.
-- `photobooth/ui_tkinter.py` builds the current Tkinter interface.
-- `requirements.txt` lists the Python packages used by the current prototype.
-- The `photos` folder, local configuration, and temporary Python files are excluded from Git.
+- main.py starts the application.
+- photobooth/app.py coordinates the camera, screens, and session flow.
+- photobooth/ui_tkinter.py builds the Tkinter interface styled after the procedure mockups.
+- photobooth/catalog.py contains the sample templates and digital photo-strip compositor.
+- photobooth/workflow.py expands quantities into sessions and enforces one retake per session.
+- photobooth/transaction_store.py reserves transaction IDs and writes local photos and manifests.
+- photobooth/camera.py manages the camera connection and frame capture.
+- photobooth/drive_storage.py and photobooth/qr_code.py are legacy integration modules and are not called by the current MVP.
+- requirements.txt lists the Python packages used by the project.
+- photos/, data/, local configuration, and temporary Python files are excluded from Git.
