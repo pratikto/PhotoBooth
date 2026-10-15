@@ -13,6 +13,49 @@ from types import SimpleNamespace
 
 @unittest.skipUnless(os.environ.get('PHOTOBOOTH_TEST_GUI') == '1', 'GUI checks are opt-in')
 class KivyFlowTests(unittest.TestCase):
+    def test_overview_composites_alpha_without_altering_source_renders(self):
+        """Contact sheets must not expose RGB hidden under transparent corners.
+
+        Widget exports have an alpha channel outside the rounded shell. Pasting
+        RGBA directly into an RGB sheet discards that alpha and paints its hidden
+        black channels instead. Include partial alpha and ordinary RGB input so
+        the evidence stays faithful without rewriting any full-size screenshot.
+        """
+        from PIL import Image, ImageDraw
+        from tools.render_gui import overview
+
+        paper = (246, 245, 240)
+        ink = (26, 48, 46)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for width, height in ((1200, 800), (800, 600)):
+                with self.subTest(size=(width, height)):
+                    source = Image.new('RGBA', (width, height), ink + (255,))
+                    draw = ImageDraw.Draw(source)
+                    draw.rectangle((0, 0, width // 4, height // 4), fill=(0, 0, 0, 0))
+                    draw.rectangle((0, height // 2, width // 4, height), fill=ink + (128,))
+                    alpha_path = root / f'alpha-{width}x{height}.png'
+                    rgb_path = root / f'rgb-{width}x{height}.png'
+                    source.save(alpha_path)
+                    Image.new('RGB', (width, height), ink).save(rgb_path)
+                    original_bytes = (alpha_path.read_bytes(), rgb_path.read_bytes())
+
+                    overview(root, (width, height), screens=('alpha', 'rgb'))
+
+                    with Image.open(root / f'overview-{width}x{height}.png') as sheet:
+                        self.assertEqual(sheet.mode, 'RGB')
+                        self.assertEqual(sheet.size, (width, height // 2 + 30))
+                        self.assertEqual(sheet.getpixel((10, 40)), paper)
+                        # Sample well away from resampled edges. Partial alpha
+                        # must blend with paper, not become opaque dark ink.
+                        expected = Image.alpha_composite(
+                            Image.new('RGBA', (1, 1), paper + (255,)),
+                            Image.new('RGBA', (1, 1), ink + (128,))).convert('RGB').getpixel((0, 0))
+                        self.assertEqual(sheet.getpixel((10, 30 + height * 3 // 8)), expected)
+                        self.assertEqual(sheet.getpixel((width // 4, 40)), ink)
+                        self.assertEqual(sheet.getpixel((width // 2 + 10, 40)), ink)
+                    self.assertEqual((alpha_path.read_bytes(), rgb_path.read_bytes()), original_bytes)
+
     def test_status_details_follow_resize_without_rebuilding_the_cart(self):
         """A message between desktop widths must not flicker or reserve a gap."""
         from kivy.base import EventLoop

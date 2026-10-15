@@ -466,3 +466,20 @@ dismissal, breakpoint stability, and storage recovery with the same two-session
 cart (Rp10.000). New [diagnostic sheets](docs/qa/README.md) compare unavailable
 storage with a ready cart. All six earlier contact sheets remain byte-identical.
 Camera and Drive scenarios still use fakes, not live devices/services.
+
+### Alpha-correct visual evidence
+
+The compact QA sheets previously pasted RGBA widget exports directly into RGB.
+That discarded the transparent rounded shell corners and exposed their hidden
+black channels as marks. The sheet builder now composites onto its paper
+background before resizing, including partially transparent edge pixels.
+Full-size source renders are not rewritten, and no application layout changed.
+
+Validation: **52 tests passed** and **34 real-widget renders** completed at both
+desktop sizes. A new regression first failed at both sizes, then passed for
+transparent, partially transparent, and opaque RGB input while checking source
+bytes remain untouched. All eight sheets were inspected visually. Pixel
+comparison confines their changes to rounded corners; their content and the
+machine-readable layout/QR report remain identical. See the updated
+[evidence and validation details](docs/qa/README.md). Camera and Drive still use
+fakes, QRIS is simulated, and physical printing is not connected.

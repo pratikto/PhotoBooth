@@ -119,12 +119,13 @@ def fully_visible(widget):
 
 
 def overview(output, size, screens=OVERVIEW_SCREENS, prefix='overview'):
-    """Keep a compact comparison of the six main screens beside full PNGs."""
+    """Flatten widget transparency into paper when assembling visual evidence."""
     width, height = size
     thumb = (width // 2, height // 2)
     label_height = 30
     rows = (len(screens) + 1) // 2
-    sheet = Image.new('RGB', (thumb[0] * 2, (thumb[1] + label_height) * rows), '#f6f5f0')
+    paper = '#f6f5f0'
+    sheet = Image.new('RGB', (thumb[0] * 2, (thumb[1] + label_height) * rows), paper)
     draw = ImageDraw.Draw(sheet)
     try:
         font = ImageFont.truetype('DejaVuSans.ttf', 14)
@@ -135,7 +136,14 @@ def overview(output, size, screens=OVERVIEW_SCREENS, prefix='overview'):
         y = (index // 2) * (thumb[1] + label_height)
         draw.text((x + 12, y + 7), f'{name.upper()}  |  {width} × {height}', fill='#1a302e', font=font)
         with Image.open(output / f'{name}-{width}x{height}.png') as image:
-            sheet.paste(image.resize(thumb, Image.Resampling.LANCZOS), (x, y + label_height))
+            # Rounded widget exports contain transparent corners. An RGBA paste
+            # into RGB without a mask discards alpha and exposes hidden black
+            # channels. Composite before resampling to keep translucent edges
+            # correct too; leave the original full-size PNG entirely untouched.
+            flattened = Image.new('RGBA', image.size, paper)
+            flattened.alpha_composite(image.convert('RGBA'))
+            sheet.paste(flattened.convert('RGB').resize(thumb, Image.Resampling.LANCZOS),
+                        (x, y + label_height))
     sheet.save(output / f'{prefix}-{width}x{height}.png')
 
 

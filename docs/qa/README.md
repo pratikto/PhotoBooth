@@ -7,6 +7,7 @@ The faithful-review follow-up starts from `1f5f3cda5a6bcba7718afa415e13726a54ec7
 The upload-revision follow-up starts from `c99924aec2460a25211c6d21b020999b12f20034`.
 The disabled-label follow-up starts from `12f7cc003deb2f9fa5e7148beec2228b13ffdaaa`.
 The complete-status follow-up starts from `ca51189f48073da8a5f6775c06b771e56403d27e`.
+The alpha-compositing follow-up starts from `2806e28e733ca91a9a9e05fb238a9ef175ccc4dd`.
 The original working copy was left untouched. Source files in the separate
 checkout were checked against the freshly fetched GitHub blobs before editing.
 
@@ -35,6 +36,7 @@ scrolling area. Payment back-navigation also retains the customer's quantities.
 | Review pixels match the saved photo crop before/after retake | Passed | Passed |
 | Disabled status labels meet the project's 4.5:1 text-color threshold | Passed | Passed |
 | Long status summary and full-message details remain reachable | Passed | Passed |
+| Contact sheets preserve transparency without modifying source PNGs | Passed | Passed |
 
 The image sheets below contain the six main screens. The reproducible renderer
 also includes countdown, bottom-of-gallery, retake-used, local-only, and next-session
@@ -187,6 +189,24 @@ Messages are synthetic fixtures, not real backend responses or credentials.
 
 ![Long status at 1200x800](diagnostics-1200x800.png)
 
+## Alpha-correct contact sheets
+
+The real widget export is RGBA: its rounded shell has transparent corners with
+hidden black RGB values. The old sheet builder pasted that image directly into
+RGB without a mask, discarding transparency and exposing black corner marks.
+The builder now composites onto the existing paper background before resizing.
+This also handles partially transparent antialiased edges correctly. It changes
+the evidence assembly only, not the application, full-size PNGs, or photo output.
+
+A new regression first failed at both desktop sizes. It now checks transparent
+and partially transparent pixels, opaque RGB compatibility, and source-byte
+preservation. All eight regenerated sheets above were inspected visually. Their
+only changed pixels are within 12x12 thumbnail-corner regions: 912 pixels per
+overview sheet, 608 per state/selection sheet, and 304 per diagnostic sheet.
+Every earlier sheet was also reproduced exactly from the new full-size renders
+using the old assembly method, proving that actual widget pixels did not change.
+The 34-render [layout/QR report](report.json) remains byte-identical.
+
 ## Reproduce
 
 Python 3.12.14, Kivy 2.3.1, OpenCV 5.0.0, SDL2 offscreen, and Mesa llvmpipe were used. No webcam,
@@ -197,7 +217,7 @@ SDL_VIDEODRIVER=offscreen PHOTOBOOTH_TEST_GUI=1 python -m unittest discover -s t
 SDL_VIDEODRIVER=offscreen python tools/render_gui.py --output-dir /tmp/photobooth-gui-qa
 ```
 
-The suite passed **51 tests**. Its controller/storage checks include two-session
+The suite passed **52 tests**. Its controller/storage checks include two-session
 orders, one retake per session, local PNG and manifest persistence, cached folder
 allocation, an offline upload failure followed by retry, and skipping verified
 uploads. Camera acquisition and Drive access use deterministic fakes. The layout
