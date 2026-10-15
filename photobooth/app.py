@@ -1,5 +1,5 @@
 # PhotoBooth source file
-# Application controller connecting customer actions, camera capture, local transaction storage, Drive synchronization, and the Tkinter screens.
+# Application controller connecting customer actions, camera capture, local transaction storage, Drive synchronization, and the Kivy screens.
 
 """Application controller for the procedure's capture and Drive workflow.
 
@@ -11,7 +11,7 @@ show the cached folder QR, and synchronize files in the background.
 import os
 import json
 from pathlib import Path
-import tkinter as tk
+from kivy.clock import ClockEvent
 
 import cv2
 from PIL import Image
@@ -23,7 +23,7 @@ from photobooth.drive_storage import AppsScriptDriveClient, DriveApiError, Googl
 from photobooth.drive_sync import DriveSyncWorker
 from photobooth.qr_code import create_qr_image
 from photobooth.transaction_store import LocalTransaction, TransactionStore
-from photobooth.ui_tkinter import PhotoBoothUI
+from photobooth.ui_kivy import KivyHost, PhotoBoothUI
 from photobooth.workflow import PhotoSession, SessionPlan, build_session_plans
 
 
@@ -39,9 +39,12 @@ class PhotoBoothApp:
 
     def __init__(self) -> None:
         # Build the main application state: camera, local transaction store, cached Drive folder pool,
-        # optional sync worker, and GUI callbacks. Tkinter timers are scheduled on the UI thread;
+        # optional sync worker, and GUI callbacks. Kivy timers are scheduled on the UI thread;
         # network synchronization runs in a background worker.
-        self.root = tk.Tk()
+        # KivyHost owns the event loop. Its small timer adapter preserves this
+        # controller's millisecond timing while returning cancellable ClockEvents.
+        # ui_tkinter.py remains untouched as a historical implementation only.
+        self.root = KivyHost(on_close=self.close)
         self.templates = get_templates()
         self.camera = Camera(camera_index=CAMERA_INDEX)
         self.photos_root = PROJECT_ROOT / "photos"
@@ -84,11 +87,11 @@ class PhotoBoothApp:
 
         self._countdown_remaining = 0
         self._countdown_is_retake = False
-        self._countdown_after_id: str | None = None
+        self._countdown_after_id: ClockEvent | None = None
         self._completion_remaining = 0
-        self._completion_after_id: str | None = None
-        self._preview_after_id: str | None = None
-        self._drive_status_after_id: str | None = None
+        self._completion_after_id: ClockEvent | None = None
+        self._preview_after_id: ClockEvent | None = None
+        self._drive_status_after_id: ClockEvent | None = None
 
         self.ui = PhotoBoothUI(
             root=self.root,
@@ -108,7 +111,7 @@ class PhotoBoothApp:
         self._schedule_drive_status_update()
 
     def run(self) -> None:
-        """Start Tkinter's event loop."""
+        """Start Kivy's event loop."""
         self.root.mainloop()
 
     def _connect_camera(self) -> None:
@@ -141,7 +144,7 @@ class PhotoBoothApp:
 
     def _update_preview(self) -> None:
         # Poll the camera repeatedly and refresh the live preview. This callback also enables capture
-        # only when a fresh frame is available, then schedules itself again with Tkinter.
+        # only when a fresh frame is available, then schedules itself again with Kivy.
         if self.is_closing:
             return
 
@@ -637,24 +640,16 @@ class PhotoBoothApp:
         self._drive_status_after_id = self.root.after(1500, self._schedule_drive_status_update)
 
     def _should_show_result_qr(self) -> bool:
-        # Decide whether the result screen can show the transaction-folder QR now or should keep
-        # displaying a pending state until the relevant upload outcome is known.
-        transaction = self.transaction
-        session = self.current_session
-        if transaction is None or session is None:
-            return False
-        manifest = transaction.manifest
-        if not manifest.get("drive_folder_url"):
-            return False
-        if self.drive_client is None or self.drive_pool.last_error:
-            return True
-        if manifest.get("upload_status") in {
-            "UPLOAD_RETRY",
-            "ACTION_REQUIRED",
-            "UPLOAD_COMPLETE",
-        }:
-            return True
-        return self._current_session_upload_verified()
+        """Expose the cached destination independently of network upload state."""
+        # A reserved folder URL is stable before any files are uploaded. Encoding
+        # that URL is entirely local and must not wait for upload verification:
+        # a slow connection used to leave the result screen without a QR code.
+        # The separate upload-status label explains when the folder is incomplete.
+        # Local-only transactions have no real Drive destination; never invent one.
+        return bool(
+            self.transaction is not None
+            and self.transaction.manifest.get("drive_folder_url")
+        )
 
     def _current_session_upload_verified(self) -> bool:
         # Check the manifest records for every raw photo and the composed output in the current
@@ -681,13 +676,13 @@ class PhotoBoothApp:
             upload_files.get(path, {}).get("status") == "VERIFIED" for path in paths
         )
 
-    def _cancel_after(self, after_id: str | None) -> None:
-        # Safely cancel a Tkinter timer callback if it is still registered; the window may already
+    def _cancel_after(self, after_id: ClockEvent | None) -> None:
+        # Safely cancel a Kivy timer callback if it is still registered; the window may already
         # have closed between scheduling and cancellation.
         if after_id is not None:
             try:
                 self.root.after_cancel(after_id)
-            except tk.TclError:
+            except RuntimeError:
                 pass
 
     def _cancel_completion_countdown(self) -> None:
@@ -699,7 +694,7 @@ class PhotoBoothApp:
 
     def close(self) -> None:
         # Shut down cleanly by cancelling pending UI timers, stopping background Drive sync, releasing
-        # the camera, and destroying the Tkinter window.
+        # the camera, and destroying the Kivy window.
         if self.is_closing:
             return
         self.is_closing = True
@@ -716,6 +711,6 @@ class PhotoBoothApp:
         self.camera.close()
         try:
             self.root.destroy()
-        except tk.TclError:
+        except RuntimeError:
             pass
 

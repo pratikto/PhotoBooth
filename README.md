@@ -1,6 +1,6 @@
 # PhotoBooth
 
-A Python photo booth application built with Tkinter, OpenCV, and Pillow. The attached procedure document is the functional source of truth. QRIS and printing are intentionally out of the current implementation until those integrations are ready.
+A Python photo booth application built with Kivy, OpenCV, and Pillow. The attached procedure document is the functional source of truth. QRIS and printing are intentionally out of the current implementation until those integrations are ready.
 
 ## Current implementation: photo and Drive flow
 
@@ -92,7 +92,7 @@ The QR printed with the photo points to the transaction folder, so the customer 
 **When online:**
 
 - Upload the transaction's files to its assigned Drive folder.
-- Show the completed folder QR after upload succeeds.
+- Show the cached transaction-folder QR immediately on the result screen. Upload status is displayed separately; the folder can be empty or incomplete until synchronization succeeds.
 
 **When offline:**
 
@@ -168,7 +168,8 @@ Run the local MVP with:
 
 - main.py starts the application.
 - photobooth/app.py coordinates the camera, screens, and session flow.
-- photobooth/ui_tkinter.py builds the Tkinter interface styled after the procedure mockups.
+- photobooth/ui_kivy.py builds the active Kivy interface and adapts controller timers to Kivy Clock.
+- photobooth/ui_tkinter.py preserves the previous Tkinter GUI unchanged as history.
 - photobooth/catalog.py contains the sample templates and digital photo-strip compositor.
 - photobooth/workflow.py expands quantities into sessions and enforces one retake per session.
 - photobooth/transaction_store.py reserves transaction IDs and writes local photos and manifests.
@@ -179,3 +180,43 @@ Run the local MVP with:
 - photobooth/qr_code.py creates the transaction folder QR shown on the result screen.
 - requirements.txt lists the Python packages used by the project.
 - photos/, data/, local configuration, and temporary Python files are excluded from Git.
+
+## Kivy GUI migration
+
+The active entry point remains `python main.py`. Install/update dependencies in
+an activated virtual environment first:
+
+```bash
+python -m pip install -r requirements.txt
+python main.py
+```
+
+The migration is based on `feature/local-photo-session-mvp`, which contains the
+multi-session workflow and Apps Script folder API. Keep your ignored
+`photobooth/local_settings.py`, `data/`, and `photos/` when updating an existing
+installation. Credentials and existing transaction records must not be replaced.
+The Apps Script deployment is unchanged by this migration.
+
+`ui_kivy.py` owns screen layouts, Pillow-to-texture conversion, modal errors,
+and the Kivy application host. `app.py` still owns transaction rules and camera
+capture. Timers use cancellable Kivy Clock events; Drive work remains in its
+background worker. The old `ui_tkinter.py` is preserved byte-for-byte and is no
+longer imported by the active controller.
+
+Folder QR generation is independent of upload verification. A real cached
+`drive_folder_url` is required. Local-only development mode intentionally has no
+Drive QR. If a folder QR is missing, check the transaction's manifest and the
+Drive-slot configuration; a local filesystem path is not a customer Drive link.
+QR pixels use nearest-neighbor filtering and retain their white quiet zone.
+
+This is a desktop GUI migration, **not a finished Android APK**. Android camera
+permissions, camera/USB/Bluetooth adapters, native dependency packaging, and
+pause/resume behavior still require implementation and device testing.
+
+Run the storage/workflow tests with `python -m unittest discover -s tests -v`.
+To include real-widget GUI regression checks on a desktop, set
+`PHOTOBOOTH_TEST_GUI=1`. On a Linux machine with Mesa offscreen support:
+
+```bash
+SDL_VIDEODRIVER=offscreen PHOTOBOOTH_TEST_GUI=1 python -m unittest discover -s tests -v
+```
