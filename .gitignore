@@ -8,3 +8,7 @@ photobooth/local_settings.py
 *.docx
 
 *.pptx
+
+# Local Python virtual environments.
+# Dependencies are installed from requirements.txt, not committed to Git.
+.venv-kivy/
