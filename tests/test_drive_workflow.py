@@ -1,3 +1,6 @@
+# PhotoBooth source file
+# Offline tests for Drive folder slots, upload retries, and manifest synchronization.
+
 import hashlib
 import json
 from pathlib import Path
@@ -21,7 +24,11 @@ from photobooth.workflow import build_session_plans
 
 
 class DriveSlotPoolTests(unittest.TestCase):
+    # Test claiming and recovering cached Drive slots without depending on a live Google Drive
+    # account.
     def test_cached_ready_slot_keeps_its_preassigned_name_and_survives_restart(self):
+        # Verify a claimed slot already has its final transaction folder name and its pending
+        # assignment survives application restart.
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             photos_root = root / "photos"
@@ -29,7 +36,10 @@ class DriveSlotPoolTests(unittest.TestCase):
             pool = DriveSlotPool(photos_root, state_path, "PB001", target_ready=1)
 
             class FakeDrive:
+                # Provide one verified ready slot as if it came from the Drive service.
                 def ensure_folder_pool(self, booth_id, target_ready):
+                    # Return a deterministic remote slot so the test can focus on local cache
+                    # behavior.
                     return [
                         RemoteDriveSlot(
                             folder_id="drive-folder-1",
@@ -57,29 +67,42 @@ class DriveSlotPoolTests(unittest.TestCase):
 
 
 class DriveUploadTests(unittest.TestCase):
+    # Test upload verification, offline retention, manifest concurrency, and retry-safe
+    # synchronization with fake responses.
     def test_resumable_upload_is_verified_and_persists_session_url(self):
+        # Verify a direct Drive upload uses resumable chunks, stores the session URL, and checks the
+        # final size and MD5 checksum.
         with tempfile.TemporaryDirectory() as directory:
             photo = Path(directory) / "capture.jpg"
             photo.write_bytes(b"photo-bytes")
             checksum = hashlib.md5(photo.read_bytes()).hexdigest()
 
             class Response:
+                # Model the response fields used by the resumable Drive upload code.
                 def __init__(self, status_code, payload=None, headers=None):
+                    # Store the status, JSON payload, and headers expected by the fake HTTP client.
                     self.status_code = status_code
                     self._payload = payload or {}
                     self.headers = headers or {}
 
                 def json(self):
+                    # Return the fake server's JSON response.
                     return self._payload
 
             class FakeSession:
+                # Record upload chunks and answer the Drive API requests needed by the resumable-
+                # upload test.
                 def __init__(self):
+                    # Initialize the list used to check which bytes the client sent.
                     self.upload_chunks = []
 
                 def post(self, url, **kwargs):
+                    # Simulate OAuth token refresh and return a fake access token.
                     return Response(200, {"access_token": "test-token", "expires_in": 3600})
 
                 def request(self, method, url, **kwargs):
+                    # Simulate Drive search, upload-session creation, chunk transfer, and final
+                    # metadata verification.
                     if method == "GET" and url == f"{API_ROOT}/files":
                         return Response(200, {"files": []})
                     if method == "POST" and url == f"{UPLOAD_ROOT}/files":
@@ -125,6 +148,7 @@ class DriveUploadTests(unittest.TestCase):
             self.assertEqual(saved_urls, ["https://upload.example/session/1", None])
 
     def test_offline_upload_stays_queued_and_keeps_the_local_file(self):
+        # Confirm a network failure leaves the file on disk and records the upload as retryable.
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             photos_root = root / "photos"
@@ -151,7 +175,9 @@ class DriveUploadTests(unittest.TestCase):
             )
 
             class OfflineDrive:
+                # Simulate a Drive client that cannot reach the network.
                 def upload_file(self, *args, **kwargs):
+                    # Raise a temporary Drive error to exercise the retry path.
                     raise DriveApiError("network unavailable", 503)
 
             sync_manifest(transaction.manifest_path, OfflineDrive())
@@ -161,6 +187,8 @@ class DriveUploadTests(unittest.TestCase):
             self.assertTrue(photo.is_file())
 
     def test_local_manifest_writes_preserve_background_upload_progress(self):
+        # Check that saving a new photo does not erase a verified upload record written by the
+        # background worker.
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             store = TransactionStore(root / "photos", root / "data" / "booth_state.json", "PB001")
@@ -214,7 +242,11 @@ class DriveUploadTests(unittest.TestCase):
 
 
 class DriveSyncTests(unittest.TestCase):
+    # Test that the synchronization worker uploads each pending file once and records successful
+    # verification.
     def test_completed_transaction_upload_records_each_verified_drive_file(self):
+        # Verify raw photos and the final composition are uploaded, checked, and not uploaded again on
+        # a second sync pass.
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             photos_root = root / "photos"
@@ -249,10 +281,15 @@ class DriveSyncTests(unittest.TestCase):
             store.complete_transaction(transaction)
 
             class FakeDrive:
+                # Return deterministic upload results while recording every relative path sent to the
+                # fake backend.
                 def __init__(self):
+                    # Initialize the list of relative upload paths observed by the fake backend.
                     self.paths = []
 
                 def upload_file(self, folder_id, transaction_id, relative_path, local_path, **kwargs):
+                    # Simulate a verified upload and the resumable-session callbacks expected by the
+                    # sync worker.
                     self.paths.append(relative_path)
                     if kwargs.get("on_session_url"):
                         kwargs["on_session_url"]("https://upload.example/session")

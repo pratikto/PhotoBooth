@@ -1,3 +1,6 @@
+# PhotoBooth source file
+# Persistent local cache for pre-created Drive transaction folders and their offline assignment states.
+
 """Persistent local ledger for pre-created Google Drive transaction folders."""
 
 from __future__ import annotations
@@ -16,6 +19,8 @@ from photobooth.drive_storage import DriveApiError, GoogleDriveClient, RemoteDri
 
 @dataclass
 class DriveSlot:
+    # Represent one Drive folder slot together with its cached URL, final transaction ID, local
+    # staging path, and synchronization state.
     folder_id: str
     folder_url: str
     slot_key: str
@@ -28,6 +33,8 @@ class DriveSlot:
     issue: str | None = None
 
     def to_manifest(self) -> dict[str, Any]:
+        # Return the slot details that a transaction manifest needs, without serializing internal
+        # error text or other pool-only state.
         return {
             "folder_id": self.folder_id,
             "folder_url": self.folder_url,
@@ -51,6 +58,8 @@ class DriveSlotPool:
         booth_id: str,
         target_ready: int = 25,
     ) -> None:
+        # Initialize the thread-safe local cache for Drive slots and load any saved state for this
+        # booth from disk.
         self.photos_root = Path(photos_root)
         self.state_path = Path(state_path)
         self.booth_id = booth_id
@@ -62,16 +71,20 @@ class DriveSlotPool:
 
     @property
     def ready_count(self) -> int:
+        # Count verified slots that can be claimed for a new transaction. The lock keeps the count
+        # consistent with background synchronization.
         with self._lock:
             return sum(slot.status == "READY" for slot in self._slots)
 
     @property
     def assigned_count(self) -> int:
+        # Count slots already reserved by local transactions, including transactions still syncing.
         with self._lock:
             return sum(slot.status == "ASSIGNED" for slot in self._slots)
 
     def refresh(self, client: GoogleDriveClient) -> None:
         """Reconcile cached slots with Drive and top the ready pool back up."""
+        # Fetch remote state before locking, then merge it with locally assigned work.
         remote_slots = client.ensure_folder_pool(self.booth_id, self.target_ready)
         remote_by_id = {slot.folder_id: slot for slot in remote_slots}
         with self._lock:
@@ -152,6 +165,8 @@ class DriveSlotPool:
             self._save()
 
     def has_ready_slot(self) -> bool:
+        # Return whether at least one verified folder is available, which is the storage gate for
+        # starting a new Drive-backed session.
         return self.ready_count > 0
 
     def claim(self) -> DriveSlot:
@@ -173,10 +188,12 @@ class DriveSlotPool:
             try:
                 if not source.is_dir() or any(source.iterdir()):
                     raise OSError("The local staging folder is missing or not empty.")
+                # Save CLAIMING before the local move so a restart can recover this boundary.
                 slot.status = "CLAIMING"
                 slot.claim_pending = True
                 slot.rename_pending = False
                 self._save()
+                # This moves only the local staging path; the remote Drive folder already has its final name.
                 os.replace(source, target)
                 slot.staging_path = str(target)
                 slot.status = "ASSIGNED"
@@ -190,11 +207,14 @@ class DriveSlotPool:
                 raise DriveApiError(f"Could not prepare the local transaction folder: {error}") from error
 
     def recover_incomplete_claims(self) -> None:
+        # Recover a slot interrupted during the local folder move, usually because the application
+        # stopped between saving its claim and finishing the move.
         with self._lock:
             recovered = False
             for slot in self._slots:
                 if slot.status != "CLAIMING" or not slot.transaction_id:
                     continue
+                # After a restart, the local folder may still be at the staging path or already moved.
                 source = Path(slot.staging_path)
                 target = self.photos_root / slot.transaction_id
                 try:
@@ -216,6 +236,8 @@ class DriveSlotPool:
                 self._save()
 
     def pending_assignments(self) -> list[DriveSlot]:
+        # Return copies of claimed slots whose assignment still needs to be acknowledged by the remote
+        # Drive service.
         with self._lock:
             return [
                 DriveSlot(**asdict(slot))
@@ -224,6 +246,8 @@ class DriveSlotPool:
             ]
 
     def mark_assigned(self, folder_id: str) -> None:
+        # Clear the pending flag after the remote service confirms that the slot belongs to this
+        # transaction.
         with self._lock:
             slot = self._get(folder_id)
             slot.claim_pending = False
@@ -231,11 +255,15 @@ class DriveSlotPool:
             self._save()
 
     def record_refresh_error(self, error: Exception) -> None:
+        # Keep the latest refresh error visible while preserving cached slots for offline
+        # transactions.
         with self._lock:
             self.last_error = str(error)
             self._save()
 
     def _get(self, folder_id: str) -> DriveSlot:
+        # Find a cached slot by its Drive folder ID or raise an error when the cache has no matching
+        # entry.
         for slot in self._slots:
             if slot.folder_id == folder_id:
                 return slot
@@ -243,6 +271,8 @@ class DriveSlotPool:
 
     @staticmethod
     def _from_remote(remote: RemoteDriveSlot, staging_path: str) -> DriveSlot:
+        # Convert the Drive API's slot record into the local representation and attach its local
+        # staging-folder path.
         return DriveSlot(
             folder_id=remote.folder_id,
             folder_url=remote.folder_url,
@@ -255,6 +285,8 @@ class DriveSlotPool:
         )
 
     def _load(self) -> None:
+        # Restore the slot cache from JSON and reject data belonging to a different booth ID, so
+        # booths cannot mix transaction folders.
         if not self.state_path.exists():
             return
         try:
@@ -268,6 +300,8 @@ class DriveSlotPool:
             self._slots = []
 
     def _save(self) -> None:
+        # Write the full pool state atomically: a temporary file is flushed first, then replaces the
+        # old cache to reduce corruption risk.
         self.state_path.parent.mkdir(parents=True, exist_ok=True)
         payload = {
             "schema_version": 1,

@@ -1,3 +1,6 @@
+# PhotoBooth source file
+# QR image generation helper used to open the transaction folder from a phone.
+
 # qrcode creates a QR code from text or a link.
 import qrcode
 
@@ -6,6 +9,8 @@ from PIL import Image
 
 
 def create_qr_image(content: str) -> Image.Image:
+    # Generate a QR image for a folder URL or other text so customers can open the digital result
+    # destination on their phones.
     """
     Create a black-and-white QR code image from text or a URL.
 

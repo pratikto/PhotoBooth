@@ -1,3 +1,6 @@
+# PhotoBooth source file
+# Small domain models and rules for ordered sessions and per-session retakes.
+
 """Small, testable models for order sessions and customer retakes."""
 
 from dataclasses import dataclass, field
@@ -32,14 +35,20 @@ class PhotoSession:
 
     @property
     def ready_for_review(self) -> bool:
+        # Return true only after three initial photos exist, which is the minimum required to enter
+        # review.
         return len(self.initial_photo_paths) == 3
 
     @property
     def retake_used(self) -> bool:
+        # Return whether this session already has a replacement photo, which enforces its one-retake
+        # quota.
         return self.retake_path is not None
 
     @property
     def can_retake(self) -> bool:
+        # Combine the review-ready, selected-photo, and unused-quota rules into the single retake
+        # eligibility check used by the UI and controller.
         return (
             self.ready_for_review
             and self.selected_index is not None
@@ -48,6 +57,7 @@ class PhotoSession:
 
     @property
     def raw_photo_paths(self) -> list[Path]:
+        # Return every original and replacement capture for the audit trail and upload queue.
         paths = list(self.initial_photo_paths)
         if self.retake_path is not None:
             paths.append(self.retake_path)
@@ -55,17 +65,23 @@ class PhotoSession:
 
     @property
     def final_photo_paths(self) -> list[Path]:
+        # Return the three photos that should appear in the final strip, replacing the selected
+        # position when a retake exists.
         photos = list(self.initial_photo_paths)
         if self.retake_path is not None and self.retake_target_index is not None:
             photos[self.retake_target_index] = self.retake_path
         return photos
 
     def add_initial_photo(self, path: Path) -> None:
+        # Append one initial capture and reject a fourth initial photo so each session always starts
+        # with exactly three.
         if len(self.initial_photo_paths) >= 3:
             raise ValueError("This session already has three initial photos.")
         self.initial_photo_paths.append(Path(path))
 
     def select_photo(self, index: int) -> None:
+        # Store the chosen index after validating that all initial captures exist and the index is
+        # within the three-photo range.
         if not self.ready_for_review:
             raise ValueError("Capture all three photos before selecting one.")
         if index < 0 or index >= 3:
@@ -73,6 +89,8 @@ class PhotoSession:
         self.selected_index = index
 
     def apply_retake(self, path: Path) -> None:
+        # Attach the retake to the selected position and reject attempts without a selection or after
+        # the quota is used.
         if self.selected_index is None:
             raise ValueError("Select one photo before using the retake.")
         if self.retake_used:

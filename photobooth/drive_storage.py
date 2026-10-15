@@ -1,3 +1,6 @@
+# PhotoBooth source file
+# Direct Google Drive and Apps Script Web App clients, including folder validation, upload, and retry support.
+
 """Google Drive API client for folder pools and resumable photo uploads.
 
 The booth authenticates with a refresh token supplied through environment
@@ -32,6 +35,8 @@ class DriveApiError(RuntimeError):
     """A Drive operation failed, with retryability for the local upload queue."""
 
     def __init__(self, message: str, status_code: int | None = None) -> None:
+        # Store a readable Drive error and its HTTP status. The status is used to distinguish
+        # temporary failures from errors that need staff attention.
         super().__init__(message)
         self.status_code = status_code
         self.transient = status_code in {408, 429} or (
@@ -41,6 +46,8 @@ class DriveApiError(RuntimeError):
 
 @dataclass(frozen=True)
 class RemoteDriveSlot:
+    # Describe a folder slot as returned by the remote Drive backend, before it is merged into the
+    # local pool cache.
     folder_id: str
     folder_url: str
     slot_key: str
@@ -63,6 +70,8 @@ class GoogleDriveClient:
         *,
         session: requests.Session | None = None,
     ) -> None:
+        # Keep the OAuth credentials, parent-folder ID, and HTTP session used for direct Google Drive
+        # API calls.
         self.parent_folder_id = parent_folder_id.strip()
         self.client_id = client_id.strip()
         self.client_secret = client_secret.strip()
@@ -87,6 +96,8 @@ class GoogleDriveClient:
         return cls(*values)
 
     def _get_access_token(self, force_refresh: bool = False) -> str:
+        # Refresh and cache the short-lived Google access token using the saved refresh token,
+        # refreshing again when forced or expired.
         if (
             not force_refresh
             and self._access_token
@@ -136,6 +147,8 @@ class GoogleDriveClient:
         data: bytes | None = None,
         timeout: tuple[int, int] = (10, 60),
     ) -> requests.Response:
+        # Send an authenticated Drive API request and convert HTTP or network failures into
+        # DriveApiError so the sync worker can retry when appropriate.
         for attempt in range(2):
             request_headers = dict(headers or {})
             request_headers["Authorization"] = f"Bearer {self._get_access_token(force_refresh=attempt == 1)}"
@@ -161,6 +174,8 @@ class GoogleDriveClient:
 
     @staticmethod
     def _error_message(response: requests.Response) -> str:
+        # Extract Google's human-readable error text from a response, falling back to the raw body
+        # when it is not JSON.
         try:
             data = response.json()
             error_body = data.get("error") if isinstance(data, dict) else None
@@ -173,6 +188,8 @@ class GoogleDriveClient:
         return str(reason or f"Google Drive returned HTTP {response.status_code}.")
 
     def _list_files(self, query: str, fields: str) -> list[dict[str, Any]]:
+        # Read matching Drive files and follow pagination tokens until the full result set has been
+        # collected.
         files: list[dict[str, Any]] = []
         page_token: str | None = None
         while True:
@@ -193,6 +210,8 @@ class GoogleDriveClient:
                 return files
 
     def _folder_link(self, folder: dict[str, Any]) -> str:
+        # Use Drive's browser link when available, otherwise construct the standard folder URL from
+        # its ID.
         url = folder.get("webViewLink")
         if not isinstance(url, str) or not url.strip():
             url = f"https://drive.google.com/drive/folders/{folder['id']}"
@@ -203,6 +222,8 @@ class GoogleDriveClient:
         return url
 
     def _permission_ready(self, folder_id: str) -> bool:
+        # Verify that a folder has an anyone-with-the-link viewer permission before treating it as a
+        # usable QR destination.
         response = self._request(
             "GET",
             f"{API_ROOT}/files/{folder_id}/permissions",
@@ -232,6 +253,8 @@ class GoogleDriveClient:
         )
 
     def _folder_is_empty(self, folder_id: str) -> bool:
+        # Check that a candidate slot has no child files or folders, because a ready slot must not
+        # contain another transaction's data.
         children = self._list_files(
             f"'{folder_id}' in parents and trashed = false",
             "id",
@@ -239,6 +262,8 @@ class GoogleDriveClient:
         return not children
 
     def _validate_slot(self, folder: dict[str, Any]) -> tuple[bool, str | None, str]:
+        # Verify the folder type, link permission, and emptiness. The Drive search that called this
+        # method already limits candidates to the configured parent folder.
         folder_id = str(folder.get("id", ""))
         if not folder_id or folder.get("mimeType") != FOLDER_MIME_TYPE:
             return False, "Drive slot is not a folder.", ""
@@ -273,6 +298,7 @@ class GoogleDriveClient:
         folders = self._list_files(query, fields)
         slots: dict[str, RemoteDriveSlot] = {}
         ready_count = 0
+        # Continue after the largest ID already present so names are incrementing and never reused.
         next_sequence = 1
         for folder in folders:
             props = folder.get("appProperties", {})
@@ -318,6 +344,7 @@ class GoogleDriveClient:
             transaction_id = f"{booth_id}_{next_sequence:08d}"
             next_sequence += 1
             slot_key = transaction_id
+            # Store the final ID as Drive metadata at creation time; there is no rename step later.
             metadata = {
                 "name": transaction_id,
                 "mimeType": FOLDER_MIME_TYPE,
@@ -364,6 +391,8 @@ class GoogleDriveClient:
     ) -> None:
         # Kept as a compatibility shim for existing callers. Folder slots are
         # created with their final transaction IDs, so assignment never renames.
+        # Keep compatibility with older callers while delegating to assignment; transaction folder
+        # names are final when created and are never renamed.
         self.assign_slot(folder_id, transaction_id, booth_id, slot_key)
 
     def assign_slot(
@@ -373,6 +402,8 @@ class GoogleDriveClient:
         booth_id: str,
         slot_key: str,
     ) -> None:
+        # Mark a pre-created slot as assigned to the transaction using Drive metadata; the visible
+        # folder name stays unchanged.
         self._request(
             "PATCH",
             f"{API_ROOT}/files/{folder_id}",
@@ -390,6 +421,8 @@ class GoogleDriveClient:
 
     @staticmethod
     def _quote_query(value: str) -> str:
+        # Escape characters that have special meaning in Drive's query language before inserting a
+        # value into a search expression.
         return value.replace("\\", "\\\\").replace("'", "\\'")
 
     def _find_existing_upload(
@@ -397,6 +430,8 @@ class GoogleDriveClient:
         folder_id: str,
         relative_path: str,
     ) -> dict[str, Any] | None:
+        # Look up a file by transaction-relative path metadata so a retry can verify or resume the
+        # existing file instead of creating a duplicate.
         escaped_path = self._quote_query(relative_path)
         query = (
             f"'{folder_id}' in parents and trashed = false and appProperties has "
@@ -420,6 +455,7 @@ class GoogleDriveClient:
         if not local_path.is_file():
             raise DriveApiError(f"Upload file is missing: {local_path}")
         file_size = local_path.stat().st_size
+        # The path and checksum make retries safe: the server can recognize the exact same file.
         checksum = hashlib.md5(local_path.read_bytes()).hexdigest()
         existing = self._find_existing_upload(folder_id, relative_path)
         if existing and existing.get("md5Checksum") == checksum and int(existing.get("size", -1)) == file_size:
@@ -439,6 +475,7 @@ class GoogleDriveClient:
 
         if resume_url is not None:
             try:
+                # Check which bytes Drive already received before sending the next chunk.
                 offset, finished = self._query_upload_status(resume_url, file_size)
                 if finished is not None:
                     if on_session_url:
@@ -447,11 +484,13 @@ class GoogleDriveClient:
             except DriveApiError as error:
                 if error.status_code != 410:
                     raise
+                # HTTP 410 means Drive expired the old upload session; create a fresh one below.
                 resume_url = None
                 if on_session_url:
                     on_session_url(None)
 
         if resume_url is None:
+            # Start a resumable session before transferring binary data in chunks.
             method = "PATCH" if file_id else "POST"
             endpoint = f"{UPLOAD_ROOT}/files/{file_id}" if file_id else f"{UPLOAD_ROOT}/files"
             params = {
@@ -476,6 +515,7 @@ class GoogleDriveClient:
             with local_path.open("rb") as stream:
                 stream.seek(offset)
                 while offset < file_size:
+                    # Drive returns 308 while more bytes are needed, including the accepted range.
                     chunk = stream.read(min(CHUNK_SIZE, file_size - offset))
                     if not chunk:
                         break
@@ -515,6 +555,8 @@ class GoogleDriveClient:
         headers: dict[str, str],
         data: bytes,
     ) -> requests.Response:
+        # Send one chunk of a resumable upload and return Google's response for the upload-state
+        # machine to interpret.
         for attempt in range(2):
             request_headers = dict(headers)
             request_headers["Authorization"] = f"Bearer {self._get_access_token(force_refresh=attempt == 1)}"
@@ -541,6 +583,8 @@ class GoogleDriveClient:
         resume_url: str,
         file_size: int,
     ) -> tuple[int, dict[str, Any] | None]:
+        # Ask the resumable-upload session how many bytes it has accepted, allowing a retry to
+        # continue at the correct offset.
         try:
             response = self._upload_request(
                 "PUT",
@@ -565,6 +609,8 @@ class GoogleDriveClient:
 
     @staticmethod
     def _next_offset(range_header: str | None) -> int:
+        # Convert Google's Range header into the index of the next byte to send; an empty or missing
+        # range means start at byte zero.
         if not range_header:
             return 0
         try:
@@ -578,6 +624,8 @@ class GoogleDriveClient:
         expected_size: int,
         expected_checksum: str,
     ) -> dict[str, Any]:
+        # Fetch the completed Drive file metadata and compare its size and MD5 checksum with the local
+        # source before marking it verified.
         file_id = response_file.get("id")
         if not file_id:
             raise DriveApiError("Drive did not return an uploaded file ID.")
@@ -606,6 +654,8 @@ class AppsScriptDriveClient:
         *,
         session: requests.Session | None = None,
     ) -> None:
+        # Store the existing Web App URL and upload token, plus an injectable HTTP session for
+        # production calls or isolated tests.
         self.web_app_url = web_app_url.strip()
         self.upload_token = upload_token.strip()
         if not self.web_app_url.startswith("https://") or not self.web_app_url.endswith("/exec"):
@@ -632,6 +682,8 @@ class AppsScriptDriveClient:
         return cls(web_app_url, upload_token)
 
     def _post(self, payload: dict[str, Any]) -> dict[str, Any]:
+        # Send one JSON action to the Apps Script /exec endpoint, validate its JSON response, and
+        # classify errors for safe retries.
         request_body = {"token": self.upload_token, **payload}
         try:
             response = self.session.post(
@@ -666,6 +718,8 @@ class AppsScriptDriveClient:
         booth_id: str,
         target_ready: int = 25,
     ) -> list[RemoteDriveSlot]:
+        # Ask the Apps Script backend to verify or create the target number of ready folders and
+        # convert its response into remote slot records.
         result = self._post(
             {
                 "action": "ensure_folder_pool",
@@ -698,6 +752,8 @@ class AppsScriptDriveClient:
         booth_id: str,
         slot_key: str,
     ) -> None:
+        # Tell Apps Script that a preassigned folder is being used by this transaction; no Drive
+        # folder rename is requested.
         self._post(
             {
                 "action": "assign_slot",
@@ -728,6 +784,8 @@ class AppsScriptDriveClient:
         resume_url: str | None = None,
         on_session_url: Callable[[str | None], None] | None = None,
     ) -> dict[str, Any]:
+        # Send a transaction-relative file to Apps Script as Base64, then verify the returned size and
+        # checksum against the local file.
         del resume_url
         local_path = Path(local_path)
         if not local_path.is_file():

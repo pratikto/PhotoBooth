@@ -1,3 +1,6 @@
+# PhotoBooth source file
+# Unit tests for session planning, retake limits, transaction manifests, and photo composition.
+
 import json
 from pathlib import Path
 import tempfile
@@ -11,7 +14,9 @@ from photobooth.workflow import PhotoSession, build_session_plans
 
 
 class WorkflowTests(unittest.TestCase):
+    # Test session planning and the one-retake-per-session business rule.
     def test_quantities_create_independent_ordered_sessions(self):
+        # Verify template quantities expand into separate sessions in the same order as the picker.
         templates = get_templates()
         plans = build_session_plans(
             templates,
@@ -34,6 +39,8 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(plans[2].template_session_count, 1)
 
     def test_retake_quota_is_one_per_session_and_replaces_selected_photo(self):
+        # Verify each template session has its own retake quota and a retake replaces only the
+        # selected output photo.
         plans = build_session_plans(get_templates(), {"template_a": 2})
         first = PhotoSession(plans[0])
         second = PhotoSession(plans[1])
@@ -67,7 +74,10 @@ class WorkflowTests(unittest.TestCase):
 
 
 class TransactionStoreTests(unittest.TestCase):
+    # Test durable transaction IDs, manifest records, and digital-photo composition using temporary
+    # directories.
     def setUp(self):
+        # Create an isolated temporary photo root and a transaction store for each test.
         self.temp_dir = tempfile.TemporaryDirectory()
         root = Path(self.temp_dir.name)
         self.photos_root = root / "photos"
@@ -76,13 +86,17 @@ class TransactionStoreTests(unittest.TestCase):
         self.plans = build_session_plans(get_templates(), {"template_a": 1})
 
     def tearDown(self):
+        # Remove the temporary files created by this test case.
         self.temp_dir.cleanup()
 
     def test_booth_id_rejects_path_separators(self):
+        # Ensure booth IDs cannot inject path separators into local transaction folder names.
         with self.assertRaises(ValueError):
             TransactionStore(self.photos_root, self.state_path, "../PB001")
 
     def test_transaction_counter_persists_and_does_not_reuse_ids(self):
+        # Verify the transaction sequence persists across store instances and never returns an ID
+        # twice.
         first = self.store.start_transaction(self.plans)
         restarted_store = TransactionStore(
             self.photos_root,
@@ -97,10 +111,13 @@ class TransactionStoreTests(unittest.TestCase):
         self.assertEqual(state["next_sequence"], 3)
 
     def test_preallocated_drive_ids_advance_the_local_counter(self):
+        # Ensure a Drive-preallocated transaction ID advances the local counter beyond that number.
         self.store.advance_counter_past("PB001_00000025")
         self.assertEqual(self.store.reserve_transaction_id(), "PB001_00000026")
 
     def test_manifest_tracks_raw_retake_and_composed_output(self):
+        # Check the manifest preserves original captures, the selected retake, and the final photo
+        # output separately.
         transaction = self.store.start_transaction(self.plans)
         plan = self.plans[0]
         session_folder = transaction.folder_path / "raw" / plan.session_id
@@ -147,6 +164,7 @@ class TransactionStoreTests(unittest.TestCase):
         self.assertEqual(record["output_path"], "output/session_001/result.png")
 
     def test_composition_writes_a_three_photo_digital_strip(self):
+        # Build a sample result image and verify its output file and dimensions are saved.
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             photo_paths = []
@@ -168,6 +186,7 @@ class TransactionStoreTests(unittest.TestCase):
                 self.assertEqual(output.size, (1800, 1000))
 
     def test_composition_rejects_an_incomplete_session(self):
+        # Ensure the image composer refuses to produce a result until all three photos are available.
         with tempfile.TemporaryDirectory() as directory:
             with self.assertRaises(ValueError):
                 compose_result(

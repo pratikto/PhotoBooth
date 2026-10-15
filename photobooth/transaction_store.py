@@ -1,3 +1,6 @@
+# PhotoBooth source file
+# Local transaction counter, photo directory structure, and durable manifest records.
+
 """Local transaction folders, persistent IDs, and manifests for the MVP."""
 
 from dataclasses import dataclass
@@ -17,6 +20,8 @@ from photobooth.workflow import SessionPlan
 
 @dataclass
 class LocalTransaction:
+    # Hold the paths and mutable manifest for one transaction while its sessions are being captured
+    # and uploaded.
     transaction_id: str
     folder_path: Path
     manifest_path: Path
@@ -36,6 +41,8 @@ class TransactionStore:
         state_path: Path,
         booth_id: str = "PB001",
     ) -> None:
+        # Keep storage paths and the booth prefix together, and reject unsafe IDs before they are
+        # used to build transaction folder names. The counter is read when an ID is reserved.
         self.photos_root = Path(photos_root)
         self.state_path = Path(state_path)
         self.booth_id = booth_id
@@ -85,6 +92,8 @@ class TransactionStore:
         folder_path: Path | None = None,
         drive_slot: dict[str, Any] | None = None,
     ) -> LocalTransaction:
+        # Create the transaction folder and initial manifest before capture begins; a supplied Drive
+        # slot makes the local folder match its preassigned final ID.
         if not plans:
             raise ValueError("Select at least one template session first.")
 
@@ -231,6 +240,8 @@ class TransactionStore:
         self._write_manifest(transaction)
 
     def complete_transaction(self, transaction: LocalTransaction) -> None:
+        # Mark the transaction complete and persist its final manifest state without deleting source
+        # photos or generated output.
         transaction.manifest["status"] = "COMPLETED"
         transaction.manifest["completed_at"] = datetime.now(timezone.utc).isoformat()
         if transaction.manifest.get("drive_folder_id") and transaction.manifest.get("upload_status") not in {
@@ -241,6 +252,8 @@ class TransactionStore:
         self._write_manifest(transaction)
 
     def _reserve_transaction_id(self) -> str:
+        # Increment the booth counter and save it before returning, so a crash cannot cause an ID
+        # to be reused.
         self.state_path.parent.mkdir(parents=True, exist_ok=True)
         if self.state_path.exists():
             try:
@@ -271,12 +284,16 @@ class TransactionStore:
         transaction: LocalTransaction,
         session_id: str,
     ) -> dict[str, Any]:
+        # Find the existing manifest entry for this session so capture, retake, and output updates
+        # all modify the same record.
         for record in transaction.manifest["sessions"]:
             if record["session_id"] == session_id:
                 return record
         raise KeyError(f"Session not found in transaction: {session_id}")
 
     def _relative_path(self, transaction: LocalTransaction, path: Path) -> str:
+        # Convert a local file path into a stable path relative to the transaction folder, which is
+        # also the upload idempotency key.
         try:
             return Path(path).resolve().relative_to(
                 transaction.folder_path.resolve()
@@ -285,6 +302,8 @@ class TransactionStore:
             raise ValueError("Transaction files must remain inside their transaction folder.") from error
 
     def _write_manifest(self, transaction: LocalTransaction) -> None:
+        # Persist the transaction manifest using the shared atomic JSON writer and keep the in-memory
+        # transaction object in sync.
         with manifest_lock(transaction.manifest_path):
             if transaction.manifest_path.exists():
                 try:
@@ -323,6 +342,8 @@ class TransactionStore:
 
     @staticmethod
     def _atomic_write_json(path: Path, data: dict[str, Any]) -> None:
+        # Retain the older class-level JSON-writing entry point for callers while using the same safe
+        # temporary-file replacement pattern.
         path.parent.mkdir(parents=True, exist_ok=True)
         descriptor, temporary_name = tempfile.mkstemp(
             prefix=f".{path.name}.",

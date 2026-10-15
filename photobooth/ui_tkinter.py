@@ -1,3 +1,6 @@
+# PhotoBooth source file
+# Tkinter widgets and screen layouts for the customer-facing PhotoBooth flow.
+
 """Tkinter interface styled after the procedure document's GUI mockups.
 
 The UI owns widgets and visual state. Camera, session, and file operations are
@@ -48,6 +51,8 @@ class PhotoBoothUI:
         on_finish: Callable[[], None],
         on_close: Callable[[], None],
     ) -> None:
+        # Store the Tk root, templates, and controller callbacks, initialize shared screen state, and
+        # build the fixed application shell.
         self.root = root
         self.templates = tuple(templates)
         self._on_home_start = on_home_start
@@ -74,6 +79,8 @@ class PhotoBoothUI:
         self.root.protocol("WM_DELETE_WINDOW", self._on_close)
 
     def _configure_window(self) -> None:
+        # Set the kiosk window size, title, background, and resize behavior so the interface has a
+        # predictable layout.
         self.root.title("Meongs Photobooth")
         self.root.geometry("1280x800")
         self.root.minsize(1024, 680)
@@ -81,6 +88,7 @@ class PhotoBoothUI:
 
     def _build_shell(self) -> None:
         """Keep the navigation bar fixed while screens change below it."""
+        # The header and content container are created once; screen methods replace only content.
         self.header = tk.Frame(self.root, bg=WHITE, height=82)
         self.header.pack(fill=tk.X)
         self.header.pack_propagate(False)
@@ -139,6 +147,7 @@ class PhotoBoothUI:
         self.content.pack(fill=tk.BOTH, expand=True)
 
     def _set_active_nav(self, screen_name: str) -> None:
+        # Highlight the navigation item that corresponds to the current screen.
         active = {
             "welcome": "templates",
             "templates": "templates",
@@ -155,6 +164,8 @@ class PhotoBoothUI:
             )
 
     def set_camera_status(self, ready: bool) -> None:
+        # Remember whether the camera is ready so the template start button can be enabled only when
+        # required equipment is available.
         self._camera_ready = ready
         self.camera_badge.config(
             text="KAMERA SIAP" if ready else "KAMERA BELUM SIAP",
@@ -168,6 +179,8 @@ class PhotoBoothUI:
         title: str,
         subtitle: str = "",
     ) -> tk.Frame:
+        # Clear only the changing content area, create the next screen frame, and reset screen-
+        # specific image references and widget handles.
         self.current_screen = screen_name
         self._image_refs = []
         self.result_status_label = None
@@ -207,10 +220,13 @@ class PhotoBoothUI:
         return page
 
     def set_status(self, message: str) -> None:
+        # Update the persistent status line without rebuilding the current screen.
         if hasattr(self, "status_label") and self.status_label.winfo_exists():
             self.status_label.config(text=message)
 
     def show_welcome(self, camera_ready: bool, status_message: str) -> None:
+        # Build the welcome screen and connect its start button to the controller's template-selection
+        # callback.
         self.set_camera_status(camera_ready)
         page = self._reset("welcome", "")
         columns = tk.Frame(page, bg=APP_BG)
@@ -305,12 +321,15 @@ class PhotoBoothUI:
         status_message: str,
         storage_ready: bool = True,
     ) -> None:
+        # Build the template cards, quantity controls, order summary, and start button; the button
+        # also depends on storage readiness.
         self.set_camera_status(camera_ready)
         page = self._reset(
             "templates",
             "Pilih template foto kamu",
             "Qty menentukan jumlah sesi foto untuk template ini.",
         )
+        # A weighted grid gives the template gallery more space than the order summary panel.
         layout = tk.Frame(page, bg=APP_BG)
         layout.pack(fill=tk.BOTH, expand=True)
         layout.grid_columnconfigure(0, weight=3)
@@ -328,6 +347,7 @@ class PhotoBoothUI:
         self._card_frames: dict[str, tk.Frame] = {}
         self._summary_items: dict[str, tk.Label] = {}
 
+        # Each card keeps its quantity in a Tk variable so its displayed number updates in place.
         for index, template in enumerate(self.templates):
             row, column = divmod(index, 2)
             card = tk.Frame(
@@ -402,6 +422,7 @@ class PhotoBoothUI:
                 cursor="hand2",
             ).pack(side=tk.LEFT)
 
+        # The cart mirrors the selection and explains that each quantity represents a new session.
         cart = tk.Frame(
             layout,
             bg=WHITE,
@@ -484,18 +505,23 @@ class PhotoBoothUI:
             state=tk.DISABLED,
         )
         self.start_button.pack(fill=tk.X, padx=24, pady=(0, 22))
+        # Readiness is separate from the selected quantity; _on_order_change combines all three gates.
         self._camera_ready = camera_ready
         self._storage_ready = storage_ready
         self._on_order_change()
         self.status_label.config(text=status_message)
 
     def set_storage_status(self, ready: bool, message: str) -> None:
+        # Update the Drive readiness flag and message, then recalculate whether the start button
+        # should be enabled.
         self._storage_ready = ready
         if self.current_screen == "templates" and hasattr(self, "start_button"):
             self._on_order_change()
         self.set_status(message)
 
     def _change_quantity(self, template_id: str, delta: int) -> None:
+        # Adjust one template quantity without allowing negative values, then refresh the order
+        # summary.
         if template_id not in getattr(self, "_quantity_vars", {}):
             return
         var = self._quantity_vars[template_id]
@@ -503,6 +529,8 @@ class PhotoBoothUI:
         self._on_order_change()
 
     def _on_order_change(self) -> None:
+        # Recalculate the session count and enable the start button only when the camera, storage, and
+        # a non-empty selection are all ready.
         if not hasattr(self, "_quantity_vars"):
             return
         quantities = {
@@ -532,6 +560,8 @@ class PhotoBoothUI:
         self.start_button.config(state=tk.NORMAL if enabled else tk.DISABLED)
 
     def _start_selected(self) -> None:
+        # Read the quantity controls into a template-ID mapping and pass the selected order to the
+        # application controller.
         quantities = {
             template_id: var.get()
             for template_id, var in self._quantity_vars.items()
@@ -549,11 +579,14 @@ class PhotoBoothUI:
         can_capture: bool = True,
         is_retake: bool = False,
     ) -> None:
+        # Build the live camera screen for one session, including its preview, capture action, and
+        # session progress.
         page = self._reset(
             "capture",
             session_label,
             "Ambil satu foto pengganti untuk sesi ini." if is_retake else "Ambil tiga foto baru untuk sesi ini.",
         )
+        # The camera preview and progress/actions use separate columns so the preview stays large.
         layout = tk.Frame(page, bg=APP_BG)
         layout.pack(fill=tk.BOTH, expand=True)
         layout.grid_columnconfigure(0, weight=3)
@@ -578,6 +611,7 @@ class PhotoBoothUI:
         if preview_image is not None:
             self.update_live_preview(preview_image)
 
+        # The side panel shows the current capture number, countdown, saved-photo progress, and action.
         progress = tk.Frame(
             layout,
             bg=WHITE,
@@ -639,6 +673,8 @@ class PhotoBoothUI:
         self.capture_button.pack(fill=tk.X, padx=24, pady=(18, 18))
 
     def update_live_preview(self, image: Image.Image) -> None:
+        # Replace the displayed camera image while retaining a Tk image reference so Python's garbage
+        # collector does not clear it.
         if self.current_screen != "capture":
             return
         if not hasattr(self, "preview_label") or not self.preview_label.winfo_exists():
@@ -656,6 +692,7 @@ class PhotoBoothUI:
             self._image_refs = self._image_refs[-3:]
 
     def set_countdown(self, seconds: int, is_retake: bool = False) -> None:
+        # Show the seconds remaining and distinguish an initial photo capture from a retake.
         if hasattr(self, "countdown_label") and self.countdown_label.winfo_exists():
             self.countdown_label.config(text=str(seconds))
         if hasattr(self, "capture_hint") and self.capture_hint.winfo_exists():
@@ -665,6 +702,7 @@ class PhotoBoothUI:
         self.set_capture_enabled(False)
 
     def set_capture_enabled(self, enabled: bool) -> None:
+        # Enable or disable the capture button when the camera frame or countdown state changes.
         if hasattr(self, "capture_button") and self.capture_button.winfo_exists():
             self.capture_button.config(state=tk.NORMAL if enabled else tk.DISABLED)
 
@@ -676,11 +714,14 @@ class PhotoBoothUI:
         retake_available: bool,
         status_message: str = "",
     ) -> None:
+        # Build the photo-selection screen, highlight the chosen image, and show whether this
+        # session's single retake remains available.
         page = self._reset(
             "review",
             "Pilih foto yang ingin diganti",
             f"{session_label}  ·  Retake tersedia 1 kali",
         )
+        # The three cards map directly to the three initial captures; clicking one selects its index.
         photo_row = tk.Frame(page, bg=APP_BG)
         photo_row.pack(fill=tk.BOTH, expand=True)
         for column in (0, 1, 2):
@@ -720,6 +761,7 @@ class PhotoBoothUI:
             )
             button.pack(fill=tk.BOTH, expand=True, padx=7, pady=7)
 
+        # Keep guidance and action buttons together below the photos for a clear review decision.
         actions = tk.Frame(page, bg=APP_BG)
         actions.pack(fill=tk.X, pady=(10, 2))
         instruction = tk.Frame(actions, bg=PALE_BLUE)
@@ -790,8 +832,11 @@ class PhotoBoothUI:
         qr_pending: bool = False,
         upload_message: str = "",
     ) -> None:
+        # Build the result screen with the digital composition, transaction details, folder QR state,
+        # upload message, and next/finish action.
         title = "Sesi selesai" if has_next_session else "Sesi terakhir selesai"
         page = self._reset("result", title, session_label)
+        # The result image and transaction/QR details share the screen in two balanced columns.
         layout = tk.Frame(page, bg=APP_BG)
         layout.pack(fill=tk.BOTH, expand=True, pady=(4, 8))
         layout.grid_columnconfigure(0, weight=1)
@@ -827,6 +872,7 @@ class PhotoBoothUI:
             bg=WHITE,
         ).pack(pady=(4, 18))
 
+        # Drive status and QR are kept separate from the image so uploads can update asynchronously.
         details = tk.Frame(
             layout,
             bg=WHITE,
@@ -940,15 +986,19 @@ class PhotoBoothUI:
             ).pack(side=tk.LEFT, fill=tk.X, expand=True)
 
     def set_completion_countdown(self, seconds_remaining: int) -> None:
+        # Refresh the automatic return timer displayed after the last session.
         if hasattr(self, "completion_label") and self.completion_label.winfo_exists():
             minutes, seconds = divmod(max(0, seconds_remaining), 60)
             self.completion_label.config(text=f"{minutes:02d}:{seconds:02d}")
 
     def set_result_upload_status(self, message: str) -> None:
+        # Update the result screen's upload message in place as background synchronization progresses.
         if self.result_status_label is not None and self.result_status_label.winfo_exists():
             self.result_status_label.config(text=message)
 
     def set_result_qr(self, qr_image: Image.Image | None, pending: bool = False) -> None:
+        # Replace the QR or placeholder only when its image/pending state changes, and keep a Tk-
+        # compatible image reference alive.
         if self.result_qr_host is None or not self.result_qr_host.winfo_exists():
             return
         digest = hashlib.md5(qr_image.tobytes()).hexdigest() if qr_image is not None else ""
@@ -988,5 +1038,7 @@ class PhotoBoothUI:
             self.result_qr_title.config(text=title)
 
     def show_error(self, title: str, message: str) -> None:
+        # Show a modal error dialog attached to the booth window so the customer or operator can
+        # understand why an action stopped.
         messagebox.showerror(title, message, parent=self.root)
 

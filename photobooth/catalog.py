@@ -1,3 +1,6 @@
+# PhotoBooth source file
+# Template definitions, preview artwork, and composition logic for the digital photo result.
+
 """Sample photobooth templates and local image composition.
 
 The bundled template art is illustrative for the local MVP. Replace the sample
@@ -13,6 +16,8 @@ from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 @dataclass(frozen=True)
 class BoothTemplate:
+    # Describe one selectable photo template: its ID, display text, colors, layout, and optional
+    # sample artwork used by the picker and result composer.
     template_id: str
     name: str
     description: str
@@ -142,6 +147,7 @@ def compose_result(
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     width, height = 1800, 1000
+    # Start from the selected template colors so every session output has the same visual theme.
     canvas = Image.new("RGB", (width, height), template.background)
     draw = ImageDraw.Draw(canvas)
 
@@ -165,6 +171,7 @@ def compose_result(
     photo_width = 470
     photo_height = 610
     gap = 40
+    # Center three fixed-size frames as a group instead of spacing them relative to the window.
     total_photos_width = photo_width * 3 + gap * 2
     left = (width - total_photos_width) // 2
     first_top = 195
@@ -174,6 +181,7 @@ def compose_result(
         photo_left = left + index * (photo_width + gap)
         top = first_top
         with Image.open(photo_path) as source:
+            # Fit crops excess edges when needed, preserving the same frame shape for each photo.
             photo = ImageOps.fit(
                 source.convert("RGB"),
                 (photo_width, photo_height),
@@ -193,6 +201,7 @@ def compose_result(
         canvas.paste(photo, (photo_left, top))
 
     footer_top = 850
+    # Keep the transaction and session IDs on the image so customers can identify the result later.
     draw.line(
         (105, footer_top, width - 105, footer_top),
         fill=template.accent,

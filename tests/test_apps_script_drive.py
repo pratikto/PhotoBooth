@@ -1,3 +1,6 @@
+# PhotoBooth source file
+# Offline tests for Apps Script client configuration, request format, and error handling.
+
 import base64
 import hashlib
 from pathlib import Path
@@ -12,27 +15,39 @@ from photobooth.drive_storage import AppsScriptDriveClient, DriveApiError
 
 
 class FakeResponse:
+    # Provide the small part of requests.Response used by the client, without making a real network
+    # request.
     status_code = 200
 
     def __init__(self, payload):
+        # Store a test JSON payload that json() will return.
         self.payload = payload
 
     def json(self):
+        # Return the saved payload in the same way as the requests library response.
         return self.payload
 
 
 class FakeSession:
+    # Replace HTTP networking with a responder function so tests can inspect the exact Apps Script
+    # request body.
     def __init__(self, responder):
+        # Keep the callback that will produce the fake response for each POST.
         self.responder = responder
         self.calls = []
 
     def post(self, url, **kwargs):
+        # Forward the URL and request keyword arguments to the test responder.
         self.calls.append((url, kwargs))
         return FakeResponse(self.responder(kwargs["json"]))
 
 
 class AppsScriptDriveClientTests(unittest.TestCase):
+    # Verify configuration loading, request payloads, upload checksums, and retry behavior without
+    # contacting Google.
     def test_existing_ignored_local_settings_are_read(self):
+        # Confirm the client reads the pre-existing ignored local_settings.py names instead of
+        # requiring new OAuth credentials.
         local_settings = types.ModuleType("photobooth.local_settings")
         local_settings.WEB_APP_URL = "https://script.google.com/macros/s/existing/exec"
         local_settings.UPLOAD_TOKEN = "existing-token"
@@ -46,11 +61,15 @@ class AppsScriptDriveClientTests(unittest.TestCase):
         self.assertEqual(client.upload_token, local_settings.UPLOAD_TOKEN)
 
     def test_existing_web_app_config_supports_pool_assignment_and_idempotent_upload_api(self):
+        # Exercise pool preparation, slot assignment, and file upload against a fake Web App,
+        # including token, Base64, size, and MD5 fields.
         payloads = []
         photo_bytes = b"photo data"
         checksum = hashlib.md5(photo_bytes).hexdigest()
 
         def respond(body):
+            # Return realistic fake JSON for each Apps Script action and fail the test on an
+            # unexpected request.
             payloads.append(body)
             if body["action"] == "ensure_folder_pool":
                 return {
@@ -105,6 +124,8 @@ class AppsScriptDriveClientTests(unittest.TestCase):
         self.assertEqual(payloads[-1]["relative_path"], "raw/session_001/capture_01.jpg")
 
     def test_web_app_errors_preserve_retry_classification(self):
+        # Check that temporary Web App failures remain retryable while permanent client errors can be
+        # surfaced for staff attention.
         client = AppsScriptDriveClient(
             "https://script.google.com/macros/s/test/exec",
             "token",

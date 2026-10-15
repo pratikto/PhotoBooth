@@ -1,3 +1,6 @@
+# PhotoBooth source file
+# OpenCV camera wrapper that opens the selected device, reads frames, and releases the device safely.
+
 import sys
 
 import cv2
@@ -7,6 +10,8 @@ class Camera:
     """Open a camera and provide its latest frame."""
 
     def __init__(self, camera_index=0):
+        # Store the requested camera index and initialize the OpenCV capture handle. The actual device
+        # connection is deferred to open() so failures can be handled by the app.
         self.camera_index = camera_index
         self.capture = None
 

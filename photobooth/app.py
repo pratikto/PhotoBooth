@@ -1,3 +1,6 @@
+# PhotoBooth source file
+# Application controller connecting customer actions, camera capture, local transaction storage, Drive synchronization, and the Tkinter screens.
+
 """Application controller for the procedure's capture and Drive workflow.
 
 Payment and printing are left out until those integrations are ready. When
@@ -35,6 +38,9 @@ class PhotoBoothApp:
     """Coordinate the camera, GUI workflow, and local transaction files."""
 
     def __init__(self) -> None:
+        # Build the main application state: camera, local transaction store, cached Drive folder pool,
+        # optional sync worker, and GUI callbacks. Tkinter timers are scheduled on the UI thread;
+        # network synchronization runs in a background worker.
         self.root = tk.Tk()
         self.templates = get_templates()
         self.camera = Camera(camera_index=CAMERA_INDEX)
@@ -106,6 +112,8 @@ class PhotoBoothApp:
         self.root.mainloop()
 
     def _connect_camera(self) -> None:
+        # Open the selected camera, read an initial frame to verify it works, and update the welcome
+        # screen with the camera and storage status.
         if self.is_closing:
             return
 
@@ -132,6 +140,8 @@ class PhotoBoothApp:
             )
 
     def _update_preview(self) -> None:
+        # Poll the camera repeatedly and refresh the live preview. This callback also enables capture
+        # only when a fresh frame is available, then schedules itself again with Tkinter.
         if self.is_closing:
             return
 
@@ -158,6 +168,8 @@ class PhotoBoothApp:
         self._preview_after_id = self.root.after(30, self._update_preview)
 
     def _open_template_selection(self) -> None:
+        # Move from the welcome screen to the template picker only when the camera is ready, and pass
+        # the current Drive-slot readiness to the GUI.
         if not self.camera_ready:
             self.ui.show_error(
                 "Kamera belum siap",
@@ -171,6 +183,8 @@ class PhotoBoothApp:
         )
 
     def _start_transaction(self, quantities: dict[str, int]) -> None:
+        # Validate the selected quantities, create one plan per session, claim a preassigned Drive
+        # folder when available, and persist the transaction locally before capturing any photos.
         if not self.camera_ready:
             self.ui.show_error("Kamera belum siap", "Sesi foto belum dapat dimulai.")
             return
@@ -216,12 +230,16 @@ class PhotoBoothApp:
         self._begin_current_session()
 
     def _begin_current_session(self) -> None:
+        # Select the session at session_index and display its capture screen. Each session owns a
+        # separate retake allowance.
         if not self.sessions:
             return
         self.current_session = self.sessions[self.session_index]
         self._show_capture_screen()
 
     def _session_label(self, plan: SessionPlan) -> str:
+        # Build the customer-facing label that shows the order position and, when relevant, the
+        # position among sessions using the same template.
         label = (
             f"Sesi {plan.order_number} dari {plan.total_sessions}"
             f" · {plan.template.name}"
@@ -234,6 +252,8 @@ class PhotoBoothApp:
         return label
 
     def _show_capture_screen(self) -> None:
+        # Render the current session's capture screen using the latest camera frame and the number of
+        # initial photos already saved.
         session = self.current_session
         if session is None:
             return
@@ -255,6 +275,8 @@ class PhotoBoothApp:
         )
 
     def _start_capture_countdown(self) -> None:
+        # Start the five-second countdown for an initial photo, but ignore duplicate clicks or
+        # requests after all three captures are complete.
         session = self.current_session
         if (
             session is None
@@ -265,12 +287,16 @@ class PhotoBoothApp:
         self._start_countdown(is_retake=False)
 
     def _start_retake_countdown(self) -> None:
+        # Start a retake only when this session has three initial photos, the customer selected one,
+        # and its one-retake quota is still available.
         session = self.current_session
         if session is None or not session.can_retake or self._countdown_after_id is not None:
             return
         self._start_countdown(is_retake=True)
 
     def _start_countdown(self, is_retake: bool) -> None:
+        # Prepare the shared countdown UI for either an initial capture or a retake, then schedule the
+        # first one-second timer tick.
         session = self.current_session
         if session is None:
             return
@@ -293,6 +319,8 @@ class PhotoBoothApp:
         self._countdown_after_id = self.root.after(1000, self._countdown_tick)
 
     def _countdown_tick(self) -> None:
+        # Advance the countdown one second at a time. When it reaches zero, save the latest camera
+        # frame instead of blocking the UI with a sleep call.
         self._countdown_after_id = None
         if self.is_closing:
             return
@@ -311,6 +339,9 @@ class PhotoBoothApp:
         self._countdown_after_id = self.root.after(1000, self._countdown_tick)
 
     def _save_current_frame(self, is_retake: bool) -> None:
+        # Persist the captured image and update the session and transaction manifest. A retake
+        # replaces the selected photo in the final result while the original remains in the raw-photo
+        # record.
         session = self.current_session
         transaction = self.transaction
         if session is None or transaction is None or self.current_frame is None:
@@ -376,6 +407,8 @@ class PhotoBoothApp:
             self._show_capture_screen()
 
     def _select_photo(self, index: int) -> None:
+        # Record the customer's selected photo for this session and refresh the review screen;
+        # selection is locked after the retake has been used.
         session = self.current_session
         if session is None or session.retake_used:
             return
@@ -387,6 +420,8 @@ class PhotoBoothApp:
         self._show_review()
 
     def _show_review(self, status_message: str = "") -> None:
+        # Display the final three-photo selection and the current retake status. After a retake, the
+        # replacement occupies the selected photo's original position.
         session = self.current_session
         if session is None:
             return
@@ -410,6 +445,8 @@ class PhotoBoothApp:
         )
 
     def _accept_current_session(self) -> None:
+        # Compose and save this session's digital result, record it in the manifest, show the folder
+        # QR and upload status, and start the final-screen timer when this is the last session.
         session = self.current_session
         transaction = self.transaction
         if session is None or transaction is None or not session.ready_for_review:
@@ -472,6 +509,8 @@ class PhotoBoothApp:
             self._start_completion_countdown()
 
     def _start_next_session(self) -> None:
+        # Cancel the final-session timer and advance to the next planned session, or finish the
+        # transaction if there is no next session.
         self._cancel_completion_countdown()
         if self.session_index + 1 >= len(self.sessions):
             self._finish_transaction()
@@ -480,10 +519,13 @@ class PhotoBoothApp:
         self._begin_current_session()
 
     def _start_completion_countdown(self) -> None:
+        # Initialize the automatic return timer shown after the final session is accepted.
         self._completion_remaining = FINAL_SCREEN_SECONDS
         self._schedule_completion_tick()
 
     def _schedule_completion_tick(self) -> None:
+        # Update the visible timer and schedule its next tick. When no time remains, return the booth
+        # to the welcome screen.
         if self._completion_remaining <= 0:
             self._finish_transaction()
             return
@@ -494,6 +536,8 @@ class PhotoBoothApp:
         )
 
     def _completion_countdown_tick(self) -> None:
+        # Handle one second of the result-screen timer, then schedule the next tick unless the app is
+        # closing.
         self._completion_after_id = None
         if self.is_closing:
             return
@@ -501,6 +545,8 @@ class PhotoBoothApp:
         self._schedule_completion_tick()
 
     def _finish_transaction(self) -> None:
+        # Mark the transaction complete in the local manifest, clear active session state, and return
+        # to the welcome screen without deleting local files.
         self._cancel_completion_countdown()
         if self.transaction is not None:
             try:
@@ -522,10 +568,14 @@ class PhotoBoothApp:
         )
 
     def _frame_to_image(self, frame) -> Image.Image:
+        # Convert OpenCV's BGR camera frame into a Pillow RGB image, which the GUI and image-
+        # composition code can display.
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         return Image.fromarray(rgb_frame)
 
     def _storage_status_message(self) -> str:
+        # Translate the cached Drive-pool and local-only state into a short message for the customer
+        # or booth operator.
         ready = self.drive_pool.ready_count
         if self.local_only_mode and ready == 0:
             return "Mode lokal aktif untuk pengembangan. Hasil hanya tersimpan di perangkat."
@@ -540,6 +590,8 @@ class PhotoBoothApp:
         return "Menyiapkan folder transaksi Google Drive. Tombol aktif setelah slot tersedia."
 
     def _upload_status_message(self) -> str:
+        # Summarize this transaction's upload state, including verified uploads, retries, offline
+        # operation, and cases that need staff attention.
         transaction = self.transaction
         if transaction is None or not transaction.manifest.get("drive_folder_id"):
             return "Hasil digital tersimpan di perangkat ini."
@@ -557,6 +609,8 @@ class PhotoBoothApp:
         return "Foto tersimpan di perangkat dan menunggu upload ke folder transaksi."
 
     def _schedule_drive_status_update(self) -> None:
+        # Poll the latest manifest and Drive-pool state without blocking the UI, refresh storage or
+        # result messages, and schedule the next poll.
         if self.is_closing:
             return
         if self.ui.current_screen == "templates":
@@ -583,6 +637,8 @@ class PhotoBoothApp:
         self._drive_status_after_id = self.root.after(1500, self._schedule_drive_status_update)
 
     def _should_show_result_qr(self) -> bool:
+        # Decide whether the result screen can show the transaction-folder QR now or should keep
+        # displaying a pending state until the relevant upload outcome is known.
         transaction = self.transaction
         session = self.current_session
         if transaction is None or session is None:
@@ -601,6 +657,8 @@ class PhotoBoothApp:
         return self._current_session_upload_verified()
 
     def _current_session_upload_verified(self) -> bool:
+        # Check the manifest records for every raw photo and the composed output in the current
+        # session; return true only when each file is marked VERIFIED.
         transaction = self.transaction
         session = self.current_session
         if transaction is None or session is None:
@@ -624,6 +682,8 @@ class PhotoBoothApp:
         )
 
     def _cancel_after(self, after_id: str | None) -> None:
+        # Safely cancel a Tkinter timer callback if it is still registered; the window may already
+        # have closed between scheduling and cancellation.
         if after_id is not None:
             try:
                 self.root.after_cancel(after_id)
@@ -631,11 +691,15 @@ class PhotoBoothApp:
                 pass
 
     def _cancel_completion_countdown(self) -> None:
+        # Cancel and reset the final-screen timer so it cannot finish a transaction after the customer
+        # has moved to another screen.
         self._cancel_after(self._completion_after_id)
         self._completion_after_id = None
         self._completion_remaining = 0
 
     def close(self) -> None:
+        # Shut down cleanly by cancelling pending UI timers, stopping background Drive sync, releasing
+        # the camera, and destroying the Tkinter window.
         if self.is_closing:
             return
         self.is_closing = True

@@ -1,3 +1,6 @@
+# PhotoBooth source file
+# Background worker that prepares Drive slots, acknowledges assignments, and retries queued file uploads.
+
 """Resumable background sync for assigned Drive folders and local manifests."""
 
 from __future__ import annotations
@@ -50,6 +53,8 @@ def sync_manifest(manifest_path: Path, client: GoogleDriveClient) -> dict[str, A
         _persist_upload_progress(manifest_path, manifest)
 
         def save_session_url(value: str | None) -> None:
+            # Persist the current resumable-upload session URL so a later retry can continue the same
+            # upload instead of starting over.
             record["upload_session_url"] = value
             _persist_upload_progress(manifest_path, manifest)
 
@@ -84,6 +89,8 @@ def sync_manifest(manifest_path: Path, client: GoogleDriveClient) -> dict[str, A
 
 
 def _refresh_upload_status(manifest: dict[str, Any]) -> None:
+    # Derive the transaction-level upload status from the individual file states, so the result screen
+    # can show one clear summary.
     records = list(manifest.get("upload_files", {}).values())
     if any(record.get("status") == "ACTION_REQUIRED" for record in records):
         manifest["upload_status"] = "ACTION_REQUIRED"
@@ -100,6 +107,8 @@ def _refresh_upload_status(manifest: dict[str, Any]) -> None:
 
 
 def _persist_upload_progress(path: Path, working: dict[str, Any]) -> None:
+    # Merge worker-updated upload fields into the newest manifest while holding the shared file lock,
+    # preventing capture code from overwriting sync progress.
     """Merge worker progress into the latest transaction manifest under a shared lock."""
     path = Path(path)
     with manifest_lock(path):
@@ -133,6 +142,8 @@ class DriveSyncWorker:
         pool: DriveSlotPool,
         interval_seconds: int = 8,
     ) -> None:
+        # Create the background worker state, synchronization lock, stop event, and lightweight
+        # trigger used to wake the worker.
         self.photos_root = Path(photos_root)
         self.client = client
         self.pool = pool
@@ -146,17 +157,23 @@ class DriveSyncWorker:
         )
 
     def start(self) -> None:
+        # Start one daemon thread that performs Drive work without freezing Tkinter's customer-facing
+        # interface.
         if not self._thread.is_alive():
             self._thread.start()
 
     def kick(self) -> None:
+        # Wake the background worker after a transaction or capture adds work to the upload queue.
         self._wake.set()
 
     def stop(self) -> None:
+        # Signal the worker to stop and wait briefly for the current network operation to finish.
         self._stop.set()
         self._wake.set()
 
     def _run(self) -> None:
+        # Run pool recovery, assignment, refresh, and queued uploads in a loop, waiting between passes
+        # instead of busy-spinning.
         while not self._stop.is_set():
             self.pool.recover_incomplete_claims()
             self._process_pending_assignments()
@@ -170,6 +187,8 @@ class DriveSyncWorker:
             self._wake.clear()
 
     def _process_pending_assignments(self) -> None:
+        # Send locally claimed slots to Drive and clear each pending flag only after the backend
+        # confirms the assignment.
         for slot in self.pool.pending_assignments():
             if not slot.transaction_id:
                 continue
@@ -185,6 +204,8 @@ class DriveSyncWorker:
                 self.pool.record_refresh_error(error)
 
     def _process_pending_uploads(self) -> None:
+        # Find manifests with queued files and upload them one transaction at a time while retaining
+        # local copies for retry.
         try:
             manifests = list(self.photos_root.glob("*/manifest.json"))
         except OSError:

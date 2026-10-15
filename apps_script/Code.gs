@@ -1,3 +1,6 @@
+// PhotoBooth source file
+// Apps Script backend for Drive folder preparation, assignment, and retry-safe uploads.
+
 /**
  * Meongs Photo Booth Drive Web App.
  *
@@ -11,19 +14,29 @@
  * and upload_file actions.
  */
 
+/**
+ * Provide a lightweight health check so an operator can confirm the deployed Web App
+ * responds at its /exec URL.
+ */
 function doGet() {
   return jsonResponse_({ ok: true, service: "meongs-photobooth-drive" });
 }
 
+/**
+ * Parse one JSON request, authenticate it with the shared upload token, dispatch the
+ * requested action, and return a consistent JSON success or error response.
+ */
 function doPost(event) {
   try {
     const body = JSON.parse(event && event.postData && event.postData.contents || "{}");
     const properties = PropertiesService.getScriptProperties();
     const expectedToken = properties.getProperty("UPLOAD_TOKEN") || "";
+    // Authenticate every action before it can create or modify Drive content.
     if (!body.token || !expectedToken || body.token !== expectedToken) {
       throw apiError_("Invalid upload token.", 401);
     }
 
+    // Requests without an action keep using the original one-file upload behavior.
     const action = body.action || "legacy_upload";
     let result;
     if (action === "ensure_folder_pool") {
@@ -47,6 +60,11 @@ function doPost(event) {
   }
 }
 
+/**
+ * Validate existing ready slots and create enough empty, link-shareable transaction
+ * folders to reach the requested pool size. A script lock protects sequence allocation
+ * from simultaneous booth requests.
+ */
 function ensureFolderPool_(body, properties) {
   const boothId = validateBoothId_(body.booth_id);
   const targetReady = Math.max(1, Math.min(100, Number(body.target_ready) || 25));
@@ -73,9 +91,11 @@ function ensureFolderPool_(body, properties) {
       }
     });
 
+    // Persist the next sequence before another request can allocate the same ID.
     while (readyCount < targetReady) {
       const sequence = Number(pool.next_sequence) || 1;
       pool.next_sequence = sequence + 1;
+      // Folder names are final transaction IDs from creation; assignment never renames them.
       const transactionId = boothId + "_" + String(sequence).padStart(8, "0");
       // Never reuse a name that may belong to a transaction outside this ledger.
       if (parent.getFoldersByName(transactionId).hasNext()) {
@@ -84,6 +104,7 @@ function ensureFolderPool_(body, properties) {
       }
 
       const folder = parent.createFolder(transactionId);
+      // The customer opens this folder from a QR code, so its link must be viewable without sign-in.
       folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
       const slot = {
         folder_id: folder.getId(),
@@ -111,6 +132,10 @@ function ensureFolderPool_(body, properties) {
   }
 }
 
+/**
+ * Remove a ready slot from the available pool after a transaction claims it. The Drive
+ * folder already has its final ID, so this action deliberately does not rename it.
+ */
 function assignSlot_(body, properties) {
   const boothId = validateBoothId_(body.booth_id);
   const transactionId = validateTransactionId_(body.transaction_id, boothId);
@@ -123,6 +148,8 @@ function assignSlot_(body, properties) {
       return item.folder_id === body.folder_id;
     });
     if (!slot) {
+      // A retry can arrive after the slot was already removed from the ready pool.
+      // Accept it only if the folder already has this final ID under the configured parent.
       const assignedFolder = DriveApp.getFolderById(String(body.folder_id || ""));
       if (assignedFolder.getName() === transactionId && hasParent_(assignedFolder, DriveApp.getFolderById(properties.getProperty("DRIVE_FOLDER_ID")))) {
         return { slot: { folder_id: assignedFolder.getId(), transaction_id: transactionId, status: "ASSIGNED" } };
@@ -133,6 +160,7 @@ function assignSlot_(body, properties) {
       throw apiError_("Drive slot does not match the assigned transaction.", 409);
     }
     if (slot.status !== "READY") throw apiError_("Drive slot is not ready.", 409);
+    // Removing the slot makes it unavailable to another transaction; its Drive name is unchanged.
     pool.slots = pool.slots.filter(function (item) { return item.folder_id !== slot.folder_id; });
     writePool_(properties, key, pool);
     return { slot: Object.assign({}, slot, { status: "ASSIGNED" }) };
@@ -141,6 +169,11 @@ function assignSlot_(body, properties) {
   }
 }
 
+/**
+ * Validate the transaction folder, relative path, file size, and MD5 before creating or
+ * verifying the file. Repeated identical requests are safe and do not create duplicate
+ * files.
+ */
 function uploadTransactionFile_(body, properties) {
   const boothId = validateBoothId_(body.transaction_id && body.transaction_id.split("_")[0]);
   const transactionId = validateTransactionId_(body.transaction_id, boothId);
@@ -173,10 +206,12 @@ function uploadTransactionFile_(body, properties) {
   const pathParts = relativePath.split("/");
   const fileName = pathParts.pop();
   let targetFolder = rootFolder;
+  // Re-create the same subfolder hierarchy recorded in the local transaction-relative path.
   pathParts.forEach(function (name) {
     targetFolder = getOrCreateChildFolder_(targetFolder, name);
   });
 
+  // Check the actual decoded bytes, not only the metadata supplied by the Python client.
   const bytes = Utilities.base64Decode(String(body.image_base64 || ""));
   const actualMd5 = md5Hex_(bytes);
   if (bytes.length !== expectedSize || actualMd5 !== expectedMd5) {
@@ -185,6 +220,7 @@ function uploadTransactionFile_(body, properties) {
 
   const existing = targetFolder.getFilesByName(fileName);
   if (existing.hasNext()) {
+    // An identical retry returns the existing file; a different file at the same path is a conflict.
     const file = existing.next();
     if (existing.hasNext()) {
       throw apiError_("Multiple files with this path already exist; staff review is required.", 409);
@@ -201,10 +237,15 @@ function uploadTransactionFile_(body, properties) {
   const mimeType = String(body.mime_type || "application/octet-stream");
   const blob = Utilities.newBlob(bytes, mimeType, fileName);
   const file = targetFolder.createFile(blob);
+  // Match the link-sharing behavior used by the QR-based result flow.
   file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
   return { file: fileResponse_(file, bytes.length, actualMd5) };
 }
 
+/**
+ * Preserve the original one-file upload request format for older booth clients that do not
+ * send an action field.
+ */
 function legacyUpload_(body, properties) {
   if (!body.filename || !body.image_base64) {
     throw apiError_("Legacy upload requires filename and image_base64.", 400);
@@ -226,8 +267,13 @@ function legacyUpload_(body, properties) {
   };
 }
 
+/**
+ * Check that a candidate slot exists, is not trashed, has the expected final name and
+ * parent, is empty, and has the required link-sharing permission.
+ */
 function validateReadyFolder_(slot, parent) {
   try {
+    // A slot is reusable only when it is empty and still has the final ID recorded in the ledger.
     const folder = DriveApp.getFolderById(slot.folder_id);
     if (folder.isTrashed() || folder.getName() !== slot.transaction_id) {
       return { verified: false, issue: "Folder is missing, trashed, or has the wrong name." };
@@ -250,14 +296,22 @@ function validateReadyFolder_(slot, parent) {
   }
 }
 
+/**
+ * Check that the configured Drive parent is an immediate parent of this folder. The booth
+ * creates transaction folders directly under that parent.
+ */
 function hasParent_(folder, expectedParent) {
   const parents = folder.getParents();
+  // Compare IDs instead of names because Drive folder names are not globally unique.
   while (parents.hasNext()) {
     if (parents.next().getId() === expectedParent.getId()) return true;
   }
   return false;
 }
 
+/**
+ * Find or create one child folder while walking the transaction-relative path structure.
+ */
 function getOrCreateChildFolder_(parent, name) {
   const matches = parent.getFoldersByName(name);
   if (matches.hasNext()) {
@@ -268,7 +322,12 @@ function getOrCreateChildFolder_(parent, name) {
   return parent.createFolder(name);
 }
 
+/**
+ * Reject absolute paths, traversal segments, and unsafe file names before creating nested
+ * Drive folders or files.
+ */
 function validateRelativePath_(relativePath, filename) {
+  // Normalize Windows separators before checking path segments and matching the leaf filename.
   const path = String(relativePath || "").replace(/\\/g, "/");
   const parts = path.split("/");
   if (!path || parts.length > 12 || parts.some(function (part) {
@@ -282,12 +341,20 @@ function validateRelativePath_(relativePath, filename) {
   return parts.join("/");
 }
 
+/**
+ * Accept only a safe booth identifier that can be used in folder names and Script Properties
+ * keys.
+ */
 function validateBoothId_(boothId) {
   const value = String(boothId || "");
   if (!/^[A-Za-z0-9]+$/.test(value)) throw apiError_("Booth ID is invalid.", 400);
   return value;
 }
 
+/**
+ * Ensure a transaction ID uses the expected booth prefix and fixed-width incrementing
+ * numeric suffix.
+ */
 function validateTransactionId_(transactionId, boothId) {
   const value = String(transactionId || "");
   if (!new RegExp("^" + boothId + "_[0-9]{8}$").test(value)) {
@@ -296,7 +363,12 @@ function validateTransactionId_(transactionId, boothId) {
   return value;
 }
 
+/**
+ * Load the booth's slot ledger from Script Properties, returning an empty ledger when none
+ * exists and reporting malformed saved data.
+ */
 function readPool_(properties, key) {
+  // The pool ledger is JSON stored in a Script Property because each Web App request is stateless.
   const raw = properties.getProperty(key);
   if (!raw) return { next_sequence: 1, slots: [] };
   try {
@@ -310,20 +382,35 @@ function readPool_(properties, key) {
   }
 }
 
+/**
+ * Save the updated slot ledger as JSON in Script Properties so sequence and ready-slot
+ * state survive Web App calls.
+ */
 function writePool_(properties, key, pool) {
   properties.setProperty(key, JSON.stringify(pool));
 }
 
+/**
+ * Build a namespaced Script Properties key for one booth's Drive slot ledger.
+ */
 function poolPropertyKey_(boothId) {
   return "PHOTOBOOTH_POOL_" + boothId;
 }
 
+/**
+ * Calculate a stable lowercase MD5 digest from Google Apps Script byte values for upload
+ * verification.
+ */
 function md5Hex_(bytes) {
   return Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, bytes)
     .map(function (value) { return ("0" + (value & 255).toString(16)).slice(-2); })
     .join("");
 }
 
+/**
+ * Return the Drive file identifiers, link, name, byte count, and checksum in the shape
+ * expected by the Python client.
+ */
 function fileResponse_(file, size, checksum) {
   return {
     id: file.getId(),
@@ -333,12 +420,18 @@ function fileResponse_(file, size, checksum) {
   };
 }
 
+/**
+ * Create an error object with an HTTP-style code that doPost can return as JSON.
+ */
 function apiError_(message, code) {
   const error = new Error(message);
   error.code = code || 400;
   return error;
 }
 
+/**
+ * Serialize a JavaScript value as a JSON TextOutput from the Web App.
+ */
 function jsonResponse_(value) {
   return ContentService.createTextOutput(JSON.stringify(value))
     .setMimeType(ContentService.MimeType.JSON);
