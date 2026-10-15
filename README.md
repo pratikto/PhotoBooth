@@ -220,3 +220,22 @@ To include real-widget GUI regression checks on a desktop, set
 ```bash
 SDL_VIDEODRIVER=offscreen PHOTOBOOTH_TEST_GUI=1 python -m unittest discover -s tests -v
 ```
+
+### Drive pool recovery
+
+Use Python 3.12 for the tested Kivy desktop environment. Kivy 2.3.1 does not
+provide Python 3.15 wheels for this setup.
+
+An unused folder already has a transaction ID before it is claimed. A temporary
+pool verification error must not permanently protect that unused slot as if it
+were a customer assignment. The client now revalidates unused staging slots
+when the backend returns them as verified READY, while preserving actual claims,
+nonempty staging directories, and transaction directories. Do not reset the
+counter, delete the cache, or manually mark unverified folders READY.
+
+If Apps Script returns a success response without a `slots` list, the client
+reports a protocol error before changing the pool. Update the existing Apps
+Script deployment to the repository's `apps_script/Code.gs` using a new version,
+and verify the configured `/exec` URL. The current repository backend returns
+`slots` for `ensure_folder_pool`; a missing list alone does not prove which
+backend or deployment was contacted.

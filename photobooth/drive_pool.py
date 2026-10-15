@@ -93,8 +93,21 @@ class DriveSlotPool:
 
             for folder_id, current in existing_by_id.items():
                 remote = remote_by_id.get(folder_id)
+                # Every unused slot already has a transaction ID. That ID alone
+                # is NOT proof of a customer assignment. Preserve real claims,
+                # but revalidate unused staging slots after a temporary error.
+                # A pending claim, a moved directory, or a transaction manifest
+                # prevents this recovery path from reusing customer storage.
+                expected_stage = self.photos_root / ".pool" / folder_id
+                protected_assignment = (
+                    current.claim_pending
+                    or Path(current.staging_path) != expected_stage
+                    or (Path(current.staging_path) / "manifest.json").exists()
+                    or bool(current.transaction_id and
+                            (self.photos_root / current.transaction_id).exists())
+                )
                 if current.status in {"ASSIGNED", "CLAIMING"} or (
-                    current.status == "ACTION_REQUIRED" and current.transaction_id
+                    current.status == "ACTION_REQUIRED" and protected_assignment
                 ):
                     # Local assignment survives offline use and remote sync.
                     merged[folder_id] = current

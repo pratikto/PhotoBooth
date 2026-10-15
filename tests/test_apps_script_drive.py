@@ -142,3 +142,12 @@ class AppsScriptDriveClientTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class PoolResponseRegressionTests(unittest.TestCase):
+    """An old or malformed backend response must not look like an empty pool."""
+
+    def test_missing_slots_is_an_actionable_protocol_error(self):
+        client = AppsScriptDriveClient('https://example.org/exec', 'fake-token',
+                                      session=FakeSession(lambda body: {'ok': True}))
+        with self.assertRaisesRegex(DriveApiError, 'missing the slots list'):
+            client.ensure_folder_pool('PB001')
