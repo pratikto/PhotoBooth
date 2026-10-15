@@ -11,6 +11,7 @@ from pathlib import Path
 import re
 import tempfile
 from typing import Any, Sequence
+from uuid import uuid4
 
 from PIL import Image
 
@@ -185,6 +186,11 @@ class TransactionStore:
         relative_string = relative_path.as_posix()
         transaction.manifest["upload_files"][relative_string] = {
             "path": relative_string,
+            # A retry can write new bytes to this same capture/retake filename.
+            # Give each successful save its own local revision so a previous
+            # VERIFIED flag or late upload response cannot bless the new file.
+            # This is queue metadata, not a new Drive name or idempotency key.
+            "content_version": uuid4().hex,
             "status": "PENDING_UPLOAD" if transaction.manifest.get("drive_folder_id") else "LOCAL_ONLY",
             "size_bytes": photo_path.stat().st_size,
             "drive_file_id": None,
@@ -231,6 +237,9 @@ class TransactionStore:
         session_record["status"] = "COMPLETED"
         transaction.manifest["upload_files"][output_relative] = {
             "path": output_relative,
+            # Composition retries obey the same revision boundary as raw
+            # captures. Keep the established path and customer folder URL.
+            "content_version": uuid4().hex,
             "status": "PENDING_UPLOAD" if transaction.manifest.get("drive_folder_id") else "LOCAL_ONLY",
             "size_bytes": output_path.stat().st_size,
             "drive_file_id": None,
@@ -314,8 +323,14 @@ class TransactionStore:
                         persisted_files = persisted.get("upload_files", {})
                         current_files = transaction.manifest.setdefault("upload_files", {})
                         for relative_path, record in persisted_files.items():
-                            current = current_files.setdefault(relative_path, {})
-                            current.update(record)
+                            current = current_files.get(relative_path)
+                            if current is None:
+                                current_files[relative_path] = dict(record)
+                            elif current.get("content_version") == record.get("content_version"):
+                                # Preserve worker progress only for these exact
+                                # saved bytes. Legacy records have no revision
+                                # on either side and keep their old behavior.
+                                current.update(record)
                         statuses = [
                             record.get("status")
                             for record in current_files.values()

@@ -45,6 +45,61 @@ class CameraRecoveryTests(unittest.TestCase):
         self.app.ui._change_quantity(self.key, 2)
         self.app.ui.start_button.dispatch('on_release')
 
+    def test_retry_after_retake_metadata_failure_uploads_the_replacement_bytes(self):
+        """Exercise the actual GUI/controller path into a same-filename retry.
+
+        The JPEG and its queue entry succeed, but recording the selected target
+        fails once. A worker uploads those first bytes before the customer tries
+        again. The retry must replace the selected photo locally AND queue its
+        new bytes, not inherit the first upload's VERIFIED flag.
+        """
+        import hashlib
+        import json
+        from photobooth.drive_sync import sync_manifest
+
+        self.order()
+        self.app.ui.payment_confirm.dispatch('on_release')
+        transaction = self.app.transaction
+        transaction.manifest.update({
+            'drive_folder_id': 'fixture-folder',
+            'drive_folder_url': 'https://drive.google.com/drive/folders/fixture-folder',
+        })
+        self.app.store._write_manifest(transaction)
+        for _ in range(3):
+            self.app._save_current_frame(False)
+        self.app._select_photo(1)
+        with patch.object(self.app.store, 'record_retake', side_effect=OSError('Fixture disk failure')):
+            self.app._save_current_frame(True)
+        self.assertEqual(self.app.ui.current_screen, 'review')
+        self.assertFalse(self.app.current_session.retake_used)
+        self.errors.assert_called_once()
+        uploads = []
+
+        class Drive:
+            def upload_file(self, _folder, _transaction, relative_path, local_path, **_kwargs):
+                data = local_path.read_bytes()
+                uploads.append((relative_path, data))
+                return {'id': 'fixture-file', 'size': str(len(data)),
+                        'md5Checksum': hashlib.md5(data).hexdigest()}
+
+        backend = Drive()
+        sync_manifest(transaction.manifest_path, backend)
+        key = 'raw/session_001/retake_01.jpg'
+        first_bytes = (transaction.folder_path / key).read_bytes()
+        self.app.current_frame = np.full_like(self.frame, (180, 90, 30))
+        self.app._save_current_frame(True)
+        self.assertTrue(self.app.current_session.retake_used)
+        self.assertTrue(self.app.ui.retake_button.disabled)
+        new_bytes = self.app.current_session.retake_path.read_bytes()
+        self.assertNotEqual(new_bytes, first_bytes)
+        saved = json.loads(transaction.manifest_path.read_text(encoding='utf-8'))
+        self.assertEqual(saved['upload_files'][key]['status'], 'PENDING_UPLOAD')
+        sync_manifest(transaction.manifest_path, backend)
+        uploaded_retakes = [data for path, data in uploads if path == key]
+        self.assertEqual(uploaded_retakes, [first_bytes, new_bytes])
+        self.assertEqual(self.app.current_session.final_photo_paths[1],
+                         self.app.current_session.retake_path)
+
     def test_camera_readiness_tracks_home_cart_and_payment_without_losing_order(self):
         ui = self.app.ui
         self.latest = None

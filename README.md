@@ -396,3 +396,28 @@ before/after retake, using landscape, portrait, and square sources. They also
 verify that source files and existing output bytes are not modified by review.
 The render report records exact crop agreement in all six review states.
 Camera and Drive checks still use fakes; no live-device claim is implied.
+
+### Upload progress follows the saved file revision
+
+A save retry can replace a retake or output at the same relative path. Previously,
+merging the worker's old record could copy its `VERIFIED` flag onto different
+local bytes. This was reproduced through the controller after a simulated failure
+to record retake metadata, as well as with a delayed upload response.
+
+Each new app save now carries a local `content_version`. Controller and worker
+merges retain progress only for that revision. Old success, failure, and resumable
+URLs cannot certify or block its replacement. Existing manifests without the field
+remain readable; unchanged verified files are not uploaded again. Folder names,
+transaction IDs, relative paths, and QR destinations are unchanged.
+
+The backend policy still matters: direct Drive API uploads can update the existing
+file; the current Apps Script deliberately returns a conflict for different bytes
+at an existing path. That case now stays `ACTION_REQUIRED`, with the new photo
+retained locally, instead of falsely claiming it was uploaded. This does not
+bypass the backend's overwrite protection or require a new Apps Script deployment.
+
+Validation: **48 tests passed**, including same-path save retries, late success and
+failure callbacks, legacy records, output replacement, and the controller failure
+path. **32 real-widget renders** passed at 1200x800 and 800x600; their report and all
+six contact sheets are byte-identical to the previous visual evidence, so no
+cosmetic layout changes were made. All camera and Drive scenarios still use fakes.

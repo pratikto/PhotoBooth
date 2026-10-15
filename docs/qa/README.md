@@ -4,6 +4,7 @@ Layout baseline: `c518e91df5a8311a08a167043e0f1e74aa50555c` on `feature/kivy-gui
 The frame-recovery follow-up starts from `a6707e6c7168248c7b80b1b36c8042cd7de1f20f`.
 The screen-action/selection follow-up starts from `26e27a722ab965e62d78b572b9c1b1e39634e6ff`.
 The faithful-review follow-up starts from `1f5f3cda5a6bcba7718afa415e13726a54ec7b32`.
+The upload-revision follow-up starts from `c99924aec2460a25211c6d21b020999b12f20034`.
 The original working copy was left untouched. Source files in the separate
 checkout were checked against the freshly fetched GitHub blobs before editing.
 
@@ -102,6 +103,33 @@ All six rendered review states (ready, quota used, and camera waiting at each
 size) record `review_matches_output: true` and `review_frame_size: [470, 500]`
 in [report.json](report.json).
 
+## Save-retry and upload-revision safety
+
+The real controller regression reproduces a retake JPEG/queue save followed by
+a simulated metadata-write failure. The first bytes upload before the customer
+retries with a different capture. Previously the replacement inherited the first
+upload's `VERIFIED` flag and was skipped. Storage and worker merges now compare
+an optional local `content_version`, not just the relative filename.
+
+New tests cover that controller path, same-path raw/output replacement, legacy
+records without a revision, a replacement committed before upload starts, late
+success/resume callbacks, and late network/permission failures. They verify that
+unchanged raw uploads stay verified, replacement bytes remain queued, and a
+subsequent supported upload verifies the current checksum without duplicate work.
+Nested callbacks reproduce overlaps deterministically; they are not live Google
+service or operating-system disk-failure tests.
+
+The Apps Script server's existing different-content conflict rule is preserved.
+A dedicated 409 regression keeps that case `ACTION_REQUIRED` and retains the
+local photo; it does not pretend that the conflicting upload succeeded. The
+direct Drive API update path and Apps Script conflict policy remain distinct.
+No deployment or credentials were changed.
+
+The 32-screen render report and all six committed contact sheets were compared
+byte-for-byte with freshly generated evidence and are unchanged. No layout
+retouching was needed for this storage/retry correction. Main-screen and waiting
+state sheets at both desktop sizes were also inspected visually.
+
 ## Reproduce
 
 Python 3.12.14, Kivy 2.3.1, OpenCV 5.0.0, SDL2 offscreen, and Mesa llvmpipe were used. No webcam,
@@ -112,7 +140,7 @@ SDL_VIDEODRIVER=offscreen PHOTOBOOTH_TEST_GUI=1 python -m unittest discover -s t
 SDL_VIDEODRIVER=offscreen python tools/render_gui.py --output-dir /tmp/photobooth-gui-qa
 ```
 
-The suite passed **40 tests**. Its controller/storage checks include two-session
+The suite passed **48 tests**. Its controller/storage checks include two-session
 orders, one retake per session, local PNG and manifest persistence, cached folder
 allocation, an offline upload failure followed by retry, and skipping verified
 uploads. Camera acquisition and Drive access use deterministic fakes. The layout

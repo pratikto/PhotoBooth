@@ -51,6 +51,12 @@ def sync_manifest(manifest_path: Path, client: GoogleDriveClient) -> dict[str, A
         record.pop("error", None)
         manifest["upload_status"] = "UPLOADING"
         _persist_upload_progress(manifest_path, manifest)
+        if upload_files[relative_path] is not record or record.get("status") != "UPLOADING":
+            # The merge may discover a newer save or an already verified copy.
+            # Do not start a stale upload; the replacement stays queued for the
+            # next pass. An upload already in flight is guarded at every later
+            # session/progress merge below instead of blocking the GUI thread.
+            continue
 
         def save_session_url(value: str | None) -> None:
             # Persist the current resumable-upload session URL so a later retry can continue the same
@@ -109,7 +115,12 @@ def _refresh_upload_status(manifest: dict[str, Any]) -> None:
 def _persist_upload_progress(path: Path, working: dict[str, Any]) -> None:
     # Merge worker-updated upload fields into the newest manifest while holding the shared file lock,
     # preventing capture code from overwriting sync progress.
-    """Merge worker progress into the latest transaction manifest under a shared lock."""
+    """Merge progress only into the same saved-file revision under the lock.
+
+    A filename is stable across a save retry, but its bytes need not be. Never
+    move an old resume URL, error, or VERIFIED result onto a replacement file.
+    Missing revision fields on both sides keep existing manifests compatible.
+    """
     path = Path(path)
     with manifest_lock(path):
         latest = json.loads(path.read_text(encoding="utf-8"))
@@ -120,8 +131,15 @@ def _persist_upload_progress(path: Path, working: dict[str, Any]) -> None:
             working_files.setdefault(relative_path, dict(persisted_record))
 
         for relative_path, progress_record in working_files.items():
-            persisted_record = latest_files.setdefault(relative_path, {})
-            if persisted_record.get("status") == "VERIFIED" and progress_record.get("status") != "VERIFIED":
+            persisted_record = latest_files.setdefault(relative_path, dict(progress_record))
+            if persisted_record.get("content_version") != progress_record.get("content_version"):
+                # Replace the working dictionary entry, not the old record
+                # object held by upload_file's callback. Its delayed response
+                # must continue to mutate only the retired revision. Updating
+                # working in place also makes sync_manifest return current
+                # queue state rather than a misleading stale success.
+                working_files[relative_path] = dict(persisted_record)
+            elif persisted_record.get("status") == "VERIFIED" and progress_record.get("status") != "VERIFIED":
                 progress_record.update(persisted_record)
             else:
                 persisted_record.update(progress_record)
