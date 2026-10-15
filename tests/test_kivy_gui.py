@@ -13,6 +13,129 @@ from types import SimpleNamespace
 
 @unittest.skipUnless(os.environ.get('PHOTOBOOTH_TEST_GUI') == '1', 'GUI checks are opt-in')
 class KivyFlowTests(unittest.TestCase):
+    def test_status_details_follow_resize_without_rebuilding_the_cart(self):
+        """A message between desktop widths must not flicker or reserve a gap."""
+        from kivy.base import EventLoop
+        from kivy.core.text import Label as CoreLabel
+        from kivy.core.window import Window
+        from photobooth.catalog import get_templates
+        from photobooth.ui_kivy import KivyHost, PhotoBoothUI
+
+        ui = PhotoBoothUI(KivyHost(lambda: None), get_templates(), on_start=lambda *_: None)
+        Window.add_widget(ui.shell)
+        original_size = Window.size
+
+        def settle():
+            for _ in range(8):
+                EventLoop.idle()
+
+        try:
+            ui.show_template_selection(True, 'Ready', quantities={'template_a': 2})
+            widths = []
+            for size in ((800, 600), (1200, 800)):
+                Window.size = size
+                settle()
+                widths.append(ui._footer_row.width - ui.camera_badge.width - ui._footer_row.spacing)
+            font = CoreLabel(font_name=ui.status.font_name, font_size=ui.status.font_size)
+            target = sum(widths) / 2
+            message = 'Drive siap: ' + 'n' * round((target - font.get_extents('Drive siap: ')[0])
+                                                   / font.get_extents('n')[0])
+            start = ui.start_button
+            ui.set_status(message)
+            for size, needed in (((1200, 800), False), ((800, 600), True), ((1200, 800), False)):
+                Window.size = size
+                settle()
+                self.assertEqual(ui.status_details.parent is ui._footer_row, needed)
+                self.assertEqual(ui.status.is_shortened, needed)
+                settle()
+                self.assertEqual(ui.status_details.parent is ui._footer_row, needed)
+                self.assertIs(ui.start_button, start)
+                self.assertEqual(ui.quantities['template_a'], 2)
+                self.assertEqual(ui.cart_total.text, 'Rp10.000')
+        finally:
+            Window.remove_widget(ui.shell)
+            Window.size = original_size
+
+    def test_long_footer_status_opens_complete_scrollable_details_without_losing_cart(self):
+        """Long diagnostics must not be silently clipped or erase an unpaid order.
+
+        Keep the full public status text for controller recovery, but elide its
+        visual summary. Open the real popup through the persistent footer action,
+        scroll its complete message, close it, and recover storage on the same
+        cart. An unusually long string also guards against measuring a massive
+        single-line GPU texture just to decide whether details are needed.
+        """
+        from kivy.base import EventLoop
+        from kivy.core.window import Window
+        from kivy.uix.button import Button
+        from kivy.uix.popup import Popup
+        from kivy.uix.scrollview import ScrollView
+        from photobooth.catalog import get_templates
+        from photobooth.ui_kivy import KivyHost, PhotoBoothUI
+
+        ui = PhotoBoothUI(KivyHost(lambda: None), get_templates(), on_start=lambda *_: None)
+        Window.add_widget(ui.shell)
+        original_size = Window.size
+        message = ('Slot Drive perlu diperiksa: Fixture verification failed. '
+                   'Local photos are retained; no real service was contacted. ') * 40
+
+        def settle():
+            for _ in range(8):
+                EventLoop.idle()
+
+        popup = None
+        try:
+            for size in ((1200, 800), (800, 600)):
+                with self.subTest(size=size):
+                    Window.size = size
+                    ui.show_template_selection(True, message, storage_ready=False,
+                                               quantities={'template_a': 2})
+                    start = ui.start_button
+                    settle()
+                    self.assertEqual(ui.status.text, message)
+                    self.assertTrue(ui.status.is_shortened, 'Long status is cropped instead of elided')
+                    self.assertIs(ui.status_details.parent, ui._footer_row)
+                    self.assertFalse(ui.status_details.disabled)
+                    self.assertTrue(start.disabled)
+                    self.assertEqual(ui.cart_total.text, 'Rp10.000')
+                    ui.status_details.dispatch('on_release')
+                    settle()
+                    popup = next(w for w in Window.children if isinstance(w, Popup))
+                    self.addCleanup(popup.dismiss, animation=False)
+                    scroll = next(w for w in popup.content.walk() if isinstance(w, ScrollView))
+                    paragraph = scroll.children[0]
+                    self.assertEqual(paragraph.text, message)
+                    self.assertGreater(paragraph.height, scroll.height)
+                    scroll.scroll_y = 0
+                    settle()
+                    # ScrollView translates its viewport instead of changing
+                    # the paragraph's local y. Compare window coordinates.
+                    self.assertAlmostEqual(paragraph.to_window(*paragraph.pos)[1],
+                                           scroll.to_window(*scroll.pos)[1], delta=1)
+                    close = next(w for w in popup.content.walk() if isinstance(w, Button))
+                    close.dispatch('on_release')
+                    # Dismissal is animated. Wait for its actual completion
+                    # rather than assuming eight frames always exceed 100ms.
+                    for _ in range(40):
+                        EventLoop.idle()
+                        if popup.parent is None:
+                            break
+                    self.assertIsNone(popup.parent)
+                    popup = None
+                    ui.set_storage_status(True, 'Drive siap')
+                    settle()
+                    self.assertIsNone(ui.status_details.parent)
+                    self.assertTrue(ui.status_details.disabled)
+                    self.assertFalse(ui.status.is_shortened)
+                    self.assertIs(ui.start_button, start)
+                    self.assertFalse(start.disabled)
+                    self.assertEqual(ui.quantities['template_a'], 2)
+        finally:
+            if popup is not None:
+                popup.dismiss(animation=False)
+            Window.remove_widget(ui.shell)
+            Window.size = original_size
+
     def test_disabled_labels_are_readable_and_recovery_restores_enabled_palette(self):
         """Read the painted label colors, including Kivy's disabled background.
 

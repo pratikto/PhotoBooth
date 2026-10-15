@@ -10,6 +10,7 @@ Android camera/USB driver implementation or an Android packaging configuration.
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.core.window import Window
+from kivy.core.text import Label as CoreLabel
 from kivy.graphics import Color, Rectangle, RoundedRectangle, Line
 from kivy.graphics.texture import Texture
 from kivy.metrics import dp
@@ -161,11 +162,29 @@ class PhotoBoothUI:
         footer = BoxLayout(size_hint_y=None, height=dp(34), spacing=dp(12))
         self._footer_row = footer
         self.status = self._label('', 12, color=GREY)
+        # The footer is intentionally one line. Keep its full text available to
+        # controller recovery while replacing visual overflow with an ellipsis.
+        # A separate, persistent action opens the unabridged diagnostic below.
+        self.status.shorten = True
+        self.status.shorten_from = 'right'
+        self.status.max_lines = 1
         footer.add_widget(self.status)
+        self.status_details = self._button('DETAIL', self._show_status_details, enabled=False,
+                                           secondary=True, screen_bound=False)
+        self.status_details.size_hint_x = None
+        self.status_details.width = dp(72)
+        self.status_details.size_hint_y = 1
+        self.status_details.font_size = dp(12)
+        self._status_measure_key = None
+        self._status_natural_width = 0
         self.camera_badge = self._label('Kamera diperiksa', 12, color=GREY, align='right')
         self.camera_badge.size_hint_x = None
         self.camera_badge.width = dp(170)
         footer.add_widget(self.camera_badge)
+        # Insert the details action only when needed. An invisible zero-width
+        # child would still add BoxLayout spacing and squeeze normal statuses.
+        footer.bind(size=self._fit_status)
+        self.camera_badge.bind(width=self._fit_status)
         self.shell.add_widget(footer)
         self.header = self.brand  # Historical public handle retained for callers.
         self._page_title = self._page_subtitle = None
@@ -332,8 +351,41 @@ class PhotoBoothUI:
         return widget
 
     def set_status(self, message):
-        """Display controller feedback independently from page navigation."""
+        """Keep complete feedback while fitting its summary into the footer.
+
+        Measure with the text provider's CPU extents, not a natural-width GPU
+        texture: a long backend diagnostic can exceed the graphics size limit.
+        Cache the latest measurement because preview/retry polls repeat messages.
+        """
         self.status.text = message
+        key = (message, self.status.font_name, self.status.font_size)
+        if key != self._status_measure_key:
+            measure = CoreLabel(font_name=self.status.font_name, font_size=self.status.font_size)
+            self._status_natural_width = measure.get_extents(message.replace('\n', ' '))[0]
+            self._status_measure_key = key
+        self._fit_status()
+
+    def _fit_status(self, *_args):
+        """Show details for overflow without a width-dependent toggle loop.
+
+        Decide against the space available WITHOUT the details action. Testing
+        the already shortened label width would make the action oscillate near
+        the breakpoint after it consumes its own width and extra spacing.
+        """
+        footer = self._footer_row
+        available = max(0, footer.width - self.camera_badge.width - footer.spacing)
+        message = self.status.text
+        needed = bool(message.strip()) and ('\n' in message or self._status_natural_width > available)
+        self.status_details.disabled = not needed
+        if needed and self.status_details.parent is None:
+            footer.add_widget(self.status_details, index=1)
+        elif not needed and self.status_details.parent is footer:
+            footer.remove_widget(self.status_details)
+
+    def _show_status_details(self):
+        """Open a read-only snapshot; background status updates do not erase it."""
+        if not self.status_details.disabled:
+            return self.show_error('Status perangkat', self.status.text)
 
     def set_camera_status(self, ready):
         """Apply frame readiness to the current screen without rebuilding it.

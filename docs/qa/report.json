@@ -185,6 +185,85 @@
       }
     },
     {
+      "screen": "templates-status",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "templates-status-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "status_shortened": true,
+      "status_details_visible": true,
+      "disabled_text_contrast": [
+        {
+          "text": "\u2212",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            76,
+            91,
+            81
+          ],
+          "ratio": 5.221
+        },
+        {
+          "text": "\u2212",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            76,
+            91,
+            81
+          ],
+          "ratio": 5.221
+        },
+        {
+          "text": "\u2212",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            76,
+            91,
+            81
+          ],
+          "ratio": 5.221
+        },
+        {
+          "text": "LANJUT KE PEMBAYARAN",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
+        }
+      ],
+      "selected_templates": [
+        "template_a"
+      ],
+      "quantities": {
+        "template_a": 2,
+        "template_b": 0,
+        "template_c": 0,
+        "template_d": 0
+      }
+    },
+    {
       "screen": "templates-bottom",
       "size": [
         1200,
@@ -569,6 +648,57 @@
             81
           ],
           "ratio": 5.221
+        }
+      ],
+      "selected_templates": [
+        "template_a"
+      ],
+      "quantities": {
+        "template_a": 2,
+        "template_b": 0,
+        "template_c": 0,
+        "template_d": 0
+      }
+    },
+    {
+      "screen": "templates-status",
+      "size": [
+        800,
+        600
+      ],
+      "file": "templates-status-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "status_shortened": true,
+      "status_details_visible": true,
+      "disabled_text_contrast": [
+        {
+          "text": "\u2212",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            76,
+            91,
+            81
+          ],
+          "ratio": 5.221
+        },
+        {
+          "text": "LANJUT KE PEMBAYARAN",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
         }
       ],
       "selected_templates": [

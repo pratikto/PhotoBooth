@@ -6,6 +6,7 @@ The screen-action/selection follow-up starts from `26e27a722ab965e62d78b572b9c1b
 The faithful-review follow-up starts from `1f5f3cda5a6bcba7718afa415e13726a54ec7b32`.
 The upload-revision follow-up starts from `c99924aec2460a25211c6d21b020999b12f20034`.
 The disabled-label follow-up starts from `12f7cc003deb2f9fa5e7148beec2228b13ffdaaa`.
+The complete-status follow-up starts from `ca51189f48073da8a5f6775c06b771e56403d27e`.
 The original working copy was left untouched. Source files in the separate
 checkout were checked against the freshly fetched GitHub blobs before editing.
 
@@ -33,11 +34,12 @@ scrolling area. Payment back-navigation also retains the customer's quantities.
 | Empty quantities disable the decrement control | Passed | Passed |
 | Review pixels match the saved photo crop before/after retake | Passed | Passed |
 | Disabled status labels meet the project's 4.5:1 text-color threshold | Passed | Passed |
+| Long status summary and full-message details remain reachable | Passed | Passed |
 
 The image sheets below contain the six main screens. The reproducible renderer
 also includes countdown, bottom-of-gallery, retake-used, local-only, and next-session
-states, camera-waiting capture/payment/review, and empty/partly selected carts:
-**32 full-size PNGs** in total.
+states, camera-waiting capture/payment/review, empty/partly selected carts,
+and a long-storage-status fixture: **34 full-size PNGs** in total.
 The JSON [report](report.json) records each
 render and the QR text decoded from its actual screen pixels. Full-size renders
 are produced by the command below; only the compact sheets are committed here.
@@ -141,8 +143,9 @@ Disabled controls now use an opaque, flat muted fill and darker ink, with no
 change to geometry or callback gates. The test also re-enables the same camera
 button and quantity controls, checking that primary/secondary colors return.
 
-The current report includes `disabled_text_contrast` for every fully visible
-disabled button in the 32 fixtures: **28 labels**, measured at **5.141–5.221:1**.
+The report includes `disabled_text_contrast` for every fully visible disabled
+button. The original 32 fixtures covered **28 labels**, and the two additional
+long-status fixtures bring that to **34 labels**, measured at **5.141–5.221:1**.
 It samples the exported screen's dominant inset background and strongest glyph
 color, not just configured properties; this catches tint from Kivy's default
 disabled atlas. Partly clipped gallery controls are excluded from color sampling
@@ -158,6 +161,32 @@ the evidence script: the welcome capture could run before its pending layout.
 Each scene is now chained from its own setup/capture. After that harness fix,
 all 32 renders passed without relaxing the layout, painted-QR, or crop checks.
 
+## Complete status diagnostics
+
+A long Drive/cache diagnostic previously needed 75px at 1200x800 and 105px at
+800x600, exceeding the footer's respective 34px and 26px heights. The new
+regression first reproduced missing elision at both sizes. Status now stays on
+one line with an ellipsis, while a persistent **DETAIL** action opens the full
+message in the existing scrollable dialog. The full public `status.text` is
+unchanged for controller recovery; only its visual presentation is shortened.
+
+The real-widget tests open and scroll a multi-kilobyte diagnostic, wait for actual
+animated dismissal, then recover storage without losing the two-session cart or
+replacing its main action. Another test resizes a message across its overflow
+threshold and back, checking that details appear only when necessary without
+rebuilding the order or oscillating. CPU font measurement avoids allocating an
+oversized texture just to calculate a long message's natural width.
+
+These new sheets compare the same Rp10.000 order with unavailable and ready
+storage. The report records `status_shortened` and `status_details_visible` for
+both long-status fixtures; all six earlier contact sheets are byte-identical.
+The new sheets and actual full-size diagnostic dialogs were inspected visually.
+Messages are synthetic fixtures, not real backend responses or credentials.
+
+![Long status at 800x600](diagnostics-800x600.png)
+
+![Long status at 1200x800](diagnostics-1200x800.png)
+
 ## Reproduce
 
 Python 3.12.14, Kivy 2.3.1, OpenCV 5.0.0, SDL2 offscreen, and Mesa llvmpipe were used. No webcam,
@@ -168,7 +197,7 @@ SDL_VIDEODRIVER=offscreen PHOTOBOOTH_TEST_GUI=1 python -m unittest discover -s t
 SDL_VIDEODRIVER=offscreen python tools/render_gui.py --output-dir /tmp/photobooth-gui-qa
 ```
 
-The suite passed **49 tests**. Its controller/storage checks include two-session
+The suite passed **51 tests**. Its controller/storage checks include two-session
 orders, one retake per session, local PNG and manifest persistence, cached folder
 allocation, an offline upload failure followed by retry, and skipping verified
 uploads. Camera acquisition and Drive access use deterministic fakes. The layout

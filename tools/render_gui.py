@@ -37,10 +37,13 @@ from photobooth.ui_kivy import KivyHost, PhotoBoothUI
 
 FOLDER_URL = 'https://drive.google.com/drive/folders/1AbCdEfGhIjKlMnOpQrStUvWxYz123456'
 STATUS = 'Drive siap · 25 slot folder tersedia.'
+LONG_STATUS = ('Slot Drive perlu diperiksa: Folder fixture belum terverifikasi. '
+               'Salinan lokal tetap tersimpan. Periksa konfigurasi deployment lalu coba lagi. ') * 8
 SIZES = ((1200, 800), (800, 600))
 OVERVIEW_SCREENS = ('welcome', 'templates', 'payment', 'capture', 'review', 'result')
 STATE_SCREENS = ('payment-waiting', 'capture-waiting', 'review-used', 'review-waiting')
 SELECTION_SCREENS = ('templates-empty', 'templates-one', 'templates', 'templates-bottom')
+DIAGNOSTIC_SCREENS = ('templates-status', 'templates-one')
 
 
 def synthetic_portrait(index):
@@ -187,6 +190,8 @@ def main():
         ('templates', cart, None),
         ('templates-empty', lambda: ui.show_template_selection(True, STATUS), None),
         ('templates-one', single_template, None),
+        ('templates-status', lambda: ui.show_template_selection(
+            True, LONG_STATUS, storage_ready=False, quantities={'template_a': 2}), None),
         ('templates-bottom', cart, scroll_last_template),
         ('payment', lambda: ui.show_payment('\n'.join(f'{t.name} × 2' for t in templates),
                                            8, 40000, lambda: None, lambda: None), None),
@@ -245,6 +250,17 @@ def main():
                 raise AssertionError('Retake must be disabled when its quota or camera is unavailable')
             record = {'screen': name, 'size': list(size), 'file': path.name,
                       'stage_fits': fits, 'decoded_qr': decoded}
+            if name == 'templates-status':
+                if (not ui.status.is_shortened or ui.status_details.disabled
+                        or ui.status_details.parent is not ui._footer_row
+                        or not fully_visible(ui.status_details)):
+                    raise AssertionError('Long status needs a visible, reachable details action')
+                if not ui.start_button.disabled or ui.cart_total.text != 'Rp10.000':
+                    raise AssertionError('Showing diagnostics must preserve the order/storage gate')
+                record['status_shortened'] = True
+                record['status_details_visible'] = True
+            elif ui.status_details.parent is not None:
+                raise AssertionError(f'A short status should not reserve a details action in {name}')
             disabled = [widget for widget in ui.content.walk()
                         if isinstance(widget, Button) and widget.disabled and fully_visible(widget)]
             if disabled:
@@ -326,6 +342,7 @@ def main():
         overview(output, size)
         overview(output, size, STATE_SCREENS, 'states')
         overview(output, size, SELECTION_SCREENS, 'selection')
+        overview(output, size, DIAGNOSTIC_SCREENS, 'diagnostics')
     print(f'{len(records)} real-widget renders saved in {output}')
 
 

@@ -314,7 +314,7 @@ to the last template, resizing an existing cart, editing payment quantities,
 controller capture/retake flow, storage persistence, and offline upload retries.
 See [visual evidence and reproduction instructions](docs/qa/README.md).
 
-Generate the 32 real-widget screenshots and a machine-readable report without
+Generate the 34 real-widget screenshots and a machine-readable report without
 camera hardware or Drive credentials:
 
 ```bash
@@ -443,3 +443,26 @@ all deadlines before startup. This avoids a slow font/plugin initialization
 executing setup and capture in the same frame. Layout, QR decoding, and crop
 assertions remain strict. Camera/Drive checks still use fakes; QRIS is simulated
 and physical printing is not connected.
+
+### Complete diagnostics without a crowded footer
+
+Long storage/backend messages previously wrapped into a fixed-height footer and
+were silently cropped. A reproduced 800x600 diagnostic needed 105px of text in a
+26px row; the same message also exceeded the 34px row at 1200x800. The footer now
+shows one line with an ellipsis and a compact **DETAIL** action only when needed.
+It opens the existing scrollable dialog with the complete message. Normal short
+statuses reserve no extra button or spacing.
+
+The public status text remains complete for camera-loss/recovery bookkeeping.
+Details are a read-only snapshot; opening, scrolling, or closing them does not
+rebuild the cart or change storage gates. Font extents are measured on the CPU
+instead of creating a potentially oversized single-line graphics texture. The
+action also appears/disappears in place when a window resize changes available
+width, without oscillating near the breakpoint.
+
+Validation: **51 tests passed** and **34 real-widget renders** completed at both
+desktop sizes. Tests cover full-message access, scrolling to the end, animated
+dismissal, breakpoint stability, and storage recovery with the same two-session
+cart (Rp10.000). New [diagnostic sheets](docs/qa/README.md) compare unavailable
+storage with a ready cart. All six earlier contact sheets remain byte-identical.
+Camera and Drive scenarios still use fakes, not live devices/services.
