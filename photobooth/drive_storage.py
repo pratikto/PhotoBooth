@@ -727,8 +727,18 @@ class AppsScriptDriveClient:
                 "target_ready": target_ready,
             }
         )
+        # Missing `slots` is a protocol mismatch, not an empty inventory. Treating
+        # it as [] used to mark every cached READY folder as ACTION_REQUIRED.
+        # Reject before the pool mutates any local records. A common cause is an
+        # older /exec deployment that has not been updated to the folder API.
+        if not isinstance(result.get("slots"), list):
+            raise DriveApiError(
+                "Apps Script response is missing the slots list. Deploy the current "
+                "apps_script/Code.gs as a new version and verify WEB_APP_URL.",
+                502,
+            )
         remote_slots: list[RemoteDriveSlot] = []
-        for item in result.get("slots", []):
+        for item in result["slots"]:
             if not isinstance(item, dict):
                 continue
             remote_slots.append(

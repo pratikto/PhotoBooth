@@ -314,3 +314,32 @@ class DriveSyncTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class PoolRecoveryRegressionTests(unittest.TestCase):
+    """Unused preallocated IDs must not permanently block slot revalidation."""
+
+    def test_unused_error_slot_recovers_but_claimed_slot_stays_assigned(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            pool = DriveSlotPool(root / 'photos', root / 'pool.json', 'PB001', 1)
+            slot = RemoteDriveSlot(folder_id='fake-folder', folder_url='https://example.org/folder',
+                                   slot_key='PB001_00000001', status='READY',
+                                   folder_name='PB001_00000001', transaction_id='PB001_00000001',
+                                   verified=True)
+            class Client:
+                def __init__(self):
+                    self.slots = [slot]
+                def ensure_folder_pool(self, *args):
+                    return self.slots
+            client = Client()
+            pool.refresh(client)
+            client.slots = []
+            pool.refresh(client)
+            self.assertEqual(pool.ready_count, 0)
+            client.slots = [slot]
+            pool.refresh(client)
+            self.assertEqual(pool.ready_count, 1)
+            claimed = pool.claim()
+            pool.refresh(client)
+            self.assertEqual(pool.ready_count, 0)
+            self.assertEqual(pool.assigned_count, 1)
