@@ -135,6 +135,11 @@ class ControllerFlowTests(unittest.TestCase):
                     app._save_current_frame(False)
                 app._accept_current_session()
                 self.assertIsNotNone(app.ui.qr_view.texture)
+                # Verify the saved/uploaded PNG itself, not only the UI QR.
+                import cv2
+                decoded, _, _ = cv2.QRCodeDetector().detectAndDecode(
+                    cv2.imread(str(app.current_session.output_path)))
+                self.assertEqual(decoded, url)
                 qr_pixels = app.ui._qr_bytes
                 manifest = sync_manifest(transaction.manifest_path, backend)
                 self.assertEqual(manifest['upload_status'], 'UPLOAD_RETRY')

@@ -142,8 +142,15 @@ def compose_result(
     output_path: Path,
     transaction_id: str,
     session_id: str,
+    folder_url: str | None = None,
 ) -> Path:
-    """Compose the three selected images into a portrait digital photo strip."""
+    """Compose three photos plus their stable transaction-folder QR.
+
+    ``folder_url`` is captured in the transaction manifest before photography.
+    It therefore works without a network request and stays the same when queued
+    uploads resume. Local-only sessions have no real destination and must not
+    contain a fabricated QR or a local machine path.
+    """
     if len(photo_paths) != 3:
         raise ValueError("A session output must contain exactly three photos.")
 
@@ -173,7 +180,9 @@ def compose_result(
     )
 
     photo_width = 470
-    photo_height = 610
+    # Reserve a dedicated footer for the scannable QR. It must never overlap
+    # faces or be cropped together with a photo. Output remains 1800x1000.
+    photo_height = 500
     gap = 40
     # Center three fixed-size frames as a group instead of spacing them relative to the window.
     total_photos_width = photo_width * 3 + gap * 2
@@ -204,7 +213,7 @@ def compose_result(
         )
         canvas.paste(photo, (photo_left, top))
 
-    footer_top = 850
+    footer_top = 735
     # Keep the transaction and session IDs on the image so customers can identify the result later.
     draw.line(
         (105, footer_top, width - 105, footer_top),
@@ -217,6 +226,31 @@ def compose_result(
         fill=template.foreground,
         font=small_font,
     )
+
+    if folder_url:
+        from photobooth.qr_code import create_qr_image
+        from urllib.parse import urlparse
+        parsed = urlparse(folder_url)
+        if parsed.scheme != "https" or not parsed.netloc:
+            raise ValueError("The result QR requires a valid HTTPS folder URL.")
+        qr = create_qr_image(folder_url)
+        # create_qr_image uses 8px modules including a four-module quiet zone.
+        # Resize by an INTEGER module scale with nearest-neighbor sampling;
+        # arbitrary resizing can introduce uneven dots and blur at print time.
+        module_count = qr.width // 8
+        module_scale = max(1, 210 // module_count)
+        qr_size = module_count * module_scale
+        qr = qr.resize((qr_size, qr_size), Image.Resampling.NEAREST)
+        canvas.paste(qr, (width - 115 - qr_size, 750))
+        draw.text((108, footer_top + 73), "SCAN UNTUK MEMBUKA FOLDER FOTO",
+                  fill=template.foreground, font=_font(28, bold=True))
+        draw.text((108, footer_top + 119), "Foto mentah dan hasil template ada di folder yang sama.",
+                  fill=template.foreground, font=small_font)
+    else:
+        # Keep an honest label for local development. A QR for a Windows path
+        # would be unusable on the customer's phone and is deliberately omitted.
+        draw.text((108, footer_top + 78), "HASIL LOKAL - LINK FOLDER BELUM TERSEDIA",
+                  fill=template.foreground, font=small_font)
 
     canvas.save(output_path, format="PNG")
     return output_path

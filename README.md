@@ -280,3 +280,19 @@ Real-device preview latency and account-specific upload permissions still requir
 operator verification. QRIS remains an explicit simulation, physical printing is
 not implemented, and Android packaging/device integration remains out of scope.
 The four bundled template artworks are still sample artwork, not final designs.
+
+### Folder QR embedded in the saved output
+
+Every newly composed session PNG now embeds the cached transaction-folder URL
+in a dedicated footer. The QR is not merely a GUI widget; it is part of the
+same PNG recorded in the manifest and queued for Drive upload. All templates
+reserve separate space for photos, IDs, captions, and a black-on-white QR quiet
+zone. Integer module scaling prevents resampling blur. No online request is
+needed to render the QR, so an offline upload retry keeps the same destination.
+Local-only sessions explicitly omit a QR because no Drive URL exists. Existing
+saved outputs are not regenerated or overwritten by this change. Physical
+printing and thermal-native QR sizing remain part of the future printer adapter.
+
+Validation now includes 24 tests: QR decoding from the saved result of all four
+templates and from a controller-generated offline transaction, in addition to
+widget, workflow, storage, camera-thread, and retry tests.

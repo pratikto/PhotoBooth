@@ -201,3 +201,25 @@ class TransactionStoreTests(unittest.TestCase):
 if __name__ == "__main__":
     unittest.main()
 
+
+class EmbeddedFolderQRTests(unittest.TestCase):
+    """Each saved template must carry a decodable folder QR outside photo areas."""
+
+    def test_all_templates_embed_the_same_folder_destination(self):
+        import cv2
+        import numpy as np
+        url = 'https://drive.google.com/drive/folders/1AbCdEfGhIjKlMnOpQrStUvWxYz123456'
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            photo = root / 'raw.png'
+            Image.new('RGB', (640, 480), '#aabbbc').save(photo)
+            for template in get_templates():
+                with self.subTest(template=template.template_id):
+                    path = compose_result([photo] * 3, template,
+                                          root / f'{template.template_id}.png',
+                                          'PB001_00000001', 'session_001', folder_url=url)
+                    result = cv2.imread(str(path))
+                    self.assertEqual(result.shape[:2], (1000, 1800))
+                    decoded, points, _ = cv2.QRCodeDetector().detectAndDecode(result)
+                    self.assertEqual(decoded, url)
+                    self.assertGreater(float(points[:, :, 1].min()), 735)

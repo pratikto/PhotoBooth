@@ -512,6 +512,9 @@ class PhotoBoothApp:
                 output_path=output_path,
                 transaction_id=transaction.transaction_id,
                 session_id=session.plan.session_id,
+                # Embed exactly the same folder destination used by the on-screen
+                # QR, including while offline. No payment QR belongs on this image.
+                folder_url=transaction.manifest.get("drive_folder_url"),
             )
             self.store.record_output(
                 transaction=transaction,
