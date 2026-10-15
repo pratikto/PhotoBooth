@@ -17,7 +17,7 @@ import cv2
 from PIL import Image
 
 from photobooth.camera import Camera
-from photobooth.catalog import compose_result, get_templates
+from photobooth.catalog import PRICE_PER_SESSION, compose_result, get_templates
 from photobooth.drive_pool import DriveSlotPool
 from photobooth.drive_storage import AppsScriptDriveClient, DriveApiError, GoogleDriveClient
 from photobooth.drive_sync import DriveSyncWorker
@@ -195,13 +195,16 @@ class PhotoBoothApp:
         The order is copied so later widget edits cannot change the paid amount.
         Camera and storage are checked again by _start_transaction on confirmation.
         """
+        if self.ui.current_screen != "templates" or self.transaction is not None:
+            return
         plans = build_session_plans(self.templates, quantities)
         if not plans:
             self.ui.show_error("Template belum dipilih", "Pilih minimal satu sesi.")
             return
         order = dict(quantities)
-        # This example price is configurable and is NOT a production tariff.
-        unit_price = int(os.environ.get("PHOTOBOOTH_DEMO_PRICE", "10000"))
+        # The agreed tariff is IDR 5,000 per quantity/session. Payment remains
+        # simulated, but its displayed amount must match the real order tariff.
+        unit_price = PRICE_PER_SESSION
         summary = "\n".join(
             f"{template.name} x {order.get(template.template_id, 0)}"
             for template in self.templates if order.get(template.template_id, 0)
@@ -217,6 +220,10 @@ class PhotoBoothApp:
     def _start_transaction(self, quantities: dict[str, int]) -> None:
         # Validate the selected quantities, create one plan per session, claim a preassigned Drive
         # folder when available, and persist the transaction locally before capturing any photos.
+        # Ignore stale payment callbacks after the screen has advanced. The
+        # explicit simulation action is the only current path into capture.
+        if self.ui.current_screen != "payment" or self.transaction is not None:
+            return
         if not self.camera_ready:
             self.ui.show_error("Kamera belum siap", "Sesi foto belum dapat dimulai.")
             return
@@ -481,6 +488,10 @@ class PhotoBoothApp:
         # QR and upload status, and start the final-screen timer when this is the last session.
         session = self.current_session
         transaction = self.transaction
+        # Prevent duplicate acceptance from a queued double tap. Once result is
+        # visible, another accept callback must not rewrite output or restart timers.
+        if self.ui.current_screen != "review":
+            return
         if session is None or transaction is None or not session.ready_for_review:
             self.ui.show_error(
                 "Foto belum lengkap",
@@ -543,6 +554,8 @@ class PhotoBoothApp:
     def _start_next_session(self) -> None:
         # Cancel the final-session timer and advance to the next planned session, or finish the
         # transaction if there is no next session.
+        if self.ui.current_screen != "result":
+            return
         self._cancel_completion_countdown()
         if self.session_index + 1 >= len(self.sessions):
             self._finish_transaction()

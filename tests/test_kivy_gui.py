@@ -47,8 +47,7 @@ class KivyFlowTests(unittest.TestCase):
         ui.show_payment('Template 1 x 2', 2, 20000,
                         lambda: confirmations.append(True), lambda: None)
         self.assertEqual(ui.current_screen, 'payment')
-        confirm = next(w for w in ui.content.children
-                       if getattr(w, 'text', '') == 'SIMULASIKAN PEMBAYARAN BERHASIL')
+        confirm = ui.payment_confirm
         confirm.dispatch('on_release')
         confirm.dispatch('on_release')
         self.assertEqual(confirmations, [True])

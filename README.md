@@ -243,8 +243,8 @@ backend or deployment was contacted.
 ## Dummy payment screen
 
 Template selection now opens a payment simulation before camera capture.
-The example session price defaults to IDR 10,000 and can be changed with
-`PHOTOBOOTH_DEMO_PRICE`. It is not a production tariff. The QR contains demo
+The agreed price is IDR 5,000 per template session (one unit of quantity).
+The gallery, cart, and payment use the same tariff from `catalog.py`. The QR contains demo
 text, is NOT valid QRIS, and must not be used to transfer money. Only the clearly
 labelled simulation button advances to capture. No provider verification or real
 payment integration is implemented.
@@ -253,3 +253,30 @@ The result screen displays the transaction-folder QR separately from payment.
 Its image has a fixed minimum display area inside a scrollable result panel,
 so short windows cannot collapse it behind its caption. Printing remains
 unimplemented; this is the digital result screen, not printer confirmation.
+
+## Kiosk interface redesign and verification
+
+The Kivy screens now use warm paper backgrounds, sage accents, consistent rounded
+cards, a persistent step indicator, and bounded touch controls. Template selection
+has a separate order summary; camera capture emphasizes the live image; review
+clearly marks the retake target. Critical order, payment, review, and result actions
+stay outside scrolling panels. Result QR content is anchored to the top of its
+card and retains its quiet zone. All six screens were rendered at 1200x800 and
+800x600 during visual QA; small windows use scrollable content instead of overlap.
+
+Controller guards ignore stale payment confirmation and session-acceptance events.
+The historical `ui_tkinter.py` remains unchanged.
+
+Validation: 23 automated tests passed with real Kivy widgets and offscreen Mesa.
+This includes complete controller orders, per-session retakes, countdown ticks,
+local output/manifest persistence, cached Drive folder allocation, offline retry,
+unchanged folder QR pixels through an outage, and skipping verified files on retry.
+Camera acquisition is tested with a blocking simulated device. QR pixels are
+read back from an actual Kivy texture and decoded with OpenCV.
+
+External limitations: the webcam and live Google Apps Script service were not
+available to the automated tests; these integrations use deterministic fakes.
+Real-device preview latency and account-specific upload permissions still require
+operator verification. QRIS remains an explicit simulation, physical printing is
+not implemented, and Android packaging/device integration remains out of scope.
+The four bundled template artworks are still sample artwork, not final designs.

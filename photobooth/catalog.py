@@ -28,6 +28,10 @@ class BoothTemplate:
     preview_background: str
 
 
+# Each quantity represents a separate three-photo session for one template.
+# Keep the tariff in one place so gallery, cart, and payment cannot disagree.
+PRICE_PER_SESSION = 5000
+
 TEMPLATES = (
     BoothTemplate(
         template_id="template_a",
