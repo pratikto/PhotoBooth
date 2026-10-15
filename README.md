@@ -239,3 +239,17 @@ Script deployment to the repository's `apps_script/Code.gs` using a new version,
 and verify the configured `/exec` URL. The current repository backend returns
 `slots` for `ensure_folder_pool`; a missing list alone does not prove which
 backend or deployment was contacted.
+
+## Dummy payment screen
+
+Template selection now opens a payment simulation before camera capture.
+The example session price defaults to IDR 10,000 and can be changed with
+`PHOTOBOOTH_DEMO_PRICE`. It is not a production tariff. The QR contains demo
+text, is NOT valid QRIS, and must not be used to transfer money. Only the clearly
+labelled simulation button advances to capture. No provider verification or real
+payment integration is implemented.
+
+The result screen displays the transaction-folder QR separately from payment.
+Its image has a fixed minimum display area inside a scrollable result panel,
+so short windows cannot collapse it behind its caption. Printing remains
+unimplemented; this is the digital result screen, not printer confirmation.

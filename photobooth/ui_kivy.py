@@ -225,6 +225,37 @@ class PhotoBoothUI:
             self._refresh_order()
         self.set_status(message)
 
+    def show_payment(self, order_summary, session_count, total_amount, on_confirm, on_back):
+        """Display a clearly labelled simulation, with no real QRIS payload.
+
+        QRIS is a payment standard; an arbitrary generated QR must never be
+        presented as a payable code. This QR contains demo text only. The
+        transaction-folder QR is generated separately after photography.
+        """
+        from photobooth.qr_code import create_qr_image
+        page = self._reset('payment', 'Pembayaran - SIMULASI',
+                           'DUMMY: bukan QRIS valid. Jangan transfer uang.')
+        scroll = ScrollView()
+        body = BoxLayout(orientation='vertical', size_hint_y=None, spacing=dp(8))
+        body.bind(minimum_height=body.setter('height'))
+        scroll.add_widget(body)
+        page.add_widget(scroll)
+        amount = 'Rp ' + f'{total_amount:,}'.replace(',', '.')
+        body.add_widget(self._label(f'{order_summary}\n{session_count} sesi | Total contoh: {amount}', 18, 100))
+        qr = self._display(create_qr_image(f'PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR {total_amount}'), crisp=True)
+        qr.size_hint_y = None
+        qr.height = dp(220)
+        body.add_widget(qr)
+        body.add_widget(self._label('Menunggu simulasi pembayaran\nHarga contoh dapat diatur dengan PHOTOBOOTH_DEMO_PRICE.', 15, 65))
+        def confirm_once():
+            # Disable before dispatch so a double tap cannot allocate two orders.
+            if not confirm.disabled:
+                confirm.disabled = True
+                on_confirm()
+        confirm = self._button('SIMULASIKAN PEMBAYARAN BERHASIL', confirm_once)
+        page.add_widget(confirm)
+        page.add_widget(self._button('KEMBALI PILIH TEMPLATE', on_back))
+
     def show_capture(self, session_label, capture_count, preview_image,
                      action_label='AMBIL FOTO', countdown_text='', can_capture=True,
                      is_retake=False):
@@ -318,15 +349,20 @@ class PhotoBoothUI:
         visible next to the QR so an offline customer understands missing files.
         """
         page = self._reset('result', 'Sesi selesai', f'{session_label} | {transaction_id}')
-        row = BoxLayout(spacing=dp(18))
-        page.add_widget(row)
+        # Fixed-height details used to consume all of a short row, leaving
+        # the QR Image with zero height. Give the QR an explicit height and
+        # put the whole result panel in a scroll viewport for small windows.
+        scroll = ScrollView(do_scroll_x=False)
+        row = BoxLayout(spacing=dp(18), size_hint_y=None, height=dp(340))
+        scroll.add_widget(row)
+        page.add_widget(scroll)
         with Image.open(image_path) as source:
             display = source.convert('RGB')
             display.thumbnail((700, 650))
         row.add_widget(self._display(display))
         details = BoxLayout(orientation='vertical', spacing=dp(10))
         row.add_widget(details)
-        self.qr_view = KivyImage(fit_mode='contain')
+        self.qr_view = KivyImage(fit_mode='contain', size_hint_y=None, height=dp(180))
         # Kivy images are transparent outside their texture. A solid white backing
         # preserves the QR quiet zone and avoids dark-theme scan failures.
         with self.qr_view.canvas.before:
@@ -335,9 +371,9 @@ class PhotoBoothUI:
         self.qr_view.bind(pos=lambda w, v: setattr(backing, 'pos', v),
                           size=lambda w, v: setattr(backing, 'size', v))
         details.add_widget(self.qr_view)
-        self.qr_title = self._label('', 17, 60)
+        self.qr_title = self._label('', 17, 54)
         details.add_widget(self.qr_title)
-        self.upload_status = self._label(upload_message, 15, 100)
+        self.upload_status = self._label(upload_message, 15, 80)
         details.add_widget(self.upload_status)
         self.set_result_qr(qr_image, qr_pending)
         self.completion = self._label('', 18, 40)

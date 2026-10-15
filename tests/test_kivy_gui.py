@@ -42,6 +42,17 @@ class KivyFlowTests(unittest.TestCase):
         ui._start_selected()
         self.assertEqual(orders, [{key: 2}])
 
+        # Payment is an explicit simulation and confirms only once per screen.
+        confirmations = []
+        ui.show_payment('Template 1 x 2', 2, 20000,
+                        lambda: confirmations.append(True), lambda: None)
+        self.assertEqual(ui.current_screen, 'payment')
+        confirm = next(w for w in ui.content.children
+                       if getattr(w, 'text', '') == 'SIMULASIKAN PEMBAYARAN BERHASIL')
+        confirm.dispatch('on_release')
+        confirm.dispatch('on_release')
+        self.assertEqual(confirmations, [True])
+
         frame = Image.new('RGB', (640, 480), 'salmon')
         ui.show_capture('Session 1', 0, frame)
         ui.set_countdown(3)
@@ -80,6 +91,9 @@ class KivyFlowTests(unittest.TestCase):
             decoded, _, _ = cv2.QRCodeDetector().detectAndDecode(
                 pixels.reshape(height, width, channels)[:, :, :3])
             self.assertEqual(decoded, url)
+            # A short window must never collapse the QR to zero height.
+            self.assertIsNone(ui.qr_view.size_hint_y)
+            self.assertGreaterEqual(ui.qr_view.height, 180)
             self.assertIn('01:00', ui.completion.text)
             ui.set_result_upload_status('Offline; files queued')
             self.assertIsNotNone(ui.qr_view.texture)

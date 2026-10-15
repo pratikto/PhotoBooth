@@ -97,7 +97,7 @@ class PhotoBoothApp:
             root=self.root,
             templates=self.templates,
             on_home_start=self._open_template_selection,
-            on_start=self._start_transaction,
+            on_start=self._open_dummy_payment,
             on_capture=self._start_capture_countdown,
             on_select_photo=self._select_photo,
             on_retake=self._start_retake_countdown,
@@ -185,6 +185,33 @@ class PhotoBoothApp:
             camera_ready=True,
             storage_ready=(self.drive_pool.has_ready_slot() or self.local_only_mode),
             status_message=self._storage_status_message(),
+        )
+
+    def _open_dummy_payment(self, quantities: dict[str, int]) -> None:
+        """Preview a simulated payment before allocating any customer transaction.
+
+        No payment provider is connected. The confirmation button is an explicit
+        development action, never evidence that real money has been received.
+        The order is copied so later widget edits cannot change the paid amount.
+        Camera and storage are checked again by _start_transaction on confirmation.
+        """
+        plans = build_session_plans(self.templates, quantities)
+        if not plans:
+            self.ui.show_error("Template belum dipilih", "Pilih minimal satu sesi.")
+            return
+        order = dict(quantities)
+        # This example price is configurable and is NOT a production tariff.
+        unit_price = int(os.environ.get("PHOTOBOOTH_DEMO_PRICE", "10000"))
+        summary = "\n".join(
+            f"{template.name} x {order.get(template.template_id, 0)}"
+            for template in self.templates if order.get(template.template_id, 0)
+        )
+        self.ui.show_payment(
+            order_summary=summary,
+            session_count=len(plans),
+            total_amount=len(plans) * unit_price,
+            on_confirm=lambda: self._start_transaction(order),
+            on_back=self._open_template_selection,
         )
 
     def _start_transaction(self, quantities: dict[str, int]) -> None:
