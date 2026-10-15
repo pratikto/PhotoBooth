@@ -9,6 +9,7 @@ It never creates a customer transaction, opens a webcam, or contacts a service.
 """
 
 import argparse
+from collections import Counter
 import json
 import os
 from pathlib import Path
@@ -26,6 +27,7 @@ from PIL import Image, ImageDraw, ImageFont
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.uix.image import Image as KivyImage
+from kivy.uix.button import Button
 from kivy.uix.scrollview import ScrollView
 
 from photobooth.catalog import compose_result, get_templates
@@ -66,6 +68,51 @@ def screenshot_qr(image_path, widget):
                   round(left):round(right)]
     decoded, _, _ = cv2.QRCodeDetector().detectAndDecode(crop)
     return decoded
+
+
+def button_contrast(image_path, widget):
+    """Measure a disabled label against its actually painted background.
+
+    Kivy's disabled atlas can tint a nominal background, so comparing configured
+    colors alone misses the final appearance. Sample only the inset button box,
+    take its dominant fill, and find the strongest painted glyph color nearest
+    the configured disabled ink. Intermediate antialias pixels are not mistaken
+    for the foreground. This is a text-color check, not an accessibility audit.
+    """
+    left, bottom, right, top = bounds(widget)
+    with Image.open(image_path) as source:
+        crop = source.convert('RGB').crop((round(left + 4), round(Window.height - top + 4),
+                                            round(right - 4), round(Window.height - bottom - 4)))
+        colors = Counter(crop.getdata())
+    background = colors.most_common(1)[0][0]
+    target = [channel * 255 for channel in widget.disabled_color[:3]]
+    foreground = min(colors, key=lambda rgb: sum((a - b) ** 2 for a, b in zip(rgb, target)))
+
+    def luminance(rgb):
+        channels = [value / 255 for value in rgb]
+        linear = [value / 12.92 if value <= .04045 else ((value + .055) / 1.055) ** 2.4
+                  for value in channels]
+        return sum(value * weight for value, weight in zip(linear, (.2126, .7152, .0722)))
+
+    dark, light = sorted((luminance(background), luminance(foreground)))
+    return {'text': widget.text, 'background_rgb': list(background),
+            'foreground_rgb': list(foreground), 'ratio': round((light + .05) / (dark + .05), 3)}
+
+
+def fully_visible(widget):
+    """Exclude gallery controls clipped by a viewport from pixel sampling."""
+    box = bounds(widget)
+    if box[0] < 0 or box[1] < 0 or box[2] > Window.width or box[3] > Window.height:
+        return False
+    parent = widget.parent
+    while parent is not None and parent is not Window:
+        if isinstance(parent, ScrollView):
+            clip = bounds(parent)
+            if (box[0] < clip[0] - 1 or box[1] < clip[1] - 1
+                    or box[2] > clip[2] + 1 or box[3] > clip[3] + 1):
+                return False
+        parent = parent.parent
+    return True
 
 
 def overview(output, size, screens=OVERVIEW_SCREENS, prefix='overview'):
@@ -198,6 +245,14 @@ def main():
                 raise AssertionError('Retake must be disabled when its quota or camera is unavailable')
             record = {'screen': name, 'size': list(size), 'file': path.name,
                       'stage_fits': fits, 'decoded_qr': decoded}
+            disabled = [widget for widget in ui.content.walk()
+                        if isinstance(widget, Button) and widget.disabled and fully_visible(widget)]
+            if disabled:
+                measured = [button_contrast(path, widget) for widget in disabled]
+                for control in measured:
+                    if control['ratio'] < 4.5:
+                        raise AssertionError(f'Unreadable disabled label in {name}: {control}')
+                record['disabled_text_contrast'] = measured
             if ui.current_screen == 'review':
                 # A visible thumbnail can still misrepresent the final crop.
                 # Compare its real texture against the saved composition, not
@@ -234,21 +289,35 @@ def main():
             errors.append(str(error))
             host.stop()
 
-    elapsed = .1
-    for size in SIZES:
-        for name, build, after_layout in scenes:
-            def setup(_dt, size=size, build=build):
-                Window.size = size
-                # Each fixture starts independently. A waiting-camera state in
-                # the preceding scene must not leak into the next healthy one.
-                ui.set_camera_status(True)
-                build()
-            Clock.schedule_once(setup, elapsed)
-            if after_layout is not None:
-                Clock.schedule_once(lambda _dt, fn=after_layout: fn(), elapsed + .15)
-            Clock.schedule_once(lambda _dt, name=name, size=size: capture(name, size), elapsed + .35)
-            elapsed += .5
-    Clock.schedule_once(lambda _dt: host.stop(), elapsed + .1)
+    # Schedule each capture relative to its own completed setup, not relative
+    # to process startup. Font/plugin initialization can take longer than the
+    # first absolute deadline; the old schedule then ran setup and capture in
+    # one frame, before layout, and falsely reported a clipped welcome screen.
+    # Chaining also prevents expensive pixel checks from overlapping the next
+    # scene. Keep layout assertions strict instead of hiding a failed render.
+    jobs = iter((size, name, build, after_layout)
+                for size in SIZES for name, build, after_layout in scenes)
+
+    def advance(_dt):
+        job = next(jobs, None)
+        if job is None:
+            host.stop()
+            return
+        size, name, build, after_layout = job
+        Window.size = size
+        # A waiting-camera fixture must not leak into the next healthy scene.
+        ui.set_camera_status(True)
+        build()
+        if after_layout is not None:
+            Clock.schedule_once(lambda _dt: after_layout(), .15)
+
+        def capture_then_advance(_dt):
+            capture(name, size)
+            if not errors:
+                Clock.schedule_once(advance, .15)
+        Clock.schedule_once(capture_then_advance, .35)
+
+    Clock.schedule_once(advance, .1)
     host.run()
     (output / 'report.json').write_text(json.dumps({'renders': records, 'errors': errors}, indent=2) + '\n')
     if errors:

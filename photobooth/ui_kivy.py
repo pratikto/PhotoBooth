@@ -85,6 +85,7 @@ SAGE = (0.16, 0.37, 0.30, 1)
 SOFT = (0.91, 0.94, 0.91, 1)
 GREY = (0.43, 0.48, 0.45, 1)
 EDGE = (0.84, 0.87, 0.83, 1)
+DISABLED_INK = (0.30, 0.36, 0.32, 1)
 CORAL = (0.80, 0.36, 0.25, 1)
 
 
@@ -221,10 +222,20 @@ class PhotoBoothUI:
         """
         widget = Button(text=text, size_hint_y=None, height=dp(52),
                         background_normal='', background_down='',
+                        background_disabled_normal='', background_disabled_down='',
                         background_color=SOFT if secondary else SAGE,
                         color=INK if secondary else WHITE,
-                        disabled_color=(0.55, 0.60, 0.56, 1),
+                        disabled_color=DISABLED_INK,
                         font_size=dp(14), bold=True, disabled=not enabled)
+        # Disabled captions still convey information such as "DIGANTI" and
+        # "RETAKE SUDAH DIGUNAKAN". The default translucent atlas plus faint ink
+        # reduced painted contrast below 2:1. Use our flat edge/ink tokens for a
+        # quiet but readable state, and restore the exact primary/secondary fill
+        # when camera readiness or quantity changes re-enable this same widget.
+        def update_fill(button, disabled):
+            button.background_color = EDGE if disabled else (SOFT if secondary else SAGE)
+        widget.bind(disabled=update_fill)
+        update_fill(widget, widget.disabled)
         revision = self._screen_revision
         def release(button):
             if button.disabled or (screen_bound and revision != self._screen_revision):

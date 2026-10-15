@@ -41,6 +41,78 @@
       "file": "templates-empty-1200x800.png",
       "stage_fits": true,
       "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "\u2212",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            76,
+            91,
+            81
+          ],
+          "ratio": 5.221
+        },
+        {
+          "text": "\u2212",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            76,
+            91,
+            81
+          ],
+          "ratio": 5.221
+        },
+        {
+          "text": "\u2212",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            76,
+            91,
+            81
+          ],
+          "ratio": 5.221
+        },
+        {
+          "text": "\u2212",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            76,
+            91,
+            81
+          ],
+          "ratio": 5.221
+        },
+        {
+          "text": "LANJUT KE PEMBAYARAN",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
+        }
+      ],
       "selected_templates": [],
       "quantities": {
         "template_a": 0,
@@ -58,6 +130,50 @@
       "file": "templates-one-1200x800.png",
       "stage_fits": true,
       "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "\u2212",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            76,
+            91,
+            81
+          ],
+          "ratio": 5.221
+        },
+        {
+          "text": "\u2212",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            76,
+            91,
+            81
+          ],
+          "ratio": 5.221
+        },
+        {
+          "text": "\u2212",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            76,
+            91,
+            81
+          ],
+          "ratio": 5.221
+        }
+      ],
       "selected_templates": [
         "template_a"
       ],
@@ -108,7 +224,23 @@
       ],
       "file": "payment-waiting-1200x800.png",
       "stage_fits": true,
-      "decoded_qr": "PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR 10000"
+      "decoded_qr": "PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR 10000",
+      "disabled_text_contrast": [
+        {
+          "text": "SIMULASIKAN PEMBAYARAN BERHASIL",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
+        }
+      ]
     },
     {
       "screen": "capture",
@@ -128,7 +260,23 @@
       ],
       "file": "capture-waiting-1200x800.png",
       "stage_fits": true,
-      "decoded_qr": null
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "AMBIL FOTO",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
+        }
+      ]
     },
     {
       "screen": "countdown",
@@ -138,7 +286,23 @@
       ],
       "file": "countdown-1200x800.png",
       "stage_fits": true,
-      "decoded_qr": null
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "AMBIL FOTO",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
+        }
+      ]
     },
     {
       "screen": "review",
@@ -164,6 +328,64 @@
       "file": "review-used-1200x800.png",
       "stage_fits": true,
       "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "Foto 1 \u00b7 Tersimpan",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
+        },
+        {
+          "text": "Foto 2 \u00b7 DIGANTI",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
+        },
+        {
+          "text": "Foto 3 \u00b7 Tersimpan",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
+        },
+        {
+          "text": "RETAKE SUDAH DIGUNAKAN",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
+        }
+      ],
       "review_frame_size": [
         470,
         500
@@ -179,6 +401,22 @@
       "file": "review-waiting-1200x800.png",
       "stage_fits": true,
       "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "RETAKE FOTO TERPILIH",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
+        }
+      ],
       "review_frame_size": [
         470,
         500
@@ -256,6 +494,50 @@
       "file": "templates-empty-800x600.png",
       "stage_fits": true,
       "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "\u2212",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            76,
+            91,
+            81
+          ],
+          "ratio": 5.221
+        },
+        {
+          "text": "\u2212",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            76,
+            91,
+            81
+          ],
+          "ratio": 5.221
+        },
+        {
+          "text": "LANJUT KE PEMBAYARAN",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
+        }
+      ],
       "selected_templates": [],
       "quantities": {
         "template_a": 0,
@@ -273,6 +555,22 @@
       "file": "templates-one-800x600.png",
       "stage_fits": true,
       "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "\u2212",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            76,
+            91,
+            81
+          ],
+          "ratio": 5.221
+        }
+      ],
       "selected_templates": [
         "template_a"
       ],
@@ -323,7 +621,23 @@
       ],
       "file": "payment-waiting-800x600.png",
       "stage_fits": true,
-      "decoded_qr": "PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR 10000"
+      "decoded_qr": "PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR 10000",
+      "disabled_text_contrast": [
+        {
+          "text": "SIMULASIKAN PEMBAYARAN BERHASIL",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
+        }
+      ]
     },
     {
       "screen": "capture",
@@ -343,7 +657,23 @@
       ],
       "file": "capture-waiting-800x600.png",
       "stage_fits": true,
-      "decoded_qr": null
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "AMBIL FOTO",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
+        }
+      ]
     },
     {
       "screen": "countdown",
@@ -353,7 +683,23 @@
       ],
       "file": "countdown-800x600.png",
       "stage_fits": true,
-      "decoded_qr": null
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "AMBIL FOTO",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
+        }
+      ]
     },
     {
       "screen": "review",
@@ -379,6 +725,64 @@
       "file": "review-used-800x600.png",
       "stage_fits": true,
       "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "Foto 1 \u00b7 Tersimpan",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
+        },
+        {
+          "text": "Foto 2 \u00b7 DIGANTI",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
+        },
+        {
+          "text": "Foto 3 \u00b7 Tersimpan",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
+        },
+        {
+          "text": "RETAKE SUDAH DIGUNAKAN",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
+        }
+      ],
       "review_frame_size": [
         470,
         500
@@ -394,6 +798,22 @@
       "file": "review-waiting-800x600.png",
       "stage_fits": true,
       "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "RETAKE FOTO TERPILIH",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
+        }
+      ],
       "review_frame_size": [
         470,
         500

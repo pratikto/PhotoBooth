@@ -13,6 +13,85 @@ from types import SimpleNamespace
 
 @unittest.skipUnless(os.environ.get('PHOTOBOOTH_TEST_GUI') == '1', 'GUI checks are opt-in')
 class KivyFlowTests(unittest.TestCase):
+    def test_disabled_labels_are_readable_and_recovery_restores_enabled_palette(self):
+        """Read the painted label colors, including Kivy's disabled background.
+
+        Retake-used captions still convey which photo was replaced even though
+        their buttons cannot be pressed. Waiting-camera actions also need a
+        readable label. Check both desktop sizes, then restore readiness and a
+        nonzero quantity to verify both enabled button variants regain their
+        original style without changing any callback or quantity gate.
+        """
+        from PIL import Image
+        from kivy.base import EventLoop
+        from kivy.core.window import Window
+        from kivy.uix.button import Button
+        from photobooth.catalog import get_templates
+        from photobooth.ui_kivy import KivyHost, PhotoBoothUI, SAGE, SOFT
+        from tools.render_gui import button_contrast
+
+        ui = PhotoBoothUI(KivyHost(lambda: None), get_templates(),
+                          on_capture=lambda: None, on_select_photo=lambda *_: None,
+                          on_retake=lambda: None, on_accept_session=lambda: None,
+                          on_start=lambda *_: None)
+        Window.add_widget(ui.shell)
+        original_size = Window.size
+
+        def settle():
+            for _ in range(6):
+                EventLoop.idle()
+
+        try:
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                raw = root / 'synthetic.png'
+                Image.new('RGB', (640, 480), '#a7b8aa').save(raw)
+                screenshot = root / 'screen.png'
+                for size in ((1200, 800), (800, 600)):
+                    Window.size = size
+                    for screen in ('capture-waiting', 'review-used', 'templates-empty'):
+                        with self.subTest(size=size, screen=screen):
+                            ui.set_camera_status(True)
+                            if screen == 'capture-waiting':
+                                ui.show_capture('Sesi 1 dari 2', 1, None)
+                                ui.set_camera_status(False)
+                                controls = [ui.capture_button]
+                            elif screen == 'review-used':
+                                ui.show_review([raw] * 3, 'Sesi 1 dari 2', 1, False)
+                                controls = [w for w in ui.content.walk()
+                                            if isinstance(w, Button) and w.disabled]
+                            else:
+                                ui.show_template_selection(True, 'Ready')
+                                controls = [ui.start_button, ui.quantity_buttons[ui.templates[0].template_id][0]]
+                            settle()
+                            ui.shell.export_to_png(str(screenshot))
+                            for button in controls:
+                                measured = button_contrast(screenshot, button)
+                                self.assertGreaterEqual(measured['ratio'], 4.5, measured)
+                            if screen == 'capture-waiting':
+                                capture = ui.capture_button
+                                ui.set_camera_status(True)
+                                ui.set_capture_enabled(True)
+                                self.assertIs(ui.capture_button, capture)
+                                self.assertFalse(capture.disabled)
+                                self.assertEqual(tuple(capture.background_color), SAGE)
+
+                    ui.set_camera_status(True)
+                    key = ui.templates[0].template_id
+                    minus, plus = ui.quantity_buttons[key]
+                    plus.dispatch('on_release')
+                    self.assertFalse(minus.disabled)
+                    self.assertEqual(tuple(minus.background_color), SOFT)
+                    self.assertFalse(ui.start_button.disabled)
+                    self.assertEqual(tuple(ui.start_button.background_color), SAGE)
+                    minus.dispatch('on_release')
+                    self.assertTrue(minus.disabled)
+                    self.assertTrue(ui.start_button.disabled)
+                    self.assertEqual(ui.quantities[key], 0)
+        finally:
+            Window.remove_widget(ui.shell)
+            Window.size = original_size
+
     def test_review_pixels_match_the_saved_frame_before_and_after_retake(self):
         """Retake decisions must use the same crop as the accepted composition.
 

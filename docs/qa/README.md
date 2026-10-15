@@ -5,6 +5,7 @@ The frame-recovery follow-up starts from `a6707e6c7168248c7b80b1b36c8042cd7de1f2
 The screen-action/selection follow-up starts from `26e27a722ab965e62d78b572b9c1b1e39634e6ff`.
 The faithful-review follow-up starts from `1f5f3cda5a6bcba7718afa415e13726a54ec7b32`.
 The upload-revision follow-up starts from `c99924aec2460a25211c6d21b020999b12f20034`.
+The disabled-label follow-up starts from `12f7cc003deb2f9fa5e7148beec2228b13ffdaaa`.
 The original working copy was left untouched. Source files in the separate
 checkout were checked against the freshly fetched GitHub blobs before editing.
 
@@ -31,6 +32,7 @@ scrolling area. Payment back-navigation also retains the customer's quantities.
 | Selected-card feedback matches nonzero quantities | Passed | Passed |
 | Empty quantities disable the decrement control | Passed | Passed |
 | Review pixels match the saved photo crop before/after retake | Passed | Passed |
+| Disabled status labels meet the project's 4.5:1 text-color threshold | Passed | Passed |
 
 The image sheets below contain the six main screens. The reproducible renderer
 also includes countdown, bottom-of-gallery, retake-used, local-only, and next-session
@@ -130,6 +132,32 @@ byte-for-byte with freshly generated evidence and are unchanged. No layout
 retouching was needed for this storage/retry correction. Main-screen and waiting
 state sheets at both desktop sizes were also inspected visually.
 
+## Disabled labels remain readable
+
+The previous disabled treatment made useful captions almost disappear, including
+the used-retake photo markers. A new real-widget test first failed in six
+screen/desktop combinations, measuring 1.438–1.846:1 in its targeted samples.
+Disabled controls now use an opaque, flat muted fill and darker ink, with no
+change to geometry or callback gates. The test also re-enables the same camera
+button and quantity controls, checking that primary/secondary colors return.
+
+The current report includes `disabled_text_contrast` for every fully visible
+disabled button in the 32 fixtures: **28 labels**, measured at **5.141–5.221:1**.
+It samples the exported screen's dominant inset background and strongest glyph
+color, not just configured properties; this catches tint from Kivy's default
+disabled atlas. Partly clipped gallery controls are excluded from color sampling
+and remain covered by the separate gallery-scrolling checks. This is a focused
+render regression, not an accessibility certification.
+
+The updated state and selection sheets above show the new treatment. The two
+six-main-screen overview sheets are byte-identical to the previous version.
+All four changed sheets and both main-screen sheets were inspected visually.
+
+The first rendering attempt also exposed an absolute-deadline startup race in
+the evidence script: the welcome capture could run before its pending layout.
+Each scene is now chained from its own setup/capture. After that harness fix,
+all 32 renders passed without relaxing the layout, painted-QR, or crop checks.
+
 ## Reproduce
 
 Python 3.12.14, Kivy 2.3.1, OpenCV 5.0.0, SDL2 offscreen, and Mesa llvmpipe were used. No webcam,
@@ -140,7 +168,7 @@ SDL_VIDEODRIVER=offscreen PHOTOBOOTH_TEST_GUI=1 python -m unittest discover -s t
 SDL_VIDEODRIVER=offscreen python tools/render_gui.py --output-dir /tmp/photobooth-gui-qa
 ```
 
-The suite passed **48 tests**. Its controller/storage checks include two-session
+The suite passed **49 tests**. Its controller/storage checks include two-session
 orders, one retake per session, local PNG and manifest persistence, cached folder
 allocation, an offline upload failure followed by retry, and skipping verified
 uploads. Camera acquisition and Drive access use deterministic fakes. The layout

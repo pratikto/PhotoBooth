@@ -421,3 +421,25 @@ failure callbacks, legacy records, output replacement, and the controller failur
 path. **32 real-widget renders** passed at 1200x800 and 800x600; their report and all
 six contact sheets are byte-identical to the previous visual evidence, so no
 cosmetic layout changes were made. All camera and Drive scenarios still use fakes.
+
+### Readable disabled controls
+
+Disabled labels still explain important states such as **DIGANTI**, **Tersimpan**,
+and **RETAKE SUDAH DIGUNAKAN**. Their old translucent default background and faint
+text produced only about 1.44–1.85:1 contrast in targeted rendered samples. Disabled
+controls now use a flat muted fill and darker ink; enabled primary/secondary colors
+return when the same widget becomes available again. Sizes, positions, camera
+gates, retake quota, and disabled-click protection are unchanged.
+
+Validation: **49 tests passed** and **32 real-widget renders** completed. The render
+report samples actual painted pixels for **28 visible disabled labels**, measuring
+about **5.14–5.22:1** against the background. The project's regression threshold is
+4.5:1; this targeted text-color check is not a full accessibility audit. Updated
+state/selection sheets show the change; the six-main-screen overview sheets remain
+byte-identical. Price remains Rp5.000/session, including Rp10.000 for quantity 2.
+
+The renderer now schedules each capture after its own setup instead of queuing
+all deadlines before startup. This avoids a slow font/plugin initialization
+executing setup and capture in the same frame. Layout, QR decoding, and crop
+assertions remain strict. Camera/Drive checks still use fakes; QRIS is simulated
+and physical printing is not connected.
