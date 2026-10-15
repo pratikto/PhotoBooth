@@ -159,7 +159,9 @@ class PhotoBoothApp:
 
         self.current_frame = frame
         if self.ui.current_screen == "capture":
-            self.ui.update_live_preview(self._frame_to_image(frame))
+            # The camera mailbox is nonblocking. Upload a small preview directly
+            # from BGR pixels instead of constructing several Pillow copies.
+            self.ui.update_live_frame(frame)
             session = self.current_session
             if (
                 session is not None

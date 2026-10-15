@@ -247,6 +247,33 @@ class PhotoBoothUI:
             display.thumbnail((960, 600))
             self._display(display, self.preview)
 
+    def update_live_frame(self, frame):
+        """Display an OpenCV BGR frame directly, without a Pillow round trip.
+
+        Resize only the preview copy before uploading pixels to the GPU. The
+        controller retains the full-resolution frame for saving and composition.
+        OpenGL work stays on Kivy's main thread; the camera thread never touches
+        widgets or textures. Reuse the existing texture between camera frames.
+        """
+        if self.current_screen != 'capture' or self.preview is None:
+            return
+        import cv2
+        height, width = frame.shape[:2]
+        scale = min(1.0, 640 / width, 480 / height)
+        if scale < 1:
+            frame = cv2.resize(frame, (max(1, int(width * scale)),
+                                      max(1, int(height * scale))),
+                               interpolation=cv2.INTER_AREA)
+        rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        size = (rgb.shape[1], rgb.shape[0])
+        texture = self.preview.texture
+        if texture is None or texture.size != size:
+            texture = Texture.create(size=size, colorfmt='rgb')
+            texture.flip_vertical()
+        texture.blit_buffer(rgb.tobytes(), colorfmt='rgb', bufferfmt='ubyte')
+        self.preview.texture = texture
+        self.preview.canvas.ask_update()
+
     def set_countdown(self, seconds, is_retake=False):
         """Display a scheduled tick without a blocking sleep call."""
         if self.current_screen == 'capture':
