@@ -172,7 +172,7 @@ class PhotoBoothApp:
 
         self._preview_after_id = self.root.after(30, self._update_preview)
 
-    def _open_template_selection(self) -> None:
+    def _open_template_selection(self, quantities: dict[str, int] | None = None) -> None:
         # Move from the welcome screen to the template picker only when the camera is ready, and pass
         # the current Drive-slot readiness to the GUI.
         if not self.camera_ready:
@@ -185,6 +185,7 @@ class PhotoBoothApp:
             camera_ready=True,
             storage_ready=(self.drive_pool.has_ready_slot() or self.local_only_mode),
             status_message=self._storage_status_message(),
+            quantities=quantities,
         )
 
     def _open_dummy_payment(self, quantities: dict[str, int]) -> None:
@@ -214,7 +215,9 @@ class PhotoBoothApp:
             session_count=len(plans),
             total_amount=len(plans) * unit_price,
             on_confirm=lambda: self._start_transaction(order),
-            on_back=self._open_template_selection,
+            # Going back is an edit of this order, not a new customer cart.
+            # Capture a copy so the next payment is priced from the edited cart.
+            on_back=lambda: self._open_template_selection(order),
         )
 
     def _start_transaction(self, quantities: dict[str, int]) -> None:
@@ -261,7 +264,7 @@ class PhotoBoothApp:
                 "Transaksi tidak dapat dimulai",
                 f"Data transaksi tidak dapat disiapkan.\n\n{error}",
             )
-            self._open_template_selection()
+            self._open_template_selection(quantities)
             return
 
         self.sessions = [PhotoSession(plan=plan) for plan in plans]

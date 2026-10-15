@@ -13,6 +13,46 @@ import numpy as np
 
 @unittest.skipUnless(os.environ.get('PHOTOBOOTH_TEST_GUI') == '1', 'GUI checks are opt-in')
 class ControllerFlowTests(unittest.TestCase):
+    def test_editing_payment_preserves_cart_and_recalculates_the_total(self):
+        """Returning from payment must edit the same order without allocating a slot.
+
+        The test drives real button callbacks, rather than calling the payment
+        method with a second hand-written amount. It catches lost quantities and
+        a stale confirmation total after the customer removes a session.
+        """
+        from photobooth.app import PhotoBoothApp
+        with tempfile.TemporaryDirectory() as directory, \
+             patch('photobooth.app.PROJECT_ROOT', Path(directory)), \
+             patch('photobooth.app.Camera'), \
+             patch('photobooth.app.AppsScriptDriveClient.from_configuration', return_value=None), \
+             patch('photobooth.app.GoogleDriveClient.from_environment', return_value=None), \
+             patch.dict(os.environ, {'PHOTOBOOTH_LOCAL_ONLY': '1'}):
+            app = PhotoBoothApp()
+            try:
+                app.camera_ready = True
+                app.current_frame = np.zeros((240, 320, 3), dtype=np.uint8)
+                app._open_template_selection()
+                first, second = (template.template_id for template in app.templates[:2])
+                app.ui._change_quantity(first, 2)
+                app.ui._change_quantity(second, 1)
+                app.ui.start_button.dispatch('on_release')
+                self.assertEqual(app.ui.payment_total, 15000)
+                app.ui.payment_back.dispatch('on_release')
+                self.assertEqual(app.ui.current_screen, 'templates')
+                self.assertEqual(app.ui.quantities[first], 2)
+                self.assertEqual(app.ui.quantities[second], 1)
+                self.assertIsNone(app.transaction)
+                app.ui._change_quantity(first, -1)
+                app.ui._change_quantity(second, -1)
+                self.assertEqual(app.ui.cart_total.text, 'Rp5.000')
+                app.ui.start_button.dispatch('on_release')
+                self.assertEqual(app.ui.payment_total, 5000)
+                app.ui.payment_confirm.dispatch('on_release')
+                self.assertEqual(len(app.sessions), 1)
+                self.assertIsNotNone(app.transaction)
+            finally:
+                app.close()
+
     def test_two_sessions_payment_capture_retake_output_and_completion(self):
         from photobooth.app import PhotoBoothApp
         class FakeCamera:

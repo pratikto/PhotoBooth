@@ -296,3 +296,33 @@ printing and thermal-native QR sizing remain part of the future printer adapter.
 Validation now includes 24 tests: QR decoding from the saved result of all four
 templates and from a controller-generated offline transaction, in addition to
 widget, workflow, storage, camera-thread, and retry tests.
+
+### Desktop clipping and order-editing fixes
+
+At 800x600 the previous outer scroll cropped the payment QR, camera preview,
+review selection buttons, and result details. Short windows now use smaller
+header/heading spacing, content-sized cards, and one row for related actions.
+The template gallery and order item lists scroll independently; the payable total
+and main actions remain visible. All four order lines are measured at their
+natural height instead of clipping the final line. Returning from payment via
+**Ubah pesanan** preserves quantities and recalculates the next payment amount.
+The tariff remains IDR 5,000 per session; quantity 2 is IDR 10,000.
+
+Validation: **26 tests passed**, including layout bounds and QR decoding from
+actual exported screens at 1200x800 and 800x600. The checks also cover scrolling
+to the last template, resizing an existing cart, editing payment quantities,
+controller capture/retake flow, storage persistence, and offline upload retries.
+See [visual evidence and reproduction instructions](docs/qa/README.md).
+
+Generate the 22 real-widget screenshots and a machine-readable report without
+camera hardware or Drive credentials:
+
+```bash
+SDL_VIDEODRIVER=offscreen python tools/render_gui.py --output-dir /tmp/photobooth-gui-qa
+```
+
+On a normal Windows desktop, run `python tools/render_gui.py` without the Linux
+environment prefix. Its default output directory is under the system temporary
+folder. All illustrated people and Drive destinations in these renders are test
+fixtures. Webcam latency and live Drive access were not tested in this run;
+QRIS is still a clearly labelled simulation and physical printing is not connected.

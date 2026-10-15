@@ -1,0 +1,225 @@
+{
+  "renders": [
+    {
+      "screen": "welcome",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "welcome-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "templates",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "templates-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "templates-bottom",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "templates-bottom-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "payment",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "payment-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": "PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR 40000"
+    },
+    {
+      "screen": "capture",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "capture-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "countdown",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "countdown-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "review",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "review-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "review-used",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "review-used-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "result",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "result-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": "https://drive.google.com/drive/folders/1AbCdEfGhIjKlMnOpQrStUvWxYz123456"
+    },
+    {
+      "screen": "result-local",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "result-local-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "result-next",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "result-next-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": "https://drive.google.com/drive/folders/1AbCdEfGhIjKlMnOpQrStUvWxYz123456"
+    },
+    {
+      "screen": "welcome",
+      "size": [
+        800,
+        600
+      ],
+      "file": "welcome-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "templates",
+      "size": [
+        800,
+        600
+      ],
+      "file": "templates-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "templates-bottom",
+      "size": [
+        800,
+        600
+      ],
+      "file": "templates-bottom-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "payment",
+      "size": [
+        800,
+        600
+      ],
+      "file": "payment-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": "PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR 40000"
+    },
+    {
+      "screen": "capture",
+      "size": [
+        800,
+        600
+      ],
+      "file": "capture-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "countdown",
+      "size": [
+        800,
+        600
+      ],
+      "file": "countdown-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "review",
+      "size": [
+        800,
+        600
+      ],
+      "file": "review-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "review-used",
+      "size": [
+        800,
+        600
+      ],
+      "file": "review-used-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "result",
+      "size": [
+        800,
+        600
+      ],
+      "file": "result-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": "https://drive.google.com/drive/folders/1AbCdEfGhIjKlMnOpQrStUvWxYz123456"
+    },
+    {
+      "screen": "result-local",
+      "size": [
+        800,
+        600
+      ],
+      "file": "result-local-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "result-next",
+      "size": [
+        800,
+        600
+      ],
+      "file": "result-next-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": "https://drive.google.com/drive/folders/1AbCdEfGhIjKlMnOpQrStUvWxYz123456"
+    }
+  ],
+  "errors": []
+}

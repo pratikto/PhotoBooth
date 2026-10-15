@@ -125,6 +125,7 @@ class PhotoBoothUI:
         self.shell = Panel(fill=PAPER, orientation='vertical', padding=dp(24), spacing=dp(12))
         root.view = self.shell
         header = BoxLayout(size_hint_y=None, height=dp(58), spacing=dp(12))
+        self._header_row = header
         self.brand = self._label('meongs.', 29, bold=True)
         self.brand.size_hint_x = .4
         header.add_widget(self.brand)
@@ -135,6 +136,7 @@ class PhotoBoothUI:
         self.content = BoxLayout(orientation='vertical', spacing=dp(10))
         self.shell.add_widget(self.content)
         footer = BoxLayout(size_hint_y=None, height=dp(34), spacing=dp(12))
+        self._footer_row = footer
         self.status = self._label('', 12, color=GREY)
         footer.add_widget(self.status)
         self.camera_badge = self._label('Kamera diperiksa', 12, color=GREY, align='right')
@@ -143,13 +145,45 @@ class PhotoBoothUI:
         footer.add_widget(self.camera_badge)
         self.shell.add_widget(footer)
         self.header = self.brand  # Historical public handle retained for callers.
+        self._page_title = self._page_subtitle = None
+        self.shell.bind(size=self._fit_chrome)
+        self._fit_chrome()
 
-    def _label(self, text, font=18, height=None, bold=False, color=INK, align='left'):
+    def _fit_chrome(self, *_args):
+        """Reserve more room for content on short desktop windows.
+
+        Keeping the same 58px header, 34px footer, and large page headings at
+        800x600 used to leave only 200px for a 420px payment card. The resulting
+        outer scroll clipped the QR and camera. Resize existing widgets in place
+        so a window resize never rebuilds the screen or loses the current cart.
+        """
+        compact = self.shell.height < dp(700)
+        self.shell.padding = dp(20 if compact else 24)
+        self.shell.spacing = dp(10 if compact else 12)
+        self._header_row.height = dp(44 if compact else 58)
+        self._footer_row.height = dp(26 if compact else 34)
+        self.camera_badge.width = dp(132 if compact else 170)
+        if self._page_title is not None:
+            self._page_title.height = dp(36 if compact else 46)
+            self._page_title.font_size = dp(26 if compact else 28)
+        if self._page_subtitle is not None:
+            self._page_subtitle.height = dp(28 if compact else 38)
+
+    def _label(self, text, font=18, height=None, bold=False, color=INK, align='left',
+               auto_height=False):
         """Wrap text within its box instead of letting it overlap adjacent controls."""
         widget = Label(text=text, color=color, font_size=dp(font), bold=bold,
                        halign=align, valign='middle')
-        widget.bind(size=lambda w, size: setattr(w, 'text_size', size))
-        if height is not None:
+        if auto_height:
+            # A scrolling paragraph must measure its natural height from width
+            # alone. Binding text_size to (width, height) creates a feedback loop
+            # that clips the final order line even when the viewport has room.
+            widget.size_hint_y = None
+            widget.bind(width=lambda w, width: setattr(w, 'text_size', (width, None)),
+                        texture_size=lambda w, size: setattr(w, 'height', size[1]))
+        else:
+            widget.bind(size=lambda w, size: setattr(w, 'text_size', size))
+        if height is not None and not auto_height:
             widget.size_hint_y = None
             widget.height = dp(height)
         return widget
@@ -176,6 +210,7 @@ class PhotoBoothUI:
         self.preview = None
         self.qr_view = None
         self._qr_bytes = None
+        self._page_title = self._page_subtitle = None
         self.set_status('')
         active = {'welcome': 1, 'templates': 1, 'payment': 2,
                   'capture': 3, 'review': 3, 'result': 4}.get(screen, 1)
@@ -183,12 +218,15 @@ class PhotoBoothUI:
             ('[ ' + label + ' ]') if index == active else label
             for index, label in enumerate(('01 Template', '02 Bayar', '03 Foto', '04 Hasil'), 1))
         if title:
-            self.content.add_widget(self._label(title, 28, 46, bold=True))
+            self._page_title = self._label(title, 28, 46, bold=True)
+            self.content.add_widget(self._page_title)
         if subtitle:
-            self.content.add_widget(self._label(subtitle, 14, 38, color=GREY))
+            self._page_subtitle = self._label(subtitle, 14, 38, color=GREY)
+            self.content.add_widget(self._page_subtitle)
+        self._fit_chrome()
         return self.content
 
-    def _responsive_row(self, left, right, right_width=330, min_height=350):
+    def _responsive_row(self, left, right, right_width=330, min_height=300):
         """Make side-by-side cards scroll safely on narrow or short windows.
 
         The inner layout has an explicit minimum height. This prevents fixed
@@ -196,20 +234,31 @@ class PhotoBoothUI:
         On phone-width windows, panels stack and can be scrolled vertically.
         """
         scroll = ScrollView(do_scroll_x=False, bar_width=dp(5), scroll_type=['bars', 'content'])
-        row = BoxLayout(spacing=dp(18), size_hint_y=None)
+        row = BoxLayout(spacing=dp(16), size_hint_y=None)
         row.add_widget(left)
         row.add_widget(right)
         scroll.add_widget(row)
         def arrange(*_args):
             compact = scroll.width < dp(720)
             row.orientation = 'vertical' if compact else 'horizontal'
-            row.height = max(scroll.height, dp(min_height * 2 + 18 if compact else min_height))
+            row.height = max(scroll.height, dp(min_height * 2 + 16 if compact else min_height))
             right.size_hint_x = 1 if compact else None
             right.width = scroll.width if compact else dp(right_width)
             left.size_hint_y = right.size_hint_y = 1
         scroll.bind(size=arrange)
         arrange()
         return scroll
+
+    def _actions(self, *buttons):
+        """Keep related actions in one reachable row instead of two tall bars.
+
+        Secondary actions come first and the main action stays on the right.
+        Both retain a 52dp touch target; no action is hidden inside a scroller.
+        """
+        row = BoxLayout(size_hint_y=None, height=dp(52), spacing=dp(12))
+        for button in buttons:
+            row.add_widget(button)
+        return row
 
     def _display(self, image, widget=None, crisp=False):
         """Convert Pillow pixels to a reusable Kivy texture on the GUI thread.
@@ -251,24 +300,29 @@ class PhotoBoothUI:
         hero.add_widget(self._label('Bikin foto seru bareng teman.\nPilih gaya, ambil foto, dan bawa pulang kenangannya.',
                                     17, 92, color=SOFT))
 
-        aside = Panel(orientation='vertical', padding=dp(24), spacing=dp(12))
+        aside = Panel(orientation='vertical', padding=dp(20), spacing=dp(8))
         aside.add_widget(self._label('Cara mainnya', 22, 46, bold=True))
         for title, note in [('01   Pilih gaya', 'Pilih template dan jumlah sesi.'),
                             ('02   Siapkan senyum', 'Tiga foto baru di setiap sesi.'),
                             ('03   Simpan momennya', 'Satu retake per sesi. Scan QR folder foto.')]:
-            aside.add_widget(self._label(title, 18, 38, bold=True))
-            aside.add_widget(self._label(note, 14, 52, color=GREY))
-        aside.add_widget(self._label('Pembayaran saat ini masih simulasi.', 12, 48, color=CORAL))
-        page.add_widget(self._responsive_row(hero, aside, 330, 460))
+            aside.add_widget(self._label(title, 18, 32, bold=True))
+            aside.add_widget(self._label(note, 14, 40, color=GREY))
+        aside.add_widget(self._label('Pembayaran saat ini masih simulasi.', 12, 40, color=CORAL))
+        # A trailing spacer top-aligns the instructions on large windows without
+        # increasing the minimum height or pushing their heading down the card.
+        aside.add_widget(Widget())
+        page.add_widget(self._responsive_row(hero, aside, 330, 400))
         page.add_widget(self._button('MULAI FOTO', self.callbacks['on_home_start'], camera_ready))
         self.set_status(status_message)
 
-    def show_template_selection(self, camera_ready, status_message, storage_ready=True):
+    def show_template_selection(self, camera_ready, status_message, storage_ready=True,
+                                quantities=None):
         """A compact template gallery plus a continuously updated order summary."""
         self.set_camera_status(camera_ready)
         self._storage_ready = storage_ready
         page = self._reset('templates', 'Pilih gaya fotomu.', 'Setiap qty berarti satu sesi baru berisi tiga foto.')
-        self.quantities = {t.template_id: 0 for t in self.templates}
+        self.quantities = {t.template_id: (quantities or {}).get(t.template_id, 0)
+                           for t in self.templates}
         self.quantity_labels = {}
         self._template_cards = {}
         gallery = ScrollView(do_scroll_x=False, bar_width=dp(5))
@@ -298,14 +352,22 @@ class PhotoBoothUI:
             card.add_widget(controls)
             self._template_cards[key] = card
             grid.add_widget(card)
-        cart = Panel(orientation='vertical', padding=dp(22), spacing=dp(14))
+        cart = Panel(orientation='vertical', padding=dp(18), spacing=dp(10))
         cart.add_widget(self._label('PESANAN KAMU', 12, 26, color=GREY, bold=True))
-        cart.add_widget(self._label('Momen pilihanmu', 23, 52, bold=True))
-        self.summary = self._label('', 16)
-        cart.add_widget(self.summary)
-        cart.add_widget(self._label('3 foto baru + 1 kesempatan retake\ndi setiap sesi yang kamu pilih.', 13, 66, color=GREY))
+        cart.add_widget(self._label('Momen pilihanmu', 22, 36, bold=True))
+        # Only the item list scrolls. The session count and payable total remain
+        # visible even when all four templates have quantities in the order.
+        items = ScrollView(do_scroll_x=False, bar_width=dp(4))
+        self.summary = self._label('', 15, auto_height=True)
+        items.add_widget(self.summary)
+        cart.add_widget(items)
+        self.cart_sessions = self._label('', 13, 26, color=GREY)
+        self.cart_total = self._label('', 27, 44, bold=True)
+        cart.add_widget(self.cart_sessions)
+        cart.add_widget(self.cart_total)
+        cart.add_widget(self._label('3 foto + 1 retake per sesi.', 13, 30, color=GREY))
         self.start_button = self._button('LANJUT KE PEMBAYARAN', self._start_selected, False)
-        page.add_widget(self._responsive_row(gallery, cart, 325, 440))
+        page.add_widget(self._responsive_row(gallery, cart, 280, 300))
         # Keep the primary order action outside scrolling panels so it remains
         # reachable at 800x600 without scrolling a cart or guessing its position.
         page.add_widget(self.start_button)
@@ -325,8 +387,10 @@ class PhotoBoothUI:
         lines = [f'{t.name}     × {self.quantities[t.template_id]}' for t in self.templates
                  if self.quantities[t.template_id]]
         amount = 'Rp' + f'{total * PRICE_PER_SESSION:,}'.replace(',', '.')
-        self.summary.text = ('\n\n'.join(lines) + f'\n\n{total} sesi × Rp5.000\n\nTotal  {amount}'
-                             if lines else 'Belum ada pilihan.\nTambahkan sesi dengan tombol +.')
+        self.summary.text = ('\n'.join(lines) if lines else
+                             'Belum ada pilihan.\nTambahkan sesi dengan tombol +.')
+        self.cart_sessions.text = f'{total} sesi × Rp5.000'
+        self.cart_total.text = amount
         self.start_button.disabled = not (total and self._camera_ready and self._storage_ready)
 
     def _start_selected(self):
@@ -345,17 +409,25 @@ class PhotoBoothUI:
         from photobooth.qr_code import create_qr_image
         page = self._reset('payment', 'Satu langkah sebelum berfoto.', 'SIMULASI PEMBAYARAN · Bukan QRIS valid. Jangan transfer uang.')
         self.payment_total = total_amount
-        pay = Panel(orientation='vertical', padding=dp(22), spacing=dp(8))
-        pay.add_widget(self._label('QR DEMO / TIDAK UNTUK TRANSFER', 12, 30, bold=True, color=CORAL, align='center'))
+        pay = Panel(orientation='vertical', padding=dp(14), spacing=dp(6))
+        pay.add_widget(self._label('QR DEMO / TIDAK UNTUK TRANSFER', 12, 24, bold=True, color=CORAL, align='center'))
         qr = self._display(create_qr_image(f'PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR {total_amount}'), crisp=True)
         qr.size_hint_y = None
-        qr.height = dp(228)
+        # 180px plus its quiet zone is legible at 800x600. The old 228px QR
+        # and 420px minimum card were clipped by the two full-width actions.
+        qr.height = dp(180)
+        self.payment_qr = qr
         pay.add_widget(qr)
-        pay.add_widget(self._label('Menunggu simulasi pembayaran', 16, 42, bold=True, align='center'))
-        pay.add_widget(self._label('Tekan tombol simulasi di sebelah untuk\nmelanjutkan. Tidak ada uang yang ditagihkan.', 14, 62, color=GREY, align='center'))
-        detail = Panel(orientation='vertical', padding=dp(22), spacing=dp(12))
+        pay.add_widget(self._label('Menunggu simulasi pembayaran', 15, 28, bold=True, align='center'))
+        pay.add_widget(self._label('Tekan tombol simulasi untuk melanjutkan.\nTidak ada uang yang ditagihkan.', 13, 40, color=GREY, align='center'))
+        pay.add_widget(Widget())
+        detail = Panel(orientation='vertical', padding=dp(18), spacing=dp(10))
         detail.add_widget(self._label('RINGKASAN PESANAN', 12, 28, bold=True, color=GREY))
-        detail.add_widget(self._label(order_summary, 17))
+        order_list = ScrollView(do_scroll_x=False, bar_width=dp(4))
+        order_text = self._label(order_summary, 16, auto_height=True)
+        self.payment_order = order_text
+        order_list.add_widget(order_text)
+        detail.add_widget(order_list)
         detail.add_widget(self._label(f'{session_count} sesi × Rp5.000', 13, 30, color=GREY))
         detail.add_widget(self._label('Rp ' + f'{total_amount:,}'.replace(',', '.'), 30, 60, bold=True))
         def confirm_once():
@@ -365,9 +437,10 @@ class PhotoBoothUI:
                 self.payment_confirm.disabled = True
                 on_confirm()
         self.payment_confirm = self._button('SIMULASIKAN PEMBAYARAN BERHASIL', confirm_once)
-        page.add_widget(self._responsive_row(pay, detail, 380, 420))
-        page.add_widget(self.payment_confirm)
-        page.add_widget(self._button('KEMBALI PILIH TEMPLATE', on_back, secondary=True))
+        page.add_widget(self._responsive_row(pay, detail, 330, 324))
+        self.payment_back = self._button('UBAH PESANAN', on_back, secondary=True)
+        self.payment_back.size_hint_x = .45
+        page.add_widget(self._actions(self.payment_back, self.payment_confirm))
 
     def show_capture(self, session_label, capture_count, preview_image,
                      action_label='AMBIL FOTO', countdown_text='', can_capture=True, is_retake=False):
@@ -380,17 +453,20 @@ class PhotoBoothUI:
         if preview_image is not None:
             self.update_live_preview(preview_image)
         camera.add_widget(self._label('Lihat ke kamera, bukan ke layar.', 13, 28, color=SOFT, align='center'))
-        guide = Panel(orientation='vertical', padding=dp(22), spacing=dp(10))
+        guide = Panel(orientation='vertical', padding=dp(18), spacing=dp(10))
         guide.add_widget(self._label('FOTO PENGGANTI' if is_retake else f'FOTO {min(capture_count + 1, 3)} / 3',
-                                     13, 36, color=GREY, bold=True))
-        self.countdown = self._label(countdown_text or 'Siap?', 44, 100, bold=True, align='center')
+                                     13, 28, color=GREY, bold=True))
+        self.countdown = self._label(countdown_text or 'Siap?', 44, bold=True, align='center')
         guide.add_widget(self.countdown)
-        guide.add_widget(self._label('Ambil posisi yang nyaman.\nCountdown dimulai setelah tombol ditekan.', 15, 82, color=GREY))
+        guide.add_widget(self._label('Atur posisi, lalu tekan tombol.\nCountdown 5 detik.', 14, 66, color=GREY))
+        progress = BoxLayout(size_hint_y=None, height=dp(36), spacing=dp(6))
         for index in range(3):
-            guide.add_widget(self._label(f'{index + 1:02d}    ' + ('Tersimpan' if index < capture_count else 'Menunggu'),
-                                        14, 28, color=SAGE if index < capture_count else GREY))
+            progress.add_widget(self._label(f'{index + 1:02d}\n' + ('Siap' if index < capture_count else '—'),
+                                           12, color=SAGE if index < capture_count else GREY,
+                                           align='center'))
+        guide.add_widget(progress)
         self.capture_button = self._button(action_label, self.callbacks['on_capture'], can_capture)
-        page.add_widget(self._responsive_row(camera, guide, 285, 430))
+        page.add_widget(self._responsive_row(camera, guide, 240, 300))
         page.add_widget(self.capture_button)
 
     def update_live_preview(self, image):
@@ -444,7 +520,13 @@ class PhotoBoothUI:
         scroll = ScrollView(do_scroll_x=False)
         gallery = GridLayout(cols=3, spacing=dp(16), size_hint_y=None)
         gallery.bind(minimum_height=gallery.setter('height'))
-        scroll.bind(width=lambda w, width: setattr(gallery, 'cols', 1 if width < dp(620) else 3))
+        def fit_review(*_args):
+            # Three landscape thumbnails and their selection buttons must be
+            # visible together. A fixed 290px card hid every button at 800x600.
+            gallery.cols = 1 if scroll.width < dp(620) else 3
+            for card in gallery.children:
+                card.height = dp(290) if gallery.cols == 1 else max(dp(220), scroll.height)
+        scroll.bind(size=fit_review)
         scroll.add_widget(gallery)
         page.add_widget(scroll)
         for index, path in enumerate(photo_paths):
@@ -459,12 +541,12 @@ class PhotoBoothUI:
                                          lambda i=index: self.callbacks['on_select_photo'](i), retake_available,
                                          secondary=not selected))
             gallery.add_widget(card)
-        page.add_widget(self._label('Pilih satu foto jika ingin menggantinya. Ketiga foto digunakan dalam hasil akhir.', 13, 44, color=GREY))
-        # Keep these actions directly in content so keyboard/automation clients
-        # can discover their enabled state without traversing decorative cards.
-        page.add_widget(self._button('RETAKE FOTO TERPILIH', self.callbacks['on_retake'],
-                                     selected_index is not None and retake_available, secondary=True))
-        page.add_widget(self._button('GUNAKAN FOTO INI', self.callbacks['on_accept_session']))
+        fit_review()
+        page.add_widget(self._label('Pilih satu foto untuk retake. Ketiga foto dipakai pada hasil akhir.', 13, 36, color=GREY))
+        self.retake_button = self._button('RETAKE FOTO TERPILIH', self.callbacks['on_retake'],
+                                         selected_index is not None and retake_available, secondary=True)
+        self.accept_button = self._button('GUNAKAN FOTO INI', self.callbacks['on_accept_session'])
+        page.add_widget(self._actions(self.retake_button, self.accept_button))
         self.set_status(status_message)
 
     def show_result(self, image_path, session_label, transaction_id, has_next_session,
@@ -483,25 +565,25 @@ class PhotoBoothUI:
             display.thumbnail((1000, 850))
         photo.add_widget(self._display(display))
         photo.add_widget(self._label('Cetak fisik belum terhubung.', 12, 28, color=GREY, align='center'))
-        share = Panel(orientation='vertical', padding=dp(16), spacing=dp(8))
-        share.add_widget(self._label('BAWA PULANG FOTOMU', 12, 24, bold=True, color=GREY))
+        share = Panel(orientation='vertical', padding=dp(10), spacing=dp(5))
+        share.add_widget(self._label('BAWA PULANG FOTOMU', 12, 20, bold=True, color=GREY))
         self.qr_view = KivyImage(fit_mode='contain', size_hint_y=None, height=dp(180))
         share.add_widget(self.qr_view)
-        self.qr_title = self._label('', 16, 52, bold=True, align='center')
+        self.qr_title = self._label('', 15, 36, bold=True, align='center')
         share.add_widget(self.qr_title)
-        self.upload_status = self._label(upload_message, 13, 92, color=GREY, align='center')
+        self.upload_status = self._label(upload_message, 13, 48, color=GREY, align='center')
         share.add_widget(self.upload_status)
         # The flexible trailing spacer anchors fixed QR content to the top.
         # Otherwise BoxLayout leaves surplus height above it on short screens.
         share.add_widget(Widget())
-        page.add_widget(self._responsive_row(photo, share, 350, 455))
+        page.add_widget(self._responsive_row(photo, share, 300, 324))
         self.set_result_qr(qr_image, qr_pending)
-        self.completion = self._label('', 13, 28, color=GREY, align='right')
-        page.add_widget(self.completion)
+        self.completion = self._label('', 13, color=GREY)
         if seconds_remaining is not None:
             self.set_completion_countdown(seconds_remaining)
-        page.add_widget(self._button('SESI BERIKUTNYA' if has_next_session else 'SELESAI',
-                                     self.callbacks['on_next_session' if has_next_session else 'on_finish']))
+        self.result_action = self._button('SESI BERIKUTNYA' if has_next_session else 'SELESAI',
+                                         self.callbacks['on_next_session' if has_next_session else 'on_finish'])
+        page.add_widget(self._actions(self.completion, self.result_action))
 
     def set_result_qr(self, qr_image, pending=False):
         """Keep the destination visible independently from synchronization state."""
@@ -530,10 +612,7 @@ class PhotoBoothUI:
         """Keep long diagnostics readable and provide an explicit dismiss action."""
         body = Panel(orientation='vertical', spacing=dp(16), padding=dp(20))
         scroll = ScrollView()
-        label = self._label(message, 16)
-        label.size_hint_y = None
-        label.bind(width=lambda w, width: setattr(w, 'text_size', (width, None)),
-                   texture_size=lambda w, size: setattr(w, 'height', size[1] + dp(20)))
+        label = self._label(message, 16, auto_height=True)
         scroll.add_widget(label)
         body.add_widget(scroll)
         popup = Popup(title=title, content=body, size_hint=(.85, .8), auto_dismiss=False)
