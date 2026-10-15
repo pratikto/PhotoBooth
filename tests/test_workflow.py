@@ -6,15 +6,34 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from PIL import Image
+from PIL import Image, ImageDraw, ImageOps
 
-from photobooth.catalog import compose_result, get_templates
+from photobooth.catalog import compose_result, fit_result_photo, get_templates
 from photobooth.transaction_store import TransactionStore
 from photobooth.workflow import PhotoSession, build_session_plans
 
 
 class WorkflowTests(unittest.TestCase):
     # Test session planning and the one-retake-per-session business rule.
+    def test_shared_review_crop_preserves_the_established_output_pixels(self):
+        """Centralizing framing must not change the existing composition crop."""
+        for mode, size in (('RGB', (640, 480)), ('RGBA', (480, 640)), ('L', (480, 480))):
+            with self.subTest(mode=mode, size=size):
+                source = Image.new(mode, size, 0)
+                draw = ImageDraw.Draw(source)
+                draw.rectangle((0, 0, size[0] // 2, size[1] // 2), fill=127)
+                draw.line((0, size[1] - 1, size[0] - 1, 0), fill=255, width=9)
+                before = source.tobytes()
+                legacy = ImageOps.fit(source.convert('RGB'), (470, 500),
+                                      method=Image.Resampling.LANCZOS, centering=(0.5, 0.5))
+                actual = fit_result_photo(source)
+                self.assertEqual(actual.mode, 'RGB')
+                self.assertEqual(actual.size, (470, 500))
+                self.assertEqual(actual.tobytes(), legacy.tobytes())
+                self.assertEqual(source.size, size)
+                self.assertEqual(source.mode, mode)
+                self.assertEqual(source.tobytes(), before)
+
     def test_quantities_create_independent_ordered_sessions(self):
         # Verify template quantities expand into separate sessions in the same order as the picker.
         templates = get_templates()

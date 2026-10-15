@@ -376,3 +376,23 @@ not block completion. Validation: **38 tests passed** and **32 real-widget rende
 completed, including the 60-second automatic return, stale navigation/completion,
 popup dismissal, selected-card state, and the existing capture/storage/retry and
 painted-QR checks. See the updated [visual evidence](docs/qa/README.md).
+
+### Review matches the final photo crop
+
+Review previously displayed the full camera frame, while the saved composition
+center-cropped each photo into a 470x500 aperture. Content visible at the edges
+during review could therefore disappear after acceptance. Review now uses the
+same crop function as composition, including the replacement photo after a
+retake. All three thumbnails keep that aspect ratio without stretching.
+
+The live camera still shows its full field of view; its caption directs the
+customer to check the final crop during review. Raw photos remain full-sized,
+and the established output crop, 1800x1000 composition, folder QR, pricing,
+and previously saved results are unchanged.
+
+Validation: **40 tests passed** and **32 real-widget renders** completed at both
+desktop sizes. New checks compare GPU review pixels with saved output frames
+before/after retake, using landscape, portrait, and square sources. They also
+verify that source files and existing output bytes are not modified by review.
+The render report records exact crop agreement in all six review states.
+Camera and Drive checks still use fakes; no live-device claim is implied.

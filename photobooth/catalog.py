@@ -32,6 +32,11 @@ class BoothTemplate:
 # Keep the tariff in one place so gallery, cart, and payment cannot disagree.
 PRICE_PER_SESSION = 5000
 
+# All current templates use this exact photo aperture. Review thumbnails and
+# the saved composition must share it; a full-camera thumbnail can otherwise
+# show a face near an edge that the final center crop silently removes.
+PHOTO_FRAME_SIZE = (470, 500)
+
 TEMPLATES = (
     BoothTemplate(
         template_id="template_a",
@@ -136,6 +141,22 @@ def create_template_preview(
     return image
 
 
+def fit_result_photo(source: Image.Image) -> Image.Image:
+    """Return the final frame pixels without changing the original capture.
+
+    Keep the established center-crop and LANCZOS resampling in one place so
+    review and composition cannot drift apart. This returns a new RGB image;
+    raw captures, replacement files, and previously saved results stay intact.
+    Every current template uses the same aperture, not the camera aspect ratio.
+    """
+    return ImageOps.fit(
+        source.convert("RGB"),
+        PHOTO_FRAME_SIZE,
+        method=getattr(Image, "Resampling", Image).LANCZOS,
+        centering=(0.5, 0.5),
+    )
+
+
 def compose_result(
     photo_paths: Sequence[Path],
     template: BoothTemplate,
@@ -179,28 +200,19 @@ def compose_result(
         font=_font(27, bold=True),
     )
 
-    photo_width = 470
     # Reserve a dedicated footer for the scannable QR. It must never overlap
     # faces or be cropped together with a photo. Output remains 1800x1000.
-    photo_height = 500
+    photo_width, photo_height = PHOTO_FRAME_SIZE
     gap = 40
     # Center three fixed-size frames as a group instead of spacing them relative to the window.
     total_photos_width = photo_width * 3 + gap * 2
     left = (width - total_photos_width) // 2
     first_top = 195
-    resampling = getattr(Image, "Resampling", Image).LANCZOS
-
     for index, photo_path in enumerate(photo_paths):
         photo_left = left + index * (photo_width + gap)
         top = first_top
         with Image.open(photo_path) as source:
-            # Fit crops excess edges when needed, preserving the same frame shape for each photo.
-            photo = ImageOps.fit(
-                source.convert("RGB"),
-                (photo_width, photo_height),
-                method=resampling,
-                centering=(0.5, 0.5),
-            )
+            photo = fit_result_photo(source)
         draw.rounded_rectangle(
             (
                 photo_left - 11,

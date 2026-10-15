@@ -3,6 +3,7 @@
 Layout baseline: `c518e91df5a8311a08a167043e0f1e74aa50555c` on `feature/kivy-gui`.
 The frame-recovery follow-up starts from `a6707e6c7168248c7b80b1b36c8042cd7de1f20f`.
 The screen-action/selection follow-up starts from `26e27a722ab965e62d78b572b9c1b1e39634e6ff`.
+The faithful-review follow-up starts from `1f5f3cda5a6bcba7718afa415e13726a54ec7b32`.
 The original working copy was left untouched. Source files in the separate
 checkout were checked against the freshly fetched GitHub blobs before editing.
 
@@ -28,6 +29,7 @@ scrolling area. Payment back-navigation also retains the customer's quantities.
 | Preview and waiting overlay stay inside their image slot | Passed | Passed |
 | Selected-card feedback matches nonzero quantities | Passed | Passed |
 | Empty quantities disable the decrement control | Passed | Passed |
+| Review pixels match the saved photo crop before/after retake | Passed | Passed |
 
 The image sheets below contain the six main screens. The reproducible renderer
 also includes countdown, bottom-of-gallery, retake-used, local-only, and next-session
@@ -80,6 +82,26 @@ The controller separately rejects completion during capture or at an intermediat
 result. The test then advances both sessions and all 60 completion ticks, proving
 that the final automatic return still works and does not wait for Drive upload.
 
+## Faithful photo framing during review
+
+The previous review thumbnails retained the camera aspect ratio, whereas the
+saved result center-crops into 470x500 frames. A new GPU regression first failed
+at both desktop sizes, before and after retake. Review now shares the exact crop
+function used by composition. The overview and state sheets above show the new
+portrait-shaped thumbnails without stretching or changing their action layout.
+
+Tests compare actual GPU pixels against the three saved output frames, using
+landscape, portrait, square, and replacement sources. They check raw files and
+saved output bytes remain untouched by review. A separate compatibility check
+proves that the extracted crop function keeps the established output pixels for
+RGB, RGBA, and grayscale input. The existing composition geometry and QR footer
+are unchanged. The live camera remains an uncropped view; its caption tells the
+customer to inspect the final crop during review.
+
+All six rendered review states (ready, quota used, and camera waiting at each
+size) record `review_matches_output: true` and `review_frame_size: [470, 500]`
+in [report.json](report.json).
+
 ## Reproduce
 
 Python 3.12.14, Kivy 2.3.1, OpenCV 5.0.0, SDL2 offscreen, and Mesa llvmpipe were used. No webcam,
@@ -90,7 +112,7 @@ SDL_VIDEODRIVER=offscreen PHOTOBOOTH_TEST_GUI=1 python -m unittest discover -s t
 SDL_VIDEODRIVER=offscreen python tools/render_gui.py --output-dir /tmp/photobooth-gui-qa
 ```
 
-The suite passed **38 tests**. Its controller/storage checks include two-session
+The suite passed **40 tests**. Its controller/storage checks include two-session
 orders, one retake per session, local PNG and manifest persistence, cached folder
 allocation, an offline upload failure followed by retry, and skipping verified
 uploads. Camera acquisition and Drive access use deterministic fakes. The layout

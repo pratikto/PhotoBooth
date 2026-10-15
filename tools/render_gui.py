@@ -25,6 +25,7 @@ import cv2
 from PIL import Image, ImageDraw, ImageFont
 from kivy.clock import Clock
 from kivy.core.window import Window
+from kivy.uix.image import Image as KivyImage
 from kivy.uix.scrollview import ScrollView
 
 from photobooth.catalog import compose_result, get_templates
@@ -197,6 +198,26 @@ def main():
                 raise AssertionError('Retake must be disabled when its quota or camera is unavailable')
             record = {'screen': name, 'size': list(size), 'file': path.name,
                       'stage_fits': fits, 'decoded_qr': decoded}
+            if ui.current_screen == 'review':
+                # A visible thumbnail can still misrepresent the final crop.
+                # Compare its real texture against the saved composition, not
+                # against a second call to the same thumbnail implementation.
+                thumbnails = sorted((widget for widget in ui.content.walk()
+                                     if isinstance(widget, KivyImage)), key=lambda w: w.x)
+                if len(thumbnails) != 3:
+                    raise AssertionError(f'{name} must show all three review frames')
+                with Image.open(result) as composition:
+                    for index, widget in enumerate(thumbnails):
+                        if widget.texture.size != (470, 500):
+                            raise AssertionError(f'{name} shows a different photo aperture')
+                        shown = Image.frombytes('RGBA', widget.texture.size,
+                                                widget.texture.pixels).convert('RGB')
+                        left = 155 + index * 510
+                        saved = composition.crop((left, 195, left + 470, 695))
+                        if shown.tobytes() != saved.tobytes():
+                            raise AssertionError(f'{name} differs from its saved result frame')
+                record['review_frame_size'] = [470, 500]
+                record['review_matches_output'] = True
             if ui.current_screen == 'templates':
                 selected = [key for key, card in ui._template_cards.items() if card.selected]
                 expected = [key for key, quantity in ui.quantities.items() if quantity > 0]

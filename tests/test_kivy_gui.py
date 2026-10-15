@@ -13,6 +13,72 @@ from types import SimpleNamespace
 
 @unittest.skipUnless(os.environ.get('PHOTOBOOTH_TEST_GUI') == '1', 'GUI checks are opt-in')
 class KivyFlowTests(unittest.TestCase):
+    def test_review_pixels_match_the_saved_frame_before_and_after_retake(self):
+        """Retake decisions must use the same crop as the accepted composition.
+
+        Landscape, portrait, and square sources have deliberately different
+        edge colors. Merely keeping a thumbnail inside its card would still
+        pass if it showed edges that the saved result removes. Compare actual
+        GPU pixels against each saved output frame at both desktop sizes, then
+        repeat with a replacement photo and check that raw files stay intact.
+        """
+        from PIL import Image, ImageDraw
+        from kivy.base import EventLoop
+        from kivy.core.window import Window
+        from kivy.uix.image import Image as KivyImage
+        from photobooth.catalog import compose_result, get_templates
+        from photobooth.ui_kivy import KivyHost, PhotoBoothUI
+
+        ui = PhotoBoothUI(KivyHost(lambda: None), get_templates(),
+                          on_select_photo=lambda *_: None, on_retake=lambda: None,
+                          on_accept_session=lambda: None)
+        Window.add_widget(ui.shell)
+        original_size = Window.size
+        try:
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                paths = []
+                for index, size in enumerate(((640, 480), (480, 640), (480, 480), (800, 450))):
+                    source = Image.new('RGB', size, '#74a186')
+                    draw = ImageDraw.Draw(source)
+                    width, height = size
+                    draw.rectangle((0, 0, width // 8, height), fill='#d94444')
+                    draw.rectangle((width * 7 // 8, 0, width, height), fill='#3c69c4')
+                    draw.rectangle((0, 0, width, height // 8), fill='#ecc94b')
+                    draw.rectangle((0, height * 7 // 8, width, height), fill='#9d5bc1')
+                    draw.line((0, 0, width - 1, height - 1), fill='white', width=7)
+                    path = root / f'raw-{index}.png'
+                    source.save(path)
+                    paths.append(path)
+                raw_bytes = [path.read_bytes() for path in paths]
+                for size in ((1200, 800), (800, 600)):
+                    Window.size = size
+                    for used in (False, True):
+                        with self.subTest(size=size, retake_used=used):
+                            final_paths = [paths[0], paths[3] if used else paths[1], paths[2]]
+                            output = compose_result(final_paths, ui.templates[0], root / 'result.png',
+                                                    'PB001_00000001', 'session_001')
+                            saved_output = output.read_bytes()
+                            ui.show_review(final_paths, 'Sesi 1 dari 1', 1, not used)
+                            for _ in range(6):
+                                EventLoop.idle()
+                            thumbnails = sorted((widget for widget in ui.content.walk()
+                                                 if isinstance(widget, KivyImage)), key=lambda w: w.x)
+                            self.assertEqual(len(thumbnails), 3)
+                            with Image.open(output) as result:
+                                for index, widget in enumerate(thumbnails):
+                                    self.assertEqual(widget.texture.size, (470, 500))
+                                    shown = Image.frombytes('RGBA', widget.texture.size,
+                                                            widget.texture.pixels).convert('RGB')
+                                    left = 155 + index * 510
+                                    saved = result.crop((left, 195, left + 470, 695))
+                                    self.assertEqual(shown.tobytes(), saved.tobytes())
+                            self.assertEqual(output.read_bytes(), saved_output)
+                self.assertEqual([path.read_bytes() for path in paths], raw_bytes)
+        finally:
+            Window.remove_widget(ui.shell)
+            Window.size = original_size
+
     def test_button_callbacks_ignore_disabled_and_retired_screen_controls(self):
         """A queued release is checked again even after normal hit testing."""
         from photobooth.catalog import get_templates

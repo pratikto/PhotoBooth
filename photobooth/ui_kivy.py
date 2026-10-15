@@ -24,7 +24,7 @@ from kivy.uix.popup import Popup
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
 from PIL import Image
-from photobooth.catalog import PRICE_PER_SESSION, create_template_preview
+from photobooth.catalog import PRICE_PER_SESSION, create_template_preview, fit_result_photo
 
 NAVY = (0.106, 0.227, 0.376, 1)
 MUTED = (0.39, 0.44, 0.52, 1)
@@ -360,7 +360,7 @@ class PhotoBoothUI:
             return 'Retake sudah digunakan. Ketiga foto ini siap dipakai pada hasil akhir.'
         if not self._camera_ready:
             return 'Kamera belum siap. Foto tetap aman; tunggu kamera untuk retake.'
-        return 'Pilih satu foto untuk retake. Ketiga foto dipakai pada hasil akhir.'
+        return 'Pilih satu foto untuk retake. Pratinjau sesuai potongan hasil akhir.'
 
     def _set_preview_live(self, live):
         """Show an intentional empty state instead of Kivy's white null texture."""
@@ -561,7 +561,8 @@ class PhotoBoothUI:
         camera.add_widget(preview_stage)
         if preview_image is not None and self._camera_ready:
             self.update_live_preview(preview_image)
-        camera.add_widget(self._label('Lihat ke kamera, bukan ke layar.', 13, 28, color=SOFT, align='center'))
+        camera.add_widget(self._label('Lihat ke kamera. Cek potongan foto saat review.',
+                                       13, 28, color=SOFT, align='center'))
         guide = Panel(orientation='vertical', padding=dp(18), spacing=dp(10))
         guide.add_widget(self._label('FOTO PENGGANTI' if is_retake else f'FOTO {min(capture_count + 1, 3)} / 3',
                                      13, 28, color=GREY, bold=True))
@@ -626,7 +627,13 @@ class PhotoBoothUI:
             self.capture_button.disabled = not (enabled and self._camera_ready)
 
     def show_review(self, photo_paths, session_label, selected_index, retake_available, status_message=''):
-        """Review all three photos; mark the exact selected retake target."""
+        """Review the final frame crops and mark the exact retake target.
+
+        Showing the full camera aspect ratio here used to expose side content
+        absent from the final strip. Render the composer's exact RGB crop, then
+        contain that frame in the card without stretching or cropping it again.
+        The raw source is opened read-only and never resized in place.
+        """
         page = self._reset('review', 'Sudah pas? Atau satu kali lagi?',
                            f'{session_label}  ·  Sisa retake: {int(retake_available)}')
         self._review_can_retake = selected_index is not None and retake_available
@@ -648,8 +655,7 @@ class PhotoBoothUI:
             card = Panel(fill=SOFT if selected else WHITE, orientation='vertical',
                          padding=dp(14), spacing=dp(12), size_hint_y=None, height=dp(290))
             with Image.open(path) as source:
-                display = source.convert('RGB')
-                display.thumbnail((600, 450))
+                display = fit_result_photo(source)
             card.add_widget(self._display(display))
             caption = (' · DIPILIH' if selected else ' · Pilih untuk retake') if retake_available else (
                 ' · DIGANTI' if selected else ' · Tersimpan')
