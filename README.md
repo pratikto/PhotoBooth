@@ -314,7 +314,7 @@ to the last template, resizing an existing cart, editing payment quantities,
 controller capture/retake flow, storage persistence, and offline upload retries.
 See [visual evidence and reproduction instructions](docs/qa/README.md).
 
-Generate the 28 real-widget screenshots and a machine-readable report without
+Generate the 32 real-widget screenshots and a machine-readable report without
 camera hardware or Drive credentials:
 
 ```bash
@@ -354,3 +354,25 @@ This recovery applies when an already-open camera starts delivering fresh frames
 again. Reopening a lost USB handle is not implemented or tested; a physical
 disconnect may still need operator intervention. All camera and Drive scenarios
 in automated validation use fakes, not a live webcam or Google account.
+
+### Selection feedback and retired-action safety
+
+The template gallery now derives a subtle selected outline/tint from each
+nonzero quantity. Decreasing a quantity to zero removes the highlight and disables
+its minus button. The cart total and the agreed IDR 5,000/session tariff are
+unchanged; two sessions still total IDR 10,000. New renders cover empty, partly
+selected, fully selected, and scrolled galleries at both supported desktop sizes.
+
+Every page button belongs to that exact screen revision. Disabled controls and
+late releases from retired pages are ignored, even when a new order displays
+another page with the same name. This prevents an old **Ubah pesanan** from
+restoring stale quantities or an old **Selesai** from ending the next customer's
+order. Modal close buttons remain tied to their own popup, so error dialogs can
+still be dismissed after the underlying page changes.
+
+The controller independently permits completion only on the last accepted
+result, after all ordered sessions have local outputs. Pending Drive uploads do
+not block completion. Validation: **38 tests passed** and **32 real-widget renders**
+completed, including the 60-second automatic return, stale navigation/completion,
+popup dismissal, selected-card state, and the existing capture/storage/retry and
+painted-QR checks. See the updated [visual evidence](docs/qa/README.md).

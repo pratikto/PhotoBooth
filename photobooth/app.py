@@ -630,6 +630,14 @@ class PhotoBoothApp:
     def _finish_transaction(self) -> None:
         # Mark the transaction complete in the local manifest, clear active session state, and return
         # to the welcome screen without deleting local files.
+        # A delayed timer or retired result callback is not permission to end a
+        # new order. Completion belongs to the final accepted result only; local
+        # outputs may still be queued for Drive, so verified upload is not a gate.
+        if (self.transaction is None or self.ui.current_screen != "result" or not self.sessions
+                or self.session_index != len(self.sessions) - 1
+                or self.current_session is not self.sessions[-1]
+                or any(session.output_path is None for session in self.sessions)):
+            return
         self._cancel_completion_countdown()
         if self.transaction is not None:
             try:

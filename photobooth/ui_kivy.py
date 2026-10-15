@@ -13,6 +13,7 @@ from kivy.core.window import Window
 from kivy.graphics import Color, Rectangle, RoundedRectangle, Line
 from kivy.graphics.texture import Texture
 from kivy.metrics import dp
+from kivy.properties import BooleanProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.floatlayout import FloatLayout
@@ -94,16 +95,29 @@ class Panel(BoxLayout):
     children after construction. Without these bindings, backgrounds stay at the
     origin or stop matching their widgets when the window is resized.
     """
+    selected = BooleanProperty(False)
+
     def __init__(self, fill=WHITE, **kwargs):
         super().__init__(**kwargs)
+        self._default_fill = tuple(fill)
         with self.canvas.before:
-            Color(*fill)
+            self._fill_color = Color(*fill)
             self._background = RoundedRectangle(pos=self.pos, size=self.size, radius=[dp(18)])
-        self.bind(pos=self._paint, size=self._paint)
+            # The thin inset outline distinguishes an ordered template from an
+            # unselected one without changing its dimensions or shifting rows.
+            self._selection_color = Color(*SAGE[:3], 0)
+            self._selection_outline = Line(rounded_rectangle=(0, 0, 1, 1, dp(17)), width=dp(1.2))
+        self.bind(pos=self._paint, size=self._paint, selected=self._paint)
+        self._paint()
 
     def _paint(self, *_args):
         self._background.pos = self.pos
         self._background.size = self.size
+        self._fill_color.rgba = (0.96, 0.98, 0.96, 1) if self.selected else self._default_fill
+        self._selection_color.rgba = SAGE if self.selected else (*SAGE[:3], 0)
+        self._selection_outline.rounded_rectangle = (
+            self.x + dp(1), self.y + dp(1), max(0, self.width - dp(2)),
+            max(0, self.height - dp(2)), dp(17))
 
 
 class PhotoBoothUI:
@@ -117,6 +131,7 @@ class PhotoBoothUI:
     def __init__(self, root, templates, **callbacks):
         self.templates = tuple(templates)
         self.callbacks = callbacks
+        self._screen_revision = 0
         self.current_screen = 'welcome'
         self._camera_ready = False
         self._storage_ready = False
@@ -195,15 +210,27 @@ class PhotoBoothUI:
             widget.height = dp(height)
         return widget
 
-    def _button(self, text, callback, enabled=True, secondary=False):
-        """Consistent 52dp touch targets; secondary actions use a quieter treatment."""
+    def _button(self, text, callback, enabled=True, secondary=False, screen_bound=True):
+        """Create a touch action owned by this exact revision of the screen.
+
+        Touch grabs and queued releases can outlive a widget's visible parent.
+        Checking only the page name is insufficient when another customer or an
+        edited order reaches a page with the same name. Invalidate retired page
+        actions and recheck disabled state at callback delivery. Only modal close
+        controls opt out: their popup can legitimately outlive a page change.
+        """
         widget = Button(text=text, size_hint_y=None, height=dp(52),
                         background_normal='', background_down='',
                         background_color=SOFT if secondary else SAGE,
                         color=INK if secondary else WHITE,
                         disabled_color=(0.55, 0.60, 0.56, 1),
                         font_size=dp(14), bold=True, disabled=not enabled)
-        widget.bind(on_release=lambda _widget: callback())
+        revision = self._screen_revision
+        def release(button):
+            if button.disabled or (screen_bound and revision != self._screen_revision):
+                return
+            return callback()
+        widget.bind(on_release=release)
         # Long translated labels wrap rather than overflowing a narrow button.
         widget.bind(size=lambda w, size: setattr(w, 'text_size', (size[0] - dp(16), size[1])))
         widget.halign = 'center'
@@ -212,6 +239,7 @@ class PhotoBoothUI:
 
     def _reset(self, screen, title, subtitle=''):
         """Discard only screen widgets, keeping shell/footer and controller state."""
+        self._screen_revision += 1
         self.current_screen = screen
         self.content.clear_widgets()
         self.preview = None
@@ -376,6 +404,7 @@ class PhotoBoothUI:
         self.quantities = {t.template_id: (quantities or {}).get(t.template_id, 0)
                            for t in self.templates}
         self.quantity_labels = {}
+        self.quantity_buttons = {}
         self._template_cards = {}
         gallery = ScrollView(do_scroll_x=False, bar_width=dp(5))
         grid = GridLayout(cols=2, spacing=dp(14), size_hint_y=None)
@@ -392,6 +421,7 @@ class PhotoBoothUI:
             controls = BoxLayout(size_hint_y=None, height=dp(42), spacing=dp(8))
             minus = self._button('−', lambda k=key: self._change_quantity(k, -1), secondary=True)
             plus = self._button('+', lambda k=key: self._change_quantity(k, 1), secondary=True)
+            self.quantity_buttons[key] = (minus, plus)
             for button in (minus, plus):
                 button.size_hint_x = None
                 button.width = dp(46)
@@ -435,6 +465,8 @@ class PhotoBoothUI:
         """Apply camera/storage/order gates; no UI click can bypass these checks."""
         for key, quantity in self.quantities.items():
             self.quantity_labels[key].text = f'{quantity} sesi'
+            self.quantity_buttons[key][0].disabled = quantity == 0
+            self._template_cards[key].selected = quantity > 0
         total = sum(self.quantities.values())
         lines = [f'{t.name}     × {self.quantities[t.template_id]}' for t in self.templates
                  if self.quantities[t.template_id]]
@@ -702,5 +734,6 @@ class PhotoBoothUI:
         scroll.add_widget(label)
         body.add_widget(scroll)
         popup = Popup(title=title, content=body, size_hint=(.85, .8), auto_dismiss=False)
-        body.add_widget(self._button('TUTUP', popup.dismiss))
+        body.add_widget(self._button('TUTUP', popup.dismiss, screen_bound=False))
         popup.open()
+        return popup

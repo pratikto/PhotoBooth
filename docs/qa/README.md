@@ -2,6 +2,7 @@
 
 Layout baseline: `c518e91df5a8311a08a167043e0f1e74aa50555c` on `feature/kivy-gui`.
 The frame-recovery follow-up starts from `a6707e6c7168248c7b80b1b36c8042cd7de1f20f`.
+The screen-action/selection follow-up starts from `26e27a722ab965e62d78b572b9c1b1e39634e6ff`.
 The original working copy was left untouched. Source files in the separate
 checkout were checked against the freshly fetched GitHub blobs before editing.
 
@@ -25,10 +26,13 @@ scrolling area. Payment back-navigation also retains the customer's quantities.
 | Real pointer taps respect disabled camera/payment controls | Passed | Passed |
 | Waiting-camera and used-retake messages fit | Passed | Passed |
 | Preview and waiting overlay stay inside their image slot | Passed | Passed |
+| Selected-card feedback matches nonzero quantities | Passed | Passed |
+| Empty quantities disable the decrement control | Passed | Passed |
 
 The image sheets below contain the six main screens. The reproducible renderer
 also includes countdown, bottom-of-gallery, retake-used, local-only, and next-session
-states, plus camera-waiting capture, payment, and review: **28 full-size PNGs** in total.
+states, camera-waiting capture/payment/review, and empty/partly selected carts:
+**32 full-size PNGs** in total.
 The JSON [report](report.json) records each
 render and the QR text decoded from its actual screen pixels. Full-size renders
 are produced by the command below; only the compact sheets are committed here.
@@ -54,6 +58,28 @@ Retake guidance distinguishes an unavailable camera from an exhausted allowance.
 
 ![Waiting-camera and used-retake states at 1200x800](states-1200x800.png)
 
+## Selection feedback and retired page actions
+
+Nonzero quantities now receive a thin inset outline and pale tint, without
+changing card dimensions. Returning to zero removes the visual selection and
+disables decrement. The screenshots compare an empty cart, two sessions of one
+template (Rp10.000), all four templates, and the last template after scrolling.
+The report records selected IDs and quantities and asserts that they agree.
+
+![Template selection states at 800x600](selection-800x600.png)
+
+![Template selection states at 1200x800](selection-1200x800.png)
+
+Regression tests first reproduced delayed **Ubah pesanan** restoring an old cart,
+delayed **Selesai** ending a different transaction, and a disabled button delivering
+a queued callback. Page actions are now bound to their exact screen revision.
+Modal close is deliberately exempt from that page lifetime and is tested with
+a real error popup while its underlying page changes.
+
+The controller separately rejects completion during capture or at an intermediate
+result. The test then advances both sessions and all 60 completion ticks, proving
+that the final automatic return still works and does not wait for Drive upload.
+
 ## Reproduce
 
 Python 3.12.14, Kivy 2.3.1, OpenCV 5.0.0, SDL2 offscreen, and Mesa llvmpipe were used. No webcam,
@@ -64,7 +90,7 @@ SDL_VIDEODRIVER=offscreen PHOTOBOOTH_TEST_GUI=1 python -m unittest discover -s t
 SDL_VIDEODRIVER=offscreen python tools/render_gui.py --output-dir /tmp/photobooth-gui-qa
 ```
 
-The suite passed **32 tests**. Its controller/storage checks include two-session
+The suite passed **38 tests**. Its controller/storage checks include two-session
 orders, one retake per session, local PNG and manifest persistence, cached folder
 allocation, an offline upload failure followed by retry, and skipping verified
 uploads. Camera acquisition and Drive access use deterministic fakes. The layout

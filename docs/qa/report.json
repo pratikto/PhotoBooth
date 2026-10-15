@@ -18,7 +18,55 @@
       ],
       "file": "templates-1200x800.png",
       "stage_fits": true,
-      "decoded_qr": null
+      "decoded_qr": null,
+      "selected_templates": [
+        "template_a",
+        "template_b",
+        "template_c",
+        "template_d"
+      ],
+      "quantities": {
+        "template_a": 2,
+        "template_b": 2,
+        "template_c": 2,
+        "template_d": 2
+      }
+    },
+    {
+      "screen": "templates-empty",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "templates-empty-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "selected_templates": [],
+      "quantities": {
+        "template_a": 0,
+        "template_b": 0,
+        "template_c": 0,
+        "template_d": 0
+      }
+    },
+    {
+      "screen": "templates-one",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "templates-one-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "selected_templates": [
+        "template_a"
+      ],
+      "quantities": {
+        "template_a": 2,
+        "template_b": 0,
+        "template_c": 0,
+        "template_d": 0
+      }
     },
     {
       "screen": "templates-bottom",
@@ -28,7 +76,19 @@
       ],
       "file": "templates-bottom-1200x800.png",
       "stage_fits": true,
-      "decoded_qr": null
+      "decoded_qr": null,
+      "selected_templates": [
+        "template_a",
+        "template_b",
+        "template_c",
+        "template_d"
+      ],
+      "quantities": {
+        "template_a": 2,
+        "template_b": 2,
+        "template_c": 2,
+        "template_d": 2
+      }
     },
     {
       "screen": "payment",
@@ -158,7 +218,55 @@
       ],
       "file": "templates-800x600.png",
       "stage_fits": true,
-      "decoded_qr": null
+      "decoded_qr": null,
+      "selected_templates": [
+        "template_a",
+        "template_b",
+        "template_c",
+        "template_d"
+      ],
+      "quantities": {
+        "template_a": 2,
+        "template_b": 2,
+        "template_c": 2,
+        "template_d": 2
+      }
+    },
+    {
+      "screen": "templates-empty",
+      "size": [
+        800,
+        600
+      ],
+      "file": "templates-empty-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "selected_templates": [],
+      "quantities": {
+        "template_a": 0,
+        "template_b": 0,
+        "template_c": 0,
+        "template_d": 0
+      }
+    },
+    {
+      "screen": "templates-one",
+      "size": [
+        800,
+        600
+      ],
+      "file": "templates-one-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "selected_templates": [
+        "template_a"
+      ],
+      "quantities": {
+        "template_a": 2,
+        "template_b": 0,
+        "template_c": 0,
+        "template_d": 0
+      }
     },
     {
       "screen": "templates-bottom",
@@ -168,7 +276,19 @@
       ],
       "file": "templates-bottom-800x600.png",
       "stage_fits": true,
-      "decoded_qr": null
+      "decoded_qr": null,
+      "selected_templates": [
+        "template_a",
+        "template_b",
+        "template_c",
+        "template_d"
+      ],
+      "quantities": {
+        "template_a": 2,
+        "template_b": 2,
+        "template_c": 2,
+        "template_d": 2
+      }
     },
     {
       "screen": "payment",

@@ -141,6 +141,70 @@ class CameraRecoveryTests(unittest.TestCase):
         self.app.ui.payment_confirm.dispatch('on_release')
         self.assertEqual(len(self.app.sessions), 1)
 
+    def test_stale_back_cannot_restore_an_older_cart(self):
+        """An old navigation release must not overwrite the customer's edit."""
+        self.order()
+        old_back = self.app.ui.payment_back
+        old_back.dispatch('on_release')
+        self.app.ui._change_quantity(self.key, 1)
+        self.app.ui.start_button.dispatch('on_release')
+        self.assertEqual(self.app.ui.payment_total, 15000)
+        old_back.dispatch('on_release')
+        self.assertEqual(self.app.ui.current_screen, 'payment')
+        self.assertEqual(self.app.ui.payment_total, 15000)
+        self.assertIsNone(self.app.transaction)
+        self.app.ui.payment_back.dispatch('on_release')
+        self.assertEqual(self.app.ui.quantities[self.key], 3)
+
+    def test_stale_finish_cannot_complete_another_customer_transaction(self):
+        """Retained result controls belong to one screen, not the next customer."""
+        self.order()
+        self.app.ui.payment_confirm.dispatch('on_release')
+        for number in range(2):
+            for _ in range(3):
+                self.app._save_current_frame(False)
+            self.app._accept_current_session()
+            if number == 0:
+                self.app.ui.result_action.dispatch('on_release')
+        old_finish = self.app.ui.result_action
+        old_finish.dispatch('on_release')
+        self.assertEqual(self.app.ui.current_screen, 'welcome')
+        self.order()
+        self.app.ui.payment_confirm.dispatch('on_release')
+        transaction = self.app.transaction
+        initial_status = transaction.manifest['status']
+        old_finish.dispatch('on_release')
+        self.assertIs(self.app.transaction, transaction)
+        self.assertEqual(transaction.manifest['status'], initial_status)
+        self.assertEqual(self.app.ui.current_screen, 'capture')
+
+    def test_completion_request_cannot_skip_unfinished_sessions(self):
+        """Controller completion is valid only after accepting the final output."""
+        self.order()
+        self.app.ui.payment_confirm.dispatch('on_release')
+        transaction = self.app.transaction
+        initial_status = transaction.manifest['status']
+        self.app._finish_transaction()  # Simulates a late timer/controller request.
+        self.assertIs(self.app.transaction, transaction)
+        self.assertEqual(transaction.manifest['status'], initial_status)
+        self.assertEqual(self.app.ui.current_screen, 'capture')
+        for _ in range(3):
+            self.app._save_current_frame(False)
+        self.app._accept_current_session()
+        self.app._finish_transaction()  # A first-session result is not the end.
+        self.assertIs(self.app.transaction, transaction)
+        self.assertEqual(self.app.ui.current_screen, 'result')
+        self.app._start_next_session()
+        for _ in range(3):
+            self.app._save_current_frame(False)
+        self.app._accept_current_session()
+        self.assertEqual(self.app._completion_remaining, 60)
+        for _ in range(60):
+            self.app._completion_countdown_tick()
+        self.assertIsNone(self.app.transaction)
+        self.assertEqual(transaction.manifest['status'], 'COMPLETED')
+        self.assertEqual(self.app.ui.current_screen, 'welcome')
+
     def test_failed_retake_keeps_allowance_and_exhausted_state_is_explicit(self):
         self.order()
         self.app.ui.payment_confirm.dispatch('on_release')

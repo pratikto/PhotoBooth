@@ -37,6 +37,7 @@ STATUS = 'Drive siap · 25 slot folder tersedia.'
 SIZES = ((1200, 800), (800, 600))
 OVERVIEW_SCREENS = ('welcome', 'templates', 'payment', 'capture', 'review', 'result')
 STATE_SCREENS = ('payment-waiting', 'capture-waiting', 'review-used', 'review-waiting')
+SELECTION_SCREENS = ('templates-empty', 'templates-one', 'templates', 'templates-bottom')
 
 
 def synthetic_portrait(index):
@@ -114,6 +115,10 @@ def main():
         for template in templates:
             ui._change_quantity(template.template_id, 2)
 
+    def single_template():
+        ui.show_template_selection(True, STATUS)
+        ui._change_quantity(templates[0].template_id, 2)
+
     def result_screen(local=False, has_next=False):
         ui.show_result(local_result if local else result, 'Sesi 1 dari 8 · Template 1',
                        'PB001_00000001', has_next, None if has_next else 60,
@@ -132,6 +137,8 @@ def main():
     scenes = (
         ('welcome', lambda: ui.show_welcome(True, STATUS), None),
         ('templates', cart, None),
+        ('templates-empty', lambda: ui.show_template_selection(True, STATUS), None),
+        ('templates-one', single_template, None),
         ('templates-bottom', cart, scroll_last_template),
         ('payment', lambda: ui.show_payment('\n'.join(f'{t.name} × 2' for t in templates),
                                            8, 40000, lambda: None, lambda: None), None),
@@ -188,8 +195,19 @@ def main():
                 raise AssertionError('Payment confirmation needs a fresh camera frame')
             if name in ('review-used', 'review-waiting') and not ui.retake_button.disabled:
                 raise AssertionError('Retake must be disabled when its quota or camera is unavailable')
-            records.append({'screen': name, 'size': list(size), 'file': path.name,
-                            'stage_fits': fits, 'decoded_qr': decoded})
+            record = {'screen': name, 'size': list(size), 'file': path.name,
+                      'stage_fits': fits, 'decoded_qr': decoded}
+            if ui.current_screen == 'templates':
+                selected = [key for key, card in ui._template_cards.items() if card.selected]
+                expected = [key for key, quantity in ui.quantities.items() if quantity > 0]
+                if selected != expected:
+                    raise AssertionError(f'Selection outline disagrees with the order in {name}')
+                for key, quantity in ui.quantities.items():
+                    if ui.quantity_buttons[key][0].disabled != (quantity == 0):
+                        raise AssertionError(f'Decrement gate disagrees with quantity in {name}')
+                record['selected_templates'] = selected
+                record['quantities'] = dict(ui.quantities)
+            records.append(record)
             print(f'PASS {name} {width}x{height}', flush=True)
         except Exception as error:
             errors.append(str(error))
@@ -217,6 +235,7 @@ def main():
     for size in SIZES:
         overview(output, size)
         overview(output, size, STATE_SCREENS, 'states')
+        overview(output, size, SELECTION_SCREENS, 'selection')
     print(f'{len(records)} real-widget renders saved in {output}')
 
 

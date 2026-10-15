@@ -13,6 +13,72 @@ from types import SimpleNamespace
 
 @unittest.skipUnless(os.environ.get('PHOTOBOOTH_TEST_GUI') == '1', 'GUI checks are opt-in')
 class KivyFlowTests(unittest.TestCase):
+    def test_button_callbacks_ignore_disabled_and_retired_screen_controls(self):
+        """A queued release is checked again even after normal hit testing."""
+        from photobooth.catalog import get_templates
+        from photobooth.ui_kivy import KivyHost, PhotoBoothUI
+        ui = PhotoBoothUI(KivyHost(lambda: None), get_templates(), on_home_start=lambda: None)
+        calls = []
+        button = ui._button('Test action', lambda: calls.append('called'), enabled=False)
+        button.dispatch('on_release')
+        self.assertEqual(calls, [])
+        button.disabled = False
+        button.dispatch('on_release')
+        self.assertEqual(calls, ['called'])
+        ui.show_welcome(True, 'Ready')
+        button.dispatch('on_release')
+        self.assertEqual(calls, ['called'])
+
+    def test_selected_template_cards_and_decrement_controls_follow_quantity(self):
+        """Only nonzero quantities receive a selected outline and active minus."""
+        from photobooth.catalog import get_templates
+        from photobooth.ui_kivy import KivyHost, PhotoBoothUI
+        ui = PhotoBoothUI(KivyHost(lambda: None), get_templates(), on_start=lambda *_: None)
+        ui.show_template_selection(True, 'Ready')
+        key = ui.templates[0].template_id
+        card = ui._template_cards[key]
+        minus, plus = ui.quantity_buttons[key]
+        self.assertFalse(card.selected)
+        self.assertTrue(minus.disabled)
+        plus.dispatch('on_release')
+        plus.dispatch('on_release')
+        self.assertTrue(card.selected)
+        self.assertFalse(minus.disabled)
+        self.assertEqual(ui.cart_total.text, 'Rp10.000')
+        minus.dispatch('on_release')
+        minus.dispatch('on_release')
+        self.assertFalse(card.selected)
+        self.assertTrue(minus.disabled)
+        self.assertEqual(ui.cart_total.text, 'Rp0')
+        minus.dispatch('on_release')
+        self.assertEqual(ui.quantities[key], 0)
+
+    def test_error_dialog_can_close_after_underlying_page_changes(self):
+        """Modal dismissal must survive a controller's error-to-cart navigation."""
+        from kivy.base import EventLoop
+        from kivy.core.window import Window
+        from kivy.uix.button import Button
+        from photobooth.catalog import get_templates
+        from photobooth.ui_kivy import KivyHost, PhotoBoothUI
+        ui = PhotoBoothUI(KivyHost(lambda: None), get_templates(), on_home_start=lambda: None)
+        Window.add_widget(ui.shell)
+        popup = None
+        try:
+            ui.show_welcome(True, 'Ready')
+            popup = ui.show_error('Test error', 'A simulated storage error; no Drive request was made.')
+            for _ in range(8):
+                EventLoop.idle()
+            ui.show_template_selection(True, 'Order kept')
+            close = next(widget for widget in popup.content.walk() if isinstance(widget, Button))
+            close.dispatch('on_release')
+            for _ in range(12):
+                EventLoop.idle()
+            self.assertIsNone(popup.parent)
+        finally:
+            if popup is not None:
+                popup.dismiss(animation=False)
+            Window.remove_widget(ui.shell)
+
     def test_pointer_taps_respect_camera_and_payment_submission_gates(self):
         """Send actual pointer events through Window, not on_release dispatch.
 
