@@ -1,18 +1,24 @@
 # PhotoBooth
 
-A Python photo booth application built with Tkinter and OpenCV. The repository currently contains an early single-photo prototype; the transaction workflow below documents the agreed product behavior that the application is intended to grow into.
+A Python photo booth application built with Tkinter, OpenCV, and Pillow. The attached procedure document is the functional source of truth. QRIS and printing are intentionally out of the current implementation until those integrations are ready.
 
-## Current prototype
+## Current implementation: photo and Drive flow
 
-The code currently:
+The first implementation milestone includes:
 
-- Shows a live preview from a built-in or USB camera.
-- Captures the current camera frame and saves it as a local JPEG.
-- Attempts to upload each captured photo to Google Drive through a Google Apps Script web app.
-- Displays a QR code for the individual photo after its upload succeeds.
-- Keeps the local photo and displays an error if upload fails.
+- A welcome screen and a template picker with a cart-style session summary.
+- Four sample template cards. Their artwork is illustrative and should be replaced with the final template designs.
+- Quantity means separate sessions. Each session captures three new photos and receives one retake of a selected photo.
+- A five-second countdown before each capture.
+- A final digital photo composition saved locally for each session.
+- One transaction folder slot for all sessions in an order, named with the booth ID and an incrementing eight-digit counter, such as PB001_00000001.
+- A persistent local pool targeting at least 25 verified Drive folders. Each folder is created with its final incrementing transaction ID, so assignment does not rename it.
+- A cached folder ID and URL for each slot, so an assigned transaction can continue offline and show the same folder QR.
+- A local manifest and retryable upload queue. Uploads are identified by transaction-relative path, checked by size and checksum, and retained locally until verified in Drive. Direct OAuth uploads are resumable; the Apps Script backend retries whole files idempotently.
 
-The complete multi-template, payment, printing, transaction-folder, and offline-reservation flow described below is not implemented yet. In particular, the current QR points to one uploaded photo, not to a transaction folder.
+QRIS payment and printing are not implemented. The bundled template artwork is illustrative and should be replaced with the final designs before operating the booth.
+
+Payment and printing sections below describe the procedure's target behavior and are not part of this implementation.
 
 ## Agreed product workflow
 
@@ -58,7 +64,7 @@ The transaction folder contains both:
 - The raw photos captured by the camera.
 - The final photo output for each template session.
 
-The Drive folder slot exists before it has a transaction ID. When a slot is claimed, record the assigned ID and final folder name against its Drive folder ID. If the booth is offline, keep that rename request locally and apply it when the connection returns. Keep using the cached Drive folder ID and URL as the stable folder-link destination for the QR.
+Each Drive folder slot is created with its final incrementing transaction ID and cached folder link. Claiming a slot records the transaction against that existing ID; the folder name does not change. If the booth is offline, continue to use the cached Drive folder ID and URL for the QR.
 
 ### 4. Take photos and allow retakes per session
 
@@ -129,9 +135,22 @@ Install the Python dependencies from the project folder:
 
     python -m pip install -r requirements.txt
 
-The current prototype uses a local configuration file, `photobooth/local_settings.py`, for the Google Apps Script web app URL and upload token. That file is ignored by Git; keep its credentials private and do not commit it.
+The existing Apps Script Web App setup is supported. Keep `WEB_APP_URL` and `UPLOAD_TOKEN` in the ignored `photobooth/local_settings.py` file. A safe starter file is provided as `photobooth/local_settings.example.py`; copy it to `photobooth/local_settings.py` and fill in the existing values.
 
-Run the current prototype with:
+The Web App must run the transaction-folder API in [`apps_script/Code.gs`](apps_script/Code.gs). In the Apps Script project's **Script Properties**, keep the existing `UPLOAD_TOKEN` and `DRIVE_FOLDER_ID`. Update the existing Web App deployment to a new version, with **Execute as: Me** and access allowed to **Anyone**. The deployment URL ending in `/exec` stays in `local_settings.py`. On startup, the booth requests 25 verified, empty folder slots; each slot is assigned a unique final name such as `PB001_00000001` when it is created. The slot's name does not change when a customer claims it.
+
+Alternatively, installations using direct Drive API OAuth can configure these environment variables:
+
+- `PHOTOBOOTH_ID` — booth code, default `PB001`.
+- `PHOTOBOOTH_DRIVE_PARENT_ID` — Drive folder ID where the application creates its slot folders.
+- `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`, and `GOOGLE_OAUTH_REFRESH_TOKEN` — OAuth credentials authorized for Google Drive API access.
+- `PHOTOBOOTH_CAMERA_INDEX` — camera index, default `0`.
+
+Enable the Google Drive API and authorize the OAuth refresh token with Drive access for the intended account. The account needs permission to create folders, set link sharing, and upload files under the configured parent. Keep OAuth credentials outside the repository. Apps Script settings take precedence when both configuration methods are present.
+
+For UI and camera development without Drive credentials, set `PHOTOBOOTH_LOCAL_ONLY=1`. This mode stores results only on the device and does not produce a Drive QR; do not use it for booth operations.
+
+Run the local MVP with:
 
     python main.py
 
@@ -140,16 +159,23 @@ Run the current prototype with:
 - The application uses camera index 0 by default. If the USB camera is not detected, check the camera index configured in `photobooth/camera.py`.
 - On Windows, allow desktop applications to access the camera in Settings > Privacy & security > Camera.
 - Close other applications that may be using the camera, such as Zoom, Teams, or Camera.
-- If Drive upload fails, the current prototype keeps the JPEG locally and reports the error. Its offline queue and reserved transaction-folder behavior are planned requirements, not current functionality.
+- Photos and transaction manifests are stored under `photos/<transaction-id>`. Preserve `data/booth_state.json` and `data/drive_pool.json` with the transaction ledger and folder-link cache.
+- If there are no ready Drive slots, check internet access and Apps Script configuration. The deployed Web App must include the actions in `apps_script/Code.gs`; the original upload-only deployment cannot create transaction folders. New transactions remain disabled until a slot is verified.
+- An `ACTION_REQUIRED` upload or slot remains on the device for staff attention; the application does not delete Drive content or pending local files.
+- QRIS and printer integration are not connected to the current UI.
 
 ## Project structure
 
-- `main.py` starts the application.
-- `photobooth/app.py` coordinates the camera, UI, local photo saving, Drive upload, and QR display.
-- `photobooth/camera.py` manages the camera connection and frame capture.
-- `photobooth/photo_storage.py` saves captured photos locally.
-- `photobooth/drive_storage.py` uploads the current prototype's individual photos through Apps Script.
-- `photobooth/qr_code.py` creates QR-code images.
-- `photobooth/ui_tkinter.py` builds the current Tkinter interface.
-- `requirements.txt` lists the Python packages used by the current prototype.
-- The `photos` folder, local configuration, and temporary Python files are excluded from Git.
+- main.py starts the application.
+- photobooth/app.py coordinates the camera, screens, and session flow.
+- photobooth/ui_tkinter.py builds the Tkinter interface styled after the procedure mockups.
+- photobooth/catalog.py contains the sample templates and digital photo-strip compositor.
+- photobooth/workflow.py expands quantities into sessions and enforces one retake per session.
+- photobooth/transaction_store.py reserves transaction IDs and writes local photos and manifests.
+- photobooth/camera.py manages the camera connection and frame capture.
+- photobooth/drive_storage.py handles Apps Script and direct OAuth Drive operations, sharing, uploads, and verification.
+- photobooth/drive_pool.py maintains the local cache of ready and assigned Drive slots.
+- photobooth/drive_sync.py syncs slot assignments and pending transaction uploads in the background.
+- photobooth/qr_code.py creates the transaction folder QR shown on the result screen.
+- requirements.txt lists the Python packages used by the project.
+- photos/, data/, local configuration, and temporary Python files are excluded from Git.
