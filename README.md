@@ -314,7 +314,7 @@ to the last template, resizing an existing cart, editing payment quantities,
 controller capture/retake flow, storage persistence, and offline upload retries.
 See [visual evidence and reproduction instructions](docs/qa/README.md).
 
-Generate the 22 real-widget screenshots and a machine-readable report without
+Generate the 28 real-widget screenshots and a machine-readable report without
 camera hardware or Drive credentials:
 
 ```bash
@@ -326,3 +326,31 @@ environment prefix. Its default output directory is under the system temporary
 folder. All illustrated people and Drive destinations in these renders are test
 fixtures. Webcam latency and live Drive access were not tested in this run;
 QRIS is still a clearly labelled simulation and physical printing is not connected.
+
+### Camera-frame recovery and explicit retake states
+
+Frame availability now updates the camera badge and the welcome, cart, payment,
+capture, and retake action gates without rebuilding the screen or losing an order.
+An unavailable frame clears the frozen preview and shows an intentional waiting
+message. When fresh frames resume, the same session can continue. A failed retake
+capture does not consume its allowance. Once that allowance is used, the review
+labels the replacement **DIGANTI** and explains **Retake sudah digunakan** instead
+of inviting another retake.
+
+Payment confirmation is tied to its original button and order. A late callback
+from a payment screen replaced by an edited order cannot submit old quantities.
+A rejected confirmation can be retried after camera recovery, while successful
+submissions remain one-shot. The unpaid cart remains editable while waiting for
+the camera; creating a transaction still requires a fresh frame.
+
+Validation: **32 tests passed**, including real pointer events on both desktop
+sizes, synthetic frame loss/recovery, a failed-then-successful retake, payment
+retry, stale payment callbacks, and the existing controller/storage/Drive retry
+checks. **28 real-widget renders** include waiting-camera and exhausted-retake
+states; the camera overlay is checked against its own bounds as well as the
+window. Updated [visual evidence](docs/qa/README.md) contains these extra states.
+
+This recovery applies when an already-open camera starts delivering fresh frames
+again. Reopening a lost USB handle is not implemented or tested; a physical
+disconnect may still need operator intervention. All camera and Drive scenarios
+in automated validation use fakes, not a live webcam or Google account.

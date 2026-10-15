@@ -1,0 +1,174 @@
+"""Controller and real-widget checks for a temporary loss of camera frames.
+
+The synthetic camera has an already-open handle whose mailbox can return None.
+This tests recovery when fresh frames resume, not USB hotplug or driver reopening.
+Controller timers are held for deterministic manual ticks; no real camera,
+network, credentials, or user transaction directories are used.
+"""
+
+from contextlib import ExitStack
+import os
+from pathlib import Path
+import tempfile
+from types import SimpleNamespace
+import unittest
+from unittest.mock import patch
+
+import numpy as np
+
+
+@unittest.skipUnless(os.environ.get('PHOTOBOOTH_TEST_GUI') == '1', 'GUI checks are opt-in')
+class CameraRecoveryTests(unittest.TestCase):
+    def setUp(self):
+        from photobooth.app import PhotoBoothApp
+        self.stack = ExitStack()
+        self.addCleanup(self.stack.close)
+        directory = self.stack.enter_context(tempfile.TemporaryDirectory())
+        self.frame = np.full((240, 320, 3), (60, 130, 180), dtype=np.uint8)
+        self.latest = self.frame
+        camera = SimpleNamespace(open=lambda: True, read=lambda: self.latest, close=lambda: None)
+        self.stack.enter_context(patch('photobooth.app.PROJECT_ROOT', Path(directory)))
+        self.stack.enter_context(patch('photobooth.app.Camera', return_value=camera))
+        self.stack.enter_context(patch('photobooth.app.AppsScriptDriveClient.from_configuration', return_value=None))
+        self.stack.enter_context(patch('photobooth.app.GoogleDriveClient.from_environment', return_value=None))
+        self.stack.enter_context(patch.dict(os.environ, {'PHOTOBOOTH_LOCAL_ONLY': '1'}))
+        self.stack.enter_context(patch('photobooth.app.KivyHost.after',
+                                       return_value=SimpleNamespace(cancel=lambda: None)))
+        self.app = PhotoBoothApp()
+        self.addCleanup(self.app.close)
+        self.errors = self.stack.enter_context(patch.object(self.app.ui, 'show_error'))
+        self.app._connect_camera()
+
+    def order(self):
+        self.app._open_template_selection()
+        self.key = self.app.templates[0].template_id
+        self.app.ui._change_quantity(self.key, 2)
+        self.app.ui.start_button.dispatch('on_release')
+
+    def test_camera_readiness_tracks_home_cart_and_payment_without_losing_order(self):
+        ui = self.app.ui
+        self.latest = None
+        self.app._update_preview()
+        self.assertFalse(self.app.camera_ready)
+        self.assertTrue(ui.home_start_button.disabled)
+        self.latest = self.frame
+        self.app._update_preview()
+        self.assertTrue(self.app.camera_ready)
+        self.assertFalse(ui.home_start_button.disabled)
+        self.assertNotIn('Menunggu gambar', ui.status.text)
+        self.app._open_template_selection()
+        key = self.app.templates[0].template_id
+        ui._change_quantity(key, 2)
+        self.latest = None
+        self.app._update_preview()
+        self.assertTrue(ui.start_button.disabled)
+        self.latest = self.frame
+        self.app._update_preview()
+        self.assertFalse(ui.start_button.disabled)
+        self.assertEqual(ui.quantities[key], 2)
+        ui.start_button.dispatch('on_release')
+        confirm = ui.payment_confirm
+        self.latest = None
+        self.app._update_preview()
+        self.assertTrue(confirm.disabled)
+        confirm.dispatch('on_release')  # Even a queued stale release is ignored.
+        self.assertIsNone(self.app.transaction)
+        self.latest = self.frame
+        self.app._update_preview()
+        self.assertIs(ui.payment_confirm, confirm)
+        self.assertFalse(confirm.disabled)
+        self.assertEqual(ui.payment_total, 10000)
+        confirm.dispatch('on_release')
+        self.assertEqual(len(self.app.sessions), 2)
+
+    def test_missing_frames_clear_preview_and_cannot_start_a_countdown(self):
+        self.order()
+        self.app.ui.payment_confirm.dispatch('on_release')
+        transaction = self.app.transaction
+        session = self.app.current_session
+        self.assertIsNotNone(self.app.ui.preview.texture)
+        self.latest = None
+        self.app._update_preview()
+        self.assertFalse(self.app.camera_ready)
+        self.assertTrue(self.app.ui.capture_button.disabled)
+        self.assertIsNone(self.app.ui.preview.texture)
+        self.assertEqual(self.app.ui.preview.opacity, 0)
+        self.assertEqual(self.app.ui.camera_wait_hint.opacity, 1)
+        self.assertIn('MENUNGGU', self.app.ui.live_caption.text)
+        self.app._start_capture_countdown()
+        self.assertIsNone(self.app._countdown_after_id)
+        self.latest = self.frame
+        self.app._update_preview()
+        self.assertTrue(self.app.camera_ready)
+        self.assertFalse(self.app.ui.capture_button.disabled)
+        self.assertIsNotNone(self.app.ui.preview.texture)
+        self.assertEqual(self.app.ui.preview.opacity, 1)
+        self.assertEqual(self.app.ui.camera_wait_hint.opacity, 0)
+        self.assertEqual(self.app.ui.live_caption.text, 'LIVE CAMERA')
+        self.assertIs(self.app.transaction, transaction)
+        self.assertIs(self.app.current_session, session)
+        self.app._start_capture_countdown()
+        self.assertIsNotNone(self.app._countdown_after_id)
+
+    def test_rejected_confirmation_unlocks_after_camera_recovers(self):
+        self.order()
+        confirm = self.app.ui.payment_confirm
+        # The controller performs a second check even if an old UI release was
+        # already queued before the camera state changed.
+        self.app.camera_ready = False
+        confirm.dispatch('on_release')
+        self.assertIsNone(self.app.transaction)
+        self.errors.assert_called_once()
+        self.app._update_preview()
+        self.assertFalse(confirm.disabled)
+        confirm.dispatch('on_release')
+        transaction = self.app.transaction
+        self.assertIsNotNone(transaction)
+        confirm.dispatch('on_release')
+        self.assertIs(self.app.transaction, transaction)
+        self.assertEqual(len(self.app.sessions), 2)
+
+    def test_late_release_from_replaced_payment_cannot_submit_old_quantities(self):
+        self.order()
+        old_confirm = self.app.ui.payment_confirm
+        self.app.ui.payment_back.dispatch('on_release')
+        self.app.ui._change_quantity(self.key, -1)
+        self.app.ui.start_button.dispatch('on_release')
+        self.assertEqual(self.app.ui.payment_total, 5000)
+        old_confirm.dispatch('on_release')
+        self.assertIsNone(self.app.transaction)
+        self.assertFalse(self.app.ui.payment_confirm.disabled)
+        self.app.ui.payment_confirm.dispatch('on_release')
+        self.assertEqual(len(self.app.sessions), 1)
+
+    def test_failed_retake_keeps_allowance_and_exhausted_state_is_explicit(self):
+        self.order()
+        self.app.ui.payment_confirm.dispatch('on_release')
+        for _ in range(3):
+            self.app._save_current_frame(False)
+        self.app._select_photo(1)
+        self.app._start_retake_countdown()
+        self.latest = None
+        self.app._update_preview()
+        for _ in range(5):
+            self.app._countdown_tick()
+        session = self.app.current_session
+        self.assertEqual(self.app.ui.current_screen, 'review')
+        self.assertFalse(session.retake_used)
+        self.assertTrue(self.app.ui.retake_button.disabled)
+        self.assertEqual(session.selected_index, 1)
+        self.assertIn('Kamera belum siap', self.app.ui.review_hint.text)
+        self.latest = self.frame
+        self.app._update_preview()
+        self.assertFalse(self.app.ui.retake_button.disabled)
+        self.assertNotIn('Kamera belum siap', self.app.ui.review_hint.text)
+        self.app._start_retake_countdown()
+        for _ in range(5):
+            self.app._countdown_tick()
+        self.assertTrue(session.retake_used)
+        self.assertTrue(self.app.ui.retake_button.disabled)
+        self.assertEqual(self.app.ui.retake_button.text, 'RETAKE SUDAH DIGUNAKAN')
+        labels = [getattr(widget, 'text', '') for widget in self.app.ui.content.walk()]
+        self.assertIn('Foto 2 · DIGANTI', labels)
+        self.assertFalse(any('Pilih untuk retake' in label for label in labels))
+        self.assertIn('Retake sudah digunakan', self.app.ui.review_hint.text)

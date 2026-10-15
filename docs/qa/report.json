@@ -41,12 +41,32 @@
       "decoded_qr": "PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR 40000"
     },
     {
+      "screen": "payment-waiting",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "payment-waiting-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": "PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR 10000"
+    },
+    {
       "screen": "capture",
       "size": [
         1200,
         800
       ],
       "file": "capture-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "capture-waiting",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "capture-waiting-1200x800.png",
       "stage_fits": true,
       "decoded_qr": null
     },
@@ -77,6 +97,16 @@
         800
       ],
       "file": "review-used-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "review-waiting",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "review-waiting-1200x800.png",
       "stage_fits": true,
       "decoded_qr": null
     },
@@ -151,12 +181,32 @@
       "decoded_qr": "PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR 40000"
     },
     {
+      "screen": "payment-waiting",
+      "size": [
+        800,
+        600
+      ],
+      "file": "payment-waiting-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": "PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR 10000"
+    },
+    {
       "screen": "capture",
       "size": [
         800,
         600
       ],
       "file": "capture-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "capture-waiting",
+      "size": [
+        800,
+        600
+      ],
+      "file": "capture-waiting-800x600.png",
       "stage_fits": true,
       "decoded_qr": null
     },
@@ -187,6 +237,16 @@
         600
       ],
       "file": "review-used-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "review-waiting",
+      "size": [
+        800,
+        600
+      ],
+      "file": "review-waiting-800x600.png",
       "stage_fits": true,
       "decoded_qr": null
     },

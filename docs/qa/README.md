@@ -1,8 +1,9 @@
 # Desktop GUI verification
 
-Baseline: `c518e91df5a8311a08a167043e0f1e74aa50555c` on `feature/kivy-gui`.
-The existing working copy was left untouched. This change was developed against
-a separate snapshot whose source files matched the fetched GitHub blobs.
+Layout baseline: `c518e91df5a8311a08a167043e0f1e74aa50555c` on `feature/kivy-gui`.
+The frame-recovery follow-up starts from `a6707e6c7168248c7b80b1b36c8042cd7de1f20f`.
+The original working copy was left untouched. Source files in the separate
+checkout were checked against the freshly fetched GitHub blobs before editing.
 
 The previous 800x600 layout put a 420px payment card inside a roughly 210px
 viewport. The QR was clipped, the review selection buttons were below the visible
@@ -21,10 +22,14 @@ scrolling area. Payment back-navigation also retains the customer's quantities.
 | Folder QR decoded from screen pixels | Passed | Passed |
 | Offline notice and completion timer fit | Passed | Passed |
 | Existing cart survives a window resize | Passed | Passed |
+| Real pointer taps respect disabled camera/payment controls | Passed | Passed |
+| Waiting-camera and used-retake messages fit | Passed | Passed |
+| Preview and waiting overlay stay inside their image slot | Passed | Passed |
 
 The image sheets below contain the six main screens. The reproducible renderer
 also includes countdown, bottom-of-gallery, retake-used, local-only, and next-session
-states: **22 full-size PNGs** in total. The JSON [report](report.json) records each
+states, plus camera-waiting capture, payment, and review: **28 full-size PNGs** in total.
+The JSON [report](report.json) records each
 render and the QR text decoded from its actual screen pixels. Full-size renders
 are produced by the command below; only the compact sheets are committed here.
 
@@ -32,9 +37,26 @@ are produced by the command below; only the compact sheets are committed here.
 
 ![Six screens at 1200x800](overview-1200x800.png)
 
+## Unavailable-camera and used-retake states
+
+Previously, a stale camera mailbox left the badge marked ready and could leave
+payment confirmation permanently disabled after a controller rejection. The
+new tests first reproduced these failures, then checked recovery without losing
+quantities, allocating a duplicate transaction, or consuming a failed retake.
+A separate regression rejects a late release from an old payment after an order
+edit. Actual Window pointer events also verify disabled controls at both sizes.
+
+The preview no longer presents a frozen frame or a blank white null texture as
+live video. Its waiting overlay is explicitly anchored within the camera slot.
+Retake guidance distinguishes an unavailable camera from an exhausted allowance.
+
+![Waiting-camera and used-retake states at 800x600](states-800x600.png)
+
+![Waiting-camera and used-retake states at 1200x800](states-1200x800.png)
+
 ## Reproduce
 
-Python 3.12.14, Kivy 2.3.1, SDL2 offscreen, and Mesa llvmpipe were used. No webcam,
+Python 3.12.14, Kivy 2.3.1, OpenCV 5.0.0, SDL2 offscreen, and Mesa llvmpipe were used. No webcam,
 payment provider, printer, or live Google service was contacted.
 
 ```bash
@@ -42,12 +64,16 @@ SDL_VIDEODRIVER=offscreen PHOTOBOOTH_TEST_GUI=1 python -m unittest discover -s t
 SDL_VIDEODRIVER=offscreen python tools/render_gui.py --output-dir /tmp/photobooth-gui-qa
 ```
 
-The suite passed **26 tests**. Its controller/storage checks include two-session
+The suite passed **32 tests**. Its controller/storage checks include two-session
 orders, one retake per session, local PNG and manifest persistence, cached folder
 allocation, an offline upload failure followed by retry, and skipping verified
 uploads. Camera acquisition and Drive access use deterministic fakes. The layout
 regression test verifies clipping ancestors and decodes the payment/folder QR from
 the exported UI, which catches a hidden QR even when its source texture is valid.
+The synthetic camera-recovery tests hold controller timers for deterministic
+manual ticks; the pointer and layout tests use Kivy's real event and canvas loop.
+Recovery means fresh frames resume on an existing handle. USB hotplug, driver
+reopening, startup failure recovery, and real-device latency remain unverified.
 
 The tariff is unchanged: Rp5.000 per session; quantity 2 totals Rp10.000. QRIS
 remains explicitly simulated, printing is not connected, and `ui_tkinter.py` is

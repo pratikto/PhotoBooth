@@ -15,6 +15,7 @@ from kivy.graphics.texture import Texture
 from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image as KivyImage
 from kivy.uix.label import Label
 from kivy.uix.button import Button
@@ -120,6 +121,12 @@ class PhotoBoothUI:
         self._camera_ready = False
         self._storage_ready = False
         self.preview = None
+        self.live_caption = None
+        self.camera_wait_hint = None
+        self.home_start_button = None
+        self._review_can_retake = False
+        self._review_has_retake = False
+        self._payment_submitted = False
         self.qr_view = None
         self._qr_bytes = None
         self.shell = Panel(fill=PAPER, orientation='vertical', padding=dp(24), spacing=dp(12))
@@ -208,6 +215,11 @@ class PhotoBoothUI:
         self.current_screen = screen
         self.content.clear_widgets()
         self.preview = None
+        self.live_caption = None
+        self.camera_wait_hint = None
+        self.home_start_button = None
+        self._review_can_retake = False
+        self._review_has_retake = False
         self.qr_view = None
         self._qr_bytes = None
         self._page_title = self._page_subtitle = None
@@ -285,10 +297,49 @@ class PhotoBoothUI:
         self.status.text = message
 
     def set_camera_status(self, ready):
-        """Keep the camera indicator separate from Drive readiness."""
+        """Apply frame readiness to the current screen without rebuilding it.
+
+        A device can stay open while its latest-frame mailbox is empty or stale.
+        Keep the order and selection intact, but close every action that needs a
+        fresh frame. A recovered camera must not unlock a submitted payment or
+        a capture countdown that is already running; the controller owns timers.
+        """
         self._camera_ready = ready
         self.camera_badge.text = 'Kamera siap' if ready else 'Kamera belum siap'
         self.camera_badge.color = SAGE if ready else CORAL
+        if self.current_screen == 'welcome' and self.home_start_button is not None:
+            self.home_start_button.disabled = not ready
+        elif self.current_screen == 'templates':
+            self._refresh_order()
+        elif self.current_screen == 'payment':
+            self.payment_confirm.disabled = not ready or self._payment_submitted
+        elif self.current_screen == 'capture':
+            if self.live_caption is not None:
+                self.live_caption.text = 'LIVE CAMERA' if ready else 'MENUNGGU KAMERA'
+            if not ready:
+                self.capture_button.disabled = True
+                if self.preview is not None:
+                    # A frozen last picture must not look like a live preview.
+                    self.preview.texture = None
+                    self._set_preview_live(False)
+        elif self.current_screen == 'review':
+            self.retake_button.disabled = not (ready and self._review_can_retake)
+            self.review_hint.text = self._review_message()
+
+    def _review_message(self):
+        """Explain which prerequisite closes the retake gate, not just its color."""
+        if not self._review_has_retake:
+            return 'Retake sudah digunakan. Ketiga foto ini siap dipakai pada hasil akhir.'
+        if not self._camera_ready:
+            return 'Kamera belum siap. Foto tetap aman; tunggu kamera untuk retake.'
+        return 'Pilih satu foto untuk retake. Ketiga foto dipakai pada hasil akhir.'
+
+    def _set_preview_live(self, live):
+        """Show an intentional empty state instead of Kivy's white null texture."""
+        if self.preview is not None:
+            self.preview.opacity = 1 if live else 0
+        if self.camera_wait_hint is not None:
+            self.camera_wait_hint.opacity = 0 if live else 1
 
     def show_welcome(self, camera_ready, status_message):
         """Introduce the session with one prominent action and honest storage state."""
@@ -312,7 +363,8 @@ class PhotoBoothUI:
         # increasing the minimum height or pushing their heading down the card.
         aside.add_widget(Widget())
         page.add_widget(self._responsive_row(hero, aside, 330, 400))
-        page.add_widget(self._button('MULAI FOTO', self.callbacks['on_home_start'], camera_ready))
+        self.home_start_button = self._button('MULAI FOTO', self.callbacks['on_home_start'], camera_ready)
+        page.add_widget(self.home_start_button)
         self.set_status(status_message)
 
     def show_template_selection(self, camera_ready, status_message, storage_ready=True,
@@ -409,6 +461,7 @@ class PhotoBoothUI:
         from photobooth.qr_code import create_qr_image
         page = self._reset('payment', 'Satu langkah sebelum berfoto.', 'SIMULASI PEMBAYARAN · Bukan QRIS valid. Jangan transfer uang.')
         self.payment_total = total_amount
+        self._payment_submitted = False
         pay = Panel(orientation='vertical', padding=dp(14), spacing=dp(6))
         pay.add_widget(self._label('QR DEMO / TIDAK UNTUK TRANSFER', 12, 24, bold=True, color=CORAL, align='center'))
         qr = self._display(create_qr_image(f'PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR {total_amount}'), crisp=True)
@@ -432,11 +485,24 @@ class PhotoBoothUI:
         detail.add_widget(self._label('Rp ' + f'{total_amount:,}'.replace(',', '.'), 30, 60, bold=True))
         def confirm_once():
             # A second tap cannot create another transaction or reserve another
-            # Drive folder. Controller guards also reject off-screen callbacks.
-            if not self.payment_confirm.disabled:
-                self.payment_confirm.disabled = True
-                on_confirm()
-        self.payment_confirm = self._button('SIMULASIKAN PEMBAYARAN BERHASIL', confirm_once)
+            # Drive folder. Compare the ORIGINAL button as well as the screen:
+            # a late release from an edited payment must not submit an old order
+            # while a new payment screen happens to be visible.
+            if (self.current_screen != 'payment' or self.payment_confirm is not confirm_button
+                    or confirm_button.disabled):
+                return
+            self._payment_submitted = True
+            confirm_button.disabled = True
+            accepted = on_confirm()
+            if (accepted is False and self.current_screen == 'payment'
+                    and self.payment_confirm is confirm_button):
+                # An explicit controller rejection is retryable. None is kept
+                # as the historical one-shot callback contract for other hosts.
+                self._payment_submitted = False
+                confirm_button.disabled = not self._camera_ready
+        self.payment_confirm = self._button('SIMULASIKAN PEMBAYARAN BERHASIL', confirm_once,
+                                            enabled=self._camera_ready)
+        confirm_button = self.payment_confirm
         page.add_widget(self._responsive_row(pay, detail, 330, 324))
         self.payment_back = self._button('UBAH PESANAN', on_back, secondary=True)
         self.payment_back.size_hint_x = .45
@@ -447,10 +513,21 @@ class PhotoBoothUI:
         """Make the camera the visual focus; keep progress and actions beside it."""
         page = self._reset('capture', 'Senyum, ini momenmu.', session_label)
         camera = Panel(fill=INK, orientation='vertical', padding=dp(14), spacing=dp(8))
-        camera.add_widget(self._label('LIVE CAMERA', 11, 26, color=SOFT, bold=True))
-        self.preview = KivyImage(fit_mode='contain')
-        camera.add_widget(self.preview)
-        if preview_image is not None:
+        self.live_caption = self._label('LIVE CAMERA' if self._camera_ready else 'MENUNGGU KAMERA',
+                                        11, 26, color=SOFT, bold=True)
+        camera.add_widget(self.live_caption)
+        # An overlay has the same bounds as the image. It becomes visible only
+        # when no fresh frame exists, without changing preview dimensions or
+        # pushing the camera footer around during a transient outage.
+        preview_stage = FloatLayout()
+        self.preview = KivyImage(fit_mode='contain', opacity=0, pos_hint={'x': 0, 'y': 0})
+        preview_stage.add_widget(self.preview)
+        self.camera_wait_hint = self._label('Menunggu gambar kamera.\nSesi ini tetap tersimpan.',
+                                            15, color=SOFT, align='center')
+        self.camera_wait_hint.pos_hint = {'x': 0, 'y': 0}
+        preview_stage.add_widget(self.camera_wait_hint)
+        camera.add_widget(preview_stage)
+        if preview_image is not None and self._camera_ready:
             self.update_live_preview(preview_image)
         camera.add_widget(self._label('Lihat ke kamera, bukan ke layar.', 13, 28, color=SOFT, align='center'))
         guide = Panel(orientation='vertical', padding=dp(18), spacing=dp(10))
@@ -465,7 +542,8 @@ class PhotoBoothUI:
                                            12, color=SAGE if index < capture_count else GREY,
                                            align='center'))
         guide.add_widget(progress)
-        self.capture_button = self._button(action_label, self.callbacks['on_capture'], can_capture)
+        self.capture_button = self._button(action_label, self.callbacks['on_capture'],
+                                           can_capture and self._camera_ready)
         page.add_widget(self._responsive_row(camera, guide, 240, 300))
         page.add_widget(self.capture_button)
 
@@ -475,6 +553,7 @@ class PhotoBoothUI:
             display = image.copy()
             display.thumbnail((640, 480))
             self._display(display, self.preview)
+            self._set_preview_live(True)
 
     def update_live_frame(self, frame):
         """Display an OpenCV BGR frame directly, without a Pillow round trip.
@@ -501,6 +580,7 @@ class PhotoBoothUI:
             texture.flip_vertical()
         texture.blit_buffer(rgb.tobytes(), colorfmt='rgb', bufferfmt='ubyte')
         self.preview.texture = texture
+        self._set_preview_live(True)
         self.preview.canvas.ask_update()
 
     def set_countdown(self, seconds, is_retake=False):
@@ -511,12 +591,14 @@ class PhotoBoothUI:
 
     def set_capture_enabled(self, enabled):
         if self.current_screen == 'capture':
-            self.capture_button.disabled = not enabled
+            self.capture_button.disabled = not (enabled and self._camera_ready)
 
     def show_review(self, photo_paths, session_label, selected_index, retake_available, status_message=''):
         """Review all three photos; mark the exact selected retake target."""
         page = self._reset('review', 'Sudah pas? Atau satu kali lagi?',
                            f'{session_label}  ·  Sisa retake: {int(retake_available)}')
+        self._review_can_retake = selected_index is not None and retake_available
+        self._review_has_retake = retake_available
         scroll = ScrollView(do_scroll_x=False)
         gallery = GridLayout(cols=3, spacing=dp(16), size_hint_y=None)
         gallery.bind(minimum_height=gallery.setter('height'))
@@ -537,14 +619,18 @@ class PhotoBoothUI:
                 display = source.convert('RGB')
                 display.thumbnail((600, 450))
             card.add_widget(self._display(display))
-            card.add_widget(self._button(f'Foto {index + 1}' + (' · DIPILIH' if selected else ' · Pilih untuk retake'),
+            caption = (' · DIPILIH' if selected else ' · Pilih untuk retake') if retake_available else (
+                ' · DIGANTI' if selected else ' · Tersimpan')
+            card.add_widget(self._button(f'Foto {index + 1}' + caption,
                                          lambda i=index: self.callbacks['on_select_photo'](i), retake_available,
                                          secondary=not selected))
             gallery.add_widget(card)
         fit_review()
-        page.add_widget(self._label('Pilih satu foto untuk retake. Ketiga foto dipakai pada hasil akhir.', 13, 36, color=GREY))
-        self.retake_button = self._button('RETAKE FOTO TERPILIH', self.callbacks['on_retake'],
-                                         selected_index is not None and retake_available, secondary=True)
+        self.review_hint = self._label(self._review_message(), 13, 36, color=GREY)
+        page.add_widget(self.review_hint)
+        self.retake_button = self._button('RETAKE FOTO TERPILIH' if retake_available else 'RETAKE SUDAH DIGUNAKAN',
+                                         self.callbacks['on_retake'],
+                                         self._review_can_retake and self._camera_ready, secondary=True)
         self.accept_button = self._button('GUNAKAN FOTO INI', self.callbacks['on_accept_session'])
         page.add_widget(self._actions(self.retake_button, self.accept_button))
         self.set_status(status_message)

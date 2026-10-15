@@ -13,6 +13,90 @@ from types import SimpleNamespace
 
 @unittest.skipUnless(os.environ.get('PHOTOBOOTH_TEST_GUI') == '1', 'GUI checks are opt-in')
 class KivyFlowTests(unittest.TestCase):
+    def test_pointer_taps_respect_camera_and_payment_submission_gates(self):
+        """Send actual pointer events through Window, not on_release dispatch.
+
+        This exercises hit testing, disabled-widget behavior, touch grabs, and
+        callback delivery. The ordinary release-dispatch tests separately check
+        stale queued callbacks that can outlive their original payment screen.
+        """
+        from kivy.base import EventLoop
+        from kivy.core.window import Window
+        from kivy.input.motionevent import MotionEvent
+        from photobooth.catalog import get_templates
+        from photobooth.ui_kivy import KivyHost, PhotoBoothUI
+
+        class Pointer(MotionEvent):
+            def depack(self, args):
+                self.sx, self.sy = args
+                self.profile = ['pos']
+                super().depack(args)
+
+        def settle():
+            for _ in range(4):
+                EventLoop.idle()
+
+        taps = []
+        callbacks = {key: lambda *args: None for key in (
+            'on_start', 'on_select_photo', 'on_accept_session',
+            'on_next_session', 'on_finish', 'on_close')}
+        callbacks['on_home_start'] = lambda: taps.append('home')
+        callbacks['on_capture'] = lambda: taps.append('capture')
+        callbacks['on_retake'] = lambda: taps.append('retake')
+        host = KivyHost(lambda: None)
+        ui = PhotoBoothUI(host, get_templates(), **callbacks)
+        original_size = Window.size
+        Window.add_widget(ui.shell)
+
+        def tap(widget):
+            x, y = widget.to_window(*widget.center)
+            event = Pointer('gui-test', str(len(taps)),
+                            (x / Window.width, y / Window.height), is_touch=True)
+            EventLoop.post_dispatch_input('begin', event)
+            EventLoop.post_dispatch_input('end', event)
+            settle()
+
+        try:
+            for size in ((1200, 800), (800, 600)):
+                with self.subTest(size=size):
+                    Window.size = size
+                    taps.clear()
+                    ui.show_welcome(False, 'Menunggu kamera')
+                    settle()
+                    tap(ui.home_start_button)
+                    self.assertEqual(taps, [])
+                    ui.set_camera_status(True)
+                    tap(ui.home_start_button)
+                    self.assertEqual(taps, ['home'])
+                    ui.show_payment('Template 1 × 2', 2, 10000,
+                                    lambda: taps.append('payment'), lambda: None)
+                    settle()
+                    ui.set_camera_status(False)
+                    tap(ui.payment_confirm)
+                    self.assertEqual(taps, ['home'])
+                    ui.set_camera_status(True)
+                    tap(ui.payment_confirm)
+                    tap(ui.payment_confirm)
+                    self.assertEqual(taps, ['home', 'payment'])
+                    # Readiness changes cannot release a successful one-shot
+                    # submission, even if its test callback keeps the page open.
+                    ui.set_camera_status(False)
+                    ui.set_camera_status(True)
+                    tap(ui.payment_confirm)
+                    self.assertEqual(taps, ['home', 'payment'])
+                    ui.show_capture('Sesi 1 dari 2', 0, None)
+                    settle()
+                    ui.set_camera_status(False)
+                    tap(ui.capture_button)
+                    self.assertEqual(taps, ['home', 'payment'])
+                    ui.set_camera_status(True)
+                    ui.set_capture_enabled(True)
+                    tap(ui.capture_button)
+                    self.assertEqual(taps, ['home', 'payment', 'capture'])
+        finally:
+            Window.remove_widget(ui.shell)
+            Window.size = original_size
+
     def test_desktop_layouts_keep_actions_photos_and_painted_qr_visible(self):
         """Check actual layout and rendered pixels at both supported desktop sizes.
 
@@ -138,6 +222,15 @@ class KivyFlowTests(unittest.TestCase):
                                 visible(ui.countdown)
                                 visible(ui.capture_button)
                                 self.assertGreaterEqual(ui.preview.height, 200)
+                                # FloatLayout children need explicit anchors.
+                                # A valid widget can otherwise extend over the
+                                # camera footer while still fitting the window.
+                                box = bounds(ui.preview)
+                                slot = bounds(ui.preview.parent)
+                                self.assertGreaterEqual(box[0], slot[0] - 1)
+                                self.assertGreaterEqual(box[1], slot[1] - 1)
+                                self.assertLessEqual(box[2], slot[2] + 1)
+                                self.assertLessEqual(box[3], slot[3] + 1)
                             elif screen == 'review':
                                 # Includes all three selection controls and both
                                 # order actions, not only the main accept button.

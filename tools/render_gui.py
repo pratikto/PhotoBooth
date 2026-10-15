@@ -36,6 +36,7 @@ FOLDER_URL = 'https://drive.google.com/drive/folders/1AbCdEfGhIjKlMnOpQrStUvWxYz
 STATUS = 'Drive siap · 25 slot folder tersedia.'
 SIZES = ((1200, 800), (800, 600))
 OVERVIEW_SCREENS = ('welcome', 'templates', 'payment', 'capture', 'review', 'result')
+STATE_SCREENS = ('payment-waiting', 'capture-waiting', 'review-used', 'review-waiting')
 
 
 def synthetic_portrait(index):
@@ -65,24 +66,25 @@ def screenshot_qr(image_path, widget):
     return decoded
 
 
-def overview(output, size):
+def overview(output, size, screens=OVERVIEW_SCREENS, prefix='overview'):
     """Keep a compact comparison of the six main screens beside full PNGs."""
     width, height = size
     thumb = (width // 2, height // 2)
     label_height = 30
-    sheet = Image.new('RGB', (thumb[0] * 2, (thumb[1] + label_height) * 3), '#f6f5f0')
+    rows = (len(screens) + 1) // 2
+    sheet = Image.new('RGB', (thumb[0] * 2, (thumb[1] + label_height) * rows), '#f6f5f0')
     draw = ImageDraw.Draw(sheet)
     try:
         font = ImageFont.truetype('DejaVuSans.ttf', 14)
     except OSError:
         font = ImageFont.load_default()
-    for index, name in enumerate(OVERVIEW_SCREENS):
+    for index, name in enumerate(screens):
         x = (index % 2) * thumb[0]
         y = (index // 2) * (thumb[1] + label_height)
         draw.text((x + 12, y + 7), f'{name.upper()}  |  {width} × {height}', fill='#1a302e', font=font)
         with Image.open(output / f'{name}-{width}x{height}.png') as image:
             sheet.paste(image.resize(thumb, Image.Resampling.LANCZOS), (x, y + label_height))
-    sheet.save(output / f'overview-{width}x{height}.png')
+    sheet.save(output / f'{prefix}-{width}x{height}.png')
 
 
 def main():
@@ -133,11 +135,18 @@ def main():
         ('templates-bottom', cart, scroll_last_template),
         ('payment', lambda: ui.show_payment('\n'.join(f'{t.name} × 2' for t in templates),
                                            8, 40000, lambda: None, lambda: None), None),
+        ('payment-waiting', lambda: ui.show_payment('Template 1 × 2',
+                                                   2, 10000, lambda: None, lambda: None),
+         lambda: ui.set_camera_status(False)),
         ('capture', lambda: ui.show_capture('Sesi 1 dari 8 · Template 1', 1, synthetic_portrait(0)), None),
+        ('capture-waiting', lambda: ui.show_capture('Sesi 1 dari 8 · Template 1', 1, synthetic_portrait(0)),
+         lambda: ui.set_camera_status(False)),
         ('countdown', lambda: (ui.show_capture('Sesi 1 dari 8 · Template 1', 1, synthetic_portrait(0)),
                                ui.set_countdown(5)), None),
         ('review', lambda: ui.show_review(paths, 'Sesi 1 dari 8 · Template 1', 1, True), None),
         ('review-used', lambda: ui.show_review(paths, 'Sesi 1 dari 8 · Template 1', 1, False), None),
+        ('review-waiting', lambda: ui.show_review(paths, 'Sesi 1 dari 8 · Template 1', 1, True),
+         lambda: ui.set_camera_status(False)),
         ('result', result_screen, None),
         ('result-local', lambda: result_screen(local=True), None),
         ('result-next', lambda: result_screen(has_next=True), None),
@@ -153,10 +162,19 @@ def main():
             fits = stage.children[0].height <= stage.height + 1
             if not fits:
                 raise AssertionError(f'{name} has a clipped desktop stage at {size}')
+            if ui.current_screen == 'capture':
+                # Window visibility alone does not detect overlap with the
+                # camera footer. The image and empty state must fit their slot.
+                slot = bounds(ui.preview.parent)
+                for widget in (ui.preview, ui.camera_wait_hint):
+                    box = bounds(widget)
+                    if (box[0] < slot[0] - 1 or box[1] < slot[1] - 1
+                            or box[2] > slot[2] + 1 or box[3] > slot[3] + 1):
+                        raise AssertionError(f'Preview overlay leaves its slot in {name} at {size}')
             decoded = None
-            if name == 'payment':
+            if name in ('payment', 'payment-waiting'):
                 decoded = screenshot_qr(path, ui.payment_qr)
-                if decoded != 'PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR 40000':
+                if decoded != f'PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR {ui.payment_total}':
                     raise AssertionError(f'Demo QR is unreadable in {path}')
             elif name in ('result', 'result-next'):
                 decoded = screenshot_qr(path, ui.qr_view)
@@ -164,6 +182,12 @@ def main():
                     raise AssertionError(f'Folder QR is unreadable in {path}')
             elif name == 'result-local' and ui.qr_view.texture is not None:
                 raise AssertionError('A local-only result must not have a fabricated Drive QR')
+            if name == 'capture-waiting' and ui.preview.texture is not None:
+                raise AssertionError('A stale frame must not be displayed as a live preview')
+            if name == 'payment-waiting' and not ui.payment_confirm.disabled:
+                raise AssertionError('Payment confirmation needs a fresh camera frame')
+            if name in ('review-used', 'review-waiting') and not ui.retake_button.disabled:
+                raise AssertionError('Retake must be disabled when its quota or camera is unavailable')
             records.append({'screen': name, 'size': list(size), 'file': path.name,
                             'stage_fits': fits, 'decoded_qr': decoded})
             print(f'PASS {name} {width}x{height}', flush=True)
@@ -176,6 +200,9 @@ def main():
         for name, build, after_layout in scenes:
             def setup(_dt, size=size, build=build):
                 Window.size = size
+                # Each fixture starts independently. A waiting-camera state in
+                # the preceding scene must not leak into the next healthy one.
+                ui.set_camera_status(True)
                 build()
             Clock.schedule_once(setup, elapsed)
             if after_layout is not None:
@@ -189,6 +216,7 @@ def main():
         raise SystemExit('\n'.join(errors))
     for size in SIZES:
         overview(output, size)
+        overview(output, size, STATE_SCREENS, 'states')
     print(f'{len(records)} real-widget renders saved in {output}')
 
 

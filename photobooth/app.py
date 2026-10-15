@@ -79,6 +79,7 @@ class PhotoBoothApp:
 
         self.current_frame = None
         self.camera_ready = False
+        self._camera_wait_status: tuple[str, str] | None = None
         self.is_closing = False
         self.transaction: LocalTransaction | None = None
         self.sessions: list[PhotoSession] = []
@@ -149,8 +150,18 @@ class PhotoBoothApp:
             return
 
         frame = self.camera.read()
+        ready = frame is not None
+        if ready != self.camera_ready:
+            self.camera_ready = ready
+            self.ui.set_camera_status(ready)
         if frame is None:
             self.current_frame = None
+            # Preserve the screen's own feedback while reporting a temporary
+            # loss of frames. Recovery restores it rather than leaving a stale
+            # "waiting for camera" notice on an otherwise live screen.
+            if (self._camera_wait_status is None or
+                    self._camera_wait_status[0] != self.ui.current_screen):
+                self._camera_wait_status = (self.ui.current_screen, self.ui.status.text)
             self.ui.set_status("Menunggu gambar dari kamera...")
             if self.ui.current_screen == "capture":
                 self.ui.set_capture_enabled(False)
@@ -158,6 +169,11 @@ class PhotoBoothApp:
             return
 
         self.current_frame = frame
+        if self._camera_wait_status is not None:
+            screen, message = self._camera_wait_status
+            if self.ui.status.text == "Menunggu gambar dari kamera...":
+                self.ui.set_status(message if screen == self.ui.current_screen else "")
+            self._camera_wait_status = None
         if self.ui.current_screen == "capture":
             # The camera mailbox is nonblocking. Upload a small preview directly
             # from BGR pixels instead of constructing several Pillow copies.
@@ -173,16 +189,20 @@ class PhotoBoothApp:
         self._preview_after_id = self.root.after(30, self._update_preview)
 
     def _open_template_selection(self, quantities: dict[str, int] | None = None) -> None:
-        # Move from the welcome screen to the template picker only when the camera is ready, and pass
-        # the current Drive-slot readiness to the GUI.
-        if not self.camera_ready:
+        # Open a new or previously unpaid cart and pass live camera/Drive gates
+        # to the UI. Never replace the screen of an active customer transaction.
+        if self.transaction is not None:
+            return
+        # Editing an unpaid order does not require a live camera. Keep its
+        # quantities visible while disabling payment until frames resume.
+        if not self.camera_ready and self.ui.current_screen not in {"templates", "payment"}:
             self.ui.show_error(
                 "Kamera belum siap",
                 "Sambungkan kamera sebelum memulai sesi foto.",
             )
             return
         self.ui.show_template_selection(
-            camera_ready=True,
+            camera_ready=self.camera_ready,
             storage_ready=(self.drive_pool.has_ready_slot() or self.local_only_mode),
             status_message=self._storage_status_message(),
             quantities=quantities,
@@ -220,16 +240,23 @@ class PhotoBoothApp:
             on_back=lambda: self._open_template_selection(order),
         )
 
-    def _start_transaction(self, quantities: dict[str, int]) -> None:
+    def _start_transaction(self, quantities: dict[str, int]) -> bool:
+        """Return True only after storage and the first session are prepared.
+
+        False lets the payment UI release its submission lock after a rejected
+        confirmation. It is not a payment-provider status; QRIS remains a demo.
+        """
         # Validate the selected quantities, create one plan per session, claim a preassigned Drive
         # folder when available, and persist the transaction locally before capturing any photos.
         # Ignore stale payment callbacks after the screen has advanced. The
         # explicit simulation action is the only current path into capture.
         if self.ui.current_screen != "payment" or self.transaction is not None:
-            return
-        if not self.camera_ready:
+            return False
+        if not self.camera_ready or self.current_frame is None:
+            self.camera_ready = False
+            self.ui.set_camera_status(False)
             self.ui.show_error("Kamera belum siap", "Sesi foto belum dapat dimulai.")
-            return
+            return False
 
         try:
             plans = build_session_plans(self.templates, quantities)
@@ -238,7 +265,7 @@ class PhotoBoothApp:
                     "Template belum dipilih",
                     "Pilih minimal satu sesi template untuk melanjutkan.",
                 )
-                return
+                return False
             if self.drive_pool.has_ready_slot():
                 slot = self.drive_pool.claim()
                 transaction_id = slot.transaction_id
@@ -265,11 +292,12 @@ class PhotoBoothApp:
                 f"Data transaksi tidak dapat disiapkan.\n\n{error}",
             )
             self._open_template_selection(quantities)
-            return
+            return False
 
         self.sessions = [PhotoSession(plan=plan) for plan in plans]
         self.session_index = 0
         self._begin_current_session()
+        return True
 
     def _begin_current_session(self) -> None:
         # Select the session at session_index and display its capture screen. Each session owns a
@@ -321,7 +349,10 @@ class PhotoBoothApp:
         # requests after all three captures are complete.
         session = self.current_session
         if (
-            session is None
+            self.ui.current_screen != "capture"
+            or not self.camera_ready
+            or self.current_frame is None
+            or session is None
             or len(session.initial_photo_paths) >= 3
             or self._countdown_after_id is not None
         ):
@@ -332,7 +363,8 @@ class PhotoBoothApp:
         # Start a retake only when this session has three initial photos, the customer selected one,
         # and its one-retake quota is still available.
         session = self.current_session
-        if session is None or not session.can_retake or self._countdown_after_id is not None:
+        if (self.ui.current_screen != "review" or not self.camera_ready or self.current_frame is None
+                or session is None or not session.can_retake or self._countdown_after_id is not None):
             return
         self._start_countdown(is_retake=True)
 
