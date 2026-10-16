@@ -15,6 +15,7 @@ import os
 from pathlib import Path
 import sys
 import tempfile
+import time
 
 # Running a file under tools/ does not automatically put the project on sys.path.
 # Add only this checkout; do not depend on a different working copy or venv.
@@ -375,11 +376,37 @@ def main():
         if after_layout is not None:
             Clock.schedule_once(lambda _dt: after_layout(), .15)
 
-        def capture_then_advance(_dt):
-            capture(name, size)
-            if not errors:
-                Clock.schedule_once(advance, .15)
-        Clock.schedule_once(capture_then_advance, .35)
+        # Clock time is fixed for the duration of one frame. Creating twelve
+        # preview textures can take longer than 350ms on a software-rendered
+        # runner, so schedule_once(.35) can already be due on the first layout
+        # frame. Wait in wall time and require stable widget geometry instead.
+        # Keep every clipping, QR and contrast assertion below unchanged.
+        prepared_at = time.monotonic()
+        last_geometry = None
+        stable_frames = 0
+
+        def capture_when_settled(_dt):
+            nonlocal last_geometry, stable_frames
+            elapsed = time.monotonic() - prepared_at
+            geometry = tuple((round(widget.x, 2), round(widget.y, 2),
+                              round(widget.width, 2), round(widget.height, 2))
+                             for widget in ui.content.walk(restrict=True))
+            if geometry == last_geometry and ui.content.opacity >= .999:
+                stable_frames += 1
+            else:
+                stable_frames = 0
+            last_geometry = geometry
+            if elapsed >= .35 and stable_frames >= 2:
+                capture(name, size)
+                if not errors:
+                    Clock.schedule_once(advance, .15)
+                return False
+            if elapsed > 5:
+                errors.append(f"Layout did not settle in {name} at {size}")
+                host.stop()
+                return False
+            return True
+        Clock.schedule_interval(capture_when_settled, 0)
 
     Clock.schedule_once(advance, .1)
     host.run()
