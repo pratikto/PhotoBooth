@@ -1,78 +1,128 @@
 # Thermal printer setup
 
-The booth sends each saved result image as a monochrome ESC/POS raster. The
-network transport is tried first when configured; USB is the fallback. The
-purchased model is the **iWare/Barcodia J-82ULW**. The product image identifies
-USB, Wi-Fi, and LAN; it supports 80 mm and 58 mm paper with a separator, and
-has an auto cutter. Use the 80 mm roll for the booth's 80 × 240 mm photo strips.
+The booth prints each saved result image as a monochrome ESC/POS raster. The
+purchased printer is the iWare/Barcodia J-82ULW. Its product listing identifies
+USB, Wi-Fi, and LAN, with 80 mm and 58 mm paper support and an auto cutter.
+Use the 80 mm roll for the booth's 80 × 240 mm photo strips.
 
-## Dependencies
+## Recommended connection order
 
-Install the repository dependencies:
+The app tries each configured route in this order:
 
-    python -m pip install -r requirements.txt
+1. LAN — preferred for a fixed booth because the cable provides a stable link
+   without Wi-Fi credentials.
+2. Wi-Fi — useful when wiring is inconvenient or the booth is moved.
+3. USB — last-resort local connection.
 
-The requirements file installs python-escpos with its USB extra. This supplies
-ESC/POS raster encoding and the PyUSB dependency used by the USB transport.
+Each route is optional. An empty host is skipped. If every configured network
+connection fails before it opens, the app tries the next configured route. If a
+connection opens and then sending fails, the print status is uncertain and
+automatic retry is suppressed to avoid duplicate or partial receipts. The
+result screen offers CETAK ULANG for a deliberate retry.
 
-## Wi-Fi: primary route
+## Printer IP and web configuration
 
-Connect the printer to the same Wi-Fi network as the booth computer. Print its
-self-test/configuration page or check the router's DHCP client list to find its
-current IP address. Reserve that IP in the router if possible, then configure
-the shell that launches the booth:
+Connect the printer and booth computer to the same local network. The IP
+address is used by the browser to open the printer's configuration page, when
+that page is available on the selected interface. Reserve the printer's address
+in the router's DHCP settings if possible so it does not change unexpectedly.
 
-    export PHOTOBOOTH_PRINTER_WIFI_HOST=192.168.1.50
+The browser configuration page is for printer administration. The booth sends
+print data separately as raw ESC/POS over TCP, usually to port 9100. Confirm the
+actual print port from the printer's self-test/configuration page or manual;
+the app keeps the port configurable.
+
+## LAN route: preferred
+
+Connect the printer's Ethernet port to the router or booth network. Find the
+LAN IP from its self-test/configuration page or from the router's DHCP client
+list. Configure that IP in the environment that launches the booth:
+
+### Windows PowerShell
+
+    $env:PHOTOBOOTH_PRINTER_LAN_HOST = "192.168.1.50"
+    $env:PHOTOBOOTH_PRINTER_LAN_PORT = "9100"
+
+### Linux or macOS shell
+
+    export PHOTOBOOTH_PRINTER_LAN_HOST=192.168.1.50
+    export PHOTOBOOTH_PRINTER_LAN_PORT=9100
+
+If the printer and computer are on different network segments, routing and
+firewall rules must allow the booth computer to reach the printer's print port.
+
+## Wi-Fi route: secondary
+
+Set up the printer's Wi-Fi connection using the printer's own configuration
+page or setup utility. Entering the SSID and password is a printer setup step;
+the Python booth application does not need those credentials and does not
+reconfigure the printer each time it prints.
+
+When the booth is used on a different Wi-Fi network, configure that network on
+the printer once and set its Wi-Fi IP below. If the Wi-Fi network and password
+stay the same, there is no need to repeat the setup. Find the Wi-Fi IP from the
+printer's configuration page or router's DHCP client list.
+
+### Windows PowerShell
+
+    $env:PHOTOBOOTH_PRINTER_WIFI_HOST = "192.168.1.51"
+    $env:PHOTOBOOTH_PRINTER_WIFI_PORT = "9100"
+
+### Linux or macOS shell
+
+    export PHOTOBOOTH_PRINTER_WIFI_HOST=192.168.1.51
     export PHOTOBOOTH_PRINTER_WIFI_PORT=9100
-    export PHOTOBOOTH_PRINTER_WIFI_TIMEOUT=2
 
-The app uses raw ESC/POS over TCP, with port 9100 as the default. The port is
-configurable because the exact network settings should be confirmed from the
-printer's self-test page or manual. The booth computer and printer must be on
-the same reachable network.
+LAN and Wi-Fi are different network interfaces and can have different IP
+addresses. Set each host only after confirming that the printer accepts jobs
+on that interface. If only Wi-Fi is configured, it is tried first because the
+LAN route is skipped.
 
-If the TCP connection cannot be opened before a job starts, the app sends the
-same prepared job through USB. If the network connection opens but the write
-fails, the print state is uncertain, so automatic USB fallback is suppressed
-to avoid a duplicate partial job. The result screen offers CETAK ULANG for a
-deliberate retry.
+## USB route: final fallback
 
-## USB fallback
-
-Connect the printer and run:
+The USB route is OS-dependent. The current ESC/POS adapter uses the printer's
+USB vendor/product IDs through PyUSB, or the Linux device file
+/dev/usb/lp0 when it exists. Find the USB IDs on Linux with:
 
     lsusb
 
-Find the printer's xxxx:xxxx vendor and product IDs. Configure both values in
-the shell that launches the booth; use the four-digit hexadecimal values shown
-by lsusb:
+Then configure both hexadecimal IDs:
 
     export PHOTOBOOTH_PRINTER_USB_VENDOR_ID=xxxx
     export PHOTOBOOTH_PRINTER_USB_PRODUCT_ID=xxxx
 
-The application passes those IDs to python-escpos. If native USB access fails
-because of permissions, configure a udev rule for the exact VID/PID or use the
-Linux device-node route below.
-
-As a Linux alternative, the application uses /dev/usb/lp0 when it exists and
-neither USB ID is configured. A different node can be selected with:
+On Linux, if native USB access fails because of permissions, configure a udev
+rule for the exact IDs or use an appropriate system group. The optional Linux
+device-node path can be changed with:
 
     export PHOTOBOOTH_PRINTER_USB_DEVICE=/dev/usb/lp1
 
-The booth process needs permission to open the USB device. Prefer an
-appropriate udev rule or system group over running the kiosk as root.
+Windows does not have the Linux /dev/usb/lp0 device file. The USB-ID route may
+need a compatible PyUSB backend and device driver, so test that fallback on the
+target Windows PC before relying on it. On Android, USB host support and app
+permissions also require device-specific validation. This platform variance is
+why network printing is preferred for the Windows, Linux SBC/mini PC, and
+Android rollout.
 
-Other optional settings:
+## Other settings
 
+- PHOTOBOOTH_PRINTER_NETWORK_TIMEOUT — timeout in seconds for each network
+  connection and write; default 2.0.
+- PHOTOBOOTH_PRINTER_WIFI_TIMEOUT — legacy alias used only when the new common
+  network timeout is not set.
 - PHOTOBOOTH_PRINTER_WIDTH_DOTS — maximum raster width; default 576, which
   matches a common printable area on an 80 mm printer. Set it to 384 for the
-  narrower 58 mm roll, then verify the smaller QR on a physical sample.
+  narrower 58 mm roll, then verify the QR code on a physical sample.
 - PHOTOBOOTH_PRINTER_USB_VENDOR_ID and PHOTOBOOTH_PRINTER_USB_PRODUCT_ID —
-  both must be set together. Values are hexadecimal, as printed by lsusb.
+  both must be set together. Values are hexadecimal.
 - PHOTOBOOTH_PRINTER_USB_DEVICE — Linux file-device fallback; default
   /dev/usb/lp0.
 
-The network connection uses no acknowledgement protocol. A “data terkirim”
+Install the repository dependencies before running the app:
+
+    python -m pip install -r requirements.txt
+
+The network connection has no acknowledgement protocol. A “data terkirim”
 status means the job bytes were accepted by the OS socket or USB driver; the
 app cannot confirm paper movement, print darkness, or cutter operation without
 a physical test print.
