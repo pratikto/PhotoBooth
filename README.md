@@ -155,11 +155,17 @@ from the transaction's cached folder URL. No manual QR editing, new Drive
 configuration, or internet connection is needed to insert the logo. Different
 transactions encode their own folder URLs; the artwork stays the same.
 
-The helper uses high error correction, a small white logo plate, and a
-four-module white scan margin. Its placement avoids finder, timing, and
-alignment patterns; a central alignment marker can move the logo slightly
-within the QR. The composition requests its final pixel size directly, keeping
-each data module an integer number of pixels wide.
+The helper uses high error correction, a small white logo plate at the **exact
+geometric center**, and a four-module white scan margin. Logo placement does not
+move with URL length. Corner finders and timing patterns stay outside the plate.
+OpenCV independently checks the actual rendered QR and its 180px screen preview;
+if the automatic encoding mask is hard to read beneath the logo, the helper
+tries another permitted mask with the same URL, version, and dimensions. It
+never moves the logo to obtain a passing scan. These checks use existing local
+dependencies and never open the URL or contact a scan service.
+The composition requests its final pixel size directly, keeping each data
+module an integer number of pixels wide. See the
+[centering correction](docs/qa/centered-qr.md) for pixel-level regression checks.
 
 For a future thermal-printer adapter, use
 `create_qr_image(folder_url, max_size=210, monochrome=True)` to obtain a QR with

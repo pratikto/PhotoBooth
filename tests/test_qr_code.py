@@ -1,7 +1,7 @@
 """Decode branded QR pixels, including the size used in saved compositions.
 
 These tests use OpenCV as an independent reader. Matching dimensions alone
-would miss a logo that hides a recognition pattern or makes a real URL unreadable.
+would miss a misplaced logo or a real URL made unreadable by its overlay.
 No test connects to Drive, a payment provider, a webcam, or a physical printer.
 """
 
@@ -9,7 +9,7 @@ import unittest
 
 import cv2
 import numpy as np
-from PIL import ImageChops
+from PIL import Image, ImageChops
 import qrcode
 from qrcode.util import pattern_position
 
@@ -23,6 +23,9 @@ class BrandedQRTests(unittest.TestCase):
         "https://example.com/",
         "https://drive.google.com/drive/folders/1AbCdEfGhIjKlMnOpQrStUvWxYz123456",
         "https://drive.google.com/drive/folders/" + "aB3xY7" * 7 + "?usp=sharing",
+        # Synthetic destination whose automatic mask becomes unreadable to
+        # OpenCV after a centered insert; another permitted mask must work.
+        "https://drive.google.com/drive/folders/AC0aHap-ztwDxJcb7jlVU4rDzyWI767ijEFgb-?usp=sharing",
     )
 
     def assert_decodes(self, image, expected):
@@ -31,9 +34,37 @@ class BrandedQRTests(unittest.TestCase):
         self.assertIsNotNone(points)
         self.assertEqual(decoded, expected)
 
+    def test_logo_is_at_the_geometric_center_for_short_and_drive_urls(self):
+        """Measure changed output pixels instead of trusting layout metadata.
+
+        The previous implementation decoded successfully but moved the logo
+        72 pixels upwards for a typical Drive link. A scan-only regression
+        therefore passed despite the visible placement bug. Reconstruct the
+        unbranded matrix and locate the actual overlaid rectangle in its delta.
+        """
+        for url in self.URLS:
+            for maximum in (None, 210, 384):
+                for monochrome in (False, True):
+                    with self.subTest(url=url, size=maximum, monochrome=monochrome):
+                        image = create_qr_image(url, max_size=maximum, monochrome=monochrome)
+                        reference = qrcode.QRCode(
+                            version=image.info.get('qr_version', 4),
+                            error_correction=qrcode.constants.ERROR_CORRECT_H,
+                            mask_pattern=image.info.get('qr_mask_pattern'),
+                            box_size=8, border=4)
+                        reference.add_data(url)
+                        reference.make(fit=True)
+                        reference.box_size = image.width // (reference.modules_count + 8)
+                        bounds = ImageChops.difference(
+                            image, reference.make_image().convert('RGB')).getbbox()
+                        self.assertIsNotNone(bounds)
+                        left, top, right, bottom = bounds
+                        self.assertLessEqual(abs(left + right - image.width), 2)
+                        self.assertLessEqual(abs(top + bottom - image.height), 2)
+
     def test_realistic_folder_urls_decode_at_display_and_footer_sizes(self):
         for url in self.URLS:
-            for max_size in (None, 210):
+            for max_size in (None, 210, 384):
                 for monochrome in (False, True):
                     with self.subTest(url=url, size=max_size, monochrome=monochrome):
                         image = create_qr_image(url, max_size=max_size, monochrome=monochrome)
@@ -42,6 +73,8 @@ class BrandedQRTests(unittest.TestCase):
                         if max_size is not None:
                             self.assertLessEqual(image.width, max_size)
                         self.assert_decodes(image, url)
+                        if max_size is None:
+                            self.assert_decodes(image.resize((180, 180), Image.Resampling.NEAREST), url)
                         pixels = np.asarray(image)
                         if monochrome:
                             # One-bit artwork must not leave hidden gray/color
@@ -52,20 +85,24 @@ class BrandedQRTests(unittest.TestCase):
                             # color artwork, so an omitted logo cannot pass.
                             self.assertTrue(np.any(pixels[:, :, 0] != pixels[:, :, 2]))
 
-    def test_overlay_preserves_finders_alignment_marks_and_the_white_margin(self):
+    def test_overlay_preserves_finders_uncovered_alignment_marks_and_the_white_margin(self):
         for url in self.URLS:
             with self.subTest(url=url):
                 # Build an unmodified reference with the same encoder settings.
-                # Compare recognition cells directly; successful decoding alone
-                # could hide accidental damage repaired by error correction.
-                reference = qrcode.QRCode(version=4, error_correction=qrcode.constants.ERROR_CORRECT_H,
+                # The centered code may select another valid mask. Rebuild
+                # that matrix before checking pixels; a different mask would
+                # otherwise look like changes outside the actual logo plate.
+                branded = create_qr_image(url)
+                reference = qrcode.QRCode(version=branded.info['qr_version'],
+                                          mask_pattern=branded.info['qr_mask_pattern'],
+                                          error_correction=qrcode.constants.ERROR_CORRECT_H,
                                           box_size=8, border=4)
                 reference.add_data(url)
                 reference.make(fit=True)
                 plain = reference.make_image().convert("RGB")
-                branded = create_qr_image(url)
                 self.assertEqual(branded.size, plain.size)
-                self.assertIsNotNone(ImageChops.difference(branded, plain).getbbox())
+                delta = ImageChops.difference(branded, plain).getbbox()
+                self.assertIsNotNone(delta)
                 cells = reference.modules_count
 
                 def compare_grid_box(left, top, right, bottom):
@@ -83,6 +120,14 @@ class BrandedQRTests(unittest.TestCase):
                     for column in pattern_position(reference.version):
                         if ((row == 6 and column in (6, cells - 7))
                                 or (column == 6 and row == cells - 7)):
+                            continue
+                        pattern = tuple((v + 4) * 8 for v in
+                                        (column - 2, row - 2, column + 3, row + 3))
+                        if (pattern[0] < delta[2] and pattern[2] > delta[0]
+                                and pattern[1] < delta[3] and pattern[3] > delta[1]):
+                            # A central alignment mark may be intentionally
+                            # hidden by the logo. Final native/preview decoding
+                            # above checks readability; all other marks stay.
                             continue
                         compare_grid_box(column - 2, row - 2, column + 3, row + 3)
                 pixels = np.asarray(branded)

@@ -1,6 +1,9 @@
 # Full-logo folder QR verification
 
-This follow-up starts from `b7fa8b774915c95da79feeca67472edd78027a7e`
+The [centering correction](centered-qr.md) supersedes the original placement
+rule below: the complete logo now stays exactly at the QR center.
+
+This original follow-up starts from `b7fa8b774915c95da79feeca67472edd78027a7e`
 on `feature/kivy-gui`. It implements the selected complete **MEONG PHOTOBOOTH**
 logo inside the customer folder QR. The asset includes the wordmark, camera-cat,
 and grayscale trail. The name has no final S.
@@ -15,9 +18,10 @@ payload. Actual payment-provider QRIS artwork is not processed by this helper.
 - Generate from the transaction's existing cached URL, with no network calls.
 - Use error correction H for branded codes and retain a four-module white border.
 - Insert the full bundled logo on a small white plate inside the data area.
-- Preserve finder, timing, alignment, and version-information patterns. When an
-  alignment marker occupies the center, place the intact logo nearby inside the
-  QR rather than obscuring the marker or cutting through the logo.
+- Keep the bounded full-logo plate exactly centered and preserve corner/timing
+  patterns and the quiet zone. The original rule that moved the logo around a
+  central alignment marker caused a visible upward shift; it has been replaced
+  by independent decoding and, when needed, another valid QR encoding mask.
 - Render the saved footer directly at an integer module scale within 210 pixels.
 - Keep the approved accent colors in digital results. `monochrome=True` provides
   a one-bit logo for thermal print tests; the surrounding matrix is unchanged.

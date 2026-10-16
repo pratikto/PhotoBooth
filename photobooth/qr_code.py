@@ -1,135 +1,122 @@
-"""Generate the transaction-folder QR with the approved full Meong logo.
+"""Generate a centered, independently checked Meong transaction-folder QR.
 
-Only the destination text is encoded into the QR. The PNG logo is a small
-visual insert, not part of the URL, so the same bundled artwork can be reused
-for every transaction without a network request. A logo hides some data dots;
-high error correction and unobstructed recognition patterns are essential.
+The bundled full logo is a visual insert; only the folder URL is encoded.
+Each new transaction keeps its own destination, and QR generation stays offline.
+The insert covers a few QR cells, so level-H error correction, a small white
+plate, an intact outer quiet zone, and independent decoding checks are required.
 """
 
 from functools import lru_cache
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageOps
+from PIL import Image, ImageOps
 import qrcode
-from qrcode.util import pattern_position
 
 
-# Resolve the asset relative to this module, not the current working directory.
-# Launching main.py from a shortcut or a different folder must still find it.
+# Resolve the artwork from the module, so shortcuts and different working
+# directories still find the approved full MEONG PHOTOBOOTH logo.
 LOGO_PATH = Path(__file__).resolve().parent / "assets" / "meong_photobooth.png"
 QUIET_ZONE_MODULES = 4
 DEFAULT_BOX_SIZE = 8
+# The separate Kivy result QR is displayed in a 180px square at normal density.
+# A readable full-size source can become unreadable when shown at this size.
+SMALL_PREVIEW_SIZE = 180
 
 
 @lru_cache(maxsize=1)
 def _load_logo() -> Image.Image:
-    """Read the local full-logo asset once, detached from its open file handle."""
+    """Read the local logo once and close its original file handle."""
     with Image.open(LOGO_PATH) as source:
-        # Flatten future transparent assets onto white too. Transparent black
-        # pixels must not become a black rectangle when a printer converts RGB.
+        # Composite alpha onto white before converting to RGB. Transparent
+        # black pixels must not become a black plate on the thermal path.
         artwork = source.convert("RGBA")
         paper = Image.new("RGBA", artwork.size, "white")
         return Image.alpha_composite(paper, artwork).convert("RGB")
 
 
-def _recognition_patterns(version: int, modules: int) -> Image.Image:
-    """Mark grid cells that a logo must never cover, including their guards.
-
-    Longer Drive URLs can require a QR with an alignment marker at its exact
-    center. Blindly pasting a logo there can remove that marker. The placement
-    search below instead finds the nearest free rectangle inside the QR.
+def _logo_box(modules: int, artwork: Image.Image) -> tuple[int, int, int, int]:
+    """Return an EXACTLY centered, small logo plate in QR-grid coordinates.
 
     Args:
-        version: QR version selected by the encoder, from 1 through 40.
-        modules: Number of data-grid cells across the QR, excluding its border.
+        modules: QR grid width without its surrounding white quiet zone.
+        artwork: The complete approved logo; its aspect ratio is retained.
 
     Returns:
-        A one-bit image with one pixel per QR module. Marked cells are reserved
-        for recognition/metadata; unmarked cells may hold the small logo plate.
+        (left, top, right, bottom), with exclusive right/bottom bounds.
+        All coordinates refer to complete modules, not individual pixels.
+
+    A QR grid has odd dimensions. Odd plate dimensions make both margins equal
+    in whole modules. The full plate is centered even when this overlays an
+    alignment marker at the center of a longer code. The previous search for a
+    marker-free rectangle moved the logo upwards, which was visibly incorrect.
+    Recognition/readability is now checked on the final candidate pixels.
+
+    Keep the plate to roughly one third of a short code and at most fifteen
+    modules on larger codes. Level-H recovery percentages refer to codewords,
+    not to arbitrary image area; they do not justify covering a large logo area.
     """
-    reserved = Image.new("1", (modules, modules), 0)
-    draw = ImageDraw.Draw(reserved)
-
-    # The three corner finders, separators, and nearby format-information bits.
-    draw.rectangle((0, 0, 8, 8), fill=1)
-    draw.rectangle((modules - 9, 0, modules - 1, 8), fill=1)
-    draw.rectangle((0, modules - 9, 8, modules - 1), fill=1)
-    # Timing patterns tell the reader where each row/column of data starts.
-    draw.line((6, 0, 6, modules - 1), fill=1)
-    draw.line((0, 6, modules - 1, 6), fill=1)
-
-    positions = pattern_position(version)
-    for row in positions:
-        for column in positions:
-            # These three combinations belong to finders, not alignment marks.
-            if ((row == 6 and column in (6, modules - 7))
-                    or (column == 6 and row == modules - 7)):
-                continue
-            # An alignment pattern is 5x5. Keep another module on each side so
-            # the pasted white plate cannot merge with its outer black ring.
-            draw.rectangle((column - 3, row - 3, column + 3, row + 3), fill=1)
-
-    if version >= 7:
-        # Higher versions carry additional version information near two corners.
-        draw.rectangle((modules - 11, 0, modules - 9, 5), fill=1)
-        draw.rectangle((0, modules - 11, 5, modules - 9), fill=1)
-    return reserved
+    columns = min(15, max(7, int(modules * 0.32)))
+    if columns % 2 == 0:
+        columns += 1
+    rows = max(5, round(columns * artwork.height / artwork.width))
+    if rows % 2 == 0:
+        rows += 1
+    left = (modules - columns) // 2
+    top = (modules - rows) // 2
+    return left, top, left + columns, top + rows
 
 
-def _logo_box(version: int, modules: int, artwork: Image.Image) -> tuple[int, int, int, int]:
-    """Choose a small module-aligned logo plate near the center of the QR.
+def _paint_qr(qr: qrcode.QRCode, artwork: Image.Image | None,
+              monochrome: bool) -> Image.Image:
+    """Render one matrix and paste its optional full logo at the final scale.
 
-    Bound the plate width to roughly one third of a short code, and at most
-    fifteen modules for longer codes. Error correction percentages refer to
-    data codewords, not to an arbitrary percentage of image area; keeping the
-    plate small is still necessary even with level H.
-
-    Args:
-        version: Encoder-selected QR version, used to locate alignment markers.
-        modules: QR grid width, excluding the white quiet zone.
-        artwork: Full logo, used only to preserve the plate's aspect ratio.
-
-    Returns:
-        Pillow-style (left, top, right, bottom) bounds measured in QR modules.
-        Right/bottom are exclusive. The outer quiet zone is not in these bounds.
-
-    Raises:
-        ValueError: No unobstructed data area can fit even the smallest plate.
+    The caller has already selected an integer pixel size for each module.
+    Only the artwork is resampled; QR data cells and the four-module white
+    border never receive smoothing or dithering. Passing no artwork returns
+    the separate, plain payment-demo QR without loading any brand asset.
     """
-    reserved = _recognition_patterns(version, modules)
-    # Odd dimensions keep the plate balanced around the center of an odd grid.
-    # Bitwise OR with 1 leaves an odd number unchanged and increases an even
-    # number by one. This keeps both plate axes aligned to whole grid cells.
-    columns = min(15, max(7, int(modules * 0.32) | 1))
-    for width in range(columns, 4, -2):
-        height = max(5, round(width * artwork.height / artwork.width) | 1)
-        # Sort by distance from the center. Multiplying each center coordinate
-        # by two avoids fractions when comparing module positions. A free
-        # central plate wins; a central marker moves the whole logo slightly.
-        candidates = sorted(
-            ((2 * left + width - modules) ** 2
-             + (2 * top + height - modules) ** 2, top, left)
-            for top in range(1, modules - height)
-            for left in range(1, modules - width)
-        )
-        for _, top, left in candidates:
-            box = (left, top, left + width, top + height)
-            if reserved.crop(box).getbbox() is None:
-                return box
-    raise ValueError("There is no free data area for the Meong QR logo.")
+    image = qr.make_image(fill_color="black", back_color="white").convert("RGB")
+    # These in-memory encoder facts let pixel-level tests reconstruct the
+    # unmodified matrix. They are not displayed or added to the encoded URL.
+    image.info["qr_version"] = qr.version
+    image.info["qr_mask_pattern"] = qr.mask_pattern
+    if artwork is None:
+        return image
+
+    left, top, right, bottom = _logo_box(qr.modules_count, artwork)
+    plate = Image.new("RGB", ((right - left) * qr.box_size,
+                              (bottom - top) * qr.box_size), "white")
+    inset = max(1, qr.box_size // 2)
+    insert = artwork.copy()
+    insert.thumbnail((plate.width - 2 * inset, plate.height - 2 * inset),
+                     Image.Resampling.LANCZOS)
+    if monochrome:
+        # Thermal paper has black dots rather than gray/color ink. Dither the
+        # inserted artwork only; keep the surrounding QR matrix binary.
+        insert = ImageOps.grayscale(insert).convert(
+            "1", dither=Image.Dither.FLOYDSTEINBERG).convert("RGB")
+    plate.paste(insert, ((plate.width - insert.width) // 2,
+                         (plate.height - insert.height) // 2))
+    image.paste(plate, ((left + QUIET_ZONE_MODULES) * qr.box_size,
+                       (top + QUIET_ZONE_MODULES) * qr.box_size))
+    return image
 
 
 @lru_cache(maxsize=16)
 def _render_qr(content: str, with_logo: bool, max_size: int | None,
                monochrome: bool) -> Image.Image:
-    """Cache a few recent destinations so GUI status polls do not re-encode.
+    """Encode, render, and check a bounded set of candidates for one URL.
 
-    This internal image belongs to the cache. The public helper always returns
-    a copy so a caller's resizing/drawing cannot damage later QR displays.
+    QR permits eight mask patterns: different valid black/white arrangements
+    carrying the same content. The library's automatic choice is tried first.
+    A centered logo can make that choice difficult for a reader, so alternate
+    masks are tried without moving the logo, changing the URL, or increasing
+    the QR version/density. No remote scan service or new dependency is used.
     """
     qr = qrcode.QRCode(
-        # A minimum of version 4 gives the full wordmark room on short demo
-        # links. Longer real URLs automatically choose the required version.
+        # Version 4 gives the complete wordmark room on short links. Longer
+        # destinations select their required version automatically. This also
+        # keeps the bounded center plate clear of corner and timing patterns.
         version=4 if with_logo else None,
         error_correction=(qrcode.constants.ERROR_CORRECT_H if with_logo
                           else qrcode.constants.ERROR_CORRECT_M),
@@ -141,70 +128,79 @@ def _render_qr(content: str, with_logo: bool, max_size: int | None,
 
     total_modules = qr.modules_count + 2 * QUIET_ZONE_MODULES
     if max_size is not None:
-        # Choose an INTEGER number of pixels per module before rendering.
-        # Resizing a finished QR to an arbitrary width can blur its data dots.
         if max_size < total_modules:
             raise ValueError("QR size is too small to preserve its modules and white margin.")
+        # Select the dot size BEFORE rendering. Arbitrary resizing of a QR to
+        # fit its footer would introduce uneven or blurred data cells.
         qr.box_size = max_size // total_modules
-    image = qr.make_image(fill_color="black", back_color="white").convert("RGB")
 
-    if with_logo:
-        artwork = _load_logo()
-        left, top, right, bottom = _logo_box(qr.version, qr.modules_count, artwork)
-        plate = Image.new("RGB", ((right - left) * qr.box_size,
-                                  (bottom - top) * qr.box_size), "white")
-        # Resize only the artwork. The QR matrix itself is never smoothed.
-        inset = max(1, qr.box_size // 2)
-        insert = artwork.copy()
-        insert.thumbnail((plate.width - 2 * inset, plate.height - 2 * inset),
-                         Image.Resampling.LANCZOS)
-        if monochrome:
-            # A thermal printer has black dots, not gray/color ink. Dither the
-            # logo alone; applying image effects to QR dots would damage them.
-            insert = ImageOps.grayscale(insert).convert(
-                "1", dither=Image.Dither.FLOYDSTEINBERG).convert("RGB")
-        plate.paste(insert, ((plate.width - insert.width) // 2,
-                             (plate.height - insert.height) // 2))
-        position = ((left + QUIET_ZONE_MODULES) * qr.box_size,
-                    (top + QUIET_ZONE_MODULES) * qr.box_size)
-        image.paste(plate, position)
+    if not with_logo:
+        return _paint_qr(qr, None, monochrome)
 
-    return image
+    # OpenCV/NumPy are existing camera dependencies. Import them only for the
+    # branded path, where an independent reader must check the overlaid result.
+    import cv2
+    import numpy as np
+
+    detector = cv2.QRCodeDetector()
+    artwork = _load_logo()
+    for mask in (None, 0, 1, 2, 3, 4, 5, 6, 7):
+        if mask is not None:
+            qr.mask_pattern = mask
+            # Version/data capacity is already established. A mask changes the
+            # module arrangement only, leaving the destination and size intact.
+            qr.make(fit=False)
+        image = _paint_qr(qr, artwork, monochrome)
+        decoded, _, _ = detector.detectAndDecode(np.asarray(image))
+        if decoded != content:
+            continue
+        if max_size is None:
+            # The unbounded image is the source of the separate GUI QR. Check
+            # its nearest-filtered 180px preview too; print-sized requests are
+            # instead verified at their actual integer-dot resolution.
+            preview = image.resize((SMALL_PREVIEW_SIZE, SMALL_PREVIEW_SIZE),
+                                   Image.Resampling.NEAREST)
+            decoded, _, _ = detector.detectAndDecode(np.asarray(preview))
+            if decoded != content:
+                continue
+        return image
+    raise ValueError("A readable centered Meong QR could not be generated at this size.")
 
 
 def create_qr_image(content: str, *, with_logo: bool = True,
                     max_size: int | None = None, monochrome: bool = False) -> Image.Image:
-    """Return an independent RGB QR image for this transaction's destination.
+    """Return a detached RGB QR image with the full logo exactly at its center.
 
     Args:
-        content: A cached folder URL (or explicit demo text). Empty text fails.
-        with_logo: Insert the approved FULL Meong logo, including its name and
-            grayscale trail. Set False for the separate payment-demo QR; this
-            helper does not modify a payment provider's actual QRIS artwork.
-        max_size: Optional pixel bound, including the four-module white margin.
-            The returned square may be smaller to keep every module equally
-            wide. For example, the saved template footer requests 210 pixels.
-        monochrome: Render only the logo as black/white dots for a future
-            thermal print path. Normal result images retain the logo colors.
+        content: Cached folder URL or explicit demo text. Empty text fails.
+        with_logo: Include the complete approved camera-cat, grayscale trail,
+            and MEONG PHOTOBOOTH wordmark. False keeps payment-demo codes plain;
+            this helper never edits a payment provider's actual QRIS artwork.
+        max_size: Optional pixel bound INCLUDING the four-module white margin.
+            The square can be smaller to retain integer module widths. The
+            80 mm receipt allocation uses 384px; legacy footers use 210px.
+        monochrome: Dither only the logo into black/white thermal dots. The
+            standard digital/result-screen QR retains the approved accent colors.
 
     Returns:
-        A detached RGB Pillow image, suitable for Kivy/Tkinter display or for
-        pasting directly into the saved photo composition.
+        An independent Pillow RGB image for a GUI or saved photo composition.
+        Encoder version/mask metadata is available in its in-memory info dict.
 
     Raises:
-        ValueError: Empty content, an invalid pixel bound, or a bound too small
-            to contain all QR modules and their mandatory white quiet zone.
-        FileNotFoundError: The bundled logo is missing from this installation.
-        qrcode.exceptions.DataOverflowError: The payload exceeds QR capacity.
+        ValueError: Empty content, an invalid/insufficient pixel bound, or no
+            centered candidate that the independent local reader can decode.
+        FileNotFoundError: The bundled approved logo is missing.
+        qrcode.exceptions.DataOverflowError: Content exceeds QR capacity.
 
-    No network request is made. Existing assigned folder URLs remain usable
-    offline, and creating a QR does not change a URL or register a transaction.
+    All work is local, so cached folder URLs keep working while offline. The
+    decoder validates pixels without opening the URL. A small recent-result
+    cache avoids repeated scans during GUI status polls; returning a copy keeps
+    one caller's drawing or resizing from corrupting the cached original.
+    Physical printer/phone-camera verification is still a separate device test.
     """
     if not isinstance(content, str) or not content.strip():
         raise ValueError("QR code content cannot be empty.")
     if max_size is not None and (isinstance(max_size, bool)
                                 or not isinstance(max_size, int) or max_size <= 0):
         raise ValueError("QR size must be a positive integer number of pixels.")
-    # Callers may paste, resize, or draw on their image without corrupting the
-    # cached source that another result screen/session will receive later.
     return _render_qr(content.strip(), with_logo, max_size, monochrome).copy()
