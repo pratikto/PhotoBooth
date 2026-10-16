@@ -306,7 +306,8 @@ class PhotoBoothUI:
         """Use a drawn symbol instead of platform-dependent emoji glyphs."""
         icon = GuideGlyph(kind=kind, size_hint=(None, None), size=(dp(28), dp(28)))
         def arrange(*_args):
-            icon.center = (button.center_x if icon_only else button.x + dp(30), button.center_y)
+            icon.center = (button.x + button.width / 2 if icon_only else button.x + dp(30),
+                           button.y + button.height / 2)
         button.bind(pos=arrange, size=arrange)
         button.add_widget(icon)
         arrange()

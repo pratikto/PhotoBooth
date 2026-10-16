@@ -170,6 +170,44 @@ class KioskInteractionTests(unittest.TestCase):
         self.assertEqual(count.plays, 5)
         self.assertIsNotNone(old_dial)
 
+    def test_static_gear_pixels_are_painted_inside_the_header_button(self):
+        """Geometry alone misses a stale canvas drawn at the previous y=0."""
+        from PIL import Image
+        import numpy as np
+        from kivy.core.window import Window
+        path = Path(self.directory.name) / "header.png"
+        self.ui.shell.export_to_png(str(path))
+        button = self.ui.settings_button
+        x, y = button.to_window(*button.pos)
+        with Image.open(path) as source:
+            pixels = np.asarray(source.convert("RGB"))
+        patch_pixels = pixels[round(Window.height - y - button.height):round(Window.height - y),
+                              round(x):round(x + button.width)]
+        blue_ink = ((patch_pixels[:, :, 0] < 100) & (patch_pixels[:, :, 1] < 160)
+                    & (patch_pixels[:, :, 2] > 180))
+        self.assertGreater(int(np.count_nonzero(blue_ink)), 40)
+
+    def test_last_order_title_is_reachable_by_scrolling_and_keeps_the_same_total(self):
+        """All twelve rows stay usable even though they cannot all fit at once."""
+        from kivy.core.window import Window
+        Window.size = (800, 600)
+        self.ui.show_template_selection(True, "Ready")
+        for template in self.ui.templates:
+            self.ui._change_quantity(template.template_id, 1)
+        scroll = self.ui.order_items.parent
+        scroll.scroll_y = 0
+        self.settle()
+        last = self.ui.templates[-1]
+        row = self.ui.order_rows[last.template_id]
+        x, y = row.to_window(*row.pos)
+        sx, sy = scroll.to_window(*scroll.pos)
+        self.assertGreaterEqual(y, sy - 1)
+        self.assertLessEqual(y + row.height, sy + scroll.height + 1)
+        self.tap(row)
+        self.settle(.5)
+        self.assertEqual(self.ui.template_carousel.index, len(self.ui.templates) - 1)
+        self.assertEqual(self.ui.cart_total.text, "Rp60.000")
+
     def test_settings_remain_in_the_header_on_all_six_screens(self):
         from PIL import Image
         path = Path(self.directory.name) / "photo.png"

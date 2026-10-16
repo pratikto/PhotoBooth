@@ -109,7 +109,12 @@ class GuideGlyph(Widget):
         """Draw in a normalized 100-unit square so geometry retains its ratio."""
         self.canvas.clear()
         scale = max(0, min(self.width, self.height)) / 100
-        x, y = self.center_x - 50 * scale, self.center_y - 50 * scale
+        # Read primitive geometry here. Kivy's cached center aliases can still
+        # contain the previous position while the pos event is being delivered.
+        # Animated glyphs would correct themselves next frame, but a static
+        # header/settings icon would otherwise remain painted at its old y=0.
+        x = self.x + (self.width - 100 * scale) / 2
+        y = self.y + (self.height - 100 * scale) / 2
         wobble = math.sin(self.phase * math.tau)
         def rect(px, py, width, height, color, radius=5):
             Color(*color)
@@ -228,9 +233,9 @@ class CountdownDial(FloatLayout):
     def _draw(self, *_args):
         self.canvas.before.clear()
         radius = max(1, min(self.width, self.height) * .39)
-        angle = self.phase * 360
+        angle = self.phase * 360 if self.seconds is not None else 0
         elapsed = min(1, max(0, time.monotonic() - self._tick_at))
-        fraction = .18 if self.seconds is None else max(0, (self.seconds - elapsed) / 5)
+        fraction = 1 if self.seconds is None else max(0, (self.seconds - elapsed) / 5)
         with self.canvas.before:
             Color(*EDGE)
             Line(circle=(*self.center, radius), width=dp(2))

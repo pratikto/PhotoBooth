@@ -586,12 +586,14 @@ class KivyFlowTests(unittest.TestCase):
                                 self.assertEqual(len(ui.order_rows), len(ui.templates))
                                 self.assertGreaterEqual(ui.order_items.height, 4 * 44)
                                 self.assertTrue(all(row.height >= 44 for row in ui.order_rows.values()))
-                                last_card = ui._template_cards[ui.templates[-1].template_id]
                                 ui.template_carousel.index = len(ui.templates) - 1
                                 settle()
-                                for widget in last_card.walk():
-                                    if isinstance(widget, Button):
-                                        visible(widget)
+                                # The focused quantity controls are outside
+                                # the carousel. Widget.walk() without restrict
+                                # also visits unrelated later siblings, such as
+                                # deliberately scrolled-out cart item buttons.
+                                for widget in ui.quantity_buttons[ui.templates[-1].template_id]:
+                                    visible(widget)
                             elif screen == 'payment':
                                 visible(ui.payment_confirm)
                                 visible(ui.payment_back)
