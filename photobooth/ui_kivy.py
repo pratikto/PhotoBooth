@@ -25,14 +25,13 @@ from kivy.uix.button import Button
 from kivy.uix.popup import Popup
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.slider import Slider
-from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.widget import Widget
 from PIL import Image
 from photobooth.audio import AudioManager
 from photobooth.ui_motion import CountdownDial, FlashEffect, GuideGlyph, MotionScope
 from photobooth.catalog import PRICE_PER_SESSION, create_template_preview, render_photo_frame
 from photobooth.ui_brand import (
-    BLUSH, BLUE, DISABLED_INK, EDGE, GREY, INK, PAPER, ROSE, SOFT, WHITE,
+    BLUSH, BLUE, CYAN, DISABLED_INK, EDGE, GREY, INK, PAPER, ROSE, SOFT, WHITE,
     BrandLockup, CarouselDots, FlowSteps, Panel, PixelRule, ReceiptSlide,
     TemplateCarousel, brand_parts, picture,
 )
@@ -201,8 +200,15 @@ class PhotoBoothUI:
         self.shell.add_widget(footer)
         self.header = self.brand  # Historical public handle retained for callers.
         self._page_title = self._page_subtitle = None
-        self.shell.bind(size=self._fit_chrome)
+        self.shell.bind(size=self._fit_chrome, parent=self._on_shell_parent)
         self._fit_chrome()
+
+    def _on_shell_parent(self, *_args):
+        """Only a mounted kiosk page owns a recurring illustration timer."""
+        if self.shell.get_root_window() is not None:
+            self._motion.activate()
+        else:
+            self._motion.suspend()
 
     def _fit_chrome(self, *_args):
         """Fit the brand shell without letting a wide monitor stretch the UI.
@@ -401,7 +407,7 @@ class PhotoBoothUI:
         self._motion.retire()
         if self.countdown_dial is not None:
             Animation.cancel_all(self.countdown_dial.label)
-        self._motion = MotionScope()
+        self._motion = MotionScope(active=self.shell.get_root_window() is not None)
         self.countdown_dial = None
         self._last_countdown_value = None
         self.audio.set_capture_active(False)
@@ -997,7 +1003,7 @@ class PhotoBoothUI:
             else:
                 text = 'Tekan kamera /\ntelapak 1 detik.'
         elif self._palm_state == 'unavailable':
-            text = 'Tekan tombol kamera.'
+            text = 'Gestur belum tersedia.\nTekan kamera.'
         else:
             text = 'Siap? Tekan kamera.\nTimer 5 detik.'
         self.capture_hint.text = text
