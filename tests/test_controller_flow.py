@@ -26,7 +26,7 @@ class ControllerFlowTests(unittest.TestCase):
              patch('photobooth.app.Camera'), \
              patch('photobooth.app.AppsScriptDriveClient.from_configuration', return_value=None), \
              patch('photobooth.app.GoogleDriveClient.from_environment', return_value=None), \
-             patch.dict(os.environ, {'PHOTOBOOTH_LOCAL_ONLY': '1'}):
+             patch.dict(os.environ, {'PHOTOBOOTH_LOCAL_ONLY': '1', 'PHOTOBOOTH_PALM_TRIGGER': '0'}):
             app = PhotoBoothApp()
             try:
                 app.camera_ready = True
@@ -69,7 +69,7 @@ class ControllerFlowTests(unittest.TestCase):
              patch('photobooth.app.Camera', FakeCamera), \
              patch('photobooth.app.AppsScriptDriveClient.from_configuration', return_value=None), \
              patch('photobooth.app.GoogleDriveClient.from_environment', return_value=None), \
-             patch.dict(os.environ, {'PHOTOBOOTH_LOCAL_ONLY': '1'}):
+             patch.dict(os.environ, {'PHOTOBOOTH_LOCAL_ONLY': '1', 'PHOTOBOOTH_PALM_TRIGGER': '0'}):
             app = PhotoBoothApp()
             try:
                 app._connect_camera()
@@ -163,7 +163,7 @@ class ControllerFlowTests(unittest.TestCase):
              patch('photobooth.app.Camera', FakeCamera), \
              patch('photobooth.app.AppsScriptDriveClient.from_configuration', return_value=None), \
              patch('photobooth.app.GoogleDriveClient.from_environment', return_value=None), \
-             patch.dict(os.environ, {'PHOTOBOOTH_LOCAL_ONLY': '0'}):
+             patch.dict(os.environ, {'PHOTOBOOTH_LOCAL_ONLY': '0', 'PHOTOBOOTH_PALM_TRIGGER': '0'}):
             app = PhotoBoothApp()
             backend = Backend()
             try:

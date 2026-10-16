@@ -420,6 +420,66 @@
       ]
     },
     {
+      "screen": "palm-ready",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "palm-ready-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Tekan tombol atau angkat\ntelapak terbuka 1 detik.",
+      "button_capture_available": true
+    },
+    {
+      "screen": "palm-hold",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "palm-hold-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Telapak terdeteksi \u00b7 70%\nTahan sebentar lagi.",
+      "button_capture_available": true
+    },
+    {
+      "screen": "palm-release",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "palm-release-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Turunkan telapak sebentar.\nTombol tetap bisa dipakai.",
+      "button_capture_available": true
+    },
+    {
+      "screen": "palm-loading",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "palm-loading-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Tekan tombol untuk foto.\nGestur sedang disiapkan...",
+      "button_capture_available": true
+    },
+    {
+      "screen": "palm-unavailable",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "palm-unavailable-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Gestur belum tersedia.\nTekan tombol untuk foto.",
+      "button_capture_available": true
+    },
+    {
       "screen": "review",
       "size": [
         1200,
@@ -902,6 +962,66 @@
           "ratio": 5.141
         }
       ]
+    },
+    {
+      "screen": "palm-ready",
+      "size": [
+        800,
+        600
+      ],
+      "file": "palm-ready-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Tekan tombol atau angkat\ntelapak terbuka 1 detik.",
+      "button_capture_available": true
+    },
+    {
+      "screen": "palm-hold",
+      "size": [
+        800,
+        600
+      ],
+      "file": "palm-hold-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Telapak terdeteksi \u00b7 70%\nTahan sebentar lagi.",
+      "button_capture_available": true
+    },
+    {
+      "screen": "palm-release",
+      "size": [
+        800,
+        600
+      ],
+      "file": "palm-release-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Turunkan telapak sebentar.\nTombol tetap bisa dipakai.",
+      "button_capture_available": true
+    },
+    {
+      "screen": "palm-loading",
+      "size": [
+        800,
+        600
+      ],
+      "file": "palm-loading-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Tekan tombol untuk foto.\nGestur sedang disiapkan...",
+      "button_capture_available": true
+    },
+    {
+      "screen": "palm-unavailable",
+      "size": [
+        800,
+        600
+      ],
+      "file": "palm-unavailable-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Gestur belum tersedia.\nTekan tombol untuk foto.",
+      "button_capture_available": true
     },
     {
       "screen": "review",

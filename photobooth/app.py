@@ -10,6 +10,7 @@ show the cached folder QR, and synchronize files in the background.
 
 import os
 import json
+import time
 from pathlib import Path
 from kivy.clock import ClockEvent
 
@@ -21,6 +22,7 @@ from photobooth.catalog import PRICE_PER_SESSION, compose_result, get_templates
 from photobooth.drive_pool import DriveSlotPool
 from photobooth.drive_storage import AppsScriptDriveClient, DriveApiError, GoogleDriveClient
 from photobooth.drive_sync import DriveSyncWorker
+from photobooth.palm_gesture import MAX_RESULT_AGE, PALM_CONFIDENCE, PalmGestureWorker, PalmHoldTrigger
 from photobooth.qr_code import create_qr_image
 from photobooth.transaction_store import LocalTransaction, TransactionStore
 from photobooth.ui_kivy import KivyHost, PhotoBoothUI
@@ -86,6 +88,15 @@ class PhotoBoothApp:
         self.session_index = 0
         self.current_session: PhotoSession | None = None
 
+        # Palm recognition is an optional second shutter. Initialize its native
+        # model on a worker after the camera connects, without delaying Kivy.
+        # A disabled/missing detector leaves the existing button path intact.
+        self.palm_worker = PalmGestureWorker(
+            PROJECT_ROOT / "data" / "models" / "gesture_recognizer.task",
+            enabled=os.environ.get("PHOTOBOOTH_PALM_TRIGGER", "1").lower() not in {"0", "false", "no"},
+        )
+        self.palm_trigger = PalmHoldTrigger()
+
         self._countdown_remaining = 0
         self._countdown_is_retake = False
         self._countdown_after_id: ClockEvent | None = None
@@ -132,6 +143,7 @@ class PhotoBoothApp:
         self.ui.set_camera_status(self.camera_ready)
 
         if self.camera_ready:
+            self.palm_worker.start()
             self.ui.show_welcome(
                 True,
                 self._storage_status_message(),
@@ -156,6 +168,7 @@ class PhotoBoothApp:
             self.ui.set_camera_status(ready)
         if frame is None:
             self.current_frame = None
+            self._update_palm_trigger(None)
             # Preserve the screen's own feedback while reporting a temporary
             # loss of frames. Recovery restores it rather than leaving a stale
             # "waiting for camera" notice on an otherwise live screen.
@@ -186,7 +199,50 @@ class PhotoBoothApp:
             ):
                 self.ui.set_capture_enabled(True)
 
+        # Recognition reads a mailbox and submits work only; no model inference
+        # or download occurs on this GUI callback. Every screen, including
+        # review/payment/result, explicitly gates the second shutter.
+        self._update_palm_trigger(frame)
+
         self._preview_after_id = self.root.after(30, self._update_preview)
+
+    def _update_palm_trigger(self, frame) -> None:
+        """Accept only recent observations from this exact capture-page revision.
+
+        A positive hold uses the same camera/selection/quota/countdown checks as
+        the button. During a countdown we still observe hand release, but never
+        accumulate the next hold. Missing frames invalidate all in-flight work.
+        """
+        if (frame is None or not self.camera_ready or self.ui.current_screen != "capture"
+                or self.current_session is None or self.is_closing):
+            self.palm_worker.pause()
+            self.palm_trigger.pause()
+            return
+        state = self.palm_worker.state
+        if state != "ready":
+            self.palm_trigger.pause()
+            self.ui.set_palm_status(state, needs_release=self.palm_trigger.needs_release)
+            return
+        context = self.ui.screen_revision
+        self.palm_worker.submit(frame, context)
+        result = self.palm_worker.poll()
+        now = time.monotonic()
+        # Compare hold continuity using source timestamps, allowing for the
+        # accepted inference latency. Expiring at delivery time would reset
+        # every hold on a slower (but still sufficiently fresh) CPU detector.
+        self.palm_trigger.expire(now - MAX_RESULT_AGE)
+        if (result is not None and result.context == context
+                and 0 <= now - result.captured_at <= MAX_RESULT_AGE):
+            if self.palm_trigger.observe(
+                result.score >= PALM_CONFIDENCE,
+                result.captured_at,
+                allow_trigger=self._countdown_after_id is None and not self.ui.capture_button.disabled,
+            ):
+                self._start_capture_countdown()
+        if self.palm_worker.state != "ready":
+            self.palm_trigger.pause()
+        self.ui.set_palm_status(self.palm_worker.state, self.palm_trigger.progress,
+                                self.palm_trigger.needs_release)
 
     def _open_template_selection(self, quantities: dict[str, int] | None = None) -> None:
         # Open a new or previously unpaid cart and pass live camera/Drive gates
@@ -347,11 +403,13 @@ class PhotoBoothApp:
             ),
             is_retake=is_retake,
         )
+        self.palm_worker.pause()
+        self.palm_trigger.pause()
+        self.ui.set_palm_status(self.palm_worker.state, needs_release=self.palm_trigger.needs_release)
 
     def _start_capture_countdown(self) -> None:
-        # The capture-page shutter is the only customer action that starts a
-        # countdown, both for initial photos and the selected replacement. Once
-        # all three originals exist, recheck selection and the per-session quota.
+        # Button presses and confirmed palm holds share this one countdown gate.
+        # Once all three originals exist, recheck selection and the session quota.
         session = self.current_session
         if (
             self.ui.current_screen != "capture"
@@ -362,6 +420,10 @@ class PhotoBoothApp:
             or self._countdown_after_id is not None
         ):
             return
+        # A button press also invalidates a half-completed palm hold. Keeping a
+        # hand raised through capture must not immediately trigger the next photo.
+        self.palm_trigger.latch()
+        self.palm_worker.pause()
         self._start_countdown(is_retake=session.ready_for_review)
 
     def _prepare_retake(self) -> None:
@@ -799,6 +861,7 @@ class PhotoBoothApp:
         self._completion_after_id = None
         self._preview_after_id = None
         self._drive_status_after_id = None
+        self.palm_worker.close()
         if self.drive_worker is not None:
             self.drive_worker.stop()
         self.camera.close()

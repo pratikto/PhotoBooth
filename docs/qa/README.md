@@ -9,6 +9,7 @@ The disabled-label follow-up starts from `12f7cc003deb2f9fa5e7148beec2228b13ffda
 The complete-status follow-up starts from `ca51189f48073da8a5f6775c06b771e56403d27e`.
 The alpha-compositing follow-up starts from `2806e28e733ca91a9a9e05fb238a9ef175ccc4dd`.
 The manual-retake follow-up starts from `42a184c1ff1bf7973570f097c9d6d709f92429ef`.
+The open-palm follow-up starts from `f9a5491e0ac93a6bec811c2c56fcd32f7ba51f0d`.
 The original working copy was left untouched. Source files in the separate
 checkout were checked against the freshly fetched GitHub blobs before editing.
 
@@ -39,11 +40,12 @@ scrolling area. Payment back-navigation also retains the customer's quantities.
 | Long status summary and full-message details remain reachable | Passed | Passed |
 | Contact sheets preserve transparency without modifying source PNGs | Passed | Passed |
 | Retake ready-state shutter and subsequent countdown fit | Passed | Passed |
+| Palm hold/release/loading/fallback guidance fits with the button available | Passed | Passed |
 
 The image sheets below contain the six main screens. The reproducible renderer
 also includes countdown, bottom-of-gallery, retake-used, local-only, and next-session
 states, camera-waiting capture/payment/review, empty/partly selected carts,
-and a long-storage-status fixture, plus retake-ready/countdown states: **38 full-size PNGs** in total.
+and a long-storage-status fixture, plus retake-ready/countdown and palm states: **48 full-size PNGs** in total.
 The JSON [report](report.json) records each
 render and the QR text decoded from its actual screen pixels. Full-size renders
 are produced by the command below; only the compact sheets are committed here.
@@ -234,9 +236,55 @@ All 34 earlier render report entries remain unchanged; the report now contains
 
 ![Retake ready and countdown at 1200x800](retake-1200x800.png)
 
+## Optional local open-palm shutter
+
+The existing photo button is retained. A separate CPU worker recognizes
+MediaPipe's `Open_Palm` category at a minimum score of 0.60. Consecutive fresh
+observations spanning one second start the same five-second controller countdown
+as a button press. The configured hold needs at least four observations and
+rejects gaps greater than 0.4 seconds. After either input, a confirmed 0.4-second
+non-palm interval re-arms gesture input; a held hand cannot trigger successive
+photos. Gestures operate only within a prepared capture/retake page.
+
+The worker has one pending frame and one latest result, processes at most ten
+frames per second, and resizes only its inference input within 480x360. It
+never performs SDK initialization, inference, downloads, or native cleanup on
+the GUI thread. Page revisions plus worker generations invalidate old results,
+including a disconnect and recovery that leaves the same page visible. Duplicate
+camera-array references and consumed results cannot fabricate a sustained hold.
+The model is optional: unavailable/loading states leave the normal button usable.
+
+Added tests cover timing (including valid 300ms inference latency), release after manual capture, a button press during a
+partial hold, stale/wrong-page results, camera loss, a blocked inference, dropped
+mailbox frames, same-page invalidation, missing/broken native initialization,
+verified offline model caching, checksum/size failures, and cancellation. The
+real controller completes three captures with mixed inputs and a selected-photo
+retake, preserving the per-session quota and original photo records.
+
+Two opt-in tests use **actual MediaPipe 0.10.32 inference**, not a fake detector.
+The model recognizes the public `left_hands.jpg` sample above the configured
+threshold and rejects `fist.jpg`, `thumb_up.jpg`, `pointing_up.jpg`, and a blank
+image. A second test feeds distinct copies of the palm fixture through the real
+worker and actual GUI/controller: a one-second hold starts the timer, five ticks
+save a photo, and the next photo button remains available. Camera acquisition is
+synthetic and no live Drive service is contacted; recognition accuracy/latency on
+the user's webcam, lighting, and device are still unverified.
+
+Ten new palm renders cover ready, holding (70%), release required, loading, and
+unavailable states at both desktop sizes. The renderer checks natural wrapped
+guidance height and continued button availability. All were visually inspected;
+the hold copy was shortened to fit a compact guide. The original 38 report
+entries remain unchanged. Main-screen, waiting-camera, selection, and diagnostics
+contact sheets remain byte-identical; the two retake sheets refresh the countdown
+instruction to tell the customer to lower their hand and look at the camera.
+
+![Palm input states at 800x600](palm-800x600.png)
+
+![Palm input states at 1200x800](palm-1200x800.png)
+
 ## Reproduce
 
-Earlier rounds used Python 3.12.14; the manual-retake follow-up used Python 3.12.3.
+Earlier rounds used Python 3.12.14; the manual-retake and palm follow-ups used Python 3.12.3.
 Both used Kivy 2.3.1, OpenCV 5.0.0, SDL2 offscreen, and Mesa llvmpipe. No webcam,
 payment provider, printer, or live Google service was contacted.
 
@@ -245,7 +293,7 @@ SDL_VIDEODRIVER=offscreen PHOTOBOOTH_TEST_GUI=1 python -m unittest discover -s t
 SDL_VIDEODRIVER=offscreen python tools/render_gui.py --output-dir /tmp/photobooth-gui-qa
 ```
 
-The suite passed **54 tests**. Its controller/storage checks include two-session
+The full run passed **73 tests**, including both native palm tests. Its controller/storage checks include two-session
 orders, one retake per session, local PNG and manifest persistence, cached folder
 allocation, an offline upload failure followed by retry, and skipping verified
 uploads. Camera acquisition and Drive access use deterministic fakes. The layout
@@ -255,6 +303,24 @@ The synthetic camera-recovery tests hold controller timers for deterministic
 manual ticks; the pointer and layout tests use Kivy's real event and canvas loop.
 Recovery means fresh frames resume on an existing handle. USB hotplug, driver
 reopening, startup failure recovery, and real-device latency remain unverified.
+
+To include native gesture tests, install `requirements-palm.txt` and set
+`PHOTOBOOTH_PALM_TEST_ASSETS` to a local directory containing the pinned model and
+four public test fixtures. Default runs skip the two native tests when these
+assets are absent. They do not download assets during the suite:
+
+```bash
+PHOTOBOOTH_PALM_TEST_ASSETS=/tmp/photobooth-palm-assets SDL_VIDEODRIVER=offscreen PHOTOBOOTH_TEST_GUI=1 python -m unittest discover -s tests -v
+```
+
+The model is [version 1](https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task),
+8,373,440 bytes, SHA-256 `97952348cf6a6a4915c2ea1496b4b37ebabc50cbbf80571435643c455f2b0482`.
+Fixture URLs:
+[left_hands.jpg](https://storage.googleapis.com/mediapipe-assets/left_hands.jpg),
+[fist.jpg](https://storage.googleapis.com/mediapipe-assets/fist.jpg),
+[thumb_up.jpg](https://storage.googleapis.com/mediapipe-assets/thumb_up.jpg),
+[pointing_up.jpg](https://storage.googleapis.com/mediapipe-assets/pointing_up.jpg).
+Neither native weights nor sample photos are committed to this repository.
 
 The tariff is unchanged: Rp5.000 per session; quantity 2 totals Rp10.000. QRIS
 remains explicitly simulated, printing is not connected, and `ui_tkinter.py` is

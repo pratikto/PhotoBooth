@@ -10,6 +10,7 @@ from contextlib import ExitStack
 import os
 from pathlib import Path
 import tempfile
+import time
 from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
@@ -31,7 +32,8 @@ class CameraRecoveryTests(unittest.TestCase):
         self.stack.enter_context(patch('photobooth.app.Camera', return_value=camera))
         self.stack.enter_context(patch('photobooth.app.AppsScriptDriveClient.from_configuration', return_value=None))
         self.stack.enter_context(patch('photobooth.app.GoogleDriveClient.from_environment', return_value=None))
-        self.stack.enter_context(patch.dict(os.environ, {'PHOTOBOOTH_LOCAL_ONLY': '1'}))
+        self.stack.enter_context(patch.dict(os.environ, {
+            'PHOTOBOOTH_LOCAL_ONLY': '1', 'PHOTOBOOTH_PALM_TRIGGER': '0'}))
         self.stack.enter_context(patch('photobooth.app.KivyHost.after',
                                        return_value=SimpleNamespace(cancel=lambda: None)))
         self.app = PhotoBoothApp()
@@ -44,6 +46,185 @@ class CameraRecoveryTests(unittest.TestCase):
         self.key = self.app.templates[0].template_id
         self.app.ui._change_quantity(self.key, 2)
         self.app.ui.start_button.dispatch('on_release')
+
+    def install_palm_observations(self):
+        """Inject model observations while keeping the real controller and UI."""
+        class Worker:
+            state = 'ready'
+            result = None
+            def submit(self, _frame, _context):
+                pass
+            def poll(self):
+                result, self.result = self.result, None
+                return result
+            def pause(self):
+                self.result = None
+            def close(self):
+                self.state = 'closed'
+        self.app.palm_worker.close()
+        self.app.palm_worker = Worker()
+        self.palm_now = 100.0
+        self.stack.enter_context(patch('photobooth.app.time',
+                                       SimpleNamespace(monotonic=lambda: self.palm_now)))
+
+    def palm_sample(self, score, timestamp, context=None, age=0):
+        from photobooth.palm_gesture import PalmObservation
+        self.palm_now = timestamp
+        self.app.palm_worker.result = PalmObservation(
+            self.app.ui.screen_revision if context is None else context,
+            timestamp - age, score)
+        self.app._update_palm_trigger(self.app.current_frame)
+
+    def test_palm_and_button_share_capture_rules_including_selected_photo_retake(self):
+        self.install_palm_observations()
+        self.order()
+        self.app.ui.payment_confirm.dispatch('on_release')
+        for t in (100, 100.2, 100.4, 100.6, 100.8):
+            self.palm_sample(.95, t)
+            self.assertIsNone(self.app._countdown_after_id)
+        self.palm_sample(.95, 101.01)
+        self.assertIsNotNone(self.app._countdown_after_id)
+        self.assertTrue(self.app.ui.capture_button.disabled)
+        self.assertIn('Turunkan tangan', self.app.ui.capture_hint.text)
+        timer = self.app._countdown_after_id
+        for t in (101.2, 101.4, 101.6):
+            self.palm_sample(.95, t)
+        self.assertIs(self.app._countdown_after_id, timer)
+        for _ in range(5):
+            self.app._countdown_tick()
+        self.assertEqual(len(self.app.current_session.initial_photo_paths), 1)
+        for t in (102, 102.2, 102.4, 102.6, 102.8, 103.01):
+            self.palm_sample(.95, t)
+        self.assertIsNone(self.app._countdown_after_id)  # Same held palm cannot take photo two.
+        self.assertFalse(self.app.ui.capture_button.disabled)
+        self.app.ui.capture_button.dispatch('on_release')  # Button works even while palm is latched.
+        for _ in range(5):
+            self.app._countdown_tick()
+        self.assertEqual(len(self.app.current_session.initial_photo_paths), 2)
+        for t in (104, 104.2, 104.41):
+            self.palm_sample(0, t)
+        for t in (104.6, 104.8, 105, 105.2, 105.4, 105.61):
+            self.palm_sample(.95, t)
+        self.assertIsNotNone(self.app._countdown_after_id)
+        for _ in range(5):
+            self.app._countdown_tick()
+        self.assertEqual(self.app.ui.current_screen, 'review')
+        for t in (106, 106.2, 106.4, 106.6, 106.8, 107.01):
+            self.palm_sample(.95, t)
+        self.assertEqual(self.app.ui.current_screen, 'review')  # Gestures never choose retake.
+        self.assertIsNone(self.app._countdown_after_id)
+        self.app._select_photo(2)
+        originals = list(self.app.current_session.final_photo_paths)
+        self.app.ui.retake_button.dispatch('on_release')
+        self.assertIsNone(self.app._countdown_after_id)
+        for t in (108, 108.2, 108.41):
+            self.palm_sample(0, t)
+        for t in (108.6, 108.8, 109, 109.2, 109.4, 109.61):
+            self.palm_sample(.95, t)
+        self.assertIsNotNone(self.app._countdown_after_id)
+        self.assertFalse(self.app.current_session.retake_used)
+        for _ in range(5):
+            self.app._countdown_tick()
+        session = self.app.current_session
+        self.assertTrue(session.retake_used)
+        self.assertEqual(session.final_photo_paths, originals[:2] + [session.retake_path])
+        self.assertTrue(self.app.ui.retake_button.disabled)
+
+    def test_stale_wrong_page_missing_camera_and_low_confidence_cannot_fire_palm_shutter(self):
+        self.install_palm_observations()
+        self.order()
+        # Neither payment nor another screen accepts a gesture confirmation.
+        for t in (100, 100.2, 100.4, 100.6, 100.8, 101.01):
+            self.palm_sample(.95, t)
+        self.assertIsNone(self.app.transaction)
+        self.app.ui.payment_confirm.dispatch('on_release')
+        old_page = self.app.ui.screen_revision - 1
+        for start, kwargs in ((102, {'context': old_page}), (104, {'age': 1}), (106, {}),
+                              (108, {'age': -1})):
+            for offset in (0, .2, .4, .6, .8, 1.01):
+                self.palm_sample(.95 if kwargs else .4, start + offset, **kwargs)
+            self.assertIsNone(self.app._countdown_after_id)
+        self.app.camera_ready = False
+        for t in (110, 110.2, 110.4, 110.6, 110.8, 111.01):
+            self.palm_sample(.95, t)
+        self.assertIsNone(self.app._countdown_after_id)
+        self.app.camera_ready = True
+        self.app.ui.capture_button.dispatch('on_release')
+        self.assertIsNotNone(self.app._countdown_after_id)  # Gesture rejection cannot break button use.
+
+    def test_unavailable_detector_keeps_the_existing_button_and_does_not_consume_retake(self):
+        self.install_palm_observations()
+        self.order()
+        self.app.ui.payment_confirm.dispatch('on_release')
+        self.app.palm_worker.state = 'unavailable'
+        for t in (100, 100.2, 100.4, 100.6, 100.8, 101.01):
+            self.palm_sample(.95, t)
+        self.assertIsNone(self.app._countdown_after_id)
+        self.assertIn('Gestur belum tersedia', self.app.ui.capture_hint.text)
+        self.assertFalse(self.app.ui.capture_button.disabled)
+        self.assertFalse(self.app.current_session.retake_used)
+        self.app.ui.capture_button.dispatch('on_release')
+        self.assertIsNotNone(self.app._countdown_after_id)
+
+    def test_button_press_during_a_partial_palm_hold_does_not_restart_countdown(self):
+        self.install_palm_observations()
+        self.order()
+        self.app.ui.payment_confirm.dispatch('on_release')
+        for t in (100, 100.2, 100.4, 100.6, 100.8):
+            self.palm_sample(.95, t)
+        self.app.ui.capture_button.dispatch('on_release')
+        self.app._countdown_tick()
+        self.assertEqual(self.app._countdown_remaining, 4)
+        for t in (101, 101.2, 101.4, 101.6, 101.8, 102.01):
+            self.palm_sample(.95, t)
+        self.assertEqual(self.app._countdown_remaining, 4)
+        self.assertEqual(len(self.app.current_session.initial_photo_paths), 0)
+
+    def test_fresh_delayed_inferences_use_frame_times_for_a_continuous_hold(self):
+        """A constant 300ms inference delay must not reset every valid sample."""
+        self.install_palm_observations()
+        self.order()
+        self.app.ui.payment_confirm.dispatch('on_release')
+        for t in (100, 100.2, 100.4, 100.6, 100.8):
+            self.palm_sample(.95, t, age=.3)
+            self.assertIsNone(self.app._countdown_after_id)
+        self.palm_sample(.95, 101.01, age=.3)
+        self.assertIsNotNone(self.app._countdown_after_id)
+
+    @unittest.skipUnless(os.environ.get('PHOTOBOOTH_PALM_TEST_ASSETS'), 'Native model assets are opt-in')
+    def test_real_model_worker_drives_the_actual_controller_and_keeps_button_capture(self):
+        """Use real inference and mailboxes; only camera acquisition is synthetic."""
+        import cv2
+        from photobooth.palm_gesture import PalmGestureWorker
+
+        assets = Path(os.environ['PHOTOBOOTH_PALM_TEST_ASSETS'])
+        self.app.palm_worker.close()
+        self.app.palm_worker = PalmGestureWorker(assets / 'gesture_recognizer.task')
+        self.app.palm_worker.start()
+        deadline = time.monotonic() + 5
+        while self.app.palm_worker.state == 'loading' and time.monotonic() < deadline:
+            time.sleep(.01)
+        self.assertEqual(self.app.palm_worker.state, 'ready')
+        self.order()
+        self.app.ui.payment_confirm.dispatch('on_release')
+        original_button = self.app.ui.capture_button
+        self.assertFalse(original_button.disabled)
+        source = cv2.imread(str(assets / 'left_hands.jpg'))
+        self.assertIsNotNone(source)
+        deadline = time.monotonic() + 5
+        while self.app._countdown_after_id is None and time.monotonic() < deadline:
+            self.latest = source.copy()  # Each read represents a distinct camera exposure.
+            self.app._update_preview()
+            time.sleep(.12)
+        self.assertIsNotNone(self.app._countdown_after_id)
+        self.assertEqual(self.app._countdown_remaining, 5)
+        self.assertIsNotNone(original_button)
+        self.assertIn('AMBIL FOTO', original_button.text)
+        self.assertEqual(len(self.app.current_session.initial_photo_paths), 0)
+        for _ in range(5):
+            self.app._countdown_tick()
+        self.assertEqual(len(self.app.current_session.initial_photo_paths), 1)
+        self.assertFalse(self.app.ui.capture_button.disabled)
 
     def test_retake_waits_for_capture_press_before_replacing_the_selected_photo(self):
         """Opening retake previews the camera; only a second press starts capture.

@@ -140,6 +140,11 @@ class PhotoBoothUI:
         self.preview = None
         self.live_caption = None
         self.camera_wait_hint = None
+        self.capture_hint = None
+        self._capture_running = False
+        self._palm_state = 'disabled'
+        self._palm_progress = 0.0
+        self._palm_needs_release = False
         self.home_start_button = None
         self._review_can_retake = False
         self._review_has_retake = False
@@ -275,6 +280,8 @@ class PhotoBoothUI:
         self.preview = None
         self.live_caption = None
         self.camera_wait_hint = None
+        self.capture_hint = None
+        self._capture_running = False
         self.home_start_button = None
         self._review_can_retake = False
         self._review_has_retake = False
@@ -631,7 +638,10 @@ class PhotoBoothUI:
                                      13, 28, color=GREY, bold=True))
         self.countdown = self._label(countdown_text or 'Siap?', 44, bold=True, align='center')
         guide.add_widget(self.countdown)
-        guide.add_widget(self._label('Atur posisi, lalu tekan tombol.\nCountdown 5 detik.', 14, 66, color=GREY))
+        self.capture_hint = self._label('', 14, 66, color=GREY)
+        guide.add_widget(self.capture_hint)
+        self._palm_progress = 0.0
+        self._refresh_capture_hint()
         progress = BoxLayout(size_hint_y=None, height=dp(36), spacing=dp(6))
         for index in range(3):
             progress.add_widget(self._label(f'{index + 1:02d}\n' + ('Siap' if index < capture_count else '—'),
@@ -682,8 +692,43 @@ class PhotoBoothUI:
     def set_countdown(self, seconds, is_retake=False):
         """Render controller timer ticks without sleeping on the GUI thread."""
         if self.current_screen == 'capture':
+            self._capture_running = True
             self.countdown.text = str(seconds)
+            self._refresh_capture_hint()
             self.set_capture_enabled(False)
+
+    @property
+    def screen_revision(self):
+        """Tag asynchronous gesture work with this exact page's lifetime."""
+        return self._screen_revision
+
+    def set_palm_status(self, state, progress=0.0, needs_release=False):
+        """Update one existing guidance slot; the photo button stays in place."""
+        self._palm_state = state
+        self._palm_progress = progress
+        self._palm_needs_release = needs_release
+        self._refresh_capture_hint()
+
+    def _refresh_capture_hint(self):
+        """Keep gesture feedback compact without exposing SDK/download details."""
+        if self.current_screen != 'capture' or self.capture_hint is None:
+            return
+        if self._capture_running:
+            text = 'Turunkan tangan,\nlalu lihat ke kamera.'
+        elif self._palm_state in {'idle', 'loading'}:
+            text = 'Tekan tombol untuk foto.\nGestur sedang disiapkan...'
+        elif self._palm_state == 'ready':
+            if self._palm_needs_release:
+                text = 'Turunkan telapak sebentar.\nTombol tetap bisa dipakai.'
+            elif self._palm_progress > 0:
+                text = f'Telapak terdeteksi · {self._palm_progress:.0%}\nTahan sebentar lagi.'
+            else:
+                text = 'Tekan tombol atau angkat\ntelapak terbuka 1 detik.'
+        elif self._palm_state == 'unavailable':
+            text = 'Gestur belum tersedia.\nTekan tombol untuk foto.'
+        else:
+            text = 'Atur posisi, lalu tekan tombol.\nCountdown 5 detik.'
+        self.capture_hint.text = text
 
     def set_capture_enabled(self, enabled):
         if self.current_screen == 'capture':

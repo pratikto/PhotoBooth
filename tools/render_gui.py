@@ -29,6 +29,7 @@ from kivy.core.window import Window
 from kivy.uix.image import Image as KivyImage
 from kivy.uix.button import Button
 from kivy.uix.scrollview import ScrollView
+from kivy.core.text import Label as CoreLabel
 
 from photobooth.catalog import compose_result, get_templates
 from photobooth.qr_code import create_qr_image
@@ -45,6 +46,7 @@ STATE_SCREENS = ('payment-waiting', 'capture-waiting', 'review-used', 'review-wa
 SELECTION_SCREENS = ('templates-empty', 'templates-one', 'templates', 'templates-bottom')
 DIAGNOSTIC_SCREENS = ('templates-status', 'templates-one')
 RETAKE_SCREENS = ('retake-ready', 'retake-countdown')
+PALM_SCREENS = ('palm-ready', 'palm-hold', 'palm-release', 'palm-loading', 'palm-unavailable')
 
 
 def synthetic_portrait(index):
@@ -191,6 +193,10 @@ def main():
         last = ui._template_cards[templates[-1].template_id]
         last.parent.parent.scroll_y = 0
 
+    def palm_screen(state='ready', progress=0.0, needs_release=False):
+        ui.show_capture('Sesi 1 dari 8 · Template 1', 1, synthetic_portrait(0))
+        ui.set_palm_status(state, progress, needs_release)
+
     # Additional states catch issues hidden by the six happy-path screenshots:
     # scrolling to the last template, active countdown, an exhausted retake,
     # local-only output, and a next-session action without a completion timer.
@@ -217,6 +223,11 @@ def main():
         ('retake-countdown', lambda: (ui.show_capture('Sesi 1 dari 8 · Template 1', 3, synthetic_portrait(0),
                                                      action_label='RETAKE FOTO TERPILIH', is_retake=True),
                                       ui.set_countdown(5, is_retake=True)), None),
+        ('palm-ready', palm_screen, None),
+        ('palm-hold', lambda: palm_screen(progress=.7), None),
+        ('palm-release', lambda: palm_screen(needs_release=True), None),
+        ('palm-loading', lambda: palm_screen(state='loading'), None),
+        ('palm-unavailable', lambda: palm_screen(state='unavailable'), None),
         ('review', lambda: ui.show_review(paths, 'Sesi 1 dari 8 · Template 1', 1, True), None),
         ('review-used', lambda: ui.show_review(paths, 'Sesi 1 dari 8 · Template 1', 1, False), None),
         ('review-waiting', lambda: ui.show_review(paths, 'Sesi 1 dari 8 · Template 1', 1, True),
@@ -245,6 +256,16 @@ def main():
                     if (box[0] < slot[0] - 1 or box[1] < slot[1] - 1
                             or box[2] > slot[2] + 1 or box[3] > slot[3] + 1):
                         raise AssertionError(f'Preview overlay leaves its slot in {name} at {size}')
+                # Labels constrained to a fixed text_size can hide overflow in
+                # texture_size. Measure their natural wrapped height instead.
+                hint = ui.capture_hint
+                natural = CoreLabel(text=hint.text, font_name=hint.font_name,
+                                    font_size=hint.font_size, text_size=(hint.width, None))
+                natural.refresh()
+                if not fully_visible(hint) or natural.texture.size[1] > hint.height + 1:
+                    raise AssertionError(f'Capture guidance is clipped in {name} at {size}')
+                if name in PALM_SCREENS and ui.capture_button.disabled:
+                    raise AssertionError(f'Palm state must preserve button capture in {name}')
             decoded = None
             if name in ('payment', 'payment-waiting'):
                 decoded = screenshot_qr(path, ui.payment_qr)
@@ -273,6 +294,9 @@ def main():
                 raise AssertionError('Retake must be disabled when its quota or camera is unavailable')
             record = {'screen': name, 'size': list(size), 'file': path.name,
                       'stage_fits': fits, 'decoded_qr': decoded}
+            if name in PALM_SCREENS:
+                record['palm_hint'] = ui.capture_hint.text
+                record['button_capture_available'] = not ui.capture_button.disabled
             if name == 'templates-status':
                 if (not ui.status.is_shortened or ui.status_details.disabled
                         or ui.status_details.parent is not ui._footer_row
@@ -346,6 +370,7 @@ def main():
         Window.size = size
         # A waiting-camera fixture must not leak into the next healthy scene.
         ui.set_camera_status(True)
+        ui.set_palm_status('disabled')  # A gesture fixture must not leak into the next scene.
         build()
         if after_layout is not None:
             Clock.schedule_once(lambda _dt: after_layout(), .15)
@@ -367,6 +392,7 @@ def main():
         overview(output, size, SELECTION_SCREENS, 'selection')
         overview(output, size, DIAGNOSTIC_SCREENS, 'diagnostics')
         overview(output, size, RETAKE_SCREENS, 'retake')
+        overview(output, size, PALM_SCREENS, 'palm')
     print(f'{len(records)} real-widget renders saved in {output}')
 
 

@@ -74,9 +74,60 @@ For every ordered session:
 2. Let the customer choose which captured photo to use.
 3. Allow at most one retake in that session. The retake replaces the selected photo.
 4. Keep the retake button disabled until a photo is selected, and show the selected photo and remaining retake allowance.
-5. **RETAKE FOTO TERPILIH** opens the replacement-photo camera preview without starting a timer. Let the customer pose, then start the five-second countdown only after **AMBIL FOTO PENGGANTI** is pressed. The allowance is consumed only when the replacement is saved successfully.
+5. **RETAKE FOTO TERPILIH** opens the replacement-photo camera preview without starting a timer. Let the customer pose, then start the five-second countdown by pressing **AMBIL FOTO PENGGANTI** or deliberately holding an open palm when the optional gesture input is ready. The allowance is consumed only when the replacement is saved successfully.
 
 The retake allowance resets for each new session. It does not reset between attempts within the same session.
+
+#### Optional open-palm shutter
+
+The photo button remains available. On a capture page, the customer may instead
+show an open palm to the camera for approximately **one second**, then lower the
+hand during the normal **five-second countdown**. This also works on the prepared
+retake page; gestures never select a photo, pay, navigate, or enter retake.
+
+Install the optional detector in the same Python 3.12 environment used by Kivy:
+
+```powershell
+.\.venv-kivy\Scripts\python.exe -m pip install -r requirements-palm.txt
+.\.venv-kivy\Scripts\python.exe main.py
+```
+
+On its first run, a background worker downloads the approximately 8 MB public
+MediaPipe gesture model into `data/models/gesture_recognizer.task`. The GUI says
+the gesture input is being prepared, and button capture stays available. The
+download is pinned to model version 1 and checked against its size and SHA-256
+before atomic publication. Later runs use the cached model offline. Camera
+frames stay on the device; no recognition service or API key is used.
+
+The preview's guidance shows hold progress. One sustained palm produces one
+shutter; after either a button or gesture shutter, a non-palm interval of at
+least 0.4 seconds is required to re-arm gestures. Gaps, duplicate camera arrays,
+old-page results, and stale observations cannot accumulate a hold. Capture and
+retake still share the existing readiness, countdown, and quota checks.
+
+The detector owns a separate thread and a latest-frame mailbox, with at most ten
+inferences per second on a copy resized within 480x360. Photo storage keeps the
+original camera resolution. Missing MediaPipe, unsupported native binaries, a
+model download error, or inference failure leaves the normal button usable.
+To disable gesture initialization in a PowerShell session:
+
+```powershell
+$env:PHOTOBOOTH_PALM_TRIGGER="0"
+```
+
+The optional dependency is pinned to MediaPipe 0.10.32, which provides a Windows
+x64 wheel for the current laptop workflow. This does not establish compatibility
+with ODROID XU4's ARM32 platform; use base requirements/button input there until
+a native backend is verified. Base requirements use `opencv-contrib-python`,
+the same OpenCV distribution required by MediaPipe, instead of `opencv-python`.
+Keep only the contrib distribution in a clean environment. If an older setup
+contains both distributions and OpenCV becomes inconsistent, uninstall both and
+reinstall `requirements-palm.txt` to restore a single `cv2` provider.
+
+Implementation and setup references:
+[MediaPipe Python guide](https://ai.google.dev/edge/mediapipe/solutions/vision/gesture_recognizer/python),
+[model and gesture labels](https://ai.google.dev/edge/mediapipe/solutions/vision/gesture_recognizer#models),
+and [pinned package wheels](https://pypi.org/project/mediapipe/0.10.32/#files).
 
 ### 5. Show progress and finish the order
 
@@ -175,6 +226,7 @@ Run the local MVP with:
 - photobooth/workflow.py expands quantities into sessions and enforces one retake per session.
 - photobooth/transaction_store.py reserves transaction IDs and writes local photos and manifests.
 - photobooth/camera.py manages the camera connection and frame capture.
+- photobooth/palm_gesture.py implements optional local recognition, the hold/release gate, model caching, and its nonblocking worker.
 - photobooth/drive_storage.py handles Apps Script and direct OAuth Drive operations, sharing, uploads, and verification.
 - photobooth/drive_pool.py maintains the local cache of ready and assigned Drive slots.
 - photobooth/drive_sync.py syncs slot assignments and pending transaction uploads in the background.
