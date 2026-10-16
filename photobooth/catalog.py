@@ -4,7 +4,7 @@
 """Sample photobooth templates and local image composition.
 
 The bundled template art is illustrative for the local MVP. Replace the sample
-artwork when the final Meong Photo Booth templates are ready.
+artwork when the final Meong Photobooth templates are ready.
 """
 
 from dataclasses import dataclass
@@ -192,7 +192,7 @@ def compose_result(
 
     title_font = _font(48, bold=True)
     small_font = _font(24)
-    draw.text((105, 48), "MEONGS PHOTOBOOTH", fill=template.foreground, font=title_font)
+    draw.text((105, 48), "MEONG PHOTOBOOTH", fill=template.foreground, font=title_font)
     draw.text(
         (108, 112),
         template.name.upper(),
@@ -245,14 +245,11 @@ def compose_result(
         parsed = urlparse(folder_url)
         if parsed.scheme != "https" or not parsed.netloc:
             raise ValueError("The result QR requires a valid HTTPS folder URL.")
-        qr = create_qr_image(folder_url)
-        # create_qr_image uses 8px modules including a four-module quiet zone.
-        # Resize by an INTEGER module scale with nearest-neighbor sampling;
-        # arbitrary resizing can introduce uneven dots and blur at print time.
-        module_count = qr.width // 8
-        module_scale = max(1, 210 // module_count)
-        qr_size = module_count * module_scale
-        qr = qr.resize((qr_size, qr_size), Image.Resampling.NEAREST)
+        # Render at the final footer scale so the full logo is resized only
+        # once and every QR module keeps an integer width. The shared helper
+        # also protects recognition patterns and the white scan margin.
+        qr = create_qr_image(folder_url, max_size=210)
+        qr_size = qr.width
         canvas.paste(qr, (width - 115 - qr_size, 750))
         draw.text((108, footer_top + 73), "SCAN UNTUK MEMBUKA FOLDER FOTO",
                   fill=template.foreground, font=_font(28, bold=True))

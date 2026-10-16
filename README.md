@@ -1,4 +1,4 @@
-# PhotoBooth
+# Meong Photobooth
 
 A Python photo booth application built with Kivy, OpenCV, and Pillow. The attached procedure document is the functional source of truth. QRIS and printing are intentionally out of the current implementation until those integrations are ready.
 
@@ -141,6 +141,34 @@ The interface should show the customer's progress through the order. For orders 
 ### 6. Upload results and provide the folder QR
 
 The QR printed with the photo points to the transaction folder, so the customer can find the raw photos and template results together.
+
+#### Full-logo folder QR
+
+The result-screen QR and the QR embedded in every newly saved three-photo
+composition now use the approved **full MEONG PHOTOBOOTH logo inside the QR**.
+The complete camera-cat, grayscale trail, and wordmark are bundled in
+[`photobooth/assets/meong_photobooth.png`](photobooth/assets/meong_photobooth.png).
+The application and composition titles also use **MEONG**, without an S.
+
+[`photobooth/qr_code.py`](photobooth/qr_code.py) generates the QR automatically
+from the transaction's cached folder URL. No manual QR editing, new Drive
+configuration, or internet connection is needed to insert the logo. Different
+transactions encode their own folder URLs; the artwork stays the same.
+
+The helper uses high error correction, a small white logo plate, and a
+four-module white scan margin. Its placement avoids finder, timing, and
+alignment patterns; a central alignment marker can move the logo slightly
+within the QR. The composition requests its final pixel size directly, keeping
+each data module an integer number of pixels wide.
+
+For a future thermal-printer adapter, use
+`create_qr_image(folder_url, max_size=210, monochrome=True)` to obtain a QR with
+a black/white logo. Choose the size for the real printer's available dot width
+and verify a physical print before deployment. The QR matrix itself stays crisp;
+only the artwork is dithered. Printer transport is still not implemented.
+Payment-demo codes remain plain and separate from the customer folder QR.
+See the [branded QR verification](docs/qa/branded-qr.md) for examples, test
+commands, and the limits of the digital checks.
 
 **When online:**
 

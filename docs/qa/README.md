@@ -1,5 +1,8 @@
 # Desktop GUI verification
 
+The [full-logo folder QR follow-up](branded-qr.md) records the approved MEONG
+branding, QR decoding checks, and updated result-screen examples.
+
 Layout baseline: `c518e91df5a8311a08a167043e0f1e74aa50555c` on `feature/kivy-gui`.
 The frame-recovery follow-up starts from `a6707e6c7168248c7b80b1b36c8042cd7de1f20f`.
 The screen-action/selection follow-up starts from `26e27a722ab965e62d78b572b9c1b1e39634e6ff`.
@@ -321,7 +324,7 @@ SDL_VIDEODRIVER=offscreen python tools/render_gui.py --output-dir /tmp/photoboot
 node --test tests/test_apps_script_retention.cjs
 ```
 
-The current full run passed **90 Python tests**, including both native palm tests,
+The photo-retention run passed **90 Python tests**, including both native palm tests,
 and **12 Apps Script tests**. Its controller/storage checks include two-session
 orders, one retake per session, local PNG and manifest persistence, cached folder
 allocation, an offline upload failure followed by retry, and skipping verified

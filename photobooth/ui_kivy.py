@@ -42,7 +42,7 @@ class KivyHost(App):
 
     def __init__(self, on_close):
         super().__init__()
-        self.title = 'Meongs Photobooth'
+        self.title = 'Meong Photobooth'
         self._on_close = on_close
         self.view = None
         # Desktop starts with a useful kiosk-sized canvas. Responsive layouts
@@ -155,7 +155,9 @@ class PhotoBoothUI:
         root.view = self.shell
         header = BoxLayout(size_hint_y=None, height=dp(58), spacing=dp(12))
         self._header_row = header
-        self.brand = self._label('meongs.', 29, bold=True)
+        # Keep the compact header wordmark consistent with MEONG PHOTOBOOTH
+        # in the window title, full QR logo, and saved composition header.
+        self.brand = self._label('meong.', 29, bold=True)
         self.brand.size_hint_x = .4
         header.add_widget(self.brand)
         self.steps = self._label('01  Template    /    02  Bayar    /    03  Foto    /    04  Hasil', 12,
@@ -566,7 +568,10 @@ class PhotoBoothUI:
         self._payment_submitted = False
         pay = Panel(orientation='vertical', padding=dp(14), spacing=dp(6))
         pay.add_widget(self._label('QR DEMO / TIDAK UNTUK TRANSFER', 12, 24, bold=True, color=CORAL, align='center'))
-        qr = self._display(create_qr_image(f'PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR {total_amount}'), crisp=True)
+        # The selected Meong branding belongs to the photo-folder QR. Keep the
+        # separate payment simulation plain and explicitly non-payable.
+        qr = self._display(create_qr_image(
+            f'PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR {total_amount}', with_logo=False), crisp=True)
         qr.size_hint_y = None
         # 180px plus its quiet zone is legible at 800x600. The old 228px QR
         # and 420px minimum card were clipped by the two full-width actions.

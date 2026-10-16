@@ -653,6 +653,10 @@ class KivyFlowTests(unittest.TestCase):
         callbacks['on_start'] = orders.append
         host = KivyHost(lambda: None)
         ui = PhotoBoothUI(host, get_templates(), **callbacks)
+        # Both the native window title and compact on-screen wordmark must
+        # agree with the approved MEONG spelling, without the old final S.
+        self.assertEqual(host.title, 'Meong Photobooth')
+        self.assertEqual(ui.brand.text, 'meong.')
         ui.show_welcome(True, 'Ready')
         ui.show_template_selection(True, 'Preparing storage', storage_ready=False)
         key = ui.templates[0].template_id

@@ -242,3 +242,10 @@ class EmbeddedFolderQRTests(unittest.TestCase):
                     decoded, points, _ = cv2.QRCodeDetector().detectAndDecode(result)
                     self.assertEqual(decoded, url)
                     self.assertGreater(float(points[:, :, 1].min()), 735)
+                    # Confirm the saved/uploaded result contains the colored
+                    # full-logo insert, rather than only the separate GUI QR.
+                    # Corner bounds exclude the template's colored background.
+                    x0, y0 = np.floor(points.min(axis=1)[0]).astype(int)
+                    x1, y1 = np.ceil(points.max(axis=1)[0]).astype(int)
+                    qr_pixels = result[y0:y1 + 1, x0:x1 + 1]
+                    self.assertTrue(np.any(qr_pixels[:, :, 0] != qr_pixels[:, :, 2]))

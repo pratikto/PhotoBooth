@@ -81,7 +81,7 @@ class PhotoBoothUI:
     def _configure_window(self) -> None:
         # Set the kiosk window size, title, background, and resize behavior so the interface has a
         # predictable layout.
-        self.root.title("Meongs Photobooth")
+        self.root.title("Meong Photobooth")
         self.root.geometry("1280x800")
         self.root.minsize(1024, 680)
         self.root.configure(bg=APP_BG)
@@ -106,7 +106,7 @@ class PhotoBoothUI:
 
         tk.Label(
             self.header,
-            text="Meongs Photobooth",
+            text="Meong Photobooth",
             font=("Arial", 20, "bold"),
             fg=NAVY,
             bg=WHITE,
