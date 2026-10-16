@@ -10,6 +10,7 @@ The complete-status follow-up starts from `ca51189f48073da8a5f6775c06b771e56403d
 The alpha-compositing follow-up starts from `2806e28e733ca91a9a9e05fb238a9ef175ccc4dd`.
 The manual-retake follow-up starts from `42a184c1ff1bf7973570f097c9d6d709f92429ef`.
 The open-palm follow-up starts from `f9a5491e0ac93a6bec811c2c56fcd32f7ba51f0d`.
+The photo-retention follow-up starts from `ceaa41ca6b596a766bcf6a03818e43afa2de240d`.
 The original working copy was left untouched. Source files in the separate
 checkout were checked against the freshly fetched GitHub blobs before editing.
 
@@ -282,18 +283,46 @@ instruction to tell the customer to lower their hand and look at the camera.
 
 ![Palm input states at 1200x800](palm-1200x800.png)
 
+## Local and cloud photo retention
+
+Photo bytes expire at 15 days on the booth and 30 days in Drive, measured from
+the original transaction rather than pre-created slot age or upload attempts.
+The result QR caption now shows **Tersimpan 30 hari di Drive**. Both full-size
+result pages were inspected at 800x600 and 1200x800; the caption fits and the
+QR still decodes. Only the two overview sheets change. The other ten sheets
+and all 48 layout/QR report entries remain byte-identical.
+
+The new retention checks exercise temporary real JPEG/PNG files, both exact
+deadline boundaries, expired local-only/failed/verified queues, permanent Drive
+deletion scope, old unused slots, clock registration, and retry immutability.
+They also cover late upload/resume callbacks after purge, an abandoned review
+trying to compose after 15 days, linked external directories, legacy migration,
+and a backend whose cloud timer has not been activated. Manifests and counters
+remain, expired image bytes disappear, and the next transaction ID is not reused.
+
+The Apps Script tests execute the actual `Code.gs` in a Node VM using a scoped
+in-memory Drive and synthetic timestamps. They cover permanent deletion, setup
+and read-only preview, disabled cleanup before activation, authentication,
+permission failures and retries, corrupt ledgers, expired uploads, and bounded
+100-folder cleanup with a continuation cursor. No live Drive deletion or
+Apps Script deployment was performed. The independent hourly cloud trigger
+still requires the operator's [activation steps](../photo-retention.md).
+
 ## Reproduce
 
 Earlier rounds used Python 3.12.14; the manual-retake and palm follow-ups used Python 3.12.3.
-Both used Kivy 2.3.1, OpenCV 5.0.0, SDL2 offscreen, and Mesa llvmpipe. No webcam,
+The retention follow-up also used Python 3.12.3 and Node 24.19.0. Both Python environments
+used Kivy 2.3.1, OpenCV 5.0.0, SDL2 offscreen, and Mesa llvmpipe. No webcam,
 payment provider, printer, or live Google service was contacted.
 
 ```bash
 SDL_VIDEODRIVER=offscreen PHOTOBOOTH_TEST_GUI=1 python -m unittest discover -s tests -v
 SDL_VIDEODRIVER=offscreen python tools/render_gui.py --output-dir /tmp/photobooth-gui-qa
+node --test tests/test_apps_script_retention.cjs
 ```
 
-The full run passed **73 tests**, including both native palm tests. Its controller/storage checks include two-session
+The current full run passed **90 Python tests**, including both native palm tests,
+and **12 Apps Script tests**. Its controller/storage checks include two-session
 orders, one retake per session, local PNG and manifest persistence, cached folder
 allocation, an offline upload failure followed by retry, and skipping verified
 uploads. Camera acquisition and Drive access use deterministic fakes. The layout

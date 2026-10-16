@@ -14,7 +14,8 @@ The first implementation milestone includes:
 - One transaction folder slot for all sessions in an order, named with the booth ID and an incrementing eight-digit counter, such as PB001_00000001.
 - A persistent local pool targeting at least 25 verified Drive folders. Each folder is created with its final incrementing transaction ID, so assignment does not rename it.
 - A cached folder ID and URL for each slot, so an assigned transaction can continue offline and show the same folder QR.
-- A local manifest and retryable upload queue. Uploads are identified by transaction-relative path, checked by size and checksum, and retained locally until verified in Drive. Direct OAuth uploads are resumable; the Apps Script backend retries whole files idempotently.
+- A local manifest and retryable upload queue. Uploads are identified by transaction-relative path and checked by size and checksum. Local photo retention is limited to 15 days even when upload has not succeeded. Direct OAuth uploads are resumable; the Apps Script backend retries whole files idempotently.
+- Automatic photo retention: 15 days on the booth and 30 days in Google Drive, measured from the transaction start. Drive's independent hourly timer requires the Apps Script setup below.
 
 QRIS payment and printing are not implemented. The bundled template artwork is illustrative and should be replaced with the final designs before operating the booth.
 
@@ -206,6 +207,31 @@ Run the local MVP with:
 
     python main.py
 
+## Photo retention: 15 days locally, 30 days in Drive
+
+| Storage | Photo lifetime | Cleanup |
+| --- | --- | --- |
+| Booth / platform (`photos/`) | 15 days from transaction start | At application startup and hourly while running |
+| Google Drive transaction folder | 30 days from transaction start | Independent hourly Apps Script trigger after activation |
+
+Both raw captures (including retakes) and final compositions expire. Upload
+retries and old pre-created empty slots do not restart the clock. Offline or
+failed uploads also lose their local photo bytes at 15 days. Small manifests,
+transaction counters, and folder-slot ledgers remain so expired uploads cannot
+resume or transaction IDs be reused. Cleanup occurs on the first scheduled pass
+at or after the deadline; a powered-off booth cleans its local files on restart.
+
+**Activate the cloud schedule in the existing Apps Script project:** update
+[`apps_script/Code.gs`](apps_script/Code.gs), enable **Drive API v3** in
+**Services**, run **`setupPhotoRetention`** once as the folder owner and authorize
+it, then update the existing Web App deployment to a **new version**. Preserve
+`UPLOAD_TOKEN`, `DRIVE_FOLDER_ID`, and the `/exec` URL. Updating Python alone
+does not install the cloud timer. Cloud cleanup permanently deletes expired
+managed folders, and their QR links stop working afterwards.
+
+See [photo retention setup and recovery](docs/photo-retention.md) for preview,
+existing-photo migration, activation verification, and the direct-OAuth limitation.
+
 ## Troubleshooting
 
 - The application uses camera index 0 by default. If the USB camera is not detected, check the camera index configured in `photobooth/camera.py`.
@@ -213,7 +239,8 @@ Run the local MVP with:
 - Close other applications that may be using the camera, such as Zoom, Teams, or Camera.
 - Photos and transaction manifests are stored under `photos/<transaction-id>`. Preserve `data/booth_state.json` and `data/drive_pool.json` with the transaction ledger and folder-link cache.
 - If there are no ready Drive slots, check internet access and Apps Script configuration. The deployed Web App must include the actions in `apps_script/Code.gs`; the original upload-only deployment cannot create transaction folders. New transactions remain disabled until a slot is verified.
-- An `ACTION_REQUIRED` upload or slot remains on the device for staff attention; the application does not delete Drive content or pending local files.
+- An `ACTION_REQUIRED` upload requires staff attention before its 15-day local photo deadline. Failed/pending uploads do not extend retention. Empty reserved slots, configuration, counters, and manifests are preserved.
+- If the log says `Run setupPhotoRetention and redeploy the Web App`, activate the cloud schedule above. Check Apps Script **Executions** for permission/API errors and `drive_retention_error` in the transaction manifest for registration failures.
 - QRIS and printer integration are not connected to the current UI.
 
 ## Project structure
@@ -230,6 +257,7 @@ Run the local MVP with:
 - photobooth/drive_storage.py handles Apps Script and direct OAuth Drive operations, sharing, uploads, and verification.
 - photobooth/drive_pool.py maintains the local cache of ready and assigned Drive slots.
 - photobooth/drive_sync.py syncs slot assignments and pending transaction uploads in the background.
+- photobooth/retention.py enforces local photo expiry and registers the original transaction deadline with Drive.
 - photobooth/qr_code.py creates the transaction folder QR shown on the result screen.
 - requirements.txt lists the Python packages used by the project.
 - photos/, data/, local configuration, and temporary Python files are excluded from Git.

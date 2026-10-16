@@ -24,6 +24,7 @@ from photobooth.drive_storage import AppsScriptDriveClient, DriveApiError, Googl
 from photobooth.drive_sync import DriveSyncWorker
 from photobooth.palm_gesture import MAX_RESULT_AGE, PALM_CONFIDENCE, PalmGestureWorker, PalmHoldTrigger
 from photobooth.qr_code import create_qr_image
+from photobooth.retention import PhotoRetentionWorker
 from photobooth.transaction_store import LocalTransaction, TransactionStore
 from photobooth.ui_kivy import KivyHost, PhotoBoothUI
 from photobooth.workflow import PhotoSession, SessionPlan, build_session_plans
@@ -119,6 +120,8 @@ class PhotoBoothApp:
             on_close=self.close,
         )
         self.ui.show_welcome(False, "Kamera sedang diperiksa...")
+        self.retention_worker = PhotoRetentionWorker(self.photos_root, self.drive_client)
+        self.retention_worker.start()
         self.root.after(100, self._connect_camera)
         self._schedule_drive_status_update()
 
@@ -608,22 +611,23 @@ class PhotoBoothApp:
             / f"{session.plan.template.template_id}.png"
         )
         try:
-            compose_result(
-                photo_paths=session.final_photo_paths,
-                template=session.plan.template,
-                output_path=output_path,
-                transaction_id=transaction.transaction_id,
-                session_id=session.plan.session_id,
-                # Embed exactly the same folder destination used by the on-screen
-                # QR, including while offline. No payment QR belongs on this image.
-                folder_url=transaction.manifest.get("drive_folder_url"),
-            )
-            self.store.record_output(
-                transaction=transaction,
-                session_id=session.plan.session_id,
-                final_photos=session.final_photo_paths,
-                output_path=output_path,
-            )
+            with self.store.photo_write_lock(transaction):
+                compose_result(
+                    photo_paths=session.final_photo_paths,
+                    template=session.plan.template,
+                    output_path=output_path,
+                    transaction_id=transaction.transaction_id,
+                    session_id=session.plan.session_id,
+                    # Embed exactly the same folder destination used by the on-screen
+                    # QR, including while offline. No payment QR belongs on this image.
+                    folder_url=transaction.manifest.get("drive_folder_url"),
+                )
+                self.store.record_output(
+                    transaction=transaction,
+                    session_id=session.plan.session_id,
+                    final_photos=session.final_photo_paths,
+                    output_path=output_path,
+                )
             session.output_path = output_path
         except (OSError, RuntimeError, ValueError) as error:
             self.ui.show_error(
@@ -862,6 +866,7 @@ class PhotoBoothApp:
         self._preview_after_id = None
         self._drive_status_after_id = None
         self.palm_worker.close()
+        self.retention_worker.stop()
         if self.drive_worker is not None:
             self.drive_worker.stop()
         self.camera.close()

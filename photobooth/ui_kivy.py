@@ -825,7 +825,7 @@ class PhotoBoothUI:
         if qr_image is not None:
             if pixels != self._qr_bytes:
                 self._display(qr_image, self.qr_view, crisp=True)
-            self.qr_title.text = 'Scan untuk membuka folder foto'
+            self.qr_title.text = 'Scan folder foto\nTersimpan 30 hari di Drive'
         else:
             self.qr_view.texture = None
             self.qr_title.text = 'Menyiapkan QR folder...' if pending else 'Mode lokal · QR Drive tidak tersedia'

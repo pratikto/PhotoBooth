@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import base64
 from dataclasses import dataclass
+from datetime import datetime, timezone
 import hashlib
 import json
 import mimetypes
@@ -22,6 +23,8 @@ from typing import Any, Callable
 from urllib.parse import urlencode
 
 import requests
+
+from photobooth.retention import read_drive_retention, retention_metadata, utc_datetime
 
 
 API_ROOT = "https://www.googleapis.com/drive/v3"
@@ -419,6 +422,58 @@ class GoogleDriveClient:
             },
         )
 
+    def register_retention(self, folder_id, transaction_id, started_at):
+        """Bind 30-day expiry to the transaction, preserving an earlier deadline."""
+        metadata = self._request('GET', f'{API_ROOT}/files/{folder_id}',
+                                 params={'fields': 'id,name,mimeType,parents,description,trashed,appProperties',
+                                         'supportsAllDrives': 'true'}).json()
+        if (metadata.get('name') != transaction_id or metadata.get('mimeType') != FOLDER_MIME_TYPE
+                or self.parent_folder_id not in metadata.get('parents', []) or metadata.get('trashed')):
+            raise DriveApiError('Retention folder is outside this booth transaction.', 409)
+        policy = retention_metadata(transaction_id, started_at)
+        existing = read_drive_retention(metadata.get('description'), transaction_id)
+        if metadata.get('description') and existing is None:
+            raise DriveApiError('Unrecognized folder description; retention was not overwritten.', 409)
+        updates = {}
+        if existing and utc_datetime(existing['started_at']) <= utc_datetime(started_at):
+            policy = existing
+        else:
+            updates['description'] = json.dumps(policy)
+        if metadata.get('appProperties', {}).get('photoboothStatus') == 'READY':
+            # Registration proves that the booth has claimed this slot even if
+            # its original assignment acknowledgement is still being retried.
+            updates['appProperties'] = dict(metadata['appProperties'], photoboothStatus='ASSIGNED')
+        if updates:
+            self._request('PATCH', f'{API_ROOT}/files/{folder_id}',
+                          params={'fields': 'id', 'supportsAllDrives': 'true'},
+                          json_body=updates)
+        return policy
+
+    def cleanup_expired(self):
+        """Delete only marked transaction folders under this configured parent.
+
+        This is the direct-OAuth fallback's online sweep. The Apps Script backend
+        has its own clock trigger so it also works while a booth is switched off.
+        Drive files.delete permanently removes a folder and its owned descendants;
+        moving it to Trash would keep the image bytes beyond the requested period.
+        """
+        folders = self._list_files(
+            f"'{self._quote_query(self.parent_folder_id)}' in parents and trashed = false "
+            f"and mimeType = '{FOLDER_MIME_TYPE}'",
+            'id,name,mimeType,parents,description,appProperties')
+        deleted = []
+        for folder in folders:
+            if (self.parent_folder_id not in folder.get('parents', [])
+                    or folder.get('mimeType') != FOLDER_MIME_TYPE
+                    or folder.get('appProperties', {}).get('photoboothStatus') == 'READY'):
+                continue
+            policy = read_drive_retention(folder.get('description'), folder.get('name'))
+            if policy and datetime.now(timezone.utc) >= utc_datetime(policy['expires_at']):
+                self._request('DELETE', f"{API_ROOT}/files/{folder['id']}",
+                              params={'supportsAllDrives': 'true'})
+                deleted.append(folder['id'])
+        return {'deleted': deleted}
+
     @staticmethod
     def _quote_query(value: str) -> str:
         # Escape characters that have special meaning in Drive's query language before inserting a
@@ -783,6 +838,21 @@ class AppsScriptDriveClient:
     ) -> None:
         """Compatibility alias; assignment only changes slot state, never its name."""
         self.assign_slot(folder_id, transaction_id, booth_id, slot_key)
+
+    def register_retention(self, folder_id, transaction_id, started_at):
+        """Send the original transaction date; backend retries cannot renew it."""
+        result = self._post({'action': 'register_retention', 'folder_id': folder_id,
+                             'transaction_id': transaction_id, 'started_at': started_at})
+        if result.get('retention_enabled') is not True:
+            raise DriveApiError('Run setupPhotoRetention in Apps Script and redeploy the Web App.', 409)
+        return result.get('retention')
+
+    def cleanup_expired(self):
+        """Supplement the backend's independently scheduled hourly cleanup."""
+        result = self._post({'action': 'cleanup_retention'})
+        if result.get('enabled') is not True:
+            raise DriveApiError('Drive retention is not enabled; run setupPhotoRetention in Apps Script.', 409)
+        return result
 
     def upload_file(
         self,

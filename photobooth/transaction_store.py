@@ -3,6 +3,7 @@
 
 """Local transaction folders, persistent IDs, and manifests for the MVP."""
 
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
 import json
@@ -16,6 +17,7 @@ from uuid import uuid4
 from PIL import Image
 
 from photobooth.manifest_io import manifest_lock
+from photobooth.retention import DRIVE_DAYS, LOCAL_DAYS, local_photos_expired, mark_local_expired, retention_metadata
 from photobooth.workflow import SessionPlan
 
 
@@ -130,11 +132,16 @@ class TransactionStore:
             for plan in plans
         ]
 
+        created_at = datetime.now(timezone.utc).isoformat()
+        policy = retention_metadata(transaction_id, created_at)
         manifest: dict[str, Any] = {
             "schema_version": 1,
             "transaction_id": transaction_id,
             "booth_id": self.booth_id,
-            "created_at": datetime.now(timezone.utc).isoformat(),
+            "created_at": created_at,
+            "local_retention_days": LOCAL_DAYS,
+            "drive_retention_days": DRIVE_DAYS,
+            "drive_photos_expire_at": policy['expires_at'],
             "status": "IN_PROGRESS",
             "drive_folder_id": drive_slot.get("folder_id") if drive_slot else None,
             "drive_folder_url": drive_slot.get("folder_url") if drive_slot else None,
@@ -152,7 +159,35 @@ class TransactionStore:
         self._write_manifest(transaction)
         return transaction
 
+    @contextmanager
+    def photo_write_lock(self, transaction: LocalTransaction):
+        """Serialize image writes with expiry so cleanup cannot be undone.
+
+        Composition reads several captures before writing its output. Keep that
+        entire operation under the same lock as cleanup, rather than checking
+        expiry only when the finished filename reaches the manifest.
+        """
+        with manifest_lock(transaction.manifest_path):
+            persisted = json.loads(transaction.manifest_path.read_text(encoding="utf-8"))
+            if local_photos_expired(persisted):
+                mark_local_expired(persisted)
+                self._atomic_write_json(transaction.manifest_path, persisted)
+                raise RuntimeError("The 15-day local photo retention deadline has expired.")
+            yield
+
     def save_raw_photo(
+        self,
+        transaction: LocalTransaction,
+        session: SessionPlan,
+        image: Image.Image,
+        filename: str,
+        role: str,
+    ) -> Path:
+        """Serialize a capture with cleanup; expired sessions cannot recreate bytes."""
+        with self.photo_write_lock(transaction):
+            return self._save_raw_photo(transaction, session, image, filename, role)
+
+    def _save_raw_photo(
         self,
         transaction: LocalTransaction,
         session: SessionPlan,
@@ -320,6 +355,13 @@ class TransactionStore:
                         transaction.manifest_path.read_text(encoding="utf-8")
                     )
                     if persisted.get("transaction_id") == transaction.transaction_id:
+                        if persisted.get('local_photos_expired_at'):
+                            raise RuntimeError('This transaction has reached its local photo retention deadline.')
+                        # Background retention acknowledgement must survive a
+                        # controller save based on an older in-memory manifest.
+                        for key in ('drive_retention_registered_at', 'drive_photos_expire_at', 'drive_retention_error'):
+                            if key in persisted:
+                                transaction.manifest[key] = persisted[key]
                         persisted_files = persisted.get("upload_files", {})
                         current_files = transaction.manifest.setdefault("upload_files", {})
                         for relative_path, record in persisted_files.items():

@@ -14,6 +14,12 @@
  * and upload_file actions.
  */
 
+const PHOTO_RETENTION_DAYS = 30;
+const PHOTO_RETENTION_MARKER = "meongs-photobooth-retention-v1";
+const PHOTO_RETENTION_TRIGGER = "cleanupPhotoRetention";
+const PHOTO_RETENTION_ENABLED = "PHOTOBOOTH_RETENTION_ENABLED";
+const LEGACY_PHOTO_NAME = /^photo_[0-9]{8}_[0-9]{6}_[0-9]{6}\.jpg$/;
+
 /**
  * Provide a lightweight health check so an operator can confirm the deployed Web App
  * responds at its /exec URL.
@@ -44,7 +50,11 @@ function doPost(event) {
     } else if (action === "assign_slot") {
       result = assignSlot_(body, properties);
     } else if (action === "upload_file") {
-      result = uploadTransactionFile_(body, properties);
+      result = withPhotoLock_(function () { return uploadTransactionFile_(body, properties); });
+    } else if (action === "register_retention") {
+      result = withPhotoLock_(function () { return registerRetention_(body, properties); });
+    } else if (action === "cleanup_retention") {
+      result = cleanupPhotoRetention();
     } else if (action === "legacy_upload") {
       result = legacyUpload_(body, properties);
     } else {
@@ -197,6 +207,13 @@ function uploadTransactionFile_(body, properties) {
   if (rootFolder.getName() !== transactionId || !hasParent_(rootFolder, DriveApp.getFolderById(parentId))) {
     throw apiError_("Transaction folder name does not match its ID.", 409);
   }
+  // New Python clients register the transaction's original time first. Older
+  // clients are adopted from their oldest photo, never an empty slot's age.
+  const retention = readPhotoRetention_(rootFolder.getDescription(), transactionId)
+    || ensureFolderRetention_(rootFolder, transactionId, oldestTransactionPhoto_(rootFolder, 0) || new Date());
+  if (new Date(retention.expires_at).getTime() <= Date.now()) {
+    throw apiError_("This transaction's 30-day Drive retention has expired.", 410);
+  }
   if (slot) {
     if (slot.status !== "READY") throw apiError_("Transaction folder is not a ready slot.", 409);
     pool.slots = pool.slots.filter(function (item) { return item.folder_id !== folderId; });
@@ -259,6 +276,10 @@ function legacyUpload_(body, properties) {
     String(body.filename),
   );
   const file = DriveApp.getFolderById(parentId).createFile(blob);
+  // Every new legacy API upload is owned by this photo backend, even if an old
+  // client chose a different filename. Unmarked historical files are adopted
+  // only when they match the repository's exact generated filename pattern.
+  file.setDescription(JSON.stringify(photoRetention_(String(body.filename), new Date())));
   file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
   return {
     file_id: file.getId(),
@@ -435,4 +456,236 @@ function apiError_(message, code) {
 function jsonResponse_(value) {
   return ContentService.createTextOutput(JSON.stringify(value))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
+ * Run ONCE from the Apps Script editor after updating Code.gs. Authorize Drive,
+ * external requests and clock triggers when Google asks, then redeploy the Web
+ * App's existing deployment as a new version. This installs exactly one hourly
+ * trigger for this account; it does not delete photos during setup.
+ *
+ * The deletion uses Drive v3 files.delete, not Trash. Enable Google Drive API
+ * in the project's Cloud settings (adding Drive API in Services also enables it
+ * for the default Apps Script Cloud project). A metadata request verifies access
+ * before any retention job is enabled.
+ */
+function setupPhotoRetention() {
+  const properties = PropertiesService.getScriptProperties();
+  const parentId = properties.getProperty("DRIVE_FOLDER_ID");
+  if (!parentId) throw apiError_("Set DRIVE_FOLDER_ID first.", 400);
+  const response = driveRetentionRequest_("get", parentId, "fields=id,mimeType");
+  if (response.getResponseCode() !== 200) {
+    throw apiError_("Enable Drive API and authorize the script before retention setup.", 403);
+  }
+  const parent = JSON.parse(response.getContentText());
+  if (parent.mimeType !== "application/vnd.google-apps.folder") {
+    throw apiError_("DRIVE_FOLDER_ID must identify the dedicated booth parent folder.", 400);
+  }
+  const triggers = ScriptApp.getProjectTriggers().filter(function (trigger) {
+    return trigger.getHandlerFunction() === PHOTO_RETENTION_TRIGGER;
+  });
+  if (!triggers.length) {
+    ScriptApp.newTrigger(PHOTO_RETENTION_TRIGGER).timeBased().everyHours(1).create();
+  } else {
+    triggers.slice(1).forEach(function (trigger) { ScriptApp.deleteTrigger(trigger); });
+  }
+  properties.setProperty(PHOTO_RETENTION_ENABLED, "true");
+  return { enabled: true, retention_days: PHOTO_RETENTION_DAYS, interval_hours: 1 };
+}
+
+/** Serialize photo uploads, deadline registration and cleanup, without nesting existing locks. */
+function withPhotoLock_(work) {
+  const lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+  try { return work(); } finally { lock.releaseLock(); }
+}
+
+/** The Python manifest supplies the actual transaction time, including offline claims. */
+function registerRetention_(body, properties) {
+  const boothId = validateBoothId_(String(body.transaction_id || "").split("_")[0]);
+  const transactionId = validateTransactionId_(body.transaction_id, boothId);
+  const folder = DriveApp.getFolderById(String(body.folder_id || ""));
+  const parent = DriveApp.getFolderById(properties.getProperty("DRIVE_FOLDER_ID"));
+  if (folder.isTrashed() || folder.getName() !== transactionId || !hasParent_(folder, parent)) {
+    throw apiError_("Retention folder is outside this booth transaction.", 409);
+  }
+  const started = new Date(body.started_at);
+  if (!Number.isFinite(started.getTime()) || started.getTime() > Date.now() + 300000) {
+    throw apiError_("Retention requires the transaction's valid original timestamp.", 400);
+  }
+  const policy = ensureFolderRetention_(folder, transactionId, started);
+  // Registration is also proof that a preallocated slot has been claimed. It
+  // cannot remain READY if an upload worker's assignment acknowledgement lags.
+  const key = poolPropertyKey_(boothId);
+  const pool = readPool_(properties, key);
+  pool.slots = pool.slots.filter(function (slot) { return slot.folder_id !== folder.getId(); });
+  writePool_(properties, key, pool);
+  return { retention: policy, retention_enabled: properties.getProperty(PHOTO_RETENTION_ENABLED) === "true" };
+}
+
+/** A timestamp retry can shorten a known clock but must never extend it. */
+function ensureFolderRetention_(folder, identity, started) {
+  const description = folder.getDescription() || "";
+  const existing = readPhotoRetention_(description, identity);
+  if (description && !existing) {
+    throw apiError_("Unknown folder description; retention was not overwritten.", 409);
+  }
+  if (existing && new Date(existing.started_at).getTime() <= new Date(started).getTime()) return existing;
+  const policy = photoRetention_(identity, started);
+  folder.setDescription(JSON.stringify(policy));
+  return policy;
+}
+
+/** Use exactly 30 elapsed days in UTC, independent of Script/local time zones. */
+function photoRetention_(identity, started) {
+  const stamp = new Date(started);
+  if (!Number.isFinite(stamp.getTime())) throw apiError_("Invalid retention timestamp.", 400);
+  return { managed_by: PHOTO_RETENTION_MARKER, transaction_id: identity,
+    started_at: stamp.toISOString(),
+    expires_at: new Date(stamp.getTime() + PHOTO_RETENTION_DAYS * 86400000).toISOString() };
+}
+
+/** Malformed or foreign metadata never authorizes deletion. */
+function readPhotoRetention_(description, identity) {
+  try {
+    const policy = JSON.parse(description || "{}");
+    if (policy.managed_by !== PHOTO_RETENTION_MARKER || policy.transaction_id !== identity) return null;
+    if (new Date(policy.expires_at).getTime() - new Date(policy.started_at).getTime()
+        !== PHOTO_RETENTION_DAYS * 86400000) return null;
+    return policy;
+  } catch (_) { return null; }
+}
+
+/**
+ * Adopt the known raw/output/session hierarchy used before retention existed.
+ * An unused empty folder has no image date and is never adopted or deleted.
+ * Unknown child folders stop adoption, so unrelated content is not guessed.
+ */
+function oldestTransactionPhoto_(folder, depth) {
+  if (depth > 3) throw apiError_("Unknown transaction photo hierarchy; adoption skipped.", 409);
+  let oldest = null;
+  const files = folder.getFiles();
+  while (files.hasNext()) {
+    const file = files.next();
+    if (!/\.(jpg|jpeg|png)$/i.test(file.getName())) throw apiError_("Unknown transaction file; adoption skipped.", 409);
+    const stamp = file.getDateCreated();
+    if (!oldest || stamp.getTime() < oldest.getTime()) oldest = stamp;
+  }
+  const folders = folder.getFolders();
+  while (folders.hasNext()) {
+    const child = folders.next();
+    if (!(depth === 0 ? /^(raw|output)$/ : /^session_[0-9]{3}$/).test(child.getName())) {
+      throw apiError_("Unknown transaction subfolder; adoption skipped.", 409);
+    }
+    const stamp = oldestTransactionPhoto_(child, depth + 1);
+    if (stamp && (!oldest || stamp.getTime() < oldest.getTime())) oldest = stamp;
+  }
+  return oldest;
+}
+
+/** Drive API permanent deletion leaves no extra 30-day Trash copy. */
+function driveRetentionRequest_(method, id, query) {
+  return UrlFetchApp.fetch("https://www.googleapis.com/drive/v3/files/" + encodeURIComponent(id)
+    + "?supportsAllDrives=true" + (query ? "&" + query : ""), {
+      method: method, headers: { Authorization: "Bearer " + ScriptApp.getOAuthToken() },
+      muteHttpExceptions: true,
+    });
+}
+
+/**
+ * The hourly cloud job works without an online booth. Only our marked transaction
+ * folders immediately under DRIVE_FOLDER_ID (and legacy photo_TIMESTAMP.jpg files
+ * produced by this repository) can expire. Never delete READY slots, the parent,
+ * or unrelated Drive content. Bound each pass so upload requests are not held
+ * behind a long lock; a saved iterator resumes the next hourly pass.
+ */
+function previewPhotoRetention() {
+  return cleanupPhotoRetention({ dryRun: true });
+}
+
+function cleanupPhotoRetention(options) {
+  // Installable clock events are objects too: only an explicit true value can
+  // select preview mode. Preview never changes markers, cursors, or image bytes.
+  const dryRun = options && options.dryRun === true;
+  const properties = PropertiesService.getScriptProperties();
+  if (!dryRun && properties.getProperty(PHOTO_RETENTION_ENABLED) !== "true") return { enabled: false, deleted: [] };
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(1000)) return { enabled: true, skipped_busy: true, deleted: [] };
+  try {
+    const parent = DriveApp.getFolderById(properties.getProperty("DRIVE_FOLDER_ID"));
+    const ready = new Set();
+    const saved = properties.getProperties();
+    Object.keys(saved).filter(function (key) { return key.indexOf("PHOTOBOOTH_POOL_") === 0; })
+      .forEach(function (key) {
+        // Corrupt pool ledgers fail closed before any deletion is attempted.
+        readPool_(properties, key).slots.forEach(function (slot) { ready.add(slot.folder_id); });
+      });
+    const report = { enabled: properties.getProperty(PHOTO_RETENTION_ENABLED) === "true",
+      dry_run: !!dryRun, deleted: [], candidates: [], adopted: [], errors: [] };
+    const deadline = Date.now() + 20000;
+    // A slot is always created before its real transaction. This coarse age
+    // filter avoids scanning a month of recent customer folders every hour;
+    // the actual deletion decision still uses the transaction marker below.
+    // DriveApp queries use Drive API v2's createdDate (REST v3 uses createdTime).
+    const ageQuery = "trashed = false and createdDate <= '"
+      + new Date(Date.now() - PHOTO_RETENTION_DAYS * 86400000).toISOString() + "'";
+    let folders;
+    try {
+      const token = properties.getProperty("PHOTOBOOTH_RETENTION_CURSOR");
+      folders = token && !dryRun ? DriveApp.continueFolderIterator(token) : parent.searchFolders(ageQuery);
+    } catch (_) { folders = parent.searchFolders(ageQuery); }
+    while (folders.hasNext() && Date.now() < deadline && report.candidates.length < 100) {
+      const folder = folders.next();
+      const name = folder.getName();
+      if (ready.has(folder.getId()) || !/^[A-Za-z0-9]+_[0-9]{8}$/.test(name)
+          || folder.isTrashed() || !hasParent_(folder, parent)) continue;
+      try {
+        let policy = readPhotoRetention_(folder.getDescription(), name);
+        if (!policy && !folder.getDescription()) {
+          const oldest = oldestTransactionPhoto_(folder, 0);
+          if (oldest) {
+            policy = dryRun ? photoRetention_(name, oldest) : ensureFolderRetention_(folder, name, oldest);
+            report.adopted.push(name);
+          }
+        }
+        if (policy && new Date(policy.expires_at).getTime() <= Date.now()) {
+          report.candidates.push(name);
+          if (dryRun) continue;
+          const response = driveRetentionRequest_("delete", folder.getId());
+          if (![200, 204, 404, 410].includes(response.getResponseCode())) {
+            throw apiError_("Drive refused retention deletion: " + response.getResponseCode(), 503);
+          }
+          report.deleted.push(name);
+        }
+      } catch (error) { report.errors.push({ transaction_id: name, error: String(error) }); }
+    }
+    if (!dryRun) {
+      if (folders.hasNext()) properties.setProperty("PHOTOBOOTH_RETENTION_CURSOR", folders.getContinuationToken());
+      else properties.deleteProperty("PHOTOBOOTH_RETENTION_CURSOR");
+    }
+    // Early prototypes stored single photos directly in the configured parent.
+    // Match their exact generated filename; never sweep arbitrary root files.
+    const files = parent.searchFiles(ageQuery);
+    while (files.hasNext() && Date.now() < deadline && report.candidates.length < 100) {
+      const file = files.next();
+      if (file.isTrashed()) continue;
+      try {
+        let policy = readPhotoRetention_(file.getDescription(), file.getName());
+        if (!policy && !LEGACY_PHOTO_NAME.test(file.getName())) continue;
+        if (!policy && !file.getDescription()) {
+          policy = photoRetention_(file.getName(), file.getDateCreated());
+          if (!dryRun) file.setDescription(JSON.stringify(policy));
+        }
+        if (policy && new Date(policy.expires_at).getTime() <= Date.now()) {
+          report.candidates.push(file.getName());
+          if (dryRun) continue;
+          const response = driveRetentionRequest_("delete", file.getId());
+          if (![200, 204, 404, 410].includes(response.getResponseCode())) throw apiError_("Legacy photo deletion failed.", 503);
+          report.deleted.push(file.getName());
+        }
+      } catch (error) { report.errors.push({ file: file.getName(), error: String(error) }); }
+    }
+    console.log(JSON.stringify(report));
+    return report;
+  } finally { lock.releaseLock(); }
 }

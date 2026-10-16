@@ -13,6 +13,40 @@ import numpy as np
 
 @unittest.skipUnless(os.environ.get('PHOTOBOOTH_TEST_GUI') == '1', 'GUI checks are opt-in')
 class ControllerFlowTests(unittest.TestCase):
+    def test_an_abandoned_review_cannot_compose_new_photo_bytes_after_fifteen_days(self):
+        """An old on-screen session must not undo the background retention job."""
+        from datetime import datetime, timedelta, timezone
+        import json
+        from photobooth.app import PhotoBoothApp
+        with tempfile.TemporaryDirectory() as directory, \
+             patch('photobooth.app.PROJECT_ROOT', Path(directory)), \
+             patch('photobooth.app.Camera'), \
+             patch('photobooth.app.AppsScriptDriveClient.from_configuration', return_value=None), \
+             patch('photobooth.app.GoogleDriveClient.from_environment', return_value=None), \
+             patch.dict(os.environ, {'PHOTOBOOTH_LOCAL_ONLY': '1', 'PHOTOBOOTH_PALM_TRIGGER': '0'}):
+            app = PhotoBoothApp()
+            try:
+                app.camera_ready = True
+                app.current_frame = np.zeros((240, 320, 3), dtype=np.uint8)
+                app._open_template_selection()
+                app._open_dummy_payment({app.templates[0].template_id: 1})
+                app.ui.payment_confirm.dispatch('on_release')
+                for _ in range(3):
+                    app._save_current_frame(False)
+                transaction = app.transaction
+                manifest = json.loads(transaction.manifest_path.read_text())
+                manifest['created_at'] = (datetime.now(timezone.utc) - timedelta(days=16)).isoformat()
+                app.store._atomic_write_json(transaction.manifest_path, manifest)
+                with patch.object(app.ui, 'show_error') as error:
+                    app.ui.accept_button.dispatch('on_release')
+                error.assert_called_once()
+                self.assertIn('retention deadline', error.call_args.args[1])
+                self.assertFalse((transaction.folder_path / 'output').exists())
+                self.assertIsNone(app.current_session.output_path)
+                self.assertTrue(json.loads(transaction.manifest_path.read_text())['local_photos_expired_at'])
+            finally:
+                app.close()
+
     def test_editing_payment_preserves_cart_and_recalculates_the_total(self):
         """Returning from payment must edit the same order without allocating a slot.
 

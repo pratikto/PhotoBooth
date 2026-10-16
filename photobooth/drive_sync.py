@@ -13,11 +13,20 @@ from typing import Any
 from photobooth.drive_pool import DriveSlotPool
 from photobooth.drive_storage import DriveApiError, GoogleDriveClient
 from photobooth.manifest_io import manifest_lock, write_json_atomic
+from photobooth.retention import local_photos_expired, mark_local_expired, register_drive_retention
 
 
 def sync_manifest(manifest_path: Path, client: GoogleDriveClient) -> dict[str, Any]:
     """Upload pending files for one transaction and persist verification per file."""
     manifest_path = Path(manifest_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if local_photos_expired(manifest):
+        with manifest_lock(manifest_path):
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            mark_local_expired(manifest)
+            write_json_atomic(manifest_path, manifest)
+        return manifest
+    register_drive_retention(manifest_path, client)
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     folder_id = manifest.get("drive_folder_id")
     transaction_id = manifest.get("transaction_id")
@@ -26,6 +35,8 @@ def sync_manifest(manifest_path: Path, client: GoogleDriveClient) -> dict[str, A
         return manifest
 
     for relative_path in list(upload_files):
+        if manifest.get('local_photos_expired_at'):
+            return manifest
         record = upload_files[relative_path]
         if record.get("status") == "VERIFIED":
             continue
@@ -98,6 +109,9 @@ def _refresh_upload_status(manifest: dict[str, Any]) -> None:
     # Derive the transaction-level upload status from the individual file states, so the result screen
     # can show one clear summary.
     records = list(manifest.get("upload_files", {}).values())
+    if manifest.get('local_photos_expired_at') and any(record.get('status') != 'VERIFIED' for record in records):
+        manifest['upload_status'] = 'LOCAL_EXPIRED'
+        return
     if any(record.get("status") == "ACTION_REQUIRED" for record in records):
         manifest["upload_status"] = "ACTION_REQUIRED"
     elif records and all(record.get("status") == "VERIFIED" for record in records):
@@ -124,6 +138,12 @@ def _persist_upload_progress(path: Path, working: dict[str, Any]) -> None:
     path = Path(path)
     with manifest_lock(path):
         latest = json.loads(path.read_text(encoding="utf-8"))
+        if latest.get('local_photos_expired_at'):
+            # Cleanup wins over late upload callbacks. Never resurrect an old
+            # queue or replace its tombstone with an in-flight success/error.
+            working.clear()
+            working.update(latest)
+            return
         working_files: dict[str, dict[str, Any]] = working.setdefault("upload_files", {})
         latest_files: dict[str, dict[str, Any]] = latest.setdefault("upload_files", {})
 
@@ -232,7 +252,7 @@ class DriveSyncWorker:
             try:
                 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
                 upload_status = manifest.get("upload_status")
-                if upload_status in {"UPLOAD_COMPLETE", "LOCAL_ONLY", "ACTION_REQUIRED"}:
+                if upload_status in {"UPLOAD_COMPLETE", "LOCAL_ONLY", "ACTION_REQUIRED", "LOCAL_EXPIRED"}:
                     continue
                 if manifest.get("drive_folder_id"):
                     sync_manifest(manifest_path, self.client)
