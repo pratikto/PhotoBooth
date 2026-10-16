@@ -61,6 +61,15 @@ speaker audibility, the physical webcam/printer, the final logo PNG, and exact
 arrow agreement with the unavailable reference screenshot require device or
 asset verification.
 
+Validation of this update uses Python 3.12 and the real Kivy desktop widgets:
+**131 automated tests pass**, with two native palm-model checks explicitly
+skipped because their opt-in assets are absent. **72 actual widget renders**
+cover 800x600, 1200x800 and 1920x1080. They retain the existing QR decoding,
+crop, bounds and disabled-text contrast assertions. The render harness waits
+for completed entry transitions and stable geometry before measuring pixels.
+Audio sample/mixer tests use deterministic fixtures; this is not a physical
+speaker, webcam, printer, or live Drive account check.
+
 ## MEONG GUI and cyclic template browsing
 
 The interface uses the approved pixel camera-cat and original MEONG PHOTOBOOTH
