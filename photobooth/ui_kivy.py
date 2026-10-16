@@ -7,6 +7,9 @@ The desktop Camera implementation is retained; this migration alone is NOT an
 Android camera/USB driver implementation or an Android packaging configuration.
 """
 
+from pathlib import Path
+
+from kivy.animation import Animation
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.core.window import Window
@@ -21,8 +24,12 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.popup import Popup
 from kivy.uix.scrollview import ScrollView
+from kivy.uix.slider import Slider
+from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.widget import Widget
 from PIL import Image
+from photobooth.audio import AudioManager
+from photobooth.ui_motion import CountdownDial, FlashEffect, GuideGlyph, MotionScope
 from photobooth.catalog import PRICE_PER_SESSION, create_template_preview, render_photo_frame
 from photobooth.ui_brand import (
     BLUSH, BLUE, DISABLED_INK, EDGE, GREY, INK, PAPER, ROSE, SOFT, WHITE,
@@ -59,6 +66,21 @@ class KivyHost(App):
         Window.clearcolor = PAPER
         return self.view
 
+    def on_start(self):
+        """Start the persistent song after Kivy has entered its native loop."""
+        if getattr(self, "ui", None) is not None:
+            self.ui.audio.start()
+
+    def on_pause(self):
+        """Stop speakers when the host is backgrounded; allow native resume."""
+        if getattr(self, "ui", None) is not None:
+            self.ui.audio.pause()
+        return True
+
+    def on_resume(self):
+        if getattr(self, "ui", None) is not None:
+            self.ui.audio.resume()
+
     def after(self, milliseconds, callback):
         """Schedule without sleeping, so preview and touch input keep working."""
         return Clock.schedule_once(lambda _dt: callback(), milliseconds / 1000)
@@ -77,6 +99,8 @@ class KivyHost(App):
 
     def on_stop(self):
         """Release camera/worker resources for both window-X and programmatic exit."""
+        if getattr(self, 'ui', None) is not None:
+            self.ui.dispose()
         self._on_close()
 
 
@@ -88,7 +112,16 @@ class PhotoBoothUI:
     reachable. Breakpoints depend on available width, not the operating system.
     """
 
-    def __init__(self, root, templates, **callbacks):
+    def __init__(self, root, templates, *, audio_manager=None, **callbacks):
+        root.ui = self
+        self.audio = audio_manager if audio_manager is not None else AudioManager(
+            Path(__file__).resolve().parent.parent / "data" / "audio")
+        self._audio_popup = None
+        self.audio_sliders = {}
+        self._motion = MotionScope()
+        self._last_countdown_value = None
+        self.countdown_dial = None
+        self._disposed = False
         self.templates = tuple(templates)
         self.callbacks = callbacks
         self._screen_revision = 0
@@ -117,6 +150,7 @@ class PhotoBoothUI:
         self.shell = Panel(fill=PAPER, radius=0, border=False, orientation='vertical',
                            padding=dp(24), spacing=dp(12))
         root.view = self.shell
+        self._flash = FlashEffect(self.shell)
         header = Panel(fill=WHITE, radius=14, border=False, size_hint_y=None,
                        height=dp(82), padding=(dp(18), dp(10)), spacing=dp(12))
         self._header_row = header
@@ -128,6 +162,15 @@ class PhotoBoothUI:
         self.steps = FlowSteps(size_hint=(None, None), width=dp(380),
                                height=dp(38), pos_hint={'center_y': .5})
         header.add_widget(self.steps)
+        # This header belongs to the application, so the settings control is
+        # present on every page and does not inherit a retired page revision.
+        self.settings_button = self._button("", self.show_audio_settings,
+                                            secondary=True, screen_bound=False)
+        self.settings_button.size_hint = (None, None)
+        self.settings_button.size = (dp(48), dp(44))
+        self.settings_button.pos_hint = {"center_y": .5}
+        self._attach_icon(self.settings_button, "gear", icon_only=True)
+        header.add_widget(self.settings_button)
         self.shell.add_widget(header)
         self.content = BoxLayout(orientation='vertical', spacing=dp(10))
         self.shell.add_widget(self.content)
@@ -177,15 +220,16 @@ class PhotoBoothUI:
         self.shell.spacing = dp(10 if compact else 16)
         self._header_row.height = dp(64 if compact else 82)
         self._header_row.padding = (dp(14), dp(8 if compact else 10))
-        self.brand.width = dp(246 if compact else 280)
-        self.brand.mascot.width = dp(92 if compact else 108)
-        self.steps.width = dp(340 if compact else 380)
+        self.brand.width = dp(216 if compact else 260)
+        self.brand.mascot.width = dp(82 if compact else 100)
+        self.steps.width = dp(306 if compact else 350)
         self.steps.height = dp(34 if compact else 38)
         self._footer_row.height = dp(22 if compact else 28)
         self.camera_badge.width = dp(132 if compact else 170)
         if self._page_title is not None:
             self._page_title.height = dp(36 if compact else 46)
-            self._page_title.font_size = dp(26 if compact else 34)
+            self._page_title.font_size = dp(24 if compact else 32)
+            self._title_row.height = self._page_title.height
         if self._page_subtitle is not None:
             self._page_subtitle.height = dp(26 if compact else 34)
 
@@ -239,16 +283,132 @@ class PhotoBoothUI:
         def release(button):
             if button.disabled or (screen_bound and revision != self._screen_revision):
                 return
+            self.audio.play("button")
+            Animation.cancel_all(button, "opacity")
+            Animation(opacity=1, duration=.10).start(button)
             return callback()
-        widget.bind(on_release=release)
+        def press(button):
+            if not button.disabled and (not screen_bound or revision == self._screen_revision):
+                Animation.cancel_all(button, "opacity")
+                Animation(opacity=.76, duration=.06).start(button)
+        widget.bind(on_press=press, on_release=release)
         # Long translated labels wrap rather than overflowing a narrow button.
         widget.bind(size=lambda w, size: setattr(w, 'text_size', (size[0] - dp(16), size[1])))
         widget.halign = 'center'
         widget.valign = 'middle'
         return widget
 
+    def _attach_icon(self, button, kind, *, icon_only=False):
+        """Use a drawn symbol instead of platform-dependent emoji glyphs."""
+        icon = GuideGlyph(kind=kind, size_hint=(None, None), size=(dp(28), dp(28)))
+        def arrange(*_args):
+            icon.center = (button.center_x if icon_only else button.x + dp(30), button.center_y)
+        button.bind(pos=arrange, size=arrange)
+        button.add_widget(icon)
+        arrange()
+        button.icon_widget = icon
+        return button
+
+    @property
+    def audio_settings_open(self):
+        """A modal blocks the optional palm shutter as well as pointer input."""
+        return self._audio_popup is not None
+
+    def show_audio_settings(self):
+        """Adjust three independent buses without navigating away from a page."""
+        if self._audio_popup is not None:
+            return self._audio_popup
+        body = BoxLayout(orientation="vertical", spacing=dp(5), padding=dp(8))
+        body.add_widget(self._label("Atur suasanamu", 23, 30, bold=True))
+        self.audio_sliders = {}
+        for channel, title, icon_name, sample in (
+                ("music", "Musik", "music", None),
+                ("buttons", "Tombol", "tap", "button"),
+                ("effects", "Efek kamera", "camera", "shutter")):
+            row = BoxLayout(size_hint_y=None, height=dp(22), spacing=dp(8))
+            row.add_widget(GuideGlyph(kind=icon_name, size_hint_x=None, width=dp(32)))
+            row.add_widget(self._label(title, 16, bold=True))
+            percent = self._label("", 14, align="right", color=BLUE)
+            percent.size_hint_x = None
+            percent.width = dp(56)
+            row.add_widget(percent)
+            body.add_widget(row)
+            controls = BoxLayout(size_hint_y=None, height=dp(44), spacing=dp(8))
+            slider = Slider(min=0, max=1, step=.01, value=getattr(self.audio.levels, channel),
+                            cursor_size=(dp(26), dp(26)), value_track=True,
+                            value_track_color=BLUE)
+            def update(_slider, value, key=channel, caption=percent):
+                self.audio.set_volume(key, value)
+                caption.text = f"{round(value * 100)}%"
+            slider.bind(value=update)
+            # Set the first caption directly; opening a menu does not rewrite
+            # preferences or restart a currently playing song.
+            percent.text = f"{round(slider.value * 100)}%"
+            self.audio_sliders[channel] = slider
+            controls.add_widget(slider)
+            if sample is not None:
+                test = self._button("Uji", lambda sound=sample: self.audio.play(sound),
+                                    secondary=True, screen_bound=False)
+                test.size_hint_x = None
+                test.width = dp(64)
+                test.height = dp(44)
+                controls.add_widget(test)
+            body.add_widget(controls)
+        body.add_widget(self._label("0% = hening", 12, 18, color=GREY))
+        body.add_widget(Widget())
+        popup = Popup(title="Suara", content=body, size_hint=(None, None),
+                      auto_dismiss=False, background="", background_color=PAPER,
+                      title_color=INK, separator_color=EDGE)
+        def fit_popup(*_args):
+            popup.size = (min(dp(520), Window.width - dp(24)),
+                          min(dp(430), Window.height - dp(24)))
+        fit_popup()
+        Window.bind(size=fit_popup)
+        save = self._button("SIMPAN", popup.dismiss, screen_bound=False)
+        save.height = dp(44)
+        body.add_widget(save)
+        def dismissed(_popup):
+            Window.unbind(size=fit_popup)
+            self.audio.save_settings()
+            if self._audio_popup is popup:
+                self._audio_popup = None
+                self.audio_sliders = {}
+        popup.bind(on_dismiss=dismissed)
+        self._audio_popup = popup
+        popup.open()
+        return popup
+
+    def notify_photo_captured(self):
+        """A successful camera save owns one shutter sound and one short flash."""
+        self.audio.play("shutter")
+        self.audio.set_capture_active(False)
+        self._flash.pulse()
+
+    def dispose(self):
+        """Release page motion and speakers when the native window is closed."""
+        if self._disposed:
+            return
+        self._disposed = True
+        if self._audio_popup is not None:
+            self._audio_popup.dismiss(animation=False)
+        self._motion.retire()
+        if self.template_carousel is not None:
+            self.template_carousel.deactivate()
+        self._flash.close()
+        self.audio.close()
+
     def _reset(self, screen, title, subtitle=''):
         """Discard only screen widgets, keeping shell/footer and controller state."""
+        # A page owns every visual clock. Retire them before replacing widgets.
+        self._motion.retire()
+        if self.countdown_dial is not None:
+            Animation.cancel_all(self.countdown_dial.label)
+        self._motion = MotionScope()
+        self.countdown_dial = None
+        self._last_countdown_value = None
+        self.audio.set_capture_active(False)
+        if self._audio_popup is not None:
+            self._audio_popup.dismiss(animation=False)
         # Completion can return to welcome while a customer inspects the strip.
         # Retire that modal with the result page so the next session cannot be
         # blocked by, or accidentally display, the previous customer's photos.
@@ -282,11 +442,23 @@ class PhotoBoothUI:
         self.steps.set_active(active)
         if title:
             self._page_title = self._label(title, 28, 46, bold=True)
-            self.content.add_widget(self._page_title)
+            title_row = BoxLayout(size_hint_y=None, height=self._page_title.height,
+                                  spacing=dp(10))
+            # A small animated pictogram makes the current action recognizable
+            # before reading its title. It never covers the QR or live image.
+            glyph = self._motion.add(GuideGlyph(
+                kind={"templates": "frames", "payment": "pay", "capture": "camera",
+                      "review": "review", "result": "result"}.get(screen, "camera"),
+                size_hint_x=None, width=dp(46)))
+            title_row.add_widget(glyph)
+            title_row.add_widget(self._page_title)
+            self._title_row = title_row
+            self.content.add_widget(title_row)
         if subtitle:
             self._page_subtitle = self._label(subtitle, 14, 38, color=GREY)
             self.content.add_widget(self._page_subtitle)
         self._fit_chrome()
+        self._motion.enter(self.content)
         return self.content
 
     def _responsive_row(self, left, right, right_width=330, min_height=300):
@@ -431,40 +603,46 @@ class PhotoBoothUI:
             self.camera_wait_hint.opacity = 0 if live else 1
 
     def show_welcome(self, camera_ready, status_message):
-        """Give the approved mascot a real product entrance, with clear pricing."""
+        """Show the complete procedure with large illustrations and short labels."""
         self.set_camera_status(camera_ready)
-        page = self._reset('welcome', '')
-        hero = Panel(fill=WHITE, orientation='horizontal', padding=dp(24), spacing=dp(24))
-        art = picture(brand_parts()[0])
-        art.size_hint_x = .47
-        hero.add_widget(art)
-        story = BoxLayout(orientation='vertical', spacing=dp(8))
-        story.add_widget(Widget())
-        story.add_widget(PixelRule(size_hint_y=None, height=dp(16)))
-        story.add_widget(self._label('YOUR MOMENT, PRINTED.', 11, 28, color=BLUE, bold=True))
-        hero_title = self._label('Masuk frame.\nBikin kenangan.', 36, 116, bold=True)
-        story.add_widget(hero_title)
-        story.add_widget(self._label('Tiga foto, satu cerita.\nPilih frame favoritmu dan siapkan senyum.',
-                                     15, 76, color=GREY))
-        story.add_widget(self._label('Rp5.000 / sesi', 22, 44, bold=True, color=BLUE))
-        story.add_widget(Widget())
-        def fit_story(*_args):
-            hero_title.font_size = dp(29 if hero.width < dp(600) else 36)
-            hero_title.height = dp(92 if hero.height < dp(450) else 116)
-            story.spacing = dp(4 if hero.height < dp(450) else 8)
-        hero.bind(size=fit_story)
-        hero.add_widget(story)
-        aside = Panel(fill=BLUSH, border=False, orientation='vertical', padding=dp(22), spacing=dp(7))
-        aside.add_widget(self._label('BUAT MOMENMU.', 12, 28, bold=True, color=ROSE))
-        for title, note in [('01  Pilih frame', '12 desain. Pilih satu atau beberapa.'),
-                            ('02  Ambil foto', 'Tiga foto baru. Satu kali retake.'),
-                            ('03  Bawa kenangan', 'Scan QR untuk membuka folder foto.')]:
-            aside.add_widget(self._label(title, 18, 32, bold=True, color=INK))
-            aside.add_widget(self._label(note, 13, 44, color=GREY))
-        aside.add_widget(Widget())
-        aside.add_widget(self._label('Pembayaran masih simulasi.', 12, 30, color=ROSE))
-        page.add_widget(self._responsive_row(hero, aside, 300, 400))
-        self.home_start_button = self._button('MULAI FOTO', self.callbacks['on_home_start'], camera_ready)
+        page = self._reset("welcome", "")
+        scroll = ScrollView(do_scroll_x=False, bar_width=dp(4))
+        tutorial = Panel(orientation="vertical", padding=dp(16), spacing=dp(12),
+                         size_hint_y=None)
+        intro = BoxLayout(size_hint_y=None, height=dp(52), spacing=dp(12))
+        intro.add_widget(self._label("Bikin kenangan.", 27, bold=True))
+        price = self._label("Rp5.000 / sesi", 18, bold=True, color=BLUE, align="right")
+        price.size_hint_x = .55
+        intro.add_widget(price)
+        tutorial.add_widget(intro)
+        grid = GridLayout(cols=4, spacing=dp(12))
+        self.welcome_steps = []
+        for number, kind, title, note, fill in (
+                (1, "frames", "Pilih frame", "12 desain", SOFT),
+                (2, "pay", "Bayar", "Demo", CYAN),
+                (3, "camera", "Senyum!", "3 foto · 1 retake", BLUSH),
+                (4, "result", "Cetak + scan", "Simpan fotomu", (1, .96, .80, 1))):
+            card = Panel(fill=fill, border=False, orientation="vertical",
+                         padding=dp(10), spacing=dp(4))
+            card.add_widget(self._label(f"{number:02d}", 12, 18, color=BLUE, bold=True))
+            illustration = self._motion.add(GuideGlyph(kind=kind))
+            card.add_widget(illustration)
+            card.add_widget(self._label(title, 17, 27, bold=True, align="center"))
+            card.add_widget(self._label(note, 12, 23, color=GREY, align="center"))
+            grid.add_widget(card)
+            self.welcome_steps.append(illustration)
+        tutorial.add_widget(grid)
+        def fit_tutorial(*_args):
+            grid.cols = 2 if scroll.width < dp(650) else 4
+            minimum = dp(510 if grid.cols == 2 else 300)
+            tutorial.height = max(scroll.height, minimum)
+            scroll.do_scroll_y = tutorial.height > scroll.height + 1
+        scroll.add_widget(tutorial)
+        scroll.bind(size=fit_tutorial)
+        fit_tutorial()
+        page.add_widget(scroll)
+        self.home_start_button = self._button("MULAI FOTO", self.callbacks["on_home_start"], camera_ready)
+        self._attach_icon(self.home_start_button, "camera")
         page.add_widget(self.home_start_button)
         self.set_status(status_message)
 
@@ -479,7 +657,7 @@ class PhotoBoothUI:
         """
         self.set_camera_status(camera_ready)
         self._storage_ready = storage_ready
-        page = self._reset('templates', 'Pilih frame. Bikin cerita.')
+        page = self._reset('templates', 'Pilih frame favoritmu.')
         self.quantities = {t.template_id: (quantities or {}).get(t.template_id, 0)
                            for t in self.templates}
         self.quantity_labels, self.quantity_buttons = {}, {}
@@ -517,32 +695,39 @@ class PhotoBoothUI:
             controls.add_widget(quantity)
             controls.add_widget(plus)
             self._quantity_rows[key] = controls
-        deck.add_widget(carousel)
+        preview_row = BoxLayout(spacing=dp(6))
+        self.carousel_previous = self._button("‹", lambda: carousel.navigate(-1), secondary=True)
+        self.carousel_next = self._button("›", lambda: carousel.navigate(1), secondary=True)
+        for button in (self.carousel_previous, self.carousel_next):
+            button.size_hint = (None, None)
+            button.size = (dp(44), dp(52))
+            button.pos_hint = {"center_y": .5}
+            button.font_size = dp(30)
+        preview_row.add_widget(self.carousel_previous)
+        preview_row.add_widget(carousel)
+        preview_row.add_widget(self.carousel_next)
+        deck.add_widget(preview_row)
         self.template_dots = CarouselDots(len(self.templates), size_hint_y=None, height=dp(8))
         deck.add_widget(self.template_dots)
         self.template_name = self._label('', 21, 30, bold=True, align='center')
         deck.add_widget(self.template_name)
         navigation = BoxLayout(spacing=dp(10), size_hint_y=None, height=dp(44))
-        self.carousel_previous = self._button('‹', lambda: carousel.navigate(-1), secondary=True)
-        self.carousel_next = self._button('›', lambda: carousel.navigate(1), secondary=True)
-        for button in (self.carousel_previous, self.carousel_next):
-            button.size_hint_x = None
-            button.width, button.height = dp(44), dp(44)
-            button.font_size = dp(25)
-        navigation.add_widget(self.carousel_previous)
         navigation.add_widget(Widget())
         self._focused_quantity_slot = BoxLayout(size_hint_x=None, width=dp(166))
         navigation.add_widget(self._focused_quantity_slot)
         navigation.add_widget(Widget())
-        navigation.add_widget(self.carousel_next)
         deck.add_widget(navigation)
-        deck.add_widget(self._label('GESER KIRI / KANAN · PILIHAN BERPUTAR', 10, 18,
+        deck.add_widget(self._label('‹  GESER FRAME  ›', 10, 18,
                                     color=GREY, align='center'))
         cart = Panel(fill=BLUE, border=False, orientation='vertical', padding=dp(18), spacing=dp(7))
         cart.add_widget(self._label('Pesanan kamu', 22, 32, bold=True, color=WHITE))
         items = ScrollView(do_scroll_x=False, bar_width=dp(3))
-        self.summary = self._label('', 14, color=WHITE, auto_height=True)
-        items.add_widget(self.summary)
+        self.order_items = GridLayout(cols=1, spacing=dp(6), size_hint_y=None)
+        self.order_items.bind(minimum_height=self.order_items.setter("height"))
+        self.order_rows = {}
+        self._order_signature = None
+        self._order_revision = 0
+        items.add_widget(self.order_items)
         cart.add_widget(items)
         cart.add_widget(PixelRule(size_hint_y=None, height=dp(12)))
         self.cart_sessions = self._label('', 12, 22, color=WHITE)
@@ -567,6 +752,8 @@ class PhotoBoothUI:
             self.template_dots.index = index
             self._focused_quantity_slot.clear_widgets()
             self._focused_quantity_slot.add_widget(self._quantity_rows[template.template_id])
+            for key, row in self.order_rows.items():
+                row.background_color = (.38, .52, .98, 1) if key == template.template_id else (.20, .38, .93, 1)
         carousel.bind(index=focus)
         carousel.index = self._last_template_index % len(self.templates)
         focus(carousel, carousel.index)
@@ -585,11 +772,38 @@ class PhotoBoothUI:
             self.quantity_buttons[key][0].disabled = quantity == 0
             self._template_cards[key].selected = quantity > 0
         total = sum(self.quantities.values())
-        lines = [f'{t.name}     × {self.quantities[t.template_id]}' for t in self.templates
-                 if self.quantities[t.template_id]]
+        signature = tuple((t.template_id, self.quantities[t.template_id]) for t in self.templates
+                          if self.quantities[t.template_id])
+        if signature != self._order_signature:
+            self._order_signature = signature
+            self._order_revision += 1
+            order_revision = self._order_revision
+            self.order_items.clear_widgets()
+            self.order_rows = {}
+            for index, template in enumerate(self.templates):
+                key = template.template_id
+                quantity = self.quantities[key]
+                if not quantity:
+                    continue
+                def inspect_template(i=index, revision=order_revision):
+                    # Storage readiness polls must not rebuild these buttons,
+                    # and a removed row's late release cannot alter focus.
+                    if revision == self._order_revision:
+                        self.template_carousel.request_index(i)
+                row = self._button(f"{template.name}   × {quantity}    ›",
+                                   inspect_template, secondary=True)
+                row.height = dp(52)
+                row.font_size = dp(14)
+                row.halign = "left"
+                row.color = WHITE
+                row.background_color = (.20, .38, .93, 1)
+                self.order_rows[key] = row
+                self.order_items.add_widget(row)
+            if not signature:
+                self.order_items.add_widget(self._label("Pilih frame, lalu tekan +", 14, 58,
+                                                        color=WHITE))
+
         amount = 'Rp' + f'{total * PRICE_PER_SESSION:,}'.replace(',', '.')
-        self.summary.text = ('\n'.join(lines) if lines else
-                             'Belum ada pilihan.\nTambahkan sesi dengan tombol +.')
         self.cart_sessions.text = f'{total} sesi × Rp5.000'
         self.cart_total.text = amount
         self.start_button.disabled = not (total and self._camera_ready and self._storage_ready)
@@ -608,7 +822,7 @@ class PhotoBoothUI:
     def show_payment(self, order_summary, session_count, total_amount, on_confirm, on_back):
         """Render a non-payable demo QR and explicit, one-shot simulation action."""
         from photobooth.qr_code import create_qr_image
-        page = self._reset('payment', 'Satu langkah sebelum berfoto.', 'SIMULASI PEMBAYARAN · Bukan QRIS valid. Jangan transfer uang.')
+        page = self._reset('payment', 'Bayar, lalu berfoto.', 'DEMO · Bukan QRIS. Jangan transfer uang.')
         self.payment_total = total_amount
         self._payment_submitted = False
         pay = Panel(orientation='vertical', padding=dp(14), spacing=dp(6))
@@ -687,9 +901,14 @@ class PhotoBoothUI:
         guide.add_widget(self._label('FOTO PENGGANTI' if is_retake else f'FOTO {min(capture_count + 1, 3)} / 3',
                                      13, 28, color=GREY, bold=True))
         self.countdown = self._label(countdown_text or 'Siap?', 44, bold=True, align='center')
-        guide.add_widget(self.countdown)
-        self.capture_hint = self._label('', 14, 66, color=GREY)
-        guide.add_widget(self.capture_hint)
+        self.countdown_dial = self._motion.add(CountdownDial(self.countdown))
+        guide.add_widget(self.countdown_dial)
+        hint_row = BoxLayout(size_hint_y=None, height=dp(58), spacing=dp(8))
+        self.capture_gesture = self._motion.add(GuideGlyph(kind="hand", size_hint_x=None, width=dp(42)))
+        hint_row.add_widget(self.capture_gesture)
+        self.capture_hint = self._label("", 13, color=GREY)
+        hint_row.add_widget(self.capture_hint)
+        guide.add_widget(hint_row)
         self._palm_progress = 0.0
         self._refresh_capture_hint()
         progress = BoxLayout(size_hint_y=None, height=dp(36), spacing=dp(6))
@@ -701,6 +920,7 @@ class PhotoBoothUI:
         self.capture_button = self._button(action_label, self.callbacks['on_capture'],
                                            can_capture and self._camera_ready)
         page.add_widget(self._responsive_row(camera, guide, 240, 300))
+        self._attach_icon(self.capture_button, 'camera')
         page.add_widget(self.capture_button)
 
     def update_live_preview(self, image):
@@ -744,6 +964,12 @@ class PhotoBoothUI:
         if self.current_screen == 'capture':
             self._capture_running = True
             self.countdown.text = str(seconds)
+            if self.countdown_dial is not None:
+                self.countdown_dial.set_seconds(seconds)
+            if seconds > 0 and seconds != self._last_countdown_value:
+                self.audio.set_capture_active(True)
+                self.audio.play("count")
+            self._last_countdown_value = seconds
             self._refresh_capture_hint()
             self.set_capture_enabled(False)
 
@@ -764,21 +990,23 @@ class PhotoBoothUI:
         if self.current_screen != 'capture' or self.capture_hint is None:
             return
         if self._capture_running:
-            text = 'Turunkan tangan,\nlalu lihat ke kamera.'
+            text = 'Turunkan tangan.\nLihat ke kamera.'
         elif self._palm_state in {'idle', 'loading'}:
-            text = 'Tekan tombol untuk foto.\nGestur sedang disiapkan...'
+            text = 'Tekan tombol kamera.\nGestur disiapkan...'
         elif self._palm_state == 'ready':
             if self._palm_needs_release:
-                text = 'Turunkan telapak sebentar.\nTombol tetap bisa dipakai.'
+                text = 'Turunkan tangan sebentar.\nAtau tekan kamera.'
             elif self._palm_progress > 0:
-                text = f'Telapak terdeteksi · {self._palm_progress:.0%}\nTahan sebentar lagi.'
+                text = f'Tahan telapak · {self._palm_progress:.0%}'
             else:
-                text = 'Tekan tombol atau angkat\ntelapak terbuka 1 detik.'
+                text = 'Tekan kamera /\ntelapak 1 detik.'
         elif self._palm_state == 'unavailable':
-            text = 'Gestur belum tersedia.\nTekan tombol untuk foto.'
+            text = 'Tekan tombol kamera.'
         else:
-            text = 'Atur posisi, lalu tekan tombol.\nCountdown 5 detik.'
+            text = 'Siap? Tekan kamera.\nTimer 5 detik.'
         self.capture_hint.text = text
+        if getattr(self, 'capture_gesture', None) is not None:
+            self.capture_gesture.kind = 'camera' if self._capture_running or self._palm_state != 'ready' else 'hand'
 
     def set_capture_enabled(self, enabled):
         if self.current_screen == 'capture':
@@ -830,6 +1058,7 @@ class PhotoBoothUI:
                                          self.callbacks['on_retake'],
                                          self._review_can_retake and self._camera_ready, secondary=True)
         self.accept_button = self._button('GUNAKAN FOTO INI', self.callbacks['on_accept_session'])
+        self._attach_icon(self.accept_button, 'check')
         page.add_widget(self._actions(self.retake_button, self.accept_button))
         self.set_status(status_message)
 

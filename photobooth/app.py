@@ -19,6 +19,7 @@ from kivy.clock import ClockEvent
 import cv2
 from PIL import Image
 
+from photobooth.audio import AudioManager
 from photobooth.camera import Camera
 from photobooth.catalog import PRICE_PER_SESSION, compose_result, get_templates
 from photobooth.drive_pool import DriveSlotPool
@@ -118,6 +119,7 @@ class PhotoBoothApp:
         self.ui = PhotoBoothUI(
             root=self.root,
             templates=self.templates,
+            audio_manager=AudioManager(PROJECT_ROOT / 'data' / 'audio'),
             on_home_start=self._open_template_selection,
             on_start=self._open_dummy_payment,
             on_capture=self._start_capture_countdown,
@@ -227,7 +229,8 @@ class PhotoBoothApp:
         accumulate the next hold. Missing frames invalidate all in-flight work.
         """
         if (frame is None or not self.camera_ready or self.ui.current_screen != "capture"
-                or self.current_session is None or self.is_closing):
+                or self.current_session is None or self.is_closing
+                or self.ui.audio_settings_open):
             self.palm_worker.pause()
             self.palm_trigger.pause()
             return
@@ -431,6 +434,7 @@ class PhotoBoothApp:
             or session is None
             or (session.ready_for_review and not session.can_retake)
             or self._countdown_after_id is not None
+            or self.ui.audio_settings_open
         ):
             return
         # A button press also invalidates a half-completed palm hold. Keeping a
@@ -529,6 +533,8 @@ class PhotoBoothApp:
                     selected_path,
                 )
                 session.apply_retake(photo_path)
+                # Cue only a successfully saved replacement, never a failed attempt.
+                self.ui.notify_photo_captured()
                 self._show_review(
                     status_message="Retake digunakan. Sisa kuota sesi ini: 0.",
                 )
@@ -543,6 +549,7 @@ class PhotoBoothApp:
                 role="capture",
             )
             session.add_initial_photo(photo_path)
+            self.ui.notify_photo_captured()
         except (OSError, RuntimeError, ValueError) as error:
             self.ui.show_error(
                 "Foto gagal disimpan",
@@ -958,6 +965,7 @@ class PhotoBoothApp:
         if self.drive_worker is not None:
             self.drive_worker.stop()
         self.camera.close()
+        self.ui.dispose()
         try:
             self.root.destroy()
         except RuntimeError:

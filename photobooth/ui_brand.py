@@ -10,6 +10,7 @@ from functools import lru_cache
 from pathlib import Path
 
 from PIL import Image
+from photobooth.branding import LOGO_PATH, load_logo
 from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.graphics import Color, Ellipse, Line, Rectangle, RoundedRectangle
@@ -37,7 +38,6 @@ CYAN = (0.77, 0.945, 1, 1)
 BLUSH = (1, 0.91, 0.955, 1)
 ROSE = (0.663, 0.149, 0.345, 1)
 LIGHT_INK = (0.75, 0.80, 0.89, 1)
-LOGO_PATH = Path(__file__).resolve().parent / 'assets' / 'meong_photobooth.png'
 
 
 def picture(image, *, crisp=False):
@@ -57,10 +57,9 @@ def brand_parts():
 
     The header arranges the two existing parts horizontally so both remain
     readable on a kiosk. The complete unmodified logo is used on welcome.
-    These are display crops only; the approved QR/logo source file is unchanged.
+    These are display crops only; the QR resolves the same shared source.
     """
-    with Image.open(LOGO_PATH) as source:
-        logo = source.convert('RGB')
+    logo = load_logo().copy()
     width, height = logo.size
     mascot = logo.crop((0, 0, width, round(height * .635)))
     wordmark = logo.crop((round(width * .04), round(height * .65),
@@ -116,10 +115,11 @@ class BrandLockup(BoxLayout):
         _, mascot, wordmark = brand_parts()
         self.mascot = picture(mascot)
         self.mascot.size_hint_x = None
-        self.mascot.width = dp(104)
+        self.mascot.width = dp(100)
         self.add_widget(self.mascot)
         self.wordmark = picture(wordmark)
         self.add_widget(self.wordmark)
+
 
 
 class FlowSteps(BoxLayout):
@@ -254,6 +254,8 @@ class TemplateCarousel(Carousel):
                          ignore_perpendicular_swipes=True, **kwargs)
         self._navigation_busy = False
         self._navigation_guard = None
+        self._focus_event = None
+        self._requested_index = None
         self.bind(index=self._finish_navigation)
 
     def _finish_navigation(self, *_args):
@@ -283,6 +285,36 @@ class TemplateCarousel(Carousel):
             self._navigation_guard = None
         self._navigation_guard = Clock.schedule_once(release, self.anim_move_duration + .05)
 
+    def request_index(self, index):
+        """Animate to an ordered design; the latest click wins during a swipe.
+
+        Cart navigation never edits quantities. A request waits for an active
+        finger drag or snap to finish instead of corrupting Kivy's touch state.
+        A single retry event is retired along with the page.
+        """
+        if self.disabled or not self.slides:
+            return
+        self._requested_index = int(index) % len(self.slides)
+        self._schedule_focus()
+
+    def _schedule_focus(self):
+        if self._focus_event is None and not self.disabled:
+            self._focus_event = Clock.schedule_once(self._apply_focus, .06)
+
+    def _apply_focus(self, _dt):
+        self._focus_event = None
+        if self.disabled or self._requested_index is None:
+            return
+        if self._navigation_busy or self._touch is not None or abs(self._offset) > dp(.5):
+            self._schedule_focus()
+            return
+        index, self._requested_index = self._requested_index, None
+        if index != self.index:
+            self._navigation_busy = True
+            self.load_slide(self.slides[index])
+            self._navigation_guard = Clock.schedule_once(
+                self._finish_navigation, self.anim_move_duration + .06)
+
     def on_touch_down(self, touch):
         """Allow a mouse wheel to browse the same cyclic list as a finger drag."""
         if self.disabled:
@@ -298,6 +330,10 @@ class TemplateCarousel(Carousel):
     def deactivate(self):
         """Retire animations and grabs when the controller leaves this screen."""
         self.disabled = True
+        self._requested_index = None
+        if self._focus_event is not None:
+            self._focus_event.cancel()
+            self._focus_event = None
         Animation.cancel_all(self)
         if self._navigation_guard is not None:
             self._navigation_guard.cancel()

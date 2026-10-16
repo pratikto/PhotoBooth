@@ -1,0 +1,51 @@
+name: Kiosk GUI regression
+
+on:
+  push:
+    branches: [feature/kivy-gui]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Tests use synthetic photos, dummy audio, and fake camera/Drive/printer
+# adapters. No account credentials or access to customer photo folders.
+permissions:
+  contents: read
+
+jobs:
+  desktop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      KIVY_NO_ARGS: "1"
+      KIVY_NO_CONSOLELOG: "1"
+      PHOTOBOOTH_TEST_GUI: "1"
+      PHOTOBOOTH_AUDIO: "0"
+      PHOTOBOOTH_PALM_TRIGGER: "0"
+      LIBGL_ALWAYS_SOFTWARE: "1"
+      SDL_AUDIODRIVER: dummy
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install desktop runtime
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb libgl1-mesa-dri libgl1 libegl1 libmtdev1 libxkbcommon0 libasound2t64
+          python -m pip install -r requirements.txt
+      - name: Check Python syntax
+        run: python -m compileall -q photobooth tests tools
+      - name: Exercise workflow, QR pixels, real widgets, audio and navigation
+        run: xvfb-run -a python -m unittest discover -s tests -v
+      - name: Render all six pages and compact layouts
+        run: xvfb-run -a python tools/render_gui.py --output-dir /tmp/meong-gui-qa
+      - name: Keep generated visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: meong-gui-qa
+          path: /tmp/meong-gui-qa
+          if-no-files-found: ignore
+          retention-days: 7

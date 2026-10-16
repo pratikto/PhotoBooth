@@ -2,12 +2,71 @@
 
 A Python photo booth application built with Kivy, OpenCV, Pillow, and ESC/POS printing. The attached procedure document is the functional source of truth. Live QRIS payment remains outside the current implementation.
 
+## Illustrated kiosk, animation and audio
+
+The welcome page now explains the workflow with four large native illustrations:
+**choose a frame → payment demo → three photos → print and scan**. Short labels
+replace the previous paragraphs. Every page has a small animated action symbol
+and a brief entry transition. The capture page adds a rotating countdown ring,
+one chime per displayed second, and a short flash/shutter cue after a successful
+photo save. A prepared retake still waits for the customer to press the shutter
+or deliberately hold an open palm.
+
+Template arrows sit on the left and right sides of the receipt preview, centered
+vertically. Each selected template in **Pesanan kamu** is a separate touch button.
+Tapping it animates the cyclic carousel to that design and updates its name and
+quantity controls. It does not add sessions or change the payable total. A click
+during a swipe waits for the swipe to finish; stale rows retire with their page.
+
+A gear button stays in the header on all six screens. Its **Suara** menu has
+independent **Musik**, **Tombol**, and **Efek kamera** sliders, including 0% mute
+and short cue previews. Preferences are saved locally when the menu closes.
+The original instrumental loop uses warm plucked notes, a bass line and a light
+melody, inspired by the general atmosphere of farm games. It contains no
+commercial game recording or copied soundtrack. Music continues across pages
+and becomes quieter during the camera countdown. It resumes its selected level
+after capture; button and camera cue gains remain independent.
+
+No additional audio package or online service is needed. On first normal
+startup, Python generates/cache WAV files under ignored data/audio in a
+background worker. Kivy loads and plays them on its main thread. Missing audio
+hardware must not prevent photography. PHOTOBOOTH_AUDIO=0 disables playback;
+PHOTOBOOTH_ANIMATIONS=0 disables continuous page illustration/countdown motion.
+The optional palm shutter is paused while the audio menu is open, so adjusting
+volume cannot accidentally start a photograph.
+
+The GUI and folder QR now resolve one logo source in
+[photobooth/branding.py](photobooth/branding.py). The final bright-trail source
+is **Meong Photobooth’s vivid pixel trails.png**. Its bytes could not be imported
+in this editing session because the local file runtime was unavailable.
+The earlier full logo is therefore still bundled. Install the approved final
+image as photobooth/assets/meong_photobooth_vivid.png, or set
+PHOTOBOOTH_LOGO_PATH to that local PNG, then restart the app. Both the header
+and newly generated folder QR images will use it. The code does not recolor,
+redraw, or download a substitute logo. Payment demo QR codes remain plain.
+
+Implementation and maintenance:
+
+- [photobooth/ui_motion.py](photobooth/ui_motion.py): scalable pictograms, page-scoped animation lifecycle, countdown ring, and capture flash.
+- [photobooth/audio.py](photobooth/audio.py): commented original score, deterministic WAV synthesis/cache, three mixer buses, and atomic volume preferences.
+- [photobooth/ui_kivy.py](photobooth/ui_kivy.py): illustrated tutorial, persistent audio settings, clickable cart rows and native controls.
+- [photobooth/ui_brand.py](photobooth/ui_brand.py): carousel requests, swipe/animation coordination, and stale-page cleanup.
+- [tests/test_audio.py](tests/test_audio.py) and [tests/test_kiosk_motion_audio.py](tests/test_kiosk_motion_audio.py): hardware-free sample, gain, navigation, modal and timing regression tests.
+
+Run tests with python -m unittest discover -s tests -v. Enable
+PHOTOBOOTH_TEST_GUI=1 for real-widget checks. The added Kiosk GUI regression
+workflow also runs the existing controller, storage, QR pixel and layout checks.
+Inspect its actual Actions result before treating the update as validated;
+speaker audibility, the physical webcam/printer, the final logo PNG, and exact
+arrow agreement with the unavailable reference screenshot require device or
+asset verification.
+
 ## MEONG GUI and cyclic template browsing
 
 The interface uses the approved pixel camera-cat and original MEONG PHOTOBOOTH
 wordmark. Lens blue, cyan, and cheek pink create a bright theme across the
 welcome screen, progress tabs, template selector, capture guidance, and actions.
-The logo source used inside the QR is unchanged.
+The GUI and folder QR share the same local logo selection.
 
 The template picker is now a **horizontal, cyclic carousel**. Drag/swipe left
 or right, use the **‹ / ›** arrows, or use a mouse wheel over the previews.
@@ -243,7 +302,7 @@ The QR printed with the photo points to the transaction folder, so the customer 
 
 The result-screen QR and the QR embedded in every newly saved three-photo
 composition now use the approved **full MEONG PHOTOBOOTH logo inside the QR**.
-The complete camera-cat, grayscale trail, and wordmark are bundled in
+The earlier complete camera-cat, grayscale trail, and wordmark are bundled in
 [`photobooth/assets/meong_photobooth.png`](photobooth/assets/meong_photobooth.png).
 The application and composition titles also use **MEONG**, without an S.
 
