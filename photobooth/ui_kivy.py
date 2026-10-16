@@ -281,6 +281,11 @@ class PhotoBoothUI:
         # quiet but readable state, and restore the exact primary/secondary fill
         # when camera readiness or quantity changes re-enable this same widget.
         def update_fill(button, disabled):
+            # Camera/storage readiness can change while a pointer is held.
+            # Restore readable disabled ink even if no release is delivered.
+            if disabled:
+                Animation.cancel_all(button, "opacity")
+                button.opacity = 1
             button.background_color = EDGE if disabled else (
                 WHITE if inverse else (SOFT if secondary else BLUE))
         widget.bind(disabled=update_fill)
