@@ -119,7 +119,7 @@ The first implementation milestone includes:
 - Quantity means separate sessions. Each session captures three new photos and receives one retake of a selected photo.
 - A five-second countdown before each capture.
 - A final digital photo composition saved locally for each session.
-- Automatic monochrome ESC/POS printing over configured LAN first, Wi-Fi second, then USB fallback with a result-screen retry action.
+- Automatic monochrome ESC/POS printing over configured Wi-Fi, with USB fallback and a result-screen retry action.
 - One transaction folder slot for all sessions in an order, named with the booth ID and an incrementing eight-digit counter, such as PB001_00000001.
 - A persistent local pool targeting at least 25 verified Drive folders. Each folder is created with its final incrementing transaction ID, so assignment does not rename it.
 - A cached folder ID and URL for each slot, so an assigned transaction can continue offline and show the same folder QR.
@@ -358,17 +358,16 @@ Upload retries should be safe to repeat and must not create duplicate copies of 
 ### 7. Print safely
 
 The app automatically sends the saved composition when its result screen opens.
-Configured raw ESC/POS TCP routes are tried in this order: LAN, then Wi-Fi.
-USB is used if the configured network connections cannot be opened. The J-82ULW
-supports USB, Wi-Fi, and LAN; see the thermal printer setup guide for setting
-the IP address and the three connection routes.
+When a Wi-Fi host is configured, raw ESC/POS is tried over TCP first, then USB
+is used if the network connection cannot be opened. The J-82ULW supports USB,
+Wi-Fi, and LAN; see the thermal printer setup guide for finding its IP address
+and configuring USB fallback.
 
 The result screen shows print status and disables CETAK ULANG while a job is in
-flight. If a network connection opens but writing fails, the print status is
-uncertain and the same job is not automatically sent through another route.
-The customer or operator can deliberately retry the saved image. Status
-confirms that job bytes were sent; it cannot confirm paper movement without
-printer feedback.
+flight. A write failure after the network connection opens is treated as
+uncertain and is not automatically duplicated over USB. The customer or
+operator can deliberately retry the same saved image. Status confirms that
+job bytes were sent; it cannot confirm paper movement without printer feedback.
 
 ### 8. Clean up local storage without deleting Drive files
 
@@ -391,7 +390,7 @@ Install the Python dependencies from the project folder:
 
     python -m pip install -r requirements.txt
 
-Configure LAN, Wi-Fi, and USB fallback as described in the thermal printer setup guide.
+Configure Wi-Fi and USB fallback as described in the thermal printer setup guide.
 
 The existing Apps Script Web App setup is supported. Keep `WEB_APP_URL` and `UPLOAD_TOKEN` in the ignored `photobooth/local_settings.py` file. A safe starter file is provided as `photobooth/local_settings.example.py`; copy it to `photobooth/local_settings.py` and fill in the existing values.
 
@@ -446,7 +445,7 @@ existing-photo migration, activation verification, and the direct-OAuth limitati
 - If there are no ready Drive slots, check internet access and Apps Script configuration. The deployed Web App must include the actions in `apps_script/Code.gs`; the original upload-only deployment cannot create transaction folders. New transactions remain disabled until a slot is verified.
 - An `ACTION_REQUIRED` upload requires staff attention before its 15-day local photo deadline. Failed/pending uploads do not extend retention. Empty reserved slots, configuration, counters, and manifests are preserved.
 - If the log says `Run setupPhotoRetention and redeploy the Web App`, activate the cloud schedule above. Check Apps Script **Executions** for permission/API errors and `drive_retention_error` in the transaction manifest for registration failures.
-- Live QRIS payment remains disconnected; thermal printing is integrated into the current UI.
+- QRIS and printer integration are not connected to the current UI.
 
 ## Project structure
 

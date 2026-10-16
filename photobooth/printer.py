@@ -1,10 +1,10 @@
 """Thermal-printer transport for the booth's final photo compositions.
 
-The app tries configured raw ESC/POS TCP routes in order: wired LAN, Wi-Fi,
-then USB. It falls back to the next route only if opening a TCP connection
-fails before any print bytes have been sent. If sending starts and then fails,
-the job status is uncertain and is reported without an automatic retry because
-the printer may already have received part of the job.
+Network printing uses raw ESC/POS over TCP, usually port 9100. A failed
+connection falls back to USB before any print bytes have been sent. If sending
+starts and then fails, the result is deliberately reported as uncertain instead
+of retrying over USB, because the printer may already have received part of the
+job and a second copy could be produced.
 """
 
 from __future__ import annotations
@@ -18,18 +18,14 @@ from typing import Callable, Mapping
 
 @dataclass(frozen=True)
 class PrinterConfig:
-    """Runtime settings for the booth's LAN, Wi-Fi, and USB printer routes.
+    """Runtime settings for a network-first ESC/POS printer connection.
 
-    LAN and Wi-Fi hosts are IP addresses assigned to their respective printer
-    network interfaces. Empty hosts disable that route. The app never needs the
-    Wi-Fi SSID or password to print; those credentials belong in the printer's
-    own network configuration.
+    A blank network host disables the network probe. Set the printer's Wi-Fi
+    IP address here to make the J-82ULW network interface the primary route.
     """
 
-    lan_host: str = ""
-    lan_port: int = 9100
-    wifi_host: str = ""
-    wifi_port: int = 9100
+    network_host: str = ""
+    network_port: int = 9100
     network_timeout: float = 2.0
     usb_vendor_id: int | None = None
     usb_product_id: int | None = None
@@ -42,31 +38,14 @@ class PrinterConfig:
     ) -> "PrinterConfig":
         """Read non-secret printer settings without making app startup fragile."""
         values = os.environ if environ is None else environ
-        legacy_wifi_timeout = _read_float(
-            values, "PHOTOBOOTH_PRINTER_WIFI_TIMEOUT", 2.0, 0.1, 30.0
-        )
         return cls(
-            lan_host=values.get("PHOTOBOOTH_PRINTER_LAN_HOST", "").strip(),
-            lan_port=_read_int(
-                values, "PHOTOBOOTH_PRINTER_LAN_PORT", 9100, 1, 65535
-            ),
-            wifi_host=values.get("PHOTOBOOTH_PRINTER_WIFI_HOST", "").strip(),
-            wifi_port=_read_int(
-                values, "PHOTOBOOTH_PRINTER_WIFI_PORT", 9100, 1, 65535
-            ),
+            network_host=values.get("PHOTOBOOTH_PRINTER_WIFI_HOST", "").strip(),
+            network_port=_read_int(values, "PHOTOBOOTH_PRINTER_WIFI_PORT", 9100, 1, 65535),
             network_timeout=_read_float(
-                values,
-                "PHOTOBOOTH_PRINTER_NETWORK_TIMEOUT",
-                legacy_wifi_timeout,
-                0.1,
-                30.0,
+                values, "PHOTOBOOTH_PRINTER_WIFI_TIMEOUT", 2.0, 0.1, 30.0
             ),
-            usb_vendor_id=_read_hex_id(
-                values.get("PHOTOBOOTH_PRINTER_USB_VENDOR_ID")
-            ),
-            usb_product_id=_read_hex_id(
-                values.get("PHOTOBOOTH_PRINTER_USB_PRODUCT_ID")
-            ),
+            usb_vendor_id=_read_hex_id(values.get("PHOTOBOOTH_PRINTER_USB_VENDOR_ID")),
+            usb_product_id=_read_hex_id(values.get("PHOTOBOOTH_PRINTER_USB_PRODUCT_ID")),
             usb_device_path=(
                 values.get("PHOTOBOOTH_PRINTER_USB_DEVICE", "/dev/usb/lp0").strip()
                 or None
@@ -89,8 +68,10 @@ class PrintResult:
     @property
     def user_message(self) -> str:
         """Return concise Indonesian status text for the result screen."""
+        if self.success and self.fell_back:
+            return "Wi-Fi tidak tersambung; data cetakan terkirim via USB."
         if self.success:
-            return self.message
+            return f"Data cetakan terkirim via {self.transport}."
         return f"Gagal mencetak: {self.message}"
 
 
@@ -103,16 +84,11 @@ class NetworkSendError(OSError):
 
 
 class ThermalPrinter:
-    """Render an image and send it through LAN, Wi-Fi, then USB.
+    """Render one image as ESC/POS and send it over network, then USB.
 
-    Empty network hosts are skipped. A network connection failure can safely
-    try the next route because no print bytes have been sent. Once a connection
-    opens and a write fails, the result is uncertain, so the app avoids
-    automatic retries that could create duplicate or partial receipts.
-
-    Optional callables make route order testable without hardware. Production
-    defaults build a raster job with python-escpos and use a raw TCP socket or
-    python-escpos USB/file transports.
+    The optional callables make transport order testable without printer
+    hardware. Production defaults build a raster job with python-escpos and use
+    a raw TCP socket or python-escpos USB/file transports to send it.
     """
 
     def __init__(
@@ -120,7 +96,7 @@ class ThermalPrinter:
         config: PrinterConfig | None = None,
         *,
         payload_builder: Callable[[Path], bytes] | None = None,
-        network_sender: Callable[[str, int, bytes], None] | None = None,
+        network_sender: Callable[[bytes], None] | None = None,
         usb_sender: Callable[[bytes], None] | None = None,
     ) -> None:
         self.config = config or PrinterConfig.from_environment()
@@ -129,7 +105,7 @@ class ThermalPrinter:
         self._usb_sender = usb_sender or self._send_usb
 
     def print_image(self, image_path: str | Path) -> PrintResult:
-        """Try configured LAN, then Wi-Fi, then USB for one saved composition."""
+        """Send a saved result over Wi-Fi first, falling back to USB on connect failure."""
         path = Path(image_path)
         if not path.is_file():
             return PrintResult(False, "USB", f"File hasil tidak ditemukan: {path}")
@@ -144,92 +120,49 @@ class ThermalPrinter:
                 f"terpasang dan file PNG dapat dibuka ({error}).",
             )
 
-        routes = (
-            ("LAN", self.config.lan_host, self.config.lan_port),
-            ("Wi-Fi", self.config.wifi_host, self.config.wifi_port),
-        )
-        connection_errors: list[tuple[str, str, int, NetworkConnectionError]] = []
-
-        for transport, host, port in routes:
-            if not host:
-                continue
-
+        network_error: NetworkConnectionError | None = None
+        if self.config.network_host:
             try:
-                self._network_sender(host, port, payload)
+                self._network_sender(payload)
+                return PrintResult(True, "Wi-Fi", "Data ESC/POS terkirim.")
             except NetworkConnectionError as error:
-                # No print bytes were sent, so trying the next route is safe.
-                connection_errors.append((transport, host, port, error))
-                continue
+                # The connection did not open, so no print bytes reached the
+                # network printer. Falling back cannot duplicate this job.
+                network_error = error
             except NetworkSendError as error:
-                # A partial write can produce a partial receipt. Do not send
-                # the same job again on another interface without user action.
+                # A partial write can leave a partially printed receipt. Do
+                # not send the same job again over USB without user action.
                 return PrintResult(
                     False,
-                    transport,
-                    f"Koneksi {transport} terbuka tetapi pengiriman terputus; "
-                    "status cetak tidak pasti "
-                    f"({error}). Tekan CETAK ULANG jika kertas tidak keluar.",
+                    "Wi-Fi",
+                    "Koneksi terbuka tetapi pengiriman terputus; status cetak "
+                    f"tidak pasti ({error}). Tekan CETAK ULANG jika kertas tidak keluar.",
                 )
             except Exception as error:
-                # Unknown network errors are also treated as uncertain because
-                # the code cannot prove that the printer received zero bytes.
                 return PrintResult(
                     False,
-                    transport,
-                    f"Pengiriman melalui {transport} gagal; status cetak tidak "
-                    f"pasti ({error}). Tekan CETAK ULANG jika kertas tidak keluar.",
+                    "Wi-Fi",
+                    f"Pengiriman melalui jaringan gagal ({error}); status cetak tidak pasti.",
                 )
-
-            message = f"Data cetakan terkirim via {transport}."
-            if connection_errors:
-                failed_routes = ", ".join(
-                    route_transport
-                    for route_transport, _, _, _ in connection_errors
-                )
-                message = f"{failed_routes} gagal; {message}"
-            return PrintResult(
-                True,
-                transport,
-                message,
-                fell_back=bool(connection_errors),
-            )
 
         try:
             self._usb_sender(payload)
         except Exception as error:
-            if connection_errors:
-                failed_routes = "; ".join(
-                    f"{transport} {host}:{port} ({network_error})"
-                    for transport, host, port, network_error in connection_errors
-                )
+            if network_error is not None:
                 return PrintResult(
                     False,
                     "USB",
-                    f"Koneksi jaringan gagal ({failed_routes}); "
+                    f"Wi-Fi tidak tersambung ke {self.config.network_host}:"
+                    f"{self.config.network_port} ({network_error}); "
                     f"cadangan USB juga gagal ({error}).",
                 )
-            return PrintResult(
-                False,
-                "USB",
-                f"Periksa kabel dan pengaturan USB ({error}).",
-            )
+            return PrintResult(False, "USB", f"Periksa kabel dan pengaturan USB ({error}).")
 
-        if connection_errors:
-            failed_transports = ", ".join(
-                transport
-                for transport, _, _, _ in connection_errors
-            )
-            message = (
-                f"{failed_transports} tidak tersambung; "
-                "data cetakan terkirim via USB."
-            )
-        else:
-            message = "Data cetakan terkirim via USB."
         return PrintResult(
             True,
             "USB",
-            message,
-            fell_back=bool(connection_errors),
+            "Data ESC/POS terkirim.",
+            fell_back=network_error is not None,
         )
 
     def _build_payload(self, image_path: Path) -> bytes:
@@ -267,11 +200,11 @@ class ThermalPrinter:
         job.cut()
         return job.output
 
-    def _send_network(self, host: str, port: int, payload: bytes) -> None:
-        """Write raw ESC/POS bytes to a configured printer TCP endpoint."""
+    def _send_network(self, payload: bytes) -> None:
+        """Write raw ESC/POS bytes to a printer listening on TCP port 9100."""
         try:
             connection = socket.create_connection(
-                (host, port),
+                (self.config.network_host, self.config.network_port),
                 timeout=self.config.network_timeout,
             )
         except OSError as error:
