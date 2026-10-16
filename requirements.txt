@@ -3,4 +3,5 @@ opencv-contrib-python
 Pillow
 requests
 qrcode[pil]
+python-escpos[usb]
 Kivy>=2.3.1,<3

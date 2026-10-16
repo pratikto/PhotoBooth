@@ -715,6 +715,12 @@ class KivyFlowTests(unittest.TestCase):
             self.assertIsNone(ui.qr_view.size_hint_y)
             self.assertGreaterEqual(ui.qr_view.height, 180)
             self.assertIn('01:00', ui.completion.text)
+            self.assertEqual(ui.print_status.text, 'Belum dikirim ke printer.')
+            self.assertFalse(ui.print_button.disabled)
+            ui.set_print_status('Sedang mencetak...', busy=True)
+            self.assertTrue(ui.print_button.disabled)
+            ui.set_print_status('Data cetakan terkirim via Wi-Fi.')
+            self.assertFalse(ui.print_button.disabled)
             ui.set_result_upload_status('Offline; files queued')
             self.assertIsNotNone(ui.qr_view.texture)
 
