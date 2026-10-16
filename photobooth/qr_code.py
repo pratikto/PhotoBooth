@@ -10,12 +10,12 @@ from functools import lru_cache
 from pathlib import Path
 
 from PIL import Image, ImageOps
+from photobooth.branding import LOGO_PATH, load_logo
 import qrcode
 
 
 # Resolve the artwork from the module, so shortcuts and different working
 # directories still find the approved full MEONG PHOTOBOOTH logo.
-LOGO_PATH = Path(__file__).resolve().parent / "assets" / "meong_photobooth.png"
 QUIET_ZONE_MODULES = 4
 DEFAULT_BOX_SIZE = 8
 # The separate Kivy result QR is displayed in a 180px square at normal density.
@@ -26,12 +26,7 @@ SMALL_PREVIEW_SIZE = 180
 @lru_cache(maxsize=1)
 def _load_logo() -> Image.Image:
     """Read the local logo once and close its original file handle."""
-    with Image.open(LOGO_PATH) as source:
-        # Composite alpha onto white before converting to RGB. Transparent
-        # black pixels must not become a black plate on the thermal path.
-        artwork = source.convert("RGBA")
-        paper = Image.new("RGBA", artwork.size, "white")
-        return Image.alpha_composite(paper, artwork).convert("RGB")
+    return load_logo().copy()
 
 
 def _logo_box(modules: int, artwork: Image.Image) -> tuple[int, int, int, int]:
@@ -173,7 +168,7 @@ def create_qr_image(content: str, *, with_logo: bool = True,
 
     Args:
         content: Cached folder URL or explicit demo text. Empty text fails.
-        with_logo: Include the complete approved camera-cat, grayscale trail,
+        with_logo: Include the complete approved camera-cat, approved trail,
             and MEONG PHOTOBOOTH wordmark. False keeps payment-demo codes plain;
             this helper never edits a payment provider's actual QRIS artwork.
         max_size: Optional pixel bound INCLUDING the four-module white margin.

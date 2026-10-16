@@ -581,8 +581,11 @@ class KivyFlowTests(unittest.TestCase):
                                 visible(ui.cart_total)
                                 self.assertEqual(ui.cart_total.text,
                                                  'Rp' + f'{len(ui.templates) * 10000:,}'.replace(',', '.'))
-                                self.assertIsNone(ui.summary.text_size[1])
-                                self.assertGreaterEqual(ui.summary.height, 4 * ui.summary.font_size)
+                                # Each order title is now a real 52dp button
+                                # within the independently scrollable cart.
+                                self.assertEqual(len(ui.order_rows), len(ui.templates))
+                                self.assertGreaterEqual(ui.order_items.height, 4 * 44)
+                                self.assertTrue(all(row.height >= 44 for row in ui.order_rows.values()))
                                 last_card = ui._template_cards[ui.templates[-1].template_id]
                                 ui.template_carousel.index = len(ui.templates) - 1
                                 settle()
