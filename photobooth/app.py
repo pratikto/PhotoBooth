@@ -1,16 +1,18 @@
 # PhotoBooth source file
 # Application controller connecting customer actions, camera capture, local transaction storage, Drive synchronization, and the Kivy screens.
 
-"""Application controller for the procedure's capture and Drive workflow.
+"""Application controller for capture, Drive synchronization, and printing.
 
-Payment and printing are left out until those integrations are ready. When
-Drive credentials are configured, transactions use pre-verified folder slots,
-show the cached folder QR, and synchronize files in the background.
+Payment remains simulated. When Drive credentials are configured, transactions
+use pre-verified folder slots, show the cached folder QR, and synchronize files
+in the background. Final compositions print automatically over configured Wi-Fi
+with USB fallback.
 """
 
 import os
 import json
 import time
+import threading
 from pathlib import Path
 from kivy.clock import ClockEvent
 
@@ -25,6 +27,7 @@ from photobooth.drive_storage import AppsScriptDriveClient, DriveApiError, Googl
 from photobooth.drive_sync import DriveSyncWorker
 from photobooth.palm_gesture import MAX_RESULT_AGE, PALM_CONFIDENCE, PalmGestureWorker, PalmHoldTrigger
 from photobooth.qr_code import create_qr_image
+from photobooth.printer import PrintResult, ThermalPrinter
 from photobooth.retention import PhotoRetentionWorker
 from photobooth.transaction_store import LocalTransaction, TransactionStore
 from photobooth.ui_kivy import KivyHost, PhotoBoothUI
@@ -107,6 +110,12 @@ class PhotoBoothApp:
         self._preview_after_id: ClockEvent | None = None
         self._drive_status_after_id: ClockEvent | None = None
 
+        # Keep printer I/O off Kivy's main thread. A job key suppresses duplicate
+        # taps while one copy of the same saved composition is still in flight.
+        self.printer = ThermalPrinter()
+        self._print_lock = threading.Lock()
+        self._print_jobs_in_flight: set[str] = set()
+
         self.ui = PhotoBoothUI(
             root=self.root,
             templates=self.templates,
@@ -119,6 +128,7 @@ class PhotoBoothApp:
             on_accept_session=self._accept_current_session,
             on_next_session=self._start_next_session,
             on_finish=self._finish_transaction,
+            on_print=self._retry_current_print,
             on_close=self.close,
         )
         self.ui.show_welcome(False, "Kamera sedang diperiksa...")
@@ -665,11 +675,85 @@ class PhotoBoothApp:
                 and not self._should_show_result_qr()
             ),
             upload_message=self._upload_status_message(),
+            print_message="Menyiapkan cetakan...",
+            print_busy=True,
         )
+        self._start_print_job(output_path)
         if self.drive_worker is not None:
             self.drive_worker.kick()
         if not has_next:
             self._start_completion_countdown()
+
+    def _retry_current_print(self) -> None:
+        """Deliberately resend the current saved image after an automatic job."""
+        session = self.current_session
+        if (
+            self.ui.current_screen != "result"
+            or session is None
+            or session.output_path is None
+        ):
+            return
+        self._start_print_job(session.output_path)
+
+    def _start_print_job(self, image_path: Path) -> None:
+        """Start one background print job for this exact saved composition."""
+        if self.is_closing:
+            return
+        path = Path(image_path)
+        job_key = str(path.resolve())
+        with self._print_lock:
+            if job_key in self._print_jobs_in_flight:
+                return
+            self._print_jobs_in_flight.add(job_key)
+
+        self.ui.set_print_status("Sedang mengirim ke printer...", busy=True)
+        worker = threading.Thread(
+            target=self._print_in_background,
+            args=(path, job_key),
+            name="thermal-printer",
+            daemon=True,
+        )
+        try:
+            worker.start()
+        except RuntimeError as error:
+            with self._print_lock:
+                self._print_jobs_in_flight.discard(job_key)
+            self.ui.set_print_status(f"Gagal memulai pencetakan ({error}).", busy=False)
+
+    def _print_in_background(self, image_path: Path, job_key: str) -> None:
+        """Run device I/O off-thread, then post status back to Kivy."""
+        try:
+            result = self.printer.print_image(image_path)
+        except Exception as error:
+            result = PrintResult(False, "printer", f"Kesalahan pencetakan ({error}).")
+        finally:
+            with self._print_lock:
+                self._print_jobs_in_flight.discard(job_key)
+
+        if self.is_closing:
+            return
+        try:
+            self.root.after(
+                0,
+                lambda: self._finish_print_job(image_path, result),
+            )
+        except Exception:
+            # The UI may have been closed while the daemon transport was
+            # writing to a disconnected printer.
+            return
+
+    def _finish_print_job(self, image_path: Path, result: PrintResult) -> None:
+        """Update only the result screen that still owns this output file."""
+        session = self.current_session
+        if (
+            self.is_closing
+            or self.ui.current_screen != "result"
+            or session is None
+            or session.output_path is None
+            or session.output_path.resolve() != image_path.resolve()
+        ):
+            return
+        self.ui.set_print_status(result.user_message, busy=False)
 
     def _start_next_session(self) -> None:
         # Cancel the final-session timer and advance to the next planned session, or finish the

@@ -11,8 +11,22 @@ from unittest.mock import patch
 import numpy as np
 
 
+class _NoHardwarePrinter:
+    """Keep opt-in GUI controller tests from sending real thermal print jobs."""
+    def print_image(self, image_path):
+        return type('PrintOutcome', (), {
+            'user_message': 'Thermal print skipped by the hardware-free test.'
+        })()
+
+
 @unittest.skipUnless(os.environ.get('PHOTOBOOTH_TEST_GUI') == '1', 'GUI checks are opt-in')
 class ControllerFlowTests(unittest.TestCase):
+    def setUp(self):
+        # Auto-print is part of the live result flow. Replace it before each
+        # controller test so a locally attached printer never receives fixtures.
+        self._printer_patch = patch('photobooth.app.ThermalPrinter', _NoHardwarePrinter)
+        self._printer_patch.start()
+        self.addCleanup(self._printer_patch.stop)
     def test_an_abandoned_review_cannot_compose_new_photo_bytes_after_fifteen_days(self):
         """An old on-screen session must not undo the background retention job."""
         from datetime import datetime, timedelta, timezone

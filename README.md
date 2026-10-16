@@ -1,6 +1,6 @@
 # Meong Photobooth
 
-A Python photo booth application built with Kivy, OpenCV, and Pillow. The attached procedure document is the functional source of truth. QRIS and printing are intentionally out of the current implementation until those integrations are ready.
+A Python photo booth application built with Kivy, OpenCV, Pillow, and ESC/POS printing. The attached procedure document is the functional source of truth. Live QRIS payment remains outside the current implementation.
 
 ## Illustrated kiosk, animation and audio
 
@@ -119,15 +119,16 @@ The first implementation milestone includes:
 - Quantity means separate sessions. Each session captures three new photos and receives one retake of a selected photo.
 - A five-second countdown before each capture.
 - A final digital photo composition saved locally for each session.
+- Automatic monochrome ESC/POS printing over configured Wi-Fi, with USB fallback and a result-screen retry action.
 - One transaction folder slot for all sessions in an order, named with the booth ID and an incrementing eight-digit counter, such as PB001_00000001.
 - A persistent local pool targeting at least 25 verified Drive folders. Each folder is created with its final incrementing transaction ID, so assignment does not rename it.
 - A cached folder ID and URL for each slot, so an assigned transaction can continue offline and show the same folder QR.
 - A local manifest and retryable upload queue. Uploads are identified by transaction-relative path and checked by size and checksum. Local photo retention is limited to 15 days even when upload has not succeeded. Direct OAuth uploads are resumable; the Apps Script backend retries whole files idempotently.
 - Automatic photo retention: 15 days on the booth and 30 days in Google Drive, measured from the transaction start. Drive's independent hourly timer requires the Apps Script setup below.
 
-The dummy payment screen supports testing the complete flow. Live QRIS payment and physical printing remain pending.
+The dummy payment screen supports testing the complete flow. Live QRIS payment remains pending; physical printing is integrated and can be configured for the iWare J-82ULW.
 
-Payment and printing sections below describe the procedure's target behavior and are not part of this implementation.
+Payment-related sections below describe the procedure's target behavior; the printer flow is described in the implemented printer setup below.
 
 ### Approved 80 mm templates
 
@@ -143,7 +144,8 @@ at eight dots/mm. The approved artwork retains its **1 mm paper margins**.
 The footer reserves **48 × 48 mm** for the transaction-folder QR, including its
 white scan margin. The full Meong logo is centered and monochrome there. Raw
 photos retain their original resolution; digital photos inside the strip keep
-their colors. Printer integration will handle photo dithering separately.
+their colors. The printer adapter converts the saved composition to a
+monochrome raster at the configured printer width (576 dots by default).
 
 | Number | Template key | Design |
 | --- | --- | --- |
@@ -330,11 +332,10 @@ The composition requests its final pixel size directly, keeping each data
 module an integer number of pixels wide. See the
 [centering correction](docs/qa/centered-qr.md) for pixel-level regression checks.
 
-For a future thermal-printer adapter, use
-`create_qr_image(folder_url, max_size=384, monochrome=True)` to obtain a QR with
-a black/white logo. Choose the size for the real printer's available dot width
-and verify a physical print before deployment. The QR matrix itself stays crisp;
-only the artwork is dithered. Printer transport is still not implemented.
+The ESC/POS adapter prints the saved composition, including its real folder QR,
+as a monochrome raster. It scales the 640 px-wide master to the configured
+print-head width while preserving aspect ratio. A physical print should still
+be checked for QR readability and darkness after the printer is configured.
 Payment-demo codes remain plain and separate from the customer folder QR.
 See the [branded QR verification](docs/qa/branded-qr.md) for examples, test
 commands, and the limits of the digital checks.
@@ -356,13 +357,17 @@ Upload retries should be safe to repeat and must not create duplicate copies of 
 
 ### 7. Print safely
 
-The print screen should expose these states:
+The app automatically sends the saved composition when its result screen opens.
+When a Wi-Fi host is configured, raw ESC/POS is tried over TCP first, then USB
+is used if the network connection cannot be opened. The J-82ULW supports USB,
+Wi-Fi, and LAN; see the thermal printer setup guide for finding its IP address
+and configuring USB fallback.
 
-- **Sedang mencetak** — disable the print action while the printer job is running.
-- **Berhasil** — confirm that printing completed.
-- **Gagal, coba lagi** — provide a retry path after a failure.
-
-A retry must not create a duplicate print job or duplicate order output. Track each print job so the application can distinguish a retry from a new print request.
+The result screen shows print status and disables CETAK ULANG while a job is in
+flight. A write failure after the network connection opens is treated as
+uncertain and is not automatically duplicated over USB. The customer or
+operator can deliberately retry the same saved image. Status confirms that
+job bytes were sent; it cannot confirm paper movement without printer feedback.
 
 ### 8. Clean up local storage without deleting Drive files
 
@@ -384,6 +389,8 @@ Transaction folders should use **Anyone with the link** access so customers can 
 Install the Python dependencies from the project folder:
 
     python -m pip install -r requirements.txt
+
+Configure Wi-Fi and USB fallback as described in the thermal printer setup guide.
 
 The existing Apps Script Web App setup is supported. Keep `WEB_APP_URL` and `UPLOAD_TOKEN` in the ignored `photobooth/local_settings.py` file. A safe starter file is provided as `photobooth/local_settings.example.py`; copy it to `photobooth/local_settings.py` and fill in the existing values.
 
