@@ -1,7 +1,9 @@
 # Thermal printer setup
 
-The booth prints each saved result image as a monochrome ESC/POS raster. The
-purchased printer is the iWare/Barcodia J-82ULW. Its product listing identifies
+The booth prints each saved result image as a monochrome ESC/POS raster. Photo
+tones use Floyd–Steinberg dithering by default; Bayer ordered dithering and a
+plain threshold are also available for comparison. The purchased printer is
+the iWare/Barcodia J-82ULW. Its product listing identifies
 USB, Wi-Fi, and LAN, with 80 mm and 58 mm paper support and an auto cutter.
 Use the 80 mm roll for the booth's 80 × 240 mm photo strips.
 
@@ -117,6 +119,25 @@ Android rollout.
   both must be set together. Values are hexadecimal.
 - PHOTOBOOTH_PRINTER_USB_DEVICE — Linux file-device fallback; default
   /dev/usb/lp0.
+- PHOTOBOOTH_PRINTER_DITHER — image conversion method: `floyd-steinberg`
+  (default), `bayer`, or `threshold`. Changes apply after restarting the app.
+- PHOTOBOOTH_PRINTER_THRESHOLD — grayscale cutoff from 0 to 255 for the
+  `threshold` method; default 128. A higher value prints more pixels as black.
+  This setting does not change Floyd–Steinberg or Bayer output.
+
+## Compare the three image methods
+
+To compare output on the same saved composition, run the helper with a PNG
+from a completed session. It sends three separate jobs, each labeled above the
+image, in this order: Floyd–Steinberg, Bayer, then threshold. It stops if a
+print fails, so check the printer before deliberately running it again.
+
+    python tools/print_dither_comparison.py "photos/PB001_00000001/output/session_01/template_a.png"
+
+Replace the example path with the actual saved result path. Configure the
+printer connection and width first; for an 80 mm roll, 576 dots is the default,
+while a 58 mm roll commonly uses 384 dots. The app's normal automatic print
+continues to use the configured `PHOTOBOOTH_PRINTER_DITHER` mode.
 
 Install the repository dependencies before running the app:
 

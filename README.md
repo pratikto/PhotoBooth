@@ -145,7 +145,9 @@ The footer reserves **48 × 48 mm** for the transaction-folder QR, including its
 white scan margin. The full Meong logo is centered and monochrome there. Raw
 photos retain their original resolution; digital photos inside the strip keep
 their colors. The printer adapter converts the saved composition to a
-monochrome raster at the configured printer width (576 dots by default).
+monochrome raster at the configured printer width (576 dots by default), using
+Floyd–Steinberg dithering by default. Bayer and threshold modes are configurable;
+the [printer setup guide](docs/printer-setup.md) explains how to compare them.
 
 | Number | Template key | Design |
 | --- | --- | --- |
@@ -368,7 +370,9 @@ flight. If a network connection opens but writing fails, the print status is
 uncertain and the same job is not automatically sent through another route.
 The customer or operator can deliberately retry the saved image. Status
 confirms that job bytes were sent; it cannot confirm paper movement without
-printer feedback.
+printer feedback. To print the same saved result with Floyd–Steinberg, Bayer,
+and threshold labels for a physical comparison, use the helper in the printer
+setup guide.
 
 ### 8. Clean up local storage without deleting Drive files
 

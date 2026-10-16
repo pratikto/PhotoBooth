@@ -8,10 +8,13 @@ from pathlib import Path
 from unittest.mock import Mock, call, patch
 
 from photobooth.printer import (
+    DITHER_MODES,
     NetworkConnectionError,
     NetworkSendError,
     PrinterConfig,
+    PrintResult,
     ThermalPrinter,
+    dither_image,
 )
 
 
@@ -41,6 +44,28 @@ class PrinterConfigTests(unittest.TestCase):
         self.assertEqual(config.usb_device_path, "/dev/usb/lp1")
         self.assertEqual(config.print_width_dots, 640)
 
+    def test_environment_selects_dither_mode_and_threshold(self):
+        config = PrinterConfig.from_environment(
+            {
+                "PHOTOBOOTH_PRINTER_DITHER": "ordered",
+                "PHOTOBOOTH_PRINTER_THRESHOLD": "170",
+            }
+        )
+
+        self.assertEqual(config.dither_mode, "bayer")
+        self.assertEqual(config.dither_threshold, 170)
+
+    def test_invalid_dither_settings_use_safe_defaults(self):
+        config = PrinterConfig.from_environment(
+            {
+                "PHOTOBOOTH_PRINTER_DITHER": "fancy-ai-mode",
+                "PHOTOBOOTH_PRINTER_THRESHOLD": "999",
+            }
+        )
+
+        self.assertEqual(config.dither_mode, "floyd-steinberg")
+        self.assertEqual(config.dither_threshold, 128)
+
     def test_legacy_wifi_timeout_remains_a_fallback_alias(self):
         config = PrinterConfig.from_environment(
             {"PHOTOBOOTH_PRINTER_WIFI_TIMEOUT": "1.25"}
@@ -64,6 +89,75 @@ class PrinterConfigTests(unittest.TestCase):
         self.assertEqual(config.network_timeout, 2.0)
         self.assertEqual(config.print_width_dots, 576)
         self.assertIsNone(config.usb_vendor_id)
+
+
+class DitherImageTests(unittest.TestCase):
+    def test_every_supported_mode_returns_a_one_bit_image(self):
+        from PIL import Image
+
+        sample = Image.new("RGB", (16, 16), color=(128, 128, 128))
+
+        for mode in DITHER_MODES:
+            with self.subTest(mode=mode):
+                result = dither_image(sample, mode)
+                self.assertEqual(result.mode, "1")
+                self.assertEqual(result.size, sample.size)
+
+    def test_bayer_mid_gray_has_repeatable_half_black_coverage(self):
+        from PIL import Image
+
+        sample = Image.new("L", (8, 8), color=128)
+
+        first = dither_image(sample, "bayer")
+        second = dither_image(sample, "ordered-bayer")
+
+        first_pixels = list(first.get_flattened_data())
+        second_pixels = list(second.get_flattened_data())
+        self.assertEqual(first_pixels, second_pixels)
+        self.assertEqual(first_pixels.count(0), 32)
+        self.assertEqual(first_pixels.count(255), 32)
+
+    def test_threshold_cutoff_controls_black_pixels(self):
+        from PIL import Image
+
+        sample = Image.new("L", (4, 1))
+        sample.putdata([0, 127, 128, 255])
+
+        result = dither_image(sample, "threshold", threshold=128)
+
+        self.assertEqual(list(result.get_flattened_data()), [0, 0, 255, 255])
+
+    def test_floyd_steinberg_preserves_average_tone_in_mid_gray_patch(self):
+        from PIL import Image
+
+        sample = Image.new("L", (32, 32), color=128)
+
+        result = dither_image(sample, "floyd")
+
+        pixels = list(result.get_flattened_data())
+        black_ratio = pixels.count(0) / len(pixels)
+        self.assertEqual(result.mode, "1")
+        self.assertGreater(black_ratio, 0.45)
+        self.assertLess(black_ratio, 0.55)
+
+    def test_each_dither_mode_preserves_absolute_black_and_white(self):
+        from PIL import Image
+
+        for mode in DITHER_MODES:
+            with self.subTest(mode=mode):
+                black = dither_image(Image.new("L", (8, 8), 0), mode)
+                white = dither_image(Image.new("L", (8, 8), 255), mode)
+                self.assertEqual(set(black.get_flattened_data()), {0})
+                self.assertEqual(set(white.get_flattened_data()), {255})
+
+    def test_unknown_mode_and_invalid_threshold_are_rejected(self):
+        from PIL import Image
+
+        sample = Image.new("L", (2, 2), color=127)
+        with self.assertRaises(ValueError):
+            dither_image(sample, "unknown")
+        with self.assertRaises(ValueError):
+            dither_image(sample, "threshold", threshold=256)
 
 
 class ThermalPrinterTests(unittest.TestCase):
@@ -223,6 +317,38 @@ class ThermalPrinterTests(unittest.TestCase):
                 printer._send_network("10.0.0.20", 9100, b"escpos job")
         connection.close.assert_called_once()
 
+    def test_comparison_prints_same_image_in_supported_mode_order(self):
+        printer = ThermalPrinter(PrinterConfig())
+        successful_result = PrintResult(True, "LAN", "sent")
+        with patch.object(
+            printer,
+            "print_image",
+            side_effect=[successful_result, successful_result, successful_result],
+        ) as print_image:
+            results = printer.print_comparison(self.image_path)
+
+        self.assertEqual(results, (successful_result,) * 3)
+        self.assertEqual(
+            print_image.call_args_list,
+            [
+                call(
+                    self.image_path,
+                    dither_mode=mode,
+                    header_label=f"DITHER TEST: {mode.upper()}",
+                )
+                for mode in DITHER_MODES
+            ],
+        )
+
+    def test_comparison_stops_after_first_failed_print(self):
+        printer = ThermalPrinter(PrinterConfig())
+        failed_result = PrintResult(False, "LAN", "uncertain")
+        with patch.object(printer, "print_image", return_value=failed_result) as print_image:
+            results = printer.print_comparison(self.image_path)
+
+        self.assertEqual(results, (failed_result,))
+        print_image.assert_called_once()
+
     def test_blank_network_hosts_use_usb_immediately(self):
         network = Mock()
         usb = Mock()
@@ -247,10 +373,12 @@ class ThermalPrinterTests(unittest.TestCase):
         class Dummy:
             output = b"escpos job"
             image_size = None
+            image_mode = None
             cut_called = False
 
             def image(self, bitmap, **kwargs):
                 self.image_size = bitmap.size
+                self.image_mode = bitmap.mode
                 self.image_options = kwargs
 
             def cut(self):
@@ -275,9 +403,55 @@ class ThermalPrinterTests(unittest.TestCase):
                 payload = printer._build_payload(image_path)
 
         self.assertEqual(dummy.image_size, (576, 1728))
+        self.assertEqual(dummy.image_mode, "1")
         self.assertEqual(dummy.image_options["impl"], "bitImageRaster")
         self.assertTrue(dummy.cut_called)
         self.assertEqual(payload, b"escpos job")
+
+    def test_payload_uses_configured_threshold_mode_and_adds_crisp_label(self):
+        from PIL import Image
+
+        class Dummy:
+            output = b"comparison job"
+            bitmap = None
+            cut_called = False
+
+            def image(self, bitmap, **_kwargs):
+                self.bitmap = bitmap.copy()
+
+            def cut(self):
+                self.cut_called = True
+
+        dummy = Dummy()
+        escpos_module = types.ModuleType("escpos")
+        printer_module = types.ModuleType("escpos.printer")
+        printer_module.Dummy = lambda: dummy
+        escpos_module.printer = printer_module
+        with tempfile.TemporaryDirectory() as directory:
+            image_path = Path(directory) / "gray.png"
+            Image.new("RGB", (16, 16), color=(128, 128, 128)).save(image_path)
+            printer = ThermalPrinter(
+                PrinterConfig(dither_mode="threshold", dither_threshold=128)
+            )
+            with patch.dict(
+                sys.modules,
+                {
+                    "escpos": escpos_module,
+                    "escpos.printer": printer_module,
+                },
+            ):
+                payload = printer._build_payload(
+                    image_path,
+                    header_label="DITHER TEST: THRESHOLD",
+                )
+
+        self.assertEqual(dummy.bitmap.mode, "1")
+        self.assertEqual(dummy.bitmap.width, 16)
+        self.assertGreater(dummy.bitmap.height, 16)
+        self.assertIn(0, set(dummy.bitmap.get_flattened_data()))
+        self.assertIn(255, set(dummy.bitmap.get_flattened_data()))
+        self.assertTrue(dummy.cut_called)
+        self.assertEqual(payload, b"comparison job")
 
     def test_missing_image_is_rejected_before_opening_a_transport(self):
         network = Mock()
