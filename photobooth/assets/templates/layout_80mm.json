@@ -1,0 +1,639 @@
+{
+  "revision": "3 - visible artwork fitted to a 1 mm paper margin on all four sides",
+  "brand": "MEONG PHOTOBOOTH",
+  "paper": {
+    "width_mm": 80,
+    "height_mm": 240,
+    "margin_mm": 1,
+    "margins_mm": {
+      "left": 1,
+      "right": 1,
+      "top": 1,
+      "bottom": 1
+    },
+    "artwork_area_mm": {
+      "width": 78,
+      "height": 238
+    }
+  },
+  "png_export": {
+    "dots_per_mm": 8,
+    "dpi_nominal": 203,
+    "width_pixels": 640,
+    "height_pixels": 1920
+  },
+  "qr_style": {
+    "selected_option": 1,
+    "description": "full approved MEONG PHOTOBOOTH logo centred in QR",
+    "background": "white",
+    "modules": "black square modules",
+    "error_correction": "H",
+    "quiet_zone_minimum_modules": 4,
+    "reserved_area_mm": 48,
+    "demo_payload": "https://example.com/",
+    "production_payload": "session-specific photo download URL"
+  },
+  "templates": [
+    {
+      "id": "01",
+      "name": "Special Day",
+      "png_file": "PNG/01_meong_special_day.png",
+      "photo_count": 3,
+      "photo_apertures": [
+        {
+          "x_mm": 6.121,
+          "y_from_top_mm": 47.41,
+          "width_mm": 67.758,
+          "height_mm": 38.081,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/01_1.png"
+        },
+        {
+          "x_mm": 6.121,
+          "y_from_top_mm": 90.151,
+          "width_mm": 67.874,
+          "height_mm": 38.279,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/01_2.png"
+        },
+        {
+          "x_mm": 6.121,
+          "y_from_top_mm": 133.091,
+          "width_mm": 67.874,
+          "height_mm": 38.279,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/01_3.png"
+        }
+      ],
+      "qr_area": {
+        "x_mm": 16.0,
+        "y_from_top_mm": 175.375,
+        "width_mm": 48.0,
+        "height_mm": 48.0,
+        "includes_white_margin": true,
+        "replace_entire_placeholder": true
+      },
+      "visible_artwork_bounds_mm": {
+        "left": 1,
+        "top": 1,
+        "right": 79,
+        "bottom": 239
+      },
+      "reference_file": "exec-8a793868-4d41-49ff-9062-c665901fadf4.png"
+    },
+    {
+      "id": "02",
+      "name": "Stitched Hearts",
+      "png_file": "PNG/02_meong_stitched_hearts.png",
+      "photo_count": 3,
+      "photo_apertures": [
+        {
+          "x_mm": 7.265,
+          "y_from_top_mm": 18.738,
+          "width_mm": 65.017,
+          "height_mm": 47.395,
+          "shape": "heart",
+          "clip_to_frame": true,
+          "mask_file": "masks/02_1.png"
+        },
+        {
+          "x_mm": 7.265,
+          "y_from_top_mm": 70.747,
+          "width_mm": 65.13,
+          "height_mm": 47.299,
+          "shape": "heart",
+          "clip_to_frame": true,
+          "mask_file": "masks/02_2.png"
+        },
+        {
+          "x_mm": 7.265,
+          "y_from_top_mm": 122.66,
+          "width_mm": 65.017,
+          "height_mm": 47.395,
+          "shape": "heart",
+          "clip_to_frame": true,
+          "mask_file": "masks/02_3.png"
+        }
+      ],
+      "qr_area": {
+        "x_mm": 16.0,
+        "y_from_top_mm": 175.5,
+        "width_mm": 48.0,
+        "height_mm": 48.0,
+        "includes_white_margin": true,
+        "replace_entire_placeholder": true
+      },
+      "visible_artwork_bounds_mm": {
+        "left": 1,
+        "top": 1,
+        "right": 79,
+        "bottom": 239
+      },
+      "reference_file": "exec-e32c477b-9686-4c6a-9bdf-ef765177b7f2.png"
+    },
+    {
+      "id": "03",
+      "name": "Memory Pass",
+      "png_file": "PNG/03_meong_memory_pass.png",
+      "photo_count": 3,
+      "photo_apertures": [
+        {
+          "x_mm": 5.744,
+          "y_from_top_mm": 31.367,
+          "width_mm": 68.437,
+          "height_mm": 44.457,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/03_1.png"
+        },
+        {
+          "x_mm": 5.857,
+          "y_from_top_mm": 78.428,
+          "width_mm": 68.324,
+          "height_mm": 44.554,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/03_2.png"
+        },
+        {
+          "x_mm": 5.857,
+          "y_from_top_mm": 125.778,
+          "width_mm": 68.324,
+          "height_mm": 44.554,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/03_3.png"
+        }
+      ],
+      "qr_area": {
+        "x_mm": 16.0,
+        "y_from_top_mm": 174.375,
+        "width_mm": 48.0,
+        "height_mm": 48.0,
+        "includes_white_margin": true,
+        "replace_entire_placeholder": true
+      },
+      "visible_artwork_bounds_mm": {
+        "left": 1,
+        "top": 1,
+        "right": 79,
+        "bottom": 239
+      },
+      "reference_file": "exec-0fbe4520-14ed-4135-a6ab-988810a4caa3.png"
+    },
+    {
+      "id": "04",
+      "name": "Movie Night",
+      "png_file": "PNG/04_meong_movie_night.png",
+      "photo_count": 3,
+      "photo_apertures": [
+        {
+          "x_mm": 7.604,
+          "y_from_top_mm": 48.594,
+          "width_mm": 64.793,
+          "height_mm": 32.81,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/04_1.png"
+        },
+        {
+          "x_mm": 7.604,
+          "y_from_top_mm": 92.182,
+          "width_mm": 64.793,
+          "height_mm": 32.906,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/04_2.png"
+        },
+        {
+          "x_mm": 7.604,
+          "y_from_top_mm": 135.579,
+          "width_mm": 64.793,
+          "height_mm": 32.715,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/04_3.png"
+        }
+      ],
+      "qr_area": {
+        "x_mm": 16.0,
+        "y_from_top_mm": 175.75,
+        "width_mm": 48.0,
+        "height_mm": 48.0,
+        "includes_white_margin": true,
+        "replace_entire_placeholder": true
+      },
+      "visible_artwork_bounds_mm": {
+        "left": 1,
+        "top": 1,
+        "right": 79,
+        "bottom": 239
+      },
+      "reference_file": "exec-ea1b147f-2bc6-4433-b553-375f885059a6.png"
+    },
+    {
+      "id": "05",
+      "name": "Cinema Club",
+      "png_file": "PNG/05_meong_cinema_club.png",
+      "photo_count": 3,
+      "photo_apertures": [
+        {
+          "x_mm": 12.01,
+          "y_from_top_mm": 43.305,
+          "width_mm": 56.206,
+          "height_mm": 38.424,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/05_1.png"
+        },
+        {
+          "x_mm": 12.01,
+          "y_from_top_mm": 87.881,
+          "width_mm": 56.206,
+          "height_mm": 38.614,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/05_2.png"
+        },
+        {
+          "x_mm": 12.01,
+          "y_from_top_mm": 132.741,
+          "width_mm": 56.206,
+          "height_mm": 38.519,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/05_3.png"
+        }
+      ],
+      "qr_area": {
+        "x_mm": 16.0,
+        "y_from_top_mm": 176.125,
+        "width_mm": 48.0,
+        "height_mm": 48.0,
+        "includes_white_margin": true,
+        "replace_entire_placeholder": true
+      },
+      "visible_artwork_bounds_mm": {
+        "left": 1,
+        "top": 1,
+        "right": 79,
+        "bottom": 239
+      },
+      "reference_file": "exec-c2f1d5b7-7288-4f97-95af-5c80340d3607.png"
+    },
+    {
+      "id": "06",
+      "name": "Now Showing",
+      "png_file": "PNG/06_meong_now_showing.png",
+      "photo_count": 3,
+      "photo_apertures": [
+        {
+          "x_mm": 8.91,
+          "y_from_top_mm": 32.964,
+          "width_mm": 62.18,
+          "height_mm": 40.957,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/06_1.png"
+        },
+        {
+          "x_mm": 8.91,
+          "y_from_top_mm": 77.768,
+          "width_mm": 62.18,
+          "height_mm": 40.749,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/06_2.png"
+        },
+        {
+          "x_mm": 8.91,
+          "y_from_top_mm": 122.259,
+          "width_mm": 62.18,
+          "height_mm": 41.789,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/06_3.png"
+        }
+      ],
+      "qr_area": {
+        "x_mm": 16.0,
+        "y_from_top_mm": 173.875,
+        "width_mm": 48.0,
+        "height_mm": 48.0,
+        "includes_white_margin": true,
+        "replace_entire_placeholder": true
+      },
+      "visible_artwork_bounds_mm": {
+        "left": 1,
+        "top": 1,
+        "right": 79,
+        "bottom": 239
+      },
+      "reference_file": "exec-4ee7e94c-7182-4549-9563-83ef6e51c2cb.png"
+    },
+    {
+      "id": "07",
+      "name": "Cafe Moments",
+      "png_file": "PNG/07_meong_cafe_moments.png",
+      "photo_count": 3,
+      "photo_apertures": [
+        {
+          "x_mm": 8.676,
+          "y_from_top_mm": 25.815,
+          "width_mm": 62.761,
+          "height_mm": 44.503,
+          "shape": "vintage_label",
+          "clip_to_frame": true,
+          "mask_file": "masks/07_1.png"
+        },
+        {
+          "x_mm": 8.676,
+          "y_from_top_mm": 77.552,
+          "width_mm": 62.761,
+          "height_mm": 43.679,
+          "shape": "vintage_label",
+          "clip_to_frame": true,
+          "mask_file": "masks/07_2.png"
+        },
+        {
+          "x_mm": 8.676,
+          "y_from_top_mm": 128.098,
+          "width_mm": 62.761,
+          "height_mm": 43.679,
+          "shape": "vintage_label",
+          "clip_to_frame": true,
+          "mask_file": "masks/07_3.png"
+        }
+      ],
+      "qr_area": {
+        "x_mm": 16.0,
+        "y_from_top_mm": 175.75,
+        "width_mm": 48.0,
+        "height_mm": 48.0,
+        "includes_white_margin": true,
+        "replace_entire_placeholder": true
+      },
+      "visible_artwork_bounds_mm": {
+        "left": 1,
+        "top": 1,
+        "right": 79,
+        "bottom": 239
+      },
+      "reference_file": "exec-3962756e-3b67-47bb-b271-749e57ec6331.png"
+    },
+    {
+      "id": "08",
+      "name": "Scrapbook Memories",
+      "png_file": "PNG/08_meong_scrapbook_memories.png",
+      "photo_count": 3,
+      "photo_apertures": [
+        {
+          "x_mm": 8.225,
+          "y_from_top_mm": 28.804,
+          "width_mm": 63.323,
+          "height_mm": 40.6,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/08_1.png"
+        },
+        {
+          "x_mm": 8.225,
+          "y_from_top_mm": 79.431,
+          "width_mm": 63.323,
+          "height_mm": 40.502,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/08_2.png"
+        },
+        {
+          "x_mm": 8.225,
+          "y_from_top_mm": 129.37,
+          "width_mm": 63.323,
+          "height_mm": 40.698,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/08_3.png"
+        }
+      ],
+      "qr_area": {
+        "x_mm": 16.0,
+        "y_from_top_mm": 175.625,
+        "width_mm": 48.0,
+        "height_mm": 48.0,
+        "includes_white_margin": true,
+        "replace_entire_placeholder": true
+      },
+      "visible_artwork_bounds_mm": {
+        "left": 1,
+        "top": 1,
+        "right": 79,
+        "bottom": 239
+      },
+      "reference_file": "exec-ffe160ca-8a3a-48d7-bc5b-82b2095b2d6d.png"
+    },
+    {
+      "id": "09",
+      "name": "Pixel Arcade",
+      "png_file": "PNG/09_meong_pixel_arcade.png",
+      "photo_count": 3,
+      "photo_apertures": [
+        {
+          "x_mm": 10.695,
+          "y_from_top_mm": 22.852,
+          "width_mm": 58.609,
+          "height_mm": 39.562,
+          "shape": "pixel_corner",
+          "clip_to_frame": true,
+          "mask_file": "masks/09_1.png"
+        },
+        {
+          "x_mm": 10.695,
+          "y_from_top_mm": 70.777,
+          "width_mm": 58.609,
+          "height_mm": 39.562,
+          "shape": "pixel_corner",
+          "clip_to_frame": true,
+          "mask_file": "masks/09_2.png"
+        },
+        {
+          "x_mm": 10.695,
+          "y_from_top_mm": 118.797,
+          "width_mm": 58.609,
+          "height_mm": 39.562,
+          "shape": "pixel_corner",
+          "clip_to_frame": true,
+          "mask_file": "masks/09_3.png"
+        }
+      ],
+      "qr_area": {
+        "x_mm": 16.0,
+        "y_from_top_mm": 174.25,
+        "width_mm": 48.0,
+        "height_mm": 48.0,
+        "includes_white_margin": true,
+        "replace_entire_placeholder": true
+      },
+      "visible_artwork_bounds_mm": {
+        "left": 1,
+        "top": 1,
+        "right": 79,
+        "bottom": 239
+      },
+      "reference_file": "exec-a3967e50-dd8b-4316-8986-31695f194b9f.png"
+    },
+    {
+      "id": "10",
+      "name": "Bake a Smile",
+      "png_file": "PNG/10_meong_bake_a_smile.png",
+      "photo_count": 3,
+      "photo_apertures": [
+        {
+          "x_mm": 10.831,
+          "y_from_top_mm": 39.673,
+          "width_mm": 58.38,
+          "height_mm": 40.801,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/10_1.png"
+        },
+        {
+          "x_mm": 10.831,
+          "y_from_top_mm": 85.155,
+          "width_mm": 58.38,
+          "height_mm": 40.801,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/10_2.png"
+        },
+        {
+          "x_mm": 10.831,
+          "y_from_top_mm": 130.738,
+          "width_mm": 58.38,
+          "height_mm": 40.801,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/10_3.png"
+        }
+      ],
+      "qr_area": {
+        "x_mm": 16.0,
+        "y_from_top_mm": 176.25,
+        "width_mm": 48.0,
+        "height_mm": 48.0,
+        "includes_white_margin": true,
+        "replace_entire_placeholder": true
+      },
+      "visible_artwork_bounds_mm": {
+        "left": 1,
+        "top": 1,
+        "right": 79,
+        "bottom": 239
+      },
+      "reference_file": "exec-83b5f561-5087-4c6a-b466-740b24a92210.png"
+    },
+    {
+      "id": "11",
+      "name": "Date Night",
+      "png_file": "PNG/11_meong_date_night.png",
+      "photo_count": 3,
+      "photo_apertures": [
+        {
+          "x_mm": 8.817,
+          "y_from_top_mm": 39.357,
+          "width_mm": 62.367,
+          "height_mm": 41.715,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/11_1.png"
+        },
+        {
+          "x_mm": 8.817,
+          "y_from_top_mm": 84.846,
+          "width_mm": 62.367,
+          "height_mm": 41.231,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/11_2.png"
+        },
+        {
+          "x_mm": 8.817,
+          "y_from_top_mm": 129.562,
+          "width_mm": 62.367,
+          "height_mm": 40.844,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/11_3.png"
+        }
+      ],
+      "qr_area": {
+        "x_mm": 16.0,
+        "y_from_top_mm": 174.375,
+        "width_mm": 48.0,
+        "height_mm": 48.0,
+        "includes_white_margin": true,
+        "replace_entire_placeholder": true
+      },
+      "visible_artwork_bounds_mm": {
+        "left": 1,
+        "top": 1,
+        "right": 79,
+        "bottom": 239
+      },
+      "reference_file": "exec-08a79a79-3e8e-432e-a9c6-ebfe373b157d.png"
+    },
+    {
+      "id": "12",
+      "name": "Celebrate",
+      "png_file": "PNG/12_meong_celebrate.png",
+      "photo_count": 3,
+      "photo_apertures": [
+        {
+          "x_mm": 3.826,
+          "y_from_top_mm": 25.36,
+          "width_mm": 72.586,
+          "height_mm": 46.203,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/12_1.png"
+        },
+        {
+          "x_mm": 3.826,
+          "y_from_top_mm": 74.97,
+          "width_mm": 72.586,
+          "height_mm": 46.102,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/12_2.png"
+        },
+        {
+          "x_mm": 3.826,
+          "y_from_top_mm": 124.68,
+          "width_mm": 72.586,
+          "height_mm": 46.203,
+          "shape": "rectangle_or_rounded_rectangle",
+          "clip_to_frame": true,
+          "mask_file": "masks/12_3.png"
+        }
+      ],
+      "qr_area": {
+        "x_mm": 16.0,
+        "y_from_top_mm": 175.625,
+        "width_mm": 48.0,
+        "height_mm": 48.0,
+        "includes_white_margin": true,
+        "replace_entire_placeholder": true
+      },
+      "visible_artwork_bounds_mm": {
+        "left": 1,
+        "top": 1,
+        "right": 79,
+        "bottom": 239
+      },
+      "reference_file": "exec-c79c95bf-d8f4-4fdf-afd2-177d37a90070.png"
+    }
+  ],
+  "validation_limits": "A digital proof cannot certify an untested physical printer or customer phone."
+}

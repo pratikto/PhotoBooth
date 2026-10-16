@@ -7,7 +7,9 @@ A Python photo booth application built with Kivy, OpenCV, and Pillow. The attach
 The first implementation milestone includes:
 
 - A welcome screen and a template picker with a cart-style session summary.
-- Four sample template cards. Their artwork is illustrative and should be replaced with the final template designs.
+- Twelve approved Meong thermal receipt templates with full-strip gallery previews.
+- Automatic placement of each session's three photos inside the selected design, including heart, vintage-label, rounded, and pixel-corner masks.
+- Review thumbnails use the same crop and shape as the accepted result, including after a retake.
 - Quantity means separate sessions. Each session captures three new photos and receives one retake of a selected photo.
 - A five-second countdown before each capture.
 - A final digital photo composition saved locally for each session.
@@ -17,9 +19,64 @@ The first implementation milestone includes:
 - A local manifest and retryable upload queue. Uploads are identified by transaction-relative path and checked by size and checksum. Local photo retention is limited to 15 days even when upload has not succeeded. Direct OAuth uploads are resumable; the Apps Script backend retries whole files idempotently.
 - Automatic photo retention: 15 days on the booth and 30 days in Google Drive, measured from the transaction start. Drive's independent hourly timer requires the Apps Script setup below.
 
-QRIS payment and printing are not implemented. The bundled template artwork is illustrative and should be replaced with the final designs before operating the booth.
+The dummy payment screen supports testing the complete flow. Live QRIS payment and physical printing remain pending.
 
 Payment and printing sections below describe the procedure's target behavior and are not part of this implementation.
+
+### Approved 80 mm templates
+
+All twelve designs are included in this repository; no separate template
+download or Drive script update is needed. In the GUI, add a quantity beside a
+design, continue through the dummy payment, take three pictures, optionally
+retake one, and select **GUNAKAN FOTO INI**. Python puts those photos into that
+session's selected template and shows the completed strip on the result page.
+Use **PERBESAR HASIL** to inspect a larger, vertically scrollable copy.
+
+The result is **640 × 1920 pixels at 203.2 dpi**, corresponding to **80 × 240 mm**
+at eight dots/mm. The approved artwork retains its **1 mm paper margins**.
+The footer reserves **48 × 48 mm** for the transaction-folder QR, including its
+white scan margin. The full Meong logo is centered and monochrome there. Raw
+photos retain their original resolution; digital photos inside the strip keep
+their colors. Printer integration will handle photo dithering separately.
+
+| Number | Template key | Design |
+| --- | --- | --- |
+| 01 | template_a | Special Day |
+| 02 | template_b | Stitched Hearts |
+| 03 | template_c | Memory Pass |
+| 04 | template_d | Movie Night |
+| 05 | template_e | Cinema Club |
+| 06 | template_f | Now Showing |
+| 07 | template_g | Cafe Moments |
+| 08 | template_h | Scrapbook Memories |
+| 09 | template_i | Pixel Arcade |
+| 10 | template_j | Bake a Smile |
+| 11 | template_k | Date Night |
+| 12 | template_l | Celebrate |
+
+Implementation and learning guide:
+
+- [`photobooth/catalog.py`](photobooth/catalog.py) loads the designs and composes photos, masks, and the real folder QR.
+- [`photobooth/assets/templates/layout_80mm.json`](photobooth/assets/templates/layout_80mm.json) defines each photo/QR position in millimetres.
+- [`photobooth/assets/templates/`](photobooth/assets/templates/) contains the twelve approved masters and 36 explicit clip masks.
+- [`photobooth/ui_kivy.py`](photobooth/ui_kivy.py) displays actual template previews and the exact review-frame pixels.
+- [`photobooth/app.py`](photobooth/app.py) passes the current session's template and final photo paths, including its replacement photo, into the renderer.
+
+Try your own existing photos without opening the camera or GUI:
+
+```bash
+python tools/compose_template.py --list
+python tools/compose_template.py --template 02 --photos one.jpg two.jpg three.jpg --output preview.png
+```
+
+Supply an actual HTTPS folder destination using `--folder-url` to embed its QR.
+The helper does not upload files. Without that option, the output says **MODE
+LOKAL** and contains no dummy download QR. The normal application supplies the
+transaction's cached folder URL automatically. Source files are never edited.
+
+The PNG's physical dimensions describe the design. A real printer must support
+the required printable width and dot density to preserve its 1 mm margins;
+physical printer and phone-camera checks remain to be performed on the device.
 
 ## Agreed product workflow
 
@@ -168,7 +225,7 @@ module an integer number of pixels wide. See the
 [centering correction](docs/qa/centered-qr.md) for pixel-level regression checks.
 
 For a future thermal-printer adapter, use
-`create_qr_image(folder_url, max_size=210, monochrome=True)` to obtain a QR with
+`create_qr_image(folder_url, max_size=384, monochrome=True)` to obtain a QR with
 a black/white logo. Choose the size for the real printer's available dot width
 and verify a physical print before deployment. The QR matrix itself stays crisp;
 only the artwork is dithered. Printer transport is still not implemented.

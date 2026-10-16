@@ -586,6 +586,10 @@ class PhotoBoothApp:
             selected_index=selected_index,
             retake_available=not session.retake_used,
             status_message=status_message,
+            # Each approved design has different aperture sizes and clipping
+            # shapes. Review must use this session's actual template, including
+            # the frame containing a replacement photo after a retake.
+            template=session.plan.template,
         )
 
     def _accept_current_session(self) -> None:

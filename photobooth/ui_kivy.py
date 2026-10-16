@@ -25,7 +25,7 @@ from kivy.uix.popup import Popup
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
 from PIL import Image
-from photobooth.catalog import PRICE_PER_SESSION, create_template_preview, fit_result_photo
+from photobooth.catalog import PRICE_PER_SESSION, create_template_preview, render_photo_frame
 
 NAVY = (0.106, 0.227, 0.376, 1)
 MUTED = (0.39, 0.44, 0.52, 1)
@@ -151,6 +151,7 @@ class PhotoBoothUI:
         self._payment_submitted = False
         self.qr_view = None
         self._qr_bytes = None
+        self._result_detail_popup = None
         self.shell = Panel(fill=PAPER, orientation='vertical', padding=dp(24), spacing=dp(12))
         root.view = self.shell
         header = BoxLayout(size_hint_y=None, height=dp(58), spacing=dp(12))
@@ -276,6 +277,12 @@ class PhotoBoothUI:
 
     def _reset(self, screen, title, subtitle=''):
         """Discard only screen widgets, keeping shell/footer and controller state."""
+        # Completion can return to welcome while a customer inspects the strip.
+        # Retire that modal with the result page so the next session cannot be
+        # blocked by, or accidentally display, the previous customer's photos.
+        if self._result_detail_popup is not None:
+            self._result_detail_popup.dismiss(animation=False)
+            self._result_detail_popup = None
         self._screen_revision += 1
         self.current_screen = screen
         self.content.clear_widgets()
@@ -481,36 +488,46 @@ class PhotoBoothUI:
         gallery = ScrollView(do_scroll_x=False, bar_width=dp(5))
         grid = GridLayout(cols=2, spacing=dp(14), size_hint_y=None)
         grid.bind(minimum_height=grid.setter('height'))
-        gallery.bind(width=lambda w, width: setattr(grid, 'cols', 1 if width < dp(370) else 2))
+        # Full-height receipt samples need room beside their names/controls.
+        # Switch to one column before either card would become too narrow.
+        gallery.bind(width=lambda w, width: setattr(grid, 'cols', 1 if width < dp(680) else 2))
         gallery.add_widget(grid)
         for number, template in enumerate(self.templates, 1):
             key = template.template_id
-            card = Panel(orientation='vertical', size_hint_y=None, height=dp(228),
-                         padding=dp(14), spacing=dp(7))
-            card.add_widget(self._display(create_template_preview(template, (520, 220))))
-            card.add_widget(self._label(template.name, 17, 27, bold=True))
-            card.add_widget(self._label('Rp5.000 / sesi', 13, 24, color=GREY))
+            card = Panel(orientation='horizontal', size_hint_y=None, height=dp(280),
+                         padding=dp(14), spacing=dp(14))
+            sample = self._display(create_template_preview(template, (100, 300)))
+            sample.size_hint_x = None
+            sample.width = dp(84)
+            card.add_widget(sample)
+            details = BoxLayout(orientation='vertical', spacing=dp(8))
+            details.add_widget(self._label(f'GAYA {number:02d}', 11, 22, color=GREY, bold=True))
+            details.add_widget(self._label(template.name, 17, 64, bold=True))
+            details.add_widget(self._label('3 foto · 80 × 240 mm', 12, 40, color=GREY))
+            details.add_widget(Widget())
+            details.add_widget(self._label('Rp5.000 / sesi', 13, 24, color=GREY))
             controls = BoxLayout(size_hint_y=None, height=dp(42), spacing=dp(8))
             minus = self._button('−', lambda k=key: self._change_quantity(k, -1), secondary=True)
             plus = self._button('+', lambda k=key: self._change_quantity(k, 1), secondary=True)
             self.quantity_buttons[key] = (minus, plus)
             for button in (minus, plus):
                 button.size_hint_x = None
-                button.width = dp(46)
+                button.width = dp(40)
                 button.height = dp(42)
             quantity = self._label('0 sesi', 14, bold=True, align='center')
             self.quantity_labels[key] = quantity
             controls.add_widget(minus)
             controls.add_widget(quantity)
             controls.add_widget(plus)
-            card.add_widget(controls)
+            details.add_widget(controls)
+            card.add_widget(details)
             self._template_cards[key] = card
             grid.add_widget(card)
         cart = Panel(orientation='vertical', padding=dp(18), spacing=dp(10))
         cart.add_widget(self._label('PESANAN KAMU', 12, 26, color=GREY, bold=True))
         cart.add_widget(self._label('Momen pilihanmu', 22, 36, bold=True))
         # Only the item list scrolls. The session count and payable total remain
-        # visible even when all four templates have quantities in the order.
+        # visible even when all twelve templates have quantities in the order.
         items = ScrollView(do_scroll_x=False, bar_width=dp(4))
         self.summary = self._label('', 15, auto_height=True)
         items.add_widget(self.summary)
@@ -739,7 +756,8 @@ class PhotoBoothUI:
         if self.current_screen == 'capture':
             self.capture_button.disabled = not (enabled and self._camera_ready)
 
-    def show_review(self, photo_paths, session_label, selected_index, retake_available, status_message=''):
+    def show_review(self, photo_paths, session_label, selected_index, retake_available,
+                    status_message='', template=None):
         """Review the final frame crops and mark the exact retake target.
 
         Showing the full camera aspect ratio here used to expose side content
@@ -751,6 +769,7 @@ class PhotoBoothUI:
                            f'{session_label}  ·  Sisa retake: {int(retake_available)}')
         self._review_can_retake = selected_index is not None and retake_available
         self._review_has_retake = retake_available
+        template = template or self.templates[0]
         scroll = ScrollView(do_scroll_x=False)
         gallery = GridLayout(cols=3, spacing=dp(16), size_hint_y=None)
         gallery.bind(minimum_height=gallery.setter('height'))
@@ -768,7 +787,7 @@ class PhotoBoothUI:
             card = Panel(fill=SOFT if selected else WHITE, orientation='vertical',
                          padding=dp(14), spacing=dp(12), size_hint_y=None, height=dp(290))
             with Image.open(path) as source:
-                display = fit_result_photo(source)
+                display = render_photo_frame(source, template, index)
             card.add_widget(self._display(display))
             caption = (' · DIPILIH' if selected else ' · Pilih untuk retake') if retake_available else (
                 ' · DIGANTI' if selected else ' · Tersimpan')
@@ -801,7 +820,12 @@ class PhotoBoothUI:
             display = source.convert('RGB')
             display.thumbnail((1000, 850))
         photo.add_widget(self._display(display))
-        photo.add_widget(self._label('Cetak fisik belum terhubung.', 12, 28, color=GREY, align='center'))
+        self.result_zoom_button = self._button('PERBESAR HASIL',
+                                               lambda: self._show_result_detail(image_path),
+                                               secondary=True)
+        self.result_zoom_button.height = dp(36)
+        photo.add_widget(self.result_zoom_button)
+        photo.add_widget(self._label('Cetak fisik belum terhubung.', 12, 22, color=GREY, align='center'))
         share = Panel(orientation='vertical', padding=dp(10), spacing=dp(5))
         share.add_widget(self._label('BAWA PULANG FOTOMU', 12, 20, bold=True, color=GREY))
         self.qr_view = KivyImage(fit_mode='contain', size_hint_y=None, height=dp(180))
@@ -821,6 +845,47 @@ class PhotoBoothUI:
         self.result_action = self._button('SESI BERIKUTNYA' if has_next_session else 'SELESAI',
                                          self.callbacks['on_next_session' if has_next_session else 'on_finish'])
         page.add_widget(self._actions(self.completion, self.result_action))
+
+    def _show_result_detail(self, image_path):
+        """Inspect the full receipt at a larger size without rewriting output.
+
+        A complete 80 × 240 mm strip is narrow when contained in a desktop
+        result card. This read-only viewer uses the available width and allows
+        vertical scrolling, so photos and footer details can be inspected.
+        Closing it returns to the same result/session; it never triggers print.
+        """
+        try:
+            with Image.open(image_path) as source:
+                image = source.convert('RGB')
+        except OSError as error:
+            return self.show_error('Hasil tidak dapat dibuka', str(error))
+        body = BoxLayout(orientation='vertical', spacing=dp(12), padding=dp(12))
+        scroll = ScrollView(do_scroll_x=False)
+        display = self._display(image)
+        display.size_hint = (None, None)
+        display.pos_hint = {'center_x': .5}
+        stage = BoxLayout(orientation='vertical', size_hint_y=None)
+        stage.add_widget(display)
+        def fit_detail(_widget, width):
+            # Cap the enlargement at native pixel width on desktop, keeping
+            # the first photograph readable without making the header enormous.
+            display.width = min(width, dp(640))
+            display.height = display.width * image.height / image.width
+            stage.height = display.height
+        stage.bind(width=fit_detail)
+        scroll.add_widget(stage)
+        body.add_widget(scroll)
+        popup = Popup(title='Detail hasil foto', content=body, size_hint=(.85, .9),
+                      auto_dismiss=False, background='', background_color=PAPER,
+                      title_color=INK, separator_color=EDGE)
+        body.add_widget(self._button('TUTUP', popup.dismiss, screen_bound=False))
+        self._result_detail_popup = popup
+        def release_detail(_popup):
+            if self._result_detail_popup is popup:
+                self._result_detail_popup = None
+        popup.bind(on_dismiss=release_detail)
+        popup.open()
+        return popup
 
     def set_result_qr(self, qr_image, pending=False):
         """Keep the destination visible independently from synchronization state."""

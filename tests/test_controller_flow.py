@@ -232,3 +232,74 @@ class ControllerFlowTests(unittest.TestCase):
                 self.assertEqual(backend.calls, 4)  # Verified files are never re-uploaded.
             finally:
                 app.close()
+
+    def test_selected_heart_and_arcade_templates_follow_their_own_sessions(self):
+        """Real callbacks must pass the chosen design through review and save.
+
+        Using a non-default heart first catches accidental fallback to the
+        first catalog entry. A second arcade session catches stale design state
+        when advancing, while a third-photo retake checks replacement order.
+        """
+        from PIL import Image
+        from kivy.uix.image import Image as KivyImage
+        from photobooth.app import PhotoBoothApp
+        with tempfile.TemporaryDirectory() as directory, \
+             patch('photobooth.app.PROJECT_ROOT', Path(directory)), \
+             patch('photobooth.app.Camera'), \
+             patch('photobooth.app.AppsScriptDriveClient.from_configuration', return_value=None), \
+             patch('photobooth.app.GoogleDriveClient.from_environment', return_value=None), \
+             patch.dict(os.environ, {'PHOTOBOOTH_LOCAL_ONLY': '1', 'PHOTOBOOTH_PALM_TRIGGER': '0'}):
+            app = PhotoBoothApp()
+            try:
+                app.camera_ready = True
+                app.current_frame = np.full((600, 800, 3), (60, 70, 170), dtype=np.uint8)
+                heart, arcade = app.templates[1], app.templates[8]
+                app._open_template_selection()
+                app.ui._change_quantity(heart.template_id, 1)
+                app.ui._change_quantity(arcade.template_id, 1)
+                app.ui.start_button.dispatch('on_release')
+                app.ui.payment_confirm.dispatch('on_release')
+                for template in (heart, arcade):
+                    self.assertEqual(app.current_session.plan.template, template)
+                    for _ in range(3):
+                        app._save_current_frame(False)
+                    thumbnails = sorted((widget for widget in app.ui.content.walk()
+                                         if isinstance(widget, KivyImage)), key=lambda w: w.x)
+                    self.assertEqual(sorted(widget.texture.size for widget in thumbnails),
+                                     sorted(frame.size for frame in template.apertures))
+                    if template == heart:
+                        app._select_photo(2)
+                        app.ui.retake_button.dispatch('on_release')
+                        self.assertEqual(app.ui.countdown.text, 'Siap?')
+                        self.assertIsNone(app._countdown_after_id)
+                        app.current_frame = np.full((600, 800, 3), (190, 70, 30), dtype=np.uint8)
+                        app._save_current_frame(True)
+                    app.ui.accept_button.dispatch('on_release')
+                    self.assertEqual(app.ui.current_screen, 'result')
+                    output = app.current_session.output_path
+                    self.assertEqual(output.name, template.template_id + '.png')
+                    with Image.open(output) as saved, Image.open(template.artwork_path) as master:
+                        # Header ink comes from the actual selected design.
+                        self.assertEqual(saved.crop((0, 0, 640, 120)).tobytes(),
+                                         master.crop((0, 0, 640, 120)).tobytes())
+                        self.assertEqual(saved.size, (640, 1920))
+                        if template == heart:
+                            colors = []
+                            for frame in template.apertures:
+                                x0, y0, x1, y1 = frame.box
+                                colors.append(saved.getpixel(((x0 + x1) // 2, (y0 + y1) // 2)))
+                            self.assertEqual(colors[0], colors[1])
+                            self.assertNotEqual(colors[1], colors[2])
+                    if template == heart:
+                        before = output.read_bytes()
+                        app.ui.result_zoom_button.dispatch('on_release')
+                        detail = app.ui._result_detail_popup
+                        self.assertIsNotNone(detail)
+                        self.assertEqual(output.read_bytes(), before)
+                        app.ui.result_action.dispatch('on_release')
+                        self.assertIsNone(app.ui._result_detail_popup)
+                        self.assertIsNone(detail.parent)
+                app.ui.result_action.dispatch('on_release')
+                self.assertEqual(app.ui.current_screen, 'welcome')
+            finally:
+                app.close()

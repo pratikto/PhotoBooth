@@ -1,5 +1,9 @@
 # Desktop GUI verification
 
+The latest [approved 80 mm receipt integration](receipt-templates.md) covers all
+twelve real designs, shaped photo masks, exact review crops, and the detail viewer.
+Older milestone notes below retain their original sample-template dimensions.
+
 The [full-logo folder QR follow-up](branded-qr.md) records the approved MEONG
 branding, QR decoding checks, and updated result-screen examples.
 

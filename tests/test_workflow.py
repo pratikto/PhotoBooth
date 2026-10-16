@@ -8,15 +8,15 @@ import unittest
 
 from PIL import Image, ImageDraw, ImageOps
 
-from photobooth.catalog import compose_result, fit_result_photo, get_templates
+from photobooth.catalog import CANVAS_SIZE, PHOTO_FRAME_SIZE, compose_result, fit_result_photo, get_templates
 from photobooth.transaction_store import TransactionStore
 from photobooth.workflow import PhotoSession, build_session_plans
 
 
 class WorkflowTests(unittest.TestCase):
     # Test session planning and the one-retake-per-session business rule.
-    def test_shared_review_crop_preserves_the_established_output_pixels(self):
-        """Centralizing framing must not change the existing composition crop."""
+    def test_shared_crop_preserves_aspect_ratio_and_original_pixels(self):
+        """Crop to the actual receipt aperture without changing the source."""
         for mode, size in (('RGB', (640, 480)), ('RGBA', (480, 640)), ('L', (480, 480))):
             with self.subTest(mode=mode, size=size):
                 source = Image.new(mode, size, 0)
@@ -24,12 +24,12 @@ class WorkflowTests(unittest.TestCase):
                 draw.rectangle((0, 0, size[0] // 2, size[1] // 2), fill=127)
                 draw.line((0, size[1] - 1, size[0] - 1, 0), fill=255, width=9)
                 before = source.tobytes()
-                legacy = ImageOps.fit(source.convert('RGB'), (470, 500),
+                expected = ImageOps.fit(source.convert('RGB'), PHOTO_FRAME_SIZE,
                                       method=Image.Resampling.LANCZOS, centering=(0.5, 0.5))
                 actual = fit_result_photo(source)
                 self.assertEqual(actual.mode, 'RGB')
-                self.assertEqual(actual.size, (470, 500))
-                self.assertEqual(actual.tobytes(), legacy.tobytes())
+                self.assertEqual(actual.size, PHOTO_FRAME_SIZE)
+                self.assertEqual(actual.tobytes(), expected.tobytes())
                 self.assertEqual(source.size, size)
                 self.assertEqual(source.mode, mode)
                 self.assertEqual(source.tobytes(), before)
@@ -202,7 +202,8 @@ class TransactionStoreTests(unittest.TestCase):
 
             self.assertTrue(output_path.is_file())
             with Image.open(output_path) as output:
-                self.assertEqual(output.size, (1800, 1000))
+                self.assertEqual(output.size, CANVAS_SIZE)
+                self.assertAlmostEqual(output.info['dpi'][0], 203.2, places=1)
 
     def test_composition_rejects_an_incomplete_session(self):
         # Ensure the image composer refuses to produce a result until all three photos are available.
@@ -238,14 +239,14 @@ class EmbeddedFolderQRTests(unittest.TestCase):
                                           root / f'{template.template_id}.png',
                                           'PB001_00000001', 'session_001', folder_url=url)
                     result = cv2.imread(str(path))
-                    self.assertEqual(result.shape[:2], (1000, 1800))
+                    self.assertEqual(result.shape[:2], CANVAS_SIZE[::-1])
                     decoded, points, _ = cv2.QRCodeDetector().detectAndDecode(result)
                     self.assertEqual(decoded, url)
-                    self.assertGreater(float(points[:, :, 1].min()), 735)
-                    # Confirm the saved/uploaded result contains the colored
-                    # full-logo insert, rather than only the separate GUI QR.
-                    # Corner bounds exclude the template's colored background.
+                    self.assertGreater(float(points[:, :, 1].min()), template.qr_box[1])
+                    # Thermal receipts use the approved monochrome logo. Its
+                    # geometric center and readability are independently
+                    # checked in test_qr_code.py at this same size bound.
                     x0, y0 = np.floor(points.min(axis=1)[0]).astype(int)
                     x1, y1 = np.ceil(points.max(axis=1)[0]).astype(int)
                     qr_pixels = result[y0:y1 + 1, x0:x1 + 1]
-                    self.assertTrue(np.any(qr_pixels[:, :, 0] != qr_pixels[:, :, 2]))
+                    self.assertTrue(np.isin(qr_pixels, (0, 255)).all())

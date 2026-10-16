@@ -182,7 +182,7 @@ def main():
         ui._change_quantity(templates[0].template_id, 2)
 
     def result_screen(local=False, has_next=False):
-        ui.show_result(local_result if local else result, 'Sesi 1 dari 8 · Template 1',
+        ui.show_result(local_result if local else result, 'Sesi 1 dari 24 · Special Day',
                        'PB001_00000001', has_next, None if has_next else 60,
                        None if local else create_qr_image(FOLDER_URL), False,
                        'Hasil digital tersimpan di perangkat ini.' if local else
@@ -209,7 +209,8 @@ def main():
             True, LONG_STATUS, storage_ready=False, quantities={'template_a': 2}), None),
         ('templates-bottom', cart, scroll_last_template),
         ('payment', lambda: ui.show_payment('\n'.join(f'{t.name} × 2' for t in templates),
-                                           8, 40000, lambda: None, lambda: None), None),
+                                           len(templates) * 2, len(templates) * 10000,
+                                           lambda: None, lambda: None), None),
         ('payment-waiting', lambda: ui.show_payment('Template 1 × 2',
                                                    2, 10000, lambda: None, lambda: None),
          lambda: ui.set_camera_status(False)),
@@ -326,15 +327,15 @@ def main():
                     raise AssertionError(f'{name} must show all three review frames')
                 with Image.open(result) as composition:
                     for index, widget in enumerate(thumbnails):
-                        if widget.texture.size != (470, 500):
+                        frame = templates[0].apertures[index]
+                        if widget.texture.size != frame.size:
                             raise AssertionError(f'{name} shows a different photo aperture')
                         shown = Image.frombytes('RGBA', widget.texture.size,
                                                 widget.texture.pixels).convert('RGB')
-                        left = 155 + index * 510
-                        saved = composition.crop((left, 195, left + 470, 695))
+                        saved = composition.crop(frame.box)
                         if shown.tobytes() != saved.tobytes():
                             raise AssertionError(f'{name} differs from its saved result frame')
-                record['review_frame_size'] = [470, 500]
+                record['review_frame_sizes'] = [list(frame.size) for frame in templates[0].apertures]
                 record['review_matches_output'] = True
             if ui.current_screen == 'templates':
                 selected = [key for key, card in ui._template_cards.items() if card.selected]

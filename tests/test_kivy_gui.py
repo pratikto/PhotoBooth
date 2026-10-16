@@ -304,7 +304,8 @@ class KivyFlowTests(unittest.TestCase):
                             output = compose_result(final_paths, ui.templates[0], root / 'result.png',
                                                     'PB001_00000001', 'session_001')
                             saved_output = output.read_bytes()
-                            ui.show_review(final_paths, 'Sesi 1 dari 1', 1, not used)
+                            ui.show_review(final_paths, 'Sesi 1 dari 1', 1, not used,
+                                           template=ui.templates[0])
                             for _ in range(6):
                                 EventLoop.idle()
                             thumbnails = sorted((widget for widget in ui.content.walk()
@@ -312,11 +313,11 @@ class KivyFlowTests(unittest.TestCase):
                             self.assertEqual(len(thumbnails), 3)
                             with Image.open(output) as result:
                                 for index, widget in enumerate(thumbnails):
-                                    self.assertEqual(widget.texture.size, (470, 500))
+                                    frame = ui.templates[0].apertures[index]
+                                    self.assertEqual(widget.texture.size, frame.size)
                                     shown = Image.frombytes('RGBA', widget.texture.size,
                                                             widget.texture.pixels).convert('RGB')
-                                    left = 155 + index * 510
-                                    saved = result.crop((left, 195, left + 470, 695))
+                                    saved = result.crop(frame.box)
                                     self.assertEqual(shown.tobytes(), saved.tobytes())
                             self.assertEqual(output.read_bytes(), saved_output)
                 self.assertEqual([path.read_bytes() for path in paths], raw_bytes)
@@ -578,7 +579,8 @@ class KivyFlowTests(unittest.TestCase):
                             self.assertLessEqual(stage.children[0].height, stage.height + 1, screen)
                             if screen == 'templates':
                                 visible(ui.cart_total)
-                                self.assertEqual(ui.cart_total.text, 'Rp40.000')
+                                self.assertEqual(ui.cart_total.text,
+                                                 'Rp' + f'{len(ui.templates) * 10000:,}'.replace(',', '.'))
                                 self.assertIsNone(ui.summary.text_size[1])
                                 self.assertGreaterEqual(ui.summary.height, 4 * ui.summary.font_size)
                                 last_card = ui._template_cards[ui.templates[-1].template_id]
