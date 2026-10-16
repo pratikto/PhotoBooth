@@ -95,10 +95,12 @@ class ControllerFlowTests(unittest.TestCase):
                 app._save_current_frame(False)
                 app._save_current_frame(False)
                 self.assertEqual(app.ui.current_screen, 'review')
-                app._start_retake_countdown()  # No selected target: no timer.
+                app.ui.retake_button.dispatch('on_release')  # No selected target: no timer.
                 self.assertIsNone(app._countdown_after_id)
                 app._select_photo(1)
-                app._start_retake_countdown()
+                app.ui.retake_button.dispatch('on_release')
+                self.assertIsNone(app._countdown_after_id)  # Ready first; no automatic timer.
+                app.ui.capture_button.dispatch('on_release')
                 for _ in range(5):
                     app._cancel_after(app._countdown_after_id)
                     app._countdown_tick()

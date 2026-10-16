@@ -384,6 +384,42 @@
       ]
     },
     {
+      "screen": "retake-ready",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "retake-ready-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "retake-countdown",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "retake-countdown-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "RETAKE FOTO TERPILIH",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
+        }
+      ]
+    },
+    {
       "screen": "review",
       "size": [
         1200,
@@ -817,6 +853,42 @@
       "disabled_text_contrast": [
         {
           "text": "AMBIL FOTO",
+          "background_rgb": [
+            214,
+            222,
+            212
+          ],
+          "foreground_rgb": [
+            77,
+            92,
+            82
+          ],
+          "ratio": 5.141
+        }
+      ]
+    },
+    {
+      "screen": "retake-ready",
+      "size": [
+        800,
+        600
+      ],
+      "file": "retake-ready-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "retake-countdown",
+      "size": [
+        800,
+        600
+      ],
+      "file": "retake-countdown-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "RETAKE FOTO TERPILIH",
           "background_rgb": [
             214,
             222,

@@ -45,6 +45,94 @@ class CameraRecoveryTests(unittest.TestCase):
         self.app.ui._change_quantity(self.key, 2)
         self.app.ui.start_button.dispatch('on_release')
 
+    def test_retake_waits_for_capture_press_before_replacing_the_selected_photo(self):
+        """Opening retake previews the camera; only a second press starts capture.
+
+        Drive the real buttons and deterministic timer ticks. Waiting must not
+        schedule a countdown, write a file, or spend the session's allowance.
+        A completed retake replaces only the selected result position while
+        retaining all three original files.
+        """
+        self.order()
+        self.app.ui.payment_confirm.dispatch('on_release')
+        for _ in range(3):
+            self.app._save_current_frame(False)
+        self.app._select_photo(1)
+        session = self.app.current_session
+        originals = list(session.initial_photo_paths)
+        original_bytes = [path.read_bytes() for path in originals]
+        manifest_bytes = self.app.transaction.manifest_path.read_bytes()
+        with patch.object(self.app.root, 'after', wraps=self.app.root.after) as schedule:
+            self.app.ui.retake_button.dispatch('on_release')
+            self.assertEqual(self.app.ui.current_screen, 'capture')
+            self.assertIsNone(self.app._countdown_after_id)
+            schedule.assert_not_called()
+            self.assertEqual(self.app.ui.countdown.text, 'Siap?')
+            self.assertEqual(self.app.ui.capture_button.text, 'AMBIL FOTO PENGGANTI')
+            self.assertFalse(self.app.ui.capture_button.disabled)
+            self.assertEqual(session.selected_index, 1)
+            self.assertFalse(session.retake_used)
+            self.assertEqual(session.final_photo_paths, originals)
+            self.assertEqual(self.app.transaction.manifest_path.read_bytes(), manifest_bytes)
+
+            # An old review release must not skip the ready screen, either.
+            self.app.ui.retake_button.dispatch('on_release')
+            schedule.assert_not_called()
+            self.app.current_frame = np.full_like(self.frame, (180, 90, 30))
+            self.app.ui.capture_button.dispatch('on_release')
+            self.assertIsNotNone(self.app._countdown_after_id)
+            schedule.assert_called_once()
+            self.assertEqual(self.app.ui.countdown.text, '5')
+            self.assertTrue(self.app.ui.capture_button.disabled)
+            self.app.ui.capture_button.dispatch('on_release')
+            schedule.assert_called_once()
+            for _ in range(4):
+                self.app._countdown_tick()
+                self.assertFalse(session.retake_used)
+            self.app._countdown_tick()
+
+        self.assertEqual(self.app.ui.current_screen, 'review')
+        self.assertTrue(session.retake_used)
+        self.assertEqual(session.retake_target_index, 1)
+        self.assertEqual(session.final_photo_paths,
+                         [originals[0], session.retake_path, originals[2]])
+        self.assertEqual([path.read_bytes() for path in originals], original_bytes)
+        self.assertNotEqual(session.retake_path.read_bytes(), original_bytes[1])
+        self.assertTrue(self.app.ui.retake_button.disabled)
+
+    def test_camera_recovery_on_retake_ready_screen_still_waits_for_a_press(self):
+        """Frame recovery enables the retake shutter without starting its timer."""
+        self.order()
+        self.app.ui.payment_confirm.dispatch('on_release')
+        for _ in range(3):
+            self.app._save_current_frame(False)
+        self.app._select_photo(2)
+        self.app.ui.retake_button.dispatch('on_release')
+        ready_button = self.app.ui.capture_button
+        self.latest = None
+        self.app._update_preview()
+        self.assertTrue(ready_button.disabled)
+        ready_button.dispatch('on_release')
+        self.assertIsNone(self.app._countdown_after_id)
+        self.latest = self.frame
+        self.app._update_preview()
+        self.assertIs(self.app.ui.capture_button, ready_button)
+        self.assertFalse(ready_button.disabled)
+        self.assertEqual(self.app.ui.countdown.text, 'Siap?')
+        self.assertIsNone(self.app._countdown_after_id)
+        self.assertFalse(self.app.current_session.retake_used)
+        self.assertEqual(self.app.current_session.selected_index, 2)
+        ready_button.dispatch('on_release')
+        timer = self.app._countdown_after_id
+        self.assertIsNotNone(timer)
+        # Further camera updates cannot unlock a countdown already in progress.
+        self.latest = None
+        self.app._update_preview()
+        self.latest = self.frame
+        self.app._update_preview()
+        self.assertIs(self.app._countdown_after_id, timer)
+        self.assertTrue(self.app.ui.capture_button.disabled)
+
     def test_retry_after_retake_metadata_failure_uploads_the_replacement_bytes(self):
         """Exercise the actual GUI/controller path into a same-filename retry.
 
@@ -266,7 +354,8 @@ class CameraRecoveryTests(unittest.TestCase):
         for _ in range(3):
             self.app._save_current_frame(False)
         self.app._select_photo(1)
-        self.app._start_retake_countdown()
+        self.app.ui.retake_button.dispatch('on_release')
+        self.app.ui.capture_button.dispatch('on_release')
         self.latest = None
         self.app._update_preview()
         for _ in range(5):
@@ -281,7 +370,8 @@ class CameraRecoveryTests(unittest.TestCase):
         self.app._update_preview()
         self.assertFalse(self.app.ui.retake_button.disabled)
         self.assertNotIn('Kamera belum siap', self.app.ui.review_hint.text)
-        self.app._start_retake_countdown()
+        self.app.ui.retake_button.dispatch('on_release')
+        self.app.ui.capture_button.dispatch('on_release')
         for _ in range(5):
             self.app._countdown_tick()
         self.assertTrue(session.retake_used)

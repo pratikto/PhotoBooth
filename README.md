@@ -74,6 +74,7 @@ For every ordered session:
 2. Let the customer choose which captured photo to use.
 3. Allow at most one retake in that session. The retake replaces the selected photo.
 4. Keep the retake button disabled until a photo is selected, and show the selected photo and remaining retake allowance.
+5. **RETAKE FOTO TERPILIH** opens the replacement-photo camera preview without starting a timer. Let the customer pose, then start the five-second countdown only after **AMBIL FOTO PENGGANTI** is pressed. The allowance is consumed only when the replacement is saved successfully.
 
 The retake allowance resets for each new session. It does not reset between attempts within the same session.
 

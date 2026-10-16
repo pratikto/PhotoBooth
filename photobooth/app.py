@@ -101,7 +101,7 @@ class PhotoBoothApp:
             on_start=self._open_dummy_payment,
             on_capture=self._start_capture_countdown,
             on_select_photo=self._select_photo,
-            on_retake=self._start_retake_countdown,
+            on_retake=self._prepare_retake,
             on_accept_session=self._accept_current_session,
             on_next_session=self._start_next_session,
             on_finish=self._finish_transaction,
@@ -182,7 +182,7 @@ class PhotoBoothApp:
             if (
                 session is not None
                 and self._countdown_after_id is None
-                and len(session.initial_photo_paths) < 3
+                and (len(session.initial_photo_paths) < 3 or session.can_retake)
             ):
                 self.ui.set_capture_enabled(True)
 
@@ -322,12 +322,15 @@ class PhotoBoothApp:
         return label
 
     def _show_capture_screen(self) -> None:
-        # Render the current session's capture screen using the latest camera frame and the number of
-        # initial photos already saved.
+        # Show the ready state without scheduling a countdown. Three initial
+        # photos identify a pending replacement; its selected target and quota
+        # remain unchanged until the customer presses the shutter and saving
+        # succeeds. Camera recovery can re-enable this same ready-state button.
         session = self.current_session
         if session is None:
             return
         count = len(session.initial_photo_paths)
+        is_retake = session.ready_for_review
         self.ui.show_capture(
             session_label=self._session_label(session.plan),
             capture_count=count,
@@ -336,37 +339,39 @@ class PhotoBoothApp:
                 if self.current_frame is not None
                 else None
             ),
-            action_label=f"AMBIL FOTO {min(count + 1, 3)}",
+            action_label="AMBIL FOTO PENGGANTI" if is_retake else f"AMBIL FOTO {count + 1}",
             can_capture=(
                 self.camera_ready
                 and self.current_frame is not None
-                and count < 3
+                and (count < 3 or session.can_retake)
             ),
+            is_retake=is_retake,
         )
 
     def _start_capture_countdown(self) -> None:
-        # Start the five-second countdown for an initial photo, but ignore duplicate clicks or
-        # requests after all three captures are complete.
+        # The capture-page shutter is the only customer action that starts a
+        # countdown, both for initial photos and the selected replacement. Once
+        # all three originals exist, recheck selection and the per-session quota.
         session = self.current_session
         if (
             self.ui.current_screen != "capture"
             or not self.camera_ready
             or self.current_frame is None
             or session is None
-            or len(session.initial_photo_paths) >= 3
+            or (session.ready_for_review and not session.can_retake)
             or self._countdown_after_id is not None
         ):
             return
-        self._start_countdown(is_retake=False)
+        self._start_countdown(is_retake=session.ready_for_review)
 
-    def _start_retake_countdown(self) -> None:
-        # Start a retake only when this session has three initial photos, the customer selected one,
-        # and its one-retake quota is still available.
+    def _prepare_retake(self) -> None:
+        # Review's retake action opens the live camera so the customer has time
+        # to pose. It must not start a timer, save a photo, or consume the quota.
         session = self.current_session
         if (self.ui.current_screen != "review" or not self.camera_ready or self.current_frame is None
                 or session is None or not session.can_retake or self._countdown_after_id is not None):
             return
-        self._start_countdown(is_retake=True)
+        self._show_capture_screen()
 
     def _start_countdown(self, is_retake: bool) -> None:
         # Prepare the shared countdown UI for either an initial capture or a retake, then schedule the

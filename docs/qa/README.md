@@ -8,6 +8,7 @@ The upload-revision follow-up starts from `c99924aec2460a25211c6d21b020999b12f20
 The disabled-label follow-up starts from `12f7cc003deb2f9fa5e7148beec2228b13ffdaaa`.
 The complete-status follow-up starts from `ca51189f48073da8a5f6775c06b771e56403d27e`.
 The alpha-compositing follow-up starts from `2806e28e733ca91a9a9e05fb238a9ef175ccc4dd`.
+The manual-retake follow-up starts from `42a184c1ff1bf7973570f097c9d6d709f92429ef`.
 The original working copy was left untouched. Source files in the separate
 checkout were checked against the freshly fetched GitHub blobs before editing.
 
@@ -37,11 +38,12 @@ scrolling area. Payment back-navigation also retains the customer's quantities.
 | Disabled status labels meet the project's 4.5:1 text-color threshold | Passed | Passed |
 | Long status summary and full-message details remain reachable | Passed | Passed |
 | Contact sheets preserve transparency without modifying source PNGs | Passed | Passed |
+| Retake ready-state shutter and subsequent countdown fit | Passed | Passed |
 
 The image sheets below contain the six main screens. The reproducible renderer
 also includes countdown, bottom-of-gallery, retake-used, local-only, and next-session
 states, camera-waiting capture/payment/review, empty/partly selected carts,
-and a long-storage-status fixture: **34 full-size PNGs** in total.
+and a long-storage-status fixture, plus retake-ready/countdown states: **38 full-size PNGs** in total.
 The JSON [report](report.json) records each
 render and the QR text decoded from its actual screen pixels. Full-size renders
 are produced by the command below; only the compact sheets are committed here.
@@ -207,9 +209,35 @@ Every earlier sheet was also reproduced exactly from the new full-size renders
 using the old assembly method, proving that actual widget pixels did not change.
 The 34-render [layout/QR report](report.json) remains byte-identical.
 
+## Retake waits for the customer
+
+The review action previously opened the camera and immediately started its
+five-second countdown. **RETAKE FOTO TERPILIH** now opens a ready-state preview
+showing **Siap?** and an enabled **AMBIL FOTO PENGGANTI** button. Only pressing
+that shutter starts the countdown. The selected target and remaining allowance
+stay intact while the customer poses; saving consumes the allowance.
+
+Two new controller regressions failed against the previous behavior, then passed
+with the fix. They drive real widget callbacks with held timer scheduling and a
+synthetic camera: opening retake schedules no timer or storage write, repeated
+retired review releases cannot start capture, and a successful countdown replaces
+only the selected photo while keeping the originals. Losing and recovering frames
+on the ready screen enables the same shutter without starting its timer; recovery
+during a running countdown cannot unlock it. Existing camera-failure and two-session
+checks now use the new two-press path.
+
+The two new states were rendered and visually inspected at both desktop sizes.
+All 34 earlier render report entries remain unchanged; the report now contains
+38 successful renders and no errors. Camera and Drive access still use fakes.
+
+![Retake ready and countdown at 800x600](retake-800x600.png)
+
+![Retake ready and countdown at 1200x800](retake-1200x800.png)
+
 ## Reproduce
 
-Python 3.12.14, Kivy 2.3.1, OpenCV 5.0.0, SDL2 offscreen, and Mesa llvmpipe were used. No webcam,
+Earlier rounds used Python 3.12.14; the manual-retake follow-up used Python 3.12.3.
+Both used Kivy 2.3.1, OpenCV 5.0.0, SDL2 offscreen, and Mesa llvmpipe. No webcam,
 payment provider, printer, or live Google service was contacted.
 
 ```bash
@@ -217,7 +245,7 @@ SDL_VIDEODRIVER=offscreen PHOTOBOOTH_TEST_GUI=1 python -m unittest discover -s t
 SDL_VIDEODRIVER=offscreen python tools/render_gui.py --output-dir /tmp/photobooth-gui-qa
 ```
 
-The suite passed **52 tests**. Its controller/storage checks include two-session
+The suite passed **54 tests**. Its controller/storage checks include two-session
 orders, one retake per session, local PNG and manifest persistence, cached folder
 allocation, an offline upload failure followed by retry, and skipping verified
 uploads. Camera acquisition and Drive access use deterministic fakes. The layout

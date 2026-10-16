@@ -44,6 +44,7 @@ OVERVIEW_SCREENS = ('welcome', 'templates', 'payment', 'capture', 'review', 'res
 STATE_SCREENS = ('payment-waiting', 'capture-waiting', 'review-used', 'review-waiting')
 SELECTION_SCREENS = ('templates-empty', 'templates-one', 'templates', 'templates-bottom')
 DIAGNOSTIC_SCREENS = ('templates-status', 'templates-one')
+RETAKE_SCREENS = ('retake-ready', 'retake-countdown')
 
 
 def synthetic_portrait(index):
@@ -211,6 +212,11 @@ def main():
          lambda: ui.set_camera_status(False)),
         ('countdown', lambda: (ui.show_capture('Sesi 1 dari 8 · Template 1', 1, synthetic_portrait(0)),
                                ui.set_countdown(5)), None),
+        ('retake-ready', lambda: ui.show_capture('Sesi 1 dari 8 · Template 1', 3, synthetic_portrait(0),
+                                                action_label='AMBIL FOTO PENGGANTI', is_retake=True), None),
+        ('retake-countdown', lambda: (ui.show_capture('Sesi 1 dari 8 · Template 1', 3, synthetic_portrait(0),
+                                                     action_label='RETAKE FOTO TERPILIH', is_retake=True),
+                                      ui.set_countdown(5, is_retake=True)), None),
         ('review', lambda: ui.show_review(paths, 'Sesi 1 dari 8 · Template 1', 1, True), None),
         ('review-used', lambda: ui.show_review(paths, 'Sesi 1 dari 8 · Template 1', 1, False), None),
         ('review-waiting', lambda: ui.show_review(paths, 'Sesi 1 dari 8 · Template 1', 1, True),
@@ -252,6 +258,15 @@ def main():
                 raise AssertionError('A local-only result must not have a fabricated Drive QR')
             if name == 'capture-waiting' and ui.preview.texture is not None:
                 raise AssertionError('A stale frame must not be displayed as a live preview')
+            if name in RETAKE_SCREENS:
+                if not fully_visible(ui.capture_button) or not fully_visible(ui.countdown):
+                    raise AssertionError(f'Retake shutter/countdown is clipped in {name} at {size}')
+                if name == 'retake-ready':
+                    if (ui.countdown.text != 'Siap?' or ui.capture_button.disabled
+                            or ui.capture_button.text != 'AMBIL FOTO PENGGANTI'):
+                        raise AssertionError('Retake preview must wait with an enabled shutter')
+                elif ui.countdown.text != '5' or not ui.capture_button.disabled:
+                    raise AssertionError('Retake countdown must disable the shutter')
             if name == 'payment-waiting' and not ui.payment_confirm.disabled:
                 raise AssertionError('Payment confirmation needs a fresh camera frame')
             if name in ('review-used', 'review-waiting') and not ui.retake_button.disabled:
@@ -351,6 +366,7 @@ def main():
         overview(output, size, STATE_SCREENS, 'states')
         overview(output, size, SELECTION_SCREENS, 'selection')
         overview(output, size, DIAGNOSTIC_SCREENS, 'diagnostics')
+        overview(output, size, RETAKE_SCREENS, 'retake')
     print(f'{len(records)} real-widget renders saved in {output}')
 
 
