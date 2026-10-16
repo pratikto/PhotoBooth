@@ -40,7 +40,11 @@ jobs:
       - name: Exercise workflow, QR pixels, real widgets, audio and navigation
         run: xvfb-run -a python -m unittest discover -s tests -v
       - name: Render all six pages and compact layouts
+        if: always()
         run: xvfb-run -a python tools/render_gui.py --output-dir /tmp/meong-gui-qa
+      - name: Summarize synthetic renders for remote visual review
+        if: always()
+        run: python tools/ci_visual_summary.py /tmp/meong-gui-qa
       - name: Keep generated visual evidence
         if: always()
         uses: actions/upload-artifact@v4

@@ -32,7 +32,8 @@ TEAL = (.13, .72, .68, 1)
 class MotionScope:
     """Own only visual timing; never schedule a shutter or change an order."""
 
-    def __init__(self):
+    def __init__(self, *, active=False):
+        self.active = active
         self.enabled = os.environ.get("PHOTOBOOTH_ANIMATIONS", "1").lower() not in {"0", "false", "no"}
         self.widgets = []
         self._entry = []
@@ -43,19 +44,37 @@ class MotionScope:
     def add(self, widget):
         """Register an illustration/dial with this page's shared animation clock."""
         self.widgets.append(widget)
-        if self.enabled and self._event is None:
+        if self.enabled and self.active and not self.retired and self._event is None:
             self._event = Clock.schedule_interval(self._tick, 1 / 24)
         return widget
 
     def enter(self, widget):
         """Use a short fade without moving touch targets or delaying input."""
-        if self.enabled:
+        if self.enabled and self.active:
             widget.opacity = .86
             Animation(opacity=1, duration=.22, t="out_quad").start(widget)
             self._entry.append(widget)
+        else:
+            widget.opacity = 1
+
+    def activate(self):
+        """Start a visible page after its root has attached to the window."""
+        self.active = True
+        if self.enabled and self.widgets and not self.retired and self._event is None:
+            self._event = Clock.schedule_interval(self._tick, 1 / 24)
+
+    def suspend(self):
+        """Detached test/host trees must not keep a recurring visual callback."""
+        self.active = False
+        if self._event is not None:
+            self._event.cancel()
+            self._event = None
 
     def _tick(self, dt):
         if self.retired:
+            return False
+        if not any(widget.get_root_window() is not None for widget in self.widgets):
+            self.suspend()
             return False
         self._elapsed += min(dt, .1)
         for widget in self.widgets:
