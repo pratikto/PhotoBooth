@@ -40,10 +40,10 @@ FOLDER_URL = 'https://drive.google.com/drive/folders/1AbCdEfGhIjKlMnOpQrStUvWxYz
 STATUS = 'Drive siap · 25 slot folder tersedia.'
 LONG_STATUS = ('Slot Drive perlu diperiksa: Folder fixture belum terverifikasi. '
                'Salinan lokal tetap tersimpan. Periksa konfigurasi deployment lalu coba lagi. ') * 8
-SIZES = ((1200, 800), (800, 600))
+SIZES = ((1200, 800), (800, 600), (1920, 1080))
 OVERVIEW_SCREENS = ('welcome', 'templates', 'payment', 'capture', 'review', 'result')
 STATE_SCREENS = ('payment-waiting', 'capture-waiting', 'review-used', 'review-waiting')
-SELECTION_SCREENS = ('templates-empty', 'templates-one', 'templates', 'templates-bottom')
+SELECTION_SCREENS = ('templates-empty', 'templates-one', 'templates', 'templates-last')
 DIAGNOSTIC_SCREENS = ('templates-status', 'templates-one')
 RETAKE_SCREENS = ('retake-ready', 'retake-countdown')
 PALM_SCREENS = ('palm-ready', 'palm-hold', 'palm-release', 'palm-loading', 'palm-unavailable')
@@ -127,7 +127,7 @@ def overview(output, size, screens=OVERVIEW_SCREENS, prefix='overview'):
     thumb = (width // 2, height // 2)
     label_height = 30
     rows = (len(screens) + 1) // 2
-    paper = '#f6f5f0'
+    paper = '#f3f5fa'
     sheet = Image.new('RGB', (thumb[0] * 2, (thumb[1] + label_height) * rows), paper)
     draw = ImageDraw.Draw(sheet)
     try:
@@ -137,7 +137,7 @@ def overview(output, size, screens=OVERVIEW_SCREENS, prefix='overview'):
     for index, name in enumerate(screens):
         x = (index % 2) * thumb[0]
         y = (index // 2) * (thumb[1] + label_height)
-        draw.text((x + 12, y + 7), f'{name.upper()}  |  {width} × {height}', fill='#1a302e', font=font)
+        draw.text((x + 12, y + 7), f'{name.upper()}  |  {width} × {height}', fill='#111620', font=font)
         with Image.open(output / f'{name}-{width}x{height}.png') as image:
             # Rounded widget exports contain transparent corners. An RGBA paste
             # into RGB without a mask discards alpha and exposes hidden black
@@ -189,12 +189,11 @@ def main():
                        'Internet terputus. QR membuka folder tujuan; foto akan muncul '
                        'setelah upload dilanjutkan.')
 
-    def scroll_last_template():
-        last = ui._template_cards[templates[-1].template_id]
-        last.parent.parent.scroll_y = 0
+    def focus_last_template():
+        ui.template_carousel.index = len(templates) - 1
 
     def palm_screen(state='ready', progress=0.0, needs_release=False):
-        ui.show_capture('Sesi 1 dari 8 · Template 1', 1, synthetic_portrait(0))
+        ui.show_capture('Sesi 1 dari 24 · Special Day', 1, synthetic_portrait(0))
         ui.set_palm_status(state, progress, needs_release)
 
     # Additional states catch issues hidden by the six happy-path screenshots:
@@ -207,21 +206,21 @@ def main():
         ('templates-one', single_template, None),
         ('templates-status', lambda: ui.show_template_selection(
             True, LONG_STATUS, storage_ready=False, quantities={'template_a': 2}), None),
-        ('templates-bottom', cart, scroll_last_template),
+        ('templates-last', cart, focus_last_template),
         ('payment', lambda: ui.show_payment('\n'.join(f'{t.name} × 2' for t in templates),
                                            len(templates) * 2, len(templates) * 10000,
                                            lambda: None, lambda: None), None),
         ('payment-waiting', lambda: ui.show_payment('Template 1 × 2',
                                                    2, 10000, lambda: None, lambda: None),
          lambda: ui.set_camera_status(False)),
-        ('capture', lambda: ui.show_capture('Sesi 1 dari 8 · Template 1', 1, synthetic_portrait(0)), None),
-        ('capture-waiting', lambda: ui.show_capture('Sesi 1 dari 8 · Template 1', 1, synthetic_portrait(0)),
+        ('capture', lambda: ui.show_capture('Sesi 1 dari 24 · Special Day', 1, synthetic_portrait(0)), None),
+        ('capture-waiting', lambda: ui.show_capture('Sesi 1 dari 24 · Special Day', 1, synthetic_portrait(0)),
          lambda: ui.set_camera_status(False)),
-        ('countdown', lambda: (ui.show_capture('Sesi 1 dari 8 · Template 1', 1, synthetic_portrait(0)),
+        ('countdown', lambda: (ui.show_capture('Sesi 1 dari 24 · Special Day', 1, synthetic_portrait(0)),
                                ui.set_countdown(5)), None),
-        ('retake-ready', lambda: ui.show_capture('Sesi 1 dari 8 · Template 1', 3, synthetic_portrait(0),
+        ('retake-ready', lambda: ui.show_capture('Sesi 1 dari 24 · Special Day', 3, synthetic_portrait(0),
                                                 action_label='AMBIL FOTO PENGGANTI', is_retake=True), None),
-        ('retake-countdown', lambda: (ui.show_capture('Sesi 1 dari 8 · Template 1', 3, synthetic_portrait(0),
+        ('retake-countdown', lambda: (ui.show_capture('Sesi 1 dari 24 · Special Day', 3, synthetic_portrait(0),
                                                      action_label='RETAKE FOTO TERPILIH', is_retake=True),
                                       ui.set_countdown(5, is_retake=True)), None),
         ('palm-ready', palm_screen, None),
@@ -229,9 +228,9 @@ def main():
         ('palm-release', lambda: palm_screen(needs_release=True), None),
         ('palm-loading', lambda: palm_screen(state='loading'), None),
         ('palm-unavailable', lambda: palm_screen(state='unavailable'), None),
-        ('review', lambda: ui.show_review(paths, 'Sesi 1 dari 8 · Template 1', 1, True), None),
-        ('review-used', lambda: ui.show_review(paths, 'Sesi 1 dari 8 · Template 1', 1, False), None),
-        ('review-waiting', lambda: ui.show_review(paths, 'Sesi 1 dari 8 · Template 1', 1, True),
+        ('review', lambda: ui.show_review(paths, 'Sesi 1 dari 24 · Special Day', 1, True), None),
+        ('review-used', lambda: ui.show_review(paths, 'Sesi 1 dari 24 · Special Day', 1, False), None),
+        ('review-waiting', lambda: ui.show_review(paths, 'Sesi 1 dari 24 · Special Day', 1, True),
          lambda: ui.set_camera_status(False)),
         ('result', result_screen, None),
         ('result-local', lambda: result_screen(local=True), None),

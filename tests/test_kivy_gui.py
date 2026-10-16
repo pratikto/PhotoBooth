@@ -24,7 +24,7 @@ class KivyFlowTests(unittest.TestCase):
         from PIL import Image, ImageDraw
         from tools.render_gui import overview
 
-        paper = (246, 245, 240)
+        paper = (243, 245, 250)
         ink = (26, 48, 46)
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -193,7 +193,7 @@ class KivyFlowTests(unittest.TestCase):
         from kivy.core.window import Window
         from kivy.uix.button import Button
         from photobooth.catalog import get_templates
-        from photobooth.ui_kivy import KivyHost, PhotoBoothUI, SAGE, SOFT
+        from photobooth.ui_kivy import KivyHost, PhotoBoothUI, SAGE, SOFT, WHITE
         from tools.render_gui import button_contrast
 
         ui = PhotoBoothUI(KivyHost(lambda: None), get_templates(),
@@ -249,7 +249,7 @@ class KivyFlowTests(unittest.TestCase):
                     self.assertFalse(minus.disabled)
                     self.assertEqual(tuple(minus.background_color), SOFT)
                     self.assertFalse(ui.start_button.disabled)
-                    self.assertEqual(tuple(ui.start_button.background_color), SAGE)
+                    self.assertEqual(tuple(ui.start_button.background_color), WHITE)
                     minus.dispatch('on_release')
                     self.assertTrue(minus.disabled)
                     self.assertTrue(ui.start_button.disabled)
@@ -584,7 +584,7 @@ class KivyFlowTests(unittest.TestCase):
                                 self.assertIsNone(ui.summary.text_size[1])
                                 self.assertGreaterEqual(ui.summary.height, 4 * ui.summary.font_size)
                                 last_card = ui._template_cards[ui.templates[-1].template_id]
-                                last_card.parent.parent.scroll_y = 0
+                                ui.template_carousel.index = len(ui.templates) - 1
                                 settle()
                                 for widget in last_card.walk():
                                     if isinstance(widget, Button):
@@ -658,7 +658,7 @@ class KivyFlowTests(unittest.TestCase):
         # Both the native window title and compact on-screen wordmark must
         # agree with the approved MEONG spelling, without the old final S.
         self.assertEqual(host.title, 'Meong Photobooth')
-        self.assertEqual(ui.brand.text, 'meong.')
+        self.assertEqual(ui.brand.text, 'MEONG PHOTOBOOTH')
         ui.show_welcome(True, 'Ready')
         ui.show_template_selection(True, 'Preparing storage', storage_ready=False)
         key = ui.templates[0].template_id

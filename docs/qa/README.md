@@ -1,5 +1,8 @@
 # Desktop GUI verification
 
+The latest [MEONG brand and cyclic carousel](meong-carousel.md) covers the bright
+blue/cyan/pink product theme, native swipes, wrapped navigation, and large monitors.
+
 The latest [approved 80 mm receipt integration](receipt-templates.md) covers all
 twelve real designs, shaped photo masks, exact review crops, and the detail viewer.
 Older milestone notes below retain their original sample-template dimensions.

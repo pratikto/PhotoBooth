@@ -2,6 +2,44 @@
 
 A Python photo booth application built with Kivy, OpenCV, and Pillow. The attached procedure document is the functional source of truth. QRIS and printing are intentionally out of the current implementation until those integrations are ready.
 
+## MEONG GUI and cyclic template browsing
+
+The interface uses the approved pixel camera-cat and original MEONG PHOTOBOOTH
+wordmark. Lens blue, cyan, and cheek pink create a bright theme across the
+welcome screen, progress tabs, template selector, capture guidance, and actions.
+The logo source used inside the QR is unchanged.
+
+The template picker is now a **horizontal, cyclic carousel**. Drag/swipe left
+or right, use the **‹ / ›** arrows, or use a mouse wheel over the previews.
+Moving past **12 / 12** returns to **01 / 12**; moving left from the first frame
+returns to the last. A large center receipt identifies the focused design;
+smaller adjacent previews show its cyclic neighbors. The selected name, position
+counter, pixel markers, and quantity controls follow the focused frame.
+
+Browsing only changes focus. It never adds a session, changes another design's
+quantity, or starts payment. Use **+ / −** to edit the focused template's count.
+The complete order and total remain in the blue cart beside the carousel on
+desktop. The agreed price stays **Rp5,000 per session**. Returning from dummy
+payment preserves the order and focused template. A new customer starts at the
+first frame with an empty order.
+
+The layout is checked at **800×600**, **1200×800**, and **1920×1080**. On wide
+monitors, content is centered within 1440 dp instead of stretching receipt cards
+across the full screen. Narrow windows can stack panels with vertical scrolling.
+Actual Android packaging/camera support is a separate integration.
+
+For learning and maintenance:
+
+- [`photobooth/ui_brand.py`](photobooth/ui_brand.py) owns colors, the original-logo lockup, progress tabs, receipt preview slides, and native Kivy carousel behavior.
+- [`photobooth/ui_kivy.py`](photobooth/ui_kivy.py) binds carousel focus to quantities and the existing controller callbacks.
+- Native Kivy owns swipe thresholds, touch grabs, snapping, and looping. Quantity buttons are outside the swipe surface.
+- A desktop container that already fits does not grab vertical scrolling; this lets horizontal swipes reach the carousel immediately.
+- Duplicate arrow releases during a short snap are ignored, so repeated clicking cannot continually restart an unfinished animation.
+- Leaving the picker retires its animation and touch grabs. Retired arrow callbacks cannot alter payment or a later customer's selection.
+
+See the [GUI evidence and checks](docs/qa/meong-carousel.md) for screenshots,
+actual pointer/swipe coverage, and current validation results.
+
 ## Current implementation: photo and Drive flow
 
 The first implementation milestone includes:
