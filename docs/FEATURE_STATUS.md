@@ -36,3 +36,7 @@ User reports both Meong music and advertising sound remain silent. The three ori
 ## Fade-in regression correction — 2026-10-17
 
 User Windows/Python 3.12/Kivy 2.3.1 test result: 13 tests, 1 failed and 1 optional native audio test skipped. The failure was `test_music_autostarts_when_advertising_fades_into_tutorial`: music incorrectly entered `play` while fade gain was still 0. `_ensure_music` now guards against starting when `_music_mix <= 0`, allowing the fade callback to start playback only once volume rises. Re-run tests on the user's machine; this is a source fix, **not yet confirmation of audible output**.
+
+## User Windows audio test results — 2026-10-17
+
+User ran `python -m unittest tests.test_audio -v` after fade-gain fix: **13 tests run, 12 passed, 1 optional native test skipped, 0 failures**. Then enabled `PHOTOBOOTH_TEST_AUDIO=1` and ran the native provider test: **1 passed**, with Kivy 2.3.1, Python 3.12.10 on Windows, ffpyplayer 4.5.3, and all five WAV files loaded through `SoundSDL2`. This verifies provider initialization and API playback state, **not audible sound on the selected speakers**. User must still confirm whether tutorial music and Settings Uji playback can be heard; silent sample advertising videos also require a separately audio-bearing test clip.
