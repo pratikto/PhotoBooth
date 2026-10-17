@@ -178,3 +178,27 @@ Install `pywin32` in the active Windows virtual environment. Network routes
 retain their priority; leave LAN and Wi-Fi host settings blank when testing USB.
 On non-Windows systems, existing PyUSB/Linux device-file behavior is unchanged.
 The print width and three dithering modes remain configurable as above.
+
+## Controlled 80 mm dither comparison over Windows USB
+
+With the existing POS80ENG queue configured, the comparison helper can first
+write safe, paper-free previews, or submit **one** labeled test job at a time.
+It reuses the identical resize, alpha compositing, width and dithering logic
+used in the production printer adapter.
+
+```powershell
+$env:PHOTOBOOTH_PRINTER_WINDOWS_NAME = "POS80 Printer"
+Remove-Item Env:PHOTOBOOTH_PRINTER_LAN_HOST -ErrorAction SilentlyContinue
+Remove-Item Env:PHOTOBOOTH_PRINTER_WIFI_HOST -ErrorAction SilentlyContinue
+$env:PHOTOBOOTH_PRINTER_WIDTH_DOTS = "576"
+python tools/print_dither_comparison.py "path\\to\\result.png" --preview-dir previews
+python tools/print_dither_comparison.py "path\\to\\result.png" --mode floyd-steinberg
+python tools/print_dither_comparison.py "path\\to\\result.png" --mode bayer
+python tools/print_dither_comparison.py "path\\to\\result.png" --mode threshold
+```
+
+Replace the path with a real photo composition, and check each physical job
+before proceeding to the next. The script's original mode without flags still
+sends all three prints, which uses more paper. The preview option **never**
+opens a printer connection. Queue acceptance is not confirmation of print
+quality, legibility or cutter behavior; do not retry blindly after partial output.
