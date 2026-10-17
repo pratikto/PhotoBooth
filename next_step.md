@@ -28,7 +28,7 @@ For each new idea record:
 - **Dependencies:** Reconcile BUG-003 (payment QR slip printing), BUG-004 (photo print quality), and physical printer integration before operational acceptance. Demo QRIS remains non-payable; do not claim payment verification.
 - **Affected components:** catalog/pricing, cart GUI, workflow/session count, payment summary, transaction persistence, photo print jobs, manual reprints, tests, documentation.
 - **Risks:** Charging base fee per copy by mistake; interpreting 2 copies as 2 capture sessions; duplicate prints; mismatch between payment display and print count; existing transaction records compatibility.
-- **Open product decision:** Confirm whether a template selection corresponds to one 3-photo capture session regardless of print copies, and whether each distinct selected template incurs its own IDR 5,000 fee. Also define zero-print/digital-only orders and maximum print copies if supported.
+- **Confirmed by owner (2026-10-18):** One selected template = **one photo session with 3 captures**, regardless of the number of printed copies. Printing 3 copies means three identical prints of that one session's composed layout, **not** three capture sessions.\n- **Remaining product decisions:** Confirm whether each distinct selected template incurs its own IDR 5,000 fee; define zero-print/digital-only orders and maximum copies if supported.
 - **Acceptance criteria (proposed):** 1/2/3 copies correctly total 10k/15k/20k for one template; one capture session produces selected number of identical physical copies; mixed-template orders sum correctly; checkout, persistence, receipts and actual prints agree; regression tests pass; no unapproved code change.
 - **Execution rank:** Provisional #1 among new features, **only after blocking existing defects and specification confirmation**. Ranking must be recalculated with every new idea.
 
@@ -38,7 +38,7 @@ M1 Core Stability; M2 Operational Reliability; M3 Commercial Readiness; M4 Produ
 ## Reprioritization history
 | Date | Trigger | Change and rationale |
 |---|---|---|
-| 2026-10-18 | Backlog framework created | No new ideas ranked; baseline/source audit needed before scheduling |\n| 2026-10-18 | FEAT-001 submitted | Provisional feature rank #1 (sole new idea); P1/high impact, partial compatibility; existing defects remain ahead of feature implementation |
+| 2026-10-18 | Backlog framework created | No new ideas ranked; baseline/source audit needed before scheduling |\n| 2026-10-18 | FEAT-001 submitted | Provisional feature rank #1 (sole new idea); P1/high impact, partial compatibility; existing defects remain ahead of feature implementation |\n| 2026-10-18 | FEAT-001 behavior confirmed | One 3-capture session per selected template; print-copy count only duplicates the same finished layout, not the photo session |
 
 ## Template
 ### FEAT-XXX — Title
