@@ -11,39 +11,6 @@
   },
   "ads": [
     {
-      "id": "sample-video-main",
-      "title": "Meong main video advertisement",
-      "file": "videoplayback.mp4",
-      "poster": "sample-01.jpg",
-      "placements": [
-        "idle",
-        "payment"
-      ],
-      "enabled": true
-    },
-    {
-      "id": "sample-video-1",
-      "title": "Meong sample video 1",
-      "file": "videoplayback (1).mp4",
-      "poster": "sample-02.jpg",
-      "placements": [
-        "idle",
-        "payment"
-      ],
-      "enabled": true
-    },
-    {
-      "id": "sample-video-2",
-      "title": "Meong sample video 2",
-      "file": "videoplayback (2).mp4",
-      "poster": "sample-03.jpg",
-      "placements": [
-        "idle",
-        "payment"
-      ],
-      "enabled": true
-    },
-    {
       "id": "sample-01",
       "title": "Poster sampel 1",
       "file": "sample-01.jpg",
