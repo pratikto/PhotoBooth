@@ -25,6 +25,9 @@ from kivy.uix.button import Button
 from kivy.uix.popup import Popup
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.slider import Slider
+from kivy.uix.textinput import TextInput
+from kivy.uix.spinner import Spinner
+from photobooth.printer import PrinterConfig, DITHER_MODES
 from kivy.uix.widget import Widget
 from PIL import Image
 from photobooth.audio import AudioManager
@@ -163,7 +166,7 @@ class PhotoBoothUI:
         header.add_widget(self.steps)
         # This header belongs to the application, so the settings control is
         # present on every page and does not inherit a retired page revision.
-        self.settings_button = self._button("", self.show_audio_settings,
+        self.settings_button = self._button("", self.show_settings_menu,
                                             secondary=True, screen_bound=False)
         self.settings_button.size_hint = (None, None)
         self.settings_button.size = (dp(48), dp(44))
@@ -325,6 +328,99 @@ class PhotoBoothUI:
     def audio_settings_open(self):
         """A modal blocks the optional palm shutter as well as pointer input."""
         return self._audio_popup is not None
+
+    def show_settings_menu(self):
+        """Keep printer and audio configuration accessible from every page."""
+        content = BoxLayout(orientation="vertical", spacing=dp(12), padding=dp(14))
+        popup = Popup(title="Pengaturan Meong", content=content,
+                      size_hint=(None, None), size=(dp(430), dp(280)))
+        audio = self._button("PENGATURAN AUDIO", lambda: (popup.dismiss(), self.show_audio_settings()),
+                             screen_bound=False)
+        printer = self._button("PENGATURAN PRINTER", lambda: (popup.dismiss(), self.show_printer_settings()),
+                               screen_bound=False)
+        close = self._button("TUTUP", popup.dismiss, secondary=True, screen_bound=False)
+        for widget in (audio, printer, close):
+            content.add_widget(widget)
+        popup.open()
+
+    def show_printer_settings(self):
+        """Edit the current printer route, width and dithering in one modal.
+
+        The modal saves only after validation; an invalid form retains the
+        previous working printer and displays an inline error.
+        """
+        callback = self.callbacks.get("on_printer_save")
+        getter = self.callbacks.get("get_printer_config")
+        if callback is None or getter is None:
+            return
+        current = getter()
+        content = BoxLayout(orientation="vertical", spacing=dp(8), padding=dp(12))
+        scroll = ScrollView(do_scroll_x=False)
+        fields = BoxLayout(orientation="vertical", size_hint_y=None,
+                           spacing=dp(8))
+        fields.bind(minimum_height=fields.setter("height"))
+        scroll.add_widget(fields)
+        content.add_widget(scroll)
+        def field(label, value):
+            fields.add_widget(self._label(label, 14, 24, color=INK))
+            widget = TextInput(text=str(value), multiline=False,
+                               size_hint_y=None, height=dp(42))
+            fields.add_widget(widget)
+            return widget
+        route = Spinner(text=("USB Windows" if current.windows_printer_name else
+                              "LAN" if current.lan_host else
+                              "Wi-Fi" if current.wifi_host else "USB Windows"),
+                        values=("USB Windows", "LAN", "Wi-Fi"),
+                        size_hint_y=None, height=dp(48))
+        fields.add_widget(self._label("Koneksi utama", 15, 26, bold=True))
+        fields.add_widget(route)
+        name = field("Nama antrean Windows (USB)", current.windows_printer_name or "POS80 Printer")
+        lan = field("IP LAN", current.lan_host)
+        wifi = field("IP Wi-Fi", current.wifi_host)
+        port = field("Port TCP (LAN / Wi-Fi)", current.lan_port)
+        width = Spinner(text=str(current.print_width_dots), values=("576", "384"),
+                        size_hint_y=None, height=dp(45))
+        fields.add_widget(self._label("Lebar cetak (dots)", 14, 24))
+        fields.add_widget(width)
+        dither = Spinner(text=current.dither_mode, values=DITHER_MODES,
+                         size_hint_y=None, height=dp(45))
+        fields.add_widget(self._label("Dithering foto", 14, 24))
+        fields.add_widget(dither)
+        status = self._label("", 12, 38, color=ROSE)
+        content.add_widget(status)
+        actions = BoxLayout(size_hint_y=None, height=dp(52), spacing=dp(8))
+        popup = Popup(title="Printer Thermal", content=content,
+                      size_hint=(.85, .9))
+        def save():
+            try:
+                port_number = int(port.text.strip())
+                if not 1 <= port_number <= 65535:
+                    raise ValueError("Port harus antara 1 dan 65535.")
+                selected = route.text
+                host = (lan.text if selected == "LAN" else
+                        wifi.text if selected == "Wi-Fi" else "")
+                if selected != "USB Windows" and not host.strip():
+                    raise ValueError("IP printer wajib diisi.")
+                if selected == "USB Windows" and not name.text.strip():
+                    raise ValueError("Nama printer Windows wajib diisi.")
+                from dataclasses import replace
+                config = replace(current,
+                                 windows_printer_name=name.text.strip() if selected == "USB Windows" else "",
+                                 lan_host=lan.text.strip() if selected == "LAN" else "",
+                                 wifi_host=wifi.text.strip() if selected == "Wi-Fi" else "",
+                                 lan_port=port_number, wifi_port=port_number,
+                                 print_width_dots=int(width.text),
+                                 dither_mode=dither.text)
+                callback(config)
+            except (ValueError, OSError) as error:
+                status.text = str(error)
+                return
+            popup.dismiss()
+        actions.add_widget(self._button("BATAL", popup.dismiss, secondary=True,
+                                        screen_bound=False))
+        actions.add_widget(self._button("SIMPAN", save, screen_bound=False))
+        content.add_widget(actions)
+        popup.open()
 
     def show_audio_settings(self):
         """Adjust three independent buses without navigating away from a page."""
