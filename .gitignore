@@ -12,3 +12,9 @@ photobooth/local_settings.py
 # Local Python virtual environments.
 # Dependencies are installed from requirements.txt, not committed to Git.
 .venv-kivy/
+
+# Advertising videos are installed locally by the operator, never published.
+*.[mM][pP]4
+*.[mM][kK][vV]
+*.[mM][oO][vV]
+*.[wW][eE][bB][mM]
