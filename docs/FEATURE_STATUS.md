@@ -10,7 +10,7 @@ Snapshot: 2026-10-17, `feature/kivy-gui`. Statuses distinguish **implemented in 
 | Optional palm-trigger shutter and face-presence invitation | Implemented; physical validation needed | `palm_gesture.py`, `face_presence.py` |
 | Idle advertising and separate payment ad playlist (images/videos) | Automatic root `ad_video/` discovery implemented with arbitrary names; **playback still unverified on device** | `advertising.py`, `ui_kiosk.py`; local video files required; decoder and display remain to be tested |
 | Larger main advertising video | **Expanded in source; desktop render not yet verified** | Idle page now uses up to 1920dp width, smaller gutters and header; aspect ratio still uses contain |
-| Audio startup, independent sliders and effects | Fade-in restart fixed in source with regression tests; **physical speaker verification pending** | Stopped music is now restarted when fade level rises; confirm on device |
+| Audio startup, independent sliders and effects | **User reports music still silent after fade-in fix; issue reopened** | Fade-in source fix alone did not resolve observed output; capture audio provider/OS mixer diagnostics |
 | Idle ad -> mandatory tutorial -> layout picker | **Implemented in source; on-device testing pending** | Manual Start and face invitation now open guide first; guide Start leads to picker |
 | Face invitation after stable 5 s; 15 s dismiss/cooldown | Implemented in source; verify behavior on hardware | Configurable kiosk timing |
 | Demo payment QR, ad column and optional print-offer after 60 s | Implemented demo; not real QRIS | `docs/advertising-and-qris.md` |
@@ -28,3 +28,7 @@ Snapshot: 2026-10-17, `feature/kivy-gui`. Statuses distinguish **implemented in 
 4. Pressing Start from main ad must open the illustrated tutorial **before** layout selection.
 
 No code change or physical test is claimed by this documentation update. See [Next steps](NEXT_STEPS.md).
+
+## Audio bug update — 2026-10-17
+
+User reports both Meong music and advertising sound remain silent. The three originally supplied sample advertisement videos were previously recorded as having no audio stream; a silent source must not be treated as a decoder audio failure. The music problem remains unresolved on the actual booth. Check persisted levels, environment flags, Kivy/SDL2 audio-provider startup, native playback state and operating-system output routing before applying another speculative code fix.
