@@ -42,3 +42,7 @@ Physical machine speakers, local media/codec setup, camera, Google Drive and LAN
 ## Current blocker: audio remains silent (reported 2026-10-17)
 
 The prior music fade-in commit has **not** solved output on the user's machine. Do not mark audio done. The original three sample clips are documented as silent video sources, so test advertising sound with a **known audio-bearing video**. On the user's machine, collect console/Kivy provider logs, check `PHOTOBOOTH_AUDIO`, `KIVY_AUDIO`, persisted `data/audio/levels.json`, actual selected sound output, and run `PHOTOBOOTH_TEST_AUDIO=1` native Kivy test with the real output (not dummy SDL driver). Verify whether the music sound handle enters `play` on tutorial and whether it reaches audible output. Fix based on those observations, add targeted regression test and update status.
+
+## Retest after fade-gain fix — 2026-10-17
+
+A Windows test run reported 1 failure in `test_music_autostarts_when_advertising_fades_into_tutorial`: sound state was `play` instead of expected `stop` before gain increased. A follow-up change defers `_ensure_music` when `_music_mix <= 0`. Next run `python -m unittest tests.test_audio -v`; then run the opt-in native audio checks with `$env:PHOTOBOOTH_TEST_AUDIO='1'` and `python -m unittest tests.test_audio.AudioTests.test_real_provider_starts_music_and_loads_every_cue_from_a_fresh_install -v`. Clear this environment flag afterward. For advertising audio, test a video that genuinely contains an audio track. Report whether the tutorial song and Settings' Uji music are audible.
