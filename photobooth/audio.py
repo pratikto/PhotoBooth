@@ -334,6 +334,24 @@ class AudioManager:
                     else "Musik menyala · beberapa efek belum tersedia")
         return self.status
 
+    @property
+    def diagnostic(self):
+        """Show real playback gates, not merely the optimistic 'audio ready' flag.
+
+        Operators need this when the WAV works in a standalone speaker check
+        but is silent inside the kiosk. The snapshot contains no user data.
+        """
+        music = self._sounds.get("music")
+        return (
+            f"provider={type(music).__name__ if music else 'none'} "
+            f"state={getattr(music, 'state', 'unloaded')} "
+            f"gain={getattr(music, 'volume', 0):.2f} "
+            f"level={self.levels.music:.2f} mix={self._music_mix:.2f} "
+            f"advert={int(self._advertising)} paused={int(self._paused)} "
+            f"started={int(self._started)} sounds={len(self._sounds)} "
+            f"enabled={int(self._enabled)}"
+        )
+
     def start(self):
         """Prepare files once off-thread; defer native audio loading to Clock."""
         if self._started or self._closed or not self._enabled:
