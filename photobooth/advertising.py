@@ -20,6 +20,8 @@ from zoneinfo import ZoneInfo
 
 LOG = logging.getLogger(__name__)
 BUNDLED_CONFIG = Path(__file__).resolve().parent / "assets" / "ads" / "playlist.json"
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_VIDEO_DIR = PROJECT_ROOT / "ad_video"
 IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp"}
 VIDEO_SUFFIXES = {".mp4", ".mkv", ".mov", ".webm"}
 
@@ -146,6 +148,45 @@ class AdCatalog:
                     LOG.warning("Skipping invalid advertising item in %s", self.path)
         except (OSError, ValueError, TypeError, AttributeError, KeyError):
             LOG.warning("Advertising configuration unavailable; showing Meong poster", exc_info=True)
+        self._discover_videos()
+
+    def _discover_videos(self):
+        """Prepend local videos in a deterministic order without hard-coded filenames.
+
+        The bundled playlist enables discovery from the project-root ad_video
+        directory. Operator-owned custom playlists remain explicit so scheduled
+        commercial campaigns are not unexpectedly mixed with loose files.
+        Paths are checked as regular files, and casefold sorting keeps playback
+        consistent even if file names contain spaces or non-ASCII characters.
+        Video decoding itself is performed by the Kivy player; any invalid
+        file can be skipped there while bundled still posters stay available.
+        """
+        if self.path.resolve() != BUNDLED_CONFIG.resolve():
+            return
+        directory = DEFAULT_VIDEO_DIR
+        try:
+            videos = sorted(
+                (entry for entry in directory.iterdir()
+                 if entry.is_file() and entry.suffix.lower() in VIDEO_SUFFIXES),
+                key=lambda entry: (entry.name.casefold(), entry.name),
+            )
+        except OSError:
+            LOG.warning("Could not scan local advertisements in %s", directory, exc_info=True)
+            return
+        existing = {item.path.resolve() for item in self.items}
+        discovered = []
+        for entry in videos:
+            if entry.resolve() in existing:
+                continue
+            discovered.append(Advertisement(
+                ad_id="local-video-" + entry.name,
+                title=entry.stem,
+                path=entry.resolve(),
+                placements=("idle", "payment"),
+            ))
+        if discovered:
+            LOG.info("Discovered %d local advertising videos in %s", len(discovered), directory)
+            self.items = discovered + self.items
 
     def available(self, placement, now=None):
         now = now or datetime.now(self.zone)
