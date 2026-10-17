@@ -50,3 +50,7 @@ A Windows test run reported 1 failure in `test_music_autostarts_when_advertising
 ## Audio diagnostic update — Windows checks passed 2026-10-17
 
 The user ran all standard audio unit tests: 12 passed, 1 opt-in native test skipped. The separately enabled native audio test passed and logs show all five WAV handles loaded via SoundSDL2, with ffpyplayer and SDL2 providers available. No assertion failures remain in these checks. This does **not** verify speaker output. Next obtain one direct observation from user: is the song audible when entering the tutorial and/or pressing `Uji Musik` in Settings? If still silent, check Windows Volume Mixer and current output device, user preferences, environment flags, and Kivy logs before more source changes. Advertising samples were documented as containing no audio track; verify with ffprobe or another known audio-bearing video.
+
+## Speaker diagnostic — 2026-10-17
+
+User confirms no audible music in the full app despite passing native provider tests. Added `tools/check_audio_output.py` to isolate SDL2 audio output without Kivy GUI/page ownership. Run `python tools/check_audio_output.py` from repo root, listen for five seconds, and inspect Windows Volume Mixer for Python and the selected device. If direct test sounds, investigate full-app audio lifecycle/mute settings; if it is silent, investigate Windows/SDL2 routing or device. Do not mark the bug fixed based on native `play` state alone.
