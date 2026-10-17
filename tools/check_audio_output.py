@@ -6,7 +6,15 @@ not proof that sound reached Windows' selected speaker.
 """
 import os
 import time
+import sys
 from pathlib import Path
+
+# Direct execution sets sys.path[0] to tools/, not the repository root.
+# Add the checkout root so both `python tools/check_audio_output.py` and
+# `python -m tools.check_audio_output` resolve the local photobooth package.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 from photobooth.audio import BUNDLED_AUDIO_DIR, load_native_sound
 
