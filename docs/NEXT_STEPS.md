@@ -80,3 +80,18 @@ output. Check UI screenshots at desktop resolutions and the persistent
 `data/printer_settings.json`. Importantly, this branch now integrates printer
 features from the older printer branch without replacing recent advertising
 or payment behaviors.
+
+## Windows QA feedback (2026-10-17)
+
+User's local Windows `python -m unittest discover -s tests -v` reported
+172 tests, four errors and 69 skips. Three printer import errors originate
+from **local unresolved merge artifacts** (`<<<<<<< HEAD` in
+`tests/test_printer.py`, and a 661-line `photobooth/printer.py` with an
+unterminated string) rather than the current GitHub `feature/kivy-gui` files
+(which contain no conflict markers and whose printer module has 625 lines).
+Do not overwrite uncommitted local edits; inspect `git status`, abort only
+an active unfinished merge/rebase if appropriate, then refresh the working
+tree safely. The fourth error was a Windows permission restriction when
+creating a symlink in the retention test; that specific `WinError 1314`
+condition now skips the symlink-specific test while preserving other errors.
+Re-run full and opt-in GUI tests before merging PR #3 into `master`.
