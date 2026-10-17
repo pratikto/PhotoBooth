@@ -169,6 +169,54 @@ class AudioTests(unittest.TestCase):
             self.assertEqual(song.volume, .28)
             self.assertEqual(manager.levels.ads, .91)
 
+    def test_music_autostarts_when_advertising_fades_into_tutorial(self):
+        """Regression: a stopped zero-volume song must resume without Settings.
+
+        Kivy/SDL does not start a stopped sound by changing its volume.
+        Simulate the Clock fade deterministically so this test needs no speaker.
+        """
+        with tempfile.TemporaryDirectory() as directory:
+            manager = self.make_manager(directory)
+            song = manager._sounds["music"]
+            manager.set_advertising(True)
+            self.assertEqual(song.state, "stop")
+            scheduled = []
+            class FakeEvent:
+                def cancel(self):
+                    pass
+            def schedule(callback, interval):
+                scheduled.append(callback)
+                return FakeEvent()
+            with patch("kivy.clock.Clock.schedule_interval", side_effect=schedule):
+                manager.set_advertising(False, fade_seconds=.25)
+                self.assertEqual(len(scheduled), 1)
+                self.assertEqual(song.state, "stop")
+                scheduled[0](.05)
+                self.assertEqual(song.state, "play")
+                self.assertGreater(song.volume, 0)
+                scheduled[0](.25)
+                self.assertAlmostEqual(song.volume, manager.levels.music)
+                self.assertEqual(manager._music_mix, 1.0)
+                self.assertEqual(song.plays, 2)
+
+    def test_muted_music_stays_muted_on_advertising_fade(self):
+        """A repair must never override the volume saved by the customer."""
+        with tempfile.TemporaryDirectory() as directory:
+            manager = self.make_manager(directory)
+            song = manager._sounds["music"]
+            manager.set_volume("music", 0)
+            manager.set_advertising(True)
+            scheduled = []
+            class FakeEvent:
+                def cancel(self):
+                    pass
+            with patch("kivy.clock.Clock.schedule_interval",
+                       side_effect=lambda cb, dt: (scheduled.append(cb), FakeEvent())[1]):
+                manager.set_advertising(False, fade_seconds=.25)
+                scheduled[0](.30)
+                self.assertEqual(song.state, "stop")
+                self.assertEqual(song.volume, 0)
+
     def test_missing_provider_and_late_worker_completion_do_not_block_the_booth(self):
         with tempfile.TemporaryDirectory() as directory:
             manager = AudioManager(directory, loader=lambda path: None)
