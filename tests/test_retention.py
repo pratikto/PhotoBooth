@@ -115,7 +115,16 @@ class PhotoRetentionTests(unittest.TestCase):
         private = outside / 'private.jpg'
         private.write_bytes(b'keep outside bytes')
         linked = self.raw.parent / 'linked'
-        linked.symlink_to(outside, target_is_directory=True)
+        try:
+            linked.symlink_to(outside, target_is_directory=True)
+        except OSError as error:
+            # Standard Windows users can lack the SeCreateSymbolicLinkPrivilege
+            # even though the retention implementation is otherwise valid.
+            # Skip this specific filesystem-permission case, not the whole
+            # retention suite or other unexpected symlink errors.
+            if getattr(error, "winerror", None) == 1314:
+                self.skipTest("Windows account cannot create symbolic links")
+            raise
         unknown = self.photos / 'unrelated'
         unknown.mkdir()
         (unknown / 'picture.jpg').write_bytes(b'keep unrelated bytes')
