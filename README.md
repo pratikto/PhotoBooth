@@ -1,6 +1,47 @@
 # Meong Photobooth
 
-A Python photo booth application built with Kivy, OpenCV, and Pillow. The attached procedure document is the functional source of truth. QRIS and printing are intentionally out of the current implementation until those integrations are ready.
+A Python photo booth application built with Kivy, OpenCV, and Pillow. QRIS is
+still an explicitly non-payable demo. The kiosk now supports local advertising
+playlists and optional QR payment-slip output to a configured LAN ESC/POS
+printer. Photograph printing remains in the separate printer development branch.
+
+## Advertising kiosk and QR payment slips
+
+The app opens directly into an advertisement. A stable nearby frontal face for
+five seconds opens an invitation inside the same window; **MULAI FOTO** is
+always available as a manual alternative. Entering the template picker stops
+advertising audio and fades in the application's original soundtrack. The
+illustrated guide remains accessible through **CARA PAKAI**.
+
+Three minutes without touch, click, keyboard or swipe activity on the guide or
+template page returns to advertising, with a warning during the final ten
+seconds. Camera presence does not reset this timer. Payment, capture, processing
+and result pages are not interrupted by the landing-page inactivity timer.
+Finishing the last result returns to advertising after the existing result timer.
+
+Payment places its independent, **always-muted** advertising playlist on the
+left and a stable payment QR, amount and order summary on the right. After sixty
+seconds unpaid, a nonmodal card offers to print the QR. Unanswered cards close
+after fifteen seconds; accepting a print replaces the offer with progress.
+The **CETAK QR** and **PERBESAR QR** controls are available without waiting.
+Enlargement occupies the advertising column and pauses its playback/exposure
+counter. A print never marks a payment successful or extends QR validity.
+
+Three small still-image posters are included under
+[photobooth/assets/ads](photobooth/assets/ads), so the app works immediately.
+**Video files are installed locally and are excluded from Git**, including
+original and converted copies. Use `PHOTOBOOTH_AD_CONFIG` for an external
+playlist, or edit the bundled JSON to point at local videos. Videos containing
+audio use their own sound on the opening screen; still-image ads are silent.
+Settings include a separate **Iklan awal** volume slider. Payment ads stay muted
+at every slider value.
+
+See [advertising and payment setup](docs/advertising-and-qris.md) for playlists,
+date/hour scheduling, timing settings, LAN printer configuration, anonymous CSV
+playback reports, exact payment-expiry behavior and testing. Update dependencies
+with `python -m pip install -r requirements.txt` before running `python main.py`.
+See [kiosk validation](docs/qa/advertising-kiosk.md) for the tested scenarios
+and current automated results.
 
 ## Illustrated kiosk, animation and audio
 
@@ -18,9 +59,10 @@ Tapping it animates the cyclic carousel to that design and updates its name and
 quantity controls. It does not add sessions or change the payable total. A click
 during a swipe waits for the swipe to finish; stale rows retire with their page.
 
-A gear button stays in the header on all six screens. Its **Suara** menu has
-independent **Musik**, **Tombol**, and **Efek kamera** sliders, including 0% mute
-and a **Uji** preview for every channel. Preferences are saved locally when the
+A gear button stays in the header on every screen. Its **Suara** menu has
+independent **Musik**, **Tombol**, **Efek kamera** and **Iklan awal** sliders,
+including 0% mute and a **Uji** preview for each application sound channel.
+Preferences are saved locally when the
 menu closes. Live feedback distinguishes playing music, a muted mix, preparation,
 and unavailable output. **COBA AUDIO LAGI** reloads the sound bank after an output
 problem is corrected, without changing the selected volumes or the photo order.
@@ -28,7 +70,7 @@ The original 40-second instrumental **Meong's Little Photo Garden** combines a
 flute-like melody, harp arpeggios, triangle bass, bell accents and soft shakers
 at 96 BPM. It draws on the cheerful farming/adventure atmosphere of Harvest Moon
 and The Minish Cap. Its melody and synthesized samples are original.
-Music continues across pages
+Application music continues across the photography pages
 and becomes quieter during the camera countdown. It resumes its selected level
 after capture; button and camera cue gains remain independent. Short menu,
 countdown, camera-shutter and saved-result cues complete the sound bank.
@@ -57,7 +99,7 @@ redraw, or download a substitute logo. Payment demo QR codes remain plain.
 Implementation and maintenance:
 
 - [photobooth/ui_motion.py](photobooth/ui_motion.py): scalable pictograms, page-scoped animation lifecycle, countdown ring, and capture flash.
-- [photobooth/audio.py](photobooth/audio.py): commented original score, shipped WAV validation/repair, native playback, three mixer buses, and atomic volume preferences.
+- [photobooth/audio.py](photobooth/audio.py): commented original score, shipped WAV validation/repair, native playback, three application buses plus a separate advertising gain, and atomic volume preferences.
 - [photobooth/assets/audio/README.md](photobooth/assets/audio/README.md): score, cue inventory and regeneration instructions.
 - [photobooth/ui_kivy.py](photobooth/ui_kivy.py): illustrated tutorial, persistent audio settings, clickable cart rows and native controls.
 - [photobooth/ui_brand.py](photobooth/ui_brand.py): carousel requests, swipe/animation coordination, and stale-page cleanup.

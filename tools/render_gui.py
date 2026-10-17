@@ -48,6 +48,8 @@ SELECTION_SCREENS = ('templates-empty', 'templates-one', 'templates', 'templates
 DIAGNOSTIC_SCREENS = ('templates-status', 'templates-one')
 RETAKE_SCREENS = ('retake-ready', 'retake-countdown')
 PALM_SCREENS = ('palm-ready', 'palm-hold', 'palm-release', 'palm-loading', 'palm-unavailable')
+ADVERTISING_SCREENS = ('advert', 'advert-invitation', 'payment', 'payment-print-offer',
+                       'payment-enlarged', 'payment-expired')
 
 
 def synthetic_portrait(index):
@@ -197,10 +199,20 @@ def main():
         ui.show_capture('Sesi 1 dari 24 · Special Day', 1, synthetic_portrait(0))
         ui.set_palm_status(state, progress, needs_release)
 
+    def payment_demo():
+        ui.show_payment('Special Day × 1', 1, 5000, lambda: None, lambda: None)
+
+    def expired_payment():
+        from datetime import timedelta
+        ui.payment.current.expires_at -= timedelta(hours=1)
+        ui._refresh_payment()
+
     # Additional states catch issues hidden by the six happy-path screenshots:
     # scrolling to the last template, active countdown, an exhausted retake,
     # local-only output, and a next-session action without a completion timer.
     scenes = (
+        ('advert', lambda: ui.show_advertisement(True, 'Kamera siap'), None),
+        ('advert-invitation', lambda: ui.show_advertisement(True, 'Kamera siap'), ui.show_face_invitation),
         ('welcome', lambda: ui.show_welcome(True, STATUS), None),
         ('templates', cart, None),
         ('templates-empty', lambda: ui.show_template_selection(True, STATUS), None),
@@ -214,6 +226,9 @@ def main():
         ('payment-waiting', lambda: ui.show_payment('Template 1 × 2',
                                                    2, 10000, lambda: None, lambda: None),
          lambda: ui.set_camera_status(False)),
+        ('payment-print-offer', payment_demo, ui._offer_payment_print),
+        ('payment-enlarged', payment_demo, ui.show_payment_enlargement),
+        ('payment-expired', payment_demo, expired_payment),
         ('capture', lambda: ui.show_capture('Sesi 1 dari 24 · Special Day', 1, synthetic_portrait(0)), None),
         ('capture-waiting', lambda: ui.show_capture('Sesi 1 dari 24 · Special Day', 1, synthetic_portrait(0)),
          lambda: ui.set_camera_status(False)),
@@ -244,8 +259,8 @@ def main():
             width, height = size
             path = output / f'{name}-{width}x{height}.png'
             ui.shell.export_to_png(str(path))
-            stage = next(w for w in ui.content.children if isinstance(w, ScrollView))
-            fits = stage.children[0].height <= stage.height + 1
+            stage = next((w for w in ui.content.children if isinstance(w, ScrollView)), None)
+            fits = stage is None or stage.children[0].height <= stage.height + 1
             if not fits:
                 raise AssertionError(f'{name} has a clipped desktop stage at {size}')
             if ui.current_screen == 'capture':
@@ -268,10 +283,15 @@ def main():
                 if name in PALM_SCREENS and ui.capture_button.disabled:
                     raise AssertionError(f'Palm state must preserve button capture in {name}')
             decoded = None
-            if name in ('payment', 'payment-waiting'):
+            if name in ('payment', 'payment-waiting', 'payment-print-offer', 'payment-enlarged'):
                 decoded = screenshot_qr(path, ui.payment_qr)
-                if decoded != f'PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR {ui.payment_total}':
+                if decoded != ui.payment.current.payload:
                     raise AssertionError(f'Demo QR is unreadable in {path}')
+                if ui._inline_offer is not None:
+                    offer = bounds(ui._inline_offer)
+                    qr_column = bounds(ui.payment_details)
+                    if offer[2] > qr_column[0]:
+                        raise AssertionError(f'Payment offer covers the QR column in {path}')
             elif name in ('result', 'result-next'):
                 decoded = screenshot_qr(path, ui.qr_view)
                 if decoded != FOLDER_URL:
@@ -420,6 +440,7 @@ def main():
         overview(output, size, DIAGNOSTIC_SCREENS, 'diagnostics')
         overview(output, size, RETAKE_SCREENS, 'retake')
         overview(output, size, PALM_SCREENS, 'palm')
+        overview(output, size, ADVERTISING_SCREENS, 'advertising')
     print(f'{len(records)} real-widget renders saved in {output}')
 
 
