@@ -230,11 +230,22 @@ class PhotoBoothUI(KioskExperienceMixin):
         Short-screen spacing retains the camera/QR minimum sizes at 800×600.
         """
         compact = self.shell.height < dp(700)
-        gutter = max(dp(16 if compact else 28), (self.shell.width - dp(1440)) / 2)
-        self.shell.padding = (gutter, dp(12 if compact else 24),
-                              gutter, dp(8 if compact else 20))
-        self.shell.spacing = dp(10 if compact else 16)
-        self._header_row.height = dp(64 if compact else 82)
+        is_advert = self.current_screen == 'advert'
+        # The opening advertising placement is our largest visual surface.
+        # Regular photo/checkout pages retain the narrower 1440dp layout, but
+        # idle media uses nearly the whole window, including wide desktops.
+        # We keep the persistent logo/settings header and the manual Start
+        # controls, rather than using a fullscreen overlay that would block
+        # either the face invitation or operator settings.
+        max_width = 1920 if is_advert else 1440
+        gutter = max(dp(8 if is_advert else (16 if compact else 28)),
+                     (self.shell.width - dp(max_width)) / 2)
+        vertical_top = 8 if is_advert else (12 if compact else 24)
+        vertical_bottom = 6 if is_advert else (8 if compact else 20)
+        self.shell.padding = (gutter, dp(vertical_top), gutter, dp(vertical_bottom))
+        self.shell.spacing = dp(6 if is_advert else (10 if compact else 16))
+        self._header_row.height = dp((54 if compact else 64) if is_advert else
+                                     (64 if compact else 82))
         self._header_row.padding = (dp(14), dp(8 if compact else 10))
         self.brand.width = dp(216 if compact else 260)
         self.brand.mascot.width = dp(82 if compact else 100)
