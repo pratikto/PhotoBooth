@@ -402,6 +402,11 @@ class PhotoBoothUI(KioskExperienceMixin):
         # so loading failures and an intentionally muted mix are visible.
         self.audio_status_label = self._label(self.audio.summary, 12, 36, color=GREY)
         controls_body.add_widget(self.audio_status_label)
+        # Debug readout is intentionally visible in Settings: it distinguishes
+        # a stopped/zero-gain mixer from an OS output-routing problem.
+        self.audio_diagnostic_label = self._label(
+            self.audio.diagnostic, 11, 48, color=GREY)
+        controls_body.add_widget(self.audio_diagnostic_label)
         retry = self._button("COBA AUDIO LAGI", self.audio.retry,
                              secondary=True, screen_bound=False)
         retry.height = dp(36)
@@ -409,6 +414,7 @@ class PhotoBoothUI(KioskExperienceMixin):
         self.audio_retry_button = retry
         def refresh_audio_status(_dt):
             self.audio_status_label.text = self.audio.summary
+            self.audio_diagnostic_label.text = self.audio.diagnostic
             return self._audio_popup is not None
         status_event = Clock.schedule_interval(refresh_audio_status, .2)
         popup = Popup(title="Suara", content=body, size_hint=(None, None),
