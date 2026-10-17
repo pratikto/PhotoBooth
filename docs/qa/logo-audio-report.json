@@ -1,0 +1,36 @@
+{
+  "logo_sha256": "dc1866b6e9cac905a08fec4019f971bb6daa6d243c51e13b23d082027646f61b",
+  "native_provider": "SoundSDL2",
+  "native_host_startup": "passed",
+  "sounds": {
+    "music": {
+      "length_seconds": 40.0,
+      "volume": 0.28,
+      "state": "play"
+    },
+    "button": {
+      "length_seconds": 0.16,
+      "volume": 0.55,
+      "state": "stop"
+    },
+    "count": {
+      "length_seconds": 0.2,
+      "volume": 0.7,
+      "state": "stop"
+    },
+    "shutter": {
+      "length_seconds": 0.23,
+      "volume": 0.7,
+      "state": "stop"
+    },
+    "success": {
+      "length_seconds": 0.9,
+      "volume": 0.7,
+      "state": "stop"
+    }
+  },
+  "settings_layouts": [
+    "1200x800 passed",
+    "800x600 passed"
+  ]
+}

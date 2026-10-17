@@ -1,0 +1,24 @@
+{
+  "size": [
+    1200,
+    800
+  ],
+  "endpoints": [
+    {
+      "index": 11,
+      "counter": "12 / 12",
+      "name": "Celebrate"
+    },
+    {
+      "index": 0,
+      "counter": "01 / 12",
+      "name": "Special Day"
+    },
+    {
+      "index": 11,
+      "counter": "12 / 12",
+      "name": "Celebrate"
+    }
+  ],
+  "cart_total": "Rp15.000"
+}

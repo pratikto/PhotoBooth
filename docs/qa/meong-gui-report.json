@@ -1,0 +1,1763 @@
+{
+  "renders": [
+    {
+      "screen": "welcome",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "welcome-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "templates",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "templates-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "selected_templates": [
+        "template_a",
+        "template_b",
+        "template_c",
+        "template_d",
+        "template_e",
+        "template_f",
+        "template_g",
+        "template_h",
+        "template_i",
+        "template_j",
+        "template_k",
+        "template_l"
+      ],
+      "quantities": {
+        "template_a": 2,
+        "template_b": 2,
+        "template_c": 2,
+        "template_d": 2,
+        "template_e": 2,
+        "template_f": 2,
+        "template_g": 2,
+        "template_h": 2,
+        "template_i": 2,
+        "template_j": 2,
+        "template_k": 2,
+        "template_l": 2
+      }
+    },
+    {
+      "screen": "templates-empty",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "templates-empty-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "\u2212",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        },
+        {
+          "text": "LANJUT BAYAR",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ],
+      "selected_templates": [],
+      "quantities": {
+        "template_a": 0,
+        "template_b": 0,
+        "template_c": 0,
+        "template_d": 0,
+        "template_e": 0,
+        "template_f": 0,
+        "template_g": 0,
+        "template_h": 0,
+        "template_i": 0,
+        "template_j": 0,
+        "template_k": 0,
+        "template_l": 0
+      }
+    },
+    {
+      "screen": "templates-one",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "templates-one-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "selected_templates": [
+        "template_a"
+      ],
+      "quantities": {
+        "template_a": 2,
+        "template_b": 0,
+        "template_c": 0,
+        "template_d": 0,
+        "template_e": 0,
+        "template_f": 0,
+        "template_g": 0,
+        "template_h": 0,
+        "template_i": 0,
+        "template_j": 0,
+        "template_k": 0,
+        "template_l": 0
+      }
+    },
+    {
+      "screen": "templates-status",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "templates-status-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "status_shortened": true,
+      "status_details_visible": true,
+      "disabled_text_contrast": [
+        {
+          "text": "LANJUT BAYAR",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ],
+      "selected_templates": [
+        "template_a"
+      ],
+      "quantities": {
+        "template_a": 2,
+        "template_b": 0,
+        "template_c": 0,
+        "template_d": 0,
+        "template_e": 0,
+        "template_f": 0,
+        "template_g": 0,
+        "template_h": 0,
+        "template_i": 0,
+        "template_j": 0,
+        "template_k": 0,
+        "template_l": 0
+      }
+    },
+    {
+      "screen": "templates-last",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "templates-last-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "selected_templates": [
+        "template_a",
+        "template_b",
+        "template_c",
+        "template_d",
+        "template_e",
+        "template_f",
+        "template_g",
+        "template_h",
+        "template_i",
+        "template_j",
+        "template_k",
+        "template_l"
+      ],
+      "quantities": {
+        "template_a": 2,
+        "template_b": 2,
+        "template_c": 2,
+        "template_d": 2,
+        "template_e": 2,
+        "template_f": 2,
+        "template_g": 2,
+        "template_h": 2,
+        "template_i": 2,
+        "template_j": 2,
+        "template_k": 2,
+        "template_l": 2
+      }
+    },
+    {
+      "screen": "payment",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "payment-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": "PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR 120000"
+    },
+    {
+      "screen": "payment-waiting",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "payment-waiting-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": "PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR 10000",
+      "disabled_text_contrast": [
+        {
+          "text": "SIMULASIKAN PEMBAYARAN BERHASIL",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ]
+    },
+    {
+      "screen": "capture",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "capture-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "capture-waiting",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "capture-waiting-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "AMBIL FOTO",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ]
+    },
+    {
+      "screen": "countdown",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "countdown-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "AMBIL FOTO",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ]
+    },
+    {
+      "screen": "retake-ready",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "retake-ready-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "retake-countdown",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "retake-countdown-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "RETAKE FOTO TERPILIH",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ]
+    },
+    {
+      "screen": "palm-ready",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "palm-ready-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Tekan tombol atau angkat\ntelapak terbuka 1 detik.",
+      "button_capture_available": true
+    },
+    {
+      "screen": "palm-hold",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "palm-hold-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Telapak terdeteksi \u00b7 70%\nTahan sebentar lagi.",
+      "button_capture_available": true
+    },
+    {
+      "screen": "palm-release",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "palm-release-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Turunkan telapak sebentar.\nTombol tetap bisa dipakai.",
+      "button_capture_available": true
+    },
+    {
+      "screen": "palm-loading",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "palm-loading-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Tekan tombol untuk foto.\nGestur sedang disiapkan...",
+      "button_capture_available": true
+    },
+    {
+      "screen": "palm-unavailable",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "palm-unavailable-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Gestur belum tersedia.\nTekan tombol untuk foto.",
+      "button_capture_available": true
+    },
+    {
+      "screen": "review",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "review-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "review_frame_sizes": [
+        [
+          542,
+          305
+        ],
+        [
+          543,
+          306
+        ],
+        [
+          543,
+          306
+        ]
+      ],
+      "review_matches_output": true
+    },
+    {
+      "screen": "review-used",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "review-used-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "Foto 1 \u00b7 Tersimpan",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        },
+        {
+          "text": "Foto 2 \u00b7 DIGANTI",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        },
+        {
+          "text": "Foto 3 \u00b7 Tersimpan",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        },
+        {
+          "text": "RETAKE SUDAH DIGUNAKAN",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ],
+      "review_frame_sizes": [
+        [
+          542,
+          305
+        ],
+        [
+          543,
+          306
+        ],
+        [
+          543,
+          306
+        ]
+      ],
+      "review_matches_output": true
+    },
+    {
+      "screen": "review-waiting",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "review-waiting-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "RETAKE FOTO TERPILIH",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ],
+      "review_frame_sizes": [
+        [
+          542,
+          305
+        ],
+        [
+          543,
+          306
+        ],
+        [
+          543,
+          306
+        ]
+      ],
+      "review_matches_output": true
+    },
+    {
+      "screen": "result",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "result-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": "https://drive.google.com/drive/folders/1AbCdEfGhIjKlMnOpQrStUvWxYz123456"
+    },
+    {
+      "screen": "result-local",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "result-local-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "result-next",
+      "size": [
+        1200,
+        800
+      ],
+      "file": "result-next-1200x800.png",
+      "stage_fits": true,
+      "decoded_qr": "https://drive.google.com/drive/folders/1AbCdEfGhIjKlMnOpQrStUvWxYz123456"
+    },
+    {
+      "screen": "welcome",
+      "size": [
+        800,
+        600
+      ],
+      "file": "welcome-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "templates",
+      "size": [
+        800,
+        600
+      ],
+      "file": "templates-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "selected_templates": [
+        "template_a",
+        "template_b",
+        "template_c",
+        "template_d",
+        "template_e",
+        "template_f",
+        "template_g",
+        "template_h",
+        "template_i",
+        "template_j",
+        "template_k",
+        "template_l"
+      ],
+      "quantities": {
+        "template_a": 2,
+        "template_b": 2,
+        "template_c": 2,
+        "template_d": 2,
+        "template_e": 2,
+        "template_f": 2,
+        "template_g": 2,
+        "template_h": 2,
+        "template_i": 2,
+        "template_j": 2,
+        "template_k": 2,
+        "template_l": 2
+      }
+    },
+    {
+      "screen": "templates-empty",
+      "size": [
+        800,
+        600
+      ],
+      "file": "templates-empty-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "\u2212",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        },
+        {
+          "text": "LANJUT BAYAR",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ],
+      "selected_templates": [],
+      "quantities": {
+        "template_a": 0,
+        "template_b": 0,
+        "template_c": 0,
+        "template_d": 0,
+        "template_e": 0,
+        "template_f": 0,
+        "template_g": 0,
+        "template_h": 0,
+        "template_i": 0,
+        "template_j": 0,
+        "template_k": 0,
+        "template_l": 0
+      }
+    },
+    {
+      "screen": "templates-one",
+      "size": [
+        800,
+        600
+      ],
+      "file": "templates-one-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "selected_templates": [
+        "template_a"
+      ],
+      "quantities": {
+        "template_a": 2,
+        "template_b": 0,
+        "template_c": 0,
+        "template_d": 0,
+        "template_e": 0,
+        "template_f": 0,
+        "template_g": 0,
+        "template_h": 0,
+        "template_i": 0,
+        "template_j": 0,
+        "template_k": 0,
+        "template_l": 0
+      }
+    },
+    {
+      "screen": "templates-status",
+      "size": [
+        800,
+        600
+      ],
+      "file": "templates-status-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "status_shortened": true,
+      "status_details_visible": true,
+      "disabled_text_contrast": [
+        {
+          "text": "LANJUT BAYAR",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ],
+      "selected_templates": [
+        "template_a"
+      ],
+      "quantities": {
+        "template_a": 2,
+        "template_b": 0,
+        "template_c": 0,
+        "template_d": 0,
+        "template_e": 0,
+        "template_f": 0,
+        "template_g": 0,
+        "template_h": 0,
+        "template_i": 0,
+        "template_j": 0,
+        "template_k": 0,
+        "template_l": 0
+      }
+    },
+    {
+      "screen": "templates-last",
+      "size": [
+        800,
+        600
+      ],
+      "file": "templates-last-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "selected_templates": [
+        "template_a",
+        "template_b",
+        "template_c",
+        "template_d",
+        "template_e",
+        "template_f",
+        "template_g",
+        "template_h",
+        "template_i",
+        "template_j",
+        "template_k",
+        "template_l"
+      ],
+      "quantities": {
+        "template_a": 2,
+        "template_b": 2,
+        "template_c": 2,
+        "template_d": 2,
+        "template_e": 2,
+        "template_f": 2,
+        "template_g": 2,
+        "template_h": 2,
+        "template_i": 2,
+        "template_j": 2,
+        "template_k": 2,
+        "template_l": 2
+      }
+    },
+    {
+      "screen": "payment",
+      "size": [
+        800,
+        600
+      ],
+      "file": "payment-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": "PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR 120000"
+    },
+    {
+      "screen": "payment-waiting",
+      "size": [
+        800,
+        600
+      ],
+      "file": "payment-waiting-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": "PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR 10000",
+      "disabled_text_contrast": [
+        {
+          "text": "SIMULASIKAN PEMBAYARAN BERHASIL",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ]
+    },
+    {
+      "screen": "capture",
+      "size": [
+        800,
+        600
+      ],
+      "file": "capture-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "capture-waiting",
+      "size": [
+        800,
+        600
+      ],
+      "file": "capture-waiting-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "AMBIL FOTO",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ]
+    },
+    {
+      "screen": "countdown",
+      "size": [
+        800,
+        600
+      ],
+      "file": "countdown-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "AMBIL FOTO",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ]
+    },
+    {
+      "screen": "retake-ready",
+      "size": [
+        800,
+        600
+      ],
+      "file": "retake-ready-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "retake-countdown",
+      "size": [
+        800,
+        600
+      ],
+      "file": "retake-countdown-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "RETAKE FOTO TERPILIH",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ]
+    },
+    {
+      "screen": "palm-ready",
+      "size": [
+        800,
+        600
+      ],
+      "file": "palm-ready-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Tekan tombol atau angkat\ntelapak terbuka 1 detik.",
+      "button_capture_available": true
+    },
+    {
+      "screen": "palm-hold",
+      "size": [
+        800,
+        600
+      ],
+      "file": "palm-hold-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Telapak terdeteksi \u00b7 70%\nTahan sebentar lagi.",
+      "button_capture_available": true
+    },
+    {
+      "screen": "palm-release",
+      "size": [
+        800,
+        600
+      ],
+      "file": "palm-release-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Turunkan telapak sebentar.\nTombol tetap bisa dipakai.",
+      "button_capture_available": true
+    },
+    {
+      "screen": "palm-loading",
+      "size": [
+        800,
+        600
+      ],
+      "file": "palm-loading-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Tekan tombol untuk foto.\nGestur sedang disiapkan...",
+      "button_capture_available": true
+    },
+    {
+      "screen": "palm-unavailable",
+      "size": [
+        800,
+        600
+      ],
+      "file": "palm-unavailable-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Gestur belum tersedia.\nTekan tombol untuk foto.",
+      "button_capture_available": true
+    },
+    {
+      "screen": "review",
+      "size": [
+        800,
+        600
+      ],
+      "file": "review-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "review_frame_sizes": [
+        [
+          542,
+          305
+        ],
+        [
+          543,
+          306
+        ],
+        [
+          543,
+          306
+        ]
+      ],
+      "review_matches_output": true
+    },
+    {
+      "screen": "review-used",
+      "size": [
+        800,
+        600
+      ],
+      "file": "review-used-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "Foto 1 \u00b7 Tersimpan",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        },
+        {
+          "text": "Foto 2 \u00b7 DIGANTI",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        },
+        {
+          "text": "Foto 3 \u00b7 Tersimpan",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        },
+        {
+          "text": "RETAKE SUDAH DIGUNAKAN",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ],
+      "review_frame_sizes": [
+        [
+          542,
+          305
+        ],
+        [
+          543,
+          306
+        ],
+        [
+          543,
+          306
+        ]
+      ],
+      "review_matches_output": true
+    },
+    {
+      "screen": "review-waiting",
+      "size": [
+        800,
+        600
+      ],
+      "file": "review-waiting-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "RETAKE FOTO TERPILIH",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ],
+      "review_frame_sizes": [
+        [
+          542,
+          305
+        ],
+        [
+          543,
+          306
+        ],
+        [
+          543,
+          306
+        ]
+      ],
+      "review_matches_output": true
+    },
+    {
+      "screen": "result",
+      "size": [
+        800,
+        600
+      ],
+      "file": "result-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": "https://drive.google.com/drive/folders/1AbCdEfGhIjKlMnOpQrStUvWxYz123456"
+    },
+    {
+      "screen": "result-local",
+      "size": [
+        800,
+        600
+      ],
+      "file": "result-local-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "result-next",
+      "size": [
+        800,
+        600
+      ],
+      "file": "result-next-800x600.png",
+      "stage_fits": true,
+      "decoded_qr": "https://drive.google.com/drive/folders/1AbCdEfGhIjKlMnOpQrStUvWxYz123456"
+    },
+    {
+      "screen": "welcome",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "welcome-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "templates",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "templates-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "selected_templates": [
+        "template_a",
+        "template_b",
+        "template_c",
+        "template_d",
+        "template_e",
+        "template_f",
+        "template_g",
+        "template_h",
+        "template_i",
+        "template_j",
+        "template_k",
+        "template_l"
+      ],
+      "quantities": {
+        "template_a": 2,
+        "template_b": 2,
+        "template_c": 2,
+        "template_d": 2,
+        "template_e": 2,
+        "template_f": 2,
+        "template_g": 2,
+        "template_h": 2,
+        "template_i": 2,
+        "template_j": 2,
+        "template_k": 2,
+        "template_l": 2
+      }
+    },
+    {
+      "screen": "templates-empty",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "templates-empty-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "\u2212",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        },
+        {
+          "text": "LANJUT BAYAR",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ],
+      "selected_templates": [],
+      "quantities": {
+        "template_a": 0,
+        "template_b": 0,
+        "template_c": 0,
+        "template_d": 0,
+        "template_e": 0,
+        "template_f": 0,
+        "template_g": 0,
+        "template_h": 0,
+        "template_i": 0,
+        "template_j": 0,
+        "template_k": 0,
+        "template_l": 0
+      }
+    },
+    {
+      "screen": "templates-one",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "templates-one-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "selected_templates": [
+        "template_a"
+      ],
+      "quantities": {
+        "template_a": 2,
+        "template_b": 0,
+        "template_c": 0,
+        "template_d": 0,
+        "template_e": 0,
+        "template_f": 0,
+        "template_g": 0,
+        "template_h": 0,
+        "template_i": 0,
+        "template_j": 0,
+        "template_k": 0,
+        "template_l": 0
+      }
+    },
+    {
+      "screen": "templates-status",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "templates-status-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "status_shortened": true,
+      "status_details_visible": true,
+      "disabled_text_contrast": [
+        {
+          "text": "LANJUT BAYAR",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ],
+      "selected_templates": [
+        "template_a"
+      ],
+      "quantities": {
+        "template_a": 2,
+        "template_b": 0,
+        "template_c": 0,
+        "template_d": 0,
+        "template_e": 0,
+        "template_f": 0,
+        "template_g": 0,
+        "template_h": 0,
+        "template_i": 0,
+        "template_j": 0,
+        "template_k": 0,
+        "template_l": 0
+      }
+    },
+    {
+      "screen": "templates-last",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "templates-last-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "selected_templates": [
+        "template_a",
+        "template_b",
+        "template_c",
+        "template_d",
+        "template_e",
+        "template_f",
+        "template_g",
+        "template_h",
+        "template_i",
+        "template_j",
+        "template_k",
+        "template_l"
+      ],
+      "quantities": {
+        "template_a": 2,
+        "template_b": 2,
+        "template_c": 2,
+        "template_d": 2,
+        "template_e": 2,
+        "template_f": 2,
+        "template_g": 2,
+        "template_h": 2,
+        "template_i": 2,
+        "template_j": 2,
+        "template_k": 2,
+        "template_l": 2
+      }
+    },
+    {
+      "screen": "payment",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "payment-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": "PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR 120000"
+    },
+    {
+      "screen": "payment-waiting",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "payment-waiting-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": "PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR 10000",
+      "disabled_text_contrast": [
+        {
+          "text": "SIMULASIKAN PEMBAYARAN BERHASIL",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ]
+    },
+    {
+      "screen": "capture",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "capture-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "capture-waiting",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "capture-waiting-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "AMBIL FOTO",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ]
+    },
+    {
+      "screen": "countdown",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "countdown-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "AMBIL FOTO",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ]
+    },
+    {
+      "screen": "retake-ready",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "retake-ready-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "retake-countdown",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "retake-countdown-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "RETAKE FOTO TERPILIH",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ]
+    },
+    {
+      "screen": "palm-ready",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "palm-ready-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Tekan tombol atau angkat\ntelapak terbuka 1 detik.",
+      "button_capture_available": true
+    },
+    {
+      "screen": "palm-hold",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "palm-hold-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Telapak terdeteksi \u00b7 70%\nTahan sebentar lagi.",
+      "button_capture_available": true
+    },
+    {
+      "screen": "palm-release",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "palm-release-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Turunkan telapak sebentar.\nTombol tetap bisa dipakai.",
+      "button_capture_available": true
+    },
+    {
+      "screen": "palm-loading",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "palm-loading-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Tekan tombol untuk foto.\nGestur sedang disiapkan...",
+      "button_capture_available": true
+    },
+    {
+      "screen": "palm-unavailable",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "palm-unavailable-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "palm_hint": "Gestur belum tersedia.\nTekan tombol untuk foto.",
+      "button_capture_available": true
+    },
+    {
+      "screen": "review",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "review-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "review_frame_sizes": [
+        [
+          542,
+          305
+        ],
+        [
+          543,
+          306
+        ],
+        [
+          543,
+          306
+        ]
+      ],
+      "review_matches_output": true
+    },
+    {
+      "screen": "review-used",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "review-used-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "Foto 1 \u00b7 Tersimpan",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        },
+        {
+          "text": "Foto 2 \u00b7 DIGANTI",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        },
+        {
+          "text": "Foto 3 \u00b7 Tersimpan",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        },
+        {
+          "text": "RETAKE SUDAH DIGUNAKAN",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ],
+      "review_frame_sizes": [
+        [
+          542,
+          305
+        ],
+        [
+          543,
+          306
+        ],
+        [
+          543,
+          306
+        ]
+      ],
+      "review_matches_output": true
+    },
+    {
+      "screen": "review-waiting",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "review-waiting-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": null,
+      "disabled_text_contrast": [
+        {
+          "text": "RETAKE FOTO TERPILIH",
+          "background_rgb": [
+            210,
+            218,
+            233
+          ],
+          "foreground_rgb": [
+            65,
+            77,
+            97
+          ],
+          "ratio": 6.078
+        }
+      ],
+      "review_frame_sizes": [
+        [
+          542,
+          305
+        ],
+        [
+          543,
+          306
+        ],
+        [
+          543,
+          306
+        ]
+      ],
+      "review_matches_output": true
+    },
+    {
+      "screen": "result",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "result-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": "https://drive.google.com/drive/folders/1AbCdEfGhIjKlMnOpQrStUvWxYz123456"
+    },
+    {
+      "screen": "result-local",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "result-local-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": null
+    },
+    {
+      "screen": "result-next",
+      "size": [
+        1920,
+        1080
+      ],
+      "file": "result-next-1920x1080.png",
+      "stage_fits": true,
+      "decoded_qr": "https://drive.google.com/drive/folders/1AbCdEfGhIjKlMnOpQrStUvWxYz123456"
+    }
+  ],
+  "errors": []
+}
