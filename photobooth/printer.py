@@ -552,6 +552,13 @@ class ThermalPrinter:
         if os.name == "nt" and self.config.windows_printer_name:
             self._send_windows_raw(self.config.windows_printer_name, payload)
             return
+        if os.name == "nt" and not self.config.windows_printer_name:
+            raise RuntimeError(
+                "USB Windows belum dikonfigurasi. Buka Settings > "
+                "PENGATURAN PRINTER, pilih USB Windows, isi nama antrean "
+                "printer (misalnya POS80 Printer), lalu tekan SIMPAN. "
+                "Jangan gunakan /dev/usb/lp0 di Windows."
+            )
         try:
             from escpos.printer import File, Usb
         except ImportError as error:
