@@ -17,7 +17,7 @@ from unittest.mock import patch
 class KioskInteractionTests(unittest.TestCase):
     def setUp(self):
         from kivy.core.window import Window
-        from photobooth.audio import AudioManager
+        from photobooth.audio import AudioManager, SOUND_NAMES
         from photobooth.catalog import get_templates
         from photobooth.ui_kivy import KivyHost, PhotoBoothUI
         from test_audio import FakeSound
@@ -26,7 +26,7 @@ class KioskInteractionTests(unittest.TestCase):
         self.addCleanup(self.directory.cleanup)
         with patch.dict(os.environ, {"PHOTOBOOTH_AUDIO": "1"}):
             self.audio = AudioManager(Path(self.directory.name) / "audio")
-        self.audio._sounds = {name: FakeSound() for name in ("music", "button", "count", "shutter")}
+        self.audio._sounds = {name: FakeSound() for name in SOUND_NAMES}
         self.audio._apply_levels()
         self.capture_actions = []
         callbacks = {name: lambda: None for name in
@@ -169,6 +169,23 @@ class KioskInteractionTests(unittest.TestCase):
         self.settle()
         self.assertEqual(count.plays, 5)
         self.assertIsNotNone(old_dial)
+
+    def test_music_preview_plays_without_rewinding_and_reports_live_mute_state(self):
+        self.tap(self.ui.settings_button)
+        self.assertEqual(set(self.ui.audio_test_buttons), {"music", "buttons", "effects"})
+        song = self.audio._sounds["music"]
+        self.tap(self.ui.audio_test_buttons["music"])
+        self.assertEqual(song.plays, 1)
+        self.assertIn("Musik menyala", self.ui.audio_status_label.text)
+        self.tap(self.ui.audio_test_buttons["music"])
+        self.assertEqual(song.plays, 1)
+        self.ui.audio_sliders["music"].value = 0
+        self.settle()
+        self.assertEqual(song.state, "stop")
+        self.assertIn("Musik dibisukan", self.ui.audio_status_label.text)
+        self.ui._audio_popup.dismiss(animation=False)
+        self.settle(.1)
+        self.assertFalse(self.ui.audio_test_buttons)
 
     def test_static_gear_pixels_are_painted_inside_the_header_button(self):
         """Geometry alone misses a stale canvas drawn at the previous y=0."""

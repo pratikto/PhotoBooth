@@ -1,9 +1,10 @@
 """Original offline music and sound cues for the MEONG kiosk.
 
 The melody below is an original small farm-game-style composition, not a
-recording or transcription of a commercial game's soundtrack. NumPy creates
-short PCM waveforms once in a background worker. Kivy loads/plays them only on
-the UI thread. No audio download, account, or additional native mixer is needed.
+recording or transcription of a commercial game's soundtrack. Ready-to-play
+WAVs ship with the application; the score below can rebuild a missing/corrupt
+asset in a background worker. Kivy loads/plays them only on the UI thread.
+No audio download, account, or additional native mixer is needed.
 
 The three buses are independent: music, buttons, and camera effects. Keeping
 one manager for the application's lifetime prevents restarting the song when
@@ -26,9 +27,13 @@ import numpy as np
 
 LOG = logging.getLogger(__name__)
 SAMPLE_RATE = 22050
-ASSET_VERSION = "v1"
-SOUND_NAMES = ("music", "button", "count", "shutter")
-CHANNEL_FOR = {"music": "music", "button": "buttons", "count": "effects", "shutter": "effects"}
+ASSET_VERSION = "v2"
+BUNDLED_AUDIO_DIR = Path(__file__).resolve().parent / "assets" / "audio"
+SOUND_DURATIONS = {"music": 40.0, "button": .16, "count": .20,
+                   "shutter": .23, "success": .90}
+SOUND_NAMES = tuple(SOUND_DURATIONS)
+CHANNEL_FOR = {"music": "music", "button": "buttons", "count": "effects",
+               "shutter": "effects", "success": "effects"}
 
 
 def clamp_volume(value, fallback=0.0):
@@ -84,8 +89,9 @@ class AudioLevels:
                 temporary.unlink(missing_ok=True)
 
 
-def _note(buffer, start, beats, midi, gain, *, beat_seconds=.75, sample_rate=SAMPLE_RATE):
-    """Mix a softly plucked note, with short attack and a natural decay.
+def _note(buffer, start, beats, midi, gain, *, voice="harp", beat_seconds=.625,
+          sample_rate=SAMPLE_RATE):
+    """Mix an original synthesized instrument with click-free note boundaries.
 
     MIDI numbers express pitch only; all phrases and their rhythm are specified
     here. Envelopes avoid abrupt discontinuities and keep the loop comfortable.
@@ -96,72 +102,137 @@ def _note(buffer, start, beats, midi, gain, *, beat_seconds=.75, sample_rate=SAM
         return
     t = np.arange(length, dtype=np.float64) / sample_rate
     frequency = 440.0 * 2 ** ((midi - 69) / 12)
-    tone = (np.sin(2 * np.pi * frequency * t)
-            + .22 * np.sin(4 * np.pi * frequency * t)
-            + .06 * np.sin(6 * np.pi * frequency * t))
-    envelope = (1 - np.exp(-t * 120)) * np.exp(-t * 4.8 / max(.15, beats))
-    envelope *= np.minimum(1, (length / sample_rate - t) * 70)
+    seconds = length / sample_rate
+    phase = 2 * np.pi * frequency * t
+    if voice == "flute":
+        # A mellow, slightly vibrating lead evokes a small handheld adventure.
+        phase += .012 * np.sin(2 * np.pi * 5.2 * t)
+        tone = np.sin(phase) + .12 * np.sin(2 * phase) + .035 * np.sin(3 * phase)
+        envelope = (1 - np.exp(-t * 45)) * np.exp(-t * 1.2 / seconds)
+    elif voice == "bass":
+        tone = np.sin(phase) - np.sin(3 * phase) / 9 + np.sin(5 * phase) / 25
+        envelope = (1 - np.exp(-t * 90)) * np.exp(-t * 2.2 / seconds)
+    elif voice == "bell":
+        tone = np.sin(phase) + .25 * np.sin(2 * phase) + .08 * np.sin(3 * phase)
+        envelope = (1 - np.exp(-t * 180)) * np.exp(-t * 4.0 / seconds)
+    else:
+        tone = np.sin(phase) + .22 * np.sin(2 * phase) + .06 * np.sin(3 * phase)
+        envelope = (1 - np.exp(-t * 120)) * np.exp(-t * 4.8 / seconds)
+    envelope *= np.minimum(1, (seconds - t) * 90)
     buffer[begin:begin + length] += tone * envelope * gain
 
 
 def synthesize(name, sample_rate=SAMPLE_RATE):
     """Return deterministic signed 16-bit mono PCM for one named sound.
 
-    Music: sixteen bars at 80 BPM, warm bass, arpeggios, and a light melody.
-    Button: a brief two-note wooden/plucked acknowledgement.
-    Count: a clear, short single chime, emitted once per controller tick.
-    Shutter: two bounded noise clicks plus a quiet mechanical low transient.
+    Music: "Meong's Little Photo Garden", sixteen bars at 96 BPM. A flute-like
+    lead, harp arpeggios, triangle bass and soft shakers suggest a cheerful
+    farming/adventure game. All pitches, rhythms and timbres are authored here.
+    Button/count: short, rounded menu and countdown chimes.
+    Shutter: a camera click with a tiny sparkling finish.
+    Success: a short ascending reward flourish after the result is saved.
     """
     if name not in SOUND_NAMES:
         raise ValueError(f"Unknown sound: {name}")
     if name == "music":
-        samples = np.zeros(round(48 * sample_rate), dtype=np.float64)
-        chords = ((48, 52, 55), (53, 57, 60), (57, 60, 64), (55, 59, 62))
-        melody = ((72, 76, 79, 76, 74, 72), (69, 72, 77, 76, 72, 69),
-                  (72, 76, 81, 79, 76, 72), (71, 74, 79, 77, 74, 71))
+        samples = np.zeros(round(SOUND_DURATIONS[name] * sample_rate), dtype=np.float64)
+        chords = ((48, 52, 55), (43, 47, 50), (45, 48, 52), (40, 43, 47),
+                  (41, 45, 48), (48, 52, 55), (50, 53, 57), (43, 47, 50))
+        phrases = (
+            ((0, 76, .65), (.75, 79, .40), (1.25, 81, .65), (2, 79, .90), (3, 74, .80)),
+            ((0, 74, .40), (.5, 71, .65), (1.25, 74, .40), (2, 79, .65), (2.75, 76, .90)),
+            ((0, 72, .65), (.75, 76, .65), (1.5, 81, .40), (2, 83, .65), (2.75, 81, .90)),
+            ((0, 79, .90), (1, 76, .65), (1.75, 74, .40), (2.5, 71, 1.25)),
+            ((0, 77, .65), (.75, 81, .40), (1.25, 79, .65), (2, 77, .65), (2.75, 76, .90)),
+            ((0, 76, .40), (.5, 79, .65), (1.25, 84, .65), (2, 83, .40), (2.5, 79, 1.25)),
+            ((0, 77, .65), (.75, 74, .65), (1.5, 76, .40), (2, 77, .65), (2.75, 81, .90)),
+            ((0, 79, .65), (.75, 74, .40), (1.25, 71, .65), (2, 74, .65), (3, 72, .85)),
+        )
+        rng = np.random.default_rng(516)
         for bar in range(16):
-            chord = chords[bar % 4]
-            _note(samples, bar * 4, 2, chord[0] - 12, .12, sample_rate=sample_rate)
-            _note(samples, bar * 4 + 2, 1.8, chord[2] - 12, .08, sample_rate=sample_rate)
+            chord = chords[bar % 8]
+            for offset, pitch in ((0, chord[0] - 12), (2, chord[2] - 12)):
+                _note(samples, bar * 4 + offset, 1.8, pitch, .23,
+                      voice="bass", sample_rate=sample_rate)
             for step in range(8):
-                _note(samples, bar * 4 + step * .5, .60,
-                      chord[(step % 4) % 3] + 12, .055, sample_rate=sample_rate)
-            for offset, pitch in zip((0, .75, 1.5, 2, 2.75, 3.25), melody[bar % 4]):
-                _note(samples, bar * 4 + offset, .55, pitch, .11, sample_rate=sample_rate)
+                _note(samples, bar * 4 + step * .5, .72,
+                      chord[(0, 1, 2, 1)[step % 4]] + 12, .13, sample_rate=sample_rate)
+                # Bounded, seeded shaker noise keeps the score reproducible.
+                begin = round((bar * 4 + step * .5 + .25) * .625 * sample_rate)
+                count = min(round(.055 * sample_rate), len(samples) - begin)
+                t = np.arange(count) / sample_rate
+                samples[begin:begin + count] += rng.uniform(-1, 1, count) * np.exp(-t * 85) * .023
+            for offset, pitch, duration in phrases[bar % 8]:
+                _note(samples, bar * 4 + offset, duration, pitch, .30,
+                      voice="flute", sample_rate=sample_rate)
+                if bar >= 8 and offset in (0, 2):
+                    _note(samples, bar * 4 + offset, duration, pitch + 12, .055,
+                          voice="bell", sample_rate=sample_rate)
     elif name in {"button", "count"}:
-        samples = np.zeros(round((.16 if name == "button" else .20) * sample_rate))
-        _note(samples, 0, .14, 84 if name == "button" else 81, .48,
-              beat_seconds=1, sample_rate=sample_rate)
+        samples = np.zeros(round(SOUND_DURATIONS[name] * sample_rate))
+        _note(samples, 0, .14, 79 if name == "button" else 84, .48,
+              voice="bell", beat_seconds=1, sample_rate=sample_rate)
         if name == "button":
-            _note(samples, .045, .10, 91, .20, beat_seconds=1, sample_rate=sample_rate)
+            _note(samples, .045, .10, 84, .20, voice="bell",
+                  beat_seconds=1, sample_rate=sample_rate)
+    elif name == "success":
+        samples = np.zeros(round(SOUND_DURATIONS[name] * sample_rate))
+        for offset, pitch in ((0, 72), (.12, 76), (.24, 79), (.40, 84)):
+            _note(samples, offset, .48, pitch, .40, voice="bell",
+                  beat_seconds=1, sample_rate=sample_rate)
     else:
-        t = np.arange(round(.23 * sample_rate)) / sample_rate
+        t = np.arange(round(SOUND_DURATIONS[name] * sample_rate)) / sample_rate
         noise = np.random.default_rng(248).uniform(-1, 1, len(t))
         first = np.exp(-t * 85)
         second = np.where(t >= .065, np.exp(-np.maximum(0, t - .065) * 65), 0)
         samples = .55 * noise * (first + .65 * second) + .12 * np.sin(2 * np.pi * 130 * t) * np.exp(-t * 35)
+        _note(samples, .08, .14, 88, .13, voice="bell",
+              beat_seconds=1, sample_rate=sample_rate)
     # Fade both loop boundaries to zero, and leave headroom for overlapping buses.
     fade = min(round(.012 * sample_rate), len(samples) // 2)
     if fade:
         samples[:fade] *= np.linspace(0, 1, fade)
         samples[-fade:] *= np.linspace(1, 0, fade)
-    return np.clip(samples * 24000, -30000, 30000).astype("<i2").tobytes()
+    # Normalize the quiet score without changing the user's selected volume.
+    # Peak headroom leaves room for the native mixer to overlay a menu cue.
+    rms = float(np.sqrt(np.mean(samples ** 2)))
+    peak = float(np.max(np.abs(samples)))
+    gain = min((.20 if name == "music" else .24) / max(rms, 1e-9),
+               .76 / max(peak, 1e-9))
+    return np.round(samples * gain * 32767).astype("<i2").tobytes()
 
 
-def prepare_assets(directory):
-    """Cache reproducible WAV files using atomic, same-directory replacements."""
+def _valid_asset(path, name):
+    """Reject truncated WAVs as well as files with an incompatible PCM header."""
+    try:
+        with wave.open(str(path), "rb") as source:
+            frames = round(SOUND_DURATIONS[name] * SAMPLE_RATE)
+            return (source.getnchannels() == 1 and source.getsampwidth() == 2
+                    and source.getframerate() == SAMPLE_RATE
+                    and source.getnframes() == frames
+                    and len(source.readframes(frames)) == frames * 2)
+    except (OSError, EOFError, wave.Error):
+        return False
+
+
+def prepare_assets(directory, *, bundled_directory=BUNDLED_AUDIO_DIR):
+    """Prefer shipped WAVs; only regenerate missing assets into the local cache.
+
+    A fresh checkout plays the same bytes as a tested build. A read-only code
+    directory is fine: any repair goes under the caller's writable data path.
+    Passing bundled_directory=None is useful for reproducible asset builds.
+    """
     directory = Path(directory)
-    directory.mkdir(parents=True, exist_ok=True)
     paths = {}
     for name in SOUND_NAMES:
+        if bundled_directory is not None:
+            bundled = Path(bundled_directory) / f"meong-{ASSET_VERSION}-{name}.wav"
+            if _valid_asset(bundled, name):
+                paths[name] = bundled
+                continue
         path = directory / f"meong-{ASSET_VERSION}-{name}.wav"
-        try:
-            with wave.open(str(path), "rb") as source:
-                valid = (source.getnchannels() == 1 and source.getsampwidth() == 2
-                         and source.getframerate() == SAMPLE_RATE and source.getnframes() > 0)
-        except (OSError, EOFError, wave.Error):
-            valid = False
-        if not valid:
+        if not _valid_asset(path, name):
+            directory.mkdir(parents=True, exist_ok=True)
             handle, temporary = tempfile.mkstemp(suffix=".wav", dir=directory)
             os.close(handle)
             try:
@@ -175,6 +246,45 @@ def prepare_assets(directory):
                 Path(temporary).unlink(missing_ok=True)
         paths[name] = path
     return paths
+
+
+def load_native_sound(path):
+    """Load desktop WAVs with SDL2, falling back to Kivy's platform provider.
+
+    SoundLoader chooses the first registered provider even when that provider
+    returns an unusable handle. In particular, an installed ffpyplayer can
+    take priority over SDL2. PCM WAVs need no external codec, so prefer Kivy's
+    bundled SDL2 mixer on desktops unless the operator explicitly set
+    KIVY_AUDIO. Android/iOS retain their platform-selected audio provider.
+    A zero-length handle is a load failure, not evidence that sound is ready.
+    """
+    from kivy.core.audio import SoundLoader
+    from kivy.utils import platform
+
+    loaders = []
+    if platform in {"win", "linux", "macosx"} and not os.environ.get("KIVY_AUDIO"):
+        try:
+            from kivy.core.audio.audio_sdl2 import SoundSDL2
+            loaders.append(lambda filename: SoundSDL2(source=filename))
+        except ImportError:
+            pass
+    loaders.append(SoundLoader.load)
+    for loader in loaders:
+        sound = None
+        try:
+            sound = loader(str(path))
+            if sound is not None and sound.length > 0:
+                LOG.info("Loaded %s with %s (%.2fs)", Path(path).name,
+                         type(sound).__name__, sound.length)
+                return sound
+        except Exception:
+            LOG.warning("Audio provider could not open %s", Path(path).name, exc_info=True)
+        if sound is not None:
+            try:
+                sound.unload()
+            except Exception:
+                pass
+    return None
 
 
 class AudioManager:
@@ -198,6 +308,25 @@ class AudioManager:
         self._poll_event = None
         self._started = self._closed = self._paused = self._capturing = False
         self._enabled = os.environ.get("PHOTOBOOTH_AUDIO", "1").lower() not in {"0", "false", "no"}
+        if not self._enabled:
+            self.status = "Audio dinonaktifkan lewat konfigurasi"
+
+    @property
+    def summary(self):
+        """Live operator feedback: distinguish muted buses from failed output."""
+        if not self._enabled or not self._sounds:
+            return self.status
+        if self._paused:
+            return "Audio dijeda"
+        if all(getattr(self.levels, channel) == 0 for channel in ("music", "buttons", "effects")):
+            return "Semua suara dibisukan · naikkan volume untuk mendengar"
+        if self.levels.music == 0:
+            return "Musik dibisukan · efek mengikuti volume masing-masing"
+        music = self._sounds.get("music")
+        if music is not None and music.state == "play":
+            return ("Musik menyala · efek siap" if len(self._sounds) == len(SOUND_NAMES)
+                    else "Musik menyala · beberapa efek belum tersedia")
+        return self.status
 
     def start(self):
         """Prepare files once off-thread; defer native audio loading to Clock."""
@@ -232,13 +361,7 @@ class AudioManager:
             LOG.warning("Audio asset preparation failed: %s", error)
             return False
         if self._loader is None:
-            try:
-                from kivy.core.audio import SoundLoader
-                self._loader = SoundLoader.load
-            except Exception:
-                self.status = "Audio belum tersedia"
-                LOG.warning("No audio provider is available", exc_info=True)
-                return False
+            self._loader = load_native_sound
         for name, path in paths.items():
             try:
                 sound = self._loader(str(path))
@@ -247,7 +370,12 @@ class AudioManager:
                     self._sounds[name] = sound
             except Exception:
                 LOG.warning("Audio provider could not load %s", name, exc_info=True)
-        self.status = "Audio siap" if len(self._sounds) == len(SOUND_NAMES) else "Sebagian audio belum tersedia"
+        self.status = ("Audio siap" if len(self._sounds) == len(SOUND_NAMES)
+                       else "Sebagian audio belum tersedia" if self._sounds
+                       else "Audio belum tersedia · periksa keluaran suara perangkat")
+        missing = set(SOUND_NAMES) - self._sounds.keys()
+        if missing:
+            LOG.warning("Audio bank incomplete; unavailable: %s", ", ".join(sorted(missing)))
         self._apply_levels()
         self._ensure_music()
         return False
@@ -271,6 +399,9 @@ class AudioManager:
         try:
             if sound.state != "play":
                 sound.play()
+                if sound.state != "play":
+                    self.status = "Musik gagal diputar · periksa keluaran suara perangkat"
+                    LOG.warning("Music provider did not enter the playing state")
         except Exception:
             self.status = "Audio belum tersedia"
             LOG.warning("Music playback failed", exc_info=True)
@@ -287,6 +418,24 @@ class AudioManager:
         """Persist the three gains without making a write failure fatal."""
         return self.levels.save(self.settings_path)
 
+    def retry(self):
+        """Let the operator retry loading after fixing an output/device problem.
+
+        Keep one preparation worker at a time. A disabled configuration and a
+        closed host remain disabled; this control never overrides their intent.
+        """
+        if self._closed or not self._enabled or self._poll_event is not None:
+            return
+        for sound in self._sounds.values():
+            try:
+                sound.stop()
+                sound.unload()
+            except Exception:
+                pass
+        self._sounds.clear()
+        self._started = False
+        self.start()
+
     def set_capture_active(self, active):
         """Duck/restore music without seeking or restarting the track."""
         self._capturing = bool(active)
@@ -295,6 +444,11 @@ class AudioManager:
     def play(self, name):
         """Play one cue; no disabled, muted, or unprepared action queues sound."""
         if self._closed or self._paused or not self._enabled or name not in CHANNEL_FOR:
+            return
+        # The music preview must not rewind the ongoing track. Normal button
+        # and camera cues still restart their one bounded reusable handle.
+        if name == "music":
+            self._ensure_music()
             return
         sound = self._sounds.get(name)
         if sound is None or getattr(self.levels, CHANNEL_FOR[name]) <= 0:

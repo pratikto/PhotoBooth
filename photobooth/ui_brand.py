@@ -62,8 +62,9 @@ def brand_parts():
     logo = load_logo().copy()
     width, height = logo.size
     mascot = logo.crop((0, 0, width, round(height * .635)))
-    wordmark = logo.crop((round(width * .04), round(height * .65),
-                          round(width * .96), height))
+    # The final PNG's M and G reach both sides of the trimmed canvas. Keep the
+    # full width: the old 4% inset clipped those two letters in every header.
+    wordmark = logo.crop((0, round(height * .65), width, height))
     return logo, mascot, wordmark
 
 
@@ -113,11 +114,11 @@ class BrandLockup(BoxLayout):
         super().__init__(orientation='horizontal', spacing=dp(10), **kwargs)
         self.text = 'MEONG PHOTOBOOTH'  # Readable public identity for hosts/tests.
         _, mascot, wordmark = brand_parts()
-        self.mascot = picture(mascot)
+        self.mascot = picture(mascot, crisp=True)
         self.mascot.size_hint_x = None
         self.mascot.width = dp(100)
         self.add_widget(self.mascot)
-        self.wordmark = picture(wordmark)
+        self.wordmark = picture(wordmark, crisp=True)
         self.add_widget(self.wordmark)
 
 

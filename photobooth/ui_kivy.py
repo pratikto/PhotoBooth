@@ -63,6 +63,11 @@ class KivyHost(App):
     def build(self):
         """Return the widget tree prepared by PhotoBoothUI before App.run()."""
         Window.clearcolor = PAPER
+        # Preparation can begin while Kivy attaches its root. on_start repeats
+        # this idempotently, so both normal and explicitly built hosts start
+        # audio; playback itself still waits for the main-thread Clock poll.
+        if getattr(self, "ui", None) is not None:
+            self.ui.audio.start()
         return self.view
 
     def on_start(self):
@@ -117,6 +122,7 @@ class PhotoBoothUI:
             Path(__file__).resolve().parent.parent / "data" / "audio")
         self._audio_popup = None
         self.audio_sliders = {}
+        self.audio_test_buttons = {}
         self._motion = MotionScope()
         self._last_countdown_value = None
         self.countdown_dial = None
@@ -331,8 +337,9 @@ class PhotoBoothUI:
         body = BoxLayout(orientation="vertical", spacing=dp(5), padding=dp(8))
         body.add_widget(self._label("Atur suasanamu", 23, 30, bold=True))
         self.audio_sliders = {}
+        self.audio_test_buttons = {}
         for channel, title, icon_name, sample in (
-                ("music", "Musik", "music", None),
+                ("music", "Musik", "music", "music"),
                 ("buttons", "Tombol", "tap", "button"),
                 ("effects", "Efek kamera", "camera", "shutter")):
             row = BoxLayout(size_hint_y=None, height=dp(22), spacing=dp(8))
@@ -363,26 +370,42 @@ class PhotoBoothUI:
                 test.width = dp(64)
                 test.height = dp(44)
                 controls.add_widget(test)
+                self.audio_test_buttons[channel] = test
             body.add_widget(controls)
         body.add_widget(self._label("0% = hening", 12, 18, color=GREY))
+        # Poll only while this modal is open. Read the manager's live summary
+        # so loading failures and an intentionally muted mix are visible.
+        self.audio_status_label = self._label(self.audio.summary, 12, 36, color=GREY)
+        body.add_widget(self.audio_status_label)
+        retry = self._button("COBA AUDIO LAGI", self.audio.retry,
+                             secondary=True, screen_bound=False)
+        retry.height = dp(36)
+        body.add_widget(retry)
+        self.audio_retry_button = retry
+        def refresh_audio_status(_dt):
+            self.audio_status_label.text = self.audio.summary
+            return self._audio_popup is not None
+        status_event = Clock.schedule_interval(refresh_audio_status, .2)
         body.add_widget(Widget())
         popup = Popup(title="Suara", content=body, size_hint=(None, None),
                       auto_dismiss=False, background="", background_color=PAPER,
                       title_color=INK, separator_color=EDGE)
         def fit_popup(*_args):
             popup.size = (min(dp(520), Window.width - dp(24)),
-                          min(dp(430), Window.height - dp(24)))
+                          min(dp(510), Window.height - dp(24)))
         fit_popup()
         Window.bind(size=fit_popup)
         save = self._button("SIMPAN", popup.dismiss, screen_bound=False)
         save.height = dp(44)
         body.add_widget(save)
         def dismissed(_popup):
+            status_event.cancel()
             Window.unbind(size=fit_popup)
             self.audio.save_settings()
             if self._audio_popup is popup:
                 self._audio_popup = None
                 self.audio_sliders = {}
+                self.audio_test_buttons = {}
         popup.bind(on_dismiss=dismissed)
         self._audio_popup = popup
         popup.open()
@@ -1110,6 +1133,9 @@ class PhotoBoothUI:
         self.result_action = self._button('SESI BERIKUTNYA' if has_next_session else 'SELESAI',
                                          self.callbacks['on_next_session' if has_next_session else 'on_finish'])
         page.add_widget(self._actions(self.completion, self.result_action))
+        # Upload progress refreshes the QR in place, so the reward is emitted
+        # once when this saved result is presented, never on status polling.
+        self.audio.play("success")
 
     def _show_result_detail(self, image_path):
         """Inspect the full receipt at a larger size without rewriting output.

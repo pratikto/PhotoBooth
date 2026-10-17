@@ -1,7 +1,7 @@
 """One logo source for the header, tutorial and every transaction-folder QR.
 
-Install the approved bright-trail PNG as assets/meong_photobooth_vivid.png, or
-point PHOTOBOOTH_LOGO_PATH at the same local artwork. This is a local path only:
+The approved bright-trail PNG is bundled as assets/meong_photobooth_vivid.png.
+PHOTOBOOTH_LOGO_PATH can select another local artwork. This is a local path only:
 customer kiosks must not depend on an authenticated ChatGPT image URL.
 
 The earlier bundled full logo remains available when the preferred file has

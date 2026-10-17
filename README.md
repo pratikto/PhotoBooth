@@ -20,35 +20,45 @@ during a swipe waits for the swipe to finish; stale rows retire with their page.
 
 A gear button stays in the header on all six screens. Its **Suara** menu has
 independent **Musik**, **Tombol**, and **Efek kamera** sliders, including 0% mute
-and short cue previews. Preferences are saved locally when the menu closes.
-The original instrumental loop uses warm plucked notes, a bass line and a light
-melody, inspired by the general atmosphere of farm games. It contains no
-commercial game recording or copied soundtrack. Music continues across pages
+and a **Uji** preview for every channel. Preferences are saved locally when the
+menu closes. Live feedback distinguishes playing music, a muted mix, preparation,
+and unavailable output. **COBA AUDIO LAGI** reloads the sound bank after an output
+problem is corrected, without changing the selected volumes or the photo order.
+The original 40-second instrumental **Meong's Little Photo Garden** combines a
+flute-like melody, harp arpeggios, triangle bass, bell accents and soft shakers
+at 96 BPM. It draws on the cheerful farming/adventure atmosphere of Harvest Moon
+and The Minish Cap. Its melody and synthesized samples are original.
+Music continues across pages
 and becomes quieter during the camera countdown. It resumes its selected level
-after capture; button and camera cue gains remain independent.
+after capture; button and camera cue gains remain independent. Short menu,
+countdown, camera-shutter and saved-result cues complete the sound bank.
 
-No additional audio package or online service is needed. On first normal
-startup, Python generates/cache WAV files under ignored data/audio in a
-background worker. Kivy loads and plays them on its main thread. Missing audio
+Ready-to-play PCM WAVs are included under `photobooth/assets/audio`; an ordinary
+checkout needs no generation step, audio download, or external codec. Missing or
+truncated samples are regenerated into ignored `data/audio` by a background
+worker, including on installations with a read-only source directory. Kivy
+loads and plays them on its main thread. Desktop WAV playback prefers the
+bundled SDL2 mixer unless `KIVY_AUDIO` explicitly selects another provider;
+unusable, zero-length handles no longer count as ready. Missing audio
 hardware must not prevent photography. PHOTOBOOTH_AUDIO=0 disables playback;
 PHOTOBOOTH_ANIMATIONS=0 disables continuous page illustration/countdown motion.
 The optional palm shutter is paused while the audio menu is open, so adjusting
 volume cannot accidentally start a photograph.
 
 The GUI and folder QR now resolve one logo source in
-[photobooth/branding.py](photobooth/branding.py). The final bright-trail source
-is **Meong Photobooth’s vivid pixel trails.png**. Its bytes could not be imported
-in this editing session because the local file runtime was unavailable.
-The earlier full logo is therefore still bundled. Install the approved final
-image as photobooth/assets/meong_photobooth_vivid.png, or set
-PHOTOBOOTH_LOGO_PATH to that local PNG, then restart the app. Both the header
-and newly generated folder QR images will use it. The code does not recolor,
+[photobooth/branding.py](photobooth/branding.py). The uploaded final
+**Bright pixel camera-cat with colorful trail(3).png** is bundled, byte-for-byte,
+as `photobooth/assets/meong_photobooth_vivid.png`. All six screen headers and
+newly generated folder QR images use it automatically. The header keeps the full
+wordmark width, including the outside edges of M and G. `PHOTOBOOTH_LOGO_PATH`
+remains an optional local override. The code does not recolor,
 redraw, or download a substitute logo. Payment demo QR codes remain plain.
 
 Implementation and maintenance:
 
 - [photobooth/ui_motion.py](photobooth/ui_motion.py): scalable pictograms, page-scoped animation lifecycle, countdown ring, and capture flash.
-- [photobooth/audio.py](photobooth/audio.py): commented original score, deterministic WAV synthesis/cache, three mixer buses, and atomic volume preferences.
+- [photobooth/audio.py](photobooth/audio.py): commented original score, shipped WAV validation/repair, native playback, three mixer buses, and atomic volume preferences.
+- [photobooth/assets/audio/README.md](photobooth/assets/audio/README.md): score, cue inventory and regeneration instructions.
 - [photobooth/ui_kivy.py](photobooth/ui_kivy.py): illustrated tutorial, persistent audio settings, clickable cart rows and native controls.
 - [photobooth/ui_brand.py](photobooth/ui_brand.py): carousel requests, swipe/animation coordination, and stale-page cleanup.
 - [tests/test_audio.py](tests/test_audio.py) and [tests/test_kiosk_motion_audio.py](tests/test_kiosk_motion_audio.py): hardware-free sample, gain, navigation, modal and timing regression tests.
@@ -56,19 +66,10 @@ Implementation and maintenance:
 Run tests with python -m unittest discover -s tests -v. Enable
 PHOTOBOOTH_TEST_GUI=1 for real-widget checks. The added Kiosk GUI regression
 workflow also runs the existing controller, storage, QR pixel and layout checks.
-Inspect its actual Actions result before treating the update as validated;
-speaker audibility, the physical webcam/printer, the final logo PNG, and exact
-arrow agreement with the unavailable reference screenshot require device or
-asset verification.
-
-Validation of this update uses Python 3.12 and the real Kivy desktop widgets:
-**131 automated tests pass**, with two native palm-model checks explicitly
-skipped because their opt-in assets are absent. **72 actual widget renders**
-cover 800x600, 1200x800 and 1920x1080. They retain the existing QR decoding,
-crop, bounds and disabled-text contrast assertions. The render harness waits
-for completed entry transitions and stable geometry before measuring pixels.
-Audio sample/mixer tests use deterministic fixtures; this is not a physical
-speaker, webcam, printer, or live Drive account check.
+`PHOTOBOOTH_TEST_AUDIO=1` additionally tests the actual native Kivy audio provider
+and Clock startup, playback state, all shipped cues, pause and resume. CI uses
+`SDL_AUDIODRIVER=dummy`; testing the computer's selected speaker still requires
+running the app on that computer. See [current validation](docs/qa/logo-audio.md).
 
 ## MEONG GUI and cyclic template browsing
 
