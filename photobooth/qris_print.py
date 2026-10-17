@@ -78,8 +78,11 @@ class PrintResult:
 class QrisPrinterWorker:
     """One off-thread job; no automatic retries after a possibly partial send."""
 
-    def __init__(self, directory, host=None, port=None, width=None):
+    def __init__(self, directory, host=None, port=None, width=None, printer_config_provider=None):
         self.directory = Path(directory)
+        # When provided by the kiosk, use its saved printer settings for QR slips.
+        # Legacy standalone LAN settings remain supported for existing callers.
+        self.printer_config_provider = printer_config_provider
         self.host = os.environ.get('PHOTOBOOTH_PRINTER_HOST', '') if host is None else host
         self._configuration_error = None
         try:
@@ -131,13 +134,37 @@ class QrisPrinterWorker:
             self.directory.mkdir(parents=True, exist_ok=True)
             name = re.sub(r'[^A-Za-z0-9_-]', '_', attempt.attempt_id)
             preview = self.directory / f'{name}.png'
-            slip = render_payment_slip(attempt, self.width)
+            config = self.printer_config_provider() if self.printer_config_provider else None
+            slip = render_payment_slip(attempt, config.print_width_dots if config else self.width)
             payload = escpos_raster(slip)
             slip.save(preview)
             (self.directory / f'{name}.bin').write_bytes(payload)
             if not self._allowed(attempt):
                 raise ValueError('Pencetakan dibatalkan karena status pembayaran berubah.')
-            if not self.host:
+            if config is not None:
+                # Reuse the very same network/Windows USB transport as the
+                # successfully printed photograph strip. No LAN-only fallback.
+                from photobooth.printer import ThermalPrinter
+                printer = ThermalPrinter(config)
+                if config.lan_host:
+                    sender = lambda: printer._send_network(config.lan_host, config.lan_port, payload)
+                elif config.wifi_host:
+                    sender = lambda: printer._send_network(config.wifi_host, config.wifi_port, payload)
+                elif config.windows_printer_name or config.usb_vendor_id is not None:
+                    sender = lambda: printer._send_usb(payload)
+                else:
+                    sender = None
+                if sender is None:
+                    result = PrintResult(attempt.attempt_id, 'preview',
+                                         'Pratinjau siap. Pilih printer di Settings.', preview)
+                else:
+                    if not self._allowed(attempt):
+                        raise ValueError('Pencetakan dibatalkan karena status pembayaran berubah.')
+                    sending = True
+                    sender()
+                    result = PrintResult(attempt.attempt_id, 'sent',
+                                         'QR dikirim ke printer. Ambil kertas, lalu pindai.', preview)
+            elif not self.host:
                 result = PrintResult(attempt.attempt_id, 'preview',
                                      'Pratinjau siap. Printer LAN belum dikonfigurasi.', preview)
             else:
