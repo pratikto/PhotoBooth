@@ -134,6 +134,7 @@ class PhotoBoothApp:
             on_print=self._retry_current_print,
             get_printer_config=lambda: self.printer.config,
             on_printer_save=self._configure_printer,
+            on_printer_test=self._test_printer,
             on_close=self.close,
         )
         self.ui.show_welcome(False, "Kamera sedang diperiksa...")
@@ -146,6 +147,30 @@ class PhotoBoothApp:
         """Apply validated operator settings to subsequent print jobs."""
         self._save_printer_config(self._printer_settings_file, config)
         self.printer = ThermalPrinter(config)
+
+    def _test_printer(self, callback):
+        """Send a short test receipt from a worker to avoid freezing the GUI.
+
+        The operator explicitly triggers this action. Never retry automatically,
+        because a submitted RAW job may have printed despite driver errors.
+        """
+        def work():
+            data = (b"\x1b\x40\x1b\x61\x01"
+                    b"MEONG PHOTOBOOTH\nUSB/LAN/WIFI TEST\n\n\n"
+                    b"\x1d\x56\x42\x00")
+            try:
+                config = self.printer.config
+                if config.lan_host:
+                    self.printer._send_network(config.lan_host, config.lan_port, data)
+                elif config.wifi_host:
+                    self.printer._send_network(config.wifi_host, config.wifi_port, data)
+                else:
+                    self.printer._send_usb(data)
+                message = "Job terkirim; periksa hasil cetakan fisik."
+            except Exception as error:
+                message = f"Test print gagal: {error}"
+            self.root.after(0, lambda: callback(message))
+        threading.Thread(target=work, daemon=True, name="meong-printer-test").start()
 
     def run(self) -> None:
         """Start Kivy's event loop."""
