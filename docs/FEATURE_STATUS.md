@@ -48,3 +48,15 @@ The first attempt at `python tools/check_audio_output.py` stopped with `ModuleNo
 ## In-app diagnostic update — 2026-10-17
 
 User confirms `python tools/check_audio_output.py` makes audible music, whereas `python main.py` remains silent. Therefore SDL2 can deliver audio on their machine; actual app audio is **not fixed**. Added a live Settings diagnostic line showing `provider`, `state`, `gain`, persisted `level`, fade `mix`, `advert`, `paused`, `started`, number of loaded `sounds` and `enabled`. Reproduce with Settings open on **tutorial** and report the complete diagnostic line and whether `Uji` is audible. `advert=1` on the opening advertising screen is expected (app music suppressed); a silent source MP4 has no ad audio to output. Do not claim audible application music until user confirms.
+
+## Cross-branch printer integration staged — 2026-10-17
+
+The active Kivy GUI branch now includes printer transports, Windows RAW spooler,
+saved GUI printer configuration, printer settings/test controls, automatic
+result-image printing via a worker, manual reprint and three dithering modes.
+Preserved recent advertising/tutorial/payment code; older printer branch
+remains unchanged for backup. New printer tests are present but the complete
+merged integration test suite and real Kivy rendering have **not been run**.
+Physical printer testing is also outstanding and in-app audio remains
+unresolved. PR #3 targets `master` as a draft review/QA gate. **Do not report
+the default branch as already merged.**
