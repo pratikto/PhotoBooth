@@ -401,7 +401,7 @@ class AudioManager:
         """Resume the existing loop only when audible and the host is active."""
         sound = self._sounds.get("music")
         if (self._closed or self._paused or self._advertising or not self._enabled
-                or sound is None or self.levels.music <= 0):
+                or sound is None or self.levels.music <= 0 or self._music_mix <= 0):
             return
         try:
             if sound.state != "play":
