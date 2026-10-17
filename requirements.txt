@@ -10,3 +10,6 @@ numpy
 ffpyplayer>=4.5,<5
 # IANA venue timezones on systems without a system database, including Windows.
 tzdata
+
+python-escpos[usb]
+pywin32; sys_platform == 'win32'
