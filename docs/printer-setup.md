@@ -147,3 +147,34 @@ The network connection has no acknowledgement protocol. A “data terkirim”
 status means the job bytes were accepted by the OS socket or USB driver; the
 app cannot confirm paper movement, print darkness, or cutter operation without
 a physical test print.
+
+## Windows USB printing through the installed POS80ENG driver
+
+On the tested PC, Device Manager reports Caysn IW-J82ULW with
+`USB\\VID_4838&PID_3830`; Windows shows `POS80 Printer` and
+`POS80 Printer(2)`, driver `POS80ENG`, port `USB001`. A normal
+Windows `Out-Printer` text test has physically succeeded. RAW ESC/POS
+compatibility has **not yet been physically verified**.
+
+The existing `feature/thermal-printer` branch now supports a named Windows
+spooler queue. This avoids replacing the installed USB driver. In PowerShell:
+
+```powershell
+python -m pip install pywin32
+python tools/test_usb_raw_windows.py --printer "POS80 Printer"
+# Optional: --cut to test the cutter only after ordinary printing succeeds
+```
+
+If the working queue is the second entry, specify `--printer "POS80 Printer(2)"`.
+A successful command means Windows accepted RAW bytes, not that a physical
+receipt printed. Check paper before retrying. For actual photo printing in the
+application, set the queue explicitly (restart the app after setting it):
+
+```powershell
+$env:PHOTOBOOTH_PRINTER_WINDOWS_NAME = "POS80 Printer"
+```
+
+Install `pywin32` in the active Windows virtual environment. Network routes
+retain their priority; leave LAN and Wi-Fi host settings blank when testing USB.
+On non-Windows systems, existing PyUSB/Linux device-file behavior is unchanged.
+The print width and three dithering modes remain configurable as above.
