@@ -1,0 +1,40 @@
+# Meong Photobooth — Next steps / chat handover
+
+**Repository:** https://github.com/pratikto/PhotoBooth  
+**Target branch:** `feature/kivy-gui` (**do not create a new branch**).  
+**Handover dated:** 2026-10-17.
+
+## Resume checklist
+
+1. Read this file, [Architecture](ARCHITECTURE.md), [Feature status](FEATURE_STATUS.md), [Decisions](DECISIONS.md), `README.md`, and `docs/advertising-and-qris.md`.
+2. Fetch the **current** branch head and inspect working files before editing. Never assume older chat claims are committed.
+3. Address reported defects **one by one** in small, reviewable commits. Keep detailed English comments. Do not modify the separate thermal-printer branch.
+4. Run targeted unit tests, then broad regression suite and real Kivy screen checks; document commands/results and unverified physical tests.
+5. Update `FEATURE_STATUS.md` and this file after each fix, then verify commit/push and link the resulting SHA.
+
+## First coding tasks, in priority order
+
+**A. Video playback fails on both idle and payment.** Inspect `ui_kiosk.py`, `advertising.py`, `requirements.txt`, ad playlist paths and Kivy video provider/ffpyplayer lifecycle. Distinguish absent local video media, failed decoder, texture not attached, muted media and stalled playback. Ensure payment playback is **muted**, not disabled. Add diagnostic logging and tests for both placements. Samples are local and excluded from Git by current policy; do not claim videos have been uploaded.
+
+**B. Enlarge the initial ad area.** Adjust responsive idle-screen geometry, preserve video aspect ratio, keep visible manual Start and face-offer controls; check 800×600, 1200×800, 1920×1080.
+
+**C. Fix music initialization.** Trace `KivyHost.build/on_start`, `AudioManager.start`, initial advertising audio ownership and transition into the guide. Check why opening Settings appears to initialize playback. Preserve intentionally silent application music while source-video advertising is active; verify it starts automatically when entering tutorial/photo flow without requiring Settings.
+
+**D. Enforce ad -> tutorial -> layout picker.** Update navigation for manual Start and face-invitation acceptance; preserve back navigation, timers and audio transitions. Use regression tests to prohibit accidental direct ad -> layout routing.
+
+## Acceptance criteria
+
+- Both configured image and compatible local MP4 ads render/advance on idle and payment pages; payment ad audio remains muted.
+- Idle video is visibly larger without cropping/distorting or hiding Start.
+- Music begins on entry to tutorial/photo flow without touching Settings; user-selected mute is respected.
+- Both Start routes lead to tutorial before the user can select a layout.
+- Existing template/session/retake/QR demo/Drive flows and their tests continue to pass.
+- Status and handover docs reflect **observed** behavior, not aspirations.
+
+## Important limitations
+
+Physical machine speakers, local media/codec setup, camera, Google Drive and LAN thermal printer cannot be validated from GitHub alone. Real QRIS is not yet supported. Previous automated QA results are historical, not validation of the four newly reported defects.
+
+## Copy/paste into a new chat
+
+> Continue Meong Photobooth from GitHub repository `pratikto/PhotoBooth`, existing branch `feature/kivy-gui` only. Read `README.md` and all four handover docs in `docs/`, inspect current code and commits, then fix the first unresolved task in `docs/NEXT_STEPS.md`. Keep detailed English comments, run tests, commit and push directly to that branch, and update handover/status docs. Do not create a new branch or represent demo QRIS as live payment.
