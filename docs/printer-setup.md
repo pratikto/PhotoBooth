@@ -202,3 +202,28 @@ before proceeding to the next. The script's original mode without flags still
 sends all three prints, which uses more paper. The preview option **never**
 opens a printer connection. Queue acceptance is not confirmation of print
 quality, legibility or cutter behavior; do not retry blindly after partial output.
+
+## GUI printer settings (source implementation; physical QA pending)
+
+On branch `feature/thermal-printer`, use the gear icon in the Kivy header,
+choose **PENGATURAN PRINTER**, then select **USB Windows**, **LAN**, or **Wi-Fi**.
+The popup lets the operator edit the Windows queue name (for example,
+`POS80 Printer`), network IP and TCP port, 576/384-dot print width, and
+Floyd–Steinberg/Bayer/threshold dithering. Save to apply to new print jobs;
+settings persist under ignored `data/printer_settings.json` across restarts.
+Only the selected route is activated; switching from LAN to USB clears the
+active network hosts to prevent accidental duplicate connection attempts.
+The app does not store the Wi-Fi SSID/password.
+
+**TEST PRINT** intentionally uses the *last saved* configuration. It sends a
+short ESC/POS test receipt from a worker thread so the UI remains responsive.
+It is an operator-initiated action and should be used only with the printer
+connected and paper loaded. A positive message confirms job submission, not
+verified paper output. Test printing has not yet been physically checked.
+Windows USB uses the existing `POS80ENG` driver and requires `pywin32`.
+
+The existing music Settings remains under **PENGATURAN AUDIO** in the same
+gear menu. Saved printer config is separate from application audio settings.
+
+Tests: `python -m unittest tests.test_printer_settings -v`.
+This source change is not a completed physical acceptance test.
