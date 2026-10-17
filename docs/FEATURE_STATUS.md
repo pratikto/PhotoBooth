@@ -72,3 +72,17 @@ USB Windows > POS80 Printer > SIMPAN**, then run **TEST PRINT**, inspect paper,
 and only then test a full strip. The ffpyplayer MP4 image-load error is a separate
 unresolved advertising issue. Raster profile width warnings are not transport
 failures. No physical RAW print success is claimed.
+
+## Shared printer route for payment QR — 2026-10-17
+
+Confirmed Windows POS80ENG printing of completed photo strips by the operator.
+The payment-page QR receipt previously used a separate LAN-only setting
+(`PHOTOBOOTH_PRINTER_HOST`), so it showed a *preview only* even when photo
+printing through the new saved Windows USB printer worked. The payment QR
+worker now obtains the saved `PrinterConfig` from the GUI/controller for each
+print, using LAN/Wi-Fi/Windows spooler consistently with photo strips. It keeps
+the original active payment attempt and payload; rendering remains one-bit with
+a QR quiet zone, and no duplicate automatic retry is introduced. The existing
+legacy standalone LAN configuration remains as a fallback for direct worker
+callers and historical tests. New mocked Windows spooler test included. Physical
+payment QR printing/scannability still needs operator verification.
