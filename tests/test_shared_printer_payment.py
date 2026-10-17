@@ -14,7 +14,7 @@ class SavedPaymentPrinterTests(unittest.TestCase):
         from photobooth.payment import DemoPaymentGateway, PaymentCoordinator
         with tempfile.TemporaryDirectory() as tmp:
             payment = PaymentCoordinator(DemoPaymentGateway(900))
-            attempt = payment.start(5000)
+            attempt = payment.begin(5000)
             config = PrinterConfig(windows_printer_name="POS80 Printer", print_width_dots=576)
             worker = QrisPrinterWorker(Path(tmp), printer_config_provider=lambda: config)
             with patch("photobooth.printer.ThermalPrinter._send_windows_raw") as raw:
