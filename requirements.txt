@@ -7,3 +7,6 @@ python-escpos[usb]
 Kivy>=2.3.1,<3
 # Used directly by the original offline audio synthesizer.
 numpy
+
+# Windows-only USB RAW printing via an installed POS80ENG spooler queue.
+pywin32; sys_platform == 'win32'
