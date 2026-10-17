@@ -464,6 +464,7 @@ class PhotoBoothUI(KioskExperienceMixin):
         """
         import logging
         logging.getLogger(__name__).info("Meong audio test tapped: %s", sound)
+        self._audio_last_test = f"Uji {sound}: tombol diterima"
         self.audio.play(sound)
         if getattr(self, "audio_status_label", None) is not None:
             self.audio_status_label.text = (
@@ -475,6 +476,7 @@ class PhotoBoothUI(KioskExperienceMixin):
         """Adjust application buses and ad volume without leaving the page."""
         if self._audio_popup is not None:
             return self._audio_popup
+        self._audio_last_test = "Belum ada tombol Uji yang dipencet"
         body = BoxLayout(orientation="vertical", spacing=dp(8), padding=dp(8))
         scroll = ScrollView(do_scroll_x=False, bar_width=dp(4),
                             scroll_timeout=80, scroll_distance=dp(18))
@@ -538,7 +540,7 @@ class PhotoBoothUI(KioskExperienceMixin):
         controls_body.add_widget(retry)
         self.audio_retry_button = retry
         def refresh_audio_status(_dt):
-            self.audio_status_label.text = self.audio.summary
+            self.audio_status_label.text = self._audio_last_test + "\\n" + self.audio.summary
             self.audio_diagnostic_label.text = self.audio.diagnostic
             return self._audio_popup is not None
         status_event = Clock.schedule_interval(refresh_audio_status, .2)
