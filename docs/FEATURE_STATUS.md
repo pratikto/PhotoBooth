@@ -9,7 +9,7 @@ Snapshot: 2026-10-17, `feature/kivy-gui`. Statuses distinguish **implemented in 
 | Capture 3 photos/session, five-second timer, review, selected-photo retake | Implemented | `app.py`, `workflow.py`, `ui_kivy.py` |
 | Optional palm-trigger shutter and face-presence invitation | Implemented; physical validation needed | `palm_gesture.py`, `face_presence.py` |
 | Idle advertising and separate payment ad playlist (images/videos) | Automatic root `ad_video/` discovery implemented with arbitrary names; **playback still unverified on device** | `advertising.py`, `ui_kiosk.py`; local video files required; decoder and display remain to be tested |
-| Larger main advertising video | **Requested / pending visual adjustment** | User says current idle video is too small |
+| Larger main advertising video | **Expanded in source; desktop render not yet verified** | Idle page now uses up to 1920dp width, smaller gutters and header; aspect ratio still uses contain |
 | Audio startup, independent sliders and effects | Implemented in code; **startup audio reported broken** | Starts only after opening Settings on user installation; reproduce and fix |
 | Idle ad -> mandatory tutorial -> layout picker | **Requested / pending behavior change** | Current documented navigation may bypass guide |
 | Face invitation after stable 5 s; 15 s dismiss/cooldown | Implemented in source; verify behavior on hardware | Configurable kiosk timing |
