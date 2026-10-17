@@ -15,6 +15,7 @@ was uploaded. The default playlist contains local still-image posters.
 | QR slip PNG and reconstructed ESC/POS raster at 384/576 dots | Decoded to the same payment payload; black/white pixels only |
 | Native H.264/AAC video fixture generated during testing | Textures, payment mute, EOS to photo, duration and decoder retirement passed |
 | Offline compressed face model | Loads without downloading; original XML SHA-256 matches the retained notice |
+| Timezone fallback without an operating-system IANA database | Venue schedules and printed QR expiry pass using the `tzdata` dependency |
 | Python compilation and whitespace | Passed |
 
 The two skipped tests require the optional MediaPipe palm model and image

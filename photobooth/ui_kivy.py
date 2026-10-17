@@ -338,7 +338,7 @@ class PhotoBoothUI(KioskExperienceMixin):
         return self._audio_popup is not None
 
     def show_audio_settings(self):
-        """Adjust three independent buses without navigating away from a page."""
+        """Adjust application buses and ad volume without leaving the page."""
         if self._audio_popup is not None:
             return self._audio_popup
         body = BoxLayout(orientation="vertical", spacing=dp(8), padding=dp(8))
@@ -467,7 +467,7 @@ class PhotoBoothUI(KioskExperienceMixin):
         self.audio.set_capture_active(False)
         if self._audio_popup is not None:
             self._audio_popup.dismiss(animation=False)
-        # Completion can return to welcome while a customer inspects the strip.
+        # Completion can return to advertising while a customer inspects the strip.
         # Retire that modal with the result page so the next session cannot be
         # blocked by, or accidentally display, the previous customer's photos.
         if self._result_detail_popup is not None:

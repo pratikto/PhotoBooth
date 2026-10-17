@@ -3,9 +3,11 @@
 
 """Application controller for the procedure's capture and Drive workflow.
 
-Payment and printing are left out until those integrations are ready. When
-Drive credentials are configured, transactions use pre-verified folder slots,
-show the cached folder QR, and synchronize files in the background.
+The kiosk opens with scheduled local advertisements and uses an explicitly
+non-payable demo payment flow. Optional LAN output prints the active QR slip;
+photograph printing is developed separately. When Drive is configured,
+transactions use pre-verified folder slots, show the cached folder QR, and
+synchronize files in the background.
 """
 
 import os
@@ -139,8 +141,8 @@ class PhotoBoothApp:
         self.root.mainloop()
 
     def _connect_camera(self) -> None:
-        # Open the selected camera, read an initial frame to verify it works, and update the welcome
-        # screen with the camera and storage status.
+        # Open the selected camera and verify one initial frame, then update
+        # readiness without replacing the advertisement already on screen.
         if self.is_closing:
             return
 

@@ -8,3 +8,5 @@ Kivy>=2.3.1,<3
 numpy
 # Native local video decoder for the advertising playlists.
 ffpyplayer>=4.5,<5
+# IANA venue timezones on systems without a system database, including Windows.
+tzdata

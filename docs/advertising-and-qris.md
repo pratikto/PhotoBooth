@@ -62,6 +62,8 @@ windows such as `22:00` to `06:00`. Equal start/end hours mean all day. Image
 `seconds` defaults to 8; video changes at its actual end. Eligible media rotate
 in configuration order. The player's schedule check removes a creative when
 its current window ends, including during a longer video.
+`requirements.txt` includes `tzdata`, so these venue timezones also work on
+Windows installations without a system IANA timezone database.
 
 At normal desktop sizes payment allocates approximately 65% to advertising and
 35% to the QR/order column. At 800×600 the QR column retains a 300-pixel minimum
