@@ -18,7 +18,7 @@
 
 **B. Enlarge the initial ad area (source change committed 2026-10-17).** The idle page now uses up to 1920dp width, narrow gutters and a shorter header; video retains `contain` sizing, and Start/face-offer controls remain outside/on the stage. Real-widget render checks at 800×600, 1200×800 and 1920×1080 are still pending.
 
-**C. Fix music initialization.** Trace `KivyHost.build/on_start`, `AudioManager.start`, initial advertising audio ownership and transition into the guide. Check why opening Settings appears to initialize playback. Preserve intentionally silent application music while source-video advertising is active; verify it starts automatically when entering tutorial/photo flow without requiring Settings.
+**C. Fix music initialization (fade-in fix committed 2026-10-17; device verification pending).** Trace `KivyHost.build/on_start`, `AudioManager.start`, initial advertising audio ownership and transition into the guide. Check why opening Settings appears to initialize playback. The audio fade now explicitly restarts music as volume rises from zero, without requiring Settings. Preserve intentionally silent application music while source-video advertising is active; verify this fix on the user's speaker and when entering tutorial/photo flow.
 
 **D. Enforce ad -> tutorial -> layout picker.** Update navigation for manual Start and face-invitation acceptance; preserve back navigation, timers and audio transitions. Use regression tests to prohibit accidental direct ad -> layout routing.
 
