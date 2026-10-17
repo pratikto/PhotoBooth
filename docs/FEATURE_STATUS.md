@@ -8,7 +8,7 @@ Snapshot: 2026-10-17, `feature/kivy-gui`. Statuses distinguish **implemented in 
 | 12 cyclic template previews, quantity/cart at Rp5,000 per session | Implemented | `README.md`, `catalog.py` |
 | Capture 3 photos/session, five-second timer, review, selected-photo retake | Implemented | `app.py`, `workflow.py`, `ui_kivy.py` |
 | Optional palm-trigger shutter and face-presence invitation | Implemented; physical validation needed | `palm_gesture.py`, `face_presence.py` |
-| Idle advertising and separate payment ad playlist (images/videos) | Implemented in code; **video playback reported broken** | `advertising.py`, `ui_kiosk.py`; investigate media backend, local files and event loop |
+| Idle advertising and separate payment ad playlist (images/videos) | Playlist now references the three original sample video names; **playback still unverified on device** | `advertising.py`, `ui_kiosk.py`; local MP4 files are still required; decoder and display remain to be tested |
 | Larger main advertising video | **Requested / pending visual adjustment** | User says current idle video is too small |
 | Audio startup, independent sliders and effects | Implemented in code; **startup audio reported broken** | Starts only after opening Settings on user installation; reproduce and fix |
 | Idle ad -> mandatory tutorial -> layout picker | **Requested / pending behavior change** | Current documented navigation may bypass guide |
