@@ -773,3 +773,15 @@ comparison confines their changes to rounded corners; their content and the
 machine-readable layout/QR report remain identical. See the updated
 [evidence and validation details](docs/qa/README.md). Camera and Drive still use
 fakes, QRIS is simulated, and physical printing is not connected.
+
+## Printer settings in the Kivy GUI (thermal-printer branch)
+
+The gear menu now has **PENGATURAN PRINTER**, separate from audio settings.
+Choose Windows USB queue, LAN, or Wi-Fi; enter the queue/IP and TCP port;
+select 576 or 384 dots and Floyd–Steinberg, Bayer, or Threshold. **SIMPAN**
+persists the selected connection to `data/printer_settings.json`. **TEST PRINT**
+sends a short receipt using the currently saved settings; printing is not
+performed automatically by opening the menu. See
+[printer setup](docs/printer-setup.md) for Windows `POS80ENG` setup, paper
+width and physical QA. GUI rendering and printer output are not yet validated
+on the user's hardware.
