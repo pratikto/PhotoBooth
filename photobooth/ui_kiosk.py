@@ -130,8 +130,11 @@ class KioskExperienceMixin:
         if self.current_screen != 'advert':
             return
         ad_id = self._ad_player.ad_id if self._ad_player else 'meong-fallback'
-        self.callbacks['on_home_start']()
-        if self.current_screen != 'advert':
+        # Both the manual action and the face invitation first open the visual
+        # guide. The guide's own Start button advances to the layout picker.
+        # Calling the controller here previously skipped the tutorial entirely.
+        self.show_welcome(self._camera_ready, 'Ikuti langkah mudah ini sebelum memilih layout.')
+        if self.current_screen == 'welcome':
             self.ad_events.write('photo_entry', ad_id=ad_id, placement='idle', source=source)
 
     def show_face_invitation(self):
