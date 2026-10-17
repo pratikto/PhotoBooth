@@ -127,7 +127,7 @@ class KioskInteractionTests(unittest.TestCase):
         self.assertEqual(self.ui.template_carousel.index, 0)
         self.assertEqual(self.ui.cart_total.text, "Rp0")
 
-    def test_settings_persist_three_gains_without_modifying_a_capture_or_order(self):
+    def test_settings_persist_four_gains_without_modifying_a_capture_or_order(self):
         from photobooth.audio import AudioLevels
         from PIL import Image
         self.ui.show_template_selection(True, "Ready")
@@ -135,10 +135,11 @@ class KioskInteractionTests(unittest.TestCase):
         before = dict(self.ui.quantities)
         self.tap(self.ui.settings_button)
         self.assertTrue(self.ui.audio_settings_open)
-        self.assertEqual(set(self.ui.audio_sliders), {"music", "buttons", "effects"})
+        self.assertEqual(set(self.ui.audio_sliders), {"music", "buttons", "effects", "ads"})
         self.ui.audio_sliders["music"].value = .13
         self.ui.audio_sliders["buttons"].value = 0
         self.ui.audio_sliders["effects"].value = .42
+        self.ui.audio_sliders["ads"].value = .37
         self.ui._audio_popup.dismiss(animation=False)
         self.settle(.1)
         self.assertFalse(self.ui.audio_settings_open)

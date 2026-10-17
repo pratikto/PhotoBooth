@@ -371,6 +371,9 @@ class CameraRecoveryTests(unittest.TestCase):
 
     def test_camera_readiness_tracks_home_cart_and_payment_without_losing_order(self):
         ui = self.app.ui
+        # The illustrated guide still gates its shutter; the new advertising
+        # entry has an independently tested always-available manual browse path.
+        ui.show_welcome(True, 'Ready')
         self.latest = None
         self.app._update_preview()
         self.assertFalse(self.app.camera_ready)
@@ -492,7 +495,7 @@ class CameraRecoveryTests(unittest.TestCase):
                 self.app.ui.result_action.dispatch('on_release')
         old_finish = self.app.ui.result_action
         old_finish.dispatch('on_release')
-        self.assertEqual(self.app.ui.current_screen, 'welcome')
+        self.assertEqual(self.app.ui.current_screen, 'advert')
         self.order()
         self.app.ui.payment_confirm.dispatch('on_release')
         transaction = self.app.transaction
@@ -527,7 +530,7 @@ class CameraRecoveryTests(unittest.TestCase):
             self.app._completion_countdown_tick()
         self.assertIsNone(self.app.transaction)
         self.assertEqual(transaction.manifest['status'], 'COMPLETED')
-        self.assertEqual(self.app.ui.current_screen, 'welcome')
+        self.assertEqual(self.app.ui.current_screen, 'advert')
 
     def test_failed_retake_keeps_allowance_and_exhausted_state_is_explicit(self):
         self.order()

@@ -52,6 +52,7 @@ class AudioLevels:
     music: float = .28
     buttons: float = .55
     effects: float = .70
+    ads: float = .50
 
     @classmethod
     def load(cls, path):
@@ -307,6 +308,9 @@ class AudioManager:
         self._sounds = {}
         self._poll_event = None
         self._started = self._closed = self._paused = self._capturing = False
+        self._advertising = False
+        self._music_mix = 1.0
+        self._fade_event = None
         self._enabled = os.environ.get("PHOTOBOOTH_AUDIO", "1").lower() not in {"0", "false", "no"}
         if not self._enabled:
             self.status = "Audio dinonaktifkan lewat konfigurasi"
@@ -318,6 +322,8 @@ class AudioManager:
             return self.status
         if self._paused:
             return "Audio dijeda"
+        if self._advertising:
+            return "Layar iklan · musik aplikasi dijeda"
         if all(getattr(self.levels, channel) == 0 for channel in ("music", "buttons", "effects")):
             return "Semua suara dibisukan · naikkan volume untuk mendengar"
         if self.levels.music == 0:
@@ -384,7 +390,7 @@ class AudioManager:
         """Only music is ducked during capture; other buses keep their own gain."""
         for name, sound in self._sounds.items():
             try:
-                sound.volume = getattr(self.levels, CHANNEL_FOR[name]) * (
+                sound.volume = getattr(self.levels, CHANNEL_FOR[name]) * (self._music_mix if name == 'music' else 1) * (
                     .28 if name == "music" and self._capturing else 1)
                 if sound.volume == 0:
                     sound.stop()
@@ -394,7 +400,8 @@ class AudioManager:
     def _ensure_music(self):
         """Resume the existing loop only when audible and the host is active."""
         sound = self._sounds.get("music")
-        if self._closed or self._paused or not self._enabled or sound is None or self.levels.music <= 0:
+        if (self._closed or self._paused or self._advertising or not self._enabled
+                or sound is None or self.levels.music <= 0):
             return
         try:
             if sound.state != "play":
@@ -408,7 +415,7 @@ class AudioManager:
 
     def set_volume(self, channel, value):
         """Apply slider changes immediately; the UI persists them on dismissal."""
-        if channel not in {"music", "buttons", "effects"}:
+        if channel not in {"music", "buttons", "effects", "ads"}:
             raise ValueError(f"Unknown audio channel: {channel}")
         setattr(self.levels, channel, clamp_volume(value))
         self._apply_levels()
@@ -441,9 +448,52 @@ class AudioManager:
         self._capturing = bool(active)
         self._apply_levels()
 
+    def set_advertising(self, active, fade_seconds=.25):
+        """Give idle video sole audio ownership; fade music back into the app.
+
+        This page state is separate from host pause, so resuming the app cannot
+        accidentally restart its song over an advertisement. New/cold handles
+        receive the target mix before asynchronous native loading completes.
+        """
+        active = bool(active)
+        if active == self._advertising:
+            return
+        self._advertising = active
+        if self._fade_event is not None:
+            self._fade_event.cancel()
+            self._fade_event = None
+        if active:
+            for name, sound in self._sounds.items():
+                if name != 'music':
+                    sound.stop()
+        target = 0.0 if active else 1.0
+        # Stop immediately before a newly mounted video can emit sound. Only
+        # returning to the photo workflow fades the application song back in.
+        if active or not self._sounds or fade_seconds <= 0:
+            self._music_mix = target
+            self._apply_levels()
+            self._ensure_music()
+            return
+        # No stale effect is replayed. Normal navigation keeps one ongoing
+        # song; only entering/leaving idle advertisements changes this mix.
+        start, elapsed = self._music_mix, 0.0
+        self._ensure_music()
+        def step(dt):
+            nonlocal elapsed
+            elapsed += dt
+            self._music_mix = start + (target - start) * min(1, elapsed / fade_seconds)
+            self._apply_levels()
+            if elapsed >= fade_seconds or self._closed:
+                self._fade_event = None
+                return False
+            return True
+        from kivy.clock import Clock
+        self._fade_event = Clock.schedule_interval(step, 1 / 30)
+
     def play(self, name):
         """Play one cue; no disabled, muted, or unprepared action queues sound."""
-        if self._closed or self._paused or not self._enabled or name not in CHANNEL_FOR:
+        if (self._closed or self._paused or self._advertising or not self._enabled
+                or name not in CHANNEL_FOR):
             return
         # The music preview must not rewind the ongoing track. Normal button
         # and camera cues still restart their one bounded reusable handle.
@@ -478,6 +528,9 @@ class AudioManager:
         if self._closed:
             return
         self._closed = True
+        if self._fade_event is not None:
+            self._fade_event.cancel()
+            self._fade_event = None
         if self._poll_event is not None:
             self._poll_event.cancel()
             self._poll_event = None

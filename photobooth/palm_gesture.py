@@ -214,9 +214,10 @@ class PalmGestureWorker:
     a one-second hold. A context change invalidates in-flight old-page results.
     """
 
-    def __init__(self, model_path, enabled=True, detector_factory=None):
+    def __init__(self, model_path, enabled=True, detector_factory=None, worker_name='photobooth-palm'):
         self._model_path = Path(model_path)
         self._factory = detector_factory
+        self._worker_name = worker_name
         self._enabled = enabled
         self._lock = threading.Lock()
         self._stop = threading.Event()
@@ -237,7 +238,7 @@ class PalmGestureWorker:
             if self._state != 'idle' or self._stop.is_set():
                 return
             self._state = 'loading'
-            self._thread = threading.Thread(target=self._run, name='photobooth-palm', daemon=True)
+            self._thread = threading.Thread(target=self._run, name=self._worker_name, daemon=True)
             self._thread.start()
 
     def submit(self, frame, context):

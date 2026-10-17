@@ -28,6 +28,7 @@ from kivy.uix.slider import Slider
 from kivy.uix.widget import Widget
 from PIL import Image
 from photobooth.audio import AudioManager
+from photobooth.ui_kiosk import KioskExperienceMixin
 from photobooth.ui_motion import CountdownDial, FlashEffect, GuideGlyph, MotionScope
 from photobooth.catalog import PRICE_PER_SESSION, create_template_preview, render_photo_frame
 from photobooth.ui_brand import (
@@ -78,12 +79,12 @@ class KivyHost(App):
     def on_pause(self):
         """Stop speakers when the host is backgrounded; allow native resume."""
         if getattr(self, "ui", None) is not None:
-            self.ui.audio.pause()
+            self.ui.pause_media()
         return True
 
     def on_resume(self):
         if getattr(self, "ui", None) is not None:
-            self.ui.audio.resume()
+            self.ui.resume_media()
 
     def after(self, milliseconds, callback):
         """Schedule without sleeping, so preview and touch input keep working."""
@@ -108,7 +109,7 @@ class KivyHost(App):
         self._on_close()
 
 
-class PhotoBoothUI:
+class PhotoBoothUI(KioskExperienceMixin):
     """Kiosk screens; controller callbacks remain the source of workflow rules.
 
     The layout uses a stable header, a flexible stage, and fixed action controls.
@@ -116,7 +117,7 @@ class PhotoBoothUI:
     reachable. Breakpoints depend on available width, not the operating system.
     """
 
-    def __init__(self, root, templates, *, audio_manager=None, **callbacks):
+    def __init__(self, root, templates, *, audio_manager=None, kiosk_data_dir=None, **callbacks):
         root.ui = self
         self.audio = audio_manager if audio_manager is not None else AudioManager(
             Path(__file__).resolve().parent.parent / "data" / "audio")
@@ -175,8 +176,12 @@ class PhotoBoothUI:
         self._attach_icon(self.settings_button, "gear", icon_only=True)
         header.add_widget(self.settings_button)
         self.shell.add_widget(header)
-        self.content = BoxLayout(orientation='vertical', spacing=dp(10))
-        self.shell.add_widget(self.content)
+        self.content = BoxLayout(orientation='vertical', spacing=dp(10), pos_hint={'x': 0, 'y': 0})
+        # An internal overlay layer keeps invitations inside this same native
+        # window. Payment offers use a narrower host in the advertising column.
+        self._page_stack = FloatLayout()
+        self._page_stack.add_widget(self.content)
+        self.shell.add_widget(self._page_stack)
         footer = BoxLayout(size_hint_y=None, height=dp(34), spacing=dp(12))
         self._footer_row = footer
         self.status = self._label('', 12, color=GREY)
@@ -208,6 +213,7 @@ class PhotoBoothUI:
         self._page_title = self._page_subtitle = None
         self.shell.bind(size=self._fit_chrome, parent=self._on_shell_parent)
         self._fit_chrome()
+        self._init_kiosk(kiosk_data_dir)
 
     def _on_shell_parent(self, *_args):
         """Only a mounted kiosk page owns a recurring illustration timer."""
@@ -298,6 +304,7 @@ class PhotoBoothUI:
         def release(button):
             if button.disabled or (screen_bound and revision != self._screen_revision):
                 return
+            self._kiosk_activity()
             self.audio.play("button")
             Animation.cancel_all(button, "opacity")
             Animation(opacity=1, duration=.10).start(button)
@@ -334,14 +341,20 @@ class PhotoBoothUI:
         """Adjust three independent buses without navigating away from a page."""
         if self._audio_popup is not None:
             return self._audio_popup
-        body = BoxLayout(orientation="vertical", spacing=dp(5), padding=dp(8))
-        body.add_widget(self._label("Atur suasanamu", 23, 30, bold=True))
+        body = BoxLayout(orientation="vertical", spacing=dp(8), padding=dp(8))
+        scroll = ScrollView(do_scroll_x=False, bar_width=dp(4))
+        controls_body = BoxLayout(orientation='vertical', spacing=dp(5), size_hint_y=None)
+        controls_body.bind(minimum_height=controls_body.setter('height'))
+        scroll.add_widget(controls_body)
+        body.add_widget(scroll)
+        controls_body.add_widget(self._label("Atur suasanamu", 23, 30, bold=True))
         self.audio_sliders = {}
         self.audio_test_buttons = {}
         for channel, title, icon_name, sample in (
                 ("music", "Musik", "music", "music"),
                 ("buttons", "Tombol", "tap", "button"),
-                ("effects", "Efek kamera", "camera", "shutter")):
+                ("effects", "Efek kamera", "camera", "shutter"),
+                ("ads", "Iklan awal", "music", None)):
             row = BoxLayout(size_hint_y=None, height=dp(22), spacing=dp(8))
             row.add_widget(GuideGlyph(kind=icon_name, size_hint_x=None, width=dp(32)))
             row.add_widget(self._label(title, 16, bold=True))
@@ -349,13 +362,14 @@ class PhotoBoothUI:
             percent.size_hint_x = None
             percent.width = dp(56)
             row.add_widget(percent)
-            body.add_widget(row)
+            controls_body.add_widget(row)
             controls = BoxLayout(size_hint_y=None, height=dp(44), spacing=dp(8))
             slider = Slider(min=0, max=1, step=.01, value=getattr(self.audio.levels, channel),
                             cursor_size=(dp(26), dp(26)), value_track=True,
                             value_track_color=BLUE)
             def update(_slider, value, key=channel, caption=percent):
                 self.audio.set_volume(key, value)
+                self._update_ad_volume()
                 caption.text = f"{round(value * 100)}%"
             slider.bind(value=update)
             # Set the first caption directly; opening a menu does not rewrite
@@ -371,28 +385,27 @@ class PhotoBoothUI:
                 test.height = dp(44)
                 controls.add_widget(test)
                 self.audio_test_buttons[channel] = test
-            body.add_widget(controls)
-        body.add_widget(self._label("0% = hening", 12, 18, color=GREY))
+            controls_body.add_widget(controls)
+        controls_body.add_widget(self._label("0% = hening", 12, 18, color=GREY))
         # Poll only while this modal is open. Read the manager's live summary
         # so loading failures and an intentionally muted mix are visible.
         self.audio_status_label = self._label(self.audio.summary, 12, 36, color=GREY)
-        body.add_widget(self.audio_status_label)
+        controls_body.add_widget(self.audio_status_label)
         retry = self._button("COBA AUDIO LAGI", self.audio.retry,
                              secondary=True, screen_bound=False)
         retry.height = dp(36)
-        body.add_widget(retry)
+        controls_body.add_widget(retry)
         self.audio_retry_button = retry
         def refresh_audio_status(_dt):
             self.audio_status_label.text = self.audio.summary
             return self._audio_popup is not None
         status_event = Clock.schedule_interval(refresh_audio_status, .2)
-        body.add_widget(Widget())
         popup = Popup(title="Suara", content=body, size_hint=(None, None),
                       auto_dismiss=False, background="", background_color=PAPER,
                       title_color=INK, separator_color=EDGE)
         def fit_popup(*_args):
             popup.size = (min(dp(520), Window.width - dp(24)),
-                          min(dp(510), Window.height - dp(24)))
+                          min(dp(590), Window.height - dp(24)))
         fit_popup()
         Window.bind(size=fit_popup)
         save = self._button("SIMPAN", popup.dismiss, screen_bound=False)
@@ -422,6 +435,7 @@ class PhotoBoothUI:
         if self._disposed:
             return
         self._disposed = True
+        self._dispose_kiosk()
         if self._audio_popup is not None:
             self._audio_popup.dismiss(animation=False)
         self._motion.retire()
@@ -432,7 +446,10 @@ class PhotoBoothUI:
 
     def _reset(self, screen, title, subtitle=''):
         """Discard only screen widgets, keeping shell/footer and controller state."""
-        # A page owns every visual clock. Retire them before replacing widgets.
+        # A page owns every decoder and visual clock. Retire them before
+        # replacing widgets; otherwise hidden video could keep playing audio.
+        self._retire_kiosk_page()
+        self.audio.set_advertising(screen == 'advert')
         self._motion.retire()
         if self.countdown_dial is not None:
             Animation.cancel_all(self.countdown_dial.label)
@@ -471,6 +488,7 @@ class PhotoBoothUI:
         active = {'welcome': 1, 'templates': 1, 'payment': 2,
                   'capture': 3, 'review': 3, 'result': 4}.get(screen, 1)
         self.steps.set_active(active)
+        self.steps.opacity = 0 if screen == 'advert' else 1
         if title:
             self._page_title = self._label(title, 28, 46, bold=True)
             title_row = BoxLayout(size_hint_y=None, height=self._page_title.height,

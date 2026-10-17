@@ -149,6 +149,26 @@ class AudioTests(unittest.TestCase):
             self.assertTrue(manager.save_settings())
             self.assertEqual(AudioLevels.load(manager.settings_path), manager.levels)
 
+    def test_advertisement_stops_app_audio_immediately_and_keeps_its_volume_independent(self):
+        with tempfile.TemporaryDirectory() as directory:
+            manager = self.make_manager(directory)
+            song = manager._sounds['music']
+            manager.play('shutter')
+            manager.set_advertising(True)
+            self.assertEqual(song.state, 'stop')
+            self.assertEqual(song.volume, 0)
+            manager.set_volume('ads', .91)
+            self.assertEqual(manager.levels.music, .28)
+            manager.pause()
+            manager.resume()
+            self.assertEqual(song.state, 'stop')
+            manager.play('button')
+            self.assertEqual(manager._sounds['button'].plays, 0)
+            manager.set_advertising(False, fade_seconds=0)
+            self.assertEqual(song.state, 'play')
+            self.assertEqual(song.volume, .28)
+            self.assertEqual(manager.levels.ads, .91)
+
     def test_missing_provider_and_late_worker_completion_do_not_block_the_booth(self):
         with tempfile.TemporaryDirectory() as directory:
             manager = AudioManager(directory, loader=lambda path: None)

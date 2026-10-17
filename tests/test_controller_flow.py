@@ -151,7 +151,7 @@ class ControllerFlowTests(unittest.TestCase):
                 self.assertEqual(app.ui.current_screen, 'result')
                 self.assertEqual(app._completion_remaining, 60)
                 app._finish_transaction()
-                self.assertEqual(app.ui.current_screen, 'welcome')
+                self.assertEqual(app.ui.current_screen, 'advert')
                 import json
                 manifest = json.loads(transaction.manifest_path.read_text())
                 self.assertEqual(manifest['status'], 'COMPLETED')
@@ -300,6 +300,6 @@ class ControllerFlowTests(unittest.TestCase):
                         self.assertIsNone(app.ui._result_detail_popup)
                         self.assertIsNone(detail.parent)
                 app.ui.result_action.dispatch('on_release')
-                self.assertEqual(app.ui.current_screen, 'welcome')
+                self.assertEqual(app.ui.current_screen, 'advert')
             finally:
                 app.close()

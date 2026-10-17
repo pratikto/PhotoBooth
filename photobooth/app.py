@@ -23,6 +23,7 @@ from photobooth.catalog import PRICE_PER_SESSION, compose_result, get_templates
 from photobooth.drive_pool import DriveSlotPool
 from photobooth.drive_storage import AppsScriptDriveClient, DriveApiError, GoogleDriveClient
 from photobooth.drive_sync import DriveSyncWorker
+from photobooth.face_presence import FacePresenceTrigger, FacePresenceWorker
 from photobooth.palm_gesture import MAX_RESULT_AGE, PALM_CONFIDENCE, PalmGestureWorker, PalmHoldTrigger
 from photobooth.qr_code import create_qr_image
 from photobooth.retention import PhotoRetentionWorker
@@ -111,6 +112,7 @@ class PhotoBoothApp:
             root=self.root,
             templates=self.templates,
             audio_manager=AudioManager(PROJECT_ROOT / 'data' / 'audio'),
+            kiosk_data_dir=PROJECT_ROOT / 'data',
             on_home_start=self._open_template_selection,
             on_start=self._open_dummy_payment,
             on_capture=self._start_capture_countdown,
@@ -120,8 +122,13 @@ class PhotoBoothApp:
             on_next_session=self._start_next_session,
             on_finish=self._finish_transaction,
             on_close=self.close,
+            on_idle=self._return_to_advertisements,
         )
-        self.ui.show_welcome(False, "Kamera sedang diperiksa...")
+        self.face_worker = FacePresenceWorker(
+            enabled=os.environ.get('PHOTOBOOTH_FACE_TRIGGER', '1').lower() not in {'0', 'false', 'no'})
+        self.face_trigger = FacePresenceTrigger(self.ui.kiosk_timing.face_hold,
+                                               self.ui.kiosk_timing.face_cooldown)
+        self.ui.show_advertisement(False, "Kamera sedang diperiksa...")
         self.retention_worker = PhotoRetentionWorker(self.photos_root, self.drive_client)
         self.retention_worker.start()
         self.root.after(100, self._connect_camera)
@@ -149,16 +156,13 @@ class PhotoBoothApp:
 
         if self.camera_ready:
             self.palm_worker.start()
-            self.ui.show_welcome(
-                True,
-                self._storage_status_message(),
-            )
+            self.face_worker.start()
+            # The opening advertisement starts immediately and is not rebuilt
+            # when camera/Drive readiness arrives a little later.
+            self.ui.set_status(self._storage_status_message())
             self._update_preview()
         else:
-            self.ui.show_welcome(
-                False,
-                "Kamera tidak terdeteksi. Periksa koneksi atau indeks kamera.",
-            )
+            self.ui.set_status("Kamera tidak terdeteksi. Periksa koneksi atau indeks kamera.")
 
     def _update_preview(self) -> None:
         # Poll the camera repeatedly and refresh the live preview. This callback also enables capture
@@ -174,6 +178,7 @@ class PhotoBoothApp:
         if frame is None:
             self.current_frame = None
             self._update_palm_trigger(None)
+            self._update_face_presence(None)
             # Preserve the screen's own feedback while reporting a temporary
             # loss of frames. Recovery restores it rather than leaving a stale
             # "waiting for camera" notice on an otherwise live screen.
@@ -208,8 +213,35 @@ class PhotoBoothApp:
         # or download occurs on this GUI callback. Every screen, including
         # review/payment/result, explicitly gates the second shutter.
         self._update_palm_trigger(frame)
+        self._update_face_presence(frame)
 
         self._preview_after_id = self.root.after(30, self._update_preview)
+
+    def _update_face_presence(self, frame) -> None:
+        """Observe one existing camera stream only while idle advertising is visible."""
+        if (frame is None or not self.camera_ready or self.ui.current_screen != 'advert'
+                or self.is_closing or self.ui.audio_settings_open or self.ui._media_paused):
+            self.face_worker.pause()
+            self.face_trigger.pause()
+            return
+        self.face_worker.start()
+        self.face_trigger.hold_seconds = self.ui.kiosk_timing.face_hold
+        self.face_trigger.cooldown_seconds = self.ui.kiosk_timing.face_cooldown
+        self.face_worker.submit(frame, self.ui.screen_revision)
+        result = self.face_worker.poll()
+        now = time.monotonic()
+        if (result is not None and result.context == self.ui.screen_revision
+                and 0 <= now - result.captured_at <= MAX_RESULT_AGE):
+            if self.face_trigger.observe(result.score >= .5, result.captured_at):
+                self.ui.show_face_invitation()
+
+    def _return_to_advertisements(self) -> None:
+        """Landing inactivity cannot interrupt payment, capture, saving or a result."""
+        if self.transaction is not None or self.ui.current_screen not in {'welcome', 'templates'}:
+            return
+        self.face_trigger.pause()
+        self.face_worker.pause()
+        self.ui.show_advertisement(self.camera_ready, self._storage_status_message())
 
     def _update_palm_trigger(self, frame) -> None:
         """Accept only recent observations from this exact capture-page revision.
@@ -257,7 +289,7 @@ class PhotoBoothApp:
             return
         # Editing an unpaid order does not require a live camera. Keep its
         # quantities visible while disabling payment until frames resume.
-        if not self.camera_ready and self.ui.current_screen not in {"templates", "payment"}:
+        if not self.camera_ready and self.ui.current_screen not in {"advert", "templates", "payment"}:
             self.ui.show_error(
                 "Kamera belum siap",
                 "Sambungkan kamera sebelum memulai sesi foto.",
@@ -735,7 +767,7 @@ class PhotoBoothApp:
         self.sessions = []
         self.current_session = None
         self.session_index = 0
-        self.ui.show_welcome(
+        self.ui.show_advertisement(
             self.camera_ready,
             self._storage_status_message(),
         )
@@ -877,6 +909,7 @@ class PhotoBoothApp:
         self._preview_after_id = None
         self._drive_status_after_id = None
         self.palm_worker.close()
+        self.face_worker.close()
         self.retention_worker.stop()
         if self.drive_worker is not None:
             self.drive_worker.stop()
