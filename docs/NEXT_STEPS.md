@@ -62,3 +62,21 @@ The first attempt at `python tools/check_audio_output.py` stopped with `ModuleNo
 ## In-app diagnostic update — 2026-10-17
 
 User confirms `python tools/check_audio_output.py` makes audible music, whereas `python main.py` remains silent. Therefore SDL2 can deliver audio on their machine; actual app audio is **not fixed**. Added a live Settings diagnostic line showing `provider`, `state`, `gain`, persisted `level`, fade `mix`, `advert`, `paused`, `started`, number of loaded `sounds` and `enabled`. Reproduce with Settings open on **tutorial** and report the complete diagnostic line and whether `Uji` is audible. `advert=1` on the opening advertising screen is expected (app music suppressed); a silent source MP4 has no ad audio to output. Do not claim audible application music until user confirms.
+
+## Integration staging — 2026-10-17
+
+The latest advertising/tutorial GUI is the integration base. Thermal printer
+modules, saved settings, Windows RAW spooler, three dithering modes, operator
+settings popup, test print callback and result-page print worker/reprint have
+been copied and adapted to `feature/kivy-gui`. The separate printer branch is
+kept as a backup; PR #2 shows the unmodified branch-to-branch merge conflicts.
+Hardware tests are pending; the real video/audio bug remains unresolved.
+
+**Do not delete old branches.** Before publishing to `master`, run
+`python -m unittest discover -s tests -v`, launch `python main.py`,
+verify entry via ad/tutorial, checkout demo and printer settings, and test
+Windows RAW paper output. A successful print spooler job does not prove paper
+output. Check UI screenshots at desktop resolutions and the persistent
+`data/printer_settings.json`. Importantly, this branch now integrates printer
+features from the older printer branch without replacing recent advertising
+or payment behaviors.
