@@ -599,7 +599,7 @@ class KivyFlowTests(unittest.TestCase):
                                 visible(ui.payment_back)
                                 self.assertIsNone(ui.payment_order.text_size[1])
                                 self.assertGreaterEqual(ui.payment_order.height, 4 * ui.payment_order.font_size)
-                                painted_qr(ui.payment_qr, 'PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR 40000',
+                                painted_qr(ui.payment_qr, ui.payment.current.payload,
                                            root / 'payment.png')
                             elif screen == 'capture':
                                 visible(ui.preview)

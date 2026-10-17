@@ -449,6 +449,14 @@ class PhotoBoothUI(KioskExperienceMixin):
         # A page owns every decoder and visual clock. Retire them before
         # replacing widgets; otherwise hidden video could keep playing audio.
         self._retire_kiosk_page()
+        if self.current_screen == 'payment' and screen != 'payment':
+            attempt = self.payment.current
+            if attempt is not None:
+                self.qris_printer.cancel(attempt.attempt_id)
+                if self.payment.check() == 'paid':
+                    self.payment.current = None
+                else:
+                    self.payment.release()
         self.audio.set_advertising(screen == 'advert')
         self._motion.retire()
         if self.countdown_dial is not None:
@@ -622,7 +630,8 @@ class PhotoBoothUI(KioskExperienceMixin):
         elif self.current_screen == 'templates':
             self._refresh_order()
         elif self.current_screen == 'payment':
-            self.payment_confirm.disabled = not ready or self._payment_submitted
+            self.payment_confirm.disabled = (not ready or self._payment_submitted
+                                             or self.payment.check() not in {'pending', 'paid'})
         elif self.current_screen == 'capture':
             if self.live_caption is not None:
                 self.live_caption.text = 'LIVE CAMERA' if ready else 'MENUNGGU KAMERA'
@@ -869,59 +878,8 @@ class PhotoBoothUI(KioskExperienceMixin):
         self.set_status(message)
 
     def show_payment(self, order_summary, session_count, total_amount, on_confirm, on_back):
-        """Render a non-payable demo QR and explicit, one-shot simulation action."""
-        from photobooth.qr_code import create_qr_image
-        page = self._reset('payment', 'Bayar, lalu berfoto.', 'DEMO · Bukan QRIS. Jangan transfer uang.')
-        self.payment_total = total_amount
-        self._payment_submitted = False
-        pay = Panel(orientation='vertical', padding=dp(14), spacing=dp(6))
-        pay.add_widget(self._label('QR DEMO / TIDAK UNTUK TRANSFER', 12, 24, bold=True, color=CORAL, align='center'))
-        # The selected Meong branding belongs to the photo-folder QR. Keep the
-        # separate payment simulation plain and explicitly non-payable.
-        qr = self._display(create_qr_image(
-            f'PHOTOBOOTH DEMO ONLY - NOT QRIS - IDR {total_amount}', with_logo=False), crisp=True)
-        qr.size_hint_y = None
-        # 180px plus its quiet zone is legible at 800x600. The old 228px QR
-        # and 420px minimum card were clipped by the two full-width actions.
-        qr.height = dp(180)
-        self.payment_qr = qr
-        pay.add_widget(qr)
-        pay.add_widget(self._label('Menunggu simulasi pembayaran', 15, 28, bold=True, align='center'))
-        pay.add_widget(self._label('Tekan tombol simulasi untuk melanjutkan.\nTidak ada uang yang ditagihkan.', 13, 40, color=GREY, align='center'))
-        pay.add_widget(Widget())
-        detail = Panel(fill=SOFT, orientation='vertical', padding=dp(18), spacing=dp(10))
-        detail.add_widget(self._label('RINGKASAN PESANAN', 12, 28, bold=True, color=GREY))
-        order_list = ScrollView(do_scroll_x=False, bar_width=dp(4))
-        order_text = self._label(order_summary, 16, auto_height=True)
-        self.payment_order = order_text
-        order_list.add_widget(order_text)
-        detail.add_widget(order_list)
-        detail.add_widget(self._label(f'{session_count} sesi × Rp5.000', 13, 30, color=GREY))
-        detail.add_widget(self._label('Rp ' + f'{total_amount:,}'.replace(',', '.'), 30, 60, bold=True))
-        def confirm_once():
-            # A second tap cannot create another transaction or reserve another
-            # Drive folder. Compare the ORIGINAL button as well as the screen:
-            # a late release from an edited payment must not submit an old order
-            # while a new payment screen happens to be visible.
-            if (self.current_screen != 'payment' or self.payment_confirm is not confirm_button
-                    or confirm_button.disabled):
-                return
-            self._payment_submitted = True
-            confirm_button.disabled = True
-            accepted = on_confirm()
-            if (accepted is False and self.current_screen == 'payment'
-                    and self.payment_confirm is confirm_button):
-                # An explicit controller rejection is retryable. None is kept
-                # as the historical one-shot callback contract for other hosts.
-                self._payment_submitted = False
-                confirm_button.disabled = not self._camera_ready
-        self.payment_confirm = self._button('SIMULASIKAN PEMBAYARAN BERHASIL', confirm_once,
-                                            enabled=self._camera_ready)
-        confirm_button = self.payment_confirm
-        page.add_widget(self._responsive_row(pay, detail, 330, 324))
-        self.payment_back = self._button('UBAH PESANAN', on_back, secondary=True)
-        self.payment_back.size_hint_x = .45
-        page.add_widget(self._actions(self.payment_back, self.payment_confirm))
+        """Show muted advertising beside a stable QR and an in-window print offer."""
+        return self._show_ad_payment(order_summary, session_count, total_amount, on_confirm, on_back)
 
     def show_capture(self, session_label, capture_count, preview_image,
                      action_label='AMBIL FOTO', countdown_text='', can_capture=True, is_retake=False):
