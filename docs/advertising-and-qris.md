@@ -7,12 +7,12 @@ not merge or change the separate `feature/thermal-printer` branch.
 
 | State | Media | Sound | Exit |
 | --- | --- | --- | --- |
-| App opening / idle | Idle playlist of videos and/or images | Video's own audio; app music/cues suppressed | Manual Start, face invitation, or illustrated guide |
+| App opening / idle | Idle playlist of videos and/or images | Video's own audio; app music/cues suppressed | Manual Start or face invitation leads to illustrated guide |
 | Guide / template selection | Existing Meong UI | Application music and effects | Payment; or 180 seconds inactive back to ads |
 | Payment | Independent payment playlist left; stable QR column right | Application audio; advertising forced mute | Explicit demo confirmation, or cancel before editing |
 | Capture / review / result | Existing photography workflow | Application music/effects | Last completed result returns to idle advertising |
 
-The invitation needs five seconds of fresh nearby face observations. Brief
+Both manual Start and acceptance of a face invitation open the illustrated guide; its own Start button leads to layout selection. The invitation needs five seconds of fresh nearby face observations. Brief
 detector misses up to 0.65 seconds are tolerated; an inference gap over 0.8
 seconds resets the partial hold. A sustained two-second absence or a 45-second
 cooldown allows another invitation. No identity is recognized and no camera
