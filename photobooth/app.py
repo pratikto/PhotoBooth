@@ -13,6 +13,7 @@ synchronize files in the background.
 import os
 import json
 import time
+import threading
 from pathlib import Path
 from kivy.clock import ClockEvent
 
@@ -28,6 +29,7 @@ from photobooth.drive_sync import DriveSyncWorker
 from photobooth.face_presence import FacePresenceTrigger, FacePresenceWorker
 from photobooth.palm_gesture import MAX_RESULT_AGE, PALM_CONFIDENCE, PalmGestureWorker, PalmHoldTrigger
 from photobooth.qr_code import create_qr_image
+from photobooth.printer import PrintResult, ThermalPrinter
 from photobooth.retention import PhotoRetentionWorker
 from photobooth.transaction_store import LocalTransaction, TransactionStore
 from photobooth.ui_kivy import KivyHost, PhotoBoothUI
@@ -110,6 +112,14 @@ class PhotoBoothApp:
         self._preview_after_id: ClockEvent | None = None
         self._drive_status_after_id: ClockEvent | None = None
 
+        from photobooth.printer_settings import load_printer_config, save_printer_config
+        self._printer_settings_file = PROJECT_ROOT / 'data' / 'printer_settings.json'
+        self._save_printer_config = save_printer_config
+        self.printer = ThermalPrinter(load_printer_config(self._printer_settings_file))
+        self._print_lock = threading.Lock()
+        self._print_jobs_in_flight: set[str] = set()
+
+
         self.ui = PhotoBoothUI(
             root=self.root,
             templates=self.templates,
@@ -123,6 +133,10 @@ class PhotoBoothApp:
             on_accept_session=self._accept_current_session,
             on_next_session=self._start_next_session,
             on_finish=self._finish_transaction,
+            on_print=self._retry_current_print,
+            get_printer_config=lambda: self.printer.config,
+            on_printer_save=self._configure_printer,
+            on_printer_test=self._test_printer,
             on_close=self.close,
             on_idle=self._return_to_advertisements,
         )
@@ -135,6 +149,35 @@ class PhotoBoothApp:
         self.retention_worker.start()
         self.root.after(100, self._connect_camera)
         self._schedule_drive_status_update()
+
+    def _configure_printer(self, config):
+        """Apply validated operator settings to subsequent print jobs."""
+        self._save_printer_config(self._printer_settings_file, config)
+        self.printer = ThermalPrinter(config)
+
+    def _test_printer(self, callback):
+        """Send a short test receipt from a worker to avoid freezing the GUI.
+
+        The operator explicitly triggers this action. Never retry automatically,
+        because a submitted RAW job may have printed despite driver errors.
+        """
+        def work():
+            data = (b"\x1b\x40\x1b\x61\x01"
+                    b"MEONG PHOTOBOOTH\nUSB/LAN/WIFI TEST\n\n\n"
+                    b"\x1d\x56\x42\x00")
+            try:
+                config = self.printer.config
+                if config.lan_host:
+                    self.printer._send_network(config.lan_host, config.lan_port, data)
+                elif config.wifi_host:
+                    self.printer._send_network(config.wifi_host, config.wifi_port, data)
+                else:
+                    self.printer._send_usb(data)
+                message = "Job terkirim; periksa hasil cetakan fisik."
+            except Exception as error:
+                message = f"Test print gagal: {error}"
+            self.root.after(0, lambda: callback(message))
+        threading.Thread(target=work, daemon=True, name="meong-printer-test").start()
 
     def run(self) -> None:
         """Start Kivy's event loop."""
@@ -704,6 +747,89 @@ class PhotoBoothApp:
             self.drive_worker.kick()
         if not has_next:
             self._start_completion_countdown()
+
+    def _start_next_session(self) -> None:
+        # Cancel the final-session timer and advance to the next planned session, or finish the
+        # transaction if there is no next session.
+        if self.ui.current_screen != "result":
+            return
+        self._cancel_completion_countdown()
+        if self.session_index + 1 >= len(self.sessions):
+            self._finish_transaction()
+            return
+        self.session_index += 1
+        self._begin_current_session()
+
+    def _retry_current_print(self) -> None:
+        """Deliberately resend the current saved image after an automatic job."""
+        session = self.current_session
+        if (
+            self.ui.current_screen != "result"
+            or session is None
+            or session.output_path is None
+        ):
+            return
+        self._start_print_job(session.output_path)
+
+    def _start_print_job(self, image_path: Path) -> None:
+        """Start one background print job for this exact saved composition."""
+        if self.is_closing:
+            return
+        path = Path(image_path)
+        job_key = str(path.resolve())
+        with self._print_lock:
+            if job_key in self._print_jobs_in_flight:
+                return
+            self._print_jobs_in_flight.add(job_key)
+
+        self.ui.set_print_status("Sedang mengirim ke printer...", busy=True)
+        worker = threading.Thread(
+            target=self._print_in_background,
+            args=(path, job_key),
+            name="thermal-printer",
+            daemon=True,
+        )
+        try:
+            worker.start()
+        except RuntimeError as error:
+            with self._print_lock:
+                self._print_jobs_in_flight.discard(job_key)
+            self.ui.set_print_status(f"Gagal memulai pencetakan ({error}).", busy=False)
+
+    def _print_in_background(self, image_path: Path, job_key: str) -> None:
+        """Run device I/O off-thread, then post status back to Kivy."""
+        try:
+            result = self.printer.print_image(image_path)
+        except Exception as error:
+            result = PrintResult(False, "printer", f"Kesalahan pencetakan ({error}).")
+        finally:
+            with self._print_lock:
+                self._print_jobs_in_flight.discard(job_key)
+
+        if self.is_closing:
+            return
+        try:
+            self.root.after(
+                0,
+                lambda: self._finish_print_job(image_path, result),
+            )
+        except Exception:
+            # The UI may have been closed while the daemon transport was
+            # writing to a disconnected printer.
+            return
+
+    def _finish_print_job(self, image_path: Path, result: PrintResult) -> None:
+        """Update only the result screen that still owns this output file."""
+        session = self.current_session
+        if (
+            self.is_closing
+            or self.ui.current_screen != "result"
+            or session is None
+            or session.output_path is None
+            or session.output_path.resolve() != image_path.resolve()
+        ):
+            return
+        self.ui.set_print_status(result.user_message, busy=False)
 
     def _start_next_session(self) -> None:
         # Cancel the final-session timer and advance to the next planned session, or finish the
