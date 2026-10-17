@@ -86,3 +86,14 @@ a QR quiet zone, and no duplicate automatic retry is introduced. The existing
 legacy standalone LAN configuration remains as a fallback for direct worker
 callers and historical tests. New mocked Windows spooler test included. Physical
 payment QR printing/scannability still needs operator verification.
+
+## Audio Settings input diagnosis — 2026-10-17
+
+Operator reports both Music and Button **Uji** controls not responding and no
+terminal feedback. Added an explicit audio-test tap handler, a persistent
+on-screen "Uji ... tombol diterima" indicator, console logger, and more
+responsive ScrollView touch thresholds. This distinguishes a Kivy popup touch
+delivery issue from the unresolved native mixer silence. Actual speaker output
+and button usability still require a Windows GUI test; no audible success is
+claimed. If the indicator updates but speakers are silent, capture the
+provider/state/gain/mix diagnostic in the same popup.
