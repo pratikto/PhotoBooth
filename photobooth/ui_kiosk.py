@@ -36,7 +36,13 @@ class KioskExperienceMixin:
         self.kiosk_timing = self.ad_catalog.timing
         self.ad_events = AdEventLog(directory / 'advertising' / 'events.jsonl')
         self.payment = PaymentCoordinator(DemoPaymentGateway(self.kiosk_timing.payment_validity))
-        self.qris_printer = QrisPrinterWorker(directory / 'qris-spool')
+        # Payment QR receipts and photo strips share the operator's saved
+        # LAN/Wi-Fi/Windows USB printer configuration. The callable is evaluated
+        # for each job so changes in Settings apply without restarting.
+        self.qris_printer = QrisPrinterWorker(
+            directory / 'qris-spool',
+            printer_config_provider=self.callbacks.get('get_printer_config'),
+        )
         self._ad_player = self._ad_stage = None
         self._inline_offer = self._offer_host = self._offer_fit = None
         self._offer_deadline = self._offer_kind = None
