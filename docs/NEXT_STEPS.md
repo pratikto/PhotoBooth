@@ -20,7 +20,7 @@
 
 **C. Fix music initialization (fade-in fix committed 2026-10-17; device verification pending).** Trace `KivyHost.build/on_start`, `AudioManager.start`, initial advertising audio ownership and transition into the guide. Check why opening Settings appears to initialize playback. The audio fade now explicitly restarts music as volume rises from zero, without requiring Settings. Preserve intentionally silent application music while source-video advertising is active; verify this fix on the user's speaker and when entering tutorial/photo flow.
 
-**D. Enforce ad -> tutorial -> layout picker.** Update navigation for manual Start and face-invitation acceptance; preserve back navigation, timers and audio transitions. Use regression tests to prohibit accidental direct ad -> layout routing.
+**D. Enforce ad -> tutorial -> layout picker (source change committed 2026-10-17; device QA pending).** Both advertising manual Start and face-invitation acceptance now open the illustrated tutorial. The tutorial's Start control continues to invoke the existing layout-selection controller. Regression coverage added in `tests/test_tutorial_entry.py`; test execution and hardware UI navigation verification remain pending.
 
 ## Acceptance criteria
 
