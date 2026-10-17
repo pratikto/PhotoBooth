@@ -112,7 +112,10 @@ class PhotoBoothApp:
 
         # Keep printer I/O off Kivy's main thread. A job key suppresses duplicate
         # taps while one copy of the same saved composition is still in flight.
-        self.printer = ThermalPrinter()
+        from photobooth.printer_settings import load_printer_config, save_printer_config
+        self._printer_settings_file = PROJECT_ROOT / 'data' / 'printer_settings.json'
+        self._save_printer_config = save_printer_config
+        self.printer = ThermalPrinter(load_printer_config(self._printer_settings_file))
         self._print_lock = threading.Lock()
         self._print_jobs_in_flight: set[str] = set()
 
@@ -129,6 +132,8 @@ class PhotoBoothApp:
             on_next_session=self._start_next_session,
             on_finish=self._finish_transaction,
             on_print=self._retry_current_print,
+            get_printer_config=lambda: self.printer.config,
+            on_printer_save=self._configure_printer,
             on_close=self.close,
         )
         self.ui.show_welcome(False, "Kamera sedang diperiksa...")
@@ -136,6 +141,11 @@ class PhotoBoothApp:
         self.retention_worker.start()
         self.root.after(100, self._connect_camera)
         self._schedule_drive_status_update()
+
+    def _configure_printer(self, config):
+        """Apply validated operator settings to subsequent print jobs."""
+        self._save_printer_config(self._printer_settings_file, config)
+        self.printer = ThermalPrinter(config)
 
     def run(self) -> None:
         """Start Kivy's event loop."""
