@@ -11,7 +11,7 @@ Snapshot: 2026-10-17, `feature/kivy-gui`. Statuses distinguish **implemented in 
 | Idle advertising and separate payment ad playlist (images/videos) | Automatic root `ad_video/` discovery implemented with arbitrary names; **playback still unverified on device** | `advertising.py`, `ui_kiosk.py`; local video files required; decoder and display remain to be tested |
 | Larger main advertising video | **Expanded in source; desktop render not yet verified** | Idle page now uses up to 1920dp width, smaller gutters and header; aspect ratio still uses contain |
 | Audio startup, independent sliders and effects | Fade-in restart fixed in source with regression tests; **physical speaker verification pending** | Stopped music is now restarted when fade level rises; confirm on device |
-| Idle ad -> mandatory tutorial -> layout picker | **Requested / pending behavior change** | Current documented navigation may bypass guide |
+| Idle ad -> mandatory tutorial -> layout picker | **Implemented in source; on-device testing pending** | Manual Start and face invitation now open guide first; guide Start leads to picker |
 | Face invitation after stable 5 s; 15 s dismiss/cooldown | Implemented in source; verify behavior on hardware | Configurable kiosk timing |
 | Demo payment QR, ad column and optional print-offer after 60 s | Implemented demo; not real QRIS | `docs/advertising-and-qris.md` |
 | LAN ESC/POS payment QR slip | Adapter documented; physical printer unverified | Printer host defaults unset; preview is not printing |
