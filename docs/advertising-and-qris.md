@@ -34,8 +34,13 @@ playlist uses the configuration loaded for that customer visit.
 
 Supported images: PNG, JPEG and WebP. Supported video containers: MP4, MOV, MKV
 and WebM, subject to the installed decoder. H.264/yuv420p MP4 is the recommended
-portable input. The checkout contains still-image posters only; install video
-files locally. Original and converted video files are excluded from Git. Media
+portable input. The checkout contains still-image posters only. The bundled playlist references
+`videoplayback.mp4`, `videoplayback (1).mp4`, and `videoplayback (2).mp4`
+for both idle and payment, **but these MP4 files are not committed**.
+Place your own compatible local MP4 copies under `photobooth/assets/ads/` with
+those names (or use `PHOTOBOOTH_AD_CONFIG` for an external playlist). Missing
+MP4 files are skipped and the existing JPEG entries rotate as fallback.
+Install video files locally. Original and converted video files are excluded from Git. Media
 is fitted without stretching or cropping. A failed item is skipped once per
 placement instance. An empty, missing, invalid or unplayable playlist falls
 back to a branded Meong poster. A missing decoder cannot block manual entry.
