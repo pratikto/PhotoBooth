@@ -456,12 +456,28 @@ class PhotoBoothUI(KioskExperienceMixin):
         content.add_widget(actions)
         popup.open()
 
+    def _test_audio_channel(self, sound):
+        """Report a real test-button tap before trying native audio playback.
+
+        The report also distinguishes input/touch problems from mixer failures.
+        Keep the button on the existing main-thread Kivy callback path.
+        """
+        import logging
+        logging.getLogger(__name__).info("Meong audio test tapped: %s", sound)
+        self.audio.play(sound)
+        if getattr(self, "audio_status_label", None) is not None:
+            self.audio_status_label.text = (
+                f"Uji {sound} dipencet | {self.audio.summary}")
+        if getattr(self, "audio_diagnostic_label", None) is not None:
+            self.audio_diagnostic_label.text = self.audio.diagnostic
+
     def show_audio_settings(self):
         """Adjust application buses and ad volume without leaving the page."""
         if self._audio_popup is not None:
             return self._audio_popup
         body = BoxLayout(orientation="vertical", spacing=dp(8), padding=dp(8))
-        scroll = ScrollView(do_scroll_x=False, bar_width=dp(4))
+        scroll = ScrollView(do_scroll_x=False, bar_width=dp(4),
+                            scroll_timeout=80, scroll_distance=dp(18))
         controls_body = BoxLayout(orientation='vertical', spacing=dp(5), size_hint_y=None)
         controls_body.bind(minimum_height=controls_body.setter('height'))
         scroll.add_widget(controls_body)
@@ -497,8 +513,9 @@ class PhotoBoothUI(KioskExperienceMixin):
             self.audio_sliders[channel] = slider
             controls.add_widget(slider)
             if sample is not None:
-                test = self._button("Uji", lambda sound=sample: self.audio.play(sound),
-                                    secondary=True, screen_bound=False)
+                test = self._button(
+                    "Uji", lambda sound=sample: self._test_audio_channel(sound),
+                    secondary=True, screen_bound=False)
                 test.size_hint_x = None
                 test.width = dp(64)
                 test.height = dp(44)
