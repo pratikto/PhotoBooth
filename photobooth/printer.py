@@ -169,6 +169,7 @@ class PrinterConfig:
     wifi_host: str = ""
     wifi_port: int = 9100
     network_timeout: float = 2.0
+    windows_printer_name: str = ""
     usb_vendor_id: int | None = None
     usb_product_id: int | None = None
     usb_device_path: str | None = "/dev/usb/lp0"
@@ -212,6 +213,7 @@ class PrinterConfig:
                 0.1,
                 30.0,
             ),
+            windows_printer_name=values.get("PHOTOBOOTH_PRINTER_WINDOWS_NAME", "").strip(),
             usb_vendor_id=_read_hex_id(
                 values.get("PHOTOBOOTH_PRINTER_USB_VENDOR_ID")
             ),
@@ -512,8 +514,44 @@ class ThermalPrinter:
         finally:
             connection.close()
 
+    @staticmethod
+    def _send_windows_raw(name: str, payload: bytes) -> None:
+        """Submit a RAW ESC/POS job via an installed Windows printer queue.
+
+        The job reaching the spooler is not proof of physical paper output.
+        A partial write has uncertain printing status: do not auto-retry.
+        """
+        try:
+            import win32print
+        except ImportError as error:
+            raise RuntimeError(
+                "pywin32 belum terpasang. Jalankan python -m pip install pywin32."
+            ) from error
+        handle = win32print.OpenPrinter(name)
+        try:
+            win32print.StartDocPrinter(handle, 1, ("Meong Photobooth ESC/POS", None, "RAW"))
+            try:
+                win32print.StartPagePrinter(handle)
+                try:
+                    written = win32print.WritePrinter(handle, payload)
+                    if written != len(payload):
+                        raise OSError(
+                            f"Windows spooler menerima {written}/{len(payload)} bytes."
+                        )
+                finally:
+                    win32print.EndPagePrinter(handle)
+            finally:
+                win32print.ClosePrinter(handle)
+        finally:
+            win32print.ClosePrinter(handle)
+
     def _send_usb(self, payload: bytes) -> None:
         """Send through native USB IDs, or Linux's /dev/usb/lp* device node."""
+        # Use the already-installed Windows POS80ENG/USB001 driver when
+        # explicitly configured. No WinUSB driver replacement is necessary.
+        if os.name == "nt" and self.config.windows_printer_name:
+            self._send_windows_raw(self.config.windows_printer_name, payload)
+            return
         try:
             from escpos.printer import File, Usb
         except ImportError as error:
