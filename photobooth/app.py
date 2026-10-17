@@ -742,7 +742,10 @@ class PhotoBoothApp:
                 and not self._should_show_result_qr()
             ),
             upload_message=self._upload_status_message(),
+            print_message='Menyiapkan cetakan...',
+            print_busy=True,
         )
+        self._start_print_job(output_path)
         if self.drive_worker is not None:
             self.drive_worker.kick()
         if not has_next:
