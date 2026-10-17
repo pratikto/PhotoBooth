@@ -10,7 +10,7 @@ Last updated: 2026-10-17. Each item records an agreed product direction or curre
 | Keep 12 approved 80 mm templates and price Rp5,000/session | One quantity unit is an independent three-photo session |
 | Support both face invitation and always-visible manual Start on idle ads | Non-camera fallback remains accessible |
 | Face hold 5 s; invitation expires in 15 s; cooldown default 45 s | Avoid disruptive repeated prompts; settings are configurable |
-| Change requested journey to **ad -> tutorial -> layout selection** | Tutorial must not be skipped by Start; currently pending code adjustment |
+| Change requested journey to **ad -> tutorial -> layout selection** | Tutorial must not be skipped by Start; source navigation now enforces the guide for manual and face-triggered entry, pending device verification |
 | Idle ads may play source-video sound; payment ad video is always muted | Avoid competing with application music and preserve payment clarity |
 | Keep music and interaction sounds on photography pages with separate user controls | Mute/volume settings should survive restart |
 | Separate payment QR from transaction-folder access QR | Payment and retrieval are different functions |
