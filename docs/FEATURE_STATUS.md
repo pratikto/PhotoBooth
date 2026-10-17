@@ -60,3 +60,15 @@ merged integration test suite and real Kivy rendering have **not been run**.
 Physical printer testing is also outstanding and in-app audio remains
 unresolved. PR #3 targets `master` as a draft review/QA gate. **Do not report
 the default branch as already merged.**
+
+## Windows USB field feedback — 2026-10-17
+Physical `Out-Printer` text worked earlier with POS80ENG/USB001, but the Kivy
+photo result returned `/dev/usb/lp0 not found`. This demonstrates that no
+Windows queue was selected in the active saved runtime configuration; it does
+not establish a failed cable or Windows print driver. The printer transport now
+gives explicit Windows Settings instructions instead of a misleading Linux path
+when the Windows queue is empty. Configure **Settings > PENGATURAN PRINTER >
+USB Windows > POS80 Printer > SIMPAN**, then run **TEST PRINT**, inspect paper,
+and only then test a full strip. The ffpyplayer MP4 image-load error is a separate
+unresolved advertising issue. Raster profile width warnings are not transport
+failures. No physical RAW print success is claimed.
