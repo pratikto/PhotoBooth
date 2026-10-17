@@ -54,3 +54,7 @@ The user ran all standard audio unit tests: 12 passed, 1 opt-in native test skip
 ## Speaker diagnostic — 2026-10-17
 
 User confirms no audible music in the full app despite passing native provider tests. Added `tools/check_audio_output.py` to isolate SDL2 audio output without Kivy GUI/page ownership. Run `python tools/check_audio_output.py` from repo root, listen for five seconds, and inspect Windows Volume Mixer for Python and the selected device. If direct test sounds, investigate full-app audio lifecycle/mute settings; if it is silent, investigate Windows/SDL2 routing or device. Do not mark the bug fixed based on native `play` state alone.
+
+## Diagnostic script import correction — 2026-10-17
+
+The first attempt at `python tools/check_audio_output.py` stopped with `ModuleNotFoundError: No module named 'photobooth'` before any music playback, because direct script execution excluded the repository root from `sys.path`. Fixed the script to insert its checkout root. The user's report of no sound from that attempt does **not** establish an audio-device failure. Rerun after pulling and report output and whether 5 seconds of audio are audible.
