@@ -38,3 +38,7 @@ Physical machine speakers, local media/codec setup, camera, Google Drive and LAN
 ## Copy/paste into a new chat
 
 > Continue Meong Photobooth from GitHub repository `pratikto/PhotoBooth`, existing branch `feature/kivy-gui` only. Read `README.md` and all four handover docs in `docs/`, inspect current code and commits, then fix the first unresolved task in `docs/NEXT_STEPS.md`. Keep detailed English comments, run tests, commit and push directly to that branch, and update handover/status docs. Do not create a new branch or represent demo QRIS as live payment.
+
+## Current blocker: audio remains silent (reported 2026-10-17)
+
+The prior music fade-in commit has **not** solved output on the user's machine. Do not mark audio done. The original three sample clips are documented as silent video sources, so test advertising sound with a **known audio-bearing video**. On the user's machine, collect console/Kivy provider logs, check `PHOTOBOOTH_AUDIO`, `KIVY_AUDIO`, persisted `data/audio/levels.json`, actual selected sound output, and run `PHOTOBOOTH_TEST_AUDIO=1` native Kivy test with the real output (not dummy SDL driver). Verify whether the music sound handle enters `play` on tutorial and whether it reaches audible output. Fix based on those observations, add targeted regression test and update status.
