@@ -416,6 +416,16 @@ class PhotoBoothUI:
                 status.text = str(error)
                 return
             popup.dismiss()
+        # A test always uses the last saved configuration, not unsaved fields.
+        def test_print():
+            runner = self.callbacks.get("on_printer_test")
+            if runner is None:
+                status.text = "Test print belum tersedia."
+                return
+            status.text = "Mengirim test print..."
+            runner(lambda message: setattr(status, "text", message))
+        actions.add_widget(self._button("TEST PRINT", test_print, secondary=True,
+                                        screen_bound=False))
         actions.add_widget(self._button("BATAL", popup.dismiss, secondary=True,
                                         screen_bound=False))
         actions.add_widget(self._button("SIMPAN", save, screen_bound=False))
