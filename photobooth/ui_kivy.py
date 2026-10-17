@@ -152,6 +152,8 @@ class PhotoBoothUI(KioskExperienceMixin):
         self.qr_view = None
         self._qr_bytes = None
         self._result_detail_popup = None
+        self.print_status = None
+        self.print_button = None
         self.template_carousel = None
         self._last_template_index = 0
         self.shell = Panel(fill=PAPER, radius=0, border=False, orientation='vertical',
@@ -596,6 +598,8 @@ class PhotoBoothUI(KioskExperienceMixin):
         if self._result_detail_popup is not None:
             self._result_detail_popup.dismiss(animation=False)
             self._result_detail_popup = None
+        self.print_status = None
+        self.print_button = None
         if self.template_carousel is not None:
             self.template_carousel.deactivate()
             self.template_carousel = None
@@ -1193,7 +1197,8 @@ class PhotoBoothUI(KioskExperienceMixin):
         self.set_status(status_message)
 
     def show_result(self, image_path, session_label, transaction_id, has_next_session,
-                    seconds_remaining=None, qr_image=None, qr_pending=False, upload_message=''):
+                    seconds_remaining=None, qr_image=None, qr_pending=False, upload_message='',
+                    print_message='Belum dikirim ke printer.', print_busy=False):
         """Separate the printable composition from the customer folder QR.
 
         The QR has a real height even at small sizes. Long details scroll as a
@@ -1212,7 +1217,14 @@ class PhotoBoothUI(KioskExperienceMixin):
                                                secondary=True)
         self.result_zoom_button.height = dp(36)
         photo.add_widget(self.result_zoom_button)
-        photo.add_widget(self._label('Cetak fisik belum terhubung.', 12, 22, color=GREY, align='center'))
+        self.print_status = self._label(print_message, 12, 34, color=GREY, align='center')
+        photo.add_widget(self.print_status)
+        self.print_button = self._button(
+            'CETAK ULANG', self.callbacks.get('on_print', lambda: None),
+            enabled=not print_busy, secondary=True,
+        )
+        self.print_button.height = dp(36)
+        photo.add_widget(self.print_button)
         share = Panel(orientation='vertical', padding=dp(10), spacing=dp(5))
         share.add_widget(self._label('BAWA PULANG FOTOMU', 12, 20, bold=True, color=GREY))
         self.qr_view = KivyImage(fit_mode='contain', size_hint_y=None, height=dp(180))
@@ -1290,6 +1302,13 @@ class PhotoBoothUI(KioskExperienceMixin):
             self.qr_view.texture = None
             self.qr_title.text = 'Menyiapkan QR folder...' if pending else 'Mode lokal · QR Drive tidak tersedia'
         self._qr_bytes = pixels
+
+    def set_print_status(self, message, busy=False):
+        """Update print progress without navigating away from result view."""
+        if self.current_screen == 'result' and self.print_status is not None:
+            self.print_status.text = message
+            if self.print_button is not None:
+                self.print_button.disabled = busy
 
     def set_result_upload_status(self, message):
         if self.current_screen == 'result':
