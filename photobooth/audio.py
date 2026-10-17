@@ -483,6 +483,13 @@ class AudioManager:
             elapsed += dt
             self._music_mix = start + (target - start) * min(1, elapsed / fade_seconds)
             self._apply_levels()
+            # Leaving the advertisement begins with a silent (and therefore
+            # stopped) music handle. A volume update does not start a stopped
+            # Kivy/SDL2 sound. Once the fade becomes audible, explicitly
+            # resume its loop without waiting for a Settings slider event.
+            # _ensure_music also respects mute, pause and failed devices.
+            if self._music_mix > 0:
+                self._ensure_music()
             if elapsed >= fade_seconds or self._closed:
                 self._fade_event = None
                 return False
