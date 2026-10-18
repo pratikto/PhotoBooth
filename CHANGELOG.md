@@ -9,4 +9,4 @@ This file records **verified changes**, not assumptions about runtime behavior.
 - No application code, runtime behavior, payments, printing, audio or UI changed.
 
 ## Historical changes
-See [docs/FEATURE_STATUS.md](docs/FEATURE_STATUS.md), [docs/NEXT_STEPS.md](docs/NEXT_STEPS.md) and Git history for earlier implementation claims and commit-specific evidence. Historical code changes are intentionally not backfilled as verified releases without audit.
+See [docs/FEATURE_STATUS.md](docs/FEATURE_STATUS.md), [docs/DEVELOPMENT_HANDOVER.md](docs/DEVELOPMENT_HANDOVER.md) and Git history for earlier implementation claims and commit-specific evidence. Historical code changes are intentionally not backfilled as verified releases without audit.
