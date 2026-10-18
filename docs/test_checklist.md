@@ -1,3 +1,12 @@
+## BUG-010 lab scroll issue — 2026-10-18
+
+- Screenshot/owner confirmed missing access to lower sliders and print controls on Windows.
+- Scope authorized: `feature/dither-tuning` GUI layout only. Independent scroll canvas and mouse wheel per lane, compact preview, sticky action buttons; no changes to native raster, printer jobs or kiosk.
+- CI compile and static GUI structure tests are evidence of source consistency only; **Windows Tk visual interaction still needs owner retest**.
+- [ ] On 1050×620 and maximized, Print Test and Save PNG visible; threshold slider accessible by scrolling Threshold.
+- [ ] Mouse wheel/scrollbar affects only hovered algorithm; adjusting slider updates correct preview.
+- [ ] Sync Parameters and Save/Load configurations still work; printing still requires confirmation.
+
 ## FEAT-011 Stage 1–3 incremental development — 2026-10-18
 
 - Owner approved staged implementation + separate pushes on `feature/dither-tuning` only. **Stage 1** [`9f73f6e`](https://github.com/pratikto/PhotoBooth/commit/9f73f6e4223c98ebc883c70a604a4e47007fb054): independent 3-way config and JSON tests; initial CI **FAIL** due to accidental literal newline escaping in JSON writer. This was fixed in Stage 2.

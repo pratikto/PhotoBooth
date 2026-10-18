@@ -4,6 +4,13 @@ This file tracks **actual verified repository/document changes**, not successful
 
 ## [Unreleased] — 2026-10-18
 
+### BUG-010 — Dither GUI scroll accessibility
+- Added per-column vertical parameter scrolling and mouse-wheel routing.
+- Reduced on-screen preview height; Print Test and Save PNG remain outside scroll container.
+- No source changes to dithering or production printing; Windows GUI acceptance pending.
+
+
+
 ### Approved staged 3-way tuning lab continuation
 - Stage 1 `9f73f6e`: independent comparison profiles and schema validation; initial CI failure from literal newline in JSON, fixed in stage 2.
 - Stage 2 `15f87a7`: `tools/dither_compare_gui.py` with original plus three live dithering columns, independently tunable sliders, optional sync controls, zoomed dot crop, runtime/coverage information, save/load all configurations and native 1-bit exports. Dedicated CI passed.

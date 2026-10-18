@@ -54,8 +54,8 @@ class ComparisonApp:
     def __init__(self, root):
         self.root = root
         root.title("MEONG | 3-Way Dither Comparison Lab")
-        root.geometry("1530x930")
-        root.minsize(1150, 720)
+        root.geometry("1450x850")
+        root.minsize(1050, 620)
         self.source = sample_source()
         self.source_label = "Synthetic sample"
         self.configs = ComparisonProfiles()
@@ -71,6 +71,7 @@ class ComparisonApp:
         self.controls = {}
         self.labels = {}
         self.statuses = {}
+        self.scroll_canvases = {}
         self.print_events = queue.Queue()
         self.print_busy = False
         self.zoom = tk.IntVar(value=2)
@@ -110,7 +111,7 @@ class ComparisonApp:
         zooms.bind("<<ComboboxSelected>>",
                    lambda _event: self.change_zoom(int(zooms.get())))
 
-        reference = ttk.LabelFrame(root, text="SOURCE IMAGE", padding=7)
+        reference = ttk.LabelFrame(root, text="SOURCE IMAGE", padding=4)
         reference.pack(fill="x", padx=12, pady=(0, 9))
         self.source_photo = None
         self.source_view = ttk.Label(reference, anchor="center")
@@ -125,38 +126,62 @@ class ComparisonApp:
             panel = ttk.LabelFrame(columns, text=SHORT[mode], padding=8)
             panel.grid(row=0, column=idx, padx=4, sticky="nsew")
             columns.rowconfigure(0, weight=1)
-            output = ttk.Label(panel, text="Rendering preview...", anchor="center")
+            # BUG-010: bound the image height; parameter controls get a
+            # separate scroll region while print/export actions stay sticky.
+            preview_holder = ttk.Frame(panel, height=286)
+            preview_holder.pack(fill="x")
+            preview_holder.pack_propagate(False)
+            output = ttk.Label(preview_holder, text="Rendering preview...", anchor="center")
             output.pack(fill="both", expand=True)
             detail = ttk.Label(panel, text="Center dot crop", anchor="center")
-            detail.pack(fill="x", pady=3)
+            detail.pack(fill="x", pady=2)
             meta = ttk.Label(panel, text="Pending...", anchor="center")
             meta.pack(fill="x")
             self.labels[mode] = (output, detail, meta)
+
+            sliders_host = ttk.Frame(panel)
+            sliders_host.pack(fill="both", expand=True, pady=(4, 2))
+            canvas = tk.Canvas(sliders_host, highlightthickness=0,
+                               borderwidth=0, height=120)
+            scroll = ttk.Scrollbar(sliders_host, orient="vertical",
+                                   command=canvas.yview)
+            canvas.configure(yscrollcommand=scroll.set)
+            scroll.pack(side="right", fill="y")
+            canvas.pack(side="left", fill="both", expand=True)
+            interior = ttk.Frame(canvas, padding=(3, 2, 6, 3))
+            window_id = canvas.create_window((0, 0), window=interior, anchor="nw")
+            interior.bind("<Configure>", lambda _event, cv=canvas:
+                          cv.configure(scrollregion=cv.bbox("all")))
+            canvas.bind("<Configure>", lambda event, cv=canvas, wid=window_id:
+                        cv.itemconfigure(wid, width=event.width))
+            self.scroll_canvases[mode] = canvas
             self.controls[mode] = {}
             for key, caption, lower, upper in FIELDS:
                 if key == "threshold" and mode != "threshold":
                     continue
-                strip = ttk.Frame(panel)
-                strip.pack(fill="x", pady=(3, 0))
+                strip = ttk.Frame(interior)
+                strip.pack(fill="x", pady=(5, 0))
                 ttk.Label(strip, text=caption).pack(side="left")
                 val_label = ttk.Label(strip, text="", width=7, anchor="e")
                 val_label.pack(side="right")
                 val = tk.DoubleVar(value=getattr(self.configs.by_mode(mode), key))
-                slider = ttk.Scale(panel, from_=lower, to=upper, variable=val,
+                slider = ttk.Scale(interior, from_=lower, to=upper, variable=val,
                                    command=lambda _value, m=mode, k=key:
                                        self.slider_changed(m, k))
                 slider.pack(fill="x")
                 self.controls[mode][key] = (val, val_label)
                 self.write_value(mode, key)
+            # Pack actions before the flexible controls grow: buttons and
+            # readiness feedback cannot be pushed out of a small window.
+            state = ttk.Label(panel, text="Awaiting preview", anchor="center")
+            state.pack(side="bottom", fill="x")
             actions = ttk.Frame(panel)
-            actions.pack(fill="x", pady=(7, 2))
+            actions.pack(side="bottom", fill="x", pady=(6, 2))
             ttk.Button(actions, text="Print Test", command=lambda m=mode:
                        self.print_lane(m)).pack(side="left", expand=True, fill="x")
             ttk.Button(actions, text="Save PNG", command=lambda m=mode:
                        self.export_lane(m)).pack(side="left", expand=True, fill="x",
                                                  padx=(5, 0))
-            state = ttk.Label(panel, text="Awaiting preview", anchor="center")
-            state.pack(fill="x")
             self.statuses[mode] = state
 
         footer = ttk.Frame(root, padding=(12, 0, 12, 7))
@@ -166,11 +191,35 @@ class ComparisonApp:
         ttk.Button(footer, text="Print All (3 jobs)",
                    command=self.print_all).pack(side="right")
 
+        root.bind_all("<MouseWheel>", self._wheel_scroll, add="+")
+        root.bind_all("<Button-4>", self._wheel_scroll, add="+")
+        root.bind_all("<Button-5>", self._wheel_scroll, add="+")
         self.refresh_source()
         for mode in DITHER_MODES:
             self.schedule(mode)
         root.after(80, self.poll)
         root.protocol("WM_DELETE_WINDOW", self.close)
+
+    def _wheel_scroll(self, event):
+        """Hit-test the pointer so each lane scrolls only its own parameters."""
+        hovered = self.root.winfo_containing(
+            self.root.winfo_pointerx(), self.root.winfo_pointery())
+        while hovered is not None:
+            for canvas in self.scroll_canvases.values():
+                if hovered is canvas:
+                    if getattr(event, "num", None) == 4:
+                        amount = -1
+                    elif getattr(event, "num", None) == 5:
+                        amount = 1
+                    else:
+                        amount = -int(event.delta / 120) if event.delta else 0
+                        if amount == 0 and event.delta:
+                            amount = -1 if event.delta > 0 else 1
+                    if amount:
+                        canvas.yview_scroll(amount, "units")
+                        return "break"
+            hovered = hovered.master
+        return None
 
     def write_value(self, mode, key):
         val, label = self.controls[mode][key]
@@ -274,7 +323,7 @@ class ComparisonApp:
 
     def show_image(self, mode, raster):
         preview = raster.convert("RGB")
-        preview.thumbnail((390, 390), Image.Resampling.NEAREST)
+        preview.thumbnail((370, 268), Image.Resampling.NEAREST)
         factor = self.zoom.get()
         width, height = raster.size
         w, h = min(130, width), min(55, height)
@@ -289,7 +338,7 @@ class ComparisonApp:
 
     def refresh_source(self):
         img = self.source.copy()
-        img.thumbnail((660, 135), Image.Resampling.LANCZOS)
+        img.thumbnail((660, 88), Image.Resampling.LANCZOS)
         self.source_photo = ImageTk.PhotoImage(img, master=self.root)
         self.source_view.configure(image=self.source_photo)
         self.source_title.configure(text=self.source_label)
