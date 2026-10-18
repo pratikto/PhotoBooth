@@ -38,5 +38,14 @@ Low: targeted visual/navigation; Medium: affected module + integration; High: en
 M1 Core Stability -> M2 Operational Reliability -> M3 Commercial Readiness -> M4 Product Enhancement -> M5 Scale & Maintenance.
 These are provisional milestones, not certified product status. Freeze feature scope during a milestone's release-candidate testing; only approved blocker fixes enter the frozen candidate.
 
-## Source of truth
-`docs/next_step.md` is the prioritized feature backlog; `bug_tracker.md` is the defect register; `test_checklist.md` is verification evidence; `CHANGELOG.md` is release/change history. `docs/DEVELOPMENT_HANDOVER.md` is the technical session handover (not a second feature backlog). Existing `docs/ARCHITECTURE.md`, `docs/FEATURE_STATUS.md`, `docs/DECISIONS.md`, `docs/DEVELOPMENT_HANDOVER.md` remain authoritative handover references. Conflicts require explicit reconciliation, not silent overwrites.
+## Source of truth (paths relative to repository root)
+- [docs/DECISIONS.md](DECISIONS.md): binding **owner-confirmed product direction**, not evidence of implementation; open commercial terms must be labelled.
+- [docs/FEATURE_STATUS.md](FEATURE_STATUS.md): observed **current source** versus **owner-reported device behavior**; do not collapse those categories.
+- [docs/bug_tracker.md](bug_tracker.md): one authoritative defect register with stable IDs (including distinct BUG-001 audio output and BUG-007 unresponsive Settings test taps).
+- [docs/test_checklist.md](test_checklist.md): evidence ledger (reported physical pass/fail, historical automated tests, unverified) and release acceptance.
+- [docs/next_step.md](next_step.md): one **unified provisional** future-feature board, including deferred/parked ideas, not an approved plan.
+- [docs/DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md): current session technical context, followed by dated historical notes; not a second backlog.
+- [docs/ARCHITECTURE.md](ARCHITECTURE.md): source architecture; [docs/advertising-and-qris.md](advertising-and-qris.md): operational ad/demo QR instructions; [docs/CHANGELOG.md](CHANGELOG.md): actual commits and changes.
+- [docs/README.md](README.md) is the documentation index; the root [README.md](../README.md) includes historical setup and milestones.
+
+**Reconciliation rule:** when legacy README/QA/handover wording conflicts with a later owner report or the current source, retain historical evidence with its date, flag discrepancies, and update canonical documents. Neither historical passed tests nor a source-level feature should be treated as a physical acceptance. No documentation update permits application code changes; the owner must approve the exact implementation scope separately.
