@@ -1,5 +1,7 @@
 # Local advertising media
 
+> **CURRENT (2026-10-19, `feature/kivy-gui`):** These are local/offline ad assets for **both idle and muted payment placements**. The owner subsequently reported video ads in both placements PASS (BUG-002), but a controlled codec/hardware matrix is not yet recorded. Videos remain local and excluded from Git; the planned per-machine Google Drive ad sync (FEAT-004) is **not implemented**. This file describes bundled media only.
+
 The checkout includes three small still-image posters. The idle placement uses
 the first; payment has its own playlist with the other two. Videos remain on
 the booth computer and are excluded from Git, including original and converted

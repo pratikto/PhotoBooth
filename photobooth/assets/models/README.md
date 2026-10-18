@@ -1,5 +1,7 @@
 # Offline frontal-face presence model
 
+> **CURRENT (2026-10-19, `feature/kivy-gui`):** Bundled OpenCV frontal-face *presence* cascade remains the local model for the ad invitation. It does **not** identify or recognize individuals. FEAT-003 display-only capture-preview mirror leaves original detector camera frames unchanged. Original source/license attribution below is a retained technical archive.
+
 `haarcascade_frontalface_default.xml.gz` contains a lossless gzip copy from OpenCV 4.12.0:
 
 https://github.com/opencv/opencv/blob/4.12.0/data/haarcascades/haarcascade_frontalface_default.xml

@@ -1,5 +1,7 @@
 # Original offline music and sound cues
 
+> **CURRENT (2026-10-19, `feature/kivy-gui`):** Original bundled WAVs remain the Kivy music/SFX source. **Actual GUI route:** header gear → **Pengaturan Meong** → **PENGATURAN AUDIO**. An explicit **UJI MUSIK** press requests a fresh playback to diagnose silent devices; normal background music avoids unwanted restarting across pages. The Settings/music test code now covers this logic, but **audible Windows music remains an unresolved/deferred owner issue (BUG-001/007)**; synthetic CI does not prove loudspeaker output.
+
 All WAVs in this folder are synthesized by `photobooth/audio.py`, using original
 note sequences and deterministic instruments/noise. They contain no sampled
 commercial recording or transcription of a game's melody.
@@ -37,8 +39,11 @@ for name in SOUND_NAMES:
 prepare_assets(BUNDLED_AUDIO_DIR, bundled_directory=None)
 ```
 
-Use the header gear → **Suara** to adjust gains, test music or either cue bus,
-inspect the current state, or retry loading after an output problem. **Uji**
-respects the selected volume; 0% stays muted. The music preview preserves the
-position of a loop that is already playing. On desktop, the app prefers SDL2
-for these WAVs; an explicitly set `KIVY_AUDIO` retains provider selection.
+Use the header gear → **Pengaturan Meong** → **PENGATURAN AUDIO** to
+adjust music, button, camera and advertisement gains, run Uji previews, inspect
+output diagnostics or retry loading after an output problem. **Uji** respects
+the selected volume; 0% stays muted. Explicit **UJI MUSIK** intentionally
+restarts the music sound handle for an audible audition; ordinary background
+music transitions do **not** restart an already playing loop. On desktop,
+the app prefers SDL2 for these WAVs; an explicitly set `KIVY_AUDIO` retains
+provider selection. Physical Windows speaker output still needs owner validation.

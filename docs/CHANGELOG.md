@@ -2,6 +2,18 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased] — 2026-10-19
+
+### Owner-approved documentation reconciliation — active Kivy status and preserved history
+
+- **Scope:** documentation only on `feature/kivy-gui`, with **no Kivy source edits**, Apps Script deployment, new feature, branch merge, print-spool change or production QRIS integration. Current **default repository branch remains `master` and is intentionally unmerged**.
+- **Source/test baseline:** audited `c40f33f5` with [Kiosk GUI CI 39145145762](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762) **SUCCESS** (230 PASS, 2 skipped, 87 renders / 0 errors) and [Dither CI 39145145764](https://github.com/pratikto/PhotoBooth/actions/runs/39145145764) **SUCCESS**. The *new documentation-only HEAD* must pass its own Actions run before claiming current-HEAD CI green.
+- **Status normalization:** FEAT-001 DEMO fee per selected template plus requested print copies and FEAT-003 capture mirroring **OWNER TESTED PASS**; BUG-011 real Windows copy count **OWNER TESTED PASS / MONITORING**; BUG-002/003/004/005/006/008/010 owner-reported PASS; BUG-001/007 audio deferred, BUG-009 Drive 30-day cleanup **OPEN / not deployed-verified**, FEAT-002 scanner and FEAT-020 real QRIS deferred/not implemented.
+- **Historical evidence preservation:** current status banners and dated **HISTORICAL / SUPERSEDED** labels added to README, canonical status/bug/backlog, architecture, handover, checklist, technical printer/ads/dither/retention guides, QA dossier/index and asset READMEs. Prior FEAT-011 experiment and earlier failed CI/printer/QR/video reports kept with timestamps; they do not override subsequent owner results or fixes.
+- **Scoped documentation commits:** [README/index `8a142bc`](https://github.com/pratikto/PhotoBooth/commit/8a142bc1113874542b46ce3020d62b9524f92b10), [architecture/status/backlog `d177f54`](https://github.com/pratikto/PhotoBooth/commit/d177f54197fc35b56d9b6ffe0a143f684955d1fe), [handover/checklist/governance `8b65b26`](https://github.com/pratikto/PhotoBooth/commit/8b65b26757b479f4403ada51c56952dfd4fb20ec), [technical guides `1261791`](https://github.com/pratikto/PhotoBooth/commit/1261791d6c93f5cf1f632f944572d67d558324d3), [dated QA reports `00c084a`](https://github.com/pratikto/PhotoBooth/commit/00c084a3eb0b24c10d96bd1ef911aad4cb3d1fa3), plus this final changelog/asset documentation commit.
+- **CI configuration observation, not changed here:** `.github/workflows/kiosk-gui.yml` has a historical PR trigger on `main` despite the actual default branch being `master`. Correcting it is **a separate CI-code change requiring explicit owner approval**; ordinary pushes to `feature/kivy-gui` already trigger full GUI QA.
+- **Release caution:** `OWNER REPORTED`, `OWNER TESTED`, mocked CI and explicit Windows per-case records have different evidence levels. No hardware test matrix is invented, and the app is not marked RELEASED.
+
 ## [Unreleased] — 2026-10-18
 
 ### QA — Kiosk GUI Regression green after targeted legacy test reconciliation
@@ -18,7 +30,7 @@ This file tracks **actual verified repository/document changes**, not successful
 - **Scope boundaries:** Original stored/printed photographs, QR/text, face/palm input are deliberately unmirrored. FEAT-002 receipt scanner/overlay remains deferred and **not** exercised by this acceptance. The update is **documentation only**; no source code, camera driver, payment, printer, `Code.gs`, branch merge or deployment change.
 - See [FEAT-003 backlog specification](next_step.md), [feature status](FEATURE_STATUS.md), [checklist](test_checklist.md), [DEC-012](DECISIONS.md) and [handover](DEVELOPMENT_HANDOVER.md).
 
-### FEAT-003 — mirrored live photo-camera preview via GPU UVs (in source; camera hardware pending)
+### HISTORICAL FEAT-003 implementation-stage note — subsequently OWNER TESTED PASS
 
 - **Owner authorization:** Proceed with FEAT-003 on existing `feature/kivy-gui` after BUG-011 owner-tested PASS. Source baseline: [`c0cb0d84`](https://github.com/pratikto/PhotoBooth/commit/c0cb0d846512233ebff3f625e3c002e2c942485c).
 - [`6f8c8ddf`](https://github.com/pratikto/PhotoBooth/commit/6f8c8ddfcb53d35070213c6fda72b8485232f280): shared `ui_kivy._new_display_texture` retains vertical UV correction and applies horizontal flip **only** for live camera view; both initial Pillow/ready/retake and streaming BGR use the same orientation without CPU flipping. **Raw frames, face/palm inference, saved JPEG/review, composed photo, print, QR/text/logo remain unmirrored.** No change to `app.py`/printer/Drive/QRIS/ads/audio code.

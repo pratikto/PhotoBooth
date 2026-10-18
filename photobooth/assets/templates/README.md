@@ -1,5 +1,7 @@
 # Approved thermal receipt assets
 
+> **CURRENT (2026-10-19, `feature/kivy-gui`):** The current Kivy booth uses the twelve approved revision-3 80 mm receipt masters. **FEAT-001 DEMO:** one selected design equals one three-photo capture session; quantity is **identical paper copies** (Rp5.000 per template + Rp5.000 per requested copy). Thermal photo print is integrated in Kivy and defaults to the owner-selected Floyd preprocessing; these unmodified template PNGs are not already-printed output. Folder QR remains separate from DEMO payment QR.
+
 These are the twelve approved revision-3 Meong masters: 80 × 240 mm, eight
 dots/mm, 640 × 1920 pixels, with 1 mm paper margins and a 48 mm QR allocation.
 The PNGs are the blank masters, not the dummy-QR proof images. Production replaces

@@ -1,5 +1,7 @@
 # MEONG PHOTOBOOTH brand assets
 
+> **CURRENT (2026-10-19, `feature/kivy-gui`):** This is the active Meong logo asset for Kivy headers and new customer **folder-access** QRs. The approved source PNG and branding hash below are unchanged; the DEMO payment QR remains unbranded/non-payable. Logo artwork test history is archived in [QA](../../docs/qa/branded-qr.md).
+
 `meong_photobooth_vivid.png` is the user's final uploaded
 **Bright pixel camera-cat with colorful trail(3).png**, preserved byte-for-byte.
 It contains the camera-cat, bright pink/lilac/yellow/cyan/peach/mint trail, and
