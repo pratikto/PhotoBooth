@@ -4,6 +4,13 @@ This file tracks **actual verified repository/document changes**, not successful
 
 ## [Unreleased] — 2026-10-18
 
+### Approved staged 3-way tuning lab continuation
+- Stage 1 `9f73f6e`: independent comparison profiles and schema validation; initial CI failure from literal newline in JSON, fixed in stage 2.
+- Stage 2 `15f87a7`: `tools/dither_compare_gui.py` with original plus three live dithering columns, independently tunable sliders, optional sync controls, zoomed dot crop, runtime/coverage information, save/load all configurations and native 1-bit exports. Dedicated CI passed.
+- Stage 3 `03e7ddf`: labeled, confirmed physical Print Test and Print All via `photobooth/dither_print.py`, submitting the preview's exact one-bit raster without re-dithering, halting uncertain batches. Dedicated CI passed; **physical print and Windows GUI are not yet verified**. The primary current GUI is `python tools/dither_compare_gui.py`; original single-lane GUI remains as a legacy lab utility.
+- Stage 4: updated [operator lab guide](dither-tuning-lab.md), bug/feature status and real-device acceptance checklist; no production kiosk code touched.
+
+
 ### Owner-approved standalone thermal dithering lab (FEAT-011 / BUG-004)
 - **New experimental branch:** [`feature/dither-tuning`](https://github.com/pratikto/PhotoBooth/tree/feature/dither-tuning), forked from GUI baseline [`5e0a898`](https://github.com/pratikto/PhotoBooth/commit/5e0a8980968430b85f04ebac1b6c1574c2191a69); source commit [`07dcb1a`](https://github.com/pratikto/PhotoBooth/commit/07dcb1a5115f978e70b90c08e5a3666e077bb229).
 - Added `photobooth/dither_lab.py` with calibrated 1-bit thermal previews, adjustable brightness/contrast/gamma/sharpness, mode/width/threshold controls and validated atomic JSON profiles. Reuses existing `photobooth.printer.dither_image`; defaults preserve current native printer raster behavior.

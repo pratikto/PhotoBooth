@@ -4,6 +4,22 @@
 **Branch:** `feature/dither-tuning` (created 2026-10-18 from `feature/kivy-gui` commit `5e0a898`).  
 **Scope:** offline photo-rendering sandbox; the existing photobooth application and photo/QR print pipeline have **not** been changed or merged.
 
+## Three-algorithm comparison GUI (current)
+
+**Primary GUI for this branch**: `python tools/dither_compare_gui.py`. It shows the **same original image plus three live raster previews**: Floyd–Steinberg, Bayer 8×8, Threshold. Each column owns its own brightness, contrast, gamma and sharpening sliders; Threshold alone has a threshold slider. Tick **Sync Parameters** to copy a subsequent brightness/contrast/gamma/sharpness slider change to all three columns. Toggle it off to resume independent tuning. Width (384 or 576 dots) is deliberately shared for fair paper comparison. A central dot crop can be zoomed 1×, 2×, or 4×, rendered nearest-neighbor.
+
+Controls are debounced and images are rendered on workers; stale results are dropped. The GUI also reports native output size, percentage of black pixels and render time (informational, not a physical quality score). **Save All Configs** and **Load All Configs** use a versioned JSON file that is strictly independent of the kiosk's printer settings. **Export 3 PNG** saves the three exact full-resolution 1-bit rasters; **Save PNG** in each column saves just that lane.
+
+### Real-paper Print Test
+
+- Configure the **existing kiosk printer** via `python main.py` → gear → **Pengaturan Printer** first. The lab reads `data/printer_settings.json` (USB Windows queue, LAN or Wi-Fi). It does not edit that file. On Windows, the active printer queue requires `pywin32` and an ESC/POS-capable driver.
+- After the latest previews finish, click **Print Test** under one algorithm or **Print All (3 jobs)**. An explicit confirmation explains the number of real print jobs; cancel prints nothing.
+- The lab snapshots the currently displayed one-bit raster and chosen parameters. The ESC/POS spool includes a parameter label above the original dot image, then sends it via the existing `ThermalPrinter` route logic. **No second dithering or resize of the original raster occurs**.
+- **Print All** sends the algorithms in Floyd/Bayer/Threshold order, stops on the first failure or uncertain status, and never automatically retries that image through a different transport after transmission may have begun. The user must inspect the physical paper and decide on any repeat manually. Success means data was accepted by the transport—not confirmed physical printing.
+- During printing, further slider edits will not change the queued snapshot; Print buttons refuse another batch until the current batch finishes. Avoid stopping the application mid-spool.
+
+**Known limitations:** the preview display is scaled for the screen; only native PNG export and physical paper reveal actual dot pattern. A fixed 8×8 Bayer matrix and existing Pillow Floyd–Steinberg are retained. Device heat/darkness is not tunable through this lab. Windows GUI interactions and physical print remain **owner verification pending**; no customer-facing production integration is approved.
+
 ## Open the standalone GUI (Windows / VS Code PowerShell)
 
 From the repository root, after safely storing any uncommitted work:
@@ -13,7 +29,7 @@ git fetch origin
 git switch feature/dither-tuning
 git pull --ff-only origin feature/dither-tuning
 python -m pip install Pillow
-python tools/dither_tuning_gui.py
+python tools/dither_compare_gui.py
 ```
 
 Python on Windows normally includes Tkinter; if `import tkinter` fails, use a Python build with Tcl/Tk installed. **Do not run `python main.py` to access this lab**; it opens a separate desktop window with no camera, Drive, sound, payment or printer dependency.
@@ -25,7 +41,7 @@ Python on Windows normally includes Tkinter; if `import tkinter` fails, use a Py
 3. Choose **576 dots** (typical 80 mm printhead image area) or **384 dots** (typical 58 mm area). The renderer preserves aspect ratio and downsizes using the same Lanczos method as the existing printer pipeline; smaller sources are **not upscaled**.
 4. Adjust **Brightness**, **Contrast**, **Gamma**, and **Sharpness**. Each starts at **1.0** (no correction). Gamma above 1 lightens midtones. The **Threshold** slider is enabled only for the Threshold algorithm, because that parameter has no effect on Floyd–Steinberg or Bayer.
 5. Inspect **Sumber**, **Raster 1-bit**, and the **3× nearest-neighbor center-crop dot preview**. The full preview is display-scaled for convenience; actual exported image pixels are not rescaled after dithering.
-6. Click **Simpan preset** to save an independent JSON recipe, **Muat preset** to restore it later, and **Ekspor PNG 1-bit** to export the complete native-width raster. Export is blocked until preview for the current controls is ready.
+6. Click **Simpan preset** to save an independent JSON recipe, **Load All Configs** to restore it later, and **Save PNG** / **Export 3 PNG** to export the complete native-width raster. Export is blocked until preview for the current controls is ready.
 
 | Parameter | Allowed range | Default | Affects |
 | --- | --- | --- | --- |

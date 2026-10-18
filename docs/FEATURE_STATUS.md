@@ -7,6 +7,9 @@ Status vocabulary: **IN SOURCE** = relevant implementation found, **OWNER REPORT
 
 ## Isolated experiment on `feature/dither-tuning` (2026-10-18)
 
+**Current follow-on source:** `tools/dither_compare_gui.py` provides one-screen three-way comparison, independent/sync slider tuning, real-time 1-bit previews, zoom, parameter JSON and exact-raster export. `photobooth/dither_print.py` supports **operator-confirmed** physical Print Test per lane/Print All with no second dithering or uncertain automatic retries. [Stage 2 CI](https://github.com/pratikto/PhotoBooth/actions/runs/39112358484) and [Stage 3 CI](https://github.com/pratikto/PhotoBooth/actions/runs/39112474748) passed targeted automated checks. Windows UI and printer-paper behavior **NOT VERIFIED**; no production kiosk changes.
+
+
 With explicit owner approval, the separate [FEAT-011 thermal dithering lab](dither-tuning-lab.md) has been added **only to this experimental branch**. It uses `photobooth/dither_lab.py`, `tools/dither_tuning_gui.py`, and `tests/test_dither_lab.py`. The GUI can preview and export grayscale-tuned 1-bit PNGs, and save/load JSON lab presets, without using the physical printer. [Dedicated GitHub Actions run 39110869478](https://github.com/pratikto/PhotoBooth/actions/runs/39110869478) passed compile and targeted unit tests. **No Windows GUI/device validation; no production print pipeline change; BUG-004 remains OPEN.** This section must not be mistaken for a feature released in `feature/kivy-gui` or `main`.
 
 ## Current implementation vs reported device behavior
