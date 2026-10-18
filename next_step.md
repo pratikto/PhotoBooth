@@ -212,3 +212,28 @@ M1 Core Stability; M2 Operational Reliability; M3 Commercial Readiness; M4 Produ
 - **Pricing discovery:** Model hardware margin and subscription contribution margin separately, then evaluate break-even and lifetime value with pilot evidence. Do not assume particular monthly price or guaranteed recurring revenue.
 - **Priority / impact / readiness:** Business impact High; priority P2 discovery after stability, readiness Concept, complexity High/XL for full billing/license platform. **Dynamic execution order:** Validate demand, unit economics and contract terms before adding license management or billing code. No production implementation authorization.
 - **Validation questions:** How is a Free-tier device activated and validated offline? Does a lapsed paid subscription downgrade to Free automatically (recommended) rather than disabling core photos? Who owns QRIS merchant account, ad inventory and customer photo data? What service levels and warranties are included?
+
+## Monetization idea parking lot — future evaluation (2026-10-18)
+**Owner instruction:** Keep these ideas for future evaluation only. Do not schedule, implement, change code, or imply commercial pricing approval. Reassess business priority, overlap, compatibility, dependencies, costs, legal/privacy risks, and readiness before promotion to executable backlog. Fix existing application bugs first.
+
+| Idea | Proposed payer / charging basis | Overlap or dependency | Notes / concerns |
+|---|---|---|---|
+| Premium photo template packs | Machine owner / one-off pack or add-on | Existing template engine, FEAT-006/014 | Distinguish core free templates from optional licensed premium art |
+| Sponsored photo frames | Merchant/brand / campaign or monthly | FEAT-014 | Already in backlog; avoid duplicate implementation |
+| Promo redemption service fee | Merchant / verified redemption | FEAT-002, FEAT-005, FEAT-013 | Separate operator reimbursement for photo discount from Meong's platform/service fee; no double counting |
+| Short-term event mode pass | Machine owner/event organizer / 1-, 3-, 7-day license | FEAT-017 | Already in backlog; entitlement, offline expiration, rollback |
+| Premium analytics | Machine owner/merchant / subscription add-on | FEAT-013/018 | Reporting tiers, data accuracy, ownership and privacy |
+| Remote support / maintenance plan | Machine owner / annual or recurring service | FEAT-008/012 | Scope, SLA, labor/travel cost, warranty separation |
+| Digital photo premium upsell | End customer / per purchase | FEAT-015 | Privacy, consent, link expiry, cost, no dark patterns |
+| Additional photo reprints | End customer / per copy | FEAT-016 | Already in backlog; price and entitlement separate from core copies |
+| White-label photobooth | Business/franchise / setup plus recurring | FEAT-006/010/014 | Preserve software attribution/license rights; brand approvals |
+| Managed advertising campaign service | Merchant/brand / campaign management fee | FEAT-004/013 | Creative review, scheduling, measurement and service labor |
+| Extended hardware warranty | Hardware buyer / optional protection plan | BIZ-001 / FEAT-019 | Legal terms, actuarial cost, exclusions and claims |
+| Multi-location licensing | Fleet operator / per machine or volume | FEAT-018/019 | Fair volume tiers, device identity and tenant isolation |
+| Meong cross-location ad network | Advertiser / campaign across Meong-reserved inventory | FEAT-004/010/013/018/019 | Requires deployed scale, location approval, competitor exclusions, verifiable impressions |
+
+**Revenue ownership caution:** On Meong-owned machines, Meong may collect photo sales and merchant promo reimbursement under its contracts. On hardware **sold** to an operator, photo sales and reimbursement for waived photo fees ordinarily belong to the **machine operator**; Meong earns hardware margin, software subscriptions, its reserved ad inventory and any separately contracted campaign/platform fees. Contractual exceptions require explicit agreement.
+
+**Potential monetization layers:** (1) hardware + free/commercial and paid software tiers + Meong-reserved ads, (2) optional premium content/events/analytics/campaigns, (3) installation/support/warranty/white-label services. No example prices are commitments.
+
+**Future evaluation gates:** Demonstrate customer willingness to pay, positive unit economics after support and hosting, technical feasibility on actual mini PC and partner POS, privacy and advertising consent, non-overlap with existing paid tiers, and measurable campaign performance. Existing critical bugs remain the immediate priority.
