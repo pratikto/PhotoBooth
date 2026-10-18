@@ -4,15 +4,44 @@
 **Target branch:** `feature/kivy-gui` (**do not create a new branch**).  
 **Handover dated:** 2026-10-17.
 
+## Current handover — reconciled 2026-10-18
+
+**Read this first rather than treating the dated 2026-10-17 notes below as an active work order.** Source-of-truth documents:
+
+- [Documentation index](README.md) and root [README](../README.md) (current status banner and historical project setup).
+- [DECISIONS.md](DECISIONS.md): owner-confirmed commercial/product behavior versus proposals.
+- [FEATURE_STATUS.md](FEATURE_STATUS.md): actual source implementation versus user-reported physical acceptance.
+- [bug_tracker.md](bug_tracker.md): operational defects and stable IDs.
+- [test_checklist.md](test_checklist.md): evidence classifications and real on-device acceptance.
+- [next_step.md](next_step.md): **one unified provisional feature queue** plus parked business ideas. Detailed old intake ranks are historical, not authorization.
+
+**Current urgent user reports (Windows mini PC):** BUG-001 app music/SFX silent while standalone sound probe was audible; BUG-007 Music/Button `Uji` not receiving callbacks; BUG-002 idle and payment video not playing; BUG-003 payment QR paper slip does not print; BUG-004 thermal strip physically prints but image quality is poor. BUG-005 ad→mandatory tutorial→picker route and BUG-006 opening-ad sizing require physical re-verification. All remain open/verification-needed until evidenced and accepted. Never infer an on-device pass from historical video/sound/GUI mocks.
+
+**Current source verified by file inspection, NOT physical test:** `photobooth/printer.py` and `printer_settings.py` are already integrated into `feature/kivy-gui` with Windows USB queue/LAN/Wi-Fi and Floyd–Steinberg/Bayer/threshold. `photobooth/qris_print.py` receives saved GUI `PrinterConfig`; legacy LAN-only fallback is for direct callers. Payment remains a *non-payable demo*. `photobooth/catalog.py` still uses IDR 5,000 per independent session/quantity, and `workflow.py` captures 3 photos **per quantity**. Do not describe proposed per-copy pricing as working.
+
+**Future direction is documented, not delivered:** FEAT-001 base fee + per-physical-copy pricing (still 3 captures per chosen session); FEAT-002A dummy external receipt scanner and FEAT-005A standalone ordering demo with automatic same-device photo promo; FEAT-003 mirrored live preview only; FEAT-004 per-machine local-first Drive ads; FEAT-006 GUI themes; FEAT-007–018 reliability, promotional reporting and fleet enhancements; BIZ-001/FEAT-019 sale of hardware with mandatory assigned Free/Business/Enterprise tier. Free remains commercially usable and all its ads belong to Meong; paid users may control some ads while Meong retains **unspecified** reserved slots on every tier. No paid-tier licensing, ad quota enforcement, merchant POS integration, or live QRIS is represented as shipped.
+
+**Funding rule:** merchant pays the waived base-fee promotion only when redeemed; the settlement recipient is the Meong-operated booth owner or a separate sold-machine operator according to who funded the discount and the contract. Do not call every merchant reimbursement Meong revenue.
+
+**Execution gate:** Bug reproduction, device evidence and documentation review first. Before implementing any fix or feature, secure **separate explicit user approval of that code scope**. Use only `feature/kivy-gui`, preserve the thermal-printer branch, avoid accidentally overwriting local Windows changes, run targeted tests + full regression after authorized code, and require real device/owner signoff for printing/audio/video. This housekeeping made **documentation edits only**.
+
+## Recommended next engineering investigations (do not execute without approval)
+
+1. Audio settings pointer/touch diagnostic (BUG-007) and application audio lifecycle (BUG-001), with logs distinguishing missed button events from mute/routing.
+2. Idle/payment MP4 decoder and texture playback on actual Windows hardware (BUG-002). Test visible moving frames with supported codec; the user's original sample files were noted to lack audio streams.
+3. Payment QR print worker and selected saved Windows queue (BUG-003). Collect worker result, spooler messages and paper; never claim successful print from an ESC/POS file alone.
+4. Native-width source-to-raster photo quality comparison (BUG-004); compare existing dither modes and physical output, separate photo from QR printing.
+5. Manually verify tutorial route, ad stage sizing and complete payment/capture/print flow (BUG-005/006), then revisit feature priorities.
+
 ## Resume checklist
 
-1. Read this file, [Architecture](ARCHITECTURE.md), [Feature status](FEATURE_STATUS.md), [Decisions](DECISIONS.md), [Bug tracker](bug_tracker.md), [Feature backlog](next_step.md), `README.md`, and [Advertising and QRIS](advertising-and-qris.md).
+1. Read [this updated handover](#current-handover--reconciled-2026-10-18), [Architecture](ARCHITECTURE.md), [Feature status](FEATURE_STATUS.md), [Decisions](DECISIONS.md), [Bug tracker](bug_tracker.md), [Feature backlog](next_step.md), [root README](../README.md), and [Advertising and QRIS](advertising-and-qris.md).
 2. Fetch the **current** branch head and inspect working files before editing. Never assume older chat claims are committed.
 3. Only after explicit owner authorization, address reported defects **one by one** in small, reviewable commits. Keep detailed English comments. Do not modify the separate thermal-printer branch.
 4. Run targeted unit tests, then broad regression suite and real Kivy screen checks; document commands/results and unverified physical tests.
 5. Update `FEATURE_STATUS.md` and this file after each fix, then verify commit/push and link the resulting SHA.
 
-## First coding tasks, in priority order
+## Historical initial coding priorities (2026-10-17; superseded by current bug tracker)
 
 **A. Video playback fails on both idle and payment (partial configuration fix committed 2026-10-17).** Inspect `ui_kiosk.py`, `advertising.py`, `requirements.txt`, ad playlist paths and Kivy video provider/ffpyplayer lifecycle. Distinguish absent local video media, failed decoder, texture not attached, muted media and stalled playback. Ensure payment playback is **muted**, not disabled. Add diagnostic logging and tests for both placements. The bundled playlist now auto-discovers video files from the repository-root `ad_video/` directory (alphabetical order, arbitrary filenames and supported extensions), for both placements. Still-image poster entries remain as fallback. Videos are NOT committed to GitHub; local decoder and actual playback remain to be verified. Custom `PHOTOBOOTH_AD_CONFIG` playlists remain explicit and do not use automatic discovery. Runtime decoder/frame testing is still outstanding; do not claim videos have been uploaded or playback fixed.
 
@@ -37,7 +66,7 @@ Physical machine speakers, local media/codec setup, camera, Google Drive and LAN
 
 ## Copy/paste into a new chat
 
-> Continue Meong Photobooth from GitHub repository `pratikto/PhotoBooth`, existing branch `feature/kivy-gui` only. Read `README.md` and all four handover docs in `docs/`, inspect current code and commits, then review `docs/bug_tracker.md` and `docs/next_step.md` and request explicit owner approval before any code changes; do not automatically execute handover tasks. Keep detailed English comments, run tests, commit and push directly to that branch, and update handover/status docs. Do not create a new branch or represent demo QRIS as live payment.
+> Continue Meong Photobooth from GitHub `pratikto/PhotoBooth` on existing `feature/kivy-gui` only. Read `docs/README.md`, current `docs/DEVELOPMENT_HANDOVER.md`, `docs/DECISIONS.md`, `docs/FEATURE_STATUS.md`, `docs/bug_tracker.md`, `docs/test_checklist.md` and `docs/next_step.md`; inspect relevant code and current commit. Fix nothing automatically: obtain explicit scope approval for application changes, then test actual Windows printer, audio and video before claiming success. Keep detailed English comments, run tests, commit and push directly to that branch, and update handover/status docs. Do not create a new branch or represent demo QRIS as live payment.
 
 ## Current blocker: audio remains silent (reported 2026-10-17)
 
