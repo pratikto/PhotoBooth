@@ -38,4 +38,4 @@ python -m unittest discover -s tests -v
 
 Optional GUI/audio-specific environment flags and validation instructions are documented in `README.md`, `docs/advertising-and-qris.md` and `docs/qa/`. Historical QA results must not be treated as proof that all current user-reported bugs are fixed.
 
-**Cross-references:** [Feature status](FEATURE_STATUS.md) · [Decisions](DECISIONS.md) · [Next steps](NEXT_STEPS.md).
+**Cross-references:** [Feature status](FEATURE_STATUS.md) · [Decisions](DECISIONS.md) · [Next steps](DEVELOPMENT_HANDOVER.md).
