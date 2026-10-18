@@ -19,7 +19,6 @@ The repository-root [README](../README.md) explains setup and preserves historic
 
 - [Architecture](ARCHITECTURE.md) — actual source-level modules vs proposed system design.
 - [Advertising and demo QR payment slip](advertising-and-qris.md) — current playback and printer setup, with **legacy LAN** instructions clearly distinguished from saved GUI printer configuration.
-- [Historical technical decisions](DECISIONS.md) — product and commercial decisions (kept current here).
 - [QA evidence archive](qa/README.md) — date-specific automated/visual reports that do not override later device failures.
 - [Photo retention](photo-retention.md) — 15-day local/30-day Drive targets and associated data-loss considerations.
 - [Legacy NEXT_STEPS pointer](NEXT_STEPS.md) — retained for older bookmarks; do not edit as a second backlog.
