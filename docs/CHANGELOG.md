@@ -4,6 +4,15 @@ This file tracks **actual verified repository/document changes**, not successful
 
 ## [Unreleased] — 2026-10-18
 
+### FEAT-003 — mirrored live photo-camera preview via GPU UVs (in source; camera hardware pending)
+
+- **Owner authorization:** Proceed with FEAT-003 on existing `feature/kivy-gui` after BUG-011 owner-tested PASS. Source baseline: [`c0cb0d84`](https://github.com/pratikto/PhotoBooth/commit/c0cb0d846512233ebff3f625e3c002e2c942485c).
+- [`6f8c8ddf`](https://github.com/pratikto/PhotoBooth/commit/6f8c8ddfcb53d35070213c6fda72b8485232f280): shared `ui_kivy._new_display_texture` retains vertical UV correction and applies horizontal flip **only** for live camera view; both initial Pillow/ready/retake and streaming BGR use the same orientation without CPU flipping. **Raw frames, face/palm inference, saved JPEG/review, composed photo, print, QR/text/logo remain unmirrored.** No change to `app.py`/printer/Drive/QRIS/ads/audio code.
+- [`e99cbb26`](https://github.com/pratikto/PhotoBooth/commit/e99cbb26b485d7497642953c04e09c223dab0c6c) plus [`1698bd94`](https://github.com/pratikto/PhotoBooth/commit/1698bd942fb21a85266b84a33495165b55e086bf): Kivy GPU regression covers first frame, stream texture reuse, large-frame resize, countdown/retake, unchanged BGR/Pillow and ordinary saved/review/result orientation.
+- [`307e779e`](https://github.com/pratikto/PhotoBooth/commit/307e779e271ba6deb439b3bbf91343d02c9b30c7): isolated [`feat003-mirror.yml`](../.github/workflows/feat003-mirror.yml). [Actions run 39139208320](https://github.com/pratikto/PhotoBooth/actions/runs/39139208320) **PASS** (1 focused Kivy GPU test plus source/test compile, synthetic data, Ubuntu/Python 3.12/Xvfb). **Not physical Windows camera acceptance** and not a full GUI regression PASS.
+- The existing camera preview belongs only to the capture/retake workflow. **FEAT-002 receipt scanner does not yet exist**; that later preview must reuse the same mirror renderer but decode unmirrored originals and map overlays correctly when separately approved. Do not claim scanner tests or production release.
+- Documented affected module, dependencies, rollback and owner hardware checklist in [next_step.md](next_step.md), [FEATURE_STATUS.md](FEATURE_STATUS.md), [ARCHITECTURE.md](ARCHITECTURE.md), [test_checklist.md](test_checklist.md) and [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md).
+
 ### Owner accepts FEAT-001 pricing and BUG-011 physical-copy correction (documentation-only status update)
 
 ### Follow-up owner verification — BUG-011 explicitly tested and passed (documentation only)
