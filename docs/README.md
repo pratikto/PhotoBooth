@@ -21,14 +21,17 @@ The repository-root [README](../README.md) explains setup and preserves historic
 - [Architecture](ARCHITECTURE.md) — actual source-level modules vs proposed system design.
 - [Advertising and demo QR payment slip](advertising-and-qris.md) — current playback and printer setup, with **legacy LAN** instructions clearly distinguished from saved GUI printer configuration.
 - [QA evidence archive](qa/README.md) — date-specific automated/visual reports that do not override later device failures.
+- **[FEAT-001 / BUG-011 print-copy acceptance](qa/FEAT-001-BUG-011-acceptance.md)** — owner accepted DEMO pricing and working Windows physical copy counts after printer RAW fixes, with dated targeted CI, evidence limitations and future regression matrix.
 - [Photo retention](photo-retention.md) — 15-day local/30-day Drive targets and associated data-loss considerations.
 - [Thermal dithering lab](dither-tuning-lab.md) — standalone FEAT-011 experiment on `feature/dither-tuning`; has no effect on the production Kivy printer until separately approved.
 - [Legacy NEXT_STEPS pointer](NEXT_STEPS.md) — retained for older bookmarks; do not edit as a second backlog.
 
 ## Current field status (2026-10-18)
 
-Operator reports **photo strip paper output works but is blurry**, **payment QR-slip printing fails**, **idle/payment videos do not play**, and **application music plus Settings `Uji` controls remain problematic**. See BUG-001/002/003/004/007; tutorial route and opening-video size also await validation (BUG-005/006).
+**Most recent owner-tested FEAT-001:** Rp5,000 per selected template/session plus Rp5,000 per requested paper copy is implemented in the Kivy GUI (DEMO). Following the Windows printer job-finalization correction, the owner reports **pricing and physical copy count both work**. **BUG-011 is OWNER REPORTED PASS — MONITORING**, not formally CLOSED. [Focused CI 39134970707](https://github.com/pratikto/PhotoBooth/actions/runs/39134970707) passed **15/15** business/print-spool mock tests; [full Kiosk GUI CI 39135186022](https://github.com/pratikto/PhotoBooth/actions/runs/39135186022) still **failed**. The exact Windows local commit, printer queue and 1/2/3 paper-count measurements were not recorded.
 
-**Payment remains DEMO (not real QRIS).** Present code uses IDR 5,000 per **independent photo session**; future per-copy billing, merchant promotions, centralized ad inventory and subscription licensing are planned decisions, **not running production features**.
+The owner also reports improved Floyd photo quality (BUG-004), payment QR-slip paper output (BUG-003), idle/payment video playback (BUG-002), expected ad/tutorial navigation (BUG-005), advertisement sizing (BUG-006), dithering GUI scrolling (BUG-010) and responsive Settings (BUG-008). These are **owner-reported physical/UI passes**, not complete release verification.
 
-No content in this directory authorizes programming, merging, releasing, running real customer payments or claiming a bug fixed. Ask for owner approval and test the actual target machine.
+**Intentionally deferred/unresolved:** tutorial/layout background music and `Uji Musik` (BUG-001/007); Google Drive 30-day photo-retention registration (BUG-009, to be coordinated with FEAT-004 advertising media synchronization). **Real payable QRIS (FEAT-020) is NOT implemented**; the onscreen payment QR and simulated checkout remain DEMO, not an authorized merchant charge. Other payment/settlement feature work remains low priority.
+
+For authoritative ongoing status use the [bug tracker](bug_tracker.md), [feature table](FEATURE_STATUS.md), [priority board](next_step.md), [physical acceptance checklist](test_checklist.md) and [FEAT-001 evidence dossier](qa/FEAT-001-BUG-011-acceptance.md). This index grants no authorization to change code, merge, deploy or declare a released build.
