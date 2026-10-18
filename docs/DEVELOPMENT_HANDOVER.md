@@ -4,6 +4,12 @@
 **Target branch:** `feature/kivy-gui` (**do not create a new branch**).  
 **Handover dated:** 2026-10-17.
 
+## Isolated owner-authorized experiment — `feature/dither-tuning` (2026-10-18)
+
+The owner expressly requested a **NEW branch** specifically for configuration of dithering algorithms and tuning parameters, overriding the usual no-new-branch default **for this task only**. New branch `feature/dither-tuning` originates from `feature/kivy-gui` at `5e0a8980968430b85f04ebac1b6c1574c2191a69`. First isolated FEAT-011 source commit: [`07dcb1a`](https://github.com/pratikto/PhotoBooth/commit/07dcb1a5115f978e70b90c08e5a3666e077bb229). Lab instructions in [dither-tuning-lab.md](dither-tuning-lab.md). [Dedicated CI 39110869478](https://github.com/pratikto/PhotoBooth/actions/runs/39110869478) PASS (compile + targeted unit tests); Windows GUI, native printer output and quality still require owner verification. Kivy GUI app, printer transport and payment QR code are not modified. **Do not merge to `feature/kivy-gui` or `main` without new owner authorization.** This temporary exception does not authorize branching other features.
+
+**FEAT-011 next steps:** test Windows `python tools/dither_tuning_gui.py`; compare actual saved photo PNG and zoomed raster using preset, export binary PNG; confirm the outputs on real paper (same width/brightness/density). Retain BUG-004 OPEN. Known BUG-008 (Settings hang) and BUG-009 (Drive retention deployment) remain unrelated active operational issues; building a standalone lab does not fix them.
+
 ## Current handover — reconciled 2026-10-18
 
 **Read this first rather than treating the dated 2026-10-17 notes below as an active work order.** Source-of-truth documents:

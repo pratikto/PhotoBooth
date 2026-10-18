@@ -5,6 +5,10 @@ This status is based on reading selected source files and the latest owner devic
 
 Status vocabulary: **IN SOURCE** = relevant implementation found, **OWNER REPORTED** = physical observation requiring reproducible evidence, **UNVERIFIED** = no current hardware acceptance, **PLANNED** = not implemented, **BLOCKED** = operational defect. For feature approval/requirements, see [DECISIONS.md](DECISIONS.md) and [next_step.md](next_step.md).
 
+## Isolated experiment on `feature/dither-tuning` (2026-10-18)
+
+With explicit owner approval, the separate [FEAT-011 thermal dithering lab](dither-tuning-lab.md) has been added **only to this experimental branch**. It uses `photobooth/dither_lab.py`, `tools/dither_tuning_gui.py`, and `tests/test_dither_lab.py`. The GUI can preview and export grayscale-tuned 1-bit PNGs, and save/load JSON lab presets, without using the physical printer. [Dedicated GitHub Actions run 39110869478](https://github.com/pratikto/PhotoBooth/actions/runs/39110869478) passed compile and targeted unit tests. **No Windows GUI/device validation; no production print pipeline change; BUG-004 remains OPEN.** This section must not be mistaken for a feature released in `feature/kivy-gui` or `main`.
+
 ## Current implementation vs reported device behavior
 
 | Feature / concern | Current source / observation | Acceptance status |

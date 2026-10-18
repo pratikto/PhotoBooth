@@ -4,6 +4,15 @@ This file tracks **actual verified repository/document changes**, not successful
 
 ## [Unreleased] — 2026-10-18
 
+### Owner-approved standalone thermal dithering lab (FEAT-011 / BUG-004)
+- **New experimental branch:** [`feature/dither-tuning`](https://github.com/pratikto/PhotoBooth/tree/feature/dither-tuning), forked from GUI baseline [`5e0a898`](https://github.com/pratikto/PhotoBooth/commit/5e0a8980968430b85f04ebac1b6c1574c2191a69); source commit [`07dcb1a`](https://github.com/pratikto/PhotoBooth/commit/07dcb1a5115f978e70b90c08e5a3666e077bb229).
+- Added `photobooth/dither_lab.py` with calibrated 1-bit thermal previews, adjustable brightness/contrast/gamma/sharpness, mode/width/threshold controls and validated atomic JSON profiles. Reuses existing `photobooth.printer.dither_image`; defaults preserve current native printer raster behavior.
+- Added standalone `tools/dither_tuning_gui.py` (Tkinter GUI with side-by-side before/after, 3× detail crop, debounce/background render, photo open, JSON preset load/save and 1-bit export); synthetic example only, no customer data sent or real printer submitted.
+- Added targeted `tests/test_dither_lab.py`, separate `.github/workflows/dither-lab.yml`, and [operator usage guide](dither-tuning-lab.md). [CI 39110869478](https://github.com/pratikto/PhotoBooth/actions/runs/39110869478) **PASS** for compile and targeted tests; Windows live Tk UI and real paper/quality **NOT VERIFIED**.
+- **Scope boundary:** existing `photobooth/printer.py` and Kivy app are **unchanged** in this source commit; no main-branch merge, app integration or production release authorized. BUG-004 is not fixed merely by creating a tuning lab.
+
+
+
 ### Approved application audio remediation (BUG-001 / BUG-007; Windows verification pending)
 - **Base/rollback commit:** [`06dd977c`](https://github.com/pratikto/PhotoBooth/commit/06dd977c06657c9b56e1de0ad18042b65515bd64); implementation and associated docs/tests are in the current audio commit on `feature/kivy-gui`. No branch creation or merge.
 - `photobooth/audio.py`: reacquire a native music channel at saved full gain when the ad fade finishes; add an operator-forced music audition that cannot be skipped by a stale `state=play` report and obeys normal mute/pause/ad gates.

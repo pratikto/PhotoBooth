@@ -1,8 +1,8 @@
 # Meong Photobooth — Dynamic Feature Backlog
 Protocol: [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md) | Updated: 2026-10-18
-Branch: `feature/kivy-gui`
+Planning baseline: `feature/kivy-gui` | Isolated authorized experiment: `feature/dither-tuning` (not merged)
 
-**Planning only. No idea below authorizes implementation.** The similarly named historical handover has been clarified as [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md); this canonical `docs/next_step.md` file tracks proposed features. Every incoming idea triggers a fresh current-code compatibility/readiness review and a full execution-order re-ranking. Stable feature IDs are not execution sequence numbers.
+**Planning only unless an explicit scope is owner-approved.** On 2026-10-18, owner specifically authorized a NEW standalone dithering tuning branch and simple GUI for FEAT-011/BUG-004; this does **not** authorize kiosk integration, an unattended printer workflow change, or release. Other backlog ideas remain unapproved. The similarly named historical handover has been clarified as [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md); this canonical `docs/next_step.md` file tracks proposed features. Every incoming idea triggers a fresh current-code compatibility/readiness review and a full execution-order re-ranking. Stable feature IDs are not execution sequence numbers.
 
 ## Intake and evaluation
 For each new idea record:
@@ -18,8 +18,8 @@ For each new idea record:
 
 | Proposed order | ID | Scope / value | Business priority | Readiness | Prerequisites / decision |
 | --- | --- | --- | --- | --- | --- |
-| **Before all features** | BUG-001–007 | Audio/tap/video/QR-slip/photo-quality and route/visual validation | Operational blockers | User reports; validation needed | Reproduce and close under [bug tracker](bug_tracker.md) |
-| 01 (alongside BUG-004) | FEAT-011 | Printer quality profiles / controlled comparisons | P1 | Partial | Fix photo blur first; avoid unapproved UI scope |
+| **Before production integration** | BUG-001–009 (current active priorities BUG-008/009/001/007/004) | Operational stability, retention, audio, image quality | Operational blockers | User reports; validation needed | Reproduce and close under [bug tracker](bug_tracker.md); lab experiments are separate |
+| 01 (isolated lab authorized) | FEAT-011 | Photo dithering tuning GUI and quality profiles | P1 | **Lab in source, tested CI; Windows/print unverified** | Standalone `feature/dither-tuning` only, no production print changes; BUG-004 needs physical A/B samples |
 | 02 | FEAT-007 | Persistent transaction and print recovery | P0/P1 | Design required | Trusted payment states, safe restart and print idempotency |
 | 03 | FEAT-008 | Device health checks | P1 | Partial | Hardware capability and false-alert handling |
 | 04 | FEAT-009 | Auto startup and crash recovery | P1 | Partial | FEAT-007/008, Windows restart behavior |
@@ -41,7 +41,7 @@ For each new idea record:
 | **Deferred until real partner exists** | FEAT-002B | Real merchant POS receipt validation | Deferred | Blocked | Actual merchant, POS sample/API and contract |
 | **Deferred until partner need proven** | FEAT-005B | Optional deeper ordering/POS integration | Deferred | Blocked | Partner-owned existing ordering is the default, not a Meong POS |
 
-**Priority vs order:** `P1` describes business impact, not permission or chronological rank. FEAT-011 is placed near BUG-004 **for investigation synergy**, not as approval to build printer-profile UI. FEAT-019 business/commercial discovery can proceed without implementing licensing. The future client-managed advertising layer relies on FEAT-004/010/013/018 and entitlements, but existing local `PHOTOBOOTH_AD_CONFIG` is not ad-slot enforcement.
+**Priority vs order:** `P1` describes business impact, not permission or chronological rank. The owner approved FEAT-011's **isolated lab GUI on a new branch only** to investigate BUG-004. Printer-profile integration into the kiosk still needs a separate decision and real paper acceptance. FEAT-019 business/commercial discovery can proceed without implementing licensing. The future client-managed advertising layer relies on FEAT-004/010/013/018 and entitlements, but existing local `PHOTOBOOTH_AD_CONFIG` is not ad-slot enforcement.
 
 **Details below are the requirements record.** Older lines saying "execution rank #1/#2/#5" are *historical intake snapshots*, not a second active queue. See this board for the latest tentative order. No feature is certified compatible until target source and hardware are rechecked before approval.
 
@@ -181,7 +181,7 @@ M1 Core Stability; M2 Operational Reliability; M3 Commercial Readiness; M4 Produ
 - **FEAT-008 — Health monitoring:** Check camera availability, printer connection/status (paper status only if device exposes it), disk capacity, network, ad media integrity and application heartbeat. Separate offline-but-operational from blocking faults. Local operator/admin health panel first, remote alerts later.
 - **FEAT-009 — Auto recovery:** OS autostart, crash watchdog with backoff, safe kiosk restoration, restart diagnostics, transaction-aware resume, avoid infinite restart loops. Test unexpected power loss.
 - **FEAT-010 — Remote config:** Per-machine ID and validated configuration for prices, ads, themes, promo thresholds and partner URLs; signed/authenticated updates, last-known-good local config, audit trail and rollback. Offline operation must continue.
-- **FEAT-011 — Printer quality:** Profiles for printer/media size, resampling, contrast and existing Floyd–Steinberg/Bayer/threshold options; use measured comparison print tests and avoid regressions. Core blurry-output bug should be fixed before expanding profile UI.
+- **FEAT-011 — Printer quality:** **OWNER-APPROVED EXPERIMENT IN SOURCE**, branch `feature/dither-tuning`, commit [`07dcb1a`](https://github.com/pratikto/PhotoBooth/commit/07dcb1a5115f978e70b90c08e5a3666e077bb229). Standalone Tk/Pillow GUI supports Floyd–Steinberg, Bayer 8×8, threshold, brightness/contrast/gamma/sharpness, 384/576-dot raster preview, 1-bit PNG export, portable JSON presets. [Usage guide](dither-tuning-lab.md). CI [39110869478](https://github.com/pratikto/PhotoBooth/actions/runs/39110869478) passed targeted tests. No printhead temperature/density control, no auto-apply to `main.py`, no Windows visual/hardware acceptance; BUG-004 stays OPEN. Future production integration and releases are **NOT APPROVED**.
 - **FEAT-012 — Diagnostics:** Structured local logs, failure categories, exportable support bundle, optional remote upload with opt-in and data minimization; never include QRIS secrets, full personal photos or sensitive tokens in ordinary logs.
 - **FEAT-013 — Partner reporting:** Separate eligible orders, *redeemed* one-time photo rewards, customer discount and partner-funded subsidy due; include merchant/outlet/machine/time and reconciliation export. Demonstration uses simulated data. Production attribution requires partner system evidence.
 - **FEAT-014 — Branded frames:** Merchant logo/campaign overlay on selectable photo templates, preview and thermal-print legibility checks, expiration and per-machine campaign control.

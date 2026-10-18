@@ -22,6 +22,7 @@ The repository-root [README](../README.md) explains setup and preserves historic
 - [Advertising and demo QR payment slip](advertising-and-qris.md) — current playback and printer setup, with **legacy LAN** instructions clearly distinguished from saved GUI printer configuration.
 - [QA evidence archive](qa/README.md) — date-specific automated/visual reports that do not override later device failures.
 - [Photo retention](photo-retention.md) — 15-day local/30-day Drive targets and associated data-loss considerations.
+- [Thermal dithering lab](dither-tuning-lab.md) — standalone FEAT-011 experiment on `feature/dither-tuning`; has no effect on the production Kivy printer until separately approved.
 - [Legacy NEXT_STEPS pointer](NEXT_STEPS.md) — retained for older bookmarks; do not edit as a second backlog.
 
 ## Current field status (2026-10-18)
