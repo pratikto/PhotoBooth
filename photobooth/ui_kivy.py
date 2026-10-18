@@ -716,19 +716,39 @@ class PhotoBoothUI(KioskExperienceMixin):
             row.add_widget(button)
         return row
 
-    def _display(self, image, widget=None, crisp=False):
-        """Convert Pillow pixels to a reusable Kivy texture on the GUI thread.
+    @staticmethod
+    def _new_display_texture(size, *, mirrored=False):
+        """Allocate a Kivy texture with display-only orientation controls.
 
-        Vertical texture coordinates differ from Pillow's row order. Flip UVs
-        once when a texture is created. QR uses nearest filtering and keeps the
-        source image's white quiet zone; regular photos use normal filtering.
+        Pillow and OpenCV supply top-first image rows, unlike OpenGL texture
+        coordinates, so every texture receives one vertical UV correction.
+        For *live camera previews only*, invert the horizontal UV coordinates
+        too: Kivy mirrors the picture on its GPU, without ever modifying camera
+        pixels that feed face/palm detection, JPEG saves, layout or printing.
+
+        This helper is the shared policy for future live scanner previews as
+        well: opt in with mirrored=True for display while decoding the original
+        unmirrored camera frame and separately mapping any detector overlays.
+        """
+        texture = Texture.create(size=size, colorfmt='rgb')
+        texture.flip_vertical()
+        if mirrored:
+            texture.flip_horizontal()
+        return texture
+
+    def _display(self, image, widget=None, crisp=False, mirrored=False):
+        """Upload Pillow pixels to a reusable Kivy texture on the GUI thread.
+
+        Only dedicated live camera widgets request mirrored=True; QR codes,
+        photo review, finished layouts, logos and all other static images
+        retain their original left/right orientation. The mirrored orientation
+        stays fixed for the lifetime of a reused preview texture.
         """
         widget = widget if widget is not None else KivyImage(fit_mode='contain')
         rgb = image.convert('RGB')
         texture = widget.texture
         if texture is None or texture.size != rgb.size:
-            texture = Texture.create(size=rgb.size, colorfmt='rgb')
-            texture.flip_vertical()
+            texture = self._new_display_texture(rgb.size, mirrored=mirrored)
         if crisp:
             texture.mag_filter = texture.min_filter = 'nearest'
         texture.blit_buffer(rgb.tobytes(), colorfmt='rgb', bufferfmt='ubyte')
@@ -1095,20 +1115,26 @@ class PhotoBoothUI(KioskExperienceMixin):
         page.add_widget(self.capture_button)
 
     def update_live_preview(self, image):
-        """Fit only a preview copy, preserving full-resolution source photos."""
+        """Mirror only the onscreen preview; never reverse a captured photo.
+
+        The initial ready/countdown/retake image comes from the unmirrored
+        controller frame. Use the same texture-UV mirror as live BGR streaming,
+        so customers never see a sudden left/right flip on page transition.
+        """
         if self.current_screen == 'capture' and self.preview is not None:
             display = image.copy()
             display.thumbnail((640, 480))
-            self._display(display, self.preview)
+            self._display(display, self.preview, mirrored=True)
             self._set_preview_live(True)
 
     def update_live_frame(self, frame):
-        """Display an OpenCV BGR frame directly, without a Pillow round trip.
+        """Display a mirrored live BGR camera frame without modifying input.
 
-        Resize only the preview copy before uploading pixels to the GPU. The
-        controller retains the full-resolution frame for saving and composition.
-        OpenGL work stays on Kivy's main thread; the camera thread never touches
-        widgets or textures. Reuse the existing texture between camera frames.
+        Resize only a preview-local copy before uploading pixels to the GPU.
+        Horizontal mirroring is encoded in the Kivy texture UVs, NOT cv2.flip:
+        the shared, unmirrored frame still drives capture, gesture/face
+        inference, photo composition and future barcode/QR decoding. Reuse the
+        existing texture between frames to avoid unnecessary GPU allocations.
         """
         if self.current_screen != 'capture' or self.preview is None:
             return
@@ -1123,8 +1149,7 @@ class PhotoBoothUI(KioskExperienceMixin):
         size = (rgb.shape[1], rgb.shape[0])
         texture = self.preview.texture
         if texture is None or texture.size != size:
-            texture = Texture.create(size=size, colorfmt='rgb')
-            texture.flip_vertical()
+            texture = self._new_display_texture(size, mirrored=True)
         texture.blit_buffer(rgb.tobytes(), colorfmt='rgb', bufferfmt='ubyte')
         self.preview.texture = texture
         self._set_preview_live(True)
