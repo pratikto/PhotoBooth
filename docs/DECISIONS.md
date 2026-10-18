@@ -1,29 +1,58 @@
-# Meong Photobooth — Decision record
+# Meong Photobooth — Product and technical decision record
 
-Last updated: 2026-10-17. Each item records an agreed product direction or current technical boundary. It does **not** certify that every feature is bug-free.
+Last reconciled: **2026-10-18** | Branch: `feature/kivy-gui`
+Sources: owner decisions from recent project discussions; technical implementation/status must be checked against [FEATURE_STATUS.md](FEATURE_STATUS.md) and [bug_tracker.md](bug_tracker.md).
 
-| Decision | Rationale / consequence |
-| --- | --- |
-| Continue GUI development on **`feature/kivy-gui`**, without creating a new branch | Keeps the user's established GitHub workflow and history |
-| Use Kivy for the active GUI; retain older Tkinter code only as historical implementation | Controller logic is separated from presentation |
-| Preserve the finalized bright Meong cat-camera logo and colorful, elegant UI | Consistent brand across pages and folder QR |
-| Keep 12 approved 80 mm templates and price Rp5,000/session | One quantity unit is an independent three-photo session |
-| Support both face invitation and always-visible manual Start on idle ads | Non-camera fallback remains accessible |
-| Face hold 5 s; invitation expires in 15 s; cooldown default 45 s | Avoid disruptive repeated prompts; settings are configurable |
-| Change requested journey to **ad -> tutorial -> layout selection** | Tutorial must not be skipped by Start; source navigation now enforces the guide for manual and face-triggered entry, pending device verification |
-| Idle ads may play source-video sound; payment ad video is always muted | Avoid competing with application music and preserve payment clarity |
-| Keep music and interaction sounds on photography pages with separate user controls | Mute/volume settings should survive restart |
-| Separate payment QR from transaction-folder access QR | Payment and retrieval are different functions |
-| Keep QRIS explicitly non-payable until verified provider integration exists | A demo click, printed QR or screenshot is not proof of payment |
-| Offer optional payment QR printing without blocking the visible QR; offer dismisses after 15 s | Assists users who cannot scan the display; does not change payment status |
-| Target local photo retention 15 days and Drive retention 30 days | Storage housekeeping must respect transaction lifecycle and remote setup |
-| Keep LAN payment slip separate from thermal **photo** printing work | Avoid silently mixing GUI and printer-branch changes |
-| Document architecture, decisions, feature status and next steps in-repo | Makes continuation possible when a ChatGPT conversation/model reaches limits |
-| Keep source comments explanatory and detailed, in English | Easier maintenance and handover |
+**Interpretation rule:** An **agreed product requirement** is not proof of an implemented, tested or released feature. Current source behavior, proposed future behavior, and open commercial terms must remain distinct. No entry here authorizes changes to application code.
 
-## Open decisions / verification
+## Active product decisions (owner-confirmed)
 
-- Exact final dimensions for the enlarged idle video should be adjusted and checked at 800×600, 1200×800 and 1920×1080, without distorting aspect ratio.
-- Confirm video compatibility with the machine's installed codecs/SDL/Kivy environment and local playlist paths.
-- Confirm the final tutorial navigation for automatic face-offer acceptance, manual Start, and return/back buttons.
-- Choose and integrate a real payment provider only when ready; never auto-enable real payment from a demo.
+| ID | Decision | Implementation boundary / consequence |
+| --- | --- | --- |
+| DEC-001 | Continue development on existing `feature/kivy-gui`; do not create a new branch by default. | Documentation-only edits are permitted as agreed; application changes require separate explicit owner authorization. Keep detailed English code comments. |
+| DEC-002 | Use the branded colorful, elegant Meong Kivy GUI, final cat-camera logo, and existing 12 approved 80 mm photo designs. | Preserve recognizable Meong branding and readable QR artwork. |
+| DEC-003 | Customer flow begins with advertising, then **mandatory illustrated tutorial**, then cyclic template selection. | Both manual Start and accepted face invitation follow the tutorial; on-device verification remains open. |
+| DEC-004 | Idle advertising supports images and videos; a stable nearby face for 5 seconds invites a photo session. | Manual Start always remains accessible; invitation auto-dismisses after 15 seconds; cooldown currently defaults to 45 seconds. Do not confuse optional face presence with identity recognition. |
+| DEC-005 | Opening/idle advertising may use its source-video audio while app music is suppressed; photography/tutorial pages use application music and effects; payment-page advertising video stays muted. | Audio ownership must be tested on physical speakers. User-reported failures remain open. |
+| DEC-006 | A payment QR and a customer photo-folder access QR are different artifacts. Payment stays **DEMO / non-payable** until a real provider with trusted confirmation is integrated. | A simulated payment click, visible QR, or printed QR is never evidence of real payment. |
+| DEC-007 | The payment screen offers optional printing of the current QR without covering the onscreen QR. | Offer closes after 15 seconds if ignored; printing does not extend payment validity or imply payment success. |
+| DEC-008 | The booth supports thermal photo printing with LAN/Wi-Fi/Windows USB queue routes and Floyd–Steinberg, Bayer and threshold modes in the Kivy branch. | **Implemented in source, not universally hardware-verified.** Photo-strip printing was reported successful on Windows, but print quality is poor and payment-QR printing is unresolved. The older thermal-printer branch stays untouched. |
+| DEC-009 | **Future pricing model (FEAT-001):** charge IDR 5,000 base per selected template/session plus IDR 5,000 per physical print copy. | Three photos are captured **once per session** regardless of 1/2/3 print copies; extra copies reproduce the same completed layout. This **is not yet implemented**; current source still charges IDR 5,000 per quantity, where quantity creates a new session. Multi-template and zero-print details still need specification. |
+| DEC-010 | **Demo receipt promotion (FEAT-002A):** scan an existing merchant-style receipt QR/barcode on the payment screen and simulate validation/discount. | Replace only payment advertisement panel with live camera while scanning; keep payment QR/order visible; successful validation closes scan and restores ads; failed validation allows immediate retry. A qualifying sample food purchase >= IDR 50,000 waives one IDR 5,000 photo base fee, **never print fees**. The sample threshold is illustrative, not universal. |
+| DEC-011 | Real merchant receipt/POS integration (FEAT-002B) is deferred until a partner and actual receipt/API evidence exist. | Detection of a code is not proof of paid food purchase, eligibility or authenticity; require replay-resistant, one-time verification. |
+| DEC-012 | Every live camera preview should appear horizontally mirrored (FEAT-003). | Display-only: keep saved photos, print composition, QR/barcode decoding and original camera data unmirrored; map detection overlays correctly. **Not yet implemented.** |
+| DEC-013 | Advertising should ultimately sync from a dedicated Meong Google Drive source to **per-machine local media**, with offline playback (FEAT-004). | Devices (e.g. BB01/BB02) receive their assigned content; updates typically weekly and must be atomic/fallback-safe. **Proposed, not present as centralized production service.** |
+| DEC-014 | For real merchants, Meong launches an existing compatible **customer-facing** web ordering solution; Meong does **not** maintain each partner's live menu/POS by default (FEAT-005). | For sales demos only, provide a standalone local dummy menu/cart/simulated checkout, with a single-use qualifying-food-order-to-photo promotion automatically passed within the same kiosk **without receipt scanning** (FEAT-005A). External cashier receipts retain their separate scanning demo path. |
+| DEC-015 | Offer configurable visually distinct Meong GUI themes using one shared codebase (FEAT-006). | Admin-controlled per-machine theme is the *proposed default*, not a separately confirmed owner choice; reconfirm before implementation. |
+| DEC-016 | Photo retention target remains 15 days on local booth and 30 days on configured Drive storage. | Existing retention logic can delete local image bytes after 15 days **even if upload failed**. Reevaluate delivery promises and customer notice before monetized digital delivery. |
+
+## Business and software subscription decisions (owner-confirmed)
+
+| ID | Decision | Commercial / technical boundary |
+| --- | --- | --- |
+| BIZ-001 | Meong may sell complete hardware units outright in addition to Meong-operated booths, rental/managed and contracted revenue-share arrangements. | Separate hardware title/margin, photo income, operator responsibilities, service/warranty and platform revenue in contracts. |
+| BIZ-002 | **Every sold machine must be assigned a software tier**, including **Free (IDR 0 recurring)**, Business and Enterprise paid options. | Free is a valid licensed tier; assigning a tier does not imply everyone pays recurring fees. Device identity/entitlements are future work. |
+| BIZ-003 | **Free permits full commercial photobooth operation**: the hardware buyer can charge end customers for photo sessions and prints. | Do not limit commercial use, impose revenue caps, or disable core capture/print because a device is on Free. Real payment gateway remains a separate not-yet-delivered capability for all tiers. |
+| BIZ-004 | **All Free advertising content is controlled by Meong**, not by the operator. | Free operators do not get ordinary controls to replace/remove Meong ad inventory; centralized delivery/offline operation still need design and implementation. |
+| BIZ-005 | **Business and Enterprise operators can manage their own ads, but Meong retains reserved advertising slots on both paid tiers.** | Reserved share/interval is **TBD**, not the example 20%/10% figures. Provide honest sales terms, local consent/exclusivity and competitor exclusions; slot enforcement is not implemented. |
+| BIZ-006 | Merchant promo subsidy is due only for **actually redeemed** eligible photo discounts, not merely eligible food orders. | On a **Meong-operated** booth Meong may receive the subsidy. On a **sold** booth, the operator bearing the waived photo fee generally receives the reimbursement; Meong may separately charge an agreed platform/campaign fee. Ownership depends on the signed contract—do not automatically credit every subsidy to Meong. |
+| BIZ-007 | Additional monetization ideas are **parked for later evaluation**. | Premium frames/templates, event passes, analytics, support, warranties, white-label, ad-network campaigns etc. are candidates, not priced products or implementation authorization; see [next_step.md](next_step.md). |
+
+## Operational status and recommendations — NOT owner-finalized commercial terms
+
+- **Current software tariff:** `photobooth/catalog.py` sets `PRICE_PER_SESSION = 5000`; `photobooth/workflow.py` expands quantity to independent photo sessions. **DEC-009 is a new requirement only**, not a completed migration.
+- **Paid subscription expiry:** graceful downgrade to commercially usable Free without interrupting existing paid customer orders is **recommended**, but final licensing/contract policy remains open.
+- **Paid feature matrix:** additional promotional tools, self-managed ads, branding, analytics, remote operations and fleet management are candidates. Exact feature entitlement, subscription prices and billing period remain open.
+- **Meong ad-share quotas:** Free = Meong controls all ads; Business/Enterprise have mixed inventory with an undetermined Meong allocation. No sample percentages are commitments.
+- **Advertising venue rights:** obtain/define location approvals, excluded advertiser categories, exclusivity, content moderation and measurement responsibility before a paid campaign or nationwide network.
+- **Merchant promotions:** define merchant and operator settlement, refunds, customer eligibility, expiration, campaign terms and reimbursement path per business model.
+- **Real payments:** merchant-of-record, QRIS settlement owner, payment provider, online/offline payment policy and fees remain open.
+- **Other open details:** zero-copy/digital-only photo purchase, mixed-template cart tariff, maximum prints, exact multi-theme preset rights, hardware service SLA and warranty terms, and availability of any partner ordering web interface.
+
+## Current operational blockers — not released/accepted fixes
+
+Review [bug_tracker.md](bug_tracker.md) and [test_checklist.md](test_checklist.md) before implementing new features: idle/payment video playback, application audio startup, unresponsive Settings audio-test buttons, printing the QR payment slip, thermal photo print quality and final route/visual verification. Printed photo strips were reported to work; **this does not establish successful QR-slip printing or acceptable image quality**.
+
+## Documentation governance
+
+[DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md) controls approval, triage, validation and releases. [FEATURE_STATUS.md](FEATURE_STATUS.md) describes **current implementation**, [next_step.md](next_step.md) captures **future design**, [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) captures **technical continuation**, and [CHANGELOG.md](CHANGELOG.md) captures **actual changes**.
