@@ -12,7 +12,7 @@ This file tracks **actual verified repository/document changes**, not successful
 - **New canonical QA dossier:** [FEAT-001 / BUG-011 Acceptance](qa/FEAT-001-BUG-011-acceptance.md) includes scenario targets, test dates/SHAs, original bug mechanism, source map, residual risks, manual follow-up evidence and rollback boundaries. Cross-linked from the current bug tracker, feature status, execution board, technical architecture and handover.
 - **Scope limit:** real QRIS FEAT-020, FEAT-007 paid-state recovery, ads/Drive sync and audio BUG-001/007 are unaffected; no Code.gs update, printer-code rework, rollout, release, merge or physical test was executed by this documentation task.
 
-### BUG-011 — FEAT-001 physical print-copy mismatch (patched in source, still open on paper)
+### BUG-011 — historical initial physical print-copy mismatch (superseded by latest owner PASS above)
 
 - **Owner feedback:** checkout/demo pricing is correct, but the Windows thermal printer physically produced a different number of sheets from the selected copy count. Requested/printed counts have not yet been captured; do **not** mark resolved.
 - **Confirmed source bug:** `ThermalPrinter._send_windows_raw` previously **called `ClosePrinter` twice instead of `EndDocPrinter` + `ClosePrinter`**. Fixed RAW job finalization order in [`41a51b5b`](https://github.com/pratikto/PhotoBooth/commit/41a51b5b31f6ef442557a1caec9bf9a9ae88da93) so Windows can finalize the document correctly and close the handle exactly once.
