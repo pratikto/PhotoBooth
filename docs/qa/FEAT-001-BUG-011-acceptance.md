@@ -4,8 +4,8 @@
 **Repository / branch:** [`pratikto/PhotoBooth`](https://github.com/pratikto/PhotoBooth) / `feature/kivy-gui`  
 **Baseline before FEAT-001:** [`5842a09f`](https://github.com/pratikto/PhotoBooth/commit/5842a09f6a4c6c771ef7f5f0d1a330d0b1040b42)  
 **Source fix present by:** [`41a51b5b`](https://github.com/pratikto/PhotoBooth/commit/41a51b5b31f6ef442557a1caec9bf9a9ae88da93)  
-**Latest owner feedback:** "**pricing udah bener**" followed by report that copy counts were wrong; after the Windows RAW fixes and suggested retest, "**sip udah bener**."  
-**Current classification:** **FEAT-001 IN SOURCE / OWNER-ACCEPTED CORE BEHAVIOR; BUG-011 OWNER REPORTED PASS — MONITORING**, **not formally CLOSED/RELEASED**. The precise Windows checkout SHA, measured counts per test, printer driver/queue name, device log and paper photographs were not supplied. A user report is field evidence but does not imply every regression scenario ran.
+**Latest owner feedback:** "**pricing udah bener**" followed by a print-count failure; after the Windows RAW fixes, "**sip udah bener**" and subsequently the explicit on-device test confirmation **"bug 11 udah aku test dan lolos"**.  
+**Current classification:** **FEAT-001 IMPLEMENTED / OWNER-TESTED CORE BEHAVIOR; BUG-011 OWNER TESTED PASS — MONITORING**, **not formally CLOSED/RELEASED**. The precise Windows checkout SHA, measured counts per test, printer driver/queue name, device log and paper photographs were not supplied. A user report is field evidence but does not imply every regression scenario ran.
 
 ## 1. Product contract and limits
 
@@ -32,7 +32,7 @@ These are **acceptance expectations**, not invented claims that every row was in
 4. **Patch A:** [`4608fcc9`](https://github.com/pratikto/PhotoBooth/commit/4608fcc9ec96c8eabeb01ddbd64059830af2bf62) repeats a **complete rendered ESC/POS image + cut stream** for each copy, then sends **one payload** via LAN/Wi-Fi/USB. [`e6d2f684`](https://github.com/pratikto/PhotoBooth/commit/e6d2f6840d4b5838e719f904bcc3b8443291193a) changes the kiosk controller from N transport calls to **one batch**.
 5. **Patch B:** [`41a51b5b`](https://github.com/pratikto/PhotoBooth/commit/41a51b5b31f6ef442557a1caec9bf9a9ae88da93) restores **`StartDocPrinter → StartPagePrinter → WritePrinter → EndPagePrinter → EndDocPrinter → ClosePrinter`**, closing the handle once and finalizing the RAW document.
 6. **Regression:** focused print tests now require one transport submission with N image/cut sequences, one Windows RAW document and `EndDocPrinter` invocation. An initial workflow failure **exposed** the missing `EndDocPrinter`, then the corrected run passed; that failing check was not suppressed.
-7. **Latest owner retest:** after applying the fixes, the owner replied **"sip udah bener"** to the printing discrepancy, following the instruction to check 1/2/3 copy counts. This is **OWNER REPORTED PASS** for real-machine core print quantity, not an instrumented per-case count or general release signoff.
+7. **Latest owner retest:** after the fixes, the owner first replied **"sip udah bener"** and then expressly clarified **"bug 11 udah aku test dan lolos"**. Record this as an **affirmative owner's hands-on PASS of BUG-011's physical copy-count behavior**. No automatic test run, screenshot, precise per-case count, queue name or exact local checkout SHA was supplied with that confirmation, so do not portray each 1/2/3 scenario or fault test as separately logged or declare a general release.
 
 ## 3. Source-of-truth map
 
@@ -58,7 +58,7 @@ These are **acceptance expectations**, not invented claims that every row was in
 | [Corrected multi-copy & spool CI 39134970707](https://github.com/pratikto/PhotoBooth/actions/runs/39134970707) | `41a51b5b` · GitHub Actions Ubuntu / Python 3.12 | **PASS: 11 business/manifest + 4 batch/spool tests = 15 tests**, syntax checks pass | Real Windows printer paper count, thermal cut, QR scannability, camera session |
 | [Dither lab CI 39135186017](https://github.com/pratikto/PhotoBooth/actions/runs/39135186017) | `f2f52e33` · GitHub Actions Ubuntu | **PASS** at prior documentation baseline | Kiosk/device/thermal output acceptance |
 | [Kiosk GUI CI 39135186022](https://github.com/pratikto/PhotoBooth/actions/runs/39135186022) | `f2f52e33` · GitHub Actions Ubuntu, synthetic desktop/Xvfb | **FAIL:** `unittest discover` step; overall workflow not green | Does **not** overturn the owner's local-paper report, but blocks claiming full regression PASS |
-| **Operator Windows printer retest** | Owner's booth; **exact local SHA/queue/driver and per-order counts not recorded** | **OWNER REPORTED PASS**: pricing confirmed correct; after fixes print-copy count confirmed correct | Every 1/2/3/mixed-template/fault case independently tested, full QA or production release |
+| **Operator Windows printer retest** | Owner's booth; **exact local SHA/queue/driver and per-order counts not recorded** | **OWNER TESTED PASS**: pricing correct; BUG-011 printing now explicitly confirmed tested and passed by owner | Every 1/2/3/mixed-template/fault case independently tested, full QA or production release |
 
 Automated tests used mock transports and no live payment provider, customer data or real paper. The **15-test CI pass** is reproducible source evidence; the **operator statement** is the only new physical-quantity evidence, and they must remain independently labeled.
 
@@ -73,7 +73,7 @@ Automated tests used mock transports and no live payment provider, customer data
 
 ## 6. Outstanding signoff and future regression matrix
 
-The **core symptom is owner-reported resolved**, so BUG-011 exits the *active repair queue* but should remain **MONITORING / not formally CLOSED** until repeatable evidence is captured, preferably before selling a kiosk or merging a release.
+The **core symptom is explicitly owner-tested and reported resolved**, so BUG-011 exits the *active repair queue* but should remain **MONITORING / not formally CLOSED** until repeatable evidence is captured, preferably before selling a kiosk or merging a release.
 
 - [ ] Record the **exact local Windows checkout SHA**, printer model, saved queue name and connection route; no serial numbers or credentials in public GitHub.
 - [ ] Capture **requested vs actual cut sheets** for 1, 2, 3 copies, with one template, before considering that full test matrix VERIFIED. Existing overall owner's confirmation does not fill these three individual boxes.
@@ -86,8 +86,8 @@ The **core symptom is owner-reported resolved**, so BUG-011 exits the *active re
 
 ## 7. Status discipline
 
-- **BUG-011:** `OWNER REPORTED PASS — MONITORING` (fixed-in-source, confirmed at a practical level by the owner; exact field-test matrix/commit evidence still incomplete). Do **not** relabel `CLOSED` solely on the conversational confirmation.
-- **FEAT-001:** `IMPLEMENTED / OWNER-ACCEPTED CORE DEMO PRICING AND PRINT-COPY BEHAVIOR`; full GUI/hardware regression and release approval pending.
+- **BUG-011:** `OWNER TESTED PASS — MONITORING` (fixed-in-source, explicitly tested on the user's Windows printer per the user's confirmation; exact per-case field-test matrix, local SHA and driver/config remain undocumented). Do **not** relabel `CLOSED`/`RELEASED` or treat every stress/failure test as passed.
+- **FEAT-001:** `IMPLEMENTED / OWNER TESTED CORE DEMO PRICING AND PRINT-COPY BEHAVIOR`; full GUI/negative-case regression and release approval pending.
 - **GitHub changes for this status reconciliation:** documentation only. No code, `Code.gs`, payment gateway, credentials, runtime deployment or physical test is carried out when recording this acceptance.
 
 Related current records: [bug tracker](../bug_tracker.md), [feature status](../FEATURE_STATUS.md), [checklist](../test_checklist.md), [backlog](../next_step.md), [decisions](../DECISIONS.md), [handover](../DEVELOPMENT_HANDOVER.md), [changelog](../CHANGELOG.md).
