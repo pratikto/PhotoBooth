@@ -588,8 +588,14 @@ class ThermalPrinter:
                 finally:
                     win32print.EndPagePrinter(handle)
             finally:
-                win32print.ClosePrinter(handle)
+                # A RAW spool document MUST be finalized with EndDocPrinter.
+                # Closing the handle instead left the job unfinished and
+                # doubled ClosePrinter, so Windows could report accepted bytes
+                # without reliably releasing the queued physical print.
+                win32print.EndDocPrinter(handle)
         finally:
+            # Close the opened handle exactly once, including when StartDoc
+            # or a write raises. Never automatically retry a partial send.
             win32print.ClosePrinter(handle)
 
     def _send_usb(self, payload: bytes) -> None:
