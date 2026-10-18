@@ -107,7 +107,7 @@
 - [ ] Network/Drive outage and later sync; confirm whether local files expire after 15 days even when upload pending
 - [ ] No logging of raw customer photos or QRIS secrets in a future support bundle
 
-## Future-feature acceptance (do not run as current product tests)
+## Feature acceptance and outstanding regression (current FEAT-001 plus future work)
 
 - **FEAT-001 (IMPLEMENTED / owner-reported operational PASS; formal matrix still pending):** One 3-capture session per chosen template → 1/2/3 identical paper prints at DEMO Rp10k/Rp15k/Rp20k. The owner accepted pricing and corrected paper quantity; keep explicit per-case and mixed-template physical records pending rather than labeling them automatically verified. Promotional settlement still separately deferred. See [FEAT-001 / BUG-011 QA](qa/FEAT-001-BUG-011-acceptance.md).
 - **FEAT-002/005:** Receipt demo and same-device dummy ordering promo distinguish code detection from validation and apply one-time merchant-funded base-fee waiver (print fees unaffected). Never claim real POS/payment.
