@@ -71,6 +71,8 @@ class ComparisonApp:
         self.controls = {}
         self.labels = {}
         self.statuses = {}
+        self.print_events = queue.Queue()
+        self.print_busy = False
         self.zoom = tk.IntVar(value=2)
         self.sync = tk.BooleanVar(value=False)
         self.width = tk.StringVar(value="576")
@@ -234,6 +236,19 @@ class ComparisonApp:
             return
         while True:
             try:
+                mode, index, total, success, message = self.print_events.get_nowait()
+            except queue.Empty:
+                break
+            if mode is None:
+                self.print_busy = False
+                continue
+            self.message.set(f"Print {index}/{total} • {SHORT[mode]}: {message}")
+            if not success:
+                messagebox.showwarning("Print stopped",
+                    "Print outcome failed/uncertain. Remaining jobs were cancelled.\\n" +
+                    message, parent=self.root)
+        while True:
+            try:
                 mode, version, profile, image, coverage, elapsed, error = (
                     self.outcomes.get_nowait())
             except queue.Empty:
@@ -365,15 +380,60 @@ class ComparisonApp:
             except OSError as error:
                 messagebox.showerror("Export failed", str(error), parent=self.root)
 
+    def _start_print(self, modes):
+        """Snapshot the currently visible native rasters; never dither twice."""
+        if self.print_busy:
+            messagebox.showinfo("Printer busy", "A print batch is still running.",
+                                parent=self.root)
+            return
+        if not all(self.ready(mode) for mode in modes):
+            messagebox.showinfo("Rendering", "Wait for the latest previews.",
+                                parent=self.root)
+            return
+        from photobooth.printer_settings import load_printer_config
+        from photobooth.dither_print import printable_destination
+        config = load_printer_config(ROOT / "data" / "printer_settings.json")
+        if not printable_destination(config):
+            messagebox.showerror(
+                "Printer not configured",
+                "Set up Windows printer queue or LAN/Wi-Fi printer in the "
+                "photobooth Settings and save it before using the lab.",
+                parent=self.root)
+            return
+        labels = ", ".join(SHORT[mode] for mode in modes)
+        if not messagebox.askyesno(
+            "Confirm physical print",
+            f"Print {len(modes)} REAL paper job(s): {labels}\\n"
+            "Each job includes its algorithm and parameter header.\\n"
+            "If delivery becomes uncertain, remaining jobs will NOT be sent.\\n"
+            "Proceed?", parent=self.root):
+            return
+        # Immutable copies protect the job against later slider edits.
+        jobs = [(mode, self.results[mode].copy(), self.ready_profiles[mode])
+                for mode in modes]
+        self.print_busy = True
+        self.message.set(f"Printing {len(jobs)} real paper job(s)...")
+        def run():
+            from photobooth.dither_print import print_native_raster
+            for index, (mode, image, profile) in enumerate(jobs, 1):
+                try:
+                    outcome = print_native_raster(image, profile, config)
+                    status = outcome.user_message
+                    ok = outcome.success
+                except Exception as error:
+                    status, ok = str(error), False
+                self.print_events.put((mode, index, len(jobs), ok, status))
+                if not ok:
+                    break
+            self.print_events.put((None, 0, 0, True, "batch finished"))
+        threading.Thread(target=run, name="dither-physical-print",
+                         daemon=True).start()
+
     def print_lane(self, mode):
-        messagebox.showinfo("Print pending",
-            "Print Test will be enabled in Stage 3, with device confirmation.",
-            parent=self.root)
+        self._start_print((mode,))
 
     def print_all(self):
-        messagebox.showinfo("Print pending",
-            "Print All will be enabled in Stage 3, with explicit confirmation.",
-            parent=self.root)
+        self._start_print(DITHER_MODES)
 
     def close(self):
         self.closed = True
