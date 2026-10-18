@@ -300,13 +300,24 @@ class ThermalPrinter:
         *,
         dither_mode: str | None = None,
         header_label: str | None = None,
+        copies: int = 1,
     ) -> PrintResult:
-        """Try configured routes to print one saved composition.
+        """Submit an entire identical-copy order as ONE ESC/POS transport job.
 
         ``dither_mode`` can override the configured mode for a single test
-        print. ``header_label`` adds a small, crisp label above the raster so
-        comparison prints remain identifiable after the paper is cut.
+        print. ``header_label`` adds a crisp identifier above test rasters.
+
+        Previously FEAT-001 called print_image repeatedly, creating a separate
+        Windows RAW spool document for each requested sheet. The spooler can
+        acknowledge those jobs before the physical POS printer finishes, so
+        device output may not match the number of accepted jobs. Rendering the
+        exact same payload once and repeating its image+cut byte sequence in a
+        *single* spool document avoids per-copy job-boundary races and saves
+        redundant photo dithering. The single send still cannot prove that
+        every physical sheet emerged: on partial write, do not retry blindly.
         """
+        if isinstance(copies, bool) or not isinstance(copies, int) or copies < 1:
+            return PrintResult(False, "printer", "Jumlah lembar cetak tidak valid.")
         path = Path(image_path)
         if not path.is_file():
             return PrintResult(False, "USB", f"File hasil tidak ditemukan: {path}")
@@ -329,6 +340,13 @@ class ThermalPrinter:
                 "Tidak dapat menyiapkan data ESC/POS. Pastikan python-escpos "
                 f"terpasang dan file PNG dapat dibuka ({error}).",
             )
+
+        # The base stream already includes ESC/POS image bytes followed by
+        # one physical cut. Repeating the *complete* stream produces N strips
+        # with N independent cuts in a single RAW spool/transport submission.
+        # Use one immutable payload rather than N separate print_image calls.
+        if copies > 1:
+            payload = payload * copies
 
         routes = (
             ("LAN", self.config.lan_host, self.config.lan_port),
