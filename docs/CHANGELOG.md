@@ -4,6 +4,14 @@ This file tracks **actual verified repository/document changes**, not successful
 
 ## [Unreleased] — 2026-10-18
 
+### BUG-011 — FEAT-001 physical print-copy mismatch (patched in source, still open on paper)
+
+- **Owner feedback:** checkout/demo pricing is correct, but the Windows thermal printer physically produced a different number of sheets from the selected copy count. Requested/printed counts have not yet been captured; do **not** mark resolved.
+- **Confirmed source bug:** `ThermalPrinter._send_windows_raw` previously **called `ClosePrinter` twice instead of `EndDocPrinter` + `ClosePrinter`**. Fixed RAW job finalization order in [`41a51b5b`](https://github.com/pratikto/PhotoBooth/commit/41a51b5b31f6ef442557a1caec9bf9a9ae88da93) so Windows can finalize the document correctly and close the handle exactly once.
+- **Multi-copy handling improvement:** [`4608fcc9`](https://github.com/pratikto/PhotoBooth/commit/4608fcc9ec96c8eabeb01ddbd64059830af2bf62) repeats the byte-identical ESC/POS image+cut stream `copies` times **inside one RAW transport payload**. [`e6d2f684`](https://github.com/pratikto/PhotoBooth/commit/e6d2f6840d4b5838e719f904bcc3b8443291193a) changes the worker to submit just that one batch and report completion as transport acceptance, not confirmed paper. No auto-retry on a partial/uncertain job; manual print remains operator-controlled.
+- **Regression:** updated controller flow in [`0e91d9a2`](https://github.com/pratikto/PhotoBooth/commit/0e91d9a220bca4df67bd0adbb7b7490f9dce3430); new byte-level LAN/USB cut and invalid-copy cases in [`58c98f79`](https://github.com/pratikto/PhotoBooth/commit/58c98f79e13a5101a67438389e9a1b1d7fcdd430); Windows RAW fake spooler lifecycle check in [`4653719f`](https://github.com/pratikto/PhotoBooth/commit/4653719f5e1b01c22d1afd9cbfd5cfe475adedac). Expanded focused CI in [`dbeab0e7`](https://github.com/pratikto/PhotoBooth/commit/dbeab0e70cdb75e015f34066561b181967f7a16d).
+- **Verification evidence:** [FEAT-001 CI run 39134970707](https://github.com/pratikto/PhotoBooth/actions/runs/39134970707) **PASS** for pricing/manifest and mocked multi-copy/Windows RAW tests following the lifecycle fix. Initial expanded run failed on the *missing EndDoc* assertion, pinpointing the source defect; it was fixed, **not hidden by skipping the test**. Actual Windows POS80 printer paper count, physical cut and full Kiosk GUI regression still require operator evidence. No QRIS/provider, pricing constants, ad player or dither tuning changed.
+
 ### FEAT-001 — DEMO session fee plus individual printed copies (owner-approved scoped source change)
 
 - **Owner authorization:** implement FEAT-001 on existing `feature/kivy-gui` as a narrow exception to the deferred QRIS/payment work queue. Base before changes: [`5842a09f`](https://github.com/pratikto/PhotoBooth/commit/5842a09f6a4c6c771ef7f5f0d1a330d0b1040b42). **Live QRIS provider FEAT-020 is NOT included.**
