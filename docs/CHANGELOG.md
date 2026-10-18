@@ -4,6 +4,12 @@ This file tracks **actual verified repository/document changes**, not successful
 
 ## [Unreleased] — 2026-10-18
 
+### QRIS future feature FEAT-020 and payment-related P3 reprioritization (docs only)
+- Owner confirmed that **all transaction/payment/checkout/pricing/merchant-promo settlement implementations should move to LOW execution priority** because production QRIS has not yet been integrated. Added **FEAT-020** as the distinct future real QRIS provider/verified-settlement feature (also **P3 / deferred**) and rearranged the unified backlog to prioritize FEAT-008/009/003/012/010/004 before that phase.
+- **Payment remains explicitly DEMO/non-payable**; no provider selected, real merchant charge accepted, terminal configured, signed callback integrated or production financial operation claimed. Payment-related existing requirements remain documented and must align with QRIS before any actual money flow.
+- Previously recorded BUG-009 deferral to FEAT-004 remains intact; unresolved Google Drive photo-retention risk is not downgraded by this **separate** QRIS scheduling decision.
+- Associated documentation commits: [docs/next_step.md `c13e8f88`](https://github.com/pratikto/PhotoBooth/commit/c13e8f8846bc1daa0133447b8406f8be09ef5e16); [docs/DECISIONS.md `39a1aee9`](https://github.com/pratikto/PhotoBooth/commit/39a1aee9c95122f3d42f011d3481d0f5b6671550); [docs/FEATURE_STATUS.md `785bc6b0`](https://github.com/pratikto/PhotoBooth/commit/785bc6b03b1600d476612f2ae4e303ff6a563eaf); [docs/DEVELOPMENT_HANDOVER.md `e40f0515`](https://github.com/pratikto/PhotoBooth/commit/e40f05152fa1d16779f106d0359c5e81b823fc42). **No app or Apps Script code, API credentials, merchant service, QRIS integration, tests, hardware config, merge or deployment were changed/performed.**
+
 ### Owner-scheduled FEAT-004 / BUG-009 combined Google Apps Script phase (docs only)
 - Logged the owner decision to **defer BUG-009** (Google Drive 30-day photo retention still unverified) and coordinate later remediation with **FEAT-004** per-machine Google Drive video/image ad sync. This is an integration/deployment planning decision, not approval to implement, deploy or delete files.
 - The current repository `apps_script/Code.gs` already contains retention setup/registration/cleanup; actual trigger and deployed Web App remain unverified. The future ad-sync API is still proposed. Keep customer photo folders separate from ad media and test the two workflows independently with authorized synthetic data.
