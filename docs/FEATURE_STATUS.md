@@ -27,7 +27,7 @@ Snapshot: 2026-10-17, `feature/kivy-gui`. Statuses distinguish **implemented in 
 3. Application music does not start automatically; opening Settings triggers it.
 4. Pressing Start from main ad must open the illustrated tutorial **before** layout selection.
 
-No code change or physical test is claimed by this documentation update. See [Next steps](NEXT_STEPS.md).
+No code change or physical test is claimed by this documentation update. See [Next steps](DEVELOPMENT_HANDOVER.md).
 
 ## Audio bug update — 2026-10-17
 
