@@ -42,13 +42,13 @@ jobs:
       - name: Check Python syntax
         run: python -m compileall -q photobooth tests tools
       - name: Exercise workflow, QR pixels, real widgets, audio and navigation
-        # Kivy redirects unittest's stderr through its logger. With
-        # KIVY_NO_CONSOLELOG=1, failures vanish from GitHub Actions output and
-        # the test step exits 1 without identifying a failing test. Re-enable
-        # the console log for THIS step, preserving quiet render snapshots.
+        # Kivy intercepts Python stderr: default unittest discover can exit 1
+        # without displaying which test failed. The CI-only runner preserves
+        # identical unittest discovery but writes the final report directly
+        # to the OS stdout file descriptor, bypassing the Kivy logger.
         env:
-          KIVY_NO_CONSOLELOG: "0"
-        run: xvfb-run -a python -m unittest discover -s tests -v
+          MEONG_CI_TEST_REPORT: /tmp/meong-kiosk-unittests.txt
+        run: xvfb-run -a python tools/run_kiosk_unittests.py
       - name: Render photo flow, advertisements, and payment offers at desktop sizes
         if: always()
         run: xvfb-run -a python tools/render_gui.py --output-dir /tmp/meong-gui-qa
@@ -60,6 +60,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: meong-gui-qa
-          path: /tmp/meong-gui-qa
+          path: |
+            /tmp/meong-gui-qa
+            /tmp/meong-kiosk-unittests.txt
           if-no-files-found: ignore
           retention-days: 7
