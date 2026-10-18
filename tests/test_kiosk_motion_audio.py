@@ -102,7 +102,7 @@ class KioskInteractionTests(unittest.TestCase):
                 self.assertEqual(self.ui.template_carousel.index, 7)
                 self.assertEqual(self.ui.template_name.text, target.name)
                 self.assertEqual(self.ui.quantities, before)
-                self.assertEqual(self.ui.cart_total.text, "Rp15.000")
+                self.assertEqual(self.ui.cart_total.text, "Rp25.000")
                 left, right = self.ui.carousel_previous, self.ui.carousel_next
                 carousel = self.ui.template_carousel
                 self.assertLess(left.center_x, carousel.x)
@@ -224,7 +224,7 @@ class KioskInteractionTests(unittest.TestCase):
         self.tap(row)
         self.settle(.5)
         self.assertEqual(self.ui.template_carousel.index, len(self.ui.templates) - 1)
-        self.assertEqual(self.ui.cart_total.text, "Rp60.000")
+        self.assertEqual(self.ui.cart_total.text, "Rp120.000")
 
     def test_settings_remain_in_the_header_on_all_six_screens(self):
         from PIL import Image
