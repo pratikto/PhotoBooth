@@ -21,7 +21,7 @@ Three-way lab source and docs were fast-forwarded into `feature/kivy-gui`. The u
 | Feature / concern | Current source / observation | Acceptance status |
 | --- | --- | --- |
 | Kivy Meong GUI, branding, 12 cyclic 80 mm templates, capture/3-photo session, review/retake | Implemented in `ui_kivy.py`, `catalog.py`, `workflow.py`, `app.py` | IN SOURCE; end-to-end device regression incomplete |
-| Current pricing: **IDR 5,000 per quantity/session** | `catalog.py: PRICE_PER_SESSION=5000`; `app.py` total = `len(plans)*unit_price`; `workflow.py` expands quantity to multiple **independent 3-capture sessions** | IN SOURCE; future base-fee + per-copy model is PLANNED (FEAT-001) |
+| FEAT-001 DEMO pricing: **Rp5.000 per selected template/sesi + Rp5.000 per thermal copy** | `catalog.py` has two fees; `workflow.quote_order` counts one session per chosen design; controller DEMO amount, GUI cart and manifest agree in source; per-session `print_copies` drives sequential sends of one PNG. | **IN SOURCE — targeted test evidence pending; physical Windows screen/paper and Kiosk CI NOT VERIFIED.** No actual QRIS payment. |
 | Initial idle ads, face-trigger invitation, tutorial-before-template | `advertising.py`, `face_presence.py`, `ui_kiosk.py` and Kivy flow | IN SOURCE; **OWNER REPORTED PASS** for navigation (BUG-005); retain regression coverage |
 | Video advertisement files on idle and payment | Local playlist/automatic `ad_video/` discovery implemented; video playback/texture depends on local codec/media | **OWNER REPORTED PASS** for both placements (BUG-002); regression required after changes |
 | Larger opening advertisement area | GUI sizing changes in source | **OWNER REPORTED PASS** for layout/sizing (BUG-006) |
