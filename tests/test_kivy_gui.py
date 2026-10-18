@@ -13,6 +13,88 @@ from types import SimpleNamespace
 
 @unittest.skipUnless(os.environ.get('PHOTOBOOTH_TEST_GUI') == '1', 'GUI checks are opt-in')
 class KivyFlowTests(unittest.TestCase):
+    def test_live_camera_mirrors_texture_only_not_capture_or_result(self):
+        """FEAT-003 mirrors both initial Pillow preview and streaming BGR UVs.
+
+        These tests use asymmetrical synthetic pixels and real Kivy textures,
+        but no real camera. Assert that raw BGR/Pillow pixels remain untouched
+        and that later saved/review/result textures have ordinary UVs. Future
+        scanner preview consumers must share this same mirrored=True policy,
+        while their decoding inputs remain the unmirrored originals.
+        """
+        import cv2
+        import numpy as np
+        from PIL import Image
+        from photobooth.catalog import get_templates
+        from photobooth.ui_kivy import KivyHost, PhotoBoothUI
+
+        ui = PhotoBoothUI(
+            KivyHost(lambda: None), get_templates(),
+            on_capture=lambda: None,
+        )
+        ui.set_camera_status(True)
+        source = Image.new('RGB', (320, 240), (255, 0, 0))
+        for x in range(160, 320):
+            for y in range(240):
+                source.putpixel((x, y), (0, 0, 255))
+        original_pillow = source.tobytes()
+
+        # Opening capture uses the initial Pillow preview; UVs alone mirror it.
+        ui.show_capture('Mirror test', 0, source)
+        preview = ui.preview
+        texture = preview.texture
+        self.assertIsNotNone(texture)
+        self.assertLess(texture.uvsize[0], 0, 'Camera preview must flip X')
+        self.assertLess(texture.uvsize[1], 0, 'Top-first pixels must flip Y')
+        self.assertEqual(source.tobytes(), original_pillow)
+
+        # A fresh OpenCV BGR frame must not double-flip a reused texture.
+        raw = cv2.cvtColor(np.asarray(source), cv2.COLOR_RGB2BGR)
+        raw = np.ascontiguousarray(raw)
+        raw_copy = raw.copy()
+        ui.update_live_frame(raw)
+        self.assertIs(ui.preview.texture, texture)
+        self.assertLess(texture.uvsize[0], 0)
+        self.assertTrue(np.array_equal(raw, raw_copy))
+
+        # Larger frames allocate a new, still-mirrored camera texture.
+        larger = cv2.resize(raw, (800, 600), interpolation=cv2.INTER_NEAREST)
+        larger_copy = larger.copy()
+        ui.update_live_frame(larger)
+        self.assertIsNot(ui.preview.texture, texture)
+        self.assertEqual(ui.preview.texture.size, (640, 480))
+        self.assertLess(ui.preview.texture.uvsize[0], 0)
+        self.assertTrue(np.array_equal(larger, larger_copy))
+
+        # Countdown, ready-state and retake use the same live image orientation.
+        ui.update_live_preview(source)
+        self.assertLess(ui.preview.texture.uvsize[0], 0)
+        ui.set_countdown(3)
+        self.assertLess(ui.preview.texture.uvsize[0], 0)
+
+        # Static review/result imagery MUST NOT inherit the camera mirror.
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'source.png'
+            source.save(path)
+            self.assertEqual(Image.open(path).convert('RGB').tobytes(), original_pillow)
+            ui.show_review([path] * 3, 'Mirror test', None, False)
+            # Review images are ordinary Kivy images, not live camera widgets.
+            review_pics = [
+                node for node in ui.shell.walk()
+                if getattr(node, 'texture', None) is not None
+                and type(node).__name__ == 'Image'
+            ]
+            self.assertTrue(review_pics)
+            self.assertTrue(all(pic.texture.uvsize[0] > 0 for pic in review_pics))
+            ui.show_result(path, 'Mirror test', 'TEST_001', False)
+            self.assertEqual(Image.open(path).convert('RGB').tobytes(), original_pillow)
+            # The saved result is still unmirrored after the live UV flip.
+            self.assertTrue(any(
+                node.texture.uvsize[0] > 0 for node in ui.shell.walk()
+                if getattr(node, 'texture', None) is not None
+                and type(node).__name__ == 'Image'
+            ))
+
     def test_overview_composites_alpha_without_altering_source_renders(self):
         """Contact sheets must not expose RGB hidden under transparent corners.
 
