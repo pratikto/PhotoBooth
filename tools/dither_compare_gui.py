@@ -1,0 +1,392 @@
+#!/usr/bin/env python3
+"""Three-lane, offline thermal-photo tuning studio.
+
+All Tk widgets live on the Tk event thread; workers compute immutable raster
+results only. Physical printing is an explicit, confirmed separate action.
+"""
+from __future__ import annotations
+
+from dataclasses import replace
+from pathlib import Path
+import queue
+import sys
+import threading
+import time
+import tkinter as tk
+from tkinter import filedialog, messagebox, ttk
+
+from PIL import Image, ImageDraw, ImageTk
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from photobooth.dither_lab import (ComparisonProfiles, DitherProfile,
+                                   load_comparison, render_thermal_image, save_comparison)
+from photobooth.printer import DITHER_MODES
+
+FIELDS = (
+    ("brightness", "Brightness", .5, 1.75),
+    ("contrast", "Contrast", .5, 2.5),
+    ("gamma", "Gamma", .3, 3),
+    ("sharpness", "Sharpness", 0, 3),
+    ("threshold", "Threshold", 0, 255),
+)
+SHORT = {"floyd-steinberg": "Floyd–Steinberg", "bayer": "Bayer 8×8",
+         "threshold": "Threshold"}
+
+
+def sample_source():
+    """Generated neutral grayscale chart; avoids bundling real customer photos."""
+    im = Image.new("RGB", (640, 800), "white")
+    d = ImageDraw.Draw(im)
+    for y in range(im.height):
+        shade = round(y * 255 / (im.height - 1))
+        d.line((0, y, im.width, y), fill=(shade, shade, shade))
+    d.ellipse((90, 120, 550, 590), fill="#b6a38c", outline="black", width=8)
+    d.ellipse((205, 310, 260, 355), fill="black")
+    d.ellipse((380, 310, 435, 355), fill="black")
+    d.arc((240, 395, 400, 490), 0, 180, fill="black", width=8)
+    return im
+
+
+class ComparisonApp:
+    def __init__(self, root):
+        self.root = root
+        root.title("MEONG | 3-Way Dither Comparison Lab")
+        root.geometry("1530x930")
+        root.minsize(1150, 720)
+        self.source = sample_source()
+        self.source_label = "Synthetic sample"
+        self.configs = ComparisonProfiles()
+        self.results = {}
+        self.ready_profiles = {}
+        self.versions = {mode: 0 for mode in DITHER_MODES}
+        self.timers = {}
+        self.busy = set()
+        self.queued = set()
+        self.outcomes = queue.Queue()
+        self.closed = False
+        self.photos = {}
+        self.controls = {}
+        self.labels = {}
+        self.statuses = {}
+        self.zoom = tk.IntVar(value=2)
+        self.sync = tk.BooleanVar(value=False)
+        self.width = tk.StringVar(value="576")
+
+        style = ttk.Style(root)
+        if "clam" in style.theme_names():
+            style.theme_use("clam")
+        style.configure("TButton", padding=(7, 5))
+        header = ttk.Frame(root, padding=12)
+        header.pack(fill="x")
+        ttk.Label(header, text="MEONG • 3-WAY DITHER LAB",
+                  font=("Segoe UI", 19, "bold")).pack(side="left")
+        ttk.Label(header, text="Experiment only | no changes to kiosk",
+                  font=("Segoe UI", 10)).pack(side="right")
+
+        bar = ttk.Frame(root, padding=(12, 0, 12, 9))
+        bar.pack(fill="x")
+        for caption, callback in (
+            ("Open Image", self.open_source), ("Save All Configs", self.save_all),
+            ("Load All Configs", self.load_all), ("Export 3 PNG", self.export_all),
+            ("Reset", self.reset),
+        ):
+            ttk.Button(bar, text=caption, command=callback).pack(side="left", padx=(0, 5))
+        ttk.Label(bar, text="Width:").pack(side="left", padx=(9, 4))
+        widths = ttk.Combobox(bar, textvariable=self.width, values=("576", "384"),
+                              state="readonly", width=6)
+        widths.pack(side="left")
+        widths.bind("<<ComboboxSelected>>", self.change_width)
+        ttk.Checkbutton(bar, text="Sync Parameters", variable=self.sync).pack(
+            side="left", padx=12)
+        ttk.Label(bar, text="Dot zoom:").pack(side="left")
+        zooms = ttk.Combobox(bar, values=("1", "2", "4"), state="readonly", width=4)
+        zooms.set("2")
+        zooms.pack(side="left", padx=(5, 0))
+        zooms.bind("<<ComboboxSelected>>",
+                   lambda _event: self.change_zoom(int(zooms.get())))
+
+        reference = ttk.LabelFrame(root, text="SOURCE IMAGE", padding=7)
+        reference.pack(fill="x", padx=12, pady=(0, 9))
+        self.source_photo = None
+        self.source_view = ttk.Label(reference, anchor="center")
+        self.source_view.pack(fill="x")
+        self.source_title = ttk.Label(reference, text="")
+        self.source_title.pack()
+
+        columns = ttk.Frame(root, padding=(8, 0, 8, 5))
+        columns.pack(fill="both", expand=True)
+        for idx, mode in enumerate(DITHER_MODES):
+            columns.columnconfigure(idx, weight=1, uniform="lane")
+            panel = ttk.LabelFrame(columns, text=SHORT[mode], padding=8)
+            panel.grid(row=0, column=idx, padx=4, sticky="nsew")
+            columns.rowconfigure(0, weight=1)
+            output = ttk.Label(panel, text="Rendering preview...", anchor="center")
+            output.pack(fill="both", expand=True)
+            detail = ttk.Label(panel, text="Center dot crop", anchor="center")
+            detail.pack(fill="x", pady=3)
+            meta = ttk.Label(panel, text="Pending...", anchor="center")
+            meta.pack(fill="x")
+            self.labels[mode] = (output, detail, meta)
+            self.controls[mode] = {}
+            for key, caption, lower, upper in FIELDS:
+                if key == "threshold" and mode != "threshold":
+                    continue
+                strip = ttk.Frame(panel)
+                strip.pack(fill="x", pady=(3, 0))
+                ttk.Label(strip, text=caption).pack(side="left")
+                val_label = ttk.Label(strip, text="", width=7, anchor="e")
+                val_label.pack(side="right")
+                val = tk.DoubleVar(value=getattr(self.configs.by_mode(mode), key))
+                slider = ttk.Scale(panel, from_=lower, to=upper, variable=val,
+                                   command=lambda _value, m=mode, k=key:
+                                       self.slider_changed(m, k))
+                slider.pack(fill="x")
+                self.controls[mode][key] = (val, val_label)
+                self.write_value(mode, key)
+            actions = ttk.Frame(panel)
+            actions.pack(fill="x", pady=(7, 2))
+            ttk.Button(actions, text="Print Test", command=lambda m=mode:
+                       self.print_lane(m)).pack(side="left", expand=True, fill="x")
+            ttk.Button(actions, text="Save PNG", command=lambda m=mode:
+                       self.export_lane(m)).pack(side="left", expand=True, fill="x",
+                                                 padx=(5, 0))
+            state = ttk.Label(panel, text="Awaiting preview", anchor="center")
+            state.pack(fill="x")
+            self.statuses[mode] = state
+
+        footer = ttk.Frame(root, padding=(12, 0, 12, 7))
+        footer.pack(fill="x")
+        self.message = tk.StringVar(value="Rendering three algorithms...")
+        ttk.Label(footer, textvariable=self.message).pack(side="left")
+        ttk.Button(footer, text="Print All (3 jobs)",
+                   command=self.print_all).pack(side="right")
+
+        self.refresh_source()
+        for mode in DITHER_MODES:
+            self.schedule(mode)
+        root.after(80, self.poll)
+        root.protocol("WM_DELETE_WINDOW", self.close)
+
+    def write_value(self, mode, key):
+        val, label = self.controls[mode][key]
+        label.configure(text=(str(round(val.get())) if key == "threshold"
+                              else f"{val.get():.2f}"))
+
+    def change_zoom(self, factor):
+        self.zoom.set(factor)
+        for mode, image in self.results.items():
+            self.show_image(mode, image)
+
+    def change_width(self, _event=None):
+        for mode in DITHER_MODES:
+            self.configs = self.configs.replace_lane(
+                replace(self.configs.by_mode(mode), width_dots=int(self.width.get())))
+            self.schedule(mode)
+
+    def slider_changed(self, mode, key):
+        self.write_value(mode, key)
+        v = self.controls[mode][key][0].get()
+        value = round(v) if key == "threshold" else round(v, 3)
+        targets = DITHER_MODES if self.sync.get() and key != "threshold" else (mode,)
+        for target in targets:
+            p = self.configs.by_mode(target)
+            self.configs = self.configs.replace_lane(replace(p, **{key: value}))
+            if target != mode and key in self.controls[target]:
+                other = self.controls[target][key][0]
+                other.set(value)
+                self.write_value(target, key)
+            self.schedule(target)
+
+    def schedule(self, mode):
+        self.versions[mode] += 1
+        if mode in self.timers:
+            self.root.after_cancel(self.timers.pop(mode))
+        self.timers[mode] = self.root.after(250, lambda m=mode: self.launch(m))
+        self.statuses[mode].configure(text="Parameters changed • rendering...")
+
+    def launch(self, mode):
+        self.timers.pop(mode, None)
+        if mode in self.busy:
+            self.queued.add(mode)
+            return
+        profile = self.configs.by_mode(mode)
+        source = self.source.copy()
+        version = self.versions[mode]
+        self.busy.add(mode)
+        def work():
+            start = time.perf_counter()
+            try:
+                raster = render_thermal_image(source, profile)
+                coverage = 100 * sum(raster.histogram()[:128]) / (
+                    raster.width * raster.height)
+                self.outcomes.put((mode, version, profile, raster, coverage,
+                                   time.perf_counter() - start, None))
+            except Exception as error:
+                self.outcomes.put((mode, version, profile, None, 0, 0, str(error)))
+        threading.Thread(target=work, daemon=True,
+                         name=f"dither-{mode}").start()
+
+    def poll(self):
+        if self.closed:
+            return
+        while True:
+            try:
+                mode, version, profile, image, coverage, elapsed, error = (
+                    self.outcomes.get_nowait())
+            except queue.Empty:
+                break
+            self.busy.discard(mode)
+            if version == self.versions[mode]:
+                if error:
+                    self.statuses[mode].configure(text=f"ERROR: {error}")
+                else:
+                    self.results[mode] = image
+                    self.ready_profiles[mode] = profile
+                    self.show_image(mode, image)
+                    self.labels[mode][2].configure(
+                        text=f"{image.width}×{image.height} dots | black {coverage:.1f}%")
+                    self.statuses[mode].configure(
+                        text=f"Ready • {elapsed * 1000:.0f} ms")
+            if mode in self.queued or version != self.versions[mode]:
+                self.queued.discard(mode)
+                if mode in self.timers:
+                    self.root.after_cancel(self.timers.pop(mode))
+                self.launch(mode)
+        self.root.after(80, self.poll)
+
+    def show_image(self, mode, raster):
+        preview = raster.convert("RGB")
+        preview.thumbnail((390, 390), Image.Resampling.NEAREST)
+        factor = self.zoom.get()
+        width, height = raster.size
+        w, h = min(130, width), min(55, height)
+        detail = raster.crop(((width - w)//2, (height-h)//2,
+                              (width+w)//2, (height+h)//2))
+        detail = detail.resize((w*factor, h*factor),
+                               Image.Resampling.NEAREST).convert("RGB")
+        self.photos[(mode, "full")] = ImageTk.PhotoImage(preview, master=self.root)
+        self.photos[(mode, "detail")] = ImageTk.PhotoImage(detail, master=self.root)
+        self.labels[mode][0].configure(image=self.photos[(mode, "full")], text="")
+        self.labels[mode][1].configure(image=self.photos[(mode, "detail")], text="")
+
+    def refresh_source(self):
+        img = self.source.copy()
+        img.thumbnail((660, 135), Image.Resampling.LANCZOS)
+        self.source_photo = ImageTk.PhotoImage(img, master=self.root)
+        self.source_view.configure(image=self.source_photo)
+        self.source_title.configure(text=self.source_label)
+
+    def open_source(self):
+        path = filedialog.askopenfilename(filetypes=[
+            ("Photos", "*.png *.jpg *.jpeg *.bmp *.webp"), ("All files", "*.*")])
+        if not path:
+            return
+        try:
+            with Image.open(path) as source:
+                source.load()
+                candidate = source.convert("RGBA")
+        except (OSError, ValueError) as error:
+            messagebox.showerror("Image error", str(error), parent=self.root)
+            return
+        self.source, self.source_label = candidate, Path(path).name
+        self.refresh_source()
+        for mode in DITHER_MODES:
+            self.schedule(mode)
+
+    def apply_configs(self, configs):
+        self.configs = configs
+        self.width.set(str(configs.floyd.width_dots))
+        for mode in DITHER_MODES:
+            for key, (var, _label) in self.controls[mode].items():
+                var.set(getattr(configs.by_mode(mode), key))
+                self.write_value(mode, key)
+            self.schedule(mode)
+
+    def reset(self):
+        self.apply_configs(ComparisonProfiles())
+
+    def save_all(self):
+        path = filedialog.asksaveasfilename(defaultextension=".json",
+            initialfile="meong-dither-3way.json", filetypes=[("JSON", "*.json")])
+        if path:
+            try:
+                save_comparison(path, self.configs)
+                self.message.set(f"Saved lab-only config: {path}")
+            except OSError as error:
+                messagebox.showerror("Save failed", str(error), parent=self.root)
+
+    def load_all(self):
+        path = filedialog.askopenfilename(filetypes=[("JSON", "*.json")])
+        if path:
+            try:
+                configs = load_comparison(path)
+                if len({configs.by_mode(m).width_dots for m in DITHER_MODES}) != 1:
+                    raise ValueError("All lanes must use the same paper width.")
+                self.apply_configs(configs)
+                self.message.set(f"Loaded lab-only config: {path}")
+            except (OSError, TypeError, ValueError) as error:
+                messagebox.showerror("Invalid config", str(error), parent=self.root)
+
+    def ready(self, mode):
+        profile = self.configs.by_mode(mode)
+        return (self.ready_profiles.get(mode) == profile and
+                mode not in self.busy and mode not in self.timers and
+                mode not in self.queued and mode in self.results)
+
+    def export_lane(self, mode):
+        if not self.ready(mode):
+            messagebox.showinfo("Rendering", "Wait for the current preview.",
+                                parent=self.root)
+            return
+        path = filedialog.asksaveasfilename(defaultextension=".png",
+            initialfile=f"meong-{mode}.png", filetypes=[("PNG", "*.png")])
+        if path:
+            try:
+                self.results[mode].save(path, format="PNG")
+                self.message.set(f"Exported native 1-bit raster: {path}")
+            except OSError as error:
+                messagebox.showerror("Export failed", str(error), parent=self.root)
+
+    def export_all(self):
+        if not all(self.ready(m) for m in DITHER_MODES):
+            messagebox.showinfo("Rendering", "Wait for all three previews.",
+                                parent=self.root)
+            return
+        folder = filedialog.askdirectory(title="Export 3 native rasters")
+        if folder:
+            try:
+                for mode in DITHER_MODES:
+                    self.results[mode].save(
+                        Path(folder) / f"meong-{mode}.png", format="PNG")
+                self.message.set(f"Exported 3 native 1-bit rasters to {folder}")
+            except OSError as error:
+                messagebox.showerror("Export failed", str(error), parent=self.root)
+
+    def print_lane(self, mode):
+        messagebox.showinfo("Print pending",
+            "Print Test will be enabled in Stage 3, with device confirmation.",
+            parent=self.root)
+
+    def print_all(self):
+        messagebox.showinfo("Print pending",
+            "Print All will be enabled in Stage 3, with explicit confirmation.",
+            parent=self.root)
+
+    def close(self):
+        self.closed = True
+        for timer in self.timers.values():
+            self.root.after_cancel(timer)
+        self.root.destroy()
+
+
+def main():
+    root = tk.Tk()
+    ComparisonApp(root)
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    main()

@@ -158,7 +158,7 @@ def save_comparison(path: str | Path, profiles: ComparisonProfiles) -> None:
         ) as stream:
             temporary = Path(stream.name)
             json.dump(data, stream, indent=2, allow_nan=False)
-            stream.write("\\n")
+            stream.write("\n")
         os.replace(temporary, path)
     finally:
         if temporary:

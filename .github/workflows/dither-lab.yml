@@ -20,6 +20,6 @@ jobs:
       - name: Install Pillow only (offline lab backend)
         run: python -m pip install "Pillow>=10,<13"
       - name: Compile tuning lab and tests
-        run: python -m py_compile photobooth/dither_lab.py tools/dither_tuning_gui.py tests/test_dither_lab.py tests/test_dither_comparison.py photobooth/printer.py
+        run: python -m py_compile photobooth/dither_lab.py tools/dither_tuning_gui.py tools/dither_compare_gui.py tests/test_dither_lab.py tests/test_dither_comparison.py photobooth/printer.py
       - name: Run targeted printer-processing regressions
         run: python -m unittest tests.test_dither_lab tests.test_dither_comparison -v
