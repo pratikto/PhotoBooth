@@ -143,12 +143,15 @@ gateway adapter. A live integration still requires provider credentials,
 verified server notifications/status checks and off-thread network handling.
 The UI does not offer a way to paste an unverified real payment QR.
 
-## LAN thermal printer
+## Payment QR thermal printing — current GUI and legacy LAN configuration
 
-QR slip output uses a small independent ESC/POS raster adapter. It does not
-change the photograph-dithering implementation on the separate printer branch.
+**Reconciled 2026-10-18:** The GUI now supplies the saved printer configuration to `QrisPrinterWorker`, sharing the photo-strip transport. This is implemented in source, **not verified by the owner to print a QR payment slip on paper**. The owner reports physical photo strips print on Windows while the QR payment slip still fails (BUG-003). See [FEATURE_STATUS.md](FEATURE_STATUS.md).
 
-Configure a printer reachable from the booth with its raw TCP printing port:
+**Preferred GUI setup on Windows:** open Settings → **PENGATURAN PRINTER** → **USB Windows**, enter the *actual* Windows printer queue name (the user's environment has used POS80 Printer/POS80ENG), select a suitable printer dot width and save; perform a physical **TEST PRINT** first. Then open demo payment, tap **CETAK QR**, inspect the real paper and scan with a phone to validate QR readability. LAN and Wi-Fi routes may also be configured through the same printer settings. Do **not** infer a successful print from an ESC/POS file or a spooler job alone.
+
+The worker uses the current saved `PrinterConfig` from the Kivy GUI, routes via configured LAN, Wi-Fi or Windows USB spooler, and preserves the active QR payload/amount/expiry. Without any usable configured route, the GUI should show a **preview**, not claim paper was printed. The source code selects among configured routes; the specific failure on the operator's machine remains under investigation.
+
+**Legacy standalone LAN-only fallback:** Direct `QrisPrinterWorker` callers without the GUI's printer-config provider may configure:
 
 ```powershell
 $env:PHOTOBOOTH_PRINTER_HOST = "192.168.1.100"
@@ -157,23 +160,11 @@ $env:PHOTOBOOTH_PRINTER_DOTS = "576"
 python main.py
 ```
 
-On Linux, use the same environment variable names with `export`.
-The host is unset by default: pressing Print prepares a clearly identified
-preview rather than claiming physical output. `576` is the typical printable
-dot width for an 80 mm-class printer; check the actual model. Widths from 384
-to 832 dots, in multiples of eight, are supported. The printer must support
-ESC/POS `GS v 0` raster printing; model-specific testing is required.
+Those legacy environment settings must **not** be presented as the sole method for printing from the current GUI. Values shown are examples, not discovered printer settings. For a direct LAN sender the ESC/POS port is commonly 9100; verify printer model/protocol, actual IP and accepted printable width. On Linux, `export` may be used instead of PowerShell assignments.
 
-The slip includes the exact QR payload, amount, attempt ID, expiry in WIB and
-waiting status. Modules use integer-sized black/white dot blocks, at least
-three dots wide, with a four-module clear margin. Branding stays outside the
-QR. No photograph dithering, smoothing or logo insertion touches payment cells.
+The QR slip uses an undithered black/white QR, integer-sized modules (at least three printer dots wide) and four-module quiet zone; applying the photo's grayscale dithering or a large logo inside the payment QR can make scanning unreliable. It includes the exact **demo** payment payload, amount, attempt ID and expiry in WIB. The QR may be enlarged on the display without replacing the active payment attempt.
 
-PNG previews and ESC/POS `.bin` spools are written to ignored `data/qris-spool`.
-Physical paper, darkness, cutter behavior and phone scanning must be checked on
-the actual printer. TCP completion is reported as **sent to printer**, not as
-sensor-verified printing. A partial/uncertain send is not automatically retried:
-the user is asked to inspect the paper before choosing another print.
+PNG previews and ESC/POS `.bin` spools are written under ignored `data/qris-spool`. A successful `send` indicates transfer to the printer interface, **not** physical paper acceptance or payment. Uncertain partial sends are not retried automatically: inspect the paper first to avoid duplicate output. Track reproducible outcome and paper/scanning evidence in [bug_tracker.md](bug_tracker.md) and [test_checklist.md](test_checklist.md).
 
 ## Anonymous playback reports
 
