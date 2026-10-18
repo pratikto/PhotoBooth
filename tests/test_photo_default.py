@@ -72,14 +72,15 @@ class OwnerFloydPhotoDefaultTests(unittest.TestCase):
                          dither_image(self.image.convert("L"), "floyd-steinberg").tobytes())
 
     def test_qr_receipts_use_separate_module(self):
-        from photobooth.qris_print import render_payment_slip
-        from unittest.mock import Mock
-        attempt = Mock()
-        attempt.payload = "DEMO-QR-CODE"
-        # Inspection guard: receipt generator does not import or call the lab.
-        import inspect
-        source = inspect.getsource(render_payment_slip)
+        # QR payment slip is independently encoded by qris_print.py.
+        # Check source without importing qrcode, which is not installed by
+        # the lightweight Pillow-only Dither Lab CI job.
+        source = (Path(__file__).resolve().parents[1]
+                  / "photobooth" / "qris_print.py").read_text(encoding="utf-8")
+        self.assertIn("def render_payment_slip(", source)
+        self.assertIn("def escpos_raster(", source)
         self.assertNotIn("render_thermal_image", source)
+        self.assertNotIn("from photobooth.dither_lab", source)
 
 
 if __name__ == "__main__":
