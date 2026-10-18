@@ -1280,6 +1280,10 @@ class PhotoBoothUI(KioskExperienceMixin):
             self.set_completion_countdown(seconds_remaining)
         self.result_action = self._button('SESI BERIKUTNYA' if has_next_session else 'SELESAI',
                                          self.callbacks['on_next_session' if has_next_session else 'on_finish'])
+        # Customers must not leave this session while a multi-copy physical
+        # print batch is still being submitted. The print worker re-enables
+        # navigation once it has stopped or completed the batch.
+        self.result_action.disabled = print_busy
         page.add_widget(self._actions(self.completion, self.result_action))
         # Upload progress refreshes the QR in place, so the reward is emitted
         # once when this saved result is presented, never on status polling.
@@ -1346,6 +1350,8 @@ class PhotoBoothUI(KioskExperienceMixin):
             self.print_status.text = message
             if self.print_button is not None:
                 self.print_button.disabled = busy
+            if getattr(self, 'result_action', None) is not None:
+                self.result_action.disabled = busy
 
     def set_result_upload_status(self, message):
         if self.current_screen == 'result':
