@@ -200,7 +200,7 @@ def main():
         ui.set_palm_status(state, progress, needs_release)
 
     def payment_demo():
-        ui.show_payment('Special Day × 1', 1, 5000, lambda: None, lambda: None)
+        ui.show_payment('Special Day · 1 lembar', 1, 10000, lambda: None, lambda: None)
 
     def expired_payment():
         from datetime import timedelta
@@ -221,10 +221,10 @@ def main():
             True, LONG_STATUS, storage_ready=False, quantities={'template_a': 2}), None),
         ('templates-last', cart, focus_last_template),
         ('payment', lambda: ui.show_payment('\n'.join(f'{t.name} × 2' for t in templates),
-                                           len(templates) * 2, len(templates) * 10000,
+                                           len(templates), len(templates) * 15000,
                                            lambda: None, lambda: None), None),
-        ('payment-waiting', lambda: ui.show_payment('Template 1 × 2',
-                                                   2, 10000, lambda: None, lambda: None),
+        ('payment-waiting', lambda: ui.show_payment('Template 1 · 2 lembar',
+                                                   1, 15000, lambda: None, lambda: None),
          lambda: ui.set_camera_status(False)),
         ('payment-print-offer', payment_demo, ui._offer_payment_print),
         ('payment-enlarged', payment_demo, ui.show_payment_enlargement),
@@ -323,7 +323,7 @@ def main():
                         or ui.status_details.parent is not ui._footer_row
                         or not fully_visible(ui.status_details)):
                     raise AssertionError('Long status needs a visible, reachable details action')
-                if not ui.start_button.disabled or ui.cart_total.text != 'Rp10.000':
+                if not ui.start_button.disabled or ui.cart_total.text != 'Rp15.000':
                     raise AssertionError('Showing diagnostics must preserve the order/storage gate')
                 record['status_shortened'] = True
                 record['status_details_visible'] = True
