@@ -3,6 +3,7 @@ import tempfile
 import time
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 
 from photobooth.printer import PrinterConfig
@@ -17,7 +18,12 @@ class SavedPaymentPrinterTests(unittest.TestCase):
             attempt = payment.begin(5000)
             config = PrinterConfig(windows_printer_name="POS80 Printer", print_width_dots=576)
             worker = QrisPrinterWorker(Path(tmp), printer_config_provider=lambda: config)
-            with patch("photobooth.printer.ThermalPrinter._send_windows_raw") as raw:
+            # Windows driver routing is selected by os.name. On Linux CI,
+            # patch only the printer module's os binding, NOT global os.name:
+            # changing the global value would break pathlib's PosixPath.
+            # This still exercises the production _send_usb Windows branch.
+            with (patch("photobooth.printer.os", SimpleNamespace(name="nt")),
+                  patch("photobooth.printer.ThermalPrinter._send_windows_raw") as raw):
                 self.assertTrue(worker.submit(attempt))
                 result = None
                 for _ in range(150):
