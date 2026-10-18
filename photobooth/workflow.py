@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Mapping, Sequence
 
-from photobooth.catalog import BoothTemplate
+from photobooth.catalog import BoothTemplate, PRICE_PER_PRINT_COPY, PRICE_PER_SESSION
 
 
 @dataclass(frozen=True)
@@ -20,6 +20,34 @@ class SessionPlan:
     total_sessions: int
     template_session_number: int
     template_session_count: int
+    # This session captures exactly three photos once; repeats refer to the
+    # same rendered photo strip and must never trigger additional camera steps.
+    print_copies: int = 1
+
+
+@dataclass(frozen=True)
+class OrderQuote:
+    """Consistent DEMO checkout math for session fees and printed sheets."""
+
+    session_count: int
+    print_copy_count: int
+    session_subtotal: int
+    print_subtotal: int
+    total_amount: int
+
+
+def quote_order(templates: Sequence[BoothTemplate], quantities: Mapping[str, int]) -> OrderQuote:
+    """Price one 3-photo session per selected design and one fee per paper copy.
+
+    Nonzero picker quantities are copy counts. Reuse planning validation so
+    displayed cart totals cannot differ from the capture and print plan.
+    """
+    plans = build_session_plans(templates, quantities)
+    sessions = len(plans)
+    copies = sum(plan.print_copies for plan in plans)
+    session_fee = sessions * PRICE_PER_SESSION
+    copy_fee = copies * PRICE_PER_PRINT_COPY
+    return OrderQuote(sessions, copies, session_fee, copy_fee, session_fee + copy_fee)
 
 
 @dataclass
@@ -103,31 +131,35 @@ def build_session_plans(
     templates: Sequence[BoothTemplate],
     quantities: Mapping[str, int],
 ) -> list[SessionPlan]:
-    """Expand template quantities into ordered, independent photo sessions."""
-    template_counts: dict[str, int] = {}
-    for template in templates:
-        quantity = quantities.get(template.template_id, 0)
-        if not isinstance(quantity, int) or quantity < 0:
-            raise ValueError("Template quantities must be non-negative integers.")
-        template_counts[template.template_id] = quantity
+    """Create one capture session for each chosen template, not for each print.
 
-    total = sum(template_counts.values())
+    Picker quantities now mean *physical copies* of the single final layout.
+    Preserve one ordered session and retake allowance per selected template.
+    Unselected templates generate neither a capture nor a print job.
+    """
+    template_copies: dict[str, int] = {}
+    for template in templates:
+        copies = quantities.get(template.template_id, 0)
+        if isinstance(copies, bool) or not isinstance(copies, int) or copies < 0:
+            raise ValueError("Print copy quantities must be non-negative integers.")
+        template_copies[template.template_id] = copies
+
+    selected = [template for template in templates
+                if template_copies[template.template_id] > 0]
+    total = len(selected)
     plans: list[SessionPlan] = []
-    order_number = 0
-
-    for template in templates:
-        quantity = template_counts[template.template_id]
-        for template_session_number in range(1, quantity + 1):
-            order_number += 1
-            plans.append(
-                SessionPlan(
-                    session_id=f"session_{order_number:03d}",
-                    template=template,
-                    order_number=order_number,
-                    total_sessions=total,
-                    template_session_number=template_session_number,
-                    template_session_count=quantity,
-                )
+    for order_number, template in enumerate(selected, start=1):
+        plans.append(
+            SessionPlan(
+                session_id=f"session_{order_number:03d}",
+                template=template,
+                order_number=order_number,
+                total_sessions=total,
+                # Retain the legacy fields for existing manifest consumers:
+                # a chosen template always owns exactly one capture session.
+                template_session_number=1,
+                template_session_count=1,
+                print_copies=template_copies[template.template_id],
             )
-
+        )
     return plans
