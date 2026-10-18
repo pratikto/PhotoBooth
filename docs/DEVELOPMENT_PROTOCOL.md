@@ -38,6 +38,19 @@ Low: targeted visual/navigation; Medium: affected module + integration; High: en
 M1 Core Stability -> M2 Operational Reliability -> M3 Commercial Readiness -> M4 Product Enhancement -> M5 Scale & Maintenance.
 These are provisional milestones, not certified product status. Freeze feature scope during a milestone's release-candidate testing; only approved blocker fixes enter the frozen candidate.
 
+## Mandatory development-to-documentation synchronization
+
+Use the copy/paste operational checklist in [DEVELOPMENT_PROMPT.md](DEVELOPMENT_PROMPT.md) for new chats or task handovers. **This protocol remains authoritative** if wording differs.
+
+1. **Before approved code work:** record task ID (existing `BUG-XXX`/`FEAT-XXX` or an assigned new ID), exact owner-approved scope, base branch and SHA, affected modules, acceptance criteria, known blockers, rollback plan and proposed tests. Lack of documented approval means **review only**.
+2. **During approved code work:** make scoped and reviewable commits; never overwrite unrelated user/local changes. Important behavior changes must have an associated documentation update in the **same commit or explicitly linked companion documentation commit**. An implementation is not complete merely because the code was uploaded.
+3. **At the end of each significant development stage:** update only documents whose facts changed: BUG findings in `bug_tracker.md`; source/device status in `FEATURE_STATUS.md`; owner decisions in `DECISIONS.md`; future features/dependencies in `next_step.md`; actual test output/limitations in `test_checklist.md`; current blockers/continuation in `DEVELOPMENT_HANDOVER.md`; module/interface changes in `ARCHITECTURE.md`; and actual changed files/commits in `CHANGELOG.md`. Technical guides receive updates only when their instructions change. Do not copy the same detailed record into several files.
+4. **Evidence discipline:** preserve exact test command, tested SHA, OS/environment, PASS/FAIL/SKIP, limitations, and operator physical observations separately. No automated/fake video/audio/printer/payment test should silently close a real-machine issue; no `VERIFIED`, `CLOSED`, `RELEASED` or `DONE` label without the required evidence and approval.
+5. **Before declaring a stage finished:** verify documentation links and current status against the actual branch, and verify code/docs commits and resulting SHAs. Distinguish **not run**, **not supported**, **reported on device**, **passed in simulated QA**, and **passed physical acceptance**. Do not claim a commit/push succeeded without confirming it.
+6. **Final owner report:** include scoped changes, related BUG/FEAT IDs, source/document files touched, actual tests, open risks, before/after commit references, approved next action and remaining approval requests. Do not merge/release or start another task without explicit authorization.
+
+**Approval separation:** Permission to update documents does **not** approve application-code changes. Permission to plan, review or propose fixes does **not** approve applying them. All execution must stay within the user-approved scope and branch.
+
 ## Source of truth (paths relative to repository root)
 - [docs/DECISIONS.md](DECISIONS.md): binding **owner-confirmed product direction**, not evidence of implementation; open commercial terms must be labelled.
 - [docs/FEATURE_STATUS.md](FEATURE_STATUS.md): observed **current source** versus **owner-reported device behavior**; do not collapse those categories.
