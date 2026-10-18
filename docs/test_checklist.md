@@ -10,11 +10,11 @@
 | --- | --- | --- | --- |
 | Windows USB photo-strip paper output | Owner saw completed photo layout printed | **REPORTED-PASS** for paper output *only* | BUG-004: assess resolution/dithering, actual image quality and page sizing |
 | Windows thermal photo sharpness | Owner says layout print looks blurry / poor quality | **REPORTED-FAIL** | BUG-004: compare source PNG to native-dot raster and physical paper |
-| Payment QR-slip physical print | Owner says payment-page QR did not print despite photo print working | **REPORTED-FAIL** | BUG-003: collect GUI callback, spool/config/log and physical paper |
-| Application music/effects | Standalone music diagnostic audible; full Kivy app audio absent | **REPORTED-FAIL** for in-app sound; standalone diagnostic **REPORTED-PASS** | BUG-001: capture audio status from tutorial page and OS playback |
-| Settings music/button tests | Owner reports `Uji` control unresponsive and no terminal messages | **REPORTED-FAIL** | BUG-007: verify click/touch handler before testing output |
-| Video on idle and payment | Owner says neither placement plays video | **REPORTED-FAIL** | BUG-002: known supported video, decoder/texture logs on both screens |
-| Ad → tutorial → picker; enlarged ad stage | Source routes and sizing changes exist | **UNVERIFIED on physical machine** | BUG-005 / BUG-006: verify manual/face navigation and live render |
+| Payment QR-slip physical print | Owner now confirms paper QR slip prints | **REPORTED-PASS** for physical output; scanning unverified | BUG-003: validate QR scan of DEMO payload |
+| Application music/effects | Button/camera effects audible; tutorial/layout music silent while SDL2 claims `state=play gain=0.59`. Standalone music check audible | **REPORTED-PASS** for SFX and standalone; **REPORTED-FAIL** for in-app music | BUG-001: verify source retry with actual Windows speakers |
+| Settings music/button tests | Owner confirms Music, Button and Camera `Uji` taps respond; Music only made default click, Button played click, Camera shutter | **REPORTED-PASS** touch/SFX; **REPORTED-FAIL** music audition | BUG-007: test newly isolated music/button/shutter samples and output on speakers |
+| Video on idle and payment | Owner confirms both placements play moving video | **REPORTED-PASS** | BUG-002: ensure audio patch does not regress video and payment mute |
+| Ad → tutorial → picker; enlarged ad stage | Owner confirms navigation and video sizing are satisfactory | **REPORTED-PASS** | BUG-005 / BUG-006: regression after UI changes |
 | Existing native video/audio, unit/GUI and printer mock tests | Historical results are preserved in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md), [QA docs](qa/README.md) | **AUTOMATED-HISTORICAL** | Do not mark on-device tests passed from these |
 | Current branch test suite after documentation changes | No Python tests executed during docs housekeeping | **UNVERIFIED** | Run after future approved code changes |
 | True QRIS payment settlement | No live payment gateway exists | **NOT IMPLEMENTED** | Never use demo `simulate_success` as production acceptance |
@@ -31,8 +31,8 @@
 
 ## High-priority on-device verification — bug closure
 
-- [ ] **BUG-001:** Opening idle advertisement intentionally suppresses app music; tutorial/camera pages start audible music *without opening Settings*; SFX/camera cues audible at configured level; verify mute persistence and OS mixer.
-- [ ] **BUG-007:** Tap both Settings `Uji` buttons. On-screen `Uji ... tombol diterima` indicator and console logging respond; distinguish touch-not-received from sound-not-audible; restart and retest.
+- [ ] **BUG-001:** Opening idle advertisement suppresses app music; after entering tutorial and layout music audibly plays *without opening Settings*. The post-fade full-gain restart and `Uji Musik` must be audible on Windows; test 0% mute, resume, cancellation and next customer. Check OS mixer/provider. `state=play` alone does not pass.
+- [ ] **BUG-007:** On updated Windows GUI, confirm `Uji Musik` audibly restarts music WITHOUT a button click; `Uji Tombol` emits one click; `Uji Efek kamera` emits one shutter. Confirm separate diagnostic messages and persisted volume/mute.
 - [ ] **BUG-002:** Local supported moving-image video plays on *idle* and *payment*. Payment video is muted; opening ad honors source soundtrack **only if the sample truly has audio**. Verify image fallback, EOS, page changes and no zombie video process.
 - [ ] **BUG-003:** Payment `CETAK QR` uses saved Windows printer (same configured photo route), delivers actual paper with complete printed QR, captures worker/queue results, and the printed demo payload scans on a phone. Test expiry/reprint prompt without charging or extending the QR.
 - [ ] **BUG-004:** Print controlled source strips using Floyd–Steinberg/Bayer/threshold; save originals, dot width, paper, darkness, print photo and human legibility/edge comparison. Verify no double scaling after dithering.
@@ -71,6 +71,13 @@
 - **FEAT-004/019:** Assigned ad inventory per machine and tier; Free Meong-managed; Business/Enterprise mixed advertiser inventory with reserved Meong slots, offline-safe playback and truthful impression accounting after entitlement design approval.
 - **FEAT-007:** Trusted payment states, crash recovery and idempotent/no duplicate print only once implemented; existing local manifests do not prove this.
 - **FEAT-015:** Privacy/retention guarantees need verification before marketing paid photo delivery.
+
+## 2026-10-18 audio implementation evidence / current acceptance
+
+- Scope approved by owner in conversation: BUG-001 music playback and BUG-007 Settings Uji audio; branch `feature/kivy-gui`, baseline `06dd977c06657c9b56e1de0ad18042b65515bd64`.
+- Source patches: restart SDL2 music channel at full gain once after ad fade; force operator music audition; remove extra generic button click for three Uji controls; fix diagnostic newline. Tests added for forced preview, fade replay and isolated GUI button sounds.
+- **Pre-change GitHub Actions baseline:** Kiosk GUI regression run [39101639665](https://github.com/pratikto/PhotoBooth/actions/runs/39101639665) FAILED the full discovery suite, but syntax and 87 synthetic visual renders succeeded; root failing test not identified from available logs.
+- **Post-change Python tests / GUI render / real Windows speakers:** awaiting actual run results. Do not claim a pass yet. CI uses dummy `SDL_AUDIODRIVER` and `PHOTOBOOTH_AUDIO=0` so even a green run cannot establish audible hardware output.
 
 ## Regression commands to execute (historical results do not carry forward)
 

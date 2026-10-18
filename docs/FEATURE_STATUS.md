@@ -11,13 +11,13 @@ Status vocabulary: **IN SOURCE** = relevant implementation found, **OWNER REPORT
 | --- | --- | --- |
 | Kivy Meong GUI, branding, 12 cyclic 80 mm templates, capture/3-photo session, review/retake | Implemented in `ui_kivy.py`, `catalog.py`, `workflow.py`, `app.py` | IN SOURCE; end-to-end device regression incomplete |
 | Current pricing: **IDR 5,000 per quantity/session** | `catalog.py: PRICE_PER_SESSION=5000`; `app.py` total = `len(plans)*unit_price`; `workflow.py` expands quantity to multiple **independent 3-capture sessions** | IN SOURCE; future base-fee + per-copy model is PLANNED (FEAT-001) |
-| Initial idle ads, face-trigger invitation, tutorial-before-template | `advertising.py`, `face_presence.py`, `ui_kiosk.py` and Kivy flow | IN SOURCE; manual and face routes need owner device verification (BUG-005) |
-| Video advertisement files on idle and payment | Local playlist/automatic `ad_video/` discovery implemented; video playback/texture depends on local codec/media | **BLOCKED / owner reports both videos fail to play** (BUG-002), notwithstanding historical automated tests |
-| Larger opening advertisement area | GUI sizing changes reported in source | UNVERIFIED actual screen sizing/resolutions (BUG-006) |
-| Application music and interaction sounds | `audio.py`, Kivy Settings callbacks and diagnostic UI present | **BLOCKED**: app music/SFX reported silent; standalone audio probe was audible (BUG-001); Settings Music/Button `Uji` reported nonresponsive (BUG-007) |
-| Demo payment QR + payment advertisement + optional QR print invitation | Demo gateway and QR interface, timed non-modal prompt in `ui_kiosk.py` | IN SOURCE; **no real QRIS gateway**. Ad rendering blocked by BUG-002 |
+| Initial idle ads, face-trigger invitation, tutorial-before-template | `advertising.py`, `face_presence.py`, `ui_kiosk.py` and Kivy flow | IN SOURCE; **OWNER REPORTED PASS** for navigation (BUG-005); retain regression coverage |
+| Video advertisement files on idle and payment | Local playlist/automatic `ad_video/` discovery implemented; video playback/texture depends on local codec/media | **OWNER REPORTED PASS** for both placements (BUG-002); regression required after changes |
+| Larger opening advertisement area | GUI sizing changes in source | **OWNER REPORTED PASS** for layout/sizing (BUG-006) |
+| Application music and interaction sounds | `audio.py` now explicitly restarts music at full gain after ad fade and on `Uji Musik`; `ui_kivy.py` isolates preview sample from generic button cue | **PATCHED IN SOURCE, NOT PHYSICALLY VERIFIED**: music remains owner-reported silent on tutorial/layout (BUG-001) until Windows retest; SFX shutter/button and `Uji` taps OWNER REPORTED PASS (BUG-007) |
+| Demo payment QR + payment advertisement + optional QR print invitation | Demo gateway and QR interface, timed non-modal prompt in `ui_kiosk.py` | IN SOURCE; **no real QRIS gateway**. Owner confirms payment video (BUG-002) plays |
 | Thermal **photo strip** printing | `printer.py` and `printer_settings.py` integrated in this **same GUI branch**, Windows RAW printer queue + LAN/Wi-Fi/USB routes; Floyd–Steinberg, Bayer, threshold in source | **OWNER REPORTED paper output works** on Windows POS80ENG, but blurry/poor print quality (BUG-004). No current comparison/quality acceptance |
-| Payment QR-slip printing | `qris_print.py` uses GUI-provided saved `PrinterConfig`; chooses LAN/Wi-Fi/Windows USB as available; keeps legacy LAN fallback for standalone callers | **BLOCKED / owner reports QR slip not printing** (BUG-003), though photo strip prints; physical QR scannability unverified |
+| Payment QR-slip printing | `qris_print.py` uses GUI-provided saved `PrinterConfig`; chooses LAN/Wi-Fi/Windows USB as available; keeps legacy LAN fallback for standalone callers | **OWNER REPORTED PASS** for physical QR print (BUG-003); QR scannability unverified |
 | Local transaction manifest and folder counter | `transaction_store.py` records photo-session manifests and output | IN SOURCE; **not equivalent** to FEAT-007 future robust paid-state/print recovery, nor live QRIS integration |
 | Photo Drive upload, folder QR, retention | Local manifest/retry queue and retention code exist; target local 15 days, Drive 30 days | IN SOURCE; Google configuration/live service not acceptance-tested. Local bytes may expire despite failed upload; review digital-delivery commitments |
 | Real QRIS/merchant POS verification, receipt-scanner promotions, new pricing, global camera mirroring | Not found as completed production features | PLANNED (FEAT-001/002/003; real partner integration deferred) |
@@ -26,12 +26,10 @@ Status vocabulary: **IN SOURCE** = relevant implementation found, **OWNER REPORT
 
 ## Device-reported defects — latest owner feedback
 
-1. **BUG-001:** Application background music and effects fail to play in full Kivy GUI even though a standalone audio diagnostic was audible.
-2. **BUG-007:** Music and Button `Uji` Settings controls did not respond and did not log callbacks in user's test. Code now includes a tap indicator/logger; actual fix remains unverified.
-3. **BUG-002:** Idle and payment advertising videos do not render/play.
-4. **BUG-003:** QR payment-slip printing fails while photo-strip printing works.
-5. **BUG-004:** Physical thermal photo-strip output is blurry/low quality.
-6. **BUG-005 / BUG-006:** Ad → tutorial → template route and enlarged opening ads require hardware UI confirmation.
+1. **BUG-001 ACTIVE:** Owner confirms tutorial/layout background music is silent while button and shutter SFX work; native provider reports play with nonzero gain. Music retry after ad fade and test preview patched in source; real speaker retest pending.
+2. **BUG-007 PARTIAL OWNER PASS:** All three test buttons register and effects play; sample isolation and actual music audition patched in source. Confirm on Windows after update.
+3. **BUG-004 ACTIVE:** Physical thermal photo-strip output remains blurry/low quality. Not in scope of this audio-only implementation.
+4. **BUG-002 / BUG-003 / BUG-005 / BUG-006 OWNER REPORTED PASS:** Ad videos, printed payment QR paper, required tutorial navigation and ad sizing accepted by owner; keep regression tests and retain historical incidents.
 
 See [bug_tracker.md](bug_tracker.md) for source-of-truth severity/status, not this descriptive list.
 

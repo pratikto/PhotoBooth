@@ -197,7 +197,37 @@ class AudioTests(unittest.TestCase):
                 scheduled[0](.25)
                 self.assertAlmostEqual(song.volume, manager.levels.music)
                 self.assertEqual(manager._music_mix, 1.0)
-                self.assertEqual(song.plays, 2)
+                # The fade starts the loop once, then the completed fade
+                # deliberately reacquires a full-gain native mixer channel.
+                self.assertEqual(song.plays, 3)
+
+    def test_operator_music_audition_restarts_a_stale_playing_handle(self):
+        """Playback state alone must not bypass the Settings music test."""
+        with tempfile.TemporaryDirectory() as directory:
+            manager = self.make_manager(directory)
+            song = manager._sounds["music"]
+            previous = song.plays
+            self.assertEqual(song.state, "play")
+            self.assertTrue(manager.preview_music())
+            self.assertEqual(song.plays, previous + 1)
+            self.assertEqual(song.state, "play")
+            self.assertAlmostEqual(song.volume, manager.levels.music)
+
+            manager.set_volume("music", 0)
+            previous = song.plays
+            self.assertFalse(manager.preview_music())
+            self.assertEqual(song.plays, previous)
+
+            manager.set_volume("music", .6)
+            manager.set_advertising(True)
+            previous = song.plays
+            self.assertFalse(manager.preview_music())
+            self.assertEqual(song.plays, previous)
+            manager.set_advertising(False, fade_seconds=0)
+            manager.pause()
+            previous = song.plays
+            self.assertFalse(manager.preview_music())
+            self.assertEqual(song.plays, previous)
 
     def test_muted_music_stays_muted_on_advertising_fade(self):
         """A repair must never override the volume saved by the customer."""

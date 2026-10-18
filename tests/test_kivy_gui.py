@@ -325,6 +325,31 @@ class KivyFlowTests(unittest.TestCase):
             Window.remove_widget(ui.shell)
             Window.size = original_size
 
+    def test_settings_audio_samples_have_no_extra_button_click(self):
+        """Music and shutter auditions should not add the generic UI SFX."""
+        from unittest.mock import call, patch
+        from photobooth.catalog import get_templates
+        from photobooth.ui_kivy import KivyHost, PhotoBoothUI
+
+        ui = PhotoBoothUI(KivyHost(lambda: None), get_templates(),
+                         on_start=lambda *_: None)
+        popup = None
+        try:
+            with (patch.object(ui.audio, "play") as play,
+                  patch.object(ui.audio, "preview_music", return_value=True) as preview):
+                popup = ui.show_audio_settings()
+                ui.audio_test_buttons["music"].dispatch("on_release")
+                self.assertIn("musik diulang", ui._audio_last_test)
+                ui.audio_test_buttons["buttons"].dispatch("on_release")
+                ui.audio_test_buttons["effects"].dispatch("on_release")
+                preview.assert_called_once_with()
+                self.assertEqual(play.call_args_list,
+                                 [call("button"), call("shutter")])
+        finally:
+            if popup is not None:
+                popup.dismiss(animation=False)
+            ui.dispose()
+
     def test_button_callbacks_ignore_disabled_and_retired_screen_controls(self):
         """A queued release is checked again even after normal hit testing."""
         from photobooth.catalog import get_templates

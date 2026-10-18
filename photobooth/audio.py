@@ -510,10 +510,46 @@ class AudioManager:
                 self._ensure_music()
             if elapsed >= fade_seconds or self._closed:
                 self._fade_event = None
+                if not self._closed:
+                    # A native provider can report state='play' for a mixer
+                    # channel that was started during the near-zero-gain fade.
+                    # Reclaim the channel once at the full saved gain instead
+                    # of trusting that status as proof of audible output.
+                    # Never replay in the advert, paused, or muted states.
+                    self.preview_music()
                 return False
             return True
         from kivy.clock import Clock
         self._fade_event = Clock.schedule_interval(step, 1 / 30)
+
+    def preview_music(self):
+        """Force a fresh music playback for the Settings audition or ad exit.
+
+        The normal play('music') intentionally preserves a running loop, but
+        a manual audition must be able to retry when SDL2 says 'play' while
+        the operator hears silence. Stop/play obtains a fresh mixer channel;
+        the selected music gain and all intentional mute gates are respected.
+        A True result means native playback was requested and acknowledged,
+        NOT that a physical speaker was confirmed audible.
+        """
+        sound = self._sounds.get("music")
+        if (self._closed or self._paused or self._advertising or not self._enabled
+                or sound is None or self.levels.music <= 0 or self._music_mix <= 0):
+            return False
+        try:
+            sound.stop()
+            self._apply_levels()
+            sound.play()
+            if sound.state != "play":
+                self.status = "Musik gagal diputar · periksa keluaran suara perangkat"
+                LOG.warning("Music retry did not enter the playing state")
+                return False
+            LOG.info("Music playback restarted at gain %.2f", sound.volume)
+            return True
+        except Exception:
+            self.status = "Audio belum tersedia"
+            LOG.warning("Music restart failed", exc_info=True)
+            return False
 
     def play(self, name):
         """Play one cue; no disabled, muted, or unprepared action queues sound."""

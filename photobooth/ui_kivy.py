@@ -285,7 +285,7 @@ class PhotoBoothUI(KioskExperienceMixin):
         return widget
 
     def _button(self, text, callback, enabled=True, secondary=False, screen_bound=True,
-                inverse=False):
+                inverse=False, play_click=True):
         """Create a touch action owned by this exact revision of the screen.
 
         Touch grabs and queued releases can outlive a widget's visible parent.
@@ -321,7 +321,10 @@ class PhotoBoothUI(KioskExperienceMixin):
             if button.disabled or (screen_bound and revision != self._screen_revision):
                 return
             self._kiosk_activity()
-            self.audio.play("button")
+            # Audio-test controls must emit only their own requested sample.
+            # Ordinary UI controls retain the existing tactile click effect.
+            if play_click:
+                self.audio.play("button")
             Animation.cancel_all(button, "opacity")
             Animation(opacity=1, duration=.10).start(button)
             return callback()
@@ -465,7 +468,16 @@ class PhotoBoothUI(KioskExperienceMixin):
         import logging
         logging.getLogger(__name__).info("Meong audio test tapped: %s", sound)
         self._audio_last_test = f"Uji {sound}: tombol diterima"
-        self.audio.play(sound)
+        if sound == "music":
+            # A status of 'play' does not mean the Windows speaker is audible.
+            # Explicitly restart the music handle for a meaningful audition,
+            # rather than just returning from AudioManager._ensure_music().
+            started = self.audio.preview_music()
+            self._audio_last_test += (
+                " · musik diulang, dengarkan speaker" if started
+                else " · musik tidak dapat diputar, periksa status")
+        else:
+            self.audio.play(sound)
         if getattr(self, "audio_status_label", None) is not None:
             self.audio_status_label.text = (
                 f"Uji {sound} dipencet | {self.audio.summary}")
@@ -517,7 +529,7 @@ class PhotoBoothUI(KioskExperienceMixin):
             if sample is not None:
                 test = self._button(
                     "Uji", lambda sound=sample: self._test_audio_channel(sound),
-                    secondary=True, screen_bound=False)
+                    secondary=True, screen_bound=False, play_click=False)
                 test.size_hint_x = None
                 test.width = dp(64)
                 test.height = dp(44)
@@ -540,7 +552,7 @@ class PhotoBoothUI(KioskExperienceMixin):
         controls_body.add_widget(retry)
         self.audio_retry_button = retry
         def refresh_audio_status(_dt):
-            self.audio_status_label.text = self._audio_last_test + "\\n" + self.audio.summary
+            self.audio_status_label.text = self._audio_last_test + "\n" + self.audio.summary
             self.audio_diagnostic_label.text = self.audio.diagnostic
             return self._audio_popup is not None
         status_event = Clock.schedule_interval(refresh_audio_status, .2)

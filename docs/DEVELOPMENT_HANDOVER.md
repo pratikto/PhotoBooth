@@ -15,7 +15,7 @@
 - [test_checklist.md](test_checklist.md): evidence classifications and real on-device acceptance.
 - [next_step.md](next_step.md): **one unified provisional feature queue** plus parked business ideas. Detailed old intake ranks are historical, not authorization.
 
-**Current urgent user reports (Windows mini PC):** BUG-001 app music/SFX silent while standalone sound probe was audible; BUG-007 Music/Button `Uji` not receiving callbacks; BUG-002 idle and payment video not playing; BUG-003 payment QR paper slip does not print; BUG-004 thermal strip physically prints but image quality is poor. BUG-005 ad→mandatory tutorial→picker route and BUG-006 opening-ad sizing require physical re-verification. All remain open/verification-needed until evidenced and accepted. Never infer an on-device pass from historical video/sound/GUI mocks.
+**Current latest owner feedback (2026-10-18):** BUG-002 video in idle/payment, BUG-003 payment QR paper, BUG-005 tutorial route and BUG-006 opening ad size are **OWNER REPORTED PASS** and not in active fix queue. BUG-007 Settings test taps now receive events, button SFX and shutter SFX work, but `Uji Musik` emitted only the standard click; BUG-001 tutorial/layout background music remains inaudible while SDL2 reports `state=play gain=0.59`. The user explicitly approved targeted BUG-001/007 code+documentation changes. BUG-004 thermal print blur remains OPEN and outside the audio patch. Pre-existing CI full-suite run 39101639665 failed despite 87 successful synthetic renders. Audio change requires actual Windows speaker retest; do not infer physical pass from provider state.
 
 **Current source verified by file inspection, NOT physical test:** `photobooth/printer.py` and `printer_settings.py` are already integrated into `feature/kivy-gui` with Windows USB queue/LAN/Wi-Fi and Floyd–Steinberg/Bayer/threshold. `photobooth/qris_print.py` receives saved GUI `PrinterConfig`; legacy LAN-only fallback is for direct callers. Payment remains a *non-payable demo*. `photobooth/catalog.py` still uses IDR 5,000 per independent session/quantity, and `workflow.py` captures 3 photos **per quantity**. Do not describe proposed per-copy pricing as working.
 
@@ -25,7 +25,15 @@
 
 **Execution gate:** Bug reproduction, device evidence and documentation review first. Before implementing any fix or feature, secure **separate explicit user approval of that code scope**. Use only `feature/kivy-gui`, preserve the thermal-printer branch, avoid accidentally overwriting local Windows changes, run targeted tests + full regression after authorized code, and require real device/owner signoff for printing/audio/video. This housekeeping made **documentation edits only**.
 
-## Recommended next engineering investigations (do not execute without approval)
+## Audio scope authorized and applied — 2026-10-18 (BUG-001 / BUG-007)
+
+- Base commit: `06dd977c06657c9b56e1de0ad18042b65515bd64`; changes on existing `feature/kivy-gui` only. Audio patch and paired tests/docs committed together; see branch history for the resulting commit.
+- `audio.py`: full-gain SDL2 music restart after returning from ad fade, deliberate music audition that reacquires the mixer channel while honoring mute/paused/ad rules. `ui_kivy.py`: Uji buttons bypass the generic click and explicitly audition music, button or shutter; diagnostic text uses a real newline.
+- Added unit and real-widget regression expectations. Current post-commit CI results must be checked separately, especially since the full baseline suite already failed. No Windows speaker verification performed by this GitHub action.
+- Next owner test: `git pull origin feature/kivy-gui`; `python main.py`; idle ad -> tutorial -> layout (music must be heard without Settings); open Sound Settings and tap Uji Musik, Uji Tombol, Uji Efek kamera; verify each emits only its intended sound; test 0%/restored music volume, advert muted application BGM and next user round. Record both result and diagnostics if still silent.
+- Next repair queue: BUG-004 thermal print blur and independent CI regression investigation only with their own approvals.
+
+## Recommended next engineering investigations (historical 2026-10-18 list; now superseded by owner feedback)
 
 1. Audio settings pointer/touch diagnostic (BUG-007) and application audio lifecycle (BUG-001), with logs distinguishing missed button events from mute/routing.
 2. Idle/payment MP4 decoder and texture playback on actual Windows hardware (BUG-002). Test visible moving frames with supported codec; the user's original sample files were noted to lack audio streams.

@@ -4,6 +4,14 @@ This file tracks **actual verified repository/document changes**, not successful
 
 ## [Unreleased] — 2026-10-18
 
+### Approved application audio remediation (BUG-001 / BUG-007; Windows verification pending)
+- **Base/rollback commit:** [`06dd977c`](https://github.com/pratikto/PhotoBooth/commit/06dd977c06657c9b56e1de0ad18042b65515bd64); implementation and associated docs/tests are in the current audio commit on `feature/kivy-gui`. No branch creation or merge.
+- `photobooth/audio.py`: reacquire a native music channel at saved full gain when the ad fade finishes; add an operator-forced music audition that cannot be skipped by a stale `state=play` report and obeys normal mute/pause/ad gates.
+- `photobooth/ui_kivy.py`: each Sound Settings Uji control plays its intended sample without a preceding generic button click; refresh feedback displays a true newline and distinguishes playback request from confirmed audible sound.
+- `tests/test_audio.py` and `tests/test_kivy_gui.py`: add regression coverage for forced music retry, fade replay and exclusive per-button sample routing.
+- Reconcile latest owner-reported device passes for BUG-002/003/005/006 separately from BUG-001/007 audio acceptance in `bug_tracker.md`, `FEATURE_STATUS.md`, `test_checklist.md` and `DEVELOPMENT_HANDOVER.md`.
+- **Tests:** GitHub Actions post-commit and physical speaker acceptance pending at authoring time; baseline full CI before change failed [run 39101639665](https://github.com/pratikto/PhotoBooth/actions/runs/39101639665) while Python compile and synthetic renders succeeded. **No sound physically verified yet.**
+
 ### Mandatory development documentation workflow (docs only)
 - Added [DEVELOPMENT_PROMPT.md](DEVELOPMENT_PROMPT.md): copy/paste full and quick prompts for new development conversations, with branch/SHA inspection, scope approval, severity/dependency review, code/test boundaries, GitHub documentation mapping and final traceability report. Commit [`de0886b`](https://github.com/pratikto/PhotoBooth/commit/de0886b9fdf491d7e21db403c234656044f9b67b).
 - Updated [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md) to require the relevant feature/bug/status/test/handover/changelog documents to be kept aligned with **approved** code changes, in the same or a clearly linked companion commit; false claims of physical acceptance remain forbidden. Commit [`5800c56`](https://github.com/pratikto/PhotoBooth/commit/5800c561006966b90dc316f404ec1ddbd9743328).
