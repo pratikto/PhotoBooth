@@ -4,6 +4,14 @@ This file tracks **actual verified repository/document changes**, not successful
 
 ## [Unreleased] — 2026-10-18
 
+### Owner accepts FEAT-001 pricing and BUG-011 physical-copy correction (documentation-only status update)
+
+- **2026-10-18 Windows-owner evidence:** The owner first confirmed DEMO pricing was correct and reported the number of physically printed copies was wrong; after the existing Windows RAW fix and copy-count retest, the owner responded **"sip udah bener"**. Record **FEAT-001 core behavior OWNER REPORTED PASS**, and reclassify **BUG-011 to OWNER REPORTED PASS — MONITORING** (removed from active fix work, *not formally CLOSED or RELEASED*). The exact selected-vs-printed counts, device SHA, queue name and paper images were not provided, so none are fabricated.
+- **No new source changes in this documentation event.** The functional fixes were already committed: [`4608fcc9`](https://github.com/pratikto/PhotoBooth/commit/4608fcc9ec96c8eabeb01ddbd64059830af2bf62) repeats complete image+cut sequences in one RAW payload; [`e6d2f684`](https://github.com/pratikto/PhotoBooth/commit/e6d2f6840d4b5838e719f904bcc3b8443291193a) switches from N Windows jobs to one batch; [`41a51b5b`](https://github.com/pratikto/PhotoBooth/commit/41a51b5b31f6ef442557a1caec9bf9a9ae88da93) fixes omitted `EndDocPrinter` and duplicate `ClosePrinter`.
+- **Independent automated evidence:** [targeted Actions 39134970707](https://github.com/pratikto/PhotoBooth/actions/runs/39134970707), at `41a51b5b`, **PASS 11 business/manifest + 4 mock transport/Windows spool tests**. This does not itself establish physical output. [Dither lab Actions 39135186017](https://github.com/pratikto/PhotoBooth/actions/runs/39135186017) **PASS**, while [Kiosk GUI Actions 39135186022](https://github.com/pratikto/PhotoBooth/actions/runs/39135186022) at `f2f52e33` **FAIL** at the full unittest step. Do not infer the source or cause of the GUI failure from the owner paper success.
+- **New canonical QA dossier:** [FEAT-001 / BUG-011 Acceptance](qa/FEAT-001-BUG-011-acceptance.md) includes scenario targets, test dates/SHAs, original bug mechanism, source map, residual risks, manual follow-up evidence and rollback boundaries. Cross-linked from the current bug tracker, feature status, execution board, technical architecture and handover.
+- **Scope limit:** real QRIS FEAT-020, FEAT-007 paid-state recovery, ads/Drive sync and audio BUG-001/007 are unaffected; no Code.gs update, printer-code rework, rollout, release, merge or physical test was executed by this documentation task.
+
 ### BUG-011 — FEAT-001 physical print-copy mismatch (patched in source, still open on paper)
 
 - **Owner feedback:** checkout/demo pricing is correct, but the Windows thermal printer physically produced a different number of sheets from the selected copy count. Requested/printed counts have not yet been captured; do **not** mark resolved.
