@@ -1,3 +1,13 @@
+## GUI merged lab + owner Floyd photo default (2026-10-18)
+
+- Owner explicitly approved merging `feature/dither-tuning` into existing `feature/kivy-gui`; fast-forward merge baseline `5e0a898` -> `f3d836d` (no new branch). Dedicated lab CI on `f3d836d` passed; Windows operator verification BUG-010 is pending.
+- Owner supplied `meong-dither-3way.json`: Floyd brightness 0.652, contrast 2.104, gamma 2.352, sharpness 2.073, threshold 128 at 576 dots; explicitly approved it as the default for photo compositions in the GUI kiosk. No customer photo is uploaded to the repo.
+- Regression test `python -m unittest tests.test_printer tests.test_photo_default -v`: verify raster parity, legacy environment rollback, Bayer/Threshold unchanged, explicit comparisons unchanged. Native Windows paper quality and QRIS scanning still require operator evidence.
+- To force old Floyd output if necessary, set `$env:PHOTOBOOTH_PHOTO_TUNING = "legacy"` before `python main.py`; remove that environment setting to return to approved Floyd profile.
+- [ ] Confirm 576-dot output on physical photo paper with approved preset and capture side-by-side old/new results.
+- [ ] Re-test actual QRIS slip readability, Bayer/Threshold test prints and Windows kiosk video/audio/Settings interactions.
+- [ ] Do not mark BUG-004 CLOSED without owner's visual/physical acceptance.
+
 ## BUG-010 lab scroll issue — 2026-10-18
 
 - Screenshot/owner confirmed missing access to lower sliders and print controls on Windows.

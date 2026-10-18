@@ -12,6 +12,10 @@ Status vocabulary: **IN SOURCE** = relevant implementation found, **OWNER REPORT
 
 With explicit owner approval, the separate [FEAT-011 thermal dithering lab](dither-tuning-lab.md) has been added **only to this experimental branch**. It uses `photobooth/dither_lab.py`, `tools/dither_tuning_gui.py`, and `tests/test_dither_lab.py`. The GUI can preview and export grayscale-tuned 1-bit PNGs, and save/load JSON lab presets, without using the physical printer. [Dedicated GitHub Actions run 39110869478](https://github.com/pratikto/PhotoBooth/actions/runs/39110869478) passed compile and targeted unit tests. **No Windows GUI/device validation; no production print pipeline change; BUG-004 remains OPEN.** This section must not be mistaken for a feature released in `feature/kivy-gui` or `main`.
 
+## Owner-approved default photo dithering (2026-10-18)
+
+Three-way lab source and docs were fast-forwarded into `feature/kivy-gui`. The user selected Floyd–Steinberg at 576 dots (brightness 0.652, contrast 2.104, gamma 2.352, sharpness 2.073); `photobooth/printer.py` uses that tuning by default for ordinary Floyd photo jobs. `PHOTOBOOTH_PHOTO_TUNING=legacy` safely selects the old processing path; non-Floyd modes, explicit comparison jobs and the QR payment slip have no new tuning. **Physical quality and broader kiosk acceptance still need owner testing; BUG-004 remains OPEN.**
+
 ## Current implementation vs reported device behavior
 
 | Feature / concern | Current source / observation | Acceptance status |

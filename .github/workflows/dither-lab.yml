@@ -2,7 +2,7 @@ name: Dither tuning lab regression
 
 on:
   push:
-    branches: [feature/dither-tuning]
+    branches: [feature/dither-tuning, feature/kivy-gui]
   workflow_dispatch:
 
 permissions:
@@ -20,6 +20,6 @@ jobs:
       - name: Install Pillow only (offline lab backend)
         run: python -m pip install "Pillow>=10,<13"
       - name: Compile tuning lab and tests
-        run: python -m py_compile photobooth/dither_lab.py tools/dither_tuning_gui.py tools/dither_compare_gui.py tests/test_dither_lab.py tests/test_dither_comparison.py tests/test_dither_print.py tests/test_dither_gui_layout.py photobooth/dither_print.py photobooth/printer.py
+        run: python -m py_compile photobooth/dither_lab.py tools/dither_tuning_gui.py tools/dither_compare_gui.py tests/test_dither_lab.py tests/test_dither_comparison.py tests/test_dither_print.py tests/test_dither_gui_layout.py tests/test_photo_default.py photobooth/dither_print.py photobooth/printer.py
       - name: Run targeted printer-processing regressions
-        run: python -m unittest tests.test_dither_lab tests.test_dither_comparison tests.test_dither_print tests.test_dither_gui_layout -v
+        run: python -m unittest tests.test_dither_lab tests.test_dither_comparison tests.test_dither_print tests.test_dither_gui_layout tests.test_photo_default tests.test_printer -v

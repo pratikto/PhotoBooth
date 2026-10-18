@@ -4,6 +4,13 @@ This file tracks **actual verified repository/document changes**, not successful
 
 ## [Unreleased] — 2026-10-18
 
+### Owner-approved GUI merge and default Floyd photo profile
+- Fast-forwarded `feature/kivy-gui` to the existing tested `feature/dither-tuning` head `f3d836d`, retaining the 3-way standalone lab, its tests and documentation. This does not merge to `main`.
+- For ordinary **photo composition** printing with configured Floyd–Steinberg and native width 384/576 dots, apply the user-selected lab profile: B 0.652, C 2.104, gamma 2.352, sharpness 2.073, threshold 128. Other dithering modes, explicitly requested comparison jobs, and QRIS slip generation are not modified.
+- Rollback: launch with `PHOTOBOOTH_PHOTO_TUNING=legacy` to use the previous Floyd preprocessing without reverting printer settings. Physical thermal print acceptance still pending.
+
+
+
 ### BUG-010 — Dither GUI scroll accessibility
 - Added per-column vertical parameter scrolling and mouse-wheel routing.
 - Reduced on-screen preview height; Print Test and Save PNG remain outside scroll container.

@@ -479,11 +479,40 @@ class ThermalPrinter:
             raise ValueError(f"Mode dithering tidak dikenal: {dither_mode}.")
         # Resize in grayscale before converting to one bit. Once pixels have
         # been dithered, scaling would blur physical dots and create artifacts.
-        thermal_bitmap = dither_image(
-            bitmap,
-            selected_mode,
-            threshold=self.config.dither_threshold,
-        )
+        # Explicit owner choice: use the calibrated Floyd photo profile by
+        # default, exactly as exported by the three-way tuning laboratory.
+        # Comparison prints with a dither_mode override remain untouched.
+        # Setting PHOTOBOOTH_PHOTO_TUNING=legacy restores the prior behavior,
+        # without changing printer settings or the payment QR pipeline.
+        if (
+            dither_mode is None
+            and selected_mode == "floyd-steinberg"
+            and os.environ.get("PHOTOBOOTH_PHOTO_TUNING", "owner-floyd").lower() != "legacy"
+        ):
+            from photobooth.dither_lab import DitherProfile, render_thermal_image
+
+            # An 80 mm profile was calibrated at 576 dots. For a deliberately
+            # narrower 384-dot printhead, preserve the tuning factors and use
+            # its physical width; other non-lab widths stay on legacy behavior.
+            if self.config.print_width_dots in (384, 576):
+                profile = DitherProfile(
+                    mode="floyd-steinberg",
+                    width_dots=self.config.print_width_dots,
+                    brightness=0.652,
+                    contrast=2.104,
+                    gamma=2.352,
+                    sharpness=2.073,
+                    threshold=128,
+                )
+                thermal_bitmap = render_thermal_image(bitmap, profile)
+            else:
+                thermal_bitmap = dither_image(
+                    bitmap, selected_mode, threshold=self.config.dither_threshold
+                )
+        else:
+            thermal_bitmap = dither_image(
+                bitmap, selected_mode, threshold=self.config.dither_threshold
+            )
         if header_label:
             thermal_bitmap = _add_binary_header(thermal_bitmap, header_label)
 
