@@ -1,5 +1,8 @@
 # Advertising kiosk validation — 17 October 2026
 
+> **Historical QA result (2026-10-17), not current booth acceptance:** Video fixture, headless Kivy and QR-raster tests listed below previously passed under their stated environment. As of 2026-10-18, the owner still reports idle/payment video playback failures and payment QR-slip paper-print failure on the real Windows machine; these remain open in [bug tracker](../bug_tracker.md). Do not read the table below as proof those physical bugs were fixed.
+
+
 Implemented on the existing `feature/kivy-gui` branch in separate, tested
 uploads. No new branch was created and no original, converted or fixture video
 was uploaded. The default playlist contains local still-image posters.
