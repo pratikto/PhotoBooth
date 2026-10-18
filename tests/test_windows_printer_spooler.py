@@ -56,8 +56,14 @@ class WindowsRawTests(unittest.TestCase):
                 PrinterConfig(windows_printer_name="POS80 Printer"),
                 payload_builder=Mock(return_value=base),
             )
-            with (patch.dict(sys.modules, {"win32print": fake}),
-                  patch("photobooth.printer.os.name", "nt")):
+            # Drive only the transport via a stub: patching os.name globally
+            # on Linux would make pathlib attempt unsupported WindowsPath.
+            with patch.dict(sys.modules, {"win32print": fake}), patch.object(
+                printer, "_usb_sender",
+                side_effect=lambda data: ThermalPrinter._send_windows_raw(
+                    "POS80 Printer", data
+                ),
+            ):
                 result = printer.print_image(image, copies=3)
 
         self.assertTrue(result.success)
