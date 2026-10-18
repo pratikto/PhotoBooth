@@ -13,6 +13,7 @@ The repository-root [README](../README.md) explains setup and preserves historic
 | Proposed / not-yet-approved feature backlog and monetization ideas | [next_step.md](next_step.md) | One **unified provisional queue**; parked ideas are not scheduled |
 | Steps to safely continue engineering | [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) | Current handover section first; old dated notes below remain historic |
 | Development approval and test rules | [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md) | No app-code changes without explicit owner-approved scope |
+| **Reusable prompt for new chats and implementation tracking** | [DEVELOPMENT_PROMPT.md](DEVELOPMENT_PROMPT.md) | Copy/paste the full or quick prompt; defer to the protocol for governance |
 | Actual repository/document change history | [CHANGELOG.md](CHANGELOG.md) | Not a release certificate or record of physical success |
 
 ## Supporting technical references
