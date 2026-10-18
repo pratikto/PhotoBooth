@@ -29,4 +29,7 @@ jobs:
       - name: Check FEAT-001 model and manifest syntax
         run: python -m py_compile photobooth/catalog.py photobooth/workflow.py photobooth/transaction_store.py tests/test_workflow.py
       - name: Test one-session copy counts, quotes, retakes, and manifests
-        run: python -m unittest tests.test_workflow -v
+        # The independent end-to-end QR decoding case requires OpenCV and
+        # belongs to the full kiosk suite; this workflow isolates FEAT-001
+        # business rules without pretending it validates QR or real printing.
+        run: python -m unittest tests.test_workflow.WorkflowTests tests.test_workflow.TransactionStoreTests -v
