@@ -42,6 +42,12 @@ jobs:
       - name: Check Python syntax
         run: python -m compileall -q photobooth tests tools
       - name: Exercise workflow, QR pixels, real widgets, audio and navigation
+        # Kivy redirects unittest's stderr through its logger. With
+        # KIVY_NO_CONSOLELOG=1, failures vanish from GitHub Actions output and
+        # the test step exits 1 without identifying a failing test. Re-enable
+        # the console log for THIS step, preserving quiet render snapshots.
+        env:
+          KIVY_NO_CONSOLELOG: "0"
         run: xvfb-run -a python -m unittest discover -s tests -v
       - name: Render photo flow, advertisements, and payment offers at desktop sizes
         if: always()
