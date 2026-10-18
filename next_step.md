@@ -90,6 +90,18 @@ For each new idea record:
 - **Acceptance:** Demo can browse sample items, adjust quantities, see cart total, simulate checkout and display an explicitly marked demo order confirmation without external connectivity or actual charge; a qualifying paid demo order automatically offers a photo promotion without receipt scanning, applies a one-time Rp5,000 session-fee waiver (not print fees), and an unpaid/nonqualifying order cannot redeem it; kiosk safely returns to Meong and preserves photobooth functionality. Later, partner's own customer ordering works on target mini PC without exposing cashier/admin functions; merchant menu changes appear without updating Meong code; no shared cart/payment assumptions.
 - **Execution rank:** Demo #5 provisional after core stability and earlier features; live partner ordering remains deferred until a compatible partner is found. Explicit implementation approval still required.
 
+## FEAT-006 — Configurable Multi-Theme Kivy GUI
+- **Status:** REVIEW / NOT APPROVED FOR IMPLEMENTATION. Owner approved concept 2026-10-18; implementation requires separate explicit authorization.
+- **Goal:** Offer multiple attractive Meong GUI visual themes, with a per-machine choice stored persistently and controlled from **Admin Settings** (default interpretation; customer theme switching not in initial scope).
+- **Candidate visual presets:** Pastel Cute, Midnight Gold, Mint Fresh, Sakura Pop; names/palette are proposals subject to brand and actual Kivy feasibility review.
+- **Scope:** Theme tokens for palette, backgrounds, button styling, accents and light animations; apply consistently to landing/ads, tutorial, layout selection, camera, payment, and settings. Keep Meong logo/brand recognisable, text readable, and touch targets accessible.
+- **Architecture:** One shared Kivy screen/navigation/transaction codebase; separate centralized theme definitions and machine-level theme config. Switching theme must **not** change screen layout, camera/print/payment behavior, ordering flow or business logic.
+- **Compatibility / dependencies:** Audit existing Kivy widgets, KV rules, asset colors, image backgrounds and dynamic styling before implementation; ensure existing logo and ad media remain legible. Theme testing depends on stable current GUI baseline.
+- **Risks:** Styling scattered through code, inconsistent screens, low contrast, theme-specific asset maintenance, animation performance, regression in camera/payment/printing, and visual mismatch with ads.
+- **Priority / impact / readiness:** P3 Low-Medium / Medium (partner customization); readiness Partial, technical compatibility Unverified, estimated M. **Execution order:** after critical bug fixes and higher-priority functional features, subject to dynamic re-ranking.
+- **Acceptance:** Admin can select a preset and it persists across restarts on that machine; every existing page uses the selected visual style; navigation, photo capture, QRIS and printing regression tests pass across all themes; no customer-facing theme switch.
+- **Decision note:** User said "Oke setuju" to theme concept after a question on admin-only vs customer choice; admin-only is the conservative proposed default and should be reconfirmed if scope becomes relevant.
+
 ## Milestone framework (provisional)
 M1 Core Stability; M2 Operational Reliability; M3 Commercial Readiness; M4 Product Enhancement; M5 Scale & Maintenance. See protocol for freeze and release rules.
 
@@ -122,6 +134,8 @@ M1 Core Stability; M2 Operational Reliability; M3 Commercial Readiness; M4 Produ
 | 2026-10-18 | FEAT-005A automatic promo demo | Add ordering-to-photo promo handoff on same machine without scanning receipt; require simulated paid qualifying food order; retain separate FEAT-002A receipt-scan demo; documentation only |
 
 | 2026-10-18 | FEAT-005 partner-funded promo | Owner confirms merchant funds Rp5,000 waived photo-session fee in return for basket-value uplift; track redeemed rewards and merchant settlement in demo; documentation only |
+
+| 2026-10-18 | FEAT-006 multi-theme GUI | Owner accepts multi-theme concept; provisionally admin-only selection per machine; visual-only themes, shared GUI code; no implementation authorized |
 
 ## Template
 ### FEAT-XXX — Title
