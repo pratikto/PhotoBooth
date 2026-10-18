@@ -113,3 +113,71 @@ def load_profile(path: str | Path) -> DitherProfile:
     if set(payload) != keys | {"schema_version"}:
         raise ValueError("Profile fields do not match the supported schema.")
     return DitherProfile(**{key: payload[key] for key in keys})
+
+# Comparison recipes are deliberately independent: syncing is a GUI action,
+# never an implicit overwrite of an algorithm's tuned state.
+COMPARISON_VERSION = 1
+
+
+@dataclass(frozen=True)
+class ComparisonProfiles:
+    floyd: DitherProfile = DitherProfile(mode="floyd-steinberg")
+    bayer: DitherProfile = DitherProfile(mode="bayer")
+    threshold: DitherProfile = DitherProfile(mode="threshold")
+
+    def __post_init__(self):
+        if (self.floyd.mode, self.bayer.mode, self.threshold.mode) != (
+            "floyd-steinberg", "bayer", "threshold"
+        ):
+            raise ValueError("Each comparison lane must keep its own algorithm.")
+
+    def by_mode(self, mode: str) -> DitherProfile:
+        return {
+            "floyd-steinberg": self.floyd,
+            "bayer": self.bayer,
+            "threshold": self.threshold,
+        }[mode]
+
+    def replace_lane(self, profile: DitherProfile) -> "ComparisonProfiles":
+        from dataclasses import replace
+        key = {"floyd-steinberg": "floyd", "bayer": "bayer",
+               "threshold": "threshold"}[profile.mode]
+        return replace(self, **{key: profile})
+
+
+def save_comparison(path: str | Path, profiles: ComparisonProfiles) -> None:
+    """Atomic versioned JSON; does not modify production printer settings."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    data = {"schema_version": COMPARISON_VERSION,
+            "lanes": {mode: asdict(profiles.by_mode(mode)) for mode in DITHER_MODES}}
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            "w", encoding="utf-8", dir=path.parent, delete=False
+        ) as stream:
+            temporary = Path(stream.name)
+            json.dump(data, stream, indent=2, allow_nan=False)
+            stream.write("\\n")
+        os.replace(temporary, path)
+    finally:
+        if temporary:
+            temporary.unlink(missing_ok=True)
+
+
+def load_comparison(path: str | Path) -> ComparisonProfiles:
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    if (not isinstance(data, dict) or
+            set(data) != {"schema_version", "lanes"} or
+            data["schema_version"] != COMPARISON_VERSION or
+            not isinstance(data["lanes"], dict) or
+            set(data["lanes"]) != set(DITHER_MODES)):
+        raise ValueError("Invalid comparison config schema.")
+    lanes = {}
+    keys = set(DitherProfile.__dataclass_fields__)
+    for mode in DITHER_MODES:
+        raw = data["lanes"][mode]
+        if not isinstance(raw, dict) or set(raw) != keys or raw["mode"] != mode:
+            raise ValueError(f"Invalid {mode} profile.")
+        lanes[mode] = DitherProfile(**raw)
+    return ComparisonProfiles(lanes["floyd-steinberg"], lanes["bayer"], lanes["threshold"])
