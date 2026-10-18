@@ -17,6 +17,7 @@ For each new idea record:
 |---|---|---|---|---|---|---|---|---|
 | 1 (provisional; after blocking defects) | FEAT-001 | Template fee + per-print pricing | P1 High | High | Partial | Partial | M | REVIEW / NOT APPROVED |
 | 2 (after FEAT-001) | FEAT-002A | Dummy receipt scanner + simulated promotion | P1 High | High | Partial | Partial | M | REVIEW / NOT APPROVED |
+| 3 (provisional, may advance for UX) | FEAT-003 | Mirror live photo preview only | P1 High | High | Partial | Partial | S/M | REVIEW / NOT APPROVED |
 | Deferred until merchant partnership | FEAT-002B | Real merchant POS integration | P2 Deferred | High | Unverified | Blocked: no partner | L/XL | DEFERRED / NOT APPROVED |
 
 **Existing product work is documented in [docs/NEXT_STEPS.md](docs/NEXT_STEPS.md) and [docs/FEATURE_STATUS.md](docs/FEATURE_STATUS.md).** Do not automatically relabel old defects as new feature requests. No execution rank is finalized until the latest branch and blocker list are reviewed.
@@ -54,6 +55,16 @@ For each new idea record:
 - **Open decisions:** Merchant POS vendor and receipt barcode format/sample; one receipt per customer/transaction and cross-booth reuse; eligibility window and eligible products; one discount per receipt vs per template; whether discounts combine with other promotions; scanner type and offline behavior. Example threshold and benefit are illustrative merchant-configurable campaign settings, not global fixed rules.
 - **Execution rank:** FEAT-002A provisional #2 after FEAT-001; FEAT-002B deferred until merchant partner. Existing operational blockers remain ahead of feature releases.
 
+## FEAT-003 — Mirror live photo preview only
+- **Status:** REVIEW / NOT APPROVED FOR IMPLEMENTATION. Submitted: 2026-10-18.
+- **Problem:** Live photo preview behaves non-mirrored; user moves hand right but perceives movement left, making posing confusing.
+- **Proposed behavior:** Flip the **live photo-camera preview horizontally** so posing behaves like looking in a mirror. Preserve original unmirrored capture files, composed template output, QR graphics, logos, text and printed photos. Do not unintentionally mirror the receipt scanner's camera feed; scanning/decoding must work regardless of preview orientation.
+- **Priority / impact:** P1 High / High customer experience. **Compatibility:** Partial pending exact camera-to-texture pipeline review. **Readiness:** Partial. **Complexity:** S/M. **Confidence:** Medium.
+- **Affected components:** Kivy camera preview rendering, image texture transformation, capture vs saved-image pipeline, optional user-facing mirror configuration, camera orientation across hardware.
+- **Dependencies / risks:** Validate camera device orientation and any existing flips to avoid double-mirroring; no changes to saved photos or printer outputs; performance and scanner camera ownership.
+- **Acceptance criteria:** Left/right posing matches mirror intuition in live preview; captured file and printed layout preserve normal orientation and readable text; countdown and overlays align; scanner decoding and other pages unaffected; test with actual camera.
+- **Execution rank:** Provisional #3 among feature ideas; may move ahead of FEAT-002A after stability blockers are resolved because it is a smaller, high-impact UX fix. Re-rank again at next intake.
+
 ## Milestone framework (provisional)
 M1 Core Stability; M2 Operational Reliability; M3 Commercial Readiness; M4 Product Enhancement; M5 Scale & Maintenance. See protocol for freeze and release rules.
 
@@ -72,6 +83,8 @@ M1 Core Stability; M2 Operational Reliability; M3 Commercial Readiness; M4 Produ
 | 2026-10-18 | FEAT-002 scanner UX clarified | Replace payment advertisement with camera preview during receipt scanning, detection indicator, validated success/failure and retry; retain payment QRIS visibility; no code authorized |
 
 | 2026-10-18 | FEAT-002 scanner success/failure behavior approved | On validated success close scanner/update amount/resume ad; on failure keep preview open for retry. Documentation only; code implementation not authorized |
+
+| 2026-10-18 | FEAT-003 submitted | Added mirror-only photo preview; ranked #3 provisionally after pricing and demo scanner, with potential to advance on low complexity/high UX impact; no code authorized |
 
 ## Template
 ### FEAT-XXX — Title
