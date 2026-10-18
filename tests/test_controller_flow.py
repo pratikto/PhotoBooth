@@ -325,6 +325,13 @@ class ControllerFlowTests(unittest.TestCase):
                 app.camera_ready = True
                 app.current_frame = np.full((600, 800, 3), (60, 70, 170), dtype=np.uint8)
                 heart, arcade = app.templates[1], app.templates[8]
+                # This test checks capture/review/template navigation. A
+                # separate FEAT-001 test checks the real batch dispatcher;
+                # complete this fake print immediately so a Kivy Clock without
+                # a running App loop cannot leave the NEXT control locked.
+                app._start_print_job = lambda path, copies=1: app.ui.set_print_status(
+                    f"Synthetic transport accepted {copies} sheet(s).", busy=False
+                )
                 app._open_template_selection()
                 app.ui._change_quantity(heart.template_id, 1)
                 app.ui._change_quantity(arcade.template_id, 1)
