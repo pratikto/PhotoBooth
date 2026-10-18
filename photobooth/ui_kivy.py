@@ -33,7 +33,8 @@ from PIL import Image
 from photobooth.audio import AudioManager
 from photobooth.ui_kiosk import KioskExperienceMixin
 from photobooth.ui_motion import CountdownDial, FlashEffect, GuideGlyph, MotionScope
-from photobooth.catalog import PRICE_PER_SESSION, create_template_preview, render_photo_frame
+from photobooth.catalog import create_template_preview, render_photo_frame
+from photobooth.workflow import quote_order
 from photobooth.ui_brand import (
     BLUSH, BLUE, CYAN, DISABLED_INK, EDGE, GREY, INK, PAPER, ROSE, SOFT, WHITE,
     BrandLockup, CarouselDots, FlowSteps, Panel, PixelRule, ReceiptSlide,
@@ -827,7 +828,7 @@ class PhotoBoothUI(KioskExperienceMixin):
                          size_hint_y=None)
         intro = BoxLayout(size_hint_y=None, height=dp(52), spacing=dp(12))
         intro.add_widget(self._label("Bikin kenangan.", 27, bold=True))
-        price = self._label("Rp5.000 / sesi", 18, bold=True, color=BLUE, align="right")
+        price = self._label("Rp5.000/sesi + Rp5.000/cetak", 12, bold=True, color=BLUE, align="right")
         price.size_hint_x = .55
         intro.add_widget(price)
         tutorial.add_widget(intro)
@@ -867,8 +868,9 @@ class PhotoBoothUI(KioskExperienceMixin):
         """Browse real frames horizontally in an endlessly looping carousel.
 
         The arrows, drag/swipe, and mouse wheel share the same native carousel.
-        Quantity controls stay OUTSIDE the gesture surface, while the complete
-        cart and checkout remain visible beside it on the supported desktops.
+        Copy-count controls stay OUTSIDE the gesture surface. A selected frame
+        is photographed once; its counter controls identical paper prints.
+        The cart and DEMO checkout remain visible beside the carousel.
         Browsing never changes the order; only the explicit +/− controls do.
         """
         self.set_camera_status(camera_ready)
@@ -904,7 +906,7 @@ class PhotoBoothUI(KioskExperienceMixin):
                 button.size_hint_x = None
                 button.width, button.height = dp(44), dp(44)
                 button.font_size = dp(21)
-            quantity = self._label('0 sesi', 14, bold=True, align='center')
+            quantity = self._label('0 cetak', 14, bold=True, align='center')
             self.quantity_labels[key] = quantity
             self.quantity_buttons[key] = (minus, plus)
             controls.add_widget(minus)
@@ -950,7 +952,8 @@ class PhotoBoothUI(KioskExperienceMixin):
         self.cart_total = self._label('', 34, 48, bold=True, color=WHITE)
         cart.add_widget(self.cart_sessions)
         cart.add_widget(self.cart_total)
-        cart.add_widget(self._label('3 foto + 1 retake per sesi.', 12, 28, color=WHITE))
+        cart.add_widget(self._label('Rp5.000/frame + Rp5.000/lembar · 3 foto per frame.',
+                                    11, 28, color=WHITE))
         self.start_button = self._button('LANJUT BAYAR', self._start_selected, False, inverse=True)
         cart.add_widget(self.start_button)
         cart.add_widget(self._label('Pembayaran demo · Tanpa tagihan.', 10, 22,
@@ -977,14 +980,14 @@ class PhotoBoothUI(KioskExperienceMixin):
         self.set_status(status_message)
 
     def _change_quantity(self, key, delta):
-        """Preserve independent quantities and never permit negative orders."""
+        """Edit paper copy counts; zero deselects the template entirely."""
         self.quantities[key] = max(0, self.quantities[key] + delta)
         self._refresh_order()
 
     def _refresh_order(self):
         """Apply camera/storage/order gates; no UI click can bypass these checks."""
         for key, quantity in self.quantities.items():
-            self.quantity_labels[key].text = f'{quantity} sesi'
+            self.quantity_labels[key].text = f'{quantity} cetak'
             self.quantity_buttons[key][0].disabled = quantity == 0
             self._template_cards[key].selected = quantity > 0
         total = sum(self.quantities.values())
@@ -1006,7 +1009,7 @@ class PhotoBoothUI(KioskExperienceMixin):
                     # and a removed row's late release cannot alter focus.
                     if revision == self._order_revision:
                         self.template_carousel.request_index(i)
-                row = self._button(f"{template.name}   × {quantity}    ›",
+                row = self._button(f"{template.name}  ·  {quantity} cetak  ›",
                                    inspect_template, secondary=True)
                 row.height = dp(52)
                 row.font_size = dp(14)
@@ -1019,8 +1022,11 @@ class PhotoBoothUI(KioskExperienceMixin):
                 self.order_items.add_widget(self._label("Pilih frame, lalu tekan +", 14, 58,
                                                         color=WHITE))
 
-        amount = 'Rp' + f'{total * PRICE_PER_SESSION:,}'.replace(',', '.')
-        self.cart_sessions.text = f'{total} sesi × Rp5.000'
+        # Both screen totals and controller payment requests share this quote.
+        # The quantity is number of identical paper copies, not camera sessions.
+        quote = quote_order(self.templates, self.quantities)
+        amount = 'Rp' + f'{quote.total_amount:,}'.replace(',', '.')
+        self.cart_sessions.text = f'{quote.session_count} frame · {quote.print_copy_count} lembar'
         self.cart_total.text = amount
         self.start_button.disabled = not (total and self._camera_ready and self._storage_ready)
 
@@ -1251,7 +1257,7 @@ class PhotoBoothUI(KioskExperienceMixin):
         self.print_status = self._label(print_message, 12, 34, color=GREY, align='center')
         photo.add_widget(self.print_status)
         self.print_button = self._button(
-            'CETAK ULANG', self.callbacks.get('on_print', lambda: None),
+            'CETAK ULANG (MANUAL)', self.callbacks.get('on_print', lambda: None),
             enabled=not print_busy, secondary=True,
         )
         self.print_button.height = dp(36)
