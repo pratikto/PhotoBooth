@@ -59,6 +59,10 @@ class KioskAdvertisingTests(unittest.TestCase):
         self.assertFalse(self.ui.advert_start_button.disabled)
         self.assertTrue(self.audio._advertising)
         self.ui.advert_start_button.dispatch('on_release')
+        # The approved kiosk flow routes idle ads through the tutorial
+        # before entering the template picker, for manual and face entry.
+        self.assertEqual(self.ui.current_screen, 'welcome')
+        self.ui.home_start_button.dispatch('on_release')
         self.assertEqual(self.ui.current_screen, 'templates')
         self.assertFalse(self.audio._advertising)
         self.ui._last_activity = time.monotonic() - 171
