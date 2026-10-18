@@ -70,6 +70,33 @@ class KioskInteractionTests(unittest.TestCase):
         EventLoop.post_dispatch_input("end", pointer)
         self.settle()
 
+    def open_audio_settings_from_header(self):
+        """Exercise the actual two-step Settings menu instead of bypassing it.
+
+        Current production UX opens a general Settings popup from the gear
+        icon; the operator must then select PENGATURAN AUDIO. Historical tests
+        incorrectly expected the audio sliders immediately after the gear.
+        Real pointer dispatch verifies both accessible controls.
+        """
+        from kivy.core.window import Window
+        from kivy.uix.button import Button
+        from kivy.uix.popup import Popup
+
+        self.tap(self.ui.settings_button)
+        menus = [
+            widget for widget in Window.children
+            if isinstance(widget, Popup) and widget.title == "Pengaturan Meong"
+        ]
+        self.assertEqual(len(menus), 1, "Gear must open the Settings menu")
+        audio_options = [
+            widget for widget in menus[0].content.walk()
+            if isinstance(widget, Button) and widget.text == "PENGATURAN AUDIO"
+        ]
+        self.assertEqual(len(audio_options), 1)
+        self.tap(audio_options[0])
+        self.assertTrue(self.ui.audio_settings_open)
+        self.assertEqual(self.ui._audio_popup.title, "Suara")
+
     def test_tutorial_uses_four_distinct_visual_steps_and_retires_its_clock(self):
         self.assertEqual([item.kind for item in self.ui.welcome_steps],
                          ["frames", "pay", "camera", "result"])
@@ -133,8 +160,7 @@ class KioskInteractionTests(unittest.TestCase):
         self.ui.show_template_selection(True, "Ready")
         self.ui._change_quantity(self.ui.templates[0].template_id, 2)
         before = dict(self.ui.quantities)
-        self.tap(self.ui.settings_button)
-        self.assertTrue(self.ui.audio_settings_open)
+        self.open_audio_settings_from_header()
         self.assertEqual(set(self.ui.audio_sliders), {"music", "buttons", "effects", "ads"})
         self.ui.audio_sliders["music"].value = .13
         self.ui.audio_sliders["buttons"].value = 0
@@ -147,7 +173,7 @@ class KioskInteractionTests(unittest.TestCase):
         self.assertEqual(AudioLevels.load(self.audio.settings_path), self.audio.levels)
         self.ui.show_capture("Session", 0, Image.new("RGB", (640, 480), "pink"))
         self.ui.set_countdown(5)
-        self.tap(self.ui.settings_button)
+        self.open_audio_settings_from_header()
         self.assertEqual(self.ui.countdown.text, "5")
         self.assertTrue(self.ui.capture_button.disabled)
         self.assertFalse(self.capture_actions)
@@ -172,7 +198,7 @@ class KioskInteractionTests(unittest.TestCase):
         self.assertIsNotNone(old_dial)
 
     def test_music_preview_plays_without_rewinding_and_reports_live_mute_state(self):
-        self.tap(self.ui.settings_button)
+        self.open_audio_settings_from_header()
         self.assertEqual(set(self.ui.audio_test_buttons), {"music", "buttons", "effects"})
         song = self.audio._sounds["music"]
         self.tap(self.ui.audio_test_buttons["music"])
@@ -244,8 +270,7 @@ class KioskInteractionTests(unittest.TestCase):
             self.settle(.1)
             self.assertIs(self.ui.settings_button, settings)
             self.assertIs(settings.parent, self.ui._header_row)
-            self.tap(settings)
-            self.assertTrue(self.ui.audio_settings_open)
+            self.open_audio_settings_from_header()
             self.ui._audio_popup.dismiss(animation=False)
             self.settle(.1)
 
