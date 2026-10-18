@@ -44,7 +44,11 @@ class CameraRecoveryTests(unittest.TestCase):
     def order(self):
         self.app._open_template_selection()
         self.key = self.app.templates[0].template_id
-        self.app.ui._change_quantity(self.key, 2)
+        # FEAT-001: two camera sessions now require TWO selected designs.
+        # Choosing two copies of one design is deliberately only one session.
+        self.second_key = self.app.templates[1].template_id
+        self.app.ui._change_quantity(self.key, 1)
+        self.app.ui._change_quantity(self.second_key, 1)
         self.app.ui.start_button.dispatch('on_release')
 
     def install_palm_observations(self):
@@ -404,9 +408,9 @@ class CameraRecoveryTests(unittest.TestCase):
         self.app._update_preview()
         self.assertIs(ui.payment_confirm, confirm)
         self.assertFalse(confirm.disabled)
-        self.assertEqual(ui.payment_total, 10000)
+        self.assertEqual(ui.payment_total, 15000)  # One session + two paper copies.
         confirm.dispatch('on_release')
-        self.assertEqual(len(self.app.sessions), 2)
+        self.assertEqual(len(self.app.sessions), 1)
 
     def test_missing_frames_clear_preview_and_cannot_start_a_countdown(self):
         self.order()
@@ -461,7 +465,7 @@ class CameraRecoveryTests(unittest.TestCase):
         self.app.ui.payment_back.dispatch('on_release')
         self.app.ui._change_quantity(self.key, -1)
         self.app.ui.start_button.dispatch('on_release')
-        self.assertEqual(self.app.ui.payment_total, 5000)
+        self.assertEqual(self.app.ui.payment_total, 10000)
         old_confirm.dispatch('on_release')
         self.assertIsNone(self.app.transaction)
         self.assertFalse(self.app.ui.payment_confirm.disabled)
@@ -475,13 +479,13 @@ class CameraRecoveryTests(unittest.TestCase):
         old_back.dispatch('on_release')
         self.app.ui._change_quantity(self.key, 1)
         self.app.ui.start_button.dispatch('on_release')
-        self.assertEqual(self.app.ui.payment_total, 15000)
+        self.assertEqual(self.app.ui.payment_total, 25000)  # A×2 + B×1.
         old_back.dispatch('on_release')
         self.assertEqual(self.app.ui.current_screen, 'payment')
-        self.assertEqual(self.app.ui.payment_total, 15000)
+        self.assertEqual(self.app.ui.payment_total, 25000)
         self.assertIsNone(self.app.transaction)
         self.app.ui.payment_back.dispatch('on_release')
-        self.assertEqual(self.app.ui.quantities[self.key], 3)
+        self.assertEqual(self.app.ui.quantities[self.key], 2)
 
     def test_stale_finish_cannot_complete_another_customer_transaction(self):
         """Retained result controls belong to one screen, not the next customer."""
