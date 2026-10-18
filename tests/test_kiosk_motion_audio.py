@@ -197,15 +197,23 @@ class KioskInteractionTests(unittest.TestCase):
         self.assertEqual(count.plays, 5)
         self.assertIsNotNone(old_dial)
 
-    def test_music_preview_plays_without_rewinding_and_reports_live_mute_state(self):
+    def test_explicit_music_preview_restarts_for_audition_and_reports_mute_state(self):
+        """Manual UJI MUSIK must restart audio, unlike ordinary background music.
+
+        The owner explicitly requested a useful speaker test after a mixer
+        reported 'playing' without audible sound. Each operator UJI tap must
+        re-issue playback; passive page transitions must not do so.
+        """
         self.open_audio_settings_from_header()
         self.assertEqual(set(self.ui.audio_test_buttons), {"music", "buttons", "effects"})
         song = self.audio._sounds["music"]
+        baseline = song.plays
         self.tap(self.ui.audio_test_buttons["music"])
-        self.assertEqual(song.plays, 1)
+        self.assertEqual(song.plays, baseline + 1)
         self.assertIn("Musik menyala", self.ui.audio_status_label.text)
         self.tap(self.ui.audio_test_buttons["music"])
-        self.assertEqual(song.plays, 1)
+        self.assertEqual(song.plays, baseline + 2)
+        self.assertIn("musik diulang", self.ui.audio_status_label.text)
         self.ui.audio_sliders["music"].value = 0
         self.settle()
         self.assertEqual(song.state, "stop")
