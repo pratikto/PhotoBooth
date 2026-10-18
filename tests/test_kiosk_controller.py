@@ -75,6 +75,8 @@ class KioskControllerTests(unittest.TestCase):
             self.sample(float(timestamp))
             self.assertIsNone(self.app.ui._inline_offer)
         self.app.ui.advert_start_button.dispatch('on_release')
+        self.assertEqual(self.app.ui.current_screen, 'welcome')
+        self.app.ui.home_start_button.dispatch('on_release')
         self.assertEqual(self.app.ui.current_screen, 'templates')
         self.assertIsNone(self.app.transaction)
 
