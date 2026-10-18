@@ -16,8 +16,11 @@ For each new idea record:
 | Execution order | ID | Feature | Business priority | Impact | Compatibility | Readiness | Complexity | Status |
 |---|---|---|---|---|---|---|---|---|
 | 1 (provisional; after blocking defects) | FEAT-001 | Template fee + per-print pricing | P1 High | High | Partial | Partial | M | REVIEW / NOT APPROVED |
-| 2 (after FEAT-001) | FEAT-002A | Dummy receipt scanner + simulated promotion | P1 High | High | Partial | Partial | M | REVIEW / NOT APPROVED |
-| 3 (provisional, may advance for UX) | FEAT-003 | Global mirrored live camera previews | P1 High | High | Partial | Partial | M | REVIEW / NOT APPROVED |
+| 2 (shared camera UX dependency) | FEAT-003 | Global mirrored live camera previews | P1 High | High | Partial | Partial | M | REVIEW / NOT APPROVED |
+| 3 (after FEAT-001 and FEAT-003) | FEAT-002A | Dummy receipt scanner + simulated promotion | P1 High | High | Partial | Partial | M | REVIEW / NOT APPROVED |
+| 4 (after core stability) | FEAT-004 | Per-machine local-first Drive ad sync | P2 Medium | High | Partial | Partial | M/L | REVIEW / NOT APPROVED |
+| 5 (demo only; after core stability) | FEAT-005A | Self-ordering kiosk demo | P2 Medium | High | Unverified | Partial | L | REVIEW / NOT APPROVED |
+| Deferred until merchant partnership | FEAT-005B | Merchant POS ordering/payment integration | P2 Deferred | High | Unverified | Blocked: no partner | XL | DEFERRED / NOT APPROVED |
 | Deferred until merchant partnership | FEAT-002B | Real merchant POS integration | P2 Deferred | High | Unverified | Blocked: no partner | L/XL | DEFERRED / NOT APPROVED |
 
 **Existing product work is documented in [docs/NEXT_STEPS.md](docs/NEXT_STEPS.md) and [docs/FEATURE_STATUS.md](docs/FEATURE_STATUS.md).** Do not automatically relabel old defects as new feature requests. No execution rank is finalized until the latest branch and blocker list are reviewed.
@@ -65,6 +68,26 @@ For each new idea record:
 - **Acceptance criteria:** Left/right movement matches mirror intuition in **every live camera preview**; saved photos and printed layout preserve normal orientation and readable text; scanner detects unmirrored original data while QR/barcode bounding box overlays align with mirrored preview; countdown and other overlays align; test with actual camera on photo and scanner pages.
 - **Execution rank:** Provisional #3 among feature ideas; may move ahead of FEAT-002A after stability blockers are resolved because the shared preview renderer is a dependency for scanning UX. Re-rank again at next intake.
 
+## FEAT-004 — Per-machine local-first Google Drive advertising sync
+- **Status:** REVIEW / NOT APPROVED FOR IMPLEMENTATION. Submitted: 2026-10-18.
+- **Owner decisions:** Advertisements always play from local storage; dedicated Meong Photobooth Google account/Drive is the centralized content source; venue/customer supplies Wi-Fi; updates typically weekly; each machine (e.g. BB01, BB02, BB03) receives only its own ads. Existing slot filename syntax must be inspected before finalizing parser, not guessed.
+- **Proposed behavior:** Background compare and download changed assets only, verify files before atomic activation, preserve last-known-good playlist when offline, show last sync and manual sync in admin; do not interrupt currently playing ads. Support per-device folder/slot mapping, disk quotas and safe deletion policy.
+- **Priority / impact:** P2 Medium / High operational scalability. **Compatibility:** Partial (existing Drive integration and ad player require detailed code audit). **Readiness:** Partial; **complexity:** M/L; **confidence:** Medium.
+- **Dependencies / risks:** Device identity, existing Drive filename convention, credentials and least-privilege access, storage limits, content corruption, Wi-Fi interruptions, player concurrency, file ownership and playlist updates.
+- **Acceptance:** Machine BB01 never downloads BB02 ads; new/updated/deleted content reconciles safely; local playback continues offline; partial downloads never play; weekly refresh and manual sync observable.
+- **Execution rank:** Provisional #4, after core stability and higher-priority pricing/camera/demo receipt flows.
+
+## FEAT-005 — Self-service merchant ordering kiosk (phased)
+- **Status:** REVIEW / NOT APPROVED FOR IMPLEMENTATION. Submitted: 2026-10-18.
+- **User value:** Photobooth also serves as self-service ordering terminal for café/restaurant/venue customers. Customers browse merchant menu, choose items/options/quantities, review cart, pay, and orders ultimately reach merchant electronic POS/cashier system.
+- **FEAT-005A demo scope:** Local demo menu/catalog, item customization, cart, simulated checkout/payment, demo order number/status. Prominent demo indicators; no real charges, no actual POS orders. Preserve photobooth functionality and clear switching between services.
+- **FEAT-005B real integration:** Only after a partner is identified and provides consent, API docs, sample menus, POS order/stock/price endpoints, merchant payment and order fulfilment requirements. Sync catalog, pricing, availability; create idempotent orders; verify actual payment with approved gateway/POS; send confirmed orders to merchant and handle cancellation/refund/reconciliation.
+- **Business priority / impact:** P2 Medium / High partnership differentiation. **Compatibility:** Unverified, requires detailed GUI/payment/transaction architecture review. **Readiness:** Demo Partial; real integration Blocked until partner. **Complexity:** Demo L, integration XL. **Confidence:** Medium-low.
+- **Dependencies:** Existing GUI architecture and stability, separate merchant order and photobooth carts/payment states, real payment integration for production, FEAT-002 merchant strategy, POS adapters and partner terms.
+- **Risks:** Duplicate orders on retries, stale menu prices/stock, inconsistent payment and order state, offline behavior, queue congestion at single shared kiosk, PCI/privacy/security concerns, printer routing and operational support.
+- **Acceptance:** Demo customer can navigate menu, customize items, checkout and see demo order confirmation without affecting photobooth; production must not send unpaid or duplicate orders, must reconcile failures, and must require explicit partner and integration approval.
+- **Execution rank:** Demo #5 provisional due to higher scope and dependencies; real integration deferred pending merchant partnership. Re-rank upon partner confirmation or further requirements.
+
 ## Milestone framework (provisional)
 M1 Core Stability; M2 Operational Reliability; M3 Commercial Readiness; M4 Product Enhancement; M5 Scale & Maintenance. See protocol for freeze and release rules.
 
@@ -87,6 +110,8 @@ M1 Core Stability; M2 Operational Reliability; M3 Commercial Readiness; M4 Produ
 | 2026-10-18 | FEAT-003 submitted | Added mirror-only photo preview; ranked #3 provisionally after pricing and demo scanner, with potential to advance on low complexity/high UX impact; no code authorized |
 
 | 2026-10-18 | FEAT-003 scope expanded by owner | All current and future live camera previews mirror by default, including receipt scanner; original frames remain unmirrored for processing and output; rank remains provisional #3 |
+
+| 2026-10-18 | FEAT-004 and FEAT-005 intake | Documented local-first per-machine Drive ad sync and phased merchant self-order kiosk; re-ranked camera preview ahead of receipt scanner dependency; live POS integration deferred until partner. No code changes authorized |
 
 ## Template
 ### FEAT-XXX — Title
