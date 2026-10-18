@@ -6,7 +6,7 @@
 
 ## Resume checklist
 
-1. Read this file, [Architecture](ARCHITECTURE.md), [Feature status](FEATURE_STATUS.md), [Decisions](DECISIONS.md), [Bug tracker](../bug_tracker.md), [Feature backlog](../next_step.md), `README.md`, and [Advertising and QRIS](advertising-and-qris.md).
+1. Read this file, [Architecture](ARCHITECTURE.md), [Feature status](FEATURE_STATUS.md), [Decisions](DECISIONS.md), [Bug tracker](bug_tracker.md), [Feature backlog](next_step.md), `README.md`, and [Advertising and QRIS](advertising-and-qris.md).
 2. Fetch the **current** branch head and inspect working files before editing. Never assume older chat claims are committed.
 3. Only after explicit owner authorization, address reported defects **one by one** in small, reviewable commits. Keep detailed English comments. Do not modify the separate thermal-printer branch.
 4. Run targeted unit tests, then broad regression suite and real Kivy screen checks; document commands/results and unverified physical tests.
@@ -37,7 +37,7 @@ Physical machine speakers, local media/codec setup, camera, Google Drive and LAN
 
 ## Copy/paste into a new chat
 
-> Continue Meong Photobooth from GitHub repository `pratikto/PhotoBooth`, existing branch `feature/kivy-gui` only. Read `README.md` and all four handover docs in `docs/`, inspect current code and commits, then review `bug_tracker.md` and `next_step.md` and request explicit owner approval before any code changes; do not automatically execute handover tasks. Keep detailed English comments, run tests, commit and push directly to that branch, and update handover/status docs. Do not create a new branch or represent demo QRIS as live payment.
+> Continue Meong Photobooth from GitHub repository `pratikto/PhotoBooth`, existing branch `feature/kivy-gui` only. Read `README.md` and all four handover docs in `docs/`, inspect current code and commits, then review `docs/bug_tracker.md` and `docs/next_step.md` and request explicit owner approval before any code changes; do not automatically execute handover tasks. Keep detailed English comments, run tests, commit and push directly to that branch, and update handover/status docs. Do not create a new branch or represent demo QRIS as live payment.
 
 ## Current blocker: audio remains silent (reported 2026-10-17)
 
