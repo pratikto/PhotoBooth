@@ -118,6 +118,10 @@ class PhotoBoothApp:
         self.printer = ThermalPrinter(load_printer_config(self._printer_settings_file))
         self._print_lock = threading.Lock()
         self._print_jobs_in_flight: set[str] = set()
+        # Only one thermal transport may send bytes at a time, even when
+        # different completed template sessions have pending print batches.
+        # This is intentionally independent of the short bookkeeping lock.
+        self._print_device_lock = threading.Lock()
 
 
         self.ui = PhotoBoothUI(
@@ -772,12 +776,16 @@ class PhotoBoothApp:
             or session.output_path is None
         ):
             return
-        self._start_print_job(session.output_path)
+        # Manual retry is always ONE explicitly requested sheet, not another
+        # paid batch. Never retry an uncertain multi-copy job automatically.
+        self._start_print_job(session.output_path, copies=1)
 
-    def _start_print_job(self, image_path: Path) -> None:
-        """Start one background print job for this exact saved composition."""
+    def _start_print_job(self, image_path: Path, copies: int = 1) -> None:
+        """Send a serialized batch of identical paper copies off the UI thread."""
         if self.is_closing:
             return
+        if isinstance(copies, bool) or not isinstance(copies, int) or copies < 1:
+            raise ValueError("A print batch must contain at least one copy.")
         path = Path(image_path)
         job_key = str(path.resolve())
         with self._print_lock:
@@ -785,10 +793,13 @@ class PhotoBoothApp:
                 return
             self._print_jobs_in_flight.add(job_key)
 
-        self.ui.set_print_status("Sedang mengirim ke printer...", busy=True)
+        self.ui.set_print_status(
+            f"Mengirim {copies} lembar ke printer; periksa hasil fisiknya...",
+            busy=True,
+        )
         worker = threading.Thread(
             target=self._print_in_background,
-            args=(path, job_key),
+            args=(path, job_key, copies),
             name="thermal-printer",
             daemon=True,
         )
@@ -799,12 +810,41 @@ class PhotoBoothApp:
                 self._print_jobs_in_flight.discard(job_key)
             self.ui.set_print_status(f"Gagal memulai pencetakan ({error}).", busy=False)
 
-    def _print_in_background(self, image_path: Path, job_key: str) -> None:
-        """Run device I/O off-thread, then post status back to Kivy."""
+    def _print_in_background(self, image_path: Path, job_key: str, copies: int = 1) -> None:
+        """Submit exactly N copies sequentially and stop on the first uncertainty.
+
+        Every copy reuses the same saved PNG and the same configured Floyd
+        printer path. A successful return only confirms the transport accepted
+        bytes; it cannot prove paper physically emerged. If one job fails or
+        has an uncertain outcome, NEVER resend it or submit remaining copies
+        automatically. A user can then inspect the actual paper and choose a
+        single explicit manual retry if needed.
+        """
+        submitted = 0
+        result = PrintResult(False, "printer", "Batch cetak belum dimulai.")
         try:
-            result = self.printer.print_image(image_path)
-        except Exception as error:
-            result = PrintResult(False, "printer", f"Kesalahan pencetakan ({error}).")
+            with self._print_device_lock:
+                for _number in range(copies):
+                    try:
+                        result = self.printer.print_image(image_path)
+                    except Exception as error:
+                        result = PrintResult(False, "printer", f"Kesalahan pencetakan ({error}).")
+                    if not result.success:
+                        # The last attempted copy might still have reached the
+                        # printer; report confirmed sends, not printed sheets.
+                        result = PrintResult(
+                            False, result.transport,
+                            f"{submitted}/{copies} pengiriman berhasil; sisa batch dihentikan. "
+                            f"Periksa kertas sebelum cetak ulang manual. {result.message}",
+                        )
+                        break
+                    submitted += 1
+                else:
+                    result = PrintResult(
+                        True, result.transport,
+                        f"Data {submitted}/{copies} lembar dikirim ke printer. "
+                        "Periksa kertas untuk memastikan semuanya tercetak.",
+                    )
         finally:
             with self._print_lock:
                 self._print_jobs_in_flight.discard(job_key)
@@ -817,8 +857,7 @@ class PhotoBoothApp:
                 lambda: self._finish_print_job(image_path, result),
             )
         except Exception:
-            # The UI may have been closed while the daemon transport was
-            # writing to a disconnected printer.
+            # Kivy may already be closing, but no unverified job is resubmitted.
             return
 
     def _finish_print_job(self, image_path: Path, result: PrintResult) -> None:
@@ -855,8 +894,15 @@ class PhotoBoothApp:
         # Update the visible timer and schedule its next tick. When no time remains, return the booth
         # to the welcome screen.
         if self._completion_remaining <= 0:
-            self._finish_transaction()
-            return
+            # Allow the final print batch to finish before the result page
+            # disappears. Sending two sheets may take longer than one,
+            # and closing during a daemon print would risk missing copies.
+            with self._print_lock:
+                print_pending = bool(self._print_jobs_in_flight)
+            if not print_pending:
+                self._finish_transaction()
+                return
+            self._completion_remaining = 1
         self.ui.set_completion_countdown(self._completion_remaining)
         self._completion_after_id = self.root.after(
             1000,
