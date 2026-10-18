@@ -1,5 +1,10 @@
 # Meong Photobooth
 
+> **Current operational status (reconciled 2026-10-18):** The active Kivy branch contains thermal **photo** printing (Windows USB queue, LAN/Wi-Fi, three dithering options) and a QR-payment-slip print worker that uses the saved printer configuration. The operator confirms that a photo strip printed, but the **photo quality is blurry**, **payment QR-slip paper output is not working**, advertising videos fail to play, and app music plus Settings sound-test controls remain problematic. These are **open defects**, not completed fixes. QRIS is simulated/non-payable. Current code charges **Rp5.000 per independent 3-capture session**; the newly agreed **Rp5.000 base per session + Rp5.000 per physical print copy** is a **future, not-yet-implemented requirement**. See [feature status](docs/FEATURE_STATUS.md), [bug tracker](docs/bug_tracker.md), [decision record](docs/DECISIONS.md), and [future backlog](docs/next_step.md).
+
+> **Reading note:** Some long sections below preserve earlier development milestones, tests and proposed workflows. Earlier statements such as “printing is not connected” or “payment and printing are only targets” describe **historical snapshots** and must not override the current status above. Historical automated QA is not proof of successful physical printer, audio, video or payment operation.
+
+
 ## Development handover (start here)
 
 For continuing work in a new chat or model, read [Architecture](docs/ARCHITECTURE.md), [Feature status](docs/FEATURE_STATUS.md), [Decisions](docs/DECISIONS.md), and [Next steps](docs/DEVELOPMENT_HANDOVER.md). These documents separate the current implementation, reported defects, and planned work. Continue on the existing `feature/kivy-gui` branch; do not assume historical automated QA resolves newly reported playback/audio/navigation issues.
@@ -155,7 +160,7 @@ For learning and maintenance:
 See the [GUI evidence and checks](docs/qa/meong-carousel.md) for screenshots,
 actual pointer/swipe coverage, and current validation results.
 
-## Current implementation: photo and Drive flow
+## Historical milestone snapshot: photo and Drive flow (superseded where noted above)
 
 The first implementation milestone includes:
 
@@ -172,9 +177,9 @@ The first implementation milestone includes:
 - A local manifest and retryable upload queue. Uploads are identified by transaction-relative path and checked by size and checksum. Local photo retention is limited to 15 days even when upload has not succeeded. Direct OAuth uploads are resumable; the Apps Script backend retries whole files idempotently.
 - Automatic photo retention: 15 days on the booth and 30 days in Google Drive, measured from the transaction start. Drive's independent hourly timer requires the Apps Script setup below.
 
-The dummy payment screen supports testing the complete flow. Live QRIS payment and physical printing remain pending.
+At this historical milestone the dummy payment screen supported a simulated flow; live QRIS remains pending. Thermal photo printing was subsequently integrated into the Kivy branch (see current status above).
 
-Payment and printing sections below describe the procedure's target behavior and are not part of this implementation.
+The following payment/printing sections originated as a target workflow specification. Check current source and the feature-status record before treating any part as implemented or physically verified.
 
 ### Approved 80 mm templates
 
@@ -650,7 +655,7 @@ On a normal Windows desktop, run `python tools/render_gui.py` without the Linux
 environment prefix. Its default output directory is under the system temporary
 folder. All illustrated people and Drive destinations in these renders are test
 fixtures. Webcam latency and live Drive access were not tested in this run;
-QRIS is still a clearly labelled simulation and physical printing is not connected.
+QRIS is still a clearly labelled simulation and at the time of this older QA snapshot, physical printing was not connected (the later Kivy branch now includes printer support, with open device defects).
 
 ### Camera-frame recovery and explicit retake states
 
@@ -767,7 +772,7 @@ The renderer now schedules each capture after its own setup instead of queuing
 all deadlines before startup. This avoids a slow font/plugin initialization
 executing setup and capture in the same frame. Layout, QR decoding, and crop
 assertions remain strict. Camera/Drive checks still use fakes; QRIS is simulated
-and physical printing is not connected.
+and at the time of this older QA snapshot, physical printing was not connected (the later Kivy branch now includes printer support, with open device defects).
 
 ### Complete diagnostics without a crowded footer
 
@@ -807,7 +812,7 @@ bytes remain untouched. All eight sheets were inspected visually. Pixel
 comparison confines their changes to rounded corners; their content and the
 machine-readable layout/QR report remain identical. See the updated
 [evidence and validation details](docs/qa/README.md). Camera and Drive still use
-fakes, QRIS is simulated, and physical printing is not connected.
+fakes, QRIS is simulated, and at the time of this older QA snapshot, physical printing was not connected (the later Kivy branch now includes printer support, with open device defects).
 
 ## Project documentation
 
