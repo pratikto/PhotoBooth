@@ -18,6 +18,9 @@ from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 ASSET_ROOT = Path(__file__).resolve().parent / "assets" / "templates"
 PRICE_PER_SESSION = 5000
+# FEAT-001: one chosen frame requires one 3-photo session, and each requested
+# physical paper copy adds a separate print fee. Demo QR amounts use both fees.
+PRICE_PER_PRINT_COPY = 5000
 # The source artwork is exactly 8 printer dots/mm. 203.2 dpi preserves 80 mm
 # physically; using 203 dpi would introduce a small but unnecessary size error.
 DOTS_PER_MM = 8
