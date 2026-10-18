@@ -1,5 +1,7 @@
 # Meong Photobooth — Bug register
 
+> **CURRENT STATUS (2026-10-19, `feature/kivy-gui`):** Current defect ledger: BUG-011 **OWNER TESTED PASS / MONITORING**; BUG-002/003/004/005/006/008/010 **owner-reported PASS**; BUG-001/007 audio deferred; BUG-009 Drive cloud retention **OPEN**. Kiosk GUI synthetic CI **PASS at `c40f33f5`** ([Actions](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762)). Later accepted results supersede earlier dated FAIL narratives without erasing incident history. Do not treat CI as physical acceptance.
+
 **Reconciled: 2026-10-18 | Branch: `feature/kivy-gui`**  
 Authoritative registry of **user-reported operational defects**, not a list of assumed fixes. New IDs never overwrite existing IDs; severity is provisional until reproduction. Latest 2026-10-18 owner feedback additionally confirms **BUG-011 print-copy quantity now works** after the Windows RAW fixes; classify **OWNER TESTED PASS — MONITORING** following an explicit successful hands-on test, not formally CLOSED/RELEASED. BUG-004/010 and BUG-008 retain their owner-reported pass/monitoring status; BUG-009 remains OPEN/deferred. This update is **documentation-only**: it records existing commits and evidence, with no source patch, new tests, deployment, or release.
 

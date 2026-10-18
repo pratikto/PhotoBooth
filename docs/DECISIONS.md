@@ -1,5 +1,7 @@
 # Meong Photobooth — Product and technical decision record
 
+> **CURRENT STATUS (2026-10-19, `feature/kivy-gui`):** Decision log is **binding requirements and owner approvals**, not a claim that planned code is shipped. Current accepted core: FEAT-001 DEMO pricing/copies, FEAT-003 capture mirror and BUG-011 monitored owner PASS. CI PASS at [`c40f33f5`](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762); real QRIS, receipt scanner, cloud-retention verification and hardware release are separate.
+
 Last reconciled: **2026-10-18** | Branch: `feature/kivy-gui`
 Sources: owner decisions from recent project discussions; technical implementation/status must be checked against [FEATURE_STATUS.md](FEATURE_STATUS.md) and [bug_tracker.md](bug_tracker.md).
 
