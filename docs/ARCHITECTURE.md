@@ -8,7 +8,7 @@ This document describes **observed source modules**, not guaranteed on-device fu
 
 | Responsibility | Main files | Current boundary |
 | --- | --- | --- |
-| Entry, orchestration, ordering and capture transitions | `main.py`, `photobooth/app.py`, `photobooth/workflow.py` | Existing quantity expands to independent photo sessions; no per-print-copy pricing yet. |
+| Entry, orchestration, ordering and capture transitions | `main.py`, `photobooth/app.py`, `photobooth/workflow.py` | **FEAT-001 in source:** each nonzero template makes one 3-photo capture session; picker quantity means identical paper copies. `quote_order` computes base-per-template and per-copy fees, DEMO only. |
 | Kivy pages, tutorial, capture controls, template carousel and animations | `photobooth/ui_kivy.py`, `ui_kiosk.py`, `ui_brand.py`, `ui_motion.py` | GUI exists; complete physical-navigation/screen-size regression pending. |
 | Local advertising playlist, face invitation and event counters | `photobooth/advertising.py`, `face_presence.py` | Bundled configuration plus local `ad_video/` files; no live central ad-entitlement enforcement. Camera presence is not identity recognition. |
 | Sound/music and video audio ownership | `photobooth/audio.py`, `ui_kiosk.py` | Playback exists in source; device reports audio/Settings control failures. Payment advertising is intended to remain muted. |
@@ -24,7 +24,7 @@ The historical `feature/thermal-printer` branch remains preserved; it is **not**
 
 **Current source (demo):** local idle ads → manual Start or face invitation → illustrated tutorial → cyclic template/session picker → **simulated payment** → sessions of 3 captures + retake/review → composed photo results with print path → idle ads. Verify transitions physically. The on-screen payment QR is **not payable**.
 
-**Future FEAT-001:** one template/session (3 captures) + a separate count of identical physical print copies, with IDR 5,000 base + IDR 5,000 per printed copy. This is a redesign of pricing, cart and workflow: changing a constant alone would be incorrect.
+**FEAT-001 source integration, pending acceptance:** each selected frame now has one 3-capture session and a count of identical physical print copies at Rp5.000 base + Rp5.000 per requested copy. `transaction_store` records `print_copies` and `demo_order_pricing`. `app.py` serializes printer batch sends and aborts on uncertain transfer; manual retry sends a single explicitly requested sheet and may be a duplicate if paper already printed. No robust paid-reprint ledger exists (FEAT-007/016 deferred). QRIS stays DEMO.
 
 **Future FEAT-002 / FEAT-005:** dummy food receipt scanning or local dummy ordering-to-photo discount in one machine; real partner ordering delegates to merchant-supplied, safe customer-facing web ordering. Real receipt/POS verification is deferred until an actual partner provides its format and APIs. Treat demo food payment as simulated and never infer genuine eligibility from decoded receipt text alone.
 
