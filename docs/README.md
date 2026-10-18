@@ -19,7 +19,7 @@ The repository-root [README](../README.md) explains setup and preserves historic
 ## Supporting technical references
 
 - [Architecture](ARCHITECTURE.md) — actual source-level modules vs proposed system design.
-- **FEAT-003 live camera mirror:** implemented capture-page preview UV mirroring in `ui_kivy.py`; [targeted Kivy GPU Actions 39139208320](https://github.com/pratikto/PhotoBooth/actions/runs/39139208320) **PASS**. Windows physical camera acceptance pending; the FEAT-002 receipt scanner remains unimplemented. [FEAT-003 acceptance checklist](test_checklist.md).
+- **FEAT-003 live camera mirror:** capture-page GPU preview mirror implemented in `ui_kivy.py`; owner explicitly confirms Windows **TESTED PASS (2026-10-18)**, and [targeted Kivy GPU Actions 39139208320](https://github.com/pratikto/PhotoBooth/actions/runs/39139208320) also **PASS**. Full Kiosk CI/release checks remain separate. FEAT-002 receipt scanner/overlay is unimplemented. [FEAT-003 acceptance checklist](test_checklist.md).
 - [Advertising and demo QR payment slip](advertising-and-qris.md) — current playback and printer setup, with **legacy LAN** instructions clearly distinguished from saved GUI printer configuration.
 - [QA evidence archive](qa/README.md) — date-specific automated/visual reports that do not override later device failures.
 - **[FEAT-001 / BUG-011 print-copy acceptance](qa/FEAT-001-BUG-011-acceptance.md)** — owner accepted DEMO pricing and working Windows physical copy counts after printer RAW fixes, with dated targeted CI, evidence limitations and future regression matrix.
