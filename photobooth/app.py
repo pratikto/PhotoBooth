@@ -781,7 +781,7 @@ class PhotoBoothApp:
         self._start_print_job(session.output_path, copies=1)
 
     def _start_print_job(self, image_path: Path, copies: int = 1) -> None:
-        """Send a serialized batch of identical paper copies off the UI thread."""
+        """Start one RAW transport submission containing N identical strips."""
         if self.is_closing:
             return
         if isinstance(copies, bool) or not isinstance(copies, int) or copies < 1:
@@ -794,7 +794,7 @@ class PhotoBoothApp:
             self._print_jobs_in_flight.add(job_key)
 
         self.ui.set_print_status(
-            f"Mengirim {copies} lembar ke printer; periksa hasil fisiknya...",
+            f"Mengirim satu batch berisi {copies} lembar; periksa jumlah kertas...",
             busy=True,
         )
         worker = threading.Thread(
@@ -811,39 +811,45 @@ class PhotoBoothApp:
             self.ui.set_print_status(f"Gagal memulai pencetakan ({error}).", busy=False)
 
     def _print_in_background(self, image_path: Path, job_key: str, copies: int = 1) -> None:
-        """Submit exactly N copies sequentially and stop on the first uncertainty.
+        """Submit one ESC/POS job containing N complete image-and-cut sequences.
 
-        Every copy reuses the same saved PNG and the same configured Floyd
-        printer path. A successful return only confirms the transport accepted
-        bytes; it cannot prove paper physically emerged. If one job fails or
-        has an uncertain outcome, NEVER resend it or submit remaining copies
-        automatically. A user can then inspect the actual paper and choose a
-        single explicit manual retry if needed.
+        On Windows, a series of separately spooled RAW jobs can be accepted
+        before the physical thermal printer catches up. Send the entire paid-
+        copy *DEMO* batch in one RAW document, rather than opening/closing a
+        spooler job for every copy. ThermalPrinter renders the saved photo once
+        and repeats the resulting image + cut commands. Every strip therefore
+        uses identical pixels and the current Floyd printer profile.
+
+        A successful sender result means only that the batch was accepted by
+        its transport, NOT that N physical sheets definitely came out. Never
+        automatically retry an uncertain batch: the printer may already have
+        printed part of it, which would produce duplicate paper.
         """
-        submitted = 0
         result = PrintResult(False, "printer", "Batch cetak belum dimulai.")
         try:
             with self._print_device_lock:
-                for _number in range(copies):
-                    try:
-                        result = self.printer.print_image(image_path)
-                    except Exception as error:
-                        result = PrintResult(False, "printer", f"Kesalahan pencetakan ({error}).")
-                    if not result.success:
-                        # The last attempted copy might still have reached the
-                        # printer; report confirmed sends, not printed sheets.
-                        result = PrintResult(
-                            False, result.transport,
-                            f"{submitted}/{copies} pengiriman berhasil; sisa batch dihentikan. "
-                            f"Periksa kertas sebelum cetak ulang manual. {result.message}",
-                        )
-                        break
-                    submitted += 1
-                else:
+                try:
+                    result = self.printer.print_image(image_path, copies=copies)
+                except Exception as error:
+                    result = PrintResult(
+                        False, "printer",
+                        f"Pengiriman batch {copies} lembar gagal/tidak pasti "
+                        f"({error}). Periksa kertas sebelum cetak ulang manual.",
+                    )
+                if result.success:
                     result = PrintResult(
                         True, result.transport,
-                        f"Data {submitted}/{copies} lembar dikirim ke printer. "
-                        "Periksa kertas untuk memastikan semuanya tercetak.",
+                        f"Batch {copies} lembar diterima oleh {result.transport}. "
+                        "Tunggu seluruh cetakan keluar dan periksa jumlah kertas.",
+                        fell_back=result.fell_back,
+                    )
+                else:
+                    result = PrintResult(
+                        False, result.transport,
+                        f"Batch {copies} lembar gagal/tidak pasti; sebagian mungkin "
+                        f"sudah tercetak. Periksa kertas sebelum cetak ulang manual. "
+                        f"{result.message}",
+                        fell_back=result.fell_back,
                     )
         finally:
             with self._print_lock:
@@ -857,7 +863,7 @@ class PhotoBoothApp:
                 lambda: self._finish_print_job(image_path, result),
             )
         except Exception:
-            # Kivy may already be closing, but no unverified job is resubmitted.
+            # Kivy may already be closing, but no unverified batch is resent.
             return
 
     def _finish_print_job(self, image_path: Path, result: PrintResult) -> None:
