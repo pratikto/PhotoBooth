@@ -19,7 +19,7 @@ For each new idea record:
 | 2 (shared camera UX dependency) | FEAT-003 | Global mirrored live camera previews | P1 High | High | Partial | Partial | M | REVIEW / NOT APPROVED |
 | 3 (after FEAT-001 and FEAT-003) | FEAT-002A | Dummy receipt scanner + simulated promotion | P1 High | High | Partial | Partial | M | REVIEW / NOT APPROVED |
 | 4 (after core stability) | FEAT-004 | Per-machine local-first Drive ad sync | P2 Medium | High | Partial | Partial | M/L | REVIEW / NOT APPROVED |
-| 5 (partner-dependent) | FEAT-005A | Merchant ordering launcher / kiosk shell | P2 Medium | High | Unverified | Blocked: partner capability | S/M | DEFERRED / NOT APPROVED |
+| 5 (demo after stability) | FEAT-005A | Local dummy ordering demo + kiosk launcher | P2 Medium | High | Partial | Partial | M | REVIEW / NOT APPROVED |
 | Deferred unless required by partner | FEAT-005B | Optional deeper ordering/POS integration | P3 Deferred | Medium | Unverified | Blocked: partner need | L/XL | DEFERRED / NOT APPROVED |
 | Deferred until merchant partnership | FEAT-002B | Real merchant POS integration | P2 Deferred | High | Unverified | Blocked: no partner | L/XL | DEFERRED / NOT APPROVED |
 
@@ -79,14 +79,14 @@ For each new idea record:
 
 ## FEAT-005 — Partner-provided self-ordering inside Meong kiosk
 - **Status:** DEFERRED / NOT APPROVED FOR IMPLEMENTATION. Submitted: 2026-10-18; strategy confirmed by owner later on 2026-10-18.
-- **Owner decision:** **Do not develop or maintain a native Meong ordering GUI, menu catalog, cart, checkout, or POS adapters by default.** Merchant owns the ordering service, menu changes, stock, pricing, payment and POS connection. Meong supplies only a safe entry point / launcher and, where supported, a kiosk-style embedded browser or controlled handoff back to photobooth.
+- **Owner decision:** For real merchants, **do not develop or maintain a production Meong ordering GUI, menu catalog, cart, checkout, or POS adapters by default**. Merchant owns the live ordering service, menu changes, stock, pricing, payment and POS connection. Meong supplies only a safe entry point / launcher and, where supported, a kiosk-style embedded browser or controlled handoff back to photobooth. **Exception: owner explicitly requests a small, standalone dummy ordering system for sales demonstrations**, without a real POS or live payment.
 - **Partner-dependent eligibility:** Only offer self-ordering when the merchant already has a compatible customer-facing web ordering solution or a separately evaluated compatible app; confirm kiosk usability, permissions, supported operating system and payment workflow with each partner. A POS cashier/admin interface must never be exposed to public kiosk users. If incompatible, disable/hide the ordering feature rather than building a full POS.
-- **FEAT-005A lightweight scope:** Configurable merchant ordering URL/approved application per machine; full-screen controlled launch, restricted navigation, clear return to Meong, inactivity reset, error/offline handling and isolation from photobooth sessions. No Meong-owned menu synchronization.
+- **FEAT-005A lightweight demo scope:** Create a **local mini web-ordering demo** on the mini PC with sample menu items, item selection/quantities, simple cart, simulated payment, and demo order confirmation. Launch from a Meong 'Pesan Makanan & Minuman' button in a controlled kiosk view with clear return, inactivity reset and isolation from photobooth sessions. Mark all payment and order screens DEMO; no real orders, payment gateway, POS integration or merchant data. Keep demo isolated and disposable: when a real partner supplies compatible ordering, the same launcher points to partner's own customer ordering service instead of building/maintaining a Meong production POS.
 - **FEAT-005B optional:** Deeper POS/API integration only if a real partner's requirements justify it and the owner explicitly approves a separate scope.
 - **Business priority / impact:** P2 Medium / High potential partner value. **Compatibility:** Unverified pending partner and operating system. **Readiness:** Blocked until partner capability known. **Complexity:** S/M for supported web kiosk, higher for non-web apps. **Confidence:** Medium.
 - **Risks:** Embedded-browser incompatibility, login/session leakage, escape from kiosk, payment handoff, network outages, merchant site UI changes, customer data exposure, OS limitations, and unsupported vendor terms.
-- **Acceptance:** Partner's own customer ordering works on target mini PC without exposing cashier/admin functions; merchant menu changes appear without updating Meong code; customer can return safely to Meong; no shared cart/payment assumptions; photobooth functions remain stable.
-- **Execution rank:** #5 provisional, deferred until a partner has compatible ordering capability. Existing bug fixes and earlier feature priorities remain ahead.
+- **Acceptance:** Demo can browse sample items, adjust quantities, see cart total, simulate checkout and display an explicitly marked demo order confirmation without external connectivity or actual charge; kiosk safely returns to Meong and preserves photobooth functionality. Later, partner's own customer ordering works on target mini PC without exposing cashier/admin functions; merchant menu changes appear without updating Meong code; no shared cart/payment assumptions.
+- **Execution rank:** Demo #5 provisional after core stability and earlier features; live partner ordering remains deferred until a compatible partner is found. Explicit implementation approval still required.
 
 ## Milestone framework (provisional)
 M1 Core Stability; M2 Operational Reliability; M3 Commercial Readiness; M4 Product Enhancement; M5 Scale & Maintenance. See protocol for freeze and release rules.
@@ -114,6 +114,8 @@ M1 Core Stability; M2 Operational Reliability; M3 Commercial Readiness; M4 Produ
 | 2026-10-18 | FEAT-004 and FEAT-005 intake | Documented local-first per-machine Drive ad sync and phased merchant self-order kiosk; re-ranked camera preview ahead of receipt scanner dependency; live POS integration deferred until partner. No code changes authorized |
 
 | 2026-10-18 | FEAT-005 simplified by owner | Merchant provides and maintains ordering UI/menu/payment; Meong only hosts/launches compatible customer ordering; no native ordering GUI or custom POS by default; partner-dependent, deferred |
+
+| 2026-10-18 | FEAT-005 demo clarified by owner | Build a small local dummy menu/cart/simulated payment/order demo for partner pitches; production ordering still relies on partner's system. Documentation only; no code implementation authorized |
 
 ## Template
 ### FEAT-XXX — Title
