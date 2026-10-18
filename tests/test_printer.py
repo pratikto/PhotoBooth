@@ -168,6 +168,58 @@ class ThermalPrinterTests(unittest.TestCase):
         self.image_path.write_bytes(b"test image")
         self.payload_builder = Mock(return_value=b"escpos job")
 
+    def test_requested_copies_repeat_complete_cut_payload_in_one_usb_job(self):
+        """Three sheets must be three image/cut sequences in ONE transport send.
+
+        This is a hardware-independent byte-level test. It deliberately
+        avoids asserting that the physical printer produced three sheets.
+        """
+        base = b"ESC-POS-IMAGE" + b"\x1dV\x00"
+        usb = Mock()
+        builder = Mock(return_value=base)
+        printer = ThermalPrinter(
+            PrinterConfig(),
+            payload_builder=builder,
+            usb_sender=usb,
+        )
+        result = printer.print_image(self.image_path, copies=3)
+
+        self.assertTrue(result.success)
+        builder.assert_called_once_with(self.image_path)
+        usb.assert_called_once_with(base * 3)
+        self.assertEqual(usb.call_count, 1)
+        self.assertEqual(usb.call_args.args[0].count(b"\x1dV\x00"), 3)
+
+    def test_multi_copy_lan_uses_only_one_network_submission(self):
+        """A multi-copy LAN job must be atomic at the transport boundary."""
+        base = b"BITMAP" + b"\x1dV\x00"
+        network = Mock()
+        printer = ThermalPrinter(
+            PrinterConfig(lan_host="10.0.0.20"),
+            payload_builder=Mock(return_value=base),
+            network_sender=network,
+            usb_sender=Mock(),
+        )
+        result = printer.print_image(self.image_path, copies=2)
+
+        self.assertTrue(result.success)
+        network.assert_called_once_with("10.0.0.20", 9100, base * 2)
+
+    def test_invalid_batch_size_never_sends_bytes(self):
+        """Reject invalid copy counts before preparing or spooling paper."""
+        usb = Mock()
+        printer = ThermalPrinter(
+            PrinterConfig(),
+            payload_builder=self.payload_builder,
+            usb_sender=usb,
+        )
+        for copies in (0, -1, True, 1.5, "3"):
+            with self.subTest(copies=copies):
+                result = printer.print_image(self.image_path, copies=copies)
+                self.assertFalse(result.success)
+        usb.assert_not_called()
+        self.payload_builder.assert_not_called()
+
     def test_lan_is_primary_and_usb_is_not_used_on_success(self):
         network = Mock()
         usb = Mock()
