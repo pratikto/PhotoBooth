@@ -22,12 +22,15 @@ The repository-root [README](../README.md) explains setup and preserves historic
 - **FEAT-003 live camera mirror:** capture-page GPU preview mirror implemented in `ui_kivy.py`; owner explicitly confirms Windows **TESTED PASS (2026-10-18)**, and [targeted Kivy GPU Actions 39139208320](https://github.com/pratikto/PhotoBooth/actions/runs/39139208320) also **PASS**. Full Kiosk CI/release checks remain separate. FEAT-002 receipt scanner/overlay is unimplemented. [FEAT-003 acceptance checklist](test_checklist.md).
 - [Advertising and demo QR payment slip](advertising-and-qris.md) — current playback and printer setup, with **legacy LAN** instructions clearly distinguished from saved GUI printer configuration.
 - [QA evidence archive](qa/README.md) — date-specific automated/visual reports that do not override later device failures.
+- **[Full Kiosk GUI Regression — verified green CI](qa/KIOSK-GUI-REGRESSION-2026-10-18.md)** — 230 passing / 2 skipped unit tests, 87 render checks, historical FAIL diagnosis and scoped test/CI-only repairs (source SHA `f129dd9e`).
 - **[FEAT-001 / BUG-011 print-copy acceptance](qa/FEAT-001-BUG-011-acceptance.md)** — owner accepted DEMO pricing and working Windows physical copy counts after printer RAW fixes, with dated targeted CI, evidence limitations and future regression matrix.
 - [Photo retention](photo-retention.md) — 15-day local/30-day Drive targets and associated data-loss considerations.
 - [Thermal dithering lab](dither-tuning-lab.md) — standalone FEAT-011 experiment on `feature/dither-tuning`; has no effect on the production Kivy printer until separately approved.
 - [Legacy NEXT_STEPS pointer](NEXT_STEPS.md) — retained for older bookmarks; do not edit as a second backlog.
 
 ## Current field status (2026-10-18)
+
+**Latest automated GUI release-quality gate:** [Kiosk GUI Actions 39144464476](https://github.com/pratikto/PhotoBooth/actions/runs/39144464476) **SUCCESS** at `f129dd9e`: 230 unit-test PASS, 2 skipped, 87 synthetic renders PASS, 0 errors. This supersedes earlier dated Kiosk CI FAIL references; it is not a hardware/production-release certificate. [Full QA analysis](qa/KIOSK-GUI-REGRESSION-2026-10-18.md).
 
 **Most recent owner-tested FEAT-001:** Rp5,000 per selected template/session plus Rp5,000 per requested paper copy is implemented in the Kivy GUI (DEMO). Following the Windows printer job-finalization correction, the owner reports **pricing and physical copy count both work**. **BUG-011 is OWNER REPORTED PASS — MONITORING**, not formally CLOSED. [Focused CI 39134970707](https://github.com/pratikto/PhotoBooth/actions/runs/39134970707) passed **15/15** business/print-spool mock tests; [full Kiosk GUI CI 39135186022](https://github.com/pratikto/PhotoBooth/actions/runs/39135186022) still **failed**. The exact Windows local commit, printer queue and 1/2/3 paper-count measurements were not recorded.
 
