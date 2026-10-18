@@ -113,6 +113,18 @@ class TransactionStoreTests(unittest.TestCase):
         # Remove the temporary files created by this test case.
         self.temp_dir.cleanup()
 
+    def test_manifest_persists_copy_count_without_creating_extra_sessions(self):
+        """The accepted DEMO quote survives disk persistence beside each plan."""
+        plans = build_session_plans(get_templates(), {"template_a": 3, "template_b": 1})
+        order = self.store.start_transaction(plans)
+        manifest = json.loads(order.manifest_path.read_text(encoding="utf-8"))
+
+        self.assertEqual(len(manifest["sessions"]), 2)
+        self.assertEqual([r["print_copies"] for r in manifest["sessions"]], [3, 1])
+        self.assertEqual(manifest["demo_order_pricing"]["session_count"], 2)
+        self.assertEqual(manifest["demo_order_pricing"]["print_copies"], 4)
+        self.assertEqual(manifest["demo_order_pricing"]["total_amount"], 30000)
+
     def test_booth_id_rejects_path_separators(self):
         # Ensure booth IDs cannot inject path separators into local transaction folder names.
         with self.assertRaises(ValueError):
