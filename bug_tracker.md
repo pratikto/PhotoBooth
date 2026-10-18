@@ -1,6 +1,6 @@
 # Meong Photobooth — Bug Tracker
 Updated: 2026-10-18 | Branch: `feature/kivy-gui`
-Reported symptoms are **not** independently verified resolutions. Cross-check [docs/FEATURE_STATUS.md](docs/FEATURE_STATUS.md) and [docs/NEXT_STEPS.md](docs/NEXT_STEPS.md) against current code and hardware before changing status.
+Reported symptoms are **not** independently verified resolutions. Cross-check [docs/FEATURE_STATUS.md](docs/FEATURE_STATUS.md) and [docs/DEVELOPMENT_HANDOVER.md](docs/DEVELOPMENT_HANDOVER.md) against current code and hardware before changing status.
 
 | ID | Symptom / evidence | Severity (provisional) | Status | Next verification |
 |---|---|---|---|---|
