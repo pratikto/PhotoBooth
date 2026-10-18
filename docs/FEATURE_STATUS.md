@@ -1,33 +1,43 @@
-# Meong Photobooth — Feature status
+# Meong Photobooth — Current feature status
 
-Snapshot: 2026-10-17, `feature/kivy-gui`. Statuses distinguish **implemented in source/docs** from **verified on the user's machine**. User-reported defects are open even if earlier automated QA passed.
+**Reconciled: 2026-10-18 | Branch: `feature/kivy-gui`**  
+This status is based on reading selected source files and the latest owner device reports; **no new tests or hardware checks were performed during documentation housekeeping**. Automated/historical test passes are not proof of current Windows booth acceptance.
 
-| Area | Status | Evidence / limitation |
+Status vocabulary: **IN SOURCE** = relevant implementation found, **OWNER REPORTED** = physical observation requiring reproducible evidence, **UNVERIFIED** = no current hardware acceptance, **PLANNED** = not implemented, **BLOCKED** = operational defect. For feature approval/requirements, see [DECISIONS.md](DECISIONS.md) and [next_step.md](next_step.md).
+
+## Current implementation vs reported device behavior
+
+| Feature / concern | Current source / observation | Acceptance status |
 | --- | --- | --- |
-| Kivy branded GUI, original Meong logo, animated pages | Implemented; on-device validation ongoing | `ui_kivy.py`, `ui_brand.py`, `ui_motion.py` |
-| 12 cyclic template previews, quantity/cart at Rp5,000 per session | Implemented | `README.md`, `catalog.py` |
-| Capture 3 photos/session, five-second timer, review, selected-photo retake | Implemented | `app.py`, `workflow.py`, `ui_kivy.py` |
-| Optional palm-trigger shutter and face-presence invitation | Implemented; physical validation needed | `palm_gesture.py`, `face_presence.py` |
-| Idle advertising and separate payment ad playlist (images/videos) | Automatic root `ad_video/` discovery implemented with arbitrary names; **playback still unverified on device** | `advertising.py`, `ui_kiosk.py`; local video files required; decoder and display remain to be tested |
-| Larger main advertising video | **Expanded in source; desktop render not yet verified** | Idle page now uses up to 1920dp width, smaller gutters and header; aspect ratio still uses contain |
-| Audio startup, independent sliders and effects | **User reports music still silent after fade-in fix; issue reopened** | Fade-in source fix alone did not resolve observed output; capture audio provider/OS mixer diagnostics |
-| Idle ad -> mandatory tutorial -> layout picker | **Implemented in source; on-device testing pending** | Manual Start and face invitation now open guide first; guide Start leads to picker |
-| Face invitation after stable 5 s; 15 s dismiss/cooldown | Implemented in source; verify behavior on hardware | Configurable kiosk timing |
-| Demo payment QR, ad column and optional print-offer after 60 s | Implemented demo; not real QRIS | `docs/advertising-and-qris.md` |
-| LAN ESC/POS payment QR slip | Adapter documented; physical printer unverified | Printer host defaults unset; preview is not printing |
-| Physical photo print + Floyd–Steinberg/Bayer/threshold | Separate printer development branch | Do not assume merged into Kivy GUI |
-| Google Drive folder queue and local sync, 15-day local/30-day Drive retention | Implemented in code and documented; credentials/service validation needed | Remote cleanup requires separate Apps Script setup |
-| Live QRIS payment confirmation | **Not implemented** | No gateway is connected |
-| Android packaging, real camera/audio/printer acceptance tests | **Not verified** | Hardware/environment dependent |
+| Kivy Meong GUI, branding, 12 cyclic 80 mm templates, capture/3-photo session, review/retake | Implemented in `ui_kivy.py`, `catalog.py`, `workflow.py`, `app.py` | IN SOURCE; end-to-end device regression incomplete |
+| Current pricing: **IDR 5,000 per quantity/session** | `catalog.py: PRICE_PER_SESSION=5000`; `app.py` total = `len(plans)*unit_price`; `workflow.py` expands quantity to multiple **independent 3-capture sessions** | IN SOURCE; future base-fee + per-copy model is PLANNED (FEAT-001) |
+| Initial idle ads, face-trigger invitation, tutorial-before-template | `advertising.py`, `face_presence.py`, `ui_kiosk.py` and Kivy flow | IN SOURCE; manual and face routes need owner device verification (BUG-005) |
+| Video advertisement files on idle and payment | Local playlist/automatic `ad_video/` discovery implemented; video playback/texture depends on local codec/media | **BLOCKED / owner reports both videos fail to play** (BUG-002), notwithstanding historical automated tests |
+| Larger opening advertisement area | GUI sizing changes reported in source | UNVERIFIED actual screen sizing/resolutions (BUG-006) |
+| Application music and interaction sounds | `audio.py`, Kivy Settings callbacks and diagnostic UI present | **BLOCKED**: app music/SFX reported silent; standalone audio probe was audible (BUG-001); Settings Music/Button `Uji` reported nonresponsive (BUG-007) |
+| Demo payment QR + payment advertisement + optional QR print invitation | Demo gateway and QR interface, timed non-modal prompt in `ui_kiosk.py` | IN SOURCE; **no real QRIS gateway**. Ad rendering blocked by BUG-002 |
+| Thermal **photo strip** printing | `printer.py` and `printer_settings.py` integrated in this **same GUI branch**, Windows RAW printer queue + LAN/Wi-Fi/USB routes; Floyd–Steinberg, Bayer, threshold in source | **OWNER REPORTED paper output works** on Windows POS80ENG, but blurry/poor print quality (BUG-004). No current comparison/quality acceptance |
+| Payment QR-slip printing | `qris_print.py` uses GUI-provided saved `PrinterConfig`; chooses LAN/Wi-Fi/Windows USB as available; keeps legacy LAN fallback for standalone callers | **BLOCKED / owner reports QR slip not printing** (BUG-003), though photo strip prints; physical QR scannability unverified |
+| Local transaction manifest and folder counter | `transaction_store.py` records photo-session manifests and output | IN SOURCE; **not equivalent** to FEAT-007 future robust paid-state/print recovery, nor live QRIS integration |
+| Photo Drive upload, folder QR, retention | Local manifest/retry queue and retention code exist; target local 15 days, Drive 30 days | IN SOURCE; Google configuration/live service not acceptance-tested. Local bytes may expire despite failed upload; review digital-delivery commitments |
+| Real QRIS/merchant POS verification, receipt-scanner promotions, new pricing, global camera mirroring | Not found as completed production features | PLANNED (FEAT-001/002/003; real partner integration deferred) |
+| Multi-theme, remote Drive ad management by machine, subscription/ad-slot enforcement, ordering launcher/demo | Not present as delivered production capabilities | PLANNED (FEAT-004/005/006/019), subject to approval and prerequisites |
+| Android packaging, unattended fleet administration | Not verified | PLANNED / separate investigation |
 
-## Priority open defects from latest conversation
+## Device-reported defects — latest owner feedback
 
-1. Videos fail to play on both initial advertising and payment pages.
-2. Main/idle advertising video should occupy more screen area.
-3. Application music does not start automatically; opening Settings triggers it.
-4. Pressing Start from main ad must open the illustrated tutorial **before** layout selection.
+1. **BUG-001:** Application background music and effects fail to play in full Kivy GUI even though a standalone audio diagnostic was audible.
+2. **BUG-007:** Music and Button `Uji` Settings controls did not respond and did not log callbacks in user's test. Code now includes a tap indicator/logger; actual fix remains unverified.
+3. **BUG-002:** Idle and payment advertising videos do not render/play.
+4. **BUG-003:** QR payment-slip printing fails while photo-strip printing works.
+5. **BUG-004:** Physical thermal photo-strip output is blurry/low quality.
+6. **BUG-005 / BUG-006:** Ad → tutorial → template route and enlarged opening ads require hardware UI confirmation.
 
-No code change or physical test is claimed by this documentation update. See [Next steps](DEVELOPMENT_HANDOVER.md).
+See [bug_tracker.md](bug_tracker.md) for source-of-truth severity/status, not this descriptive list.
+
+## Historical implementation and QA notes (2026-10-17; NOT current acceptance)
+
+The following chronological notes are retained to preserve past test reports and debugging context. They may describe earlier revisions or planned tests. **Where they conflict with the table above or newer source, the table above is the current reconciled interpretation.** Reports of tests passing cannot override later user-observed failures.
 
 ## Audio bug update — 2026-10-17
 
