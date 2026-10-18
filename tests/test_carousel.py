@@ -148,11 +148,11 @@ class CarouselTests(unittest.TestCase):
         self.tap(self.ui.carousel_next)
         self.tap(self.ui.quantity_buttons[second.template_id][1])
         self.tap(self.ui.quantity_buttons[second.template_id][1])
-        self.assertEqual(self.ui.cart_total.text, 'Rp15.000')
+        self.assertEqual(self.ui.cart_total.text, 'Rp25.000')
         self.tap(self.ui.carousel_previous)
-        self.assertEqual(self.ui.quantity_labels[first.template_id].text, '1 sesi')
+        self.assertEqual(self.ui.quantity_labels[first.template_id].text, '1 cetak')
         self.tap(self.ui.quantity_buttons[first.template_id][0])
-        self.assertEqual(self.ui.cart_total.text, 'Rp10.000')
+        self.assertEqual(self.ui.cart_total.text, 'Rp15.000')
         self.assertEqual(self.ui.quantities[second.template_id], 2)
         self.assertTrue(self.ui.quantity_buttons[first.template_id][0].disabled)
         self.tap(self.ui.start_button)
@@ -173,7 +173,7 @@ class CarouselTests(unittest.TestCase):
             self.assertIs(self.ui.start_button, start)
             self.assertEqual(carousel.index, 7)
             self.assertEqual(self.ui.template_name.text, 'Scrapbook Memories')
-            self.assertEqual(self.ui.cart_total.text, 'Rp10.000')
+            self.assertEqual(self.ui.cart_total.text, 'Rp15.000')
             self.assertLessEqual(self.ui.shell.width - self.ui.shell.padding[0]
                                  - self.ui.shell.padding[2], dp(1440) + 1)
             for widget in (self.ui.carousel_previous, self.ui.carousel_next, start):
