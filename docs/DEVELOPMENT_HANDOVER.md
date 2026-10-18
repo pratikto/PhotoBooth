@@ -4,6 +4,16 @@
 **Target branch:** `feature/kivy-gui` (**do not create a new branch**).  
 **Handover dated:** 2026-10-17.
 
+## Latest active work — FEAT-001 DEMO pricing/print copies (2026-10-18)
+
+**The owner explicitly requested "kita lanjut feat1 aja"**, approving FEAT-001 as a narrowly scoped exception to general P3 transaction/payment feature sequencing. Do not infer approval for FEAT-007 durable paid-state recovery, FEAT-020 real QRIS, FEAT-002 promo settlement or any actual merchant charge. The QR shown at checkout must continue to say DEMO / non-payable.
+
+**Source changed:** `photobooth/catalog.py` defines a separate Rp5.000 session fee and Rp5.000 print-copy fee; `workflow.py` quotes the total and creates **one** capture/session for each chosen template rather than one per requested sheet; `ui_kivy.py` labels copy counts; `app.py` displays the consistent DEMO quote and sends N **serialized, identical thermal images**, aborting the rest of a batch on uncertain failure without automatic retry; `transaction_store.py` records per-session `print_copies` and a `demo_order_pricing` record. Manual "CETAK ULANG" remains a one-sheet, deliberately initiated recovery action, not a new paid purchase. Updated source-level flow and test cases in `test_workflow.py`, `test_controller_flow.py`, `test_kivy_gui.py` and synthetic `tools/render_gui.py`. Detailed user acceptance is in [test_checklist.md](test_checklist.md).
+
+**Quality/risk:** Successful transport submission does not prove physical paper. Target Windows tests: 1/2/3 identical prints after one 3-shot session at Rp10k/Rp15k/Rp20k; two designs with 2+1 copies at Rp25k and only two sessions; safe failure mid-batch; demo QR and Drive folder QR remain distinct; no GPIO or real QRIS payment. Existing Kiosk GUI GitHub CI previously failed, independently of this feature; check the **current commit** run rather than claiming it passed. Owner acceptance and final merge/release remain pending. Pre-implementation branch rollback reference: [`5842a09f`](https://github.com/pratikto/PhotoBooth/commit/5842a09f6a4c6c771ef7f5f0d1a330d0b1040b42).
+
+**Other priorities unchanged:** FEAT-008/009 remain normal top-of-backlog features after this owner-selected work. BUG-001/007 postponed, BUG-008 monitoring, BUG-009 still OPEN/deferred alongside FEAT-004 with cloud privacy risk. Current canonical prioritization and FEAT-001 exception: [next_step.md](next_step.md).
+
 ## Current priority handover — owner decision 2026-10-18 (latest)
 
 **Target:** `feature/kivy-gui`; use the [unified execution board](next_step.md) rather than historical sections below. Owner explicitly deferred **all payment, transaction, checkout/pricing, receipt-promo settlement and paid-reprint development to execution P3 LOW** while real QRIS is absent. **NEW FEAT-020** captures future provider-backed real QRIS; the existing QR and payment confirmation are DEMO / non-payable. Before any real-money release, FEAT-001 pricing, FEAT-007 durable paid-state recovery and FEAT-020 provider verification must be coordinated. **This is a documentation decision, not approval for code or deployment.**
