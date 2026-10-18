@@ -2,7 +2,7 @@
 Protocol: [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md) | Updated: 2026-10-18
 Branch: `feature/kivy-gui`
 
-**Planning only. No idea below authorizes implementation.** Every incoming idea triggers a fresh current-code compatibility/readiness review and a full execution-order re-ranking. Stable feature IDs are not execution sequence numbers.
+**Planning only. No idea below authorizes implementation.** The similarly named historical handover has been clarified as [docs/DEVELOPMENT_HANDOVER.md](docs/DEVELOPMENT_HANDOVER.md); this root file alone tracks proposed features. Every incoming idea triggers a fresh current-code compatibility/readiness review and a full execution-order re-ranking. Stable feature IDs are not execution sequence numbers.
 
 ## Intake and evaluation
 For each new idea record:
@@ -23,7 +23,7 @@ For each new idea record:
 | Deferred unless required by partner | FEAT-005B | Optional deeper ordering/POS integration | P3 Deferred | Medium | Unverified | Blocked: partner need | L/XL | DEFERRED / NOT APPROVED |
 | Deferred until merchant partnership | FEAT-002B | Real merchant POS integration | P2 Deferred | High | Unverified | Blocked: no partner | L/XL | DEFERRED / NOT APPROVED |
 
-**Existing product work is documented in [docs/NEXT_STEPS.md](docs/NEXT_STEPS.md) and [docs/FEATURE_STATUS.md](docs/FEATURE_STATUS.md).** Do not automatically relabel old defects as new feature requests. No execution rank is finalized until the latest branch and blocker list are reviewed.
+**Existing product work is documented in [docs/DEVELOPMENT_HANDOVER.md](docs/DEVELOPMENT_HANDOVER.md) and [docs/FEATURE_STATUS.md](docs/FEATURE_STATUS.md).** Do not automatically relabel old defects as new feature requests. No execution rank is finalized until the latest branch and blocker list are reviewed.
 
 ## FEAT-001 — Template fee + per-print pricing
 - **Status:** REVIEW / NOT APPROVED FOR IMPLEMENTATION. Submitted: 2026-10-18.
