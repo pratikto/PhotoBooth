@@ -8,6 +8,9 @@ on:
       - photobooth/workflow.py
       - photobooth/transaction_store.py
       - tests/test_workflow.py
+      - photobooth/printer.py
+      - tests/test_printer.py
+      - tests/test_windows_printer_spooler.py
       - .github/workflows/feat001-pricing.yml
   workflow_dispatch:
 
@@ -26,10 +29,20 @@ jobs:
           python-version: "3.12"
       - name: Install image and QR test dependencies only
         run: python -m pip install "Pillow>=10,<13" "qrcode>=7.4,<9"
-      - name: Check FEAT-001 model and manifest syntax
-        run: python -m py_compile photobooth/catalog.py photobooth/workflow.py photobooth/transaction_store.py tests/test_workflow.py
+      - name: Check FEAT-001 model, printer, and manifest syntax
+        run: python -m py_compile photobooth/catalog.py photobooth/workflow.py photobooth/transaction_store.py photobooth/printer.py tests/test_workflow.py tests/test_printer.py tests/test_windows_printer_spooler.py
       - name: Test one-session copy counts, quotes, retakes, and manifests
         # The independent end-to-end QR decoding case requires OpenCV and
         # belongs to the full kiosk suite; this workflow isolates FEAT-001
         # business rules without pretending it validates QR or real printing.
         run: python -m unittest tests.test_workflow.WorkflowTests tests.test_workflow.TransactionStoreTests -v
+      - name: Verify multi-copy ESC/POS bytes and a single Windows RAW job
+        # No physical paper or Windows device is available in this CI runner.
+        # Both transports are exercised using injectible senders/fake win32print.
+        run: |
+          python -m unittest \
+            tests.test_printer.ThermalPrinterTests.test_requested_copies_repeat_complete_cut_payload_in_one_usb_job \
+            tests.test_printer.ThermalPrinterTests.test_multi_copy_lan_uses_only_one_network_submission \
+            tests.test_printer.ThermalPrinterTests.test_invalid_batch_size_never_sends_bytes \
+            tests.test_windows_printer_spooler.WindowsRawTests.test_three_copies_are_one_windows_raw_document \
+            -v
