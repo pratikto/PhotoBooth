@@ -1,6 +1,6 @@
 # Meong Photobooth — Documentation Index
 
-The repository-root [README](../README.md) explains setup and preserves historical development notes. This `docs/` directory contains the current documentation sources for the Kivy project on **`feature/kivy-gui`**.
+The repository-root [README](../README.md) explains setup and preserves historical development notes. This `docs/` directory contains the current documentation sources for the Kivy project on **`feature/kivy-gui`**. **This branch is not merged into the default `master` branch**. Historical sections elsewhere remain traceable but must not override the current operational summary below.
 
 ## Start here: current product and operational truth
 
@@ -25,14 +25,14 @@ The repository-root [README](../README.md) explains setup and preserves historic
 - **[Full Kiosk GUI Regression — verified green CI](qa/KIOSK-GUI-REGRESSION-2026-10-18.md)** — 230 passing / 2 skipped unit tests, 87 render checks, historical FAIL diagnosis and scoped test/CI-only repairs (source SHA `f129dd9e`).
 - **[FEAT-001 / BUG-011 print-copy acceptance](qa/FEAT-001-BUG-011-acceptance.md)** — owner accepted DEMO pricing and working Windows physical copy counts after printer RAW fixes, with dated targeted CI, evidence limitations and future regression matrix.
 - [Photo retention](photo-retention.md) — 15-day local/30-day Drive targets and associated data-loss considerations.
-- [Thermal dithering lab](dither-tuning-lab.md) — standalone FEAT-011 experiment on `feature/dither-tuning`; has no effect on the production Kivy printer until separately approved.
+- [Thermal dithering lab](dither-tuning-lab.md) — the standalone three-algorithm comparison tool originated in `feature/dither-tuning` and was **merged into this Kivy branch**. The owner-approved Floyd preset **is now the default for Kivy photo printing**; lab JSON presets themselves still do not load automatically into `main.py`.
 - [Legacy NEXT_STEPS pointer](NEXT_STEPS.md) — retained for older bookmarks; do not edit as a second backlog.
 
-## Current field status (2026-10-18)
+## Current field status and verified CI (as of 2026-10-19)
 
-**Latest automated GUI release-quality gate:** [Kiosk GUI Actions 39144464476](https://github.com/pratikto/PhotoBooth/actions/runs/39144464476) **SUCCESS** at `f129dd9e`: 230 unit-test PASS, 2 skipped, 87 synthetic renders PASS, 0 errors. This supersedes earlier dated Kiosk CI FAIL references; it is not a hardware/production-release certificate. [Full QA analysis](qa/KIOSK-GUI-REGRESSION-2026-10-18.md).
+**Latest verified HEAD quality gate (2026-10-18):** [Kiosk GUI Actions 39145145762](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762) **SUCCESS** at branch SHA `c40f33f5`: **230 PASS, 2 SKIP, 0 FAIL/ERROR; 87 simulated renders / 0 visual errors**. [Dither regression 39145145764](https://github.com/pratikto/PhotoBooth/actions/runs/39145145764) also **SUCCESS** at the same SHA. These supersede previous CI FAIL status lines but do not constitute Windows hardware/release certification. [QA diagnosis](qa/KIOSK-GUI-REGRESSION-2026-10-18.md).
 
-**Most recent owner-tested FEAT-001:** Rp5,000 per selected template/session plus Rp5,000 per requested paper copy is implemented in the Kivy GUI (DEMO). Following the Windows printer job-finalization correction, the owner reports **pricing and physical copy count both work**. **BUG-011 is OWNER REPORTED PASS — MONITORING**, not formally CLOSED. [Focused CI 39134970707](https://github.com/pratikto/PhotoBooth/actions/runs/39134970707) passed **15/15** business/print-spool mock tests; [full Kiosk GUI CI 39135186022](https://github.com/pratikto/PhotoBooth/actions/runs/39135186022) still **failed**. The exact Windows local commit, printer queue and 1/2/3 paper-count measurements were not recorded.
+**Latest owner-tested FEAT-001 / BUG-011:** Rp5.000 per selected template/three-photo session plus Rp5.000 per requested copy is implemented. **Both price and actual copy-count passed the owner's Windows test. BUG-011 = OWNER TESTED PASS — MONITORING**, not formally CLOSED/RELEASED. Focused mock/spool CI [39134970707](https://github.com/pratikto/PhotoBooth/actions/runs/39134970707) **15/15 PASS**, and later **full Kiosk GUI CI PASS** (above). Exact local device SHA, queue identity and 1/2/3 paper-count case matrix were not provided.
 
 The owner also reports improved Floyd photo quality (BUG-004), payment QR-slip paper output (BUG-003), idle/payment video playback (BUG-002), expected ad/tutorial navigation (BUG-005), advertisement sizing (BUG-006), dithering GUI scrolling (BUG-010) and responsive Settings (BUG-008). These are **owner-reported physical/UI passes**, not complete release verification.
 

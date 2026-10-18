@@ -1,8 +1,8 @@
 # Meong Photobooth
 
-> **Current operational status (reconciled 2026-10-18):** The active Kivy branch contains thermal **photo** printing (Windows USB queue, LAN/Wi-Fi, three dithering options) and a QR-payment-slip print worker that uses the saved printer configuration. The operator confirms that a photo strip printed, but the **photo quality is blurry**, **payment QR-slip paper output is not working**, advertising videos fail to play, and app music plus Settings sound-test controls remain problematic. These are **open defects**, not completed fixes. QRIS is simulated/non-payable. Current code charges **Rp5.000 per independent 3-capture session**; the newly agreed **Rp5.000 base per session + Rp5.000 per physical print copy** is a **future, not-yet-implemented requirement**. See [feature status](docs/FEATURE_STATUS.md), [bug tracker](docs/bug_tracker.md), [decision record](docs/DECISIONS.md), and [future backlog](docs/next_step.md).
+> **CURRENT — Kivy development baseline (reviewed 2026-10-19, branch `feature/kivy-gui`, source SHA `c40f33f5`):** FEAT-001 is implemented: **Rp5.000 per selected template/3-photo session + Rp5.000 per identical printed copy** (DEMO pricing, not payable QRIS). **FEAT-001 and FEAT-003 live-camera mirror are OWNER TESTED PASS**; **BUG-011 copy-count is OWNER TESTED PASS — MONITORING**. BUG-002/003/004/005/006/008/010 have owner-reported improvements/PASS, without per-case hardware certification. BUG-001/007 music remain deferred/unverified for speaker output; BUG-009 Google Drive 30-day cleanup is **OPEN / not verified**. Real QRIS (FEAT-020) and receipt scanner FEAT-002 have not been implemented. [Full Kiosk CI](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762) and [dither lab CI](https://github.com/pratikto/PhotoBooth/actions/runs/39145145764) both **SUCCESS at `c40f33f5`**; synthetic tests are not physical booth release approval. See [current feature status](docs/FEATURE_STATUS.md), [bug tracker](docs/bug_tracker.md), [decisions](docs/DECISIONS.md), and [backlog](docs/next_step.md).
 
-> **Reading note:** Some long sections below preserve earlier development milestones, tests and proposed workflows. Earlier statements such as “printing is not connected” or “payment and printing are only targets” describe **historical snapshots** and must not override the current status above. Historical automated QA is not proof of successful physical printer, audio, video or payment operation.
+> **Documentation rule:** The status block above and [docs/README.md](docs/README.md) are CURRENT. Historical milestones, archived product proposals and past test counts below are **HISTORICAL / SUPERSEDED where they conflict with current source**; do not implement old capture-quantity or no-Drive-deletion rules from archival sections. Preserve them for debugging, not as current instructions. Physical photo/speaker/QRIS checks remain separate from synthetic CI.
 
 
 ## Development handover (start here)
@@ -12,7 +12,7 @@ For continuing work in a new chat or model, read [Architecture](docs/ARCHITECTUR
 A Python photo booth application built with Kivy, OpenCV, and Pillow. QRIS is
 still an explicitly non-payable demo. The kiosk now supports local advertising
 playlists and optional QR payment-slip output to a configured LAN ESC/POS
-printer. Photograph printing remains in the separate printer development branch.
+printer. **Thermal photo printing is integrated into this Kivy GUI branch**, with owner-tested Windows multi-copy behavior; the older printer branch is retained for historical reference.
 
 ## Advertising kiosk and QR payment slips
 
@@ -236,7 +236,9 @@ The PNG's physical dimensions describe the design. A real printer must support
 the required printable width and dot density to preserve its 1 mm margins;
 physical printer and phone-camera checks remain to be performed on the device.
 
-## Agreed product workflow
+## Historical product workflow proposal — superseded where noted
+
+> **HISTORICAL / SUPERSEDED:** This originally agreed workflow predates FEAT-001 copy pricing and the 15-day local / targeted 30-day Drive photo retention design. It is **not** the source of truth for current copy quantities, real payment eligibility, print transport, or data deletion. Use [feature status](docs/FEATURE_STATUS.md) and [workflow source](photobooth/workflow.py) for the implemented DEMO behavior. The legacy proposal is preserved for traceability.
 
 ### 1. Prepare the booth and reserve storage folders
 
@@ -255,9 +257,9 @@ The folder is allocated before the transaction and before taking photos. One tra
 
 The customer selects one or more templates and a quantity for each template.
 
-- One unit of quantity means one separate photo session for that template.
-- For example, quantity 2 for one template gives the customer two independent sessions. Each session has its own three new photos and its own retake allowance.
-- Calculate the payment from the total number of ordered sessions and the configured price per session.
+- **HISTORICAL / SUPERSEDED:** Previously, one quantity meant another capture session. **Current FEAT-001:** quantity means identical printed copies; one selected template creates exactly one three-photo session.
+- **HISTORICAL / SUPERSEDED example:** Quantity 2 used to be described as two independent sessions. **Current:** one three-photo session produces two identical paper copies, priced at Rp15.000 in DEMO.
+- **CURRENT DEMO:** Rp5.000 per selected template/session plus Rp5.000 per physical copy. Do not interpret the simulated payment as real QRIS.
 - The payment screen should show the order total and a clear QRIS state, such as waiting for payment, verified, or expired.
 - Do not start photography until the payment provider confirms payment.
 - If the customer changes the cart after a payment QR is created, invalidate or cancel that QR and create a new one for the updated amount.
@@ -382,11 +384,11 @@ The composition requests its final pixel size directly, keeping each data
 module an integer number of pixels wide. See the
 [centering correction](docs/qa/centered-qr.md) for pixel-level regression checks.
 
-For a future thermal-printer adapter, use
+For the **existing** thermal photo/QR rendering adapters (historical example), use
 `create_qr_image(folder_url, max_size=384, monochrome=True)` to obtain a QR with
 a black/white logo. Choose the size for the real printer's available dot width
 and verify a physical print before deployment. The QR matrix itself stays crisp;
-only the artwork is dithered. Printer transport is still not implemented.
+only the artwork is dithered. **HISTORICAL / SUPERSEDED:** ESC/POS transport is now implemented in this Kivy branch; printer send success still does not prove a physical paper or phone-scan result.
 Payment-demo codes remain plain and separate from the customer folder QR.
 See the [branded QR verification](docs/qa/branded-qr.md) for examples, test
 commands, and the limits of the digital checks.
@@ -420,7 +422,7 @@ A retry must not create a duplicate print job or duplicate order output. Track e
 
 A separate scheduled cleanup program may remove old files from the booth's SD card to manage local storage.
 
-- Never delete customer folders or files from Google Drive.
+- **HISTORICAL / SUPERSEDED:** This original rule prohibited deleting Drive files; current policy **targets Drive photo cleanup after 30 days**. Deployment/trigger verification is still **OPEN (BUG-009)**; do not claim cleanup active without proof.
 - Keep local files for transactions that are unfinished or still waiting to upload.
 - Only remove local photo files after the corresponding Drive upload has been confirmed.
 - Keep the local folder-link/reservation records needed to manage the pool and generate QR codes.
@@ -490,7 +492,7 @@ existing-photo migration, activation verification, and the direct-OAuth limitati
 - If there are no ready Drive slots, check internet access and Apps Script configuration. The deployed Web App must include the actions in `apps_script/Code.gs`; the original upload-only deployment cannot create transaction folders. New transactions remain disabled until a slot is verified.
 - An `ACTION_REQUIRED` upload requires staff attention before its 15-day local photo deadline. Failed/pending uploads do not extend retention. Empty reserved slots, configuration, counters, and manifests are preserved.
 - If the log says `Run setupPhotoRetention and redeploy the Web App`, activate the cloud schedule above. Check Apps Script **Executions** for permission/API errors and `drive_retention_error` in the transaction manifest for registration failures.
-- QRIS and printer integration are not connected to the current UI.
+- **CURRENT:** DEMO QR payment and saved-config thermal photo/QR-slip printing are wired to the Kivy GUI. **Real QRIS provider settlement is not implemented**, and physical QR scannability requires a separate device test.
 
 ## Project structure
 
@@ -570,10 +572,12 @@ and verify the configured `/exec` URL. The current repository backend returns
 `slots` for `ensure_folder_pool`; a missing list alone does not prove which
 backend or deployment was contacted.
 
-## Dummy payment screen
+## Historical dummy payment milestone — pricing and print state superseded
 
-Template selection now opens a payment simulation before camera capture.
-The agreed price is IDR 5,000 per template session (one unit of quantity).
+> **HISTORICAL / SUPERSEDED:** The original dummy screen/print description below is retained as a dated milestone. Current implementation uses the FEAT-001 base-plus-copy DEMO tariff and real ESC/POS photo print integration.
+
+Template selection opens a payment simulation before camera capture.
+**Current DEMO tariff: IDR 5.000 per selected template/three-photo session plus IDR 5.000 per paper copy.**
 The gallery, cart, and payment use the same tariff from `catalog.py`. The QR contains demo
 text, is NOT valid QRIS, and must not be used to transfer money. Only the clearly
 labelled simulation button advances to capture. No provider verification or real
@@ -581,8 +585,7 @@ payment integration is implemented.
 
 The result screen displays the transaction-folder QR separately from payment.
 Its image has a fixed minimum display area inside a scrollable result panel,
-so short windows cannot collapse it behind its caption. Printing remains
-unimplemented; this is the digital result screen, not printer confirmation.
+so short windows cannot collapse it behind its caption. **HISTORICAL / SUPERSEDED:** Photo printing is now implemented; the GUI's printer queue acknowledgement is not an independently counted paper result.
 
 ## Kiosk interface redesign and verification
 
