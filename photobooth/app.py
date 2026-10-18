@@ -22,7 +22,7 @@ from PIL import Image
 
 from photobooth.audio import AudioManager
 from photobooth.camera import Camera
-from photobooth.catalog import PRICE_PER_SESSION, compose_result, get_templates
+from photobooth.catalog import PRICE_PER_PRINT_COPY, PRICE_PER_SESSION, compose_result, get_templates
 from photobooth.drive_pool import DriveSlotPool
 from photobooth.drive_storage import AppsScriptDriveClient, DriveApiError, GoogleDriveClient
 from photobooth.drive_sync import DriveSyncWorker
@@ -33,7 +33,7 @@ from photobooth.printer import PrintResult, ThermalPrinter
 from photobooth.retention import PhotoRetentionWorker
 from photobooth.transaction_store import LocalTransaction, TransactionStore
 from photobooth.ui_kivy import KivyHost, PhotoBoothUI
-from photobooth.workflow import PhotoSession, SessionPlan, build_session_plans
+from photobooth.workflow import PhotoSession, SessionPlan, build_session_plans, quote_order
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -362,17 +362,20 @@ class PhotoBoothApp:
             self.ui.show_error("Template belum dipilih", "Pilih minimal satu sesi.")
             return
         order = dict(quantities)
-        # The agreed tariff is IDR 5,000 per quantity/session. Payment remains
-        # simulated, but its displayed amount must match the real order tariff.
-        unit_price = PRICE_PER_SESSION
+        # FEAT-001: each chosen template incurs one capture/session fee;
+        # the quantity now counts identical physical prints of that session.
+        # The displayed QR remains DEMO-only regardless of the amount.
+        quote = quote_order(self.templates, order)
         summary = "\n".join(
-            f"{template.name} x {order.get(template.template_id, 0)}"
+            f"{template.name}: {order[template.template_id]} lembar "
+            f"(Rp{PRICE_PER_SESSION:,} + "
+            f"Rp{order[template.template_id] * PRICE_PER_PRINT_COPY:,})"
             for template in self.templates if order.get(template.template_id, 0)
-        )
+        ).replace(",", ".")
         self.ui.show_payment(
             order_summary=summary,
-            session_count=len(plans),
-            total_amount=len(plans) * unit_price,
+            session_count=quote.session_count,
+            total_amount=quote.total_amount,
             on_confirm=lambda: self._start_transaction(order),
             # Going back is an edit of this order, not a new customer cart.
             # Capture a copy so the next payment is priced from the edited cart.
@@ -385,8 +388,9 @@ class PhotoBoothApp:
         False lets the payment UI release its submission lock after a rejected
         confirmation. It is not a payment-provider status; QRIS remains a demo.
         """
-        # Validate the selected quantities, create one plan per session, claim a preassigned Drive
-        # folder when available, and persist the transaction locally before capturing any photos.
+        # Validate print-copy quantities, create one capture session per
+        # selected template, and persist the complete planned order before
+        # capture. Extra copies must not create extra camera sessions.
         # Ignore stale payment callbacks after the screen has advanced. The
         # explicit simulation action is the only current path into capture.
         if self.ui.current_screen != "payment" or self.transaction is not None:
@@ -453,11 +457,7 @@ class PhotoBoothApp:
             f"Sesi {plan.order_number} dari {plan.total_sessions}"
             f" · {plan.template.name}"
         )
-        if plan.template_session_count > 1:
-            label += (
-                f" · Sesi template {plan.template_session_number}"
-                f" dari {plan.template_session_count}"
-            )
+        label += f" · {plan.print_copies} lembar"
         return label
 
     def _show_capture_screen(self) -> None:
@@ -742,10 +742,10 @@ class PhotoBoothApp:
                 and not self._should_show_result_qr()
             ),
             upload_message=self._upload_status_message(),
-            print_message='Menyiapkan cetakan...',
+            print_message=f'Menyiapkan {session.plan.print_copies} lembar hasil yang sama...',
             print_busy=True,
         )
-        self._start_print_job(output_path)
+        self._start_print_job(output_path, copies=session.plan.print_copies)
         if self.drive_worker is not None:
             self.drive_worker.kick()
         if not has_next:
