@@ -736,7 +736,14 @@ class KivyFlowTests(unittest.TestCase):
             url = 'https://drive.google.com/drive/folders/1AbCdEfGhIjKlMnOpQrStUvWxYz123456'
             qr = create_qr_image(url)
             ui.show_result(path, 'Session 1', 'PB001_00000001', False,
-                           seconds_remaining=60, qr_image=qr, upload_message='Upload pending')
+                           seconds_remaining=60, qr_image=qr, upload_message='Upload pending',
+                           print_busy=True)
+            # Do not navigate away while a multi-copy printer worker is still
+            # submitting sheets; the completion callback re-enables the action.
+            self.assertTrue(ui.result_action.disabled)
+            ui.set_print_status('Synthetic batch finished', busy=False)
+            self.assertFalse(ui.result_action.disabled)
+            self.assertFalse(ui.print_button.disabled)
             # Decode the actual GPU texture, rather than only the source Pillow
             # image, to detect broken color conversion or missing QR pixels.
             pixels = np.frombuffer(ui.qr_view.texture.pixels, dtype=np.uint8)
