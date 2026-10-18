@@ -1,5 +1,9 @@
 # Desktop GUI verification
 
+## Current acceptance follow-up — FEAT-001 / BUG-011 (2026-10-18)
+
+**[FEAT-001 pricing + BUG-011 Windows RAW / physical copy-count acceptance](FEAT-001-BUG-011-acceptance.md)** is the current detailed QA record for DEMO pricing and per-template paper copies. It traces the missing `EndDocPrinter` fix, one-job/multi-cut ESC/POS batching, **15/15 focused CI PASS**, and **latest OWNER REPORTED PASS** for correct physical printed quantities on Windows. Precise per-case 1/2/3 physical count logs, local printer checkout SHA and full Kiosk GUI CI PASS are **not available**; BUG-011 is **MONITORING**, not formally CLOSED. This current document supersedes older screenshot descriptions saying that picker quantity denotes separate capture sessions.
+
 > **Historical test archive — status reconciled 2026-10-18:** Results and screenshot references below describe dated synthetic, rendered or mocked test runs and prior code revisions. They do **not** certify present Windows printer output, QR-slip printing, music/Uji button responsiveness, video playback or the proposed per-print-copy tariff. Consult [current feature status](../FEATURE_STATUS.md), [bug tracker](../bug_tracker.md) and [test evidence](../test_checklist.md) before marking anything verified.
 
 
