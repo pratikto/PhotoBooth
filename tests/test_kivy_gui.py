@@ -31,6 +31,10 @@ class KivyFlowTests(unittest.TestCase):
         ui = PhotoBoothUI(
             KivyHost(lambda: None), get_templates(),
             on_capture=lambda: None,
+            on_select_photo=lambda *_: None,
+            on_retake=lambda: None,
+            on_accept_session=lambda: None,
+            on_finish=lambda: None,
         )
         ui.set_camera_status(True)
         source = Image.new('RGB', (320, 240), (255, 0, 0))
