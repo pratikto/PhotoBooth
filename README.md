@@ -816,4 +816,4 @@ fakes, QRIS is simulated, and at the time of this older QA snapshot, physical pr
 
 ## Project documentation
 
-See the [documentation index](docs/README.md) for the [bug tracker](docs/bug_tracker.md), [feature backlog](docs/next_step.md), [development protocol](docs/DEVELOPMENT_PROTOCOL.md), [test checklist](docs/test_checklist.md), and [changelog](docs/CHANGELOG.md). The technical [development handover](docs/DEVELOPMENT_HANDOVER.md) is separate from the feature backlog. Documentation updates do not authorize code changes.
+See the [documentation index](docs/README.md), [reusable development prompt](docs/DEVELOPMENT_PROMPT.md), [bug tracker](docs/bug_tracker.md), [feature backlog](docs/next_step.md), [development protocol](docs/DEVELOPMENT_PROTOCOL.md), [test checklist](docs/test_checklist.md) and [changelog](docs/CHANGELOG.md). The technical [development handover](docs/DEVELOPMENT_HANDOVER.md) is separate from the feature backlog. For new chats, start with the prompt and always verify the latest branch and documentation. Documentation updates do not authorize code changes.
