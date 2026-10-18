@@ -52,7 +52,7 @@ class ControllerFlowTests(unittest.TestCase):
 
         The test drives real button callbacks, rather than calling the payment
         method with a second hand-written amount. It catches lost quantities and
-        a stale confirmation total after the customer removes a session.
+        a stale confirmation total after the customer edits requested copies.
         """
         from photobooth.app import PhotoBoothApp
         with tempfile.TemporaryDirectory() as directory, \
@@ -70,7 +70,7 @@ class ControllerFlowTests(unittest.TestCase):
                 app.ui._change_quantity(first, 2)
                 app.ui._change_quantity(second, 1)
                 app.ui.start_button.dispatch('on_release')
-                self.assertEqual(app.ui.payment_total, 15000)
+                self.assertEqual(app.ui.payment_total, 25000)
                 app.ui.payment_back.dispatch('on_release')
                 self.assertEqual(app.ui.current_screen, 'templates')
                 self.assertEqual(app.ui.quantities[first], 2)
@@ -78,9 +78,9 @@ class ControllerFlowTests(unittest.TestCase):
                 self.assertIsNone(app.transaction)
                 app.ui._change_quantity(first, -1)
                 app.ui._change_quantity(second, -1)
-                self.assertEqual(app.ui.cart_total.text, 'Rp5.000')
+                self.assertEqual(app.ui.cart_total.text, 'Rp10.000')
                 app.ui.start_button.dispatch('on_release')
-                self.assertEqual(app.ui.payment_total, 5000)
+                self.assertEqual(app.ui.payment_total, 10000)
                 app.ui.payment_confirm.dispatch('on_release')
                 self.assertEqual(len(app.sessions), 1)
                 self.assertIsNotNone(app.transaction)
@@ -109,10 +109,13 @@ class ControllerFlowTests(unittest.TestCase):
                 app._connect_camera()
                 app._open_template_selection()
                 self.assertEqual(app.ui.current_screen, 'templates')
-                order = {app.templates[0].template_id: 2}
+                # One design requests two identical prints; the second has
+                # one print. This is still only two capture sessions total.
+                order = {app.templates[0].template_id: 2,
+                         app.templates[1].template_id: 1}
                 app._open_dummy_payment(order)
                 self.assertIsNone(app.transaction)  # No transaction before payment.
-                self.assertEqual(app.ui.payment_total, 10000)  # Two sessions at IDR 5,000.
+                self.assertEqual(app.ui.payment_total, 25000)  # 2 session fees + 3 print fees.
                 app.ui.payment_confirm.dispatch('on_release')
                 self.assertEqual(app.ui.current_screen, 'capture')
                 transaction = app.transaction
@@ -156,6 +159,8 @@ class ControllerFlowTests(unittest.TestCase):
                 manifest = json.loads(transaction.manifest_path.read_text())
                 self.assertEqual(manifest['status'], 'COMPLETED')
                 self.assertEqual(len(manifest['sessions']), 2)
+                self.assertEqual([row['print_copies'] for row in manifest['sessions']], [2, 1])
+                self.assertEqual(manifest['demo_order_pricing']['total_amount'], 25000)
                 for record in manifest['sessions']:
                     self.assertTrue((transaction.folder_path / record['output_path']).is_file())
             finally:
