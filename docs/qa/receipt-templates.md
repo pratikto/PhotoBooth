@@ -1,5 +1,7 @@
 # Approved receipt templates in the Kivy workflow
 
+> **HISTORICAL QA SNAPSHOT (template rollout): This document records the approved 12-template 80 mm layout and its initial 48-render synthetic verification. **CURRENT:** the same template system is used on `feature/kivy-gui` with FEAT-001 copy pricing and integrated thermal printing; do not interpret earlier 'printer transport separate' language as current implementation status. Owner-tested paper-copy PASS is documented [here](FEAT-001-BUG-011-acceptance.md).**
+
 The application now loads the twelve approved revision-3 80 mm designs instead
 of four illustrative cards. Each session's selected template determines its
 three aspect-preserving crops, explicit masks, and QR footer. The same rendered

@@ -1,6 +1,8 @@
 # Final MEONG logo and offline audio — 17 October 2026
 
-> **Historical QA result (2026-10-17), not proof of audible sound today:** Native audio/GUI test passes below establish behavior in the noted test environment. Owner later reported that `python main.py` music/SFX are inaudible and Settings Music/Button `Uji` controls unresponsive despite a standalone sound probe being audible. See [BUG-001/BUG-007](../bug_tracker.md) and [test evidence](../test_checklist.md); neither bug is closed.
+> **HISTORICAL QA SNAPSHOT (2026-10-17): Below are dated logo/audio fixture results. **CURRENT:** the header gear opens general Settings then **PENGATURAN AUDIO**, and each explicit **UJI MUSIK** attempts a fresh playback (not 'preserve position'). Settings/button/shutter taps have owner-reported improvements, but **music audible from the actual Windows kiosk remains unverified/deferred (BUG-001/007)**. Synthetic audio tests do not prove speaker output. See [feature status](../FEATURE_STATUS.md).**
+
+> **HISTORICAL / SUPERSEDED field report:** At the earlier checkpoint, music/SFX were reported silent and Settings Uji controls unresponsive. Later UI taps and sample buttons improved, but the actual booth's audible music was not subsequently certified. Preserve the exact past audio test results below without treating their old playback behavior as current.
 
 
 This update targets the existing `feature/kivy-gui` branch.

@@ -1,5 +1,7 @@
 # FEAT-001 and BUG-011 — DEMO pricing, thermal copy count and Windows acceptance
 
+> **CURRENT ACCEPTANCE (2026-10-19): FEAT-001 DEMO base-per-template + copy pricing and **BUG-011 Windows paper copy-count owner-tested PASS / monitoring**; targeted [15/15 CI PASS](https://github.com/pratikto/PhotoBooth/actions/runs/39134970707). The **full Kiosk GUI CI later passed** at SHA `c40f33f5` ([run 39145145762](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762): 230 PASS/2 SKIP/87 renders). Old FAIL runs and the initial paper mismatch below are **HISTORICAL**. No recorded per-case count matrix or formal release signoff.**
+
 **Evidence date:** 2026-10-18  
 **Repository / branch:** [`pratikto/PhotoBooth`](https://github.com/pratikto/PhotoBooth) / `feature/kivy-gui`  
 **Baseline before FEAT-001:** [`5842a09f`](https://github.com/pratikto/PhotoBooth/commit/5842a09f6a4c6c771ef7f5f0d1a330d0b1040b42)  
@@ -69,7 +71,7 @@ Automated tests used mock transports and no live payment provider, customer data
 - `PrintResult.success` means transport accepted the data; it is **not a physical paper counter**. Kivy stops holding the result-page action once transport submission finishes, not necessarily when the last paper clears the cutter; operators should wait for physical completion.
 - Persisted pricing records document **DEMO**, not verified paid transactions. Real QRIS (FEAT-020), paid print recovery/idempotency (FEAT-007) and promo/settlement remain deferred. Do not use DEMO confirmation as money movement.
 - This fix did not intentionally alter Floyd parameters, ad playback, music, Drive photo-retention cleanup or `Code.gs`. **BUG-001/007 audio remain deferred, BUG-008 Settings monitoring, BUG-009 30-day Drive deletion unverified and deferred with FEAT-004**.
-- The full GUI Actions workflow still failed at the documented `f2f52e33` baseline. Root cause was not established as FEAT-001 and has not been repaired in this documentation pass.
+- **HISTORICAL / SUPERSEDED:** the GUI Actions workflow failed at historical `f2f52e33`. The later QA-only repair resolved its test assertions; the **full suite PASSED at `c40f33f5`** ([Actions](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762)). Historical failure is preserved as a dated observation only.
 
 ## 6. Outstanding signoff and future regression matrix
 
@@ -87,7 +89,7 @@ The **core symptom is explicitly owner-tested and reported resolved**, so BUG-01
 ## 7. Status discipline
 
 - **BUG-011:** `OWNER TESTED PASS — MONITORING` (fixed-in-source, explicitly tested on the user's Windows printer per the user's confirmation; exact per-case field-test matrix, local SHA and driver/config remain undocumented). Do **not** relabel `CLOSED`/`RELEASED` or treat every stress/failure test as passed.
-- **FEAT-001:** `IMPLEMENTED / OWNER TESTED CORE DEMO PRICING AND PRINT-COPY BEHAVIOR`; full GUI/negative-case regression and release approval pending.
+- **FEAT-001:** `IMPLEMENTED / OWNER TESTED CORE DEMO PRICING AND PRINT-COPY BEHAVIOR`; full *synthetic GUI regression now PASS*, while wider physical negative-case matrix and explicit production release remain pending.
 - **GitHub changes for this status reconciliation:** documentation only. No code, `Code.gs`, payment gateway, credentials, runtime deployment or physical test is carried out when recording this acceptance.
 
 Related current records: [bug tracker](../bug_tracker.md), [feature status](../FEATURE_STATUS.md), [checklist](../test_checklist.md), [backlog](../next_step.md), [decisions](../DECISIONS.md), [handover](../DEVELOPMENT_HANDOVER.md), [changelog](../CHANGELOG.md).

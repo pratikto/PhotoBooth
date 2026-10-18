@@ -1,5 +1,7 @@
 # Kiosk GUI Regression — 2026-10-18 iterative repair and verification
 
+> **CURRENT QA DISPOSITION (2026-10-19): The full GUI regression was green at test-repair SHA `f129dd9e` **and again at documentation baseline `c40f33f5`** ([Kiosk Actions 39145145762](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762): 230 PASS/2 SKIP/87 renders; [Dither Actions 39145145764](https://github.com/pratikto/PhotoBooth/actions/runs/39145145764): PASS). This report keeps the *original* `f129dd9e` test diagnosis and evidence as an immutable HISTORICAL run record; no claim of Windows physical/release acceptance. The later documentation reconciliation must be verified on its own new HEAD.**
+
 **Branch:** `feature/kivy-gui` · **Source/test verification SHA:** [`f129dd9e`](https://github.com/pratikto/PhotoBooth/commit/f129dd9ecb14b2d554dd83022745452764f5282d)  
 **Final verified workflow:** [Kiosk GUI regression Actions run 39144464476](https://github.com/pratikto/PhotoBooth/actions/runs/39144464476) — **SUCCESS**  
 **Environment:** GitHub Actions `ubuntu-latest`, Python 3.12, Xvfb, Kivy software OpenGL, dummy sound driver, mock camera/Drive/payment/printer, synthetic image assets.  
@@ -19,7 +21,7 @@
 **Precise CI log evidence:**
 `Ran 232 tests in 101.275s`; `KIOSK_UNITTEST_SUMMARY: run=232 failures=0 errors=0 skipped=2 success=True`; `MEONG_GUI_REPORT:{"renders": 87, "errors": []}`. The two skipped cases are ordinary unittest skips; no production device claim is inferred from CI green.
 
-**Limit:** Status applies to **tested commit `f129dd9e`**, and newer documentation-only commits must be checked against their own GitHub run before assigning a current-HEAD green status. No merge to `main`, release, deployment, Windows-driver rewrite or customer-data use is authorized.
+**Limit:** Status applies to **tested commit `f129dd9e`**, and newer documentation-only commits must be checked against their own GitHub run before assigning a current-HEAD green status. No merge to the actual default branch `master`, release, deployment, Windows-driver rewrite or customer-data use is authorized. `main` references in older documents were a mistaken branch name.
 
 ## 2. Investigation history and diagnostic reliability
 

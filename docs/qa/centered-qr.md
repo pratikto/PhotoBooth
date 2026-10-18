@@ -1,5 +1,7 @@
 # Exactly centered full-logo QR
 
+> **HISTORICAL QA SNAPSHOT (QR centering repair): This document preserves earlier fixture-based geometric/decode verification. The centered folder QR behavior remains current; full GUI synthetic CI subsequently passed at `c40f33f5`. Independent physical phone and thermal paper checks are separate; no real payable QRIS provider is implemented.**
+
 The original marker-avoidance search placed the logo **72 pixels above center**
 in a 456x456 QR for a representative Drive folder link. Existing scan-only checks
 passed because that misplaced QR was still readable. This correction adds a

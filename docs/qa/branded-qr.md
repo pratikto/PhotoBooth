@@ -1,5 +1,7 @@
 # Full-logo folder QR verification
 
+> **HISTORICAL QA SNAPSHOT (original logo-in-folder-QR implementation): The [later centered-logo correction](centered-qr.md) supersedes the original placement method below. **CURRENT:** folder photo QR is separate from the DEMO/non-payable payment QR; thermal printer transport is implemented in `feature/kivy-gui`, while independent physical paper QR phone-scanning evidence remains separate.**
+
 The [centering correction](centered-qr.md) supersedes the original placement
 rule below: the complete logo now stays exactly at the QR center.
 

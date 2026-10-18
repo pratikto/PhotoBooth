@@ -1,5 +1,7 @@
 # MEONG brand and cyclic carousel
 
+> **HISTORICAL GUI QA SNAPSHOT (initial carousel rollout): The 12-template carousel and 72-render evidence below remain useful; the **old Rp15.000 cart and capture quantity assumptions do not define current prices**. **CURRENT:** FEAT-001 is Rp5.000 per selected three-shot template/session + Rp5.000 for each identical print copy; 2 copies of one design = one capture session and **Rp15.000 DEMO**. Current full GUI CI [PASS at `c40f33f5`](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762).**
+
 The selector now presents one large receipt in the center with smaller previews
 of its cyclic neighbors. Native horizontal swipes, arrow buttons, and mouse
 wheel input browse the same twelve designs. The focused name, 01–12 counter,

@@ -1,6 +1,8 @@
 # Advertising kiosk validation — 17 October 2026
 
-> **Historical QA result (2026-10-17), not current booth acceptance:** Video fixture, headless Kivy and QR-raster tests listed below previously passed under their stated environment. As of 2026-10-18, the owner still reports idle/payment video playback failures and payment QR-slip paper-print failure on the real Windows machine; these remain open in [bug tracker](../bug_tracker.md). Do not read the table below as proof those physical bugs were fixed.
+> **HISTORICAL QA SNAPSHOT (2026-10-17): The test counts and video fixture results below are preserved. **CURRENT (2026-10-19):** the owner subsequently reported **idle/payment video playback and QR-slip paper print PASS** (BUG-002/003); the earlier Windows FAIL feedback described an earlier state, not today's current status. Real hardware media variants and printed QR phone-scans are still distinct from synthetic tests. See [current status](../FEATURE_STATUS.md).**
+
+> **HISTORICAL / SUPERSEDED field-status note:** The initial 2026-10-18 report of video/QR paper failures was recorded before the owner's later improvements and PASS feedback. The historical headless fixture and QR raster tests below are valid for that run, not an assertion that current Windows videos or printer are failing.
 
 
 Implemented on the existing `feature/kivy-gui` branch in separate, tested
