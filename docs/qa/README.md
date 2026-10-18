@@ -1,5 +1,8 @@
 # Desktop GUI verification
 
+> **Historical test archive — status reconciled 2026-10-18:** Results and screenshot references below describe dated synthetic, rendered or mocked test runs and prior code revisions. They do **not** certify present Windows printer output, QR-slip printing, music/Uji button responsiveness, video playback or the proposed per-print-copy tariff. Consult [current feature status](../FEATURE_STATUS.md), [bug tracker](../bug_tracker.md) and [test evidence](../test_checklist.md) before marking anything verified.
+
+
 The latest [MEONG brand and cyclic carousel](meong-carousel.md) covers the bright
 blue/cyan/pink product theme, native swipes, wrapped navigation, and large monitors.
 
