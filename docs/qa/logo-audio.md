@@ -1,5 +1,8 @@
 # Final MEONG logo and offline audio — 17 October 2026
 
+> **Historical QA result (2026-10-17), not proof of audible sound today:** Native audio/GUI test passes below establish behavior in the noted test environment. Owner later reported that `python main.py` music/SFX are inaudible and Settings Music/Button `Uji` controls unresponsive despite a standalone sound probe being audible. See [BUG-001/BUG-007](../bug_tracker.md) and [test evidence](../test_checklist.md); neither bug is closed.
+
+
 This update targets the existing `feature/kivy-gui` branch.
 
 The final uploaded PNG is included unchanged. Every screen's header and every
