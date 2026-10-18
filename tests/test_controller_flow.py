@@ -13,6 +13,72 @@ import numpy as np
 
 @unittest.skipUnless(os.environ.get('PHOTOBOOTH_TEST_GUI') == '1', 'GUI checks are opt-in')
 class ControllerFlowTests(unittest.TestCase):
+
+    def test_print_batch_submits_one_saved_composition_multiple_times(self):
+        """FEAT-001 submits two copies without a second capture or layout."""
+        import threading
+        from types import SimpleNamespace
+        from photobooth.app import PhotoBoothApp
+        from photobooth.printer import PrintResult
+
+        app = object.__new__(PhotoBoothApp)
+        app.is_closing = False
+        app._print_lock = threading.Lock()
+        app._print_device_lock = threading.Lock()
+        app._print_jobs_in_flight = {"test-photo"}
+        sent = []
+        published = []
+        image = Path("saved-layout.png")
+        app.printer = SimpleNamespace(
+            print_image=lambda path: (
+                sent.append(path) or PrintResult(True, "TEST", "fake queued")
+            )
+        )
+        app.root = SimpleNamespace(after=lambda delay, callback: callback())
+        app._finish_print_job = lambda path, result: published.append((path, result))
+
+        app._print_in_background(image, "test-photo", copies=2)
+
+        self.assertEqual(sent, [image, image])
+        self.assertEqual(len(published), 1)
+        self.assertTrue(published[0][1].success)
+        self.assertIn("2/2", published[0][1].message)
+        self.assertFalse(app._print_jobs_in_flight)
+
+    def test_print_batch_stops_after_uncertain_send_and_never_retries(self):
+        """An ambiguous partial send cannot trigger the rest of a print batch."""
+        import threading
+        from types import SimpleNamespace
+        from photobooth.app import PhotoBoothApp
+        from photobooth.printer import PrintResult
+
+        app = object.__new__(PhotoBoothApp)
+        app.is_closing = False
+        app._print_lock = threading.Lock()
+        app._print_device_lock = threading.Lock()
+        app._print_jobs_in_flight = {"test-photo"}
+        results = [
+            PrintResult(True, "TEST", "first copy queued"),
+            PrintResult(False, "TEST", "second copy uncertain"),
+        ]
+        sent = []
+        published = []
+        def fake_print(path):
+            sent.append(path)
+            return results[len(sent) - 1]
+        app.printer = SimpleNamespace(print_image=fake_print)
+        app.root = SimpleNamespace(after=lambda delay, callback: callback())
+        app._finish_print_job = lambda path, result: published.append(result)
+
+        app._print_in_background(Path("same-layout.png"), "test-photo", copies=3)
+
+        self.assertEqual(len(sent), 2)
+        self.assertEqual(len(published), 1)
+        self.assertFalse(published[0].success)
+        self.assertIn("1/3", published[0].message)
+        self.assertIn("Periksa kertas", published[0].message)
+        self.assertFalse(app._print_jobs_in_flight)
+
     def test_an_abandoned_review_cannot_compose_new_photo_bytes_after_fifteen_days(self):
         """An old on-screen session must not undo the background retention job."""
         from datetime import datetime, timedelta, timezone
