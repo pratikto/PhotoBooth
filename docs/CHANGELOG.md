@@ -4,6 +4,13 @@ This file tracks **actual verified repository/document changes**, not successful
 
 ## [Unreleased] — 2026-10-18
 
+### Mandatory development documentation workflow (docs only)
+- Added [DEVELOPMENT_PROMPT.md](DEVELOPMENT_PROMPT.md): copy/paste full and quick prompts for new development conversations, with branch/SHA inspection, scope approval, severity/dependency review, code/test boundaries, GitHub documentation mapping and final traceability report. Commit [`de0886b`](https://github.com/pratikto/PhotoBooth/commit/de0886b9fdf491d7e21db403c234656044f9b67b).
+- Updated [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md) to require the relevant feature/bug/status/test/handover/changelog documents to be kept aligned with **approved** code changes, in the same or a clearly linked companion commit; false claims of physical acceptance remain forbidden. Commit [`5800c56`](https://github.com/pratikto/PhotoBooth/commit/5800c561006966b90dc316f404ec1ddbd9743328).
+- Linked the canonical prompt in [docs/README.md](README.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and the repository-root [README.md](../README.md). The handover now points to one maintained prompt rather than duplicating its full operating rules.
+- **Scope:** Markdown documentation only; no Kivy/Python application code, media, hardware configuration or runtime behavior changed. No automated or physical booth test executed for this documentation change.
+
+
 ### Documentation governance and folder housekeeping (docs only)
 - Introduced the development protocol with approval gates, dynamic bug/feature prioritization, regression evidence levels and rollback requirements.
 - Added independent bug register, feature backlog and verification checklist without representing reports as fixes.
