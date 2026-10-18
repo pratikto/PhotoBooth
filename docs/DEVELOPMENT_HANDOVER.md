@@ -4,6 +4,18 @@
 **Target branch:** `feature/kivy-gui` (**do not create a new branch**).  
 **Handover dated:** 2026-10-17.
 
+## Latest active owner-selected FEAT-003 — mirror live capture preview (2026-10-18)
+
+**Scope/approval:** Owner explicitly requested proceeding with FEAT-003 on the existing `feature/kivy-gui` branch. Baseline `c0cb0d84`. The present GUI implements only **capture-page** live camera previews; FEAT-002 receipt scanner and detection bounding boxes are **still backlog**. The user wants **all current and future live camera views mirrored**, but the approved delivery here implements only the existing live screen and establishes the shared rendering policy for later screens.
+
+**Code delivered:** [`6f8c8ddf`](https://github.com/pratikto/PhotoBooth/commit/6f8c8ddfcb53d35070213c6fda72b8485232f280) adds `PhotoBoothUI._new_display_texture(..., mirrored=False)`, the existing mandatory vertical UV flip and an opt-in horizontal UV flip. Both first Pillow/ready/countdown/retake preview `update_live_preview` and streamed BGR `update_live_frame` request mirrored=True. There is **no `cv2.flip` on the shared frame**: capture, face/palm recognition, JPEG, review, final layout, QR and thermal printing remain unmirrored. No changes to `app.py`, `camera.py`, payment, printer or `Code.gs`. Synthetic GPU test committed in [`e99cbb26`](https://github.com/pratikto/PhotoBooth/commit/e99cbb26b485d7497642953c04e09c223dab0c6c) with callback cleanup; [dedicated CI workflow `feat003-mirror.yml`](../.github/workflows/feat003-mirror.yml).
+
+**Verified isolated CI:** [FEAT-003 run 39139208320](https://github.com/pratikto/PhotoBooth/actions/runs/39139208320) at `307e779e` **PASS**, 1 focused Kivy test plus Python compile, Ubuntu Python 3.12/Xvfb/software OpenGL, synthetic asymmetric pixels. Tests check the initial/live UV mirrors, texture reuse and size-change, unmodified BGR/Pillow buffers, and unmirrored static saved/review/result images. **No Windows device camera has been checked by this assistant.** The full Kiosk GUI regression has had pre-existing failures; separately inspect its completed current status before any release claim.
+
+**Next safe step:** Owner runs `git pull --ff-only origin feature/kivy-gui` after checking uncommitted local changes, launches `python main.py`, verifies left/right mirror for live ready/countdown/retake and original unmirrored saved/printed text. Record branch SHA, camera orientation, and observable behavior; then classify FEAT-003 as OWNER REPORTED PASS only if owner confirms. Full test/checklist: [test_checklist.md](test_checklist.md). **Do not implement FEAT-002 scanner/merchant checkout or modify stable FEAT-001/BUG-011 print logic without separate scope.**
+
+**Priorities unchanged otherwise:** FEAT-008 device health and FEAT-009 auto-start are still normal pending priorities, with FEAT-003 an owner-selected exception. Audio BUG-001/007 deferred; BUG-011 owner-tested PASS/monitoring; BUG-009 Drive 30-day-retention risk still OPEN/deferred with FEAT-004. FEAT-020 real QRIS deferred. More detailed current scope: [next_step.md](next_step.md) and [FEATURE_STATUS.md](FEATURE_STATUS.md).
+
 ## Latest active work — FEAT-001 DEMO pricing/print copies (2026-10-18)
 
 ### BUG-011 paper-copy mismatch — owner confirms working after Windows RAW fix
