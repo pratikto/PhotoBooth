@@ -808,3 +808,7 @@ comparison confines their changes to rounded corners; their content and the
 machine-readable layout/QR report remain identical. See the updated
 [evidence and validation details](docs/qa/README.md). Camera and Drive still use
 fakes, QRIS is simulated, and physical printing is not connected.
+
+## Project documentation
+
+See the [documentation index](docs/README.md) for the [bug tracker](docs/bug_tracker.md), [feature backlog](docs/next_step.md), [development protocol](docs/DEVELOPMENT_PROTOCOL.md), [test checklist](docs/test_checklist.md), and [changelog](docs/CHANGELOG.md). The technical [development handover](docs/DEVELOPMENT_HANDOVER.md) is separate from the feature backlog. Documentation updates do not authorize code changes.
