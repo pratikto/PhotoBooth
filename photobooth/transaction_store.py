@@ -18,6 +18,7 @@ from PIL import Image
 
 from photobooth.manifest_io import manifest_lock
 from photobooth.retention import DRIVE_DAYS, LOCAL_DAYS, local_photos_expired, mark_local_expired, retention_metadata
+from photobooth.catalog import PRICE_PER_PRINT_COPY, PRICE_PER_SESSION
 from photobooth.workflow import SessionPlan
 
 
@@ -122,6 +123,9 @@ class TransactionStore:
                 "total_sessions": plan.total_sessions,
                 "template_session_number": plan.template_session_number,
                 "template_session_count": plan.template_session_count,
+                # FEAT-001: a chosen design captures once, then sends this
+                # many copies of the exact same composition to the printer.
+                "print_copies": plan.print_copies,
                 "status": "PENDING",
                 "raw_photos": [],
                 "retake_used": False,
@@ -148,6 +152,18 @@ class TransactionStore:
             "drive_slot_key": drive_slot.get("slot_key") if drive_slot else None,
             "upload_status": "ASSIGNED" if drive_slot else "LOCAL_ONLY",
             "upload_files": {},
+            # This records DEMO pricing only; no real payment provider exists.
+            # Older manifests remain valid without this additive field.
+            "demo_order_pricing": {
+                "session_fee": PRICE_PER_SESSION,
+                "per_print_fee": PRICE_PER_PRINT_COPY,
+                "session_count": len(plans),
+                "print_copies": sum(plan.print_copies for plan in plans),
+                "total_amount": (
+                    PRICE_PER_SESSION * len(plans)
+                    + PRICE_PER_PRINT_COPY * sum(plan.print_copies for plan in plans)
+                ),
+            },
             "sessions": sessions,
         }
         transaction = LocalTransaction(
