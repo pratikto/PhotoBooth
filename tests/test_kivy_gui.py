@@ -94,7 +94,7 @@ class KivyFlowTests(unittest.TestCase):
                 self.assertEqual(ui.status_details.parent is ui._footer_row, needed)
                 self.assertIs(ui.start_button, start)
                 self.assertEqual(ui.quantities['template_a'], 2)
-                self.assertEqual(ui.cart_total.text, 'Rp10.000')
+                self.assertEqual(ui.cart_total.text, 'Rp15.000')
         finally:
             Window.remove_widget(ui.shell)
             Window.size = original_size
@@ -140,7 +140,7 @@ class KivyFlowTests(unittest.TestCase):
                     self.assertIs(ui.status_details.parent, ui._footer_row)
                     self.assertFalse(ui.status_details.disabled)
                     self.assertTrue(start.disabled)
-                    self.assertEqual(ui.cart_total.text, 'Rp10.000')
+                    self.assertEqual(ui.cart_total.text, 'Rp15.000')
                     ui.status_details.dispatch('on_release')
                     settle()
                     popup = next(w for w in Window.children if isinstance(w, Popup))
@@ -381,7 +381,7 @@ class KivyFlowTests(unittest.TestCase):
         plus.dispatch('on_release')
         self.assertTrue(card.selected)
         self.assertFalse(minus.disabled)
-        self.assertEqual(ui.cart_total.text, 'Rp10.000')
+        self.assertEqual(ui.cart_total.text, 'Rp15.000')
         minus.dispatch('on_release')
         minus.dispatch('on_release')
         self.assertFalse(card.selected)
@@ -605,7 +605,7 @@ class KivyFlowTests(unittest.TestCase):
                             if screen == 'templates':
                                 visible(ui.cart_total)
                                 self.assertEqual(ui.cart_total.text,
-                                                 'Rp' + f'{len(ui.templates) * 10000:,}'.replace(',', '.'))
+                                                 'Rp' + f'{len(ui.templates) * 15000:,}'.replace(',', '.'))
                                 # Each order title is now a real 52dp button
                                 # within the independently scrollable cart.
                                 self.assertEqual(len(ui.order_rows), len(ui.templates))
@@ -661,7 +661,7 @@ class KivyFlowTests(unittest.TestCase):
                     settle()
                     self.assertIs(ui.start_button, start)
                     self.assertEqual(ui.quantities['template_a'], 2)
-                    self.assertEqual(ui.cart_total.text, 'Rp10.000')
+                    self.assertEqual(ui.cart_total.text, 'Rp15.000')
         finally:
             Window.remove_widget(ui.shell)
             Window.size = original_size
@@ -698,10 +698,14 @@ class KivyFlowTests(unittest.TestCase):
         self.assertFalse(ui.start_button.disabled)
         ui._start_selected()
         self.assertEqual(orders, [{key: 2}])
+        # Two sheets of one frame have only one capture/session fee.
+        self.assertEqual(ui.cart_sessions.text, '1 frame · 2 lembar')
+        self.assertEqual(ui.cart_total.text, 'Rp15.000')
+        self.assertEqual(ui.quantity_labels[key].text, '2 cetak')
 
         # Payment is an explicit simulation and confirms only once per screen.
         confirmations = []
-        ui.show_payment('Template 1 x 2', 2, 10000,
+        ui.show_payment('Template 1 · 2 lembar', 1, 15000,
                         lambda: confirmations.append(True), lambda: None)
         self.assertEqual(ui.current_screen, 'payment')
         confirm = ui.payment_confirm
