@@ -77,7 +77,8 @@
 - Scope approved by owner in conversation: BUG-001 music playback and BUG-007 Settings Uji audio; branch `feature/kivy-gui`, baseline `06dd977c06657c9b56e1de0ad18042b65515bd64`.
 - Source patches: restart SDL2 music channel at full gain once after ad fade; force operator music audition; remove extra generic button click for three Uji controls; fix diagnostic newline. Tests added for forced preview, fade replay and isolated GUI button sounds.
 - **Pre-change GitHub Actions baseline:** Kiosk GUI regression run [39101639665](https://github.com/pratikto/PhotoBooth/actions/runs/39101639665) FAILED the full discovery suite, but syntax and 87 synthetic visual renders succeeded; root failing test not identified from available logs.
-- **Post-change Python tests / GUI render / real Windows speakers:** awaiting actual run results. Do not claim a pass yet. CI uses dummy `SDL_AUDIODRIVER` and `PHOTOBOOTH_AUDIO=0` so even a green run cannot establish audible hardware output.
+- **Post-change GitHub Actions on code SHA `b69d3837de6220d27a477a10a807fdbdd799cb0b`:** [run 39104614520](https://github.com/pratikto/PhotoBooth/actions/runs/39104614520) **FAILED overall**: `python -m compileall -q photobooth tests tools` **PASS**; `xvfb-run -a python -m unittest discover -s tests -v` **FAIL** (exit 1, individual failing test not available in captured job log); `xvfb-run -a python tools/render_gui.py --output-dir /tmp/meong-gui-qa` **PASS**, 87 renders, 0 reported errors; visual-summary step **PASS**. The **baseline run also failed** at discovery: this does not identify whether any newly added audio tests failed.
+- **Targeted audio unit suite and real Windows speakers:** **NOT RUN in isolation / UNVERIFIED**. CI uses dummy `SDL_AUDIODRIVER` and `PHOTOBOOTH_AUDIO=0`; synthetic rendering and provider states cannot establish audible hardware output.
 
 ## Regression commands to execute (historical results do not carry forward)
 
