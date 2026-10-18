@@ -21,7 +21,16 @@ import unittest
 
 def main() -> int:
     """Run existing tests unchanged and preserve their exit status."""
-    suite = unittest.defaultTestLoader.discover("tests", pattern="test_*.py")
+    # Invoking a file from tools/ makes sys.path[0] point to tools/, not the
+    # repository root. Restore the normal 'python -m unittest' import context
+    # before discovery so every test can import photobooth as it does locally.
+    repository_root = Path(__file__).resolve().parent.parent
+    if str(repository_root) not in sys.path:
+        sys.path.insert(0, str(repository_root))
+    suite = unittest.defaultTestLoader.discover(
+        str(repository_root / "tests"), pattern="test_*.py",
+        top_level_dir=str(repository_root),
+    )
     output = io.StringIO()
     result = unittest.TextTestRunner(
         stream=output, verbosity=2, buffer=False
