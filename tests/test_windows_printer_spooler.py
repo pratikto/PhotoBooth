@@ -56,8 +56,8 @@ class WindowsRawTests(unittest.TestCase):
                 PrinterConfig(windows_printer_name="POS80 Printer"),
                 payload_builder=Mock(return_value=base),
             )
-            with patch.dict(sys.modules, {"win32print": fake}), \\
-                 patch("photobooth.printer.os.name", "nt"):
+            with (patch.dict(sys.modules, {"win32print": fake}),
+                  patch("photobooth.printer.os.name", "nt")):
                 result = printer.print_image(image, copies=3)
 
         self.assertTrue(result.success)
