@@ -45,7 +45,8 @@ For each new idea record:
 - **Risks and controls:** Ordinary barcode/QR may encode only receipt ID and cannot independently prove value; validate purchase amount, store, date and authenticity against merchant POS or cryptographically signed token. Enforce atomic one-time redemption (including multiple kiosks), replay prevention, expiry, offline policy, data minimization and clear error/fallback UI. Do not treat a scan as payment confirmation. Recompute payment amount **before** generating any payable QRIS; invalidate stale payment requests if discount changes.
 - **Affected areas:** checkout UI, scanning input (camera or external reader), promotion rules, pricing calculation, transaction store/redemption state, merchant API, test harness, receipt/discount display and audit logs.
 - **Proposed acceptance:** Valid eligible receipt >= IDR 50,000 discounts exactly one template fee by IDR 5,000; print fees remain unchanged; ineligible, duplicate, expired, invalid or unverifiable receipts receive no discount; mixed-template carts cap discounts correctly; checkout totals and payment requests stay consistent; no duplicate redemption across concurrent kiosks; scan failures preserve the normal payment path.
-- **Open decisions:** Merchant POS vendor and receipt barcode format; one receipt per customer/transaction and cross-booth reuse; eligibility window and eligible products; one discount per receipt vs per template; whether discounts combine with other promotions; scanner type and offline behavior. Example threshold and benefit are illustrative merchant-configurable campaign settings, not global fixed rules.
+- **Confirmed by owner (2026-10-18):** Use the merchant's **existing POS-issued purchase receipt** and its existing barcode/QR first; do **not** require the café to issue a separate Meong voucher as the initial approach. Scan alone is not evidence of eligibility; inspect actual receipt encoding and determine whether merchant POS lookup is available before selecting validation architecture.
+- **Open decisions:** Merchant POS vendor and receipt barcode format/sample; one receipt per customer/transaction and cross-booth reuse; eligibility window and eligible products; one discount per receipt vs per template; whether discounts combine with other promotions; scanner type and offline behavior. Example threshold and benefit are illustrative merchant-configurable campaign settings, not global fixed rules.
 - **Execution rank:** Provisional #2 after FEAT-001 because it requires a reliable base pricing model, then POS/anti-fraud design and payment integration. Existing operational blockers remain ahead of feature releases.
 
 ## Milestone framework (provisional)
@@ -59,6 +60,8 @@ M1 Core Stability; M2 Operational Reliability; M3 Commercial Readiness; M4 Produ
 | 2026-10-18 | FEAT-001 behavior confirmed | One 3-capture session per selected template; print-copy count only duplicates the same finished layout, not the photo session |
 
 | 2026-10-18 | FEAT-002 submitted | Re-ranked full backlog: FEAT-001 stays #1 as prerequisite; FEAT-002 enters #2 pending merchant validation and pricing integration. Existing bugs still take precedence. |
+
+| 2026-10-18 | FEAT-002 receipt source confirmed | Prioritize existing merchant POS receipt QR/barcode, not custom Meong voucher; readiness remains blocked until actual receipt format and verification method are known; ranks unchanged |
 
 ## Template
 ### FEAT-XXX — Title
