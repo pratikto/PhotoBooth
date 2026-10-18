@@ -2,7 +2,7 @@
 
 ## Development handover (start here)
 
-For continuing work in a new chat or model, read [Architecture](docs/ARCHITECTURE.md), [Feature status](docs/FEATURE_STATUS.md), [Decisions](docs/DECISIONS.md), and [Next steps](docs/NEXT_STEPS.md). These documents separate the current implementation, reported defects, and planned work. Continue on the existing `feature/kivy-gui` branch; do not assume historical automated QA resolves newly reported playback/audio/navigation issues.
+For continuing work in a new chat or model, read [Architecture](docs/ARCHITECTURE.md), [Feature status](docs/FEATURE_STATUS.md), [Decisions](docs/DECISIONS.md), and [Next steps](docs/DEVELOPMENT_HANDOVER.md). These documents separate the current implementation, reported defects, and planned work. Continue on the existing `feature/kivy-gui` branch; do not assume historical automated QA resolves newly reported playback/audio/navigation issues.
 
 A Python photo booth application built with Kivy, OpenCV, and Pillow. QRIS is
 still an explicitly non-payable demo. The kiosk now supports local advertising
