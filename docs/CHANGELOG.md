@@ -4,6 +4,11 @@ This file tracks **actual verified repository/document changes**, not successful
 
 ## [Unreleased] — 2026-10-18
 
+### Owner-scheduled FEAT-004 / BUG-009 combined Google Apps Script phase (docs only)
+- Logged the owner decision to **defer BUG-009** (Google Drive 30-day photo retention still unverified) and coordinate later remediation with **FEAT-004** per-machine Google Drive video/image ad sync. This is an integration/deployment planning decision, not approval to implement, deploy or delete files.
+- The current repository `apps_script/Code.gs` already contains retention setup/registration/cleanup; actual trigger and deployed Web App remain unverified. The future ad-sync API is still proposed. Keep customer photo folders separate from ad media and test the two workflows independently with authorized synthetic data.
+- Related documentation-only commits: `docs/bug_tracker.md` [`bb2326de`](https://github.com/pratikto/PhotoBooth/commit/bb2326dee165e1cf570485d41d9d0768630dd902); `docs/next_step.md` [`7c4d73a2`](https://github.com/pratikto/PhotoBooth/commit/7c4d73a257c584e3ef7f1f0d225d24231dc14078); `docs/DECISIONS.md` [`f1e72bf6`](https://github.com/pratikto/PhotoBooth/commit/f1e72bf6fc99c76cc1e7baf29a5a77a530d139d6). No Python/Apps Script source files changed; no new automated or device tests were run for this entry.
+
 ### Owner-approved GUI merge and default Floyd photo profile
 - Fast-forwarded `feature/kivy-gui` to the existing tested `feature/dither-tuning` head `f3d836d`, retaining the 3-way standalone lab, its tests and documentation. This does not merge to `main`.
 - For ordinary **photo composition** printing with configured Floyd–Steinberg and native width 384/576 dots, apply the user-selected lab profile: B 0.652, C 2.104, gamma 2.352, sharpness 2.073, threshold 128. Other dithering modes, explicitly requested comparison jobs, and QRIS slip generation are not modified.
