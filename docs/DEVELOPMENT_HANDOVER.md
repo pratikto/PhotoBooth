@@ -8,7 +8,7 @@
 
 **Read this first rather than treating the dated 2026-10-17 notes below as an active work order.** Source-of-truth documents:
 
-- [Documentation index](README.md) and root [README](../README.md) (current status banner and historical project setup).
+- [Documentation index](README.md), [reusable development prompt](DEVELOPMENT_PROMPT.md), and root [README](../README.md) (current status banner and historical project setup).
 - [DECISIONS.md](DECISIONS.md): owner-confirmed commercial/product behavior versus proposals.
 - [FEATURE_STATUS.md](FEATURE_STATUS.md): actual source implementation versus user-reported physical acceptance.
 - [bug_tracker.md](bug_tracker.md): operational defects and stable IDs.
@@ -66,7 +66,9 @@ Physical machine speakers, local media/codec setup, camera, Google Drive and LAN
 
 ## Copy/paste into a new chat
 
-> Continue Meong Photobooth from GitHub `pratikto/PhotoBooth` on existing `feature/kivy-gui` only. Read `docs/README.md`, current `docs/DEVELOPMENT_HANDOVER.md`, `docs/DECISIONS.md`, `docs/FEATURE_STATUS.md`, `docs/bug_tracker.md`, `docs/test_checklist.md` and `docs/next_step.md`; inspect relevant code and current commit. Fix nothing automatically: obtain explicit scope approval for application changes, then test actual Windows printer, audio and video before claiming success. Keep detailed English comments, run tests, commit and push directly to that branch, and update handover/status docs. Do not create a new branch or represent demo QRIS as live payment.
+The maintained full and quick prompts are in [DEVELOPMENT_PROMPT.md](DEVELOPMENT_PROMPT.md). The compact starter below references that single canonical prompt rather than maintaining a divergent second checklist:
+
+> Continue Meong Photobooth from GitHub `pratikto/PhotoBooth` on existing `feature/kivy-gui`. Follow `docs/DEVELOPMENT_PROMPT.md` and `docs/DEVELOPMENT_PROTOCOL.md`; read current `docs/DECISIONS.md`, `docs/FEATURE_STATUS.md`, `docs/bug_tracker.md`, `docs/test_checklist.md`, `docs/next_step.md` and `docs/DEVELOPMENT_HANDOVER.md`. Inspect current branch/SHA and relevant source. **Review only unless I approve a named documentation or code scope.** For approved development, record tests and link documentation/commit evidence before claiming a bug fixed. No new branch, merge or real QRIS claims without authorization.
 
 ## Current blocker: audio remains silent (reported 2026-10-17)
 
