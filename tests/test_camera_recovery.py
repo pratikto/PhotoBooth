@@ -489,6 +489,13 @@ class CameraRecoveryTests(unittest.TestCase):
 
     def test_stale_finish_cannot_complete_another_customer_transaction(self):
         """Retained result controls belong to one screen, not the next customer."""
+        # This test exercises transaction ownership and completion, not the
+        # physical printer. FEAT-001 now gates NEXT/SELESAI until an async
+        # transport job finishes; complete that fake batch deterministically.
+        # Dedicated printer tests separately enforce the busy/uncertain gate.
+        self.app._start_print_job = lambda path, copies=1: self.app.ui.set_print_status(
+            f"Synthetic {copies}-copy print transport accepted", busy=False
+        )
         self.order()
         self.app.ui.payment_confirm.dispatch('on_release')
         for number in range(2):
@@ -511,6 +518,13 @@ class CameraRecoveryTests(unittest.TestCase):
 
     def test_completion_request_cannot_skip_unfinished_sessions(self):
         """Controller completion is valid only after accepting the final output."""
+        # This test exercises transaction ownership and completion, not the
+        # physical printer. FEAT-001 now gates NEXT/SELESAI until an async
+        # transport job finishes; complete that fake batch deterministically.
+        # Dedicated printer tests separately enforce the busy/uncertain gate.
+        self.app._start_print_job = lambda path, copies=1: self.app.ui.set_print_status(
+            f"Synthetic {copies}-copy print transport accepted", busy=False
+        )
         self.order()
         self.app.ui.payment_confirm.dispatch('on_release')
         transaction = self.app.transaction
