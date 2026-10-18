@@ -1,5 +1,7 @@
 # Meong Photobooth — Reusable Development & Documentation Prompt
 
+> **CURRENT (2026-10-19):** This is a reusable **process template**, not an active task list. Latest reviewed development branch: `feature/kivy-gui` (not merged into `master`); owner-test and CI status must be fetched afresh from [status](FEATURE_STATUS.md) and [QA checklist](test_checklist.md) whenever starting a new task. Previous snippets in other documents explicitly marked HISTORICAL must not override the current source.
+
 Last reviewed: 2026-10-18 | Repository: `pratikto/PhotoBooth` | Branch: `feature/kivy-gui`
 
 **Purpose:** Copy the prompt below into a new chat or use it when continuing a task. GitHub documentation is the durable project record; chat history by itself is **not** the status ledger.

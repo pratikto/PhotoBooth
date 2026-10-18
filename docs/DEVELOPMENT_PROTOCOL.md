@@ -1,4 +1,6 @@
 # Meong Photobooth Development Protocol v1.0
+
+> **CURRENT (2026-10-19):** Governance v1.0 is **still authoritative** for `feature/kivy-gui`: read [current status](FEATURE_STATUS.md), [bug tracker](bug_tracker.md) and [backlog](next_step.md) before work. This documentation-only reconciliation does **not** authorize code changes, physical release or merge to `master`; continue separating historical evidence, synthetic CI and owner device acceptance. Full Kiosk CI at `c40f33f5` PASS.
 Effective: 2026-10-18 | Branch: `feature/kivy-gui`
 
 ## Non-negotiable rules
