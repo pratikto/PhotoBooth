@@ -27,9 +27,11 @@ def main() -> int:
     repository_root = Path(__file__).resolve().parent.parent
     if str(repository_root) not in sys.path:
         sys.path.insert(0, str(repository_root))
+    # The tests/ directory intentionally has no __init__.py. Allow default
+    # unittest top-level discovery to import test_*.py directly, just as the
+    # original 'python -m unittest discover -s tests -v' command did.
     suite = unittest.defaultTestLoader.discover(
         str(repository_root / "tests"), pattern="test_*.py",
-        top_level_dir=str(repository_root),
     )
     output = io.StringIO()
     result = unittest.TextTestRunner(
