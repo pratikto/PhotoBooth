@@ -5,6 +5,12 @@ This status is based on reading selected source files and the latest owner devic
 
 Status vocabulary: **IN SOURCE** = relevant implementation found, **OWNER REPORTED** = physical observation requiring reproducible evidence, **UNVERIFIED** = no current hardware acceptance, **PLANNED** = not implemented, **BLOCKED** = operational defect. For feature approval/requirements, see [DECISIONS.md](DECISIONS.md) and [next_step.md](next_step.md).
 
+## Latest automated quality gate — Kiosk GUI Regression PASS
+
+**As of 2026-10-18:** [Kiosk GUI regression Actions 39144464476](https://github.com/pratikto/PhotoBooth/actions/runs/39144464476) **SUCCESS**, tested SHA `f129dd9e`: `232` unittests (**230 PASS / 2 SKIP / 0 FAIL / 0 ERROR**), Python compilation PASS, **87 synthetic desktop screen renders / 0 errors**. Previous pipeline FAIL was investigated using the new diagnostics runner; 17 initial assertion failures were resolved in **test/CI code only**, to reflect approved FEAT-001 pricing/sessions, ad → tutorial navigation, actual Settings submenu and per-tap music auditions, safe print completion and simulated Windows queue selection. **No runtime `photobooth/` source changed** during this quality-gate repair. [Detailed CI evidence](qa/KIOSK-GUI-REGRESSION-2026-10-18.md).
+
+**Release distinction:** the full GUI suite is now green **at that verified commit**; no claim of real-camera, audio speaker, thermal paper, customer-data retention or actual QRIS settlement acceptance. The owner's separate FEAT-001/BUG-011 and FEAT-003 physical PASS statements remain in force; BUG-009 cloud-photo retention and BUG-001/007 audio remain unchanged. Documentation-only commits after `f129dd9e` should receive their own CI result.
+
 ## Isolated experiment on `feature/dither-tuning` (2026-10-18)
 
 **Current follow-on source:** `tools/dither_compare_gui.py` provides one-screen three-way comparison, independent/sync slider tuning, real-time 1-bit previews, zoom, parameter JSON and exact-raster export. `photobooth/dither_print.py` supports **operator-confirmed** physical Print Test per lane/Print All with no second dithering or uncertain automatic retries. [Stage 2 CI](https://github.com/pratikto/PhotoBooth/actions/runs/39112358484) and [Stage 3 CI](https://github.com/pratikto/PhotoBooth/actions/runs/39112474748) passed targeted automated checks. Windows UI and printer-paper behavior **NOT VERIFIED**; no production kiosk changes.
