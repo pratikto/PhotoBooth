@@ -62,6 +62,11 @@ class KioskAdvertisingTests(unittest.TestCase):
         # The approved kiosk flow routes idle ads through the tutorial
         # before entering the template picker, for manual and face entry.
         self.assertEqual(self.ui.current_screen, 'welcome')
+        # No camera was available when this visit began; tutorial should stay
+        # accessible but must block checkout until the camera becomes ready.
+        self.assertTrue(self.ui.home_start_button.disabled)
+        self.ui.set_camera_status(True)
+        self.assertFalse(self.ui.home_start_button.disabled)
         self.ui.home_start_button.dispatch('on_release')
         self.assertEqual(self.ui.current_screen, 'templates')
         self.assertFalse(self.audio._advertising)
