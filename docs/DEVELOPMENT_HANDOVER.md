@@ -22,7 +22,7 @@ Owner reports FEAT-001 **pricing correct but printed-sheet count wrong** on Wind
 
 **Other priorities unchanged:** FEAT-008/009 remain normal top-of-backlog features after this owner-selected work. BUG-001/007 postponed, BUG-008 monitoring, BUG-009 still OPEN/deferred alongside FEAT-004 with cloud privacy risk. Current canonical prioritization and FEAT-001 exception: [next_step.md](next_step.md).
 
-## Current priority handover — owner decision 2026-10-18 (latest)
+## Earlier priority handover — owner decision 2026-10-18 (superseded by FEAT-001/BUG-011 update above)
 
 **Target:** `feature/kivy-gui`; use the [unified execution board](next_step.md) rather than historical sections below. Owner explicitly deferred **all payment, transaction, checkout/pricing, receipt-promo settlement and paid-reprint development to execution P3 LOW** while real QRIS is absent. **NEW FEAT-020** captures future provider-backed real QRIS; the existing QR and payment confirmation are DEMO / non-payable. Before any real-money release, FEAT-001 pricing, FEAT-007 durable paid-state recovery and FEAT-020 provider verification must be coordinated. **This is a documentation decision, not approval for code or deployment.**
 
