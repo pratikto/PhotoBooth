@@ -1,7 +1,9 @@
 # Photo retention
 
+> **CURRENT operational baseline (2026-10-19, `feature/kivy-gui`):** **BUG-009 OPEN / NOT VERIFIED:** The repository contains a **15-day local photo retention policy** and a **30-day target for Drive photo deletion**, but the Google Apps Script deployment, hourly trigger and successful permanent cloud deletion have **not been verified** on the operator's account. **Do not promise customers that cloud photos will automatically disappear after 30 days** until the user authorizes deployment and observes non-customer-data test runs. Drive photo deletion is irreversible; do not activate or test it on production customer folders as part of documentation cleanup. Planned remediation is deferred with FEAT-004.
+
 The platform in this desktop application is the booth's local `photos/` storage.
-Photo bytes expire after **15 days locally** and **30 days in Google Drive**.
+**Configured targets** are **15 days locally** and **30 days in Google Drive**. Local cleanup is implemented in Python; Drive cleanup requires a separately deployed and authorized Apps Script timer and is **NOT CONFIRMED ACTIVE (BUG-009)**.
 Both clocks use the actual transaction's `created_at` in UTC. A pre-created
 empty folder's age is not the transaction's age. Assignments, upload retries,
 application restarts, and a late upload never renew a deadline.
@@ -15,8 +17,7 @@ retaining the customer's image bytes.
 
 ## Activate Google Drive cleanup
 
-The repository includes the backend implementation, but updating the Python
-application does not deploy Apps Script or install a Google account's timer.
+The repository includes backend implementation **only**; no GitHub code/documentation update deploys Apps Script or installs the Google-account timer. **The following steps are operator instructions, not an activity performed by this review.**
 Use the **existing** Apps Script project that supplies `WEB_APP_URL`:
 
 1. Open the project in [Apps Script](https://script.google.com/home) using the

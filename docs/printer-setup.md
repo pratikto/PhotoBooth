@@ -1,5 +1,7 @@
 # Thermal printer setup
 
+> **CURRENT operational baseline (2026-10-19, `feature/kivy-gui`):** The source on **`feature/kivy-gui`** supports photo strips and DEMO payment QR-slip printing through the saved GUI `PrinterConfig`, including Windows RAW ESC/POS, LAN and Wi-Fi. The owner confirmed **FEAT-001 price and BUG-011 actual multi-copy count PASS on Windows** and reported Floyd image quality / QR paper output PASS (BUG-004/003). This is not independent QA of every width, driver or phone QR scan. Floyd–Steinberg with the **owner-selected photo preprocessing** is the active default; `PHOTOBOOTH_PHOTO_TUNING=legacy` is an explicit fallback. Earlier stage references to only `feature/thermal-printer` and RAW printing untested are **HISTORICAL / SUPERSEDED**.
+
 The booth prints each saved result image as a monochrome ESC/POS raster. Photo
 tones use Floyd–Steinberg dithering by default; Bayer ordered dithering and a
 plain threshold are also available for comparison. The purchased printer is
@@ -153,11 +155,10 @@ a physical test print.
 On the tested PC, Device Manager reports Caysn IW-J82ULW with
 `USB\\VID_4838&PID_3830`; Windows shows `POS80 Printer` and
 `POS80 Printer(2)`, driver `POS80ENG`, port `USB001`. A normal
-Windows `Out-Printer` text test has physically succeeded. RAW ESC/POS
-compatibility has **not yet been physically verified**.
+Windows `Out-Printer` text test historically succeeded. **CURRENT:** the owner subsequently confirmed physical RAW ESC/POS copy-count behavior on Windows (BUG-011 OWNER TESTED PASS); the precise local queue, firmware, and 1/2/3 cut-sheet matrix were not provided, so full driver compatibility across configurations remains unverified.
 
-The existing `feature/thermal-printer` branch now supports a named Windows
-spooler queue. This avoids replacing the installed USB driver. In PowerShell:
+The **current `feature/kivy-gui` branch** supports a named Windows
+spooler queue; the older `feature/thermal-printer` branch remains an archived reference. This avoids replacing the installed USB driver. In PowerShell:
 
 ```powershell
 python -m pip install pywin32
@@ -203,9 +204,9 @@ sends all three prints, which uses more paper. The preview option **never**
 opens a printer connection. Queue acceptance is not confirmation of print
 quality, legibility or cutter behavior; do not retry blindly after partial output.
 
-## GUI printer settings (source implementation; physical QA pending)
+## Current GUI printer settings — in Kivy; specific device test evidence remains separate
 
-On branch `feature/thermal-printer`, use the gear icon in the Kivy header,
+On branch `feature/kivy-gui`, use the gear icon in the Kivy header,
 choose **PENGATURAN PRINTER**, then select **USB Windows**, **LAN**, or **Wi-Fi**.
 The popup lets the operator edit the Windows queue name (for example,
 `POS80 Printer`), network IP and TCP port, 576/384-dot print width, and
@@ -219,11 +220,11 @@ The app does not store the Wi-Fi SSID/password.
 short ESC/POS test receipt from a worker thread so the UI remains responsive.
 It is an operator-initiated action and should be used only with the printer
 connected and paper loaded. A positive message confirms job submission, not
-verified paper output. Test printing has not yet been physically checked.
+verified paper output. **The owner confirmed actual paper copy-count PASS in the normal photo flow**; that does not by itself confirm this dedicated settings TEST PRINT button on every route.
 Windows USB uses the existing `POS80ENG` driver and requires `pywin32`.
 
 The existing music Settings remains under **PENGATURAN AUDIO** in the same
 gear menu. Saved printer config is separate from application audio settings.
 
 Tests: `python -m unittest tests.test_printer_settings -v`.
-This source change is not a completed physical acceptance test.
+**Acceptance separation:** owner-tested Windows photo printing / copy count is PASS; full width/network-route, QR phone-scannability, spool-error and cutter acceptance remains separately unverified. See [QA checklist](test_checklist.md).

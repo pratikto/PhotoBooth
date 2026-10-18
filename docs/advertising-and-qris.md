@@ -1,5 +1,7 @@
 # Advertising and QR payment-slip setup
 
+> **CURRENT operational baseline (2026-10-19, `feature/kivy-gui`):** The advertising → mandatory tutorial → 12 templates flow is in source. The owner subsequently reported **idle/payment video and QR-slip paper print PASS** (BUG-002/003/005), not formal per-case hardware certification. The payment QR/confirmation remains explicitly **DEMO / non-payable**. Windows QR phone scannability and all ad/audio setups remain separate checks; application background music BUG-001/007 is deferred. The initial QR-slip failure recorded below is **HISTORICAL / SUPERSEDED**.
+
 This implementation belongs to the existing `feature/kivy-gui` branch. It does
 not merge or change the separate `feature/thermal-printer` branch.
 
@@ -145,11 +147,11 @@ The UI does not offer a way to paste an unverified real payment QR.
 
 ## Payment QR thermal printing — current GUI and legacy LAN configuration
 
-**Reconciled 2026-10-18:** The GUI now supplies the saved printer configuration to `QrisPrinterWorker`, sharing the photo-strip transport. This is implemented in source, **not verified by the owner to print a QR payment slip on paper**. The owner reports physical photo strips print on Windows while the QR payment slip still fails (BUG-003). See [FEATURE_STATUS.md](FEATURE_STATUS.md).
+**Current (reconciled 2026-10-19):** The GUI passes its saved printer configuration to `QrisPrinterWorker`, sharing the photo-strip transport. **BUG-003 QR-slip printing subsequently received OWNER REPORTED PASS for paper output on Windows.** The earlier failure is historical; exact Windows checkout SHA, per-device receipt photo and phone scannability were not captured. A sent spool or digital decode alone must never be labelled verified paper/phone scan. See [FEATURE_STATUS.md](FEATURE_STATUS.md).
 
 **Preferred GUI setup on Windows:** open Settings → **PENGATURAN PRINTER** → **USB Windows**, enter the *actual* Windows printer queue name (the user's environment has used POS80 Printer/POS80ENG), select a suitable printer dot width and save; perform a physical **TEST PRINT** first. Then open demo payment, tap **CETAK QR**, inspect the real paper and scan with a phone to validate QR readability. LAN and Wi-Fi routes may also be configured through the same printer settings. Do **not** infer a successful print from an ESC/POS file or a spooler job alone.
 
-The worker uses the current saved `PrinterConfig` from the Kivy GUI, routes via configured LAN, Wi-Fi or Windows USB spooler, and preserves the active QR payload/amount/expiry. Without any usable configured route, the GUI should show a **preview**, not claim paper was printed. The source code selects among configured routes; the specific failure on the operator's machine remains under investigation.
+The worker uses the current saved `PrinterConfig` from the Kivy GUI, routes via configured LAN, Wi-Fi or Windows USB spooler, and preserves the active QR payload/amount/expiry. Without any usable configured route, the GUI should show a **preview**, not claim paper was printed. The source code selects among configured routes. **The original device failure was reported resolved by the owner (BUG-003)**; investigate only if a new regression or unverified device mode appears.
 
 **Legacy standalone LAN-only fallback:** Direct `QrisPrinterWorker` callers without the GUI's printer-config provider may configure:
 

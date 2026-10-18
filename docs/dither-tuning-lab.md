@@ -1,8 +1,9 @@
 # Meong Photobooth — Thermal Dither Tuning Lab
 
-**Experiment:** FEAT-011, investigating open BUG-004 (blurry/low-quality photo print).  
-**Branch:** `feature/dither-tuning` (created 2026-10-18 from `feature/kivy-gui` commit `5e0a898`).  
-**Scope:** offline photo-rendering sandbox; the existing photobooth application and photo/QR print pipeline have **not** been changed or merged.
+> **CURRENT operational baseline (2026-10-19, `feature/kivy-gui`):** FEAT-011 standalone 3-way tuning GUI was developed on `feature/dither-tuning`, **merged into `feature/kivy-gui`**, and the chosen Floyd photo preprocessing is **active by default** in `photobooth/printer.py` (owner-reported print-quality PASS, BUG-004/010). The lab's standalone saved JSON settings **do not automatically configure** the kiosk printer; hardware quality assessment is separate from CI. Historical references to an unmerged branch/OPEN BUG-004 below are superseded.
+
+**CURRENT state:** FEAT-011 lab and the selected default Floyd photo profile are available in `feature/kivy-gui`; BUG-004/010 owner-reported PASS (not a complete printer/media test matrix).  
+**HISTORICAL origin:** `feature/dither-tuning` was created 2026-10-18 from `feature/kivy-gui` at `5e0a898` and initially kept its experiment separate. The standalone lab remains a tool, while the approved Floyd preprocessing is now on the Kivy photo-print path.
 
 ## BUG-010 layout usability
 
@@ -63,7 +64,7 @@ Image pipeline: **composite transparency onto white → grayscale → proportion
 
 - JSON lab profiles are **NOT** loaded by `main.py`, `PrinterConfig`, or `data/printer_settings.json`. Different schemas; do not copy/overwrite that file.
 - Exporting a PNG **does not print**. It does not configure physical printer darkness/heat, paper quality or firmware. An on-screen preview is **not proof** of physical dot reproduction.
-- This branch is not a fix/closure for BUG-004 until controlled real-paper results are reviewed and owner-approved.
+- **CURRENT evidence:** the owner later accepted the Floyd photo improvement (BUG-004 OWNER REPORTED PASS). No controlled before/after paper matrix was archived, so do not treat this as formal cross-printer quality certification.
 - Physical print comparison remains an **explicit separate operator action**: existing `tools/print_dither_comparison.py` can print a saved composition when configured for the correct real printer; it sends actual paper jobs. Never automatically submit several prints when a job's outcome is uncertain.
 
 ## Test evidence and next acceptance
@@ -74,6 +75,6 @@ Source commit [`07dcb1a`](https://github.com/pratikto/PhotoBooth/commit/07dcb1a5
 python -m unittest tests.test_dither_lab -v
 ```
 
-**Still pending:** Windows GUI screenshot and interactions, preview/slider responsiveness, physical printer samples for each mode with the same photograph and settings, and the operator's assessment of clarity. The baseline Kivy kiosk suite remains a separate pre-existing issue; this lab's passing CI must not be represented as a full kiosk release test.
+**Remaining evidence (not a claim the operator's PASS did not happen):** a recorded 3-algorithm same-photo Windows paper comparison, exact device SHA/media width and repeatable slider/print results. **Kiosk GUI full CI now PASS** ([run 39145145762](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762)) and Dither CI PASS ([run 39145145764](https://github.com/pratikto/PhotoBooth/actions/runs/39145145764)) at `c40f33f5`; neither proves every real printer medium.
 
-**Rollback/isolation:** checkout `feature/kivy-gui` without merging; its printer behavior is unchanged. Any transfer of lab profile behavior into the customer kiosk needs a **new explicit approval**, printer quality regression tests, and device evidence.
+**CURRENT rollback/isolation:** The lab is **already merged into `feature/kivy-gui`**, and `photobooth/printer.py` uses approved Floyd preprocessing for photo output by default. For troubleshooting, `PHOTOBOOTH_PHOTO_TUNING=legacy` restores prior preprocessing without reverting unrelated commits. Future *different lab JSON presets* still need explicit approval before changing the main app; never replace `data/printer_settings.json` with incompatible lab JSON. Do not merge to `master` without explicit release authorization.
