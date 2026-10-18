@@ -10,7 +10,7 @@ from PIL import Image, ImageDraw, ImageOps
 
 from photobooth.catalog import CANVAS_SIZE, PHOTO_FRAME_SIZE, compose_result, fit_result_photo, get_templates
 from photobooth.transaction_store import TransactionStore
-from photobooth.workflow import PhotoSession, build_session_plans
+from photobooth.workflow import PhotoSession, build_session_plans, quote_order
 
 
 class WorkflowTests(unittest.TestCase):
@@ -34,33 +34,38 @@ class WorkflowTests(unittest.TestCase):
                 self.assertEqual(source.mode, mode)
                 self.assertEqual(source.tobytes(), before)
 
-    def test_quantities_create_independent_ordered_sessions(self):
-        # Verify template quantities expand into separate sessions in the same order as the picker.
+    def test_print_copies_do_not_create_extra_capture_sessions(self):
+        """Two copies use one capture/review and one final image per template."""
         templates = get_templates()
-        plans = build_session_plans(
-            templates,
-            {
-                "template_a": 2,
-                "template_b": 1,
-            },
-        )
+        order = {"template_a": 2, "template_b": 1}
+        plans = build_session_plans(templates, order)
+        self.assertEqual([p.session_id for p in plans], ["session_001", "session_002"])
+        self.assertEqual([p.template.template_id for p in plans], ["template_a", "template_b"])
+        self.assertEqual([p.print_copies for p in plans], [2, 1])
+        self.assertEqual([p.template_session_count for p in plans], [1, 1])
+        self.assertEqual([p.total_sessions for p in plans], [2, 2])
+        self.assertEqual(quote_order(templates, order).total_amount, 25000)
 
-        self.assertEqual(
-            [plan.session_id for plan in plans],
-            ["session_001", "session_002", "session_003"],
-        )
-        self.assertEqual(
-            [plan.template.template_id for plan in plans],
-            ["template_a", "template_a", "template_b"],
-        )
-        self.assertEqual(plans[0].template_session_count, 2)
-        self.assertEqual(plans[1].template_session_number, 2)
-        self.assertEqual(plans[2].template_session_count, 1)
+    def test_session_fee_plus_copy_fee_for_one_design(self):
+        templates = get_templates()
+        for copies, expected in ((1, 10000), (2, 15000), (3, 20000)):
+            with self.subTest(copies=copies):
+                quote = quote_order(templates, {"template_a": copies})
+                self.assertEqual(quote.session_count, 1)
+                self.assertEqual(quote.print_copy_count, copies)
+                self.assertEqual(quote.session_subtotal, 5000)
+                self.assertEqual(quote.print_subtotal, copies * 5000)
+                self.assertEqual(quote.total_amount, expected)
+        self.assertEqual(quote_order(templates, {}).total_amount, 0)
+        for invalid in (-1, 1.5, "2", True):
+            with self.subTest(invalid=invalid):
+                with self.assertRaises(ValueError):
+                    build_session_plans(templates, {"template_a": invalid})
 
     def test_retake_quota_is_one_per_session_and_replaces_selected_photo(self):
         # Verify each template session has its own retake quota and a retake replaces only the
         # selected output photo.
-        plans = build_session_plans(get_templates(), {"template_a": 2})
+        plans = build_session_plans(get_templates(), {"template_a": 2, "template_b": 1})
         first = PhotoSession(plans[0])
         second = PhotoSession(plans[1])
         originals = [Path(f"capture_{index}.jpg") for index in range(1, 4)]
