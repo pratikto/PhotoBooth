@@ -131,32 +131,19 @@ M1 Core Stability; M2 Operational Reliability; M3 Commercial Readiness; M4 Produ
 | 2026-10-18 | Backlog framework created | No new ideas ranked; baseline/source audit needed before scheduling |
 | 2026-10-18 | FEAT-001 submitted | Provisional feature rank #1 (sole new idea); P1/high impact, partial compatibility; existing defects remain ahead of feature implementation |
 | 2026-10-18 | FEAT-001 behavior confirmed | One 3-capture session per selected template; print-copy count only duplicates the same finished layout, not the photo session |
-
 | 2026-10-18 | FEAT-002 submitted | Re-ranked full backlog: FEAT-001 stays #1 as prerequisite; FEAT-002 enters #2 pending merchant validation and pricing integration. Existing bugs still take precedence. |
-
 | 2026-10-18 | FEAT-002 receipt source confirmed | Prioritize existing merchant POS receipt QR/barcode, not custom Meong voucher; readiness remains blocked until actual receipt format and verification method are known; ranks unchanged |
-
 | 2026-10-18 | FEAT-002 staged by owner | FEAT-002A dummy receipt scanner/discount for demo ranked #2; FEAT-002B real POS integration deferred until merchant partnership; no implementation authorized |
 | 2026-10-18 | FEAT-002 scanner UX clarified | Replace payment advertisement with camera preview during receipt scanning, detection indicator, validated success/failure and retry; retain payment QRIS visibility; no code authorized |
-
 | 2026-10-18 | FEAT-002 scanner success/failure behavior approved | On validated success close scanner/update amount/resume ad; on failure keep preview open for retry. Documentation only; code implementation not authorized |
-
 | 2026-10-18 | FEAT-003 submitted | Added mirror-only photo preview; ranked #3 provisionally after pricing and demo scanner, with potential to advance on low complexity/high UX impact; no code authorized |
-
 | 2026-10-18 | FEAT-003 scope expanded by owner | All current and future live camera previews mirror by default, including receipt scanner; original frames remain unmirrored for processing and output; rank remains provisional #3 |
-
 | 2026-10-18 | FEAT-004 and FEAT-005 intake | Documented local-first per-machine Drive ad sync and phased merchant self-order kiosk; re-ranked camera preview ahead of receipt scanner dependency; live POS integration deferred until partner. No code changes authorized |
-
 | 2026-10-18 | FEAT-005 simplified by owner | Merchant provides and maintains ordering UI/menu/payment; Meong only hosts/launches compatible customer ordering; no native ordering GUI or custom POS by default; partner-dependent, deferred |
-
 | 2026-10-18 | FEAT-005 demo clarified by owner | Build a small local dummy menu/cart/simulated payment/order demo for partner pitches; production ordering still relies on partner's system. Documentation only; no code implementation authorized |
-
 | 2026-10-18 | FEAT-005A automatic promo demo | Add ordering-to-photo promo handoff on same machine without scanning receipt; require simulated paid qualifying food order; retain separate FEAT-002A receipt-scan demo; documentation only |
-
 | 2026-10-18 | FEAT-005 partner-funded promo | Owner confirms merchant funds Rp5,000 waived photo-session fee in return for basket-value uplift; track redeemed rewards and merchant settlement in demo; documentation only |
-
 | 2026-10-18 | FEAT-006 multi-theme GUI | Owner accepts multi-theme concept; provisionally admin-only selection per machine; visual-only themes, shared GUI code; no implementation authorized |
-
 | 2026-10-18 | Documentation consolidation | Unified queue now covers FEAT-001 through FEAT-019 and deferred subphases; bug blockers lead all features. Reconciled merchant promo recipient by machine ownership and clarified Free/Business/Enterprise ad rights. No code or implementation approval. |
 
 ## Template
