@@ -1,3 +1,17 @@
+## FEAT-001 — scoped DEMO price / print-copy regression (2026-10-18)
+
+- **Authorization:** owner chose to implement FEAT-001 now as a narrow exception to the general P3 payment-feature deferral. Baseline before this change: `5842a09f` on `feature/kivy-gui`. The goal is one chosen template = **one 3-capture session**, even when requesting 2 or 3 identical thermal copies, with **Rp5.000 session fee + Rp5.000 per physical copy**; no real QRIS integration.
+- **In-source test coverage added/updated (not equivalent to test execution):** `tests/test_workflow.py` checks 1/2/3 copy quotes, mixed two-template cart and invalid quantities; `tests/test_controller_flow.py` checks edited-cart DEMO amount, photo-session/manifest print counts, and synthetic multi-copy worker success/fail-stop; `tests/test_kivy_gui.py` checks selected copy labels and cart totals; `tools/render_gui.py` has updated DEMO price/layout scenarios.
+- **Suggested focused Windows tests:** `python -m unittest tests.test_workflow -v`; set `$env:PHOTOBOOTH_TEST_GUI = "1"` then run `python -m unittest tests.test_controller_flow tests.test_kivy_gui -v`; run `python main.py` using a configured Windows thermal-printer queue. These commands are **not claimed as executed by the owner during this update**. GitHub Kiosk GUI Actions starts automatically on every push; capture completed job URLs, PASS/FAIL and exact SHA separately.
+- [ ] On Windows, order **one template ×1 copy**: DEMO cart/QR shows **Rp10.000**, exactly 3 shots, exactly 1 paper print with the selected Floyd profile.
+- [ ] **One template ×2 copies**: cart/QR **Rp15.000**, exactly 3 shots, both sheets contain the *same* completed layout (same QR/download destination), and no additional camera session.
+- [ ] **One template ×3 copies**: cart/QR **Rp20.000**, same 3 captures and **three** identical physical sheets.
+- [ ] **Two different templates ×2 and ×1 copies**: cart/QR **Rp25.000**, only two sessions of 3 captures each, correct distinct composition per template, total **three** sheets; manifest `demo_order_pricing.total_amount`=25000 and session `print_copies` [2,1].
+- [ ] Test return from DEMO payment to edit cart without retaining an old amount/QR; switching template carousel does not change quantity; zero deselects a template.
+- [ ] Simulate an interrupted/uncertain thermal send: **no automatic resubmission of the uncertain sheet or remaining batch**. Manual "CETAK ULANG" submits a single sheet only after the operator checks paper. Confirm no cross-session printer concurrency and result-page timing does not interrupt a batch.
+- [ ] Regression-test camera/retake, template layout/output, Drive upload/folder QR, demo payment QR-slip printing, idle/payment video, existing BUG-001/007 audio symptoms, and other printer modes (Floyd/Bayer/Threshold). **Real QRIS FEAT-020 remains NOT IMPLEMENTED**.
+- **Evidence status:** source + test cases committed; no independent local Windows camera/printer verification and no live payment tests performed by the assistant. Treat GitHub CI state per its actual completed run, not merely successful syntax check. Rollback base: `5842a09f`; avoid discarding later unrelated owner commits.
+
 ## GUI merged lab + owner Floyd photo default (2026-10-18)
 
 - Owner explicitly approved merging `feature/dither-tuning` into existing `feature/kivy-gui`; fast-forward merge baseline `5e0a898` -> `f3d836d` (no new branch). Dedicated lab CI on `f3d836d` passed; Windows operator verification BUG-010 is pending.
