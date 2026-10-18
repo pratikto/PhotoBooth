@@ -4,6 +4,12 @@ This file tracks **actual verified repository/document changes**, not successful
 
 ## [Unreleased] — 2026-10-18
 
+### FEAT-003 — owner confirms Windows live-camera mirror PASS (docs only)
+
+- **Owner test confirmation (2026-10-18):** Following the FEAT-003 capture mirror rollout, owner reports **"sip udah sesuai. PASS"**. Record **OWNER TESTED PASS** for the implemented capture preview (initial/live/countdown/retake); the actual hardware result is a user report, while the [dedicated synthetic Kivy GPU Actions run 39139208320](https://github.com/pratikto/PhotoBooth/actions/runs/39139208320) independently **PASSED**. Do not fabricate local checkout SHA, exact per-case results, printer photos or an overall Kiosk GUI PASS.
+- **Scope boundaries:** Original stored/printed photographs, QR/text, face/palm input are deliberately unmirrored. FEAT-002 receipt scanner/overlay remains deferred and **not** exercised by this acceptance. The update is **documentation only**; no source code, camera driver, payment, printer, `Code.gs`, branch merge or deployment change.
+- See [FEAT-003 backlog specification](next_step.md), [feature status](FEATURE_STATUS.md), [checklist](test_checklist.md), [DEC-012](DECISIONS.md) and [handover](DEVELOPMENT_HANDOVER.md).
+
 ### FEAT-003 — mirrored live photo-camera preview via GPU UVs (in source; camera hardware pending)
 
 - **Owner authorization:** Proceed with FEAT-003 on existing `feature/kivy-gui` after BUG-011 owner-tested PASS. Source baseline: [`c0cb0d84`](https://github.com/pratikto/PhotoBooth/commit/c0cb0d846512233ebff3f625e3c002e2c942485c).
