@@ -1,3 +1,5 @@
+> **B.3 CI launched:** [device health Windows/Ubuntu run 39245547810](https://github.com/pratikto/PhotoBooth/actions/runs/39245547810) and [Kiosk regression run 39245547822](https://github.com/pratikto/PhotoBooth/actions/runs/39245547822) were queued/running for code/workflow commit [d26314ef](https://github.com/pratikto/PhotoBooth/commit/d26314ef0ba8af4bdd22e2d1e84c86e0b1bffec2). Final PASS/FAIL **not established** at record time. CI now includes B.3 test module on both Windows and Ubuntu.
+
 ## FEAT-008 B.3 — 2026-10-19 approved branch-only increment
 
 - [x] Source added: `photobooth/device_recovery.py` (non-invasive presence/reappearance classification), linked tests `tests/test_device_recovery.py`.
