@@ -23,6 +23,11 @@ from PIL import Image
 from photobooth.audio import AudioManager
 from photobooth.camera import Camera
 from photobooth.device_health import collect_health_snapshot
+from photobooth.device_selection import (
+    DeviceSelectionError, camera_startup_source, load_device_selection,
+    printer_startup_config, save_device_selection, stage_selection,
+)
+from photobooth.hardware_adapters import platform_family
 from photobooth.catalog import PRICE_PER_PRINT_COPY, PRICE_PER_SESSION, compose_result, get_templates
 from photobooth.drive_pool import DriveSlotPool
 from photobooth.drive_storage import AppsScriptDriveClient, DriveApiError, GoogleDriveClient
@@ -56,7 +61,13 @@ class PhotoBoothApp:
         # ui_tkinter.py remains untouched as a historical implementation only.
         self.root = KivyHost(on_close=self.close)
         self.templates = get_templates()
-        self.camera = Camera(camera_index=CAMERA_INDEX)
+        # Operator selections take effect on next launch only. Invalid or
+        # incompatible saved targets abort startup rather than silently opening
+        # another camera/using an unintended printer.
+        self._device_selection_file = PROJECT_ROOT / "data" / "device_selection.json"
+        self._device_selection = load_device_selection(self._device_selection_file)
+        camera_source = camera_startup_source(self._device_selection, CAMERA_INDEX)
+        self.camera = Camera(camera_index=camera_source)
         self.photos_root = PROJECT_ROOT / "photos"
         self.store = TransactionStore(
             photos_root=self.photos_root,
@@ -116,7 +127,9 @@ class PhotoBoothApp:
         from photobooth.printer_settings import load_printer_config, save_printer_config
         self._printer_settings_file = PROJECT_ROOT / 'data' / 'printer_settings.json'
         self._save_printer_config = save_printer_config
-        self.printer = ThermalPrinter(load_printer_config(self._printer_settings_file))
+        self.printer = ThermalPrinter(printer_startup_config(
+            self._device_selection, load_printer_config(self._printer_settings_file)
+        ))
         self._print_lock = threading.Lock()
         self._print_jobs_in_flight: set[str] = set()
         # Only one thermal transport may send bytes at a time, even when
@@ -125,6 +138,7 @@ class PhotoBoothApp:
         self._print_device_lock = threading.Lock()
         # Serialize operator-initiated health probes; never stall a Kivy tick.
         self._health_probe_lock = threading.Lock()
+        self._latest_health_snapshot = None
 
 
         self.ui = PhotoBoothUI(
@@ -145,6 +159,8 @@ class PhotoBoothApp:
             on_printer_save=self._configure_printer,
             on_printer_test=self._test_printer,
             on_health_refresh=self._refresh_device_health,
+            get_device_selection=lambda: self._device_selection,
+            on_device_stage=self._stage_device_selection,
             on_close=self.close,
             on_idle=self._return_to_advertisements,
         )
@@ -159,9 +175,53 @@ class PhotoBoothApp:
         self._schedule_drive_status_update()
 
     def _configure_printer(self, config):
-        """Apply validated operator settings to subsequent print jobs."""
+        """Legacy printer Settings explicitly override staged Windows queue.
+
+        First clear that queued preference so it cannot unexpectedly restore
+        an older printer at the next startup. A save failure leaves current
+        runtime printer unchanged.
+        """
+        if self._device_selection.printer_kind:
+            selection = stage_selection(self._device_selection, printer=("", ""))
+            save_device_selection(self._device_selection_file, selection)
+            self._device_selection = selection
         self._save_printer_config(self._printer_settings_file, config)
         self.printer = ThermalPrinter(config)
+
+    def _stage_device_selection(self, *, camera=None, printer=None):
+        """Persist operator choices for next startup, never hot swap hardware.
+
+        Only configured OpenCV indices (manual, acknowledged unstable), Linux
+        V4L by-id camera aliases actually listed by our last snapshot, or
+        Windows queues discovered by the OS are accepted. No print, USB open,
+        camera reinitialization or cloud call occurs during this method.
+        """
+        if self.is_closing:
+            raise DeviceSelectionError("Aplikasi sedang ditutup.")
+        family = platform_family()
+        if camera is not None and camera[0]:
+            if camera[0] == "opencv-index" and family != "windows":
+                raise DeviceSelectionError("Indeks kamera manual hanya tersedia untuk Windows.")
+            if camera[0] == "linux-v4l-by-id" and family != "linux":
+                raise DeviceSelectionError("Alias V4L hanya tersedia di Linux.")
+            if camera[0] == "linux-v4l-by-id":
+                snapshot = self._latest_health_snapshot
+                ids = {d.device_id for d in getattr(snapshot, "devices", ())
+                       if d.kind == "camera" and d.presence == "node-detected"}
+                if "v4l:by-id:" + camera[1] not in ids:
+                    raise DeviceSelectionError("Kamera tidak ada dalam discovery terakhir.")
+        if printer is not None and printer[0]:
+            if printer[0] != "windows-spooler" or family != "windows":
+                raise DeviceSelectionError("Printer queue ini hanya tersedia di Windows.")
+            snapshot = self._latest_health_snapshot
+            ids = {d.device_id for d in getattr(snapshot, "devices", ())
+                   if d.kind == "printer" and d.presence == "queue-detected"}
+            if "win-queue:" + printer[1] not in ids:
+                raise DeviceSelectionError("Printer tidak ada dalam discovery terakhir.")
+        staged = stage_selection(self._device_selection, camera=camera, printer=printer)
+        save_device_selection(self._device_selection_file, staged)
+        self._device_selection = staged
+        return "Pilihan tersimpan. Tutup dan jalankan ulang Meong untuk mengaktifkan."
 
     def _test_printer(self, callback):
         """Send a short test receipt from a worker to avoid freezing the GUI.
@@ -229,7 +289,11 @@ class PhotoBoothApp:
             finally:
                 self._health_probe_lock.release()
             if not self.is_closing:
-                self.root.after(0, lambda: callback(snapshot))
+                def deliver():
+                    if not self.is_closing:
+                        self._latest_health_snapshot = snapshot
+                        callback(snapshot)
+                self.root.after(0, deliver)
 
         threading.Thread(
             target=worker, name="meong-device-health", daemon=True,
