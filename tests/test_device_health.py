@@ -87,6 +87,24 @@ class DeviceHealthTests(unittest.TestCase):
         self.assertIn("paper status are unknown", result.message)
         queue_probe.assert_called_once_with("POS80 Printer")
 
+    def test_missing_win32_spooler_api_means_unknown_not_disconnected(self):
+        config = PrinterConfig(windows_printer_name="POS80 Printer")
+        result = health.check_printer(
+            config, platform="win32", windows_queue_probe=lambda _: None
+        )
+        self.assertEqual(result.status, health.UNKNOWN)
+
+    def test_windows_spooler_adapter_exception_is_safely_handled(self):
+        class SpoolerError(Exception):
+            pass
+
+        config = PrinterConfig(windows_printer_name="POS80 Printer")
+        result = health.check_printer(
+            config, platform="win32",
+            windows_queue_probe=Mock(side_effect=SpoolerError("win32")),
+        )
+        self.assertEqual(result.status, health.WARNING)
+
     def test_printer_unavailable_queue_and_network_are_warning(self):
         config = PrinterConfig(lan_host="192.0.2.1", windows_printer_name="POS80")
         result = health.check_printer(
