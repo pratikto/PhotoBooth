@@ -188,6 +188,7 @@ class HealthWorkerControllerTests(unittest.TestCase):
                 ad_catalog=obj.ui.ad_catalog,
                 last_heartbeat=123.45,
                 printer_busy=False,
+                include_discovery=True,
             )
             self.assertEqual(len(queued), 1)
             self.assertEqual(callbacks, [None])
