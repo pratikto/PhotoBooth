@@ -20,3 +20,6 @@ The `verified=True` parameter is **not cryptographic proof**. This is only an is
 `python -m unittest discover -s tests -p "test_payment_ledger.py" -v`
 
 Initial isolated Python 3 container check: **5 PASS, 0 FAIL** (mock tests only; not a full repository regression or Windows hardware acceptance).
+
+## Stage 2 (2026-10-20)
+Checkout price validation module and five unit test methods committed. Targeted tests and full regression have not been run in this session. No backend or live payment enabled.
