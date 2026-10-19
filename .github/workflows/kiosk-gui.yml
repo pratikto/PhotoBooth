@@ -2,9 +2,9 @@ name: Kiosk GUI regression
 
 on:
   push:
-    branches: [feature/kivy-gui]
+    branches: [feature/kivy-gui, master]
   pull_request:
-    branches: [main]
+    branches: [master]
   workflow_dispatch:
 
 # Tests use synthetic photos, dummy audio, and fake camera/Drive/printer
