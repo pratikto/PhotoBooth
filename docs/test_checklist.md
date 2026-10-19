@@ -3,8 +3,8 @@
 - [x] Owner approved Stage B on existing `feature/device-health` **without merge authorization**. Prior Stage A PR #5 was reverted out of `master` in [PR #6](https://github.com/pratikto/PhotoBooth/pull/6).
 - [x] Kivy Settings now includes DEVICE HEALTH dialog with six statuses, automatic single scan on open, manual REFRESH, scrollable content, and close; main photo GUI is not replaced.
 - [x] Probe submission occurs via a daemon worker with Kivy main-thread callback, no new monitoring timer, print-in-flight guard, no automatic printing and stale-popup result rejection.
-- [ ] **Exact Stage B Kiosk GUI CI:** record final PR SHA, counts and 87 render results when available; GUI tests in `tests/test_device_health_gui.py` are opt-in using `PHOTOBOOTH_TEST_GUI=1`.
-- [ ] **Isolated Stage A regression:** after Stage B print guard change rerun `python -m unittest discover -s tests -p test_device_health.py -v` and record final SHA/pass count.
+- [x] **Stage B code Kiosk GUI CI:** on source/tree code SHA `f93dd88ad5435349ff71c9351aaf0430edd74525`, [GitHub Actions 39197763624](https://github.com/pratikto/PhotoBooth/actions/runs/39197763624) **270 tests / 268 PASS / 2 SKIP / 0 FAIL or ERROR, 87 GUI renders / 0 render errors**. New `tests/test_device_health_gui.py` is opt-in under `PHOTOBOOTH_TEST_GUI=1`; all tests run on synthetic Kivy/Xvfb, not on the user's Windows hardware. The later branch documentation-only commits do not change tested implementation code; final PR HEAD CI must be verified separately.
+- [x] **Isolated Stage A regression:** [GitHub Actions 39197763719](https://github.com/pratikto/PhotoBooth/actions/runs/39197763719) at code/test SHA `f93dd88ad5435349ff71c9351aaf0430edd74525` **25/25 PASS**, including skipping spooler checks during an active print. Later doc-only SHA reruns tracked by PR checks.
 - [ ] **Owner Windows trial:** Settings → DEVICE HEALTH; refresh twice, close/reopen; check existing camera and real printer not blocked; video/Drive/cutter physical status not verified by probe.
 - [ ] **Merge:** NOT AUTHORIZED; keep the draft PR unmerged until explicit owner approval.
 
