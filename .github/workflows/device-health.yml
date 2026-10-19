@@ -33,3 +33,5 @@ jobs:
         run: python -m compileall -q photobooth/device_health.py tests/test_device_health.py
       - name: Run isolated FEAT-008 Stage A tests (no hardware)
         run: python -m unittest discover -s tests -p 'test_device_health.py' -v
+      - name: Verify heterogeneous platform adapter capabilities
+        run: python -m unittest discover -s tests -p 'test_hardware_adapters.py' -v
