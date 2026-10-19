@@ -31,6 +31,93 @@ Synthetic GUI/controller tests live in `tests/test_device_health_gui.py` and are
 
 The Stage B PR is **review-only** until the owner approves merging its precise tested SHA to `master`. Do not infer merge permission from test PASS. The prior Stage A branch and this branch are the same `feature/device-health`, so a later approved merge would introduce both Stage A and B together.
 
+
+## Cross-platform capability work — phased continuation (2026-10-19)
+
+The owner approved staged implementation for heterogeneous cameras, printers,
+Windows mini PCs, Linux/SBCs and Android **on the existing feature branch**.
+This does **not** approve merging Draft PR #7 or changing the v1 source release.
+
+### B.1 — Capability inventory (implemented, code verification in CI)
+
+`photobooth/hardware_adapters.py` defines immutable `DeviceDescriptor`
+with `kind`, `device_id`, `name`, `transport`, `platform`,
+`identity_quality`, `presence`, `capabilities` and a limitations `note`.
+`platform_family` separates Windows, Linux, Android and unsupported runtimes;
+the adapter **describes** selected camera / printer routes without opening
+devices or switching hardware. A configured printer IP, a Windows queue name,
+a Linux USB path or a camera index are **not stable serial-number identities**.
+Manufacturer/product USB IDs alone do not uniquely identify one printer.
+
+`collect_health_snapshot` includes `platform` and `devices` while
+retaining the existing six health status rows. Desktop checks only run on
+desktop backends; Android camera/printer report **UNKNOWN** until genuinely
+supported native bridges exist (no simulated Camera2 success).
+
+The existing `Camera` and `ThermalPrinter` still own **actual photo and
+printing operations**. This is a capability and identity foundation, **not yet
+a fully interchangeable runtime camera/printer HAL**. Do not declare Windows
+device codes ready for Android merely because the inventory class exists.
+
+### B.2 — Read-only device discovery (implemented; selection deferred)
+
+`photobooth/hardware_discovery.py` enumerates only possible OS candidates:
+
+| Platform | Non-invasive sources | Important limitation |
+| --- | --- | --- |
+| Windows | `win32print.EnumPrinters` local/connected print queues | Queue enumeration does **not** verify printer physically present, driver readiness, paper or cutter. Windows camera scanning intentionally does **not** brute-force `VideoCapture(index)`. |
+| Linux mini PC / SBC | `/dev/v4l/by-id/` aliases and `/dev/video*`; `/dev/usb/lp*`; `lpstat -e` queue names with 1.5-second command timeout | Paths/queues do not prove permissions, frames, ESC/POS support or paper. CSI/libcamera modules may require a separate adapter; `video*` indices may change after USB reconnect. |
+| Android | No desktop bus enumeration | A platform-native Camera2/USB Host bridge, permissions and real device trials are prerequisites. Empty discovery is **unknown**, not proof of no camera/printer. |
+
+Discovery runs only as part of the explicit operator Settings health scan,
+off the Kivy thread. The panel displays **configured** route entries and
+**OS-detected candidate** entries separately in the scrollable list. It does
+not auto-select a different printer or camera, alter the existing printer
+configuration or write a selection file. Zero discovered devices may mean
+the OS enumeration API is unavailable rather than no devices existing.
+
+A reliable **B.2 selection follow-up** requires validating unique device
+identity, appropriate permissions and reconnect behavior on Windows/SBC.
+The current printer Settings already saves an operator-selected LAN/Wi-Fi/
+Windows queue route; Windows camera index remains configured using
+`PHOTOBOOTH_CAMERA_INDEX`. Do **not** replace camera `index=0` automatically
+with another camera if an extra USB webcam is connected. Proposed selection
+changes should be explicit, persisted safely and normally take effect only
+after a controlled restart.
+
+### B.3 / B.4 — Pending implementation and acceptance boundary
+
+- **B.3:** Extend runtime printer and camera adapters after verifying actual
+  Windows printer-driver status APIs, Linux V4L2/CUPS/libcamera support and
+  specific transport capabilities. No universal paper or cutter indicator
+  without an actual supported sensor/protocol.
+- **B.4:** Android native Camera2 / USB Host / vendor printer SDK bridge,
+  packaging, runtime permissions, activity lifecycle and real Android hardware
+  tests. Desktop OpenCV/pywin32 code is not an Android driver.
+- **Stage C:** owner-run physical acceptance matrix by OS, actual printer
+  model/transport, camera model, USB disconnect/reconnect, restart, paper-out,
+  camera permission denial, low disk, no network, and working checkout. All
+  unsupported sensors must remain `UNKNOWN` / `NOT SUPPORTED`.
+
+### Verification commands
+
+Run from the repository root after checking out `feature/device-health`:
+
+```powershell
+python -m unittest discover -s tests -p test_device_health.py -v
+python -m unittest discover -s tests -p test_hardware_adapters.py -v
+python -m unittest discover -s tests -p test_hardware_discovery.py -v
+python main.py
+```
+
+In Meong's Settings > DEVICE HEALTH, confirm a platform label, six diagnostic
+rows and a **DAFTAR PERANGKAT / ADAPTER** section listing configured and
+detected candidates. Try Refresh, close/reopen and compare with Windows
+printer Settings. Device discovery makes **no print job** and does **not**
+open new camera handles. Preserve test logs without customer photos or cloud
+tokens. The Draft PR and automated Linux tests do not replace Windows/SBC/
+Android hardware testing. **No merge to master without explicit owner approval.**
+
 ## Scope and interface
 
 `photobooth/device_health.py` provides a read-only `HealthCheck(name, status, message)`, immutable `HealthSnapshot(checked_at, checks)`, individual `check_*` probes and `collect_health_snapshot(...)`. Status vocabulary: `ready` (only the stated check passed), `warning` (degraded or reachability not confirmed), `unavailable` (e.g. camera closed), and `unknown` (not supplied or not safely inspectable). Do **not** map `ready` to "booth fully operational" or "paper present".
