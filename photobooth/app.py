@@ -208,6 +208,8 @@ class PhotoBoothApp:
         photos_root = self.photos_root
         ad_catalog = self.ui.ad_catalog
         last_heartbeat = self.ui._health_last_tick
+        with self._print_lock:
+            printer_busy = bool(self._print_jobs_in_flight)
 
         def worker():
             try:
@@ -217,6 +219,7 @@ class PhotoBoothApp:
                     photo_directory=photos_root,
                     ad_catalog=ad_catalog,
                     last_heartbeat=last_heartbeat,
+                    printer_busy=printer_busy,
                 )
             except Exception:
                 # No low-level exception text (paths / hosts / device names)
