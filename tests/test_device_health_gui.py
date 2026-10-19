@@ -82,6 +82,15 @@ class DeviceHealthGuiTests(unittest.TestCase):
         self.assertEqual(len(pending), 1)
         self.assertTrue(ui._health_refresh_button.disabled)
 
+    def test_health_modal_blocks_existing_gesture_shutter_guard(self):
+        pending = []
+        ui = self.make_ui(lambda cb: pending.append(cb))
+        self.assertFalse(ui.audio_settings_open)
+        popup = ui.show_health_settings()
+        self.assertTrue(ui.audio_settings_open)
+        popup.dismiss(animation=False)
+        self.assertFalse(ui.audio_settings_open)
+
     def test_late_worker_result_cannot_touch_closed_or_reopened_panel(self):
         pending = []
         ui = self.make_ui(lambda cb: pending.append(cb))
