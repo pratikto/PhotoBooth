@@ -23,3 +23,6 @@ Initial isolated Python 3 container check: **5 PASS, 0 FAIL** (mock tests only; 
 
 ## Stage 2 (2026-10-20)
 Checkout price validation module and five unit test methods committed. Targeted tests and full regression have not been run in this session. No backend or live payment enabled.
+
+## Stage 3 (2026-10-20)
+Added isolated SQLite order lifecycle `photobooth/payment_orders.py` and six regression tests in `tests/test_payment_orders.py`. Local Python 3 isolated test run: 6 PASS, 0 FAIL; full repository CI not verified. Code commits: `f757ae59`, `1ab2f41e`. No API, Midtrans connection, webhook verification, kiosk integration, merchant keys, or live payment. The `confirm_provider_status` method is an internal-only seam and must not be exposed to an untrusted caller; provider signature/status verification and booth authentication are still required. No merge to master.
