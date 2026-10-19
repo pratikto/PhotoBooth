@@ -37,6 +37,12 @@ Sources: owner decisions from recent project discussions; technical implementati
 | --- | --- | --- |
 | DEC-020 | On 2026-10-19 the owner approved **preserving old `master`**, merging the tested `feature/kivy-gui` into `master`, and creating the version-one `v1.0.0` tag/release. | Snapshot the old tip as `backup/master-pre-v1-20261019`; do not force-push. Existing known issues (BUG-001/007 audio, BUG-009 cloud retention) stay open/monitoring; the GitHub version tag is a **source baseline only**, not hardware certification, real QRIS, a customer deployment or feature permission. See [release notes](releases/v1.0.0.md). |
 
+## Post-v1 feature-scope decisions (owner-confirmed)
+
+| ID | Decision | Scope boundary |
+| --- | --- | --- |
+| DEC-021 | On 2026-10-19 owner explicitly approved **FEAT-008 Stage A** (non-invasive backend health probes and mocked unit tests) after the `v1.0.0` documentation merge. | Create `feature/device-health` from `master`, document/check code and open tested PR. **No Stage B operator GUI, Stage C physical Windows certification, automatic job blocking/recovery, cloud deployment or new feature** is authorized by this limited scope. No changes to immutable `v1.0.0`; outstanding BUG-001/007 and BUG-009 keep their existing status. |
+
 ## Business and software subscription decisions (owner-confirmed)
 
 | ID | Decision | Commercial / technical boundary |
