@@ -1,17 +1,3 @@
-## FEAT-008 Stage A — source / test checklist (2026-10-19)
-
-- [x] Owner-approved backend-only scope and isolated branch `feature/device-health` from `master` `abbdb0d6b0d97a796da14b7edabf21252892c9cb`.
-- [x] Non-invasive checks implemented: existing-frame camera, printer TCP/queue/device-node visibility with **zero print commands**, disk, short TCP network reachability, local ad files, optional heartbeat.
-- [x] New no-hardware unit tests added in `tests/test_device_health.py` (check results against actual CI after PR). No GUI changes or app startup wiring.
-- [x] **Targeted test evidence:** `python -m unittest discover -s tests -p test_device_health.py -v`, Python 3.12 Ubuntu GitHub Actions [39192498537](https://github.com/pratikto/PhotoBooth/actions/runs/39192498537): **24 tests / 24 PASS**, no skips/errors. Tested source/workflow SHA `3ae31dfc933352c293eed682c72f4f8afb6020c`. Later documentation commits require separate full-PR regression check; no Windows physical probes were run.
-- [x] **Full Kiosk regression on Stage A code/test SHA `5512ccfd242bed9b8034bf5d9e86652b6c9afbbe`:** Ubuntu/Python 3.12 [Actions 39192396595](https://github.com/pratikto/PhotoBooth/actions/runs/39192396595) **259 tests run / 257 PASS / 2 SKIP / 0 errors or failures; 87 GUI renders / 0 render errors**. The later workflow/docs commits did not change the Stage A application module or tests; GitHub should separately confirm green checks on the final PR SHA.
-- [ ] Stage B dedicated admin Settings UI — requires new approval.
-- [ ] Stage C physical Windows printer, camera, network and media tests — requires new approval and owner evidence.
-
-See [implementation and limitations](device-health.md). `v1.0.0` remains the independently tagged source baseline; **never claim hardware READY** from successful mocked checks.
-
----
-
 ## Version 1.0.0 — release-source verification (2026-10-19)
 
 **Immutable release SHA:** `07ce51d2022ab5673a7a27e744e5e5757fbb3d08` (`v1.0.0`, GitHub pre-release). [Kiosk GUI](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245) **SUCCESS**: 235 tests (233 PASS, 2 SKIP, 0 failures/errors), 87 synthetic screenshots / 0 errors. [Dither lab](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273) **SUCCESS**: 48 tests. GitHub Linux mocked tests verify code/screenshot behavior, **not** physical Windows camera/audio/printer/QR phone scan or actual settlement; QRIS is DEMO only. BUG-001/007 audio retest and BUG-009 Drive cloud retention remain unresolved. Earlier `c40f33f5`, `f129dd9e`, and `e46812b8` results are retained as *historical* evidence.

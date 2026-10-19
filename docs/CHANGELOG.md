@@ -2,11 +2,6 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
-## [Unreleased — FEAT-008 Stage A, branch feature/device-health] — 2026-10-19
-
-- Owner approved **Stage A only** of FEAT-008; added `photobooth/device_health.py` (read-only, opt-in camera/printer/disk/network/media/heartbeat probes), `tests/test_device_health.py` (deterministic mocks, no hardware access) and [Stage A guide](device-health.md). No Kivy GUI callback, background monitor, print submission, camera reopen, Google Drive change, or real QRIS implementation. Stage B operator UI and Stage C Windows tests require separate approval.
-- Source baseline for the branch: `master` `abbdb0d6`; immutable release `v1.0.0` remains untouched. [PR #5](https://github.com/pratikto/PhotoBooth/pull/5); standalone [FEAT-008 Actions 39192498537](https://github.com/pratikto/PhotoBooth/actions/runs/39192498537) at `3ae31dfc` **24/24 unit tests PASS**, with no hardware access. See [test checklist](test_checklist.md) for exact tested SHA, full Kiosk gate and outstanding device signoff; do not conflate commits or assume a product release.
-
 ## [Unreleased — docs-only, post-v1.0.0] — 2026-10-19
 
 - Owner approved a **documentation-only** reconciliation on a dedicated `docs/post-v1-release-reconciliation-20261019` branch. Update current README/index, source status, bug/backlog, decisions, QA and technical-guide headings to match the already tagged GitHub `v1.0.0` pre-release. Preserve earlier dated test/failure history and explicit hardware acceptance gaps. The documentation PR is **not part of the immutable v1 tag**; review and merge it without rewriting the release.
