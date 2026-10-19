@@ -6,6 +6,8 @@ Last reconciled: **2026-10-19** | Branch: `master` | Tagged source snapshot: `v1
 
 This document describes **observed source modules**, not guaranteed on-device functionality. User-reported failures and acceptance status are tracked in [FEATURE_STATUS.md](FEATURE_STATUS.md) and [bug_tracker.md](bug_tracker.md). Future requirements are in [next_step.md](next_step.md).
 
+> **FEAT-008 Stage A (2026-10-19, branch `feature/device-health` — NOT merged/released):** Owner approved backend-only device health probes and offline/mock tests. New `photobooth/device_health.py` can inspect existing camera frame, configured printer routes, disk capacity, short TCP connectivity, local ad files, and an optional app heartbeat **on explicit request only**. No Settings GUI, scheduler, automatic blocking/recovery, printer output, cloud changes, or Windows hardware acceptance. See [Stage A guide](device-health.md). Baseline remains immutable `v1.0.0` on `master` until PR merge is verified.
+
 ## Existing application modules (in released source on `master`)
 
 | Responsibility | Main files | Current boundary |
