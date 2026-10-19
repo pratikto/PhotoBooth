@@ -47,6 +47,9 @@ class HealthPanelMixin:
             13, 52, color=GREY,
         )
         body.add_widget(summary)
+        # Adapter identity reports configuration, not verified physical presence.
+        hardware_info = self._label("Adapter: belum diperiksa.", 11, 54, color=GREY)
+        body.add_widget(hardware_info)
         scroll = ScrollView(do_scroll_x=False, bar_width=dp(6))
         entries = BoxLayout(orientation="vertical", size_hint_y=None,
                             padding=(dp(2), dp(2)), spacing=dp(7))
@@ -107,6 +110,7 @@ class HealthPanelMixin:
             serial = self._health_request_serial
             refresh_button.disabled = True
             summary.text = "Memeriksa perangkat di background..."
+            hardware_info.text = "Meninjau adapter dan perangkat yang dipilih..."
             for key, caption in CHECK_NAMES:
                 heading, details = labels[key]
                 heading.text = f"{caption}: MEMERIKSA..."
@@ -130,6 +134,7 @@ class HealthPanelMixin:
                 return
             refresh_button.disabled = False
             if snapshot is None:
+                hardware_info.text = "Identitas perangkat belum tersedia."
                 summary.text = "Pemeriksaan belum dapat diselesaikan. Coba REFRESH lagi."
                 for key, caption in CHECK_NAMES:
                     heading, details = labels[key]
@@ -145,6 +150,14 @@ class HealthPanelMixin:
                 summary.text = "Format laporan tidak dikenali. Coba REFRESH lagi."
                 return
 
+            family = str(getattr(snapshot, "platform", "unknown")).upper()
+            inventory = getattr(snapshot, "devices", ())
+            configured = [item for item in inventory if item.kind in ("camera", "printer")]
+            names = ", ".join(item.name for item in configured[:2])
+            hardware_info.text = (
+                f"Platform adapter: {family} (configured, not certified).\n"
+                + (names if names else "Identitas hardware belum tersedia.")
+            )
             caution = False
             for key, caption in CHECK_NAMES:
                 heading, details = labels[key]
