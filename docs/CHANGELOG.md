@@ -5,7 +5,7 @@ This file tracks **actual verified repository/document changes**, not successful
 ## [Unreleased — FEAT-008 Stage A, branch feature/device-health] — 2026-10-19
 
 - Owner approved **Stage A only** of FEAT-008; added `photobooth/device_health.py` (read-only, opt-in camera/printer/disk/network/media/heartbeat probes), `tests/test_device_health.py` (deterministic mocks, no hardware access) and [Stage A guide](device-health.md). No Kivy GUI callback, background monitor, print submission, camera reopen, Google Drive change, or real QRIS implementation. Stage B operator UI and Stage C Windows tests require separate approval.
-- Source baseline for the branch: `master` `abbdb0d6`; immutable release `v1.0.0` remains untouched. PR/test results recorded in [test_checklist.md](test_checklist.md) once verified; do not claim this feature is merged or released before actual checks.
+- Source baseline for the branch: `master` `abbdb0d6`; immutable release `v1.0.0` remains untouched. [PR #5](https://github.com/pratikto/PhotoBooth/pull/5); standalone [FEAT-008 Actions 39192498537](https://github.com/pratikto/PhotoBooth/actions/runs/39192498537) at `3ae31dfc` **24/24 unit tests PASS**, with no hardware access. See [test checklist](test_checklist.md) for exact tested SHA, full Kiosk gate and outstanding device signoff; do not conflate commits or assume a product release.
 
 ## [Unreleased — docs-only, post-v1.0.0] — 2026-10-19
 
