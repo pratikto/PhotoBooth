@@ -123,6 +123,8 @@ class HealthWorkerControllerTests(unittest.TestCase):
         obj = PhotoBoothApp.__new__(PhotoBoothApp)
         obj.is_closing = False
         obj._health_probe_lock = threading.Lock()
+        obj._print_lock = threading.Lock()
+        obj._print_jobs_in_flight = set()
         obj.camera = SimpleNamespace(capture=None)
         obj.printer = SimpleNamespace(config=PrinterConfig())
         obj.photos_root = Path("synthetic-photos")
@@ -176,12 +178,35 @@ class HealthWorkerControllerTests(unittest.TestCase):
                 photo_directory=obj.photos_root,
                 ad_catalog=obj.ui.ad_catalog,
                 last_heartbeat=123.45,
+                printer_busy=False,
             )
             self.assertEqual(len(queued), 1)
             self.assertEqual(callbacks, [None])
             queued.pop()[1]()
             self.assertEqual(callbacks, [None, snapshot])
             self.assertFalse(obj._health_probe_lock.locked())
+
+    def test_inflight_print_is_captured_on_main_thread(self):
+        from photobooth.app import PhotoBoothApp
+        obj, queued = self.make_controller()
+        obj._print_jobs_in_flight.add("active-job")
+        workers = []
+
+        class SyntheticThread:
+            def __init__(self, *, target, **_kwargs):
+                workers.append(target)
+            def start(self):
+                pass
+
+        with (
+            patch("photobooth.app.threading.Thread", SyntheticThread),
+            patch("photobooth.app.collect_health_snapshot") as collect,
+        ):
+            PhotoBoothApp._refresh_device_health(obj, lambda _: None)
+            workers.pop()()
+            self.assertTrue(collect.call_args.kwargs["printer_busy"])
+            self.assertEqual(len(queued), 1)
+            queued.pop()[1]()
 
     def test_closing_during_worker_discards_late_result(self):
         from photobooth.app import PhotoBoothApp
