@@ -29,6 +29,6 @@ python -m unittest discover -s tests -p test_device_health.py -v
 python -m compileall -q photobooth tests
 ```
 
-After a PR is opened, record actual GitHub Actions run ID and tested commit SHA in [test_checklist.md](test_checklist.md). Linux/mock tests are **not** camera, Windows queue, ESC/POS paper or codec hardware acceptance.
+Standalone mocked regression: [FEAT-008 GitHub Actions 39192498537](https://github.com/pratikto/PhotoBooth/actions/runs/39192498537) **24/24 PASS** at source/test SHA `3ae31dfc933352c293eed682c72f4f8afb6020c` on Ubuntu Python 3.12. [test_checklist.md](test_checklist.md) tracks the PR's full Kiosk CI and any later head SHA separately. Linux/mock tests are **not** camera, Windows queue, ESC/POS paper or codec hardware acceptance.
 
 **Rollback:** revert FEAT-008 Stage A commits/PR if necessary; no existing `main.py` path imports this module, so legacy kiosk behavior is unchanged. **Next approval boundary:** Stage B operator UI and Stage C device tests remain separate follow-ups; do not begin without new owner approval.
