@@ -11,6 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from photobooth.hardware_adapters import DeviceDescriptor, configured_inventory, platform_family
+from photobooth.hardware_discovery import discover_local_devices
 from pathlib import Path
 import os
 import shutil
@@ -273,6 +274,7 @@ def collect_health_snapshot(
     last_heartbeat=None,
     printer_busy: bool = False,
     platform: str | None = None,
+    include_discovery: bool = False,
 ) -> HealthSnapshot:
     """Run one opt-in observation pass (never scheduled during kiosk startup).
 
@@ -301,5 +303,6 @@ def collect_health_snapshot(
         checked_at=datetime.now(timezone.utc).isoformat(),
         checks=checks,
         platform=family,
-        devices=configured_inventory(camera, printer_config, platform=platform),
+        devices=(configured_inventory(camera, printer_config, platform=platform)
+                 + (discover_local_devices(platform=platform) if include_discovery else ())),
     )
