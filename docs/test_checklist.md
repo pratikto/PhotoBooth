@@ -4,7 +4,7 @@
 - [x] B.1 platform/capability descriptors, Android `UNKNOWN` device bridges, no fake stable camera index or USB vendor/product identity.
 - [x] B.2 read-only Windows print queue, Linux V4L/by-id candidate, USB node and time-bounded CUPS queue discovery, with **no camera open and no test print**, limited to operator health scans in the worker.
 - [x] [Dedicated GitHub CI 39204278785](https://github.com/pratikto/PhotoBooth/actions/runs/39204278785) on exact tested source SHA `6cb4263e97a31cfd2d74a6e0eb2ae6329232269c`: **25 Stage A + 14 adapter + 9 discovery = 48/48 mocked tests PASS** (Ubuntu Python 3.12). Later documentation/source SHA needs its own CI confirmation.
-- [ ] Full Kiosk GUI CI on final PR HEAD SHA; recorded separately from standalone mock tests.
+- [x] Full [Kiosk GUI Actions 39204601283](https://github.com/pratikto/PhotoBooth/actions/runs/39204601283) on exact tested source SHA `f8c96a40c7f9fa0a10c7af43f8569b22d78e10a9`: **293 tests / 291 PASS / 2 SKIP / 0 errors or failures, 87 synthetic renders / 0 errors**. Later QA-documentation-only commits do not change the tested Python implementation.
 - [ ] Windows physical operator test: compare configured queue vs Windows discovery with real printer connected/disconnected; camera preview and other customer flows unaffected; check disk low warning. Test against actual booth hardware.
 - [ ] Linux/SBC physical V4L2, libcamera CSI, queue/node permissions and ESC/POS print output; **not tested** by Ubuntu mocks.
 - [ ] Android Camera2 native bridge/permissions, USB Host SDK and packaging; **not implemented or tested**.
