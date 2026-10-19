@@ -8,7 +8,7 @@ on:
     types: [completed]
     branches: [master]
 
-# One-time release only. CI must pass at the exact owner-approved merge SHA.
+# One-time release only. CI must pass at the exact owner-approved release SHA.
 permissions:
   contents: write
   actions: read
@@ -37,7 +37,7 @@ jobs:
           export GH_REPO="$GITHUB_REPOSITORY"
           subject="$(gh api "repos/$GH_REPO/commits/$CANDIDATE_SHA" --jq '.commit.message' | head -n 1)"
           if [[ "$subject" != "release: Meong Photobooth v1.0.0" ]]; then
-            echo "Not the approved v1 merge commit; release is skipped."
+            echo "Not the approved v1 release commit; release is skipped."
             exit 0
           fi
 
@@ -49,7 +49,7 @@ jobs:
             exit 0
           fi
 
-          existing_tag="$(gh api "repos/$GH_REPO/git/ref/tags/v1.0.0" --jq '.object.sha' 2>/dev/null || true)"
+          existing_tag="$(gh api "repos/$GH_REPO/git/ref/tags/v1.0.0" 2>/dev/null | jq -r '.object.sha // empty' || true)"
           if [[ -n "$existing_tag" && "$existing_tag" != "$CANDIDATE_SHA" ]]; then
             echo "::error::v1.0.0 exists but targets a different commit. Manual review needed."
             exit 1
