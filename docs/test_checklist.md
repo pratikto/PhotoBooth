@@ -3,7 +3,7 @@
 - [x] Owner-approved backend-only scope and isolated branch `feature/device-health` from `master` `abbdb0d6b0d97a796da14b7edabf21252892c9cb`.
 - [x] Non-invasive checks implemented: existing-frame camera, printer TCP/queue/device-node visibility with **zero print commands**, disk, short TCP network reachability, local ad files, optional heartbeat.
 - [x] New no-hardware unit tests added in `tests/test_device_health.py` (check results against actual CI after PR). No GUI changes or app startup wiring.
-- [ ] **Targeted test evidence:** `python -m unittest discover -s tests -p test_device_health.py -v` (run ID, test count and SHA to be recorded after CI verification).
+- [x] **Targeted test evidence:** `python -m unittest discover -s tests -p test_device_health.py -v`, Python 3.12 Ubuntu GitHub Actions [39192498537](https://github.com/pratikto/PhotoBooth/actions/runs/39192498537): **24 tests / 24 PASS**, no skips/errors. Tested source/workflow SHA `3ae31dfc933352c293eed682c72f4f8afb6020c`. Later documentation commits require separate full-PR regression check; no Windows physical probes were run.
 - [ ] **Full regression evidence:** PR Kiosk GUI CI on exact Stage A head SHA (record run ID and count after passing).
 - [ ] Stage B dedicated admin Settings UI — requires new approval.
 - [ ] Stage C physical Windows printer, camera, network and media tests — requires new approval and owner evidence.
