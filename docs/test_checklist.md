@@ -1,3 +1,13 @@
+## FEAT-008 cross-OS test compatibility — WinError 1314 (2026-10-19)
+
+- [x] **Owner-reported Windows failure:** running `python -m unittest discover -s tests -p "test_device_selection.py" -v` from an unelevated Windows Python 3.12 environment gave 12 tests OK, 1 ERROR: `test_linux_camera_symlink_remains_selected_and_is_not_opened` raised `OSError: [WinError 1314]` in `Path.symlink_to()`. This is a **test-fixture permission issue**, not evidence that the physical camera or device health is broken.
+- [x] **Fix:** `tests/test_device_selection.py` and `tests/test_hardware_discovery.py` mock the Linux symlink Path predicates on Windows, but preserve real filesystem symlink tests on Linux; do not require Developer Mode or elevated PowerShell, do not modify runtime camera code.
+- [x] **Cross-platform CI:** [GitHub Actions 39223474630](https://github.com/pratikto/PhotoBooth/actions/runs/39223474630) at implementation/workflow SHA `b83074d9a81822ad68b26ad9a9ca7d88bf034652` **PASS on both Windows and Ubuntu**. Each OS runs 25 base health, 14 adapters, 10 discovery and 13 selection tests = **62/62 PASS on each platform**. The workflow now triggers for changes to these modules/tests and explicitly exercises Windows.
+- [ ] Owner rerun locally in PowerShell without administrator: both `test_device_selection.py` and `test_hardware_discovery.py` must pass after pulling `feature/device-health`.
+- [ ] Hardware and OS acceptance remain distinct: no real Linux V4L camera, printer/cutter, SBC, QRIS or Android hardware was validated by these mocks. Draft PR #7 still must **not** merge without explicit owner permission.
+
+---
+
 ## FEAT-008 — owner-reported Windows GUI smoke test: 7/7 PASS (2026-10-19)
 
 **Evidence source:** Owner ran the booth on a Windows laptop and reported the seven results below. This is a **human-reported on-device GUI/diagnostics smoke test**, not independent hardware telemetry, and the exact local commit SHA was **not supplied**. It does not override outstanding physical acceptance or grant merge permission.
