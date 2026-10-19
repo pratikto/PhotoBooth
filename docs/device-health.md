@@ -1,6 +1,35 @@
 # FEAT-008 — Device Health Monitoring (Stage A backend)
 
-**State (2026-10-19):** Owner-approved **Stage A only** is implemented on `feature/device-health` in [PR #5](https://github.com/pratikto/PhotoBooth/pull/5) as reviewable source and mock tests. **Check the PR for its exact CI and merge state**; the immutable [v1.0.0](releases/v1.0.0.md) tag is unchanged. Stage B (Settings GUI), Stage C (physical Windows acceptance), alarms, auto-recovery and remote monitoring are **not implemented or authorized by this stage**.
+**Current branch (2026-10-19):** FEAT-008 **Stage A backend** and explicitly approved **Stage B operator Settings GUI** are under development in `feature/device-health`. The earlier [Stage A PR #5](https://github.com/pratikto/PhotoBooth/pull/5) was merged without separate approval and **reverted from `master` by owner request in [PR #6](https://github.com/pratikto/PhotoBooth/pull/6)**. Both stages remain on the feature branch only; do **not** merge without separate owner approval. The immutable [v1.0.0](releases/v1.0.0.md) tag is unchanged. Stage C (physical Windows acceptance), alarms, crash recovery and remote monitoring remain out of scope.
+
+
+## Stage B — Kivy Settings panel (branch-only)
+
+**Operator path:** On the `feature/device-health` branch, launch the normal Kivy booth, tap the **gear (Settings)** in the header, then choose **DEVICE HEALTH**. The panel runs **one nonblocking diagnostic sweep on opening**; **REFRESH STATUS** starts another sweep only when the previous result finished. **TUTUP** closes the popup. It does not navigate away from or reset the ongoing photo session.
+
+Six rows show camera, printer, disk, network, media, and the existing application's Kivy heartbeat. Statuses are `READY`, `PERHATIAN`, `TIDAK TERSEDIA`, and `BELUM DIKETAHUI`. The last probe timestamp uses the Windows local clock. **The app never automatically prints, reopens the camera, deletes photos, restarts services, or blocks a customer solely because of a health status.** The existing face/palm shutter guard also inhibits gesture actions while this operator modal is open.
+
+The controller `PhotoBoothApp._refresh_device_health` captures the active camera, printer configuration, photos directory, ad catalog, and current Kivy heartbeat **on the main thread**, then executes the existing `collect_health_snapshot` in a **daemon worker**; only UI-result delivery runs on the main Kivy clock. A lock prevents duplicate overlapping scans. The Kivy panel ignores results received after dismissal or reopening. The UI heartbeat reuses the already scheduled `_kiosk_tick` (no new monitor timer). Printer route checks are **skipped** while an in-flight photo print is registered, returning `unknown` rather than interfering with print spool submission.
+
+**Stage B limitations:** printer queue/TCP readiness does not certify physical paper/cutter; network TCP is not a Drive or payment check; file presence does not certify video decoding; no hardware camera is opened for probing. Default disk warning is below **10% free or 1 GiB free**, not 15%. A heartbeat `ready` confirms only that the existing Kivy tick was recent when the operator requested a sample. Cloud 30-day retention BUG-009 remains OPEN.
+
+### Windows smoke test (no automatic physical print)
+
+```powershell
+git fetch origin
+git switch feature/device-health
+git pull origin feature/device-health
+python -m unittest discover -s tests -p test_device_health.py -v
+python main.py
+```
+
+With the Kivy app open: Settings gear → DEVICE HEALTH → read all six rows → REFRESH STATUS → TUTUP. Check that closing/reopening the panel never displays stale results, and that camera preview/photo workflow and existing printer controls still work. **Do not start a real print test just to validate this read-only feature.** Windows hardware acceptance is Stage C and requires separate approval/evidence.
+
+Synthetic GUI/controller tests live in `tests/test_device_health_gui.py` and are run by Kiosk GUI regression CI (`PHOTOBOOTH_TEST_GUI=1` with a Kivy/Xvfb display). The local 25+ isolated Stage A tests run without physical hardware.
+
+### Separate merge authorization
+
+The Stage B PR is **review-only** until the owner approves merging its precise tested SHA to `master`. Do not infer merge permission from test PASS. The prior Stage A branch and this branch are the same `feature/device-health`, so a later approved merge would introduce both Stage A and B together.
 
 ## Scope and interface
 
@@ -31,4 +60,4 @@ python -m compileall -q photobooth tests
 
 Standalone mocked regression: [FEAT-008 GitHub Actions 39192498537](https://github.com/pratikto/PhotoBooth/actions/runs/39192498537) **24/24 PASS** at source/test SHA `3ae31dfc933352c293eed682c72f4f8afb6020c` on Ubuntu Python 3.12. [test_checklist.md](test_checklist.md) tracks the PR's full Kiosk CI and any later head SHA separately. Linux/mock tests are **not** camera, Windows queue, ESC/POS paper or codec hardware acceptance.
 
-**Rollback:** revert FEAT-008 Stage A commits/PR if necessary; no existing `main.py` path imports this module, so legacy kiosk behavior is unchanged. **Next approval boundary:** Stage B operator UI and Stage C device tests remain separate follow-ups; do not begin without new owner approval.
+**Rollback:** discard or revert this unmerged branch's Stage B commits; `master` already has the original Stage A unauthorized merge safely reverted. **Next approval boundary:** Stage C physical device signoff and any future merge/release remain subject to separate explicit owner permission.
