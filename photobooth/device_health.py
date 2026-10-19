@@ -268,6 +268,7 @@ def collect_health_snapshot(
     photo_directory=None,
     ad_catalog=None,
     last_heartbeat=None,
+    printer_busy: bool = False,
 ) -> HealthSnapshot:
     """Run one opt-in observation pass (never scheduled during kiosk startup).
 
@@ -276,7 +277,8 @@ def collect_health_snapshot(
     """
     checks = (
         check_camera(camera),
-        check_printer(printer_config),
+        (HealthCheck("printer", UNKNOWN, "Printer sedang mencetak; pemeriksaan ditunda.")
+         if printer_busy else check_printer(printer_config)),
         check_disk(photo_directory),
         check_network(),
         check_media(ad_catalog),
