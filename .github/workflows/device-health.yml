@@ -5,13 +5,25 @@ on:
     branches: [feature/device-health, master]
     paths:
       - photobooth/device_health.py
+      - photobooth/hardware_adapters.py
+      - photobooth/hardware_discovery.py
+      - photobooth/device_selection.py
       - tests/test_device_health.py
+      - tests/test_hardware_adapters.py
+      - tests/test_hardware_discovery.py
+      - tests/test_device_selection.py
       - .github/workflows/device-health.yml
   pull_request:
     branches: [master]
     paths:
       - photobooth/device_health.py
+      - photobooth/hardware_adapters.py
+      - photobooth/hardware_discovery.py
+      - photobooth/device_selection.py
       - tests/test_device_health.py
+      - tests/test_hardware_adapters.py
+      - tests/test_hardware_discovery.py
+      - tests/test_device_selection.py
       - .github/workflows/device-health.yml
   workflow_dispatch:
 
@@ -22,15 +34,20 @@ permissions:
 
 jobs:
   health:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
+    name: Device health / ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Compile independent health module and tests
-        run: python -m compileall -q photobooth/device_health.py tests/test_device_health.py
+      - name: Compile independent health modules and tests
+        run: python -m compileall -q photobooth/device_health.py photobooth/hardware_adapters.py photobooth/hardware_discovery.py photobooth/device_selection.py tests/test_device_health.py tests/test_hardware_adapters.py tests/test_hardware_discovery.py tests/test_device_selection.py
       - name: Run isolated FEAT-008 Stage A tests (no hardware)
         run: python -m unittest discover -s tests -p 'test_device_health.py' -v
       - name: Verify heterogeneous platform adapter capabilities
