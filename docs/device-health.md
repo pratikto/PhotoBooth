@@ -172,7 +172,7 @@ are included in the full Kiosk GUI workflow. They mock printers/cameras and
 assert that settings are staged without changing active devices, undetected
 queues are rejected, and the chooser closes cleanly with the Health popup.
 
-**Physical acceptance pending:** boot and reboot tests with actual Windows
+**CI evidence for B.2.1:** [targeted 62/62 PASS](https://github.com/pratikto/PhotoBooth/actions/runs/39206664105), [full Kiosk 313 tests / 311 PASS / 2 SKIP, 87 renders / 0 errors](https://github.com/pratikto/PhotoBooth/actions/runs/39206664043), both against the exact Python implementation SHA `e6798c17f42121e938ee4973eff47ec02edc5e60`. Tests use synthetic/mocked device data and do not establish physical hardware suitability.\n\n**Physical acceptance pending:** boot and reboot tests with actual Windows
 USB webcam indices, printer queue names, Linux stable camera aliases and
 real USB disconnects. The native Android runtime is **still unsupported**.
 This branch remains inside [Draft PR #7](https://github.com/pratikto/PhotoBooth/pull/7)

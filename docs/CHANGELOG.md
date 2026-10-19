@@ -8,7 +8,7 @@ This file tracks **actual verified repository/document changes**, not successful
 
 - Owner asked to continue development on the existing feature branch while hardware testing is temporarily unavailable. Added `photobooth/device_selection.py`: versioned strict atomic `data/device_selection.json`, explicit next-start camera/printer choices, cross-OS validation and no silent fallback when a selected device is unavailable.
 - Operator Health panel now offers **PILIH DEVICE** after a scan: Windows manual camera indices, Linux discovered stable V4L aliases and Windows discovered printer queues. Unimplemented CUPS/Android active routes are not falsely offered.
-- `PhotoBoothApp` applies saved choice only at process startup; stage does not hot-swap or send bytes. Saving manual printer settings clears any staged printer queue. Added mock persistence, startup safety, UI and controller tests; no physical device acceptance or approval to merge Draft PR #7.
+- `PhotoBoothApp` applies saved choice only at process startup; stage does not hot-swap or send bytes. Saving manual printer settings clears any staged printer queue. Added mock persistence, startup safety, UI and controller tests. On tested implementation SHA `e6798c17`, [targeted Device Health CI 39206664105](https://github.com/pratikto/PhotoBooth/actions/runs/39206664105) **62/62 PASS** and [Kiosk CI 39206664043](https://github.com/pratikto/PhotoBooth/actions/runs/39206664043) **311 PASS, 2 SKIP, 87 render passes**. No physical device acceptance or approval to merge Draft PR #7.
 
 ## [Unreleased — FEAT-008 cross-platform B.1 / B.2 discovery] — 2026-10-19
 
