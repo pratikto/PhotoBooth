@@ -1,6 +1,6 @@
 # FEAT-008 — Device Health Monitoring (Stage A backend)
 
-**State (2026-10-19):** Owner-approved **Stage A only** is implemented on `feature/device-health` as reviewable source and mock tests. It is **not merged/released** until PR review and CI verification; the immutable [v1.0.0](releases/v1.0.0.md) tag is unchanged. Stage B (Settings GUI), Stage C (physical Windows acceptance), alarms, auto-recovery and remote monitoring are **not implemented or authorized by this stage**.
+**State (2026-10-19):** Owner-approved **Stage A only** is implemented on `feature/device-health` in [PR #5](https://github.com/pratikto/PhotoBooth/pull/5) as reviewable source and mock tests. **Check the PR for its exact CI and merge state**; the immutable [v1.0.0](releases/v1.0.0.md) tag is unchanged. Stage B (Settings GUI), Stage C (physical Windows acceptance), alarms, auto-recovery and remote monitoring are **not implemented or authorized by this stage**.
 
 ## Scope and interface
 
@@ -25,7 +25,7 @@ The module takes existing `Camera`, `PrinterConfig`, the photos directory and lo
 Run targeted tests locally:
 
 ```powershell
-python -m unittest tests.test_device_health -v
+python -m unittest discover -s tests -p test_device_health.py -v
 python -m compileall -q photobooth tests
 ```
 
