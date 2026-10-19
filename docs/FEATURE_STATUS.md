@@ -1,17 +1,17 @@
 # Meong Photobooth — Current feature status
 
-> **CURRENT STATUS (2026-10-19, `feature/kivy-gui`):** At audited code SHA `c40f33f5`: **Kiosk GUI CI PASS** ([run 39145145762](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762), 230 PASS / 2 SKIP / 87 renders); Dither CI PASS ([39145145764](https://github.com/pratikto/PhotoBooth/actions/runs/39145145764)). FEAT-001 and FEAT-003 owner-tested PASS; BUG-011 PASS/monitoring; BUG-002/003/004/005/006/008/010 owner-reported PASS. Audio BUG-001/007 deferred, Drive retention BUG-009 OPEN, real QRIS and receipt scanner not in source. Hardware signoff/release remains separate.
+> **CURRENT AS OF 2026-10-19 — POST-v1 SOURCE RELEASE:** Default branch is `master`; the immutable `v1.0.0` [pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0) points to commit `07ce51d2022ab5673a7a27e744e5e5757fbb3d08`. [Kiosk CI](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245): 235 tests (233 PASS, 2 SKIP), 87 synthetic renders/0 errors; [Dither CI](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273): 48 tests PASS. This is **source/CI evidence, not Windows production or hardware certification**. FEAT-001 DEMO pricing/copy count and FEAT-003 live-preview mirror have owner-tested PASS; BUG-011 monitored; BUG-001/007 speaker/audio retests pending; BUG-009 Drive 30-day cleanup remains OPEN. Real QRIS FEAT-020 and receipt scanner FEAT-002 are not implemented. Dated pre-release statements below are historical when superseded by this notice.
 
-**Reconciled: 2026-10-19 | Branch: `feature/kivy-gui`**  
+**Reconciled: 2026-10-19 | Current baseline: `master` / `v1.0.0`**  
 This status is based on reading selected source files and the latest owner device reports; **no new tests or hardware checks were performed during documentation housekeeping**. Automated/historical test passes are not proof of current Windows booth acceptance.
 
 Status vocabulary: **IN SOURCE** = relevant implementation found, **OWNER REPORTED** = physical observation requiring reproducible evidence, **UNVERIFIED** = no current hardware acceptance, **PLANNED** = not implemented, **BLOCKED** = operational defect. For feature approval/requirements, see [DECISIONS.md](DECISIONS.md) and [next_step.md](next_step.md).
 
 ## Latest automated quality gate — Kiosk GUI Regression PASS
 
-**Latest full CI at branch baseline:** [Kiosk GUI regression Actions 39145145762](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762) **SUCCESS**, tested SHA `c40f33f5`: `232` unittests (**230 PASS / 2 SKIP / 0 FAIL / 0 ERROR**), Python compilation PASS, **87 synthetic desktop screen renders / 0 errors**. Previous pipeline FAIL was investigated using the new diagnostics runner; 17 initial assertion failures were resolved in **test/CI code only**, to reflect approved FEAT-001 pricing/sessions, ad → tutorial navigation, actual Settings submenu and per-tap music auditions, safe print completion and simulated Windows queue selection. **No runtime `photobooth/` source changed** during this quality-gate repair. [Detailed CI evidence](qa/KIOSK-GUI-REGRESSION-2026-10-18.md).
+**Historical pre-release full CI (retained):** [Kiosk GUI regression Actions 39145145762](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762) **SUCCESS**, tested SHA `c40f33f5`: `232` unittests (**230 PASS / 2 SKIP / 0 FAIL / 0 ERROR**), Python compilation PASS, **87 synthetic desktop screen renders / 0 errors**. Previous pipeline FAIL was investigated using the new diagnostics runner; 17 initial assertion failures were resolved in **test/CI code only**, to reflect approved FEAT-001 pricing/sessions, ad → tutorial navigation, actual Settings submenu and per-tap music auditions, safe print completion and simulated Windows queue selection. **No runtime `photobooth/` source changed** during this quality-gate repair. [Detailed CI evidence](qa/KIOSK-GUI-REGRESSION-2026-10-18.md).
 
-**Release distinction:** the full GUI suite is now green **at that verified commit**; no claim of real-camera, audio speaker, thermal paper, customer-data retention or actual QRIS settlement acceptance. The owner's separate FEAT-001/BUG-011 and FEAT-003 physical PASS statements remain in force; BUG-009 cloud-photo retention and BUG-001/007 audio remain unchanged. The later documentation-only baseline `c40f33f5` also completed CI successfully. This reconciliation adds documentation commits only; verify their own Actions checks separately.
+**Release distinction:** the historical GUI suite was green **at its tested commit**, and the v1.0.0 suite also passed independently; no claim of real-camera, audio speaker, thermal paper, customer-data retention or actual QRIS settlement acceptance. The owner's separate FEAT-001/BUG-011 and FEAT-003 physical PASS statements remain in force; BUG-009 cloud-photo retention and BUG-001/007 audio remain unchanged. The later documentation-only baseline `c40f33f5` also completed CI successfully. This reconciliation adds documentation commits only; verify their own Actions checks separately.
 
 ## Historical FEAT-011 isolated dithering experiment (superseded integration status)
 
@@ -80,7 +80,7 @@ The first attempt at `python tools/check_audio_output.py` stopped with `ModuleNo
 
 User confirms `python tools/check_audio_output.py` makes audible music, whereas `python main.py` remains silent. Therefore SDL2 can deliver audio on their machine; actual app audio is **not fixed**. Added a live Settings diagnostic line showing `provider`, `state`, `gain`, persisted `level`, fade `mix`, `advert`, `paused`, `started`, number of loaded `sounds` and `enabled`. Reproduce with Settings open on **tutorial** and report the complete diagnostic line and whether `Uji` is audible. `advert=1` on the opening advertising screen is expected (app music suppressed); a silent source MP4 has no ad audio to output. Do not claim audible application music until user confirms.
 
-## Cross-branch printer integration staged — 2026-10-17
+## HISTORICAL — Cross-branch printer integration staged on 2026-10-17 (superseded by v1)
 
 The active Kivy GUI branch now includes printer transports, Windows RAW spooler,
 saved GUI printer configuration, printer settings/test controls, automatic
@@ -89,8 +89,7 @@ Preserved recent advertising/tutorial/payment code; older printer branch
 remains unchanged for backup. New printer tests are present but the complete
 merged integration test suite and real Kivy rendering have **not been run**.
 Physical printer testing is also outstanding and in-app audio remains
-unresolved. PR #3 targets `master` as a draft review/QA gate. **Do not report
-the default branch as already merged.**
+unresolved. PR #3 **was subsequently merged to `master` on 2026-10-19**. This sentence replaces the original pre-merge warning; see release notes.
 
 ## Windows USB field feedback — 2026-10-17
 Physical `Out-Printer` text worked earlier with POS80ENG/USB001, but the Kivy
