@@ -64,7 +64,7 @@ The owner expressly requested a **NEW branch** specifically for configuration of
 
 **FEAT-011 next steps:** test Windows `python tools/dither_tuning_gui.py`; compare actual saved photo PNG and zoomed raster using preset, export binary PNG; confirm the outputs on real paper (same width/brightness/density). Retain BUG-004 OPEN. Known BUG-008 (Settings hang) and BUG-009 (Drive retention deployment) remain unrelated active operational issues; building a standalone lab does not fix them.
 
-## Current handover — reconciled 2026-10-18
+## Historical handover snapshot — reconciled 2026-10-18 (superseded by v1 top section)
 
 **Read this first rather than treating the dated 2026-10-17 notes below as an active work order.** Source-of-truth documents:
 
@@ -133,11 +133,11 @@ The owner expressly requested a **NEW branch** specifically for configuration of
 
 Physical machine speakers, local media/codec setup, camera, Google Drive and LAN thermal printer cannot be validated from GitHub alone. Real QRIS is not yet supported. Previous automated QA results are historical, not validation of the four newly reported defects.
 
-## Copy/paste into a new chat
+## Historical copy/paste prompt (2026-10-17; superseded — use DEVELOPMENT_PROMPT.md)
 
 The maintained full and quick prompts are in [DEVELOPMENT_PROMPT.md](DEVELOPMENT_PROMPT.md). The compact starter below references that single canonical prompt rather than maintaining a divergent second checklist:
 
-> Continue Meong Photobooth from GitHub `pratikto/PhotoBooth` on existing `feature/kivy-gui`. Follow `docs/DEVELOPMENT_PROMPT.md` and `docs/DEVELOPMENT_PROTOCOL.md`; read current `docs/DECISIONS.md`, `docs/FEATURE_STATUS.md`, `docs/bug_tracker.md`, `docs/test_checklist.md`, `docs/next_step.md` and `docs/DEVELOPMENT_HANDOVER.md`. Inspect current branch/SHA and relevant source. **Review only unless I approve a named documentation or code scope.** For approved development, record tests and link documentation/commit evidence before claiming a bug fixed. No new branch, merge or real QRIS claims without authorization.
+> Historical 2026-10-17 resume advice (superseded): the then-current `feature/kivy-gui` branch was the development target. **Do not copy this old branch instruction.** Use the maintained [reusable prompt](DEVELOPMENT_PROMPT.md), start from `master`/`v1.0.0`, and seek explicit task approval for new changes, PR merges, deployment and physical signoff.
 
 ## Current blocker: audio remains silent (reported 2026-10-17)
 
