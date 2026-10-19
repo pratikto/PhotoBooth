@@ -2,7 +2,7 @@
 
 This is a staging-only API factory, not a production deployment.
 """
-from fastapi import FastAPI, Header, HTTPException
+from fastapi import FastAPI, Header, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
 
 
@@ -51,5 +51,20 @@ def create_app(service, authenticator):
         if not service.claim(order_id, booth_id):
             raise HTTPException(status_code=409, detail="Order not claimable")
         return {"claimed": True}
+
+    @app.post("/api/webhooks/midtrans")
+    async def midtrans_webhook(request: Request):
+        payload = await request.body()
+        if len(payload) > 16384:
+            raise HTTPException(status_code=413, detail="Payload too large")
+        try:
+            import json
+            notification = json.loads(payload)
+            if not isinstance(notification, dict):
+                raise ValueError("Expected JSON object")
+            verified = service.process_notification(notification)
+        except (ValueError, TypeError, KeyError) as error:
+            raise HTTPException(status_code=400, detail="Invalid notification") from error
+        return {"verified": bool(verified)}
 
     return app
