@@ -29,3 +29,6 @@ Added isolated SQLite order lifecycle `photobooth/payment_orders.py` and six reg
 
 ## Stage 4 (2026-10-20)
 Added `photobooth/midtrans_verify.py` and `tests/test_midtrans_verify.py` in commits `6ec7e836` and `3aacd137`. Verifier checks SHA-512 callback signature, positive whole-IDR amounts and independent provider status parity. This is an offline primitive only; it does not fetch the provider status, accept webhooks, create QRIS, or unlock the booth. Tests not executed in this session. Provider order IDs, status mapping, merchant configuration and actual sandbox response format must be validated before integration.
+
+## Stage 5 (2026-10-20)
+Added sandbox-only Midtrans Core API HTTP transport `photobooth/midtrans_sandbox.py` and five mocked-transport tests `tests/test_midtrans_sandbox.py` (commits `56bc1bba`, `08fb980f`). Endpoint is hard-coded to `api.sandbox.midtrans.com`, with server-side Basic Auth, timeout, bounded response and no production endpoint. **Tests not run or independently verified in this session.** No server, webhook route, real Midtrans sandbox transaction, merchant credentials or kiosk integration. Do not place MIDTRANS_SERVER_KEY in the kiosk or repository. Next: authenticated backend API, independently fetched provider status, webhook handler, and full regression.
