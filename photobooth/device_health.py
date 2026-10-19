@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from photobooth.hardware_adapters import DeviceDescriptor, configured_inventory, platform_family
 from pathlib import Path
 import os
 import shutil
@@ -39,6 +40,8 @@ class HealthSnapshot:
 
     checked_at: str
     checks: tuple[HealthCheck, ...]
+    platform: str = "unknown"
+    devices: tuple[DeviceDescriptor, ...] = ()
 
     def by_name(self, name: str) -> HealthCheck:
         return next(check for check in self.checks if check.name == name)
@@ -269,16 +272,26 @@ def collect_health_snapshot(
     ad_catalog=None,
     last_heartbeat=None,
     printer_busy: bool = False,
+    platform: str | None = None,
 ) -> HealthSnapshot:
     """Run one opt-in observation pass (never scheduled during kiosk startup).
 
     Network and LAN reachability checks initiate short TCP handshakes only.
     A future GUI must run this function outside the Kivy rendering thread.
     """
+    family = platform_family(platform)
+    # Android requires native Camera2/USB bridge implementations. Never run
+    # desktop-only device probes and label the device READY on Android.
+    if family == "android":
+        camera_check = HealthCheck("camera", UNKNOWN, "Android Camera2 bridge belum tersedia.")
+        printer_check = HealthCheck("printer", UNKNOWN, "Android printer bridge belum tersedia.")
+    else:
+        camera_check = check_camera(camera)
+        printer_check = (HealthCheck("printer", UNKNOWN, "Printer sedang mencetak; pemeriksaan ditunda.")
+                         if printer_busy else check_printer(printer_config))
     checks = (
-        check_camera(camera),
-        (HealthCheck("printer", UNKNOWN, "Printer sedang mencetak; pemeriksaan ditunda.")
-         if printer_busy else check_printer(printer_config)),
+        camera_check,
+        printer_check,
         check_disk(photo_directory),
         check_network(),
         check_media(ad_catalog),
@@ -287,4 +300,6 @@ def collect_health_snapshot(
     return HealthSnapshot(
         checked_at=datetime.now(timezone.utc).isoformat(),
         checks=checks,
+        platform=family,
+        devices=configured_inventory(camera, printer_config, platform=platform),
     )
