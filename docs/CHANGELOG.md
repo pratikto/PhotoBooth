@@ -1,3 +1,8 @@
+## 2026-10-19 — FEAT-008 B.3 documentation reconciliation (feature branch only)
+
+- Updated documentation index, architecture, owner approval log, feature state, execution priority, QA evidence, handover, and B.3 guide to reflect committed read-only presence-state classifier (`588df3c`, `06ab0f4`, `bbc4162`), CI workflow change (`d26314e`), and previously recorded documentation changes (`7d2ae90`, `5040e12`, `476a388`, `e0cc249`, `4554c7f`, `70f6766`).
+- Evidence truth: owner Windows full GUI opt-in 308 PASS / 5 SKIP **before** B.3; device-health CI 39245625653 SUCCESS at `70f6766`; GUI CI 39245625676 was IN PROGRESS at reconciliation. Subsequent documentation HEAD CI needs new check; no physical validation or PR merge claimed.
+
 ## 2026-10-19 — FEAT-008 B.3 presence-state foundation (feature branch only)
 
 - `photobooth/device_recovery.py`: new read-only, fail-closed selected-device presence / identity return observations; no device I/O.
