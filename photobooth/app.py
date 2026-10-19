@@ -220,6 +220,7 @@ class PhotoBoothApp:
                     ad_catalog=ad_catalog,
                     last_heartbeat=last_heartbeat,
                     printer_busy=printer_busy,
+                    include_discovery=True,
                 )
             except Exception:
                 # No low-level exception text (paths / hosts / device names)
