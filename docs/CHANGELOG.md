@@ -2,6 +2,12 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased — FEAT-008 Stage B, branch feature/device-health] — 2026-10-19
+
+- Owner explicitly authorized **Stage B Settings Health Monitoring GUI** in the existing `feature/device-health` branch only, after requesting the prior Stage A merge be reverted from `master` through [PR #6](https://github.com/pratikto/PhotoBooth/pull/6). No authorization to merge Stage A/B or alter immutable `v1.0.0`.
+- Added `photobooth/ui_health.py` health panel (six rows, auto-on-open and manual refresh, stale-modal callback guard), wired a controller-side asynchronous worker and main-thread callback, added existing-tick heartbeat and nonintrusive print-in-flight guard; no customer payment, image composition, cloud, print payload, camera open or photo-storage mutations. Added GUI/worker regression tests in `tests/test_device_health_gui.py` and a safety regression to `tests/test_device_health.py`; [technical guide](device-health.md).
+- PR CI and Windows operator observations must be recorded separately; **not yet production-accepted**, draft PR review must not be merged without explicit approval.
+
 ## [Unreleased — FEAT-008 Stage A, branch feature/device-health] — 2026-10-19
 
 - Owner approved **Stage A only** of FEAT-008; added `photobooth/device_health.py` (read-only, opt-in camera/printer/disk/network/media/heartbeat probes), `tests/test_device_health.py` (deterministic mocks, no hardware access) and [Stage A guide](device-health.md). No Kivy GUI callback, background monitor, print submission, camera reopen, Google Drive change, or real QRIS implementation. Stage B operator UI and Stage C Windows tests require separate approval.
