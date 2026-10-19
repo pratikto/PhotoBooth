@@ -41,12 +41,8 @@ Sources: owner decisions from recent project discussions; technical implementati
 
 | ID | Decision | Scope boundary |
 | --- | --- | --- |
-| DEC-022 | On 2026-10-19 owner directed to revert the earlier unauthorized FEAT-008 Stage A PR #5 merge to master; PR #6 restored exact pre-FEAT-008 master contents, retaining the feature branch. Owner then approved **FEAT-008 Stage B development on `feature/device-health`**. | Develop GUI, nonblocking worker and related tests/documentation on the existing branch only; **do not merge the feature PR without another explicit owner instruction**, regardless of CI results. Stage C device acceptance and all new features remain separate. |
-
-
-| ID | Decision | Scope boundary |
-| --- | --- | --- |
-| DEC-021 | On 2026-10-19 owner explicitly approved **FEAT-008 Stage A** (non-invasive backend health probes and mocked unit tests) after the `v1.0.0` documentation merge. | Create `feature/device-health` from `master`, document/check code and open tested PR. **No Stage B operator GUI, Stage C physical Windows certification, automatic job blocking/recovery, cloud deployment or new feature** is authorized by this limited scope. No changes to immutable `v1.0.0`; outstanding BUG-001/007 and BUG-009 keep their existing status. |
+| DEC-021 | On 2026-10-19 owner approved **FEAT-008 Stage A** (non-invasive backend probes and mocked tests) on the dedicated feature branch. | This was **implementation approval only**; the subsequent PR #5 merge had no separate authorization and was reverted in PR #6. Preserve `v1.0.0` and unrelated bugs. |
+| DEC-022 | On 2026-10-19 owner requested revert of unauthorized PR #5 merge; PR #6 restored pre-FEAT-008 master contents. Owner subsequently approved **Stage B development on the existing `feature/device-health`**. | Panel, nonblocking worker and tests/docs on the feature branch only; **no merge without another explicit owner instruction**, regardless of CI. Stage C physical signoff and other features remain separate. |
 
 ## Business and software subscription decisions (owner-confirmed)
 
