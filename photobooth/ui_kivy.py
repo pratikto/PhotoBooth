@@ -378,6 +378,7 @@ class PhotoBoothUI(HealthPanelMixin, KioskExperienceMixin):
         for widget in (audio, printer, health, close):
             content.add_widget(widget)
         popup.open()
+        return popup
 
     def show_printer_settings(self):
         """Edit the current printer route, width and dithering in one modal.
