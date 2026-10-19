@@ -3,6 +3,7 @@
 This is a staging-only API factory, not a production deployment.
 """
 from fastapi import FastAPI, Header, HTTPException, Request
+import json
 from pydantic import BaseModel, ConfigDict
 
 
@@ -32,6 +33,8 @@ def create_app(service, authenticator):
             return service.create_order(booth_id, body.quantities)
         except ValueError as error:
             raise HTTPException(status_code=422, detail="Invalid checkout") from error
+        except Exception as error:
+            raise HTTPException(status_code=503, detail="Checkout temporarily unavailable") from error
 
     @app.get("/api/orders/{order_id}")
     def order_status(order_id: str, x_booth_id: str = Header(default=""),
@@ -54,17 +57,24 @@ def create_app(service, authenticator):
 
     @app.post("/api/webhooks/midtrans")
     async def midtrans_webhook(request: Request):
+        try:
+            length = int(request.headers.get("content-length", "0"))
+        except ValueError as error:
+            raise HTTPException(status_code=400, detail="Invalid content length") from error
+        if length > 16384:
+            raise HTTPException(status_code=413, detail="Payload too large")
         payload = await request.body()
         if len(payload) > 16384:
             raise HTTPException(status_code=413, detail="Payload too large")
         try:
-            import json
             notification = json.loads(payload)
             if not isinstance(notification, dict):
                 raise ValueError("Expected JSON object")
             verified = service.process_notification(notification)
         except (ValueError, TypeError, KeyError) as error:
             raise HTTPException(status_code=400, detail="Invalid notification") from error
+        except Exception as error:
+            raise HTTPException(status_code=503, detail="Provider verification unavailable") from error
         return {"verified": bool(verified)}
 
     return app
