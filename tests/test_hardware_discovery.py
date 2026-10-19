@@ -1,4 +1,5 @@
 """FEAT-008 B.2: read-only OS discovery, with no physical device opened."""
+import os
 import tempfile
 from pathlib import Path
 from types import SimpleNamespace
@@ -59,8 +60,21 @@ class DiscoveryTests(unittest.TestCase):
             fake = root / "video0"
             fake.write_bytes(b"fake camera device file")
             alias = v4l / "usb-ExampleCam-video-index0"
-            alias.symlink_to(fake)
-            found = _linux_video_devices(root=root)
+            if os.name == "nt":
+                # Do not require an elevated terminal or Windows Developer
+                # Mode just to simulate a Linux udev by-id symbolic link.
+                # Create a directory entry for iterdir, then mock symlink
+                # predicates. Linux CI below uses an actual symlink.
+                alias.write_bytes(b"synthetic udev alias")
+                with (
+                    patch.object(Path, "is_symlink", return_value=True),
+                    patch.object(Path, "exists", return_value=True),
+                    patch.object(Path, "resolve", return_value=fake),
+                ):
+                    found = _linux_video_devices(root=root)
+            else:
+                alias.symlink_to(fake)
+                found = _linux_video_devices(root=root)
         self.assertEqual(len(found), 1)
         self.assertEqual(found[0].identity_quality, "udev-by-id")
         self.assertEqual(found[0].presence, "node-detected")
