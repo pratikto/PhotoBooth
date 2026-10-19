@@ -1,3 +1,13 @@
+## FEAT-008 — user-run Windows hardware adapter tests: 14/14 PASS (2026-10-19)
+
+- [x] **Owner-reported local Windows/Python 3.12 result:** `python -m unittest discover -s tests -p "test_hardware_adapters.py" -v` ran **14 tests / 14 PASS / 0 failures / 0 errors**, using the owner's `.venv-kivy` PowerShell environment. Exact local Git SHA was not included.
+- [x] Covered platform-family detection, configured camera/printer descriptors, Linux path and USB model identifiers, Android **unsupported** bridge reporting, backward-compatible health snapshots.
+- [ ] **Separate outstanding owner rerun:** `test_device_selection.py` (13 tests) and `test_hardware_discovery.py` (10 tests) after updating to the latest feature branch; the earlier symlink failure on Windows was fixed in test fixtures but this new message does not confirm those suites locally yet.
+- [ ] Not physical-device verification: test cases mentioning Linux/Android use synthetic inputs/mocks; real Linux/SBC and Android devices were not tested. Production QRIS and Android native support remain deferred.
+- [x] Record-only change; no application code edits or merge approval; Draft PR #7 remains open.
+
+---
+
 ## FEAT-008 cross-OS test compatibility — WinError 1314 (2026-10-19)
 
 - [x] **Owner-reported Windows failure:** running `python -m unittest discover -s tests -p "test_device_selection.py" -v` from an unelevated Windows Python 3.12 environment gave 12 tests OK, 1 ERROR: `test_linux_camera_symlink_remains_selected_and_is_not_opened` raised `OSError: [WinError 1314]` in `Path.symlink_to()`. This is a **test-fixture permission issue**, not evidence that the physical camera or device health is broken.
