@@ -1,6 +1,8 @@
 # Original offline music and sound cues
 
-> **CURRENT (2026-10-19, `feature/kivy-gui`):** Original bundled WAVs remain the Kivy music/SFX source. **Actual GUI route:** header gear → **Pengaturan Meong** → **PENGATURAN AUDIO**. An explicit **UJI MUSIK** press requests a fresh playback to diagnose silent devices; normal background music avoids unwanted restarting across pages. The Settings/music test code now covers this logic, but **audible Windows music remains an unresolved/deferred owner issue (BUG-001/007)**; synthetic CI does not prove loudspeaker output.
+> **Release provenance:** Assets are in the source pre-release [v1.0.0](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0), from prior `feature/kivy-gui` work. Keep media/codecs, audio speaker response and printer/QR paper quality distinct from simulated CI; no change to asset bytes in this documentation cleanup.
+
+> **CURRENT (2026-10-19, `master` / immutable `v1.0.0`):** Original bundled WAVs remain the Kivy music/SFX source. **Actual GUI route:** header gear → **Pengaturan Meong** → **PENGATURAN AUDIO**. An explicit **UJI MUSIK** press requests a fresh playback to diagnose silent devices; normal background music avoids unwanted restarting across pages. The Settings/music test code now covers this logic, but **audible Windows music remains an unresolved/deferred owner issue (BUG-001/007)**; synthetic CI does not prove loudspeaker output.
 
 All WAVs in this folder are synthesized by `photobooth/audio.py`, using original
 note sequences and deterministic instruments/noise. They contain no sampled
