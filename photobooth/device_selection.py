@@ -36,6 +36,10 @@ class DeviceSelection:
 def _validate(selection: DeviceSelection) -> DeviceSelection:
     if not isinstance(selection, DeviceSelection):
         raise DeviceSelectionError("Invalid device selection type.")
+    if any(type(value) is not str for value in (
+            selection.camera_kind, selection.camera_value,
+            selection.printer_kind, selection.printer_value)):
+        raise DeviceSelectionError("Device selections must be strings.")
     if selection.camera_kind not in ("", "opencv-index", "linux-v4l-by-id"):
         raise DeviceSelectionError("Unsupported camera selection backend.")
     if selection.printer_kind not in ("", "windows-spooler"):
