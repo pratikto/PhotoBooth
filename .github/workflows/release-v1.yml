@@ -41,6 +41,12 @@ jobs:
             exit 0
           fi
 
+          current_master="$(gh api "repos/$GH_REPO/git/ref/heads/master" --jq '.object.sha')"
+          if [[ "$current_master" != "$CANDIDATE_SHA" ]]; then
+            echo "A newer master HEAD ($current_master) supersedes $CANDIDATE_SHA; skip stale release."
+            exit 0
+          fi
+
           runs="$(gh api "repos/$GH_REPO/actions/runs?head_sha=$CANDIDATE_SHA&branch=master&per_page=100")"
           kiosk="$(jq -r '[.workflow_runs[] | select(.name == "Kiosk GUI regression" and .conclusion == "success")] | length' <<< "$runs")"
           dither="$(jq -r '[.workflow_runs[] | select(.name == "Dither tuning lab regression" and .conclusion == "success")] | length' <<< "$runs")"
