@@ -1,3 +1,12 @@
+## FEAT-008 B.3 — 2026-10-19 approved branch-only increment
+
+- [x] Source added: `photobooth/device_recovery.py` (non-invasive presence/reappearance classification), linked tests `tests/test_device_recovery.py`.
+- [ ] New B.3 regression run: `python -m unittest discover -s tests -p "test_device_recovery.py" -v` — **NOT RUN / no result yet**. Do not infer PASS merely from push.
+- [ ] Full regression for post-change branch HEAD — **NOT RUN yet**.
+- [x] Earlier owner Windows GUI opt-in regression: **313 tests, 308 PASS, 5 SKIP, 0 failures**, 101.898 seconds; owner screenshot/log supplied in chat; exact owner local SHA not supplied. It predates B.3 commits.
+- [ ] B.3 state observation is not wired to live UI; live disconnect/reconnect behavior, printer readiness and camera frames require separate acceptance.
+- [ ] Windows/SBC physical disconnect, reconnect, permission and restart tests pending. No automatic hardware switching or merge approved.
+
 ## FEAT-008 Windows local test follow-up — selection PASS, stale discovery fixture (2026-10-19)
 
 - [x] **Owner Windows PowerShell:** `test_device_selection.py` — **13/13 PASS**, including `test_linux_camera_symlink_remains_selected_and_is_not_opened`; previous local WinError 1314 for this suite is resolved.
