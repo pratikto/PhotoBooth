@@ -52,6 +52,36 @@ class QRISApiTests(unittest.TestCase):
     def test_invalid_webhook_rejected(self):
         self.assertEqual(self.client.post("/api/webhooks/midtrans", content=b"not-json").status_code, 400)
 
+    def test_webhook_large_body_rejected(self):
+        result = self.client.post("/api/webhooks/midtrans",
+                                  content=b"x" * 16385)
+        self.assertEqual(result.status_code, 413)
+
+    def test_webhook_bad_content_length_rejected(self):
+        result = self.client.post("/api/webhooks/midtrans",
+                                  content=b"{}", headers={"content-length": "bad"})
+        self.assertEqual(result.status_code, 400)
+
+    def test_checkout_provider_outage_is_503(self):
+        class OutageService(StubService):
+            def create_order(self, booth, quantities):
+                raise RuntimeError("provider unavailable")
+        auth = BoothAuthenticator({"PB001": "sample-booth-secret-at-least-32-characters"})
+        client = TestClient(create_app(OutageService(), auth))
+        result = client.post("/api/orders",
+                             json={"quantities": {"template_a": 1}},
+                             headers=self.headers)
+        self.assertEqual(result.status_code, 503)
+
+    def test_webhook_provider_outage_is_503(self):
+        class OutageService(StubService):
+            def process_notification(self, data):
+                raise RuntimeError("provider unavailable")
+        auth = BoothAuthenticator({"PB001": "sample-booth-secret-at-least-32-characters"})
+        client = TestClient(create_app(OutageService(), auth))
+        self.assertEqual(client.post("/api/webhooks/midtrans",
+                                     json={"order_id": "test"}).status_code, 503)
+
 
 if __name__ == "__main__":
     unittest.main()
