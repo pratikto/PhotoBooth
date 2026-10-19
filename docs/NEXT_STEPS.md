@@ -1,6 +1,6 @@
 # Moved: Development Handover
 
-> **CURRENT (2026-10-19, `feature/kivy-gui`):** **HISTORICAL COMPATIBILITY POINTER ONLY.** Active backlog is [next_step.md](next_step.md); active continuation context is [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md). FEAT-001/003 and BUG-011 have owner-tested PASS, full Kiosk synthetic CI passed on `c40f33f5`, and FEAT-008 is the next proposed feature **only after approval**. Do not add tasks to this moved file.
+> **CURRENT (2026-10-19):** Historical compatibility pointer only. Stable application baseline is `master` / immutable `v1.0.0` pre-release; use [current backlog](next_step.md) and [handover](DEVELOPMENT_HANDOVER.md). FEAT-008 remains a candidate requiring approval; BUG-001/007 audio retest and BUG-009 Drive retention remain unresolved. Do not add new tasks to this moved file.
 
 This historical document has moved to [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md).
 
