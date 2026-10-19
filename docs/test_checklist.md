@@ -1,3 +1,15 @@
+## FEAT-008 B.2.1 — restart-only primary device selection (2026-10-19)
+
+- [x] Owner asked to continue staged work while Windows/SBC/Android hardware tests cannot yet be conducted. **No merge permission.**
+- [x] Strict atomic versioned JSON preferences with unchanged legacy default when no selection exists, next-start-only activation, and explicit cross-OS/missing-alias rejection.
+- [x] Windows manual camera indices (unstable), Linux discovered V4L by-id camera aliases, Windows discovered spooler queues only; no unsupported CUPS/Android runtime selections.
+- [x] GUI device chooser from Health, available after scan. Stage never closes camera/changes active printer/prints; old Printer Settings overrides staged queue.
+- [ ] Final exact-head [Draft PR #7](https://github.com/pratikto/PhotoBooth/pull/7) Kiosk GUI CI (`tests/test_device_selection_ui.py`) and dedicated no-hardware `tests/test_device_selection.py` counts to be recorded.
+- [ ] **Owner physical acceptance deferred**: Windows manual index reconnect/reboot and printer queue physically unavailable; SBC V4L/by-id camera/CSI driver and CUPS/USB; Android native bridge. Do not infer READY.
+- [ ] **Merge gate:** explicit owner authorization required even if CI PASS.
+
+---
+
 > **Latest B.1/B.2 safety correction CI (2026-10-19):** On `feature/device-health` source/test SHA `b5617679960c585a6fe6ccec298fc4ba31591ae7`, [Device Health Actions 39205072276](https://github.com/pratikto/PhotoBooth/actions/runs/39205072276) **49/49 PASS** (25 original + 14 adapters + 10 discovery). [Kiosk GUI Actions 39205072279](https://github.com/pratikto/PhotoBooth/actions/runs/39205072279) **294 tests / 292 PASS / 2 SKIP, 87 renders / 0 errors**. Printer route probing **and Windows queue discovery** both skip whenever a photo print is in flight. These are mocked Ubuntu CI results, not physical acceptance; docs-only commit after this does not alter tested code. PR #7 stays Draft, unmerged.
 
 ## FEAT-008 B.1/B.2 capability/discovery — verified mock QA (2026-10-19)

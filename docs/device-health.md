@@ -118,6 +118,67 @@ open new camera handles. Preserve test logs without customer photos or cloud
 tokens. The Draft PR and automated Linux tests do not replace Windows/SBC/
 Android hardware testing. **No merge to master without explicit owner approval.**
 
+## B.2.1 — Operator-staged primary devices (branch-only, not hardware accepted)
+
+A new **PILIH DEVICE** action appears inside Settings → DEVICE HEALTH once the
+first read-only scan completes. It stages selection for the **next application
+launch**; no active camera handle is closed, no photo session is interrupted and
+no current printer configuration is changed in memory.
+
+The strict JSON file `data/device_selection.json` is written atomically.
+`photobooth/device_selection.py` validates the format and allows only:
+
+- **Windows camera:** explicit manual OpenCV index 0–15. These indices are
+  *not* physical serial IDs; choosing index 2 does not guarantee that a USB
+  camera stays at index 2 after reconnect. No bulk opening of cameras occurs
+  to enumerate them.
+- **Linux camera:** a V4L `/dev/v4l/by-id` alias that appeared in the last
+  discovery snapshot. This must exist and resolve to a video node at startup.
+  If it is missing, the application **does not automatically switch to index
+  0**. CSI/libcamera support and V4L permissions still need real SBC tests.
+- **Windows printer:** a queue shown by the Windows spooler in the last scan;
+  the selection is applied to a copy of the existing `PrinterConfig` at the
+  **next launch**, preserving dithering, width and other settings. The previous
+  LAN/Wi-Fi routes are not silently substituted if this chosen queue fails.
+- **Linux CUPS and Android USB/Camera2:** **not offered as active printer/camera
+  selections** until actual compatible runtime backends are available and
+  physically validated. Existing printer Settings can still configure
+  previously supported LAN/Wi-Fi/Windows USB routes.
+
+Each device can be left **TIDAK DIUBAH** or reset to **KEMBALI KE DEFAULT**.
+Existing deployments without `device_selection.json` retain their prior
+`PHOTOBOOTH_CAMERA_INDEX` and `printer_settings.json` behavior. Saving a
+printer through the existing dedicated Printer Settings explicitly clears any
+previously staged Windows queue, so future restarts cannot unexpectedly
+restore an older queued selection.
+
+**Fail-closed behavior:** malformed/incompatible preference files produce an
+explicit startup error instead of silently using another customer-facing
+camera/printer. If you deliberately need to restore the legacy configuration,
+back up or remove **only** `data/device_selection.json` while the booth is
+stopped. Do not delete transaction/photo/retention files. A missing selected
+V4L alias blocks startup without fallback; a present alias still needs the
+usual first-frame validation. A recognized print queue does **not** prove
+paper/cutter or physical print success.
+
+**Synthetic verification:**
+
+```powershell
+python -m unittest discover -s tests -p test_device_selection.py -v
+```
+
+The new Kivy chooser/controller tests in `tests/test_device_selection_ui.py`
+are included in the full Kiosk GUI workflow. They mock printers/cameras and
+assert that settings are staged without changing active devices, undetected
+queues are rejected, and the chooser closes cleanly with the Health popup.
+
+**Physical acceptance pending:** boot and reboot tests with actual Windows
+USB webcam indices, printer queue names, Linux stable camera aliases and
+real USB disconnects. The native Android runtime is **still unsupported**.
+This branch remains inside [Draft PR #7](https://github.com/pratikto/PhotoBooth/pull/7)
+and cannot be merged without a new explicit owner instruction.
+
+
 ## Scope and interface
 
 `photobooth/device_health.py` provides a read-only `HealthCheck(name, status, message)`, immutable `HealthSnapshot(checked_at, checks)`, individual `check_*` probes and `collect_health_snapshot(...)`. Status vocabulary: `ready` (only the stated check passed), `warning` (degraded or reachability not confirmed), `unavailable` (e.g. camera closed), and `unknown` (not supplied or not safely inspectable). Do **not** map `ready` to "booth fully operational" or "paper present".

@@ -4,6 +4,12 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased — FEAT-008 B.2.1 restart-only primary device selection] — 2026-10-19
+
+- Owner asked to continue development on the existing feature branch while hardware testing is temporarily unavailable. Added `photobooth/device_selection.py`: versioned strict atomic `data/device_selection.json`, explicit next-start camera/printer choices, cross-OS validation and no silent fallback when a selected device is unavailable.
+- Operator Health panel now offers **PILIH DEVICE** after a scan: Windows manual camera indices, Linux discovered stable V4L aliases and Windows discovered printer queues. Unimplemented CUPS/Android active routes are not falsely offered.
+- `PhotoBoothApp` applies saved choice only at process startup; stage does not hot-swap or send bytes. Saving manual printer settings clears any staged printer queue. Added mock persistence, startup safety, UI and controller tests; no physical device acceptance or approval to merge Draft PR #7.
+
 ## [Unreleased — FEAT-008 cross-platform B.1 / B.2 discovery] — 2026-10-19
 
 - Owner approved **staged** heterogeneous camera/printer health architecture for Windows, Linux/SBC and Android, strictly on `feature/device-health`; no merge approval. [Draft PR #7](https://github.com/pratikto/PhotoBooth/pull/7) remains unmerged.
