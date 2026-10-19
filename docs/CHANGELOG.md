@@ -2,11 +2,16 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased — docs-only, post-v1.0.0] — 2026-10-19
+
+- Owner approved a **documentation-only** reconciliation on a dedicated `docs/post-v1-release-reconciliation-20261019` branch. Update current README/index, source status, bug/backlog, decisions, QA and technical-guide headings to match the already tagged GitHub `v1.0.0` pre-release. Preserve earlier dated test/failure history and explicit hardware acceptance gaps. The documentation PR is **not part of the immutable v1 tag**; review and merge it without rewriting the release.
+- CI evidence at the immutable v1 SHA: [Kiosk GUI Actions 39185986245](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245) **233 pass / 2 skips / 87 renders / 0 errors** and [Dither 39185986273](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273) **48 pass**. **No new hardware test**, no Python production-source, printer, ads, QRIS, Apps Script or customer cloud changes.
+
 ## [v1.0.0] — 2026-10-19 (Kivy source baseline)
 
 - **Approved promotion:** owner explicitly approved the version-one baseline process: preserve the old `master` tip, make `feature/kivy-gui` the new `master`, then tag the tested merged source as `v1.0.0`. Backup: `backup/master-pre-v1-20261019` at `d4852cb5`.
 - **CI controls:** enable Kiosk GUI and Dither workflows for pushes to `master`, and correct Kiosk pull-request target from nonexistent `main` to `master`. A one-time GitHub release workflow publishes the v1 tag only after both tests have passed on the exact `master` release-baseline commit (including any release-workflow correction).
-- **Status:** release notes and known limitations are in [releases/v1.0.0.md](releases/v1.0.0.md). This denotes an **auditable versioned source baseline**, not real QRIS, verified Drive retention, or physical Windows production acceptance. The tag/release must be verified on GitHub before reporting it as created.
+- **Status:** release notes and known limitations are in [releases/v1.0.0.md](releases/v1.0.0.md). This denotes an **auditable versioned source baseline**, not real QRIS, verified Drive retention, or physical Windows production acceptance. Tag/ref and GitHub pre-release **verified**: [v1.0.0](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0), SHA `07ce51d2022ab5673a7a27e744e5e5757fbb3d08`. Historical statements below that the tag had not been published are superseded.
 - The older sections titled **Unreleased** below are dated **pre-v1 historical development records**. Their statements that no branch merge or release had been authorized were true when written, and are superseded only for this specifically approved version promotion.
 
 ## [Unreleased] — 2026-10-19
