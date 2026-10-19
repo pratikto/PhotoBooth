@@ -2,7 +2,7 @@ name: Dither tuning lab regression
 
 on:
   push:
-    branches: [feature/dither-tuning, feature/kivy-gui]
+    branches: [feature/dither-tuning, feature/kivy-gui, master]
   workflow_dispatch:
 
 permissions:
