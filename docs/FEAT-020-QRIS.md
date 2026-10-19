@@ -41,3 +41,6 @@ Added `photobooth/booth_auth.py` (`bc876fa9`) and six offline test methods in `t
 
 ## Stage 8 — Incremental FastAPI staging routes (2026-10-20)
 `photobooth/qris_api.py` introduced in commits `9273ef9`, `9772a67`, `d7a8bb0`: health, authenticated create/status/claim and webhook route. Six HTTP route tests added in `tests/test_qris_api.py` (`e26bdfa`). **No tests executed/CI verified in this session.** Server deployment, TLS, secret provisioning, webhook rate limits, provider error handling, request validation, real Sandbox integration, Kivy and Windows hardware testing are open. This API is NOT approved for public deployment. No master merge without explicit owner approval.
+
+## Stage 9 — API failure handling (2026-10-20)
+Incremental commits `5847f4c` and `68ba4ab` add HTTP 503 responses for unexpected checkout/provider failures, request-size checks for webhook payloads, and four new route regression cases. **These new tests are authored but not executed**; full repository regression, actual provider behavior, TLS/rate limiting, merchant configuration and Windows hardware tests remain open. No live deployment or master merge. Review potential proxy/content-length behavior during integration.
