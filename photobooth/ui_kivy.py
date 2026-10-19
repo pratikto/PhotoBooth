@@ -132,6 +132,10 @@ class PhotoBoothUI(HealthPanelMixin, KioskExperienceMixin):
         self._health_refresh_button = None
         self._health_request_serial = 0
         self._health_last_tick = None
+        self._health_platform = "unknown"
+        self._health_inventory = ()
+        self._health_select_button = None
+        self._device_pick_popup = None
         self.audio_sliders = {}
         self.audio_test_buttons = {}
         self._motion = MotionScope()
@@ -608,6 +612,8 @@ class PhotoBoothUI(HealthPanelMixin, KioskExperienceMixin):
         self._dispose_kiosk()
         if self._audio_popup is not None:
             self._audio_popup.dismiss(animation=False)
+        if self._device_pick_popup is not None:
+            self._device_pick_popup.dismiss(animation=False)
         if self._health_popup is not None:
             self._health_popup.dismiss(animation=False)
         self._motion.retire()
