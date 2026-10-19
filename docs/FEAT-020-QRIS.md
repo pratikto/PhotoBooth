@@ -26,3 +26,6 @@ Checkout price validation module and five unit test methods committed. Targeted 
 
 ## Stage 3 (2026-10-20)
 Added isolated SQLite order lifecycle `photobooth/payment_orders.py` and six regression tests in `tests/test_payment_orders.py`. Local Python 3 isolated test run: 6 PASS, 0 FAIL; full repository CI not verified. Code commits: `f757ae59`, `1ab2f41e`. No API, Midtrans connection, webhook verification, kiosk integration, merchant keys, or live payment. The `confirm_provider_status` method is an internal-only seam and must not be exposed to an untrusted caller; provider signature/status verification and booth authentication are still required. No merge to master.
+
+## Stage 4 (2026-10-20)
+Added `photobooth/midtrans_verify.py` and `tests/test_midtrans_verify.py` in commits `6ec7e836` and `3aacd137`. Verifier checks SHA-512 callback signature, positive whole-IDR amounts and independent provider status parity. This is an offline primitive only; it does not fetch the provider status, accept webhooks, create QRIS, or unlock the booth. Tests not executed in this session. Provider order IDs, status mapping, merchant configuration and actual sandbox response format must be validated before integration.
