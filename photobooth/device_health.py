@@ -304,5 +304,6 @@ def collect_health_snapshot(
         checks=checks,
         platform=family,
         devices=(configured_inventory(camera, printer_config, platform=platform)
-                 + (discover_local_devices(platform=platform) if include_discovery else ())),
+                 + (discover_local_devices(platform=platform)
+                    if include_discovery and not printer_busy else ())),
     )
