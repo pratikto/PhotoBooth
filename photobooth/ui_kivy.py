@@ -360,8 +360,12 @@ class PhotoBoothUI(HealthPanelMixin, KioskExperienceMixin):
 
     @property
     def audio_settings_open(self):
-        """A modal blocks the optional palm shutter as well as pointer input."""
-        return self._audio_popup is not None
+        """Keep the historical shutter guard active for operator modals.
+
+        The property name is retained for existing controller callers. A
+        health popup must block face/palm-triggered actions just like audio.
+        """
+        return self._audio_popup is not None or self._health_popup is not None
 
     def show_settings_menu(self):
         """Keep printer and audio configuration accessible from every page."""
