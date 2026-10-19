@@ -52,8 +52,10 @@ def selected_device_observation(selection: DeviceSelection, kind: str, *,
             continue
         names.add(str(getattr(device, "name", "")))
         names.add(str(getattr(device, "device_id", "")))
-    found = target in names or (backend == "linux-v4l-by-id" and
-                               any(name.endswith("/" + target) for name in names))
+    found = target in names or (backend == "windows-spooler" and
+                               ("win-queue:" + target in names or "Print queue: " + target in names)) or (backend == "linux-v4l-by-id" and
+                               ("v4l:by-id:" + target in names or
+                                any(name.endswith("/" + target) for name in names)))
     if not found:
         return SelectionObservation(kind, target, "missing",
                                     "Selected device not detected; do not switch to another.")
