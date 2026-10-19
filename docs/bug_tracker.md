@@ -7,6 +7,10 @@ Authoritative registry of **user-reported operational defects**, not a list of a
 
 **Severity:** S0 = unsafe/payment integrity/data loss/kiosk unusable; S1 = core customer session cannot be completed; S2 = material degradation or workaround required; S3 = cosmetic or nonblocking. Higher execution priority may be assigned to customer-flow failures even when individual severities remain provisional.
 
+## CI-only QA issue — separate from operational bugs
+
+**QA-QR-001 (CI-only, P1 stabilization, now MONITORING):** Random DEMO QR attempt UUIDs changed module patterns on each synthetic Kivy screenshot render. GitHub's one-scale OpenCV decoder intermittently failed despite no observed laptop issue. Test-harness-only commit [`e46812b8`](https://github.com/pratikto/PhotoBooth/commit/e46812b8c9f66c548bccebb1e9fc45e3c89afeef) uses deterministic synthetic IDs and bounded screenshot-pixel decoder scales, preserving exact payload assertions and negative QR tests. **Kiosk CI 3/3 SUCCESS** at `e46812b8`: [run 39178452927](https://github.com/pratikto/PhotoBooth/actions/runs/39178452927) with **233 PASS / 2 SKIP and 87 screenshot PASS** each. [Detailed QA record](qa/KIOSK-GUI-REGRESSION-2026-10-18.md). This is **not BUG-003** (QR printing) and not a production failure; monitor future regression runs.
+
 ## Current bug queue — operational defects first
 
 Active defects and deferred retests appear first. Monitoring items and owner-reported passes remain in the register for traceability and possible formal closure, **not as active fix tasks**.

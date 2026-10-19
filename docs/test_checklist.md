@@ -1,3 +1,19 @@
+## Current CI screenshot QR stabilization — 2026-10-19
+
+**QA-QR-001 — CI-only / monitoring:** The owner reports the QR is working normally on their Windows laptop. GitHub's QR screenshot decoder previously failed intermittently (e.g. [run 39176198126](https://github.com/pratikto/PhotoBooth/actions/runs/39176198126) attempt 1) with **identical production code**; a rerun succeeded. The synthetic QR used random DEMO attempt IDs, leading to changing rendered QR matrices; OpenCV sometimes failed at one raster scale.
+
+**Test-harness-only fix** [`e46812b8`](https://github.com/pratikto/PhotoBooth/commit/e46812b8c9f66c548bccebb1e9fc45e3c89afeef): deterministic DEMO IDs **only in `tools/render_gui.py`**, independent bounded native/2x/3x pixel-reading of **the captured PNG crop**, strict equality to payload, and three new positive/negative unittest checks (including blank/obscured QR still FAIL). Production `photobooth/qr_code.py`, `payment.py`, kiosk UI and actual printer unchanged.
+
+- [x] [Kiosk Actions 39178452927](https://github.com/pratikto/PhotoBooth/actions/runs/39178452927) **attempts 1, 2, 3 ALL SUCCESS** on one code SHA `e46812b8`: each **235 tests (233 PASS / 2 SKIP / 0 FAIL or ERROR)** and **87 GUI renders / 0 errors**.
+- [x] [Dither Actions 39178452898](https://github.com/pratikto/PhotoBooth/actions/runs/39178452898) PASS at the same SHA.
+- [ ] Confirm Actions on the next documentation-only HEAD commit. Do not conflate SHA results.
+- [ ] Monitor future Kiosk runs for repeated screen-QR decode failures (the 3/3 sample is not a permanent guarantee).
+- [ ] Real Windows QR scan/thermal paper and legitimate QRIS remain separate; owner reports laptop unaffected and payment QR is still DEMO.
+
+Detailed cause/boundaries: [Kiosk QA history and 2026-10-19 addendum](qa/KIOSK-GUI-REGRESSION-2026-10-18.md).
+
+---
+
 ## Kiosk GUI full regression — VERIFIED CI PASS (2026-10-18)
 
 > **CURRENT (2026-10-19):** The latest verified **full Kiosk GUI CI at `c40f33f5` PASS** ([run 39145145762](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762): 230 passing/2 skipped, 87 simulated renders), and [dither CI PASS](https://github.com/pratikto/PhotoBooth/actions/runs/39145145764). FEAT-001/003 **OWNER TESTED PASS**; BUG-011 monitored. Specific individual hardware test boxes remain unchecked **if logs, counts or local SHA were not supplied**; unchecked does *not* negate the owner's overall acceptance. BUG-009 Drive cloud retention and audio BUG-001/007 still require separate attention; no production release verified.

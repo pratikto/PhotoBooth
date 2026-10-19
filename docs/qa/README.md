@@ -1,5 +1,7 @@
 # Desktop GUI verification
 
+> **LATEST QR visual CI stability evidence (2026-10-19):** Owner reports laptop QR has no problem. Test-only commit [`e46812b8`](https://github.com/pratikto/PhotoBooth/commit/e46812b8c9f66c548bccebb1e9fc45e3c89afeef) fixes randomized synthetic DEMO QR fixtures and single-size OpenCV screenshot sensitivity, without changing production code. [Kiosk GUI Actions 39178452927](https://github.com/pratikto/PhotoBooth/actions/runs/39178452927) completed **3/3 SUCCESS attempts at the same SHA**, **233 PASS / 2 SKIP / 87 renders each**; [Dither 39178452898](https://github.com/pratikto/PhotoBooth/actions/runs/39178452898) PASS. Exact pixel-content assertions and negative obscured/blank-QR tests remain strict. See [QA addendum](KIOSK-GUI-REGRESSION-2026-10-18.md); watch for recurrence. Documentation-only HEAD is checked separately.
+
 > **CURRENT QA INDEX (reviewed 2026-10-19): At source SHA `c40f33f5`, [full Kiosk CI 39145145762](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762) and [Dither CI 39145145764](https://github.com/pratikto/PhotoBooth/actions/runs/39145145764) both **PASS**; 230 unittests passed, two native-palm cases skipped, 87 renders/0 errors. Owner-tested FEAT-001/003 and BUG-011 remain PASS/monitoring; physical audio BUG-001/007 and cloud photo retention BUG-009 unresolved/deferred. The dated evidence and images below are **HISTORICAL**; they do not override later current outcomes.**
 
 ## Latest verified full Kiosk GUI CI — 2026-10-18

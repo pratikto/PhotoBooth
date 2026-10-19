@@ -4,6 +4,14 @@ This file tracks **actual verified repository/document changes**, not successful
 
 ## [Unreleased] — 2026-10-19
 
+### QA-QR-001 — stabilize flaky DEMO QR screenshot regression (CI-only)
+
+- **Owner field report:** QR works normally on the Windows laptop; no user-facing QR change requested or made. GitHub Kiosk CI had intermittent QRCodeDetector failures while decoding screenshots of the **same production source** (example [39176198126](https://github.com/pratikto/PhotoBooth/actions/runs/39176198126): initial FAIL and subsequent success). A changing `uuid4` DEMO attempt ID and a one-scale detector are supported contributors; there is no evidence of an actual booth QR failure.
+- **Test-only commit [`e46812b8`](https://github.com/pratikto/PhotoBooth/commit/e46812b8c9f66c548bccebb1e9fc45e3c89afeef):** `tools/render_gui.py` now creates stable unique synthetic DEMO IDs, while `tools/ci_qr_pixels.py` strictly decodes the **on-screen captured crop** at 1x/2x/3x nearest-neighbour scales. `tests/test_ci_qr_pixels.py` adds three positive/negative tests including a covered or blank QR which cannot pass. Exact payload checks were not relaxed.
+- **Verification:** [Kiosk GUI Actions 39178452927](https://github.com/pratikto/PhotoBooth/actions/runs/39178452927) **3 consecutive SUCCESS attempts at identical SHA**: each 235 total unit tests (**233 PASS, 2 SKIP, no errors**) and **87 screenshot renders / 0 errors**. [Dither 39178452898](https://github.com/pratikto/PhotoBooth/actions/runs/39178452898) also SUCCESS.
+- **Scope:** no `photobooth/` production changes, no payment or printer transport modifications, no workflow YAML change, no branch merge to `master`. Label **QA-QR-001 MONITORING**, not proof all possible QR screenshots will pass forever. A subsequent documentation-only HEAD still requires its own CI status.
+
+
 ### Owner-approved documentation reconciliation — active Kivy status and preserved history
 
 - **Scope:** documentation only on `feature/kivy-gui`, with **no Kivy source edits**, Apps Script deployment, new feature, branch merge, print-spool change or production QRIS integration. Current **default repository branch remains `master` and is intentionally unmerged**.

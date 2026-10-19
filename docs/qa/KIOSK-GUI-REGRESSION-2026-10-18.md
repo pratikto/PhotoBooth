@@ -1,4 +1,20 @@
 # Kiosk GUI Regression — 2026-10-18 iterative repair and verification
+## 2026-10-19 follow-up — QR DEMO screenshot stability (CI-only)
+
+**Owner's clarification:** the DEMO QR works on the real Windows laptop; no booth/device malfunction was reported in this follow-up. The problem is a **flaky OpenCV decoder assertion on GitHub's exported Kivy screenshot**, and is tracked as a test-harness quality issue rather than an active real-world payment defect.
+
+**Historical evidence:** [Kiosk Actions 39176198126](https://github.com/pratikto/PhotoBooth/actions/runs/39176198126) at `6ab28cda` initially **FAILED** while decoding `payment-waiting-1200x800.png`, but attempt 2 **PASSED** without a code change. Other previous identical-code runs sometimes failed on `payment-enlarged-800x600.png` or other payment states. The failed screenshot visibly contained a QR; production `DemoPaymentGateway` generates a random UUID fragment for each attempt, hence different QR module patterns each run. OpenCV's single-size QRCodeDetector is pattern/resampling-sensitive. This is the **supported explanation**, not proof of an underlying kiosk pixel-render bug.
+
+**Scoped test-only fix:** [commit `e46812b8`](https://github.com/pratikto/PhotoBooth/commit/e46812b8c9f66c548bccebb1e9fc45e3c89afeef) changes only:
+- `tools/render_gui.py`: supplies **deterministic, distinct DEMO attempt IDs** solely to the synthetic screenshot harness, preserving amount/payload format and QR creation by the actual GUI. Real `photobooth/payment.py` UUID behavior is unchanged.
+- `tools/ci_qr_pixels.py`: QRCodeDetector reads **only the exported PNG screenshot crop** and makes bounded native/2x/3x **nearest-neighbour** decoding attempts. No source-PIL image fallback, fictional success, UI change, blur cleanup or QR payload bypass. The strict exact-payload assertion still fails if displayed pixels cannot be decoded at any checked scale.
+- `tests/test_ci_qr_pixels.py`: tests correct DEMO payload at multiple simulated screen pixel widths, empty/blank screenshots, and a heavily obscured QR **which MUST fail**. Existing other GUI assertions remain active.
+
+**Verified repeated evidence on identical SHA `e46812b8`:** [Kiosk Actions run 39178452927](https://github.com/pratikto/PhotoBooth/actions/runs/39178452927) attempts **1, 2 and 3 all SUCCESS**. Each attempt executed **235 total tests: 233 PASS, 2 SKIP, 0 FAIL/ERROR** and rendered **87 complete synthetic GUI states / 0 errors**. [Dither tuning CI 39178452898](https://github.com/pratikto/PhotoBooth/actions/runs/39178452898) also SUCCESS at the same SHA.
+
+**Disposition:** CI screenshot QA **PASS x3 at the tested code commit; monitor for recurrence**. Three clean trials improve confidence but do **not** mathematically eliminate future flakiness or verify live Windows thermal paper / phone scanning / payable QRIS. No `photobooth/*.py` production source, printer, audio, `.github/workflows/`, `apps_script/Code.gs` or deployment is changed by this follow-up. The final documentation-only HEAD requires a separate workflow result.
+
+---
 
 > **CURRENT QA DISPOSITION (2026-10-19): The full GUI regression was green at test-repair SHA `f129dd9e` **and again at documentation baseline `c40f33f5`** ([Kiosk Actions 39145145762](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762): 230 PASS/2 SKIP/87 renders; [Dither Actions 39145145764](https://github.com/pratikto/PhotoBooth/actions/runs/39145145764): PASS). This report keeps the *original* `f129dd9e` test diagnosis and evidence as an immutable HISTORICAL run record; no claim of Windows physical/release acceptance. The later documentation reconciliation must be verified on its own new HEAD.**
 
