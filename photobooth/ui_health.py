@@ -12,6 +12,7 @@ from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 from kivy.uix.scrollview import ScrollView
+from kivy.uix.spinner import Spinner
 
 from photobooth.ui_brand import BLUE, EDGE, GREY, INK, PAPER, ROSE, WHITE, Panel
 
@@ -34,6 +35,116 @@ STATUS_LABELS = {
 
 class HealthPanelMixin:
     """Settings-only diagnostic view; never changes any customer session state."""
+
+    def show_device_selection_settings(self):
+        """Stage a primary device for next launch; do not hot-swap anything.
+
+        Windows cameras are entered as explicit OpenCV indices (not stable
+        hardware IDs); Linux cameras need a discovered V4L by-id alias.
+        Only enumerated Windows spooler queues are eligible printer choices.
+        We never offer unimplemented CUPS/Android transports as working routes.
+        """
+        if (self._health_popup is None or self._device_pick_popup is not None
+                or self._disposed):
+            return self._device_pick_popup
+        handler = self.callbacks.get("on_device_stage")
+        if handler is None:
+            return None
+
+        platform = self._health_platform
+        inventory = self._health_inventory
+        skip = "TIDAK DIUBAH"
+        reset = "KEMBALI KE DEFAULT"
+        camera_options = {skip: None, reset: ("", "")}
+        printer_options = {skip: None, reset: ("", "")}
+        if platform == "windows":
+            for index in range(16):
+                camera_options[f"Kamera OpenCV indeks {index} (manual)"] = (
+                    "opencv-index", str(index))
+            for item in inventory:
+                if (item.kind == "printer" and item.presence == "queue-detected"
+                        and item.device_id.startswith("win-queue:")):
+                    queue = item.device_id[len("win-queue:"):]
+                    printer_options[f"Windows queue: {queue}"] = (
+                        "windows-spooler", queue)
+        elif platform == "linux":
+            for item in inventory:
+                if (item.kind == "camera" and item.presence == "node-detected"
+                        and item.device_id.startswith("v4l:by-id:")):
+                    alias = item.device_id[len("v4l:by-id:"):]
+                    camera_options[f"V4L by-id: {alias}"] = (
+                        "linux-v4l-by-id", alias)
+
+        body = BoxLayout(orientation="vertical", spacing=dp(10), padding=dp(14))
+        body.add_widget(self._label(
+            "Pilihan baru hanya aktif setelah Meong direstart. Tidak ada "
+            "perubahan kamera/printer selama sesi berjalan.",
+            13, 72, color=GREY))
+        body.add_widget(self._label("KAMERA UTAMA", 15, 28, bold=True))
+        camera_input = Spinner(text=skip, values=list(camera_options),
+                               size_hint_y=None, height=dp(49))
+        body.add_widget(camera_input)
+        body.add_widget(self._label("PRINTER UTAMA", 15, 28, bold=True))
+        printer_input = Spinner(text=skip, values=list(printer_options),
+                                size_hint_y=None, height=dp(49))
+        body.add_widget(printer_input)
+        caption = self._label(
+            "Index kamera Windows dapat berubah setelah cabut/pasang USB. "
+            "CUPS/Android belum tersedia sebagai backend printer aktif.",
+            12, 60, color=GREY)
+        body.add_widget(caption)
+        saved = self.callbacks.get("get_device_selection")
+        state = saved() if saved else None
+        state_label = self._label(
+            ("Tersimpan: kamera=" + (state.camera_value or "default")
+             + ", printer=" + (state.printer_value or "default")) if state else
+            "Belum ada konfigurasi yang tersimpan.",
+            12, 50, color=GREY,
+        )
+        body.add_widget(state_label)
+
+        popup = Popup(
+            title="Pilih hardware untuk restart berikutnya",
+            content=body, size_hint=(None, None), auto_dismiss=False,
+            background="", background_color=PAPER,
+            title_color=INK, separator_color=EDGE,
+        )
+        def fit_popup(*_args):
+            popup.size = (
+                min(dp(600), Window.width - dp(24)),
+                min(dp(565), Window.height - dp(24)),
+            )
+        Window.bind(size=fit_popup)
+        fit_popup()
+
+        def save():
+            camera = camera_options[camera_input.text]
+            printer = printer_options[printer_input.text]
+            if camera is None and printer is None:
+                state_label.text = "Pilih kamera atau printer terlebih dahulu."
+                return
+            try:
+                state_label.text = str(handler(camera=camera, printer=printer))
+                state_label.color = BLUE
+            except (ValueError, OSError) as error:
+                state_label.text = str(error)
+                state_label.color = ROSE
+
+        actions = BoxLayout(size_hint_y=None, height=dp(48), spacing=dp(8))
+        save_button = self._button("SIMPAN UNTUK RESTART", save, screen_bound=False)
+        actions.add_widget(save_button)
+        actions.add_widget(self._button("TUTUP", popup.dismiss,
+                                        secondary=True, screen_bound=False))
+        body.add_widget(actions)
+
+        def dismissed(_popup):
+            Window.unbind(size=fit_popup)
+            if self._device_pick_popup is popup:
+                self._device_pick_popup = None
+        self._device_pick_popup = popup
+        popup.bind(on_dismiss=dismissed)
+        popup.open()
+        return popup
 
     def show_health_settings(self):
         if self._disposed:
@@ -105,9 +216,14 @@ class HealthPanelMixin:
             # A request made before closing cannot paint a reopened dialog.
             self._health_request_serial += 1
             if self._health_popup is popup:
+                if self._device_pick_popup is not None:
+                    self._device_pick_popup.dismiss(animation=False)
                 self._health_popup = None
                 self._health_refresh_button = None
+                self._health_select_button = None
                 self._health_labels = {}
+                self._health_inventory = ()
+                self._health_platform = "unknown"
 
         def refresh():
             if self._health_popup is not popup or refresh_button.disabled:
@@ -115,6 +231,7 @@ class HealthPanelMixin:
             self._health_request_serial += 1
             serial = self._health_request_serial
             refresh_button.disabled = True
+            choose_button.disabled = True
             summary.text = "Memeriksa perangkat di background..."
             hardware_info.text = "Meninjau adapter dan perangkat yang dipilih..."
             inventory_rows.clear_widgets()
@@ -141,6 +258,7 @@ class HealthPanelMixin:
                 return
             refresh_button.disabled = False
             if snapshot is None:
+                choose_button.disabled = True
                 hardware_info.text = "Identitas perangkat belum tersedia."
                 inventory_rows.clear_widgets()
                 inventory_rows.add_widget(self._label("Discovery tidak tersedia.", 12, 40, color=GREY))
@@ -161,6 +279,9 @@ class HealthPanelMixin:
 
             family = str(getattr(snapshot, "platform", "unknown")).upper()
             inventory = getattr(snapshot, "devices", ())
+            self._health_platform = family.lower()
+            self._health_inventory = inventory
+            choose_button.disabled = self.callbacks.get("on_device_stage") is None
             configured = [item for item in inventory if item.kind in ("camera", "printer")]
             names = ", ".join(item.name for item in configured[:2])
             detected = [item for item in inventory
@@ -201,15 +322,21 @@ class HealthPanelMixin:
             )
 
         refresh_button = self._button("REFRESH STATUS", refresh, screen_bound=False)
+        choose_button = self._button(
+            "PILIH DEVICE", self.show_device_selection_settings,
+            secondary=True, screen_bound=False, enabled=False,
+        )
         close_button = self._button(
             "TUTUP", popup.dismiss, secondary=True, screen_bound=False,
         )
         buttons.add_widget(refresh_button)
+        buttons.add_widget(choose_button)
         buttons.add_widget(close_button)
         body.add_widget(buttons)
         self._health_popup = popup
         self._health_labels = labels
         self._health_refresh_button = refresh_button
+        self._health_select_button = choose_button
         popup.bind(on_dismiss=dismissed)
         fit_popup()
         Window.bind(size=fit_popup)
