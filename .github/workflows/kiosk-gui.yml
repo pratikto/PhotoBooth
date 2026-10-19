@@ -1,0 +1,67 @@
+name: Kiosk GUI regression
+
+on:
+  push:
+    branches: [feature/kivy-gui, master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+# Tests use synthetic photos, dummy audio, and fake camera/Drive/printer
+# adapters. No account credentials or access to customer photo folders.
+permissions:
+  contents: read
+
+jobs:
+  desktop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      KIVY_NO_ARGS: "1"
+      KIVY_NO_CONSOLELOG: "1"
+      PHOTOBOOTH_TEST_GUI: "1"
+      PHOTOBOOTH_TEST_AUDIO: "1"
+      PHOTOBOOTH_AUDIO: "0"
+      PHOTOBOOTH_PALM_TRIGGER: "0"
+      PHOTOBOOTH_FACE_TRIGGER: "0"
+      PHOTOBOOTH_AD_VIDEO: "0"
+      PHOTOBOOTH_TEST_VIDEO: "1"
+      LIBGL_ALWAYS_SOFTWARE: "1"
+      SDL_AUDIODRIVER: dummy
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install desktop runtime
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg xvfb libgl1-mesa-dri libgl1 libegl1 libmtdev1 libxkbcommon0 libasound2t64
+          python -m pip install -r requirements.txt
+      - name: Check Python syntax
+        run: python -m compileall -q photobooth tests tools
+      - name: Exercise workflow, QR pixels, real widgets, audio and navigation
+        # Kivy intercepts Python stderr: default unittest discover can exit 1
+        # without displaying which test failed. The CI-only runner preserves
+        # identical unittest discovery but writes the final report directly
+        # to the OS stdout file descriptor, bypassing the Kivy logger.
+        env:
+          MEONG_CI_TEST_REPORT: /tmp/meong-kiosk-unittests.txt
+        run: xvfb-run -a python tools/run_kiosk_unittests.py
+      - name: Render photo flow, advertisements, and payment offers at desktop sizes
+        if: always()
+        run: xvfb-run -a python tools/render_gui.py --output-dir /tmp/meong-gui-qa
+      - name: Summarize synthetic renders for remote visual review
+        if: always()
+        run: python tools/ci_visual_summary.py /tmp/meong-gui-qa
+      - name: Keep generated visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: meong-gui-qa
+          path: |
+            /tmp/meong-gui-qa
+            /tmp/meong-kiosk-unittests.txt
+          if-no-files-found: ignore
+          retention-days: 7

@@ -1,0 +1,49 @@
+name: FEAT-003 live camera mirror regression
+
+on:
+  push:
+    branches: [feature/kivy-gui]
+    paths:
+      - photobooth/ui_kivy.py
+      - photobooth/app.py
+      - tests/test_kivy_gui.py
+      - .github/workflows/feat003-mirror.yml
+  workflow_dispatch:
+
+# Mirrors are display-only. Test on synthetic pixels in a software GL window:
+# no actual camera, captured customer media, printer, Drive or QRIS is accessed.
+permissions:
+  contents: read
+
+jobs:
+  mirror-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      KIVY_NO_ARGS: "1"
+      KIVY_NO_CONSOLELOG: "1"
+      PHOTOBOOTH_TEST_GUI: "1"
+      PHOTOBOOTH_AUDIO: "0"
+      PHOTOBOOTH_AD_VIDEO: "0"
+      PHOTOBOOTH_PALM_TRIGGER: "0"
+      PHOTOBOOTH_FACE_TRIGGER: "0"
+      LIBGL_ALWAYS_SOFTWARE: "1"
+      SDL_AUDIODRIVER: dummy
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install headless desktop dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg xvfb libgl1-mesa-dri libgl1 libegl1 libmtdev1 libxkbcommon0 libasound2t64
+          python -m pip install -r requirements.txt
+      - name: Compile live preview and tests
+        run: python -m py_compile photobooth/ui_kivy.py photobooth/app.py tests/test_kivy_gui.py
+      - name: Test mirrored preview and unmirrored saved/result pixel data
+        run: |
+          xvfb-run -a python -m unittest \
+            tests.test_kivy_gui.KivyFlowTests.test_live_camera_mirrors_texture_only_not_capture_or_result \
+            -v

@@ -1,0 +1,44 @@
+{
+  "timezone": "Asia/Jakarta",
+  "timing": {
+    "face_hold": 5,
+    "offer_timeout": 15,
+    "face_cooldown": 45,
+    "landing_idle": 180,
+    "idle_warning": 10,
+    "payment_offer_after": 60,
+    "payment_validity": 900
+  },
+  "ads": [
+    {
+      "id": "sample-01",
+      "title": "Poster sampel 1",
+      "file": "sample-01.jpg",
+      "seconds": 8,
+      "placements": [
+        "idle"
+      ],
+      "enabled": true
+    },
+    {
+      "id": "sample-02",
+      "title": "Poster sampel 2",
+      "file": "sample-02.jpg",
+      "seconds": 8,
+      "placements": [
+        "payment"
+      ],
+      "enabled": true
+    },
+    {
+      "id": "sample-03",
+      "title": "Poster sampel 3",
+      "file": "sample-03.jpg",
+      "seconds": 8,
+      "placements": [
+        "payment"
+      ],
+      "enabled": true
+    }
+  ]
+}

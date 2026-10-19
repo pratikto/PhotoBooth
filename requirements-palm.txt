@@ -1,0 +1,4 @@
+# Optional open-palm shutter for the Windows x64/Python 3.12 development setup.
+# Keep requirements.txt usable on devices without a MediaPipe wheel.
+-r requirements.txt
+mediapipe==0.10.32
