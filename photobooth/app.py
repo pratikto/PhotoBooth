@@ -221,7 +221,7 @@ class PhotoBoothApp:
         staged = stage_selection(self._device_selection, camera=camera, printer=printer)
         save_device_selection(self._device_selection_file, staged)
         self._device_selection = staged
-        return "Pilihan tersimpan. Tutup dan jalankan ulang Meong untuk mengaktifkan."
+        return "Pilihan tersimpan. Restart Meong untuk mengaktifkan (tidak berlaku pada sesi ini)."
 
     def _test_printer(self, callback):
         """Send a short test receipt from a worker to avoid freezing the GUI.
