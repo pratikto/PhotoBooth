@@ -1,5 +1,6 @@
 """No-hardware regression for next-start hardware selection (FEAT-008 B.2.1)."""
 import json
+import os
 import tempfile
 from pathlib import Path
 from types import SimpleNamespace
@@ -63,14 +64,28 @@ class DeviceSelectionTests(unittest.TestCase):
             node.write_bytes(b"fake node; no camera opened")
             aliases = root / "by-id"
             aliases.mkdir()
-            (aliases / "usb-ExampleCam-video-index0").symlink_to(node)
+            alias = aliases / "usb-ExampleCam-video-index0"
             chosen = stage_selection(DeviceSelection(), camera=(
                 "linux-v4l-by-id", "usb-ExampleCam-video-index0",
             ))
-            result = camera_startup_source(
-                chosen, 0, platform="linux", aliases_root=aliases,
-            )
-            self.assertEqual(result, str(aliases / "usb-ExampleCam-video-index0"))
+            if os.name == "nt":
+                # Unprivileged Windows users cannot create symlinks by default
+                # (WinError 1314). Mock only the Path predicates; the Linux CI
+                # still exercises the genuine V4L-style symlink below.
+                with (
+                    patch.object(Path, "is_symlink", return_value=True),
+                    patch.object(Path, "exists", return_value=True),
+                    patch.object(Path, "resolve", return_value=node),
+                ):
+                    result = camera_startup_source(
+                        chosen, 0, platform="linux", aliases_root=aliases,
+                    )
+            else:
+                alias.symlink_to(node)
+                result = camera_startup_source(
+                    chosen, 0, platform="linux", aliases_root=aliases,
+                )
+            self.assertEqual(result, str(alias))
 
     def test_missing_selected_camera_fails_closed_never_uses_index_zero(self):
         chosen = stage_selection(DeviceSelection(), camera=(
