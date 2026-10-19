@@ -22,6 +22,7 @@ from PIL import Image
 
 from photobooth.audio import AudioManager
 from photobooth.camera import Camera
+from photobooth.device_health import collect_health_snapshot
 from photobooth.catalog import PRICE_PER_PRINT_COPY, PRICE_PER_SESSION, compose_result, get_templates
 from photobooth.drive_pool import DriveSlotPool
 from photobooth.drive_storage import AppsScriptDriveClient, DriveApiError, GoogleDriveClient
@@ -122,6 +123,8 @@ class PhotoBoothApp:
         # different completed template sessions have pending print batches.
         # This is intentionally independent of the short bookkeeping lock.
         self._print_device_lock = threading.Lock()
+        # Serialize operator-initiated health probes; never stall a Kivy tick.
+        self._health_probe_lock = threading.Lock()
 
 
         self.ui = PhotoBoothUI(
@@ -141,6 +144,7 @@ class PhotoBoothApp:
             get_printer_config=lambda: self.printer.config,
             on_printer_save=self._configure_printer,
             on_printer_test=self._test_printer,
+            on_health_refresh=self._refresh_device_health,
             on_close=self.close,
             on_idle=self._return_to_advertisements,
         )
@@ -182,6 +186,50 @@ class PhotoBoothApp:
                 message = f"Test print gagal: {error}"
             self.root.after(0, lambda: callback(message))
         threading.Thread(target=work, daemon=True, name="meong-printer-test").start()
+
+    def _refresh_device_health(self, callback) -> None:
+        """Read-only probes run on a daemon worker, never on Kivy's UI thread.
+
+        Camera/playlist/printer references and the latest UI heartbeat are
+        captured on the main thread. The worker only performs Stage A probes;
+        it cannot reopen a camera, send print bytes or access Drive. The UI
+        rejects responses from dialogs already closed or superseded.
+        """
+        if self.is_closing:
+            return
+        if not self._health_probe_lock.acquire(blocking=False):
+            # A previous dialog can close while its worker is still running.
+            # Do not stack probes; the new panel can retry with REFRESH.
+            self.root.after(0, lambda: callback(None))
+            return
+
+        camera = self.camera
+        printer_config = self.printer.config
+        photos_root = self.photos_root
+        ad_catalog = self.ui.ad_catalog
+        last_heartbeat = self.ui._health_last_tick
+
+        def worker():
+            try:
+                snapshot = collect_health_snapshot(
+                    camera=camera,
+                    printer_config=printer_config,
+                    photo_directory=photos_root,
+                    ad_catalog=ad_catalog,
+                    last_heartbeat=last_heartbeat,
+                )
+            except Exception:
+                # No low-level exception text (paths / hosts / device names)
+                # is surfaced to the operator or written to customer files.
+                snapshot = None
+            finally:
+                self._health_probe_lock.release()
+            if not self.is_closing:
+                self.root.after(0, lambda: callback(snapshot))
+
+        threading.Thread(
+            target=worker, name="meong-device-health", daemon=True,
+        ).start()
 
     def run(self) -> None:
         """Start Kivy's event loop."""
