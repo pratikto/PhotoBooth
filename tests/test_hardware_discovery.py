@@ -109,6 +109,26 @@ class DiscoveryTests(unittest.TestCase):
         discover.assert_not_called()
         self.assertEqual(len(report.checks), 6)
 
+    def test_inflight_print_suppresses_all_queue_discovery(self):
+        with patch("photobooth.device_health.discover_local_devices") as discover:
+            with (
+                patch("photobooth.device_health.check_camera",
+                      return_value=HealthCheck("camera", READY, "ok")),
+                patch("photobooth.device_health.check_disk",
+                      return_value=HealthCheck("disk", READY, "ok")),
+                patch("photobooth.device_health.check_network",
+                      return_value=HealthCheck("network", READY, "ok")),
+                patch("photobooth.device_health.check_media",
+                      return_value=HealthCheck("media", READY, "ok")),
+                patch("photobooth.device_health.check_heartbeat",
+                      return_value=HealthCheck("heartbeat", READY, "ok")),
+            ):
+                report = collect_health_snapshot(
+                    platform="win32", include_discovery=True, printer_busy=True,
+                )
+        discover.assert_not_called()
+        self.assertEqual(report.by_name("printer").status, "unknown")
+
     def test_explicit_discovery_augments_inventory_without_overwriting_current_selection(self):
         from photobooth.hardware_adapters import DeviceDescriptor
         candidate = DeviceDescriptor(
