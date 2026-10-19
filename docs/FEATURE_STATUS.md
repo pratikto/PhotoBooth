@@ -7,7 +7,7 @@ This status is based on reading selected source files and the latest owner devic
 
 Status vocabulary: **IN SOURCE** = relevant implementation found, **OWNER REPORTED** = physical observation requiring reproducible evidence, **UNVERIFIED** = no current hardware acceptance, **PLANNED** = not implemented, **BLOCKED** = operational defect. For feature approval/requirements, see [DECISIONS.md](DECISIONS.md) and [next_step.md](next_step.md).
 
-> **FEAT-008 Stage A (2026-10-19, branch `feature/device-health` — NOT merged/released):** Owner approved backend-only device health probes and offline/mock tests. New `photobooth/device_health.py` can inspect existing camera frame, configured printer routes, disk capacity, short TCP connectivity, local ad files, and an optional app heartbeat **on explicit request only**. No Settings GUI, scheduler, automatic blocking/recovery, printer output, cloud changes, or Windows hardware acceptance. See [Stage A guide](device-health.md). Baseline remains immutable `v1.0.0` on `master` until PR merge is verified.
+> **FEAT-008 Stage A (2026-10-19, introduced via branch `feature/device-health` / PR #5):** Owner approved backend-only device health probes and offline/mock tests. New `photobooth/device_health.py` can inspect existing camera frame, configured printer routes, disk capacity, short TCP connectivity, local ad files, and an optional app heartbeat **on explicit request only**. No Settings GUI, scheduler, automatic blocking/recovery, printer output, cloud changes, or Windows hardware acceptance. See [Stage A guide](device-health.md). Baseline remains immutable `v1.0.0` on `master` until PR merge is verified.
 
 ## Latest automated quality gate — Kiosk GUI Regression PASS
 
