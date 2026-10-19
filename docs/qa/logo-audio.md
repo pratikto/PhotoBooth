@@ -1,5 +1,8 @@
 # Final MEONG logo and offline audio — 17 October 2026
 
+> **2026-10-19 v1 SOURCE FOLLOW-UP:** `feature/kivy-gui` has been promoted to `master` and tagged as the immutable [v1.0.0 source pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0) (`07ce51d`). The findings/tests dated below remain **historical snapshots**; current source/bug/physical-device status is tracked in [FEATURE_STATUS.md](../FEATURE_STATUS.md), [bug_tracker.md](../bug_tracker.md) and [release notes](../releases/v1.0.0.md). Linux synthetic CI is not production hardware certification. QRIS remains DEMO and BUG-009 Drive cleanup is OPEN.
+
+
 > **HISTORICAL QA SNAPSHOT (2026-10-17): Below are dated logo/audio fixture results. **CURRENT:** the header gear opens general Settings then **PENGATURAN AUDIO**, and each explicit **UJI MUSIK** attempts a fresh playback (not 'preserve position'). Settings/button/shutter taps have owner-reported improvements, but **music audible from the actual Windows kiosk remains unverified/deferred (BUG-001/007)**. Synthetic audio tests do not prove speaker output. See [feature status](../FEATURE_STATUS.md).**
 
 > **HISTORICAL / SUPERSEDED field report:** At the earlier checkpoint, music/SFX were reported silent and Settings Uji controls unresponsive. Later UI taps and sample buttons improved, but the actual booth's audible music was not subsequently certified. Preserve the exact past audio test results below without treating their old playback behavior as current.
