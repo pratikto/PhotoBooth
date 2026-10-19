@@ -6,7 +6,7 @@ This file tracks **actual verified repository/document changes**, not successful
 
 - Owner explicitly authorized **Stage B Settings Health Monitoring GUI** in the existing `feature/device-health` branch only, after requesting the prior Stage A merge be reverted from `master` through [PR #6](https://github.com/pratikto/PhotoBooth/pull/6). No authorization to merge Stage A/B or alter immutable `v1.0.0`.
 - Added `photobooth/ui_health.py` health panel (six rows, auto-on-open and manual refresh, stale-modal callback guard), wired a controller-side asynchronous worker and main-thread callback, added existing-tick heartbeat and nonintrusive print-in-flight guard; no customer payment, image composition, cloud, print payload, camera open or photo-storage mutations. Added GUI/worker regression tests in `tests/test_device_health_gui.py` and a safety regression to `tests/test_device_health.py`; [technical guide](device-health.md).
-- PR CI and Windows operator observations must be recorded separately; **not yet production-accepted**, draft PR review must not be merged without explicit approval.
+- [Draft review PR #7](https://github.com/pratikto/PhotoBooth/pull/7) code SHA `f93dd88`: [Stage A isolated 25/25 PASS](https://github.com/pratikto/PhotoBooth/actions/runs/39197763719), [Kiosk GUI synthetic 268 PASS / 2 SKIP + 87 renders, 0 errors](https://github.com/pratikto/PhotoBooth/actions/runs/39197763624). No physical Windows device acceptance, **not production-accepted**. Do not merge draft PR without a separate explicit owner command.
 
 ## [Unreleased — FEAT-008 Stage A, branch feature/device-health] — 2026-10-19
 
