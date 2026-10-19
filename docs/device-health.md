@@ -32,6 +32,8 @@ Synthetic GUI/controller tests live in `tests/test_device_health_gui.py` and are
 The Stage B PR is **review-only** until the owner approves merging its precise tested SHA to `master`. Do not infer merge permission from test PASS. The prior Stage A branch and this branch are the same `feature/device-health`, so a later approved merge would introduce both Stage A and B together.
 
 
+> **Android B.4 priority superseded:** **Owner decision (2026-10-19): Defer native Android development until FEAT-020 real payable production QRIS is implemented and verified usable. QRIS DEMO does NOT count.** Current FEAT-008 implementation priorities: Windows mini PCs and Linux/SBC cameras/printers. Existing Android capability placeholders remain UNKNOWN/unsupported; do not implement Android Camera2, USB Host/printer SDK, APK packaging or claim hardware validation. Only revisit after a separate owner instruction. No authorization to build QRIS, merge PR #7, or release. Older B.4 content below describes future technical prerequisites, NOT authorized current Android work.
+
 ## Cross-platform capability work — phased continuation (2026-10-19)
 
 The owner approved staged implementation for heterogeneous cameras, printers,
@@ -91,7 +93,7 @@ after a controlled restart.
   Windows printer-driver status APIs, Linux V4L2/CUPS/libcamera support and
   specific transport capabilities. No universal paper or cutter indicator
   without an actual supported sensor/protocol.
-- **B.4:** Android native Camera2 / USB Host / vendor printer SDK bridge,
+- **B.4 (DEFERRED until operational FEAT-020 production QRIS):** Android native Camera2 / USB Host / vendor printer SDK bridge,
   packaging, runtime permissions, activity lifecycle and real Android hardware
   tests. Desktop OpenCV/pywin32 code is not an Android driver.
 - **Stage C:** owner-run physical acceptance matrix by OS, actual printer

@@ -2,6 +2,13 @@
 
 # Meong Photobooth — Documentation and release changelog
 
+## [Unreleased — Android deferred until QRIS, feature/device-health] — 2026-10-19
+
+- Owner instructed to **postpone native Android work until FEAT-020 real payable QRIS is operational**, not simply demo QRIS. Separate approval to resume Android will be required after verified QRIS.
+- B.4 Android Camera2/USB Host/printer SDK, app packaging and Android hardware acceptance are **DEFERRED**; focus remains on Windows mini PCs and Linux/SBC. Existing Android descriptors remain explicitly unsupported/UNKNOWN.
+- Documentation and dynamic development priorities updated only. No application code, native Android driver, QRIS provider, release, master merge or tag changed.
+
+
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
 ## [Unreleased — FEAT-008 B.2.1 restart-only primary device selection] — 2026-10-19

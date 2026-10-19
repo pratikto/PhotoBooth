@@ -1,3 +1,13 @@
+## Scope control — Android depends on real QRIS (2026-10-19)
+
+- [x] Owner postponed native Android B.4 until FEAT-020 **real payable QRIS** works and is verified; QRIS DEMO does not meet the gate.
+- [ ] FEAT-020 real production QRIS delivery and end-to-end verification (separately planned and approved; not implemented).
+- [ ] Explicit owner decision to resume Android after QRIS gate is met.
+- [ ] Continue Windows mini PC and Linux/SBC mock/device compatibility work; physical on-device acceptance still pending.
+- [x] Documentation-only priority change; no Python/Android code or deployment, no master merge.
+
+---
+
 ## FEAT-008 B.2.1 — restart-only primary device selection (2026-10-19)
 
 - [x] Owner asked to continue staged work while Windows/SBC/Android hardware tests cannot yet be conducted. **No merge permission.**
