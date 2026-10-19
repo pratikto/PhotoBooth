@@ -1,12 +1,12 @@
 # Meong Photobooth — Current architecture and future boundaries
 
-> **CURRENT STATUS (2026-10-19, `feature/kivy-gui`):** Source snapshot `c40f33f5`: FEAT-001 DEMO price/copies and FEAT-003 capture preview mirror are in source and owner-tested PASS; BUG-011 physical copy count owner-tested PASS / monitoring. **Full Kiosk GUI CI PASS (230/232, 2 skips, 87 renders) and Dither CI PASS** at [`c40f33f5`](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762). BUG-009 Drive cleanup remains OPEN; audio BUG-001/007 deferred. Production QRIS and receipt scanner not implemented. This is a *source map*, not a released product or every-device hardware certification.
+> **CURRENT AS OF 2026-10-19 — POST-v1 SOURCE RELEASE:** Default branch is `master`; the immutable `v1.0.0` [pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0) points to commit `07ce51d2022ab5673a7a27e744e5e5757fbb3d08`. [Kiosk CI](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245): 235 tests (233 PASS, 2 SKIP), 87 synthetic renders/0 errors; [Dither CI](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273): 48 tests PASS. This is **source/CI evidence, not Windows production or hardware certification**. FEAT-001 DEMO pricing/copy count and FEAT-003 live-preview mirror have owner-tested PASS; BUG-011 monitored; BUG-001/007 speaker/audio retests pending; BUG-009 Drive 30-day cleanup remains OPEN. Real QRIS FEAT-020 and receipt scanner FEAT-002 are not implemented. Dated pre-release statements below are historical when superseded by this notice.
 
-Last reconciled: **2026-10-19** | Branch: `feature/kivy-gui`
+Last reconciled: **2026-10-19** | Branch: `master` | Tagged source snapshot: `v1.0.0`
 
 This document describes **observed source modules**, not guaranteed on-device functionality. User-reported failures and acceptance status are tracked in [FEATURE_STATUS.md](FEATURE_STATUS.md) and [bug_tracker.md](bug_tracker.md). Future requirements are in [next_step.md](next_step.md).
 
-## Existing application modules (in this branch)
+## Existing application modules (in released source on `master`)
 
 | Responsibility | Main files | Current boundary |
 | --- | --- | --- |
