@@ -71,6 +71,12 @@ class HealthPanelMixin:
             entries.add_widget(row)
             labels[key] = (heading, details)
 
+        entries.add_widget(self._label("DAFTAR PERANGKAT / ADAPTER", 13, 30, bold=True))
+        inventory_rows = BoxLayout(orientation="vertical", size_hint_y=None, spacing=dp(5))
+        inventory_rows.bind(minimum_height=inventory_rows.setter("height"))
+        entries.add_widget(inventory_rows)
+        inventory_rows.add_widget(self._label("Belum ada enumerasi perangkat.", 12, 40, color=GREY))
+
         note = self._label(
             "READY hanya berarti pemeriksaan terbatas berhasil. "
             "Status kertas, hasil cetak, video decoder, dan Google Drive "
@@ -111,6 +117,7 @@ class HealthPanelMixin:
             refresh_button.disabled = True
             summary.text = "Memeriksa perangkat di background..."
             hardware_info.text = "Meninjau adapter dan perangkat yang dipilih..."
+            inventory_rows.clear_widgets()
             for key, caption in CHECK_NAMES:
                 heading, details = labels[key]
                 heading.text = f"{caption}: MEMERIKSA..."
@@ -135,6 +142,8 @@ class HealthPanelMixin:
             refresh_button.disabled = False
             if snapshot is None:
                 hardware_info.text = "Identitas perangkat belum tersedia."
+                inventory_rows.clear_widgets()
+                inventory_rows.add_widget(self._label("Discovery tidak tersedia.", 12, 40, color=GREY))
                 summary.text = "Pemeriksaan belum dapat diselesaikan. Coba REFRESH lagi."
                 for key, caption in CHECK_NAMES:
                     heading, details = labels[key]
@@ -154,10 +163,25 @@ class HealthPanelMixin:
             inventory = getattr(snapshot, "devices", ())
             configured = [item for item in inventory if item.kind in ("camera", "printer")]
             names = ", ".join(item.name for item in configured[:2])
+            detected = [item for item in inventory
+                        if item.presence in ("node-detected", "queue-detected")]
             hardware_info.text = (
-                f"Platform adapter: {family} (configured, not certified).\n"
-                + (names if names else "Identitas hardware belum tersedia.")
+                f"Platform adapter: {family} (belum tersertifikasi).\n"
+                + f"{len(configured)} entri konfigurasi; {len(detected)} kandidat OS ditemukan."
             )
+            inventory_rows.clear_widgets()
+            if not inventory:
+                inventory_rows.add_widget(self._label(
+                    "Tidak ada identitas perangkat yang bisa ditampilkan.",
+                    12, 48, color=GREY))
+            for item in inventory[:20]:
+                text = (f"{item.kind.upper()}: {item.name} [{item.presence}]\n"
+                        f"Identitas: {item.identity_quality}; akses fisik belum dipastikan.")
+                inventory_rows.add_widget(self._label(text, 12, 68, color=GREY))
+            if len(inventory) > 20:
+                inventory_rows.add_widget(self._label(
+                    f"+{len(inventory) - 20} entri lain tidak ditampilkan.",
+                    12, 34, color=GREY))
             caution = False
             for key, caption in CHECK_NAMES:
                 heading, details = labels[key]
