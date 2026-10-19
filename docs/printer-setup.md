@@ -1,6 +1,6 @@
 # Thermal printer setup
 
-> **CURRENT operational baseline (2026-10-19, `feature/kivy-gui`):** The source on **`feature/kivy-gui`** supports photo strips and DEMO payment QR-slip printing through the saved GUI `PrinterConfig`, including Windows RAW ESC/POS, LAN and Wi-Fi. The owner confirmed **FEAT-001 price and BUG-011 actual multi-copy count PASS on Windows** and reported Floyd image quality / QR paper output PASS (BUG-004/003). This is not independent QA of every width, driver or phone QR scan. Floyd–Steinberg with the **owner-selected photo preprocessing** is the active default; `PHOTOBOOTH_PHOTO_TUNING=legacy` is an explicit fallback. Earlier stage references to only `feature/thermal-printer` and RAW printing untested are **HISTORICAL / SUPERSEDED**.
+> **CURRENT SOURCE (2026-10-19):** This functionality and related documentation are now part of `master` at the published, immutable `v1.0.0` [source pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0). The previous `feature/kivy-gui` and other feature branches remain historical references. CI passed on the tagged SHA (`07ce51d`, [Kiosk](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245), [Dither](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273)), but physical Windows acceptance is separate. BUG-001/007 audio and BUG-009 Drive retention remain unresolved; payment stays DEMO. Current photo/DEMO QR-slip printer routes include LAN/Wi-Fi/Windows RAW USB queue. BUG-011 copy counts were owner-tested PASS/monitoring; do not infer all media/driver/QR-scan cases were verified.
 
 The booth prints each saved result image as a monochrome ESC/POS raster. Photo
 tones use Floyd–Steinberg dithering by default; Bayer ordered dithering and a
@@ -157,7 +157,7 @@ On the tested PC, Device Manager reports Caysn IW-J82ULW with
 `POS80 Printer(2)`, driver `POS80ENG`, port `USB001`. A normal
 Windows `Out-Printer` text test historically succeeded. **CURRENT:** the owner subsequently confirmed physical RAW ESC/POS copy-count behavior on Windows (BUG-011 OWNER TESTED PASS); the precise local queue, firmware, and 1/2/3 cut-sheet matrix were not provided, so full driver compatibility across configurations remains unverified.
 
-The **current `feature/kivy-gui` branch** supports a named Windows
+The **current `master` source (tag `v1.0.0`)** supports a named Windows
 spooler queue; the older `feature/thermal-printer` branch remains an archived reference. This avoids replacing the installed USB driver. In PowerShell:
 
 ```powershell
@@ -206,7 +206,7 @@ quality, legibility or cutter behavior; do not retry blindly after partial outpu
 
 ## Current GUI printer settings — in Kivy; specific device test evidence remains separate
 
-On branch `feature/kivy-gui`, use the gear icon in the Kivy header,
+On `master` / `v1.0.0`, use the gear icon in the Kivy header,
 choose **PENGATURAN PRINTER**, then select **USB Windows**, **LAN**, or **Wi-Fi**.
 The popup lets the operator edit the Windows queue name (for example,
 `POS80 Printer`), network IP and TCP port, 576/384-dot print width, and
