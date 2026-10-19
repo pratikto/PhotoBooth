@@ -105,6 +105,8 @@ def check_printer(
     device_exists = device_exists or os.path.exists
     platform = sys.platform if platform is None else platform
     attempted = False
+    network_attempted = False
+    queue_unverified = False
 
     for label, host_attr, port_attr in (
         ("LAN", "lan_host", "lan_port"),
@@ -114,6 +116,7 @@ def check_printer(
         if not host:
             continue
         attempted = True
+        network_attempted = True
         try:
             # No print bytes are sent. Limit time spent probing any one route.
             conn = dial(host, getattr(config, port_attr, 9100), 0.75)
@@ -132,7 +135,13 @@ def check_printer(
             result = windows_queue_probe(queue_name)
             if result is True:
                 return HealthCheck("printer", READY, "Windows print queue is accessible; printer and paper status are unknown.")
-        except (OSError, RuntimeError):
+            if result is None:
+                # pywin32 may not be installed. Missing probe capability is
+                # distinct from a confirmed offline Windows printer.
+                queue_unverified = True
+        except Exception:
+            # Windows spooler adapters may raise pywintypes.error, which is not
+            # consistently an OSError across Python/pywin32 versions.
             pass
 
     # The default Unix path is irrelevant on Windows. Do not probe the USB
@@ -150,6 +159,8 @@ def check_printer(
     if all(value is not None for value in usb_ids):
         return HealthCheck("printer", UNKNOWN, "USB IDs are configured, but USB presence was not safely verified.")
 
+    if queue_unverified and not network_attempted:
+        return HealthCheck("printer", UNKNOWN, "Windows spooler could not be inspected safely.")
     if queue_name and not platform.startswith("win") and not attempted:
         return HealthCheck("printer", UNKNOWN, "Windows print queue cannot be probed on this platform.")
     if attempted:
@@ -205,7 +216,7 @@ def check_media(catalog) -> HealthCheck:
     """Inspect the loaded offline-ad catalog and file bytes, never decode media.
 
     The existing AdCatalog remains the source of truth for playlists/schedules.
-    Disabled/scheduled-out items are not made available by this check.
+    Only items already loaded by AdCatalog are checked; schedule eligibility\n    and media decoding are not evaluated.
     """
     if catalog is None:
         return HealthCheck("media", UNKNOWN, "Advertising catalog was not supplied.")
