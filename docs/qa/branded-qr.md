@@ -1,5 +1,8 @@
 # Full-logo folder QR verification
 
+> **2026-10-19 v1 SOURCE FOLLOW-UP:** `feature/kivy-gui` has been promoted to `master` and tagged as the immutable [v1.0.0 source pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0) (`07ce51d`). The findings/tests dated below remain **historical snapshots**; current source/bug/physical-device status is tracked in [FEATURE_STATUS.md](../FEATURE_STATUS.md), [bug_tracker.md](../bug_tracker.md) and [release notes](../releases/v1.0.0.md). Linux synthetic CI is not production hardware certification. QRIS remains DEMO and BUG-009 Drive cleanup is OPEN.
+
+
 > **HISTORICAL QA SNAPSHOT (original logo-in-folder-QR implementation): The [later centered-logo correction](centered-qr.md) supersedes the original placement method below. **CURRENT:** folder photo QR is separate from the DEMO/non-payable payment QR; thermal printer transport is implemented in `feature/kivy-gui`, while independent physical paper QR phone-scanning evidence remains separate.**
 
 The [centering correction](centered-qr.md) supersedes the original placement
