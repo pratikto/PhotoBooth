@@ -1,5 +1,8 @@
 # Approved receipt templates in the Kivy workflow
 
+> **2026-10-19 v1 SOURCE FOLLOW-UP:** `feature/kivy-gui` has been promoted to `master` and tagged as the immutable [v1.0.0 source pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0) (`07ce51d`). The findings/tests dated below remain **historical snapshots**; current source/bug/physical-device status is tracked in [FEATURE_STATUS.md](../FEATURE_STATUS.md), [bug_tracker.md](../bug_tracker.md) and [release notes](../releases/v1.0.0.md). Linux synthetic CI is not production hardware certification. QRIS remains DEMO and BUG-009 Drive cleanup is OPEN.
+
+
 > **HISTORICAL QA SNAPSHOT (template rollout): This document records the approved 12-template 80 mm layout and its initial 48-render synthetic verification. **CURRENT:** the same template system is used on `feature/kivy-gui` with FEAT-001 copy pricing and integrated thermal printing; do not interpret earlier 'printer transport separate' language as current implementation status. Owner-tested paper-copy PASS is documented [here](FEAT-001-BUG-011-acceptance.md).**
 
 The application now loads the twelve approved revision-3 80 mm designs instead
