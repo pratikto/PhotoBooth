@@ -1,0 +1,22 @@
+# FEAT-020 — QRIS full-auto payment (stage 1: mock ledger)
+
+Status: **PARTIAL / MOCK ONLY**. Owner approved phased implementation on 2026-10-20. Branch: `feature/qris-payment` from stable `master`; no merge or production payment approval.
+
+## Scope implemented in this stage
+- `photobooth/payment_ledger.py`: standalone SQLite mock payment evidence/one-time session-claim ledger.
+- `tests/test_payment_ledger.py`: tests unverified denial, idempotent recording, conflicting evidence, one-time claim and restart persistence.
+- Existing `photobooth/payment.py` / Kivy UI unchanged. No bank API, webhook, real QRIS, backend, customer money movement or live automatic photo unlock.
+
+## Important security boundary
+The `verified=True` parameter is **not cryptographic proof**. This is only an isolated mock seam and must never be wired to kiosk/UI or an untrusted HTTP request. Before any production use, move payment verification and authoritative claim into a server-side trust boundary with signed provider notifications, independent status reconciliation, amount/order/merchant checks, authenticated kiosk identity, idempotency and race-safe durable transactions. A locally writable SQLite file is not sufficient payment authority.
+
+## Next stages
+1. Reconcile this prototype with existing `PaymentCoordinator`, `transaction_store`, and session lifecycle; design order and provider interfaces.
+2. Implement server-side order pricing validation and sandbox QRIS provider; isolate credentials and verify callbacks.
+3. Kivy status polling, expiry/cancellation and payment-page UI integration; keep muted ads and separate Drive QR.
+4. Test duplicate notifications, stale/late payments, disconnected/reconnected kiosk, crash recovery and physical hardware. No live production until explicit acceptance.
+
+## Local targeted test
+`python -m unittest discover -s tests -p "test_payment_ledger.py" -v`
+
+Initial isolated Python 3 container check: **5 PASS, 0 FAIL** (mock tests only; not a full repository regression or Windows hardware acceptance).
