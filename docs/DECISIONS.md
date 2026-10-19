@@ -31,6 +31,12 @@ Sources: owner decisions from recent project discussions; technical implementati
 | DEC-018 | **All other payment/transaction/checkout, merchant-promo financial workflows and paid reprints stay LOW PRIORITY (execution P3) while production QRIS is absent. FEAT-020 real QRIS remains a deferred prerequisite.** | FEAT-001 DEMO price/print-copy handling was separately authorized and is now owner-reported working (see DEC-009/DEC-019); this **does not lift** P3 deferral on FEAT-007, FEAT-020, promo settlement, paid reprints or authorize any actual charge. Device health, auto-start, mirroring, logging and Drive ads retain normal planned priority. |
 | DEC-019 | **Accept FEAT-001 DEMO pricing and print-copy behavior as OWNER TESTED PASS; BUG-011 moves out of active fixes into MONITORING after the Windows RAW spooler correction (2026-10-18).** | Owner first said pricing correct but paper count wrong, then **"sip udah bener"**, followed by the explicit hands-on confirmation **"bug 11 udah aku test dan lolos"**, after the `EndDocPrinter` and single-job/N-cut fixes. Preserve [the QA evidence and gaps](qa/FEAT-001-BUG-011-acceptance.md): targeted 15/15 CI PASS and owner paper confirmation are distinct; precise local tested SHA/count matrix not recorded; Kiosk GUI CI still FAIL. **This confirms the physical BUG-011 test passed but not the full regression/release; missing exact Windows SHA and per-case counts remain open evidence fields. No code/deployment/merge approval or automatic CLOSED/RELEASED label.** |
 
+## Source release decisions (owner-confirmed)
+
+| ID | Decision | Boundary |
+| --- | --- | --- |
+| DEC-020 | On 2026-10-19 the owner approved **preserving old `master`**, merging the tested `feature/kivy-gui` into `master`, and creating the version-one `v1.0.0` tag/release. | Snapshot the old tip as `backup/master-pre-v1-20261019`; do not force-push. Existing known issues (BUG-001/007 audio, BUG-009 cloud retention) stay open/monitoring; the GitHub version tag is a **source baseline only**, not hardware certification, real QRIS, a customer deployment or feature permission. See [release notes](releases/v1.0.0.md). |
+
 ## Business and software subscription decisions (owner-confirmed)
 
 | ID | Decision | Commercial / technical boundary |
