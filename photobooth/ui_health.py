@@ -282,7 +282,9 @@ class HealthPanelMixin:
             self._health_platform = family.lower()
             self._health_inventory = inventory
             choose_button.disabled = self.callbacks.get("on_device_stage") is None
-            configured = [item for item in inventory if item.kind in ("camera", "printer")]
+            configured = [item for item in inventory
+                          if item.kind in ("camera", "printer")
+                          and item.presence not in ("node-detected", "queue-detected")]
             names = ", ".join(item.name for item in configured[:2])
             detected = [item for item in inventory
                         if item.presence in ("node-detected", "queue-detected")]
