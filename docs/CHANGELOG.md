@@ -1,3 +1,10 @@
+## 2026-10-19 — FEAT-008 B.3 presence-state foundation (feature branch only)
+
+- `photobooth/device_recovery.py`: new read-only, fail-closed selected-device presence / identity return observations; no device I/O.
+- `tests/test_device_recovery.py`: Windows/Linux/Android mock cases for absent/returned identity and discovery uncertainty.
+- Initial commits: [588df3c](https://github.com/pratikto/PhotoBooth/commit/588df3c664dc77e33900096bcd78f708d2dc782a), [06ab0f4](https://github.com/pratikto/PhotoBooth/commit/06ab0f4864b61329d7e8b8a23307d32845068fc0), descriptor fix [bbc4162](https://github.com/pratikto/PhotoBooth/commit/bbc4162b3dcf091f397537373e0c78b92966a010).
+- Regression on B.3 HEAD **not run/verified yet**; previous owner 308 PASS / 5 SKIP test predates this code. No master merge, hardware assertion or release.
+
 > **FEAT-008 cross-platform test-fixture fix (2026-10-19):** Owner's normal Windows PowerShell produced `WinError 1314` while Linux symlink unit test attempted `Path.symlink_to`. Fixed only `tests/test_device_selection.py` and `tests/test_hardware_discovery.py` to mock symlinks on Windows and preserve real symlink checks on Linux. Extended `.github/workflows/device-health.yml` to run 62 focused tests on **windows-latest and ubuntu-latest**, [Actions 39223474630](https://github.com/pratikto/PhotoBooth/actions/runs/39223474630) **PASS both OS** at tested code SHA `b83074d9`. Owner Windows rerun pending; no application driver changes, physical hardware certification, QRIS changes or merge.
 
 > **Field QA update, 2026-10-19:** Owner reported **seven of seven Windows laptop GUI health-monitoring checks PASS**, covering launch, Settings/Health menu, six indicators, Refresh responsiveness, printer queue discovery, device chooser and popup reopen. Logged as **OWNER-REPORTED smoke PASS**, not verified paper/camera physical or restart-persistence acceptance; exact laptop commit SHA unknown. This is a **documentation-only** QA record on `feature/device-health`; does not merge Draft PR #7 or alter `master`.
