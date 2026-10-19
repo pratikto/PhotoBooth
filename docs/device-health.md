@@ -1,4 +1,4 @@
-# FEAT-008 — Device Health Monitoring (Stage A backend)
+# FEAT-008 — Device Health Monitoring (Stage A backend + Stage B operator GUI)
 
 **Current branch (2026-10-19):** FEAT-008 **Stage A backend** and explicitly approved **Stage B operator Settings GUI** are under development in `feature/device-health`. The earlier [Stage A PR #5](https://github.com/pratikto/PhotoBooth/pull/5) was merged without separate approval and **reverted from `master` by owner request in [PR #6](https://github.com/pratikto/PhotoBooth/pull/6)**. Both stages remain on the feature branch only; do **not** merge without separate owner approval. The immutable [v1.0.0](releases/v1.0.0.md) tag is unchanged. Stage C (physical Windows acceptance), alarms, crash recovery and remote monitoring remain out of scope.
 
@@ -25,7 +25,7 @@ python main.py
 
 With the Kivy app open: Settings gear → DEVICE HEALTH → read all six rows → REFRESH STATUS → TUTUP. Check that closing/reopening the panel never displays stale results, and that camera preview/photo workflow and existing printer controls still work. **Do not start a real print test just to validate this read-only feature.** Windows hardware acceptance is Stage C and requires separate approval/evidence.
 
-Synthetic GUI/controller tests live in `tests/test_device_health_gui.py` and are run by Kiosk GUI regression CI (`PHOTOBOOTH_TEST_GUI=1` with a Kivy/Xvfb display). The local 25+ isolated Stage A tests run without physical hardware.
+Synthetic GUI/controller tests live in `tests/test_device_health_gui.py` and are run by Kiosk GUI regression CI (`PHOTOBOOTH_TEST_GUI=1` with a Kivy/Xvfb display). The 25 isolated Stage A tests run without physical hardware.
 
 ### Separate merge authorization
 
@@ -45,7 +45,7 @@ Checks cover:
 
 ## Safety and integration boundary
 
-**No import/startup side effects**: no timers, background watchers, automatic retries, camera restart, print commands, file writes, web uploads or Google Apps Script calls. `collect_health_snapshot` is **only an opt-in synchronous probe**. It can spend time on network/spooler/disk I/O, so Stage B must run it in an explicit worker rather than the Kivy render thread, safely marshal UI updates back to Kivy and avoid scanning while printing if the Windows driver is sensitive. This feature does not gate customer sessions or override the operator's print/camera choices.
+**Stage A has no import/startup side effects**: no timers, background watchers, automatic retries, camera restart, print commands, file writes, web uploads or Google Apps Script calls. `collect_health_snapshot` is **only an opt-in synchronous probe**. It can spend time on network/spooler/disk I/O, so Stage B must run it in an explicit worker rather than the Kivy render thread, safely marshal UI updates back to Kivy and avoid scanning while printing if the Windows driver is sensitive. This feature does not gate customer sessions or override the operator's print/camera choices.
 
 The module takes existing `Camera`, `PrinterConfig`, the photos directory and loaded `AdCatalog`; it does **not** import the Kivy UI/controller. Future integration should reuse those existing objects and must not instantiate a second camera or printer. Printer and network dialers are injectable for isolated tests.
 
