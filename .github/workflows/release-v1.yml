@@ -1,0 +1,66 @@
+name: Publish Meong v1.0.0 source baseline
+
+on:
+  workflow_run:
+    workflows:
+      - Kiosk GUI regression
+      - Dither tuning lab regression
+    types: [completed]
+    branches: [master]
+
+# One-time release only. CI must pass at the exact owner-approved merge SHA.
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: meong-v1.0.0-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the tested master commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Verify both regression workflows and publish the immutable baseline
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANDIDATE_SHA: ${{ github.event.workflow_run.head_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          export GH_REPO="$GITHUB_REPOSITORY"
+          subject="$(gh api "repos/$GH_REPO/commits/$CANDIDATE_SHA" --jq '.commit.message' | head -n 1)"
+          if [[ "$subject" != "release: Meong Photobooth v1.0.0" ]]; then
+            echo "Not the approved v1 merge commit; release is skipped."
+            exit 0
+          fi
+
+          runs="$(gh api "repos/$GH_REPO/actions/runs?head_sha=$CANDIDATE_SHA&branch=master&per_page=100")"
+          kiosk="$(jq -r '[.workflow_runs[] | select(.name == "Kiosk GUI regression" and .conclusion == "success")] | length' <<< "$runs")"
+          dither="$(jq -r '[.workflow_runs[] | select(.name == "Dither tuning lab regression" and .conclusion == "success")] | length' <<< "$runs")"
+          if [[ "$kiosk" -lt 1 || "$dither" -lt 1 ]]; then
+            echo "Both full CI checks must pass at $CANDIDATE_SHA; kiosk=$kiosk dither=$dither."
+            exit 0
+          fi
+
+          existing_tag="$(gh api "repos/$GH_REPO/git/ref/tags/v1.0.0" --jq '.object.sha' 2>/dev/null || true)"
+          if [[ -n "$existing_tag" && "$existing_tag" != "$CANDIDATE_SHA" ]]; then
+            echo "::error::v1.0.0 exists but targets a different commit. Manual review needed."
+            exit 1
+          fi
+          if gh release view v1.0.0 >/dev/null 2>&1; then
+            echo "The release already exists; leaving it unchanged."
+            exit 0
+          fi
+
+          gh release create v1.0.0 \
+            --target "$CANDIDATE_SHA" \
+            --title "Meong Photobooth v1.0.0" \
+            --notes-file docs/releases/v1.0.0.md \
+            --prerelease
