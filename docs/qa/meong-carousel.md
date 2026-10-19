@@ -1,5 +1,8 @@
 # MEONG brand and cyclic carousel
 
+> **2026-10-19 v1 SOURCE FOLLOW-UP:** `feature/kivy-gui` has been promoted to `master` and tagged as the immutable [v1.0.0 source pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0) (`07ce51d`). The findings/tests dated below remain **historical snapshots**; current source/bug/physical-device status is tracked in [FEATURE_STATUS.md](../FEATURE_STATUS.md), [bug_tracker.md](../bug_tracker.md) and [release notes](../releases/v1.0.0.md). Linux synthetic CI is not production hardware certification. QRIS remains DEMO and BUG-009 Drive cleanup is OPEN.
+
+
 > **HISTORICAL GUI QA SNAPSHOT (initial carousel rollout): The 12-template carousel and 72-render evidence below remain useful; the **old Rp15.000 cart and capture quantity assumptions do not define current prices**. **CURRENT:** FEAT-001 is Rp5.000 per selected three-shot template/session + Rp5.000 for each identical print copy; 2 copies of one design = one capture session and **Rp15.000 DEMO**. Current full GUI CI [PASS at `c40f33f5`](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762).**
 
 The selector now presents one large receipt in the center with smaller previews
