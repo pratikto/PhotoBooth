@@ -1,8 +1,8 @@
 # Advertising and QR payment-slip setup
 
-> **CURRENT operational baseline (2026-10-19, `feature/kivy-gui`):** The advertising → mandatory tutorial → 12 templates flow is in source. The owner subsequently reported **idle/payment video and QR-slip paper print PASS** (BUG-002/003/005), not formal per-case hardware certification. The payment QR/confirmation remains explicitly **DEMO / non-payable**. Windows QR phone scannability and all ad/audio setups remain separate checks; application background music BUG-001/007 is deferred. The initial QR-slip failure recorded below is **HISTORICAL / SUPERSEDED**.
+> **CURRENT SOURCE (2026-10-19):** This functionality and related documentation are now part of `master` at the published, immutable `v1.0.0` [source pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0). The previous `feature/kivy-gui` and other feature branches remain historical references. CI passed on the tagged SHA (`07ce51d`, [Kiosk](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245), [Dither](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273)), but physical Windows acceptance is separate. BUG-001/007 audio and BUG-009 Drive retention remain unresolved; payment stays DEMO.
 
-This implementation belongs to the existing `feature/kivy-gui` branch. It does
+This implementation is part of the source on `master` (tagged as `v1.0.0`). It does
 not merge or change the separate `feature/thermal-printer` branch.
 
 ## Customer flow

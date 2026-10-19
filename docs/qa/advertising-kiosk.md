@@ -1,5 +1,8 @@
 # Advertising kiosk validation — 17 October 2026
 
+> **2026-10-19 v1 SOURCE FOLLOW-UP:** `feature/kivy-gui` has been promoted to `master` and tagged as the immutable [v1.0.0 source pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0) (`07ce51d`). The findings/tests dated below remain **historical snapshots**; current source/bug/physical-device status is tracked in [FEATURE_STATUS.md](../FEATURE_STATUS.md), [bug_tracker.md](../bug_tracker.md) and [release notes](../releases/v1.0.0.md). Linux synthetic CI is not production hardware certification. QRIS remains DEMO and BUG-009 Drive cleanup is OPEN.
+
+
 > **HISTORICAL QA SNAPSHOT (2026-10-17): The test counts and video fixture results below are preserved. **CURRENT (2026-10-19):** the owner subsequently reported **idle/payment video playback and QR-slip paper print PASS** (BUG-002/003); the earlier Windows FAIL feedback described an earlier state, not today's current status. Real hardware media variants and printed QR phone-scans are still distinct from synthetic tests. See [current status](../FEATURE_STATUS.md).**
 
 > **HISTORICAL / SUPERSEDED field-status note:** The initial 2026-10-18 report of video/QR paper failures was recorded before the owner's later improvements and PASS feedback. The historical headless fixture and QR raster tests below are valid for that run, not an assertion that current Windows videos or printer are failing.

@@ -1,12 +1,14 @@
 # Meong Photobooth — Development handover
 
-> **CURRENT (2026-10-19):** Kivy branch `feature/kivy-gui` remains **unmerged** to `master`. Full Kiosk GUI CI **SUCCESS at SHA `c40f33f5`** ([run 39145145762](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762): 230 PASS/2 SKIP/87 renders), dither CI **SUCCESS** ([39145145764](https://github.com/pratikto/PhotoBooth/actions/runs/39145145764)). FEAT-001 pricing/copies and FEAT-003 live mirror owner-tested PASS; BUG-011 monitoring; BUG-009 retention OPEN; music BUG-001/007 deferred; QRIS DEMO. **Next feature candidate FEAT-008 requires new owner approval.** Everything below the recent QA handover is dated engineering history unless explicitly reaffirmed here.
+> **CURRENT RELEASE BASELINE (2026-10-19):** Default branch `master` contains Meong Photobooth Kivy GUI. Immutable source snapshot `v1.0.0` / `07ce51d2022ab5673a7a27e744e5e5757fbb3d08` is published as a [GitHub pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0). Release-SHA CI: [Kiosk GUI 39185986245](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245) (**233 pass, 2 skipped, 87 synthetic renders, 0 errors**) and [Dither 39185986273](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273) (**48 tests pass**). Linux mock/screenshot QA is **not** certification on Windows hardware or customer deployment. Outstanding: BUG-001/007 audio speaker retest, BUG-009 30-day Drive cloud retention **OPEN**; QRIS is DEMO/non-payable (FEAT-020 not implemented), receipt scanner FEAT-002 not implemented. The earlier `feature/kivy-gui` branch and dated narratives below are **historical** where they conflict with this baseline.
+
+> **Next continuation:** Prioritize owner retesting of BUG-001/007 Windows audio and documented risk management of BUG-009 cloud retention; FEAT-008 remains only a proposed feature requiring separate approval. The PR #3 promotion is **complete**, not pending.
 
 **Repository:** https://github.com/pratikto/PhotoBooth  
-**Target branch:** `feature/kivy-gui` (**do not create a new branch**).  
+**Target baseline:** `master` for stable code; new approved changes go to a dedicated task branch (`fix/*`, `feature/*`, or `docs/*`) and through PR review. **Tag:** `v1.0.0` stays unchanged.  
 **Handover updated:** 2026-10-19 (historical handover began 2026-10-17).
 
-## Current QA handover — Kiosk GUI Regression FULL CI PASS (2026-10-18)
+## Historical QA handover — Kiosk GUI Regression FULL CI PASS (2026-10-18)
 
 **Owner-approved remediation completed:** Prior **Kiosk GUI regression FAIL** is now **VERIFIED PASS** on [run 39144464476](https://github.com/pratikto/PhotoBooth/actions/runs/39144464476) at source/test SHA [`f129dd9e`](https://github.com/pratikto/PhotoBooth/commit/f129dd9ecb14b2d554dd83022745452764f5282d). The full Kivy `unittest` suite performed **232 tests: 230 passed, 2 skipped, 0 failed/errors**; the visual renderer produced **87 scenarios / 0 errors** and the workflow concluded **SUCCESS**. A later [**HEAD `c40f33f5` CI run 39145145762](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762) also completed SUCCESS**. Reconciliation documentation commits after that snapshot must be verified separately.
 
@@ -62,7 +64,7 @@ The owner expressly requested a **NEW branch** specifically for configuration of
 
 **FEAT-011 next steps:** test Windows `python tools/dither_tuning_gui.py`; compare actual saved photo PNG and zoomed raster using preset, export binary PNG; confirm the outputs on real paper (same width/brightness/density). Retain BUG-004 OPEN. Known BUG-008 (Settings hang) and BUG-009 (Drive retention deployment) remain unrelated active operational issues; building a standalone lab does not fix them.
 
-## Current handover — reconciled 2026-10-18
+## Historical handover snapshot — reconciled 2026-10-18 (superseded by v1 top section)
 
 **Read this first rather than treating the dated 2026-10-17 notes below as an active work order.** Source-of-truth documents:
 
@@ -131,11 +133,11 @@ The owner expressly requested a **NEW branch** specifically for configuration of
 
 Physical machine speakers, local media/codec setup, camera, Google Drive and LAN thermal printer cannot be validated from GitHub alone. Real QRIS is not yet supported. Previous automated QA results are historical, not validation of the four newly reported defects.
 
-## Copy/paste into a new chat
+## Historical copy/paste prompt (2026-10-17; superseded — use DEVELOPMENT_PROMPT.md)
 
 The maintained full and quick prompts are in [DEVELOPMENT_PROMPT.md](DEVELOPMENT_PROMPT.md). The compact starter below references that single canonical prompt rather than maintaining a divergent second checklist:
 
-> Continue Meong Photobooth from GitHub `pratikto/PhotoBooth` on existing `feature/kivy-gui`. Follow `docs/DEVELOPMENT_PROMPT.md` and `docs/DEVELOPMENT_PROTOCOL.md`; read current `docs/DECISIONS.md`, `docs/FEATURE_STATUS.md`, `docs/bug_tracker.md`, `docs/test_checklist.md`, `docs/next_step.md` and `docs/DEVELOPMENT_HANDOVER.md`. Inspect current branch/SHA and relevant source. **Review only unless I approve a named documentation or code scope.** For approved development, record tests and link documentation/commit evidence before claiming a bug fixed. No new branch, merge or real QRIS claims without authorization.
+> Historical 2026-10-17 resume advice (superseded): the then-current `feature/kivy-gui` branch was the development target. **Do not copy this old branch instruction.** Use the maintained [reusable prompt](DEVELOPMENT_PROMPT.md), start from `master`/`v1.0.0`, and seek explicit task approval for new changes, PR merges, deployment and physical signoff.
 
 ## Current blocker: audio remains silent (reported 2026-10-17)
 

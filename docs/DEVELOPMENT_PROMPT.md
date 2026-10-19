@@ -1,8 +1,8 @@
 # Meong Photobooth — Reusable Development & Documentation Prompt
 
-> **CURRENT (2026-10-19):** This is a reusable **process template**, not an active task list. Latest reviewed development branch: `feature/kivy-gui` (not merged into `master`); owner-test and CI status must be fetched afresh from [status](FEATURE_STATUS.md) and [QA checklist](test_checklist.md) whenever starting a new task. Previous snippets in other documents explicitly marked HISTORICAL must not override the current source.
+> **CURRENT RELEASE BASELINE (2026-10-19):** Default branch `master` contains Meong Photobooth Kivy GUI. Immutable source snapshot `v1.0.0` / `07ce51d2022ab5673a7a27e744e5e5757fbb3d08` is published as a [GitHub pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0). Release-SHA CI: [Kiosk GUI 39185986245](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245) (**233 pass, 2 skipped, 87 synthetic renders, 0 errors**) and [Dither 39185986273](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273) (**48 tests pass**). Linux mock/screenshot QA is **not** certification on Windows hardware or customer deployment. Outstanding: BUG-001/007 audio speaker retest, BUG-009 30-day Drive cloud retention **OPEN**; QRIS is DEMO/non-payable (FEAT-020 not implemented), receipt scanner FEAT-002 not implemented. The earlier `feature/kivy-gui` branch and dated narratives below are **historical** where they conflict with this baseline.
 
-Last reviewed: 2026-10-18 | Repository: `pratikto/PhotoBooth` | Branch: `feature/kivy-gui`
+Last reviewed: 2026-10-19 | Repository: `pratikto/PhotoBooth` | Stable branch: `master` | Immutable release: `v1.0.0`
 
 **Purpose:** Copy the prompt below into a new chat or use it when continuing a task. GitHub documentation is the durable project record; chat history by itself is **not** the status ledger.
 
@@ -12,7 +12,7 @@ Last reviewed: 2026-10-18 | Repository: `pratikto/PhotoBooth` | Branch: `feature
 
 > **MEONG PHOTOBOOTH — Continue Development with GitHub Traceability**
 >
-> Repository: `pratikto/PhotoBooth`. Use existing branch **`feature/kivy-gui`** only; do not create another branch, merge or release without my explicit authorization.
+> Repository: `pratikto/PhotoBooth`. Use **`master`** only as the stable baseline; for specifically approved work use a scoped **`feature/*`, `fix/*`, or `docs/*`** branch and propose a PR. Never update the immutable `v1.0.0` tag, merge, change application code or deploy beyond my explicit task authorization.
 >
 > **My requested task:** [DESCRIBE THE BUG, FEATURE OR REVIEW]
 >
@@ -36,14 +36,14 @@ Last reviewed: 2026-10-18 | Repository: `pratikto/PhotoBooth` | Branch: `feature
 >    - `docs/ARCHITECTURE.md` / specific technical guides — only when modules, interfaces, routing or setup instructions actually change.
 >    - `docs/CHANGELOG.md` — actual changes, with commit references or explicit uncommitted status, never aspirational fixes.
 >    Update **only relevant files** and keep one canonical source of truth per topic. Each significant approved code behavior change must have a corresponding relevant documentation update, in the same commit or a clearly associated documentation commit.
-> 6. **Commit and verify only when authorized.** Verify changes on the existing branch. Keep code and documentation commits scoped and traceable with BUG/FEAT IDs when applicable; record before/after commit SHA and link. Do not claim a push, check or physical test succeeded unless verified from GitHub/test evidence. Do not merge, publish, release or mark CLOSED without the required owner approval and evidence.
+> 6. **Commit and verify only when authorized.** Verify changes on the approved task branch. Keep code and documentation commits scoped and traceable with BUG/FEAT IDs when applicable; record before/after commit SHA and link. Do not claim a push, check or physical test succeeded unless verified from GitHub/test evidence. Do not merge, publish, release or mark CLOSED without the required owner approval and evidence.
 > 7. **Final report to me:** Summarize **(a)** work ID/scope/approval, **(b)** changed files and reason, **(c)** tests and unverified hardware items, **(d)** updated documents, **(e)** commit links/before-after SHA, **(f)** remaining bugs, risks, next action and any pending approval. If no change was authorized, report findings and proposed doc edits without implementing.
 >
 > **Important:** Never silently overwrite decisions, remove historical evidence, infer live QRIS capability, or mark a user-reported device bug fixed because unit tests passed.
 
 ## Quick resume prompt
 
-> Continue Meong Photobooth in `pratikto/PhotoBooth`, existing `feature/kivy-gui`. Follow [docs/DEVELOPMENT_PROMPT.md](DEVELOPMENT_PROMPT.md) and [docs/DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md), inspect the newest GitHub commit and the canonical documentation before proposing actions. Tell me the top open bugs and today's safe next task. **Review only until I approve a specific code/documentation scope.**
+> Continue Meong Photobooth in `pratikto/PhotoBooth`, stable `master` at (or following) tagged source version `v1.0.0`; create a scoped working branch only for approved changes. Follow [docs/DEVELOPMENT_PROMPT.md](DEVELOPMENT_PROMPT.md) and [docs/DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md), inspect the newest GitHub commit and the canonical documentation before proposing actions. Tell me the top open bugs and today's safe next task. **Review only until I approve a specific code/documentation scope.**
 
 ## How updates should be recorded
 

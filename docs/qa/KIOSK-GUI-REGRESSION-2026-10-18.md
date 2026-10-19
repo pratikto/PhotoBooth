@@ -1,4 +1,7 @@
 # Kiosk GUI Regression — 2026-10-18 iterative repair and verification
+
+> **2026-10-19 SOURCE RELEASE FOLLOW-UP:** **Immutable release SHA:** `07ce51d2022ab5673a7a27e744e5e5757fbb3d08` (`v1.0.0`, GitHub pre-release). [Kiosk GUI](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245) **SUCCESS**: 235 tests (233 PASS, 2 SKIP, 0 failures/errors), 87 synthetic screenshots / 0 errors. [Dither lab](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273) **SUCCESS**: 48 tests. GitHub Linux mocked tests verify code/screenshot behavior, **not** physical Windows camera/audio/printer/QR phone scan or actual settlement; QRIS is DEMO only. BUG-001/007 audio retest and BUG-009 Drive cloud retention remain unresolved. Earlier `c40f33f5`, `f129dd9e`, and `e46812b8` results are retained as *historical* evidence. This file remains the dated investigation record for the 2026-10-18/19 QA repair; explicit **no merge** / **not released** statements in older dated sections refer to the original test stage and were superseded by PR #3 and the source pre-release.
+
 ## 2026-10-19 follow-up — QR DEMO screenshot stability (CI-only)
 
 **Owner's clarification:** the DEMO QR works on the real Windows laptop; no booth/device malfunction was reported in this follow-up. The problem is a **flaky OpenCV decoder assertion on GitHub's exported Kivy screenshot**, and is tracked as a test-harness quality issue rather than an active real-world payment defect.

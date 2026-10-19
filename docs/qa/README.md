@@ -1,10 +1,12 @@
 # Desktop GUI verification
 
+> **CURRENT v1.0.0 QA (2026-10-19):** **Immutable release SHA:** `07ce51d2022ab5673a7a27e744e5e5757fbb3d08` (`v1.0.0`, GitHub pre-release). [Kiosk GUI](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245) **SUCCESS**: 235 tests (233 PASS, 2 SKIP, 0 failures/errors), 87 synthetic screenshots / 0 errors. [Dither lab](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273) **SUCCESS**: 48 tests. GitHub Linux mocked tests verify code/screenshot behavior, **not** physical Windows camera/audio/printer/QR phone scan or actual settlement; QRIS is DEMO only. BUG-001/007 audio retest and BUG-009 Drive cloud retention remain unresolved. Earlier `c40f33f5`, `f129dd9e`, and `e46812b8` results are retained as *historical* evidence.
+
 > **LATEST QR visual CI stability evidence (2026-10-19):** Owner reports laptop QR has no problem. Test-only commit [`e46812b8`](https://github.com/pratikto/PhotoBooth/commit/e46812b8c9f66c548bccebb1e9fc45e3c89afeef) fixes randomized synthetic DEMO QR fixtures and single-size OpenCV screenshot sensitivity, without changing production code. [Kiosk GUI Actions 39178452927](https://github.com/pratikto/PhotoBooth/actions/runs/39178452927) completed **3/3 SUCCESS attempts at the same SHA**, **233 PASS / 2 SKIP / 87 renders each**; [Dither 39178452898](https://github.com/pratikto/PhotoBooth/actions/runs/39178452898) PASS. Exact pixel-content assertions and negative obscured/blank-QR tests remain strict. See [QA addendum](KIOSK-GUI-REGRESSION-2026-10-18.md); watch for recurrence. Documentation-only HEAD is checked separately.
 
-> **CURRENT QA INDEX (reviewed 2026-10-19): At source SHA `c40f33f5`, [full Kiosk CI 39145145762](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762) and [Dither CI 39145145764](https://github.com/pratikto/PhotoBooth/actions/runs/39145145764) both **PASS**; 230 unittests passed, two native-palm cases skipped, 87 renders/0 errors. Owner-tested FEAT-001/003 and BUG-011 remain PASS/monitoring; physical audio BUG-001/007 and cloud photo retention BUG-009 unresolved/deferred. The dated evidence and images below are **HISTORICAL**; they do not override later current outcomes.**
+> **HISTORICAL PRE-v1 QA INDEX (reviewed 2026-10-19): At source SHA `c40f33f5`, [full Kiosk CI 39145145762](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762) and [Dither CI 39145145764](https://github.com/pratikto/PhotoBooth/actions/runs/39145145764) both **PASS**; 230 unittests passed, two native-palm cases skipped, 87 renders/0 errors. Owner-tested FEAT-001/003 and BUG-011 remain PASS/monitoring; physical audio BUG-001/007 and cloud photo retention BUG-009 unresolved/deferred. The dated evidence and images below are **HISTORICAL**; they do not override later current outcomes.**
 
-## Latest verified full Kiosk GUI CI — 2026-10-18
+## Historical verified Kiosk GUI CI — 2026-10-18
 
 **[Full regression repair, test-by-test triage and verification](KIOSK-GUI-REGRESSION-2026-10-18.md):** [Actions run 39144464476](https://github.com/pratikto/PhotoBooth/actions/runs/39144464476) at `f129dd9e` **SUCCESS**, Python 3.12 / Xvfb on GitHub Linux: **232 cases (230 PASS, 2 SKIP, 0 FAIL, 0 ERROR)** and **87 GUI renders / 0 errors**. The now-retained CI artifact includes all unittest tracebacks to make later failures diagnosable. Source changes were restricted to tests, one diagnostic runner, and the GitHub workflow; **no production photobooth source or deployed payment system changed**. This clears the previously failing **CI quality gate at the tested SHA**, not the Windows hardware/release gates.
 
@@ -376,7 +378,7 @@ Fixture URLs:
 [pointing_up.jpg](https://storage.googleapis.com/mediapipe-assets/pointing_up.jpg).
 Neither native weights nor sample photos are committed to this repository.
 
-The tariff is unchanged: Rp5.000 per session; quantity 2 totals Rp10.000. QRIS
-remains explicitly simulated, printing is not connected, and `ui_tkinter.py` is
+**HISTORICAL — initial Tkinter-era fixture pricing, SUPERSEDED by FEAT-001 in v1:** At that older stage, tariff was Rp5.000 per session and quantity 2 totaled Rp10.000. In **current v1 DEMO**, one selected three-photo template plus two identical printed copies totals **Rp15.000**, not Rp10.000. QRIS
+was explicitly simulated; printing was not connected in that historical Tkinter fixture, and `ui_tkinter.py` was
 unchanged. These renders use generated geometric illustrations and fixture URLs;
 they contain no customer images, credentials, or transaction data.

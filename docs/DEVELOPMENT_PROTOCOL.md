@@ -2,15 +2,17 @@
 
 > **APPROVAL UPDATE (2026-10-19):** The owner now explicitly authorizes promotion of `feature/kivy-gui` to `master` with a backup of the previous master, CI checks, and immutable `v1.0.0` source tag / GitHub pre-release. This is permission for the named repository/version-control operation and release documentation **only**, not permission for a new feature, live QRIS, Google Apps Script deployment, cloud deletion, or declaring Windows hardware certified. Earlier warnings below about an unapproved master merge are historical and superseded for this operation. See [v1 source release notes](releases/v1.0.0.md).
 
-> **CURRENT (2026-10-19):** Governance v1.0 is **still authoritative** for `feature/kivy-gui`: read [current status](FEATURE_STATUS.md), [bug tracker](bug_tracker.md) and [backlog](next_step.md) before work. This documentation-only reconciliation does **not** authorize code changes, physical release or merge to `master`; continue separating historical evidence, synthetic CI and owner device acceptance. Full Kiosk CI at `c40f33f5` PASS.
-Effective: 2026-10-18 | Branch: `feature/kivy-gui`
+> **CURRENT RELEASE BASELINE (2026-10-19):** Default branch `master` contains Meong Photobooth Kivy GUI. Immutable source snapshot `v1.0.0` / `07ce51d2022ab5673a7a27e744e5e5757fbb3d08` is published as a [GitHub pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0). Release-SHA CI: [Kiosk GUI 39185986245](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245) (**233 pass, 2 skipped, 87 synthetic renders, 0 errors**) and [Dither 39185986273](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273) (**48 tests pass**). Linux mock/screenshot QA is **not** certification on Windows hardware or customer deployment. Outstanding: BUG-001/007 audio speaker retest, BUG-009 30-day Drive cloud retention **OPEN**; QRIS is DEMO/non-payable (FEAT-020 not implemented), receipt scanner FEAT-002 not implemented. The earlier `feature/kivy-gui` branch and dated narratives below are **historical** where they conflict with this baseline.
+
+> **History notice:** Below, earlier governance instructions describing `feature/kivy-gui` as unmerged represent the pre-release stage, not current branch/release status. Existing approval, issue-tracking, hardware-validation and evidence rules remain in force.
+Effective: 2026-10-18; release-branch policy revised 2026-10-19 | Stable branch: `master` | Published source tag: `v1.0.0`
 
 ## Non-negotiable rules
 1. New ideas are **documentation-only** until the owner explicitly approves a named implementation scope. Approval to document is not approval to code.
 2. Review each incoming idea against the **latest branch source** for business priority, user/operational impact, compatibility, technical readiness, complexity, dependencies, and regression risk. If code has not been inspected, mark readiness **Unverified**, not Ready.
 3. Re-rank the entire backlog after every new idea or material bug discovery. Stable IDs (`FEAT-001`, `BUG-001`) never change; execution order may change.
 4. Prioritize critical defects and operational stability. Do not allow attractive enhancements to mask unresolved defects.
-5. Use existing `feature/kivy-gui` branch unless owner expressly changes the policy; no automatic new branches or merges.
+5. Use `master` as stable baseline. Keep `v1.0.0` immutable; approved future work should use a scope-specific `fix/*`, `feature/*`, or `docs/*` branch and a tested PR. Never merge or change release status without explicit owner approval.
 6. Small, scoped, reviewable changes; explanatory English code comments; never assert tests passed without evidence.
 7. No implementation, code commit, push, merge, or release without explicit approval of the relevant action/scope. Documentation-only approval authorizes documentation commits on the agreed branch.
 

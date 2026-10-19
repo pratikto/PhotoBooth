@@ -1,9 +1,12 @@
 # FEAT-001 and BUG-011 — DEMO pricing, thermal copy count and Windows acceptance
 
+> **2026-10-19 v1 SOURCE FOLLOW-UP:** `feature/kivy-gui` has been promoted to `master` and tagged as the immutable [v1.0.0 source pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0) (`07ce51d`). The findings/tests dated below remain **historical snapshots**; current source/bug/physical-device status is tracked in [FEATURE_STATUS.md](../FEATURE_STATUS.md), [bug_tracker.md](../bug_tracker.md) and [release notes](../releases/v1.0.0.md). Linux synthetic CI is not production hardware certification. QRIS remains DEMO and BUG-009 Drive cleanup is OPEN.
+
+
 > **CURRENT ACCEPTANCE (2026-10-19): FEAT-001 DEMO base-per-template + copy pricing and **BUG-011 Windows paper copy-count owner-tested PASS / monitoring**; targeted [15/15 CI PASS](https://github.com/pratikto/PhotoBooth/actions/runs/39134970707). The **full Kiosk GUI CI later passed** at SHA `c40f33f5` ([run 39145145762](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762): 230 PASS/2 SKIP/87 renders). Old FAIL runs and the initial paper mismatch below are **HISTORICAL**. No recorded per-case count matrix or formal release signoff.**
 
 **Evidence date:** 2026-10-18  
-**Repository / branch:** [`pratikto/PhotoBooth`](https://github.com/pratikto/PhotoBooth) / `feature/kivy-gui`  
+**Current repository / baseline:** [`pratikto/PhotoBooth`](https://github.com/pratikto/PhotoBooth) / `master` / `v1.0.0` (historical test work originated on `feature/kivy-gui`)  
 **Baseline before FEAT-001:** [`5842a09f`](https://github.com/pratikto/PhotoBooth/commit/5842a09f6a4c6c771ef7f5f0d1a330d0b1040b42)  
 **Source fix present by:** [`41a51b5b`](https://github.com/pratikto/PhotoBooth/commit/41a51b5b31f6ef442557a1caec9bf9a9ae88da93)  
 **Latest owner feedback:** "**pricing udah bener**" followed by a print-count failure; after the Windows RAW fixes, "**sip udah bener**" and subsequently the explicit on-device test confirmation **"bug 11 udah aku test dan lolos"**.  
@@ -82,7 +85,7 @@ The **core symptom is explicitly owner-tested and reported resolved**, so BUG-01
 - [ ] Capture mixed templates (A×2, B×1): two capture sessions, three sheets, correct frame/Drive folder QR and Rp25,000 DEMO amount.
 - [ ] Test interrupted spooler/network send and paper-out; no accidental automatic duplicate or silently skipped paper, manual reprint requires operator decision.
 - [ ] Review full Kiosk GUI CI failures independently and run camera/retake, Floyd print quality, ad video, QR-slip, Windows UI/Settings and Drive folder regression; audio BUG-001/007 remains intentionally deferred.
-- [ ] **Separate owner approval** required before formal `CLOSED`, production `VERIFIED/RELEASED`, any merge to `main` or new code changes.
+- [ ] **Separate owner approval** is still required before BUG-011 formal `CLOSED`, device-level production certification or any new application-code change. **The v1 source-only merge and tag are already complete**; this checklist was written before that event.
 
 **Rollback reference:** The pre-FEAT-001 source baseline is [`5842a09f`](https://github.com/pratikto/PhotoBooth/commit/5842a09f6a4c6c771ef7f5f0d1a330d0b1040b42). Do **not** hard-reset an operator's working branch or discard subsequent commits. If a regression occurs, plan a **narrow revert** of the relevant printer changes on a controlled review branch/commit with explicit approval, and keep the printer profile/settings backup. The old Floyd image-processing path can separately be selected through `PHOTOBOOTH_PHOTO_TUNING=legacy`; **that switch is not a rollback of print-copy dispatch or Windows spooler finalization**.
 

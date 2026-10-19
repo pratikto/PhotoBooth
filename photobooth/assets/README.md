@@ -1,6 +1,8 @@
 # MEONG PHOTOBOOTH brand assets
 
-> **CURRENT (2026-10-19, `feature/kivy-gui`):** This is the active Meong logo asset for Kivy headers and new customer **folder-access** QRs. The approved source PNG and branding hash below are unchanged; the DEMO payment QR remains unbranded/non-payable. Logo artwork test history is archived in [QA](../../docs/qa/branded-qr.md).
+> **Release provenance:** Assets are in the source pre-release [v1.0.0](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0), from prior `feature/kivy-gui` work. Keep media/codecs, audio speaker response and printer/QR paper quality distinct from simulated CI; no change to asset bytes in this documentation cleanup.
+
+> **CURRENT (2026-10-19, `master` / immutable `v1.0.0`):** This is the active Meong logo asset for Kivy headers and new customer **folder-access** QRs. The approved source PNG and branding hash below are unchanged; the DEMO payment QR remains unbranded/non-payable. Logo artwork test history is archived in [QA](../../docs/qa/branded-qr.md).
 
 `meong_photobooth_vivid.png` is the user's final uploaded
 **Bright pixel camera-cat with colorful trail(3).png**, preserved byte-for-byte.

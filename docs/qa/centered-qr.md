@@ -1,5 +1,7 @@
 # Exactly centered full-logo QR
 
+> **2026-10-19 update:** Earlier QR geometry tests are historical; current implementation resides on `master` and is included in immutable [v1.0.0](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0). Synthetic Kiosk CI [PASS at the tagged SHA](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245); physical scan/paper and real payable QRIS not verified/implemented.
+
 > **HISTORICAL QA SNAPSHOT (QR centering repair): This document preserves earlier fixture-based geometric/decode verification. The centered folder QR behavior remains current; full GUI synthetic CI subsequently passed at `c40f33f5`. Independent physical phone and thermal paper checks are separate; no real payable QRIS provider is implemented.**
 
 The original marker-avoidance search placed the logo **72 pixels above center**

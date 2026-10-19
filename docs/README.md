@@ -1,6 +1,9 @@
 # Meong Photobooth — Documentation Index
 
-The repository-root [README](../README.md) explains setup and preserves historical development notes. This `docs/` directory contains the current documentation sources for the Kivy project on **`feature/kivy-gui`**. **This branch is not merged into the default `master` branch**. Historical sections elsewhere remain traceable but must not override the current operational summary below.
+The repository-root [README](../README.md) explains setup. **Current source of truth:** `master` (Kivy application); `v1.0.0` is the immutable, published source baseline. The previous `feature/kivy-gui` is preserved as development history, not the primary branch. Dated records remain useful evidence but do not override current status.
+
+> **CURRENT RELEASE BASELINE (2026-10-19):** Default branch `master` contains Meong Photobooth Kivy GUI. Immutable source snapshot `v1.0.0` / `07ce51d2022ab5673a7a27e744e5e5757fbb3d08` is published as a [GitHub pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0). Release-SHA CI: [Kiosk GUI 39185986245](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245) (**233 pass, 2 skipped, 87 synthetic renders, 0 errors**) and [Dither 39185986273](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273) (**48 tests pass**). Linux mock/screenshot QA is **not** certification on Windows hardware or customer deployment. Outstanding: BUG-001/007 audio speaker retest, BUG-009 30-day Drive cloud retention **OPEN**; QRIS is DEMO/non-payable (FEAT-020 not implemented), receipt scanner FEAT-002 not implemented. The earlier `feature/kivy-gui` branch and dated narratives below are **historical** where they conflict with this baseline.
+
 
 ## Start here: current product and operational truth
 
@@ -25,12 +28,12 @@ The repository-root [README](../README.md) explains setup and preserves historic
 - **[Full Kiosk GUI Regression — verified green CI](qa/KIOSK-GUI-REGRESSION-2026-10-18.md)** — 230 passing / 2 skipped unit tests, 87 render checks, historical FAIL diagnosis and scoped test/CI-only repairs (source SHA `f129dd9e`).
 - **[FEAT-001 / BUG-011 print-copy acceptance](qa/FEAT-001-BUG-011-acceptance.md)** — owner accepted DEMO pricing and working Windows physical copy counts after printer RAW fixes, with dated targeted CI, evidence limitations and future regression matrix.
 - [Photo retention](photo-retention.md) — 15-day local/30-day Drive targets and associated data-loss considerations.
-- [Thermal dithering lab](dither-tuning-lab.md) — the standalone three-algorithm comparison tool originated in `feature/dither-tuning` and was **merged into this Kivy branch**. The owner-approved Floyd preset **is now the default for Kivy photo printing**; lab JSON presets themselves still do not load automatically into `main.py`.
+- [Thermal dithering lab](dither-tuning-lab.md) — the standalone three-algorithm comparison tool originated in `feature/dither-tuning` and was **included in the Kivy code now on `master`**. The owner-approved Floyd preset **is now the default for Kivy photo printing**; lab JSON presets themselves still do not load automatically into `main.py`.
 - [Legacy NEXT_STEPS pointer](NEXT_STEPS.md) — retained for older bookmarks; do not edit as a second backlog.
 
 ## Current field status and verified CI (as of 2026-10-19)
 
-**Latest verified HEAD quality gate (2026-10-18):** [Kiosk GUI Actions 39145145762](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762) **SUCCESS** at branch SHA `c40f33f5`: **230 PASS, 2 SKIP, 0 FAIL/ERROR; 87 simulated renders / 0 visual errors**. [Dither regression 39145145764](https://github.com/pratikto/PhotoBooth/actions/runs/39145145764) also **SUCCESS** at the same SHA. These supersede previous CI FAIL status lines but do not constitute Windows hardware/release certification. [QA diagnosis](qa/KIOSK-GUI-REGRESSION-2026-10-18.md).
+**Current v1.0.0 quality gate (2026-10-19):** [Kiosk GUI 39185986245](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245) (**233 pass, 2 skipped, 87 synthetic renders, 0 errors**) and [Dither 39185986273](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273) (**48 tests pass**). This covers automated Linux simulations only; physical Windows camera, thermal printer, speaker, codec and real customer experience remain separately assessed. Earlier `c40f33f5` checks are historical.
 
 **Latest owner-tested FEAT-001 / BUG-011:** Rp5.000 per selected template/three-photo session plus Rp5.000 per requested copy is implemented. **Both price and actual copy-count passed the owner's Windows test. BUG-011 = OWNER TESTED PASS — MONITORING**, not formally CLOSED/RELEASED. Focused mock/spool CI [39134970707](https://github.com/pratikto/PhotoBooth/actions/runs/39134970707) **15/15 PASS**, and later **full Kiosk GUI CI PASS** (above). Exact local device SHA, queue identity and 1/2/3 paper-count case matrix were not provided.
 
@@ -38,4 +41,4 @@ The owner also reports improved Floyd photo quality (BUG-004), payment QR-slip p
 
 **Intentionally deferred/unresolved:** tutorial/layout background music and `Uji Musik` (BUG-001/007); Google Drive 30-day photo-retention registration (BUG-009, to be coordinated with FEAT-004 advertising media synchronization). **Real payable QRIS (FEAT-020) is NOT implemented**; the onscreen payment QR and simulated checkout remain DEMO, not an authorized merchant charge. Other payment/settlement feature work remains low priority.
 
-For authoritative ongoing status use the [bug tracker](bug_tracker.md), [feature table](FEATURE_STATUS.md), [priority board](next_step.md), [physical acceptance checklist](test_checklist.md) and [FEAT-001 evidence dossier](qa/FEAT-001-BUG-011-acceptance.md). This index grants no authorization to change code, merge, deploy or declare a released build.
+For authoritative ongoing status use the [bug tracker](bug_tracker.md), [feature table](FEATURE_STATUS.md), [priority board](next_step.md), [physical acceptance checklist](test_checklist.md) and [FEAT-001 evidence dossier](qa/FEAT-001-BUG-011-acceptance.md). This index does not authorize further code changes, deployments, or upgrading the versioned **source pre-release** into a hardware-certified production release.

@@ -1,6 +1,8 @@
 # Local advertising media
 
-> **CURRENT (2026-10-19, `feature/kivy-gui`):** These are local/offline ad assets for **both idle and muted payment placements**. The owner subsequently reported video ads in both placements PASS (BUG-002), but a controlled codec/hardware matrix is not yet recorded. Videos remain local and excluded from Git; the planned per-machine Google Drive ad sync (FEAT-004) is **not implemented**. This file describes bundled media only.
+> **Release provenance:** Assets are in the source pre-release [v1.0.0](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0), from prior `feature/kivy-gui` work. Keep media/codecs, audio speaker response and printer/QR paper quality distinct from simulated CI; no change to asset bytes in this documentation cleanup.
+
+> **CURRENT (2026-10-19, `master` / immutable `v1.0.0`):** These are local/offline ad assets for **both idle and muted payment placements**. The owner subsequently reported video ads in both placements PASS (BUG-002), but a controlled codec/hardware matrix is not yet recorded. Videos remain local and excluded from Git; the planned per-machine Google Drive ad sync (FEAT-004) is **not implemented**. This file describes bundled media only.
 
 The checkout includes three small still-image posters. The idle placement uses
 the first; payment has its own playlist with the other two. Videos remain on

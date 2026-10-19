@@ -1,3 +1,17 @@
+## Version 1.0.0 — release-source verification (2026-10-19)
+
+**Immutable release SHA:** `07ce51d2022ab5673a7a27e744e5e5757fbb3d08` (`v1.0.0`, GitHub pre-release). [Kiosk GUI](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245) **SUCCESS**: 235 tests (233 PASS, 2 SKIP, 0 failures/errors), 87 synthetic screenshots / 0 errors. [Dither lab](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273) **SUCCESS**: 48 tests. GitHub Linux mocked tests verify code/screenshot behavior, **not** physical Windows camera/audio/printer/QR phone scan or actual settlement; QRIS is DEMO only. BUG-001/007 audio retest and BUG-009 Drive cloud retention remain unresolved. Earlier `c40f33f5`, `f129dd9e`, and `e46812b8` results are retained as *historical* evidence.
+
+- [x] Old `master` preserved at `backup/master-pre-v1-20261019` (`d4852cb5`); [merge PR #3](https://github.com/pratikto/PhotoBooth/pull/3) landed.
+- [x] Source tag `v1.0.0` verified against the release SHA; [GitHub pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0) published.
+- [x] Kiosk 233/235 pass with 2 skips + 87 screenshots; Dither 48/48 pass on *exact release commit*.
+- [ ] Independent repeatable Windows end-to-end audio (BUG-001/007), physical thermal/QR scanning, and 30-day Drive cleanup (BUG-009) verification before claiming hardware/product certification.
+- [ ] Production payable QRIS FEAT-020 not delivered: never infer real payment acceptance from DEMO.
+
+**Evidence rule:** Checkbox items below describing historical pre-v1 milestones or per-device tests are preserved; do not reinterpret them as missing GitHub source release or completed physical acceptance.
+
+---
+
 ## Current CI screenshot QR stabilization — 2026-10-19
 
 **QA-QR-001 — CI-only / monitoring:** The owner reports the QR is working normally on their Windows laptop. GitHub's QR screenshot decoder previously failed intermittently (e.g. [run 39176198126](https://github.com/pratikto/PhotoBooth/actions/runs/39176198126) attempt 1) with **identical production code**; a rerun succeeded. The synthetic QR used random DEMO attempt IDs, leading to changing rendered QR matrices; OpenCV sometimes failed at one raster scale.
@@ -6,7 +20,7 @@
 
 - [x] [Kiosk Actions 39178452927](https://github.com/pratikto/PhotoBooth/actions/runs/39178452927) **attempts 1, 2, 3 ALL SUCCESS** on one code SHA `e46812b8`: each **235 tests (233 PASS / 2 SKIP / 0 FAIL or ERROR)** and **87 GUI renders / 0 errors**.
 - [x] [Dither Actions 39178452898](https://github.com/pratikto/PhotoBooth/actions/runs/39178452898) PASS at the same SHA.
-- [ ] Confirm Actions on the next documentation-only HEAD commit. Do not conflate SHA results.
+- [x] Both workflows confirmed PASS on final immutable `v1.0.0` release SHA; newer documentation-only PR commits are **not** part of that tag. Do not conflate SHAs.
 - [ ] Monitor future Kiosk runs for repeated screen-QR decode failures (the 3/3 sample is not a permanent guarantee).
 - [ ] Real Windows QR scan/thermal paper and legitimate QRIS remain separate; owner reports laptop unaffected and payment QR is still DEMO.
 
@@ -14,9 +28,9 @@ Detailed cause/boundaries: [Kiosk QA history and 2026-10-19 addendum](qa/KIOSK-G
 
 ---
 
-## Kiosk GUI full regression — VERIFIED CI PASS (2026-10-18)
+## Historical Kiosk GUI full regression — VERIFIED CI PASS (2026-10-18)
 
-> **CURRENT (2026-10-19):** The latest verified **full Kiosk GUI CI at `c40f33f5` PASS** ([run 39145145762](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762): 230 passing/2 skipped, 87 simulated renders), and [dither CI PASS](https://github.com/pratikto/PhotoBooth/actions/runs/39145145764). FEAT-001/003 **OWNER TESTED PASS**; BUG-011 monitored. Specific individual hardware test boxes remain unchecked **if logs, counts or local SHA were not supplied**; unchecked does *not* negate the owner's overall acceptance. BUG-009 Drive cloud retention and audio BUG-001/007 still require separate attention; no production release verified.
+> **PRE-v1 historical evidence:** The earlier verified **full Kiosk GUI CI at `c40f33f5` PASS** ([run 39145145762](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762): 230 passing/2 skipped, 87 simulated renders), and [dither CI PASS](https://github.com/pratikto/PhotoBooth/actions/runs/39145145764). FEAT-001/003 **OWNER TESTED PASS**; BUG-011 monitored. Specific individual hardware test boxes remain unchecked **if logs, counts or local SHA were not supplied**; unchecked does *not* negate the owner's overall acceptance. BUG-009 Drive cloud retention and audio BUG-001/007 still require separate attention; no production release verified.
 
 **Authoritative outcome:** [GitHub Actions run 39144464476](https://github.com/pratikto/PhotoBooth/actions/runs/39144464476), commit `f129dd9e`, completed **SUCCESS**. `xvfb-run -a python tools/run_kiosk_unittests.py` (standard unittest discovery with Kivy-log-safe reporting): **232 run, 230 PASS, 2 SKIP, 0 FAIL, 0 ERROR**. `tools/render_gui.py` and `ci_visual_summary.py`: **87 simulated GUI screenshots / 0 errors**, including camera, cart, ads, QR DEMO and both supported desktop sizes. Python syntax check also PASS. Environment is Linux GitHub Actions / Python 3.12 / Xvfb / software GL / mocked devices—not Windows hardware.
 
