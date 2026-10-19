@@ -23,7 +23,9 @@ def _enumerate_windows_queues(spooler=None) -> tuple[str, ...]:
         entries = spooler.EnumPrinters(flags, None, 2)
         names = [item.get("pPrinterName", "") for item in entries]
         return tuple(sorted({name.strip() for name in names if isinstance(name, str) and name.strip()}))
-    except (ImportError, OSError, RuntimeError, AttributeError, TypeError):
+    except Exception:
+        # Native Windows pywintypes.error is not consistently an OSError.
+        # A failed queue enumeration must never abort all other health checks.
         return ()
 
 
