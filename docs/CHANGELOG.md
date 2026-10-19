@@ -1,3 +1,5 @@
+> **Field QA update, 2026-10-19:** Owner reported **seven of seven Windows laptop GUI health-monitoring checks PASS**, covering launch, Settings/Health menu, six indicators, Refresh responsiveness, printer queue discovery, device chooser and popup reopen. Logged as **OWNER-REPORTED smoke PASS**, not verified paper/camera physical or restart-persistence acceptance; exact laptop commit SHA unknown. This is a **documentation-only** QA record on `feature/device-health`; does not merge Draft PR #7 or alter `master`.
+
 > **FEAT-008 cross-platform latest safety CI (2026-10-19):** [49/49 focused tests](https://github.com/pratikto/PhotoBooth/actions/runs/39205072276) and [Kiosk 292 PASS / 2 SKIP + 87 renders](https://github.com/pratikto/PhotoBooth/actions/runs/39205072279) on tested implementation SHA `b5617679960c585a6fe6ccec298fc4ba31591ae7`. Corrected health discovery to avoid querying Windows spooler during active photo printing. Draft PR #7 stays unmerged; no Windows/SBC/Android device acceptance.
 
 # Meong Photobooth — Documentation and release changelog

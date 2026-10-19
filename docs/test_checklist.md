@@ -1,3 +1,21 @@
+## FEAT-008 — owner-reported Windows GUI smoke test: 7/7 PASS (2026-10-19)
+
+**Evidence source:** Owner ran the booth on a Windows laptop and reported the seven results below. This is a **human-reported on-device GUI/diagnostics smoke test**, not independent hardware telemetry, and the exact local commit SHA was **not supplied**. It does not override outstanding physical acceptance or grant merge permission.
+
+- [x] PASS — Aplikasi terbuka normal tanpa error
+- [x] PASS — Menu DEVICE HEALTH dapat dibuka
+- [x] PASS — Enam status kesehatan perangkat tampil
+- [x] PASS — REFRESH STATUS bekerja tanpa membuat GUI macet
+- [x] PASS — Daftar perangkat menampilkan printer Windows
+- [x] PASS — PILIH DEVICE menampilkan pilihan kamera dan printer
+- [x] PASS — Tutup dan buka kembali Health Monitoring tanpa error
+
+**Still unverified:** saving a selected camera/printer, stopping/restarting Meong and verifying the preference is honored; camera USB disconnect/reconnect; printer physical presence, paper-out/cutter and successful printing; Linux/SBC camera/CUPS; Android (deferred until production QRIS works). No test of payment gateway, QRIS settlement, photo quality or end-to-end kiosk purchase flow was reported here.
+
+**Branch gate:** `feature/device-health` Draft PR #7 remains unmerged. No automatic merge/release or source edits are authorized by these PASS reports.
+
+---
+
 ## Scope control — Android depends on real QRIS (2026-10-19)
 
 - [x] Owner postponed native Android B.4 until FEAT-020 **real payable QRIS** works and is verified; QRIS DEMO does not meet the gate.
