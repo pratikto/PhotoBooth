@@ -25,7 +25,7 @@ python main.py
 
 With the Kivy app open: Settings gear → DEVICE HEALTH → read all six rows → REFRESH STATUS → TUTUP. Check that closing/reopening the panel never displays stale results, and that camera preview/photo workflow and existing printer controls still work. **Do not start a real print test just to validate this read-only feature.** Windows hardware acceptance is Stage C and requires separate approval/evidence.
 
-Synthetic GUI/controller tests live in `tests/test_device_health_gui.py` and are run by Kiosk GUI regression CI (`PHOTOBOOTH_TEST_GUI=1` with a Kivy/Xvfb display). The 25 isolated Stage A tests run without physical hardware.
+Synthetic GUI/controller tests live in `tests/test_device_health_gui.py` and are run by Kiosk GUI regression CI (`PHOTOBOOTH_TEST_GUI=1` with a Kivy/Xvfb display). The 25 isolated Stage A tests run without physical hardware. **Reviewed Stage B code SHA `f93dd88`:** [Device Health tests 25 PASS](https://github.com/pratikto/PhotoBooth/actions/runs/39197763719) and [full Kiosk GUI synthetic regression](https://github.com/pratikto/PhotoBooth/actions/runs/39197763624) **270 run (268 PASS, 2 SKIP), 87 synthetic renders / 0 errors**. This evidence is not a Windows physical device signoff; later documentation-only PR head checks must be assessed separately.
 
 ### Separate merge authorization
 
