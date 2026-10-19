@@ -38,3 +38,6 @@ Added `photobooth/checkout_service.py` (commit `f08ed287`) and six offline servi
 
 ## Stage 7 — Booth authentication primitive (2026-10-20)
 Added `photobooth/booth_auth.py` (`bc876fa9`) and six offline test methods in `tests/test_booth_auth.py` (`525ba571`). Per-booth bearer tokens are validated against configured SHA-256 digests with constant-time comparison; cross-booth credential reuse is denied. **Tests have not been executed in this session.** This is not yet an HTTP backend or production credential provisioning. Token distribution, rotation, TLS, rate limits, deployment, signed provider callbacks, session handoff and full regression remain outstanding. Branch-only; do not merge into master without owner approval.
+
+## Stage 8 — Incremental FastAPI staging routes (2026-10-20)
+`photobooth/qris_api.py` introduced in commits `9273ef9`, `9772a67`, `d7a8bb0`: health, authenticated create/status/claim and webhook route. Six HTTP route tests added in `tests/test_qris_api.py` (`e26bdfa`). **No tests executed/CI verified in this session.** Server deployment, TLS, secret provisioning, webhook rate limits, provider error handling, request validation, real Sandbox integration, Kivy and Windows hardware testing are open. This API is NOT approved for public deployment. No master merge without explicit owner approval.
