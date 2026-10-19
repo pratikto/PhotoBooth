@@ -378,7 +378,7 @@ Fixture URLs:
 [pointing_up.jpg](https://storage.googleapis.com/mediapipe-assets/pointing_up.jpg).
 Neither native weights nor sample photos are committed to this repository.
 
-The tariff is unchanged: Rp5.000 per session; quantity 2 totals Rp10.000. QRIS
-remains explicitly simulated, printing is not connected, and `ui_tkinter.py` is
+**HISTORICAL — initial Tkinter-era fixture pricing, SUPERSEDED by FEAT-001 in v1:** At that older stage, tariff was Rp5.000 per session and quantity 2 totaled Rp10.000. In **current v1 DEMO**, one selected three-photo template plus two identical printed copies totals **Rp15.000**, not Rp10.000. QRIS
+was explicitly simulated; printing was not connected in that historical Tkinter fixture, and `ui_tkinter.py` was
 unchanged. These renders use generated geometric illustrations and fixture URLs;
 they contain no customer images, credentials, or transaction data.
