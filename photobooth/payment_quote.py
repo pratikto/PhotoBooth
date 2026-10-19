@@ -11,7 +11,7 @@ import re
 
 from photobooth.catalog import PRICE_PER_SESSION, PRICE_PER_PRINT_COPY
 
-_TEMPLATE_PATTERN = re.compile(r"template_[a-l]\\Z")
+_TEMPLATE_PATTERN = re.compile(r"template_[a-l]$")
 
 
 @dataclass(frozen=True)
