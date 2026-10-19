@@ -5,7 +5,7 @@ This file tracks **actual verified repository/document changes**, not successful
 ## [v1.0.0] — 2026-10-19 (Kivy source baseline)
 
 - **Approved promotion:** owner explicitly approved the version-one baseline process: preserve the old `master` tip, make `feature/kivy-gui` the new `master`, then tag the tested merged source as `v1.0.0`. Backup: `backup/master-pre-v1-20261019` at `d4852cb5`.
-- **CI controls:** enable Kiosk GUI and Dither workflows for pushes to `master`, and correct Kiosk pull-request target from nonexistent `main` to `master`. A one-time GitHub release workflow publishes the v1 tag only after both tests have passed on the release merge SHA.
+- **CI controls:** enable Kiosk GUI and Dither workflows for pushes to `master`, and correct Kiosk pull-request target from nonexistent `main` to `master`. A one-time GitHub release workflow publishes the v1 tag only after both tests have passed on the exact `master` release-baseline commit (including any release-workflow correction).
 - **Status:** release notes and known limitations are in [releases/v1.0.0.md](releases/v1.0.0.md). This denotes an **auditable versioned source baseline**, not real QRIS, verified Drive retention, or physical Windows production acceptance. The tag/release must be verified on GitHub before reporting it as created.
 - The older sections titled **Unreleased** below are dated **pre-v1 historical development records**. Their statements that no branch merge or release had been authorized were true when written, and are superseded only for this specifically approved version promotion.
 
