@@ -35,3 +35,5 @@ jobs:
         run: python -m unittest discover -s tests -p 'test_device_health.py' -v
       - name: Verify heterogeneous platform adapter capabilities
         run: python -m unittest discover -s tests -p 'test_hardware_adapters.py' -v
+      - name: Verify safe read-only platform hardware discovery
+        run: python -m unittest discover -s tests -p 'test_hardware_discovery.py' -v
