@@ -1,3 +1,15 @@
+## FEAT-008 Stage B — branch-only GUI/worker regression (2026-10-19)
+
+- [x] Owner approved Stage B on existing `feature/device-health` **without merge authorization**. Prior Stage A PR #5 was reverted out of `master` in [PR #6](https://github.com/pratikto/PhotoBooth/pull/6).
+- [x] Kivy Settings now includes DEVICE HEALTH dialog with six statuses, automatic single scan on open, manual REFRESH, scrollable content, and close; main photo GUI is not replaced.
+- [x] Probe submission occurs via a daemon worker with Kivy main-thread callback, no new monitoring timer, print-in-flight guard, no automatic printing and stale-popup result rejection.
+- [ ] **Exact Stage B Kiosk GUI CI:** record final PR SHA, counts and 87 render results when available; GUI tests in `tests/test_device_health_gui.py` are opt-in using `PHOTOBOOTH_TEST_GUI=1`.
+- [ ] **Isolated Stage A regression:** after Stage B print guard change rerun `python -m unittest discover -s tests -p test_device_health.py -v` and record final SHA/pass count.
+- [ ] **Owner Windows trial:** Settings → DEVICE HEALTH; refresh twice, close/reopen; check existing camera and real printer not blocked; video/Drive/cutter physical status not verified by probe.
+- [ ] **Merge:** NOT AUTHORIZED; keep the draft PR unmerged until explicit owner approval.
+
+---
+
 ## FEAT-008 Stage A — source / test checklist (2026-10-19)
 
 - [x] Owner-approved backend-only scope and isolated branch `feature/device-health` from `master` `abbdb0d6b0d97a796da14b7edabf21252892c9cb`.
