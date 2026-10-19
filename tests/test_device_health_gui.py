@@ -64,8 +64,7 @@ class DeviceHealthGuiTests(unittest.TestCase):
         self.assertIn("READY", ui._health_labels["printer"][0].text)
         self.assertIn("PERHATIAN", ui._health_labels["disk"][0].text)
         self.assertIn("BELUM DIKETAHUI", ui._health_labels["media"][0].text)
-        self.assertIn("decoder", ui._health_labels["media"][1].text.lower() if False else
-                      ui._health_labels["media"][1].text.lower().replace("diagnostic", "decoder"))
+        self.assertIn("Diagnostic for media", ui._health_labels["media"][1].text)
         self.assertEqual(Window.size, previous_size)
         self.assertLessEqual(popup.width, Window.width)
         self.assertLessEqual(popup.height, Window.height)
