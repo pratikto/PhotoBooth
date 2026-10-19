@@ -222,6 +222,20 @@ class DeviceHealthTests(unittest.TestCase):
         self.assertEqual(health.check_heartbeat(100.0, now=106.0).status, health.WARNING)
         self.assertEqual(health.check_heartbeat(103.0, now=100.0).status, health.UNKNOWN)
 
+    def test_printer_busy_does_not_probe_or_send_anything(self):
+        with (
+            patch.object(health, "check_camera", return_value=health.HealthCheck("camera", health.READY, "ok")),
+            patch.object(health, "check_printer") as printer_check,
+            patch.object(health, "check_disk", return_value=health.HealthCheck("disk", health.READY, "ok")),
+            patch.object(health, "check_network", return_value=health.HealthCheck("network", health.READY, "ok")),
+            patch.object(health, "check_media", return_value=health.HealthCheck("media", health.READY, "ok")),
+            patch.object(health, "check_heartbeat", return_value=health.HealthCheck("heartbeat", health.READY, "ok")),
+        ):
+            snapshot = health.collect_health_snapshot(printer_busy=True)
+        printer_check.assert_not_called()
+        self.assertEqual(snapshot.by_name("printer").status, health.UNKNOWN)
+        self.assertIn("ditunda", snapshot.by_name("printer").message)
+
     def test_snapshot_has_six_ordered_checks_with_timezone_aware_timestamp(self):
         # No real physical I/O. Patch every check that could reach a device
         # or filesystem; the snapshot only aggregates typed observations.
