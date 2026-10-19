@@ -1,3 +1,5 @@
+> **FEAT-008 cross-platform latest safety CI (2026-10-19):** [49/49 focused tests](https://github.com/pratikto/PhotoBooth/actions/runs/39205072276) and [Kiosk 292 PASS / 2 SKIP + 87 renders](https://github.com/pratikto/PhotoBooth/actions/runs/39205072279) on tested implementation SHA `b5617679960c585a6fe6ccec298fc4ba31591ae7`. Corrected health discovery to avoid querying Windows spooler during active photo printing. Draft PR #7 stays unmerged; no Windows/SBC/Android device acceptance.
+
 # Meong Photobooth — Documentation and release changelog
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).

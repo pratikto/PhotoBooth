@@ -69,7 +69,7 @@ device codes ready for Android merely because the inventory class exists.
 | Linux mini PC / SBC | `/dev/v4l/by-id/` aliases and `/dev/video*`; `/dev/usb/lp*`; `lpstat -e` queue names with 1.5-second command timeout | Paths/queues do not prove permissions, frames, ESC/POS support or paper. CSI/libcamera modules may require a separate adapter; `video*` indices may change after USB reconnect. |
 | Android | No desktop bus enumeration | A platform-native Camera2/USB Host bridge, permissions and real device trials are prerequisites. Empty discovery is **unknown**, not proof of no camera/printer. |
 
-Discovery runs only as part of the explicit operator Settings health scan,
+Discovery runs only as part of the explicit operator Settings health scan **and is skipped entirely while an active photo print is registered**,
 off the Kivy thread. The panel displays **configured** route entries and
 **OS-detected candidate** entries separately in the scrollable list. It does
 not auto-select a different printer or camera, alter the existing printer

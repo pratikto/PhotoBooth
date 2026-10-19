@@ -1,3 +1,5 @@
+> **Latest B.1/B.2 safety correction CI (2026-10-19):** On `feature/device-health` source/test SHA `b5617679960c585a6fe6ccec298fc4ba31591ae7`, [Device Health Actions 39205072276](https://github.com/pratikto/PhotoBooth/actions/runs/39205072276) **49/49 PASS** (25 original + 14 adapters + 10 discovery). [Kiosk GUI Actions 39205072279](https://github.com/pratikto/PhotoBooth/actions/runs/39205072279) **294 tests / 292 PASS / 2 SKIP, 87 renders / 0 errors**. Printer route probing **and Windows queue discovery** both skip whenever a photo print is in flight. These are mocked Ubuntu CI results, not physical acceptance; docs-only commit after this does not alter tested code. PR #7 stays Draft, unmerged.
+
 ## FEAT-008 B.1/B.2 capability/discovery — verified mock QA (2026-10-19)
 
 - [x] Owner approved staged cross-platform development on existing branch `feature/device-health`; PR #7 is Draft, **no merge authorization**.
