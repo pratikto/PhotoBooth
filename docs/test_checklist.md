@@ -1,3 +1,14 @@
+## FEAT-008 Windows local test follow-up — selection PASS, stale discovery fixture (2026-10-19)
+
+- [x] **Owner Windows PowerShell:** `test_device_selection.py` — **13/13 PASS**, including `test_linux_camera_symlink_remains_selected_and_is_not_opened`; previous local WinError 1314 for this suite is resolved.
+- [ ] **Owner Windows PowerShell:** `test_hardware_discovery.py` — **9/10 PASS, 1 ERROR**. `test_linux_v4l_by_id_alias_is_stable_candidate_not_verified_camera` still attempted `alias.symlink_to(fake)` at local line 62 and raised `WinError 1314`.
+- [x] **Repository comparison:** current `feature/device-health` remote test file branches on `os.name == "nt"` at line 63 and only calls `alias.symlink_to(fake)` in the Linux/non-Windows branch at line 76. Therefore the user-provided trace matches an **older local copy of `tests/test_hardware_discovery.py`** (exact local Git SHA not provided), not the current patched repository file. Do not recommend admin rights or Developer Mode.
+- [ ] **Next owner action:** confirm `git status` and `git branch --show-current`; fast-forward pull `feature/device-health` if safe; rerun `python -m unittest discover -s tests -p "test_hardware_discovery.py" -v`. Do not overwrite uncommitted changes.
+- [x] Prior [GitHub CI 39223474630](https://github.com/pratikto/PhotoBooth/actions/runs/39223474630) PASS for **62/62 Windows** and **62/62 Linux** device tests. This remains software/mock evidence, not physical printer/camera qualification.
+- [x] QA record only. No production code modified or permission to merge Draft PR #7.
+
+---
+
 ## FEAT-008 — user-run Windows hardware adapter tests: 14/14 PASS (2026-10-19)
 
 - [x] **Owner-reported local Windows/Python 3.12 result:** `python -m unittest discover -s tests -p "test_hardware_adapters.py" -v` ran **14 tests / 14 PASS / 0 failures / 0 errors**, using the owner's `.venv-kivy` PowerShell environment. Exact local Git SHA was not included.
