@@ -22,7 +22,7 @@ The repository-root [README](../README.md) explains setup. **Current source of t
 ## Supporting technical references
 
 - [Architecture](ARCHITECTURE.md) — actual source-level modules vs proposed system design.
-- [FEAT-008 Device Health Monitoring](device-health.md) — **Stage A backend + Stage B Settings GUI** developed on `feature/device-health` for review, **not merged into master**. Automatic nonblocking checks on panel open and manual Refresh; Windows acceptance Stage C not done, separate merge authorization required.
+- [FEAT-008 Device Health Monitoring](device-health.md) — **Stage A/B operator GUI plus B.1/B.2 cross-platform capabilities and read-only discovery** under development in `feature/device-health` for review, **not merged into master**. No automatic selection or native Android bridge; on-device Windows/SBC acceptance and separate merge authorization still required.
 - **FEAT-003 live camera mirror:** capture-page GPU preview mirror implemented in `ui_kivy.py`; owner explicitly confirms Windows **TESTED PASS (2026-10-18)**, and [targeted Kivy GPU Actions 39139208320](https://github.com/pratikto/PhotoBooth/actions/runs/39139208320) also **PASS**. Full Kiosk CI/release checks remain separate. FEAT-002 receipt scanner/overlay is unimplemented. [FEAT-003 acceptance checklist](test_checklist.md).
 - [Advertising and demo QR payment slip](advertising-and-qris.md) — current playback and printer setup, with **legacy LAN** instructions clearly distinguished from saved GUI printer configuration.
 - [QA evidence archive](qa/README.md) — date-specific automated/visual reports that do not override later device failures.

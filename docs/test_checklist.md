@@ -1,3 +1,18 @@
+## FEAT-008 B.1/B.2 capability/discovery — verified mock QA (2026-10-19)
+
+- [x] Owner approved staged cross-platform development on existing branch `feature/device-health`; PR #7 is Draft, **no merge authorization**.
+- [x] B.1 platform/capability descriptors, Android `UNKNOWN` device bridges, no fake stable camera index or USB vendor/product identity.
+- [x] B.2 read-only Windows print queue, Linux V4L/by-id candidate, USB node and time-bounded CUPS queue discovery, with **no camera open and no test print**, limited to operator health scans in the worker.
+- [x] [Dedicated GitHub CI 39204278785](https://github.com/pratikto/PhotoBooth/actions/runs/39204278785) on exact tested source SHA `6cb4263e97a31cfd2d74a6e0eb2ae6329232269c`: **25 Stage A + 14 adapter + 9 discovery = 48/48 mocked tests PASS** (Ubuntu Python 3.12). Later documentation/source SHA needs its own CI confirmation.
+- [ ] Full Kiosk GUI CI on final PR HEAD SHA; recorded separately from standalone mock tests.
+- [ ] Windows physical operator test: compare configured queue vs Windows discovery with real printer connected/disconnected; camera preview and other customer flows unaffected; check disk low warning. Test against actual booth hardware.
+- [ ] Linux/SBC physical V4L2, libcamera CSI, queue/node permissions and ESC/POS print output; **not tested** by Ubuntu mocks.
+- [ ] Android Camera2 native bridge/permissions, USB Host SDK and packaging; **not implemented or tested**.
+- [ ] Safe persistent primary-camera/printer selection for changed devices; **not yet implemented** (existing printer Settings remains, camera index remains env-selected).
+- [ ] Explicit separate owner approval before merging/releasing FEAT-008 to `master`.
+
+---
+
 ## FEAT-008 Stage B — branch-only GUI/worker regression (2026-10-19)
 
 - [x] Owner approved Stage B on existing `feature/device-health` **without merge authorization**. Prior Stage A PR #5 was reverted out of `master` in [PR #6](https://github.com/pratikto/PhotoBooth/pull/6).

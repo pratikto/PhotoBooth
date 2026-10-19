@@ -43,6 +43,7 @@ Sources: owner decisions from recent project discussions; technical implementati
 | --- | --- | --- |
 | DEC-021 | On 2026-10-19 owner approved **FEAT-008 Stage A** (non-invasive backend probes and mocked tests) on the dedicated feature branch. | This was **implementation approval only**; the subsequent PR #5 merge had no separate authorization and was reverted in PR #6. Preserve `v1.0.0` and unrelated bugs. |
 | DEC-022 | On 2026-10-19 owner requested revert of unauthorized PR #5 merge; PR #6 restored pre-FEAT-008 master contents. Owner subsequently approved **Stage B development on the existing `feature/device-health`**. | Panel, nonblocking worker and tests/docs on the feature branch only; **no merge without another explicit owner instruction**, regardless of CI. Stage C physical signoff and other features remain separate. |
+| DEC-023 | On 2026-10-19 owner approved executing FEAT-008 cross-platform work **in stages** after clarifying cameras/printers can vary by model/vendor and OS (Windows, Linux/SBC, Android). | First B.1 capability inventory and B.2 safe discovery in the **existing** feature branch, then validate device selection and real OS drivers separately. `READY` must not imply printer paper/camera sensor verified. Android native driver/permissions and Windows/SBC physical tests are not yet implemented or certified. **No merge to master** without a separate explicit command. |
 
 ## Business and software subscription decisions (owner-confirmed)
 

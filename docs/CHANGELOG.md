@@ -2,6 +2,13 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased — FEAT-008 cross-platform B.1 / B.2 discovery] — 2026-10-19
+
+- Owner approved **staged** heterogeneous camera/printer health architecture for Windows, Linux/SBC and Android, strictly on `feature/device-health`; no merge approval. [Draft PR #7](https://github.com/pratikto/PhotoBooth/pull/7) remains unmerged.
+- B.1: `photobooth/hardware_adapters.py` capability and identity descriptors, OS adapter boundary, explicit Android Camera2/printer bridge `UNKNOWN` rather than false `READY`, `HealthSnapshot.devices/platform` and Settings platform label.
+- B.2 initial **read-only discovery**: `photobooth/hardware_discovery.py` enumerates Windows spooler queues, Linux V4L/by-id nodes, USB printer nodes and time-bounded CUPS queues without opening competing cameras or sending prints; configured vs discovered candidates visible in the operator Health panel. Adds adapter/discovery mock tests + targeted CI, no persistent device selection yet.
+- Test evidence: [Device Health 39204278785](https://github.com/pratikto/PhotoBooth/actions/runs/39204278785), **25 Stage A + 14 adapters + 9 discovery = 48 mocked tests PASS** at source SHA `6cb4263e`. Full Kiosk GUI on this source SHA must be verified independently. No owner Windows/SBC/Android hardware signoff.
+
 ## [Unreleased — FEAT-008 Stage B, branch feature/device-health] — 2026-10-19
 
 - Owner explicitly authorized **Stage B Settings Health Monitoring GUI** in the existing `feature/device-health` branch only, after requesting the prior Stage A merge be reverted from `master` through [PR #6](https://github.com/pratikto/PhotoBooth/pull/6). No authorization to merge Stage A/B or alter immutable `v1.0.0`.
