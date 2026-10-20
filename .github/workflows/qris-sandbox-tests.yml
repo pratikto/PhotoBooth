@@ -2,24 +2,20 @@ name: QRIS Sandbox Unit Tests
 
 on:
   push:
-    branches:
-      - feature/qris-payment
+    branches: [feature/qris-payment]
     paths:
-      - "photobooth/payment_*.py"
-      - "photobooth/midtrans_*.py"
-      - "photobooth/checkout_service.py"
-      - "photobooth/booth_auth.py"
-      - "photobooth/qris_api.py"
-      - "photobooth/qris_kiosk_client.py"
-      - "photobooth/qris_preview.py"
-      - "photobooth/qris_server.py"
-      - "tests/test_payment_*.py"
-      - "tests/test_midtrans_*.py"
-      - "tests/test_checkout_service.py"
-      - "tests/test_booth_auth.py"
-      - "tests/test_qris_api.py"
-      - "tests/test_qris_kiosk_client.py"
-      - ".github/workflows/qris-sandbox-tests.yml"
+      - 'photobooth/**'
+      - 'tests/**'
+      - 'tools/run_qris_tests.py'
+      - 'requirements-qris*.txt'
+      - '.github/workflows/qris-sandbox-tests.yml'
+  pull_request:
+    paths:
+      - 'photobooth/**'
+      - 'tests/**'
+      - 'tools/run_qris_tests.py'
+      - 'requirements-qris*.txt'
+      - '.github/workflows/qris-sandbox-tests.yml'
   workflow_dispatch:
 
 permissions:
@@ -31,16 +27,42 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-      - name: Install isolated test dependencies
-        run: python -m pip install "pillow>=10,<12" "fastapi>=0.115,<1" "httpx>=0.27,<1"
-      - name: Run offline QRIS regression tests
+          python-version: '3.11'
+      - name: Install backend test dependencies
+        run: python -m pip install 'Pillow==11.3.0' 'fastapi==0.128.2' 'pydantic==2.13.5' 'httpx==0.28.1' 'requests==2.32.5'
+      - name: Record reproducible test inputs
         run: |
-          python -m unittest discover -s tests -p "test_payment_*.py" -v
-          python -m unittest discover -s tests -p "test_midtrans_*.py" -v
-          python -m unittest discover -s tests -p "test_checkout_service.py" -v
-          python -m unittest discover -s tests -p "test_booth_auth.py" -v
-          python -m unittest discover -s tests -p "test_qris_api.py" -v
-          python -m unittest discover -s tests -p "test_qris_kiosk_client.py" -v
+          mkdir -p qris-evidence
+          git rev-parse HEAD > qris-evidence/tested-sha.txt
+          python -V > qris-evidence/python.txt
+          python -m pip freeze > qris-evidence/dependencies.txt
+          git archive --format=zip HEAD -o qris-evidence/tested-source.zip
+      - name: Run every required backend suite without silent skips
+        run: |
+          python - <<'PY' 2>&1 | tee qris-evidence/tests.txt
+          import pathlib, sys, unittest
+          sys.path.insert(0, str(pathlib.Path('tests').resolve()))
+          names = [
+              'test_payment_ledger', 'test_payment_quote', 'test_payment_orders',
+              'test_payment_concurrency', 'test_midtrans_verify', 'test_midtrans_sandbox',
+              'test_checkout_service', 'test_booth_auth', 'test_qris_api',
+              'test_qris_kiosk_client',
+          ]
+          suite = unittest.defaultTestLoader.loadTestsFromNames(names)
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if result.skipped:
+              print('ERROR: mandatory backend tests must not be skipped')
+          sys.exit(0 if result.wasSuccessful() and not result.skipped and result.testsRun else 1)
+          PY
+      - name: Preserve evidence even when tests fail
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qris-evidence-${{ github.sha }}
+          path: qris-evidence/
+          retention-days: 7
+          if-no-files-found: error
