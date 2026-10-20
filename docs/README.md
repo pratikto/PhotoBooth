@@ -21,6 +21,8 @@ The repository-root [README](../README.md) explains setup. **Current source of t
 
 ## Supporting technical references
 
+- **[FEAT-021 Meong Fly standalone mockup UI](features/FEAT-021-meong-fly.md)** — feature-branch-only five-screen pixel-art arcade prototype; how to launch and test it, visual mockup constraints, one demo receipt per chance and full Windows acceptance gaps. **Not integrated** into the production Kivy welcome screen/QRIS.
+
 - [Architecture](ARCHITECTURE.md) — actual source-level modules vs proposed system design.
 - **FEAT-003 live camera mirror:** capture-page GPU preview mirror implemented in `ui_kivy.py`; owner explicitly confirms Windows **TESTED PASS (2026-10-18)**, and [targeted Kivy GPU Actions 39139208320](https://github.com/pratikto/PhotoBooth/actions/runs/39139208320) also **PASS**. Full Kiosk CI/release checks remain separate. FEAT-002 receipt scanner/overlay is unimplemented. [FEAT-003 acceptance checklist](test_checklist.md).
 - [Advertising and demo QR payment slip](advertising-and-qris.md) — current playback and printer setup, with **legacy LAN** instructions clearly distinguished from saved GUI printer configuration.
@@ -44,4 +46,3 @@ The owner also reports improved Floyd photo quality (BUG-004), payment QR-slip p
 For authoritative ongoing status use the [bug tracker](bug_tracker.md), [feature table](FEATURE_STATUS.md), [priority board](next_step.md), [physical acceptance checklist](test_checklist.md) and [FEAT-001 evidence dossier](qa/FEAT-001-BUG-011-acceptance.md). This index does not authorize further code changes, deployments, or upgrading the versioned **source pre-release** into a hardware-certified production release.
 
 
-- **[FEAT-021 Meong Fly standalone mockup UI](features/FEAT-021-meong-fly.md)** — feature-branch-only five-screen pixel-art arcade prototype; how to launch and test it, visual mockup constraints, one demo receipt per chance and full Windows acceptance gaps. **Not integrated** into the production Kivy welcome screen/QRIS.
