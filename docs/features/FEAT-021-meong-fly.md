@@ -1,11 +1,11 @@
 # FEAT-021 — Meong Fly isolated prototype
 
-Status: IN PROGRESS — Step 4 standalone mockup-styled GUI coded; NEW Windows GUI acceptance pending. Historical Step 3 standalone GUI owner-reported 6/6 PASS; NOT production/hardware certified.
+Status: IN PROGRESS — Visual Polish v2 Batch A (Start/Scan) + Batch B (Gameplay) IN SOURCE; current Windows GUI/visual acceptance PENDING. Batch C (Win/Lose) not yet polished. Historical Step 3 owner 6/6 PASS applies only to the older renderer, NOT this version.
 Approved 2026-10-20: isolated prototype in feature/meong-flappy-challenge; no master merge.
 Priority: P2 product enhancement, after core operational bugs; commercial integration BLOCKED.
 
 ## Scope
-A standalone Kivy mini game inspired by tap-to-fly arcade mechanics, with a gray cat, rainbow trail, pipes, score, loss and win states. Entry point: `python -m photobooth.meong_fly_demo`. No receipt scan, welcome-screen integration, discount, merchant ledger, or Midtrans payment in this prototype.
+An isolated five-screen Kivy arcade mini-game with the approved Meong camera-cat logo crop, rainbow, a ten-point asteroid-gap challenge, pause, score, Win/Lose, and SQLite persistence enforcing a single play per locally entered `DEMO-...` token. Entry point: `python -m photobooth.meong_fly_demo`. QR artwork is decorative, NOT a real scan. There is no verified cafe POS/merchant receipt, redeemable discount, production welcome-screen integration or live Midtrans payment.
 
 ## Proposed future business rules (NOT IMPLEMENTED)
 Model A: scan valid cafe receipt first, then one game attempt. A win may grant IDR 2,500 off the photobooth total. Subsidy is shared between Meong and cafe; 50:50 is a proposal, not a confirmed split. Only successful paid redemption is eligible for cafe settlement. Receipt validation must use verifiable unique tokens and atomic redemption; never trust GUI score alone.
