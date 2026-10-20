@@ -796,6 +796,7 @@ class PhotoBoothApp:
                     session_id=session.plan.session_id,
                     final_photos=session.final_photo_paths,
                     output_path=output_path,
+                    background_style=self._background_style,
                 )
             session.output_path = output_path
         except (OSError, RuntimeError, ValueError) as error:
