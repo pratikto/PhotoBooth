@@ -38,7 +38,7 @@ class DizzyLabIntegrationTests(unittest.TestCase):
         self.assertEqual(a.size, gray.size)
         self.assertNotEqual(a.tobytes(), b.tobytes())
 
-    def test_v3_profile_and_four_lane_roundtrip(self):
+    def test_v4_profile_and_four_lane_roundtrip(self):
         configs = ComparisonProfiles().replace_lane(
             DitherProfile(mode="dizzy", dizzy_seed=7, dizzy_variant="orthogonal-4"))
         with tempfile.TemporaryDirectory() as folder:
@@ -58,6 +58,7 @@ class DizzyLabIntegrationTests(unittest.TestCase):
             values = asdict(profiles.by_mode(mode))
             values.pop("dizzy_seed")
             values.pop("dizzy_variant")
+            values.pop("enhanced_dizzy")
             lanes[mode] = values
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / "v2.json"
@@ -66,6 +67,7 @@ class DizzyLabIntegrationTests(unittest.TestCase):
             loaded = load_comparison(path)
             self.assertEqual(loaded.dizzy.dizzy_variant, "article-8")
             self.assertEqual(loaded.dizzy.dizzy_seed, 42)
+            self.assertFalse(loaded.dizzy.enhanced_dizzy)
             self.assertEqual(loaded.floyd, profiles.floyd)
 
     def test_dizzy_validation(self):
