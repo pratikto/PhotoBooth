@@ -1,7 +1,7 @@
 """Offline simulation tests; no camera, payment, Kivy or hardware required."""
 import random
 import unittest
-from photobooth.meong_fly import MeongFly, Pipe, CAT_X, PIPE_WIDTH, TARGET_SCORE
+from photobooth.meong_fly import MeongFly, Pipe, CAT_X, CAT_LEFT, CAT_RIGHT, CAT_BOTTOM, CAT_TOP, PIPE_WIDTH, TARGET_SCORE, HEIGHT
 
 
 class MeongFlyTests(unittest.TestCase):
@@ -39,6 +39,34 @@ class MeongFlyTests(unittest.TestCase):
         game.pipes = [Pipe(CAT_X - PIPE_WIDTH - 25, 300)]
         game.step(.01)
         self.assertEqual(game.status, "won")
+
+    def test_visible_sprite_edge_collision(self):
+        game = MeongFly()
+        game.start()
+        game.y = 300
+        game.pipes = [Pipe(CAT_X + CAT_RIGHT - 1, 500)]
+        game.step(.01)
+        self.assertEqual(game.status, "lost")
+
+    def test_visible_sprite_bounds(self):
+        for start_y in (CAT_BOTTOM - 1, HEIGHT - CAT_TOP + 1):
+            with self.subTest(start_y=start_y):
+                game = MeongFly()
+                game.start()
+                game.y = start_y
+                game.step(.01)
+                self.assertEqual(game.status, "lost")
+
+    def test_score_only_after_entire_sprite_passes(self):
+        game = MeongFly()
+        game.start()
+        game.y = 300
+        game.pipes = [Pipe(CAT_X - CAT_LEFT - PIPE_WIDTH + 1, 300)]
+        game.step(.01)
+        self.assertEqual(game.score, 0)
+        game.pipes[0].x = CAT_X - CAT_LEFT - PIPE_WIDTH - 1
+        game.step(.01)
+        self.assertEqual(game.score, 1)
 
     def test_reset(self):
         game = MeongFly()
