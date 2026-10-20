@@ -69,3 +69,21 @@ Owner reported a successful Windows Python 3.12 run after the scoped SQLite and 
 The owner reports completing all six Windows GUI Step 3 checklist items with **6/6 PASS**: launch/render, visible camera-cat versus asteroid collision (rainbow trail excluded), flap/tap responsiveness, portrait and landscape resizing, demo receipt replay rejection after reopening, and terminal win/loss behavior with no replay button. This is **owner-reported manual Windows Kivy evidence**, not a remotely observed or automated GUI test. Exact screen dimensions, screenshots, Windows build and runtime commit SHA were not supplied; these are not independently verified. Earlier owner-reported Python 3.12 targeted unit retest was **10/10 PASS**. Thus the isolated Step 3 prototype meets owner-reported manual acceptance, while production kiosk integration, real receipt/POS validation, real discount/payment, end-to-end regression, and hardware release remain unverified/not implemented. No merge to master.
 
 **Next proposed milestone (NOT YET APPROVED):** Step 4 welcome-screen integration design and isolated implementation, with safe skip-to-photo, session ownership, one-attempt persistence, and regression tests. Obtain explicit approval of Step 4 scope before code changes. Visual fidelity to exact logo asset remains a separate polish item.
+
+
+## 2026-10-21 — Owner-approved revised Step 4: mockup-matched standalone GUI
+
+**This section supersedes the earlier proposed Step 4 welcome-screen integration.** Owner explicitly rejects integration into the existing photobooth GUI until the standalone mini-game visually matches the attached five-panel pixel-art space mockup, and approved proceeding ("oke gas"). Implement **only on `feature/meong-flappy-challenge`**; no `master` merge or changes to production GUI, printer, camera, audio, ads, payment, or real QRIS.
+
+### Screen-by-screen implementation specification
+1. **Start:** dark pixel-art starfield, planets, the Meong camera-cat **actual logo asset** (gray cat, white camera, prominent blue lens, waving rainbow, pink accents), `MEONG FLY!` hero panel, Rp2.500 promotional example, pink `MAIN GAME`, cyan `LANGSUNG FOTO`.
+2. **Receipt:** `SCAN STRUK KAFE` themed visual, decorative sample QR zone **clearly labeled nonfunctional demo**, manual `DEMO-...` input and an explicit one-use demo validation action, `KEMBALI` without consuming an attempt. NO POS/barcode/camera scanner.
+3. **Gameplay:** moving starfield and layered celestial objects, actual logo-derived flying camera-cat sprite, moving asteroid clusters with hitbox-aligned visual boundaries, top `SCORE` / `TARGET` HUD and pause/resume control, tap/click to flap. Retain stable physics and one-attempt receipt ledger; mockup displays a target of 10 (update target and tests together if changed).
+4. **Win:** `MISSION COMPLETE!`, celebratory camera-cat and yellow Rp2.500 promotional panel, primary continue CTA. Discount remains simulation only: **no checkout/QRIS integration**.
+5. **Lose:** `GAME OVER`, actual score, clear no-discount message and same continue CTA. **No `MAIN LAGI` button on either terminal screen.**
+
+### Navigation / acceptance
+`Start -> Receipt -> Gameplay -> Win/Lose -> Exit standalone demo`; `Start -> Direct photo` exits the standalone demo (does not open the production photobooth); `Receipt -> Back` returns to Start before claim. Once a demo receipt is atomically claimed, no button, restart, back navigation, pause, or app relaunch permits playing that code again. Running the demo must work on Windows Kivy at portrait and landscape sizes without stretched sprites or incorrect tap locations. Keep code logic testable independently of Kivy. Record actual testing results, do not report Windows visual pass without an owner rerun. Rollback: restore pre-Step-4 feature branch commit; `master` remains unaffected.
+
+### Deliberately excluded
+Real QR scanning/POS validation, redeemable discounts, subsidy settlement, payments, photobooth welcome-screen wiring, shared session state, auto-transition into camera, and any changes to production operational flows.
