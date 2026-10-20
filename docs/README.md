@@ -46,3 +46,8 @@ The owner also reports improved Floyd photo quality (BUG-004), payment QR-slip p
 For authoritative ongoing status use the [bug tracker](bug_tracker.md), [feature table](FEATURE_STATUS.md), [priority board](next_step.md), [physical acceptance checklist](test_checklist.md) and [FEAT-001 evidence dossier](qa/FEAT-001-BUG-011-acceptance.md). This index does not authorize further code changes, deployments, or upgrading the versioned **source pre-release** into a hardware-certified production release.
 
 
+
+
+### Isolated FEAT-021 mini-game development (feature branch)
+
+The mini-game is being developed separately on `feature/meong-flappy-challenge`, not in the production photobooth GUI. [Meong Fly engineering record](features/FEAT-021-meong-fly.md) and [Visual Polish v2 per-screen/per-object specification](features/FEAT-021-visual-polish-v2.md) describe its demo-only receipt model, mockup-matched Start/Scan Batch A and pending Windows acceptance. The embedded QR is decorative and the Rp2.500 voucher is illustrative, **not a live POS or payment discount**. No `master` integration has been authorized.
