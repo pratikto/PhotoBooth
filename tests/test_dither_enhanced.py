@@ -189,9 +189,12 @@ class EnhancedDitherTests(unittest.TestCase):
                 load_profile(target)
 
     def test_test_print_uses_original_native_dots_and_labeled_header(self):
-        image = render_thermal_image(
-            self.photo, DitherProfile(mode="dizzy", enhanced_dizzy=True))
-        profile = DitherProfile(mode="dizzy", enhanced_dizzy=True)
+        # A proper 384-dot-width strip ensures both header labels fit,
+        # so their binary metadata can be compared without clipping.
+        image = Image.new("1", (384, 48), 255)
+        image.putpixel((0, 0), 0)
+        profile = DitherProfile(mode="dizzy", width_dots=384,
+                               enhanced_dizzy=True)
         baseline = replace(profile, enhanced_dizzy=False)
         orig = image.tobytes()
         tagged = annotated_raster(image, profile)
