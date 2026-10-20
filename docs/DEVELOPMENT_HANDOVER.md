@@ -213,3 +213,10 @@ Owner requested a **genuinely redesigned independent mini-game UI** to follow th
 
 ## 2026-10-21 — BUG-012 FEAT-021 Windows input blocker
 Owner screenshot shows the painted demo-code box but cannot enter a receipt. Root cause identified in mockup GUI source: parent `canvas.clear` erased actual TextInput/Label child drawing when screens refreshed. Applied isolated `canvas.before` fix `974b8c7c`, added source-layout + optional Windows Kivy GUI regression `38d00d41`. **Status source patched; Windows retest not yet reported.** Run `python -m unittest tests.test_meong_fly_gui -v` and `python -m photobooth.meong_fly_demo` from `feature/meong-flappy-challenge`, checking visible caret, typing, Enter/Validate and one-receipt-once rule. Continue visual polish only after bug acceptance. Never merge to `master` without authorization.
+
+
+## 2026-10-21 — FEAT-021 Visual Polish v2 Batch A handover
+
+The owner approved Batch A only (Start/Scan/shared visual primitives). Work pushed to `feature/meong-flappy-challenge`: new `meong_fly_polish.py` painter and Start/Scan delegation, Kivy animated decorative QR sweep, TextInput focus/error and button-hover borders, and stop-time event cleanup. Layout preserves the BUG-012 input canvas fix and original `ACTIONS`/receipt ledger. Real POS scanning/payment and production photobooth GUI untouched. [Approved implementation specification](features/FEAT-021-visual-polish-v2.md).
+
+**Tests:** local pure Pillow 7/7 PASS and local compileall no errors; Windows Kivy and exact GitHub source SHA regression are still pending. Original Step 3 owner GUI 6/6 PASS applies only to older renderer. Operator next: `git switch feature/meong-flappy-challenge && git pull`, run `python -m unittest tests.test_meong_fly_polish tests.test_meong_fly_gui tests.test_meong_fly_flow tests.test_meong_fly_receipts tests.test_meong_fly tests.test_meong_fly_painter -v`, launch `python -m photobooth.meong_fly_demo`, capture Start/Scan/screenshots and validate typed code and responsive resize. Do **not** mark verified before operator report; defer visual Batch B gameplay and Batch C win/lose until instructed. Do not merge to `master`.
