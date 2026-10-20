@@ -39,6 +39,9 @@ def annotated_raster(raster: Image.Image, profile: DitherProfile) -> Image.Image
         f"G {profile.gamma:.2f} S {profile.sharpness:.2f}",
         f"THRESHOLD: {profile.threshold}",
     ]
+    if profile.mode == "dizzy":
+        parts.append(
+            f"DIZZY: {profile.dizzy_variant} | SEED: {profile.dizzy_seed}")
     output = raster.copy()
     # Header is a separate 1-bit strip; original preview bytes stay untouched.
     for line in reversed(parts):
