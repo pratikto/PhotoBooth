@@ -72,3 +72,8 @@ Sources: owner decisions from recent project discussions; technical implementati
 ## DEC-021 — Meong Fly game attempt rule (owner-confirmed, 2026-10-21)
 
 One **unique valid cafe receipt = one game attempt**; after win or loss there is no `Main Lagi` button and reuse of the same receipt must be rejected, including across restarts. Gameplay is space-themed Flappy Bird-like asteroid avoidance with the Meong camera-cat and rainbow trail. The standalone prototype implements this using **demo-only** `DEMO-` codes, not verified cafe receipts. A win may lead to a proposed Rp2,500 discount, but real redemption, cafe settlement split and POS/payment integration are not approved or implemented. No decision here authorizes Step 4 code or merging to master.
+
+
+## 2026-10-21 — DEC-021 addendum: visual fidelity before integration
+
+The owner explicitly declined integrating the current mini-game into the existing photobooth GUI and approved a **standalone** Step 4 rebuild following the selected pixel-art space mockup first. Five screens are Start, Cafe Receipt (demo QR depiction plus manual local demo-code input), Gameplay, Win and Lose; use the actual camera-cat logo with blue lens/rainbow and asteroid theme. Preserve **one unique receipt = one chance**, no replay button after win OR loss. The mockup shows a 10-point score target and Rp2.500 discount; these remain a **demo game target and promotional simulation**, NOT authorization for live discounts or POS/payment changes. The mockup's visible `Main Lagi` buttons are intentionally **omitted** in accordance with the stronger owner one-attempt rule. Owner approval in this conversation covers the isolated GUI scope, not future integration or merge to master.
