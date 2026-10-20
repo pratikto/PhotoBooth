@@ -1,3 +1,9 @@
+## 2026-10-20 — FEAT-008 B.3 operator status integration (branch only)
+
+- [79ffc96](https://github.com/pratikto/PhotoBooth/commit/79ffc96d80fb2d4b445545b84362e9ad2cb2339a): show read-only selected-device presence classifications in Health panel. Absence remains UNKNOWN because discovery completeness is unverified.
+- [2452f65](https://github.com/pratikto/PhotoBooth/commit/2452f65bfd2edfb5a99380d79e95cfa5de7eb2f2): GUI regression test for a positively enumerated saved printer queue.
+- CI on these changes pending; no runtime recovery or release.
+
 ## 2026-10-19 — FEAT-008 B.3 documentation reconciliation (feature branch only)
 
 - Updated documentation index, architecture, owner approval log, feature state, execution priority, QA evidence, handover, and B.3 guide to reflect committed read-only presence-state classifier (`588df3c`, `06ab0f4`, `bbc4162`), CI workflow change (`d26314e`), and previously recorded documentation changes (`7d2ae90`, `5040e12`, `476a388`, `e0cc249`, `4554c7f`, `70f6766`).
