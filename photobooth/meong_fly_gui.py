@@ -138,6 +138,14 @@ class MeongFlyStage(Widget):
         board_bottom = 134.0
         wx = W / WIDTH
         wy = wx  # Hitbox, camera sprite and asteroid textures must not stretch.
+        # Foreground stars drift at three parallax speeds without shifting hitboxes.
+        for index in range(34):
+            depth = 1 + index % 3
+            star_x = (index * 89 - self._time * (8 + depth * 10)) % W
+            star_y = 141 + ((index * 73) % 462)
+            Color(.34 + depth * .17, .41 + depth * .13, 1, .85)
+            Rectangle(pos=(ox + star_x * scale, oy + star_y * scale),
+                      size=(depth * scale, depth * scale))
         for index, obstacle in enumerate(game.pipes):
             x = obstacle.x * wx
             w = PIPE_WIDTH * wx
