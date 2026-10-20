@@ -2,6 +2,20 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased — FEAT-021 standalone mini-game mockup GUI] — 2026-10-21
+
+**Approved task:** owner rejected immediate integration of the earlier mini-game into the production photobooth GUI and approved a standalone five-screen visual rebuild matching the selected Meong camera-cat space mockup. All changes are in `feature/meong-flappy-challenge`; **no merge to `master`**.
+
+- Documentation of revised isolated scope `7c415396`.
+- `8194f979`, `796169ff`: add headless navigation/receipt controller and replay/pause/terminal transition tests.
+- `5a2d4f9a`: change standalone game target from 6 to 10 as shown in the mockup; prior 25-second limit retained.
+- `37e28433`: add Pillow pixel-art painter for Start, Scan, Gameplay, Win and Lose. Reuse read-only approved Meong logo asset; no duplicate logo or font files.
+- `1ff153a9`, `ca134b66`: create standalone Kivy GPU canvas with real touch mapping and typed demo voucher; replace old demo entrypoint; **no** photobooth welcome/payment/QRIS integration.
+- `4623a289`, `b6a0802e`, `cbc330f6`: HUD text proportion, gameplay parallax stars and no unnecessary redraw of static pages.
+- `62719e41`, `e4d2de72`: pure-Pillow scene/layout/no-retry and 10-point target regression tests.
+
+**Verification status:** local isolated code mirror compiled and produced five 360x720 static pixel-art preview frames; headless sample flow smoke passed. New GitHub-branch test commands and owner Windows Kivy visual acceptance are **NOT YET RUN/VERIFIED** on this version. The owner-reported 6/6 Windows GUI PASS applies to the preceding Step 3 renderer only. No real QR scanner, POS receipt verification, discounts, checkout or paid Midtrans transaction were enabled. Technical spec and planned QA: [FEAT-021](features/FEAT-021-meong-fly.md).
+
 ## [Unreleased — docs-only, post-v1.0.0] — 2026-10-19
 
 - Owner approved a **documentation-only** reconciliation on a dedicated `docs/post-v1-release-reconciliation-20261019` branch. Update current README/index, source status, bug/backlog, decisions, QA and technical-guide headings to match the already tagged GitHub `v1.0.0` pre-release. Preserve earlier dated test/failure history and explicit hardware acceptance gaps. The documentation PR is **not part of the immutable v1 tag**; review and merge it without rewriting the release.
