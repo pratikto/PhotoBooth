@@ -22,4 +22,4 @@ jobs:
       - name: Compile tuning lab and tests
         run: python -m py_compile photobooth/dither_lab.py photobooth/dizzy_dither.py tools/dither_tuning_gui.py tools/dither_compare_gui.py tests/test_dither_lab.py tests/test_dither_comparison.py tests/test_dither_print.py tests/test_dither_gui_layout.py tests/test_dizzy_dither.py tests/test_dizzy_lab_integration.py tests/test_dither_enhanced.py photobooth/dither_print.py photobooth/printer.py
       - name: Run targeted printer-processing regressions
-        run: python -m unittest tests.test_dither_lab tests.test_dither_comparison tests.test_dither_print tests.test_dither_gui_layout tests.test_dizzy_dither tests.test_dizzy_lab_integration -v
+        run: python -m unittest tests.test_dither_lab tests.test_dither_comparison tests.test_dither_print tests.test_dither_gui_layout tests.test_dizzy_dither tests.test_dizzy_lab_integration tests.test_dither_enhanced -v
