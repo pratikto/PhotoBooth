@@ -218,7 +218,8 @@ def _download_area(canvas: Image.Image, template: BoothTemplate,
 
 def compose_result(photo_paths: Sequence[Path], template: BoothTemplate,
                    output_path: Path, transaction_id: str, session_id: str,
-                   folder_url: str | None = None) -> Path:
+                   folder_url: str | None = None,
+                   background_images: Sequence[Image.Image] | None = None) -> Path:
     """Save three photos inside the chosen 80 × 240 mm design as a PNG.
 
     PNG density is 203.2 dpi (640 × 1920 dots). Photos retain their colors for
@@ -233,10 +234,18 @@ def compose_result(photo_paths: Sequence[Path], template: BoothTemplate,
         parsed = urlparse(folder_url)
         if parsed.scheme != "https" or not parsed.netloc:
             raise ValueError("The result QR requires a valid HTTPS folder URL.")
+    if background_images is not None and (
+        len(background_images) != 3 or
+        not all(isinstance(image, Image.Image) for image in background_images)
+    ):
+        raise ValueError("Background Studio requires exactly three PIL images.")
     canvas = _artwork(template).copy()
     for index, path in enumerate(photo_paths):
-        with Image.open(path) as source:
-            frame = render_photo_frame(source, template, index)
+        if background_images is None:
+            with Image.open(path) as source:
+                frame = render_photo_frame(source, template, index)
+        else:
+            frame = render_photo_frame(background_images[index], template, index)
         canvas.paste(frame, template.apertures[index].box[:2])
     _download_area(canvas, template, folder_url, transaction_id, session_id)
     output_path = Path(output_path)
