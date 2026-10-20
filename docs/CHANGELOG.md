@@ -2,6 +2,14 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased lab experiment] — 2026-10-21 (Enhanced Dizzy preprocessing)
+
+- **Owner-approved experimental scope only:** `feature/dither-tuning` now supports opt-in Enhanced Dizzy in both `article-8` and `orthogonal-4` variants. `photobooth/dither_lab.py` refactors the **unchanged** Enhanced Floyd preprocessing into one shared function, keeping baseline Floyd/Bayer/Threshold/Dizzy behavior untouched. Adds `enhanced_dizzy=False` and version 4 validated lab JSON with v1–v3 backward compatibility. [Core `108be4c`](https://github.com/pratikto/PhotoBooth/commit/108be4cf5e089e18fa22df36714ef56419c063be).
+- `tools/dither_compare_gui.py` adds **Enhanced Dizzy (experimental)** checkbox in Dizzy panel, persistent independent on/off state, panel status, new v4 JSON filename and `-enhanced`/`-baseline` Dizzy native-raster PNG filename. [GUI `b6941b5`](https://github.com/pratikto/PhotoBooth/commit/b6941b56ea2e644872ad0f0d477d00337e75a9a8).
+- `photobooth/dither_print.py` adds the chosen baseline/enhanced state to Dizzy test-print header; ESC/POS still receives the same native 1-bit preview bytes with no second dithering. [Print annotation `9423381`](https://github.com/pratikto/PhotoBooth/commit/9423381e41987c5a36ae9a14d09f3941333d9991).
+- Added `tests/test_dither_enhanced.py`, adapted migration/UI tests and expanded `.github/workflows/dither-lab.yml`. [CI run 39503134534](https://github.com/pratikto/PhotoBooth/actions/runs/39503134534) at `80980f7ba` — compile + **42 targeted unit tests PASS** (Linux Python 3.12); **Windows Tk and real-paper comparative acceptance still pending**.
+- No changes to `master`, production Kivy printing or printer/QR transport, and no automatic or real-money print jobs. Dizzy-specific contrast LUT and GPU implementation remain unapproved/out of scope.
+
 ## [Unreleased GUI adjustment] — 2026-10-21 (Threshold hidden)
 
 - In `feature/dither-tuning`, the primary comparison GUI now shows **Floyd–Steinberg, Bayer 8×8 and Dizzy** only. Threshold's preview, slider, Save PNG and Print Test controls were removed **from the display only**. `Export 3 PNG` and `Print All (3 jobs)` process only visible modes, and the three panels regain the 370px display preview width. Source [`ad6b299`](https://github.com/pratikto/PhotoBooth/commit/ad6b299537791905ba79d27035eac6e27af92f2c).
