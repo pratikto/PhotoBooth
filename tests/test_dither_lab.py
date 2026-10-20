@@ -109,6 +109,17 @@ class DitherLabTests(unittest.TestCase):
             self.assertFalse(loaded.enhanced_floyd)
             self.assertEqual(loaded.mode, "floyd-steinberg")
 
+    def test_preview_coverage_and_exact_raster(self):
+        image = Image.new("1", (200, 200), 255)
+        image.putdata([0 if (x + y) % 2 else 255 for y in range(200) for x in range(200)])
+        original = image.tobytes()
+        displayed = image.convert("L").resize((20, 20), Image.Resampling.BOX)
+        self.assertTrue(all(110 <= p <= 145 for p in displayed.getdata()))
+        self.assertEqual(image.tobytes(), original)
+        path = Path(__file__).resolve().parents[1] / "tools" / "dither_compare_gui.py"
+        code = path.read_text(encoding="utf-8")
+        self.assertIn("preview.thumbnail((370, 268), Image.Resampling.BOX)", code)
+
     def test_compare_gui_has_enhanced_toggle_and_compiles(self):
         import ast
         path = Path(__file__).resolve().parents[1] / "tools" / "dither_compare_gui.py"
