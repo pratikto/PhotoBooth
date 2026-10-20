@@ -242,3 +242,12 @@ Native audio/video tests may require explicit opt-in environment flags and compa
 - [ ] Obtain owner visual acceptance only after above checks; **do not merge to master** until separately authorized.
 
 Screen-by-screen source and precise limitations: [FEAT-021](features/FEAT-021-meong-fly.md).
+
+
+## BUG-012 — FEAT-021 demo receipt text entry (2026-10-21)
+- **Observed before fix:** owner Windows screenshot of Scan Struk screen; painted input visible but user cannot type; versions/commit unspecified. This invalidates Step 4 GUI acceptance for receipt entry until retested.
+- **Source fix:** `974b8c7c`; tests added `38d00d41`. Full Kivy drawing moved to `canvas.before` to preserve child `TextInput` and `Label` graphics. No evidence of new Windows PASS at time of record.
+- [ ] After `git pull`, run `python -m unittest tests.test_meong_fly_gui -v`. Expected: 2 Kivy-independent tests and 3 Kivy widget tests (if Kivy installed). Record actual output and exact commit/OS/Python/Kivy versions.
+- [ ] Run `python -m photobooth.meong_fly_demo` on Windows, Start > Scan > click input: cursor and `DEMO-123` hint visible, typed `DEMO-BUG012-001` visible, Back/Validate still respond.
+- [ ] Press Enter or Validasi, verify Gameplay; close and restart app and verify used code is rejected. Repeat with a *new* demo code.
+- [ ] Resize to portrait and landscape and confirm the typing hotspot tracks the painted input. No production checkout/scanner testing implied.
