@@ -39,6 +39,7 @@ class ScrollLayoutTests(unittest.TestCase):
         self.assertIn('for mode in VISIBLE_MODES:', self.source)
         self.assertNotIn('Print All (4 jobs)', self.source)
         self.assertNotIn('Export 4 PNG', self.source)
+        self.assertIn('meong-dither-lab-v3.json', self.source)
 
     def test_bounded_previews(self):
         self.assertIn('preview_holder = ttk.Frame(panel, height=286)', self.source)
