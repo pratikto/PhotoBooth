@@ -367,13 +367,16 @@ class MeongFlyStage(Widget):
         with self.canvas.before:
             Color(.01, .025, .105, 1)
             Rectangle(pos=self.pos, size=self.size)
-            screen = (self.flow.screen if self.flow.screen in self._backdrops
+            show_impact = (self.flow.screen == "lost"
+                           and self._time < self._impact_until)
+            screen = ("game" if show_impact else
+                      self.flow.screen if self.flow.screen in self._backdrops
                       else "start")
             pos, size = self._rect((0, 0, W, H))
             Color(1, 1, 1, 1)
             Rectangle(texture=self._backdrops[screen], pos=pos, size=size)
             if screen == "game":
-                self._draw_game()
+                self._draw_game(show_impact=show_impact)
             elif screen == "lost":
                 self._draw_score(
                     f"{self.flow.game.score}/{TARGET_SCORE}",
@@ -381,7 +384,7 @@ class MeongFlyStage(Widget):
                 )
             if screen in ("start", "scan"):
                 self._draw_menu_effects(screen)
-        self._screen_seen = self.flow.screen
+        self._screen_seen = screen  # Track displayed game during brief impact.
 
     def validate_receipt(self):
         if self.flow.claim_and_start(self.receipt.text):
@@ -390,17 +393,29 @@ class MeongFlyStage(Widget):
 
     def update(self, dt):
         self._time += min(max(float(dt), 0), .1)
+        before_screen = self.flow.screen
+        before_score = self.flow.game.score
         self.flow.tick(dt)
-        # Scan animates only its illustration beam; menus/results stay cached.
+        if before_screen == "game" and self.flow.game.score > before_score:
+            self._score_fx_since = self._time
+            self._score_fx_y = (GAME_FIELD_BOTTOM -
+                                self.flow.game.y * W / WIDTH)
+        if before_screen == "game" and self.flow.screen == "lost":
+            self._impact_until = self._time + .22
+        # Scan is decorative; it does not scan a real cafe receipt.
         tick = int(self._time * 15)
         animate_scan = self.flow.screen == "scan" and tick != self._scan_tick
         if animate_scan:
             self._scan_tick = tick
         if (self.flow.screen == "game" or animate_scan
+                or self._time < self._impact_until
                 or self._screen_seen != self.flow.screen):
             self._refresh()
 
     def on_touch_down(self, touch):
+        # Prevent invisible result CTA activation during the 220 ms burst.
+        if self.flow.screen == "lost" and self._time < self._impact_until:
+            return True
         if not self.collide_point(*touch.pos):
             return super().on_touch_down(touch)
         # The real TextInput takes priority over the scanned-QR illustration.
