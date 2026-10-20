@@ -1,6 +1,6 @@
 # FEAT-021 — Meong Fly isolated prototype
 
-Status: IN PROGRESS — Step 3 standalone GUI owner-reported 6/6 PASS; NOT production/hardware certified.
+Status: IN PROGRESS — Step 4 standalone mockup-styled GUI coded; NEW Windows GUI acceptance pending. Historical Step 3 standalone GUI owner-reported 6/6 PASS; NOT production/hardware certified.
 Approved 2026-10-20: isolated prototype in feature/meong-flappy-challenge; no master merge.
 Priority: P2 product enhancement, after core operational bugs; commercial integration BLOCKED.
 
@@ -87,3 +87,53 @@ The owner reports completing all six Windows GUI Step 3 checklist items with **6
 
 ### Deliberately excluded
 Real QR scanning/POS validation, redeemable discounts, subsidy settlement, payments, photobooth welcome-screen wiring, shared session state, auto-transition into camera, and any changes to production operational flows.
+
+
+## 2026-10-21 — Step 4 implementation: five-screen standalone GUI (source committed)
+
+**Approved source scope:** rebuild the isolated demo's visual identity to match the owner's attached five-screen space pixel-art reference. The owner explicitly postponed any integration into the *existing* Kivy photobooth GUI. Old Step 4 integration notes above are **superseded** by this standalone design milestone.
+
+### What is actually implemented in this branch
+
+| Screen | Implementation | What is NOT functional |
+| --- | --- | --- |
+| Start | Approved bundled `photobooth/assets/meong_photobooth_vivid.png` rendered with transparent, nearest-neighbor display crop; planets, stars, pixel-bitmapped panels, pink MAIN GAME and cyan LANGSUNG FOTO. | Direct Photo only exits demo; it cannot open the production camera |
+| Scan | Space-themed QR-illustration frame, focusable `DEMO-...` text input, demo validation button, and pre-claim Back action. | QR illustration is **NOT scannable**, no camera or merchant POS connected |
+| Gameplay | Existing physics engine and collision bounds, logo-derived camera-cat body, wavy rainbow trail, parallax stars, visibly occupied textured asteroid belts, score/target HUD, pause/resume and tap-to-fly. | Gameplay is neither launched from photobooth nor tied to checkout |
+| Win | MISSION COMPLETE, decorative Meong rainbow, Rp2.500 demo promotional panel and continue CTA. | No redeemable discount, Midtrans, or settlement |
+| Lose | GAME OVER, dynamic `score/10`, regular-price copy and same continue CTA; **NO Main Lagi**. | No paid photo order is created |
+
+**Shared policy:** `TARGET_SCORE = 10` to match the owner's reference (previous demo used 6). 25-second timeout retained. Once an identifier is claimed in SQLite, it remains consumed through a crash, finish or application relaunch. No end-state route or back button restarts a claimed game. The pink `LANJUT KE PEMBAYARAN` CTA closes the standalone demo; the on-screen footer labels the entire flow a demo, so it does **not** perform payment. Window is portrait by default; landscape must letterbox at the correct aspect ratio and share the same logical button hitboxes.
+
+### Source and regression inventory
+
+- `photobooth/meong_fly_painter.py` — pure-Pillow five-screen pixel-art backgrounds and controls, optional white-edge transparency mask of the approved logo, cropped on-screen camera-cat, asteroid tiles; no new logo file.
+- `photobooth/meong_fly_flow.py` — Kivy-independent state transitions, irrevocable demo receipt claim, result-once ledger write, and pause.
+- `photobooth/meong_fly_gui.py` — standalone Kivy GPU texture stage, real input field, animated asteroid/game layers, proportional touch mapping.
+- `photobooth/meong_fly_demo.py` — thin backward-compatible entrypoint.
+- `photobooth/meong_fly.py` — isolated 10-point target; no changes to production photobooth modules.
+- `tests/test_meong_fly_flow.py`, `tests/test_meong_fly_painter.py` — new headless flow/art regression cases; old engine/receipt tests retained.
+
+Key commits: scope `7c415396`, flow `8194f979`, target `5a2d4f9a`, painter `37e28433`, GUI `1ff153a9`, demo entry `ca134b66`, visual bounds/animation/performance polish `4623a289`, `b6a0802e`, `cbc330f6`, and painter target regression `e4d2de72`. Specific test additions: `796169ff`, `62719e41`.
+
+### How to run the latest standalone GUI
+
+```powershell
+git fetch origin
+git switch feature/meong-flappy-challenge
+git pull origin feature/meong-flappy-challenge
+.\.venv-kivy\Scripts\Activate.ps1
+python -m photobooth.meong_fly_demo
+```
+
+1. Click **MAIN GAME** -> Scan screen.
+2. QR artwork is for visual guidance, **NOT a working scanner**. Type a unique `DEMO-MOCKUP-001`, then **VALIDASI DEMO 1X**.
+3. Click/tap the game to flap. The actual target is **10**; `II` pauses/resumes.
+4. Win/lose shows one continue CTA that **closes the demo** (no production payment). There is no replay.
+5. Relaunch; `DEMO-MOCKUP-001` must be rejected. Use `DEMO-MOCKUP-002` for another test.
+
+### Verification truth and remaining gate
+
+**Performed locally in an isolated mirrored source workspace, NOT from a live clone of the GitHub branch:** Python compilation passed; Pillow successfully generated five 360x720 static concept frames using the owner's supplied transparent GIF as a stand-in for the bundled PNG; a local headless smoke script verified demo receipt claim, replay rejection, back/skip, pause, win, 10-point target, 5 screen images, and lack of retry controls. This is **not** a completed GitHub CI or real Kivy GUI test. Environment does **not** have Kivy; neither the new source's real rendering on Windows nor its FPS/resize/touch accuracy has been observed here. The two new test modules have been committed but their exact GitHub-branch execution is **pending**.
+
+**Required owner validation before marking polished UI accepted:** run `python -m unittest tests.test_meong_fly tests.test_meong_fly_receipts tests.test_meong_fly_flow tests.test_meong_fly_painter -v` (record full output); launch Kivy on Windows; visually compare **each of five screens** with the supplied mockup; confirm approved logo has no white rectangular background or clipped head/wordmark, sprite/hitbox fairness, stars/asteroids animated, score 0..10, pause/resume, typed demo voucher once only even after restart, terminal CTA closes without checkout, no retry; test portrait plus landscape and capture screenshots/OS/commit hash. Fix visual gaps **on this branch** only after reproducible feedback. Never merge to master before explicit owner approval.
