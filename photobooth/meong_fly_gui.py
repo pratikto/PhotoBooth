@@ -22,6 +22,10 @@ from .meong_fly import (
     GAP_HEIGHT, HEIGHT, PIPE_WIDTH, TARGET_SCORE, WIDTH,
 )
 from .meong_fly_flow import MeongFlyFlow
+from .meong_fly_game_art import (
+    GAME_FIELD_TOP, GAME_FIELD_BOTTOM, ROCK_VARIANTS, camera_cat_poses,
+    make_rock_tile, asteroid_screen_rects, camera_screen_rect,
+)
 from .meong_fly_painter import (
     ACTIONS, DEMO_ENTRY, H, W, GOLD,
     logo_parts, make_asteroid_tile, paint_static_screen, pixel_text,
@@ -54,9 +58,16 @@ class MeongFlyStage(Widget):
             name: kivy_texture(paint_static_screen(name, self._logo_path))
             for name in ACTIONS
         }
-        self._cat = kivy_texture(logo_parts(str(self._logo_path))[1])
-        self._asteroids = [kivy_texture(make_asteroid_tile(i)) for i in range(3)]
+        self._cat_poses = {
+            name: kivy_texture(image)
+            for name, image in camera_cat_poses(logo_parts(str(self._logo_path))[1]).items()
+        }
+        self._cat = self._cat_poses["level"]  # Preserve optional caller compatibility.
+        self._asteroids = [kivy_texture(make_rock_tile(i)) for i in range(ROCK_VARIANTS)]
         self._score_tex = {}
+        self._score_fx_since = -10.0
+        self._score_fx_y = 300.0
+        self._impact_until = -1.0
         self.receipt = TextInput(
             hint_text="DEMO-123", multiline=False,
             background_normal="", background_active="",
