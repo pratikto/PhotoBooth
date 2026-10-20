@@ -4,6 +4,14 @@
 **Branch:** `feature/dither-tuning` (created 2026-10-18 from `feature/kivy-gui` commit `5e0a898`).  
 **Scope:** offline photo-rendering sandbox; the existing photobooth application and photo/QR print pipeline have **not** been changed or merged.
 
+## Three-panel GUI — local enhancement controls (2026-10-21)
+
+The **Enhanced Floyd (experimental)** checkbox now sits **inside the Floyd–Steinberg panel**, directly below the preview/output metadata and above the Brightness slider, mirroring the **Enhanced Dizzy (experimental)** checkbox inside the Dizzy panel. The global/top toolbar no longer contains a Floyd enhancement toggle. Bayer has no enhancement checkbox.
+
+Each checkbox affects **only its own algorithm**; `Sync Parameters` continues to synchronize brightness/contrast/gamma/sharpness slider adjustments only. Save/Load All Configs persists both flags independently (schema v4); Reset sets both OFF. The 1-bit raster, Floyd/Dizzy preprocessing, preview scaling, output file naming, physical Print Test behavior and printing defaults are **unchanged**.
+
+**Automated regression evidence:** [GitHub Actions 39505103668](https://github.com/pratikto/PhotoBooth/actions/runs/39505103668), commit `8cdc2b50a3a5220c839805cf1d6a87155aa1815e`: **43 targeted unit/static tests PASS** and **3 actual Tk GUI runtime tests PASS** on Linux Python 3.12/Xvfb. Tk tests verify the checkbox belongs to the correct panel, click effects are lane-specific even with Sync enabled, Reset restores flags OFF, and Dizzy worker still renders 1-bit. Real Windows screen layout and photo printing are **not** physically validated by this CI.
+
 ## Enhanced Dizzy preprocessing A/B experiment (2026-10-21)
 
 **Owner-authorized scope:** only the experimental `feature/dither-tuning` branch. The GUI now has an independent **Enhanced Dizzy (experimental)** checkbox inside the Dizzy panel. It is **OFF by default**; checking it recomputes **only** the Dizzy preview, while Floyd and Bayer remain unchanged. Both Dizzy variants (`article-8` and `orthogonal-4`) support the same checkbox. The Enhanced Floyd checkbox remains independent.
@@ -55,7 +63,7 @@ References: [original article](https://liamappelbe.medium.com/dizzy-dithering-2a
 
 ## Experimental enhanced Floyd preprocessing (2026-10-21)
 
-An opt-in **Enhanced Floyd (experimental)** checkbox is available in `tools/dither_compare_gui.py`. It affects the Floyd lane only; Enhanced Dizzy now separately opts into the same preprocessing helper in the Dizzy panel. Unchecked uses the byte-identical legacy baseline path; checked applies a 3x3 median noise filter, a 20% blend with gently autocontrasted grayscale, and restrained unsharp masking (radius 1.1, strength 55%, threshold 3), after the existing brightness/contrast/gamma/sharpness controls and before Pillow Floyd–Steinberg error diffusion. This is conservative *global* tonal processing, **not CLAHE, face-aware enhancement, or printer heat control**. Existing control values still matter and aggressive settings may degrade results.
+An opt-in **Enhanced Floyd (experimental)** checkbox is available **inside the Floyd panel** of `tools/dither_compare_gui.py`, immediately below the preview metadata; it was moved from the top toolbar to match Enhanced Dizzy in the Dizzy panel. It affects the Floyd lane only, and Enhanced Dizzy separately opts into the same preprocessing helper. Unchecked uses the byte-identical legacy baseline path; checked applies a 3x3 median noise filter, a 20% blend with gently autocontrasted grayscale, and restrained unsharp masking (radius 1.1, strength 55%, threshold 3), after the existing brightness/contrast/gamma/sharpness controls and before Pillow Floyd–Steinberg error diffusion. This is conservative *global* tonal processing, **not CLAHE, face-aware enhancement, or printer heat control**. Existing control values still matter and aggressive settings may degrade results.
 
 The check box allows A/B comparison by exporting/printing Floyd baseline, then toggling on and exporting/printing Floyd enhanced with the same image, width and sliders. Exports include `-baseline` or `-enhanced` suffix; only the native 1-bit result should be used for dot-level comparison. The comparison GUI now displays Floyd/Bayer/Dizzy. Save/Load All Configs persists both enhancement switches; v4 JSON files are written, while v1/v2/v3 presets remain readable. Do not copy these JSONs into printer settings.
 
