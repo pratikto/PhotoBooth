@@ -22,8 +22,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from photobooth.dither_lab import (LAB_DITHER_MODES, ComparisonProfiles, DitherProfile,
-                                   load_comparison, render_thermal_image, save_comparison,
-                                   save_profile)
+                                   load_comparison, render_thermal_image, save_comparison)
 from photobooth.dizzy_dither import DIZZY_VARIANTS
 from photobooth.dither_autotune import AutoTuneCancelled, tune_enhanced_floyd
 
@@ -431,16 +430,19 @@ class ComparisonApp:
             return
         path = filedialog.asksaveasfilename(
             defaultextension=".json",
-            initialfile="meong-floyd-autotune-v4.json",
+            initialfile="meong-floyd-autotune-lab-v4.json",
             filetypes=[("JSON", "*.json")],
             parent=self.autotune_dialog or self.root)
         if not path:
             return
         try:
-            save_profile(path, candidate.profile)
+            # Use the same full comparison schema as "Load All Configs".
+            # A saved candidate is NOT implicitly applied to the live GUI.
+            saved_configs = self.configs.replace_lane(candidate.profile)
+            save_comparison(path, saved_configs)
             self.message.set(
-                f"Saved lab-only Auto Tune profile: {path} "
-                "(not applied to kiosk).")
+                f"Saved Auto Tune lab config: {path} "
+                "(loadable via Load All Configs; no settings applied).")
         except (OSError, ValueError) as error:
             messagebox.showerror(
                 "Save preset failed", str(error),
