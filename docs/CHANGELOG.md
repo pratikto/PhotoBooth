@@ -2,6 +2,14 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased experiment] — 2026-10-21 (Dizzy Dithering)
+
+- FEAT-011 isolated lab: added article-aligned Dizzy CPU versions `article-8` (axial 1.0 / diagonal 0.1) and `orthogonal-4` (four equal axial neighbors) with five-round randomized permutation, seed 42, floating-point error and native 1-bit output. Algorithm commit [`3896c7a`](https://github.com/pratikto/PhotoBooth/commit/3896c7adc26263c8f556ebda12db5e18efef1c87).
+- Extended `photobooth/dither_lab.py` comparison profiles to a fourth Dizzy lane with v3 JSON and v1/v2 migration; [`f3c32c2`](https://github.com/pratikto/PhotoBooth/commit/f3c32c270af1e75a8f5835af5fbc05b12da94728).
+- Updated `tools/dither_compare_gui.py` four-lane UI, Dizzy variant selector, byte-preserving native PNG exports and operator-confirmed print metadata; GUI [`e5ae35a`](https://github.com/pratikto/PhotoBooth/commit/e5ae35a30176e355a81c83fdea78a69a59991be7), headers [`ccdec4a`](https://github.com/pratikto/PhotoBooth/commit/ccdec4ae781cc9c0d3913ef712ae373170d133c0).
+- Added `tests/test_dizzy_dither.py` (isolated local 5-test PASS) and `tests/test_dizzy_lab_integration.py`; updated legacy GUI/layout tests and CI workflow [`b8b5cd0`](https://github.com/pratikto/PhotoBooth/commit/b8b5cd017cdeba7ac26a425579e9e45ff0c22770). Latest GitHub CI and Windows/paper acceptance have **not been verified**.
+- No production `DITHER_MODES`, kiosk/app, `master` or printer spooler modifications; author contrast-correction LUT remains disabled pending variant-specific calibration.
+
 ## [Unreleased] — 2026-10-18
 
 ### BUG-010 — Dither GUI scroll accessibility
