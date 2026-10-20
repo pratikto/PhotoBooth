@@ -193,3 +193,9 @@ For changes made before the documentation effort, inspect Git commits and the da
 ## 2026-10-21 — FEAT-021 isolated prototype QA record (feature branch only)
 
 Document owner-reported Windows Step 3 GUI checklist **6/6 PASS** and prior targeted unit tests **10/10 PASS** for `feature/meong-flappy-challenge`. Documentation-only synchronization; **no application code changes, no master merge, no new test execution, no live POS/discount integration**. See [feature acceptance record](features/FEAT-021-meong-fly.md).
+
+
+## 2026-10-21 — BUG-012 Meong Fly standalone demo input visibility fix (feature branch only)
+- `974b8c7c`: change `MeongFlyStage._refresh` to draw on `canvas.before` instead of clearing the parent widget canvas, preserving child TextInput and Label graphics.
+- `38d00d41`: add `tests/test_meong_fly_gui.py` checks for canvas preservation, visible input geometry and no scan CTA overlap. Kivy tests are conditional on a Kivy installation; no local Windows GUI PASS is claimed.
+- Fix isolated to `feature/meong-flappy-challenge`. No modifications to production UI, payments, receipt/POS integration or `master`. Owner screen retest pending. See [BUG-012](bug_tracker.md) and [FEAT-021](features/FEAT-021-meong-fly.md).
