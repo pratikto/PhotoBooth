@@ -67,3 +67,8 @@ Sources: owner decisions from recent project discussions; technical implementati
 ## Documentation governance
 
 [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md) controls approval, triage, validation and releases. [FEATURE_STATUS.md](FEATURE_STATUS.md) describes **current implementation**, [next_step.md](next_step.md) captures **future design**, [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) captures **technical continuation**, and [CHANGELOG.md](CHANGELOG.md) captures **actual changes**.
+
+
+## DEC-021 — Meong Fly game attempt rule (owner-confirmed, 2026-10-21)
+
+One **unique valid cafe receipt = one game attempt**; after win or loss there is no `Main Lagi` button and reuse of the same receipt must be rejected, including across restarts. Gameplay is space-themed Flappy Bird-like asteroid avoidance with the Meong camera-cat and rainbow trail. The standalone prototype implements this using **demo-only** `DEMO-` codes, not verified cafe receipts. A win may lead to a proposed Rp2,500 discount, but real redemption, cafe settlement split and POS/payment integration are not approved or implemented. No decision here authorizes Step 4 code or merging to master.
