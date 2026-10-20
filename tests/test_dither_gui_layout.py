@@ -22,6 +22,24 @@ class ScrollLayoutTests(unittest.TestCase):
         self.assertIn('actions = ttk.Frame(panel)', self.source)
         self.assertIn('actions.pack(side="bottom"', self.source)
 
+    def test_threshold_hidden_without_disabling_saved_preset(self):
+        # The GUI renders only Floyd/Bayer/Dizzy, never a Threshold lane.
+        self.assertIn('VISIBLE_MODES = ("floyd-steinberg", "bayer", "dizzy")',
+                      self.source)
+        self.assertIn('for idx, mode in enumerate(VISIBLE_MODES):', self.source)
+        self.assertNotIn('("threshold", "Threshold", 0, 255)', self.source)
+        self.assertIn('for mode in LAB_DITHER_MODES:', self.source)
+        self.assertIn('for mode in VISIBLE_MODES:', self.source)
+        self.assertIn('for m in LAB_DITHER_MODES}', self.source)
+
+    def test_batch_and_export_only_visible_three(self):
+        self.assertIn('Export 3 PNG', self.source)
+        self.assertIn('Print All (3 jobs)', self.source)
+        self.assertIn('self._start_print(VISIBLE_MODES)', self.source)
+        self.assertIn('for mode in VISIBLE_MODES:', self.source)
+        self.assertNotIn('Print All (4 jobs)', self.source)
+        self.assertNotIn('Export 4 PNG', self.source)
+
     def test_bounded_previews(self):
         self.assertIn('preview_holder = ttk.Frame(panel, height=286)', self.source)
         self.assertIn('preview_holder.pack_propagate(False)', self.source)
