@@ -120,7 +120,7 @@ class DitherLabTests(unittest.TestCase):
         self.assertEqual(image.tobytes(), original)
         path = Path(__file__).resolve().parents[1] / "tools" / "dither_compare_gui.py"
         code = path.read_text(encoding="utf-8")
-        self.assertIn("preview.thumbnail((270, 268), Image.Resampling.BOX)", code)
+        self.assertIn("preview.thumbnail((370, 268), Image.Resampling.BOX)", code)
 
     def test_compare_gui_has_enhanced_toggle_and_compiles(self):
         import ast
