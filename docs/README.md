@@ -42,3 +42,6 @@ The owner also reports improved Floyd photo quality (BUG-004), payment QR-slip p
 **Intentionally deferred/unresolved:** tutorial/layout background music and `Uji Musik` (BUG-001/007); Google Drive 30-day photo-retention registration (BUG-009, to be coordinated with FEAT-004 advertising media synchronization). **Real payable QRIS (FEAT-020) is NOT implemented**; the onscreen payment QR and simulated checkout remain DEMO, not an authorized merchant charge. Other payment/settlement feature work remains low priority.
 
 For authoritative ongoing status use the [bug tracker](bug_tracker.md), [feature table](FEATURE_STATUS.md), [priority board](next_step.md), [physical acceptance checklist](test_checklist.md) and [FEAT-001 evidence dossier](qa/FEAT-001-BUG-011-acceptance.md). This index does not authorize further code changes, deployments, or upgrading the versioned **source pre-release** into a hardware-certified production release.
+
+
+- **[FEAT-021 Meong Fly standalone mockup UI](features/FEAT-021-meong-fly.md)** — feature-branch-only five-screen pixel-art arcade prototype; how to launch and test it, visual mockup constraints, one demo receipt per chance and full Windows acceptance gaps. **Not integrated** into the production Kivy welcome screen/QRIS.
