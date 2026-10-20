@@ -1,5 +1,9 @@
 # Meong Photobooth - Current feature status
 
+## Owner feedback update - 2026-10-20
+
+**FEAT-020 main-GUI MOCK trial: OWNER-REPORTED PASS.** The owner reports that the discussed MOCK flow runs smoothly. This updates the field-observation status only; it is not Midtrans Sandbox/production acceptance, full physical-device certification, or merge/release approval. Exact local SHA and per-scenario device evidence remain unspecified. See [the canonical test record](test_checklist.md#owner-reported-mock-trial---2026-10-20) for the report and its limits.
+
 ## Current feature branch: FEAT-020, 2026-10-20
 
 **`feature/qris-payment`: automatic main-GUI mock trial is implemented and verified in synthetic CI. Not production-ready, not merged.** Tested source: `7cf90ea95a32b4cf2feee16c21232069bc1aa9bb`. Default `master` / immutable `v1.0.0` remain separate stable baselines; this feature does not rewrite that release.
@@ -9,7 +13,7 @@
 | Main Kivy checkout -> automatic payment detection -> photo session | Implemented through `app_qris.py`, `ui_qris.py`, durable kiosk journal and authenticated backend. Real-widget tests cover automatic single admission and the existing two-template capture/retake/result/completion path. |
 | Order/claim retry and restart | Same checkout key/order/grant replay; no blind duplicate charge. Interrupted capture is held for operator recovery, not automatically recaptured or reprinted. |
 | Provider verification and lifecycle | Signed notifications plus independently fetched order/amount/IDR/QRIS/merchant/transaction checks; missed webhook recovery, expiry, cancellation, rejection and late-payment isolation. Actual merchant Sandbox responses still need owner acceptance. |
-| Mock GUI trial | `python tools/run_qris_mock.py`: loopback-only backend, no merchant key, explicitly non-payable QR, automatic simulation after eight seconds. Physical print disabled unless `--allow-print`. |
+| Mock GUI trial | **OWNER-REPORTED PASS for general smooth operation (2026-10-20)**; exact local SHA and individual device results not supplied. `python tools/run_qris_mock.py`: loopback-only backend, no merchant key, explicitly non-payable QR, automatic simulation after eight seconds. Physical print disabled unless `--allow-print`. |
 | Midtrans Sandbox mode | Wired to the same main GUI; requires backend-only Sandbox credentials and merchant ID. No production endpoint or live payment enablement. |
 | Existing DEMO, camera, templates, retake, photo printing, ads and Drive QR | Original `app.py`, core Kivy UI, printer, catalog and Drive modules retained. Full synthetic regression remains green. This does not certify physical devices or resolve existing retention/audio defects. |
 | Payment QR paper slip | Existing DEMO slip remains; the new remote QRIS page currently displays the provider QR onscreen only. Provider-image slip printing remains pending. |

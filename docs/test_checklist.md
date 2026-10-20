@@ -1,5 +1,13 @@
 # Meong Photobooth - Test checklist and evidence
 
+## Owner-reported MOCK trial - 2026-10-20
+
+**FEAT-020: OWNER-REPORTED PASS for the discussed main-GUI MOCK flow.** After the explanation that the MOCK trial simulates payment without scanning or transferring money, the owner reported: "udah bisa berjalan dengan lancar" (already running smoothly).
+
+This is a general owner observation about the discussed MOCK trial, not a new automated test or a claim of real Midtrans payment. The exact locally tested commit SHA, launch command, OS/device configuration, scenario/copy counts, logs and individual camera/audio/printer/Drive checks were not supplied. The repository head when this feedback was recorded was `40b2fe47547512a32b6acaf4dae9b04f95ae02fe`; do not treat that as the confirmed local test SHA. No physical-print, provider QR scan, failure-recovery or real merchant acceptance is inferred from this report.
+
+Scope of this update: record field feedback under the existing FEAT-020 development/documentation authorization; documentation only. No code, test execution, deployment, release, production payment or merge approval is implied. The detailed operator/provider gates below remain open until separately evidenced. The next provider acceptance stage remains the actual Midtrans Sandbox trial described in [QRIS_TRIAL.md](QRIS_TRIAL.md).
+
 ## Current FEAT-020 gate - 2026-10-20
 
 **Tested source:** `7cf90ea95a32b4cf2feee16c21232069bc1aa9bb`, `feature/qris-payment`. Documentation-only changes after this SHA do not constitute a new hardware test.
