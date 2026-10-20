@@ -22,8 +22,10 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from photobooth.dither_lab import (LAB_DITHER_MODES, ComparisonProfiles, DitherProfile,
-                                   load_comparison, render_thermal_image, save_comparison)
+                                   load_comparison, render_thermal_image, save_comparison,
+                                   save_profile)
 from photobooth.dizzy_dither import DIZZY_VARIANTS
+from photobooth.dither_autotune import AutoTuneCancelled, tune_enhanced_floyd
 
 # Threshold remains in lab profiles and production backends for backward
 # compatibility, but no longer has a visible comparison/print/export panel.
@@ -78,6 +80,18 @@ class ComparisonApp:
         self.scroll_canvases = {}
         self.print_events = queue.Queue()
         self.print_busy = False
+        # Auto Tune never touches live printing or applies settings silently.
+        # Worker events are marshalled to Tk through a queue.
+        self.autotune_events = queue.Queue()
+        self.autotune_generation = 0
+        self.autotune_cancel_event = None
+        self.autotune_busy = False
+        self.autotune_result = None
+        self.autotune_dialog = None
+        self.autotune_photos = []
+        self.autotune_selected = None
+        self._setting_tuned_controls = False
+        self.autotune_button = None
         self.zoom = tk.IntVar(value=2)
         self.sync = tk.BooleanVar(value=False)
         self.width = tk.StringVar(value="576")
@@ -204,6 +218,11 @@ class ComparisonApp:
             state.pack(side="bottom", fill="x")
             actions = ttk.Frame(panel)
             actions.pack(side="bottom", fill="x", pady=(6, 2))
+            if mode == "floyd-steinberg":
+                self.autotune_button = ttk.Button(
+                    actions, text="Auto Tune", command=self.start_auto_tune)
+                self.autotune_button.pack(
+                    side="left", expand=True, fill="x", padx=(0, 5))
             ttk.Button(actions, text="Print Test", command=lambda m=mode:
                        self.print_lane(m)).pack(side="left", expand=True, fill="x")
             ttk.Button(actions, text="Save PNG", command=lambda m=mode:
@@ -226,6 +245,206 @@ class ComparisonApp:
             self.schedule(mode)
         root.after(80, self.poll)
         root.protocol("WM_DELETE_WINDOW", self.close)
+
+    def invalidate_auto_tune(self):
+        """Cancel or dismiss stale candidate sets whenever Floyd input changes."""
+        self.autotune_generation += 1
+        if self.autotune_cancel_event is not None:
+            self.autotune_cancel_event.set()
+        self.autotune_cancel_event = None
+        self.autotune_busy = False
+        self.autotune_result = None
+        if self.autotune_button is not None:
+            self.autotune_button.configure(text="Auto Tune")
+        if self.autotune_dialog is not None:
+            if self.autotune_dialog.winfo_exists():
+                self.autotune_dialog.destroy()
+            self.autotune_dialog = None
+        self.autotune_photos = []
+
+    def start_auto_tune(self):
+        """Start a bounded, cancellable search without blocking Tk widgets."""
+        if self.autotune_busy:
+            self.invalidate_auto_tune()
+            self.message.set("Auto Tune cancelled. No settings changed.")
+            return
+        if self.autotune_result is not None:
+            self.show_auto_tune_candidates()
+            return
+        # Auto Tune always searches Enhanced Floyd; it does not silently tick
+        # the live checkbox or change other lanes until Apply is clicked.
+        profile = replace(self.configs.floyd, enhanced_floyd=True)
+        source = self.source.copy()
+        self.autotune_generation += 1
+        generation = self.autotune_generation
+        cancel_event = threading.Event()
+        self.autotune_cancel_event = cancel_event
+        self.autotune_busy = True
+        self.autotune_button.configure(text="Cancel Tune")
+        self.message.set("Auto Tune: searching Enhanced Floyd presets...")
+        def on_progress(n, phase):
+            self.autotune_events.put(
+                ("progress", generation, (n, phase)))
+        def worker():
+            try:
+                result = tune_enhanced_floyd(
+                    source, profile, should_cancel=cancel_event.is_set,
+                    on_progress=on_progress)
+                self.autotune_events.put(("complete", generation, result))
+            except AutoTuneCancelled:
+                self.autotune_events.put(("cancelled", generation, None))
+            except Exception as error:
+                self.autotune_events.put(("error", generation, str(error)))
+        threading.Thread(
+            target=worker, daemon=True, name="meong-auto-tune-floyd").start()
+
+    def poll_auto_tune(self):
+        while True:
+            try:
+                event, generation, payload = self.autotune_events.get_nowait()
+            except queue.Empty:
+                break
+            if generation != self.autotune_generation or self.closed:
+                continue  # Ignore stale results after change/cancellation.
+            if event == "progress":
+                evaluated, stage = payload
+                self.message.set(f"Auto Tune: {stage} — {evaluated} settings evaluated...")
+                continue
+            self.autotune_busy = False
+            self.autotune_cancel_event = None
+            self.autotune_button.configure(text="Auto Tune")
+            if event == "complete":
+                self.autotune_result = payload
+                self.message.set(
+                    f"Auto Tune ready: {payload.trials} evaluations; "
+                    "choose a candidate to apply or save.")
+                self.show_auto_tune_candidates()
+            elif event == "error":
+                self.message.set("Auto Tune failed; Floyd settings unchanged.")
+                messagebox.showerror("Auto Tune failed", payload, parent=self.root)
+            elif event == "cancelled":
+                self.message.set("Auto Tune cancelled; settings unchanged.")
+
+    def dismiss_auto_tune_candidates(self):
+        if self.autotune_dialog is not None:
+            if self.autotune_dialog.winfo_exists():
+                self.autotune_dialog.destroy()
+            self.autotune_dialog = None
+            self.autotune_photos = []
+
+    def show_auto_tune_candidates(self):
+        """Review three distinct native-dot previews before selecting."""
+        if self.autotune_result is None:
+            return
+        self.dismiss_auto_tune_candidates()
+        dialog = tk.Toplevel(self.root)
+        self.autotune_dialog = dialog
+        dialog.title("MEONG | Enhanced Floyd Auto Tune — 3 candidates")
+        dialog.geometry("900x595")
+        dialog.minsize(760, 500)
+        dialog.protocol("WM_DELETE_WINDOW", self.dismiss_auto_tune_candidates)
+        ttk.Label(
+            dialog, text="Digital fidelity ranking — NOT calibrated paper quality",
+            font=("Segoe UI", 12, "bold")
+        ).pack(padx=12, pady=(12, 4))
+        ttk.Label(
+            dialog, text="All candidates use Enhanced Floyd. No changes are "
+                         "applied or printed until you choose Apply. "
+                         "Print Test separately to judge real paper.",
+            wraplength=820, justify="center"
+        ).pack(padx=12, pady=(0, 8))
+
+        cards = ttk.Frame(dialog, padding=(8, 0, 8, 4))
+        cards.pack(fill="both", expand=True)
+        self.autotune_selected = tk.IntVar(value=0)
+        for index, candidate in enumerate(self.autotune_result.candidates):
+            cards.columnconfigure(index, weight=1, uniform="candidate")
+            card = ttk.LabelFrame(
+                cards, text=f"#{index + 1} • score {candidate.score:.1f}/100",
+                padding=8)
+            card.grid(row=0, column=index, padx=4, sticky="nsew")
+            preview = candidate.raster.convert("L")
+            preview.thumbnail((230, 270), Image.Resampling.BOX)
+            photo = ImageTk.PhotoImage(preview, master=dialog)
+            self.autotune_photos.append(photo)
+            ttk.Label(card, image=photo, anchor="center").pack(fill="x")
+            ttk.Radiobutton(
+                card, text="Select candidate", value=index,
+                variable=self.autotune_selected
+            ).pack(anchor="w", pady=(7, 2))
+            p = candidate.profile
+            ttk.Label(
+                card,
+                text=(f"Brightness {p.brightness:.3f}   Contrast {p.contrast:.3f}\n"
+                      f"Gamma {p.gamma:.3f}   Sharpness {p.sharpness:.3f}\n"
+                      f"Black dots {candidate.black_coverage:.1f}%\n"
+                      f"Tonal error {candidate.tone_error:.1f}   "
+                      f"Edge error {candidate.edge_error:.1f}"),
+                justify="left",
+            ).pack(anchor="w", pady=3)
+        controls = ttk.Frame(dialog, padding=10)
+        controls.pack(fill="x")
+        ttk.Button(controls, text="Apply Best",
+                   command=lambda: self.apply_auto_tune_candidate(0)).pack(
+                       side="left", padx=(0, 6))
+        ttk.Button(controls, text="Apply Selected",
+                   command=self.apply_auto_tune_candidate).pack(
+                       side="left", padx=(0, 6))
+        ttk.Button(controls, text="Save Selected Preset",
+                   command=self.save_auto_tune_preset).pack(
+                       side="left", padx=(0, 6))
+        ttk.Button(controls, text="Close",
+                   command=self.dismiss_auto_tune_candidates).pack(side="right")
+
+    def chosen_auto_tune_candidate(self, index=None):
+        if self.autotune_result is None:
+            return None
+        if index is None:
+            index = self.autotune_selected.get()
+        if not (0 <= index < len(self.autotune_result.candidates)):
+            return None
+        return self.autotune_result.candidates[index]
+
+    def apply_auto_tune_candidate(self, index=None):
+        candidate = self.chosen_auto_tune_candidate(index)
+        if candidate is None:
+            return
+        # Protect independently tuned Bayer/Dizzy even with Sync enabled.
+        self.invalidate_auto_tune()
+        self._setting_tuned_controls = True
+        try:
+            self.configs = self.configs.replace_lane(candidate.profile)
+            self.enhanced_floyd.set(True)
+            for key, (var, _label) in self.controls["floyd-steinberg"].items():
+                var.set(getattr(candidate.profile, key))
+                self.write_value("floyd-steinberg", key)
+        finally:
+            self._setting_tuned_controls = False
+        self.schedule("floyd-steinberg")
+        self.message.set(
+            "Applied Enhanced Floyd Auto Tune to Floyd only. "
+            "Use Save All Configs to keep it; print quality requires paper review.")
+
+    def save_auto_tune_preset(self):
+        candidate = self.chosen_auto_tune_candidate()
+        if candidate is None:
+            return
+        path = filedialog.asksaveasfilename(
+            defaultextension=".json",
+            initialfile="meong-floyd-autotune-v4.json",
+            filetypes=[("JSON", "*.json")],
+            parent=self.autotune_dialog or self.root)
+        if not path:
+            return
+        try:
+            save_profile(path, candidate.profile)
+            self.message.set(
+                f"Saved lab-only Auto Tune profile: {path} "
+                "(not applied to kiosk).")
+        except (OSError, ValueError) as error:
+            messagebox.showerror(
+                "Save preset failed", str(error),
+                parent=self.autotune_dialog or self.root)
 
     def _wheel_scroll(self, event):
         """Hit-test the pointer so each lane scrolls only its own parameters."""
@@ -253,6 +472,7 @@ class ComparisonApp:
         label.configure(text=f"{val.get():.2f}")
 
     def toggle_enhanced(self):
+        self.invalidate_auto_tune()
         p = self.configs.floyd
         self.configs = self.configs.replace_lane(replace(p, enhanced_floyd=self.enhanced_floyd.get()))
         self.schedule("floyd-steinberg")
@@ -275,6 +495,7 @@ class ComparisonApp:
             self.show_image(mode, image)
 
     def change_width(self, _event=None):
+        self.invalidate_auto_tune()
         # Keep the hidden Threshold profile width aligned for old JSON files;
         # render only the three visible methods.
         for mode in LAB_DITHER_MODES:
@@ -284,6 +505,10 @@ class ComparisonApp:
             self.schedule(mode)
 
     def slider_changed(self, mode, key):
+        if self._setting_tuned_controls:
+            return
+        if mode == "floyd-steinberg" or self.sync.get():
+            self.invalidate_auto_tune()
         self.write_value(mode, key)
         v = self.controls[mode][key][0].get()
         value = round(v, 3)
@@ -372,6 +597,7 @@ class ComparisonApp:
                 if mode in self.timers:
                     self.root.after_cancel(self.timers.pop(mode))
                 self.launch(mode)
+        self.poll_auto_tune()
         self.root.after(80, self.poll)
 
     def show_image(self, mode, raster):
@@ -413,12 +639,15 @@ class ComparisonApp:
         except (OSError, ValueError) as error:
             messagebox.showerror("Image error", str(error), parent=self.root)
             return
+        self.invalidate_auto_tune()
         self.source, self.source_label = candidate, Path(path).name
         self.refresh_source()
         for mode in VISIBLE_MODES:
             self.schedule(mode)
 
     def apply_configs(self, configs):
+        self.invalidate_auto_tune()
+        self._setting_tuned_controls = True
         self.configs = configs
         self.width.set(str(configs.floyd.width_dots))
         self.enhanced_floyd.set(configs.floyd.enhanced_floyd)
@@ -430,6 +659,7 @@ class ComparisonApp:
                 var.set(getattr(configs.by_mode(mode), key))
                 self.write_value(mode, key)
             self.schedule(mode)
+        self._setting_tuned_controls = False
 
     def reset(self):
         self.apply_configs(ComparisonProfiles())
@@ -556,6 +786,7 @@ class ComparisonApp:
         self._start_print(VISIBLE_MODES)
 
     def close(self):
+        self.invalidate_auto_tune()
         self.closed = True
         for timer in self.timers.values():
             self.root.after_cancel(timer)
