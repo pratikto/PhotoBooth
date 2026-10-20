@@ -6,14 +6,14 @@ on:
     paths:
       - 'photobooth/**'
       - 'tests/**'
-      - 'tools/run_qris_tests.py'
+      - 'tools/run_qris*.py'
       - 'requirements-qris*.txt'
       - '.github/workflows/qris-sandbox-tests.yml'
   pull_request:
     paths:
       - 'photobooth/**'
       - 'tests/**'
-      - 'tools/run_qris_tests.py'
+      - 'tools/run_qris*.py'
       - 'requirements-qris*.txt'
       - '.github/workflows/qris-sandbox-tests.yml'
   workflow_dispatch:

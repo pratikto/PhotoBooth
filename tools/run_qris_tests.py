@@ -13,6 +13,7 @@ SUITES = (
     'test_checkout_service', 'test_booth_auth', 'test_qris_api',
     'test_qris_kiosk_client', 'test_checkout_durability', 'test_checkout_backend',
     'test_qris_http_v2', 'test_qris_session', 'test_qris_images',
+    'test_qris_sandbox_launcher',
 )
 
 if __name__ == '__main__':

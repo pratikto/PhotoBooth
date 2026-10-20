@@ -25,6 +25,8 @@ Other test scenarios: `--scenario expire`, `--scenario deny`, `--scenario pendin
 
 ## Actual Midtrans Sandbox trial
 
+For the interactive, credential-separated local launcher and simulator checklist, use [Actual merchant Sandbox trial](QRIS_SANDBOX_TRIAL.md): `python tools/run_qris_sandbox.py`. The detailed manual server configuration remains below. No real merchant acceptance is inferred from launcher tests.
+
 Backend-only environment: `MIDTRANS_SERVER_KEY` (Sandbox), `MIDTRANS_MERCHANT_ID`, `MEONG_QRIS_BOOTH_ID`, `MEONG_QRIS_BOOTH_TOKEN` (random >=32 characters), and optionally `MEONG_QRIS_DB_PATH`. Keep secrets outside Git and chat. Start:
 
 ```powershell
