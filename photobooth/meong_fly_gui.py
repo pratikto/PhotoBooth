@@ -210,9 +210,16 @@ class MeongFlyStage(Widget):
             self._draw_score("PAUSE", 180, 321, width=230, height=50, scale=4)
 
     def _refresh(self):
+        """Repaint only the background layer; keep interactive child canvases.
+
+        Kivy attaches the TextInput/Label canvases to this Widget's main
+        canvas. Clearing that canvas removes the input's text and caret from
+        rendering, even though its painted box and touch widget still exist.
+        The static scene belongs in canvas.before, safely behind child widgets.
+        """
         self._sync_overlays()
-        self.canvas.clear()
-        with self.canvas:
+        self.canvas.before.clear()
+        with self.canvas.before:
             Color(.01, .025, .105, 1)
             Rectangle(pos=self.pos, size=self.size)
             screen = (self.flow.screen if self.flow.screen in self._backdrops
