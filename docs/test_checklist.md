@@ -264,3 +264,18 @@ Screen-by-screen source and precise limitations: [FEAT-021](features/FEAT-021-me
 - [ ] Back from Scan before claim returns Start and leaves new code valid; reused code remains rejected on restart; no Main Lagi or gameplay reset bypass.
 - [ ] Resize to 450x900 portrait and landscape/windowed; exact letterbox touch hitboxes for input/CTA, no clipped footer, no stretched mascot, no screen lockup or FPS regression.
 - [ ] Send actual Windows screenshots of Start and Scan, record owner visual acceptance. **Batch A not VERIFIED until then; Batch B/C not yet implemented in this pass.**
+
+
+## FEAT-021 — Batch B Gameplay art/regression evidence (2026-10-21)
+
+**Status:** IN SOURCE only; **NOT owner-Windows-GUI VERIFIED**. Branch `feature/meong-flappy-challenge`; pre-Batch-B rollback baseline `c1498217`. Source changes `72658e55`, `b60c0d68`, `a08952fd`, `7b7b448a`, `ad4a2e49`, `1cea6794`. Test additions `9ed6ab19`, `f5349bef`.
+
+**Assistant local-mirror checks:** Linux container Python 3.13.5 / Pillow 12.3.0, no Kivy. `PYTHONPATH=/mnt/data/meong_step4 python -m unittest discover -s /mnt/data/meong_step4/tests -p 'test_meong_fly_*.py' -v`: **19 run / 15 PASS / 4 SKIP (Kivy unavailable) / 0 FAIL / 0 ERROR**. `python -m compileall -q /mnt/data/meong_step4/photobooth /mnt/data/meong_step4/tests`: no errors. Standalone `DemoReceiptLedger` smoke: claim/one attempt/pause/loss/persistent replay denial PASS. This local mirror is **not** a verified checkout of the exact resulting GitHub commit. Sample Pillow frame is conceptual only; do not report Windows/UI/hardware PASS based on it.
+
+- [ ] On Windows after pull: `python -m unittest tests.test_meong_fly tests.test_meong_fly_receipts tests.test_meong_fly_flow tests.test_meong_fly_painter tests.test_meong_fly_polish tests.test_meong_fly_gui tests.test_meong_fly_game_art tests.test_meong_fly_gameplay_gui -v`.
+- [ ] Start and Scan remain functional; `DEMO-BATCHB-001` works once and is denied after restart; no `Main Lagi` anywhere.
+- [ ] Gameplay Score 0, midgame, near-asteroid screenshots and collision fairness; camera-cat pose, rainbow and asteroid belts never imply smaller hitboxes than physics.
+- [ ] Pause freezes score, elapsed time, objects and input; resume restores gameplay; score +1 only once per completed obstacle pass.
+- [ ] Crash burst displays ~220 ms, does not accept an invisible Continue button, then shows correct actual Game Over score.
+- [ ] 450×900 portrait / 800×600 / 1200×800 layout, smooth >=30 FPS on intended mini-PC; real Kivy gameplay performance and input coordinates.
+- [ ] Owner visually accepts Gameplay before Batch C. Historical 6/6 Windows Step 3 and 7/7 Batch A Pillow evidence do NOT certify this renderer.
