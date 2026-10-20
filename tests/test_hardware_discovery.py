@@ -150,7 +150,7 @@ class DiscoveryTests(unittest.TestCase):
             "windows-spooler", "windows", "queue-name",
             "queue-detected", ("spooler-presence",), "No paper check",
         )
-        with patch("photobooth.device_health.discover_local_devices", return_value=(candidate,)) as scan:
+        with patch("photobooth.device_health.discover_devices_with_evidence", return_value=((candidate,), ("printer",))) as scan:
             with (
                 patch("photobooth.device_health.check_camera", return_value=HealthCheck("camera", READY, "ok")),
                 patch("photobooth.device_health.check_printer", return_value=HealthCheck("printer", READY, "ok")),
@@ -163,6 +163,7 @@ class DiscoveryTests(unittest.TestCase):
                     platform="win32", include_discovery=True,
                 )
         scan.assert_called_once_with(platform="win32")
+        self.assertEqual(report.discovery_complete_kinds, ("printer",))
         self.assertEqual(report.devices[-1], candidate)
         self.assertEqual(report.devices[0].kind, "camera")
 
