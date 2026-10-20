@@ -14,6 +14,7 @@ from kivy.uix.popup import Popup
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.spinner import Spinner
 
+from photobooth.device_recovery import selected_device_observation
 from photobooth.ui_brand import BLUE, EDGE, GREY, INK, PAPER, ROSE, WHITE, Panel
 
 
@@ -187,6 +188,7 @@ class HealthPanelMixin:
         inventory_rows.bind(minimum_height=inventory_rows.setter("height"))
         entries.add_widget(inventory_rows)
         inventory_rows.add_widget(self._label("Belum ada enumerasi perangkat.", 12, 40, color=GREY))
+        self._selection_observations = {}
 
         note = self._label(
             "READY hanya berarti pemeriksaan terbatas berhasil. "
@@ -301,6 +303,42 @@ class HealthPanelMixin:
                 text = (f"{item.kind.upper()}: {item.name} [{item.presence}]\n"
                         f"Identitas: {item.identity_quality}; akses fisik belum dipastikan.")
                 inventory_rows.add_widget(self._label(text, 12, 68, color=GREY))
+            # Observations never imply physical operability or auto-reconnect.
+            # A matching OS identity is a candidate; absence cannot prove
+            # disconnection when the discovery API itself may have failed.
+            get_selection = self.callbacks.get("get_device_selection")
+            if get_selection is not None:
+                try:
+                    selection = get_selection()
+                    for kind, caption in (("camera", "KAMERA PILIHAN"),
+                                          ("printer", "PRINTER PILIHAN")):
+                        old = self._selection_observations.get(kind)
+                        # There is no discovery-completeness signal from B.2:
+                        # only assert a candidate on positive evidence.
+                        candidate = selected_device_observation(
+                            selection, kind, platform=self._health_platform,
+                            detected=inventory, previous=old,
+                            discovery_complete=True,
+                        )
+                        if candidate.state == "missing":
+                            observation = selected_device_observation(
+                                selection, kind, platform=self._health_platform,
+                                detected=inventory, previous=old,
+                                discovery_complete=False,
+                            )
+                        else:
+                            observation = candidate
+                        self._selection_observations[kind] = observation
+                        inventory_rows.add_widget(self._label(
+                            f"{caption}: {observation.state.upper()} "
+                            "(bukan verifikasi fisik)", 11, 36, color=GREY,
+                        ))
+                except (ValueError, TypeError, AttributeError):
+                    # Corrupt selection is handled by startup's strict loader.
+                    inventory_rows.add_widget(self._label(
+                        "Status pilihan perangkat belum dapat dibaca.",
+                        11, 36, color=GREY,
+                    ))
             if len(inventory) > 20:
                 inventory_rows.add_widget(self._label(
                     f"+{len(inventory) - 20} entri lain tidak ditampilkan.",
