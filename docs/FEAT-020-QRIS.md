@@ -44,3 +44,6 @@ Added `photobooth/booth_auth.py` (`bc876fa9`) and six offline test methods in `t
 
 ## Stage 9 — API failure handling (2026-10-20)
 Incremental commits `5847f4c` and `68ba4ab` add HTTP 503 responses for unexpected checkout/provider failures, request-size checks for webhook payloads, and four new route regression cases. **These new tests are authored but not executed**; full repository regression, actual provider behavior, TLS/rate limiting, merchant configuration and Windows hardware tests remain open. No live deployment or master merge. Review potential proxy/content-length behavior during integration.
+
+## Stage 10 — SQLite threaded-access hardening (2026-10-20)
+Commit `82e5ae1` serializes access to a shared SQLite connection with `threading.RLock` and enables `check_same_thread=False` for FastAPI staging worker threads. Commit `9e497c9` adds two offline regression tests for 64 concurrent claim attempts and two separate SQLite connections. **Tests are not yet executed/verified; this change is not a production concurrency certification.** Keep server in sandbox; review transaction boundaries, SQLite multi-process load, shutdown coordination and provider idempotency before deployment. No merge to master without explicit owner approval.
