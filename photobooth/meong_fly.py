@@ -14,7 +14,7 @@ PIPE_SPEED = 165.0
 PIPE_WIDTH = 65
 GAP_HEIGHT = 195
 ROUND_SECONDS = 25.0
-TARGET_SCORE = 6
+TARGET_SCORE = 10  # Approved standalone GUI mockup uses a 10-point win target.
 
 
 @dataclass
