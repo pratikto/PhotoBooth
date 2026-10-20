@@ -47,6 +47,8 @@ class MeongFlyStage(Widget):
         self.flow = flow
         self._screen_seen = None
         self._time = 0.0
+        self._hover_action = None  # Decorative highlight, never affects game state.
+        self._scan_tick = -1
         self._logo_path = Path(logo_path)
         self._backdrops = {
             name: kivy_texture(paint_static_screen(name, self._logo_path))
@@ -60,10 +62,13 @@ class MeongFlyStage(Widget):
             background_normal="", background_active="",
             background_color=(0, 0, 0, 0),
             foreground_color=(.04, .06, .20, 1),
-            cursor_color=(.13, .36, .83, 1),
+            cursor_color=(.06, .43, .85, 1),
+            hint_text_color=(.43, .42, .58, 1),
+            selection_color=(.28, .73, .98, .38),
             size_hint=(None, None), write_tab=False,
         )
         self.receipt.bind(on_text_validate=lambda *_: self.validate_receipt())
+        self.receipt.bind(focus=self._focus_changed)
         self.add_widget(self.receipt)
         self.notice = Label(
             text="", color=(1, .83, .44, 1),
@@ -74,6 +79,8 @@ class MeongFlyStage(Widget):
         self.bind(pos=self._resize, size=self._resize)
         self._resize()
         Clock.schedule_interval(self.update, 1 / 30)
+        # Desktop hover is optional: mobile/touch controls work without it.
+        Window.bind(mouse_pos=self._mouse_moved)
 
     def _viewport(self):
         scale = (min(self.width / W, self.height / H)
@@ -110,6 +117,66 @@ class MeongFlyStage(Widget):
         self.notice.text = self.flow.message if active else ""
         if not active and self.receipt.focus:
             self.receipt.focus = False
+
+    def _focus_changed(self, *_):
+        """Keep focus ring synchronized without ever clearing TextInput.canvas."""
+        if self.flow.screen == "scan":
+            self._refresh()
+
+    def _action_at(self, window_position):
+        """Map Window mouse coordinates to the exact shared logical hitbox."""
+        if not self.collide_point(*window_position):
+            return None
+        ox, oy, scale = self._viewport()
+        if scale <= 0:
+            return None
+        x = (window_position[0] - ox) / scale
+        y = H - (window_position[1] - oy) / scale
+        if not (0 <= x <= W and 0 <= y <= H):
+            return None
+        for action, (ax, ay, width, height) in ACTIONS.get(
+                self.flow.screen, {}).items():
+            if ax <= x <= ax + width and ay <= y <= ay + height:
+                return action
+        return None
+
+    def _mouse_moved(self, _window, window_position):
+        """Repaint only when the highlighted action actually changes."""
+        if self.flow.screen not in ("start", "scan"):
+            return
+        hovered = self._action_at(window_position)
+        if hovered != self._hover_action:
+            self._hover_action = hovered
+            self._refresh()
+
+    def _border(self, logical_xywh, rgba, thickness=2):
+        """Simple pixel border following the same letterbox transform as taps."""
+        (x, y), (w, h) = self._rect(logical_xywh)
+        t = max(1, thickness * self._viewport()[2])
+        Color(*rgba)
+        Rectangle(pos=(x, y), size=(w, t))
+        Rectangle(pos=(x, y + h - t), size=(w, t))
+        Rectangle(pos=(x, y), size=(t, h))
+        Rectangle(pos=(x + w - t, y), size=(t, h))
+
+    def _draw_menu_effects(self, screen):
+        """Lightweight animated overlays: no Pillow/GPU texture creation."""
+        if screen == "scan":
+            # Demonstration animation only; no QR scanning or decoding.
+            scan_y = 292 + (math.sin(self._time * 1.9) + 1) * 54
+            pos, size = self._rect((112, scan_y, 136, 8))
+            Color(.30, .82, 1, .15)
+            Rectangle(pos=pos, size=size)
+            pos, size = self._rect((112, scan_y + 3, 136, 2))
+            Color(.34, .88, 1, .68)
+            Rectangle(pos=pos, size=size)
+            if self.flow.message:
+                self._border(DEMO_ENTRY, (1, .45, .45, .9), 2)
+            elif self.receipt.focus:
+                self._border(DEMO_ENTRY, (.20, .82, 1, .95), 2)
+        if self._hover_action in ACTIONS.get(screen, {}):
+            self._border(ACTIONS[screen][self._hover_action],
+                         (1, .97, .72, .86), 2)
 
     def _score_texture(self, value, size=4, color=GOLD):
         key = (str(value), size, color)
@@ -234,6 +301,8 @@ class MeongFlyStage(Widget):
                     f"{self.flow.game.score}/{TARGET_SCORE}",
                     180, 412, width=180, height=36, scale=3,
                 )
+            if screen in ("start", "scan"):
+                self._draw_menu_effects(screen)
         self._screen_seen = self.flow.screen
 
     def validate_receipt(self):
@@ -244,8 +313,13 @@ class MeongFlyStage(Widget):
     def update(self, dt):
         self._time += min(max(float(dt), 0), .1)
         self.flow.tick(dt)
-        # Static menu/result pages do not rebuild their canvas at 30 FPS.
-        if self.flow.screen == "game" or self._screen_seen != self.flow.screen:
+        # Scan animates only its illustration beam; menus/results stay cached.
+        tick = int(self._time * 15)
+        animate_scan = self.flow.screen == "scan" and tick != self._scan_tick
+        if animate_scan:
+            self._scan_tick = tick
+        if (self.flow.screen == "game" or animate_scan
+                or self._screen_seen != self.flow.screen):
             self._refresh()
 
     def on_touch_down(self, touch):
