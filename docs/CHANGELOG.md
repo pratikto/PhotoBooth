@@ -1,3 +1,11 @@
+## 2026-10-20 — FEAT-008 B.3 discovery completeness (branch only)
+
+- `9238a8e`: introduce Windows spooler enumeration with explicit success/failure evidence.
+- `1e354fc`: propagate `discovery_complete_kinds` to Health snapshots.
+- `ef4d626`: allow Health UI missing classification only when enumeration actually completed.
+- `b16c43b`: add mock regression for empty success vs enumeration failure.
+- Linux and Android enumeration remain conservative/UNKNOWN; no physical recovery or master merge.
+
 ## 2026-10-20 — FEAT-008 B.3 operator status integration (branch only)
 
 - [79ffc96](https://github.com/pratikto/PhotoBooth/commit/79ffc96d80fb2d4b445545b84362e9ad2cb2339a): show read-only selected-device presence classifications in Health panel. Absence remains UNKNOWN because discovery completeness is unverified.
