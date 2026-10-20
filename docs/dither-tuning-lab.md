@@ -4,6 +4,14 @@
 **Branch:** `feature/dither-tuning` (created 2026-10-18 from `feature/kivy-gui` commit `5e0a898`).  
 **Scope:** offline photo-rendering sandbox; the existing photobooth application and photo/QR print pipeline have **not** been changed or merged.
 
+## Experimental enhanced Floyd preprocessing (2026-10-21)
+
+An opt-in **Enhanced Floyd (experimental)** checkbox is available in `tools/dither_compare_gui.py`. It affects the Floyd lane only. Unchecked uses the byte-identical legacy baseline path; checked applies a 3x3 median noise filter, a 20% blend with gently autocontrasted grayscale, and restrained unsharp masking (radius 1.1, strength 55%, threshold 3), after the existing brightness/contrast/gamma/sharpness controls and before Pillow Floyd–Steinberg error diffusion. This is conservative *global* tonal processing, **not CLAHE, face-aware enhancement, or printer heat control**. Existing control values still matter and aggressive settings may degrade results.
+
+The check box allows A/B comparison by exporting/printing Floyd baseline, then toggling on and exporting/printing Floyd enhanced with the same image, width and sliders. Exports include `-baseline` or `-enhanced` suffix; only the native 1-bit result should be used for dot-level comparison. The three-way lab still compares Floyd/Bayer/Threshold. Save/Load All Configs persists the new Floyd selection. New schema version 2 files are written, while v1 profile and comparison JSONs load with `enhanced_floyd=False`. Do not copy these JSONs into printer settings.
+
+Scope is `feature/dither-tuning` only. **The customer-facing `main.py`, `master` printer preset, printer ESC/POS path and production configuration have not been changed.** Preview is not proof of printed quality. Physical comparison must use identical photographs, paper, speed and printer settings, and operator-confirmed test printing. Automated regression tests were added, but physical acceptance remains pending.
+
 ## BUG-010 layout usability
 
 Each algorithm has an independently scrollable parameter area. Hover its slider region and turn the mouse wheel, or drag the adjacent vertical scrollbar. The preview remains visible, and Print Test / Save PNG remain on screen outside the slider scroll region. This must still be checked on the operator's actual Windows screen.
