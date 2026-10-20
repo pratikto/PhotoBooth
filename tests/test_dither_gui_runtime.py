@@ -59,6 +59,40 @@ class EnhancedDizzyTkTests(unittest.TestCase):
         self.assertFalse(self.app.enhanced_dizzy.get())
         self.assertFalse(self.app.configs.dizzy.enhanced_dizzy)
 
+    def test_enhancement_switches_are_in_respective_panels(self):
+        # This checks actual widget ancestry, not just matching source text.
+        checks = [
+            widget for widget in _descendants(self.root)
+            if isinstance(widget, ttk.Checkbutton)
+        ]
+        for label, panel_label in (
+            ("Enhanced Floyd (experimental)", "Floyd–Steinberg"),
+            ("Enhanced Dizzy (experimental)", "Dizzy Dithering"),
+        ):
+            with self.subTest(label=label):
+                matches = [w for w in checks if w.cget("text") == label]
+                self.assertEqual(len(matches), 1)
+                self.assertIsInstance(matches[0].master, ttk.LabelFrame)
+                self.assertEqual(matches[0].master.cget("text"), panel_label)
+
+        # Sync Parameters must never synchronize per-algorithm enhancement.
+        self.app.sync.set(True)
+        prior = dict(self.app.versions)
+        floyd_check = next(
+            w for w in checks if w.cget("text") == "Enhanced Floyd (experimental)")
+        floyd_check.invoke()
+        self.assertTrue(self.app.enhanced_floyd.get())
+        self.assertTrue(self.app.configs.floyd.enhanced_floyd)
+        self.assertFalse(self.app.configs.dizzy.enhanced_dizzy)
+        self.assertEqual(self.app.versions["floyd-steinberg"],
+                         prior["floyd-steinberg"] + 1)
+        self.assertEqual(self.app.versions["bayer"], prior["bayer"])
+        self.assertEqual(self.app.versions["dizzy"], prior["dizzy"])
+
+        self.app.apply_configs(ComparisonProfiles())
+        self.assertFalse(self.app.enhanced_floyd.get())
+        self.assertFalse(self.app.enhanced_dizzy.get())
+
     def test_actual_gui_worker_renders_distinct_baseline_enhanced_rasters(self):
         baseline = self._wait_for_ready()
         self.assertEqual(baseline.mode, "1")
