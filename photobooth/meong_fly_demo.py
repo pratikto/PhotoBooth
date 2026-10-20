@@ -31,12 +31,16 @@ class SpaceBoard(Widget):
     def redraw(self):
         if not self.width or not self.height:
             return
-        sx, sy = self.width / WIDTH, self.height / HEIGHT
+        # Uniform scaling prevents stretched cats and deceptive collision visuals.
+        scale = min(self.width / WIDTH, self.height / HEIGHT)
+        ox = self.x + (self.width - WIDTH * scale) / 2
+        oy = self.y + (self.height - HEIGHT * scale) / 2
+        sx = sy = scale
         t = self.game.elapsed
         def rect(x, y, w, h):
-            Rectangle(pos=(self.x + x*sx, self.y + y*sy), size=(w*sx, h*sy))
+            Rectangle(pos=(ox + x*sx, oy + y*sy), size=(w*sx, h*sy))
         def circle(x, y, radius):
-            Ellipse(pos=(self.x+(x-radius)*sx, self.y+(y-radius)*sy),
+            Ellipse(pos=(ox+(x-radius)*sx, oy+(y-radius)*sy),
                     size=(2*radius*sx, 2*radius*sy))
         with self.canvas:
             self.canvas.clear()
@@ -51,7 +55,7 @@ class SpaceBoard(Widget):
             Color(.19, .12, .40, 1)
             circle(395, 538, 57)
             Color(.54, .31, .75, 1)
-            Ellipse(pos=(self.x+329*sx, self.y+525*sy), size=(132*sx, 22*sy))
+            Ellipse(pos=(ox+329*sx, oy+525*sy), size=(132*sx, 22*sy))
             Color(.31, .17, .56, 1)
             circle(395, 538, 48)
             Color(.06, .18, .42, 1)
@@ -139,6 +143,7 @@ class Demo(App):
         self.game = MeongFly()
         self.ledger = DemoReceiptLedger(Path.home() / ".meong_fly_demo.sqlite3")
         self.active_receipt = None
+        self.result_recorded = False
         root = BoxLayout(orientation="vertical", padding=12, spacing=8)
         self.title_label = Label(text="MEONG FLY! SPACE EDITION", size_hint_y=None, height=50, font_size=22)
         self.receipt = TextInput(hint_text="Kode struk demo: DEMO-123", multiline=False,
@@ -163,6 +168,7 @@ class Demo(App):
             self.status.text = "Struk demo tidak valid atau sudah pernah digunakan."
             return
         self.active_receipt = code
+        self.result_recorded = False
         self.receipt.disabled = True
         self.scan.disabled = True
         self.game.start()
@@ -170,8 +176,9 @@ class Demo(App):
     def tick(self, dt):
         self.game.step(dt)
         self.board.redraw()
-        if self.active_receipt and self.game.status in ("won", "lost"):
+        if self.active_receipt and not self.result_recorded and self.game.status in ("won", "lost"):
             self.ledger.finish(self.active_receipt, self.game.status == "won")
+            self.result_recorded = True
         if self.game.status == "won":
             self.status.text = "MENANG! Simulasi diskon Rp2.500 (belum aktif)"
         elif self.game.status == "lost":
