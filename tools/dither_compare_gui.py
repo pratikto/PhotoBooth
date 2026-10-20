@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Four-lane, offline thermal-photo tuning studio.
+"""Three-panel, offline thermal-photo tuning studio.
 
 All Tk widgets live on the Tk event thread; workers compute immutable raster
 results only. Physical printing is an explicit, confirmed separate action.
@@ -25,18 +25,19 @@ from photobooth.dither_lab import (LAB_DITHER_MODES, ComparisonProfiles, DitherP
                                    load_comparison, render_thermal_image, save_comparison)
 from photobooth.dizzy_dither import DIZZY_VARIANTS
 
-# The production printer still supports only Floyd/Bayer/Threshold.
-DITHER_MODES = LAB_DITHER_MODES
+# Threshold remains in lab profiles and production backends for backward
+# compatibility, but no longer has a visible comparison/print/export panel.
+VISIBLE_MODES = ("floyd-steinberg", "bayer", "dizzy")
+assert set(VISIBLE_MODES).issubset(LAB_DITHER_MODES)
 
 FIELDS = (
     ("brightness", "Brightness", .5, 1.75),
     ("contrast", "Contrast", .5, 2.5),
     ("gamma", "Gamma", .3, 3),
     ("sharpness", "Sharpness", 0, 3),
-    ("threshold", "Threshold", 0, 255),
 )
 SHORT = {"floyd-steinberg": "Floyd–Steinberg", "bayer": "Bayer 8×8",
-         "threshold": "Threshold", "dizzy": "Dizzy Dithering"}
+         "dizzy": "Dizzy Dithering"}
 
 
 def sample_source():
@@ -57,14 +58,14 @@ class ComparisonApp:
     def __init__(self, root):
         self.root = root
         root.title("MEONG | Dither Comparison Lab + Dizzy (Experimental)")
-        root.geometry("1560x850")
-        root.minsize(1150, 620)
+        root.geometry("1450x850")
+        root.minsize(1050, 620)
         self.source = sample_source()
         self.source_label = "Synthetic sample"
         self.configs = ComparisonProfiles()
         self.results = {}
         self.ready_profiles = {}
-        self.versions = {mode: 0 for mode in DITHER_MODES}
+        self.versions = {mode: 0 for mode in VISIBLE_MODES}
         self.timers = {}
         self.busy = set()
         self.queued = set()
@@ -89,7 +90,7 @@ class ComparisonApp:
         style.configure("TButton", padding=(7, 5))
         header = ttk.Frame(root, padding=12)
         header.pack(fill="x")
-        ttk.Label(header, text="MEONG • 4-WAY DITHER LAB",
+        ttk.Label(header, text="MEONG • 3-WAY DITHER LAB",
                   font=("Segoe UI", 19, "bold")).pack(side="left")
         ttk.Label(header, text="Experiment only | no changes to kiosk",
                   font=("Segoe UI", 10)).pack(side="right")
@@ -98,7 +99,7 @@ class ComparisonApp:
         bar.pack(fill="x")
         for caption, callback in (
             ("Open Image", self.open_source), ("Save All Configs", self.save_all),
-            ("Load All Configs", self.load_all), ("Export 4 PNG", self.export_all),
+            ("Load All Configs", self.load_all), ("Export 3 PNG", self.export_all),
             ("Reset", self.reset),
         ):
             ttk.Button(bar, text=caption, command=callback).pack(side="left", padx=(0, 5))
@@ -136,7 +137,7 @@ class ComparisonApp:
 
         columns = ttk.Frame(root, padding=(8, 0, 8, 5))
         columns.pack(fill="both", expand=True)
-        for idx, mode in enumerate(DITHER_MODES):
+        for idx, mode in enumerate(VISIBLE_MODES):
             columns.columnconfigure(idx, weight=1, uniform="lane")
             panel = ttk.LabelFrame(columns, text=SHORT[mode], padding=8)
             panel.grid(row=0, column=idx, padx=4, sticky="nsew")
@@ -172,8 +173,6 @@ class ComparisonApp:
             self.scroll_canvases[mode] = canvas
             self.controls[mode] = {}
             for key, caption, lower, upper in FIELDS:
-                if key == "threshold" and mode != "threshold":
-                    continue
                 strip = ttk.Frame(interior)
                 strip.pack(fill="x", pady=(5, 0))
                 ttk.Label(strip, text=caption).pack(side="left")
@@ -203,14 +202,14 @@ class ComparisonApp:
         footer.pack(fill="x")
         self.message = tk.StringVar(value="Lab only: article-8 Dizzy uses axial 1.0 / diagonal 0.1 weights. Native PNG / print remain 1-bit.")
         ttk.Label(footer, textvariable=self.message).pack(side="left")
-        ttk.Button(footer, text="Print All (4 jobs)",
+        ttk.Button(footer, text="Print All (3 jobs)",
                    command=self.print_all).pack(side="right")
 
         root.bind_all("<MouseWheel>", self._wheel_scroll, add="+")
         root.bind_all("<Button-4>", self._wheel_scroll, add="+")
         root.bind_all("<Button-5>", self._wheel_scroll, add="+")
         self.refresh_source()
-        for mode in DITHER_MODES:
+        for mode in VISIBLE_MODES:
             self.schedule(mode)
         root.after(80, self.poll)
         root.protocol("WM_DELETE_WINDOW", self.close)
@@ -238,8 +237,7 @@ class ComparisonApp:
 
     def write_value(self, mode, key):
         val, label = self.controls[mode][key]
-        label.configure(text=(str(round(val.get())) if key == "threshold"
-                              else f"{val.get():.2f}"))
+        label.configure(text=f"{val.get():.2f}")
 
     def toggle_enhanced(self):
         p = self.configs.floyd
@@ -258,16 +256,19 @@ class ComparisonApp:
             self.show_image(mode, image)
 
     def change_width(self, _event=None):
-        for mode in DITHER_MODES:
+        # Keep the hidden Threshold profile width aligned for old JSON files;
+        # render only the three visible methods.
+        for mode in LAB_DITHER_MODES:
             self.configs = self.configs.replace_lane(
                 replace(self.configs.by_mode(mode), width_dots=int(self.width.get())))
+        for mode in VISIBLE_MODES:
             self.schedule(mode)
 
     def slider_changed(self, mode, key):
         self.write_value(mode, key)
         v = self.controls[mode][key][0].get()
-        value = round(v) if key == "threshold" else round(v, 3)
-        targets = DITHER_MODES if self.sync.get() and key != "threshold" else (mode,)
+        value = round(v, 3)
+        targets = VISIBLE_MODES if self.sync.get() else (mode,)
         for target in targets:
             p = self.configs.by_mode(target)
             self.configs = self.configs.replace_lane(replace(p, **{key: value}))
@@ -357,7 +358,7 @@ class ComparisonApp:
         # physical print look sparse/jagged. BOX averages dot coverage into
         # display grays, approximating perceived tone without changing bytes.
         preview = raster.convert("L")
-        preview.thumbnail((270, 268), Image.Resampling.BOX)
+        preview.thumbnail((370, 268), Image.Resampling.BOX)
         preview = preview.convert("RGB")
         factor = self.zoom.get()
         width, height = raster.size
@@ -392,7 +393,7 @@ class ComparisonApp:
             return
         self.source, self.source_label = candidate, Path(path).name
         self.refresh_source()
-        for mode in DITHER_MODES:
+        for mode in VISIBLE_MODES:
             self.schedule(mode)
 
     def apply_configs(self, configs):
@@ -401,7 +402,7 @@ class ComparisonApp:
         self.enhanced_floyd.set(configs.floyd.enhanced_floyd)
         self.dizzy_variant.set(configs.dizzy.dizzy_variant)
         self.dizzy_seed_label.configure(text=f"Seed: {configs.dizzy.dizzy_seed}")
-        for mode in DITHER_MODES:
+        for mode in VISIBLE_MODES:
             for key, (var, _label) in self.controls[mode].items():
                 var.set(getattr(configs.by_mode(mode), key))
                 self.write_value(mode, key)
@@ -425,7 +426,7 @@ class ComparisonApp:
         if path:
             try:
                 configs = load_comparison(path)
-                if len({configs.by_mode(m).width_dots for m in DITHER_MODES}) != 1:
+                if len({configs.by_mode(m).width_dots for m in LAB_DITHER_MODES}) != 1:
                     raise ValueError("All lanes must use the same paper width.")
                 self.apply_configs(configs)
                 self.message.set(f"Loaded lab-only config: {path}")
@@ -461,17 +462,17 @@ class ComparisonApp:
                 messagebox.showerror("Export failed", str(error), parent=self.root)
 
     def export_all(self):
-        if not all(self.ready(m) for m in DITHER_MODES):
-            messagebox.showinfo("Rendering", "Wait for all four previews.",
+        if not all(self.ready(m) for m in VISIBLE_MODES):
+            messagebox.showinfo("Rendering", "Wait for all three previews.",
                                 parent=self.root)
             return
-        folder = filedialog.askdirectory(title="Export 4 native rasters")
+        folder = filedialog.askdirectory(title="Export 3 native rasters")
         if folder:
             try:
-                for mode in DITHER_MODES:
+                for mode in VISIBLE_MODES:
                     self.results[mode].save(
                         Path(folder) / self.raster_filename(self.ready_profiles[mode]), format="PNG")
-                self.message.set(f"Exported 4 native 1-bit rasters to {folder}")
+                self.message.set(f"Exported 3 native 1-bit rasters to {folder}")
             except OSError as error:
                 messagebox.showerror("Export failed", str(error), parent=self.root)
 
@@ -528,7 +529,7 @@ class ComparisonApp:
         self._start_print((mode,))
 
     def print_all(self):
-        self._start_print(DITHER_MODES)
+        self._start_print(VISIBLE_MODES)
 
     def close(self):
         self.closed = True
