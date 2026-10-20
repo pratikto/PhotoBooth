@@ -5,6 +5,10 @@ This status is based on reading selected source files and the latest owner devic
 
 Status vocabulary: **IN SOURCE** = relevant implementation found, **OWNER REPORTED** = physical observation requiring reproducible evidence, **UNVERIFIED** = no current hardware acceptance, **PLANNED** = not implemented, **BLOCKED** = operational defect. For feature approval/requirements, see [DECISIONS.md](DECISIONS.md) and [next_step.md](next_step.md).
 
+## FEAT-011 Floyd enhancement checkbox placement — 2026-10-21 (GUI only)
+
+In `feature/dither-tuning`, the **Enhanced Floyd** switch has been relocated from the global toolbar to the Floyd–Steinberg panel, immediately below preview metadata, matching the existing **Enhanced Dizzy** control in the Dizzy panel. Both flags remain independent of Sync Parameters, reset/load correctly, and do not change 1-bit raster or printer processing. See [dither guide](dither-tuning-lab.md). **Automated VERIFIED in Linux CI**: [run 39505103668](https://github.com/pratikto/PhotoBooth/actions/runs/39505103668) at `8cdc2b50a3a5220c839805cf1d6a87155aa1815e` — 43 unit/static regression tests PASS and 3 Tk/Xvfb runtime tests PASS. **Windows visual acceptance still pending**; `master` and kiosk printer code were not changed.
+
 ## FEAT-011 Enhanced Dizzy opt-in — 2026-10-21 (experimental only)
 
 **Implemented in source on `feature/dither-tuning`:** `photobooth/dither_lab.py` now shares the existing Enhanced Floyd grayscale preprocessing with an independent, **OFF-by-default** `enhanced_dizzy` option for both Dizzy article variants. The three-panel lab GUI displays an **Enhanced Dizzy** checkbox within the Dizzy lane, maintains independent Floyd and Dizzy enhancement switches, and labels baseline/enhanced PNG exports and printed test headers. Lab profile/comparison JSON now uses **v4** and reads v1/v2/v3 files with Enhanced Dizzy disabled; the hidden Threshold profile is retained. The production `photobooth/printer.py`, Kivy customer path and `master` are **unchanged**.
