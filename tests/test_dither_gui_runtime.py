@@ -12,7 +12,7 @@ import tkinter as tk
 from tkinter import ttk
 import unittest
 
-from photobooth.dither_lab import ComparisonProfiles, load_profile
+from photobooth.dither_lab import ComparisonProfiles, load_comparison
 from tools.dither_compare_gui import ComparisonApp
 
 
@@ -123,8 +123,10 @@ class EnhancedDizzyTkTests(unittest.TestCase):
                 return_value=str(target),
             ):
                 self.app.save_auto_tune_preset()
-            saved = load_profile(target)
-            self.assertTrue(saved.enhanced_floyd)
+            saved = load_comparison(target)
+            self.assertTrue(saved.floyd.enhanced_floyd)
+            self.assertEqual(saved.bayer, prior_bayer)
+            self.assertEqual(saved.dizzy, prior_dizzy)
             self.assertEqual(self.app.configs.floyd, previous_floyd)
 
         expected = self.app.autotune_result.candidates[0]
