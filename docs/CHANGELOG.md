@@ -2,6 +2,12 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased dither GUI layout] — 2026-10-21 (Enhanced Floyd in panel)
+
+- Moved **Enhanced Floyd (experimental)** checkbox from the global top toolbar into the Floyd–Steinberg panel, directly under raster metadata and above Brightness, mirroring the already local Enhanced Dizzy checkbox. Retained the same callback/state and independent persistence, no changes to preprocessing or real-print data. [GUI commit `bfeca1d`](https://github.com/pratikto/PhotoBooth/commit/bfeca1d3659eba6c13d4b7dd3028aa6cb32f2fbd).
+- Added runtime Tk assertions for exact checkbox parent panel, lane-only operation with Sync Parameters ON and Reset, plus static no-toolbar regression. [Runtime test `4195f3b`](https://github.com/pratikto/PhotoBooth/commit/4195f3b447469dcb1cb9986c9f23eb07700bcf11), [static test `8cdc2b5`](https://github.com/pratikto/PhotoBooth/commit/8cdc2b50a3a5220c839805cf1d6a87155aa1815e).
+- [GitHub CI 39505103668](https://github.com/pratikto/PhotoBooth/actions/runs/39505103668) on `8cdc2b50a`: compile **PASS**, 43 unit/static tests **PASS**, 3 real Tk (Linux Xvfb) GUI tests **PASS**. Windows GUI visual acceptance at the operator's monitor size and scaling remains pending; no production Kivy printer code or `master` change.
+
 ## [Unreleased lab experiment] — 2026-10-21 (Enhanced Dizzy preprocessing)
 
 - **Owner-approved experimental scope only:** `feature/dither-tuning` now supports opt-in Enhanced Dizzy in both `article-8` and `orthogonal-4` variants. `photobooth/dither_lab.py` refactors the **unchanged** Enhanced Floyd preprocessing into one shared function, keeping baseline Floyd/Bayer/Threshold/Dizzy behavior untouched. Adds `enhanced_dizzy=False` and version 4 validated lab JSON with v1–v3 backward compatibility. [Core `108be4c`](https://github.com/pratikto/PhotoBooth/commit/108be4cf5e089e18fa22df36714ef56419c063be).
