@@ -104,11 +104,13 @@ class DitherLabTests(unittest.TestCase):
             path = Path(directory) / "legacy.json"
             original = asdict(DitherProfile())
             original.pop("enhanced_floyd")
+            original.pop("enhanced_dizzy")
             original.pop("dizzy_variant")
             original.pop("dizzy_seed")
             path.write_text(json.dumps({"schema_version": 1, **original}), encoding="utf-8")
             loaded = load_profile(path)
             self.assertFalse(loaded.enhanced_floyd)
+            self.assertFalse(loaded.enhanced_dizzy)
             self.assertEqual(loaded.mode, "floyd-steinberg")
 
     def test_preview_coverage_and_exact_raster(self):
