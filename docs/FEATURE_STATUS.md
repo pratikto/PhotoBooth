@@ -5,13 +5,19 @@ This status is based on reading selected source files and the latest owner devic
 
 Status vocabulary: **IN SOURCE** = relevant implementation found, **OWNER REPORTED** = physical observation requiring reproducible evidence, **UNVERIFIED** = no current hardware acceptance, **PLANNED** = not implemented, **BLOCKED** = operational defect. For feature approval/requirements, see [DECISIONS.md](DECISIONS.md) and [next_step.md](next_step.md).
 
+## FEAT-011 Enhanced Dizzy opt-in — 2026-10-21 (experimental only)
+
+**Implemented in source on `feature/dither-tuning`:** `photobooth/dither_lab.py` now shares the existing Enhanced Floyd grayscale preprocessing with an independent, **OFF-by-default** `enhanced_dizzy` option for both Dizzy article variants. The three-panel lab GUI displays an **Enhanced Dizzy** checkbox within the Dizzy lane, maintains independent Floyd and Dizzy enhancement switches, and labels baseline/enhanced PNG exports and printed test headers. Lab profile/comparison JSON now uses **v4** and reads v1/v2/v3 files with Enhanced Dizzy disabled; the hidden Threshold profile is retained. The production `photobooth/printer.py`, Kivy customer path and `master` are **unchanged**.
+
+**Verification:** [GitHub Actions 39503134534](https://github.com/pratikto/PhotoBooth/actions/runs/39503134534) on code/CI SHA `80980f7ba`: Python compilation and 42 targeted automated tests **PASS** on Linux Python 3.12. This includes Enhanced Floyd raster parity and deterministic 1-bit Dizzy processing. **No new real-paper quality conclusion**: Windows GUI interaction, both enhancement settings on representative customer photos, printer density and physical output still need operator testing. See [dithering lab guide](dither-tuning-lab.md) and [test checklist](test_checklist.md).
+
 ## FEAT-011 Threshold GUI removal — 2026-10-21
 
 The current `feature/dither-tuning` `tools/dither_compare_gui.py` displays **only Floyd, Bayer and Dizzy**. Threshold has no preview, slider, Print Test or Save PNG control; **Print All** and **Export All** include exactly those three modes. Its backend implementation and v3 lab JSON profile remain intact (hidden Threshold values are still loaded/saved for compatibility). This is a GUI-only experiment update; no production Kivy printer behavior was changed. Automated and Windows hardware verification remain separate and must not be inferred from commits alone.
 
 ## FEAT-011 Dizzy CPU experiment — 2026-10-21 (branch only)
 
-The **isolated** `feature/dither-tuning` branch now contains `photobooth/dizzy_dither.py` with two article-aligned CPU variants: `article-8` (axial weight 1, diagonal 0.1) and `orthogonal-4` (four equal-weight axial neighbors). The standalone GUI offers a fourth comparison lane, version 3 lab JSON (v1/v2 loading), fixed seed and 1-bit output, with separately confirmed real-paper printing. No author's contrast-correction LUT is enabled without separate calibration. Dedicated Dizzy core tests passed in an isolated local Python/Pillow prototype; full branch CI and Windows physical GUI/paper evaluation are **PENDING**, not assumed PASS. Existing production `photobooth/printer.py` and `master` are unchanged. See [operator guide](dither-tuning-lab.md) and [test checklist](test_checklist.md).
+The **isolated** `feature/dither-tuning` branch now contains `photobooth/dizzy_dither.py` with two article-aligned CPU variants: `article-8` (axial weight 1, diagonal 0.1) and `orthogonal-4` (four equal-weight axial neighbors). The standalone GUI offers a fourth comparison lane, version 4 lab JSON (v1/v2/v3 loading), fixed seed and 1-bit output, with real-paper print quality not yet verified for Dizzy. No author's contrast-correction LUT is enabled without separate calibration. Dedicated Dizzy core tests passed in an isolated local Python/Pillow prototype; full branch CI and Windows physical GUI/paper evaluation are **PENDING**, not assumed PASS. Existing production `photobooth/printer.py` and `master` are unchanged. See [operator guide](dither-tuning-lab.md) and [test checklist](test_checklist.md).
 
 ## Isolated experiment on `feature/dither-tuning` (2026-10-18)
 
