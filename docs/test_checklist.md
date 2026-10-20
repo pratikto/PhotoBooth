@@ -225,3 +225,20 @@ Native audio/video tests may require explicit opt-in environment flags and compa
 - **Earlier targeted automated tests:** owner-supplied Windows Python 3.12 output: `python -m unittest tests.test_meong_fly tests.test_meong_fly_receipts -v` — **10 tests, OK**. No new automated tests run for this documentation entry.
 - **Evidence level:** owner-reported, not independently reproduced or GitHub CI verified. No claim of hardware/production acceptance.
 - **Open:** exact logo sprite, kiosk welcome-screen integration, full GUI regression, real POS receipt and payment/discount verification; master remains unchanged.
+
+
+## FEAT-021 — Step 4 rewritten standalone UI QA plan (2026-10-21)
+
+**New code on:** `feature/meong-flappy-challenge`. Historical Step 3 owner-reported Windows GUI 6/6 PASS and Windows Python 3.12 10/10 PASS describe the **older renderer**; they do NOT certify the new mockup-styled GUI. Environment used for assistant-side proof did not have Kivy nor network access to clone GitHub.
+
+- **LOCAL MIRROR (not the GitHub checked-out branch):** Python `compileall -q` PASS for local modules, pure Pillow rendered five 360x720 pixel-art scene frames with user-supplied GIF stand-in, and a headless smoke script PASS on demo claim/replay/back/skip/pause/win and no retry. Do not represent this as Windows/Kivy PASS.
+- **New source-level tests written, execution pending on exact GitHub SHA:** `tests/test_meong_fly_flow.py`, `tests/test_meong_fly_painter.py`.
+- [ ] Windows: `python -m unittest tests.test_meong_fly tests.test_meong_fly_receipts tests.test_meong_fly_flow tests.test_meong_fly_painter -v` -> record Python/Kivy/Pillow versions, actual totals, branch SHA.
+- [ ] Visually compare **Start, Scan, Gameplay, Win, Lose** with the owner's selected mockup. Confirm branded logo uses approved PNG, no white logo box/cropped cat; buttons, scoreboard and fonts are readable.
+- [ ] Demonstrate the 10-point win target and Game Over, asteroid collision visible relative to camera-cat body (rainbow excluded), stars/rainbow move smoothly, and pause stops physics.
+- [ ] Receipt `DEMO-MOCKUP-001` works once, never replays after loss/win/restart; KEMBALI before claim does not consume it; invalid/reused codes show errors.
+- [ ] Resize portrait and landscape; no sprite distortion, missing button, hidden voucher input or misplaced touch hitboxes. Record render FPS/performance.
+- [ ] MAIN GAME -> SCAN -> GAME -> terminal, plus LANGSUNG FOTO -> demo exit; no real QR scanning, no payment or discount redemption; **no MAIN LAGI** on either terminal screen.
+- [ ] Obtain owner visual acceptance only after above checks; **do not merge to master** until separately authorized.
+
+Screen-by-screen source and precise limitations: [FEAT-021](features/FEAT-021-meong-fly.md).
