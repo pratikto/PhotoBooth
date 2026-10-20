@@ -1,3 +1,12 @@
+## FEAT-011 — Enhanced Floyd control moved into Floyd panel (2026-10-21)
+
+- **Authorization and isolation:** the owner approved fixing the dithering test GUI to place Enhanced Floyd in the Floyd–Steinberg panel instead of the top toolbar. Only `tools/dither_compare_gui.py`, targeted GUI tests, and relevant lab documentation were changed on `feature/dither-tuning`. No `master` merge, production printing change or dithering math adjustment.
+- **Source commits:** [GUI `bfeca1d`](https://github.com/pratikto/PhotoBooth/commit/bfeca1d3659eba6c13d4b7dd3028aa6cb32f2fbd), [Tk runtime regression `4195f3b`](https://github.com/pratikto/PhotoBooth/commit/4195f3b447469dcb1cb9986c9f23eb07700bcf11), [static layout checks `8cdc2b5`](https://github.com/pratikto/PhotoBooth/commit/8cdc2b50a3a5220c839805cf1d6a87155aa1815e).
+- **GitHub CI PASS:** [run 39505103668](https://github.com/pratikto/PhotoBooth/actions/runs/39505103668) on `8cdc2b50a3a5220c839805cf1d6a87155aa1815e`: Python 3.12/Pillow on Ubuntu; compile **PASS**; 43 targeted unit/static tests **PASS**; 3 Tk/Xvfb runtime tests **PASS**. Runtime verifies Floyd checkbox has the Floyd panel as actual parent, Dizzy checkbox belongs to Dizzy panel, both are unique, clicking Floyd alters only Floyd even when Sync Parameters is active, Reset clears both flags, and baseline/enhanced raster behavior remains functional.
+- [ ] **Windows UI acceptance:** pull the branch, launch `python tools/dither_compare_gui.py` and check 1050×620/minimized and maximized screens; toolbar has no Enhanced Floyd checkbox, Floyd/Dizzy panels show their own controls under the output/dot preview and before Brightness, Bayer shows no checkbox, and sliders/Print Test/Save PNG remain accessible when scrolling.
+- [ ] Toggle Enhanced Floyd with Sync Parameters both ON and OFF; confirm Bayer/Dizzy do not change. Toggle Enhanced Dizzy; Save/Load All Configs then Reset; check both flags restore appropriately and output PNG / Print Test remains the same 1-bit raster for unchanged parameter values.
+- **Not certified:** real Windows display, user-specific monitor scaling and printed thermal-paper visual quality. Operator confirmation remains necessary.
+
 ## FEAT-011 — Shared Enhanced Floyd + Enhanced Dizzy experiment (2026-10-21)
 
 - **Approval/scope:** owner explicitly approved implementing opt-in Enhanced Dizzy in the **isolated** `feature/dither-tuning` lab, with GUI checkbox, tests and docs; no `master` merge or modification to the live Kivy/photo-QR printer route.
