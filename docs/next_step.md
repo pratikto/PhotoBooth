@@ -270,3 +270,8 @@ M1 Core Stability; M2 Operational Reliability; M3 Commercial Readiness; M4 Produ
 **Potential monetization layers:** (1) hardware + free/commercial and paid software tiers + Meong-reserved ads, (2) optional premium content/events/analytics/campaigns, (3) installation/support/warranty/white-label services. No example prices are commitments.
 
 **Future evaluation gates:** Demonstrate customer willingness to pay, positive unit economics after support and hosting, technical feasibility on actual mini PC and partner POS, privacy and advertising consent, non-overlap with existing paid tiers, and measurable campaign performance. Existing critical bugs remain the immediate priority.
+
+
+## FEAT-021 — Meong Fly Space Edition (2026-10-21 status)
+
+**P2 product enhancement; standalone prototype IN PROGRESS on `feature/meong-flappy-challenge`.** Owner-reported Step 3 Windows GUI checklist 6/6 PASS and targeted unit tests 10/10 PASS. One `DEMO-` identifier permits one attempt, no retry; this is NOT real cafe POS receipt validation or a redeemable discount. Step 4 (optional welcome-screen integration) is **proposed, NOT approved**, and depends on regression planning and preservation of core photo flow. Real receipt/POS, subsidy settlement, and payable QRIS remain separately blocked/deferred. Existing operational bugs retain priority. See [FEAT-021](features/FEAT-021-meong-fly.md).
