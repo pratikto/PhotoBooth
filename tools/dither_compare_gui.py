@@ -123,7 +123,8 @@ class ComparisonApp:
             state="readonly", width=15)
         dizzy_variants.pack(side="left")
         dizzy_variants.bind("<<ComboboxSelected>>", self.change_dizzy_variant)
-        ttk.Label(bar, text="Seed: 42").pack(side="left", padx=5)
+        self.dizzy_seed_label = ttk.Label(bar, text=f"Seed: {self.configs.dizzy.dizzy_seed}")
+        self.dizzy_seed_label.pack(side="left", padx=5)
 
         reference = ttk.LabelFrame(root, text="SOURCE IMAGE", padding=4)
         reference.pack(fill="x", padx=12, pady=(0, 9))
@@ -399,6 +400,7 @@ class ComparisonApp:
         self.width.set(str(configs.floyd.width_dots))
         self.enhanced_floyd.set(configs.floyd.enhanced_floyd)
         self.dizzy_variant.set(configs.dizzy.dizzy_variant)
+        self.dizzy_seed_label.configure(text=f"Seed: {configs.dizzy.dizzy_seed}")
         for mode in DITHER_MODES:
             for key, (var, _label) in self.controls[mode].items():
                 var.set(getattr(configs.by_mode(mode), key))
