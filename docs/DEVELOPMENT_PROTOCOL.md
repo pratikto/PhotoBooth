@@ -1,3 +1,5 @@
+> **FEAT-008 B.3 scope approval (2026-10-19):** Owner approved limited branch-only device disconnect/reconnect observation, startup validation, cross-platform mock regression, and associated documentation. This does not authorize auto-reconnect, additional unrelated code, merge of Draft PR #7, release, or any change to `master`/`v1.0.0`. Software CI and physical acceptance remain distinct. See [feature status](FEATURE_STATUS.md) and [QA evidence](test_checklist.md).
+
 # Meong Photobooth Development Protocol v1.0
 
 > **APPROVAL UPDATE (2026-10-19):** The owner now explicitly authorizes promotion of `feature/kivy-gui` to `master` with a backup of the previous master, CI checks, and immutable `v1.0.0` source tag / GitHub pre-release. This is permission for the named repository/version-control operation and release documentation **only**, not permission for a new feature, live QRIS, Google Apps Script deployment, cloud deletion, or declaring Windows hardware certified. Earlier warnings below about an unapproved master merge are historical and superseded for this operation. See [v1 source release notes](releases/v1.0.0.md).

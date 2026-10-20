@@ -32,6 +32,7 @@ from kivy.uix.widget import Widget
 from PIL import Image
 from photobooth.audio import AudioManager
 from photobooth.ui_kiosk import KioskExperienceMixin
+from photobooth.ui_health import HealthPanelMixin
 from photobooth.ui_motion import CountdownDial, FlashEffect, GuideGlyph, MotionScope
 from photobooth.catalog import create_template_preview, render_photo_frame
 from photobooth.workflow import quote_order
@@ -113,7 +114,7 @@ class KivyHost(App):
         self._on_close()
 
 
-class PhotoBoothUI(KioskExperienceMixin):
+class PhotoBoothUI(HealthPanelMixin, KioskExperienceMixin):
     """Kiosk screens; controller callbacks remain the source of workflow rules.
 
     The layout uses a stable header, a flexible stage, and fixed action controls.
@@ -126,6 +127,15 @@ class PhotoBoothUI(KioskExperienceMixin):
         self.audio = audio_manager if audio_manager is not None else AudioManager(
             Path(__file__).resolve().parent.parent / "data" / "audio")
         self._audio_popup = None
+        self._health_popup = None
+        self._health_labels = {}
+        self._health_refresh_button = None
+        self._health_request_serial = 0
+        self._health_last_tick = None
+        self._health_platform = "unknown"
+        self._health_inventory = ()
+        self._health_select_button = None
+        self._device_pick_popup = None
         self.audio_sliders = {}
         self.audio_test_buttons = {}
         self._motion = MotionScope()
@@ -354,22 +364,29 @@ class PhotoBoothUI(KioskExperienceMixin):
 
     @property
     def audio_settings_open(self):
-        """A modal blocks the optional palm shutter as well as pointer input."""
-        return self._audio_popup is not None
+        """Keep the historical shutter guard active for operator modals.
+
+        The property name is retained for existing controller callers. A
+        health popup must block face/palm-triggered actions just like audio.
+        """
+        return self._audio_popup is not None or self._health_popup is not None
 
     def show_settings_menu(self):
         """Keep printer and audio configuration accessible from every page."""
         content = BoxLayout(orientation="vertical", spacing=dp(12), padding=dp(14))
         popup = Popup(title="Pengaturan Meong", content=content,
-                      size_hint=(None, None), size=(dp(430), dp(280)))
+                      size_hint=(None, None), size=(dp(430), dp(345)))
         audio = self._button("PENGATURAN AUDIO", lambda: (popup.dismiss(), self.show_audio_settings()),
                              screen_bound=False)
         printer = self._button("PENGATURAN PRINTER", lambda: (popup.dismiss(), self.show_printer_settings()),
                                screen_bound=False)
+        health = self._button("DEVICE HEALTH", lambda: (popup.dismiss(), self.show_health_settings()),
+                              screen_bound=False)
         close = self._button("TUTUP", popup.dismiss, secondary=True, screen_bound=False)
-        for widget in (audio, printer, close):
+        for widget in (audio, printer, health, close):
             content.add_widget(widget)
         popup.open()
+        return popup
 
     def show_printer_settings(self):
         """Edit the current printer route, width and dithering in one modal.
@@ -595,6 +612,10 @@ class PhotoBoothUI(KioskExperienceMixin):
         self._dispose_kiosk()
         if self._audio_popup is not None:
             self._audio_popup.dismiss(animation=False)
+        if self._device_pick_popup is not None:
+            self._device_pick_popup.dismiss(animation=False)
+        if self._health_popup is not None:
+            self._health_popup.dismiss(animation=False)
         self._motion.retire()
         if self.template_carousel is not None:
             self.template_carousel.deactivate()

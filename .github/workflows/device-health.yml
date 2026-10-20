@@ -1,0 +1,64 @@
+name: FEAT-008 device health unit tests
+
+on:
+  push:
+    branches: [feature/device-health, master]
+    paths:
+      - photobooth/device_health.py
+      - photobooth/hardware_adapters.py
+      - photobooth/hardware_discovery.py
+      - photobooth/device_selection.py
+      - photobooth/device_recovery.py
+      - tests/test_device_health.py
+      - tests/test_hardware_adapters.py
+      - tests/test_hardware_discovery.py
+      - tests/test_device_selection.py
+      - tests/test_device_recovery.py
+      - .github/workflows/device-health.yml
+  pull_request:
+    branches: [master]
+    paths:
+      - photobooth/device_health.py
+      - photobooth/hardware_adapters.py
+      - photobooth/hardware_discovery.py
+      - photobooth/device_selection.py
+      - photobooth/device_recovery.py
+      - tests/test_device_health.py
+      - tests/test_hardware_adapters.py
+      - tests/test_hardware_discovery.py
+      - tests/test_device_selection.py
+      - tests/test_device_recovery.py
+      - .github/workflows/device-health.yml
+  workflow_dispatch:
+
+# No printer, camera, payment service, Kivy GUI, media decoder, or Drive
+# credentials are used. Every health adapter is injected/mocked by the tests.
+permissions:
+  contents: read
+
+jobs:
+  health:
+    name: Device health / ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile independent health modules and tests
+        run: python -m compileall -q photobooth/device_health.py photobooth/hardware_adapters.py photobooth/hardware_discovery.py photobooth/device_selection.py photobooth/device_recovery.py tests/test_device_recovery.py tests/test_device_health.py tests/test_hardware_adapters.py tests/test_hardware_discovery.py tests/test_device_selection.py
+      - name: Run isolated FEAT-008 Stage A tests (no hardware)
+        run: python -m unittest discover -s tests -p 'test_device_health.py' -v
+      - name: Verify heterogeneous platform adapter capabilities
+        run: python -m unittest discover -s tests -p 'test_hardware_adapters.py' -v
+      - name: Verify safe read-only platform hardware discovery
+        run: python -m unittest discover -s tests -p 'test_hardware_discovery.py' -v
+      - name: Validate staged device preferences and restart policies
+        run: python -m unittest discover -s tests -p 'test_device_selection.py' -v
+      - name: Validate selected-device disconnect and same-identity return (B.3)
+        run: python -m unittest discover -s tests -p 'test_device_recovery.py' -v

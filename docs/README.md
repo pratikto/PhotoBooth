@@ -1,3 +1,5 @@
+> **CURRENT FEATURE BRANCH (2026-10-19):** FEAT-008 B.3 read-only reconnect/disconnect identity observation and mock tests committed on [`feature/device-health`](https://github.com/pratikto/PhotoBooth/tree/feature/device-health). Windows owner default regression 313 tests / 223 PASS / 90 SKIP and GUI-enabled 313 / 308 PASS / 5 SKIP preceded B.3; local SHA unspecified. [B.3 Windows/Ubuntu device CI](https://github.com/pratikto/PhotoBooth/actions/runs/39245625653) SUCCESS on prior documentation HEAD; [Kiosk GUI CI](https://github.com/pratikto/PhotoBooth/actions/runs/39245625676) was still running at review. B.3 is **not connected to live GUI**, not real auto-reconnect, and not physical approval. `master`/`v1.0.0` remain unchanged. See [device guide](device-health.md) and [test evidence](test_checklist.md).
+
 # Meong Photobooth — Documentation Index
 
 The repository-root [README](../README.md) explains setup. **Current source of truth:** `master` (Kivy application); `v1.0.0` is the immutable, published source baseline. The previous `feature/kivy-gui` is preserved as development history, not the primary branch. Dated records remain useful evidence but do not override current status.
@@ -22,6 +24,7 @@ The repository-root [README](../README.md) explains setup. **Current source of t
 ## Supporting technical references
 
 - [Architecture](ARCHITECTURE.md) — actual source-level modules vs proposed system design.
+- [FEAT-008 Device Health Monitoring](device-health.md) — **Stage A/B operator GUI plus B.1/B.2 cross-platform capabilities and read-only discovery and restart-only primary device selection** under development in `feature/device-health` for review, **not merged into master**. No automatic selection or native Android bridge; on-device Windows/SBC acceptance and separate merge authorization still required.
 - **FEAT-003 live camera mirror:** capture-page GPU preview mirror implemented in `ui_kivy.py`; owner explicitly confirms Windows **TESTED PASS (2026-10-18)**, and [targeted Kivy GPU Actions 39139208320](https://github.com/pratikto/PhotoBooth/actions/runs/39139208320) also **PASS**. Full Kiosk CI/release checks remain separate. FEAT-002 receipt scanner/overlay is unimplemented. [FEAT-003 acceptance checklist](test_checklist.md).
 - [Advertising and demo QR payment slip](advertising-and-qris.md) — current playback and printer setup, with **legacy LAN** instructions clearly distinguished from saved GUI printer configuration.
 - [QA evidence archive](qa/README.md) — date-specific automated/visual reports that do not override later device failures.

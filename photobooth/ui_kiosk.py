@@ -199,6 +199,9 @@ class KioskExperienceMixin:
     def _kiosk_tick(self, _dt=0):
         if self._disposed:
             return False
+        # Reuse the existing main-thread kiosk tick as the health heartbeat.
+        # No extra Clock timer is installed and no probe runs here.
+        self._health_last_tick = time.monotonic()
         if self._media_paused:
             return
         now = time.monotonic()

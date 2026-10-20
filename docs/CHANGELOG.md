@@ -1,6 +1,69 @@
+## 2026-10-20 — FEAT-008 B.3 discovery completeness (branch only)
+
+- `9238a8e`: introduce Windows spooler enumeration with explicit success/failure evidence.
+- `1e354fc`: propagate `discovery_complete_kinds` to Health snapshots.
+- `ef4d626`: allow Health UI missing classification only when enumeration actually completed.
+- `b16c43b`: add mock regression for empty success vs enumeration failure.
+- Linux and Android enumeration remain conservative/UNKNOWN; no physical recovery or master merge.
+
+## 2026-10-20 — FEAT-008 B.3 operator status integration (branch only)
+
+- [79ffc96](https://github.com/pratikto/PhotoBooth/commit/79ffc96d80fb2d4b445545b84362e9ad2cb2339a): show read-only selected-device presence classifications in Health panel. Absence remains UNKNOWN because discovery completeness is unverified.
+- [2452f65](https://github.com/pratikto/PhotoBooth/commit/2452f65bfd2edfb5a99380d79e95cfa5de7eb2f2): GUI regression test for a positively enumerated saved printer queue.
+- CI on these changes pending; no runtime recovery or release.
+
+## 2026-10-19 — FEAT-008 B.3 documentation reconciliation (feature branch only)
+
+- Updated documentation index, architecture, owner approval log, feature state, execution priority, QA evidence, handover, and B.3 guide to reflect committed read-only presence-state classifier (`588df3c`, `06ab0f4`, `bbc4162`), CI workflow change (`d26314e`), and previously recorded documentation changes (`7d2ae90`, `5040e12`, `476a388`, `e0cc249`, `4554c7f`, `70f6766`).
+- Evidence truth: owner Windows full GUI opt-in 308 PASS / 5 SKIP **before** B.3; device-health CI 39245625653 SUCCESS at `70f6766`; GUI CI 39245625676 was IN PROGRESS at reconciliation. Subsequent documentation HEAD CI needs new check; no physical validation or PR merge claimed.
+
+## 2026-10-19 — FEAT-008 B.3 presence-state foundation (feature branch only)
+
+- `photobooth/device_recovery.py`: new read-only, fail-closed selected-device presence / identity return observations; no device I/O.
+- `tests/test_device_recovery.py`: Windows/Linux/Android mock cases for absent/returned identity and discovery uncertainty.
+- Initial commits: [588df3c](https://github.com/pratikto/PhotoBooth/commit/588df3c664dc77e33900096bcd78f708d2dc782a), [06ab0f4](https://github.com/pratikto/PhotoBooth/commit/06ab0f4864b61329d7e8b8a23307d32845068fc0), descriptor fix [bbc4162](https://github.com/pratikto/PhotoBooth/commit/bbc4162b3dcf091f397537373e0c78b92966a010).
+- Regression on B.3 HEAD **not run/verified yet**; previous owner 308 PASS / 5 SKIP test predates this code. No master merge, hardware assertion or release.
+
+> **FEAT-008 cross-platform test-fixture fix (2026-10-19):** Owner's normal Windows PowerShell produced `WinError 1314` while Linux symlink unit test attempted `Path.symlink_to`. Fixed only `tests/test_device_selection.py` and `tests/test_hardware_discovery.py` to mock symlinks on Windows and preserve real symlink checks on Linux. Extended `.github/workflows/device-health.yml` to run 62 focused tests on **windows-latest and ubuntu-latest**, [Actions 39223474630](https://github.com/pratikto/PhotoBooth/actions/runs/39223474630) **PASS both OS** at tested code SHA `b83074d9`. Owner Windows rerun pending; no application driver changes, physical hardware certification, QRIS changes or merge.
+
+> **Field QA update, 2026-10-19:** Owner reported **seven of seven Windows laptop GUI health-monitoring checks PASS**, covering launch, Settings/Health menu, six indicators, Refresh responsiveness, printer queue discovery, device chooser and popup reopen. Logged as **OWNER-REPORTED smoke PASS**, not verified paper/camera physical or restart-persistence acceptance; exact laptop commit SHA unknown. This is a **documentation-only** QA record on `feature/device-health`; does not merge Draft PR #7 or alter `master`.
+
+> **FEAT-008 cross-platform latest safety CI (2026-10-19):** [49/49 focused tests](https://github.com/pratikto/PhotoBooth/actions/runs/39205072276) and [Kiosk 292 PASS / 2 SKIP + 87 renders](https://github.com/pratikto/PhotoBooth/actions/runs/39205072279) on tested implementation SHA `b5617679960c585a6fe6ccec298fc4ba31591ae7`. Corrected health discovery to avoid querying Windows spooler during active photo printing. Draft PR #7 stays unmerged; no Windows/SBC/Android device acceptance.
+
 # Meong Photobooth — Documentation and release changelog
 
+## [Unreleased — Android deferred until QRIS, feature/device-health] — 2026-10-19
+
+- Owner instructed to **postpone native Android work until FEAT-020 real payable QRIS is operational**, not simply demo QRIS. Separate approval to resume Android will be required after verified QRIS.
+- B.4 Android Camera2/USB Host/printer SDK, app packaging and Android hardware acceptance are **DEFERRED**; focus remains on Windows mini PCs and Linux/SBC. Existing Android descriptors remain explicitly unsupported/UNKNOWN.
+- Documentation and dynamic development priorities updated only. No application code, native Android driver, QRIS provider, release, master merge or tag changed.
+
+
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
+
+## [Unreleased — FEAT-008 B.2.1 restart-only primary device selection] — 2026-10-19
+
+- Owner asked to continue development on the existing feature branch while hardware testing is temporarily unavailable. Added `photobooth/device_selection.py`: versioned strict atomic `data/device_selection.json`, explicit next-start camera/printer choices, cross-OS validation and no silent fallback when a selected device is unavailable.
+- Operator Health panel now offers **PILIH DEVICE** after a scan: Windows manual camera indices, Linux discovered stable V4L aliases and Windows discovered printer queues. Unimplemented CUPS/Android active routes are not falsely offered.
+- `PhotoBoothApp` applies saved choice only at process startup; stage does not hot-swap or send bytes. Saving manual printer settings clears any staged printer queue. Added mock persistence, startup safety, UI and controller tests. On tested implementation SHA `e6798c17`, [targeted Device Health CI 39206664105](https://github.com/pratikto/PhotoBooth/actions/runs/39206664105) **62/62 PASS** and [Kiosk CI 39206664043](https://github.com/pratikto/PhotoBooth/actions/runs/39206664043) **311 PASS, 2 SKIP, 87 render passes**. No physical device acceptance or approval to merge Draft PR #7.
+
+## [Unreleased — FEAT-008 cross-platform B.1 / B.2 discovery] — 2026-10-19
+
+- Owner approved **staged** heterogeneous camera/printer health architecture for Windows, Linux/SBC and Android, strictly on `feature/device-health`; no merge approval. [Draft PR #7](https://github.com/pratikto/PhotoBooth/pull/7) remains unmerged.
+- B.1: `photobooth/hardware_adapters.py` capability and identity descriptors, OS adapter boundary, explicit Android Camera2/printer bridge `UNKNOWN` rather than false `READY`, `HealthSnapshot.devices/platform` and Settings platform label.
+- B.2 initial **read-only discovery**: `photobooth/hardware_discovery.py` enumerates Windows spooler queues, Linux V4L/by-id nodes, USB printer nodes and time-bounded CUPS queues without opening competing cameras or sending prints; configured vs discovered candidates visible in the operator Health panel. Adds adapter/discovery mock tests + targeted CI, no persistent device selection yet.
+- CI on B.1/B.2 implementation SHA `f8c96a4`: [Device Health 39204601245](https://github.com/pratikto/PhotoBooth/actions/runs/39204601245) **48/48 mock tests PASS** (25 base + 14 adapter + 9 discovery) and [full Kiosk GUI 39204601283](https://github.com/pratikto/PhotoBooth/actions/runs/39204601283) **293 tests / 291 PASS / 2 SKIP, 87 renders / 0 errors**. No physical Windows/SBC/Android signoff, persistent device selection or master merge approval.
+
+## [Unreleased — FEAT-008 Stage B, branch feature/device-health] — 2026-10-19
+
+- Owner explicitly authorized **Stage B Settings Health Monitoring GUI** in the existing `feature/device-health` branch only, after requesting the prior Stage A merge be reverted from `master` through [PR #6](https://github.com/pratikto/PhotoBooth/pull/6). No authorization to merge Stage A/B or alter immutable `v1.0.0`.
+- Added `photobooth/ui_health.py` health panel (six rows, auto-on-open and manual refresh, stale-modal callback guard), wired a controller-side asynchronous worker and main-thread callback, added existing-tick heartbeat and nonintrusive print-in-flight guard; no customer payment, image composition, cloud, print payload, camera open or photo-storage mutations. Added GUI/worker regression tests in `tests/test_device_health_gui.py` and a safety regression to `tests/test_device_health.py`; [technical guide](device-health.md).
+- [Draft review PR #7](https://github.com/pratikto/PhotoBooth/pull/7) code SHA `f93dd88`: [Stage A isolated 25/25 PASS](https://github.com/pratikto/PhotoBooth/actions/runs/39197763719), [Kiosk GUI synthetic 268 PASS / 2 SKIP + 87 renders, 0 errors](https://github.com/pratikto/PhotoBooth/actions/runs/39197763624). No physical Windows device acceptance, **not production-accepted**. Do not merge draft PR without a separate explicit owner command.
+
+## [Unreleased — FEAT-008 Stage A, branch feature/device-health] — 2026-10-19
+
+- Owner approved **Stage A only** of FEAT-008; added `photobooth/device_health.py` (read-only, opt-in camera/printer/disk/network/media/heartbeat probes), `tests/test_device_health.py` (deterministic mocks, no hardware access) and [Stage A guide](device-health.md). No Kivy GUI callback, background monitor, print submission, camera reopen, Google Drive change, or real QRIS implementation. Stage B operator UI and Stage C Windows tests require separate approval.
+- Source baseline for the branch: `master` `abbdb0d6`; immutable release `v1.0.0` remains untouched. [PR #5](https://github.com/pratikto/PhotoBooth/pull/5); standalone [FEAT-008 Actions 39192498537](https://github.com/pratikto/PhotoBooth/actions/runs/39192498537) at `3ae31dfc` **24/24 unit tests PASS**, with no hardware access. See [test checklist](test_checklist.md) for exact tested SHA, full Kiosk gate and outstanding device signoff; do not conflate commits or assume a product release.
 
 ## [Unreleased — docs-only, post-v1.0.0] — 2026-10-19
 
