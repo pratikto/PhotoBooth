@@ -26,6 +26,10 @@ Sources: owner decisions from recent project discussions; technical implementati
 | DEC-015 | Offer configurable visually distinct Meong GUI themes using one shared codebase (FEAT-006). | Admin-controlled per-machine theme is the *proposed default*, not a separately confirmed owner choice; reconfirm before implementation. |
 | DEC-016 | Photo retention target remains 15 days on local booth and 30 days on configured Drive storage. | Existing retention logic can delete local image bytes after 15 days **even if upload failed**. Reevaluate delivery promises and customer notice before monetized digital delivery. |
 
+## FEAT-011 lab-only owner authorization — 2026-10-21
+
+The owner explicitly approved an **optional Enhanced Dizzy preprocessing experiment** on existing `feature/dither-tuning`, reusing the Enhanced Floyd preprocessing, exposing an independent checkbox in the three-panel Dithering Test GUI, and updating tests/documentation. This is **not authorization** to switch the production thermal algorithm, merge into `master`, add a Dizzy contrast-correction LUT/GPU engine, or perform unattended physical print tests. Prioritize real-paper side-by-side acceptance before any proposed production promotion. Recorded here as a dated FEAT-011 authorization, **not a new DEC-017 ID**, because higher DEC IDs already exist in the independent `master` history and must not be reused.
+
 ## Business and software subscription decisions (owner-confirmed)
 
 | ID | Decision | Commercial / technical boundary |
