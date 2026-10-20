@@ -113,15 +113,22 @@ class MeongFlyStage(Widget):
     def _score_texture(self, value, size=4, color=GOLD):
         key = (str(value), size, color)
         if key not in self._score_tex:
-            im = Image.new("RGBA", (178, 50), (0, 0, 0, 0))
+            label = str(value)
+            image_width = max(32, (len(label) * 6 - 1) * size + 6)
+            image_height = 7 * size + 6
+            im = Image.new("RGBA", (image_width, image_height), (0, 0, 0, 0))
             draw = ImageDraw.Draw(im)
-            pixel_text(draw, str(value), 89, 3, scale=size, fill=color)
+            pixel_text(draw, label, image_width / 2, 3, scale=size, fill=color)
             self._score_tex[key] = kivy_texture(im)
         return self._score_tex[key]
 
     def _draw_score(self, value, x, top, width=120, height=37, scale=3):
         texture = self._score_texture(value, size=scale)
-        pos, size = self._rect((x - width / 2, top, width, height))
+        # Preserve each bitmap glyph's aspect ratio, including '6/10' and PAUSE.
+        natural_width = height * texture.size[0] / texture.size[1]
+        shown_width = min(width, natural_width)
+        pos, size = self._rect((x - shown_width / 2, top,
+                                shown_width, height))
         Color(1, 1, 1, 1)
         Rectangle(texture=texture, pos=pos, size=size)
 
