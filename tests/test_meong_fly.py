@@ -61,7 +61,7 @@ class MeongFlyTests(unittest.TestCase):
         game = MeongFly()
         game.start()
         game.y = 300
-        game.pipes = [Pipe(CAT_X - CAT_LEFT - PIPE_WIDTH + 1, 300)]
+        game.pipes = [Pipe(CAT_X - CAT_LEFT - PIPE_WIDTH + 5, 300)]
         game.step(.01)
         self.assertEqual(game.score, 0)
         game.pipes[0].x = CAT_X - CAT_LEFT - PIPE_WIDTH - 1
