@@ -20,6 +20,7 @@ from kivy.clock import ClockEvent
 import cv2
 from PIL import Image
 
+from photobooth.background_studio import BackgroundStudio, BackgroundProcessingError, ORIGINAL, CLEAN_STUDIO
 from photobooth.audio import AudioManager
 from photobooth.camera import Camera
 from photobooth.catalog import PRICE_PER_PRINT_COPY, PRICE_PER_SESSION, compose_result, get_templates
@@ -94,6 +95,11 @@ class PhotoBoothApp:
         self.sessions: list[PhotoSession] = []
         self.session_index = 0
         self.current_session: PhotoSession | None = None
+        self.background_studio = BackgroundStudio()
+        self._background_style = ORIGINAL
+        self._background_images = None
+        self._background_pending = False
+        self._background_generation = 0
 
         # Palm recognition is an optional second shutter. Initialize its native
         # model on a worker after the camera connects, without delaying Kivy.
@@ -135,6 +141,7 @@ class PhotoBoothApp:
             on_select_photo=self._select_photo,
             on_retake=self._prepare_retake,
             on_accept_session=self._accept_current_session,
+            on_background_style=self._choose_background_style,
             on_next_session=self._start_next_session,
             on_finish=self._finish_transaction,
             on_print=self._retry_current_print,
@@ -452,6 +459,10 @@ class PhotoBoothApp:
         if not self.sessions:
             return
         self.current_session = self.sessions[self.session_index]
+        self._background_generation += 1
+        self._background_style = ORIGINAL
+        self._background_images = None
+        self._background_pending = False
         self._show_capture_screen()
 
     def _session_label(self, plan: SessionPlan) -> str:
@@ -604,6 +615,10 @@ class PhotoBoothApp:
                     selected_path,
                 )
                 session.apply_retake(photo_path)
+                self._background_generation += 1
+                self._background_style = ORIGINAL
+                self._background_images = None
+                self._background_pending = False
                 # Cue only a successfully saved replacement, never a failed attempt.
                 self.ui.notify_photo_captured()
                 self._show_review(
@@ -678,7 +693,68 @@ class PhotoBoothApp:
             # shapes. Review must use this session's actual template, including
             # the frame containing a replacement photo after a retake.
             template=session.plan.template,
+            background_style=self._background_style,
+            background_images=self._background_images,
+            background_busy=self._background_pending,
+            background_available=self.background_studio.available_offline(),
         )
+
+    def _choose_background_style(self, style: str) -> None:
+        """Apply offline AI after capture; no inference on the Kivy UI thread.
+
+        A pending job blocks accepting/retaking. Its finished callback also
+        checks generation, session, transaction, page and source-photo paths.
+        """
+        session, transaction = self.current_session, self.transaction
+        if (self.is_closing or self.ui.current_screen != "review"
+                or session is None or transaction is None or self._background_pending):
+            return
+        if style == ORIGINAL:
+            self._background_generation += 1
+            self._background_style = ORIGINAL
+            self._background_images = None
+            self._show_review(status_message="Foto asli digunakan tanpa pengolahan AI.")
+            return
+        if style != CLEAN_STUDIO:
+            return
+        if not self.background_studio.available_offline():
+            self._show_review(status_message="Model AI belum tersedia offline. Gunakan Original.")
+            return
+        self._background_generation += 1
+        generation = self._background_generation
+        raw_paths = tuple(session.final_photo_paths)
+        self._background_pending = True
+        self._show_review(status_message="Sedang membuat latar Clean Studio...")
+        def work():
+            images = None
+            failure = ""
+            try:
+                images = self.background_studio.process_three(raw_paths)
+            except (BackgroundProcessingError, OSError, ValueError) as error:
+                failure = str(error)
+            except Exception:
+                failure = "Model AI gagal memproses foto."
+            def finish():
+                if (self.is_closing or self._background_generation != generation
+                        or self.current_session is not session
+                        or self.transaction is not transaction
+                        or tuple(session.final_photo_paths) != raw_paths
+                        or self.ui.current_screen != "review"):
+                    return
+                self._background_pending = False
+                self._background_images = images
+                self._background_style = CLEAN_STUDIO if images is not None else ORIGINAL
+                self._show_review(status_message=(
+                    "Clean Studio siap. Periksa tepi rambut dan wajah."
+                    if images is not None else
+                    f"{failure} Foto Original dipulihkan."))
+            self.root.after(0, finish)
+        try:
+            threading.Thread(target=work, daemon=True, name="meong-background-ai").start()
+        except RuntimeError:
+            self._background_pending = False
+            self._background_style = ORIGINAL
+            self._show_review(status_message="Gagal menjalankan AI. Foto Original tetap aman.")
 
     def _accept_current_session(self) -> None:
         # Compose and save this session's digital result, record it in the manifest, show the folder
@@ -687,7 +763,7 @@ class PhotoBoothApp:
         transaction = self.transaction
         # Prevent duplicate acceptance from a queued double tap. Once result is
         # visible, another accept callback must not rewrite output or restart timers.
-        if self.ui.current_screen != "review":
+        if self.ui.current_screen != "review" or self._background_pending:
             return
         if session is None or transaction is None or not session.ready_for_review:
             self.ui.show_error(
@@ -706,6 +782,7 @@ class PhotoBoothApp:
             with self.store.photo_write_lock(transaction):
                 compose_result(
                     photo_paths=session.final_photo_paths,
+                    background_images=(self._background_images if self._background_style == CLEAN_STUDIO else None),
                     template=session.plan.template,
                     output_path=output_path,
                     transaction_id=transaction.transaction_id,
@@ -719,6 +796,7 @@ class PhotoBoothApp:
                     session_id=session.plan.session_id,
                     final_photos=session.final_photo_paths,
                     output_path=output_path,
+                    background_style=self._background_style,
                 )
             session.output_path = output_path
         except (OSError, RuntimeError, ValueError) as error:
@@ -946,6 +1024,10 @@ class PhotoBoothApp:
                 )
                 return
 
+        self._background_generation += 1
+        self._background_style = ORIGINAL
+        self._background_images = None
+        self._background_pending = False
         self.transaction = None
         self.sessions = []
         self.current_session = None

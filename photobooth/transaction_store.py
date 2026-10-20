@@ -271,6 +271,7 @@ class TransactionStore:
         session_id: str,
         final_photos: Sequence[Path],
         output_path: Path,
+        background_style: str = "original",
     ) -> None:
         """Record the final digital composition and photos used to create it."""
         if len(final_photos) != 3:
@@ -285,6 +286,11 @@ class TransactionStore:
         ]
         output_relative = self._relative_path(transaction, output_path)
         session_record["output_path"] = output_relative
+        # The source JPEG references remain original even with AI backgrounds.
+        # Metadata is additive for old manifests and does not affect uploads.
+        if background_style not in {"original", "clean-studio"}:
+            raise ValueError("Unknown recorded background style.")
+        session_record["background_style"] = background_style
         session_record["status"] = "COMPLETED"
         transaction.manifest["upload_files"][output_relative] = {
             "path": output_relative,

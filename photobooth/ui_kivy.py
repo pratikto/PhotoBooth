@@ -1209,7 +1209,9 @@ class PhotoBoothUI(KioskExperienceMixin):
             self.capture_button.disabled = not (enabled and self._camera_ready)
 
     def show_review(self, photo_paths, session_label, selected_index, retake_available,
-                    status_message='', template=None):
+                    status_message='', template=None, background_style='original',
+                    background_images=None, background_busy=False,
+                    background_available=False):
         """Review the final frame crops and mark the exact retake target.
 
         Showing the full camera aspect ratio here used to expose side content
@@ -1238,8 +1240,11 @@ class PhotoBoothUI(KioskExperienceMixin):
             selected = index == selected_index
             card = Panel(fill=SOFT if selected else WHITE, orientation='vertical',
                          padding=dp(14), spacing=dp(12), size_hint_y=None, height=dp(290))
-            with Image.open(path) as source:
-                display = render_photo_frame(source, template, index)
+            if background_images is not None:
+                display = render_photo_frame(background_images[index], template, index)
+            else:
+                with Image.open(path) as source:
+                    display = render_photo_frame(source, template, index)
             card.add_widget(self._display(display))
             caption = (' · DIPILIH' if selected else ' · Pilih untuk retake') if retake_available else (
                 ' · DIGANTI' if selected else ' · Tersimpan')
@@ -1248,12 +1253,29 @@ class PhotoBoothUI(KioskExperienceMixin):
                                          secondary=not selected))
             gallery.add_widget(card)
         fit_review()
+        # Background selection does not mutate raw captures or retake choices.
+        actions = BoxLayout(orientation='horizontal', size_hint_y=None,
+                            height=dp(48), spacing=dp(10))
+        self.background_original_button = self._button(
+            'ORIGINAL',
+            lambda: self.callbacks.get('on_background_style', lambda *_: None)('original'),
+            enabled=not background_busy, secondary=background_style != 'original')
+        self.background_studio_button = self._button(
+            'CLEAN STUDIO · AI',
+            lambda: self.callbacks.get('on_background_style', lambda *_: None)('clean-studio'),
+            enabled=background_available and not background_busy,
+            secondary=background_style != 'clean-studio')
+        actions.add_widget(self.background_original_button)
+        actions.add_widget(self.background_studio_button)
+        page.add_widget(actions)
         self.review_hint = self._label(self._review_message(), 13, 36, color=GREY)
         page.add_widget(self.review_hint)
         self.retake_button = self._button('RETAKE FOTO TERPILIH' if retake_available else 'RETAKE SUDAH DIGUNAKAN',
                                          self.callbacks['on_retake'],
-                                         self._review_can_retake and self._camera_ready, secondary=True)
-        self.accept_button = self._button('GUNAKAN FOTO INI', self.callbacks['on_accept_session'])
+                                         self._review_can_retake and self._camera_ready and not background_busy,
+                                         secondary=True)
+        self.accept_button = self._button('GUNAKAN FOTO INI', self.callbacks['on_accept_session'],
+                                          enabled=not background_busy)
         self._attach_icon(self.accept_button, 'check')
         page.add_widget(self._actions(self.retake_button, self.accept_button))
         self.set_status(status_message)

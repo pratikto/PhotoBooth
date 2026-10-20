@@ -1,0 +1,4 @@
+# Optional FEAT-021 offline portrait segmentation. NOT part of requirements.txt.
+# Windows kiosk tested with Python 3.12; install the model explicitly in advance.
+# This must never be installed/downloaded during an active customer session.
+rembg[cpu,cli]>=2.0.84,<3
