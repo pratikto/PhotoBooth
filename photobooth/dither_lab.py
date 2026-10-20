@@ -14,12 +14,12 @@ import os
 from pathlib import Path
 import tempfile
 
-from PIL import Image, ImageEnhance
+from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 
 from photobooth.printer import DITHER_MODES, dither_image
 
 
-PROFILE_VERSION = 1
+PROFILE_VERSION = 2
 
 
 @dataclass(frozen=True)
@@ -33,8 +33,11 @@ class DitherProfile:
     gamma: float = 1.0
     sharpness: float = 1.0
     threshold: int = 128
+    enhanced_floyd: bool = False
 
     def __post_init__(self) -> None:
+        if type(self.enhanced_floyd) is not bool or (self.enhanced_floyd and self.mode != 'floyd-steinberg'):
+            raise ValueError('Enhanced preprocessing is available only for Floyd.')
         if self.mode not in DITHER_MODES:
             raise ValueError(f"Unsupported dithering mode: {self.mode!r}")
         if type(self.width_dots) is not int or self.width_dots not in (384, 576):
@@ -82,6 +85,14 @@ def render_thermal_image(source: Image.Image, profile: DitherProfile) -> Image.I
     if profile.sharpness != 1.0:
         gray = ImageEnhance.Sharpness(gray).enhance(profile.sharpness)
 
+    if profile.enhanced_floyd:
+        # Lab-only conservative denoise, gentle tonal normalization and
+        # restrained edge sharpening before 1-bit error diffusion.
+        denoised = gray.filter(ImageFilter.MedianFilter(size=3))
+        leveled = ImageOps.autocontrast(denoised, cutoff=1, preserve_tone=True)
+        gray = Image.blend(denoised, leveled, 0.20)
+        gray = gray.filter(ImageFilter.UnsharpMask(radius=1.1, percent=55, threshold=3))
+
     return dither_image(gray, profile.mode, profile.threshold)
 
 
@@ -107,16 +118,18 @@ def save_profile(path: str | Path, profile: DitherProfile) -> None:
 def load_profile(path: str | Path) -> DitherProfile:
     """Reject malformed/unknown presets instead of silently changing a print."""
     payload = json.loads(Path(path).read_text(encoding="utf-8"))
-    if not isinstance(payload, dict) or payload.get("schema_version") != PROFILE_VERSION:
+    if not isinstance(payload, dict) or payload.get("schema_version") not in (1, PROFILE_VERSION):
         raise ValueError("Invalid or unsupported tuning profile version.")
     keys = set(DitherProfile.__dataclass_fields__)
+    if payload['schema_version'] == 1 and set(payload) == (keys - {'enhanced_floyd'}) | {'schema_version'}:
+        payload['enhanced_floyd'] = False
     if set(payload) != keys | {"schema_version"}:
         raise ValueError("Profile fields do not match the supported schema.")
     return DitherProfile(**{key: payload[key] for key in keys})
 
 # Comparison recipes are deliberately independent: syncing is a GUI action,
 # never an implicit overwrite of an algorithm's tuned state.
-COMPARISON_VERSION = 1
+COMPARISON_VERSION = 2
 
 
 @dataclass(frozen=True)
@@ -169,7 +182,7 @@ def load_comparison(path: str | Path) -> ComparisonProfiles:
     data = json.loads(Path(path).read_text(encoding="utf-8"))
     if (not isinstance(data, dict) or
             set(data) != {"schema_version", "lanes"} or
-            data["schema_version"] != COMPARISON_VERSION or
+            data["schema_version"] not in (1, COMPARISON_VERSION) or
             not isinstance(data["lanes"], dict) or
             set(data["lanes"]) != set(DITHER_MODES)):
         raise ValueError("Invalid comparison config schema.")
@@ -177,6 +190,8 @@ def load_comparison(path: str | Path) -> ComparisonProfiles:
     keys = set(DitherProfile.__dataclass_fields__)
     for mode in DITHER_MODES:
         raw = data["lanes"][mode]
+        if data['schema_version'] == 1 and isinstance(raw, dict) and set(raw) == keys - {'enhanced_floyd'}:
+            raw = {**raw, 'enhanced_floyd': False}
         if not isinstance(raw, dict) or set(raw) != keys or raw["mode"] != mode:
             raise ValueError(f"Invalid {mode} profile.")
         lanes[mode] = DitherProfile(**raw)
