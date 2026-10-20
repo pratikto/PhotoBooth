@@ -10,11 +10,15 @@ on:
       - "photobooth/checkout_service.py"
       - "photobooth/booth_auth.py"
       - "photobooth/qris_api.py"
+      - "photobooth/qris_kiosk_client.py"
+      - "photobooth/qris_preview.py"
+      - "photobooth/qris_server.py"
       - "tests/test_payment_*.py"
       - "tests/test_midtrans_*.py"
       - "tests/test_checkout_service.py"
       - "tests/test_booth_auth.py"
       - "tests/test_qris_api.py"
+      - "tests/test_qris_kiosk_client.py"
       - ".github/workflows/qris-sandbox-tests.yml"
   workflow_dispatch:
 
@@ -39,3 +43,4 @@ jobs:
           python -m unittest discover -s tests -p "test_checkout_service.py" -v
           python -m unittest discover -s tests -p "test_booth_auth.py" -v
           python -m unittest discover -s tests -p "test_qris_api.py" -v
+          python -m unittest discover -s tests -p "test_qris_kiosk_client.py" -v
