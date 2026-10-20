@@ -12,7 +12,10 @@ STATES = {'CREATED', 'PENDING', 'PAID', 'EXPIRED', 'FAILED', 'CANCELLED', 'REVIE
 
 class QrisKioskClient:
     def __init__(self, base_url, booth_id, booth_token, *, timeout=8, session=None,
-                 allow_local_http=False):
+                 allow_local_http=False, expected_mode='sandbox'):
+        if expected_mode not in {'sandbox', 'mock'}:
+            raise ValueError('Invalid payment environment')
+        self.expected_mode = expected_mode
         parsed = urlsplit(base_url)
         local = parsed.hostname in {'127.0.0.1', 'localhost'}
         if parsed.scheme != 'https' and not (allow_local_http and local and parsed.scheme == 'http'):
@@ -51,10 +54,9 @@ class QrisKioskClient:
         finally:
             response.close()
 
-    @staticmethod
-    def _order(result, order_id=None):
+    def _order(self, result, order_id=None):
         identifier(result.get('order_id'), maximum=50)
-        if (result.get('state') not in STATES or result.get('mode') not in {'sandbox', 'mock'}
+        if (result.get('state') not in STATES or result.get('mode') != self.expected_mode
                 or (order_id is not None and result['order_id'] != order_id)
                 or type(result.get('amount')) is not int or result['amount'] <= 0):
             raise ValueError('Unexpected checkout response')
@@ -82,8 +84,12 @@ class QrisKioskClient:
 
     def service_transition(self, order_id, grant_id, state, transaction_id):
         identifier(order_id, maximum=50)
-        return self._order(self._call('POST', '/api/orders/' + order_id + '/service',
+        result = self._order(self._call('POST', '/api/orders/' + order_id + '/service',
             payload={'grant_id': grant_id, 'state': state, 'transaction_id': transaction_id}), order_id)
+        if (result.get('grant_id') != grant_id or result.get('service_state') != state
+                or result.get('local_transaction_id') != transaction_id):
+            raise ValueError('Service acknowledgement does not match this capture')
+        return result
 
     def cancel(self, order_id):
         identifier(order_id, maximum=50)

@@ -21,13 +21,15 @@ class CheckoutBackend:
         self.store, self.provider = store, provider
         self.server_key, self.merchant_id = server_key, merchant_id
 
-    @staticmethod
-    def view(order, *, verification_pending=False):
+    def view(self, order, *, verification_pending=False):
         fields = ('id', 'checkout_key', 'quantities', 'amount', 'state', 'expires_at',
                   'qr_url', 'grant_id', 'service_state', 'local_transaction_id', 'closed')
         result = {key: order[key] for key in fields}
         result['order_id'] = result.pop('id')
-        result['mode'] = 'sandbox'
+        result['mode'] = getattr(self.provider, 'mode', 'sandbox')
+        if result['mode'] == 'mock':
+            result['qr_url'] = None
+            result['qr_payload'] = 'MEONG MOCK ONLY - NOT QRIS - ' + order['id']
         result['verification_pending'] = verification_pending
         if order['state'] != 'PENDING':
             result['qr_url'] = None

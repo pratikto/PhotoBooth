@@ -70,3 +70,9 @@ class KioskClientTests(unittest.TestCase):
         class Redirect(FakeResponse): status_code = 302
         self.session.request = lambda *_a, **_k: Redirect({})
         with self.assertRaises(RuntimeError): self.client.status('abc123')
+
+    def test_service_acknowledgement_must_match_capture(self):
+        self.session.payload.update(state='PAID', grant_id='b' * 32,
+                                    service_state='RESERVED', local_transaction_id='WRONG')
+        with self.assertRaises(ValueError):
+            self.client.service_transition('abc123', 'b' * 32, 'STARTED', 'PB001_00000001')
