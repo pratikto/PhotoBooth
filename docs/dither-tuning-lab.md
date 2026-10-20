@@ -4,6 +4,29 @@
 **Branch:** `feature/dither-tuning` (created 2026-10-18 from `feature/kivy-gui` commit `5e0a898`).  
 **Scope:** offline photo-rendering sandbox; the existing photobooth application and photo/QR print pipeline have **not** been changed or merged.
 
+## Article-aligned Dizzy Dithering experiment (2026-10-21)
+
+**Current test GUI:** `python tools/dither_compare_gui.py` now shows **four lanes**: Floyd, Bayer, Threshold and Dizzy. The Dizzy lane has two selectable variants:
+
+- `article-8` (default): from Liam Appelbe's 2024 article. Process pixels in a pseudorandom order, diffuse error only to unprocessed neighbors among all 8 directions, weight axial neighbors 1.0 and diagonals 0.1, and normalize by the **sum of eligible neighbors' weights**.
+- `orthogonal-4`: from the 2026 follow-up and sample Gist. Propagate evenly only to unprocessed horizontal/vertical neighbors (4 directions).
+
+Both use a local fixed seed (`42`), a five-round odd-multiply/XOR permutation on a padded power-of-two pixel-index domain (first article optimization), float-valued error accumulation (avoids repeated integer rounding), and exact Pillow mode `1` output with no secondary halftone. The author's minimal Gist uses a shuffled list and rounded 8-bit updates; Meong is an **article-aligned adaptation**, not guaranteed pixel-identical to his Gist or GPU shader.
+
+The 2026 contrast-correction lookup tables are specific to the author's calibrated algorithm variants. **No LUT is applied** in this first experiment: article-8 needs separate calibration; orthogonal-4 should be checked against the author's response curves before considering the author's lookup values.
+
+Lab profiles and four-lane comparisons save as **v3 JSON**, including `dizzy_variant` and `dizzy_seed`; loading v1/v2 profiles retains prior lanes and adds Dizzy with defaults. Printer settings, production `photobooth.printer.DITHER_MODES`, `main.py` and the main photo-prints are **unchanged**.
+
+For a fair evaluation: open the same photo, use equal brightness/contrast/gamma/sharpness/width across algorithms, disable Enhanced Floyd for the initial algorithm-only comparison, then export each exact 1-bit raster. Switch Dizzy to orthogonal-4 and export that separately; Dizzy filenames contain variant and seed. The reduced GUI overview uses BOX area averaging for screen display; the nearest-neighbor crop, exported PNG and Print Test raster remain exact printer dots.
+
+`Print All (4 jobs)` still requires explicit approval and stops when a job is failed or uncertain. Test print headers include Dizzy variant and seed. Do not treat successful transport as physical paper-quality proof. Compare the same face/hair/shadows/gradients on the actual printer and record paper type and printer darkness; keep QR/text legibility as a separate criterion.
+
+Code: `photobooth/dizzy_dither.py`, `tests/test_dizzy_dither.py`, `tests/test_dizzy_lab_integration.py`. Preliminary isolated Python/Pillow test: 5 Dizzy core tests passed; on a synthetic 576x579 image, about 0.97 seconds (article-8) and 0.65 seconds (orthogonal-4) in that local test environment. This is **not** measured Windows/GUI or physical-printer acceptance. The GitHub workflow is configured to run broader regression tests; verify its actual run status separately.
+
+References: [original article](https://liamappelbe.medium.com/dizzy-dithering-2ae76dbceba1), [GPU follow-up](https://liamappelbe.medium.com/dizzy-dithering-on-the-gpu-84f2d2c12a82), [author Python Gist](https://gist.github.com/liamappelbe/c2c76ad1ba655aa1caae5da40bcadc7e), [author calibration LUT](https://gist.github.com/liamappelbe/cc6bdfd94fdf19ffe1cee1ed2c808fea).
+
+**Scope:** `feature/dither-tuning` only, no `master` merge, no Kivy customer journey change, no production printer change. Rollback: switch back to the previous 3-lane branch revision.
+
 ## Experimental enhanced Floyd preprocessing (2026-10-21)
 
 An opt-in **Enhanced Floyd (experimental)** checkbox is available in `tools/dither_compare_gui.py`. It affects the Floyd lane only. Unchecked uses the byte-identical legacy baseline path; checked applies a 3x3 median noise filter, a 20% blend with gently autocontrasted grayscale, and restrained unsharp masking (radius 1.1, strength 55%, threshold 3), after the existing brightness/contrast/gamma/sharpness controls and before Pillow Floyd–Steinberg error diffusion. This is conservative *global* tonal processing, **not CLAHE, face-aware enhancement, or printer heat control**. Existing control values still matter and aggressive settings may degrade results.
@@ -22,16 +45,16 @@ Each algorithm has an independently scrollable parameter area. Hover its slider 
 
 ## Three-algorithm comparison GUI (current)
 
-**Primary GUI for this branch**: `python tools/dither_compare_gui.py`. It shows the **same original image plus three live raster previews**: Floyd–Steinberg, Bayer 8×8, Threshold. Each column owns its own brightness, contrast, gamma and sharpening sliders; Threshold alone has a threshold slider. Tick **Sync Parameters** to copy a subsequent brightness/contrast/gamma/sharpness slider change to all three columns. Toggle it off to resume independent tuning. Width (384 or 576 dots) is deliberately shared for fair paper comparison. A central dot crop can be zoomed 1×, 2×, or 4×, rendered nearest-neighbor.
+**Primary GUI for this branch**: `python tools/dither_compare_gui.py`. It now shows the **same original image plus four live raster previews**: Floyd–Steinberg, Bayer 8×8, Threshold and Dizzy (article-8/orthogonal-4). Each column owns its own brightness, contrast, gamma and sharpening sliders; Threshold alone has a threshold slider. Tick **Sync Parameters** to copy a subsequent brightness/contrast/gamma/sharpness slider change to all three columns. Toggle it off to resume independent tuning. Width (384 or 576 dots) is deliberately shared for fair paper comparison. A central dot crop can be zoomed 1×, 2×, or 4×, rendered nearest-neighbor.
 
-Controls are debounced and images are rendered on workers; stale results are dropped. The GUI also reports native output size, percentage of black pixels and render time (informational, not a physical quality score). **Save All Configs** and **Load All Configs** use a versioned JSON file that is strictly independent of the kiosk's printer settings. **Export 3 PNG** saves the three exact full-resolution 1-bit rasters; **Save PNG** in each column saves just that lane.
+Controls are debounced and images are rendered on workers; stale results are dropped. The GUI also reports native output size, percentage of black pixels and render time (informational, not a physical quality score). **Save All Configs** and **Load All Configs** use a versioned JSON file that is strictly independent of the kiosk's printer settings. **Export 4 PNG** saves the four exact full-resolution 1-bit rasters; **Save PNG** in each column saves just that lane.
 
 ### Real-paper Print Test
 
 - Configure the **existing kiosk printer** via `python main.py` → gear → **Pengaturan Printer** first. The lab reads `data/printer_settings.json` (USB Windows queue, LAN or Wi-Fi). It does not edit that file. On Windows, the active printer queue requires `pywin32` and an ESC/POS-capable driver.
 - After the latest previews finish, click **Print Test** under one algorithm or **Print All (3 jobs)**. An explicit confirmation explains the number of real print jobs; cancel prints nothing.
 - The lab snapshots the currently displayed one-bit raster and chosen parameters. The ESC/POS spool includes a parameter label above the original dot image, then sends it via the existing `ThermalPrinter` route logic. **No second dithering or resize of the original raster occurs**.
-- **Print All** sends the algorithms in Floyd/Bayer/Threshold order, stops on the first failure or uncertain status, and never automatically retries that image through a different transport after transmission may have begun. The user must inspect the physical paper and decide on any repeat manually. Success means data was accepted by the transport—not confirmed physical printing.
+- **Print All** sends the algorithms in Floyd/Bayer/Threshold/Dizzy order, stops on the first failure or uncertain status, and never automatically retries that image through a different transport after transmission may have begun. The user must inspect the physical paper and decide on any repeat manually. Success means data was accepted by the transport—not confirmed physical printing.
 - During printing, further slider edits will not change the queued snapshot; Print buttons refuse another batch until the current batch finishes. Avoid stopping the application mid-spool.
 
 **Known limitations:** the preview display is scaled for the screen; only native PNG export and physical paper reveal actual dot pattern. A fixed 8×8 Bayer matrix and existing Pillow Floyd–Steinberg are retained. Device heat/darkness is not tunable through this lab. Windows GUI interactions and physical print remain **owner verification pending**; no customer-facing production integration is approved.
