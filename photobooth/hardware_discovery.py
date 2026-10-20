@@ -140,3 +140,31 @@ def discover_local_devices(
     # hardware, not desktop Python endpoints. Until a JNI adapter exists,
     # absence of results must not be interpreted as 'no devices'.
     return ()
+
+def discover_devices_with_evidence(*, platform=None, **kwargs):
+    """Return (candidates, complete_kinds) without hiding spooler failures.
+
+    Only Windows queue enumeration has a bounded, inspectable completion
+    outcome. Linux and Android remain UNKNOWN until individual discovery
+    sources expose reliable completion status.
+    """
+    family = platform_family(platform, kwargs.get("environ"))
+    if family != "windows":
+        return discover_local_devices(platform=platform, **kwargs), ()
+    spooler = kwargs.get("spooler")
+    try:
+        if spooler is None:
+            import win32print as spooler
+        flags = spooler.PRINTER_ENUM_LOCAL | spooler.PRINTER_ENUM_CONNECTIONS
+        entries = spooler.EnumPrinters(flags, None, 2)
+        names = tuple(sorted({name.strip() for item in entries
+                              for name in [item.get("pPrinterName", "")]
+                              if isinstance(name, str) and name.strip()}))
+    except Exception:
+        return (), ()
+    return tuple(DeviceDescriptor(
+        "printer", "win-queue:" + name, f"Print queue: {name}",
+        "windows-spooler", "windows", "queue-name", "queue-detected",
+        ("spooler-presence",),
+        "Queue enumeration does not verify an online physical printer.",
+    ) for name in names), ("printer",)
