@@ -82,7 +82,9 @@ class DizzyLabIntegrationTests(unittest.TestCase):
         ast.parse(source, filename=str(file))
         self.assertIn("LAB_DITHER_MODES", source)
         self.assertIn("def change_dizzy_variant(self,", source)
-        self.assertIn("Export 4 PNG", source)
+        self.assertIn("Export 3 PNG", source)
+        self.assertIn('self._start_print(VISIBLE_MODES)', source)
+        self.assertIn('VISIBLE_MODES = ("floyd-steinberg", "bayer", "dizzy")', source)
 
 
 if __name__ == "__main__":
