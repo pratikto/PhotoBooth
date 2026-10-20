@@ -1,7 +1,7 @@
 # FEAT-021 — Meong Fly: Visual Polish Specification v2
 
 **Date:** 2026-10-21  
-**Status:** DESIGN SPECIFICATION — prepared for implementation; individual code batches not yet executed or GUI-verified against this specification.  
+**Status (2026-10-21):** Batch A Start/Scan and Batch B Gameplay **IN SOURCE** on the isolated feature branch; new Windows GUI/owner visual acceptance **PENDING**. Batch C Win/Lose polish is not yet implemented.  
 **Scope:** Standalone Meong Fly Kivy mini-game only.  
 **Target branch:** `feature/meong-flappy-challenge`  
 **Stable baseline:** `master` is read-only; no merge or kiosk integration without explicit approval.  
@@ -257,7 +257,7 @@ Also run the project's applicable regression suite when a batch modifies a share
 
 **Still excluded after v2:** real merchant QR scan, POS integration, genuine Rp2.500 discounts, Midtrans/DOKU payment, cafe subsidy settlement, production photobooth welcome-screen integration, automatic photo flow, and any `master` merge. These require separate scope approval and testing.
 
-**Implementation status of this document:** specification only; this document does not represent completed visual-code changes or a GUI validation run.
+**Historical status at first authoring:** this was initially a design-only specification. The dated Batch A and Batch B implementation records below supersede that historical statement; Windows Kivy verification remains pending.
 ## Batch A implementation record — 2026-10-21
 
 This design document was authored before the code changes. **Batch A is now IN SOURCE on `feature/meong-flappy-challenge`**, but **not yet Windows GUI accepted**. The approved revised visuals are cacheable Pillow Start/Scan artwork in `photobooth/meong_fly_polish.py` (premium stepped cards, voucher, hero halo, scanner brackets, readable spacing and CTA palette) routed through `meong_fly_painter.paint_static_screen`. The Kivy standalone stage in `meong_fly_gui.py` adds a decorative scan sweep, text-field focus/error outline and desktop hover outline while keeping `canvas.before` (BUG-012 remains guarded). Physics, SQLite receipt policy, production kiosk GUI, Midtrans/QRIS and win/lose screens are not changed. No merge to `master`.
