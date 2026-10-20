@@ -195,3 +195,10 @@ tree safely. The fourth error was a Windows permission restriction when
 creating a symlink in the retention test; that specific `WinError 1314`
 condition now skips the symlink-specific test while preserving other errors.
 Re-run full and opt-in GUI tests before merging PR #3 into `master`.
+
+
+## 2026-10-21 — FEAT-021 Step 3 owner-reported GUI acceptance
+
+Branch `feature/meong-flappy-challenge` contains isolated Meong Fly Space Edition prototype; owner reports **6/6 Windows GUI checklist PASS**, alongside earlier **10/10 Windows Python 3.12 targeted unit tests PASS**. Exact GUI runtime SHA, screenshot and display dimensions were not supplied; evidence is operator-reported and limited to standalone prototype. No production integration, real POS receipt or QRIS discount; no merge to master. See [FEAT-021](features/FEAT-021-meong-fly.md) and [test checklist](test_checklist.md).
+
+**Next safe action:** propose Step 4 welcome-screen integration design and regression plan, request explicit code approval, and keep the work isolated on a feature branch. Existing operational BUG-001/007 audio and BUG-009 Drive retention priorities are not superseded by this prototype milestone.
