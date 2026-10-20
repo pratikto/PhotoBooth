@@ -109,8 +109,6 @@ class ComparisonApp:
                               state="readonly", width=6)
         widths.pack(side="left")
         widths.bind("<<ComboboxSelected>>", self.change_width)
-        ttk.Checkbutton(bar, text="Enhanced Floyd (experimental)", variable=self.enhanced_floyd,
-                        command=self.toggle_enhanced).pack(side="left", padx=8)
         ttk.Checkbutton(bar, text="Sync Parameters", variable=self.sync).pack(
             side="left", padx=12)
         ttk.Label(bar, text="Dot zoom:").pack(side="left")
@@ -155,9 +153,15 @@ class ComparisonApp:
             meta = ttk.Label(panel, text="Pending...", anchor="center")
             meta.pack(fill="x")
             self.labels[mode] = (output, detail, meta)
-            if mode == "dizzy":
-                # Put the toggle in its lane instead of crowding the top bar.
-                # It affects only Dizzy, never synced brightness/contrast.
+            # Keep each experimental preprocessing switch in its own panel.
+            # Sync Parameters applies to tonal sliders, not these checkboxes.
+            if mode == "floyd-steinberg":
+                ttk.Checkbutton(
+                    panel, text="Enhanced Floyd (experimental)",
+                    variable=self.enhanced_floyd,
+                    command=self.toggle_enhanced,
+                ).pack(fill="x", pady=(4, 0))
+            elif mode == "dizzy":
                 ttk.Checkbutton(
                     panel, text="Enhanced Dizzy (experimental)",
                     variable=self.enhanced_dizzy,
