@@ -47,3 +47,18 @@ Incremental commits `5847f4c` and `68ba4ab` add HTTP 503 responses for unexpecte
 
 ## Stage 10 — SQLite threaded-access hardening (2026-10-20)
 Commit `82e5ae1` serializes access to a shared SQLite connection with `threading.RLock` and enables `check_same_thread=False` for FastAPI staging worker threads. Commit `9e497c9` adds two offline regression tests for 64 concurrent claim attempts and two separate SQLite connections. **Tests are not yet executed/verified; this change is not a production concurrency certification.** Keep server in sandbox; review transaction boundaries, SQLite multi-process load, shutdown coordination and provider idempotency before deployment. No merge to master without explicit owner approval.
+
+## Stage 11 — Opt-in Kivy sandbox preview (2026-10-20)
+Incremental commits:
+- `6b3f678` kiosk HTTP adapter (TLS by default, loopback HTTP only by explicit opt-in).
+- `8174410` offline adapter contract tests.
+- `3d15abf` / `f211e8f` validate Midtrans sandbox QR image host before attaching a pending order, with regression coverage.
+- `508e830` standalone Kivy preview, background HTTP operations, QR image display, status and one-time claim.
+- `8e019ba` environment-driven sandbox ASGI entrypoint.
+- `e2d7975` CI includes kiosk adapter tests.
+
+### Operator sandbox GUI trial (NOT live payments)
+Install dependencies in a separate virtual environment: `pip install -r requirements.txt "fastapi>=0.115,<1" "uvicorn>=0.30,<1" "httpx>=0.27,<1"`.
+Set `MIDTRANS_SERVER_KEY` (sandbox key), `MEONG_QRIS_BOOTH_ID=PB001`, `MEONG_QRIS_BOOTH_TOKEN` (random secret >=32 characters) on the backend. Do not commit or paste secrets. Set `MEONG_QRIS_DB_PATH` if desired. Start backend bound to loopback only: `python -m uvicorn photobooth.qris_server:app --host 127.0.0.1 --port 8000`. In the same local machine's GUI environment, set `MEONG_QRIS_API_URL=http://127.0.0.1:8000`, `MEONG_QRIS_LOCAL_PREVIEW=1`, same booth ID/token, then run `python -m photobooth.qris_preview`. The preview is standalone: **the main GUI still uses DEMO payment**. For a remote kiosk, use HTTPS behind an authenticated reverse proxy and enforce ingress limits/rate limiting.
+
+The preview creates a Midtrans Sandbox order, displays the QR image, checks provider-verified status via backend, and allows one-time claim after PAID. It does not start the camera or print, and cannot transfer live money. Test with real Midtrans Sandbox merchant credentials before claiming provider compatibility. The webhook must be configured to reach the backend securely; loopback is not reachable from Midtrans. No tests or GUI launch have been verified in this session. No production deployment and no merge to master without explicit approval.
