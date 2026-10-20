@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Three-lane, offline thermal-photo tuning studio.
+"""Four-lane, offline thermal-photo tuning studio.
 
 All Tk widgets live on the Tk event thread; workers compute immutable raster
 results only. Physical printing is an explicit, confirmed separate action.
@@ -21,9 +21,12 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from photobooth.dither_lab import (ComparisonProfiles, DitherProfile,
+from photobooth.dither_lab import (LAB_DITHER_MODES, ComparisonProfiles, DitherProfile,
                                    load_comparison, render_thermal_image, save_comparison)
-from photobooth.printer import DITHER_MODES
+from photobooth.dizzy_dither import DIZZY_VARIANTS
+
+# The production printer still supports only Floyd/Bayer/Threshold.
+DITHER_MODES = LAB_DITHER_MODES
 
 FIELDS = (
     ("brightness", "Brightness", .5, 1.75),
@@ -33,7 +36,7 @@ FIELDS = (
     ("threshold", "Threshold", 0, 255),
 )
 SHORT = {"floyd-steinberg": "Floyd–Steinberg", "bayer": "Bayer 8×8",
-         "threshold": "Threshold"}
+         "threshold": "Threshold", "dizzy": "Dizzy Dithering"}
 
 
 def sample_source():
@@ -53,9 +56,9 @@ def sample_source():
 class ComparisonApp:
     def __init__(self, root):
         self.root = root
-        root.title("MEONG | Dither Comparison Lab + Enhanced Floyd")
-        root.geometry("1450x850")
-        root.minsize(1050, 620)
+        root.title("MEONG | Dither Comparison Lab + Dizzy (Experimental)")
+        root.geometry("1560x850")
+        root.minsize(1150, 620)
         self.source = sample_source()
         self.source_label = "Synthetic sample"
         self.configs = ComparisonProfiles()
@@ -78,6 +81,7 @@ class ComparisonApp:
         self.sync = tk.BooleanVar(value=False)
         self.width = tk.StringVar(value="576")
         self.enhanced_floyd = tk.BooleanVar(value=False)
+        self.dizzy_variant = tk.StringVar(value=self.configs.dizzy.dizzy_variant)
 
         style = ttk.Style(root)
         if "clam" in style.theme_names():
@@ -85,7 +89,7 @@ class ComparisonApp:
         style.configure("TButton", padding=(7, 5))
         header = ttk.Frame(root, padding=12)
         header.pack(fill="x")
-        ttk.Label(header, text="MEONG • 3-WAY DITHER LAB",
+        ttk.Label(header, text="MEONG • 4-WAY DITHER LAB",
                   font=("Segoe UI", 19, "bold")).pack(side="left")
         ttk.Label(header, text="Experiment only | no changes to kiosk",
                   font=("Segoe UI", 10)).pack(side="right")
@@ -94,7 +98,7 @@ class ComparisonApp:
         bar.pack(fill="x")
         for caption, callback in (
             ("Open Image", self.open_source), ("Save All Configs", self.save_all),
-            ("Load All Configs", self.load_all), ("Export 3 PNG", self.export_all),
+            ("Load All Configs", self.load_all), ("Export 4 PNG", self.export_all),
             ("Reset", self.reset),
         ):
             ttk.Button(bar, text=caption, command=callback).pack(side="left", padx=(0, 5))
@@ -113,6 +117,13 @@ class ComparisonApp:
         zooms.pack(side="left", padx=(5, 0))
         zooms.bind("<<ComboboxSelected>>",
                    lambda _event: self.change_zoom(int(zooms.get())))
+        ttk.Label(bar, text="Dizzy:").pack(side="left", padx=(10, 3))
+        dizzy_variants = ttk.Combobox(
+            bar, textvariable=self.dizzy_variant, values=DIZZY_VARIANTS,
+            state="readonly", width=15)
+        dizzy_variants.pack(side="left")
+        dizzy_variants.bind("<<ComboboxSelected>>", self.change_dizzy_variant)
+        ttk.Label(bar, text="Seed: 42").pack(side="left", padx=5)
 
         reference = ttk.LabelFrame(root, text="SOURCE IMAGE", padding=4)
         reference.pack(fill="x", padx=12, pady=(0, 9))
@@ -189,9 +200,9 @@ class ComparisonApp:
 
         footer = ttk.Frame(root, padding=(12, 0, 12, 7))
         footer.pack(fill="x")
-        self.message = tk.StringVar(value="Screen preview shows averaged dot coverage; dot crop / PNG / print stay exact.")
+        self.message = tk.StringVar(value="Lab only: article-8 Dizzy uses axial 1.0 / diagonal 0.1 weights. Native PNG / print remain 1-bit.")
         ttk.Label(footer, textvariable=self.message).pack(side="left")
-        ttk.Button(footer, text="Print All (3 jobs)",
+        ttk.Button(footer, text="Print All (4 jobs)",
                    command=self.print_all).pack(side="right")
 
         root.bind_all("<MouseWheel>", self._wheel_scroll, add="+")
@@ -233,6 +244,12 @@ class ComparisonApp:
         p = self.configs.floyd
         self.configs = self.configs.replace_lane(replace(p, enhanced_floyd=self.enhanced_floyd.get()))
         self.schedule("floyd-steinberg")
+
+    def change_dizzy_variant(self, _event=None):
+        profile = self.configs.dizzy
+        self.configs = self.configs.replace_lane(
+            replace(profile, dizzy_variant=self.dizzy_variant.get()))
+        self.schedule("dizzy")
 
     def change_zoom(self, factor):
         self.zoom.set(factor)
@@ -321,7 +338,9 @@ class ComparisonApp:
                     self.show_image(mode, image)
                     self.labels[mode][2].configure(
                         text=f"{image.width}×{image.height} dots | black {coverage:.1f}%")
-                    suffix = " | enhanced" if profile.enhanced_floyd else " | baseline"
+                    suffix = (f" | {profile.dizzy_variant} / seed {profile.dizzy_seed}"
+                              if mode == "dizzy" else
+                              " | enhanced" if profile.enhanced_floyd else " | baseline")
                     self.statuses[mode].configure(
                         text=f"Ready{suffix} • {elapsed * 1000:.0f} ms")
             if mode in self.queued or version != self.versions[mode]:
@@ -337,11 +356,11 @@ class ComparisonApp:
         # physical print look sparse/jagged. BOX averages dot coverage into
         # display grays, approximating perceived tone without changing bytes.
         preview = raster.convert("L")
-        preview.thumbnail((370, 268), Image.Resampling.BOX)
+        preview.thumbnail((270, 268), Image.Resampling.BOX)
         preview = preview.convert("RGB")
         factor = self.zoom.get()
         width, height = raster.size
-        w, h = min(130, width), min(55, height)
+        w, h = min(130, width, 260 // factor), min(55, height)
         detail = raster.crop(((width - w)//2, (height-h)//2,
                               (width+w)//2, (height+h)//2))
         detail = detail.resize((w*factor, h*factor),
@@ -379,6 +398,7 @@ class ComparisonApp:
         self.configs = configs
         self.width.set(str(configs.floyd.width_dots))
         self.enhanced_floyd.set(configs.floyd.enhanced_floyd)
+        self.dizzy_variant.set(configs.dizzy.dizzy_variant)
         for mode in DITHER_MODES:
             for key, (var, _label) in self.controls[mode].items():
                 var.set(getattr(configs.by_mode(mode), key))
@@ -390,7 +410,7 @@ class ComparisonApp:
 
     def save_all(self):
         path = filedialog.asksaveasfilename(defaultextension=".json",
-            initialfile="meong-dither-3way.json", filetypes=[("JSON", "*.json")])
+            initialfile="meong-dither-4way.json", filetypes=[("JSON", "*.json")])
         if path:
             try:
                 save_comparison(path, self.configs)
@@ -416,13 +436,21 @@ class ComparisonApp:
                 mode not in self.busy and mode not in self.timers and
                 mode not in self.queued and mode in self.results)
 
+    def raster_filename(self, profile):
+        if profile.mode == "floyd-steinberg":
+            return "meong-floyd-{}.png".format(
+                "enhanced" if profile.enhanced_floyd else "baseline")
+        if profile.mode == "dizzy":
+            return f"meong-dizzy-{profile.dizzy_variant}-seed{profile.dizzy_seed}.png"
+        return f"meong-{profile.mode}.png"
+
     def export_lane(self, mode):
         if not self.ready(mode):
             messagebox.showinfo("Rendering", "Wait for the current preview.",
                                 parent=self.root)
             return
         path = filedialog.asksaveasfilename(defaultextension=".png",
-            initialfile=f"meong-{mode}{'-enhanced' if self.ready_profiles[mode].enhanced_floyd else '-baseline'}.png", filetypes=[("PNG", "*.png")])
+            initialfile=self.raster_filename(self.ready_profiles[mode]), filetypes=[("PNG", "*.png")])
         if path:
             try:
                 self.results[mode].save(path, format="PNG")
@@ -432,16 +460,16 @@ class ComparisonApp:
 
     def export_all(self):
         if not all(self.ready(m) for m in DITHER_MODES):
-            messagebox.showinfo("Rendering", "Wait for all three previews.",
+            messagebox.showinfo("Rendering", "Wait for all four previews.",
                                 parent=self.root)
             return
-        folder = filedialog.askdirectory(title="Export 3 native rasters")
+        folder = filedialog.askdirectory(title="Export 4 native rasters")
         if folder:
             try:
                 for mode in DITHER_MODES:
                     self.results[mode].save(
-                        Path(folder) / f"meong-{mode}{'-enhanced' if self.ready_profiles[mode].enhanced_floyd else '-baseline'}.png", format="PNG")
-                self.message.set(f"Exported 3 native 1-bit rasters to {folder}")
+                        Path(folder) / self.raster_filename(self.ready_profiles[mode]), format="PNG")
+                self.message.set(f"Exported 4 native 1-bit rasters to {folder}")
             except OSError as error:
                 messagebox.showerror("Export failed", str(error), parent=self.root)
 
