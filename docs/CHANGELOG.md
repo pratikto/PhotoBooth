@@ -174,3 +174,7 @@ This file tracks **actual verified repository/document changes**, not successful
 ## Historical application changes
 
 For changes made before the documentation effort, inspect Git commits and the dated QA evidence. Existing user-confirmed working thermal photo paper output **does not** prove acceptable image quality or QR-slip paper output. Historic sound/video mocked test passes **do not** resolve present Windows audio/video reports. Current defects remain in [bug_tracker.md](bug_tracker.md).
+
+## FEAT-021 — branch-scoped background processing experiment (2026-10-21)
+
+The owner authorized starting this work on `feature/ai-background-studio`, not a merge or release. Only `photobooth/background_studio.py`, its synthetic tests and an optional dependency manifest are currently in source. No production GUI, composer, Drive sync, payment, camera or printer behavior has been changed. AI requires a model seeded locally in advance; without it, the existing Original path remains the only working customer route. Hardware/model benchmarks and end-to-end GUI validation remain pending. See [FEAT-021 backlog](next_step.md#feat-021--offline-ai-background-studio-2026-10-21).

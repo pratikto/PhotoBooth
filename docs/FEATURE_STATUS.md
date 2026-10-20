@@ -127,3 +127,7 @@ delivery issue from the unresolved native mixer silence. Actual speaker output
 and button usability still require a Windows GUI test; no audible success is
 claimed. If the indicator updates but speakers are silent, capture the
 provider/state/gain/mix diagnostic in the same popup.
+
+## FEAT-021 — branch-scoped background processing experiment (2026-10-21)
+
+The owner authorized starting this work on `feature/ai-background-studio`, not a merge or release. Only `photobooth/background_studio.py`, its synthetic tests and an optional dependency manifest are currently in source. No production GUI, composer, Drive sync, payment, camera or printer behavior has been changed. AI requires a model seeded locally in advance; without it, the existing Original path remains the only working customer route. Hardware/model benchmarks and end-to-end GUI validation remain pending. See [FEAT-021 backlog](next_step.md#feat-021--offline-ai-background-studio-2026-10-21).
