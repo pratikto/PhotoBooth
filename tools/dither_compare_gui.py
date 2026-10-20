@@ -413,7 +413,7 @@ class ComparisonApp:
 
     def save_all(self):
         path = filedialog.asksaveasfilename(defaultextension=".json",
-            initialfile="meong-dither-4way.json", filetypes=[("JSON", "*.json")])
+            initialfile="meong-dither-lab-v3.json", filetypes=[("JSON", "*.json")])
         if path:
             try:
                 save_comparison(path, self.configs)
