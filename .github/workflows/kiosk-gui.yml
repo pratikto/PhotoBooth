@@ -2,7 +2,7 @@ name: Kiosk GUI regression
 
 on:
   push:
-    branches: [feature/kivy-gui, master]
+    branches: [feature/kivy-gui, feature/qris-payment, master]
   pull_request:
     branches: [master]
   workflow_dispatch:
@@ -28,6 +28,7 @@ jobs:
       PHOTOBOOTH_TEST_VIDEO: "1"
       LIBGL_ALWAYS_SOFTWARE: "1"
       SDL_AUDIODRIVER: dummy
+      MEONG_QRIS_GUI_OUTPUT: /tmp/meong-qris-gui
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -38,7 +39,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg xvfb libgl1-mesa-dri libgl1 libegl1 libmtdev1 libxkbcommon0 libasound2t64
-          python -m pip install -r requirements.txt
+          python -m pip install -r requirements.txt -r requirements-qris.txt
       - name: Check Python syntax
         run: python -m compileall -q photobooth tests tools
       - name: Exercise workflow, QR pixels, real widgets, audio and navigation
@@ -62,6 +63,7 @@ jobs:
           name: meong-gui-qa
           path: |
             /tmp/meong-gui-qa
+            /tmp/meong-qris-gui
             /tmp/meong-kiosk-unittests.txt
           if-no-files-found: ignore
           retention-days: 7
