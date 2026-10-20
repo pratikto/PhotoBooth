@@ -60,8 +60,8 @@ class KivyDemoInputTests(unittest.TestCase):
         self.stage._refresh()
 
     def _unschedule(self):
-        from kivy.clock import Clock
-        Clock.unschedule(self.stage.update)
+        # Stop both the animation clock and Window mouse listener.
+        self.stage.dispose()
 
     def test_scan_input_canvas_survives_refresh(self):
         """Text/caret drawing instructions stay parented after every redraw."""
@@ -78,6 +78,24 @@ class KivyDemoInputTests(unittest.TestCase):
         self.stage.validate_receipt()
         self.assertEqual(self.flow.screen, "game")
         self.assertEqual(self.flow.active_receipt, "DEMO-INPUT-001")
+
+    def test_hover_action_matches_painted_logical_button(self):
+        self.stage.pos = (0, 0)
+        self.stage.size = (450, 900)
+        self.stage._resize()
+        x, y, w, h = ACTIONS["scan"]["validate"]
+        (ox, oy), (width, height) = self.stage._rect((x, y, w, h))
+        self.stage._mouse_moved(None, (ox + width / 2, oy + height / 2))
+        self.assertEqual(self.stage._hover_action, "validate")
+        self.stage._mouse_moved(None, (-50, -50))
+        self.assertIsNone(self.stage._hover_action)
+
+    def test_scanner_animation_does_not_erase_demo_receipt_text(self):
+        self.stage.receipt.text = "DEMO-SCAN-ANIMATION"
+        for _ in range(5):
+            self.stage.update(.08)
+        self.assertEqual(self.stage.receipt.text, "DEMO-SCAN-ANIMATION")
+        self.assertIn(self.stage.receipt.canvas, self.stage.canvas.children)
 
     def test_visible_input_position_matches_touch_hitbox(self):
         self.stage.pos = (0, 0)
