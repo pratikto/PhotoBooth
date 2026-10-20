@@ -4,7 +4,9 @@ import random
 
 WIDTH, HEIGHT = 480, 640
 CAT_X = 110
-CAT_RADIUS = 15
+CAT_RADIUS = 15  # Legacy test constant; sprite collision now uses visible body bounds.
+CAT_LEFT, CAT_RIGHT = 24, 54
+CAT_BOTTOM, CAT_TOP = 25, 33
 GRAVITY = 820.0
 FLAP_VELOCITY = -285.0
 PIPE_SPEED = 165.0
@@ -58,7 +60,7 @@ class MeongFly:
         self.elapsed += dt
         self.velocity += GRAVITY * dt
         self.y += self.velocity * dt
-        if self.y - CAT_RADIUS <= 0 or self.y + CAT_RADIUS >= HEIGHT:
+        if self.y - CAT_BOTTOM <= 0 or self.y + CAT_TOP >= HEIGHT:
             self.status = "lost"
             return
         self.spawn_elapsed += dt
@@ -67,13 +69,13 @@ class MeongFly:
             self.pipes.append(AsteroidGap(WIDTH + 10, self.rng.uniform(155, HEIGHT - 155)))
         for pipe in self.pipes:
             pipe.x -= PIPE_SPEED * dt
-            if (CAT_X + CAT_RADIUS > pipe.x and
-                    CAT_X - CAT_RADIUS < pipe.x + PIPE_WIDTH and
-                    (self.y - CAT_RADIUS < pipe.gap_y - GAP_HEIGHT / 2 or
-                     self.y + CAT_RADIUS > pipe.gap_y + GAP_HEIGHT / 2)):
+            if (CAT_X + CAT_RIGHT > pipe.x and
+                    CAT_X - CAT_LEFT < pipe.x + PIPE_WIDTH and
+                    (self.y - CAT_BOTTOM < pipe.gap_y - GAP_HEIGHT / 2 or
+                     self.y + CAT_TOP > pipe.gap_y + GAP_HEIGHT / 2)):
                 self.status = "lost"
                 return
-            if not pipe.scored and pipe.x + PIPE_WIDTH < CAT_X - CAT_RADIUS:
+            if not pipe.scored and pipe.x + PIPE_WIDTH < CAT_X - CAT_LEFT:
                 pipe.scored = True
                 self.score += 1
                 if self.score >= TARGET_SCORE:
