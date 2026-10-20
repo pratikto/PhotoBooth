@@ -104,6 +104,8 @@ class DitherLabTests(unittest.TestCase):
             path = Path(directory) / "legacy.json"
             original = asdict(DitherProfile())
             original.pop("enhanced_floyd")
+            original.pop("dizzy_variant")
+            original.pop("dizzy_seed")
             path.write_text(json.dumps({"schema_version": 1, **original}), encoding="utf-8")
             loaded = load_profile(path)
             self.assertFalse(loaded.enhanced_floyd)
@@ -118,7 +120,7 @@ class DitherLabTests(unittest.TestCase):
         self.assertEqual(image.tobytes(), original)
         path = Path(__file__).resolve().parents[1] / "tools" / "dither_compare_gui.py"
         code = path.read_text(encoding="utf-8")
-        self.assertIn("preview.thumbnail((370, 268), Image.Resampling.BOX)", code)
+        self.assertIn("preview.thumbnail((270, 268), Image.Resampling.BOX)", code)
 
     def test_compare_gui_has_enhanced_toggle_and_compiles(self):
         import ast
