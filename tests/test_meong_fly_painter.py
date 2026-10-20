@@ -8,6 +8,7 @@ import unittest
 from pathlib import Path
 
 from PIL import Image, ImageDraw
+from photobooth.meong_fly import TARGET_SCORE
 from photobooth.meong_fly_painter import (
     ACTIONS, DEMO_ENTRY, H, W, GLYPHS, logo_parts,
     make_asteroid_tile, paint_static_screen,
@@ -72,6 +73,9 @@ class MeongFlyPainterTests(unittest.TestCase):
     def test_pixel_font_has_screen_and_receipt_glyphs(self):
         for char in "MEONG FLY! 2.500 & /-:1X":
             self.assertIn(char, GLYPHS)
+
+    def test_mockup_target_is_ten_and_matches_engine(self):
+        self.assertEqual(TARGET_SCORE, 10)
 
     def test_unknown_scene_rejected(self):
         with self.assertRaises(ValueError):
