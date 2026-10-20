@@ -1,3 +1,17 @@
+## FEAT-011 / Dizzy experiment — 2026-10-21
+
+- **Source-only scope:** `feature/dither-tuning` (no `master` merge, no kiosk production print-mode modification).
+- **Algorithm:** article-8 8-neighbor axial 1 / diagonal 0.1, and orthogonal-4 from follow-up, fixed seed 42, float error and five-round random permutation. Production `DITHER_MODES` unchanged.
+- **Local isolated test evidence:** `PYTHONPATH=/mnt/data/dizzy_dev python -m unittest discover -s /mnt/data/dizzy_dev/tests -p 'test_dizzy_dither.py' -v`: **5 PASS**, zero FAIL, in container Python/Pillow. The test used the same prototype core code subsequently uploaded to GitHub; **not** full repository integration/GUI CI.
+- **Synthetic performance snapshot:** 576x579 gray image: article-8 ~0.97 sec; orthogonal-4 ~0.65 sec on this execution container. Not a Windows benchmark.
+- **GitHub test automation:** `.github/workflows/dither-lab.yml` updated to compile and run `tests.test_dizzy_dither`, `tests.test_dizzy_lab_integration`, and prior dither tests. Actual CI run status **not yet confirmed** by the tool; do not mark green until checked.
+- [ ] Local Windows: `python -m unittest tests.test_dither_lab tests.test_dither_comparison tests.test_dither_print tests.test_dither_gui_layout tests.test_dizzy_dither tests.test_dizzy_lab_integration -v`.
+- [ ] Open `python tools/dither_compare_gui.py`; verify four lanes at 1150px and maximized, no clipped preview, scrolling, sync, reset, JSON save/load v1/v2/v3.
+- [ ] Same-photo A/B: Floyd baseline, Enhanced Floyd, Dizzy article-8 and orthogonal-4, and Bayer with same width and sliders; inspect exact exported 1-bit rasters.
+- [ ] Physical printer only with operator permission: confirm each single Print Test, printed Dizzy variant/seed header, 4-job cancellation/uncertain-state stop, native 576-dot width, print quality and paper density.
+- [ ] LUT calibration is **out of scope**: author LUT should not be copied onto a different uncalibrated variant.
+- **Acceptance** pending repeatable Windows UI and actual printer-paper inspection, especially faces/hair/skin midtones and monochrome QR/text clarity.
+
 ## BUG-010 lab scroll issue — 2026-10-18
 
 - Screenshot/owner confirmed missing access to lower sliders and print controls on Windows.
