@@ -12,6 +12,13 @@ For each new idea record:
 - Dependencies (including BUG IDs), affected components, risk, acceptance criteria
 - Proposed **execution order**, reason for placement, status and approval reference
 
+## FEAT-011 update — Auto Tune Enhanced Floyd experiment (2026-10-21)
+
+- **Owner authorization:** implementation of an optional Auto Tune feature in the existing `feature/dither-tuning` test GUI only, including ranked three-candidate preview, Apply Best/Apply Selected, Save Preset, regression testing and GitHub documentation. This is an **extension to existing FEAT-011**, not a new standalone production feature or approval to merge.
+- **Impact / priority:** P1 quality investigation supporting open BUG-004, high operational image-quality relevance, low immediate production risk due to branch isolation; readiness **source + CI verified, printer-paper acceptance pending**. Complexity **M**; dependencies Pillow/Tk and an operator-confirmed representative-paper quality comparison. Main risk: overfitting digital dot-coverage metrics while real paper looks worse; mitigate with opt-in candidate review, no automatic print or production setting changes and a repeatable A/B checklist.
+- **Execution ranking:** FEAT-011 stays first among isolated feature experiments; existing operational blockers still take priority for production. No unrelated backlog re-ordering was justified by this refinement. Physical thermal-photo calibration and production promotion remain separate **unapproved** decisions.
+- **Source:** `photobooth/dither_autotune.py` and `tools/dither_compare_gui.py`; operator notes in [dither-tuning-lab.md](dither-tuning-lab.md). The search tests actual native Floyd rasters and returns three human-reviewed candidates; the numeric score is not a universal quality certificate.
+
 ## Unified provisional execution board — 2026-10-18
 
 **This is the ONE active proposed execution-order view**, not permission to implement. It replaces earlier partial queue tables and their historic per-feature rank notes. Existing open bugs in [bug_tracker.md](bug_tracker.md) are **ahead of every feature**. The order below balances operational risk, dependencies, demo value and business discovery; change it with new evidence. All statuses are **NOT APPROVED FOR IMPLEMENTATION**, unless an explicit, separately recorded owner approval is later provided.
@@ -19,7 +26,7 @@ For each new idea record:
 | Proposed order | ID | Scope / value | Business priority | Readiness | Prerequisites / decision |
 | --- | --- | --- | --- | --- | --- |
 | **Before production integration** | BUG-001–009 (current active priorities BUG-008/009/001/007/004) | Operational stability, retention, audio, image quality | Operational blockers | User reports; validation needed | Reproduce and close under [bug tracker](bug_tracker.md); lab experiments are separate |
-| 01 (isolated lab authorized) | FEAT-011 | Photo dithering tuning GUI and quality profiles | P1 | **Lab in source, tested CI; Windows/print unverified** | Standalone `feature/dither-tuning` only, no production print changes; BUG-004 needs physical A/B samples |
+| 01 (isolated lab authorized) | FEAT-011 | Photo dithering lab, Enhanced Floyd/Dizzy controls, and lab-only Enhanced Floyd Auto Tune | P1 | **Source + CI tests passed; Windows/print unverified** | Standalone `feature/dither-tuning` only, no production print changes; Auto Tune is a heuristic ranking pending physical paper A/B evidence for BUG-004 |
 | 02 | FEAT-007 | Persistent transaction and print recovery | P0/P1 | Design required | Trusted payment states, safe restart and print idempotency |
 | 03 | FEAT-008 | Device health checks | P1 | Partial | Hardware capability and false-alert handling |
 | 04 | FEAT-009 | Auto startup and crash recovery | P1 | Partial | FEAT-007/008, Windows restart behavior |
