@@ -2,6 +2,12 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased GUI adjustment] — 2026-10-21 (Threshold hidden)
+
+- In `feature/dither-tuning`, the primary comparison GUI now shows **Floyd–Steinberg, Bayer 8×8 and Dizzy** only. Threshold's preview, slider, Save PNG and Print Test controls were removed **from the display only**. `Export 3 PNG` and `Print All (3 jobs)` process only visible modes, and the three panels regain the 370px display preview width. Source [`ad6b299`](https://github.com/pratikto/PhotoBooth/commit/ad6b299537791905ba79d27035eac6e27af92f2c).
+- Added/updated guards in `tests/test_dither_gui_layout.py`, `tests/test_dizzy_lab_integration.py` and `tests/test_dither_lab.py` for the three-panel UI, printing/export, and monitor preview. GitHub CI and actual Windows display/print acceptance require separate recorded results.
+- Threshold algorithm, legacy single-algorithm tool, and hidden v3 JSON profile remain supported; shared print width is preserved for all saved profiles. **No `master` merge or production printer changes.**
+
 ## [Unreleased experiment] — 2026-10-21 (Dizzy Dithering)
 
 - FEAT-011 isolated lab: added article-aligned Dizzy CPU versions `article-8` (axial 1.0 / diagonal 0.1) and `orthogonal-4` (four equal axial neighbors) with five-round randomized permutation, seed 42, floating-point error and native 1-bit output. Algorithm commit [`3896c7a`](https://github.com/pratikto/PhotoBooth/commit/3896c7adc26263c8f556ebda12db5e18efef1c87).
