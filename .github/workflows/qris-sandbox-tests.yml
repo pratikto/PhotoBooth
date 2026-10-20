@@ -43,21 +43,7 @@ jobs:
           git archive --format=zip HEAD -o qris-evidence/tested-source.zip
       - name: Run every required backend suite without silent skips
         run: |
-          python - <<'PY' 2>&1 | tee qris-evidence/tests.txt
-          import pathlib, sys, unittest
-          sys.path.insert(0, str(pathlib.Path('tests').resolve()))
-          names = [
-              'test_payment_ledger', 'test_payment_quote', 'test_payment_orders',
-              'test_payment_concurrency', 'test_midtrans_verify', 'test_midtrans_sandbox',
-              'test_checkout_service', 'test_booth_auth', 'test_qris_api',
-              'test_qris_kiosk_client', 'test_checkout_durability',
-          ]
-          suite = unittest.defaultTestLoader.loadTestsFromNames(names)
-          result = unittest.TextTestRunner(verbosity=2).run(suite)
-          if result.skipped:
-              print('ERROR: mandatory backend tests must not be skipped')
-          sys.exit(0 if result.wasSuccessful() and not result.skipped and result.testsRun else 1)
-          PY
+          python tools/run_qris_tests.py 2>&1 | tee qris-evidence/tests.txt
       - name: Preserve evidence even when tests fail
         if: always()
         uses: actions/upload-artifact@v4
