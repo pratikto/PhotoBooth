@@ -41,6 +41,17 @@ class ScrollLayoutTests(unittest.TestCase):
         self.assertNotIn('Export 4 PNG', self.source)
         self.assertIn('meong-dither-lab-v4.json', self.source)
 
+    def test_enhanced_floyd_is_in_floyd_panel_not_top_toolbar(self):
+        # Both toggles live after their respective preview metadata.
+        self.assertIn('panel, text="Enhanced Floyd (experimental)"', self.source)
+        self.assertIn('panel, text="Enhanced Dizzy (experimental)"', self.source)
+        self.assertNotIn(
+            'ttk.Checkbutton(bar, text="Enhanced Floyd (experimental)"',
+            self.source,
+        )
+        self.assertIn('command=self.toggle_enhanced,', self.source)
+        self.assertIn('command=self.toggle_enhanced_dizzy,', self.source)
+
     def test_bounded_previews(self):
         self.assertIn('preview_holder = ttk.Frame(panel, height=286)', self.source)
         self.assertIn('preview_holder.pack_propagate(False)', self.source)
