@@ -78,6 +78,24 @@ class SelectionKivyTests(unittest.TestCase):
             picker.dismiss(animation=False)
             health.dismiss(animation=False)
 
+    def test_health_shows_selected_queue_candidate_without_switching(self):
+        ui, pending, staged = self.make_ui()
+        from photobooth.device_selection import stage_selection
+        selection = stage_selection(DeviceSelection(), printer=(
+            "windows-spooler", "POS80 test",
+        ))
+        ui.callbacks["get_device_selection"] = lambda: selection
+        popup = ui.show_health_settings()
+        try:
+            pending.pop()(self.snapshot("windows"))
+            self.assertEqual(ui._selection_observations["printer"].state, "candidate")
+            # Never activate a printer or stage a new device during diagnostics.
+            self.assertEqual(staged, [])
+            self.assertEqual(ui.current_screen, "welcome")
+            self.assertIs(ui._health_popup, popup)
+        finally:
+            popup.dismiss(animation=False)
+
     def test_android_offers_no_unimplemented_hardware(self):
         from kivy.uix.spinner import Spinner
         ui, pending, staged = self.make_ui()
