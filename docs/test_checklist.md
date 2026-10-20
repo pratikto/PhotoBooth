@@ -216,3 +216,12 @@ Native audio/video tests may require explicit opt-in environment flags and compa
 - [ ] Blocking defects resolved, or explicit written risk acceptance documented
 - [ ] Rollback reference and device configuration backup recorded
 - [ ] Owner explicitly authorizes the release
+
+
+## FEAT-021 — Windows prototype Step 3 acceptance (owner report, 2026-10-21)
+
+- **Branch:** `feature/meong-flappy-challenge`; tested runtime SHA not supplied; Windows Kivy manual run, exact OS build/screen dimensions not supplied.
+- **Manual GUI:** owner confirms **6/6 PASS**: app launches and renders; asteroid collision respects visible camera-cat body and excludes rainbow trail; tap controls respond; portrait/landscape resize remains proportional and clickable; reused `DEMO-` receipt is rejected after restart; win/loss screens show appropriate demo outcome without replay.
+- **Earlier targeted automated tests:** owner-supplied Windows Python 3.12 output: `python -m unittest tests.test_meong_fly tests.test_meong_fly_receipts -v` — **10 tests, OK**. No new automated tests run for this documentation entry.
+- **Evidence level:** owner-reported, not independently reproduced or GitHub CI verified. No claim of hardware/production acceptance.
+- **Open:** exact logo sprite, kiosk welcome-screen integration, full GUI regression, real POS receipt and payment/discount verification; master remains unchanged.
