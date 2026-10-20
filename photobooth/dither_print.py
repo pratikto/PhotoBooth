@@ -42,6 +42,10 @@ def annotated_raster(raster: Image.Image, profile: DitherProfile) -> Image.Image
     if profile.mode == "dizzy":
         parts.append(
             f"DIZZY: {profile.dizzy_variant} | SEED: {profile.dizzy_seed}")
+        parts.append(
+            "PREPROCESS: ENHANCED" if profile.enhanced_dizzy
+            else "PREPROCESS: BASELINE"
+        )
     output = raster.copy()
     # Header is a separate 1-bit strip; original preview bytes stay untouched.
     for line in reversed(parts):
