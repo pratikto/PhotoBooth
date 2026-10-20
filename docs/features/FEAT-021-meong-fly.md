@@ -141,3 +141,18 @@ python -m photobooth.meong_fly_demo
 
 ## 2026-10-21 — BUG-012: scan-demo input canvas regression (source fix, Windows QA pending)
 Owner screenshot of the new mockup-styled `SCAN STRUK KAFE` page shows the white field but typing appears impossible. In `MeongFlyStage._refresh`, `self.canvas.clear()` removed child `TextInput` canvas instructions while the fake painted input box remained visible. Scoped fix: repaint static/dynamic scene using `self.canvas.before.clear()` and `with self.canvas.before`, preserving the real child input's text/cursor rendering. **Code:** `974b8c7c`; **new regression tests:** `38d00d41` (`tests/test_meong_fly_gui.py`). Root cause is supported by source inspection; the precise Windows symptom is owner-reported, and **the fix has not yet been operator-verified**. Demo input should accept `DEMO-INPUT-001` in a fresh receipt and reject its reuse across restarts. No real scanner, production GUI, or payment changes.
+
+
+## 2026-10-21 — Approved Visual Polish v2, Batch A source delivered (Start + Scan only)
+
+The owner approved continuing **Batch A** after reviewing the pixel-arcade v2 specification. The original visual identity stays intact: dark navy retro space, bundled camera-cat logo, rainbow motif, asteroid planets and pink/cyan/gold controls. **This is strictly a standalone mini-game feature branch and not a production photobooth GUI integration.**
+
+The complete [Visual Polish Spec v2](FEAT-021-visual-polish-v2.md) is now tracked on GitHub. Source changes:
+- `photobooth/meong_fly_polish.py` (`74bdef6a`, refined `e18a0936`): pure-Pillow v2 Start and Scan art, shared stepped arcade panel/button helper, behind-logo star halo, legible mock voucher, space accent motifs, scanner corner brackets and QR simulation labels. Start and Scan preserve their existing `ACTIONS`/input geometry.
+- `photobooth/meong_fly_painter.py` (`cbc74372`): delegate only Start/Scan backgrounds to v2 renderer; Gameplay, Win and Lose artwork unchanged in this batch.
+- `photobooth/meong_fly_gui.py` (`f8bc996b`, cleanup `f7b0598e`): lightweight Kivy scan-beam animation (decorative), focus/error outline for real editable `TextInput`, optional hover highlight using the SAME hitboxes, and listener/Clock cleanup on app stop. Preserve BUG-012 `canvas.before` layering.
+- `tests/test_meong_fly_polish.py` (`05fccdd6`) and `tests/test_meong_fly_gui.py` (`6df4d498`): pure Pillow canvas/contrast/button/input geometry and optional Kivy hover/input redraw regression.
+
+**Evidence:** 7/7 pure-Pillow standalone visual-layout tests PASS on assistant-side local source mirror; the module compiles in that local container. Kivy is NOT installed in that execution environment. New exact GitHub branch SHA, Windows Kivy GUI, real logo asset rendering/interactive input and window resizing **NOT VERIFIED**. The local preview uses a previously supplied logo/GIF frame as stand-in; production game uses existing bundled `meong_photobooth_vivid.png`. Do not transfer old Step 3 6/6 Windows acceptance to this new design.
+
+**Acceptance gate:** owner must test Windows Start and Scan at portrait/landscape, verify no text overlapping cards, input cursor/typing and Enter/Validate work, Back before claim leaves receipt unused, and codes are rejected after use/restart. The mock QR does not scan. One receipt = one attempt and no replay remain unchanged. Batch B Gameplay and Batch C Win/Lose still require a separate continuation; no `master` merge.
