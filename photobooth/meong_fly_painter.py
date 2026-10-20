@@ -302,6 +302,36 @@ def _fake_qr(draw,x,y,pixel=6):
     draw.ellipse((x+10*pixel,y+9*pixel,x+12*pixel,y+11*pixel),fill=PINK)
 
 
+
+def _gamepad_icon(draw, x, y):
+    """Tiny outlined retro controller for the pink Start CTA."""
+    draw.rectangle((x, y+3, x+29, y+20), fill=INK)
+    draw.rectangle((x+3, y, x+26, y+19), fill=WHITE)
+    draw.rectangle((x+6, y+3, x+23, y+16), fill=(208,197,225))
+    draw.rectangle((x+8, y+6, x+11, y+14), fill=INK)
+    draw.rectangle((x+5, y+9, x+14, y+11), fill=INK)
+    draw.rectangle((x+18, y+7, x+20, y+9), fill=PINK)
+    draw.rectangle((x+22, y+11, x+24, y+13), fill=CYAN)
+
+
+def _camera_icon(draw, x, y):
+    """Small chunky camera icon for 'Langsung Foto'."""
+    draw.rectangle((x, y+4, x+26, y+20), fill=INK)
+    draw.rectangle((x+3, y+7, x+23, y+17), fill=WHITE)
+    draw.rectangle((x+7, y+2, x+17, y+8), fill=INK)
+    draw.ellipse((x+8, y+7, x+19, y+18), fill=(16,52,122))
+    draw.ellipse((x+11, y+10, x+16, y+15), fill=CYAN)
+    draw.rectangle((x+20, y+6, x+23, y+9), fill=PINK)
+
+
+def _ticket_icon(draw, x, y):
+    """Iconic prize ticket as seen beside the mockup win voucher."""
+    draw.rectangle((x, y+3, x+27, y+23), fill=INK)
+    draw.rectangle((x+3, y+5, x+24, y+20), fill=(253,158,81))
+    draw.rectangle((x+7, y+7, x+20, y+18), fill=GOLD)
+    draw.rectangle((x+11, y+11, x+15, y+15), fill=PINK)
+
+
 def paint_static_screen(screen,logo_path):
     """Paint all five real UI backgrounds with the mockup's visual hierarchy."""
     if screen not in ACTIONS:
@@ -323,6 +353,8 @@ def paint_static_screen(screen,logo_path):
         pixel_text(d,"UNTUK PHOTOBOOTH!",180,491,scale=2,fill=INK)
         button(d,ACTIONS["start"]["game"],"MAIN GAME",text_scale=3)
         button(d,ACTIONS["start"]["photo"],"LANGSUNG FOTO",kind="cyan",text_scale=2)
+        _gamepad_icon(d,60,558)
+        _camera_icon(d,60,624)
         pixel_text(d,"SIMULASI - BELUM ADA DISKON",180,685,scale=1,fill=(180,179,213))
     elif screen=="scan":
         panel(d,(25,137,335,461))
@@ -358,6 +390,7 @@ def paint_static_screen(screen,logo_path):
         panel(d,(38,417,322,529),fill=GOLD,border=(226,141,53))
         pixel_text(d,"KAMU DAPAT DISKON",180,431,scale=2,fill=INK)
         pixel_text(d,"Rp 2.500",180,457,scale=4,fill=(239,54,132))
+        _ticket_icon(d,50,468)
         pixel_text(d,"UNTUK PHOTOBOOTH!",180,502,scale=2,fill=INK)
         button(d,ACTIONS["won"]["continue"],"LANJUT KE PEMBAYARAN")
         pixel_text(d,"DEMO: BELUM TERHUBUNG",180,658,scale=2,fill=GOLD)
