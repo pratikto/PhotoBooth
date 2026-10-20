@@ -1,6 +1,6 @@
 # FEAT-021 — Meong Fly isolated prototype
 
-Status: IN PROGRESS — prototype source only; NOT GUI/hardware verified.
+Status: IN PROGRESS — Step 3 standalone GUI owner-reported 6/6 PASS; NOT production/hardware certified.
 Approved 2026-10-20: isolated prototype in feature/meong-flappy-challenge; no master merge.
 Priority: P2 product enhancement, after core operational bugs; commercial integration BLOCKED.
 
@@ -62,3 +62,10 @@ Fix commits: `c4928576` explicitly closes SQLite connections via `contextlib.clo
 ## 2026-10-21 — Owner Windows unit retest evidence
 
 Owner reported a successful Windows Python 3.12 run after the scoped SQLite and sprite-boundary test fixes, using `python -m unittest tests.test_meong_fly tests.test_meong_fly_receipts -v`. Result: 10 tests run in 0.050 s, all OK, 0 failures, 0 errors. This is owner-supplied terminal output rather than a remotely reproduced run. It supersedes the earlier 7 pass / 1 fail / 2 error run for these targeted tests. Remaining Step 3 acceptance: manual Kivy GUI validation after the hitbox and aspect-ratio changes, including portrait/landscape sizing and collision fairness. This does not authorize Step 4 integration or a master merge.
+
+
+## 2026-10-21 — Step 3 GUI acceptance (owner-reported)
+
+The owner reports completing all six Windows GUI Step 3 checklist items with **6/6 PASS**: launch/render, visible camera-cat versus asteroid collision (rainbow trail excluded), flap/tap responsiveness, portrait and landscape resizing, demo receipt replay rejection after reopening, and terminal win/loss behavior with no replay button. This is **owner-reported manual Windows Kivy evidence**, not a remotely observed or automated GUI test. Exact screen dimensions, screenshots, Windows build and runtime commit SHA were not supplied; these are not independently verified. Earlier owner-reported Python 3.12 targeted unit retest was **10/10 PASS**. Thus the isolated Step 3 prototype meets owner-reported manual acceptance, while production kiosk integration, real receipt/POS validation, real discount/payment, end-to-end regression, and hardware release remain unverified/not implemented. No merge to master.
+
+**Next proposed milestone (NOT YET APPROVED):** Step 4 welcome-screen integration design and isolated implementation, with safe skip-to-photo, session ownership, one-attempt persistence, and regression tests. Obtain explicit approval of Step 4 scope before code changes. Visual fidelity to exact logo asset remains a separate polish item.
