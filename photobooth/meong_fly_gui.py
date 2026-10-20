@@ -78,9 +78,16 @@ class MeongFlyStage(Widget):
         self.add_widget(self.notice)
         self.bind(pos=self._resize, size=self._resize)
         self._resize()
-        Clock.schedule_interval(self.update, 1 / 30)
+        self._update_event = Clock.schedule_interval(self.update, 1 / 30)
         # Desktop hover is optional: mobile/touch controls work without it.
         Window.bind(mouse_pos=self._mouse_moved)
+
+    def dispose(self):
+        """Release the clock and mouse listener when this standalone stage closes."""
+        if self._update_event is not None:
+            self._update_event.cancel()
+            self._update_event = None
+        Window.unbind(mouse_pos=self._mouse_moved)
 
     def _viewport(self):
         scale = (min(self.width / W, self.height / H)
@@ -373,3 +380,7 @@ class MeongFlyStandaloneApp(App):
         self.flow = MeongFlyFlow(ledger)
         self.stage = MeongFlyStage(self.flow)
         return self.stage
+
+    def on_stop(self):
+        if getattr(self, "stage", None) is not None:
+            self.stage.dispose()
