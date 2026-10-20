@@ -82,6 +82,7 @@ class ComparisonApp:
         self.sync = tk.BooleanVar(value=False)
         self.width = tk.StringVar(value="576")
         self.enhanced_floyd = tk.BooleanVar(value=False)
+        self.enhanced_dizzy = tk.BooleanVar(value=self.configs.dizzy.enhanced_dizzy)
         self.dizzy_variant = tk.StringVar(value=self.configs.dizzy.dizzy_variant)
 
         style = ttk.Style(root)
@@ -154,6 +155,14 @@ class ComparisonApp:
             meta = ttk.Label(panel, text="Pending...", anchor="center")
             meta.pack(fill="x")
             self.labels[mode] = (output, detail, meta)
+            if mode == "dizzy":
+                # Put the toggle in its lane instead of crowding the top bar.
+                # It affects only Dizzy, never synced brightness/contrast.
+                ttk.Checkbutton(
+                    panel, text="Enhanced Dizzy (experimental)",
+                    variable=self.enhanced_dizzy,
+                    command=self.toggle_enhanced_dizzy,
+                ).pack(fill="x", pady=(4, 0))
 
             sliders_host = ttk.Frame(panel)
             sliders_host.pack(fill="both", expand=True, pady=(4, 2))
@@ -243,6 +252,12 @@ class ComparisonApp:
         p = self.configs.floyd
         self.configs = self.configs.replace_lane(replace(p, enhanced_floyd=self.enhanced_floyd.get()))
         self.schedule("floyd-steinberg")
+
+    def toggle_enhanced_dizzy(self):
+        profile = self.configs.dizzy
+        self.configs = self.configs.replace_lane(
+            replace(profile, enhanced_dizzy=self.enhanced_dizzy.get()))
+        self.schedule("dizzy")
 
     def change_dizzy_variant(self, _event=None):
         profile = self.configs.dizzy
@@ -340,9 +355,12 @@ class ComparisonApp:
                     self.show_image(mode, image)
                     self.labels[mode][2].configure(
                         text=f"{image.width}×{image.height} dots | black {coverage:.1f}%")
-                    suffix = (f" | {profile.dizzy_variant} / seed {profile.dizzy_seed}"
-                              if mode == "dizzy" else
-                              " | enhanced" if profile.enhanced_floyd else " | baseline")
+                    suffix = (
+                        f" | {profile.dizzy_variant} / seed {profile.dizzy_seed}"
+                        f" | {'enhanced' if profile.enhanced_dizzy else 'baseline'}"
+                        if mode == "dizzy" else
+                        " | enhanced" if profile.enhanced_floyd else " | baseline"
+                    )
                     self.statuses[mode].configure(
                         text=f"Ready{suffix} • {elapsed * 1000:.0f} ms")
             if mode in self.queued or version != self.versions[mode]:
@@ -400,6 +418,7 @@ class ComparisonApp:
         self.configs = configs
         self.width.set(str(configs.floyd.width_dots))
         self.enhanced_floyd.set(configs.floyd.enhanced_floyd)
+        self.enhanced_dizzy.set(configs.dizzy.enhanced_dizzy)
         self.dizzy_variant.set(configs.dizzy.dizzy_variant)
         self.dizzy_seed_label.configure(text=f"Seed: {configs.dizzy.dizzy_seed}")
         for mode in VISIBLE_MODES:
@@ -413,7 +432,7 @@ class ComparisonApp:
 
     def save_all(self):
         path = filedialog.asksaveasfilename(defaultextension=".json",
-            initialfile="meong-dither-lab-v3.json", filetypes=[("JSON", "*.json")])
+            initialfile="meong-dither-lab-v4.json", filetypes=[("JSON", "*.json")])
         if path:
             try:
                 save_comparison(path, self.configs)
@@ -444,7 +463,8 @@ class ComparisonApp:
             return "meong-floyd-{}.png".format(
                 "enhanced" if profile.enhanced_floyd else "baseline")
         if profile.mode == "dizzy":
-            return f"meong-dizzy-{profile.dizzy_variant}-seed{profile.dizzy_seed}.png"
+            quality = "enhanced" if profile.enhanced_dizzy else "baseline"
+            return f"meong-dizzy-{profile.dizzy_variant}-seed{profile.dizzy_seed}-{quality}.png"
         return f"meong-{profile.mode}.png"
 
     def export_lane(self, mode):
