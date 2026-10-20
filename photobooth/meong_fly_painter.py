@@ -332,7 +332,7 @@ def paint_static_screen(screen,logo_path):
         panel(d,(85,255,275,434),fill=(229,234,249),border=PINK)
         _fake_qr(d,117,282,6)
         pixel_text(d,"ILUSTRASI QR",180,440,scale=1,fill=GOLD)
-        pixel_text(d,"KODE STRUK DEMO",180,467,scale=2)
+        pixel_text(d,"KODE STRUK DEMO",180,455,scale=2)
         panel(d,(DEMO_ENTRY[0],DEMO_ENTRY[1],
                  DEMO_ENTRY[0]+DEMO_ENTRY[2],DEMO_ENTRY[1]+DEMO_ENTRY[3]),
               fill=(244,242,255))
