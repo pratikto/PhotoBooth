@@ -17,9 +17,14 @@ import tempfile
 from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 
 from photobooth.printer import DITHER_MODES, dither_image
+from photobooth.dizzy_dither import (DEFAULT_DIZZY_SEED, DIZZY_VARIANTS,
+                                     dizzy_dither)
+
+# Four offline comparison lanes; do not expand production PrinterConfig modes.
+LAB_DITHER_MODES = DITHER_MODES + ("dizzy",)
 
 
-PROFILE_VERSION = 2
+PROFILE_VERSION = 3
 
 
 @dataclass(frozen=True)
@@ -34,12 +39,22 @@ class DitherProfile:
     sharpness: float = 1.0
     threshold: int = 128
     enhanced_floyd: bool = False
+    dizzy_variant: str = "article-8"
+    dizzy_seed: int = DEFAULT_DIZZY_SEED
 
     def __post_init__(self) -> None:
         if type(self.enhanced_floyd) is not bool or (self.enhanced_floyd and self.mode != 'floyd-steinberg'):
             raise ValueError('Enhanced preprocessing is available only for Floyd.')
-        if self.mode not in DITHER_MODES:
+        if self.mode not in LAB_DITHER_MODES:
             raise ValueError(f"Unsupported dithering mode: {self.mode!r}")
+        if self.dizzy_variant not in DIZZY_VARIANTS:
+            raise ValueError("Unknown Dizzy variant.")
+        if type(self.dizzy_seed) is not int or not 0 <= self.dizzy_seed <= 0xFFFFFFFF:
+            raise ValueError("Dizzy seed must be an integer in 0..2^32-1.")
+        if self.mode != "dizzy" and (
+            self.dizzy_variant != "article-8" or self.dizzy_seed != DEFAULT_DIZZY_SEED
+        ):
+            raise ValueError("Dizzy parameters are only valid for Dizzy mode.")
         if type(self.width_dots) is not int or self.width_dots not in (384, 576):
             raise ValueError("Print width must be 384 or 576 dots.")
         for key, minimum, maximum in (
@@ -93,6 +108,9 @@ def render_thermal_image(source: Image.Image, profile: DitherProfile) -> Image.I
         gray = Image.blend(denoised, leveled, 0.20)
         gray = gray.filter(ImageFilter.UnsharpMask(radius=1.1, percent=55, threshold=3))
 
+    if profile.mode == "dizzy":
+        return dizzy_dither(gray, variant=profile.dizzy_variant,
+                            seed=profile.dizzy_seed)
     return dither_image(gray, profile.mode, profile.threshold)
 
 
@@ -116,20 +134,25 @@ def save_profile(path: str | Path, profile: DitherProfile) -> None:
 
 
 def load_profile(path: str | Path) -> DitherProfile:
-    """Reject malformed/unknown presets instead of silently changing a print."""
+    """Load a lab-only profile, keeping v1/v2 Dizzy-disabled by default."""
     payload = json.loads(Path(path).read_text(encoding="utf-8"))
-    if not isinstance(payload, dict) or payload.get("schema_version") not in (1, PROFILE_VERSION):
+    if not isinstance(payload, dict) or payload.get("schema_version") not in (1, 2, 3):
         raise ValueError("Invalid or unsupported tuning profile version.")
+    version = payload["schema_version"]
     keys = set(DitherProfile.__dataclass_fields__)
-    if payload['schema_version'] == 1 and set(payload) == (keys - {'enhanced_floyd'}) | {'schema_version'}:
-        payload['enhanced_floyd'] = False
-    if set(payload) != keys | {"schema_version"}:
+    missing = {1: {"enhanced_floyd", "dizzy_variant", "dizzy_seed"},
+               2: {"dizzy_variant", "dizzy_seed"}, 3: set()}[version]
+    if set(payload) != (keys - missing) | {"schema_version"}:
         raise ValueError("Profile fields do not match the supported schema.")
-    return DitherProfile(**{key: payload[key] for key in keys})
+    values = {key: payload[key] for key in keys - missing}
+    for key in missing:
+        values[key] = getattr(DitherProfile(), key)
+    return DitherProfile(**values)
+
 
 # Comparison recipes are deliberately independent: syncing is a GUI action,
 # never an implicit overwrite of an algorithm's tuned state.
-COMPARISON_VERSION = 2
+COMPARISON_VERSION = 3
 
 
 @dataclass(frozen=True)
@@ -137,11 +160,11 @@ class ComparisonProfiles:
     floyd: DitherProfile = DitherProfile(mode="floyd-steinberg")
     bayer: DitherProfile = DitherProfile(mode="bayer")
     threshold: DitherProfile = DitherProfile(mode="threshold")
+    dizzy: DitherProfile = DitherProfile(mode="dizzy")
 
     def __post_init__(self):
-        if (self.floyd.mode, self.bayer.mode, self.threshold.mode) != (
-            "floyd-steinberg", "bayer", "threshold"
-        ):
+        if (self.floyd.mode, self.bayer.mode, self.threshold.mode,
+                self.dizzy.mode) != LAB_DITHER_MODES:
             raise ValueError("Each comparison lane must keep its own algorithm.")
 
     def by_mode(self, mode: str) -> DitherProfile:
@@ -149,12 +172,13 @@ class ComparisonProfiles:
             "floyd-steinberg": self.floyd,
             "bayer": self.bayer,
             "threshold": self.threshold,
+            "dizzy": self.dizzy,
         }[mode]
 
     def replace_lane(self, profile: DitherProfile) -> "ComparisonProfiles":
         from dataclasses import replace
         key = {"floyd-steinberg": "floyd", "bayer": "bayer",
-               "threshold": "threshold"}[profile.mode]
+               "threshold": "threshold", "dizzy": "dizzy"}[profile.mode]
         return replace(self, **{key: profile})
 
 
@@ -163,7 +187,7 @@ def save_comparison(path: str | Path, profiles: ComparisonProfiles) -> None:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     data = {"schema_version": COMPARISON_VERSION,
-            "lanes": {mode: asdict(profiles.by_mode(mode)) for mode in DITHER_MODES}}
+            "lanes": {mode: asdict(profiles.by_mode(mode)) for mode in LAB_DITHER_MODES}}
     temporary = None
     try:
         with tempfile.NamedTemporaryFile(
@@ -179,20 +203,30 @@ def save_comparison(path: str | Path, profiles: ComparisonProfiles) -> None:
 
 
 def load_comparison(path: str | Path) -> ComparisonProfiles:
+    """Read v1/v2 three-lane presets or v3 four-lane presets, fail closed."""
     data = json.loads(Path(path).read_text(encoding="utf-8"))
     if (not isinstance(data, dict) or
             set(data) != {"schema_version", "lanes"} or
-            data["schema_version"] not in (1, COMPARISON_VERSION) or
-            not isinstance(data["lanes"], dict) or
-            set(data["lanes"]) != set(DITHER_MODES)):
+            data["schema_version"] not in (1, 2, 3) or
+            not isinstance(data["lanes"], dict)):
         raise ValueError("Invalid comparison config schema.")
-    lanes = {}
+    version = data["schema_version"]
+    modes = DITHER_MODES if version in (1, 2) else LAB_DITHER_MODES
+    if set(data["lanes"]) != set(modes):
+        raise ValueError("Invalid comparison lanes.")
     keys = set(DitherProfile.__dataclass_fields__)
-    for mode in DITHER_MODES:
+    missing = {1: {"enhanced_floyd", "dizzy_variant", "dizzy_seed"},
+               2: {"dizzy_variant", "dizzy_seed"}, 3: set()}[version]
+    defaults = DitherProfile()
+    lanes = {}
+    for mode in modes:
         raw = data["lanes"][mode]
-        if data['schema_version'] == 1 and isinstance(raw, dict) and set(raw) == keys - {'enhanced_floyd'}:
-            raw = {**raw, 'enhanced_floyd': False}
-        if not isinstance(raw, dict) or set(raw) != keys or raw["mode"] != mode:
+        if not isinstance(raw, dict) or set(raw) != keys - missing or raw["mode"] != mode:
             raise ValueError(f"Invalid {mode} profile.")
-        lanes[mode] = DitherProfile(**raw)
-    return ComparisonProfiles(lanes["floyd-steinberg"], lanes["bayer"], lanes["threshold"])
+        values = dict(raw)
+        for key in missing:
+            values[key] = getattr(defaults, key)
+        lanes[mode] = DitherProfile(**values)
+    return ComparisonProfiles(
+        lanes["floyd-steinberg"], lanes["bayer"], lanes["threshold"],
+        lanes.get("dizzy", DitherProfile(mode="dizzy")))
