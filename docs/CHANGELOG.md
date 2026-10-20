@@ -199,3 +199,10 @@ Document owner-reported Windows Step 3 GUI checklist **6/6 PASS** and prior targ
 - `974b8c7c`: change `MeongFlyStage._refresh` to draw on `canvas.before` instead of clearing the parent widget canvas, preserving child TextInput and Label graphics.
 - `38d00d41`: add `tests/test_meong_fly_gui.py` checks for canvas preservation, visible input geometry and no scan CTA overlap. Kivy tests are conditional on a Kivy installation; no local Windows GUI PASS is claimed.
 - Fix isolated to `feature/meong-flappy-challenge`. No modifications to production UI, payments, receipt/POS integration or `master`. Owner screen retest pending. See [BUG-012](bug_tracker.md) and [FEAT-021](features/FEAT-021-meong-fly.md).
+
+
+## 2026-10-21 — FEAT-021 Visual Polish v2 Batch A (standalone mini-game branch)
+
+**Owner-approved Start/Scan visual enhancement**, not welcome-screen or payment integration. New `photobooth/meong_fly_polish.py` in `74bdef6a` paints refined pixel-arcade panels/buttons, hero halo, simulated voucher, scanner panel and decorative corner accents; `cbc74372` routes only Start/Scan static backgrounds through it; `f8bc996b` adds a nonfunctional scanner beam, input focus/error state and hover highlight to `meong_fly_gui.py`; `e18a0936` corrects overlapping voucher text and uses supported ampersand bitmap; `f7b0598e` cleans up Kivy listener/clock at app exit. New `05fccdd6` painter/layout regression tests; `6df4d498` adds conditional Kivy input/hover tests. Full [Visual Polish Spec v2](features/FEAT-021-visual-polish-v2.md) committed.
+
+Assistant-side local-mirror Pillow checks **7/7 PASS** and `compileall -q` no errors, **not an exact GitHub SHA run**; Windows Kivy rendering/typing remains unverified. No production `master` updates, real QR scanner, price/discount, POS or device-hardware changes.
