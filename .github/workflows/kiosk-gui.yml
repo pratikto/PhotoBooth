@@ -53,6 +53,9 @@ jobs:
       - name: Render photo flow, advertisements, and payment offers at desktop sizes
         if: always()
         run: xvfb-run -a python tools/render_gui.py --output-dir /tmp/meong-gui-qa
+      - name: Render QRIS main page and decode captured QR pixels
+        if: always()
+        run: xvfb-run -a python tools/render_qris_gui.py --output-dir /tmp/meong-qris-gui
       - name: Summarize synthetic renders for remote visual review
         if: always()
         run: python tools/ci_visual_summary.py /tmp/meong-gui-qa

@@ -133,3 +133,21 @@ class CheckoutBackendTests(unittest.TestCase):
         for url in ['https://evil.test/qr','https://api.sandbox.midtrans.com:444/v2/qris/abc/qr-code']:
             from photobooth.qris_evidence import sandbox_qr_url
             with self.assertRaises(ValueError): sandbox_qr_url(url)
+
+    def test_expiry_407_is_terminal_not_unknown(self):
+        self.provider.rows[self.oid].update(transaction_status='expire', status_code='407')
+        self.assertEqual(self.backend.status(self.oid, 'PB001')['state'], 'EXPIRED')
+
+    def test_fraud_denial_is_failed_not_paid(self):
+        self.provider.rows[self.oid].update(transaction_status='deny', status_code='202', fraud_status='deny')
+        self.assertEqual(self.backend.status(self.oid, 'PB001')['state'], 'FAILED')
+
+    def test_successful_status_request_does_not_mean_paid(self):
+        self.provider.rows[self.oid].update(transaction_status='pending', status_code='200')
+        self.assertEqual(self.backend.status(self.oid, 'PB001')['state'], 'PENDING')
+
+    def test_expiry_code_cannot_authorize_settlement(self):
+        self.provider.rows[self.oid].update(transaction_status='settlement', status_code='407')
+        result = self.backend.status(self.oid, 'PB001')
+        self.assertEqual(result['state'], 'PENDING')
+        self.assertTrue(result['verification_pending'])

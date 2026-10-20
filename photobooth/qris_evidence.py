@@ -62,12 +62,18 @@ def provider_evidence(data, order, merchant_id):
         raise ValueError('Invalid provider response')
     amount = idr_amount(data.get('gross_amount'))
     status = data.get('transaction_status')
+    code = data.get('status_code')
+    # Midtrans status_code describes the API action, not payment success.
+    # Some expiry responses use 407; that code must never authorize a session.
+    valid_code = code in {'200', '201', '202'} or (status == 'expire' and code == '407')
+    fraud_ok = (data.get('fraud_status', 'accept') == 'accept'
+                or status in {'expire', 'deny', 'cancel', 'failure'})
     if (data.get('order_id') != order['id'] or amount != order['amount']
             or data.get('currency') != 'IDR' or data.get('payment_type') != 'qris'
             or data.get('merchant_id') != merchant_id
-            or data.get('fraud_status', 'accept') != 'accept'
+            or not fraud_ok
             or status not in PROVIDER_STATES
-            or data.get('status_code') not in {'200', '201', '202'}
+            or not valid_code
             or (status == 'settlement' and data.get('status_code') != '200')):
         raise ValueError('Provider response does not match checkout')
     reference = identifier(data.get('transaction_id'), maximum=128)

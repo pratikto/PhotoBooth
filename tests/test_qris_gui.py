@@ -131,7 +131,7 @@ class QrisGuiTests(unittest.TestCase):
             self.pump_until(lambda:self.app.checkout.snapshot()['phase'] == 'RECOVERY')
         self.assertEqual(self.app.ui.current_screen, 'payment')
 
-    def test_payment_screenshot_at_two_desktop_sizes(self):
+    def test_payment_layout_at_two_desktop_sizes(self):
         from kivy.clock import Clock
         from kivy.core.window import Window
         self.begin()
@@ -152,5 +152,6 @@ class QrisGuiTests(unittest.TestCase):
                     Clock.tick(); shell.do_layout(); time.sleep(.01)
                 self.assertGreaterEqual(self.app.qris_page.qr.width, 200)
                 self.assertGreaterEqual(self.app.qris_page.qr.height, 180)
-                shell.export_to_png(str(root/f'qris-main-{width}x{height}.png'))
+                # Pixel evidence is rendered by tools/render_qris_gui.py in
+                # a running host, not by exporting an unattached unit-test tree.
         finally: Window.size = old_size

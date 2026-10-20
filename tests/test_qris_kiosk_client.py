@@ -76,3 +76,7 @@ class KioskClientTests(unittest.TestCase):
                                     service_state='RESERVED', local_transaction_id='WRONG')
         with self.assertRaises(ValueError):
             self.client.service_transition('abc123', 'b' * 32, 'STARTED', 'PB001_00000001')
+
+    def test_sandbox_client_rejects_mock_backend(self):
+        self.session.payload['mode'] = 'mock'
+        with self.assertRaises(ValueError): self.client.status('abc123')
