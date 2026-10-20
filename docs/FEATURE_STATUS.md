@@ -127,3 +127,8 @@ delivery issue from the unresolved native mixer silence. Actual speaker output
 and button usability still require a Windows GUI test; no audible success is
 claimed. If the indicator updates but speakers are silent, capture the
 provider/state/gain/mix diagnostic in the same popup.
+
+
+## FEAT-021 — Meong Fly isolated prototype (feature branch, 2026-10-21)
+
+On `feature/meong-flappy-challenge` only (NOT in `master`): standalone Kivy space mini-game, camera-cat approximation, animated stars/rainbow, asteroid obstacles, SQLite single-use `DEMO-` receipt attempts, win/loss without replay. **Owner reports Windows GUI Step 3 6/6 PASS** and targeted Python 3.12 unit tests **10/10 PASS**; these are owner-provided results, not independently executed in this documentation update. Prototype accepted for Step 3 manual QA only, not production release. No real POS receipt verification, discount redemption, payment integration, or welcome-screen wiring. See [FEAT-021](features/FEAT-021-meong-fly.md).
