@@ -53,7 +53,7 @@ def sample_source():
 class ComparisonApp:
     def __init__(self, root):
         self.root = root
-        root.title("MEONG | 3-Way Dither Comparison Lab")
+        root.title("MEONG | Dither Comparison Lab + Enhanced Floyd")
         root.geometry("1450x850")
         root.minsize(1050, 620)
         self.source = sample_source()
@@ -77,6 +77,7 @@ class ComparisonApp:
         self.zoom = tk.IntVar(value=2)
         self.sync = tk.BooleanVar(value=False)
         self.width = tk.StringVar(value="576")
+        self.enhanced_floyd = tk.BooleanVar(value=False)
 
         style = ttk.Style(root)
         if "clam" in style.theme_names():
@@ -102,6 +103,8 @@ class ComparisonApp:
                               state="readonly", width=6)
         widths.pack(side="left")
         widths.bind("<<ComboboxSelected>>", self.change_width)
+        ttk.Checkbutton(bar, text="Enhanced Floyd (experimental)", variable=self.enhanced_floyd,
+                        command=self.toggle_enhanced).pack(side="left", padx=8)
         ttk.Checkbutton(bar, text="Sync Parameters", variable=self.sync).pack(
             side="left", padx=12)
         ttk.Label(bar, text="Dot zoom:").pack(side="left")
@@ -186,7 +189,7 @@ class ComparisonApp:
 
         footer = ttk.Frame(root, padding=(12, 0, 12, 7))
         footer.pack(fill="x")
-        self.message = tk.StringVar(value="Rendering three algorithms...")
+        self.message = tk.StringVar(value="Compare original Floyd against enhanced Floyd via checkbox; kiosk unchanged.")
         ttk.Label(footer, textvariable=self.message).pack(side="left")
         ttk.Button(footer, text="Print All (3 jobs)",
                    command=self.print_all).pack(side="right")
@@ -225,6 +228,11 @@ class ComparisonApp:
         val, label = self.controls[mode][key]
         label.configure(text=(str(round(val.get())) if key == "threshold"
                               else f"{val.get():.2f}"))
+
+    def toggle_enhanced(self):
+        p = self.configs.floyd
+        self.configs = self.configs.replace_lane(replace(p, enhanced_floyd=self.enhanced_floyd.get()))
+        self.schedule("floyd-steinberg")
 
     def change_zoom(self, factor):
         self.zoom.set(factor)
@@ -291,7 +299,8 @@ class ComparisonApp:
             if mode is None:
                 self.print_busy = False
                 continue
-            self.message.set(f"Print {index}/{total} • {SHORT[mode]}: {message}")
+            suffix = " (enhanced)" if mode == "floyd-steinberg" and self.ready_profiles.get(mode, self.configs.floyd).enhanced_floyd else ""
+            self.message.set(f"Print {index}/{total} • {SHORT[mode]}{suffix}: {message}")
             if not success:
                 messagebox.showwarning("Print stopped",
                     "Print outcome failed/uncertain. Remaining jobs were cancelled.\\n" +
@@ -312,8 +321,9 @@ class ComparisonApp:
                     self.show_image(mode, image)
                     self.labels[mode][2].configure(
                         text=f"{image.width}×{image.height} dots | black {coverage:.1f}%")
+                    suffix = " | enhanced" if profile.enhanced_floyd else " | baseline"
                     self.statuses[mode].configure(
-                        text=f"Ready • {elapsed * 1000:.0f} ms")
+                        text=f"Ready{suffix} • {elapsed * 1000:.0f} ms")
             if mode in self.queued or version != self.versions[mode]:
                 self.queued.discard(mode)
                 if mode in self.timers:
@@ -363,6 +373,7 @@ class ComparisonApp:
     def apply_configs(self, configs):
         self.configs = configs
         self.width.set(str(configs.floyd.width_dots))
+        self.enhanced_floyd.set(configs.floyd.enhanced_floyd)
         for mode in DITHER_MODES:
             for key, (var, _label) in self.controls[mode].items():
                 var.set(getattr(configs.by_mode(mode), key))
@@ -406,7 +417,7 @@ class ComparisonApp:
                                 parent=self.root)
             return
         path = filedialog.asksaveasfilename(defaultextension=".png",
-            initialfile=f"meong-{mode}.png", filetypes=[("PNG", "*.png")])
+            initialfile=f"meong-{mode}{'-enhanced' if self.ready_profiles[mode].enhanced_floyd else '-baseline'}.png", filetypes=[("PNG", "*.png")])
         if path:
             try:
                 self.results[mode].save(path, format="PNG")
@@ -424,7 +435,7 @@ class ComparisonApp:
             try:
                 for mode in DITHER_MODES:
                     self.results[mode].save(
-                        Path(folder) / f"meong-{mode}.png", format="PNG")
+                        Path(folder) / f"meong-{mode}{'-enhanced' if self.ready_profiles[mode].enhanced_floyd else '-baseline'}.png", format="PNG")
                 self.message.set(f"Exported 3 native 1-bit rasters to {folder}")
             except OSError as error:
                 messagebox.showerror("Export failed", str(error), parent=self.root)
