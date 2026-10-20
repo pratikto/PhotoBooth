@@ -60,3 +60,20 @@ python -m unittest discover -s tests -v
 Run commands on appropriate operating systems with real dependencies; record passes, failures, skipped tests and actual device results. No code modification is authorized by documentation housekeeping. The [development protocol](DEVELOPMENT_PROTOCOL.md) controls implementation and release approval.
 
 **Cross-references:** [Feature status](FEATURE_STATUS.md) · [Decisions](DECISIONS.md) · [Bug tracker](bug_tracker.md) · [Development handover](DEVELOPMENT_HANDOVER.md).
+
+
+## FEAT-021 — Standalone mini-game architecture (feature branch, 2026-10-21)
+
+**`feature/meong-flappy-challenge` ONLY — not production wiring:**
+
+```text
+python -m photobooth.meong_fly_demo
+  -> meong_fly_gui.MeongFlyStandaloneApp (Kivy renderer and touch mapping)
+     -> meong_fly_painter (Pillow pixel backgrounds/controls)
+        -> branding.LOGO_PATH -> assets/meong_photobooth_vivid.png (read-only)
+     -> meong_fly_flow.MeongFlyFlow (five-screen navigation)
+        -> meong_fly.MeongFly (offline physics, TARGET_SCORE 10)
+        -> meong_fly_receipts.DemoReceiptLedger (local SQLite DEMO-* claim)
+```
+
+GUI uses a portrait 360x720 logical viewport and uniform letterboxing. Screen control bounds are defined once in `meong_fly_painter.ACTIONS` and mapped to Kivy window touches by the same transform; painted buttons are touch-responsive, the local voucher is a real Kivy TextInput and QR is **decorative**. Standalone Direct Photo and result Continue **exit** rather than invoking production UI/payment. Existing photobooth `ui_kivy.py`, scanner, audio, printing, payment and receipt/cloud modules are untouched. Work is IN SOURCE only until new Windows visual/functional acceptance and separate approved integration scope.
