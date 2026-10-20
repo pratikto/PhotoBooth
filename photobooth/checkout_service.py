@@ -3,7 +3,7 @@
 Server-only service. Caller must authenticate booth identity before invoking
 create_order/status/claim; never expose this object directly to kiosk clients.
 """
-from decimal import Decimal, InvalidOperation
+from urllib.parse import urlsplit
 
 from photobooth.payment_quote import quote_checkout
 from photobooth.midtrans_verify import reconcile_midtrans_status
@@ -27,14 +27,17 @@ class SandboxCheckoutService:
                 or response.get("transaction_status") != "pending"
                 or response.get("payment_type") != "qris"):
             raise ValueError("Unexpected Midtrans QRIS response")
-        # Midtrans order ID is the stable correlation identifier.
-        self.store.attach_provider(order_id, order_id)
         actions = response.get("actions", [])
         qr_url = next((a.get("url") for a in actions
                        if isinstance(a, dict) and a.get("name") == "generate-qr-code"), None)
-        if not isinstance(qr_url, str) or not qr_url.startswith("https://"):
-            # No untrusted QR link is exposed; order remains nonpayable in UI.
-            raise ValueError("Missing HTTPS QRIS action")
+        if not isinstance(qr_url, str):
+            raise ValueError("Missing QRIS action")
+        parsed = urlsplit(qr_url)
+        if (parsed.scheme != "https" or parsed.hostname != "api.sandbox.midtrans.com"
+                or parsed.username or parsed.password or parsed.fragment):
+            raise ValueError("Untrusted Midtrans QRIS action URL")
+        # Validate every externally supplied field before moving CREATED to PENDING.
+        self.store.attach_provider(order_id, order_id)
         return {"order_id": order_id, "amount": quote.total_amount,
                 "state": "PENDING", "qr_url": qr_url}
 
