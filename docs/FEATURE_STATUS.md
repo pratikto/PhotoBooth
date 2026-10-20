@@ -141,3 +141,8 @@ On `feature/meong-flappy-challenge` only (NOT in `master`): standalone Kivy spac
 
 ## BUG-012 — FEAT-021 receipt field visibility/source patch (2026-10-21)
 Owner reports being unable to type in the standalone Step 4 Scan Struk screen. A source-level rendering defect (`MeongFlyStage._refresh` cleared parent canvas including child `TextInput` graphics) was patched with `canvas.before` in commit `974b8c7c`; tests added in `38d00d41`. **FIXED IN SOURCE; OWNER WINDOWS RETEST PENDING.** This blocks Step 4 standalone GUI acceptance until cursor, typing, validation and one-use persistence are retested. Existing photobooth `master` and real QRIS unaffected.
+
+
+## FEAT-021 — Visual Polish v2 Batch A current source (2026-10-21)
+
+On `feature/meong-flappy-challenge` **only**, `meong_fly_polish.py` now renders polished Start and Scan art (official logo reused via painter; space halo, arcade bevel cards/CTAs, clearer promo and demo scanner), and `meong_fly_gui.py` adds a decorative scan line, input focus/error ring, mouse hover feedback and event cleanup. Existing Stage 4 one-attempt receipt flow, game physics, Win/Lose, and **BUG-012 `canvas.before` input fix** are retained; nothing is integrated into the production photobooth `master`. Status **IN SOURCE, WINDOWS OWNER VISUAL/INTERACTION QA PENDING**. Assistant-side 7/7 pure Pillow layout tests passed on local mirror; no Kivy/Windows certification. See [Visual Polish v2 Spec](features/FEAT-021-visual-polish-v2.md) and [FEAT-021 feature record](features/FEAT-021-meong-fly.md).
