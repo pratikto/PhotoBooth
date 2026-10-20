@@ -206,3 +206,17 @@ Document owner-reported Windows Step 3 GUI checklist **6/6 PASS** and prior targ
 **Owner-approved Start/Scan visual enhancement**, not welcome-screen or payment integration. New `photobooth/meong_fly_polish.py` in `74bdef6a` paints refined pixel-arcade panels/buttons, hero halo, simulated voucher, scanner panel and decorative corner accents; `cbc74372` routes only Start/Scan static backgrounds through it; `f8bc996b` adds a nonfunctional scanner beam, input focus/error state and hover highlight to `meong_fly_gui.py`; `e18a0936` corrects overlapping voucher text and uses supported ampersand bitmap; `f7b0598e` cleans up Kivy listener/clock at app exit. New `05fccdd6` painter/layout regression tests; `6df4d498` adds conditional Kivy input/hover tests. Full [Visual Polish Spec v2](features/FEAT-021-visual-polish-v2.md) committed.
 
 Assistant-side local-mirror Pillow checks **7/7 PASS** and `compileall -q` no errors, **not an exact GitHub SHA run**; Windows Kivy rendering/typing remains unverified. No production `master` updates, real QR scanner, price/discount, POS or device-hardware changes.
+
+
+## 2026-10-21 — FEAT-021 standalone Visual Polish v2 Batch B (Gameplay only)
+
+**Owner authorized continuing visual work**, limited to `feature/meong-flappy-challenge`. Source changes:
+- `72658e55`: add `photobooth/meong_fly_game_art.py` (cached space landscape, richer pixel HUD, 5 asteroid/crater variants, 3 approved-logo camera-cat poses, exact engine-to-screen hitbox math).
+- `b60c0d68`: use new cached game background in `photobooth/meong_fly_painter.py`; other screens unchanged.
+- `a08952fd`: preload rock/sprite assets once when standalone Kivy stage is built.
+- `7b7b448a`: animated parallax stars/comet, pixel rock belts visibly covering real collision zones, tapering rainbow trail, expressive body angle and score HUD.
+- `ad4a2e49`: safe score +1 sparkle and ~220 ms cosmetic hit burst before already-recorded Game Over without a hidden actionable result CTA.
+- `1cea6794`: render HUD target directly from engine `TARGET_SCORE`.
+- `9ed6ab19`, `f5349bef`: pure Pillow geometry/art + optional Kivy performance/input/terminal regression test modules.
+
+**Verified constraints:** source change scope does not modify physics, receipt/POS validation, SQLite ledger, `MeongFlyFlow`, true discounts, QRIS, production Kivy `master`, Win/Lose results or hardware. Local mirror Linux Python 3.13.5/Pillow 12.3.0: **19 unittest cases, 15 PASS/4 SKIP (Kivy unavailable)**, compileall no errors; headless one-attempt persistence smoke PASS. This is not exact-branch CI, Windows Kivy or end-user visual acceptance. Details in [FEAT-021 Visual Polish v2](features/FEAT-021-visual-polish-v2.md). No merge to `master`.
