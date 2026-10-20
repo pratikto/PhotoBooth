@@ -17,3 +17,11 @@ Validation before push: YAML parsed locally and the explicit module list checked
 5. Run integration and applicable GUI regression; merchant Sandbox and physical Windows tests require real evidence.
 
 Historical isolated PASS claims without execution evidence are not acceptance criteria. The source remains a Sandbox prototype until the above gates are evidenced. Rollback is a reviewed revert of scoped feature-branch commits, never a reset or modification of `master` or `v1.0.0`.
+
+## Step 2 - durable visit and service identity
+
+Step 1 CI run 39364289177 at `9fd1fba7ee5d6acbb502db57a5fc1249e60f1ba7`: **58 PASS, 0 FAIL, 0 SKIP**. Evidence artifact 12238283847 contains the complete report and tested source.
+
+Added `checkout_store.py` and 14 failure/restart tests. A checkout key is immutable per booth/visit; a second active visit is refused. Claims replay the same persistent `grant_id`. Provider payment status and service RESERVED/STARTED/COMPLETED are independent. Late settlement after a closed/terminal visit is REVIEW_REQUIRED; stale pending cannot downgrade paid. Events retain only digests/correlation/status. BEGIN IMMEDIATE serializes multi-statement operations across connections. Unresolved legacy prototype orders are conservatively imported as REVIEW_REQUIRED, not forgotten. The new ledger is not yet wired into the HTTP service in this commit.
+
+Before-push validation: `python -m unittest discover -s tests -p test_checkout_durability.py -v` on Linux/Python 3.13.5: **14 PASS, 0 FAIL, 0 SKIP**, including 64 concurrent grant requests, two independent connections, lost response + restart, late payment isolation, and prior-schema migration. These are offline tests, not real settlement, physical capture or paper evidence.

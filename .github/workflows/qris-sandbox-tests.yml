@@ -50,7 +50,7 @@ jobs:
               'test_payment_ledger', 'test_payment_quote', 'test_payment_orders',
               'test_payment_concurrency', 'test_midtrans_verify', 'test_midtrans_sandbox',
               'test_checkout_service', 'test_booth_auth', 'test_qris_api',
-              'test_qris_kiosk_client',
+              'test_qris_kiosk_client', 'test_checkout_durability',
           ]
           suite = unittest.defaultTestLoader.loadTestsFromNames(names)
           result = unittest.TextTestRunner(verbosity=2).run(suite)
