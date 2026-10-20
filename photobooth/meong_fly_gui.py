@@ -45,6 +45,7 @@ class MeongFlyStage(Widget):
     def __init__(self, flow, logo_path=LOGO_PATH, **kwargs):
         super().__init__(**kwargs)
         self.flow = flow
+        self._screen_seen = None
         self._time = 0.0
         self._logo_path = Path(logo_path)
         self._backdrops = {
@@ -226,6 +227,7 @@ class MeongFlyStage(Widget):
                     f"{self.flow.game.score}/{TARGET_SCORE}",
                     180, 412, width=180, height=36, scale=3,
                 )
+        self._screen_seen = self.flow.screen
 
     def validate_receipt(self):
         if self.flow.claim_and_start(self.receipt.text):
@@ -235,7 +237,9 @@ class MeongFlyStage(Widget):
     def update(self, dt):
         self._time += min(max(float(dt), 0), .1)
         self.flow.tick(dt)
-        self._refresh()  # Refresh animating stars/rainbow/asteroids and transitions.
+        # Static menu/result pages do not rebuild their canvas at 30 FPS.
+        if self.flow.screen == "game" or self._screen_seen != self.flow.screen:
+            self._refresh()
 
     def on_touch_down(self, touch):
         if not self.collide_point(*touch.pos):
