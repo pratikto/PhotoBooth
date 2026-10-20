@@ -84,6 +84,39 @@ class DitherLabTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 load_profile(path)
 
+    def test_enhanced_floyd_is_opt_in_and_distinct(self):
+        source = Image.new("L", (576, 180))
+        source.putdata([(x * 211 // 575 + (17 if (x + y) % 7 == 0 else 0)) % 256
+                        for y in range(180) for x in range(576)])
+        baseline = render_thermal_image(source, DitherProfile())
+        enhanced = render_thermal_image(source, DitherProfile(enhanced_floyd=True))
+        self.assertEqual(enhanced.mode, "1")
+        self.assertEqual(enhanced.size, baseline.size)
+        self.assertNotEqual(enhanced.tobytes(), baseline.tobytes())
+        with self.assertRaises(ValueError):
+            DitherProfile(mode="bayer", enhanced_floyd=True)
+        with self.assertRaises(ValueError):
+            DitherProfile(enhanced_floyd=1)
+
+    def test_legacy_profile_v1_loads_with_enhanced_off(self):
+        from dataclasses import asdict
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "legacy.json"
+            original = asdict(DitherProfile())
+            original.pop("enhanced_floyd")
+            path.write_text(json.dumps({"schema_version": 1, **original}), encoding="utf-8")
+            loaded = load_profile(path)
+            self.assertFalse(loaded.enhanced_floyd)
+            self.assertEqual(loaded.mode, "floyd-steinberg")
+
+    def test_compare_gui_has_enhanced_toggle_and_compiles(self):
+        import ast
+        path = Path(__file__).resolve().parents[1] / "tools" / "dither_compare_gui.py"
+        source = path.read_text(encoding="utf-8")
+        ast.parse(source, filename=str(path))
+        self.assertIn("def toggle_enhanced(self):", source)
+        self.assertIn("Enhanced Floyd (experimental)", source)
+
     def test_gui_module_compiles_without_importing_windows_printer(self):
         import ast
         target = Path(__file__).resolve().parents[1] / "tools" / "dither_tuning_gui.py"
