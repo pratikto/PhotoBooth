@@ -251,3 +251,16 @@ Screen-by-screen source and precise limitations: [FEAT-021](features/FEAT-021-me
 - [ ] Run `python -m photobooth.meong_fly_demo` on Windows, Start > Scan > click input: cursor and `DEMO-123` hint visible, typed `DEMO-BUG012-001` visible, Back/Validate still respond.
 - [ ] Press Enter or Validasi, verify Gameplay; close and restart app and verify used code is rejected. Repeat with a *new* demo code.
 - [ ] Resize to portrait and landscape and confirm the typing hotspot tracks the painted input. No production checkout/scanner testing implied.
+
+
+## FEAT-021 — Visual Polish v2 Batch A QA gate (2026-10-21)
+
+**Source branch:** `feature/meong-flappy-challenge`; `master` unchanged. Source commits `74bdef6a`, `cbc74372`, `f8bc996b`, `e18a0936`, `f7b0598e`. Targeted tests `05fccdd6` and `6df4d498`. **Assistant-side local mirror:** `PYTHONPATH=/mnt/data/meong_step4 python -m unittest discover -s /mnt/data/meong_step4/tests -p test_meong_fly_polish.py -v` -> **7 tests, OK** (Pillow 12.3.0, Linux container), followed by `python -m compileall -q /mnt/data/meong_step4/photobooth /mnt/data/meong_step4/tests` -> no errors. This is **not** an exact GitHub SHA unit run or a Windows/Kivy GUI test; Kivy is not installed in the container. Preview logo is the supplied GIF frame, not the official PNG byte-for-byte.
+
+- [ ] Windows after `git pull`: `python -m unittest tests.test_meong_fly_polish tests.test_meong_fly_gui tests.test_meong_fly_flow tests.test_meong_fly_receipts tests.test_meong_fly tests.test_meong_fly_painter -v`; record Python/Pillow/Kivy versions, exact SHA and final summary.
+- [ ] Start screen: official logo fully visible, halo behind mascot, voucher and Rp2.500 demo disclaimer do not overlap, CTA pink/cyan hierarchy and icons visible; both buttons respond on touch/click, Direct Photo exits standalone demo only.
+- [ ] Scan screen: corner brackets and animated horizontal line do NOT imply real scanning; `ILUSTRASI QR` and `QR ASLI BELUM TERHUBUNG` readable.
+- [ ] Click real light TextInput: caret and `DEMO-123` hint are visible; type, paste, backspace, press Enter or Validate with `DEMO-V2-001`, and confirm gameplay starts; observe focus/error ring and disabled input after claim.
+- [ ] Back from Scan before claim returns Start and leaves new code valid; reused code remains rejected on restart; no Main Lagi or gameplay reset bypass.
+- [ ] Resize to 450x900 portrait and landscape/windowed; exact letterbox touch hitboxes for input/CTA, no clipped footer, no stretched mascot, no screen lockup or FPS regression.
+- [ ] Send actual Windows screenshots of Start and Scan, record owner visual acceptance. **Batch A not VERIFIED until then; Batch B/C not yet implemented in this pass.**
