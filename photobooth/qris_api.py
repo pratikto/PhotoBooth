@@ -1,80 +1,195 @@
-"""Dependency-injected FastAPI sandbox application for FEAT-020.
-
-This is a staging-only API factory, not a production deployment.
-"""
-from fastapi import FastAPI, Header, HTTPException, Request
+"""Sandbox HTTP boundary: strict input, bounded streaming and threaded I/O."""
+import asyncio
+from collections import OrderedDict
+from contextlib import asynccontextmanager
 import json
-from pydantic import BaseModel, ConfigDict
+import time
+from typing import Annotated
+
+from fastapi import FastAPI, Header, HTTPException, Request
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
+from starlette.concurrency import run_in_threadpool
+
+from photobooth.checkout_backend import ProviderUnavailable
+from photobooth.checkout_store import CheckoutConflict, CheckoutMissing, identifier
+from photobooth.payment_quote import quote_checkout
 
 
 class NewOrder(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    quantities: dict[str, int]
+    model_config = ConfigDict(extra='forbid', strict=True)
+    quantities: dict[str, Annotated[int, Field(strict=True, ge=1, le=10)]] = Field(min_length=1, max_length=12)
+
+    @field_validator('quantities')
+    @classmethod
+    def valid_catalog(cls, value):
+        quote_checkout(value)
+        return value
 
 
-def create_app(service, authenticator):
-    app = FastAPI(title="MEONG QRIS Sandbox")
+class ServiceUpdate(BaseModel):
+    model_config = ConfigDict(extra='forbid', strict=True)
+    grant_id: str = Field(pattern=r'^[a-f0-9]{32}$')
+    state: str = Field(pattern=r'^(STARTED|COMPLETED)$')
+    transaction_id: str = Field(pattern=r'^[A-Za-z0-9_-]{1,64}$')
 
-    def booth_identity(booth_id, authorization):
+
+def unique_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError('Duplicate JSON member')
+        result[key] = value
+    return result
+
+
+async def bounded_json(request, limit=16384):
+    """Stop on the first excessive chunk, even without Content-Length."""
+    try:
+        length = int(request.headers.get('content-length', '0'))
+    except ValueError as error:
+        raise HTTPException(400, 'Invalid content length') from error
+    if length < 0:
+        raise HTTPException(400, 'Invalid content length')
+    if length > limit:
+        raise HTTPException(413, 'Payload too large')
+    payload = bytearray()
+    try:
+        async with asyncio.timeout(5):
+            async for chunk in request.stream():
+                if len(payload) + len(chunk) > limit:
+                    raise HTTPException(413, 'Payload too large')
+                payload.extend(chunk)
+        data = json.loads(payload, object_pairs_hook=unique_object)
+        if not isinstance(data, dict):
+            raise ValueError('JSON object required')
+        return data
+    except TimeoutError as error:
+        raise HTTPException(408, 'Request body timed out') from error
+    except (ValueError, UnicodeError) as error:
+        raise HTTPException(400, 'Invalid JSON') from error
+
+
+class LocalRateLimit:
+    """Bounded one-worker Sandbox guard; production needs an ingress limiter."""
+    def __init__(self, limit=120, window=60):
+        self.limit, self.window = limit, window
+        self.entries = OrderedDict()
+
+    def check(self, key):
+        now = time.monotonic()
+        start, count = self.entries.pop(key, (now, 0))
+        if now - start >= self.window:
+            start, count = now, 0
+        self.entries[key] = (start, count + 1)
+        while len(self.entries) > 2048:
+            self.entries.popitem(last=False)
+        if count >= self.limit:
+            raise HTTPException(429, 'Too many requests', headers={'Retry-After': '60'})
+
+
+def create_app(service, authenticator, *, on_shutdown=None, rate_limit=120):
+    @asynccontextmanager
+    async def lifespan(_app):
+        yield
+        if on_shutdown is not None:
+            await run_in_threadpool(on_shutdown)
+
+    app = FastAPI(title='MEONG QRIS Sandbox', version='0.2.0', lifespan=lifespan)
+    limiter = LocalRateLimit(rate_limit)
+
+    def booth_identity(request, booth_id, authorization):
+        peer = request.client.host if request.client else 'unknown'
+        limiter.check('peer:' + peer)
+        if len(booth_id) > 64 or len(authorization) > 520:
+            raise HTTPException(401, 'Unauthorized')
         identity = authenticator.authenticate(booth_id, authorization)
         if identity is None:
-            raise HTTPException(status_code=401, detail="Unauthorized")
+            raise HTTPException(401, 'Unauthorized')
         return identity
 
-    @app.get("/api/health")
-    def health():
-        return {"status": "ok", "mode": "sandbox"}
-
-    @app.post("/api/orders", status_code=201)
-    def create_order(body: NewOrder, x_booth_id: str = Header(default=""),
-                     authorization: str = Header(default="")):
-        booth_id = booth_identity(x_booth_id, authorization)
+    async def invoke(function, *args):
         try:
-            return service.create_order(booth_id, body.quantities)
+            return await run_in_threadpool(function, *args)
+        except CheckoutMissing as error:
+            raise HTTPException(404, 'Order not found') from error
+        except CheckoutConflict as error:
+            raise HTTPException(409, 'Checkout requires recovery or completion') from error
+        except ProviderUnavailable as error:
+            raise HTTPException(503, 'Provider verification temporarily unavailable') from error
         except ValueError as error:
-            raise HTTPException(status_code=422, detail="Invalid checkout") from error
+            raise HTTPException(422, 'Invalid checkout') from error
         except Exception as error:
-            raise HTTPException(status_code=503, detail="Checkout temporarily unavailable") from error
+            raise HTTPException(503, 'Checkout temporarily unavailable') from error
 
-    @app.get("/api/orders/{order_id}")
-    def order_status(order_id: str, x_booth_id: str = Header(default=""),
-                     authorization: str = Header(default="")):
-        booth_id = booth_identity(x_booth_id, authorization)
-        result = service.status(order_id, booth_id)
+    def key(value):
+        try:
+            return identifier(value, minimum=16)
+        except ValueError as error:
+            raise HTTPException(422, 'Valid Idempotency-Key required') from error
+
+    @app.get('/api/health')
+    async def health():
+        return {'status': 'ok', 'mode': getattr(service, 'mode', 'sandbox'), 'api_version': 2}
+
+    @app.post('/api/orders', status_code=201)
+    async def create_order(request: Request, x_booth_id: str = Header(default=''),
+                           authorization: str = Header(default=''),
+                           idempotency_key: str = Header(default='')):
+        booth = booth_identity(request, x_booth_id, authorization)
+        visit = key(idempotency_key)
+        data = await bounded_json(request, 8192)
+        try:
+            body = NewOrder.model_validate(data)
+        except (ValidationError, ValueError) as error:
+            raise HTTPException(422, 'Invalid template quantities') from error
+        return await invoke(service.create_order, booth, body.quantities, visit)
+
+    @app.get('/api/orders/{order_id}')
+    async def order_status(order_id: str, request: Request, x_booth_id: str = Header(default=''),
+                           authorization: str = Header(default='')):
+        booth = booth_identity(request, x_booth_id, authorization)
+        result = await invoke(service.status, order_id, booth)
         if result is None:
-            raise HTTPException(status_code=404, detail="Order not found")
+            raise HTTPException(404, 'Order not found')
         return result
 
-    @app.post("/api/orders/{order_id}/claim")
-    def claim_order(order_id: str, x_booth_id: str = Header(default=""),
-                    authorization: str = Header(default="")):
-        booth_id = booth_identity(x_booth_id, authorization)
-        if service.status(order_id, booth_id) is None:
-            raise HTTPException(status_code=404, detail="Order not found")
-        if not service.claim(order_id, booth_id):
-            raise HTTPException(status_code=409, detail="Order not claimable")
-        return {"claimed": True}
+    @app.post('/api/orders/{order_id}/claim')
+    async def claim_order(order_id: str, request: Request, x_booth_id: str = Header(default=''),
+                          authorization: str = Header(default=''),
+                          idempotency_key: str = Header(default='')):
+        booth = booth_identity(request, x_booth_id, authorization)
+        return await invoke(service.claim, order_id, booth, key(idempotency_key))
 
-    @app.post("/api/webhooks/midtrans")
+    @app.post('/api/orders/{order_id}/service')
+    async def service_update(order_id: str, request: Request, x_booth_id: str = Header(default=''),
+                             authorization: str = Header(default='')):
+        booth = booth_identity(request, x_booth_id, authorization)
+        data = await bounded_json(request, 2048)
+        try:
+            body = ServiceUpdate.model_validate(data)
+        except ValidationError as error:
+            raise HTTPException(422, 'Invalid service acknowledgement') from error
+        return await invoke(service.service_transition, order_id, booth, body.grant_id,
+                            body.state, body.transaction_id)
+
+    @app.post('/api/orders/{order_id}/cancel')
+    async def cancel_order(order_id: str, request: Request, x_booth_id: str = Header(default=''),
+                           authorization: str = Header(default='')):
+        booth = booth_identity(request, x_booth_id, authorization)
+        return await invoke(service.cancel, order_id, booth)
+
+    @app.post('/api/webhooks/midtrans')
     async def midtrans_webhook(request: Request):
+        limiter.check('webhook:' + (request.client.host if request.client else 'unknown'))
+        notification = await bounded_json(request)
         try:
-            length = int(request.headers.get("content-length", "0"))
-        except ValueError as error:
-            raise HTTPException(status_code=400, detail="Invalid content length") from error
-        if length > 16384:
-            raise HTTPException(status_code=413, detail="Payload too large")
-        payload = await request.body()
-        if len(payload) > 16384:
-            raise HTTPException(status_code=413, detail="Payload too large")
-        try:
-            notification = json.loads(payload)
-            if not isinstance(notification, dict):
-                raise ValueError("Expected JSON object")
-            verified = service.process_notification(notification)
+            accepted = await run_in_threadpool(service.process_notification, notification)
         except (ValueError, TypeError, KeyError) as error:
-            raise HTTPException(status_code=400, detail="Invalid notification") from error
+            raise HTTPException(400, 'Invalid notification') from error
         except Exception as error:
-            raise HTTPException(status_code=503, detail="Provider verification unavailable") from error
-        return {"verified": bool(verified)}
+            raise HTTPException(503, 'Provider verification unavailable') from error
+        if not accepted:
+            raise HTTPException(503, 'Notification not applied; retry required')
+        return {'received': True}
 
     return app

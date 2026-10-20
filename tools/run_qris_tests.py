@@ -12,6 +12,7 @@ SUITES = (
     'test_payment_concurrency', 'test_midtrans_verify', 'test_midtrans_sandbox',
     'test_checkout_service', 'test_booth_auth', 'test_qris_api',
     'test_qris_kiosk_client', 'test_checkout_durability', 'test_checkout_backend',
+    'test_qris_http_v2',
 )
 
 if __name__ == '__main__':

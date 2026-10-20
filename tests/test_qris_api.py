@@ -1,35 +1,31 @@
 """HTTP route tests for the staging-only QRIS backend."""
 import unittest
 
-try:
-    from fastapi.testclient import TestClient
-    from photobooth.qris_api import create_app
-    from photobooth.booth_auth import BoothAuthenticator
-except ImportError:
-    TestClient = None
-
+from fastapi.testclient import TestClient
+from photobooth.qris_api import create_app
+from photobooth.booth_auth import BoothAuthenticator
 
 class StubService:
-    def create_order(self, booth, quantities):
+    def create_order(self, booth, quantities, checkout_key):
         return {"order_id": "order-1", "booth": booth, "quantities": quantities}
 
     def status(self, order_id, booth):
         return {"state": "PAID", "claimed": False} if booth == "PB001" and order_id == "order-1" else None
 
-    def claim(self, order_id, booth):
+    def claim(self, order_id, booth, checkout_key):
         return booth == "PB001" and order_id == "order-1"
 
     def process_notification(self, data):
         return False
 
 
-@unittest.skipIf(TestClient is None, "FastAPI and httpx required")
 class QRISApiTests(unittest.TestCase):
     def setUp(self):
         auth = BoothAuthenticator({"PB001": "sample-booth-secret-at-least-32-characters"})
         self.client = TestClient(create_app(StubService(), auth))
         self.headers = {"x-booth-id": "PB001",
-                        "Authorization": "Bearer sample-booth-secret-at-least-32-characters"}
+                        "Authorization": "Bearer sample-booth-secret-at-least-32-characters",
+                        "Idempotency-Key": "a" * 32}
 
     def test_health(self):
         self.assertEqual(self.client.get("/api/health").status_code, 200)
@@ -64,7 +60,7 @@ class QRISApiTests(unittest.TestCase):
 
     def test_checkout_provider_outage_is_503(self):
         class OutageService(StubService):
-            def create_order(self, booth, quantities):
+            def create_order(self, booth, quantities, checkout_key):
                 raise RuntimeError("provider unavailable")
         auth = BoothAuthenticator({"PB001": "sample-booth-secret-at-least-32-characters"})
         client = TestClient(create_app(OutageService(), auth))

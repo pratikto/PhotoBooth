@@ -59,6 +59,21 @@ class MidtransSandboxTests(unittest.TestCase):
             self.client.get_status("")
         self.assertFalse(self.requests)
 
+    def test_cancel_uses_sandbox(self):
+        self.client.cancel("PB001-0001")
+        request = self.requests[0][0]
+        self.assertEqual(request.get_method(), "POST")
+        self.assertEqual(request.full_url, SANDBOX_BASE + "/v2/PB001-0001/cancel")
+
+    def test_redirect_is_not_followed(self):
+        from photobooth.midtrans_sandbox import NoRedirect
+        self.assertIsNone(NoRedirect().redirect_request(None, None, 302, "", {}, "https://evil.test"))
+
+    def test_nonfinite_timeout_rejected(self):
+        for timeout in (True, float('nan'), float('inf'), 0):
+            with self.subTest(timeout=timeout), self.assertRaises(ValueError):
+                MidtransSandboxClient("dummy", timeout=timeout)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -5,21 +5,29 @@ No live endpoint support; this module deliberately fails closed.
 """
 import base64
 import json
-from urllib.request import Request, urlopen
+from urllib.request import Request, build_opener, HTTPRedirectHandler
+import math
+import re
 from urllib.parse import quote
 
 SANDBOX_BASE = "https://api.sandbox.midtrans.com"
+
+
+class NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        # Never forward server credentials to a redirect destination.
+        return None
 
 
 class MidtransSandboxClient:
     def __init__(self, server_key, *, timeout=10, transport=None):
         if not isinstance(server_key, str) or not server_key:
             raise ValueError("MIDTRANS_SERVER_KEY required")
-        if not 0 < timeout <= 30:
+        if type(timeout) not in (int, float) or not math.isfinite(timeout) or not 0 < timeout <= 30:
             raise ValueError("Timeout must be between 0 and 30 seconds")
         self._key = server_key
         self.timeout = timeout
-        self._transport = transport or urlopen
+        self._transport = transport or build_opener(NoRedirect()).open
 
     def _request(self, method, path, body=None):
         auth = base64.b64encode((self._key + ":").encode("utf-8")).decode("ascii")
@@ -39,7 +47,7 @@ class MidtransSandboxClient:
         return result
 
     def create_qris(self, order_id, amount):
-        if not isinstance(order_id, str) or not order_id or len(order_id) > 50:
+        if not isinstance(order_id, str) or re.fullmatch(r"[A-Za-z0-9_-]{1,50}", order_id) is None:
             raise ValueError("Invalid order ID")
         if type(amount) is not int or amount <= 0:
             raise ValueError("Invalid IDR amount")
@@ -49,6 +57,11 @@ class MidtransSandboxClient:
         })
 
     def get_status(self, order_id):
-        if not isinstance(order_id, str) or not order_id or len(order_id) > 50:
+        if not isinstance(order_id, str) or re.fullmatch(r"[A-Za-z0-9_-]{1,50}", order_id) is None:
             raise ValueError("Invalid order ID")
         return self._request("GET", "/v2/" + quote(order_id, safe="") + "/status")
+
+    def cancel(self, order_id):
+        if not isinstance(order_id, str) or re.fullmatch(r"[A-Za-z0-9_-]{1,50}", order_id) is None:
+            raise ValueError("Invalid order ID")
+        return self._request("POST", "/v2/" + quote(order_id, safe="") + "/cancel")
