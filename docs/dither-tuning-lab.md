@@ -4,11 +4,31 @@
 **Branch:** `feature/dither-tuning` (created 2026-10-18 from `feature/kivy-gui` commit `5e0a898`).  
 **Scope:** offline photo-rendering sandbox; the existing photobooth application and photo/QR print pipeline have **not** been changed or merged.
 
+## Enhanced Dizzy preprocessing A/B experiment (2026-10-21)
+
+**Owner-authorized scope:** only the experimental `feature/dither-tuning` branch. The GUI now has an independent **Enhanced Dizzy (experimental)** checkbox inside the Dizzy panel. It is **OFF by default**; checking it recomputes **only** the Dizzy preview, while Floyd and Bayer remain unchanged. Both Dizzy variants (`article-8` and `orthogonal-4`) support the same checkbox. The Enhanced Floyd checkbox remains independent.
+
+**Exact shared preprocessing**, applied after native-width Lanczos resize and user brightness/contrast/gamma/sharpness adjustments and **before** either error-diffusion algorithm:
+
+1. PIL `MedianFilter(size=3)` to reduce isolated camera noise.
+2. `ImageOps.autocontrast(cutoff=1, preserve_tone=True)`, mixed with the median-filtered image using `Image.blend(..., 0.20)`. This is a mild **global** tonal adjustment, not CLAHE or face-aware enhancement.
+3. `UnsharpMask(radius=1.1, percent=55, threshold=3)` for restrained edge sharpening.
+
+The previous Enhanced Floyd math and operation ordering are unchanged, now implemented via one shared function (`_enhance_photo_for_dithering` in `photobooth/dither_lab.py`). With both enhancement flags OFF, the original Floyd and Dizzy raster paths are unchanged. Neither the Dizzy neighborhood rules nor seed nor article-specific contrast correction LUT is modified; a stronger or different preprocessing profile will need separate evaluation.
+
+**Saved presets:** the lab now writes **schema v4**, containing an independent `enhanced_dizzy: bool` field for each validated profile. Old v1, v2 and v3 profiles/comparison files load with `enhanced_dizzy=False` and retain prior Floyd settings, Dizzy variant/seed, hidden Threshold parameters and width. A v4 preset persists both Enhanced Floyd and Enhanced Dizzy separately. `Save All Configs` still writes the four backend lanes (including hidden Threshold); only **three panels** are rendered/printed/exported. Never copy lab presets into kiosk printer settings.
+
+**Export and paper provenance:** the Dizzy native 1-bit PNG name now includes the variant, seed, and `-baseline` or `-enhanced` (e.g., `meong-dizzy-article-8-seed42-enhanced.png`). The lab Print Test header also labels `PREPROCESS: BASELINE` or `PREPROCESS: ENHANCED`; the 1-bit raster below the header stays byte-identical to the latest approved preview/export. Physical Print Test remains manually confirmed, with no uncertain automatic retries. This experimental change never touches the Kivy print path on `master`.
+
+**Recommended controlled comparison:** use a saved original portrait with identical width, brightness, contrast, gamma, sharpening, Dizzy variant/seed, printer darkness and paper. Compare Dizzy baseline vs Enhanced Dizzy first; next compare Enhanced Floyd vs Enhanced Dizzy with identical preprocessing controls. Repeat for both Dizzy variants. Evaluate face details, skin texture, hair, backgrounds, black coverage and on-paper clarity; a screen preview alone cannot determine the best physical output. More preprocessing can also over-smooth detail, especially text and QR portions of a finished photo strip.
+
+**Automated evidence:** [Dither tuning lab CI 39503134534](https://github.com/pratikto/PhotoBooth/actions/runs/39503134534), commit `80980f7ba`: compilation and **42 unit tests PASS**, including backward-compatible v1/v2/v3 preset loading, unchanged Floyd raster, deterministic baseline/Enhanced Dizzy variants, output one-bit and metadata preservation. **Windows Tk UI acceptance and thermal-paper visual quality remain pending operator testing.**
+
 ## Current three-panel GUI (2026-10-21)
 
 The main experiment window (`python tools/dither_compare_gui.py`) now displays **Floyd–Steinberg, Bayer 8×8 and Dizzy** only. The Threshold preview, its slider and its individual print/export buttons are hidden. **Export 3 PNG** exports only those three visible outputs; **Print All (3 jobs)** submits those same three in Floyd/Bayer/Dizzy order, with the existing explicit confirmation and stop-on-uncertain-outcome protections.
 
-Only the Tkinter comparison interface changes. The Threshold algorithm remains available in `photobooth/printer.py`, `photobooth/dither_lab.py`, and the legacy standalone tools. **Save All Configs** still writes the four-mode lab JSON (including the hidden Threshold profile) to preserve v3 schema and backward compatibility with existing presets; Load All Configs accepts v1/v2/v3. Selecting a new print width also updates the hidden profile so the saved shared width remains consistent. No changes to live Kivy printing or `master`. Paper-quality acceptance remains pending.
+Only the Tkinter comparison interface changes. The Threshold algorithm remains available in `photobooth/printer.py`, `photobooth/dither_lab.py`, and the legacy standalone tools. **Save All Configs** still writes the four-mode lab JSON (including the hidden Threshold profile) to preserve v4 schema and backward compatibility with existing presets; Load All Configs accepts v1/v2/v3/v4. Selecting a new print width also updates the hidden profile so the saved shared width remains consistent. No changes to live Kivy printing or `master`. Paper-quality acceptance remains pending.
 
 ## Article-aligned Dizzy Dithering experiment (2026-10-21)
 
@@ -21,7 +41,7 @@ Both use a local fixed seed (`42`), a five-round odd-multiply/XOR permutation on
 
 The 2026 contrast-correction lookup tables are specific to the author's calibrated algorithm variants. **No LUT is applied** in this first experiment: article-8 needs separate calibration; orthogonal-4 should be checked against the author's response curves before considering the author's lookup values.
 
-Lab profiles and four-lane comparisons save as **v3 JSON**, including `dizzy_variant` and `dizzy_seed`; loading v1/v2 profiles retains prior lanes and adds Dizzy with defaults. Printer settings, production `photobooth.printer.DITHER_MODES`, `main.py` and the main photo-prints are **unchanged**.
+Lab profiles and four-lane comparisons save as **v4 JSON**, including `dizzy_variant` and `dizzy_seed`; loading v1/v2 profiles retains prior lanes and adds Dizzy with defaults. Printer settings, production `photobooth.printer.DITHER_MODES`, `main.py` and the main photo-prints are **unchanged**.
 
 For a fair evaluation: open the same photo, use equal brightness/contrast/gamma/sharpness/width across algorithms, disable Enhanced Floyd for the initial algorithm-only comparison, then export each exact 1-bit raster. Switch Dizzy to orthogonal-4 and export that separately; Dizzy filenames contain variant and seed. The reduced GUI overview uses BOX area averaging for screen display; the nearest-neighbor crop, exported PNG and Print Test raster remain exact printer dots.
 
@@ -35,9 +55,9 @@ References: [original article](https://liamappelbe.medium.com/dizzy-dithering-2a
 
 ## Experimental enhanced Floyd preprocessing (2026-10-21)
 
-An opt-in **Enhanced Floyd (experimental)** checkbox is available in `tools/dither_compare_gui.py`. It affects the Floyd lane only. Unchecked uses the byte-identical legacy baseline path; checked applies a 3x3 median noise filter, a 20% blend with gently autocontrasted grayscale, and restrained unsharp masking (radius 1.1, strength 55%, threshold 3), after the existing brightness/contrast/gamma/sharpness controls and before Pillow Floyd–Steinberg error diffusion. This is conservative *global* tonal processing, **not CLAHE, face-aware enhancement, or printer heat control**. Existing control values still matter and aggressive settings may degrade results.
+An opt-in **Enhanced Floyd (experimental)** checkbox is available in `tools/dither_compare_gui.py`. It affects the Floyd lane only; Enhanced Dizzy now separately opts into the same preprocessing helper in the Dizzy panel. Unchecked uses the byte-identical legacy baseline path; checked applies a 3x3 median noise filter, a 20% blend with gently autocontrasted grayscale, and restrained unsharp masking (radius 1.1, strength 55%, threshold 3), after the existing brightness/contrast/gamma/sharpness controls and before Pillow Floyd–Steinberg error diffusion. This is conservative *global* tonal processing, **not CLAHE, face-aware enhancement, or printer heat control**. Existing control values still matter and aggressive settings may degrade results.
 
-The check box allows A/B comparison by exporting/printing Floyd baseline, then toggling on and exporting/printing Floyd enhanced with the same image, width and sliders. Exports include `-baseline` or `-enhanced` suffix; only the native 1-bit result should be used for dot-level comparison. The comparison GUI now displays Floyd/Bayer/Dizzy. Save/Load All Configs persists the new Floyd selection; v3 JSON files are written, while v1/v2 presets remain readable. Do not copy these JSONs into printer settings.
+The check box allows A/B comparison by exporting/printing Floyd baseline, then toggling on and exporting/printing Floyd enhanced with the same image, width and sliders. Exports include `-baseline` or `-enhanced` suffix; only the native 1-bit result should be used for dot-level comparison. The comparison GUI now displays Floyd/Bayer/Dizzy. Save/Load All Configs persists both enhancement switches; v4 JSON files are written, while v1/v2/v3 presets remain readable. Do not copy these JSONs into printer settings.
 
 Scope is `feature/dither-tuning` only. **The customer-facing `main.py`, `master` printer preset, printer ESC/POS path and production configuration have not been changed.** Preview is not proof of printed quality. Physical comparison must use identical photographs, paper, speed and printer settings, and operator-confirmed test printing. Automated regression tests were added, but physical acceptance remains pending.
 
