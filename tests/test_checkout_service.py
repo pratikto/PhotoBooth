@@ -21,7 +21,7 @@ class FakeProvider:
                             "transaction_status": "pending", "status_code": "201"}
         return {"order_id": order_id, "transaction_status": "pending",
                 "payment_type": "qris", "actions": [
-                    {"name": "generate-qr-code", "url": "https://example.test/qr"}]}
+                    {"name": "generate-qr-code", "url": "https://api.sandbox.midtrans.com/qr"}]}
 
     def get_status(self, order_id):
         return self.status_data
@@ -72,6 +72,16 @@ class CheckoutServiceTests(unittest.TestCase):
         callback["signature_key"] = "invalid"
         with self.assertRaises(ValueError):
             self.service.process_notification(callback)
+
+    def test_untrusted_qr_action_fails_before_pending(self):
+        class BadProvider(FakeProvider):
+            def create_qris(self, order_id, amount):
+                response = super().create_qris(order_id, amount)
+                response["actions"][0]["url"] = "https://malicious.example/qr"
+                return response
+        service = SandboxCheckoutService(self.store, BadProvider(), KEY)
+        with self.assertRaises(ValueError):
+            service.create_order("PB001", {"template_a": 1})
 
     def test_other_booth_denied(self):
         self.assertIsNone(self.service.status(self.order["order_id"], "PB002"))
