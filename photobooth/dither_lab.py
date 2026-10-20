@@ -24,7 +24,7 @@ from photobooth.dizzy_dither import (DEFAULT_DIZZY_SEED, DIZZY_VARIANTS,
 LAB_DITHER_MODES = DITHER_MODES + ("dizzy",)
 
 
-PROFILE_VERSION = 3
+PROFILE_VERSION = 4
 
 
 @dataclass(frozen=True)
@@ -39,12 +39,16 @@ class DitherProfile:
     sharpness: float = 1.0
     threshold: int = 128
     enhanced_floyd: bool = False
+    enhanced_dizzy: bool = False
     dizzy_variant: str = "article-8"
     dizzy_seed: int = DEFAULT_DIZZY_SEED
 
     def __post_init__(self) -> None:
         if type(self.enhanced_floyd) is not bool or (self.enhanced_floyd and self.mode != 'floyd-steinberg'):
             raise ValueError('Enhanced preprocessing is available only for Floyd.')
+        if (type(self.enhanced_dizzy) is not bool or
+                (self.enhanced_dizzy and self.mode != "dizzy")):
+            raise ValueError("Enhanced Dizzy preprocessing is available only for Dizzy.")
         if self.mode not in LAB_DITHER_MODES:
             raise ValueError(f"Unsupported dithering mode: {self.mode!r}")
         if self.dizzy_variant not in DIZZY_VARIANTS:
@@ -70,6 +74,21 @@ class DitherProfile:
                 raise ValueError(f"{key} must be between {minimum} and {maximum}.")
         if type(self.threshold) is not int or not 0 <= self.threshold <= 255:
             raise ValueError("Threshold must be an integer between 0 and 255.")
+
+
+def _enhance_photo_for_dithering(gray: Image.Image) -> Image.Image:
+    """Use the same experimental preprocessing for Floyd and Dizzy.
+
+    Denoising, gentle grayscale contrast correction, and restrained edge
+    sharpening happen before either algorithm's 1-bit error diffusion.
+    This preserves the previous Enhanced Floyd pixel operations and order.
+    """
+    denoised = gray.filter(ImageFilter.MedianFilter(size=3))
+    leveled = ImageOps.autocontrast(denoised, cutoff=1, preserve_tone=True)
+    corrected = Image.blend(denoised, leveled, 0.20)
+    return corrected.filter(
+        ImageFilter.UnsharpMask(radius=1.1, percent=55, threshold=3)
+    )
 
 
 def render_thermal_image(source: Image.Image, profile: DitherProfile) -> Image.Image:
@@ -100,13 +119,8 @@ def render_thermal_image(source: Image.Image, profile: DitherProfile) -> Image.I
     if profile.sharpness != 1.0:
         gray = ImageEnhance.Sharpness(gray).enhance(profile.sharpness)
 
-    if profile.enhanced_floyd:
-        # Lab-only conservative denoise, gentle tonal normalization and
-        # restrained edge sharpening before 1-bit error diffusion.
-        denoised = gray.filter(ImageFilter.MedianFilter(size=3))
-        leveled = ImageOps.autocontrast(denoised, cutoff=1, preserve_tone=True)
-        gray = Image.blend(denoised, leveled, 0.20)
-        gray = gray.filter(ImageFilter.UnsharpMask(radius=1.1, percent=55, threshold=3))
+    if profile.enhanced_floyd or profile.enhanced_dizzy:
+        gray = _enhance_photo_for_dithering(gray)
 
     if profile.mode == "dizzy":
         return dizzy_dither(gray, variant=profile.dizzy_variant,
@@ -134,14 +148,15 @@ def save_profile(path: str | Path, profile: DitherProfile) -> None:
 
 
 def load_profile(path: str | Path) -> DitherProfile:
-    """Load a lab-only profile, keeping v1/v2 Dizzy-disabled by default."""
+    """Load v1-v4 lab-only profile; older presets keep Enhanced Dizzy off."""
     payload = json.loads(Path(path).read_text(encoding="utf-8"))
-    if not isinstance(payload, dict) or payload.get("schema_version") not in (1, 2, 3):
+    if not isinstance(payload, dict) or payload.get("schema_version") not in (1, 2, 3, 4):
         raise ValueError("Invalid or unsupported tuning profile version.")
     version = payload["schema_version"]
     keys = set(DitherProfile.__dataclass_fields__)
-    missing = {1: {"enhanced_floyd", "dizzy_variant", "dizzy_seed"},
-               2: {"dizzy_variant", "dizzy_seed"}, 3: set()}[version]
+    missing = {1: {"enhanced_floyd", "enhanced_dizzy", "dizzy_variant", "dizzy_seed"},
+               2: {"enhanced_dizzy", "dizzy_variant", "dizzy_seed"},
+               3: {"enhanced_dizzy"}, 4: set()}[version]
     if set(payload) != (keys - missing) | {"schema_version"}:
         raise ValueError("Profile fields do not match the supported schema.")
     values = {key: payload[key] for key in keys - missing}
@@ -152,7 +167,7 @@ def load_profile(path: str | Path) -> DitherProfile:
 
 # Comparison recipes are deliberately independent: syncing is a GUI action,
 # never an implicit overwrite of an algorithm's tuned state.
-COMPARISON_VERSION = 3
+COMPARISON_VERSION = 4
 
 
 @dataclass(frozen=True)
@@ -203,11 +218,11 @@ def save_comparison(path: str | Path, profiles: ComparisonProfiles) -> None:
 
 
 def load_comparison(path: str | Path) -> ComparisonProfiles:
-    """Read v1/v2 three-lane presets or v3 four-lane presets, fail closed."""
+    """Read v1/v2 three-lane or v3/v4 four-lane presets, fail closed."""
     data = json.loads(Path(path).read_text(encoding="utf-8"))
     if (not isinstance(data, dict) or
             set(data) != {"schema_version", "lanes"} or
-            data["schema_version"] not in (1, 2, 3) or
+            data["schema_version"] not in (1, 2, 3, 4) or
             not isinstance(data["lanes"], dict)):
         raise ValueError("Invalid comparison config schema.")
     version = data["schema_version"]
@@ -215,8 +230,9 @@ def load_comparison(path: str | Path) -> ComparisonProfiles:
     if set(data["lanes"]) != set(modes):
         raise ValueError("Invalid comparison lanes.")
     keys = set(DitherProfile.__dataclass_fields__)
-    missing = {1: {"enhanced_floyd", "dizzy_variant", "dizzy_seed"},
-               2: {"dizzy_variant", "dizzy_seed"}, 3: set()}[version]
+    missing = {1: {"enhanced_floyd", "enhanced_dizzy", "dizzy_variant", "dizzy_seed"},
+               2: {"enhanced_dizzy", "dizzy_variant", "dizzy_seed"},
+               3: {"enhanced_dizzy"}, 4: set()}[version]
     defaults = DitherProfile()
     lanes = {}
     for mode in modes:
