@@ -343,6 +343,10 @@ def paint_static_screen(screen,logo_path):
         # Batch A: cacheable, mockup-matched surfaces with exact existing hitboxes.
         from .meong_fly_polish import paint_polished_menu
         return paint_polished_menu(screen, logo_path)
+    if screen == "game":
+        # Batch B: independently cached HUD/space art; live sprites stay in Kivy.
+        from .meong_fly_game_art import paint_game_background
+        return paint_game_background()
     logo,body=logo_parts(str(Path(logo_path)))
     if screen=="start":
         place_art(canvas,logo,26,58,308,207)
