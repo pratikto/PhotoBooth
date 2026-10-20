@@ -39,3 +39,16 @@ Tests and physical GUI verification have NOT yet been executed/confirmed for the
 - Player is a pixel-drawn gray camera-cat with large blue lens, camera flash, ears and pink cheeks. This is a visual approximation of the owner's logo; the exact uploaded GIF has NOT been committed as a sprite asset.
 - No game physics, receipt rules, pricing, production welcome screen, or payment behavior changed in this step.
 - Visual code commit: `d110af05`. Tests and real Kivy rendering have not been run/verified for this update. Required next: render on actual Windows Kivy, inspect frame sizes and collision fairness, and verify asset fidelity before declaring visual acceptance.
+
+## 2026-10-21 — Step 3 prototype hardening (owner-approved)
+
+Owner-reported Windows manual QA, prior to Step 3: 5/5 PASS (collision, used receipt rejected after restart, new receipt accepted, time limit, win condition). Control direction was observed as unexpected but explicitly accepted for now. This is operator-reported evidence, not an automated test run.
+
+Step 3 isolated branch commits:
+- `b74d6926`: collision and scoring boundaries now follow visible camera-cat body (left 24, right 54, bottom 25, top 33 relative to anchor). Decorative rainbow exhaust is intentionally excluded. This can change difficulty; repeat operator QA.
+- `ac8b97d0`: terminal receipt outcome is written once per game instead of once per frame; drawing uses uniform scaling and centers game field for landscape without stretching sprites.
+- `d32c75d6`, `8f08b8fe`: add boundary collision/scoring regression cases and adjust for frame movement.
+
+**Verification remains pending**: CI and local Windows unit tests have NOT been run for these commits. An attempted clone into the execution environment failed because GitHub host resolution was unavailable. Run `python -m unittest tests.test_meong_fly tests.test_meong_fly_receipts -v` and launch `python -m photobooth.meong_fly_demo` on Windows; repeat the five manual QA scenarios, check narrow portrait and 800x600 / 1200x800 / 1920x1080 landscape readability and touch accuracy. Do not infer GUI/hardware PASS from earlier QA after collision changes.
+
+No POS verification, discount, payment flow, welcome-screen wiring, or real receipt barcode scanning was implemented. No master merge. Follow-up before Step 4: record updated Windows regression results and reconsider character movement direction only on owner approval.
