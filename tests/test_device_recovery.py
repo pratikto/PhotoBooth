@@ -59,6 +59,24 @@ class DeviceRecoveryTests(unittest.TestCase):
         self.assertEqual(observe(s, "printer", platform="android", discovery_complete=True).state,
                          "unsupported")
 
+
+    def test_windows_spooler_success_and_failure_are_distinct(self):
+        from unittest.mock import Mock
+        from photobooth.hardware_discovery import discover_devices_with_evidence
+        spooler = Mock(PRINTER_ENUM_LOCAL=2, PRINTER_ENUM_CONNECTIONS=4)
+        spooler.EnumPrinters.return_value = []
+        devices, completed = discover_devices_with_evidence(platform="win32", spooler=spooler)
+        self.assertEqual(devices, ())
+        self.assertEqual(completed, ("printer",))
+        selected = stage_selection(DeviceSelection(), printer=("windows-spooler", "POS80"))
+        self.assertEqual(observe(selected, "printer", platform="win32", detected=devices,
+                                 discovery_complete="printer" in completed).state, "missing")
+        spooler.EnumPrinters.side_effect = OSError("mock spooler failure")
+        devices, completed = discover_devices_with_evidence(platform="win32", spooler=spooler)
+        self.assertEqual(completed, ())
+        self.assertEqual(observe(selected, "printer", platform="win32", detected=devices,
+                                 discovery_complete="printer" in completed).state, "unknown")
+
     def test_invalid_device_kind_rejected(self):
         with self.assertRaises(ValueError):
             observe(DeviceSelection(), "disk", platform="win32")
