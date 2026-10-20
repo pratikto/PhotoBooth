@@ -77,3 +77,8 @@ python -m photobooth.meong_fly_demo
 ```
 
 GUI uses a portrait 360x720 logical viewport and uniform letterboxing. Screen control bounds are defined once in `meong_fly_painter.ACTIONS` and mapped to Kivy window touches by the same transform; painted buttons are touch-responsive, the local voucher is a real Kivy TextInput and QR is **decorative**. Standalone Direct Photo and result Continue **exit** rather than invoking production UI/payment. Existing photobooth `ui_kivy.py`, scanner, audio, printing, payment and receipt/cloud modules are untouched. Work is IN SOURCE only until new Windows visual/functional acceptance and separate approved integration scope.
+
+
+### FEAT-021 Visual Polish v2 Batch A extension (2026-10-21)
+
+`meong_fly_painter.paint_static_screen` now delegates **only** the Start and Scan pages to `meong_fly_polish.paint_polished_menu`, a pure Pillow module implementing shared stepped panels/buttons, official-logo hero composition, non-redeemable voucher, and decorative scanner framing. Gameplay/Win/Lose continue through the original painter path. `meong_fly_gui.MeongFlyStage` caches those backgrounds as nearest-neighbor textures; it draws only the scan sweep, input focus/error ring, and mouse-hover outline on the Kivy `canvas.before` layer, without deleting child `TextInput`/Label canvases (BUG-012 guard). `ACTIONS` and `DEMO_ENTRY` still own the exact logical interactive bounds; resize transform remains shared. `MeongFlyStage.dispose` cancels Clock and mouse listeners at standalone app stop. This module does NOT communicate with POS/QRIS or production photo flows; Windows Kivy verification is pending. [Design/acceptance](features/FEAT-021-visual-polish-v2.md).
