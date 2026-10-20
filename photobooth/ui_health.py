@@ -313,14 +313,13 @@ class HealthPanelMixin:
                     for kind, caption in (("camera", "KAMERA PILIHAN"),
                                           ("printer", "PRINTER PILIHAN")):
                         old = self._selection_observations.get(kind)
-                        # There is no discovery-completeness signal from B.2:
-                        # only assert a candidate on positive evidence.
+                        # Only a successful enumeration can prove absence.
                         candidate = selected_device_observation(
                             selection, kind, platform=self._health_platform,
                             detected=inventory, previous=old,
-                            discovery_complete=True,
+                            discovery_complete=kind in getattr(snapshot, "discovery_complete_kinds", ()),
                         )
-                        if candidate.state == "missing":
+                        if candidate.state == "missing" and kind not in getattr(snapshot, "discovery_complete_kinds", ()):
                             observation = selected_device_observation(
                                 selection, kind, platform=self._health_platform,
                                 detected=inventory, previous=old,
