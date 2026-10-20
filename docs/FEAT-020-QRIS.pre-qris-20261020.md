@@ -1,0 +1,64 @@
+# FEAT-020 — QRIS full-auto payment (stage 1: mock ledger)
+
+Status: **PARTIAL / MOCK ONLY**. Owner approved phased implementation on 2026-10-20. Branch: `feature/qris-payment` from stable `master`; no merge or production payment approval.
+
+## Scope implemented in this stage
+- `photobooth/payment_ledger.py`: standalone SQLite mock payment evidence/one-time session-claim ledger.
+- `tests/test_payment_ledger.py`: tests unverified denial, idempotent recording, conflicting evidence, one-time claim and restart persistence.
+- Existing `photobooth/payment.py` / Kivy UI unchanged. No bank API, webhook, real QRIS, backend, customer money movement or live automatic photo unlock.
+
+## Important security boundary
+The `verified=True` parameter is **not cryptographic proof**. This is only an isolated mock seam and must never be wired to kiosk/UI or an untrusted HTTP request. Before any production use, move payment verification and authoritative claim into a server-side trust boundary with signed provider notifications, independent status reconciliation, amount/order/merchant checks, authenticated kiosk identity, idempotency and race-safe durable transactions. A locally writable SQLite file is not sufficient payment authority.
+
+## Next stages
+1. Reconcile this prototype with existing `PaymentCoordinator`, `transaction_store`, and session lifecycle; design order and provider interfaces.
+2. Implement server-side order pricing validation and sandbox QRIS provider; isolate credentials and verify callbacks.
+3. Kivy status polling, expiry/cancellation and payment-page UI integration; keep muted ads and separate Drive QR.
+4. Test duplicate notifications, stale/late payments, disconnected/reconnected kiosk, crash recovery and physical hardware. No live production until explicit acceptance.
+
+## Local targeted test
+`python -m unittest discover -s tests -p "test_payment_ledger.py" -v`
+
+Initial isolated Python 3 container check: **5 PASS, 0 FAIL** (mock tests only; not a full repository regression or Windows hardware acceptance).
+
+## Stage 2 (2026-10-20)
+Checkout price validation module and five unit test methods committed. Targeted tests and full regression have not been run in this session. No backend or live payment enabled.
+
+## Stage 3 (2026-10-20)
+Added isolated SQLite order lifecycle `photobooth/payment_orders.py` and six regression tests in `tests/test_payment_orders.py`. Local Python 3 isolated test run: 6 PASS, 0 FAIL; full repository CI not verified. Code commits: `f757ae59`, `1ab2f41e`. No API, Midtrans connection, webhook verification, kiosk integration, merchant keys, or live payment. The `confirm_provider_status` method is an internal-only seam and must not be exposed to an untrusted caller; provider signature/status verification and booth authentication are still required. No merge to master.
+
+## Stage 4 (2026-10-20)
+Added `photobooth/midtrans_verify.py` and `tests/test_midtrans_verify.py` in commits `6ec7e836` and `3aacd137`. Verifier checks SHA-512 callback signature, positive whole-IDR amounts and independent provider status parity. This is an offline primitive only; it does not fetch the provider status, accept webhooks, create QRIS, or unlock the booth. Tests not executed in this session. Provider order IDs, status mapping, merchant configuration and actual sandbox response format must be validated before integration.
+
+## Stage 5 (2026-10-20)
+Added sandbox-only Midtrans Core API HTTP transport `photobooth/midtrans_sandbox.py` and five mocked-transport tests `tests/test_midtrans_sandbox.py` (commits `56bc1bba`, `08fb980f`). Endpoint is hard-coded to `api.sandbox.midtrans.com`, with server-side Basic Auth, timeout, bounded response and no production endpoint. **Tests not run or independently verified in this session.** No server, webhook route, real Midtrans sandbox transaction, merchant credentials or kiosk integration. Do not place MIDTRANS_SERVER_KEY in the kiosk or repository. Next: authenticated backend API, independently fetched provider status, webhook handler, and full regression.
+
+## Stage 6 (2026-10-20)
+Added `photobooth/checkout_service.py` (commit `f08ed287`) and six offline service tests `tests/test_checkout_service.py` (commit `6dad9543`). Server-side orchestration calculates price, requests sandbox QR, verifies signed settlement against an independent provider status query, and grants at most one claim through the order store. **Tests have not been executed or CI verified.** Service is not an authenticated HTTP API. Kiosk must not invoke service methods or provider credentials directly. Pending blockers: real Midtrans Sandbox response compatibility, QR action URL trust, provider outage recovery, expired/cancelled status handling, durable multi-process concurrency, authenticated booth HTTP routes, actual Kivy integration, full regression and hardware acceptance. No production or master merge.
+
+## Stage 7 — Booth authentication primitive (2026-10-20)
+Added `photobooth/booth_auth.py` (`bc876fa9`) and six offline test methods in `tests/test_booth_auth.py` (`525ba571`). Per-booth bearer tokens are validated against configured SHA-256 digests with constant-time comparison; cross-booth credential reuse is denied. **Tests have not been executed in this session.** This is not yet an HTTP backend or production credential provisioning. Token distribution, rotation, TLS, rate limits, deployment, signed provider callbacks, session handoff and full regression remain outstanding. Branch-only; do not merge into master without owner approval.
+
+## Stage 8 — Incremental FastAPI staging routes (2026-10-20)
+`photobooth/qris_api.py` introduced in commits `9273ef9`, `9772a67`, `d7a8bb0`: health, authenticated create/status/claim and webhook route. Six HTTP route tests added in `tests/test_qris_api.py` (`e26bdfa`). **No tests executed/CI verified in this session.** Server deployment, TLS, secret provisioning, webhook rate limits, provider error handling, request validation, real Sandbox integration, Kivy and Windows hardware testing are open. This API is NOT approved for public deployment. No master merge without explicit owner approval.
+
+## Stage 9 — API failure handling (2026-10-20)
+Incremental commits `5847f4c` and `68ba4ab` add HTTP 503 responses for unexpected checkout/provider failures, request-size checks for webhook payloads, and four new route regression cases. **These new tests are authored but not executed**; full repository regression, actual provider behavior, TLS/rate limiting, merchant configuration and Windows hardware tests remain open. No live deployment or master merge. Review potential proxy/content-length behavior during integration.
+
+## Stage 10 — SQLite threaded-access hardening (2026-10-20)
+Commit `82e5ae1` serializes access to a shared SQLite connection with `threading.RLock` and enables `check_same_thread=False` for FastAPI staging worker threads. Commit `9e497c9` adds two offline regression tests for 64 concurrent claim attempts and two separate SQLite connections. **Tests are not yet executed/verified; this change is not a production concurrency certification.** Keep server in sandbox; review transaction boundaries, SQLite multi-process load, shutdown coordination and provider idempotency before deployment. No merge to master without explicit owner approval.
+
+## Stage 11 — Opt-in Kivy sandbox preview (2026-10-20)
+Incremental commits:
+- `6b3f678` kiosk HTTP adapter (TLS by default, loopback HTTP only by explicit opt-in).
+- `8174410` offline adapter contract tests.
+- `3d15abf` / `f211e8f` validate Midtrans sandbox QR image host before attaching a pending order, with regression coverage.
+- `508e830` standalone Kivy preview, background HTTP operations, QR image display, status and one-time claim.
+- `8e019ba` environment-driven sandbox ASGI entrypoint.
+- `e2d7975` CI includes kiosk adapter tests.
+
+### Operator sandbox GUI trial (NOT live payments)
+Install dependencies in a separate virtual environment: `pip install -r requirements.txt "fastapi>=0.115,<1" "uvicorn>=0.30,<1" "httpx>=0.27,<1"`.
+Set `MIDTRANS_SERVER_KEY` (sandbox key), `MEONG_QRIS_BOOTH_ID=PB001`, `MEONG_QRIS_BOOTH_TOKEN` (random secret >=32 characters) on the backend. Do not commit or paste secrets. Set `MEONG_QRIS_DB_PATH` if desired. Start backend bound to loopback only: `python -m uvicorn photobooth.qris_server:app --host 127.0.0.1 --port 8000`. In the same local machine's GUI environment, set `MEONG_QRIS_API_URL=http://127.0.0.1:8000`, `MEONG_QRIS_LOCAL_PREVIEW=1`, same booth ID/token, then run `python -m photobooth.qris_preview`. The preview is standalone: **the main GUI still uses DEMO payment**. For a remote kiosk, use HTTPS behind an authenticated reverse proxy and enforce ingress limits/rate limiting.
+
+The preview creates a Midtrans Sandbox order, displays the QR image, checks provider-verified status via backend, and allows one-time claim after PAID. It does not start the camera or print, and cannot transfer live money. Test with real Midtrans Sandbox merchant credentials before claiming provider compatibility. The webhook must be configured to reach the backend securely; loopback is not reachable from Midtrans. No tests or GUI launch have been verified in this session. No production deployment and no merge to master without explicit approval.
