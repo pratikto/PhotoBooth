@@ -69,3 +69,13 @@ Active defects and deferred retests appear first. Monitoring items and owner-rep
 - Suspected area vs *proven* root cause:
 - Dependencies / related FEAT IDs:
 - Explicit fix approval, tests run, on-device verification and rollback commit:
+
+
+## BUG-012 — FEAT-021 standalone demo receipt input invisible/unusable (2026-10-21)
+- **Severity:** S2 major for isolated mini-game (blocks starting a demo game); **priority:** fix before further standalone visual polishing. Does not affect the production kiosk on `master`.
+- **Evidence:** owner Windows screenshot on the `SCAN STRUK KAFE` screen: painted white `KODE STRUK DEMO` input box is visible, but owner cannot enter the demo receipt; runtime commit SHA, Windows/Python/Kivy versions and terminal logs were not supplied.
+- **Expected:** click input, see cursor/hint, type e.g. `DEMO-INPUT-001`, then press Enter or `VALIDASI DEMO 1X`; code is claimed once before game starts.
+- **Source-level cause:** `MeongFlyStage._refresh` called `self.canvas.clear()`. Kivy adds child widget canvases (including the real `TextInput` caret/text and the notice label) into the parent's main canvas, so clearing it removes their graphics; the painted input rectangle remains in the rendered static background. Real on-device reproduction of the exact cause is not independently established.
+- **Approved scoped correction:** user reported being blocked by this standalone screen. Change only `photobooth/meong_fly_gui.py` to draw the image/game scene into `self.canvas.before` and clear only that layer; retain interactive child canvases. Code commit [`974b8c7c`](https://github.com/pratikto/PhotoBooth/commit/974b8c7c97c61b61a48bdfd46ce4f119758d20ab). Regression test file `tests/test_meong_fly_gui.py` in commit [`38d00d41`](https://github.com/pratikto/PhotoBooth/commit/38d00d41fe6417c94c886f920e56cbf4b34bf02b) covers redraw-layer contract, input/action box overlap, and conditional Kivy widget/input verification.
+- **Status:** FIXED IN SOURCE, **WINDOWS RETEST PENDING**. No fresh on-device verification or unit-test PASS claimed. Next: update feature branch, run `python -m unittest tests.test_meong_fly_gui -v`, launch `python -m photobooth.meong_fly_demo`, verify cursor and text, then demo validation and persistent single-use receipt. Never mark VERIFIED/CLOSED without owner confirmation.
+- **Rollback:** revert code commit `974b8c7c` on the feature branch only; do not touch `master`. Related: FEAT-021.
