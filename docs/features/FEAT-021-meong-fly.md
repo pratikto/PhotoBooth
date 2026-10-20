@@ -33,3 +33,9 @@ The standalone Kivy demo accepts local `DEMO-...` identifiers. `DemoReceiptLedge
 Run: `python -m photobooth.meong_fly_demo`.
 Targeted tests: `python -m unittest tests.test_meong_fly tests.test_meong_fly_receipts -v`.
 Tests and physical GUI verification have NOT yet been executed/confirmed for these commits. Further work must validate the demo engine, actual artwork, kiosk screen scaling and collision fairness. Do not merge to master without owner approval.
+
+## 2026-10-21 — Step 2 visual upgrade (approved)
+- Kivy demo now draws an animated parallax starfield, planets, a blue horizon, textured cratered asteroid obstacles, and a wavy five-color rainbow trail.
+- Player is a pixel-drawn gray camera-cat with large blue lens, camera flash, ears and pink cheeks. This is a visual approximation of the owner's logo; the exact uploaded GIF has NOT been committed as a sprite asset.
+- No game physics, receipt rules, pricing, production welcome screen, or payment behavior changed in this step.
+- Visual code commit: `d110af05`. Tests and real Kivy rendering have not been run/verified for this update. Required next: render on actual Windows Kivy, inspect frame sizes and collision fairness, and verify asset fidelity before declaring visual acceptance.
