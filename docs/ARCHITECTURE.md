@@ -82,3 +82,19 @@ GUI uses a portrait 360x720 logical viewport and uniform letterboxing. Screen co
 ### FEAT-021 Visual Polish v2 Batch A extension (2026-10-21)
 
 `meong_fly_painter.paint_static_screen` now delegates **only** the Start and Scan pages to `meong_fly_polish.paint_polished_menu`, a pure Pillow module implementing shared stepped panels/buttons, official-logo hero composition, non-redeemable voucher, and decorative scanner framing. Gameplay/Win/Lose continue through the original painter path. `meong_fly_gui.MeongFlyStage` caches those backgrounds as nearest-neighbor textures; it draws only the scan sweep, input focus/error ring, and mouse-hover outline on the Kivy `canvas.before` layer, without deleting child `TextInput`/Label canvases (BUG-012 guard). `ACTIONS` and `DEMO_ENTRY` still own the exact logical interactive bounds; resize transform remains shared. `MeongFlyStage.dispose` cancels Clock and mouse listeners at standalone app stop. This module does NOT communicate with POS/QRIS or production photo flows; Windows Kivy verification is pending. [Design/acceptance](features/FEAT-021-visual-polish-v2.md).
+
+
+### FEAT-021 — Batch B Gameplay visual source boundary (2026-10-21)
+
+The `feature/meong-flappy-challenge` standalone-only renderer now additionally uses:
+```text
+meong_fly_painter.paint_static_screen("game", logo_path)
+  -> meong_fly_game_art.paint_game_background() (one Pillow RGBA art at 360x720)
+meong_fly_gui.MeongFlyStage.__init__
+  -> camera_cat_poses(approved_logo_crop) -> three cached Kivy textures
+  -> make_rock_tile(0..4) -> five cached Kivy textures
+meong_fly_gui.MeongFlyStage._draw_game
+  -> asteroid_screen_rects(obstacle.x, obstacle.gap_y) + camera_screen_rect(game.y)
+  -> Kivy rectangles for moving parallax, asteroid belts, rainbow and scored HUD
+```
+The pure art geometry helpers map the existing engine 480×640 rectangular hitboxes into the same 360×720 logical Kivy stage. Gameplay backgrounds/assets are uploaded once, with no PIL image generation per frame; only rare new score labels are cached on demand. Win/Lose transitions remain owned by `MeongFlyFlow`; Kivy only displays a brief noninteractive collision burst after flow has recorded loss once. `canvas.before` is still used to avoid BUG-012 regressions. No physics, receipt validation, POS, QRIS, production GUI or `master` changes. Kivy/Windows acceptance pending; see [v2 spec](features/FEAT-021-visual-polish-v2.md).
