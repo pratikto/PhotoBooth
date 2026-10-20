@@ -339,6 +339,10 @@ def paint_static_screen(screen,logo_path):
     canvas=Image.new("RGBA",(W,H),(0,0,0,255))
     d=ImageDraw.Draw(canvas)
     draw_common(d,screen)
+    if screen in ("start", "scan"):
+        # Batch A: cacheable, mockup-matched surfaces with exact existing hitboxes.
+        from .meong_fly_polish import paint_polished_menu
+        return paint_polished_menu(screen, logo_path)
     logo,body=logo_parts(str(Path(logo_path)))
     if screen=="start":
         place_art(canvas,logo,26,58,308,207)
