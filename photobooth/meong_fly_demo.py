@@ -1,5 +1,6 @@
 """Standalone Meong Fly Space Edition: demo voucher, one attempt, asteroid dodging."""
 import random
+import math
 from pathlib import Path
 from kivy.app import App
 from kivy.clock import Clock
@@ -18,7 +19,7 @@ class SpaceBoard(Widget):
     def __init__(self, game, **kwargs):
         super().__init__(**kwargs)
         self.game = game
-        self.stars = [(random.Random(i).uniform(0, WIDTH), random.Random(i+999).uniform(0, HEIGHT)) for i in range(75)]
+        self.stars = [(random.Random(i).uniform(0, WIDTH), random.Random(i+999).uniform(0, HEIGHT), 1 + (i % 3)) for i in range(85)]
         self.bind(pos=lambda *_: self.redraw(), size=lambda *_: self.redraw())
 
     def on_touch_down(self, touch):
@@ -31,57 +32,105 @@ class SpaceBoard(Widget):
         if not self.width or not self.height:
             return
         sx, sy = self.width / WIDTH, self.height / HEIGHT
+        t = self.game.elapsed
         def rect(x, y, w, h):
             Rectangle(pos=(self.x + x*sx, self.y + y*sy), size=(w*sx, h*sy))
+        def circle(x, y, radius):
+            Ellipse(pos=(self.x+(x-radius)*sx, self.y+(y-radius)*sy),
+                    size=(2*radius*sx, 2*radius*sy))
         with self.canvas:
             self.canvas.clear()
-            Color(.025, .035, .15, 1)
+            Color(.025, .026, .12, 1)
             rect(0, 0, WIDTH, HEIGHT)
-            for x, y in self.stars:
-                Color(.7, .8, 1, 1)
-                rect(x, y, 2, 2)
-            Color(.36, .2, .6, 1)
-            Ellipse(pos=(self.x + 360*sx, self.y + 530*sy), size=(80*sx, 80*sy))
-            for obstacle in self.game.pipes:
-                # Rocky asteroid fields occupy the top and bottom of each gap.
-                for low, high in ((0, obstacle.gap_y-GAP_HEIGHT/2),
-                                  (obstacle.gap_y+GAP_HEIGHT/2, HEIGHT)):
+            # Subtle moving star field: cosmetic only, never changes collisions.
+            for x, y, depth in self.stars:
+                Color(.35 + .16*depth, .45 + .12*depth, 1, 1)
+                px = (x - t*(7+depth*10)) % WIDTH
+                rect(px, y, depth, depth)
+            # Distant purple planet with ring, and blue horizon.
+            Color(.19, .12, .40, 1)
+            circle(395, 538, 57)
+            Color(.54, .31, .75, 1)
+            Ellipse(pos=(self.x+329*sx, self.y+525*sy), size=(132*sx, 22*sy))
+            Color(.31, .17, .56, 1)
+            circle(395, 538, 48)
+            Color(.06, .18, .42, 1)
+            circle(40, -40, 126)
+            Color(.08, .28, .53, 1)
+            circle(35, -48, 111)
+            # Asteroid columns: rocky edges, crater details, no green pipes.
+            # Their hitboxes remain identical to the physics engine.
+            for idx, obstacle in enumerate(self.game.pipes):
+                for part, (low, high) in enumerate(((0, obstacle.gap_y-GAP_HEIGHT/2),
+                                                      (obstacle.gap_y+GAP_HEIGHT/2, HEIGHT))):
                     if high <= low:
                         continue
-                    Color(.36, .34, .53, 1)
+                    Color(.23, .21, .36, 1)
                     rect(obstacle.x, low, PIPE_WIDTH, high-low)
-                    Color(.55, .51, .68, 1)
-                    for j in range(3):
-                        cy = low + (high-low)*(j+1)/4
-                        Ellipse(pos=(self.x+(obstacle.x+10+j*9)*sx, self.y+cy*sy),
-                                size=(14*sx, 12*sy))
+                    Color(.42, .38, .56, 1)
+                    rect(obstacle.x+5, low, PIPE_WIDTH-10, high-low)
+                    # Crater positions are deterministic and remain decorative.
+                    for j in range(int((high-low)//40)+1):
+                        cy = low + 20 + j*39
+                        if cy > high-8:
+                            continue
+                        cx = obstacle.x + 17 + ((j*19+idx*11+part*7)%29)
+                        Color(.17, .15, .30, 1)
+                        circle(cx, cy, 10)
+                        Color(.61, .55, .69, 1)
+                        circle(cx-3, cy+3, 4)
+                    Color(.62, .56, .72, 1)
+                    rect(obstacle.x, high-7 if part==0 else low, PIPE_WIDTH, 7)
             cx, cy = CAT_X, self.game.y
-            # Pixel-art rainbow exhaust from the camera-cat's rear.
-            for j, rgb in enumerate(((1,.27,.42),(1,.63,.2),(.98,.88,.28),(.3,.85,.6),(.35,.55,1))):
+            # Five-color wavy rainbow exhaust; small time-based animation.
+            for j, rgb in enumerate(((1,.26,.39),(1,.60,.16),(.98,.86,.23),
+                                     (.26,.84,.57),(.27,.57,1))):
                 Color(*rgb, 1)
-                rect(cx-77, cy-13+j*5, 64, 5)
+                for segment in range(13):
+                    px = cx-90 + segment*6
+                    wave = math.sin(t*10 + segment*.6)*3
+                    rect(px, cy-13+j*5+wave, 7, 5)
+            # Pixel camera-cat based on Meong brand silhouette: white outline,
+            # gray camera body, prominent blue lens, pink cheeks, camera flash.
             Color(0,0,0,1)
-            rect(cx-19,cy-21,64,43)
+            rect(cx-24,cy-25,78,51)
+            rect(cx-12,cy+25,21,8)
+            rect(cx+25,cy+19,24,13)
             Color(1,1,1,1)
-            rect(cx-16,cy-18,58,37)
-            Color(.58,.6,.67,1)
-            rect(cx-12,cy-14,52,29)
-            # White instant camera with a large blue lens and cat face.
-            Color(.05,.23,.55,1)
-            Ellipse(pos=(self.x+(cx-9)*sx,self.y+(cy-11)*sy),size=(23*sx,23*sy))
-            Color(.05,.62,1,1)
-            Ellipse(pos=(self.x+(cx-4)*sx,self.y+(cy-6)*sy),size=(13*sx,13*sy))
-            Color(.55,.57,.64,1)
-            rect(cx+16,cy-12,25,25)
-            rect(cx+18,cy+9,7,11)
-            rect(cx+32,cy+9,7,11)
-            Color(.07,.07,.12,1)
-            rect(cx+23,cy+2,3,4)
-            rect(cx+34,cy+2,3,4)
-            rect(cx+28,cy-5,5,3)
-            Color(1,.42,.7,1)
-            rect(cx+19,cy-4,4,4)
-            rect(cx+37,cy-4,4,4)
+            rect(cx-21,cy-22,72,45)
+            rect(cx-9,cy+23,15,7)
+            rect(cx+28,cy+18,18,11)
+            Color(.58,.61,.68,1)
+            rect(cx-17,cy-18,64,37)
+            Color(.90,.93,.96,1)
+            rect(cx-17,cy-18,40,37)
+            Color(.06,.08,.16,1)
+            circle(cx-1,cy,17)
+            Color(.05,.33,.82,1)
+            circle(cx-1,cy,14)
+            Color(.10,.72,1,1)
+            circle(cx+2,cy+2,8)
+            Color(.02,.09,.24,1)
+            circle(cx+3,cy+1,5)
+            Color(1,1,1,1)
+            rect(cx+26,cy+13,7,6)
+            Color(.1,.84,1,1)
+            rect(cx+27,cy+14,5,4)
+            # Cat ears and face are integral to the camera silhouette.
+            Color(.54,.57,.64,1)
+            rect(cx+25,cy+19,9,10)
+            rect(cx+42,cy+19,9,10)
+            rect(cx+22,cy-15,30,31)
+            Color(.08,.08,.12,1)
+            rect(cx+29,cy+3,3,4)
+            rect(cx+43,cy+3,3,4)
+            rect(cx+35,cy-5,6,3)
+            Color(1,.48,.72,1)
+            rect(cx+24,cy-5,5,4)
+            rect(cx+46,cy-5,5,4)
+            # Tiny printed-photo slot at the bottom of the camera.
+            Color(.06,.07,.12,1)
+            rect(cx-12,cy-22,28,4)
 
 
 class Demo(App):
