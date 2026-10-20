@@ -106,7 +106,8 @@ def paint_game_background():
                 shadow=(1, 3), glow=(140, 216, 240))
     p.pixel_text(draw, "SCORE", 161, 29, scale=2, fill=p.WHITE)
     p.pixel_text(draw, "TARGET", 296, 29, scale=2, fill=p.CYAN)
-    p.pixel_text(draw, "10", 296, 52, scale=3, fill=p.CYAN)
+    from .meong_fly import TARGET_SCORE
+    p.pixel_text(draw, str(TARGET_SCORE), 296, 52, scale=3, fill=p.CYAN)
 
     draw.rectangle((0, 635, p.W, 719), fill=(8, 16, 51))
     draw.line((16, 643, 344, 643), fill=(61, 69, 132), width=2)
