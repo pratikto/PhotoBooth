@@ -174,3 +174,8 @@ This file tracks **actual verified repository/document changes**, not successful
 ## Historical application changes
 
 For changes made before the documentation effort, inspect Git commits and the dated QA evidence. Existing user-confirmed working thermal photo paper output **does not** prove acceptable image quality or QR-slip paper output. Historic sound/video mocked test passes **do not** resolve present Windows audio/video reports. Current defects remain in [bug_tracker.md](bug_tracker.md).
+
+
+## 2026-10-21 — FEAT-021 isolated prototype QA record (feature branch only)
+
+Document owner-reported Windows Step 3 GUI checklist **6/6 PASS** and prior targeted unit tests **10/10 PASS** for `feature/meong-flappy-challenge`. Documentation-only synchronization; **no application code changes, no master merge, no new test execution, no live POS/discount integration**. See [feature acceptance record](features/FEAT-021-meong-fly.md).
