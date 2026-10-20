@@ -12,6 +12,10 @@ The check box allows A/B comparison by exporting/printing Floyd baseline, then t
 
 Scope is `feature/dither-tuning` only. **The customer-facing `main.py`, `master` printer preset, printer ESC/POS path and production configuration have not been changed.** Preview is not proof of printed quality. Physical comparison must use identical photographs, paper, speed and printer settings, and operator-confirmed test printing. Automated regression tests were added, but physical acceptance remains pending.
 
+## Screen preview fidelity fix (2026-10-21)
+
+The GUI overview previously shrank a 1-bit dithered raster with NEAREST, aliasing away many black/white dots and making the monitor look worse than physical paper. The reduced overview now uses BOX area averaging in display grayscale to preserve approximate visual dot coverage. The overview's grays are *screen-only* representations of black/white dot density. The nearest-neighbor detail crop, native 1-bit PNG export, and ESC/POS paper payload are unchanged. Compare actual dots using the detail crop and final fidelity on paper.
+
 ## BUG-010 layout usability
 
 Each algorithm has an independently scrollable parameter area. Hover its slider region and turn the mouse wheel, or drag the adjacent vertical scrollbar. The preview remains visible, and Print Test / Save PNG remain on screen outside the slider scroll region. This must still be checked on the operator's actual Windows screen.
