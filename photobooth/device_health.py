@@ -11,7 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from photobooth.hardware_adapters import DeviceDescriptor, configured_inventory, platform_family
-from photobooth.hardware_discovery import discover_local_devices
+from photobooth.hardware_discovery import discover_local_devices, discover_devices_with_evidence
 from pathlib import Path
 import os
 import shutil
@@ -43,6 +43,7 @@ class HealthSnapshot:
     checks: tuple[HealthCheck, ...]
     platform: str = "unknown"
     devices: tuple[DeviceDescriptor, ...] = ()
+    discovery_complete_kinds: tuple[str, ...] = ()
 
     def by_name(self, name: str) -> HealthCheck:
         return next(check for check in self.checks if check.name == name)
@@ -299,11 +300,12 @@ def collect_health_snapshot(
         check_media(ad_catalog),
         check_heartbeat(last_heartbeat),
     )
+    detected, complete = (discover_devices_with_evidence(platform=platform)
+                          if include_discovery and not printer_busy else ((), ()))
     return HealthSnapshot(
+        discovery_complete_kinds=complete,
         checked_at=datetime.now(timezone.utc).isoformat(),
         checks=checks,
         platform=family,
-        devices=(configured_inventory(camera, printer_config, platform=platform)
-                 + (discover_local_devices(platform=platform)
-                    if include_discovery and not printer_busy else ())),
+        devices=configured_inventory(camera, printer_config, platform=platform) + detected,
     )
