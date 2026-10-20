@@ -1,3 +1,14 @@
+## FEAT-011 — Hide Threshold comparison panel (2026-10-21)
+
+- **Owner-approved scope:** remove Threshold from the standalone `tools/dither_compare_gui.py` display; keep Floyd/Bayer/Dizzy and retain the Threshold backend, lab JSON keys and legacy tools. Work restricted to `feature/dither-tuning`. GUI commit [`ad6b299`](https://github.com/pratikto/PhotoBooth/commit/ad6b299537791905ba79d27035eac6e27af92f2c).
+- **Source checks added:** `tests/test_dither_gui_layout.py` asserts the three visible panels and Print All/Export All selections exclude Threshold, while saved lab profile widths still include all modes; other dither tests updated for three-panel 370 px preview and GUI labels. *Test execution not confirmed by this change record.*
+- [ ] Run `python -m unittest tests.test_dither_lab tests.test_dither_comparison tests.test_dither_print tests.test_dither_gui_layout tests.test_dizzy_dither tests.test_dizzy_lab_integration -v` on latest branch and capture PASS/FAIL/SKIP and SHA.
+- [ ] Launch `python tools/dither_compare_gui.py`; confirm three panels in order Floyd–Steinberg / Bayer 8×8 / Dizzy, no Threshold slider, 1050×620 and maximized layouts usable.
+- [ ] Toggle Enhanced Floyd and Dizzy variant, adjust/sync sliders, change width 576 ↔ 384, then Save/Load All Configs; verify hidden Threshold profile remains in v3 JSON but never appears in GUI or gets printed by Print All.
+- [ ] Export All produces exactly **three 1-bit PNGs**; individual Save PNG works for every visible algorithm; never outputs a Threshold PNG.
+- [ ] With explicit physical-print confirmation, **Print All (3 jobs)** sends only Floyd/Bayer/Dizzy and retains stop-on-uncertain behavior; verify against actual printer (a spool success is not proof of printed paper).
+- **Isolation:** production printer supports Threshold unchanged; `master` is not touched.
+
 ## FEAT-011 / Dizzy experiment — 2026-10-21
 
 - **Source-only scope:** `feature/dither-tuning` (no `master` merge, no kiosk production print-mode modification).
@@ -6,9 +17,9 @@
 - **Synthetic performance snapshot:** 576x579 gray image: article-8 ~0.97 sec; orthogonal-4 ~0.65 sec on this execution container. Not a Windows benchmark.
 - **GitHub test automation:** `.github/workflows/dither-lab.yml` updated to compile and run `tests.test_dizzy_dither`, `tests.test_dizzy_lab_integration`, and prior dither tests. Actual CI run status **not yet confirmed** by the tool; do not mark green until checked.
 - [ ] Local Windows: `python -m unittest tests.test_dither_lab tests.test_dither_comparison tests.test_dither_print tests.test_dither_gui_layout tests.test_dizzy_dither tests.test_dizzy_lab_integration -v`.
-- [ ] Open `python tools/dither_compare_gui.py`; verify four lanes at 1150px and maximized, no clipped preview, scrolling, sync, reset, JSON save/load v1/v2/v3.
+- [ ] Open `python tools/dither_compare_gui.py`; verify three visible lanes at 1050px and maximized (Threshold hidden), no clipped preview, scrolling, sync, reset, JSON save/load v1/v2/v3.
 - [ ] Same-photo A/B: Floyd baseline, Enhanced Floyd, Dizzy article-8 and orthogonal-4, and Bayer with same width and sliders; inspect exact exported 1-bit rasters.
-- [ ] Physical printer only with operator permission: confirm each single Print Test, printed Dizzy variant/seed header, 4-job cancellation/uncertain-state stop, native 576-dot width, print quality and paper density.
+- [ ] Physical printer only with operator permission: confirm each single Print Test, printed Dizzy variant/seed header, 3-job cancellation/uncertain-state stop, native 576-dot width, print quality and paper density.
 - [ ] LUT calibration is **out of scope**: author LUT should not be copied onto a different uncalibrated variant.
 - **Acceptance** pending repeatable Windows UI and actual printer-paper inspection, especially faces/hair/skin midtones and monochrome QR/text clarity.
 
@@ -17,7 +28,7 @@
 - Screenshot/owner confirmed missing access to lower sliders and print controls on Windows.
 - Scope authorized: `feature/dither-tuning` GUI layout only. Independent scroll canvas and mouse wheel per lane, compact preview, sticky action buttons; no changes to native raster, printer jobs or kiosk.
 - CI compile and static GUI structure tests are evidence of source consistency only; **Windows Tk visual interaction still needs owner retest**.
-- [ ] On 1050×620 and maximized, Print Test and Save PNG visible; threshold slider accessible by scrolling Threshold.
+- [ ] On 1050×620 and maximized, Print Test and Save PNG visible; all three visible algorithms accessible; Threshold is no longer displayed.
 - [ ] Mouse wheel/scrollbar affects only hovered algorithm; adjusting slider updates correct preview.
 - [ ] Sync Parameters and Save/Load configurations still work; printing still requires confirmation.
 
