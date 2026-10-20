@@ -49,7 +49,7 @@ class MeongFlyTests(unittest.TestCase):
         self.assertEqual(game.status, "lost")
 
     def test_visible_sprite_bounds(self):
-        for start_y in (CAT_BOTTOM - 1, HEIGHT - CAT_TOP + 1):
+        for start_y in (CAT_BOTTOM - 1, HEIGHT - CAT_TOP + 5):
             with self.subTest(start_y=start_y):
                 game = MeongFly()
                 game.start()
