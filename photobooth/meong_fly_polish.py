@@ -88,12 +88,11 @@ def voucher(draw, p):
     for x in (45, 314):
         draw.rectangle((x - 3, 450, x + 3, 465), fill=(6, 12, 48))
     draw.line((62, 442, 298, 442), fill=(230, 154, 73), width=1)
-    draw.line((62, 496, 298, 496), fill=(230, 154, 73), width=1)
-    p.pixel_text(draw, "MENANG = DAPAT DISKON", 180, 424, 2, fill=p.INK)
-    p.pixel_text(draw, "RP 2.500", 180, 451, 4, fill=(236, 57, 127),
-                 shadow=(255, 168, 125))
-    p.pixel_text(draw, "UNTUK PHOTOBOOTH!", 180, 476, 2, fill=p.INK)
-    p.pixel_text(draw, "SIMULASI - BELUM AKTIF", 180, 504, 1,
+    draw.line((62, 501, 298, 501), fill=(230, 154, 73), width=1)
+    p.pixel_text(draw, "MENANG & DAPAT DISKON", 180, 424, 2, fill=p.INK)
+    p.pixel_text(draw, "RP 2.500", 180, 448, 4, fill=(236, 57, 127))
+    p.pixel_text(draw, "UNTUK PHOTOBOOTH!", 180, 482, 2, fill=p.INK)
+    p.pixel_text(draw, "SIMULASI - BELUM AKTIF", 180, 506, 1,
                  fill=(107, 52, 73))
 
 
