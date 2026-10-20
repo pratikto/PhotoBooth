@@ -218,81 +218,141 @@ class MeongFlyStage(Widget):
         Color(1, 1, 1, 1)
         Rectangle(texture=texture, pos=pos, size=size)
 
-    def _draw_game(self):
-        game = self.flow.game
-        ox, oy, scale = self._viewport()
-        board_bottom = 134.0
-        wx = W / WIDTH
-        wy = wx  # Hitbox, camera sprite and asteroid textures must not stretch.
-        # Foreground stars drift at three parallax speeds without shifting hitboxes.
-        for index in range(34):
-            depth = 1 + index % 3
-            star_x = (index * 89 - self._time * (8 + depth * 10)) % W
-            star_y = 141 + ((index * 73) % 462)
-            Color(.34 + depth * .17, .41 + depth * .13, 1, .85)
-            Rectangle(pos=(ox + star_x * scale, oy + star_y * scale),
-                      size=(depth * scale, depth * scale))
-        for index, obstacle in enumerate(game.pipes):
-            x = obstacle.x * wx
-            w = PIPE_WIDTH * wx
-            low_y = obstacle.gap_y - GAP_HEIGHT / 2
-            high_y = obstacle.gap_y + GAP_HEIGHT / 2
-            for part, (bottom, top) in enumerate(((0, low_y),
-                                                  (high_y, HEIGHT))):
-                if top <= bottom:
-                    continue
-                bound_y = board_bottom + bottom * wy
-                bound_h = (top - bottom) * wy
-                # Filled rock belt makes the WHOLE rectangle hitbox visible.
-                Color(.28, .22, .44, .86)
-                Rectangle(pos=(ox + x * scale, oy + bound_y * scale),
-                          size=(w * scale, bound_h * scale))
-                tile_size = 46.0
-                filled = 0.0
-                while filled < bound_h:
-                    segment = min(tile_size, bound_h - filled)
-                    texture = self._asteroids[
-                        (index + part + int(filled / tile_size)) % len(self._asteroids)
-                    ]
-                    Color(1, 1, 1, .96)
-                    # Every tile is bounded by the exact physics collision box.
-                    Rectangle(texture=texture,
-                              pos=(ox + x * scale,
-                                   oy + (bound_y + filled) * scale),
-                              size=(w * scale, segment * scale))
-                    filled += tile_size
-                Color(.67, .55, .85, 1)
-                edge_y = (bound_y + bound_h - 3) if part == 0 else bound_y
-                Rectangle(pos=(ox + x * scale, oy + edge_y * scale),
-                          size=(w * scale, 3 * scale))
+    def _draw_game(self, show_impact=False):
+        """Paint a live frame using the unchanged physics geometry and cached art.
 
-        cy = board_bottom + game.y * wy
-        body_x = (CAT_X - CAT_LEFT) * wx
-        body_y = board_bottom + (game.y - CAT_BOTTOM) * wy
-        # The rainbow is decorative: collision is the exact logo body only.
-        palette = (
-            (1, .38, .65), (1, .65, .31), (1, .90, .45),
-            (.40, .92, .66), (.35, .79, 1),
-        )
-        for band, rgb in enumerate(palette):
-            Color(*rgb, 1)
+        Art textures are prepared in __init__; no Pillow calls per frame.
+        """
+        game = self.flow.game
+        elapsed = game.elapsed  # Frozen during pause and after terminal result.
+
+        # Three parallax layers only inside the playing area.
+        for index in range(42):
+            depth = 1 + index % 3
+            x = (index * 89 - elapsed * (7 + 11 * depth)) % W
+            y = GAME_FIELD_TOP + 14 + ((index * 73) % (
+                GAME_FIELD_BOTTOM - GAME_FIELD_TOP - 29))
+            Color(.30 + depth * .14, .39 + depth * .13, 1, .72)
+            pos, size = self._rect((x, y, depth, depth))
+            Rectangle(pos=pos, size=size)
+
+        # Quiet background comet; cosmetic, no score or collision.
+        comet_x = W + 52 - (elapsed * 17) % (W + 108)
+        comet_y = 201 + math.sin(elapsed * .36) * 11
+        for i in range(6):
+            Color(.28 + .07 * (5 - i), .59 + .03 * (5 - i), 1,
+                  .25 + .11 * (5 - i))
+            pos, size = self._rect((comet_x + i * 4, comet_y + i * 2, 3, 2))
+            Rectangle(pos=pos, size=size)
+
+        for index, obstacle in enumerate(game.pipes):
+            for part, (bx, by, bw, bh) in asteroid_screen_rects(
+                    obstacle.x, obstacle.gap_y):
+                if bh <= 0:
+                    continue
+                # Clip the belt as an obstacle enters/exits the viewport.
+                left = max(0, bx)
+                right = min(W, bx + bw)
+                visible_width = right - left
+                if visible_width <= 0:
+                    continue
+                pos, size = self._rect((left, by, visible_width, bh))
+                # The whole low-contrast belt communicates the true rectangular
+                # collision box; individual decorative rocks have alpha edges.
+                Color(.27, .22, .42, .88)
+                Rectangle(pos=pos, size=size)
+                self._border((left, by, visible_width, bh),
+                             (.57, .49, .77, .34), 1)
+
+                tile_height = 46.0
+                tile_index = 0
+                while tile_index * tile_height < bh:
+                    filled = tile_index * tile_height
+                    tile_h = min(tile_height, bh - filled)
+                    variant = (index * 3 + (2 if part == "upper" else 0)
+                               + tile_index) % len(self._asteroids)
+                    texture = self._asteroids[variant]
+                    pos, size = self._rect((left, by + filled,
+                                            visible_width, tile_h))
+                    Color(1, 1, 1, .99)
+                    Rectangle(texture=texture, pos=pos, size=size)
+                    tile_index += 1
+
+                # Exact gap boundary: rocks never protrude beyond the hitbox.
+                edge_y = by if part == "lower" else by + bh - 3
+                pos, size = self._rect((left, edge_y, visible_width, 3))
+                Color(.80, .68, .96, 1)
+                Rectangle(pos=pos, size=size)
+
+        bx, by, bw, bh = camera_screen_rect(game.y)
+        center_y = by + bh / 2
+        bands = ((1, .33, .58), (1, .68, .31), (1, .91, .48),
+                 (.42, .93, .68), (.31, .75, 1))
+        for band, color in enumerate(bands):
             for k in range(20):
-                x = body_x - 3 - k * 4.0
-                y = cy + (band - 2) * 4 + math.sin(self._time * 9 + k * .4) * 3
-                Rectangle(pos=(ox + x * scale, oy + y * scale),
-                          size=(5 * scale, 4 * scale))
+                trail_x = bx + 1 - k * 4.1
+                if trail_x < -5:
+                    break
+                trail_y = (center_y + (band - 2) * 4.2
+                           + math.sin(elapsed * 9 + k * .47) * 3.2)
+                trail_w = 5 if k < 8 else 4 if k < 14 else 2
+                trail_h = 4 if k < 11 else 3 if k < 17 else 2
+                Color(*color, max(.20, 1 - k * .038))
+                pos, size = self._rect((trail_x, trail_y, trail_w, trail_h))
+                Rectangle(pos=pos, size=size)
+
+        # Rotation follows visual movement, NOT a new game physics direction.
+        pose = ("climb" if game.velocity > 130 else
+                "dive" if game.velocity < -100 else "level")
         Color(1, 1, 1, 1)
-        Rectangle(texture=self._cat,
-                  pos=(ox + body_x * scale, oy + body_y * scale),
-                  size=((CAT_LEFT + CAT_RIGHT) * wx * scale,
-                        (CAT_BOTTOM + CAT_TOP) * wy * scale))
-        self._draw_score(game.score, 181, 43, width=92, height=31, scale=4)
+        pos, size = self._rect((bx, by, bw, bh))
+        Rectangle(texture=self._cat_poses[pose], pos=pos, size=size)
+        if int(elapsed * 9) % 4 == 0:
+            Color(1, .92, .65, .88)
+            pos, size = self._rect((bx + bw * .67, by - 5, 2, 2))
+            Rectangle(pos=pos, size=size)
+
+        self._draw_score(game.score, 161, 50, width=94, height=29, scale=4)
+        effect_age = self._time - self._score_fx_since
+        if 0 <= effect_age < .36 and not show_impact:
+            progress = effect_age / .36
+            texture = self._score_texture("+1", size=2, color=GOLD)
+            top = max(GAME_FIELD_TOP + 10,
+                      self._score_fx_y - 50 - progress * 22)
+            Color(1, 1, 1, 1 - progress)
+            pos, size = self._rect((bx + bw + 5, top, 41, 20))
+            Rectangle(texture=texture, pos=pos, size=size)
+            for j in range(5):
+                Color(1, .80 + j * .03, .33, 1 - progress)
+                px = bx + bw + 10 + j * 7
+                py = top + 17 + math.sin(j * 1.8) * 5 - progress * 9
+                dot_pos, dot_size = self._rect((px, py, 2, 2))
+                Rectangle(pos=dot_pos, size=dot_size)
+
+        if show_impact:
+            # Flow has already saved the loss exactly once. 220 ms of particles
+            # are only a cosmetic transition to the existing result screen.
+            progress = 1 - max(0, self._impact_until - self._time) / .22
+            for j in range(16):
+                angle = j * math.tau / 16
+                distance = 5 + max(0, progress) * (13 + j % 4 * 4)
+                px = bx + bw / 2 + math.cos(angle) * distance
+                py = center_y + math.sin(angle) * distance
+                rgb = (1, .68, .27) if j % 3 else (1, .34, .63)
+                Color(*rgb, max(0, 1 - progress))
+                dot_pos, dot_size = self._rect(
+                    (px, py, 2 + j % 2, 2 + j % 2))
+                Rectangle(pos=dot_pos, size=dot_size)
 
         if self.flow.paused:
-            Color(.02, .03, .11, .85)
-            Rectangle(pos=(ox, oy + 124 * scale),
-                      size=(W * scale, 510 * scale))
-            self._draw_score("PAUSE", 180, 321, width=230, height=50, scale=4)
+            Color(.02, .04, .13, .88)
+            pos, size = self._rect((0, GAME_FIELD_TOP, W,
+                                    GAME_FIELD_BOTTOM - GAME_FIELD_TOP))
+            Rectangle(pos=pos, size=size)
+            self._draw_score("PAUSED", 180, 309, width=240,
+                             height=48, scale=4)
+            self._border(ACTIONS["game"]["pause"],
+                         (1, .87, .49, .97), 2)
 
     def _refresh(self):
         """Repaint only the background layer; keep interactive child canvases.
