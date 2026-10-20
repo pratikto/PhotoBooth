@@ -4,12 +4,15 @@ Run under Xvfb on Linux. This creates a GUI but never accesses hardware,
 sets printer settings, or submits a print job.
 """
 from dataclasses import replace
+from pathlib import Path
+import tempfile
+from unittest.mock import patch
 import time
 import tkinter as tk
 from tkinter import ttk
 import unittest
 
-from photobooth.dither_lab import ComparisonProfiles
+from photobooth.dither_lab import ComparisonProfiles, load_profile
 from tools.dither_compare_gui import ComparisonApp
 
 
@@ -92,6 +95,62 @@ class EnhancedDizzyTkTests(unittest.TestCase):
         self.app.apply_configs(ComparisonProfiles())
         self.assertFalse(self.app.enhanced_floyd.get())
         self.assertFalse(self.app.enhanced_dizzy.get())
+
+    def test_auto_tune_dialog_save_then_apply_best_is_floyd_only(self):
+        """Exercise the real async search, preview dialog and 1-bit Apply."""
+        self.app.sync.set(True)
+        prior_bayer = self.app.configs.bayer
+        prior_dizzy = self.app.configs.dizzy
+        previous_floyd = self.app.configs.floyd
+        self.app.start_auto_tune()
+        self.assertTrue(self.app.autotune_busy)
+        self.assertEqual(self.app.autotune_button.cget("text"), "Cancel Tune")
+        deadline = time.monotonic() + 35
+        while time.monotonic() < deadline and self.app.autotune_result is None:
+            self.root.update()
+            time.sleep(0.025)
+        self.assertIsNotNone(self.app.autotune_result, "search did not finish")
+        self.assertEqual(self.app.autotune_button.cget("text"), "Auto Tune")
+        self.assertEqual(len(self.app.autotune_result.candidates), 3)
+        self.assertIsNotNone(self.app.autotune_dialog)
+        self.assertTrue(self.app.autotune_dialog.winfo_exists())
+        self.assertEqual(self.app.configs.floyd, previous_floyd)
+        # Preset save must not silently modify the current kiosk/lab params.
+        with tempfile.TemporaryDirectory() as folder:
+            target = Path(folder) / "auto-only.json"
+            with patch(
+                "tools.dither_compare_gui.filedialog.asksaveasfilename",
+                return_value=str(target),
+            ):
+                self.app.save_auto_tune_preset()
+            saved = load_profile(target)
+            self.assertTrue(saved.enhanced_floyd)
+            self.assertEqual(self.app.configs.floyd, previous_floyd)
+
+        expected = self.app.autotune_result.candidates[0]
+        self.app.apply_auto_tune_candidate(0)
+        self.assertEqual(self.app.configs.floyd, expected.profile)
+        self.assertEqual(self.app.configs.bayer, prior_bayer)
+        self.assertEqual(self.app.configs.dizzy, prior_dizzy)
+        self.assertFalse(self.app.autotune_busy)
+        self.assertIsNone(self.app.autotune_result)
+        self.assertTrue(self.app.enhanced_floyd.get())
+        actual = self._wait_for_ready("floyd-steinberg")
+        self.assertEqual(actual.mode, "1")
+        self.assertEqual(actual.tobytes(), expected.raster.tobytes())
+
+    def test_auto_tune_cancel_invalidates_pending_results(self):
+        self.app.start_auto_tune()
+        self.assertTrue(self.app.autotune_busy)
+        old_gen = self.app.autotune_generation
+        self.app.controls["floyd-steinberg"]["contrast"][0].set(1.13)
+        self.app.slider_changed("floyd-steinberg", "contrast")
+        self.assertGreater(self.app.autotune_generation, old_gen)
+        self.assertFalse(self.app.autotune_busy)
+        self.assertIsNone(self.app.autotune_result)
+        self.assertEqual(self.app.autotune_button.cget("text"), "Auto Tune")
+        self.root.update()  # Pending events from the cancelled worker are stale.
+        self.assertIsNone(self.app.autotune_result)
 
     def test_actual_gui_worker_renders_distinct_baseline_enhanced_rasters(self):
         baseline = self._wait_for_ready()
