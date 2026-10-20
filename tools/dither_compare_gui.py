@@ -136,7 +136,7 @@ class ComparisonApp:
             preview_holder.pack_propagate(False)
             output = ttk.Label(preview_holder, text="Rendering preview...", anchor="center")
             output.pack(fill="both", expand=True)
-            detail = ttk.Label(panel, text="Center dot crop", anchor="center")
+            detail = ttk.Label(panel, text="Actual dots (nearest-neighbor crop)", anchor="center")
             detail.pack(fill="x", pady=2)
             meta = ttk.Label(panel, text="Pending...", anchor="center")
             meta.pack(fill="x")
@@ -189,7 +189,7 @@ class ComparisonApp:
 
         footer = ttk.Frame(root, padding=(12, 0, 12, 7))
         footer.pack(fill="x")
-        self.message = tk.StringVar(value="Compare original Floyd against enhanced Floyd via checkbox; kiosk unchanged.")
+        self.message = tk.StringVar(value="Screen preview shows averaged dot coverage; dot crop / PNG / print stay exact.")
         ttk.Label(footer, textvariable=self.message).pack(side="left")
         ttk.Button(footer, text="Print All (3 jobs)",
                    command=self.print_all).pack(side="right")
@@ -332,8 +332,13 @@ class ComparisonApp:
         self.root.after(80, self.poll)
 
     def show_image(self, mode, raster):
-        preview = raster.convert("RGB")
-        preview.thumbnail((370, 268), Image.Resampling.NEAREST)
+        # Screen preview is necessarily smaller than the 1-bit print raster.
+        # NEAREST discards most black dots when shrinking and makes a good
+        # physical print look sparse/jagged. BOX averages dot coverage into
+        # display grays, approximating perceived tone without changing bytes.
+        preview = raster.convert("L")
+        preview.thumbnail((370, 268), Image.Resampling.BOX)
+        preview = preview.convert("RGB")
         factor = self.zoom.get()
         width, height = raster.size
         w, h = min(130, width), min(55, height)
