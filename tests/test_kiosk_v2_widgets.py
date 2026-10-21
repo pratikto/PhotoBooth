@@ -8,11 +8,14 @@ os.environ.setdefault("PHOTOBOOTH_AD_VIDEO", "0")
 os.environ.setdefault("KIVY_NO_ARGS", "1")
 
 try:
-    from photobooth.kiosk_v2.app import PortraitKioskV2App
-    from photobooth.kiosk_v2.flow import ADVERT, TEMPLATES, TUTORIAL, GAME_PREVIEW
-    HAS_KIVY = True
+    import kivy  # noqa: F401
 except ImportError:
     HAS_KIVY = False
+else:
+    HAS_KIVY = True
+    # After Kivy is installed, errors in v2 imports must FAIL, not be skipped.
+    from photobooth.kiosk_v2.app import PortraitKioskV2App
+    from photobooth.kiosk_v2.flow import ADVERT, TEMPLATES, TUTORIAL, GAME_PREVIEW
 
 
 @unittest.skipUnless(HAS_KIVY, "Kivy not available in pure-Python test environment")
