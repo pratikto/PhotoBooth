@@ -1,5 +1,14 @@
 # FEAT-022 - Meong Photobooth portrait kiosk GUI v2 (working specification)
 
+> **P2.6–P2.8 closure (2026-10-22): non-hardware PASS.** Readable disabled actions,
+> page-revision/suspend guards, audio effect ownership and traceable visual capture
+> are complete. Exact-SHA CI succeeded and original artifacts were downloaded,
+> checksum verified and reviewed at both target sizes. 45 local tests pass.
+> Stable application/renderer checkpoint: `0fbf15829d1537a7f18990b492b1e5934f21c0f8`.
+> [Final report / Windows checklist](qa/portrait-v2-p28/README.md).
+> Windows hardware acceptance and future service/game integrations remain separate.
+
+
 **Date:** 2026-10-21
 **Status:** APPROVED FOR STAGED DEVELOPMENT; NOT PRODUCTION READY
 **Working branch:** feature/portrait-kiosk-v2-next (derived from feature/portrait-kiosk-gui; master unchanged)

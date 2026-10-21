@@ -1,0 +1,9 @@
+{
+  "artifact_id": 12353357896,
+  "run_id": 39618540570,
+  "source_sha": "0fbf15829d1537a7f18990b492b1e5934f21c0f8",
+  "expected_digest": "sha256:a27ac09dd5e16e36431463d332b993ba0dbcce6de162156234faf1c466267a13",
+  "downloaded_zip_digest": "sha256:a27ac09dd5e16e36431463d332b993ba0dbcce6de162156234faf1c466267a13",
+  "verified": true,
+  "png_count": 12
+}

@@ -4,7 +4,7 @@
 
 ## Checkpoint and evidence policy
 
-- Latest verified application/renderer checkpoint: `0fbf15829d1537a7f18990b492b1e5934f21c0f8`, [CI 39618540570](https://github.com/pratikto/PhotoBooth/actions/runs/39618540570), both jobs successful. Its artifact visual review remains BLOCKED. Newer documentation commits must not inherit this CI PASS.
+- Latest verified application/renderer checkpoint: `0fbf15829d1537a7f18990b492b1e5934f21c0f8`, [CI 39618540570](https://github.com/pratikto/PhotoBooth/actions/runs/39618540570), both jobs successful. Its artifact has been downloaded, digest verified and visually reviewed. Newer documentation commits must not inherit this CI PASS.
 - A pushed commit and verified remote HEAD mean **published**, not **tested**.
 - Gate requires a GitHub Actions run with `head_sha` **exactly equal** to the milestone checkpoint SHA and both jobs successful. If no matching run is available, mark **BLOCKED / NOT VERIFIED**, never PASS.
 - The desktop job must upload twelve screenshots (six pages × two viewports). Download and inspect those screenshots; existence alone does not prove legibility or alignment.
@@ -21,18 +21,18 @@
 ## P2.7 — Responsive, interactive and audio lifecycle
 
 - [x] Add fake-provider tests for page ownership, game-preview handoff, suspension, resume, cleanup, and idempotent teardown.
-- [ ] Verify navigation and touch targets across both viewport sizes with widget smoke and visual evidence.
-- [ ] Check transitions, timeout-to-idle behavior, one-tutorial-per-visit, and no restart of soundtrack during tutorial-to-template navigation.
-- [ ] Verify game preview does not overlap GUI music; actual Meong Fly is not integrated.
+- [x] Verify navigation and touch targets across both viewport sizes with widget smoke and visual evidence.
+- [x] Check transitions, timeout-to-idle behavior, one-tutorial-per-visit, and no restart of soundtrack during tutorial-to-template navigation.
+- [x] Verify game preview does not overlap GUI music; actual Meong Fly is not integrated.
 - [ ] Verify real Windows speaker playback and camera only during later operator acceptance, not in CI.
 
 ## P2.8 — Visual QA and rollback
 
-- [ ] Review screenshot artifact pixel-by-pixel for each page, each viewport.
-- [ ] Record screenshot artifact URL, exact SHA, test run ID, test summary and known limitations.
-- [ ] Close all P2.6–P2.8 blockers; mark non-hardware gates PASS only with evidence.
-- [ ] Record final stable commit as rollback reference; do not merge to `master`.
-- [ ] Present Windows acceptance checklist for user approval **after** P2.8 evidence is ready.
+- [x] Review screenshot artifact pixel-by-pixel for each page, each viewport.
+- [x] Record screenshot artifact URL, exact SHA, test run ID, test summary and known limitations.
+- [x] Close all P2.6–P2.8 blockers; mark non-hardware gates PASS only with evidence.
+- [x] Record final stable commit as rollback reference; do not merge to `master`.
+- [x] Present Windows acceptance checklist for user approval **after** P2.8 evidence is ready.
 
 ## Operator Windows acceptance (approval required later)
 
@@ -65,7 +65,7 @@ CONNECT 403. P2.7 exact-SHA run was queued at last observation. Local P2.8
 renderer checks, 45 tests and twelve pixel-identical rerenders passed, but
 **P2.6–P2.8 completion is not certified** until required CI/artifact review.
 
-## Current 2026-10-22 post-publish verification
+## Historical first 2026-10-22 post-publish verification (superseded below)
 
 [Exact-SHA CI metadata, downloaded P2.6 images and review](qa/portrait-v2-ci/README.md).
 P2.6 non-hardware gate is PASS. P2.7 and P2.8 both pass exact-SHA CI, but
@@ -73,3 +73,14 @@ their artifact visual review is still BLOCKED by two additional GitHub storage
 hosts (13 and 9). Those exact domains were saved in a new environment draft.
 Post-publish local validation: 45 tests PASS, clean `0fbf158` manifests and twelve
 new screenshots. No new application code changes. P2.8 remains incomplete.
+
+## Final 2026-10-22 closure — non-hardware PASS
+
+[Final CI evidence](qa/portrait-v2-ci/README.md) and [report/Windows checklist](qa/portrait-v2-p28/README.md).
+All three milestone checkpoints have exact-SHA successful CI, both jobs successful,
+and downloaded original screenshot artifacts reviewed at both target dimensions.
+P2.7/P2.8 ZIP digests match GitHub; P2.8 manifests match clean source and PNG hashes.
+45 local tests PASS, zero skips. Stable code/renderer rollback:
+`0fbf15829d1537a7f18990b492b1e5934f21c0f8`.
+Windows speaker/touch acceptance is deliberately still unchecked above.
+No master merge, game integration, production payment or hardware certification.

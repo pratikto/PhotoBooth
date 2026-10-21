@@ -2,6 +2,12 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased — P2.6–P2.8 non-hardware gates closed] — 2026-10-22
+
+- Downloaded P2.7/P2.8 original CI artifacts after network publication; verified both ZIP digests, all dimensions and P2.8 clean-source/PNG manifests. Reviewed every page at 800×1280 and 452×900; no remaining synthetic visual blocker.
+- Exact milestone SHAs and both jobs pass CI. Final local suites: 45 PASS, no failures/errors/skips. Archive original CI PNGs, manifests, hashes, metadata and closure transcript; update QA gate, Windows checklist and final rollback checkpoint `0fbf158`.
+- [Final report](qa/portrait-v2-p28/README.md). Windows audio/touch and BUG-001/007/009 remain open; no master merge, gameplay, scanner, discount or production payment enablement.
+
 ## [Unreleased — post-publish P2 QA verification] — 2026-10-22
 
 - Verified exact-SHA CI SUCCESS and both jobs for P2.6, P2.7 and P2.8. Downloaded P2.6 artifact, verified its ZIP digest and inspected all twelve original CI screenshots at 800×1280 and 452×900; P2.6 non-hardware gate PASS.

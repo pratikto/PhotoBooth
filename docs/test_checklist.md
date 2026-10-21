@@ -404,3 +404,15 @@ Do not close P2.6–P2.8 based only on these local results.
 - [ ] Windows acceptance remains NOT RUN.
 
 [Current evidence, checkpoints and network action](qa/portrait-v2-ci/README.md).
+
+## Final 2026-10-22 P2.6–P2.8 closure — non-hardware PASS
+
+- [x] Exact-SHA CI and both jobs SUCCESS for all milestone code checkpoints.
+- [x] All three original screenshot artifacts downloaded and reviewed at both portrait sizes.
+- [x] P2.7/P2.8 ZIP digest verification; final clean-source manifest and twelve PNG hashes checked.
+- [x] Final local 45 tests PASS, zero failures/errors/skips.
+- [x] Stable rollback `0fbf15829d1537a7f18990b492b1e5934f21c0f8` recorded.
+- [x] Windows operator checklist presented in the [final report](qa/portrait-v2-p28/README.md).
+- [ ] Physical Windows audible speaker/touch acceptance remains NOT RUN.
+
+Earlier BLOCKED sections above are historical and superseded by this closure.
