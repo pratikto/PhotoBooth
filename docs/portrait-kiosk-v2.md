@@ -158,3 +158,12 @@ Initial new GUI/audio source has **16/16 Kivy-independent tests PASS** and succe
 
 **Next approved integration gate:** Preserve existing advertising/touch/template flow and collect physical audio/touch observations first. Real face triggering, mini-game receipt and discount, QRIS, camera/retake, printer and Drive integrations still require staged follow-up testing and remain disconnected from the v2 opt-in prototype. Do not delete payment/receipt history, and do not merge to `master` without owner approval.
 
+### P2.5 real Kivy synthetic visual contact sheets
+
+The following **actual Kivy-generated** screenshots were recorded from [GitHub Actions run 39555635722](https://github.com/pratikto/PhotoBooth/actions/runs/39555635722), tested on documentation head c3b22bc6 with the same P2.5 application source as c4e4703a. These are *not* mockup images, hardware screenshots, camera captures or proof of payment/printing; they are visual regression evidence for the six currently implemented app states.
+
+![Real synthetic Kivy P2.5 screenshot montage at 800x1280](qa/portrait-v2-p25-800x1280.png)
+
+![Real synthetic Kivy P2.5 screenshot montage at 452x900](qa/portrait-v2-p25-452x900.png)
+
+The original, owner-approved artwork remains in [the visual specification](portrait-kiosk-v2-visual-spec.md). Remaining pixel-font/detail and unimplemented QRIS/capture/result pages must not be falsely certified from these snapshots.
