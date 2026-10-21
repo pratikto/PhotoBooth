@@ -288,3 +288,12 @@ This design document was authored before the code changes. **Batch A is now IN S
 - [ ] Obtain owner acceptance for the live Gameplay look and fairness before Batch C release/polish signoff.
 
 **Rollback:** revert the scoped Batch B commits from pre-Batch-B feature-branch baseline `c1498217c715b4a94a510e5395ea760842ab222e` (do not rewrite `master`). Visual-only changes must never be accepted as production-payment behavior. Batch C Win/Lose polish remains NOT STARTED in this pass.
+
+
+## 2026-10-21 — Owner-provided Windows Kivy automated regression: **55/55 PASS**
+
+The owner supplied the complete Windows test output for the eight FEAT-021 targeted test modules covering Batch A and Batch B. Result: **`Ran 55 tests in 6.272s` — `OK`**; **55 PASS, 0 FAIL, 0 ERROR, 0 SKIP**. Notably, the 4 previously skipped conditional Kivy Batch B GUI tests and the Kivy receipt-input tests executed and passed on the owner's machine.
+
+**Observed environment in test log:** Windows, Python **3.12.10** (64-bit), Kivy **2.3.1** (SDL2 window provider), OpenGL **4.6** with **Intel Iris Xe Graphics**. The output includes successful tests for background/asteroid/sprite geometry, prepared GPU textures and displayed game screen, scoring/receipt ownership, pause/unpause, collision-result transition, interactive TextInput canvas integrity, hover and scan animation, SQLite single-use receipt persistence, pixel-art painter and Start/Scan visual geometry.
+
+**Evidence classification:** owner-provided real Windows Kivy **automated** tests, not independently re-executed by the assistant. The pasted output does **not include the exact tested Git commit SHA**, Pillow version, manual gameplay screenshots, measured FPS, portrait/landscape visual review, or physical user acceptance of visual fidelity. Therefore the earlier "Windows automated tests pending" gate is now **SATISFIED at reported environment level**, while **manual UI appearance and input experience, collision fairness in gameplay, resizing, frame rate and owner aesthetic approval remain OPEN**. This does not authorize Batch C coding or `master` merge. See [Windows QA checklist](../test_checklist.md).
