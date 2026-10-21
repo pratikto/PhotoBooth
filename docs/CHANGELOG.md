@@ -2,6 +2,36 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Documentation only — FEAT-021 Visual Overhaul v5 audit and status reconciliation] — 2026-10-21
+
+**User-authorized task:** comprehensively update documentation of the **existing** `feature/meong-flappy-challenge` mini-game after audit against the owner's latest five-panel neon pixel-space mockup. **NO Python/asset/GUI/physics/test source changes, test execution, new branch, merge, release or production-device changes in this documentation session.** Stable `master` / `v1.0.0` untouched. Audited pre-doc branch HEAD: `85a6aaa99356f3825067dfc5b92c6f91933d8519`.
+
+### New authoritative feature documentation
+- [`0194a274`](https://github.com/pratikto/PhotoBooth/commit/0194a27497d381eb0f004d9de38ca5d47348da69): **new** [Visual Overhaul v5 canonical audit/spec](features/FEAT-021-visual-overhaul-v5.md), 5-screen/object inventory, source-vs-mockup gaps, exact print-film storyboard, source-level architectural defects (dual static+animated hero, estimated print slot), 16 VF items, risks, phased remediation and explicit approval boundary.
+- [`c807353b`](https://github.com/pratikto/PhotoBooth/commit/c807353b37a8dc06436eb63705503c4938f0110e): **new** [v5 Windows QA/acceptance matrix](qa/FEAT-021-visual-v5-acceptance.md): historical evidence classification, Q01–Q20 behavioral, V01–V16 screen/object, A01–A10 physical instant-film acceptance, regression/performance, exact-SHA collection and owner sign-off form. **All v5 tests PENDING, not run.**
+
+### Reconciled canonical project records (documentation changes only)
+- [`9c9a36fb`](https://github.com/pratikto/PhotoBooth/commit/9c9a36fbe47ff5d4c37f62edcfd04bb6688485c4): [FEAT-021 engineering history](features/FEAT-021-meong-fly.md) now starts with the current **v4 IN SOURCE / visual NOT ACCEPTED / v5 DOC SPEC ONLY** truth and keeps old chronological source/test records.
+- [`3d594ae2`](https://github.com/pratikto/PhotoBooth/commit/3d594ae273df8bce738195852a4c3bfb8daf98af): mark [Visual Polish v2 spec](features/FEAT-021-visual-polish-v2.md) **historical/superseded**, rather than presenting “Batch C not implemented” as current.
+- [`da4a8926`](https://github.com/pratikto/PhotoBooth/commit/da4a8926fd505413ebdbbec47678645f55946299), [`6e35528`](https://github.com/pratikto/PhotoBooth/commit/6e35528766da7dc547cce0bddc1ff7725d34a5f6): update [documentation index](README.md) and [QA index](qa/README.md) to prominently link canonical design/status/QA and historical evidence.
+- [`63c5222f`](https://github.com/pratikto/PhotoBooth/commit/63c5222fa65d36dcf1034f8e9c557fd9d54cdd5b): [FEATURE_STATUS.md](FEATURE_STATUS.md) distinguishes v4 source inventory, owner rejection and v5 unimplemented proposal at the top.
+- [`0034017a`](https://github.com/pratikto/PhotoBooth/commit/0034017a67ee4d26033cc5416a669a998961995a): [DECISIONS.md](DECISIONS.md) records only owner-confirmed mockup/printing/flow requirements, not inferred implementation approval.
+- [`5cac1532`](https://github.com/pratikto/PhotoBooth/commit/5cac15322a11da63b4dfbd9397dc508c8bfafc68): create **BUG-013** in [bug_tracker.md](bug_tracker.md): provisional S2 standalone visual-acceptance blocker, confirmed source findings vs unverified Windows artifacts.
+- [`473c1452`](https://github.com/pratikto/PhotoBooth/commit/473c1452e62a161b8c9defd5e1fa9a0635030dbf): [next_step.md](next_step.md) reviews FEAT-021 in the **unified** dynamic backlog; keeps operational BUG-001/007/009 and FEAT-008/009 ahead of visual enhancement; v5 coding not yet authorized.
+- [`83f6dac7`](https://github.com/pratikto/PhotoBooth/commit/83f6dac73fac046a2f197382408872f4d73f8d99): [test_checklist.md](test_checklist.md) now links v5 QA and clearly marks the difference between 55/55 and 23/23 **historical** owner Windows PASS, 10/10 local-mirror print-model PASS, and **not-run** newer v4/v5 UI checks.
+- [`3926ca26`](https://github.com/pratikto/PhotoBooth/commit/3926ca26e5708d63985285e6aa845ec35e804614): [ARCHITECTURE.md](ARCHITECTURE.md) maps the v4 Pillow/Kivy/static+live/SQLite dependencies and proposed v5 compositor/slot-mask boundary without changing source.
+- [`9e5ec6f3`](https://github.com/pratikto/PhotoBooth/commit/9e5ec6f30f2e9dfc6b52a3d626f14793041a09f9): [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) provides current state, exact baseline, historical evidence, remaining gaps, and next **owner-authorized** step requirements.
+
+### Current state after documentation
+**Implemented:** standalone v4 engine/graphics/navigation/print emitter; one `DEMO-` code per attempt, no retry, result `PILIH LAYOUT FOTO` through one-time demo tutorial and generic 12 layout cards.  
+**Owner-reported issue:** mockup visual fidelity and natural instant-camera printing **not satisfactory**.  
+**Proposed only:** Visual Overhaul v5 and its per-screen/object acceptance process; NO code edits permitted without separate explicit approval.  
+**Not verified:** exact post-v4 Windows tests at the current SHA, screenshot/video/FPS, physical slot alignment, new v5 art or owner sign-off. Historical source/release quality gates do not certify FEAT-021.  
+**Excluded:** live merchant POS, redeemable Rp2.500 discount, QRIS/payment integration, actual camera/thermal printing, production template selection, `master` merge. 
+
+---
+
+
 ## [Unreleased — FEAT-021 standalone mini-game mockup GUI] — 2026-10-21
 
 **Approved task:** owner rejected immediate integration of the earlier mini-game into the production photobooth GUI and approved a standalone five-screen visual rebuild matching the selected Meong camera-cat space mockup. All changes are in `feature/meong-flappy-challenge`; **no merge to `master`**.
