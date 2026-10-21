@@ -22,7 +22,7 @@
 
 ### Approved Meong Fly artboard
 
-![Last approved Meong Fly mini game visual reference](assets/portrait-v2/meong-fly-flow-approved.webp)
+![Last approved Meong Fly mini game visual reference](assets/portrait-v2/meong-fly-revised-approved.webp)
 
 ### Core owner decisions (binding over mockup text)
 
