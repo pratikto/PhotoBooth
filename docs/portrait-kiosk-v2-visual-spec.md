@@ -83,10 +83,10 @@ The proposed commercial promo settlement share and interactions with FEAT-002 re
 
 | ID | Screen/state | Status in current v2 | Essential controls and content |
 | --- | --- | --- | --- |
-| M00 | Idle / advertising | **Implemented (partial)** | Actual AdCatalog and AdvertisementPlayer, MULAI FOTO, MAIN MEONG FLY, media fallback |
+| M00 | Idle / advertising | **Implemented (P2.5 visual polish)** | Actual AdCatalog/AdvertisementPlayer, MULAI FOTO, MAIN MEONG FLY, CARA PAKAI, branded UI and media fallback |
 | M01 | Face invitation on idle | **Manual preview only** | AYO FOTO, MAIN MEONG FLY, NANTI SAJA; real detector trigger not connected |
-| M02 | Mandatory tutorial | **Implemented** | Four illustrated steps, explicit LANJUT; once-per-visit state |
-| M03 | Template carousel | **Implemented** | Genuine 12 template previews, previous/next, copy quantity, DEMO quote |
+| M02 | Mandatory tutorial | **Implemented (four new vector illustrations)** | Scalable icons, scrollable four steps, explicit LANJUT; once-per-visit state |
+| M03 | Template carousel | **Implemented (three visible strip previews + swipe)** | Genuine 12 templates; adjacent/current strip images, horizontal swipe or previous/next, paper-copy count and truthful DEMO quote |
 | M04 | Review cart / applied promo | **Target** | Accurate session and copy subtotals; win discount only when eligible and authorized |
 | M05 | Payment pending | **Target (legacy/QRIS branches only)** | Stable QR, official mode/status, price, expiry, muted ad and safe order edits |
 | M06 | Payment expiry / denied / unknown / recovery | **Target** | Provider-confirmed status, no false admission or duplicate charge, appropriate retries |
@@ -97,7 +97,7 @@ The proposed commercial promo settlement share and interactions with FEAT-002 re
 | M11 | Result and photo-strip download QR | **Target** | 3-photo 80×240 mm strip, QR photo download, printing/result CTA |
 | M12 | Safe completion → advertising | **Target** | No race with in-flight print, completed/uncertain payments or residual visit data |
 | G00 | Game entry from idle/invitation | **Implemented as placeholder link** | No second homepage |
-| G01 | Dedicated game intro/rules | **Target; present in latest revised board, absent from current v2** | LANJUT SCAN STRUK; KEMBALI; one receipt one chance |
+| G01 | Dedicated game intro/rules | **Implemented as safe visual intro; scanner disabled** | Meong Fly rules and proposed discount in separate intro, blocked scan CTA, safe direct photo / return to ad; no actual game/struk |
 | G02 | Receipt scanning / manual DEMO code | **Standalone branch only** | Clearly labelled DEMO until real reader available |
 | G03 | Receipt validation/errors | **Target** | Claim once, reject used/invalid, avoid holding a photo checkout |
 | G04 | Gameplay | **Standalone branch only** | Score, pause, responsive obstacle/game feedback |
@@ -106,7 +106,7 @@ The proposed commercial promo settlement share and interactions with FEAT-002 re
 | S00 | Browsing inactivity warning | **Implemented on prototype browsing pages** | Warning 10s before configured timeout, ability to continue |
 | S01 | Payment/camera/printer/storage failure | **Target** | Failure-specific safe recovery, never silently reset a paid/unknown session |
 
-**Important:** The v2 prototype currently has only **four actual route names**: advert, tutorial, templates and game_preview. The remaining entries are screen requirements, overlays or services, **not** pre-existing interactive pages.
+**Important:** The v2 prototype still has only **four actual route names**: advert, tutorial, templates and game_preview. The game_preview route now displays a dedicated illustrated *intro* but its scanner/game CTA remains disabled. The remaining entries are screen requirements, overlays or services, **not** pre-existing interactive pages.
 
 ## E. Overlay timings, lifecycles and ownership
 
@@ -145,3 +145,15 @@ The game mockup's **30-second timeout numeral** is an illustrative visual, not a
 - [Asset manifests and original-file checksums](assets/portrait-v2/README.md).
 
 **No new bitmap or diagram is approved just by editing this document.** Preserve both artboards as visual references until the owner explicitly requests a new mockup revision. Implementation requires separately approved work scope, branch-specific commits, screenshot regression and actual hardware acceptance; no merge to master is authorized here.
+
+## H. P2.5 implementation versus approved mockups (2026-10-21)
+
+**Current visual QA:** [GitHub Actions 39555036023](https://github.com/pratikto/PhotoBooth/actions/runs/39555036023), code SHA c4e4703a, both jobs SUCCESS, 21 pure tests and 12 800×1280/452×900 synthetic screenshots. Direct visual comparison to the original approved boards was performed as a **synthetic UX inspection**, not hardware acceptance.
+
+- **Idle / invitation:** Branded PixelCard ad heading and themed two customer entry CTAs; Cara Pakai invokes the real mandatory tutorial; manual invitation overlay retains Foto and Meong Fly. Real camera face presence still unavailable.
+- **Tutorial:** four illustrated Kivy-vector cards (template strip, symbolic payment, camera and print/photo QR) in a ScrollView; the underlying once-per-visit VisitFlow remains unchanged. Compact height scrolls to lower cards.
+- **Template carousel:** selected actual full-strip master preview flanked by prior/next real strip previews, working arrow buttons and **horizontal touch-swipe handler**; source catalog, three photographs and photo-download QR unchanged. Swipe direction logic has automated regression; physical touchscreen swipe acceptance remains pending.
+- **Meong Fly:** distinct, responsive full-screen intro with mascot and owner-approved rules; explicit unavailable scanner and skip-to-photo continue flow. The on-screen promo text is *potential discount*, not an issued voucher. The actual gameplay/receipt claim/Win-Lose/checkout are deliberately NOT integrated.
+- **Remaining design gap:** portrait Kivy fonts remain non-pixel default, some pixel art and animation detail from the approved reference has not yet been recreated, and target QRIS/capture/review/result pages are future P3/P4 stages.
+
+**Implementation reference:** [FEAT-022 primary specification, P2.5 source map](portrait-kiosk-v2.md). Preserve both latest approved mockup images; no artwork was redrawn in this code stage.
