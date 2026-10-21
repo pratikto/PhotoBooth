@@ -51,7 +51,7 @@ The current **owner-authorized working branch is feature/portrait-kiosk-v2-next*
 **Approved mockup artboards (both embedded, full-resolution):**
 
 - [Main photobooth visual flow (actual approved board)](assets/portrait-v2/meong-main-flow-approved.webp)
-- [Meong Fly promo/game flow (actual approved board)](assets/portrait-v2/meong-fly-flow-approved.webp)
+- [Meong Fly promo/game flow (actual approved board)](assets/portrait-v2/meong-fly-revised-approved.webp)
 - [Screen-by-screen visual/interaction interpretation and corrections](portrait-kiosk-v2-visual-spec.md) — *required reading*: idle and face invitation share the entry, game has its own intro, win/lose → tutorial iff unseen → template picker, not payment.
 - [Technical architecture and future interface contracts](portrait-kiosk-v2-technical-design.md) — current code vs proposed camera/game/QRIS/Drive adapters and secure session/payment invariants.
 - [Mockup asset origin, hashes and scope](assets/portrait-v2/README.md), [CI/hardware QA matrix](test_checklist.md) and [feature implementation truth](FEATURE_STATUS.md).
