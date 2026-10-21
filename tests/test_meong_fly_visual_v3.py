@@ -10,9 +10,10 @@ from pathlib import Path
 from PIL import Image
 
 from photobooth.meong_fly_painter import ACTIONS, paint_static_screen, W, H
+from photobooth.meong_fly_print_fx import InstantPhotoEmitter
 from photobooth.meong_fly_visual_v3 import (
     animation_gif_path, meong_animation_frames, camera_cat_from_latest_logo,
-    printed_photo_tile, falling_photo_positions, paint_poster_screen,
+    printed_photo_tile, photo_feed_frames, paint_poster_screen,
 )
 
 
@@ -63,12 +64,22 @@ class PosterV3Tests(unittest.TestCase):
         self.assertTrue(all(c.size == (32, 41) for c in cards))
         self.assertTrue(all(c.getpixel((0, 0))[3] != 0 for c in cards))
 
-    def test_falling_photo_motion_changes_positions(self):
-        a = falling_photo_positions(0)
-        b = falling_photo_positions(.6)
-        self.assertEqual(len(a), 6)
-        self.assertNotEqual(a, b)
-        self.assertTrue(all(0 <= size < 64 for _, _, size, _ in a))
+    def test_falling_photo_motion_starts_at_meong_not_random(self):
+        emitter = InstantPhotoEmitter()
+        for _ in range(8):
+            emitter.update(.1, (180, 230), bottom=450)
+        (paper,) = emitter.poses()
+        self.assertAlmostEqual(paper.x + paper.width/2, 180)
+        self.assertAlmostEqual(paper.y, 230)
+        self.assertTrue(paper.attached)
+
+    def test_photo_feed_previews_reveal_pixels_without_squashing(self):
+        tile = printed_photo_tile(0)
+        steps = photo_feed_frames(tile)
+        self.assertEqual(len(steps), 8)
+        self.assertTrue(all(image.size == tile.size for image in steps))
+        self.assertEqual(steps[0].getpixel((10, 40))[3], 0)
+        self.assertEqual(steps[-1].tobytes(), tile.tobytes())
 
 
 if __name__ == "__main__":
