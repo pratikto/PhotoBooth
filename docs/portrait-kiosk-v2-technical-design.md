@@ -147,3 +147,11 @@ Record *exact test SHA, command, OS/versions, PASS/FAIL/SKIP, screenshot artifac
 Stable **master / v1.0.0** remains the rollback route and customer baseline. The v2 window is opt-in and is not permitted to allocate real transactions. Do not edit or delete existing customer manifests, receipts, payment journals, key material or cloud setup to test v2. Never force-push/delete feature branches.
 
 Use scope-specific commits with required documentation and CI proof. Follow [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md). No merge to master, live payment enablement, production deployment or real commercial promo requires anything less than separate explicit owner approval.
+
+## P2.5 implementation update — validated arcade UI (2026-10-21)
+
+**Code delivered on this branch, opt-in only:** new `photobooth/kiosk_v2/illustrations.py` scales four symbolic tutorial graphics with Kivy canvas vectors; `theme.py` paints sharper stars, decorated PixelCards and native ArcadeButtons with pressed/disabled visual states; `app.py` renders an ad-dominant invite entry with separate Foto/Game/Cara Pakai actions, illustrated tutorial, side-by-side previous/current/next **real print master** gallery, DEMO-only copy quote, and a distinct Meong Fly intro with an explicitly disabled scanner. A `SwipeGallery` Kivy BoxLayout handles user horizontal drags within the gallery, rejecting vertical/short motion. The VisitFlow continues to expose exactly advert/tutorial/templates/game_preview, and owner-of-visit tutorial_seen behavior is unchanged.
+
+**No integrated new services:** real face trigger, receipt capture/ledger, gameplay result, discount entitlement, Midtrans provider, camera and printing are not connected to this UI prototype. The Meong Fly intro is not a POS scanner or one-time voucher issuer. The uploaded approved artboards are documentation only, not runtime bitmaps. Kivy still uses current default fonts; exact visual parity is open.
+
+**Source regression:** [Actions 39555036023](https://github.com/pratikto/PhotoBooth/actions/runs/39555036023) at source SHA `c4e4703a` — 21/21 pure tests PASS, updated Kivy widget smoke PASS, 12 screenshots PASS at 800×1280 and 452×900. Physical Windows audio and gesture/touch QA are unverified. Proposed backend adapter and protected transaction boundaries above remain unchanged.
