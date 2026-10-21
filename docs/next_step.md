@@ -290,3 +290,8 @@ On isolated `feature/meong-flappy-challenge`, visual **Batch A (Start + Scan + c
 ## FEAT-021 Visual Polish v2 backlog progression (2026-10-21)
 
 Scope `feature/meong-flappy-challenge` (separate standalone mini-game) remains P2 product enhancement and **NOT production-ready**. **Batch A Start/Scan:** IN SOURCE, owner Windows UI acceptance PENDING. **Batch B Gameplay:** IN SOURCE after explicit owner continuation; cached HUD/space parallax, five asteroid textures, approved camera-cat poses, rainbow/score/hit feedback; owner Windows Kivy hitbox/FPS acceptance PENDING. **Batch C Win/Lose and final five-page polish:** NOT STARTED in this pass, dependent on operator Batch B observations and separate continuation. Preserve DEMO-only codes, one receipt = one play, no retry; real POS receipt scanning, Rp2.500 checkout discount/QRIS and kiosk welcome-screen integration all deferred. Core operational BUG-001/007 audio and BUG-009 retention still take priority over a production release. [v2 specification and tests](features/FEAT-021-visual-polish-v2.md).
+
+
+## FEAT-021 visual QA status after owner Windows test run (2026-10-21)
+
+**Batch A/B targeted Windows automated regression: OWNER-REPORTED 55/55 PASS with 0 Kivy skips** (Python 3.12.10, Kivy 2.3.1, Intel Iris Xe). Manual aesthetic acceptance still pending: Start/Scan typed-input experience, live Gameplay sprite/rock fairness, FPS and portrait/landscape rendering, measured on device. Exact tested Git SHA not reported. Continue visual QA before deciding on Batch C Win/Lose polish; Batch C remains not yet implemented or explicitly authorized as part of this test report. No production kiosk integration or `master` merge. Existing operational bug priorities unchanged.
