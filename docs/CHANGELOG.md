@@ -193,3 +193,34 @@ For changes made before the documentation effort, inspect Git commits and the da
 - `caad0e0d`: add provider-fallback/duration/failed-play unit cases to the isolated v2 audio suite.
 - Design, test limitations, and Windows-speaker acceptance remain in [portrait-kiosk-v2.md](portrait-kiosk-v2.md). These commits do **not** certify audio audibility, restore audio in v1, implement payments or connect actual photography services. New-branch CI is not yet verified at time of this entry.
 
+
+## [Unreleased — FEAT-022 complete mockup + branch documentation reconciliation] — 2026-10-21
+
+**Approval and scope:** owner requested **comprehensive GitHub documentation for feature/portrait-kiosk-v2-next, including the last approved mockup images**. This work is **DOCS AND IMAGE-ASSET ONLY** after the previously committed GUI v2 / audio prototype. It does **not** modify production Python, legacy main.py, payments, camera, printer, Drive, QRIS credentials, receipt logic, release tag or master.
+
+### Exact design assets now stored in repository
+
+- [6e7f29a7](https://github.com/pratikto/PhotoBooth/commit/6e7f29a769b2ca19d09efa99b3bef21fb7b8bc86) — initially archived the full-resolution main UI and earlier eight-screen game boards as high-quality WebP under docs/assets/portrait-v2/.
+- [7b927526](https://github.com/pratikto/PhotoBooth/commit/7b927526d9edc157e73aa82bc4525486da02048b) — **archived the *latest revised nine-screen Meong Fly board*** with the dedicated **MASUK MINI GAME** intro. This is now the **primary approved game visual**; the eight-screen predecessor remains traceable archival art.
+- [Image asset provenance/checksums](assets/portrait-v2/README.md) includes original PNG SHA-256, exported WebP SHA-256, Git blob SHAs and exact visual correction precedence. No image was redrawn during this documentation stage.
+
+### Canonical documentation updated
+
+- [portrait-kiosk-v2.md](portrait-kiosk-v2.md) — comprehensive owner-approved flow, both actual embedded latest artboards, current v2 implementation matrix, audio/QRIS/game/printing boundaries, staged delivery and actual CI evidence.
+- **New** [portrait-kiosk-v2-visual-spec.md](portrait-kiosk-v2-visual-spec.md) — annotated boards, full direct-photo / Meong Fly paths, >9 screen/overlay inventory, UI design rules, accessible touch/portrait behaviors, 80×240 mm 3-photo/1-QR print preview requirements and image-versus-source corrections.
+- **New** [portrait-kiosk-v2-technical-design.md](portrait-kiosk-v2-technical-design.md) — present package/module map vs **proposed** typed service adapters; once-per-visit tutorial/receipt ledger/discount lifecycle; payment/safety invariants; audio page ownership, Windows acceptance, phased dependencies and rollback.
+- [DECISIONS.md](DECISIONS.md) — DEC-022 greenfield GUI + approved artboards, with DEC-003 tutorial-once addendum preserved. Both CTA paths share the idle/face invitation; dedicated game intro before receipt, one receipt one chance/no replay, Win/Lose → tutorial iff unseen → template selection, not immediate payment, Rp2.500 eligibility requires future verified checkout.
+- [ARCHITECTURE.md](ARCHITECTURE.md) — isolated current v2 modules and backend adapter boundaries; no missing integrated game/QRIS/camera/print/Drive features claimed.
+- [FEATURE_STATUS.md](FEATURE_STATUS.md) — current v2 four-route prototype, manual invite preview, unavailable game placeholder, no provider/camera/print integration, actual CI status.
+- [next_step.md](next_step.md) — owner-selected stage, dynamic delivery re-ranking and conflict/dependency review (including duplicate FEAT-021 IDs and FEAT-002/Meong Fly promo overlap).
+- [test_checklist.md](test_checklist.md) — exact CI evidence and detailed on-device / feature integration / release acceptance matrices, with runnable Windows commands.
+- [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) — new up-front current handover, next safe action, evidence and explicit no-merge rule.
+- [docs/README.md](README.md) — entry point and links to all above documents and the **latest revised game** artboard.
+
+### Evidence and non-claims
+
+- [FEAT-022 source/mockup CI 39548798578](https://github.com/pratikto/PhotoBooth/actions/runs/39548798578), SHA **6e7f29a7** — Python compile PASS, **21/21 pure navigation/audio tests PASS**, real Kivy widget smoke PASS under Linux/Xvfb, and 12 synthetic screenshots at 800×1280 and 452×900; **two jobs SUCCESS**. A deliberately failing mock audio provider is part of a **passing** fallback test.
+- Later assets and Markdown commits change no application source. Workflow results on later documentation SHAs, when present, must be checked separately; **there was no new Windows/hardware testing during these documentation commits**.
+- **Still pending/not implemented:** real Windows audible background music and ad audio, actual 10.1-inch touch acceptance, genuine face invitation, receipt scanner/POS verification, playable game inside the kiosk, real Rp2.500 voucher redemption, server-authoritative QRIS, actual photo capture/retake, physical paper and digital Drive delivery in v2. No security/financial/customer deployment approved.
+- **Rollback:** switch back to stable master/v1.0.0. Do not merge to master without a new explicit owner decision; do not delete other branches or journals. BUG-001/007 and BUG-009 remain operationally open.
+
