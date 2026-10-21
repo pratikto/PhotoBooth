@@ -225,3 +225,8 @@ Assistant-side local-mirror Pillow checks **7/7 PASS** and `compileall -q` no er
 ## 2026-10-21 — FEAT-021 owner Windows Kivy Batch A/B test evidence (documentation only)
 
 Received the owner's Windows Python **3.12.10** / Kivy **2.3.1** targeted test output: **55/55 PASS in 6.272s**, no skips, errors or failures; covers real Kivy runtime geometry/input, renderer/score/pause/loss, engine, receipt persistence and art tests. Recorded separately from previous Linux local-mirror 15 PASS/4 SKIP result. Test output did not identify the exact tested source SHA, Pillow version or manual visual/FPS results. **This commit updates documentation only**; there is no code patch, release, physical gameplay acceptance, checkout integration or `master` merge. [QA checklist](test_checklist.md), [feature visual specification](features/FEAT-021-visual-polish-v2.md).
+
+
+## 2026-10-21 — FEAT-021 standalone result-to-layout handoff
+
+User directs that after either game result, flow should continue to **photo layout selection**, not payment, with one-time tutorial gate if needed and Direct Photo sharing that route. Commits: `1f00af59` (Kivy-independent state navigation + demo outcome metadata), `5da9abd0` (paint tutorial and 12 demo layout cards), `20b6d2c0` (terminal button and new screen hitboxes), `45056a8f` (Kivy action dispatch + standalone tutorial marker), `8112e700` (updated state tests). Real photo templates and main GUI remain unchanged; selecting a demo layout exits the standalone test app. No production checkout or payment and no merge to `master`. Exact-branch Windows regression pending.
