@@ -174,3 +174,12 @@ This file tracks **actual verified repository/document changes**, not successful
 ## Historical application changes
 
 For changes made before the documentation effort, inspect Git commits and the dated QA evidence. Existing user-confirmed working thermal photo paper output **does not** prove acceptable image quality or QR-slip paper output. Historic sound/video mocked test passes **do not** resolve present Windows audio/video reports. Current defects remain in [bug_tracker.md](bug_tracker.md).
+
+
+## [Unreleased — FEAT-022 portrait GUI v2 standalone foundation] — 2026-10-21
+
+- Owner approved rebuilding the customer-facing Kivy GUI and audio controller from scratch on **feature/portrait-kiosk-gui**, preserving the working v1 backend and immutable v1.0.0. Initial master base SHA 27f3801b.
+- New independent Python visit navigation, audio lifecycle with bundled WAV files, Pixel Arcade Space design components, opt-in launcher, actual idle playlist widget, inline invitation **visual preview only**, mandatory tutorial per visit, and a picker of the existing 12 approved 3-photo + photo-QR thermal strips with copy counts and DEMO quote.
+- A Meong Fly entry notice is displayed, **not an integrated gameplay/scanner/discount**. QRIS/capture/printing/Drive checkout are not wired into v2 yet; the default main.py is unchanged.
+- Added isolated pure navigation/audio unit tests, optional real-widget Kivy smoke test and a new branch-only CI workflow. Synthetic, physical and Windows results remain to be recorded; no master merge.
+- Design/rollback and acceptance plan: portrait-kiosk-v2.md. This entry tracks source changes, not release or physical certification.
