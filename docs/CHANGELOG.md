@@ -183,3 +183,13 @@ For changes made before the documentation effort, inspect Git commits and the da
 - A Meong Fly entry notice is displayed, **not an integrated gameplay/scanner/discount**. QRIS/capture/printing/Drive checkout are not wired into v2 yet; the default main.py is unchanged.
 - Added isolated pure navigation/audio unit tests, optional real-widget Kivy smoke test and a new branch-only CI workflow. Synthetic, physical and Windows results remain to be recorded; no master merge.
 - Design/rollback and acceptance plan: portrait-kiosk-v2.md. This entry tracks source changes, not release or physical certification.
+
+
+## [Unreleased — FEAT-022 portrait v2 audio hardening on new branch] — 2026-10-21
+
+- Created `feature/portrait-kiosk-v2-next` from existing opt-in `feature/portrait-kiosk-gui` scaffold. `master`, v1.0.0, `main.py` and legacy audio are unchanged.
+- `ab551ba3`: enable the existing portrait CI workflow for the new working branch.
+- `2b743da0`: favor SDL2 on desktop for bundled PCM WAV, preserve explicit Kivy audio-provider overrides, reject/unload invalid native handles, and avoid reporting successful playback if the native handle remains stopped.
+- `caad0e0d`: add provider-fallback/duration/failed-play unit cases to the isolated v2 audio suite.
+- Design, test limitations, and Windows-speaker acceptance remain in [portrait-kiosk-v2.md](portrait-kiosk-v2.md). These commits do **not** certify audio audibility, restore audio in v1, implement payments or connect actual photography services. New-branch CI is not yet verified at time of this entry.
+
