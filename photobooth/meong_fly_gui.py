@@ -21,6 +21,10 @@ from .meong_fly import (
     CAT_BOTTOM, CAT_LEFT, CAT_RIGHT, CAT_TOP, CAT_X,
     GAP_HEIGHT, HEIGHT, PIPE_WIDTH, TARGET_SCORE, WIDTH,
 )
+from .meong_fly_visual_v3 import (
+    animation_gif_path, meong_animation_frames, printed_photo_tile,
+    falling_photo_positions,
+)
 from .meong_fly_flow import MeongFlyFlow
 from .meong_fly_game_art import (
     GAME_FIELD_TOP, GAME_FIELD_BOTTOM, ROCK_VARIANTS, camera_cat_poses,
@@ -64,6 +68,12 @@ class MeongFlyStage(Widget):
         }
         self._cat = self._cat_poses["level"]  # Preserve optional caller compatibility.
         self._asteroids = [kivy_texture(make_rock_tile(i)) for i in range(ROCK_VARIANTS)]
+        self._animated_gif = animation_gif_path() is not None
+        # Cached on startup; never decode GIF/paint a photo in a game frame.
+        self._hero_frames = [kivy_texture(img) for img in
+                             meong_animation_frames(self._logo_path)]
+        self._photo_tiles = [kivy_texture(printed_photo_tile(i))
+                             for i in range(4)]
         self._score_tex = {}
         self._score_fx_since = -10.0
         self._score_fx_y = 300.0
@@ -195,6 +205,41 @@ class MeongFlyStage(Widget):
         if self._hover_action in ACTIONS.get(screen, {}):
             self._border(ACTIONS[screen][self._hover_action],
                          (1, .97, .72, .86), 2)
+
+    def _draw_falling_photos(self, screen):
+        """Pixel instant prints drift downward independently of game physics.
+
+        Existing GIF (if installed) provides the exact approved camera-cat
+        animation. The little printed photos use the same offline texture cache.
+        They must never obscure receipt inputs or in-game pause/score buttons.
+        """
+        if screen not in ("start", "game", "won", "lost"):
+            return
+        if screen == "start":
+            # Static scene already contains the logo; GIF frames replace it.
+            if self._animated_gif and len(self._hero_frames) > 1:
+                index = int(self._time * 10) % len(self._hero_frames)
+                Color(1, 1, 1, 1)
+                pos, size = self._rect((35, 90, 290, 182))
+                Rectangle(texture=self._hero_frames[index], pos=pos, size=size)
+        elapsed = self._time if screen != "game" else self.flow.game.elapsed
+        for i, (x, y, size_px, tilt) in enumerate(
+                falling_photo_positions(elapsed, 7)):
+            if screen == "start":
+                if not 95 < y < 270:
+                    continue
+            elif screen == "game":
+                if not GAME_FIELD_TOP + 25 < y < GAME_FIELD_BOTTOM - 24:
+                    continue
+            else:
+                if not 226 < y < 395:
+                    continue
+            # Nearest-neighbour sprites are used without expensive rotations.
+            # Side-to-side motion approximates a tumbling paper photograph.
+            Color(1, 1, 1, .96)
+            pos, size = self._rect((x, y, size_px, size_px * 1.25))
+            Rectangle(texture=self._photo_tiles[i%len(self._photo_tiles)],
+                      pos=pos, size=size)
 
     def _score_texture(self, value, size=4, color=GOLD):
         key = (str(value), size, color)
@@ -384,6 +429,7 @@ class MeongFlyStage(Widget):
                 )
             if screen in ("start", "scan"):
                 self._draw_menu_effects(screen)
+            self._draw_falling_photos(screen)
         self._screen_seen = screen  # Track displayed game during brief impact.
 
     def validate_receipt(self):
@@ -405,9 +451,11 @@ class MeongFlyStage(Widget):
         # Scan is decorative; it does not scan a real cafe receipt.
         tick = int(self._time * 15)
         animate_scan = self.flow.screen == "scan" and tick != self._scan_tick
-        if animate_scan:
+        animate_paper = self.flow.screen in ("start", "won", "lost")
+        animate_paper = animate_paper and tick != self._scan_tick
+        if animate_scan or animate_paper:
             self._scan_tick = tick
-        if (self.flow.screen == "game" or animate_scan
+        if (self.flow.screen == "game" or animate_scan or animate_paper
                 or self._time < self._impact_until
                 or self._screen_seen != self.flow.screen):
             self._refresh()
