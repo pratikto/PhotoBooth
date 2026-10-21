@@ -161,3 +161,8 @@ User supplied a Windows Kivy 2.3.1 / Python 3.12.10 test log showing **55/55 aut
 ## FEAT-021 — Owner-requested post-game layout handoff (2026-10-21)
 
 **IN SOURCE on `feature/meong-flappy-challenge`, manual Windows QA pending.** Win and Lose terminal CTAs now say `PILIH LAYOUT FOTO` and navigate through a one-time demo tutorial when unseen to an illustrated 12-layout **preview screen**; the original `LANGSUNG FOTO` Start path uses the same gate. This is a **standalone navigation demonstration, not production template selection**, camera, thermal print or payment. Win Rp2,500 is held as in-memory demo metadata, not an applied discount. Physics, one-receipt-one-attempt and no retry unchanged. Prior 55/55 Windows automated pass predated these changes and is not transferred. No `master` modifications/merge.
+
+
+## FEAT-021 poster-look v3 (2026-10-21)
+
+**SOURCE IMPLEMENTED on `feature/meong-flappy-challenge`, Windows visual/automated acceptance NOT YET VERIFIED for v3.** Corrects previous mismatch with owner's neon-space five-screen concept: much bolder readable bitmap font, simplified first page, updated camera-cat derived from owner GIF (small CRC-validated image bundled as `assets/meong_fly_gif_logo.b85`), poster-styled Win/Lose and simulated instant-print photos drifting down during flight. Offline ten-frame fallback animates the bundled image; optional full GIF path `photobooth/assets/meong_photobooth_print_drop.gif` is supported but full GIF bytes are not part of the Git commit. Result CTA stays `PILIH LAYOUT FOTO` through mandatory one-time tutorial if unseen; one DEMO receipt = one play, never replay. No payment/camera/print integration or `master` merge. New v3 tests exist but have not been run against the current branch.
