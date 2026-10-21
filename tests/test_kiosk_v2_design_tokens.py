@@ -36,6 +36,15 @@ class PixelArcadeTokensTests(unittest.TestCase):
         for dimensions in ((0, 10), (10, 0), (-1, 8), (5, -2)):
             self.assertEqual(d.stepped_rects(0, 0, *dimensions, 6), ())
 
+    def test_oversized_notch_stays_within_panel(self):
+        pieces = d.stepped_rects(0, 0, 20, 10, 999)
+        self.assertEqual(pieces, ((5.0, 0, 10.0, 10), (0, 5.0, 20, 0.0)))
+
+    def test_button_palette_has_all_variants(self):
+        self.assertEqual(set(d.BUTTON_COLORS), set(d.BUTTON_EDGES))
+        self.assertEqual(set(d.BUTTON_COLORS),
+                         {"primary", "secondary", "tertiary", "muted"})
+
     def test_negative_notch_is_clamped(self):
         self.assertEqual(
             d.stepped_rects(1, 2, 10, 20, -3),
