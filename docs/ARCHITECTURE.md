@@ -98,3 +98,8 @@ meong_fly_gui.MeongFlyStage._draw_game
   -> Kivy rectangles for moving parallax, asteroid belts, rainbow and scored HUD
 ```
 The pure art geometry helpers map the existing engine 480×640 rectangular hitboxes into the same 360×720 logical Kivy stage. Gameplay backgrounds/assets are uploaded once, with no PIL image generation per frame; only rare new score labels are cached on demand. Win/Lose transitions remain owned by `MeongFlyFlow`; Kivy only displays a brief noninteractive collision burst after flow has recorded loss once. `canvas.before` is still used to avoid BUG-012 regressions. No physics, receipt validation, POS, QRIS, production GUI or `master` changes. Kivy/Windows acceptance pending; see [v2 spec](features/FEAT-021-visual-polish-v2.md).
+
+
+### FEAT-021 standalone post-game handoff interface (2026-10-21)
+
+`MeongFlyFlow.continue_from_result()` no longer represents a payment/exit action. Instead `continue_from_result` or `direct_photo` calls an internal `_route_to_photo`, optionally opening `tutorial` if not previously seen and then `layouts` state. `photo_outcome` stores **demo-only** `won`, `demo_discount_idr`, `receipt_demo` as handoff metadata; it is **not** trusted by any payment handler. `MeongFlyStage` shows static illustrations from `meong_fly_photo_handoff.photo_handoff_screen`; the 12 illustrated layout items are *NOT* production thermal templates and selecting one exits the demo. Tutorial completion is a standalone home-directory marker only; no production tutorial state is changed. No integrations with `ui_kivy.py`, actual template assets, POS/QRIS, printer or photo flow. Other physics and receipt-engine modules remain untouched.
