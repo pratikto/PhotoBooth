@@ -46,6 +46,12 @@ class VisualRecorder(PortraitKioskV2App):
     def _capture(self, name):
         suffix = f"{self.dimensions[0]}x{self.dimensions[1]}"
         target = self.output_dir / f"{name}-{suffix}.png"
+        # RGB rows at widths such as 450 are not divisible by the default
+        # four-byte GL row alignment (450*3=1350). Force byte-aligned packing
+        # before capturing, or a screenshot can appear diagonally sheared even
+        # though the Kivy widget geometry and GL scene are correct.
+        from kivy.graphics.opengl import GL_PACK_ALIGNMENT, glPixelStorei
+        glPixelStorei(GL_PACK_ALIGNMENT, 1)
         written = Window.screenshot(name=str(target))
         path = Path(written or target)
         if path.is_file() and path.stat().st_size > 1000:
