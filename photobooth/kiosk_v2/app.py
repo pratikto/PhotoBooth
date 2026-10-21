@@ -29,7 +29,7 @@ from photobooth.workflow import quote_order
 from .audio import make_kivy_audio
 from .illustrations import TutorialIcon
 from .flow import ADVERT, BROWSING_PAGES, GAME_PREVIEW, TEMPLATES, TUTORIAL, VisitFlow
-from .theme import ArcadeButton, CYAN, GOLD, MUTED, PixelCard, PINK, Starfield, text_label
+from .theme import ArcadeButton, CYAN, GOLD, MUTED, PixelCard, PINK, Starfield, WHITE, text_label
 
 
 LOG = logging.getLogger(__name__)
@@ -374,29 +374,52 @@ class PortraitKioskV2App(App):
         self._show()
 
     def _build_game_notice(self, canvas):
+        """Dedicated Meong Fly entry screen, *not* a working receipt/game path."""
         shell = self._frame(canvas)
-        self._brand(shell, "MEONG FLY!", "Mini game dan diskon Rp2.500 — belum terhubung")
-        shell.add_widget(text_label("PENGEMBANGAN TERPISAH", size=17,
-                                    height=42, color=CYAN, bold=True))
-        info = PixelCard(orientation="vertical", padding=18, spacing=8)
-        info.add_widget(text_label(
-            "MEONG FLY MASIH DEMO",
-            size=22, height=57, color=GOLD, bold=True,
-        ))
-        info.add_widget(text_label(
-            "Game berada di branch feature/meong-flappy-challenge.",
-            size=15, height=80, color=MUTED,
-        ))
-        info.add_widget(text_label(
-            "Belum ada scan struk kafe asli, permainan di dalam GUI ini,"
-            " atau diskon yang berlaku di QRIS.",
-            size=14, height=120,
-        ))
-        shell.add_widget(info)
-        shell.add_widget(self._action("LANJUT FOTO TANPA GAME",
-                                      lambda: self._choose_photo("skip_game")))
-        shell.add_widget(self._action("KEMBALI KE IKLAN", self._return_ad,
-                                      variant="tertiary"))
+        self._brand(shell, "MEONG FLY!", "TERBANG • HINDARI ASTEROID • KUMPULKAN POIN")
+        shell.add_widget(text_label(
+            "MISI GALAKSI MEONG", size=20, height=41,
+            color=GOLD, bold=True))
+
+        hero = PixelCard(orientation="vertical", padding=10, spacing=6)
+        hero.add_widget(Image(
+            source=str(LOGO_PATH), fit_mode="contain"))
+        hero.add_widget(text_label(
+            "MAIN SEKALI, MENANG DAPAT DISKON!",
+            size=17, height=46, color=CYAN, bold=True))
+        shell.add_widget(hero)
+
+        rules = PixelCard(orientation="vertical", size_hint_y=None,
+                          height=dp(224), padding=12, spacing=4)
+        rules.add_widget(text_label(
+            "ATURAN MEONG FLY", size=18, height=38,
+            color=GOLD, bold=True))
+        rules.add_widget(text_label(
+            "01  Satu struk kafe = satu kesempatan main",
+            size=14, height=42, color=WHITE, align="left"))
+        rules.add_widget(text_label(
+            "02  Menang: potensi diskon Rp2.500",
+            size=14, height=42, color=WHITE, align="left"))
+        rules.add_widget(text_label(
+            "03  Setelah game, pilih template foto",
+            size=14, height=42, color=WHITE, align="left"))
+        rules.add_widget(text_label(
+            "SCAN STRUK / DISKON ASLI BELUM TERHUBUNG",
+            size=12, height=31, color=MUTED))
+        shell.add_widget(rules)
+
+        self._warning_label = text_label(
+            "", size=12, height=26, color=GOLD)
+        shell.add_widget(self._warning_label)
+        shell.add_widget(self._action(
+            "LANJUT SCAN STRUK (BELUM AKTIF)",
+            lambda: None, disabled=True, height=56))
+        shell.add_widget(self._action(
+            "LANJUT FOTO TANPA GAME",
+            lambda: self._choose_photo("skip_game")))
+        shell.add_widget(self._action(
+            "KEMBALI KE IKLAN", self._return_ad,
+            variant="tertiary", height=48))
 
     def _build_templates(self, canvas):
         shell = self._frame(canvas)
