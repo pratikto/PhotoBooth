@@ -243,3 +243,24 @@ Required physical follow-up: (1) inspect advertising video/image and 15-second i
 - [Legacy GUI CI run 39522083946](https://github.com/pratikto/PhotoBooth/actions/runs/39522083946) at earlier source revision: **252 tests run, 250 PASS / 2 SKIP / 0 FAIL / 0 ERROR**, 87 synthetic existing-page renders accepted. This is historical for that SHA; rerun full suite after any subsequent shared module modification.
 - Screenshots inspected: portrait layout/copy selection readable, 12 real templates loaded; **visual polish versus owner's comprehensive pixel-arcade reference is NOT COMPLETE**. No claim of final Windows hardware acceptance, ad-video sound/music speaker audibility, face detector trigger, touchscreen at 10.1 inches, POS/discount/QRIS, camera, real print or Drive completion.
 - Previous QA limitation: 450x900 Xvfb screenshot GL RGB stride distorted despite Kivy widget smoke success; scripts now flag corrupt screenshot rows and use 452x900 aligned screenshots. Physical 450x900 behavior still requires on-device comparison.
+
+
+### FEAT-022 — follow-up audio provider QA on `feature/portrait-kiosk-v2-next` (2026-10-21)
+
+**New source and tests:** `2b743da0` (SDL2-first WAV loader/length verification), `caad0e0d` (fake-provider and stopped-state tests), `ab551ba3` (CI branch trigger). These do not change existing `python main.py` behavior. Exact-branch Actions and real Windows speaker checks are **PENDING**; do not reuse previous branch's 16/16 CI verdict as proof of the new code.
+
+~~~powershell
+git fetch origin
+git switch feature/portrait-kiosk-v2-next
+git pull origin feature/portrait-kiosk-v2-next
+python -m unittest tests.test_kiosk_v2_flow tests.test_kiosk_v2_audio tests.test_kiosk_v2_widgets -v
+python tools/run_portrait_v2.py
+~~~
+
+- [ ] Record exact Windows SHA/Python/Kivy/platform speaker device and installed audio providers.
+- [ ] WAV music audibly begins on Tutorial without pressing UJI MUSIK, keeps playing on template page, and does **not** double or restart unexpectedly.
+- [ ] Music stops in Idle/Advertising and resumes when returning to the photo flow; video advertising retains its own sound, if the media actually contains audio.
+- [ ] UJI MUSIK audibly restarts playback, and a deliberately absent/disconnected output shows a truthful failure or non-audible diagnostic without blocking the photo booth.
+- [ ] Watch portrait touch/button alignment at 800x1280 on a real 10.1-inch screen; synthetic Xvfb renders are not hardware acceptance.
+- [ ] Keep BUG-001/007 open until actual audible device evidence; no payment/camera/printer/Drive integration asserted.
+
