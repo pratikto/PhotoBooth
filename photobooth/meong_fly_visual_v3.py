@@ -62,6 +62,15 @@ def meong_animation_frames(logo_path, limit=15):
         return [body.convert("RGBA")]
 
 
+def camera_cat_from_latest_logo(logo_path):
+    """Extract the flying camera-cat, without the rainbow, for game hitboxes."""
+    frame = meong_animation_frames(logo_path)[0]
+    w, h = frame.size
+    # User's new GIF artwork has the camera-cat at the right of its trail.
+    return frame.crop((round(w*.24), round(h*.05),
+                       round(w*.96), round(h*.96)))
+
+
 def printed_photo_tile(index=0):
     """Generate cheerful instant-film pixels for the in-space print cascade."""
     import random
