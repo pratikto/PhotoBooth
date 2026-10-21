@@ -4,7 +4,7 @@ All layouts/components in this package are newly authored for GUI v2. Only
 approved logo and thermal template art are reused; no legacy page widgets.
 """
 
-from kivy.graphics import Color, Rectangle, RoundedRectangle
+from kivy.graphics import Color, Ellipse, Line, Rectangle, RoundedRectangle
 from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
@@ -59,13 +59,34 @@ class Starfield(FloatLayout):
                 size = dp(3 if index % 9 == 0 else 2)
                 Rectangle(pos=(self.x + x * self.width, self.y + y * self.height),
                           size=(size, size))
-            # Side decorations stay outside the main center content area.
-            Color(*rgba(PURPLE, .18))
-            Rectangle(pos=(self.x, self.y + self.height * .66),
-                      size=(self.width * .13, self.height * .18))
-            Color(*rgba(PINK, .12))
-            Rectangle(pos=(self.right - self.width * .11, self.y + self.height * .19),
-                      size=(self.width * .11, self.height * .16))
+            # Restrained planets/asteroids replace the v1-like solid side bars.
+            # Keep ornaments near the edges, behind opaque interface panels.
+            orbit = self.width * .25
+            Color(*rgba("#7B4BA8", .38))
+            Ellipse(pos=(self.x - orbit * .58, self.y + self.height * .67),
+                    size=(orbit, orbit))
+            Color(*rgba("#E774D6", .42))
+            Line(ellipse=(self.x - orbit * .64, self.y + self.height * .70,
+                          orbit * 1.13, orbit * .66), width=dp(3))
+            Color(*rgba("#301D60", .65))
+            Ellipse(pos=(self.x - orbit * .31, self.y + self.height * .77),
+                    size=(orbit * .16, orbit * .16))
+            Color(*rgba("#5488DD", .26))
+            Ellipse(pos=(self.right - orbit * .55, self.y + self.height * .15),
+                    size=(orbit, orbit))
+            Color(*rgba("#8BE0FF", .38))
+            Line(ellipse=(self.right - orbit * .68,
+                          self.y + self.height * .18, orbit * 1.18,
+                          orbit * .69), width=dp(2))
+            # Tiny cratered rock at the upper side: cosmetic, not a game obstacle.
+            Color(*rgba("#78709F", .54))
+            Ellipse(pos=(self.right - orbit * .37, self.y + self.height * .87),
+                    size=(orbit * .45, orbit * .45))
+            Color(*rgba("#272955", .88))
+            Ellipse(pos=(self.right - orbit * .27, self.y + self.height * .92),
+                    size=(orbit * .12, orbit * .12))
+            Ellipse(pos=(self.right - orbit * .05, self.y + self.height * .91),
+                    size=(orbit * .10, orbit * .10))
 
 
 class PixelCard(BoxLayout):
