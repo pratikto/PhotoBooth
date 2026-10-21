@@ -1,7 +1,10 @@
-# FEAT-021 — Meong Fly: Visual Polish Specification v2
+# FEAT-021 — Meong Fly: Visual Polish Specification v2 (HISTORICAL)
 
-**Date:** 2026-10-21  
-**Status (2026-10-21):** Batch A Start/Scan and Batch B Gameplay **IN SOURCE** on the isolated feature branch; new Windows GUI/owner visual acceptance **PENDING**. Batch C Win/Lose polish is not yet implemented.  
+> **SUPERSEDED VISUAL SPEC / HISTORICAL IMPLEMENTATION SNAPSHOT (2026-10-21).** This document records the v2 Batch A/B plan and tests **as they were known then**. Since then, **v3 Start/Win/Lose poster code and v4 photo-print animation have been committed** on the existing mini-game feature branch. It is therefore **not correct** to read “Batch C not yet implemented” as a current code inventory, nor to treat later code as visually accepted. The owner has **rejected current visual fidelity** against the latest neon poster.  
+> **CURRENT authoritative design/status:** [FEAT-021 Visual Overhaul v5 source audit and per-object requirements](FEAT-021-visual-overhaul-v5.md) + [v5 visual QA matrix](../qa/FEAT-021-visual-v5-acceptance.md) + [current FEAT-021 status](FEAT-021-meong-fly.md). **V5 is documentation only, NOT source implemented or code-approved.** The older 55/55 owner Windows regression applies to the older A/B version, not v4/v5.
+
+**Date of original spec:** 2026-10-21  
+**Historical status:** Batch A Start/Scan and Batch B Gameplay were implemented at the time; Batch C was then proposed. **Subsequent v3/v4 changes are documented in the links above**.  
 **Scope:** Standalone Meong Fly Kivy mini-game only.  
 **Target branch:** `feature/meong-flappy-challenge`  
 **Stable baseline:** `master` is read-only; no merge or kiosk integration without explicit approval.  
