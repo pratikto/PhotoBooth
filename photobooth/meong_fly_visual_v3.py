@@ -46,8 +46,20 @@ def meong_animation_frames(logo_path, limit=15):
                 frame.thumbnail((264, 204), Image.Resampling.NEAREST)
                 result.append(frame)
             return result
-    _, body = logo_parts(str(logo_path))
-    return [body.convert("RGBA")]
+    # Always prefer the actual owner's new GIF-derived cropped camera-cat.
+    # Encoded as ASCII to preserve binary fidelity through text-only GitHub tools.
+    # This frame is bundled, even when the animated GIF isn't installed locally.
+    try:
+        import base64
+        from io import BytesIO
+        asset = Path(__file__).resolve().parent / "assets" / "meong_fly_gif_logo.b85"
+        image = Image.open(BytesIO(base64.b85decode(
+            asset.read_text(encoding="ascii").strip()))).convert("RGBA")
+        return [image]
+    except (OSError, ValueError, EOFError):
+        # Old official PNG is only a last-resort fallback.
+        _, body = logo_parts(str(logo_path))
+        return [body.convert("RGBA")]
 
 
 def printed_photo_tile(index=0):
@@ -140,7 +152,6 @@ def paint_poster_screen(screen, logo_path):
         d=ImageDraw.Draw(frame)
         arcade_card(d,(45,393,315,491),(16,28,76),(174,89,164))
         p.pixel_text(d,"SCORE",180,402,scale=3,fill=p.WHITE)
-        p.pixel_text(d,"/10",224,447,scale=2,fill=p.GOLD)
         p.pixel_text(d,"TETAP BISA FOTO!",180,514,scale=2,fill=p.WHITE)
         arcade_button(d,p.ACTIONS["lost"]["continue"],
                       "PILIH LAYOUT FOTO","cyan",p,scale=2)
