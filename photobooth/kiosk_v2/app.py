@@ -290,9 +290,29 @@ class PortraitKioskV2App(App):
         shell.add_widget(guide)
         self._warning_label = text_label("", size=12, height=31, color=GOLD)
         shell.add_widget(self._warning_label)
+        shell.add_widget(self._action("UJI MUSIK (CEK SPEAKER)", self._test_music,
+                                      variant="secondary", height=44))
+        self._audio_status = text_label(
+            "Dengarkan musik saat di tutorial. Tombol ini mengulang tes.",
+            size=11, height=35, color=MUTED,
+        )
+        shell.add_widget(self._audio_status)
         shell.add_widget(self._action("LANJUT PILIH TEMPLATE", self._complete_tutorial))
         shell.add_widget(self._action("BATAL / KEMBALI IKLAN", self._return_ad,
                                       variant="tertiary", height=48))
+
+    def _test_music(self):
+        requested = self.audio_v2.test_music()
+        status = self.audio_v2.status()
+        provider = status["provider"]
+        if requested:
+            self._audio_status.text = (
+                f"Playback diminta ({provider}). Pastikan terdengar di speaker."
+            )
+        else:
+            self._audio_status.text = (
+                f"Audio tidak siap ({provider}): {status['last_error'] or 'cek volume'}"
+            )
 
     def _complete_tutorial(self):
         self.navigation.complete_tutorial()
