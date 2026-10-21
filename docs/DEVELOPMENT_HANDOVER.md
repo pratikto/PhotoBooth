@@ -1,4 +1,22 @@
 # Meong Photobooth — Development handover
+## Current FEAT-021 standalone visual handover — 2026-10-21 (DOCUMENTATION ONLY)
+
+**What changed this session:** The owner requested **comprehensive documentation**, not source edits. The latest five-panel neon mockup was audited against actual v4 source on **existing `feature/meong-flappy-challenge`** at code/docs baseline `85a6aaa99356f3825067dfc5b92c6f91933d8519`. Added the [canonical v5 object-by-object audit/spec](features/FEAT-021-visual-overhaul-v5.md) and [exact-commit Windows QA matrix](qa/FEAT-021-visual-v5-acceptance.md), updated engineering/current-status/decision history, recorded **BUG-013** visual acceptance blocker, and clarified dynamic backlog. **No Python/image asset/tests/app version/production flow/merges were changed.**
+
+**Current real status:** Standalone mini-game v4 **IN SOURCE** with Start/Scan/Game/Win/Lose, tutorial once and generic 12-layout preview; 10-point target, 25 s timer, Kivy animations and one-use SQLite `DEMO-` receipts. Owner rejects aesthetic fidelity relative to latest neon poster. Visual Overhaul **v5 SPECIFIED ONLY / CODE UNAPPROVED / OWNER WINDOWS QA NOT EXECUTED**. The source itself confirms duplicated Start/Win hero draw paths, relative estimated instant-film slot, lack of authentic aperture mask, basic 5×7 font, tiled asteroid belts and absent defeated/X-eye pose. These are not evidence of a particular measured screen artifact.
+
+**Older evidence kept distinct:** earlier Windows 55/55 automated PASS for historical Batch A/B; 23/23 partial post-v3 owner log; 10/10 local mirrored v4 emitter behavioral PASS; older Step 3 6/6 manual PASS. None verifies the exact current v4 SHA's Kivy visual output, measured FPS, corrected print origin or v5 owner acceptance.
+
+**Next SAFE step (needs fresh approval for code):**
+1. Owner reviews [v5 specification and prioritization](features/FEAT-021-visual-overhaul-v5.md); suggested first code phase is V5-1 (one hero renderer + physical local print-slot/mask; photo feed/attachment/release/fall).
+2. Before any code change, record `git rev-parse HEAD`, existing branch local changes, full source diff, affected tests and rollback SHA; scope the smallest patch and obtain explicit owner authorization. **Do not create a new branch** for FEAT-021 unless owner later changes instruction; **do not merge** to `master`.
+3. After authorized implementation, run [v5 QA matrix](qa/FEAT-021-visual-v5-acceptance.md) against exact Windows code SHA; capture real screenshots/videos at Start/Scan/Game/Win/Lose/Tutorial/Layout, gameplay obstacle fairness and 4-stage film printing, + FPS data, + real keyboard and receipt replay checks.
+4. Update BUG-013, FEATURE_STATUS, test_checklist, CHANGELOG with true evidence and owner sign-off; do not close a bug or label a feature VERIFIED without test evidence. Production kiosk hardware bugs BUG-001/007, BUG-009 remain independently prioritized.
+
+**Production decision boundaries:** result CTA `PILIH LAYOUT FOTO` (not payment), tutorial once, one receipt one attempt/no `MAIN LAGI`; current selector is generic demo only. Production 12 thermal 80×240 mm / 640×1920 templates remain unchanged, 3 vertically stacked photos and Drive **folder-download QR** (not scanner/QRIS). Discount Rp2.500 is simulated; real merchant/POS/QRIS/photobooth GUI integration remain unapproved.
+
+
+
 
 > **CURRENT RELEASE BASELINE (2026-10-19):** Default branch `master` contains Meong Photobooth Kivy GUI. Immutable source snapshot `v1.0.0` / `07ce51d2022ab5673a7a27e744e5e5757fbb3d08` is published as a [GitHub pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0). Release-SHA CI: [Kiosk GUI 39185986245](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245) (**233 pass, 2 skipped, 87 synthetic renders, 0 errors**) and [Dither 39185986273](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273) (**48 tests pass**). Linux mock/screenshot QA is **not** certification on Windows hardware or customer deployment. Outstanding: BUG-001/007 audio speaker retest, BUG-009 30-day Drive cloud retention **OPEN**; QRIS is DEMO/non-payable (FEAT-020 not implemented), receipt scanner FEAT-002 not implemented. The earlier `feature/kivy-gui` branch and dated narratives below are **historical** where they conflict with this baseline.
 
