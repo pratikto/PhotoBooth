@@ -145,7 +145,12 @@ class PortraitAudio:
             return False
 
     def test_music(self):
-        """Diagnostic is intentional, never accidentally invoked on a page tick."""
+        """Force an audible test request, reloading if initial native load failed.
+
+        Native state=play is only a provider response, NOT proof of speaker audio.
+        """
+        if self._handles.get("music") is None:
+            self._handles.pop("music", None)
         return self._sync_music(restart=True)
 
     def suspend(self):
