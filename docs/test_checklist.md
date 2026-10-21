@@ -311,3 +311,18 @@ Scope `feature/meong-flappy-challenge` standalone demo. **New code pushed; lates
 
 
 **Follow-up source test:** `tests/test_meong_fly_photo_handoff.py` committed at `3d63d0b2` verifies new painted tutorial/layout screens, exactly 12 non-overlapping hitboxes, and no retry on terminal screens. **Not executed** in this environment: GitHub network unavailable to the container. Include `python -m unittest tests.test_meong_fly_photo_handoff tests.test_meong_fly_flow tests.test_meong_fly_painter -v` in the next Windows QA run. The earlier 55/55 PASS is historical, predates the handoff changes.
+
+
+## FEAT-021 poster v3 regression checklist (2026-10-21)
+
+Status **SOURCE PATCHED; NEW AUTOMATED/GUI TESTING NOT YET EXECUTED/REPORTED**. Historical owner Windows Kivy 55/55 PASS (Python 3.12.10 / Kivy 2.3.1) was recorded before the current poster/animation code and is **not transferred**. New tests: `tests.test_meong_fly_visual_v3`; changes affect Start/Win/Lose, shared bitmap glyphs, latest camera sprite, and Kivy printed-photo animation.
+
+- [ ] On Windows fetch updated feature branch and record `git rev-parse HEAD`.
+- [ ] Run `python -m unittest tests.test_meong_fly_visual_v3 tests.test_meong_fly_photo_handoff tests.test_meong_fly_flow tests.test_meong_fly_painter tests.test_meong_fly_polish tests.test_meong_fly_game_art tests.test_meong_fly_gameplay_gui tests.test_meong_fly_gui tests.test_meong_fly_receipts tests.test_meong_fly -v`; record pass/fail/skip and logs.
+- [ ] Latest GIF-frame-derived logo appears on Start instead of older black text PNG; MEONG / FLY! main heading stays legible on navy, with short instructions, Rp2.500 demo panel, and two clearly separated CTAs.
+- [ ] Full 26-frame GIF is OPTIONAL: copy it to `photobooth/assets/meong_photobooth_print_drop.gif` or set `MEONG_FLY_ANIM_GIF`; otherwise **ten-frame synthesized print-drop** uses bundled GIF-derived image. Verify printed-photo sheet emerges and drifts/falls, and no crop/stretch.
+- [ ] Manually review Scan real TextInput visibility and typing, decorative QR notice and one DEMO code one attempt (BUG-012), including restart.
+- [ ] Gameplay: updated camera-cat source/poses remain clearly inside original hitbox; photo debris never appears to be collision hazard, score/pause and asteroid gap unchanged, 30 FPS on target hardware.
+- [ ] Win / Lose use high-contrast poster treatment but only CTA `PILIH LAYOUT FOTO` (NOT mockup's payment CTA), with tutorial once -> twelve demo layout cards. No `Main Lagi`.
+- [ ] Check loss dynamic score sits below its SCORE title without overlapping. Check letterboxing at 450x900 and 800x600; touch regions remain exact.
+- [ ] Capture owner Windows Start, Scan, Gameplay, Win and Lose screenshots and approval before declaring mockup visual match. Standalone only; no actual printer/payment/POS integration.
