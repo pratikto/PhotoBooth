@@ -22,6 +22,7 @@ def animation_gif_path():
     return bundled if bundled.is_file() else None
 
 
+@lru_cache(maxsize=4)
 def meong_animation_frames(logo_path, limit=15):
     """Return cropped native GIF frames, or approved PNG sprite as fallback.
 
@@ -45,7 +46,7 @@ def meong_animation_frames(logo_path, limit=15):
                                     round(w*.92), round(h*.64)))
                 frame.thumbnail((264, 204), Image.Resampling.NEAREST)
                 result.append(frame)
-            return result
+            return tuple(result)
     # Always prefer the actual owner's new GIF-derived cropped camera-cat.
     # Encoded as ASCII to preserve binary fidelity through text-only GitHub tools.
     # This frame is bundled, even when the animated GIF isn't installed locally.
@@ -55,11 +56,11 @@ def meong_animation_frames(logo_path, limit=15):
         asset = Path(__file__).resolve().parent / "assets" / "meong_fly_gif_logo.b85"
         image = Image.open(BytesIO(base64.b85decode(
             asset.read_text(encoding="ascii").strip()))).convert("RGBA")
-        return [image]
+        return (image,)
     except (OSError, ValueError, EOFError):
         # Old official PNG is only a last-resort fallback.
         _, body = logo_parts(str(logo_path))
-        return [body.convert("RGBA")]
+        return (body.convert("RGBA"),)
 
 
 def camera_cat_from_latest_logo(logo_path):
