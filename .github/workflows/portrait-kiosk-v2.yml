@@ -51,8 +51,8 @@ jobs:
         run: xvfb-run -a python -m unittest tests.test_kiosk_v2_widgets -v
       - name: Capture real Kivy pages at 800x1280 (fresh Xvfb process)
         run: xvfb-run -a -s "-screen 0 1600x1600x24" python tools/render_portrait_v2.py --output-dir /tmp/meong-portrait-v2 --width 800 --height 1280
-      - name: Capture real Kivy pages at 450x900 (fresh Xvfb process)
-        run: xvfb-run -a -s "-screen 0 1280x1024x24" python tools/render_portrait_v2.py --output-dir /tmp/meong-portrait-v2 --width 450 --height 900
+      - name: Capture compact Kivy pages at 452x900 (RGB readback-aligned)
+        run: xvfb-run -a -s "-screen 0 1280x1024x24" python tools/render_portrait_v2.py --output-dir /tmp/meong-portrait-v2 --width 452 --height 900
       - name: Preserve visual evidence for review
         if: always()
         uses: actions/upload-artifact@v4
