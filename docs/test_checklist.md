@@ -1,4 +1,9 @@
 ## Version 1.0.0 — release-source verification (2026-10-19)
+> **LATEST FEAT-021 VISUAL QA GATE — 2026-10-21 (DOCUMENTATION, NOT AN EXECUTED TEST):** [Canonical visual v5 audit](features/FEAT-021-visual-overhaul-v5.md) + [Detailed Windows v5 acceptance checklist](qa/FEAT-021-visual-v5-acceptance.md). Current feature-branch GUI visual source is **v4 IN SOURCE, visually REJECTED/PENDING by owner**; proposed Visual Overhaul v5 is **NOT CODE IMPLEMENTED** and all v5 Q/V/A cases are **NOT RUN**. Source baseline audited at `85a6aaa99356f3825067dfc5b92c6f91933d8519` prior to doc updates. Earlier owner 55/55 Windows and 23/23 partial reports (plus assistant local-mirror 10/10 print-model checks) are strictly **historical** and do not certify post-v4 Kivy screenshots, frame rate, motion or new code. A real v5 sign-off requires complete exact SHA tests, actual five-screen captures, four-stage camera-print video and owner approval. Related [BUG-013](bug_tracker.md) and historical BUG-012 input regression. **No fresh automated run or physical acceptance is claimed by this documentation update.**
+
+---
+
+
 
 **Immutable release SHA:** `07ce51d2022ab5673a7a27e744e5e5757fbb3d08` (`v1.0.0`, GitHub pre-release). [Kiosk GUI](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245) **SUCCESS**: 235 tests (233 PASS, 2 SKIP, 0 failures/errors), 87 synthetic screenshots / 0 errors. [Dither lab](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273) **SUCCESS**: 48 tests. GitHub Linux mocked tests verify code/screenshot behavior, **not** physical Windows camera/audio/printer/QR phone scan or actual settlement; QRIS is DEMO only. BUG-001/007 audio retest and BUG-009 Drive cloud retention remain unresolved. Earlier `c40f33f5`, `f129dd9e`, and `e46812b8` results are retained as *historical* evidence.
 
