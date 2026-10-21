@@ -215,7 +215,7 @@ class PortraitKioskV2App(App):
 
     def _build_advert(self, canvas):
         shell = self._frame(canvas)
-        self._brand(shell, "YOUR NEXT MEMORY STARTS HERE", "Pixel-space photobooth • 3 foto + QR")
+        self._brand(shell, "ABADIKAN MOMEN DI GALAKSI", "Pixel-space photobooth • 3 foto + QR")
         shell.add_widget(text_label("IKLAN / MODE SIAGA", size=14, height=30, color=CYAN))
         creative = PixelCard(orientation="vertical", padding=6, spacing=0)
         media_host = FloatLayout()
@@ -356,9 +356,9 @@ class PortraitKioskV2App(App):
         self._template_name = text_label("", size=17, height=36, color=CYAN, bold=True)
         deck.add_widget(self._template_name)
         nav = BoxLayout(size_hint_y=None, height=dp(52), spacing=dp(12))
-        nav.add_widget(self._action("◀ SEBELUMNYA", lambda: self._shift_template(-1),
+        nav.add_widget(self._action("SEBELUMNYA", lambda: self._shift_template(-1),
                                     variant="tertiary", height=52))
-        nav.add_widget(self._action("BERIKUTNYA ▶", lambda: self._shift_template(1),
+        nav.add_widget(self._action("BERIKUTNYA", lambda: self._shift_template(1),
                                     variant="secondary", height=52))
         deck.add_widget(nav)
         shell.add_widget(deck)
