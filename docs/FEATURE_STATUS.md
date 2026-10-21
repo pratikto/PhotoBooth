@@ -136,3 +136,9 @@ provider/state/gain/mix diagnostic in the same popup.
 ### FEAT-022 P0–P2 synthetic QA update — 2026-10-21
 
 [Portrait CI 39522764587](https://github.com/pratikto/PhotoBooth/actions/runs/39522764587) succeeded: **16/16 pure navigation/audio tests**, Linux/Xvfb Kivy interactive widget smoke, 12 validated screenshots (6 pages at both 800x1280 and aligned 452x900). These are **source / virtual-display PASS**, NOT audible Windows music acceptance or an integrated paid photobooth. Status remains **PARTIAL IN SOURCE / DEVICE QA PENDING**. [Legacy v1 Kiosk CI 39522083946](https://github.com/pratikto/PhotoBooth/actions/runs/39522083946) previously ran 252 tests (250 passed / two skipped), 87 renders; current new branch must still be physically tested and polished. The repaired screenshot renderer avoids unreliable 450px RGB row packing in Linux and does NOT certify Windows touch. DO NOT MERGE pending owner review.
+
+
+## FEAT-022 — portrait GUI v2 follow-up branch: PCM audio provider hardening (2026-10-21)
+
+**IN SOURCE / DEVICE QA PENDING.** `feature/portrait-kiosk-v2-next` was created from `feature/portrait-kiosk-gui`, leaving the existing working scaffold and `master` untouched. Native SDL2 gets first chance at desktop PCM WAV playback (unless `KIVY_AUDIO` explicitly overrides it), with length-verified provider fallback and failure detection when playback remains stopped. New mocked regressions are committed. Separate Windows Kivy/speaker acceptance and exact-branch CI results are still required. The previously reported BUG-001/007 music issue is **not marked resolved**; this change only affects opt-in v2. Game, live QRIS, camera, printing and Google Drive are not yet connected to v2. Detail: [portrait-kiosk-v2.md](portrait-kiosk-v2.md); source commits `2b743da0` and `caad0e0d`.
+
