@@ -9,6 +9,9 @@ Examples:
 """
 
 import argparse
+import hashlib
+import json
+import subprocess
 import os
 from pathlib import Path
 import sys
@@ -42,8 +45,16 @@ class VisualRecorder(PortraitKioskV2App):
         self.output_dir = Path(output_dir)
         self.dimensions = dimensions
         self.saved = []
+        self.evidence = []
 
     def _capture(self, name):
+        expected_page = {
+            "01-advert": "advert", "02-invitation": "advert",
+            "03-tutorial": "tutorial", "04-templates": "templates",
+            "05-copy-cart": "templates", "06-game-placeholder": "game_preview",
+        }[name]
+        if self.navigation.page != expected_page:
+            raise RuntimeError(f"Wrong page for {name}: {self.navigation.page}")
         suffix = f"{self.dimensions[0]}x{self.dimensions[1]}"
         target = self.output_dir / f"{name}-{suffix}.png"
         # 452 pixels is the nearest 4-byte-aligned screenshot width to 450.
@@ -57,6 +68,8 @@ class VisualRecorder(PortraitKioskV2App):
             # of accepting a corrupt PNG as genuine 450-pixel visual evidence.
             from PIL import Image as PillowImage, ImageChops, ImageStat
             with PillowImage.open(path) as original:
+                if original.size != self.dimensions:
+                    raise RuntimeError(f"Wrong screenshot size: {original.size}")
                 rgb = original.convert("RGB")
                 left = rgb.crop((2, int(rgb.height * .10),
                                  min(12, rgb.width), int(rgb.height * .90)))
@@ -71,26 +84,46 @@ class VisualRecorder(PortraitKioskV2App):
                     f"mean adjacent row difference={vertical_noise:.1f}"
                 )
             self.saved.append(path)
+            self.evidence.append({
+                "state": name, "page": expected_page, "file": path.name,
+                "width": self.dimensions[0], "height": self.dimensions[1],
+                "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            })
 
     def on_start(self):
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
-        def later(seconds, function):
-            Clock.schedule_once(lambda _dt, task=function: task(), seconds)
+        # Schedule relative to the completed previous action. Slow font/texture
+        # startup must not collapse several routes and captures into one frame.
+        steps = iter((
+            (1.2, lambda: self._capture("01-advert")),
+            (.3, self._show_invitation),
+            (.6, lambda: self._capture("02-invitation")),
+            (.2, self._choose_photo),
+            (.6, lambda: self._capture("03-tutorial")),
+            (.3, self._complete_tutorial),
+            (.6, lambda: self._capture("04-templates")),
+            (.2, lambda: self._change_copies(1)),
+            (.5, lambda: self._capture("05-copy-cart")),
+            (.2, self._return_ad),
+            (.2, self._choose_game),
+            (.6, lambda: self._capture("06-game-placeholder")),
+            (.4, self.stop),
+        ))
 
-        later(1.2, lambda: self._capture("01-advert"))
-        later(1.5, self._show_invitation)
-        later(2.1, lambda: self._capture("02-invitation"))
-        later(2.3, self._choose_photo)
-        later(2.9, lambda: self._capture("03-tutorial"))
-        later(3.2, self._complete_tutorial)
-        later(3.8, lambda: self._capture("04-templates"))
-        later(4.0, lambda: self._change_copies(1))
-        later(4.5, lambda: self._capture("05-copy-cart"))
-        later(4.7, self._return_ad)
-        later(4.9, self._choose_game)
-        later(5.5, lambda: self._capture("06-game-placeholder"))
-        later(5.9, self.stop)
+        def advance():
+            try:
+                delay, action = next(steps)
+            except StopIteration:
+                return
+
+            def execute(_dt):
+                action()
+                advance()
+
+            Clock.schedule_once(execute, delay)
+
+        advance()
 
 
 def main():
@@ -100,8 +133,19 @@ def main():
     app.run()
     if len(app.saved) != 6:
         raise SystemExit(f"Incomplete {options.width}x{options.height} QA evidence: {len(app.saved)}/6")
+    report = {
+        "source_sha": subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+        "tracked_changes": bool(subprocess.check_output(
+            ["git", "status", "--porcelain", "--untracked-files=no"], cwd=ROOT)),
+        "synthetic_only": True,
+        "screenshots": app.evidence,
+    }
+    report_path = app.output_dir / f"report-{options.width}x{options.height}.json"
+    report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     for path in app.saved:
         print(path, path.stat().st_size, "bytes")
+    print(report_path)
 
 
 if __name__ == "__main__":

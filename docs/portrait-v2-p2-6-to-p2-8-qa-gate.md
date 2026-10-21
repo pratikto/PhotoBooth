@@ -56,3 +56,11 @@ Page callbacks now reject retired/suspended input; all CTA heights are at least
 48dp, fourth tutorial step scroll access is tested at both sizes, and effects
 stop during suspend or handoff to advert/game preview. Exact-SHA CI and remote
 artifact inspection are still required; do not mark P2.8 complete.
+
+## P2.8 current stop point — external evidence gate
+
+[Checkpoint report, exact SHAs, CI/artifact references, blocker and Windows checklist](qa/portrait-v2-p28/README.md).
+P2.6 exact-SHA CI passed both jobs; artifact download is still blocked by proxy
+CONNECT 403. P2.7 exact-SHA run was queued at last observation. Local P2.8
+renderer checks, 45 tests and twelve pixel-identical rerenders passed, but
+**P2.6–P2.8 completion is not certified** until required CI/artifact review.

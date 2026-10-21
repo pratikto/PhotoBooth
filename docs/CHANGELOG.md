@@ -2,6 +2,11 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased — P2.8 evidence checkpoint, BLOCKED] — 2026-10-21
+
+- Harden screenshot recording with sequential scheduling, expected-route and dimension validation, and per-viewport SHA-256/source manifests. 45 portrait tests and twelve rerenders passed locally; all pixels match the reviewed P2.7 images.
+- Document exact published checkpoints, verified P2.6 CI, pending P2.7 CI, blocked artifact download and unrun Windows acceptance checklist. [Evidence report](qa/portrait-v2-p28/README.md). P2.8 is **not complete**; no production/hardware claims.
+
 ## [Unreleased — P2.7 portrait lifecycle] — 2026-10-21
 
 - Retire page-owned button/swipe callbacks; block input and browsing timeout while suspended, refresh inactivity on resume, and ignore resume after app stop.

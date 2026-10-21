@@ -384,3 +384,13 @@ Evidence and rollback: [P2.6](qa/portrait-v2-p26/README.md). This does not close
 - [ ] Exact-SHA remote CI/artifact gate and Windows audible/touch acceptance.
 
 [Evidence and rollback](qa/portrait-v2-p27/README.md).
+
+## P2.8 evidence gate — BLOCKED
+
+- [x] 45 local portrait tests, twelve rerenders and full pixel comparison to reviewed P2.7 images.
+- [x] P2.6 CI at `5fced9d` reports success for both jobs.
+- [ ] Required exact-SHA remote screenshot artifacts downloaded and inspected.
+- [ ] P2.7 and final checkpoint CI results verified independently.
+- [ ] Windows acceptance (unrun checklist in the [checkpoint report](qa/portrait-v2-p28/README.md)).
+
+Do not close P2.6–P2.8 based only on these local results.
