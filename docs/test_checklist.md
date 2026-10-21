@@ -308,3 +308,6 @@ Scope `feature/meong-flappy-challenge` standalone demo. **New code pushed; lates
 - [ ] 12 generic **demo** layout cards are visible and clickable, but do not masquerade as approved actual thermal templates or trigger camera/payment. Selecting a card exits the standalone demo.
 - [ ] No second game attempt, no retry button, and SQLite receipt replay protection after restart.
 - [ ] Verify portrait/landscape touch mapping and readable screen text before owner visual acceptance; NOT marked production integrated.
+
+
+**Follow-up source test:** `tests/test_meong_fly_photo_handoff.py` committed at `3d63d0b2` verifies new painted tutorial/layout screens, exactly 12 non-overlapping hitboxes, and no retry on terminal screens. **Not executed** in this environment: GitHub network unavailable to the container. Include `python -m unittest tests.test_meong_fly_photo_handoff tests.test_meong_fly_flow tests.test_meong_fly_painter -v` in the next Windows QA run. The earlier 55/55 PASS is historical, predates the handoff changes.
