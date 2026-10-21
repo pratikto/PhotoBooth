@@ -26,6 +26,7 @@ from photobooth.ui_ads import AdvertisementPlayer
 from photobooth.workflow import quote_order
 
 from .audio import make_kivy_audio
+from .illustrations import TutorialIcon
 from .flow import ADVERT, BROWSING_PAGES, GAME_PREVIEW, TEMPLATES, TUTORIAL, VisitFlow
 from .theme import ArcadeButton, CYAN, GOLD, MUTED, PixelCard, PINK, Starfield, text_label
 
@@ -293,39 +294,65 @@ class PortraitKioskV2App(App):
 
     def _build_tutorial(self, canvas):
         shell = self._frame(canvas)
-        self._brand(shell, "CARA PAKAI MEONG", "Wajib sekali per kunjungan sebelum memilih template")
-        guide = ScrollView(size_hint_y=1, bar_width=dp(3), do_scroll_x=False)
+        self._brand(shell, "CARA PAKAI MEONG", "CUMA 4 LANGKAH • GAMPANG BANGET!")
+
+        status = PixelCard(orientation="horizontal", size_hint_y=None,
+                           height=dp(50), padding=7, spacing=5)
+        status.add_widget(text_label(
+            "TUTORIAL WAJIB", size=14, height=33, color=CYAN, bold=True))
+        status.add_widget(text_label(
+            "Cukup sekali per kunjungan", size=13, height=33, color=GOLD))
+        shell.add_widget(status)
+
+        guide = ScrollView(size_hint_y=1, bar_width=dp(4), do_scroll_x=False)
         stack = BoxLayout(orientation="vertical", size_hint_y=None,
-                          spacing=dp(13), padding=[dp(4), dp(7), dp(4), dp(11)])
+                          spacing=dp(12),
+                          padding=[dp(3), dp(8), dp(3), dp(12)])
         stack.bind(minimum_height=stack.setter("height"))
+
         steps = (
-            ("01  PILIH TEMPLATE", "Pilih dari 12 strip thermal 3 foto + QR."),
-            ("02  LAKUKAN PEMBAYARAN", "Bayar melalui mode pembayaran yang tersedia."),
-            ("03  AMBIL 3 FOTO", "Berpose tiga kali. Ada 1 kesempatan retake."),
-            ("04  CETAK DAN SCAN", "Ambil strip 80 x 240 mm dan scan QR foto."),
+            ("template", "01  PILIH TEMPLATE",
+             "Cari desain favoritmu dari 12 strip asli."),
+            ("payment", "02  BAYAR",
+             "Selesaikan pembayaran sesuai instruksi layar."),
+            ("camera", "03  AMBIL 3 FOTO",
+             "Pose tiga kali! Kamu bisa ulang satu foto."),
+            ("print", "04  CETAK & SCAN QR",
+             "Ambil strip vertikal, scan QR untuk foto digital."),
         )
-        for title, detail in steps:
-            panel = PixelCard(
-                orientation="vertical", size_hint_y=None,
-                height=dp(124), padding=11, spacing=4,
-            )
-            panel.add_widget(text_label(title, size=18, height=41, color=CYAN, bold=True))
-            panel.add_widget(text_label(detail, size=13, height=45, color=MUTED))
-            stack.add_widget(panel)
+        for kind, title, detail in steps:
+            card = PixelCard(orientation="horizontal", size_hint_y=None,
+                             height=dp(146), padding=12, spacing=14)
+            art = TutorialIcon(kind=kind, size_hint=(None, 1), width=dp(106))
+            card.add_widget(art)
+
+            copy = BoxLayout(orientation="vertical", spacing=dp(6))
+            copy.add_widget(text_label(
+                title, size=18, height=45, color=CYAN,
+                bold=True, align="left"))
+            copy.add_widget(text_label(
+                detail, size=15, height=64, color=MUTED, align="left"))
+            card.add_widget(copy)
+            stack.add_widget(card)
+
         guide.add_widget(stack)
         shell.add_widget(guide)
-        self._warning_label = text_label("", size=12, height=31, color=GOLD)
+        self._warning_label = text_label(
+            "", size=12, height=29, color=GOLD)
         shell.add_widget(self._warning_label)
-        shell.add_widget(self._action("UJI MUSIK (CEK SPEAKER)", self._test_music,
-                                      variant="secondary", height=44))
+        shell.add_widget(self._action(
+            "UJI MUSIK (CEK SPEAKER)", self._test_music,
+            variant="secondary", height=43))
         self._audio_status = text_label(
-            "Dengarkan musik saat di tutorial. Tombol ini mengulang tes.",
-            size=11, height=35, color=MUTED,
+            "Musik diputar otomatis di halaman ini. Dengarkan speaker.",
+            size=12, height=38, color=MUTED,
         )
         shell.add_widget(self._audio_status)
-        shell.add_widget(self._action("LANJUT PILIH TEMPLATE", self._complete_tutorial))
-        shell.add_widget(self._action("BATAL / KEMBALI IKLAN", self._return_ad,
-                                      variant="tertiary", height=48))
+        shell.add_widget(self._action(
+            "LANJUT PILIH TEMPLATE", self._complete_tutorial))
+        shell.add_widget(self._action(
+            "BATAL / KEMBALI IKLAN", self._return_ad,
+            variant="tertiary", height=48))
 
     def _test_music(self):
         requested = self.audio_v2.test_music()
