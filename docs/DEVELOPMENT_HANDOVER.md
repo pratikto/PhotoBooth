@@ -2,11 +2,45 @@
 
 > **CURRENT RELEASE BASELINE (2026-10-19):** Default branch `master` contains Meong Photobooth Kivy GUI. Immutable source snapshot `v1.0.0` / `07ce51d2022ab5673a7a27e744e5e5757fbb3d08` is published as a [GitHub pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0). Release-SHA CI: [Kiosk GUI 39185986245](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245) (**233 pass, 2 skipped, 87 synthetic renders, 0 errors**) and [Dither 39185986273](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273) (**48 tests pass**). Linux mock/screenshot QA is **not** certification on Windows hardware or customer deployment. Outstanding: BUG-001/007 audio speaker retest, BUG-009 30-day Drive cloud retention **OPEN**; QRIS is DEMO/non-payable (FEAT-020 not implemented), receipt scanner FEAT-002 not implemented. The earlier `feature/kivy-gui` branch and dated narratives below are **historical** where they conflict with this baseline.
 
-> **Next continuation:** Prioritize owner retesting of BUG-001/007 Windows audio and documented risk management of BUG-009 cloud retention; FEAT-008 remains only a proposed feature requiring separate approval. The PR #3 promotion is **complete**, not pending.
+> **Next continuation (2026-10-21):** Read the CURRENT FEAT-022 handover below before any portrait GUI work. Owner Windows audible speaker/10.1-inch touch and existing BUG-009 retention checks are still priorities. Historical PR #3 promotion is complete; no portrait v2 merge to master is approved.
 
 **Repository:** https://github.com/pratikto/PhotoBooth  
 **Target baseline:** `master` for stable code; new approved changes go to a dedicated task branch (`fix/*`, `feature/*`, or `docs/*`) and through PR review. **Tag:** `v1.0.0` stays unchanged.  
-**Handover updated:** 2026-10-19 (historical handover began 2026-10-17).
+**Handover updated:** 2026-10-21 for FEAT-022 branch follow-up; older sections preserve their dated historical evidence from 2026-10-17 onward.
+
+## CURRENT HANDOVER — FEAT-022 portrait GUI v2 + approved artboards (2026-10-21)
+
+**Task authorization:** owner approved starting fresh greenfield GUI / isolated audio and using **a new branch**, then expressly requested **comprehensive feature-branch documentation including the last approved mockup images**. Current working branch: **feature/portrait-kiosk-v2-next**, created from the previously developed **feature/portrait-kiosk-gui** (39 pre-existing commits); the released **master/v1.0.0 remains unchanged**. This documentation-only continuation does not authorize camera/QRIS/game code integration, payment activation or master merge.
+
+**Read first, in this order:** [primary FEAT-022 specification with both images](portrait-kiosk-v2.md) → [latest corrected nine-screen game + main visual spec](portrait-kiosk-v2-visual-spec.md) → [current technical/adapter boundaries](portrait-kiosk-v2-technical-design.md) → [feature status](FEATURE_STATUS.md) → [detailed test checklist](test_checklist.md) → [DEC-022 and DEC-003 tutorial-once decisions](DECISIONS.md) → [prioritized backlog](next_step.md). [Artwork checksums and archived older game board](assets/portrait-v2/README.md) document the provenance of the image evidence.
+
+### Source and actual current behavior
+
+- **New standalone v2 package:** photobooth/kiosk_v2/{app,flow,theme,audio}.py; launcher tools/run_portrait_v2.py. **python main.py continues to run legacy v1**.
+- **Functional prototype:** idle advertising (reusing catalog and player), buttons for direct photo and Meong Fly, *manual visual* face invitation overlay on that same ad surface, four-step tutorial with acknowledged-once-per-visit state, real 12 original 80×240 mm three-photo + photo-QR templates with paper-copy count and DEMO quote. Existing game entry goes only to a clearly unavailable notice.
+- **Audio source hardening:** SDL2-first valid-duration native WAV loading, SoundLoader fallback, fail-soft handling and stopped-after-play check (source commit [2b743da0](https://github.com/pratikto/PhotoBooth/commit/2b743da060b0493456bb810e32b61d8a9cc331dc); focused tests [caad0e0d](https://github.com/pratikto/PhotoBooth/commit/caad0e0dcd89be575942871f915f1a6bd910a003)). Does not close v1 BUG-001/007.
+- **Not integrated in v2:** actual face detection, real Meong Fly game/struk reader/durable promo/discount, QRIS or Midtrans, camera capture/one-retake, physical printing, Drive upload/digital QR delivery, customer subscription licensing. Separate mature v1 and feature-branch implementations are not proof of v2 capability.
+
+### Owner-approved visual source of truth and fixes
+
+- [Main GUI concept](assets/portrait-v2/meong-main-flow-approved.webp): idle, invitation, tutorial, template carousel, QRIS concept, camera, review, final 3-photo strip.
+- **[LATEST revised Meong Fly concept](assets/portrait-v2/meong-fly-revised-approved.webp): nine-screen board, now explicitly including MASUK MINI GAME before struk scan**. The earlier [eight-screen game board](assets/portrait-v2/meong-fly-flow-approved.webp) is **archival/superseded**, not the current target.
+- Owner's subsequent functional corrections override sample mockup arrows and prices: both foto/game CTA live on the **same advertising/inline invitation**; a dedicated mini-game intro leads to struk; one unique struk = one consumed play, no Main Lagi; Win Rp2.500 candidate / Lose no discount; **both results → tutorial iff unseen → select original 12 templates → authoritative payment**. Final strip QR is for photos, never a payment QRIS; old concept Rp25.000 price is illustrative only. No app-code or payment integration is implied by storing the images.
+
+### Actual QA evidence
+
+[Portrait workflow run 39548798578](https://github.com/pratikto/PhotoBooth/actions/runs/39548798578) at code-plus-initial-artwork SHA **6e7f29a769b2ca19d09efa99b3bef21fb7b8bc86**: **21/21 Python unit tests PASS, compile PASS, Kivy widget smoke PASS, 12 synthetic screenshots PASS** at 800×1280 and 452×900, both jobs SUCCESS. The subsequent **revised game artboard and document-only commits do not change the code under test**, but must have their own Actions/contents status checked when preparing a PR. The older prototype [run 39522764587](https://github.com/pratikto/PhotoBooth/actions/runs/39522764587) (16 tests) is historical.
+
+**No Windows physical speaker/test UI evidence** has been provided for this source. Do not confuse SDL2 play acknowledgement, virtual 452×900 Xvfb screenshots, simulated Video/UI or a GitHub PASS with operator audio, touchscreen, camera, payment, printer or Drive signoff. BUG-009 photo-retention cleanup remains open.
+
+### Required next action (do not silently broaden code scope)
+
+1. **Owner Windows trial:** git fetch origin, git switch feature/portrait-kiosk-v2-next, git pull; record git rev-parse HEAD; run python -m unittest tests.test_kiosk_v2_flow tests.test_kiosk_v2_audio tests.test_kiosk_v2_widgets -v; launch python tools/run_portrait_v2.py.
+2. Verify idle advertisements (image/video and optional source audio), inline invite (currently manual), tutorial-once and carousel, accurate approved strip masters, game unavailable label, portrait 10.1-inch tap/scroll, **audible music automatically** on Tutorial/Template and truthful UJI MUSIK. Provide exact source SHA, speakers/provider, screenshots and PASS/FAIL feedback.
+3. Compare actual 800×1280 screenshots with [approved visual spec](portrait-kiosk-v2-visual-spec.md) and record visual gaps. Then request the owner's explicit scope approval before building further P3 camera/face/print/Drive adapters or P4 standalone game/QRIS integration.
+4. Preserve existing paid/uncertain visit journals, receipt attempt ledger, printer profile, photo files and v1 return path; no destructive reset or unapproved master merge. Resolve duplicate FEAT-021 labels (Meong Fly vs Background Studio) before cross-branch registry integration.
+
+**Rollback:** simply return to master / launch legacy python main.py; do not revert/deploy master, remove branches, or force rewrite customer data. Branch CI/source success is not v2 release acceptance.
 
 ## Historical QA handover — Kiosk GUI Regression FULL CI PASS (2026-10-18)
 
