@@ -156,3 +156,8 @@ On `feature/meong-flappy-challenge` **only**, `meong_fly_polish.py` now renders 
 ## FEAT-021 — Batch A/B Windows targeted automated retest (2026-10-21)
 
 User supplied a Windows Kivy 2.3.1 / Python 3.12.10 test log showing **55/55 automated tests PASS, 0 skipped/failures/errors, 6.272 seconds**, on Intel Iris Xe / OpenGL 4.6. Includes actual Kivy Batch B renderer, scoring, pause/impact tests and BUG-012 TextInput widget/canvas tests; prior Linux Kivy SKIP evidence is superseded for those targeted tests. **Status: SOURCE IMPLEMENTED + OWNER-REPORTED WINDOWS AUTOMATED REGRESSION PASS; MANUAL VISUAL ACCEPTANCE/FPS STILL PENDING.** Exact tested SHA not included. Not production-ready and no merge to `master`; the five-screen aesthetic acceptance and Batch C remain open. See [FEAT-021 QA](test_checklist.md).
+
+
+## FEAT-021 — Owner-requested post-game layout handoff (2026-10-21)
+
+**IN SOURCE on `feature/meong-flappy-challenge`, manual Windows QA pending.** Win and Lose terminal CTAs now say `PILIH LAYOUT FOTO` and navigate through a one-time demo tutorial when unseen to an illustrated 12-layout **preview screen**; the original `LANGSUNG FOTO` Start path uses the same gate. This is a **standalone navigation demonstration, not production template selection**, camera, thermal print or payment. Win Rp2,500 is held as in-memory demo metadata, not an applied discount. Physics, one-receipt-one-attempt and no retry unchanged. Prior 55/55 Windows automated pass predated these changes and is not transferred. No `master` modifications/merge.
