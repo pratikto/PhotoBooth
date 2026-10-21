@@ -1,8 +1,51 @@
-# FEAT-021 — Meong Fly isolated prototype
+# FEAT-021 — Meong Fly standalone mini-game (engineering status and history)
 
-Status: IN PROGRESS — Visual Polish v2 Batch A (Start/Scan) + Batch B (Gameplay) IN SOURCE; current Windows GUI/visual acceptance PENDING. Batch C (Win/Lose) not yet polished. Historical Step 3 owner 6/6 PASS applies only to the older renderer, NOT this version.
-Approved 2026-10-20: isolated prototype in feature/meong-flappy-challenge; no master merge.
-Priority: P2 product enhancement, after core operational bugs; commercial integration BLOCKED.
+> **CURRENT AS OF 2026-10-21 — AUTHORITATIVE STATUS SNAPSHOT (documentation-only reconciliation)**  
+> **Branch:** `feature/meong-flappy-challenge` (existing branch; no new branch); source audited at `85a6aaa99356f3825067dfc5b92c6f91933d8519` **before** the documentation commits.  
+> **Lifecycle:** **IN PROGRESS — source implemented through visual v4; visual fidelity NOT owner-accepted; Visual Overhaul v5 documented but NOT coded/approved.**  
+> **Priority:** FEAT-021 **P2 product enhancement**; v5 visual blockers P0/P1 **within** this feature. Existing `master` operational bugs retain higher priority.  
+> **Scope permission:** current owner request authorizes **documentation**, not new v5 application-code commits, kiosk integration, real payment/receipt validation, release, or merge.
+
+**Read first (canonical current references):**
+1. **[Visual Overhaul v5 — definitive current mockup-vs-source audit, per-page/per-object specification, risk/architecture/remediation roadmap](FEAT-021-visual-overhaul-v5.md)**.
+2. **[FEAT-021 v5 Windows visual acceptance and regression matrix](../qa/FEAT-021-visual-v5-acceptance.md)**, with explicit unexecuted outcomes.
+3. [Owner decisions](../DECISIONS.md), [bug tracker](../bug_tracker.md) and [current feature status](../FEATURE_STATUS.md).
+4. [Historical Visual Polish v2 specification](FEAT-021-visual-polish-v2.md) for historical design and test evidence only.
+
+## Current implementation snapshot (supersedes dated sections below if contradictory)
+
+| Component | Actually exists on feature branch | Remaining gap / true evidence |
+| --- | --- | --- |
+| Standalone game | Space-themed Kivy + Pillow screens, 10-point score target, time cap, pause, score, asteroid avoidance | Not yet a visually approved replication of owner's latest neon poster |
+| Current screens | **Start, Scan, Gameplay, Win, Lose**, plus **tutorial and generic 12-layout preview** | Extra tutorial/layout screens are not real production photo workflow |
+| Brand/art | Latest GIF-derived gray camera-cat still encoded in `meong_fly_gif_logo.b85`, reused in hero/Game; synthetic hover loop | Full original GIF frames not bundled; logo layering/precise physical print outlet need improvement |
+| Photo animation v4 | `InstantPhotoEmitter` feeds from estimated camera anchor, detaches, falls under gravity with bounded sway; no old random paper confetti | Owner aesthetic objection **remains OPEN**; source draws static AND animated hero in Start/Win; printed film can appear disconnected; on-device v4 visual capture pending |
+| Typeface/background/obstacles | Basic 5×7 bitmap with local stroke, deep-space scenes, Kivy nebula/stars, five tiled asteroid palettes | Not the thick layered neon poster font, cinematic compositing and irregular asteroid art target |
+| Outcome/navigation | No `MAIN LAGI`; Win/Lose both **PILIH LAYOUT FOTO**; mandatory tutorial if unseen; `LANGSUNG FOTO` takes same route | Correct by owner decision; selecting one generic layout currently **exits the standalone demo** |
+| Receipt/discount | SQLite one-use **`DEMO-...`** identifiers; simulated Rp2.500 win | Real cafe POS receipt verification, redeemable discount, QRIS/payment and subsidies NOT implemented |
+| Tests | Historic owner-reported Step 3 **6/6** GUI, old Windows **55/55** targeted automated, later partial **23/23**, assistant local-mirror emitter **10/10** | No verified full Windows Kivy post-v4 SHA, current screenshots/video, frame-rate measurements or explicit final visual acceptance |
+| Release | Only `feature/meong-flappy-challenge` | Not on `master`, not deployed, not merged, not production-certified |
+
+**Source-level defects and v5 design tasks are indexed as VF-01..VF-16 in the v5 audit.** Most material: duplicate static+animated hero rendering in Start/Win; approximate printer outlet anchor; no physical slot mask; lack of dedicated pixel display-font assets; tiled asteroid columns; no defeated/X-eye sprite; older mockup wording differs from binding **PILIH LAYOUT FOTO** result navigation. Do not conflate verified code facts with physical GUI confirmation.
+
+### Expected future approved flow
+
+`Start → Main Game → demo receipt validation → Gameplay → Win/Lose → one-time tutorial (if not seen) → generic 12-layout preview → exit standalone`.
+
+`Start → Langsung Foto → one-time tutorial (if not seen) → generic 12-layout preview → exit standalone`.
+
+When and **only when** future photobooth integration is separately authorized, substitute the approved 12 real thermal strip templates (80×240 mm, 640×1920, three vertical photos, Google Drive folder-download QR) in the production flow. Never interpret the Scan illustration or printed-photo animation as real receipt scanning or photo printing.
+
+### Evidence / approval / rollback boundary
+
+The latest supplied five-panel poster is a **visual reference**, not a screenshot of the current program. The owner asked for a comprehensive document update; **v5 code is NOT authorized or executed** by this request. Run and record the complete FEAT-021 suite at exact checkout SHA plus Windows Kivy screenshots/video before changing the status to VERIFIED. `master` and immutable `v1.0.0` are read-only, no merge without explicit approval. Preserve existing commit history and use scoped future reverts.
+
+---
+
+## Historical implementation and QA timeline (dated entries preserved)
+
+> Entries below chronicle how FEAT-021 reached v4 and include historically accurate “pending” claims and old proposed payment/navigation paths; **the current snapshot above and binding DEC-021 decisions supersede them**. Do not delete old failures/tests or infer current PASS from previous stages.
+
 
 ## Scope
 An isolated five-screen Kivy arcade mini-game with the approved Meong camera-cat logo crop, rainbow, a ten-point asteroid-gap challenge, pause, score, Win/Lose, and SQLite persistence enforcing a single play per locally entered `DEMO-...` token. Entry point: `python -m photobooth.meong_fly_demo`. QR artwork is decorative, NOT a real scan. There is no verified cafe POS/merchant receipt, redeemable discount, production welcome-screen integration or live Midtrans payment.
