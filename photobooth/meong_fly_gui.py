@@ -393,6 +393,11 @@ class MeongFlyStage(Widget):
                 pos, size = self._rect((trail_x, trail_y, trail_w, trail_h))
                 Rectangle(pos=pos, size=size)
 
+        # Paper originates at the *current* camera body slot, feeds out,
+        # detaches, then falls independently. Keep it behind Meong's body.
+        if not show_impact:
+            self._paint_print_sheets("game")
+
         # Rotation follows visual movement, NOT a new game physics direction.
         pose = ("climb" if game.velocity > 130 else
                 "dive" if game.velocity < -100 else "level")
@@ -476,7 +481,8 @@ class MeongFlyStage(Widget):
                 )
             if screen in ("start", "scan"):
                 self._draw_menu_effects(screen)
-            self._draw_falling_photos(screen)
+            if screen in ("start", "won", "lost"):
+                self._paint_hero(screen)
         self._screen_seen = screen  # Track displayed game during brief impact.
 
     def validate_receipt(self):
@@ -489,6 +495,7 @@ class MeongFlyStage(Widget):
         before_screen = self.flow.screen
         before_score = self.flow.game.score
         self.flow.tick(dt)
+        self._advance_printer(dt)
         if before_screen == "game" and self.flow.game.score > before_score:
             self._score_fx_since = self._time
             self._score_fx_y = (GAME_FIELD_BOTTOM -
