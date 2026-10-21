@@ -37,6 +37,7 @@ from .meong_fly_painter import (
     logo_parts, make_asteroid_tile, paint_static_screen, pixel_text,
 )
 from .meong_fly_receipts import DemoReceiptLedger
+from .meong_fly_scanner import ReceiptScanner, SCAN_PREVIEW, MIRRORED_UV
 
 
 def kivy_texture(image):
@@ -52,9 +53,14 @@ def kivy_texture(image):
 class MeongFlyStage(Widget):
     """A responsive five-screen stage with gameplay/receipt-state isolation."""
 
-    def __init__(self, flow, logo_path=LOGO_PATH, **kwargs):
+    def __init__(self, flow, logo_path=LOGO_PATH, scanner=None, **kwargs):
         super().__init__(**kwargs)
         self.flow = flow
+        self._scanner = scanner  # App opts in; render/test stages never open hardware.
+        self._scan_texture = None
+        self._scan_serial = -1
+        self._scan_code = None
+        self._scan_status = "Kamera tidak aktif. Ketik kode demo."
         self._screen_seen = None
         self._time = 0.0
         self._hover_action = None  # Decorative highlight, never affects game state.
@@ -114,6 +120,9 @@ class MeongFlyStage(Widget):
             self._update_event.cancel()
             self._update_event = None
         Window.unbind(mouse_pos=self._mouse_moved)
+        if self._scanner is not None:
+            self._scanner.dispose()
+        self._scan_texture = None
 
     def _viewport(self):
         scale = (min(self.width / W, self.height / H)
@@ -147,9 +156,46 @@ class MeongFlyStage(Widget):
         self.receipt.opacity = int(active)
         self.receipt.disabled = not active
         self.notice.opacity = int(active)
-        self.notice.text = self.flow.message if active else ""
+        if self._scanner is not None:
+            self._scanner.set_active(active)
+        if not active:
+            self._scan_texture = None
+            self._scan_code = None
+            self._scan_serial = -1
+        self.notice.text = (self.flow.message or self._scan_status) if active else ""
         if not active and self.receipt.focus:
             self.receipt.focus = False
+
+    def _poll_scanner(self):
+        if self.flow.screen != "scan" or self._scanner is None:
+            return
+        self._scanner.set_active(True)
+        serial, frame, code, status = self._scanner.snapshot()
+        self._scan_status = status
+        if frame is None:
+            self._scan_texture = None
+        elif serial != self._scan_serial:
+            w, h, pixels = frame
+            if self._scan_texture is None or self._scan_texture.size != (w, h):
+                self._scan_texture = Texture.create(size=(w, h), colorfmt="rgb")
+                self._scan_texture.min_filter = self._scan_texture.mag_filter = "linear"
+            self._scan_texture.blit_buffer(pixels, colorfmt="rgb", bufferfmt="ubyte")
+        self._scan_serial = serial
+        if code and code != self._scan_code:
+            self._scan_code = code
+            self.receipt.text = code
+            self.flow.message = ""  # Still requires explicit Validate/Enter.
+
+    def _draw_scan_preview(self):
+        pos, size = self._rect(SCAN_PREVIEW)
+        Color(.02, .035, .08, 1)
+        Rectangle(pos=pos, size=size)
+        if self._scan_texture is not None:
+            rect = fit_rect(self._scan_texture.size, SCAN_PREVIEW)
+            pos, size = self._rect(rect)
+            Color(1, 1, 1, 1)
+            Rectangle(texture=self._scan_texture, pos=pos, size=size,
+                      tex_coords=MIRRORED_UV)
 
     def _focus_changed(self, *_):
         """Keep focus ring synchronized without ever clearing TextInput.canvas."""
@@ -195,7 +241,8 @@ class MeongFlyStage(Widget):
     def _draw_menu_effects(self, screen):
         """Lightweight animated overlays: no Pillow/GPU texture creation."""
         if screen == "scan":
-            # Demonstration animation only; no QR scanning or decoding.
+            self._draw_scan_preview()
+            # Subtle guide over the live view; decoding runs on unmirrored pixels.
             scan_y = 292 + (math.sin(self._time * 1.9) + 1) * 54
             pos, size = self._rect((112, scan_y, 136, 8))
             Color(.30, .82, 1, .15)
@@ -490,6 +537,7 @@ class MeongFlyStage(Widget):
 
     def update(self, dt):
         self._time += min(max(float(dt), 0), .1)
+        self._poll_scanner()
         before_screen = self.flow.screen
         before_score = self.flow.game.score
         self.flow.tick(dt)
@@ -576,7 +624,7 @@ class MeongFlyStandaloneApp(App):
         ledger = DemoReceiptLedger(Path.home() / ".meong_fly_demo.sqlite3")
         tutorial_seen = (Path.home() / ".meong_fly_tutorial_seen").is_file()
         self.flow = MeongFlyFlow(ledger, tutorial_seen=tutorial_seen)
-        self.stage = MeongFlyStage(self.flow)
+        self.stage = MeongFlyStage(self.flow, scanner=ReceiptScanner())
         return self.stage
 
     def on_stop(self):

@@ -135,16 +135,16 @@ def paint_polished_menu(screen, logo_path):
                     glow=(113, 96, 188))
         p.pixel_text(draw, "SCAN STRUK KAFE", 180, 155, 3)
         draw.line((71, 187, 289, 187), fill=(71, 69, 139), width=2)
-        p.pixel_text(draw, "QR ASLI BELUM TERHUBUNG", 180, 198, 2,
+        p.pixel_text(draw, "SCAN QR DEMO STRUK", 180, 198, 2,
                      fill=p.GOLD)
-        p.pixel_text(draw, "PAKAI KODE DEMO DI BAWAH", 180, 223, 1,
+        p.pixel_text(draw, "ATAU KETIK KODE DEMO DI BAWAH", 180, 223, 1,
                      fill=(220, 215, 255))
         arcade_card(draw, (96, 257, 264, 429), (237, 239, 253),
                     (194, 174, 229), shadow=(0, 2), glow=(255, 255, 255))
-        # Real-looking finder patterns stay decorative, clearly labelled.
-        p._fake_qr(draw, 117, 281, 6)
+        # The Kivy layer supplies live camera pixels inside this frame.
+        draw.rectangle((100, 261, 260, 425), fill=(5, 9, 24))
         scanner_corners(draw)
-        p.pixel_text(draw, "ILUSTRASI QR", 180, 439, 1, fill=p.GOLD)
+        p.pixel_text(draw, "LIVE CAMERA - MIRROR", 180, 439, 1, fill=p.GOLD)
         p.pixel_text(draw, "KODE STRUK DEMO", 180, 455, 2, fill=p.WHITE)
         x, y, w, h = p.DEMO_ENTRY
         arcade_card(draw, (x, y, x+w, y+h), (246, 246, 255),
