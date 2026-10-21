@@ -49,3 +49,7 @@ The existing python main.py path remains unchanged, running v1. The separate opt
 ## Rollback and evidence
 
 The stable master/v1.0.0 remain unchanged; remove/switch away from feature/portrait-kiosk-gui to return to existing functionality. Each stage gets a separate commit with relevant tests and documentary evidence. Incomplete automated/device checks must remain clearly labelled pending.
+
+## First-stage QA snapshot (2026-10-21, branch-only)
+
+Initial new GUI/audio source has **16/16 Kivy-independent tests PASS** and successful Linux/Xvfb real-widget and 12 portrait screenshot states (six states at 800x1280 and 452x900) in [CI run 39522764587](https://github.com/pratikto/PhotoBooth/actions/runs/39522764587); artifact `meong-portrait-v2-screens` ID 12312581205. Screenshot inspection confirms functional layout/legibility at both virtual sizes, but pixel-arcade visual refinement to the full owner's reference remains incomplete. 452 width is used solely because raw screenshots at 450 suffer Xvfb OpenGL RGB alignment; the screenshot generator rejects obviously corrupted rows. This does not demonstrate physical 450x900 or 10.1-inch touchscreen behavior. Windows speaker sound, real video audio, face presence, mini-game, server-priced discounts, Midtrans provider and photo/thermal/Drive end-to-end remain untested or intentionally disconnected. `python main.py` is untouched, and PR #10 stays draft, NOT MERGED.
