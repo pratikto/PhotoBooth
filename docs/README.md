@@ -44,6 +44,22 @@ The owner also reports improved Floyd photo quality (BUG-004), payment QR-slip p
 For authoritative ongoing status use the [bug tracker](bug_tracker.md), [feature table](FEATURE_STATUS.md), [priority board](next_step.md), [physical acceptance checklist](test_checklist.md) and [FEAT-001 evidence dossier](qa/FEAT-001-BUG-011-acceptance.md). This index does not authorize further code changes, deployments, or upgrading the versioned **source pre-release** into a hardware-certified production release.
 
 
+### FEAT-022 — comprehensive portrait GUI v2 documentation (2026-10-21)
+
+The current **owner-authorized working branch is feature/portrait-kiosk-v2-next**, derived from the existing feature/portrait-kiosk-gui prototype; **master/v1.0.0 remains unchanged**. Start at the [consolidated FEAT-022 design, current source and QA specification](portrait-kiosk-v2.md).
+
+**Approved mockup artboards (both embedded, full-resolution):**
+
+- [Main photobooth visual flow (actual approved board)](assets/portrait-v2/meong-main-flow-approved.webp)
+- [Meong Fly promo/game flow (actual approved board)](assets/portrait-v2/meong-fly-flow-approved.webp)
+- [Screen-by-screen visual/interaction interpretation and corrections](portrait-kiosk-v2-visual-spec.md) — *required reading*: idle and face invitation share the entry, game has its own intro, win/lose → tutorial iff unseen → template picker, not payment.
+- [Technical architecture and future interface contracts](portrait-kiosk-v2-technical-design.md) — current code vs proposed camera/game/QRIS/Drive adapters and secure session/payment invariants.
+- [Mockup asset origin, hashes and scope](assets/portrait-v2/README.md), [CI/hardware QA matrix](test_checklist.md) and [feature implementation truth](FEATURE_STATUS.md).
+
+**Latest verified synthetic evidence:** [portrait v2 workflow 39548798578](https://github.com/pratikto/PhotoBooth/actions/runs/39548798578), code + mockups SHA 6e7f29a7: **21/21** navigation/audio tests, Kivy widget smoke and twelve screenshot states at 800×1280 and 452×900 passed. This is **not** audible Windows music, touchscreen, real Meong Fly, real merchant/POS receipt, camera, payable QRIS, thermal print or Drive hardware verification.
+
+**Try the opt-in prototype:** switch to feature/portrait-kiosk-v2-next, install the existing Kivy dependencies, then run **python tools/run_portrait_v2.py**. **python main.py** still launches the legacy v1 booth. The current v2 game CTA shows an *unavailable placeholder*; it is not an integrated gameplay/discount feature. No code change, merge, release or customer deployment is authorized by this documentation entry.
+
 ### FEAT-022 — separate portrait GUI v2 development branch
 
-[Portrait kiosk v2 design/rollback/QA plan](portrait-kiosk-v2.md) records the new opt-in 10.1-inch Pixel Arcade Space GUI, audio lifecycle, tutorial-once gate and approved isolation from released v1. Development launcher: python tools/run_portrait_v2.py on feature/portrait-kiosk-gui; the default python main.py remains v1. Current source is a partial prototype, NOT an integrated camera/QRIS/mini-game/printing release.
+[Portrait kiosk v2 design/rollback/QA plan](portrait-kiosk-v2.md) records the new opt-in 10.1-inch Pixel Arcade Space GUI, audio lifecycle, tutorial-once gate and approved isolation from released v1. Historical prototype branch: feature/portrait-kiosk-gui; continuing work: feature/portrait-kiosk-v2-next. Development launcher: python tools/run_portrait_v2.py; the default python main.py remains v1. Current source is a partial prototype, NOT an integrated camera/QRIS/mini-game/printing release.
