@@ -67,3 +67,21 @@ Run commands on appropriate operating systems with real dependencies; record pas
 Working prototype only: photobooth/kiosk_v2/ is a separate Kivy presentation and visit-state boundary, started via python tools/run_portrait_v2.py. It does NOT replace the released python main.py, ui_kivy.py, ui_kiosk.py, or PhotoBoothApp transaction/controller routes. The v2 UI has fresh Space theme/panels, explicit VisitFlow navigation, and new PortraitAudio (no photobooth.audio.AudioManager imports). Bundled WAVs are reused as assets only. The already-tested AdCatalog and AdvertisementPlayer are reused as **media adapters**, not as v1 page layouts.
 
 Current v2 route: advertising with optional inline **preview-only** invitation -> direct photo -> mandatory tutorial once per visit -> true 12-template gallery and copy-count/DEMO quote, or advertising -> Meong Fly **integration notice** -> skip to tutorial/photo. Game, real face detection, verified cafe receipt, valid promo discount, real QRIS, camera capture, retake, printing, and Drive upload are explicitly not connected to this launcher. The normal v1 program remains operational and unchanged. Data-sensitive backends will be introduced behind safeguards only after staged approval/QA. See portrait-kiosk-v2.md.
+
+## FEAT-022 architecture update — approved mockups and safe adapter boundaries (2026-10-21)
+
+**Development head:** feature/portrait-kiosk-v2-next (derived from feature/portrait-kiosk-gui); no master merge. Canonical design: [portrait GUI v2](portrait-kiosk-v2.md); actual last approved artboards: [main](assets/portrait-v2/meong-main-flow-approved.webp) and [mini-game](assets/portrait-v2/meong-fly-flow-approved.webp); behavioral corrections: [visual specification](portrait-kiosk-v2-visual-spec.md); module/adapter contract: [technical design](portrait-kiosk-v2-technical-design.md).
+
+**Current opt-in implementation only:**
+
+- photobooth/kiosk_v2/app.py owns fresh portrait screen widgets and a separate Kivy ScreenManager; existing Kivy UI and PhotoBoothApp remain the production path, not reused as new layouts.
+- flow.py owns visit-scoped advert/tutorial/templates/game_preview routing and explicit tutorial_seen; game_preview is a **nonfunctional notice**, not gameplay or discount.
+- audio.py owns portrait WAV sound handles independently, with desktop SDL2-first provider selection, SoundLoader fallback and bounded diagnostics. Native provider PASS is *not* an audible Windows speaker test.
+- theme.py renders Pixel Arcade Space UI primitives, backed by the original approved Meong logo and 12 actual printer template previews. AdCatalog and AdvertisementPlayer are **reused services**, not layout widgets from v1.
+- The current v2 face invitation is a **manual-preview overlay on advertising**; real live camera face trigger has not been connected.
+- The current v2 photo checkout, QRIS, camera capture/retake, printer, Drive and single-use real café receipt interfaces do not exist. Calling their source modules in v1/other branches does not prove their v2 integration.
+
+**Proposed integration contract (NOT IN SOURCE):** Kivy presentation → visit coordinator → typed adapters for face detector, standalone Meong Fly + receipt ledger, server-authorized discount/QRIS checkout, camera, strip composition, spooler and Drive. A future customer visit must preserve tutorial-once state, game Win/Lose routing to *template selection* (with tutorial if unseen), durable consumed receipt attempts and provider-verified paid state. Generic browsing timeout may only clear pre-payment visitors; it must not destroy active/unknown payment or printing. The print master remains 80×240mm, 3 photographs plus photo-folder QR; payment QRIS must stay distinct.
+
+**Evidence:** [run 39548798578](https://github.com/pratikto/PhotoBooth/actions/runs/39548798578) on code/mockup SHA 6e7f29a7 succeeded with 21/21 fake audio/navigation cases and synthetic Kivy widgets/screenshots, not Windows camera, speakers, touchscreen, physical paper or provider payments. Never merge other task branches automatically; FEAT-021 ID collision (Meong Fly versus Background Studio) must be reconciled before cross-branch feature registration.
+
