@@ -25,11 +25,12 @@ class PosterV3Tests(unittest.TestCase):
 
     def test_latest_gif_derived_logo_is_bundled_and_readable(self):
         frames = meong_animation_frames(self.logo)
-        self.assertGreaterEqual(len(frames), 1)
+        self.assertGreater(len(frames), 1)  # Full GIF or synthesized print-drop loop
         frame = frames[0]
         self.assertGreater(frame.width, 80)
         self.assertEqual(frame.mode, "RGBA")
         self.assertTrue(frame.getbbox())
+        self.assertNotEqual(frames[0].tobytes(), frames[-1].tobytes())
         self.assertGreater(frame.getpixel((frame.width//2, frame.height//2))[3], 0)
 
     def test_new_camera_cat_crop_is_bounded(self):
