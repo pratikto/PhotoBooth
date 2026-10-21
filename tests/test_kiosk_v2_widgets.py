@@ -14,7 +14,7 @@ except ImportError:
 else:
     HAS_KIVY = True
     # After Kivy is installed, errors in v2 imports must FAIL, not be skipped.
-    from photobooth.kiosk_v2.app import PortraitKioskV2App
+    from photobooth.kiosk_v2.app import PortraitKioskV2App, SwipeGallery
     from photobooth.kiosk_v2.illustrations import TutorialIcon
     from photobooth.kiosk_v2.theme import ArcadeButton
     from photobooth.kiosk_v2.flow import ADVERT, TEMPLATES, TUTORIAL, GAME_PREVIEW
@@ -117,6 +117,13 @@ class PortraitKivySmokeTests(unittest.TestCase):
             self.assertEqual(app.stage.current, ADVERT)
         finally:
             app.on_stop()
+
+
+    def test_carousel_swipe_uses_horizontal_direction_and_rejects_vertical(self):
+        self.assertEqual(SwipeGallery.swipe_step(-90, 5), 1)
+        self.assertEqual(SwipeGallery.swipe_step(90, -4), -1)
+        self.assertEqual(SwipeGallery.swipe_step(12, 0), 0)
+        self.assertEqual(SwipeGallery.swipe_step(80, 160), 0)
 
 
 if __name__ == "__main__":
