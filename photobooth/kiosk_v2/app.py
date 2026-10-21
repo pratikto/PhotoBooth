@@ -376,10 +376,14 @@ class PortraitKioskV2App(App):
     def _build_game_notice(self, canvas):
         """Dedicated Meong Fly entry screen, *not* a working receipt/game path."""
         shell = self._frame(canvas)
-        self._brand(shell, "MEONG FLY!", "TERBANG • HINDARI ASTEROID • KUMPULKAN POIN")
+        # This intro has one large Meong mascot, not a duplicated tiny header
+        # logo. The freed vertical room preserves the hero at 452 x 900.
         shell.add_widget(text_label(
-            "MISI GALAKSI MEONG", size=20, height=41,
+            "MEONG FLY!", size=28, height=58,
             color=GOLD, bold=True))
+        shell.add_widget(text_label(
+            "TERBANG • HINDARI ASTEROID • KUMPULKAN POIN",
+            size=13, height=32, color=CYAN))
 
         hero = PixelCard(orientation="vertical", padding=10, spacing=6)
         hero.add_widget(Image(
