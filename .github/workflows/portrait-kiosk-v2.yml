@@ -3,6 +3,8 @@ name: Portrait kiosk v2 prototype checks
 on:
   push:
     branches: [feature/portrait-kiosk-gui]
+  pull_request:
+    branches: [master]
   workflow_dispatch:
 
 permissions:
