@@ -16,7 +16,9 @@ For each new idea record:
 - Dependencies (including BUG IDs), affected components, risk, acceptance criteria
 - Proposed **execution order**, reason for placement, status and approval reference
 
-## Unified provisional execution board — 2026-10-18
+## Unified provisional execution board — 2026-10-18 (FEAT-021 status/rank addendum reviewed 2026-10-21)
+
+> **2026-10-21 targeted re-ranking review:** The owner reported a material **FEAT-021 standalone visual acceptance defect** and approved **documentation of it**, not new implementation. Add **FEAT-021/BUG-013** as a parallel **P2 product-enhancement QA/remediation track** without giving it precedence over production BUG-009, BUG-001/007, FEAT-008 device health or FEAT-009 recovery. Internal VF-01..VF-04 P0 means *block v5 art acceptance*, **not** S0 operational severity. No current payment/retention/maintenance priorities change because of this aesthetic review. The rest of the board retains its earlier evaluated order and does not claim a fresh source-readiness audit of every other feature. **See current v5 audit**: [FEAT-021 Visual Overhaul](features/FEAT-021-visual-overhaul-v5.md).
 
 **This is the ONE current proposed execution-order view**, not blanket authorization to implement. On 2026-10-18 the owner **explicitly selected FEAT-001 for immediate implementation** as an exception to the earlier decision to keep payment-related features P3 until QRIS is ready. All **other** transaction, payment, paid-reprint and merchant-promo/settlement work remains LOW PRIORITY while real QRIS is absent. QRIS implementation itself is a future low-priority prerequisite, newly tracked as **FEAT-020**, not permission to enable payment today. Core photo/thermal print reliability and device operation remain independent priorities; an urgent new physical print defect must still be triaged as a bug. Existing BUG-009 is deferred to FEAT-004 despite its unresolved Drive privacy risk; BUG-001/007 remain owner-deferred and BUG-008 monitoring. Business-model research without payment/billing code may continue in parallel. See [bug_tracker.md](bug_tracker.md). All other listed features remain **NOT APPROVED FOR IMPLEMENTATION** unless an explicit per-scope authorization is recorded. FEAT-001 code work is authorized only for **DEMO pricing, one capture session per selected template and its chosen paper copies**, with NO real payment provider.
 
@@ -30,6 +32,7 @@ For each new idea record:
 | **04** | FEAT-012 | Structured local diagnostics and support logs | **P2 — MEDIUM** | Partial | Device/log privacy; prioritize operational diagnostics over payment ledger |
 | **05** | FEAT-010 | Per-machine authenticated configuration and identity | **P1/P2 — MEDIUM/HIGH** | Partial | Prioritize ad/media/device config; pricing/payment settings wait for QRIS phase |
 | **06** | FEAT-004 + BUG-009 | Offline-first per-machine Drive image/video ad sync; independently activate/verify 30-day photo-retention cleanup | **P2 — MEDIUM**; BUG-009 risk remains S1 provisional | Partial; cloud retention unverified | FEAT-010 machine mapping, safe cache, separate Drive folders, Apps Script deployment |
+| **Parallel, isolated prototype track (not ahead of operational checks)** | **FEAT-021 + BUG-013** | **Meong Fly standalone Visual Overhaul v5:** owner-rejected current v4 appearance despite in-source game/receipt/tutorial flow. Proposed hero/print-slot rework, thick poster UI, varied asteroids, Win/Lose art and exact Windows screenshot/video acceptance. | **P2 product enhancement; P0/P1 visual acceptance tasks inside feature, NOT production severity/rank** | **PARTIAL (v4 source), v5 SPECIFIED ONLY / CODE NOT APPROVED** | Same existing `feature/meong-flappy-challenge`; depends on authentic logo asset, confirmed print outlet, BUG-012 regression guard, [visual v5 spec](features/FEAT-021-visual-overhaul-v5.md) and [v5 QA plan](qa/FEAT-021-visual-v5-acceptance.md). NO kiosk integration, POS or payment. |
 | **07** | FEAT-006 | Admin-selected GUI theme presets | **P3 — LOW (nonpayment)** | Partial/unverified | Shared Kivy styles; avoid altering payment logic |
 | **08** | FEAT-014 | Branded photo frames and campaign creatives | **P2 — MEDIUM** | Partial | FEAT-006/010, preview/print legibility; no paid redemption feature required |
 | **09** | FEAT-017 | Event-specific themes, media and photo frames | **P2 — MEDIUM** | Partial | FEAT-006/010/014; **event pricing and payment bundles deferred** |
@@ -305,3 +308,26 @@ Priorities updated after owner supplied enhanced neon-space mockup and demanded 
 ## FEAT-021 current print-FX v4 QA priority (2026-10-21)
 
 Pixel poster UI remains **standalone and still requires owner aesthetic acceptance**. Camera-attached print effect source v4 is now implemented on `feature/meong-flappy-challenge`, not a new branch. It replaces all independent random picture scattering with progressive actual print-feed and simple gravity. **Next P1 within FEAT-021:** verify full exact-branch Windows Kivy regression, real Start/Game/Win printer exit aesthetics and at least 30fps at intended screen size, no overlap with UI and no replay. Prior 23/23, 55/55 test logs are historical and do NOT cover these commits. Subsequent detailed visual polish and real GIF asset packaging depend on the owner's live screenshots; main photobooth welcome-screen integration, scanner, real discount/QRIS and production print path remain outside scope. No merge to `master`.
+
+
+## 2026-10-21 — FEAT-021 Visual Overhaul v5 dynamic feature review (latest; supersedes dated FEAT-021 notes above)
+
+| Field | Current reviewed assessment |
+| --- | --- |
+| Stable feature | **FEAT-021 Meong Fly**; sub-issue **BUG-013** source-level/owner-reported visual acceptance blocker; old input issue BUG-012 is a regression risk |
+| Goal | Make **standalone** Meong Fly visually faithful to the owner's latest bold neon pixel-space poster; physically believable instant-photo feed/release/fall; keep gameplay and navigation working |
+| Owner evidence | Owner explicitly rejected prior GUI aesthetics, particularly fake/random photos and inadequate font/art; mockup was supplied and source v4 audited at `85a6aaa99356f3825067dfc5b92c6f91933d8519` |
+| Approval state | **Documentation-only authorized 2026-10-21.** V5 design and test plan recorded; **v5 coding/asset changes NOT authorized**, no new branch, merge or production wiring |
+| Business priority vs internal fixes | Overall **P2** product enhancement; **P0** hero/slot/physical print motion and type legibility are quality gates *within FEAT-021*, do not outrank existing production operational defects |
+| Impact | **High** on this optional mini-game's perceived product quality/owner sign-off; **no demonstrated impact** on deployed `master` photobooth flow |
+| Current-version compatibility | Same standalone branch/360×720 logical renderer; production v1 is isolated. Exact post-v4 Windows behavior and performance remain **Unverified** |
+| Readiness | **Partial**: v4 engine/flow/print emitter in source, reference poster and audit available; exact latest GIF animation, single-hero compositor, art assets and on-device acceptance not ready |
+| Complexity/confidence | **L to XL** for full art-system overhaul; **high** confidence in source-verified duplicate hero paths and relative anchor code; **unverified** actual measured ghosting, gap sizes, visual FPS |
+| Dependencies | Owner approval for V5-1..V5-5 code scopes; current logo source/GIF asset, font and graphic rights, exact outlet coordinate and alt Win/Lose poses, BUG-012 TextInput safety, honest hitbox mapping; current one-use ledger must remain unchanged |
+| Risks | Sprite/film z-order and wrong outlet, degraded readability from glow, FPS/texture cost, collision deception by irregular rocks, incorrect tutorial/layout payment handoff, regressions of receipt replay and touch targets |
+| Proposed execution order | **Parallel standalone owner-requested v5 art gate, only after explicit code approval; production operational backlog retains precedence.** V5-1 single hero/slot/mask first; V5-2 titles/Start/Scan; V5-3 Gameplay; V5-4 results; V5-5 full QA |
+| Acceptance | Actual Windows Kivy screenshots of five panels and generic tutorial/layout, real four-stage photo video, exact branch SHA, complete Python unittest report, readable CTA/input and fair collisions, owner explicit visual PASS |
+| Rollback | Record exact feature-branch commit pre-implementation; scoped revert only on feature branch; no history rewriting or `master` merge |
+| Status | **V4 IMPLEMENTED IN SOURCE / OWNER VISUAL REJECTED; V5 SPEC DOCUMENTED; REGRESSION + IMPLEMENTATION + RELEASE PENDING** |
+
+**Source of truth:** [v5 object-level audit and proposed design](features/FEAT-021-visual-overhaul-v5.md), [future QA evidence matrix](qa/FEAT-021-visual-v5-acceptance.md), [BUG-013](bug_tracker.md), [owner decisions](DECISIONS.md), [engineering history](features/FEAT-021-meong-fly.md). Real POS receipt scanning / QRIS / redeemable IDR 2,500 discount stay separately deferred and must not be included in v5 source changes without authorization.
