@@ -168,3 +168,17 @@ Owner authorized continuing Gameplay aesthetics after Batch A. New [v2 Batch B a
 ## 2026-10-21 — Owner-provided targeted Windows Kivy Batch A/B regression PASS
 
 The owner pasted Windows console output confirming **`Ran 55 tests in 6.272s` / `OK`** across eight FEAT-021 test modules (55 PASS, zero FAIL/ERROR/SKIP). Real Kivy **2.3.1** on Python **3.12.10** used Intel Iris Xe/OpenGL 4.6. All relevant Kivy gameplay-pause-score-hit transition checks, receipt TextInput canvas tests, demo receipt single-use tests, geometry and painter regressions passed. The previous Linux local-mirror **4 Kivy skips** are superseded **only for the executed targeted Windows suite**. The exact tested Git SHA and Pillow version were not supplied; visual/manual screenshots and FPS remain pending. Status: **owner-reported Windows automated acceptance PASSED, manual aesthetic/kiosk QA NOT VERIFIED**. No code change, no checkout integration, no merge to `master`. See [QA checklist](../test_checklist.md).
+
+
+## 2026-10-21 — Owner-approved photo-layout navigation after Meong Fly
+
+**Approved product flow:** Win and Lose screens must offer **PILIH LAYOUT FOTO**, not payment. The Start **LANGSUNG FOTO** path also skips the game, but the user must see the tutorial once if not yet completed. Correct destination ordering: `Start -> [Scan -> Game -> Win/Lose OR Direct Photo] -> Tutorial if unseen -> Layout Selection -> (future approved photobooth checkout/capture)`. One receipt = one attempt; **no retry**; win demo discount is an in-memory session hint only, not a monetary entitlement. The existing production 12 thermal layouts remain untouched.
+
+**Implemented on isolated branch only (not kiosk integrated):**
+- `photobooth/meong_fly_flow.py` commit `1f00af59`: `continue_from_result()` and `direct_photo()` route via one-time tutorial flag to `layouts`; preserve terminal win/loss and demo discount metadata without claiming production checkout; `finish_tutorial()` and `select_layout(1..12)` enforce state and no replay.
+- `photobooth/meong_fly_photo_handoff.py` commit `5da9abd0`: explicitly labelled **standalone DEMO** tutorial and generic 12-pattern layout preview; not the approved production thermal template renderer, not print ready.
+- `photobooth/meong_fly_painter.py` commit `20b6d2c0`: Win and Lose CTA text becomes `PILIH LAYOUT FOTO`; registers tutorial/layout hitboxes and painted screens.
+- `photobooth/meong_fly_gui.py` commit `45056a8f`: handles tutorial and selection buttons, retains the `canvas.before` input fix; demo tutorial completion marker `~/.meong_fly_tutorial_seen`, independent of production tutorial preferences. Choosing a demo layout **exits** the isolated demo; no production session is started.
+- `tests/test_meong_fly_flow.py` commit `8112e700`: rework existing start/direct-photo/win/loss tests to expect tutorial/layout navigation, verify tutorial-seen bypass and demo discount metadata. No code/tests on `master` changed.
+
+**Known constraint:** this is an *isolated UI/navigation prototype*, not actual photobooth main-GUI layout integration; no real full session, payment, printer or hardware output. Needs owner Windows GUI and exact-branch tests before acceptance. Future actual integration requires separate approval.
