@@ -22,9 +22,10 @@ from .meong_fly import (
     GAP_HEIGHT, HEIGHT, PIPE_WIDTH, TARGET_SCORE, WIDTH,
 )
 from .meong_fly_visual_v3 import (
-    animation_gif_path, meong_animation_frames, printed_photo_tile,
-    camera_cat_from_latest_logo, falling_photo_positions,
+    meong_animation_frames, printed_photo_tile,
+    camera_cat_from_latest_logo, photo_feed_frames,
 )
+from .meong_fly_print_fx import InstantPhotoEmitter
 from .meong_fly_flow import MeongFlyFlow
 from .meong_fly_game_art import (
     GAME_FIELD_TOP, GAME_FIELD_BOTTOM, ROCK_VARIANTS, camera_cat_poses,
@@ -73,8 +74,17 @@ class MeongFlyStage(Widget):
         self._hero_frames = [kivy_texture(img) for img in
                              meong_animation_frames(self._logo_path)]
         self._animated_gif = len(self._hero_frames) > 1
+        # Every print stage is pre-rendered once. During gameplay we upload
+        # NO PIL pixels; only camera-anchored cached textures are drawn.
         self._photo_tiles = [kivy_texture(printed_photo_tile(i))
                              for i in range(4)]
+        self._photo_reveals = [
+            [kivy_texture(frame) for frame in
+             photo_feed_frames(printed_photo_tile(i))]
+            for i in range(4)
+        ]
+        self._printer = InstantPhotoEmitter()
+        self._printer_screen = None
         self._score_tex = {}
         self._score_fx_since = -10.0
         self._score_fx_y = 300.0
@@ -207,47 +217,76 @@ class MeongFlyStage(Widget):
             self._border(ACTIONS[screen][self._hover_action],
                          (1, .97, .72, .86), 2)
 
-    def _draw_falling_photos(self, screen):
-        """Pixel instant prints drift downward independently of game physics.
+    # The hero image boxes mirror paint_poster_screen; no second layout map.
+    _HERO_BOXES = {
+        "start": (35, 69, 290, 175),
+        "won": (78, 219, 215, 160),
+        "lost": (97, 264, 170, 118),
+    }
 
-        Existing GIF (if installed) provides the exact approved camera-cat
-        animation. The little printed photos use the same offline texture cache.
-        They must never obscure receipt inputs or in-game pause/score buttons.
-        """
-        if screen not in ("start", "game", "won", "lost"):
+    def _hero_rect(self, screen):
+        """Fit the actual logo to the painted box, without stretching pixels."""
+        box_x, box_y, box_w, box_h = self._HERO_BOXES[screen]
+        natural_w, natural_h = self._hero_frames[0].size
+        scale = min(box_w / natural_w, box_h / natural_h)
+        w, h = natural_w * scale, natural_h * scale
+        return (box_x + (box_w - w) / 2,
+                box_y + (box_h - h) / 2, w, h)
+
+    def _printer_context(self, screen):
+        """Physical paper slot is under the lens/body in the *current* sprite."""
+        if screen == "game":
+            x, y, w, h = camera_screen_rect(self.flow.game.y)
+            return ((x + w * .42, y + h * .87),
+                    GAME_FIELD_BOTTOM - 5)
+        x, y, w, h = self._hero_rect(screen)
+        # The approved camera-cat GIF frame includes its rainbow on the left.
+        return ((x + w * .53, y + h * .78),
+                271 if screen == "start" else 390)
+
+    def _advance_printer(self, dt):
+        """Reset on each scene transition; never spawn across other screens."""
+        screen = self.flow.screen
+        active = screen if screen in ("start", "game", "won") else None
+        if active != self._printer_screen:
+            self._printer.reset()
+            self._printer.MAX_SHEETS = 1 if active == "won" else 2
+            self._printer_screen = active
+        if active is not None:
+            slot, floor = self._printer_context(active)
+            self._printer.update(
+                dt, slot, floor,
+                paused=(active == "game" and self.flow.paused),
+            )
+
+    def _paint_print_sheets(self, screen):
+        """Show *only* film emerging at Meong's body, then falling beneath it."""
+        if screen != self._printer_screen:
             return
-        if screen == "start":
-            # Static scene already contains the logo; GIF frames replace it.
-            if self._animated_gif and len(self._hero_frames) > 1:
-                index = int(self._time * 10) % len(self._hero_frames)
-                texture = self._hero_frames[index]
-                natural_w, natural_h = texture.size
-                scale = min(290 / natural_w, 182 / natural_h)
-                target_w, target_h = natural_w * scale, natural_h * scale
-                # Fit, never stretch, the approved camera-cat artwork.
-                target_x = 35 + (290 - target_w) / 2
-                target_y = 90 + (182 - target_h) / 2
-                Color(1, 1, 1, 1)
-                pos, size = self._rect((target_x, target_y, target_w, target_h))
-                Rectangle(texture=texture, pos=pos, size=size)
-        elapsed = self._time if screen != "game" else self.flow.game.elapsed
-        for i, (x, y, size_px, tilt) in enumerate(
-                falling_photo_positions(elapsed, 7)):
-            if screen == "start":
-                if not 95 < y < 270:
-                    continue
-            elif screen == "game":
-                if not GAME_FIELD_TOP + 25 < y < GAME_FIELD_BOTTOM - 24:
-                    continue
+        for pose in self._printer.poses():
+            style = pose.serial % len(self._photo_tiles)
+            if pose.attached:
+                stages = self._photo_reveals[style]
+                step = min(len(stages) - 1,
+                           max(0, int(pose.reveal * len(stages)) - 1))
+                texture = stages[step]
             else:
-                if not 226 < y < 395:
-                    continue
-            # Nearest-neighbour sprites are used without expensive rotations.
-            # Side-to-side motion approximates a tumbling paper photograph.
-            Color(1, 1, 1, .96)
-            pos, size = self._rect((x, y, size_px, size_px * 1.25))
-            Rectangle(texture=self._photo_tiles[i%len(self._photo_tiles)],
-                      pos=pos, size=size)
+                texture = self._photo_tiles[style]
+            Color(1, 1, 1, pose.opacity)
+            pos, size = self._rect(
+                (pose.x, pose.y, pose.width, pose.height))
+            Rectangle(texture=texture, pos=pos, size=size)
+
+    def _paint_hero(self, screen):
+        """Animate a clean camera frame above the physically-fed photo."""
+        if screen in ("start", "won"):
+            self._paint_print_sheets(screen)
+        if self._animated_gif:
+            texture = self._hero_frames[int(self._time * 8) %
+                                        len(self._hero_frames)]
+            Color(1, 1, 1, 1)
+            pos, size = self._rect(self._hero_rect(screen))
+            Rectangle(texture=texture, pos=pos, size=size)
 
     def _score_texture(self, value, size=4, color=GOLD):
         key = (str(value), size, color)
