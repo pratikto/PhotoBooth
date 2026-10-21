@@ -53,3 +53,22 @@ The stable master/v1.0.0 remain unchanged; remove/switch away from feature/portr
 ## First-stage QA snapshot (2026-10-21, branch-only)
 
 Initial new GUI/audio source has **16/16 Kivy-independent tests PASS** and successful Linux/Xvfb real-widget and 12 portrait screenshot states (six states at 800x1280 and 452x900) in [CI run 39522764587](https://github.com/pratikto/PhotoBooth/actions/runs/39522764587); artifact `meong-portrait-v2-screens` ID 12312581205. Screenshot inspection confirms functional layout/legibility at both virtual sizes, but pixel-arcade visual refinement to the full owner's reference remains incomplete. 452 width is used solely because raw screenshots at 450 suffer Xvfb OpenGL RGB alignment; the screenshot generator rejects obviously corrupted rows. This does not demonstrate physical 450x900 or 10.1-inch touchscreen behavior. Windows speaker sound, real video audio, face presence, mini-game, server-priced discounts, Midtrans provider and photo/thermal/Drive end-to-end remain untested or intentionally disconnected. `python main.py` is untouched, and PR #10 stays draft, NOT MERGED.
+
+## 2026-10-21 — Next-stage branch: desktop PCM audio provider hardening
+
+**Branch:** `feature/portrait-kiosk-v2-next`, created from the existing `feature/portrait-kiosk-gui` prototype instead of discarding its P0–P2 work. **No merge to master and no change to legacy `photobooth/audio.py`.**
+
+**Scope completed in source, not device-certified:**
+
+- `photobooth/kiosk_v2/audio.py` now prefers a Kivy SDL2 native PCM WAV sound handle on Windows/Linux/macOS where `KIVY_AUDIO` was not explicitly overridden. An explicit operator provider override remains respected; the ordinary Kivy `SoundLoader` is a fallback.
+- Reject a provider that returns a missing, non-finite or non-positive audio duration and unload its handle before trying the next provider. Continue to fail soft when all native loaders are unavailable.
+- When a native playback request leaves a handle reporting `stop`, expose a failure instead of claiming music started. This is only provider-state evidence; it **cannot prove audible speaker output**.
+- `tests/test_kiosk_v2_audio.py` adds fake-provider priority/fallback/rejected-handle and stopped-after-play regression checks. Existing tutorial/ads ownership, mute, page transitions and cleanup behavior must remain unchanged.
+- The branch-only CI workflow now runs on `feature/portrait-kiosk-v2-next` as well.
+
+**Traceable source commits:** CI trigger `ab551ba3`; audio code `2b743da0`; audio tests `caad0e0d`. New exact-branch CI verification remains **PENDING** until the workflow completes and results are inspected. Existing successful CI run 39522764587 belongs to the earlier prototype and must not be transferred as verification for these new commits.
+
+**Required physical Windows gate:** On the operator machine, run `git switch feature/portrait-kiosk-v2-next`, `git pull origin feature/portrait-kiosk-v2-next`, `python -m unittest tests.test_kiosk_v2_flow tests.test_kiosk_v2_audio tests.test_kiosk_v2_widgets -v`, then `python tools/run_portrait_v2.py`. Confirm with ears that music plays automatically on Tutorial and Templates without needing the Settings/Test Music button, that it stops during video ads, that the explicit test button audibly restarts it, that changing windows/resuming does not double playback, and that the Windows output device/volume mixer is correct. Record exact Windows version, Python/Kivy, branch commit SHA, provider, speaker result, and whether video retains its own audio. Do not mark BUG-001/007 fixed until audible owner acceptance.
+
+**Next approved integration gate:** Preserve existing advertising/touch/template flow and collect physical audio/touch observations first. Real face triggering, mini-game receipt and discount, QRIS, camera/retake, printer and Drive integrations still require staged follow-up testing and remain disconnected from the v2 opt-in prototype. Do not delete payment/receipt history, and do not merge to `master` without owner approval.
+
