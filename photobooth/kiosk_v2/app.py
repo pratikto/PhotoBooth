@@ -18,6 +18,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import NoTransition, Screen, ScreenManager
 from kivy.uix.scrollview import ScrollView
+from kivy.uix.widget import Widget
 
 from photobooth.advertising import AdCatalog, AdEventLog, PROJECT_ROOT
 from photobooth.branding import LOGO_PATH
@@ -399,43 +400,88 @@ class PortraitKioskV2App(App):
 
     def _build_templates(self, canvas):
         shell = self._frame(canvas)
-        shell.add_widget(text_label("PILIH TEMPLATE STRIP", size=23, height=53,
-                                    color=GOLD, bold=True))
-        shell.add_widget(text_label("12 desain asli • 3 foto + 1 QR download",
-                                    size=13, height=34, color=MUTED))
-        deck = PixelCard(orientation="vertical", padding=10, spacing=5)
+        shell.add_widget(text_label(
+            "PILIH TEMPLATE STRIP", size=24, height=53,
+            color=GOLD, bold=True))
+        shell.add_widget(text_label(
+            "12 desain asli • 3 foto vertikal + 1 QR untuk download",
+            size=13, height=34, color=MUTED))
+
+        deck = PixelCard(orientation="vertical", padding=10, spacing=6)
+        deck.add_widget(text_label(
+            "GESER PILIHANMU DI GALAKSI MEONG!",
+            size=14, height=30, color=CYAN, bold=True))
+
+        gallery = BoxLayout(orientation="horizontal", spacing=dp(7))
+        left = BoxLayout(orientation="vertical", size_hint_x=.22,
+                         spacing=dp(2))
+        left.add_widget(Widget(size_hint_y=.18))
+        self._previous_preview = Image(fit_mode="contain", size_hint_y=.70)
+        left.add_widget(self._previous_preview)
+        left.add_widget(text_label(
+            "SEBELUM", size=12, height=25, color=MUTED))
+        left.add_widget(Widget(size_hint_y=.12))
+        gallery.add_widget(left)
+
+        middle = BoxLayout(orientation="vertical", size_hint_x=.56)
         self._preview = Image(fit_mode="contain")
-        deck.add_widget(self._preview)
-        self._template_name = text_label("", size=17, height=36, color=CYAN, bold=True)
+        middle.add_widget(self._preview)
+        gallery.add_widget(middle)
+
+        right = BoxLayout(orientation="vertical", size_hint_x=.22,
+                          spacing=dp(2))
+        right.add_widget(Widget(size_hint_y=.18))
+        self._next_preview = Image(fit_mode="contain", size_hint_y=.70)
+        right.add_widget(self._next_preview)
+        right.add_widget(text_label(
+            "BERIKUT", size=12, height=25, color=MUTED))
+        right.add_widget(Widget(size_hint_y=.12))
+        gallery.add_widget(right)
+        deck.add_widget(gallery)
+
+        self._template_name = text_label(
+            "", size=18, height=39, color=GOLD, bold=True)
         deck.add_widget(self._template_name)
-        nav = BoxLayout(size_hint_y=None, height=dp(52), spacing=dp(12))
-        nav.add_widget(self._action("SEBELUMNYA", lambda: self._shift_template(-1),
-                                    variant="tertiary", height=52))
-        nav.add_widget(self._action("BERIKUTNYA", lambda: self._shift_template(1),
-                                    variant="secondary", height=52))
+        nav = BoxLayout(size_hint_y=None, height=dp(54), spacing=dp(12))
+        nav.add_widget(self._action(
+            "SEBELUMNYA", lambda: self._shift_template(-1),
+            variant="tertiary", height=54))
+        nav.add_widget(self._action(
+            "BERIKUTNYA", lambda: self._shift_template(1),
+            variant="secondary", height=54))
         deck.add_widget(nav)
         shell.add_widget(deck)
+
         count_card = PixelCard(orientation="vertical", size_hint_y=None,
-                               height=dp(146), spacing=5)
-        count_card.add_widget(text_label("JUMLAH CETAK TEMPLATE INI",
-                                         size=13, height=31, color=MUTED))
-        row = BoxLayout(size_hint_y=None, height=dp(53), spacing=dp(12))
-        row.add_widget(self._action("−", lambda: self._change_copies(-1),
-                                     variant="tertiary", height=53))
-        self._copy_value = text_label("0", size=24, height=53, color=GOLD, bold=True)
+                               height=dp(166), spacing=5, padding=9)
+        count_card.add_widget(text_label(
+            "JUMLAH CETAK UNTUK DESAIN INI",
+            size=14, height=31, color=CYAN, bold=True))
+        row = BoxLayout(size_hint_y=None, height=dp(55), spacing=dp(12))
+        row.add_widget(self._action(
+            "-", lambda: self._change_copies(-1),
+            variant="tertiary", height=55))
+        self._copy_value = text_label(
+            "0", size=26, height=55, color=GOLD, bold=True)
         row.add_widget(self._copy_value)
-        row.add_widget(self._action("+", lambda: self._change_copies(1),
-                                     variant="secondary", height=53))
+        row.add_widget(self._action(
+            "+", lambda: self._change_copies(1),
+            variant="secondary", height=55))
         count_card.add_widget(row)
-        self._order_summary = text_label("", size=13, height=28)
+        self._order_summary = text_label(
+            "", size=14, height=52, color=WHITE)
         count_card.add_widget(self._order_summary)
         shell.add_widget(count_card)
-        self._warning_label = text_label("", size=12, height=25, color=GOLD)
+
+        self._warning_label = text_label(
+            "", size=12, height=25, color=GOLD)
         shell.add_widget(self._warning_label)
-        shell.add_widget(self._action("PEMBAYARAN (BELUM TERHUBUNG)",
-                                      lambda: None, disabled=True, height=56))
-        shell.add_widget(self._action("SELESAI / KEMBALI IKLAN", self._return_ad,
-                                      variant="tertiary", height=48))
+        shell.add_widget(self._action(
+            "PEMBAYARAN (BELUM TERHUBUNG)",
+            lambda: None, disabled=True, height=56))
+        shell.add_widget(self._action(
+            "SELESAI / KEMBALI IKLAN", self._return_ad,
+            variant="tertiary", height=48))
         self._update_template()
 
     def _shift_template(self, step):
@@ -454,15 +500,21 @@ class PortraitKioskV2App(App):
 
     def _update_template(self):
         template = self.templates[self.template_index]
+        previous = self.templates[(self.template_index - 1) % len(self.templates)]
+        following = self.templates[(self.template_index + 1) % len(self.templates)]
         self._template_name.text = (
-            f"{self.template_index + 1:02d} / {len(self.templates):02d} • {template.name}"
+            f"{self.template_index + 1:02d} / {len(self.templates):02d}  •  {template.name}"
         )
-        if template.template_id not in self._textures:
-            self._textures[template.template_id] = _portrait_strip_texture(template)
+        for item in (previous, template, following):
+            if item.template_id not in self._textures:
+                self._textures[item.template_id] = _portrait_strip_texture(item)
+        self._previous_preview.texture = self._textures[previous.template_id]
         self._preview.texture = self._textures[template.template_id]
+        self._next_preview.texture = self._textures[following.template_id]
         self._copy_value.text = str(self.quantities[template.template_id])
         quote = quote_order(self.templates, self.quantities)
+        total = f"{quote.total_amount:,}".replace(",", ".")
         self._order_summary.text = (
-            f"{quote.session_count} sesi • {quote.print_copy_count} lembar • "
-            f"DEMO Rp{quote.total_amount:,}".replace(",", ".")
+            f"{quote.session_count} sesi foto  •  {quote.print_copy_count} lembar"
+            f"\nSIMULASI DEMO: Rp{total}  •  Bukan tagihan QRIS"
         )
