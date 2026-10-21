@@ -333,3 +333,19 @@ Status **SOURCE PATCHED; NEW AUTOMATED/GUI TESTING NOT YET EXECUTED/REPORTED**. 
 The owner pasted output of **23 successful unit tests**: `Ran 23 tests in 1.789s` / `OK`, no reported failure/error/skip. Named tests were from exactly three modules: `tests.test_meong_fly_photo_handoff` (**3**), `tests.test_meong_fly_flow` (**11**) and `tests.test_meong_fly_painter` (**9**). This confirms owner-reported isolated handoff/flow/painter tests after recent edits, but the pasted output does **not** include the exact Git SHA, environment header or precise invocation. Do **NOT** extrapolate this to a full v3 regression, Kivy GUI performance, live input, GIF frame quality, or owner acceptance. Prior 55/55 PASS was from an older version.
 
 **Required follow-up:** run `python -m unittest discover -s tests -p "test_meong_fly*.py" -v` on the latest feature branch, record `git rev-parse HEAD`, and verify live Start, Scan, Gameplay, Win, Lose plus tutorial/layout, latest GIF-derived logo, flying-print-drop visual, no replay and text clarity. No production GUI integration or `master` merge.
+
+
+## FEAT-021 — Print FX v4 regression gate (2026-10-21)
+
+**Status:** source pushed to EXISTING `feature/meong-flappy-challenge`, owner Windows GUI QA **PENDING**. The older `falling_photo_positions` random-scatter animation has been removed in favor of one `InstantPhotoEmitter` anchored to the active Meong print slot.
+
+**Assistant local-mirror evidence:** 10 pure-Python behavior unit tests PASS (camera-attached reveal, movement while attached, release freezing origin, gravity, horizontal drift at most 4 px, at most two visible, pause freeze, floor bounds, scene reset, dt clamp); compileall passed. Visual frame simulation with user's camera-cat sprite showed a single sheet emerging and falling under the body. These tests are **not** executed against an exact GitHub checkout. Exact-branch Kivy tests and hardware FPS were NOT RUN.
+
+- [ ] Windows `git switch feature/meong-flappy-challenge`, `git pull --ff-only origin feature/meong-flappy-challenge`, `git rev-parse HEAD`.
+- [ ] Run `python -m unittest discover -s tests -p "test_meong_fly*.py" -v`, include `tests.test_meong_fly_print_fx` (pure + optional real Kivy integration) and updated `tests.test_meong_fly_visual_v3`. Save real count/PASS/FAIL/SKIP and runtime version.
+- [ ] Start: latest Meong graphic hovers; ONE sheet progressively grows from below the body, detaches, falls near original release x (sway <=4 px) and fades before heading. No random photos anywhere else.
+- [ ] Gameplay: paper emerges from the physical moving Meong slot and follows while attached; after release the original world-space x is retained as Meong rises/falls. Size small enough to distinguish from asteroid/hitboxes; pause freezes film and physics together.
+- [ ] Win: one decorative print may emerge/fall in hero zone; Lose: no new falling photos; no photos on QR Scan, Tutorial, Layout selector or buttons/HUD.
+- [ ] Check no duplicated paper from GIF/synthetic frames; the external 26-frame GIF is treated as a clean *first frame source* while printer animation is controlled by the new emitter.
+- [ ] Test Start, Scan, Gameplay, Win, Lose, tutorial and 12 demo layouts at portrait/landscape and test BUG-012 real keyboard TextInput, receipt replay, 10-point target, no Main Lagi and layout CTA.
+- [ ] Capture Windows screenshots/video of the photo actually exiting Meong, then owner aesthetic acceptance; no production master merge.
