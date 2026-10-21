@@ -214,9 +214,19 @@ class PortraitKioskV2App(App):
         self._show()
 
     def _build_advert(self, canvas):
+        """Attract mode stays advertising-first, with two equally visible paths."""
         shell = self._frame(canvas)
-        self._brand(shell, "ABADIKAN MOMEN DI GALAKSI", "Pixel-space photobooth • 3 foto + QR")
-        shell.add_widget(text_label("IKLAN / MODE SIAGA", size=14, height=30, color=CYAN))
+        self._brand(shell, "ABADIKAN MOMEN DI GALAKSI",
+                    "STRIP 3 FOTO + QR DOWNLOAD • MEONG PHOTOBOOTH")
+
+        headline = PixelCard(orientation="horizontal", size_hint_y=None,
+                             height=dp(50), padding=7, spacing=8)
+        headline.add_widget(text_label("IKLAN / MODE SIAGA", size=15, height=34,
+                                      color=CYAN, bold=True))
+        headline.add_widget(text_label("PETUALANGAN DIMULAI DI SINI",
+                                      size=12, height=34, color=GOLD))
+        shell.add_widget(headline)
+
         creative = PixelCard(orientation="vertical", padding=6, spacing=0)
         media_host = FloatLayout()
         self._ad_player = AdvertisementPlayer(
@@ -227,37 +237,53 @@ class PortraitKioskV2App(App):
         creative.add_widget(media_host)
         shell.add_widget(creative)
         self._advert_host = media_host
-        shell.add_widget(self._action("MULAI FOTO", lambda: self._choose_photo("manual")))
-        shell.add_widget(self._action("MAIN MEONG FLY", lambda: self._choose_game("manual"),
-                                      variant="secondary"))
-        shell.add_widget(self._action("LIHAT UNDANGAN (DEMO)", self._show_invitation,
-                                      variant="tertiary", height=48))
+
+        shell.add_widget(self._action(
+            "MULAI FOTO", lambda: self._choose_photo("manual")))
+        shell.add_widget(self._action(
+            "MAIN MEONG FLY", lambda: self._choose_game("manual"),
+            variant="secondary"))
+
+        # Cara Pakai enters the already mandatory tutorial and keeps the
+        # single-visit gate. Invitation remains a PREVIEW-only operator action.
+        tools = BoxLayout(size_hint_y=None, height=dp(48), spacing=dp(10))
+        tools.add_widget(self._action(
+            "CARA PAKAI", lambda: self._choose_photo("help"),
+            variant="tertiary", height=48))
+        tools.add_widget(self._action(
+            "UNDANGAN (DEMO)", self._show_invitation,
+            variant="tertiary", height=48))
+        shell.add_widget(tools)
         shell.add_widget(text_label(
-            "Iklan berjalan saat tidak digunakan. Mini game belum terintegrasi.",
-            size=11, height=37, color=MUTED,
+            "Mode iklan aktif saat idle • Game dan QRIS masih prototype",
+            size=12, height=31, color=MUTED,
         ))
 
     def _show_invitation(self):
-        """Visual preview: actual 5-second camera detector is NOT yet connected."""
+        """Real ad media stays visible beneath a nonmodal, manual demo invite."""
         if self.navigation.page != ADVERT:
             return
         self._close_invitation()
         panel = PixelCard(
-            orientation="vertical", size_hint=(.95, None), height=dp(260),
-            pos_hint={"center_x": .5, "center_y": .48},
-            padding=11, spacing=6,
+            orientation="vertical", size_hint=(.94, None), height=dp(277),
+            pos_hint={"center_x": .5, "center_y": .49},
+            padding=12, spacing=7,
         )
-        panel.add_widget(text_label("HAI! MAU FOTO ATAU MAIN?", size=16,
-                                    height=37, color=GOLD, bold=True))
-        panel.add_widget(text_label("Undangan Meong saat kamu mendekat!",
-                                    size=12, height=28))
-        panel.add_widget(self._action("AYO FOTO", lambda: self._choose_photo("face_preview"),
-                                      height=48))
-        panel.add_widget(self._action("MAIN MEONG FLY",
-                                      lambda: self._choose_game("face_preview"),
-                                      variant="secondary", height=48))
-        panel.add_widget(self._action("NANTI SAJA", self._close_invitation,
-                                      variant="tertiary", height=33))
+        panel.add_widget(text_label(
+            "HAIII! MAU FOTO ATAU MAIN?", size=19,
+            height=42, color=GOLD, bold=True))
+        panel.add_widget(text_label(
+            "Yuk pilih petualanganmu bareng Meong!",
+            size=13, height=30, color=MUTED))
+        panel.add_widget(self._action(
+            "AYO FOTO", lambda: self._choose_photo("face_preview"),
+            height=50))
+        panel.add_widget(self._action(
+            "MAIN MEONG FLY", lambda: self._choose_game("face_preview"),
+            variant="secondary", height=50))
+        panel.add_widget(self._action(
+            "NANTI SAJA", self._close_invitation,
+            variant="tertiary", height=39))
         self._advert_host.add_widget(panel)
         self._invitation = panel
         self._ad_player.set_volume(.15)
