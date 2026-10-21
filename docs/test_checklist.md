@@ -367,3 +367,12 @@ python tools/run_portrait_v2.py
 - [ ] All approved reference visuals are compared to device captures and deviations recorded in [visual spec](portrait-kiosk-v2-visual-spec.md); future QRIS/camera/result states remain separately gated.
 
 **No current production claim:** Kivy GUI page/screenshot and test PASS cannot certify physical speaker, touch, video codec, thermal print, payment or real user receipt integration. Keep previous FEAT-022 hardware items open until the owner supplies device evidence.
+
+## P2.6 portrait v2 local review — 2026-10-21
+
+- [x] 40 local navigation/audio/design/widget checks passed, no skips.
+- [x] Twelve full-resolution synthetic pages generated; disabled-action readability corrected.
+- [ ] Matching-SHA GitHub workflow and downloaded screenshot artifact reviewed.
+- [ ] P2.7 interactive/resize/scroll and Windows hardware acceptance.
+
+Evidence and rollback: [P2.6](qa/portrait-v2-p26/README.md). This does not close P2.6–P2.8.

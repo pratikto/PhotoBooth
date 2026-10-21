@@ -140,6 +140,9 @@ class ArcadeButton(Button):
             background_color=(0, 0, 0, 0),
             font_size=dp(18), bold=True,
             color=rgba(INK if variant in {"primary", "secondary"} else WHITE),
+            # Kivy uses disabled_color instead of color for disabled text.
+            # Keep unavailable scanner/payment labels readable at both sizes.
+            disabled_color=rgba(MUTED),
             **kwargs,
         )
         self.bind(pos=self._paint, size=self._paint,
@@ -165,8 +168,7 @@ class ArcadeButton(Button):
             Color(*rgba(border, .75 if self.disabled else 1))
             _pixel_plate(self.x, self.y, self.width, self.height)
             inset = dp(PIXEL_INSET_DP)
-            Color(*rgba(fill, .57 if self.disabled else
-                        .82 if self.state == "down" else 1.0))
+            Color(*rgba(fill, .82 if self.state == "down" and not self.disabled else 1.0))
             _pixel_plate(self.x + inset, self.y + inset,
                          max(0, self.width - 2 * inset),
                          max(0, self.height - 2 * inset),

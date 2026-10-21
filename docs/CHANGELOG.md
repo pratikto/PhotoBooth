@@ -2,6 +2,12 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased — P2.6 portrait QA] — 2026-10-21
+
+- Readable disabled payment/scanner labels in GUI v2; preserve unavailable actions and shared pixel palette.
+- Added a real-widget regression; 40 portrait tests passed locally, and twelve synthetic screenshots were generated at both target sizes. Evidence: [P2.6 local review](qa/portrait-v2-p26/README.md). Matching-SHA CI remains pending; no hardware acceptance claimed.
+- Rollback before this milestone: `e888d9945bc8c0a4c74bd1a8de57e946acb26204`.
+
 ## [Unreleased — docs-only, post-v1.0.0] — 2026-10-19
 
 - Owner approved a **documentation-only** reconciliation on a dedicated `docs/post-v1-release-reconciliation-20261019` branch. Update current README/index, source status, bug/backlog, decisions, QA and technical-guide headings to match the already tagged GitHub `v1.0.0` pre-release. Preserve earlier dated test/failure history and explicit hardware acceptance gaps. The documentation PR is **not part of the immutable v1 tag**; review and merge it without rewriting the release.

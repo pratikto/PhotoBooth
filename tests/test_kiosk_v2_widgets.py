@@ -119,6 +119,13 @@ class PortraitKivySmokeTests(unittest.TestCase):
             app.on_stop()
 
 
+    def test_unavailable_actions_keep_readable_text_without_becoming_touchable(self):
+        from photobooth.kiosk_v2.theme import MUTED, rgba
+        button = ArcadeButton("PEMBAYARAN (BELUM TERHUBUNG)")
+        button.disabled = True
+        self.assertEqual(tuple(button.disabled_color), rgba(MUTED))
+        self.assertTrue(button.disabled)
+
     def test_carousel_swipe_uses_horizontal_direction_and_rejects_vertical(self):
         self.assertEqual(SwipeGallery.swipe_step(-90, 5), 1)
         self.assertEqual(SwipeGallery.swipe_step(90, -4), -1)

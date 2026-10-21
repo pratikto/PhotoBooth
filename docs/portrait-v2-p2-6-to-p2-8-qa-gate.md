@@ -43,3 +43,10 @@
 5. Compare approved 12 vertical thermal designs and three-photo/QR layout against their existing source of truth; GUI prototype must not silently modify print output.
 
 **Release rule:** no automatic promotion to master, no game integration, no assertion of production readiness from synthetic checks.
+
+## 2026-10-21 current local checkpoint
+
+P2.6 review found and corrected unreadable disabled payment/scanner labels.
+40 local tests passed; twelve screenshots preserved in [local evidence](qa/portrait-v2-p26/README.md).
+Matching-SHA CI/artifact gate remains pending. P2.7 and P2.8 are not closed.
+Pre-change rollback: `e888d9945bc8c0a4c74bd1a8de57e946acb26204`.
