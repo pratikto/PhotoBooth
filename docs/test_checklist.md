@@ -344,3 +344,26 @@ python tools/run_portrait_v2.py
 - [ ] Record config/data backup, immutable base, rollback path and owner-approved merge/release instruction; **do not merge to master by default**.
 
 **CI versus field summary:** Branch CI is green for the current isolated v2 code. **Visual parity of all target screens, end-to-end service integration, real speaker and thermal/camera/merchant acceptance remain open.** No documentation-only commit itself constitutes a test result.
+
+
+### FEAT-022 P2.5 pixel-arcade and strip-swipe validation — 2026-10-21
+
+**Source/check:** `feature/portrait-kiosk-v2-next`, [Actions 39555036023](https://github.com/pratikto/PhotoBooth/actions/runs/39555036023), code/test SHA **c4e4703ac076d5eed2cd1b88c7ccd19fa4916cd3**. Both jobs SUCCESS: 21/21 pure Python VisitFlow/PortraitAudio cases, desktop Kivy widget tests (expanded with new illustrated tutorial, disabled game scan, shared advert CTAs, three-strip preview and swipe-direction assertions), 12 synthetic screenshots at 800×1280 and 452×900. The code changes are limited to `photobooth/kiosk_v2/app.py`, `theme.py`, new `illustrations.py` and the v2 widget test; production v1 and master are unchanged.
+
+**Review of actual CI screenshot artifacts:** the 800×1280 tutorial now visibly contains four illustrated cards; the 452×900 tutorial shows the first cards with remaining steps accessible through ScrollView. The three real thermal master previews flank the selected strip at both dimensions. The after-fix 452×900 Meong Fly intro retains a meaningful mascot area, complete single-use rules, a **disabled** scan button and safe `LANJUT FOTO TANPA GAME`. The idle advertising remains a live local media area and contains both Foto/Game CTA. This is **virtual render inspection**, not physical acceptance.
+
+- [x] CI syntax and 21 pure VisitFlow + audio-provider mock tests succeed at recorded source/test SHA.
+- [x] Actual Kivy widget smoke passes: illustrated TutorialIcon kinds, 3-template current/neighbor textures, safe intro scanner, ad photo/help/game paths.
+- [x] SwipeGallery horizontal direction and rejection of short/vertical motions are unit tested (logic-level only).
+- [x] Exactly 12 portrait synthetic screenshot states generated (6 at 800×1280; 6 at 452×900); responsive compact intro no longer duplicates tiny logo.
+- [ ] Real Windows physical touchscreen swipe left/right switches one template and never accidentally changes copies; vertical drag leaves selection intact.
+- [ ] Tap `CARA PAKAI` on idle enters a full mandatory illustrated tutorial; confirm all four step cards can be scrolled and acknowledged once per active visit.
+- [ ] Inline invitation still overlays real ad without replacing/stopping the advertisement; both photo and mini-game entries work and `NANTI SAJA` dismisses cleanly.
+- [ ] Actual video+audio advertisement plays with correct aspect ratio, including a dark/bright file and landscape/portrait formats.
+- [ ] Physical Windows speaker automatically plays tutorial/templates background music, stops on idle; the `UJI MUSIK` diagnostic is truly audible.
+- [ ] 12 print master previews are readable and keep 1:3 at actual 10.1-inch panel; selected/adjacent thumbnails correspond to correct template IDs.
+- [ ] Selecting paper-copy quantity changes one DEMO quote but does not attempt QRIS charge, real session capture, printing or Drive upload.
+- [ ] Game intro always shows truthful disabled scanner; no real game attempt or Rp2.500 voucher is granted by a visual demo.
+- [ ] All approved reference visuals are compared to device captures and deviations recorded in [visual spec](portrait-kiosk-v2-visual-spec.md); future QRIS/camera/result states remain separately gated.
+
+**No current production claim:** Kivy GUI page/screenshot and test PASS cannot certify physical speaker, touch, video codec, thermal print, payment or real user receipt integration. Keep previous FEAT-022 hardware items open until the owner supplies device evidence.
