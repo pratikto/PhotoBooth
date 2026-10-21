@@ -270,3 +270,8 @@ M1 Core Stability; M2 Operational Reliability; M3 Commercial Readiness; M4 Produ
 **Potential monetization layers:** (1) hardware + free/commercial and paid software tiers + Meong-reserved ads, (2) optional premium content/events/analytics/campaigns, (3) installation/support/warranty/white-label services. No example prices are commitments.
 
 **Future evaluation gates:** Demonstrate customer willingness to pay, positive unit economics after support and hosting, technical feasibility on actual mini PC and partner POS, privacy and advertising consent, non-overlap with existing paid tiers, and measurable campaign performance. Existing critical bugs remain the immediate priority.
+
+
+## FEAT-022 — Portrait GUI v2 owner-selected branch stage (2026-10-21)
+
+**Execution order:** owner-selected isolated P0-P2 prototype work may proceed on feature/portrait-kiosk-gui after operational baseline review; it does not reduce priority of BUG-009 cloud retention or unresolved BUG-001/007 Windows music. **Source status PARTIAL, acceptance PENDING, production BLOCKED.** New layouts/audio state are independently developed, preserving old photo/print/Drive routes without touching main.py. No production migration, POS/receipt discount, real Meong Fly game, QRIS integration or actual touchscreen certification. Dependencies: accepted new UI and responsive Windows/audio checks, duplicate FEAT-021 ID reconciliation, optional game branch readiness, FEAT-020 QRIS server-side pricing/settlement, reliable paid order and print recovery. Complexity L, regression risk HIGH at integration but LOW while isolated. Maintain full rollback simply by continuing to use master. Refer to portrait-kiosk-v2.md for staged gates; re-rank the unified execution board before expanding this scope.

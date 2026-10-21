@@ -127,3 +127,12 @@ delivery issue from the unresolved native mixer silence. Actual speaker output
 and button usability still require a Windows GUI test; no audible success is
 claimed. If the indicator updates but speakers are silent, capture the
 provider/state/gain/mix diagnostic in the same popup.
+
+
+## FEAT-022 — Owner-approved isolated portrait GUI v2 initial source (2026-10-21)
+
+**IN SOURCE ON feature/portrait-kiosk-gui; NOT TESTED/RELEASED.** The user approved a greenfield customer-facing GUI plus an independent audio lifecycle, based on master SHA 27f3801b, and specifically requested a new branch. Initial files: kiosk_v2/flow.py (tutorial completed once per visit), audio.py (separate WAV-only page music and SFX lifecycle), theme.py and app.py (Pixel Arcade Space portrait Kivy advert/tutorial/12 real template previews, copy-count demo quote, inline invitation preview), and tools/run_portrait_v2.py (opt-in launcher). Existing main.py/v1 remains untouched. The game-entry button opens an **explicit unavailable notice**, not a working mini game. The face invitation is operator-triggered preview, not live detection. Checkout, payment, real cafe POS, camera, photo printing and Drive integrations are NOT implemented in this v2 prototype. CI regression workflow/test code committed, execution and Windows 10.1-inch visual/audible acceptance pending. No master merge. See portrait-kiosk-v2.md.
+
+### FEAT-022 P0–P2 synthetic QA update — 2026-10-21
+
+[Portrait CI 39522764587](https://github.com/pratikto/PhotoBooth/actions/runs/39522764587) succeeded: **16/16 pure navigation/audio tests**, Linux/Xvfb Kivy interactive widget smoke, 12 validated screenshots (6 pages at both 800x1280 and aligned 452x900). These are **source / virtual-display PASS**, NOT audible Windows music acceptance or an integrated paid photobooth. Status remains **PARTIAL IN SOURCE / DEVICE QA PENDING**. [Legacy v1 Kiosk CI 39522083946](https://github.com/pratikto/PhotoBooth/actions/runs/39522083946) previously ran 252 tests (250 passed / two skipped), 87 renders; current new branch must still be physically tested and polished. The repaired screenshot renderer avoids unreliable 450px RGB row packing in Linux and does NOT certify Windows touch. DO NOT MERGE pending owner review.

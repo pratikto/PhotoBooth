@@ -216,3 +216,30 @@ Native audio/video tests may require explicit opt-in environment flags and compa
 - [ ] Blocking defects resolved, or explicit written risk acceptance documented
 - [ ] Rollback reference and device configuration backup recorded
 - [ ] Owner explicitly authorizes the release
+
+
+## FEAT-022 — portrait kiosk v2 synthetic and on-device QA (2026-10-21)
+
+**Initial source committed on feature/portrait-kiosk-gui; results NOT YET CONFIRMED at this writing.** No audio-speaker, thermal-paper, real camera, merchant POS or provider payments were physically exercised.
+
+Automation added: .github/workflows/portrait-kiosk-v2.yml, covering Python syntax, test_kiosk_v2_flow, test_kiosk_v2_audio, and test_kiosk_v2_widgets (Kivy/Xvfb). Test source creation is not proof of a successful CI run; record exact SHA/run link and PASS/FAIL/SKIP after the run completes.
+
+To reproduce on Windows from an existing Kivy virtual environment:
+
+~~~powershell
+git fetch origin
+git switch feature/portrait-kiosk-gui
+git pull origin feature/portrait-kiosk-gui
+python -m unittest tests.test_kiosk_v2_flow tests.test_kiosk_v2_audio tests.test_kiosk_v2_widgets -v
+python tools/run_portrait_v2.py
+~~~
+
+Required physical follow-up: (1) inspect advertising video/image and 15-second invitation overlay (prototype manual preview, not real face detection); (2) check navigation and mandatory tutorial-once, 180-second browsing timeout, 10-second warning, 12 true thermal strip templates, copy count and quote at 800x1280 and 450x900; (3) hear music on tutorial/templates then verify it stops cleanly during ads and never doubles on page rebuild, test effect cue; (4) prove no accidental checkout, capture or printing; (5) rerun full production v1 regression once any shared service is modified. v2 does not yet offer a real audio settings page. A fake audio state PASS must never close BUG-001/007.
+
+### FEAT-022 P0–P2 verified synthetic CI evidence (2026-10-21)
+
+- Code/UI source audited at `d85bb62ae8dd461b04d3b9612396434713a14cca`; later documentation-only changes must not be interpreted as physical acceptance.
+- [Portrait GUI v2 CI run 39522764587](https://github.com/pratikto/PhotoBooth/actions/runs/39522764587): both jobs **SUCCESS** — Kivy-independent navigation/audio: **16/16 PASS**, Python syntax PASS, real-widget Kivy smoke SUCCESS under Linux/Xvfb, and real screenshot generation for six states each at **800x1280 and 452x900** with 0 screenshot validation errors. Visual artifact `meong-portrait-v2-screens` ID **12312581205**. The 452-pixel width is an **image-readback alignment workaround**, NOT a verified Windows 450x900 touchscreen test.
+- [Legacy GUI CI run 39522083946](https://github.com/pratikto/PhotoBooth/actions/runs/39522083946) at earlier source revision: **252 tests run, 250 PASS / 2 SKIP / 0 FAIL / 0 ERROR**, 87 synthetic existing-page renders accepted. This is historical for that SHA; rerun full suite after any subsequent shared module modification.
+- Screenshots inspected: portrait layout/copy selection readable, 12 real templates loaded; **visual polish versus owner's comprehensive pixel-arcade reference is NOT COMPLETE**. No claim of final Windows hardware acceptance, ad-video sound/music speaker audibility, face detector trigger, touchscreen at 10.1 inches, POS/discount/QRIS, camera, real print or Drive completion.
+- Previous QA limitation: 450x900 Xvfb screenshot GL RGB stride distorted despite Kivy widget smoke success; scripts now flag corrupt screenshot rows and use 452x900 aligned screenshots. Physical 450x900 behavior still requires on-device comparison.
