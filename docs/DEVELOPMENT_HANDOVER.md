@@ -195,3 +195,8 @@ tree safely. The fourth error was a Windows permission restriction when
 creating a symlink in the retention test; that specific `WinError 1314`
 condition now skips the symlink-specific test while preserving other errors.
 Re-run full and opt-in GUI tests before merging PR #3 into `master`.
+
+
+## FEAT-022 — Portrait GUI v2 owner-approved independent branch (2026-10-21)
+
+Target: feature/portrait-kiosk-gui, originating from master SHA 27f3801b235d81dc0a49ab201f3e143b62314413; do not merge to master. Owner chose greenfield portrait 10.1-inch GUI and new sound lifecycle because v1 music audibility remains unresolved, while reusing stable backend services. Status: initial GUI prototype source (advertising/media, invitation preview, tutorial, 12-template gallery/quantities) and audio controller/tests committed; Windows speaker, actual face detection, game integration, payment/camera/Drive/printing all unverified or intentionally disconnected. Entry: python tools/run_portrait_v2.py; python main.py still launches original v1. Technical/QA stages in portrait-kiosk-v2.md. Complete the new branch CI and Windows portrait/touch/audio checks before expanding into actual camera/transaction integration. Existing BUG-001/007 and BUG-009 are not closed by this work; record exact test result/commit before any acceptance. The DEC-003 tutorial-once addendum from docs branch commit 980af997 was brought into this branch, without merging that documentation branch or master.
