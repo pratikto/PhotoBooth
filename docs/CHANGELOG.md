@@ -233,3 +233,8 @@ User directs that after either game result, flow should continue to **photo layo
 
 
 **Additional regression coverage:** `3d63d0b2` adds a standalone test module for 12 layout card hit regions, new screen drawing and result CTA/no-retry contract. Tests not run in this assistant environment; Windows operator retest required.
+
+
+## 2026-10-21 — FEAT-021 poster-style v3 start/results typography, current owner logo and printed-photo animation
+
+With explicit owner approval, on `feature/meong-flappy-challenge` **only**: new `photobooth/meong_fly_visual_v3.py` (`e04abfb5`) adds concise Start, stronger Win and Game Over pixel poster art and simulated printed-photo motion; `photobooth/meong_fly_painter.py` `c925909f` routes Start/Win/Lose to v3 and adds a 1-pixel boldening stroke to 5x7 font at scale>=2. `photobooth/assets/meong_fly_gif_logo.b85` `6b59d6fa`, corrected `5ff6d5f5`, adds a CRC-validated compact GIF-frame-derived image from the owner's latest print-drop GIF. The actual GIF file remains optional (not pushed as binary); v3 synthesizes 10 flying/photo-print frames from the bundled logo `de167709` and accepts a local 26-frame GIF by path or `MEONG_FLY_ANIM_GIF`. Kivy preloads GIF/photo textures and animates print debris in `2550fcc9`/`46733ece`/`32a038a6`, swaps the game sprite to the current camera-cat `d476118d`, fixes overlapped Game Over score `64973aa7`. New regression tests `0197507c`/`1b241d63`. **No new Windows tests run for these commits.** Original one-receipt rule, offline tutorial-to-layout flow, no retry, no production integration or `master` changes.
