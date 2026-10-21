@@ -94,6 +94,35 @@ The existing python main.py path remains unchanged, running v1. The separate opt
 | P4 | Mini game + QRIS integration | Receipt verification, single attempt and discount checks tied to authoritative order state; mock and provider Sandbox tests required |
 | P5 | Complete Windows kiosk regression | Camera/audio/print/video/device/privacy tests and explicit owner release approval |
 
+## FEAT-022 P2.5 — implemented arcade visual polish, gesture gallery and safe game intro (2026-10-21)
+
+**Current working branch:** `feature/portrait-kiosk-v2-next`. This is a **real opt-in Python/Kivy source change**, not mockup-only documentation. It does **not** replace `python main.py`, merge into `master`, or connect real payment, cafe struk, gameplay, capture, Drive and printing.
+
+### Delivered P2.5 code, with traceability
+
+| Path | Implemented change | Commit |
+| --- | --- | --- |
+| `photobooth/kiosk_v2/illustrations.py` (new) | Four scalable vector icons: genuine three-slot strip conceptual illustration, symbolic payment, camera and printer/QR. These are tutorial icons, **not actual payment QR or print masters**. | [80f085e0](https://github.com/pratikto/PhotoBooth/commit/80f085e0fe2d33faefbe8b7d4785a34a61976cc0) |
+| `theme.py` | Brighter pixel twinkles, accent corners on PixelCard, stylized touch buttons with accessible native Kivy behavior and visually distinct pressed/disabled states | [f935ef34](https://github.com/pratikto/PhotoBooth/commit/f935ef34eea3378c31ff65c65936208723840365) |
+| `app.py` idle/invitation | Ad playback remains the **primary idle media**. Photo/game CTAs stay together and the face invitation remains an inline manual-preview overlay; a working `CARA PAKAI` now enters the mandatory tutorial. | [d4a9acaa](https://github.com/pratikto/PhotoBooth/commit/d4a9acaa8315d53c2ade201ec94e75b2e8b08e7d) |
+| `app.py` tutorial | Four illustrated horizontal cards: `PILIH TEMPLATE`, `BAYAR`, `AMBIL 3 FOTO`, `CETAK & SCAN QR`. ScrollView for compact windows; once-per-visit acknowledgement and sound test remain unchanged. | [a74377d0](https://github.com/pratikto/PhotoBooth/commit/a74377d0e80a145f82dd8cd8808e53a07349d097) |
+| `app.py` template picker | Three real strip previews at once (previous/current/next) with selected 1:3 master centered; lazy texture caching, Kivy native navigation, correct DEMO quote and count of paper copies, not extra poses. | [39edb3ab](https://github.com/pratikto/PhotoBooth/commit/39edb3ab4f8a9b7f126258be9ed19b7512cbf43a) |
+| `app.py` game intro | Dedicated `MEONG FLY!` entry screen, illustrated mascot/rules, transparent one-struk/one-play and proposed Rp2.500 win promo; **scan disabled** and safe `LANJUT FOTO TANPA GAME` remains active. Compact game hero adjusted to avoid a duplicate tiny logo. | [38d86d0d](https://github.com/pratikto/PhotoBooth/commit/38d86d0dcb8b2c157b3bf077c2cdecff569554ba), [0e496280](https://github.com/pratikto/PhotoBooth/commit/0e496280e57efe9e9521c7644ccb77fa204df841) |
+| `app.py` `SwipeGallery` | Horizontal swipe moves selected template forward/back; rejects short/vertical drags; buttons still work. | [e33cbe98](https://github.com/pratikto/PhotoBooth/commit/e33cbe9846fbc2d314543f5652c62c25b86bf8cd) |
+| `tests/test_kiosk_v2_widgets.py` | Kivy tests enforce tutorial icon inventory, safe disabled scanner, shared ad entry, 3-preview textures and swipe direction threshold. | [8647b5e7](https://github.com/pratikto/PhotoBooth/commit/8647b5e7e70ca73a891222ed1b2e1052f9d63dd8), [c4e4703a](https://github.com/pratikto/PhotoBooth/commit/c4e4703ac076d5eed2cd1b88c7ccd19fa4916cd3) |
+
+### Verified regression and visual evidence
+
+[**GitHub Actions 39555036023**](https://github.com/pratikto/PhotoBooth/actions/runs/39555036023) on source-and-test commit **c4e4703ac076d5eed2cd1b88c7ccd19fa4916cd3**: navigation/audio Python job SUCCESS, **21/21 Kivy-independent unit tests PASS**, actual Kivy widget smoke SUCCESS with the new checks, **12 synthetic screenshots** generated successfully at 800×1280 and 452×900, both workflow jobs SUCCESS. Earlier interim UI commits temporarily reported a synthetic test mismatch because the old test assumed only one template texture; the tests were updated for three simultaneous real previews, and this branch's final tested SHA is green. No unverified FAIL was silently treated as PASS.
+
+**Visual inspection:** inspected the real screenshot artboards after code changes. Both target sizes expose the approved palette and complete core CTAs. The **latest compact Meong Fly intro** shows a legible centered camera-cat and rules after the small duplicate logo was removed. The tutorial scrolls on short screens; full four-step display remains accessible by scrolling. Three actual thermal master strips are visible in the template carousel. None of these synthetic images is a physical 10.1-inch device test.
+
+### Intentional non-features and further visual work
+
+The intro is a **safe visual page**, not an operational game: `GAME_PREVIEW` remains the current route name and its Scan Struk button is disabled; game result, promo ledger, backend QRIS and actual receipt validation remain on separate branches. There is no real camera-based face invitation. Payment/capture/review/result remain unimplemented in the opt-in v2 GUI. The idle creative remains controlled by the local ad catalog, not hard-coded mockup banners.
+
+Pixel-specific parity is **not yet complete**: the code uses standard Kivy fonts rather than a shipped pixel font, and the logo retains the already approved original white-padding artwork. Do not copy the contact-sheet's example prices or pretend that the saved standalone game artwork is an interactive UI. Real Windows 10.1-inch tap/swipe, actual ad audio/video codec and speaker music audibility must be owner tested before further backend integration.
+
 ## Known blockers/risks
 
 - BUG-001/007 v1 music audible failure: a rewritten audio controller is not proof it is fixed; run on actual Windows speaker with provider diagnostics and genuine WAV playback.
