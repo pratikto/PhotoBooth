@@ -106,6 +106,10 @@ def pixel_text(draw, value, center_x, top, scale=2, fill=WHITE,
                         draw.rectangle((x+scale,y+scale,x+2*scale-1,y+2*scale-1),
                                        fill=shadow)
                     draw.rectangle((x,y,x+scale-1,y+scale-1),fill=fill)
+                    # A one-pixel boldening stroke makes the 5x7 bitmap more
+                    # legible at kiosk viewing distance. Do not thicken 1x labels.
+                    if scale >= 2:
+                        draw.rectangle((x+scale,y,x+scale,y+scale-1),fill=fill)
 
 
 def panel(draw, bbox, fill=PANEL, border=OUTLINE, thickness=3):
@@ -346,8 +350,11 @@ def paint_static_screen(screen,logo_path):
     if screen in ("tutorial", "layouts"):
         from .meong_fly_photo_handoff import photo_handoff_screen
         return photo_handoff_screen(screen, logo_path)
-    if screen in ("start", "scan"):
-        # Batch A: cacheable, mockup-matched surfaces with exact existing hitboxes.
+    if screen in ("start", "won", "lost"):
+        # Poster v3 uses actual live Kivy buttons and optional owner GIF art.
+        from .meong_fly_visual_v3 import paint_poster_screen
+        return paint_poster_screen(screen, logo_path)
+    if screen == "scan":
         from .meong_fly_polish import paint_polished_menu
         return paint_polished_menu(screen, logo_path)
     if screen == "game":
