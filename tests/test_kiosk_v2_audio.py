@@ -5,7 +5,7 @@ from tempfile import TemporaryDirectory
 import unittest
 
 from photobooth.kiosk_v2.audio import (
-    BUNDLED_SOUNDS, SOUND_FILES, PortraitAudio, bounded_gain,
+    BUNDLED_SOUNDS, SOUND_FILES, PortraitAudio, bounded_gain, select_pcm_handle,
 )
 
 
@@ -122,6 +122,76 @@ class PortraitAudioTests(unittest.TestCase):
         self.assertEqual(bounded_gain(-5), 0)
         self.assertEqual(bounded_gain(3), 1)
         self.assertEqual(bounded_gain(float("nan")), 0)
+
+
+
+class WavProviderSelectionTests(unittest.TestCase):
+    """Provider fallback tests use fake handles; no speaker is asserted."""
+
+    def test_valid_primary_does_not_load_secondary(self):
+        primary = FakeClip()
+        primary.length = 4.0
+        calls = []
+
+        def first():
+            calls.append("SDL2")
+            return primary
+
+        def second():
+            calls.append("fallback")
+            return FakeClip()
+
+        self.assertIs(select_pcm_handle([("SDL2", first), ("other", second)]), primary)
+        self.assertEqual(calls, ["SDL2"])
+        self.assertEqual(primary.unloads, 0)
+
+    def test_invalid_zero_length_primary_is_unloaded_then_falls_back(self):
+        primary, fallback = FakeClip(), FakeClip()
+        primary.length = 0
+        fallback.length = 1.25
+        resolved = select_pcm_handle([
+            ("SDL2", lambda: primary),
+            ("fallback", lambda: fallback),
+        ])
+        self.assertIs(resolved, fallback)
+        self.assertEqual(primary.unloads, 1)
+        self.assertEqual(fallback.unloads, 0)
+
+    def test_broken_primary_loader_does_not_block_valid_fallback(self):
+        fallback = FakeClip()
+        fallback.length = 1.5
+
+        def broken():
+            raise RuntimeError("bad backend")
+
+        self.assertIs(select_pcm_handle([
+            ("SDL2", broken), ("fallback", lambda: fallback),
+        ]), fallback)
+
+    def test_nan_and_missing_durations_are_not_accepted(self):
+        invalid = FakeClip()
+        invalid.length = float("nan")
+        missing = FakeClip()
+        self.assertIsNone(select_pcm_handle([
+            ("nan", lambda: invalid), ("missing", lambda: missing),
+        ]))
+        self.assertEqual(invalid.unloads, 1)
+        self.assertEqual(missing.unloads, 1)
+
+    def test_music_play_request_is_not_success_if_provider_remains_stopped(self):
+        with TemporaryDirectory() as directory:
+            (Path(directory) / SOUND_FILES["music"]).write_bytes(b"fake")
+
+            class UnresponsiveClip(FakeClip):
+                def play(self):
+                    self.plays += 1  # Sound driver ignores the request.
+                    self.state = "stop"
+
+            audio = PortraitAudio(lambda _path: UnresponsiveClip(), root=directory)
+            self.assertFalse(audio.enter_page("tutorial"))
+            self.assertEqual(audio.status()["music_state"], "stop")
+            self.assertIn("did not acknowledge", audio.status()["last_error"])
+            audio.close()
 
 
 if __name__ == "__main__":
