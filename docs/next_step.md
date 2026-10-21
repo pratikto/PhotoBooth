@@ -295,3 +295,8 @@ Scope `feature/meong-flappy-challenge` (separate standalone mini-game) remains P
 ## FEAT-021 visual QA status after owner Windows test run (2026-10-21)
 
 **Batch A/B targeted Windows automated regression: OWNER-REPORTED 55/55 PASS with 0 Kivy skips** (Python 3.12.10, Kivy 2.3.1, Intel Iris Xe). Manual aesthetic acceptance still pending: Start/Scan typed-input experience, live Gameplay sprite/rock fairness, FPS and portrait/landscape rendering, measured on device. Exact tested Git SHA not reported. Continue visual QA before deciding on Batch C Win/Lose polish; Batch C remains not yet implemented or explicitly authorized as part of this test report. No production kiosk integration or `master` merge. Existing operational bug priorities unchanged.
+
+
+## FEAT-021 poster v3 visual owner QA gate (2026-10-21)
+
+Priorities updated after owner supplied enhanced neon-space mockup and demanded source implementation: **P1 for isolated mini-game visual usability** within FEAT-021 P2 enhancement scope. Batch A/B and navigation are in source, but poster v3 (bold font, concise Start, newest GIF frame, simulated print/drop) is **IN SOURCE / exact Windows QA PENDING**. Optional full GIF file must be installed locally if exact 26-frame animation is desired; bundled standalone v3 creates its own ten-frame fallback. Real approved thermal templates, photos, POS, discount redemption and production GUI remain deferred and separately approved. No gameplay retry. Other operational bugs and `master` unaffected. Next: target all FEAT-021 regression tests and owner visual acceptance, then consider remaining polish from screenshots.
