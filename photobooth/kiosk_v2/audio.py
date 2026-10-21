@@ -8,6 +8,7 @@ Real speaker audibility still needs a fresh Windows operator test.
 
 from pathlib import Path
 import logging
+import math
 import os
 
 LOG = logging.getLogger(__name__)
@@ -37,10 +38,59 @@ def bounded_gain(value: float) -> float:
     return max(0.0, min(1.0, gain))
 
 
+def select_pcm_handle(candidates):
+    """Use the first native WAV handle with a positive, finite duration.
+
+    The earlier GUI sometimes selected an audio provider that could report
+    playback while remaining silent on Windows. An unusable provider must not
+    monopolize the only music channel or hide the working SDL2 fallback.
+    Candidate factories are injected so provider selection can be tested without
+    importing Kivy or touching a real speaker.
+    """
+    for name, factory in candidates:
+        handle = None
+        try:
+            handle = factory()
+            seconds = float(getattr(handle, "length", 0)) if handle is not None else 0
+            if handle is not None and math.isfinite(seconds) and seconds > 0:
+                LOG.info("Meong v2 WAV provider=%s duration=%.2fs", name, seconds)
+                return handle
+            LOG.warning("Meong v2 WAV provider=%s returned unusable duration", name)
+        except Exception:
+            LOG.warning("Meong v2 WAV provider=%s failed", name, exc_info=True)
+        if handle is not None:
+            try:
+                handle.unload()
+            except Exception:
+                LOG.warning("Failed to release rejected WAV provider=%s", name, exc_info=True)
+    return None
+
+
 def kivy_sound_loader():
-    """Delay importing Kivy so page/audio state can be unit-tested headlessly."""
+    """Prefer desktop SDL2 for bundled PCM WAV; preserve explicit KIVY_AUDIO.
+
+    Import Kivy only when the window starts. SoundLoader alone may select
+    ffpyplayer first on Windows; our previous GUI's music audibility remained
+    unverified even when a handle said 'play'. SDL2 is attempted directly
+    before the ordinary provider fallback, while an operator's KIVY_AUDIO
+    override is honored. Neither provider success nor state='play' proves that
+    real speakers produced audible sound.
+    """
     from kivy.core.audio import SoundLoader
-    return SoundLoader.load
+    from kivy.utils import platform
+
+    def load(path):
+        candidates = []
+        if platform in {"win", "linux", "macosx"} and not os.environ.get("KIVY_AUDIO"):
+            try:
+                from kivy.core.audio.audio_sdl2 import SoundSDL2
+                candidates.append(("SDL2", lambda: SoundSDL2(source=str(path))))
+            except Exception:
+                LOG.warning("SDL2 WAV provider unavailable; using Kivy SoundLoader", exc_info=True)
+        candidates.append(("Kivy SoundLoader", lambda: SoundLoader.load(str(path))))
+        return select_pcm_handle(candidates)
+
+    return load
 
 
 class PortraitAudio:
@@ -104,6 +154,11 @@ class PortraitAudio:
             handle.volume = self.music_gain
             if restart or getattr(handle, "state", None) != "play":
                 handle.play()
+            if getattr(handle, "state", None) != "play":
+                self.last_error = "music: native provider did not acknowledge playback"
+                LOG.warning("Meong v2 music requested but native provider remains stopped")
+                return False
+            self.last_error = None
             return True
         except Exception as exc:
             self.last_error = f"music: {type(exc).__name__}"
