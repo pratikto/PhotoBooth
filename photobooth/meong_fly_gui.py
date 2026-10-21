@@ -220,9 +220,16 @@ class MeongFlyStage(Widget):
             # Static scene already contains the logo; GIF frames replace it.
             if self._animated_gif and len(self._hero_frames) > 1:
                 index = int(self._time * 10) % len(self._hero_frames)
+                texture = self._hero_frames[index]
+                natural_w, natural_h = texture.size
+                scale = min(290 / natural_w, 182 / natural_h)
+                target_w, target_h = natural_w * scale, natural_h * scale
+                # Fit, never stretch, the approved camera-cat artwork.
+                target_x = 35 + (290 - target_w) / 2
+                target_y = 90 + (182 - target_h) / 2
                 Color(1, 1, 1, 1)
-                pos, size = self._rect((35, 90, 290, 182))
-                Rectangle(texture=self._hero_frames[index], pos=pos, size=size)
+                pos, size = self._rect((target_x, target_y, target_w, target_h))
+                Rectangle(texture=texture, pos=pos, size=size)
         elapsed = self._time if screen != "game" else self.flow.game.elapsed
         for i, (x, y, size_px, tilt) in enumerate(
                 falling_photo_positions(elapsed, 7)):
