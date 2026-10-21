@@ -4,7 +4,7 @@
 
 ## Checkpoint and evidence policy
 
-- Last confirmed successful GitHub Actions workflow at the time of this document: `d7509f34e91a704892f1271bb17a406fe7b0e2f3`. Newer commits must not inherit this PASS.
+- Latest verified application/renderer checkpoint: `0fbf15829d1537a7f18990b492b1e5934f21c0f8`, [CI 39618540570](https://github.com/pratikto/PhotoBooth/actions/runs/39618540570), both jobs successful. Its artifact visual review remains BLOCKED. Newer documentation commits must not inherit this CI PASS.
 - A pushed commit and verified remote HEAD mean **published**, not **tested**.
 - Gate requires a GitHub Actions run with `head_sha` **exactly equal** to the milestone checkpoint SHA and both jobs successful. If no matching run is available, mark **BLOCKED / NOT VERIFIED**, never PASS.
 - The desktop job must upload twelve screenshots (six pages × two viewports). Download and inspect those screenshots; existence alone does not prove legibility or alignment.
@@ -15,8 +15,8 @@
 - [x] Extract game palette and pixel geometry as pure design tokens.
 - [x] Replace native v2 card/button backgrounds with stepped arcade styling.
 - [x] Add design-token and clipped-corner regression tests; include them in CI.
-- [ ] Review all six rendered pages at **800×1280** and **452×900**, with no clipping, obscured CTA, unreadable text, or accidental rounded v1 elements.
-- [ ] Record a matching-SHA CI PASS and preserve artifact reference.
+- [x] Review all six rendered pages at **800×1280** and **452×900**, with no clipping, obscured CTA, unreadable text, or accidental rounded v1 elements.
+- [x] Record a matching-SHA CI PASS and preserve artifact reference: P2.6 SHA `5fced9d`, run `39616959017`, artifact `12352643337`; downloaded ZIP digest verified and all twelve CI images reviewed.
 
 ## P2.7 — Responsive, interactive and audio lifecycle
 
@@ -44,7 +44,7 @@
 
 **Release rule:** no automatic promotion to master, no game integration, no assertion of production readiness from synthetic checks.
 
-## 2026-10-21 current local checkpoint
+## Historical 2026-10-21 local checkpoint (superseded by the 2026-10-22 update)
 
 P2.6 review found and corrected unreadable disabled payment/scanner labels.
 40 local tests passed; twelve screenshots preserved in [local evidence](qa/portrait-v2-p26/README.md).
@@ -57,10 +57,19 @@ Page callbacks now reject retired/suspended input; all CTA heights are at least
 stop during suspend or handoff to advert/game preview. Exact-SHA CI and remote
 artifact inspection are still required; do not mark P2.8 complete.
 
-## P2.8 current stop point — external evidence gate
+## Historical 2026-10-21 stop point — external evidence gate
 
 [Checkpoint report, exact SHAs, CI/artifact references, blocker and Windows checklist](qa/portrait-v2-p28/README.md).
 P2.6 exact-SHA CI passed both jobs; artifact download is still blocked by proxy
 CONNECT 403. P2.7 exact-SHA run was queued at last observation. Local P2.8
 renderer checks, 45 tests and twelve pixel-identical rerenders passed, but
 **P2.6–P2.8 completion is not certified** until required CI/artifact review.
+
+## Current 2026-10-22 post-publish verification
+
+[Exact-SHA CI metadata, downloaded P2.6 images and review](qa/portrait-v2-ci/README.md).
+P2.6 non-hardware gate is PASS. P2.7 and P2.8 both pass exact-SHA CI, but
+their artifact visual review is still BLOCKED by two additional GitHub storage
+hosts (13 and 9). Those exact domains were saved in a new environment draft.
+Post-publish local validation: 45 tests PASS, clean `0fbf158` manifests and twelve
+new screenshots. No new application code changes. P2.8 remains incomplete.

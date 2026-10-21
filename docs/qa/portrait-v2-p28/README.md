@@ -1,6 +1,19 @@
-# P2.8 evidence checkpoint — BLOCKED, not complete
+# P2.8 evidence checkpoint — remote visual review still BLOCKED
 
-Date: 2026-10-21. Branch: `feature/portrait-kiosk-v2-next` only.
+Latest update: 2026-10-22. Branch: `feature/portrait-kiosk-v2-next` only.
+
+## Current status after environment publish — 2026-10-22
+
+P2.6, P2.7 and P2.8 exact-SHA CI and both jobs are now verified SUCCESS.
+P2.6 ZIP digest and all twelve downloaded images have been verified/reviewed.
+P2.7/P2.8 downloads redirect to two different, still-blocked GitHub storage hosts
+(13 and 9); both exact domains were added to the new environment draft.
+45 tests and clean-checkout manifests passed again in the published environment.
+[Full current evidence and next action](../portrait-v2-ci/README.md). P2.8 is not
+complete until the two remaining remote artifacts are reviewed.
+
+The dated narrative below records the earlier 2026-10-21 stop point; its queued
+CI observations are superseded by the current evidence above.
 
 ## Published checkpoints
 

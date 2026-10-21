@@ -394,3 +394,13 @@ Evidence and rollback: [P2.6](qa/portrait-v2-p26/README.md). This does not close
 - [ ] Windows acceptance (unrun checklist in the [checkpoint report](qa/portrait-v2-p28/README.md)).
 
 Do not close P2.6–P2.8 based only on these local results.
+
+## 2026-10-22 post-publish P2 verification (current)
+
+- [x] Exact-SHA CI and both jobs SUCCESS for P2.6 `5fced9d`, P2.7 `5bb4798`, and P2.8 `0fbf158`.
+- [x] P2.6 artifact ZIP digest verified; twelve original CI PNGs downloaded and visually reviewed.
+- [x] Published current instance: 45 tests PASS, zero skips; twelve rerenders with clean source SHA and verified dimensions/hashes.
+- [ ] P2.7/P2.8 remote artifact download and visual review (storage hosts 13/9 still blocked).
+- [ ] Windows acceptance remains NOT RUN.
+
+[Current evidence, checkpoints and network action](qa/portrait-v2-ci/README.md).

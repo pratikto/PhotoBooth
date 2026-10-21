@@ -2,6 +2,12 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased — post-publish P2 QA verification] — 2026-10-22
+
+- Verified exact-SHA CI SUCCESS and both jobs for P2.6, P2.7 and P2.8. Downloaded P2.6 artifact, verified its ZIP digest and inspected all twelve original CI screenshots at 800×1280 and 452×900; P2.6 non-hardware gate PASS.
+- Re-ran 45 tests and both renderer viewports on clean published `0fbf158`; all local checks passed. Preserve CI metadata, original P2.6 PNGs, hashes and post-publish manifests. [Evidence](qa/portrait-v2-ci/README.md).
+- P2.7/P2.8 artifact downloads require two additional GitHub storage hosts; exact domains saved to draft. Their visual gate remains BLOCKED. No application/renderer changes or hardware acceptance.
+
 ## [Unreleased — P2.8 evidence checkpoint, BLOCKED] — 2026-10-21
 
 - Harden screenshot recording with sequential scheduling, expected-route and dimension validation, and per-viewport SHA-256/source manifests. 45 portrait tests and twelve rerenders passed locally; all pixels match the reviewed P2.7 images.

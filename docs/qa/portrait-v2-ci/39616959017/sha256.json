@@ -1,0 +1,74 @@
+[
+  {
+    "file": "01-advert-452x9000001.png",
+    "width": 452,
+    "height": 900,
+    "sha256": "5455093b627e96cdaeecfd7453765e3055a608c83d8f1b8d6855cc822daabba5"
+  },
+  {
+    "file": "01-advert-800x12800001.png",
+    "width": 800,
+    "height": 1280,
+    "sha256": "5ed310a233b6e4c0211faa83be72629d5b5f52af42244f218e47c8033f8e24bb"
+  },
+  {
+    "file": "02-invitation-452x9000001.png",
+    "width": 452,
+    "height": 900,
+    "sha256": "c91fd777a80285db30cc84ba47400999ebc2e8fccfe19021f972bfa4623917b7"
+  },
+  {
+    "file": "02-invitation-800x12800001.png",
+    "width": 800,
+    "height": 1280,
+    "sha256": "51edba4eaa483d3a3f765fb097306b60bc6865177b68441c8990309d10e19296"
+  },
+  {
+    "file": "03-tutorial-452x9000001.png",
+    "width": 452,
+    "height": 900,
+    "sha256": "cecd1e7df3e34f3892733633af70731a88349b6e8f33424f1a6deada145e91de"
+  },
+  {
+    "file": "03-tutorial-800x12800001.png",
+    "width": 800,
+    "height": 1280,
+    "sha256": "4eb5139bbdb7306c689aa6306f875c0fa6e46c2daf228538b55a74e75967784d"
+  },
+  {
+    "file": "04-templates-452x9000001.png",
+    "width": 452,
+    "height": 900,
+    "sha256": "77fdf7afecd1bc36171801b4aa913b5b093c29616f5c7a31e97fa872220f0541"
+  },
+  {
+    "file": "04-templates-800x12800001.png",
+    "width": 800,
+    "height": 1280,
+    "sha256": "77e488165a11c979806ec9d875c05e6e94c65932f960b77acecdbe0bcd11cb29"
+  },
+  {
+    "file": "05-copy-cart-452x9000001.png",
+    "width": 452,
+    "height": 900,
+    "sha256": "8c7613fd88c51c33134b17b68e827ae77b345f9368f8c2cf9476444511b5ad7a"
+  },
+  {
+    "file": "05-copy-cart-800x12800001.png",
+    "width": 800,
+    "height": 1280,
+    "sha256": "cc8737752a4398fd5c73be6bf5ed824112ab5b274f3a4531a890cdf800f5e989"
+  },
+  {
+    "file": "06-game-placeholder-452x9000001.png",
+    "width": 452,
+    "height": 900,
+    "sha256": "5ce23609cad52f342a5ccea5748b64234799b607f1ca76aafd53ddf08cbbeb0d"
+  },
+  {
+    "file": "06-game-placeholder-800x12800001.png",
+    "width": 800,
+    "height": 1280,
+    "sha256": "d75e19a9363b4304f3fc735fba777106f21d735a61c2120fd215780b838215e0"
+  }
+]
