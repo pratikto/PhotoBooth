@@ -42,7 +42,7 @@ class InstantPhotoEmitterTests(unittest.TestCase):
         emitter = InstantPhotoEmitter()
         for _ in range(8):
             emitter.update(.1, (160, 180), bottom=480)
-        for _ in range(5):
+        for _ in range(8):
             emitter.update(.1, (190, 200), bottom=480)
         released = emitter.poses()[0]
         self.assertFalse(released.attached)
@@ -58,7 +58,9 @@ class InstantPhotoEmitterTests(unittest.TestCase):
 
     def test_pause_freezes_paper_and_emission_clock(self):
         emitter = InstantPhotoEmitter()
-        emitter.update(.8, (160, 230), bottom=440)
+        for _ in range(9):
+            emitter.update(.1, (160, 230), bottom=440)
+        self.assertTrue(emitter.poses())
         before = (emitter.elapsed, emitter.poses())
         for _ in range(5):
             emitter.update(.1, (300, 90), bottom=440, paused=True)

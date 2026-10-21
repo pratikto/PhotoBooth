@@ -9,7 +9,7 @@ from pathlib import Path
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.core.window import Window
-from kivy.graphics import Color, Rectangle
+from kivy.graphics import Color, Rectangle, Quad
 from kivy.graphics.texture import Texture
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
@@ -22,13 +22,14 @@ from .meong_fly import (
     GAP_HEIGHT, HEIGHT, PIPE_WIDTH, TARGET_SCORE, WIDTH,
 )
 from .meong_fly_visual_v3 import (
-    meong_animation_frames, printed_photo_tile,
-    camera_cat_from_latest_logo, photo_feed_frames,
+    printed_photo_tile,
 )
 from .meong_fly_print_fx import InstantPhotoEmitter
+from .meong_fly_sprite import (camera_frames, fit_rect, world_slot,
+                               paper_corners, HERO_BOXES)
 from .meong_fly_flow import MeongFlyFlow
 from .meong_fly_game_art import (
-    GAME_FIELD_TOP, GAME_FIELD_BOTTOM, ROCK_VARIANTS, camera_cat_poses,
+    GAME_FIELD_TOP, GAME_FIELD_BOTTOM, ROCK_VARIANTS,
     make_rock_tile, asteroid_screen_rects, camera_screen_rect,
 )
 from .meong_fly_painter import (
@@ -63,26 +64,19 @@ class MeongFlyStage(Widget):
             name: kivy_texture(paint_static_screen(name, self._logo_path))
             for name in ACTIONS
         }
-        self._cat_poses = {
-            name: kivy_texture(image)
-            for name, image in camera_cat_poses(camera_cat_from_latest_logo(self._logo_path)).items()
+        self._camera_frames = camera_frames()
+        self._camera_layers = {
+            name: (kivy_texture(frame.rear), kivy_texture(frame.front))
+            for name, frame in self._camera_frames.items()
         }
-        self._cat = self._cat_poses["level"]  # Preserve optional caller compatibility.
+        self._cat_poses = {name: self._camera_layers[name][1]
+                           for name in ("level", "climb", "dive")}
+        self._cat = self._cat_poses["level"]
         self._asteroids = [kivy_texture(make_rock_tile(i)) for i in range(ROCK_VARIANTS)]
-        # Real owner GIF if installed; otherwise a 10-frame print-drop loop
-        # composed from its bundled official image, never from the old mascot.
-        self._hero_frames = [kivy_texture(img) for img in
-                             meong_animation_frames(self._logo_path)]
-        self._animated_gif = len(self._hero_frames) > 1
         # Every print stage is pre-rendered once. During gameplay we upload
         # NO PIL pixels; only camera-anchored cached textures are drawn.
         self._photo_tiles = [kivy_texture(printed_photo_tile(i))
                              for i in range(4)]
-        self._photo_reveals = [
-            [kivy_texture(frame) for frame in
-             photo_feed_frames(printed_photo_tile(i))]
-            for i in range(4)
-        ]
         self._printer = InstantPhotoEmitter()
         self._printer_screen = None
         self._score_tex = {}
@@ -217,31 +211,26 @@ class MeongFlyStage(Widget):
             self._border(ACTIONS[screen][self._hover_action],
                          (1, .97, .72, .86), 2)
 
-    # The hero image boxes mirror paint_poster_screen; no second layout map.
-    _HERO_BOXES = {
-        "start": (35, 69, 290, 175),
-        "won": (78, 190, 215, 160),
-        "lost": (97, 264, 170, 118),
-    }
+    _HERO_BOXES = HERO_BOXES
 
     def _hero_rect(self, screen):
-        """Fit the actual logo to the painted box, without stretching pixels."""
-        box_x, box_y, box_w, box_h = self._HERO_BOXES[screen]
-        natural_w, natural_h = self._hero_frames[0].size
-        scale = min(box_w / natural_w, box_h / natural_h)
-        w, h = natural_w * scale, natural_h * scale
-        return (box_x + (box_w - w) / 2,
-                box_y + (box_h - h) / 2, w, h)
+        rect = fit_rect(self._camera_frames["hero"].front.size,
+                        self._HERO_BOXES[screen])
+        # Move the whole pose, never pixels hidden inside an animation texture.
+        bob = math.sin(self._time * 2.4) * 3 if screen != "lost" else 0
+        return (rect[0], rect[1] + bob, rect[2], rect[3])
+
+    def _camera_context(self, screen):
+        if screen == "game":
+            velocity = self.flow.game.velocity
+            name = "climb" if velocity > 130 else "dive" if velocity < -100 else "level"
+            return name, camera_screen_rect(self.flow.game.y)
+        return "hero", self._hero_rect(screen)
 
     def _printer_context(self, screen):
-        """Physical paper slot is under the lens/body in the *current* sprite."""
-        if screen == "game":
-            x, y, w, h = camera_screen_rect(self.flow.game.y)
-            return ((x + w * .42, y + h * .87),
-                    GAME_FIELD_BOTTOM - 5)
-        x, y, w, h = self._hero_rect(screen)
-        # The approved camera-cat GIF frame includes its rainbow on the left.
-        return ((x + w * .53, y + h * .78),
+        name, rect = self._camera_context(screen)
+        return (world_slot(self._camera_frames[name], rect),
+                GAME_FIELD_BOTTOM - 5 if screen == "game" else
                 300 if screen == "start" else 389)
 
     def _advance_printer(self, dt):
@@ -260,9 +249,16 @@ class MeongFlyStage(Widget):
             self._printer_screen = active
         if active is not None:
             slot, floor = self._printer_context(active)
+            name, rect = self._camera_context(active)
+            frame = self._camera_frames[name]
+            # Keep film narrower than the aperture, also in the small game pose.
+            width = min(18 if active == "game" else 28 if active == "won" else 30,
+                        frame.slot_width * rect[2] / frame.front.width * .90)
+            self._printer.width = width
+            self._printer.height = width * 41 / 32
             self._printer.update(
                 dt, slot, floor,
-                paused=(active == "game" and self.flow.paused),
+                paused=(active == "game" and self.flow.paused), angle=frame.angle,
             )
 
     def _paint_print_sheets(self, screen):
@@ -271,28 +267,33 @@ class MeongFlyStage(Widget):
             return
         for pose in self._printer.poses():
             style = pose.serial % len(self._photo_tiles)
-            if pose.attached:
-                stages = self._photo_reveals[style]
-                step = min(len(stages) - 1,
-                           max(0, int(pose.reveal * len(stages)) - 1))
-                texture = stages[step]
-            else:
-                texture = self._photo_tiles[style]
+            texture = self._photo_tiles[style]
+            reveal = pose.reveal if pose.attached else 1.0
             Color(1, 1, 1, pose.opacity)
-            pos, size = self._rect(
-                (pose.x, pose.y, pose.width, pose.height))
-            Rectangle(texture=texture, pos=pos, size=size)
+            # Crop UVs to the exposed leading edge, without stretching pixels.
+            # The top-center is the same physical outlet used by the camera.
+            ox, oy, scale = self._viewport()
+            points = []
+            for x, y in paper_corners(pose.x, pose.y, pose.width,
+                                      pose.height * reveal, pose.angle):
+                points.extend((ox + x*scale, oy + (H-y)*scale))
+            Quad(texture=texture, points=points,
+                 tex_coords=(0, 1-reveal, 0, 1, 1, 1, 1, 1-reveal))
+
+    def _paint_camera(self, screen, print_enabled=True):
+        """One composition owner: rear aperture, film, foreground camera lip."""
+        name, rect = self._camera_context(screen)
+        rear, front = self._camera_layers[name]
+        pos, size = self._rect(rect)
+        Color(1, 1, 1, 1)
+        Rectangle(texture=rear, pos=pos, size=size)
+        if print_enabled:
+            self._paint_print_sheets(screen)
+        Color(1, 1, 1, 1)
+        Rectangle(texture=front, pos=pos, size=size)
 
     def _paint_hero(self, screen):
-        """Animate a clean camera frame above the physically-fed photo."""
-        if screen in ("start", "won"):
-            self._paint_print_sheets(screen)
-        if self._animated_gif:
-            texture = self._hero_frames[int(self._time * 8) %
-                                        len(self._hero_frames)]
-            Color(1, 1, 1, 1)
-            pos, size = self._rect(self._hero_rect(screen))
-            Rectangle(texture=texture, pos=pos, size=size)
+        self._paint_camera(screen, print_enabled=screen in ("start", "won"))
 
     def _score_texture(self, value, size=4, color=GOLD):
         key = (str(value), size, color)
@@ -399,17 +400,7 @@ class MeongFlyStage(Widget):
                 pos, size = self._rect((trail_x, trail_y, trail_w, trail_h))
                 Rectangle(pos=pos, size=size)
 
-        # Paper originates at the *current* camera body slot, feeds out,
-        # detaches, then falls independently. Keep it behind Meong's body.
-        if not show_impact:
-            self._paint_print_sheets("game")
-
-        # Rotation follows visual movement, NOT a new game physics direction.
-        pose = ("climb" if game.velocity > 130 else
-                "dive" if game.velocity < -100 else "level")
-        Color(1, 1, 1, 1)
-        pos, size = self._rect((bx, by, bw, bh))
-        Rectangle(texture=self._cat_poses[pose], pos=pos, size=size)
+        self._paint_camera("game", print_enabled=not show_impact)
         if int(elapsed * 9) % 4 == 0:
             Color(1, .92, .65, .88)
             pos, size = self._rect((bx + bw * .67, by - 5, 2, 2))
@@ -465,6 +456,7 @@ class MeongFlyStage(Widget):
         rendering, even though its painted box and touch widget still exist.
         The static scene belongs in canvas.before, safely behind child widgets.
         """
+        self._advance_printer(0)
         self._sync_overlays()
         self.canvas.before.clear()
         with self.canvas.before:

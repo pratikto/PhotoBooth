@@ -110,7 +110,8 @@ def printed_photo_tile(index=0):
 def photo_feed_frames(tile, steps=8):
     """Pre-render 8 physical reveal stages, never squash photo pixels.
 
-    The top of each photograph peeks out of Meong's camera slot first.
+    The leading bottom edge emerges first; existing pixels move outward as
+    more paper feeds. The hidden portion remains behind the camera housing.
     Texture bytes are prepared only at screen construction, not each frame.
     """
     width, height = tile.size
@@ -118,7 +119,7 @@ def photo_feed_frames(tile, steps=8):
     for index in range(1, steps + 1):
         exposed = max(1, round(height * index / steps))
         paper = Image.new("RGBA", tile.size, (0, 0, 0, 0))
-        paper.alpha_composite(tile.crop((0, 0, width, exposed)), (0, 0))
+        paper.alpha_composite(tile.crop((0, height - exposed, width, height)), (0, 0))
         result.append(paper)
     return tuple(result)
 
@@ -146,7 +147,6 @@ def paint_poster_screen(screen, logo_path):
         d.ellipse((42,73,318,287),fill=(16, 25, 81))
         d.ellipse((67,91,294,262),fill=(27, 31, 100))
         # Leave a real print-drop pocket between the camera and MEONG title.
-        _hero(frame, meong_animation_frames(logo_path)[0],(35,69,290,175))
         d=ImageDraw.Draw(frame)
         # Big two-line white title: deliberately NOT a black wordmark on navy.
         p.pixel_text(d,"MEONG",180,305,scale=7,fill=p.WHITE,
@@ -171,7 +171,6 @@ def paint_poster_screen(screen, logo_path):
             d.line((180,282,x,y),fill=(57,49,128),width=3)
         p.pixel_text(d,"SELAMAT!",180,114,scale=5,fill=p.GOLD,
                      shadow=(230,82,116))
-        _hero(frame,meong_animation_frames(logo_path)[0],(78,190,215,160))
         d=ImageDraw.Draw(frame)
         p.pixel_text(d,"TARGET TERCAPAI!",180,390,scale=2,fill=p.WHITE)
         arcade_card(d,(36,425,324,537),(255,221,129),(255,155,66))
@@ -186,7 +185,6 @@ def paint_poster_screen(screen, logo_path):
                      shadow=(98,34,104))
         p.pixel_text(d,"OVER",180,173,scale=6,fill=(255,115,168),
                      shadow=(98,34,104))
-        _hero(frame,meong_animation_frames(logo_path)[0],(97,264,170,118))
         d=ImageDraw.Draw(frame)
         arcade_card(d,(45,393,315,491),(16,28,76),(174,89,164))
         p.pixel_text(d,"SCORE",180,402,scale=3,fill=p.WHITE)
