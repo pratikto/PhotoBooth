@@ -106,6 +106,23 @@ def printed_photo_tile(index=0):
     return image
 
 
+
+def photo_feed_frames(tile, steps=8):
+    """Pre-render 8 physical reveal stages, never squash photo pixels.
+
+    The top of each photograph peeks out of Meong's camera slot first.
+    Texture bytes are prepared only at screen construction, not each frame.
+    """
+    width, height = tile.size
+    result = []
+    for index in range(1, steps + 1):
+        exposed = max(1, round(height * index / steps))
+        paper = Image.new("RGBA", tile.size, (0, 0, 0, 0))
+        paper.alpha_composite(tile.crop((0, 0, width, exposed)), (0, 0))
+        result.append(paper)
+    return tuple(result)
+
+
 def _hero(image, frame, box):
     from .meong_fly_painter import place_art
     x,y,w,h=box
@@ -128,7 +145,8 @@ def paint_poster_screen(screen, logo_path):
     if screen=="start":
         d.ellipse((42,73,318,287),fill=(16, 25, 81))
         d.ellipse((67,91,294,262),fill=(27, 31, 100))
-        _hero(frame, meong_animation_frames(logo_path)[0],(35,90,290,182))
+        # Leave a real print-drop pocket between the camera and MEONG title.
+        _hero(frame, meong_animation_frames(logo_path)[0],(35,69,290,175))
         d=ImageDraw.Draw(frame)
         # Big two-line white title: deliberately NOT a black wordmark on navy.
         p.pixel_text(d,"MEONG",180,278,scale=7,fill=p.WHITE,
