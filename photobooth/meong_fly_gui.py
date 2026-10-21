@@ -450,6 +450,17 @@ class MeongFlyStage(Widget):
             self.flow.toggle_pause()
         elif action == "continue":
             self.flow.continue_from_result()
+        elif action == "tutorial_done":
+            if self.flow.finish_tutorial():
+                # Standalone-only on-disk flag; production onboarding is separate.
+                marker = Path.home() / ".meong_fly_tutorial_seen"
+                try:
+                    marker.write_text("1", encoding="ascii")
+                except OSError:
+                    # Continue this session; do not block customers on disk failure.
+                    pass
+        elif action.startswith("layout_"):
+            self.flow.select_layout(int(action.split("_")[1]))
         if self.flow.screen == "exit":
             Clock.schedule_once(lambda *_: App.get_running_app().stop(), 0)
         self._refresh()
@@ -463,7 +474,8 @@ class MeongFlyStandaloneApp(App):
         Window.clearcolor = (.015, .02, .10, 1)
         self.title = "Meong Fly! - Standalone Demo"
         ledger = DemoReceiptLedger(Path.home() / ".meong_fly_demo.sqlite3")
-        self.flow = MeongFlyFlow(ledger)
+        tutorial_seen = (Path.home() / ".meong_fly_tutorial_seen").is_file()
+        self.flow = MeongFlyFlow(ledger, tutorial_seen=tutorial_seen)
         self.stage = MeongFlyStage(self.flow)
         return self.stage
 
