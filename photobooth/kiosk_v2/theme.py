@@ -11,23 +11,11 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.floatlayout import FloatLayout
 
-SPACE = "#050C2F"
-PANEL = "#0B1543"
-PANEL_EDGE = "#57499A"
-INK = "#070D26"
-WHITE = "#F8F8FF"
-PINK = "#FF55AB"
-CYAN = "#58D1FF"
-GOLD = "#FFDC78"
-PURPLE = "#B385FF"
-MUTED = "#B9BFDE"
-
-BUTTON_COLORS = {
-    "primary": PINK,
-    "secondary": CYAN,
-    "tertiary": PANEL_EDGE,
-    "muted": "#454764",
-}
+from .design_tokens import (
+    BUTTON_COLORS, BUTTON_EDGES, CYAN, GOLD, INK, MUTED, PANEL,
+    PANEL_EDGE, PINK, PIXEL_INSET_DP, PIXEL_NOTCH_DP, PURPLE, SHADOW,
+    SPACE, WHITE, stepped_rects,
+)
 
 
 def rgba(hex_color, alpha=1.0):
@@ -100,8 +88,14 @@ class Starfield(FloatLayout):
                     size=(orbit * .10, orbit * .10))
 
 
+def _pixel_plate(x, y, width, height, *, notch=PIXEL_NOTCH_DP):
+    """Draw one clipped-corner plate from two Kivy rectangles."""
+    for px, py, pw, ph in stepped_rects(x, y, width, height, dp(notch)):
+        Rectangle(pos=(px, py), size=(pw, ph))
+
+
 class PixelCard(BoxLayout):
-    """Pixel-stepped effect via opaque panel and offset shadow rectangles."""
+    """Kivy-native FEAT-021 stepped panel; no rounded v1-like corners."""
 
     def __init__(self, *, fill=PANEL, padding=12, spacing=8, **kwargs):
         super().__init__(padding=dp(padding), spacing=dp(spacing), **kwargs)
@@ -111,18 +105,19 @@ class PixelCard(BoxLayout):
 
     def _paint(self, *_args):
         self.canvas.before.clear()
+        if self.width <= 0 or self.height <= 0:
+            return
         with self.canvas.before:
-            Color(*rgba(INK, .92))
-            RoundedRectangle(pos=(self.x + dp(4), self.y - dp(4)),
-                             size=self.size, radius=[dp(9)])
+            Color(*rgba(SHADOW, .94))
+            _pixel_plate(self.x + dp(3), self.y - dp(5), self.width, self.height)
             Color(*rgba(PANEL_EDGE))
-            RoundedRectangle(pos=self.pos, size=self.size, radius=[dp(9)])
+            _pixel_plate(self.x, self.y, self.width, self.height)
+            inset = dp(PIXEL_INSET_DP)
             Color(*rgba(self._fill))
-            RoundedRectangle(pos=(self.x + dp(3), self.y + dp(3)),
-                             size=(max(0, self.width - dp(6)), max(0, self.height - dp(6))),
-                             radius=[dp(7)])
-            # Two small pixel corners add the approved arcade treatment
-            # without obstructing children or ad/video media.
+            _pixel_plate(self.x + inset, self.y + inset,
+                         max(0, self.width - 2 * inset),
+                         max(0, self.height - 2 * inset),
+                         notch=PIXEL_NOTCH_DP - PIXEL_INSET_DP)
             if self.width >= dp(40) and self.height >= dp(36):
                 Color(*rgba(PINK, .92))
                 Rectangle(pos=(self.x + dp(12), self.top - dp(5)),
@@ -133,11 +128,7 @@ class PixelCard(BoxLayout):
 
 
 class ArcadeButton(Button):
-    """An accessible portrait-sized arcade CTA with pixel-corner accent.
-
-    Text stays a native Kivy Button for keyboard/touch/accessibility bindings.
-    The visual draw layer deliberately owns no touch events.
-    """
+    """Touchable native button with FEAT-021 stepped border and state."""
 
     def __init__(self, text, *, variant="primary", height=62, **kwargs):
         if variant not in BUTTON_COLORS:
@@ -163,23 +154,23 @@ class ArcadeButton(Button):
         self._paint()
 
     def _paint(self, *_args):
+        self.canvas.before.clear()
         if self.width <= 0 or self.height <= 0:
             return
-        fill = "#454764" if self.disabled else BUTTON_COLORS[self.variant]
-        border = MUTED if self.disabled else CYAN if self.variant == "primary" else PINK
+        fill = BUTTON_COLORS["muted"] if self.disabled else BUTTON_COLORS[self.variant]
+        border = BUTTON_EDGES["muted"] if self.disabled else BUTTON_EDGES[self.variant]
         with self.canvas.before:
-            self.canvas.before.clear()
-            Color(*rgba(INK, .96))
-            RoundedRectangle(pos=(self.x + dp(2), self.y - dp(4)),
-                             size=self.size, radius=[dp(9)])
-            Color(*rgba(border, .68))
-            RoundedRectangle(pos=self.pos, size=self.size, radius=[dp(9)])
+            Color(*rgba(SHADOW, .96))
+            _pixel_plate(self.x + dp(2), self.y - dp(4), self.width, self.height)
+            Color(*rgba(border, .75 if self.disabled else 1))
+            _pixel_plate(self.x, self.y, self.width, self.height)
+            inset = dp(PIXEL_INSET_DP)
             Color(*rgba(fill, .57 if self.disabled else
                         .82 if self.state == "down" else 1.0))
-            RoundedRectangle(pos=(self.x + dp(3), self.y + dp(3)),
-                             size=(max(0, self.width - dp(6)),
-                                   max(0, self.height - dp(6))),
-                             radius=[dp(7)])
+            _pixel_plate(self.x + inset, self.y + inset,
+                         max(0, self.width - 2 * inset),
+                         max(0, self.height - 2 * inset),
+                         notch=PIXEL_NOTCH_DP - PIXEL_INSET_DP)
             if self.width > dp(48):
                 Color(*rgba(WHITE, .53 if not self.disabled else .18))
                 Rectangle(pos=(self.x + dp(12), self.top - dp(7)),
