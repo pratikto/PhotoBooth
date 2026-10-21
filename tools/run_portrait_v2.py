@@ -1,4 +1,4 @@
-"""Run the opt-in GUI v2 prototype, without changing python main.py.
+r"""Run the opt-in GUI v2 prototype, without changing python main.py.
 
 Windows:
     .\.venv-kivy\Scripts\Activate.ps1
