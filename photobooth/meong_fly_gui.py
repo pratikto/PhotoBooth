@@ -68,10 +68,11 @@ class MeongFlyStage(Widget):
         }
         self._cat = self._cat_poses["level"]  # Preserve optional caller compatibility.
         self._asteroids = [kivy_texture(make_rock_tile(i)) for i in range(ROCK_VARIANTS)]
-        self._animated_gif = animation_gif_path() is not None
-        # Cached on startup; never decode GIF/paint a photo in a game frame.
+        # Real owner GIF if installed; otherwise a 10-frame print-drop loop
+        # composed from its bundled official image, never from the old mascot.
         self._hero_frames = [kivy_texture(img) for img in
                              meong_animation_frames(self._logo_path)]
+        self._animated_gif = len(self._hero_frames) > 1
         self._photo_tiles = [kivy_texture(printed_photo_tile(i))
                              for i in range(4)]
         self._score_tex = {}
