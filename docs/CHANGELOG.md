@@ -2,6 +2,12 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased — P2.7 portrait lifecycle] — 2026-10-21
+
+- Retire page-owned button/swipe callbacks; block input and browsing timeout while suspended, refresh inactivity on resume, and ignore resume after app stop.
+- Stop effects as well as music during suspend and silent-page handoff; game preview owns no GUI audio. Increase small CTA heights to 48dp.
+- 45 local portrait tests PASS, real touch/scroll checks at both target sizes, native SDL2 dummy-audio smoke PASS, twelve new synthetic screenshots. [Evidence and rollback](qa/portrait-v2-p27/README.md). Hardware and matching-SHA CI artifact gate remain open.
+
 ## [Unreleased — P2.6 portrait QA] — 2026-10-21
 
 - Readable disabled payment/scanner labels in GUI v2; preserve unavailable actions and shared pixel palette.

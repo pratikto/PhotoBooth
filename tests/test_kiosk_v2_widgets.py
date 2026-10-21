@@ -126,6 +126,113 @@ class PortraitKivySmokeTests(unittest.TestCase):
         self.assertEqual(tuple(button.disabled_color), rgba(MUTED))
         self.assertTrue(button.disabled)
 
+    def test_retired_buttons_and_swipes_cannot_change_next_visit(self):
+        app = PortraitKioskV2App()
+        app.build()
+        try:
+            app._choose_photo()
+            old_done = next(w for w in app.stage.walk()
+                            if isinstance(w, ArcadeButton) and w.text == "LANJUT PILIH TEMPLATE")
+            app._complete_tutorial()
+            old_gallery = next(w for w in app.stage.walk() if isinstance(w, SwipeGallery))
+            app._return_ad()
+            app._choose_photo()
+            old_done.dispatch("on_release")
+            self.assertEqual(app.navigation.page, TUTORIAL)
+            self.assertFalse(app.navigation.tutorial_seen)
+            app._complete_tutorial()
+            old_gallery._on_swipe(1)
+            self.assertEqual(app.template_index, 0)
+        finally:
+            app.on_stop()
+
+    def test_pause_blocks_touch_and_timeout_resume_starts_fresh_idle_period(self):
+        import time
+        app = PortraitKioskV2App()
+        app.build()
+        try:
+            app._choose_photo()
+            done = next(w for w in app.stage.walk()
+                        if isinstance(w, ArcadeButton) and w.text == "LANJUT PILIH TEMPLATE")
+            app.on_pause()
+            done.dispatch("on_release")
+            app._last_activity = time.monotonic() - app.catalog.timing.landing_idle - 1
+            app._tick(0)
+            self.assertEqual(app.navigation.page, TUTORIAL)
+            app.on_resume()
+            app._tick(0)
+            self.assertEqual(app.navigation.page, TUTORIAL)
+            done.dispatch("on_release")
+            self.assertEqual(app.navigation.page, TEMPLATES)
+            app._change_copies(1)
+            app._last_activity = time.monotonic() - app.catalog.timing.landing_idle - 1
+            app._tick(0)
+            self.assertEqual(app.navigation.page, ADVERT)
+            self.assertEqual(sum(app.quantities.values()), 0)
+            self.assertFalse(app.navigation.tutorial_seen)
+        finally:
+            app.on_stop()
+
+    def test_touch_targets_and_tutorial_scroll_at_both_portrait_sizes(self):
+        from kivy.base import EventLoop
+        from kivy.core.window import Window
+        from kivy.input.motionevent import MotionEvent
+        from kivy.uix.scrollview import ScrollView
+
+        class Pointer(MotionEvent):
+            def depack(self, args):
+                self.sx, self.sy = args
+                self.profile = ['pos']
+                super().depack(args)
+
+        def settle():
+            for _ in range(4):
+                EventLoop.idle()
+
+        original = Window.size
+        try:
+            for width, height in ((800, 1280), (452, 900)):
+                with self.subTest(viewport=(width, height)):
+                    Window.size = (width, height)
+                    app = PortraitKioskV2App()
+                    Window.add_widget(app.build())
+                    try:
+                        settle()
+                        start = next(w for w in app.stage.walk()
+                                     if isinstance(w, ArcadeButton) and w.text == "MULAI FOTO")
+                        x, y = start.to_window(*start.center)
+                        event = Pointer('portrait-test', f'{width}',
+                                        (x / Window.width, y / Window.height), is_touch=True)
+                        EventLoop.post_dispatch_input('begin', event)
+                        EventLoop.post_dispatch_input('end', event)
+                        settle()
+                        self.assertEqual(app.navigation.page, TUTORIAL)
+                        guide = next(w for w in app.stage.walk() if isinstance(w, ScrollView))
+                        guide.scroll_y = 0
+                        settle()
+                        final_icon = next(w for w in app.stage.walk()
+                                          if isinstance(w, TutorialIcon) and w.kind == 'print')
+                        _, icon_y = final_icon.to_window(*final_icon.center)
+                        _, guide_y = guide.to_window(guide.x, guide.y)
+                        self.assertGreater(icon_y, guide_y)
+                        self.assertLess(icon_y, guide_y + guide.height)
+                        for route in (lambda: None, app._complete_tutorial,
+                                      app._return_ad, app._choose_game):
+                            route()
+                            settle()
+                            for button in (w for w in app.stage.walk() if isinstance(w, ArcadeButton)):
+                                x, y = button.to_window(button.x, button.y)
+                                self.assertGreaterEqual(button.height, 48)
+                                self.assertGreaterEqual(x, 0)
+                                self.assertGreaterEqual(y, 0)
+                                self.assertLessEqual(x + button.width, width + 1)
+                                self.assertLessEqual(y + button.height, height + 1)
+                    finally:
+                        app.on_stop()
+                        Window.remove_widget(app.stage)
+        finally:
+            Window.size = original
+
     def test_carousel_swipe_uses_horizontal_direction_and_rejects_vertical(self):
         self.assertEqual(SwipeGallery.swipe_step(-90, 5), 1)
         self.assertEqual(SwipeGallery.swipe_step(90, -4), -1)

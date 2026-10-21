@@ -50,3 +50,9 @@ P2.6 review found and corrected unreadable disabled payment/scanner labels.
 40 local tests passed; twelve screenshots preserved in [local evidence](qa/portrait-v2-p26/README.md).
 Matching-SHA CI/artifact gate remains pending. P2.7 and P2.8 are not closed.
 Pre-change rollback: `e888d9945bc8c0a4c74bd1a8de57e946acb26204`.
+
+P2.7 local follow-up: [45 tests, native dummy audio and twelve renders](qa/portrait-v2-p27/README.md).
+Page callbacks now reject retired/suspended input; all CTA heights are at least
+48dp, fourth tutorial step scroll access is tested at both sizes, and effects
+stop during suspend or handoff to advert/game preview. Exact-SHA CI and remote
+artifact inspection are still required; do not mark P2.8 complete.

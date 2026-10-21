@@ -376,3 +376,11 @@ python tools/run_portrait_v2.py
 - [ ] P2.7 interactive/resize/scroll and Windows hardware acceptance.
 
 Evidence and rollback: [P2.6](qa/portrait-v2-p26/README.md). This does not close P2.6–P2.8.
+
+## P2.7 portrait v2 local lifecycle — 2026-10-21
+
+- [x] 45 tests PASS with no skips, including real touch dispatch, scroll reachability, CTA bounds, retired input and suspend/timeout.
+- [x] Native SDL2 dummy-audio lifecycle passed; twelve new renders generated.
+- [ ] Exact-SHA remote CI/artifact gate and Windows audible/touch acceptance.
+
+[Evidence and rollback](qa/portrait-v2-p27/README.md).

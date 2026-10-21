@@ -170,6 +170,10 @@ class PortraitAudio:
         if page not in KNOWN_PAGES:
             raise ValueError("Unsupported prototype page: " + str(page))
         self.page = page
+        if page not in MUSIC_PAGES:
+            for name, handle in self._handles.items():
+                if name != "music":
+                    self._stop(handle)
         return self._sync_music()
 
     def set_music_gain(self, value):
@@ -183,7 +187,7 @@ class PortraitAudio:
         """No SFX on ad screen: its video's source track owns the audio."""
         if name not in ("button", "count", "shutter", "success"):
             raise ValueError("Unsupported sound cue")
-        if not self.enabled or self.suspended or self.page == "advert" or self.effects_gain <= 0:
+        if not self.enabled or self.suspended or self.page not in MUSIC_PAGES or self.effects_gain <= 0:
             return False
         handle = self._sound(name)
         if handle is None:
@@ -210,7 +214,8 @@ class PortraitAudio:
 
     def suspend(self):
         self.suspended = True
-        self._sync_music()
+        for handle in self._handles.values():
+            self._stop(handle)
 
     def resume(self):
         self.suspended = False

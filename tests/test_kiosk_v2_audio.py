@@ -86,6 +86,25 @@ class PortraitAudioTests(unittest.TestCase):
         self.assertFalse(self.audio.cue("button"))
         self.assertEqual(clip.plays, 1)
 
+    def test_effects_stop_on_suspend_and_do_not_resume_as_stale_cues(self):
+        self.audio.enter_page("tutorial")
+        self.audio.cue("button")
+        effect = self.loaded[SOUND_FILES["button"]]
+        self.audio.suspend()
+        self.assertEqual(effect.state, "stop")
+        self.audio.resume()
+        self.assertEqual(effect.state, "stop")
+        self.assertEqual(effect.plays, 1)
+
+    def test_page_handoff_stops_effects_and_game_preview_cannot_play_them(self):
+        for page in ("advert", "game_preview"):
+            self.audio.enter_page("tutorial")
+            self.audio.cue("button")
+            effect = self.loaded[SOUND_FILES["button"]]
+            self.audio.enter_page(page)
+            self.assertEqual(effect.state, "stop")
+            self.assertFalse(self.audio.cue("button"))
+
     def test_suspend_resume_and_cleanup(self):
         self.audio.enter_page("tutorial")
         music = self.loaded["meong-v2-music.wav"]

@@ -101,6 +101,9 @@ class PortraitKioskV2App(App):
     def build(self):
         # Window defaults belong to the dedicated launcher, not the shared App.
         # This keeps importing/building the prototype free of global size changes.
+        self._suspended = False
+        self._closed = False
+        self._view_revision = 0
         self.navigation = VisitFlow()
         self.templates = get_templates()
         self.catalog = AdCatalog()
@@ -120,17 +123,24 @@ class PortraitKioskV2App(App):
         return self.stage
 
     def on_pause(self):
+        self._suspended = True
         self.audio_v2.suspend()
         if self._ad_player is not None:
             self._ad_player.pause()
         return True
 
     def on_resume(self):
+        if self._closed or not self._suspended:
+            return
+        self._suspended = False
+        # Background time is not customer browsing time.
+        self._activity()
         self.audio_v2.resume()
         if self._ad_player is not None:
             self._ad_player.resume()
 
     def on_stop(self):
+        self._closed = True
         if getattr(self, "_heartbeat", None):
             self._heartbeat.cancel()
         self._close_invitation()
@@ -144,7 +154,7 @@ class PortraitKioskV2App(App):
             self._warning_label.text = ""
 
     def _tick(self, _dt):
-        if self.navigation.page not in BROWSING_PAGES:
+        if self._closed or self._suspended or self.navigation.page not in BROWSING_PAGES:
             return
         duration = time.monotonic() - self._last_activity
         deadline = self.catalog.timing.landing_idle
@@ -176,6 +186,7 @@ class PortraitKioskV2App(App):
 
     def _show(self):
         """Retire old media before rebuilding only the opt-in v2 page tree."""
+        self._view_revision += 1
         self._close_invitation()
         self._stop_ad()
         self._warning_label = None
@@ -213,10 +224,22 @@ class PortraitKioskV2App(App):
         shell.add_widget(text_label(title, size=23, height=37, bold=True, color=GOLD))
         shell.add_widget(text_label(subtitle, size=13, height=40, color=MUTED))
 
+    def _page_callback(self, callback):
+        """Late touch/swipe releases belong only to the page that created them."""
+        revision = self._view_revision
+
+        def invoke(*args):
+            if self._closed or self._suspended or revision != self._view_revision:
+                return
+            return callback(*args)
+
+        return invoke
+
     def _action(self, title, callback, *, variant="primary", height=62, disabled=False):
         button = ArcadeButton(title, variant=variant, height=height)
         button.disabled = disabled
-        button.bind(on_release=lambda *_: callback())
+        invoke = self._page_callback(callback)
+        button.bind(on_release=lambda *_: None if button.disabled else invoke())
         return button
 
     def _choose_photo(self, source="manual"):
@@ -298,11 +321,11 @@ class PortraitKioskV2App(App):
 
     def _show_invitation(self):
         """Real ad media stays visible beneath a nonmodal, manual demo invite."""
-        if self.navigation.page != ADVERT:
+        if self._closed or self._suspended or self.navigation.page != ADVERT:
             return
         self._close_invitation()
         panel = PixelCard(
-            orientation="vertical", size_hint=(.94, None), height=dp(277),
+            orientation="vertical", size_hint=(.94, None), height=dp(286),
             pos_hint={"center_x": .5, "center_y": .49},
             padding=12, spacing=7,
         )
@@ -320,7 +343,7 @@ class PortraitKioskV2App(App):
             variant="secondary", height=50))
         panel.add_widget(self._action(
             "NANTI SAJA", self._close_invitation,
-            variant="tertiary", height=39))
+            variant="tertiary", height=48))
         self._advert_host.add_widget(panel)
         self._invitation = panel
         self._ad_player.set_volume(.15)
@@ -378,7 +401,7 @@ class PortraitKioskV2App(App):
         shell.add_widget(self._warning_label)
         shell.add_widget(self._action(
             "UJI MUSIK (CEK SPEAKER)", self._test_music,
-            variant="secondary", height=43))
+            variant="secondary", height=48))
         self._audio_status = text_label(
             "Musik diputar otomatis di halaman ini. Dengarkan speaker.",
             size=12, height=38, color=MUTED,
@@ -474,7 +497,7 @@ class PortraitKioskV2App(App):
             "GESER PILIHANMU DI GALAKSI MEONG!",
             size=14, height=30, color=CYAN, bold=True))
 
-        gallery = SwipeGallery(on_swipe=self._shift_template,
+        gallery = SwipeGallery(on_swipe=self._page_callback(self._shift_template),
                                orientation="horizontal", spacing=dp(7))
         left = BoxLayout(orientation="vertical", size_hint_x=.22,
                          spacing=dp(2))
