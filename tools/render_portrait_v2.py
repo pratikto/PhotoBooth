@@ -55,6 +55,23 @@ class VisualRecorder(PortraitKioskV2App):
         written = Window.screenshot(name=str(target))
         path = Path(written or target)
         if path.is_file() and path.stat().st_size > 1000:
+            # Detect the Kivy/OpenGL RGB row-packing screenshot defect instead
+            # of accepting a corrupt PNG as genuine 450-pixel visual evidence.
+            from PIL import Image as PillowImage, ImageChops, ImageStat
+            with PillowImage.open(path) as original:
+                rgb = original.convert("RGB")
+                left = rgb.crop((2, int(rgb.height * .10),
+                                 min(12, rgb.width), int(rgb.height * .90)))
+                rows = ImageChops.difference(
+                    left.crop((0, 0, left.width, left.height - 1)),
+                    left.crop((0, 1, left.width, left.height)),
+                )
+                vertical_noise = sum(ImageStat.Stat(rows).mean) / 3
+            if vertical_noise > 12:
+                raise RuntimeError(
+                    f"Corrupt OpenGL screenshot row stride at {path.name}: "
+                    f"mean adjacent row difference={vertical_noise:.1f}"
+                )
             self.saved.append(path)
 
     def on_start(self):
