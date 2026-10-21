@@ -30,7 +30,11 @@ ACTIONS = {
     "game": {"pause": (15, 18, 48, 46)},
     "won": {"continue": (34, 563, 292, 62)},
     "lost": {"continue": (34, 565, 292, 62)},
+    "tutorial": {"tutorial_done": (35, 644, 290, 55)},
+    "layouts": {},  # Populated from layout_hitboxes after declaration.
 }
+from .meong_fly_photo_handoff import layout_hitboxes
+ACTIONS["layouts"] = layout_hitboxes()
 DEMO_ENTRY = (45, 478, 270, 46)
 
 # Built-in 5x7 bitmap characters avoid a dependence on installed Windows fonts.
@@ -339,6 +343,9 @@ def paint_static_screen(screen,logo_path):
     canvas=Image.new("RGBA",(W,H),(0,0,0,255))
     d=ImageDraw.Draw(canvas)
     draw_common(d,screen)
+    if screen in ("tutorial", "layouts"):
+        from .meong_fly_photo_handoff import photo_handoff_screen
+        return photo_handoff_screen(screen, logo_path)
     if screen in ("start", "scan"):
         # Batch A: cacheable, mockup-matched surfaces with exact existing hitboxes.
         from .meong_fly_polish import paint_polished_menu
@@ -400,7 +407,7 @@ def paint_static_screen(screen,logo_path):
         pixel_text(d,"Rp 2.500",180,457,scale=4,fill=(239,54,132))
         _ticket_icon(d,50,468)
         pixel_text(d,"UNTUK PHOTOBOOTH!",180,502,scale=2,fill=INK)
-        button(d,ACTIONS["won"]["continue"],"LANJUT KE PEMBAYARAN")
+        button(d,ACTIONS["won"]["continue"],"PILIH LAYOUT FOTO")
         pixel_text(d,"DEMO: BELUM TERHUBUNG",180,658,scale=2,fill=GOLD)
     elif screen=="lost":
         pixel_text(d,"GAME",180,113,scale=5,fill=(255,91,127),
@@ -414,7 +421,7 @@ def paint_static_screen(screen,logo_path):
         pixel_text(d,"TIDAK APA-APA!",180,481,scale=2)
         pixel_text(d,"KAMU MASIH BISA FOTO",180,504,scale=2)
         pixel_text(d,"DENGAN HARGA NORMAL",180,527,scale=2)
-        button(d,ACTIONS["lost"]["continue"],"LANJUT KE PEMBAYARAN")
+        button(d,ACTIONS["lost"]["continue"],"PILIH LAYOUT FOTO")
         pixel_text(d,"DEMO: BELUM TERHUBUNG",180,658,scale=2,fill=GOLD)
     return canvas.convert("RGBA")
 
