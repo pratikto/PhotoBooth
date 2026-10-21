@@ -149,9 +149,9 @@ def paint_poster_screen(screen, logo_path):
         _hero(frame, meong_animation_frames(logo_path)[0],(35,69,290,175))
         d=ImageDraw.Draw(frame)
         # Big two-line white title: deliberately NOT a black wordmark on navy.
-        p.pixel_text(d,"MEONG",180,278,scale=7,fill=p.WHITE,
+        p.pixel_text(d,"MEONG",180,305,scale=7,fill=p.WHITE,
                      shadow=(55,82,166))
-        p.pixel_text(d,"FLY!",180,339,scale=7,fill=p.GOLD,
+        p.pixel_text(d,"FLY!",180,360,scale=7,fill=p.GOLD,
                      shadow=(146,57,128))
         arcade_card(d,(36,421,324,459),(13,30,79),(95,91,189))
         p.pixel_text(d,"HINDARI ASTEROID!",180,435,scale=2,fill=p.CYAN)
@@ -171,7 +171,7 @@ def paint_poster_screen(screen, logo_path):
             d.line((180,282,x,y),fill=(57,49,128),width=3)
         p.pixel_text(d,"SELAMAT!",180,114,scale=5,fill=p.GOLD,
                      shadow=(230,82,116))
-        _hero(frame,meong_animation_frames(logo_path)[0],(78,219,215,160))
+        _hero(frame,meong_animation_frames(logo_path)[0],(78,190,215,160))
         d=ImageDraw.Draw(frame)
         p.pixel_text(d,"TARGET TERCAPAI!",180,390,scale=2,fill=p.WHITE)
         arcade_card(d,(36,425,324,537),(255,221,129),(255,155,66))
