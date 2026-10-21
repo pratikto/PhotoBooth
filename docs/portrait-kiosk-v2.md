@@ -2,9 +2,66 @@
 
 **Date:** 2026-10-21
 **Status:** APPROVED FOR STAGED DEVELOPMENT; NOT PRODUCTION READY
-**Branch:** feature/portrait-kiosk-gui
+**Working branch:** feature/portrait-kiosk-v2-next (derived from feature/portrait-kiosk-gui; master unchanged)
 **Stable base SHA:** 27f3801b235d81dc0a49ab201f3e143b62314413 (master)
 **Owner authorization:** Greenfield Kivy GUI and fresh audio lifecycle, portrait-first 10.1-inch, work only on a new branch; do not merge to master without separate approval.
+
+## Canonical status and approved artboards — 2026-10-21
+
+**Authoritative docs for this feature:**
+
+- **This file** — FEAT-022 scope, delivery stages, branch status, timing and release gates.
+- [Approved visual reference and corrected page-by-page flow](portrait-kiosk-v2-visual-spec.md) — the **two actual last approved mockups** and annotations that supersede incorrect/missing flow arrows.
+- [Technical engineering contract](portrait-kiosk-v2-technical-design.md) — actual source modules vs proposed adapters, visit-state and payment/recovery invariants.
+- [Image asset provenance and checksums](assets/portrait-v2/README.md) — two verified full-resolution artboards committed as high-quality WebP.
+- [QA evidence](test_checklist.md) and [source state](FEATURE_STATUS.md) — verified tests are not equivalent to speaker/camera/printer hardware certification.
+
+### Approved photobooth artboard
+
+![Last approved Meong Photobooth main flow visual reference](assets/portrait-v2/meong-main-flow-approved.webp)
+
+### Approved Meong Fly artboard
+
+![Last approved Meong Fly mini game visual reference](assets/portrait-v2/meong-fly-flow-approved.webp)
+
+### Core owner decisions (binding over mockup text)
+
+**Single shared entry:** Idle advertising displays real local video/image content and both **MULAI FOTO** and **MAIN MEONG FLY** CTAs. Optional face invitation is a non-modal overlay **on that same advertising screen**, with both actions; a separate promo home must **not** replace advertising.
+
+**Once-per-visit tutorial gate:** Direct photo visitors and visitors finishing Meong Fly must complete the mandatory four-step illustrated tutorial **once per active visit** before reaching template selection. Set tutorial_seen only after explicit acknowledgement; reset at safe end/abandonment for the next customer; never reset consumed receipt attempts.
+
+**Meong Fly end:** Provide a dedicated game-entry / rules screen before the receipt step. One unique valid cafe receipt grants exactly one chance; no replay on loss or win. A Win proposes a **Rp2.500** discount, Lose no discount. **Both outcomes go to the tutorial if unseen and then the 12-template gallery, not straight to payment.** Any win discount only becomes payable after server-side validation in the future authorised checkout; current game is DEMO-only.
+
+**Template and final print:** Use the 12 existing 80 × 240 mm (1:3) masters, each exactly **three photo slots and one photo-download QR**. Physical copy quantity is not extra capture count. The final photo-folder QR is not the QRIS payment QR. Preserve camera/photo orientation, existing print quantity behavior and safe Drive delivery.
+
+**Audio and timeout:** New page-owned Audio Manager v2, no reused legacy GUI playback lifecycle; idle video can own its own audio; payment ads are muted; never cut off a paid/unknown payment, active capture or uncertain print with a generic browsing timeout. Capture and result states must remain truthful if devices/network fail.
+
+**Visual reference vs functional acceptance:** The two artboards are approved **styling and content direction**, but illustration-level omissions and mistakes (no Meong Fly CTA on idle, stand-alone mini-game home, result button to payment, sample Rp25.000 QRIS total, decorative receipt scans, unverified print strip styling) are explicitly **not** final routing/pricing/working behavior. The detailed visual document resolves every one.
+
+### Source truth today — do not confuse target pages with implemented pages
+
+| Subsystem | Current portrait v2 source | Not yet delivered |
+| --- | --- | --- |
+| GUI | New independent Kivy window, Pixel Arcade Space colors/stars/large touch CTA | Complete final visual parity for every target screen |
+| Advertising | AdCatalog and AdvertisementPlayer idle media, two entry actions | Camera-driven face trigger; invitation only a manual preview |
+| Visit navigation | advert/tutorial/templates/game_preview, visit-scoped tutorial_seen and safe browse idle | Integrated game results, session entitlement, real payment states |
+| Tutorial | Mandatory four-step illustrated page, explicit completion | End-to-end integrated game return with retained discount |
+| 12 strip templates | Real catalog preview, count per template and DEMO cart quote | Checkout service adapter and live ordered captures/printing |
+| Mini game | Explicit **unavailable** placeholder behind entry CTA | Real mini-game/receipt input/POS validation and discount |
+| Audio | New PortraitAudio, SDL2-first desktop WAV fallback, diagnostics and unit tests | **Actual Windows speaker audibility** and game/camera/payment audio buses |
+| Payment/camera/result | No real v2 transaction, capture, print or Drive call | Camera mirror/retake/3-shot, QRIS, printing and delivery integration |
+
+**Current evidence:** [portrait v2 GitHub Actions run 39548798578](https://github.com/pratikto/PhotoBooth/actions/runs/39548798578) on code-and-approved-artwork SHA **6e7f29a7**: **21/21 Python navigation/fake audio tests PASS**, compile PASS, Kivy widget smoke PASS, **12 synthetic screenshot states** at 800×1280 and 452×900, two workflow jobs SUCCESS. This supersedes the earlier "CI pending" entry. **Windows speaker, physical portrait/touch, real face detector, merchant/POS receipt, Midtrans, camera, thermal paper and Google Drive end-to-end remain NOT VERIFIED**. After later docs-only commits the application source remains unchanged; do not count docs pushes as new physical QA.
+
+### Staged QA/release gates
+
+1. **First:** verify actual Windows music speaker output, idle ad video + audio, touchscreen responsiveness and owner acceptance of refreshed visual composition at 10.1-inch portrait.
+2. **Then (separately approved implementation):** integrate actual face invite and reuse safe camera/capture/retake/print/Drive core via adapters, with full regression.
+3. **Then:** bring the standalone mini-game, demo single-use receipt and corrected tutorial/template routing; confirm no replay, no fake real discount.
+4. **Then:** integrate protected server-side discount with QRIS Mock/Sandbox only after eligible partner and order-recovery rules are defined; no real charges without approval.
+5. **Lastly:** full Windows/merchant/privacy/reliability acceptance, branch PR review and explicit **owner approval before any master merge or release**.
+
+**Rollback:** Continue running legacy python main.py on master; never force-merge, delete historical branches, rewrite v1 media, or reset uncertain payment/print customer state.
 
 ## Product and design baseline
 
@@ -66,7 +123,7 @@ Initial new GUI/audio source has **16/16 Kivy-independent tests PASS** and succe
 - `tests/test_kiosk_v2_audio.py` adds fake-provider priority/fallback/rejected-handle and stopped-after-play regression checks. Existing tutorial/ads ownership, mute, page transitions and cleanup behavior must remain unchanged.
 - The branch-only CI workflow now runs on `feature/portrait-kiosk-v2-next` as well.
 
-**Traceable source commits:** CI trigger `ab551ba3`; audio code `2b743da0`; audio tests `caad0e0d`. New exact-branch CI verification remains **PENDING** until the workflow completes and results are inspected. Existing successful CI run 39522764587 belongs to the earlier prototype and must not be transferred as verification for these new commits.
+**Traceable source commits:** CI trigger `ab551ba3`; audio code `2b743da0`; audio tests `caad0e0d`. **Subsequent verified CI:** [run 39548798578](https://github.com/pratikto/PhotoBooth/actions/runs/39548798578) on SHA 6e7f29a7 passed 21/21 Python tests, Kivy widget smoke, and 12 synthetic portrait screenshots; two jobs SUCCESS. Previous prototype [run 39522764587](https://github.com/pratikto/PhotoBooth/actions/runs/39522764587) remains historical. Neither run verifies audible Windows speaker output, genuine video sound, touch hardware or the unconnected payment/photo services.
 
 **Required physical Windows gate:** On the operator machine, run `git switch feature/portrait-kiosk-v2-next`, `git pull origin feature/portrait-kiosk-v2-next`, `python -m unittest tests.test_kiosk_v2_flow tests.test_kiosk_v2_audio tests.test_kiosk_v2_widgets -v`, then `python tools/run_portrait_v2.py`. Confirm with ears that music plays automatically on Tutorial and Templates without needing the Settings/Test Music button, that it stops during video ads, that the explicit test button audibly restarts it, that changing windows/resuming does not double playback, and that the Windows output device/volume mixer is correct. Record exact Windows version, Python/Kivy, branch commit SHA, provider, speaker result, and whether video retains its own audio. Do not mark BUG-001/007 fixed until audible owner acceptance.
 
