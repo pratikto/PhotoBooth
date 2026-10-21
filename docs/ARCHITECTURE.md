@@ -70,7 +70,7 @@ Current v2 route: advertising with optional inline **preview-only** invitation -
 
 ## FEAT-022 architecture update — approved mockups and safe adapter boundaries (2026-10-21)
 
-**Development head:** feature/portrait-kiosk-v2-next (derived from feature/portrait-kiosk-gui); no master merge. Canonical design: [portrait GUI v2](portrait-kiosk-v2.md); actual last approved artboards: [main](assets/portrait-v2/meong-main-flow-approved.webp) and [mini-game](assets/portrait-v2/meong-fly-flow-approved.webp); behavioral corrections: [visual specification](portrait-kiosk-v2-visual-spec.md); module/adapter contract: [technical design](portrait-kiosk-v2-technical-design.md).
+**Development head:** feature/portrait-kiosk-v2-next (derived from feature/portrait-kiosk-gui); no master merge. Canonical design: [portrait GUI v2](portrait-kiosk-v2.md); actual last approved artboards: [main](assets/portrait-v2/meong-main-flow-approved.webp) and [mini-game](assets/portrait-v2/meong-fly-revised-approved.webp); behavioral corrections: [visual specification](portrait-kiosk-v2-visual-spec.md); module/adapter contract: [technical design](portrait-kiosk-v2-technical-design.md).
 
 **Current opt-in implementation only:**
 
