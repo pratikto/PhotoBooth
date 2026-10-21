@@ -11,7 +11,6 @@ import time
 
 from kivy.app import App
 from kivy.clock import Clock
-from kivy.core.window import Window
 from kivy.graphics.texture import Texture
 from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
@@ -63,9 +62,8 @@ class PortraitKioskV2App(App):
     title = "MEONG PHOTOBOOTH - PORTRAIT GUI V2 (PROTOTIPE)"
 
     def build(self):
-        # Preview hardware dimensions only; actual kiosk fullscreen is deferred
-        # until rotation, OS touch calibration and face camera have been tested.
-        Window.size = (800, 1280)
+        # Window defaults belong to the dedicated launcher, not the shared App.
+        # This keeps importing/building the prototype free of global size changes.
         self.navigation = VisitFlow()
         self.templates = get_templates()
         self.catalog = AdCatalog()
@@ -245,7 +243,7 @@ class PortraitKioskV2App(App):
             return
         self._close_invitation()
         panel = PixelCard(
-            orientation="vertical", size_hint=(.95, None), height=dp(228),
+            orientation="vertical", size_hint=(.95, None), height=dp(260),
             pos_hint={"center_x": .5, "center_y": .48},
             padding=11, spacing=6,
         )
@@ -283,7 +281,7 @@ class PortraitKioskV2App(App):
         for title, detail in steps:
             panel = PixelCard(
                 orientation="vertical", size_hint_y=None,
-                height=dp(106), padding=11, spacing=4,
+                height=dp(124), padding=11, spacing=4,
             )
             panel.add_widget(text_label(title, size=18, height=41, color=CYAN, bold=True))
             panel.add_widget(text_label(detail, size=13, height=45, color=MUTED))
