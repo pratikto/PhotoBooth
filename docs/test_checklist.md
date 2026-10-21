@@ -279,3 +279,18 @@ Screen-by-screen source and precise limitations: [FEAT-021](features/FEAT-021-me
 - [ ] Crash burst displays ~220 ms, does not accept an invisible Continue button, then shows correct actual Game Over score.
 - [ ] 450×900 portrait / 800×600 / 1200×800 layout, smooth >=30 FPS on intended mini-PC; real Kivy gameplay performance and input coordinates.
 - [ ] Owner visually accepts Gameplay before Batch C. Historical 6/6 Windows Step 3 and 7/7 Batch A Pillow evidence do NOT certify this renderer.
+
+
+## FEAT-021 — Batch A/B Windows Kivy automated regression reported PASS (2026-10-21)
+
+**Evidence:** user-pasted Windows console log in ChatGPT; reported run includes the targeted 8 FEAT-021 test modules. **`Ran 55 tests in 6.272s` / `OK`**, i.e. **55 PASS / 0 FAIL / 0 ERROR / 0 SKIP**. All Kivy-specific tests actually executed (no conditional skip). Reported environment: **Windows**, Python **3.12.10**, Kivy **2.3.1**, SDL2 window, OpenGL **4.6**, Intel **Iris Xe Graphics**. Exact tested feature-branch SHA, Pillow version, screenshots, and FPS measurements **not supplied**; do not label "CI certified" or "independently verified".
+
+**Covered automated test categories:** 6 new pure Pillow Batch B geometry/art tests, 2 source contract tests, 4 Kivy Batch B runtime tests (GPU textures, pause, +1 scoring, loss animation), 7 input/canvas/hover tests, 10 flow tests, 2 receipt persistence tests, 8 physics tests, 9 painter tests, and 7 Batch A art/layout tests, totaling **55**. BUG-012 receipt TextInput redraw regression passes in the shared Kivy suite; that does not replace live typing/visual acceptance.
+
+- [x] Owner reports new targeted Windows automated 55/55 PASS (Kivy **not skipped**); reported output retained in conversation.
+- [ ] Record exact `git rev-parse HEAD` from tested checkout and `python -m pip show pillow` version before tying result to a precise source baseline.
+- [ ] Inspect live Start/Scan on Windows: visible caret/hint, actual typing/paste, scanner decoration, usable CTA at portrait/landscape, no clipping.
+- [ ] Inspect live Gameplay with screenshots at score 0/midgame/near asteroid; ensure camera-cat remains recognizable, rocks never visually mislead about full rectangular hitbox, and HUD+trail clarity.
+- [ ] Manually play pause/resume, observe score +1, hit burst, 10-point target and single attempt after application restart.
+- [ ] Check physical device FPS (goal >=30), input hit regions and letterboxing at 450x900, 800x600 and 1200x800.
+- [ ] Owner aesthetic acceptance of Batch A/B after live GUI review; Batch C Win/Lose still not implemented in this pass.
