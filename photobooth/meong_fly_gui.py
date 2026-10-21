@@ -220,7 +220,7 @@ class MeongFlyStage(Widget):
     # The hero image boxes mirror paint_poster_screen; no second layout map.
     _HERO_BOXES = {
         "start": (35, 69, 290, 175),
-        "won": (78, 219, 215, 160),
+        "won": (78, 190, 215, 160),
         "lost": (97, 264, 170, 118),
     }
 
@@ -242,7 +242,7 @@ class MeongFlyStage(Widget):
         x, y, w, h = self._hero_rect(screen)
         # The approved camera-cat GIF frame includes its rainbow on the left.
         return ((x + w * .53, y + h * .78),
-                271 if screen == "start" else 390)
+                300 if screen == "start" else 389)
 
     def _advance_printer(self, dt):
         """Reset on each scene transition; never spawn across other screens."""
@@ -250,6 +250,12 @@ class MeongFlyStage(Widget):
         active = screen if screen in ("start", "game", "won") else None
         if active != self._printer_screen:
             self._printer.reset()
+            # Larger Polaroid near hero; smaller for precise gameplay.
+            self._printer.width, self._printer.height = (
+                (18.0, 24.0) if active == "game" else
+                (28.0, 36.0) if active == "won" else
+                (30.0, 40.0)
+            )
             self._printer.MAX_SHEETS = 1 if active == "won" else 2
             self._printer_screen = active
         if active is not None:
