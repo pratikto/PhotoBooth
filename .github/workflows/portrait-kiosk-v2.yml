@@ -23,7 +23,7 @@ jobs:
       - name: Syntax
         run: python -m compileall -q photobooth/kiosk_v2 tools/run_portrait_v2.py tools/render_portrait_v2.py tests/test_kiosk_v2_*.py
       - name: Kivy-independent navigation and fake audio tests
-        run: python -m unittest tests.test_kiosk_v2_flow tests.test_kiosk_v2_audio -v
+        run: python -m unittest tests.test_kiosk_v2_flow tests.test_kiosk_v2_audio tests.test_kiosk_v2_design_tokens -v
 
   desktop:
     name: Synthetic Kivy screen/nav smoke (no hardware)
