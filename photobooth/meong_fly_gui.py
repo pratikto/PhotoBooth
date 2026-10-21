@@ -433,7 +433,7 @@ class MeongFlyStage(Widget):
             elif screen == "lost":
                 self._draw_score(
                     f"{self.flow.game.score}/{TARGET_SCORE}",
-                    180, 412, width=180, height=36, scale=3,
+                    180, 442, width=180, height=36, scale=3,
                 )
             if screen in ("start", "scan"):
                 self._draw_menu_effects(screen)
