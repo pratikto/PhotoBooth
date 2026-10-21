@@ -99,6 +99,29 @@ class PortraitAudioTests(unittest.TestCase):
         self.audio.close()
         self.assertEqual(music.unloads, 1)
 
+    def test_return_from_game_preview_restores_music_only_on_allowed_page(self):
+        self.audio.enter_page("tutorial")
+        clip = self.loaded["meong-v2-music.wav"]
+        self.audio.enter_page("game_preview")
+        self.assertEqual(clip.state, "stop")
+        self.assertEqual(self.audio.page, "game_preview")
+        self.audio.enter_page("templates")
+        self.assertEqual(clip.state, "play")
+        self.assertEqual(clip.plays, 2)
+        self.audio.enter_page("advert")
+        self.assertEqual(clip.state, "stop")
+
+    def test_close_then_reenter_does_not_reuse_unloaded_handle(self):
+        self.audio.enter_page("tutorial")
+        old = self.loaded["meong-v2-music.wav"]
+        self.audio.close()
+        self.assertEqual(old.unloads, 1)
+        self.audio.resume()
+        self.assertTrue(self.audio.enter_page("tutorial"))
+        fresh = self.loaded["meong-v2-music.wav"]
+        self.assertIsNot(old, fresh)
+        self.assertEqual(fresh.plays, 1)
+
     def test_missing_assets_fail_softly(self):
         missing = PortraitAudio(lambda path: FakeClip(), root=Path(self.directory.name) / "missing")
         self.assertFalse(missing.enter_page("tutorial"))
