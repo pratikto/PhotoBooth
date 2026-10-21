@@ -60,3 +60,10 @@ python -m unittest discover -s tests -v
 Run commands on appropriate operating systems with real dependencies; record passes, failures, skipped tests and actual device results. No code modification is authorized by documentation housekeeping. The [development protocol](DEVELOPMENT_PROTOCOL.md) controls implementation and release approval.
 
 **Cross-references:** [Feature status](FEATURE_STATUS.md) · [Decisions](DECISIONS.md) · [Bug tracker](bug_tracker.md) · [Development handover](DEVELOPMENT_HANDOVER.md).
+
+
+## FEAT-022 — Greenfield portrait kiosk v2 (branch-only design / source, 2026-10-21)
+
+Working prototype only: photobooth/kiosk_v2/ is a separate Kivy presentation and visit-state boundary, started via python tools/run_portrait_v2.py. It does NOT replace the released python main.py, ui_kivy.py, ui_kiosk.py, or PhotoBoothApp transaction/controller routes. The v2 UI has fresh Space theme/panels, explicit VisitFlow navigation, and new PortraitAudio (no photobooth.audio.AudioManager imports). Bundled WAVs are reused as assets only. The already-tested AdCatalog and AdvertisementPlayer are reused as **media adapters**, not as v1 page layouts.
+
+Current v2 route: advertising with optional inline **preview-only** invitation -> direct photo -> mandatory tutorial once per visit -> true 12-template gallery and copy-count/DEMO quote, or advertising -> Meong Fly **integration notice** -> skip to tutorial/photo. Game, real face detection, verified cafe receipt, valid promo discount, real QRIS, camera capture, retake, printing, and Drive upload are explicitly not connected to this launcher. The normal v1 program remains operational and unchanged. Data-sensitive backends will be introduced behind safeguards only after staged approval/QA. See portrait-kiosk-v2.md.
