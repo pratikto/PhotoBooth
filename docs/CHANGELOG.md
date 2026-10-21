@@ -230,3 +230,6 @@ Received the owner's Windows Python **3.12.10** / Kivy **2.3.1** targeted test o
 ## 2026-10-21 — FEAT-021 standalone result-to-layout handoff
 
 User directs that after either game result, flow should continue to **photo layout selection**, not payment, with one-time tutorial gate if needed and Direct Photo sharing that route. Commits: `1f00af59` (Kivy-independent state navigation + demo outcome metadata), `5da9abd0` (paint tutorial and 12 demo layout cards), `20b6d2c0` (terminal button and new screen hitboxes), `45056a8f` (Kivy action dispatch + standalone tutorial marker), `8112e700` (updated state tests). Real photo templates and main GUI remain unchanged; selecting a demo layout exits the standalone test app. No production checkout or payment and no merge to `master`. Exact-branch Windows regression pending.
+
+
+**Additional regression coverage:** `3d63d0b2` adds a standalone test module for 12 layout card hit regions, new screen drawing and result CTA/no-retry contract. Tests not run in this assistant environment; Windows operator retest required.
