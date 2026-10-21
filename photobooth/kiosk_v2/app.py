@@ -58,6 +58,41 @@ class TouchStage(Starfield):
         return super().on_touch_down(touch)
 
 
+class SwipeGallery(BoxLayout):
+    """Real horizontal touch gesture for the approved strip carousel.
+
+    No global touch grabs: only a gesture beginning and ending inside this
+    gallery can turn a template. Predominantly vertical motions are ignored.
+    """
+
+    def __init__(self, on_swipe, **kwargs):
+        self._on_swipe = on_swipe
+        self._touch_origins = {}
+        super().__init__(**kwargs)
+
+    @staticmethod
+    def swipe_step(dx, dy):
+        if abs(dx) < dp(54) or abs(dx) <= abs(dy) * 1.35:
+            return 0
+        return -1 if dx > 0 else 1
+
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            self._touch_origins[touch.uid] = (touch.x, touch.y)
+        return super().on_touch_down(touch)
+
+    def on_touch_up(self, touch):
+        origin = self._touch_origins.pop(touch.uid, None)
+        consumed = super().on_touch_up(touch)
+        if origin is None or not self.collide_point(*touch.pos):
+            return consumed
+        step = self.swipe_step(touch.x - origin[0], touch.y - origin[1])
+        if step:
+            self._on_swipe(step)
+            return True
+        return consumed
+
+
 class PortraitKioskV2App(App):
     """Separate greenfield window; the original python main.py remains untouched."""
 
@@ -439,7 +474,8 @@ class PortraitKioskV2App(App):
             "GESER PILIHANMU DI GALAKSI MEONG!",
             size=14, height=30, color=CYAN, bold=True))
 
-        gallery = BoxLayout(orientation="horizontal", spacing=dp(7))
+        gallery = SwipeGallery(on_swipe=self._shift_template,
+                               orientation="horizontal", spacing=dp(7))
         left = BoxLayout(orientation="vertical", size_hint_x=.22,
                          spacing=dp(2))
         left.add_widget(Widget(size_hint_y=.18))
