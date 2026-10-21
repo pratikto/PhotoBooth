@@ -51,14 +51,25 @@ class Starfield(FloatLayout):
         with self.canvas.before:
             Color(*rgba(SPACE))
             Rectangle(pos=self.pos, size=self.size)
-            for index in range(63):
+            for index in range(87):
                 x = ((index * 37 + 11) % 103) / 103
                 y = ((index * 59 + 23) % 101) / 101
-                Color(*rgba(CYAN if index % 8 == 0 else PURPLE if index % 11 == 0 else WHITE,
-                            .50 if index % 3 else .85))
-                size = dp(3 if index % 9 == 0 else 2)
-                Rectangle(pos=(self.x + x * self.width, self.y + y * self.height),
-                          size=(size, size))
+                color = CYAN if index % 8 == 0 else GOLD if index % 13 == 0 else (
+                    PURPLE if index % 11 == 0 else WHITE
+                )
+                Color(*rgba(color, .52 if index % 3 else .86))
+                px = self.x + x * self.width
+                py = self.y + y * self.height
+                if index % 12 == 0:
+                    # Bright four-point pixel twinkles, never an animated CPU loop.
+                    Rectangle(pos=(px, py), size=(dp(5), dp(5)))
+                    Rectangle(pos=(px - dp(5), py + dp(1.5)),
+                              size=(dp(15), dp(2)))
+                    Rectangle(pos=(px + dp(1.5), py - dp(5)),
+                              size=(dp(2), dp(15)))
+                else:
+                    size = dp(3 if index % 9 == 0 else 2)
+                    Rectangle(pos=(px, py), size=(size, size))
             # Restrained planets/asteroids replace the v1-like solid side bars.
             # Keep ornaments near the edges, behind opaque interface panels.
             orbit = self.width * .25
@@ -110,31 +121,72 @@ class PixelCard(BoxLayout):
             RoundedRectangle(pos=(self.x + dp(3), self.y + dp(3)),
                              size=(max(0, self.width - dp(6)), max(0, self.height - dp(6))),
                              radius=[dp(7)])
+            # Two small pixel corners add the approved arcade treatment
+            # without obstructing children or ad/video media.
+            if self.width >= dp(40) and self.height >= dp(36):
+                Color(*rgba(PINK, .92))
+                Rectangle(pos=(self.x + dp(12), self.top - dp(5)),
+                          size=(dp(20), dp(3)))
+                Color(*rgba(CYAN, .82))
+                Rectangle(pos=(self.right - dp(5), self.top - dp(27)),
+                          size=(dp(3), dp(17)))
 
 
 class ArcadeButton(Button):
-    """Large touch-safe CTA with consistent press and disabled appearance."""
+    """An accessible portrait-sized arcade CTA with pixel-corner accent.
+
+    Text stays a native Kivy Button for keyboard/touch/accessibility bindings.
+    The visual draw layer deliberately owns no touch events.
+    """
 
     def __init__(self, text, *, variant="primary", height=62, **kwargs):
+        if variant not in BUTTON_COLORS:
+            raise ValueError("Unknown arcade button variant")
         self.variant = variant
         super().__init__(
             text=text, size_hint_y=None, height=dp(height),
             background_normal="", background_down="",
+            background_color=(0, 0, 0, 0),
             font_size=dp(18), bold=True,
             color=rgba(INK if variant in {"primary", "secondary"} else WHITE),
             **kwargs,
         )
-        self.bind(state=self._recolor, disabled=self._recolor)
+        self.bind(pos=self._paint, size=self._paint,
+                  state=self._recolor, disabled=self._recolor)
         self._recolor()
 
     def _recolor(self, *_args):
-        color = BUTTON_COLORS[self.variant]
-        self.background_color = rgba(
-            "454764" if self.disabled else color,
-            .65 if self.disabled else .76 if self.state == "down" else 1.0,
+        self.color = rgba(
+            MUTED if self.disabled else
+            INK if self.variant in {"primary", "secondary"} else WHITE
         )
-        self.color = rgba(MUTED if self.disabled else
-                          INK if self.variant in {"primary", "secondary"} else WHITE)
+        self._paint()
+
+    def _paint(self, *_args):
+        if self.width <= 0 or self.height <= 0:
+            return
+        fill = "#454764" if self.disabled else BUTTON_COLORS[self.variant]
+        border = MUTED if self.disabled else CYAN if self.variant == "primary" else PINK
+        with self.canvas.before:
+            self.canvas.before.clear()
+            Color(*rgba(INK, .96))
+            RoundedRectangle(pos=(self.x + dp(2), self.y - dp(4)),
+                             size=self.size, radius=[dp(9)])
+            Color(*rgba(border, .68))
+            RoundedRectangle(pos=self.pos, size=self.size, radius=[dp(9)])
+            Color(*rgba(fill, .57 if self.disabled else
+                        .82 if self.state == "down" else 1.0))
+            RoundedRectangle(pos=(self.x + dp(3), self.y + dp(3)),
+                             size=(max(0, self.width - dp(6)),
+                                   max(0, self.height - dp(6))),
+                             radius=[dp(7)])
+            if self.width > dp(48):
+                Color(*rgba(WHITE, .53 if not self.disabled else .18))
+                Rectangle(pos=(self.x + dp(12), self.top - dp(7)),
+                          size=(min(dp(28), self.width / 4), dp(3)))
+                Color(*rgba(INK, .30))
+                Rectangle(pos=(self.right - dp(17), self.y + dp(8)),
+                          size=(dp(8), dp(3)))
 
 
 def text_label(text, *, size=16, height=36, color=WHITE, bold=False, align="center"):
