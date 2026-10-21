@@ -216,3 +216,22 @@ Native audio/video tests may require explicit opt-in environment flags and compa
 - [ ] Blocking defects resolved, or explicit written risk acceptance documented
 - [ ] Rollback reference and device configuration backup recorded
 - [ ] Owner explicitly authorizes the release
+
+
+## FEAT-022 — portrait kiosk v2 synthetic and on-device QA (2026-10-21)
+
+**Initial source committed on feature/portrait-kiosk-gui; results NOT YET CONFIRMED at this writing.** No audio-speaker, thermal-paper, real camera, merchant POS or provider payments were physically exercised.
+
+Automation added: .github/workflows/portrait-kiosk-v2.yml, covering Python syntax, test_kiosk_v2_flow, test_kiosk_v2_audio, and test_kiosk_v2_widgets (Kivy/Xvfb). Test source creation is not proof of a successful CI run; record exact SHA/run link and PASS/FAIL/SKIP after the run completes.
+
+To reproduce on Windows from an existing Kivy virtual environment:
+
+~~~powershell
+git fetch origin
+git switch feature/portrait-kiosk-gui
+git pull origin feature/portrait-kiosk-gui
+python -m unittest tests.test_kiosk_v2_flow tests.test_kiosk_v2_audio tests.test_kiosk_v2_widgets -v
+python tools/run_portrait_v2.py
+~~~
+
+Required physical follow-up: (1) inspect advertising video/image and 15-second invitation overlay (prototype manual preview, not real face detection); (2) check navigation and mandatory tutorial-once, 180-second browsing timeout, 10-second warning, 12 true thermal strip templates, copy count and quote at 800x1280 and 450x900; (3) hear music on tutorial/templates then verify it stops cleanly during ads and never doubles on page rebuild, test effect cue; (4) prove no accidental checkout, capture or printing; (5) rerun full production v1 regression once any shared service is modified. v2 does not yet offer a real audio settings page. A fake audio state PASS must never close BUG-001/007.
