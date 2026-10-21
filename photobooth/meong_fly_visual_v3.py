@@ -22,6 +22,28 @@ def animation_gif_path():
     return bundled if bundled.is_file() else None
 
 
+def synth_print_frames(approved_frame, count=10):
+    """Make a lightweight flying/printing loop from the newest GIF frame.
+
+    The actual 26-frame GIF overrides this procedural fallback if installed.
+    """
+    from math import sin, pi
+    sprite = approved_frame.convert("RGBA")
+    sprite.thumbnail((224, 150), Image.Resampling.NEAREST)
+    photos = printed_photo_tile(0)
+    frames = []
+    for idx in range(count):
+        out = Image.new("RGBA", (244, 184), (0, 0, 0, 0))
+        dy = round(sin(idx * 2 * pi / count) * 3)
+        out.alpha_composite(sprite, (10, 9 + dy))
+        # An instant print extends from the camera and floats down.
+        if idx >= 2:
+            y = 112 + (idx - 2) * 9
+            out.alpha_composite(photos, (127 + (idx - 2) % 3 * 3, y))
+        frames.append(out)
+    return tuple(frames)
+
+
 @lru_cache(maxsize=4)
 def meong_animation_frames(logo_path, limit=15):
     """Return cropped native GIF frames, or approved PNG sprite as fallback.
@@ -56,11 +78,11 @@ def meong_animation_frames(logo_path, limit=15):
         asset = Path(__file__).resolve().parent / "assets" / "meong_fly_gif_logo.b85"
         image = Image.open(BytesIO(base64.b85decode(
             asset.read_text(encoding="ascii").strip()))).convert("RGBA")
-        return (image,)
+        return synth_print_frames(image)
     except (OSError, ValueError, EOFError):
         # Old official PNG is only a last-resort fallback.
         _, body = logo_parts(str(logo_path))
-        return (body.convert("RGBA"),)
+        return synth_print_frames(body.convert("RGBA"))
 
 
 def camera_cat_from_latest_logo(logo_path):
