@@ -45,6 +45,19 @@ class PixelArcadeTokensTests(unittest.TestCase):
         self.assertEqual(set(d.BUTTON_COLORS),
                          {"primary", "secondary", "tertiary", "muted"})
 
+    def test_clipped_corner_geometry_has_no_outside_pixels(self):
+        pieces = d.stepped_rects(10, 20, 100, 60, 6)
+        def inside(px, py):
+            return any(x <= px < x + w and y <= py < y + h
+                       for x, y, w, h in pieces)
+        self.assertFalse(inside(10, 20))
+        self.assertFalse(inside(109, 20))
+        self.assertFalse(inside(10, 79))
+        self.assertFalse(inside(109, 79))
+        self.assertTrue(inside(16, 20))
+        self.assertTrue(inside(10, 26))
+        self.assertTrue(inside(60, 50))
+
     def test_negative_notch_is_clamped(self):
         self.assertEqual(
             d.stepped_rects(1, 2, 10, 20, -3),
