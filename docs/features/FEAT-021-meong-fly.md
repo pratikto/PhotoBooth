@@ -1,5 +1,7 @@
 # FEAT-021 — Meong Fly standalone mini-game (engineering status and history)
 
+> **2026-10-21 — Visual v5 Phase 1 update:** Phase 1 is IN SOURCE at `a83eee8`, approved by owner on 2026-10-21. Single camera compositor, authored slot layers/pose, UV feed, attached hold, continuous release and bounded fall are implemented. Linux suite 91 PASS; Windows/manual acceptance pending. [Technical record](FEAT-021-v5-phase1.md) · [QA](../qa/FEAT-021-v5-phase1/README.md). Older v5-unapproved statements below are historical for Phase 1; later phases remain unapproved.
+
 > **CURRENT AS OF 2026-10-21 — AUTHORITATIVE STATUS SNAPSHOT (documentation-only reconciliation)**  
 > **Branch:** `feature/meong-flappy-challenge` (existing branch; no new branch); source audited at `85a6aaa99356f3825067dfc5b92c6f91933d8519` **before** the documentation commits.  
 > **Lifecycle:** **IN PROGRESS — source implemented through visual v4; visual fidelity NOT owner-accepted; Visual Overhaul v5 documented but NOT coded/approved.**  

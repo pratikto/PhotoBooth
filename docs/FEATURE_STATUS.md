@@ -1,5 +1,7 @@
 # Meong Photobooth — Current feature status
 
+> **2026-10-21 — Visual v5 Phase 1 update:** FEAT-021 v5 **Phase 1 IN SOURCE**, owner-approved, runtime commit `a83eee8`. Linux Kivy suite **91 PASS / 0 FAIL/ERROR/SKIP**; 12 deterministic FBO captures. Windows video/FPS and owner visual acceptance pending. Full BUG-013 remains OPEN; later visual phases not implemented. [Implementation](features/FEAT-021-v5-phase1.md) · [Evidence](qa/FEAT-021-v5-phase1/README.md). This supersedes blanket v5-unapproved/not-coded statements only for Phase 1.
+
 ## Latest FEAT-021 feature-branch snapshot — 2026-10-21 (documentation only)
 
 **Current source:** `feature/meong-flappy-challenge` implements isolated Meong Fly through **v4**: standalone Kivy/Pillow retro-space GUI, Start/Scan/Gameplay/Win/Lose, tutorial and 12 **generic** demo layout cards, demo-only one-use SQLite receipt codes, target 10, no replay, and camera-anchored printing-film animation. **Latest visual poster match: NOT ACCEPTED by owner.** Proposed **Visual Overhaul v5: audit/specification only, NOT CODE IMPLEMENTED/APPROVED**; no exact-current-SHA Windows Kivy screenshot/video/FPS or full post-v4 regression evidence. This supersedes older statements in the historical chronology below saying “Batch C not implemented” or “v2 mockup matched.”

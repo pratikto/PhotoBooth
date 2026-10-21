@@ -1,0 +1,166 @@
+{
+  "kind": "deterministic Linux Kivy FBO fixtures; NOT Windows acceptance",
+  "python": "3.12.14",
+  "os": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "kivy": "2.3.1",
+  "sha": "a83eee8b1f4f8ae7dd55d411e36e28bea33eab7d",
+  "working_tree": "",
+  "captures": [
+    {
+      "file": "start-450x900-idle.png",
+      "scene": "start",
+      "logical_time": 0.3,
+      "paper": []
+    },
+    {
+      "file": "start-450x900-feed.png",
+      "scene": "start",
+      "logical_time": 0.96,
+      "paper": [
+        {
+          "serial": 0,
+          "x": 160.39473684210526,
+          "y": 213.99226034343124,
+          "width": 30,
+          "height": 38.4375,
+          "reveal": 0.5500000000000005,
+          "opacity": 1.0,
+          "attached": true,
+          "angle": 0.0
+        }
+      ]
+    },
+    {
+      "file": "start-450x900-hold.png",
+      "scene": "start",
+      "logical_time": 1.32,
+      "paper": [
+        {
+          "serial": 0,
+          "x": 160.39473684210526,
+          "y": 211.68394506273955,
+          "width": 30,
+          "height": 38.4375,
+          "reveal": 1.0,
+          "opacity": 1.0,
+          "attached": true,
+          "angle": 0.0
+        }
+      ]
+    },
+    {
+      "file": "start-450x900-fall.png",
+      "scene": "start",
+      "logical_time": 1.74,
+      "paper": [
+        {
+          "serial": 0,
+          "x": 161.02719641396263,
+          "y": 223.78615646642785,
+          "width": 30,
+          "height": 38.4375,
+          "reveal": 1.0,
+          "opacity": 1.0,
+          "attached": false,
+          "angle": 0.4216397145715809
+        }
+      ]
+    },
+    {
+      "file": "scan-450x900-scene.png",
+      "scene": "scan",
+      "logical_time": 0.96,
+      "paper": []
+    },
+    {
+      "file": "game-450x900-scene.png",
+      "scene": "game",
+      "logical_time": 0.96,
+      "paper": [
+        {
+          "serial": 0,
+          "x": 76.659375,
+          "y": 369.57142857142856,
+          "width": 11.64375,
+          "height": 14.9185546875,
+          "reveal": 0.5500000000000005,
+          "opacity": 1.0,
+          "attached": true,
+          "angle": 0.0
+        }
+      ]
+    },
+    {
+      "file": "won-450x900-scene.png",
+      "scene": "won",
+      "logical_time": 0.96,
+      "paper": [
+        {
+          "serial": 0,
+          "x": 167.66071428571428,
+          "y": 318.300531020123,
+          "width": 28,
+          "height": 35.875,
+          "reveal": 0.5500000000000005,
+          "opacity": 1.0,
+          "attached": true,
+          "angle": 0.0
+        }
+      ]
+    },
+    {
+      "file": "lost-450x900-scene.png",
+      "scene": "lost",
+      "logical_time": 0.96,
+      "paper": []
+    },
+    {
+      "file": "tutorial-450x900-scene.png",
+      "scene": "tutorial",
+      "logical_time": 0.96,
+      "paper": []
+    },
+    {
+      "file": "layouts-450x900-scene.png",
+      "scene": "layouts",
+      "logical_time": 0.96,
+      "paper": []
+    },
+    {
+      "file": "game-800x600-scene.png",
+      "scene": "game",
+      "logical_time": 0.96,
+      "paper": [
+        {
+          "serial": 0,
+          "x": 76.659375,
+          "y": 369.57142857142856,
+          "width": 11.64375,
+          "height": 14.9185546875,
+          "reveal": 0.5500000000000005,
+          "opacity": 1.0,
+          "attached": true,
+          "angle": 0.0
+        }
+      ]
+    },
+    {
+      "file": "game-1200x800-scene.png",
+      "scene": "game",
+      "logical_time": 0.96,
+      "paper": [
+        {
+          "serial": 0,
+          "x": 76.659375,
+          "y": 369.57142857142856,
+          "width": 11.64375,
+          "height": 14.9185546875,
+          "reveal": 0.5500000000000005,
+          "opacity": 1.0,
+          "attached": true,
+          "angle": 0.0
+        }
+      ]
+    }
+  ]
+}

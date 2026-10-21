@@ -1,5 +1,7 @@
 # Meong Photobooth — Bug register
 
+> **2026-10-21 — Visual v5 Phase 1 update:** BUG-013: Phase 1 root causes (duplicate hero including Lose, estimated outlet, missing full-sheet hold/release continuity) now **FIXED IN SOURCE** at `a83eee8`, with Linux automated checks and Kivy frame evidence. **BUG-013 remains OPEN**: Windows acceptance plus typography/background/asteroid/result-expression gaps remain. BUG-012 child-canvas guards continue to pass Linux regression; no new Windows manual claim. [Evidence](qa/FEAT-021-v5-phase1/README.md).
+
 > **CURRENT AS OF 2026-10-19 — POST-v1 SOURCE RELEASE:** Default branch is `master`; the immutable `v1.0.0` [pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0) points to commit `07ce51d2022ab5673a7a27e744e5e5757fbb3d08`. [Kiosk CI](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245): 235 tests (233 PASS, 2 SKIP), 87 synthetic renders/0 errors; [Dither CI](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273): 48 tests PASS. This is **source/CI evidence, not Windows production or hardware certification**. FEAT-001 DEMO pricing/copy count and FEAT-003 live-preview mirror have owner-tested PASS; BUG-011 monitored; BUG-001/007 speaker/audio retests pending; BUG-009 Drive 30-day cleanup remains OPEN. Real QRIS FEAT-020 and receipt scanner FEAT-002 are not implemented. Dated pre-release statements below are historical when superseded by this notice.
 
 **Reconciled: 2026-10-19 | Stable baseline: `master` / `v1.0.0`**  

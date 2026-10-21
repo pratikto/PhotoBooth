@@ -1,5 +1,7 @@
 # Meong Photobooth — Documentation and release changelog
 
+> **2026-10-21 — Visual v5 Phase 1 update:** FEAT-021 / BUG-013: [`a83eee8`](https://github.com/pratikto/PhotoBooth/commit/a83eee8b1f4f8ae7dd55d411e36e28bea33eab7d) implements Phase 1 single compositor, authored slot layers, UV feed, full hold/release and regressions. Eight files in runtime/test/scope commit. Companion documentation/evidence update adds Linux 91-test PASS log, Kivy captures, status reconciliation. [Changed modules and rollback](features/FEAT-021-v5-phase1.md) · [QA](qa/FEAT-021-v5-phase1/README.md). Windows/manual acceptance pending; no master merge.
+
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
 ## [Documentation only — FEAT-021 Visual Overhaul v5 audit and status reconciliation] — 2026-10-21

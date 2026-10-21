@@ -1,4 +1,6 @@
 # Meong Photobooth — Current architecture and future boundaries
+
+> **2026-10-21 — Visual v5 Phase 1 update:** FEAT-021 v5 Phase 1 replaces the live hero/game sprite preparation with `meong_fly_sprite.camera_frames`: authored local aperture, rear/front layers, aspect-preserving crop/pose metadata. `MeongFlyStage._paint_camera` is the single composition owner; poster textures have no baked hero. Film uses a cached texture with moving UV crop, then frozen release pose and independent gravity. Arbitrary external GIF overrides are not used by this metadata-bound compositor. Engine/flow/receipts/production untouched. [Detailed contract](features/FEAT-021-v5-phase1.md). The v4 pipeline below is historical where superseded.
 ## 2026-10-21 — FEAT-021 standalone v4 renderer audit / proposed v5 boundary (documentation only)
 
 **Source baseline:** `feature/meong-flappy-challenge` at `85a6aaa99356f3825067dfc5b92c6f91933d8519` (pre-documentation commits). **No application-code architecture changed in this task.** Current source is an independent Kivy/Pillow game and is **not** imported by production `ui_kivy.py` (kiosk `master`). Physics/receipt/gameplay owner decisions remain unchanged.

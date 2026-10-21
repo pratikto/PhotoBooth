@@ -1,5 +1,7 @@
 # FEAT-021 — Visual v5 Acceptance & Regression Matrix
 
+> **2026-10-21 — Visual v5 Phase 1 update:** Phase 1 now has [Linux automated and Kivy FBO evidence](FEAT-021-v5-phase1/README.md): 91 PASS, 0 FAIL/ERROR/SKIP. The NOT RUN entries below continue to mean **Windows/manual v5 acceptance**, not absence of Linux tests. All-phase V01–V16 owner aesthetic gates remain pending; no Windows PASS claimed.
+
 **Prepared 2026-10-21 · STATUS: TEST PLAN ONLY (NOT EXECUTED) · Branch: `feature/meong-flappy-challenge`.**  
 Current visual/audit requirements: [FEAT-021 Visual Overhaul v5](../features/FEAT-021-visual-overhaul-v5.md).  
 Source **audit baseline** before documentation work: `85a6aaa99356f3825067dfc5b92c6f91933d8519`. Record a **new exact SHA** before any eventual code test or v5 implementation.

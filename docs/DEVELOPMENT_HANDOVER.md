@@ -1,4 +1,6 @@
 # Meong Photobooth — Development handover
+
+> **2026-10-21 — Visual v5 Phase 1 update:** Owner approved Phase 1 with "yes aku stuju scope nya". Runtime source delivered on the SAME branch at `a83eee8`; Linux 91-test suite PASS, 12 Kivy FBO fixtures, Windows acceptance still pending. [Scope/architecture/rollback](features/FEAT-021-v5-phase1.md) · [QA and Windows commands](qa/FEAT-021-v5-phase1/README.md). Next: owner Windows animation/input/FPS review. Do not infer approval for Phase 2, production integration or master merge. Older documentation-only handover below predates this implementation.
 ## Current FEAT-021 standalone visual handover — 2026-10-21 (DOCUMENTATION ONLY)
 
 **What changed this session:** The owner requested **comprehensive documentation**, not source edits. The latest five-panel neon mockup was audited against actual v4 source on **existing `feature/meong-flappy-challenge`** at code/docs baseline `85a6aaa99356f3825067dfc5b92c6f91933d8519`. Added the [canonical v5 object-by-object audit/spec](features/FEAT-021-visual-overhaul-v5.md) and [exact-commit Windows QA matrix](qa/FEAT-021-visual-v5-acceptance.md), updated engineering/current-status/decision history, recorded **BUG-013** visual acceptance blocker, and clarified dynamic backlog. **No Python/image asset/tests/app version/production flow/merges were changed.**
