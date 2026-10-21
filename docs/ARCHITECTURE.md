@@ -1,4 +1,38 @@
 # Meong Photobooth — Current architecture and future boundaries
+## 2026-10-21 — FEAT-021 standalone v4 renderer audit / proposed v5 boundary (documentation only)
+
+**Source baseline:** `feature/meong-flappy-challenge` at `85a6aaa99356f3825067dfc5b92c6f91933d8519` (pre-documentation commits). **No application-code architecture changed in this task.** Current source is an independent Kivy/Pillow game and is **not** imported by production `ui_kivy.py` (kiosk `master`). Physics/receipt/gameplay owner decisions remain unchanged.
+
+**Actual v4 rendering and navigation pipeline:**
+
+```text
+meong_fly_demo.py → MeongFlyStage(meong_fly_gui.py)
+  ├─ Kivy action hitboxes from meong_fly_painter.ACTIONS and DEMO_ENTRY
+  ├─ static cached 360×720 Pillow scenes from meong_fly_painter.paint_static_screen
+  │   ├─ scan → meong_fly_polish.paint_polished_menu
+  │   ├─ game → meong_fly_game_art.paint_game_background
+  │   ├─ start / won / lost → meong_fly_visual_v3.paint_poster_screen
+  │   └─ tutorial / layouts → meong_fly_photo_handoff.photo_handoff_screen
+  ├─ per-frame Kivy sprite/hud/asteroid/score renderer
+  ├─ InstantPhotoEmitter(meong_fly_print_fx.py)
+  │   ├─ slot from MeongFlyStage._printer_context (currently relative estimates)
+  │   ├─ cached 8-frame partial-paper/fully-printed RGBA textures
+  │   ├─ feed → detach → gravity → bounded removal
+  │   └─ frozen during gameplay pause; reset on scene transition
+  └─ MeongFlyFlow(meong_fly_flow.py)
+      ├─ MeongFly physics (meong_fly.py): 10-point asteroid game
+      ├─ DemoReceiptLedger SQLite: one local DEMO- token = one attempt
+      └─ win/loss/direct-photo → tutorial once → generic 12 layouts → exit
+```
+
+**Confirmed current architectural hazards / gaps:** (A) poster painter draws the Start/Win hero into static texture while `MeongFlyStage._paint_hero()` separately composites an animated hero — two authoritative draw paths that can create ghosting, must be unified before v5 visual acceptance; (B) `_printer_context` derives a body outlet with frame percentages rather than metadata attached to the sprite, so alignment during scaling/pose is only approximate; (C) eight `photo_feed_frames` crop top rows but are not an actual camera-slot aperture/mask; (D) `camera_cat_poses` and rectangular rock belts still require hitbox/visual-faithfulness review; (E) pixel typography remains mainly 5×7 bitmap with a small stroke. Whether these cause visible errors on Windows and their magnitude remains **not independently tested at the latest v4 SHA**.
+
+**Proposed v5 architecture, NOT implemented/authorized:** exactly one composited camera hero per scene, authored local slot coordinates transformed by the same scale/rotation as the visible character, a clip/mask exposing film behind an instant-camera trim, shared high-contrast pixel font/panel assets, richer yet legible atmosphere and silhouette-consistent hazards. `MeongFly`, `DemoReceiptLedger`, `MeongFlyFlow`, production camera/printer/checkout and `master` should **not** be modified as part of a mere visual overhaul. Any future hitbox alteration requires separate approval and collision tests. Documentation of architecture alternatives is not implementation approval.
+
+**Detailed source-to-target mapping:** [canonical v5 feature specification](features/FEAT-021-visual-overhaul-v5.md). **QA and visual evidence:** [v5 acceptance matrix](qa/FEAT-021-visual-v5-acceptance.md). [Current engineering/history](features/FEAT-021-meong-fly.md).
+
+
+
 
 > **CURRENT AS OF 2026-10-19 — POST-v1 SOURCE RELEASE:** Default branch is `master`; the immutable `v1.0.0` [pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0) points to commit `07ce51d2022ab5673a7a27e744e5e5757fbb3d08`. [Kiosk CI](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245): 235 tests (233 PASS, 2 SKIP), 87 synthetic renders/0 errors; [Dither CI](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273): 48 tests PASS. This is **source/CI evidence, not Windows production or hardware certification**. FEAT-001 DEMO pricing/copy count and FEAT-003 live-preview mirror have owner-tested PASS; BUG-011 monitored; BUG-001/007 speaker/audio retests pending; BUG-009 Drive 30-day cleanup remains OPEN. Real QRIS FEAT-020 and receipt scanner FEAT-002 are not implemented. Dated pre-release statements below are historical when superseded by this notice.
 
