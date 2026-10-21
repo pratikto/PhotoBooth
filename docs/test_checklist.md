@@ -294,3 +294,17 @@ Screen-by-screen source and precise limitations: [FEAT-021](features/FEAT-021-me
 - [ ] Manually play pause/resume, observe score +1, hit burst, 10-point target and single attempt after application restart.
 - [ ] Check physical device FPS (goal >=30), input hit regions and letterboxing at 450x900, 800x600 and 1200x800.
 - [ ] Owner aesthetic acceptance of Batch A/B after live GUI review; Batch C Win/Lose still not implemented in this pass.
+
+
+## FEAT-021 — Tutorial/layout handoff test gate (2026-10-21)
+
+Scope `feature/meong-flappy-challenge` standalone demo. **New code pushed; latest tests NOT YET REPORTED on Windows.** Previous owner Windows **55/55 PASS** refers to the older, pre-handoff revision and cannot verify this change.
+
+- [ ] Run `python -m unittest tests.test_meong_fly_flow tests.test_meong_fly_painter tests.test_meong_fly_gui tests.test_meong_fly_gameplay_gui -v` plus the remaining FEAT-021 regressions; record tested SHA, actual output.
+- [ ] Win CTA shows **PILIH LAYOUT FOTO**, never payment; when tutorial unseen it opens Tutorial before the demo layout selector. Win hint Rp2.500 remains demo-only.
+- [ ] Lose CTA shows **PILIH LAYOUT FOTO**, never payment; identical tutorial routing, with zero demo discount.
+- [ ] Direct Photo skips game/receipt and still opens Tutorial if unseen, or demo layout selector if previously completed.
+- [ ] Completing tutorial sets local standalone-only marker; reopening demo skips tutorial. Preserve production tutorial preference isolation. Simulate read-only marker failure, ensure current-session flow is still accessible.
+- [ ] 12 generic **demo** layout cards are visible and clickable, but do not masquerade as approved actual thermal templates or trigger camera/payment. Selecting a card exits the standalone demo.
+- [ ] No second game attempt, no retry button, and SQLite receipt replay protection after restart.
+- [ ] Verify portrait/landscape touch mapping and readable screen text before owner visual acceptance; NOT marked production integrated.
