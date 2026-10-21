@@ -58,6 +58,30 @@ class PortraitVisitFlowTests(unittest.TestCase):
         self.assertTrue(visit.browse_timeout())
         self.assertEqual(visit.page, ADVERT)
 
+    def test_timeout_from_templates_resets_tutorial_and_entry_source(self):
+        visit = VisitFlow()
+        visit.begin_photo("manual")
+        visit.complete_tutorial()
+        self.assertTrue(visit.browse_timeout())
+        self.assertEqual(visit.page, ADVERT)
+        self.assertFalse(visit.tutorial_seen)
+        self.assertIsNone(visit.entry_source)
+        self.assertEqual(visit.begin_photo("new_visitor"), TUTORIAL)
+
+    def test_rejected_stale_actions_leave_page_unchanged(self):
+        visit = VisitFlow()
+        visit.begin_photo()
+        with self.assertRaises(NavigationError):
+            visit.begin_photo()
+        self.assertEqual(visit.page, TUTORIAL)
+        with self.assertRaises(NavigationError):
+            visit.begin_game_preview()
+        self.assertEqual(visit.page, TUTORIAL)
+        visit.complete_tutorial()
+        with self.assertRaises(NavigationError):
+            visit.complete_tutorial()
+        self.assertEqual(visit.page, TEMPLATES)
+
     def test_game_preview_does_not_create_discount_or_checkout(self):
         visit = VisitFlow()
         visit.begin_game_preview()
