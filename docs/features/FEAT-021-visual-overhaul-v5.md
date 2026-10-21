@@ -1,5 +1,7 @@
 # FEAT-021 — Meong Fly Visual Overhaul v5: Canonical Audit and Implementation Specification
 
+> **2026-10-21 — Scan camera update:** Owner-authorized Scan extension now implements live mirrored camera and DEMO QR decoding at `76761a7`. This supersedes decorative-QR-only restrictions for this standalone scope. Valid cafe receipt/POS verification remains absent; broader typography/art phases remain pending. [Scope](FEAT-021-scan-camera.md) · [Evidence](../qa/FEAT-021-scan-camera/README.md).
+
 > **2026-10-21 — Visual v5 Phase 1 update:** Phase 1 is now owner-approved and IN SOURCE at `a83eee8`; phases 2–5 remain proposals. The previous “v5 not implemented/approved” statements below are historical for Phase 1 only. See [Phase 1 implementation](FEAT-021-v5-phase1.md) and [Linux QA evidence](../qa/FEAT-021-v5-phase1/README.md). Overall poster fidelity and Windows acceptance remain pending.
 
 > **Current as of 2026-10-21 · DOCUMENTATION / PROPOSAL ONLY · NOT IMPLEMENTED v5**

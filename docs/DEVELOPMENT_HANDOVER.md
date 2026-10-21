@@ -1,5 +1,7 @@
 # Meong Photobooth — Development handover
 
+> **2026-10-21 — Scan camera update:** FEAT-021 live Scan preview + display-only mirror delivered at `76761a7` on existing feature branch. Camera opens only on Scan; QR DEMO token fills input, explicit Validate starts attempt. Linux 98 PASS. Next owner check: use .venv-kivy, verify physical camera/mirror/QR and release. Overall poster/Windows acceptance remains open. [Scope](features/FEAT-021-scan-camera.md) · [Evidence](qa/FEAT-021-scan-camera/README.md).
+
 > **2026-10-21 — Visual v5 Phase 1 update:** Owner approved Phase 1 with "yes aku stuju scope nya". Runtime source delivered on the SAME branch at `a83eee8`; Linux 91-test suite PASS, 12 Kivy FBO fixtures, Windows acceptance still pending. [Scope/architecture/rollback](features/FEAT-021-v5-phase1.md) · [QA and Windows commands](qa/FEAT-021-v5-phase1/README.md). Next: owner Windows animation/input/FPS review. Do not infer approval for Phase 2, production integration or master merge. Older documentation-only handover below predates this implementation.
 ## Current FEAT-021 standalone visual handover — 2026-10-21 (DOCUMENTATION ONLY)
 

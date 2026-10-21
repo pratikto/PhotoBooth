@@ -1,5 +1,7 @@
 # FEAT-021 — Meong Fly standalone mini-game (engineering status and history)
 
+> **2026-10-21 — Scan camera update:** Owner-authorized Scan extension now IN SOURCE at `76761a7`: live mirrored camera, actual local DEMO QR decoding, manual fallback and explicit validation. Prior decorative-QR-only descriptions below are historical for this branch; real POS/merchant receipt verification remains unimplemented. Linux 98 PASS; physical Windows scanner pending. [Scope](FEAT-021-scan-camera.md) · [Evidence](../qa/FEAT-021-scan-camera/README.md).
+
 > **2026-10-21 — Visual v5 Phase 1 update:** Phase 1 is IN SOURCE at `a83eee8`, approved by owner on 2026-10-21. Single camera compositor, authored slot layers/pose, UV feed, attached hold, continuous release and bounded fall are implemented. Linux suite 91 PASS; Windows/manual acceptance pending. [Technical record](FEAT-021-v5-phase1.md) · [QA](../qa/FEAT-021-v5-phase1/README.md). Older v5-unapproved statements below are historical for Phase 1; later phases remain unapproved.
 
 > **CURRENT AS OF 2026-10-21 — AUTHORITATIVE STATUS SNAPSHOT (documentation-only reconciliation)**  

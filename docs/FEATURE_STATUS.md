@@ -1,5 +1,7 @@
 # Meong Photobooth — Current feature status
 
+> **2026-10-21 — Scan camera update:** FEAT-021 Scan now has live mirrored camera preview and local QR decoding of DEMO tokens, source `76761a7`. QR fills input; explicit validation still consumes the attempt. Linux 98 PASS/0 skips; physical Windows camera/mirror/scan pending. Real cafe/POS validation remains absent. [Scope](features/FEAT-021-scan-camera.md) · [Evidence](qa/FEAT-021-scan-camera/README.md).
+
 > **2026-10-21 — Visual v5 Phase 1 update:** FEAT-021 v5 **Phase 1 IN SOURCE**, owner-approved, runtime commit `a83eee8`. Linux Kivy suite **91 PASS / 0 FAIL/ERROR/SKIP**; 12 deterministic FBO captures. Windows video/FPS and owner visual acceptance pending. Full BUG-013 remains OPEN; later visual phases not implemented. [Implementation](features/FEAT-021-v5-phase1.md) · [Evidence](qa/FEAT-021-v5-phase1/README.md). This supersedes blanket v5-unapproved/not-coded statements only for Phase 1.
 
 ## Latest FEAT-021 feature-branch snapshot — 2026-10-21 (documentation only)

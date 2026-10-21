@@ -1,5 +1,7 @@
 # FEAT-021 — Visual v5 Acceptance & Regression Matrix
 
+> **2026-10-21 — Scan camera update:** Scan QA amendment: Q18 now checks local DEMO QR decode into editable input, explicit Validate, mirrored display with unmirrored decoder, invalid/used QR handling and camera release. Existing camera-free Q18 wording is historical. Linux 98 PASS; Windows physical acceptance remains NOT RUN. [Scope](../features/FEAT-021-scan-camera.md) · [Evidence](FEAT-021-scan-camera/README.md).
+
 > **2026-10-21 — Visual v5 Phase 1 update:** Phase 1 now has [Linux automated and Kivy FBO evidence](FEAT-021-v5-phase1/README.md): 91 PASS, 0 FAIL/ERROR/SKIP. The NOT RUN entries below continue to mean **Windows/manual v5 acceptance**, not absence of Linux tests. All-phase V01–V16 owner aesthetic gates remain pending; no Windows PASS claimed.
 
 **Prepared 2026-10-21 · STATUS: TEST PLAN ONLY (NOT EXECUTED) · Branch: `feature/meong-flappy-challenge`.**  
