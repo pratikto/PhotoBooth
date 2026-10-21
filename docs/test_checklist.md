@@ -264,3 +264,83 @@ python tools/run_portrait_v2.py
 - [ ] Watch portrait touch/button alignment at 800x1280 on a real 10.1-inch screen; synthetic Xvfb renders are not hardware acceptance.
 - [ ] Keep BUG-001/007 open until actual audible device evidence; no payment/camera/printer/Drive integration asserted.
 
+
+## FEAT-022 — complete approved mockup, branch-CI and next-stage acceptance matrix (2026-10-21)
+
+**Scope:** documentation + approved artwork + existing isolated v2 prototype on **feature/portrait-kiosk-v2-next**. [Approved main board](assets/portrait-v2/meong-main-flow-approved.webp), **[latest revised nine-screen Meong Fly board with MASUK MINI GAME intro](assets/portrait-v2/meong-fly-revised-approved.webp)** and [visual inspection criteria](portrait-kiosk-v2-visual-spec.md). The prior eight-screen Meong Fly board is retained **only as historical artwork**, not current acceptance target. **This documentation reconciliation changes no source behavior and performs no actual physical test.**
+
+### Evidence with exact source head
+
+| Check | Source/run | Verified outcome | Limitations |
+| --- | --- | --- | --- |
+| Python syntax | [Actions run 39548798578](https://github.com/pratikto/PhotoBooth/actions/runs/39548798578), source/assets SHA **6e7f29a769b2ca19d09efa99b3bef21fb7b8bc86**, Ubuntu Python 3.12 | PASS | Code syntax only |
+| Pure VisitFlow + PortraitAudio tests | Same Actions run, Navigation/audio job | **21 tests / 21 PASS / 0 FAIL / 0 SKIP** | Fake audio provider, cannot measure speaker sound |
+| Kivy real-widget smoke | Same Actions run, Linux/Xvfb | PASS | Synthetic window, not Windows touchscreen |
+| Portrait UI image capture | Same Actions run, Linux/Xvfb | **12 images produced, six states at 800×1280 and 452×900** | Original Kivy/OpenGL 450px RGB stride problem; 452px is test capture workaround |
+| Approved mockup assets | Commit [6e7f29a7](https://github.com/pratikto/PhotoBooth/commit/6e7f29a769b2ca19d09efa99b3bef21fb7b8bc86) plus later revised-artboard archive commit | Actual high-quality WebP files in docs/assets/portrait-v2 | Design reference, not a runtime GUI screenshot or print master |
+| Windows speakers and device | No operator result yet for this v2 audio source | **NOT TESTED** | Actual audible output, real ads video sound, native provider device |
+| Real Meong Fly / receipt / discount | No v2 integration | **NOT IMPLEMENTED** | Separate demo branch ≠ current GUI |
+| Real v2 QRIS / photo/print/Drive | No v2 integration | **NOT IMPLEMENTED** | Legacy v1 and separate QRIS feature branches must not be mistaken for v2 |
+
+One simulated test deliberately throws a faulty-provider exception to verify fallback; its traceback is **expected test input**, not a failing CI run. Final reported unittest result is **OK, 21 tests**.
+
+### Windows owner verification — current opt-in prototype
+
+From the repository root and an existing compatible Kivy environment:
+
+~~~powershell
+git fetch origin
+git switch feature/portrait-kiosk-v2-next
+git pull origin feature/portrait-kiosk-v2-next
+git rev-parse HEAD
+
+python -m unittest tests.test_kiosk_v2_flow tests.test_kiosk_v2_audio tests.test_kiosk_v2_widgets -v
+python tools/run_portrait_v2.py
+~~~
+
+**Record:** Windows version; Python/Kivy/ffpyplayer/Pillow versions; full git SHA; actual display pixel resolution/scaling and touchscreen orientation; audio output device/provider; image/video ad codec; test start/end timestamps; every FAIL/SKIP with logs; short media/screenshot evidence after removing personal or financial information. A unit-test PASS is **never** evidence that a speaker emitted audible music.
+
+### Physical QA gate A — before future integration
+
+- [ ] UI launches ONLY through opt-in v2 command; **python main.py** still uses original v1, no paid transaction/printing side effects.
+- [ ] Idle shows actual local advertiser image/video or safe Meong fallback, correct aspect ratio, **MULAI FOTO** and **MAIN MEONG FLY** CTA together.
+- [ ] Current preview **LIHAT UNDANGAN (DEMO)** renders on the same idle ad stage with **AYO FOTO**, **MAIN MEONG FLY**, **NANTI SAJA**, and dismiss after expected lifetime; do not claim live face trigger works.
+- [ ] UI shows the real Meong logo (complete cat/camera, blue lens and rainbow), high-contrast readable text, no clipped CTAs at 10.1-inch portrait 800×1280.
+- [ ] Tutorial has four illustrated steps and is explicitly completed **once per visit**; new visitor resets the state.
+- [ ] Full set of actual 12 1:3 templates displays; plus/minus print quantities change copies and DEMO quote, not photo count; no fictional 2/4-photo strip choices.
+- [ ] The game CTA displays a truthful **unavailable** notice in the current prototype; no false QRIS, scanner, promo coupon or paid-session admission.
+- [ ] Existing browsing timeout 180s, warning in final 10s, and safe return to advertising behave correctly; user interaction resets browsing countdown.
+- [ ] **Speaker audibly** starts background music automatically when leaving idle for tutorial; it continues between tutorial and templates and stops on advertising; no double-play, no stale paused state.
+- [ ] **UJI MUSIK** actually produces sound through selected Windows speaker when tapped; provider state alone is not enough.
+- [ ] Advertising video audio plays only when the source contains audio; application music is absent during idle advertising.
+- [ ] Actual tap mapping, scroll behavior, visual text/button contrast and safe-area margins work on the physical portrait device, not just the GitHub screenshot.
+- [ ] At compact 450×900/nearby display, all important text/actions remain accessible and strip previews retain 1:3 aspect ratio.
+- [ ] On Windows shutdown and restart there are no leaked audio devices, video decoder crashes, stale Kivy callbacks or duplicated background music.
+
+### Future integration QA gate B — require explicit feature approval
+
+- [ ] Optional real face detection causes *inline invitation* after 5s continuous presence, dismiss after 15s, cooldown around 45s, and never records identity/images for the invitation.
+- [ ] From advertising **or** face invitation, game entry opens a **dedicated MASUK MINI GAME / MEONG FLY intro** before scan; no extra home screen replaces ad video.
+- [ ] Receipt DEMO token claim is consumed **once before gameplay** and survives restart; used code rejects repeat even if game was lost; no **MAIN LAGI** on either result.
+- [ ] Valid/invalid/used/offline scanner outcomes have honest UI. Actual partner QR/POS scanning is not claimed until provider evidence and backend test exist.
+- [ ] Win result proposes **Rp2.500**; Lose proposes **Rp0**. Both go to **tutorial iff not acknowledged this visit**, then **12-template picker**; no result page routes straight to payment.
+- [ ] Voucher cannot be transferred into the next customer visit or applied twice; a claim/receipt remains irreversibly consumed even after idle timeout.
+- [ ] Cart shows correct session (one 3-shot sequence per design), number of identical sheets, subtotal, eligible discount, and server-authorized total. Do not trust local Kivy calculations; define FEAT-002 promo stacking rules.
+- [ ] QRIS MOCK/Sandbox pending/paid/expired/denied/unknown/retry/restart is bound to the same visit and amount; one payment admits one capture; no fake success or duplicate refund/charge.
+- [ ] Ad videos on checkout remain muted and payment QR remains stable; an official provider QR cannot be substituted by a locally generated DEMO QR.
+- [ ] Three camera captures, one selected retake, preview mirroring-only and source file orientation match existing v1.
+- [ ] All 12 real 80×240 mm masters compose to three photos plus one downloadable **photo-folder QR**, clearly different from the payment QRIS.
+- [ ] Physical thermal print at actual printer resolution matches selected copies and contains a scannable photo folder QR; spool transport acknowledgement alone is not a paper/QR acceptance.
+- [ ] Drive upload, queued/offline fallback, 15-day local and unverified 30-day cloud retention have truthful customer notices; BUG-009 remains open until verified.
+- [ ] Cancellation/timeout cannot destroy or start duplicate paid/unknown orders, active captures, uncertain printing or customer file manifests.
+- [ ] Full existing v1 regression after any change to shared services, plus separate QRIS/game integration suites and genuine Windows operator signoff before release.
+
+### Release gate C
+
+- [ ] Document exact tested feature-branch SHA and matching CI jobs/artifact evidence (not a green run from an older code SHA).
+- [ ] Compare **real GUI screenshots** at 800×1280 to the two final approved visual boards and document differences / approved exceptions. These artboards are image style references, not source-of-truth pricing/routing.
+- [ ] Record on-device music and video audibility, 10.1-inch touch, camera, paper/copy/QR, Midtrans Sandbox and customer photo delivery individually.
+- [ ] Close or explicitly risk-accept all blocking bugs, including BUG-001/007 and BUG-009 where applicable; do not conflate v2 new audio success with a v1 bugfix.
+- [ ] Record config/data backup, immutable base, rollback path and owner-approved merge/release instruction; **do not merge to master by default**.
+
+**CI versus field summary:** Branch CI is green for the current isolated v2 code. **Visual parity of all target screens, end-to-end service integration, real speaker and thermal/camera/merchant acceptance remain open.** No documentation-only commit itself constitutes a test result.
