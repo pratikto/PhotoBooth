@@ -10,7 +10,7 @@ from .meong_fly import MeongFly
 class MeongFlyFlow:
     """Five-screen navigation with a single irreversible receipt claim."""
 
-    def __init__(self, ledger, game=None):
+    def __init__(self, ledger, game=None, tutorial_seen=False):
         self.ledger = ledger
         self.game = game if game is not None else MeongFly()
         self.screen = "start"
@@ -18,6 +18,8 @@ class MeongFlyFlow:
         self.result_recorded = False
         self.paused = False
         self.message = ""
+        self.tutorial_seen = bool(tutorial_seen)
+        self.photo_outcome = None  # in-memory handoff only, never a real discount
 
     @property
     def can_play(self):
@@ -81,16 +83,50 @@ class MeongFlyFlow:
             self.result_recorded = True
         self.screen = self.game.status
 
-    def continue_from_result(self):
-        """Stand-alone boundary: the CTA exits, not a real payment checkout."""
-        if self.screen not in ("won", "lost"):
+    def _route_to_photo(self):
+        """Route to required one-time tutorial, then standalone layout preview.
+
+        The production tutorial/template selector is deliberately not imported
+        into this isolated demo. Its integration requires separate approval.
+        """
+        self.screen = "layouts" if self.tutorial_seen else "tutorial"
+        return True
+
+    def finish_tutorial(self):
+        if self.screen != "tutorial":
             return False
+        self.tutorial_seen = True
+        self.screen = "layouts"
+        return True
+
+    def select_layout(self, layout_id):
+        """Record the desired demo layout, without launching a photo session."""
+        if self.screen != "layouts":
+            return False
+        if not isinstance(layout_id, int) or not 1 <= layout_id <= 12:
+            return False
+        self.selected_layout = layout_id
         self.screen = "exit"
         return True
 
+    def continue_from_result(self):
+        """Win/loss -> tutorial (if unseen) -> layout selector, never payment."""
+        if self.screen not in ("won", "lost"):
+            return False
+        self.photo_outcome = {
+            "won": self.screen == "won",
+            "demo_discount_idr": 2500 if self.screen == "won" else 0,
+            "receipt_demo": self.active_receipt,
+        }
+        return self._route_to_photo()
+
     def direct_photo(self):
-        """Exit this demo; production photobooth navigation is NOT wired."""
+        """Skip mini-game; tutorial gate still applies before layout selection."""
         if self.screen != "start" or not self.can_play:
             return False
-        self.screen = "exit"
-        return True
+        self.photo_outcome = {
+            "won": False,
+            "demo_discount_idr": 0,
+            "receipt_demo": None,
+        }
+        return self._route_to_photo()
