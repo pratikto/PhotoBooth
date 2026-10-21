@@ -23,8 +23,12 @@ class MeongFlyFlowTests(unittest.TestCase):
         self.assertTrue(self.flow.claim_and_start("DEMO-BACK"))
         self.assertEqual(self.flow.screen, "game")
 
-    def test_direct_photo_exits_without_receipt(self):
+    def test_direct_photo_routes_tutorial_then_layout_without_receipt(self):
         self.assertTrue(self.flow.direct_photo())
+        self.assertEqual(self.flow.screen, "tutorial")
+        self.assertTrue(self.flow.finish_tutorial())
+        self.assertEqual(self.flow.screen, "layouts")
+        self.assertTrue(self.flow.select_layout(3))
         self.assertEqual(self.flow.screen, "exit")
         self.assertFalse(self.flow.open_scan())
 
@@ -72,6 +76,13 @@ class MeongFlyFlowTests(unittest.TestCase):
         self.assertFalse(self.flow.open_scan())
         self.assertFalse(self.flow.flap())
         self.assertTrue(self.flow.continue_from_result())
+        self.assertEqual(self.flow.screen, "tutorial")
+        self.assertTrue(self.flow.photo_outcome["won"])
+        self.assertEqual(self.flow.photo_outcome["demo_discount_idr"], 2500)
+        self.assertTrue(self.flow.finish_tutorial())
+        self.assertEqual(self.flow.screen, "layouts")
+        self.assertTrue(self.flow.select_layout(12))
+        self.assertEqual(self.flow.selected_layout, 12)
         self.assertEqual(self.flow.screen, "exit")
         other = MeongFlyFlow(DemoReceiptLedger(self.db))
         other.open_scan()
@@ -86,6 +97,19 @@ class MeongFlyFlowTests(unittest.TestCase):
         self.assertFalse(self.flow.toggle_pause())
         self.assertFalse(self.flow.back())
         self.assertTrue(self.flow.continue_from_result())
+        self.assertEqual(self.flow.screen, "tutorial")
+        self.assertEqual(self.flow.photo_outcome["demo_discount_idr"], 0)
+        self.assertFalse(self.flow.open_scan())
+
+    def test_tutorial_already_seen_goes_directly_to_layout(self):
+        flow = MeongFlyFlow(DemoReceiptLedger(self.db), tutorial_seen=True)
+        self.assertTrue(flow.direct_photo())
+        self.assertEqual(flow.screen, "layouts")
+        self.assertFalse(flow.finish_tutorial())
+        self.assertFalse(flow.select_layout(0))
+        self.assertFalse(flow.select_layout(13))
+        self.assertFalse(flow.select_layout("2"))
+        self.assertTrue(flow.select_layout(1))
 
     def test_continue_not_allowed_before_terminal(self):
         self.assertFalse(self.flow.continue_from_result())
