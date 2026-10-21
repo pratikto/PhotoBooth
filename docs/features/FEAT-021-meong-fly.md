@@ -182,3 +182,6 @@ The owner pasted Windows console output confirming **`Ran 55 tests in 6.272s` / 
 - `tests/test_meong_fly_flow.py` commit `8112e700`: rework existing start/direct-photo/win/loss tests to expect tutorial/layout navigation, verify tutorial-seen bypass and demo discount metadata. No code/tests on `master` changed.
 
 **Known constraint:** this is an *isolated UI/navigation prototype*, not actual photobooth main-GUI layout integration; no real full session, payment, printer or hardware output. Needs owner Windows GUI and exact-branch tests before acceptance. Future actual integration requires separate approval.
+
+
+**Additional layout UI regression test:** `tests/test_meong_fly_photo_handoff.py` commit `3d63d0b2`. Source and docs verified in GitHub branch after push; automated tests for this exact new branch SHA have **not** run here (container could not resolve github.com). Please execute Windows targeted tests before changing status from IN SOURCE to VERIFIED.
