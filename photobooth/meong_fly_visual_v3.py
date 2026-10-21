@@ -23,26 +23,21 @@ def animation_gif_path():
 
 
 def synth_print_frames(approved_frame, count=10):
-    """Make a lightweight flying/printing loop from the newest GIF frame.
+    """Animate camera-cat hovering, without baking extra photos into its art.
 
-    The actual 26-frame GIF overrides this procedural fallback if installed.
+    The ONE print emitter in Kivy is responsible for the paper feeding and
+    falling sequence. This removes the old double-print overlay.
     """
     from math import sin, pi
     sprite = approved_frame.convert("RGBA")
     sprite.thumbnail((224, 150), Image.Resampling.NEAREST)
-    photos = printed_photo_tile(0)
     frames = []
     for idx in range(count):
         out = Image.new("RGBA", (244, 184), (0, 0, 0, 0))
         dy = round(sin(idx * 2 * pi / count) * 3)
         out.alpha_composite(sprite, (10, 9 + dy))
-        # An instant print extends from the camera and floats down.
-        if idx >= 2:
-            y = 112 + (idx - 2) * 9
-            out.alpha_composite(photos, (127 + (idx - 2) % 3 * 3, y))
         frames.append(out)
     return tuple(frames)
-
 
 @lru_cache(maxsize=4)
 def meong_animation_frames(logo_path, limit=15):
@@ -54,21 +49,14 @@ def meong_animation_frames(logo_path, limit=15):
     source = animation_gif_path()
     if source is not None:
         with Image.open(source) as gif:
-            count = getattr(gif, "n_frames", 1)
-            indices = sorted({round(i*(count-1)/max(1, limit-1))
-                              for i in range(min(count, limit))})
-            result = []
-            for idx in indices:
-                gif.seek(idx)
-                frame = gif.convert("RGBA")
-                # Crop printed logo's CAMERA-CAT, RAINBOW and emerging print,
-                # not its original black MEONG wordmark.
-                w, h = frame.size
-                frame = frame.crop((round(w*.08), round(h*.07),
-                                    round(w*.92), round(h*.64)))
-                frame.thumbnail((264, 204), Image.Resampling.NEAREST)
-                result.append(frame)
-            return tuple(result)
+            # Decode only the clean first frame: later GIF frames already
+            # contain a print and would double-up with the new paper emitter.
+            gif.seek(0)
+            frame = gif.convert("RGBA")
+            w, h = frame.size
+            frame = frame.crop((round(w*.08), round(h*.07),
+                                round(w*.92), round(h*.57)))
+            return synth_print_frames(frame, count=min(limit, 10))
     # Always prefer the actual owner's new GIF-derived cropped camera-cat.
     # Encoded as ASCII to preserve binary fidelity through text-only GitHub tools.
     # This frame is bundled, even when the animated GIF isn't installed locally.
@@ -195,15 +183,3 @@ def animation_tick(t, duration=2.4):
     """Pure function; Kivy uses it to select an immutable cached GIF frame."""
     return int(max(0,t)*10) % max(1,round(duration*10))
 
-
-def falling_photo_positions(elapsed, count=6):
-    """Repeatable cosmetic particles, never part of physics or receipt state."""
-    from math import sin
-    result=[]
-    for i in range(count):
-        cycle=(elapsed*42 + i*112) % 800
-        x=40 + ((i*61+113) % 269) + sin(elapsed*1.2+i)*18
-        y=60 + cycle
-        size=23 + i%3*7
-        result.append((x,y,size,(-1 if i%2 else 1)*((elapsed*15+i*23)%20)))
-    return result
