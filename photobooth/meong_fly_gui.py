@@ -23,7 +23,7 @@ from .meong_fly import (
 )
 from .meong_fly_visual_v3 import (
     animation_gif_path, meong_animation_frames, printed_photo_tile,
-    falling_photo_positions,
+    camera_cat_from_latest_logo, falling_photo_positions,
 )
 from .meong_fly_flow import MeongFlyFlow
 from .meong_fly_game_art import (
@@ -64,7 +64,7 @@ class MeongFlyStage(Widget):
         }
         self._cat_poses = {
             name: kivy_texture(image)
-            for name, image in camera_cat_poses(logo_parts(str(self._logo_path))[1]).items()
+            for name, image in camera_cat_poses(camera_cat_from_latest_logo(self._logo_path)).items()
         }
         self._cat = self._cat_poses["level"]  # Preserve optional caller compatibility.
         self._asteroids = [kivy_texture(make_rock_tile(i)) for i in range(ROCK_VARIANTS)]
