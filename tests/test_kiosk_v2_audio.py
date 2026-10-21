@@ -122,6 +122,29 @@ class PortraitAudioTests(unittest.TestCase):
         self.assertIsNot(old, fresh)
         self.assertEqual(fresh.plays, 1)
 
+    def test_suspended_navigation_does_not_start_music(self):
+        self.audio.suspend()
+        self.assertFalse(self.audio.enter_page("tutorial"))
+        self.assertNotIn("meong-v2-music.wav", self.loaded)
+        self.audio.enter_page("templates")
+        self.audio.resume()
+        music = self.loaded["meong-v2-music.wav"]
+        self.assertEqual(music.plays, 1)
+        self.audio.enter_page("advert")
+        self.assertEqual(music.state, "stop")
+
+    def test_close_is_idempotent_for_loaded_effects(self):
+        self.audio.enter_page("tutorial")
+        self.assertTrue(self.audio.cue("button"))
+        music = self.loaded["meong-v2-music.wav"]
+        effect = self.loaded["meong-v2-button.wav"]
+        self.audio.close()
+        self.audio.close()
+        self.assertEqual(music.unloads, 1)
+        self.assertEqual(effect.unloads, 1)
+        self.assertEqual(music.state, "stop")
+        self.assertEqual(effect.state, "stop")
+
     def test_missing_assets_fail_softly(self):
         missing = PortraitAudio(lambda path: FakeClip(), root=Path(self.directory.name) / "missing")
         self.assertFalse(missing.enter_page("tutorial"))
