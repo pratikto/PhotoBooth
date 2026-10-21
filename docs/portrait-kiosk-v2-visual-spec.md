@@ -7,7 +7,7 @@
 **Last reviewed:** 2026-10-21  
 **Canonical implementation status:** [FEAT-022 primary specification](portrait-kiosk-v2.md) and [FEATURE_STATUS.md](FEATURE_STATUS.md)
 
-This is the authoritative **visual-to-behavior interpretation** of the two approved artboards. Images preserve the agreed cosmic pixel-arcade visual look; **explicit owner flow corrections supersede text, page counts, arrows, sample prices and absent buttons in the artwork**. No mockup constitutes a working UI, paid QRIS, partner POS, printer template, test record or accepted hardware output.
+This is the authoritative **visual-to-behavior interpretation** of the approved main artboard and the **latest revised nine-screen Meong Fly artboard** (the earlier eight-screen game diagram is retained only as archived history). Images preserve the agreed cosmic pixel-arcade visual look; **explicit owner flow corrections supersede text, page counts, arrows, sample prices and absent buttons in the artwork**. No mockup constitutes a working UI, paid QRIS, partner POS, printer template, test record or accepted hardware output.
 
 ## A. Main photobooth approved concept board
 
@@ -21,13 +21,13 @@ This is the authoritative **visual-to-behavior interpretation** of the two appro
 
 ## B. Meong Fly approved concept board
 
-![Approved Meong Fly pixel-arcade board showing receipt scan, validation, gameplay, win, loss, inactivity, and payment error concepts](assets/portrait-v2/meong-fly-flow-approved.webp)
+![Latest approved nine-screen Meong Fly board including the dedicated MASUK MINI GAME intro before receipt scan, gameplay, win, loss and error concepts](assets/portrait-v2/meong-fly-revised-approved.webp)
 
-[Open full-resolution Meong Fly board](assets/portrait-v2/meong-fly-flow-approved.webp) · [Asset provenance](assets/portrait-v2/README.md)
+[Open full-resolution Meong Fly board](assets/portrait-v2/meong-fly-revised-approved.webp) · [Asset provenance](assets/portrait-v2/README.md)
 
 **Retain:** animated/arcade feel, camera-cat with rainbow movement, asteroid obstacles, score and target in an unobstructed HUD, receipt visual language, clear win/loss feedback, one-attempt rule, and attractive Rp2.500 *proposed* discount announcement.
 
-**Required corrections:** the panel labelled **PROMO DI HOME** is **not** a new home: promotional access belongs to the existing idle/advertising stage and face invitation. Add the missing dedicated **MASUK MINI GAME / MEONG FLY** intro/rules screen before receipt scan. Replace **LANJUT KE PEMBAYARAN** after both Win and Lose with a route to **tutorial (only if unseen)**, then **PILIH TEMPLATE**, where the cart can display a proposed discount. Do not show **MAIN LAGI**, even after a loss. A screen about expired/failed QRIS belongs to the checkout error states, not to the end of a mini-game attempt. A decorative receipt QR is not working receipt verification.
+**Required corrections:** the panel labelled **PROMO DI HOME** is **not** a new home: promotional access belongs to the existing idle/advertising stage and face invitation. The **latest revised nine-screen board now visibly contains MASUK MINI GAME** before receipt scan; this dedicated intro must still be implemented inside the future integrated kiosk. Replace **LANJUT KE PEMBAYARAN** after both Win and Lose with a route to **tutorial (only if unseen)**, then **PILIH TEMPLATE**, where the cart can display a proposed discount. Do not show **MAIN LAGI**, even after a loss. A screen about expired/failed QRIS belongs to the checkout error states, not to the end of a mini-game attempt. A decorative receipt QR is not working receipt verification.
 
 ## Non-negotiable visual and interaction rules
 
@@ -97,7 +97,7 @@ The proposed commercial promo settlement share and interactions with FEAT-002 re
 | M11 | Result and photo-strip download QR | **Target** | 3-photo 80×240 mm strip, QR photo download, printing/result CTA |
 | M12 | Safe completion → advertising | **Target** | No race with in-flight print, completed/uncertain payments or residual visit data |
 | G00 | Game entry from idle/invitation | **Implemented as placeholder link** | No second homepage |
-| G01 | Dedicated game intro/rules | **Target; absent from artwork/current v2** | LANJUT SCAN STRUK; KEMBALI; one receipt one chance |
+| G01 | Dedicated game intro/rules | **Target; present in latest revised board, absent from current v2** | LANJUT SCAN STRUK; KEMBALI; one receipt one chance |
 | G02 | Receipt scanning / manual DEMO code | **Standalone branch only** | Clearly labelled DEMO until real reader available |
 | G03 | Receipt validation/errors | **Target** | Claim once, reject used/invalid, avoid holding a photo checkout |
 | G04 | Gameplay | **Standalone branch only** | Score, pause, responsive obstacle/game feedback |
