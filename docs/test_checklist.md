@@ -326,3 +326,10 @@ Status **SOURCE PATCHED; NEW AUTOMATED/GUI TESTING NOT YET EXECUTED/REPORTED**. 
 - [ ] Win / Lose use high-contrast poster treatment but only CTA `PILIH LAYOUT FOTO` (NOT mockup's payment CTA), with tutorial once -> twelve demo layout cards. No `Main Lagi`.
 - [ ] Check loss dynamic score sits below its SCORE title without overlapping. Check letterboxing at 450x900 and 800x600; touch regions remain exact.
 - [ ] Capture owner Windows Start, Scan, Gameplay, Win and Lose screenshots and approval before declaring mockup visual match. Standalone only; no actual printer/payment/POS integration.
+
+
+## 2026-10-21 — Owner-provided partial Windows FEAT-021 post-v3 tests (23/23 PASS)
+
+The owner pasted output of **23 successful unit tests**: `Ran 23 tests in 1.789s` / `OK`, no reported failure/error/skip. Named tests were from exactly three modules: `tests.test_meong_fly_photo_handoff` (**3**), `tests.test_meong_fly_flow` (**11**) and `tests.test_meong_fly_painter` (**9**). This confirms owner-reported isolated handoff/flow/painter tests after recent edits, but the pasted output does **not** include the exact Git SHA, environment header or precise invocation. Do **NOT** extrapolate this to a full v3 regression, Kivy GUI performance, live input, GIF frame quality, or owner acceptance. Prior 55/55 PASS was from an older version.
+
+**Required follow-up:** run `python -m unittest discover -s tests -p "test_meong_fly*.py" -v` on the latest feature branch, record `git rev-parse HEAD`, and verify live Start, Scan, Gameplay, Win, Lose plus tutorial/layout, latest GIF-derived logo, flying-print-drop visual, no replay and text clarity. No production GUI integration or `master` merge.
