@@ -6,6 +6,7 @@ This file tracks **actual verified repository/document changes**, not successful
 
 - Scale the entire v2 page to retain its minimum content budget in short/high-DPI windows, preserving gallery previews, cart state, media and audio ownership during live resize. Match native touch/swipe coordinates and discard resize-interrupted drags.
 - Review 30 synthetic screenshots across five sizes, including 800×1280 and 452×900. 55 focused tests PASS; full suite 290 run / 288 PASS / 2 optional model skips; two fresh-process 150% density checks PASS.
+- Exact-SHA CI also succeeds for audio `16f7918` (39738222976) and layout `2deefd8` (39739671551), both jobs each. Final original CI artifact digest, 24 PNG hashes and clean-source manifests verified. Windows ffpyplayer wheel inspection confirms its SDL_mixer backend; this is not execution on owner hardware.
 - Add a separate 38-item repeat/resize retest HTML with Submit Hasil, prepared prompt, local persistence and copy/download; DOM checks PASS. [Evidence, source hashes, screenshots and rollback](qa/portrait-v2-retest-9a9e18e/README.md). Owner Windows acceptance stays open.
 
 ## [Unreleased — repeated Windows audio correction] — 2026-10-22

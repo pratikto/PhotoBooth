@@ -42,7 +42,13 @@ nonzero music/click samples, verifies that a concurrent click does not unmute a
 playing ad, and checks silence after close. [Transcript](audio-tests.txt).
 Full regression: **289 run, 287 PASS, 2 optional native palm-model skips,
 zero failures/errors**. [Transcript](audio-full-tests.txt). Compile and diff checks pass.
-No physical speaker or actual Windows decoder was tested here.
+The official `ffpyplayer-4.5.3-cp312-cp312-win_amd64` wheel was statically
+inspected: its config enables `USE_SDL2_MIXER=1` and it ships SDL2_mixer.dll.
+[Wheel digest/config evidence](windows-provider-inspection.json). The Linux
+wheel disables that backend, which is why ordinary Linux video playback alone
+does not reproduce this Windows channel-reuse path. This does not establish
+the exact dependency version installed on the owner machine.
+No physical speaker or actual Windows decoder was executed here.
 
 ## Live scaling correction
 
@@ -92,6 +98,17 @@ no claim of a clean capture checkout is made. CI captures a separate clean SHA.
 - Audio correction / before viewport change: `16f79182b553291c13c1aa5e2834434e9799739f`.
   [Exact-SHA CI 39738222976](https://github.com/pratikto/PhotoBooth/actions/runs/39738222976)
   completed SUCCESS. This is synthetic CI, not Windows speaker acceptance.
+- Layout/touch/Submit source checkpoint: `2deefd8ab5cb3370353cecf5ebf22f37d940a17c`.
+  [Exact-SHA CI 39739671551](https://github.com/pratikto/PhotoBooth/actions/runs/39739671551)
+  completed SUCCESS; both jobs independently verified SUCCESS. Native 20-cycle
+  PCM and all four CI screenshot dimensions passed. Original artifact
+  `12408418188` downloaded; ZIP SHA256
+  `590509fb818ef5910af453da03ff7cc69714b36ce5c7d1623165eb3f5f957600`
+  verified, along with **24 original PNG hashes and four clean-source manifests**.
+  [Run metadata](39739671551-run.json), [jobs](39739671551-jobs.json),
+  [artifact verification](ci-artifact-verification.json). Visual review above
+  refers to the 30 preserved local PNGs; hash verification of CI is separate.
+- Final evidence-only documentation commit changes no application source.
 - To undo a correction, use a reviewed `git revert` of its source commit on the
   same feature branch. Do not reset/force-push, create another branch or touch master.
 

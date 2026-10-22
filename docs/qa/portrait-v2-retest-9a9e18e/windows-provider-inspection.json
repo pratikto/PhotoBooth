@@ -1,0 +1,9 @@
+{
+  "package": "ffpyplayer-4.5.3-cp312-cp312-win_amd64.whl",
+  "sha256": "7eefb1060e2df8534eec245e1f7e228b4b53853a0b4f508a124b4b83c6f2c56c",
+  "use_sdl2_mixer": [
+    "#define USE_SDL2_MIXER 1"
+  ],
+  "inspection_only": true,
+  "windows_execution": false
+}
