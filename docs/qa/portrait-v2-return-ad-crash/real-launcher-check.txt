@@ -1,0 +1,3 @@
+MEONG v2 HEAD=bef4014b762d diagnostic log: <PROJECT>/data/diagnostics/portrait-v2-20261022-230555-263768-4597.log
+MEONG v2 PORTRAIT PROTOTYPE - no payment, camera, printing or real game
+PASS real dedicated launcher: native video/audio startup, advert ready, scheduled stop, closed diagnostic stream, persisted session end.

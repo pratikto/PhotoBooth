@@ -7,7 +7,7 @@ This file tracks **actual verified repository/document changes**, not successful
 - Preserve the owner's raw V4 33/35 checked result at five cycles and unknown HEAD; the explicit crash on return overrides overall navigation acceptance. Track BUG-012 OPEN; F05/F06 remain unverified.
 - Reproduce and correct Kivy Video's MP4-as-still-image probe while preserving real decoding and explicit posters. This fixes the demonstrated loader error; it does not establish the cause of the owner's process exit.
 - Add per-run local diagnostic logs before native provider imports, source HEAD at startup, page-stage breadcrumbs, Python/worker tracebacks and available fatal native stacks. Keep startup usable if logs cannot be created. Seven focused diagnostic checks and the video regression are included in CI.
-- Local 79 focused PASS; full 314 run / 312 PASS / 2 optional model skips. Twenty native-video/audio cycles complete before and after on Linux; Windows crash is not reproduced and remains BLOCKED pending diagnostic retest. [Evidence, limitations and next Windows check](qa/portrait-v2-return-ad-crash/README.md).
+- Local 79 focused PASS; full 314 run / 312 PASS / 2 optional model skips. Twenty native-video/audio cycles complete before and after on Linux; real dedicated-launcher startup/teardown also passes. Code `bef4014` passes exact-SHA CI 39869369246, all three jobs, including 38 Windows native audio/diagnostic tests. Original artifact ZIP digest and 24 page / nine motion PNGs verified and reviewed. Windows crash is not reproduced and remains BLOCKED pending diagnostic retest. [Evidence, limitations and next Windows check](qa/portrait-v2-return-ad-crash/README.md).
 
 ## [Unreleased — gallery and animation Windows checklist V4] — 2026-10-23
 

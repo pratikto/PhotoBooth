@@ -1,0 +1,42 @@
+{
+  "id": 39869369246,
+  "head_sha": "bef4014b762d11f3ea5622afaef35dfbb4fbda4e",
+  "head_branch": "feature/portrait-kiosk-v2-next",
+  "status": "completed",
+  "conclusion": "success",
+  "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/39869369246",
+  "created_at": "2026-10-22T23:04:32Z",
+  "updated_at": "2026-10-22T23:06:19Z",
+  "jobs": [
+    {
+      "id": 120139602551,
+      "name": "Navigation and audio lifecycle",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/39869369246/job/120139602551"
+    },
+    {
+      "id": 120139602721,
+      "name": "Windows Python 3.12 native SDL audio (dummy output)",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/39869369246/job/120139602721"
+    },
+    {
+      "id": 120139602849,
+      "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/39869369246/job/120139602849"
+    }
+  ],
+  "artifact": {
+    "id": 12465338177,
+    "name": "meong-portrait-v2-screens",
+    "size_in_bytes": 3537815,
+    "digest": "sha256:7dfcadfcbc0c307382b81b04bfd3c19b6e93da437e4a66ae451a0125b2140002",
+    "expired": false,
+    "downloaded_zip_sha256": "7dfcadfcbc0c307382b81b04bfd3c19b6e93da437e4a66ae451a0125b2140002"
+  },
+  "review": "Original GitHub ZIP digest verified; four exact-SHA clean manifests and 24 page / nine motion PNG hashes verified. All screenshots/motion frames reviewed. Synthetic visual gate passes; BUG-012 Windows crash cause and owner acceptance remain OPEN."
+}

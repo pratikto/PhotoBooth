@@ -1,0 +1,12 @@
+test_exception_is_flushed_to_file_and_not_swallowed (tests.test_kiosk_v2_diagnostics.DiagnosticSessionTests.test_exception_is_flushed_to_file_and_not_swallowed) ... ok
+test_existing_explicit_fatal_handler_is_not_replaced (tests.test_kiosk_v2_diagnostics.DiagnosticSessionTests.test_existing_explicit_fatal_handler_is_not_replaced) ... ok
+test_launcher_runs_with_configured_window_and_a_persistent_log (tests.test_kiosk_v2_diagnostics.DiagnosticSessionTests.test_launcher_runs_with_configured_window_and_a_persistent_log) ... ok
+test_launcher_still_runs_if_diagnostic_directory_cannot_be_created (tests.test_kiosk_v2_diagnostics.DiagnosticSessionTests.test_launcher_still_runs_if_diagnostic_directory_cannot_be_created) ... ok
+test_native_fatal_destination_stays_open_through_session_then_releases_ownership (tests.test_kiosk_v2_diagnostics.DiagnosticSessionTests.test_native_fatal_destination_stays_open_through_session_then_releases_ownership) ... ok
+test_source_head_is_local_bounded_and_tolerates_missing_git (tests.test_kiosk_v2_diagnostics.DiagnosticSessionTests.test_source_head_is_local_bounded_and_tolerates_missing_git) ... ok
+test_worker_exception_records_context_and_delegates_to_previous_hook (tests.test_kiosk_v2_diagnostics.DiagnosticSessionTests.test_worker_exception_records_context_and_delegates_to_previous_hook) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.006s
+
+OK

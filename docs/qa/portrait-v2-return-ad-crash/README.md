@@ -91,10 +91,49 @@ does not prevent startup. The ordinary launcher remains the operator entry.
 These results **do not reproduce the owner's Windows crash**. They do not close
 BUG-012, certify the actual advertisement files, Intel driver behavior, real
 speaker output or the owner's twenty-cycle gate. Matching-source CI and capture
-evidence are recorded after validation/push; no earlier commit's PASS is inherited.
+evidence are recorded below; no earlier commit's PASS is inherited.
 Local captures record the base HEAD plus tracked changes;
 [source hashes and test scope](local-source-manifest.json) identify the exact
 runtime/renderer/test inputs. No runtime change was made after these checks.
+
+The real dedicated launcher also completes native video/audio startup, displays
+the advert page, stops on a scheduled test callback, closes its diagnostic stream
+and leaves `Session end` on disk: [integration check](real-launcher-check.txt).
+Seven diagnostic tests also pass in a fresh Python process without Kivy installed:
+[standard-library-only transcript](stdlib-diagnostics-tests.txt).
+
+## Exact-source checkpoint and CI
+
+Code checkpoint: **`bef4014b762d11f3ea5622afaef35dfbb4fbda4e`**.
+Normal push and remote HEAD match were verified. Later evidence-only commits do
+not inherit this code checkpoint's CI result.
+
+[CI run 39869369246](https://github.com/pratikto/PhotoBooth/actions/runs/39869369246)
+is **SUCCESS, all three jobs**:
+
+- Pure navigation/audio/preview/diagnostics: **56 PASS**,
+  [transcript](pure-ci-tests.txt).
+- Genuine Windows Python 3.12 native audio and diagnostics: **38 PASS**,
+  [transcript](windows-ci-tests.txt). Native dummy output and diagnostic tests do
+  not certify Windows GUI, the actual ad files or physical speaker acceptance.
+- Desktop widget/audio smoke, native PCM and all four capture commands SUCCESS.
+
+[Verified CI metadata](ci-verification.json). Original artifact `12465338177`
+is 3,537,815 bytes; downloaded ZIP SHA-256 matches GitHub:
+`7dfcadfcbc0c307382b81b04bfd3c19b6e93da437e4a66ae451a0125b2140002`.
+All four manifests show the exact code SHA with `tracked_changes=false`.
+All **24 page PNGs and nine motion frames** match their recorded hashes and
+were visually reviewed:
+[800×1280](ci-original/contact-800x1280.png),
+[452×900](ci-original/contact-452x900.png),
+[360×640](ci-original/contact-360x640.png),
+[800×600](ci-original/contact-800x600.png),
+[motion](ci-original/contact-motion.png).
+
+This is a verified non-hardware source checkpoint. **BUG-012 remains OPEN**;
+successful CI does not establish why the owner process exited or close its
+five-to-twenty-cycle gap. Pre-change `b49ce24` is only a rollback reference,
+not a certified stable Windows version for this crash.
 
 ## Windows next check
 
@@ -104,6 +143,8 @@ runtime/renderer/test inputs. No runtime change was made after these checks.
    path; use the same local advertising videos that were present during failure.
 3. Try one ad → tutorial → gallery → SELESAI / KEMBALI IKLAN cycle. If it exits,
    stop and share that run's diagnostic file plus the terminal's final lines.
+   In PowerShell, also run `$LASTEXITCODE` immediately after Python exits and
+   include the number; this helps identify native exits without a Python stack.
 4. If return works, repeat and check video/image transitions and minimize/restore.
    Only after twenty completed cycles can F05/F06 be considered for a fresh PASS.
 
