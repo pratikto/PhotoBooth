@@ -22,12 +22,12 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
 
 from photobooth.advertising import AdCatalog, AdEventLog, PROJECT_ROOT
-from photobooth.branding import LOGO_PATH
 from photobooth.catalog import create_template_preview, get_templates
 from photobooth.ui_ads import AdvertisementPlayer
 from photobooth.workflow import quote_order
 
 from .audio import make_kivy_audio
+from .branding import MeongLogo
 from .illustrations import TutorialIcon
 from .flow import ADVERT, BROWSING_PAGES, GAME_PREVIEW, TEMPLATES, TUTORIAL, VisitFlow
 from .theme import ArcadeButton, CYAN, GOLD, MUTED, PixelCard, PINK, Starfield, WHITE, text_label
@@ -245,19 +245,18 @@ class PortraitKioskV2App(App):
         else:
             raise RuntimeError("Unknown prototype page")
 
-    def _frame(self, canvas):
+    def _frame(self, canvas, *, brand_height=100):
         shell = BoxLayout(
             orientation="vertical", padding=[dp(20), dp(18), dp(20), dp(18)],
             spacing=dp(13),
         )
         canvas.add_widget(shell)
+        if brand_height:
+            shell.add_widget(MeongLogo(size_hint_y=None, height=dp(brand_height)))
         return shell
 
     @staticmethod
     def _brand(shell, title, subtitle):
-        logo = Image(source=str(LOGO_PATH), fit_mode="contain",
-                     size_hint_y=None, height=dp(117))
-        shell.add_widget(logo)
         shell.add_widget(text_label(title, size=23, height=37, bold=True, color=GOLD))
         shell.add_widget(text_label(subtitle, size=13, height=40, color=MUTED))
 
@@ -477,9 +476,8 @@ class PortraitKioskV2App(App):
 
     def _build_game_notice(self, canvas):
         """Dedicated Meong Fly entry screen, *not* a working receipt/game path."""
-        shell = self._frame(canvas)
-        # This intro has one large Meong mascot, not a duplicated tiny header
-        # logo. The freed vertical room preserves the hero at 452 x 900.
+        # One large shared transparent brand in the hero; no duplicated header.
+        shell = self._frame(canvas, brand_height=0)
         shell.add_widget(text_label(
             "MEONG FLY!", size=28, height=58,
             color=GOLD, bold=True))
@@ -488,8 +486,7 @@ class PortraitKioskV2App(App):
             size=13, height=32, color=CYAN))
 
         hero = PixelCard(orientation="vertical", padding=10, spacing=6)
-        hero.add_widget(Image(
-            source=str(LOGO_PATH), fit_mode="contain"))
+        hero.add_widget(MeongLogo(hero=True))
         hero.add_widget(text_label(
             "MAIN SEKALI, MENANG DAPAT DISKON!",
             size=17, height=46, color=CYAN, bold=True))
@@ -528,7 +525,7 @@ class PortraitKioskV2App(App):
             variant="tertiary", height=48))
 
     def _build_templates(self, canvas):
-        shell = self._frame(canvas)
+        shell = self._frame(canvas, brand_height=64)
         shell.add_widget(text_label(
             "PILIH TEMPLATE STRIP", size=24, height=53,
             color=GOLD, bold=True))

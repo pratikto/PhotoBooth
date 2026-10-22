@@ -1,0 +1,8 @@
+{
+  "photobooth/kiosk_v2/app.py": "f51df58f0fc40410fd291d2f0d250cf6330d9794c228f908c760b8c7d5c2b0a5",
+  "photobooth/kiosk_v2/audio.py": "433c21f404fb26f87f77df50556a7fc8a14a4d7ba4bf0e1d378dd956f5e34c73",
+  "photobooth/kiosk_v2/branding.py": "35f00fddee3c7ef4198cfab94ce03fd7cfc31b8a3cf2a12758bc38cc792072fb",
+  "photobooth/kiosk_v2/assets/meong-fly-camera.png": "bd5513c0ba6b1d6eb355dd89ff4d5abbc7fe99341134f64b1381e8d515b0d227",
+  "photobooth/ui_ads.py": "ef9a238c9d3ca43a66ddc3ddc15ab817d523b15096bd5f93c4a8798d6e948e77",
+  "tools/render_portrait_v2.py": "d4badc8ddb4c9e710352bf9863c606b965eeb29a19534b61d93a336286b8950c"
+}

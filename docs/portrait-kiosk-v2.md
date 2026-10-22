@@ -1,5 +1,12 @@
 # FEAT-022 - Meong Photobooth portrait kiosk GUI v2 (working specification)
 
+> **Windows follow-up (2026-10-22):** owner audit at `3cfa9d2` checked 29/38.
+> Swipe/click/minimize corrections and the new shared transparent Meong logo are
+> under focused retest; latest audio policy is music for image ads, source audio
+> for video ads, and one click on every enabled page action. Payment remains
+> unavailable. [Current screenshots, evidence and retest](qa/portrait-v2-windows-followup/README.md).
+
+
 > **P2.6–P2.8 closure (2026-10-22): non-hardware PASS.** Readable disabled actions,
 > page-revision/suspend guards, audio effect ownership and traceable visual capture
 > are complete. Exact-SHA CI succeeded and original artifacts were downloaded,

@@ -220,6 +220,15 @@ class PortraitKivySmokeTests(unittest.TestCase):
                                       app._return_ad, app._choose_game):
                             route()
                             settle()
+                            from photobooth.kiosk_v2.branding import MeongLogo
+                            brands = [w for w in app.stage.walk() if isinstance(w, MeongLogo)]
+                            self.assertEqual(len(brands), 1)
+                            brand = brands[0]
+                            for part in (brand.art, brand.wordmark, brand.caption):
+                                self.assertGreaterEqual(part.x, brand.x - 1)
+                                self.assertGreaterEqual(part.y, brand.y - 1)
+                                self.assertLessEqual(part.right, brand.right + 1)
+                                self.assertLessEqual(part.top, brand.top + 1)
                             for button in (w for w in app.stage.walk() if isinstance(w, ArcadeButton)):
                                 x, y = button.to_window(button.x, button.y)
                                 self.assertGreaterEqual(button.height, 48)
@@ -370,6 +379,33 @@ class PortraitKivySmokeTests(unittest.TestCase):
                 self.assertEqual(kinds[-1], 'fallback')
             finally:
                 player.close()
+
+    def test_shared_brand_uses_original_transparent_reference_art(self):
+        import hashlib
+        from PIL import Image as PillowImage
+        from photobooth.kiosk_v2.branding import CAMERA_ART
+        self.assertEqual(hashlib.sha256(CAMERA_ART.read_bytes()).hexdigest(),
+                         'bd5513c0ba6b1d6eb355dd89ff4d5abbc7fe99341134f64b1381e8d515b0d227')
+        with PillowImage.open(CAMERA_ART) as source:
+            self.assertEqual(source.size, (224, 152))
+            self.assertEqual(source.convert('RGBA').getchannel('A').getextrema(), (0, 255))
+
+    def test_tutorial_keeps_four_numbered_steps_in_display_order(self):
+        from kivy.uix.scrollview import ScrollView
+        app = PortraitKioskV2App()
+        app.build()
+        try:
+            app._choose_photo()
+            guide = next(w for w in app.stage.walk() if isinstance(w, ScrollView))
+            cards = list(reversed(guide.children[0].children))
+            expected = [('template', '01  PILIH TEMPLATE'), ('payment', '02  BAYAR'),
+                        ('camera', '03  AMBIL 3 FOTO'), ('print', '04  CETAK & SCAN QR')]
+            self.assertEqual(len(cards), 4)
+            for card, (kind, title) in zip(cards, expected):
+                self.assertEqual(next(w.kind for w in card.walk() if isinstance(w, TutorialIcon)), kind)
+                self.assertTrue(any(getattr(w, 'text', '') == title for w in card.walk()))
+        finally:
+            app.on_stop()
 
     def test_carousel_swipe_uses_horizontal_direction_and_rejects_vertical(self):
         self.assertEqual(SwipeGallery.swipe_step(-90, 5), 1)

@@ -76,3 +76,13 @@ Neither cloud check certifies audible Windows speaker output.
 
 Keep the original 29 checks associated with 3cfa9d2; record the new tested SHA,
 OS/display/provider details and individual retest results before changing them.
+
+## Branding and tutorial-order follow-up
+
+Use the exact transparent Meong Fly reference artwork (unchanged bytes) in a shared
+native brand component on each implemented page. No white image plate or game code
+is imported. 52 targeted tests and twelve local screenshots passed; final complete regression
+is 287 run / 285 PASS / 2 optional model-asset skips. Actual wordmark
+pixels and four-step tutorial order are now checked in addition to geometry.
+[Updated screenshots and evidence](portrait-v2-windows-followup/README.md).
+Windows aesthetics, audible sound and repaired swipe still require owner retest.

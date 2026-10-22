@@ -37,6 +37,7 @@ Config.set("graphics", "height", str(options.height if options else 1280))
 from kivy.clock import Clock
 from kivy.core.window import Window
 from photobooth.kiosk_v2.app import PortraitKioskV2App
+from photobooth.kiosk_v2.branding import MeongLogo
 
 
 class VisualRecorder(PortraitKioskV2App):
@@ -71,6 +72,19 @@ class VisualRecorder(PortraitKioskV2App):
                 if original.size != self.dimensions:
                     raise RuntimeError(f"Wrong screenshot size: {original.size}")
                 rgb = original.convert("RGB")
+                brands = [w for w in self.stage.walk() if isinstance(w, MeongLogo)]
+                if len(brands) != 1:
+                    raise RuntimeError(f"Expected one brand on {name}, got {len(brands)}")
+                mark = brands[0].wordmark
+                x, y = mark.to_window(mark.x, mark.y)
+                box = (max(0, int(x)), max(0, int(rgb.height - y - mark.height)),
+                       min(rgb.width, int(x + mark.width)), min(rgb.height, int(rgb.height - y)))
+                if box[2] <= box[0] or box[3] <= box[1]:
+                    raise RuntimeError(f"Offscreen Meong wordmark on {name}")
+                gold_pixels = sum(1 for r, g, b in rgb.crop(box).getdata()
+                                  if abs(r - 255) <= 3 and abs(g - 220) <= 3 and abs(b - 120) <= 3)
+                if gold_pixels < 20:
+                    raise RuntimeError(f"Meong wordmark missing from actual pixels on {name}")
                 left = rgb.crop((2, int(rgb.height * .10),
                                  min(12, rgb.width), int(rgb.height * .90)))
                 rows = ImageChops.difference(
