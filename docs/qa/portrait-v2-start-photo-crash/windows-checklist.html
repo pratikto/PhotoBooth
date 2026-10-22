@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src data:">
+<title>Meong — Form Uji Windows — Setelah Perbaikan Crash</title>
+<style>
+:root{color-scheme:light;--bg:#f4f3fa;--ink:#18203e;--muted:#5a627a;--purple:#5542ac;--line:#dedced;--green:#16764e}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,Segoe UI,sans-serif}main{max-width:920px;margin:auto;padding:28px 18px 60px}header{padding:22px;border-radius:16px;background:#101a43;color:#fff}h1{margin:4px 0;font-size:clamp(23px,4vw,32px)}header p{color:#d6d8f0;margin:8px 0 0}.tag{font-size:12px;font-weight:800;letter-spacing:2px;color:#7ce2fc}
+.panel,section{background:white;border:1px solid var(--line);border-radius:14px;margin-top:18px;padding:20px}.meta{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:block;font-weight:650;font-size:14px}.field input,textarea{width:100%;margin-top:6px;border:1px solid #bdc0d1;border-radius:8px;padding:11px;color:var(--ink);background:#fff;font:inherit}.field input:focus,textarea:focus{outline:3px solid #dad2ff;outline-offset:1px}.wide{grid-column:1/-1}.summary{position:sticky;top:0;z-index:2;box-shadow:0 3px 16px #151a4315;background:#fffffff5;padding:14px 20px;border:1px solid var(--line);border-radius:12px;margin-top:18px}.numbers{display:flex;justify-content:space-between;gap:12px}.numbers strong{color:var(--purple)}progress{display:block;width:100%;height:13px;margin-top:9px;accent-color:var(--green)}h2{font-size:20px;margin:0 0 12px}.section-count{font-size:14px;font-weight:500;color:var(--muted);margin-left:10px}.item{display:flex;align-items:flex-start;gap:12px;padding:13px 7px;border-top:1px solid #efedf6;cursor:pointer;border-radius:6px}.item:hover{background:#f7f5ff}.item input{flex:0 0 23px;width:23px;height:23px;margin:2px 0;accent-color:var(--green);cursor:pointer}.item .id{display:inline-block;min-width:36px;color:var(--purple);font-size:13px;font-weight:750}.item.done{background:#f2faf5}.item.done .id{color:var(--green)}.help{color:var(--muted);font-size:14px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}button{border:0;border-radius:9px;padding:12px 18px;background:var(--purple);color:#fff;font:600 15px system-ui;cursor:pointer;min-height:46px}button.secondary{background:#eeebf8;color:var(--ink)}button.reset{background:#fff;color:#8c3434;border:1px solid #dcc5c5}button:hover{filter:brightness(.95)}#status{min-height:24px;margin-top:12px;color:var(--green)}textarea{min-height:150px;resize:vertical}.footer{font-size:13px;color:var(--muted);margin-top:18px}@media(max-width:580px){.meta{grid-template-columns:1fr}.panel,section{padding:15px}.summary{padding:12px}.item{padding:13px 2px}.item .id{min-width:30px}}@media print{body{background:white}.summary{position:static;box-shadow:none}.actions,#status,.footer{display:none}section{break-inside:avoid}main{padding:0;max-width:none}header{color:#101a43;background:white;border-bottom:2px solid #101a43;border-radius:0}header p{color:#4b526b}}
+</style>
+</head>
+<body><main>
+<header><div class="tag">MEONG PHOTOBOOTH · GUI V2</div><h1>Form Uji Windows — Setelah Perbaikan Crash</h1><p>Mulai dari bagian P. Centang hanya setelah tes lulus. Jika MULAI FOTO masih membuat aplikasi keluar, hentikan uji, tulis catatan dan tekan Submit Hasil. Untuk audio, ulangi alur minimal 20 kali sebelum meluluskan tes berulang.</p></header>
+<div class="panel help">Form untuk versi yang sudah memuat perbaikan <strong>471bbd9</strong>. Isi HEAD yang benar-benar diuji dari perintah <code>git rev-parse --short HEAD</code>. Tidak ada tes yang dicentang otomatis.</div>
+<div class="panel meta">
+<label class="field wide">Branch<input id="branch" data-field value="feature/portrait-kiosk-v2-next"></label>
+<label class="field">HEAD yang diuji<input id="head" data-field value="" placeholder="Hasil git rev-parse --short HEAD"></label>
+<label class="field">Tanggal<input type="date" id="date" data-field value="2026-10-22"></label>
+<label class="field">Versi Windows<input id="windows" data-field placeholder="Contoh: Windows 11"></label>
+<label class="field">Resolusi layar<input id="resolution" data-field placeholder="Contoh: 800 × 1280"></label>
+<label class="field">Display scaling (%)<input id="scaling" data-field placeholder="Contoh: 100%"></label>
+<label class="field">Jumlah putaran selesai<input type="number" min="0" step="1" id="cycles" data-field placeholder="Contoh: 20"></label>
+<label class="field">Speaker / output audio<input id="speaker" data-field placeholder="Nama perangkat yang dipilih"></label>
+</div>
+<div class="summary"><div class="numbers"><strong id="count" aria-live="polite">0 / 41 lulus</strong><span id="save-status" class="help">Menyimpan…</span></div><progress id="progress" value="0" max="41" aria-label="Jumlah tes lulus"></progress></div>
+<div id="sections"></div>
+<div class="panel"><h2>Catatan masalah</h2><label class="field" for="notes">Tulis ID item, langkah mengulang, yang terjadi, dan yang diharapkan.</label><textarea id="notes" data-field placeholder="Contoh: P02 — aplikasi keluar setelah MULAI FOTO. Atau G03 — musik hilang pada putaran ke-7. Sertakan log error jika tersedia."></textarea>
+<div class="actions"><button id="submit" type="button">Submit Hasil</button><button id="copy" class="secondary" type="button">Salin prompt</button><button id="download" type="button">Unduh hasil .txt</button><button id="print" class="secondary" type="button">Cetak / PDF</button><button id="reset" class="reset" type="button">Kosongkan checklist</button></div><div id="status" role="status" aria-live="polite"></div></div>
+<div id="submission" class="panel" hidden><h2>Prompt siap dikirim</h2><p>Tempel teks ini ke kolom chat lalu tekan Kirim. File offline ini tidak dapat mengirim otomatis ke percakapan.</p><textarea id="prompt-output" readonly aria-label="Laporan untuk prompt chat"></textarea></div>
+<p class="footer">Form versi 3 berisi 41 item (P dan A–G). Ini berbeda dari audit dan form sebelumnya. Centang versi lama tidak diimpor agar hasil tes baru tidak tertukar. Centang dan catatan tersimpan di browser ini bila penyimpanan tersedia. Gunakan Unduh hasil untuk menyimpan salinan yang bisa dibagikan.</p>
+</main>
+<script>
+const SECTIONS = [["P", "Mulai di sini: cek perbaikan crash", ["Aplikasi terbuka di halaman iklan tanpa keluar atau layar hitam.", "Tekan MULAI FOTO: tutorial terbuka dan aplikasi tetap berjalan.", "Tekan LANJUT PILIH TEMPLATE: galeri terbuka dan aplikasi tetap berjalan."]], ["A", "Logo & tampilan", ["Logo transparan tampil pada halaman iklan.", "Logo tampil pada tutorial, galeri, dan game preview.", "Logo tidak terpotong, gepeng, atau menutupi konten.", "Semua teks dan tombol utama terlihat utuh.", "Empat langkah tutorial berurutan: Pilih Template → Bayar → Ambil 3 Foto → Cetak & Scan QR.", "Tutorial dapat di-scroll sampai langkah keempat."]], ["B", "Swipe & galeri", ["Swipe ke kiri di atas preview berpindah ke template berikutnya.", "Swipe ke kanan berpindah ke template sebelumnya.", "Satu swipe hanya berpindah satu template.", "Swipe vertikal dan gerakan pendek tidak mengubah template.", "Swipe dapat dilakukan di preview tengah maupun samping.", "Tombol SEBELUMNYA/BERIKUTNYA dan jumlah cetak ± tetap berfungsi."]], ["C", "Suara tombol", ["Tombol di halaman iklan berbunyi satu kali setiap ditekan.", "Tombol overlay undangan berbunyi satu kali.", "Tombol tutorial dan game preview berbunyi satu kali.", "Tombol galeri, panah, dan ± tidak menghasilkan bunyi ganda."]], ["D", "Musik & audio iklan", ["Iklan GAMBAR memiliki musik background.", "Iklan VIDEO menggunakan audio videonya sendiri tanpa musik GUI.", "Saat playlist gambar → video, musik GUI berhenti.", "Saat playlist video → gambar, musik GUI kembali terdengar.", "Musik terdengar otomatis ketika tutorial dibuka.", "Musik berlanjut ke galeri tanpa restart atau tumpang tindih.", "UJI MUSIK menghasilkan suara nyata dari speaker.", "Game preview tidak memiliki musik GUI; klik tombol tetap terdengar."]], ["E", "Minimize, keluar & navigasi", ["Saat diminimalkan, musik/audio iklan berhenti sementara.", "Saat dipulihkan, audio kembali sesuai halaman tanpa menjadi ganda.", "Menutup aplikasi tidak meninggalkan suara.", "Membuka ulang aplikasi berjalan normal dan dimulai dari iklan.", "Kembali ke iklan mengosongkan keranjang dan mereset tutorial.", "Tap cepat/berulang tidak menyebabkan crash atau halaman meloncat."]], ["F", "Batas prototype", ["Pembayaran dan scanner tetap nonaktif.", "Tidak ada transaksi, pembayaran, atau diskon nyata yang dibuat."]], ["G", "Resize & pemakaian berulang", ["Kecilkan jendela ke 452×600 atau 360×640: tiga preview dan seluruh tombol tetap terlihat.", "Resize saat memilih template: pilihan, jumlah cetak dan musik tidak direset.", "Selesaikan minimal 20 putaran iklan → tutorial → galeri → iklan: musik dan klik tetap terdengar di setiap putaran.", "Ulangi pergantian iklan gambar → video → gambar: musik GUI kembali di gambar tanpa bercampur dengan suara video.", "Minimize/pulihkan berulang: audio sesuai halaman, tanpa bunyi ganda.", "Sesudah 20 putaran, tutup dan buka ulang: tidak ada suara tertinggal dan aplikasi kembali normal."]]];
+const KEY = 'meong-windows-start-photo-41-v3';
+const FIELDS = ['branch','head','date','windows','resolution','scaling','speaker','cycles','notes'];
+const defaults = Object.fromEntries(FIELDS.map(id=>[id,document.getElementById(id).value]));
+const items = [];
+for (const [code,title,labels] of SECTIONS) {
+ const section=document.createElement('section');
+ const heading=document.createElement('h2'); heading.textContent=code+'. '+title;
+ const count=document.createElement('span'); count.className='section-count';count.id='count-'+code; heading.append(count);section.append(heading);
+ labels.forEach((text,index)=>{
+  const id=code+String(index+1).padStart(2,'0');
+  const label=document.createElement('label');label.className='item';label.htmlFor=id;
+  const box=document.createElement('input');box.type='checkbox';box.id=id;
+  const copy=document.createElement('span');const badge=document.createElement('span');badge.className='id';badge.textContent=id;
+  copy.append(badge,document.createTextNode(text));label.append(box,copy);section.append(label);
+  items.push({id,text,code,box,label});box.addEventListener('change',()=>{update();save();});
+ });
+ document.getElementById('sections').append(section);
+}
+function update(){
+ const done=items.filter(item=>item.box.checked).length;
+ document.getElementById('count').textContent=done+' / '+items.length+' lulus';
+ document.getElementById('progress').value=done;
+ for(const [code,,labels] of SECTIONS)document.getElementById('count-'+code).textContent=items.filter(i=>i.code===code&&i.box.checked).length+'/'+labels.length;
+ for(const item of items)item.label.classList.toggle('done',item.box.checked);
+}
+function save(){
+ if(!document.getElementById('submission').hidden)document.getElementById('prompt-output').value=promptReport();
+ const data={fields:Object.fromEntries(FIELDS.map(id=>[id,document.getElementById(id).value])),checked:items.filter(i=>i.box.checked).map(i=>i.id)};
+ try{localStorage.setItem(KEY,JSON.stringify(data));document.getElementById('save-status').textContent='Tersimpan di browser ini';}
+ catch{document.getElementById('save-status').textContent='Gunakan Unduh hasil untuk menyimpan';}
+}
+function restore(){
+ try{
+  const raw=localStorage.getItem(KEY);if(!raw)return;const data=JSON.parse(raw);
+  for(const id of FIELDS)if(typeof data.fields?.[id]==='string')document.getElementById(id).value=data.fields[id];
+  const checked=new Set(Array.isArray(data.checked)?data.checked:[]);for(const item of items)item.box.checked=checked.has(item.id);
+ }catch{document.getElementById('save-status').textContent='Gunakan Unduh hasil untuk menyimpan';}
+}
+function report(){
+ const names={branch:'Branch',head:'HEAD yang diuji',date:'Tanggal',windows:'Versi Windows',resolution:'Resolusi layar',scaling:'Display scaling (%)',speaker:'Speaker/output audio',cycles:'Jumlah putaran selesai'};
+ const lines=['MEONG PHOTOBOOTH GUI V2 — UJI SETELAH PERBAIKAN CRASH V3 (41 ITEM)'];
+ for(const [id,name] of Object.entries(names))lines.push(name+': '+document.getElementById(id).value);
+ const done=items.filter(i=>i.box.checked).length;lines.push('','Lulus: '+done+'/'+items.length,'Belum dicentang (gagal/belum diuji): '+(items.length-done),'');
+ for(const [code,title] of SECTIONS){lines.push(code+'. '+title);for(const i of items.filter(i=>i.code===code))lines.push((i.box.checked?'[x] ':'[ ] ')+i.id+' '+i.text);lines.push('');}
+ lines.push('CATATAN MASALAH',document.getElementById('notes').value||'(Belum ada catatan)');return lines.join('\n');
+}
+function promptReport(){
+ return 'Berikut hasil retest Windows Meong Photobooth v2. Tolong analisis hasil dan catatan masalah. Item kosong berarti gagal atau belum diuji; jangan otomatis dianggap lulus.\n\n'+report();
+}
+function submitReport(){
+ save();
+ document.getElementById('submission').hidden=false;
+ const output=document.getElementById('prompt-output');
+ output.value=promptReport();output.focus();output.select();
+ status('Prompt disiapkan. Salin lalu tempel ke kolom chat dan tekan Kirim.');
+}
+function status(text){document.getElementById('status').textContent=text;}
+async function copyReport(){
+ try{
+  if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(promptReport());
+  else{
+   const temp=document.createElement('textarea');temp.value=promptReport();document.body.append(temp);temp.select();const ok=document.execCommand('copy');temp.remove();if(!ok)throw new Error('copy');
+  }
+  status('Hasil disalin. Tempelkan di chat untuk dikirim.');
+ }catch{status('Browser tidak mengizinkan salin otomatis. Gunakan Unduh hasil .txt.');}
+}
+FIELDS.forEach(id=>document.getElementById(id).addEventListener('input',save));
+document.getElementById('submit').addEventListener('click',submitReport);
+document.getElementById('copy').addEventListener('click',copyReport);
+document.getElementById('download').addEventListener('click',()=>{
+ const file=new Blob([report()],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(file);const a=document.createElement('a');a.href=url;a.download='meong-windows-retest.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);status('File hasil siap disimpan.');
+});
+document.getElementById('print').addEventListener('click',()=>window.print());
+document.getElementById('reset').addEventListener('click',()=>{
+ if(!confirm('Kosongkan semua centang, data perangkat, dan catatan pada checklist ini?'))return;
+ document.getElementById('submission').hidden=true;document.getElementById('prompt-output').value='';
+ for(const i of items)i.box.checked=false;for(const id of FIELDS)document.getElementById(id).value=defaults[id];update();save();status('Checklist dikosongkan.');
+});
+restore();update();save();
+</script></body></html>

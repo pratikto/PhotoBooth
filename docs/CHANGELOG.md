@@ -2,6 +2,11 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased — post-crash Windows checklist form] — 2026-10-22
+
+- Add a clickable 41-item retest form beginning with startup / MULAI FOTO / tutorial-to-gallery crash checks, plus cycle-count metadata and the existing audio/resize checks. Submit Hasil prepares a prompt for manual paste into chat; separate storage keeps earlier checkmarks from passing the new gate.
+- JavaScript syntax and DOM behavior checks PASS. [Form and usage](qa/portrait-v2-start-photo-crash/windows-checklist.html). Application source and existing device-acceptance status are unchanged.
+
 ## [Unreleased — Windows MULAI FOTO crash correction] — 2026-10-22
 
 - Owner log identifies Windows Python 3.12 TypeError from CDLL(None, handle=...) in the previous correction, followed by a native ffpyplayer channel-layout error and reported app exit.

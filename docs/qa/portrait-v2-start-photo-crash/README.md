@@ -112,6 +112,17 @@ python tools/run_portrait_v2.py
 - [ ] Resize and swipe still work; minimize/restore/close leave no duplicate sound.
 - [ ] Payment, scanner, real discounts and production transactions remain inactive.
 
-The [clickable retest form](../portrait-v2-retest-9a9e18e/windows-checklist.html)
-still includes Submit Hasil. Record the actual updated HEAD, then paste its
-prepared prompt into chat. **Physical owner acceptance remains OPEN.**
+The [current clickable retest form](windows-checklist.html) has **41 items**,
+starting with P01–P03 for startup, MULAI FOTO and tutorial-to-gallery crash checks.
+It also records the actual completed cycle count and retains the audio/resize
+checks. Start with P02; if the app exits, stop, leave it unchecked and include the
+error in the notes. Prior-version checkmarks are not imported.
+
+**Submit Hasil** prepares the result prompt; **Salin prompt** copies it for manual
+paste/send in chat. Checkmarks/notes persist locally; TXT download and printing
+remain available. JavaScript syntax and DOM checks PASS for 41 items, metadata,
+cycle count, submit/live updates, persistence, old-state isolation, reset and
+storage-unavailable fallback. No new physical Windows or browser-render PASS is
+claimed for this documentation form.
+
+Record the actual updated HEAD. **Physical owner acceptance remains OPEN.**
