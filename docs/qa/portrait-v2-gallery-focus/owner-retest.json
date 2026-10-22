@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-22",
+  "branch": "feature/portrait-kiosk-v2-next",
+  "tested_head": null,
+  "windows": "Windows 11",
+  "resolution": null,
+  "display_scaling": null,
+  "output": "laptop speaker",
+  "reported_completed_cycles": 10,
+  "raw_checked": 41,
+  "raw_total": 41,
+  "duration_qualified_items": [
+    "G03",
+    "G06"
+  ],
+  "required_cycles_for_those_items": 20,
+  "notes": [
+    "Slight lag on button presses",
+    "Wants strip images to slide in animations",
+    "Dislikes template picker layout because previews are small"
+  ],
+  "clarification": "Owner says resize works at any window size; HEAD/resolution/scaling were not supplied.",
+  "acceptance": "Owner reports successful crash/swipe/audio behavior across ten cycles; twenty-cycle gate and exact-SHA acceptance remain unverified."
+}

@@ -143,6 +143,13 @@ class PortraitAudio:
                 self.last_error = f"{name}: {type(exc).__name__}"
         return self._handles[name]
 
+    def prepare(self):
+        """Load silent handles during idle; first tap must not open a WAV file."""
+        if not self.enabled or self.suspended:
+            return False
+        handles = [self._sound(name) for name in ('button', 'music')]
+        return all(handle is not None for handle in handles)
+
     @staticmethod
     def _stop(handle):
         if handle is not None:
@@ -193,7 +200,7 @@ class PortraitAudio:
             self.ad_media = "video"
         if page not in MUSIC_PAGES:
             for name, handle in self._handles.items():
-                if name != "music":
+                if name not in {"music", "button"}:
                     self._stop(handle)
         return self._sync_music()
 

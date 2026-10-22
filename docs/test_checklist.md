@@ -445,3 +445,13 @@ Branding follow-up: 52 targeted tests PASS and twelve screenshots reviewed, incl
 - [ ] Owner retest: MULAI FOTO opens tutorial without exiting, then twenty visits retain audible music/clicks.
 
 [Current crash evidence and checkpoint](qa/portrait-v2-start-photo-crash/README.md).
+
+## Owner ten-cycle retest / response follow-up — 2026-10-22
+
+- [x] Preserve raw 41/41 checked result with ten reported cycles and unknown HEAD.
+- [ ] G03/G06 twenty-cycle acceptance: still unverified; do not infer from checkmarks.
+- [x] 68 focused checks PASS for idle audio/preview warmup and immediate click order.
+- [ ] Gallery preview focus / image slide polish: next authorized step.
+- [ ] Fresh Windows response/layout/motion retest with actual HEAD.
+
+[Owner audit and response timings](qa/portrait-v2-gallery-focus/README.md).

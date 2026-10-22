@@ -2,6 +2,12 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased — owner retest and button response] — 2026-10-22
+
+- Record 41 checked boxes with ten completed Windows cycles and an unknown tested HEAD; G03/G06 twenty-cycle acceptance stays open. Owner confirms resize works and requests larger strip previews and visible sliding motion.
+- Warm silent WAV handles and CPU strip previews outside button callbacks; play a valid click before navigation, preserve it across page handoffs, and keep camera effects/suspend/close ownership. Copy changes only update order text.
+- 68 focused tests PASS, including worker cancellation/nonblocking access and native PCM checks. Local timings and hardware limits are preserved in the [current evidence](qa/portrait-v2-gallery-focus/README.md); gallery polish follows.
+
 ## [Unreleased — post-crash Windows checklist form] — 2026-10-22
 
 - Add a clickable 41-item retest form beginning with startup / MULAI FOTO / tutorial-to-gallery crash checks, plus cycle-count metadata and the existing audio/resize checks. Submit Hasil prepares a prompt for manual paste into chat; separate storage keeps earlier checkmarks from passing the new gate.

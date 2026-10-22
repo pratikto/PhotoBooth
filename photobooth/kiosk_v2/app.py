@@ -32,14 +32,16 @@ from .illustrations import TutorialIcon
 from .flow import ADVERT, BROWSING_PAGES, GAME_PREVIEW, TEMPLATES, TUTORIAL, VisitFlow
 from .theme import ArcadeButton, CYAN, GOLD, MUTED, PixelCard, PINK, Starfield, WHITE, text_label
 from .viewport import PortraitViewport
+from .previews import PreviewPreloader
 
 
 LOG = logging.getLogger(__name__)
 
 
-def _portrait_strip_texture(template):
+def _portrait_strip_texture(template, preview=None):
     """Convert only this approved master preview to a GPU texture, preserving 1:3."""
-    preview = create_template_preview(template, (180, 540)).convert("RGB")
+    if preview is None:
+        preview = create_template_preview(template, (180, 540)).convert("RGB")
     texture = Texture.create(size=preview.size, colorfmt="rgb")
     texture.blit_buffer(preview.tobytes(), colorfmt="rgb", bufferfmt="ubyte")
     texture.flip_vertical()
@@ -144,6 +146,7 @@ class PortraitKioskV2App(App):
         self.quantities = {t.template_id: 0 for t in self.templates}
         self.template_index = 0
         self._textures = {}
+        self._preview_preloader = PreviewPreloader(self.templates)
         self._ad_player = None
         self._invitation = None
         self._invitation_timer = None
@@ -151,9 +154,17 @@ class PortraitKioskV2App(App):
         self._last_activity = time.monotonic()
         self.stage = ScreenManager(transition=NoTransition())
         self._show()
+        self._warmup = Clock.schedule_once(self._prepare_idle_assets, 0)
         self._heartbeat = Clock.schedule_interval(self._tick, 1)
         Window.bind(on_minimize=self._window_minimized, on_restore=self._window_restored)
         return self.stage
+
+    def _prepare_idle_assets(self, _dt):
+        if self._closed:
+            return
+        self._preview_preloader.start()
+        if not self._suspended:
+            self.audio_v2.prepare()
 
     def _window_minimized(self, *_args):
         self.on_pause()
@@ -184,6 +195,10 @@ class PortraitKioskV2App(App):
         self._retire_gestures()
         if getattr(self, "_heartbeat", None):
             self._heartbeat.cancel()
+        if getattr(self, '_warmup', None):
+            self._warmup.cancel()
+        if getattr(self, '_preview_preloader', None):
+            self._preview_preloader.close()
         self._close_invitation()
         self._stop_ad()
         if getattr(self, "audio_v2", None):
@@ -285,10 +300,10 @@ class PortraitKioskV2App(App):
         button = ArcadeButton(title, variant=variant, height=height)
         button.disabled = disabled
         def activate():
+            # Give feedback before routing/decoder retirement. The short shared
+            # click now survives page handoffs; suspend/close still stop it.
+            self.audio_v2.cue("button")
             callback()
-            # Play after routing so a silent-page handoff cannot cut this click.
-            if not self._closed:
-                self.audio_v2.cue("button")
 
         invoke = self._page_callback(activate)
         button.bind(on_release=lambda *_: None if button.disabled else invoke())
@@ -635,7 +650,7 @@ class PortraitKioskV2App(App):
         old = self.quantities[template.template_id]
         self.quantities[template.template_id] = max(0, min(9, old + delta))
         self._activity()
-        self._update_template()
+        self._update_order()
 
     def _update_template(self):
         template = self.templates[self.template_index]
@@ -646,10 +661,15 @@ class PortraitKioskV2App(App):
         )
         for item in (previous, template, following):
             if item.template_id not in self._textures:
-                self._textures[item.template_id] = _portrait_strip_texture(item)
+                self._textures[item.template_id] = _portrait_strip_texture(
+                    item, self._preview_preloader.get(item))
         self._previous_preview.texture = self._textures[previous.template_id]
         self._preview.texture = self._textures[template.template_id]
         self._next_preview.texture = self._textures[following.template_id]
+        self._update_order()
+
+    def _update_order(self):
+        template = self.templates[self.template_index]
         self._copy_value.text = str(self.quantities[template.template_id])
         quote = quote_order(self.templates, self.quantities)
         total = f"{quote.total_amount:,}".replace(",", ".")

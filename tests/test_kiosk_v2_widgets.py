@@ -22,6 +22,27 @@ else:
 
 @unittest.skipUnless(HAS_KIVY, "Kivy not available in pure-Python test environment")
 class PortraitKivySmokeTests(unittest.TestCase):
+    def test_button_feedback_precedes_expensive_callback_and_copy_does_not_render_previews(self):
+        from unittest.mock import patch
+        app = PortraitKioskV2App()
+        app.build()
+        try:
+            events = []
+            with patch.object(app.audio_v2, 'cue', side_effect=lambda *_: events.append('click')):
+                action = app._action('test', lambda: events.append('route'))
+                action.dispatch('on_release')
+            self.assertEqual(events, ['click', 'route'])
+            app._choose_photo()
+            app._complete_tutorial()
+            with patch.object(app, '_update_template') as render:
+                app._change_copies(1)
+                render.assert_not_called()
+            self.assertEqual(app.quantities[app.templates[0].template_id], 1)
+        finally:
+            app.on_stop()
+        app._prepare_idle_assets(0)  # Queued idle callback after close is inert.
+        self.assertFalse(app._preview_preloader._futures)
+
     @unittest.skipUnless(os.environ.get('PHOTOBOOTH_TEST_AUDIO') == '1',
                          'native audio route requires PHOTOBOOTH_TEST_AUDIO=1')
     def test_start_photo_with_enabled_native_audio_keeps_gui_on_tutorial_and_gallery(self):

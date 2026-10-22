@@ -145,15 +145,38 @@ class PortraitAudioTests(unittest.TestCase):
         self.assertEqual(effect.state, "stop")
         self.assertEqual(effect.plays, 1)
 
-    def test_page_handoff_stops_old_effects_but_allows_new_click(self):
+    def test_page_handoff_preserves_immediate_click_but_stops_camera_effects(self):
         for page in ("advert", "game_preview"):
             self.audio.enter_page("tutorial")
             self.audio.cue("button")
             effect = self.loaded[SOUND_FILES["button"]]
+            self.audio.cue('count')
+            camera = self.loaded[SOUND_FILES['count']]
             self.audio.enter_page(page)
-            self.assertEqual(effect.state, "stop")
+            self.assertEqual(effect.state, "play")
+            self.assertEqual(camera.state, 'stop')
             self.assertFalse(self.audio.cue("shutter"))
             self.assertTrue(self.audio.cue("button"))
+
+    def test_prepare_loads_once_silently_and_never_restarts_a_playing_song(self):
+        self.assertTrue(self.audio.prepare())
+        self.assertEqual(set(self.loaded), {SOUND_FILES['music'], SOUND_FILES['button']})
+        for clip in self.loaded.values():
+            self.assertEqual(clip.plays, 0)
+            self.assertEqual(clip.volume, 0)
+        self.audio.enter_page('tutorial')
+        music = self.loaded[SOUND_FILES['music']]
+        self.assertTrue(self.audio.prepare())
+        self.assertEqual(music.plays, 1)
+        self.assertEqual(music.volume, self.audio.music_gain)
+
+    def test_prepare_during_suspend_or_disabled_audio_never_loads(self):
+        self.audio.enabled = False
+        self.assertFalse(self.audio.prepare())
+        self.audio.enabled = True
+        self.audio.suspend()
+        self.assertFalse(self.audio.prepare())
+        self.assertFalse(self.loaded)
 
     def test_suspend_resume_and_cleanup(self):
         self.audio.enter_page("tutorial")
