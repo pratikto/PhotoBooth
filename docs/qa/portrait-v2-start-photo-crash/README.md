@@ -74,11 +74,22 @@ These are Linux synthetic captures, not Windows display/speaker acceptance.
 
 A dedicated **windows-latest / Python 3.12** job now installs genuine Windows
 Kivy/ffpyplayer providers and runs DLL/default-WAV plus 20-cycle native PCM tests
-with SDL dummy output. CI result is pending until the code commit is pushed and
-that exact job completes; do not infer Windows success from local Linux results.
+with SDL dummy output. **Verified exact-SHA CI**:
+[run 39742760872](https://github.com/pratikto/PhotoBooth/actions/runs/39742760872)
+on `471bbd9064f6fbf15264c15cc5f1fb3ffbd52144` completed **SUCCESS**; all **three
+jobs SUCCESS** independently checked. The Windows job completed **29 audio
+tests, all PASS**, including real named-DLL/default-WAV loading and twenty
+native PCM cycles. Installed Kivy 2.3.1, SDL dependency 0.8.0 and ffpyplayer 4.5.3
+match the versions relevant to the owner's log. [Windows transcript extract](windows-ci-tests.txt),
+[run metadata](39742760872-run.json), [job/step metadata](39742760872-jobs.json).
+This is genuine Windows execution with a dummy output device; physical speaker
+and Windows touchscreen/advertising-codec acceptance still need the owner test.
 
 ## Checkpoints and acceptance
 
+- Corrected code checkpoint: `471bbd9064f6fbf15264c15cc5f1fb3ffbd52144`, pushed to
+  the required branch and remote HEAD verified. All three CI jobs PASS above.
+- Final CI-evidence documentation commits change no application source.
 - Before this fix: `6dc1f88`, **known to contain this crash**.
 - Last owner-tested pre-channel-recovery reference: `9a9e18e`, with the older
   repeated-audio/short-window failures; it is not a complete accepted rollback.

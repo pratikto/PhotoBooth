@@ -441,7 +441,7 @@ Branding follow-up: 52 targeted tests PASS and twelve screenshots reviewed, incl
 - [x] Correct named existing HMODULE loading; default Windows fallback stays on SDL2 or unavailable audio.
 - [x] 62 focused PASS; five audio-enabled button-flow visits; full suite 297 run / 295 PASS / 2 optional model skips.
 - [x] Twelve reviewed screenshots with audio enabled at 800×1280 and 452×900.
-- [ ] Exact-SHA native Windows CI job must complete successfully.
+- [x] Exact-SHA CI at `471bbd9`, run 39742760872: all three jobs SUCCESS, including 29 Windows audio tests and native PCM/DLL checks.
 - [ ] Owner retest: MULAI FOTO opens tutorial without exiting, then twenty visits retain audible music/clicks.
 
 [Current crash evidence and checkpoint](qa/portrait-v2-start-photo-crash/README.md).

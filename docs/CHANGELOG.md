@@ -6,7 +6,7 @@ This file tracks **actual verified repository/document changes**, not successful
 
 - Owner log identifies Windows Python 3.12 TypeError from CDLL(None, handle=...) in the previous correction, followed by a native ffpyplayer channel-layout error and reported app exit.
 - Name the already loaded SDL2 mixer DLL explicitly. Default Windows WAV fallback tries plain SDL2 and otherwise returns unavailable audio; it no longer automatically opens a second FFmpeg WAV decoder after that failure. Explicit provider overrides remain respected.
-- 62 focused checks PASS, five audio-enabled start-button visits, native 20-cycle PCM checks, complete regression 297 run / 295 PASS / 2 optional skips and twelve reviewed screenshots. Add genuine Windows native-audio CI; its result remains pending until verified. [Diagnosis, evidence, checkpoints and retest](qa/portrait-v2-start-photo-crash/README.md).
+- 62 focused checks PASS, five audio-enabled start-button visits, native 20-cycle PCM checks, complete regression 297 run / 295 PASS / 2 optional skips and twelve reviewed screenshots. Genuine Windows CI now passes 29 audio tests; exact code SHA `471bbd9`, run 39742760872, all three jobs SUCCESS. Physical operator retest remains open. [Diagnosis, evidence, checkpoints and retest](qa/portrait-v2-start-photo-crash/README.md).
 
 ## [Unreleased — live window scaling and repeat-use retest] — 2026-10-22
 

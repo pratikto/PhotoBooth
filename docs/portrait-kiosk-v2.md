@@ -3,7 +3,8 @@
 > **Current Windows crash follow-up:** owner log shows MULAI FOTO exits after
 > the previous correction's CDLL(None) TypeError and native FFmpeg WAV fallback
 > error. Named DLL loading and SDL-only default Windows fallback are corrected;
-> native Windows CI and physical operator retest are separate gates.
+> native Windows CI passes 29 audio tests at `471bbd9`; physical operator
+> retest remains open.
 > [Current diagnosis and acceptance](qa/portrait-v2-start-photo-crash/README.md).
 
 > **Latest owner retest (`9a9e18e`):** 27/32 checklist total; single-flow clicks/music
