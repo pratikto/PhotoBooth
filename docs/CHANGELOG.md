@@ -6,7 +6,7 @@ This file tracks **actual verified repository/document changes**, not successful
 
 - Reuse exact transparent camera-cat artwork from the read-only Meong Fly reference in a native shared Meong lockup. Add it to every implemented page, including the template gallery; replace the game preview white plate with one hero brand. No game code or v1/QR logo changes.
 - Check real rendered wordmark pixels per screenshot, preserve artwork provenance and add ordered tutorial/brand bounds regressions. 52 targeted tests PASS; complete regression 287 run / 285 PASS / 2 optional model-asset skips; twelve screenshots reviewed at both portrait sizes. [Evidence and Windows retest](qa/portrait-v2-windows-followup/README.md).
-- Input/audio predecessor `37c0024` passes exact-SHA CI; owner Windows acceptance remains 29/38 at the audited version until retested.
+- Both source checkpoints independently pass CI: input/audio `37c0024` / run 39710969312 and shared brand `faa1c7d` / run 39711930820. Remote HEADs were verified after each push. Owner Windows acceptance remains 29/38 at the audited version until retested.
 
 ## [Unreleased — Windows input/audio follow-up] — 2026-10-22
 

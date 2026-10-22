@@ -10,8 +10,11 @@ Those device checks do not automatically become PASS on repaired code.
 - Input/audio fix: `37c0024e002d2a809ddb9267dc874653d389a8b5`.
   [Exact-SHA CI 39710969312](https://github.com/pratikto/PhotoBooth/actions/runs/39710969312)
   completed SUCCESS; both jobs SUCCESS (metadata preserved here).
-- Visual branding follows that input/audio checkpoint in a separate scoped commit.
-  Its CI result must be recorded separately, without inheriting 37c0024 success.
+- Visual branding: `faa1c7d7aa6fb6f87ad10a7d686ad0b0baa3005d`.
+  [Exact-SHA CI 39711930820](https://github.com/pratikto/PhotoBooth/actions/runs/39711930820)
+  completed SUCCESS; both jobs SUCCESS, verified separately from the input/audio run.
+- Pre-brand rollback is input/audio checkpoint `37c0024`; pre-fix Windows rollback
+  is `3cfa9d2`. No reset, force-push or master change was performed.
 
 ## Input/audio evidence
 

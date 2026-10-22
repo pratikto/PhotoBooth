@@ -86,3 +86,16 @@ is 287 run / 285 PASS / 2 optional model-asset skips. Actual wordmark
 pixels and four-step tutorial order are now checked in addition to geometry.
 [Updated screenshots and evidence](portrait-v2-windows-followup/README.md).
 Windows aesthetics, audible sound and repaired swipe still require owner retest.
+
+## Published repair checkpoints (Windows retest OPEN)
+
+- Input/audio: `37c0024e002d2a809ddb9267dc874653d389a8b5`, CI
+  [39710969312](https://github.com/pratikto/PhotoBooth/actions/runs/39710969312), both jobs SUCCESS.
+- Shared brand: `faa1c7d7aa6fb6f87ad10a7d686ad0b0baa3005d`, CI
+  [39711930820](https://github.com/pratikto/PhotoBooth/actions/runs/39711930820), both jobs SUCCESS.
+- Final local complete suite: 287 run / 285 PASS / 2 optional model-asset skips;
+  focused suites: 52 PASS. Twelve local screenshots and actual brand pixels checked.
+
+These checkpoints are source/synthetic evidence, not a new 38/38 Windows claim.
+The subsequent documentation-only commit records this evidence; it does not
+inherit a separate CI run. Pull this same branch on Windows and retest the open IDs.
