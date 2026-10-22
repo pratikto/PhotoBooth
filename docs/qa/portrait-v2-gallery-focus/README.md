@@ -1,5 +1,12 @@
 # Owner retest and gallery polish — 2026-10-22
 
+> **Later owner V4 result (2026-10-23):** 33/35 checked at five Windows cycles,
+> with an explicit crash returning to advertising. New gallery, typography,
+> animation and response are positively reported; global navigation acceptance
+> is BLOCKED. Twenty-cycle and exact-HEAD acceptance are unverified. See the
+> [current BUG-012 investigation and diagnostic retest](../portrait-v2-return-ad-crash/README.md).
+> The dated evidence below remains valid at its own source checkpoints.
+
 Branch: `feature/portrait-kiosk-v2-next`. Starting code/document checkpoint:
 `29a34198a4893df6fc399ac64767a04b7401935e`.
 

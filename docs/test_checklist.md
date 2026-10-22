@@ -461,3 +461,16 @@ Branding follow-up: 52 targeted tests PASS and twelve screenshots reviewed, incl
 - [x] 2026-10-23: V4 clickable 35-item form with Submit, fresh storage and enforced twenty-cycle qualification; syntax and 11 DOM behavior checks PASS. This is form verification, not application/device acceptance.
 
 [Owner audit and response timings](qa/portrait-v2-gallery-focus/README.md).
+
+## Windows V4 five-cycle retest / BUG-012 — 2026-10-23
+
+- [x] Preserve raw 33/35 checked result, five cycles, scaling 100%, unknown tested HEAD/resolution.
+- [x] Explicit crash returning to advertising qualifies checked F02 and blocks overall navigation acceptance; preserve the other positive device observations.
+- [ ] F05/F06: twenty-cycle duration remains unverified.
+- [x] Reproduce MP4 passed to the image loader (red regression), then remove that probe while preserving explicit previews.
+- [x] Persistent local launcher diagnostics: seven tests PASS; full focused 79 PASS.
+- [x] Full regression: 314 run / 312 PASS / 2 optional model skips; no failures/errors.
+- [x] Native video/audio: twenty Linux cycles complete before and after; diagnostic trace records twenty returns and no MP4 image-probe errors after correction.
+- [ ] BUG-012 Windows crash cause identified and device return-to-advertising retest PASS.
+
+[Evidence and next focused Windows check](qa/portrait-v2-return-ad-crash/README.md).

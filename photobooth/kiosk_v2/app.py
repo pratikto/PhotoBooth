@@ -190,6 +190,8 @@ class PortraitKioskV2App(App):
 
     def _show(self):
         """Retire old media before rebuilding only the opt-in v2 page tree."""
+        LOG.info('Page rebuild begin from=%s to=%s revision=%s',
+                 self.stage.current, self.navigation.page, self._view_revision + 1)
         self._view_revision += 1
         self._close_invitation()
         self._stop_ad()
@@ -202,6 +204,7 @@ class PortraitKioskV2App(App):
         self.stage.add_widget(page)
         self.stage.current = page.name
         self.audio_v2.enter_page(self.navigation.page)
+        LOG.info('Page media retired; audio owner=%s; building view', self.navigation.page)
         if page.name == ADVERT:
             self._build_advert(canvas)
         elif page.name == TUTORIAL:
@@ -212,6 +215,7 @@ class PortraitKioskV2App(App):
             self._build_game_notice(canvas)
         else:
             raise RuntimeError("Unknown prototype page")
+        LOG.info('Page ready page=%s revision=%s', page.name, self._view_revision)
 
     def _frame(self, canvas, *, brand_height=100):
         shell = BoxLayout(
@@ -278,6 +282,7 @@ class PortraitKioskV2App(App):
         self.template_index = 0
 
     def _return_ad(self):
+        LOG.info('Return to advertising requested from=%s', self.navigation.page)
         self.navigation.to_advertising()
         self._reset_visit()
         self._activity()

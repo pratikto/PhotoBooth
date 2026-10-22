@@ -22,6 +22,21 @@ else:
 
 @unittest.skipUnless(HAS_KIVY, "Kivy not available in pure-Python test environment")
 class PortraitKivySmokeTests(unittest.TestCase):
+    def test_video_source_is_not_probed_as_an_image_and_explicit_poster_still_loads(self):
+        from unittest.mock import Mock, patch
+        from photobooth.ui_ads import GuardedVideo
+        from photobooth.kiosk_v2.branding import CAMERA_ART
+        with patch.object(GuardedVideo, 'set_texture_from_resource') as image_load:
+            video = GuardedVideo(Mock(), source='advertising-clip.mp4', state='pause')
+            try:
+                video.texture_update()
+                self.assertNotIn(video.source, [call.args[0] for call in image_load.call_args_list])
+                video.preview = str(CAMERA_ART)
+                video.texture_update()
+                image_load.assert_called_once_with(str(CAMERA_ART))
+            finally:
+                video.retire()
+
     def test_gallery_focus_keeps_full_strips_and_floating_arrows_inside_preview(self):
         from kivy.base import EventLoop
         from kivy.core.window import Window

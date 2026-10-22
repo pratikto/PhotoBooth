@@ -1,0 +1,132 @@
+(.venv-kivy) PS <PROJECT>> python tools/run_portrait_v2.py
+[INFO   ] [Logger      ] Record log in <USERPROFILE>\.kivy\logs\kivy_26-10-23_0.txt
+[INFO   ] [deps        ] Successfully imported "kivy_deps.angle" 0.4.0
+[INFO   ] [deps        ] Successfully imported "kivy_deps.glew" 0.3.1
+[INFO   ] [deps        ] Successfully imported "kivy_deps.sdl2" 0.8.0
+[INFO   ] [Kivy        ] v2.3.1
+[INFO   ] [Kivy        ] Installed at "<PROJECT>\.venv-kivy\Lib\site-packages\kivy\__init__.py"
+[INFO   ] [Python      ] v3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]
+[INFO   ] [Python      ] Interpreter at "<PROJECT>\.venv-kivy\Scripts\python.exe"
+[INFO   ] [Logger      ] Purge log fired. Processing...
+[INFO   ] [Logger      ] Purge finished!
+[INFO   ] [Factory     ] 195 symbols loaded
+[INFO   ] [ImageLoaderFFPy] Using ffpyplayer 4.5.3
+[INFO   ] [Image       ] Providers: img_tex, img_dds, img_sdl2, img_pil, img_ffpyplayer 
+[INFO   ] [Window      ] Provider: sdl2
+[INFO   ] [GL          ] Using the "OpenGL" graphics system
+[INFO   ] [GL          ] GLEW initialization succeeded
+[INFO   ] [GL          ] Backend used <glew>
+[INFO   ] [GL          ] OpenGL version <b'4.6.0 - Build 32.0.101.6314'>
+[INFO   ] [GL          ] OpenGL vendor <b'Intel'>
+[INFO   ] [GL          ] OpenGL renderer <b'Intel(R) Iris(R) Xe Graphics'>
+[INFO   ] [GL          ] OpenGL parsed version: 4, 6
+[INFO   ] [GL          ] Shading version <b'4.60 - Build 32.0.101.6314'>
+[INFO   ] [GL          ] Texture max size <16384>
+[INFO   ] [GL          ] Texture max units <32>
+[INFO   ] [Window      ] auto add sdl2 input provider
+[INFO   ] [Window      ] virtual keyboard not allowed, single mode, not docked
+[INFO   ] [Text        ] Provider: sdl2
+[INFO   ] [VideoFFPy   ] Using ffpyplayer 4.5.3
+[INFO   ] [Video       ] Provider: ffpyplayer(['video_ffmpeg'] ignored)
+MEONG v2 PORTRAIT PROTOTYPE - no payment, camera, printing or real game
+[INFO   ] Discovered 2 local advertising videos in <PROJECT>\ad_video
+[INFO   ] [SoundFFPy   ] Using ffpyplayer 4.5.3
+[INFO   ] [Audio       ] Providers: audio_ffpyplayer, audio_sdl2 
+[INFO   ] [GL          ] NPOT texture support is available
+[DEBUG  ] Importing PngImagePlugin
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'IDAT' 41 4096
+[DEBUG  ] STREAM b'IDAT' 1764526 6
+[INFO   ] [Base        ] Start application main loop
+[DEBUG  ] Importing AvifImagePlugin
+[DEBUG  ] Importing BlpImagePlugin
+[DEBUG  ] Importing BmpImagePlugin
+[DEBUG  ] Importing BufrStubImagePlugin
+[DEBUG  ] Importing CurImagePlugin
+[DEBUG  ] Importing DcxImagePlugin
+[DEBUG  ] Importing DdsImagePlugin
+[DEBUG  ] Importing EpsImagePlugin
+[DEBUG  ] Importing FitsImagePlugin
+[DEBUG  ] Importing FliImagePlugin
+[DEBUG  ] Importing FpxImagePlugin
+[DEBUG  ] [Image       ] failed to import FpxImagePlugin: No module named 'olefile'
+[DEBUG  ] Importing FtexImagePlugin
+[DEBUG  ] Importing GbrImagePlugin
+[DEBUG  ] Importing GifImagePlugin
+[DEBUG  ] Importing GribStubImagePlugin
+[DEBUG  ] Importing Hdf5StubImagePlugin
+[DEBUG  ] Importing IcnsImagePlugin
+[DEBUG  ] Importing IcoImagePlugin
+[DEBUG  ] Importing ImImagePlugin
+[DEBUG  ] Importing ImtImagePlugin
+[DEBUG  ] Importing IptcImagePlugin
+[DEBUG  ] Importing JpegImagePlugin
+[DEBUG  ] Importing Jpeg2KImagePlugin
+[DEBUG  ] Importing McIdasImagePlugin
+[DEBUG  ] Importing MicImagePlugin
+[DEBUG  ] [Image       ] failed to import MicImagePlugin: No module named 'olefile'
+[DEBUG  ] Importing MpegImagePlugin
+[DEBUG  ] Importing MpoImagePlugin
+[DEBUG  ] Importing MspImagePlugin
+[DEBUG  ] Importing PalmImagePlugin
+[DEBUG  ] Importing PcdImagePlugin
+[DEBUG  ] Importing PcxImagePlugin
+[DEBUG  ] Importing PdfImagePlugin
+[DEBUG  ] Importing PixarImagePlugin
+[DEBUG  ] Importing PngImagePlugin
+[DEBUG  ] Importing PpmImagePlugin
+[DEBUG  ] Importing PsdImagePlugin
+[DEBUG  ] Importing QoiImagePlugin
+[DEBUG  ] Importing SgiImagePlugin
+[DEBUG  ] Importing SpiderImagePlugin
+[DEBUG  ] Importing SunImagePlugin
+[DEBUG  ] Importing TgaImagePlugin
+[DEBUG  ] Importing TiffImagePlugin
+[DEBUG  ] Importing WebPImagePlugin
+[DEBUG  ] Importing WmfImagePlugin
+[DEBUG  ] Importing XbmImagePlugin
+[DEBUG  ] Importing XpmImagePlugin
+[DEBUG  ] Importing XVThumbImagePlugin
+[ERROR  ] [Image       ] Error loading <<PROJECT>\ad_video\Iklan-Mamee-Monster-SnapYT.App.mp4>
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Meong v2 WAV provider=SDL2 (idle channel recovery) duration=0.16s
+[INFO   ] Meong v2 WAV provider=SDL2 (idle channel recovery) duration=40.00s
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[ERROR  ] [Image       ] Error loading <<PROJECT>\ad_video\Iklan-Mamee-Monster-SnapYT.App.mp4>
+[ERROR  ] [Image       ] Error loading <<PROJECT>\ad_video\Iklan-Mamee-Monster-SnapYT.App.mp4>
+[ERROR  ] [Image       ] Error loading <<PROJECT>\ad_video\Iklan-Mamee-Monster-SnapYT.App.mp4>
+[ERROR  ] [Image       ] Error loading <<PROJECT>\ad_video\Iklan-Mamee-Monster-SnapYT.App.mp4>

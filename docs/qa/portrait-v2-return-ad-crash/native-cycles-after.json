@@ -1,0 +1,286 @@
+[
+  {
+    "cycle": 1,
+    "phase": "video-ready",
+    "ad_id": "mono",
+    "video_size": [
+      192,
+      128
+    ]
+  },
+  {
+    "cycle": 1,
+    "phase": "returned",
+    "next_frame_threads": 1
+  },
+  {
+    "cycle": 2,
+    "phase": "video-ready",
+    "ad_id": "stereo",
+    "video_size": [
+      160,
+      120
+    ]
+  },
+  {
+    "cycle": 2,
+    "phase": "returned",
+    "next_frame_threads": 1
+  },
+  {
+    "cycle": 3,
+    "phase": "video-ready",
+    "ad_id": "mono",
+    "video_size": [
+      192,
+      128
+    ]
+  },
+  {
+    "cycle": 3,
+    "phase": "returned",
+    "next_frame_threads": 1
+  },
+  {
+    "cycle": 4,
+    "phase": "video-ready",
+    "ad_id": "stereo",
+    "video_size": [
+      160,
+      120
+    ]
+  },
+  {
+    "cycle": 4,
+    "phase": "returned",
+    "next_frame_threads": 1
+  },
+  {
+    "cycle": 5,
+    "phase": "video-ready",
+    "ad_id": "mono",
+    "video_size": [
+      192,
+      128
+    ]
+  },
+  {
+    "cycle": 5,
+    "phase": "returned",
+    "next_frame_threads": 1
+  },
+  {
+    "cycle": 6,
+    "phase": "video-ready",
+    "ad_id": "stereo",
+    "video_size": [
+      160,
+      120
+    ]
+  },
+  {
+    "cycle": 6,
+    "phase": "returned",
+    "next_frame_threads": 1
+  },
+  {
+    "cycle": 7,
+    "phase": "video-ready",
+    "ad_id": "mono",
+    "video_size": [
+      192,
+      128
+    ]
+  },
+  {
+    "cycle": 7,
+    "phase": "returned",
+    "next_frame_threads": 1
+  },
+  {
+    "cycle": 8,
+    "phase": "video-ready",
+    "ad_id": "stereo",
+    "video_size": [
+      160,
+      120
+    ]
+  },
+  {
+    "cycle": 8,
+    "phase": "returned",
+    "next_frame_threads": 1
+  },
+  {
+    "cycle": 9,
+    "phase": "video-ready",
+    "ad_id": "mono",
+    "video_size": [
+      192,
+      128
+    ]
+  },
+  {
+    "cycle": 9,
+    "phase": "returned",
+    "next_frame_threads": 1
+  },
+  {
+    "cycle": 10,
+    "phase": "video-ready",
+    "ad_id": "stereo",
+    "video_size": [
+      160,
+      120
+    ]
+  },
+  {
+    "cycle": 10,
+    "phase": "returned",
+    "next_frame_threads": 1
+  },
+  {
+    "cycle": 11,
+    "phase": "video-ready",
+    "ad_id": "mono",
+    "video_size": [
+      192,
+      128
+    ]
+  },
+  {
+    "cycle": 11,
+    "phase": "returned",
+    "next_frame_threads": 1
+  },
+  {
+    "cycle": 12,
+    "phase": "video-ready",
+    "ad_id": "stereo",
+    "video_size": [
+      160,
+      120
+    ]
+  },
+  {
+    "cycle": 12,
+    "phase": "returned",
+    "next_frame_threads": 1
+  },
+  {
+    "cycle": 13,
+    "phase": "video-ready",
+    "ad_id": "mono",
+    "video_size": [
+      192,
+      128
+    ]
+  },
+  {
+    "cycle": 13,
+    "phase": "returned",
+    "next_frame_threads": 1
+  },
+  {
+    "cycle": 14,
+    "phase": "video-ready",
+    "ad_id": "stereo",
+    "video_size": [
+      160,
+      120
+    ]
+  },
+  {
+    "cycle": 14,
+    "phase": "returned",
+    "next_frame_threads": 1
+  },
+  {
+    "cycle": 15,
+    "phase": "video-ready",
+    "ad_id": "mono",
+    "video_size": [
+      192,
+      128
+    ]
+  },
+  {
+    "cycle": 15,
+    "phase": "returned",
+    "next_frame_threads": 1
+  },
+  {
+    "cycle": 16,
+    "phase": "video-ready",
+    "ad_id": "stereo",
+    "video_size": [
+      160,
+      120
+    ]
+  },
+  {
+    "cycle": 16,
+    "phase": "returned",
+    "next_frame_threads": 1
+  },
+  {
+    "cycle": 17,
+    "phase": "video-ready",
+    "ad_id": "mono",
+    "video_size": [
+      192,
+      128
+    ]
+  },
+  {
+    "cycle": 17,
+    "phase": "returned",
+    "next_frame_threads": 1
+  },
+  {
+    "cycle": 18,
+    "phase": "video-ready",
+    "ad_id": "stereo",
+    "video_size": [
+      160,
+      120
+    ]
+  },
+  {
+    "cycle": 18,
+    "phase": "returned",
+    "next_frame_threads": 1
+  },
+  {
+    "cycle": 19,
+    "phase": "video-ready",
+    "ad_id": "mono",
+    "video_size": [
+      192,
+      128
+    ]
+  },
+  {
+    "cycle": 19,
+    "phase": "returned",
+    "next_frame_threads": 1
+  },
+  {
+    "cycle": 20,
+    "phase": "video-ready",
+    "ad_id": "stereo",
+    "video_size": [
+      160,
+      120
+    ]
+  },
+  {
+    "cycle": 20,
+    "phase": "returned",
+    "next_frame_threads": 1
+  },
+  {
+    "result": "COMPLETED",
+    "cycles": 20
+  }
+]

@@ -32,6 +32,17 @@ class GuardedVideo(Video):
         self._retired = False
         super().__init__(**kwargs)
 
+    def texture_update(self, *args):
+        # Kivy 2.3.1's Video inherits Image and probes source as a still when
+        # no preview is supplied. A movie belongs only to its video decoder.
+        # The player already displays its separate poster/fallback while loading.
+        if self._retired:
+            return
+        if self.preview:
+            self.set_texture_from_resource(self.preview)
+        else:
+            self._clear_core_image()
+
     def _do_video_load(self, *args):
         if self._retired:
             return

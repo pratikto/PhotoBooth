@@ -1,0 +1,236 @@
+2026-10-22 22:57:24,574 INFO photobooth.kiosk_v2.diagnostics: Session start HEAD=b49ce247d108 Python=3.12.14 OS=Linux
+2026-10-22 22:57:24,574 INFO photobooth.kiosk_v2.diagnostics: Native fatal tracebacks=True destination=this file
+2026-10-22 22:57:24,583 INFO kivy: Kivy: v2.3.1
+2026-10-22 22:57:24,584 INFO kivy: Logger: Record log in /workspace/.photobooth-cloud/kivy/logs/kivy_26-10-22_75.txt
+2026-10-22 22:57:24,584 INFO kivy: Kivy: Installed at "<PROJECT>/.venv/lib/python3.12/site-packages/kivy/__init__.py"
+2026-10-22 22:57:24,584 INFO kivy: Python: v3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]
+2026-10-22 22:57:24,584 INFO kivy: Python: Interpreter at "<PROJECT>/.venv/bin/python"
+2026-10-22 22:57:24,584 INFO kivy: Logger: Purge log fired. Processing...
+2026-10-22 22:57:24,584 INFO kivy: Logger: Purge finished!
+2026-10-22 22:57:24,599 INFO kivy: Factory: 195 symbols loaded
+2026-10-22 22:57:24,652 INFO kivy: ImageLoaderFFPy: Using ffpyplayer 4.5.3
+2026-10-22 22:57:24,653 INFO kivy: Image: Providers: img_tex, img_dds, img_sdl2, img_pil, img_ffpyplayer 
+2026-10-22 22:57:24,658 INFO kivy: Window: Provider: sdl2
+2026-10-22 22:57:24,699 INFO kivy: GL: Using the "OpenGL" graphics system
+2026-10-22 22:57:24,699 INFO kivy: GL: Backend used <sdl2>
+2026-10-22 22:57:24,699 INFO kivy: GL: OpenGL version <b'4.5 (Compatibility Profile) Mesa 25.0.7-2+deb13u1'>
+2026-10-22 22:57:24,699 INFO kivy: GL: OpenGL vendor <b'Mesa'>
+2026-10-22 22:57:24,699 INFO kivy: GL: OpenGL renderer <b'llvmpipe (LLVM 19.1.7, 256 bits)'>
+2026-10-22 22:57:24,699 INFO kivy: GL: OpenGL parsed version: 4, 5
+2026-10-22 22:57:24,699 INFO kivy: GL: Shading version <b'4.50'>
+2026-10-22 22:57:24,699 INFO kivy: GL: Texture max size <16384>
+2026-10-22 22:57:24,699 INFO kivy: GL: Texture max units <32>
+2026-10-22 22:57:24,710 INFO kivy: Window: auto add sdl2 input provider
+2026-10-22 22:57:24,710 INFO kivy: Window: virtual keyboard not allowed, single mode, not docked
+2026-10-22 22:57:24,720 INFO kivy: Text: Provider: sdl2
+2026-10-22 22:57:24,723 INFO kivy: VideoFFPy: Using ffpyplayer 4.5.3
+2026-10-22 22:57:24,723 INFO kivy: Video: Provider: ffpyplayer(['video_ffmpeg'] ignored)
+2026-10-22 22:57:24,728 INFO kivy: SoundFFPy: Using ffpyplayer 4.5.3
+2026-10-22 22:57:24,728 INFO kivy: Audio: Providers: audio_ffpyplayer, audio_sdl2 
+2026-10-22 22:57:24,729 INFO photobooth.kiosk_v2.app: Page rebuild begin from=None to=advert revision=1
+2026-10-22 22:57:24,731 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=advert; building view
+2026-10-22 22:57:24,731 INFO kivy: GL: NPOT texture support is available
+2026-10-22 22:57:24,782 INFO photobooth.kiosk_v2.app: Page ready page=advert revision=1
+2026-10-22 22:57:24,788 INFO photobooth.kiosk_v2.audio: Meong v2 WAV provider=SDL2 (idle channel recovery) duration=0.16s
+2026-10-22 22:57:24,824 INFO photobooth.kiosk_v2.audio: Meong v2 WAV provider=SDL2 (idle channel recovery) duration=40.00s
+2026-10-22 22:57:24,906 INFO photobooth.kiosk_v2.app: Page rebuild begin from=advert to=tutorial revision=2
+2026-10-22 22:57:25,031 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=tutorial; building view
+2026-10-22 22:57:25,036 INFO photobooth.kiosk_v2.app: Page ready page=tutorial revision=2
+2026-10-22 22:57:25,124 INFO photobooth.kiosk_v2.app: Page rebuild begin from=tutorial to=templates revision=3
+2026-10-22 22:57:25,126 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=templates; building view
+2026-10-22 22:57:25,135 INFO photobooth.kiosk_v2.app: Page ready page=templates revision=3
+2026-10-22 22:57:25,265 INFO photobooth.kiosk_v2.app: Return to advertising requested from=templates
+2026-10-22 22:57:25,265 INFO photobooth.kiosk_v2.app: Page rebuild begin from=templates to=advert revision=4
+2026-10-22 22:57:25,267 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=advert; building view
+2026-10-22 22:57:25,286 INFO photobooth.kiosk_v2.app: Page ready page=advert revision=4
+2026-10-22 22:57:25,601 INFO photobooth.kiosk_v2.app: Page rebuild begin from=advert to=tutorial revision=5
+2026-10-22 22:57:25,704 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=tutorial; building view
+2026-10-22 22:57:25,709 INFO photobooth.kiosk_v2.app: Page ready page=tutorial revision=5
+2026-10-22 22:57:25,795 INFO photobooth.kiosk_v2.app: Page rebuild begin from=tutorial to=templates revision=6
+2026-10-22 22:57:25,797 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=templates; building view
+2026-10-22 22:57:25,801 INFO photobooth.kiosk_v2.app: Page ready page=templates revision=6
+2026-10-22 22:57:25,928 INFO photobooth.kiosk_v2.app: Return to advertising requested from=templates
+2026-10-22 22:57:25,928 INFO photobooth.kiosk_v2.app: Page rebuild begin from=templates to=advert revision=7
+2026-10-22 22:57:25,930 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=advert; building view
+2026-10-22 22:57:25,936 INFO photobooth.kiosk_v2.app: Page ready page=advert revision=7
+2026-10-22 22:57:26,039 INFO photobooth.kiosk_v2.app: Page rebuild begin from=advert to=tutorial revision=8
+2026-10-22 22:57:26,182 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=tutorial; building view
+2026-10-22 22:57:26,217 INFO photobooth.kiosk_v2.app: Page ready page=tutorial revision=8
+2026-10-22 22:57:26,305 INFO photobooth.kiosk_v2.app: Page rebuild begin from=tutorial to=templates revision=9
+2026-10-22 22:57:26,307 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=templates; building view
+2026-10-22 22:57:26,312 INFO photobooth.kiosk_v2.app: Page ready page=templates revision=9
+2026-10-22 22:57:26,434 INFO photobooth.kiosk_v2.app: Return to advertising requested from=templates
+2026-10-22 22:57:26,434 INFO photobooth.kiosk_v2.app: Page rebuild begin from=templates to=advert revision=10
+2026-10-22 22:57:26,436 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=advert; building view
+2026-10-22 22:57:26,443 INFO photobooth.kiosk_v2.app: Page ready page=advert revision=10
+2026-10-22 22:57:26,724 INFO photobooth.kiosk_v2.app: Page rebuild begin from=advert to=tutorial revision=11
+2026-10-22 22:57:26,860 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=tutorial; building view
+2026-10-22 22:57:26,865 INFO photobooth.kiosk_v2.app: Page ready page=tutorial revision=11
+2026-10-22 22:57:26,951 INFO photobooth.kiosk_v2.app: Page rebuild begin from=tutorial to=templates revision=12
+2026-10-22 22:57:26,952 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=templates; building view
+2026-10-22 22:57:26,990 INFO photobooth.kiosk_v2.app: Page ready page=templates revision=12
+2026-10-22 22:57:27,111 INFO photobooth.kiosk_v2.app: Return to advertising requested from=templates
+2026-10-22 22:57:27,111 INFO photobooth.kiosk_v2.app: Page rebuild begin from=templates to=advert revision=13
+2026-10-22 22:57:27,113 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=advert; building view
+2026-10-22 22:57:27,119 INFO photobooth.kiosk_v2.app: Page ready page=advert revision=13
+2026-10-22 22:57:27,230 INFO photobooth.kiosk_v2.app: Page rebuild begin from=advert to=tutorial revision=14
+2026-10-22 22:57:27,364 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=tutorial; building view
+2026-10-22 22:57:27,369 INFO photobooth.kiosk_v2.app: Page ready page=tutorial revision=14
+2026-10-22 22:57:27,455 INFO photobooth.kiosk_v2.app: Page rebuild begin from=tutorial to=templates revision=15
+2026-10-22 22:57:27,457 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=templates; building view
+2026-10-22 22:57:27,461 INFO photobooth.kiosk_v2.app: Page ready page=templates revision=15
+2026-10-22 22:57:27,579 INFO photobooth.kiosk_v2.app: Return to advertising requested from=templates
+2026-10-22 22:57:27,579 INFO photobooth.kiosk_v2.app: Page rebuild begin from=templates to=advert revision=16
+2026-10-22 22:57:27,581 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=advert; building view
+2026-10-22 22:57:27,588 INFO photobooth.kiosk_v2.app: Page ready page=advert revision=16
+2026-10-22 22:57:27,860 INFO photobooth.kiosk_v2.app: Page rebuild begin from=advert to=tutorial revision=17
+2026-10-22 22:57:27,960 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=tutorial; building view
+2026-10-22 22:57:27,966 INFO photobooth.kiosk_v2.app: Page ready page=tutorial revision=17
+2026-10-22 22:57:28,053 INFO photobooth.kiosk_v2.app: Page rebuild begin from=tutorial to=templates revision=18
+2026-10-22 22:57:28,056 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=templates; building view
+2026-10-22 22:57:28,060 INFO photobooth.kiosk_v2.app: Page ready page=templates revision=18
+2026-10-22 22:57:28,178 INFO photobooth.kiosk_v2.app: Return to advertising requested from=templates
+2026-10-22 22:57:28,178 INFO photobooth.kiosk_v2.app: Page rebuild begin from=templates to=advert revision=19
+2026-10-22 22:57:28,180 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=advert; building view
+2026-10-22 22:57:28,229 INFO photobooth.kiosk_v2.app: Page ready page=advert revision=19
+2026-10-22 22:57:28,365 INFO photobooth.kiosk_v2.app: Page rebuild begin from=advert to=tutorial revision=20
+2026-10-22 22:57:28,506 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=tutorial; building view
+2026-10-22 22:57:28,511 INFO photobooth.kiosk_v2.app: Page ready page=tutorial revision=20
+2026-10-22 22:57:28,597 INFO photobooth.kiosk_v2.app: Page rebuild begin from=tutorial to=templates revision=21
+2026-10-22 22:57:28,599 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=templates; building view
+2026-10-22 22:57:28,604 INFO photobooth.kiosk_v2.app: Page ready page=templates revision=21
+2026-10-22 22:57:28,730 INFO photobooth.kiosk_v2.app: Return to advertising requested from=templates
+2026-10-22 22:57:28,730 INFO photobooth.kiosk_v2.app: Page rebuild begin from=templates to=advert revision=22
+2026-10-22 22:57:28,732 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=advert; building view
+2026-10-22 22:57:28,738 INFO photobooth.kiosk_v2.app: Page ready page=advert revision=22
+2026-10-22 22:57:29,019 INFO photobooth.kiosk_v2.app: Page rebuild begin from=advert to=tutorial revision=23
+2026-10-22 22:57:29,156 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=tutorial; building view
+2026-10-22 22:57:29,208 INFO photobooth.kiosk_v2.app: Page ready page=tutorial revision=23
+2026-10-22 22:57:29,298 INFO photobooth.kiosk_v2.app: Page rebuild begin from=tutorial to=templates revision=24
+2026-10-22 22:57:29,299 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=templates; building view
+2026-10-22 22:57:29,304 INFO photobooth.kiosk_v2.app: Page ready page=templates revision=24
+2026-10-22 22:57:29,421 INFO photobooth.kiosk_v2.app: Return to advertising requested from=templates
+2026-10-22 22:57:29,421 INFO photobooth.kiosk_v2.app: Page rebuild begin from=templates to=advert revision=25
+2026-10-22 22:57:29,423 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=advert; building view
+2026-10-22 22:57:29,431 INFO photobooth.kiosk_v2.app: Page ready page=advert revision=25
+2026-10-22 22:57:29,537 INFO photobooth.kiosk_v2.app: Page rebuild begin from=advert to=tutorial revision=26
+2026-10-22 22:57:29,676 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=tutorial; building view
+2026-10-22 22:57:29,681 INFO photobooth.kiosk_v2.app: Page ready page=tutorial revision=26
+2026-10-22 22:57:29,767 INFO photobooth.kiosk_v2.app: Page rebuild begin from=tutorial to=templates revision=27
+2026-10-22 22:57:29,769 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=templates; building view
+2026-10-22 22:57:29,822 INFO photobooth.kiosk_v2.app: Page ready page=templates revision=27
+2026-10-22 22:57:29,941 INFO photobooth.kiosk_v2.app: Return to advertising requested from=templates
+2026-10-22 22:57:29,941 INFO photobooth.kiosk_v2.app: Page rebuild begin from=templates to=advert revision=28
+2026-10-22 22:57:29,943 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=advert; building view
+2026-10-22 22:57:29,949 INFO photobooth.kiosk_v2.app: Page ready page=advert revision=28
+2026-10-22 22:57:30,232 INFO photobooth.kiosk_v2.app: Page rebuild begin from=advert to=tutorial revision=29
+2026-10-22 22:57:30,367 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=tutorial; building view
+2026-10-22 22:57:30,373 INFO photobooth.kiosk_v2.app: Page ready page=tutorial revision=29
+2026-10-22 22:57:30,460 INFO photobooth.kiosk_v2.app: Page rebuild begin from=tutorial to=templates revision=30
+2026-10-22 22:57:30,462 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=templates; building view
+2026-10-22 22:57:30,467 INFO photobooth.kiosk_v2.app: Page ready page=templates revision=30
+2026-10-22 22:57:30,587 INFO photobooth.kiosk_v2.app: Return to advertising requested from=templates
+2026-10-22 22:57:30,587 INFO photobooth.kiosk_v2.app: Page rebuild begin from=templates to=advert revision=31
+2026-10-22 22:57:30,590 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=advert; building view
+2026-10-22 22:57:30,597 INFO photobooth.kiosk_v2.app: Page ready page=advert revision=31
+2026-10-22 22:57:30,698 INFO photobooth.kiosk_v2.app: Page rebuild begin from=advert to=tutorial revision=32
+2026-10-22 22:57:30,796 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=tutorial; building view
+2026-10-22 22:57:30,802 INFO photobooth.kiosk_v2.app: Page ready page=tutorial revision=32
+2026-10-22 22:57:30,889 INFO photobooth.kiosk_v2.app: Page rebuild begin from=tutorial to=templates revision=33
+2026-10-22 22:57:30,891 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=templates; building view
+2026-10-22 22:57:30,896 INFO photobooth.kiosk_v2.app: Page ready page=templates revision=33
+2026-10-22 22:57:31,019 INFO photobooth.kiosk_v2.app: Return to advertising requested from=templates
+2026-10-22 22:57:31,019 INFO photobooth.kiosk_v2.app: Page rebuild begin from=templates to=advert revision=34
+2026-10-22 22:57:31,022 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=advert; building view
+2026-10-22 22:57:31,099 INFO photobooth.kiosk_v2.app: Page ready page=advert revision=34
+2026-10-22 22:57:31,417 INFO photobooth.kiosk_v2.app: Page rebuild begin from=advert to=tutorial revision=35
+2026-10-22 22:57:31,550 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=tutorial; building view
+2026-10-22 22:57:31,556 INFO photobooth.kiosk_v2.app: Page ready page=tutorial revision=35
+2026-10-22 22:57:31,643 INFO photobooth.kiosk_v2.app: Page rebuild begin from=tutorial to=templates revision=36
+2026-10-22 22:57:31,645 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=templates; building view
+2026-10-22 22:57:31,650 INFO photobooth.kiosk_v2.app: Page ready page=templates revision=36
+2026-10-22 22:57:31,767 INFO photobooth.kiosk_v2.app: Return to advertising requested from=templates
+2026-10-22 22:57:31,767 INFO photobooth.kiosk_v2.app: Page rebuild begin from=templates to=advert revision=37
+2026-10-22 22:57:31,769 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=advert; building view
+2026-10-22 22:57:31,775 INFO photobooth.kiosk_v2.app: Page ready page=advert revision=37
+2026-10-22 22:57:31,886 INFO photobooth.kiosk_v2.app: Page rebuild begin from=advert to=tutorial revision=38
+2026-10-22 22:57:32,020 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=tutorial; building view
+2026-10-22 22:57:32,076 INFO photobooth.kiosk_v2.app: Page ready page=tutorial revision=38
+2026-10-22 22:57:32,166 INFO photobooth.kiosk_v2.app: Page rebuild begin from=tutorial to=templates revision=39
+2026-10-22 22:57:32,168 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=templates; building view
+2026-10-22 22:57:32,172 INFO photobooth.kiosk_v2.app: Page ready page=templates revision=39
+2026-10-22 22:57:32,289 INFO photobooth.kiosk_v2.app: Return to advertising requested from=templates
+2026-10-22 22:57:32,290 INFO photobooth.kiosk_v2.app: Page rebuild begin from=templates to=advert revision=40
+2026-10-22 22:57:32,292 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=advert; building view
+2026-10-22 22:57:32,298 INFO photobooth.kiosk_v2.app: Page ready page=advert revision=40
+2026-10-22 22:57:32,580 INFO photobooth.kiosk_v2.app: Page rebuild begin from=advert to=tutorial revision=41
+2026-10-22 22:57:32,717 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=tutorial; building view
+2026-10-22 22:57:32,723 INFO photobooth.kiosk_v2.app: Page ready page=tutorial revision=41
+2026-10-22 22:57:32,809 INFO photobooth.kiosk_v2.app: Page rebuild begin from=tutorial to=templates revision=42
+2026-10-22 22:57:32,811 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=templates; building view
+2026-10-22 22:57:32,858 INFO photobooth.kiosk_v2.app: Page ready page=templates revision=42
+2026-10-22 22:57:32,983 INFO photobooth.kiosk_v2.app: Return to advertising requested from=templates
+2026-10-22 22:57:32,983 INFO photobooth.kiosk_v2.app: Page rebuild begin from=templates to=advert revision=43
+2026-10-22 22:57:32,985 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=advert; building view
+2026-10-22 22:57:32,991 INFO photobooth.kiosk_v2.app: Page ready page=advert revision=43
+2026-10-22 22:57:33,104 INFO photobooth.kiosk_v2.app: Page rebuild begin from=advert to=tutorial revision=44
+2026-10-22 22:57:33,237 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=tutorial; building view
+2026-10-22 22:57:33,242 INFO photobooth.kiosk_v2.app: Page ready page=tutorial revision=44
+2026-10-22 22:57:33,329 INFO photobooth.kiosk_v2.app: Page rebuild begin from=tutorial to=templates revision=45
+2026-10-22 22:57:33,331 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=templates; building view
+2026-10-22 22:57:33,335 INFO photobooth.kiosk_v2.app: Page ready page=templates revision=45
+2026-10-22 22:57:33,459 INFO photobooth.kiosk_v2.app: Return to advertising requested from=templates
+2026-10-22 22:57:33,459 INFO photobooth.kiosk_v2.app: Page rebuild begin from=templates to=advert revision=46
+2026-10-22 22:57:33,462 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=advert; building view
+2026-10-22 22:57:33,468 INFO photobooth.kiosk_v2.app: Page ready page=advert revision=46
+2026-10-22 22:57:33,776 INFO photobooth.kiosk_v2.app: Page rebuild begin from=advert to=tutorial revision=47
+2026-10-22 22:57:33,886 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=tutorial; building view
+2026-10-22 22:57:33,892 INFO photobooth.kiosk_v2.app: Page ready page=tutorial revision=47
+2026-10-22 22:57:33,979 INFO photobooth.kiosk_v2.app: Page rebuild begin from=tutorial to=templates revision=48
+2026-10-22 22:57:33,981 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=templates; building view
+2026-10-22 22:57:33,985 INFO photobooth.kiosk_v2.app: Page ready page=templates revision=48
+2026-10-22 22:57:34,110 INFO photobooth.kiosk_v2.app: Return to advertising requested from=templates
+2026-10-22 22:57:34,110 INFO photobooth.kiosk_v2.app: Page rebuild begin from=templates to=advert revision=49
+2026-10-22 22:57:34,113 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=advert; building view
+2026-10-22 22:57:34,165 INFO photobooth.kiosk_v2.app: Page ready page=advert revision=49
+2026-10-22 22:57:34,303 INFO photobooth.kiosk_v2.app: Page rebuild begin from=advert to=tutorial revision=50
+2026-10-22 22:57:34,444 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=tutorial; building view
+2026-10-22 22:57:34,449 INFO photobooth.kiosk_v2.app: Page ready page=tutorial revision=50
+2026-10-22 22:57:34,536 INFO photobooth.kiosk_v2.app: Page rebuild begin from=tutorial to=templates revision=51
+2026-10-22 22:57:34,538 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=templates; building view
+2026-10-22 22:57:34,542 INFO photobooth.kiosk_v2.app: Page ready page=templates revision=51
+2026-10-22 22:57:34,673 INFO photobooth.kiosk_v2.app: Return to advertising requested from=templates
+2026-10-22 22:57:34,674 INFO photobooth.kiosk_v2.app: Page rebuild begin from=templates to=advert revision=52
+2026-10-22 22:57:34,676 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=advert; building view
+2026-10-22 22:57:34,682 INFO photobooth.kiosk_v2.app: Page ready page=advert revision=52
+2026-10-22 22:57:34,943 INFO photobooth.kiosk_v2.app: Page rebuild begin from=advert to=tutorial revision=53
+2026-10-22 22:57:35,055 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=tutorial; building view
+2026-10-22 22:57:35,118 INFO photobooth.kiosk_v2.app: Page ready page=tutorial revision=53
+2026-10-22 22:57:35,207 INFO photobooth.kiosk_v2.app: Page rebuild begin from=tutorial to=templates revision=54
+2026-10-22 22:57:35,210 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=templates; building view
+2026-10-22 22:57:35,215 INFO photobooth.kiosk_v2.app: Page ready page=templates revision=54
+2026-10-22 22:57:35,342 INFO photobooth.kiosk_v2.app: Return to advertising requested from=templates
+2026-10-22 22:57:35,342 INFO photobooth.kiosk_v2.app: Page rebuild begin from=templates to=advert revision=55
+2026-10-22 22:57:35,344 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=advert; building view
+2026-10-22 22:57:35,352 INFO photobooth.kiosk_v2.app: Page ready page=advert revision=55
+2026-10-22 22:57:35,456 INFO photobooth.kiosk_v2.app: Page rebuild begin from=advert to=tutorial revision=56
+2026-10-22 22:57:35,561 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=tutorial; building view
+2026-10-22 22:57:35,567 INFO photobooth.kiosk_v2.app: Page ready page=tutorial revision=56
+2026-10-22 22:57:35,654 INFO photobooth.kiosk_v2.app: Page rebuild begin from=tutorial to=templates revision=57
+2026-10-22 22:57:35,656 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=templates; building view
+2026-10-22 22:57:35,712 INFO photobooth.kiosk_v2.app: Page ready page=templates revision=57
+2026-10-22 22:57:35,832 INFO photobooth.kiosk_v2.app: Return to advertising requested from=templates
+2026-10-22 22:57:35,832 INFO photobooth.kiosk_v2.app: Page rebuild begin from=templates to=advert revision=58
+2026-10-22 22:57:35,834 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=advert; building view
+2026-10-22 22:57:35,840 INFO photobooth.kiosk_v2.app: Page ready page=advert revision=58
+2026-10-22 22:57:36,123 INFO photobooth.kiosk_v2.app: Page rebuild begin from=advert to=tutorial revision=59
+2026-10-22 22:57:36,260 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=tutorial; building view
+2026-10-22 22:57:36,266 INFO photobooth.kiosk_v2.app: Page ready page=tutorial revision=59
+2026-10-22 22:57:36,352 INFO photobooth.kiosk_v2.app: Page rebuild begin from=tutorial to=templates revision=60
+2026-10-22 22:57:36,354 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=templates; building view
+2026-10-22 22:57:36,358 INFO photobooth.kiosk_v2.app: Page ready page=templates revision=60
+2026-10-22 22:57:36,480 INFO photobooth.kiosk_v2.app: Return to advertising requested from=templates
+2026-10-22 22:57:36,480 INFO photobooth.kiosk_v2.app: Page rebuild begin from=templates to=advert revision=61
+2026-10-22 22:57:36,483 INFO photobooth.kiosk_v2.app: Page media retired; audio owner=advert; building view
+2026-10-22 22:57:36,489 INFO photobooth.kiosk_v2.app: Page ready page=advert revision=61
+2026-10-22 22:57:36,732 INFO photobooth.kiosk_v2.diagnostics: Session end

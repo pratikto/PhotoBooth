@@ -1,5 +1,13 @@
 # FEAT-022 - Meong Photobooth portrait kiosk GUI v2 (working specification)
 
+> **Current blocker (2026-10-23): BUG-012 OPEN.** Owner V4 retest reports 33/35
+> checked at five Windows cycles but exits when returning to advertising. Tested
+> HEAD/resolution are unknown; twenty-cycle and navigation acceptance remain open.
+> MP4-as-image probing is reproduced/corrected and persistent launcher diagnostics
+> are added. Local 79 focused PASS; full 314 run / 312 PASS / 2 optional skips;
+> native-video probes complete twenty Linux cycles before and after without
+> reproducing the Windows crash. [Current investigation and device check](qa/portrait-v2-return-ad-crash/README.md).
+
 > **Latest owner retest:** 41 checked boxes, ten Windows cycles, tested HEAD not
 > supplied. Crash, swipe and audio are positively reported; G03/G06 require twenty
 > cycles and remain unverified for that duration. Resize works. Current approved

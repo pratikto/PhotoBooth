@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-23",
+  "timezone": "Asia/Jakarta",
+  "branch": "feature/portrait-kiosk-v2-next",
+  "tested_head": null,
+  "windows": "Windows 11",
+  "python": "3.12.10",
+  "kivy": "2.3.1",
+  "ffpyplayer": "4.5.3",
+  "gpu": "Intel Iris Xe",
+  "resolution": null,
+  "display_scaling_percent": 100,
+  "speaker": "laptop speaker",
+  "completed_cycles": 5,
+  "raw_checked": 33,
+  "raw_total": 35,
+  "unchecked": [
+    "F05",
+    "F06"
+  ],
+  "reported_problem": "crash saat kembali ke halaman iklan",
+  "qualification": "Positive layout/motion/response/audio reports are preserved. Return-to-advertising stability is BLOCKED by the crash note, including qualification of checked F02. Twenty-cycle and exact-HEAD acceptance remain unverified.",
+  "status": "OPEN \u2014 device crash cause not established; not reproduced by Linux twenty-cycle native-video probe"
+}

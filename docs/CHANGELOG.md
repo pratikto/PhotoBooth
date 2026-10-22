@@ -2,6 +2,13 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased — return-to-advert crash investigation and diagnostics] — 2026-10-23
+
+- Preserve the owner's raw V4 33/35 checked result at five cycles and unknown HEAD; the explicit crash on return overrides overall navigation acceptance. Track BUG-012 OPEN; F05/F06 remain unverified.
+- Reproduce and correct Kivy Video's MP4-as-still-image probe while preserving real decoding and explicit posters. This fixes the demonstrated loader error; it does not establish the cause of the owner's process exit.
+- Add per-run local diagnostic logs before native provider imports, source HEAD at startup, page-stage breadcrumbs, Python/worker tracebacks and available fatal native stacks. Keep startup usable if logs cannot be created. Seven focused diagnostic checks and the video regression are included in CI.
+- Local 79 focused PASS; full 314 run / 312 PASS / 2 optional model skips. Twenty native-video/audio cycles complete before and after on Linux; Windows crash is not reproduced and remains BLOCKED pending diagnostic retest. [Evidence, limitations and next Windows check](qa/portrait-v2-return-ad-crash/README.md).
+
 ## [Unreleased — gallery and animation Windows checklist V4] — 2026-10-23
 
 - Add a clickable 35-item form for the latest gallery, pixel branding, swipe/motion, response, audio and lifecycle. Submit Hasil prepares a prompt for manual copy/send; download, print and separate local persistence are retained.

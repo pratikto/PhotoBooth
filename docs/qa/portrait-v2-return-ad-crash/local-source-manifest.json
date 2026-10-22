@@ -1,0 +1,39 @@
+{
+  "base_sha": "b49ce247d108256a03594e4e9f6440791477fc48",
+  "tracked_changes": true,
+  "synthetic_only": true,
+  "sources": {
+    ".github/workflows/portrait-kiosk-v2.yml": "24cf1b142e8658d9f4f89e1b835f2ca3fa2bf273d076e7f99b79bb7aab24f82d",
+    "photobooth/kiosk_v2/__init__.py": "d3f17da982c143f3f7fa85945f0172f41e28a645abc873c948c6d4559363eb0b",
+    "photobooth/kiosk_v2/app.py": "dd120f8f570e0c5ddf6017869ceb2f8fae0143aa7d9e50b9fcbde6c77521dbf6",
+    "photobooth/kiosk_v2/audio.py": "6c7e1fd3fa540c548ab236b894c329e2e9244ead9cb3f093f2f60e0b61ee3fae",
+    "photobooth/kiosk_v2/branding.py": "b6f363d97458fa0543539c8b749ab15d871c41b710207bffa0e59057e33d38f6",
+    "photobooth/kiosk_v2/design_tokens.py": "b288a9468474c7f89caf519f31a00d9e4a08df561084670702e7b4c37b1bad70",
+    "photobooth/kiosk_v2/diagnostics.py": "ed1f74153b76fd5127049d999d682b975804672ad4aa36952760267afb45f96f",
+    "photobooth/kiosk_v2/flow.py": "fcdc56e7c7f8b01f4a0a17a4a6f95a91d9d39691e043fcea0e6f90f158e7e453",
+    "photobooth/kiosk_v2/gallery.py": "5a5daac41374ebfae399602fc55ec75c126b1beb5347948bf637f665e4df6931",
+    "photobooth/kiosk_v2/illustrations.py": "a68cf482cc4d9277ab86155cbc163325dc3517f635cc6ab4acef31cfe0997d0e",
+    "photobooth/kiosk_v2/mixer.py": "40ee4e0ee60d0c2b67f5757cf264c8f9f3907fb0c4c7283dd7724d57ac7cbddf",
+    "photobooth/kiosk_v2/pixel_type.py": "84401bcb8ca1f36bc933def324ad13add7d1a8a2bc9604f7656f984369db4dcb",
+    "photobooth/kiosk_v2/previews.py": "16f24981d5a5320d5ad6ebce913f6044bcd76ef4cadc9ef3569ff60a55f027d5",
+    "photobooth/kiosk_v2/theme.py": "94c22aa350ac6f17d428c4989b0491c9fa35a3100f16c6cc7d2928bb9eb6ef6c",
+    "photobooth/kiosk_v2/viewport.py": "623a814c97775cc417e9ee36c22bc67026501e4a3be06473cad24e81e6f1b4ad",
+    "photobooth/ui_ads.py": "f5dfb3af44f6e96b3ef59504442bd01f0188afd35db8d41c72094ebfc3d1d12b",
+    "tests/test_kiosk_v2_diagnostics.py": "b7a5d95dbc7be1f815e13c7aaebcc78763ec558d6f48dc5572a077d84603f220",
+    "tests/test_kiosk_v2_widgets.py": "656b18420fdf22d74a4bece3e25668ed0e4c53af45718ba1a8ede8a3b17d759f",
+    "tools/render_portrait_v2.py": "328e2b41bfc379263d4c79f970b3d8a25a39aab0f8d789bb58455665cb45710d",
+    "tools/run_portrait_v2.py": "684758dd7279547b7e6ca8cd96cf823de45105b69940c1f5887961ec51202593"
+  },
+  "tests": {
+    "focused": 79,
+    "full_run": 314,
+    "full_pass": 312,
+    "full_optional_model_skips": 2,
+    "errors": 0,
+    "failures": 0
+  },
+  "native_video_cycles_before": 20,
+  "native_video_cycles_after": 20,
+  "windows_crash_reproduced": false,
+  "windows_acceptance": "OPEN \u2014 cause unestablished and retest required"
+}

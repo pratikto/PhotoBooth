@@ -1,0 +1,14 @@
+test_video_source_is_not_probed_as_an_image_and_explicit_poster_still_loads (tests.test_kiosk_v2_widgets.PortraitKivySmokeTests.test_video_source_is_not_probed_as_an_image_and_explicit_poster_still_loads) ... FAIL
+
+======================================================================
+FAIL: test_video_source_is_not_probed_as_an_image_and_explicit_poster_still_loads (tests.test_kiosk_v2_widgets.PortraitKivySmokeTests.test_video_source_is_not_probed_as_an_image_and_explicit_poster_still_loads)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 33, in test_video_source_is_not_probed_as_an_image_and_explicit_poster_still_loads
+    self.assertNotIn(video.source, [call.args[0] for call in image_load.call_args_list])
+AssertionError: 'advertising-clip.mp4' unexpectedly found in ['advertising-clip.mp4', 'advertising-clip.mp4']
+
+----------------------------------------------------------------------
+Ran 1 test in 0.026s
+
+FAILED (failures=1)
