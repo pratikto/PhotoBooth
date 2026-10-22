@@ -1,5 +1,10 @@
 # FEAT-022 - Meong Photobooth portrait kiosk GUI v2 (working specification)
 
+> **Latest owner retest (`9a9e18e`):** 27/32 checklist total; single-flow clicks/music
+> work, but both fail after repeated visits. Swipe checks are blocked by an invisible
+> gallery at the owner's window size. Native muted-channel reuse is reproduced and
+> corrected; smaller-window layout work follows. [Evidence and current retest](qa/portrait-v2-retest-9a9e18e/README.md).
+
 > **Windows follow-up (2026-10-22):** owner audit at `3cfa9d2` checked 29/38.
 > Swipe/click/minimize corrections and the new shared transparent Meong logo are
 > under focused retest; latest audio policy is music for image ads, source audio

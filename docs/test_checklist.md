@@ -422,3 +422,12 @@ Earlier BLOCKED sections above are historical and superseded by this closure.
 Owner checked 29/38; [exact result IDs and focused retest checklist](qa/portrait-v2-windows-acceptance-3cfa9d2.md). D04 fails on the device; F01–F06, C02 and G05 remain unchecked. Input/audio corrections pass 50 synthetic tests; Windows repair acceptance is still OPEN. Latest policy: clicks on every enabled page action; music on image ads, video source audio on video ads.
 
 Branding follow-up: 52 targeted tests PASS and twelve screenshots reviewed, including native wordmark pixels and numbered tutorial order. [Screenshots and focused Windows retest](qa/portrait-v2-windows-followup/README.md). Do not convert the owner's pending C02/D04/F/G05 checks to PASS without new device evidence.
+
+## Windows retest at 9a9e18e — repeated-use correction
+
+- [x] Preserve owner 27/32 result without treating unavailable gallery swipe tests as failures.
+- [x] Reproduce muted native SDL channel reuse; 54 focused checks PASS including 20 post-mix PCM cycles.
+- [ ] Owner Windows repeat-flow audio acceptance: still OPEN (single-flow checks do not close it).
+- [ ] Responsive gallery at smaller live window sizes: implementation/verification pending.
+
+[Evidence and rollback](qa/portrait-v2-retest-9a9e18e/README.md).

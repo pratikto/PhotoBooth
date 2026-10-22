@@ -83,8 +83,8 @@ def kivy_sound_loader():
         candidates = []
         if platform in {"win", "linux", "macosx"} and not os.environ.get("KIVY_AUDIO"):
             try:
-                from kivy.core.audio.audio_sdl2 import SoundSDL2
-                candidates.append(("SDL2", lambda: SoundSDL2(source=str(path))))
+                from .mixer import channel_safe_sound
+                candidates.append(("SDL2 (idle channel recovery)", lambda: channel_safe_sound(path)))
             except Exception:
                 LOG.warning("SDL2 WAV provider unavailable; using Kivy SoundLoader", exc_info=True)
         candidates.append(("Kivy SoundLoader", lambda: SoundLoader.load(str(path))))

@@ -2,6 +2,12 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased — repeated Windows audio correction] — 2026-10-22
+
+- Record owner retest at `9a9e18e`: 27/32 checklist total, single-flow C/D success qualified by repeated music/click loss; B01–B05 untested because gallery was not visible.
+- Reproduce silent SDL channel reuse despite state=play and positive WAV gain. Restore unused channel gains before v2 WAV allocation, preserving playing ad channels and explicit provider overrides.
+- 54 focused tests PASS, including native post-mix PCM across 20 repeated visits and silence after close. [Evidence, rollback and device retest](qa/portrait-v2-retest-9a9e18e/README.md). Windows repeated-use acceptance stays open; responsive layout follow-up is next.
+
 ## [Unreleased — Windows visual branding follow-up] — 2026-10-22
 
 - Reuse exact transparent camera-cat artwork from the read-only Meong Fly reference in a native shared Meong lockup. Add it to every implemented page, including the template gallery; replace the game preview white plate with one hero brand. No game code or v1/QR logo changes.

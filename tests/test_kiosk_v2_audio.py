@@ -31,6 +31,28 @@ class FakeClip:
 
 
 class PortraitAudioTests(unittest.TestCase):
+    def test_channel_recovery_never_changes_a_playing_advertising_channel(self):
+        from photobooth.kiosk_v2.mixer import restore_idle_channels
+
+        class Mixer:
+            gains = [0, 23, 0, 0]
+
+            def Mix_AllocateChannels(self, count):
+                self_query.assertEqual(count, -1)
+                return 4
+
+            def Mix_Playing(self, channel):
+                return channel in (1, 2)
+
+            def Mix_Volume(self, channel, gain):
+                self_query.assertGreaterEqual(channel, 0)
+                self.gains[channel] = gain
+
+        self_query = self
+        mixer = Mixer()
+        restore_idle_channels(mixer)
+        self.assertEqual(mixer.gains, [128, 23, 0, 128])
+
     def setUp(self):
         self.directory = TemporaryDirectory()
         self.addCleanup(self.directory.cleanup)
