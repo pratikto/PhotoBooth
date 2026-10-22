@@ -233,6 +233,144 @@ class PortraitKivySmokeTests(unittest.TestCase):
         finally:
             Window.size = original
 
+    def test_every_enabled_button_clicks_once_even_on_ads_and_game_preview(self):
+        from unittest.mock import patch
+        app = PortraitKioskV2App()
+        app.build()
+        try:
+            def button(text):
+                return next(w for w in app.stage.walk()
+                            if isinstance(w, ArcadeButton) and w.text == text)
+
+            with patch.object(app.audio_v2, 'cue', return_value=True) as cue:
+                labels = ('UNDANGAN (DEMO)', 'NANTI SAJA', 'MAIN MEONG FLY',
+                          'LANJUT FOTO TANPA GAME', 'LANJUT PILIH TEMPLATE',
+                          '+', 'BERIKUTNYA', 'SELESAI / KEMBALI IKLAN')
+                for count, label in enumerate(labels, 1):
+                    old = button(label)
+                    old.dispatch('on_release')
+                    self.assertEqual(cue.call_count, count, label)
+                # The old return button must not affect a new visitor or click.
+                old.dispatch('on_release')
+                self.assertEqual(cue.call_count, len(labels))
+                app._choose_photo()
+                app._complete_tutorial()
+                button('PEMBAYARAN (BELUM TERHUBUNG)').dispatch('on_release')
+                self.assertEqual(cue.call_count, len(labels))
+        finally:
+            app.on_stop()
+
+    def test_real_gallery_swipe_grabs_stream_and_moves_once_at_both_sizes(self):
+        from kivy.base import EventLoop
+        from kivy.core.window import Window
+        from kivy.input.motionevent import MotionEvent
+
+        class Pointer(MotionEvent):
+            def depack(self, args):
+                self.sx, self.sy = args
+                self.profile = ['pos']
+                super().depack(args)
+
+        def settle():
+            for _ in range(4):
+                EventLoop.idle()
+
+        original = Window.size
+        try:
+            for width, height in ((800, 1280), (452, 900)):
+                with self.subTest(viewport=(width, height)):
+                    Window.size = (width, height)
+                    app = PortraitKioskV2App()
+                    Window.add_widget(app.build())
+                    try:
+                        app._choose_photo()
+                        app._complete_tutorial()
+                        settle()
+                        gallery = next(w for w in app.stage.walk() if isinstance(w, SwipeGallery))
+                        x, y = gallery.to_window(*gallery.center)
+                        def drag(dx, dy, identity):
+                            touch = Pointer('portrait-swipe', identity,
+                                            (x / Window.width, y / Window.height), is_touch=True)
+                            EventLoop.post_dispatch_input('begin', touch)
+                            self.assertIn(gallery, [ref() for ref in touch.grab_list])
+                            touch.move(((x + dx) / Window.width, (y + dy) / Window.height))
+                            EventLoop.post_dispatch_input('update', touch)
+                            EventLoop.post_dispatch_input('end', touch)
+                            settle()
+                            self.assertNotIn(gallery, [ref() for ref in touch.grab_list])
+                            self.assertFalse(gallery._touch_origins)
+                        drag(-90, 0, 'left')
+                        self.assertEqual(app.template_index, 1)
+                        drag(90, 0, 'right')
+                        self.assertEqual(app.template_index, 0)
+                        drag(0, 65, 'vertical')
+                        drag(-15, 0, 'short')
+                        self.assertEqual(app.template_index, 0)
+                        drag(-90, 0, 'left-again')
+                        self.assertEqual(app.template_index, 1)
+                        pending = Pointer('portrait-swipe', 'retired',
+                                          (x / Window.width, y / Window.height), is_touch=True)
+                        EventLoop.post_dispatch_input('begin', pending)
+                        self.assertIn(gallery, [ref() for ref in pending.grab_list])
+                        app._return_ad()
+                        self.assertNotIn(gallery, [ref() for ref in pending.grab_list])
+                        self.assertFalse(gallery._touch_origins)
+                        EventLoop.post_dispatch_input('end', pending)
+                        self.assertEqual(app.navigation.page, ADVERT)
+                    finally:
+                        app.on_stop()
+                        Window.remove_widget(app.stage)
+        finally:
+            Window.size = original
+
+    def test_minimize_restore_and_retired_gallery_release_ownership(self):
+        from kivy.core.window import Window
+        app = PortraitKioskV2App()
+        app.build()
+        try:
+            Window.dispatch('on_minimize')
+            self.assertTrue(app._suspended)
+            Window.dispatch('on_restore')
+            self.assertFalse(app._suspended)
+        finally:
+            app.on_stop()
+        Window.dispatch('on_minimize')
+        self.assertFalse(app._suspended)
+
+    def test_ad_media_notification_precedes_video_load_and_recovers_to_image(self):
+        import tempfile
+        from pathlib import Path
+        from types import SimpleNamespace
+        from unittest.mock import Mock, patch
+        from PIL import Image as PillowImage
+        from photobooth.advertising import Advertisement
+        from photobooth.ui_ads import AdvertisementPlayer
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            PillowImage.new('RGB', (20, 20), 'red').save(root / 'image.png')
+            (root / 'clip.mp4').write_bytes(b'synthetic-decoder-failure')
+            items = [Advertisement('still', 'Still', root / 'image.png', ('idle',)),
+                     Advertisement('video', 'Video', root / 'clip.mp4', ('idle',))]
+            kinds = []
+            catalog = SimpleNamespace(items=items, available=lambda _: items)
+            player = AdvertisementPlayer(catalog, 'idle', Mock(), on_media_change=kinds.append)
+            try:
+                player.next()
+                self.assertEqual(kinds, ['image'])
+                def decoder(*args, **kwargs):
+                    self.assertEqual(kinds[-1], 'video')
+                    raise RuntimeError('simulated decoder failure')
+                with patch.dict(os.environ, PHOTOBOOTH_AD_VIDEO='1'), patch('photobooth.ui_ads.GuardedVideo', decoder):
+                    player.next()
+                self.assertEqual(kinds, ['image', 'video'])
+                player.next()
+                self.assertEqual(kinds, ['image', 'video', 'image'])
+                catalog.available = lambda _: []
+                player.next()
+                self.assertEqual(kinds[-1], 'fallback')
+            finally:
+                player.close()
+
     def test_carousel_swipe_uses_horizontal_direction_and_rejects_vertical(self):
         self.assertEqual(SwipeGallery.swipe_step(-90, 5), 1)
         self.assertEqual(SwipeGallery.swipe_step(90, -4), -1)

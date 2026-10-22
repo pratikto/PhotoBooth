@@ -63,9 +63,12 @@ class AdvertisementPlayer(FloatLayout):
     Missing/empty playlists always show a usable branded poster.
     """
 
-    def __init__(self, catalog, placement, events, volume=.5, **kwargs):
+    def __init__(self, catalog, placement, events, volume=.5, on_media_change=None, **kwargs):
         super().__init__(**kwargs)
         self.catalog, self.placement, self.events = catalog, placement, events
+        # Optional consumer notification; legacy callers retain their audio policy.
+        self._media_changed = on_media_change
+        self._media_kind = None
         self.volume = 0 if placement == 'payment' else volume
         self.current = self.video = None
         self._index = -1
@@ -122,6 +125,12 @@ class AdvertisementPlayer(FloatLayout):
         self.image.opacity = 0
         self._fallback.opacity = 1
 
+    def _notify_media(self, kind):
+        if kind != self._media_kind:
+            self._media_kind = kind
+            if self._media_changed is not None and not self._closed:
+                self._media_changed(kind)
+
     def next(self, completed=False):
         if self._closed:
             return
@@ -129,6 +138,7 @@ class AdvertisementPlayer(FloatLayout):
         choices = [item for item in self.catalog.available(self.placement)
                    if item.path not in self._failed]
         if not choices:
+            self._notify_media("fallback")
             self._later(self.next, 30)
             return
         eligible_indices = [index for index, item in enumerate(self.catalog.items) if item in choices]
@@ -136,6 +146,8 @@ class AdvertisementPlayer(FloatLayout):
         self.current = item = self.catalog.items[self._index]
         try:
             if item.video:
+                # Retire GUI music before any native decoder can begin audio.
+                self._notify_media("video")
                 if item.poster and item.poster.is_file():
                     self.image.source = str(item.poster)
                     self.image.opacity = 1
@@ -162,6 +174,7 @@ class AdvertisementPlayer(FloatLayout):
                 self.image.opacity = 1
                 self._fallback.opacity = 0
                 self._ready = True
+                self._notify_media("image")
         except Exception:
             LOG.warning('Skipping unplayable advertising asset %s', item.path, exc_info=True)
             self._failed.add(item.path)

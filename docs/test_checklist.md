@@ -416,3 +416,7 @@ Do not close P2.6–P2.8 based only on these local results.
 - [ ] Physical Windows audible speaker/touch acceptance remains NOT RUN.
 
 Earlier BLOCKED sections above are historical and superseded by this closure.
+
+## Windows audit follow-up at 3cfa9d2 — 2026-10-22
+
+Owner checked 29/38; [exact result IDs and focused retest checklist](qa/portrait-v2-windows-acceptance-3cfa9d2.md). D04 fails on the device; F01–F06, C02 and G05 remain unchecked. Input/audio corrections pass 50 synthetic tests; Windows repair acceptance is still OPEN. Latest policy: clicks on every enabled page action; music on image ads, video source audio on video ads.

@@ -75,16 +75,39 @@ class PortraitAudioTests(unittest.TestCase):
         self.assertEqual(clip.plays, 2)
         self.assertAlmostEqual(clip.volume, .3)
 
-    def test_effects_do_not_play_over_advertisements(self):
-        self.assertFalse(self.audio.cue("button"))
-        self.assertNotIn("meong-v2-button.wav", self.loaded)
-        self.audio.enter_page("tutorial")
-        self.assertTrue(self.audio.cue("button"))
-        clip = self.loaded["meong-v2-button.wav"]
-        self.assertEqual(clip.plays, 1)
+    def test_only_button_feedback_can_play_over_advert_and_game_preview(self):
+        for page in ("advert", "game_preview"):
+            self.audio.enter_page(page)
+            self.assertTrue(self.audio.cue("button"))
+            self.assertFalse(self.audio.cue("shutter"))
+            self.assertFalse(self.audio.cue("count"))
+        self.assertEqual(self.loaded[SOUND_FILES["button"]].plays, 2)
+        self.assertNotIn(SOUND_FILES["music"], self.loaded)
+
+    def test_image_music_yields_before_video_and_returns_for_next_image(self):
         self.audio.enter_page("advert")
-        self.assertFalse(self.audio.cue("button"))
-        self.assertEqual(clip.plays, 1)
+        self.assertNotIn(SOUND_FILES["music"], self.loaded)
+        self.assertTrue(self.audio.set_ad_media("image"))
+        music = self.loaded[SOUND_FILES["music"]]
+        self.audio.set_ad_media("image")
+        self.assertEqual(music.plays, 1)
+        self.audio.set_ad_media("video")
+        self.assertEqual(music.state, "stop")
+        self.audio.set_ad_media("image")
+        self.assertEqual(music.plays, 2)
+        self.audio.enter_page("tutorial")
+        self.audio.enter_page("templates")
+        self.assertEqual(music.plays, 2)
+        self.audio.enter_page("advert")
+        self.assertEqual(music.state, "stop")
+        self.audio.set_ad_media("fallback")
+        self.assertEqual(music.plays, 3)
+        self.audio.suspend()
+        self.audio.set_ad_media("video")
+        self.audio.resume()
+        self.assertEqual(music.state, "stop")
+        with self.assertRaises(ValueError):
+            self.audio.set_ad_media("unknown")
 
     def test_effects_stop_on_suspend_and_do_not_resume_as_stale_cues(self):
         self.audio.enter_page("tutorial")
@@ -96,14 +119,15 @@ class PortraitAudioTests(unittest.TestCase):
         self.assertEqual(effect.state, "stop")
         self.assertEqual(effect.plays, 1)
 
-    def test_page_handoff_stops_effects_and_game_preview_cannot_play_them(self):
+    def test_page_handoff_stops_old_effects_but_allows_new_click(self):
         for page in ("advert", "game_preview"):
             self.audio.enter_page("tutorial")
             self.audio.cue("button")
             effect = self.loaded[SOUND_FILES["button"]]
             self.audio.enter_page(page)
             self.assertEqual(effect.state, "stop")
-            self.assertFalse(self.audio.cue("button"))
+            self.assertFalse(self.audio.cue("shutter"))
+            self.assertTrue(self.audio.cue("button"))
 
     def test_suspend_resume_and_cleanup(self):
         self.audio.enter_page("tutorial")

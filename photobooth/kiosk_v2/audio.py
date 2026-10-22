@@ -21,7 +21,7 @@ SOUND_FILES = {
     "shutter": "meong-v2-shutter.wav",
     "success": "meong-v2-success.wav",
 }
-# No soundtrack over an advertising video or a payment QR. A future game
+# No soundtrack over an advertising video; still images may use GUI music. A future game
 # integration must obtain/release its own isolated audio channel explicitly.
 MUSIC_PAGES = frozenset({"tutorial", "templates"})
 KNOWN_PAGES = frozenset({"advert", "tutorial", "templates", "game_preview"})
@@ -103,6 +103,7 @@ class PortraitAudio:
         self.music_gain = bounded_gain(music_gain)
         self.effects_gain = bounded_gain(effects_gain)
         self.page = "advert"
+        self.ad_media = "video"
         self.suspended = False
         self._handles = {}
         self.last_error = None
@@ -140,7 +141,9 @@ class PortraitAudio:
     def _sync_music(self, *, restart=False):
         handle = self._handles.get("music")
         should_play = (self.enabled and not self.suspended and
-                       self.page in MUSIC_PAGES and self.music_gain > 0)
+                       (self.page in MUSIC_PAGES or
+                        (self.page == "advert" and self.ad_media in {"image", "fallback"}))
+                       and self.music_gain > 0)
         if not should_play:
             self._stop(handle)
             return False
@@ -170,10 +173,20 @@ class PortraitAudio:
         if page not in KNOWN_PAGES:
             raise ValueError("Unsupported prototype page: " + str(page))
         self.page = page
+        if page == "advert":
+            # Stay silent until the player declares its current creative.
+            self.ad_media = "video"
         if page not in MUSIC_PAGES:
             for name, handle in self._handles.items():
                 if name != "music":
                     self._stop(handle)
+        return self._sync_music()
+
+    def set_ad_media(self, media):
+        """The player calls before video load, or after a still/fallback is ready."""
+        if media not in {"video", "image", "fallback"}:
+            raise ValueError("Unsupported advertising media")
+        self.ad_media = media
         return self._sync_music()
 
     def set_music_gain(self, value):
@@ -184,10 +197,11 @@ class PortraitAudio:
         self.effects_gain = bounded_gain(value)
 
     def cue(self, name="button"):
-        """No SFX on ad screen: its video's source track owns the audio."""
+        """Clicks are permitted on every page; camera effects stay page-owned."""
         if name not in ("button", "count", "shutter", "success"):
             raise ValueError("Unsupported sound cue")
-        if not self.enabled or self.suspended or self.page not in MUSIC_PAGES or self.effects_gain <= 0:
+        if (not self.enabled or self.suspended or self.effects_gain <= 0 or
+                (name != "button" and self.page not in MUSIC_PAGES)):
             return False
         handle = self._sound(name)
         if handle is None:

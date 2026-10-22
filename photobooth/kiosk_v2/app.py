@@ -11,6 +11,7 @@ import time
 
 from kivy.app import App
 from kivy.clock import Clock
+from kivy.core.window import Window
 from kivy.graphics.texture import Texture
 from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
@@ -61,8 +62,9 @@ class TouchStage(Starfield):
 class SwipeGallery(BoxLayout):
     """Real horizontal touch gesture for the approved strip carousel.
 
-    No global touch grabs: only a gesture beginning and ending inside this
-    gallery can turn a template. Predominantly vertical motions are ignored.
+    Grab each pointer stream until release so Windows touch/pen providers keep
+    delivering its move/up events. Only gestures ending inside turn a template.
+    Predominantly vertical and short motions are ignored.
     """
 
     def __init__(self, on_swipe, **kwargs):
@@ -77,20 +79,40 @@ class SwipeGallery(BoxLayout):
         return -1 if dx > 0 else 1
 
     def on_touch_down(self, touch):
-        if self.collide_point(*touch.pos):
-            self._touch_origins[touch.uid] = (touch.x, touch.y)
-        return super().on_touch_down(touch)
+        if super().on_touch_down(touch):
+            return True
+        if not self.collide_point(*touch.pos) or touch.is_mouse_scrolling:
+            return False
+        # Normalized window coordinates survive Kivy's parent/local transforms.
+        self._touch_origins[touch.uid] = (touch, touch.sx, touch.sy)
+        touch.grab(self)
+        return True
+
+    def on_touch_move(self, touch):
+        if touch.grab_current is self or touch.uid in self._touch_origins:
+            return True
+        return super().on_touch_move(touch)
 
     def on_touch_up(self, touch):
+        # Kivy sends both normal and grabbed dispatch; consume only the latter.
+        if touch.grab_current is not self:
+            return super().on_touch_up(touch)
         origin = self._touch_origins.pop(touch.uid, None)
-        consumed = super().on_touch_up(touch)
+        touch.ungrab(self)
         if origin is None or not self.collide_point(*touch.pos):
-            return consumed
-        step = self.swipe_step(touch.x - origin[0], touch.y - origin[1])
+            return True
+        _, sx, sy = origin
+        step = self.swipe_step((touch.sx - sx) * Window.width,
+                               (touch.sy - sy) * Window.height)
         if step:
             self._on_swipe(step)
-            return True
-        return consumed
+        return True
+
+    def dispose(self):
+        """A retired page must not retain a native pointer grab."""
+        for touch, _sx, _sy in self._touch_origins.values():
+            touch.ungrab(self)
+        self._touch_origins.clear()
 
 
 class PortraitKioskV2App(App):
@@ -120,7 +142,14 @@ class PortraitKioskV2App(App):
         self.stage = ScreenManager(transition=NoTransition())
         self._show()
         self._heartbeat = Clock.schedule_interval(self._tick, 1)
+        Window.bind(on_minimize=self._window_minimized, on_restore=self._window_restored)
         return self.stage
+
+    def _window_minimized(self, *_args):
+        self.on_pause()
+
+    def _window_restored(self, *_args):
+        self.on_resume()
 
     def on_pause(self):
         self._suspended = True
@@ -141,6 +170,8 @@ class PortraitKioskV2App(App):
 
     def on_stop(self):
         self._closed = True
+        Window.unbind(on_minimize=self._window_minimized, on_restore=self._window_restored)
+        self._retire_gestures()
         if getattr(self, "_heartbeat", None):
             self._heartbeat.cancel()
         self._close_invitation()
@@ -184,12 +215,18 @@ class PortraitKioskV2App(App):
         if self._ad_player is not None:
             self._ad_player.set_volume(.55)
 
+    def _retire_gestures(self):
+        for widget in self.stage.walk():
+            if isinstance(widget, SwipeGallery):
+                widget.dispose()
+
     def _show(self):
         """Retire old media before rebuilding only the opt-in v2 page tree."""
         self._view_revision += 1
         self._close_invitation()
         self._stop_ad()
         self._warning_label = None
+        self._retire_gestures()
         self.stage.clear_widgets()
         page = Screen(name=self.navigation.page)
         canvas = TouchStage(self._activity)
@@ -238,7 +275,13 @@ class PortraitKioskV2App(App):
     def _action(self, title, callback, *, variant="primary", height=62, disabled=False):
         button = ArcadeButton(title, variant=variant, height=height)
         button.disabled = disabled
-        invoke = self._page_callback(callback)
+        def activate():
+            callback()
+            # Play after routing so a silent-page handoff cannot cut this click.
+            if not self._closed:
+                self.audio_v2.cue("button")
+
+        invoke = self._page_callback(activate)
         button.bind(on_release=lambda *_: None if button.disabled else invoke())
         return button
 
@@ -291,6 +334,7 @@ class PortraitKioskV2App(App):
         media_host = FloatLayout()
         self._ad_player = AdvertisementPlayer(
             self.catalog, "idle", self.events, volume=.55,
+            on_media_change=self._page_callback(self.audio_v2.set_ad_media),
             size_hint=(1, 1), pos_hint={"x": 0, "y": 0},
         )
         media_host.add_widget(self._ad_player)
@@ -497,7 +541,7 @@ class PortraitKioskV2App(App):
             "GESER PILIHANMU DI GALAKSI MEONG!",
             size=14, height=30, color=CYAN, bold=True))
 
-        gallery = SwipeGallery(on_swipe=self._page_callback(self._shift_template),
+        gallery = SwipeGallery(on_swipe=self._page_callback(self._swipe_template),
                                orientation="horizontal", spacing=dp(7))
         left = BoxLayout(orientation="vertical", size_hint_x=.22,
                          spacing=dp(2))
@@ -570,9 +614,12 @@ class PortraitKioskV2App(App):
             variant="tertiary", height=48))
         self._update_template()
 
+    def _swipe_template(self, step):
+        self._shift_template(step)
+        self.audio_v2.cue("button")
+
     def _shift_template(self, step):
         self.template_index = (self.template_index + step) % len(self.templates)
-        self.audio_v2.cue()
         self._activity()
         self._update_template()
 
@@ -580,7 +627,6 @@ class PortraitKioskV2App(App):
         template = self.templates[self.template_index]
         old = self.quantities[template.template_id]
         self.quantities[template.template_id] = max(0, min(9, old + delta))
-        self.audio_v2.cue()
         self._activity()
         self._update_template()
 

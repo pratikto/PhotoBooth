@@ -2,6 +2,13 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased — Windows input/audio follow-up] — 2026-10-22
+
+- Record owner Windows audit at `3cfa9d2`: 29/38 checked, with D04 swipe explicitly failing and audio/order/relaunch checks still open. Preserve positive device observations without claiming complete acceptance.
+- Fix pointer-grab/normalized-coordinate swipe ownership and desktop minimize/restore bindings. Centralize one click per enabled action on every page; stale/disabled actions remain silent.
+- Honor latest owner policy: image/fallback ads use GUI music, video ads use their own audio; notify music ownership before a decoder can start. The optional shared-player callback preserves legacy callers and muted payment ads.
+- 50 targeted synthetic tests PASS; full suite 285 run / 283 PASS / 2 optional model-asset skips. Native SDL2 dummy-audio lifecycle PASS and twelve portrait states rendered. [Audit, rollback and retest](qa/portrait-v2-windows-acceptance-3cfa9d2.md). Native/device evidence remains distinguished.
+
 ## [Unreleased — P2.6–P2.8 non-hardware gates closed] — 2026-10-22
 
 - Downloaded P2.7/P2.8 original CI artifacts after network publication; verified both ZIP digests, all dimensions and P2.8 clean-source/PNG manifests. Reviewed every page at 800×1280 and 452×900; no remaining synthetic visual blocker.
