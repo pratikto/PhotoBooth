@@ -2,6 +2,11 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased — gallery and animation Windows checklist V4] — 2026-10-23
+
+- Add a clickable 35-item form for the latest gallery, pixel branding, swipe/motion, response, audio and lifecycle. Submit Hasil prepares a prompt for manual copy/send; download, print and separate local persistence are retained.
+- F05–F06 cannot pass without at least twenty reported cycles; reaching twenty never auto-passes them. Exports explicitly qualify missing tested HEAD and unmet duration. JavaScript syntax and 11 DOM behavior checks PASS. [Form, evidence and usage](qa/portrait-v2-gallery-focus/README.md). Application source and existing Windows acceptance are unchanged.
+
 ## [Unreleased — gallery focus, moving strips and pixel typography] — 2026-10-22
 
 - Give the vertical strips most of the gallery, keep previous/current/next fully visible, and float the arrows in the preview's lower corners. Compact the header, copy summary and footer; raise preview resolution without changing print masters.

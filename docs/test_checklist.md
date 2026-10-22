@@ -458,5 +458,6 @@ Branding follow-up: 52 targeted tests PASS and twelve screenshots reviewed, incl
 - [x] Visual source `5a568bf`: exact-SHA CI 39803887478, all three jobs SUCCESS, including 31 Windows native audio tests.
 - [x] Original artifact ZIP digest, four clean-source manifests and all 24 page / nine motion PNG hashes verified; images visually reviewed.
 - [ ] Fresh Windows response/layout/motion retest with actual HEAD.
+- [x] 2026-10-23: V4 clickable 35-item form with Submit, fresh storage and enforced twenty-cycle qualification; syntax and 11 DOM behavior checks PASS. This is form verification, not application/device acceptance.
 
 [Owner audit and response timings](qa/portrait-v2-gallery-focus/README.md).

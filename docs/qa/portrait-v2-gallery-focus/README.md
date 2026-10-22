@@ -169,9 +169,30 @@ composition still need owner retest. Cold preview decoding can still pause an
 early first entry. Existing project hardware/Drive issues are not closed here.
 No game/payment/scanner/backend integration or master change is made.
 
-Record the actual `git rev-parse --short HEAD` when testing. The existing
-[41-item clickable form with Submit Hasil](../portrait-v2-start-photo-crash/windows-checklist.html)
-can still capture the full regression; use these additional checks for the new UI:
+Record the actual `git rev-parse --short HEAD` when testing. Use the current
+[35-item clickable V4 form with Submit Hasil](windows-checklist.html) for the
+gallery/animation follow-up. Download the HTML and open it in Edge/Chrome;
+after testing, choose **Submit Hasil → Salin prompt**, then paste and send in
+chat. The file works offline and cannot send directly to a conversation.
+It includes startup, branding, strip layout, motion/swipe, response/clicks,
+music, lifecycle, twenty-cycle and prototype-boundary checks.
+
+V4 uses separate storage, starts with every item unchecked, and does not prefill
+the tested Windows HEAD. F05–F06 stay unavailable until a whole-number cycle
+count of at least twenty is entered; reaching twenty never checks them
+automatically. Lowering the count clears those two checks. Missing HEAD and
+unmet duration are explicitly qualified in the exported report.
+The [old 41-item V3 form](../portrait-v2-start-photo-crash/windows-checklist.html)
+remains a historical crash-retest form; its checkmarks are not imported.
+
+Form-only verification on 2026-10-23 (Asia/Jakarta): JavaScript syntax and
+**11 DOM behavior checks PASS**, including gate enforcement/restore, missing
+HEAD, separate storage, partial Submit, prompt refresh, literal notes, clipboard
+API/fallback and UTF-8 download. [Transcript](windows-checklist-tests.txt).
+This verifies the form logic, not browser visual rendering or new application
+acceptance. Application, renderer and CI configuration are unchanged.
+
+The focused UI checks represented in the form are:
 
 - [ ] New gallery: strip is the main focus, all three full previews are visible;
   arrows float at the lower corners without covering the selected strip.

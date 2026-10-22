@@ -1,0 +1,13 @@
+PASS JavaScript syntax
+PASS 35 unique blank items, blank tested HEAD, Jakarta date, no inherited PASS
+PASS individual tick updates progress and section count
+PASS Submit exports partial report, unchecked items and missing-HEAD qualification
+PASS ten cycles cannot pass F05/F06, including programmatic stale ticks
+PASS 20 cycles enable only, never auto-pass; lowering count clears duration checks
+PASS old V3 storage is isolated and stale ten-cycle V4 restore is sanitized
+PASS saved eligible checks and notes restore; reset restores empty defaults
+PASS notes remain literal text; submitted prompt tracks further changes
+PASS Submit works without local storage
+PASS clipboard API copies full prompt
+PASS clipboard fallback and UTF-8 text download preserve report
+11 DOM behavior checks PASS; JavaScript syntax PASS. Browser visual rendering and physical Windows application tests were not run by this form check.

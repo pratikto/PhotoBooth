@@ -1,0 +1,12 @@
+{
+  "date": "2026-10-23",
+  "timezone": "Asia/Jakarta",
+  "source_sha256": "e88ebc3585f78550ac855b50eea390b52c3766de2e12a46b3b18d07c2def8ef9",
+  "syntax": "PASS",
+  "dom_checks": 11,
+  "dom_result": "PASS",
+  "visual_browser_test": "NOT RUN",
+  "windows_application_test": "NOT RUN; existing application acceptance unchanged",
+  "node": "v24.19.0",
+  "jsdom": "30.1.3"
+}
