@@ -3,14 +3,17 @@
 > **Latest owner retest:** 41 checked boxes, ten Windows cycles, tested HEAD not
 > supplied. Crash, swipe and audio are positively reported; G03/G06 require twenty
 > cycles and remain unverified for that duration. Resize works. Current approved
-> follow-up is faster button response, larger strip previews and visible carousel
-> motion. [Audit and ongoing evidence](qa/portrait-v2-gallery-focus/README.md).
+> follow-up implements faster button feedback, larger strip previews with floating
+> arrows, moving-image carousel and mini-game-style pixel typography. Local:
+> 71 focused PASS; full 306 run / 304 PASS / 2 optional skips; thirty reviewed PNGs.
+> New Windows acceptance and exact-source CI remain separate gates.
+> [Audit, evidence and focused retest](qa/portrait-v2-gallery-focus/README.md).
 
-> **Current Windows crash follow-up:** owner log shows MULAI FOTO exits after
+> **Historical Windows crash follow-up:** owner log shows MULAI FOTO exits after
 > the previous correction's CDLL(None) TypeError and native FFmpeg WAV fallback
 > error. Named DLL loading and SDL-only default Windows fallback are corrected;
-> native Windows CI passes 29 audio tests at `471bbd9`; physical operator
-> retest remains open.
+> native Windows CI passes 29 audio tests at `471bbd9`. Later owner retest above
+> reports startup/tutorial/gallery success; its tested HEAD was not supplied.
 > [Current diagnosis and acceptance](qa/portrait-v2-start-photo-crash/README.md).
 
 > **Latest owner retest (`9a9e18e`):** 27/32 checklist total; single-flow clicks/music

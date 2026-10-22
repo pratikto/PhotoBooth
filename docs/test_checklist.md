@@ -451,7 +451,11 @@ Branding follow-up: 52 targeted tests PASS and twelve screenshots reviewed, incl
 - [x] Preserve raw 41/41 checked result with ten reported cycles and unknown HEAD.
 - [ ] G03/G06 twenty-cycle acceptance: still unverified; do not infer from checkmarks.
 - [x] 68 focused checks PASS for idle audio/preview warmup and immediate click order.
-- [ ] Gallery preview focus / image slide polish: next authorized step.
+- [x] Response source `67e9da8`: exact-SHA CI 39798019411, all three jobs SUCCESS.
+- [x] Gallery preview focus, floating arrows, real image motion and pixel brand implemented; 71 focused checks PASS.
+- [x] Full 306 run / 304 PASS / 2 optional model skips; three 150% density checks PASS.
+- [x] Thirty screenshots across five sizes and nine native motion frames reviewed; hashes preserved.
+- [ ] New visual-source exact-SHA CI and original artifact verification after push.
 - [ ] Fresh Windows response/layout/motion retest with actual HEAD.
 
 [Owner audit and response timings](qa/portrait-v2-gallery-focus/README.md).

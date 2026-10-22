@@ -22,6 +22,142 @@ else:
 
 @unittest.skipUnless(HAS_KIVY, "Kivy not available in pure-Python test environment")
 class PortraitKivySmokeTests(unittest.TestCase):
+    def test_gallery_focus_keeps_full_strips_and_floating_arrows_inside_preview(self):
+        from kivy.base import EventLoop
+        from kivy.core.window import Window
+        from photobooth.kiosk_v2.branding import PixelWordmark, MeongLogo
+        original = Window.size
+        app = PortraitKioskV2App()
+        Window.add_widget(app.build())
+        try:
+            app._choose_photo()
+            app._complete_tutorial()
+            for size in ((800, 1280), (452, 900), (360, 640), (452, 600), (800, 600)):
+                with self.subTest(viewport=size):
+                    Window.size = size
+                    for _ in range(6):
+                        EventLoop.idle()
+                    gallery = app._carousel
+                    left, bottom = gallery.viewport.to_window(*gallery.viewport.pos)
+                    right, top = gallery.viewport.to_window(gallery.viewport.right, gallery.viewport.top)
+                    for image in (app._previous_preview, app._preview, app._next_preview):
+                        x, y = image.to_window(*image.pos)
+                        x1, y1 = image.to_window(image.right, image.top)
+                        self.assertGreaterEqual(x, left - 1)
+                        self.assertGreaterEqual(y, bottom - 1)
+                        self.assertLessEqual(x1, right + 1)
+                        self.assertLessEqual(y1, top + 1)
+                        self.assertAlmostEqual((x1 - x) / (y1 - y), 1 / 3, places=4)
+                    x, y = app._preview.to_window(*app._preview.pos)
+                    x1, y1 = app._preview.to_window(app._preview.right, app._preview.top)
+                    self.assertGreater(y1 - y, Window.height * .49)
+                    for text in ('SEBELUMNYA', 'BERIKUTNYA'):
+                        button = next(w for w in app.stage.walk()
+                                      if isinstance(w, ArcadeButton) and w.text == text)
+                        bx, by = button.to_window(*button.pos)
+                        br, bt = button.to_window(button.right, button.top)
+                        self.assertGreaterEqual(bx, left - 1)
+                        self.assertLessEqual(br, right + 1)
+                        self.assertGreaterEqual(by, bottom - 1)
+                        self.assertLess(bt, bottom + (top - bottom) * .25)
+                        self.assertTrue(br <= x or bx >= x1, 'arrow obscures selected strip')
+                    brand = next(w for w in app.stage.walk() if isinstance(w, MeongLogo))
+                    self.assertIsInstance(brand.wordmark, PixelWordmark)
+                    self.assertIsInstance(brand.caption, PixelWordmark)
+                    self.assertEqual((brand.wordmark.text, brand.caption.text), ('MEONG', 'PHOTOBOOTH'))
+        finally:
+            app.on_stop()
+            Window.remove_widget(app.stage)
+            Window.size = original
+
+    def test_carousel_has_real_motion_and_rapid_input_replaces_without_late_page_actions(self):
+        import time
+        from kivy.base import EventLoop
+        from kivy.core.window import Window
+        app = PortraitKioskV2App()
+        Window.add_widget(app.build())
+        try:
+            app._choose_photo()
+            app._complete_tutorial()
+            for _ in range(5):
+                EventLoop.idle()
+            gallery = app._carousel
+            origin = app._preview.x
+            observed = []
+            gallery.bind(offset=lambda widget, offset: observed.append((offset, app._preview.x)))
+            app._shift_template(1)
+            deadline = time.monotonic() + 1
+            while gallery._moving and time.monotonic() < deadline:
+                EventLoop.idle()
+            self.assertTrue(any(offset < 0 and x < origin for offset, x in observed))
+            self.assertFalse(gallery._moving)
+            for step in (1, -1, 1, 1, -1):
+                app._shift_template(step)
+            self.assertEqual(app.template_index, 2)
+            deadline = time.monotonic() + 1
+            while gallery._moving and time.monotonic() < deadline:
+                EventLoop.idle()
+            self.assertFalse(gallery._moving)
+            self.assertEqual(gallery.offset, 0)
+            self.assertIs(app._preview.texture, app._textures[app.templates[2].template_id])
+            app._shift_template(1)
+            app.on_pause()
+            self.assertFalse(gallery._moving)
+            self.assertEqual(gallery.offset, 0)
+            app.on_resume()
+            app._shift_template(-1)
+            app._return_ad()
+            self.assertTrue(gallery._disposed)
+            self.assertFalse(gallery._moving)
+            self.assertFalse(gallery._touch_origins)
+            for _ in range(5):
+                EventLoop.idle()
+            self.assertEqual(app.navigation.page, ADVERT)
+            self.assertEqual(app.template_index, 0)
+        finally:
+            app.on_stop()
+            Window.remove_widget(app.stage)
+
+    def test_finger_drags_strip_before_selection_and_secondary_touch_cannot_commit_twice(self):
+        from kivy.base import EventLoop
+        from kivy.core.window import Window
+        from kivy.input.motionevent import MotionEvent
+
+        class Pointer(MotionEvent):
+            def depack(self, args):
+                self.sx, self.sy = args
+                self.profile = ['pos']
+                super().depack(args)
+
+        app = PortraitKioskV2App()
+        Window.add_widget(app.build())
+        try:
+            app._choose_photo()
+            app._complete_tutorial()
+            for _ in range(5):
+                EventLoop.idle()
+            gallery = app._carousel
+            x, y = gallery.to_window(*gallery.center)
+            first = Pointer('drag-test', 'primary', (x / Window.width, y / Window.height), is_touch=True)
+            second = Pointer('drag-test', 'secondary', (x / Window.width, y / Window.height), is_touch=True)
+            origin = app._preview.x
+            EventLoop.post_dispatch_input('begin', first)
+            EventLoop.post_dispatch_input('begin', second)
+            self.assertEqual(len(gallery._touch_origins), 1)
+            first.move(((x - 90) / Window.width, y / Window.height))
+            EventLoop.post_dispatch_input('update', first)
+            self.assertEqual(app.template_index, 0)
+            self.assertLess(app._preview.x, origin)
+            self.assertLess(gallery.offset, 0)
+            EventLoop.post_dispatch_input('end', first)
+            self.assertEqual(app.template_index, 1)
+            EventLoop.post_dispatch_input('end', second)
+            self.assertEqual(app.template_index, 1)
+            self.assertFalse(gallery._touch_origins)
+        finally:
+            app.on_stop()
+            Window.remove_widget(app.stage)
+
     def test_button_feedback_precedes_expensive_callback_and_copy_does_not_render_previews(self):
         from unittest.mock import patch
         app = PortraitKioskV2App()
@@ -149,6 +285,13 @@ class PortraitKivySmokeTests(unittest.TestCase):
                         gesture((x + (right - x) * .5, y), (x + (right - x) * .52, y))
                         self.assertEqual(app.template_index, before)
                         for preview in (app._previous_preview, app._preview, app._next_preview):
+                            # This check targets stable left/centre/right hit
+                            # regions. Motion interruption is verified separately.
+                            import time
+                            deadline = time.monotonic() + .6
+                            while app._carousel._moving and time.monotonic() < deadline:
+                                EventLoop.idle()
+                            self.assertFalse(app._carousel._moving)
                             start = preview.to_window(*preview.center)
                             delta = (right - x) * (.3 if start[0] <= (right + x) / 2 else -.3)
                             before = app.template_index

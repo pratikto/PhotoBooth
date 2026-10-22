@@ -26,6 +26,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--output-dir", required=True)
 parser.add_argument("--width", type=int, choices=(360, 452, 800), default=800)
 parser.add_argument("--height", type=int, choices=(600, 640, 900, 1280), default=1280)
+parser.add_argument('--motion', action='store_true', help='Also capture native carousel motion frames and GIF')
 # The renderer sets Config before importing the Window singleton.
 options = parser.parse_args() if __name__ == "__main__" else None
 
@@ -41,12 +42,29 @@ from photobooth.kiosk_v2.branding import MeongLogo
 
 
 class VisualRecorder(PortraitKioskV2App):
-    def __init__(self, output_dir, dimensions, **kwargs):
+    def __init__(self, output_dir, dimensions, *, capture_motion=False, **kwargs):
         super().__init__(**kwargs)
         self.output_dir = Path(output_dir)
         self.dimensions = dimensions
         self.saved = []
         self.evidence = []
+        self.capture_motion = capture_motion
+        self.motion_frames = []
+
+    def _capture_motion_frame(self, name):
+        if self.navigation.page != 'templates':
+            raise RuntimeError('Motion capture outside gallery')
+        suffix = f'{self.dimensions[0]}x{self.dimensions[1]}'
+        path = self.output_dir / f'motion-{name}-{suffix}.png'
+        # Native FBO export renders the current widget geometry, including its
+        # stencil. This avoids reading a previous swapped Window frame.
+        self.stage.export_to_png(str(path))
+        self.motion_frames.append({
+            'file': path.name, 'selected_index': self.template_index,
+            'offset': self._carousel.offset,
+            'selected_image_pos': list(self._preview.pos),
+            'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
+        })
 
     def _capture(self, name):
         expected_page = {
@@ -82,9 +100,11 @@ class VisualRecorder(PortraitKioskV2App):
                        min(rgb.width, int(right)), min(rgb.height, int(rgb.height - y)))
                 if box[2] <= box[0] or box[3] <= box[1]:
                     raise RuntimeError(f"Offscreen Meong wordmark on {name}")
-                gold_pixels = sum(1 for r, g, b in rgb.crop(box).getdata()
-                                  if abs(r - 255) <= 3 and abs(g - 220) <= 3 and abs(b - 120) <= 3)
-                if gold_pixels < 20:
+                expected_ink = tuple(int(mark.ink.strip('#')[i:i + 2], 16) for i in (0, 2, 4))
+                ink_pixels = sum(1 for pixel in rgb.crop(box).getdata()
+                                 if all(abs(channel - target) <= 3
+                                        for channel, target in zip(pixel, expected_ink)))
+                if ink_pixels < 20:
                     raise RuntimeError(f"Meong wordmark missing from actual pixels on {name}")
                 left = rgb.crop((2, int(rgb.height * .10),
                                  min(12, rgb.width), int(rgb.height * .90)))
@@ -110,7 +130,7 @@ class VisualRecorder(PortraitKioskV2App):
 
         # Schedule relative to the completed previous action. Slow font/texture
         # startup must not collapse several routes and captures into one frame.
-        steps = iter((
+        steps = [
             (1.2, lambda: self._capture("01-advert")),
             (.3, self._show_invitation),
             (.6, lambda: self._capture("02-invitation")),
@@ -118,13 +138,30 @@ class VisualRecorder(PortraitKioskV2App):
             (.6, lambda: self._capture("03-tutorial")),
             (.3, self._complete_tutorial),
             (.6, lambda: self._capture("04-templates")),
+        ]
+        if self.capture_motion:
+            steps.extend([
+                (.1, lambda: self._capture_motion_frame('00-rest')),
+                (.02, lambda: self._shift_template(1)),
+                (.03, lambda: self._capture_motion_frame('01-next')),
+                (.03, lambda: self._capture_motion_frame('02-next')),
+                (.03, lambda: self._capture_motion_frame('03-next')),
+                (.25, lambda: self._capture_motion_frame('04-selected')),
+                (.02, lambda: self._shift_template(-1)),
+                (.03, lambda: self._capture_motion_frame('05-previous')),
+                (.03, lambda: self._capture_motion_frame('06-previous')),
+                (.03, lambda: self._capture_motion_frame('07-previous')),
+                (.25, lambda: self._capture_motion_frame('08-returned')),
+            ])
+        steps.extend([
             (.2, lambda: self._change_copies(1)),
             (.5, lambda: self._capture("05-copy-cart")),
             (.2, self._return_ad),
             (.2, self._choose_game),
             (.6, lambda: self._capture("06-game-placeholder")),
             (.4, self.stop),
-        ))
+        ])
+        steps = iter(steps)
 
         def advance():
             try:
@@ -145,7 +182,7 @@ def main():
     if (options.width, options.height) not in ((800, 1280), (452, 900),
                                               (360, 640), (452, 600), (800, 600)):
         raise SystemExit("Unsupported QA viewport size")
-    app = VisualRecorder(options.output_dir, (options.width, options.height))
+    app = VisualRecorder(options.output_dir, (options.width, options.height), capture_motion=options.motion)
     app.run()
     if len(app.saved) != 6:
         raise SystemExit(f"Incomplete {options.width}x{options.height} QA evidence: {len(app.saved)}/6")
@@ -156,13 +193,29 @@ def main():
             ["git", "status", "--porcelain", "--untracked-files=no"], cwd=ROOT)),
         "synthetic_only": True,
         "screenshots": app.evidence,
+        'motion_frames': app.motion_frames,
     }
     report_path = app.output_dir / f"report-{options.width}x{options.height}.json"
     report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    if options.motion:
+        from PIL import Image as PillowImage
+        if len(app.motion_frames) != 9 or len({f['sha256'] for f in app.motion_frames}) < 5:
+            raise SystemExit('Incomplete or static carousel motion evidence')
+        frames = [PillowImage.open(app.output_dir / f['file']).convert('RGB') for f in app.motion_frames]
+        frames[0].save(app.output_dir / f'carousel-{options.width}x{options.height}.gif',
+                       save_all=True, append_images=frames[1:], loop=0,
+                       duration=[250, 70, 70, 70, 250, 70, 70, 70, 250])
     for path in app.saved:
         print(path, path.stat().st_size, "bytes")
     print(report_path)
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except BaseException:
+        # Kivy may redirect stderr when its console logger is disabled. Preserve
+        # the real capture failure instead of returning a silent nonzero status.
+        import traceback
+        os.write(2, traceback.format_exc().encode('utf-8', errors='replace'))
+        raise

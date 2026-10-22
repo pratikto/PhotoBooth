@@ -32,7 +32,8 @@ from .illustrations import TutorialIcon
 from .flow import ADVERT, BROWSING_PAGES, GAME_PREVIEW, TEMPLATES, TUTORIAL, VisitFlow
 from .theme import ArcadeButton, CYAN, GOLD, MUTED, PixelCard, PINK, Starfield, WHITE, text_label
 from .viewport import PortraitViewport
-from .previews import PreviewPreloader
+from .previews import PREVIEW_SIZE, PreviewPreloader
+from .gallery import SwipeGallery, StripCarousel
 
 
 LOG = logging.getLogger(__name__)
@@ -41,7 +42,7 @@ LOG = logging.getLogger(__name__)
 def _portrait_strip_texture(template, preview=None):
     """Convert only this approved master preview to a GPU texture, preserving 1:3."""
     if preview is None:
-        preview = create_template_preview(template, (180, 540)).convert("RGB")
+        preview = create_template_preview(template, PREVIEW_SIZE).convert("RGB")
     texture = Texture.create(size=preview.size, colorfmt="rgb")
     texture.blit_buffer(preview.tobytes(), colorfmt="rgb", bufferfmt="ubyte")
     texture.flip_vertical()
@@ -64,67 +65,6 @@ class TouchStage(Starfield):
         if self.collide_point(*touch.pos):
             self._activity()
         return super().on_touch_down(touch)
-
-
-class SwipeGallery(BoxLayout):
-    """Real horizontal touch gesture for the approved strip carousel.
-
-    Grab each pointer stream until release so Windows touch/pen providers keep
-    delivering its move/up events. Only gestures ending inside turn a template.
-    Predominantly vertical and short motions are ignored.
-    """
-
-    def __init__(self, on_swipe, **kwargs):
-        self._on_swipe = on_swipe
-        self._touch_origins = {}
-        super().__init__(**kwargs)
-
-    @staticmethod
-    def swipe_step(dx, dy, *, threshold=None):
-        if abs(dx) < (dp(54) if threshold is None else threshold) or abs(dx) <= abs(dy) * 1.35:
-            return 0
-        return -1 if dx > 0 else 1
-
-    def on_touch_down(self, touch):
-        if super().on_touch_down(touch):
-            return True
-        if not self.collide_point(*touch.pos) or touch.is_mouse_scrolling:
-            return False
-        # Normalized window coordinates survive Kivy's parent/local transforms.
-        self._touch_origins[touch.uid] = (touch, touch.sx, touch.sy, tuple(Window.size))
-        touch.grab(self)
-        return True
-
-    def on_touch_move(self, touch):
-        if touch.grab_current is self or touch.uid in self._touch_origins:
-            return True
-        return super().on_touch_move(touch)
-
-    def on_touch_up(self, touch):
-        # Kivy sends both normal and grabbed dispatch; consume only the latter.
-        if touch.grab_current is not self:
-            return super().on_touch_up(touch)
-        origin = self._touch_origins.pop(touch.uid, None)
-        touch.ungrab(self)
-        if origin is None or not self.collide_point(*touch.pos):
-            return True
-        _, sx, sy, viewport = origin
-        if tuple(Window.size) != viewport:
-            return True  # A resize in the middle of a drag is not a swipe.
-        x0, _ = self.to_window(0, 0)
-        x1, _ = self.to_window(dp(54), 0)
-        step = self.swipe_step((touch.sx - sx) * Window.width,
-                               (touch.sy - sy) * Window.height,
-                               threshold=abs(x1 - x0))
-        if step:
-            self._on_swipe(step)
-        return True
-
-    def dispose(self):
-        """A retired page must not retain a native pointer grab."""
-        for touch, _sx, _sy, _viewport in self._touch_origins.values():
-            touch.ungrab(self)
-        self._touch_origins.clear()
 
 
 class PortraitKioskV2App(App):
@@ -175,6 +115,9 @@ class PortraitKioskV2App(App):
     def on_pause(self):
         self._suspended = True
         self.audio_v2.suspend()
+        for widget in self.stage.walk():
+            if isinstance(widget, SwipeGallery):
+                widget.cancel_motion()
         if self._ad_player is not None:
             self._ad_player.pause()
         return True
@@ -550,90 +493,74 @@ class PortraitKioskV2App(App):
             variant="tertiary", height=48))
 
     def _build_templates(self, canvas):
-        shell = self._frame(canvas, brand_height=64)
-        shell.add_widget(text_label(
-            "PILIH TEMPLATE STRIP", size=24, height=53,
-            color=GOLD, bold=True))
-        shell.add_widget(text_label(
-            "12 desain asli • 3 foto vertikal + 1 QR untuk download",
-            size=13, height=34, color=MUTED))
+        # Most vertical space belongs to the approved 1:3 strips. Utility text
+        # and order controls stay compact; floating arrows do not consume a row.
+        shell = BoxLayout(orientation='vertical', padding=dp(12), spacing=dp(8))
+        canvas.add_widget(shell)
+        header = BoxLayout(size_hint_y=None, height=dp(50), spacing=dp(8))
+        header.add_widget(MeongLogo(size_hint=(.56, 1)))
+        title = text_label('PILIH TEMPLATE STRIP', size=18, height=50,
+                           color=GOLD, bold=True)
+        title.size_hint_x = .44
+        header.add_widget(title)
+        shell.add_widget(header)
 
-        deck = PixelCard(orientation="vertical", padding=10, spacing=6)
-        deck.add_widget(text_label(
-            "GESER PILIHANMU DI GALAKSI MEONG!",
-            size=14, height=30, color=CYAN, bold=True))
-
-        gallery = SwipeGallery(on_swipe=self._page_callback(self._swipe_template),
-                               orientation="horizontal", spacing=dp(7))
-        left = BoxLayout(orientation="vertical", size_hint_x=.22,
-                         spacing=dp(2))
-        left.add_widget(Widget(size_hint_y=.18))
-        self._previous_preview = Image(fit_mode="contain", size_hint_y=.70)
-        left.add_widget(self._previous_preview)
-        left.add_widget(text_label(
-            "SEBELUM", size=12, height=25, color=MUTED))
-        left.add_widget(Widget(size_hint_y=.12))
-        gallery.add_widget(left)
-
-        middle = BoxLayout(orientation="vertical", size_hint_x=.56)
-        self._preview = Image(fit_mode="contain")
-        middle.add_widget(self._preview)
-        gallery.add_widget(middle)
-
-        right = BoxLayout(orientation="vertical", size_hint_x=.22,
-                          spacing=dp(2))
-        right.add_widget(Widget(size_hint_y=.18))
-        self._next_preview = Image(fit_mode="contain", size_hint_y=.70)
-        right.add_widget(self._next_preview)
-        right.add_widget(text_label(
-            "BERIKUT", size=12, height=25, color=MUTED))
-        right.add_widget(Widget(size_hint_y=.12))
-        gallery.add_widget(right)
-        deck.add_widget(gallery)
-
-        self._template_name = text_label(
-            "", size=18, height=39, color=GOLD, bold=True)
+        deck = PixelCard(orientation='vertical', padding=8, spacing=4)
+        host = FloatLayout()
+        gallery = StripCarousel(on_swipe=self._page_callback(self._swipe_template),
+                                pos_hint={'x': 0, 'y': 0})
+        self._carousel = gallery
+        self._previous_preview = gallery.previous_image
+        self._preview = gallery.selected_image
+        self._next_preview = gallery.next_image
+        host.add_widget(gallery)
+        for label, step, hint in (('SEBELUMNYA', -1, {'x': .01, 'y': .015}),
+                                   ('BERIKUTNYA', 1, {'right': .99, 'y': .015})):
+            arrow = self._action(label, lambda step=step: self._shift_template(step),
+                                 variant='tertiary' if step == -1 else 'secondary', height=48)
+            arrow.size_hint = (None, None)
+            arrow.width = dp(108)
+            arrow.font_size = dp(12)
+            arrow.pos_hint = hint
+            host.add_widget(arrow)
+        deck.add_widget(host)
+        self._template_name = text_label('', size=18, height=30, color=GOLD, bold=True)
         deck.add_widget(self._template_name)
-        nav = BoxLayout(size_hint_y=None, height=dp(54), spacing=dp(12))
-        nav.add_widget(self._action(
-            "SEBELUMNYA", lambda: self._shift_template(-1),
-            variant="tertiary", height=54))
-        nav.add_widget(self._action(
-            "BERIKUTNYA", lambda: self._shift_template(1),
-            variant="secondary", height=54))
-        deck.add_widget(nav)
         shell.add_widget(deck)
 
-        count_card = PixelCard(orientation="vertical", size_hint_y=None,
-                               height=dp(166), spacing=5, padding=9)
-        count_card.add_widget(text_label(
-            "JUMLAH CETAK UNTUK DESAIN INI",
-            size=14, height=31, color=CYAN, bold=True))
-        row = BoxLayout(size_hint_y=None, height=dp(55), spacing=dp(12))
-        row.add_widget(self._action(
-            "-", lambda: self._change_copies(-1),
-            variant="tertiary", height=55))
-        self._copy_value = text_label(
-            "0", size=26, height=55, color=GOLD, bold=True)
+        count_card = PixelCard(orientation='vertical', size_hint_y=None,
+                               height=dp(98), spacing=6, padding=8)
+        row = BoxLayout(size_hint_y=None, height=dp(48), spacing=dp(8))
+        caption = text_label('CETAK', size=13, height=48, color=CYAN, bold=True)
+        caption.size_hint_x = None
+        caption.width = dp(62)
+        row.add_widget(caption)
+        row.add_widget(self._action('-', lambda: self._change_copies(-1),
+                                    variant='tertiary', height=48))
+        self._copy_value = text_label('0', size=24, height=48, color=GOLD, bold=True)
         row.add_widget(self._copy_value)
-        row.add_widget(self._action(
-            "+", lambda: self._change_copies(1),
-            variant="secondary", height=55))
+        row.add_widget(self._action('+', lambda: self._change_copies(1),
+                                    variant='secondary', height=48))
         count_card.add_widget(row)
-        self._order_summary = text_label(
-            "", size=14, height=52, color=WHITE)
+        self._order_summary = text_label('', size=13, height=28, color=WHITE)
         count_card.add_widget(self._order_summary)
         shell.add_widget(count_card)
 
-        self._warning_label = text_label(
-            "", size=12, height=25, color=GOLD)
+        self._warning_label = text_label('', size=12, height=0, color=GOLD)
+        self._warning_label.bind(text=lambda label, text: setattr(label, 'height', dp(22) if text else 0))
         shell.add_widget(self._warning_label)
-        shell.add_widget(self._action(
-            "PEMBAYARAN (BELUM TERHUBUNG)",
-            lambda: None, disabled=True, height=56))
-        shell.add_widget(self._action(
-            "SELESAI / KEMBALI IKLAN", self._return_ad,
-            variant="tertiary", height=48))
+        footer = BoxLayout(size_hint_y=None, height=dp(48), spacing=dp(8))
+        payment = self._action('PEMBAYARAN (BELUM TERHUBUNG)', lambda: None,
+                               disabled=True, height=48)
+        payment.size_hint_x = .55
+        payment.font_size = dp(12)
+        finish = self._action('SELESAI / KEMBALI IKLAN', self._return_ad,
+                              variant='tertiary', height=48)
+        finish.size_hint_x = .45
+        finish.font_size = dp(12)
+        footer.add_widget(payment)
+        footer.add_widget(finish)
+        shell.add_widget(footer)
         self._update_template()
 
     def _swipe_template(self, step):
@@ -643,16 +570,17 @@ class PortraitKioskV2App(App):
     def _shift_template(self, step):
         self.template_index = (self.template_index + step) % len(self.templates)
         self._activity()
-        self._update_template()
+        self._update_template(step=step)
 
     def _change_copies(self, delta):
         template = self.templates[self.template_index]
         old = self.quantities[template.template_id]
         self.quantities[template.template_id] = max(0, min(9, old + delta))
         self._activity()
+        self._carousel.cancel_motion()
         self._update_order()
 
-    def _update_template(self):
+    def _update_template(self, *, step=0):
         template = self.templates[self.template_index]
         previous = self.templates[(self.template_index - 1) % len(self.templates)]
         following = self.templates[(self.template_index + 1) % len(self.templates)]
@@ -663,9 +591,9 @@ class PortraitKioskV2App(App):
             if item.template_id not in self._textures:
                 self._textures[item.template_id] = _portrait_strip_texture(
                     item, self._preview_preloader.get(item))
-        self._previous_preview.texture = self._textures[previous.template_id]
-        self._preview.texture = self._textures[template.template_id]
-        self._next_preview.texture = self._textures[following.template_id]
+        self._carousel.show((self._textures[previous.template_id],
+                             self._textures[template.template_id],
+                             self._textures[following.template_id]), step=step)
         self._update_order()
 
     def _update_order(self):
@@ -674,6 +602,6 @@ class PortraitKioskV2App(App):
         quote = quote_order(self.templates, self.quantities)
         total = f"{quote.total_amount:,}".replace(",", ".")
         self._order_summary.text = (
-            f"{quote.session_count} sesi foto  •  {quote.print_copy_count} lembar"
-            f"\nSIMULASI DEMO: Rp{total}  •  Bukan tagihan QRIS"
+            f"{quote.session_count} sesi  •  {quote.print_copy_count} lembar"
+            f"  •  SIMULASI Rp{total}"
         )

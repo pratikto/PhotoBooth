@@ -1,0 +1,147 @@
+{
+  "source_sha": "67e9da8930a3449299b2264c5b5242a990f68114",
+  "tracked_changes": true,
+  "synthetic_only": true,
+  "screenshots": [
+    {
+      "state": "01-advert",
+      "page": "advert",
+      "file": "01-advert-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "4ff461c684460868691d8266ca25f9939e861b01b91382a4c2dca05d2fc6e4a4"
+    },
+    {
+      "state": "02-invitation",
+      "page": "advert",
+      "file": "02-invitation-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "82ba0a4db25cc892e1ba2684f90071f22e342dbcb4464a5857417860ab34d754"
+    },
+    {
+      "state": "03-tutorial",
+      "page": "tutorial",
+      "file": "03-tutorial-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "d15d41bcdf82ba31c9a2b7343593116eda5e677afbe92f1ac5ef7d130541e7c2"
+    },
+    {
+      "state": "04-templates",
+      "page": "templates",
+      "file": "04-templates-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "6f5d41a2f373333aa506958306f7ded1d11dfc2237f7716d1f80940ebd216d1f"
+    },
+    {
+      "state": "05-copy-cart",
+      "page": "templates",
+      "file": "05-copy-cart-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "c7e08821ca0527e305ed875133b86d91496a1b147b379bbee20095499b449522"
+    },
+    {
+      "state": "06-game-placeholder",
+      "page": "game_preview",
+      "file": "06-game-placeholder-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "95cf44887b4e38c06142bd1ebde28cec11029d0f7eb21e15fe24b0e94c84203e"
+    }
+  ],
+  "motion_frames": [
+    {
+      "file": "motion-00-rest-452x900.png",
+      "selected_index": 0,
+      "offset": 0,
+      "selected_image_pos": [
+        147.72,
+        288.15999999999997
+      ],
+      "sha256": "f4db0448fdf6e628fb071eb204bc00666c2ecc7765424e23d04fc08356756f15"
+    },
+    {
+      "file": "motion-01-next-452x900.png",
+      "selected_index": 1,
+      "offset": 0,
+      "selected_image_pos": [
+        147.72,
+        288.15999999999997
+      ],
+      "sha256": "09c430f2a7a3a5e269dbaa29e92fde388df2d401fdeacb28ec70f9e149582676"
+    },
+    {
+      "file": "motion-02-next-452x900.png",
+      "selected_index": 1,
+      "offset": -0.700659600119527,
+      "selected_image_pos": [
+        62.042223042024055,
+        334.2320121377795
+      ],
+      "sha256": "0f050535f200cdf295ada344a5e14613c3f2d27e6cc16f8f7fc91d16ed3ebf29"
+    },
+    {
+      "file": "motion-03-next-452x900.png",
+      "selected_index": 1,
+      "offset": -0.9638778507798132,
+      "selected_image_pos": [
+        29.855474202083172,
+        351.5399808535968
+      ],
+      "sha256": "7f62570983baacca5636bce24b5d752db612d399cb8a18c14031be78d5c61668"
+    },
+    {
+      "file": "motion-04-selected-452x900.png",
+      "selected_index": 1,
+      "offset": 0,
+      "selected_image_pos": [
+        147.72,
+        288.15999999999997
+      ],
+      "sha256": "b76725b9f9190af3cc6bdaf18dc632e98f9136129489a9cfbea772ac407dce47"
+    },
+    {
+      "file": "motion-05-previous-452x900.png",
+      "selected_index": 0,
+      "offset": 0,
+      "selected_image_pos": [
+        147.72,
+        288.15999999999997
+      ],
+      "sha256": "0254447c06f5cc72a572e1e7eed234906740e3cf23b5a8d011ce0f59e282a898"
+    },
+    {
+      "file": "motion-06-previous-452x900.png",
+      "selected_index": 0,
+      "offset": 0.6961557243724519,
+      "selected_image_pos": [
+        263.36427508359264,
+        333.93585888725545
+      ],
+      "sha256": "787e311ff2daa16f47de91bdd649cecba61835209d83a1b6a1eb97552675a888"
+    },
+    {
+      "file": "motion-07-previous-452x900.png",
+      "selected_index": 0,
+      "offset": 0.9621880212219694,
+      "selected_image_pos": [
+        307.5571345845596,
+        351.42886577305484
+      ],
+      "sha256": "cfd63a754fae19c81d3d7ad52e4bea2a0f7b221836b7530e275a1f5a98398498"
+    },
+    {
+      "file": "motion-08-returned-452x900.png",
+      "selected_index": 0,
+      "offset": 0,
+      "selected_image_pos": [
+        147.72,
+        288.15999999999997
+      ],
+      "sha256": "f4db0448fdf6e628fb071eb204bc00666c2ecc7765424e23d04fc08356756f15"
+    }
+  ]
+}

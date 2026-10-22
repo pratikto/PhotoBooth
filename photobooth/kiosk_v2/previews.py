@@ -8,12 +8,13 @@ from concurrent.futures import ThreadPoolExecutor
 import logging
 
 LOG = logging.getLogger(__name__)
+PREVIEW_SIZE = (320, 960)
 
 
 def render_preview(template):
     # Lazy import keeps the injected-worker tests independent of Pillow/Kivy.
     from photobooth.catalog import create_template_preview
-    return create_template_preview(template, (180, 540)).convert('RGB')
+    return create_template_preview(template, PREVIEW_SIZE).convert('RGB')
 
 
 class PreviewPreloader:

@@ -8,13 +8,54 @@ from pathlib import Path
 from kivy.clock import Clock
 from kivy.graphics import Color, Ellipse, Rectangle
 from kivy.metrics import dp
+from kivy.properties import NumericProperty, StringProperty
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
-from kivy.uix.label import Label
+from kivy.uix.widget import Widget
 
 from .theme import CYAN, GOLD, PURPLE, rgba
+from .pixel_type import BRAND_GLYPHS
 
 CAMERA_ART = Path(__file__).parent / "assets" / "meong-fly-camera.png"
+
+
+class PixelWordmark(Widget):
+    """Native 5x7 title cells and offset shadow, matching the mini-game style."""
+
+    text = StringProperty('MEONG')
+    ink = StringProperty(PURPLE)
+    shadow = StringProperty('#472479')
+    font_size = NumericProperty(42)
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self._repaint = Clock.create_trigger(self._paint, -1)
+        self.bind(pos=self._repaint, size=self._repaint, text=self._repaint,
+                  ink=self._repaint, shadow=self._repaint, font_size=self._repaint)
+        self._repaint()
+
+    def _paint(self, *_args):
+        self.canvas.clear()
+        if not self.text or self.width <= 0 or self.height <= 0:
+            return
+        columns = len(self.text) * 6
+        cell = min(self.width / columns, self.height / 8, self.font_size / 7)
+        # Half-pixel steps also keep the compact caption legible after scaling.
+        cell = max(.25, int(cell * 2) / 2)
+        left = self.x + (self.width - columns * cell) / 2
+        bottom = self.y + (self.height - 8 * cell) / 2
+        cells = [(left + (index * 6 + x) * cell, bottom + (7 - y) * cell)
+                 for index, letter in enumerate(self.text)
+                 for y, row in enumerate(BRAND_GLYPHS[letter])
+                 for x, bit in enumerate(row) if bit == '1']
+        with self.canvas:
+            Color(*rgba(self.shadow))
+            for x, y in cells:
+                Rectangle(pos=(x + cell, y - cell), size=(cell, cell))
+            Color(*rgba(self.ink))
+            for x, y in cells:
+                stroke = min(dp(1), cell / 4) if cell >= 2 else 0
+                Rectangle(pos=(x, y), size=(cell + stroke, cell))
 
 
 class MeongLogo(FloatLayout):
@@ -26,10 +67,9 @@ class MeongLogo(FloatLayout):
         self.art = Image(source=str(CAMERA_ART), fit_mode="contain", size_hint=(None, None))
         self.art.bind(texture=self._nearest)
         self._nearest(self.art, self.art.texture)
-        self.wordmark = Label(text="MEONG", bold=True, color=rgba(GOLD),
-                              size_hint=(None, None))
-        self.caption = Label(text="P H O T O B O O T H", color=rgba(CYAN),
-                             size_hint=(None, None))
+        self.wordmark = PixelWordmark(text='MEONG', size_hint=(None, None))
+        self.caption = PixelWordmark(text='PHOTOBOOTH', ink=CYAN, shadow='#142951',
+                                     size_hint=(None, None))
         for widget in (self.art, self.wordmark, self.caption):
             self.add_widget(widget)
         # Arrange after parent size/position aliases have settled for this frame.
@@ -55,7 +95,7 @@ class MeongLogo(FloatLayout):
             self.wordmark.font_size = min(dp(48), width / 4.5, height * .15)
             self.caption.size = (width, height * .11)
             self.caption.pos = (self.x, self.y + height * .02)
-            self.caption.font_size = min(dp(13), width / 22, height * .085)
+            self.caption.font_size = min(dp(16), width / 15, height * .10)
         else:
             art_h = min(height * .95, width * .31)
             art_w = art_h * 224 / 152
@@ -68,7 +108,7 @@ class MeongLogo(FloatLayout):
             self.wordmark.font_size = min(dp(42), word_w / 3.8, height * .42)
             self.caption.size = (word_w, height * .27)
             self.caption.pos = (self.wordmark.x, self.y + height * .10)
-            self.caption.font_size = min(dp(12), word_w / 19, height * .18)
+            self.caption.font_size = min(dp(16), word_w / 10, height * .22)
         # The aura and glints are native decoration behind the immutable art.
         self.canvas.before.clear()
         with self.canvas.before:

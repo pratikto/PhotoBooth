@@ -2,11 +2,17 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased — gallery focus, moving strips and pixel typography] — 2026-10-22
+
+- Give the vertical strips most of the gallery, keep previous/current/next fully visible, and float the arrows in the preview's lower corners. Compact the header, copy summary and footer; raise preview resolution without changing print masters.
+- Slide actual images for 200 ms and follow finger drags. Pool the image widgets, replace motion on rapid input, select once per gesture, and cancel motion on resize/minimize/retirement. Match the read-only mini-game's pixel title with display-only glyph data.
+- 71 focused tests PASS; full suite 306 run / 304 PASS / 2 optional model skips; three fresh-process 150% density checks PASS. Thirty page PNGs and nine motion frames reviewed, including 800×1280 and 452×900. [Evidence, GIF, source hashes and Windows retest](qa/portrait-v2-gallery-focus/README.md). Exact-source CI follows the normal push; Windows preference/response and twenty-cycle acceptance remain open.
+
 ## [Unreleased — owner retest and button response] — 2026-10-22
 
 - Record 41 checked boxes with ten completed Windows cycles and an unknown tested HEAD; G03/G06 twenty-cycle acceptance stays open. Owner confirms resize works and requests larger strip previews and visible sliding motion.
 - Warm silent WAV handles and CPU strip previews outside button callbacks; play a valid click before navigation, preserve it across page handoffs, and keep camera effects/suspend/close ownership. Copy changes only update order text.
-- 68 focused tests PASS, including worker cancellation/nonblocking access and native PCM checks. Local timings and hardware limits are preserved in the [current evidence](qa/portrait-v2-gallery-focus/README.md); gallery polish follows.
+- 68 focused tests PASS, including worker cancellation/nonblocking access and native PCM checks. Exact response source `67e9da8` passes all three CI jobs (39798019411). Local timings and hardware limits are preserved in the [current evidence](qa/portrait-v2-gallery-focus/README.md).
 
 ## [Unreleased — post-crash Windows checklist form] — 2026-10-22
 

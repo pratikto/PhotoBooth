@@ -1,0 +1,28 @@
+{
+  "base_sha": "67e9da8930a3449299b2264c5b5242a990f68114",
+  "tracked_changes": true,
+  "synthetic_only": true,
+  "command": "tools/render_portrait_v2.py, five sizes; --motion at 452x900; PHOTOBOOTH_AUDIO=1",
+  "review": "Thirty native page screenshots and nine motion frames manually reviewed. Contact sheets are resized review aids, not replacement captures. GIF samples native widget FBO frames; not an FPS or physical display measurement.",
+  "source_sha256": {
+    ".github/workflows/portrait-kiosk-v2.yml": "56853546e3402dcc0b3b3dd2941635e5d08f9b465ceb4f262aeb5164572f63ce",
+    "photobooth/kiosk_v2/__init__.py": "d3f17da982c143f3f7fa85945f0172f41e28a645abc873c948c6d4559363eb0b",
+    "photobooth/kiosk_v2/app.py": "1c5796574126c56d149f7b065c12747a61b72249cc18f52f64e1b198741f6a3f",
+    "photobooth/kiosk_v2/audio.py": "6c7e1fd3fa540c548ab236b894c329e2e9244ead9cb3f093f2f60e0b61ee3fae",
+    "photobooth/kiosk_v2/branding.py": "b6f363d97458fa0543539c8b749ab15d871c41b710207bffa0e59057e33d38f6",
+    "photobooth/kiosk_v2/design_tokens.py": "b288a9468474c7f89caf519f31a00d9e4a08df561084670702e7b4c37b1bad70",
+    "photobooth/kiosk_v2/flow.py": "fcdc56e7c7f8b01f4a0a17a4a6f95a91d9d39691e043fcea0e6f90f158e7e453",
+    "photobooth/kiosk_v2/gallery.py": "5a5daac41374ebfae399602fc55ec75c126b1beb5347948bf637f665e4df6931",
+    "photobooth/kiosk_v2/illustrations.py": "a68cf482cc4d9277ab86155cbc163325dc3517f635cc6ab4acef31cfe0997d0e",
+    "photobooth/kiosk_v2/mixer.py": "40ee4e0ee60d0c2b67f5757cf264c8f9f3907fb0c4c7283dd7724d57ac7cbddf",
+    "photobooth/kiosk_v2/pixel_type.py": "84401bcb8ca1f36bc933def324ad13add7d1a8a2bc9604f7656f984369db4dcb",
+    "photobooth/kiosk_v2/previews.py": "16f24981d5a5320d5ad6ebce913f6044bcd76ef4cadc9ef3569ff60a55f027d5",
+    "photobooth/kiosk_v2/theme.py": "94c22aa350ac6f17d428c4989b0491c9fa35a3100f16c6cc7d2928bb9eb6ef6c",
+    "photobooth/kiosk_v2/viewport.py": "623a814c97775cc417e9ee36c22bc67026501e4a3be06473cad24e81e6f1b4ad",
+    "tests/test_kiosk_v2_native_audio.py": "f71b19bf9d07a2aca5d42dc39da4334d366c32f13a64db2749b4e3fe1db17626",
+    "tests/test_kiosk_v2_widgets.py": "872d9cfdbb467295bb220d0bc853ce2764b5bc33f58d11f2e1eb5fb2f25f4987",
+    "tools/render_portrait_v2.py": "328e2b41bfc379263d4c79f970b3d8a25a39aab0f8d789bb58455665cb45710d"
+  },
+  "reference_game_sha": "672e3f7089bb40940e5b41644ceb656aa63aafbb",
+  "camera_art_sha256": "bd5513c0ba6b1d6eb355dd89ff4d5abbc7fe99341134f64b1381e8d515b0d227"
+}

@@ -73,7 +73,18 @@ class NativeChannelReuseTests(unittest.TestCase):
 
         mixer.Mix_SetPostMix.argtypes = [callback_type, ctypes.c_void_p]
         mixer.Mix_SetPostMix.restype = None
-        mixer.Mix_SetPostMix(observe, None)
+        def sample_output(seconds=.12):
+            # Never hold a Python post-mix callback while a Cython SoundSDL2
+            # method may wait for the mixer lock with the GIL held. Install the
+            # probe only during sleep, and remove it (ctypes releases the GIL)
+            # before any play/stop/unload. The GUI never installs this test probe.
+            peaks.clear()
+            mixer.Mix_SetPostMix(observe, None)
+            try:
+                time.sleep(seconds)
+            finally:
+                mixer.Mix_SetPostMix(callback_type(), None)
+            return list(peaks)
         audio = PortraitAudio(channel_safe_sound)
         ad = audio_sdl2.SoundSDL2(source=str(BUNDLED_SOUNDS / SOUND_FILES['music']))
         ad.volume = .5
@@ -97,21 +108,18 @@ class NativeChannelReuseTests(unittest.TestCase):
                             for clip in audio._handles.values():
                                 if clip is not None:
                                     clip.stop()
-                        peaks.clear()
                         self.assertTrue(audio.cue('button'))
-                        time.sleep(.12)
-                        self.assertTrue(peaks and max(peaks) > 50, 'native output was silent')
+                        output = sample_output()
+                        self.assertTrue(output and max(output) > 50, 'native output was silent')
                     audio.enter_page('advert')
                     self.assertTrue(audio.set_ad_media('image'))
                     audio.suspend()
                     audio.resume()
-                    peaks.clear()
-                    time.sleep(.12)
-                    self.assertTrue(peaks and max(peaks) > 50, 'music output was silent')
+                    output = sample_output()
+                    self.assertTrue(output and max(output) > 50, 'music output was silent')
             audio.close()
-            peaks.clear()
-            time.sleep(.22)
-            self.assertTrue(peaks and max(peaks[-1:]) == 0, 'sound remained after close')
+            output = sample_output(.22)
+            self.assertTrue(output and output[-1] == 0, 'sound remained after close')
         finally:
             audio.close()
             ad.stop()

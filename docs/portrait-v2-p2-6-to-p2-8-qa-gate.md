@@ -4,7 +4,8 @@
 
 ## Checkpoint and evidence policy
 
-- Latest verified application/renderer checkpoint: `0fbf15829d1537a7f18990b492b1e5934f21c0f8`, [CI 39618540570](https://github.com/pratikto/PhotoBooth/actions/runs/39618540570), both jobs successful. Its artifact has been downloaded, digest verified and visually reviewed. Newer documentation commits must not inherit this CI PASS.
+- Current owner-directed follow-up: [gallery focus / response / moving images / pixel typography](qa/portrait-v2-gallery-focus/README.md). Owner reports ten successful Windows cycles at an unknown HEAD; twenty-cycle duration and acceptance of the new visual source are still open. Local results and subsequent exact-source CI must stay distinct.
+- Original P2 closure application/renderer checkpoint: `0fbf15829d1537a7f18990b492b1e5934f21c0f8`, [CI 39618540570](https://github.com/pratikto/PhotoBooth/actions/runs/39618540570), both jobs successful. Its artifact has been downloaded, digest verified and visually reviewed. Newer commits must not inherit this CI PASS; the current workflow also has a third Windows audio job.
 - A pushed commit and verified remote HEAD mean **published**, not **tested**.
 - Gate requires a GitHub Actions run with `head_sha` **exactly equal** to the milestone checkpoint SHA and both jobs successful. If no matching run is available, mark **BLOCKED / NOT VERIFIED**, never PASS.
 - The desktop job must upload twelve screenshots (six pages × two viewports). Download and inspect those screenshots; existence alone does not prove legibility or alignment.
@@ -38,7 +39,7 @@
 
 1. Run the GUI v2 on the actual 10.1-inch portrait touchscreen at its native resolution.
 2. Confirm idle/invitation/tutorial/templates/cart/game-preview screen alignment and all CTA touch areas.
-3. Confirm music audible on tutorial/templates, silent on advertisement and game preview; suspend/resume and exit cleanly.
+3. Confirm music on image advertisements and tutorial/templates, source audio only on video advertisements, no GUI music on game preview, and one click per enabled action on every page; suspend/resume and exit cleanly.
 4. Confirm the camera and thermal printer are **not** represented as validated by this prototype; verify those only in separately authorized end-to-end integration.
 5. Compare approved 12 vertical thermal designs and three-photo/QR layout against their existing source of truth; GUI prototype must not silently modify print output.
 

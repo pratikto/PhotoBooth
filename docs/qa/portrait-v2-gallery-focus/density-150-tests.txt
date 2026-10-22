@@ -1,0 +1,8 @@
+test_gallery_focus_keeps_full_strips_and_floating_arrows_inside_preview (tests.test_kiosk_v2_widgets.PortraitKivySmokeTests.test_gallery_focus_keeps_full_strips_and_floating_arrows_inside_preview) ... ok
+test_live_resize_preserves_gallery_cart_audio_owner_and_real_touch_coordinates (tests.test_kiosk_v2_widgets.PortraitKivySmokeTests.test_live_resize_preserves_gallery_cart_audio_owner_and_real_touch_coordinates) ... ok
+test_touch_targets_and_tutorial_scroll_at_portrait_and_short_sizes (tests.test_kiosk_v2_widgets.PortraitKivySmokeTests.test_touch_targets_and_tutorial_scroll_at_portrait_and_short_sizes) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 11.411s
+
+OK

@@ -54,7 +54,7 @@ jobs:
       - name: Capture real Kivy pages at 800x1280 (fresh Xvfb process)
         run: xvfb-run -a -s "-screen 0 1600x1600x24" python tools/render_portrait_v2.py --output-dir /tmp/meong-portrait-v2 --width 800 --height 1280
       - name: Capture compact Kivy pages at 452x900 (RGB readback-aligned)
-        run: xvfb-run -a -s "-screen 0 1280x1024x24" python tools/render_portrait_v2.py --output-dir /tmp/meong-portrait-v2 --width 452 --height 900
+        run: xvfb-run -a -s "-screen 0 1280x1024x24" python tools/render_portrait_v2.py --output-dir /tmp/meong-portrait-v2 --width 452 --height 900 --motion
       - name: Capture short-window Kivy pages at 360x640 and 800x600
         run: |
           xvfb-run -a python tools/render_portrait_v2.py --output-dir /tmp/meong-portrait-v2 --width 360 --height 640
