@@ -4,7 +4,7 @@
 
 ## Checkpoint and evidence policy
 
-- Current owner-directed follow-up: [gallery focus / response / moving images / pixel typography](qa/portrait-v2-gallery-focus/README.md). Owner reports ten successful Windows cycles at an unknown HEAD; twenty-cycle duration and acceptance of the new visual source are still open. Local results and subsequent exact-source CI must stay distinct.
+- Current owner-directed follow-up: [gallery focus / response / moving images / pixel typography](qa/portrait-v2-gallery-focus/README.md). Visual source `5a568bf` passes exact-SHA CI 39803887478, all three jobs; original artifact ZIP digest, clean manifests and images are verified and reviewed. Owner reports ten successful Windows cycles at an unknown earlier HEAD; twenty-cycle duration and owner acceptance of the new visual source are still open.
 - Original P2 closure application/renderer checkpoint: `0fbf15829d1537a7f18990b492b1e5934f21c0f8`, [CI 39618540570](https://github.com/pratikto/PhotoBooth/actions/runs/39618540570), both jobs successful. Its artifact has been downloaded, digest verified and visually reviewed. Newer commits must not inherit this CI PASS; the current workflow also has a third Windows audio job.
 - A pushed commit and verified remote HEAD mean **published**, not **tested**.
 - Gate requires a GitHub Actions run with `head_sha` **exactly equal** to the milestone checkpoint SHA and both jobs successful. If no matching run is available, mark **BLOCKED / NOT VERIFIED**, never PASS.

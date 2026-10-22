@@ -6,7 +6,7 @@ This file tracks **actual verified repository/document changes**, not successful
 
 - Give the vertical strips most of the gallery, keep previous/current/next fully visible, and float the arrows in the preview's lower corners. Compact the header, copy summary and footer; raise preview resolution without changing print masters.
 - Slide actual images for 200 ms and follow finger drags. Pool the image widgets, replace motion on rapid input, select once per gesture, and cancel motion on resize/minimize/retirement. Match the read-only mini-game's pixel title with display-only glyph data.
-- 71 focused tests PASS; full suite 306 run / 304 PASS / 2 optional model skips; three fresh-process 150% density checks PASS. Thirty page PNGs and nine motion frames reviewed, including 800×1280 and 452×900. [Evidence, GIF, source hashes and Windows retest](qa/portrait-v2-gallery-focus/README.md). Exact-source CI follows the normal push; Windows preference/response and twenty-cycle acceptance remain open.
+- 71 focused tests PASS; full suite 306 run / 304 PASS / 2 optional model skips; three fresh-process 150% density checks PASS. Thirty local page PNGs and nine motion frames reviewed, including 800×1280 and 452×900. Source `5a568bf` passes exact-SHA CI 39803887478 (all three jobs, including 31 native Windows audio tests); original artifact ZIP digest, 24 page PNGs and nine motion hashes verified and reviewed. [Evidence, GIF, source hashes and Windows retest](qa/portrait-v2-gallery-focus/README.md). Windows preference/response and twenty-cycle owner acceptance remain open.
 
 ## [Unreleased — owner retest and button response] — 2026-10-22
 

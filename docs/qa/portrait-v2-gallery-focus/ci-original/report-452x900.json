@@ -1,0 +1,147 @@
+{
+  "source_sha": "5a568bf12fa9756d6f233387663c5371b18af491",
+  "tracked_changes": false,
+  "synthetic_only": true,
+  "screenshots": [
+    {
+      "state": "01-advert",
+      "page": "advert",
+      "file": "01-advert-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "3595f4b88a458d1731f08eecdacdeb00b45830251f2c9e5ee116ae1176780132"
+    },
+    {
+      "state": "02-invitation",
+      "page": "advert",
+      "file": "02-invitation-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "71903011d64c8145f4acb6b691611023933e3117eeebe5f681cadeb37f69c07d"
+    },
+    {
+      "state": "03-tutorial",
+      "page": "tutorial",
+      "file": "03-tutorial-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "efcd96e980c5dc30208e61be45f06cdbfda0fd42d9c75e2f3784b8a898a4de1e"
+    },
+    {
+      "state": "04-templates",
+      "page": "templates",
+      "file": "04-templates-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "5c9f72800f6662b04bccea5752be4443ad198f27db9200c1898bdc7c06094ad5"
+    },
+    {
+      "state": "05-copy-cart",
+      "page": "templates",
+      "file": "05-copy-cart-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "82a98aba9cdf0b4a8d093116b3869cb1c81d35ee3ed2ce2dbcf1592781d1a162"
+    },
+    {
+      "state": "06-game-placeholder",
+      "page": "game_preview",
+      "file": "06-game-placeholder-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "5186d9c32fcdeae7946210b74b26f2316ad4677c3bc047ea79df7b826ccd475c"
+    }
+  ],
+  "motion_frames": [
+    {
+      "file": "motion-00-rest-452x900.png",
+      "selected_index": 0,
+      "offset": 0,
+      "selected_image_pos": [
+        147.72,
+        288.15999999999997
+      ],
+      "sha256": "73e9363fc30cc5a29fd80eec8919dcc54d1f00fefb93ba4a92db6c68be6dfd19"
+    },
+    {
+      "file": "motion-01-next-452x900.png",
+      "selected_index": 1,
+      "offset": -0.1736205690302629,
+      "selected_image_pos": [
+        126.489399026069,
+        299.57645524069875
+      ],
+      "sha256": "43962b4466cc971058afbf17cc1cdeef58ddaaac21b76b07fed65b5d511d607c"
+    },
+    {
+      "file": "motion-02-next-452x900.png",
+      "selected_index": 1,
+      "offset": -0.8065396969851735,
+      "selected_image_pos": [
+        49.09503538913782,
+        341.1941790831995
+      ],
+      "sha256": "67ff8700445a66596ae8ce12bddf52c570ea27dafae7a9becef1923a193f1a42"
+    },
+    {
+      "file": "motion-03-next-452x900.png",
+      "selected_index": 1,
+      "offset": -0.9847700050790662,
+      "selected_image_pos": [
+        27.300748146923667,
+        352.913748637975
+      ],
+      "sha256": "d1eee04a71d82a9e5e41564139b9faa401aa6892a164a4baa241ed4e88a5ae13"
+    },
+    {
+      "file": "motion-04-selected-452x900.png",
+      "selected_index": 1,
+      "offset": 0,
+      "selected_image_pos": [
+        147.72,
+        288.15999999999997
+      ],
+      "sha256": "c9c6783b062f661cd30056c35fcf05e6dbe111ae32c84ab194932c0103d40836"
+    },
+    {
+      "file": "motion-05-previous-452x900.png",
+      "selected_index": 0,
+      "offset": 0.1736030930922885,
+      "selected_image_pos": [
+        176.55866805954201,
+        299.5753061069021
+      ],
+      "sha256": "11d7b3e5b641aad23e07f31b1b24ae79a9d75937db3fe934c3145ecff3687781"
+    },
+    {
+      "file": "motion-06-previous-452x900.png",
+      "selected_index": 0,
+      "offset": 0.8061920835476413,
+      "selected_image_pos": [
+        281.64333901160046,
+        341.17132169209185
+      ],
+      "sha256": "1a6e2fd811bc77362d2defc0308560436f78921dafcfc2d81c459b3514208e89"
+    },
+    {
+      "file": "motion-07-previous-452x900.png",
+      "selected_index": 0,
+      "offset": 0.9839456322718656,
+      "selected_image_pos": [
+        311.1714741199906,
+        352.85954183916294
+      ],
+      "sha256": "3f9f356101d43f8a0fc2f9faafe1b5a2af69164771f56e64b7e7fecc8642cbbd"
+    },
+    {
+      "file": "motion-08-returned-452x900.png",
+      "selected_index": 0,
+      "offset": 0,
+      "selected_image_pos": [
+        147.72,
+        288.15999999999997
+      ],
+      "sha256": "73e9363fc30cc5a29fd80eec8919dcc54d1f00fefb93ba4a92db6c68be6dfd19"
+    }
+  ]
+}

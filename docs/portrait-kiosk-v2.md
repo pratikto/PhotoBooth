@@ -6,7 +6,8 @@
 > follow-up implements faster button feedback, larger strip previews with floating
 > arrows, moving-image carousel and mini-game-style pixel typography. Local:
 > 71 focused PASS; full 306 run / 304 PASS / 2 optional skips; thirty reviewed PNGs.
-> New Windows acceptance and exact-source CI remain separate gates.
+> Source `5a568bf`: exact-SHA CI 39803887478 SUCCESS, three jobs, original
+> screenshot artifact verified and reviewed. New Windows acceptance stays open.
 > [Audit, evidence and focused retest](qa/portrait-v2-gallery-focus/README.md).
 
 > **Historical Windows crash follow-up:** owner log shows MULAI FOTO exits after

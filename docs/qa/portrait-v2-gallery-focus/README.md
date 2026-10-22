@@ -121,14 +121,47 @@ automated tests verify that the fourth step can be reached.
 The GIF samples native widget FBO frames and is not an FPS benchmark. Local
 capture manifests honestly record base `67e9da8` plus uncommitted source changes.
 [Source hashes](local-source-manifest.json) identify exactly what was tested;
-clean exact-commit CI and its original artifact must be recorded after push.
+the clean exact-commit CI and original artifact are recorded below.
+
+## Exact-source CI and original artifact review
+
+Visual/motion code checkpoint: **`5a568bf12fa9756d6f233387663c5371b18af491`**.
+[Run 39803887478](https://github.com/pratikto/PhotoBooth/actions/runs/39803887478)
+completed **SUCCESS, all three jobs**. [Verified metadata](visual-ci.json).
+
+- Navigation/audio/preview job: **49 PASS**, [transcript](pure-ci-tests.txt).
+- Desktop job: widget smoke, twenty-cycle native PCM checks and all four
+  screenshot captures SUCCESS. Its native PCM process reports 2 PASS.
+- Genuine Windows Python 3.12 native SDL job: **31 PASS**, including named DLL
+  loading, safe fallback and twenty-cycle PCM: [transcript](windows-ci-tests.txt).
+  Dummy output does not certify the owner's physical speaker or Windows GUI.
+
+Original artifact `12436731940`, 3,573,100 bytes, downloaded and its ZIP digest
+matched GitHub:
+`048302526ca1744e8f46c2208304d97f3d211210d05cf64e18af8bc952b32059`.
+All four manifests report the exact checkpoint with **tracked_changes=false**.
+All **24 page PNGs and nine motion frames** match their manifest SHA-256 hashes
+and were visually reviewed. The tested source-file hashes also match the local
+capture manifest; no runtime/renderer changes were made after local validation.
+
+Preserved originals and review sheets:
+[800×1280](ci-original/contact-800x1280.png),
+[452×900](ci-original/contact-452x900.png),
+[360×640](ci-original/contact-360x640.png),
+[800×600](ci-original/contact-800x600.png),
+[motion frames](ci-original/contact-motion.png),
+[original sampled GIF](ci-original/carousel-452x900.gif).
+No synthetic visual blocker was found. Windows response/smoothness and the
+twenty-cycle owner gate remain separate from this CI/artifact result.
 
 ## Checkpoints, remaining work and Windows retest
 
 - Pre-follow-up rollback reference: `29a34198a4893df6fc399ac64767a04b7401935e`.
 - Response-only rollback reference: `67e9da8930a3449299b2264c5b5242a990f68114`.
-- Visual/motion source: pending this commit's normal push and matching-SHA CI.
-  Do not treat the response checkpoint's CI as the visual stage's CI result.
+- Visual/motion source and current application rollback checkpoint:
+  `5a568bf12fa9756d6f233387663c5371b18af491`, exact-SHA CI SUCCESS and original
+  artifact reviewed. Normal push and remote HEAD match were verified at the
+  source commit. Later evidence-only commits must not inherit its CI result.
 
 No remaining defect was found in the reviewed synthetic layout or tests.
 Windows perceived tap lag, animation smoothness and preference for the new

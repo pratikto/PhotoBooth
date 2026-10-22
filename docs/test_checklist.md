@@ -455,7 +455,8 @@ Branding follow-up: 52 targeted tests PASS and twelve screenshots reviewed, incl
 - [x] Gallery preview focus, floating arrows, real image motion and pixel brand implemented; 71 focused checks PASS.
 - [x] Full 306 run / 304 PASS / 2 optional model skips; three 150% density checks PASS.
 - [x] Thirty screenshots across five sizes and nine native motion frames reviewed; hashes preserved.
-- [ ] New visual-source exact-SHA CI and original artifact verification after push.
+- [x] Visual source `5a568bf`: exact-SHA CI 39803887478, all three jobs SUCCESS, including 31 Windows native audio tests.
+- [x] Original artifact ZIP digest, four clean-source manifests and all 24 page / nine motion PNG hashes verified; images visually reviewed.
 - [ ] Fresh Windows response/layout/motion retest with actual HEAD.
 
 [Owner audit and response timings](qa/portrait-v2-gallery-focus/README.md).

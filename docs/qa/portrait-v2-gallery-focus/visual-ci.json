@@ -1,0 +1,42 @@
+{
+  "id": 39803887478,
+  "head_sha": "5a568bf12fa9756d6f233387663c5371b18af491",
+  "head_branch": "feature/portrait-kiosk-v2-next",
+  "status": "completed",
+  "conclusion": "success",
+  "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/39803887478",
+  "created_at": "2026-10-22T15:20:22Z",
+  "updated_at": "2026-10-22T15:22:02Z",
+  "jobs": [
+    {
+      "id": 119911814339,
+      "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/39803887478/job/119911814339"
+    },
+    {
+      "id": 119911814839,
+      "name": "Navigation and audio lifecycle",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/39803887478/job/119911814839"
+    },
+    {
+      "id": 119911814981,
+      "name": "Windows Python 3.12 native SDL audio (dummy output)",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/39803887478/job/119911814981"
+    }
+  ],
+  "artifact": {
+    "id": 12436731940,
+    "name": "meong-portrait-v2-screens",
+    "size_in_bytes": 3573100,
+    "digest": "sha256:048302526ca1744e8f46c2208304d97f3d211210d05cf64e18af8bc952b32059",
+    "expired": false,
+    "downloaded_zip_sha256": "048302526ca1744e8f46c2208304d97f3d211210d05cf64e18af8bc952b32059"
+  },
+  "review": "Original ZIP digest matches GitHub. Four clean exact-SHA manifests, 24 native page PNGs and nine motion-frame PNG hashes verified. All 24 pages and nine motion frames visually reviewed; 800x1280 and 452x900 included. Contact sheets are resized review aids. Native Windows dummy-output tests are not physical speaker acceptance."
+}
