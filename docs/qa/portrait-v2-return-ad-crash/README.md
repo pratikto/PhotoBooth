@@ -1,11 +1,18 @@
 # Windows return-to-advertising crash investigation — 2026-10-23
 
-**BUG-012 remains OPEN. The device crash is not proven fixed.**
+**Current: BUG-012 OWNER-REPORTED PASS / MONITORING (2026-10-23).**
+After the correction/diagnostic update and focused retest instructions, the owner
+replied **“sudah oke”**. Record the return-to-advertising flow as working by owner
+report. Tested HEAD, completed post-update cycles, fresh log and resolution were
+not supplied; exact-source and twenty-cycle acceptance remain unverified.
+[Confirmation and limits](owner-confirmation.json). No new runtime change or
+new device test is claimed by this documentation update.
+
 Branch: `feature/portrait-kiosk-v2-next`; pre-change reference:
 `b49ce247d108256a03594e4e9f6440791477fc48`. This is a source/CI reference,
 not a known-good Windows hardware rollback for the reported crash.
 
-## Owner result and acceptance
+## Original owner result and acceptance
 
 Owner reports **33/35 checked, five cycles**, Windows 11, scaling 100%, laptop
 speaker. Tested HEAD and resolution are blank. Layout, pixel branding, moving
@@ -130,23 +137,25 @@ were visually reviewed:
 [800×600](ci-original/contact-800x600.png),
 [motion](ci-original/contact-motion.png).
 
-This is a verified non-hardware source checkpoint. **BUG-012 remains OPEN**;
-successful CI does not establish why the owner process exited or close its
-five-to-twenty-cycle gap. Pre-change `b49ce24` is only a rollback reference,
+This is a verified non-hardware source checkpoint. Subsequent owner confirmation
+changes BUG-012 to **OWNER-REPORTED PASS / MONITORING**, not formally CLOSED.
+Successful CI does not establish the original process exit's cause or complete
+the owner's twenty-cycle gate. Pre-change `b49ce24` is only a rollback reference,
 not a certified stable Windows version for this crash.
 
-## Windows next check
+## Remaining Windows acceptance and recurrence evidence
 
-1. Update the existing `feature/portrait-kiosk-v2-next` branch with a normal
-   fast-forward pull. Keep any local changes; do not force/reset them.
-2. Run `python tools/run_portrait_v2.py`. Record the printed HEAD and diagnostic
-   path; use the same local advertising videos that were present during failure.
-3. Try one ad → tutorial → gallery → SELESAI / KEMBALI IKLAN cycle. If it exits,
-   stop and share that run's diagnostic file plus the terminal's final lines.
+1. When completing the remaining acceptance, record the launcher HEAD and
+   diagnostic path. Keep earlier unknown tested HEADs marked unknown.
+2. Complete at least twenty ad → tutorial → gallery → advert cycles, checking
+   clicks/music, response and video/image transitions throughout. Only pass F05
+   if that duration and behavior were actually tested successfully.
+3. After twenty cycles, close and reopen; only pass F06 after verifying clean
+   exit, no remaining audio and normal startup.
+4. If the crash recurs, stop and share that run's diagnostic file plus the
+   terminal's final lines.
    In PowerShell, also run `$LASTEXITCODE` immediately after Python exits and
    include the number; this helps identify native exits without a Python stack.
-4. If return works, repeat and check video/image transitions and minimize/restore.
-   Only after twenty completed cycles can F05/F06 be considered for a fresh PASS.
 
 The [V4 checklist](../portrait-v2-gallery-focus/windows-checklist.html) remains
 available. Clear previous checkmarks for a new tested HEAD; Submit Hasil prepares
@@ -154,5 +163,6 @@ a prompt for manual copy/send. Leave any failed or untried item unchecked.
 
 No layout redesign, game/scanner/discount/payment activation, production service
 change, new branch or master merge is included. Further changes to the native
-decoder/driver/audio pipeline require evidence identifying the failure; current
-device acceptance remains BLOCKED pending a diagnostic retest.
+decoder/driver/audio pipeline require evidence identifying a recurrent failure.
+No further crash patch is planned while the owner reports the flow working;
+exact-HEAD and twenty-cycle acceptance remain pending.

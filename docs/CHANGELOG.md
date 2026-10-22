@@ -2,6 +2,11 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased — owner confirms return-to-advert flow working] — 2026-10-23
+
+- Record the owner's follow-up “sudah oke” after the correction/diagnostic retest instructions. BUG-012 becomes OWNER-REPORTED PASS / MONITORING; no further crash patch is planned while it works.
+- Preserve unknown post-update tested HEAD/cycle count and the unchecked F05/F06 twenty-cycle gate. Do not convert the earlier five-cycle report or this brief confirmation into exact-source / full-duration acceptance. Documentation-only update; runtime, existing test transcripts and source CI results unchanged. [Confirmation and limits](qa/portrait-v2-return-ad-crash/owner-confirmation.json).
+
 ## [Unreleased — return-to-advert crash investigation and diagnostics] — 2026-10-23
 
 - Preserve the owner's raw V4 33/35 checked result at five cycles and unknown HEAD; the explicit crash on return overrides overall navigation acceptance. Track BUG-012 OPEN; F05/F06 remain unverified.

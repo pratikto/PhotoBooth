@@ -1,6 +1,6 @@
 # Desktop GUI verification
 
-> **Portrait v2 current blocker (2026-10-23):** [BUG-012: return-to-advertising crash investigation](portrait-v2-return-ad-crash/README.md). Owner reports 33/35 checked, five cycles, unknown HEAD and an explicit crash. Local 79 focused PASS / full 314 run with two optional skips; reproduced MP4 image-probe error corrected and persistent diagnostics added. Twenty native-video Linux cycles complete before and after; Windows cause/acceptance remain OPEN.
+> **Portrait v2 update (2026-10-23):** [BUG-012 confirmation and evidence](portrait-v2-return-ad-crash/README.md). After the correction/diagnostic retest instructions, the owner reports “sudah oke”: return-to-advert flow is OWNER-REPORTED PASS / MONITORING. Post-update tested HEAD/cycles were not supplied; F05/F06 twenty-cycle acceptance remains unverified. This documentation update adds no application change or new device tests.
 
 > **Portrait v2 current follow-up (2026-10-22):** [Owner audit, response timings, preview-focused gallery, floating arrows, pixel typography and native motion evidence](portrait-v2-gallery-focus/README.md). Local 71 focused PASS; full 306 run / 304 PASS / 2 optional skips; thirty page captures and nine motion frames reviewed. Source `5a568bf` passes exact-SHA CI 39803887478, all three jobs, and original artifact review. Incoming owner result is ten cycles at unknown HEAD; twenty-cycle and new source Windows acceptance remain open. Stable v1 notices below apply to that separate baseline.
 

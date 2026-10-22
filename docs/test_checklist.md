@@ -473,6 +473,8 @@ Branding follow-up: 52 targeted tests PASS and twelve screenshots reviewed, incl
 - [x] Native video/audio: twenty Linux cycles complete before and after; diagnostic trace records twenty returns and no MP4 image-probe errors after correction.
 - [x] Dedicated-launcher native video startup/teardown check; source `bef4014` exact-SHA CI 39869369246 all three jobs SUCCESS, including 38 native Windows audio/diagnostic tests.
 - [x] Twelve local captures match prior gallery pixels; original CI ZIP digest / 24 page PNGs / nine motion frames verified and visually reviewed.
-- [ ] BUG-012 Windows crash cause identified and device return-to-advertising retest PASS.
+- [x] Subsequent owner reply “sudah oke”: BUG-012 return flow OWNER-REPORTED PASS / MONITORING (2026-10-23), not formal exact-source or twenty-cycle closure.
+- [ ] Original native Windows exit cause proven; confirmation does not establish root cause.
+- [ ] Post-update tested HEAD and twenty completed Windows cycles supplied; F05/F06 stay unverified.
 
 [Evidence and next focused Windows check](qa/portrait-v2-return-ad-crash/README.md).

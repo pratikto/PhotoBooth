@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-23",
+  "timezone": "Asia/Jakarta",
+  "owner_quote": "sudah oke",
+  "context": "Follow-up after return-to-advertising correction/diagnostic update and focused Windows retest instructions.",
+  "bug": "BUG-012",
+  "status": "OWNER-REPORTED PASS / MONITORING",
+  "interpreted_scope": "Return-to-advertising flow reported working; no further speculative crash patch while it works.",
+  "tested_head": null,
+  "completed_post_update_cycles": null,
+  "new_log_supplied": false,
+  "formal_closed": false,
+  "twenty_cycle_acceptance": "UNVERIFIED — F05/F06 remain unchecked without evidence of twenty successful post-update cycles.",
+  "root_cause": "Original native process exit not proven; reproduced MP4-as-image probe correction remains separately evidenced.",
+  "documentation_only": true
+}
