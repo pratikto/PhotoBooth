@@ -428,6 +428,9 @@ Branding follow-up: 52 targeted tests PASS and twelve screenshots reviewed, incl
 - [x] Preserve owner 27/32 result without treating unavailable gallery swipe tests as failures.
 - [x] Reproduce muted native SDL channel reuse; 54 focused checks PASS including 20 post-mix PCM cycles.
 - [ ] Owner Windows repeat-flow audio acceptance: still OPEN (single-flow checks do not close it).
-- [ ] Responsive gallery at smaller live window sizes: implementation/verification pending.
+- [x] Responsive gallery: five viewports, live resize/cart/swipe, 150% density checks and 30 reviewed PNGs.
+- [x] Final regression 290 run / 288 PASS / 2 optional model skips; 55 focused checks PASS.
+- [x] New clickable retest form includes Submit Hasil to prepare a prompt (manual paste/send).
+- [ ] Owner Windows audio/resize acceptance after these corrections remains OPEN.
 
 [Evidence and rollback](qa/portrait-v2-retest-9a9e18e/README.md).

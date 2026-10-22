@@ -2,6 +2,12 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased — live window scaling and repeat-use retest] — 2026-10-22
+
+- Scale the entire v2 page to retain its minimum content budget in short/high-DPI windows, preserving gallery previews, cart state, media and audio ownership during live resize. Match native touch/swipe coordinates and discard resize-interrupted drags.
+- Review 30 synthetic screenshots across five sizes, including 800×1280 and 452×900. 55 focused tests PASS; full suite 290 run / 288 PASS / 2 optional model skips; two fresh-process 150% density checks PASS.
+- Add a separate 38-item repeat/resize retest HTML with Submit Hasil, prepared prompt, local persistence and copy/download; DOM checks PASS. [Evidence, source hashes, screenshots and rollback](qa/portrait-v2-retest-9a9e18e/README.md). Owner Windows acceptance stays open.
+
 ## [Unreleased — repeated Windows audio correction] — 2026-10-22
 
 - Record owner retest at `9a9e18e`: 27/32 checklist total, single-flow C/D success qualified by repeated music/click loss; B01–B05 untested because gallery was not visible.

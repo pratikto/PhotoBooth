@@ -24,8 +24,8 @@ os.environ.setdefault("PHOTOBOOTH_AD_VIDEO", "0")
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--output-dir", required=True)
-parser.add_argument("--width", type=int, choices=(452, 800), default=800)
-parser.add_argument("--height", type=int, choices=(900, 1280), default=1280)
+parser.add_argument("--width", type=int, choices=(360, 452, 800), default=800)
+parser.add_argument("--height", type=int, choices=(600, 640, 900, 1280), default=1280)
 # The renderer sets Config before importing the Window singleton.
 options = parser.parse_args() if __name__ == "__main__" else None
 
@@ -77,8 +77,9 @@ class VisualRecorder(PortraitKioskV2App):
                     raise RuntimeError(f"Expected one brand on {name}, got {len(brands)}")
                 mark = brands[0].wordmark
                 x, y = mark.to_window(mark.x, mark.y)
-                box = (max(0, int(x)), max(0, int(rgb.height - y - mark.height)),
-                       min(rgb.width, int(x + mark.width)), min(rgb.height, int(rgb.height - y)))
+                right, top = mark.to_window(mark.right, mark.top)
+                box = (max(0, int(x)), max(0, int(rgb.height - top)),
+                       min(rgb.width, int(right)), min(rgb.height, int(rgb.height - y)))
                 if box[2] <= box[0] or box[3] <= box[1]:
                     raise RuntimeError(f"Offscreen Meong wordmark on {name}")
                 gold_pixels = sum(1 for r, g, b in rgb.crop(box).getdata()
@@ -141,8 +142,9 @@ class VisualRecorder(PortraitKioskV2App):
 
 
 def main():
-    if (options.width, options.height) not in ((800, 1280), (452, 900)):
-        raise SystemExit("Only approved portrait preview sizes are supported")
+    if (options.width, options.height) not in ((800, 1280), (452, 900),
+                                              (360, 640), (452, 600), (800, 600)):
+        raise SystemExit("Unsupported QA viewport size")
     app = VisualRecorder(options.output_dir, (options.width, options.height))
     app.run()
     if len(app.saved) != 6:

@@ -22,6 +22,117 @@ else:
 
 @unittest.skipUnless(HAS_KIVY, "Kivy not available in pure-Python test environment")
 class PortraitKivySmokeTests(unittest.TestCase):
+    def test_live_resize_preserves_gallery_cart_audio_owner_and_real_touch_coordinates(self):
+        from unittest.mock import patch
+        from kivy.base import EventLoop
+        from kivy.core.window import Window
+        from kivy.input.motionevent import MotionEvent
+        from photobooth.kiosk_v2.viewport import PortraitViewport
+
+        class Pointer(MotionEvent):
+            def depack(self, args):
+                self.sx, self.sy = args
+                self.profile = ['pos']
+                super().depack(args)
+
+        def settle():
+            for _ in range(5):
+                EventLoop.idle()
+
+        def gesture(start, end):
+            touch = Pointer('resize-test', 'pointer',
+                            (start[0] / Window.width, start[1] / Window.height), is_touch=True)
+            EventLoop.post_dispatch_input('begin', touch)
+            touch.move((end[0] / Window.width, end[1] / Window.height))
+            EventLoop.post_dispatch_input('update', touch)
+            EventLoop.post_dispatch_input('end', touch)
+            settle()
+
+        original = Window.size
+        app = PortraitKioskV2App()
+        Window.add_widget(app.build())
+        try:
+            app._choose_photo()
+            app._complete_tutorial()
+            app._change_copies(2)
+            gallery = next(w for w in app.stage.walk() if isinstance(w, SwipeGallery))
+            screen = app.stage.current_screen
+            revision = app._view_revision
+            with patch.object(app.audio_v2, 'enter_page', wraps=app.audio_v2.enter_page) as enter:
+                for dimensions in ((800, 1280), (452, 900), (360, 640),
+                                   (452, 600), (800, 600), (800, 1280)):
+                    with self.subTest(viewport=dimensions):
+                        Window.size = dimensions
+                        settle()
+                        self.assertIs(app.stage.current_screen, screen)
+                        self.assertEqual(app._view_revision, revision)
+                        self.assertEqual(app.quantities[app.templates[0].template_id], 2)
+                        self.assertIs(next(w for w in app.stage.walk()
+                                           if isinstance(w, SwipeGallery)), gallery)
+                        viewport = next(w for w in app.stage.walk()
+                                        if isinstance(w, PortraitViewport))
+                        bottom = app._preview.to_window(app._preview.x, app._preview.y)[1]
+                        top = app._preview.to_window(app._preview.right, app._preview.top)[1]
+                        self.assertGreater(top - bottom, 100, 'strip preview collapsed')
+                        self.assertGreater(bottom, 0)
+                        self.assertLess(top, Window.height)
+                        for button in (w for w in app.stage.walk() if isinstance(w, ArcadeButton)):
+                            x, y = button.to_window(button.x, button.y)
+                            right, top = button.to_window(button.right, button.top)
+                            self.assertGreaterEqual(x, -.1)
+                            self.assertGreaterEqual(y, -.1)
+                            self.assertLessEqual(right, Window.width + .1)
+                            self.assertLessEqual(top, Window.height + .1)
+                            self.assertGreaterEqual(top - y, 48 * viewport.viewport_scale - .1)
+                        # Actual grabbed input must still use inverse scaled coordinates.
+                        x, y = gallery.to_window(gallery.x, gallery.center_y)
+                        right, _ = gallery.to_window(gallery.right, gallery.center_y)
+                        before = app.template_index
+                        gesture((x + (right - x) * .75, y), (x + (right - x) * .25, y))
+                        self.assertEqual(app.template_index, (before + 1) % 12)
+                        gesture((x + (right - x) * .25, y), (x + (right - x) * .75, y))
+                        self.assertEqual(app.template_index, before)
+                        gesture((x + (right - x) * .5, y), (x + (right - x) * .5, y + 40))
+                        self.assertEqual(app.template_index, before)
+                        gesture((x + (right - x) * .5, y), (x + (right - x) * .52, y))
+                        self.assertEqual(app.template_index, before)
+                        for preview in (app._previous_preview, app._preview, app._next_preview):
+                            start = preview.to_window(*preview.center)
+                            delta = (right - x) * (.3 if start[0] <= (right + x) / 2 else -.3)
+                            before = app.template_index
+                            gesture(start, (start[0] + delta, start[1]))
+                            self.assertEqual(app.template_index, (before + (-1 if delta > 0 else 1)) % 12)
+                        # Restore selection using the arrow model, preserving the cart.
+                        app._shift_template(-app.template_index)
+                        plus = next(w for w in app.stage.walk()
+                                    if isinstance(w, ArcadeButton) and w.text == '+')
+                        point = plus.to_window(*plus.center)
+                        gesture(point, point)
+                        self.assertEqual(app.quantities[app.templates[0].template_id], 3)
+                        app._change_copies(-1)
+                enter.assert_not_called()  # Resizing must never restart page audio.
+            # A drag interrupted by resize must release its grab without navigation.
+            start = gallery.to_window(*gallery.center)
+            touch = Pointer('resize-test', 'interrupted',
+                            (start[0] / Window.width, start[1] / Window.height), is_touch=True)
+            EventLoop.post_dispatch_input('begin', touch)
+            Window.size = (452, 600)
+            settle()
+            end = gallery.to_window(*gallery.center)
+            touch.move((end[0] / Window.width, end[1] / Window.height))
+            EventLoop.post_dispatch_input('end', touch)
+            self.assertEqual(app.template_index, 0)
+            self.assertFalse(gallery._touch_origins)
+            self.assertNotIn(gallery, [ref() for ref in touch.grab_list])
+            plus = next(w for w in app.stage.walk() if isinstance(w, ArcadeButton) and w.text == '+')
+            point = plus.to_window(*plus.center)
+            gesture(point, point)
+            self.assertEqual(app.quantities[app.templates[0].template_id], 3)
+        finally:
+            app.on_stop()
+            Window.remove_widget(app.stage)
+            Window.size = original
+
     def test_advert_game_invitation_tutorial_and_real_12_strip_gallery(self):
         from photobooth.workflow import quote_order
 
@@ -173,7 +284,7 @@ class PortraitKivySmokeTests(unittest.TestCase):
         finally:
             app.on_stop()
 
-    def test_touch_targets_and_tutorial_scroll_at_both_portrait_sizes(self):
+    def test_touch_targets_and_tutorial_scroll_at_portrait_and_short_sizes(self):
         from kivy.base import EventLoop
         from kivy.core.window import Window
         from kivy.input.motionevent import MotionEvent
@@ -191,7 +302,7 @@ class PortraitKivySmokeTests(unittest.TestCase):
 
         original = Window.size
         try:
-            for width, height in ((800, 1280), (452, 900)):
+            for width, height in ((800, 1280), (452, 900), (360, 640), (452, 600), (800, 600)):
                 with self.subTest(viewport=(width, height)):
                     Window.size = (width, height)
                     app = PortraitKioskV2App()
@@ -214,8 +325,9 @@ class PortraitKivySmokeTests(unittest.TestCase):
                                           if isinstance(w, TutorialIcon) and w.kind == 'print')
                         _, icon_y = final_icon.to_window(*final_icon.center)
                         _, guide_y = guide.to_window(guide.x, guide.y)
+                        _, guide_top = guide.to_window(guide.right, guide.top)
                         self.assertGreater(icon_y, guide_y)
-                        self.assertLess(icon_y, guide_y + guide.height)
+                        self.assertLess(icon_y, guide_top)
                         for route in (lambda: None, app._complete_tutorial,
                                       app._return_ad, app._choose_game):
                             route()
@@ -231,11 +343,12 @@ class PortraitKivySmokeTests(unittest.TestCase):
                                 self.assertLessEqual(part.top, brand.top + 1)
                             for button in (w for w in app.stage.walk() if isinstance(w, ArcadeButton)):
                                 x, y = button.to_window(button.x, button.y)
+                                right, top = button.to_window(button.right, button.top)
                                 self.assertGreaterEqual(button.height, 48)
                                 self.assertGreaterEqual(x, 0)
                                 self.assertGreaterEqual(y, 0)
-                                self.assertLessEqual(x + button.width, width + 1)
-                                self.assertLessEqual(y + button.height, height + 1)
+                                self.assertLessEqual(right, width + 1)
+                                self.assertLessEqual(top, height + 1)
                     finally:
                         app.on_stop()
                         Window.remove_widget(app.stage)

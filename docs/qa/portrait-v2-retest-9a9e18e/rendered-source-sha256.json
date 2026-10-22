@@ -1,0 +1,13 @@
+{
+  "photobooth/kiosk_v2/__init__.py": "d3f17da982c143f3f7fa85945f0172f41e28a645abc873c948c6d4559363eb0b",
+  "photobooth/kiosk_v2/app.py": "4496cec7e850b3733a9e02fb9c18ca1aec4c73a39b44fc600068c1f9bd6908e7",
+  "photobooth/kiosk_v2/audio.py": "a445519da65bbb87f2e12c1fd328db5c025dbc6db52d7e649a0076f205589e4c",
+  "photobooth/kiosk_v2/branding.py": "35f00fddee3c7ef4198cfab94ce03fd7cfc31b8a3cf2a12758bc38cc792072fb",
+  "photobooth/kiosk_v2/design_tokens.py": "b288a9468474c7f89caf519f31a00d9e4a08df561084670702e7b4c37b1bad70",
+  "photobooth/kiosk_v2/flow.py": "fcdc56e7c7f8b01f4a0a17a4a6f95a91d9d39691e043fcea0e6f90f158e7e453",
+  "photobooth/kiosk_v2/illustrations.py": "a68cf482cc4d9277ab86155cbc163325dc3517f635cc6ab4acef31cfe0997d0e",
+  "photobooth/kiosk_v2/mixer.py": "13dd302802452bc4b87202d7fbb0647d506ee5cdd10cff846f88eb7cb538a3b5",
+  "photobooth/kiosk_v2/theme.py": "94c22aa350ac6f17d428c4989b0491c9fa35a3100f16c6cc7d2928bb9eb6ef6c",
+  "photobooth/kiosk_v2/viewport.py": "623a814c97775cc417e9ee36c22bc67026501e4a3be06473cad24e81e6f1b4ad",
+  "tools/render_portrait_v2.py": "c213117eb6608844ec9d785a20f7970e905ea5f561d8d7637f92e68b5c3f1658"
+}

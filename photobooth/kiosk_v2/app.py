@@ -31,6 +31,7 @@ from .branding import MeongLogo
 from .illustrations import TutorialIcon
 from .flow import ADVERT, BROWSING_PAGES, GAME_PREVIEW, TEMPLATES, TUTORIAL, VisitFlow
 from .theme import ArcadeButton, CYAN, GOLD, MUTED, PixelCard, PINK, Starfield, WHITE, text_label
+from .viewport import PortraitViewport
 
 
 LOG = logging.getLogger(__name__)
@@ -42,7 +43,11 @@ def _portrait_strip_texture(template):
     texture = Texture.create(size=preview.size, colorfmt="rgb")
     texture.blit_buffer(preview.tobytes(), colorfmt="rgb", bufferfmt="ubyte")
     texture.flip_vertical()
-    texture.mag_filter = texture.min_filter = "nearest"
+    texture.mag_filter = "nearest"
+    # Thin thermal frame lines need area interpolation when the whole window
+    # shrinks; nearest minification can drop a line completely. Brand pixel art
+    # keeps its separate nearest filter.
+    texture.min_filter = "linear"
     return texture
 
 
@@ -73,8 +78,8 @@ class SwipeGallery(BoxLayout):
         super().__init__(**kwargs)
 
     @staticmethod
-    def swipe_step(dx, dy):
-        if abs(dx) < dp(54) or abs(dx) <= abs(dy) * 1.35:
+    def swipe_step(dx, dy, *, threshold=None):
+        if abs(dx) < (dp(54) if threshold is None else threshold) or abs(dx) <= abs(dy) * 1.35:
             return 0
         return -1 if dx > 0 else 1
 
@@ -84,7 +89,7 @@ class SwipeGallery(BoxLayout):
         if not self.collide_point(*touch.pos) or touch.is_mouse_scrolling:
             return False
         # Normalized window coordinates survive Kivy's parent/local transforms.
-        self._touch_origins[touch.uid] = (touch, touch.sx, touch.sy)
+        self._touch_origins[touch.uid] = (touch, touch.sx, touch.sy, tuple(Window.size))
         touch.grab(self)
         return True
 
@@ -101,16 +106,21 @@ class SwipeGallery(BoxLayout):
         touch.ungrab(self)
         if origin is None or not self.collide_point(*touch.pos):
             return True
-        _, sx, sy = origin
+        _, sx, sy, viewport = origin
+        if tuple(Window.size) != viewport:
+            return True  # A resize in the middle of a drag is not a swipe.
+        x0, _ = self.to_window(0, 0)
+        x1, _ = self.to_window(dp(54), 0)
         step = self.swipe_step((touch.sx - sx) * Window.width,
-                               (touch.sy - sy) * Window.height)
+                               (touch.sy - sy) * Window.height,
+                               threshold=abs(x1 - x0))
         if step:
             self._on_swipe(step)
         return True
 
     def dispose(self):
         """A retired page must not retain a native pointer grab."""
-        for touch, _sx, _sy in self._touch_origins.values():
+        for touch, _sx, _sy, _viewport in self._touch_origins.values():
             touch.ungrab(self)
         self._touch_origins.clear()
 
@@ -230,7 +240,7 @@ class PortraitKioskV2App(App):
         self.stage.clear_widgets()
         page = Screen(name=self.navigation.page)
         canvas = TouchStage(self._activity)
-        page.add_widget(canvas)
+        page.add_widget(PortraitViewport(canvas))
         self.stage.add_widget(page)
         self.stage.current = page.name
         self.audio_v2.enter_page(self.navigation.page)

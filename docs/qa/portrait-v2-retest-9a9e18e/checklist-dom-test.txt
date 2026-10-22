@@ -1,0 +1,1 @@
+PASS: 38-item DOM construction; Submit includes metadata/checks/notes; edits update prompt; persistence restores; v1 state isolated; reset clears; storage-denied fallback works.
