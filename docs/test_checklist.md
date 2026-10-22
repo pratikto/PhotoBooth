@@ -434,3 +434,14 @@ Branding follow-up: 52 targeted tests PASS and twelve screenshots reviewed, incl
 - [ ] Owner Windows audio/resize acceptance after these corrections remains OPEN.
 
 [Evidence and rollback](qa/portrait-v2-retest-9a9e18e/README.md).
+
+## Windows MULAI FOTO crash follow-up — 2026-10-22
+
+- [x] Reproduce exact Windows CPython 3.12 CDLL(None) failure and fallback-policy regression before correction.
+- [x] Correct named existing HMODULE loading; default Windows fallback stays on SDL2 or unavailable audio.
+- [x] 62 focused PASS; five audio-enabled button-flow visits; full suite 297 run / 295 PASS / 2 optional model skips.
+- [x] Twelve reviewed screenshots with audio enabled at 800×1280 and 452×900.
+- [ ] Exact-SHA native Windows CI job must complete successfully.
+- [ ] Owner retest: MULAI FOTO opens tutorial without exiting, then twenty visits retain audible music/clicks.
+
+[Current crash evidence and checkpoint](qa/portrait-v2-start-photo-crash/README.md).

@@ -1,5 +1,11 @@
 # FEAT-022 - Meong Photobooth portrait kiosk GUI v2 (working specification)
 
+> **Current Windows crash follow-up:** owner log shows MULAI FOTO exits after
+> the previous correction's CDLL(None) TypeError and native FFmpeg WAV fallback
+> error. Named DLL loading and SDL-only default Windows fallback are corrected;
+> native Windows CI and physical operator retest are separate gates.
+> [Current diagnosis and acceptance](qa/portrait-v2-start-photo-crash/README.md).
+
 > **Latest owner retest (`9a9e18e`):** 27/32 checklist total; single-flow clicks/music
 > work, but both fail after repeated visits. Swipe checks are blocked by an invisible
 > gallery at the owner's window size. Native muted-channel reuse is reproduced and

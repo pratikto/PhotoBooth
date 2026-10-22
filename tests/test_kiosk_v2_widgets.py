@@ -22,6 +22,37 @@ else:
 
 @unittest.skipUnless(HAS_KIVY, "Kivy not available in pure-Python test environment")
 class PortraitKivySmokeTests(unittest.TestCase):
+    @unittest.skipUnless(os.environ.get('PHOTOBOOTH_TEST_AUDIO') == '1',
+                         'native audio route requires PHOTOBOOTH_TEST_AUDIO=1')
+    def test_start_photo_with_enabled_native_audio_keeps_gui_on_tutorial_and_gallery(self):
+        from unittest.mock import patch
+        from kivy.core.audio.audio_sdl2 import SoundSDL2
+
+        with patch.dict(os.environ, {'PHOTOBOOTH_AUDIO': '1', 'PHOTOBOOTH_AD_VIDEO': '0',
+                                    'KIVY_AUDIO': ''}), \
+                patch('kivy.core.audio.SoundLoader.load') as ff:
+            app = PortraitKioskV2App()
+            app.build()
+            try:
+                for _ in range(5):
+                    start = next(w for w in app.stage.walk()
+                                 if isinstance(w, ArcadeButton) and w.text == 'MULAI FOTO')
+                    start.dispatch('on_release')
+                    self.assertFalse(app._closed)
+                    self.assertEqual(app.navigation.page, TUTORIAL)
+                    self.assertIsInstance(app.audio_v2._handles['music'], SoundSDL2)
+                    self.assertIsInstance(app.audio_v2._handles['button'], SoundSDL2)
+                    self.assertEqual(app.audio_v2.status()['music_state'], 'play')
+                    done = next(w for w in app.stage.walk() if isinstance(w, ArcadeButton)
+                                and w.text == 'LANJUT PILIH TEMPLATE')
+                    done.dispatch('on_release')
+                    self.assertEqual(app.navigation.page, TEMPLATES)
+                    self.assertEqual(app.audio_v2.status()['music_state'], 'play')
+                    app._return_ad()
+                ff.assert_not_called()
+            finally:
+                app.on_stop()
+
     def test_live_resize_preserves_gallery_cart_audio_owner_and_real_touch_coordinates(self):
         from unittest.mock import patch
         from kivy.base import EventLoop

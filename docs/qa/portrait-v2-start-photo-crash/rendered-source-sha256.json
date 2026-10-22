@@ -1,0 +1,6 @@
+{
+  "photobooth/kiosk_v2/audio.py": "264dda1644071b5da367c033ff78bdfe814956ebe7da69c2ff05c4ef8abf6554",
+  "photobooth/kiosk_v2/mixer.py": "40ee4e0ee60d0c2b67f5757cf264c8f9f3907fb0c4c7283dd7724d57ac7cbddf",
+  "photobooth/kiosk_v2/app.py": "4496cec7e850b3733a9e02fb9c18ca1aec4c73a39b44fc600068c1f9bd6908e7",
+  "tools/render_portrait_v2.py": "c213117eb6608844ec9d785a20f7970e905ea5f561d8d7637f92e68b5c3f1658"
+}

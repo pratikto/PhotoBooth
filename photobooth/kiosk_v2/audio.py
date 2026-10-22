@@ -73,7 +73,9 @@ def kivy_sound_loader():
     ffpyplayer first on Windows; our previous GUI's music audibility remained
     unverified even when a handle said 'play'. SDL2 is attempted directly
     before the ordinary provider fallback, while an operator's KIVY_AUDIO
-    override is honored. Neither provider success nor state='play' proves that
+    override is honored. Default Windows WAV fallback stays on SDL2: ffpyplayer
+    can fail natively when reopening a different channel layout after ad video.
+    Neither provider success nor state='play' proves that
     real speakers produced audible sound.
     """
     from kivy.core.audio import SoundLoader
@@ -86,7 +88,20 @@ def kivy_sound_loader():
                 from .mixer import channel_safe_sound
                 candidates.append(("SDL2 (idle channel recovery)", lambda: channel_safe_sound(path)))
             except Exception:
-                LOG.warning("SDL2 WAV provider unavailable; using Kivy SoundLoader", exc_info=True)
+                LOG.warning("SDL2 WAV channel recovery helper unavailable", exc_info=True)
+            if platform == "win":
+                # A ctypes/helper failure must not start a second FFmpeg audio
+                # decoder. That fallback crashed on the owner's ad -> tutorial
+                # handoff with ffpyplayer 4.5.3 ('Channel layout change ...').
+                # Plain SDL keeps the GUI usable if channel repair is unavailable;
+                # if both SDL paths fail, return None and let the UI stay open.
+                try:
+                    from kivy.core.audio.audio_sdl2 import SoundSDL2
+                    candidates.append(("SDL2 (plain fallback)",
+                                       lambda: SoundSDL2(source=str(path))))
+                except Exception:
+                    LOG.warning("Windows SDL2 WAV fallback unavailable", exc_info=True)
+                return select_pcm_handle(candidates)
         candidates.append(("Kivy SoundLoader", lambda: SoundLoader.load(str(path))))
         return select_pcm_handle(candidates)
 

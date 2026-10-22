@@ -1,0 +1,99 @@
+test_existing_windows_dll_handle_has_a_name_for_python312_ctypes (tests.test_kiosk_v2_audio.WindowsAudioLoadingTests.test_existing_windows_dll_handle_has_a_name_for_python312_ctypes) ... ERROR
+test_explicit_windows_audio_override_still_uses_requested_provider (tests.test_kiosk_v2_audio.WindowsAudioLoadingTests.test_explicit_windows_audio_override_still_uses_requested_provider) ... ok
+test_missing_windows_mixer_is_not_loaded_from_another_location (tests.test_kiosk_v2_audio.WindowsAudioLoadingTests.test_missing_windows_mixer_is_not_loaded_from_another_location) ... ok
+test_windows_sdl_failure_keeps_gui_audio_unavailable_instead_of_native_ffmpeg_fallback (tests.test_kiosk_v2_audio.WindowsAudioLoadingTests.test_windows_sdl_failure_keeps_gui_audio_unavailable_instead_of_native_ffmpeg_fallback) ... Meong v2 WAV provider=SDL2 (idle channel recovery) failed
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/audio.py", line 53, in select_pcm_handle
+    handle = factory()
+             ^^^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/audio.py", line 87, in <lambda>
+    candidates.append(("SDL2 (idle channel recovery)", lambda: channel_safe_sound(path)))
+                                                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+OSError: wrapper unavailable
+Meong v2 WAV provider=Kivy SoundLoader failed
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/audio.py", line 54, in select_pcm_handle
+    seconds = float(getattr(handle, "length", 0)) if handle is not None else 0
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: float() argument must be a string or a real number, not 'Mock'
+FAIL
+test_windows_wrapper_failure_uses_plain_sdl_without_starting_ffpyplayer (tests.test_kiosk_v2_audio.WindowsAudioLoadingTests.test_windows_wrapper_failure_uses_plain_sdl_without_starting_ffpyplayer) ... Meong v2 WAV provider=SDL2 (idle channel recovery) failed
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/audio.py", line 53, in select_pcm_handle
+    handle = factory()
+             ^^^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/audio.py", line 87, in <lambda>
+    candidates.append(("SDL2 (idle channel recovery)", lambda: channel_safe_sound(path)))
+                                                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+TypeError: Windows ctypes failure
+Meong v2 WAV provider=Kivy SoundLoader failed
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/audio.py", line 54, in select_pcm_handle
+    seconds = float(getattr(handle, "length", 0)) if handle is not None else 0
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: float() argument must be a string or a real number, not 'Mock'
+FAIL
+
+======================================================================
+ERROR: test_existing_windows_dll_handle_has_a_name_for_python312_ctypes (tests.test_kiosk_v2_audio.WindowsAudioLoadingTests.test_existing_windows_dll_handle_has_a_name_for_python312_ctypes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_audio.py", line 334, in test_existing_windows_dll_handle_has_a_name_for_python312_ctypes
+    self.assertIs(mixer.loaded_mixer.__wrapped__('audio_sdl2.pyd'), functions)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/mixer.py", line 33, in loaded_mixer
+    mixer = ctypes.CDLL(None, handle=module)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1204, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_audio.py", line 325, in windows_cdll
+    if '/' in name or '\\' in name:
+       ^^^^^^^^^^^
+TypeError: argument of type 'NoneType' is not iterable
+
+======================================================================
+FAIL: test_windows_sdl_failure_keeps_gui_audio_unavailable_instead_of_native_ffmpeg_fallback (tests.test_kiosk_v2_audio.WindowsAudioLoadingTests.test_windows_sdl_failure_keeps_gui_audio_unavailable_instead_of_native_ffmpeg_fallback)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_audio.py", line 377, in test_windows_sdl_failure_keeps_gui_audio_unavailable_instead_of_native_ffmpeg_fallback
+    ff.assert_not_called()
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 910, in assert_not_called
+    raise AssertionError(msg)
+AssertionError: Expected 'SoundLoader.load' to not have been called. Called 1 times.
+Calls: [call('music.wav'), call().unload()].
+
+======================================================================
+FAIL: test_windows_wrapper_failure_uses_plain_sdl_without_starting_ffpyplayer (tests.test_kiosk_v2_audio.WindowsAudioLoadingTests.test_windows_wrapper_failure_uses_plain_sdl_without_starting_ffpyplayer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_audio.py", line 369, in test_windows_wrapper_failure_uses_plain_sdl_without_starting_ffpyplayer
+    self.assertIs(load('music.wav'), native)
+AssertionError: None is not <tests.test_kiosk_v2_audio.FakeClip object at 0x7f5435af2600>
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.004s
+
+FAILED (failures=2, errors=1)

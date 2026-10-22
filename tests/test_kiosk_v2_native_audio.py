@@ -12,6 +12,33 @@ import unittest
 @unittest.skipUnless(os.environ.get("PHOTOBOOTH_TEST_AUDIO") == "1",
                      "native SDL mixer test requires PHOTOBOOTH_TEST_AUDIO=1")
 class NativeChannelReuseTests(unittest.TestCase):
+    def test_default_wav_loader_uses_native_channel_recovery_without_ffpyplayer(self):
+        from unittest.mock import patch
+        from kivy.core.audio import audio_sdl2
+        from photobooth.kiosk_v2.audio import kivy_sound_loader, BUNDLED_SOUNDS, SOUND_FILES
+        from photobooth.kiosk_v2.mixer import loaded_mixer
+
+        with patch.dict(os.environ, {'KIVY_AUDIO': ''}), \
+                patch('kivy.core.audio.SoundLoader.load') as fallback:
+            sound = kivy_sound_loader()(BUNDLED_SOUNDS / SOUND_FILES['button'])
+            self.assertIsNotNone(sound)
+            fallback.assert_not_called()
+            try:
+                self.assertIsInstance(sound, audio_sdl2.SoundSDL2)
+                mixer = loaded_mixer(audio_sdl2.__file__)
+                # A real load/play on Windows exercises ctypes' platform-specific
+                # name validation, which Linux-only native tests did not cover.
+                sound.volume = .6
+                sound.play()
+                self.assertEqual(sound.state, 'play')
+                active = [i for i in range(mixer.Mix_AllocateChannels(-1))
+                          if mixer.Mix_Playing(i)]
+                self.assertTrue(active)
+                self.assertTrue(all(mixer.Mix_Volume(i, -1) > 0 for i in active))
+            finally:
+                sound.stop()
+                sound.unload()
+
     def test_repeated_muted_video_channel_reuse_has_real_pcm_and_keeps_active_ad_gain(self):
         from kivy.core.audio import audio_sdl2
         from photobooth.kiosk_v2.audio import PortraitAudio, BUNDLED_SOUNDS, SOUND_FILES

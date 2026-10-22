@@ -1,0 +1,112 @@
+test_advert_is_silent_and_tutorial_starts_once (tests.test_kiosk_v2_audio.PortraitAudioTests.test_advert_is_silent_and_tutorial_starts_once) ... ok
+test_bundled_original_wav_paths_exist (tests.test_kiosk_v2_audio.PortraitAudioTests.test_bundled_original_wav_paths_exist) ... ok
+test_channel_recovery_never_changes_a_playing_advertising_channel (tests.test_kiosk_v2_audio.PortraitAudioTests.test_channel_recovery_never_changes_a_playing_advertising_channel) ... ok
+test_close_is_idempotent_for_loaded_effects (tests.test_kiosk_v2_audio.PortraitAudioTests.test_close_is_idempotent_for_loaded_effects) ... ok
+test_close_then_reenter_does_not_reuse_unloaded_handle (tests.test_kiosk_v2_audio.PortraitAudioTests.test_close_then_reenter_does_not_reuse_unloaded_handle) ... ok
+test_disabled_audio_never_attempts_loading (tests.test_kiosk_v2_audio.PortraitAudioTests.test_disabled_audio_never_attempts_loading) ... ok
+test_effects_stop_on_suspend_and_do_not_resume_as_stale_cues (tests.test_kiosk_v2_audio.PortraitAudioTests.test_effects_stop_on_suspend_and_do_not_resume_as_stale_cues) ... ok
+test_image_music_yields_before_video_and_returns_for_next_image (tests.test_kiosk_v2_audio.PortraitAudioTests.test_image_music_yields_before_video_and_returns_for_next_image) ... ok
+test_in_game_preview_has_no_legacy_music_overlap (tests.test_kiosk_v2_audio.PortraitAudioTests.test_in_game_preview_has_no_legacy_music_overlap) ... ok
+test_missing_assets_fail_softly (tests.test_kiosk_v2_audio.PortraitAudioTests.test_missing_assets_fail_softly) ... ok
+test_only_button_feedback_can_play_over_advert_and_game_preview (tests.test_kiosk_v2_audio.PortraitAudioTests.test_only_button_feedback_can_play_over_advert_and_game_preview) ... ok
+test_page_handoff_stops_old_effects_but_allows_new_click (tests.test_kiosk_v2_audio.PortraitAudioTests.test_page_handoff_stops_old_effects_but_allows_new_click) ... ok
+test_return_from_game_preview_restores_music_only_on_allowed_page (tests.test_kiosk_v2_audio.PortraitAudioTests.test_return_from_game_preview_restores_music_only_on_allowed_page) ... ok
+test_suspend_resume_and_cleanup (tests.test_kiosk_v2_audio.PortraitAudioTests.test_suspend_resume_and_cleanup) ... ok
+test_suspended_navigation_does_not_start_music (tests.test_kiosk_v2_audio.PortraitAudioTests.test_suspended_navigation_does_not_start_music) ... ok
+test_unknown_pages_and_gain_bounds (tests.test_kiosk_v2_audio.PortraitAudioTests.test_unknown_pages_and_gain_bounds) ... ok
+test_volume_zero_mutes_and_does_not_restart (tests.test_kiosk_v2_audio.PortraitAudioTests.test_volume_zero_mutes_and_does_not_restart) ... ok
+test_broken_primary_loader_does_not_block_valid_fallback (tests.test_kiosk_v2_audio.WavProviderSelectionTests.test_broken_primary_loader_does_not_block_valid_fallback) ... Meong v2 WAV provider=SDL2 failed
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/audio.py", line 53, in select_pcm_handle
+    handle = factory()
+             ^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_audio.py", line 280, in broken
+    raise RuntimeError("bad backend")
+RuntimeError: bad backend
+ok
+test_invalid_zero_length_primary_is_unloaded_then_falls_back (tests.test_kiosk_v2_audio.WavProviderSelectionTests.test_invalid_zero_length_primary_is_unloaded_then_falls_back) ... Meong v2 WAV provider=SDL2 returned unusable duration
+ok
+test_music_play_request_is_not_success_if_provider_remains_stopped (tests.test_kiosk_v2_audio.WavProviderSelectionTests.test_music_play_request_is_not_success_if_provider_remains_stopped) ... Meong v2 music requested but native provider remains stopped
+ok
+test_nan_and_missing_durations_are_not_accepted (tests.test_kiosk_v2_audio.WavProviderSelectionTests.test_nan_and_missing_durations_are_not_accepted) ... Meong v2 WAV provider=nan returned unusable duration
+Meong v2 WAV provider=missing returned unusable duration
+ok
+test_valid_primary_does_not_load_secondary (tests.test_kiosk_v2_audio.WavProviderSelectionTests.test_valid_primary_does_not_load_secondary) ... ok
+test_existing_windows_dll_handle_has_a_name_for_python312_ctypes (tests.test_kiosk_v2_audio.WindowsAudioLoadingTests.test_existing_windows_dll_handle_has_a_name_for_python312_ctypes) ... ok
+test_explicit_windows_audio_override_still_uses_requested_provider (tests.test_kiosk_v2_audio.WindowsAudioLoadingTests.test_explicit_windows_audio_override_still_uses_requested_provider) ... ok
+test_missing_windows_mixer_is_not_loaded_from_another_location (tests.test_kiosk_v2_audio.WindowsAudioLoadingTests.test_missing_windows_mixer_is_not_loaded_from_another_location) ... ok
+test_windows_sdl_failure_keeps_gui_audio_unavailable_instead_of_native_ffmpeg_fallback (tests.test_kiosk_v2_audio.WindowsAudioLoadingTests.test_windows_sdl_failure_keeps_gui_audio_unavailable_instead_of_native_ffmpeg_fallback) ... Meong v2 WAV provider=SDL2 (idle channel recovery) failed
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/audio.py", line 53, in select_pcm_handle
+    handle = factory()
+             ^^^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/audio.py", line 89, in <lambda>
+    candidates.append(("SDL2 (idle channel recovery)", lambda: channel_safe_sound(path)))
+                                                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+OSError: wrapper unavailable
+Meong v2 WAV provider=SDL2 (plain fallback) failed
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/audio.py", line 53, in select_pcm_handle
+    handle = factory()
+             ^^^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/audio.py", line 101, in <lambda>
+    lambda: SoundSDL2(source=str(path))))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+OSError: SDL unavailable
+ok
+test_windows_wrapper_failure_uses_plain_sdl_without_starting_ffpyplayer (tests.test_kiosk_v2_audio.WindowsAudioLoadingTests.test_windows_wrapper_failure_uses_plain_sdl_without_starting_ffpyplayer) ... Meong v2 WAV provider=SDL2 (idle channel recovery) failed
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/audio.py", line 53, in select_pcm_handle
+    handle = factory()
+             ^^^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/audio.py", line 89, in <lambda>
+    candidates.append(("SDL2 (idle channel recovery)", lambda: channel_safe_sound(path)))
+                                                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+TypeError: Windows ctypes failure
+ok
+test_first_photo_entry_always_requires_tutorial (tests.test_kiosk_v2_flow.PortraitVisitFlowTests.test_first_photo_entry_always_requires_tutorial) ... ok
+test_game_entry_is_same_advert_entry_not_a_second_home (tests.test_kiosk_v2_flow.PortraitVisitFlowTests.test_game_entry_is_same_advert_entry_not_a_second_home) ... ok
+test_game_preview_does_not_create_discount_or_checkout (tests.test_kiosk_v2_flow.PortraitVisitFlowTests.test_game_preview_does_not_create_discount_or_checkout) ... ok
+test_inactivity_only_ends_browsing (tests.test_kiosk_v2_flow.PortraitVisitFlowTests.test_inactivity_only_ends_browsing) ... ok
+test_no_duplicate_completion_or_stale_taps (tests.test_kiosk_v2_flow.PortraitVisitFlowTests.test_no_duplicate_completion_or_stale_taps) ... ok
+test_rejected_stale_actions_leave_page_unchanged (tests.test_kiosk_v2_flow.PortraitVisitFlowTests.test_rejected_stale_actions_leave_page_unchanged) ... ok
+test_return_to_advert_resets_only_visit_scoped_state (tests.test_kiosk_v2_flow.PortraitVisitFlowTests.test_return_to_advert_resets_only_visit_scoped_state) ... ok
+test_timeout_from_templates_resets_tutorial_and_entry_source (tests.test_kiosk_v2_flow.PortraitVisitFlowTests.test_timeout_from_templates_resets_tutorial_and_entry_source) ... ok
+test_tutorial_marked_only_after_real_completion (tests.test_kiosk_v2_flow.PortraitVisitFlowTests.test_tutorial_marked_only_after_real_completion) ... ok
+test_button_faces_match_existing_game_polish (tests.test_kiosk_v2_design_tokens.PixelArcadeTokensTests.test_button_faces_match_existing_game_polish) ... ok
+test_button_palette_has_all_variants (tests.test_kiosk_v2_design_tokens.PixelArcadeTokensTests.test_button_palette_has_all_variants) ... ok
+test_clipped_corner_geometry_has_no_outside_pixels (tests.test_kiosk_v2_design_tokens.PixelArcadeTokensTests.test_clipped_corner_geometry_has_no_outside_pixels) ... ok
+test_game_palette_matches_audited_source (tests.test_kiosk_v2_design_tokens.PixelArcadeTokensTests.test_game_palette_matches_audited_source) ... ok
+test_negative_notch_is_clamped (tests.test_kiosk_v2_design_tokens.PixelArcadeTokensTests.test_negative_notch_is_clamped) ... ok
+test_oversized_notch_stays_within_panel (tests.test_kiosk_v2_design_tokens.PixelArcadeTokensTests.test_oversized_notch_stays_within_panel) ... ok
+test_stepped_rectangles_fit_original_bounds (tests.test_kiosk_v2_design_tokens.PixelArcadeTokensTests.test_stepped_rectangles_fit_original_bounds) ... ok
+test_zero_and_negative_dimensions_have_no_drawable_area (tests.test_kiosk_v2_design_tokens.PixelArcadeTokensTests.test_zero_and_negative_dimensions_have_no_drawable_area) ... ok
+
+----------------------------------------------------------------------
+Ran 44 tests in 0.008s
+
+OK

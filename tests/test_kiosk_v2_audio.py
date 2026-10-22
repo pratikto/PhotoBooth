@@ -2,10 +2,14 @@
 
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from contextlib import contextmanager
+from types import ModuleType, SimpleNamespace
+from unittest.mock import Mock, patch
 import unittest
 
 from photobooth.kiosk_v2.audio import (
     BUNDLED_SOUNDS, SOUND_FILES, PortraitAudio, bounded_gain, select_pcm_handle,
+    kivy_sound_loader,
 )
 
 
@@ -303,6 +307,85 @@ class WavProviderSelectionTests(unittest.TestCase):
             self.assertEqual(audio.status()["music_state"], "stop")
             self.assertIn("did not acknowledge", audio.status()["last_error"])
             audio.close()
+
+
+class WindowsAudioLoadingTests(unittest.TestCase):
+    """Exercise Windows-only branches even on the Kivy-free Linux job."""
+
+    def test_existing_windows_dll_handle_has_a_name_for_python312_ctypes(self):
+        from photobooth.kiosk_v2 import mixer
+
+        handle = 0x123456789ABC  # Do not truncate a 64-bit HMODULE.
+        get_module = Mock(return_value=handle)
+        functions = SimpleNamespace(Mix_AllocateChannels=Mock(), Mix_Playing=Mock(),
+                                    Mix_Volume=Mock())
+
+        def windows_cdll(name, *, handle):
+            # CPython 3.12 on Windows performs this check even with a handle.
+            if '/' in name or '\\' in name:
+                raise AssertionError('The loaded module should not be searched by path')
+            return functions
+
+        with patch.object(mixer.sys, 'platform', 'win32'), \
+                patch.object(mixer.ctypes, 'windll',
+                             SimpleNamespace(kernel32=SimpleNamespace(GetModuleHandleW=get_module)),
+                             create=True), \
+                patch.object(mixer.ctypes, 'CDLL', side_effect=windows_cdll) as dll:
+            self.assertIs(mixer.loaded_mixer.__wrapped__('audio_sdl2.pyd'), functions)
+            dll.assert_called_once_with('SDL2_mixer.dll', handle=handle)
+            get_module.assert_called_once_with('SDL2_mixer.dll')
+            self.assertIs(get_module.restype, mixer.ctypes.c_void_p)
+
+    def test_missing_windows_mixer_is_not_loaded_from_another_location(self):
+        from photobooth.kiosk_v2 import mixer
+
+        with patch.object(mixer.sys, 'platform', 'win32'), \
+                patch.object(mixer.ctypes, 'windll',
+                             SimpleNamespace(kernel32=SimpleNamespace(GetModuleHandleW=Mock(return_value=0))),
+                             create=True), patch.object(mixer.ctypes, 'CDLL') as dll:
+            with self.assertRaisesRegex(RuntimeError, 'loaded SDL2_mixer'):
+                mixer.loaded_mixer.__wrapped__('audio_sdl2.pyd')
+            dll.assert_not_called()
+
+    @contextmanager
+    def windows_providers(self, wrapped, native, *, override=''):
+        # No Kivy/device import: the pure job must cover Windows fallback policy.
+        modules = {name: ModuleType(name) for name in
+                   ('kivy', 'kivy.core', 'kivy.core.audio', 'kivy.utils',
+                    'kivy.core.audio.audio_sdl2')}
+        fallback = Mock(name='SoundLoader.load')
+        modules['kivy.core.audio'].SoundLoader = SimpleNamespace(load=fallback)
+        modules['kivy.core.audio.audio_sdl2'].SoundSDL2 = native
+        modules['kivy.utils'].platform = 'win'
+        with patch.dict('sys.modules', modules), patch.dict('os.environ', {'KIVY_AUDIO': override}), \
+                patch('photobooth.kiosk_v2.mixer.channel_safe_sound', wrapped):
+            yield kivy_sound_loader(), fallback
+
+    def test_windows_wrapper_failure_uses_plain_sdl_without_starting_ffpyplayer(self):
+        native = FakeClip()
+        native.length = 40
+        factory = Mock(return_value=native)
+        with self.windows_providers(Mock(side_effect=TypeError('Windows ctypes failure')), factory) as (load, ff):
+            self.assertIs(load('music.wav'), native)
+            factory.assert_called_once_with(source='music.wav')
+            ff.assert_not_called()
+
+    def test_windows_sdl_failure_keeps_gui_audio_unavailable_instead_of_native_ffmpeg_fallback(self):
+        with self.windows_providers(Mock(side_effect=OSError('wrapper unavailable')),
+                                    Mock(side_effect=OSError('SDL unavailable'))) as (load, ff):
+            self.assertIsNone(load('music.wav'))
+            ff.assert_not_called()
+
+    def test_explicit_windows_audio_override_still_uses_requested_provider(self):
+        wrapped, native = Mock(), Mock()
+        with self.windows_providers(wrapped, native, override='ffpyplayer') as (load, ff):
+            requested = FakeClip()
+            requested.length = 1
+            ff.return_value = requested
+            self.assertIs(load('music.wav'), requested)
+            wrapped.assert_not_called()
+            native.assert_not_called()
+            ff.assert_called_once_with('music.wav')
 
 
 if __name__ == "__main__":

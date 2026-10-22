@@ -30,7 +30,9 @@ def loaded_mixer(provider_path):
         module = get_module("SDL2_mixer.dll")
         if not module:
             raise RuntimeError("Kivy's loaded SDL2_mixer.dll was not found")
-        mixer = ctypes.CDLL(None, handle=module)
+        # Windows CPython 3.12 inspects the name even when handle is supplied;
+        # None raises TypeError before the existing HMODULE can be wrapped.
+        mixer = ctypes.CDLL("SDL2_mixer.dll", handle=module)
     else:
         # POSIX dlsym includes dependencies of the already imported provider.
         mixer = ctypes.CDLL(provider_path)
