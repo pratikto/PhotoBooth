@@ -143,11 +143,11 @@ class PortraitAudio:
                 self.last_error = f"{name}: {type(exc).__name__}"
         return self._handles[name]
 
-    def prepare(self):
+    def prepare(self, names=('button', 'music')):
         """Load silent handles during idle; first tap must not open a WAV file."""
         if not self.enabled or self.suspended:
             return False
-        handles = [self._sound(name) for name in ('button', 'music')]
+        handles = [self._sound(name) for name in names]
         return all(handle is not None for handle in handles)
 
     @staticmethod

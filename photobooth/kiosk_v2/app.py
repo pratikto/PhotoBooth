@@ -103,6 +103,9 @@ class PortraitKioskV2App(PhotoViews, App):
         self.template_index = 0
         self._textures = {}
         self._preview_preloader = PreviewPreloader(self.templates)
+        self._idle_audio_pending = ['count', 'shutter', 'success']
+        self._idle_failed_previews = set()
+        self._idle_asset_event = None
         self._ad_player = None
         self._invitation = None
         self._invitation_timer = None
@@ -137,6 +140,40 @@ class PortraitKioskV2App(PhotoViews, App):
         self.camera_device.start()
         if not self._suspended:
             self.audio_v2.prepare()
+        self._idle_asset_event = Clock.schedule_interval(self._warm_idle_assets, .05)
+
+    def _warm_idle_assets(self, _dt):
+        """Upload one ready strip/load one silent cue per idle turn, never on tap."""
+        if self._closed:
+            return False
+        if self._suspended or self.navigation.page != ADVERT or self._invitation is not None:
+            return
+        started = time.perf_counter()
+        if self._idle_audio_pending:
+            name = self._idle_audio_pending.pop(0)
+            self.audio_v2.prepare(names=(name,))
+            LOG.info('Idle asset ready kind=audio name=%s prepare_ms=%.1f',
+                     name, (time.perf_counter() - started) * 1000)
+            return
+        pending = False
+        for template in (self.templates[0], *self.templates[-1:], *self.templates[1:-1]):
+            key = template.template_id
+            if key in self._textures or key in self._idle_failed_previews:
+                continue
+            pending = True
+            preview = self._preview_preloader.get(template)
+            if preview is None:
+                continue  # CPU decoder is still busy; never wait on a future here.
+            try:
+                self._textures[key] = _portrait_strip_texture(template, preview)
+                LOG.info('Idle asset ready kind=strip name=%s prepare_ms=%.1f',
+                         key, (time.perf_counter() - started) * 1000)
+            except Exception:
+                self._idle_failed_previews.add(key)
+                LOG.warning('Idle strip upload unavailable: %s', key, exc_info=True)
+            return  # Keep the next Kivy turn free for input and advertising.
+        if not pending:
+            return False
 
     def _devices_tick(self, _dt):
         if self._closed:
@@ -239,6 +276,8 @@ class PortraitKioskV2App(PhotoViews, App):
             self._heartbeat.cancel()
         if getattr(self, '_warmup', None):
             self._warmup.cancel()
+        if self._idle_asset_event is not None:
+            self._idle_asset_event.cancel()
         if getattr(self, '_preview_preloader', None):
             self._preview_preloader.close()
         if getattr(self, '_devices_event', None):

@@ -25,6 +25,63 @@ else:
 
 @unittest.skipUnless(HAS_KIVY, "Kivy not available in pure-Python test environment")
 class PortraitKivySmokeTests(unittest.TestCase):
+    def test_idle_warmup_prepares_one_asset_per_turn_and_first_gallery_reuses_textures(self):
+        from unittest.mock import patch
+        from PIL import Image
+        from photobooth.kiosk_v2.app import _portrait_strip_texture
+
+        app = PortraitKioskV2App()
+        app.build()
+        preview = Image.new('RGB', (32, 96), '#8060c0')
+        try:
+            revision = app._view_revision
+            with patch.object(app.audio_v2, 'prepare') as audio, \
+                    patch.object(app._preview_preloader, 'get', return_value=preview), \
+                    patch('photobooth.kiosk_v2.app._portrait_strip_texture', wraps=_portrait_strip_texture) as upload:
+                for _ in range(3 + len(app.templates)):
+                    before = audio.call_count + upload.call_count
+                    app._warm_idle_assets(0)
+                    self.assertEqual(audio.call_count + upload.call_count, before + 1)
+                self.assertEqual([call.kwargs['names'] for call in audio.call_args_list],
+                                 [('count',), ('shutter',), ('success',)])
+                self.assertEqual(len(app._textures), 12)
+                self.assertEqual(app._view_revision, revision)
+                self.assertFalse(any(app.quantities.values()))
+                self.assertIs(app._warm_idle_assets(0), False)
+                app._choose_photo()
+                app._complete_tutorial()
+                app._shift_template(1)
+                self.assertEqual(upload.call_count, 12, 'First gallery navigation uploaded a new texture')
+                self.assertIsNotNone(app._preview.texture)
+        finally:
+            app.on_stop()
+
+    def test_idle_warmup_never_waits_for_cpu_or_runs_on_capture_minimize_or_close(self):
+        from unittest.mock import patch
+        from photobooth.kiosk_v2.flow import CAPTURE
+
+        app = PortraitKioskV2App()
+        app.build()
+        app._idle_audio_pending.clear()
+        try:
+            with patch.object(app._preview_preloader, 'get', return_value=None) as get, \
+                    patch('photobooth.kiosk_v2.app._portrait_strip_texture') as upload:
+                self.assertIsNone(app._warm_idle_assets(0))
+                self.assertEqual(get.call_count, 12)
+                upload.assert_not_called()
+                get.reset_mock()
+                app.navigation.page = CAPTURE
+                app._warm_idle_assets(0)
+                app.navigation.page = ADVERT
+                app.on_pause()
+                app._warm_idle_assets(0)
+                get.assert_not_called()
+                app.on_stop()
+                self.assertIs(app._warm_idle_assets(0), False)
+                upload.assert_not_called()
+        finally:
+            app.on_stop()
+
     def test_reused_camera_texture_redraws_without_touch_countdown_or_text_changes(self):
         """Pixel uploads must reach the window even when all labels stay still."""
         from types import SimpleNamespace

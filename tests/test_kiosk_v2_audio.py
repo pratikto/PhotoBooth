@@ -109,6 +109,19 @@ class PortraitAudioTests(unittest.TestCase):
         self.assertEqual(clip.state, "stop")
         self.assertEqual(clip.volume, 0)
 
+    def test_idle_effect_prepare_is_silent_and_first_cue_reuses_its_handle(self):
+        for name in ('count', 'shutter', 'success'):
+            self.assertTrue(self.audio.prepare(names=(name,)))
+        self.assertEqual(set(self.loaded), {SOUND_FILES[name] for name in ('count', 'shutter', 'success')})
+        for clip in self.loaded.values():
+            self.assertEqual((clip.volume, clip.plays), (0, 0))
+        self.audio.enter_page('capture')
+        for name in ('count', 'shutter', 'success'):
+            clip = self.loaded[SOUND_FILES[name]]
+            self.assertTrue(self.audio.cue(name))
+            self.assertIs(self.loaded[SOUND_FILES[name]], clip)
+            self.assertEqual(clip.plays, 1)
+
     def test_in_game_preview_has_no_legacy_music_overlap(self):
         self.audio.enter_page("tutorial")
         clip = self.loaded["meong-v2-music.wav"]
