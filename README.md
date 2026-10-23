@@ -1,5 +1,8 @@
 # Meong Photobooth
 
+> **P3 latest Windows retest:** Preview work now runs off the GUI, and optional open-palm shares SIAP’s countdown. Update the existing v2 branch and use [the 40-item form with Submit](docs/qa/portrait-v2-p3-retest/windows-checklist.html). [Evidence, optional MediaPipe installation, logs and rollback](docs/qa/portrait-v2-p3-retest/README.md). Actual Windows performance and hand/face acceptance remain open.
+
+
 > **Portrait GUI v2 P3 (feature branch only):** Launch `python tools/run_portrait_v2.py`, complete the tutorial, select copies, then choose **UJI FOTO**. This is an explicit photo test without payment, local by default; printer/Drive require operator opt-in. [P3 instructions/evidence](docs/qa/portrait-v2-p3/README.md) · [Windows checklist with Submit](docs/qa/portrait-v2-p3/windows-checklist.html). Real payment, scanner, discounts and game integration remain off.
 
 

@@ -1,5 +1,8 @@
 # Meong Photobooth — Current feature status
 
+> **Latest P3 correction verification (2026-10-23):** Staged runtime commits `a322237` (worker preview/touch responsiveness) and `a059d30` (deferred detectors/open-palm) are pushed and each has three-job CI SUCCESS. Final 349 local tests PASS with real native public fixtures, zero skips; 71 focused PASS. Owner’s earlier 21/34 remains a report at unknown HEAD, not acceptance of these changes. BUG-013/014 require Windows retest. [Final evidence and new 40-item Submit form](qa/portrait-v2-p3-retest/README.md).
+
+
 > **P3 stage 2 (2026-10-23):** Optional open-palm now connects the existing v1 worker/hold/release policy to v2’s same SIAP countdown. Native initialization is deferred off GUI; missing MediaPipe/model keeps manual capture available with a truthful hint. Face invitation shows hold progress, retains five seconds/cooldown and handles accepted inference delay. 348 full native-fixture tests PASS, final 71 focused PASS; physical BUG-013/014 acceptance remains OPEN. [Current evidence](qa/portrait-v2-p3-retest/README.md).
 
 

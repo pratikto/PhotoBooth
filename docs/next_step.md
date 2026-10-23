@@ -1,5 +1,8 @@
 # Meong Photobooth — Dynamic Feature Backlog
 
+> **Current P3 continuation (2026-10-23):** Test the staged preview/input corrections on Windows before P4: [40-item retest form](qa/portrait-v2-p3-retest/windows-checklist.html). Preserve owner raw 21/34 with unknown tested HEAD; confirm BUG-013 responsiveness and BUG-014 optional palm, then still-open composition/paper/Drive gates. 349 source tests and three-job CI do not certify those devices. Do not integrate game, receipt/QRIS or production payments in this continuation.
+
+
 > **Portrait roadmap update (2026-10-23):** Owner authorized P3a/P3b and the new camera SFX. Source implementation is connected; next is [Windows P3 acceptance](qa/portrait-v2-p3/windows-checklist.html), including actual camera, paper-copy count, Drive QR, new shutter and twenty cycles. P4 mini-game/receipt/QRIS integration still requires separate scope approval; P5 is hardware certification. Do not treat this portrait milestone P3 as authorization for the separate deferred payment-feature priority P3 below. [Current evidence/checkpoints](qa/portrait-v2-p3/README.md).
 
 

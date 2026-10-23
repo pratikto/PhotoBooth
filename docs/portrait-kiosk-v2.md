@@ -1,5 +1,8 @@
 # FEAT-022 - Meong Photobooth portrait kiosk GUI v2 (working specification)
 
+> **P3 device follow-up (2026-10-23):** Worker-owned RGB preview and reduced busy rebuilds are in `a322237`; `a059d30` adds deferred face initialization/progress and restores the existing optional open-palm shutter through the same capture countdown/quota/release policy. Manual SIAP remains available without optional MediaPipe/model. Final 349 local native-fixture tests PASS; actual Windows responsiveness/gesture acceptance remains open. [Report, source checkpoints and current retest form](qa/portrait-v2-p3-retest/README.md).
+
+
 > **P3 source implementation (2026-10-23):** P3a camera/face invitation and P3b photo test pages/adapters are implemented on `feature/portrait-kiosk-v2-next`. Use gallery **UJI FOTO**, explicit nonfinancial consent, three originals, one optional retake, composition and optional operator test print/Drive. New v2-only shutter; v1 unchanged. Physical Windows acceptance is pending. Payment/scanner/discount/game remain inactive. This supersedes earlier pre-P3 implementation/approval inventories below. [Evidence, rollback and Windows form](qa/portrait-v2-p3/README.md).
 
 

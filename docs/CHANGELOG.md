@@ -1,5 +1,8 @@
 # Meong Photobooth — Documentation and release changelog
 
+> **P3 stage 3 (2026-10-23):** Archive final 349/349 native-fixture regression and 71 focused passes, matching-source three-job CI at `a059d30`, verified original artifact digest and 40 image hashes/contact sheets. Add a browser-verified 40-item Windows form with Submit, camera/index/lag fields, missing-metadata status, separate storage and preserved twenty-cycle gate. Document owner raw 21/34, open device bugs, optional dependency setup and rollback checkpoints; no runtime or legacy-service change in this stage. [Final verification](qa/portrait-v2-p3-retest/final-verification.json).
+
+
 > **P3 staged follow-up (2026-10-23, stage 2):** Restore optional v1 open-palm input in v2, sharing the manual countdown/quota and release latch. Load native detectors off GUI, rate-limit offers, preserve stale-page checks and show face/palm progress/fallback hints. Log input flags and include audio time in slow-action diagnostics. Existing v1 services/models unchanged. 348 full tests PASS with native fixtures; final 71 focused PASS. [Source/device limits](qa/portrait-v2-p3-retest/README.md).
 
 

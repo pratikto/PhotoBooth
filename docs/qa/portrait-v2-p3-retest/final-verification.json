@@ -1,0 +1,44 @@
+{
+  "source_sha": "a059d30be8da6a3249f68946b59003c78addfc97",
+  "source_ci_run": 39919633523,
+  "source_ci_url": "https://github.com/pratikto/PhotoBooth/actions/runs/39919633523",
+  "ci_conclusion": "success",
+  "jobs": [
+    {
+      "name": "Navigation and audio lifecycle",
+      "conclusion": "success"
+    },
+    {
+      "name": "Windows Python 3.12 native SDL audio (dummy output)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+      "conclusion": "success"
+    }
+  ],
+  "final_full_suite": "349 PASS; zero skips; native public fixtures; no real devices",
+  "focused_suite": "71 PASS; zero skips; native public fixtures",
+  "legacy_byte_unchanged": {
+    "main.py": true,
+    "photobooth/app.py": true,
+    "photobooth/audio.py": true,
+    "photobooth/camera.py": true,
+    "photobooth/catalog.py": true,
+    "photobooth/workflow.py": true,
+    "photobooth/transaction_store.py": true,
+    "photobooth/printer.py": true,
+    "photobooth/drive_pool.py": true,
+    "photobooth/drive_sync.py": true,
+    "photobooth/drive_storage.py": true,
+    "photobooth/retention.py": true,
+    "photobooth/palm_gesture.py": true,
+    "photobooth/face_presence.py": true,
+    "photobooth/assets/audio/meong-v2-shutter.wav": true
+  },
+  "runtime_hashes_match_stage2": true,
+  "owner_retest": "21/34 checked; 13 open; 20 reported cycles; HEAD/resolution/camera metadata unknown",
+  "physical_windows_new_head": "NOT RUN",
+  "checkpoint_before_stage1": "37e3c9264a595e93774c4ce3892133261f99ef30",
+  "checkpoint_before_stage2": "a322237bc82c818b13093fadb0982332e24a82a2"
+}

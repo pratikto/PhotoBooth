@@ -1,5 +1,8 @@
 ## Version 1.0.0 — release-source verification (2026-10-19)
 
+> **Final P3 follow-up QA (2026-10-23):** 349 complete tests PASS, zero skips with public native model fixtures, and 71 final focused PASS. Three-job CI SUCCESS at each staged runtime commit; screenshots reviewed at 800×1280/452×900 plus 40 matching-source CI renders. [Evidence](qa/portrait-v2-p3-retest/README.md). [New 40-item form](qa/portrait-v2-p3-retest/windows-checklist.html) includes camera/index/lag metadata, six palm cases and Submit; it imports no old checkmarks. Original thirteen unchecked items and new Windows device acceptance remain open.
+
+
 > **P3 retest correction (2026-10-23):** Preserve the owner’s 21/34 raw checkmarks and twenty reported cycles; missing HEAD, resolution and camera metadata prevent exact-source acceptance. Thirteen unchecked items stay failed OR not tested. Stage 1 has 77 focused tests PASS; native screenshots and local timing evidence remain separate from Windows responsiveness. [Report and open checks](qa/portrait-v2-p3-retest/README.md).
 
 

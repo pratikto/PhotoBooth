@@ -112,3 +112,55 @@ PASS is claimed before testing the actual Windows setup.
 - [ ] Camera loss and minimize during countdown; no stale frame/shutter.
 - [ ] Unchecked composition, physical print and Drive items from original report.
 - [ ] Repeat twenty cycles and restart on the actual new HEAD.
+
+## Final verification and retest form
+
+**349 complete tests PASS, zero skips** at runtime source
+`a059d30be8da6a3249f68946b59003c78addfc97`:
+[final transcript](final-complete-tests.txt). This final run includes the last
+face source-time expiry, camera-unavailable hint and total/audio/callback timing
+changes, with both optional native model tests enabled. The earlier 348-test
+snapshot above remains historical evidence, not the final count.
+
+[CI 39919633523](https://github.com/pratikto/PhotoBooth/actions/runs/39919633523)
+completed all three jobs SUCCESS on that exact source. Its original GitHub ZIP
+SHA-256 and 40 main screenshot hashes across six clean-source reports were
+verified and visually reviewed: [artifact verification](ci-artifact-verification.json),
+[P3 contact sheet](ci-p3-contact.png), [browsing/short-window sheet](ci-browsing-contact.png).
+CI's optional palm model fixtures are not installed; native palm inference is
+proved by the local public-fixture tests, not falsely attributed to Windows CI.
+The online artifact expires after seven days; contact sheets/reports and local
+original captures remain committed. [Final source/legacy verification](final-verification.json)
+confirms fifteen legacy services/media files remain byte-unchanged.
+
+[Open the new 40-item Windows checklist with Submit Hasil](windows-checklist.html).
+It starts unchecked with a new storage key, adds camera/index and where lag
+starts, preserves missing metadata in the report, adds six open-palm cases, and
+retains the original untested composition/print/Drive gates. G01/G02 still need
+a declared twenty cycles; no check is granted automatically. Submit prepares a
+prompt for manual paste into chat. Browser behavior was checked at 452 and
+360 pixels, including Submit/report, index `0`, storage, metadata, cycle gate and
+untested Drive: [browser checks](form-browser-test.json).
+
+Windows update (on the required branch, inside the existing virtual environment):
+
+```powershell
+git pull --ff-only origin feature/portrait-kiosk-v2-next
+python -m pip install -r requirements-palm.txt
+$env:PHOTOBOOTH_PALM_TRIGGER = "1"
+$env:PHOTOBOOTH_FACE_TRIGGER = "1"
+git rev-parse --short HEAD
+python tools/run_portrait_v2.py
+```
+
+The optional-package install is needed only if MediaPipe is absent. The first
+palm model setup needs internet; already verified cache works offline. If a
+problem persists, run `explorer .\data\diagnostics` and send the newest log.
+It includes HEAD, enabled flags, model state and aggregate frame/action timings;
+no camera images are logged. Note whether lag starts in idle or after capture.
+No new Windows PASS is inferred from the report or source fixes. BUG-013 stays
+OPEN for device responsiveness, BUG-014 awaits a real Windows palm retest, and
+BUG-009 cloud deletion remains OPEN. P4/payment/scanner/game work remains outside
+this task. To roll back, close v2 and use the unchanged v1 launcher, preserve all
+photo/journal/counter files, and review normal same-branch revert commits rather
+than rewriting branch history or deleting runtime data.

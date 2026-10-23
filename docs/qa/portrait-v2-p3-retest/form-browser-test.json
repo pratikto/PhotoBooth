@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "items": 40,
+  "checks": [
+    "initial unchecked",
+    "20-cycle guard",
+    "submit prompt",
+    "unknown HEAD",
+    "unchecked Drive",
+    "local storage",
+    "360px resize",
+    "no JS errors",
+    "missing metadata stays unverified",
+    "camera index 0 is included correctly"
+  ],
+  "form_sha256": "5c7228169a568cd509325941a469d8e3df0b6577189dc95b970596c7785f1dd7"
+}

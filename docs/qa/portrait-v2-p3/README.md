@@ -1,5 +1,8 @@
 # Portrait v2 P3 — camera, photo workflow and service adapters
 
+> Latest owner retest is 21/34 with unknown tested HEAD; preview/touch and optional-palm source corrections follow in [the current P3 retest record](../portrait-v2-p3-retest/README.md). Use its new 40-item form. Earlier implementation evidence below remains historical.
+
+
 Owner authorization, 2026-10-23 (Asia/Jakarta): **“oke tolong eksekusi p3”**.
 Branch remains `feature/portrait-kiosk-v2-next`; pre-P3 checkpoint:
 `419cfedfa63bd53df64831437c6d63f25bc1fb10`.

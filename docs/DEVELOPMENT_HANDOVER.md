@@ -1,5 +1,8 @@
 # Meong Photobooth — Development handover
 
+> **Latest P3 Windows follow-up (2026-10-23):** Owner reports preview/button/face lag and asks about missing palm input, then requests continued work and staged pushes. Source corrections are in `a322237` and `a059d30`; do not restart P3 or modify legacy services. Next is [40-item Windows retest with Submit](qa/portrait-v2-p3-retest/windows-checklist.html), recording actual HEAD, camera/index, resolution and when lag starts. Enable optional palm/face in that Windows session and install existing requirements-palm.txt if needed; model init stays off GUI and SIAP remains available. [Evidence, commands, open bugs and checkpoints](qa/portrait-v2-p3-retest/README.md).
+
+
 > **Latest P3 handover (2026-10-23):** Approved P3a/P3b source work is connected on the required v2 branch; do not restart it. Next action is Windows P3 device acceptance using [the 34-item form with Submit](qa/portrait-v2-p3/windows-checklist.html). Start launcher → tutorial → gallery → select copies → UJI FOTO → consent. Default local; printer and Drive require operator opt-ins. Evidence, commands, source checkpoints, outstanding physical tests and BUG-009 boundary are in [P3 QA](qa/portrait-v2-p3/README.md). P4 game/receipt/payment integration and P5 physical certification are not complete/authorized by this source work. Older handovers below are history.
 
 
