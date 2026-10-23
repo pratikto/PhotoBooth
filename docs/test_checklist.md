@@ -1,3 +1,44 @@
+## FEAT-011 — Smart Enhance & 1-bit Post-Processing (2026-10-23)
+
+**Branch:** `feature/dither-tuning`. **No master merge; no Kivy production
+print pipeline changes.** Verified reference [GitHub Actions run 39973139694](https://github.com/pratikto/PhotoBooth/actions/runs/39973139694)
+(commit `6f2c537952c9a0c4821b00f5aa7e84342a051cbb`):
+**compile PASS**, **64 backend/static tests PASS** and **11 Tk GUI/Xvfb tests
+PASS** (Linux, Python 3.12, Pillow), including the latest A/B presets, raster
+byte-preservation, schema v1-v5 loading, Smart candidate coverage, no paper
+printing on UI toggles, and 1-bit print-test header labeling.
+
+- [x] Existing three-lane GUI; no new GUI to launch.
+- [x] Separate per-lane Smart Enhance and guarded 1-bit Post-Processing.
+- [x] One-click Original / Smart Enhanced / Smart + Post / Post Only presets.
+- [x] Collapsible advanced sliders; reset/manual Save/Load/Auto Tune retained.
+- [x] 1-bit native PNG and test print reuse the same photo raster; auto search
+      never calls the printer; optional processing defaults OFF.
+- [x] Full-lab/preset JSON schema v5; older v1-v4 opens with stages OFF.
+- [x] Auto Tune considers processing options, preview and Apply modify only
+      selected lane with Sync Parameters ON.
+- [ ] **Windows screen review:** pull this branch, launch
+      `python tools/dither_compare_gui.py`, resize to 1050×620 and maximize.
+      Confirm all 3 panels, fixed Print Test/Save PNG/Auto Tune buttons,
+      horizontal toolbar and mouse-wheel-scrolling advanced controls.
+- [ ] **Manual A/B test:** open the same photo at 576 dots; choose Original,
+      then Smart Enhanced, then Smart + Post for each algorithm. Check
+      preview differences, full-resolution PNG pixel size, save filename
+      suffix and default restoration by Reset. Repeat with 384 dots.
+- [ ] **Auto Tune UI test:** start/cancel each lane, review 3 candidates and
+      Smart/Post labels; Close without applying, then Save Selected Preset
+      and reload. Apply Selected with Sync ON and confirm other lanes
+      unchanged; verify no real printer job was created by tuning.
+- [ ] **Real thermal paper:** use explicit Print Test confirmation for the
+      three combinations with constant paper, darkness, speed and source.
+      Assess facial detail, highlights, hair, noisy background and any
+      missing halftone dots. Treat heuristic scores as advisory only.
+- [ ] **SBC performance acceptance:** test CPU peak/memory/render latency on
+      actual hardware before considering adoption beyond the lab.
+- [ ] **Production integration decision:** hold until operator compares
+      physical prints and explicitly approves rollout.
+
+
 ## FEAT-011 — Auto Tune Enhanced Floyd (2026-10-21)
 
 ## Independent Auto Tune GUI — 2026-10-23
