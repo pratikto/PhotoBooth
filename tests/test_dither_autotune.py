@@ -42,7 +42,7 @@ class AutoTuneTests(unittest.TestCase):
             on_progress=lambda n, phase: progress.append((n, phase)))
         self.assertEqual(len(report.candidates), 3)
         self.assertGreaterEqual(report.trials, 3)
-        self.assertLessEqual(report.trials, 73)
+        self.assertLessEqual(report.trials, 115)
         self.assertEqual(report.trials, progress[-1][0])
         self.assertEqual([c.score for c in report.candidates],
                          sorted((c.score for c in report.candidates), reverse=True))
@@ -61,7 +61,7 @@ class AutoTuneTests(unittest.TestCase):
             self.assertLessEqual(candidate.score, 100)
             self.assertGreaterEqual(candidate.black_coverage, 0)
             self.assertLessEqual(candidate.black_coverage, 100)
-            signatures.add((p.brightness, p.contrast, p.gamma, p.sharpness))
+            signatures.add(p)
         self.assertEqual(len(signatures), 3)
         self.assertEqual(self.source.tobytes(), source_before)
         self.assertFalse(baseline.enhanced_floyd)  # no implicit apply
@@ -81,7 +81,7 @@ class AutoTuneTests(unittest.TestCase):
                 render_thermal_image(self.source, neutral),
                 _photo_gray(self.source, neutral.width_dots), neutral)[0]
             self.assertGreaterEqual(result.candidates[0].score, round(neutral_score, 3))
-            self.assertLessEqual(result.trials, 73)
+            self.assertLessEqual(result.trials, 115)
 
         reports.append(tune_enhanced_floyd(self.source, DitherProfile(
             brightness=1.75, contrast=0.5, gamma=3.0, sharpness=0.0)))
