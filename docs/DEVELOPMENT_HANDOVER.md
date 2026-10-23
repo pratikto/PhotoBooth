@@ -1,5 +1,7 @@
 # Meong Photobooth — Development handover
 
+> **Current owner correction (2026-10-24):** Reuse the latest complete Meong Fly implementation; the prior custom game view is insufficient. Reference `672e3f7` verified at remote HEAD. Stage 1 imports original modules/tests (98 PASS); next mount the original renderer and flow through a narrow safe v2 adapter, test visual parity and push separately. [Current correction contract](qa/portrait-v2-meong-reuse/README.md).
+
 > **Current P4 handover (2026-10-23):** P4a DEMO game and P4b opt-in local MOCK checkout are implemented at `97b5596`; final 406 full PASS, matching-source [three-job CI SUCCESS](https://github.com/pratikto/PhotoBooth/actions/runs/39973934595), 42 hash-verified/reviewed P4 CI captures and browser-verified 28-item Submit form. Run the existing v2 launcher; set PHOTOBOOTH_V2_CHECKOUT_MOCK=1 only for section C. P3 owner acceptance stands. Next is P4 Windows game/MOCK acceptance; real provider Sandbox/merchant promo contract remains external and is not enabled. Keep the same branch and push checkpoints. [Commands/evidence/open gates/rollback](qa/portrait-v2-p4/README.md).
 
 > **P4a source checkpoint (2026-10-23):** Native DEMO game pages are connected after the accepted P3. 377 full PASS, 22 reviewed captures; preserve P3 photo/audio behavior. Continue P4b isolated MOCK on the same branch, then provide a P4 checkbox form with Submit. Real merchant/provider acceptance remains external. [Evidence and rollback](qa/portrait-v2-p4/README.md).

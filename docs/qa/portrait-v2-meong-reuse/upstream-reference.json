@@ -1,0 +1,139 @@
+{
+  "reference_branch": "feature/meong-flappy-challenge",
+  "reference_sha": "672e3f7089bb40940e5b41644ceb656aa63aafbb",
+  "verified_remote_head": "672e3f7089bb40940e5b41644ceb656aa63aafbb",
+  "no_merge": true,
+  "baseline": "89644af6d6b8cad605bcea12dcd44f94d75f463d",
+  "files": [
+    {
+      "file": "photobooth/assets/meong_fly_gif_logo.b85",
+      "sha256": "79525c1346efa4ba03d6f91b77229b908df00fafec7716b52aea13945fb60f33",
+      "byte_identical": true
+    },
+    {
+      "file": "photobooth/meong_fly.py",
+      "sha256": "e0d517cbd2f6d6e65a37e1d3043e8254275853d7b0134bb890334691288ab123",
+      "byte_identical": true
+    },
+    {
+      "file": "photobooth/meong_fly_flow.py",
+      "sha256": "85f2f94d24043bc0c685cb2265b9bb26139990d749c021736b9a28a50ef4b5f1",
+      "byte_identical": true
+    },
+    {
+      "file": "photobooth/meong_fly_game_art.py",
+      "sha256": "75d3d05a1bdfca03f3e88898a651233e7c18d4699f5e0f5cfae4a7c5a34e398d",
+      "byte_identical": true
+    },
+    {
+      "file": "photobooth/meong_fly_gui.py",
+      "sha256": "b450b84dd608a19129df0183d451788d8c24ff4a27ed53ec9bd8594be610fd12",
+      "byte_identical": true
+    },
+    {
+      "file": "photobooth/meong_fly_painter.py",
+      "sha256": "63f34a12a5f206fc01f1143baba77c433c87020597312a700e4c443a8f6dccf4",
+      "byte_identical": true
+    },
+    {
+      "file": "photobooth/meong_fly_photo_handoff.py",
+      "sha256": "542d39e70673fc28d6f9d77fabeffffe32901e230ee27dbd224d09fff1b88944",
+      "byte_identical": true
+    },
+    {
+      "file": "photobooth/meong_fly_polish.py",
+      "sha256": "398734a01c02f46f83c249e8dde33df7dd2970790d8fda67606fb31e8ba99149",
+      "byte_identical": true
+    },
+    {
+      "file": "photobooth/meong_fly_print_fx.py",
+      "sha256": "bb815e2ff3f79f297753c5cdded4dc858513ede339e787b255e950913c5f0951",
+      "byte_identical": true
+    },
+    {
+      "file": "photobooth/meong_fly_receipts.py",
+      "sha256": "cb521d0675c1c4e468685aa0569453942c08e7a58aea843e29f6e02cea571500",
+      "byte_identical": true
+    },
+    {
+      "file": "photobooth/meong_fly_scanner.py",
+      "sha256": "c7bc639343d8d8a694b44a3443ed7432e31da9583b3b145302d3b946bf7ab632",
+      "byte_identical": true
+    },
+    {
+      "file": "photobooth/meong_fly_sprite.py",
+      "sha256": "196c8723ccbe9a8913854f6bdea6b20f52b2573a338e5725be8efecd57b7f23c",
+      "byte_identical": true
+    },
+    {
+      "file": "photobooth/meong_fly_visual_v3.py",
+      "sha256": "2c2aec0b9343c9aff7c91c4faa0f96231a827030ec3f06c9cc41fffd2c981ffa",
+      "byte_identical": true
+    },
+    {
+      "file": "tests/test_meong_fly.py",
+      "sha256": "d843eb22fa782416f6dade91f31e5e198c2eb87fe7ba91c8898998e43c95c266",
+      "byte_identical": true
+    },
+    {
+      "file": "tests/test_meong_fly_flow.py",
+      "sha256": "87015b5d7456bc2b62a5847289059e88b2fd71196c5bafa71936527e624811b2",
+      "byte_identical": true
+    },
+    {
+      "file": "tests/test_meong_fly_game_art.py",
+      "sha256": "01a33ab5b632d6acd3c251ea3a0c51ef5d772c1789143c5d06692a8d0bbbe68c",
+      "byte_identical": true
+    },
+    {
+      "file": "tests/test_meong_fly_gameplay_gui.py",
+      "sha256": "f6a0544565e5150dbb6d418bad1b6b772d70f74c517e03fa16533b4f5e60c876",
+      "byte_identical": true
+    },
+    {
+      "file": "tests/test_meong_fly_gui.py",
+      "sha256": "39bcc2df58598d2c07ae81bbbdedb8d45f6f928bca104b7d9deab5b5b5456700",
+      "byte_identical": true
+    },
+    {
+      "file": "tests/test_meong_fly_painter.py",
+      "sha256": "f2420c34c8e126c4ef178a0645fdd629940b2a5f132ca36494702f48b11498ae",
+      "byte_identical": true
+    },
+    {
+      "file": "tests/test_meong_fly_photo_handoff.py",
+      "sha256": "88289a5a1f9a4004ec0168d1128ab082e2182fe5528ae5915d9113e63ed440d7",
+      "byte_identical": true
+    },
+    {
+      "file": "tests/test_meong_fly_polish.py",
+      "sha256": "f860dc96bc6ca5fbf10e9843bedfddc17868c7f114e80fe9ab2159f1403aa37d",
+      "byte_identical": true
+    },
+    {
+      "file": "tests/test_meong_fly_print_fx.py",
+      "sha256": "fc3ce9281d4a26738e797e01c276b443ac952f005a1212ccf464a7cecd47e278",
+      "byte_identical": true
+    },
+    {
+      "file": "tests/test_meong_fly_receipts.py",
+      "sha256": "a69df2b92488da5b268147d1c73ea0b4014ebe6e5184fde4e0f895325e9585a3",
+      "byte_identical": true
+    },
+    {
+      "file": "tests/test_meong_fly_scanner.py",
+      "sha256": "64599878aca4cd7ae1e9ac2fb8b6c6399c2d365a90fc0118027d9b0c36f3b9e0",
+      "byte_identical": true
+    },
+    {
+      "file": "tests/test_meong_fly_v5.py",
+      "sha256": "a22602fb14059008e894159ae476c67cc0fa527db4542bfbd3b94926614f1a10",
+      "byte_identical": true
+    },
+    {
+      "file": "tests/test_meong_fly_visual_v3.py",
+      "sha256": "b655b4503ba017d3d5127b9dc0f1914cc655b9bb970b0a8519cae1505a994882",
+      "byte_identical": true
+    }
+  ]
+}

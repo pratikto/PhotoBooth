@@ -1,5 +1,7 @@
 # Meong Photobooth — Documentation and release changelog
 
+> **Meong Fly reuse correction, stage 1 (2026-10-24):** Prior v2 reused physics but recreated the view. Add latest reference modules/assets/tests byte-for-byte from `672e3f7`; 98 original tests PASS. Actual renderer wiring follows as a separate push. [Diagnosis/provenance](qa/portrait-v2-meong-reuse/README.md).
+
 > **P4 source evidence archived (2026-10-23, docs only):** All three CI jobs SUCCESS at `97b5596` ([39973934595](https://github.com/pratikto/PhotoBooth/actions/runs/39973934595)). Original artifact digest matches GitHub; four clean-source reports and all 42 P4 image hashes/dimensions verified, contact sheets reviewed. No runtime change or Windows/provider certification. [Evidence/checkpoints](qa/portrait-v2-p4/README.md).
 
 > **P4b MOCK (2026-10-23):** Add local authoritative quote, conditional simulated promo, stable-key orders, protected pending/unknown/expiry/recovery and atomic one-use handoff to P3 consent. Default checkout entry off; nonpayable text QR and explicit simulation controls only. Fix compact pending overflow found during review. 406 full PASS, 20 final checkout captures and a tested 28-item Submit form. [Evidence and limits](qa/portrait-v2-p4/README.md).
