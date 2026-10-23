@@ -1,5 +1,8 @@
 # Meong Photobooth
 
+> **Portrait GUI v2 P3 (feature branch only):** Launch `python tools/run_portrait_v2.py`, complete the tutorial, select copies, then choose **UJI FOTO**. This is an explicit photo test without payment, local by default; printer/Drive require operator opt-in. [P3 instructions/evidence](docs/qa/portrait-v2-p3/README.md) · [Windows checklist with Submit](docs/qa/portrait-v2-p3/windows-checklist.html). Real payment, scanner, discounts and game integration remain off.
+
+
 > **CURRENT RELEASE BASELINE (2026-10-19):** Default branch `master` contains Meong Photobooth Kivy GUI. Immutable source snapshot `v1.0.0` / `07ce51d2022ab5673a7a27e744e5e5757fbb3d08` is published as a [GitHub pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0). Release-SHA CI: [Kiosk GUI 39185986245](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245) (**233 pass, 2 skipped, 87 synthetic renders, 0 errors**) and [Dither 39185986273](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273) (**48 tests pass**). Linux mock/screenshot QA is **not** certification on Windows hardware or customer deployment. Outstanding: BUG-001/007 audio speaker retest, BUG-009 30-day Drive cloud retention **OPEN**; QRIS is DEMO/non-payable (FEAT-020 not implemented), receipt scanner FEAT-002 not implemented. The earlier `feature/kivy-gui` branch and dated narratives below are **historical** where they conflict with this baseline.
 
 

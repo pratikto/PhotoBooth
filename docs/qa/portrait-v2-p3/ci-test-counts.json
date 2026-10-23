@@ -1,0 +1,43 @@
+{
+  "note": "Only unittest summaries visible in CI stdout are counted here. Kivy can redirect widget-test stderr; its completed CI step is SUCCESS, and the final local focused transcript includes the real widget tests. Do not sum overlapping suites as unique tests.",
+  "jobs": [
+    {
+      "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+      "conclusion": "success",
+      "visible_unittest_summaries": [
+        [
+          "3",
+          "0.012"
+        ],
+        [
+          "11",
+          "3.448"
+        ],
+        [
+          "2",
+          "10.134"
+        ]
+      ]
+    },
+    {
+      "name": "Navigation and audio lifecycle",
+      "conclusion": "success",
+      "visible_unittest_summaries": [
+        [
+          "63",
+          "0.236"
+        ]
+      ]
+    },
+    {
+      "name": "Windows Python 3.12 native SDL audio (dummy output)",
+      "conclusion": "success",
+      "visible_unittest_summaries": [
+        [
+          "45",
+          "11.237"
+        ]
+      ]
+    }
+  ]
+}

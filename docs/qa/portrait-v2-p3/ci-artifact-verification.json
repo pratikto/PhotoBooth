@@ -1,0 +1,17 @@
+{
+  "artifact_id": 12470113255,
+  "digest": "sha256:49f4aa2036f9b6f17c0280ad3832fcf824bf7ac390dae37f486acc35f2e99b7e",
+  "bytes": 4242161,
+  "verified": true,
+  "reports": [
+    "report-800x600.json",
+    "report-800x1280.json",
+    "report-452x900.json",
+    "report-360x640.json",
+    "p3/p3-report-800x1280.json",
+    "p3/p3-report-452x900.json"
+  ],
+  "source_sha": "569dbf50a07a2c2154430a762c6fd1c340d8bc59",
+  "tracked_changes": false,
+  "main_screenshots_verified": 40
+}

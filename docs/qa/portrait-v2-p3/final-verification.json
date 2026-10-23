@@ -1,0 +1,38 @@
+{
+  "source_sha": "569dbf50a07a2c2154430a762c6fd1c340d8bc59",
+  "baseline": "419cfedfa63bd53df64831437c6d63f25bc1fb10",
+  "legacy_files_byte_unchanged": {
+    "main.py": true,
+    "photobooth/app.py": true,
+    "photobooth/audio.py": true,
+    "photobooth/camera.py": true,
+    "photobooth/catalog.py": true,
+    "photobooth/workflow.py": true,
+    "photobooth/transaction_store.py": true,
+    "photobooth/printer.py": true,
+    "photobooth/drive_pool.py": true,
+    "photobooth/drive_sync.py": true,
+    "photobooth/drive_storage.py": true,
+    "photobooth/retention.py": true,
+    "photobooth/assets/audio/meong-v2-shutter.wav": true
+  },
+  "p3_source_hashes_match_saved_evidence": true,
+  "ci_run": 39880474594,
+  "ci_url": "https://github.com/pratikto/PhotoBooth/actions/runs/39880474594",
+  "ci_conclusion": "success",
+  "jobs": [
+    {
+      "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Navigation and audio lifecycle",
+      "conclusion": "success"
+    },
+    {
+      "name": "Windows Python 3.12 native SDL audio (dummy output)",
+      "conclusion": "success"
+    }
+  ],
+  "source_sha256_matches": true
+}

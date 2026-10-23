@@ -180,10 +180,22 @@ unchecked Drive items, the cycle gate and 360-pixel layout.
 | `9e01225180f01bf4a72d2a5927941e6f10d84f38` | P3a asynchronous camera/face invitation |
 | `579fbf3be7dbb2b3ec4e51e6a9b8454f921e97ee` | Original v2-only shutter |
 | `5c83a26f5fe24f58fe9acf72f88e653376aea98b` | Photo/print/Drive service adapter checkpoint before native pages |
+| `c04534fcf3a4026aab00f62b9a606bd72566331d` | Connected native P3 photo pages; CI exposed missing QR dependency |
+| `569dbf50a07a2c2154430a762c6fd1c340d8bc59` | CI dependency corrected; exact-source three-job SUCCESS |
 
 All pushes are ordinary pushes to the existing branch, with remote HEAD checked.
-The matching native-page source commit and final CI are recorded in the follow-up
-verification record. Do not force-push, merge master or reset/delete test photos
+[Final verification record](final-verification.json) pins the native source and
+[CI 39880474594](https://github.com/pratikto/PhotoBooth/actions/runs/39880474594)
+to `569dbf50a07a2c2154430a762c6fd1c340d8bc59`: all three jobs SUCCESS.
+[CI test counts](ci-test-counts.json); [artifact digest/hash verification](ci-artifact-verification.json).
+The original 4.24 MB GitHub artifact was downloaded, its SHA-256 matched, and
+all 40 main screenshots across six clean exact-source reports were hash-checked
+and visually reviewed: [P3 contact sheet](ci-p3-contact.png),
+[browsing/short-window sheet](ci-browsing-contact.png). The online artifact has
+GitHub’s seven-day retention; contact sheets, report JSON and local original PNGs
+are committed here. Thirteen legacy/v1 source/media files are byte-unchanged
+from the pre-P3 checkpoint. The final documentation-only follow-up does not
+change those runtime hashes. Do not force-push, merge master or reset/delete test photos
 to roll back. To stop P3 device use, close v2 and run the established v1 launcher;
 keep v2 files/manifests/journals for diagnosis. For a reviewed source rollback,
 revert the relevant P3 commits on this same branch through the normal tests/push
@@ -212,7 +224,7 @@ process; do not rewrite history or erase counters/uncertain print journals.
 - [ ] Tutorial/gallery/game preview and minimize do not accept stale detections.
 - [ ] Unplug/replug recovers one camera; close releases the device; manual entry
   remains usable when camera/detector is unavailable.
-- [ ] P3b capture/review/print/Drive hardware checks after its implementation.
+- [ ] Complete the linked 34-item P3 camera/capture/review/print/Drive Windows form on the actual tested HEAD.
 - [ ] Complete twenty Windows cycles and clean restart for the prior F05/F06 gate.
 
 No native Windows camera, actual face detection, paper output or cloud delivery

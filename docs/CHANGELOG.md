@@ -1,5 +1,12 @@
 # Meong Photobooth — Documentation and release changelog
 
+## 2026-10-23 — P3 exact-source CI and evidence archived
+
+- `569dbf5` passes all three jobs in [CI 39880474594](https://github.com/pratikto/PhotoBooth/actions/runs/39880474594), including Windows SDL dummy audio, real widget tests, isolated photo/Drive tests and 40 main synthetic screenshots. This supersedes the failed CI install at `c04534f`.
+- Downloaded original artifact, matched archive SHA-256, verified six clean-source reports and all 40 main image hashes, reviewed native P3 and browsing/short-window contact sheets. Source/media hash checks confirm 13 legacy v1 files unchanged.
+- Preserve physical device gates and BUG-009/012 status; add operator entry instructions and [final verification](qa/portrait-v2-p3/final-verification.json). No runtime changes in this documentation follow-up.
+
+
 ## 2026-10-23 — P3 CI QR dependency correction
 
 - Exact-source CI at `c04534f` correctly failed the Drive-enabled composition test because the minimum desktop install omitted the existing `qrcode[pil]` dependency. Add it to the CI install; runtime code and assertions unchanged.
