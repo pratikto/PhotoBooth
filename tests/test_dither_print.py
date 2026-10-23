@@ -18,6 +18,20 @@ class DitherPhysicalSafetyTests(unittest.TestCase):
         self.assertEqual(tagged.crop((0, tagged.height - source.height,
                                       source.width, tagged.height)).tobytes(), original)
 
+    def test_enhancement_print_header_does_not_mutate_native_raster(self):
+        image = Image.new("1", (384, 96), 255)
+        image.putpixel((18, 35), 0)
+        initial = image.tobytes()
+        normal = annotated_raster(image, DitherProfile(mode="bayer", width_dots=384))
+        enhanced = annotated_raster(image, DitherProfile(
+            mode="bayer", width_dots=384, smart_enhance=True,
+            postprocess_enabled=True, clahe_strength=0.4,
+            dot_cleanup_level=2))
+        self.assertGreater(enhanced.height, normal.height)
+        self.assertEqual(enhanced.crop((0, enhanced.height - 96, 384,
+                                        enhanced.height)).tobytes(), initial)
+        self.assertEqual(image.tobytes(), initial)
+
     def test_requires_binary_image_and_native_width(self):
         with self.assertRaises(ValueError):
             annotated_raster(Image.new("RGB", (576, 40)), DitherProfile())
