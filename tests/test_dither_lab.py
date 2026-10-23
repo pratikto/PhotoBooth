@@ -7,7 +7,7 @@ from pathlib import Path
 from PIL import Image
 
 from photobooth.dither_lab import (
-    DitherProfile, load_profile, render_thermal_image, save_profile,
+    NEW_ENHANCEMENT_FIELDS, DitherProfile, load_profile, render_thermal_image, save_profile,
 )
 from photobooth.printer import DITHER_MODES, dither_image
 
@@ -107,6 +107,8 @@ class DitherLabTests(unittest.TestCase):
             original.pop("enhanced_dizzy")
             original.pop("dizzy_variant")
             original.pop("dizzy_seed")
+            for key in NEW_ENHANCEMENT_FIELDS:
+                original.pop(key)
             path.write_text(json.dumps({"schema_version": 1, **original}), encoding="utf-8")
             loaded = load_profile(path)
             self.assertFalse(loaded.enhanced_floyd)
