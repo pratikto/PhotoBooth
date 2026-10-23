@@ -1,4 +1,4 @@
-"""Offline, deterministic auto-tuning for Enhanced Floyd in Meong's test lab.
+"""Offline, deterministic auto-tuning for each Meong lab dithering algorithm.
 
 This is a **heuristic** visual-fidelity search, not a physical thermal-printer
 calibration or an AI face-quality classifier. No data leaves this process, no
@@ -12,7 +12,8 @@ import random
 
 from PIL import Image, ImageChops, ImageFilter, ImageStat
 
-from photobooth.dither_lab import DitherProfile, render_thermal_image
+from photobooth.dither_lab import DitherProfile, LAB_DITHER_MODES, render_thermal_image
+from photobooth.dizzy_dither import DIZZY_VARIANTS
 
 # Keep the candidate budget bounded so the desktop GUI remains responsive.
 SEARCH_STEPS = (
@@ -24,6 +25,10 @@ TUNING_FIELDS = ("brightness", "contrast", "gamma", "sharpness")
 BOUNDS = ((0.5, 1.75), (0.5, 2.5), (0.3, 3.0), (0.0, 3.0))
 SHORTLIST_SIZE = 8
 PROXY_MAX_SIZE = (384, 520)
+# Dizzy is a CPU-heavy per-pixel algorithm: use a smaller bounded search.
+DIZZY_PROXY_MAX_SIZE = (176, 240)
+THRESHOLD_BOUNDS = (64, 200)
+THRESHOLD_STEPS = (28, 14, 7)
 
 
 class AutoTuneCancelled(Exception):
@@ -100,6 +105,8 @@ def score_print_proxy(
     # rewards them on a noisy image; do not impose a universal ink-coverage %.
     penalty = sum(abs(getattr(profile, field) - 1.0) / span
                   for field, span in zip(TUNING_FIELDS, (0.75, 1.5, 2.0, 2.0)))
+    if profile.mode == "threshold":
+        penalty += abs(profile.threshold - 128) / 127
     score = max(0.0, min(
         100.0,
         100.0 - (0.72 * tone_error + 0.16 * edge_error +
@@ -108,44 +115,73 @@ def score_print_proxy(
     return score, tone_error, edge_error, black_coverage
 
 
-def _signature(profile: DitherProfile) -> tuple[float, ...]:
-    return tuple(getattr(profile, field) for field in TUNING_FIELDS)
+def _signature(profile: DitherProfile) -> tuple:
+    """Key includes algorithm-specific controls to keep distinct presets."""
+    key = tuple(getattr(profile, field) for field in TUNING_FIELDS)
+    if profile.mode == "threshold":
+        return (*key, profile.threshold)
+    if profile.mode == "dizzy":
+        return (*key, profile.enhanced_dizzy, profile.dizzy_variant,
+                profile.dizzy_seed)
+    return key
 
 
 def _search_neighbor(profile: DitherProfile, field: str,
                      amount: float, bounds: tuple[float, float]) -> DitherProfile:
     value = max(bounds[0], min(bounds[1], getattr(profile, field) + amount))
-    return replace(profile, **{field: round(value, 3)})
+    return replace(profile, **{field: int(round(value)) if field == "threshold"
+                               else round(value, 3)})
 
 
-def tune_enhanced_floyd(
+def tune_dither(
     source: Image.Image,
     starting_profile: DitherProfile,
     *,
     should_cancel: Callable[[], bool] | None = None,
     on_progress: Callable[[int, str], None] | None = None,
 ) -> AutoTuneResult:
-    """Return three ranked native-size candidates; never alter caller state.
+    """Search the selected algorithm from system-neutral parameters.
 
-    Only the requested print width is used from starting_profile. Search uses
-    a fixed random seed and system-neutral parameters, independent of sliders.
-    At most 65 proxy evaluations plus 8 native finalists; neutral is guaranteed.
+    Only the selected mode and print width are inherited from the live GUI,
+    never the current manual sliders, enhancement flags, Dizzy seed/variant,
+    or threshold. Searches and outputs are separate for each algorithm.
+    Floyd keeps the existing Enhanced Floyd search for compatibility; Bayer
+    uses its fixed 8x8 matrix; Dizzy tries both article variants and both
+    preprocessing states; Threshold can be tuned via the backend even though
+    its comparison-GUI lane is intentionally hidden.
     """
     if not isinstance(starting_profile, DitherProfile):
         raise TypeError("Expected DitherProfile.")
-    if starting_profile.mode != "floyd-steinberg":
-        raise ValueError("Auto Tune supports Floyd–Steinberg only.")
+    if starting_profile.mode not in LAB_DITHER_MODES:
+        raise ValueError("Unsupported algorithm for Auto Tune.")
     if source.width < 1 or source.height < 1:
         raise ValueError("Auto Tune needs a non-empty image.")
     cancel = should_cancel or (lambda: False)
     if cancel():
         raise AutoTuneCancelled("Auto Tune cancelled before starting.")
 
-    start = DitherProfile(width_dots=starting_profile.width_dots, enhanced_floyd=True)
+    mode = starting_profile.mode
+    neutral = DitherProfile(
+        mode=mode, width_dots=starting_profile.width_dots,
+        enhanced_floyd=(mode == "floyd-steinberg"),
+    )
+    anchors = [neutral]
+    if mode == "dizzy":
+        # Assess the variants independently, rather than copying the
+        # operator's manual selection into an automatic recommendation.
+        anchors = [
+            replace(neutral, dizzy_variant=variant, enhanced_dizzy=enhanced)
+            for variant in DIZZY_VARIANTS for enhanced in (False, True)
+        ]
+    fields = TUNING_FIELDS + (("threshold",) if mode == "threshold" else ())
+    bounds = BOUNDS + ((THRESHOLD_BOUNDS,) if mode == "threshold" else ())
     proxy = source.copy()
-    proxy.thumbnail(PROXY_MAX_SIZE, Image.Resampling.LANCZOS)
-    proxy_ref = _photo_gray(proxy, start.width_dots)
-    scores: dict[tuple[float, ...], tuple[float, DitherProfile]] = {}
+    proxy.thumbnail(
+        DIZZY_PROXY_MAX_SIZE if mode == "dizzy" else PROXY_MAX_SIZE,
+        Image.Resampling.LANCZOS,
+    )
+    proxy_ref = _photo_gray(proxy, neutral.width_dots)
+    scores: dict[tuple, tuple[float, DitherProfile]] = {}
 
     def evaluate(profile: DitherProfile) -> float:
         if cancel():
@@ -159,41 +195,49 @@ def tune_enhanced_floyd(
                 on_progress(len(scores), "Searching")
         return scores[key][0]
 
-    # Explore system bounds reproducibly, then refine two system-chosen seeds.
-    neutral = start
-    evaluate(neutral)
+    for anchor in anchors:
+        evaluate(anchor)
     rng = random.Random(42)
-    for _ in range(16):
-        proposal = replace(neutral, **{
-            field: round(rng.uniform(low, high), 3)
-            for field, (low, high) in zip(TUNING_FIELDS, BOUNDS)
-        })
-        evaluate(proposal)
+    for _ in range(8 if mode == "dizzy" else 16):
+        base = anchors[rng.randrange(len(anchors))] if mode == "dizzy" else neutral
+        values = {
+            field: (rng.randint(int(low), int(high))
+                    if field == "threshold" else round(rng.uniform(low, high), 3))
+            for field, (low, high) in zip(fields, bounds)
+        }
+        evaluate(replace(base, **values))
+
     best_probe = max(scores.values(), key=lambda item: item[0])[1]
-    for seed in (neutral, best_probe):
+    seeds = (best_probe,) if mode == "dizzy" else (neutral, best_probe)
+    steps = SEARCH_STEPS[:2] if mode == "dizzy" else SEARCH_STEPS
+    for seed in seeds:
         center = seed
-        evaluate(center)
-        for step_set in SEARCH_STEPS:
-            for field, step, bounds in zip(TUNING_FIELDS, step_set, BOUNDS):
-                candidates = [
-                    _search_neighbor(center, field, -step, bounds),
-                    _search_neighbor(center, field, step, bounds),
-                ]
-                for proposal in candidates:
+        for stage, step_set in enumerate(steps):
+            for field, bounds_pair, step in zip(
+                fields, bounds,
+                (*step_set, THRESHOLD_STEPS[stage]) if mode == "threshold"
+                else step_set,
+            ):
+                neighbors = (
+                    _search_neighbor(center, field, -step, bounds_pair),
+                    _search_neighbor(center, field, step, bounds_pair),
+                )
+                for proposal in neighbors:
                     evaluate(proposal)
-                # Ties keep the current settings rather than drifting arbitrarily.
-                center = max((center, *candidates), key=evaluate)
+                center = max((center, *neighbors), key=evaluate)
 
     if cancel():
         raise AutoTuneCancelled("Auto Tune cancelled before full-resolution ranking.")
 
+    shortlist_size = 5 if mode == "dizzy" else SHORTLIST_SIZE
     shortlisted = [profile for _, profile in sorted(
         scores.values(), key=lambda item: (-item[0], _signature(item[1]))
-    )[:SHORTLIST_SIZE]]
-    # Keep a system-neutral native reference, independent of manual values.
+    )[:shortlist_size]]
+    # Always evaluate the neutral algorithm baseline at true native resolution,
+    # even if its reduced-proxy score was not in the best shortlist.
     if _signature(neutral) not in {_signature(p) for p in shortlisted}:
         shortlisted[-1] = neutral
-    full_ref = _photo_gray(source, start.width_dots)
+    full_ref = _photo_gray(source, neutral.width_dots)
     final: list[AutoTuneCandidate] = []
     for profile in shortlisted:
         if cancel():
@@ -211,10 +255,28 @@ def tune_enhanced_floyd(
     if cancel():
         raise AutoTuneCancelled("Auto Tune cancelled after native validation.")
     baseline = next(c for c in final if c.profile == neutral)
-    trials = len(scores) + len(final)
-
     ranked = sorted(final, key=lambda item: (
         -item.score, item.tone_error, _signature(item.profile)
     ))
-    return AutoTuneResult(candidates=tuple(ranked[:3]),
-                          trials=trials, baseline=baseline)
+    return AutoTuneResult(
+        candidates=tuple(ranked[:3]), trials=len(scores) + len(final),
+        baseline=baseline,
+    )
+
+
+def tune_enhanced_floyd(
+    source: Image.Image,
+    starting_profile: DitherProfile,
+    *,
+    should_cancel: Callable[[], bool] | None = None,
+    on_progress: Callable[[int, str], None] | None = None,
+) -> AutoTuneResult:
+    """Backward-compatible Enhanced Floyd-only entry point."""
+    if not isinstance(starting_profile, DitherProfile):
+        raise TypeError("Expected DitherProfile.")
+    if starting_profile.mode != "floyd-steinberg":
+        raise ValueError("Auto Tune supports Floyd–Steinberg only.")
+    return tune_dither(
+        source, starting_profile, should_cancel=should_cancel,
+        on_progress=on_progress,
+    )
