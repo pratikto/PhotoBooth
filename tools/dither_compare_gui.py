@@ -39,6 +39,14 @@ FIELDS = (
 )
 SHORT = {"floyd-steinberg": "Floyd–Steinberg", "bayer": "Bayer 8×8",
          "dizzy": "Dizzy Dithering"}
+PIPELINE_SLIDERS = (
+    ("clahe_strength", "CLAHE Strength", 0.0, 1.0),
+    ("denoise_level", "Median Denoise (0–2)", 0, 2),
+    ("tone_strength", "Tone Balance", 0.0, 1.0),
+    ("dot_cleanup_level", "Selective Dot Cleanup (0–3)", 0, 3),
+    ("edge_refine_level", "Edge Refinement (0–3)", 0, 3),
+)
+PIPELINE_LEVELS = {"denoise_level", "dot_cleanup_level", "edge_refine_level"}
 
 
 def sample_source():
@@ -74,6 +82,9 @@ class ComparisonApp:
         self.closed = False
         self.photos = {}
         self.controls = {}
+        self.pipeline_controls = {}
+        self.pipeline_flags = {}
+        self.pipeline_sections = {}
         self.labels = {}
         self.statuses = {}
         self.scroll_canvases = {}
@@ -213,6 +224,43 @@ class ComparisonApp:
                 slider.pack(fill="x")
                 self.controls[mode][key] = (val, val_label)
                 self.write_value(mode, key)
+
+            # Processing is opt-in and lane-specific, even when Sync is ON.
+            self.pipeline_flags[mode] = {}
+            for key, caption in (
+                ("smart_enhance", "Smart Enhance (optional)"),
+                ("postprocess_enabled", "1-bit Post-Processing (optional)"),
+            ):
+                enabled = tk.BooleanVar(value=getattr(self.configs.by_mode(mode), key))
+                self.pipeline_flags[mode][key] = enabled
+                ttk.Checkbutton(
+                    interior, text=caption, variable=enabled,
+                    command=lambda m=mode, k=key: self.pipeline_toggle(m, k),
+                ).pack(fill="x", pady=(6, 0))
+
+            toggle = ttk.Button(interior, text="Image Processing Options ▸")
+            toggle.pack(fill="x", pady=(6, 2))
+            advanced = ttk.Frame(interior)
+            self.pipeline_sections[mode] = (toggle, advanced)
+            toggle.configure(command=lambda m=mode: self.toggle_pipeline_options(m))
+            self.pipeline_controls[mode] = {}
+            for key, caption, lower, upper in PIPELINE_SLIDERS:
+                strip = ttk.Frame(advanced)
+                strip.pack(fill="x", pady=(4, 0))
+                ttk.Label(strip, text=caption).pack(side="left")
+                readout = ttk.Label(strip, text="", width=5, anchor="e")
+                readout.pack(side="right")
+                var = tk.DoubleVar(value=getattr(self.configs.by_mode(mode), key))
+                ttk.Scale(
+                    advanced, from_=lower, to=upper, variable=var,
+                    command=lambda _value, m=mode, k=key: self.pipeline_changed(m, k),
+                ).pack(fill="x")
+                self.pipeline_controls[mode][key] = (var, readout)
+                self.write_pipeline_value(mode, key)
+            ttk.Label(
+                advanced, text="Only applies when the matching option is checked.",
+                wraplength=265, justify="left",
+            ).pack(fill="x", pady=(4, 1))
             # Pack actions before the flexible controls grow: buttons and
             # readiness feedback cannot be pushed out of a small window.
             state = ttk.Label(panel, text="Awaiting preview", anchor="center")
@@ -249,7 +297,7 @@ class ComparisonApp:
         root.protocol("WM_DELETE_WINDOW", self.close)
 
     def invalidate_auto_tune(self):
-        """Cancel or dismiss stale candidate sets whenever Floyd input changes."""
+        """Cancel or dismiss stale candidate sets whenever tuned input changes."""
         self.autotune_generation += 1
         if self.autotune_cancel_event is not None:
             self.autotune_cancel_event.set()
@@ -350,8 +398,8 @@ class ComparisonApp:
         dialog = tk.Toplevel(self.root)
         self.autotune_dialog = dialog
         dialog.title(f"MEONG | {SHORT[self.autotune_mode]} Auto Tune — 3 candidates")
-        dialog.geometry("900x635")
-        dialog.minsize(760, 560)
+        dialog.geometry("975x690")
+        dialog.minsize(820, 590)
         dialog.protocol("WM_DELETE_WINDOW", self.dismiss_auto_tune_candidates)
         ttk.Label(
             dialog, text="Digital fidelity ranking — NOT calibrated paper quality",
@@ -400,6 +448,11 @@ class ComparisonApp:
                       + (f"Dizzy: {p.dizzy_variant}, enhanced={p.enhanced_dizzy}\n"
                          if p.mode == "dizzy" else "")
                       + (f"Threshold: {p.threshold}\n" if p.mode == "threshold" else "")
+                      + (f"Smart: CLAHE {p.clahe_strength:.2f}, Denoise {p.denoise_level}, "
+                         f"Tone {p.tone_strength:.2f}\n" if p.smart_enhance
+                         else "Smart: OFF\n")
+                      + (f"Post: Dots {p.dot_cleanup_level}, Edges {p.edge_refine_level}\n"
+                         if p.postprocess_enabled else "Post: OFF\n")
                       + f"Black dots {candidate.black_coverage:.1f}%\n"
                       f"Vs neutral {candidate.score - baseline.score:+.2f} points\n"
                       f"Tonal error {candidate.tone_error:.1f}   "
@@ -448,6 +501,7 @@ class ComparisonApp:
             for key, (var, _label) in self.controls[mode].items():
                 var.set(getattr(candidate.profile, key))
                 self.write_value(mode, key)
+            self.set_pipeline_profile(mode, candidate.profile)
         finally:
             self._setting_tuned_controls = False
         self.schedule(mode)
@@ -461,7 +515,7 @@ class ComparisonApp:
             return
         path = filedialog.asksaveasfilename(
             defaultextension=".json",
-            initialfile=f"meong-{candidate.profile.mode}-autotune-lab-v4.json",
+            initialfile=f"meong-{candidate.profile.mode}-autotune-lab-v5.json",
             filetypes=[("JSON", "*.json")],
             parent=self.autotune_dialog or self.root)
         if not path:
@@ -503,6 +557,52 @@ class ComparisonApp:
     def write_value(self, mode, key):
         val, label = self.controls[mode][key]
         label.configure(text=f"{val.get():.2f}")
+
+    def toggle_pipeline_options(self, mode):
+        """Keep advanced sliders compact inside the existing scrollable lane."""
+        button, advanced = self.pipeline_sections[mode]
+        if advanced.winfo_manager():
+            advanced.pack_forget()
+            button.configure(text="Image Processing Options ▸")
+        else:
+            advanced.pack(fill="x", after=button)
+            button.configure(text="Image Processing Options ▾")
+
+    def write_pipeline_value(self, mode, key):
+        var, label = self.pipeline_controls[mode][key]
+        value = var.get()
+        label.configure(text=str(int(round(value))) if key in PIPELINE_LEVELS
+                        else f"{value:.2f}")
+
+    def set_pipeline_profile(self, mode, profile):
+        """Refresh every processing widget without changing other lanes."""
+        for key, flag in self.pipeline_flags[mode].items():
+            flag.set(getattr(profile, key))
+        for key, (var, _readout) in self.pipeline_controls[mode].items():
+            var.set(getattr(profile, key))
+            self.write_pipeline_value(mode, key)
+
+    def pipeline_toggle(self, mode, key):
+        if self._setting_tuned_controls:
+            return
+        if self.autotune_mode == mode:
+            self.invalidate_auto_tune()
+        profile = self.configs.by_mode(mode)
+        self.configs = self.configs.replace_lane(
+            replace(profile, **{key: self.pipeline_flags[mode][key].get()}))
+        self.schedule(mode)
+
+    def pipeline_changed(self, mode, key):
+        if self._setting_tuned_controls:
+            return
+        if self.autotune_mode == mode:
+            self.invalidate_auto_tune()
+        self.write_pipeline_value(mode, key)
+        raw = self.pipeline_controls[mode][key][0].get()
+        value = int(round(raw)) if key in PIPELINE_LEVELS else round(raw, 3)
+        profile = self.configs.by_mode(mode)
+        self.configs = self.configs.replace_lane(replace(profile, **{key: value}))
+        self.schedule(mode)
 
     def toggle_enhanced(self):
         if self.autotune_mode == "floyd-steinberg":
@@ -696,6 +796,7 @@ class ComparisonApp:
             for key, (var, _label) in self.controls[mode].items():
                 var.set(getattr(configs.by_mode(mode), key))
                 self.write_value(mode, key)
+            self.set_pipeline_profile(mode, configs.by_mode(mode))
             self.schedule(mode)
         self._setting_tuned_controls = False
 
@@ -704,7 +805,7 @@ class ComparisonApp:
 
     def save_all(self):
         path = filedialog.asksaveasfilename(defaultextension=".json",
-            initialfile="meong-dither-lab-v4.json", filetypes=[("JSON", "*.json")])
+            initialfile="meong-dither-lab-v5.json", filetypes=[("JSON", "*.json")])
         if path:
             try:
                 save_comparison(path, self.configs)
