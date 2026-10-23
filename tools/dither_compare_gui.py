@@ -84,6 +84,7 @@ class ComparisonApp:
         self.controls = {}
         self.pipeline_controls = {}
         self.pipeline_flags = {}
+        self.processing_presets = {}
         self.pipeline_sections = {}
         self.labels = {}
         self.statuses = {}
@@ -225,6 +226,19 @@ class ComparisonApp:
                 self.controls[mode][key] = (val, val_label)
                 self.write_value(mode, key)
 
+            # One-click A/B combinations preserve the manual processing
+            # strengths, and can be overridden via the checkboxes below.
+            ttk.Label(interior, text="Quick Processing A/B:").pack(
+                fill="x", pady=(8, 1))
+            preset = tk.StringVar(value="Original")
+            self.processing_presets[mode] = preset
+            preset_picker = ttk.Combobox(
+                interior, textvariable=preset, state="readonly",
+                values=("Original", "Smart Enhanced", "Smart + Post", "Post Only"))
+            preset_picker.pack(fill="x", pady=(0, 3))
+            preset_picker.bind(
+                "<<ComboboxSelected>>",
+                lambda _event, m=mode: self.processing_preset_changed(m))
             # Processing is opt-in and lane-specific, even when Sync is ON.
             self.pipeline_flags[mode] = {}
             for key, caption in (
@@ -558,6 +572,37 @@ class ComparisonApp:
         val, label = self.controls[mode][key]
         label.configure(text=f"{val.get():.2f}")
 
+    def processing_preset_changed(self, mode):
+        """Select baseline, Smart, Smart + Post or post only for one lane."""
+        if self._setting_tuned_controls:
+            return
+        modes = {
+            "Original": (False, False),
+            "Smart Enhanced": (True, False),
+            "Smart + Post": (True, True),
+            "Post Only": (False, True),
+        }
+        selected = self.processing_presets[mode].get()
+        if selected not in modes:
+            raise ValueError("Unknown processing A/B preset.")
+        if self.autotune_mode == mode:
+            self.invalidate_auto_tune()
+        smart, post = modes[selected]
+        self.pipeline_flags[mode]["smart_enhance"].set(smart)
+        self.pipeline_flags[mode]["postprocess_enabled"].set(post)
+        profile = self.configs.by_mode(mode)
+        self.configs = self.configs.replace_lane(replace(
+            profile, smart_enhance=smart, postprocess_enabled=post))
+        self.schedule(mode)
+
+    def refresh_processing_preset(self, mode):
+        smart = self.pipeline_flags[mode]["smart_enhance"].get()
+        post = self.pipeline_flags[mode]["postprocess_enabled"].get()
+        selected = ("Smart + Post" if smart and post else
+                    "Smart Enhanced" if smart else
+                    "Post Only" if post else "Original")
+        self.processing_presets[mode].set(selected)
+
     def toggle_pipeline_options(self, mode):
         """Keep advanced sliders compact inside the existing scrollable lane."""
         button, advanced = self.pipeline_sections[mode]
@@ -581,6 +626,7 @@ class ComparisonApp:
         for key, (var, _readout) in self.pipeline_controls[mode].items():
             var.set(getattr(profile, key))
             self.write_pipeline_value(mode, key)
+        self.refresh_processing_preset(mode)
 
     def pipeline_toggle(self, mode, key):
         if self._setting_tuned_controls:
@@ -590,6 +636,7 @@ class ComparisonApp:
         profile = self.configs.by_mode(mode)
         self.configs = self.configs.replace_lane(
             replace(profile, **{key: self.pipeline_flags[mode][key].get()}))
+        self.refresh_processing_preset(mode)
         self.schedule(mode)
 
     def pipeline_changed(self, mode, key):
@@ -833,12 +880,20 @@ class ComparisonApp:
 
     def raster_filename(self, profile):
         if profile.mode == "floyd-steinberg":
-            return "meong-floyd-{}.png".format(
+            stem = "meong-floyd-{}".format(
                 "enhanced" if profile.enhanced_floyd else "baseline")
-        if profile.mode == "dizzy":
+        elif profile.mode == "dizzy":
             quality = "enhanced" if profile.enhanced_dizzy else "baseline"
-            return f"meong-dizzy-{profile.dizzy_variant}-seed{profile.dizzy_seed}-{quality}.png"
-        return f"meong-{profile.mode}.png"
+            stem = f"meong-dizzy-{profile.dizzy_variant}-seed{profile.dizzy_seed}-{quality}"
+        else:
+            stem = f"meong-{profile.mode}"
+        # Keep legacy default names, but never overwrite saved A/B variants
+        # under an indistinguishable filename.
+        if profile.smart_enhance:
+            stem += "-smart"
+        if profile.postprocess_enabled:
+            stem += "-post"
+        return f"{stem}.png"
 
     def export_lane(self, mode):
         if not self.ready(mode):
