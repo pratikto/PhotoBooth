@@ -3,12 +3,19 @@ name: Portrait kiosk v2 prototype checks
 on:
   push:
     branches: [feature/portrait-kiosk-gui, feature/portrait-kiosk-v2-next]
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
   pull_request:
     branches: [master]
   workflow_dispatch:
 
 permissions:
   contents: read
+
+concurrency:
+  group: portrait-kiosk-v2-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   pure:
