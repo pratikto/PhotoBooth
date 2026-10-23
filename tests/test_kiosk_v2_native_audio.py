@@ -117,6 +117,13 @@ class NativeChannelReuseTests(unittest.TestCase):
                     audio.resume()
                     output = sample_output()
                     self.assertTrue(output and max(output) > 50, 'music output was silent')
+            audio.enter_page('templates')
+            audio.set_music_gain(0)
+            self.assertTrue(audio.cue('shutter'))
+            output = sample_output(.12)
+            self.assertTrue(output and max(output) > 50, 'new shutter PCM was silent')
+            self.assertEqual(audio._handles['shutter'].source,
+                             str(BUNDLED_SOUNDS / SOUND_FILES['shutter']))
             audio.close()
             output = sample_output(.22)
             self.assertTrue(output and output[-1] == 0, 'sound remained after close')

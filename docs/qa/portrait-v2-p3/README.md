@@ -48,6 +48,23 @@ pre-P3 base plus tracked changes. Matching-source CI follows the normal push.
 
 ## P3b — next authorized stage
 
+### New v2 shutter, 2026-10-23
+
+The owner requests a better camera SFX than v1. V2 now selects the original
+`meong-v2-shutter-soft.wav`: a 0.30-second rounded two-curtain click with a soft
+spring return, synthesized deterministically by `kiosk_v2/shutter.py`.
+The old shutter file and v1 controller are unchanged. **32 audio tests PASS**,
+including actual new-shutter PCM at the native SDL dummy mixer output:
+[transcript](shutter-tests.txt). This does not certify Windows speaker timbre.
+
+- [ ] Hear the new shutter on Windows after a successful capture/retake.
+- [ ] Failed save or cancelled countdown produces no shutter.
+- [ ] Accept its volume and timbre with the music playing.
+
+Rollback checkpoint before this audio change: `9e01225180f01bf4a72d2a5927941e6f10d84f38`.
+P3a matching-source [CI 39877277390](https://github.com/pratikto/PhotoBooth/actions/runs/39877277390)
+completed with all three jobs successful; that run predates the new shutter.
+
 Integrate actual preview/countdown/three captures, selected single retake,
 composition, physical-copy output and truthful local/Drive results through
 existing services. Keep admission explicitly nonfinancial for this P3 test flow;

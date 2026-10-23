@@ -18,7 +18,7 @@ SOUND_FILES = {
     "music": "meong-v2-music.wav",
     "button": "meong-v2-button.wav",
     "count": "meong-v2-count.wav",
-    "shutter": "meong-v2-shutter.wav",
+    "shutter": "meong-v2-shutter-soft.wav",
     "success": "meong-v2-success.wav",
 }
 # No soundtrack over an advertising video; still images may use GUI music. A future game

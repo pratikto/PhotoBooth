@@ -4,7 +4,7 @@
 
 > **CURRENT (2026-10-19, `master` / immutable `v1.0.0`):** Original bundled WAVs remain the Kivy music/SFX source. **Actual GUI route:** header gear → **Pengaturan Meong** → **PENGATURAN AUDIO**. An explicit **UJI MUSIK** press requests a fresh playback to diagnose silent devices; normal background music avoids unwanted restarting across pages. The Settings/music test code now covers this logic, but **audible Windows music remains an unresolved/deferred owner issue (BUG-001/007)**; synthetic CI does not prove loudspeaker output.
 
-All WAVs in this folder are synthesized by `photobooth/audio.py`, using original
+The legacy bank in this folder is synthesized by `photobooth/audio.py`, using original
 note sequences and deterministic instruments/noise. They contain no sampled
 commercial recording or transcription of a game's melody.
 
@@ -19,6 +19,7 @@ The Legend of Zelda: The Minish Cap direction.
 | `meong-v2-button.wav` | 0.16 s | Accepted button action | Buttons |
 | `meong-v2-count.wav` | 0.20 s | Once per displayed countdown second | Effects |
 | `meong-v2-shutter.wav` | 0.23 s | Successful photo save | Effects |
+| `meong-v2-shutter-soft.wav` | 0.30 s | Portrait GUI v2 only: new rounded mechanical shutter | Effects |
 | `meong-v2-success.wav` | 0.90 s | Saved result first presented | Effects |
 
 Every file is mono, signed 16-bit little-endian PCM at 22,050 Hz. Short fades
@@ -27,6 +28,14 @@ these shipped files. A missing/truncated sample is rebuilt into `data/audio`
 without writing into this asset directory. `levels.json` remains under
 `data/audio`, preserving the user's independent gains and 0% mute settings.
 The new `v2` names bypass any older generated `v1` cache.
+
+The portrait GUI's new shutter (2026-10-23) is an original two-curtain mechanical
+cue with a warm body and soft spring release. It contains no recordings or
+third-party samples. Its deterministic generator is
+`photobooth/kiosk_v2/shutter.py`; regenerate with
+`python -m photobooth.kiosk_v2.shutter`. The legacy shutter and v1 playback
+remain unchanged. Listen on the target Windows speakers to accept its timbre;
+PCM/provider tests alone do not judge subjective sound quality.
 
 To regenerate the committed bank after intentionally editing the score, run
 from the repository root:

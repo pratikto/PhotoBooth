@@ -1,5 +1,12 @@
 # Meong Photobooth — Documentation and release changelog
 
+## 2026-10-23 — Portrait v2 original shutter
+
+- New 0.30 s mechanical shutter with a soft release, selected only by v2; v1 audio bytes/controller unchanged.
+- 32 audio tests PASS, including native SDL dummy PCM for the new file. Speaker timbre remains an operator check.
+- Evidence and rollback: [P3 QA](qa/portrait-v2-p3/README.md).
+
+
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
 ## [Unreleased — P3 authorized; P3a asynchronous camera and face invitation] — 2026-10-23

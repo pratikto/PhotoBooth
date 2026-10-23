@@ -35,6 +35,26 @@ class FakeClip:
 
 
 class PortraitAudioTests(unittest.TestCase):
+    def test_new_shutter_is_original_bounded_pcm_and_does_not_replace_v1(self):
+        import array
+        import wave
+        from photobooth.kiosk_v2.shutter import shutter_pcm, SAMPLE_RATE
+
+        path = BUNDLED_SOUNDS / SOUND_FILES['shutter']
+        self.assertNotEqual(path.name, 'meong-v2-shutter.wav')
+        with wave.open(str(path), 'rb') as clip:
+            self.assertEqual((clip.getnchannels(), clip.getsampwidth(), clip.getframerate()),
+                             (1, 2, SAMPLE_RATE))
+            pcm = clip.readframes(clip.getnframes())
+            self.assertEqual(pcm, shutter_pcm())
+            self.assertAlmostEqual(clip.getnframes() / SAMPLE_RATE, .30, places=3)
+        values = array.array('h', pcm)
+        self.assertGreater(max(values), 10000)
+        self.assertLess(max(abs(value) for value in values), 23000)
+        self.assertEqual((values[0], values[-1]), (0, 0))
+        self.assertNotEqual(path.read_bytes(),
+                            (BUNDLED_SOUNDS / 'meong-v2-shutter.wav').read_bytes())
+
     def test_channel_recovery_never_changes_a_playing_advertising_channel(self):
         from photobooth.kiosk_v2.mixer import restore_idle_channels
 
