@@ -1,0 +1,8 @@
+{
+  "read_only_reference": "672e3f7089bb40940e5b41644ceb656aa63aafbb",
+  "original_path": "photobooth/meong_fly.py",
+  "v2_path": "photobooth/kiosk_v2/game_engine.py",
+  "sha256": "e0d517cbd2f6d6e65a37e1d3043e8254275853d7b0134bb890334691288ab123",
+  "copied_byte_for_byte": true,
+  "no_branch_merge": true
+}

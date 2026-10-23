@@ -1,0 +1,132 @@
+test_ground_collision (test_kiosk_v2_game_engine.MeongFlyTests.test_ground_collision) ... ok
+test_pipe_collision (test_kiosk_v2_game_engine.MeongFlyTests.test_pipe_collision) ... ok
+test_reset (test_kiosk_v2_game_engine.MeongFlyTests.test_reset) ... ok
+test_score_once_and_win (test_kiosk_v2_game_engine.MeongFlyTests.test_score_once_and_win) ... ok
+test_score_only_after_entire_sprite_passes (test_kiosk_v2_game_engine.MeongFlyTests.test_score_only_after_entire_sprite_passes) ... ok
+test_starts_only_on_input (test_kiosk_v2_game_engine.MeongFlyTests.test_starts_only_on_input) ... ok
+test_visible_sprite_bounds (test_kiosk_v2_game_engine.MeongFlyTests.test_visible_sprite_bounds) ... ok
+test_visible_sprite_edge_collision (test_kiosk_v2_game_engine.MeongFlyTests.test_visible_sprite_edge_collision) ... ok
+test_abandonment_does_not_restore_a_consumed_code (test_kiosk_v2_demo_game.DemoGameTests.test_abandonment_does_not_restore_a_consumed_code) ... ok
+test_claim_is_durable_before_game_and_never_reset_by_restart_or_outcome (test_kiosk_v2_demo_game.DemoGameTests.test_claim_is_durable_before_game_and_never_reset_by_restart_or_outcome) ... ok
+test_concurrent_claim_allows_exactly_one_attempt (test_kiosk_v2_demo_game.DemoGameTests.test_concurrent_claim_allows_exactly_one_attempt) ... ok
+test_false_win_and_missing_attempt_fail_closed (test_kiosk_v2_demo_game.DemoGameTests.test_false_win_and_missing_attempt_fail_closed) ... ok
+test_invalid_real_or_empty_tokens_never_create_attempts (test_kiosk_v2_demo_game.DemoGameTests.test_invalid_real_or_empty_tokens_never_create_attempts) ... ok
+test_poll_returns_revision_and_storage_failures_without_inventing_a_claim (test_kiosk_v2_demo_game.DemoGameTests.test_poll_returns_revision_and_storage_failures_without_inventing_a_claim) ... DEMO game storage unavailable action=claim
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/demo_game.py", line 98, in run
+    self.store = self._factory()
+                 ^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_demo_game.py", line 97, in unavailable
+    raise OSError('read-only')
+OSError: read-only
+ok
+test_slow_claim_never_blocks_gui_or_queues_a_second_tap_and_close_discards_callback (test_kiosk_v2_demo_game.DemoGameTests.test_slow_claim_never_blocks_gui_or_queues_a_second_tap_and_close_discards_callback) ... ok
+test_terminal_result_is_idempotent_and_cannot_be_rewritten (test_kiosk_v2_demo_game.DemoGameTests.test_terminal_result_is_idempotent_and_cannot_be_rewritten) ... ok
+test_first_photo_entry_always_requires_tutorial (test_kiosk_v2_flow.PortraitVisitFlowTests.test_first_photo_entry_always_requires_tutorial) ... ok
+test_game_entry_is_same_advert_entry_not_a_second_home (test_kiosk_v2_flow.PortraitVisitFlowTests.test_game_entry_is_same_advert_entry_not_a_second_home) ... ok
+test_game_preview_does_not_create_discount_or_checkout (test_kiosk_v2_flow.PortraitVisitFlowTests.test_game_preview_does_not_create_discount_or_checkout) ... ok
+test_inactivity_only_ends_browsing (test_kiosk_v2_flow.PortraitVisitFlowTests.test_inactivity_only_ends_browsing) ... ok
+test_no_duplicate_completion_or_stale_taps (test_kiosk_v2_flow.PortraitVisitFlowTests.test_no_duplicate_completion_or_stale_taps) ... ok
+test_rejected_stale_actions_leave_page_unchanged (test_kiosk_v2_flow.PortraitVisitFlowTests.test_rejected_stale_actions_leave_page_unchanged) ... ok
+test_return_to_advert_resets_only_visit_scoped_state (test_kiosk_v2_flow.PortraitVisitFlowTests.test_return_to_advert_resets_only_visit_scoped_state) ... ok
+test_timeout_from_templates_resets_tutorial_and_entry_source (test_kiosk_v2_flow.PortraitVisitFlowTests.test_timeout_from_templates_resets_tutorial_and_entry_source) ... ok
+test_tutorial_marked_only_after_real_completion (test_kiosk_v2_flow.PortraitVisitFlowTests.test_tutorial_marked_only_after_real_completion) ... ok
+test_advert_is_silent_and_tutorial_starts_once (test_kiosk_v2_audio.PortraitAudioTests.test_advert_is_silent_and_tutorial_starts_once) ... ok
+test_bundled_original_wav_paths_exist (test_kiosk_v2_audio.PortraitAudioTests.test_bundled_original_wav_paths_exist) ... ok
+test_channel_recovery_never_changes_a_playing_advertising_channel (test_kiosk_v2_audio.PortraitAudioTests.test_channel_recovery_never_changes_a_playing_advertising_channel) ... ok
+test_close_is_idempotent_for_loaded_effects (test_kiosk_v2_audio.PortraitAudioTests.test_close_is_idempotent_for_loaded_effects) ... ok
+test_close_then_reenter_does_not_reuse_unloaded_handle (test_kiosk_v2_audio.PortraitAudioTests.test_close_then_reenter_does_not_reuse_unloaded_handle) ... ok
+test_disabled_audio_never_attempts_loading (test_kiosk_v2_audio.PortraitAudioTests.test_disabled_audio_never_attempts_loading) ... ok
+test_effects_stop_on_suspend_and_do_not_resume_as_stale_cues (test_kiosk_v2_audio.PortraitAudioTests.test_effects_stop_on_suspend_and_do_not_resume_as_stale_cues) ... ok
+test_idle_effect_prepare_is_silent_and_first_cue_reuses_its_handle (test_kiosk_v2_audio.PortraitAudioTests.test_idle_effect_prepare_is_silent_and_first_cue_reuses_its_handle) ... ok
+test_image_music_yields_before_video_and_returns_for_next_image (test_kiosk_v2_audio.PortraitAudioTests.test_image_music_yields_before_video_and_returns_for_next_image) ... ok
+test_in_game_preview_has_no_legacy_music_overlap (test_kiosk_v2_audio.PortraitAudioTests.test_in_game_preview_has_no_legacy_music_overlap) ... ok
+test_missing_assets_fail_softly (test_kiosk_v2_audio.PortraitAudioTests.test_missing_assets_fail_softly) ... ok
+test_new_shutter_is_original_bounded_pcm_and_does_not_replace_v1 (test_kiosk_v2_audio.PortraitAudioTests.test_new_shutter_is_original_bounded_pcm_and_does_not_replace_v1) ... ok
+test_only_button_feedback_can_play_over_advert_and_game_preview (test_kiosk_v2_audio.PortraitAudioTests.test_only_button_feedback_can_play_over_advert_and_game_preview) ... ok
+test_page_handoff_preserves_immediate_click_but_stops_camera_effects (test_kiosk_v2_audio.PortraitAudioTests.test_page_handoff_preserves_immediate_click_but_stops_camera_effects) ... ok
+test_prepare_during_suspend_or_disabled_audio_never_loads (test_kiosk_v2_audio.PortraitAudioTests.test_prepare_during_suspend_or_disabled_audio_never_loads) ... ok
+test_prepare_loads_once_silently_and_never_restarts_a_playing_song (test_kiosk_v2_audio.PortraitAudioTests.test_prepare_loads_once_silently_and_never_restarts_a_playing_song) ... ok
+test_return_from_game_preview_restores_music_only_on_allowed_page (test_kiosk_v2_audio.PortraitAudioTests.test_return_from_game_preview_restores_music_only_on_allowed_page) ... ok
+test_suspend_resume_and_cleanup (test_kiosk_v2_audio.PortraitAudioTests.test_suspend_resume_and_cleanup) ... ok
+test_suspended_navigation_does_not_start_music (test_kiosk_v2_audio.PortraitAudioTests.test_suspended_navigation_does_not_start_music) ... ok
+test_unknown_pages_and_gain_bounds (test_kiosk_v2_audio.PortraitAudioTests.test_unknown_pages_and_gain_bounds) ... ok
+test_volume_zero_mutes_and_does_not_restart (test_kiosk_v2_audio.PortraitAudioTests.test_volume_zero_mutes_and_does_not_restart) ... ok
+test_broken_primary_loader_does_not_block_valid_fallback (test_kiosk_v2_audio.WavProviderSelectionTests.test_broken_primary_loader_does_not_block_valid_fallback) ... Meong v2 WAV provider=SDL2 failed
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/audio.py", line 53, in select_pcm_handle
+    handle = factory()
+             ^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_audio.py", line 339, in broken
+    raise RuntimeError("bad backend")
+RuntimeError: bad backend
+ok
+test_invalid_zero_length_primary_is_unloaded_then_falls_back (test_kiosk_v2_audio.WavProviderSelectionTests.test_invalid_zero_length_primary_is_unloaded_then_falls_back) ... Meong v2 WAV provider=SDL2 returned unusable duration
+ok
+test_music_play_request_is_not_success_if_provider_remains_stopped (test_kiosk_v2_audio.WavProviderSelectionTests.test_music_play_request_is_not_success_if_provider_remains_stopped) ... Meong v2 music requested but native provider remains stopped
+ok
+test_nan_and_missing_durations_are_not_accepted (test_kiosk_v2_audio.WavProviderSelectionTests.test_nan_and_missing_durations_are_not_accepted) ... Meong v2 WAV provider=nan returned unusable duration
+Meong v2 WAV provider=missing returned unusable duration
+ok
+test_valid_primary_does_not_load_secondary (test_kiosk_v2_audio.WavProviderSelectionTests.test_valid_primary_does_not_load_secondary) ... ok
+test_existing_windows_dll_handle_has_a_name_for_python312_ctypes (test_kiosk_v2_audio.WindowsAudioLoadingTests.test_existing_windows_dll_handle_has_a_name_for_python312_ctypes) ... ok
+test_explicit_windows_audio_override_still_uses_requested_provider (test_kiosk_v2_audio.WindowsAudioLoadingTests.test_explicit_windows_audio_override_still_uses_requested_provider) ... ok
+test_missing_windows_mixer_is_not_loaded_from_another_location (test_kiosk_v2_audio.WindowsAudioLoadingTests.test_missing_windows_mixer_is_not_loaded_from_another_location) ... ok
+test_windows_sdl_failure_keeps_gui_audio_unavailable_instead_of_native_ffmpeg_fallback (test_kiosk_v2_audio.WindowsAudioLoadingTests.test_windows_sdl_failure_keeps_gui_audio_unavailable_instead_of_native_ffmpeg_fallback) ... Meong v2 WAV provider=SDL2 (idle channel recovery) failed
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/audio.py", line 53, in select_pcm_handle
+    handle = factory()
+             ^^^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/audio.py", line 89, in <lambda>
+    candidates.append(("SDL2 (idle channel recovery)", lambda: channel_safe_sound(path)))
+                                                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+OSError: wrapper unavailable
+Meong v2 WAV provider=SDL2 (plain fallback) failed
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/audio.py", line 53, in select_pcm_handle
+    handle = factory()
+             ^^^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/audio.py", line 101, in <lambda>
+    lambda: SoundSDL2(source=str(path))))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+OSError: SDL unavailable
+ok
+test_windows_wrapper_failure_uses_plain_sdl_without_starting_ffpyplayer (test_kiosk_v2_audio.WindowsAudioLoadingTests.test_windows_wrapper_failure_uses_plain_sdl_without_starting_ffpyplayer) ... Meong v2 WAV provider=SDL2 (idle channel recovery) failed
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/audio.py", line 53, in select_pcm_handle
+    handle = factory()
+             ^^^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/audio.py", line 89, in <lambda>
+    candidates.append(("SDL2 (idle channel recovery)", lambda: channel_safe_sound(path)))
+                                                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+TypeError: Windows ctypes failure
+ok
+
+----------------------------------------------------------------------
+Ran 56 tests in 0.049s
+
+OK

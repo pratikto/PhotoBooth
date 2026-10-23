@@ -1,5 +1,7 @@
 # Meong Photobooth — Documentation and release changelog
 
+> **P4 stage 1 (2026-10-23):** Owner-approved continuation after P3 acceptance. Copy the audited pure game engine without merging the reference branch; add local DEMO-only SQLite claim/result records and single-flight background jobs. 56 targeted tests PASS. GUI integration follows; no real scanner, payable QR or redeemable discount enabled. [Scope/tests/provenance](qa/portrait-v2-p4/README.md).
+
 > **P3 Windows owner result recorded (2026-10-23, documentation only):** Preserve the focused 16/16 report, twenty cycles and no issue notes. Preview/button lag becomes OWNER-REPORTED PASS / MONITORING; physical print batch/uncertain-restart checks are now explicitly owner-reported passes. Keep HEAD/device metadata unknown, A01 metadata incomplete and unrelated full-P3/Drive-retention gates open. No application change or new test run is implied. [Report and audit](qa/portrait-v2-preview-redraw/README.md).
 
 > **P3 preview/first-use correction (2026-10-23):** Reproduce missing redraw with actual window flips/pixel readback (baseline FAIL → fixed PASS), then request redraw per new reused camera texture as v1 does (`0d08f07`, 350 full PASS). Prepare one ready strip texture or silent camera effect per idle turn (`ef0fcb0`, 353 full PASS). Preserve owner raw 36/40 report and contradictions, add focused Submit form and printer opt-in instructions. Windows lag/physical print gates remain OPEN. [Evidence and rollback](qa/portrait-v2-preview-redraw/README.md).
