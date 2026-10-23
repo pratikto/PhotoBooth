@@ -5,6 +5,8 @@ import unittest
 
 os.environ.setdefault("PHOTOBOOTH_AUDIO", "0")
 os.environ.setdefault("PHOTOBOOTH_AD_VIDEO", "0")
+os.environ.setdefault('PHOTOBOOTH_CAMERA', '0')
+os.environ.setdefault('PHOTOBOOTH_FACE_TRIGGER', '0')
 os.environ.setdefault("KIVY_NO_ARGS", "1")
 
 try:
@@ -22,6 +24,40 @@ else:
 
 @unittest.skipUnless(HAS_KIVY, "Kivy not available in pure-Python test environment")
 class PortraitKivySmokeTests(unittest.TestCase):
+    def test_automatic_face_invitation_keeps_ad_player_and_retired_overlay_is_inert(self):
+        from unittest.mock import Mock, patch
+        device, inviter = Mock(), Mock()
+        device.read.return_value = object()
+        inviter.update.side_effect = lambda frame, revision, allowed: allowed
+        app = PortraitKioskV2App(camera_device=device, face_inviter=inviter)
+        app.build()
+        try:
+            player = app._ad_player
+            app._devices_tick(0)
+            panel = app._invitation
+            self.assertIsNotNone(panel)
+            self.assertIs(app._ad_player, player)
+            app._devices_tick(0)
+            self.assertIs(app._invitation, panel)
+            retired = next(w for w in panel.walk() if isinstance(w,ArcadeButton) and w.text=='AYO FOTO')
+            app._close_invitation()
+            with patch.object(app.audio_v2,'cue') as cue:
+                retired.dispatch('on_release')
+                cue.assert_not_called()
+            self.assertEqual(app.navigation.page, ADVERT)
+            app._devices_tick(0)
+            accept = next(w for w in app._invitation.walk() if isinstance(w,ArcadeButton) and w.text=='AYO FOTO')
+            accept.dispatch('on_release')
+            self.assertEqual(app.navigation.entry_source,'face')
+            self.assertEqual(app.navigation.page,TUTORIAL)
+            app._devices_tick(0)
+            self.assertIsNone(app._invitation)
+            app.on_pause();device.set_active.assert_called_with(False)
+            app.on_resume();device.set_active.assert_called_with(True)
+        finally:
+            app.on_stop()
+            device.close.assert_called_once_with()
+
     def test_video_source_is_not_probed_as_an_image_and_explicit_poster_still_loads(self):
         from unittest.mock import Mock, patch
         from photobooth.ui_ads import GuardedVideo

@@ -7,6 +7,7 @@ camera, retakes, Drive and printing are deliberately NOT wired up yet.
 
 from pathlib import Path
 import logging
+import os
 import time
 
 from kivy.app import App
@@ -34,6 +35,7 @@ from .theme import ArcadeButton, CYAN, GOLD, MUTED, PixelCard, PINK, Starfield, 
 from .viewport import PortraitViewport
 from .previews import PREVIEW_SIZE, PreviewPreloader
 from .gallery import SwipeGallery, StripCarousel
+from .devices import AsyncCamera, FaceInviter
 
 
 LOG = logging.getLogger(__name__)
@@ -72,6 +74,11 @@ class PortraitKioskV2App(App):
 
     title = "MEONG PHOTOBOOTH - PORTRAIT GUI V2 (PROTOTIPE)"
 
+    def __init__(self, *, camera_device=None, face_inviter=None, **kwargs):
+        self._provided_camera = camera_device
+        self._provided_inviter = face_inviter
+        super().__init__(**kwargs)
+
     def build(self):
         # Window defaults belong to the dedicated launcher, not the shared App.
         # This keeps importing/building the prototype free of global size changes.
@@ -92,10 +99,21 @@ class PortraitKioskV2App(App):
         self._invitation_timer = None
         self._warning_label = None
         self._last_activity = time.monotonic()
+        camera_enabled = os.environ.get('PHOTOBOOTH_CAMERA', '1').lower() not in {'0', 'false', 'no'}
+        try:
+            camera_index = int(os.environ.get('PHOTOBOOTH_CAMERA_INDEX', '0'))
+        except ValueError:
+            camera_index = 0
+        self.camera_device = self._provided_camera or AsyncCamera(enabled=camera_enabled, index=camera_index)
+        face_enabled = os.environ.get('PHOTOBOOTH_FACE_TRIGGER', '1').lower() not in {'0', 'false', 'no'}
+        self.face_inviter = self._provided_inviter or FaceInviter(
+            enabled=face_enabled, hold=self.catalog.timing.face_hold,
+            cooldown=self.catalog.timing.face_cooldown)
         self.stage = ScreenManager(transition=NoTransition())
         self._show()
         self._warmup = Clock.schedule_once(self._prepare_idle_assets, 0)
         self._heartbeat = Clock.schedule_interval(self._tick, 1)
+        self._devices_event = Clock.schedule_interval(self._devices_tick, 1 / 30)
         Window.bind(on_minimize=self._window_minimized, on_restore=self._window_restored)
         return self.stage
 
@@ -103,8 +121,19 @@ class PortraitKioskV2App(App):
         if self._closed:
             return
         self._preview_preloader.start()
+        self.camera_device.start()
         if not self._suspended:
             self.audio_v2.prepare()
+
+    def _devices_tick(self, _dt):
+        if self._closed:
+            return False
+        if self._suspended:
+            return
+        frame = self.camera_device.read()
+        allowed = self.navigation.page == ADVERT and self._invitation is None
+        if self.face_inviter.update(frame, self._view_revision, allowed=allowed):
+            self._show_invitation(source='face')
 
     def _window_minimized(self, *_args):
         self.on_pause()
@@ -114,6 +143,8 @@ class PortraitKioskV2App(App):
 
     def on_pause(self):
         self._suspended = True
+        self.camera_device.set_active(False)
+        self.face_inviter.pause()
         self.audio_v2.suspend()
         for widget in self.stage.walk():
             if isinstance(widget, SwipeGallery):
@@ -126,6 +157,7 @@ class PortraitKioskV2App(App):
         if self._closed or not self._suspended:
             return
         self._suspended = False
+        self.camera_device.set_active(True)
         # Background time is not customer browsing time.
         self._activity()
         self.audio_v2.resume()
@@ -142,6 +174,12 @@ class PortraitKioskV2App(App):
             self._warmup.cancel()
         if getattr(self, '_preview_preloader', None):
             self._preview_preloader.close()
+        if getattr(self, '_devices_event', None):
+            self._devices_event.cancel()
+        if getattr(self, 'camera_device', None):
+            self.camera_device.close()
+        if getattr(self, 'face_inviter', None):
+            self.face_inviter.close()
         self._close_invitation()
         self._stop_ad()
         if getattr(self, "audio_v2", None):
@@ -178,6 +216,9 @@ class PortraitKioskV2App(App):
             self._invitation_timer.cancel()
             self._invitation_timer = None
         if self._invitation is not None and self._invitation.parent is not None:
+            for control in self._invitation.walk(restrict=True):
+                if isinstance(control, ArcadeButton):
+                    control.disabled = True
             self._invitation.parent.remove_widget(self._invitation)
         self._invitation = None
         if self._ad_player is not None:
@@ -193,6 +234,7 @@ class PortraitKioskV2App(App):
         LOG.info('Page rebuild begin from=%s to=%s revision=%s',
                  self.stage.current, self.navigation.page, self._view_revision + 1)
         self._view_revision += 1
+        self.face_inviter.pause()
         self._close_invitation()
         self._stop_ad()
         self._warning_label = None
@@ -335,7 +377,7 @@ class PortraitKioskV2App(App):
             size=12, height=31, color=MUTED,
         ))
 
-    def _show_invitation(self):
+    def _show_invitation(self, source='face_preview'):
         """Real ad media stays visible beneath a nonmodal, manual demo invite."""
         if self._closed or self._suspended or self.navigation.page != ADVERT:
             return
@@ -352,10 +394,10 @@ class PortraitKioskV2App(App):
             "Yuk pilih petualanganmu bareng Meong!",
             size=13, height=30, color=MUTED))
         panel.add_widget(self._action(
-            "AYO FOTO", lambda: self._choose_photo("face_preview"),
+            "AYO FOTO", lambda: self._choose_photo(source),
             height=50))
         panel.add_widget(self._action(
-            "MAIN MEONG FLY", lambda: self._choose_game("face_preview"),
+            "MAIN MEONG FLY", lambda: self._choose_game(source),
             variant="secondary", height=50))
         panel.add_widget(self._action(
             "NANTI SAJA", self._close_invitation,

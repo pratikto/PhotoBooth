@@ -2,6 +2,12 @@
 
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
+## [Unreleased — P3 authorized; P3a asynchronous camera and face invitation] — 2026-10-23
+
+- Owner authorizes P3a/P3b on the existing v2 branch. Add one asynchronous camera adapter using the existing camera service and local face worker/hold policy; no idle recording or model download.
+- Connect fresh same-page face observations to the existing advert overlay, preserving ad playback, manual entry, cooldown and lifecycle ownership. Disable retired overlay buttons without affecting sibling ad controls.
+- 86 focused PASS; full 321 run / 319 PASS / 2 optional skips; twelve fresh captures reviewed and pixel-identical to prior pages. P3a camera/face hardware acceptance remains open; P3b follows as a separately tested stage within the same authorization. [Evidence and scope](qa/portrait-v2-p3/README.md).
+
 ## [Unreleased — owner confirms return-to-advert flow working] — 2026-10-23
 
 - Record the owner's follow-up “sudah oke” after the correction/diagnostic retest instructions. BUG-012 becomes OWNER-REPORTED PASS / MONITORING; no further crash patch is planned while it works.

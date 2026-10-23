@@ -478,3 +478,15 @@ Branding follow-up: 52 targeted tests PASS and twelve screenshots reviewed, incl
 - [ ] Post-update tested HEAD and twenty completed Windows cycles supplied; F05/F06 stay unverified.
 
 [Evidence and next focused Windows check](qa/portrait-v2-return-ad-crash/README.md).
+
+## P3a — asynchronous camera and actual face invitation (2026-10-23)
+
+- [x] P3a/P3b explicitly authorized; keep the same branch and payment/game/scanner boundaries.
+- [x] 86 focused PASS, full 321 run / 319 PASS / 2 optional model skips.
+- [x] Slow/late camera open, pause/resume, reconnect and stale frame/results tests.
+- [x] Automatic overlay retains ad-player identity; retired controls are inert.
+- [x] Twelve reviewed screenshots at 800×1280 and 452×900 match prior page pixels.
+- [ ] Matching-source P3a CI after push; physical Windows camera/face acceptance.
+- [ ] P3b implementation and its own tests, captures and checkpoints.
+
+[P3 scope, evidence and remaining Windows checklist](qa/portrait-v2-p3/README.md).

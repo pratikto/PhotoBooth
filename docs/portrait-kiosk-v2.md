@@ -1,5 +1,13 @@
 # FEAT-022 - Meong Photobooth portrait kiosk GUI v2 (working specification)
 
+> **P3 authorized (2026-10-23):** Owner requests “oke tolong eksekusi p3”. P3a
+> camera/face adapters are implemented: one asynchronous camera owner, existing
+> offline face detector/hold policy and safe automatic invitation over ads.
+> 86 focused PASS; full 321 run / 319 PASS / 2 optional skips; twelve unchanged
+> captures reviewed. P3b photo/print/Drive work follows within this authorization;
+> physical camera/face and prior twenty-cycle acceptance remain open.
+> [Current staged P3 evidence](qa/portrait-v2-p3/README.md).
+
 > **Current owner update (2026-10-23): BUG-012 OWNER-REPORTED PASS / MONITORING.**
 > Following the return-to-advert diagnostic/correction retest instructions, the
 > owner replied “sudah oke”. Post-update tested HEAD/cycle count were not supplied;

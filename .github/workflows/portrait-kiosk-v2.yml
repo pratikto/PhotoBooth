@@ -23,7 +23,7 @@ jobs:
       - name: Syntax
         run: python -m compileall -q photobooth/kiosk_v2 tools/run_portrait_v2.py tools/render_portrait_v2.py tests/test_kiosk_v2_*.py
       - name: Kivy-independent navigation and fake audio tests
-        run: python -m unittest tests.test_kiosk_v2_flow tests.test_kiosk_v2_audio tests.test_kiosk_v2_design_tokens tests.test_kiosk_v2_previews tests.test_kiosk_v2_diagnostics -v
+        run: python -m unittest tests.test_kiosk_v2_flow tests.test_kiosk_v2_audio tests.test_kiosk_v2_design_tokens tests.test_kiosk_v2_previews tests.test_kiosk_v2_diagnostics tests.test_kiosk_v2_devices -v
 
   desktop:
     name: Synthetic Kivy screen/nav smoke (no hardware)
@@ -34,6 +34,8 @@ jobs:
       KIVY_NO_CONSOLELOG: "1"
       PHOTOBOOTH_AUDIO: "0"
       PHOTOBOOTH_AD_VIDEO: "0"
+      PHOTOBOOTH_CAMERA: "0"
+      PHOTOBOOTH_FACE_TRIGGER: "0"
       SDL_AUDIODRIVER: dummy
       LIBGL_ALWAYS_SOFTWARE: "1"
     steps:
@@ -46,7 +48,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y xvfb libgl1-mesa-dri libgl1 libegl1 libmtdev1 libxkbcommon0
-          python -m pip install "Kivy>=2.3.1,<3" Pillow tzdata "ffpyplayer>=4.5,<5"
+          python -m pip install "Kivy>=2.3.1,<3" Pillow tzdata "ffpyplayer>=4.5,<5" "opencv-python-headless>=4.10,<5" requests
+      - name: Load the bundled offline face detector and check hold/cooldown policy
+        run: python -m unittest tests.test_face_presence -v
       - name: Exercise opt-in Kivy widgets at a virtual display
         run: PHOTOBOOTH_TEST_AUDIO=1 xvfb-run -a python -m unittest tests.test_kiosk_v2_widgets -v
       - name: Reuse muted native channels across twenty audio cycles (dummy PCM output)
@@ -85,7 +89,7 @@ jobs:
       - name: Install Windows native providers
         run: python -m pip install "Kivy>=2.3.1,<3" "ffpyplayer>=4.5,<5"
       - name: Check Windows DLL loading, safe WAV fallback and twenty PCM cycles
-        run: python -m unittest tests.test_kiosk_v2_audio tests.test_kiosk_v2_native_audio tests.test_kiosk_v2_diagnostics -v
+        run: python -m unittest tests.test_kiosk_v2_audio tests.test_kiosk_v2_native_audio tests.test_kiosk_v2_diagnostics tests.test_kiosk_v2_devices -v
 
 # These are synthetic checks. Real Windows music audibility, video decoder,
 # face camera, thermal output, actual QRIS and end-to-end UI are NOT certified.

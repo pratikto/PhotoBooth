@@ -1,0 +1,16 @@
+{
+  "base_sha": "419cfedfa63bd53df64831437c6d63f25bc1fb10",
+  "tracked_changes": true,
+  "synthetic_only": true,
+  "source_sha256": {
+    "photobooth/kiosk_v2/devices.py": "cf917f9c58faf6effc865877d236022bfb1f0c84613e0bb24af32a70bb6f75ee",
+    "photobooth/kiosk_v2/app.py": "25825413f3be2e42eb8c9558ee2a1e829f9dc45b919d08fb4b82dd2cae8ab563",
+    "tests/test_kiosk_v2_devices.py": "26a33938fa54e9a53194120366d776532055dba88ac3f4f5ef711370c84cbd62",
+    "tests/test_kiosk_v2_widgets.py": "d781e8bccc075bd97b2997e2abb75e175107fb8a93be4e3adadb7f7847227fd5",
+    "tools/render_portrait_v2.py": "b7b9d2b5a69e19d9a26dd24bd84efa3d193220225dca9268666826f65e7d5d18",
+    ".github/workflows/portrait-kiosk-v2.yml": "410be79aabb768e37af93dcda413e12ab227c4709bc191de540651c30eafc51c"
+  },
+  "captures": 12,
+  "pixel_identical_to_pre_p3": true,
+  "physical_camera_and_face_acceptance": "NOT RUN"
+}

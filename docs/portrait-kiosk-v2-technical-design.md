@@ -5,6 +5,16 @@
 **Status:** the explicitly labelled **CURRENT** items below were found in opt-in source; everything labelled **PROPOSED** is a future interface, not an implemented integration.  
 **Base:** stable master, original v1.0.0 remains unchanged; dedicated v2 package descends from feature/portrait-kiosk-gui.
 
+> **P3 authorization/current override (2026-10-23):** Owner explicitly requests
+> P3a and P3b. P3a now reuses one asynchronously opened camera and the existing
+> nonrecording face worker/hold policy for automatic idle invitations. Native
+> imports remain lazy and QA fixtures keep hardware disabled. P3b will connect
+> photo/print/Drive via isolated nonfinancial test admission; no real payment,
+> scanner, discount, game integration or production transactions are authorized.
+> [Current source evidence and remaining physical gates](qa/portrait-v2-p3/README.md).
+> Older CURRENT/PROPOSED inventory below describes the pre-P3 snapshot where
+> superseded by this update.
+
 ## 1. Rebuild principle
 
 Greenfield v2 rebuilds **Kivy customer-facing widgets, navigation, page transitions and audio ownership** from scratch. Reuse only already working, independently testable back-end services and original approved design/media assets; do not copy the legacy v1 screen layout as a new "portrait" presentation. Never rewrite camera JPEG acquisition, print raster/transport, Drive manifest/upload or order accounting merely to change the presentation layer.
