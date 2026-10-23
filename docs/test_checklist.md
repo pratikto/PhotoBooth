@@ -1,5 +1,14 @@
 ## FEAT-011 — Auto Tune Enhanced Floyd (2026-10-21)
 
+## Independent Auto Tune GUI — 2026-10-23
+
+FEAT-011: manual sliders retained; Auto Tune uses fixed system search independent
+of manual values, with explicit Apply. 53 local regressions and compile PASS;
+Tk/Windows/physical acceptance pending. Prior manual-seeded behavior is superseded.
+See [current lab workflow and validation](dither-tuning-lab.md#independent-auto-tune-gui--2026-10-23).
+Publication remains pending after the previous automatic approval rejection.
+
+
 ## Auto Tune continuation — 2026-10-22
 
 - Owner-authorized FEAT-011 improvement; baseline `26964d8`.

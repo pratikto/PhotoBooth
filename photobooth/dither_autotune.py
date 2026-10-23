@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 from typing import Callable
+import random
 
 from PIL import Image, ImageChops, ImageFilter, ImageStat
 
@@ -43,7 +44,7 @@ class AutoTuneCandidate:
 class AutoTuneResult:
     candidates: tuple[AutoTuneCandidate, ...]
     trials: int
-    baseline: AutoTuneCandidate  # Exact original settings, including enhancement flag.
+    baseline: AutoTuneCandidate  # System-neutral Enhanced Floyd reference.
     # No network, trained AI, facial recognition or automatic printer actions.
 
 
@@ -126,11 +127,9 @@ def tune_enhanced_floyd(
 ) -> AutoTuneResult:
     """Return three ranked native-size candidates; never alter caller state.
 
-    Two coarse-to-fine searches evaluate at most 50 settings at reduced
-    resolution, then rerank at most 8 finalists plus the exact original profile.
-    The neutral Enhanced Floyd profile is also always a native finalist.
-    The current manual settings are ALWAYS a finalist as a safety baseline.
-    Both passes use real Floyd/Enhanced Floyd rendering, not a fake halftone.
+    Only the requested print width is used from starting_profile. Search uses
+    a fixed random seed and system-neutral parameters, independent of sliders.
+    At most 65 proxy evaluations plus 8 native finalists; neutral is guaranteed.
     """
     if not isinstance(starting_profile, DitherProfile):
         raise TypeError("Expected DitherProfile.")
@@ -142,7 +141,7 @@ def tune_enhanced_floyd(
     if cancel():
         raise AutoTuneCancelled("Auto Tune cancelled before starting.")
 
-    start = replace(starting_profile, enhanced_floyd=True)
+    start = DitherProfile(width_dots=starting_profile.width_dots, enhanced_floyd=True)
     proxy = source.copy()
     proxy.thumbnail(PROXY_MAX_SIZE, Image.Resampling.LANCZOS)
     proxy_ref = _photo_gray(proxy, start.width_dots)
@@ -160,9 +159,18 @@ def tune_enhanced_floyd(
                 on_progress(len(scores), "Searching")
         return scores[key][0]
 
-    # A neutral restart can escape poor manual settings without discarding them.
-    neutral = replace(start, brightness=1.0, contrast=1.0, gamma=1.0, sharpness=1.0)
-    for seed in (start, neutral):
+    # Explore system bounds reproducibly, then refine two system-chosen seeds.
+    neutral = start
+    evaluate(neutral)
+    rng = random.Random(42)
+    for _ in range(16):
+        proposal = replace(neutral, **{
+            field: round(rng.uniform(low, high), 3)
+            for field, (low, high) in zip(TUNING_FIELDS, BOUNDS)
+        })
+        evaluate(proposal)
+    best_probe = max(scores.values(), key=lambda item: item[0])[1]
+    for seed in (neutral, best_probe):
         center = seed
         evaluate(center)
         for step_set in SEARCH_STEPS:
@@ -182,11 +190,9 @@ def tune_enhanced_floyd(
     shortlisted = [profile for _, profile in sorted(
         scores.values(), key=lambda item: (-item[0], _signature(item[1]))
     )[:SHORTLIST_SIZE]]
-    # Reserve native-resolution slots for both anchors, even when proxy ranks differ.
-    anchors = { _signature(p) for p in (start, neutral) }
-    shortlisted = [p for p in shortlisted if _signature(p) not in anchors]
-    shortlisted = shortlisted[:SHORTLIST_SIZE - len(anchors)]
-    shortlisted += [start] if start == neutral else [start, neutral]
+    # Keep a system-neutral native reference, independent of manual values.
+    if _signature(neutral) not in {_signature(p) for p in shortlisted}:
+        shortlisted[-1] = neutral
     full_ref = _photo_gray(source, start.width_dots)
     final: list[AutoTuneCandidate] = []
     for profile in shortlisted:
@@ -203,20 +209,9 @@ def tune_enhanced_floyd(
             on_progress(len(scores) + len(final), "Validating native dots")
 
     if cancel():
-        raise AutoTuneCancelled("Auto Tune cancelled before baseline comparison.")
-    baseline = next((c for c in final if c.profile == starting_profile), None)
-    baseline_trials = 0
-    if baseline is None:
-        raster = render_thermal_image(source, starting_profile)
-        score, tone, edges, black = score_print_proxy(raster, full_ref, starting_profile)
-        baseline = AutoTuneCandidate(starting_profile, raster, round(score, 3),
-                                     round(tone, 3), round(edges, 3), round(black, 2))
-        baseline_trials = 1
-    trials = len(scores) + len(final) + baseline_trials
-    if on_progress:
-        on_progress(trials, "Compared original settings")
-    if cancel():
-        raise AutoTuneCancelled("Auto Tune cancelled after baseline comparison.")
+        raise AutoTuneCancelled("Auto Tune cancelled after native validation.")
+    baseline = next(c for c in final if c.profile == neutral)
+    trials = len(scores) + len(final)
 
     ranked = sorted(final, key=lambda item: (
         -item.score, item.tone_error, _signature(item.profile)

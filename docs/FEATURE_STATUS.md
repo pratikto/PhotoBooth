@@ -1,5 +1,14 @@
 # Meong Photobooth — Current feature status
 
+## Independent Auto Tune GUI — 2026-10-23
+
+FEAT-011: manual sliders retained; Auto Tune uses fixed system search independent
+of manual values, with explicit Apply. 53 local regressions and compile PASS;
+Tk/Windows/physical acceptance pending. Prior manual-seeded behavior is superseded.
+See [current lab workflow and validation](dither-tuning-lab.md#independent-auto-tune-gui--2026-10-23).
+Publication remains pending after the previous automatic approval rejection.
+
+
 ## FEAT-011 update — 2026-10-22
 
 Auto Tune now searches from both manual and neutral profiles and displays score differences against the exact original settings. Small-image metric blends dots correctly. Local 53-test regression PASS; Tk CI pending; Windows and paper acceptance pending. BUG-004 remains open. See [lab guide](dither-tuning-lab.md).

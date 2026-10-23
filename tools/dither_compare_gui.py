@@ -272,7 +272,7 @@ class ComparisonApp:
             return
         # Auto Tune always searches Enhanced Floyd; it does not silently tick
         # the live checkbox or change other lanes until Apply is clicked.
-        profile = replace(self.configs.floyd, enhanced_floyd=True)
+        profile = DitherProfile(width_dots=self.configs.floyd.width_dots, enhanced_floyd=True)
         source = self.source.copy()
         self.autotune_generation += 1
         generation = self.autotune_generation
@@ -347,7 +347,7 @@ class ComparisonApp:
             font=("Segoe UI", 12, "bold")
         ).pack(padx=12, pady=(12, 4))
         ttk.Label(
-            dialog, text="All candidates use Enhanced Floyd. No changes are "
+            dialog, text="Auto Tune ignores manual sliders and searches Enhanced Floyd. No changes are "
                          "applied or printed until you choose Apply. "
                          "Print Test separately to judge real paper.",
             wraplength=820, justify="center"
@@ -355,11 +355,10 @@ class ComparisonApp:
 
         baseline = self.autotune_result.baseline
         gain = self.autotune_result.candidates[0].score - baseline.score
-        state = "ON" if baseline.profile.enhanced_floyd else "OFF"
         self.autotune_baseline_text = (
-            f"Original settings: {baseline.score:.1f}/100 (Enhanced {state}). "
-            f"Best candidate: {gain:+.2f} points vs original. "
-            + ("No digital improvement; keep original or compare on paper."
+            f"System neutral: {baseline.score:.1f}/100. "
+            f"Best candidate: {gain:+.2f} points vs neutral. "
+            + ("No digital improvement; keep manual settings or compare on paper."
                if gain <= 0 else "Confirm the difference on paper."))
         ttk.Label(dialog, text=self.autotune_baseline_text, wraplength=820,
                   justify="center").pack(padx=12, pady=(0, 8))
@@ -388,7 +387,7 @@ class ComparisonApp:
                 text=(f"Brightness {p.brightness:.3f}   Contrast {p.contrast:.3f}\n"
                       f"Gamma {p.gamma:.3f}   Sharpness {p.sharpness:.3f}\n"
                       f"Black dots {candidate.black_coverage:.1f}%\n"
-                      f"Vs original {candidate.score - baseline.score:+.2f} points\n"
+                      f"Vs neutral {candidate.score - baseline.score:+.2f} points\n"
                       f"Tonal error {candidate.tone_error:.1f}   "
                       f"Edge error {candidate.edge_error:.1f}"),
                 justify="left",

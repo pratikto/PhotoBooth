@@ -1,5 +1,28 @@
 # Meong Photobooth — Thermal Dither Tuning Lab
 
+## Independent Auto Tune GUI — 2026-10-23
+
+Owner-approved FEAT-011 continuation: Auto Tune ignores manual parameter values.
+The existing Floyd **Auto Tune** button starts a reproducible system search:
+16 seeded random samples across bounded brightness/contrast/gamma/sharpness,
+then coarse-to-fine coordinate refinement from neutral and the best sampled
+profile. At most 65 proxy + 8 native evaluations. Only print width is inherited;
+photo grayscale is the scoring target. Neutral Enhanced Floyd is always a native
+finalist and the dialog reports score differences against this system reference.
+Manual sliders and their current values remain available and unchanged until
+**Apply Best / Apply Selected**. Closing/cancelling keeps manual settings;
+Save Selected Preset exports without applying. After Apply, sliders remain editable.
+Print Test is still a separate operator action. Search remains Enhanced Floyd only.
+
+Validation: 53 targeted backend/static regressions PASS on Linux/Pillow 12.3.0;
+compile PASS. Regression verifies identical candidates, scores and raster bytes
+with opposite manual parameter extremes. Tk runtime and Windows/paper checks
+remain pending (no local display/Xvfb). Supersedes the manual-seeded search and
+manual-baseline dialog described in historical entries below. Local checkpoint:
+`05f699d`; remote baseline/rollback `26964d8`. Publication previously blocked by
+automatic approval review; no new push attempted without explicit authorization.
+
+
 **Experiment:** FEAT-011, investigating open BUG-004 (blurry/low-quality photo print).  
 **Branch:** `feature/dither-tuning` (created 2026-10-18 from `feature/kivy-gui` commit `5e0a898`).  
 **Scope:** offline photo-rendering sandbox; the existing photobooth application and photo/QR print pipeline have **not** been changed or merged.

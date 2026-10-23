@@ -42,7 +42,7 @@ class AutoTuneTests(unittest.TestCase):
             on_progress=lambda n, phase: progress.append((n, phase)))
         self.assertEqual(len(report.candidates), 3)
         self.assertGreaterEqual(report.trials, 3)
-        self.assertLessEqual(report.trials, 59)
+        self.assertLessEqual(report.trials, 73)
         self.assertEqual(report.trials, progress[-1][0])
         self.assertEqual([c.score for c in report.candidates],
                          sorted((c.score for c in report.candidates), reverse=True))
@@ -66,20 +66,29 @@ class AutoTuneTests(unittest.TestCase):
         self.assertEqual(self.source.tobytes(), source_before)
         self.assertFalse(baseline.enhanced_floyd)  # no implicit apply
 
-    def test_exact_original_baseline_and_neutral_fallback(self):
+    def test_manual_parameters_do_not_influence_candidates(self):
+        reports = []
         for enhanced in (False, True):
             original = DitherProfile(brightness=0.5, contrast=2.5, gamma=0.3,
                                      sharpness=3.0, enhanced_floyd=enhanced)
             result = tune_enhanced_floyd(self.source, original)
-            self.assertEqual(result.baseline.profile, original)
+            reports.append(result)
+            self.assertEqual(result.baseline.profile, DitherProfile(enhanced_floyd=True))
             self.assertEqual(result.baseline.raster.tobytes(),
-                             render_thermal_image(self.source, original).tobytes())
+                             render_thermal_image(self.source, DitherProfile(enhanced_floyd=True)).tobytes())
             neutral = DitherProfile(enhanced_floyd=True)
             neutral_score = score_print_proxy(
                 render_thermal_image(self.source, neutral),
                 _photo_gray(self.source, neutral.width_dots), neutral)[0]
             self.assertGreaterEqual(result.candidates[0].score, round(neutral_score, 3))
-            self.assertLessEqual(result.trials, 59)
+            self.assertLessEqual(result.trials, 73)
+
+        reports.append(tune_enhanced_floyd(self.source, DitherProfile(
+            brightness=1.75, contrast=0.5, gamma=3.0, sharpness=0.0)))
+        expected = [(c.profile, c.score, c.raster.tobytes()) for c in reports[0].candidates]
+        for result in reports[1:]:
+            self.assertEqual(expected, [(c.profile, c.score, c.raster.tobytes())
+                                        for c in result.candidates])
 
     def test_small_midtone_is_scored_as_blended_dots(self):
         source = Image.new("L", (96, 96), 128)
