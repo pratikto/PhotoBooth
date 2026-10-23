@@ -41,6 +41,8 @@ class AutoTuneTests(unittest.TestCase):
             self.source, baseline,
             on_progress=lambda n, phase: progress.append((n, phase)))
         self.assertEqual(len(report.candidates), 3)
+        self.assertTrue(any(c.profile.smart_enhance for c in report.candidates))
+        self.assertTrue(any(c.profile.postprocess_enabled for c in report.candidates))
         self.assertGreaterEqual(report.trials, 3)
         self.assertLessEqual(report.trials, 115)
         self.assertEqual(report.trials, progress[-1][0])
