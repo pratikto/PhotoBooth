@@ -48,6 +48,28 @@ pre-P3 base plus tracked changes. Matching-source CI follows the normal push.
 
 ## P3b — next authorized stage
 
+### Service adapter checkpoint
+
+`photos.py` reuses the actual `TransactionStore`, `PhotoSession`, composition and
+printer services behind a single-flight worker. The test namespace is
+`data/kiosk-v2-p3`, default booth ID `PB001V2`; configured IDs must end in `V2`.
+No paid admission or production counters/manifests are touched. Three source
+JPEGs and an optional one-photo replacement remain unmirrored; all originals
+are preserved. One design creates one session and N copies of the same output.
+
+Printing persists SENDING before one batch, then SUBMITTED or UNCERTAIN.
+Repeated sends are rejected, restart never replays jobs, and an uncertain result
+requires operator acknowledgement. Paper output is never inferred from send success.
+Drive is opt-in and uses a separate pool. Uploads are held until the existing
+backend acknowledges retention; no remote cleanup/deployment is attempted.
+Default local composition has the existing MODE LOKAL footer, no fake QR.
+
+**74 service tests PASS**, including nine new real JPEG/composition, quota,
+failure, single-flight, isolated-ID, print-journal and retention-guard tests:
+[transcript](p3b-service-tests.txt). These exercise adapters with fake devices,
+not physical camera/printer/Drive acceptance. The native photo pages follow in
+the next implementation checkpoint. Rollback before adapters: `579fbf3be7dbb2b3ec4e51e6a9b8454f921e97ee`.
+
 ### New v2 shutter, 2026-10-23
 
 The owner requests a better camera SFX than v1. V2 now selects the original
