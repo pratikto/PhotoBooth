@@ -1,0 +1,84 @@
+{
+  "verified_at": "2026-10-23T16:41:32.143419+07:00",
+  "source_sha": "ef0fcb0e15f3c83178044631e84530b5b629a821",
+  "pre_correction_checkpoint": "507035b451ff9db84972b52b19a0f20d1271c542",
+  "redraw_checkpoint": "0d08f07acc471c7776e5bc494c53c00f3d48f717",
+  "ci": {
+    "url": "https://github.com/pratikto/PhotoBooth/actions/runs/39932978580",
+    "head_sha": "ef0fcb0e15f3c83178044631e84530b5b629a821",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "name": "Windows Python 3.12 native SDL audio (dummy output)",
+        "conclusion": "success",
+        "url": "https://github.com/pratikto/PhotoBooth/actions/runs/39932978580/job/120345541063"
+      },
+      {
+        "name": "Navigation and audio lifecycle",
+        "conclusion": "success",
+        "url": "https://github.com/pratikto/PhotoBooth/actions/runs/39932978580/job/120345541313"
+      },
+      {
+        "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+        "conclusion": "success",
+        "url": "https://github.com/pratikto/PhotoBooth/actions/runs/39932978580/job/120345541556"
+      }
+    ]
+  },
+  "native_regression": {
+    "stage1_run": 350,
+    "final_run": 353,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "public_model_fixtures": true,
+    "dummy_audio_video": true
+  },
+  "redraw_regression": {
+    "baseline_507035b": "FAIL: no window redraw for new pixels",
+    "fixed_ef0fcb0": "PASS: six flips and displayed RGB values verified",
+    "same_texture_reused": true,
+    "no_touch_or_countdown_required": true
+  },
+  "source_sha256": {
+    "photobooth/kiosk_v2/app.py": "39d0709e30ff0febbb21f81725823e90ee3747d1526b235afb58a4342f3d10c6",
+    "photobooth/kiosk_v2/audio.py": "c80dd9524ccafc61e5a4de62f111725291cc58ebae66c1525d238625aa0499b0",
+    "photobooth/kiosk_v2/photo_views.py": "cc81806f109da85d91810ad06114daa4099543efac6c46498bb1b96e8c1628a2",
+    "tests/test_kiosk_v2_widgets.py": "9360d88141424ae5cac79a17641420ade56c164dca0bbc3ba550275597dcc843",
+    "tests/test_kiosk_v2_audio.py": "69633ade18e3078c9d1b568a6776308d74e09838839ce7e4397fd5f2ae4b2049"
+  },
+  "unchanged_v1_sha256": {
+    "main.py": "6c2083230e95e05acb7615e6e2fd397e014f89e61cf0f759dab34af6e34b5f4f",
+    "photobooth/app.py": "61390e6e4977837ee8ce68b1f570b807de4abfa59698c97cfbf3c4409eaaf019",
+    "photobooth/ui_kivy.py": "b8cdd1ab19ddc3af77d7ad92250365042fd88f00dab1804d426d965c7ccacfd1",
+    "photobooth/camera.py": "c1a47e981c5f8b83a34302d83050808cf7f9ef3130f20ac1dfb1bf7e0157622a",
+    "photobooth/audio.py": "0c6a24d4a42e0667448cfcd9a6f8ee5b1a511a6a9fb2ec20d0fee237500fd6df",
+    "photobooth/palm_gesture.py": "92865a0aedf597711dabf3243c11faa0a86e04b0716fb425465a429296459df4",
+    "photobooth/face_presence.py": "f2f977402bf650d7ff525c3e26a142d08d823c17052da1584fb6cabc6d0abca2",
+    "photobooth/printer.py": "5820a87ecd256573617fbdbcea52f3b3c757cbcdb29f481fdc5f2a809509b374",
+    "photobooth/printer_settings.py": "f639b21dc2270f08e1b203527d7e9ee126eda71982ef7a1fff444b8ce45ef89e",
+    "photobooth/drive_storage.py": "0bb540e8cb21fa1a4f12ba65376a99ae13cdd0e9a214ec92f829aef3fe67c81d"
+  },
+  "screenshots": {
+    "count": 24,
+    "sizes": [
+      "800x1280",
+      "452x900"
+    ],
+    "hashes_checked": true,
+    "contact_sheets_reviewed": true,
+    "synthetic_only": true
+  },
+  "owner_report": {
+    "sha256": "ca9a7ea025d43cc8ea30b93ec04689717e6262f7025139b86fd167d618b16d3a",
+    "preserved_byte_for_byte": true,
+    "raw_checked": 36,
+    "raw_items": 40,
+    "tested_head": null,
+    "preview_pass_conflicts_with_notes": true
+  },
+  "windows_device_preview_acceptance": "OPEN",
+  "windows_first_use_button_acceptance": "OPEN",
+  "physical_print_acceptance": "NOT TESTED IN REPORT"
+}

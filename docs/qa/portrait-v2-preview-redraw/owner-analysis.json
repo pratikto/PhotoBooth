@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-23",
+  "timezone": "Asia/Jakarta",
+  "branch": "feature/portrait-kiosk-v2-next",
+  "tested_head": null,
+  "camera": "laptop cam",
+  "camera_index": null,
+  "resolution": null,
+  "scaling_percent": 100,
+  "speaker": null,
+  "reported_cycles": 20,
+  "raw_checked": 36,
+  "raw_items": 40,
+  "unchecked": [
+    "B02",
+    "D03",
+    "D04",
+    "D05"
+  ],
+  "conflicts": [
+    {
+      "item": "B03",
+      "status": "FAILED IN OWNER NOTE; raw check preserved",
+      "reason": "Preview is checked but the issue notes explicitly report very severe preview lag."
+    },
+    {
+      "item": "A02",
+      "status": "PARTIAL / NOT FULLY TESTED",
+      "reason": "Built-in camera cannot be unplugged; responsive idle does not certify detach/reconnect."
+    },
+    {
+      "item": "B05",
+      "status": "PARTIAL / NOT FULLY TESTED",
+      "reason": "Minimize may be checked; physical unplug is not tested on the built-in camera."
+    },
+    {
+      "item": "D02",
+      "status": "PARTIAL / NOT FULLY TESTED",
+      "reason": "Owner says print test is disabled. Default-disabled behavior does not certify any physical print batch."
+    },
+    {
+      "item": "A01",
+      "status": "METADATA INCOMPLETE",
+      "reason": "HEAD, camera index and resolution are empty."
+    }
+  ],
+  "notes": [
+    "Kapan lag terasa says tidak terasa but issue notes report preview lag and delayed page buttons; do not infer latency acceptance.",
+    "Owner clarified first use of random buttons can lag and later uses are usually smooth.",
+    "D03-D05 and B02 remain failed OR not tested; no automatic PASS.",
+    "Face and open-palm checkmarks are owner-reported at unknown HEAD, not independent exact-source acceptance.",
+    "Printer connection does not enable PHOTOBOOTH_V2_PRINT; local default remains unchanged."
+  ]
+}

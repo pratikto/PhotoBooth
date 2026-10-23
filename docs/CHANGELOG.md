@@ -1,5 +1,7 @@
 # Meong Photobooth — Documentation and release changelog
 
+> **P3 preview/first-use correction (2026-10-23):** Reproduce missing redraw with actual window flips/pixel readback (baseline FAIL → fixed PASS), then request redraw per new reused camera texture as v1 does (`0d08f07`, 350 full PASS). Prepare one ready strip texture or silent camera effect per idle turn (`ef0fcb0`, 353 full PASS). Preserve owner raw 36/40 report and contradictions, add focused Submit form and printer opt-in instructions. Windows lag/physical print gates remain OPEN. [Evidence and rollback](qa/portrait-v2-preview-redraw/README.md).
+
 > **P3 stage 3 (2026-10-23):** Archive final 349/349 native-fixture regression and 71 focused passes, matching-source three-job CI at `a059d30`, verified original artifact digest and 40 image hashes/contact sheets. Add a browser-verified 40-item Windows form with Submit, camera/index/lag fields, missing-metadata status, separate storage and preserved twenty-cycle gate. Document owner raw 21/34, open device bugs, optional dependency setup and rollback checkpoints; no runtime or legacy-service change in this stage. [Final verification](qa/portrait-v2-p3-retest/final-verification.json).
 
 

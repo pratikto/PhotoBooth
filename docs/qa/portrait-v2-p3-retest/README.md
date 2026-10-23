@@ -1,5 +1,7 @@
 # P3 Windows retest — responsiveness and optional gesture follow-up
 
+> Latest follow-up: [preview redraw/first-use correction and fuller 36/40 report audit](../portrait-v2-preview-redraw/README.md). This file preserves the earlier 21/34 report and source checkpoints; do not treat them as the newest Windows result. Use the [focused 16-item form](../portrait-v2-preview-redraw/windows-checklist.html) for the new correction.
+
 Owner report, 2026-10-23 Asia/Jakarta: **21/34 checked, 13 open**, Windows 11,
 100% scaling, laptop speakers, 20 reported cycles. Tested HEAD, resolution and
 camera model/index are missing. [Original report](owner-retest-2026-10-23.txt)

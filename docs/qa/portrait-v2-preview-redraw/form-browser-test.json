@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "items": 16,
+  "checks": [
+    "initial unchecked",
+    "20-cycle guard",
+    "submit prompt",
+    "unknown HEAD",
+    "unchecked print gate",
+    "local storage",
+    "360px resize",
+    "no JS errors",
+    "old 40-item storage not imported",
+    "camera index zero retained",
+    "missing metadata remains unverified",
+    "download report contains the new 16-item title"
+  ],
+  "form_sha256": "15b1021cb0c1453511b373aebb6cef3ac983ee205481dda10bf607d80fa5921d",
+  "viewport_sizes": [
+    "452x900",
+    "360x640"
+  ]
+}

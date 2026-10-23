@@ -1,0 +1,84 @@
+Berikut hasil retest Windows Meong Photobooth v2. Tolong analisis hasil dan catatan masalah. Item kosong berarti gagal atau belum diuji; jangan otomatis dianggap lulus.
+
+MEONG PHOTOBOOTH GUI V2 — RETEST P3 RESPONS & OPEN-PALM (40 ITEM)
+Branch: feature/portrait-kiosk-v2-next
+HEAD yang diuji: 
+Tanggal: 2026-10-23
+Versi Windows: win 11
+Resolusi layar: 
+Display scaling (%): 100%
+Speaker/output audio: 
+Kamera: laptop cam
+Index kamera: 
+Kapan lag terasa: tidak terasa
+Jumlah putaran selesai: 20
+Status HEAD: BELUM DIISI — exact-HEAD acceptance belum terverifikasi.
+Gate 20 putaran: Jumlah putaran memenuhi syarat; G01–G02 mengikuti centang hasil uji.
+Status metadata: BELUM LENGKAP — HEAD/resolusi/kamera/index belum seluruhnya diisi.
+
+Lulus: 36/40
+Belum dicentang (gagal/belum diuji): 4
+
+A. Startup, kamera & undangan
+[x] A01 Jalankan launcher GUI v2: iklan terbuka tanpa error; isi HEAD, kamera dan resolusi pada metadata di atas.
+[x] A02 Kamera dan tombol terasa responsif sejak iklan; cabut/pasang kamera kembali memulihkan satu perangkat, tanpa antrean frame lama.
+[x] A03 Wajah terlihat stabil lima detik: petunjuk TAHAN muncul, kemudian satu undangan terbuka di atas iklan; tidak menyimpan foto saat idle.
+[x] A04 AYO FOTO, MAIN MEONG FLY dan NANTI SAJA tetap benar; timeout/cooldown mencegah undangan bertubi-tubi.
+[x] A05 Tutorial wajib, 12 strip, swipe, panah melayang dan jumlah cetak 0–9 tetap normal setelah resize.
+
+B. Masuk uji & ambil tiga foto
+[x] B01 UJI FOTO baru aktif setelah memilih jumlah cetak; konfirmasi jelas TANPA PEMBAYARAN.
+[ ] B02 Tanpa kamera, konfirmasi tidak memulai capture; sambungkan lalu coba lagi.
+[x] B03 Preview kamera lancar dan tetap di dalam panel; preview cermin, JPEG asli tidak terbalik dan resolusinya tetap milik kamera.
+[x] B04 Tekan SIAP untuk setiap foto: countdown lima detik dan satu bunyi per angka; tepat tiga foto per desain.
+[x] B05 Cabut kamera atau minimize saat countdown: tidak menyimpan frame lama; setelah pulih ulangi countdown dari awal.
+
+C. Review & retake
+[x] C01 Tiga foto terlihat jelas di review; pilih retake foto 1, 2 atau 3 pada sesi yang berbeda.
+[x] C02 Retake perlu tombol SIAP/countdown baru; hanya satu foto terpilih diganti dan quota satu kali per sesi.
+[x] C03 Empat raw (tiga asli + retake) tetap tersimpan; final strip memakai tiga foto dengan pengganti di posisi yang benar.
+[x] C04 Sesi desain berikutnya punya quota baru; N lembar desain sama tidak menambah sesi capture.
+
+D. Komposisi & cetak uji (operator)
+[x] D01 PAKAI FOTO INI menghasilkan PNG 640×1920 dari template asli; tiga slot dan footer terlihat utuh.
+[x] D02 Default: CETAK UJI nonaktif. Dengan opt-in operator dan printer uji, tekan CETAK sekali: satu batch N lembar desain yang sama.
+[ ] D03 Tap CETAK cepat/berulang tidak mengirim ulang; SUBMITTED berarti terkirim, verifikasi N lembar fisik secara terpisah.
+[ ] D04 Pada kegagalan/kertas/koneksi, hasil tidak pasti tidak diklaim sukses; tidak retry otomatis, cek printer sebelum mengakui.
+[ ] D05 Tutup/buka saat kiriman belum pasti: aplikasi tidak mengirim ulang; periksa log/journal dan lembar fisik sebelum tindakan operator.
+
+E. Lokal & Drive (operator)
+[x] E01 Default lokal: footer MODE LOKAL, tanpa QR palsu; raw/hasil tersimpan di data/kiosk-v2-p3/photos.
+[x] E02 Dengan Drive uji diaktifkan dan backend retensi siap, folder/QR memakai pool PB001V2 terpisah dari v1.
+[x] E03 Putuskan internet: foto lokal tetap aman dan status belum terverifikasi; pulihkan, antrean melanjutkan meski sudah kembali ke iklan.
+[x] E04 Hanya setelah UPLOAD_COMPLETE, cek QR di ponsel: raw, retake dan output benar; backend tanpa acknowledgement retensi menahan upload.
+
+F. SFX, musik, resize & lifecycle
+[x] F01 Shutter baru terdengar singkat, halus dan jelas setelah JPEG capture/retake berhasil disimpan; timbre/volume disetujui.
+[x] F02 Gagal simpan/cancel countdown tidak berbunyi shutter; tombol aktif satu klik, countdown tidak dobel.
+[x] F03 Musik berlanjut tutorial → galeri → kamera → review → hasil; iklan gambar memakai musik, video hanya audio videonya.
+[x] F04 Minimize mematikan audio sementara; pulihkan tanpa suara ganda; close tidak meninggalkan suara atau kamera terkunci.
+[x] F05 Periksa 800×1280, 452×900 dan 360×640: foto/strip, teks, tombol utuh; resize tidak mereset foto/retake/jumlah.
+
+G. Putaran & restart
+[x] G01 Selesaikan minimal 20 putaran iklan → tutorial → galeri → tiga foto → review → hasil → iklan tanpa crash/audio hilang.
+[x] G02 Setelah minimal 20 putaran, tutup dan buka ulang: iklan normal, kamera lepas/tersambung, tidak ada suara atau cetak tertinggal.
+[x] G03 AKHIRI UJI menyimpan raw yang sudah ada; kunjungan berikutnya kosong dan wajib tutorial, ID folder tidak dipakai ulang.
+
+H. Batas & laporan
+[x] H01 Pembayaran, scanner, diskon nyata dan gameplay baru tetap nonaktif; tidak ada transaksi produksi.
+[x] H02 Photos/counter/pool/data pelanggan v1 tidak berubah; konfigurasi printer/credential tidak ditulis ulang oleh v2.
+[x] H03 Sertakan log data/diagnostics jika gagal. Item tanpa perangkat/credential tetap kosong dengan catatan BELUM DIUJI.
+
+I. Open-palm opsional & respons
+[x] I01 Dengan MediaPipe/model siap, angkat telapak terbuka satu detik: satu countdown lima detik dimulai; SIAP tetap dapat dipakai saat detektor disiapkan.
+[x] I02 Satu tahan telapak menghasilkan satu countdown. Mengetuk SIAP saat countdown tidak membuat timer/foto ganda.
+[x] I03 Setelah foto disimpan, tangan yang tetap terangkat tidak memulai foto berikutnya. Turunkan sebentar (minimal 0,4 detik), lalu angkat lagi satu detik.
+[x] I04 Kepalan, jempol atau gerakan lain tidak memicu foto. Wajah/telapak dari halaman lama tidak memicu capture setelah kembali/resize/minimize.
+[x] I05 Retake memakai SIAP atau telapak melalui countdown yang sama; maksimal satu retake per sesi, semua raw tetap tersimpan.
+[x] I06 Saat open-palm dinonaktifkan (PHOTOBOOTH_PALM_TRIGGER=0) atau belum tersedia, petunjuk memakai SIAP muncul dan foto manual tetap berfungsi. Tidak perlu uninstall paket.
+
+CATATAN MASALAH
+- kameraku kan embed di laptop jadi gak bisa di copot
+- kamera preview nge lag bgt.. tolong benerein
+- uji cetak belum bisa dilakukan karena belum diaktifkan. kenyataan nya printer sudah terkonek ke laptop.
+- tombol buat ganti halaman kadang biking ngelag. jadi kafang harus dipencet 2x baru aktif

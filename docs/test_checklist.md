@@ -1,5 +1,7 @@
 ## Version 1.0.0 — release-source verification (2026-10-19)
 
+> **Latest P3 preview retest (2026-10-23):** Use the [16-item focused form with Submit](qa/portrait-v2-preview-redraw/windows-checklist.html) after pull. Preview must move for thirty seconds without touch/countdown; test first-use page taps, three photos/retake, palm, resize, audio and twenty full cycles. [353-test source evidence and report audit](qa/portrait-v2-preview-redraw/README.md). Original 40-item B03 is not accepted despite its raw check because notes report severe lag; B02 and D03–D05 stay open, D02 physical printing is untested, A02/B05 reconnect is untested on the embedded webcam. Do not import older PASS into this retest.
+
 > **Final P3 follow-up QA (2026-10-23):** 349 complete tests PASS, zero skips with public native model fixtures, and 71 final focused PASS. Three-job CI SUCCESS at each staged runtime commit; screenshots reviewed at 800×1280/452×900 plus 40 matching-source CI renders. [Evidence](qa/portrait-v2-p3-retest/README.md). [New 40-item form](qa/portrait-v2-p3-retest/windows-checklist.html) includes camera/index/lag metadata, six palm cases and Submit; it imports no old checkmarks. Original thirteen unchecked items and new Windows device acceptance remain open.
 
 

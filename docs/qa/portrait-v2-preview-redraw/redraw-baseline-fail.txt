@@ -1,0 +1,16 @@
+test_reused_camera_texture_redraws_without_touch_countdown_or_text_changes (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_reused_camera_texture_redraws_without_touch_countdown_or_text_changes)
+Pixel uploads must reach the window even when all labels stay still. ... FAIL
+
+======================================================================
+FAIL: test_reused_camera_texture_redraws_without_touch_countdown_or_text_changes (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_reused_camera_texture_redraws_without_touch_countdown_or_text_changes)
+Pixel uploads must reach the window even when all labels stay still.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 126, in test_reused_camera_texture_redraws_without_touch_countdown_or_text_changes
+    self.assertGreater(len(flips), before, 'New camera pixels never reached a window redraw')
+AssertionError: 1 not greater than 1 : New camera pixels never reached a window redraw
+
+----------------------------------------------------------------------
+Ran 1 test in 0.108s
+
+FAILED (failures=1)

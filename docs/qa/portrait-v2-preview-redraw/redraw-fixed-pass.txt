@@ -1,0 +1,7 @@
+test_reused_camera_texture_redraws_without_touch_countdown_or_text_changes (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_reused_camera_texture_redraws_without_touch_countdown_or_text_changes)
+Pixel uploads must reach the window even when all labels stay still. ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.245s
+
+OK
