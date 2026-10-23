@@ -17,6 +17,7 @@ import tempfile
 from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 
 from photobooth.printer import DITHER_MODES, dither_image
+from photobooth.dither_processing import apply_smart_enhance, refine_binary_raster
 from photobooth.dizzy_dither import (DEFAULT_DIZZY_SEED, DIZZY_VARIANTS,
                                      dizzy_dither)
 
@@ -24,7 +25,11 @@ from photobooth.dizzy_dither import (DEFAULT_DIZZY_SEED, DIZZY_VARIANTS,
 LAB_DITHER_MODES = DITHER_MODES + ("dizzy",)
 
 
-PROFILE_VERSION = 4
+PROFILE_VERSION = 5
+NEW_ENHANCEMENT_FIELDS = frozenset({
+    "smart_enhance", "clahe_strength", "denoise_level", "tone_strength",
+    "postprocess_enabled", "dot_cleanup_level", "edge_refine_level",
+})
 
 
 @dataclass(frozen=True)
@@ -42,6 +47,14 @@ class DitherProfile:
     enhanced_dizzy: bool = False
     dizzy_variant: str = "article-8"
     dizzy_seed: int = DEFAULT_DIZZY_SEED
+    # Opt-in lab-only passes. Stored defaults do not change any legacy raster.
+    smart_enhance: bool = False
+    clahe_strength: float = 0.35
+    denoise_level: int = 1
+    tone_strength: float = 0.20
+    postprocess_enabled: bool = False
+    dot_cleanup_level: int = 1
+    edge_refine_level: int = 1
 
     def __post_init__(self) -> None:
         if type(self.enhanced_floyd) is not bool or (self.enhanced_floyd and self.mode != 'floyd-steinberg'):
@@ -74,6 +87,17 @@ class DitherProfile:
                 raise ValueError(f"{key} must be between {minimum} and {maximum}.")
         if type(self.threshold) is not int or not 0 <= self.threshold <= 255:
             raise ValueError("Threshold must be an integer between 0 and 255.")
+        if type(self.smart_enhance) is not bool or type(self.postprocess_enabled) is not bool:
+            raise ValueError("Image-processing enable switches must be booleans.")
+        for key in ("clahe_strength", "tone_strength"):
+            value = getattr(self, key)
+            if type(value) not in (float, int) or not math.isfinite(value) or not 0 <= value <= 1:
+                raise ValueError(f"{key} must be a number between 0 and 1.")
+        for key, upper in (("denoise_level", 2),
+                           ("dot_cleanup_level", 3), ("edge_refine_level", 3)):
+            value = getattr(self, key)
+            if type(value) is not int or not 0 <= value <= upper:
+                raise ValueError(f"{key} must be an integer between 0 and {upper}.")
 
 
 def _enhance_photo_for_dithering(gray: Image.Image) -> Image.Image:
@@ -121,11 +145,23 @@ def render_thermal_image(source: Image.Image, profile: DitherProfile) -> Image.I
 
     if profile.enhanced_floyd or profile.enhanced_dizzy:
         gray = _enhance_photo_for_dithering(gray)
+    if profile.smart_enhance:
+        gray = apply_smart_enhance(
+            gray, clahe_strength=profile.clahe_strength,
+            denoise_level=profile.denoise_level,
+            tone_strength=profile.tone_strength,
+        )
 
     if profile.mode == "dizzy":
-        return dizzy_dither(gray, variant=profile.dizzy_variant,
-                            seed=profile.dizzy_seed)
-    return dither_image(gray, profile.mode, profile.threshold)
+        raster = dizzy_dither(gray, variant=profile.dizzy_variant,
+                              seed=profile.dizzy_seed)
+    else:
+        raster = dither_image(gray, profile.mode, profile.threshold)
+    if profile.postprocess_enabled:
+        raster = refine_binary_raster(
+            raster, gray, dot_cleanup_level=profile.dot_cleanup_level,
+            edge_refine_level=profile.edge_refine_level)
+    return raster
 
 
 def save_profile(path: str | Path, profile: DitherProfile) -> None:
@@ -148,15 +184,17 @@ def save_profile(path: str | Path, profile: DitherProfile) -> None:
 
 
 def load_profile(path: str | Path) -> DitherProfile:
-    """Load v1-v4 lab-only profile; older presets keep Enhanced Dizzy off."""
+    """Load v1-v5 profiles; older versions gain disabled enhancement passes."""
     payload = json.loads(Path(path).read_text(encoding="utf-8"))
-    if not isinstance(payload, dict) or payload.get("schema_version") not in (1, 2, 3, 4):
+    if not isinstance(payload, dict) or payload.get("schema_version") not in (1, 2, 3, 4, 5):
         raise ValueError("Invalid or unsupported tuning profile version.")
     version = payload["schema_version"]
     keys = set(DitherProfile.__dataclass_fields__)
     missing = {1: {"enhanced_floyd", "enhanced_dizzy", "dizzy_variant", "dizzy_seed"},
                2: {"enhanced_dizzy", "dizzy_variant", "dizzy_seed"},
-               3: {"enhanced_dizzy"}, 4: set()}[version]
+               3: {"enhanced_dizzy"}, 4: set(), 5: set()}[version]
+    if version < 5:
+        missing = missing | NEW_ENHANCEMENT_FIELDS
     if set(payload) != (keys - missing) | {"schema_version"}:
         raise ValueError("Profile fields do not match the supported schema.")
     values = {key: payload[key] for key in keys - missing}
@@ -167,7 +205,7 @@ def load_profile(path: str | Path) -> DitherProfile:
 
 # Comparison recipes are deliberately independent: syncing is a GUI action,
 # never an implicit overwrite of an algorithm's tuned state.
-COMPARISON_VERSION = 4
+COMPARISON_VERSION = 5
 
 
 @dataclass(frozen=True)
@@ -218,11 +256,11 @@ def save_comparison(path: str | Path, profiles: ComparisonProfiles) -> None:
 
 
 def load_comparison(path: str | Path) -> ComparisonProfiles:
-    """Read v1/v2 three-lane or v3/v4 four-lane presets, fail closed."""
+    """Read v1/v2 three-lane or v3-v5 four-lane presets, fail closed."""
     data = json.loads(Path(path).read_text(encoding="utf-8"))
     if (not isinstance(data, dict) or
             set(data) != {"schema_version", "lanes"} or
-            data["schema_version"] not in (1, 2, 3, 4) or
+            data["schema_version"] not in (1, 2, 3, 4, 5) or
             not isinstance(data["lanes"], dict)):
         raise ValueError("Invalid comparison config schema.")
     version = data["schema_version"]
@@ -232,7 +270,9 @@ def load_comparison(path: str | Path) -> ComparisonProfiles:
     keys = set(DitherProfile.__dataclass_fields__)
     missing = {1: {"enhanced_floyd", "enhanced_dizzy", "dizzy_variant", "dizzy_seed"},
                2: {"enhanced_dizzy", "dizzy_variant", "dizzy_seed"},
-               3: {"enhanced_dizzy"}, 4: set()}[version]
+               3: {"enhanced_dizzy"}, 4: set(), 5: set()}[version]
+    if version < 5:
+        missing = missing | NEW_ENHANCEMENT_FIELDS
     defaults = DitherProfile()
     lanes = {}
     for mode in modes:
