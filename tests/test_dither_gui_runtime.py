@@ -214,6 +214,25 @@ class EnhancedDizzyTkTests(unittest.TestCase):
                                          old_versions[other])
                 self.app.apply_configs(original)
 
+    def test_quick_ab_modes_are_isolated_and_keep_manual_sliders(self):
+        mode = "bayer"
+        initial = self.app.configs
+        self.app.sync.set(True)
+        version = dict(self.app.versions)
+        self.app.processing_presets[mode].set("Smart + Post")
+        self.app.processing_preset_changed(mode)
+        self.assertTrue(self.app.configs.bayer.smart_enhance)
+        self.assertTrue(self.app.configs.bayer.postprocess_enabled)
+        self.assertEqual(self.app.versions[mode], version[mode] + 1)
+        self.assertEqual(self.app.configs.floyd, initial.floyd)
+        self.assertEqual(self.app.configs.dizzy, initial.dizzy)
+        self.assertEqual(self.app.configs.bayer.brightness, initial.bayer.brightness)
+        self.assertIn("-smart-post.png", self.app.raster_filename(self.app.configs.bayer))
+        self.app.processing_presets[mode].set("Original")
+        self.app.processing_preset_changed(mode)
+        self.assertEqual(self.app.configs.bayer, initial.bayer)
+        self.assertIn("Original", self.app.processing_presets[mode].get())
+
     def test_advanced_processing_sliders_and_preset_refresh(self):
         from dataclasses import replace
         mode = "bayer"
