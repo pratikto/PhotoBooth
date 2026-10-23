@@ -166,6 +166,10 @@ class EnhancedDizzyTkTests(unittest.TestCase):
             with self.subTest(mode=mode):
                 original = self.app.configs
                 p = DitherProfile(mode=mode, brightness=1.12, contrast=1.18,
+                                  smart_enhance=True, clahe_strength=0.58,
+                                  denoise_level=2, tone_strength=0.34,
+                                  postprocess_enabled=True, dot_cleanup_level=2,
+                                  edge_refine_level=2,
                                   enhanced_dizzy=(mode == "dizzy"),
                                   dizzy_variant="orthogonal-4" if mode == "dizzy"
                                   else "article-8")
@@ -181,9 +185,69 @@ class EnhancedDizzyTkTests(unittest.TestCase):
                     if other != mode:
                         self.assertEqual(self.app.configs.by_mode(other),
                                          original.by_mode(other))
+                self.assertTrue(self.app.pipeline_flags[mode]["smart_enhance"].get())
+                self.assertTrue(self.app.pipeline_flags[mode]["postprocess_enabled"].get())
+                self.assertAlmostEqual(
+                    self.app.pipeline_controls[mode]["clahe_strength"][0].get(), 0.58)
                 if mode == "dizzy":
                     self.assertTrue(self.app.enhanced_dizzy.get())
                     self.assertEqual(self.app.dizzy_variant.get(), "orthogonal-4")
+
+    def test_opt_in_processing_controls_are_per_lane_even_with_sync(self):
+        from photobooth.dither_lab import DitherProfile
+        self.app.sync.set(True)
+        for mode in ("floyd-steinberg", "bayer", "dizzy"):
+            with self.subTest(mode=mode):
+                original = self.app.configs
+                old_versions = dict(self.app.versions)
+                self.assertFalse(self.app.pipeline_flags[mode]["smart_enhance"].get())
+                self.assertFalse(self.app.pipeline_flags[mode]["postprocess_enabled"].get())
+                self.app.pipeline_flags[mode]["smart_enhance"].set(True)
+                self.app.pipeline_toggle(mode, "smart_enhance")
+                self.assertTrue(self.app.configs.by_mode(mode).smart_enhance)
+                self.assertEqual(self.app.versions[mode], old_versions[mode] + 1)
+                for other in ("floyd-steinberg", "bayer", "dizzy"):
+                    if other != mode:
+                        self.assertEqual(self.app.configs.by_mode(other),
+                                         original.by_mode(other))
+                        self.assertEqual(self.app.versions[other],
+                                         old_versions[other])
+                self.app.apply_configs(original)
+
+    def test_advanced_processing_sliders_and_preset_refresh(self):
+        from dataclasses import replace
+        mode = "bayer"
+        button, advanced = self.app.pipeline_sections[mode]
+        self.assertFalse(advanced.winfo_manager())
+        self.app.toggle_pipeline_options(mode)
+        self.assertTrue(advanced.winfo_manager())
+        self.app.toggle_pipeline_options(mode)
+        self.assertFalse(advanced.winfo_manager())
+        saved = self.app.configs.replace_lane(replace(
+            self.app.configs.bayer, smart_enhance=True,
+            clahe_strength=0.67, denoise_level=2,
+            tone_strength=0.45, postprocess_enabled=True,
+            dot_cleanup_level=3, edge_refine_level=2))
+        self.app.apply_configs(saved)
+        self.assertTrue(self.app.pipeline_flags[mode]["smart_enhance"].get())
+        self.assertTrue(self.app.pipeline_flags[mode]["postprocess_enabled"].get())
+        self.assertAlmostEqual(
+            self.app.pipeline_controls[mode]["clahe_strength"][0].get(), 0.67)
+        self.assertEqual(
+            round(self.app.pipeline_controls[mode]["dot_cleanup_level"][0].get()), 3)
+        self.app.reset()
+        self.assertFalse(self.app.configs.bayer.smart_enhance)
+        self.assertFalse(self.app.configs.bayer.postprocess_enabled)
+
+    def test_processing_toggle_never_calls_print(self):
+        with patch.object(self.app, "_start_print") as printer:
+            mode = "bayer"
+            self.app.pipeline_flags[mode]["postprocess_enabled"].set(True)
+            self.app.pipeline_toggle(mode, "postprocess_enabled")
+            self.app.pipeline_controls[mode]["edge_refine_level"][0].set(2.0)
+            self.app.pipeline_changed(mode, "edge_refine_level")
+            printer.assert_not_called()
+            self.assertEqual(self.app.configs.bayer.edge_refine_level, 2)
 
     def test_auto_tune_cancel_invalidates_pending_results(self):
         self.app.start_auto_tune()
