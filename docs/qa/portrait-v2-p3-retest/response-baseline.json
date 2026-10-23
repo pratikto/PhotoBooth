@@ -1,0 +1,20 @@
+{
+  "tutorial_callback_ms": 8.464,
+  "tutorial_next_frame_ms": 17.216,
+  "templates_callback_ms": 25.469,
+  "templates_next_frame_ms": 30.689,
+  "live_upload": {
+    "n": 90,
+    "median_ms": 0.87,
+    "p95_ms": 1.645,
+    "max_ms": 120.844
+  },
+  "frame_draw": {
+    "n": 90,
+    "median_ms": 11.271,
+    "p95_ms": 12.438,
+    "max_ms": 15.433
+  },
+  "capture_submit_ms": 5.669,
+  "profile": "         37685 function calls (37457 primitive calls) in 1.219 seconds\n\n   Ordered by: cumulative time\n   List reduced from 284 to 18 due to restriction <18>\n\n   ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n       90    0.001    0.000    1.104    0.012 /workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/base.py:369(idle)\n       90    0.000    0.000    1.084    0.012 /workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/clock.py:727(tick)\n       90    0.000    0.000    1.040    0.012 /workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/clock.py:677(idle)\n       88    0.000    0.000    0.985    0.011 /workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/clock.py:964(usleep)\n       88    0.839    0.010    0.839    0.010 /workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/clock.py:555(_usleep)\n        6    0.000    0.000    0.411    0.068 /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/thread.py:54(run)\n        6    0.000    0.000    0.410    0.068 /workspace/PhotoBooth/photobooth/kiosk_v2/previews.py:14(render_preview)\n        6    0.000    0.000    0.409    0.068 /workspace/PhotoBooth/photobooth/catalog.py:169(create_template_preview)\n       26    0.000    0.000    0.214    0.008 /workspace/PhotoBooth/.venv/lib/python3.12/site-packages/PIL/Image.py:1355(copy)\n      120    0.029    0.000    0.126    0.001 /workspace/PhotoBooth/photobooth/kiosk_v2/photo_views.py:148(_update_live_photo)\n       53    0.105    0.002    0.107    0.002 {method 'decode' of 'ImagingDecoder' objects}\n      120    0.098    0.001    0.098    0.001 {method 'tobytes' of 'numpy.ndarray' objects}\n        6    0.000    0.000    0.092    0.015 /workspace/PhotoBooth/photobooth/catalog.py:107(_artwork)\n       13    0.000    0.000    0.091    0.007 /workspace/PhotoBooth/.venv/lib/python3.12/site-packages/PIL/Image.py:1016(convert)\n        6    0.000    0.000    0.078    0.013 /workspace/PhotoBooth/photobooth/catalog.py:155(_preview)\n       12    0.000    0.000    0.066    0.005 /workspace/PhotoBooth/.venv/lib/python3.12/site-packages/PIL/ImageFile.py:296(load)\n        6    0.000    0.000    0.043    0.007 /workspace/PhotoBooth/.venv/lib/python3.12/site-packages/PIL/ImageOps.py:390(pad)\n        6    0.000    0.000    0.042    0.007 /workspace/PhotoBooth/.venv/lib/python3.12/site-packages/PIL/ImageOps.py:299(contain)\n\n\n"
+}

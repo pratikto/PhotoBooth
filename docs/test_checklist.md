@@ -1,5 +1,8 @@
 ## Version 1.0.0 — release-source verification (2026-10-19)
 
+> **P3 retest correction (2026-10-23):** Preserve the owner’s 21/34 raw checkmarks and twenty reported cycles; missing HEAD, resolution and camera metadata prevent exact-source acceptance. Thirteen unchecked items stay failed OR not tested. Stage 1 has 77 focused tests PASS; native screenshots and local timing evidence remain separate from Windows responsiveness. [Report and open checks](qa/portrait-v2-p3-retest/README.md).
+
+
 > **Current P3 QA (2026-10-23):** Use [Windows P3 checkbox form with Submit](qa/portrait-v2-p3/windows-checklist.html), 34 unchecked items. It preserves unknown HEAD, distinguishes unchecked tests, and locks twenty-cycle items until the cycle count qualifies. [Source tests and reviewed native screenshots](qa/portrait-v2-p3/README.md) remain separate from actual camera/speaker/printer/Drive acceptance. No previous Windows checkmarks are imported or upgraded to P3 PASS.
 
 

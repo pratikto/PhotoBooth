@@ -36,6 +36,8 @@ from .previews import PREVIEW_SIZE, PreviewPreloader
 from .gallery import SwipeGallery, StripCarousel
 from .devices import AsyncCamera, FaceInviter
 from .photo_views import PhotoViews
+from .live_preview import LivePreview
+from .performance import PerformanceLog
 
 
 LOG = logging.getLogger(__name__)
@@ -86,6 +88,8 @@ class PortraitKioskV2App(PhotoViews, App):
         self._closed = False
         self._view_revision = 0
         self._init_photos()
+        self.live_preview = LivePreview()
+        self.performance = PerformanceLog()
         self.navigation = VisitFlow()
         self.templates = get_templates()
         self.catalog = AdCatalog()
@@ -133,7 +137,11 @@ class PortraitKioskV2App(PhotoViews, App):
         if self._suspended:
             return
         frame = self.camera_device.read()
-        self._update_live_photo(frame)
+        if self.navigation.page == 'capture':
+            self.live_preview.submit(frame, self._view_revision)
+        preview = self.live_preview.read(self._view_revision)
+        self._update_live_photo(frame, preview)
+        self.performance.observe(self.navigation.page, _dt, frame, preview)
         allowed = self.navigation.page == ADVERT and self._invitation is None
         if self.face_inviter.update(frame, self._view_revision, allowed=allowed):
             self._show_invitation(source='face')
@@ -147,6 +155,8 @@ class PortraitKioskV2App(PhotoViews, App):
     def on_pause(self):
         self._suspended = True
         self._photo_pause()
+        self.live_preview.pause()
+        self.performance.flush()
         self.camera_device.set_active(False)
         self.face_inviter.pause()
         self.audio_v2.suspend()
@@ -161,6 +171,7 @@ class PortraitKioskV2App(PhotoViews, App):
         if self._closed or not self._suspended:
             return
         self._suspended = False
+        self.performance.flush()
         self.camera_device.set_active(True)
         # Background time is not customer browsing time.
         self._activity()
@@ -173,6 +184,8 @@ class PortraitKioskV2App(PhotoViews, App):
     def on_stop(self):
         self._closed = True
         self._cancel_countdown()
+        self.live_preview.close()
+        self.performance.flush()
         if self._photo_jobs is not None:
             self._photo_jobs.close()
         Window.unbind(on_minimize=self._window_minimized, on_restore=self._window_restored)
@@ -240,6 +253,8 @@ class PortraitKioskV2App(PhotoViews, App):
 
     def _show(self):
         """Retire old media before rebuilding only the opt-in v2 page tree."""
+        started = time.perf_counter()
+        self.live_preview.pause()
         LOG.info('Page rebuild begin from=%s to=%s revision=%s',
                  self.stage.current, self.navigation.page, self._view_revision + 1)
         self._view_revision += 1
@@ -268,7 +283,8 @@ class PortraitKioskV2App(PhotoViews, App):
             self._build_photo_page(canvas)
         else:
             raise RuntimeError("Unknown prototype page")
-        LOG.info('Page ready page=%s revision=%s', page.name, self._view_revision)
+        LOG.info('Page ready page=%s revision=%s build_ms=%.1f',
+                 page.name, self._view_revision, (time.perf_counter() - started) * 1000)
 
     def _frame(self, canvas, *, brand_height=100):
         shell = BoxLayout(
@@ -303,7 +319,13 @@ class PortraitKioskV2App(PhotoViews, App):
             # Give feedback before routing/decoder retirement. The short shared
             # click now survives page handoffs; suspend/close still stop it.
             self.audio_v2.cue("button")
-            callback()
+            started = time.perf_counter()
+            try:
+                callback()
+            finally:
+                elapsed = time.perf_counter() - started
+                if elapsed >= .05:
+                    LOG.info('Slow action title=%s callback_ms=%.1f', title, elapsed * 1000)
 
         invoke = self._page_callback(activate)
         button.bind(on_release=lambda *_: None if button.disabled else invoke())

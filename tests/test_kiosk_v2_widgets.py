@@ -24,6 +24,47 @@ else:
 
 @unittest.skipUnless(HAS_KIVY, "Kivy not available in pure-Python test environment")
 class PortraitKivySmokeTests(unittest.TestCase):
+    def test_photo_io_keeps_the_live_view_and_retires_pending_button_releases(self):
+        import threading
+        import time
+        import numpy as np
+        from tempfile import TemporaryDirectory
+        from unittest.mock import Mock, patch
+        from photobooth.kiosk_v2.photos import PhotoTest
+        frame = np.zeros((40, 60, 3), dtype=np.uint8)
+        camera, face = Mock(), Mock()
+        camera.read.return_value = frame
+        face.update.return_value = False
+        with TemporaryDirectory() as root, patch('photobooth.kiosk_v2.photos.configured_test', return_value=PhotoTest(root)):
+            app = PortraitKioskV2App(camera_device=camera, face_inviter=face)
+            app.build()
+            def settle():
+                end = time.monotonic() + 2
+                while app._photo_jobs.busy and time.monotonic() < end:
+                    app._poll_photos();time.sleep(.005)
+                self.assertFalse(app._photo_jobs.busy)
+            entered, release = threading.Event(), threading.Event()
+            try:
+                app._choose_photo();app._complete_tutorial();app._change_copies(1)
+                app._enter_photo_test();settle();app._admit_photo_test();settle()
+                page, live, old = app.stage.current_screen, app._live_image, app._capture_button
+                original = app._photo_jobs.service.capture
+                def slow(frame):
+                    entered.set();release.wait(2);return original(frame)
+                with patch.object(app._photo_jobs.service, 'capture', side_effect=slow):
+                    app._photo_submit('capture', frame)
+                    self.assertTrue(entered.wait(1))
+                    self.assertIs(app.stage.current_screen, page)
+                    self.assertIs(app._live_image, live)
+                    self.assertTrue(old.disabled)
+                    old.dispatch('on_release');self.assertIsNone(app._countdown_event)
+                    release.set();settle()
+                old.dispatch('on_release')
+                self.assertIsNone(app._countdown_event)
+                self.assertEqual(app._photo_view['captured'], 1)
+            finally:
+                release.set();app.on_stop()
+
     def test_p3_photo_pages_save_three_retake_once_and_only_shutter_after_success(self):
         import time
         import numpy as np
@@ -71,7 +112,10 @@ class PortraitKivySmokeTests(unittest.TestCase):
                         Window.size = original_size
                     app._admit_photo_test(); settle()
                     self.assertEqual(app.navigation.page, CAPTURE)
-                    app._devices_tick(0)
+                    deadline = time.monotonic() + 2
+                    while app._live_image.texture is None and time.monotonic() < deadline:
+                        app._devices_tick(.033)
+                        EventLoop.idle()
                     self.assertIsNotNone(app._live_image.texture)
                     for _ in range(5):
                         EventLoop.idle()

@@ -1,0 +1,20 @@
+{
+  "tutorial_callback_ms": 7.084,
+  "tutorial_next_frame_ms": 16.165,
+  "templates_callback_ms": 10.09,
+  "templates_next_frame_ms": 15.77,
+  "live_upload": {
+    "n": 90,
+    "median_ms": 0.208,
+    "p95_ms": 0.239,
+    "max_ms": 0.946
+  },
+  "frame_draw": {
+    "n": 90,
+    "median_ms": 11.944,
+    "p95_ms": 12.012,
+    "max_ms": 20.025
+  },
+  "capture_submit_ms": 0.755,
+  "profile": "         58822 function calls (58406 primitive calls) in 1.160 seconds\n\n   Ordered by: cumulative time\n   List reduced from 505 to 18 due to restriction <18>\n\n   ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n    91/90    0.001    0.000    1.055    0.012 /workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/base.py:369(idle)\n       88    0.001    0.000    1.041    0.012 /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py:323(wait)\n       90    0.001    0.000    1.009    0.011 /workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/clock.py:727(tick)\n       90    0.000    0.000    0.943    0.010 /workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/clock.py:677(idle)\n       88    0.000    0.000    0.942    0.011 /workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/clock.py:964(usleep)\n       88    0.923    0.010    0.923    0.010 /workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/clock.py:555(_usleep)\n        9    0.000    0.000    0.127    0.014 /workspace/PhotoBooth/.venv/lib/python3.12/site-packages/PIL/Image.py:1016(convert)\n    89/10    0.000    0.000    0.072    0.007 /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py:637(wait)\n    91/90    0.000    0.000    0.068    0.001 /workspace/PhotoBooth/photobooth/kiosk_v2/live_preview.py:19(prepare_pixels)\n       91    0.063    0.001    0.063    0.001 {resize}\n       35    0.053    0.002    0.053    0.002 {method 'decode' of 'ImagingDecoder' objects}\n        4    0.000    0.000    0.043    0.011 /workspace/PhotoBooth/photobooth/catalog.py:107(_artwork)\n        8    0.000    0.000    0.037    0.005 /workspace/PhotoBooth/.venv/lib/python3.12/site-packages/PIL/ImageFile.py:296(load)\n        5    0.000    0.000    0.032    0.006 /workspace/PhotoBooth/.venv/lib/python3.12/site-packages/PIL/ImageOps.py:299(contain)\n    67/66    0.000    0.000    0.028    0.000 <frozen importlib._bootstrap>:1349(_find_and_load)\n       64    0.000    0.000    0.028    0.000 /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/__init__.py:73(import_module)\n       64    0.000    0.000    0.028    0.000 <frozen importlib._bootstrap>:1375(_gcd_import)\n    67/66    0.000    0.000    0.027    0.000 <frozen importlib._bootstrap>:1304(_find_and_load_unlocked)\n\n\n"
+}

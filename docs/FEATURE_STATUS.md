@@ -1,5 +1,8 @@
 # Meong Photobooth — Current feature status
 
+> **P3 owner retest (2026-10-23):** Raw 21/34 checked, thirteen open, twenty reported Windows cycles with HEAD/camera/resolution missing. New shutter/retake/audio/resize are owner-reported passes; face invitation, countdown interruption, print and Drive gates remain open. BUG-013 tracks preview/button/face responsiveness, BUG-014 the missing optional open-palm input. Preview preparation now moves off the GUI and busy photo I/O avoids redundant rebuilds; physical correction is unverified. [Audit and staged evidence](qa/portrait-v2-p3-retest/README.md).
+
+
 > **Current portrait P3 (2026-10-23): IN SOURCE / DEVICE ACCEPTANCE OPEN.** Camera/face invitation, explicit photo-test admission, mirrored live preview, three unmirrored originals, one selected retake per session, full strip composition and optional guarded print/Drive adapters are connected. New original v2 shutter leaves v1 unchanged. Default output is local; payment/scanner/game/discount stay inactive. BUG-009 remains open; unacknowledged Drive retention blocks P3 uploads. Prior BUG-012 remains owner-reported PASS/monitoring, not new exact-HEAD or twenty-cycle acceptance. [Tests, reviewed screenshots, limits and checklist](qa/portrait-v2-p3/README.md). This supersedes older P3a-only and no-P3-approval notices below.
 
 

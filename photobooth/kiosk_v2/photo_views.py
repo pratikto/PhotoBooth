@@ -15,6 +15,7 @@ from photobooth.advertising import PROJECT_ROOT
 from .flow import PHOTO_CONFIRM, CAPTURE, REVIEW, RESULT, PHOTO_PAGES, TEMPLATES
 from .theme import PixelCard, text_label, GOLD, MUTED, CYAN
 from .branding import CAMERA_ART
+from .theme import ArcadeButton
 
 
 def image_texture(photo):
@@ -34,6 +35,7 @@ class PhotoViews:
         self._live_image = None
         self._camera_texture = None
         self._last_live_frame = None
+        self._last_preview = None
         self._photo_refresh_at = 0
 
     def _enter_photo_test(self):
@@ -60,7 +62,12 @@ class PhotoViews:
         self._photo_error = ''
         if self._photo_jobs.submit(action, *args):
             if action != 'snapshot':
-                self._show()
+                # Preserve the current camera/strip and layout while I/O runs.
+                # Completion rebuilds once, retiring these callbacks by revision.
+                for control in self.stage.walk():
+                    if isinstance(control, ArcadeButton):
+                        control.disabled = True
+                self._photo_message.text = 'Sedang memproses… tunggu sebentar.'
 
     def _admit_photo_test(self):
         if self.camera_device.read() is None:
@@ -145,7 +152,7 @@ class PhotoViews:
             self.audio_v2.cue('count')
             self._last_count = remaining
 
-    def _update_live_photo(self, frame):
+    def _update_live_photo(self, frame, preview=None):
         if self.navigation.page != CAPTURE or self._live_image is None:
             return
         if frame is None:
@@ -154,22 +161,21 @@ class PhotoViews:
             self._camera_hint.text = 'KAMERA BELUM SIAP • sambungkan kamera'
             self._count_label.font_size = dp(28)
             self._count_label.text = 'KAMERA\nBELUM SIAP'
-        elif frame is not self._last_live_frame:
+        elif preview is not None and preview is not self._last_preview:
+            started = time.perf_counter()
             self._live_image.opacity = 1
-            self._last_live_frame = frame
-            # Bound upload bytes; this view-only texture never reaches saved photos.
-            step = max(1, (frame.shape[1] + 639) // 640)
-            preview = frame[::step, ::step]
-            size = (preview.shape[1], preview.shape[0])
+            self._last_preview = preview
+            size = preview.size
             if self._camera_texture is None or self._camera_texture.size != size:
-                self._camera_texture = Texture.create(size=size, colorfmt='bgr')
+                self._camera_texture = Texture.create(size=size, colorfmt='rgb')
                 self._camera_texture.flip_vertical()
                 self._camera_texture.flip_horizontal()
-            self._camera_texture.blit_buffer(preview.tobytes(), colorfmt='bgr', bufferfmt='ubyte')
+            self._camera_texture.blit_buffer(preview.pixels, colorfmt='rgb', bufferfmt='ubyte')
             self._live_image.texture = self._camera_texture
             self._camera_hint.text = 'PREVIEW CERMIN • hasil foto tidak dicerminkan'
             if self._countdown_event is None:
                 self._count_label.text = ''
+            self.performance.upload(time.perf_counter() - started)
         if frame is not None:
             self._count_label.font_size = dp(100)
         if self._countdown_event is None:
@@ -178,6 +184,7 @@ class PhotoViews:
     def _build_photo_page(self, canvas):
         self._live_image = None
         self._last_live_frame = None
+        self._last_preview = None
         shell = self._frame(canvas, brand_height=65)
         page = self.navigation.page
         title = {PHOTO_CONFIRM: 'UJI FOTO', CAPTURE: 'SENYUM DULU, MEONG!',

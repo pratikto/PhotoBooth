@@ -1,0 +1,72 @@
+Berikut hasil retest Windows Meong Photobooth v2. Tolong analisis hasil dan catatan masalah. Item kosong berarti gagal atau belum diuji; jangan otomatis dianggap lulus.
+
+MEONG PHOTOBOOTH GUI V2 — RETEST P3 KAMERA & FOTO (34 ITEM)
+Branch: feature/portrait-kiosk-v2-next
+HEAD yang diuji: 
+Tanggal: 2026-10-23
+Versi Windows: windows 11
+Resolusi layar: 
+Display scaling (%): 100%
+Speaker/output audio: speaker laptop
+Jumlah putaran selesai: 20
+Status HEAD: BELUM DIISI — exact-HEAD acceptance belum terverifikasi.
+Gate 20 putaran: Jumlah putaran memenuhi syarat; G01–G02 mengikuti centang hasil uji.
+
+Lulus: 21/34
+Belum dicentang (gagal/belum diuji): 13
+
+A. Startup, kamera & undangan
+[x] A01 Catat HEAD sebenarnya, Windows, kamera/model/index, resolusi dan scaling; launcher v2 mulai di iklan.
+[x] A02 Kamera terbuka tanpa membekukan iklan/tombol; cabut/pasang kembali memulihkan satu kamera.
+[ ] A03 Wajah di depan kamera selama lima detik membuka satu undangan di atas iklan; tidak merekam foto saat idle.
+[ ] A04 AYO FOTO, MAIN MEONG FLY dan NANTI SAJA tetap benar; timeout/cooldown mencegah undangan bertubi-tubi.
+[x] A05 Tutorial wajib, 12 strip, swipe, panah melayang dan jumlah cetak 0–9 tetap normal setelah resize.
+
+B. Masuk uji & ambil tiga foto
+[x] B01 UJI FOTO baru aktif setelah memilih jumlah cetak; konfirmasi jelas TANPA PEMBAYARAN.
+[x] B02 Tanpa kamera, konfirmasi tidak memulai capture; sambungkan lalu coba lagi.
+[x] B03 Preview kamera berada di panel, tidak menutupi tombol; preview bercermin, tulisan/asimetri pada JPEG asli tidak terbalik.
+[ ] B04 Tekan SIAP untuk setiap foto: countdown lima detik dan satu bunyi per angka; tepat tiga foto per desain.
+[ ] B05 Cabut kamera atau minimize saat countdown: tidak menyimpan frame lama; setelah pulih ulangi countdown dari awal.
+
+C. Review & retake
+[x] C01 Tiga foto terlihat jelas di review; pilih retake foto 1, 2 atau 3 pada sesi yang berbeda.
+[x] C02 Retake perlu tombol SIAP/countdown baru; hanya satu foto terpilih diganti dan quota satu kali per sesi.
+[x] C03 Empat raw (tiga asli + retake) tetap tersimpan; final strip memakai tiga foto dengan pengganti di posisi yang benar.
+[x] C04 Sesi desain berikutnya punya quota baru; N lembar desain sama tidak menambah sesi capture.
+
+D. Komposisi & cetak uji (operator)
+[ ] D01 PAKAI FOTO INI menghasilkan PNG 640×1920 dari template asli; tiga slot dan footer terlihat utuh.
+[ ] D02 Default: CETAK UJI nonaktif. Dengan opt-in operator dan printer uji, tekan CETAK sekali: satu batch N lembar desain yang sama.
+[ ] D03 Tap CETAK cepat/berulang tidak mengirim ulang; SUBMITTED berarti terkirim, verifikasi N lembar fisik secara terpisah.
+[ ] D04 Pada kegagalan/kertas/koneksi, hasil tidak pasti tidak diklaim sukses; tidak retry otomatis, cek printer sebelum mengakui.
+[ ] D05 Tutup/buka saat kiriman belum pasti: aplikasi tidak mengirim ulang; periksa log/journal dan lembar fisik sebelum tindakan operator.
+
+E. Lokal & Drive (operator)
+[ ] E01 Default lokal: footer MODE LOKAL, tanpa QR palsu; raw/hasil tersimpan di data/kiosk-v2-p3/photos.
+[ ] E02 Dengan Drive uji diaktifkan dan backend retensi siap, folder/QR memakai pool PB001V2 terpisah dari v1.
+[ ] E03 Putuskan internet: foto lokal tetap aman dan status belum terverifikasi; pulihkan, antrean melanjutkan meski sudah kembali ke iklan.
+[ ] E04 Hanya setelah UPLOAD_COMPLETE, cek QR di ponsel: raw, retake dan output benar; backend tanpa acknowledgement retensi menahan upload.
+
+F. SFX, musik, resize & lifecycle
+[x] F01 Shutter baru terdengar singkat, halus dan jelas setelah JPEG capture/retake berhasil disimpan; timbre/volume disetujui.
+[x] F02 Gagal simpan/cancel countdown tidak berbunyi shutter; tombol aktif satu klik, countdown tidak dobel.
+[x] F03 Musik berlanjut tutorial → galeri → kamera → review → hasil; iklan gambar memakai musik, video hanya audio videonya.
+[x] F04 Minimize mematikan audio sementara; pulihkan tanpa suara ganda; close tidak meninggalkan suara atau kamera terkunci.
+[x] F05 Periksa 800×1280, 452×900 dan 360×640: foto/strip, teks, tombol utuh; resize tidak mereset foto/retake/jumlah.
+
+G. Putaran & restart
+[x] G01 Selesaikan minimal 20 putaran iklan → tutorial → galeri → tiga foto → review → hasil → iklan tanpa crash/audio hilang.
+[x] G02 Setelah minimal 20 putaran, tutup dan buka ulang: iklan normal, kamera lepas/tersambung, tidak ada suara atau cetak tertinggal.
+[x] G03 AKHIRI UJI menyimpan raw yang sudah ada; kunjungan berikutnya kosong dan wajib tutorial, ID folder tidak dipakai ulang.
+
+H. Batas & laporan
+[x] H01 Pembayaran, scanner, diskon nyata dan gameplay baru tetap nonaktif; tidak ada transaksi produksi.
+[x] H02 Photos/counter/pool/data pelanggan v1 tidak berubah; konfigurasi printer/credential tidak ditulis ulang oleh v2.
+[x] H03 Sertakan log data/diagnostics jika gagal. Item tanpa perangkat/credential tetap kosong dengan catatan BELUM DIUJI.
+
+CATATAN MASALAH
+- preview kamer nge lag bgt
+- deteksi wajah buat halaman iklan gak respnsif
+- deteksi open palm buat foto belum ada atau gak jalan ya?
+-tiap pencet tombol agak nge lag jadi nya

@@ -17,6 +17,19 @@ from photobooth.kiosk_v2.photos import PhotoTest, PhotoJobs, PURPOSE
 
 
 class PhotoWorkflowTests(unittest.TestCase):
+    def test_preview_conversion_is_bounded_rgb_and_preserves_original_bgr_orientation(self):
+        from photobooth.kiosk_v2.live_preview import prepare_pixels
+        frame = np.zeros((1920, 1080, 3), dtype=np.uint8)
+        frame[:, :540] = (0, 0, 255)
+        frame[:, 540:] = (255, 0, 0)
+        before = frame.copy()
+        size, pixels = prepare_pixels(frame)
+        self.assertEqual(size, (270, 480))
+        image = Image.frombytes('RGB', size, pixels)
+        self.assertEqual(image.getpixel((10, 100)), (255, 0, 0))
+        self.assertEqual(image.getpixel((260, 100)), (0, 0, 255))
+        np.testing.assert_array_equal(frame, before)
+
     def setUp(self):
         self.temp = TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

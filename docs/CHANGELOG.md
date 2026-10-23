@@ -1,5 +1,8 @@
 # Meong Photobooth — Documentation and release changelog
 
+> **P3 staged follow-up (2026-10-23, stage 1):** Add bounded worker-owned RGB preview conversion and aggregate diagnostic timings. Preserve the current view while photo I/O runs, disable controls and rebuild once on completion; stale releases remain inert. Record owner’s 21/34 Windows result with unknown tested HEAD; open BUG-013/014. 77 focused PASS, simulated timing improvement; Windows performance is not certified. [Evidence and rollback](qa/portrait-v2-p3-retest/README.md).
+
+
 ## 2026-10-23 — P3 exact-source CI and evidence archived
 
 - `569dbf5` passes all three jobs in [CI 39880474594](https://github.com/pratikto/PhotoBooth/actions/runs/39880474594), including Windows SDL dummy audio, real widget tests, isolated photo/Drive tests and 40 main synthetic screenshots. This supersedes the failed CI install at `c04534f`.
