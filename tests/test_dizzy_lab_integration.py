@@ -59,6 +59,10 @@ class DizzyLabIntegrationTests(unittest.TestCase):
             values.pop("dizzy_seed")
             values.pop("dizzy_variant")
             values.pop("enhanced_dizzy")
+            for key in ("smart_enhance", "clahe_strength", "denoise_level",
+                        "tone_strength", "postprocess_enabled",
+                        "dot_cleanup_level", "edge_refine_level"):
+                values.pop(key)
             lanes[mode] = values
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / "v2.json"
