@@ -46,6 +46,14 @@ def annotated_raster(raster: Image.Image, profile: DitherProfile) -> Image.Image
             "PREPROCESS: ENHANCED" if profile.enhanced_dizzy
             else "PREPROCESS: BASELINE"
         )
+    if profile.smart_enhance:
+        parts.append(
+            f"SMART: CLAHE {profile.clahe_strength:.2f} "
+            f"MED {profile.denoise_level} TONE {profile.tone_strength:.2f}")
+    if profile.postprocess_enabled:
+        parts.append(
+            f"POST: DOTS {profile.dot_cleanup_level} "
+            f"EDGES {profile.edge_refine_level}")
     output = raster.copy()
     # Header is a separate 1-bit strip; original preview bytes stay untouched.
     for line in reversed(parts):
