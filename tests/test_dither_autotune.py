@@ -5,7 +5,7 @@ import unittest
 from PIL import Image, ImageChops, ImageFilter
 
 from photobooth.dither_autotune import (
-    AutoTuneCancelled, _photo_gray, score_print_proxy, tune_enhanced_floyd,
+    AutoTuneCancelled, _photo_gray, score_print_proxy, tune_dither, tune_enhanced_floyd,
 )
 from photobooth.dither_lab import DitherProfile, render_thermal_image
 
@@ -117,6 +117,55 @@ class AutoTuneTests(unittest.TestCase):
             tune_enhanced_floyd(self.source, DitherProfile(mode="dizzy"))
         with self.assertRaises(ValueError):
             tune_enhanced_floyd(self.source, DitherProfile(mode="bayer"))
+
+    def test_each_algorithm_has_independent_neutral_search(self):
+        photo = self.source.resize((42, 55))
+        for mode in ("bayer", "dizzy", "threshold"):
+            with self.subTest(mode=mode):
+                manual = DitherProfile(
+                    mode=mode, width_dots=384, brightness=1.7,
+                    contrast=2.0, gamma=2.2, sharpness=2.8,
+                    enhanced_dizzy=(mode == "dizzy"),
+                    dizzy_variant="orthogonal-4" if mode == "dizzy" else "article-8",
+                    threshold=180 if mode == "threshold" else 128,
+                )
+                report = tune_dither(photo, manual)
+                self.assertEqual(len(report.candidates), 3)
+                self.assertEqual(report.baseline.profile.mode, mode)
+                self.assertEqual(report.baseline.profile.width_dots, 384)
+                self.assertEqual(report.baseline.profile.brightness, 1.0)
+                self.assertEqual(report.baseline.profile.contrast, 1.0)
+                self.assertEqual(report.baseline.profile.gamma, 1.0)
+                self.assertEqual(report.baseline.profile.sharpness, 1.0)
+                if mode == "dizzy":
+                    self.assertFalse(report.baseline.profile.enhanced_dizzy)
+                    self.assertEqual(report.baseline.profile.dizzy_variant, "article-8")
+                for candidate in report.candidates:
+                    self.assertEqual(candidate.profile.mode, mode)
+                    self.assertEqual(candidate.raster.mode, "1")
+                    self.assertEqual(candidate.raster.size, photo.size)
+                    self.assertEqual(
+                        candidate.raster.tobytes(),
+                        render_thermal_image(photo, candidate.profile).tobytes(),
+                    )
+                neutral = tune_dither(photo, DitherProfile(mode=mode, width_dots=384))
+                self.assertEqual(
+                    [(c.profile, c.score) for c in report.candidates],
+                    [(c.profile, c.score) for c in neutral.candidates],
+                )
+
+    def test_all_mode_cancellation_and_floyd_compatibility(self):
+        for mode in ("bayer", "dizzy", "threshold"):
+            with self.subTest(mode=mode):
+                with self.assertRaises(AutoTuneCancelled):
+                    tune_dither(self.source, DitherProfile(mode=mode),
+                                should_cancel=lambda: True)
+        photo = self.source.resize((44, 60))
+        p = DitherProfile()
+        old = tune_enhanced_floyd(photo, p)
+        new = tune_dither(photo, p)
+        self.assertEqual([(x.profile, x.score) for x in old.candidates],
+                         [(x.profile, x.score) for x in new.candidates])
 
     def test_cancel_before_start_and_during_search(self):
         with self.assertRaises(AutoTuneCancelled):
