@@ -175,6 +175,9 @@ class PhotoViews:
                 self._camera_texture.flip_horizontal()
             self._camera_texture.blit_buffer(preview.pixels, colorfmt='rgb', bufferfmt='ubyte')
             self._live_image.texture = self._camera_texture
+            # Like v1, invalidate the canvas after updating a reused texture.
+            # Its identity is unchanged, so Image.texture emits no redraw.
+            self._live_image.canvas.ask_update()
             self._camera_hint.text = 'PREVIEW CERMIN • hasil foto tidak dicerminkan'
             if self._countdown_event is None:
                 self._count_label.text = ''

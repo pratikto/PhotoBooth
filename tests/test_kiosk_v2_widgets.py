@@ -25,6 +25,63 @@ else:
 
 @unittest.skipUnless(HAS_KIVY, "Kivy not available in pure-Python test environment")
 class PortraitKivySmokeTests(unittest.TestCase):
+    def test_reused_camera_texture_redraws_without_touch_countdown_or_text_changes(self):
+        """Pixel uploads must reach the window even when all labels stay still."""
+        from types import SimpleNamespace
+        from kivy.base import EventLoop
+        from kivy.core.window import Window
+        from kivy.graphics.opengl import glReadPixels, GL_RGBA, GL_UNSIGNED_BYTE
+        from kivy.uix.image import Image
+        from kivy.uix.label import Label
+        from photobooth.kiosk_v2.flow import CAPTURE
+        from photobooth.kiosk_v2.live_preview import PreviewFrame
+        from photobooth.kiosk_v2.performance import PerformanceLog
+        from photobooth.kiosk_v2.photo_views import PhotoViews
+
+        view = PhotoViews()
+        view._init_photos()
+        view.navigation = SimpleNamespace(page=CAPTURE)
+        view._photo_jobs = SimpleNamespace(busy=False)
+        view._live_image = Image(fit_mode='contain')
+        view._camera_hint, view._count_label = Label(), Label()
+        view._capture_button = SimpleNamespace(disabled=False)
+        view.performance = PerformanceLog()
+        frame = object()
+        flips = []
+        def record_flip(*_):
+            flips.append(tuple(glReadPixels(int(Window.width / 2), int(Window.height / 2),
+                                           1, 1, GL_RGBA, GL_UNSIGNED_BYTE)[:3]))
+        Window.add_widget(view._live_image)
+        Window.bind(on_flip=record_flip)
+        try:
+            def upload(color):
+                packet = PreviewFrame(1, 0, (16, 12), bytes(color) * (16 * 12))
+                view._update_live_photo(frame, packet)
+                EventLoop.idle()
+            upload((255, 0, 0))
+            for _ in range(8):
+                EventLoop.idle()
+            texture = view._live_image.texture
+            hint, count = view._camera_hint.text, view._count_label.text
+            for color in ((0, 255, 0), (0, 0, 255), (255, 0, 0)) * 2:
+                before = len(flips)
+                upload(color)
+                self.assertGreater(len(flips), before, 'New camera pixels never reached a window redraw')
+                self.assertEqual(flips[-1], color, 'The window still displays old camera pixels')
+                self.assertIs(view._live_image.texture, texture)
+                self.assertEqual(view._camera_hint.text, hint)
+                self.assertEqual(view._count_label.text, count)
+            # Polling the same packet must not force an unnecessary redraw.
+            for _ in range(4):
+                EventLoop.idle()
+            before = len(flips)
+            view._update_live_photo(frame, view._last_preview)
+            EventLoop.idle()
+            self.assertEqual(len(flips), before)
+        finally:
+            Window.unbind(on_flip=record_flip)
+            Window.remove_widget(view._live_image)
+
     @unittest.skipUnless(os.environ.get('PHOTOBOOTH_PALM_TEST_ASSETS'), 'Native model assets are opt-in')
     def test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture(self):
         import time
