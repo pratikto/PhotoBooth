@@ -4,8 +4,8 @@ Windows:
     .\.venv-kivy\Scripts\Activate.ps1
     python tools/run_portrait_v2.py
 
-P3 photo tests are local by default. Payment, cafe receipt scanner, discounts
-and game integration remain disabled. Print/Drive require explicit operator opt-in.
+Photo tests and P4 Meong Fly DEMO are local by default. Production payment,
+cafe receipt scanner and actual discounts stay disabled. Print/Drive are opt-in.
 """
 
 import os
@@ -38,7 +38,7 @@ def main():
         Config.set("graphics", "height", "1280")
         from photobooth.kiosk_v2.app import PortraitKioskV2App
         logging.getLogger('photobooth.kiosk_v2').info('Window startup')
-        print("MEONG v2 P3 PHOTO TEST - no payment, scanner, discounts or real game", flush=True)
+        print("MEONG v2 P4 DEMO - no production payment, scanner or actual discount", flush=True)
         app = PortraitKioskV2App()
         try:
             app.run()
@@ -49,6 +49,9 @@ def main():
             if getattr(app, '_photo_jobs', None):
                 app._photo_jobs.close()
                 app._photo_jobs.wait_closed()
+            if getattr(app, '_game_jobs', None):
+                app._game_jobs.close()
+                app._game_jobs.wait_closed()
 
 
 if __name__ == "__main__":

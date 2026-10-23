@@ -1,5 +1,7 @@
 # Meong Photobooth — Current feature status
 
+> **P4a native DEMO game in source (2026-10-23):** Manual DEMO code → durable one-use claim → native game → win/loss → tutorial-once → existing gallery. 377/377 full tests PASS; 22 real Kivy captures reviewed at 800×1280/452×900. No replay, real receipt scanner, payable QR or actual discount. P4b MOCK follows. [Evidence/rollback](qa/portrait-v2-p4/README.md).
+
 > **P4 authorized (2026-10-23):** Owner explicitly requests P4 after P3 acceptance. Stage 1 reuses the existing pure Meong Fly engine and adds an isolated durable DEMO attempt ledger/background command owner; 56 focused tests PASS. New game pages are not connected yet. P3 owner PASS remains valid. Real scanner/payment/discount, provider Sandbox acceptance, branch merge and release remain outside this source claim. [P4 scope/evidence](qa/portrait-v2-p4/README.md).
 
 > **Latest P3 Windows owner retest (2026-10-23):** Focused preview/button form is **16/16 raw checked, twenty cycles, no reported issues**. Preview without touch, first-use buttons, capture/retake/palm, resize/audio/lifecycle and physical print guards are owner-reported PASS. BUG-013 moves to MONITORING; no new patch. HEAD and device fields remain blank, so exact-source acceptance and all-P3 certification are not established. Source checkpoints remain `0d08f07`/`ef0fcb0` with 353 prior full tests PASS. [Owner report, audit and limits](qa/portrait-v2-preview-redraw/README.md).

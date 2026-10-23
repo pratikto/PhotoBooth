@@ -830,9 +830,11 @@ class PortraitKivySmokeTests(unittest.TestCase):
             self.assertEqual(app.navigation.page, GAME_PREVIEW)
             buttons = [w for w in widgets(app.stage)
                        if isinstance(w, ArcadeButton)]
-            scanner = [b for b in buttons if "SCAN STRUK" in b.text]
-            self.assertEqual(len(scanner), 1)
-            self.assertTrue(scanner[0].disabled)
+            demo = [b for b in buttons if b.text == 'COBA GAME • KODE DEMO']
+            self.assertEqual(len(demo), 1)
+            self.assertFalse(demo[0].disabled)
+            labels = [w.text for w in widgets(app.stage) if hasattr(w, 'text')]
+            self.assertIn('SCAN STRUK / DISKON ASLI BELUM TERHUBUNG', labels)
             self.assertFalse(hasattr(app.navigation, "discount_amount"))
             self.assertFalse(hasattr(app.navigation, "paid"))
             app._choose_photo("skip_game")

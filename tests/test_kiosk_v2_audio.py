@@ -128,6 +128,17 @@ class PortraitAudioTests(unittest.TestCase):
         self.assertFalse(self.audio.enter_page("game_preview"))
         self.assertEqual(clip.state, "stop")
 
+    def test_demo_game_pages_keep_gui_music_off_and_single_click_owner_available(self):
+        self.audio.enter_page('tutorial')
+        music = self.loaded[SOUND_FILES['music']]
+        for page in ('game_receipt', 'game_play', 'game_result'):
+            self.assertFalse(self.audio.enter_page(page))
+            self.assertEqual(music.state, 'stop')
+            self.assertTrue(self.audio.cue('button'))
+            self.assertFalse(self.audio.cue('shutter'))
+        self.audio.enter_page('tutorial')
+        self.assertEqual(music.plays, 2)
+
     def test_volume_zero_mutes_and_does_not_restart(self):
         self.audio.enter_page("tutorial")
         clip = self.loaded["meong-v2-music.wav"]

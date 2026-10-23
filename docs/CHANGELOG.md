@@ -1,5 +1,7 @@
 # Meong Photobooth — Documentation and release changelog
 
+> **P4a (2026-10-23):** Add native manual-code/game/result pages, fixed-canvas asteroid display and safe tutorial/gallery handoff. Guard stale input, pause/minimize and durable consumed attempts; preserve existing gallery amounts. 377 full PASS and 22 reviewed screenshots. [Tests/provenance/rollback](qa/portrait-v2-p4/README.md).
+
 > **P4 stage 1 (2026-10-23):** Owner-approved continuation after P3 acceptance. Copy the audited pure game engine without merging the reference branch; add local DEMO-only SQLite claim/result records and single-flight background jobs. 56 targeted tests PASS. GUI integration follows; no real scanner, payable QR or redeemable discount enabled. [Scope/tests/provenance](qa/portrait-v2-p4/README.md).
 
 > **P3 Windows owner result recorded (2026-10-23, documentation only):** Preserve the focused 16/16 report, twenty cycles and no issue notes. Preview/button lag becomes OWNER-REPORTED PASS / MONITORING; physical print batch/uncertain-restart checks are now explicitly owner-reported passes. Keep HEAD/device metadata unknown, A01 metadata incomplete and unrelated full-P3/Drive-retention gates open. No application change or new test run is implied. [Report and audit](qa/portrait-v2-preview-redraw/README.md).

@@ -3,11 +3,28 @@
 import unittest
 
 from photobooth.kiosk_v2.flow import (
-    ADVERT, GAME_PREVIEW, TEMPLATES, TUTORIAL, NavigationError, VisitFlow,
+    ADVERT, GAME_PREVIEW, GAME_RECEIPT, GAME_PLAY, GAME_RESULT, TEMPLATES, TUTORIAL, NavigationError, VisitFlow,
 )
 
 
 class PortraitVisitFlowTests(unittest.TestCase):
+    def test_demo_game_routes_once_through_result_and_required_tutorial(self):
+        for seen in (False, True):
+            visit = VisitFlow(tutorial_seen=seen)
+            visit.begin_game_preview()
+            visit.open_game_receipt()
+            self.assertEqual(visit.page, GAME_RECEIPT)
+            visit.start_game()
+            self.assertEqual(visit.page, GAME_PLAY)
+            self.assertFalse(visit.browse_timeout())
+            with self.assertRaises(NavigationError):
+                visit.to_advertising()
+            visit.finish_game()
+            self.assertEqual(visit.page, GAME_RESULT)
+            self.assertEqual(visit.continue_game_photo(), TEMPLATES if seen else TUTORIAL)
+            with self.assertRaises(NavigationError):
+                visit.continue_game_photo()
+
     def test_first_photo_entry_always_requires_tutorial(self):
         visit = VisitFlow()
         self.assertEqual(visit.begin_photo(), TUTORIAL)

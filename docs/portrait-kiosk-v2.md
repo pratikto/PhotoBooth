@@ -1,5 +1,7 @@
 # FEAT-022 - Meong Photobooth portrait kiosk GUI v2 (working specification)
 
+> **P4a current override (2026-10-23):** Owner explicitly approves P4. DEMO game, manual one-use code ledger, result and tutorial/gallery handoff are now connected; P3 owner acceptance remains valid. 377 full PASS and 22 screenshots reviewed. Production scanner/payment/discount stay off; P4b MOCK follows. Older game-not-integrated inventories below are historical. [P4 evidence](qa/portrait-v2-p4/README.md).
+
 > **P3 device follow-up (2026-10-23):** Worker-owned RGB preview and reduced busy rebuilds are in `a322237`; `a059d30` adds deferred face initialization/progress and restores the existing optional open-palm shutter through the same capture countdown/quota/release policy. Manual SIAP remains available without optional MediaPipe/model. Final 349 local native-fixture tests PASS; actual Windows responsiveness/gesture acceptance remains open. [Report, source checkpoints and current retest form](qa/portrait-v2-p3-retest/README.md).
 
 

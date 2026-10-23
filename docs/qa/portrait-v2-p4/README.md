@@ -36,3 +36,26 @@ terminal results. Bounded background jobs cannot queue repeated start taps or
 call a retired GUI. Existing GUI/audio/photo source is unchanged at this stage;
 new pages and physical Windows acceptance are not yet claimed. Screenshot
 review and a P4-specific checkbox form follow when the new pages are connected.
+
+
+## Stage 2 — P4a native game pages
+
+**377/377 full tests PASS**, zero failures/errors/skips, including real Kivy,
+muted native audio/video and public native palm fixtures. [Transcript](stage2-full-tests.txt).
+Six game widget scenarios cover win/loss, tutorial seen/unseen, restart/used code,
+abandonment, stale/failed I/O, minimize and resize. The store still consumes the
+code before play; there is no MAIN LAGI or live receipt scanner. No client game
+score changes the existing gallery quote. BGM stays off inside the game;
+existing button audio is the sole feedback owner.
+
+Actual Kivy screenshots: **22 captures**, eleven pages at each required size.
+Reviewed [800×1280 contact](game-contact-800x1280.jpg) and
+[452×900 contact](game-contact-452x900.jpg), plus game/result originals.
+[800 manifest](game-render-800x1280.json), [452 manifest](game-render-452x900.json)
+record file hashes and the precommit base SHA with tracked changes explicitly
+true. Ready/paused/win/loss states are injected for visual coverage; this does
+not certify human gameplay, Windows touch/speakers or a physical scanner.
+Asteroids are five static reference-rendered textures, never Pillow per frame.
+
+Rollback for this GUI stage: `d30d921` (engine/store only). P4a is ready for
+Windows device acceptance; P4b MOCK and its checklist follow in the next stage.

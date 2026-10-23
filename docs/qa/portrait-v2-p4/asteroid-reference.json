@@ -1,0 +1,27 @@
+{
+  "reference_sha": "672e3f7089bb40940e5b41644ceb656aa63aafbb",
+  "function": "photobooth/meong_fly_game_art.py::make_rock_tile",
+  "pre_rendered_once_no_per_frame_pillow": true,
+  "assets": [
+    {
+      "file": "photobooth/kiosk_v2/assets/p4/asteroid-0.png",
+      "sha256": "c4de8e53fac9f63215f01736f6cdf70089fa9438d744c7c9ef6f908edd4cc32b"
+    },
+    {
+      "file": "photobooth/kiosk_v2/assets/p4/asteroid-1.png",
+      "sha256": "5e6037a3a53d2d4e832f15caded947e9ec8155aa07abb21772496868171bc2ed"
+    },
+    {
+      "file": "photobooth/kiosk_v2/assets/p4/asteroid-2.png",
+      "sha256": "002d66f642fe6c46d9ad2bb3d07b48c93636aad87797645ec8b33aae32a5ddde"
+    },
+    {
+      "file": "photobooth/kiosk_v2/assets/p4/asteroid-3.png",
+      "sha256": "239a15e602cb817af7a5dc2465883cd22569ffb9e6a51538c84563c086822cdd"
+    },
+    {
+      "file": "photobooth/kiosk_v2/assets/p4/asteroid-4.png",
+      "sha256": "1f37553a15dc984b0afae39dda0ef3ef80cec2f16a9089c6613b4bcbbc26ca52"
+    }
+  ]
+}

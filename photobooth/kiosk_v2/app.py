@@ -1,7 +1,7 @@
 """Opt-in Kivy portrait kiosk UI v2; does not launch the production booth.
 
-P3 adds an explicit nonfinancial photo-test path using existing camera, capture,
-retake, composition and optional print/Drive services. Payment and game stay off.
+P3 adds a nonfinancial photo-test path; P4 adds manual-token DEMO gameplay.
+Production payment, merchant scanning and redeemable discounts stay off.
 """
 
 from pathlib import Path
@@ -30,7 +30,7 @@ from photobooth.workflow import quote_order
 from .audio import make_kivy_audio
 from .branding import MeongLogo
 from .illustrations import TutorialIcon
-from .flow import ADVERT, BROWSING_PAGES, GAME_PREVIEW, TEMPLATES, TUTORIAL, PHOTO_PAGES, VisitFlow
+from .flow import ADVERT, BROWSING_PAGES, GAME_PREVIEW, GAME_PAGES, TEMPLATES, TUTORIAL, PHOTO_PAGES, VisitFlow
 from .theme import ArcadeButton, CYAN, GOLD, MUTED, PixelCard, PINK, Starfield, WHITE, text_label
 from .viewport import PortraitViewport
 from .previews import PREVIEW_SIZE, PreviewPreloader
@@ -40,6 +40,7 @@ from .photo_views import PhotoViews
 from .live_preview import LivePreview
 from .performance import PerformanceLog
 from .sensors import PalmShutter
+from .game_views import GameViews
 
 
 LOG = logging.getLogger(__name__)
@@ -73,15 +74,16 @@ class TouchStage(Starfield):
         return super().on_touch_down(touch)
 
 
-class PortraitKioskV2App(PhotoViews, App):
+class PortraitKioskV2App(PhotoViews, GameViews, App):
     """Separate greenfield window; the original python main.py remains untouched."""
 
     title = "MEONG PHOTOBOOTH - PORTRAIT GUI V2 (PROTOTIPE)"
 
-    def __init__(self, *, camera_device=None, face_inviter=None, palm_shutter=None, **kwargs):
+    def __init__(self, *, camera_device=None, face_inviter=None, palm_shutter=None, game_jobs=None, **kwargs):
         self._provided_camera = camera_device
         self._provided_inviter = face_inviter
         self._provided_palm = palm_shutter
+        self._provided_game_jobs = game_jobs
         super().__init__(**kwargs)
 
     def build(self):
@@ -91,6 +93,7 @@ class PortraitKioskV2App(PhotoViews, App):
         self._closed = False
         self._view_revision = 0
         self._init_photos()
+        self._init_game()
         self.live_preview = LivePreview()
         self.performance = PerformanceLog()
         self._sensor_states = None
@@ -181,6 +184,7 @@ class PortraitKioskV2App(PhotoViews, App):
         self._poll_photos()
         if self._suspended:
             return
+        self._poll_game()
         frame = self.camera_device.read()
         if self.navigation.page == 'capture':
             self.live_preview.submit(frame, self._view_revision)
@@ -236,6 +240,7 @@ class PortraitKioskV2App(PhotoViews, App):
     def on_pause(self):
         self._suspended = True
         self._photo_pause()
+        self._pause_game()
         self.live_preview.pause()
         self.performance.flush()
         self.camera_device.set_active(False)
@@ -266,6 +271,8 @@ class PortraitKioskV2App(PhotoViews, App):
     def on_stop(self):
         self._closed = True
         self._cancel_countdown()
+        self._retire_game_field()
+        self._game_jobs.close()
         self.live_preview.close()
         self.performance.flush()
         if self._photo_jobs is not None:
@@ -344,6 +351,7 @@ class PortraitKioskV2App(PhotoViews, App):
         LOG.info('Page rebuild begin from=%s to=%s revision=%s',
                  self.stage.current, self.navigation.page, self._view_revision + 1)
         self._view_revision += 1
+        self._retire_game_field()
         self.face_inviter.pause()
         self.palm_shutter.pause()
         self._close_invitation()
@@ -368,6 +376,8 @@ class PortraitKioskV2App(PhotoViews, App):
             self._build_game_notice(canvas)
         elif page.name in PHOTO_PAGES:
             self._build_photo_page(canvas)
+        elif page.name in GAME_PAGES:
+            self._build_game_page(canvas)
         else:
             raise RuntimeError("Unknown prototype page")
         LOG.info('Page ready page=%s revision=%s build_ms=%.1f',
@@ -445,6 +455,8 @@ class PortraitKioskV2App(PhotoViews, App):
         # UI-only reset. An actual receipt-attempt ledger will NEVER be cleared.
         self.quantities = {t.template_id: 0 for t in self.templates}
         self.template_index = 0
+        self._game_attempt = self._game_result = self._game_engine = None
+        self._game_error = ''
 
     def _return_ad(self):
         LOG.info('Return to advertising requested from=%s', self.navigation.page)
@@ -613,7 +625,7 @@ class PortraitKioskV2App(PhotoViews, App):
         self._show()
 
     def _build_game_notice(self, canvas):
-        """Dedicated Meong Fly entry screen, *not* a working receipt/game path."""
+        """Common intro; real scanner stays off, manual DEMO gameplay is available."""
         # One large shared transparent brand in the hero; no duplicated header.
         shell = self._frame(canvas, brand_height=0)
         shell.add_widget(text_label(
@@ -626,7 +638,7 @@ class PortraitKioskV2App(PhotoViews, App):
         hero = PixelCard(orientation="vertical", padding=10, spacing=6)
         hero.add_widget(MeongLogo(hero=True))
         hero.add_widget(text_label(
-            "MAIN SEKALI, MENANG DAPAT DISKON!",
+            "MAIN SEKALI • RAIH 10 POIN!",
             size=17, height=46, color=CYAN, bold=True))
         shell.add_widget(hero)
 
@@ -636,10 +648,10 @@ class PortraitKioskV2App(PhotoViews, App):
             "ATURAN MEONG FLY", size=18, height=38,
             color=GOLD, bold=True))
         rules.add_widget(text_label(
-            "01  Satu struk kafe = satu kesempatan main",
+            "01  Satu kode DEMO = satu kesempatan main",
             size=14, height=42, color=WHITE, align="left"))
         rules.add_widget(text_label(
-            "02  Menang: potensi diskon Rp2.500",
+            "02  Menang: potensi Rp2.500 (simulasi)",
             size=14, height=42, color=WHITE, align="left"))
         rules.add_widget(text_label(
             "03  Setelah game, pilih template foto",
@@ -653,8 +665,8 @@ class PortraitKioskV2App(PhotoViews, App):
             "", size=12, height=26, color=GOLD)
         shell.add_widget(self._warning_label)
         shell.add_widget(self._action(
-            "LANJUT SCAN STRUK (BELUM AKTIF)",
-            lambda: None, disabled=True, height=56))
+            "COBA GAME • KODE DEMO",
+            self._open_game_demo, height=56))
         shell.add_widget(self._action(
             "LANJUT FOTO TANPA GAME",
             lambda: self._choose_photo("skip_game")))
@@ -674,6 +686,10 @@ class PortraitKioskV2App(PhotoViews, App):
         title.size_hint_x = .44
         header.add_widget(title)
         shell.add_widget(header)
+        if self._game_result is not None:
+            shell.add_widget(text_label(
+                'DEMO • potensi Rp2.500 belum diterapkan' if self._game_result['result'] == 'won'
+                else 'DEMO game selesai • tanpa potongan harga', size=12, height=24, color=GOLD))
 
         deck = PixelCard(orientation='vertical', padding=8, spacing=4)
         host = FloatLayout()

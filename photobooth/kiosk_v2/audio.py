@@ -21,10 +21,10 @@ SOUND_FILES = {
     "shutter": "meong-v2-shutter-soft.wav",
     "success": "meong-v2-success.wav",
 }
-# No soundtrack over an advertising video; still images may use GUI music. A future game
-# integration must obtain/release its own isolated audio channel explicitly.
+# Advertising video owns its audio; still images may use GUI music. DEMO game
+# pages stay free of GUI music and use the single shared click owner only.
 MUSIC_PAGES = frozenset({"tutorial", "templates", 'photo_confirm', 'capture', 'review', 'result'})
-KNOWN_PAGES = MUSIC_PAGES | frozenset({"advert", "game_preview"})
+KNOWN_PAGES = MUSIC_PAGES | frozenset({"advert", "game_preview", 'game_receipt', 'game_play', 'game_result'})
 
 
 def bounded_gain(value: float) -> float:

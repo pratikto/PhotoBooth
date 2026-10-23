@@ -21,7 +21,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Syntax
-        run: python -m compileall -q photobooth/kiosk_v2 tools/run_portrait_v2.py tools/render_portrait_v2.py tools/render_portrait_p3.py tests/test_kiosk_v2_*.py
+        run: python -m compileall -q photobooth/kiosk_v2 tools/run_portrait_v2.py tools/render_portrait_v2.py tools/render_portrait_p3.py tools/render_portrait_p4.py tests/test_kiosk_v2_*.py
       - name: Kivy-independent navigation and fake audio tests
         run: python -m unittest tests.test_kiosk_v2_flow tests.test_kiosk_v2_audio tests.test_kiosk_v2_design_tokens tests.test_kiosk_v2_previews tests.test_kiosk_v2_live_preview tests.test_kiosk_v2_sensors tests.test_kiosk_v2_diagnostics tests.test_kiosk_v2_devices tests.test_kiosk_v2_game_engine tests.test_kiosk_v2_demo_game -v
 
@@ -55,7 +55,7 @@ jobs:
       - name: Isolated P3 photo, composition, retake and durable print guards
         run: python -m unittest tests.test_kiosk_v2_photos -v
       - name: Exercise opt-in Kivy widgets at a virtual display
-        run: PHOTOBOOTH_TEST_AUDIO=1 xvfb-run -a python -m unittest tests.test_kiosk_v2_widgets -v
+        run: PHOTOBOOTH_TEST_AUDIO=1 xvfb-run -a python -m unittest tests.test_kiosk_v2_widgets tests.test_kiosk_v2_game_widgets -v
       - name: Reuse muted native channels across twenty audio cycles (dummy PCM output)
         run: PHOTOBOOTH_TEST_AUDIO=1 xvfb-run -a python -m unittest tests.test_kiosk_v2_native_audio -v
       - name: Capture real Kivy pages at 800x1280 (fresh Xvfb process)
@@ -70,6 +70,10 @@ jobs:
         run: |
           xvfb-run -a -s "-screen 0 1600x1600x24" python tools/render_portrait_p3.py --output-dir /tmp/meong-portrait-v2/p3 --width 800 --height 1280
           xvfb-run -a -s "-screen 0 1280x1024x24" python tools/render_portrait_p3.py --output-dir /tmp/meong-portrait-v2/p3 --width 452 --height 900
+      - name: Capture P4 DEMO game pages with isolated attempt ledger
+        run: |
+          xvfb-run -a -s "-screen 0 1600x1600x24" python tools/render_portrait_p4.py --output-dir /tmp/meong-portrait-v2/p4 --width 800 --height 1280
+          xvfb-run -a -s "-screen 0 1280x1024x24" python tools/render_portrait_p4.py --output-dir /tmp/meong-portrait-v2/p4 --width 452 --height 900
       - name: Preserve visual evidence for review
         if: always()
         uses: actions/upload-artifact@v4

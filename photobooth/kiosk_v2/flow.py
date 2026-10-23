@@ -11,12 +11,16 @@ ADVERT = "advert"
 TUTORIAL = "tutorial"
 TEMPLATES = "templates"
 GAME_PREVIEW = "game_preview"
+GAME_RECEIPT = 'game_receipt'
+GAME_PLAY = 'game_play'
+GAME_RESULT = 'game_result'
+GAME_PAGES = frozenset({GAME_RECEIPT, GAME_PLAY, GAME_RESULT})
 PHOTO_CONFIRM = 'photo_confirm'
 CAPTURE = 'capture'
 REVIEW = 'review'
 RESULT = 'result'
 PHOTO_PAGES = frozenset({PHOTO_CONFIRM, CAPTURE, REVIEW, RESULT})
-BROWSING_PAGES = frozenset({TUTORIAL, TEMPLATES, GAME_PREVIEW})
+BROWSING_PAGES = frozenset({TUTORIAL, TEMPLATES, GAME_PREVIEW, GAME_RECEIPT, GAME_RESULT})
 
 
 class NavigationError(ValueError):
@@ -47,8 +51,29 @@ class VisitFlow:
         if self.page != ADVERT:
             raise NavigationError("Meong Fly entry belongs to the idle advertising screen.")
         self.entry_source = source
-        # There is no real game, receipt scanner or discount bridge on this branch.
         self.page = GAME_PREVIEW
+        return self.page
+
+    def open_game_receipt(self):
+        if self.page != GAME_PREVIEW:
+            raise NavigationError('DEMO receipt entry requires the game intro.')
+        self.page = GAME_RECEIPT
+
+    def start_game(self):
+        if self.page != GAME_RECEIPT:
+            raise NavigationError('Gameplay requires a claimed DEMO attempt.')
+        self.page = GAME_PLAY
+
+    def finish_game(self):
+        if self.page != GAME_PLAY:
+            raise NavigationError('Only the active game may finish.')
+        self.page = GAME_RESULT
+
+    def continue_game_photo(self):
+        if self.page != GAME_RESULT:
+            raise NavigationError('Photo handoff requires a finished game.')
+        self.entry_source = 'game_demo'
+        self.page = TEMPLATES if self.tutorial_seen else TUTORIAL
         return self.page
 
     def complete_tutorial(self) -> str:
@@ -64,7 +89,7 @@ class VisitFlow:
         An active photo test must finish through its service before this reset.
         Future production admission must still enforce independent paid-order guards.
         """
-        if self.page in {CAPTURE, REVIEW, RESULT}:
+        if self.page in {CAPTURE, REVIEW, RESULT, GAME_PLAY}:
             raise NavigationError('An active photo test must finish safely first.')
         self.page = ADVERT
         self.tutorial_seen = False

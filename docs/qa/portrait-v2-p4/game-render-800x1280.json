@@ -1,0 +1,85 @@
+{
+  "source_sha": "d30d921822ebe49c0febb7713f92d22a758064ab",
+  "tracked_changes": true,
+  "synthetic_only": true,
+  "game_states_injected": true,
+  "screenshots": [
+    {
+      "file": "01-intro-800x12800001.png",
+      "page": "game_preview",
+      "width": 800,
+      "height": 1280,
+      "sha256": "cc6b5ee80874d14187fe118dab87b0b939a8df0bbfba39e820d4a99f4ee839b6"
+    },
+    {
+      "file": "02-code-entry-800x12800001.png",
+      "page": "game_receipt",
+      "width": 800,
+      "height": 1280,
+      "sha256": "70715f9b1bb1c0244878b132b0d1014d0d26deb7ccff228adbfc8c058d623d73"
+    },
+    {
+      "file": "03-invalid-800x12800001.png",
+      "page": "game_receipt",
+      "width": 800,
+      "height": 1280,
+      "sha256": "1da17343e6812902d47a7d86aa1f46c5bb776cb3f7bc0eb009b8d791be1b0fd0"
+    },
+    {
+      "file": "04-ready-800x12800001.png",
+      "page": "game_play",
+      "width": 800,
+      "height": 1280,
+      "sha256": "cc496f6a5f429850cffa3f67edfa096a00512114bda67644c3fe0bc0a7cceb6a"
+    },
+    {
+      "file": "05-paused-game-800x12800001.png",
+      "page": "game_play",
+      "width": 800,
+      "height": 1280,
+      "sha256": "62e1fed50c1326db9ec7e1b1a4ecc2256b432338e814f8e546c757352f139db6"
+    },
+    {
+      "file": "06-win-800x12800001.png",
+      "page": "game_result",
+      "width": 800,
+      "height": 1280,
+      "sha256": "2f23ce65574240097d39d08ee8f1ec72f0ad9d18c18915c9aabed9c8ec440b7c"
+    },
+    {
+      "file": "07-required-tutorial-800x12800001.png",
+      "page": "tutorial",
+      "width": 800,
+      "height": 1280,
+      "sha256": "5228c20ebe8edb4792667f5df88e25c38f2d73ad96ea878d75866f4117a4bf48"
+    },
+    {
+      "file": "08-win-gallery-800x12800001.png",
+      "page": "templates",
+      "width": 800,
+      "height": 1280,
+      "sha256": "12cccceab63d7f64c9fff2ed137e5e07a14719d12bc9b7b0953ecf750a7ceea0"
+    },
+    {
+      "file": "09-loss-800x12800001.png",
+      "page": "game_result",
+      "width": 800,
+      "height": 1280,
+      "sha256": "ef3592f7852fa63a875d3c4c57ff60d723aa28847034fb93ba8fd9fa33ffb625"
+    },
+    {
+      "file": "10-loss-gallery-800x12800001.png",
+      "page": "templates",
+      "width": 800,
+      "height": 1280,
+      "sha256": "0f9ae43aee810c7a2533d4f447328df99ade45e77ec6b350c710a8d44cac3c78"
+    },
+    {
+      "file": "11-used-code-800x12800001.png",
+      "page": "game_receipt",
+      "width": 800,
+      "height": 1280,
+      "sha256": "08416f443ddf08725ab815d9982429fc4c94ebdeb2b6848c4bfe0c201ae6f099"
+    }
+  ]
+}
