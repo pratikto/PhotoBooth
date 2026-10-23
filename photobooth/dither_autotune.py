@@ -24,11 +24,29 @@ SEARCH_STEPS = (
 TUNING_FIELDS = ("brightness", "contrast", "gamma", "sharpness")
 BOUNDS = ((0.5, 1.75), (0.5, 2.5), (0.3, 3.0), (0.0, 3.0))
 SHORTLIST_SIZE = 8
-PROXY_MAX_SIZE = (384, 520)
+PROXY_MAX_SIZE = (256, 320)
 # Dizzy is a CPU-heavy per-pixel algorithm: use a smaller bounded search.
-DIZZY_PROXY_MAX_SIZE = (176, 240)
+DIZZY_PROXY_MAX_SIZE = (160, 200)
 THRESHOLD_BOUNDS = (64, 200)
 THRESHOLD_STEPS = (28, 14, 7)
+# Deliberately short, bounded combinations; these are photo-heuristic trials,
+# not trained printer calibration or a promise that paper quality improves.
+PROCESSING_PRESETS = (
+    {"smart_enhance": True, "clahe_strength": 0.20,
+     "denoise_level": 1, "tone_strength": 0.12},
+    {"smart_enhance": True, "clahe_strength": 0.48,
+     "denoise_level": 1, "tone_strength": 0.25},
+    {"postprocess_enabled": True, "dot_cleanup_level": 2,
+     "edge_refine_level": 1},
+    {"smart_enhance": True, "clahe_strength": 0.34,
+     "denoise_level": 1, "tone_strength": 0.18,
+     "postprocess_enabled": True, "dot_cleanup_level": 1,
+     "edge_refine_level": 1},
+)
+PROCESSING_FIELDS = (
+    "smart_enhance", "clahe_strength", "denoise_level", "tone_strength",
+    "postprocess_enabled", "dot_cleanup_level", "edge_refine_level",
+)
 
 
 class AutoTuneCancelled(Exception):
@@ -49,7 +67,7 @@ class AutoTuneCandidate:
 class AutoTuneResult:
     candidates: tuple[AutoTuneCandidate, ...]
     trials: int
-    baseline: AutoTuneCandidate  # System-neutral Enhanced Floyd reference.
+    baseline: AutoTuneCandidate  # System-neutral algorithm-specific reference.
     # No network, trained AI, facial recognition or automatic printer actions.
 
 
@@ -107,6 +125,11 @@ def score_print_proxy(
                   for field, span in zip(TUNING_FIELDS, (0.75, 1.5, 2.0, 2.0)))
     if profile.mode == "threshold":
         penalty += abs(profile.threshold - 128) / 127
+    if profile.smart_enhance:
+        penalty += 0.18 + 0.3 * profile.clahe_strength + 0.1 * profile.denoise_level
+    if profile.postprocess_enabled:
+        penalty += 0.15 + 0.08 * (
+            profile.dot_cleanup_level + profile.edge_refine_level)
     score = max(0.0, min(
         100.0,
         100.0 - (0.72 * tone_error + 0.16 * edge_error +
@@ -117,7 +140,8 @@ def score_print_proxy(
 
 def _signature(profile: DitherProfile) -> tuple:
     """Key includes algorithm-specific controls to keep distinct presets."""
-    key = tuple(getattr(profile, field) for field in TUNING_FIELDS)
+    key = tuple(getattr(profile, field) for field in
+                (*TUNING_FIELDS, *PROCESSING_FIELDS))
     if profile.mode == "threshold":
         return (*key, profile.threshold)
     if profile.mode == "dizzy":
@@ -195,11 +219,15 @@ def tune_dither(
                 on_progress(len(scores), "Searching")
         return scores[key][0]
 
+    # Evaluate opt-in enhancement alternatives explicitly, even when the
+    # manual GUI happens to have all processing options disabled.
+    for options in PROCESSING_PRESETS:
+        anchors.append(replace(neutral, **options))
     for anchor in anchors:
         evaluate(anchor)
     rng = random.Random(42)
     for _ in range(8 if mode == "dizzy" else 16):
-        base = anchors[rng.randrange(len(anchors))] if mode == "dizzy" else neutral
+        base = anchors[rng.randrange(len(anchors))]
         values = {
             field: (rng.randint(int(low), int(high))
                     if field == "threshold" else round(rng.uniform(low, high), 3))
@@ -226,6 +254,26 @@ def tune_dither(
                     evaluate(proposal)
                 center = max((center, *neighbors), key=evaluate)
 
+    # Fine-tune the strongest enhanced proposal, independently of tonal
+    # coordinates. Limit evaluations and keep integer post levels discrete.
+    enhanced_profiles = [profile for _, profile in scores.values()
+                         if profile.smart_enhance]
+    if enhanced_profiles:
+        best_enhanced = max(enhanced_profiles, key=evaluate)
+        for field, step in (("clahe_strength", 0.12), ("tone_strength", 0.1)):
+            for direction in (-1, 1):
+                evaluate(_search_neighbor(best_enhanced, field, step * direction,
+                                          (0.0, 1.0)))
+        for level in (0, 2):
+            evaluate(replace(best_enhanced, denoise_level=level))
+    post_profiles = [profile for _, profile in scores.values()
+                     if profile.postprocess_enabled]
+    if post_profiles:
+        best_post = max(post_profiles, key=evaluate)
+        for field in ("dot_cleanup_level", "edge_refine_level"):
+            for direction in (-1, 1):
+                evaluate(_search_neighbor(best_post, field, direction, (0, 3)))
+
     if cancel():
         raise AutoTuneCancelled("Auto Tune cancelled before full-resolution ranking.")
 
@@ -235,8 +283,24 @@ def tune_dither(
     )[:shortlist_size]]
     # Always evaluate the neutral algorithm baseline at true native resolution,
     # even if its reduced-proxy score was not in the best shortlist.
-    if _signature(neutral) not in {_signature(p) for p in shortlisted}:
-        shortlisted[-1] = neutral
+    # Reserve native verification for a smart candidate and a post candidate,
+    # even when digital proxy scores favor only unprocessed images.
+    finalists = [p for _, p in sorted(
+        scores.values(), key=lambda item: (-item[0], _signature(item[1]))
+    )]
+    reserved = [neutral]
+    for predicate in (lambda p: p.smart_enhance,
+                      lambda p: p.postprocess_enabled):
+        eligible = next((p for p in finalists if predicate(p)), None)
+        if eligible is not None and eligible not in reserved:
+            reserved.append(eligible)
+    for item in reserved:
+        if item not in shortlisted:
+            # Replace the lowest-ranked unreserved result, preserving space.
+            for idx in range(len(shortlisted) - 1, -1, -1):
+                if shortlisted[idx] not in reserved:
+                    shortlisted[idx] = item
+                    break
     full_ref = _photo_gray(source, neutral.width_dots)
     final: list[AutoTuneCandidate] = []
     for profile in shortlisted:
@@ -258,8 +322,23 @@ def tune_dither(
     ranked = sorted(final, key=lambda item: (
         -item.score, item.tone_error, _signature(item.profile)
     ))
+    # Offer a meaningful human-review comparison: best digital score plus
+    # an opt-in Smart option and (when distinct) a post-processing option.
+    selected = [ranked[0]]
+    for predicate in (lambda c: c.profile.smart_enhance,
+                      lambda c: c.profile.postprocess_enabled):
+        option = next((c for c in ranked if predicate(c.profile)
+                       and c not in selected), None)
+        if option is not None and len(selected) < 3:
+            selected.append(option)
+    for candidate in ranked:
+        if len(selected) == 3:
+            break
+        if candidate not in selected:
+            selected.append(candidate)
+    selected.sort(key=lambda c: (-c.score, c.tone_error, _signature(c.profile)))
     return AutoTuneResult(
-        candidates=tuple(ranked[:3]), trials=len(scores) + len(final),
+        candidates=tuple(selected), trials=len(scores) + len(final),
         baseline=baseline,
     )
 
