@@ -3,11 +3,24 @@
 import unittest
 
 from photobooth.kiosk_v2.flow import (
-    ADVERT, GAME_PREVIEW, GAME_RECEIPT, GAME_PLAY, GAME_RESULT, TEMPLATES, TUTORIAL, NavigationError, VisitFlow,
+    ADVERT, GAME_PREVIEW, GAME_RECEIPT, GAME_PLAY, GAME_RESULT, TEMPLATES, TUTORIAL, MOCK_CHECKOUT, NavigationError, VisitFlow,
 )
 
 
 class PortraitVisitFlowTests(unittest.TestCase):
+    def test_mock_checkout_requires_tutorial_and_cannot_expire_or_reset_into_idle(self):
+        visit=VisitFlow()
+        with self.assertRaises(NavigationError):visit.open_mock_checkout()
+        visit.begin_photo()
+        with self.assertRaises(NavigationError):visit.open_mock_checkout()
+        visit.complete_tutorial();visit.open_mock_checkout()
+        self.assertEqual(visit.page,MOCK_CHECKOUT)
+        self.assertFalse(visit.browse_timeout())
+        with self.assertRaises(NavigationError):visit.to_advertising()
+        visit.leave_mock_checkout()
+        self.assertEqual(visit.page,TEMPLATES)
+        with self.assertRaises(NavigationError):visit.leave_mock_checkout()
+
     def test_demo_game_routes_once_through_result_and_required_tutorial(self):
         for seen in (False, True):
             visit = VisitFlow(tutorial_seen=seen)

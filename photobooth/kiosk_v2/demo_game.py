@@ -81,15 +81,16 @@ class GameOutcome:
 class GameJobs:
     """Single-flight I/O; results are polled, never delivered into retired pages."""
 
-    def __init__(self, factory):
+    def __init__(self, factory, *, actions=None):
         self._factory, self.store = factory, None
+        self._actions = frozenset({'claim', 'finish'} if actions is None else actions)
         self._results = queue.Queue(maxsize=1)
         self._thread = None
         self._closed = False
         self.busy = False
 
     def submit(self, action, revision, *args):
-        if self._closed or self.busy or action not in {'claim', 'finish'}:
+        if self._closed or self.busy or action not in self._actions:
             return False
         self.busy = True
         def run():

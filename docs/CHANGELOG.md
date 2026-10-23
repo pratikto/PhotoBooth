@@ -1,5 +1,7 @@
 # Meong Photobooth — Documentation and release changelog
 
+> **P4b MOCK (2026-10-23):** Add local authoritative quote, conditional simulated promo, stable-key orders, protected pending/unknown/expiry/recovery and atomic one-use handoff to P3 consent. Default checkout entry off; nonpayable text QR and explicit simulation controls only. Fix compact pending overflow found during review. 406 full PASS, 20 final checkout captures and a tested 28-item Submit form. [Evidence and limits](qa/portrait-v2-p4/README.md).
+
 > **P4a (2026-10-23):** Add native manual-code/game/result pages, fixed-canvas asteroid display and safe tutorial/gallery handoff. Guard stale input, pause/minimize and durable consumed attempts; preserve existing gallery amounts. 377 full PASS and 22 reviewed screenshots. [Tests/provenance/rollback](qa/portrait-v2-p4/README.md).
 
 > **P4 stage 1 (2026-10-23):** Owner-approved continuation after P3 acceptance. Copy the audited pure game engine without merging the reference branch; add local DEMO-only SQLite claim/result records and single-flight background jobs. 56 targeted tests PASS. GUI integration follows; no real scanner, payable QR or redeemable discount enabled. [Scope/tests/provenance](qa/portrait-v2-p4/README.md).

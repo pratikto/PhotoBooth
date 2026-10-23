@@ -14,6 +14,7 @@ GAME_PREVIEW = "game_preview"
 GAME_RECEIPT = 'game_receipt'
 GAME_PLAY = 'game_play'
 GAME_RESULT = 'game_result'
+MOCK_CHECKOUT = 'mock_checkout'
 GAME_PAGES = frozenset({GAME_RECEIPT, GAME_PLAY, GAME_RESULT})
 PHOTO_CONFIRM = 'photo_confirm'
 CAPTURE = 'capture'
@@ -89,7 +90,7 @@ class VisitFlow:
         An active photo test must finish through its service before this reset.
         Future production admission must still enforce independent paid-order guards.
         """
-        if self.page in {CAPTURE, REVIEW, RESULT, GAME_PLAY}:
+        if self.page in {CAPTURE, REVIEW, RESULT, GAME_PLAY, MOCK_CHECKOUT}:
             raise NavigationError('An active photo test must finish safely first.')
         self.page = ADVERT
         self.tutorial_seen = False
@@ -100,6 +101,18 @@ class VisitFlow:
         if self.page != TEMPLATES or not self.tutorial_seen:
             raise NavigationError('Complete the tutorial and choose templates first.')
         self.page = PHOTO_CONFIRM
+
+    def open_mock_checkout(self):
+        if self.page != TEMPLATES or not self.tutorial_seen:
+            raise NavigationError('MOCK checkout requires the completed tutorial/gallery.')
+        self.page = MOCK_CHECKOUT
+
+    def leave_mock_checkout(self):
+        # The caller must obtain terminal cancellation/expiry or one-use MOCK
+        # admission from the isolated service before leaving this protected page.
+        if self.page != MOCK_CHECKOUT:
+            raise NavigationError('No active MOCK checkout.')
+        self.page = TEMPLATES
 
     def photo_step(self, phase):
         if self.page not in PHOTO_PAGES or phase not in {CAPTURE, REVIEW, RESULT, 'done'}:

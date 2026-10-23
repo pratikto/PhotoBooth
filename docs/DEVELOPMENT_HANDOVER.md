@@ -1,5 +1,7 @@
 # Meong Photobooth — Development handover
 
+> **Current P4 handover (2026-10-23):** P4a DEMO game and P4b opt-in local MOCK checkout are implemented; final 406 full PASS, 42 reviewed P4 captures and browser-verified 28-item Submit form. Run the existing v2 launcher; set PHOTOBOOTH_V2_CHECKOUT_MOCK=1 only for section C. P3 owner acceptance stands. Next is P4 Windows game/MOCK acceptance; real provider Sandbox/merchant promo contract remains external and is not enabled. Keep the same branch and push checkpoints. [Commands/evidence/open gates/rollback](qa/portrait-v2-p4/README.md).
+
 > **P4a source checkpoint (2026-10-23):** Native DEMO game pages are connected after the accepted P3. 377 full PASS, 22 reviewed captures; preserve P3 photo/audio behavior. Continue P4b isolated MOCK on the same branch, then provide a P4 checkbox form with Submit. Real merchant/provider acceptance remains external. [Evidence and rollback](qa/portrait-v2-p4/README.md).
 
 > **Current work — P4 (2026-10-23):** Owner says “p3 kan udah diuji.. lanjut p4 aja lah”. Continue P4a DEMO game → tutorial-once → existing gallery, then guarded P4b MOCK work, on the same required branch. P3 metadata does not block development. Stage-1 engine/ledger has 56 targeted PASS; connect native pages next, test and push in stages. P3 optional session-checklist WIP is saved locally in a named stash and is not shipped. Preserve the accepted camera/audio/photo behavior. [P4 contract and rollback](qa/portrait-v2-p4/README.md).

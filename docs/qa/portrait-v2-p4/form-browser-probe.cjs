@@ -1,0 +1,42 @@
+const {chromium}=require('/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const fs=require('fs');
+const assert=require('assert');
+(async()=>{
+ const browser=await chromium.launch({executablePath:'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
+ const results=[];
+ for(const [width,height] of [[800,1280],[452,900]]){
+  const context=await browser.newContext({viewport:{width,height},acceptDownloads:true});
+  const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.goto('http://127.0.0.1:8765/docs/qa/portrait-v2-p4/windows-checklist.html');
+  assert.equal(await page.locator('input[type=checkbox]').count(),28);
+  assert.equal(await page.locator('#count').innerText(),'0 / 28 lulus');
+  assert(await page.locator('#G01').isDisabled());
+  await page.locator('#A02').check();await page.reload();assert(await page.locator('#A02').isChecked());
+  await page.locator('#cycles').fill('19');assert(await page.locator('#G01').isDisabled());
+  await page.locator('#cycles').fill('20');assert(!(await page.locator('#G01').isDisabled()));
+  assert(!(await page.locator('#G01').isChecked()));
+  await page.locator('#G01').check();await page.locator('#G02').check();
+  await page.locator('#notes').fill('C03 belum diuji; catatan <script>tetap teks</script>');
+  await page.locator('#submit').click();let report=await page.locator('#prompt-output').inputValue();
+  assert(report.includes('Lulus: 3/28'));assert(report.includes('[ ] C03'));assert(report.includes('Sandbox / merchant / QRIS asli BELUM DIUJI'));
+  assert(report.includes('BELUM DIISI'));assert(report.includes('<script>tetap teks</script>'));
+  await page.locator('#cycles').fill('5');assert(!(await page.locator('#G01').isChecked()));
+  report=await page.locator('#prompt-output').inputValue();assert(report.includes('Lulus: 1/28'));
+  const downloadPromise=page.waitForEvent('download');await page.locator('#download').click();const download=await downloadPromise;
+  await download.saveAs('/workspace/.photobooth-cloud/p4-form-download-'+width+'.txt');
+  assert(fs.readFileSync('/workspace/.photobooth-cloud/p4-form-download-'+width+'.txt','utf8').includes('Lulus: 1/28'));
+  await page.evaluate(()=>window.scrollTo(0,0));
+  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth));
+  await page.screenshot({path:'/workspace/.photobooth-cloud/p4-form-'+width+'.png'});
+  await page.evaluate(()=>localStorage.setItem('meong-windows-p3-preview-redraw-v1',JSON.stringify({checked:['A01'],fields:{head:'old-p3-head'}})));
+  page.once('dialog',dialog=>dialog.accept());await page.locator('#reset').click();
+  assert.equal(await page.locator('#count').innerText(),'0 / 28 lulus');
+  await page.reload();assert.equal(await page.locator('#head').inputValue(),'');
+  assert.equal(await page.locator('#count').innerText(),'0 / 28 lulus');assert.deepEqual(errors,[]);
+  results.push({width,height,items:28,blank_and_separate_storage:true,reload:true,cycle_gate:true,submit:true,unchecked_preserved:true,download:true,reset:true,no_horizontal_overflow:true,page_errors:errors});
+  await context.close();
+ }
+ await browser.close();
+ fs.writeFileSync('/workspace/.photobooth-cloud/p4-form-verification.json',JSON.stringify({browser:'Chromium/Playwright',results},null,2)+'\n');
+ process.stdout.write('P4 form PASS at 800×1280 and 452×900; 28 items, Submit/download/storage/cycle gate/reset.\n');
+})().catch(e=>{console.error(e);process.exit(1)});

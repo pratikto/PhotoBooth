@@ -35,6 +35,15 @@ class FakeClip:
 
 
 class PortraitAudioTests(unittest.TestCase):
+    def test_mock_checkout_preserves_one_music_stream_and_button_feedback(self):
+        self.audio.enter_page('tutorial');music=self.loaded['meong-v2-music.wav']
+        self.audio.enter_page('templates');self.audio.enter_page('mock_checkout')
+        self.assertEqual(music.plays,1)
+        self.assertTrue(self.audio.cue('button'))
+        self.audio.suspend();self.assertEqual(music.state,'stop')
+        self.audio.resume();self.assertEqual(music.plays,2)
+        self.audio.enter_page('photo_confirm');self.assertEqual(music.plays,2)
+
     def test_new_shutter_is_original_bounded_pcm_and_does_not_replace_v1(self):
         import array
         import wave

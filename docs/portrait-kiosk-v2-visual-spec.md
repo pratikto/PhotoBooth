@@ -1,5 +1,7 @@
 # FEAT-022 — Approved visual mockups and corrected screen-by-screen UX specification
 
+> **P4 native source update (2026-10-23):** Actual DEMO intro/code/game/result and opt-in MOCK checkout states are connected and reviewed at both target sizes. The revised game result still routes through tutorial-once/gallery; payment artwork is represented only by clearly nonpayable MOCK QR. 42 reviewed P4 captures; no real scanner/payable QR/discount. [Contacts and acceptance form](qa/portrait-v2-p4/README.md).
+
 **Working branch:** feature/portrait-kiosk-v2-next  
 **Product:** Meong Photobooth — greenfield portrait Kivy customer GUI v2  
 **Status:** APPROVED **visual direction**; complete corrected workflow is a **design target**, not an implemented or production-certified flow  

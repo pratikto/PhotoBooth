@@ -30,7 +30,7 @@ from photobooth.workflow import quote_order
 from .audio import make_kivy_audio
 from .branding import MeongLogo
 from .illustrations import TutorialIcon
-from .flow import ADVERT, BROWSING_PAGES, GAME_PREVIEW, GAME_PAGES, TEMPLATES, TUTORIAL, PHOTO_PAGES, VisitFlow
+from .flow import ADVERT, BROWSING_PAGES, GAME_PREVIEW, GAME_PAGES, TEMPLATES, TUTORIAL, PHOTO_PAGES, MOCK_CHECKOUT, VisitFlow
 from .theme import ArcadeButton, CYAN, GOLD, MUTED, PixelCard, PINK, Starfield, WHITE, text_label
 from .viewport import PortraitViewport
 from .previews import PREVIEW_SIZE, PreviewPreloader
@@ -41,6 +41,7 @@ from .live_preview import LivePreview
 from .performance import PerformanceLog
 from .sensors import PalmShutter
 from .game_views import GameViews
+from .checkout_views import CheckoutViews
 
 
 LOG = logging.getLogger(__name__)
@@ -74,16 +75,18 @@ class TouchStage(Starfield):
         return super().on_touch_down(touch)
 
 
-class PortraitKioskV2App(PhotoViews, GameViews, App):
+class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
     """Separate greenfield window; the original python main.py remains untouched."""
 
     title = "MEONG PHOTOBOOTH - PORTRAIT GUI V2 (PROTOTIPE)"
 
-    def __init__(self, *, camera_device=None, face_inviter=None, palm_shutter=None, game_jobs=None, **kwargs):
+    def __init__(self, *, camera_device=None, face_inviter=None, palm_shutter=None, game_jobs=None,
+                 checkout_jobs=None, **kwargs):
         self._provided_camera = camera_device
         self._provided_inviter = face_inviter
         self._provided_palm = palm_shutter
         self._provided_game_jobs = game_jobs
+        self._provided_checkout_jobs = checkout_jobs
         super().__init__(**kwargs)
 
     def build(self):
@@ -94,6 +97,7 @@ class PortraitKioskV2App(PhotoViews, GameViews, App):
         self._view_revision = 0
         self._init_photos()
         self._init_game()
+        self._init_checkout()
         self.live_preview = LivePreview()
         self.performance = PerformanceLog()
         self._sensor_states = None
@@ -185,6 +189,7 @@ class PortraitKioskV2App(PhotoViews, GameViews, App):
         if self._suspended:
             return
         self._poll_game()
+        self._poll_checkout()
         frame = self.camera_device.read()
         if self.navigation.page == 'capture':
             self.live_preview.submit(frame, self._view_revision)
@@ -273,6 +278,7 @@ class PortraitKioskV2App(PhotoViews, GameViews, App):
         self._cancel_countdown()
         self._retire_game_field()
         self._game_jobs.close()
+        self._mock_jobs.close()
         self.live_preview.close()
         self.performance.flush()
         if self._photo_jobs is not None:
@@ -378,6 +384,8 @@ class PortraitKioskV2App(PhotoViews, GameViews, App):
             self._build_photo_page(canvas)
         elif page.name in GAME_PAGES:
             self._build_game_page(canvas)
+        elif page.name == MOCK_CHECKOUT:
+            self._build_mock_checkout(canvas)
         else:
             raise RuntimeError("Unknown prototype page")
         LOG.info('Page ready page=%s revision=%s build_ms=%.1f',
@@ -456,6 +464,8 @@ class PortraitKioskV2App(PhotoViews, GameViews, App):
         self.quantities = {t.template_id: 0 for t in self.templates}
         self.template_index = 0
         self._game_attempt = self._game_result = self._game_engine = None
+        self._mock_view = None
+        self._mock_key = None
         self._game_error = ''
 
     def _return_ad(self):
@@ -755,6 +765,10 @@ class PortraitKioskV2App(PhotoViews, GameViews, App):
         footer.add_widget(self._test_photo_button)
         footer.add_widget(finish)
         shell.add_widget(footer)
+        if self._mock_enabled:
+            self._mock_checkout_button = self._action('UJI CHECKOUT MOCK • TANPA PEMBAYARAN',
+                                                       self._open_mock_checkout, variant='secondary', height=44)
+            shell.add_widget(self._mock_checkout_button)
         self._update_template()
 
     def _swipe_template(self, step):
@@ -795,6 +809,8 @@ class PortraitKioskV2App(PhotoViews, GameViews, App):
         self._copy_value.text = str(self.quantities[template.template_id])
         quote = quote_order(self.templates, self.quantities)
         self._test_photo_button.disabled = quote.session_count == 0
+        if self._mock_enabled:
+            self._mock_checkout_button.disabled = quote.session_count == 0
         total = f"{quote.total_amount:,}".replace(",", ".")
         self._order_summary.text = (
             f"{quote.session_count} sesi  •  {quote.print_copy_count} lembar"

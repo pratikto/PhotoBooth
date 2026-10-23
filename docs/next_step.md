@@ -1,5 +1,7 @@
 # Meong Photobooth — Dynamic Feature Backlog
 
+> **Current continuation — P4 (2026-10-23):** Owner approved P4 after the accepted P3. P4a game and P4b local MOCK are now in source with 406 full PASS and reviewed screenshots. Next: Windows P4 game/MOCK acceptance using the [28-item Submit form](qa/portrait-v2-p4/windows-checklist.html); then obtain the trusted merchant promo contract and provider Sandbox configuration/approval before real integration. Do not reopen P3 solely for missing report metadata, activate production or advance P5. [Current gates and checkpoints](qa/portrait-v2-p4/README.md).
+
 > **Current P3 continuation (2026-10-23):** Test the staged preview/input corrections on Windows before P4: [40-item retest form](qa/portrait-v2-p3-retest/windows-checklist.html). Preserve owner raw 21/34 with unknown tested HEAD; confirm BUG-013 responsiveness and BUG-014 optional palm, then still-open composition/paper/Drive gates. 349 source tests and three-job CI do not certify those devices. Do not integrate game, receipt/QRIS or production payments in this continuation.
 
 

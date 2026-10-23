@@ -1,0 +1,26 @@
+{
+  "conclusion": "success",
+  "headSha": "cd785e13f2552a143957a05d9715746f8ebf1326",
+  "jobs": [
+    {
+      "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/pratikto/PhotoBooth/actions/runs/39970759606/job/120472488551"
+    },
+    {
+      "name": "Windows Python 3.12 native SDL audio (dummy output)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/pratikto/PhotoBooth/actions/runs/39970759606/job/120472488860"
+    },
+    {
+      "name": "Navigation and audio lifecycle",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/pratikto/PhotoBooth/actions/runs/39970759606/job/120472488983"
+    }
+  ],
+  "status": "completed",
+  "url": "https://github.com/pratikto/PhotoBooth/actions/runs/39970759606"
+}

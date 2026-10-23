@@ -1,0 +1,45 @@
+{
+  "baseline": "2d0469aff696c23f000bf225c3d66a3aa2d006a5",
+  "files": [
+    {
+      "file": "main.py",
+      "unchanged": true,
+      "sha256": "6c2083230e95e05acb7615e6e2fd397e014f89e61cf0f759dab34af6e34b5f4f"
+    },
+    {
+      "file": "photobooth/camera.py",
+      "unchanged": true,
+      "sha256": "c1a47e981c5f8b83a34302d83050808cf7f9ef3130f20ac1dfb1bf7e0157622a"
+    },
+    {
+      "file": "photobooth/palm_gesture.py",
+      "unchanged": true,
+      "sha256": "92865a0aedf597711dabf3243c11faa0a86e04b0716fb425465a429296459df4"
+    },
+    {
+      "file": "photobooth/printer.py",
+      "unchanged": true,
+      "sha256": "5820a87ecd256573617fbdbcea52f3b3c757cbcdb29f481fdc5f2a809509b374"
+    },
+    {
+      "file": "photobooth/payment.py",
+      "unchanged": true,
+      "sha256": "4eb8008a27d9654c61f3724fe6e825e7882fa131e9f55a93b9a9afc2c3d07c67"
+    },
+    {
+      "file": "photobooth/ui_kivy.py",
+      "unchanged": true,
+      "sha256": "b8cdd1ab19ddc3af77d7ad92250365042fd88f00dab1804d426d965c7ccacfd1"
+    },
+    {
+      "file": "photobooth/workflow.py",
+      "unchanged": true,
+      "sha256": "9a4979678e7685869ee9e53256b37c86cea18a20cc4068ae2b8e031479f47d99"
+    },
+    {
+      "file": "photobooth/catalog.py",
+      "unchanged": true,
+      "sha256": "3b0102bce0e8e2682a710ba1c87ac6dfc30a38b07b15650b95d2a8d664ba526b"
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 # Meong Photobooth — Current feature status
 
+> **P4a + P4b MOCK in source (2026-10-23):** Native one-use DEMO game and opt-in local checkout are connected on the existing v2 branch. 406/406 final full tests PASS, zero skips; 42 P4 Kivy captures reviewed at 800×1280/452×900. SQLite computes simulated promo/quote, preserves pending/unknown state and permits one admission to existing P3 consent. Production payment/discount/scanner remain off. Real provider Sandbox/merchant validation and P4 Windows acceptance are still OPEN. [Evidence, commands, 28-item Submit form and rollback](qa/portrait-v2-p4/README.md). Earlier P4a-only/P3-blocking notices below are history.
+
 > **P4a native DEMO game in source (2026-10-23):** Manual DEMO code → durable one-use claim → native game → win/loss → tutorial-once → existing gallery. 377/377 full tests PASS; 22 real Kivy captures reviewed at 800×1280/452×900. No replay, real receipt scanner, payable QR or actual discount. P4b MOCK follows. [Evidence/rollback](qa/portrait-v2-p4/README.md).
 
 > **P4 authorized (2026-10-23):** Owner explicitly requests P4 after P3 acceptance. Stage 1 reuses the existing pure Meong Fly engine and adds an isolated durable DEMO attempt ledger/background command owner; 56 focused tests PASS. New game pages are not connected yet. P3 owner PASS remains valid. Real scanner/payment/discount, provider Sandbox acceptance, branch merge and release remain outside this source claim. [P4 scope/evidence](qa/portrait-v2-p4/README.md).

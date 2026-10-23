@@ -1,5 +1,7 @@
 # Meong Photobooth — Current architecture and future boundaries
 
+> **Portrait v2 P4 addition (2026-10-23):** Read-only reference engine → native game pages; `demo_game.py` and `mock_checkout.py` share a separate P4 SQLite ledger for consumed DEMO attempts, simulated quotes/orders and one-use admission. `GameJobs` serializes off-GUI I/O. MOCK checkout is opt-in and only hands off to existing explicit nonfinancial P3 consent. Legacy services remain unchanged; real merchant/provider integration is still external. [Evidence/contracts](qa/portrait-v2-p4/README.md).
+
 > **V2 input/preview follow-up (2026-10-23):** `live_preview.py` prepares bounded RGB bytes in one latest-frame worker; Kivy only uploads a prepared texture, preserving original BGR capture pixels. `sensors.py` defers optional native imports and adapts the existing palm hold/release worker to the shared v2 countdown. Face progress and optional-palm readiness are visible; no second camera, paid admission or new recognition model is introduced. [Contracts/tests](qa/portrait-v2-p3-retest/README.md).
 
 

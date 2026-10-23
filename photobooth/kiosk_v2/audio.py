@@ -23,7 +23,7 @@ SOUND_FILES = {
 }
 # Advertising video owns its audio; still images may use GUI music. DEMO game
 # pages stay free of GUI music and use the single shared click owner only.
-MUSIC_PAGES = frozenset({"tutorial", "templates", 'photo_confirm', 'capture', 'review', 'result'})
+MUSIC_PAGES = frozenset({"tutorial", "templates", 'photo_confirm', 'capture', 'review', 'result', 'mock_checkout'})
 KNOWN_PAGES = MUSIC_PAGES | frozenset({"advert", "game_preview", 'game_receipt', 'game_play', 'game_result'})
 
 
