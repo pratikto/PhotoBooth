@@ -1,5 +1,33 @@
 # Meong Photobooth — Documentation and release changelog
 
+## [Unreleased] Smart Enhance and guarded post-processing — 2026-10-23
+
+- **Owner-approved FEAT-011 lab-only extension** on `feature/dither-tuning`:
+  `photobooth/dither_processing.py` adds Pillow-only CLAHE with smoothly
+  interpolated contrast-limited tiles, optional median denoise and tonal
+  balancing, plus guarded 1-bit selective dot cleanup and edge refinement.
+  New stages default OFF, preserving legacy thermal-photo raster bytes.
+- The **existing** three-lane `tools/dither_compare_gui.py` now has separate
+  Smart Enhance and Post-Processing toggles, collapsible strength/level
+  sliders, quick A/B states (**Original / Smart Enhanced / Smart + Post /
+  Post Only**), and keeps manual sliders and existing per-algorithm Auto Tune.
+  Applying a tuned candidate still modifies only its lane with Sync ON.
+  PNG export filenames distinguish Smart/Post variants; physical test strips
+  label active processing settings without touching the native photo dots.
+- Auto Tune now considers bounded optional preprocessing/postprocessing
+  presets as well as tonal parameters, and keeps representative Smart/Post
+  candidates available for explicit operator review. Scores remain
+  **uncalibrated digital heuristics**, not physical printer certification.
+- Lab-only validated profile/comparison JSON schema advances to **v5**,
+  while v1-v4 presets load with the new processing stages disabled.
+  Regression suite compiles and tests the new Pillow implementation, old
+  preset migrations, 1-bit preservation, no midtone dot loss, lane-specific
+  controls and Tk UI; see [test checklist](test_checklist.md).
+- No new GUI, no changed kiosk production code, no `master` merge,
+  no automatic printing. Windows visual checks, SBC performance and
+  real thermal-paper quality acceptance are **not yet completed**.
+
+
 ## Independent Auto Tune GUI — 2026-10-23
 
 FEAT-011: manual sliders retained; Auto Tune uses fixed system search independent
