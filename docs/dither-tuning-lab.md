@@ -13,8 +13,12 @@ applicable, native preview, **Auto Tune**, Print Test and Save PNG buttons.
 
 1. Run `python tools/dither_compare_gui.py` on Windows and open a
    representative photo. Select the correct 576/384-dot printer width.
-2. In the desired algorithm panel, switch on **Smart Enhance (optional)**
-   for median noise removal, clip-limited adaptive histogram equalization
+2. In the desired algorithm panel use **Quick Processing A/B** to select
+   **Original**, **Smart Enhanced**, **Smart + Post**, or **Post Only** without
+   altering manual strength values. Alternatively switch on
+   **Smart Enhance (optional)** and/or **1-bit Post-Processing (optional)**
+   individually. Smart Enhance performs median noise removal,
+   clip-limited adaptive histogram equalization
    (CLAHE), and gentle tone balancing. Expand **Image Processing Options**
    in the existing *scrollable* panel to adjust CLAHE Strength (0.0–1.0),
    Median Denoise (0–2), and Tone Balance (0.0–1.0).
