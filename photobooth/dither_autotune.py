@@ -325,8 +325,8 @@ def tune_dither(
     # Offer a meaningful human-review comparison: best digital score plus
     # an opt-in Smart option and (when distinct) a post-processing option.
     selected = [ranked[0]]
-    for predicate in (lambda c: c.profile.smart_enhance,
-                      lambda c: c.profile.postprocess_enabled):
+    for predicate in (lambda p: p.smart_enhance,
+                      lambda p: p.postprocess_enabled):
         option = next((c for c in ranked if predicate(c.profile)
                        and c not in selected), None)
         if option is not None and len(selected) < 3:
