@@ -1,5 +1,71 @@
 # Meong Photobooth — Thermal Dither Tuning Lab
 
+## Smart Enhance + Selective 1-bit Post-Processing — 2026-10-23
+
+**Implementation status:** opt-in **in the existing three-panel comparison GUI** on
+`feature/dither-tuning`. This experiment deliberately does not modify the
+Kivy kiosk GUI, the production printer code, the receipt/QR pipeline, or master.
+Each Floyd–Steinberg, Bayer 8×8 and Dizzy panel keeps existing manual
+Brightness/Contrast/Gamma/Sharpness, the existing enhanced checkboxes where
+applicable, native preview, **Auto Tune**, Print Test and Save PNG buttons.
+
+### Use it
+
+1. Run `python tools/dither_compare_gui.py` on Windows and open a
+   representative photo. Select the correct 576/384-dot printer width.
+2. In the desired algorithm panel, switch on **Smart Enhance (optional)**
+   for median noise removal, clip-limited adaptive histogram equalization
+   (CLAHE), and gentle tone balancing. Expand **Image Processing Options**
+   in the existing *scrollable* panel to adjust CLAHE Strength (0.0–1.0),
+   Median Denoise (0–2), and Tone Balance (0.0–1.0).
+3. Optionally switch on **1-bit Post-Processing (optional)**. Under advanced
+   controls set Selective Dot Cleanup (0–3) and Edge Refinement (0–3). Cleanup
+   only acts in near-white/near-black flat source regions, preserving the
+   1-bit halftone grain around actual midtones. Edge refinement only anchors
+   high-contrast source edges with extreme light/dark pixel values.
+4. Use manual tuning as before, or press **Auto Tune** within *that same
+   algorithm panel*. The bounded offline search additionally evaluates
+   opt-in processing combinations, and includes an enhanced/post candidate
+   for human review even if the digital metric prefers the baseline.
+   Inspect the three 1-bit candidates and their enable flags/levels.
+   **Apply Best / Apply Selected** updates only the selected lane, even if
+   Sync Parameters is enabled. Close/cancel/save candidates without applying
+   whenever desired.
+5. **Print Test** requires separate positive operator confirmation.
+   Compare original, Smart only, and Smart + Post on the same paper and
+   printer heat/darkness settings. Small on-screen digital-score gains are
+   not a physical print-quality guarantee. Export PNG raster to inspect dots
+   without touching a printer. The photo raster stays native 1-bit
+   throughout; no secondary dithering is performed after post-processing.
+
+### Compatibility and safe defaults
+
+- Both new enable flags default **OFF**, so legacy Floyd/Bayer/Dizzy raster
+  output remains byte-identical when enhancements are not enabled.
+- `DitherProfile` and comparison preset schemas are now **v5**, with strict
+  bounds for new parameters; old v1/v2/v3/v4 JSON loads with the new stages
+  disabled. Save All Configs, Save Selected Preset, and Load All Configs
+  remain **lab-only** (never automatically imported into production).
+- No OpenCV, NumPy, external model, cloud service, or new hardware dependency:
+  CLAHE uses clipped local histograms and interpolated tile LUTs in
+  Pillow/Python; processing runs in the GUI's existing daemon render worker.
+  Heavy photos can take longer on SBCs. Auto Tune uses reduced-resolution
+  proxy searches; Dizzy uses a smaller search budget.
+- Post-process is guarded by the **source grayscale**, not a generic binary
+  erosion/dilation. Unmasked Floyd/Dizzy/Bayer halftone pixels are left
+  unchanged. Never post-process QR or text: the experiment only handles the
+  photo raster before the separately-added labeled test-print header.
+
+### Verification
+
+CI compiles `photobooth/dither_processing.py`, covers CLAHE deterministic
+output, uniform patches, 1-bit retention, midtone halftone preservation,
+selective speck removal, edge anchors, validation/serialization, legacy
+v4 compatibility and GUI lane isolation under Sync Parameters. Linux Xvfb
+also exercises expanded controls, toggle and Reset. Windows layout and
+actual thermal-paper fidelity still require real-world acceptance.
+
+
 ## All-algorithm Auto Tune — 2026-10-23
 
 The comparison GUI now displays **Auto Tune** independently in the Floyd–Steinberg, Bayer 8×8, and Dizzy panels. This supersedes the earlier Floyd-only restriction described below. Threshold continues to be hidden from the 3-panel GUI, but is supported by the auto-tune backend for compatibility with stored lab profiles.
