@@ -42,7 +42,7 @@ class AutoTuneTests(unittest.TestCase):
             on_progress=lambda n, phase: progress.append((n, phase)))
         self.assertEqual(len(report.candidates), 3)
         self.assertGreaterEqual(report.trials, 3)
-        self.assertLessEqual(report.trials, 33)
+        self.assertLessEqual(report.trials, 59)
         self.assertEqual(report.trials, progress[-1][0])
         self.assertEqual([c.score for c in report.candidates],
                          sorted((c.score for c in report.candidates), reverse=True))
@@ -65,6 +65,34 @@ class AutoTuneTests(unittest.TestCase):
         self.assertEqual(len(signatures), 3)
         self.assertEqual(self.source.tobytes(), source_before)
         self.assertFalse(baseline.enhanced_floyd)  # no implicit apply
+
+    def test_exact_original_baseline_and_neutral_fallback(self):
+        for enhanced in (False, True):
+            original = DitherProfile(brightness=0.5, contrast=2.5, gamma=0.3,
+                                     sharpness=3.0, enhanced_floyd=enhanced)
+            result = tune_enhanced_floyd(self.source, original)
+            self.assertEqual(result.baseline.profile, original)
+            self.assertEqual(result.baseline.raster.tobytes(),
+                             render_thermal_image(self.source, original).tobytes())
+            neutral = DitherProfile(enhanced_floyd=True)
+            neutral_score = score_print_proxy(
+                render_thermal_image(self.source, neutral),
+                _photo_gray(self.source, neutral.width_dots), neutral)[0]
+            self.assertGreaterEqual(result.candidates[0].score, round(neutral_score, 3))
+            self.assertLessEqual(result.trials, 59)
+
+    def test_small_midtone_is_scored_as_blended_dots(self):
+        source = Image.new("L", (96, 96), 128)
+        p = DitherProfile()
+        raster = render_thermal_image(source, p)
+        score, tone, _, _ = score_print_proxy(raster, source, p)
+        # A faithful 50% halftone must not incur raw per-dot error near 127.
+        self.assertLess(tone, 20)
+        self.assertGreater(score, 80)
+
+    def test_invalid_profile_type_has_clear_error(self):
+        with self.assertRaises(TypeError):
+            tune_enhanced_floyd(self.source, None)
 
     def test_repeatable_search_and_rankings(self):
         profile = DitherProfile(width_dots=384, enhanced_floyd=True)

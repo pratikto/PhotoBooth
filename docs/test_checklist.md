@@ -1,5 +1,14 @@
 ## FEAT-011 — Auto Tune Enhanced Floyd (2026-10-21)
 
+## Auto Tune continuation — 2026-10-22
+
+- Owner-authorized FEAT-011 improvement; baseline `26964d8`.
+- Local Linux / Pillow 12.3.0: `python -m unittest tests.test_dither_lab tests.test_dither_comparison tests.test_dither_print tests.test_dither_gui_layout tests.test_dizzy_dither tests.test_dizzy_lab_integration tests.test_dither_enhanced tests.test_dither_autotune -q`: **53 PASS**. Compile checks PASS.
+- New coverage: small midtone halftone fidelity, exact baseline enhancement ON/OFF, neutral fallback from extreme sliders, search budget, invalid profile type. Existing determinism/cancellation/export tests retained.
+- Tk runtime: pending GitHub CI; local display/Xvfb unavailable. Windows layout and printer-paper acceptance NOT RUN.
+- Operator: compare manual vs selected candidate with same photo/paper/width/heat; verify signed delta, no automatic Apply/print, cancellation, and Save/Load. Scores are not physical quality certification.
+
+
 - **Owner-approved implementation scope:** existing `feature/dither-tuning` only. Optional Auto Tune on Enhanced Floyd with bounded parameter search, three digital-fidelity-ranked native 1-bit candidates, explicit Apply Best/Apply Selected/Save Selected Preset, unit/UI test coverage and documentation. No change to production kiosk or `master`; no unattended paper printing.
 - **Implementation:** `photobooth/dither_autotune.py` (bounded, deterministic offline search; max 25 reduced-resolution settings plus 8 native-dot finalist evaluations; source-relative fidelity/edge/black-coverage heuristic); `tools/dither_compare_gui.py` (cancelable background worker, safe Tk event queue, generation-token cancellation on source/Floyd changes, three-candidate preview dialog, explicit Floyd-only Apply and schema-v4 full-lab preset Save). Baseline Floyd/Dizzy/Bayer render math remains intact.
 - **Code commits:** [engine `f0ac68b`](https://github.com/pratikto/PhotoBooth/commit/f0ac68b6fe18e63a1ea6bd0bac46afae5e01fd4b), [GUI `3d82d1b`](https://github.com/pratikto/PhotoBooth/commit/3d82d1b6949679c0e4db34235a4310f1ec27a330), [algorithm tests `68ddaa8`](https://github.com/pratikto/PhotoBooth/commit/68ddaa8b9106c1f1ade50a66d21528fce755a96e), [CI `5c549ba`](https://github.com/pratikto/PhotoBooth/commit/5c549ba69d8862e24f7cb7580510d367547babed), [real Tk tests `e7365b6`](https://github.com/pratikto/PhotoBooth/commit/e7365b6f761ce55855ce0ca4ff54d2c13df449e6).

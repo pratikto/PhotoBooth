@@ -1,5 +1,12 @@
 # Meong Photobooth — Documentation and release changelog
 
+## [Unreleased Auto Tune improvement] — 2026-10-22
+
+- FEAT-011 / BUG-004: bounded manual + neutral search (at most 59 evaluations), native-resolution anchor guarantees, exact original baseline score, signed candidate improvement labels. Fix small-image scoring to blend dots instead of penalizing binary pixels directly. Clear invalid-profile type error.
+- 53 targeted unit/regression tests PASS locally on Linux, Python/Pillow 12.3.0; compile PASS. Tk runtime awaits CI (local Xvfb unavailable). Physical print and Windows visual acceptance pending.
+- Base/rollback: `26964d89f4a7761799480b6bd54e9e4ba2b0e649`. Details and workflow: [lab guide](dither-tuning-lab.md). No production/transport changes.
+
+
 This file tracks **actual verified repository/document changes**, not successful live booth operation. Historical test assertions are kept in [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [QA evidence](qa/README.md). Application code can be considered released only under [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md).
 
 ## [Unreleased lab Auto Tune] — 2026-10-21 (Enhanced Floyd candidate search)

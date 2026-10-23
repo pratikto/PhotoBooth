@@ -1,5 +1,10 @@
 # Meong Photobooth — Current feature status
 
+## FEAT-011 update — 2026-10-22
+
+Auto Tune now searches from both manual and neutral profiles and displays score differences against the exact original settings. Small-image metric blends dots correctly. Local 53-test regression PASS; Tk CI pending; Windows and paper acceptance pending. BUG-004 remains open. See [lab guide](dither-tuning-lab.md).
+
+
 **Reconciled: 2026-10-18 | Branch: `feature/kivy-gui`**  
 This status is based on reading selected source files and the latest owner device reports; **no new tests or hardware checks were performed during documentation housekeeping**. Automated/historical test passes are not proof of current Windows booth acceptance.
 

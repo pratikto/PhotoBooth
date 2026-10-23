@@ -4,7 +4,19 @@
 **Branch:** `feature/dither-tuning` (created 2026-10-18 from `feature/kivy-gui` commit `5e0a898`).  
 **Scope:** offline photo-rendering sandbox; the existing photobooth application and photo/QR print pipeline have **not** been changed or merged.
 
-## Auto Tune Enhanced Floyd — manual-review experiment (2026-10-21)
+## Auto Tune improvement — 2026-10-22
+
+Owner request: continue improving Auto Tune (FEAT-011 / BUG-004) on
+`feature/dither-tuning`. Base/rollback: `26964d89f4a7761799480b6bd54e9e4ba2b0e649`.
+Scope: bounded manual + neutral search, dot-averaged scoring for small images,
+and exact original-profile comparison in the review dialog. No printer transport
+or production settings changes. Acceptance: deterministic native 1-bit outputs,
+original checkbox/profile preserved in baseline, best score at least as good as
+neutral Enhanced Floyd, cancellation and independent Floyd Apply retained.
+Tests: lab regression suite, new metric/baseline/search regressions, Tk runtime CI.
+Hardware and Windows visual acceptance remain pending.
+
+## Auto Tune Enhanced Floyd — manual-review experiment (updated 2026-10-22)
 
 **Status:** Owner-approved scope in existing `feature/dither-tuning` only (FEAT-011 / BUG-004). The three-pane GUI now includes an **Auto Tune** button in the Floyd–Steinberg panel next to the existing Print Test / Save PNG actions. **This feature does not change the Kivy production printer, existing photo/QR pipeline, or `master`.**
 
@@ -16,7 +28,7 @@
 4. **Apply** updates **only the Floyd lane** (including Enhanced Floyd checked), then re-renders it. Bayer/Dizzy are untouched even if `Sync Parameters` is checked. **Save Selected Preset** exports a **Load All Configs-compatible full lab configuration** (schema-v4 JSON) containing the chosen Floyd candidate and current Bayer, Dizzy, and hidden Threshold settings. It does **not** change the currently active GUI settings. You can reopen the file with **Load All Configs** later; alternatively, click Apply and then Save All Configs. Closing the dialog never changes settings. **Print Test** is a separate, explicit, confirmed real-paper action.
 5. For controlled A/B tests, print the **previous manual profile** and the chosen candidate on the same paper at the same printer speed/darkness, assess portraits/skin/hair/shadows and QR/text separately, and record the settings and physical outcome. Prefer the physical result if it disagrees with the on-screen ranking.
 
-**How ranking works:** `photobooth/dither_autotune.py` performs a small deterministic coarse-to-fine coordinate search. It evaluates at most **25 distinct proxy settings** on a reduced sample (max 384×520 px), shortlists up to **8 candidates**, then rerenders and ranks them using the **actual requested native-dot output** (up to **33 evaluations**, including the starting manual settings). The score combines distance to the original image's grayscale after downsampled dot-coverage reconstruction, approximate local edge differences, a source-relative black coverage penalty and a small extreme-slider penalty. A score out of 100 is **only a within-photo heuristic**; it is **not SSIM, a learned perceptual model, a face-quality or biometric assessment, a physical printer calibration, or a guarantee of optimal output**. Noise, contrast, printer heat, paper and viewing distance can reverse the ranking. Search processing is offline and uses Pillow only; no uploads, external APIs or automatic thermal printing.
+**How ranking works:** `photobooth/dither_autotune.py` performs a small deterministic coarse-to-fine coordinate search. It evaluates at most **50 distinct proxy settings** from both manual and neutral starting points on a reduced sample (max 384×520 px), shortlists up to **8 candidates**, then rerenders and ranks them using the **actual requested native-dot output** (up to **59 evaluations**, including a separate exact original-profile baseline when needed). Both manual Enhanced Floyd and neutral Enhanced Floyd are guaranteed native finalists. The exact original profile (including enhancement OFF) is scored separately; the dialog shows its score and each candidate’s signed difference. Small images now blend dots over at least roughly three horizontal pixels rather than comparing individual binary dots directly. Scores from the older metric are not comparable. The score combines distance to the original image's grayscale after downsampled dot-coverage reconstruction, approximate local edge differences, a source-relative black coverage penalty and a small extreme-slider penalty. A score out of 100 is **only a within-photo heuristic**; it is **not SSIM, a learned perceptual model, a face-quality or biometric assessment, a physical printer calibration, or a guarantee of optimal output**. Noise, contrast, printer heat, paper and viewing distance can reverse the ranking. Search processing is offline and uses Pillow only; no uploads, external APIs or automatic thermal printing.
 
 **Safety / compatibility:** the baseline/Enhanced Floyd render math is untouched; all three suggested raster outputs are exactly mode `1` and can be reproduced using their stored `DitherProfile` parameters. The GUI dispatches computation to a daemon worker; only Tk's main thread manipulates widgets. A generation token and thread cancellation signal discard stale results when source or Floyd settings change. Saving a lab comparison preset never changes production settings. Existing schema-v1/v2/v3/v4 presets and hidden Threshold values remain supported. **Rollback point before Auto Tune:** [`0924ea6`](https://github.com/pratikto/PhotoBooth/commit/0924ea6d6422e52711ef0a7aa1c6a1f9c0fd1999) on the lab branch (do not reset unrelated commits without first reviewing branch differences).
 

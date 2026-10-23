@@ -43,6 +43,7 @@ class AutoTuneCandidate:
 class AutoTuneResult:
     candidates: tuple[AutoTuneCandidate, ...]
     trials: int
+    baseline: AutoTuneCandidate  # Exact original settings, including enhancement flag.
     # No network, trained AI, facial recognition or automatic printer actions.
 
 
@@ -71,7 +72,7 @@ def score_print_proxy(
         raise ValueError("Scoring requires same-sized 1-bit raster and grayscale input.")
 
     width, height = raster.size
-    small_width = min(192, width)
+    small_width = max(1, min(192, width // 3))
     small_height = max(1, round(height * small_width / width))
     box_size = (small_width, small_height)
 
@@ -125,17 +126,18 @@ def tune_enhanced_floyd(
 ) -> AutoTuneResult:
     """Return three ranked native-size candidates; never alter caller state.
 
-    A coarse-to-fine coordinate search evaluates at most 25 settings at
-    reduced resolution, then reranks at most 8 finalists at native resolution.
+    Two coarse-to-fine searches evaluate at most 50 settings at reduced
+    resolution, then rerank at most 8 finalists plus the exact original profile.
+    The neutral Enhanced Floyd profile is also always a native finalist.
     The current manual settings are ALWAYS a finalist as a safety baseline.
     Both passes use real Floyd/Enhanced Floyd rendering, not a fake halftone.
     """
+    if not isinstance(starting_profile, DitherProfile):
+        raise TypeError("Expected DitherProfile.")
     if starting_profile.mode != "floyd-steinberg":
         raise ValueError("Auto Tune supports Floyd–Steinberg only.")
     if source.width < 1 or source.height < 1:
         raise ValueError("Auto Tune needs a non-empty image.")
-    if not isinstance(starting_profile, DitherProfile):
-        raise TypeError("Expected DitherProfile.")
     cancel = should_cancel or (lambda: False)
     if cancel():
         raise AutoTuneCancelled("Auto Tune cancelled before starting.")
@@ -158,18 +160,21 @@ def tune_enhanced_floyd(
                 on_progress(len(scores), "Searching")
         return scores[key][0]
 
-    center = start
-    evaluate(center)
-    for step_set in SEARCH_STEPS:
-        for field, step, bounds in zip(TUNING_FIELDS, step_set, BOUNDS):
-            candidates = [
-                _search_neighbor(center, field, -step, bounds),
-                _search_neighbor(center, field, step, bounds),
-            ]
-            for proposal in candidates:
-                evaluate(proposal)
-            # Ties keep the current settings rather than drifting arbitrarily.
-            center = max((center, *candidates), key=evaluate)
+    # A neutral restart can escape poor manual settings without discarding them.
+    neutral = replace(start, brightness=1.0, contrast=1.0, gamma=1.0, sharpness=1.0)
+    for seed in (start, neutral):
+        center = seed
+        evaluate(center)
+        for step_set in SEARCH_STEPS:
+            for field, step, bounds in zip(TUNING_FIELDS, step_set, BOUNDS):
+                candidates = [
+                    _search_neighbor(center, field, -step, bounds),
+                    _search_neighbor(center, field, step, bounds),
+                ]
+                for proposal in candidates:
+                    evaluate(proposal)
+                # Ties keep the current settings rather than drifting arbitrarily.
+                center = max((center, *candidates), key=evaluate)
 
     if cancel():
         raise AutoTuneCancelled("Auto Tune cancelled before full-resolution ranking.")
@@ -177,9 +182,11 @@ def tune_enhanced_floyd(
     shortlisted = [profile for _, profile in sorted(
         scores.values(), key=lambda item: (-item[0], _signature(item[1]))
     )[:SHORTLIST_SIZE]]
-    # Always compare the manual starting point at true print resolution.
-    if _signature(start) not in {_signature(p) for p in shortlisted}:
-        shortlisted[-1] = start
+    # Reserve native-resolution slots for both anchors, even when proxy ranks differ.
+    anchors = { _signature(p) for p in (start, neutral) }
+    shortlisted = [p for p in shortlisted if _signature(p) not in anchors]
+    shortlisted = shortlisted[:SHORTLIST_SIZE - len(anchors)]
+    shortlisted += [start] if start == neutral else [start, neutral]
     full_ref = _photo_gray(source, start.width_dots)
     final: list[AutoTuneCandidate] = []
     for profile in shortlisted:
@@ -195,8 +202,24 @@ def tune_enhanced_floyd(
         if on_progress:
             on_progress(len(scores) + len(final), "Validating native dots")
 
+    if cancel():
+        raise AutoTuneCancelled("Auto Tune cancelled before baseline comparison.")
+    baseline = next((c for c in final if c.profile == starting_profile), None)
+    baseline_trials = 0
+    if baseline is None:
+        raster = render_thermal_image(source, starting_profile)
+        score, tone, edges, black = score_print_proxy(raster, full_ref, starting_profile)
+        baseline = AutoTuneCandidate(starting_profile, raster, round(score, 3),
+                                     round(tone, 3), round(edges, 3), round(black, 2))
+        baseline_trials = 1
+    trials = len(scores) + len(final) + baseline_trials
+    if on_progress:
+        on_progress(trials, "Compared original settings")
+    if cancel():
+        raise AutoTuneCancelled("Auto Tune cancelled after baseline comparison.")
+
     ranked = sorted(final, key=lambda item: (
         -item.score, item.tone_error, _signature(item.profile)
     ))
     return AutoTuneResult(candidates=tuple(ranked[:3]),
-                          trials=len(scores) + len(final))
+                          trials=trials, baseline=baseline)

@@ -1,5 +1,10 @@
 # Meong Photobooth — Development handover
 
+## Latest dither continuation — 2026-10-22
+
+User authorized improving Auto Tune on `feature/dither-tuning`; base/rollback `26964d8`. Implemented bounded dual-start search, exact original comparison, and corrected small-image dot averaging. 53 local regressions PASS; Tk CI and hardware acceptance tracked in [test checklist](test_checklist.md). Next operator action: pull this branch and compare real-paper manual/candidate samples. No production integration or master merge.
+
+
 **Repository:** https://github.com/pratikto/PhotoBooth  
 **Target branch:** `feature/kivy-gui` (**do not create a new branch**).  
 **Handover dated:** 2026-10-17.

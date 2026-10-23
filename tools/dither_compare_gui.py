@@ -339,8 +339,8 @@ class ComparisonApp:
         dialog = tk.Toplevel(self.root)
         self.autotune_dialog = dialog
         dialog.title("MEONG | Enhanced Floyd Auto Tune — 3 candidates")
-        dialog.geometry("900x595")
-        dialog.minsize(760, 500)
+        dialog.geometry("900x635")
+        dialog.minsize(760, 560)
         dialog.protocol("WM_DELETE_WINDOW", self.dismiss_auto_tune_candidates)
         ttk.Label(
             dialog, text="Digital fidelity ranking — NOT calibrated paper quality",
@@ -352,6 +352,17 @@ class ComparisonApp:
                          "Print Test separately to judge real paper.",
             wraplength=820, justify="center"
         ).pack(padx=12, pady=(0, 8))
+
+        baseline = self.autotune_result.baseline
+        gain = self.autotune_result.candidates[0].score - baseline.score
+        state = "ON" if baseline.profile.enhanced_floyd else "OFF"
+        self.autotune_baseline_text = (
+            f"Original settings: {baseline.score:.1f}/100 (Enhanced {state}). "
+            f"Best candidate: {gain:+.2f} points vs original. "
+            + ("No digital improvement; keep original or compare on paper."
+               if gain <= 0 else "Confirm the difference on paper."))
+        ttk.Label(dialog, text=self.autotune_baseline_text, wraplength=820,
+                  justify="center").pack(padx=12, pady=(0, 8))
 
         cards = ttk.Frame(dialog, padding=(8, 0, 8, 4))
         cards.pack(fill="both", expand=True)
@@ -377,6 +388,7 @@ class ComparisonApp:
                 text=(f"Brightness {p.brightness:.3f}   Contrast {p.contrast:.3f}\n"
                       f"Gamma {p.gamma:.3f}   Sharpness {p.sharpness:.3f}\n"
                       f"Black dots {candidate.black_coverage:.1f}%\n"
+                      f"Vs original {candidate.score - baseline.score:+.2f} points\n"
                       f"Tonal error {candidate.tone_error:.1f}   "
                       f"Edge error {candidate.edge_error:.1f}"),
                 justify="left",

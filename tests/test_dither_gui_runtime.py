@@ -112,6 +112,8 @@ class EnhancedDizzyTkTests(unittest.TestCase):
         self.assertIsNotNone(self.app.autotune_result, "search did not finish")
         self.assertEqual(self.app.autotune_button.cget("text"), "Auto Tune")
         self.assertEqual(len(self.app.autotune_result.candidates), 3)
+        self.assertIn("Original settings:", self.app.autotune_baseline_text)
+        self.assertIn("Enhanced OFF", self.app.autotune_baseline_text)
         self.assertIsNotNone(self.app.autotune_dialog)
         self.assertTrue(self.app.autotune_dialog.winfo_exists())
         self.assertEqual(self.app.configs.floyd, previous_floyd)
