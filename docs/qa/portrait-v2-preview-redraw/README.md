@@ -1,11 +1,40 @@
 # P3 preview redraw and first-use response — 2026-10-23
 
+## Latest Windows owner acceptance
+
+The owner now submits **16/16 raw checked**, **twenty complete cycles** and
+**no issue notes**. [Report transcribed from chat](owner-pass-2026-10-23.txt)
+(LF/trailing-space normalization only), [structured audit](owner-pass-analysis.json).
+No earlier device values were imported into this report.
+
+- Preview moves for thirty seconds without touch/countdown; first-use page buttons work with one tap.
+- Three photos, countdown, retake, palm release guard, resize, audio and minimize/restore are reported working.
+- D02/D03 now explicitly report physical batch quantity/duplicate guard and uncertain-print/restart handling as working. This is owner acceptance, not independent printer telemetry.
+- Twenty-cycle count and both G01/G02 checkmarks satisfy this form's owner-reported cycle gate.
+- **A01 is partial:** startup reported working, but HEAD and every device field remain blank. Source identity and measurements cannot be reconstructed from the checkmarks.
+
+**BUG-013 and BUG-014: OWNER-REPORTED PASS / MONITORING**, not formally closed
+or released. No runtime patch is needed on this evidence, and no additional
+mandatory twenty-cycle run is imposed. If the tested checkout is unchanged,
+`git rev-parse --short HEAD` can supply its current HEAD for owner confirmation;
+do not silently substitute the remote/current SHA for the missing tested SHA.
+
+This is a focused regression result, not all-P3 certification. The earlier
+forty-item unavailable-camera admission case and physical embedded-camera
+unplug/reconnect are not covered just because this form's B02 is checked
+(B02 here means three-photo capture). BUG-009 remote thirty-day deletion and
+complete Drive/backend acceptance remain separate. The earlier report,
+source verification JSON, CI and screenshots below are preserved historical
+evidence; they are not overwritten with unobserved new device measurements.
+
+## Earlier failure and correction context
+
 Branch: `feature/portrait-kiosk-v2-next`. Owner reports that the v2 camera
 preview is very laggy while v1 is smooth, followed by a fuller Windows retest
 and clarification that random page buttons are slow on first use and usually
 smooth on subsequent uses. These are corrections within the approved P3 scope.
 
-## Owner report audit
+## Earlier 40-item owner report audit
 
 [Original report](owner-retest-2026-10-23.txt) is preserved byte-for-byte.
 The directory's attributes preserve its Windows CRLF and empty-field spacing.
@@ -125,9 +154,9 @@ D03–D05 empty until deliberately tested. For local-only runs restore
 `$env:PHOTOBOOTH_V2_PRINT = "0"` before launch. No default or production
 payment/scanner/discount/game/Drive activation is made by this correction.
 
-If lag persists, send the newest log after `explorer .\data\diagnostics`,
-with the page/button and whether this was its first use. BUG-013 stays OPEN for
-Windows confirmation; BUG-014 is owner-reported working at unknown HEAD.
+If lag recurs, send the newest log after `explorer .\data\diagnostics`,
+with the page/button and whether this was its first use. The latest owner
+result above moves BUG-013/014 to monitoring; tested source identity remains unknown.
 
 ## Rollback checkpoints
 

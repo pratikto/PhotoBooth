@@ -1,0 +1,118 @@
+{
+  "date": "2026-10-23",
+  "timezone": "Asia/Jakarta",
+  "source": "User message in chat; transcribed with LF and trailing field spacing normalized. No original attachment bytes claimed.",
+  "branch": "feature/portrait-kiosk-v2-next",
+  "tested_head": null,
+  "windows": null,
+  "resolution": null,
+  "scaling_percent": null,
+  "speaker": null,
+  "camera": null,
+  "camera_index": null,
+  "lag_field": null,
+  "reported_cycles": 20,
+  "raw_checked": 16,
+  "raw_items": 16,
+  "unchecked": [],
+  "reported_issue_notes": "(Belum ada catatan)",
+  "checks": [
+    {
+      "id": "A01",
+      "raw_checked": true,
+      "text": "Jalankan launcher GUI v2 dari branch yang benar; isi HEAD, resolusi, kamera dan index sesuai perangkat."
+    },
+    {
+      "id": "A02",
+      "raw_checked": true,
+      "text": "Pada kunjungan pertama setelah aplikasi dibuka, satu tap MULAI FOTO membuka tutorial tanpa perlu menekan lagi."
+    },
+    {
+      "id": "A03",
+      "raw_checked": true,
+      "text": "LANJUT PILIH TEMPLATE pertama kali merespons satu tap; strip asli muncul dan navigasi tidak tertahan."
+    },
+    {
+      "id": "A04",
+      "raw_checked": true,
+      "text": "Coba tombol halaman lain pada pemakaian pertama dan berikutnya: satu klik per aksi, tidak perlu dua tap; catat nama tombol bila ada jeda."
+    },
+    {
+      "id": "B01",
+      "raw_checked": true,
+      "text": "Diam di halaman kamera minimal 30 detik TANPA menyentuh tombol atau memulai countdown: gerakan tetap terlihat lancar, tidak menunggu sentuhan agar gambar berubah."
+    },
+    {
+      "id": "B02",
+      "raw_checked": true,
+      "text": "Ambil tiga foto dengan SIAP: preview bergerak selama countdown lima detik; tepat satu shutter per foto berhasil."
+    },
+    {
+      "id": "B03",
+      "raw_checked": true,
+      "text": "Retake satu foto bekerja, quota tetap satu; hasil asli/strip tidak dicerminkan dan resolusi JPEG asli tidak diturunkan."
+    },
+    {
+      "id": "B04",
+      "raw_checked": true,
+      "text": "Telapak satu detik memulai satu countdown; tangan yang tetap terangkat tidak memicu lagi, turunkan sebelum foto berikutnya; SIAP tetap bekerja."
+    },
+    {
+      "id": "C01",
+      "raw_checked": true,
+      "text": "Periksa 800×1280, 452×900 dan 360×640: preview, strip dan tombol utuh; resize tidak mereset foto/jumlah atau membuat preview macet."
+    },
+    {
+      "id": "C02",
+      "raw_checked": true,
+      "text": "Minimize saat countdown membatalkannya; pulihkan dan mulai ulang tanpa frame lama, musik ganda atau kamera terkunci."
+    },
+    {
+      "id": "C03",
+      "raw_checked": true,
+      "text": "Iklan gambar memakai musik GUI, video hanya audio video; tombol tetap berbunyi sekali, tutup aplikasi tidak meninggalkan suara."
+    },
+    {
+      "id": "D01",
+      "raw_checked": true,
+      "text": "Default CETAK UJI tetap nonaktif. Jika memilih uji fisik, tutup GUI, set PHOTOBOOTH_V2_PRINT=1 di sesi PowerShell lalu buka launcher; konfigurasi printer uji dibaca tanpa diubah."
+    },
+    {
+      "id": "D02",
+      "raw_checked": true,
+      "text": "Dengan printer uji siap: CETAK UJI mengirim satu batch N lembar; verifikasi lembar fisik, tap cepat tidak menggandakan batch. Belum ada uji fisik berarti biarkan kosong."
+    },
+    {
+      "id": "D03",
+      "raw_checked": true,
+      "text": "Uji hasil cetak tidak pasti dan restart secara terkontrol: tidak diklaim sukses atau dikirim ulang otomatis; operator memeriksa printer/journal dahulu."
+    },
+    {
+      "id": "G01",
+      "raw_checked": true,
+      "text": "Selesaikan minimal 20 putaran iklan → tutorial → galeri → tiga foto → review → hasil → iklan tanpa crash, preview macet, audio hilang atau tombol perlu dua tap."
+    },
+    {
+      "id": "G02",
+      "raw_checked": true,
+      "text": "Setelah minimal 20 putaran, tutup dan buka lagi: iklan normal, kamera tersedia, tidak ada suara atau kiriman cetak tertinggal."
+    }
+  ],
+  "assessment": {
+    "preview": "OWNER-REPORTED PASS / MONITORING",
+    "first_use_buttons": "OWNER-REPORTED PASS / MONITORING",
+    "capture_retake_palm": "OWNER-REPORTED PASS AT UNKNOWN HEAD",
+    "resize_audio_lifecycle": "OWNER-REPORTED PASS AT UNKNOWN HEAD",
+    "physical_print_batch_and_uncertain_restart": "OWNER-REPORTED PASS AT UNKNOWN HEAD; printer queue, copy counts and journal not supplied",
+    "twenty_cycle_gate": "OWNER REPORT SATISFIES COUNT AND BOTH G01/G02 CHECKMARKS",
+    "A01": "STARTUP OWNER-REPORTED PASS; METADATA PORTION INCOMPLETE",
+    "exact_source_acceptance": "UNVERIFIED; do not substitute current remote HEAD",
+    "all_P3_acceptance": "NOT ESTABLISHED BY THIS FOCUSED FORM"
+  },
+  "remaining_outside_focused_form": [
+    "Earlier full P3 no-camera admission check is not the same as focused B02 three-photo test.",
+    "Built-in-camera physical disconnect/reconnect not established by this form.",
+    "BUG-009 remote thirty-day deletion and complete Drive/backend acceptance remain separate."
+  ],
+  "action": "Record the owner acceptance and monitor BUG-013/014. No new runtime patch or production feature activation."
+}

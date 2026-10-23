@@ -1,0 +1,49 @@
+Berikut hasil retest Windows Meong Photobooth v2. Tolong analisis hasil dan catatan masalah. Item kosong berarti gagal atau belum diuji; jangan otomatis dianggap lulus.
+
+MEONG PHOTOBOOTH GUI V2 — RETEST PREVIEW & TOMBOL (16 ITEM)
+Branch: feature/portrait-kiosk-v2-next
+HEAD yang diuji:
+Tanggal: 2026-10-23
+Versi Windows:
+Resolusi layar:
+Display scaling (%):
+Speaker/output audio:
+Kamera:
+Index kamera:
+Kapan lag terasa:
+Jumlah putaran selesai: 20
+Status HEAD: BELUM DIISI — exact-HEAD acceptance belum terverifikasi.
+Gate 20 putaran: Jumlah putaran memenuhi syarat; G01–G02 mengikuti centang hasil uji.
+Status metadata: BELUM LENGKAP — HEAD/resolusi/kamera/index belum seluruhnya diisi.
+
+Lulus: 16/16
+Belum dicentang (gagal/belum diuji): 0
+
+A. Startup & tombol pertama
+[x] A01 Jalankan launcher GUI v2 dari branch yang benar; isi HEAD, resolusi, kamera dan index sesuai perangkat.
+[x] A02 Pada kunjungan pertama setelah aplikasi dibuka, satu tap MULAI FOTO membuka tutorial tanpa perlu menekan lagi.
+[x] A03 LANJUT PILIH TEMPLATE pertama kali merespons satu tap; strip asli muncul dan navigasi tidak tertahan.
+[x] A04 Coba tombol halaman lain pada pemakaian pertama dan berikutnya: satu klik per aksi, tidak perlu dua tap; catat nama tombol bila ada jeda.
+
+B. Preview, capture & retake
+[x] B01 Diam di halaman kamera minimal 30 detik TANPA menyentuh tombol atau memulai countdown: gerakan tetap terlihat lancar, tidak menunggu sentuhan agar gambar berubah.
+[x] B02 Ambil tiga foto dengan SIAP: preview bergerak selama countdown lima detik; tepat satu shutter per foto berhasil.
+[x] B03 Retake satu foto bekerja, quota tetap satu; hasil asli/strip tidak dicerminkan dan resolusi JPEG asli tidak diturunkan.
+[x] B04 Telapak satu detik memulai satu countdown; tangan yang tetap terangkat tidak memicu lagi, turunkan sebelum foto berikutnya; SIAP tetap bekerja.
+
+C. Resize, audio & lifecycle
+[x] C01 Periksa 800×1280, 452×900 dan 360×640: preview, strip dan tombol utuh; resize tidak mereset foto/jumlah atau membuat preview macet.
+[x] C02 Minimize saat countdown membatalkannya; pulihkan dan mulai ulang tanpa frame lama, musik ganda atau kamera terkunci.
+[x] C03 Iklan gambar memakai musik GUI, video hanya audio video; tombol tetap berbunyi sekali, tutup aplikasi tidak meninggalkan suara.
+
+D. Cetak uji operator (opsional)
+[x] D01 Default CETAK UJI tetap nonaktif. Jika memilih uji fisik, tutup GUI, set PHOTOBOOTH_V2_PRINT=1 di sesi PowerShell lalu buka launcher; konfigurasi printer uji dibaca tanpa diubah.
+[x] D02 Dengan printer uji siap: CETAK UJI mengirim satu batch N lembar; verifikasi lembar fisik, tap cepat tidak menggandakan batch. Belum ada uji fisik berarti biarkan kosong.
+[x] D03 Uji hasil cetak tidak pasti dan restart secara terkontrol: tidak diklaim sukses atau dikirim ulang otomatis; operator memeriksa printer/journal dahulu.
+
+G. 20 putaran & restart
+[x] G01 Selesaikan minimal 20 putaran iklan → tutorial → galeri → tiga foto → review → hasil → iklan tanpa crash, preview macet, audio hilang atau tombol perlu dua tap.
+[x] G02 Setelah minimal 20 putaran, tutup dan buka lagi: iklan normal, kamera tersedia, tidak ada suara atau kiriman cetak tertinggal.
+
+CATATAN MASALAH
+(Belum ada catatan)
