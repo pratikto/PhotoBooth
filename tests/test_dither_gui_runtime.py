@@ -142,6 +142,49 @@ class EnhancedDizzyTkTests(unittest.TestCase):
         self.assertEqual(actual.mode, "1")
         self.assertEqual(actual.tobytes(), expected.raster.tobytes())
 
+    def test_all_visible_lanes_have_independent_buttons(self):
+        self.assertEqual(set(self.app.autotune_buttons),
+                         {"floyd-steinberg", "bayer", "dizzy"})
+        self.app.sync.set(True)
+        for mode in ("bayer", "dizzy"):
+            with self.subTest(mode=mode):
+                original = self.app.configs
+                self.app.start_auto_tune(mode)
+                self.assertTrue(self.app.autotune_busy)
+                self.assertEqual(self.app.autotune_mode, mode)
+                self.assertEqual(self.app.autotune_buttons[mode].cget("text"),
+                                 "Cancel Tune")
+                self.app.start_auto_tune(mode)
+                self.assertFalse(self.app.autotune_busy)
+                self.assertEqual(self.app.configs, original)
+
+    def test_tuned_profile_applies_only_to_own_lane(self):
+        # Avoid expensive GUI search: test exact candidate-to-lane application.
+        from photobooth.dither_autotune import AutoTuneCandidate, AutoTuneResult
+        from photobooth.dither_lab import DitherProfile, render_thermal_image
+        for mode in ("bayer", "dizzy"):
+            with self.subTest(mode=mode):
+                original = self.app.configs
+                p = DitherProfile(mode=mode, brightness=1.12, contrast=1.18,
+                                  enhanced_dizzy=(mode == "dizzy"),
+                                  dizzy_variant="orthogonal-4" if mode == "dizzy"
+                                  else "article-8")
+                candidate = AutoTuneCandidate(p, render_thermal_image(self.app.source, p),
+                                              90.0, 2.0, 3.0, 35.0)
+                self.app.autotune_mode = mode
+                self.app.autotune_result = AutoTuneResult((candidate,), 1, candidate)
+                self.app.autotune_selected = tk.IntVar(value=0)
+                self.app.sync.set(True)
+                self.app.apply_auto_tune_candidate(0)
+                self.assertEqual(self.app.configs.by_mode(mode), p)
+                for other in ("floyd-steinberg", "bayer", "dizzy"):
+                    if other != mode:
+                        self.assertEqual(self.app.configs.by_mode(other),
+                                         original.by_mode(other))
+                if mode == "dizzy":
+                    self.assertTrue(self.app.enhanced_dizzy.get())
+                    self.assertEqual(self.app.dizzy_variant.get(), "orthogonal-4")
+
     def test_auto_tune_cancel_invalidates_pending_results(self):
         self.app.start_auto_tune()
         self.assertTrue(self.app.autotune_busy)
