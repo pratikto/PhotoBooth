@@ -1,5 +1,18 @@
 # Meong Photobooth — Thermal Dither Tuning Lab
 
+## All-algorithm Auto Tune — 2026-10-23
+
+The comparison GUI now displays **Auto Tune** independently in the Floyd–Steinberg, Bayer 8×8, and Dizzy panels. This supersedes the earlier Floyd-only restriction described below. Threshold continues to be hidden from the 3-panel GUI, but is supported by the auto-tune backend for compatibility with stored lab profiles.
+
+- Each visible algorithm searches its own bounded parameters, independent of the current manual slider values. Floyd searches Enhanced Floyd; Bayer keeps its fixed 8×8 screen; Dizzy evaluates baseline/enhanced preprocessing and both article variants. Hidden Threshold can optimize its threshold cutoff as well as tonal preprocessing.
+- Each search uses reduced-resolution proxy scoring, native-dot verification, a system-neutral baseline and up to three ranked preview candidates. Dizzy uses a smaller proxy and search budget due to its CPU cost. The heuristic score is **not** calibrated print quality.
+- The per-lane Auto Tune button becomes **Cancel Tune** while busy. Running a different algorithm cancels the old search. Source/width changes invalidate the current search; altering parameters of the actively tuned lane invalidates its candidates.
+- **Apply Best / Apply Selected** updates only the matching algorithm's profile and controls, even if Sync Parameters is ON. The manual sliders, Print Test, Save PNG and Save All Configs still work. Save Selected Preset remains lab-only and does not apply silently.
+- No auto-printing, changes to the production print engine, or merging to master. Always validate the recommended recipe on the actual paper and printhead.
+
+Validation is through the branch's targeted backend tests and real Tk runtime smoke tests on GitHub Actions; paper and Windows visual assessment still require operator testing.
+
+
 ## Independent Auto Tune GUI — 2026-10-23
 
 Owner-approved FEAT-011 continuation: Auto Tune ignores manual parameter values.
