@@ -48,7 +48,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y xvfb libgl1-mesa-dri libgl1 libegl1 libmtdev1 libxkbcommon0
-          python -m pip install "Kivy>=2.3.1,<3" Pillow tzdata "ffpyplayer>=4.5,<5" "opencv-python-headless>=4.10,<5" requests
+          python -m pip install "Kivy>=2.3.1,<3" Pillow tzdata "ffpyplayer>=4.5,<5" "opencv-python-headless>=4.10,<5" requests "qrcode[pil]>=7.4,<9"
       - name: Load the bundled offline face detector and check hold/cooldown policy
         run: python -m unittest tests.test_face_presence -v
       - name: Isolated P3 photo, composition, retake and durable print guards

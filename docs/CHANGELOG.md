@@ -1,5 +1,11 @@
 # Meong Photobooth — Documentation and release changelog
 
+## 2026-10-23 — P3 CI QR dependency correction
+
+- Exact-source CI at `c04534f` correctly failed the Drive-enabled composition test because the minimum desktop install omitted the existing `qrcode[pil]` dependency. Add it to the CI install; runtime code and assertions unchanged.
+- Rechecked 11 photo adapter tests locally; replacement exact-source CI is required before declaring the workflow PASS. [Failure/correction record](qa/portrait-v2-p3/ci-dependency-correction.json).
+
+
 ## 2026-10-23 — P3b native photo test flow
 
 - Gallery UJI FOTO opens explicit nonfinancial consent, live mirrored camera, five-second countdown, three unmirrored originals, one selected retake per session and full strip results.

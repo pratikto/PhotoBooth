@@ -125,7 +125,9 @@ python tools/run_portrait_v2.py
 Activate the existing Windows Kivy virtual environment first. Camera and face
 invitation default enabled; use `PHOTOBOOTH_CAMERA_INDEX` for the actual device.
 Audio defaults enabled. No new environment or installation is needed if the
-previous launcher already works with OpenCV, Pillow and Kivy.
+previous full v1 environment already includes OpenCV, Pillow, Kivy and the
+existing `qrcode[pil]` requirement. A partial GUI-only install must add the
+repository requirements before testing actual QR/Drive/printing adapters.
 
 Default photo output: `data/kiosk-v2-p3/photos/PB001V2_########/` with raw JPEGs,
 composed PNG and manifest. Default strip footer is **MODE LOKAL**, without a

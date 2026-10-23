@@ -1,0 +1,8 @@
+{
+  "failed_run": 39880221936,
+  "failed_sha": "c04534fcf3a4026aab00f62b9a606bd72566331d",
+  "failed_step": "Isolated P3 photo, composition, retake and durable print guards",
+  "reason": "CI minimum desktop install omitted existing qrcode[pil] dependency; Drive-enabled composition test raised ModuleNotFoundError: qrcode.",
+  "correction": "Install qrcode[pil]>=7.4,<9 in desktop CI. No runtime or test assertions changed.",
+  "local_recheck": "11 photo adapter tests PASS after configuration correction; exact replacement CI follows normal push."
+}
