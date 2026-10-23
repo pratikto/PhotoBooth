@@ -23,6 +23,7 @@ os.environ.setdefault("PHOTOBOOTH_AUDIO", "0")
 os.environ.setdefault("PHOTOBOOTH_AD_VIDEO", "0")
 os.environ.setdefault('PHOTOBOOTH_CAMERA', '0')
 os.environ.setdefault('PHOTOBOOTH_FACE_TRIGGER', '0')
+os.environ.setdefault('PHOTOBOOTH_PALM_TRIGGER', '0')
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--output-dir", required=True)

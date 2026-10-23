@@ -2,6 +2,7 @@
 
 import math
 import time
+import logging
 
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
@@ -117,7 +118,7 @@ class PhotoViews:
             self._countdown_event.cancel()
             self._countdown_event = None
 
-    def _start_countdown(self):
+    def _start_countdown(self, source='button'):
         if self._photo_jobs.busy or self._countdown_event is not None:
             return
         if self.camera_device.read() is None:
@@ -125,9 +126,11 @@ class PhotoViews:
             self._show()
             return
         self._photo_error = ''
+        self.palm_shutter.latch()
         self._countdown_deadline = time.monotonic() + 5
         self._last_count = None
         self._countdown_event = Clock.schedule_interval(self._countdown_tick, .05)
+        logging.getLogger(__name__).info('Countdown started source=%s revision=%s', source, self._view_revision)
         self._countdown_tick(0)
 
     def _countdown_tick(self, _dt):
@@ -256,6 +259,8 @@ class PhotoViews:
         shell.add_widget(card)
         self._camera_hint = text_label('MENYIAPKAN KAMERA…', size=13, height=42, color=MUTED)
         shell.add_widget(self._camera_hint)
+        self._palm_hint = text_label('Tekan SIAP untuk mulai foto.', size=13, height=38, color=CYAN)
+        shell.add_widget(self._palm_hint)
         self._capture_button = self._photo_action('SIAP • HITUNG MUNDUR 5 DETIK', self._start_countdown)
         shell.add_widget(self._capture_button)
         self._abort_photo_button = self._photo_action('AKHIRI UJI • SIMPAN FOTO YANG ADA',

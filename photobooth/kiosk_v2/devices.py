@@ -3,6 +3,7 @@
 import logging
 import threading
 import time
+from .sensors import DeferredDetector, DetectorParts
 
 LOG = logging.getLogger(__name__)
 
@@ -154,8 +155,23 @@ class FaceInviter:
     def __init__(self, *, enabled=True, hold=5, cooldown=45, worker=None, trigger=None):
         self.enabled = enabled
         self.hold, self.cooldown = hold, cooldown
-        self._worker, self._trigger = worker, trigger
+        def load():
+            from photobooth.face_presence import FacePresenceTrigger, FacePresenceWorker
+            return DetectorParts(FacePresenceWorker(), FacePresenceTrigger(hold, cooldown))
+        self._detector = DeferredDetector(load, enabled=enabled,
+                                         parts=DetectorParts(worker, trigger) if worker is not None else None)
         self._closed = False
+        self._last_submit = None
+        self._last_observation = None
+
+    @property
+    def state(self):
+        return self._detector.state
+
+    @property
+    def progress(self):
+        parts = self._detector.parts
+        return parts.trigger.progress if parts else 0
 
     def update(self, frame, revision, *, allowed, now=None):
         if self._closed or not self.enabled:
@@ -163,26 +179,30 @@ class FaceInviter:
         if not allowed or frame is None:
             self.pause()
             return False
-        if self._worker is None:
-            from photobooth.face_presence import FacePresenceTrigger, FacePresenceWorker
-            self._worker = FacePresenceWorker()
-            self._trigger = FacePresenceTrigger(self.hold, self.cooldown)
-        self._worker.start()
-        self._worker.submit(frame, revision)
-        result = self._worker.poll()
+        self._detector.start()
+        parts = self._detector.parts
+        if parts is None:
+            return False
         now = time.monotonic() if now is None else now
+        if self._last_observation is not None and now - parts.max_age - self._last_observation > .8:
+            parts.trigger.pause()
+            self._last_observation = None
+        if self._last_submit is None or now - self._last_submit >= .15:
+            parts.worker.submit(frame, revision)
+            self._last_submit = now
+        result = parts.worker.poll()
         if (result is None or result.context != revision or
                 not 0 <= now - result.captured_at <= .5):
             return False
-        return self._trigger.observe(result.score >= .5, result.captured_at)
+        self._last_observation = result.captured_at
+        return parts.trigger.observe(result.score >= .5, result.captured_at)
 
     def pause(self):
-        if self._worker is not None:
-            self._worker.pause()
-            self._trigger.pause()
+        self._detector.pause()
+        self._last_submit = None
+        self._last_observation = None
 
     def close(self):
         self._closed = True
         self.pause()
-        if self._worker is not None:
-            self._worker.close()
+        self._detector.close()

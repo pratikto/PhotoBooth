@@ -8,6 +8,7 @@ from pathlib import Path
 import logging
 import os
 import time
+import math
 
 from kivy.app import App
 from kivy.clock import Clock
@@ -38,6 +39,7 @@ from .devices import AsyncCamera, FaceInviter
 from .photo_views import PhotoViews
 from .live_preview import LivePreview
 from .performance import PerformanceLog
+from .sensors import PalmShutter
 
 
 LOG = logging.getLogger(__name__)
@@ -76,9 +78,10 @@ class PortraitKioskV2App(PhotoViews, App):
 
     title = "MEONG PHOTOBOOTH - PORTRAIT GUI V2 (PROTOTIPE)"
 
-    def __init__(self, *, camera_device=None, face_inviter=None, **kwargs):
+    def __init__(self, *, camera_device=None, face_inviter=None, palm_shutter=None, **kwargs):
         self._provided_camera = camera_device
         self._provided_inviter = face_inviter
+        self._provided_palm = palm_shutter
         super().__init__(**kwargs)
 
     def build(self):
@@ -90,6 +93,7 @@ class PortraitKioskV2App(PhotoViews, App):
         self._init_photos()
         self.live_preview = LivePreview()
         self.performance = PerformanceLog()
+        self._sensor_states = None
         self.navigation = VisitFlow()
         self.templates = get_templates()
         self.catalog = AdCatalog()
@@ -114,6 +118,10 @@ class PortraitKioskV2App(PhotoViews, App):
         self.face_inviter = self._provided_inviter or FaceInviter(
             enabled=face_enabled, hold=self.catalog.timing.face_hold,
             cooldown=self.catalog.timing.face_cooldown)
+        palm_enabled = os.environ.get('PHOTOBOOTH_PALM_TRIGGER', '1').lower() not in {'0', 'false', 'no'}
+        self.palm_shutter = self._provided_palm or PalmShutter(enabled=palm_enabled)
+        LOG.info('Input configuration camera_enabled=%s camera_index=%s face_enabled=%s palm_enabled=%s',
+                 camera_enabled, camera_index, face_enabled, palm_enabled)
         self.stage = ScreenManager(transition=NoTransition())
         self._show()
         self._warmup = Clock.schedule_once(self._prepare_idle_assets, 0)
@@ -145,9 +153,45 @@ class PortraitKioskV2App(PhotoViews, App):
         allowed = self.navigation.page == ADVERT and self._invitation is None
         if self.face_inviter.update(frame, self._view_revision, allowed=allowed):
             self._show_invitation(source='face')
+        active = self.navigation.page == 'capture'
+        can_trigger = (active and self._countdown_event is None and
+                       not self._photo_jobs.busy and not self._capture_button.disabled)
+        if self.palm_shutter.update(frame, self._view_revision, active=active, can_trigger=can_trigger):
+            self._start_countdown(source='palm')
+        self._update_sensor_hints(camera_ready=frame is not None)
 
     def _window_minimized(self, *_args):
         self.on_pause()
+
+    def _update_sensor_hints(self, *, camera_ready=True):
+        face_state, palm_state = self.face_inviter.state, self.palm_shutter.state
+        states = (face_state if isinstance(face_state, str) else 'unknown',
+                  palm_state if isinstance(palm_state, str) else 'unknown')
+        if states != self._sensor_states:
+            LOG.info('Detection face_state=%s palm_state=%s', *states)
+            self._sensor_states = states
+        if self.navigation.page == ADVERT:
+            progress = self.face_inviter.progress
+            progress = progress if isinstance(progress, (int, float)) else 0
+            self._face_hint.text = (
+                f"WAJAH TERLIHAT • TAHAN {max(1, math.ceil((1-progress)*self.catalog.timing.face_hold))} DTK"
+                if progress > 0 else 'PETUALANGAN DIMULAI DI SINI')
+        elif self.navigation.page == 'capture':
+            if not camera_ready:
+                hint = 'Sambungkan kamera untuk memakai SIAP/telapak'
+            elif self._countdown_event is not None:
+                hint = 'Senyum! Turunkan telapak setelah countdown.'
+            elif palm_state in {'disabled', 'unavailable', 'closed'}:
+                hint = 'Telapak belum tersedia • pakai tombol SIAP'
+            elif palm_state != 'ready':
+                hint = 'Menyiapkan deteksi telapak • SIAP tetap bisa'
+            elif self.palm_shutter.needs_release:
+                hint = 'Turunkan telapak sebelum foto berikutnya'
+            elif self.palm_shutter.progress > 0:
+                hint = 'Tahan telapak terbuka sebentar…'
+            else:
+                hint = 'Angkat telapak 1 detik atau tekan SIAP'
+            self._palm_hint.text = hint
 
     def _window_restored(self, *_args):
         self.on_resume()
@@ -159,6 +203,7 @@ class PortraitKioskV2App(PhotoViews, App):
         self.performance.flush()
         self.camera_device.set_active(False)
         self.face_inviter.pause()
+        self.palm_shutter.pause()
         self.audio_v2.suspend()
         for widget in self.stage.walk():
             if isinstance(widget, SwipeGallery):
@@ -202,6 +247,8 @@ class PortraitKioskV2App(PhotoViews, App):
             self.camera_device.close()
         if getattr(self, 'face_inviter', None):
             self.face_inviter.close()
+        if getattr(self, 'palm_shutter', None):
+            self.palm_shutter.close()
         self._close_invitation()
         self._stop_ad()
         if getattr(self, "audio_v2", None):
@@ -259,6 +306,7 @@ class PortraitKioskV2App(PhotoViews, App):
                  self.stage.current, self.navigation.page, self._view_revision + 1)
         self._view_revision += 1
         self.face_inviter.pause()
+        self.palm_shutter.pause()
         self._close_invitation()
         self._stop_ad()
         self._warning_label = None
@@ -318,14 +366,17 @@ class PortraitKioskV2App(PhotoViews, App):
         def activate():
             # Give feedback before routing/decoder retirement. The short shared
             # click now survives page handoffs; suspend/close still stop it.
-            self.audio_v2.cue("button")
             started = time.perf_counter()
+            self.audio_v2.cue("button")
+            audio_seconds = time.perf_counter() - started
             try:
                 callback()
             finally:
                 elapsed = time.perf_counter() - started
                 if elapsed >= .05:
-                    LOG.info('Slow action title=%s callback_ms=%.1f', title, elapsed * 1000)
+                    LOG.info('Slow action title=%s total_ms=%.1f audio_ms=%.1f callback_ms=%.1f',
+                             title, elapsed * 1000, audio_seconds * 1000,
+                             (elapsed - audio_seconds) * 1000)
 
         invoke = self._page_callback(activate)
         button.bind(on_release=lambda *_: None if button.disabled else invoke())
@@ -373,8 +424,8 @@ class PortraitKioskV2App(PhotoViews, App):
                              height=dp(50), padding=7, spacing=8)
         headline.add_widget(text_label("IKLAN / MODE SIAGA", size=15, height=34,
                                       color=CYAN, bold=True))
-        headline.add_widget(text_label("PETUALANGAN DIMULAI DI SINI",
-                                      size=12, height=34, color=GOLD))
+        self._face_hint = text_label("PETUALANGAN DIMULAI DI SINI", size=12, height=34, color=GOLD)
+        headline.add_widget(self._face_hint)
         shell.add_widget(headline)
 
         creative = PixelCard(orientation="vertical", padding=6, spacing=0)

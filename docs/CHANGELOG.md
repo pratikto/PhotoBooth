@@ -1,5 +1,8 @@
 # Meong Photobooth — Documentation and release changelog
 
+> **P3 staged follow-up (2026-10-23, stage 2):** Restore optional v1 open-palm input in v2, sharing the manual countdown/quota and release latch. Load native detectors off GUI, rate-limit offers, preserve stale-page checks and show face/palm progress/fallback hints. Log input flags and include audio time in slow-action diagnostics. Existing v1 services/models unchanged. 348 full tests PASS with native fixtures; final 71 focused PASS. [Source/device limits](qa/portrait-v2-p3-retest/README.md).
+
+
 > **P3 staged follow-up (2026-10-23, stage 1):** Add bounded worker-owned RGB preview conversion and aggregate diagnostic timings. Preserve the current view while photo I/O runs, disable controls and rebuild once on completion; stale releases remain inert. Record owner’s 21/34 Windows result with unknown tested HEAD; open BUG-013/014. 77 focused PASS, simulated timing improvement; Windows performance is not certified. [Evidence and rollback](qa/portrait-v2-p3-retest/README.md).
 
 

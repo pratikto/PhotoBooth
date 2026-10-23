@@ -16,12 +16,14 @@ sys.path.insert(0, str(ROOT))
 os.environ.setdefault('KIVY_NO_ARGS', '1')
 os.environ['PHOTOBOOTH_CAMERA'] = '0'
 os.environ['PHOTOBOOTH_FACE_TRIGGER'] = '0'
+os.environ['PHOTOBOOTH_PALM_TRIGGER'] = '0'
 os.environ['PHOTOBOOTH_AD_VIDEO'] = '0'
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--width', type=int, default=800)
 parser.add_argument('--height', type=int, default=1280)
 parser.add_argument('--output-dir', type=Path, required=True)
+parser.add_argument('--sensors', action='store_true', help='Add clearly synthetic face/palm status views')
 args = parser.parse_args()
 
 from kivy.config import Config
@@ -58,16 +60,29 @@ class SyntheticCamera:
     def set_active(self, active): pass
 
 
+class SyntheticSensor:
+    state = 'ready'
+    progress = 0.0
+    needs_release = False
+    def update(self, *a, **kw): return False
+    def pause(self): pass
+    def close(self): pass
+    def latch(self): self.progress = 0
+
+
 class Recorder(PortraitKioskV2App):
     def __init__(self):
         self.temp = TemporaryDirectory()
         self.evidence = []
         self.fake_camera = SyntheticCamera()
-        super().__init__(camera_device=self.fake_camera)
+        self.fake_face, self.fake_palm = SyntheticSensor(), SyntheticSensor()
+        super().__init__(camera_device=self.fake_camera,
+                         face_inviter=self.fake_face if args.sensors else None,
+                         palm_shutter=self.fake_palm if args.sensors else None)
 
     def on_start(self):
         args.output_dir.mkdir(parents=True, exist_ok=True)
-        self.actions = iter([
+        actions = [
             lambda: (self._choose_photo(), self._complete_tutorial(), self._change_copies(2)),
             self.enter,
             lambda: self.capture_screen('01-photo-confirm'),
@@ -94,7 +109,22 @@ class Recorder(PortraitKioskV2App):
             self.lose_camera,
             lambda: self.capture_screen('08-camera-unavailable'),
             self.stop,
-        ])
+        ]
+        if args.sensors:
+            actions[:0] = [lambda: setattr(self.fake_face, 'progress', .4),
+                           lambda: self.capture_screen('09-face-hold')]
+            index = actions.index(self._start_countdown)
+            actions[index:index] = [
+                lambda: setattr(self.fake_palm, 'progress', .5),
+                lambda: self.capture_screen('10-palm-hold'),
+                lambda: setattr(self.fake_palm, 'state', 'unavailable'),
+                lambda: self.capture_screen('11-palm-unavailable'),
+                lambda: (setattr(self.fake_palm, 'state', 'ready'),
+                         setattr(self.fake_palm, 'needs_release', True)),
+                lambda: self.capture_screen('12-palm-release'),
+                lambda: setattr(self.fake_palm, 'needs_release', False),
+            ]
+        self.actions = iter(actions)
         Clock.schedule_once(self.advance, 1)
 
     def enter(self):
@@ -140,11 +170,12 @@ if __name__ == '__main__':
     app = Recorder()
     try:
         app.run()
-        if len(app.evidence) != 8:
-            raise SystemExit(f'Incomplete P3 evidence: {len(app.evidence)}/8')
+        expected = 12 if args.sensors else 8
+        if len(app.evidence) != expected:
+            raise SystemExit(f'Incomplete P3 evidence: {len(app.evidence)}/{expected}')
         report = {'source_sha': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
                   'tracked_changes': bool(subprocess.check_output(['git','status','--porcelain','--untracked-files=no'],cwd=ROOT)),
-                  'synthetic_only': True, 'screenshots': app.evidence}
+                  'synthetic_only': True, 'synthetic_sensor_status': args.sensors, 'screenshots': app.evidence}
         (args.output_dir / f'p3-report-{args.width}x{args.height}.json').write_text(json.dumps(report, indent=2)+'\n')
     finally:
         if app._photo_jobs:

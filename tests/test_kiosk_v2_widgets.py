@@ -7,6 +7,7 @@ os.environ.setdefault("PHOTOBOOTH_AUDIO", "0")
 os.environ.setdefault("PHOTOBOOTH_AD_VIDEO", "0")
 os.environ.setdefault('PHOTOBOOTH_CAMERA', '0')
 os.environ.setdefault('PHOTOBOOTH_FACE_TRIGGER', '0')
+os.environ.setdefault('PHOTOBOOTH_PALM_TRIGGER', '0')
 os.environ.setdefault("KIVY_NO_ARGS", "1")
 
 try:
@@ -24,6 +25,103 @@ else:
 
 @unittest.skipUnless(HAS_KIVY, "Kivy not available in pure-Python test environment")
 class PortraitKivySmokeTests(unittest.TestCase):
+    @unittest.skipUnless(os.environ.get('PHOTOBOOTH_PALM_TEST_ASSETS'), 'Native model assets are opt-in')
+    def test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture(self):
+        import time
+        import cv2
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+        from unittest.mock import Mock, patch
+        from kivy.base import EventLoop
+        from photobooth.kiosk_v2.photos import PhotoTest
+        from photobooth.kiosk_v2.sensors import PalmShutter
+        assets = Path(os.environ['PHOTOBOOTH_PALM_TEST_ASSETS'])
+        hand = cv2.imread(str(assets / 'left_hands.jpg'))
+        self.assertIsNotNone(hand)
+        camera, face = Mock(), Mock()
+        camera.read.side_effect = lambda: hand.copy()
+        face.update.return_value = False
+        palm = PalmShutter(model_path=assets/'gesture_recognizer.task')
+        with TemporaryDirectory() as root, patch('photobooth.kiosk_v2.photos.configured_test',return_value=PhotoTest(root)):
+            app = PortraitKioskV2App(camera_device=camera,face_inviter=face,palm_shutter=palm)
+            app.build()
+            def settle():
+                end=time.monotonic()+3
+                while app._photo_jobs.busy and time.monotonic()<end:
+                    app._poll_photos();EventLoop.idle()
+                self.assertFalse(app._photo_jobs.busy)
+            try:
+                app._choose_photo();app._complete_tutorial();app._change_copies(1)
+                app._enter_photo_test();settle();app._admit_photo_test();settle()
+                self.assertFalse(app._capture_button.disabled)
+                end=time.monotonic()+15
+                while app._countdown_event is None and time.monotonic()<end:
+                    app._devices_tick(.033);EventLoop.idle()
+                self.assertIsNotNone(app._countdown_event, palm.state)
+                self.assertEqual(app._photo_view['captured'],0)
+                timer=app._countdown_event
+                end=time.monotonic()+.3
+                while time.monotonic()<end:
+                    app._devices_tick(.033);EventLoop.idle()
+                self.assertIs(app._countdown_event,timer)
+                app.on_pause()
+                self.assertIsNone(app._countdown_event)
+            finally:app.on_stop()
+
+    def test_optional_palm_shares_countdown_and_requires_release_before_the_next_photo(self):
+        import time
+        import numpy as np
+        from tempfile import TemporaryDirectory
+        from types import SimpleNamespace
+        from unittest.mock import Mock, patch
+        from photobooth.kiosk_v2.photos import PhotoTest
+        from photobooth.kiosk_v2.sensors import PalmShutter, DetectorParts
+        from photobooth.palm_gesture import PalmHoldTrigger
+        camera, face, worker = Mock(), Mock(), Mock()
+        camera.read.return_value = np.zeros((40, 60, 3), dtype=np.uint8)
+        face.update.return_value = False
+        worker.state = 'ready'; worker.poll.return_value = None
+        now = [10.0]
+        palm = PalmShutter(parts=DetectorParts(worker, PalmHoldTrigger(), .6, .5), clock=lambda:now[0])
+        with TemporaryDirectory() as root, patch('photobooth.kiosk_v2.photos.configured_test',return_value=PhotoTest(root)):
+            app = PortraitKioskV2App(camera_device=camera,face_inviter=face,palm_shutter=palm)
+            app.build()
+            def settle():
+                end=time.monotonic()+2
+                while app._photo_jobs.busy and time.monotonic()<end:
+                    app._poll_photos();time.sleep(.005)
+                self.assertFalse(app._photo_jobs.busy)
+            def observe(stamp, score=1, revision=None):
+                now[0]=stamp
+                worker.poll.return_value=SimpleNamespace(context=app._view_revision if revision is None else revision,
+                                                         captured_at=stamp,score=score)
+                app._devices_tick(.033)
+            try:
+                app._choose_photo();app._complete_tutorial();app._change_copies(1)
+                app._enter_photo_test();settle();app._admit_photo_test();settle()
+                for stamp in (10,10.2,10.4,10.6,10.8):observe(stamp)
+                self.assertIsNone(app._countdown_event)
+                observe(11.01)
+                timer=app._countdown_event
+                self.assertIsNotNone(timer)
+                observe(11.2);self.assertIs(app._countdown_event,timer)
+                app._countdown_deadline=time.monotonic()-.01
+                app._countdown_tick(0);settle()
+                self.assertEqual(app._photo_view['captured'],1)
+                for stamp in (11.4,11.6,11.8,12,12.2,12.41):observe(stamp)
+                self.assertIsNone(app._countdown_event)
+                self.assertIn('Turunkan telapak',app._palm_hint.text)
+                for stamp in (12.6,12.8,13.01):observe(stamp,0)
+                for stamp in (13.2,13.4,13.6,13.8,14,14.21):observe(stamp)
+                self.assertIsNotNone(app._countdown_event)
+                old_revision=app._view_revision
+                app.on_pause();app.on_resume()
+                self.assertIsNone(app._countdown_event)
+                observe(14.4,revision=old_revision)
+                self.assertIsNone(app._countdown_event)
+                self.assertEqual(app._photo_view['captured'],1)
+            finally:app.on_stop()
+
     def test_photo_io_keeps_the_live_view_and_retires_pending_button_releases(self):
         import threading
         import time

@@ -1,5 +1,8 @@
 # Meong Photobooth — Current architecture and future boundaries
 
+> **V2 input/preview follow-up (2026-10-23):** `live_preview.py` prepares bounded RGB bytes in one latest-frame worker; Kivy only uploads a prepared texture, preserving original BGR capture pixels. `sensors.py` defers optional native imports and adapts the existing palm hold/release worker to the shared v2 countdown. Face progress and optional-palm readiness are visible; no second camera, paid admission or new recognition model is introduced. [Contracts/tests](qa/portrait-v2-p3-retest/README.md).
+
+
 > **Portrait v2 P3 addition (2026-10-23, feature branch only):** Dedicated `tools/run_portrait_v2.py` now hosts native camera/capture/review/result pages via `kiosk_v2/devices.py`, `photos.py`, `photo_views.py` and `photo_drive.py`. Existing camera/workflow/store/composer/printer/Drive implementations are reused without launching or editing the legacy GUI. Test storage and pool use `data/kiosk-v2-p3` / `PB001V2`; worker threads perform disk/device/network work, and current-page UI polls outcomes. Live-only UV mirroring preserves saved pixels. A persisted SENDING journal prevents uncertain print replay. [Adapter contracts and evidence](qa/portrait-v2-p3/README.md).
 
 

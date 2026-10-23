@@ -13,7 +13,10 @@ Scope is the already authorized P3 correction plus the owner's **“lanjuting do
 and **“push bertahap aja”**. Use only `feature/portrait-kiosk-v2-next`. No payment,
 production transactions, scanner, discount, game integration, master change,
 cloud deployment or remote deletion. Pre-fix rollback checkpoint:
-`37e3c9264a595e93774c4ce3892133261f99ef30`.
+`37e3c9264a595e93774c4ce3892133261f99ef30`. Stage 1 was pushed as
+`a322237bc82c818b13093fadb0982332e24a82a2`; remote HEAD matched and
+[CI 39916946241](https://github.com/pratikto/PhotoBooth/actions/runs/39916946241)
+completed all three jobs SUCCESS. This is the rollback checkpoint before stage 2.
 
 ## Stage 1 — preview/touch responsiveness (BUG-013, device retest OPEN)
 
@@ -41,7 +44,7 @@ or proof of the owner's hardware root cause. Keep BUG-013 open until device rete
 
 **77 focused tests PASS**, no skips: [transcript](stage1-tests.txt). Sixteen native P3 screenshots were reviewed at [800×1280](stage1-contact-800x1280.png) and [452×900](stage1-contact-452x900.png). Camera pixels/print transport are synthetic; originals are under `stage1-screenshots`. Actual Windows responsiveness stays open. [Source hashes](stage1-source.json).
 
-## Stage 2 — face invitation and existing open-palm shutter
+## Stage 2 — face invitation and existing open-palm shutter (BUG-014)
 
 The audited pre-fix v2 source did not connect the existing v1 palm service; the
 owner's question describes a real missing input, not a failed gesture test.
@@ -50,7 +53,55 @@ checks as SIAP, never a separate capture path. Keep one hold/one shutter and
 release-before-next-photo guards. Missing optional MediaPipe/model leaves SIAP
 usable, with truthful on-screen status. Face invitation retains its approved
 five-second hold and cooldown. Loading/inference must remain off the GUI.
-No physical hand/face PASS is claimed before testing the actual Windows setup.
+The v2 adapter now connects that service. A deferred initializer imports optional
+native packages off the GUI and reports idle/loading/ready/unavailable/disabled.
+The real worker performs inference in its existing bounded mailbox; offers are
+rate-limited while results are polled promptly. Face hold progress is visible in
+the existing ad headline; no timer or confidence threshold is relaxed. Stalled
+observations clear stale hold progress. The startup log records only camera
+index and enabled flags; detector state changes help diagnose a disabled option.
+
+The capture page shows one compact palm hint: preparing, raise/hold, lower hand,
+or unavailable/use SIAP. Both manual and palm input call the same five-second
+countdown, fresh-camera and busy checks. Manual presses latch the same release
+policy. Page changes, camera loss and minimize invalidate old observations;
+one retake per session and all capture storage rules are unchanged.
+
+Open-palm needs the existing optional **MediaPipe 0.10.32** package. If it is not
+installed in the Windows virtual environment, run:
+
+```powershell
+python -m pip install -r requirements-palm.txt
+$env:PHOTOBOOTH_PALM_TRIGGER = "1"
+$env:PHOTOBOOTH_FACE_TRIGGER = "1"
+python tools/run_portrait_v2.py
+```
+
+The existing service caches the pinned public 8 MB model under
+`data/models/gesture_recognizer.task`; first setup can need internet. It never
+uploads camera images. A missing package/download failure keeps SIAP usable;
+there is no fake gesture-ready state. The existing v1 detector/model service,
+confidence, hold/release and camera ownership code are reused without edits.
+**348 complete tests PASS, zero skips** with the optional native model fixtures:
+[transcript](p3-retest-complete-tests.txt). A final **71 focused tests PASS,
+zero skips** after the accepted face-inference-delay expiry and diagnostic timing
+refinement: [transcript](p3-sensors-final-tests.txt). The final face adapter test
+specifically preserves the five-second hold with 300 ms accepted inference delay;
+truly stale progress resets without weakening source-time continuity.
+
+[Native model check](p3-palm-native-tests.txt) accepts public open-palm imagery
+and rejects fist/thumb-up/pointing/empty frames. A real model/worker also starts
+v2's actual countdown from public sample pixels; holding the same hand cannot
+start another. These are real native inference with synthetic camera acquisition,
+not the owner's Windows hand/camera. [Fixture/model sources and hashes](native-test-assets.json).
+Twenty-four fresh native widgets were reviewed at
+[800×1280](stage2-contact-800x1280.png) and [452×900](stage2-contact-452x900.png),
+including explicitly synthetic face-hold and palm-hold/unavailable/release states.
+These status fixtures are not actual camera recognition evidence. Original PNGs
+and hash reports are under `stage2-screenshots`; [source hashes](stage2-source.json).
+The complete 348-test run preceded the final source-time expiry/logging/hint
+refinement; the final 71 focused tests cover that source. No physical hand/face
+PASS is claimed before testing the actual Windows setup.
 
 ## Remaining Windows evidence
 

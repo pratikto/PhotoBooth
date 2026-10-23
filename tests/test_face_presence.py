@@ -14,6 +14,26 @@ from photobooth.face_presence import FacePresenceTrigger, OpenCVFaceDetector
 
 
 class FacePresenceTests(unittest.TestCase):
+    def test_v2_adapter_preserves_face_hold_with_accepted_inference_delay(self):
+        from types import SimpleNamespace
+        from unittest.mock import Mock
+        from photobooth.kiosk_v2.devices import FaceInviter
+        worker = Mock()
+        trigger = FacePresenceTrigger()
+        inviter = FaceInviter(worker=worker, trigger=trigger)
+        fires = []
+        try:
+            for index in range(11):
+                stamp = index * .6
+                worker.poll.return_value = SimpleNamespace(context=7,captured_at=stamp,score=1)
+                if inviter.update(object(),7,allowed=True,now=stamp+.3):fires.append(stamp)
+            self.assertEqual(len(fires),1)
+            self.assertGreaterEqual(fires[0],5)
+            worker.poll.return_value = None
+            inviter.update(object(),7,allowed=True,now=20)
+            self.assertEqual(inviter.progress,0)
+        finally:inviter.close()
+
     def test_face_requires_five_seconds_and_rearms_only_after_absence_or_cooldown(self):
         trigger = FacePresenceTrigger()
         fired = [t for t in np.arange(0, 7, .2) if trigger.observe(True, float(t))]

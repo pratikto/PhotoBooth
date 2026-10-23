@@ -1,5 +1,8 @@
 # Meong Photobooth — Current feature status
 
+> **P3 stage 2 (2026-10-23):** Optional open-palm now connects the existing v1 worker/hold/release policy to v2’s same SIAP countdown. Native initialization is deferred off GUI; missing MediaPipe/model keeps manual capture available with a truthful hint. Face invitation shows hold progress, retains five seconds/cooldown and handles accepted inference delay. 348 full native-fixture tests PASS, final 71 focused PASS; physical BUG-013/014 acceptance remains OPEN. [Current evidence](qa/portrait-v2-p3-retest/README.md).
+
+
 > **P3 owner retest (2026-10-23):** Raw 21/34 checked, thirteen open, twenty reported Windows cycles with HEAD/camera/resolution missing. New shutter/retake/audio/resize are owner-reported passes; face invitation, countdown interruption, print and Drive gates remain open. BUG-013 tracks preview/button/face responsiveness, BUG-014 the missing optional open-palm input. Preview preparation now moves off the GUI and busy photo I/O avoids redundant rebuilds; physical correction is unverified. [Audit and staged evidence](qa/portrait-v2-p3-retest/README.md).
 
 

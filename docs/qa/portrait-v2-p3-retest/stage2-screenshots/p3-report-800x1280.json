@@ -1,0 +1,104 @@
+{
+  "source_sha": "a322237bc82c818b13093fadb0982332e24a82a2",
+  "tracked_changes": true,
+  "synthetic_only": true,
+  "synthetic_sensor_status": true,
+  "screenshots": [
+    {
+      "state": "09-face-hold",
+      "page": "advert",
+      "file": "09-face-hold-800x12800001.png",
+      "sha256": "329bbb9523b031d65be4d298035bcb14db067c65d44f412000b4321e2464caaf",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "01-photo-confirm",
+      "page": "photo_confirm",
+      "file": "01-photo-confirm-800x12800001.png",
+      "sha256": "1a7116087b2046ac1edb6adcd9152da0c631de51a5b52713c8c548f94b49fc2f",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "02-camera-ready",
+      "page": "capture",
+      "file": "02-camera-ready-800x12800001.png",
+      "sha256": "2dfa4ff6e8c48e96f0d12b4114961bf141b18cebae69256ed9a4b61cdba39c81",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "10-palm-hold",
+      "page": "capture",
+      "file": "10-palm-hold-800x12800001.png",
+      "sha256": "9b3e7048b2486a54653bfa520099215a0a2185942bb6443a2eb56218bc68098a",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "11-palm-unavailable",
+      "page": "capture",
+      "file": "11-palm-unavailable-800x12800001.png",
+      "sha256": "ba66e6d22081dc3e735ccd4eec0e647d66d27463a7ecdeeea13f1054a6307bed",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "12-palm-release",
+      "page": "capture",
+      "file": "12-palm-release-800x12800001.png",
+      "sha256": "9d1c45978eb26a6790e85d93f3effb499fdb5ca7edd9a0df8fd5fb6d6671d75c",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "03-countdown",
+      "page": "capture",
+      "file": "03-countdown-800x12800001.png",
+      "sha256": "402b3afdad27f69f9ea8e77beff0367db3e9adc8182c7e4effeaf4a50bc8551b",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "04-review",
+      "page": "review",
+      "file": "04-review-800x12800001.png",
+      "sha256": "1a4e2b946c4ad4d0c7e8c65d2ecde6ccb5f01aea146545d5e9e5e5d0ea0ff18f",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "05-retake-ready",
+      "page": "capture",
+      "file": "05-retake-ready-800x12800001.png",
+      "sha256": "6f830485a1e3a1558d856e2dda637d24a7849140884a77083f11d88dec4d83fa",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "06-local-result",
+      "page": "result",
+      "file": "06-local-result-800x12800001.png",
+      "sha256": "6acb6c477cf08a7f011e584b7d6ced2c6e287ffc2e1e80afc499a41498d82cd1",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "07-print-uncertain",
+      "page": "result",
+      "file": "07-print-uncertain-800x12800001.png",
+      "sha256": "9fa7a55a3dafd6a73650c072976c8834c8c4175650a7941f0c214e26a3609e55",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "08-camera-unavailable",
+      "page": "capture",
+      "file": "08-camera-unavailable-800x12800001.png",
+      "sha256": "de7aaec790314a358e5603dd01278451d1af54d1af8e4a3233543b620f706361",
+      "width": 800,
+      "height": 1280
+    }
+  ]
+}
