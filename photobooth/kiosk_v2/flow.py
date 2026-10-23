@@ -1,8 +1,8 @@
 """Pure UI routing for the portrait kiosk.
 
-This module owns only navigation for the unconnected prototype. It deliberately
-cannot grant discounts, accept payments, claim receipts or start a photo session.
-All future paid/capture states must be introduced behind validated backends.
+Navigation never grants discounts, payments or receipt claims. P3 photo pages
+are admitted separately by the nonfinancial test service; active photo work is
+protected from generic idle returns.
 """
 
 from dataclasses import dataclass
@@ -11,6 +11,11 @@ ADVERT = "advert"
 TUTORIAL = "tutorial"
 TEMPLATES = "templates"
 GAME_PREVIEW = "game_preview"
+PHOTO_CONFIRM = 'photo_confirm'
+CAPTURE = 'capture'
+REVIEW = 'review'
+RESULT = 'result'
+PHOTO_PAGES = frozenset({PHOTO_CONFIRM, CAPTURE, REVIEW, RESULT})
 BROWSING_PAGES = frozenset({TUTORIAL, TEMPLATES, GAME_PREVIEW})
 
 
@@ -56,13 +61,25 @@ class VisitFlow:
     def to_advertising(self) -> str:
         """Discard uncommitted visitor UI state for the next visitor.
 
-        This prototype cannot enter payment/capture/printing. Production
-        integration will have to enforce the existing paid-order guards.
+        An active photo test must finish through its service before this reset.
+        Future production admission must still enforce independent paid-order guards.
         """
+        if self.page in {CAPTURE, REVIEW, RESULT}:
+            raise NavigationError('An active photo test must finish safely first.')
         self.page = ADVERT
         self.tutorial_seen = False
         self.entry_source = None
         return self.page
+
+    def confirm_photo_test(self):
+        if self.page != TEMPLATES or not self.tutorial_seen:
+            raise NavigationError('Complete the tutorial and choose templates first.')
+        self.page = PHOTO_CONFIRM
+
+    def photo_step(self, phase):
+        if self.page not in PHOTO_PAGES or phase not in {CAPTURE, REVIEW, RESULT, 'done'}:
+            raise NavigationError('Invalid photo-test navigation.')
+        self.page = phase if phase != 'done' else PHOTO_CONFIRM
 
     def browse_timeout(self) -> bool:
         """Only browsing screens can expire; never a hypothetical paid page."""

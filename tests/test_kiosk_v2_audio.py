@@ -102,6 +102,9 @@ class PortraitAudioTests(unittest.TestCase):
         self.assertEqual(clip.plays, 1)
         self.assertTrue(self.audio.enter_page("templates"))
         self.assertEqual(clip.plays, 1)
+        for page in ('photo_confirm', 'capture', 'review', 'result'):
+            self.assertTrue(self.audio.enter_page(page))
+            self.assertEqual(clip.plays, 1, 'photo page restarted the music')
         self.audio.enter_page("advert")
         self.assertEqual(clip.state, "stop")
         self.assertEqual(clip.volume, 0)

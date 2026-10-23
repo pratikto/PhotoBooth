@@ -24,6 +24,141 @@ else:
 
 @unittest.skipUnless(HAS_KIVY, "Kivy not available in pure-Python test environment")
 class PortraitKivySmokeTests(unittest.TestCase):
+    def test_p3_photo_pages_save_three_retake_once_and_only_shutter_after_success(self):
+        import time
+        import numpy as np
+        from tempfile import TemporaryDirectory
+        from unittest.mock import Mock, patch
+        from photobooth.kiosk_v2.photos import PhotoTest
+        from photobooth.kiosk_v2.flow import CAPTURE, REVIEW, RESULT
+        from kivy.core.window import Window
+        from kivy.base import EventLoop
+        device, inviter = Mock(), Mock()
+        frame = np.zeros((120, 160, 3), dtype=np.uint8)
+        frame[:, :80] = (0, 0, 255)
+        device.read.return_value = frame
+        inviter.update.return_value = False
+        with TemporaryDirectory() as root:
+            service = PhotoTest(root)
+            with patch('photobooth.kiosk_v2.photos.configured_test', return_value=service):
+                app = PortraitKioskV2App(camera_device=device, face_inviter=inviter)
+                Window.add_widget(app.build())
+                def settle():
+                    deadline = time.monotonic() + 3
+                    while app._photo_jobs.busy and time.monotonic() < deadline:
+                        app._poll_photos()
+                        time.sleep(.005)
+                    self.assertFalse(app._photo_jobs.busy)
+                def shoot():
+                    app._start_countdown()
+                    app._countdown_deadline = time.monotonic() - .01
+                    app._countdown_tick(0)
+                    settle()
+                try:
+                    app._choose_photo(); app._complete_tutorial(); app._change_copies(2)
+                    app._enter_photo_test(); settle()
+                    original_size = Window.size
+                    try:
+                        for size in ((452, 900), (360, 640), (800, 1280)):
+                            Window.size = size
+                            for _ in range(5):
+                                EventLoop.idle()
+                            card = app._photo_confirm_card
+                            for child in card.children:
+                                self.assertGreaterEqual(child.y, card.y)
+                                self.assertLessEqual(child.top, card.top)
+                    finally:
+                        Window.size = original_size
+                    app._admit_photo_test(); settle()
+                    self.assertEqual(app.navigation.page, CAPTURE)
+                    app._devices_tick(0)
+                    self.assertIsNotNone(app._live_image.texture)
+                    for _ in range(5):
+                        EventLoop.idle()
+                    host = app._live_image.parent
+                    self.assertEqual(app._live_image.pos, host.pos)
+                    self.assertEqual(app._live_image.size, host.size)
+                    with patch.object(app.audio_v2, 'cue') as cue:
+                        with patch.object(service.store, 'save_raw_photo', side_effect=OSError('disk full')):
+                            shoot()
+                        self.assertNotIn(('shutter',), [call.args for call in cue.call_args_list])
+                        self.assertEqual(service.session.initial_photo_paths, [])
+                        for _ in range(3):
+                            shoot()
+                        self.assertEqual(sum(call.args == ('shutter',) for call in cue.call_args_list), 3)
+                    self.assertEqual(app.navigation.page, REVIEW)
+                    app._photo_submit('retake', 1); settle(); shoot()
+                    self.assertTrue(app._photo_view['retake_used'])
+                    self.assertTrue(all(w.disabled for w in app.stage.walk()
+                                        if isinstance(w, ArcadeButton) and w.text == 'RETAKE'))
+                    app._photo_submit('compose'); settle()
+                    self.assertEqual(app.navigation.page, RESULT)
+                    self.assertIn('MODE LOKAL', app._delivery_label.text)
+                    self.assertIn('tanpa QR', app._delivery_label.text)
+                    self.assertEqual(app._photo_view['copies'], 2)
+                    app._photo_submit('next'); settle()
+                    self.assertEqual(app.navigation.page, ADVERT)
+                    self.assertFalse(any(app.quantities.values()))
+                    # Keep one service alive so queued delivery continues while idle.
+                    self.assertFalse(service._closed.is_set())
+                    app._choose_photo(); app._complete_tutorial(); app._change_copies(1)
+                    app._enter_photo_test(); settle()
+                    app._admit_photo_test(); settle()
+                    self.assertEqual(app._photo_view['captured'], 0)
+                    self.assertFalse(app._photo_view['retake_used'])
+                finally:
+                    app.on_stop()
+                    Window.remove_widget(app.stage)
+
+    def test_p3_missing_camera_minimize_and_retired_controls_cannot_capture(self):
+        import time
+        import numpy as np
+        from tempfile import TemporaryDirectory
+        from unittest.mock import Mock, patch
+        from photobooth.kiosk_v2.photos import PhotoTest
+        from photobooth.kiosk_v2.flow import CAPTURE, PHOTO_CONFIRM, NavigationError
+        device, inviter = Mock(), Mock()
+        device.read.return_value = np.zeros((40, 60, 3), dtype=np.uint8)
+        inviter.update.return_value = False
+        with TemporaryDirectory() as root, patch('photobooth.kiosk_v2.photos.configured_test',
+                                                 return_value=PhotoTest(root)):
+            app = PortraitKioskV2App(camera_device=device, face_inviter=inviter)
+            app.build()
+            def settle():
+                deadline = time.monotonic() + 3
+                while app._photo_jobs.busy and time.monotonic() < deadline:
+                    app._poll_photos(); time.sleep(.005)
+                self.assertFalse(app._photo_jobs.busy)
+            try:
+                app._choose_photo(); app._complete_tutorial(); app._change_copies(1)
+                app._enter_photo_test(); settle()
+                device.read.return_value = None
+                app._admit_photo_test()
+                self.assertEqual(app.navigation.page, PHOTO_CONFIRM)
+                device.read.return_value = np.zeros((40, 60, 3), dtype=np.uint8)
+                app._admit_photo_test(); settle()
+                self.assertEqual(app.navigation.page, CAPTURE)
+                with self.assertRaises(NavigationError):
+                    app.navigation.to_advertising()
+                old_button = app._capture_button
+                app._start_countdown()
+                self.assertIsNotNone(app._countdown_event)
+                app.on_pause()
+                self.assertIsNone(app._countdown_event)
+                app.on_resume()
+                old_button.dispatch('on_release')
+                self.assertIsNone(app._countdown_event)
+                self.assertEqual(app._photo_view['captured'], 0)
+                app._start_countdown()
+                device.read.return_value = None
+                app._countdown_tick(0)
+                self.assertIsNone(app._countdown_event)
+                self.assertEqual(app._photo_view['captured'], 0)
+                app._photo_submit('abort'); settle()
+                self.assertEqual(app.navigation.page, ADVERT)
+            finally:
+                app.on_stop()
+
     def test_automatic_face_invitation_keeps_ad_player_and_retired_overlay_is_inert(self):
         from unittest.mock import Mock, patch
         device, inviter = Mock(), Mock()

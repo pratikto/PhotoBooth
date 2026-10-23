@@ -46,7 +46,7 @@ input is disabled in captures; they do not prove actual face-trigger behavior.
 [Source hashes and limits](p3a-local-source.json); captures honestly record the
 pre-P3 base plus tracked changes. Matching-source CI follows the normal push.
 
-## P3b — next authorized stage
+## P3b — connected source implementation
 
 ### Service adapter checkpoint
 
@@ -67,8 +67,8 @@ Default local composition has the existing MODE LOKAL footer, no fake QR.
 **74 service tests PASS**, including nine new real JPEG/composition, quota,
 failure, single-flight, isolated-ID, print-journal and retention-guard tests:
 [transcript](p3b-service-tests.txt). These exercise adapters with fake devices,
-not physical camera/printer/Drive acceptance. The native photo pages follow in
-the next implementation checkpoint. Rollback before adapters: `579fbf3be7dbb2b3ec4e51e6a9b8454f921e97ee`.
+not physical camera/printer/Drive acceptance. This checkpoint precedes the native
+pages described below. Rollback before adapters: `579fbf3be7dbb2b3ec4e51e6a9b8454f921e97ee`.
 
 ### New v2 shutter, 2026-10-23
 
@@ -87,13 +87,119 @@ Rollback checkpoint before this audio change: `9e01225180f01bf4a72d2a5927941e6f1
 P3a matching-source [CI 39877277390](https://github.com/pratikto/PhotoBooth/actions/runs/39877277390)
 completed with all three jobs successful; that run predates the new shutter.
 
-Integrate actual preview/countdown/three captures, selected single retake,
-composition, physical-copy output and truthful local/Drive results through
-existing services. Keep admission explicitly nonfinancial for this P3 test flow;
-do not enable the payment/scanner/game controls or mark an order paid. Preserve
-original pixels; mirror the live preview only. Printing and uploads must remain
-explicit, traceable, isolated from production storage and safe against duplicate
-or uncertain sends. No P3b implementation/test PASS is claimed by the P3a commit.
+### Native flow and lifecycle
+
+The native gallery now exposes **UJI FOTO** after at least one copy is selected.
+A separate **MODE UJI / TANPA PEMBAYARAN** consent page admits the run. Ready
+camera → manual five-second countdown for each of three photos → review →
+optional selected single retake with a new countdown → actual strip composition
+→ explicit optional test print → next selected design or finish to advertising.
+Payment remains disabled. There is no fake paid status or production admission.
+
+Only the live camera texture is horizontally mirrored. Saved/reviewed/composed
+and queued upload bytes remain in camera orientation. A successful JPEG save
+emits the new v2 shutter once; failed saves and interrupted countdowns do not.
+Camera loss cancels countdown and requires a fresh manual start. Minimize pauses
+audio/camera and cancels countdown; restore cannot execute the old touch event.
+Active photo pages are protected from generic browse timeout and idle resets.
+Worker outcomes are polled on the GUI and deferred while minimized. The launcher
+waits briefly for device and photo I/O shutdown after the window closes, while
+its diagnostic log is still open.
+
+The single photo-service environment stays alive after finish/cancel, so its
+Drive queue can continue while idle and subsequent visits get fresh photo state.
+An hourly local-only retention worker reuses the existing 15-day cleanup under
+the isolated P3 photo root. No remote cleanup is called. A new test run never
+reuses IDs. Early exit preserves captured files and records that it ended early.
+Print or upload errors never silently mark payment, paper or cloud delivery PASS.
+
+### Launch on Windows
+
+```powershell
+git switch feature/portrait-kiosk-v2-next
+git pull --ff-only origin feature/portrait-kiosk-v2-next
+git rev-parse --short HEAD
+python tools/run_portrait_v2.py
+```
+
+Activate the existing Windows Kivy virtual environment first. Camera and face
+invitation default enabled; use `PHOTOBOOTH_CAMERA_INDEX` for the actual device.
+Audio defaults enabled. No new environment or installation is needed if the
+previous launcher already works with OpenCV, Pillow and Kivy.
+
+Default photo output: `data/kiosk-v2-p3/photos/PB001V2_########/` with raw JPEGs,
+composed PNG and manifest. Default strip footer is **MODE LOKAL**, without a
+fake QR. The existing v1 `photos/`, counter/pool and customer records are untouched.
+For deliberate **operator device tests only**, set before launching:
+
+```powershell
+$env:PHOTOBOOTH_V2_PRINT = "1"  # enables explicit CETAK UJI; does not auto-print
+# Optional, only with configured TEST Drive account/backend:
+$env:PHOTOBOOTH_V2_DRIVE = "1"
+```
+
+Printing reads the existing operator printer settings without rewriting them;
+it sends only after CETAK UJI is pressed. Drive reads existing configuration and
+uses a separate `PB001V2` pool; an enabled but unavailable/misconfigured Drive
+blocks admission instead of pretending a QR is ready. Do not change the booth
+ID on an existing counter. `PHOTOBOOTH_V2_BOOTH_ID` must end in `V2` to avoid
+claiming the legacy remote namespace. No credentials are committed or displayed.
+
+### Final source QA and screenshots
+
+The final evidence files are `p3b-final-complete-tests.txt`,
+`p3b-final-focused-tests.txt`, `p3b-domain-final-tests.txt`, `p3b-form-test.json`
+and `p3b-source.json`. **335 complete tests run / 333 PASS / 2 optional-model skips**, no failures or errors. **87 final focused tests PASS**, zero skips, after the final compact-layout/payment-label adjustment. Their exact source limits are recorded there;
+they do not certify devices. The domain suite includes **20 complete simulated
+photo runs** with unique IDs/fresh quotas and a real adapter sequence from pool
+claim → three JPEGs + retake → composition → offline upload → verified retry,
+without duplicate uploads or remote cleanup.
+
+Fresh native P3 captures at [800×1280](p3b-contact-800x1280.png) and
+[452×900](p3b-contact-452x900.png) cover consent, ready, countdown, review,
+retake, local result, uncertain print and unavailable camera. Preview pixels and
+print transport are synthetic; the JPEG/PNG storage/composition and native
+widgets are real. Review corrected camera containment and compact consent
+height before accepting the final captures. Twelve refreshed browsing-page captures were also reviewed at [800×1280](p3b-browsing-contact-800x1280.png) and [452×900](p3b-browsing-contact-452x900.png), preserving full strip focus with the added UJI FOTO CTA and readable disabled payment label. Original image hashes are in
+`p3b-screenshots/p3-report-*.json`.
+
+[Open the 34-item Windows form with Submit Hasil](windows-checklist.html).
+Submit prepares a prompt for manual paste into chat; it cannot send to the
+conversation. Blank items are never PASS. HEAD starts empty, storage is separate
+from previous forms, and G01/G02 require a declared twenty cycles before they can
+be checked. Browser verification covers Submit, counts, storage, unknown HEAD,
+unchecked Drive items, the cycle gate and 360-pixel layout.
+
+### Checkpoints and rollback
+
+| Commit | Purpose |
+| --- | --- |
+| `419cfedfa63bd53df64831437c6d63f25bc1fb10` | Pre-P3 owner-reported return-to-advert working checkpoint |
+| `9e01225180f01bf4a72d2a5927941e6f10d84f38` | P3a asynchronous camera/face invitation |
+| `579fbf3be7dbb2b3ec4e51e6a9b8454f921e97ee` | Original v2-only shutter |
+| `5c83a26f5fe24f58fe9acf72f88e653376aea98b` | Photo/print/Drive service adapter checkpoint before native pages |
+
+All pushes are ordinary pushes to the existing branch, with remote HEAD checked.
+The matching native-page source commit and final CI are recorded in the follow-up
+verification record. Do not force-push, merge master or reset/delete test photos
+to roll back. To stop P3 device use, close v2 and run the established v1 launcher;
+keep v2 files/manifests/journals for diagnosis. For a reviewed source rollback,
+revert the relevant P3 commits on this same branch through the normal tests/push
+process; do not rewrite history or erase counters/uncertain print journals.
+
+### Remaining bugs and limits
+
+- **BUG-009 stays OPEN:** no Apps Script deployment or remote 30-day cleanup
+  certification was authorized. P3 holds upload without retention acknowledgement;
+  backend acknowledgement alone does not prove eventual cloud deletion.
+- **BUG-012 remains owner-reported PASS / MONITORING:** no new Windows exact-HEAD
+  twenty-cycle result was supplied; do not substitute Linux simulation for it.
+- Actual face trigger, Windows camera/USB lifecycle, new shutter timbre, physical
+  N-sheet count, QR scan and real account delivery remain **NOT RUN here**.
+- Interrupted photo tests are preserved, not automatically resumed. Uncertain
+  print jobs are never replayed on restart. Operator must inspect paper/journal;
+  no paid recovery, reprint commerce or new administrative feature is implied.
+- P4 game/receipt/QRIS and P5 device certification remain separate milestones.
 
 ## Windows acceptance remaining
 

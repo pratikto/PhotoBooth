@@ -1,0 +1,71 @@
+{
+  "source_sha": "5c83a26f5fe24f58fe9acf72f88e653376aea98b",
+  "tracked_changes": true,
+  "synthetic_only": true,
+  "screenshots": [
+    {
+      "state": "01-photo-confirm",
+      "page": "photo_confirm",
+      "file": "01-photo-confirm-800x12800001.png",
+      "sha256": "1a7116087b2046ac1edb6adcd9152da0c631de51a5b52713c8c548f94b49fc2f",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "02-camera-ready",
+      "page": "capture",
+      "file": "02-camera-ready-800x12800001.png",
+      "sha256": "9062840ef30646c804bbe2b70f1ae750407c1c50a0f6ec06bc5bc983785a6482",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "03-countdown",
+      "page": "capture",
+      "file": "03-countdown-800x12800001.png",
+      "sha256": "26c84e3b192b56636d240536c1bf55d060e22bd91a5645fdf7510dd7a254784a",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "04-review",
+      "page": "review",
+      "file": "04-review-800x12800001.png",
+      "sha256": "1a4e2b946c4ad4d0c7e8c65d2ecde6ccb5f01aea146545d5e9e5e5d0ea0ff18f",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "05-retake-ready",
+      "page": "capture",
+      "file": "05-retake-ready-800x12800001.png",
+      "sha256": "f8c0a6efec00eb7eccb419c5d643297d78600fb32ec5ca9a1a71683a0f3a421d",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "06-local-result",
+      "page": "result",
+      "file": "06-local-result-800x12800001.png",
+      "sha256": "6acb6c477cf08a7f011e584b7d6ced2c6e287ffc2e1e80afc499a41498d82cd1",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "07-print-uncertain",
+      "page": "result",
+      "file": "07-print-uncertain-800x12800001.png",
+      "sha256": "9fa7a55a3dafd6a73650c072976c8834c8c4175650a7941f0c214e26a3609e55",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "08-camera-unavailable",
+      "page": "capture",
+      "file": "08-camera-unavailable-800x12800001.png",
+      "sha256": "9ebad5d24790a50ed43be9c4c5c8c59c812cc633583d6c05ed4361a5f3f54465",
+      "width": 800,
+      "height": 1280
+    }
+  ]
+}

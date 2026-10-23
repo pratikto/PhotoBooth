@@ -1,8 +1,7 @@
 """Opt-in Kivy portrait kiosk UI v2; does not launch the production booth.
 
-Stage P0-P2: real advertising widget and camera-cat artwork, tutorial, 12 exact
-thermal template previews, and a safe quantity/DEMO quote. Real game, QRIS,
-camera, retakes, Drive and printing are deliberately NOT wired up yet.
+P3 adds an explicit nonfinancial photo-test path using existing camera, capture,
+retake, composition and optional print/Drive services. Payment and game stay off.
 """
 
 from pathlib import Path
@@ -30,12 +29,13 @@ from photobooth.workflow import quote_order
 from .audio import make_kivy_audio
 from .branding import MeongLogo
 from .illustrations import TutorialIcon
-from .flow import ADVERT, BROWSING_PAGES, GAME_PREVIEW, TEMPLATES, TUTORIAL, VisitFlow
+from .flow import ADVERT, BROWSING_PAGES, GAME_PREVIEW, TEMPLATES, TUTORIAL, PHOTO_PAGES, VisitFlow
 from .theme import ArcadeButton, CYAN, GOLD, MUTED, PixelCard, PINK, Starfield, WHITE, text_label
 from .viewport import PortraitViewport
 from .previews import PREVIEW_SIZE, PreviewPreloader
 from .gallery import SwipeGallery, StripCarousel
 from .devices import AsyncCamera, FaceInviter
+from .photo_views import PhotoViews
 
 
 LOG = logging.getLogger(__name__)
@@ -69,7 +69,7 @@ class TouchStage(Starfield):
         return super().on_touch_down(touch)
 
 
-class PortraitKioskV2App(App):
+class PortraitKioskV2App(PhotoViews, App):
     """Separate greenfield window; the original python main.py remains untouched."""
 
     title = "MEONG PHOTOBOOTH - PORTRAIT GUI V2 (PROTOTIPE)"
@@ -85,6 +85,7 @@ class PortraitKioskV2App(App):
         self._suspended = False
         self._closed = False
         self._view_revision = 0
+        self._init_photos()
         self.navigation = VisitFlow()
         self.templates = get_templates()
         self.catalog = AdCatalog()
@@ -128,9 +129,11 @@ class PortraitKioskV2App(App):
     def _devices_tick(self, _dt):
         if self._closed:
             return False
+        self._poll_photos()
         if self._suspended:
             return
         frame = self.camera_device.read()
+        self._update_live_photo(frame)
         allowed = self.navigation.page == ADVERT and self._invitation is None
         if self.face_inviter.update(frame, self._view_revision, allowed=allowed):
             self._show_invitation(source='face')
@@ -143,6 +146,7 @@ class PortraitKioskV2App(App):
 
     def on_pause(self):
         self._suspended = True
+        self._photo_pause()
         self.camera_device.set_active(False)
         self.face_inviter.pause()
         self.audio_v2.suspend()
@@ -163,9 +167,14 @@ class PortraitKioskV2App(App):
         self.audio_v2.resume()
         if self._ad_player is not None:
             self._ad_player.resume()
+        if self.navigation.page in PHOTO_PAGES:
+            self._show()
 
     def on_stop(self):
         self._closed = True
+        self._cancel_countdown()
+        if self._photo_jobs is not None:
+            self._photo_jobs.close()
         Window.unbind(on_minimize=self._window_minimized, on_restore=self._window_restored)
         self._retire_gestures()
         if getattr(self, "_heartbeat", None):
@@ -255,6 +264,8 @@ class PortraitKioskV2App(App):
             self._build_templates(canvas)
         elif page.name == GAME_PREVIEW:
             self._build_game_notice(canvas)
+        elif page.name in PHOTO_PAGES:
+            self._build_photo_page(canvas)
         else:
             raise RuntimeError("Unknown prototype page")
         LOG.info('Page ready page=%s revision=%s', page.name, self._view_revision)
@@ -599,13 +610,21 @@ class PortraitKioskV2App(App):
         footer = BoxLayout(size_hint_y=None, height=dp(48), spacing=dp(8))
         payment = self._action('PEMBAYARAN (BELUM TERHUBUNG)', lambda: None,
                                disabled=True, height=48)
-        payment.size_hint_x = .55
-        payment.font_size = dp(12)
+        payment.size_hint_x = .40
+        payment.font_size = dp(10)
+        payment.halign = 'center'
+        payment.valign = 'middle'
+        payment.bind(size=lambda w, size: setattr(w, 'text_size', (max(10, size[0] - dp(12)), size[1])))
+        self._test_photo_button = self._action('UJI FOTO', self._enter_photo_test,
+                                               variant='secondary', height=48)
+        self._test_photo_button.size_hint_x = .22
+        self._test_photo_button.font_size = dp(12)
         finish = self._action('SELESAI / KEMBALI IKLAN', self._return_ad,
                               variant='tertiary', height=48)
-        finish.size_hint_x = .45
-        finish.font_size = dp(12)
+        finish.size_hint_x = .38
+        finish.font_size = dp(11)
         footer.add_widget(payment)
+        footer.add_widget(self._test_photo_button)
         footer.add_widget(finish)
         shell.add_widget(footer)
         self._update_template()
@@ -647,6 +666,7 @@ class PortraitKioskV2App(App):
         template = self.templates[self.template_index]
         self._copy_value.text = str(self.quantities[template.template_id])
         quote = quote_order(self.templates, self.quantities)
+        self._test_photo_button.disabled = quote.session_count == 0
         total = f"{quote.total_amount:,}".replace(",", ".")
         self._order_summary.text = (
             f"{quote.session_count} sesi  •  {quote.print_copy_count} lembar"

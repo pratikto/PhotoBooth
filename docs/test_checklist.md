@@ -1,5 +1,8 @@
 ## Version 1.0.0 — release-source verification (2026-10-19)
 
+> **Current P3 QA (2026-10-23):** Use [Windows P3 checkbox form with Submit](qa/portrait-v2-p3/windows-checklist.html), 34 unchecked items. It preserves unknown HEAD, distinguishes unchecked tests, and locks twenty-cycle items until the cycle count qualifies. [Source tests and reviewed native screenshots](qa/portrait-v2-p3/README.md) remain separate from actual camera/speaker/printer/Drive acceptance. No previous Windows checkmarks are imported or upgraded to P3 PASS.
+
+
 **Immutable release SHA:** `07ce51d2022ab5673a7a27e744e5e5757fbb3d08` (`v1.0.0`, GitHub pre-release). [Kiosk GUI](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245) **SUCCESS**: 235 tests (233 PASS, 2 SKIP, 0 failures/errors), 87 synthetic screenshots / 0 errors. [Dither lab](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273) **SUCCESS**: 48 tests. GitHub Linux mocked tests verify code/screenshot behavior, **not** physical Windows camera/audio/printer/QR phone scan or actual settlement; QRIS is DEMO only. BUG-001/007 audio retest and BUG-009 Drive cloud retention remain unresolved. Earlier `c40f33f5`, `f129dd9e`, and `e46812b8` results are retained as *historical* evidence.
 
 - [x] Old `master` preserved at `backup/master-pre-v1-20261019` (`d4852cb5`); [merge PR #3](https://github.com/pratikto/PhotoBooth/pull/3) landed.

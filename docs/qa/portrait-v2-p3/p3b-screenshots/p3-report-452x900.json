@@ -1,0 +1,71 @@
+{
+  "source_sha": "5c83a26f5fe24f58fe9acf72f88e653376aea98b",
+  "tracked_changes": true,
+  "synthetic_only": true,
+  "screenshots": [
+    {
+      "state": "01-photo-confirm",
+      "page": "photo_confirm",
+      "file": "01-photo-confirm-452x9000001.png",
+      "sha256": "9aa216ea3602729d426e882eff9613be251b7befa9417fa3da1ce445c7a940c6",
+      "width": 452,
+      "height": 900
+    },
+    {
+      "state": "02-camera-ready",
+      "page": "capture",
+      "file": "02-camera-ready-452x9000001.png",
+      "sha256": "92fd8064f43d64fa3b1282544da38219b8f81f553047bcf2f8dba96841688691",
+      "width": 452,
+      "height": 900
+    },
+    {
+      "state": "03-countdown",
+      "page": "capture",
+      "file": "03-countdown-452x9000001.png",
+      "sha256": "e1470d704a6d8e2840fc5c67904b971536cbc97e61a1cf7f39bc56248b7a7e6d",
+      "width": 452,
+      "height": 900
+    },
+    {
+      "state": "04-review",
+      "page": "review",
+      "file": "04-review-452x9000001.png",
+      "sha256": "3cacf13b8f7520644f5f150ab46f3b7e8a5920b00afc9e62b6778d0efa620044",
+      "width": 452,
+      "height": 900
+    },
+    {
+      "state": "05-retake-ready",
+      "page": "capture",
+      "file": "05-retake-ready-452x9000001.png",
+      "sha256": "39c70e4933eb516146911e59edf106972ea627240e8e192c52e54726eef75bae",
+      "width": 452,
+      "height": 900
+    },
+    {
+      "state": "06-local-result",
+      "page": "result",
+      "file": "06-local-result-452x9000001.png",
+      "sha256": "acc8cfaa1ea49bdc468e04a12e5ec32b77d5ad2817d2f80d66bdebb9292964e8",
+      "width": 452,
+      "height": 900
+    },
+    {
+      "state": "07-print-uncertain",
+      "page": "result",
+      "file": "07-print-uncertain-452x9000001.png",
+      "sha256": "e7db589bb031ce64cb73e1e35d9173b3d1ecce4ff32c129c8e216040fc7249be",
+      "width": 452,
+      "height": 900
+    },
+    {
+      "state": "08-camera-unavailable",
+      "page": "capture",
+      "file": "08-camera-unavailable-452x9000001.png",
+      "sha256": "7a64da99d81f2c9a028303e209c9661e4cd6e6666a91e59a0ad495cbfa27c5fa",
+      "width": 452,
+      "height": 900
+    }
+  ]
+}

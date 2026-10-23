@@ -1,5 +1,14 @@
 # Meong Photobooth — Documentation and release changelog
 
+## 2026-10-23 — P3b native photo test flow
+
+- Gallery UJI FOTO opens explicit nonfinancial consent, live mirrored camera, five-second countdown, three unmirrored originals, one selected retake per session and full strip results.
+- Reuse existing composition, local retention, print-copy and Drive services under isolated v2 storage/IDs. Worker-owned I/O, stale-touch guards, interrupted-countdown cancellation and bounded post-window device cleanup.
+- Test prints persist before send, reject duplicate retries and require operator acknowledgement for uncertainty; Drive holds uploads without backend retention acknowledgement. Default local mode has no fake download QR.
+- Original v2 shutter plays only after successful capture/retake save. Add native P3 screenshot recorder and 34-item Windows form with Submit.
+- [QA evidence, limitations and rollback](qa/portrait-v2-p3/README.md); physical device acceptance remains open.
+
+
 ## 2026-10-23 — Portrait v2 original shutter
 
 - New 0.30 s mechanical shutter with a soft release, selected only by v2; v1 audio bytes/controller unchanged.

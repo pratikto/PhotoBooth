@@ -1,5 +1,8 @@
 # Meong Photobooth — Product and technical decision record
 
+> **P3 scope clarification (2026-10-23):** Owner says “oke tolong eksekusi p3” and requests a better camera SFX than v1. Implement P3a/P3b through an explicit **UJI FOTO / TANPA PEMBAYARAN** test admission, not a fabricated paid status. Preserve v1 shutter and playback. Printing/Drive are explicit operator opt-ins in an isolated test namespace. This does not authorize real payments, discount/scanner/game integration, production transactions, backend deployment or master merge. [Implementation/evidence](qa/portrait-v2-p3/README.md).
+
+
 > **CURRENT AS OF 2026-10-19 — POST-v1 SOURCE RELEASE:** Default branch is `master`; the immutable `v1.0.0` [pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0) points to commit `07ce51d2022ab5673a7a27e744e5e5757fbb3d08`. [Kiosk CI](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245): 235 tests (233 PASS, 2 SKIP), 87 synthetic renders/0 errors; [Dither CI](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273): 48 tests PASS. This is **source/CI evidence, not Windows production or hardware certification**. FEAT-001 DEMO pricing/copy count and FEAT-003 live-preview mirror have owner-tested PASS; BUG-011 monitored; BUG-001/007 speaker/audio retests pending; BUG-009 Drive 30-day cleanup remains OPEN. Real QRIS FEAT-020 and receipt scanner FEAT-002 are not implemented. Dated pre-release statements below are historical when superseded by this notice.
 
 Last reconciled: **2026-10-19** | Stable branch: `master` | Immutable release: `v1.0.0`

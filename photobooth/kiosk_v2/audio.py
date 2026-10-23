@@ -23,8 +23,8 @@ SOUND_FILES = {
 }
 # No soundtrack over an advertising video; still images may use GUI music. A future game
 # integration must obtain/release its own isolated audio channel explicitly.
-MUSIC_PAGES = frozenset({"tutorial", "templates"})
-KNOWN_PAGES = frozenset({"advert", "tutorial", "templates", "game_preview"})
+MUSIC_PAGES = frozenset({"tutorial", "templates", 'photo_confirm', 'capture', 'review', 'result'})
+KNOWN_PAGES = MUSIC_PAGES | frozenset({"advert", "game_preview"})
 
 
 def bounded_gain(value: float) -> float:

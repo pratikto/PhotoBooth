@@ -142,6 +142,11 @@ class AsyncCamera:
         if self._thread is not None and self._thread is not threading.current_thread():
             self._thread.join(timeout=.05)
 
+    def wait_closed(self, timeout=3):
+        """Dedicated launcher waits after GUI shutdown, while diagnostics stay open."""
+        if self._thread is not None and self._thread is not threading.current_thread():
+            self._thread.join(timeout=timeout)
+
 
 class FaceInviter:
     """Use the existing nonrecording worker, hold, cooldown and revision tags."""

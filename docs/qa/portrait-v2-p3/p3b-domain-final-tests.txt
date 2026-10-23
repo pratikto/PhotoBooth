@@ -1,0 +1,31 @@
+test_copies_one_batch_and_durable_no_duplicate_print (tests.test_kiosk_v2_photos.PhotoWorkflowTests.test_copies_one_batch_and_durable_no_duplicate_print) ... ok
+test_drive_pool_capture_offline_retry_and_verified_delivery_use_v2_namespace (tests.test_kiosk_v2_photos.PhotoWorkflowTests.test_drive_pool_capture_offline_retry_and_verified_delivery_use_v2_namespace) ... ok
+test_drive_retention_guard_blocks_upload_without_backend_ack (tests.test_kiosk_v2_photos.PhotoWorkflowTests.test_drive_retention_guard_blocks_upload_without_backend_ack) ... Drive retention registration failed for PB001V2_00000001: Backend did not acknowledge the photo retention policy.
+ok
+test_early_exit_preserves_files_and_next_run_never_reuses_id (tests.test_kiosk_v2_photos.PhotoWorkflowTests.test_early_exit_preserves_files_and_next_run_never_reuses_id) ... ok
+test_failed_save_does_not_advance_photo_or_consume_retake (tests.test_kiosk_v2_photos.PhotoWorkflowTests.test_failed_save_does_not_advance_photo_or_consume_retake) ... ok
+test_invalid_quantities_and_early_composition_are_rejected (tests.test_kiosk_v2_photos.PhotoWorkflowTests.test_invalid_quantities_and_early_composition_are_rejected) ... ok
+test_isolated_admission_three_photos_and_unmirrored_original_pixels (tests.test_kiosk_v2_photos.PhotoWorkflowTests.test_isolated_admission_three_photos_and_unmirrored_original_pixels) ... ok
+test_retake_quota_preserves_original_and_is_per_design_not_per_copy (tests.test_kiosk_v2_photos.PhotoWorkflowTests.test_retake_quota_preserves_original_and_is_per_design_not_per_copy) ... ok
+test_twenty_complete_test_runs_keep_unique_ids_and_fresh_quotas (tests.test_kiosk_v2_photos.PhotoWorkflowTests.test_twenty_complete_test_runs_keep_unique_ids_and_fresh_quotas) ... ok
+test_uncertain_send_requires_operator_check_and_restart_never_replays (tests.test_kiosk_v2_photos.PhotoWorkflowTests.test_uncertain_send_requires_operator_check_and_restart_never_replays) ... Photo test print outcome uncertain
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/photos.py", line 188, in print_result
+    result = self.printer.print_image(session.output_path, copies=session.plan.print_copies)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+OSError: partial send
+ok
+test_worker_is_nonblocking_single_flight_and_discards_completion_after_close (tests.test_kiosk_v2_photos.PhotoWorkflowTests.test_worker_is_nonblocking_single_flight_and_discards_completion_after_close) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 3.428s
+
+OK

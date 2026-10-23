@@ -150,6 +150,20 @@ class PhotoWorkflowTests(unittest.TestCase):
         self.assertNotEqual(view['transaction_id'], old_id)
         restarted.close()
 
+    def test_twenty_complete_test_runs_keep_unique_ids_and_fresh_quotas(self):
+        ids = set()
+        for _ in range(20):
+            self.service.start(self.templates, self.quantities)
+            ids.add(self.service.transaction.transaction_id)
+            self.assertFalse(self.service.session.retake_used)
+            for _ in range(3):
+                self.service.capture(self.frame)
+            self.service.compose()
+            self.service.next()
+            self.service.reset()
+        self.assertEqual(len(ids), 20)
+        self.assertEqual(len(list(self.service.store.photos_root.glob('*/output/*.png'))), 20)
+
     def test_worker_is_nonblocking_single_flight_and_discards_completion_after_close(self):
         entered, release = threading.Event(), threading.Event()
         service = Mock()
@@ -189,6 +203,45 @@ class PhotoWorkflowTests(unittest.TestCase):
             path.write_text(json.dumps(manifest))
             worker._process_pending_uploads()
             sync.assert_called_once_with(path, client)
+        client.cleanup_expired.assert_not_called()
+
+    def test_drive_pool_capture_offline_retry_and_verified_delivery_use_v2_namespace(self):
+        import hashlib
+        from photobooth.drive_pool import DriveSlotPool
+        from photobooth.drive_storage import DriveApiError, RemoteDriveSlot
+        from photobooth.retention import retention_metadata
+        from photobooth.kiosk_v2.photo_drive import RetentionGuardedSync
+        client = Mock()
+        client.ensure_folder_pool.return_value = [RemoteDriveSlot(
+            'v2-test-folder', 'https://example.test/photos/v2', 'v2-slot', 'READY',
+            'PB001V2_00000001', transaction_id='PB001V2_00000001', verified=True)]
+        client.register_retention.side_effect = lambda folder, txid, started: retention_metadata(txid, started)
+        pool = DriveSlotPool(self.service.store.photos_root, self.root / 'pool.json', 'PB001V2', 1)
+        pool.refresh(client)
+        self.service.pool = pool
+        self.service.drive_client = client
+        self.start_review()
+        self.service.retake(2)
+        self.service.capture(self.frame)
+        self.service.compose()
+        worker = RetentionGuardedSync(self.service.store.photos_root, client, pool)
+        worker._process_pending_assignments()
+        client.upload_file.side_effect = DriveApiError('offline', 503)
+        worker._process_pending_uploads()
+        self.assertNotEqual(self.service.snapshot()['upload_status'], 'UPLOAD_COMPLETE')
+        self.assertTrue(all(p.is_file() for p in self.service.session.raw_photo_paths))
+        def upload(folder, txid, relative, path, **kwargs):
+            self.assertEqual(txid, 'PB001V2_00000001')
+            data = path.read_bytes()
+            return {'id': relative, 'size': len(data), 'md5Checksum': hashlib.md5(data).hexdigest()}
+        client.upload_file.side_effect = upload
+        client.upload_file.reset_mock()
+        worker._process_pending_uploads()
+        self.assertEqual(self.service.snapshot()['upload_status'], 'UPLOAD_COMPLETE')
+        self.assertEqual(client.upload_file.call_count, 5)  # Three raw, retake, final strip.
+        worker._process_pending_uploads()
+        self.assertEqual(client.upload_file.call_count, 5)
+        self.assertEqual(self.service.snapshot()['folder_url'], 'https://example.test/photos/v2')
         client.cleanup_expired.assert_not_called()
 
 

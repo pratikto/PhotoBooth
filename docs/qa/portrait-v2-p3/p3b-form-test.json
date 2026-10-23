@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "items": 34,
+  "checks": [
+    "initial unchecked",
+    "20-cycle guard",
+    "submit prompt",
+    "unknown HEAD",
+    "unchecked Drive",
+    "local storage",
+    "360px resize",
+    "no JS errors"
+  ]
+}

@@ -4,8 +4,8 @@ Windows:
     .\.venv-kivy\Scripts\Activate.ps1
     python tools/run_portrait_v2.py
 
-This stage cannot accept payments, operate a real cafe receipt scanner,
-capture camera frames, print or issue discounts.
+P3 photo tests are local by default. Payment, cafe receipt scanner, discounts
+and game integration remain disabled. Print/Drive require explicit operator opt-in.
 """
 
 import os
@@ -38,8 +38,17 @@ def main():
         Config.set("graphics", "height", "1280")
         from photobooth.kiosk_v2.app import PortraitKioskV2App
         logging.getLogger('photobooth.kiosk_v2').info('Window startup')
-        print("MEONG v2 PORTRAIT PROTOTYPE - no payment, camera, printing or real game", flush=True)
-        PortraitKioskV2App().run()
+        print("MEONG v2 P3 PHOTO TEST - no payment, scanner, discounts or real game", flush=True)
+        app = PortraitKioskV2App()
+        try:
+            app.run()
+        finally:
+            if getattr(app, 'camera_device', None):
+                app.camera_device.close()
+                app.camera_device.wait_closed()
+            if getattr(app, '_photo_jobs', None):
+                app._photo_jobs.close()
+                app._photo_jobs.wait_closed()
 
 
 if __name__ == "__main__":

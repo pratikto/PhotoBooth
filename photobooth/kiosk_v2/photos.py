@@ -32,6 +32,7 @@ class PhotoTest:
         self.drive_client = drive_client
         self.pool = None
         self.drive_worker = None
+        self.retention_worker = None
         self.transaction = None
         self.sessions = []
         self.index = 0
@@ -44,6 +45,11 @@ class PhotoTest:
         """Called off the GUI; recover uncertain sends without replaying them."""
         from photobooth.retention import purge_local_photos
         purge_local_photos(self.store.photos_root)
+        if self.retention_worker is None and not self._closed.is_set():
+            from photobooth.retention import PhotoRetentionWorker
+            # Isolated local cleanup only. Never invoke remote cleanup on legacy folders.
+            self.retention_worker = PhotoRetentionWorker(self.store.photos_root, client=None)
+            self.retention_worker.start()
         for path in self.store.photos_root.glob('*/manifest.json'):
             with manifest_lock(path):
                 manifest = json.loads(path.read_text(encoding='utf-8'))
@@ -58,13 +64,23 @@ class PhotoTest:
                         self.recovered_prints += 1
                 if changed:
                     write_json_atomic(path, manifest)
-        if self.drive_client is not None and not self._closed.is_set():
+        if self.drive_client is not None and self.drive_worker is None and not self._closed.is_set():
             from photobooth.drive_pool import DriveSlotPool
             from .photo_drive import RetentionGuardedSync
             self.pool = DriveSlotPool(self.store.photos_root, self.root / 'drive-pool.json',
                                       self.store.booth_id, target_ready=2)
             self.drive_worker = RetentionGuardedSync(self.store.photos_root, self.drive_client, self.pool)
             self.drive_worker.start()
+
+    def reset(self):
+        if self.phase not in {'confirm', 'done'}:
+            raise ValueError('Finish the current photo test before starting another.')
+        self.transaction = None
+        self.sessions = []
+        self.index = 0
+        self._retake = False
+        self.phase = 'confirm'
+        return self.snapshot()
 
     @property
     def session(self):
@@ -240,6 +256,8 @@ class PhotoTest:
         self._closed.set()
         if self.drive_worker:
             self.drive_worker.stop()
+        if self.retention_worker:
+            self.retention_worker.stop()
 
 
 @dataclass

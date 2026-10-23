@@ -1,0 +1,56 @@
+{
+  "source_sha": "5c83a26f5fe24f58fe9acf72f88e653376aea98b",
+  "tracked_changes": true,
+  "synthetic_only": true,
+  "screenshots": [
+    {
+      "state": "01-advert",
+      "page": "advert",
+      "file": "01-advert-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "4ff461c684460868691d8266ca25f9939e861b01b91382a4c2dca05d2fc6e4a4"
+    },
+    {
+      "state": "02-invitation",
+      "page": "advert",
+      "file": "02-invitation-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "82ba0a4db25cc892e1ba2684f90071f22e342dbcb4464a5857417860ab34d754"
+    },
+    {
+      "state": "03-tutorial",
+      "page": "tutorial",
+      "file": "03-tutorial-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "d15d41bcdf82ba31c9a2b7343593116eda5e677afbe92f1ac5ef7d130541e7c2"
+    },
+    {
+      "state": "04-templates",
+      "page": "templates",
+      "file": "04-templates-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "bb4db0800fb3bf277fe3998231f88d16381e53319edd0fceef0bc3ca52ed1323"
+    },
+    {
+      "state": "05-copy-cart",
+      "page": "templates",
+      "file": "05-copy-cart-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "9e15249d10ee229ff04bb9d455cb7a8dac7b7da734932b6c195c1b8d231d9728"
+    },
+    {
+      "state": "06-game-placeholder",
+      "page": "game_preview",
+      "file": "06-game-placeholder-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "95cf44887b4e38c06142bd1ebde28cec11029d0f7eb21e15fe24b0e94c84203e"
+    }
+  ],
+  "motion_frames": []
+}

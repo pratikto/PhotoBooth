@@ -1,5 +1,8 @@
 # FEAT-022 - Meong Photobooth portrait kiosk GUI v2 (working specification)
 
+> **P3 source implementation (2026-10-23):** P3a camera/face invitation and P3b photo test pages/adapters are implemented on `feature/portrait-kiosk-v2-next`. Use gallery **UJI FOTO**, explicit nonfinancial consent, three originals, one optional retake, composition and optional operator test print/Drive. New v2-only shutter; v1 unchanged. Physical Windows acceptance is pending. Payment/scanner/discount/game remain inactive. This supersedes earlier pre-P3 implementation/approval inventories below. [Evidence, rollback and Windows form](qa/portrait-v2-p3/README.md).
+
+
 > **P3 authorized (2026-10-23):** Owner requests “oke tolong eksekusi p3”. P3a
 > camera/face adapters are implemented: one asynchronous camera owner, existing
 > offline face detector/hold policy and safe automatic invitation over ads.

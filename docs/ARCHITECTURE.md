@@ -1,5 +1,8 @@
 # Meong Photobooth — Current architecture and future boundaries
 
+> **Portrait v2 P3 addition (2026-10-23, feature branch only):** Dedicated `tools/run_portrait_v2.py` now hosts native camera/capture/review/result pages via `kiosk_v2/devices.py`, `photos.py`, `photo_views.py` and `photo_drive.py`. Existing camera/workflow/store/composer/printer/Drive implementations are reused without launching or editing the legacy GUI. Test storage and pool use `data/kiosk-v2-p3` / `PB001V2`; worker threads perform disk/device/network work, and current-page UI polls outcomes. Live-only UV mirroring preserves saved pixels. A persisted SENDING journal prevents uncertain print replay. [Adapter contracts and evidence](qa/portrait-v2-p3/README.md).
+
+
 > **CURRENT AS OF 2026-10-19 — POST-v1 SOURCE RELEASE:** Default branch is `master`; the immutable `v1.0.0` [pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0) points to commit `07ce51d2022ab5673a7a27e744e5e5757fbb3d08`. [Kiosk CI](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245): 235 tests (233 PASS, 2 SKIP), 87 synthetic renders/0 errors; [Dither CI](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273): 48 tests PASS. This is **source/CI evidence, not Windows production or hardware certification**. FEAT-001 DEMO pricing/copy count and FEAT-003 live-preview mirror have owner-tested PASS; BUG-011 monitored; BUG-001/007 speaker/audio retests pending; BUG-009 Drive 30-day cleanup remains OPEN. Real QRIS FEAT-020 and receipt scanner FEAT-002 are not implemented. Dated pre-release statements below are historical when superseded by this notice.
 
 Last reconciled: **2026-10-19** | Branch: `master` | Tagged source snapshot: `v1.0.0`
