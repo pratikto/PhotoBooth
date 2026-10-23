@@ -270,8 +270,9 @@ class ComparisonApp:
         if mode not in VISIBLE_MODES:
             raise ValueError("Auto Tune requires a visible algorithm.")
         if self.autotune_busy:
+            previous_mode = self.autotune_mode
             self.invalidate_auto_tune()
-            if mode == self.autotune_mode:
+            if mode == previous_mode:
                 self.message.set("Auto Tune cancelled. No settings changed.")
                 return
         if self.autotune_result is not None:
