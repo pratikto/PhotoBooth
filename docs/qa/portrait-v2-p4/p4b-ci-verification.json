@@ -1,0 +1,62 @@
+{
+  "run_id": 39973934595,
+  "url": "https://github.com/pratikto/PhotoBooth/actions/runs/39973934595",
+  "source_sha": "97b55964d37c06761fc5e532f01fc15cf319be33",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "Windows Python 3.12 native SDL audio (dummy output)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/pratikto/PhotoBooth/actions/runs/39973934595/job/120483511672"
+    },
+    {
+      "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/pratikto/PhotoBooth/actions/runs/39973934595/job/120483511679"
+    },
+    {
+      "name": "Navigation and audio lifecycle",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/pratikto/PhotoBooth/actions/runs/39973934595/job/120483511706"
+    }
+  ],
+  "artifact": {
+    "id": 12510362084,
+    "name": "meong-portrait-v2-screens",
+    "size_in_bytes": 7038896,
+    "digest": "sha256:6f2bb3213be3ae13e6474b3220d506f438fce5aee8daabd8288a16bf6ef6e3d8"
+  },
+  "download_digest_matches": true,
+  "reports": [
+    {
+      "file": "p4/p4-report-452x900.json",
+      "source_sha": "97b55964d37c06761fc5e532f01fc15cf319be33",
+      "tracked_changes": false,
+      "verified_images": 11
+    },
+    {
+      "file": "p4/p4-report-800x1280.json",
+      "source_sha": "97b55964d37c06761fc5e532f01fc15cf319be33",
+      "tracked_changes": false,
+      "verified_images": 11
+    },
+    {
+      "file": "p4b/checkout-report-452x900.json",
+      "source_sha": "97b55964d37c06761fc5e532f01fc15cf319be33",
+      "tracked_changes": false,
+      "verified_images": 10
+    },
+    {
+      "file": "p4b/checkout-report-800x1280.json",
+      "source_sha": "97b55964d37c06761fc5e532f01fc15cf319be33",
+      "tracked_changes": false,
+      "verified_images": 10
+    }
+  ],
+  "verified_images": 42,
+  "windows_device_acceptance": false,
+  "real_payment_provider": false
+}

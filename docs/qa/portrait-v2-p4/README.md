@@ -163,9 +163,9 @@ if Windows gameplay, touch or audio fails. No new dependency beyond P3 is needed
 - `2d0469a`: pre-P4 accepted P3 documentation/source baseline.
 - `d30d921`: engine + durable DEMO ledger only (56 targeted PASS).
 - `cd785e1`: native P4a game pages (377 full PASS; matching-source three-job CI).
-- This stage: opt-in P4b MOCK and Windows checklist; source SHA recorded by git
-  and subsequent CI evidence. Disable the MOCK environment flag as the immediate
-  reversible fallback; code rollback checkpoint is `cd785e1`.
+- `97b5596`: opt-in P4b MOCK and Windows checklist (406 full PASS; matching-source
+  three-job CI). Disable the MOCK environment flag as the immediate reversible
+  fallback; code rollback checkpoint is `cd785e1`.
 - Preserve `data/kiosk-v2-p4/demo-attempts.sqlite3` during rollback. **Do not delete
   consumed codes/orders to manufacture another attempt or replay admission.**
 
@@ -181,3 +181,27 @@ real provider would skip that gate; no real QRIS configuration is written.
 No remaining known failure in the tested local MOCK scenarios. External gates
 remain NOT RUN/BLOCKED, not PASS. Stop here before live/Sandbox/merchant work or
 P5 certification; owner/provider configuration is needed for that next scope.
+
+
+## Stage 4 — matching-source CI evidence, documentation only
+
+Runtime source **`97b55964d37c06761fc5e532f01fc15cf319be33`**:
+[GitHub Actions 39973934595](https://github.com/pratikto/PhotoBooth/actions/runs/39973934595)
+**all three jobs SUCCESS** (pure navigation/audio/SQLite guards, synthetic Linux
+Kivy GUI and Windows Python 3.12 native SDL dummy audio/SQLite guards).
+[Machine-readable verification](p4b-ci-verification.json).
+
+The original uploaded ZIP (artifact `12510362084`, 7,038,896 bytes) matches the
+GitHub SHA-256 digest
+`6f2bb3213be3ae13e6474b3220d506f438fce5aee8daabd8288a16bf6ef6e3d8`.
+Four fresh reports identify the same source with **tracked_changes=false**;
+all **42 P4 PNG hashes and dimensions** were checked and their four contact
+sheets visually reviewed:
+
+- Game: [800×1280](ci-game-800x1280.jpg), [452×900](ci-game-452x900.jpg).
+- MOCK checkout: [800×1280](ci-checkout-800x1280.jpg), [452×900](ci-checkout-452x900.jpg).
+
+This final evidence commit changes only documentation/archived images. The
+406-test final local regression, Windows-dummy CI and synthetic states do not
+mark Windows human gameplay, touchscreen/audio acceptance or provider Sandbox
+as PASS. Those gates above remain open. No further runtime patch is implied.
