@@ -1,5 +1,9 @@
 # Meong Photobooth — Thermal Dither Tuning Lab
 
+
+> **Operator reference (English):** [Dither Comparison GUI — Complete Parameter Guide](dither-gui-parameter-guide.md). It explains every visible slider, checkbox, algorithm mode, toolbar action, Auto Tune control and print/export action, including their effects on face, hair, highlights, shadows and native 1-bit thermal dots. Use it before manual A/B testing or real-paper printing.
+
+
 ### Final staged GitHub CI evidence — 2026-10-24
 
 **Stages 1–3 now pass** in
