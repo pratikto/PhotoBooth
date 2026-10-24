@@ -1,0 +1,33 @@
+{
+  "browser": "Chromium/Playwright",
+  "results": [
+    {
+      "width": 800,
+      "height": 1280,
+      "items": 14,
+      "blank_and_separate_storage": true,
+      "reload": true,
+      "cycle_gate": true,
+      "submit": true,
+      "unchecked_preserved": true,
+      "download": true,
+      "reset": true,
+      "no_horizontal_overflow": true,
+      "page_errors": []
+    },
+    {
+      "width": 452,
+      "height": 900,
+      "items": 14,
+      "blank_and_separate_storage": true,
+      "reload": true,
+      "cycle_gate": true,
+      "submit": true,
+      "unchecked_preserved": true,
+      "download": true,
+      "reset": true,
+      "no_horizontal_overflow": true,
+      "page_errors": []
+    }
+  ]
+}

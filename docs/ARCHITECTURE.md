@@ -1,5 +1,7 @@
 # Meong Photobooth — Current architecture and future boundaries
 
+> BUG-015 correction: game_layout now applies one uniform world translation; no position-dependent motion projection. MeongLogo uses one native decorative animation with explicit pause/retirement hooks; centered wordmark, gallery floating title and equal quote columns share existing widgets. [Contracts/evidence](qa/portrait-v2-motion-correction/README.md).
+
 > Responsive original-art adapter (2026-10-24): game_layout.py reflows cached original card/glyph pixels over one full-stage source sky. Original Stage dynamic drawing, engine, camera/film compositor and audio owner are reused unchanged; transformed hitboxes and film corners share the layout. [Contract and evidence](qa/portrait-v2-responsive-scene/README.md).
 
 > **Portrait v2 P4 addition (2026-10-23):** Read-only reference engine → native game pages; `demo_game.py` and `mock_checkout.py` share a separate P4 SQLite ledger for consumed DEMO attempts, simulated quotes/orders and one-use admission. `GameJobs` serializes off-GUI I/O. MOCK checkout is opt-in and only hands off to existing explicit nonfinancial P3 consent. Legacy services remain unchanged; real merchant/provider integration is still external. [Evidence/contracts](qa/portrait-v2-p4/README.md).

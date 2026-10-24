@@ -29,7 +29,7 @@ from kivy.core.window import Window
 from PIL import Image
 from photobooth.kiosk_v2.app import PortraitKioskV2App
 from photobooth.kiosk_v2.demo_game import DemoGameStore, GameJobs
-from photobooth.kiosk_v2.game_engine import Pipe
+from photobooth.kiosk_v2.game_engine import PIPE_SPEED, Pipe
 
 
 class Recorder(PortraitKioskV2App):
@@ -51,7 +51,8 @@ class Recorder(PortraitKioskV2App):
     def sample_game(self, paused=True):
         self._game_engine.y=320
         self._game_engine.score=3
-        self._game_engine.pipes=[Pipe(300,320),Pipe(470,260)]
+        # Normal source-engine wave spacing, not an arbitrary close pair.
+        self._game_engine.pipes=[Pipe(150,320),Pipe(150+PIPE_SPEED*1.6,260)]
         if self._game_paused != paused:self._toggle_game_pause()
         self._game_field._refresh()
 

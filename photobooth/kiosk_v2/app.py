@@ -258,6 +258,8 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
         for widget in self.stage.walk():
             if isinstance(widget, SwipeGallery):
                 widget.cancel_motion()
+            elif isinstance(widget, MeongLogo):
+                widget.set_active(False)
         if self._ad_player is not None:
             self._ad_player.pause()
         return True
@@ -271,6 +273,9 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
         # Background time is not customer browsing time.
         self._activity()
         self.audio_v2.resume()
+        for widget in self.stage.walk():
+            if isinstance(widget, MeongLogo):
+                widget.set_active(True)
         if self._ad_player is not None:
             self._ad_player.resume()
         if self.navigation.page in PHOTO_PAGES:
@@ -350,7 +355,7 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
 
     def _retire_gestures(self):
         for widget in self.stage.walk():
-            if isinstance(widget, SwipeGallery):
+            if isinstance(widget, (SwipeGallery, MeongLogo)):
                 widget.dispose()
 
     def _show(self):
@@ -644,26 +649,28 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
     def _build_templates(self, canvas):
         # Most vertical space belongs to the approved 1:3 strips. Utility text
         # and order controls stay compact; floating arrows do not consume a row.
-        shell = BoxLayout(orientation='vertical', padding=dp(12), spacing=dp(8))
+        shell = BoxLayout(orientation='vertical', padding=dp(12), spacing=dp(6))
         canvas.add_widget(shell)
-        header = BoxLayout(size_hint_y=None, height=dp(50), spacing=dp(8))
-        header.add_widget(MeongLogo(size_hint=(.56, 1)))
-        title = text_label('PILIH TEMPLATE STRIP', size=18, height=50,
-                           color=GOLD, bold=True)
-        title.size_hint_x = .44
-        header.add_widget(title)
-        shell.add_widget(header)
+        shell.add_widget(MeongLogo(size_hint_y=None, height=dp(78)))
         self._game_offer_note = None
 
         deck = PixelCard(orientation='vertical', padding=8, spacing=4)
         host = FloatLayout()
         gallery = StripCarousel(on_swipe=self._page_callback(self._swipe_template),
-                                pos_hint={'x': 0, 'y': 0})
+                                size_hint=(1, None), pos_hint={'x': 0, 'y': 0})
+        # Title floats inside the gallery, above the complete strip artwork.
+        # A small inner inset reserves its lane without covering a design.
+        host.bind(height=lambda widget, height:setattr(gallery, 'height', max(1, height-dp(26))))
         self._carousel = gallery
         self._previous_preview = gallery.previous_image
         self._preview = gallery.selected_image
         self._next_preview = gallery.next_image
         host.add_widget(gallery)
+        title = self._gallery_title = PixelCard(size_hint=(None, None), width=dp(236),
+            height=dp(26), padding=0, pos_hint={'center_x': .5, 'top': 1})
+        title.add_widget(text_label('PILIH TEMPLATE STRIP', size=14, height=26,
+                                    color=GOLD, bold=True))
+        host.add_widget(title)
         for label, step, hint in (('SEBELUMNYA', -1, {'x': .01, 'y': .015}),
                                    ('BERIKUTNYA', 1, {'right': .99, 'y': .015})):
             arrow = self._action(label, lambda step=step: self._shift_template(step),
@@ -679,9 +686,10 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
         shell.add_widget(deck)
 
         count_card = self._count_card = PixelCard(orientation='vertical', size_hint_y=None,
-                               height=dp(98), spacing=4, padding=8)
-        row = BoxLayout(size_hint_y=None, height=dp(48), spacing=dp(16))
-        quantity = BoxLayout(spacing=dp(4), size_hint_x=.48)
+                               height=dp(90), padding=8)
+        row = BoxLayout(spacing=dp(16), padding=[0, dp(4), 0, dp(4)])
+        quantity_column = BoxLayout(orientation='vertical', size_hint_x=.5)
+        quantity = BoxLayout(spacing=dp(4), size_hint_y=None, height=dp(48))
         quantity.add_widget(self._action('-', lambda: self._change_copies(-1),
                                          variant='tertiary', height=48))
         self._copy_value = text_label('0', size=24, height=48, color=GOLD, bold=True)
@@ -689,19 +697,18 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
         quantity.add_widget(self._copy_value)
         quantity.add_widget(self._action('+', lambda: self._change_copies(1),
                                          variant='secondary', height=48))
-        row.add_widget(quantity)
-        price = BoxLayout(orientation='vertical', size_hint_x=.52)
-        price.add_widget(text_label('TOTAL SIMULASI', size=10, height=16, color=WHITE))
+        quantity_column.add_widget(quantity)
+        self._order_summary = text_label('', size=12, height=18, color=WHITE)
+        quantity_column.add_widget(self._order_summary)
+        row.add_widget(quantity_column)
+        price = BoxLayout(orientation='vertical', size_hint_x=.5)
+        price.add_widget(text_label('TOTAL SIMULASI', size=10, height=14, color=WHITE))
         self._order_total_label = text_label('', size=24, height=32, color=GOLD, bold=True)
         price.add_widget(self._order_total_label)
+        self._game_offer_note = text_label('', size=12, height=20, color=GOLD)
+        price.add_widget(self._game_offer_note)
         row.add_widget(price)
         count_card.add_widget(row)
-        detail = BoxLayout(size_hint_y=None, height=dp(22), spacing=dp(8))
-        self._order_summary = text_label('', size=12, height=22, color=WHITE)
-        self._game_offer_note = text_label('', size=12, height=22, color=GOLD)
-        detail.add_widget(self._order_summary)
-        detail.add_widget(self._game_offer_note)
-        count_card.add_widget(detail)
         shell.add_widget(count_card)
 
         self._warning_label = text_label('', size=12, height=0, color=GOLD)

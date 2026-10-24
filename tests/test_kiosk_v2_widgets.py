@@ -512,6 +512,18 @@ class PortraitKivySmokeTests(unittest.TestCase):
                     self.assertIsInstance(brand.wordmark, PixelWordmark)
                     self.assertIsInstance(brand.caption, PixelWordmark)
                     self.assertEqual((brand.wordmark.text, brand.caption.text), ('MEONG', 'PHOTOBOOTH'))
+                    for mark in (brand.wordmark, brand.caption):
+                        ml, _ = mark.to_window(mark.x, mark.y)
+                        mr, _ = mark.to_window(mark.right, mark.y)
+                        self.assertAlmostEqual((ml+mr)/2, Window.width/2, delta=1)
+                    self.assertAlmostEqual(app._copy_value.center_x, app._order_summary.center_x, delta=.1)
+                    self.assertAlmostEqual(app._order_total_label.center_x, app._game_offer_note.center_x, delta=.1)
+                    self.assertAlmostEqual((app._copy_value.center_x+app._order_total_label.center_x)/2,
+                                           app._count_card.center_x, delta=.1)
+                    title = app._gallery_title
+                    _, title_bottom = title.to_window(title.x, title.y)
+                    self.assertGreaterEqual(title_bottom, y1, 'floating title covers strip')
+                    self.assertIs(title.parent, app._carousel.parent)
         finally:
             app.on_stop()
             Window.remove_widget(app.stage)
@@ -1154,6 +1166,77 @@ class PortraitKivySmokeTests(unittest.TestCase):
         with PillowImage.open(CAMERA_ART) as source:
             self.assertEqual(source.size, (224, 152))
             self.assertEqual(source.convert('RGBA').getchannel('A').getextrema(), (0, 255))
+
+    def test_flying_brand_runs_on_clock_and_pauses_retires_without_late_motion(self):
+        import time
+        from kivy.base import EventLoop
+        from kivy.core.window import Window
+        from photobooth.kiosk_v2.branding import MeongLogo
+        app=PortraitKioskV2App()
+        Window.add_widget(app.build())
+        def settle(seconds=.12):
+            end=time.monotonic()+seconds
+            while time.monotonic()<end:EventLoop.idle()
+        def brand():
+            return next(w for w in app.stage.walk() if isinstance(w,MeongLogo))
+        try:
+            settle();logo=brand();before=logo.art.x
+            settle();self.assertGreater(logo.art.x,before)
+            center=logo.wordmark.center_x
+            self.assertEqual(center,logo.center_x)
+            app.on_pause();paused=logo.flight
+            settle();self.assertEqual(logo.flight,paused)
+            self.assertIsNone(logo._flight_anim)
+            app.on_resume();settle();self.assertGreater(logo.flight,paused)
+            self.assertEqual(logo.wordmark.center_x,center)
+            app._choose_photo();settle()
+            self.assertTrue(logo._disposed)
+            frozen=logo.flight
+            self.assertIsNone(logo._flight_anim)
+            tutorial_logo=brand();before=tutorial_logo.art.x
+            settle();self.assertGreater(tutorial_logo.art.x,before)
+            for _ in range(5):
+                tutorial=brand();app._complete_tutorial();settle(.04)
+                self.assertTrue(tutorial._disposed)
+                if _==0:
+                    gallery_logo=brand();before=gallery_logo.art.x
+                    settle();self.assertGreater(gallery_logo.art.x,before)
+                gallery=brand();app._return_ad();settle(.04)
+                self.assertTrue(gallery._disposed)
+                app._choose_photo();settle(.04)
+            self.assertEqual(logo.flight,frozen)
+            active=brand();app.on_stop();settle(.04)
+            self.assertTrue(active._disposed)
+            self.assertIsNone(active._flight_anim)
+        finally:
+            app.on_stop();Window.remove_widget(app.stage)
+
+    def test_flying_brand_turns_at_both_edges_without_crossing_centered_text(self):
+        from kivy.base import EventLoop
+        from kivy.core.window import Window
+        from photobooth.kiosk_v2.branding import MeongLogo
+        app=PortraitKioskV2App();Window.add_widget(app.build())
+        try:
+            for _ in range(5):EventLoop.idle()
+            logo=next(w for w in app.stage.walk() if isinstance(w,MeongLogo))
+            logo.set_active(False)
+            texture=logo.art.texture
+            for phase in (0,.25,.5,.75,1):
+                logo.flight=phase
+                self.assertGreaterEqual(logo.art.x,logo.x)
+                self.assertLessEqual(logo.art.right,logo.right+.1)
+                self.assertGreaterEqual(logo.art.y,logo.wordmark.top-.1)
+                self.assertLessEqual(logo.art.top,logo.top+.1)
+                self.assertEqual(logo.wordmark.center_x,logo.center_x)
+            self.assertAlmostEqual(logo.art.right,logo.right)
+            logo._turn()
+            self.assertEqual(logo._direction.x,-1)
+            self.assertIs(logo.art.texture,texture)
+            logo.flight=0;logo._turn()
+            self.assertEqual(logo._direction.x,1)
+            self.assertAlmostEqual(logo.art.x,logo.x)
+        finally:
+            app.on_stop();Window.remove_widget(app.stage)
 
     def test_tutorial_keeps_four_numbered_steps_in_display_order(self):
         from kivy.uix.scrollview import ScrollView

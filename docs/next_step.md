@@ -1,5 +1,7 @@
 # Meong Photobooth — Dynamic Feature Backlog
 
+> Next owner retest: BUG-015 consistent wave motion plus centered/flying brand, floating gallery title and centered quote groups. [14-item Submit form](qa/portrait-v2-motion-correction/windows-checklist.html). P3 acceptance stands; P4 physical acceptance and external production/provider gates remain separate.
+
 > Current P4 follow-up (2026-10-24): retest unified game background, responsive controls/playfield and compact gallery price panel using the [14-item form with Submit](qa/portrait-v2-responsive-scene/windows-checklist.html). Preserve P3 acceptance and P4 one-use DEMO/MOCK guards. Production/provider/P5 gates remain separate.
 
 > **Current continuation — P4 (2026-10-23):** Owner approved P4 after the accepted P3. P4a game and P4b local MOCK are now in source with 406 full PASS and reviewed screenshots. Next: Windows P4 game/MOCK acceptance using the [28-item Submit form](qa/portrait-v2-p4/windows-checklist.html); then obtain the trusted merchant promo contract and provider Sandbox configuration/approval before real integration. Do not reopen P3 solely for missing report metadata, activate production or advance P5. [Current gates and checkpoints](qa/portrait-v2-p4/README.md).

@@ -3,10 +3,12 @@
 The camera PNG is decoded byte-for-byte from the read-only reference artwork.
 No game/scanner module is imported, and original booth/QR logos are unchanged.
 """
+from math import pi, sin
 from pathlib import Path
 
+from kivy.animation import Animation
 from kivy.clock import Clock
-from kivy.graphics import Color, Ellipse, Rectangle
+from kivy.graphics import Color, PopMatrix, PushMatrix, Rectangle, Scale, Translate
 from kivy.metrics import dp
 from kivy.properties import NumericProperty, StringProperty
 from kivy.uix.floatlayout import FloatLayout
@@ -59,14 +61,30 @@ class PixelWordmark(Widget):
 
 
 class MeongLogo(FloatLayout):
-    """One transparent camera-cat and legible wordmark, without a white tile."""
+    """Centered wordmark and the existing mascot flying above its lettering."""
+
+    flight = NumericProperty(0)
 
     def __init__(self, *, hero=False, **kwargs):
         self.hero = hero
+        self._flight_anim = None
+        self._flight_direction = 1
+        self._flight_active = True
+        self._disposed = False
+        self._flight_geometry = None
         super().__init__(**kwargs)
         self.art = Image(source=str(CAMERA_ART), fit_mode="contain", size_hint=(None, None))
         self.art.bind(texture=self._nearest)
         self._nearest(self.art, self.art.texture)
+        # Flip this image's draw transform on the return flight. The shared
+        # source texture stays immutable, including the game/QR/v1 artwork.
+        with self.art.canvas.before:
+            PushMatrix()
+            self._pivot = Translate()
+            self._direction = Scale(1, 1, 1)
+            self._unpivot = Translate()
+        with self.art.canvas.after:
+            PopMatrix()
         self.wordmark = PixelWordmark(text='MEONG', size_hint=(None, None))
         self.caption = PixelWordmark(text='PHOTOBOOTH', ink=CYAN, shadow='#142951',
                                      size_hint=(None, None))
@@ -75,6 +93,7 @@ class MeongLogo(FloatLayout):
         # Arrange after parent size/position aliases have settled for this frame.
         self._trigger_arrange = Clock.create_trigger(self._arrange, -1)
         self.bind(pos=self._trigger_arrange, size=self._trigger_arrange)
+        self.bind(flight=self._fly, parent=self._trigger_arrange)
         self._trigger_arrange()
 
     @staticmethod
@@ -83,39 +102,60 @@ class MeongLogo(FloatLayout):
             texture.mag_filter = texture.min_filter = "nearest"
 
     def _arrange(self, *_args):
+        if self._disposed:
+            return
+        geometry = (*self.pos, *self.size)
+        if ((geometry != self._flight_geometry or self.parent is None) and
+                self._flight_anim is not None):
+            self._flight_anim.cancel(self)
+            self._flight_anim = None
+        self._flight_geometry = geometry
         width, height = max(1, self.width), max(1, self.height)
-        center_x, center_y = self.x + width / 2, self.y + height / 2
-        if self.hero:
-            art_h = min(height * .64, width * .60)
-            art_w = art_h * 224 / 152
-            self.art.size = (art_w, art_h)
-            self.art.pos = (center_x - art_w / 2, self.y + height * .33)
-            self.wordmark.size = (width, height * .20)
-            self.wordmark.pos = (self.x, self.y + height * .12)
-            self.wordmark.font_size = min(dp(48), width / 4.5, height * .15)
-            self.caption.size = (width, height * .11)
-            self.caption.pos = (self.x, self.y + height * .02)
-            self.caption.font_size = min(dp(16), width / 15, height * .10)
-        else:
-            art_h = min(height * .95, width * .31)
-            art_w = art_h * 224 / 152
-            word_w = max(1, min(dp(230), width - art_w - dp(12)))
-            left = center_x - (art_w + dp(12) + word_w) / 2
-            self.art.size = (art_w, art_h)
-            self.art.pos = (left, center_y - art_h / 2)
-            self.wordmark.size = (word_w, height * .58)
-            self.wordmark.pos = (left + art_w + dp(12), self.y + height * .32)
-            self.wordmark.font_size = min(dp(42), word_w / 3.8, height * .42)
-            self.caption.size = (word_w, height * .27)
-            self.caption.pos = (self.wordmark.x, self.y + height * .10)
-            self.caption.font_size = min(dp(16), word_w / 10, height * .22)
-        # The aura and glints are native decoration behind the immutable art.
-        self.canvas.before.clear()
-        with self.canvas.before:
-            Color(*rgba(PURPLE, .12))
-            Ellipse(pos=(self.art.x, self.art.y + self.art.height * .12),
-                    size=(self.art.width, self.art.height * .76))
-            Color(*rgba(CYAN, .75))
-            for x, y in ((self.art.x + self.art.width * .12, self.art.top - dp(5)),
-                         (self.art.right - dp(6), self.art.y + self.art.height * .22)):
-                Rectangle(pos=(x, y), size=(dp(3), dp(3)))
+        self.art.size = (height * .36 * 224 / 152, height * .36)
+        self.wordmark.size = (width, height * .43)
+        self.wordmark.pos = (self.x, self.y + height * .18)
+        self.wordmark.font_size = min(dp(42), width / 5, height * .42)
+        self.caption.size = (width, height * .20)
+        self.caption.pos = (self.x, self.y)
+        self.caption.font_size = min(dp(16), width / 14, height * .20)
+        self._fly()
+        self._start_flight()
+
+    def _fly(self, *_args):
+        if self._disposed:
+            return
+        self.art.pos = (self.x + self.flight * max(0, self.width - self.art.width),
+                        self.y + self.height * .63 + sin(self.flight * pi * 6) * self.height * .01)
+        self._pivot.x, self._pivot.y = self.art.center
+        self._unpivot.x, self._unpivot.y = -self.art.center_x, -self.art.center_y
+        self._direction.x = self._flight_direction
+
+    def _start_flight(self):
+        if (self._disposed or not self._flight_active or self.parent is None or
+                self._flight_anim is not None):
+            return
+        target = 1 if self._flight_direction > 0 else 0
+        distance = abs(target-self.flight) * max(1, self.width-self.art.width)
+        self._flight_anim = Animation(flight=target, duration=max(.1, distance/dp(65)),
+                                      t='linear', step=1/30)
+        self._flight_anim.bind(on_complete=self._turn)
+        self._flight_anim.start(self)
+
+    def _turn(self, *_args):
+        self._flight_anim = None
+        self._flight_direction *= -1
+        self._fly()
+        self._start_flight()
+
+    def set_active(self, active):
+        self._flight_active = active
+        if not active and self._flight_anim is not None:
+            self._flight_anim.cancel(self)
+            self._flight_anim = None
+        elif active:
+            self._start_flight()
+
+    def dispose(self):
+        self.set_active(False)
+        self._disposed = True
+        self._trigger_arrange.cancel()

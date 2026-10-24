@@ -1,5 +1,7 @@
 ## Version 1.0.0 — release-source verification (2026-10-19)
 
+> BUG-015 and centered/flying header follow-up: final 533 local PASS, zero failures/errors/skips; 77 native captures checked, actual Clock mascot motion observed, displayed asteroid spacing/velocity checked across four sizes. [Full evidence and fresh Submit form](qa/portrait-v2-motion-correction/README.md). Physical Windows acceptance remains pending.
+
 > BUG-015 focused cloud QA: 25 native checks PASS, zero skips, including real rendered asteroid travel and 1.6-second wave spacing at four sizes plus differential original-engine stepping. Windows retest remains pending. [Evidence](qa/portrait-v2-motion-correction/README.md).
 
 > 2026-10-24 responsive stage: 529 full local PASS, 0 errors/failures/skips; 80 Kivy PNGs hash/dimension checked, representative four-size scene review, 14-item Submit form browser checks PASS. Matching-source CI 40056129151 at 5c81ea1 has all three jobs SUCCESS; 50 CI P4/MOCK PNG hashes/dimensions verified. This replaces the rejected filler QA; Windows hardware acceptance remains pending. [Evidence/form](qa/portrait-v2-responsive-scene/README.md).
