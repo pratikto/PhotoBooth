@@ -1,5 +1,11 @@
 ## Version 1.0.0 — release-source verification (2026-10-19)
 
+> Final local P4b/P5 regression: **688 PASS / 0 failures / 0 errors / 0 skips**, 211.646s; final native hook regression fixed, focused 10 PASS and browser checklist verified. Merchant/device/retention certification remains pending. [Results and commands](qa/portrait-v2-p5/README.md).
+
+
+> Current P4b/P5: unchanged payment protocol 124 PASS; native HTTP→GUI→P3 focused set 195 PASS. Owner last typography/audio form 8/8 confirmed clear (unknown HEAD); BUG-017 monitoring. [Source evidence](qa/portrait-v2-sandbox/README.md). [New Windows 26-item form](qa/portrait-v2-p5/windows-checklist.html) includes metadata import/Submit and separate new-integration 20-cycle gate. Merchant and physical tests NOT RUN in cloud.
+
+
 > Current typography checks: nine focused native PASS including intrinsic font texture size, one-line arrows, punctuation, icon-free canvas, long/disabled labels, source-frame RGB/alpha, click/audio/stale guards. 54 screenshot hashes/dimensions verified; fresh 8-item Submit form passes browser checks. Final full gate 546 PASS, zero failures/errors/skips; matching-source d52a7d8 CI 40104190105 three-job SUCCESS, 99 PNGs verified; no Windows aesthetic acceptance inferred. [Proof](qa/portrait-v2-readable-type/README.md).
 
 > Native-control final gate: 546 full PASS/0 failures/errors/skips, 15 focused PASS including native source-button RGB/alpha equality, caption fit, disabled/cache/touch/audio and header lifecycle; 54 PNGs verified, 8-item Submit form browser-checked. Matching-source CI 40102001442 at 25fd55c has three-job SUCCESS, 99 PNGs verified. New visual Windows acceptance remains open; prior 14/14/twenty-cycle owner report preserved. BUG-017 unchanged/unfixed. [Proof/form](qa/portrait-v2-native-controls/README.md).

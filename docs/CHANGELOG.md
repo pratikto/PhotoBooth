@@ -1,5 +1,8 @@
 # P4b native Sandbox integration — 2026-10-24
 
+> P5: add read-only readiness inventory/CLI using existing diagnostics, primary Windows display metadata, secret-free JSON import into reused Submit form, and focused/full unittest runner selection with native CI report artifacts. No provider/device acceptance fabricated. [Instructions](qa/portrait-v2-p5/README.md).
+
+
 Add opt-in native Sandbox adapter, original HTTP/client/journal admission to existing P3 photo worker, isolated launcher/profile, recovery holds and offline end-to-end tests/screenshots. Default payments unchanged; local game promo never authorizes QRIS discount. [Details](qa/portrait-v2-sandbox/README.md).
 
 # P4b Sandbox reuse — 2026-10-24

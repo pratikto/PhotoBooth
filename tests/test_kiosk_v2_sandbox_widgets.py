@@ -110,3 +110,18 @@ class SandboxWidgetTests(unittest.TestCase):
             app._sandbox_retry();self.settle(app)
             self.assertEqual(app._sandbox_view['phase'],'WAITING')
             self.assertEqual(f.provider.charges,1)
+
+    def test_missing_started_ack_blocks_countdown_until_same_transaction_ack(self):
+        with self.booth() as (app,f):
+            self.reserve(app,f);app._sandbox_photo_consent();self.settle(app)
+            with patch.object(f.backend,'service_transition',side_effect=TimeoutError('lost ACK')):
+                app._admit_photo_test();self.settle(app)
+            self.assertEqual(app.navigation.page,SANDBOX_CHECKOUT)
+            self.assertFalse(app._sandbox_can_capture())
+            app._start_countdown();self.assertIsNone(app._countdown_event)
+            tx=app._photo_view['transaction_id']
+            app._sandbox_retry();self.settle(app)
+            self.assertEqual(app.navigation.page,CAPTURE)
+            self.assertTrue(app._sandbox_can_capture())
+            self.assertEqual(f.flow.snapshot()['transaction_id'],tx)
+            self.assertEqual(f.provider.charges,1)

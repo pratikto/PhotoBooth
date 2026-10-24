@@ -127,8 +127,14 @@ class PhotoViews:
             self._countdown_event.cancel()
             self._countdown_event = None
 
+    def _photo_capture_allowed(self):
+        # PhotoViews also supports the standalone, nonfinancial P3 preview.
+        # The complete Sandbox app always supplies its durable admission guard.
+        guard = getattr(self, '_sandbox_can_capture', None)
+        return guard() if guard is not None else True
+
     def _start_countdown(self, source='button'):
-        if not self._sandbox_can_capture() or self._photo_jobs.busy or self._countdown_event is not None:
+        if not self._photo_capture_allowed() or self._photo_jobs.busy or self._countdown_event is not None:
             return
         if self.camera_device.read() is None:
             self._photo_error = 'Kamera belum siap. Hitung mundur belum dimulai.'
@@ -194,7 +200,7 @@ class PhotoViews:
         if frame is not None:
             self._count_label.font_size = dp(100)
         if self._countdown_event is None:
-            self._capture_button.disabled = not self._sandbox_can_capture() or frame is None or self._photo_jobs.busy
+            self._capture_button.disabled = not self._photo_capture_allowed() or frame is None or self._photo_jobs.busy
 
     def _build_photo_page(self, canvas):
         self._live_image = None

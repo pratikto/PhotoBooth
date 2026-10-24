@@ -1,0 +1,1 @@
+PASS: 26 fresh unchecked items; JSON metadata import preserves unchecked tests; 20-cycle guard; Submit 2/26 with merchant item empty; persistence; 360/452/800px no horizontal overflow; zero browser errors.

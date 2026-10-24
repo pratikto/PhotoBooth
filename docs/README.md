@@ -1,5 +1,8 @@
 # Meong Photobooth — Documentation Index
 
+> Current native v2: [P4b Sandbox reuse/integration](qa/portrait-v2-sandbox/README.md) and [P5 readiness, launch commands and final acceptance](qa/portrait-v2-p5/README.md). [Interactive 26-item Windows form with Submit](qa/portrait-v2-p5/windows-checklist.html).
+
+
 The repository-root [README](../README.md) explains setup. **Current source of truth:** `master` (Kivy application); `v1.0.0` is the immutable, published source baseline. The previous `feature/kivy-gui` is preserved as development history, not the primary branch. Dated records remain useful evidence but do not override current status.
 
 > **CURRENT RELEASE BASELINE (2026-10-19):** Default branch `master` contains Meong Photobooth Kivy GUI. Immutable source snapshot `v1.0.0` / `07ce51d2022ab5673a7a27e744e5e5757fbb3d08` is published as a [GitHub pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0). Release-SHA CI: [Kiosk GUI 39185986245](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245) (**233 pass, 2 skipped, 87 synthetic renders, 0 errors**) and [Dither 39185986273](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273) (**48 tests pass**). Linux mock/screenshot QA is **not** certification on Windows hardware or customer deployment. Outstanding: BUG-001/007 audio speaker retest, BUG-009 30-day Drive cloud retention **OPEN**; QRIS is DEMO/non-payable (FEAT-020 not implemented), receipt scanner FEAT-002 not implemented. The earlier `feature/kivy-gui` branch and dated narratives below are **historical** where they conflict with this baseline.

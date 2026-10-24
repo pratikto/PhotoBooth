@@ -1,5 +1,8 @@
 # Meong Photobooth — Product and technical decision record
 
+> 2026-10-24 owner explicitly selects P4b QRIS Sandbox, then requests P5 with manual testing at end; staged tested pushes remain authorized. Reuse latest existing service; no production/payment-discount activation, deployment or merge. Final visual/audio 8/8 accepted (“udah clear semua”); preserve unknown metadata and earlier 20 cycles. [Record](qa/portrait-v2-sandbox/README.md).
+
+
 > 2026-10-24 latest owner preference supersedes the prior all-pixel caption request: typography must look clean/aesthetic and main buttons need no icons. Reuse the earlier native font, keep the retro frame/palette, larger Meong and existing interaction/audio guards. [Correction](qa/portrait-v2-readable-type/README.md).
 
 > 2026-10-24 owner follow-up: enlarge header Meong and make main-app button style match the Meong Fly screenshot. Reuse the original painter/material/glyphs/icons through the existing native control. Retain callback/audio/disabled/financial guards. Existing 14/14/twenty-cycle owner results have unknown HEAD; the new visual source requires its own preference/touch check. Video→video lag is a separate open issue. [Scope/proof](qa/portrait-v2-native-controls/README.md).

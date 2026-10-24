@@ -1,5 +1,8 @@
 # Meong Photobooth — Dynamic Feature Backlog
 
+> Current approved execution: finish P4b Sandbox integration and P5 source/readiness checks on feature/portrait-kiosk-v2-next; owner manual tests afterward. Merchant/provider acceptance, trusted backend promo, physical devices/privacy/retention and release signoff remain external gates. [Current scope](qa/portrait-v2-p5/README.md).
+
+
 > Current owner-selected work: readable native/button typography is pushed at d52a7d8, 546 local PASS and matching three-job CI SUCCESS; original frames and larger Meong retained. Next owner visual retest uses the [fresh 8-item form](qa/portrait-v2-readable-type/windows-checklist.html). BUG-017 remains the separate open consecutive-video latency issue; no P5/production expansion.
 
 > Next visual action: retest larger Meong and original-style main-app buttons using the [8-item Submit form](qa/portrait-v2-native-controls/windows-checklist.html); no new twenty-cycle gate is imposed. Source 25fd55c has 546 full PASS, zero skips, and matching three-job CI SUCCESS. BUG-017 video→video latency remains the separate open performance investigation; no P5/production expansion.

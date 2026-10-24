@@ -30,7 +30,7 @@ jobs:
       - name: Syntax
         run: python -m compileall -q photobooth/kiosk_v2 tools/run_portrait_v2.py tools/render_portrait_v2.py tools/render_portrait_p3.py tools/render_portrait_p4.py tools/render_portrait_checkout.py tests/test_kiosk_v2_*.py
       - name: Kivy-independent navigation and fake audio tests
-        run: python -m unittest tests.test_kiosk_v2_flow tests.test_kiosk_v2_audio tests.test_kiosk_v2_design_tokens tests.test_kiosk_v2_previews tests.test_kiosk_v2_live_preview tests.test_kiosk_v2_sensors tests.test_kiosk_v2_diagnostics tests.test_kiosk_v2_devices tests.test_kiosk_v2_game_engine tests.test_kiosk_v2_demo_game tests.test_kiosk_v2_mock_checkout tests.test_kiosk_v2_game_offer tests.test_kiosk_v2_meong_reference.ReferenceSourceTests -v
+        run: python -m unittest tests.test_kiosk_v2_flow tests.test_kiosk_v2_audio tests.test_kiosk_v2_design_tokens tests.test_kiosk_v2_previews tests.test_kiosk_v2_live_preview tests.test_kiosk_v2_sensors tests.test_kiosk_v2_diagnostics tests.test_kiosk_v2_readiness tests.test_kiosk_v2_devices tests.test_kiosk_v2_game_engine tests.test_kiosk_v2_demo_game tests.test_kiosk_v2_mock_checkout tests.test_kiosk_v2_game_offer tests.test_kiosk_v2_meong_reference.ReferenceSourceTests -v
 
   desktop:
     name: Synthetic Kivy screen/nav smoke (no hardware)
@@ -64,9 +64,9 @@ jobs:
         run: python -m unittest tests.test_kiosk_v2_photos -v
       - name: Reused QRIS protocol and native v2 Sandbox handoff (offline only)
         run: |
-          PYTHONPATH=tests xvfb-run -a python -m unittest test_checkout_backend test_checkout_durability test_booth_auth test_qris_api test_qris_http_v2 test_qris_session test_qris_kiosk_client test_qris_images test_midtrans_sandbox test_midtrans_verify test_payment_quote test_qris_sandbox_launcher test_kiosk_v2_sandbox test_kiosk_v2_sandbox_widgets -v
+          MEONG_CI_TEST_REPORT=/tmp/meong-portrait-v2/reports/sandbox-tests.txt xvfb-run -a python tools/run_kiosk_unittests.py test_checkout_backend test_checkout_durability test_booth_auth test_qris_api test_qris_http_v2 test_qris_session test_qris_kiosk_client test_qris_images test_midtrans_sandbox test_midtrans_verify test_payment_quote test_qris_sandbox_launcher test_kiosk_v2_sandbox test_kiosk_v2_sandbox_widgets
       - name: Exercise opt-in Kivy widgets at a virtual display
-        run: PHOTOBOOTH_TEST_AUDIO=1 xvfb-run -a python -m unittest tests.test_kiosk_v2_widgets tests.test_kiosk_v2_game_widgets tests.test_kiosk_v2_checkout_widgets tests.test_kiosk_v2_meong_reference tests.test_kiosk_v2_game_followup tests.test_kiosk_v2_brand_flight tests.test_kiosk_v2_button_art -v
+        run: MEONG_CI_TEST_REPORT=/tmp/meong-portrait-v2/reports/native-tests.txt PHOTOBOOTH_TEST_AUDIO=1 xvfb-run -a python tools/run_kiosk_unittests.py tests.test_kiosk_v2_widgets tests.test_kiosk_v2_game_widgets tests.test_kiosk_v2_checkout_widgets tests.test_kiosk_v2_meong_reference tests.test_kiosk_v2_game_followup tests.test_kiosk_v2_brand_flight tests.test_kiosk_v2_button_art
       - name: Verify unchanged latest Meong Fly modules and original regression suite
         run: xvfb-run -a python -m unittest discover -s tests -p 'test_meong_fly*.py' -v
       - name: Reuse muted native channels across twenty audio cycles (dummy PCM output)
@@ -121,7 +121,7 @@ jobs:
       - name: Install Windows native providers
         run: python -m pip install "Kivy>=2.3.1,<3" "ffpyplayer>=4.5,<5"
       - name: Check Windows DLL loading, safe WAV fallback and twenty PCM cycles
-        run: python -m unittest tests.test_kiosk_v2_audio tests.test_kiosk_v2_native_audio tests.test_kiosk_v2_diagnostics tests.test_kiosk_v2_devices tests.test_kiosk_v2_live_preview tests.test_kiosk_v2_sensors tests.test_kiosk_v2_game_engine tests.test_kiosk_v2_demo_game tests.test_kiosk_v2_mock_checkout -v
+        run: python -m unittest tests.test_kiosk_v2_audio tests.test_kiosk_v2_native_audio tests.test_kiosk_v2_diagnostics tests.test_kiosk_v2_readiness tests.test_kiosk_v2_devices tests.test_kiosk_v2_live_preview tests.test_kiosk_v2_sensors tests.test_kiosk_v2_game_engine tests.test_kiosk_v2_demo_game tests.test_kiosk_v2_mock_checkout -v
 
 # These are synthetic checks. Real Windows music audibility, video decoder,
 # face camera, thermal output, actual QRIS and end-to-end UI are NOT certified.

@@ -1,5 +1,11 @@
 # Meong Photobooth — Development handover
 
+> Final local P4b/P5 regression: **688 PASS / 0 failures / 0 errors / 0 skips**, 211.646s; final native hook regression fixed, focused 10 PASS and browser checklist verified. Merchant/device/retention certification remains pending. [Results and commands](qa/portrait-v2-p5/README.md).
+
+
+> Current P4b: 37da798 unchanged service (124 original PASS), ce603c2 native Sandbox admission (195 focused PASS), both pushed/remote-verified. Owner authorizes subsequent P5 prep and manual tests at end. Default payments remain off; no trusted merchant game promo or production/release claim. [P5 commands/form/remaining gates](qa/portrait-v2-p5/README.md). Final regression and matching-source CI must be recorded before completion.
+
+
 > Current authorized continuation: owner accepts final 8/8 visual/audio report (“udah clear semua”), including BUG-017 monitoring; then explicitly approves P4b QRIS Sandbox and P5 readiness, manual Windows tests at the end. Reuse QRIS branch 3cc8a8e; no production/deployment/merge. [Scope, source provenance, acceptance and rollback](qa/portrait-v2-sandbox/README.md). Older “not authorized” notes below are historical.
 
 > Current owner typography correction: pixel button text rejected; use the earlier native Roboto renderer at 18-point requested size and remove main-button icons. Original frame material and larger Meong retained. Nine focused native checks PASS; 54 native PNGs verified and required sizes reviewed; 546 final full PASS/zero skips; source d52a7d8 pushed/remote-verified, CI 40104190105 all three jobs SUCCESS, 99 clean-source PNGs verified. BUG-017 remains OPEN. [Scope/proof/form](qa/portrait-v2-readable-type/README.md).

@@ -12,6 +12,7 @@ accessed beyond the existing synthetic unittest suite.
 
 from __future__ import annotations
 
+import argparse
 import io
 import os
 from pathlib import Path
@@ -19,7 +20,7 @@ import sys
 import unittest
 
 
-def main() -> int:
+def main(argv=None) -> int:
     """Run existing tests unchanged and preserve their exit status."""
     # Invoking a file from tools/ makes sys.path[0] point to tools/, not the
     # repository root. Restore the normal 'python -m unittest' import context
@@ -30,9 +31,12 @@ def main() -> int:
     # The tests/ directory intentionally has no __init__.py. Allow default
     # unittest top-level discovery to import test_*.py directly, just as the
     # original 'python -m unittest discover -s tests -v' command did.
-    suite = unittest.defaultTestLoader.discover(
-        str(repository_root / "tests"), pattern="test_*.py",
-    )
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('tests', nargs='*', help='Optional focused unittest module/test names')
+    args = parser.parse_args(argv)
+    sys.path.insert(0, str(repository_root / 'tests'))
+    suite = (unittest.defaultTestLoader.loadTestsFromNames(args.tests) if args.tests else
+             unittest.defaultTestLoader.discover(str(repository_root / "tests"), pattern="test_*.py"))
     output = io.StringIO()
     result = unittest.TextTestRunner(
         stream=output, verbosity=2, buffer=False

@@ -1,0 +1,17 @@
+test_reused_camera_texture_redraws_without_touch_countdown_or_text_changes (tests.test_kiosk_v2_widgets.PortraitKivySmokeTests.test_reused_camera_texture_redraws_without_touch_countdown_or_text_changes)
+Pixel uploads must reach the window even when all labels stay still. ... ok
+test_lost_creation_reply_cannot_leave_or_create_second_charge (tests.test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_lost_creation_reply_cannot_leave_or_create_second_charge) ... ok
+test_missing_started_ack_blocks_countdown_until_same_transaction_ack (tests.test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_missing_started_ack_blocks_countdown_until_same_transaction_ack) ... ok
+test_real_photo_handoff_completion_and_duplicate_taps (tests.test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_real_photo_handoff_completion_and_duplicate_taps) ... ok
+test_resize_persists_reserved_order_and_abort_requires_recovery (tests.test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_resize_persists_reserved_order_and_abort_requires_recovery) ... ok
+test_unpaid_guard_and_explicit_quote_then_authoritative_cancel (tests.test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_unpaid_guard_and_explicit_quote_then_authoritative_cancel) ... ok
+test_invalid_camera_index_is_not_silently_changed (tests.test_kiosk_v2_readiness.ReadinessTests.test_invalid_camera_index_is_not_silently_changed) ... ok
+test_no_env_values_are_disclosed_and_conflicting_modes_fail (tests.test_kiosk_v2_readiness.ReadinessTests.test_no_env_values_are_disclosed_and_conflicting_modes_fail) ... ok
+test_non_windows_does_not_invent_resolution (tests.test_kiosk_v2_readiness.ReadinessTests.test_non_windows_does_not_invent_resolution) ... ok
+test_unknown_device_does_not_become_pass (tests.test_kiosk_v2_readiness.ReadinessTests.test_unknown_device_does_not_become_pass) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 5.446s
+
+OK
+KIOSK_UNITTEST_SUMMARY: run=10 failures=0 errors=0 skipped=0 success=True
