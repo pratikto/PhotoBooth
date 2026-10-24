@@ -31,12 +31,13 @@ class Layout:
     def world_x(self, x):
         """Translate the complete original world without warping its motion.
 
-        Align the original spawn edge with the stage's right edge. Extra sky
-        stays continuous; HUD and menus can reflow independently. A shared
-        translation preserves speed, wave spacing, sprites and reaction time
-        everywhere, including the approach and exit, at every window size.
+        Center the complete playable world inside the continuous sky. Right
+        alignment pushed Meong toward the far edge on wide windows (BUG-016).
+        HUD and menus can still reflow independently. A shared translation
+        preserves speed, wave spacing, sprites and reaction time everywhere,
+        including the approach and exit, at every window size (BUG-015).
         """
-        return x + self.extra[0]
+        return x + self.extra[0] / 2
 
     def rect(self, box):
         x, y, w, h = box

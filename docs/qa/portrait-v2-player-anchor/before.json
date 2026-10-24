@@ -1,0 +1,81 @@
+{
+  "synthetic_native_only": true,
+  "rows": [
+    {
+      "window": [
+        800,
+        1280
+      ],
+      "stage": [
+        800.0,
+        1232.0
+      ],
+      "meong_center_fraction": 0.43052083492279053,
+      "left_margin_px": 184.0,
+      "right_margin_px": 0.0,
+      "world_velocity_px_s": 211.75,
+      "wave_spacing_px": 338.8
+    },
+    {
+      "window": [
+        452,
+        900
+      ],
+      "stage": [
+        452.0,
+        852.0
+      ],
+      "meong_center_fraction": 0.3029590623568645,
+      "left_margin_px": 25.99999999999996,
+      "right_margin_px": 5.684341886080802e-14,
+      "world_velocity_px_s": 146.4375,
+      "wave_spacing_px": 234.3
+    },
+    {
+      "window": [
+        800,
+        900
+      ],
+      "stage": [
+        800.0,
+        852.0
+      ],
+      "meong_center_fraction": 0.6061718893051148,
+      "left_margin_px": 373.99999999999994,
+      "right_margin_px": 0.0,
+      "world_velocity_px_s": 146.4375,
+      "wave_spacing_px": 234.3
+    },
+    {
+      "window": [
+        1920,
+        1080
+      ],
+      "stage": [
+        1920.0,
+        1032.0
+      ],
+      "meong_center_fraction": 0.8012369533379873,
+      "left_margin_px": 1403.9999999999998,
+      "right_margin_px": 2.2737367544323206e-13,
+      "world_velocity_px_s": 177.375,
+      "wave_spacing_px": 283.8
+    },
+    {
+      "window": [
+        360,
+        640
+      ],
+      "stage": [
+        506.25,
+        852.0
+      ],
+      "meong_center_fraction": 0.3776543134524498,
+      "left_margin_px": 80.24999999999999,
+      "right_margin_px": 0.0,
+      "world_velocity_px_s": 146.4375,
+      "wave_spacing_px": 234.3
+    }
+  ],
+  "coordinate_units": "Stage logical coordinates; PortraitViewport also scales short windows."
+}

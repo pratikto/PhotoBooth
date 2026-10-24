@@ -175,15 +175,51 @@ class GameFollowupTests(unittest.TestCase):
     def test_projection_keeps_collision_geometry_and_original_sprite_aspect(self):
         from photobooth.kiosk_v2.game_layout import Layout
         from photobooth.meong_fly_game_art import camera_screen_rect,asteroid_screen_rects
-        for size in ((800,900),(800,1280),(452,900),(360,640)):
+        for size in ((800,900),(800,1280),(452,900),(360,640),(1920,1080)):
             layout=Layout(*size,'game')
-            self.assertAlmostEqual(layout.world_x(360),size[0]/layout.scale)
-            offset=layout.extra[0]
+            self.assertAlmostEqual(layout.world_x(180)*layout.scale,size[0]/2)
+            offset=layout.extra[0]/2
             for x in (-48.75,0,15.75,16,24,40,70,110,160,200,210,300,360,367.5):
                 self.assertAlmostEqual(layout.world_x(x)-x,offset)
             for box in [camera_screen_rect(320)]+[r for _,r in asteroid_screen_rects(110,320)]:
                 projected=layout.rect(box)
                 self.assertEqual(projected[2:],box[2:])
+
+    def test_live_meong_stays_left_of_center_and_world_margins_balance_after_resize(self):
+        from kivy.graphics import Rectangle
+        original=Window.size
+        helper=support.GameWidgetTests()
+        try:
+            with helper.booth() as (app,_):
+                helper.claim(app)
+                field=app._game_field
+                field._update_event.cancel();field._update_event=None
+                app._toggle_game_pause()
+                engine=app._game_engine
+                before=(engine.y,engine.elapsed,engine.score,engine.spawn_elapsed)
+                for size in ((800,1280),(452,900),(800,900),(1920,1080),(360,640),(800,1280)):
+                    Window.size=size
+                    for _ in range(4):EventLoop.idle()
+                    field._refresh()
+                    camera_name,_=field._camera_context('game')
+                    layers=field._camera_layers[camera_name]
+                    camera=[item for item in field.canvas.before.children
+                            if isinstance(item,Rectangle) and item.texture in layers]
+                    self.assertEqual(len(camera),2)  # Original rear/front compositor.
+                    body=camera[0]
+                    center=(body.pos[0]+body.size[0]/2-field.x)/field.width
+                    self.assertGreater(center,.18)
+                    self.assertLess(center,.46,msg=f'Meong is too far right at {size}: {center:.3f}')
+                    # Measure the whole playable world, not just the mascot:
+                    # moving only the camera would desynchronize collisions.
+                    layout=field._layout
+                    left=layout.world_x(0)*layout.scale
+                    right=field.width-layout.world_x(360)*layout.scale
+                    self.assertAlmostEqual(left,right,delta=.001)
+                    self.assertEqual(body.size,camera[1].size)
+                    self.assertEqual((engine.y,engine.elapsed,engine.score,engine.spawn_elapsed),before)
+                    self.assertIs(app._game_engine,engine)
+        finally:Window.size=original
 
     def test_rendered_asteroid_speed_and_wave_spacing_are_constant_over_entire_flight(self):
         from kivy.graphics import Rectangle
@@ -197,7 +233,7 @@ class GameFollowupTests(unittest.TestCase):
                 field._update_event.cancel();field._update_event=None
                 app._toggle_game_pause()
                 source_speed=PIPE_SPEED*360/480
-                for size in ((800,1280),(452,900),(800,900),(360,640)):
+                for size in ((800,1280),(452,900),(800,900),(360,640),(1920,1080)):
                     Window.size=size
                     for _ in range(4):EventLoop.idle()
                     unit=field._viewport()[2]
@@ -227,7 +263,7 @@ class GameFollowupTests(unittest.TestCase):
                 field=app._game_field
                 field._update_event.cancel();field._update_event=None
                 baseline=copy.deepcopy(app._game_engine)
-                sizes=((800,1280),(452,900),(800,900),(360,640))
+                sizes=((800,1280),(452,900),(800,900),(360,640),(1920,1080))
                 for frame in range(180):
                     if frame%30==0:
                         Window.size=sizes[(frame//30)%len(sizes)]

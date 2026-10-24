@@ -1,5 +1,7 @@
 # Meong Photobooth — Development handover
 
+> Current owner correction (2026-10-24), BUG-016: right-anchored world pushed Meong to 80% width in landscape. Entire world is now centered; 20 focused native tests PASS and 45 captures hash/dimension checked. Next: commit/push this stage, then the owner-requested same-level mascot/text impact animation and one final full regression. [Evidence/rollback](qa/portrait-v2-player-anchor/README.md).
+
 > Current owner follow-up: motion fix 144bd60 is pushed/remote-verified with matching-source CI SUCCESS. Centered/flying brand and gallery alignment now pass 533 full local tests, zero skips; 77 PNGs hash/dimension checked. Original game files unchanged. Visual source b6a730a is pushed/remote-verified; CI 40059427863 has all three jobs SUCCESS. Next: owner Windows retest. [Current evidence/form](qa/portrait-v2-motion-correction/README.md).
 
 > Owner reports resize-related fast/variable waves; BUG-015 is reproduced and fixed in adapter, 25 focused native checks PASS. Next: separately center gallery controls/header and add requested flying logo/title overlay. [Scope/evidence](qa/portrait-v2-motion-correction/README.md).
