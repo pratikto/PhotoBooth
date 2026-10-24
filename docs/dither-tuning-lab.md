@@ -1,5 +1,33 @@
 # Meong Photobooth — Thermal Dither Tuning Lab
 
+### Final staged GitHub CI evidence — 2026-10-24
+
+**Stages 1–3 now pass** in
+[GitHub Actions run 40043510521](https://github.com/pratikto/PhotoBooth/actions/runs/40043510521)
+at commit `49799515c0555227983d929da1c50458f0582b2c`:
+**75 targeted backend/static tests PASS**, **12 real Tk/Xvfb smoke tests PASS**,
+256-tone digital calibration scan PASS, Python compile PASS and author
+reference comparison PASS. Exported artifacts:
+
+- [256-tone CSV/JSON/SVG](https://github.com/pratikto/PhotoBooth/actions/runs/40043510521/artifacts/12539824481)
+- [Reference source, optimized raster PNG/difference PNG/JSON](https://github.com/pratikto/PhotoBooth/actions/runs/40043510521/artifacts/12540132879)
+
+Measured digital MAE: article-8 0.3896pp -> 0.0259pp; orthogonal-4
+1.3590pp -> 0.0495pp. On the separate synthetic reference image,
+Meong orthogonal-4 disagrees with the shuffled Gist-style output at
+31.75% of pixels, but only 0.65% when visitation order is held fixed.
+Meong article-8 differs by 32.54% from independent shuffled-order
+eight-neighbor pseudocode. Similar average black/white coverage does not
+guarantee visual similarity or print quality. The reference is an
+**independent adaptation**, not byte-identical official author code.
+
+**Remaining acceptance gates:** Windows operator GUI test, calibration
+generalization across photographs/seeds, measured SBC throughput and actual
+thermal-paper A/B test. None of these have been performed by GitHub Actions.
+`feature/dither-tuning` is still lab-only; no merge into `master`,
+Kivy kiosk/QR pipeline change or uncontrolled print action.
+
+
 ## Stage 3: controlled author-reference comparison (2026-10-24)
 
 Run from repository root:

@@ -1,3 +1,18 @@
+## CI verification checkpoint for all three staged Dizzy steps (2026-10-24)
+
+- [x] [Final code checkpoint `4979951`](https://github.com/pratikto/PhotoBooth/commit/49799515c0555227983d929da1c50458f0582b2c):
+      [CI run 40043510521](https://github.com/pratikto/PhotoBooth/actions/runs/40043510521)
+      passed 75 backend/static tests, 12 real Tk tests, 256-tone audit and
+      author reference comparisons.
+- [x] [256-shade curves + data](https://github.com/pratikto/PhotoBooth/actions/runs/40043510521/artifacts/12539824481)
+      and [reference raster images + JSON](https://github.com/pratikto/PhotoBooth/actions/runs/40043510521/artifacts/12540132879)
+      uploaded as CI artifacts.
+- [ ] Windows GUI display and responsiveness on actual booth computer.
+- [ ] Operator thermal-paper comparison to select a production default.
+- [ ] SBC speed/memory verification and explicit authorization before kiosk
+      integration. No automatic printer job occurred in these tests.
+
+
 ## FEAT-011 Dizzy CPU — Stage 3 author-reference comparison (2026-10-24)
 
 - [x] Reproduce author Python Gist's 4-neighbor rounded/clamped 8-bit math

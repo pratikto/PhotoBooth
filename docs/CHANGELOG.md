@@ -1,5 +1,15 @@
 # Meong Photobooth — Documentation and release changelog
 
+## Final verification: staged Dizzy calibration rollout (2026-10-24)
+
+[GitHub Actions 40043510521](https://github.com/pratikto/PhotoBooth/actions/runs/40043510521)
+on `4979951`: **75 backend/static tests PASS, 12 Tk GUI tests PASS**,
+256-tone calibration scan and reference comparison **PASS**, both sets of
+PNG/JSON/CSV/SVG evidence uploaded. Final rollout remains **lab-only**
+on `feature/dither-tuning`; no master merge and no physical print
+acceptance. Full report: [dither-tuning-lab.md](dither-tuning-lab.md).
+
+
 ## [Unreleased] Stage 3 — independent Dizzy reference comparison (2026-10-24)
 
 - Added `tools/dizzy_reference_compare.py` and
