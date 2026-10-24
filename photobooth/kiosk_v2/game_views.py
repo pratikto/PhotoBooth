@@ -20,6 +20,7 @@ class GameViews:
         self._game_field = self._reference_stage = self._reference_flow = None
         self._game_paused = False
         self._game_error = ''
+        self._game_footer = None
 
     def _open_game_demo(self):
         if self._reference_flow.open_scan():
@@ -34,7 +35,7 @@ class GameViews:
         if self._game_jobs.submit('claim', self._view_revision, self._demo_code.text):
             self._demo_code.disabled = True
             self._demo_code.focus = False
-            self._game_footer.disabled = True
+            if self._game_footer is not None:self._game_footer.disabled = True
             self._game_message.text = 'Memeriksa kode DEMO…'
             self._game_field._refresh()
 
@@ -49,7 +50,7 @@ class GameViews:
                 self._game_error = {'invalid':'Gunakan kode DEMO- diikuti huruf/angka.',
                                     'used':'Kode DEMO sudah dipakai. Tidak ada kesempatan ulang.'}.get(
                                         outcome.error, 'Penyimpanan belum siap. Game belum dimulai.')
-                self._game_footer.disabled = False
+                if self._game_footer is not None:self._game_footer.disabled = False
                 self._game_field._refresh()
                 return
             self._game_attempt, self._game_result = outcome.value, None
@@ -84,7 +85,7 @@ class GameViews:
             return
         if self._game_jobs.submit('finish', self._view_revision, self._game_attempt['attempt_id'],
                                   result, self._game_engine.score):
-            self._game_footer.disabled = True
+            if self._game_footer is not None:self._game_footer.disabled = True
             self._game_busy_label.text = 'Menyimpan hasil DEMO…'
             self._game_field.receipt.disabled = True
 
@@ -119,7 +120,7 @@ class GameViews:
             self._reference_stage = self._reference_flow = None
 
     def _build_game_page(self, canvas):
-        shell = BoxLayout(orientation='vertical', spacing=dp(4), padding=[0,0,0,dp(8)])
+        shell = BoxLayout(orientation='vertical', spacing=0, padding=0)
         canvas.add_widget(shell)
         if self._reference_stage is None:
             self._reference_flow = KioskGameFlow(self)
@@ -133,11 +134,11 @@ class GameViews:
         if self._game_error:self._game_busy_label.height=dp(32)
         shell.add_widget(self._game_busy_label)
         playing = self.navigation.page == GAME_PLAY
-        self._game_footer = self._action(
-            'AKHIRI GAME • TANPA MAIN ULANG' if playing else 'KEMBALI KE IKLAN',
-            self._finish_game_demo if playing else self._return_ad,
-            variant='tertiary', height=48, disabled=self._game_jobs.busy)
-        shell.add_widget(self._game_footer)
+        self._game_footer = None
+        if playing:
+            self._game_footer = self._action('AKHIRI GAME • TANPA MAIN ULANG',
+                self._finish_game_demo, variant='tertiary', height=48, disabled=self._game_jobs.busy)
+            shell.add_widget(self._game_footer)
         field.mount()
 
     def _back_game_intro(self):

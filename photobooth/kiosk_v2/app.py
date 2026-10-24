@@ -70,6 +70,8 @@ class TouchStage(Starfield):
         super().__init__(**kwargs)
 
     def on_touch_down(self, touch):
+        if getattr(touch, 'button', 'left') in {'right', 'middle'}:
+            return False
         if self.collide_point(*touch.pos):
             self._activity()
         return super().on_touch_down(touch)

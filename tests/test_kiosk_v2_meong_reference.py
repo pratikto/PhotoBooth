@@ -59,7 +59,7 @@ class ReferenceIntegrationTests(unittest.TestCase):
             self.assertEqual(app._game_busy_label.text,'')
 
     def test_renderer_compositor_and_animation_methods_are_original_objects(self):
-        for name in ('_refresh','_draw_game','_paint_camera','_paint_print_sheets',
+        for name in ('_draw_game','_paint_camera','_paint_print_sheets',
                      '_advance_printer','_camera_context','_printer_context','_draw_score'):
             with self.subTest(method=name):
                 self.assertIs(getattr(KioskGameStage,name),getattr(MeongFlyStage,name))
@@ -94,6 +94,13 @@ class ReferenceIntegrationTests(unittest.TestCase):
                                     view._refresh()
                                 actual=bytes(stage.export_as_image().texture.pixels)
                                 expected=bytes(baseline.export_as_image().texture.pixels)
+                                # Only the opaque standalone side plate is now
+                                # removed; compare the original portrait scene.
+                                from PIL import Image
+                                ox,oy,scale=stage._viewport()
+                                crop=(round(ox-stage.x),0,round(ox-stage.x+360*scale),size[1])
+                                actual=Image.frombytes('RGBA',size,actual).crop(crop).tobytes()
+                                expected=Image.frombytes('RGBA',size,expected).crop(crop).tobytes()
                                 self.assertEqual(hashlib.sha256(actual).hexdigest(),hashlib.sha256(expected).hexdigest())
                                 PARITY_RECORDS.append({'width':size[0],'height':size[1],'scene':scene,
                                                        'time':phase,'equal':actual==expected,

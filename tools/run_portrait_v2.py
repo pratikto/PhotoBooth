@@ -20,6 +20,14 @@ sys.path.insert(0, str(PROJECT_ROOT))
 # Kivy reads these before opening the window. Ignore kiosk framework CLI flags.
 os.environ.setdefault("KIVY_NO_ARGS", "1")
 
+def configure_kivy(config):
+    """V2 process defaults; never persist settings into the user's Kivy file."""
+    config.set('graphics', 'width', '800')
+    config.set('graphics', 'height', '1280')
+    # Right/Ctrl clicks otherwise create persistent red multitouch markers.
+    # This only disables mouse emulation; physical touchscreen input remains.
+    config.set('input', 'mouse', 'mouse,disable_multitouch')
+
 def main():
     # Install before importing native window/audio/video providers. Keep the
     # stream open through App.run/on_stop so fatal Windows exceptions can be
@@ -34,8 +42,7 @@ def main():
         if session is not None:
             print(f"MEONG v2 HEAD={session.head} diagnostic log: {session.path}", flush=True)
         from kivy.config import Config
-        Config.set("graphics", "width", "800")
-        Config.set("graphics", "height", "1280")
+        configure_kivy(Config)
         from photobooth.kiosk_v2.app import PortraitKioskV2App
         logging.getLogger('photobooth.kiosk_v2').info('Window startup')
         print("MEONG v2 P4 DEMO - no production payment, scanner or actual discount", flush=True)

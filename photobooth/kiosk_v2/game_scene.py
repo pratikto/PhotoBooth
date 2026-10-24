@@ -6,6 +6,7 @@ original modules. Only input, async ledger and kiosk lifecycle are adapted.
 
 from kivy.clock import Clock
 from kivy.core.window import Window
+from kivy.graphics import Rectangle
 
 from photobooth.meong_fly_flow import MeongFlyFlow
 from photobooth.meong_fly_gui import MeongFlyStage
@@ -93,6 +94,16 @@ class KioskGameStage(MeongFlyStage):
         if self._mounted and not self._disposed and not self.host._closed and not self.host._suspended:
             super().update(dt)
 
+    def _refresh(self):
+        super()._refresh()
+        # Keep the original scene/sprites at their correct aspect ratio while
+        # the existing full-window Starfield shows through its unused margins.
+        # Only remove the standalone's opaque letterbox plate, not its art.
+        plate = next((item for item in self.canvas.before.children if isinstance(item, Rectangle)), None)
+        if (plate is not None and tuple(plate.pos) == tuple(self.pos) and
+                tuple(plate.size) == tuple(self.size)):
+            plate.size = (0, 0)
+
     def _sync_overlays(self):
         super()._sync_overlays()
         self.receipt.disabled = self.receipt.disabled or self.host._game_jobs.busy or not self._mounted
@@ -127,6 +138,13 @@ class KioskGameStage(MeongFlyStage):
             super()._mouse_moved(window, self.to_widget(*position))
 
     def on_touch_down(self, touch):
-        if not self.input_allowed() or getattr(touch, 'is_mouse_scrolling', False):
+        if (not self.input_allowed() or getattr(touch, 'is_mouse_scrolling', False) or
+                getattr(touch, 'button', 'left') in {'right', 'middle'}):
             return False
+        if self.collide_point(*touch.pos) and self.flow.screen == 'game':
+            # The responsive side areas are also valid flight input. The actual
+            # playfield/physics and original pause hitbox stay unchanged.
+            ox, oy, scale = self._viewport()
+            if not (ox <= touch.x <= ox+360*scale and oy <= touch.y <= oy+720*scale):
+                return self.flow.flap()
         return super().on_touch_down(touch)
