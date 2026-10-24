@@ -1,5 +1,14 @@
 # Meong Photobooth — Documentation and release changelog
 
+
+## [Documentation] Complete English Dither GUI parameter guide — 2026-10-24
+
+- Published [Dither Comparison GUI — Parameter Guide](dither-gui-parameter-guide.md), a source-checked, user-facing explanation of **every current GUI control** and default/range, the effects on portraits (skin, eyes, hair, shadows, highlights), risks of aggressive settings and how each operation fits the processing order.
+- Covers global controls, Floyd/Bayer/Dizzy and the CPU Tone LUT, Smart Enhance, CLAHE, Denoise, Tone Balance, selective 1-bit Dot Cleanup and Edge Refinement, Quick A/B modes, candidate/Auto Tune score interpretation, Save/Load/Reset, and explicit real-paper print controls.
+- Adds practical symptom-based troubleshooting, a one-variable-at-a-time paper test workflow, schema-v6 compatibility and SBC/physical-printer limitations. **Documentation only:** no algorithm, GUI, printing or production/master changes.
+
+
+
 ## Final verification: staged Dizzy calibration rollout (2026-10-24)
 
 [GitHub Actions 40043510521](https://github.com/pratikto/PhotoBooth/actions/runs/40043510521)
