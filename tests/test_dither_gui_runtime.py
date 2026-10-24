@@ -171,6 +171,7 @@ class EnhancedDizzyTkTests(unittest.TestCase):
                                   postprocess_enabled=True, dot_cleanup_level=2,
                                   edge_refine_level=2,
                                   enhanced_dizzy=(mode == "dizzy"),
+                                  dizzy_contrast_correction=(mode == "dizzy"),
                                   dizzy_variant="orthogonal-4" if mode == "dizzy"
                                   else "article-8")
                 candidate = AutoTuneCandidate(p, render_thermal_image(self.app.source, p),
