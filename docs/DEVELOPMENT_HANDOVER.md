@@ -1,6 +1,6 @@
 # Meong Photobooth — Development handover
 
-> Current owner follow-up: motion fix 144bd60 is pushed/remote-verified with matching-source CI SUCCESS. Centered/flying brand and gallery alignment now pass 533 full local tests, zero skips; 77 PNGs hash/dimension checked. Original game files unchanged. Next: push visual checkpoint, matching-source CI, then owner Windows retest. [Current evidence/form](qa/portrait-v2-motion-correction/README.md).
+> Current owner follow-up: motion fix 144bd60 is pushed/remote-verified with matching-source CI SUCCESS. Centered/flying brand and gallery alignment now pass 533 full local tests, zero skips; 77 PNGs hash/dimension checked. Original game files unchanged. Visual source b6a730a is pushed/remote-verified; CI 40059427863 has all three jobs SUCCESS. Next: owner Windows retest. [Current evidence/form](qa/portrait-v2-motion-correction/README.md).
 
 > Owner reports resize-related fast/variable waves; BUG-015 is reproduced and fixed in adapter, 25 focused native checks PASS. Next: separately center gallery controls/header and add requested flying logo/title overlay. [Scope/evidence](qa/portrait-v2-motion-correction/README.md).
 

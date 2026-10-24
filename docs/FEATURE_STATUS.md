@@ -1,6 +1,6 @@
 # Meong Photobooth — Current feature status
 
-> Current owner correction (2026-10-24): BUG-015 fast/variable displayed wave spacing is fixed at 144bd60 (matching-source CI SUCCESS). Centered/flying brand and gallery title/price alignment pass final 533 full local checks, zero skips; Windows acceptance remains pending. [Current QA/form/checkpoints](qa/portrait-v2-motion-correction/README.md).
+> Current owner correction (2026-10-24): BUG-015 fast/variable displayed wave spacing is fixed at 144bd60 (matching-source CI SUCCESS). Centered/flying brand and gallery title/price alignment at b6a730a pass final 533 full local checks, zero skips, and CI 40059427863 all three jobs SUCCESS. Windows acceptance remains pending. [Current QA/form/checkpoints](qa/portrait-v2-motion-correction/README.md).
 
 > Current resize follow-up (2026-10-24): the earlier separate-filler fix is superseded by responsive original-art composition and compact gallery totals. Source 5c81ea1 has 529 full local PASS, zero skips, and matching-source CI 40056129151 all three jobs SUCCESS. Windows acceptance remains pending. [Current evidence, rollback and 14-item Submit form](qa/portrait-v2-responsive-scene/README.md).
 

@@ -1,0 +1,408 @@
+{
+  "run": 40059427863,
+  "source_sha": "b6a730ac8e7e2ec4a55a5b2710a5eb80651e2b09",
+  "png_count": 50,
+  "hashes_and_dimensions_valid": true,
+  "images": [
+    {
+      "file": "01-intro-800x12800001.png",
+      "page": "game_preview",
+      "game_scene": "start",
+      "width": 800,
+      "height": 1280,
+      "sha256": "e36308e5b0f76e35ce54b57de1b2eb64d665b28061b06827b104bc2230c7b226"
+    },
+    {
+      "file": "01a-print-idle-800x12800001.png",
+      "page": "game_preview",
+      "game_scene": "start",
+      "width": 800,
+      "height": 1280,
+      "sha256": "b891792b640adbf8c92371b6151688ce60f2255e53c30a800200cafc0b158fbb"
+    },
+    {
+      "file": "01b-print-feed-800x12800001.png",
+      "page": "game_preview",
+      "game_scene": "start",
+      "width": 800,
+      "height": 1280,
+      "sha256": "20c7e1af8d8e668e53e44a43d4dcd35a2a2c0bb862eacbcdb43801dca6298057"
+    },
+    {
+      "file": "01c-print-hold-800x12800001.png",
+      "page": "game_preview",
+      "game_scene": "start",
+      "width": 800,
+      "height": 1280,
+      "sha256": "8cdec3e6f5cec5591bcbd408dbd5651735585c0b4f6416b447a5e0f21d55d334"
+    },
+    {
+      "file": "01d-print-fall-800x12800001.png",
+      "page": "game_preview",
+      "game_scene": "start",
+      "width": 800,
+      "height": 1280,
+      "sha256": "e72d79314f85d359228952b5b808d75418ec9eca974963f7724b045a53704066"
+    },
+    {
+      "file": "02-code-entry-800x12800001.png",
+      "page": "game_receipt",
+      "game_scene": "scan",
+      "width": 800,
+      "height": 1280,
+      "sha256": "8205196c72060d982fc3eca2f4f9143146ff2946febe716e921ca8788f25fabb"
+    },
+    {
+      "file": "03-invalid-800x12800001.png",
+      "page": "game_receipt",
+      "game_scene": "scan",
+      "width": 800,
+      "height": 1280,
+      "sha256": "c6173c39bee4578e30b1ba6d6ed7f159972468f577e5eaafce4e3f9a6fe4f88f"
+    },
+    {
+      "file": "04-original-game-800x12800001.png",
+      "page": "game_play",
+      "game_scene": "game",
+      "width": 800,
+      "height": 1280,
+      "sha256": "6539aab589d80996a1f9fb51a3338913c53a8e408fc146ca64fd5424941a1f08"
+    },
+    {
+      "file": "05-paused-game-800x12800001.png",
+      "page": "game_play",
+      "game_scene": "game",
+      "width": 800,
+      "height": 1280,
+      "sha256": "0db64e3643dffebe8629035f03fb18f3da69dfa8238a857e000c23d2fe531943"
+    },
+    {
+      "file": "06-win-800x12800001.png",
+      "page": "game_result",
+      "game_scene": "won",
+      "width": 800,
+      "height": 1280,
+      "sha256": "9ddffc195d1a2eeb894d11a0350e27147d9943ca7aa3c8e66e2900850827da3e"
+    },
+    {
+      "file": "07-required-tutorial-800x12800001.png",
+      "page": "tutorial",
+      "game_scene": null,
+      "width": 800,
+      "height": 1280,
+      "sha256": "1233ef4ab907208be49cd6811c74fc3933298a888c078c88b8d1d7fa01c35bdd"
+    },
+    {
+      "file": "08-win-gallery-800x12800001.png",
+      "page": "templates",
+      "game_scene": null,
+      "width": 800,
+      "height": 1280,
+      "sha256": "8c99503110263d9998c6a0ea677e7d23456eab12db81531bda476fa39c8896f8"
+    },
+    {
+      "file": "09-loss-800x12800001.png",
+      "page": "game_result",
+      "game_scene": "lost",
+      "width": 800,
+      "height": 1280,
+      "sha256": "d947210e4161229d27f76d639ae270ecd9b3ad7389d5ce31170fd0c9ab400e9c"
+    },
+    {
+      "file": "10-loss-gallery-800x12800001.png",
+      "page": "templates",
+      "game_scene": null,
+      "width": 800,
+      "height": 1280,
+      "sha256": "2810cd3f9478a6b22a602f54644ae0054f1a8351be1f7802ecd8b038c9eef7f9"
+    },
+    {
+      "file": "11-used-code-800x12800001.png",
+      "page": "game_receipt",
+      "game_scene": "scan",
+      "width": 800,
+      "height": 1280,
+      "sha256": "f64f964a2793f3c728e8bb96ed6a80b1432379b6ca410e89eb24803d5e8faf37"
+    },
+    {
+      "file": "01-intro-452x9000001.png",
+      "page": "game_preview",
+      "game_scene": "start",
+      "width": 452,
+      "height": 900,
+      "sha256": "59abb0dbd585f8566a74d0b00003a27c21ec326b69dd5c57f14b190e9eae8876"
+    },
+    {
+      "file": "01a-print-idle-452x9000001.png",
+      "page": "game_preview",
+      "game_scene": "start",
+      "width": 452,
+      "height": 900,
+      "sha256": "27ad18d30ccf578686ea8a304ed0d0a17cddb71e049bed63fed80310a8ace243"
+    },
+    {
+      "file": "01b-print-feed-452x9000001.png",
+      "page": "game_preview",
+      "game_scene": "start",
+      "width": 452,
+      "height": 900,
+      "sha256": "ab4cf8a04d994b4506702cb8fef93ab7e35cf8365e112b5788f9a6c95cc9f3bf"
+    },
+    {
+      "file": "01c-print-hold-452x9000001.png",
+      "page": "game_preview",
+      "game_scene": "start",
+      "width": 452,
+      "height": 900,
+      "sha256": "311f307c39392e29e8289f074431aa10f83606ffeefd4883244365d85edde296"
+    },
+    {
+      "file": "01d-print-fall-452x9000001.png",
+      "page": "game_preview",
+      "game_scene": "start",
+      "width": 452,
+      "height": 900,
+      "sha256": "2a418a362f1aa5238674f4a7a040dd47bccb0c71a8405ba93b281db4416b6b2f"
+    },
+    {
+      "file": "02-code-entry-452x9000001.png",
+      "page": "game_receipt",
+      "game_scene": "scan",
+      "width": 452,
+      "height": 900,
+      "sha256": "5943f854e4cde8f5812494b34c700b3eafff347986b55f83d4c5e869f0745adc"
+    },
+    {
+      "file": "03-invalid-452x9000001.png",
+      "page": "game_receipt",
+      "game_scene": "scan",
+      "width": 452,
+      "height": 900,
+      "sha256": "8bffd24cb311ab8fecf51573fe97e2ea390f7ef3a729e4bd98fe73082c1f7e25"
+    },
+    {
+      "file": "04-original-game-452x9000001.png",
+      "page": "game_play",
+      "game_scene": "game",
+      "width": 452,
+      "height": 900,
+      "sha256": "7f60c587e2888d203b264c9e7e30d4e4fac996d2287820e14bd4132342c45e88"
+    },
+    {
+      "file": "05-paused-game-452x9000001.png",
+      "page": "game_play",
+      "game_scene": "game",
+      "width": 452,
+      "height": 900,
+      "sha256": "53d28ba4da5884e0b215e9fe454226acf2df578c825f239ec2e903886d1693d9"
+    },
+    {
+      "file": "06-win-452x9000001.png",
+      "page": "game_result",
+      "game_scene": "won",
+      "width": 452,
+      "height": 900,
+      "sha256": "1a958d0d4fca7f31c03330f4d451c7f580d43514ec643de6dfa63cfb125ba470"
+    },
+    {
+      "file": "07-required-tutorial-452x9000001.png",
+      "page": "tutorial",
+      "game_scene": null,
+      "width": 452,
+      "height": 900,
+      "sha256": "152616d616b2f12541302934a610b5f04094c537af9cd1a4ba3967e9203ea3b6"
+    },
+    {
+      "file": "08-win-gallery-452x9000001.png",
+      "page": "templates",
+      "game_scene": null,
+      "width": 452,
+      "height": 900,
+      "sha256": "92b0be1e3336b2b801fa46deaad1a0c18f5c9f130a8b6111e6be1efb3aa8e931"
+    },
+    {
+      "file": "09-loss-452x9000001.png",
+      "page": "game_result",
+      "game_scene": "lost",
+      "width": 452,
+      "height": 900,
+      "sha256": "190e187964d3f5da3f30d90c65c6a1798464e912696a79875f6cd460899a7ea3"
+    },
+    {
+      "file": "10-loss-gallery-452x9000001.png",
+      "page": "templates",
+      "game_scene": null,
+      "width": 452,
+      "height": 900,
+      "sha256": "35864a0c130a83a6a9373ce6cf0d0464c7abeeef73191af16ade083d3cdbfb9c"
+    },
+    {
+      "file": "11-used-code-452x9000001.png",
+      "page": "game_receipt",
+      "game_scene": "scan",
+      "width": 452,
+      "height": 900,
+      "sha256": "1984531662d806a12e6b2a7ea12a110441b3e30477b90bd66c7d51e82d214c36"
+    },
+    {
+      "file": "01-mock-gallery-800x12800001.png",
+      "page": "templates",
+      "mock_state": null,
+      "width": 800,
+      "height": 1280,
+      "sha256": "6ae5d9452ea128f0970fb6999b958831a9a800afe59c876f22043ac1fbc92d0a"
+    },
+    {
+      "file": "02-regular-pending-800x12800001.png",
+      "page": "mock_checkout",
+      "mock_state": "PENDING",
+      "width": 800,
+      "height": 1280,
+      "sha256": "2b1beadfa0e66d5f502543cc7c81819c95bba10589173e51833ceadd5511fda4"
+    },
+    {
+      "file": "03-cancelled-800x12800001.png",
+      "page": "mock_checkout",
+      "mock_state": "CANCELLED",
+      "width": 800,
+      "height": 1280,
+      "sha256": "da0d2e74b1920b4b44f7a0c7b6afcb9139e484d5a0923ab4c8c0b5407571177c"
+    },
+    {
+      "file": "04-win-gallery-800x12800001.png",
+      "page": "templates",
+      "mock_state": null,
+      "width": 800,
+      "height": 1280,
+      "sha256": "5c06412be01b502045d76a00770d3aac5af845181e37af97b65a9f4914e46fcf"
+    },
+    {
+      "file": "05-win-pending-800x12800001.png",
+      "page": "mock_checkout",
+      "mock_state": "PENDING",
+      "width": 800,
+      "height": 1280,
+      "sha256": "484d5bdb1d7a3cad295571dec52a33ff2e6fb999c3acb60cf8a5d76359466028"
+    },
+    {
+      "file": "06-unknown-800x12800001.png",
+      "page": "mock_checkout",
+      "mock_state": "UNKNOWN",
+      "width": 800,
+      "height": 1280,
+      "sha256": "21d5d8794e32a68a6c3aee143768038b5aaa09b19cf2464ab928289fd3c02c33"
+    },
+    {
+      "file": "07-confirmed-800x12800001.png",
+      "page": "mock_checkout",
+      "mock_state": "CONFIRMED",
+      "width": 800,
+      "height": 1280,
+      "sha256": "54661a8ffaad4be3d50db01a5b5fa9f84c24c1ab38fa91754f2c91f46d4d006b"
+    },
+    {
+      "file": "08-photo-consent-800x12800001.png",
+      "page": "photo_confirm",
+      "mock_state": "ADMITTED",
+      "width": 800,
+      "height": 1280,
+      "sha256": "bf1b53f5e784649879bc5022d11b6d261c611ebc89f8d4391ccb0e7230ed3b8c"
+    },
+    {
+      "file": "09-expired-800x12800001.png",
+      "page": "mock_checkout",
+      "mock_state": "EXPIRED",
+      "width": 800,
+      "height": 1280,
+      "sha256": "932d3f03a0f5312924b648b0ffe76ab5494201eb9286a3d2ab9ef7669c74c6f9"
+    },
+    {
+      "file": "10-recovered-800x12800001.png",
+      "page": "mock_checkout",
+      "mock_state": "PENDING",
+      "width": 800,
+      "height": 1280,
+      "sha256": "45adc2b99273ba0c44c4e02d478bb4321fa7e5f3c2af1e23446e6e30978b3ddb"
+    },
+    {
+      "file": "01-mock-gallery-452x9000001.png",
+      "page": "templates",
+      "mock_state": null,
+      "width": 452,
+      "height": 900,
+      "sha256": "eda3c1286b65113f09d1f4c6e278a828e2f005494df5210af1cea8a85d2e11f4"
+    },
+    {
+      "file": "02-regular-pending-452x9000001.png",
+      "page": "mock_checkout",
+      "mock_state": "PENDING",
+      "width": 452,
+      "height": 900,
+      "sha256": "49e4067c1bfdeab9ef8401cea3a488bfcaa20c2b45e7019ca468a96a65346d99"
+    },
+    {
+      "file": "03-cancelled-452x9000001.png",
+      "page": "mock_checkout",
+      "mock_state": "CANCELLED",
+      "width": 452,
+      "height": 900,
+      "sha256": "6c7fbb686f572ff19255800d98701bc6b20f2c759cd1e6da4096f1b084a51e1b"
+    },
+    {
+      "file": "04-win-gallery-452x9000001.png",
+      "page": "templates",
+      "mock_state": null,
+      "width": 452,
+      "height": 900,
+      "sha256": "96f22479d4ea0ae1a0325936f7eb4213a9fb0f3c178b01fdf43e1feacd87e49f"
+    },
+    {
+      "file": "05-win-pending-452x9000001.png",
+      "page": "mock_checkout",
+      "mock_state": "PENDING",
+      "width": 452,
+      "height": 900,
+      "sha256": "8ae384b6973b73007f866525f09f764254581b172f50d3ddce28cd0129f08abb"
+    },
+    {
+      "file": "06-unknown-452x9000001.png",
+      "page": "mock_checkout",
+      "mock_state": "UNKNOWN",
+      "width": 452,
+      "height": 900,
+      "sha256": "35714d55275268b01623f09a0c413e227e7c7bcaa359433883031496dd2dae6a"
+    },
+    {
+      "file": "07-confirmed-452x9000001.png",
+      "page": "mock_checkout",
+      "mock_state": "CONFIRMED",
+      "width": 452,
+      "height": 900,
+      "sha256": "193f1301f7675ecc4b24c5b6603aac814676c63be682352a3df97b3e56530410"
+    },
+    {
+      "file": "08-photo-consent-452x9000001.png",
+      "page": "photo_confirm",
+      "mock_state": "ADMITTED",
+      "width": 452,
+      "height": 900,
+      "sha256": "5a6616232dd4ab19267985099d7cc6335c196bf30b88f57960f125754a15ead7"
+    },
+    {
+      "file": "09-expired-452x9000001.png",
+      "page": "mock_checkout",
+      "mock_state": "EXPIRED",
+      "width": 452,
+      "height": 900,
+      "sha256": "7aabe58ae334048c02f106f94947683bffb54b7b8a6873f58d2e1da1ac9eeabc"
+    },
+    {
+      "file": "10-recovered-452x9000001.png",
+      "page": "mock_checkout",
+      "mock_state": "PENDING",
+      "width": 452,
+      "height": 900,
+      "sha256": "687b6380afc67edaf73c4ed33de6d7461994923581246e06f558a0f04dc4a12a"
+    }
+  ]
+}

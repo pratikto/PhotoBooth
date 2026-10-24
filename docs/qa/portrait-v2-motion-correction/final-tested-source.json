@@ -11,5 +11,10 @@
     "tests/test_kiosk_v2_game_followup.py": "433849a53bf26546aab93dda2daf5f87bba0d6a2f476b3eb9bf8e18fa1fc06e8",
     "tests/test_kiosk_v2_meong_reference.py": "02b08a63e66beb97d5bdbedecc738a693f20fb83fb1edbd539034029f90d1c3c",
     "tools/render_portrait_p4.py": "c97520e935b1e9d97ac4b827716cd4eeba7df0f6cf7a8df8ca386162f73d3c64"
-  }
+  },
+  "verified_commit": "b6a730ac8e7e2ec4a55a5b2710a5eb80651e2b09",
+  "run": 533,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0
 }

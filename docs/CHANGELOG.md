@@ -1,5 +1,7 @@
 # Meong Photobooth — Documentation and release changelog
 
+> BUG-015/header/gallery final source b6a730a: matching-source CI 40059427863 all three jobs SUCCESS. Archive CI, source-bound test hashes and verified 50-image P4/MOCK artifact; runtime unchanged. [Evidence](qa/portrait-v2-motion-correction/README.md).
+
 > 2026-10-24 owner correction: preserve original asteroid tempo/spacing (144bd60), center the MEONG PHOTOBOOTH wordmark, animate the existing mascot across its own header lane, float the gallery title above intact strips, and center both quote columns. Final 533 full local PASS, zero skips; [proof/form/rollback](qa/portrait-v2-motion-correction/README.md).
 
 > BUG-015: remove nonlinear asteroid position mapping introduced by responsive layout; uniform full-path speed/spacing, unchanged original engine. 25 focused native tests PASS. [QA](qa/portrait-v2-motion-correction/README.md).

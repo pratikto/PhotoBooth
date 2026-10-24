@@ -128,3 +128,28 @@ evidence. Syntax and whitespace checks pass. No local failing check remains.
 Windows retest remains open for actual perceived pace, touch, animation/frame
 pacing and speakers. Do not reuse old checkmarks. Default payment/scanner remain
 disabled; no production discount, receipt, transaction, merge or deployment.
+
+## Final pushed source and CI
+
+Motion source `144bd60` → centered/flying brand and gallery source
+**b6a730ac8e7e2ec4a55a5b2710a5eb80651e2b09**. Both normal pushes and remote HEADs
+were verified. The final tested file hashes match the committed runtime.
+
+[GitHub CI 40059427863](https://github.com/pratikto/PhotoBooth/actions/runs/40059427863)
+has **all three jobs SUCCESS**: navigation/audio lifecycle, Linux native GUI
+regression/original-source checks/screenshots, and Windows Python 3.12 native
+SDL audio cycles with dummy output. [Archived result](final-ci.json).
+Downloaded its screenshot artifact; all 50 P4/MOCK PNG hashes and dimensions
+match clean-source reports at b6a730a. [Verification](ci-screenshot-verification.json)
+and [reviewed CI sheet](ci-contact.jpg). This is not physical Windows acceptance.
+
+The companion evidence commit changes documentation only and skips redundant
+CI. Runtime rollback for this visual stage remains 144bd60; retain consumed
+attempt/order state and photo/print journals. No unresolved automated failure;
+next action is owner retest using the fresh Submit form, especially consistent
+wave pace, centered text/price and the flying mascot lifecycle.
+
+On Windows, use the existing venv, stay on feature/portrait-kiosk-v2-next, pull
+with `git pull --ff-only`, then run `python tools/run_portrait_v2.py`. Open
+`docs/qa/portrait-v2-motion-correction/windows-checklist.html` in a browser and
+submit only checks actually completed. No P3 acceptance is silently reopened.
