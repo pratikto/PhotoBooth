@@ -1,5 +1,7 @@
 # Meong Photobooth — Development handover
 
+> Latest owner retest (2026-10-24): 14/14 checked, twenty P4 cycles, unknown tested HEAD/device metadata; game position/waves/header/gallery/lifecycle OWNER-REPORTED PASS / MONITORING. Video→video lag is explicitly reported in the lag field despite empty issue notes: BUG-017 OPEN. Current authorized follow-up: larger header Meong first, then reuse original Meong Fly button artwork. [Audit/scope/rollback](qa/portrait-v2-native-controls/README.md).
+
 > Latest owner correction (2026-10-24): game world centered at 848a52d, pushed/remote-verified, three-job CI SUCCESS. Same-level flying Meong with source-derived joint motion, original camera/film, waving trail and one impact spin now has 28 focused + 540 final full PASS, zero skips. Twelve final native captures and fresh Submit form verified. Header source c242b97 pushed/remote-verified; matching-source CI 40073923004 has all three jobs SUCCESS, 99 CI PNGs hash/dimension/source verified. Windows acceptance pending. [Evidence/rollback](qa/portrait-v2-player-anchor/README.md).
 
 > Current owner correction (2026-10-24), BUG-016: right-anchored world pushed Meong to 80% width in landscape. Entire world is now centered; 20 focused native tests PASS and 45 captures hash/dimension checked. Game source 848a52d pushed/remote-verified, all three CI jobs SUCCESS. Header stage now has 28 focused PASS and native-clock preview; final full regression is running. [Evidence/rollback](qa/portrait-v2-player-anchor/README.md).

@@ -128,7 +128,7 @@ class MeongLogo(FloatLayout):
         # Leave a real approach on both sides even in a tall/narrow header;
         # otherwise the first frame can already overlap the lettering and miss
         # its contact event. Keep the original sprite's proportions.
-        self.art.max_unit = max(.01, (self.lettering.x-self.x-dp(8)) / 123)
+        self.art.max_unit = max(.01, (self.lettering.x-self.x-dp(8)) / 58.5)
         self.art.pos, self.art.size = self.pos, self.size
         self._rotate_words()
         self._fly(detect_impact=False)

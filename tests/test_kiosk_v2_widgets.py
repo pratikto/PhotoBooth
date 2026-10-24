@@ -1223,18 +1223,18 @@ class PortraitKivySmokeTests(unittest.TestCase):
             texture=logo.art.texture
             for phase in (0,.25,.5,.75,1):
                 logo.flight=phase
-                self.assertGreaterEqual(logo.art.mascot_x,logo.x)
-                self.assertLessEqual(logo.art.mascot_x+logo.art.sprite_width,logo.right+.1)
                 x,y,w,h=logo.art.body_box
+                self.assertGreaterEqual(x,logo.x)
+                self.assertLessEqual(x+w,logo.right+.1)
                 self.assertAlmostEqual(y+h/2,logo.lettering.center_y,delta=2)
                 self.assertEqual(logo.wordmark.center_x,logo.center_x)
-            self.assertAlmostEqual(logo.art.mascot_x+logo.art.sprite_width,logo.right)
+            self.assertAlmostEqual(logo.art.body_box[0]+logo.art.body_box[2],logo.right)
             logo._turn()
             self.assertEqual(logo.art.direction,-1)
             self.assertIs(logo.art.texture,texture)
             logo.flight=0;logo._turn()
             self.assertEqual(logo.art.direction,1)
-            self.assertAlmostEqual(logo.art.mascot_x,logo.x)
+            self.assertAlmostEqual(logo.art.body_box[0],logo.x)
         finally:
             app.on_stop();Window.remove_widget(app.stage)
 

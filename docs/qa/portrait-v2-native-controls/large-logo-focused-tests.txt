@@ -1,0 +1,13 @@
+test_attached_photo_tracks_outlet_and_detached_photo_stays_behind_meong (tests.test_kiosk_v2_brand_flight.BrandFlightTests.test_attached_photo_tracks_outlet_and_detached_photo_stays_behind_meong) ... ok
+test_cached_frame_motion_changes_limbs_rainbow_and_keeps_mirror_uvs_without_uploads (tests.test_kiosk_v2_brand_flight.BrandFlightTests.test_cached_frame_motion_changes_limbs_rainbow_and_keeps_mirror_uvs_without_uploads) ... ok
+test_pause_resize_resume_and_dispose_do_not_replay_or_leave_animations (tests.test_kiosk_v2_brand_flight.BrandFlightTests.test_pause_resize_resume_and_dispose_do_not_replay_or_leave_animations) ... ok
+test_real_clock_contact_spins_once_then_settles_and_return_hits_from_other_side (tests.test_kiosk_v2_brand_flight.BrandFlightTests.test_real_clock_contact_spins_once_then_settles_and_return_hits_from_other_side) ... ok
+test_reuses_original_camera_film_emitter_and_immutable_source_pixels (tests.test_kiosk_v2_brand_flight.BrandFlightTests.test_reuses_original_camera_film_emitter_and_immutable_source_pixels) ... ok
+test_same_level_brand_geometry_at_compact_and_large_headers (tests.test_kiosk_v2_brand_flight.BrandFlightTests.test_same_level_brand_geometry_at_compact_and_large_headers) ... ok
+test_flying_brand_runs_on_clock_and_pauses_retires_without_late_motion (tests.test_kiosk_v2_widgets.PortraitKivySmokeTests.test_flying_brand_runs_on_clock_and_pauses_retires_without_late_motion) ... ok
+test_flying_brand_stays_level_with_centered_text_and_turns_at_both_edges (tests.test_kiosk_v2_widgets.PortraitKivySmokeTests.test_flying_brand_stays_level_with_centered_text_and_turns_at_both_edges) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 6.258s
+
+OK

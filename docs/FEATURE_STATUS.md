@@ -1,5 +1,7 @@
 # Meong Photobooth — Current feature status
 
+> Owner reports 14/14 plus twenty P4 cycles passing on Windows at unknown HEAD/device metadata. BUG-015/016 now OWNER-REPORTED PASS / MONITORING, not formally closed. New BUG-017 video→video lag remains OPEN; video↔image is reported okay. Larger logo and original-style native buttons are separately requested and not device-accepted yet. [Audit](qa/portrait-v2-native-controls/README.md).
+
 > Current P4 follow-up: BUG-016 centered world is pushed at 848a52d; animated same-level header reuses original camera/paper composition and emitter, with cached source-derived limbs/rainbow and contact-gated text flip. 540 final native/local PASS, zero skips; header source c242b97 pushed/remote-verified, CI 40073923004 three-job SUCCESS and 99 PNGs verified. Physical Windows pending. [Current source/evidence/form](qa/portrait-v2-player-anchor/README.md).
 
 > BUG-016 correction: centered original game world keeps Meong left of center across portrait/landscape resize; original motion and 26 reference files retained. 20 focused native PASS; Windows acceptance pending. [Current evidence](qa/portrait-v2-player-anchor/README.md).

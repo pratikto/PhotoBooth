@@ -58,7 +58,7 @@ class FlyingMeongArt(StencilView):
         self.elapsed = 0
         self.flight = 0
         self.direction = 1
-        self.max_unit = dp(1.15)
+        self.max_unit = dp(1.65)
         self._pose = 'level-0'
         self._disposed = False
         self._art_canvas = Canvas()
@@ -73,7 +73,7 @@ class FlyingMeongArt(StencilView):
 
     @property
     def unit(self):
-        return min(dp(1.15), self.max_unit, max(.01, self.height * .5 / 43.5))
+        return min(dp(1.65), self.max_unit, max(.01, self.height * .72 / 43.5))
 
     @property
     def sprite_width(self):
@@ -81,16 +81,22 @@ class FlyingMeongArt(StencilView):
 
     @property
     def travel(self):
-        return max(0, self.width - self.sprite_width)
+        return max(0, self.width - 58.5 * self.unit)
+
+    @property
+    def body_x(self):
+        return self.x + self.flight * self.travel
 
     @property
     def mascot_x(self):
-        return self.x + self.flight * self.travel
+        # The body travels edge to edge. Its rainbow can naturally enter/leave
+        # through the header's existing stencil, leaving room for a larger cat.
+        return self.body_x - (64.5 if self.direction > 0 else 7) * self.unit
 
     @property
     def body_box(self):
         unit = self.unit
-        x = self.mascot_x + (64.5 if self.direction > 0 else 7) * unit
+        x = self.body_x
         bob = sin(self.elapsed * 2.4) * 1.5 * unit
         return x, self.center_y + bob - 43.5 * unit / 2, 58.5 * unit, 43.5 * unit
 

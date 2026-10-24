@@ -37,8 +37,8 @@ class BrandFlightTests(unittest.TestCase):
         art=self.logo.art
         unit=art.unit
         if direction>0:
-            return (self.logo.lettering.x-art.x-123*unit)/art.travel
-        return (self.logo.lettering.right-art.x-7*unit)/art.travel
+            return (self.logo.lettering.x-art.x-58.5*unit)/art.travel
+        return (self.logo.lettering.right-art.x)/art.travel
 
     def wait_for_impact(self):
         deadline=time.monotonic()+1
@@ -150,6 +150,7 @@ class BrandFlightTests(unittest.TestCase):
             logo.size=(width,height);self.settle(.02)
             self.assertEqual(logo.wordmark.center_x,logo.center_x)
             self.assertEqual(logo.caption.center_x,logo.center_x)
+            self.assertGreaterEqual(logo.art.body_box[3],height*.65)
             for phase in (0,.25,.5,.75,1):
                 logo.flight=phase
                 x,y,w,h=logo.art.body_box
@@ -161,6 +162,8 @@ class BrandFlightTests(unittest.TestCase):
                 if phase==0:
                     self.assertLess(x+w,logo.lettering.x,'Flight starts inside the wordmark')
                 elif phase==1:
+                    before=logo.art.body_box[0]
                     logo._flight_direction=-1;logo._fly(detect_impact=False)
                     self.assertGreater(logo.art.body_box[0],logo.lettering.right)
+                    self.assertEqual(logo.art.body_box[0],before,'Meong jumps on its return turn')
                     logo._flight_direction=1
