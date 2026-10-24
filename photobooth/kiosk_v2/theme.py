@@ -1,7 +1,7 @@
 """Portrait-first Pixel Arcade Space design primitives.
 
-All layouts/components in this package are newly authored for GUI v2. Only
-approved logo and thermal template art are reused; no legacy page widgets.
+Native layouts retain v2 ownership; controls reuse original Meong Fly button
+material, icons and glyph rendering through a small presentation adapter.
 """
 
 from kivy.graphics import Color, Ellipse, Line, Rectangle, RoundedRectangle
@@ -10,6 +10,8 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.floatlayout import FloatLayout
+
+from .button_art import ICONS, caption_layout, caption_texture, material_slices, material_texture
 
 from .design_tokens import (
     BUTTON_COLORS, BUTTON_EDGES, CYAN, GOLD, INK, MUTED, PANEL,
@@ -128,7 +130,7 @@ class PixelCard(BoxLayout):
 
 
 class ArcadeButton(Button):
-    """Touchable native button with FEAT-021 stepped border and state."""
+    """Native touch/disabled behavior with the actual Meong Fly button artwork."""
 
     def __init__(self, text, *, variant="primary", height=62, **kwargs):
         if variant not in BUTTON_COLORS:
@@ -138,7 +140,7 @@ class ArcadeButton(Button):
             text=text, size_hint_y=None, height=dp(height),
             background_normal="", background_down="",
             background_color=(0, 0, 0, 0),
-            font_size=dp(18), bold=True,
+            font_size=dp(22), bold=True,
             color=rgba(INK if variant in {"primary", "secondary"} else WHITE),
             # Kivy uses disabled_color instead of color for disabled text.
             # Keep unavailable scanner/payment labels readable at both sizes.
@@ -147,7 +149,19 @@ class ArcadeButton(Button):
         )
         self.bind(pos=self._paint, size=self._paint,
                   state=self._recolor, disabled=self._recolor)
+        self.bind(size=self._trigger_texture)
         self._recolor()
+
+    def texture_update(self, *_args):
+        icon=None if self.disabled else ICONS.get(self.text)
+        lines,cell=caption_layout(self.text,self.font_size,
+                                  max(1,self.width-dp(24)),max(1,self.height-dp(18)),icon)
+        ink=tuple(round(channel*255) for channel in (self.disabled_color if self.disabled else self.color))
+        texture=caption_texture(lines,ink,icon)
+        self.texture=texture
+        self.texture_size=(texture.width*cell/2,texture.height*cell/2)
+        self._caption_lines,self._caption_cell=lines,cell
+        self.is_shortened=False
 
     def _recolor(self, *_args):
         self.color = rgba(
@@ -158,28 +172,18 @@ class ArcadeButton(Button):
 
     def _paint(self, *_args):
         self.canvas.before.clear()
-        if self.width <= 0 or self.height <= 0:
+        if self.width<=0 or self.height<=0:
             return
-        fill = BUTTON_COLORS["muted"] if self.disabled else BUTTON_COLORS[self.variant]
-        border = BUTTON_EDGES["muted"] if self.disabled else BUTTON_EDGES[self.variant]
+        texture=material_texture('muted' if self.disabled else self.variant)
+        tint=.84 if self.state=='down' and not self.disabled else 1
+        uv=texture.tex_coords
         with self.canvas.before:
-            Color(*rgba(SHADOW, .96))
-            _pixel_plate(self.x + dp(2), self.y - dp(4), self.width, self.height)
-            Color(*rgba(border, .75 if self.disabled else 1))
-            _pixel_plate(self.x, self.y, self.width, self.height)
-            inset = dp(PIXEL_INSET_DP)
-            Color(*rgba(fill, .82 if self.state == "down" and not self.disabled else 1.0))
-            _pixel_plate(self.x + inset, self.y + inset,
-                         max(0, self.width - 2 * inset),
-                         max(0, self.height - 2 * inset),
-                         notch=PIXEL_NOTCH_DP - PIXEL_INSET_DP)
-            if self.width > dp(48):
-                Color(*rgba(WHITE, .53 if not self.disabled else .18))
-                Rectangle(pos=(self.x + dp(12), self.top - dp(7)),
-                          size=(min(dp(28), self.width / 4), dp(3)))
-                Color(*rgba(INK, .30))
-                Rectangle(pos=(self.right - dp(17), self.y + dp(8)),
-                          size=(dp(8), dp(3)))
+            Color(tint,tint,tint,1)
+            for (sx0,sy0,sx1,sy1),(x0,y0,x1,y1) in material_slices(self.width,self.height,dp(12)):
+                rect=Rectangle(texture=texture,pos=(self.x+x0,self.top-y1),size=(x1-x0,y1-y0))
+                left=uv[0]+sx0/291*(uv[2]-uv[0]);right=uv[0]+sx1/291*(uv[2]-uv[0])
+                bottom=uv[1]+(1-sy1/61)*(uv[5]-uv[1]);top=uv[1]+(1-sy0/61)*(uv[5]-uv[1])
+                rect.tex_coords=(left,bottom,right,bottom,right,top,left,top)
 
 
 def text_label(text, *, size=16, height=36, color=WHITE, bold=False, align="center"):

@@ -1,5 +1,7 @@
 # Meong Photobooth — Current architecture and future boundaries
 
+> Native controls: button_art reuses meong_fly_polish.arcade_button and original painter glyph/icons. Four cached materials use nine slices; bounded cached captions fit whole words via native Button.texture_update. Core Button/page/audio ownership is retained. Larger Meong anchors its body while the longer rainbow is stencil-clipped at entry/exit; original camera/film composition remains. Shared advertising player is unchanged. [Contract](qa/portrait-v2-native-controls/README.md).
+
 > Shared native header now uses brand_flight.FlyingMeongArt: direct original camera/paper methods, immutable cached source-derived poses and original InstantPhotoEmitter. Existing flight Animation also drives decorative motion; contact-gated wordmark flip has separate bounded Animation. No header game/scanner/hardware instance. [Contract](qa/portrait-v2-player-anchor/README.md).
 
 > BUG-016: Layout.world_x centers the complete original world with half the surplus width. Camera/asteroids/trails/film share the same translation and scale; original motion/collision/timing remain. Wide-window spawn belongs to the centered original world, not the physical right edge. [Contract](qa/portrait-v2-player-anchor/README.md).

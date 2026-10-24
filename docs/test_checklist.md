@@ -1,5 +1,7 @@
 ## Version 1.0.0 — release-source verification (2026-10-19)
 
+> Native-control final gate: 546 full PASS/0 failures/errors/skips, 15 focused PASS including native source-button RGB/alpha equality, caption fit, disabled/cache/touch/audio and header lifecycle; 54 PNGs verified, 8-item Submit form browser-checked. New visual Windows acceptance remains open; prior 14/14/twenty-cycle owner report preserved. BUG-017 unchanged/unfixed. [Proof/form](qa/portrait-v2-native-controls/README.md).
+
 > 2026-10-24 owner retest: raw 14/14, twenty cycles, HEAD/resolution/scaling blank; preserve the reported passes without exact-SHA attribution. A01 metadata subclaim incomplete. Video→video lag is an additional open issue outside the fourteen explicit checks. [Preserved report and pending checks](qa/portrait-v2-native-controls/README.md).
 
 > Current gate: 540 final PASS/0 failures/errors/skips after compact-header approach correction; 28 focused animation/game + 4 focused QR checks PASS. Twelve final native pages and 45 earlier game PNGs verified, real Clock GIF recorded; 14-item Submit form browser-verified. Exact failed random MOCK QR pattern now uses the existing bounded pixel reader; encoder/checkout unchanged. Source c242b97 matching CI 40073923004 three-job SUCCESS, 99 artifact PNGs verified. Windows retest pending. [Evidence](qa/portrait-v2-player-anchor/README.md).

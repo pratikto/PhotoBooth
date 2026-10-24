@@ -1,5 +1,7 @@
 # Meong Photobooth — Dynamic Feature Backlog
 
+> Next visual action: retest larger Meong and original-style main-app buttons using the [8-item Submit form](qa/portrait-v2-native-controls/windows-checklist.html); no new twenty-cycle gate is imposed. Source has 546 full PASS, zero skips. BUG-017 video→video latency remains the separate open performance investigation; no P5/production expansion.
+
 > Current authorized visual work: larger Meong then original Meong Fly button style. Previous game/header/gallery form is owner-reported 14/14 with twenty cycles at unknown HEAD. Next operational investigation is BUG-017 consecutive-video latency; preserve reported working video↔image paths and decoder retirement guards. No P5/production expansion. [Scope/evidence](qa/portrait-v2-native-controls/README.md).
 
 > Next owner action: Windows retest of corrected game position plus same-level flying mascot, original camera/photo/rainbow motion and impact-spin header. Source c242b97: 540 local PASS, zero skips; all three matching-source CI jobs SUCCESS. Use the [14-item Submit form](qa/portrait-v2-player-anchor/windows-checklist.html); preserve P3 acceptance and P4 one-use guards. No new roadmap/production expansion follows automatically.

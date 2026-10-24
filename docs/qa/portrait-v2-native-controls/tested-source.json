@@ -1,0 +1,45 @@
+{
+  "baseline_sha": "c887d30bfddc246433266f7c0da2c77e84a3e97f",
+  "worktree_tested_before_commit": true,
+  "files": [
+    {
+      "path": "photobooth/kiosk_v2/brand_flight.py",
+      "sha256": "e91b9ab137c9ffafd5354d8b9210c42010dc7dd6a2e684b5dab93cdefae07a9d"
+    },
+    {
+      "path": "photobooth/kiosk_v2/branding.py",
+      "sha256": "00e2bd6cc503eebb953da3f82c0c10d690e986946580fa8b3c0d56aa0a381a24"
+    },
+    {
+      "path": "photobooth/kiosk_v2/theme.py",
+      "sha256": "e24a4c556d582470bc52078c0ebbde6bcf65cb67d6af2b37a6efd0964c618ca2"
+    },
+    {
+      "path": "photobooth/kiosk_v2/button_art.py",
+      "sha256": "036eb5e47d861ca7f6a140242ac89c391d691b404ee492d468cd7694f7723ac0"
+    },
+    {
+      "path": "tests/test_kiosk_v2_brand_flight.py",
+      "sha256": "fe0fa17df8b87e6d36c64bdca1b63804dd9aabd46e9eb1031a86d0c03f2bc020"
+    },
+    {
+      "path": "tests/test_kiosk_v2_widgets.py",
+      "sha256": "20c84f0575e98421c3bab1d0fc1a749a540486ab2ed9e98748cf718f0cba063a"
+    },
+    {
+      "path": "tests/test_kiosk_v2_button_art.py",
+      "sha256": "37379c38e00ece91d495cbb129d7d5052c877868405b7812ba02a1ef6323564b"
+    },
+    {
+      "path": ".github/workflows/portrait-kiosk-v2.yml",
+      "sha256": "6c288a66403722c7e0c83565d5b8c6cdb99ba9cb5c2ddf205793b0232a2d76de"
+    }
+  ],
+  "final_run": {
+    "tests": 546,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 169.105
+  }
+}
