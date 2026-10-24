@@ -49,13 +49,13 @@ def measure_fidelity(*, width=96, height=96, seed=42,
                                contrast_correction=False)
             corrected = dizzy_dither(original, variant=variant, seed=seed,
                                      contrast_correction=True)
-            # Mode 1 histogram bins are [black dots, white dots].
+            # Normalize mode-1 white encoding (1 vs 255) before counting white dots.
             if raw.mode != "1" or corrected.mode != "1":
                 raise AssertionError("Dizzy must return a native 1-bit raster.")
             total = width * height
             target = tone / 255.0
-            white_before = raw.histogram()[1] / total
-            white_after = corrected.histogram()[1] / total
+            white_before = raw.convert("L").histogram()[255] / total
+            white_after = corrected.convert("L").histogram()[255] / total
             item = {
                 "variant": variant, "gray": tone,
                 "target_white_pct": target * 100,
