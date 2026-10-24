@@ -29,19 +29,14 @@ class Layout:
         return self.width / self.scale - 360, self.height / self.scale - 720
 
     def world_x(self, x):
-        """Widen the approach, keeping collision-near geometry uniform.
+        """Translate the complete original world without warping its motion.
 
-        Engine coordinates/timing never change. All collision-relevant rocks
-        and the cat receive the same translation inside x=15..210. Only distant
-        approach positions use extra horizontal space; sprite widths stay fixed.
+        Align the original spawn edge with the stage's right edge. Extra sky
+        stays continuous; HUD and menus can reflow independently. A shared
+        translation preserves speed, wave spacing, sprites and reaction time
+        everywhere, including the approach and exit, at every window size.
         """
-        extra, _ = self.extra
-        offset = extra * .23
-        if x < 15:
-            return x + offset * max(0, x) / 15
-        if x <= 210:
-            return x + offset
-        return x + offset + (extra - offset) * (x - 210) / 150
+        return x + self.extra[0]
 
     def rect(self, box):
         x, y, w, h = box

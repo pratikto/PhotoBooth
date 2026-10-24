@@ -1,5 +1,7 @@
 # Meong Photobooth — Documentation and release changelog
 
+> BUG-015: remove nonlinear asteroid position mapping introduced by responsive layout; uniform full-path speed/spacing, unchanged original engine. 25 focused native tests PASS. [QA](qa/portrait-v2-motion-correction/README.md).
+
 > Responsive source 5c81ea1: matching-source portrait CI 40056129151 all three jobs SUCCESS. CI evidence and checkpoint archived; runtime unchanged. [Proof](qa/portrait-v2-responsive-scene/README.md).
 
 > 2026-10-24: replace separate game filler/fixed poster layout with cached responsive original-art components and one source sky; align hitboxes/film, retain original engine/compositor. Gallery quantity/total simplified, CETAK removed. 529 full local PASS, zero skips; [QA/screenshots/rollback](qa/portrait-v2-responsive-scene/README.md).

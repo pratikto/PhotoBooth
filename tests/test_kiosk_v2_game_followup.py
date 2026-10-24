@@ -178,12 +178,70 @@ class GameFollowupTests(unittest.TestCase):
         for size in ((800,900),(800,1280),(452,900),(360,640)):
             layout=Layout(*size,'game')
             self.assertAlmostEqual(layout.world_x(360),size[0]/layout.scale)
-            offset=layout.extra[0]*.23
-            for x in (15.75,16,24,40,70,110,160,200):
+            offset=layout.extra[0]
+            for x in (-48.75,0,15.75,16,24,40,70,110,160,200,210,300,360,367.5):
                 self.assertAlmostEqual(layout.world_x(x)-x,offset)
             for box in [camera_screen_rect(320)]+[r for _,r in asteroid_screen_rects(110,320)]:
                 projected=layout.rect(box)
                 self.assertEqual(projected[2:],box[2:])
+
+    def test_rendered_asteroid_speed_and_wave_spacing_are_constant_over_entire_flight(self):
+        from kivy.graphics import Rectangle
+        from photobooth.meong_fly import PIPE_SPEED, Pipe
+        original=Window.size
+        helper=support.GameWidgetTests()
+        try:
+            with helper.booth() as (app,_):
+                helper.claim(app)
+                field=app._game_field
+                field._update_event.cancel();field._update_event=None
+                app._toggle_game_pause()
+                source_speed=PIPE_SPEED*360/480
+                for size in ((800,1280),(452,900),(800,900),(360,640)):
+                    Window.size=size
+                    for _ in range(4):EventLoop.idle()
+                    unit=field._viewport()[2]
+                    previous=None
+                    # Two true 1.6-second waves traverse both old breakpoints.
+                    for left in range(160,4,-5):
+                        app._game_engine.pipes=[Pipe(left/.75,320),
+                                                Pipe((left+source_speed*1.6)/.75,320)]
+                        field._refresh()
+                        xs=sorted(set(round(item.pos[0],5) for item in field.canvas.before.children
+                            if isinstance(item,Rectangle) and item.texture in field._asteroids))
+                        self.assertEqual(len(xs),2)
+                        self.assertAlmostEqual(xs[1]-xs[0],source_speed*1.6*unit,delta=.001)
+                        if previous is not None:
+                            self.assertAlmostEqual(previous[0]-xs[0],5*unit,delta=.001)
+                            self.assertAlmostEqual(previous[1]-xs[1],5*unit,delta=.001)
+                        previous=xs
+        finally:Window.size=original
+
+    def test_resize_keeps_original_engine_timing_speed_and_spawn_sequence(self):
+        import copy
+        helper=support.GameWidgetTests()
+        original=Window.size
+        try:
+            with helper.booth() as (app,_):
+                helper.claim(app)
+                field=app._game_field
+                field._update_event.cancel();field._update_event=None
+                baseline=copy.deepcopy(app._game_engine)
+                sizes=((800,1280),(452,900),(800,900),(360,640))
+                for frame in range(180):
+                    if frame%30==0:
+                        Window.size=sizes[(frame//30)%len(sizes)]
+                        for _ in range(3):EventLoop.idle()
+                    # Keep the flight centered; test the unchanged clock and
+                    # spawning independently of human tap skill/vertical loss.
+                    baseline.y=app._game_engine.y=320
+                    baseline.velocity=app._game_engine.velocity=0
+                    baseline.step(1/30);field.update(1/30)
+                    for name in ('elapsed','spawn_elapsed','y','velocity','score','pipes','status'):
+                        self.assertEqual(getattr(app._game_engine,name),getattr(baseline,name),name)
+                    if baseline.status!='playing':break
+                self.assertGreater(baseline.elapsed,3)
+        finally:Window.size=original
 
     def test_right_click_does_not_navigate_and_wide_side_tap_flaps_once(self):
         class Pointer(MotionEvent):

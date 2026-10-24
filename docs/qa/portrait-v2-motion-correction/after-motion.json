@@ -1,0 +1,26 @@
+[
+  {
+    "width": 800,
+    "height": 1280,
+    "display_units_per_source_unit": 1.0,
+    "wave_distance_source_units": 198.0
+  },
+  {
+    "width": 452,
+    "height": 900,
+    "display_units_per_source_unit": 1.0,
+    "wave_distance_source_units": 198.0
+  },
+  {
+    "width": 800,
+    "height": 900,
+    "display_units_per_source_unit": 1.0,
+    "wave_distance_source_units": 198.0
+  },
+  {
+    "width": 360,
+    "height": 640,
+    "display_units_per_source_unit": 1.0,
+    "wave_distance_source_units": 198.0
+  }
+]

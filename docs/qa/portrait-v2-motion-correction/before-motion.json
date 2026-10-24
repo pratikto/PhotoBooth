@@ -1,0 +1,29 @@
+[
+  {
+    "width": 800,
+    "height": 1280,
+    "old_far_speed_logical_per_second": 180.92250000000035,
+    "old_near_speed_logical_per_second": 123.75,
+    "speed_ratio": 1.4620000000000029,
+    "old_far_wave_distance": 258.06,
+    "old_near_wave_distance": 204.89999999999998
+  },
+  {
+    "width": 452,
+    "height": 900,
+    "old_far_speed_logical_per_second": 124.76640000000032,
+    "old_near_speed_logical_per_second": 123.75,
+    "speed_ratio": 1.0082133333333358,
+    "old_far_wave_distance": 199.06773333333336,
+    "old_near_wave_distance": 198.12266666666665
+  },
+  {
+    "width": 800,
+    "height": 900,
+    "old_far_speed_logical_per_second": 301.6200000000026,
+    "old_near_speed_logical_per_second": 123.75,
+    "speed_ratio": 2.4373333333333544,
+    "old_far_wave_distance": 384.85333333333335,
+    "old_near_wave_distance": 219.46666666666664
+  }
+]
