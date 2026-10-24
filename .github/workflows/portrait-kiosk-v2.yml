@@ -66,7 +66,7 @@ jobs:
       - name: Verify unchanged latest Meong Fly modules and original regression suite
         run: xvfb-run -a python -m unittest discover -s tests -p 'test_meong_fly*.py' -v
       - name: Reuse muted native channels across twenty audio cycles (dummy PCM output)
-        run: PHOTOBOOTH_TEST_AUDIO=1 xvfb-run -a python -m unittest tests.test_kiosk_v2_native_audio -v
+        run: PHOTOBOOTH_TEST_AUDIO=1 xvfb-run -a python -m unittest tests.test_kiosk_v2_native_audio tests.test_kiosk_v2_game_music -v
       - name: Capture real Kivy pages at 800x1280 (fresh Xvfb process)
         run: xvfb-run -a -s "-screen 0 1600x1600x24" python tools/render_portrait_v2.py --output-dir /tmp/meong-portrait-v2 --width 800 --height 1280
       - name: Capture compact Kivy pages at 452x900 (RGB readback-aligned)

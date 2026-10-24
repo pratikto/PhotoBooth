@@ -1,5 +1,7 @@
 ## Version 1.0.0 — release-source verification (2026-10-19)
 
+> **P4 owner follow-up QA (2026-10-24):** 527 final native-fixture tests PASS with zero skips; new native mouse-dot reproduction/cleanup, full-window bounds, original scene crop parity, gallery/MOCK discount agreement and twenty game PCM cycles. [Updated 28-item Submit form](qa/portrait-v2-p4/windows-checklist.html) starts empty; physical Windows audio/layout acceptance remains open. [Proof and checkpoints](qa/portrait-v2-game-followup/README.md).
+
 > **Meong Fly reuse QA (2026-10-24):** 98 unchanged original tests plus integration/regression coverage; final 512 full PASS, zero skips. Source hashes and original renderer identity verified; 14 native FBO comparisons match at both portrait sizes, 30 full-window captures reviewed. [Current evidence](qa/portrait-v2-meong-reuse/README.md); [fresh original-game Submit form](qa/portrait-v2-p4/windows-checklist.html). Windows feel/animation/device acceptance remains open, P3 owner PASS unchanged.
 
 > **Current P4 QA gate (2026-10-23):** 406 final source tests PASS, zero skips; 42 actual P4 captures reviewed and 28-item form verified in Chromium at both required sizes. [Windows P4 checklist with Submit](qa/portrait-v2-p4/windows-checklist.html) starts unchecked and gates new P4 twenty-cycle items; P3 owner acceptance remains valid. Sandbox/provider/merchant/actual discount/scanner tests remain NOT RUN and are not part of a MOCK PASS. [Tests, commands and remaining gates](qa/portrait-v2-p4/README.md).

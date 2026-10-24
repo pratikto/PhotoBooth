@@ -16,13 +16,16 @@ LOG = logging.getLogger(__name__)
 BUNDLED_SOUNDS = Path(__file__).resolve().parents[1] / "assets" / "audio"
 SOUND_FILES = {
     "music": "meong-v2-music.wav",
+    "game_music": "meong-v2-game-chase.wav",
     "button": "meong-v2-button.wav",
     "count": "meong-v2-count.wav",
     "shutter": "meong-v2-shutter-soft.wav",
     "success": "meong-v2-success.wav",
 }
-# Advertising video owns its audio; still images may use GUI music. DEMO game
-# pages stay free of GUI music and use the single shared click owner only.
+# Advertising video owns its audio. Game scenes share one distinct loop, with
+# no overlap with the normal GUI loop and the same single button SFX owner.
+GAME_MUSIC_PAGES = frozenset({'game_preview','game_receipt','game_play','game_result'})
+MUSIC_NAMES = ('music','game_music')
 MUSIC_PAGES = frozenset({"tutorial", "templates", 'photo_confirm', 'capture', 'review', 'result', 'mock_checkout'})
 KNOWN_PAGES = MUSIC_PAGES | frozenset({"advert", "game_preview", 'game_receipt', 'game_play', 'game_result'})
 
@@ -132,7 +135,7 @@ class PortraitAudio:
                 handle = self._load(str(path)) if path.is_file() else None
                 if handle is not None:
                     handle.volume = 0.0
-                    if name == "music":
+                    if name in MUSIC_NAMES:
                         handle.loop = True
                 self._handles[name] = handle
                 if handle is None:
@@ -161,16 +164,20 @@ class PortraitAudio:
                 LOG.warning("Meong v2 audio stop failure", exc_info=True)
 
     def _sync_music(self, *, restart=False):
-        handle = self._handles.get("music")
+        selected = 'game_music' if self.page in GAME_MUSIC_PAGES else 'music'
+        for name in MUSIC_NAMES:
+            if name != selected:
+                self._stop(self._handles.get(name))
+        handle = self._handles.get(selected)
         should_play = (self.enabled and not self.suspended and
-                       (self.page in MUSIC_PAGES or
+                       (self.page in MUSIC_PAGES or self.page in GAME_MUSIC_PAGES or
                         (self.page == "advert" and self.ad_media in {"image", "fallback"}))
                        and self.music_gain > 0)
         if not should_play:
             self._stop(handle)
             return False
         if handle is None:
-            handle = self._sound("music")
+            handle = self._sound(selected)
         if handle is None:
             return False
         try:
@@ -200,7 +207,7 @@ class PortraitAudio:
             self.ad_media = "video"
         if page not in MUSIC_PAGES:
             for name, handle in self._handles.items():
-                if name not in {"music", "button"}:
+                if name not in {*MUSIC_NAMES, "button"}:
                     self._stop(handle)
         return self._sync_music()
 
@@ -244,8 +251,9 @@ class PortraitAudio:
 
         Native state=play is only a provider response, NOT proof of speaker audio.
         """
-        if self._handles.get("music") is None:
-            self._handles.pop("music", None)
+        selected = 'game_music' if self.page in GAME_MUSIC_PAGES else 'music'
+        if self._handles.get(selected) is None:
+            self._handles.pop(selected, None)
         return self._sync_music(restart=True)
 
     def suspend(self):
@@ -258,11 +266,13 @@ class PortraitAudio:
         self._sync_music()
 
     def status(self):
-        handle = self._handles.get("music")
+        selected = 'game_music' if self.page in GAME_MUSIC_PAGES else 'music'
+        handle = self._handles.get(selected)
         return {
             "page": self.page,
             "enabled": self.enabled,
             "music_gain": self.music_gain,
+            "music_track": selected,
             "music_state": getattr(handle, "state", "unloaded") if handle else "unavailable",
             "provider": type(handle).__name__ if handle is not None else "none",
             "last_error": self.last_error,

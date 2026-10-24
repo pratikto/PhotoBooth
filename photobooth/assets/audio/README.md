@@ -58,3 +58,19 @@ restarts the music sound handle for an audible audition; ordinary background
 music transitions do **not** restart an already playing loop. On desktop,
 the app prefers SDL2 for these WAVs; an explicitly set `KIVY_AUDIO` retains
 provider selection. Physical Windows speaker output still needs owner validation.
+
+
+## Portrait v2 game loop — Asteroid Chase (2026-10-24)
+
+`meong-v2-game-chase.wav`: 30-second original arcade loop, 128 BPM, D minor,
+with short arpeggios, pulse bass, soft percussion and restrained bell accents.
+It reuses the existing `_note` instruments from `photobooth/audio.py`; the score
+is new and generated offline with deterministic noise. No sampled recording,
+external audio API or runtime synthesis. PCM format matches the existing bank:
+mono signed 16-bit little-endian, 22,050 Hz, bounded peaks and soft loop edges.
+
+Regenerate intentionally: `python -m photobooth.kiosk_v2.game_music`.
+The existing GUI/v1 soundtrack bytes and playback manager are unchanged. V2's
+single PortraitAudio owner switches between GUI/game loops before starting the
+next one; ad video remains exclusive. A real Windows speaker check still judges
+its sound/tension/volume; dummy PCM tests only prove valid audible samples.

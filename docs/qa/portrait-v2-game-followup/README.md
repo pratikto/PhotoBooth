@@ -64,3 +64,68 @@ all displayed reductions are explicitly SIMULASI and checkout stays MOCK-only.
 [transcript](stage2-offer-tests.txt). Includes actual gallery-vs-backend totals,
 multiple designs/copies, empty/loss, admission/recovery and twenty MOCK visits.
 Stage-2 rollback: `4896d51`; retain persistent attempts/orders.
+
+
+## Stage 3 — dedicated game soundtrack and final regression
+
+New **Asteroid Chase** is an original 30-second minor-key arcade loop at 128 BPM,
+using the existing synth's harp/bass/bell instruments with short arpeggios and
+soft percussion. No external audio service or sampled recording. Format matches
+the existing sound bank: mono signed 16-bit PCM, 22,050 Hz; bounded peaks, quiet
+edges. [Provenance/hash](game-music-provenance.json). Generator runs offline;
+playback reads the shipped WAV. GUI/v1 song and v1 audio code are unchanged.
+
+The existing single PortraitAudio owner prewarms the game sound silently and
+switches tracks before play: game intro/receipt/play/result share ONE game loop;
+tutorial/gallery/checkout use the GUI loop; image ads use GUI music, video ads
+own their audio. Game-page changes do not restart the game song. Volume zero,
+button effects, minimize/restore and close retain established behavior. No extra
+mixer or player App is introduced.
+
+**39 focused audio tests PASS**, zero skips:
+[transcript](stage3-audio-tests.txt). Native SDL dummy post-mix sampling verifies
+nonzero game PCM by itself across twenty cycles, only one active music channel,
+normal GUI resumption and final silence. Fake-provider cases verify one loop
+across all four game scenes and gain/suspend/restart/close. Actual Windows
+speakers still judge audibility, timbre, tension and loudness.
+
+**527 final full tests PASS**, zero failures/errors/skips, with native Kivy,
+audio/video and public palm fixtures. [Final transcript](final-full-tests.txt).
+Original Meong Fly engine/compositor/animations and 26 reference file hashes
+remain unchanged; only the v2 host's background plate differs, with the original
+portrait scene compared independently. Legacy camera/photo/printer/workflow and
+real payment/scanner are untouched.
+
+Fifty final Kivy captures verified: thirty game states plus twenty MOCK states,
+at 800×1280 and 452×900. Reviewed [800 game contact](final-contact-800x1280.jpg),
+[452 game contact](final-contact-452x900.jpg) and winning gallery/checkout pairs.
+Manifest hashes: [800 game](final-render-800x1280.json),
+[452 game](final-render-452x900.json), [800 MOCK](final-checkout-800x1280.json),
+[452 MOCK](final-checkout-452x900.json). States are synthetic; precommit SHA and
+tracked changes are recorded truthfully. Matching-source CI follows push.
+
+The [28-item Submit checklist](../portrait-v2-p4/windows-checklist.html) now
+covers full-window background, removed non-playing footer, right-click cleanup,
+gallery/net-MOCK math, spent wins and distinct game music. Fresh storage key
+avoids importing old checkmarks. Browser checks revalidated at both sizes:
+[report](form-verification.json). P3 owner acceptance remains valid.
+
+## Delivery and Windows retest
+
+- Baseline / stage-1 rollback: `b0be59e`.
+- `4896d51`: window/background, footer and native mouse correction (18 PASS).
+- `16bc7c6`: shared winning quote and spent-offer correction (38 PASS).
+- Stage 3 source: dedicated music, final 527 PASS; CI/HEAD recorded after push.
+  Rollback music stage to `16bc7c6` if needed; preserve attempts/orders.
+
+Close the old app, pull `feature/portrait-kiosk-v2-next` with `--ff-only`, then
+start the existing `python tools/run_portrait_v2.py` launcher in the Windows
+venv. Restart is necessary for the mouse provider configuration and new WAV.
+Use a new DEMO code for each play. Check resizing/left touch/right clicks,
+minimize/restore, new music and win/loss. Win → one design/one copy must show
+Rp10.000 − Rp2.500 = Rp7.500 in BOTH gallery and MOCK checkout (the latter keeps
+its existing PHOTOBOOTH_V2_CHECKOUT_MOCK=1 opt-in). Do not enable production.
+
+No known remaining failure in the tested local scenarios. Windows feel/speaker
+acceptance and previously open provider Sandbox/merchant gates are not claimed
+PASS; all prices/discounts here remain nonfinancial simulations.

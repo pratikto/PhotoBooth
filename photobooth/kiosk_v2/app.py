@@ -113,7 +113,7 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
         self.template_index = 0
         self._textures = {}
         self._preview_preloader = PreviewPreloader(self.templates)
-        self._idle_audio_pending = ['count', 'shutter', 'success']
+        self._idle_audio_pending = ['count', 'shutter', 'success', 'game_music']
         self._idle_failed_previews = set()
         self._idle_asset_event = None
         self._ad_player = None

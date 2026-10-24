@@ -1,0 +1,90 @@
+{
+  "source_sha": "16bc7c6e2c0b22516903c801e735d3bb19589847",
+  "tracked_changes": true,
+  "synthetic_only": true,
+  "game_result_injected": true,
+  "recovery_seeded": true,
+  "real_provider": false,
+  "screenshots": [
+    {
+      "file": "01-mock-gallery-800x12800001.png",
+      "page": "templates",
+      "mock_state": null,
+      "width": 800,
+      "height": 1280,
+      "sha256": "c4d4349563d32451444401ead6b66778bb3f9934f3b4467bd1e5ae8711ce6cf9"
+    },
+    {
+      "file": "02-regular-pending-800x12800001.png",
+      "page": "mock_checkout",
+      "mock_state": "PENDING",
+      "width": 800,
+      "height": 1280,
+      "sha256": "d4e9df4d0608698fac6102220253351bcad24d28223a176be74c269416f2673b"
+    },
+    {
+      "file": "03-cancelled-800x12800001.png",
+      "page": "mock_checkout",
+      "mock_state": "CANCELLED",
+      "width": 800,
+      "height": 1280,
+      "sha256": "6097d63d41fdf27ff0d303ec08353d9d7695fcaa71c164dcbe7e706033467f60"
+    },
+    {
+      "file": "04-win-gallery-800x12800001.png",
+      "page": "templates",
+      "mock_state": null,
+      "width": 800,
+      "height": 1280,
+      "sha256": "1fde235012cf586860cf2c3d2db5b9b1954b7f512d9694c0f3f7ad5ea7170645"
+    },
+    {
+      "file": "05-win-pending-800x12800001.png",
+      "page": "mock_checkout",
+      "mock_state": "PENDING",
+      "width": 800,
+      "height": 1280,
+      "sha256": "7d86a479f7762707e0e9999b463d91491c26eca3672d19f8e254852bd2ef022f"
+    },
+    {
+      "file": "06-unknown-800x12800001.png",
+      "page": "mock_checkout",
+      "mock_state": "UNKNOWN",
+      "width": 800,
+      "height": 1280,
+      "sha256": "e27bcd47dc73806344d19b9ce80a1e58825bc5df939c643e96bbf34e4827fbf3"
+    },
+    {
+      "file": "07-confirmed-800x12800001.png",
+      "page": "mock_checkout",
+      "mock_state": "CONFIRMED",
+      "width": 800,
+      "height": 1280,
+      "sha256": "d2335d1b58e9403d46fb55fb8cd32c0d1dca50c5db3f9d80ea72b192f18c3d2f"
+    },
+    {
+      "file": "08-photo-consent-800x12800001.png",
+      "page": "photo_confirm",
+      "mock_state": "ADMITTED",
+      "width": 800,
+      "height": 1280,
+      "sha256": "44df3468c9c96c03c6b06754c5b3eccd014b230f481b9e89ab59c86755a5386a"
+    },
+    {
+      "file": "09-expired-800x12800001.png",
+      "page": "mock_checkout",
+      "mock_state": "EXPIRED",
+      "width": 800,
+      "height": 1280,
+      "sha256": "790dcfc6d35f79d9b13b65007ef86120c9843a4119ab8db802cf1b0ba68f9d05"
+    },
+    {
+      "file": "10-recovered-800x12800001.png",
+      "page": "mock_checkout",
+      "mock_state": "PENDING",
+      "width": 800,
+      "height": 1280,
+      "sha256": "42f77c75ad059a404a5b87e1a16132056f6640015feb413176e16a0e17264800"
+    }
+  ]
+}

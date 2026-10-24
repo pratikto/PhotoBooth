@@ -1,0 +1,18 @@
+{
+  "title": "Asteroid Chase",
+  "bpm": 128,
+  "key": "D minor",
+  "file": "photobooth/assets/audio/meong-v2-game-chase.wav",
+  "sha256": "d1c67ede3aa75bc91543ef86f08b31b68fdffdaef9994d24d4d32575bb615001",
+  "format": {
+    "rate": 22050,
+    "channels": 1,
+    "sample_bytes": 2,
+    "seconds": 30.0
+  },
+  "generator": "photobooth/kiosk_v2/game_music.py",
+  "reused_instruments": "photobooth/audio.py::_note",
+  "original_score": true,
+  "runtime_generation": false,
+  "external_audio_service": false
+}

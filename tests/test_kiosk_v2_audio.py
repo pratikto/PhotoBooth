@@ -35,6 +35,34 @@ class FakeClip:
 
 
 class PortraitAudioTests(unittest.TestCase):
+    def test_game_has_one_distinct_loop_across_all_scenes_then_yields_to_gui_and_video(self):
+        self.audio.enter_page('tutorial')
+        gui=self.loaded[SOUND_FILES['music']]
+        for page in ('game_preview','game_receipt','game_play','game_result'):
+            self.assertTrue(self.audio.enter_page(page))
+            game=self.loaded[SOUND_FILES['game_music']]
+            self.assertTrue(game.loop)
+            self.assertEqual(game.plays,1)
+            self.assertEqual(gui.state,'stop')
+            self.assertEqual(self.audio.status()['music_track'],'game_music')
+        self.audio.suspend();self.assertEqual(game.state,'stop')
+        self.audio.resume();self.assertEqual(game.plays,2)
+        self.audio.enter_page('tutorial');self.audio.enter_page('templates')
+        self.assertEqual(game.state,'stop');self.assertEqual(gui.plays,2)
+        self.audio.enter_page('advert');self.audio.set_ad_media('video')
+        self.assertEqual(game.state,gui.state)
+        self.assertEqual(gui.state,'stop')
+        self.audio.close();self.assertEqual(game.unloads,1)
+
+    def test_game_music_respects_zero_gain_without_muting_button_feedback(self):
+        self.audio.enter_page('game_play');game=self.loaded[SOUND_FILES['game_music']]
+        self.audio.set_music_gain(0)
+        self.assertEqual(game.state,'stop')
+        self.assertTrue(self.audio.cue('button'))
+        self.audio.set_music_gain(.2)
+        self.assertEqual(game.state,'play')
+        self.assertAlmostEqual(game.volume,.2)
+
     def test_mock_checkout_preserves_one_music_stream_and_button_feedback(self):
         self.audio.enter_page('tutorial');music=self.loaded['meong-v2-music.wav']
         self.audio.enter_page('templates');self.audio.enter_page('mock_checkout')
@@ -134,14 +162,14 @@ class PortraitAudioTests(unittest.TestCase):
     def test_in_game_preview_has_no_legacy_music_overlap(self):
         self.audio.enter_page("tutorial")
         clip = self.loaded["meong-v2-music.wav"]
-        self.assertFalse(self.audio.enter_page("game_preview"))
+        self.assertTrue(self.audio.enter_page("game_preview"))
         self.assertEqual(clip.state, "stop")
 
     def test_demo_game_pages_keep_gui_music_off_and_single_click_owner_available(self):
         self.audio.enter_page('tutorial')
         music = self.loaded[SOUND_FILES['music']]
         for page in ('game_receipt', 'game_play', 'game_result'):
-            self.assertFalse(self.audio.enter_page(page))
+            self.assertTrue(self.audio.enter_page(page))
             self.assertEqual(music.state, 'stop')
             self.assertTrue(self.audio.cue('button'))
             self.assertFalse(self.audio.cue('shutter'))

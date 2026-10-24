@@ -1,5 +1,7 @@
 # Meong Photobooth — Documentation and release changelog
 
+> **P4 game soundtrack/final regression (2026-10-24):** Add original 128 BPM minor-key game loop using existing synth instruments and single-owner GUI/game track switching. Preserve click, gain, video exclusivity, minimize/restore and close. Final 527 full PASS; native PCM and 39 focused audio PASS. Fifty game/MOCK captures checked. [Evidence](qa/portrait-v2-game-followup/README.md).
+
 > **P4 winning quote, stage 2 (2026-10-24):** Share existing MOCK amount math with gallery preview, show subtotal/game reduction/net, and stop reapplying consumed wins including recovered admission. 38 targeted tests PASS. All reductions remain local SIMULASI. [Evidence](qa/portrait-v2-game-followup/README.md).
 
 > **P4 Windows follow-up, stage 1 (2026-10-24):** Fill game host/background with current window, preserve original playfield proportions, remove non-playing return footer and disable mouse multitouch simulation in the v2 launcher. Native red-dot reproduction and 18 focused tests PASS; scanner/payment remain off. [Evidence](qa/portrait-v2-game-followup/README.md).

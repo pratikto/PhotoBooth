@@ -112,6 +112,16 @@ class NativeChannelReuseTests(unittest.TestCase):
                         output = sample_output()
                         self.assertTrue(output and max(output) > 50, 'native output was silent')
                     audio.enter_page('advert')
+                    # A real distinct game loop must emit PCM by itself, not
+                    # merely report state=play or borrow the click's samples.
+                    audio.enter_page('game_play')
+                    audio._handles['button'].stop()
+                    self.assertEqual(audio._handles['music'].state,'stop')
+                    self.assertEqual(audio._handles['game_music'].state,'play')
+                    self.assertEqual(len(active()),1,'more than one music channel')
+                    output=sample_output()
+                    self.assertTrue(output and max(output)>50,'game soundtrack PCM was silent')
+                    audio.enter_page('advert')
                     self.assertTrue(audio.set_ad_media('image'))
                     audio.suspend()
                     audio.resume()

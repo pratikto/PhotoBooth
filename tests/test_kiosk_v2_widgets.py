@@ -38,12 +38,12 @@ class PortraitKivySmokeTests(unittest.TestCase):
             with patch.object(app.audio_v2, 'prepare') as audio, \
                     patch.object(app._preview_preloader, 'get', return_value=preview), \
                     patch('photobooth.kiosk_v2.app._portrait_strip_texture', wraps=_portrait_strip_texture) as upload:
-                for _ in range(3 + len(app.templates)):
+                for _ in range(4 + len(app.templates)):
                     before = audio.call_count + upload.call_count
                     app._warm_idle_assets(0)
                     self.assertEqual(audio.call_count + upload.call_count, before + 1)
                 self.assertEqual([call.kwargs['names'] for call in audio.call_args_list],
-                                 [('count',), ('shutter',), ('success',)])
+                                 [('count',), ('shutter',), ('success',), ('game_music',)])
                 self.assertEqual(len(app._textures), 12)
                 self.assertEqual(app._view_revision, revision)
                 self.assertFalse(any(app.quantities.values()))
