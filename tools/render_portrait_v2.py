@@ -93,22 +93,27 @@ class VisualRecorder(PortraitKioskV2App):
                 if original.size != self.dimensions:
                     raise RuntimeError(f"Wrong screenshot size: {original.size}")
                 rgb = original.convert("RGB")
-                brands = [w for w in self.stage.walk() if isinstance(w, MeongLogo)]
-                if len(brands) != 1:
-                    raise RuntimeError(f"Expected one brand on {name}, got {len(brands)}")
-                mark = brands[0].wordmark
-                x, y = mark.to_window(mark.x, mark.y)
-                right, top = mark.to_window(mark.right, mark.top)
-                box = (max(0, int(x)), max(0, int(rgb.height - top)),
-                       min(rgb.width, int(right)), min(rgb.height, int(rgb.height - y)))
-                if box[2] <= box[0] or box[3] <= box[1]:
-                    raise RuntimeError(f"Offscreen Meong wordmark on {name}")
-                expected_ink = tuple(int(mark.ink.strip('#')[i:i + 2], 16) for i in (0, 2, 4))
-                ink_pixels = sum(1 for pixel in rgb.crop(box).getdata()
-                                 if all(abs(channel - target) <= 3
-                                        for channel, target in zip(pixel, expected_ink)))
-                if ink_pixels < 20:
-                    raise RuntimeError(f"Meong wordmark missing from actual pixels on {name}")
+                if self.navigation.page == 'game_preview':
+                    from photobooth.meong_fly_gui import MeongFlyStage
+                    if not isinstance(self._game_field, MeongFlyStage) or self._game_field._screen_seen != 'start':
+                        raise RuntimeError('Expected actual latest Meong Fly start stage')
+                else:
+                    brands = [w for w in self.stage.walk() if isinstance(w, MeongLogo)]
+                    if len(brands) != 1:
+                        raise RuntimeError(f"Expected one brand on {name}, got {len(brands)}")
+                    mark = brands[0].wordmark
+                    x, y = mark.to_window(mark.x, mark.y)
+                    right, top = mark.to_window(mark.right, mark.top)
+                    box = (max(0, int(x)), max(0, int(rgb.height - top)),
+                           min(rgb.width, int(right)), min(rgb.height, int(rgb.height - y)))
+                    if box[2] <= box[0] or box[3] <= box[1]:
+                        raise RuntimeError(f"Offscreen Meong wordmark on {name}")
+                    expected_ink = tuple(int(mark.ink.strip('#')[i:i + 2], 16) for i in (0, 2, 4))
+                    ink_pixels = sum(1 for pixel in rgb.crop(box).getdata()
+                                     if all(abs(channel - target) <= 3
+                                            for channel, target in zip(pixel, expected_ink)))
+                    if ink_pixels < 20:
+                        raise RuntimeError(f"Meong wordmark missing from actual pixels on {name}")
                 left = rgb.crop((2, int(rgb.height * .10),
                                  min(12, rgb.width), int(rgb.height * .90)))
                 rows = ImageChops.difference(

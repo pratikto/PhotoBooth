@@ -1,5 +1,7 @@
 # Meong Photobooth — Documentation and release changelog
 
+> **Meong Fly reuse, stage 2 (2026-10-24):** Replace custom v2 game view with direct original MeongFlyStage/MeongFlyFlow; engine becomes compatibility imports of the same class. Preserve original pose/film/parallax/rainbow/score/impact and async v2 routing guards. Remove redundant asteroid assets; fix stale invalid-code warning. 512 full PASS, 14 native pixel-identical fixtures and 30 reviewed captures. [Evidence](qa/portrait-v2-meong-reuse/README.md).
+
 > **Meong Fly reuse correction, stage 1 (2026-10-24):** Prior v2 reused physics but recreated the view. Add latest reference modules/assets/tests byte-for-byte from `672e3f7`; 98 original tests PASS. Actual renderer wiring follows as a separate push. [Diagnosis/provenance](qa/portrait-v2-meong-reuse/README.md).
 
 > **P4 source evidence archived (2026-10-23, docs only):** All three CI jobs SUCCESS at `97b5596` ([39973934595](https://github.com/pratikto/PhotoBooth/actions/runs/39973934595)). Original artifact digest matches GitHub; four clean-source reports and all 42 P4 image hashes/dimensions verified, contact sheets reviewed. No runtime change or Windows/provider certification. [Evidence/checkpoints](qa/portrait-v2-p4/README.md).

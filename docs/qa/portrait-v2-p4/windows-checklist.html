@@ -13,7 +13,7 @@
 <body><main>
 <header><div class="tag">MEONG PHOTOBOOTH · GUI V2</div><h1>Windows — P4 Game & Checkout MOCK</h1><p>Centang hanya tes yang sudah lulus. Item kosong berarti gagal atau belum diuji. Jika aplikasi keluar sendiri, hentikan uji dan tulis catatan. Untuk G01–G02, selesaikan minimal 20 putaran dan isi jumlah putaran di bawah.</p></header>
 <div class="panel help"><strong>Jalankan:</strong> pull branch <code>feature/portrait-kiosk-v2-next</code>, aktifkan venv Windows yang sudah ada, lalu <code>git rev-parse --short HEAD</code> dan <code>python tools/run_portrait_v2.py</code>.<br><br>
-<strong>Game:</strong> MAIN MEONG FLY → COBA GAME · KODE DEMO. Gunakan kode baru tiap putaran, misalnya DEMO-P4-001, DEMO-P4-002. Kode yang sudah diklaim tetap terpakai walaupun kalah, keluar, atau restart. Tidak ada scanner struk asli.<br><br>
+<strong>Game:</strong> MAIN MEONG FLY → MAIN GAME. Gunakan kode baru tiap putaran, misalnya DEMO-P4-001, DEMO-P4-002. Kode yang sudah diklaim tetap terpakai walaupun kalah, keluar, atau restart. Tidak ada scanner struk asli.<br><br>
 <strong>Checkout MOCK:</strong> tutup GUI, jalankan <code>$env:PHOTOBOOTH_V2_CHECKOUT_MOCK = "1"</code> di PowerShell, lalu buka launcher lagi. Pilih jumlah cetak → UJI CHECKOUT MOCK. Untuk kembali ke default setelah menutup GUI: <code>Remove-Item Env:PHOTOBOOTH_V2_CHECKOUT_MOCK -ErrorAction SilentlyContinue</code>.<br><br>
 <strong>MOCK bukan pembayaran:</strong> QR hanya berisi teks uji; jangan membayar. Tombol SIMULASI KONFIRMASI hanya mengubah ledger lokal. Tidak ada provider Sandbox, pembayaran, diskon nyata, atau scanner produksi yang diaktifkan. Uji provider/merchant adalah gate terpisah yang belum dijalankan.<br><br>
 Centang hasil P4 yang benar-benar diuji. Jangan menyalin centang P3; penerimaan P3 sebelumnya tetap dicatat. Menang belum dicoba berarti item promo dibiarkan kosong. Submit menyiapkan teks hasil, lalu salin/tempel ke chat; tidak mengirim otomatis.</div>
@@ -46,7 +46,7 @@ const SECTIONS = [
     [
       "Jalankan launcher pada branch yang benar dan isi HEAD yang terlihat pada terminal/log.",
       "Iklan gambar memakai musik GUI; iklan video hanya audio video. MULAI FOTO tetap membawa ke tutorial.",
-      "Logo piksel, teks dan tombol game/checkout terlihat utuh pada 800×1280 dan 452×900; catat ukuran aktual.",
+      "Tampilan game sama dengan versi terbaru Meong Fly; gambar, teks dan tombol game/checkout utuh pada 800×1280 dan 452×900. Catat ukuran aktual.",
       "Tanpa flag CHECKOUT_MOCK, tombol checkout MOCK tidak muncul; PEMBAYARAN tetap nonaktif."
     ]
   ],
@@ -54,13 +54,13 @@ const SECTIONS = [
     "B",
     "Meong Fly DEMO",
     [
-      "MAIN MEONG FLY membuka pengantar; kode kosong atau tanpa awalan DEMO- ditolak, belum masuk permainan.",
-      "Kode DEMO baru diterima tepat sekali; tap cepat pada validasi tidak membuat permainan ganda.",
-      "Tap area game memulai/menaikkan Meong, asteroid bergerak lancar dan skor/tumbukan bekerja.",
-      "JEDA serta minimize menghentikan game; setelah dipulihkan game tetap dijeda sampai LANJUT MAIN ditekan.",
+      "MAIN MEONG FLY membuka intro asli branch Meong Fly terbaru (672e3f7); MAIN GAME membuka input kode. Kode kosong atau tanpa awalan DEMO- ditolak.",
+      "VALIDASI DEMO 1X menerima kode baru tepat sekali dan langsung memulai permainan seperti versi original; tap cepat tidak membuat game ganda.",
+      "Intro menampilkan cetak foto idle → keluar dari slot → tertahan → jatuh; gameplay memakai sprite/pose, pelangi, parallax dan efek skor/tumbukan asli. Tap area game menaikkan Meong.",
+      "Tombol II di HUD dan minimize menghentikan game; setelah dipulihkan masih PAUSED sampai tombol II ditekan lagi.",
       "AKHIRI GAME menyimpan hasil keluar; kode tersebut tetap tidak bisa dimainkan lagi.",
       "Menang 10 poin menampilkan potensi promo simulasi Rp2.500; kalah tanpa potongan; tidak ada MAIN LAGI.",
-      "Kedua hasil menuju tutorial wajib jika belum dilihat, lalu 12 template asli; galeri tetap menampilkan harga dasar.",
+      "PILIH LAYOUT FOTO pada kedua hasil menuju tutorial v2 jika belum dilihat, lalu 12 template asli. Tidak memakai placeholder layout standalone; harga dasar galeri tetap sama.",
       "Setelah kembali ke iklan dan setelah restart, kode DEMO yang pernah dipakai tetap ditolak."
     ]
   ],
@@ -99,7 +99,7 @@ const SECTIONS = [
     ]
   ]
 ];
-const KEY = 'meong-windows-p4-game-mock-v1';
+const KEY = 'meong-windows-p4-original-game-mock-v2';
 const CYCLE_ITEMS = new Set(['G01','G02']);
 try {
  const parts = new Intl.DateTimeFormat('en-CA', {timeZone:'Asia/Jakarta',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());

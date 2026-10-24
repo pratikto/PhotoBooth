@@ -1,5 +1,7 @@
 # FEAT-022 P4 — staged DEMO game and checkout integration
 
+> **Superseded game visuals (2026-10-24):** Owner requests the complete latest Meong Fly, not a custom v2 rendering of its engine. The [reuse correction](../portrait-v2-meong-reuse/README.md) now tracks original `MeongFlyStage`/`MeongFlyFlow`, byte-identical modules and native pixel comparisons. Game entry is MAIN MEONG FLY → MAIN GAME → VALIDASI DEMO 1X; pause is the original II HUD control. Earlier custom-game screenshots below are historical. Checkout/ledger/P3 safety contracts remain valid.
+
 Owner authorization, 2026-10-23 Asia/Jakarta: **“p3 kan udah diuji.. lanjut p4 aja lah”**.
 Baseline: `2d0469aff696c23f000bf225c3d66a3aa2d006a5` on
 `feature/portrait-kiosk-v2-next`. P3 owner acceptance remains valid; missing
@@ -131,7 +133,7 @@ git rev-parse --short HEAD
 python tools/run_portrait_v2.py
 ```
 
-MAIN MEONG FLY → COBA GAME · KODE DEMO → new code, e.g. DEMO-P4-001.
+MAIN MEONG FLY → MAIN GAME → VALIDASI DEMO 1X → new code, e.g. DEMO-P4-001.
 Use a different code for each new attempt; invalid/previously used codes do not
 start a game. Both outcomes continue through the normal tutorial/gallery.
 

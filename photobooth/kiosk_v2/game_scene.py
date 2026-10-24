@@ -1,85 +1,132 @@
-"""Native, clipped Meong Fly display; fixed canvas objects, no per-frame uploads."""
+"""Thin v2 host for the unchanged latest MeongFlyStage and MeongFlyFlow.
 
-from kivy.core.image import Image as CoreImage
-from pathlib import Path
-from kivy.graphics import Color, Rectangle
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.stencilview import StencilView
+All painting, camera/film composition, animation and physics come from the
+original modules. Only input, async ledger and kiosk lifecycle are adapted.
+"""
 
-from .branding import CAMERA_ART
-from .game_engine import WIDTH, HEIGHT, CAT_X, CAT_LEFT, CAT_RIGHT, CAT_BOTTOM, CAT_TOP, GAP_HEIGHT, PIPE_WIDTH
-from .theme import rgba, PANEL, PURPLE, GOLD, CYAN
+from kivy.clock import Clock
+from kivy.core.window import Window
+
+from photobooth.meong_fly_flow import MeongFlyFlow
+from photobooth.meong_fly_gui import MeongFlyStage
+from photobooth.meong_fly_painter import ACTIONS
 
 
-class GameField(FloatLayout):
-    def __init__(self, engine, flap, **kwargs):
-        super().__init__(**kwargs)
-        self.engine, self._flap, self._disposed = engine, flap, False
-        self._asteroids = [CoreImage(str(Path(__file__).parent/'assets'/'p4'/f'asteroid-{i}.png')).texture
-                           for i in range(5)]
-        for texture in self._asteroids:
-            texture.wrap = 'repeat'
-            texture.mag_filter = texture.min_filter = 'nearest'
-        self.arena = StencilView(size_hint=(None, None))
-        self.add_widget(self.arena)
-        with self.arena.canvas:
-            Color(*rgba(PANEL))
-            self.background = Rectangle()
-            Color(*rgba(CYAN, .5))
-            self.stars = [Rectangle() for _ in range(28)]
-            self.rocks = []
-            for i in range(8):
-                # A faint belt exposes the whole rectangular collision field.
-                Color(*rgba(PURPLE, .18))
-                upper, lower = Rectangle(), Rectangle()
-                Color(1, 1, 1, 1)
-                upper_rocks = Rectangle(texture=self._asteroids[i%5])
-                lower_rocks = Rectangle(texture=self._asteroids[(i+2)%5])
-                self.rocks.append((upper, lower, upper_rocks, lower_rocks))
-            Color(1, 1, 1, 1)
-            self.cat = Rectangle(texture=CoreImage(str(CAMERA_ART)).texture)
-        self.bind(size=self._fit, pos=self._fit)
-        self._fit()
+class ClaimedAttempt:
+    """Bridge original flow callbacks to the already durable v2 claim/result."""
 
-    def _fit(self, *_):
-        self.scale = min(self.width / WIDTH, self.height / HEIGHT)
-        self.arena.size = (WIDTH*self.scale, HEIGHT*self.scale)
-        self.arena.pos = (self.center_x-self.arena.width/2, self.center_y-self.arena.height/2)
-        self.draw()
+    def __init__(self, host):
+        self.host = host
 
-    def draw(self):
-        if self._disposed:
-            return
-        x, y = self.arena.pos
-        s = self.scale
-        self.background.pos, self.background.size = self.arena.pos, self.arena.size
-        for i, star in enumerate(self.stars):
-            star.pos = (x+((i*73+17)%WIDTH)*s, y+((i*137+29)%HEIGHT)*s)
-            star.size = (2*s, 2*s)
-        self.cat.pos = (x+(CAT_X-CAT_LEFT)*s, y+(HEIGHT-self.engine.y-CAT_TOP)*s)
-        self.cat.size = ((CAT_LEFT+CAT_RIGHT)*s, (CAT_BOTTOM+CAT_TOP)*s)
-        for i, (upper, lower, upper_rocks, lower_rocks) in enumerate(self.rocks):
-            if i >= len(self.engine.pipes):
-                upper.size = lower.size = upper_rocks.size = lower_rocks.size = (0, 0)
-                continue
-            pipe = self.engine.pipes[i]
-            top_height = max(0, pipe.gap_y-GAP_HEIGHT/2)
-            bottom_height = max(0, HEIGHT-pipe.gap_y-GAP_HEIGHT/2)
-            upper.pos, upper.size = (x+pipe.x*s, y+(HEIGHT-top_height)*s), (PIPE_WIDTH*s, top_height*s)
-            lower.pos, lower.size = (x+pipe.x*s, y), (PIPE_WIDTH*s, bottom_height*s)
-            for rocks, band, height in ((upper_rocks, upper, top_height), (lower_rocks, lower, bottom_height)):
-                rocks.pos, rocks.size = band.pos, band.size
-                repeats = height/PIPE_WIDTH
-                rocks.tex_coords = (0, 0, 1, 0, 1, repeats, 0, repeats)
-        self.canvas.ask_update()
+    def claim(self, code):
+        attempt = self.host._game_attempt
+        return bool(attempt and attempt['token'] == code and attempt['result'] == 'started')
 
-    def on_touch_down(self, touch):
-        if getattr(touch, 'is_mouse_scrolling', False):
+    def finish(self, code, won):
+        attempt = self.host._game_attempt
+        if attempt and attempt['token'] == code:
+            self.host._finish_game_demo('won' if won else 'lost')
+
+
+class KioskGameFlow(MeongFlyFlow):
+    def __init__(self, host):
+        self.host = host
+        super().__init__(ClaimedAttempt(host), tutorial_seen=host.navigation.tutorial_seen)
+
+    def flap(self):
+        stage = self.host._game_field
+        if stage is None or not stage.input_allowed():
             return False
-        if not self._disposed and self.arena.collide_point(*touch.pos):
-            self._flap()
-            return True
-        return super().on_touch_down(touch)
+        accepted = super().flap()
+        if accepted:
+            self.host.audio_v2.cue('button')
+        return accepted
+
+    def tick(self, dt):
+        if self.host._closed or self.host._suspended or self.host._game_jobs.busy:
+            return
+        # Original tick owns physics, score and terminal transition. The ledger
+        # callback queues persistence; v2 blocks result CTA until it is acked.
+        super().tick(dt)
+
+
+class KioskGameStage(MeongFlyStage):
+    def __init__(self, host, flow, **kwargs):
+        self.host = host
+        self._mounted = self._disposed = False
+        self._mount_revision = -1
+        super().__init__(flow, scanner=None, **kwargs)
+        self.detach()
+
+    def input_allowed(self):
+        return (not self._disposed and self._mounted and not self.host._closed and
+                not self.host._suspended and not self.host._game_jobs.busy and
+                self.host._game_field is self and self._mount_revision == self.host._view_revision)
+
+    def mount(self):
+        if self._disposed:
+            raise RuntimeError('Cannot mount a retired Meong Fly stage.')
+        self._mounted = True
+        self._mount_revision = self.host._view_revision
+        if self._update_event is None:
+            self._update_event = Clock.schedule_interval(self.update, 1/30)
+            Window.bind(mouse_pos=self._mouse_moved)
+        self._refresh()
+
+    def detach(self):
+        self._mounted = False
+        if self._update_event is not None:
+            self._update_event.cancel()
+            self._update_event = None
+        Window.unbind(mouse_pos=self._mouse_moved)
+        self.receipt.focus = False
+        self.receipt.disabled = True
+        if self.parent is not None:
+            self.parent.remove_widget(self)
 
     def dispose(self):
+        self.detach()
         self._disposed = True
+        super().dispose()
+
+    def update(self, dt):
+        if self._mounted and not self._disposed and not self.host._closed and not self.host._suspended:
+            super().update(dt)
+
+    def _sync_overlays(self):
+        super()._sync_overlays()
+        self.receipt.disabled = self.receipt.disabled or self.host._game_jobs.busy or not self._mounted
+        if self.flow.screen == 'scan':
+            self.notice.text = (self.host._game_error or
+                                ('Memeriksa kode DEMO…' if self.host._game_jobs.busy else
+                                 'Scanner nonaktif. Ketik kode DEMO baru.'))
+
+    def validate_receipt(self):
+        if self.input_allowed():
+            self.host._claim_game_demo()
+            self._refresh()
+
+    def _handle_action(self, action):
+        if not self.input_allowed() or action not in ACTIONS.get(self.flow.screen, {}):
+            return
+        callbacks = {
+            'game': self.host._open_game_demo,
+            'photo': lambda:self.host._choose_photo('skip_game'),
+            'back': self.host._back_game_intro,
+            'validate': self.validate_receipt,
+            'pause': self.host._toggle_game_pause,
+            'continue': self.host._continue_game_photo,
+        }
+        callback = callbacks.get(action)
+        if callback is not None:
+            self.host.audio_v2.cue('button')
+            callback()
+
+    def _mouse_moved(self, window, position):
+        if self.input_allowed():
+            super()._mouse_moved(window, self.to_widget(*position))
+
+    def on_touch_down(self, touch):
+        if not self.input_allowed() or getattr(touch, 'is_mouse_scrolling', False):
+            return False
+        return super().on_touch_down(touch)

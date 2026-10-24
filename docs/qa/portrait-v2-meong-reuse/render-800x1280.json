@@ -1,0 +1,115 @@
+{
+  "source_sha": "fd09c7354b79159890cf9c91ea3dfb0429f9a90a",
+  "tracked_changes": true,
+  "synthetic_only": true,
+  "game_states_injected": true,
+  "original_renderer": "photobooth.meong_fly_gui.MeongFlyStage",
+  "reference_sha": "672e3f7089bb40940e5b41644ceb656aa63aafbb",
+  "screenshots": [
+    {
+      "file": "01-intro-800x12800001.png",
+      "page": "game_preview",
+      "width": 800,
+      "height": 1280,
+      "sha256": "c9053c175f84cfc821b2081319181c89693e84b1fc52646bbaf00e18cb2dd1e6"
+    },
+    {
+      "file": "01a-print-idle-800x12800001.png",
+      "page": "game_preview",
+      "width": 800,
+      "height": 1280,
+      "sha256": "4408913a2d985cae74f55c516039666508753c7b76fb93cadca035b43923cfb9"
+    },
+    {
+      "file": "01b-print-feed-800x12800001.png",
+      "page": "game_preview",
+      "width": 800,
+      "height": 1280,
+      "sha256": "ed0fcfe54c1a77b624407898db791610aa186e6b573177124c59852869693f69"
+    },
+    {
+      "file": "01c-print-hold-800x12800001.png",
+      "page": "game_preview",
+      "width": 800,
+      "height": 1280,
+      "sha256": "8b287bec497b6bd8a5245206ba973bfa8eb1bf032d88c8452e819ce9770bee93"
+    },
+    {
+      "file": "01d-print-fall-800x12800001.png",
+      "page": "game_preview",
+      "width": 800,
+      "height": 1280,
+      "sha256": "73d550a954251438c574d88387e95a1ecacec78803a75dfd110ff3a61c23788e"
+    },
+    {
+      "file": "02-code-entry-800x12800001.png",
+      "page": "game_receipt",
+      "width": 800,
+      "height": 1280,
+      "sha256": "44e476a75fa1527c008585f24980c50542b5a301d63720e538d47c91f1aa2d8a"
+    },
+    {
+      "file": "03-invalid-800x12800001.png",
+      "page": "game_receipt",
+      "width": 800,
+      "height": 1280,
+      "sha256": "57a1455f6300e3f5a855ee1c4e8f1afee5dacd8407d9b37c33af3b15d42bef6b"
+    },
+    {
+      "file": "04-original-game-800x12800001.png",
+      "page": "game_play",
+      "width": 800,
+      "height": 1280,
+      "sha256": "2f0f07b072deffa01bc7e95dc2232bccefdc27709ccec5ba56c2e3aa755eaebc"
+    },
+    {
+      "file": "05-paused-game-800x12800001.png",
+      "page": "game_play",
+      "width": 800,
+      "height": 1280,
+      "sha256": "5f3ac247d4d4ab615ee75cfd6c8cfa3185fd776d221db1a2afbfdbe1aa9cfe21"
+    },
+    {
+      "file": "06-win-800x12800001.png",
+      "page": "game_result",
+      "width": 800,
+      "height": 1280,
+      "sha256": "27db7b062f8f0b01a41dedb730fab2972d4bebc560e46dbc629abbddaa465829"
+    },
+    {
+      "file": "07-required-tutorial-800x12800001.png",
+      "page": "tutorial",
+      "width": 800,
+      "height": 1280,
+      "sha256": "5228c20ebe8edb4792667f5df88e25c38f2d73ad96ea878d75866f4117a4bf48"
+    },
+    {
+      "file": "08-win-gallery-800x12800001.png",
+      "page": "templates",
+      "width": 800,
+      "height": 1280,
+      "sha256": "12cccceab63d7f64c9fff2ed137e5e07a14719d12bc9b7b0953ecf750a7ceea0"
+    },
+    {
+      "file": "09-loss-800x12800001.png",
+      "page": "game_result",
+      "width": 800,
+      "height": 1280,
+      "sha256": "da39db9d9fbdc87a9a1a50d6f159e70b00208fae8e1210794d4f160bf2c4e39f"
+    },
+    {
+      "file": "10-loss-gallery-800x12800001.png",
+      "page": "templates",
+      "width": 800,
+      "height": 1280,
+      "sha256": "0f9ae43aee810c7a2533d4f447328df99ade45e77ec6b350c710a8d44cac3c78"
+    },
+    {
+      "file": "11-used-code-800x12800001.png",
+      "page": "game_receipt",
+      "width": 800,
+      "height": 1280,
+      "sha256": "243bda1124a122e138eb454818780b037be1542cf6dc55de7c435b88ed0861e8"
+    }
+  ]
+}

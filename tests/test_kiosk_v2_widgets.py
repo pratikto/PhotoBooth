@@ -830,11 +830,10 @@ class PortraitKivySmokeTests(unittest.TestCase):
             self.assertEqual(app.navigation.page, GAME_PREVIEW)
             buttons = [w for w in widgets(app.stage)
                        if isinstance(w, ArcadeButton)]
-            demo = [b for b in buttons if b.text == 'COBA GAME • KODE DEMO']
-            self.assertEqual(len(demo), 1)
-            self.assertFalse(demo[0].disabled)
-            labels = [w.text for w in widgets(app.stage) if hasattr(w, 'text')]
-            self.assertIn('SCAN STRUK / DISKON ASLI BELUM TERHUBUNG', labels)
+            from photobooth.meong_fly_gui import MeongFlyStage
+            self.assertIsInstance(app._game_field,MeongFlyStage)
+            self.assertEqual(app._game_field.flow.screen,'start')
+            self.assertIsNone(app._game_field._scanner)
             self.assertFalse(hasattr(app.navigation, "discount_amount"))
             self.assertFalse(hasattr(app.navigation, "paid"))
             app._choose_photo("skip_game")
@@ -973,13 +972,19 @@ class PortraitKivySmokeTests(unittest.TestCase):
                             settle()
                             from photobooth.kiosk_v2.branding import MeongLogo
                             brands = [w for w in app.stage.walk() if isinstance(w, MeongLogo)]
-                            self.assertEqual(len(brands), 1)
-                            brand = brands[0]
-                            for part in (brand.art, brand.wordmark, brand.caption):
-                                self.assertGreaterEqual(part.x, brand.x - 1)
-                                self.assertGreaterEqual(part.y, brand.y - 1)
-                                self.assertLessEqual(part.right, brand.right + 1)
-                                self.assertLessEqual(part.top, brand.top + 1)
+                            if app.navigation.page == GAME_PREVIEW:
+                                from photobooth.meong_fly_gui import MeongFlyStage
+                                self.assertIsInstance(app._game_field,MeongFlyStage)
+                                self.assertEqual(app._game_field._screen_seen,'start')
+                                self.assertIsNotNone(app._game_field._camera_layers['hero'][1])
+                            else:
+                                self.assertEqual(len(brands), 1)
+                                brand = brands[0]
+                                for part in (brand.art, brand.wordmark, brand.caption):
+                                    self.assertGreaterEqual(part.x, brand.x - 1)
+                                    self.assertGreaterEqual(part.y, brand.y - 1)
+                                    self.assertLessEqual(part.right, brand.right + 1)
+                                    self.assertLessEqual(part.top, brand.top + 1)
                             for button in (w for w in app.stage.walk() if isinstance(w, ArcadeButton)):
                                 x, y = button.to_window(button.x, button.y)
                                 right, top = button.to_window(button.right, button.top)
@@ -1008,8 +1013,11 @@ class PortraitKivySmokeTests(unittest.TestCase):
                           'LANJUT FOTO TANPA GAME', 'LANJUT PILIH TEMPLATE',
                           '+', 'BERIKUTNYA', 'SELESAI / KEMBALI IKLAN')
                 for count, label in enumerate(labels, 1):
-                    old = button(label)
-                    old.dispatch('on_release')
+                    if label == 'LANJUT FOTO TANPA GAME':
+                        app._game_field._handle_action('photo')
+                    else:
+                        old = button(label)
+                        old.dispatch('on_release')
                     self.assertEqual(cue.call_count, count, label)
                 # The old return button must not affect a new visitor or click.
                 old.dispatch('on_release')

@@ -54,7 +54,7 @@ class GameWidgetTests(unittest.TestCase):
         app._claim_game_demo();app._claim_game_demo()
         self.settle(app)
         self.assertEqual(app.navigation.page,GAME_PLAY)
-        self.assertEqual(app._game_engine.status,'ready')
+        self.assertEqual(app._game_engine.status,'playing')  # Original flow starts on validated claim.
 
     def finish(self, app, won=False):
         app._game_engine.score = TARGET_SCORE if won else 2
@@ -74,10 +74,10 @@ class GameWidgetTests(unittest.TestCase):
                 self.assertEqual(store.get(attempt)['result'],'won' if won else 'lost')
                 buttons=[w for w in app.stage.walk() if isinstance(w,ArcadeButton)]
                 self.assertFalse(any('MAIN LAGI'==w.text for w in buttons))
-                old=next(w for w in buttons if w.text=='LANJUT PILIH TEMPLATE')
-                old.dispatch('on_release')
+                old=app._page_callback(app._continue_game_photo)
+                app._game_field._handle_action('continue')
                 self.assertEqual(app.navigation.page,TUTORIAL)
-                old.dispatch('on_release')
+                old()
                 self.assertEqual(app.navigation.page,TUTORIAL)
                 app._complete_tutorial();app._change_copies(1)
                 self.assertEqual(quote_order(app.templates,app.quantities).total_amount,10000)
@@ -116,9 +116,10 @@ class GameWidgetTests(unittest.TestCase):
                     Window.size=size
                     for _ in range(4):EventLoop.idle()
                     self.assertIs(app._game_engine,engine)
-                    arena=app._game_field.arena
-                    bottom=arena.to_window(*arena.pos)
-                    top=arena.to_window(arena.right,arena.top)
+                    arena=app._game_field
+                    (x,y),(w,h)=arena._rect((0,0,360,720))
+                    bottom=arena.to_window(x,y)
+                    top=arena.to_window(x+w,y+h)
                     self.assertGreaterEqual(min(bottom),-1)
                     self.assertLessEqual(top[0],size[0]+1)
                     self.assertLessEqual(top[1],size[1]+1)
@@ -131,11 +132,12 @@ class GameWidgetTests(unittest.TestCase):
             field=app._game_field
             attempt=app._game_attempt['attempt_id']
             app._finish_game_demo();self.settle(app)
-            self.assertTrue(field._disposed)
+            self.assertIs(field,app._game_field)  # Preserve original result/print animation.
             self.assertEqual(store.get(attempt)['result'],'abandoned')
             with self.assertRaises(DemoClaimError):store.claim('DEMO-GUI')
             app._return_ad()
-            field._flap()
+            self.assertTrue(field._disposed)
+            field.flow.flap()
             self.assertEqual(app.navigation.page,ADVERT)
 
     def test_stale_claim_never_navigates_a_new_visit(self):
@@ -161,7 +163,7 @@ class GameWidgetTests(unittest.TestCase):
             app._claim_game_demo();self.settle(app)
             self.assertEqual(app.navigation.page,GAME_RECEIPT)
             self.assertIsNone(app._game_attempt)
-            self.assertFalse(app._demo_start.disabled)
+            self.assertFalse(app._demo_code.disabled)
             app._back_game_intro();app._choose_photo()
             self.assertEqual(app.navigation.page,TUTORIAL)
 

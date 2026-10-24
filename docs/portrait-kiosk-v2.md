@@ -1,5 +1,7 @@
 # FEAT-022 - Meong Photobooth portrait kiosk GUI v2 (working specification)
 
+> **Latest game correction (2026-10-24):** Follow owner reuse-first instruction: original latest Meong Fly renderer/flow/assets are now mounted directly, replacing the prior custom v2 rendition. 512 full PASS; fourteen native frames match original pixels, thirty GUI captures reviewed. Existing v2 consent/template/ledger/MOCK and all production boundaries are preserved. [Current proof and Windows form](qa/portrait-v2-meong-reuse/README.md).
+
 > **Current P4 boundary (2026-10-23):** P4a native DEMO game and P4b opt-in local MOCK checkout are in source after accepted P3. Final 406 full PASS; no production payment/discount/scanner. Full P4 remains open for trusted merchant/provider Sandbox integration and Windows game/MOCK acceptance. [Current evidence and commands](qa/portrait-v2-p4/README.md) supersede older unintegrated-game/QRIS notices below.
 
 > **P4a current override (2026-10-23):** Owner explicitly approves P4. DEMO game, manual one-use code ledger, result and tutorial/gallery handoff are now connected; P3 owner acceptance remains valid. 377 full PASS and 22 screenshots reviewed. Production scanner/payment/discount stay off; P4b MOCK follows. Older game-not-integrated inventories below are historical. [P4 evidence](qa/portrait-v2-p4/README.md).

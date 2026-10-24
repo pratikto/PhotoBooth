@@ -1,0 +1,114 @@
+[
+  {
+    "width": 800,
+    "height": 1280,
+    "scene": "start",
+    "time": 0.3,
+    "equal": true,
+    "sha256": "4b0ba144fe653a9ed6ea77cab80b9805533a31935466b2b5a9a6868e5fad0a03"
+  },
+  {
+    "width": 800,
+    "height": 1280,
+    "scene": "start",
+    "time": 0.96,
+    "equal": true,
+    "sha256": "bfb2017725dff022b8f7ea2cedd511f4f70f0b5e5058092a3ab6e8b755574cad"
+  },
+  {
+    "width": 800,
+    "height": 1280,
+    "scene": "start",
+    "time": 1.32,
+    "equal": true,
+    "sha256": "67b62227bb0978b3cb840b4cd432b52e1c5f7a15a4f2e51feaacad8350e31b43"
+  },
+  {
+    "width": 800,
+    "height": 1280,
+    "scene": "start",
+    "time": 1.74,
+    "equal": true,
+    "sha256": "2b195d66b96f021434197b1f8e3f299e5730fb68feb8e1bc18badc919d45980c"
+  },
+  {
+    "width": 800,
+    "height": 1280,
+    "scene": "game",
+    "time": 0.96,
+    "equal": true,
+    "sha256": "9344525a2c5bb15bcedf888e71f7c0620275c8d4ca314f8cdb6e263ad2544994"
+  },
+  {
+    "width": 800,
+    "height": 1280,
+    "scene": "won",
+    "time": 0.96,
+    "equal": true,
+    "sha256": "d094c61b44236b486123225612d243f04fa1916f4b29e1a86712ada444e5df97"
+  },
+  {
+    "width": 800,
+    "height": 1280,
+    "scene": "lost",
+    "time": 0.96,
+    "equal": true,
+    "sha256": "7407588ef99f16703471a880afdd0aa0bdaf124b6a4c46744c5069043df159cc"
+  },
+  {
+    "width": 452,
+    "height": 900,
+    "scene": "start",
+    "time": 0.3,
+    "equal": true,
+    "sha256": "d7aeaf53fbd727e6639d5fe3cd0bad5f71fc57a0cb6cff79f7e407c97fc2dbe9"
+  },
+  {
+    "width": 452,
+    "height": 900,
+    "scene": "start",
+    "time": 0.96,
+    "equal": true,
+    "sha256": "e8addacdf0890e1475ab69f041a9908805ce8d0b3a5650912223080ac38adf1d"
+  },
+  {
+    "width": 452,
+    "height": 900,
+    "scene": "start",
+    "time": 1.32,
+    "equal": true,
+    "sha256": "b988f5d19ff0da7cc9d53e5f722a4fb70888f84a49dfb116b00b98fc3e2cafd1"
+  },
+  {
+    "width": 452,
+    "height": 900,
+    "scene": "start",
+    "time": 1.74,
+    "equal": true,
+    "sha256": "2c7468ac7df8c24819fd9ddff355834beba9f950f04d7b7fc2454d3e2eaee5d0"
+  },
+  {
+    "width": 452,
+    "height": 900,
+    "scene": "game",
+    "time": 0.96,
+    "equal": true,
+    "sha256": "a930a1b883d5e4492f2a444fd1ebf98db3cd2649ef09755ea38d5c4bed19b601"
+  },
+  {
+    "width": 452,
+    "height": 900,
+    "scene": "won",
+    "time": 0.96,
+    "equal": true,
+    "sha256": "4ea6482e709c647e6737d816b01aae1644bf4e58963bbbab5fbf7359adc1a99f"
+  },
+  {
+    "width": 452,
+    "height": 900,
+    "scene": "lost",
+    "time": 0.96,
+    "equal": true,
+    "sha256": "8df3c82ff473b3ca4d7e388439eb69295c5d9a4bf32f997ac5b77d3f77c85a99"
+  }
+]

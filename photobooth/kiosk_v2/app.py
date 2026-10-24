@@ -635,54 +635,7 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
         self._show()
 
     def _build_game_notice(self, canvas):
-        """Common intro; real scanner stays off, manual DEMO gameplay is available."""
-        # One large shared transparent brand in the hero; no duplicated header.
-        shell = self._frame(canvas, brand_height=0)
-        shell.add_widget(text_label(
-            "MEONG FLY!", size=28, height=58,
-            color=GOLD, bold=True))
-        shell.add_widget(text_label(
-            "TERBANG • HINDARI ASTEROID • KUMPULKAN POIN",
-            size=13, height=32, color=CYAN))
-
-        hero = PixelCard(orientation="vertical", padding=10, spacing=6)
-        hero.add_widget(MeongLogo(hero=True))
-        hero.add_widget(text_label(
-            "MAIN SEKALI • RAIH 10 POIN!",
-            size=17, height=46, color=CYAN, bold=True))
-        shell.add_widget(hero)
-
-        rules = PixelCard(orientation="vertical", size_hint_y=None,
-                          height=dp(224), padding=12, spacing=4)
-        rules.add_widget(text_label(
-            "ATURAN MEONG FLY", size=18, height=38,
-            color=GOLD, bold=True))
-        rules.add_widget(text_label(
-            "01  Satu kode DEMO = satu kesempatan main",
-            size=14, height=42, color=WHITE, align="left"))
-        rules.add_widget(text_label(
-            "02  Menang: potensi Rp2.500 (simulasi)",
-            size=14, height=42, color=WHITE, align="left"))
-        rules.add_widget(text_label(
-            "03  Setelah game, pilih template foto",
-            size=14, height=42, color=WHITE, align="left"))
-        rules.add_widget(text_label(
-            "SCAN STRUK / DISKON ASLI BELUM TERHUBUNG",
-            size=12, height=31, color=MUTED))
-        shell.add_widget(rules)
-
-        self._warning_label = text_label(
-            "", size=12, height=26, color=GOLD)
-        shell.add_widget(self._warning_label)
-        shell.add_widget(self._action(
-            "COBA GAME • KODE DEMO",
-            self._open_game_demo, height=56))
-        shell.add_widget(self._action(
-            "LANJUT FOTO TANPA GAME",
-            lambda: self._choose_photo("skip_game")))
-        shell.add_widget(self._action(
-            "KEMBALI KE IKLAN", self._return_ad,
-            variant="tertiary", height=48))
+        self._build_game_page(canvas)
 
     def _build_templates(self, canvas):
         # Most vertical space belongs to the approved 1:3 strips. Utility text

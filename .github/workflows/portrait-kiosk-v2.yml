@@ -30,7 +30,7 @@ jobs:
       - name: Syntax
         run: python -m compileall -q photobooth/kiosk_v2 tools/run_portrait_v2.py tools/render_portrait_v2.py tools/render_portrait_p3.py tools/render_portrait_p4.py tools/render_portrait_checkout.py tests/test_kiosk_v2_*.py
       - name: Kivy-independent navigation and fake audio tests
-        run: python -m unittest tests.test_kiosk_v2_flow tests.test_kiosk_v2_audio tests.test_kiosk_v2_design_tokens tests.test_kiosk_v2_previews tests.test_kiosk_v2_live_preview tests.test_kiosk_v2_sensors tests.test_kiosk_v2_diagnostics tests.test_kiosk_v2_devices tests.test_kiosk_v2_game_engine tests.test_kiosk_v2_demo_game tests.test_kiosk_v2_mock_checkout -v
+        run: python -m unittest tests.test_kiosk_v2_flow tests.test_kiosk_v2_audio tests.test_kiosk_v2_design_tokens tests.test_kiosk_v2_previews tests.test_kiosk_v2_live_preview tests.test_kiosk_v2_sensors tests.test_kiosk_v2_diagnostics tests.test_kiosk_v2_devices tests.test_kiosk_v2_game_engine tests.test_kiosk_v2_demo_game tests.test_kiosk_v2_mock_checkout tests.test_kiosk_v2_meong_reference.ReferenceSourceTests -v
 
   desktop:
     name: Synthetic Kivy screen/nav smoke (no hardware)
@@ -62,7 +62,7 @@ jobs:
       - name: Isolated P3 photo, composition, retake and durable print guards
         run: python -m unittest tests.test_kiosk_v2_photos -v
       - name: Exercise opt-in Kivy widgets at a virtual display
-        run: PHOTOBOOTH_TEST_AUDIO=1 xvfb-run -a python -m unittest tests.test_kiosk_v2_widgets tests.test_kiosk_v2_game_widgets tests.test_kiosk_v2_checkout_widgets -v
+        run: PHOTOBOOTH_TEST_AUDIO=1 xvfb-run -a python -m unittest tests.test_kiosk_v2_widgets tests.test_kiosk_v2_game_widgets tests.test_kiosk_v2_checkout_widgets tests.test_kiosk_v2_meong_reference -v
       - name: Verify unchanged latest Meong Fly modules and original regression suite
         run: xvfb-run -a python -m unittest discover -s tests -p 'test_meong_fly*.py' -v
       - name: Reuse muted native channels across twenty audio cycles (dummy PCM output)
