@@ -1,6 +1,6 @@
 ## Version 1.0.0 — release-source verification (2026-10-19)
 
-> 2026-10-24 responsive stage: 529 full local PASS, 0 errors/failures/skips; 80 Kivy PNGs hash/dimension checked, representative four-size scene review, 14-item Submit form browser checks PASS. This replaces the rejected filler QA, not Windows hardware acceptance. [Evidence/form](qa/portrait-v2-responsive-scene/README.md).
+> 2026-10-24 responsive stage: 529 full local PASS, 0 errors/failures/skips; 80 Kivy PNGs hash/dimension checked, representative four-size scene review, 14-item Submit form browser checks PASS. Matching-source CI 40056129151 at 5c81ea1 has all three jobs SUCCESS; 50 CI P4/MOCK PNG hashes/dimensions verified. This replaces the rejected filler QA; Windows hardware acceptance remains pending. [Evidence/form](qa/portrait-v2-responsive-scene/README.md).
 
 > 2026-10-24 responsive follow-up stage 1: 20 native focused checks PASS, zero skips; Windows retest pending. [Evidence](qa/portrait-v2-responsive-scene/README.md).
 

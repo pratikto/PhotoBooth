@@ -1,5 +1,7 @@
 # Meong Photobooth — Documentation and release changelog
 
+> Responsive source 5c81ea1: matching-source portrait CI 40056129151 all three jobs SUCCESS. CI evidence and checkpoint archived; runtime unchanged. [Proof](qa/portrait-v2-responsive-scene/README.md).
+
 > 2026-10-24: replace separate game filler/fixed poster layout with cached responsive original-art components and one source sky; align hitboxes/film, retain original engine/compositor. Gallery quantity/total simplified, CETAK removed. 529 full local PASS, zero skips; [QA/screenshots/rollback](qa/portrait-v2-responsive-scene/README.md).
 
 > Compact gallery quantity controls and prominent simulated total; remove CETAK and repeated price prose. 20 native focused checks PASS. See [current QA](qa/portrait-v2-responsive-scene/README.md).

@@ -1,6 +1,6 @@
 # Meong Photobooth — Development handover
 
-> Current resize follow-up (2026-10-24): compact gallery pushed as 60ab3cf (CI SUCCESS). Responsive original-art stage now passes 529 full local tests, zero skips; 80 PNGs hash-checked with four-size visual review. Original 26 reference files unchanged. Next is matching-source CI and Windows retest with the new Submit form. [Evidence, source hashes and rollback](qa/portrait-v2-responsive-scene/README.md).
+> Current resize follow-up (2026-10-24): compact gallery pushed as 60ab3cf (CI SUCCESS). Responsive original-art stage now passes 529 full local tests, zero skips; 80 PNGs hash-checked with four-size visual review. Original 26 reference files unchanged. Source 5c81ea1 has matching-source CI 40056129151: all three jobs SUCCESS. Next is Windows retest with the new Submit form. [Evidence, source hashes and rollback](qa/portrait-v2-responsive-scene/README.md).
 
 > Current owner resize follow-up: compact gallery stage passes 20 native checks; next adapt actual original game components to window bounds, replacing separate filler. [QA/rollback](qa/portrait-v2-responsive-scene/README.md).
 

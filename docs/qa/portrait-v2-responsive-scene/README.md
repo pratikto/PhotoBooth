@@ -110,3 +110,28 @@ not send messages or connect to a payment service.
 - Syntax and `git diff --check` pass. No unresolved local test failure. Windows
   resize aesthetics/touch/frame pacing and speaker acceptance remain untested
   for this change; use the new form rather than assuming those items passed.
+
+### Matching-source GitHub verification and final checkpoint
+
+Functional source **5c81ea11a34102496bf5c7523e74a0bf94556c7a** is pushed and its
+remote HEAD was verified. The final tested file hashes match that committed
+source. [Portrait CI 40056129151](https://github.com/pratikto/PhotoBooth/actions/runs/40056129151)
+completed with **all three jobs SUCCESS**: navigation/audio lifecycle, Linux
+native GUI/source regression/screenshots, and Windows Python 3.12 native SDL
+PCM cycles (dummy output). [Archived job result](final-ci.json).
+
+Downloaded its original screenshot artifact, checked all 50 P4/MOCK PNG hashes
+and dimensions against reports carrying the exact source SHA and clean tracked
+source, and reviewed [representative CI captures](ci-contact.jpg).
+[Verification manifest](ci-screenshot-verification.json). These checks do not
+certify physical Windows speaker/touch/performance.
+
+Code checkpoints: `60ab3cf` compact gallery → `5c81ea1` responsive game. Roll back
+runtime code to `60ab3cf` if the new layout needs correction, preserving the P4
+consumed-attempt/order ledger and P3 photo/print journals. The next commit only
+archives CI/QA evidence; it does not change tested runtime or trigger another
+GUI workflow. No local test failure remains; await owner Windows acceptance.
+
+After pulling the same branch, run `python tools/run_portrait_v2.py` in the
+existing Windows venv. Open `docs/qa/portrait-v2-responsive-scene/windows-checklist.html`
+in a browser, fill the actual HEAD/device fields and submit only tested items.

@@ -1,6 +1,6 @@
 # Meong Photobooth — Current feature status
 
-> Current resize follow-up (2026-10-24): the earlier separate-filler fix is superseded by responsive original-art composition and compact gallery totals. Source QA is distinct from pending Windows acceptance. [Current evidence, rollback and 14-item Submit form](qa/portrait-v2-responsive-scene/README.md).
+> Current resize follow-up (2026-10-24): the earlier separate-filler fix is superseded by responsive original-art composition and compact gallery totals. Source 5c81ea1 has 529 full local PASS, zero skips, and matching-source CI 40056129151 all three jobs SUCCESS. Windows acceptance remains pending. [Current evidence, rollback and 14-item Submit form](qa/portrait-v2-responsive-scene/README.md).
 
 > **P4 owner follow-up (2026-10-24):** Full-window game background with preserved original scene proportions, no non-playing return footer, mouse-emulation red dots fixed. Winning offer now reaches gallery/net MOCK totals and is not reapplied after use. Dedicated minor-key game BGM uses the existing single audio owner; video remains exclusive. Final 527 full PASS, zero skips; 50 captures checked at both target sizes. [Evidence/checkpoints/Windows form](qa/portrait-v2-game-followup/README.md). Previous game-silent/unapplied-preview notices below are historical; production payment/discount/scanner stay off.
 

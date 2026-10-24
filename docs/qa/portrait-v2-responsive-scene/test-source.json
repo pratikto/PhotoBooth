@@ -12,5 +12,7 @@
     "tests/test_kiosk_v2_meong_reference.py": "02b08a63e66beb97d5bdbedecc738a693f20fb83fb1edbd539034029f90d1c3c",
     "tests/test_kiosk_v2_game_followup.py": "7fab071c09cbf0509fe8ca7c3ae20aa5333ef7488bbd80118c57a446e6a0fe07",
     "tools/render_portrait_p4.py": "43d52c407b33520928c1cab38d43cdc8215c5bb25f711ee1728ef455081c7902"
-  }
+  },
+  "verified_commit": "5c81ea11a34102496bf5c7523e74a0bf94556c7a",
+  "verification": "All listed committed file hashes match the final 529-test run."
 }
