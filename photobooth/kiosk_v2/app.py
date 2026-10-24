@@ -42,6 +42,7 @@ from .performance import PerformanceLog
 from .sensors import PalmShutter
 from .game_views import GameViews
 from .checkout_views import CheckoutViews
+from .game_offer import demo_amount, is_demo_winner
 
 
 LOG = logging.getLogger(__name__)
@@ -469,6 +470,7 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
         self._mock_view = None
         self._mock_key = None
         self._game_error = ''
+        self._game_discount_used = False
 
     def _return_ad(self):
         LOG.info('Return to advertising requested from=%s', self.navigation.page)
@@ -651,10 +653,10 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
         title.size_hint_x = .44
         header.add_widget(title)
         shell.add_widget(header)
+        self._game_offer_note = None
         if self._game_result is not None:
-            shell.add_widget(text_label(
-                'DEMO • potensi Rp2.500 belum diterapkan' if self._game_result['result'] == 'won'
-                else 'DEMO game selesai • tanpa potongan harga', size=12, height=24, color=GOLD))
+            self._game_offer_note = text_label('', size=12, height=24, color=GOLD)
+            shell.add_widget(self._game_offer_note)
 
         deck = PixelCard(orientation='vertical', padding=8, spacing=4)
         host = FloatLayout()
@@ -679,7 +681,7 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
         deck.add_widget(self._template_name)
         shell.add_widget(deck)
 
-        count_card = PixelCard(orientation='vertical', size_hint_y=None,
+        count_card = self._count_card = PixelCard(orientation='vertical', size_hint_y=None,
                                height=dp(98), spacing=6, padding=8)
         row = BoxLayout(size_hint_y=None, height=dp(48), spacing=dp(8))
         caption = text_label('CETAK', size=13, height=48, color=CYAN, bold=True)
@@ -766,8 +768,22 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
         self._test_photo_button.disabled = quote.session_count == 0
         if self._mock_enabled:
             self._mock_checkout_button.disabled = quote.session_count == 0
-        total = f"{quote.total_amount:,}".replace(",", ".")
-        self._order_summary.text = (
-            f"{quote.session_count} sesi  •  {quote.print_copy_count} lembar"
-            f"  •  SIMULASI Rp{total}"
-        )
+        # The result was acknowledged by the durable game worker. This preview
+        # shares amount math with MOCK; checkout still revalidates its ledger.
+        eligible = is_demo_winner(self._game_result) and not self._game_discount_used
+        amount = self._gallery_amount = demo_amount(quote.total_amount, eligible)
+        money = lambda value:'Rp'+f'{value:,}'.replace(',', '.')
+        detail = f'{quote.session_count} sesi • {quote.print_copy_count} lembar'
+        if amount.discount:
+            self._order_summary.text = (f'{detail} • Subtotal {money(amount.subtotal)}\n'
+                f'Diskon game −{money(amount.discount)} • SIMULASI {money(amount.total)}')
+        else:
+            self._order_summary.text = f'{detail} • SIMULASI {money(amount.total)}'
+        self._order_summary.height = dp(48 if amount.discount else 28)
+        self._count_card.height = dp(118 if amount.discount else 98)
+        if self._game_offer_note is not None:
+            self._game_offer_note.text = (
+                'Diskon game −Rp2.500 sudah masuk total simulasi' if amount.discount else
+                'Game menang • pilih jumlah cetak untuk diskon simulasi' if eligible else
+                'Diskon game sudah dipakai' if self._game_discount_used else
+                'Game selesai • tanpa potongan harga')

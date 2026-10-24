@@ -89,6 +89,8 @@ class CheckoutViews:
             if outcome.revision != self._view_revision or self.navigation.page != MOCK_CHECKOUT:
                 return
             if outcome.error:
+                if outcome.error == 'promo-used':
+                    self._game_discount_used = True
                 self._mock_error = {
                     'promo-used': 'Potensi promo DEMO sudah dipakai pada pesanan sebelumnya.',
                     'unresolved': 'Status belum pasti. Selesaikan simulasi atau periksa status dahulu.',
@@ -96,6 +98,9 @@ class CheckoutViews:
                 }.get(outcome.error, 'Belum berhasil. Periksa status MOCK; belum ada izin foto baru.')
             else:
                 self._mock_view = outcome.value
+                if (self._mock_view['state'] == 'ADMITTED' and self._mock_view['discount'] and
+                        self._game_result and self._mock_view['attempt_id'] == self._game_result.get('attempt_id')):
+                    self._game_discount_used = True
                 self._mock_error = ('Pesanan MOCK aktif dipulihkan; pilihan tersimpan digunakan.'
                                     if self._mock_view['request_key'] != self._mock_key else '')
                 if outcome.action == 'admit' and self._mock_view['state'] == 'ADMITTED':

@@ -39,3 +39,28 @@ tests remain byte-identical. This is local source proof, not a Windows retest.
 Stage-1 rollback: `b0be59e`; preserve consumed attempts/orders. Next: connect the
 winning offer to the displayed simulated total, then dedicated game BGM. One
 full final regression follows the completed functional changes.
+
+
+## Stage 2 — winning quote reaches the gallery and MOCK total
+
+Extract the existing backend flat-discount math into `game_offer.py` and reuse
+it in both the gallery preview and authoritative local MOCK creation. The
+preview requires the acknowledged persisted result (won, score≥10, attempt ID),
+not just a GUI win badge. MOCK still reads/validates the durable ledger and
+single-use reservation before creating the order.
+
+One design/one copy: subtotal Rp10.000 − Rp2.500 = Rp7.500. Two copies of that
+design: Rp15.000 − Rp2.500 = Rp12.500; two designs/three sheets: Rp25.000 − Rp2.500
+= Rp22.500. Discount is once per order, capped at subtotal; empty cart is zero,
+loss has no reduction. Display subtotal/discount/net in two lines, preserving
+strip focus. [Winning gallery](stage2-win-gallery.png).
+
+A consumed matching win is marked used on admission or authoritative recovered
+ADMITTED status, including a lost response; gallery never reapplies it. Cancel/
+expiry retains the existing backend rules. Real payments/discounts remain off;
+all displayed reductions are explicitly SIMULASI and checkout stays MOCK-only.
+
+**38 targeted tests PASS**, zero skips:
+[transcript](stage2-offer-tests.txt). Includes actual gallery-vs-backend totals,
+multiple designs/copies, empty/loss, admission/recovery and twenty MOCK visits.
+Stage-2 rollback: `4896d51`; retain persistent attempts/orders.

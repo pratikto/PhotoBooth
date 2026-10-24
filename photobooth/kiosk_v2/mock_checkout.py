@@ -11,6 +11,7 @@ import time
 import uuid
 
 from .demo_game import DemoClaimError, DemoGameStore
+from .game_offer import demo_amount, is_demo_winner
 
 
 class MockCheckoutError(DemoClaimError):
@@ -90,16 +91,16 @@ class MockCheckoutStore(DemoGameStore):
                 attempt = db.execute('SELECT * FROM attempts WHERE attempt_id=?', (attempt_id,)).fetchone()
                 if attempt is None:
                     raise MockCheckoutError('invalid-attempt')
-                if attempt['result'] == 'won' and attempt['score'] >= 10:
+                if is_demo_winner(dict(attempt)):
                     eligible = attempt_id
             if eligible and db.execute("SELECT 1 FROM mock_orders WHERE attempt_id=? AND state NOT IN ('CANCELLED','EXPIRED')",
                                        (eligible,)).fetchone():
                 raise MockCheckoutError('promo-used')
-            discount = min(2500, subtotal) if eligible else 0
+            amount = demo_amount(subtotal, eligible is not None)
             order_id = uuid.uuid4().hex
             db.execute('INSERT INTO mock_orders VALUES (?,?,?,?,?,?,?,?,?,?,NULL)',
                        (order_id, request_key, payload, json.dumps(quantities, sort_keys=True),
-                        subtotal, discount, subtotal-discount, eligible, 'PENDING', self.clock()+180))
+                        amount.subtotal, amount.discount, amount.total, eligible, 'PENDING', self.clock()+180))
             return self._view(db.execute('SELECT * FROM mock_orders WHERE order_id=?', (order_id,)).fetchone())
 
     def recover(self):

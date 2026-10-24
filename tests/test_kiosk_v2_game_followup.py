@@ -23,6 +23,60 @@ else:
 
 @unittest.skipUnless(HAS_KIVY,'Native game/window environment required')
 class GameFollowupTests(unittest.TestCase):
+    def test_recovered_consumed_win_removes_preview_discount_without_replaying_admission(self):
+        from tests import test_kiosk_v2_checkout_widgets as checkout_support
+        helper=checkout_support.CheckoutWidgetTests()
+        with helper.booth() as (app,store):
+            attempt=store.claim('DEMO-LOST-ACK')['attempt_id']
+            app._game_result=store.finish(attempt,'won',10)
+            helper.gallery(app);app._open_mock_checkout();helper.settle(app)
+            oid=app._mock_view['order_id']
+            store.transition(oid,'confirm');store.admit(oid)
+            app._mock_status();helper.settle(app)
+            self.assertTrue(app._game_discount_used)
+            self.assertIsNone(app._photo_jobs)
+            app._mock_leave()
+            self.assertEqual(app._gallery_amount.total,10000)
+
+    def test_winning_gallery_total_matches_checkout_and_consumed_offer_is_not_reused(self):
+        import time
+        from tests import test_kiosk_v2_checkout_widgets as checkout_support
+        from photobooth.kiosk_v2.photos import PhotoTest
+        for won in (False,True):
+            with tempfile.TemporaryDirectory() as root,patch('photobooth.kiosk_v2.photos.configured_test',
+                    return_value=PhotoTest(root)),checkout_support.CheckoutWidgetTests().booth() as (app,store):
+                helper=checkout_support.CheckoutWidgetTests()
+                attempt=store.claim('DEMO-GALLERY-OFFER')['attempt_id']
+                app._game_result=store.finish(attempt,'won' if won else 'lost',10 if won else 0)
+                helper.gallery(app)
+                self.assertEqual(app._gallery_amount.total,7500 if won else 10000)
+                self.assertIn('Rp7.500' if won else 'Rp10.000',app._order_summary.text)
+                app._open_mock_checkout();helper.settle(app)
+                self.assertEqual(app._mock_view['total'],app._gallery_amount.total)
+                if won:
+                    app._mock_transition('confirm');helper.settle(app)
+                    app._mock_admit();helper.settle(app)
+                    deadline=time.monotonic()+3
+                    while app._photo_jobs.busy and time.monotonic()<deadline:
+                        app._poll_photos();time.sleep(.005)
+                    self.assertFalse(app._photo_jobs.busy)
+                    app._leave_photo_confirm()
+                    self.assertEqual(app._gallery_amount.discount,0)
+                    self.assertIn('sudah dipakai',app._game_offer_note.text)
+
+    def test_gallery_discount_is_once_per_order_and_empty_cart_stays_zero(self):
+        helper=support.GameWidgetTests()
+        with helper.booth() as (app,store):
+            record=store.claim('DEMO-MANY-COPIES')['attempt_id']
+            app._game_result=store.finish(record,'won',10)
+            app._choose_photo();app._complete_tutorial()
+            self.assertEqual(app._gallery_amount.total,0)
+            app._change_copies(2)
+            self.assertEqual(app._gallery_amount.total,12500)
+            app._shift_template(1);app._change_copies(1)
+            self.assertEqual(app._gallery_amount.total,22500)
+            self.assertEqual(app._gallery_amount.discount,2500)
+
     def test_mouse_provider_reproduces_old_marker_and_new_config_leaves_none(self):
         before=len(Window.canvas.after.children)
         legacy=MouseMotionEventProvider('legacy-proof','')

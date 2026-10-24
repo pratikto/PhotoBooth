@@ -20,6 +20,7 @@ class GameViews:
         self._game_field = self._reference_stage = self._reference_flow = None
         self._game_paused = False
         self._game_error = ''
+        self._game_discount_used = False
         self._game_footer = None
 
     def _open_game_demo(self):
