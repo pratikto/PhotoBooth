@@ -1,3 +1,7 @@
+# P4b Sandbox reuse — 2026-10-24
+
+FEAT-020/022: import unchanged active QRIS backend/client/journal and relevant original tests from 3cc8a8e. Archive final owner 8/8 acceptance; BUG-017 monitoring. No payment mode enabled by default. [Scope/provenance](qa/portrait-v2-sandbox/README.md).
+
 # Meong Photobooth — Documentation and release changelog
 
 > 2026-10-24 — Restore native font rendering for main-app button captions, remove decorative button icons and unused bitmap caption generation, retain original Meong Fly frame material. Nine focused native checks PASS; Source d52a7d8 pushed/remote-verified; 546 final full PASS/zero skips, matching-source CI 40104190105 three-job SUCCESS and 99 artifact PNGs verified. [Evidence](qa/portrait-v2-readable-type/README.md).

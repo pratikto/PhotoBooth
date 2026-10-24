@@ -1,0 +1,108 @@
+"""Authoritative Sandbox checkout service with retry-safe visit identity.
+
+The old checkout_service.py/OrderStore remain isolated historical prototypes.
+Only this service plus CheckoutStore is used by the current server entrypoint.
+"""
+from photobooth.checkout_store import CheckoutConflict, CheckoutMissing, identifier
+from photobooth.payment_quote import quote_checkout
+from photobooth.qris_evidence import (authenticated_notification, provider_evidence,
+                                     qr_url_from_status, idr_amount)
+
+
+class ProviderUnavailable(RuntimeError):
+    """Keep the order; do not invent a decline, success or replacement QR."""
+
+
+class CheckoutBackend:
+    def __init__(self, store, provider, server_key, merchant_id):
+        if not isinstance(server_key, str) or not server_key:
+            raise ValueError('Sandbox server key required')
+        identifier(merchant_id)
+        self.store, self.provider = store, provider
+        self.server_key, self.merchant_id = server_key, merchant_id
+
+    def view(self, order, *, verification_pending=False):
+        fields = ('id', 'checkout_key', 'quantities', 'amount', 'state', 'expires_at',
+                  'qr_url', 'grant_id', 'service_state', 'local_transaction_id', 'closed')
+        result = {key: order[key] for key in fields}
+        result['order_id'] = result.pop('id')
+        result['mode'] = getattr(self.provider, 'mode', 'sandbox')
+        if result['mode'] == 'mock':
+            result['qr_url'] = None
+            result['qr_payload'] = 'MEONG MOCK ONLY - NOT QRIS - ' + order['id']
+        result['verification_pending'] = verification_pending
+        if order['state'] != 'PENDING':
+            result['qr_url'] = None
+        return result
+
+    def _apply(self, order, data):
+        evidence = provider_evidence(data, order, self.merchant_id)
+        # A valid payment must still be retained even when displaying its QR
+        # fails. QR validation cannot turn a received settlement into nothing.
+        updated = self.store.apply_evidence(order['id'], evidence)
+        if updated['state'] == 'PENDING':
+            self.store.save_qr(order['id'], qr_url_from_status(data, evidence))
+        return self.store.get(order['id'])
+
+    def create_order(self, booth_id, quantities, checkout_key):
+        quote = quote_checkout(quantities)
+        order, first = self.store.begin(booth_id, dict(quantities), quote.total_amount, checkout_key)
+        if not first:
+            return self.status(order['id'], booth_id)
+        try:
+            return self.view(self._apply(order, self.provider.create_qris(order['id'], order['amount'])))
+        except Exception as error:
+            # The persisted key survives an ambiguous response. Retrying does
+            # GET Status for the SAME order; never another charge/order ID.
+            raise ProviderUnavailable('Checkout verification unavailable; retry the same visit') from error
+
+    def status(self, order_id, booth_id):
+        identifier(order_id, maximum=50)
+        order = self.store.get(order_id, booth_id)
+        if order['state'] in {'CREATED', 'PENDING'} and self.store.reserve_check(order_id):
+            try:
+                order = self._apply(order, self.provider.get_status(order_id))
+            except Exception:
+                return self.view(self.store.get(order_id), verification_pending=True)
+        return self.view(order, verification_pending=order['state'] == 'CREATED')
+
+    def process_notification(self, notification):
+        order_id = authenticated_notification(notification, self.server_key)
+        self.store.event(notification, 'RECEIVED')
+        try:
+            order = self.store.get(order_id)
+        except CheckoutMissing:
+            self.store.event(notification, 'IGNORED_UNKNOWN_ORDER')
+            return True
+        if idr_amount(notification['gross_amount']) != order['amount']:
+            self.store.event(notification, 'REJECTED_AMOUNT')
+            raise ValueError('Notification amount mismatch')
+        try:
+            # Even an old pending callback reconciles the latest status. Do
+            # not assume that unsigned callback status fields are authentic.
+            self._apply(order, self.provider.get_status(order_id))
+        except Exception as error:
+            self.store.event(notification, 'RETRY')
+            raise ProviderUnavailable('Provider verification unavailable') from error
+        self.store.event(notification, 'APPLIED')
+        return True
+
+    def claim(self, order_id, booth_id, checkout_key):
+        return self.view(self.store.grant(order_id, booth_id, checkout_key))
+
+    def service_transition(self, order_id, booth_id, grant_id, state, transaction_id):
+        return self.view(self.store.service_transition(order_id, booth_id, grant_id, state, transaction_id))
+
+    def cancel(self, order_id, booth_id):
+        order = self.store.get(order_id, booth_id)
+        if order['state'] in {'CREATED', 'PENDING'}:
+            try:
+                # Provider cancel and payment may race. Independent final
+                # status decides whether the customer may leave or must take
+                # the paid session; a local button never overrides settlement.
+                self.provider.cancel(order_id)
+                order = self._apply(order, self.provider.get_status(order_id))
+            except Exception as error:
+                raise ProviderUnavailable('Cancellation not confirmed') from error
+        self.store.close_visit(order_id, booth_id)
+        return self.view(self.store.get(order_id, booth_id))

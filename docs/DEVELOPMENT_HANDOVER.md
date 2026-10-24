@@ -1,5 +1,7 @@
 # Meong Photobooth — Development handover
 
+> Current authorized continuation: owner accepts final 8/8 visual/audio report (“udah clear semua”), including BUG-017 monitoring; then explicitly approves P4b QRIS Sandbox and P5 readiness, manual Windows tests at the end. Reuse QRIS branch 3cc8a8e; no production/deployment/merge. [Scope, source provenance, acceptance and rollback](qa/portrait-v2-sandbox/README.md). Older “not authorized” notes below are historical.
+
 > Current owner typography correction: pixel button text rejected; use the earlier native Roboto renderer at 18-point requested size and remove main-button icons. Original frame material and larger Meong retained. Nine focused native checks PASS; 54 native PNGs verified and required sizes reviewed; 546 final full PASS/zero skips; source d52a7d8 pushed/remote-verified, CI 40104190105 all three jobs SUCCESS, 99 clean-source PNGs verified. BUG-017 remains OPEN. [Scope/proof/form](qa/portrait-v2-readable-type/README.md).
 
 > Current native controls: larger Meong c887d30 pushed/remote-verified; CI 40100048784 three-job SUCCESS. Original mini-game button painter/glyphs now reused by ArcadeButton. Final 546 full PASS, 15 focused PASS, 54 PNGs verified/reviewed and 8-item Submit form checked. Button source 25fd55c pushed/remote-verified; CI 40102001442 all three jobs SUCCESS; 99 artifact PNGs hash/dimension/source verified. Owner prior 14/14 + twenty cycles remain accepted as reported at unknown HEAD; BUG-017 video→video lag OPEN/unfixed. [Proof/rollback/form](qa/portrait-v2-native-controls/README.md).
