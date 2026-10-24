@@ -122,3 +122,26 @@ AKHIRI GAME exits without another attempt, both result CTAs use the v2 tutorial
 and original template gallery. Physical Windows animation/feel/input acceptance
 is still needed; provider Sandbox/merchant and production gates remain outside
 this correction. Scanner, real payment and actual discounts stay disabled.
+
+
+## Stage 3 — matching-source CI evidence (documentation only)
+
+Functional correction source **`d267d8908f737d9610c9a67dc4c4dd2d6baa486f`**:
+[Actions 40043552747](https://github.com/pratikto/PhotoBooth/actions/runs/40043552747)
+**all three jobs SUCCESS**: pure rules/reference hashes, native Linux Kivy /
+original game suite, and Windows Python 3.12 SDL dummy audio. The workflow
+includes the new reference integration/pixel tests and all original game tests.
+[Verification JSON](ci-verification.json).
+
+Downloaded original artifact `12540397094` (7,086,615 bytes); its SHA-256 matches
+GitHub's digest `da2f8f5ffd7a20903ccae41fda8a99bd71be6c292013425b1b0c5277a0360112`.
+Four fresh reports identify the same commit with **tracked_changes=false**;
+all 50 P4 PNG hashes/dimensions verified (30 game plus 20 unchanged MOCK views).
+The 30 game captures were visually reviewed in both
+[800×1280 CI contact](ci-contact-800x1280.jpg) and
+[452×900 CI contact](ci-contact-452x900.jpg).
+
+This evidence commit changes documentation/images only. The new docs-only path
+filter prevents another full portrait CI run; no functional checks are waived.
+The application remains byte-identical to tested `d267d89`. Native fixtures and
+Windows dummy sound are not a claim of physical Windows gameplay/audibility.

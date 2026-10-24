@@ -1,0 +1,62 @@
+{
+  "run_id": 40043552747,
+  "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40043552747",
+  "source_sha": "d267d8908f737d9610c9a67dc4c4dd2d6baa486f",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "Navigation and audio lifecycle",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40043552747/job/120719935640"
+    },
+    {
+      "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40043552747/job/120719935907"
+    },
+    {
+      "name": "Windows Python 3.12 native SDL audio (dummy output)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40043552747/job/120719935925"
+    }
+  ],
+  "artifact": {
+    "id": 12540397094,
+    "name": "meong-portrait-v2-screens",
+    "size_in_bytes": 7086615,
+    "digest": "sha256:da2f8f5ffd7a20903ccae41fda8a99bd71be6c292013425b1b0c5277a0360112"
+  },
+  "download_digest_matches": true,
+  "reports": [
+    {
+      "file": "p4/p4-report-452x900.json",
+      "source_sha": "d267d8908f737d9610c9a67dc4c4dd2d6baa486f",
+      "tracked_changes": false,
+      "verified_images": 15
+    },
+    {
+      "file": "p4/p4-report-800x1280.json",
+      "source_sha": "d267d8908f737d9610c9a67dc4c4dd2d6baa486f",
+      "tracked_changes": false,
+      "verified_images": 15
+    },
+    {
+      "file": "p4b/checkout-report-452x900.json",
+      "source_sha": "d267d8908f737d9610c9a67dc4c4dd2d6baa486f",
+      "tracked_changes": false,
+      "verified_images": 10
+    },
+    {
+      "file": "p4b/checkout-report-800x1280.json",
+      "source_sha": "d267d8908f737d9610c9a67dc4c4dd2d6baa486f",
+      "tracked_changes": false,
+      "verified_images": 10
+    }
+  ],
+  "verified_images": 50,
+  "game_images": 30,
+  "windows_physical_acceptance": false
+}
