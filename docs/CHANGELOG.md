@@ -1,6 +1,6 @@
 # Meong Photobooth — Documentation and release changelog
 
-> 2026-10-24 — Restore native font rendering for main-app button captions, remove decorative button icons and unused bitmap caption generation, retain original Meong Fly frame material. Nine focused native checks PASS; 546 final full PASS/zero skips. [Evidence](qa/portrait-v2-readable-type/README.md).
+> 2026-10-24 — Restore native font rendering for main-app button captions, remove decorative button icons and unused bitmap caption generation, retain original Meong Fly frame material. Nine focused native checks PASS; Source d52a7d8 pushed/remote-verified; 546 final full PASS/zero skips, matching-source CI 40104190105 three-job SUCCESS and 99 artifact PNGs verified. [Evidence](qa/portrait-v2-readable-type/README.md).
 
 > 2026-10-24 — Reuse actual original Meong Fly arcade_button/pixel_text/icons for main-app native buttons, with cached nine-slice material, readable whole-word captions and existing touch/audio/disabled guards. Larger Meong source c887d30 pushed/remote-verified/CI SUCCESS. Button source 25fd55c pushed/remote-verified; CI 40102001442 three-job SUCCESS. Final combined 546 full PASS, 15 focused PASS, 54 local captures and 99 CI PNGs verified; BUG-017 remains open. [Evidence](qa/portrait-v2-native-controls/README.md).
 

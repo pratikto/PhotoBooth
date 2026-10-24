@@ -21,5 +21,7 @@
     "errors": 0,
     "skipped": 0,
     "seconds": 168.435
-  }
+  },
+  "functional_sha": "d52a7d8dce2b40657888fa38d038f1c1e9cd88e6",
+  "normal_push_remote_verified": true
 }

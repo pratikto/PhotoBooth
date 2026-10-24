@@ -1,5 +1,7 @@
 # Owner retest, larger Meong and original Meong Fly buttons
 
+> Superseded caption/icon preference: owner rejects the pixel typography and requests a minimal look. Source d52a7d8 restores native unscaled font rendering and removes main-button icons while preserving this stage's original frames and larger Meong. 546 full PASS and matching three-job CI SUCCESS. [Current proof/preview/form](../portrait-v2-readable-type/README.md).
+
 2026-10-24, branch feature/portrait-kiosk-v2-next. Starting remote/local source
 94dbd0322b0a16b582e84d09c42688bb1689e86e; normal staged pushes authorized.
 

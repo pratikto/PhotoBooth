@@ -1,6 +1,6 @@
 # Meong Photobooth — Current feature status
 
-> Owner rejects main-button bitmap typography and requests a minimal aesthetic without required icons. Readable native font/icon-free correction is in local QA; source frame remains original Meong Fly. Nine focused checks PASS, 54 screenshots verified; 546 final full PASS, zero skips; no new physical acceptance claimed. [Current evidence](qa/portrait-v2-readable-type/README.md).
+> Owner rejects main-button bitmap typography and requests a minimal aesthetic without required icons. Readable native font/icon-free correction is in local QA; source frame remains original Meong Fly. Nine focused checks PASS, 54 screenshots verified; Source d52a7d8 pushed/remote-verified; 546 final full PASS, zero skips; CI 40104190105 three-job SUCCESS and 99 PNGs verified. No new physical acceptance claimed. [Current evidence](qa/portrait-v2-readable-type/README.md).
 
 > Larger logo source c887d30 has matching-source three-job CI SUCCESS. Native main-app buttons now reuse original Meong Fly material/glyph/icon rendering; final 546 full PASS, zero skips, 54 PNGs checked. Button source 25fd55c pushed/remote-verified; CI 40102001442 three-job SUCCESS, 99 CI PNGs verified. New visual source awaits Windows preference/touch retest. Existing owner 14/14/twenty-cycle report stands at unknown HEAD. BUG-017 advertising video→video lag remains OPEN. [Evidence](qa/portrait-v2-native-controls/README.md).
 

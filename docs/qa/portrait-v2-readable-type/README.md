@@ -64,3 +64,37 @@ run python tools/run_kiosk_unittests.py. Linux Python 3.12/Kivy 2.3.1/software G
 dummy audio and synthetic camera/printing/checkout. Syntax/whitespace checks pass.
 No subjective aesthetic or actual Windows acceptance is inferred from this gate.
 Source commit/push and matching-source CI follow; no remaining automated failure.
+
+
+## Pushed source
+
+Functional source **d52a7d8dce2b40657888fa38d038f1c1e9cd88e6** is normally
+pushed to the required branch and remote HEAD verified. Tested runtime/test
+hashes match committed files. [CI 40104190105](https://github.com/pratikto/PhotoBooth/actions/runs/40104190105)
+completed SUCCESS at that exact SHA; all three jobs pass.
+The companion evidence commit will update only documentation and skip redundant CI.
+
+For Windows, close the running GUI, keep feature/portrait-kiosk-v2-next and the
+existing venv; run git pull --ff-only then python tools/run_portrait_v2.py.
+Use the fresh [8-item Submit form](windows-checklist.html) if retesting; no new
+twenty-cycle requirement. Subjective preference and Windows touch remain pending;
+BUG-017 video→video lag is still open. No production payment/scanner is enabled.
+
+
+## Matching-source CI and final checkpoint
+
+[CI 40104190105](https://github.com/pratikto/PhotoBooth/actions/runs/40104190105)
+at **d52a7d8** has **all three jobs SUCCESS**: navigation/audio lifecycle,
+native GUI/source-frame/typography checks and captures, and Windows Python 3.12
+native SDL audio with dummy output. [Archived result](final-ci.json).
+Downloaded its original artifact; **99 PNGs** have verified hashes, dimensions
+and clean-source metadata: [verification](ci-screenshot-verification.json),
+[reviewed advert/gallery sheet](ci-contact.jpg). Local gate remains 546 PASS,
+zero failures/errors/skips. This is source/synthetic evidence; aesthetic
+preference, actual Windows touch and speaker behavior remain owner checks.
+
+The final companion commit changes documentation only and skips redundant CI.
+Tested runtime files remain byte-identical to d52a7d8. Rollback aee85cd restores
+the rejected pixel-caption/icon state, retaining consumed ledgers and journals.
+No unresolved automated failure remains. BUG-017 consecutive-video lag is still
+OPEN/unfixed; the previous reported twenty cycles remain accepted as reported.
