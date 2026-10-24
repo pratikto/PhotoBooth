@@ -1,6 +1,9 @@
 """Test that a physical comparison reuses preview bytes without re-dithering."""
 import unittest
+from unittest.mock import patch
 from PIL import Image
+
+import photobooth.dither_print as dither_print
 from photobooth.dither_lab import DitherProfile
 from photobooth.dither_print import annotated_raster, printable_destination
 from photobooth.printer import PrinterConfig
@@ -31,6 +34,37 @@ class DitherPhysicalSafetyTests(unittest.TestCase):
         self.assertEqual(enhanced.crop((0, enhanced.height - 96, 384,
                                         enhanced.height)).tobytes(), initial)
         self.assertEqual(image.tobytes(), initial)
+
+    def test_test_print_cutoff_label_only_for_threshold_mode(self):
+        """Only the actual global Threshold algorithm should print a cutoff."""
+        source = Image.new("1", (384, 64), 255)
+        source.putpixel((17, 22), 0)
+        before = source.tobytes()
+        for mode in ("floyd-steinberg", "bayer", "dizzy", "threshold"):
+            with self.subTest(mode=mode):
+                profile = DitherProfile(
+                    mode=mode, width_dots=384, threshold=203)
+                # Inspect the exact header strings without OCR.
+                with patch(
+                    "photobooth.dither_print._add_binary_header",
+                    wraps=dither_print._add_binary_header,
+                ) as add_header:
+                    tagged = annotated_raster(source, profile)
+                labels = [call.args[1] for call in add_header.call_args_list]
+                cutoff_lines = [line for line in labels
+                                if line.startswith("THRESHOLD:")]
+                if mode == "threshold":
+                    self.assertEqual(cutoff_lines, ["THRESHOLD: 203"])
+                else:
+                    self.assertEqual(cutoff_lines, [])
+                self.assertEqual(source.tobytes(), before)
+                self.assertEqual(tagged.mode, "1")
+                self.assertEqual(tagged.width, source.width)
+                self.assertEqual(
+                    tagged.crop((0, tagged.height - source.height,
+                                 source.width, tagged.height)).tobytes(),
+                    before,
+                )
 
     def test_requires_binary_image_and_native_width(self):
         with self.assertRaises(ValueError):

@@ -1,6 +1,17 @@
 # Meong Photobooth — Documentation and release changelog
 
 
+## [Lab print metadata] Hide irrelevant threshold label — 2026-10-24
+
+- In `photobooth/dither_print.py`, physical **Print Test** headers include
+  `THRESHOLD: <value>` **only** for the global Threshold algorithm.
+  Floyd–Steinberg, Bayer 8×8 and Dizzy no longer show a misleading
+  `THRESHOLD: 128` despite their outputs not consuming this parameter.
+- Added regression coverage for all four modes, exact header strings and
+  byte-identical native 1-bit photo pixels. Updated the [operator guide](dither-gui-parameter-guide.md)
+  and [test checklist](test_checklist.md). **No algorithm, stored preset,
+  printer transport, production kiosk or master change.**
+
 ## [Documentation] Complete English Dither GUI parameter guide — 2026-10-24
 
 - Published [Dither Comparison GUI — Parameter Guide](dither-gui-parameter-guide.md), a source-checked, user-facing explanation of **every current GUI control** and default/range, the effects on portraits (skin, eyes, hair, shadows, highlights), risks of aggressive settings and how each operation fits the processing order.

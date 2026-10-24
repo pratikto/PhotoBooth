@@ -1,3 +1,16 @@
+## Dither Print Test — meaningful parameter labels (2026-10-24)
+
+- [x] `THRESHOLD: <value>` appears only for the actual `threshold`
+      algorithm in the test-print header.
+- [x] Floyd–Steinberg, Bayer 8×8 and Dizzy test prints no longer display
+      the irrelevant stored global threshold value.
+- [x] Tests inspect header strings directly without OCR and verify the
+      underlying native photo dots, image mode and width stay unchanged.
+- [ ] Optional operator paper review: confirm header readability and
+      no unexpected whitespace in the printed output.
+- [x] No changes to production kiosk, source/photo processing, printer
+      transport logic, or JSON profile schema.
+
 ## CI verification checkpoint for all three staged Dizzy steps (2026-10-24)
 
 - [x] [Final code checkpoint `4979951`](https://github.com/pratikto/PhotoBooth/commit/49799515c0555227983d929da1c50458f0582b2c):

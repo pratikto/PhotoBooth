@@ -263,6 +263,14 @@ printer/driver; this GUI does not calibrate them.
 | **Print Test** (each panel) | Sends **one real paper job** for that algorithm using exactly the native ready 1-bit raster, plus a separate parameter header. | Requires configured printer settings and an explicit yes/no confirmation. It is not a simulated print. |
 | **Print All (3 jobs)** | Sends **three separate real paper jobs**, one per visible algorithm. | One confirmation covers the batch; remaining jobs stop on failed/uncertain delivery. Uses paper, so check the current settings first. |
 
+**Test-print header — Threshold visibility:** The physical **Print Test**
+header includes a `THRESHOLD: <value>` line **only if the raster was produced
+with the global `threshold` algorithm**. It is **not** shown for
+Floyd–Steinberg, Bayer 8×8, or Dizzy because their output does not use
+the profile's global threshold setting. This is a **header-only change**;
+it does not adjust the dither calculation, native 1-bit photo raster,
+printhead darkness, or existing JSON presets.
+
 **Candidate-screen terms:**
 
 - **Score /100:** a *relative* digital heuristic; higher is preferred

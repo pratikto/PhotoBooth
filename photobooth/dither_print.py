@@ -37,8 +37,12 @@ def annotated_raster(raster: Image.Image, profile: DitherProfile) -> Image.Image
         f"MODE: {profile.mode} | WIDTH: {profile.width_dots}",
         f"B {profile.brightness:.2f} C {profile.contrast:.2f} "
         f"G {profile.gamma:.2f} S {profile.sharpness:.2f}",
-        f"THRESHOLD: {profile.threshold}",
     ]
+    # A global cutoff is meaningful only for the Threshold algorithm.
+    # Floyd uses error diffusion, Bayer its ordered matrix, and Dizzy its
+    # own binary quantizer; none uses DitherProfile.threshold.
+    if profile.mode == "threshold":
+        parts.append(f"THRESHOLD: {profile.threshold}")
     if profile.mode == "dizzy":
         parts.append(
             f"DIZZY: {profile.dizzy_variant} | SEED: {profile.dizzy_seed}")

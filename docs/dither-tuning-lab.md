@@ -1,6 +1,18 @@
 # Meong Photobooth — Thermal Dither Tuning Lab
 
 
+### Print Test label accuracy — 2026-10-24
+
+**The legacy `THRESHOLD: 128` line is no longer displayed on the physical
+test-print header for Floyd–Steinberg, Bayer 8×8, or Dizzy.** These algorithms
+do not consume the stored global threshold cutoff, so showing it implied a
+misleading tuning effect. The threshold header remains available when
+`annotated_raster` is called explicitly with the hidden `threshold` mode.
+This changes **only the human-readable test-paper header**, not the 1-bit
+photo raster, dithering algorithms, saved profiles, or kiosk production path.
+The output is protected by a regression test that inspects the actual
+header text and confirms the original photo dots remain byte-identical.
+
 > **Operator reference (English):** [Dither Comparison GUI — Complete Parameter Guide](dither-gui-parameter-guide.md). It explains every visible slider, checkbox, algorithm mode, toolbar action, Auto Tune control and print/export action, including their effects on face, hair, highlights, shadows and native 1-bit thermal dots. Use it before manual A/B testing or real-paper printing.
 
 
