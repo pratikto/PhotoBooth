@@ -1,5 +1,52 @@
 # Meong Photobooth — Thermal Dither Tuning Lab
 
+## Stage 3: controlled author-reference comparison (2026-10-24)
+
+Run from repository root:
+
+```powershell
+python tools/dizzy_reference_compare.py --width 144 --height 168 --seed 42 --output-dir data/dizzy_reference
+```
+
+This creates **no real print job** and never touches kiosk/QR code.
+By default it uses a reproducible synthetic gradient with an edge/portrait-like
+shape. Supply `--image path/to/photo.png` to use your own test photo;
+the image is processed locally without upload.
+
+**Reference provenance is explicit:**
+
+1. **`orthogonal-4`:** independently written adaptation of [Liam Appelbe's
+   published Python Gist](https://gist.github.com/liamappelbe/c2c76ad1ba655aa1caae5da40bcadc7e).
+   Retains its shuffled *column-major* coordinate order, rounded/clamped
+   8-bit neighbor updates, four orthogonal directions, and `<128`
+   black decision. Uses a fixed local seed for reproducibility (author's
+   sample uses ambient `random.shuffle`).
+2. **`orthogonal-4`, equal order:** the same Gist-style 8-bit math, but
+   substitutes Meong's five-round index permutation. This intentionally
+   holds iteration order constant and isolates the effect of intermediate
+   8-bit rounding/clamping versus Meong's float32 buffer.
+3. **`article-8`:** independent implementation of the 2024
+   [article pseudocode](https://liamappelbe.medium.com/dizzy-dithering-2ae76dbceba1),
+   using a seeded full shuffle, 8 neighbors with diagonal weight 0.1, and
+   float64 accumulation. **This is not an official published 8-neighbor
+   Python Gist.**
+
+Outputs include per-variant `*_meong.png`, `*_reference.png`,
+`*_difference.png` (white pixels mark disagreements), a special
+`*_gist_equal_order.png` for the four-neighbor numeric comparison, and
+`dizzy_reference_comparison.json`. The JSON reports percent disagreeing
+pixels, white-dot coverage for both images and signed coverage difference.
+Since author and Meong use different visitation order/precision, pixelwise
+identity is **not** expected and percent-difference alone is not a photo
+quality score. Tone LUT stays **OFF** during these comparisons to isolate
+the original dithering math.
+
+The GitHub Actions dither-lab workflow runs an offline reference comparison
+and uploads `meong-dizzy-reference-comparison` artifacts with the test.
+No GPU Layered Dizzy implementation, GPU LUT copy, or production integration
+is authorized by this experiment.
+
+
 ## Stage 2: complete grayscale fidelity test and plots (2026-10-24)
 
 Run from the repository root on Windows/Linux:
@@ -31,6 +78,14 @@ Note: digital white-dot-density fidelity does not measure spatial noise,
 edge preservation, actual printer density, face quality, thermal heat or paper
 response. Real-photo and paper comparisons remain mandatory.
 
+
+**Verified Stage-2 CI:** [run 40043294118](https://github.com/pratikto/PhotoBooth/actions/runs/40043294118)
+compiled, passed 69 backend/static tests and 12 Tk/Xvfb tests and uploaded
+[CSV/JSON/SVG](https://github.com/pratikto/PhotoBooth/actions/runs/40043294118/artifacts/12539718225).
+Full 256-level seed42 digital MAE **article-8 0.3896 -> 0.0259
+percentage points (93.4% less)** and **orthogonal-4 1.3590 -> 0.0495
+percentage points (96.4% less)**. This is on the same calibration grid; test
+other seeds and physical paper separately.
 
 ## Stage 1: CPU Dizzy inverse-tone LUT (2026-10-24)
 

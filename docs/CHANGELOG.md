@@ -1,5 +1,21 @@
 # Meong Photobooth — Documentation and release changelog
 
+## [Unreleased] Stage 3 — independent Dizzy reference comparison (2026-10-24)
+
+- Added `tools/dizzy_reference_compare.py` and
+  `tests/test_dizzy_reference.py` to compare baseline CPU Meong against the
+  author's four-neighbor Python Gist semantics (seeded shuffle,
+  integer/rounded/clamped update), then again with **identical visitation
+  order** to isolate numeric rounding. The eight-neighbor reference is an
+  independent implementation of the original article's pseudocode, not an
+  author's published Python implementation.
+- Produces independently reviewable native mode-1 PNGs, pixel-difference
+  images and JSON metrics; GitHub Actions uploads comparison artifacts.
+- Does not claim byte equivalence or superior image quality from mismatch
+  percentages. All stages remain lab-only; no master merge or printer
+  integration. Physical/Windows/SBC acceptance remains open.
+
+
 ## [Unreleased] Stage 2 — CPU Dizzy grayscale fidelity and SVG plots (2026-10-24)
 
 - Added `tools/dizzy_fidelity.py`: deterministic full-range 0..255

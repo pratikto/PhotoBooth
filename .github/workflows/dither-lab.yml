@@ -20,9 +20,9 @@ jobs:
       - name: Install Pillow only (offline lab backend)
         run: python -m pip install "Pillow>=10,<13"
       - name: Compile tuning lab and tests
-        run: python -m py_compile photobooth/dither_lab.py photobooth/dizzy_calibration.py photobooth/dither_processing.py photobooth/dizzy_dither.py photobooth/dither_autotune.py tools/dither_tuning_gui.py tools/dither_compare_gui.py tools/dizzy_fidelity.py tests/test_dither_lab.py tests/test_dither_comparison.py tests/test_dither_print.py tests/test_dither_gui_layout.py tests/test_dizzy_dither.py tests/test_dizzy_lab_integration.py tests/test_dither_enhanced.py tests/test_dither_gui_runtime.py tests/test_dither_autotune.py tests/test_dither_processing.py tests/test_dizzy_fidelity.py photobooth/dither_print.py photobooth/printer.py
+        run: python -m py_compile photobooth/dither_lab.py photobooth/dizzy_calibration.py photobooth/dither_processing.py photobooth/dizzy_dither.py photobooth/dither_autotune.py tools/dither_tuning_gui.py tools/dither_compare_gui.py tools/dizzy_fidelity.py tools/dizzy_reference_compare.py tests/test_dither_lab.py tests/test_dither_comparison.py tests/test_dither_print.py tests/test_dither_gui_layout.py tests/test_dizzy_dither.py tests/test_dizzy_lab_integration.py tests/test_dither_enhanced.py tests/test_dither_gui_runtime.py tests/test_dither_autotune.py tests/test_dither_processing.py tests/test_dizzy_fidelity.py tests/test_dizzy_reference.py photobooth/dither_print.py photobooth/printer.py
       - name: Run targeted printer-processing regressions
-        run: python -m unittest tests.test_dither_lab tests.test_dither_comparison tests.test_dither_print tests.test_dither_gui_layout tests.test_dizzy_dither tests.test_dizzy_lab_integration tests.test_dither_enhanced tests.test_dither_autotune tests.test_dither_processing tests.test_dizzy_fidelity -v
+        run: python -m unittest tests.test_dither_lab tests.test_dither_comparison tests.test_dither_print tests.test_dither_gui_layout tests.test_dizzy_dither tests.test_dizzy_lab_integration tests.test_dither_enhanced tests.test_dither_autotune tests.test_dither_processing tests.test_dizzy_fidelity tests.test_dizzy_reference -v
       - name: Run Tk GUI runtime smoke with Xvfb (no physical printing)
         run: xvfb-run -a python -m unittest tests.test_dither_gui_runtime -v
 
@@ -33,4 +33,13 @@ jobs:
         with:
           name: meong-dizzy-cpu-fidelity-256
           path: /tmp/meong-dizzy-fidelity/
+          if-no-files-found: error
+
+      - name: Compare optimized CPU Dizzy against independent author references
+        run: python tools/dizzy_reference_compare.py --seed 42 --width 144 --height 168 --output-dir /tmp/meong-dizzy-reference
+      - name: Upload reference comparison PNG and JSON
+        uses: actions/upload-artifact@v4
+        with:
+          name: meong-dizzy-reference-comparison
+          path: /tmp/meong-dizzy-reference/
           if-no-files-found: error

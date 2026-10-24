@@ -1,3 +1,17 @@
+## FEAT-011 Dizzy CPU — Stage 3 author-reference comparison (2026-10-24)
+
+- [x] Reproduce author Python Gist's 4-neighbor rounded/clamped 8-bit math
+      with deterministic local seed; cite source and document limitations.
+- [x] Hold Meong's five-round pixel order constant to isolate 8-bit update
+      differences from shuffled-order differences.
+- [x] Independent eight-neighbor pseudocode-based reference uses float64
+      and shuffled order, clearly labeled as **not author Gist code**.
+- [x] Export 1-bit reference and Meong PNGs, mismatch maps and JSON metrics,
+      plus CI artifact for review.
+- [ ] Interpret the visual differences on real portrait images at 576 dots.
+- [ ] Physical paper A/B quality review before any release to production.
+
+
 ## FEAT-011 Dizzy CPU — Stage 2 grayscale fidelity (2026-10-24)
 
 - [x] Full 0..255 input grayscale scan for both CPU Dizzy variants.
