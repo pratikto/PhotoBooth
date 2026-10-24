@@ -7,7 +7,7 @@ from unittest.mock import patch
 from PIL import Image,ImageDraw,ImageChops
 from photobooth import meong_fly_painter as painter
 from photobooth.meong_fly_polish import arcade_button
-from photobooth.kiosk_v2.button_art import (material_pixels,caption_pixels,caption_layout,display_text)
+from photobooth.kiosk_v2.button_art import material_pixels
 
 
 class ButtonArtTests(unittest.TestCase):
@@ -17,20 +17,6 @@ class ButtonArtTests(unittest.TestCase):
             arcade_button(ImageDraw.Draw(expected),(0,0,290,55),'',kind,painter)
             self.assertEqual(material_pixels(variant).tobytes(),expected.tobytes())
 
-    def test_small_arrow_words_are_not_split_or_shortened(self):
-        for text in ('SEBELUMNYA','BERIKUTNYA'):
-            lines,cell=caption_layout(text,12,84,30)
-            self.assertEqual(lines,(text,))
-            self.assertLessEqual((len(text)*6)*cell,84)
-
-    def test_long_operator_labels_preserve_all_characters_and_original_pixel_glyphs(self):
-        text='CETAK UJI • BELUM DIAKTIFKAN OPERATOR'
-        lines,cell=caption_layout(text,22,190,30)
-        self.assertEqual(''.join(lines).replace(' ',''),display_text(text).replace(' ',''))
-        self.assertTrue(all(char in painter.GLYPHS for line in lines for char in line))
-        image=caption_pixels(lines,(7,13,38,255))
-        self.assertLessEqual(image.width*cell/2,190+.01)
-        self.assertLessEqual(image.height*cell/2,30+.01)
 
 
 try:
@@ -70,17 +56,38 @@ class NativeButtonArtTests(unittest.TestCase):
             b.font_size=font;b.texture_update()
             self.assertLessEqual(b.texture_size[0],width-24+.01)
             self.assertLessEqual(b.texture_size[1],height-18+.01)
-            self.assertEqual(''.join(b._caption_lines).replace(' ',''),display_text(text).replace(' ',''))
+            self.assertIs(b.texture,b._label.texture)
+            self.assertEqual(tuple(b.texture_size),tuple(b.texture.size))
+            self.assertEqual(b._label.text,text)
             original=b.text;b.disabled=True;b.texture_update()
             self.assertEqual(b.text,original);self.assertTrue(b.disabled)
             self.assertEqual(tuple(b.disabled_color),rgba(MUTED))
-            ink=tuple(round(c*255) for c in rgba(MUTED))
-            self.assertIn(ink,[tuple(b.texture.pixels[i:i+4]) for i in range(0,len(b.texture.pixels),4)])
+            self.assertEqual(tuple(b._label.options['color']),rgba(MUTED))
 
     def test_position_and_pressed_state_reuse_cached_original_material_and_caption(self):
         b=ArcadeButton('MULAI FOTO',width=398);b.texture_update()
         original=b.texture
         with patch('photobooth.kiosk_v2.button_art.arcade_button',side_effect=AssertionError('Repeated material raster')):
             for index in range(20):
-                b.pos=(index,index);b.state='down' if index%2 else 'normal';b.texture_update()
+                b.pos=(index,index);b.state='down' if index%2 else 'normal'
                 self.assertIs(b.texture,original)
+
+    def test_native_font_keeps_arrows_on_one_line_without_bitmap_scaling(self):
+        for text in ('SEBELUMNYA','BERIKUTNYA'):
+            b=ArcadeButton(text,width=108,height=48,size_hint=(None,None))
+            b.font_size=12;b.texture_update()
+            self.assertEqual(b._label.text,text)
+            self.assertLessEqual(b.texture_size[1],18)
+            self.assertIs(b.texture,b._label.texture)
+            self.assertEqual(tuple(b.texture_size),tuple(b.texture.size))
+
+    def test_native_font_preserves_punctuation_and_has_no_caption_icon(self):
+        from kivy.graphics import Rectangle
+        text='SELESAI • KEMBALI IKLAN'
+        b=ArcadeButton(text,width=398);b.texture_update()
+        self.assertEqual(b.font_size,18)
+        self.assertEqual(b._label.text,text)
+        self.assertIs(b.texture,b._label.texture)
+        # Only the nine original frame slices; the caption is the standard
+        # native Button canvas. No embedded icon or caption bitmap overlay.
+        self.assertEqual(sum(isinstance(item,Rectangle) for item in b.canvas.before.children),9)

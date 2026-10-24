@@ -1,7 +1,7 @@
 """Portrait-first Pixel Arcade Space design primitives.
 
 Native layouts retain v2 ownership; controls reuse original Meong Fly button
-material, icons and glyph rendering through a small presentation adapter.
+material; captions use the native font through a small presentation adapter.
 """
 
 from kivy.graphics import Color, Ellipse, Line, Rectangle, RoundedRectangle
@@ -11,7 +11,7 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.floatlayout import FloatLayout
 
-from .button_art import ICONS, caption_layout, caption_texture, material_slices, material_texture
+from .button_art import material_slices, material_texture
 
 from .design_tokens import (
     BUTTON_COLORS, BUTTON_EDGES, CYAN, GOLD, INK, MUTED, PANEL,
@@ -140,7 +140,7 @@ class ArcadeButton(Button):
             text=text, size_hint_y=None, height=dp(height),
             background_normal="", background_down="",
             background_color=(0, 0, 0, 0),
-            font_size=dp(22), bold=True,
+            font_size=dp(18), bold=True,
             color=rgba(INK if variant in {"primary", "secondary"} else WHITE),
             # Kivy uses disabled_color instead of color for disabled text.
             # Keep unavailable scanner/payment labels readable at both sizes.
@@ -153,15 +153,22 @@ class ArcadeButton(Button):
         self._recolor()
 
     def texture_update(self, *_args):
-        icon=None if self.disabled else ICONS.get(self.text)
-        lines,cell=caption_layout(self.text,self.font_size,
-                                  max(1,self.width-dp(24)),max(1,self.height-dp(18)),icon)
-        ink=tuple(round(channel*255) for channel in (self.disabled_color if self.disabled else self.color))
-        texture=caption_texture(lines,ink,icon)
-        self.texture=texture
-        self.texture_size=(texture.width*cell/2,texture.height*cell/2)
-        self._caption_lines,self._caption_cell=lines,cell
-        self.is_shortened=False
+        # Restore the existing native Roboto provider. Measure and wrap with
+        # its real glyph metrics; never stretch a bitmap caption to fit.
+        width=max(1,self.width-dp(24))
+        height=max(1,self.height-dp(18))
+        if self.text_size[0] is not None:
+            width=min(width,max(1,self.text_size[0]))
+        requested=self.font_size
+        for attempt in range(20):
+            self._label.options['font_size']=requested*.95**attempt
+            self._label.usersize=(None,None)
+            super().texture_update()
+            if self.texture_size[0]>width:
+                self._label.usersize=(width,None)
+                super().texture_update()
+            if self.texture_size[0]<=width+.1 and self.texture_size[1]<=height+.1:
+                break
 
     def _recolor(self, *_args):
         self.color = rgba(

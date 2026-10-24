@@ -1,0 +1,25 @@
+{
+  "baseline_sha": "aee85cd74adb0068b5aaa66ac8b2d57f1a76d846",
+  "worktree_tested_before_commit": true,
+  "files": [
+    {
+      "path": "photobooth/kiosk_v2/theme.py",
+      "sha256": "fc120e3eec47962423f0739a33c53548a7314bf6baaf9f6a3aca2d69465c2aa4"
+    },
+    {
+      "path": "photobooth/kiosk_v2/button_art.py",
+      "sha256": "cc4467560c8c443434b9c1332af66d06b9fe8648fe3c91e4dc63f6f643c307bb"
+    },
+    {
+      "path": "tests/test_kiosk_v2_button_art.py",
+      "sha256": "0cfbe42777f0c86767876c4c43cc1b486c3f93deadc118f0a9a8db620a8b3a0e"
+    }
+  ],
+  "full_run": {
+    "tests": 546,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 168.435
+  }
+}

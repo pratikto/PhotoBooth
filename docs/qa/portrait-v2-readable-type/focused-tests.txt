@@ -1,0 +1,14 @@
+test_material_pixels_reuse_complete_original_meong_button (tests.test_kiosk_v2_button_art.ButtonArtTests.test_material_pixels_reuse_complete_original_meong_button) ... ok
+test_compact_native_caption_bounds_disabled_contrast_and_full_text (tests.test_kiosk_v2_button_art.NativeButtonArtTests.test_compact_native_caption_bounds_disabled_contrast_and_full_text) ... ok
+test_native_font_keeps_arrows_on_one_line_without_bitmap_scaling (tests.test_kiosk_v2_button_art.NativeButtonArtTests.test_native_font_keeps_arrows_on_one_line_without_bitmap_scaling) ... ok
+test_native_font_preserves_punctuation_and_has_no_caption_icon (tests.test_kiosk_v2_button_art.NativeButtonArtTests.test_native_font_preserves_punctuation_and_has_no_caption_icon) ... ok
+test_native_nine_slice_matches_original_pixels_at_reference_size (tests.test_kiosk_v2_button_art.NativeButtonArtTests.test_native_nine_slice_matches_original_pixels_at_reference_size) ... ok
+test_position_and_pressed_state_reuse_cached_original_material_and_caption (tests.test_kiosk_v2_button_art.NativeButtonArtTests.test_position_and_pressed_state_reuse_cached_original_material_and_caption) ... ok
+test_every_enabled_button_clicks_once_even_on_ads_and_game_preview (tests.test_kiosk_v2_widgets.PortraitKivySmokeTests.test_every_enabled_button_clicks_once_even_on_ads_and_game_preview) ... ok
+test_retired_buttons_and_swipes_cannot_change_next_visit (tests.test_kiosk_v2_widgets.PortraitKivySmokeTests.test_retired_buttons_and_swipes_cannot_change_next_visit) ... ok
+test_unavailable_actions_keep_readable_text_without_becoming_touchable (tests.test_kiosk_v2_widgets.PortraitKivySmokeTests.test_unavailable_actions_keep_readable_text_without_becoming_touchable) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.464s
+
+OK

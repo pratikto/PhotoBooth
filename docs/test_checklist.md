@@ -1,5 +1,7 @@
 ## Version 1.0.0 — release-source verification (2026-10-19)
 
+> Current typography checks: nine focused native PASS including intrinsic font texture size, one-line arrows, punctuation, icon-free canvas, long/disabled labels, source-frame RGB/alpha, click/audio/stale guards. 54 screenshot hashes/dimensions verified; fresh 8-item Submit form passes browser checks. Final full gate 546 PASS, zero failures/errors/skips; no Windows aesthetic acceptance inferred. [Proof](qa/portrait-v2-readable-type/README.md).
+
 > Native-control final gate: 546 full PASS/0 failures/errors/skips, 15 focused PASS including native source-button RGB/alpha equality, caption fit, disabled/cache/touch/audio and header lifecycle; 54 PNGs verified, 8-item Submit form browser-checked. Matching-source CI 40102001442 at 25fd55c has three-job SUCCESS, 99 PNGs verified. New visual Windows acceptance remains open; prior 14/14/twenty-cycle owner report preserved. BUG-017 unchanged/unfixed. [Proof/form](qa/portrait-v2-native-controls/README.md).
 
 > 2026-10-24 owner retest: raw 14/14, twenty cycles, HEAD/resolution/scaling blank; preserve the reported passes without exact-SHA attribution. A01 metadata subclaim incomplete. Video→video lag is an additional open issue outside the fourteen explicit checks. [Preserved report and pending checks](qa/portrait-v2-native-controls/README.md).

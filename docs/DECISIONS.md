@@ -1,5 +1,7 @@
 # Meong Photobooth — Product and technical decision record
 
+> 2026-10-24 latest owner preference supersedes the prior all-pixel caption request: typography must look clean/aesthetic and main buttons need no icons. Reuse the earlier native font, keep the retro frame/palette, larger Meong and existing interaction/audio guards. [Correction](qa/portrait-v2-readable-type/README.md).
+
 > 2026-10-24 owner follow-up: enlarge header Meong and make main-app button style match the Meong Fly screenshot. Reuse the original painter/material/glyphs/icons through the existing native control. Retain callback/audio/disabled/financial guards. Existing 14/14/twenty-cycle owner results have unknown HEAD; the new visual source requires its own preference/touch check. Video→video lag is a separate open issue. [Scope/proof](qa/portrait-v2-native-controls/README.md).
 
 > 2026-10-24 owner follow-up: correct game Meong sitting too far right during resize. Also approved as a separate next stage: mascot level with centered MEONG PHOTOBOOTH, flying into it and causing a rotation that settles back. Owner also requests animated limbs/rainbow and printing while flying. Reuse existing sprite, camera/film compositor, emitter, wordmark and native animation. No production or P5 expansion. [Current stages](qa/portrait-v2-player-anchor/README.md).
