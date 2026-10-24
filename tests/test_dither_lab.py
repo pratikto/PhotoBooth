@@ -107,6 +107,7 @@ class DitherLabTests(unittest.TestCase):
             original.pop("enhanced_dizzy")
             original.pop("dizzy_variant")
             original.pop("dizzy_seed")
+            original.pop("dizzy_contrast_correction")
             for key in NEW_ENHANCEMENT_FIELDS:
                 original.pop(key)
             path.write_text(json.dumps({"schema_version": 1, **original}), encoding="utf-8")
