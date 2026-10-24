@@ -1,5 +1,7 @@
 ## Version 1.0.0 — release-source verification (2026-10-19)
 
+> 2026-10-24 responsive follow-up stage 1: 20 native focused checks PASS, zero skips; Windows retest pending. [Evidence](qa/portrait-v2-responsive-scene/README.md).
+
 > **P4 owner follow-up QA (2026-10-24):** 527 final native-fixture tests PASS with zero skips; new native mouse-dot reproduction/cleanup, full-window bounds, original scene crop parity, gallery/MOCK discount agreement and twenty game PCM cycles. [Updated 28-item Submit form](qa/portrait-v2-p4/windows-checklist.html) starts empty; physical Windows audio/layout acceptance remains open. [Proof and checkpoints](qa/portrait-v2-game-followup/README.md).
 
 > **Meong Fly reuse QA (2026-10-24):** 98 unchanged original tests plus integration/regression coverage; final 512 full PASS, zero skips. Source hashes and original renderer identity verified; 14 native FBO comparisons match at both portrait sizes, 30 full-window captures reviewed. [Current evidence](qa/portrait-v2-meong-reuse/README.md); [fresh original-game Submit form](qa/portrait-v2-p4/windows-checklist.html). Windows feel/animation/device acceptance remains open, P3 owner PASS unchanged.

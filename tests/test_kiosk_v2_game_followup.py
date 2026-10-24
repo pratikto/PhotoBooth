@@ -50,7 +50,7 @@ class GameFollowupTests(unittest.TestCase):
                 app._game_result=store.finish(attempt,'won' if won else 'lost',10 if won else 0)
                 helper.gallery(app)
                 self.assertEqual(app._gallery_amount.total,7500 if won else 10000)
-                self.assertIn('Rp7.500' if won else 'Rp10.000',app._order_summary.text)
+                self.assertIn('Rp7.500' if won else 'Rp10.000',app._order_total_label.text)
                 app._open_mock_checkout();helper.settle(app)
                 self.assertEqual(app._mock_view['total'],app._gallery_amount.total)
                 if won:

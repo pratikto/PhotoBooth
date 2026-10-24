@@ -654,9 +654,6 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
         header.add_widget(title)
         shell.add_widget(header)
         self._game_offer_note = None
-        if self._game_result is not None:
-            self._game_offer_note = text_label('', size=12, height=24, color=GOLD)
-            shell.add_widget(self._game_offer_note)
 
         deck = PixelCard(orientation='vertical', padding=8, spacing=4)
         host = FloatLayout()
@@ -682,21 +679,29 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
         shell.add_widget(deck)
 
         count_card = self._count_card = PixelCard(orientation='vertical', size_hint_y=None,
-                               height=dp(98), spacing=6, padding=8)
-        row = BoxLayout(size_hint_y=None, height=dp(48), spacing=dp(8))
-        caption = text_label('CETAK', size=13, height=48, color=CYAN, bold=True)
-        caption.size_hint_x = None
-        caption.width = dp(62)
-        row.add_widget(caption)
-        row.add_widget(self._action('-', lambda: self._change_copies(-1),
-                                    variant='tertiary', height=48))
+                               height=dp(98), spacing=4, padding=8)
+        row = BoxLayout(size_hint_y=None, height=dp(48), spacing=dp(16))
+        quantity = BoxLayout(spacing=dp(4), size_hint_x=.48)
+        quantity.add_widget(self._action('-', lambda: self._change_copies(-1),
+                                         variant='tertiary', height=48))
         self._copy_value = text_label('0', size=24, height=48, color=GOLD, bold=True)
-        row.add_widget(self._copy_value)
-        row.add_widget(self._action('+', lambda: self._change_copies(1),
-                                    variant='secondary', height=48))
+        self._copy_value.size_hint_x = .65
+        quantity.add_widget(self._copy_value)
+        quantity.add_widget(self._action('+', lambda: self._change_copies(1),
+                                         variant='secondary', height=48))
+        row.add_widget(quantity)
+        price = BoxLayout(orientation='vertical', size_hint_x=.52)
+        price.add_widget(text_label('TOTAL SIMULASI', size=10, height=16, color=WHITE))
+        self._order_total_label = text_label('', size=24, height=32, color=GOLD, bold=True)
+        price.add_widget(self._order_total_label)
+        row.add_widget(price)
         count_card.add_widget(row)
-        self._order_summary = text_label('', size=13, height=28, color=WHITE)
-        count_card.add_widget(self._order_summary)
+        detail = BoxLayout(size_hint_y=None, height=dp(22), spacing=dp(8))
+        self._order_summary = text_label('', size=12, height=22, color=WHITE)
+        self._game_offer_note = text_label('', size=12, height=22, color=GOLD)
+        detail.add_widget(self._order_summary)
+        detail.add_widget(self._game_offer_note)
+        count_card.add_widget(detail)
         shell.add_widget(count_card)
 
         self._warning_label = text_label('', size=12, height=0, color=GOLD)
@@ -773,17 +778,9 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
         eligible = is_demo_winner(self._game_result) and not self._game_discount_used
         amount = self._gallery_amount = demo_amount(quote.total_amount, eligible)
         money = lambda value:'Rp'+f'{value:,}'.replace(',', '.')
-        detail = f'{quote.session_count} sesi • {quote.print_copy_count} lembar'
-        if amount.discount:
-            self._order_summary.text = (f'{detail} • Subtotal {money(amount.subtotal)}\n'
-                f'Diskon game −{money(amount.discount)} • SIMULASI {money(amount.total)}')
-        else:
-            self._order_summary.text = f'{detail} • SIMULASI {money(amount.total)}'
-        self._order_summary.height = dp(48 if amount.discount else 28)
-        self._count_card.height = dp(118 if amount.discount else 98)
-        if self._game_offer_note is not None:
-            self._game_offer_note.text = (
-                'Diskon game −Rp2.500 sudah masuk total simulasi' if amount.discount else
-                'Game menang • pilih jumlah cetak untuk diskon simulasi' if eligible else
-                'Diskon game sudah dipakai' if self._game_discount_used else
-                'Game selesai • tanpa potongan harga')
+        self._order_total_label.text = money(amount.total)
+        self._order_summary.text = f'{quote.print_copy_count} lembar • {quote.session_count} sesi'
+        self._game_offer_note.text = (
+            f'Hemat {money(amount.discount)}' if amount.discount else
+            'Diskon siap' if eligible else
+            'Diskon sudah dipakai' if self._game_discount_used else '')

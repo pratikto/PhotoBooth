@@ -479,6 +479,11 @@ class PortraitKivySmokeTests(unittest.TestCase):
                     Window.size = size
                     for _ in range(6):
                         EventLoop.idle()
+                    self.assertFalse(any(getattr(w, 'text', '') == 'CETAK' for w in app.stage.walk()))
+                    for label in (app._order_total_label, app._order_summary):
+                        self.assertIsNotNone(label.parent)
+                        self.assertGreater(label.width, label.texture_size[0] - 1)
+                        self.assertGreaterEqual(label.height, label.texture_size[1])
                     gallery = app._carousel
                     left, bottom = gallery.viewport.to_window(*gallery.viewport.pos)
                     right, top = gallery.viewport.to_window(gallery.viewport.right, gallery.viewport.top)
