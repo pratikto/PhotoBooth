@@ -1,0 +1,16 @@
+{
+  "parent_sha": "60ab3cf3798bcd718737511a7047185070f7f0f2",
+  "working_tree_test": true,
+  "run": 529,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "files": {
+    "photobooth/kiosk_v2/game_layout.py": "17e15960a1ac67f6302801c9f868ccdf6862ed6ca7efdc8be9f2983869abb492",
+    "photobooth/kiosk_v2/game_scene.py": "67ede960aa176b7f92a43ea41fa52ba5f5765689b3cde6f843365e0ea7c1fbab",
+    "photobooth/kiosk_v2/app.py": "1a9121adf355bd456d9364986ec7002c57acfe5abb95f5a756d3519cdcc7eba4",
+    "tests/test_kiosk_v2_meong_reference.py": "02b08a63e66beb97d5bdbedecc738a693f20fb83fb1edbd539034029f90d1c3c",
+    "tests/test_kiosk_v2_game_followup.py": "7fab071c09cbf0509fe8ca7c3ae20aa5333ef7488bbd80118c57a446e6a0fe07",
+    "tools/render_portrait_p4.py": "43d52c407b33520928c1cab38d43cdc8215c5bb25f711ee1728ef455081c7902"
+  }
+}

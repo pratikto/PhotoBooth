@@ -1,5 +1,7 @@
 # Meong Photobooth — Product and technical decision record
 
+> Owner UI direction (2026-10-24): replace visibly separate side filler with one unified game scene; game components must follow window resize. Keep existing Meong Fly artwork/animations. Simplify gallery to quantity controls, prominent simulated total and short savings detail; remove CETAK. This authorizes these UI adaptations, not production financial/scanner integration.
+
 > **P3 scope clarification (2026-10-23):** Owner says “oke tolong eksekusi p3” and requests a better camera SFX than v1. Implement P3a/P3b through an explicit **UJI FOTO / TANPA PEMBAYARAN** test admission, not a fabricated paid status. Preserve v1 shutter and playback. Printing/Drive are explicit operator opt-ins in an isolated test namespace. This does not authorize real payments, discount/scanner/game integration, production transactions, backend deployment or master merge. [Implementation/evidence](qa/portrait-v2-p3/README.md).
 
 

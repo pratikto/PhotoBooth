@@ -1,5 +1,7 @@
 ## Version 1.0.0 — release-source verification (2026-10-19)
 
+> 2026-10-24 responsive stage: 529 full local PASS, 0 errors/failures/skips; 80 Kivy PNGs hash/dimension checked, representative four-size scene review, 14-item Submit form browser checks PASS. This replaces the rejected filler QA, not Windows hardware acceptance. [Evidence/form](qa/portrait-v2-responsive-scene/README.md).
+
 > 2026-10-24 responsive follow-up stage 1: 20 native focused checks PASS, zero skips; Windows retest pending. [Evidence](qa/portrait-v2-responsive-scene/README.md).
 
 > **P4 owner follow-up QA (2026-10-24):** 527 final native-fixture tests PASS with zero skips; new native mouse-dot reproduction/cleanup, full-window bounds, original scene crop parity, gallery/MOCK discount agreement and twenty game PCM cycles. [Updated 28-item Submit form](qa/portrait-v2-p4/windows-checklist.html) starts empty; physical Windows audio/layout acceptance remains open. [Proof and checkpoints](qa/portrait-v2-game-followup/README.md).

@@ -64,7 +64,9 @@ class ReferenceIntegrationTests(unittest.TestCase):
             with self.subTest(method=name):
                 self.assertIs(getattr(KioskGameStage,name),getattr(MeongFlyStage,name))
 
-    def test_native_pixels_match_reference_at_both_sizes_and_four_print_phases(self):
+    def test_original_camera_and_film_reflow_at_three_sizes_and_four_print_phases(self):
+        from kivy.graphics import Quad
+        from photobooth.kiosk_v2.game_layout import Layout
         helper=support.GameWidgetTests()
         with helper.booth() as (app,_):
             app._choose_game()
@@ -74,7 +76,7 @@ class ReferenceIntegrationTests(unittest.TestCase):
             baseline=MeongFlyStage(MeongFlyFlow(Mock()),size_hint=(None,None))
             baseline._update_event.cancel();baseline._update_event=None
             try:
-                for size in ((800,1280),(452,900)):
+                for size in ((800,1280),(452,900),(800,900)):
                     stage.size=baseline.size=size
                     for scene in ('start','game','won','lost'):
                         phases=(.30,.96,1.32,1.74) if scene=='start' else (.96,)
@@ -92,19 +94,33 @@ class ReferenceIntegrationTests(unittest.TestCase):
                                         view._time=round(view._time+.03,6)
                                         view._advance_printer(.03)
                                     view._refresh()
-                                actual=bytes(stage.export_as_image().texture.pixels)
-                                expected=bytes(baseline.export_as_image().texture.pixels)
-                                # Only the opaque standalone side plate is now
-                                # removed; compare the original portrait scene.
-                                from PIL import Image
-                                ox,oy,scale=stage._viewport()
-                                crop=(round(ox-stage.x),0,round(ox-stage.x+360*scale),size[1])
-                                actual=Image.frombytes('RGBA',size,actual).crop(crop).tobytes()
-                                expected=Image.frombytes('RGBA',size,expected).crop(crop).tobytes()
-                                self.assertEqual(hashlib.sha256(actual).hexdigest(),hashlib.sha256(expected).hexdigest())
+                                # The renderer, pose, layer pixels and emitter
+                                # are still upstream, even as their layout moves.
+                                self.assertEqual(stage._camera_context(scene),baseline._camera_context(scene))
+                                self.assertEqual(stage._printer.poses(),baseline._printer.poses())
+                                for name in stage._camera_layers:
+                                    for actual,expected in zip(stage._camera_layers[name],baseline._camera_layers[name]):
+                                        self.assertEqual(bytes(actual.pixels),bytes(expected.pixels))
+                                actual=[i for i in stage.canvas.before.children if isinstance(i,Quad)]
+                                expected=[i for i in baseline.canvas.before.children if isinstance(i,Quad)]
+                                self.assertEqual(len(actual),len(expected))
+                                layout=Layout(*size,scene)
+                                ox,oy,scale=baseline._viewport()
+                                for got,want in zip(actual,expected):
+                                    self.assertEqual(tuple(got.tex_coords),tuple(want.tex_coords))
+                                    self.assertEqual(bytes(got.texture.pixels),bytes(want.texture.pixels))
+                                    for index in range(0,8,2):
+                                        x=(want.points[index]-ox)/scale
+                                        y=720-(want.points[index+1]-oy)/scale
+                                        if scene=='game':
+                                            x=layout.world_x(x);y+=layout.extra[1]/2
+                                        else:
+                                            x+=layout.extra[0]/2
+                                            y+=layout.menu_offset(stage._camera_context(scene)[1])
+                                        self.assertAlmostEqual(got.points[index],stage.x+x*layout.scale,delta=.01)
+                                        self.assertAlmostEqual(got.points[index+1],stage.top-y*layout.scale,delta=.01)
                                 PARITY_RECORDS.append({'width':size[0],'height':size[1],'scene':scene,
-                                                       'time':phase,'equal':actual==expected,
-                                                       'sha256':hashlib.sha256(actual).hexdigest()})
+                                                       'time':phase,'original_camera_film':True})
             finally:
                 baseline.dispose()
 
@@ -114,7 +130,7 @@ class ReferenceIntegrationTests(unittest.TestCase):
                 self.sx,self.sy=args;self.profile=['pos'];super().depack(args)
         original=Window.size
         try:
-            for size in ((800,1280),(452,900),(360,640)):
+            for size in ((800,1280),(452,900),(360,640),(800,900)):
                 with self.subTest(size=size),support.GameWidgetTests().booth() as (app,_):
                     Window.size=size;app._choose_game()
                     for _ in range(4):EventLoop.idle()
@@ -122,7 +138,7 @@ class ReferenceIntegrationTests(unittest.TestCase):
                         stage=app._game_field
                         x,y,w,h=ACTIONS['start']['game']
                         pos,extent=stage._rect((x,y,w,h))
-                        point=stage.to_window(pos[0]+extent[0]/2,pos[1]+extent[1]/2)
+                        point=stage.to_window(pos[0]+min(20,extent[0]/4),pos[1]+extent[1]/2)
                         pointer=Pointer('reference-stage','start',(point[0]/Window.width,point[1]/Window.height),is_touch=True)
                         EventLoop.post_dispatch_input('begin',pointer);EventLoop.post_dispatch_input('end',pointer)
                         self.assertEqual(app.navigation.page,GAME_RECEIPT)

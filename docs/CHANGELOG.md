@@ -1,5 +1,7 @@
 # Meong Photobooth — Documentation and release changelog
 
+> 2026-10-24: replace separate game filler/fixed poster layout with cached responsive original-art components and one source sky; align hitboxes/film, retain original engine/compositor. Gallery quantity/total simplified, CETAK removed. 529 full local PASS, zero skips; [QA/screenshots/rollback](qa/portrait-v2-responsive-scene/README.md).
+
 > Compact gallery quantity controls and prominent simulated total; remove CETAK and repeated price prose. 20 native focused checks PASS. See [current QA](qa/portrait-v2-responsive-scene/README.md).
 
 > **P4 follow-up CI evidence (2026-10-24, docs only):** Three jobs SUCCESS at `f3172a5`; original artifact digest and all fifty P4 PNG hashes/dimensions verified, game contacts reviewed. No runtime change or new hardware PASS. [Verification](qa/portrait-v2-game-followup/README.md).

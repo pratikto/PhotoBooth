@@ -1,5 +1,7 @@
 # Meong Photobooth — Development handover
 
+> Current resize follow-up (2026-10-24): compact gallery pushed as 60ab3cf (CI SUCCESS). Responsive original-art stage now passes 529 full local tests, zero skips; 80 PNGs hash-checked with four-size visual review. Original 26 reference files unchanged. Next is matching-source CI and Windows retest with the new Submit form. [Evidence, source hashes and rollback](qa/portrait-v2-responsive-scene/README.md).
+
 > Current owner resize follow-up: compact gallery stage passes 20 native checks; next adapt actual original game components to window bounds, replacing separate filler. [QA/rollback](qa/portrait-v2-responsive-scene/README.md).
 
 > **Current owner follow-up (2026-10-24):** Staged `4896d51` fixes game background/window/footer/mouse; `16bc7c6` fixes winning quote display/consumption. Dedicated game BGM at `f3172a5` now reuses the existing owner and synth instruments; [matching-source CI 40051193648](https://github.com/pratikto/PhotoBooth/actions/runs/40051193648) has all three jobs SUCCESS, final 527 full PASS, 39 focused audio PASS and 50 screenshots verified. Restart the existing launcher after pull so pointer config/new WAV load. All original reference modules remain unchanged. [Current proof, rollback and retest](qa/portrait-v2-game-followup/README.md).

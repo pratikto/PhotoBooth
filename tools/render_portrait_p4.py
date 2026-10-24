@@ -48,11 +48,11 @@ class Recorder(PortraitKioskV2App):
         self._demo_code.text=code
         self._claim_game_demo()
 
-    def sample_game(self):
+    def sample_game(self, paused=True):
         self._game_engine.y=320
         self._game_engine.score=3
         self._game_engine.pipes=[Pipe(300,320),Pipe(470,260)]
-        if not self._game_paused:self._toggle_game_pause()
+        if self._game_paused != paused:self._toggle_game_pause()
         self._game_field._refresh()
 
     def print_phase(self, seconds):
@@ -68,6 +68,7 @@ class Recorder(PortraitKioskV2App):
         field._refresh()
 
     def outcome(self, won):
+        self._loss_frame_ready = False
         self._game_paused=False
         self._reference_flow.paused=False
         self._game_engine.status='won' if won else 'lost'
@@ -79,6 +80,7 @@ class Recorder(PortraitKioskV2App):
         with Image.open(path) as photo:
             if photo.size!=(args.width,args.height):raise RuntimeError('Wrong screenshot dimensions')
         self.evidence.append({'file':path.name,'page':self.navigation.page,
+                              'game_scene':self._game_field._screen_seen if self._game_field else None,
                               'width':args.width,'height':args.height,
                               'sha256':hashlib.sha256(path.read_bytes()).hexdigest()})
 
@@ -96,6 +98,7 @@ class Recorder(PortraitKioskV2App):
             lambda:self.enter_code('CAFE-INVALID'),
             lambda:self.capture('03-invalid'),
             lambda:self.enter_code('DEMO-RENDER-1'),
+            lambda:self.sample_game(False),
             lambda:self.capture('04-original-game'),
             self.sample_game,
             lambda:self.capture('05-paused-game'),
@@ -122,10 +125,14 @@ class Recorder(PortraitKioskV2App):
         if self._game_jobs.busy:
             Clock.schedule_once(self.advance,.1)
             return
-        if (self.navigation.page=='game_result' and self._game_field.flow.screen=='lost' and
-                self._game_field._time < self._game_field._impact_until):
-            Clock.schedule_once(self.advance,.1)
-            return  # Capture the actual loss result after the original impact transition.
+        if self.navigation.page=='game_result' and self._game_field.flow.screen=='lost':
+            field=self._game_field
+            if (field._time < field._impact_until or field._screen_seen != 'lost' or
+                    not getattr(self,'_loss_frame_ready',False)):
+                if field._time >= field._impact_until and field._screen_seen == 'lost':
+                    self._loss_frame_ready=True
+                Clock.schedule_once(self.advance,.1)
+                return  # Wait for a drawn result frame, not just the physics deadline.
         try:next(self.actions)()
         except StopIteration:return
         Clock.schedule_once(self.advance,.25)

@@ -1,5 +1,7 @@
 # Meong Photobooth — Bug register
 
+> 2026-10-24 visual follow-up: owner rejects separate game-side filler/fixed center and dense gallery prices. Responsive original-art layout and compact total are implemented for local QA; Windows acceptance is still pending. Earlier filler checks do not close this report. [Evidence/rollback](qa/portrait-v2-responsive-scene/README.md).
+
 > **P3 scope note (2026-10-23):** No existing device defect is newly closed by P3 source tests. BUG-012 remains owner-reported PASS/monitoring with the Windows twenty-cycle gate open. BUG-009 remains OPEN: the isolated P3 upload adapter now holds photo uploads until backend retention acknowledgement, but no Apps Script deployment, cleanup execution or actual 30-day deletion has been certified; existing v1 behavior is unchanged. [Current P3 evidence and physical checklist](qa/portrait-v2-p3/README.md).
 
 

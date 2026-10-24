@@ -1,5 +1,7 @@
 # Meong Photobooth — Current feature status
 
+> Current resize follow-up (2026-10-24): the earlier separate-filler fix is superseded by responsive original-art composition and compact gallery totals. Source QA is distinct from pending Windows acceptance. [Current evidence, rollback and 14-item Submit form](qa/portrait-v2-responsive-scene/README.md).
+
 > **P4 owner follow-up (2026-10-24):** Full-window game background with preserved original scene proportions, no non-playing return footer, mouse-emulation red dots fixed. Winning offer now reaches gallery/net MOCK totals and is not reapplied after use. Dedicated minor-key game BGM uses the existing single audio owner; video remains exclusive. Final 527 full PASS, zero skips; 50 captures checked at both target sizes. [Evidence/checkpoints/Windows form](qa/portrait-v2-game-followup/README.md). Previous game-silent/unapplied-preview notices below are historical; production payment/discount/scanner stay off.
 
 > **Meong Fly reuse corrected (2026-10-24):** V2 now mounts the original latest MeongFlyStage/MeongFlyFlow from read-only reference `672e3f7`; original renderer, sprite/print compositor and effects are reused directly. All 26 reference files unchanged; 14 native fixture frames pixel-identical at both target sizes. Final 512/512 full tests PASS, 30 screenshots reviewed. Small host preserves v2 ledger/tutorial/gallery/audio/lifecycle; no real scanner/payment/discount. [Correction proof and checkpoints](qa/portrait-v2-meong-reuse/README.md). Older custom-game visuals below are historical.

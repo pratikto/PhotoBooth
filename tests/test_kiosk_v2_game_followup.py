@@ -110,7 +110,7 @@ class GameFollowupTests(unittest.TestCase):
             self.assertFalse(any(isinstance(w,ArcadeButton) and 'KEMBALI KE IKLAN' in w.text
                                  for w in app.stage.walk()))
 
-    def test_game_page_tracks_full_window_and_side_background_is_not_a_flat_plate(self):
+    def test_game_controls_reflow_across_full_window_and_sky_is_one_opaque_scene(self):
         from PIL import Image
         original=Window.size
         try:
@@ -126,15 +126,64 @@ class GameFollowupTests(unittest.TestCase):
                     self.assertAlmostEqual(origin[1],0,delta=1)
                     self.assertAlmostEqual(corner[0],size[0],delta=1)
                     self.assertAlmostEqual(corner[1],size[1],delta=1)
+                    pos,extent=field._rect((35,542,290,55))
+                    self.assertGreater(extent[0],field.width*.78)
+                    # One full-stage original sky covers the old main filler.
+                    group,bg,_,_,_=field._responsive_scenes['start']
+                    self.assertEqual(tuple(bg.size),tuple(field.size))
+                    self.assertEqual(tuple(bg.pos),tuple(field.pos))
+                    self.assertGreaterEqual(min(bg.texture.pixels[3::4]),255)
                 Window.size=(800,900)
                 for _ in range(5):EventLoop.idle()
                 with tempfile.TemporaryDirectory() as root:
                     filename=Window.screenshot(name=str(Path(root)/'wide.png'))
                     with Image.open(filename) as image:
-                        # The original flat letterbox had one color here.
+                        # Original sky extends into the actual former side area.
                         colors=image.convert('RGB').crop((5,30,100,850)).getcolors(100000)
                         self.assertGreater(len(colors),5)
         finally:Window.size=original
+
+    def test_resize_preserves_code_game_clock_and_cached_textures(self):
+        original=Window.size
+        helper=support.GameWidgetTests()
+        try:
+            with helper.booth() as (app,_):
+                app._choose_game();app._open_game_demo()
+                app._demo_code.text='DEMO-RESIZE'
+                field=app._game_field
+                with patch('photobooth.kiosk_v2.game_scene.kivy_texture',side_effect=AssertionError('Resize upload')):
+                    for size in ((800,900),(452,900),(800,1280),(360,640)):
+                        Window.size=size
+                        for _ in range(4):EventLoop.idle()
+                        self.assertEqual(field.receipt.text,'DEMO-RESIZE')
+                        self.assertGreater(field.receipt.width,field.width*.70)
+                app._claim_game_demo();helper.settle(app)
+                app._toggle_game_pause()
+                field=app._game_field
+                engine=app._game_engine;engine.score=4
+                before=(engine.y,engine.elapsed,field._printer_screen)
+                with patch('photobooth.kiosk_v2.game_scene.kivy_texture',side_effect=AssertionError('Resize upload')):
+                    for size in ((800,900),(452,900),(800,1280),(360,640)):
+                        Window.size=size
+                        for _ in range(4):EventLoop.idle()
+                        self.assertIs(app._game_engine,engine)
+                        self.assertEqual(engine.score,4)
+                        self.assertEqual((engine.y,engine.elapsed,field._printer_screen),before)
+                self.assertIsNone(field._scanner)
+        finally:Window.size=original
+
+    def test_projection_keeps_collision_geometry_and_original_sprite_aspect(self):
+        from photobooth.kiosk_v2.game_layout import Layout
+        from photobooth.meong_fly_game_art import camera_screen_rect,asteroid_screen_rects
+        for size in ((800,900),(800,1280),(452,900),(360,640)):
+            layout=Layout(*size,'game')
+            self.assertAlmostEqual(layout.world_x(360),size[0]/layout.scale)
+            offset=layout.extra[0]*.23
+            for x in (15.75,16,24,40,70,110,160,200):
+                self.assertAlmostEqual(layout.world_x(x)-x,offset)
+            for box in [camera_screen_rect(320)]+[r for _,r in asteroid_screen_rects(110,320)]:
+                projected=layout.rect(box)
+                self.assertEqual(projected[2:],box[2:])
 
     def test_right_click_does_not_navigate_and_wide_side_tap_flaps_once(self):
         class Pointer(MotionEvent):
