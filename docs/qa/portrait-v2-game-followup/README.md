@@ -115,7 +115,7 @@ avoids importing old checkmarks. Browser checks revalidated at both sizes:
 - Baseline / stage-1 rollback: `b0be59e`.
 - `4896d51`: window/background, footer and native mouse correction (18 PASS).
 - `16bc7c6`: shared winning quote and spent-offer correction (38 PASS).
-- Stage 3 source: dedicated music, final 527 PASS; CI/HEAD recorded after push.
+- `f3172a5`: dedicated music, final 527 PASS and matching-source three-job CI SUCCESS.
   Rollback music stage to `16bc7c6` if needed; preserve attempts/orders.
 
 Close the old app, pull `feature/portrait-kiosk-v2-next` with `--ff-only`, then
@@ -129,3 +129,23 @@ its existing PHOTOBOOTH_V2_CHECKOUT_MOCK=1 opt-in). Do not enable production.
 No known remaining failure in the tested local scenarios. Windows feel/speaker
 acceptance and previously open provider Sandbox/merchant gates are not claimed
 PASS; all prices/discounts here remain nonfinancial simulations.
+
+
+## Matching-source CI evidence — documentation only
+
+Source **`f3172a55fc99545df9b5bd06be74646f27e561cb`**:
+[Actions 40051193648](https://github.com/pratikto/PhotoBooth/actions/runs/40051193648),
+all three jobs SUCCESS, including Windows native SDL dummy output, pure checks
+and Linux native GUI/original game regression.
+[Verification](ci-verification.json).
+
+The original artifact `12543756396` (7,099,162 bytes) matches GitHub SHA-256
+`ea367c2fa42208ee7f4fd572a97569035b8d5ca3a74b4062e7ff7605390d81e6`.
+Four clean-source reports identify f3172a5 with tracked_changes=false; all fifty
+P4 PNG hashes/dimensions verified. Game contact sheets reviewed at
+[800×1280](ci-contact-800x1280.jpg) and [452×900](ci-contact-452x900.jpg).
+The metadata and screenshots are synthetic; physical Windows speaker/feel
+acceptance is still open. No production payment/discount/scanner enabled.
+
+This companion changes only docs/images; the application remains identical to
+the tested source, and the existing docs-only path filter avoids redundant CI.

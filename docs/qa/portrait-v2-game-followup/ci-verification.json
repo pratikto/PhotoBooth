@@ -1,0 +1,61 @@
+{
+  "source_sha": "f3172a55fc99545df9b5bd06be74646f27e561cb",
+  "run_id": 40051193648,
+  "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40051193648",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "Windows Python 3.12 native SDL audio (dummy output)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40051193648/job/120744036400"
+    },
+    {
+      "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40051193648/job/120744036509"
+    },
+    {
+      "name": "Navigation and audio lifecycle",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40051193648/job/120744036575"
+    }
+  ],
+  "artifact": {
+    "id": 12543756396,
+    "name": "meong-portrait-v2-screens",
+    "size_in_bytes": 7099162,
+    "digest": "sha256:ea367c2fa42208ee7f4fd572a97569035b8d5ca3a74b4062e7ff7605390d81e6"
+  },
+  "download_digest_matches": true,
+  "verified_images": 50,
+  "reports": [
+    {
+      "file": "p4/p4-report-452x900.json",
+      "source_sha": "f3172a55fc99545df9b5bd06be74646f27e561cb",
+      "tracked_changes": false,
+      "images": 15
+    },
+    {
+      "file": "p4/p4-report-800x1280.json",
+      "source_sha": "f3172a55fc99545df9b5bd06be74646f27e561cb",
+      "tracked_changes": false,
+      "images": 15
+    },
+    {
+      "file": "p4b/checkout-report-452x900.json",
+      "source_sha": "f3172a55fc99545df9b5bd06be74646f27e561cb",
+      "tracked_changes": false,
+      "images": 10
+    },
+    {
+      "file": "p4b/checkout-report-800x1280.json",
+      "source_sha": "f3172a55fc99545df9b5bd06be74646f27e561cb",
+      "tracked_changes": false,
+      "images": 10
+    }
+  ],
+  "physical_windows_acceptance": false
+}
