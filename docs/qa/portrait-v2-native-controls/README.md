@@ -128,3 +128,39 @@ Current runtime rollback for button styling: **c887d30**, retaining the larger
 logo. To restore prior logo size use 94dbd03. Preserve all consumed DEMO/MOCK and
 P3 journals. Remaining: owner preference/touch QA for the new visual source,
 unknown exact HEAD of prior reported passes, and **BUG-017 OPEN/unfixed**.
+
+
+## Pushed source checkpoints
+
+- Larger Meong: **c887d30**, normal push/remote verified, matching CI 40100048784
+  all three jobs SUCCESS.
+- Original-style native buttons: **25fd55c8336b2aea0c65eb228895e982c2128097**,
+  normal push/remote verified; final 546 local tests pass and hashes match the
+  committed files. [CI 40102001442](https://github.com/pratikto/PhotoBooth/actions/runs/40102001442)
+  has all three jobs SUCCESS at this exact functional SHA.
+- Original reference **672e3f7**, read-only remote verified, 26 file hashes intact.
+  Button-only rollback c887d30; prior-size rollback 94dbd03. Preserve journals.
+
+Use the existing Windows venv on feature/portrait-kiosk-v2-next: close the GUI,
+git pull --ff-only, then python tools/run_portrait_v2.py. The fresh
+[8-item form](windows-checklist.html) preserves blank/untested items and leaves
+BUG-017 visible; it does not claim consecutive-video lag is fixed.
+
+
+## Final matching-source CI and archived evidence
+
+[CI 40102001442](https://github.com/pratikto/PhotoBooth/actions/runs/40102001442)
+at **25fd55c** completed **SUCCESS in all three jobs**: navigation/audio lifecycle,
+native GUI/button-pixel/source reuse checks and screenshots, and Windows Python
+3.12 native SDL audio using dummy output. [Archived result](final-ci.json).
+Downloaded its original artifact: **99 PNGs** have verified hashes, dimensions
+and clean-source metadata at this exact SHA. [Verification](ci-screenshot-verification.json),
+[reviewed advert/gallery sheet](ci-contact.jpg). This is additional source/CI
+proof, not Windows screen preference, actual speaker/touch or media-latency QA.
+
+The companion evidence commit is documentation-only and skips redundant CI.
+Runtime files still match the final 546-test source hashes. No unresolved
+automated failure remains. Larger-logo rollback c887d30, prior-size rollback
+94dbd03; preserve consumed ledgers and photo/print journals. BUG-017 remains
+OPEN/unfixed. Owner prior 14/14/twenty-cycle report is retained without assigning
+it to a guessed HEAD or requiring twenty new cycles for these style changes.

@@ -41,5 +41,7 @@
     "errors": 0,
     "skipped": 0,
     "seconds": 169.105
-  }
+  },
+  "functional_sha": "25fd55c8336b2aea0c65eb228895e982c2128097",
+  "normal_push_remote_verified": true
 }

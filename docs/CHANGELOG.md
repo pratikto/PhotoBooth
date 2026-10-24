@@ -1,6 +1,6 @@
 # Meong Photobooth — Documentation and release changelog
 
-> 2026-10-24 — Reuse actual original Meong Fly arcade_button/pixel_text/icons for main-app native buttons, with cached nine-slice material, readable whole-word captions and existing touch/audio/disabled guards. Larger Meong source c887d30 pushed/remote-verified/CI SUCCESS. Final combined 546 full PASS, 15 focused PASS, 54 captures verified; BUG-017 remains open. [Evidence](qa/portrait-v2-native-controls/README.md).
+> 2026-10-24 — Reuse actual original Meong Fly arcade_button/pixel_text/icons for main-app native buttons, with cached nine-slice material, readable whole-word captions and existing touch/audio/disabled guards. Larger Meong source c887d30 pushed/remote-verified/CI SUCCESS. Button source 25fd55c pushed/remote-verified; CI 40102001442 three-job SUCCESS. Final combined 546 full PASS, 15 focused PASS, 54 local captures and 99 CI PNGs verified; BUG-017 remains open. [Evidence](qa/portrait-v2-native-controls/README.md).
 
 > 2026-10-24 — Archive owner 14/14/twenty-cycle retest at unknown HEAD; BUG-017 records video→video lag. Enlarge decorative header body using existing animation/film compositor; body stays in the header and turns without jumping. Eight focused native PASS, twelve PNGs verified and portrait screenshots reviewed. Next approved stage: original mini-game button style. [Evidence](qa/portrait-v2-native-controls/README.md).
 

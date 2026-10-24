@@ -1,6 +1,6 @@
 # Meong Photobooth — Current feature status
 
-> Larger logo source c887d30 has matching-source three-job CI SUCCESS. Native main-app buttons now reuse original Meong Fly material/glyph/icon rendering; final 546 full PASS, zero skips, 54 PNGs checked. New visual source awaits Windows preference/touch retest. Existing owner 14/14/twenty-cycle report stands at unknown HEAD. BUG-017 advertising video→video lag remains OPEN. [Evidence](qa/portrait-v2-native-controls/README.md).
+> Larger logo source c887d30 has matching-source three-job CI SUCCESS. Native main-app buttons now reuse original Meong Fly material/glyph/icon rendering; final 546 full PASS, zero skips, 54 PNGs checked. Button source 25fd55c pushed/remote-verified; CI 40102001442 three-job SUCCESS, 99 CI PNGs verified. New visual source awaits Windows preference/touch retest. Existing owner 14/14/twenty-cycle report stands at unknown HEAD. BUG-017 advertising video→video lag remains OPEN. [Evidence](qa/portrait-v2-native-controls/README.md).
 
 > Owner reports 14/14 plus twenty P4 cycles passing on Windows at unknown HEAD/device metadata. BUG-015/016 now OWNER-REPORTED PASS / MONITORING, not formally closed. New BUG-017 video→video lag remains OPEN; video↔image is reported okay. Larger logo and original-style native buttons are separately requested and not device-accepted yet. [Audit](qa/portrait-v2-native-controls/README.md).
 

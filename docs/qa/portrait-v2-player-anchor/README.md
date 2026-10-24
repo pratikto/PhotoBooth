@@ -1,5 +1,7 @@
 # BUG-016 — Meong shifts too far right after window resize
 
+> Owner reports 14/14 and twenty cycles passing on 2026-10-24 at unknown HEAD/device metadata; video→video ad lag is additionally reported as BUG-017 OPEN. Subsequent requested larger logo c887d30 and original-style native buttons 25fd55c have 546 local PASS and matching three-job CI SUCCESS; new visual acceptance remains separate. [Latest report, proof and 8-item form](../portrait-v2-native-controls/README.md).
+
 Owner report, 2026-10-24: live Meong is too far right at portrait and maximized
 landscape sizes. Authorized scope is this P4 layout regression only, on
 feature/portrait-kiosk-v2-next. Starting remote/local HEAD:
