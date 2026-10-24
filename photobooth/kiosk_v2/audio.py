@@ -26,7 +26,7 @@ SOUND_FILES = {
 # no overlap with the normal GUI loop and the same single button SFX owner.
 GAME_MUSIC_PAGES = frozenset({'game_preview','game_receipt','game_play','game_result'})
 MUSIC_NAMES = ('music','game_music')
-MUSIC_PAGES = frozenset({"tutorial", "templates", 'photo_confirm', 'capture', 'review', 'result', 'mock_checkout'})
+MUSIC_PAGES = frozenset({"tutorial", "templates", 'photo_confirm', 'capture', 'review', 'result', 'mock_checkout', 'sandbox_checkout'})
 KNOWN_PAGES = MUSIC_PAGES | frozenset({"advert", "game_preview", 'game_receipt', 'game_play', 'game_result'})
 
 

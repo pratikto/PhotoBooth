@@ -323,14 +323,15 @@ class PhotoJobs:
             self._thread.join(timeout=timeout)
 
 
-def configured_test(root):
+def configured_test(root, *, configuration_root=None):
     """Operator opt-ins affect only P3 photo tests, never payment admission."""
     import os
     printer = client = None
+    configuration_root = Path(configuration_root) if configuration_root else Path(root).parents[1]
     if os.environ.get('PHOTOBOOTH_V2_PRINT') == '1':
         from photobooth.printer import ThermalPrinter
         from photobooth.printer_settings import load_printer_config
-        printer = ThermalPrinter(load_printer_config(Path(root).parents[1] / 'data' / 'printer_settings.json'))
+        printer = ThermalPrinter(load_printer_config(configuration_root / 'data' / 'printer_settings.json'))
     if os.environ.get('PHOTOBOOTH_V2_DRIVE') == '1':
         from photobooth.drive_storage import AppsScriptDriveClient, GoogleDriveClient
         client = AppsScriptDriveClient.from_configuration() or GoogleDriveClient.from_environment()

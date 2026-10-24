@@ -13,7 +13,7 @@ from kivy.uix.image import Image
 from kivy.uix.widget import Widget
 
 from photobooth.advertising import PROJECT_ROOT
-from .flow import PHOTO_CONFIRM, CAPTURE, REVIEW, RESULT, PHOTO_PAGES, TEMPLATES
+from .flow import PHOTO_CONFIRM, CAPTURE, REVIEW, RESULT, PHOTO_PAGES, TEMPLATES, SANDBOX_CHECKOUT
 from .theme import PixelCard, text_label, GOLD, MUTED, CYAN
 from .branding import CAMERA_ART
 from .theme import ArcadeButton
@@ -40,12 +40,16 @@ class PhotoViews:
         self._photo_refresh_at = 0
 
     def _enter_photo_test(self):
-        if not any(self.quantities.values()):
+        if (not any(self.quantities.values()) or
+                (self._sandbox_enabled and (not self._sandbox_consent or
+                 (self._sandbox_view or {}).get('phase') != 'RESERVED'))):
             return
         from .photos import PhotoJobs, configured_test
         self.navigation.confirm_photo_test()
         if self._photo_jobs is None:
-            self._photo_jobs = PhotoJobs(factory=lambda: configured_test(PROJECT_ROOT / 'data' / 'kiosk-v2-p3'))
+            photo_root = (self._sandbox_jobs.store.flow.path.parent / 'photo-tests' if self._sandbox_enabled
+                          else PROJECT_ROOT / 'data' / 'kiosk-v2-p3')
+            self._photo_jobs = PhotoJobs(factory=lambda: configured_test(photo_root, configuration_root=PROJECT_ROOT) if self._sandbox_enabled else configured_test(photo_root))
         self._photo_view = {}
         self._photo_error = ''
         self._photo_jobs.submit('reset' if self._photo_prepared else 'prepare')
@@ -54,7 +58,7 @@ class PhotoViews:
     def _leave_photo_confirm(self):
         if self._photo_jobs.busy:
             return
-        self.navigation.page = TEMPLATES
+        self.navigation.page = SANDBOX_CHECKOUT if self._sandbox_consent else TEMPLATES
         self._show()
 
     def _photo_submit(self, action, *args):
@@ -75,7 +79,10 @@ class PhotoViews:
             self._photo_error = 'Kamera belum siap. Sambungkan kamera lalu coba lagi.'
             self._show()
             return
-        self._photo_submit('start', self.templates, dict(self.quantities))
+        if self._sandbox_enabled:
+            self._sandbox_prepare_photo()
+        else:
+            self._photo_submit('start', self.templates, dict(self.quantities))
 
     def _poll_photos(self):
         jobs = self._photo_jobs
@@ -90,6 +97,8 @@ class PhotoViews:
                                      'foto yang tersimpan tetap aman. Detail ada di log.')
             elif outcome.action == 'prepare':
                 self._photo_prepared = True
+            if self._sandbox_photo_outcome(outcome):
+                return
             phase = self._photo_view.get('phase')
             if phase in {CAPTURE, REVIEW, RESULT, 'done'}:
                 self.navigation.photo_step(phase)
@@ -119,7 +128,7 @@ class PhotoViews:
             self._countdown_event = None
 
     def _start_countdown(self, source='button'):
-        if self._photo_jobs.busy or self._countdown_event is not None:
+        if not self._sandbox_can_capture() or self._photo_jobs.busy or self._countdown_event is not None:
             return
         if self.camera_device.read() is None:
             self._photo_error = 'Kamera belum siap. Hitung mundur belum dimulai.'
@@ -185,7 +194,7 @@ class PhotoViews:
         if frame is not None:
             self._count_label.font_size = dp(100)
         if self._countdown_event is None:
-            self._capture_button.disabled = frame is None or self._photo_jobs.busy
+            self._capture_button.disabled = not self._sandbox_can_capture() or frame is None or self._photo_jobs.busy
 
     def _build_photo_page(self, canvas):
         self._live_image = None
@@ -195,7 +204,7 @@ class PhotoViews:
         page = self.navigation.page
         title = {PHOTO_CONFIRM: 'UJI FOTO', CAPTURE: 'SENYUM DULU, MEONG!',
                  REVIEW: 'PILIH MOMEN TERBAIK', RESULT: 'STRIP KAMU SUDAH SIAP'}[page]
-        self._brand(shell, title, 'MODE UJI • TANPA PEMBAYARAN')
+        self._brand(shell, title, 'MODE UJI • QRIS SANDBOX' if self._sandbox_consent else 'MODE UJI • TANPA PEMBAYARAN')
         view = self._photo_view
         if view.get('session_number'):
             shell.add_widget(text_label(
@@ -242,7 +251,7 @@ class PhotoViews:
         if not self._photo_prepared and not self._photo_jobs.busy:
             shell.add_widget(self._photo_action('COBA PERSIAPAN LAGI',
                                                 lambda: self._photo_submit('prepare'), variant='secondary'))
-        shell.add_widget(self._photo_action('KEMBALI PILIH TEMPLATE', self._leave_photo_confirm,
+        shell.add_widget(self._photo_action('KEMBALI KE PESANAN UJI' if self._sandbox_consent else 'KEMBALI PILIH TEMPLATE', self._leave_photo_confirm,
                                             variant='tertiary', height=48))
 
     def _build_capture(self, shell):

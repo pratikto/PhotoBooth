@@ -57,10 +57,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y xvfb libgl1-mesa-dri libgl1 libegl1 libmtdev1 libxkbcommon0
           python -m pip install "Kivy>=2.3.1,<3" Pillow tzdata "ffpyplayer>=4.5,<5" "opencv-python-headless>=4.10,<5" requests "qrcode[pil]>=7.4,<9"
+          python -m pip install -r requirements-qris.txt
       - name: Load the bundled offline face detector and check hold/cooldown policy
         run: python -m unittest tests.test_face_presence -v
       - name: Isolated P3 photo, composition, retake and durable print guards
         run: python -m unittest tests.test_kiosk_v2_photos -v
+      - name: Reused QRIS protocol and native v2 Sandbox handoff (offline only)
+        run: |
+          PYTHONPATH=tests xvfb-run -a python -m unittest test_checkout_backend test_checkout_durability test_booth_auth test_qris_api test_qris_http_v2 test_qris_session test_qris_kiosk_client test_qris_images test_midtrans_sandbox test_midtrans_verify test_payment_quote test_qris_sandbox_launcher test_kiosk_v2_sandbox test_kiosk_v2_sandbox_widgets -v
       - name: Exercise opt-in Kivy widgets at a virtual display
         run: PHOTOBOOTH_TEST_AUDIO=1 xvfb-run -a python -m unittest tests.test_kiosk_v2_widgets tests.test_kiosk_v2_game_widgets tests.test_kiosk_v2_checkout_widgets tests.test_kiosk_v2_meong_reference tests.test_kiosk_v2_game_followup tests.test_kiosk_v2_brand_flight tests.test_kiosk_v2_button_art -v
       - name: Verify unchanged latest Meong Fly modules and original regression suite
@@ -87,6 +91,10 @@ jobs:
         run: |
           PHOTOBOOTH_V2_CHECKOUT_MOCK=1 xvfb-run -a -s "-screen 0 1600x1600x24" python tools/render_portrait_checkout.py --output-dir /tmp/meong-portrait-v2/p4b --width 800 --height 1280
           PHOTOBOOTH_V2_CHECKOUT_MOCK=1 xvfb-run -a -s "-screen 0 1280x1024x24" python tools/render_portrait_checkout.py --output-dir /tmp/meong-portrait-v2/p4b --width 452 --height 900
+      - name: Capture native Sandbox views with offline HTTP fixtures (not merchant acceptance)
+        run: |
+          xvfb-run -a -s "-screen 0 1600x1600x24" python tools/render_portrait_sandbox.py --output-dir /tmp/meong-portrait-v2/sandbox --width 800 --height 1280
+          xvfb-run -a -s "-screen 0 1280x1024x24" python tools/render_portrait_sandbox.py --output-dir /tmp/meong-portrait-v2/sandbox --width 452 --height 900
       - name: Preserve visual evidence for review
         if: always()
         uses: actions/upload-artifact@v4

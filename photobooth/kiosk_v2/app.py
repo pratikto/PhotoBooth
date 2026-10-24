@@ -30,7 +30,7 @@ from photobooth.workflow import quote_order
 from .audio import make_kivy_audio
 from .branding import MeongLogo
 from .illustrations import TutorialIcon
-from .flow import ADVERT, BROWSING_PAGES, GAME_PREVIEW, GAME_PAGES, TEMPLATES, TUTORIAL, PHOTO_PAGES, MOCK_CHECKOUT, VisitFlow
+from .flow import ADVERT, BROWSING_PAGES, GAME_PREVIEW, GAME_PAGES, TEMPLATES, TUTORIAL, PHOTO_PAGES, MOCK_CHECKOUT, SANDBOX_CHECKOUT, VisitFlow
 from .theme import ArcadeButton, CYAN, GOLD, MUTED, PixelCard, PINK, Starfield, WHITE, text_label
 from .viewport import PortraitViewport
 from .previews import PREVIEW_SIZE, PreviewPreloader
@@ -42,6 +42,7 @@ from .performance import PerformanceLog
 from .sensors import PalmShutter
 from .game_views import GameViews
 from .checkout_views import CheckoutViews
+from .sandbox_views import SandboxViews
 from .game_offer import demo_amount, is_demo_winner
 
 
@@ -78,18 +79,19 @@ class TouchStage(Starfield):
         return super().on_touch_down(touch)
 
 
-class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
+class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, SandboxViews, App):
     """Separate greenfield window; the original python main.py remains untouched."""
 
     title = "MEONG PHOTOBOOTH - PORTRAIT GUI V2 (PROTOTIPE)"
 
     def __init__(self, *, camera_device=None, face_inviter=None, palm_shutter=None, game_jobs=None,
-                 checkout_jobs=None, **kwargs):
+                 checkout_jobs=None, sandbox_jobs=None, **kwargs):
         self._provided_camera = camera_device
         self._provided_inviter = face_inviter
         self._provided_palm = palm_shutter
         self._provided_game_jobs = game_jobs
         self._provided_checkout_jobs = checkout_jobs
+        self._provided_sandbox_jobs = sandbox_jobs
         super().__init__(**kwargs)
 
     def build(self):
@@ -98,6 +100,7 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
         self._suspended = False
         self._closed = False
         self._view_revision = 0
+        self._init_sandbox()
         self._init_photos()
         self._init_game()
         self._init_checkout()
@@ -136,6 +139,9 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
         LOG.info('Input configuration camera_enabled=%s camera_index=%s face_enabled=%s palm_enabled=%s',
                  camera_enabled, camera_index, face_enabled, palm_enabled)
         self.stage = ScreenManager(transition=NoTransition())
+        if self._sandbox_enabled:
+            self.navigation.page = SANDBOX_CHECKOUT
+            self._sandbox_submit('boot')
         self._show()
         self._warmup = Clock.schedule_once(self._prepare_idle_assets, 0)
         self._heartbeat = Clock.schedule_interval(self._tick, 1)
@@ -193,6 +199,7 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
             return
         self._poll_game()
         self._poll_checkout()
+        self._poll_sandbox()
         frame = self.camera_device.read()
         if self.navigation.page == 'capture':
             self.live_preview.submit(frame, self._view_revision)
@@ -287,6 +294,8 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
         self._retire_game_field()
         self._game_jobs.close()
         self._mock_jobs.close()
+        if self._sandbox_jobs:
+            self._sandbox_jobs.close()
         self.live_preview.close()
         self.performance.flush()
         if self._photo_jobs is not None:
@@ -392,6 +401,8 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
             self._build_photo_page(canvas)
         elif page.name in GAME_PAGES:
             self._build_game_page(canvas)
+        elif page.name == SANDBOX_CHECKOUT:
+            self._build_sandbox_checkout(canvas)
         elif page.name == MOCK_CHECKOUT:
             self._build_mock_checkout(canvas)
         else:
@@ -715,15 +726,15 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
         self._warning_label.bind(text=lambda label, text: setattr(label, 'height', dp(22) if text else 0))
         shell.add_widget(self._warning_label)
         footer = BoxLayout(size_hint_y=None, height=dp(48), spacing=dp(8))
-        payment = self._action('PEMBAYARAN (BELUM TERHUBUNG)', lambda: None,
-                               disabled=True, height=48)
+        payment = self._action('QRIS SANDBOX' if self._sandbox_enabled else 'PEMBAYARAN (BELUM TERHUBUNG)',
+                               self._open_sandbox, disabled=not self._sandbox_enabled, height=48)
         payment.size_hint_x = .40
         payment.font_size = dp(10)
         payment.halign = 'center'
         payment.valign = 'middle'
         payment.bind(size=lambda w, size: setattr(w, 'text_size', (max(10, size[0] - dp(12)), size[1])))
         self._test_photo_button = self._action('UJI FOTO', self._enter_photo_test,
-                                               variant='secondary', height=48)
+                                               variant='secondary', height=48, disabled=self._sandbox_enabled)
         self._test_photo_button.size_hint_x = .22
         self._test_photo_button.font_size = dp(12)
         finish = self._action('SELESAI / KEMBALI IKLAN', self._return_ad,
@@ -777,7 +788,7 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, App):
         template = self.templates[self.template_index]
         self._copy_value.text = str(self.quantities[template.template_id])
         quote = quote_order(self.templates, self.quantities)
-        self._test_photo_button.disabled = quote.session_count == 0
+        self._test_photo_button.disabled = self._sandbox_enabled or quote.session_count == 0
         if self._mock_enabled:
             self._mock_checkout_button.disabled = quote.session_count == 0
         # The result was acknowledged by the durable game worker. This preview

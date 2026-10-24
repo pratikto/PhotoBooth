@@ -15,6 +15,7 @@ GAME_RECEIPT = 'game_receipt'
 GAME_PLAY = 'game_play'
 GAME_RESULT = 'game_result'
 MOCK_CHECKOUT = 'mock_checkout'
+SANDBOX_CHECKOUT = 'sandbox_checkout'
 GAME_PAGES = frozenset({GAME_RECEIPT, GAME_PLAY, GAME_RESULT})
 PHOTO_CONFIRM = 'photo_confirm'
 CAPTURE = 'capture'
@@ -90,7 +91,7 @@ class VisitFlow:
         An active photo test must finish through its service before this reset.
         Future production admission must still enforce independent paid-order guards.
         """
-        if self.page in {CAPTURE, REVIEW, RESULT, GAME_PLAY, MOCK_CHECKOUT}:
+        if self.page in {CAPTURE, REVIEW, RESULT, GAME_PLAY, MOCK_CHECKOUT, SANDBOX_CHECKOUT}:
             raise NavigationError('An active photo test must finish safely first.')
         self.page = ADVERT
         self.tutorial_seen = False

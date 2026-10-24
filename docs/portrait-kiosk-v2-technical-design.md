@@ -1,5 +1,8 @@
 # FEAT-022 — Portrait Kiosk GUI v2: engineering architecture and integration contracts
 
+> Current P4b owner authorization (2026-10-24): Sandbox source integration reuses the latest QRIS service/client/journal, with a native v2 adapter and isolated local merchant-trial launcher. Default remains off. Trusted merchant promo, actual provider acceptance and P5 Windows/hardware/privacy/release certification are external gates. Owner requests manual testing at the end. [Contract](qa/portrait-v2-sandbox/README.md).
+
+
 > **Current game reuse boundary (2026-10-24):** Import the original root MeongFlyStage/MeongFlyFlow/engine from pinned latest `672e3f7`; no independently implemented renderer. `kiosk_v2/game_scene.py` is only input/lifecycle/async-ledger adapter; `game_views.py` mounts original scenes and routes to native tutorial/gallery. Original class/method identity and fourteen native frame matches are tested; 512 full PASS. Scanner/standalone App/home marker are not used. [Contracts and evidence](qa/portrait-v2-meong-reuse/README.md).
 
 > **P4b implemented MOCK boundary (2026-10-23):** `mock_checkout.py` owns isolated SQLite quote/order/promo reservation/admission; `checkout_views.py` owns explicit MOCK widgets. Backend reads the durable DEMO result/catalogue, never a GUI amount. Single-flight worker handles I/O/QR encoding; pending/unknown cannot browse-timeout; admission is atomic and never replayed after restart. Existing P3 consent remains explicit. 406 full PASS; actual provider/merchant authority is still unimplemented and disabled. [Contract/evidence](qa/portrait-v2-p4/README.md).

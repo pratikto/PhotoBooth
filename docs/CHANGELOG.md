@@ -1,3 +1,7 @@
+# P4b native Sandbox integration — 2026-10-24
+
+Add opt-in native Sandbox adapter, original HTTP/client/journal admission to existing P3 photo worker, isolated launcher/profile, recovery holds and offline end-to-end tests/screenshots. Default payments unchanged; local game promo never authorizes QRIS discount. [Details](qa/portrait-v2-sandbox/README.md).
+
 # P4b Sandbox reuse — 2026-10-24
 
 FEAT-020/022: import unchanged active QRIS backend/client/journal and relevant original tests from 3cc8a8e. Archive final owner 8/8 acceptance; BUG-017 monitoring. No payment mode enabled by default. [Scope/provenance](qa/portrait-v2-sandbox/README.md).

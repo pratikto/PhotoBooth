@@ -129,7 +129,8 @@ def stop(child):
             child.wait()
 
 
-def main(argv=None):
+def main(argv=None, *, environment_factory=trial_environments, gui_entry=('main.py',),
+         trial_notice=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--port', type=int, default=8000)
     parser.add_argument('--booth-id', default=os.environ.get('PHOTOBOOTH_ID', 'PB001'))
@@ -146,7 +147,7 @@ def main(argv=None):
             raise RuntimeError('Install requirements.txt and requirements-qris.txt in your Kivy environment')
         print('MIDTRANS SANDBOX ONLY. Do NOT scan/pay using a real banking or wallet app.', flush=True)
         print('Payment is NOT automatic after 8 seconds; use the official simulator.', flush=True)
-        print('The existing photo/printer configuration is retained: completing a session may print.', flush=True)
+        print(trial_notice or 'The existing photo/printer configuration is retained: completing a session may print.', flush=True)
         merchant = os.environ.get('MIDTRANS_MERCHANT_ID') or input('Sandbox Merchant ID: ').strip()
         key = os.environ.get('MIDTRANS_SERVER_KEY', '')
         if not key:
@@ -154,7 +155,7 @@ def main(argv=None):
             with warnings.catch_warnings():
                 warnings.simplefilter('error', getpass.GetPassWarning)
                 key = getpass.getpass('Sandbox Server Key (hidden): ')
-        backend_env, gui_env = trial_environments(dict(os.environ), merchant, key,
+        backend_env, gui_env = environment_factory(dict(os.environ), merchant, key,
                                                 args.booth_id, args.port)
         # Refuse an occupied port instead of accidentally connecting to another service.
         with socket.socket() as probe:
@@ -170,7 +171,7 @@ def main(argv=None):
         print('Official QRIS simulator: ' + SIMULATOR_URL, flush=True)
         print('Choose a template in the GUI; its current Sandbox QR image URL will appear here.', flush=True)
         launch_ns = time.time_ns()
-        gui = subprocess.Popen([sys.executable, 'main.py'], cwd=ROOT, env=gui_env)
+        gui = subprocess.Popen([sys.executable, *gui_entry], cwd=ROOT, env=gui_env)
         shown = None
         while gui.poll() is None:
             if server.poll() is not None:

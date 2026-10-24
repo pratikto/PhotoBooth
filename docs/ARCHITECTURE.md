@@ -1,3 +1,7 @@
+# Native v2 Sandbox integration — 2026-10-24
+
+`kiosk_v2/sandbox_checkout.py` adapts unchanged `qris_session.KioskCheckout` / `QrisKioskClient`; `sandbox_views.py` presents native v2 controls and handoff. `qris_api` / `checkout_backend` / `checkout_store` retain server authority and atomic grants from QRIS branch 3cc8a8e. Dedicated wrapper uses existing credential-isolated launcher with injectable entry/environment. P3 allocation follows durable STARTING and capture follows STARTED ACK. [Contract and operator steps](qa/portrait-v2-sandbox/README.md).
+
 # Meong Photobooth — Current architecture and future boundaries
 
 > Button typography correction: native Label texture updates/real glyph metrics replace bitmap caption scaling; main-button icons/caption raster caches are removed. Four cached original frame textures/nine-slice geometry remain. [Current contract](qa/portrait-v2-readable-type/README.md).
