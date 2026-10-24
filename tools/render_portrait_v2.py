@@ -77,6 +77,16 @@ class VisualRecorder(PortraitKioskV2App):
         }[name]
         if self.navigation.page != expected_page:
             raise RuntimeError(f"Wrong page for {name}: {self.navigation.page}")
+        if self.navigation.page != 'game_preview' and getattr(self, '_brand_capture_ready', None) != name:
+            # A live impact flip is briefly edge-on. Freeze a declared neutral
+            # pose for static page/ink QA; real-clock motion is checked separately.
+            for brand in (w for w in self.stage.walk() if isinstance(w, MeongLogo)):
+                brand.set_active(False)
+                brand.spin = 0
+                brand.flight = 0
+            self._brand_capture_ready = name
+            Clock.schedule_once(lambda _dt: self._capture(name), .08)
+            return
         suffix = f"{self.dimensions[0]}x{self.dimensions[1]}"
         target = self.output_dir / f"{name}-{suffix}.png"
         # 452 pixels is the nearest 4-byte-aligned screenshot width to 450.
@@ -202,6 +212,7 @@ def main():
         "synthetic_only": True,
         "screenshots": app.evidence,
         'motion_frames': app.motion_frames,
+        'static_brand_pose_controlled': True,
     }
     report_path = app.output_dir / f"report-{options.width}x{options.height}.json"
     report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

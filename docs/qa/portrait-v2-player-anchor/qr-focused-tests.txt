@@ -1,0 +1,9 @@
+test_nonpayable_qr_decodes_to_mock_text (tests.test_kiosk_v2_checkout_widgets.CheckoutWidgetTests.test_nonpayable_qr_decodes_to_mock_text) ... ok
+test_blank_or_empty_screenshot_is_not_accepted (tests.test_ci_qr_pixels.RenderedQRPixelTests.test_blank_or_empty_screenshot_is_not_accepted) ... ok
+test_displayed_demo_qr_payload_is_exact_at_multiple_screen_sizes (tests.test_ci_qr_pixels.RenderedQRPixelTests.test_displayed_demo_qr_payload_is_exact_at_multiple_screen_sizes) ... ok
+test_obscured_qr_cannot_be_passed_by_resizing (tests.test_ci_qr_pixels.RenderedQRPixelTests.test_obscured_qr_cannot_be_passed_by_resizing) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.570s
+
+OK

@@ -158,12 +158,19 @@ class CheckoutWidgetTests(unittest.TestCase):
     def test_nonpayable_qr_decodes_to_mock_text(self):
         import cv2
         import numpy as np
-        with self.booth() as (app,_):
-            self.open(app)
-            (width,height),pixels=app._mock_view['qr_rgb']
-            image=np.frombuffer(pixels,dtype=np.uint8).reshape(height,width,3)
-            decoded,_,_=cv2.QRCodeDetector().detectAndDecode(image)
-            self.assertEqual(decoded,app._mock_view['qr_payload'])
+        from uuid import UUID
+        from tools.ci_qr_pixels import decode_rendered_qr_pixels
+        # Include the exact random pattern that failed native-scale OpenCV
+        # decoding. The existing reader retries only unchanged pixel scales.
+        for order_id in ('33517492cac0481daa1d7cb59af77d4b','0123456789abcdef0123456789abcdef'):
+            with self.subTest(order_id=order_id),self.booth() as (app,_):
+                with patch('photobooth.kiosk_v2.mock_checkout.uuid.uuid4',return_value=UUID(order_id)):
+                    self.open(app)
+                (width,height),pixels=app._mock_view['qr_rgb']
+                image=np.frombuffer(pixels,dtype=np.uint8).reshape(height,width,3)
+                decoded=decode_rendered_qr_pixels(cv2.cvtColor(image,cv2.COLOR_RGB2BGR))
+                self.assertEqual(decoded,app._mock_view['qr_payload'])
+                self.assertEqual(decoded,'MEONG MOCK ONLY - NOT QRIS - '+order_id)
 
     def test_pending_qr_quote_and_controls_stay_inside_at_all_portrait_sizes(self):
         original=Window.size

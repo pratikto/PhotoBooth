@@ -1,5 +1,7 @@
 # Meong Photobooth — Dynamic Feature Backlog
 
+> Next owner action: Windows retest of corrected game position plus same-level flying mascot, original camera/photo/rainbow motion and impact-spin header. Local source gate 540 PASS, zero skips. Use the [14-item Submit form](qa/portrait-v2-player-anchor/windows-checklist.html); preserve P3 acceptance and P4 one-use guards. No new roadmap/production expansion follows automatically.
+
 > Active owner follow-up: BUG-016 centered game-world correction first, then aligned flying mascot/wordmark impact-spin animation. Preserve BUG-015 uniform wave motion and original game reuse. Final full regression after both stages, then Windows retest. [Evidence/rollback](qa/portrait-v2-player-anchor/README.md).
 
 > Next owner retest: BUG-015 consistent wave motion plus centered/flying brand, floating gallery title and centered quote groups. [14-item Submit form](qa/portrait-v2-motion-correction/windows-checklist.html). P3 acceptance stands; P4 physical acceptance and external production/provider gates remain separate.

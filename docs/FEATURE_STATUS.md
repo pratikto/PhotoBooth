@@ -1,5 +1,7 @@
 # Meong Photobooth — Current feature status
 
+> Current P4 follow-up: BUG-016 centered world is pushed at 848a52d; animated same-level header reuses original camera/paper composition and emitter, with cached source-derived limbs/rainbow and contact-gated text flip. 540 final native/local PASS, zero skips; physical Windows pending. [Current source/evidence/form](qa/portrait-v2-player-anchor/README.md).
+
 > BUG-016 correction: centered original game world keeps Meong left of center across portrait/landscape resize; original motion and 26 reference files retained. 20 focused native PASS; Windows acceptance pending. [Current evidence](qa/portrait-v2-player-anchor/README.md).
 
 > Current owner correction (2026-10-24): BUG-015 fast/variable displayed wave spacing is fixed at 144bd60 (matching-source CI SUCCESS). Centered/flying brand and gallery title/price alignment at b6a730a pass final 533 full local checks, zero skips, and CI 40059427863 all three jobs SUCCESS. Windows acceptance remains pending. [Current QA/form/checkpoints](qa/portrait-v2-motion-correction/README.md).

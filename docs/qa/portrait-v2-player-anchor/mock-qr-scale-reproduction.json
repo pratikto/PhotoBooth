@@ -1,0 +1,23 @@
+{
+  "failure_from_full_run": "MEONG MOCK ONLY - NOT QRIS - 33517492cac0481daa1d7cb59af77d4b",
+  "presentation_size": [
+    205,
+    205,
+    3
+  ],
+  "scales": [
+    {
+      "scale": 1,
+      "decoded_exact_payload": false
+    },
+    {
+      "scale": 2,
+      "decoded_exact_payload": true
+    },
+    {
+      "scale": 3,
+      "decoded_exact_payload": true
+    }
+  ],
+  "existing_reader_decodes": true
+}

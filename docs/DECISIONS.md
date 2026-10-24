@@ -1,6 +1,6 @@
 # Meong Photobooth — Product and technical decision record
 
-> 2026-10-24 owner follow-up: correct game Meong sitting too far right during resize. Also approved as a separate next stage: mascot level with centered MEONG PHOTOBOOTH, flying into it and causing a rotation that settles back. Reuse existing sprite/wordmark/native animation. No production or P5 expansion. [Current stages](qa/portrait-v2-player-anchor/README.md).
+> 2026-10-24 owner follow-up: correct game Meong sitting too far right during resize. Also approved as a separate next stage: mascot level with centered MEONG PHOTOBOOTH, flying into it and causing a rotation that settles back. Owner also requests animated limbs/rainbow and printing while flying. Reuse existing sprite, camera/film compositor, emitter, wordmark and native animation. No production or P5 expansion. [Current stages](qa/portrait-v2-player-anchor/README.md).
 
 > Owner display correction (2026-10-24): preserve original mini-game pace/spacing on resize. Center MEONG PHOTOBOOTH; replace its static mascot with flight across the header. Move PILIH TEMPLATE STRIP into the gallery as a floating title and center quantity/price groups. Reuse existing art/engine; keep financial/scanner production boundaries.
 

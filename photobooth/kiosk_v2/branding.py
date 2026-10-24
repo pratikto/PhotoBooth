@@ -1,22 +1,22 @@
 """Display-only Meong Fly artwork in a shared native portrait brand lockup.
 
-The camera PNG is decoded byte-for-byte from the read-only reference artwork.
-No game/scanner module is imported, and original booth/QR logos are unchanged.
+The read-only game artwork/compositor supplies the decorative flying camera.
+No game, scanner or real printer is started; original booth/QR logos are unchanged.
 """
 from math import pi, sin
 from pathlib import Path
 
 from kivy.animation import Animation
 from kivy.clock import Clock
-from kivy.graphics import Color, PopMatrix, PushMatrix, Rectangle, Scale, Translate
+from kivy.graphics import Color, PopMatrix, PushMatrix, Rectangle, Rotate
 from kivy.metrics import dp
 from kivy.properties import NumericProperty, StringProperty
 from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.image import Image
 from kivy.uix.widget import Widget
 
 from .theme import CYAN, GOLD, PURPLE, rgba
 from .pixel_type import BRAND_GLYPHS
+from .brand_flight import FlyingMeongArt
 
 CAMERA_ART = Path(__file__).parent / "assets" / "meong-fly-camera.png"
 
@@ -61,45 +61,46 @@ class PixelWordmark(Widget):
 
 
 class MeongLogo(FloatLayout):
-    """Centered wordmark and the existing mascot flying above its lettering."""
+    """Original mascot flies into a centered wordmark, giving it one playful spin."""
 
     flight = NumericProperty(0)
+    spin = NumericProperty(0)
 
     def __init__(self, *, hero=False, **kwargs):
         self.hero = hero
         self._flight_anim = None
+        self._spin_anim = None
+        self._spin_target = 0
+        self._hit_this_pass = False
         self._flight_direction = 1
         self._flight_active = True
         self._disposed = False
         self._flight_geometry = None
+        self._pose_time = None
         super().__init__(**kwargs)
-        self.art = Image(source=str(CAMERA_ART), fit_mode="contain", size_hint=(None, None))
-        self.art.bind(texture=self._nearest)
-        self._nearest(self.art, self.art.texture)
-        # Flip this image's draw transform on the return flight. The shared
-        # source texture stays immutable, including the game/QR/v1 artwork.
-        with self.art.canvas.before:
-            PushMatrix()
-            self._pivot = Translate()
-            self._direction = Scale(1, 1, 1)
-            self._unpivot = Translate()
-        with self.art.canvas.after:
-            PopMatrix()
+        self.art = FlyingMeongArt(size_hint=(None, None))
         self.wordmark = PixelWordmark(text='MEONG', size_hint=(None, None))
         self.caption = PixelWordmark(text='PHOTOBOOTH', ink=CYAN, shadow='#142951',
                                      size_hint=(None, None))
-        for widget in (self.art, self.wordmark, self.caption):
-            self.add_widget(widget)
+        self.lettering = FloatLayout(size_hint=(None, None))
+        # Rotate the existing native glyphs as one sign. A vertical-axis flip
+        # fits compact headers throughout the turn; no raster uploads per tick.
+        with self.lettering.canvas.before:
+            PushMatrix()
+            self._word_spin = Rotate(axis=(0, 1, 0))
+            self._word_tilt = Rotate()
+        with self.lettering.canvas.after:
+            PopMatrix()
+        self.lettering.add_widget(self.wordmark)
+        self.lettering.add_widget(self.caption)
+        self.add_widget(self.lettering)
+        self.add_widget(self.art)  # Meong passes in front of the lettering.
         # Arrange after parent size/position aliases have settled for this frame.
         self._trigger_arrange = Clock.create_trigger(self._arrange, -1)
         self.bind(pos=self._trigger_arrange, size=self._trigger_arrange)
         self.bind(flight=self._fly, parent=self._trigger_arrange)
+        self.bind(spin=self._rotate_words)
         self._trigger_arrange()
-
-    @staticmethod
-    def _nearest(_image, texture):
-        if texture is not None:
-            texture.mag_filter = texture.min_filter = "nearest"
 
     def _arrange(self, *_args):
         if self._disposed:
@@ -109,33 +110,89 @@ class MeongLogo(FloatLayout):
                 self._flight_anim is not None):
             self._flight_anim.cancel(self)
             self._flight_anim = None
+        if geometry != self._flight_geometry:
+            self.art.reset_geometry()
         self._flight_geometry = geometry
+        self._pose_time = Clock.get_time()
         width, height = max(1, self.width), max(1, self.height)
-        self.art.size = (height * .36 * 224 / 152, height * .36)
-        self.wordmark.size = (width, height * .43)
-        self.wordmark.pos = (self.x, self.y + height * .18)
-        self.wordmark.font_size = min(dp(42), width / 5, height * .42)
-        self.caption.size = (width, height * .20)
-        self.caption.pos = (self.x, self.y)
-        self.caption.font_size = min(dp(16), width / 14, height * .20)
-        self._fly()
+        cell = max(.5, int(min(dp(6), height * .56 / 8, width / 50) * 2) / 2)
+        caption_cell = max(.5, int(min(dp(16)/7, cell * .36) * 2) / 2)
+        self.lettering.size = (30 * cell, 8 * (cell + caption_cell))
+        self.lettering.center = self.center
+        self.wordmark.size = (self.lettering.width, 8 * cell)
+        self.wordmark.pos = (self.lettering.x, self.lettering.y + 8 * caption_cell)
+        self.wordmark.font_size = 7 * cell
+        self.caption.size = (self.lettering.width, 8 * caption_cell)
+        self.caption.pos = self.lettering.pos
+        self.caption.font_size = 7 * caption_cell
+        # Leave a real approach on both sides even in a tall/narrow header;
+        # otherwise the first frame can already overlap the lettering and miss
+        # its contact event. Keep the original sprite's proportions.
+        self.art.max_unit = max(.01, (self.lettering.x-self.x-dp(8)) / 123)
+        self.art.pos, self.art.size = self.pos, self.size
+        self._rotate_words()
+        self._fly(detect_impact=False)
+        if self.parent is None and self._spin_anim is not None:
+            self._spin_anim.cancel(self)
+            self._spin_anim = None
         self._start_flight()
+        self._start_spin()
 
-    def _fly(self, *_args):
+    def _fly(self, *_args, detect_impact=True):
         if self._disposed:
             return
-        self.art.pos = (self.x + self.flight * max(0, self.width - self.art.width),
-                        self.y + self.height * .63 + sin(self.flight * pi * 6) * self.height * .01)
-        self._pivot.x, self._pivot.y = self.art.center
-        self._unpivot.x, self._unpivot.y = -self.art.center_x, -self.art.center_y
-        self._direction.x = self._flight_direction
+        x, _, w, _ = self.art.body_box
+        previous = x if self._flight_direction < 0 else x+w
+        now = Clock.get_time()
+        dt = (max(0, now-self._pose_time) if self._pose_time is not None and
+              detect_impact and self._flight_active else 0)
+        self._pose_time = now
+        self.art.advance(self.flight, self._flight_direction, dt)
+        x, _, w, _ = self.art.body_box
+        # The wordmark occupies its actual pixel grid width, so contact is
+        # measured at the lettering rather than an invisible full-width box.
+        crossed = (previous <= self.lettering.x < x+w if self._flight_direction > 0
+                   else previous >= self.lettering.right > x)
+        if (detect_impact and crossed and not self._hit_this_pass and
+                self._flight_active and self.parent is not None):
+            self._hit_wordmark()
+
+    def _hit_wordmark(self):
+        self._hit_this_pass = True
+        if self._spin_anim is not None:
+            self._spin_anim.cancel(self)
+            self._spin_anim = None
+        self.spin = 0
+        self._spin_target = 360 * self._flight_direction
+        self._start_spin()
+
+    def _rotate_words(self, *_args):
+        for rotation in (self._word_spin, self._word_tilt):
+            rotation.origin = (*self.lettering.center, 0)
+        self._word_spin.angle = self.spin
+        self._word_tilt.angle = sin(self.spin * pi / 180) * 4
+
+    def _start_spin(self):
+        if (self._disposed or not self._flight_active or self.parent is None or
+                self._spin_anim is not None or self._spin_target == 0):
+            return
+        remaining = abs(self._spin_target - self.spin) / 360
+        self._spin_anim = Animation(spin=self._spin_target, duration=max(.02, .65 * remaining),
+                                    t='out_cubic', step=1/30)
+        self._spin_anim.bind(on_complete=self._settle_words)
+        self._spin_anim.start(self)
+
+    def _settle_words(self, *_args):
+        self._spin_anim = None
+        self._spin_target = 0
+        self.spin = 0
 
     def _start_flight(self):
         if (self._disposed or not self._flight_active or self.parent is None or
                 self._flight_anim is not None):
             return
         target = 1 if self._flight_direction > 0 else 0
-        distance = abs(target-self.flight) * max(1, self.width-self.art.width)
+        distance = abs(target-self.flight) * max(1, self.art.travel)
         self._flight_anim = Animation(flight=target, duration=max(.1, distance/dp(65)),
                                       t='linear', step=1/30)
         self._flight_anim.bind(on_complete=self._turn)
@@ -144,18 +201,25 @@ class MeongLogo(FloatLayout):
     def _turn(self, *_args):
         self._flight_anim = None
         self._flight_direction *= -1
-        self._fly()
+        self._hit_this_pass = False
+        self._fly(detect_impact=False)
         self._start_flight()
 
     def set_active(self, active):
         self._flight_active = active
-        if not active and self._flight_anim is not None:
-            self._flight_anim.cancel(self)
-            self._flight_anim = None
-        elif active:
+        self._pose_time = Clock.get_time()
+        if not active:
+            for name in ('_flight_anim', '_spin_anim'):
+                animation = getattr(self, name)
+                if animation is not None:
+                    animation.cancel(self)
+                    setattr(self, name, None)
+        else:
             self._start_flight()
+            self._start_spin()
 
     def dispose(self):
         self.set_active(False)
         self._disposed = True
         self._trigger_arrange.cancel()
+        self.art.dispose()

@@ -1,0 +1,54 @@
+{
+  "baseline_sha": "848a52d0b5cf5c0986965db0d9c2232309a2ba5b",
+  "worktree_tested_before_commit": true,
+  "files": [
+    {
+      "path": "photobooth/kiosk_v2/game_layout.py",
+      "sha256": "f9390dd5cbb1266a23b47e476b582f01d3f25731686ff3595a7239d44d7d689c"
+    },
+    {
+      "path": "photobooth/kiosk_v2/brand_flight.py",
+      "sha256": "934bf997deb61bc0b7634031b63ec488acf695c9bf118bf4e0396ed49c3cd1b3"
+    },
+    {
+      "path": "photobooth/kiosk_v2/branding.py",
+      "sha256": "3afb48ce1f962513f48a2d247c4e2f3460ec81efc34e7bb161d1d9524357491e"
+    },
+    {
+      "path": "tests/test_kiosk_v2_brand_flight.py",
+      "sha256": "d5a0d2871bd6d51e887f56b215785218ad3e927424351f0f11d662afa2473b48"
+    },
+    {
+      "path": "tests/test_kiosk_v2_game_followup.py",
+      "sha256": "5ee1dde5a657c77f1bbdaa21897d3930b8e1bd1de0a6d22ee957708e93ed8393"
+    },
+    {
+      "path": "tests/test_kiosk_v2_widgets.py",
+      "sha256": "6b6eaee8465bd4f572e6f93464ef7d6521718bf25163d6723b59f93fa3e0b84b"
+    },
+    {
+      "path": "tests/test_kiosk_v2_checkout_widgets.py",
+      "sha256": "e2d10957432de7a5ca9e38e5a944ccd49a937760969c324c5508ad8d64760ebf"
+    },
+    {
+      "path": "tools/ci_qr_pixels.py",
+      "sha256": "983d582c48bb0560fa1fde14a3f4c386bebe649b263ac3d6b0a94bef40653983"
+    },
+    {
+      "path": "tools/render_portrait_v2.py",
+      "sha256": "10d639b0833eafe22ce81d44297200576d6d0ea748895b7163bcfca09a5aa259"
+    },
+    {
+      "path": ".github/workflows/portrait-kiosk-v2.yml",
+      "sha256": "07ead385e4d47b3762f8e498b48f444765b0cda75a2efe5b12a97a1ebd1b9fb6"
+    }
+  ],
+  "final_run": {
+    "tests": 540,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 163.945
+  },
+  "environment": "Linux Python 3.12 / Kivy 2.3.1 / offscreen SDL software GL; dummy PCM and synthetic hardware; installed public palm fixtures"
+}

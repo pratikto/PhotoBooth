@@ -1,6 +1,8 @@
 # Meong Photobooth — Development handover
 
-> Current owner correction (2026-10-24), BUG-016: right-anchored world pushed Meong to 80% width in landscape. Entire world is now centered; 20 focused native tests PASS and 45 captures hash/dimension checked. Next: commit/push this stage, then the owner-requested same-level mascot/text impact animation and one final full regression. [Evidence/rollback](qa/portrait-v2-player-anchor/README.md).
+> Latest owner correction (2026-10-24): game world centered at 848a52d, pushed/remote-verified, three-job CI SUCCESS. Same-level flying Meong with source-derived joint motion, original camera/film, waving trail and one impact spin now has 28 focused + 540 final full PASS, zero skips. Twelve final native captures and fresh Submit form verified. Header source ready for push; Windows acceptance pending. [Evidence/rollback](qa/portrait-v2-player-anchor/README.md).
+
+> Current owner correction (2026-10-24), BUG-016: right-anchored world pushed Meong to 80% width in landscape. Entire world is now centered; 20 focused native tests PASS and 45 captures hash/dimension checked. Game source 848a52d pushed/remote-verified, all three CI jobs SUCCESS. Header stage now has 28 focused PASS and native-clock preview; final full regression is running. [Evidence/rollback](qa/portrait-v2-player-anchor/README.md).
 
 > Current owner follow-up: motion fix 144bd60 is pushed/remote-verified with matching-source CI SUCCESS. Centered/flying brand and gallery alignment now pass 533 full local tests, zero skips; 77 PNGs hash/dimension checked. Original game files unchanged. Visual source b6a730a is pushed/remote-verified; CI 40059427863 has all three jobs SUCCESS. Next: owner Windows retest. [Current evidence/form](qa/portrait-v2-motion-correction/README.md).
 

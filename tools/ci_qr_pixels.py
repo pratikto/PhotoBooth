@@ -1,7 +1,8 @@
 """Strict independent reader for QR codes captured in synthetic GUI screenshots.
 
-This reader NEVER uses the known source payload or a Kivy texture to determine
-whether a QR passes. The input must be pixels cropped from the exported screen.
+This reader NEVER uses the known source payload to determine whether a QR
+passes. Input is actual pixel data: an exported-screen crop, or the existing
+MOCK presentation RGB buffer converted to BGR in its native widget test.
 The one-bit/module layout cannot be repaired by nearest-neighbour enlargement;
 the extra views only reduce OpenCV QRCodeDetector's scale-specific false negatives.
 
