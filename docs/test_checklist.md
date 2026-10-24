@@ -1,3 +1,15 @@
+## FEAT-011 Dizzy CPU — Stage 2 grayscale fidelity (2026-10-24)
+
+- [x] Full 0..255 input grayscale scan for both CPU Dizzy variants.
+- [x] Native mode-1 white-dot fraction measured before/after Tone LUT.
+- [x] CSV per-tone results, machine-readable JSON MAE/worst cases,
+      and standalone SVG grayscale response graphs.
+- [x] GitHub Actions generates downloadable fidelity artifacts and checks
+      corrected error is lower than baseline on the 96x96 seed42 calibration.
+- [ ] Inspect curves across second seed, printhead widths, and real portraits.
+- [ ] Compare on thermal paper using the same printer darkness and speed.
+
+
 ## FEAT-011 — Smart Enhance & 1-bit Post-Processing (2026-10-23)
 
 **Branch:** `feature/dither-tuning`. **No master merge; no Kivy production

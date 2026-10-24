@@ -1,5 +1,20 @@
 # Meong Photobooth — Documentation and release changelog
 
+## [Unreleased] Stage 2 — CPU Dizzy grayscale fidelity and SVG plots (2026-10-24)
+
+- Added `tools/dizzy_fidelity.py`: deterministic full-range 0..255
+  grayscale dot-density measurement per variant and seed, with one-bit
+  baseline/calibrated coverage, signed percentage-point errors, MAE and
+  maximum error. Exports CSV + JSON + self-contained SVG response curves.
+- Dither Lab GitHub Actions now runs all 256 levels on both variants and
+  uploads `meong-dizzy-cpu-fidelity-256` for review. Correction must reduce
+  mean grayscale error on the calibration grid or the stage fails CI.
+- Added `tests/test_dizzy_fidelity.py` for data/plot sanity, valid XML,
+  small-patch calibration gains and invalid-input handling.
+- No printer access, new runtime dependencies, GUI replacement or master merge.
+  Results are strictly digital; physical thermal quality is still unverified.
+
+
 ## [Unreleased] Smart Enhance and guarded post-processing — 2026-10-23
 
 - **Owner-approved FEAT-011 lab-only extension** on `feature/dither-tuning`:

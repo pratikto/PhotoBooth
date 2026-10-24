@@ -1,5 +1,37 @@
 # Meong Photobooth — Thermal Dither Tuning Lab
 
+## Stage 2: complete grayscale fidelity test and plots (2026-10-24)
+
+Run from the repository root on Windows/Linux:
+
+```powershell
+python tools/dizzy_fidelity.py --width 96 --height 96 --seed 42 --output-dir data/dizzy_fidelity
+```
+
+The default is **all 256 input gray values 0..255** on synthetic, uniform
+96x96 test fields, separately for `article-8` and `orthogonal-4`. It
+measures physical dot *count* in the native one-bit output (not appearance
+on the screen), both **Tone LUT OFF and Tone LUT ON**. Results:
+
+- `dizzy_grayscale_0-255.csv`: one row per shade and algorithm, target
+  % white dots, baseline %, corrected %, and signed errors in percentage points.
+- `dizzy_fidelity_summary.json`: reproducible metadata, every measured
+  row, MAE and worst-case errors, and relative improvement percentages.
+- `dizzy_fidelity.svg`: two independent response plots with ideal linear,
+  baseline, and corrected coverage curves. Open the SVG in any browser.
+
+The GitHub Actions dither-lab workflow automatically runs the same **256-level
+audit** and uploads the three files as `meong-dizzy-cpu-fidelity-256`
+artifacts. The CI gate requires corrected MAE to beat uncorrected MAE for
+both CPU variants. A smoke test uses fewer tones; the actual workflow uses
+all 256 levels. Vary `--seed`, `--width`, or `--height` to check
+generalization (sizes limited to 16..256 to bound CPU processing).
+
+Note: digital white-dot-density fidelity does not measure spatial noise,
+edge preservation, actual printer density, face quality, thermal heat or paper
+response. Real-photo and paper comparisons remain mandatory.
+
+
 ## Stage 1: CPU Dizzy inverse-tone LUT (2026-10-24)
 
 Opt-in per-variant calibration follows Liam Appelbe's inverse tone-response
