@@ -1,6 +1,6 @@
 # Meong Photobooth — Documentation and release changelog
 
-> 2026-10-24 — Owner-requested animated header: same-level Meong and centered pixel lettering, one impact spin per pass, cached source-pixel limb poses, waving original-style trail and original camera/film compositor/emitter. Native pause/resize/retirement guards; 28 focused + 540 final full PASS, zero skips, actual Clock preview and twelve final native page captures. [Evidence](qa/portrait-v2-player-anchor/README.md).
+> 2026-10-24 — Owner-requested animated header: same-level Meong and centered pixel lettering, one impact spin per pass, cached source-pixel limb poses, waving original-style trail and original camera/film compositor/emitter. Native pause/resize/retirement guards; 28 focused + 540 final full PASS, zero skips, actual Clock preview and twelve final native page captures. Source c242b97 pushed/remote-verified; matching-source CI 40073923004 all three jobs SUCCESS, 99 CI PNGs verified. [Evidence](qa/portrait-v2-player-anchor/README.md).
 
 > 2026-10-24 — BUG-016: replace right-aligned original gameplay world with a centered shared translation. Add native player-position and landscape motion checks. 20 focused PASS; 45 synthetic native captures verified, required portrait and landscape reviewed. [Details](qa/portrait-v2-player-anchor/README.md).
 

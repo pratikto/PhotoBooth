@@ -16,7 +16,9 @@ Actions credits on work that already exists and works.**
   compatibility evidence shows reuse cannot satisfy the approved requirements.
 - Responsive gameplay must preserve displayed speed and wave spacing across the
   whole flight path. Unchanged physics alone is insufficient; test rendered
-  motion. Do not scale far and near positions differently (BUG-015).
+  motion. Do not scale far and near positions differently (BUG-015). Check player
+  position at portrait and landscape sizes too; center the complete world
+  instead of right-aligning it to the physical spawn edge (BUG-016).
 - Keep existing safety and lifecycle guards when integrating; reuse does not
   authorize production payments, discounts, scanners, deployments or merges.
 

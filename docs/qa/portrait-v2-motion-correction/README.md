@@ -1,5 +1,7 @@
 # BUG-015 — resize-induced asteroid motion regression
 
+> Follow-up supersedes the right-aligned world and above-text header described here: BUG-016 world centering at 848a52d, and same-level animated Meong/impact header at c242b97, both pushed/remote-verified. Latest 540 full PASS and three-job CI SUCCESS. [Current evidence/form](../portrait-v2-player-anchor/README.md).
+
 Owner reports: game suddenly feels faster, and wave spacing changes from wide
 to narrow. Starting source 72fafcd / runtime 5c81ea1 on the mandatory branch
 feature/portrait-kiosk-v2-next. The later owner corrections also request centered

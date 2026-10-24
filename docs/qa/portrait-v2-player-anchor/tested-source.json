@@ -50,5 +50,7 @@
     "skipped": 0,
     "seconds": 163.945
   },
-  "environment": "Linux Python 3.12 / Kivy 2.3.1 / offscreen SDL software GL; dummy PCM and synthetic hardware; installed public palm fixtures"
+  "environment": "Linux Python 3.12 / Kivy 2.3.1 / offscreen SDL software GL; dummy PCM and synthetic hardware; installed public palm fixtures",
+  "functional_sha": "c242b97fe09727f9132769edba057281eb196db3",
+  "normal_push_remote_verified": true
 }

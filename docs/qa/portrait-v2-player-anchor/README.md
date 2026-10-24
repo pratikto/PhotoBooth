@@ -172,8 +172,9 @@ synthetic camera/print/checkout; not physical Windows acceptance. Syntax and
 whitespace checks pass. Both the failed QR gate and superseded pre-approach
 successful gate remain archived rather than relabelled as final-source PASS.
 
-The final header source is ready for normal commit/push; CI will bind to that
-functional SHA. The companion evidence commit can update its SHA/CI results
+The final header source **c242b97fe09727f9132769edba057281eb196db3** is normally
+pushed and its remote HEAD verified. Tested hashes match the committed files.
+CI 40073923004 completed SUCCESS at that exact functional SHA; all three jobs pass. The companion evidence commit can update its SHA/CI results
 without changing tested runtime files or triggering another GUI workflow.
 
 Remaining: Windows perception of the game position/pace and header animation,
@@ -185,3 +186,36 @@ On Windows, keep branch feature/portrait-kiosk-v2-next and the existing venv:
 run git pull --ff-only, then python tools/run_portrait_v2.py. Open
 [the fresh Submit form](windows-checklist.html), record tested HEAD and check
 only completed tests. Close/reopen the GUI to load the updated header.
+
+
+## Pushed checkpoints
+
+- Game position: **848a52d**; normal push/remote HEAD verified, CI 40071831101
+  has all three jobs SUCCESS.
+- Animated header: **c242b97**; normal push/remote HEAD verified, final local
+  540 PASS and source hashes matched. [Matching-source CI 40073923004](https://github.com/pratikto/PhotoBooth/actions/runs/40073923004)
+  has all three jobs SUCCESS.
+- Header rollback: 848a52d. Original game reference: 672e3f7, read-only and all
+  26 files unchanged. No master changes, merge, deployment or production enablement.
+
+
+## Archived matching-source CI
+
+[CI 40073923004](https://github.com/pratikto/PhotoBooth/actions/runs/40073923004)
+at **c242b97** is **SUCCESS in all three jobs**: navigation/audio lifecycle,
+native GUI/original-source/motion/film tests and screenshot generation, plus
+Windows Python 3.12 native SDL audio using dummy output.
+[Archived result](final-ci.json). This does not certify actual Windows speakers,
+touchscreen or frame pacing.
+
+Downloaded the original CI screenshot artifact: **99 PNGs** have verified hashes,
+dimensions and clean-source metadata matching c242b97. Includes original game,
+P3 synthetic photo and opt-in MOCK guards as well as the shared header.
+[Verification](ci-screenshot-verification.json), [reviewed game/gallery sheet](ci-contact.jpg).
+Local native [live-clock GIF](header-live-clock.gif) supplies the header animation
+preview; static CI brand poses are explicitly frozen, not motion-speed evidence.
+
+The companion evidence commit changes documentation/instructions only and skips
+redundant CI. Runtime rollback for the animated header remains **848a52d**;
+tested source hashes and all 26 original reference hashes remain unchanged.
+No unresolved automated failure remains. Owner Windows retest is still pending.
