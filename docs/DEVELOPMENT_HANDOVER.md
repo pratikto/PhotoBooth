@@ -1,5 +1,8 @@
 # Meong Photobooth — Development handover
 
+> P5 functional source **9433010** pushed and remote-verified after 688 full PASS/zero skips. Clean-cloud readiness reports READY_FOR_MANUAL_TEST; hardware/merchant gates NOT_RUN. Matching-source CI 40109206417 all three jobs SUCCESS; 109 PNGs source/hash/dimension-verified, required two-size Sandbox/gallery/photo/game views reviewed. [Final package](qa/portrait-v2-p5/README.md).
+
+
 > Final local P4b/P5 regression: **688 PASS / 0 failures / 0 errors / 0 skips**, 211.646s; final native hook regression fixed, focused 10 PASS and browser checklist verified. Merchant/device/retention certification remains pending. [Results and commands](qa/portrait-v2-p5/README.md).
 
 

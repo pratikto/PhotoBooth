@@ -1,0 +1,944 @@
+{
+  "ci_run": 40109206417,
+  "functional_sha": "9433010faee04c58789e9778d2297308492b60c5",
+  "artifact_id": 12566490205,
+  "zip_sha256": "1aa7ed39e092c632644405b56661fc5cd6d420f3614639b177b24d421b09e47f",
+  "verified_pngs": 109,
+  "synthetic_only": true,
+  "reports": [
+    {
+      "file": "p3/p3-report-452x900.json",
+      "source": "9433010faee04c58789e9778d2297308492b60c5",
+      "tracked_changes": false
+    },
+    {
+      "file": "p3/p3-report-800x1280.json",
+      "source": "9433010faee04c58789e9778d2297308492b60c5",
+      "tracked_changes": false
+    },
+    {
+      "file": "p4/p4-report-452x900.json",
+      "source": "9433010faee04c58789e9778d2297308492b60c5",
+      "tracked_changes": false
+    },
+    {
+      "file": "p4/p4-report-800x1280.json",
+      "source": "9433010faee04c58789e9778d2297308492b60c5",
+      "tracked_changes": false
+    },
+    {
+      "file": "p4b/checkout-report-452x900.json",
+      "source": "9433010faee04c58789e9778d2297308492b60c5",
+      "tracked_changes": false
+    },
+    {
+      "file": "p4b/checkout-report-800x1280.json",
+      "source": "9433010faee04c58789e9778d2297308492b60c5",
+      "tracked_changes": false
+    },
+    {
+      "file": "report-360x640.json",
+      "source": "9433010faee04c58789e9778d2297308492b60c5",
+      "tracked_changes": false
+    },
+    {
+      "file": "report-452x900.json",
+      "source": "9433010faee04c58789e9778d2297308492b60c5",
+      "tracked_changes": false
+    },
+    {
+      "file": "report-800x1280.json",
+      "source": "9433010faee04c58789e9778d2297308492b60c5",
+      "tracked_changes": false
+    },
+    {
+      "file": "report-800x600.json",
+      "source": "9433010faee04c58789e9778d2297308492b60c5",
+      "tracked_changes": false
+    },
+    {
+      "file": "sandbox/evidence-452x900.json",
+      "source": "9433010faee04c58789e9778d2297308492b60c5",
+      "tracked_changes": null
+    },
+    {
+      "file": "sandbox/evidence-800x1280.json",
+      "source": "9433010faee04c58789e9778d2297308492b60c5",
+      "tracked_changes": null
+    }
+  ],
+  "images": [
+    {
+      "file": "p3/01-photo-confirm-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "1b5f9b44d190d6d8ae15b42536dfca2fe500f185ed2aceb18fea5587b7a174b1"
+    },
+    {
+      "file": "p3/02-camera-ready-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "b5266a989e99ff1efd3ab75412ab7236ab140d3efafb0541d8dbbbde3fb212d0"
+    },
+    {
+      "file": "p3/03-countdown-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "42d624a9362444c894a9e6784f2f7c25ca7a2bfd836b55cba881e05a0ddf9edd"
+    },
+    {
+      "file": "p3/04-review-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "348ba516670b4b5ab1b073a7658e8aaf869efef3ee941d9fb446bfb725193876"
+    },
+    {
+      "file": "p3/05-retake-ready-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "4985d67cfeeba3d15f31c26a02b84c6ad7ff74ca1c00ab2e9da17aef66fdebc4"
+    },
+    {
+      "file": "p3/06-local-result-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "36e679db75df43c067f4e28b3df6e35807a7f61c6522576bc724ab86fb4861cb"
+    },
+    {
+      "file": "p3/07-print-uncertain-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "4bf9729e771a82278587fc6f97fb228934eaf32e2e0c1ae934accd0cd426139b"
+    },
+    {
+      "file": "p3/08-camera-unavailable-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "0c11393c0778e1253f5c54e5002cbb2143fd64266da2932d3013b769601bdee8"
+    },
+    {
+      "file": "p3/01-photo-confirm-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "2f63b9cdcebcb6b8b23ece50ec16efa0dd610b03b01212efdba4e7aee9f951b4"
+    },
+    {
+      "file": "p3/02-camera-ready-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "2f1777f92291ff0c796863705cdafb864a3fa41878afbc402dd8228f47f33c1a"
+    },
+    {
+      "file": "p3/03-countdown-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "b51e2a3547e2bdeab761344da12857f6f5dccbc3b34b98f97f815ae726c313e0"
+    },
+    {
+      "file": "p3/04-review-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "9dcaa46e3a8a9620e22e66bb4121c42cf35f71396522cc68dea721ffdaf9a098"
+    },
+    {
+      "file": "p3/05-retake-ready-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "3d2e90a09eedb19ad08745b4a358f7a2ed8069265c631c21d5906538914498e1"
+    },
+    {
+      "file": "p3/06-local-result-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "9b17a3bcae82333ba158e6293d3867d5e5a32c9ceb35eb9a1b63f89878433751"
+    },
+    {
+      "file": "p3/07-print-uncertain-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "790a8f2bb93aa98ce91534042434ff1e54c0ca270e442d384199b4e9f9b00a7f"
+    },
+    {
+      "file": "p3/08-camera-unavailable-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "9019d5356111230872997d4b7f8b59a9d652ecf6223d56b3ad664ee7cc4bf612"
+    },
+    {
+      "file": "p4/01-intro-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "5e57ab7f250cdc4e28bbf9b275588781bc0c619e5cb35f23ed63a0637c2dcba3"
+    },
+    {
+      "file": "p4/01a-print-idle-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "27ad18d30ccf578686ea8a304ed0d0a17cddb71e049bed63fed80310a8ace243"
+    },
+    {
+      "file": "p4/01b-print-feed-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "ab4cf8a04d994b4506702cb8fef93ab7e35cf8365e112b5788f9a6c95cc9f3bf"
+    },
+    {
+      "file": "p4/01c-print-hold-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "311f307c39392e29e8289f074431aa10f83606ffeefd4883244365d85edde296"
+    },
+    {
+      "file": "p4/01d-print-fall-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "2a418a362f1aa5238674f4a7a040dd47bccb0c71a8405ba93b281db4416b6b2f"
+    },
+    {
+      "file": "p4/02-code-entry-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "6d3192a8cc7551bc0b68557e02cb8ac80a3c592b05e08a8a8f1f9360ad3a99ab"
+    },
+    {
+      "file": "p4/03-invalid-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "5fd99203c8005d8a84d548f53bff7eecd1ac989d94e030e7bbc7715383384212"
+    },
+    {
+      "file": "p4/04-original-game-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "553f26a999087ad6562770646371a4df5b8c68f79ca639fbeda2f4dbbd0e4065"
+    },
+    {
+      "file": "p4/05-paused-game-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "bc8735119becee25d58ef7064049f69be68bf9872dd6310f3bd8f59d44d19037"
+    },
+    {
+      "file": "p4/06-win-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "6f3d98c2240a92011cb9be180efe238f28680dab0365bc6eea352e765a9a0f61"
+    },
+    {
+      "file": "p4/07-required-tutorial-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "055cc8b58591d276c43169d861d46c17f6439e2ec4e4bafc0954e697d8772b0e"
+    },
+    {
+      "file": "p4/08-win-gallery-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "bf285c47d755c2f798aeb80d6f2de84757ef1feafeb52c1d95333b5db2cbb38b"
+    },
+    {
+      "file": "p4/09-loss-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "190e187964d3f5da3f30d90c65c6a1798464e912696a79875f6cd460899a7ea3"
+    },
+    {
+      "file": "p4/10-loss-gallery-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "1f3ad08f6baedeb84e0aa0dfd5170615fc7da7c3a540dc443c99d3dc83765aea"
+    },
+    {
+      "file": "p4/11-used-code-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "a50b34185c4d6f44f2fa49edd22b565170659b300a91b8124bd5a8e4bce015f7"
+    },
+    {
+      "file": "p4/01-intro-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "7b36ee09e80650d9a8ea5646b6671c6937201424e93b1bbef325c20f62e33a25"
+    },
+    {
+      "file": "p4/01a-print-idle-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "b891792b640adbf8c92371b6151688ce60f2255e53c30a800200cafc0b158fbb"
+    },
+    {
+      "file": "p4/01b-print-feed-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "20c7e1af8d8e668e53e44a43d4dcd35a2a2c0bb862eacbcdb43801dca6298057"
+    },
+    {
+      "file": "p4/01c-print-hold-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "8cdec3e6f5cec5591bcbd408dbd5651735585c0b4f6416b447a5e0f21d55d334"
+    },
+    {
+      "file": "p4/01d-print-fall-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "e72d79314f85d359228952b5b808d75418ec9eca974963f7724b045a53704066"
+    },
+    {
+      "file": "p4/02-code-entry-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "a333bd318d26282f089537b88a0e10a8e0b55d1776a10a2ed7b12fd67eb016f0"
+    },
+    {
+      "file": "p4/03-invalid-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "20e39c7b9f9e9fda725cdba602b7d3ac3cc53a57f0745f45818a7e42d7620b9f"
+    },
+    {
+      "file": "p4/04-original-game-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "5bb6c3adad36d0eeca818e3ca05304e920428261655540377b874259a4dc759e"
+    },
+    {
+      "file": "p4/05-paused-game-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "29eae6f38ac0739ebbbd12597fc18fbb88662340c02aecb34e312504d40a00c9"
+    },
+    {
+      "file": "p4/06-win-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "4d8139cca22b49cae190e6e873ae0192e7777b5d5679a1f51de6103f6401fe66"
+    },
+    {
+      "file": "p4/07-required-tutorial-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "786d04f5157c7c92550ff0dc43c4f9571342f426388d0f37b7372d0af3538839"
+    },
+    {
+      "file": "p4/08-win-gallery-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "b7773cbdb84b619bb181cd49d0b567ecaf54266a4cb22cd9ac0c503e7f9b0e12"
+    },
+    {
+      "file": "p4/09-loss-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "d947210e4161229d27f76d639ae270ecd9b3ad7389d5ce31170fd0c9ab400e9c"
+    },
+    {
+      "file": "p4/10-loss-gallery-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "1026edcba21d0a3919f658862c0f044b63fb2f2f4ba344bc7ad74e39aa64719a"
+    },
+    {
+      "file": "p4/11-used-code-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "896f046eb95faf9789ef33676aa2adc9500922589fdc05286ed6d292d75efe57"
+    },
+    {
+      "file": "p4b/01-mock-gallery-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "c20c6e13873a856696df22a566938e1f2ec054013fbc4b951cbfe8fc7423876f"
+    },
+    {
+      "file": "p4b/02-regular-pending-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "d9559c96cdf03f4f92bcdd53aa21d2c82fc215314f690a37fc166b665077cbe1"
+    },
+    {
+      "file": "p4b/03-cancelled-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "72297853475355474ad982be0279fffe57f4a1f5fc7eba1ab8d95b908905601c"
+    },
+    {
+      "file": "p4b/04-win-gallery-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "ddc986fba9681755d8556e1e7a36842b2a2f49492efb8f4c4726c62e22bb64c7"
+    },
+    {
+      "file": "p4b/05-win-pending-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "e00a644ac88eff3dd7014481d7719c6f22120fabcd4982909da4ea4e663d7ca7"
+    },
+    {
+      "file": "p4b/06-unknown-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "60cb25af97db601557b1bbbf22f872746741c708f07e3c7b33e9a38413d50428"
+    },
+    {
+      "file": "p4b/07-confirmed-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "95ea5903ec5700480bb6326e8cd7301bdb5f929d3b5333d2910cf9706f6346ec"
+    },
+    {
+      "file": "p4b/08-photo-consent-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "60777fcfa9e9bd10f780ee0106861a27ab97e4fc36b412acd048e032b4c7787c"
+    },
+    {
+      "file": "p4b/09-expired-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "b7e6c2fdb32e1d3b5c1788d303689e1838c6565cbb5edce449d95265333ad67d"
+    },
+    {
+      "file": "p4b/10-recovered-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "999b804ea3233b676822e316f6e9d70df4eca683ee0beb052e32be7e83986e39"
+    },
+    {
+      "file": "p4b/01-mock-gallery-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "d00be5346ded053fb200a5c4626468ee95ade9e343a6bc2c7260a776169f77d7"
+    },
+    {
+      "file": "p4b/02-regular-pending-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "a28c74843f3aa90b9698b64c72cdc85475d05682b65d375f70022a974c59c226"
+    },
+    {
+      "file": "p4b/03-cancelled-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "7e02ab99682cb2aa382ad08a34efaa4e62f0b10fb614d259bb8f90ec6b22e92c"
+    },
+    {
+      "file": "p4b/04-win-gallery-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "a7ca70e21e9a956a97ece71f74192a39b31375793a2394975db9ec6bc4c2eb9b"
+    },
+    {
+      "file": "p4b/05-win-pending-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "4b8d779815c057f89e9f818e07318da376f21736a87b0165a33b8aa0113a38b3"
+    },
+    {
+      "file": "p4b/06-unknown-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "e5a965b63868cd5cce69c7d39c7b33337d3f9cd0d34d27b9544916600dc35deb"
+    },
+    {
+      "file": "p4b/07-confirmed-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "535c46029a6fbb9cf64e206f94b0e1b9903b74e3b573e0d84eaade1ad62f596d"
+    },
+    {
+      "file": "p4b/08-photo-consent-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "f250d85dd80d57239740dac50cedb7cadb593a618d8b630387f9532c3f6771ca"
+    },
+    {
+      "file": "p4b/09-expired-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "6317b867b795ab5f0ebd054b45e7af5b1e71dc0b79a85d65906bde3be25e7ec8"
+    },
+    {
+      "file": "p4b/10-recovered-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "0b2e058406b5cdce03028ea0f4f665e14524aa745e5a5982efe8a27ef1750248"
+    },
+    {
+      "file": "01-advert-360x6400001.png",
+      "size": [
+        360,
+        640
+      ],
+      "sha256": "70d75c52dd3315f08bc9d18e4653d4504a894515bab7263e4af677ec193370fc"
+    },
+    {
+      "file": "02-invitation-360x6400001.png",
+      "size": [
+        360,
+        640
+      ],
+      "sha256": "af6693a60e7251c923abb0e736352fe344cff065447fe2230eee391a892a4e7d"
+    },
+    {
+      "file": "03-tutorial-360x6400001.png",
+      "size": [
+        360,
+        640
+      ],
+      "sha256": "982ce7acd8811e7646596416637acbb0cd86cf45624e310407bc57ee9e7281f4"
+    },
+    {
+      "file": "04-templates-360x6400001.png",
+      "size": [
+        360,
+        640
+      ],
+      "sha256": "a7e36a59ba1cdb51a850d673357624b09a26dfabf2b323e9ad8f145f3e9d8470"
+    },
+    {
+      "file": "05-copy-cart-360x6400001.png",
+      "size": [
+        360,
+        640
+      ],
+      "sha256": "350d6b6197f6834997d4003a6b0d7e4bd8b8f24a5eea03b4c202789c2db23a69"
+    },
+    {
+      "file": "06-game-placeholder-360x6400001.png",
+      "size": [
+        360,
+        640
+      ],
+      "sha256": "076fe8a195479c79d0b6423ead34bdc904bab5d7fb5833113a2fc507b9f82b51"
+    },
+    {
+      "file": "01-advert-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "8b6aebef6151bd2e6408fd7b0da294fabf6f42fff92bc7be48afc93712a614f0"
+    },
+    {
+      "file": "02-invitation-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "992c0f1a6b257f63703d14c4389bb3a7d5428f60da1cc875e1ad6c87480c752c"
+    },
+    {
+      "file": "03-tutorial-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "be000a24eb96f21c23af242e71db7ebddf521c9fbd237b56728a75f61da78f13"
+    },
+    {
+      "file": "04-templates-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "29b871db3e5f608e3773891d45d3198cd64bced195bfbd4680e21f665be25d04"
+    },
+    {
+      "file": "05-copy-cart-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "e3d39bcf07c3c173643cac4dc7fc402729978f6001f8f439e3d6c1ebd4a99bc6"
+    },
+    {
+      "file": "06-game-placeholder-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "696dc6b27292c2b4b6eb62ace14cd5d81659d384ca42d4879e3ba2a45326dd5b"
+    },
+    {
+      "file": "motion-00-rest-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "5dbd0368f132f815183cccdb225726ae14e102740f16e84348e13c0680f5327e"
+    },
+    {
+      "file": "motion-01-next-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "51eee7cb36e44e7434da915779155169fd9ad09c24e16318c40ae1d3b601e972"
+    },
+    {
+      "file": "motion-02-next-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "8ac8059d53e5770a163e1ad1f32de66a9d075e4a1baca807dcc4c846afc54ead"
+    },
+    {
+      "file": "motion-03-next-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "ea358daeb8b0453f5b90332e8ea3f3efca7b1107a34156debb2736d20b76b413"
+    },
+    {
+      "file": "motion-04-selected-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "231348e30125d987abe64cd137a7d0f2986fe9b2d8ff11996dee931e5e2cd1ab"
+    },
+    {
+      "file": "motion-05-previous-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "436ff046c8c555ed1fa999ef541bb1d5f9ce5c6a30d37bb4a07fe3aaf71f5b8a"
+    },
+    {
+      "file": "motion-06-previous-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "bec05e38692c9509b1d66ba322168b81c72dcef95650e7da211af177696f2c35"
+    },
+    {
+      "file": "motion-07-previous-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "24b9ce007d7abf1e9959dacd649ca24f3d4aa273bbab512c5b717dfba3cbd147"
+    },
+    {
+      "file": "motion-08-returned-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "5dbd0368f132f815183cccdb225726ae14e102740f16e84348e13c0680f5327e"
+    },
+    {
+      "file": "01-advert-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "a49b7806bbc4f71448cd7d5aeaa72266b6801a52dc13764a60c1d37222027dc3"
+    },
+    {
+      "file": "02-invitation-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "db0af88612139ec9098b1b27006146d9aa4f83331e57bd979f71c4c0df6f0067"
+    },
+    {
+      "file": "03-tutorial-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "48ee94430c33713182b15e58de17887ac7d805798c7ca719c463d9922a81b309"
+    },
+    {
+      "file": "04-templates-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "7be756fae671bb2a6d5b89bac167b3f20e441190aa6cc03d14498ed2cc267646"
+    },
+    {
+      "file": "05-copy-cart-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "e1c3f92ea411b77fc829173954faf29d8be12eb96f41d4c26c57162a6a0c8d66"
+    },
+    {
+      "file": "06-game-placeholder-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "8fd77e2b652b4511d983fe06b8651e5062e266fb2d8c870ad1039a8dda78b255"
+    },
+    {
+      "file": "01-advert-800x6000001.png",
+      "size": [
+        800,
+        600
+      ],
+      "sha256": "13df5fdfd5c19ebde6adcb892dc4d47ad287ebf01a975c580b0546ce10ba3fc3"
+    },
+    {
+      "file": "02-invitation-800x6000001.png",
+      "size": [
+        800,
+        600
+      ],
+      "sha256": "1654b70f258972d345f3dd7cbc187580d2c6f6e4a4e0eb177ea61015b6523584"
+    },
+    {
+      "file": "03-tutorial-800x6000001.png",
+      "size": [
+        800,
+        600
+      ],
+      "sha256": "f2593f3e87df4a8d48d29feadcb84e4147aa22fbcef9e9e1ddbc0fc1dd0351c4"
+    },
+    {
+      "file": "04-templates-800x6000001.png",
+      "size": [
+        800,
+        600
+      ],
+      "sha256": "0a251dddbf072d5f72b8cff672e8ada560a2a3eb7505ecc0798394fd4d68d1d8"
+    },
+    {
+      "file": "05-copy-cart-800x6000001.png",
+      "size": [
+        800,
+        600
+      ],
+      "sha256": "2731091fab9bc4ce6d887261dd8a45e4d91227aaedc159db02efef4d064a08ce"
+    },
+    {
+      "file": "06-game-placeholder-800x6000001.png",
+      "size": [
+        800,
+        600
+      ],
+      "sha256": "b99b9746361fe0f9aa2dd6fe71986d2c6cdbf4a4ba2a9d99099d25b3c098647e"
+    },
+    {
+      "file": "sandbox/01-quote-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "eef9cc3d6e8dcbb79cd479a9ff237571243cdf1d5b0912ee4ad37c96256fcacc"
+    },
+    {
+      "file": "sandbox/02-waiting-offline-fixture-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "990904c0d6dbaefce2f4e8313f7cf02df09ea3d38b891d2e2ca311f628f6b4ae"
+    },
+    {
+      "file": "sandbox/03-reserved-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "4d4280ec61e5e6bc7710bf6ae102f1351c546ca34a152363206e45b276e57fee"
+    },
+    {
+      "file": "sandbox/04-consent-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "29e5a7c3b8a840ae6891de1a7f5891ce05d7b331d8c108543988595ecb1bcfb8"
+    },
+    {
+      "file": "sandbox/05-recovery-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "8de045229097f5b68c2ca1f46528f8c0e18bf9e223fac710d63b1be795f74c14"
+    },
+    {
+      "file": "sandbox/01-quote-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "892a4917b0688cd2d0220ec9ff6e1fa437639f98e60bee9f758414c6a5614eb2"
+    },
+    {
+      "file": "sandbox/02-waiting-offline-fixture-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "c0da8abb7d0a4f4e7e3b5b098245a7efe79019f44292748ad4a7a8b5f9eb687c"
+    },
+    {
+      "file": "sandbox/03-reserved-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "452ef4db26e7c980bd0652368654c6f3cb9d4a01406025adf32717ea2f0ebac3"
+    },
+    {
+      "file": "sandbox/04-consent-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "54bf9b380405c5912876895ba1792ddf6493a29294dab3d48f364ece0f9df249"
+    },
+    {
+      "file": "sandbox/05-recovery-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "2fb9c9e1b8b9d328322d14a449bfea2734552c8faa3a18caa2457100bdae6d48"
+    }
+  ]
+}

@@ -83,6 +83,7 @@ Checkpoints on `feature/portrait-kiosk-v2-next`:
 | d6fb5d4 | Accepted visual/local-flow baseline before Sandbox imports |
 | 37da798 | Unchanged QRIS service/client + 124 original tests |
 | ce603c2 | Native Sandbox handoff, 195 focused PASS, reviewed two-size views |
+| 9433010 | Final P5 source, 688 full PASS, matching-source CI three-job SUCCESS |
 
 Stop the trial before code rollback. Preserve `data/kiosk-v2-sandbox` databases,
 visit journals and photo/print manifests; reconcile any active order first.
@@ -115,3 +116,46 @@ The ordinary v2 launcher remains available without enabling Sandbox.
 
 These are automated source/fixture results, not real speaker, camera, paper,
 merchant credential, privacy or 30-day Drive certification. BUG-009 remains OPEN.
+
+Final functional source: **9433010faee04c58789e9778d2297308492b60c5**, pushed
+and remote HEAD verified. [Clean-cloud inventory](cloud-readiness.json) reports
+READY_FOR_MANUAL_TEST with all physical/provider acceptance still NOT_RUN;
+Linux resolution/scaling/camera model/speaker remain unknown rather than invented.
+
+For merchant keys, open the Midtrans **Sandbox** dashboard → Settings → Access
+Keys; use Merchant ID and Sandbox Server Key, not Client Key/Production. This
+follows the [existing QRIS trial runbook at the reused source](https://github.com/pratikto/PhotoBooth/blob/3cc8a8e360e8c2100a3077b755664eb61d0216ea/docs/QRIS_SANDBOX_TRIAL.md).
+The local trial verifies provider status by polling. Public HTTPS webhook ingress
+is a separate unrun gate requiring an approved endpoint; no tunnel or deployment
+is created here. Original signed-callback/reconciliation tests remain in the
+source regression, but fixtures do not prove real webhook delivery.
+
+## Matching-source CI and screenshot review
+
+[CI 40109206417](https://github.com/pratikto/PhotoBooth/actions/runs/40109206417)
+on source **9433010**: all three jobs SUCCESS (navigation/audio, Linux native
+GUI/payment/screenshots, Windows native dummy audio). [Job record](final-ci.json).
+The preserved payment step runs **138 PASS / zero skips**; native GUI step runs
+82 cases with **81 PASS / one optional palm-model-assets skip**. That real-model
+case is covered by the final local 688-test run with the supplied offline assets;
+CI's skip is retained, not relabelled. [Raw CI reports](ci-reports/).
+
+All **109 PNGs** in artifact `12566490205` were checked against their reported
+source, dimensions and SHA-256; artifact ZIP digest also matches GitHub's digest.
+[Verification record](ci-screenshot-verification.json) paths refer to the downloaded
+artifact tree. Ten native Sandbox PNGs are retained in [screenshots/](screenshots/).
+[Sandbox contact sheet](sandbox-contact.jpg) and [gallery/photo/original-game
+regression sheet](regression-contact.jpg) were visually reviewed at 800×1280 and
+452×900: captions, amounts, QR, consent and actions remain within bounds; gallery
+strip focus and left-anchored game player remain intact. Screenshot QR is an
+**offline nonpayable fixture**, not an actual merchant QR/payment result.
+
+No additional functional source edits followed the 688-test regression. The
+source-hash manifest still matches the final commit. Evidence-only documentation
+is pushed with CI skipped; no successful GUI workflow is rerun for documentation.
+
+P4b source integration and P5 readiness package are ready for the owner's final
+manual acceptance. **P5 commercial release certification remains pending** the
+external gates above. There are no remaining failing automated tests. BUG-017 is
+owner-reported PASS / monitoring; BUG-009 is still OPEN. Source rollback remains
+d6fb5d4 / 37da798 as described, preserving all runtime journals.

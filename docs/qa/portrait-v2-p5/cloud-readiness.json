@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-24T15:55:59.360657+00:00",
+  "source": {
+    "head": "9433010faee04c58789e9778d2297308492b60c5",
+    "branch": "feature/portrait-kiosk-v2-next",
+    "dirty": false
+  },
+  "device": {
+    "os": "Linux",
+    "os_release": "6.18.55",
+    "python": "3.12.14",
+    "display": {
+      "resolution": null,
+      "scaling_percent": null,
+      "scope": "primary display; not measured on this OS"
+    },
+    "camera_index": 0,
+    "camera_model": null,
+    "speaker_output": null
+  },
+  "dependencies": {
+    "Kivy": "2.3.1",
+    "Pillow": "13.0.0",
+    "opencv-python": "5.0.0.93",
+    "ffpyplayer": "4.5.3",
+    "requests": "2.32.5",
+    "qrcode": "8.2",
+    "fastapi": "0.128.2",
+    "pydantic": "2.13.5",
+    "httpx": "0.28.1",
+    "uvicorn": "0.54.0"
+  },
+  "configuration": {
+    "sandbox_selected": false,
+    "mock_selected": false,
+    "test_printer_opt_in": false,
+    "test_drive_opt_in": false,
+    "booth_token_present": false
+  },
+  "preflight": {
+    "checks": {
+      "required_branch": true,
+      "source_clean": true,
+      "python_311_or_newer": true,
+      "core_dependencies_present": true,
+      "checkout_mode_exclusive": true,
+      "sandbox_mode_selected_if_enabled": true,
+      "gui_merchant_credentials_absent": true,
+      "sandbox_dependencies_present_if_enabled": true,
+      "camera_index_valid": true
+    },
+    "status": "READY_FOR_MANUAL_TEST"
+  },
+  "acceptance": {
+    "windows_touch_camera_audio": "NOT_RUN",
+    "merchant_sandbox_simulator": "NOT_RUN",
+    "physical_print_output": "NOT_RUN",
+    "drive_download_and_30_day_retention": "NOT_RUN",
+    "privacy_operator_signoff": "NOT_RUN",
+    "release_approval": "NOT_RUN"
+  },
+  "notes": [
+    "No camera, microphone, speaker, printer, merchant or cloud network was accessed.",
+    "Primary display may differ from kiosk monitor; verify actual resolution/scaling.",
+    "Configuration presence is not provider authentication or hardware acceptance.",
+    "No secrets, tokens, provider URLs or customer photo paths are included."
+  ]
+}
