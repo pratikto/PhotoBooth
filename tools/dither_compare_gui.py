@@ -110,6 +110,8 @@ class ComparisonApp:
         self.width = tk.StringVar(value="576")
         self.enhanced_floyd = tk.BooleanVar(value=False)
         self.enhanced_dizzy = tk.BooleanVar(value=self.configs.dizzy.enhanced_dizzy)
+        self.dizzy_correction = tk.BooleanVar(
+            value=self.configs.dizzy.dizzy_contrast_correction)
         self.dizzy_variant = tk.StringVar(value=self.configs.dizzy.dizzy_variant)
 
         style = ttk.Style(root)
@@ -194,6 +196,11 @@ class ComparisonApp:
                     variable=self.enhanced_dizzy,
                     command=self.toggle_enhanced_dizzy,
                 ).pack(fill="x", pady=(4, 0))
+                ttk.Checkbutton(
+                    panel, text="Dizzy CPU Tone LUT (experimental)",
+                    variable=self.dizzy_correction,
+                    command=self.toggle_dizzy_correction,
+                ).pack(fill="x", pady=(3, 0))
 
             sliders_host = ttk.Frame(panel)
             sliders_host.pack(fill="both", expand=True, pady=(4, 2))
@@ -459,7 +466,8 @@ class ComparisonApp:
                 card,
                 text=(f"Brightness {p.brightness:.3f}   Contrast {p.contrast:.3f}\n"
                       f"Gamma {p.gamma:.3f}   Sharpness {p.sharpness:.3f}\n"
-                      + (f"Dizzy: {p.dizzy_variant}, enhanced={p.enhanced_dizzy}\n"
+                      + (f"Dizzy: {p.dizzy_variant}, enhanced={p.enhanced_dizzy}, "
+                         f"tone LUT={p.dizzy_contrast_correction}\n"
                          if p.mode == "dizzy" else "")
                       + (f"Threshold: {p.threshold}\n" if p.mode == "threshold" else "")
                       + (f"Smart: CLAHE {p.clahe_strength:.2f}, Denoise {p.denoise_level}, "
@@ -510,6 +518,7 @@ class ComparisonApp:
                 self.enhanced_floyd.set(candidate.profile.enhanced_floyd)
             if mode == "dizzy":
                 self.enhanced_dizzy.set(candidate.profile.enhanced_dizzy)
+                self.dizzy_correction.set(candidate.profile.dizzy_contrast_correction)
                 self.dizzy_variant.set(candidate.profile.dizzy_variant)
                 self.dizzy_seed_label.configure(text=f"Seed: {candidate.profile.dizzy_seed}")
             for key, (var, _label) in self.controls[mode].items():
@@ -529,7 +538,7 @@ class ComparisonApp:
             return
         path = filedialog.asksaveasfilename(
             defaultextension=".json",
-            initialfile=f"meong-{candidate.profile.mode}-autotune-lab-v5.json",
+            initialfile=f"meong-{candidate.profile.mode}-autotune-lab-v6.json",
             filetypes=[("JSON", "*.json")],
             parent=self.autotune_dialog or self.root)
         if not path:
@@ -666,6 +675,14 @@ class ComparisonApp:
             replace(profile, enhanced_dizzy=self.enhanced_dizzy.get()))
         self.schedule("dizzy")
 
+    def toggle_dizzy_correction(self):
+        if self.autotune_mode == "dizzy":
+            self.invalidate_auto_tune()
+        self.configs = self.configs.replace_lane(replace(
+            self.configs.dizzy,
+            dizzy_contrast_correction=self.dizzy_correction.get()))
+        self.schedule("dizzy")
+
     def change_dizzy_variant(self, _event=None):
         if self.autotune_mode == "dizzy":
             self.invalidate_auto_tune()
@@ -772,6 +789,7 @@ class ComparisonApp:
                     suffix = (
                         f" | {profile.dizzy_variant} / seed {profile.dizzy_seed}"
                         f" | {'enhanced' if profile.enhanced_dizzy else 'baseline'}"
+                        f" | {'tone LUT' if profile.dizzy_contrast_correction else 'uncalibrated'}"
                         if mode == "dizzy" else
                         " | enhanced" if profile.enhanced_floyd else " | baseline"
                     )
@@ -837,6 +855,7 @@ class ComparisonApp:
         self.width.set(str(configs.floyd.width_dots))
         self.enhanced_floyd.set(configs.floyd.enhanced_floyd)
         self.enhanced_dizzy.set(configs.dizzy.enhanced_dizzy)
+        self.dizzy_correction.set(configs.dizzy.dizzy_contrast_correction)
         self.dizzy_variant.set(configs.dizzy.dizzy_variant)
         self.dizzy_seed_label.configure(text=f"Seed: {configs.dizzy.dizzy_seed}")
         for mode in VISIBLE_MODES:
@@ -852,7 +871,7 @@ class ComparisonApp:
 
     def save_all(self):
         path = filedialog.asksaveasfilename(defaultextension=".json",
-            initialfile="meong-dither-lab-v5.json", filetypes=[("JSON", "*.json")])
+            initialfile="meong-dither-lab-v6.json", filetypes=[("JSON", "*.json")])
         if path:
             try:
                 save_comparison(path, self.configs)
@@ -885,6 +904,8 @@ class ComparisonApp:
         elif profile.mode == "dizzy":
             quality = "enhanced" if profile.enhanced_dizzy else "baseline"
             stem = f"meong-dizzy-{profile.dizzy_variant}-seed{profile.dizzy_seed}-{quality}"
+            if profile.dizzy_contrast_correction:
+                stem += "-tone-lut"
         else:
             stem = f"meong-{profile.mode}"
         # Keep legacy default names, but never overwrite saved A/B variants

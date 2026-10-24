@@ -190,6 +190,7 @@ class EnhancedDizzyTkTests(unittest.TestCase):
                 self.assertAlmostEqual(
                     self.app.pipeline_controls[mode]["clahe_strength"][0].get(), 0.58)
                 if mode == "dizzy":
+                    self.assertTrue(self.app.dizzy_correction.get())
                     self.assertTrue(self.app.enhanced_dizzy.get())
                     self.assertEqual(self.app.dizzy_variant.get(), "orthogonal-4")
 
@@ -280,6 +281,19 @@ class EnhancedDizzyTkTests(unittest.TestCase):
         self.assertEqual(self.app.autotune_button.cget("text"), "Auto Tune")
         self.root.update()  # Pending events from the cancelled worker are stale.
         self.assertIsNone(self.app.autotune_result)
+
+    def test_dizzy_cpu_tone_lut_switch_is_lane_specific(self):
+        before = self.app.configs
+        self.app.sync.set(True)
+        self.assertFalse(self.app.dizzy_correction.get())
+        self.app.dizzy_correction.set(True)
+        self.app.toggle_dizzy_correction()
+        self.assertTrue(self.app.configs.dizzy.dizzy_contrast_correction)
+        self.assertEqual(self.app.configs.floyd, before.floyd)
+        self.assertEqual(self.app.configs.bayer, before.bayer)
+        self.assertIn("-tone-lut.png", self.app.raster_filename(self.app.configs.dizzy))
+        self.app.apply_configs(before)
+        self.assertFalse(self.app.dizzy_correction.get())
 
     def test_actual_gui_worker_renders_distinct_baseline_enhanced_rasters(self):
         baseline = self._wait_for_ready()

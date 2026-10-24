@@ -42,10 +42,41 @@ class DizzyDitherTests(unittest.TestCase):
             self.assertGreater(white_frac, 0.39)
             self.assertLess(white_frac, 0.61)
 
+    def test_cpu_tone_lut_reduces_uniform_gray_error(self):
+        from photobooth.dizzy_calibration import dizzy_cpu_lut
+        for variant in ("article-8", "orthogonal-4"):
+            lut = dizzy_cpu_lut(variant)
+            self.assertEqual(len(lut), 256)
+            self.assertEqual((lut[0], lut[-1]), (0.0, 1.0))
+            self.assertTrue(all(a <= b for a, b in zip(lut, lut[1:])))
+            for g in (16, 32, 224, 240):
+                with self.subTest(variant=variant, gray=g):
+                    image = Image.new("L", (96, 96), g)
+                    base = dizzy_dither(image, variant=variant)
+                    tuned = dizzy_dither(image, variant=variant,
+                                        contrast_correction=True)
+                    ideal = g / 255.0
+                    def error(raster):
+                        return abs(raster.convert("L").tobytes().count(255) / 9216 - ideal)
+                    self.assertLess(error(tuned), error(base) + 0.002)
+
+    def test_opt_in_tone_lut_preserves_defaults_and_extremes(self):
+        image = Image.new("L", (41, 37))
+        image.putdata([(x * 19 + y * 7) % 256 for y in range(37) for x in range(41)])
+        for variant in ("article-8", "orthogonal-4"):
+            self.assertEqual(
+                dizzy_dither(image, variant=variant, seed=123).tobytes(),
+                dizzy_dither(image, variant=variant, seed=123,
+                             contrast_correction=False).tobytes())
+            for color in (0, 255):
+                flat = Image.new("L", (30, 35), color)
+                tuned = dizzy_dither(flat, variant=variant, contrast_correction=True)
+                self.assertEqual(set(tuned.convert("L").tobytes()), {color})
+
     def test_reject_bad_variant_and_seed(self):
         image = Image.new("L", (3, 3), 128)
         for args in ({"variant": "unknown"}, {"seed": -1},
-                     {"seed": True}, {"seed": 2 ** 32}):
+                     {"seed": True}, {"seed": 2 ** 32}, {"contrast_correction": 1}):
             with self.subTest(args=args), self.assertRaises(ValueError):
                 dizzy_dither(image, **args)
 

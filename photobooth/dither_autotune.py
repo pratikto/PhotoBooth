@@ -146,7 +146,7 @@ def _signature(profile: DitherProfile) -> tuple:
         return (*key, profile.threshold)
     if profile.mode == "dizzy":
         return (*key, profile.enhanced_dizzy, profile.dizzy_variant,
-                profile.dizzy_seed)
+                profile.dizzy_seed, profile.dizzy_contrast_correction)
     return key
 
 
@@ -194,8 +194,10 @@ def tune_dither(
         # Assess the variants independently, rather than copying the
         # operator's manual selection into an automatic recommendation.
         anchors = [
-            replace(neutral, dizzy_variant=variant, enhanced_dizzy=enhanced)
+            replace(neutral, dizzy_variant=variant, enhanced_dizzy=enhanced,
+                    dizzy_contrast_correction=corrected)
             for variant in DIZZY_VARIANTS for enhanced in (False, True)
+            for corrected in (False, True)
         ]
     fields = TUNING_FIELDS + (("threshold",) if mode == "threshold" else ())
     bounds = BOUNDS + ((THRESHOLD_BOUNDS,) if mode == "threshold" else ())

@@ -120,7 +120,7 @@ class SmartEnhanceTests(unittest.TestCase):
             all_modes = root / "comparison.json"
             original = asdict(configs.bayer)
             legacy = {k: v for k, v in original.items()
-                      if k not in NEW_ENHANCEMENT_FIELDS}
+                      if k not in NEW_ENHANCEMENT_FIELDS and k != "dizzy_contrast_correction"}
             single.write_text(
                 json.dumps({"schema_version": 4, **legacy}), encoding="utf-8")
             loaded = load_profile(single)
@@ -131,14 +131,14 @@ class SmartEnhanceTests(unittest.TestCase):
             for mode in ("floyd-steinberg", "bayer", "threshold", "dizzy"):
                 lanes[mode] = {
                     k: v for k, v in asdict(configs.by_mode(mode)).items()
-                    if k not in NEW_ENHANCEMENT_FIELDS
+                    if k not in NEW_ENHANCEMENT_FIELDS and k != "dizzy_contrast_correction"
                 }
             all_modes.write_text(
                 json.dumps({"schema_version": 4, "lanes": lanes}),
                 encoding="utf-8")
             self.assertEqual(load_comparison(all_modes), configs)
 
-    def test_v5_preset_roundtrip_keeps_lane_independence(self):
+    def test_v6_preset_roundtrip_keeps_lane_independence(self):
         configs = ComparisonProfiles().replace_lane(replace(
             DitherProfile(mode="dizzy"), smart_enhance=True,
             postprocess_enabled=True, clahe_strength=0.64,
@@ -149,8 +149,8 @@ class SmartEnhanceTests(unittest.TestCase):
             save_comparison(compare, configs)
             self.assertEqual(load_profile(single), configs.dizzy)
             self.assertEqual(load_comparison(compare), configs)
-            self.assertEqual(json.loads(single.read_text())["schema_version"], 5)
-            self.assertEqual(json.loads(compare.read_text())["schema_version"], 5)
+            self.assertEqual(json.loads(single.read_text())["schema_version"], 6)
+            self.assertEqual(json.loads(compare.read_text())["schema_version"], 6)
             self.assertFalse(configs.floyd.smart_enhance)
 
 

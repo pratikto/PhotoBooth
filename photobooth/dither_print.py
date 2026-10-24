@@ -46,6 +46,8 @@ def annotated_raster(raster: Image.Image, profile: DitherProfile) -> Image.Image
             "PREPROCESS: ENHANCED" if profile.enhanced_dizzy
             else "PREPROCESS: BASELINE"
         )
+        parts.append("CPU TONE LUT: ON" if profile.dizzy_contrast_correction
+                     else "CPU TONE LUT: OFF")
     if profile.smart_enhance:
         parts.append(
             f"SMART: CLAHE {profile.clahe_strength:.2f} "

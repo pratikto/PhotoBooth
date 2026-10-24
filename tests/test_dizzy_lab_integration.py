@@ -59,6 +59,7 @@ class DizzyLabIntegrationTests(unittest.TestCase):
             values.pop("dizzy_seed")
             values.pop("dizzy_variant")
             values.pop("enhanced_dizzy")
+            values.pop("dizzy_contrast_correction")
             for key in ("smart_enhance", "clahe_strength", "denoise_level",
                         "tone_strength", "postprocess_enabled",
                         "dot_cleanup_level", "edge_refine_level"):

@@ -39,7 +39,7 @@ class ScrollLayoutTests(unittest.TestCase):
         self.assertIn('for mode in VISIBLE_MODES:', self.source)
         self.assertNotIn('Print All (4 jobs)', self.source)
         self.assertNotIn('Export 4 PNG', self.source)
-        self.assertIn('meong-dither-lab-v5.json', self.source)
+        self.assertIn('meong-dither-lab-v6.json', self.source)
 
     def test_enhanced_floyd_is_in_floyd_panel_not_top_toolbar(self):
         # Both toggles live after their respective preview metadata.

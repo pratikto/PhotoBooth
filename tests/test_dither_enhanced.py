@@ -126,7 +126,7 @@ class EnhancedDitherTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             DitherProfile(mode="dizzy", enhanced_floyd=True)
 
-    def test_v5_round_trip_persists_independent_enhanced_flags(self):
+    def test_v6_round_trip_persists_independent_enhanced_flags(self):
         configs = ComparisonProfiles()
         configs = configs.replace_lane(
             replace(configs.floyd, enhanced_floyd=True))
@@ -138,7 +138,7 @@ class EnhancedDitherTests(unittest.TestCase):
             single = Path(folder) / "single.json"
             save_comparison(target, configs)
             stored = json.loads(target.read_text(encoding="utf-8"))
-            self.assertEqual(stored["schema_version"], 5)
+            self.assertEqual(stored["schema_version"], 6)
             self.assertTrue(stored["lanes"]["dizzy"]["enhanced_dizzy"])
             self.assertFalse(stored["lanes"]["bayer"]["enhanced_dizzy"])
             self.assertIn("threshold", stored["lanes"])
@@ -146,7 +146,7 @@ class EnhancedDitherTests(unittest.TestCase):
             save_profile(single, configs.dizzy)
             self.assertEqual(load_profile(single), configs.dizzy)
             self.assertEqual(
-                json.loads(single.read_text(encoding="utf-8"))["schema_version"], 5)
+                json.loads(single.read_text(encoding="utf-8"))["schema_version"], 6)
 
     def test_v3_preset_loads_with_dizzy_enhancement_off(self):
         # v3 may contain tuned Floyd, hidden Threshold, or changed Dizzy seed.
@@ -162,6 +162,7 @@ class EnhancedDitherTests(unittest.TestCase):
         for mode in ("floyd-steinberg", "bayer", "threshold", "dizzy"):
             raw = asdict(old.by_mode(mode))
             raw.pop("enhanced_dizzy")
+            raw.pop("dizzy_contrast_correction")
             for key in ("smart_enhance", "clahe_strength", "denoise_level",
                         "tone_strength", "postprocess_enabled",
                         "dot_cleanup_level", "edge_refine_level"):
@@ -182,12 +183,12 @@ class EnhancedDitherTests(unittest.TestCase):
             }), encoding="utf-8")
             self.assertFalse(load_profile(single).enhanced_dizzy)
 
-    def test_invalid_extra_v5_field_rejected(self):
+    def test_invalid_extra_v6_field_rejected(self):
         old = asdict(DitherProfile(mode="dizzy"))
         with tempfile.TemporaryDirectory() as folder:
             target = Path(folder) / "invalid.json"
             target.write_text(json.dumps({
-                "schema_version": 5, **old, "unapproved_option": True,
+                "schema_version": 6, **old, "unapproved_option": True,
             }), encoding="utf-8")
             with self.assertRaises(ValueError):
                 load_profile(target)
@@ -222,7 +223,7 @@ class EnhancedDitherTests(unittest.TestCase):
             "variable=self.enhanced_dizzy",
             "self.enhanced_dizzy.set(configs.dizzy.enhanced_dizzy)",
             "self.schedule(\"dizzy\")",
-            "meong-dither-lab-v5.json",
+            "meong-dither-lab-v6.json",
             "enhanced\" if profile.enhanced_dizzy else \"baseline",
         ):
             with self.subTest(marker=marker):

@@ -15,6 +15,7 @@ import random
 from typing import Iterator
 
 from PIL import Image
+from photobooth.dizzy_calibration import dizzy_cpu_lut
 
 DIZZY_VARIANTS = ("article-8", "orthogonal-4")
 DEFAULT_DIZZY_SEED = 42
@@ -44,7 +45,8 @@ def _permuted_pixel_indices(count: int, seed: int) -> Iterator[int]:
 
 
 def dizzy_dither(image: Image.Image, *, variant: str = "article-8",
-                 seed: int = DEFAULT_DIZZY_SEED) -> Image.Image:
+                 seed: int = DEFAULT_DIZZY_SEED,
+                 contrast_correction: bool = False) -> Image.Image:
     """Return native-sized mode-1 raster using randomized error diffusion.
 
     'article-8' distributes quantization error to all unprocessed neighboring
@@ -57,6 +59,8 @@ def dizzy_dither(image: Image.Image, *, variant: str = "article-8",
         raise ValueError(f"Unknown Dizzy variant: {variant!r}")
     if type(seed) is not int or not 0 <= seed <= 0xFFFFFFFF:
         raise ValueError("Dizzy seed must be an integer from 0 to 2^32-1.")
+    if type(contrast_correction) is not bool:
+        raise ValueError("Dizzy contrast correction must be boolean.")
     gray = image.convert("L")
     width, height = gray.size
     count = width * height
@@ -65,7 +69,11 @@ def dizzy_dither(image: Image.Image, *, variant: str = "article-8",
 
     # The float buffer retains the fractional errors that would be lost by
     # modifying an 8-bit PIL pixel buffer directly (unlike the minimal Gist).
-    values = array("f", (value / 255.0 for value in gray.tobytes()))
+    if contrast_correction:
+        curve = dizzy_cpu_lut(variant)
+        values = array("f", (curve[value] for value in gray.tobytes()))
+    else:
+        values = array("f", (value / 255.0 for value in gray.tobytes()))
     processed = bytearray(count)
     result = bytearray(count)
     diagonal = variant == "article-8"

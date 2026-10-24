@@ -25,7 +25,7 @@ from photobooth.dizzy_dither import (DEFAULT_DIZZY_SEED, DIZZY_VARIANTS,
 LAB_DITHER_MODES = DITHER_MODES + ("dizzy",)
 
 
-PROFILE_VERSION = 5
+PROFILE_VERSION = 6
 NEW_ENHANCEMENT_FIELDS = frozenset({
     "smart_enhance", "clahe_strength", "denoise_level", "tone_strength",
     "postprocess_enabled", "dot_cleanup_level", "edge_refine_level",
@@ -47,6 +47,7 @@ class DitherProfile:
     enhanced_dizzy: bool = False
     dizzy_variant: str = "article-8"
     dizzy_seed: int = DEFAULT_DIZZY_SEED
+    dizzy_contrast_correction: bool = False
     # Opt-in lab-only passes. Stored defaults do not change any legacy raster.
     smart_enhance: bool = False
     clahe_strength: float = 0.35
@@ -66,6 +67,10 @@ class DitherProfile:
             raise ValueError(f"Unsupported dithering mode: {self.mode!r}")
         if self.dizzy_variant not in DIZZY_VARIANTS:
             raise ValueError("Unknown Dizzy variant.")
+        if type(self.dizzy_contrast_correction) is not bool or (
+            self.dizzy_contrast_correction and self.mode != "dizzy"
+        ):
+            raise ValueError("CPU Dizzy tone LUT is available only in Dizzy mode.")
         if type(self.dizzy_seed) is not int or not 0 <= self.dizzy_seed <= 0xFFFFFFFF:
             raise ValueError("Dizzy seed must be an integer in 0..2^32-1.")
         if self.mode != "dizzy" and (
@@ -153,8 +158,9 @@ def render_thermal_image(source: Image.Image, profile: DitherProfile) -> Image.I
         )
 
     if profile.mode == "dizzy":
-        raster = dizzy_dither(gray, variant=profile.dizzy_variant,
-                              seed=profile.dizzy_seed)
+        raster = dizzy_dither(
+            gray, variant=profile.dizzy_variant, seed=profile.dizzy_seed,
+            contrast_correction=profile.dizzy_contrast_correction)
     else:
         raster = dither_image(gray, profile.mode, profile.threshold)
     if profile.postprocess_enabled:
@@ -184,15 +190,18 @@ def save_profile(path: str | Path, profile: DitherProfile) -> None:
 
 
 def load_profile(path: str | Path) -> DitherProfile:
-    """Load v1-v5 profiles; older versions gain disabled enhancement passes."""
+    """Load v1-v6 profiles; older presets keep CPU tone LUT disabled."""
     payload = json.loads(Path(path).read_text(encoding="utf-8"))
-    if not isinstance(payload, dict) or payload.get("schema_version") not in (1, 2, 3, 4, 5):
+    if not isinstance(payload, dict) or payload.get("schema_version") not in (1, 2, 3, 4, 5, 6):
         raise ValueError("Invalid or unsupported tuning profile version.")
     version = payload["schema_version"]
     keys = set(DitherProfile.__dataclass_fields__)
     missing = {1: {"enhanced_floyd", "enhanced_dizzy", "dizzy_variant", "dizzy_seed"},
                2: {"enhanced_dizzy", "dizzy_variant", "dizzy_seed"},
-               3: {"enhanced_dizzy"}, 4: set(), 5: set()}[version]
+               3: {"enhanced_dizzy"}, 4: set(), 5: set(),
+               6: set()}[version]
+    if version < 6:
+        missing = missing | {"dizzy_contrast_correction"}
     if version < 5:
         missing = missing | NEW_ENHANCEMENT_FIELDS
     if set(payload) != (keys - missing) | {"schema_version"}:
@@ -205,7 +214,7 @@ def load_profile(path: str | Path) -> DitherProfile:
 
 # Comparison recipes are deliberately independent: syncing is a GUI action,
 # never an implicit overwrite of an algorithm's tuned state.
-COMPARISON_VERSION = 5
+COMPARISON_VERSION = 6
 
 
 @dataclass(frozen=True)
@@ -256,11 +265,11 @@ def save_comparison(path: str | Path, profiles: ComparisonProfiles) -> None:
 
 
 def load_comparison(path: str | Path) -> ComparisonProfiles:
-    """Read v1/v2 three-lane or v3-v5 four-lane presets, fail closed."""
+    """Read v1/v2 three-lane or v3-v6 four-lane presets, fail closed."""
     data = json.loads(Path(path).read_text(encoding="utf-8"))
     if (not isinstance(data, dict) or
             set(data) != {"schema_version", "lanes"} or
-            data["schema_version"] not in (1, 2, 3, 4, 5) or
+            data["schema_version"] not in (1, 2, 3, 4, 5, 6) or
             not isinstance(data["lanes"], dict)):
         raise ValueError("Invalid comparison config schema.")
     version = data["schema_version"]
@@ -270,7 +279,10 @@ def load_comparison(path: str | Path) -> ComparisonProfiles:
     keys = set(DitherProfile.__dataclass_fields__)
     missing = {1: {"enhanced_floyd", "enhanced_dizzy", "dizzy_variant", "dizzy_seed"},
                2: {"enhanced_dizzy", "dizzy_variant", "dizzy_seed"},
-               3: {"enhanced_dizzy"}, 4: set(), 5: set()}[version]
+               3: {"enhanced_dizzy"}, 4: set(), 5: set(),
+               6: set()}[version]
+    if version < 6:
+        missing = missing | {"dizzy_contrast_correction"}
     if version < 5:
         missing = missing | NEW_ENHANCEMENT_FIELDS
     defaults = DitherProfile()

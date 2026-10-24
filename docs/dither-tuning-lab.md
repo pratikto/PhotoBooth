@@ -1,5 +1,35 @@
 # Meong Photobooth — Thermal Dither Tuning Lab
 
+## Stage 1: CPU Dizzy inverse-tone LUT (2026-10-24)
+
+Opt-in per-variant calibration follows Liam Appelbe's inverse tone-response
+method. Meong uses its **own CPU** 96x96/seed-42 measurements, not the author's
+separate `Layered Dizzy` GPU LUT. The two Q16 tables are in
+`photobooth/dizzy_calibration.py`: `article-8` (8 neighbors) and
+`orthogonal-4` (4 neighbors), digitally calibrated independently.
+
+- Checkbox **Dizzy CPU Tone LUT (experimental)** is inside the Dizzy panel.
+  It is OFF by default. The old byte-for-byte uncorrected result remains
+  available (and the default for old v1-v5 JSON).
+- The inverse table maps each grayscale input byte to float in [0,1] *before*
+  Dizzy error propagation; output stays native binary dots and is not
+  re-dithered. The toggle never changes Floyd, Bayer, hidden Threshold or
+  production Kivy/ESC-POS code. Save PNG uses suffix `-tone-lut`; the real
+  Print Test remains an explicit confirmation and prints the LUT ON/OFF label.
+- Auto Tune considers corrected and uncorrected Dizzy candidates, with the
+  same explicit Apply / Save / Cancel behavior. Preset schema advances to v6,
+  backwards-loading v1-v5 with this feature disabled.
+- Measured uniform 96x96 grayscale response (all 0..255, fixed seed):
+  `article-8` mean absolute white-dot-density error ~0.00390 before,
+  ~0.00025 after; `orthogonal-4` ~0.01359 before, ~0.00050 after.
+  These are digital lab statistics only, not a guarantee for other seeds,
+  real faces or thermal paper. Stage 2 will measure/plot all levels and
+  cross-seed generalization in the reproducible fidelity tool.
+
+Source method: https://liamappelbe.medium.com/dizzy-dithering-on-the-gpu-84f2d2c12a82
+Author's DIFFERENT CPU/GPU curves: https://gist.github.com/liamappelbe/cc6bdfd94fdf19ffe1cee1ed2c808fea
+
+
 ## Smart Enhance + Selective 1-bit Post-Processing — 2026-10-23
 
 **Implementation status:** opt-in **in the existing three-panel comparison GUI** on
