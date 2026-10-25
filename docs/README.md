@@ -23,6 +23,15 @@ Default GitHub yang terverifikasi masih **master**. Gunakan launcher khusus v2;
 | Riwayat perubahan | [CHANGELOG.md](CHANGELOG.md) |
 | Branch referensi dan rencana branch utama | [Audit 19 branch](gui-v2-branch-audit.md) · [promotion plan](gui-v2-promotion-plan.md) |
 
+## Increment operator — development berlanjut sambil menunggu uji laptop
+
+[Device Health v2 / reuse UI+worker v1](qa/portrait-v2-operator-health/README.md):
+F12 atau tahan header pada idle, enam observasi read-only, ekspor metadata lokal.
+[Form operator 8 item](qa/portrait-v2-operator-health/windows-checklist.html) terpisah
+dari merchant P5; tidak memerlukan mengulang 20 putaran lama. Source work tidak
+berhenti hanya karena hardware/provider belum bisa diuji. Bukti cloud tetap
+bukan acceptance aktual laptop.
+
 ## Paket operasional terbaru
 
 - **[P5 Windows acceptance](qa/portrait-v2-p5/README.md)**: perintah launch,

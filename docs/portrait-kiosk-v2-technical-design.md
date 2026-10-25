@@ -104,6 +104,25 @@ Iklan video memiliki audio sendiri; iklan gambar memakai BGM GUI. Tutorial,
 galeri, foto dan checkout memakai satu loop GUI; game memakai loop berbeda.
 Setiap enabled action mengeluarkan satu cue; tidak ada sound owner v1 paralel.
 
+## Operator health seam / FEAT-008
+
+Actual `HealthPanelMixin.show_health_settings` dan caption helper v1 dipakai
+direct; worker `_refresh_device_health` diekstrak verbatim ke class shell agar
+v1 app tidak diinstansiasi/ditimpa. Original lock/scheduling/error guards tetap.
+Adapter hanya memetakan root.after → Kivy Clock, frame mailbox v2 → read-only
+camera view, config printer lazy di worker, dan tombol ke audio owner v2.
+
+F12/hold header membuka panel hanya idle atau Sandbox RECOVERY. Face invitation
+terhenti selama modal; iklan/audio/visit tetap. Input epoch menolak release lama
+setelah modal, single tap baru tetap bekerja. Close/minimize/stop mengakhiri modal
+serta guard callback. Probe/export single-flight; hasil lama tidak mengecat panel
+baru atau meninggalkan kontrol report terkunci.
+
+JSON report hanya inventory aman + enam status allowlisted, bukan raw messages,
+photos/logs/keys/address/serial/queue/QR/order. Semua acceptance fisik/provider tetap
+NOT_RUN. Tidak ada device selection callback/setting writes, kamera baru, print
+payload, watchdog/restart atau upload. [Proof](qa/portrait-v2-operator-health/README.md).
+
 ## 7. Bukti dan batas
 
 Source 9433010: 688 full PASS / nol skip; CI tiga job SUCCESS, 109 PNG diverifikasi,

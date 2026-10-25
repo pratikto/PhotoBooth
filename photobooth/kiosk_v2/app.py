@@ -43,6 +43,7 @@ from .sensors import PalmShutter
 from .game_views import GameViews
 from .checkout_views import CheckoutViews
 from .sandbox_views import SandboxViews
+from .operator_health import OperatorViews, OperatorMeongLogo
 from .game_offer import demo_amount, is_demo_winner
 
 
@@ -79,7 +80,7 @@ class TouchStage(Starfield):
         return super().on_touch_down(touch)
 
 
-class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, SandboxViews, App):
+class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, SandboxViews, OperatorViews, App):
     """Separate greenfield window; the original python main.py remains untouched."""
 
     title = "MEONG PHOTOBOOTH - PORTRAIT GUI V2 (PROTOTIPE)"
@@ -138,6 +139,7 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, SandboxViews, App
         self.palm_shutter = self._provided_palm or PalmShutter(enabled=palm_enabled)
         LOG.info('Input configuration camera_enabled=%s camera_index=%s face_enabled=%s palm_enabled=%s',
                  camera_enabled, camera_index, face_enabled, palm_enabled)
+        self._init_operator()
         self.stage = ScreenManager(transition=NoTransition())
         if self._sandbox_enabled:
             self.navigation.page = SANDBOX_CHECKOUT
@@ -194,6 +196,8 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, SandboxViews, App
     def _devices_tick(self, _dt):
         if self._closed:
             return False
+        self._operator_last_tick = time.monotonic()
+        self._poll_operator()
         self._poll_photos()
         if self._suspended:
             return
@@ -206,7 +210,7 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, SandboxViews, App
         preview = self.live_preview.read(self._view_revision)
         self._update_live_photo(frame, preview)
         self.performance.observe(self.navigation.page, _dt, frame, preview)
-        allowed = self.navigation.page == ADVERT and self._invitation is None
+        allowed = self.navigation.page == ADVERT and self._invitation is None and not self._operator_active
         if self.face_inviter.update(frame, self._view_revision, allowed=allowed):
             self._show_invitation(source='face')
         active = self.navigation.page == 'capture'
@@ -254,6 +258,7 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, SandboxViews, App
 
     def on_pause(self):
         self._suspended = True
+        self._close_operator()
         self._photo_pause()
         self._pause_game()
         self.live_preview.pause()
@@ -290,6 +295,9 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, SandboxViews, App
 
     def on_stop(self):
         self._closed = True
+        self._close_operator()
+        self._health_reports.close()
+        Window.unbind(on_keyboard=self._operator_key)
         self._cancel_countdown()
         self._retire_game_field()
         self._game_jobs.close()
@@ -417,7 +425,9 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, SandboxViews, App
         )
         canvas.add_widget(shell)
         if brand_height:
-            shell.add_widget(MeongLogo(size_hint_y=None, height=dp(brand_height)))
+            shell.add_widget(OperatorMeongLogo(operator_open=self._open_operator,
+                                             operator_allowed=self._operator_allowed,
+                                             size_hint_y=None, height=dp(brand_height)))
         return shell
 
     @staticmethod
@@ -439,7 +449,11 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, SandboxViews, App
     def _action(self, title, callback, *, variant="primary", height=62, disabled=False):
         button = ArcadeButton(title, variant=variant, height=height)
         button.disabled = disabled
+        button._operator_press_epoch = self._operator_epoch
+        button.bind(on_press=lambda w:setattr(w, '_operator_press_epoch', self._operator_epoch))
         def activate():
+            if self._operator_active or button._operator_press_epoch != self._operator_epoch:
+                return
             # Give feedback before routing/decoder retirement. The short shared
             # click now survives page handoffs; suspend/close still stop it.
             started = time.perf_counter()

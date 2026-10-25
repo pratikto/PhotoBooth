@@ -1,9 +1,26 @@
 # Handover Meong Photobooth — GUI v2
 
+> Latest operator increment: **780 full PASS / zero failures/errors/skips**, 27
+> focused PASS, reused v1 panel/worker, fifteen reviewed local fixture PNGs and
+> eight-item Submit/import form verified. V1 core fourteen files unchanged;
+> physical/provider acceptance remains pending. [Evidence](qa/portrait-v2-operator-health/README.md).
+
+
 **Mulai di sini, 25 Oktober 2026.** Repository `pratikto/PhotoBooth`, branch wajib
 **feature/portrait-kiosk-v2-next**. Owner memilih GUI v2 sebagai calon branch utama
 berikutnya; default GitHub masih master, main.py masih v1. Tidak membuat ulang
 proyek, branch baru, merge, rename/default change atau produksi.
+
+## Latest authorized continuation — 25 Oktober
+
+Owner asks safe development to continue while actual laptop tests wait, and
+explicitly says refer/reuse v1 to avoid duplicate work. Current increment is
+**read-only operator Device Health and safe local report export**, reusing actual
+v1 backend/panel/worker from dbbe055. Foundation checkpoint **4c89e4f**, 73 focused
+PASS, pushed/remote-verified; native host/report source and final evidence at
+[operator-health](qa/portrait-v2-operator-health/README.md). No physical/provider
+PASS, active device switching, production or merge. This overrides the old
+“wait for P5 report before source work” ordering, not the safety boundaries.
 
 ## Checkpoint dan scope aktif
 

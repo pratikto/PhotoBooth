@@ -22,6 +22,17 @@ Nama shared backend di tabel berada di `photobooth/`. Daftar modul v2 dan kontra
 lengkap: [desain teknis](portrait-kiosk-v2-technical-design.md). Peta semua branch
 beserta SHA/file referensi: [audit](gui-v2-branch-audit.md).
 
+## Operator increment — actual v1 reuse
+
+`photobooth/ui_health.py` and device/hardware services are byte-identical to
+dbbe055. `v1_health_controller.py` contains the verbatim original v1 worker method
+in a standalone shell; the v1 app is not instantiated or changed.
+`kiosk_v2/health_service.py` adapts existing cached-frame/heartbeat and lazy config;
+`operator_health.py` mounts the same panel with v2 audio/modal/input lifecycle;
+`health_report.py` uses existing inventory/atomic JSON helpers for safe metadata.
+There is no new probe schedule, second camera, print payload, device selection,
+public upload or order mutation. [Provenance and limits](qa/portrait-v2-operator-health/README.md).
+
 ## Durability dan batas trust
 
 - Satu desain → tiga capture dan maksimum satu retake; count → lembar, bukan
@@ -42,8 +53,7 @@ journal v1/pembayaran untuk menyelesaikan uji atau rollback.
 
 ## Fitur terpisah yang belum menjadi arsitektur v2
 
-Device Health GUI di branch FEAT-008, AI Background Studio, WhatsApp dan lab
-dithering terbaru belum di-port ke v2. Preflight v2 bukan pengganti operator
+Read-only Device Health panel/report kini direuse pada v2; device staging/switching, AI Background Studio, WhatsApp dan lab dithering terbaru tetap terpisah. Preflight v2 bukan pengganti operator
 Health panel/hardware reconnect. Konfigurasi licensing/Free–Business–Enterprise,
 central ads/per-machine sync, fleet control dan merchant POS masih desain/backlog.
 

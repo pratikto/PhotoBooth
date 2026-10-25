@@ -59,6 +59,9 @@ def main():
             if getattr(app, '_game_jobs', None):
                 app._game_jobs.close()
                 app._game_jobs.wait_closed()
+            if getattr(app, '_health_reports', None):
+                app._health_reports.close()
+                app._health_reports.wait_closed()
             if getattr(app, '_sandbox_jobs', None):
                 app._sandbox_jobs.close()
                 app._sandbox_jobs.wait_closed()

@@ -8,6 +8,15 @@ GUI v2 melanjutkan proyek yang sudah ada, dengan GUI/audio owner tersendiri dan
 reuse backend/renderer yang bekerja. Tidak memulai ulang kamera, template,
 printer, Drive, game atau payment service. [Audit branch](gui-v2-branch-audit.md).
 
+## Operator increment setelah persiapan P5
+
+Owner pada 25 Oktober meminta safe source development terus berjalan meskipun
+laptop belum sempat diuji, dan menegaskan reuse v1. Device Health read-only dengan
+actual panel/worker existing sekarang dipasang melalui adapter v2, plus ekspor
+laporan lokal yang redacted. [Panduan/bukti dan form operator](qa/portrait-v2-operator-health/README.md).
+Gate merchant/perangkat tetap terpisah, bukan alasan memulai ulang atau berhenti
+pada source work yang aman. Tidak ada perubahan default branch/produksi.
+
 ## Alur dan aturan produk
 
 1. **Iklan** adalah halaman pertama. MULAI FOTO, MAIN MEONG FLY, CARA PAKAI dan

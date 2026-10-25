@@ -5,6 +5,15 @@ Status **25 Oktober 2026**. Pusat pengembangan/calon utama GUI v2:
 persiapan P5 sudah ada; jangan kembali mengimplementasikan P2/P3/P4 dari awal.
 [Roadmap yang sudah dikerjakan](portrait-kiosk-v2.md).
 
+## Override owner — 25 Oktober, sambil menunggu uji laptop
+
+Owner meminta safe development terus berjalan, tidak menunggu actual laptop
+acceptance; v1 harus dirujuk/direuse agar tidak dua kali kerja. Increment berikut
+menyelesaikan **read-only operator Device Health + laporan lokal**, memakai actual
+panel/backend/worker existing. Tabel “tunggu form” di bawah adalah gate bukti
+manual, bukan blokir semua source work. Tidak ada promo QRIS/produksi, device
+switching, deployment atau merge dari cakupan ini. [Scope/bukti](qa/portrait-v2-operator-health/README.md).
+
 ## Satu antrean aktif untuk GUI v2
 
 | Urutan | Fokus | Keadaan dan tindakan berikutnya |
@@ -24,7 +33,7 @@ source, bukan perintah menjalankan semua tes ulang untuk dokumentasi.
 
 | Topik | Source yang harus dicek/direuse | Gate sebelum port v2 |
 | --- | --- | --- |
-| FEAT-008 Device Health | feature/device-health / dbbe055, read-only operator GUI dan discovery | Refresh CI/source; adapt v1 UI, startup identity/recovery; tidak auto-hot-swap |
+| FEAT-008 Device Health | UI/backend/worker dbbe055 direuse pada v2; [increment operator](qa/portrait-v2-operator-health/README.md) | Read-only panel/report masuk source; staging/active switching/hot-swap tetap tidak terintegrasi atau diaktifkan |
 | FEAT-009 watchdog/autostart | Desain existing + diagnostik/performance v2 | Payment-aware restart harus menjaga pending/started/uncertain jobs; tidak auto replay |
 | FEAT-011 dither | feature/dither-tuning / e89e6ee, Auto Tune/enhancement/guide 24 Oktober | Lab tidak otomatis mengubah preset printer. Butuh paper quality/device/performance evidence |
 | FEAT-021 (AI Background Studio) | feature/ai-background-studio / eb368c1 | Reuse offline pipeline, cache/model, Original fallback; raw photo tetap utuh, GUI/latency/print QA |

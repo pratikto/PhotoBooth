@@ -51,6 +51,19 @@ simulasi. [Penjelasan resmi](https://docs.midtrans.com/docs/midtrans-account).
 Jangan kirim Server Key ke chat/repository. Gunakan simulator resmi yang dicetak
 terminal, bukan aplikasi bank/dompet asli. [Panduan dan recovery](docs/qa/portrait-v2-sandbox/README.md).
 
+## Device Health operator — reuse v1
+
+Pada halaman iklan tekan **F12** atau tahan header Meong **1,5 detik**. Panel
+Device Health existing menampilkan enam indikator, inventory OS dan REFRESH di
+background. Akses juga tersedia pada Sandbox RECOVERY, tanpa mengubah order.
+Capture/game/checkout aktif tidak dapat diinterupsi lewat akses operator ini.
+
+**SIMPAN LAPORAN LOKAL** membuat JSON metadata di `data/diagnostics`, tanpa foto,
+key/token, raw logs, alamat jaringan atau queue/serial. READY hanya observasi
+terbatas, bukan bukti paper/provider/Drive siap. PILIH DEVICE nonaktif; tidak
+mengubah konfigurasi atau membuka kamera kedua. [Panduan/bukti](docs/qa/portrait-v2-operator-health/README.md)
+· [8-item form operator dengan Submit](docs/qa/portrait-v2-operator-health/windows-checklist.html).
+
 ## Uji akhir dan status saat ini
 
 ```powershell
@@ -63,7 +76,7 @@ centang hanya tes yang lulus, lalu **Submit Hasil** untuk menyiapkan laporan cha
 Owner telah melaporkan **READY_FOR_MANUAL_TEST pada HEAD `0dc6555`**; ini baru
 preflight, bukan bukti lulus pengujian perangkat/provider.
 
-Source fungsional terakhir **9433010**: **688 tes PASS / 0 skip**;
+Baseline P5 sebelum increment operator, source **9433010**: **688 tes PASS / 0 skip**;
 [CI 40109206417](https://github.com/pratikto/PhotoBooth/actions/runs/40109206417)
 tiga job SUCCESS dan 109 PNG terverifikasi. Screenshot 800×1280 dan 452×900
 sudah direview. Native CI memiliki satu skip aset palm opsional yang tercakup

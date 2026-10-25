@@ -125,3 +125,21 @@ class SandboxWidgetTests(unittest.TestCase):
             self.assertTrue(app._sandbox_can_capture())
             self.assertEqual(f.flow.snapshot()['transaction_id'],tx)
             self.assertEqual(f.provider.charges,1)
+
+    def test_operator_health_in_recovery_never_changes_order_or_replays_service(self):
+        from tests.test_kiosk_v2_operator_widgets import fixture_snapshot
+        with self.booth() as (app,f):
+            self.reserve(app,f);app._sandbox_photo_consent();self.settle(app)
+            app._admit_photo_test();self.settle(app)
+            app._photo_submit('abort');self.settle(app)
+            before=f.flow.snapshot()
+            with patch('photobooth.v1_health_controller.collect_health_snapshot',return_value=fixture_snapshot()):
+                app._open_operator()
+                deadline=time.monotonic()+3
+                while app._operator_panel.snapshot is None and time.monotonic()<deadline:EventLoop.idle()
+                self.assertIsNotNone(app._operator_panel.snapshot)
+                self.assertEqual(f.flow.snapshot(),before)
+                self.assertFalse(app._sandbox_can_capture())
+                app._close_operator()
+            self.assertEqual(f.flow.snapshot(),before)
+            self.assertEqual(f.provider.charges,1)

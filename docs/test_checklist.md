@@ -1,8 +1,24 @@
 # Pengujian dan acceptance — Meong Photobooth GUI v2
 
+> Latest operator increment: **780 full PASS / zero failures/errors/skips**, 27
+> focused PASS, reused v1 panel/worker, fifteen reviewed local fixture PNGs and
+> eight-item Submit/import form verified. V1 core fourteen files unchanged;
+> physical/provider acceptance remains pending. [Evidence](qa/portrait-v2-operator-health/README.md).
+
+
 Diperbarui **25 Oktober 2026**, branch **feature/portrait-kiosk-v2-next**.
 Form kanonis saat ini: **[26-item P4b/P5 Windows checklist dengan Submit](qa/portrait-v2-p5/windows-checklist.html)**.
 [Perintah/instruksi/bukti lengkap](qa/portrait-v2-p5/README.md).
+
+## Operator increment — separate acceptance
+
+[Eight-item operator form with Submit](qa/portrait-v2-operator-health/windows-checklist.html)
+covers F12/hold, six read-only rows, resize/scroll, single-flight/stale callbacks,
+minimize and safe local JSON export. It preserves prior reports and does not
+impose another twenty photo/game cycles. Existing merchant/P5 gates stay open.
+[Source/native proof](qa/portrait-v2-operator-health/README.md).
+Owner explicitly allows cloud development/automation while laptop tests wait;
+no physical/provider item is auto-passed.
 
 ## Ledger bukti saat ini
 

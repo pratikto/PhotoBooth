@@ -52,3 +52,10 @@ root README and `docs/gui-v2-branch-audit.md` before borrowing branch features.
 The audit pins all 19 branch tips; refresh the relevant remote before reuse.
 Do not treat the branch direction as permission to rename, merge, change default,
 switch `main.py`, enable production or automatically port candidate features.
+
+Owner continuation, 2026-10-25: do safe approved source work and automatic checks
+while laptop acceptance waits; do not stop solely for missing physical tests.
+Refer to/reuse v1 whenever related, including actual UI and controller methods,
+to avoid duplicate work. Current bounded increment is read-only operator Device
+Health + local safe reports; hardware/provider gates stay explicit, no production,
+device switching, deployment or default/merge operations inferred.

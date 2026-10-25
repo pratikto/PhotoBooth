@@ -48,3 +48,83 @@ existing scheduling/cached-frame objects. This avoids a second implementation
 of the v1 worker while leaving the current v1 launcher unchanged.
 
 Stage 1 verification: **73 focused PASS / 0 failure/error/skip**, Linux Python 3.12; five original backend suites plus byte/method provenance checks. [Output](reuse-tests.txt).
+
+## Native integration and local report
+
+Run the **existing** `python tools/run_portrait_v2.py`. At idle advertising press
+**F12**, or hold the Meong header **1.5 seconds**. Short tap/drag/right click do
+not enter. A protected Sandbox RECOVERY page also allows observations; pending
+checkout, active capture and game cannot be interrupted by this entry.
+
+The actual original `HealthPanelMixin.show_health_settings` and native v1 label
+helper are reused. Compatibility seams are limited to the v2 button/audio owner,
+Kivy scheduling (`root.after`), cached asynchronous-camera frame and lazy read-only
+printer config. No v1 application or second camera is instantiated. No device
+staging callback is supplied: PILIH DEVICE stays disabled and saved selections
+are not applied/changed by v2. No automatic device restart/hot-swap/watchdog.
+
+Six rows plus OS candidate inventory are scrollable. One original v1 worker lock
+prevents overlapping probes; dialog serials and v2 guards discard old results.
+Close/minimize retires the popup. Idle ads/audio are retained. Customer buttons
+held before opening are retired, while the next genuine single tap works.
+Checks run only on manual open/refresh; there is no background polling schedule.
+Printer/TCP/spooler observation sends no print payload. Queues are candidates,
+not proof of physical paper/cutter. Camera reports a fresh existing mailbox frame,
+not a new native-handle probe. Connectivity is not merchant/Drive verification.
+
+**SIMPAN LAPORAN LOKAL** writes unique atomic JSON under
+`data/diagnostics/device-health-*.json` using the existing inventory/atomic writer.
+It includes source/branch/dirty flag, OS/dependency/display metadata and six
+allowlisted status observations. It excludes camera pixels/photos, raw logs,
+probe exception messages, keys/tokens, addresses, queue/serial identities,
+merchant/order/QR references and journals. Nothing is uploaded. All physical/
+provider acceptance fields stay NOT_RUN. It imports into the existing P5 form
+or [new eight-item operator form](windows-checklist.html); import never passes a test.
+
+Current manual reports remain accepted with their existing metadata limits.
+[Operator form](windows-checklist.html) does not impose another twenty-cycle
+photo/game retest; actual merchant/P5 hardware/retention still use their own gate.
+
+## Focused verification and preview
+
+Twenty-seven focused tests PASS before the final regression, including the
+unchanged v1 worker/panel, native twenty open/close cycles with no leaked window
+size bindings, hold/F12 guards, stale probe/export callbacks, error redaction,
+single-tap/SFX behavior, atomic reports, and real HTTP Sandbox recovery without
+order mutation or replay. Initial Kivy test-helper dependency on pytest was
+removed by using the project's existing native MotionEvent test pattern.
+Screenshots are generated with `tools/render_portrait_health.py` using injected
+offline observations; no real device/network/provider probes in the renderer.
+Required sizes: 800×1280/452×900; 360×640 also checked. Final full/CI/source and
+PNG evidence will be attached before delivery. No physical PASS is claimed.
+
+## Final local regression
+
+**780 tests PASS / 0 failure / 0 error / 0 skip**, 270.671s. Linux/Python 3.12,
+Kivy 2.3.1, software GL/offscreen SDL, dummy PCM, synthetic device/payment/print
+fixtures and supplied offline face/palm assets. Command:
+
+```text
+PHOTOBOOTH_TEST_GUI=1 PHOTOBOOTH_TEST_AUDIO=1 PHOTOBOOTH_TEST_VIDEO=1
+PHOTOBOOTH_PALM_TEST_ASSETS=<prepared-offline-assets>
+MEONG_CI_TEST_REPORT=<report> python tools/run_kiosk_unittests.py
+```
+
+[Full output](full-tests.txt) · [27 focused PASS](focused-tests.txt) ·
+[browser form checks](browser-tests.txt) · [functional-source hashes](tested-source-sha256.json).
+The browser check verifies eight initially empty boxes, safe operator JSON import
+without passing tests, partial Submit 1/8, persistence/download, no new twenty-cycle
+gate and 360/452/800px bounds. Fifteen local native PNGs (five states at three
+sizes) were dimension/hash checked and visually reviewed. The renderer waits for
+the UI to paint after worker delivery so screenshots describe their named state.
+Cloud observations are fixtures, not proof of device/provider availability.
+
+[V1 runtime hashes](v1-runtime-unchanged.json) verify fourteen existing launcher,
+controller/UI/audio/camera/photo/printer/Drive/retention files unchanged from
+fdafbe2. Actual original health UI/backend and extracted worker remain pinned by
+[reuse provenance](reused-source.json). No functional changes followed the full
+regression; matching-source CI/screenshots will be recorded separately.
+
+Rollback: foundation **4c89e4f** (customer UI unchanged), or baseline **fdafbe2**.
+Use scoped inverse code commits on the same authorized branch after inspection;
+keep all payment/photo/print journals and reports. Never reset transaction data.

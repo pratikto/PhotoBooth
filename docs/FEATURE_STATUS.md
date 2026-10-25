@@ -1,5 +1,11 @@
 # Status fitur Meong Photobooth — GUI v2
 
+> Latest operator increment: **780 full PASS / zero failures/errors/skips**, 27
+> focused PASS, reused v1 panel/worker, fifteen reviewed local fixture PNGs and
+> eight-item Submit/import form verified. V1 core fourteen files unchanged;
+> physical/provider acceptance remains pending. [Evidence](qa/portrait-v2-operator-health/README.md).
+
+
 Diperbarui **25 Oktober 2026**. Branch aktif/calon utama
 **feature/portrait-kiosk-v2-next**; default GitHub masih master. Source fungsional
 **9433010**, bukti **0dc6555**. [Audit 19 branch](gui-v2-branch-audit.md).
@@ -21,7 +27,20 @@ status production-certified dari form/preflight atau tes fixture.
 | FEAT-020 Sandbox | Backend/client/journal existing + native v2 adapter, quote/grant/ACK/recovery | Opt-in; source verified, uji merchant simulator belum diserahkan; trusted game-promo contract belum ada |
 | P5 inventory/acceptance | CLI read-only, JSON metadata, form 26 item/import/Submit, rollback dan screenshot package | Owner preflight HEAD 0dc6555 READY_FOR_MANUAL_TEST; bukan physical/provider acceptance |
 | Production QRIS/POS/merchant promo | Tidak diaktifkan | Perlu kontrak, bukti provider dan cakupan tersendiri |
-| Device Health / AI / WhatsApp / lab dithering terbaru | Referensi branch terpisah | Bukan fitur v2 hanya karena ada pada branch lain; [peta integrasi](gui-v2-branch-audit.md) |
+| Operator Device Health | Original panel/backend/worker + small v2 adapters/report | Read-only source increment, physical acceptance pending; staging/switching disabled |
+| Device staging / AI / WhatsApp / lab dithering terbaru | Referensi branch terpisah | Bukan fitur v2 hanya karena ada pada branch lain; [peta integrasi](gui-v2-branch-audit.md) |
+
+## Increment operator / FEAT-008 — 25 Oktober
+
+Read-only Device Health v1 dari dbbe055 dipakai langsung: backend, actual panel,
+label helper dan metode worker original. Adapter v2 menambahkan akses F12/hold
+header, cached-frame observation, scheduling/audio/lifecycle dan metadata export.
+No device selection callback; tidak menyimpan/mengganti perangkat. Akses dibatasi
+idle/Sandbox RECOVERY dan tidak mengubah order. [Current evidence](qa/portrait-v2-operator-health/README.md).
+
+Owner meminta safe source development berlanjut tanpa menunggu tes laptop.
+Laporan/operator/merchant physical acceptance tetap NOT_RUN sampai bukti ada.
+Device staging/switching dan kandidat lainnya tetap terpisah dari read-only panel/report yang baru masuk source.
 
 ## Bukti aktif
 

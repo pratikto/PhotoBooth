@@ -1,0 +1,19 @@
+{
+  "baseline": "fdafbe273ffc5d3e31bf79899a2acf8779b71548",
+  "files": {
+    "main.py": "6c2083230e95e05acb7615e6e2fd397e014f89e61cf0f759dab34af6e34b5f4f",
+    "photobooth/app.py": "61390e6e4977837ee8ce68b1f570b807de4abfa59698c97cfbf3c4409eaaf019",
+    "photobooth/ui_kivy.py": "b8cdd1ab19ddc3af77d7ad92250365042fd88f00dab1804d426d965c7ccacfd1",
+    "photobooth/ui_brand.py": "3b562bcff258416b9be72445239db97e76c0c976d3a79260a4f2c6cd2246cd07",
+    "photobooth/audio.py": "0c6a24d4a42e0667448cfcd9a6f8ee5b1a511a6a9fb2ec20d0fee237500fd6df",
+    "photobooth/camera.py": "c1a47e981c5f8b83a34302d83050808cf7f9ef3130f20ac1dfb1bf7e0157622a",
+    "photobooth/catalog.py": "3b0102bce0e8e2682a710ba1c87ac6dfc30a38b07b15650b95d2a8d664ba526b",
+    "photobooth/workflow.py": "9a4979678e7685869ee9e53256b37c86cea18a20cc4068ae2b8e031479f47d99",
+    "photobooth/printer.py": "5820a87ecd256573617fbdbcea52f3b3c757cbcdb29f481fdc5f2a809509b374",
+    "photobooth/printer_settings.py": "f639b21dc2270f08e1b203527d7e9ee126eda71982ef7a1fff444b8ce45ef89e",
+    "photobooth/transaction_store.py": "176bc520d198e9993382187a4e35dd14a2aa411177cf3eff9a668c5d680d3691",
+    "photobooth/drive_storage.py": "0bb540e8cb21fa1a4f12ba65376a99ae13cdd0e9a214ec92f829aef3fe67c81d",
+    "photobooth/drive_sync.py": "d77d8d3e0d0236c100d0a7400e5094c8efdfce499ff23e91896a233a087bef79",
+    "photobooth/retention.py": "68bf37118e913610ab99e0ea434cd3863833b168f9705687ca03f2ae5747dcb1"
+  }
+}

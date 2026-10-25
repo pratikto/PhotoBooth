@@ -1,5 +1,14 @@
 # P4b native Sandbox integration — 2026-10-24
 
+## 2026-10-25 — v1 operator panel/worker mounted in v2
+
+Read-only Device Health reuse now has native v2 entry (F12/header hold), original
+panel/label/worker, cached-frame/lazy-config adapters, safe local JSON export and
+stale-input/probe/export lifecycle guards. No v1 app change, second camera,
+settings mutation, order replay or production. Original 71 tests + provenance
+and native fixtures retained. [Scope/proof/form](qa/portrait-v2-operator-health/README.md).
+
+
 ## 2026-10-25 — FEAT-008 operator health foundation reused for v2
 
 Owner requests safe further source development while laptop tests wait, explicitly
