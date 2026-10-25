@@ -1,5 +1,14 @@
 # P4b native Sandbox integration — 2026-10-24
 
+## 2026-10-25 — FEAT-008 operator health foundation reused for v2
+
+Owner requests safe further source development while laptop tests wait, explicitly
+reuse v1 to avoid duplicate work. Import latest read-only Device Health backend,
+actual panel and original backend tests from dbbe055; extract the original v1
+async refresh method verbatim with provenance. No current v1 application,
+selection preference or customer flow changes. [Scope and proof](qa/portrait-v2-operator-health/README.md).
+
+
 ## 2026-10-25 — Konsolidasi dokumentasi GUI v2 / audit semua branch
 
 Owner meminta dokumentasi GUI v2 diperbarui berdasarkan tiap branch dan

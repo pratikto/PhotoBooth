@@ -1,0 +1,30 @@
+{
+  "repository": "pratikto/PhotoBooth",
+  "reference_branch": "feature/device-health",
+  "sha": "dbbe055bb1281ad065a5ba0c3593cfbfbd388bd3",
+  "files": {
+    "photobooth/device_health.py": "f06e46db4c6c9428b0623337274763988ce700d7e764026189413cc6bc24f901",
+    "photobooth/device_recovery.py": "0f446c2a8380ea79cbdd29dcf943fcd6aaa04bf9f6a97aac70df0f9d754bdcf8",
+    "photobooth/device_selection.py": "66194c7ab39c190b1c5dc098f7f06f6c3af9fea96a7686f62b4e732c9963090a",
+    "photobooth/hardware_adapters.py": "1c0bf1c31e702eb79c51a3eac3a04ff83a1c731c576d91b09bc0c6edf84946a4",
+    "photobooth/hardware_discovery.py": "bf1b6c8fa5615f85161e1cdc1744721f294be6462ea52b88df5a58b68e8c0bcd",
+    "photobooth/ui_health.py": "607316d413a777bc6493c69821280a35cd30bf6cb8636e977cad40724465813f",
+    "tests/test_device_health.py": "72ccc75750aa4f05ae6b62e86c46b5eb412ce7c8fa813d12a234f6d325c6e2b3",
+    "tests/test_device_recovery.py": "0be21aeb8d9d628effebae7510d407ac2d04e2e9a28c0b4002f6988fafea7850",
+    "tests/test_device_selection.py": "33870cab12facbc78c10413a7bb05fac564df26bbc3c40b0bbd9082b4601e08c",
+    "tests/test_hardware_adapters.py": "b52d14ee3bbff045dcbe92c20c85677e661b9e4f9dbc30ff71bd2b189d090693",
+    "tests/test_hardware_discovery.py": "97a64aaf0e83aecfe828e4c29baea45de177f1634f53d7831728e9d0b2f5196d"
+  },
+  "extracted_methods": [
+    {
+      "source_file": "photobooth/app.py",
+      "source_class": "PhotoBoothApp",
+      "method": "_refresh_device_health",
+      "source_start_line": 250,
+      "source_end_line": 300,
+      "target_file": "photobooth/v1_health_controller.py",
+      "target_class": "V1HealthController",
+      "method_sha256": "80f15272ada21d63027990f4e292617b1c118988a5417c20295e2bf77540eb20"
+    }
+  ]
+}

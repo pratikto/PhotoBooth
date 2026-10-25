@@ -23,6 +23,16 @@ Keputusan reuse/cost: cek SHA terbaru branch terkait, pakai kode/renderer/GUI/as
 yang sudah bekerja dan catat perbedaan adapter; jangan reinventing the wheel atau
 mengulang CI sukses hanya untuk dokumentasi. Lihat root [AGENTS](../AGENTS.md).
 
+## 25 Oktober — continuation while manual tests are pending
+
+Owner explicitly requests safe further roadmap development without waiting for
+actual laptop testing, to review tonight. This supersedes the previous “wait for
+P5 form before any source work” sequencing. Current scoped next increment is
+read-only operator Device Health reusing latest source/UI, local redacted reports
+and automatic lifecycle/recovery checks. No physical/provider PASS is inferred;
+production, device switching, deployments/default change/merge stay separate.
+[Scope and evidence](qa/portrait-v2-operator-health/README.md).
+
 ## Active product decisions (owner-confirmed)
 
 | ID | Decision | Implementation boundary / consequence |
