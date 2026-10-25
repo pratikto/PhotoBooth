@@ -1,71 +1,59 @@
-# Dokumentasi Meong Photobooth — GUI v2
+# Meong Photobooth documentation — GUI v2
 
-Diperbarui **25 Oktober 2026 (Asia/Jakarta)**. Pusat pengembangan GUI v2 adalah
-**feature/portrait-kiosk-v2-next**, calon branch utama berikutnya menurut owner.
-Default GitHub yang terverifikasi masih **master**. Gunakan launcher khusus v2;
-`python main.py` tetap v1. [Rencana transisi](gui-v2-promotion-plan.md).
+Updated **25 October 2026 (Asia/Jakarta)**. Continue on
+`feature/portrait-kiosk-v2-next`; the GitHub default remains `master` and
+`python main.py` remains the v1 entry point.
 
-## Mulai dari kebutuhanmu
+## Find the authoritative document
 
-| Kebutuhan | Dokumen kanonis |
+| Subject | Document |
 | --- | --- |
-| Instalasi, launcher, pilihan mode | [README repository](../README.md) |
-| Roadmap P0–P5, alur dan status milestone | [Spesifikasi GUI v2](portrait-kiosk-v2.md) |
-| Modul, worker, audio, payment/photo lifecycle | [Desain teknis](portrait-kiosk-v2-technical-design.md) · [peta arsitektur](ARCHITECTURE.md) |
-| Mockup dan koreksi tampilan terbaru | [Spesifikasi visual](portrait-kiosk-v2-visual-spec.md) · [asal aset](assets/portrait-v2/README.md) |
-| Apa yang sudah aktif vs rencana | [FEATURE_STATUS.md](FEATURE_STATUS.md) |
-| Keputusan produk dan batas persetujuan | [DECISIONS.md](DECISIONS.md) |
-| Bug dan prioritas operasional | [bug_tracker.md](bug_tracker.md) |
-| Tugas aman berikutnya / backlog | [next_step.md](next_step.md) |
-| Lanjut development tanpa memulai ulang | [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) · [prompt](DEVELOPMENT_PROMPT.md) |
-| Aturan kerja/reuse/test/push | [AGENTS.md](../AGENTS.md) · [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md) |
-| Hasil tes dan acceptance | [test_checklist.md](test_checklist.md) · [indeks QA](qa/README.md) |
-| Riwayat perubahan | [CHANGELOG.md](CHANGELOG.md) |
-| Branch referensi dan rencana branch utama | [Audit 19 branch](gui-v2-branch-audit.md) · [promotion plan](gui-v2-promotion-plan.md) |
+| Installation, launchers and test modes | [Repository README](../README.md) |
+| Implemented roadmap and customer flow | [GUI v2 specification](portrait-kiosk-v2.md) |
+| Current implementation and acceptance boundaries | [Feature status](FEATURE_STATUS.md) |
+| Modules, workers and service contracts | [Technical design](portrait-kiosk-v2-technical-design.md) · [architecture](ARCHITECTURE.md) |
+| Current visual decisions and artwork provenance | [Visual specification](portrait-kiosk-v2-visual-spec.md) · [artboards](assets/portrait-v2/README.md) |
+| Owner-confirmed product decisions | [Decision log](DECISIONS.md) |
+| Defects and monitoring | [Bug register](bug_tracker.md) |
+| Outstanding work and proposed features | [Backlog](next_step.md) |
+| Resume work | [Handover](DEVELOPMENT_HANDOVER.md) · [continuation prompt](DEVELOPMENT_PROMPT.md) |
+| Scope, reuse, checks and staged pushes | [AGENTS.md](../AGENTS.md) · [development protocol](DEVELOPMENT_PROTOCOL.md) |
+| Tests, owner reports and manual acceptance | [Test ledger](test_checklist.md) · [QA index](qa/README.md) |
+| Change history | [Changelog](CHANGELOG.md) |
+| Reference branches and repository transition | [Branch audit](gui-v2-branch-audit.md) · [promotion plan](gui-v2-promotion-plan.md) |
+| This documentation cross-check | [Reconciliation report](qa/documentation-consistency-2026-10-25.md) |
 
-## Increment operator — development berlanjut sambil menunggu uji laptop
+## Current acceptance packages
 
-[Device Health v2 / reuse UI+worker v1](qa/portrait-v2-operator-health/README.md):
-F12 atau tahan header pada idle, enam observasi read-only, ekspor metadata lokal.
-[Form operator 8 item](qa/portrait-v2-operator-health/windows-checklist.html) terpisah
-dari merchant P5; tidak memerlukan mengulang 20 putaran lama. Source work tidak
-berhenti hanya karena hardware/provider belum bisa diuji. Bukti cloud tetap
-bukan acceptance aktual laptop.
+- [Operator Device Health](qa/portrait-v2-operator-health/README.md): latest
+  functional source `ea394e8`, original v1 panel/worker reuse, local safe reports;
+  [eight-item form](qa/portrait-v2-operator-health/windows-checklist.html).
+- [P5 baseline and runbook](qa/portrait-v2-p5/README.md): source `9433010`,
+  [26-item Windows form](qa/portrait-v2-p5/windows-checklist.html), metadata import,
+  new Sandbox integration checks and recovery. Its 688-test result predates the
+  operator increment; [the test ledger](test_checklist.md) distinguishes both.
+- [Sandbox](qa/portrait-v2-sandbox/README.md): isolated keys/backend,
+  official simulator, full-price consent and durable photo admission.
+- [P3 source record](qa/portrait-v2-p3/README.md) and
+  [later preview/button acceptance](qa/portrait-v2-preview-redraw/README.md).
+- [Original game reuse](qa/portrait-v2-meong-reuse/README.md) and
+  [readable typography](qa/portrait-v2-readable-type/README.md): source-specific history.
 
-## Paket operasional terbaru
+P5 is ready for acceptance; merchant/device/cloud/privacy evidence and release
+signoff remain separate. The preflight at `0dc6555` is not physical acceptance.
+Safe authorized source work may continue while laptop checks wait. The operator
+form does not require repeating old photo/game twenty-cycle reports.
 
-- **[P5 Windows acceptance](qa/portrait-v2-p5/README.md)**: perintah launch,
-  metadata preflight, bukti 688 full PASS, CI/source/screenshot dan rollback.
-- **[Form 26 item dengan Submit](qa/portrait-v2-p5/windows-checklist.html)**:
-  impor `windows-readiness.json`; kosong berarti gagal/belum diuji. Import tidak
-  mencentang tes dan laporan 20 putaran lama tidak meluluskan integrasi baru.
-- **[P4b QRIS Sandbox](qa/portrait-v2-sandbox/README.md)**: kredensial lokal,
-  simulator, harga tanpa promo, izin backend sekali pakai dan recovery.
-- **[P3 foto/printer/Drive](qa/portrait-v2-p3/README.md)** dan
-  [preview/button acceptance](qa/portrait-v2-preview-redraw/README.md): bukti
-  tahap terdahulu; default lokal, bukan launcher Sandbox atau sertifikasi P5.
-- **[Reuse game asli](qa/portrait-v2-meong-reuse/README.md)** dan
-  [tipografi terbaru](qa/portrait-v2-readable-type/README.md): jejak visual/QA.
+## Historical and shared references
 
-Preflight Windows owner pada HEAD **0dc6555** menghasilkan
-**READY_FOR_MANUAL_TEST**. Source fungsional **9433010** diuji 688 PASS / nol skip;
-[CI 40109206417](https://github.com/pratikto/PhotoBooth/actions/runs/40109206417)
-tiga job SUCCESS, 109 PNG. Uji merchant/provider/perangkat/retensi/privasi dan
-rilis tetap terpisah. **P5 siap diuji, belum tersertifikasi komersial.**
+Dated QA records, the [P2 gate](portrait-v2-p2-6-to-p2-8-qa-gate.md),
+[original integration blueprint](FEAT-021-to-FEAT-022-integration-plan.md),
+and v1 release describe their original source and authorization. Their former
+“not integrated”, “OPEN”, test counts and next actions do not override current
+status or later owner reports. Raw evidence is retained without translation or
+rewriting its results; active guidance and audit corrections are in English.
 
-## Cara membaca referensi lama
-
-Dokumen QA bertanggal dan tag `v1.0.0` mempertahankan fakta pada SHA aslinya.
-Status prototype P0–P2, tarif quantity/session lama, placeholder game, atau klaim
-“tidak ada kamera/QRIS sama sekali” tidak mewakili GUI v2 sekarang. Jangan
-menerapkan ulang instruksi branch/merge/fitur dari snapshot referensi.
-
-Panduan [advertising-and-qris.md](advertising-and-qris.md),
-[photo-retention.md](photo-retention.md), [dither-tuning-lab.md](dither-tuning-lab.md)
-dan [rilis v1](releases/v1.0.0.md) tetap berguna sesuai konteks v1/backendnya;
-launcher, status dan kontrol v2 mengikuti dokumen kanonis di atas. Panduan
-lab dithering yang lebih baru tersedia di branch referensi, bukan otomatis di v2.
-
-[Indeks sebelum konsolidasi](https://github.com/pratikto/PhotoBooth/blob/0dc6555d299cdab19d952e92df2ae660cdc4676d/docs/README.md)
-disimpan di riwayat Git. Dokumentasi ini tidak mengubah source aplikasi, default
-branch, master, deployment, produksi atau persetujuan release.
+[Advertising/QR slips](advertising-and-qris.md), [printer setup](printer-setup.md),
+[retention](photo-retention.md) and [dithering lab](dither-tuning-lab.md) identify
+which instructions apply to v1/shared services versus v2. Newer reference-branch
+features require their own authorized integration; the 19-branch audit is dated.

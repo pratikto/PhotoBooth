@@ -1,390 +1,88 @@
-# Roadmap berikutnya dan backlog Meong Photobooth
+# Meong Photobooth — outstanding work and feature backlog
 
-Status **25 Oktober 2026**. Pusat pengembangan/calon utama GUI v2:
-**feature/portrait-kiosk-v2-next**. Default GitHub masih master. P4b source dan
-persiapan P5 sudah ada; jangan kembali mengimplementasikan P2/P3/P4 dari awal.
-[Roadmap yang sudah dikerjakan](portrait-kiosk-v2.md).
+Updated **25 October 2026**. Continue on `feature/portrait-kiosk-v2-next`.
+P3 photo, original game reuse, MOCK/Sandbox and P5 tooling already exist; do not
+reimplement them. The read-only Device Health/report increment is now complete
+in source (`ea394e8`), with actual operator acceptance pending.
 
-## Override owner — 25 Oktober, sambil menunggu uji laptop
+The owner permits safe approved source development while laptop tests wait.
+Evidence gates below do not block every source task. The backlog is not blanket
+approval for features, production, deployments or repository transitions.
 
-Owner meminta safe development terus berjalan, tidak menunggu actual laptop
-acceptance; v1 harus dirujuk/direuse agar tidak dua kali kerja. Increment berikut
-menyelesaikan **read-only operator Device Health + laporan lokal**, memakai actual
-panel/backend/worker existing. Tabel “tunggu form” di bawah adalah gate bukti
-manual, bukan blokir semua source work. Tidak ada promo QRIS/produksi, device
-switching, deployment atau merge dari cakupan ini. [Scope/bukti](qa/portrait-v2-operator-health/README.md).
+## Current follow-up
 
-## Satu antrean aktif untuk GUI v2
-
-| Urutan | Fokus | Keadaan dan tindakan berikutnya |
+| Order | Focus | Next action / boundary |
 | --- | --- | --- |
-| 1 | P5 Windows integrasi baru / FEAT-022 | Preflight owner HEAD 0dc6555 ready; tunggu hasil [form](qa/portrait-v2-p5/windows-checklist.html), perbaiki hanya failure yang terbukti |
-| 2 | FEAT-020 merchant Sandbox | Dapatkan key akun Sandbox secara lokal; uji simulator/create/status/cancel/restart/recovery tanpa produksi |
-| 3 | BUG-009 / Drive/privacy + printer | Bukti download/offline/retensi cloud dan paper/uncertain outcome. Source mock bukan paper/retention PASS; deployment/cloud deletion tidak diotorisasi oleh docs |
-| 4 | Promo Meong Fly → QRIS | Kontrak backend tepercaya belum ada; pertahankan full-price consent Sandbox, jangan memakai skor lokal sebagai authority. Butuh scope/source tersendiri |
-| 5 | GUI v2 sebagai branch utama | Setelah gate dan instruksi operasi GitHub: [promotion plan](gui-v2-promotion-plan.md); belum default change/rename/merge/release |
+| 1 | FEAT-008 operator increment | Collect the [eight-item report](qa/portrait-v2-operator-health/windows-checklist.html); no repeat old photo/game twenty-cycle requirement |
+| 2 | FEAT-022 P5 current Windows integration | Collect the [P5 report](qa/portrait-v2-p5/windows-checklist.html); preflight `0dc6555` alone is not acceptance. Fix reproducible failures within authorized scope |
+| 3 | FEAT-020 actual merchant Sandbox | Enter keys locally; test official simulator/status/cancel/restart/recovery. New integration cycles are separate from old reports |
+| 4 | BUG-009 / Drive/privacy and printing | Verify download/offline behavior, physical paper and uncertain sends; cloud retention remains OPEN and deployment/deletion needs its own authorization |
+| 5 | Game → trusted QRIS promotion | Backend eligibility/redeem contract absent; preserve full-price Sandbox consent. Define approved scope before implementation |
+| 6 | Intended primary-branch transition | Follow the [promotion plan](gui-v2-promotion-plan.md) when the owner specifies the repository operation; not yet performed |
 
-Owner-reported perbaikan visual/audio/preview/game tetap diterima sesuai tanggal
-laporan, tanpa mengisi HEAD/device yang kosong. BUG-017 monitoring; jangan patch
-lagi tanpa gejala terukur. Source 9433010/688 full PASS dan CI hijau tetap bukti
-source, bukan perintah menjalankan semua tes ulang untuk dokumentasi.
+Source evidence: [feature status](FEATURE_STATUS.md), [test ledger](test_checklist.md).
+BUG-012/013/014/015/016/017 are monitoring per recorded owner reports; do not
+speculatively patch working paths. Missing tested HEAD/device metadata stays unknown.
 
-## Kandidat setelah acceptance — referensi, bukan otomatis disetujui
+## Stable feature inventory and candidates
 
-| Topik | Source yang harus dicek/direuse | Gate sebelum port v2 |
+Business priority is distinct from execution order. Candidate scope requires a
+fresh source/readiness review and relevant owner instruction before code work.
+
+| ID / topic | Current state or retained proposal | Dependency / boundary |
 | --- | --- | --- |
-| FEAT-008 Device Health | UI/backend/worker dbbe055 direuse pada v2; [increment operator](qa/portrait-v2-operator-health/README.md) | Read-only panel/report masuk source; staging/active switching/hot-swap tetap tidak terintegrasi atau diaktifkan |
-| FEAT-009 watchdog/autostart | Desain existing + diagnostik/performance v2 | Payment-aware restart harus menjaga pending/started/uncertain jobs; tidak auto replay |
-| FEAT-011 dither | feature/dither-tuning / e89e6ee, Auto Tune/enhancement/guide 24 Oktober | Lab tidak otomatis mengubah preset printer. Butuh paper quality/device/performance evidence |
-| FEAT-021 (AI Background Studio) | feature/ai-background-studio / eb368c1 | Reuse offline pipeline, cache/model, Original fallback; raw photo tetap utuh, GUI/latency/print QA |
-| FEAT-021 (WhatsApp) | docs/feat-021-whatsapp-photo-delivery / aebde84 | Masih rencana optional channel; QR Drive dipertahankan, consent/privacy/provider API perlu scope |
-| FEAT-004/010/012 | Existing Drive/media/config/log services | Per-machine/offline/atomic update, data privacy; jangan menambah layanan paralel tanpa audit |
-| FEAT-019 / BIZ | Keputusan Free/Business/Enterprise dan slot Meong | Riset/kontrak, belum billing/license/ad entitlement code; persentase slot tetap TBD |
-| FEAT-002/POS, FEAT-005/order, themes/events/analytics/fleet | Desain/backlog existing | Partner evidence dan persetujuan implementasi terpisah; tidak dimasukkan ke gate default branch secara otomatis |
-
-Snapshot SHA di sini merupakan audit 25 Oktober, bukan janji tetap terbaru.
-Refresh remote branch sebelum port. [Audit lengkap 19 branch](gui-v2-branch-audit.md).
-ID FEAT-021 bentrok lintas branch: selalu tulis nama fitur/branch, jangan otomatis
-menggabungkan topik atau mengganti nomor historis. Pusat integrasi v2 FEAT-022.
-
-<details>
-<summary>Arsip sebelum konsolidasi 25 Oktober 2026 — catatan historis, bukan status/instruksi aktif</summary>
-
-Pernyataan “current”, “belum diimplementasikan”, urutan prioritas, branch dan jumlah
-tes di arsip berikut hanya berlaku pada tanggal/source aslinya. Status aktif ada
-di bagian atas dokumen; bukti QA bertanggal tetap dipertahankan.
-
-# Meong Photobooth — Dynamic Feature Backlog
-
-> Current approved execution: finish P4b Sandbox integration and P5 source/readiness checks on feature/portrait-kiosk-v2-next; owner manual tests afterward. Merchant/provider acceptance, trusted backend promo, physical devices/privacy/retention and release signoff remain external gates. [Current scope](qa/portrait-v2-p5/README.md).
-
-
-> Current owner-selected work: readable native/button typography is pushed at d52a7d8, 546 local PASS and matching three-job CI SUCCESS; original frames and larger Meong retained. Next owner visual retest uses the [fresh 8-item form](qa/portrait-v2-readable-type/windows-checklist.html). BUG-017 remains the separate open consecutive-video latency issue; no P5/production expansion.
-
-> Next visual action: retest larger Meong and original-style main-app buttons using the [8-item Submit form](qa/portrait-v2-native-controls/windows-checklist.html); no new twenty-cycle gate is imposed. Source 25fd55c has 546 full PASS, zero skips, and matching three-job CI SUCCESS. BUG-017 video→video latency remains the separate open performance investigation; no P5/production expansion.
-
-> Current authorized visual work: larger Meong then original Meong Fly button style. Previous game/header/gallery form is owner-reported 14/14 with twenty cycles at unknown HEAD. Next operational investigation is BUG-017 consecutive-video latency; preserve reported working video↔image paths and decoder retirement guards. No P5/production expansion. [Scope/evidence](qa/portrait-v2-native-controls/README.md).
-
-> Next owner action: Windows retest of corrected game position plus same-level flying mascot, original camera/photo/rainbow motion and impact-spin header. Source c242b97: 540 local PASS, zero skips; all three matching-source CI jobs SUCCESS. Use the [14-item Submit form](qa/portrait-v2-player-anchor/windows-checklist.html); preserve P3 acceptance and P4 one-use guards. No new roadmap/production expansion follows automatically.
-
-> Active owner follow-up: BUG-016 centered game-world correction first, then aligned flying mascot/wordmark impact-spin animation. Preserve BUG-015 uniform wave motion and original game reuse. Final full regression after both stages, then Windows retest. [Evidence/rollback](qa/portrait-v2-player-anchor/README.md).
-
-> Next owner retest: BUG-015 consistent wave motion plus centered/flying brand, floating gallery title and centered quote groups. [14-item Submit form](qa/portrait-v2-motion-correction/windows-checklist.html). P3 acceptance stands; P4 physical acceptance and external production/provider gates remain separate.
-
-> Current P4 follow-up (2026-10-24): retest unified game background, responsive controls/playfield and compact gallery price panel using the [14-item form with Submit](qa/portrait-v2-responsive-scene/windows-checklist.html). Preserve P3 acceptance and P4 one-use DEMO/MOCK guards. Production/provider/P5 gates remain separate.
-
-> **Current continuation — P4 (2026-10-23):** Owner approved P4 after the accepted P3. P4a game and P4b local MOCK are now in source with 406 full PASS and reviewed screenshots. Next: Windows P4 game/MOCK acceptance using the [28-item Submit form](qa/portrait-v2-p4/windows-checklist.html); then obtain the trusted merchant promo contract and provider Sandbox configuration/approval before real integration. Do not reopen P3 solely for missing report metadata, activate production or advance P5. [Current gates and checkpoints](qa/portrait-v2-p4/README.md).
-
-> **Current P3 continuation (2026-10-23):** Test the staged preview/input corrections on Windows before P4: [40-item retest form](qa/portrait-v2-p3-retest/windows-checklist.html). Preserve owner raw 21/34 with unknown tested HEAD; confirm BUG-013 responsiveness and BUG-014 optional palm, then still-open composition/paper/Drive gates. 349 source tests and three-job CI do not certify those devices. Do not integrate game, receipt/QRIS or production payments in this continuation.
-
-
-> **Portrait roadmap update (2026-10-23):** Owner authorized P3a/P3b and the new camera SFX. Source implementation is connected; next is [Windows P3 acceptance](qa/portrait-v2-p3/windows-checklist.html), including actual camera, paper-copy count, Drive QR, new shutter and twenty cycles. P4 mini-game/receipt/QRIS integration still requires separate scope approval; P5 is hardware certification. Do not treat this portrait milestone P3 as authorization for the separate deferred payment-feature priority P3 below. [Current evidence/checkpoints](qa/portrait-v2-p3/README.md).
-
-
-> **CURRENT AS OF 2026-10-19 — POST-v1 SOURCE RELEASE:** Default branch is `master`; the immutable `v1.0.0` [pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0) points to commit `07ce51d2022ab5673a7a27e744e5e5757fbb3d08`. [Kiosk CI](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245): 235 tests (233 PASS, 2 SKIP), 87 synthetic renders/0 errors; [Dither CI](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273): 48 tests PASS. This is **source/CI evidence, not Windows production or hardware certification**. FEAT-001 DEMO pricing/copy count and FEAT-003 live-preview mirror have owner-tested PASS; BUG-011 monitored; BUG-001/007 speaker/audio retests pending; BUG-009 Drive 30-day cleanup remains OPEN. Real QRIS FEAT-020 and receipt scanner FEAT-002 are not implemented. Dated pre-release statements below are historical when superseded by this notice.
-
-> **Execution order:** Fix/retest active operational issues before introducing another feature. FEAT-008 is the next proposed **feature** but is **not approved** for implementation. Real payment, receipt scanning and new commercial features remain deferred; re-rank this dynamic backlog when new evidence arrives.
-Protocol: [DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md) | Baseline reconciled: 2026-10-19
-Planning baseline: `master` / `v1.0.0` | Historical FEAT-011 origin: `feature/dither-tuning` -> `feature/kivy-gui` at `f3d836d` -> `master` in v1
-
-**Planning only unless an explicit scope is owner-approved.** On 2026-10-18, FEAT-011/BUG-004 was originally authorized as an isolated lab; a later owner-approved fast-forward merge and Floyd kiosk-print preset integration now exist in the v1 source on `master`, with owner-reported Windows acceptance; **the source pre-release does not certify physical operation**. Other backlog ideas remain unapproved. The similarly named historical handover has been clarified as [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md); this canonical `docs/next_step.md` file tracks proposed features. Every incoming idea triggers a fresh current-code compatibility/readiness review and a full execution-order re-ranking. Stable feature IDs are not execution sequence numbers.
-
-## Intake and evaluation
-For each new idea record:
-- Stable ID, submitted date, problem statement, expected customer/business value and proposed behavior
-- Business priority P0/P1/P2/P3; impact H/M/L; compatibility and current source/commit evidence
-- Readiness Ready/Partial/Blocked/Unverified; complexity S/M/L/XL; confidence
-- Dependencies (including BUG IDs), affected components, risk, acceptance criteria
-- Proposed **execution order**, reason for placement, status and approval reference
-
-## Unified provisional execution board — 2026-10-18
-
-**This is the ONE current proposed execution-order view**, not blanket authorization to implement. On 2026-10-18 the owner **explicitly selected FEAT-001 for immediate implementation** as an exception to the earlier decision to keep payment-related features P3 until QRIS is ready. All **other** transaction, payment, paid-reprint and merchant-promo/settlement work remains LOW PRIORITY while real QRIS is absent. QRIS implementation itself is a future low-priority prerequisite, newly tracked as **FEAT-020**, not permission to enable payment today. Core photo/thermal print reliability and device operation remain independent priorities; an urgent new physical print defect must still be triaged as a bug. Existing BUG-009 is deferred to FEAT-004 despite its unresolved Drive privacy risk; BUG-001/007 remain owner-deferred and BUG-008 monitoring. Business-model research without payment/billing code may continue in parallel. See [bug_tracker.md](bug_tracker.md). All other listed features remain **NOT APPROVED FOR IMPLEMENTATION** unless an explicit per-scope authorization is recorded. FEAT-001 code work is authorized only for **DEMO pricing, one capture session per selected template and its chosen paper copies**, with NO real payment provider.
-
-| Proposed order | ID | Scope / user value | Execution priority now | Readiness | Key dependency / boundary |
-| --- | --- | --- | --- | --- | --- |
-| **Independent release/operational checks** | GUI CI, BUG-009 / BUG-001 / BUG-007 / BUG-008 | **Full Kiosk GUI CI now VERIFIED PASS at `f129dd9e` ([run 39144464476](https://github.com/pratikto/PhotoBooth/actions/runs/39144464476)): 230 PASS, 2 SKIP, 87 render PASS**. Google Drive 30-day photo deletion still unverified; audio deferred; Settings monitoring | The **CI gate** is cleared at tested SHA; production/Windows hardware quality gates remain distinct | [Full QA dossier](qa/KIOSK-GUI-REGRESSION-2026-10-18.md), and fresh run on post-documentation HEAD required | No automatic release or reprioritization of QRIS/payment work |
-| **Already in source (historical FEAT-011)** | FEAT-011 | 3-way dithering lab and approved Floyd kiosk print profile | Implemented in GUI branch; no new feature work | Owner-reported Windows PASS for BUG-004/010; formal evidence incomplete | Avoid unnecessary edits to working print process |
-| **01** | FEAT-008 | Device health checks: camera, printer, disk, connectivity, media | **P1 — HIGH** | Partial | First-line diagnostics on the actual kiosk, no QRIS required |
-| **02** | FEAT-009 | Windows auto-start and application crash/watchdog recovery | **P1 — HIGH** | Partial | FEAT-008; **payment-aware transaction resume deferred to FEAT-007** |
-| **03 (owner-selected FEAT-003 — accepted core capture behavior)** | FEAT-003 | Capture-page live camera mirroring (first frame, stream, countdown and retake), preserving original saved/review/printed output; future scanner inherits same requirement | **IN SOURCE — OWNER TESTED PASS (2026-10-18)** | [Dedicated synthetic Kivy mirror CI](https://github.com/pratikto/PhotoBooth/actions/runs/39139208320) **PASS**; owner explicitly reports **"sip udah sesuai. PASS"** after Windows retest. No per-case logs/exact device SHA provided; full kiosk CI/release separate | FEAT-002 receipt scanner and detection overlay not implemented; stable original camera/print path unchanged |
-| **04** | FEAT-012 | Structured local diagnostics and support logs | **P2 — MEDIUM** | Partial | Device/log privacy; prioritize operational diagnostics over payment ledger |
-| **05** | FEAT-010 | Per-machine authenticated configuration and identity | **P1/P2 — MEDIUM/HIGH** | Partial | Prioritize ad/media/device config; pricing/payment settings wait for QRIS phase |
-| **06** | FEAT-004 + BUG-009 | Offline-first per-machine Drive image/video ad sync; independently activate/verify 30-day photo-retention cleanup | **P2 — MEDIUM**; BUG-009 risk remains S1 provisional | Partial; cloud retention unverified | FEAT-010 machine mapping, safe cache, separate Drive folders, Apps Script deployment |
-| **07** | FEAT-006 | Admin-selected GUI theme presets | **P3 — LOW (nonpayment)** | Partial/unverified | Shared Kivy styles; avoid altering payment logic |
-| **08** | FEAT-014 | Branded photo frames and campaign creatives | **P2 — MEDIUM** | Partial | FEAT-006/010, preview/print legibility; no paid redemption feature required |
-| **09** | FEAT-017 | Event-specific themes, media and photo frames | **P2 — MEDIUM** | Partial | FEAT-006/010/014; **event pricing and payment bundles deferred** |
-| **10, only after multi-device need** | FEAT-018 | Fleet monitoring dashboard | **P3 — LOW now** | Unverified | FEAT-008/010/012, real operational fleet evidence |
-| **LOW PRIORITY — QRIS stage 11** | **FEAT-020 (NEW)** | **Real QRIS gateway/provider integration, signed status verification and settlement-safe payment** | **P3 — DEFERRED until QRIS project is authorized/provider selected** | Unverified; no provider/credentials selected | Must design money-state consistency with FEAT-001/007 before any real charge |
-| **Owner-authorized FEAT-001 exception — core owner acceptance recorded** | FEAT-001 + BUG-011 | One Rp5.000 base per template/3-photo session + Rp5.000 per sheet, N identical image+cut strips sent as one Windows RAW batch | **IMPLEMENTED; OWNER TESTED PASS** for prices and actual printed count | **15/15 focused CI PASS**; owner explicitly confirms BUG-011 tested and passed on Windows; **MONITORING**, full Kiosk GUI CI now PASS, while formal Windows per-case acceptance matrix remains outstanding | Leave stable printer path unchanged unless issue recurs. FEAT-020 QRIS remains DEFERRED; see [QA evidence](qa/FEAT-001-BUG-011-acceptance.md) |
-| **LOW PRIORITY — 13** | FEAT-007 | Payment/transaction persistence, print fulfillment and paid-state recovery | **P3 — DEFERRED** | Design needed | Must precede **production** QRIS acceptance; simple operational printer-error handling remains independent |
-| **LOW PRIORITY — 14** | FEAT-002A | Dummy merchant receipt scanning and photo fee discount | **P3 — DEFERRED** | Partial | FEAT-001/003, checkout; remains DEMO only |
-| **LOW PRIORITY — 15** | FEAT-005A | Dummy food order + simulated checkout and photo promo handoff | **P3 — DEFERRED** | Partial | FEAT-001/002A/020 phase, no live merchant POS |
-| **LOW PRIORITY — 16** | FEAT-013 | Merchant promo redemption / subsidy settlement reporting | **P3 — DEFERRED** | Partial | FEAT-002/005 redemption ledger; no real settlement claims |
-| **LOW PRIORITY — 17** | FEAT-016 | Paid transaction-referenced reprints | **P3 — DEFERRED** | Partial | FEAT-007/020, payment verification and print idempotency |
-| **LOW PRIORITY — 18** | FEAT-015 | Paid digital-photo upsell and transactional delivery | **P3 — DEFERRED** | Unverified | FEAT-020 and consent/secure links/BUG-009 retention; base photo-folder QR already exists |
-| **Parallel research only** | BIZ-001 / FEAT-019 | Hardware + Free/Business/Enterprise subscriptions and Meong ad-slot rights | Commercial discovery only; **billing/collections code LOW PRIORITY** | Concept | No new license billing or photo-charge integration before separate approval |
-| **Deferred until real partner exists** | FEAT-002B | Real merchant POS receipt eligibility verification | **DEFERRED** | Blocked | Merchant/POS agreement, receipts and API evidence |
-| **Deferred until partner need proven** | FEAT-005B | Deeper ordering/POS integration | **DEFERRED** | Blocked | Merchant-owned ordering remains the default |
-
-**Priority vs order:** Current **execution P3** for payment-related features is an explicit owner scheduling decision made because the booth has **no real QRIS**; it does not erase potential future business importance (older P0/P1 labels in historical intake prose/matrix refer to impact at the time). **FEAT-020** is the prerequisite for real money movement; pricing and crash-safe payment states must be coordinated with it **before** live rollout, despite all being deferred now. Core photo capture, physical printing, device health, crash restart, local ad playback and ad sync are not payment-dependent. FEAT-011 is already in the GUI branch, with owner-reported acceptance. BUG-009 remains an unresolved cloud privacy risk deferred with FEAT-004. FEAT-019 research may continue without billing-code development.
-
-**Details below are the requirements record.** Older per-feature P1/P0 labels and lines saying "execution rank #1/#2/#5" are *historical intake/business-impact snapshots*, **overridden for execution by this P3 payment deferral**. See the board above for the only current proposed sequence. No feature is certified compatible until target source and hardware are rechecked before approval.
-
-## FEAT-001 — Template fee + per-print pricing
-- **Status:** **IMPLEMENTED IN SOURCE — OWNER TESTED PASS (2026-10-18)** for the two core functions: DEMO pricing and physical copy count. The owner initially reported BUG-011 count failure, then confirmed **"sip udah bener"** and explicitly **"bug 11 udah aku test dan lolos"** after printer fixes. **BUG-011 MONITORING, not formally CLOSED; FEAT-001 not RELEASED or full-regression VERIFIED.** Earlier blanket P3 policy has this explicitly authorized exception; real QRIS FEAT-020 remains deferred.
-- **Requested behavior:** One selected template incurs IDR 5,000 base fee, plus IDR 5,000 for **each physical print copy**. For one selected template: 1 copy = IDR 10,000; 2 = IDR 15,000; 3 = IDR 20,000. General formula per template = 5,000 + (5,000 × print copies). Multiple selected templates: sum each selected template's base fee and copy charges.
-- **Business priority:** P1 High; **impact:** High (checkout price, customer expectations, printer usage, transaction consistency).
-- **Current implemented source (2026-10-18):** `catalog.py` defines `PRICE_PER_SESSION=5000` and `PRICE_PER_PRINT_COPY=5000`; `workflow.py::quote_order` adds base-per-frame and per-sheet fees; `build_session_plans` builds exactly one `SessionPlan` per selected template and records `print_copies`. `ui_kivy.py` displays print copies and corresponding DEMO amount; `app.py` sends **one** multi-copy batch of the saved layout, not N individual Windows jobs; `printer.py` repeats N complete ESC/POS image+cut streams in that job and properly closes Windows RAW via `EndDocPrinter` then one `ClosePrinter` ([`41a51b5b`](https://github.com/pratikto/PhotoBooth/commit/41a51b5b31f6ef442557a1caec9bf9a9ae88da93)). `transaction_store.py` persists copy counts and `demo_order_pricing`; no live payment state is asserted.
-- **Readiness / QA:** source implemented, targeted [15/15 FEAT-001 CI](https://github.com/pratikto/PhotoBooth/actions/runs/39134970707) PASS and **Windows operator reports price + physical copy count now work**. Exact per-case 1/2/3 physical logs, tested local SHA and Windows/device-wide release regression remains outstanding, while **Kiosk GUI automated CI now PASSES at `f129dd9e`** ([latest GUI Actions PASS 39145145762](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762); historical FAIL 39135186022 superseded). **Complexity:** M. **Confidence:** Medium-high for the reported core path, limited for full release coverage. Manifest fields remain additive; no payment-provider integration.
-- **Dependencies:** BUG-003 QR-slip paper and BUG-004 Floyd photo quality have later **owner-reported PASS**; keep phone-scannability, broader printer-mode testing and formal device acceptance independent. Printer already integrated into Kivy. Demo QRIS remains non-payable; do not claim payment verification.
-- **Affected components:** catalog/pricing, cart GUI, workflow/session count, payment summary, transaction persistence, photo print jobs, manual reprints, tests, documentation.
-- **Risks:** Charging base fee per copy, accidentally capturing more than once, mismatch between display/manifest/paper count, paper jams/partially transmitted print jobs, old saved manifests, UI navigation while asynchronous print threads are active. Successful send is **not proof of physical paper output**; no automatic retry is allowed after an uncertain send. `CETAK ULANG (MANUAL)` explicitly sends one additional sheet for operator recovery, without silently modifying the DEMO quote; FEAT-016/020 must govern any future paid reprints.
-- **Confirmed by owner (2026-10-18):** One selected template = **one photo session with 3 captures**, regardless of the number of printed copies. Printing 3 copies means three identical prints of that one session's composed layout, **not** three capture sessions.
-- **Clarified for this approved scope:** Each distinct selected template incurs its own IDR 5.000 base fee and has 3 captures once. Quantity zero deselects the template; digital-only zero-print ordering, a configurable maximum, live charges, refunds and paid extra reprints remain **out of scope / for later owner decision**.
-- **Acceptance tests:** 1/2/3 sheets total Rp10k/Rp15k/Rp20k per frame; mixed cart A×2 + B×1 totals Rp25k with exactly **two** 3-shot capture sessions; preview and `demo_order_pricing` match; the thermal printer receives the same output PNG for every requested copy without re-capturing/recomposing; failed or uncertain send aborts remaining copies with NO automatic retry. Verify real Windows screen, paper and receipt physically; retain QR DEMO label, video/audio, Drive QR/retake and Floyd output. **Tests and device acceptance are reported separately.**
-- **Execution status:** Owner expressly chose FEAT-001 now despite general transaction P3 deferral, and subsequently **confirmed the core DEMO price and physical copy-count functionality passed their hands-on test**. [Detailed acceptance history and exact evidence](qa/FEAT-001-BUG-011-acceptance.md). No further printer changes needed while stable; formal bug closure and production release require separate complete evidence/approval. FEAT-008 remains next normal backlog feature; further QRIS/payment and FEAT-007 work remains unapproved. Pre-feature rollback reference: `5842a09f` (do not hard-reset or discard subsequent work).
-
-## FEAT-002 — Merchant receipt QR/barcode promotion (two-phase delivery)
-- **Status:** REVIEW / NOT APPROVED FOR IMPLEMENTATION. Submitted: 2026-10-18.
-- **User story:** On the photobooth payment page, a customer scans a participating café/restaurant's food/beverage purchase receipt barcode or QR code. Example promotion: purchase of at least IDR 50,000 grants one free template fee. Apply the eligible discount to the photobooth amount payable.
-- **Pricing proposal (subject to merchant terms):** FEAT-001 base IDR 5,000/template + IDR 5,000/physical print. A valid receipt waives **one template base fee (IDR 5,000)**, not printing. One template with 1/2/3 copies would cost IDR 5,000/10,000/15,000 after this example promotion. Discount cannot exceed eligible template charges or create a negative total.
-- **Business priority:** P1 High; **impact:** High (merchant partnership, conversion, checkout accuracy).
-- **Source compatibility / evidence (inspected 2026-10-18):** Partial. `photobooth/app.py` has `_open_dummy_payment` and computes `total_amount=len(plans)*unit_price` with no receipt-discount calculation; `photobooth/ui_kivy.py` contains payment UI flow. QR helpers in `photobooth/qr_code.py` serve existing QR workflows, not proof of receipt authenticity. **Current payment is non-payable demo**, not an integrated QRIS gateway.
-- **Owner decision (2026-10-18):** **Real POS integration is deferred until a merchant partner exists.** For machine demonstrations, build only a dummy receipt scan and simulated discount path. This is scope confirmation, **not approval to modify application code**.
-- **Confirmed scanner UX (2026-10-18):** On payment page, tapping receipt scan **stops/hides payment advertising video** and replaces the advertisement region with a **live camera preview** (no separate screen). Keep payment QRIS and order summary visible. Show framing guides, active detection indicator, explicit distinction between code detected and receipt validated, success confirmation and applied discount, or failure reason with scan-again action. **Owner-approved UX (2026-10-18):** after successful receipt validation, automatically close scanner, update payable total and resume payment advertisement; after failed scan/validation, keep camera preview active and offer retry without forcing the customer to reposition. When scanning exits, release scanner resources and restore payment advertising as appropriate. Apply this same interaction pattern to demo and future real merchant receipts. Camera ownership must not interfere with photo capture or ad playback; handle unavailable camera, timeout, duplicate detections and scan retry.
-- **Phase A / FEAT-002A — demo:** Use printed or on-screen dummy receipt QR/barcode encoding a demo transaction ID; look up the ID in a local deterministic fixture (e.g., DEMO-001 IDR 65,000 eligible, DEMO-002 IDR 35,000 ineligible, DEMO-003 already redeemed). Apply IDR 5,000 template-fee discount only to eligible demo orders, with a clearly visible DEMO label; no live merchant API, no real receipt validation, no real payment verification. Specify test reset behavior and prevent accidental presentation as live integration.
-- **Phase B / FEAT-002B — deferred:** Only after merchant partnership, obtain sample real receipts, POS vendor/API access, merchant authorization and security/privacy requirements. Implement adapter, server-side verification and durable cross-kiosk redemption then.
-- **Readiness:** Phase A Partial (needs UI/scanner behavior and fixtures); Phase B Blocked (no partner). **Complexity:** Phase A M; Phase B L/XL. **Confidence:** Medium.
-- **Dependencies:** FEAT-001 pricing model, merchant agreement and eligibility rules, receipt/POS API or signed one-time vouchers, camera/scanner UX, persistent claim ledger, payment recalculation, live gateway only when separately approved. BUG-003 printing is a separate QR-slip issue; do not conflate payment QR scanning with receipt scanning.
-- **Risks and controls:** Ordinary barcode/QR may encode only receipt ID and cannot independently prove value; validate purchase amount, store, date and authenticity against merchant POS or cryptographically signed token. Enforce atomic one-time redemption (including multiple kiosks), replay prevention, expiry, offline policy, data minimization and clear error/fallback UI. Do not treat a scan as payment confirmation. Recompute payment amount **before** generating any payable QRIS; invalidate stale payment requests if discount changes.
-- **Affected areas:** checkout UI, scanning input (camera or external reader), promotion rules, pricing calculation, transaction store/redemption state, merchant API, test harness, receipt/discount display and audit logs.
-- **Proposed acceptance:** Valid eligible receipt >= IDR 50,000 discounts exactly one template fee by IDR 5,000; print fees remain unchanged; ineligible, duplicate, expired, invalid or unverifiable receipts receive no discount; mixed-template carts cap discounts correctly; checkout totals and payment requests stay consistent; no duplicate redemption across concurrent kiosks; scan failures preserve the normal payment path.
-- **Confirmed by owner (2026-10-18):** Use the merchant's **existing POS-issued purchase receipt** and its existing barcode/QR first; do **not** require the café to issue a separate Meong voucher as the initial approach. Scan alone is not evidence of eligibility; inspect actual receipt encoding and determine whether merchant POS lookup is available before selecting validation architecture.
-- **Open decisions:** Merchant POS vendor and receipt barcode format/sample; one receipt per customer/transaction and cross-booth reuse; eligibility window and eligible products; one discount per receipt vs per template; whether discounts combine with other promotions; scanner type and offline behavior. Example threshold and benefit are illustrative merchant-configurable campaign settings, not global fixed rules.
-- **Execution rank:** FEAT-002A provisional #2 after FEAT-001; FEAT-002B deferred until merchant partner. Existing operational blockers remain ahead of feature releases.
-
-## FEAT-003 — Global mirrored live camera previews
-- **Status:** **IMPLEMENTED IN CURRENT CAPTURE PAGE — OWNER TESTED PASS (2026-10-18)**. Submitted: 2026-10-18; original pre-implementation status was REVIEW and is **SUPERSEDED**. Future FEAT-002 scanner still not implemented.
-- **Historical problem (resolved in existing capture page):** Live photo preview behaved non-mirrored; user moves hand right but perceives movement left, making posing confusing.
-- **Owner-confirmed scope (2026-10-18):** **Every live camera preview throughout the app** must appear horizontally mirrored by default, including photo capture, receipt scanning (dummy and future merchant), and all future camera-based features. Mirror is a **display-only transform**: preserve original unmirrored capture files, composed template output, QR graphics, logos, text and printed photos; decode QR/barcodes using original frames. Detection overlays/bounding boxes must be mapped into mirrored display coordinates so the visual indicator stays aligned.
-- **Implementation status (2026-10-18):** **IMPLEMENTED IN SOURCE — OWNER TESTED PASS for existing Windows capture preview.** Owner confirms **"sip udah sesuai. PASS"** following instructions to test live camera mirroring. Exact per-transition/print test logs and local SHA were not provided, so do not claim the full hardware matrix or release verified. At present the *only implemented live camera viewport* is the photo-capture page. `PhotoBoothUI._new_display_texture(size, mirrored=True)` flips horizontal Kivy **UV coordinates on the GPU**, in addition to the normal vertical texture correction. Both initial/retake Pillow preview `update_live_preview` and streaming OpenCV BGR `update_live_frame` use this policy, including countdown, avoiding a transition that flips back. The raw `frame` remains unmodified for face/palm inference, JPEG save, photo composition and print. Review, composed result, static QR/text are not mirrored. The FEAT-002 demo/merchant receipt scanner and its bounding box overlay are **not implemented yet**: global future-screen policy documented but those future screens cannot be claimed tested.
-- **Priority / impact:** P1 High / High customer experience; *owner-selected implementation exception* to unified pending queue. **Compatibility:** current Kivy capture preview pipeline reviewed; no frame mutations. **Readiness:** IN SOURCE / isolated GPU CI PASS + owner Windows camera PASS; individual case logs not supplied. **Complexity:** S/M. **Confidence:** core camera acceptance supported by owner's PASS; detailed hardware test matrix still pending.
-- **Affected components:** Shared Kivy live-camera preview renderer, image texture transformation, capture vs saved-image pipeline, receipt-scanner detection overlays, camera orientation across hardware and future camera consumers.
-- **Dependencies / risks:** Validate camera device orientation and any existing flips to avoid double-mirroring; no changes to saved photos or printer outputs; performance and scanner camera ownership.
-- **Acceptance criteria:** Current capture: left/right movement is mirrored in initial live preview, 3-shot capture, countdown and retake; saved JPEG/review/composed output/print and readable QR/text remain unmirrored; palm/face detectors still use original frames. **Current automated tests:** synthetic asymmetric image, first Pillow texture, streaming BGR with texture reuse and resize, static review/result orientation and unmodified inputs in `test_live_camera_mirrors_texture_only_not_capture_or_result` under [dedicated FEAT-003 CI](https://github.com/pratikto/PhotoBooth/actions/workflows/feat003-mirror.yml). **Owner field acceptance:** PASS for the FEAT-003 behavior as a whole; operator says "sip udah sesuai. PASS" after Windows validation. The separately described individual tests for left/right, preview transitions and saved/printed orientations remain recommendations until recorded individually. When FEAT-002 scanner is later approved, test unmirrored QR decoder input and correctly remapped bounding boxes on its new preview. **Do not call nonexisting scanner code tested.**
-- **Execution status:** FEAT-003 current capture portion already completed and owner-tested PASS. The original provisional #3 rank is **HISTORICAL / SUPERSEDED**; future receipt-scanner UI will inherit its display-only policy when separately approved.
-
-## FEAT-004 — Per-machine local-first Google Drive advertising sync
-- **Status:** REVIEW / NOT APPROVED FOR IMPLEMENTATION. Submitted: 2026-10-18. **Owner decision (2026-10-18): coordinate unresolved BUG-009 retention remediation with this future FEAT-004 work; both implementation scopes require separate explicit approval.**
-- **Owner decisions:** Advertisements always play from local storage; dedicated Meong Photobooth Google account/Drive is the centralized content source; venue/customer supplies Wi-Fi; updates typically weekly; each machine (e.g. BB01, BB02, BB03) receives only its own ads. Existing slot filename syntax must be inspected before finalizing parser, not guessed.
-- **Proposed behavior:** Background compare and download changed video/image ads only, verify files before atomic activation, preserve last-known-good playlist when offline, show last sync and manual sync in admin; do not interrupt currently playing ads. Support per-device folder/slot mapping, disk quotas and safe deletion policy.
-- **Priority / impact:** P2 Medium / High operational scalability. **Compatibility:** Partial (existing Drive integration and ad player require detailed code audit). **Readiness:** Partial; **complexity:** M/L; **confidence:** Medium.
-- **Dependencies / risks:** Device identity, existing Drive filename convention, credentials and least-privilege access, storage limits, content corruption, Wi-Fi interruptions, player concurrency, file ownership and playlist updates. **BUG-009** photo-retention remains unresolved while deferred: Google Drive 30-day expiry must not be advertised as guaranteed. Dedicated ad folders and photo-transaction folders must be isolated so retention's permanent delete cannot touch active advertising inventory. Preserve existing upload/retention paths and the original expiration timestamps.
-- **Acceptance (FEAT-004):** Machine BB01 never downloads BB02 ads; new/updated/deleted content reconciles safely; local playback continues offline; partial downloads never play; weekly refresh and manual sync observable. **Independent BUG-009 acceptance:** setup/authorization verified, deployed version and hourly cleanup trigger operational, original 30-day expiry enforced on isolated synthetic test photo folders, and advertising files unaffected.
-- **Implementation/deployment plan (proposal; no code authorized):** Review `apps_script/Code.gs` against the actually deployed Apps Script project. The repository already includes `setupPhotoRetention`, `register_retention` and cleanup; BUG-009 may need trigger setup/redeployment **without changing those functions**. FEAT-004 needs a new authenticated per-device ad manifest/list API and a suitable bounded/resumable media download route; do **not** transfer large video binaries through JSON/Base64. Coordinate versioning and one planned backend redeployment where appropriate, but test media sync and photo deletion separately, with rollback and credentials protected. Never delete customer photos during a trial; use consented synthetic data only.
-- **Execution rank:** Provisional #12 on the unified execution board; **co-schedule BUG-009** when FEAT-004 is separately approved, not as permission to implement now.
-
-## FEAT-005 — Partner-provided self-ordering inside Meong kiosk
-- **Status:** DEFERRED / NOT APPROVED FOR IMPLEMENTATION. Submitted: 2026-10-18; strategy confirmed by owner later on 2026-10-18.
-- **Owner decision:** For real merchants, **do not develop or maintain a production Meong ordering GUI, menu catalog, cart, checkout, or POS adapters by default**. Merchant owns the live ordering service, menu changes, stock, pricing, payment and POS connection. Meong supplies only a safe entry point / launcher and, where supported, a kiosk-style embedded browser or controlled handoff back to photobooth. **Exception: owner explicitly requests a small, standalone dummy ordering system for sales demonstrations**, without a real POS or live payment.
-- **Partner-dependent eligibility:** Only offer self-ordering when the merchant already has a compatible customer-facing web ordering solution or a separately evaluated compatible app; confirm kiosk usability, permissions, supported operating system and payment workflow with each partner. A POS cashier/admin interface must never be exposed to public kiosk users. If incompatible, disable/hide the ordering feature rather than building a full POS.
-- **FEAT-005A lightweight demo scope:** Create a **local mini web-ordering demo** on the mini PC with sample menu items, item selection/quantities, simple cart, simulated payment, and demo order confirmation. Launch from a Meong 'Pesan Makanan & Minuman' button in a controlled kiosk view with clear return, inactivity reset and isolation from photobooth sessions. Mark all payment and order screens DEMO; no real orders, payment gateway, POS integration or merchant data. Keep demo isolated and disposable: when a real partner supplies compatible ordering, the same launcher points to partner's own customer ordering service instead of building/maintaining a Meong production POS.
-- **Demo cross-promotion requirement (owner confirmed 2026-10-18):** Ordering runs on the same Meong kiosk, so **no receipt scan** is required for the dummy ordering-to-photo promo. After a dummy food order is simulated as successfully paid, generate a single-use, session-bound demo promotion entitlement. Example: qualifying food spend >= Rp50,000 waives one Rp5,000 photo template/session base fee, while Rp5,000 per physical print copy remains payable. Automatically present a photo offer and apply the promo at photo checkout. Ensure promo is not granted for unpaid/cancelled orders, is not duplicated or reused, and expires/resets appropriately on abandoned kiosk sessions. Mark all transactions and discount validations DEMO. This is an **additional path** alongside FEAT-002A's independent external-receipt scanning demo; do not remove FEAT-002A. Confirm final promo threshold and offer wording before implementation.
-- **Promo funding model (owner decision 2026-10-18; reconciled with hardware-sale model):** The **merchant partner funds the waived photo-session base fee only when a qualifying reward is actually REDEEMED**, to encourage higher food basket value. Example: simulated paid food order >= Rp50,000 yields a single Rp5,000 photo base-fee discount; printing remains customer-paid. **Recipient depends on machine ownership and contract:** for a Meong-operated booth, Meong may receive the reimbursement; for a sold machine, the owner/operator who bore the photo discount should ordinarily receive the subsidy. Meong can charge a separately agreed platform/campaign service fee, not mislabel the operator's reimbursement as Meong revenue. Record customer discount, subsidy payer, subsidy recipient, redeemed count and any platform fee in separate ledger fields. Demo partner settlement must show this distinction, with all figures clearly simulated. Production needs documented qualifying orders, refunds/cancellations, one-time redemption, reconciliation and signed payment terms; do not infer live POS linkage.
-- **FEAT-005B optional:** Deeper POS/API integration only if a real partner's requirements justify it and the owner explicitly approves a separate scope.
-- **Business priority / impact:** P2 Medium / High potential partner value. **Compatibility:** Unverified pending partner and operating system. **Readiness:** Blocked until partner capability known. **Complexity:** S/M for supported web kiosk, higher for non-web apps. **Confidence:** Medium.
-- **Risks:** Embedded-browser incompatibility, login/session leakage, escape from kiosk, payment handoff, network outages, merchant site UI changes, customer data exposure, OS limitations, and unsupported vendor terms.
-- **Acceptance:** Demo can browse sample items, adjust quantities, see cart total, simulate checkout and display an explicitly marked demo order confirmation without external connectivity or actual charge; a qualifying paid demo order automatically offers a photo promotion without receipt scanning, applies a one-time Rp5,000 session-fee waiver (not print fees), and an unpaid/nonqualifying order cannot redeem it; kiosk safely returns to Meong and preserves photobooth functionality. Later, partner's own customer ordering works on target mini PC without exposing cashier/admin functions; merchant menu changes appear without updating Meong code; no shared cart/payment assumptions.
-- **Execution rank:** Demo #5 provisional after core stability and earlier features; live partner ordering remains deferred until a compatible partner is found. Explicit implementation approval still required.
-
-## FEAT-006 — Configurable Multi-Theme Kivy GUI
-- **Status:** REVIEW / NOT APPROVED FOR IMPLEMENTATION. Owner approved concept 2026-10-18; implementation requires separate explicit authorization.
-- **Goal:** Offer multiple attractive Meong GUI visual themes, with a per-machine choice stored persistently and controlled from **Admin Settings** (default interpretation; customer theme switching not in initial scope).
-- **Candidate visual presets:** Pastel Cute, Midnight Gold, Mint Fresh, Sakura Pop; names/palette are proposals subject to brand and actual Kivy feasibility review.
-- **Scope:** Theme tokens for palette, backgrounds, button styling, accents and light animations; apply consistently to landing/ads, tutorial, layout selection, camera, payment, and settings. Keep Meong logo/brand recognisable, text readable, and touch targets accessible.
-- **Architecture:** One shared Kivy screen/navigation/transaction codebase; separate centralized theme definitions and machine-level theme config. Switching theme must **not** change screen layout, camera/print/payment behavior, ordering flow or business logic.
-- **Compatibility / dependencies:** Audit existing Kivy widgets, KV rules, asset colors, image backgrounds and dynamic styling before implementation; ensure existing logo and ad media remain legible. Theme testing depends on stable current GUI baseline.
-- **Risks:** Styling scattered through code, inconsistent screens, low contrast, theme-specific asset maintenance, animation performance, regression in camera/payment/printing, and visual mismatch with ads.
-- **Priority / impact / readiness:** P3 Low-Medium / Medium (partner customization); readiness Partial, technical compatibility Unverified, estimated M. **Execution order:** after critical bug fixes and higher-priority functional features, subject to dynamic re-ranking.
-- **Acceptance:** Admin can select a preset and it persists across restarts on that machine; every existing page uses the selected visual style; navigation, photo capture, QRIS and printing regression tests pass across all themes; no customer-facing theme switch.
-- **Decision note:** User said "Oke setuju" to theme concept after a question on admin-only vs customer choice; admin-only is the conservative proposed default and should be reconfirmed if scope becomes relevant.
-
-## Milestone framework (provisional)
-M1 Core Stability; M2 Operational Reliability; M3 Commercial Readiness; M4 Product Enhancement; M5 Scale & Maintenance. See protocol for freeze and release rules.
-
-## Reprioritization history
-| Date | Trigger | Change and rationale |
-|---|---|---|
-| 2026-10-18 | Backlog framework created | No new ideas ranked; baseline/source audit needed before scheduling |
-| 2026-10-18 | FEAT-001 submitted | Provisional feature rank #1 (sole new idea); P1/high impact, partial compatibility; existing defects remain ahead of feature implementation |
-| 2026-10-18 | FEAT-001 behavior confirmed | One 3-capture session per selected template; print-copy count only duplicates the same finished layout, not the photo session |
-| 2026-10-18 | FEAT-002 submitted | Re-ranked full backlog: FEAT-001 stays #1 as prerequisite; FEAT-002 enters #2 pending merchant validation and pricing integration. Existing bugs still take precedence. |
-| 2026-10-18 | FEAT-002 receipt source confirmed | Prioritize existing merchant POS receipt QR/barcode, not custom Meong voucher; readiness remains blocked until actual receipt format and verification method are known; ranks unchanged |
-| 2026-10-18 | FEAT-002 staged by owner | FEAT-002A dummy receipt scanner/discount for demo ranked #2; FEAT-002B real POS integration deferred until merchant partnership; no implementation authorized |
-| 2026-10-18 | FEAT-002 scanner UX clarified | Replace payment advertisement with camera preview during receipt scanning, detection indicator, validated success/failure and retry; retain payment QRIS visibility; no code authorized |
-| 2026-10-18 | FEAT-002 scanner success/failure behavior approved | On validated success close scanner/update amount/resume ad; on failure keep preview open for retry. Documentation only; code implementation not authorized |
-| 2026-10-18 | FEAT-003 submitted | Added mirror-only photo preview; ranked #3 provisionally after pricing and demo scanner, with potential to advance on low complexity/high UX impact; no code authorized |
-| 2026-10-18 | FEAT-003 scope expanded by owner | All current and future live camera previews mirror by default, including receipt scanner; original frames remain unmirrored for processing and output; rank remains provisional #3 |
-| 2026-10-18 | FEAT-003 owner-selected implementation | Kivy capture initial/live/retake preview mirror implemented in `ui_kivy.py` by horizontal texture-UV flip; raw capture/face-palm/save/print unchanged. Synthetic GPU regression and isolated workflow committed. Future FEAT-002 receipt scanner remains unimplemented; no hardware PASS or release until verified |
-| 2026-10-18 | FEAT-003 owner-tested PASS | After FEAT-003 mirror source and CI were pushed, owner reported **"sip udah sesuai. PASS"** on the existing capture-preview flow. Record core feature ACCEPTED on Windows; exact local SHA and case-by-case checklist remain unavailable. FEAT-002 scanner not implemented, full kiosk GUI CI now green at `f129dd9e`, while device-wide release not certified. Documentation only |
-| 2026-10-18 | FEAT-004 and FEAT-005 intake | Documented local-first per-machine Drive ad sync and phased merchant self-order kiosk; re-ranked camera preview ahead of receipt scanner dependency; live POS integration deferred until partner. No code changes authorized |
-| 2026-10-18 | FEAT-004 + BUG-009 coordinated phase | Owner deferred BUG-009 Google Drive photo-retention remediation to the same future Apps Script/`Code.gs` integration and deployment phase as per-machine video/image advertising sync. Functions must be tested independently; 30-day photo deletion remains unverified. Documentation only; no implementation or deployment approval. |
-| 2026-10-18 | Payment/transaction work reprioritized + FEAT-020 intake | Owner placed **all payment, pricing, transaction and merchant promotion/settlement implementations at P3/LOW execution priority** because no production QRIS is integrated. Added **FEAT-020 production QRIS** as a distinct backlog item and future prerequisite, also low priority for now. Re-ranked all nonpayment reliability/camera/media work ahead of the payment phase. No source, gateway, secrets or release changes authorized. |
-| 2026-10-18 | FEAT-005 simplified by owner | Merchant provides and maintains ordering UI/menu/payment; Meong only hosts/launches compatible customer ordering; no native ordering GUI or custom POS by default; partner-dependent, deferred |
-| 2026-10-18 | FEAT-005 demo clarified by owner | Build a small local dummy menu/cart/simulated payment/order demo for partner pitches; production ordering still relies on partner's system. Documentation only; no code implementation authorized |
-| 2026-10-18 | FEAT-005A automatic promo demo | Add ordering-to-photo promo handoff on same machine without scanning receipt; require simulated paid qualifying food order; retain separate FEAT-002A receipt-scan demo; documentation only |
-| 2026-10-18 | FEAT-005 partner-funded promo | Owner confirms merchant funds Rp5,000 waived photo-session fee in return for basket-value uplift; track redeemed rewards and merchant settlement in demo; documentation only |
-| 2026-10-18 | FEAT-006 multi-theme GUI | Owner accepts multi-theme concept; provisionally admin-only selection per machine; visual-only themes, shared GUI code; no implementation authorized |
-| 2026-10-18 | Documentation consolidation | Unified queue now covers FEAT-001 through FEAT-019 and deferred subphases; bug blockers lead all features. Reconciled merchant promo recipient by machine ownership and clarified Free/Business/Enterprise ad rights. No code or implementation approval. |
-
-## Template
-### FEAT-XXX — Title
-- Status: IDEA; submitted: YYYY-MM-DD; approval: none
-- User value / proposed behavior:
-- Business priority / impact:
-- Compatibility / code SHA evidence:
-- Readiness / complexity / confidence:
-- Dependencies / affected modules / risks:
-- Acceptance criteria / tests:
-- Execution order and rationale:
-
-
-## Detailed FEAT-007 to FEAT-018 dependency/reference matrix — 2026-10-18
-**Governance:** The table below is a **historical business-impact/dependency reference**, NOT a current execution-order table. The unified board above supersedes its older ranks, particularly for deferred payment/transaction features now **P3**. BUG-001/007 remain deferred, BUG-008 monitoring, BUG-004/010 owner-reported pass, BUG-009 deferred with FEAT-004; **full Kiosk GUI CI now PASS** at `c40f33f5` (historical CI failures archived). Verify code/hardware before separately approved work.
-
-| Dependency timing (not an execution rank) | ID | Candidate | Business impact | Priority | Readiness | Complexity | Dependencies / principal risk | Status |
-|---|---|---|---|---|---|---|---|---|
-| Deferred until QRIS phase (current board #13) | FEAT-007 | Payment-aware transaction/print recovery | High potential impact **after** live payments | **P3 now** | Design needed | L | FEAT-020 provider verification, FEAT-001 prices, idempotency; standalone printer health remains FEAT-008 | DEFERRED |
-| After critical bugs, before unattended pilot | FEAT-008 | Device health monitoring | Very high: reduce downtime | P1 | Partial | M | Hardware status support, false alerts, privacy | REVIEW |
-| After FEAT-008; independent of real payment | FEAT-009 | OS auto-start and generic crash recovery | High unattended uptime | P1 | Partial | M | OS startup, watchdog loop prevention; paid transaction resume later under FEAT-007 | REVIEW |
-| Before pilot / with FEAT-004 | FEAT-010 | Per-machine remote configuration | High: multi-machine management | P1/P2 | Partial | L | Offline-safe config, authentication, validation, rollback | REVIEW |
-| With printer quality bugfix | FEAT-011 | Thermal printer quality profiles | High: core product quality | P1 | Partial | M | Printer media width, dithering, scaling, test prints | REVIEW |
-| After FEAT-008 | FEAT-012 | Remote diagnostics and structured logs | High: lower support cost | P2 | Partial | M | Sensitive data redaction, connectivity, log retention | REVIEW |
-| Deferred to QRIS/merchant phase | FEAT-013 | Promo redemption/subsidy reporting | Future merchant value | **P3 now** | Partial | M | FEAT-002/005, reliable simulated vs actual settlement distinction | DEFERRED |
-| With FEAT-006 | FEAT-014 | Branded photo frame campaigns | High: sponsor packages | P2 | Partial | S/M | Print readability, logo placement, template compatibility | REVIEW |
-| Deferred transactional delivery/upsell | FEAT-015 | Digital delivery paid upsell | Future sharing value | **P3 now** | Unverified | L | FEAT-020, consent, expiring links and BUG-009 retention; existing folder QR unaffected | DEFERRED |
-| Deferred until real payment and recovery | FEAT-016 | Paid photo reprint by transaction code | Future additional revenue | **P3 now** | Partial | M | FEAT-007/020, authorization and duplicate-print controls | DEFERRED |
-| After FEAT-006 + config | FEAT-017 | Event mode / event-specific campaigns | Medium-high: weddings/corporate | P2 | Partial | M | Theme/layout/price/ad bundles, safe rollback | REVIEW |
-| After fleet pilot and FEAT-008/010/012 | FEAT-018 | Multi-machine fleet dashboard | High at scale, limited at one machine | P3 now | Unverified | XL | Secure identity, telemetry, outages, maintenance | REVIEW |
-| Deferred real-payment stage; new intake | **FEAT-020** | Production QRIS provider integration | High potential after contracting provider | **P3 now** | Unverified | L/XL | Provider selection, verified callback/polling, settlement, security, FEAT-001/007 money-state consistency | BACKLOG |
-
-### Technical acceptance and implementation boundaries
-- **FEAT-007 — Deferred until FEAT-020 QRIS stage (P3 now):** Persist unique order ID, pricing and payment state, capture completion, composed file references, print attempts and final fulfillment locally (e.g., SQLite). Proposed lifecycle CREATED → PAYMENT_PENDING → PAID → CAPTURED → PRINTING → COMPLETED, with explicit failure/retry/cancel states. Only trusted payment confirmation may set PAID in production. On restart recover safely without duplicate charges or uncontrolled duplicate prints; test power loss at each stage. Coordinate with FEAT-001 pricing and QRIS production integration.
-- **FEAT-008 — Health monitoring:** Check camera availability, printer connection/status (paper status only if device exposes it), disk capacity, network, ad media integrity and application heartbeat. Separate offline-but-operational from blocking faults. Local operator/admin health panel first, remote alerts later.
-- **FEAT-009 — Auto recovery:** Prioritize OS autostart, crash watchdog with backoff, safe Kivy kiosk restoration and restart diagnostics, avoiding infinite restart loops. **Transaction-aware paid-order resume is deferred to FEAT-007**. Test unexpected power loss for ordinary kiosk operation.
-- **FEAT-010 — Remote config:** Prioritize per-machine ID and validated configuration for ad content, media and themes with signed/authenticated updates, last-known-good local config, audit trail and rollback. **Price, payment and promo configuration belongs to the deferred FEAT-020/001 phase**. Offline operation must continue.
-- **FEAT-011 — Printer quality (HISTORICAL initial laboratory stage, SUPERSEDED):** **OWNER-APPROVED EXPERIMENT IN SOURCE**, branch `feature/dither-tuning`, commit [`07dcb1a`](https://github.com/pratikto/PhotoBooth/commit/07dcb1a5115f978e70b90c08e5a3666e077bb229). Staged standalone Tk/Pillow GUI now shows all three algorithms together with independent/sync sliders, image reference, zoom, 384/576-dot raster previews, three-way 1-bit PNG exports, portable JSON presets and explicitly confirmed Print Test per lane / Print All using the same bitmap. [Usage guide](dither-tuning-lab.md). CI [39110869478](https://github.com/pratikto/PhotoBooth/actions/runs/39110869478) passed targeted tests. No printhead temperature/density control, originally no auto-apply to `main.py` and BUG-004 remained OPEN **at that historical experiment stage**. **CURRENT:** the standalone lab is merged into Kivy, Floyd photo default enabled and quality owner-reported PASS. Lab JSON presets remain distinct from main-app settings; broader hardware release is not approved.
-- **FEAT-012 — Diagnostics:** Structured local logs, failure categories, exportable support bundle, optional remote upload with opt-in and data minimization; never include QRIS secrets, full personal photos or sensitive tokens in ordinary logs.
-- **FEAT-013 — Partner reporting:** Separate eligible orders, *redeemed* one-time photo rewards, customer discount and partner-funded subsidy due; include merchant/outlet/machine/time and reconciliation export. Demonstration uses simulated data. Production attribution requires partner system evidence.
-- **FEAT-014 — Branded frames:** Merchant logo/campaign overlay on selectable photo templates, preview and thermal-print legibility checks, expiration and per-machine campaign control.
-- **FEAT-015 — Digital delivery:** Optional scan-to-download QR for photos with unguessable expiring links, consent, retention/deletion schedule, access limits and offline fallback; avoid public persistent photo URLs.
-- **FEAT-016 — Reprint:** Unique transaction reference and bounded retained output, verification before paid reprint, explicit price, rate/quantity limits, clear customer session isolation.
-- **FEAT-017 — Event mode:** Named bundles of themes, photo templates, campaign content, pricing and branding; admin-controlled start/end and reliable restore to normal mode.
-- **FEAT-018 — Fleet dashboard:** Inventory and per-machine uptime, health, current config version, ad-sync state, print counts and faults; avoid storing customer photo content centrally by default.
-
-### Business proposals and validation (not app implementation)
-- **Revenue model candidates:** Photo session + print charges (FEAT-001); monthly/location-based ad slots (FEAT-004); merchant-funded **redeemed** photo promo subsidies (FEAT-002/005); machine rental, venue revenue-share or hybrid contracts. All pricing/rates require pilot evidence, not assumed as commitments.
-- **Unit economics per machine:** Track sessions/day, prints/session, operating days, ad income, redeemed promo subsidy and receivables separately from customer discounts. Subtract consumables, transaction fees, rent/revenue share, electricity, connectivity, field service, depreciation and taxes before claiming profit. Pilot illustrative inputs (12 sessions/day, 26 days, 2 prints, Rp300k ads, 60 redemptions) are **examples only**, not forecasts.
-- **Partner offer:** Merchant funds photo-session waiver only when genuinely redeemed; target basket threshold set per partner. Test incremental basket lift against a credible baseline, not just total qualifying orders.
-- **Pilot success gates:** (1) Customers use and pay for photos, (2) promo generates incremental merchant spend rather than subsidizing unchanged purchases, (3) machine contribution margin after costs is positive and operational uptime/queues are acceptable. Start with one machine and validate before multi-location expansion.
-- **Partner contracts:** Clarify ad inventory/creative approval, subsidy settlement cadence, promotion thresholds and exclusions, refund handling, hardware access, internet/power responsibilities, revenue-share, customer data ownership and support SLA.
-
-### Historical sequencing notes (superseded by unified board above)
-1. **Fix and regress-test current blocking defects**; do not start broad feature development.
-2. Stabilize unattended operations: FEAT-007/008/009, plus FEAT-011 alongside printer defect repair; FEAT-012 as needed.
-3. Deliver approved demo scope when separately authorized: FEAT-001/003/002A/005A, with FEAT-013 minimal simulated partner reporting and FEAT-006 themes as capacity permits.
-4. Add per-machine configuration and ads (FEAT-010/004), partner-branded frames (FEAT-014) and optional event mode (FEAT-017) according to pilot needs.
-5. Consider photo delivery/reprint (FEAT-015/016) only after privacy, payments and retention design; fleet dashboard (FEAT-018) after multi-machine evidence. Real POS integrations remain partner-dependent.
-
-
-
-## FEAT-020 — Real QRIS payment gateway integration (new intake: 2026-10-18)
-
-- **Status:** BACKLOG / DEFERRED / **NOT APPROVED FOR IMPLEMENTATION**. **Execution P3 LOW** while QRIS provider, merchant settlement ownership and acceptance scope remain undecided. Owner requested this item expressly and placed all transaction/payment features at low priority until a live QRIS foundation exists.
-- **Current baseline:** `photobooth/payment.py` uses `DemoPaymentGateway` and creates a **non-payable DEMO QR**; `photobooth/ui_kiosk.py` shows **QR DEMO · BUKAN UNTUK TRANSFER** and can print a DEMO slip through `qris_print.py`. A printed/scannable QR is **not** evidence of a real transaction; no trusted provider confirmation is integrated.
-- **Target scope (future proposal):** Integrate an authorized Indonesian QRIS payment provider/acquirer with suitable merchant account and settlement destination; create unique amount-bound, time-limited payable QRIS requests; display correct expiry/cancel/error states; verify authoritative provider status via signed server callback and/or authenticated reconciliation/polling; persist IDs/status safely; gate photo session start on **trusted PAID confirmation**. Handle timeout, late payment, retry, reboot, duplicate notifications and unknown outcomes without accidental double charging or printing. Receipt/slip and customer photo-folder QR are separate artifacts. Keep a clearly labeled DEMO mode for offline testing.
-- **Priority / impact / readiness / complexity:** Current execution **P3 LOW**, future business impact potentially High, readiness **Unverified/Blocked** (provider, API contract, legal merchant settlement and deployment unselected), complexity **L/XL**, confidence **Low** until provider evidence.
-- **Dependencies and safe order within deferred phase:** FEAT-001 must align the payable amount and photo/copy counts; FEAT-007 must persist and reconcile transaction/payment/print state before any real-money rollout. FEAT-002A/002B, FEAT-005A/005B, FEAT-013, FEAT-015 paid upsell and FEAT-016 must not claim production settlement before this gateway and their own validations. FEAT-008/009 device checks and generic startup must **not** wait for QRIS.
-- **Technical interfaces (proposal):** Provider-adapter boundary in `photobooth/payment.py`, server-side callback verification where required, integration with `photobooth/app.py` and `ui_kiosk.py`, transaction persistence, `qris_print.py` printable payload, configuration/credentials, regression tests and updated operator docs. Never store real gateway secrets in the public repository or trust an unauthenticated client-side 'paid' button.
-- **Risks / open decisions:** Provider/acquirer and contractual owner of the money, API keys, webhook hosting and authentication, settlement reconciliation, fees/taxes, refunds, network loss, dynamic QR format, expiry and late-paid disputes, fail-closed policy and fraud/duplicate protection. Provider choice, rollout environment and production legal obligations need a separate review.
-- **Proposed acceptance gate:** End-to-end provider **sandbox** tests for create/pending/paid/expired/cancelled/failed/unknown, invalid/tampered signatures, duplicate/late webhooks, wrong amounts, network loss, crash/restart and idempotency; then separately approved supervised real-transaction validation with reconciliation. **Never mark real QRIS available from DEMO QR rendering or mock tests.**
-- **Execution sequence:** Low-priority QRIS stage **#11** per the only current unified board; P3 now is a sequencing decision, not automatic approval. Re-rank if the owner signs a provider deal or explicitly starts real payment implementation.
-
-## BIZ-001 / FEAT-019 — Hardware sales with recurring software subscription (2026-10-18)
-- **Status:** BUSINESS MODEL EXPLORATION / REVIEW; owner raised possibility, not approval to implement or a final commercial commitment.
-- **Owner decision (2026-10-18):** **Business and Enterprise subscribers may manage their own ad creatives and schedules, BUT Meong retains reserved ad inventory on every tier**, including Business and Enterprise. Free: 100% Meong-controlled ads. Business/Enterprise: mixed customer-managed and centrally inserted Meong ads; reserved percentage, insertion frequency, exclusions and whether Enterprise has a different quota are **not yet decided** (example splits must not be treated as commitments). Ad scheduler should enforce immutable Meong slots at the entitlement layer, maintain separate playback reports for Meong vs customer inventory, support per-location competitor/category exclusions, locally cache media with offline-safe rotation, and avoid interfering with photo/payment/printing. Make unavoidable platform ads and their limits transparent in subscription sales terms; assess customer perception and legal/venue advertising approvals before production.
-- **Owner decision (2026-10-18):** **Free-tier ad inventory/content is controlled by Meong platform owner**, not by hardware buyers/operators. Free devices remain fully usable for commercial photo sessions and prints, but cannot upload/replace/remove centrally managed Meong ads through ordinary admin settings. Ads should be distributed per-machine/per-location using the existing local-first sync concept (FEAT-004), with safe offline playback and no interruption to photo/payment/print flows. Proposed paid-tier differentiation: customer-managed advertising/campaign content, subject to future agreed entitlement rules; do not assume paid means Meong can never display any mandatory platform notices. Make the ad-control condition transparent in hardware purchase/license terms; account for venue approval, competing-brand exclusions, content moderation, privacy, and any offline synchronization grace period. Implementation and commercial policy details remain unapproved.
-- **Owner decision (2026-10-18):** Free tier explicitly permits full commercial use, including charging end customers for photo sessions and prints on purchased Meong hardware. Do not restrict commercial photo sales to paid tiers, impose artificial revenue caps, or disable core photo/payment/print capabilities based on paid status. Paid subscriptions monetize optional business growth/operations features (ads, merchant promotions, branding, reporting, remote management). Recommended paid-expiry behavior: downgrade to fully commercial Free without interrupting in-flight paid customer orders; final contractual details TBD.
-- **Owner clarification (2026-10-18):** A software subscription/license tier is **mandatory for every sold unit**, but the catalog includes both a **Free tier (Rp0 recurring fee)** and paid tier(s). Every device must be assigned an active tier/entitlement; Free is a valid tier, not an expired or unlicensed device. Free must retain fully functioning core photo/capture/print, safety, security patches and bug fixes. Paid tiers may add merchant ads/promos, branding, reporting and fleet management. Final tier matrix and commercial terms are proposals pending owner approval.
-- **Concept:** In addition to Meong-operated and rental/revenue-share models, sell a complete photobooth hardware unit to merchant/client, with ongoing per-device (or per-fleet) software subscription for selected software services. Hardware ownership, software licensing and service responsibilities must be contractually separated.
-- **Owner-named tiers (Free / Business / Enterprise; specific paid entitlements and prices TBD):** **Free** (Rp0 subscription; fully commercial core photos/prints; all advertising controlled by Meong); **Business** (may manage own ad campaigns but Meong retains reserved slots; optional merchant promos/branding/reporting to define); **Enterprise** (may manage own ad campaigns but Meong retains reserved slots; potential fleet/remote/admin capabilities to define). Neither reserved ad percentages nor a detailed feature matrix are approved. Paid expiration to commercially usable Free without interrupting orders is recommended but requires owner approval. Never market planned paid functions as shipped.
-- **Dependencies:** Reliable core photobooth (bugs, printing, payment), FEAT-007 transaction recovery, FEAT-008/009 health and recovery, FEAT-010 configuration, FEAT-012 diagnostics, FEAT-018 fleet controls, plus a future license/subscription provisioning service only when commercial model validated.
-- **Technical concerns:** Device identity/activation, offline license grace period, secure license keys and renewal, entitlements per tier, software update channels and rollback, hardware compatibility matrix, remote support permissions, tenant isolation between clients, data ownership and export, subscription suspension policy, anti-tamper without bricking legitimate offline operation, and customer protection during payment/print.
-- **Commercial concerns:** Hardware BOM, assembly and QA, shipping, installation, training, warranty/returns, spare parts, consumables, payment fees, tax/invoicing, SLA/support cost, software hosting, churn, subscription collections and ownership of merchant ad/promo revenue. Avoid selling a subscription for functionality already implied by hardware purchase without transparent terms.
-- **Partner/client segmentation:** Independent operators buying one machine vs multi-site operators; distinguish the hardware buyer from venue host and merchant subsidizing photo promos. Avoid conflicting revenue-share and subsidy agreements.
-- **Pricing discovery:** Model hardware margin and subscription contribution margin separately, then evaluate break-even and lifetime value with pilot evidence. Do not assume particular monthly price or guaranteed recurring revenue.
-- **Priority / impact / readiness:** Business impact High; **commercial discovery may continue**, but **subscription billing/collections code is P3 LOW with other payment work**, readiness Concept, complexity High/XL for full billing/license platform. **Dynamic execution order:** Validate demand, unit economics and contract terms before adding license management or billing code. No production implementation authorization.
-- **Validation questions:** How is a Free-tier device activated and validated offline? Does a lapsed paid subscription downgrade to Free automatically (recommended) rather than disabling core photos? Who owns QRIS merchant account, ad inventory and customer photo data? What service levels and warranties are included?
-
-## Monetization idea parking lot — future evaluation (2026-10-18)
-**Owner instruction:** Keep these ideas for future evaluation only. Do not schedule, implement, change code, or imply commercial pricing approval. Reassess business priority, overlap, compatibility, dependencies, costs, legal/privacy risks, and readiness before promotion to executable backlog. Fix existing application bugs first.
-
-| Idea | Proposed payer / charging basis | Overlap or dependency | Notes / concerns |
-|---|---|---|---|
-| Premium photo template packs | Machine owner / one-off pack or add-on | Existing template engine, FEAT-006/014 | Distinguish core free templates from optional licensed premium art |
-| Sponsored photo frames | Merchant/brand / campaign or monthly | FEAT-014 | Already in backlog; avoid duplicate implementation |
-| Promo redemption service fee | Merchant / verified redemption | FEAT-002, FEAT-005, FEAT-013 | Separate operator reimbursement for photo discount from Meong's platform/service fee; no double counting |
-| Short-term event mode pass | Machine owner/event organizer / 1-, 3-, 7-day license | FEAT-017 | Already in backlog; entitlement, offline expiration, rollback |
-| Premium analytics | Machine owner/merchant / subscription add-on | FEAT-013/018 | Reporting tiers, data accuracy, ownership and privacy |
-| Remote support / maintenance plan | Machine owner / annual or recurring service | FEAT-008/012 | Scope, SLA, labor/travel cost, warranty separation |
-| Digital photo premium upsell | End customer / per purchase | FEAT-015 | Privacy, consent, link expiry, cost, no dark patterns |
-| Additional photo reprints | End customer / per copy | FEAT-016 | Already in backlog; price and entitlement separate from core copies |
-| White-label photobooth | Business/franchise / setup plus recurring | FEAT-006/010/014 | Preserve software attribution/license rights; brand approvals |
-| Managed advertising campaign service | Merchant/brand / campaign management fee | FEAT-004/013 | Creative review, scheduling, measurement and service labor |
-| Extended hardware warranty | Hardware buyer / optional protection plan | BIZ-001 / FEAT-019 | Legal terms, actuarial cost, exclusions and claims |
-| Multi-location licensing | Fleet operator / per machine or volume | FEAT-018/019 | Fair volume tiers, device identity and tenant isolation |
-| Meong cross-location ad network | Advertiser / campaign across Meong-reserved inventory | FEAT-004/010/013/018/019 | Requires deployed scale, location approval, competitor exclusions, verifiable impressions |
-
-**Revenue ownership caution:** On Meong-owned machines, Meong may collect photo sales and merchant promo reimbursement under its contracts. On hardware **sold** to an operator, photo sales and reimbursement for waived photo fees ordinarily belong to the **machine operator**; Meong earns hardware margin, software subscriptions, its reserved ad inventory and any separately contracted campaign/platform fees. Contractual exceptions require explicit agreement.
-
-**Potential monetization layers:** (1) hardware + free/commercial and paid software tiers + Meong-reserved ads, (2) optional premium content/events/analytics/campaigns, (3) installation/support/warranty/white-label services. No example prices are commitments.
-
-**Future evaluation gates:** Demonstrate customer willingness to pay, positive unit economics after support and hosting, technical feasibility on actual mini PC and partner POS, privacy and advertising consent, non-overlap with existing paid tiers, and measurable campaign performance. Existing critical bugs remain the immediate priority.
-
-
-## FEAT-022 — Portrait GUI v2 owner-selected branch stage (2026-10-21)
-
-**Execution order:** owner-selected isolated P0-P2 prototype work may proceed on feature/portrait-kiosk-gui after operational baseline review; it does not reduce priority of BUG-009 cloud retention or unresolved BUG-001/007 Windows music. **Source status PARTIAL, acceptance PENDING, production BLOCKED.** New layouts/audio state are independently developed, preserving old photo/print/Drive routes without touching main.py. No production migration, POS/receipt discount, real Meong Fly game, QRIS integration or actual touchscreen certification. Dependencies: accepted new UI and responsive Windows/audio checks, duplicate FEAT-021 ID reconciliation, optional game branch readiness, FEAT-020 QRIS server-side pricing/settlement, reliable paid order and print recovery. Complexity L, regression risk HIGH at integration but LOW while isolated. Maintain full rollback simply by continuing to use master. Refer to portrait-kiosk-v2.md for staged gates; re-rank the unified execution board before expanding this scope.
-
-## FEAT-022 — 2026-10-21 dynamic execution re-ranking after approved mockup archival
-
-**Owner-selected active working branch:** feature/portrait-kiosk-v2-next, deriving from the already committed feature/portrait-kiosk-gui prototype. **Feature tracking ID:** FEAT-022 (not the duplicate FEAT-021 labels independently used for Meong Fly and AI Background Studio). **Status:** PARTIAL IN SOURCE, synthetic CI VERIFIED, WINDOWS DEVICE QA PENDING; implementation of future integration gates is **NOT yet authorized** by this documentation update.
-
-**Source / design evidence:** [primary specification](portrait-kiosk-v2.md), [owner-approved main and game visual boards with required corrections](portrait-kiosk-v2-visual-spec.md), [adapter/security architecture](portrait-kiosk-v2-technical-design.md), and [CI 39548798578](https://github.com/pratikto/PhotoBooth/actions/runs/39548798578) at source/assets SHA 6e7f29a7 (**21/21 Python tests + Kivy widget test + 12 synthetic screenshots PASS**). Real Windows music speaker, touchscreen, actual camera, merchant receipt, Midtrans and printer/Drive are not included in this pass.
-
-**Dynamic proposed execution order (no automatic new code approval):**
-
-| Proposed order | Task / stream | Severity or feature priority | Impact and reason | Readiness / dependency |
-| --- | --- | --- | --- | --- |
-| 1 | BUG-009 Drive retention/cleanup privacy verification; existing BUG-001/007 audible music diagnosis and on-device retest | BUG-009 previously S1; BUG-001/007 S2 | Protect customer photo retention and establish actual speaker behavior | Open device evidence; isolate from visual-only claims |
-| 2 | FEAT-022 P2.5: visual parity and physical Windows 10.1-inch portrait/touch/audio/video acceptance on the new branch | P2 user-selected / high UX impact | Audio regression was the primary reason for greenfield rebuild; review true video/ad/CTA presentation against the artboards before integrating money/data | New Kivy foundation present, 21/21 synthetic tests; **real device pending** |
-| 3 | FEAT-022 P3: safe v1-service adapters (camera/3 poses/one retake, real 12 template outputs, print-copy count, Drive photo QR), plus optional actual face detector | P2 user-selected / high regression impact | Preserve working core; safety of stale callbacks and paid/unknown session must gate GUI migration | Requires P2.5 acceptance and **separate owner code approval** |
-| 4 | Meong Fly standalone QA and FEAT-021 ID collision resolution; only then FEAT-022 mini-game intro/receipt DEMO/result→template bridge | P2 engagement / medium operational risk | Main idle/invitation must share entry. One struk one attempt; win/lose → tutorial iff unseen → 12 templates | Standalone mini-game branch separate; receipt QR is only decorative/demo; owner acceptance/regression pending |
-| 5 | FEAT-020 QRIS Mock/Sandbox and authoritative Rp2.500 win promotion calculation | P3 financial/high integrity risk | Need backend amount verification, idempotent order and safe recovery; no discount from GUI alone | QRIS provider branch separate; real Midtrans merchant/webhook/Windows acceptance pending |
-| 6 | FEAT-002/FEAT-005 live merchant receipt/POS, promotions, reimbursement and anti-stacking policy | P3 deferred / high commercial risk | Real struk trust and eligibility require actual partner/campaign contracts and secure verification | BLOCKED on partner evidence, QRIS readiness, reimbursement terms |
-| Later | Other backlog items, including isolated AI Background Studio, ad fleet sync and payment-independent enhancements | Existing dynamic ranking | Preserve independent approved branch status; avoid mixing unrelated features into FEAT-022 | Per-item owner approval and regression |
-
-**Notable overlap:** prior FEAT-002A example struk discount at QRIS screen is **not automatically combined** with the proposed Meong Fly win discount at pre-template game. Until stacking/eligibility/campaign rules are approved, both must be documented and tested as separate promo concepts.
-
-**Risk:** high at real payment/capture/print integration; low while the existing opt-in v2 prototype remains isolated from the legacy master. **Acceptance criteria:** artwork-compliant portrait UI, persistent ad surface with both entry paths, one acknowledged tutorial per visit, dedicated game intro, valid single-use demo receipt, win/lose returning to template picker with correctly scoped discount proposal, no replay, provider-authorized checkout, correct three-shot/one-retake and N identical printed 80×240mm strips, valid photo-folder QR, audio physically audible and robust crash/timeout behavior. All of these are **target states**, not current v2 implementation.
-
-**Authorization discipline:** This re-ranking is planning/documentation only. No new QRIS, POS, game, hardware, backend or master merge authorization follows automatically. Do not remove/reassign historical FEAT-021 IDs without a cross-branch decision and traceable migration plan.
-
-## FEAT-022 — P2.5 milestone status after GUI polish (2026-10-21)
-
-**P2.5 code delivered in source on `feature/portrait-kiosk-v2-next`, not physically accepted:** themed native controls, illustrated once-per-visit tutorial, idle/invitation with both entry paths, three real strip previews with swipe and correct quantity DEMO quote, and a clearly disabled Meong Fly receipt-scanning intro. [CI 39555036023](https://github.com/pratikto/PhotoBooth/actions/runs/39555036023) verified 21/21 pure tests, widget smoke and 12 synthetic screenshots; no new payment, camera, printer, POS or game adapter. **This does not reorder the backlog ahead of the previously noted outstanding BUG-009 cloud retention and BUG-001/007 Windows sound evidence.**
-
-**Remaining P2.5 priority:** operator Windows 10.1-inch portrait sound/touch/swipe/ad video QA, evidence-backed visual comparisons to the two approved mockups, then owner approval for controlled P3 camera/Drive/print and P4 game/QRIS backend integration. Actual QRIS amount trust, single-use promo ledger and FEAT-021 duplicate ID remain gating dependencies. No merge to master.
-
-</details>
+| FEAT-001 pricing/copies | Implemented: Rp5,000/design + Rp5,000/copy, one three-photo session/design | Quantity zero deselects; mixed A×2+B×1 = Rp25,000/two sessions; digital-only and commercial maximum policy remain undecided |
+| FEAT-002A/B merchant receipt promotion | Separate design: receipt scan at checkout; example Rp50,000 food purchase waives one Rp5,000 base fee | Existing POS receipt first; scan is not purchase proof. Partner/API, one-use eligibility, offline/stacking and reimbursement terms unresolved; not the game discount |
+| FEAT-003 live mirror | In source; display-only mirror across implemented live previews | Originals/review/print/QR/decode input unmirrored; future scanner inherits policy |
+| FEAT-004 ads + BUG-009 | Proposed per-machine local-first Drive ad sync; coordinate retention work | Separate ad/photo folders, atomic updates/offline cache; verify deployment/trigger and deletion independently |
+| FEAT-005A/B ordering | Small standalone DEMO proposal; real merchant supplies compatible customer-facing ordering | Same-kiosk DEMO order-to-photo offer needs no receipt scan; retain external-receipt path. Do not build a full production POS by default |
+| FEAT-006 themes | Proposed configurable shared-codebase themes | Final admin/preset policy and approval pending |
+| FEAT-007 transaction recovery | Some durable Sandbox admission already implemented; broader operational paid fulfillment remains future scope | No replay on restart; paid reprint/refund/production recovery not implied |
+| FEAT-008 Device Health | Read-only panel/report integrated; active selection/staging/switching not mounted | Reuse `feature/device-health` / `dbbe055`; actual device acceptance separate |
+| FEAT-009 watchdog/autostart | Candidate | Preserve pending/started/uncertain state; never automatic capture/charge/print replay |
+| FEAT-010 device identity/config | Candidate | Authenticated per-machine config; tenant separation and offline behavior |
+| FEAT-011 dithering | Existing lab/printer baseline present; newer branch lab separate | Refresh `feature/dither-tuning` (audit `e89e6ee`) before reuse; Auto Tune/enhancement is not automatically the kiosk preset |
+| FEAT-012 diagnostics | Existing local diagnostics/readiness and safe health reports present; broader support scope candidate | Data minimization and explicit upload/remote-support policy |
+| FEAT-013 promo/subsidy reporting | Proposed | Verified redemption and contract-defined revenue recipient; not merely qualifying food spend |
+| FEAT-014 branded frames | Proposed | Approved artwork, print/QR readability and existing templates preserved |
+| FEAT-015 paid digital upsell | Proposed | Current folder QR is separate; delivery/consent/retention/provider acceptance required |
+| FEAT-016 paid reprints | Proposed | Payment/fulfillment idempotency and uncertain-paper handling |
+| FEAT-017 event mode | Proposed | Shared theme/media/config; event prices/bundles not approved by theme scope |
+| FEAT-018 fleet monitoring | Candidate after demonstrated multi-device need | Health/config/log privacy and tenant isolation |
+| FEAT-019 / BIZ | Free/Business/Enterprise direction recorded, billing/license enforcement not implemented | Commercially usable Free; Meong controls Free ads and retains TBD slots on paid tiers; [decisions](DECISIONS.md) |
+| FEAT-020 QRIS | MOCK and opt-in Sandbox source integrated | Actual merchant acceptance/production/merchant promotion remain separate |
+| FEAT-021 — Meong Fly | Original game renderer/flow integrated as DEMO | Manual one-use input in v2; standalone scanner/POS not enabled |
+| FEAT-021 — AI Background Studio | Separate candidate branch (`eb368c1` at audit) | Reuse offline/cache/fallback implementation, preserve raw originals; hardware latency/paper evidence |
+| FEAT-021 — WhatsApp delivery | Separate documentation proposal (`aebde84` at audit) | Additional optional channel; retain Drive QR, require consent/provider/privacy scope |
+| FEAT-022 GUI v2 | Development focus; P5 ready for acceptance plus health increment | Current [roadmap](portrait-kiosk-v2.md); default/master/release operations separate |
+
+FEAT-021 has three historical branch-local meanings. Always append the topic
+and branch; do not silently renumber history or combine their authorization.
+Reference SHAs are dated snapshots; refresh before reuse.
+[All 19 reference branches](gui-v2-branch-audit.md).
+
+## Evaluation fields and parked business ideas
+
+For new work record ID/date, problem/value/behavior, priority/impact, current-code
+compatibility/evidence, readiness, complexity/confidence, dependencies/risks,
+affected modules/devices, acceptance, approval, execution rank and rollback.
+Re-rank when a material defect or new decision appears.
+
+Premium templates/sponsored frames, event passes, analytics, support/warranty,
+white-label, campaigns, digital upsells, reprints, fleet licenses and a Meong ad
+network remain parked for evaluation. No example price or revenue is committed.
+Check demand, unit economics, hardware/partner compatibility, privacy/venue rights
+and overlap with tier entitlements before proposing implementation.
+
+Photo income and reimbursement for waived fees generally belong to the operator
+bearing those fees on sold hardware; Meong's hardware/software/ad/platform fees
+require their own contracts. Subsidies apply to redeemed eligible discounts,
+not every qualifying food order. [Binding business direction](DECISIONS.md).
+
+Detailed original proposals, acceptance examples and the former execution
+rankings remain in the dated historical record below; their old implementation
+statuses do not override this inventory.
+
+## Historical record
+
+The [pre-audit version](https://github.com/pratikto/PhotoBooth/blob/5f09eff9998c942ed54feef0cf0563fc3944611b/docs/next_step.md) preserves the complete dated history. Its former “current”, approval, branch and next-step statements apply only to their recorded stage. Use the current documents linked above for continuation.

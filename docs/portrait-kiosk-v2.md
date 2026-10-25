@@ -1,102 +1,85 @@
-# FEAT-022 — Meong Photobooth GUI v2: spesifikasi dan roadmap
+# FEAT-022 — GUI v2 specification and roadmap
 
-Status **25 Oktober 2026**. Pusat pengembangan/calon branch utama:
-**feature/portrait-kiosk-v2-next**. Default GitHub masih master. Source operator
-terbaru **ea394e8**, 780 full PASS/CI tiga-job SUCCESS; baseline P5 **9433010**
-dan bukti **0dc6555** tetap historis. [Handover](DEVELOPMENT_HANDOVER.md).
+Updated **25 October 2026**. Active development and intended future primary
+branch: **`feature/portrait-kiosk-v2-next`**. GitHub default remains `master`;
+`main.py` remains v1. [Current checkpoint/evidence](FEATURE_STATUS.md) ·
+[handover](DEVELOPMENT_HANDOVER.md) · [promotion plan](gui-v2-promotion-plan.md).
 
-GUI v2 melanjutkan proyek yang sudah ada, dengan GUI/audio owner tersendiri dan
-reuse backend/renderer yang bekerja. Tidak memulai ulang kamera, template,
-printer, Drive, game atau payment service. [Audit branch](gui-v2-branch-audit.md).
+GUI v2 owns its portrait UI/audio lifecycle and reuses working camera, capture,
+templates, printer, Drive, original game and QRIS services through small adapters.
+It is beyond the earlier gallery-only prototype; do not rebuild existing features.
 
-## Operator increment setelah persiapan P5
+## Product flow
 
-Owner pada 25 Oktober meminta safe source development terus berjalan meskipun
-laptop belum sempat diuji, dan menegaskan reuse v1. Device Health read-only dengan
-actual panel/worker existing sekarang dipasang melalui adapter v2, plus ekspor
-laporan lokal yang redacted. [Panduan/bukti dan form operator](qa/portrait-v2-operator-health/README.md).
-Gate merchant/perangkat tetap terpisah, bukan alasan memulai ulang atau berhenti
-pada source work yang aman. Tidak ada perubahan default branch/produksi.
+1. Advertising opens first; direct photo, MAIN MEONG FLY and CARA PAKAI share the
+   same media surface. The face invitation is an overlay, with manual entry retained.
+2. Tutorial acknowledgement is required once per active visit, including after
+   either game result if unseen. Safe return to idle resets transient visit state.
+3. Gallery: twelve original 80×240 mm strips, three photo slots plus one download
+   QR. Swipe/arrows move the designs; the center strip is emphasized. Quantity
+   zero deselects; 1–9 means identical copies from one session per selected design.
+4. Local/default: UJI FOTO → consent → three captures with five-second countdowns
+   → review/one retake per design → composition/result → advertising. Output is
+   local unless the operator opts into printer/Drive.
+5. Game DEMO: intro → manual one-use DEMO code → original game → win/lose →
+   tutorial if unseen → gallery. No retry; consumed codes stay consumed after restart.
+   Real scanning/POS is not mounted in v2.
+6. Opt-in MOCK: nonpayable checkout, locally validated one-use reward/quote and
+   one admission to photo consent. A win reduces one order by Rp2,500, capped at subtotal.
+7. Opt-in Sandbox: explicit full-price/no-game-promo consent → provider Sandbox
+   QR → backend verification/grant → photo consent → durable STARTING → one
+   transaction → STARTED ACK → capture → all selected designs → COMPLETED ACK.
+   Pending/unknown/paid/recovery is protected from browsing timeout.
 
-## Alur dan aturan produk
+Tariff in source: **Rp5,000 per selected design/session + Rp5,000 per copy**.
+One design with 1/2/3 copies costs Rp10,000/Rp15,000/Rp20,000; mixed A×2+B×1
+costs Rp25,000 with two three-photo sessions. Zero-copy digital-only purchase
+and final commercial maximum policies are not implemented/settled by these controls.
+Sandbox does not accept the game reward: there is no trusted backend promotion
+contract. GUI scores/amounts never authorize a provider discount.
+The printed photo-folder QR is separate from the payment QRIS.
 
-1. **Iklan** adalah halaman pertama. MULAI FOTO, MAIN MEONG FLY, CARA PAKAI dan
-   undangan ada pada satu permukaan media; undangan wajah adalah overlay.
-2. **Tutorial wajib sekali per kunjungan**, direct maupun setelah menang/kalah:
-   Pilih Template → Bayar → Ambil 3 Foto → Cetak & Scan QR. Langkah yang
-   menggambarkan layanan tidak berarti semua integrasi produksi aktif.
-3. **Galeri** berisi 12 template asli 80×240 mm, 3 slot foto + 1 QR download.
-   Swipe/panah bergeser nyata, strip tengah fokus; −/jumlah/+ menentukan 0–9
-   lembar per desain, satu sesi tiga foto per desain terpilih.
-4. **Lokal/default:** UJI FOTO → persetujuan → tiga capture/countdown lima detik →
-   review/satu retake → komposisi/hasil → iklan. Printer/Drive opt-in operator.
-5. **Game DEMO:** intro → kode DEMO sekali pakai → game asli → menang/kalah →
-   tutorial jika belum dilalui → galeri. Tidak ada main ulang; scanner/POS nyata
-   tetap tidak aktif. Kode yang sudah dipakai tetap ditolak setelah restart.
-6. **MOCK opt-in:** checkout lokal berlabel nonpayable, ledger diskon/quote dan
-   satu admission menuju persetujuan foto. Menang: Rp2.500 sekali/order, capped.
-7. **Sandbox opt-in:** konfirmasi harga penuh/tanpa promo → QR provider Sandbox →
-   backend memverifikasi settlement → grant → persetujuan foto → journal STARTING →
-   satu transaksi foto → ACK STARTED → capture → seluruh desain selesai → ACK
-   COMPLETED. Pending/unknown/paid/recovery tidak dibuang oleh timeout browsing.
+## Roadmap: implemented source versus remaining evidence
 
-Tarif source: **Rp5.000 per desain/sesi + Rp5.000 per lembar**. Satu desain satu
-lembar Rp10.000, dua lembar Rp15.000. MOCK menang menjadi Rp7.500/Rp12.500.
-Sandbox **belum menerima promo game**: backend referensi belum punya kontrak
-bukti promo. Tidak boleh mengirim skor/amount GUI sebagai otoritas diskon.
-QR pembayaran berbeda dari QR folder/download hasil foto.
-
-## Roadmap dan gate yang sebenarnya
-
-| Tahap | Source sekarang | Bukti / gate tersisa |
+| Stage | Source now | Acceptance boundary |
 | --- | --- | --- |
-| P0 | VisitFlow/tutorial-once/protected lifecycle | Regresi source tersedia |
-| P1 | Audio v2 satu owner, WAV SDL2, minimize/close, SFX | Owner melaporkan audio v2 normal; regresi perangkat P5 tetap khusus source yang diuji |
-| P2/P2.5/P2.6–P2.8 | Iklan/overlay/tutorial/galeri responsif, swipe/transisi/header dan tipografi terbaru | Laporan Windows terdahulu diterima sesuai metadata; screenshot source akhir tersedia |
-| P3a | Kamera async, face invitation, preview mirror, optional palm | Owner melaporkan perbaikan respons/preview/palm; reconnect/fisik/metadata masih mengikuti checklist |
-| P3b | Tiga foto asli, retake per desain, komposisi, print/Drive opt-in | Default lokal; paper/Drive/retensi tidak disimpulkan dari tes mock |
-| P4a | Renderer/flow/aset game terbaru direuse langsung, DEMO ledger satu kesempatan | Game/visual owner-reported PASS; POS/scanner nyata tidak aktif |
-| P4b MOCK | Quote/ledger/promo/admission lokal | Sudah dalam source/regresi, tidak merupakan pembayaran bank |
-| P4b Sandbox | Service/client/journal QRIS existing + native v2 adapter dan launcher terisolasi | Merchant simulator/perangkat belum diuji; promo QRIS tepercaya belum tersedia |
-| P5 | Readiness CLI, form Submit/import metadata, regresi dan paket screenshot/rollback | **SIAP ACCEPTANCE, BELUM SERTIFIKASI**: Windows integrasi baru, merchant, printer, privasi/Drive dan signoff |
-| Transisi branch utama | Arah owner tercatat; audit 19 branch selesai | Operasi default/rename/merge/launcher/release belum dilakukan; [rencana](gui-v2-promotion-plan.md) |
+| P0 | VisitFlow/tutorial-once/protected lifecycle | Automated regression recorded |
+| P1 | One v2 audio owner, SDL2 WAV loading, SFX/minimize/close | Owner reports v2 audio normal; v1 BUG-001/007 not closed |
+| P2/P2.5/P2.6–P2.8 | Responsive advertising/overlay/tutorial/gallery, swipe/transitions, current typography/header | Automated source and dated owner reports; older P2 “no integration” scope is historical |
+| P3a | Async camera, mirrored preview, face invitation and optional palm | Owner-reported corrections accepted; missing source/device fields remain unknown; reconnect/current-integration evidence separate |
+| P3b | Three originals, one retake/design, composition/result, optional printer/Drive | Default local; fixture tests do not certify paper/download/cloud deletion |
+| P4a | Original Meong Fly Stage/Flow/render/assets/emitter and one-use DEMO ledger | Owner-reported game/visual PASS; real scanner/POS disabled |
+| P4b MOCK | Local quote/reward/admission ledger | Nonpayable simulation |
+| P4b Sandbox | Existing service/client/journal plus native v2 host and isolated launcher | Actual merchant simulator/current-device evidence pending; no trusted game promo |
+| P5 | Readiness CLI, metadata import/Submit form, regression/screenshots/rollback package | **Ready for acceptance**, not commercial certification; Windows/merchant/paper/Drive/privacy/release gates remain |
+| Operator increment | Original v1 read-only health panel/worker + safe reports | Source `ea394e8` verified; eight-item manual acceptance separate; selection disabled |
+| Primary branch transition | Owner direction and reference audit recorded | Default/rename/merge/launcher/release operations not performed |
 
-Owner pada 24 Oktober meminta P4b lalu P5, uji manual di akhir. Pada 25 Oktober
-menyampaikan preflight **HEAD 0dc6555 → READY_FOR_MANUAL_TEST**. Output ini tidak
-mencakup acceptance kamera/speaker/merchant/printer/Drive; metadata file yang
-belum dikirim tidak diisi dari laporan lama.
+Owner approved P4b/P5 with manual tests at the end, then safe source continuation
+while laptop checks wait. Health/report source is complete. The preflight at
+`0dc6555` is READY_FOR_MANUAL_TEST, not merchant/hardware acceptance.
+[Latest evidence ledger](test_checklist.md) distinguishes 780-test operator
+source from the earlier 688-test P5 baseline and optional CI skips.
 
-## Visual dan media yang dipertahankan
+## Visual, audio and evidence
 
-Portrait 10.1 inci, referensi **800×1280** dan **452×900**, dengan resize kecil/
-landscape. Cosmic pixel space dan frame tombol dari game; caption aplikasi
-utama **native Roboto yang bersih, tanpa ikon wajib**, bukan bitmap caption yang
-sudah ditolak. Wordmark MEONG PHOTOBOOTH terpusat; Meong animasi lebih besar,
-sejajar, dengan kaki/pelangi/print dan efek tabrakan wordmark.
+Portrait 10.1-inch target; required reference sizes **800×1280** and **452×900**,
+with compact/landscape/scaling checks where relevant. Preserve cosmic pixel-space,
+original game materials and Meong art. Main-app captions use readable native
+Roboto without mandatory icons, with the larger animated mascot and focused strips.
 
-Iklan gambar memakai BGM GUI; video memakai audionya sendiri. Tutorial/galeri/
-foto/Sandbox berbagi BGM tanpa restart berlapis; game memakai musik berbeda.
-Setiap aksi tombol aktif berbunyi sekali. Minimize/close dan perpindahan halaman
-mengakhiri owner/callback lama dengan aman.
+Still advertisements use GUI BGM; video uses its own audio. Tutorial/gallery/
+photo/checkout share a GUI loop; game has a separate loop. One enabled action,
+one cue; minimize/close retires prior playback/callbacks.
 
-![Main photobooth approved artboard](assets/portrait-v2/meong-main-flow-approved.webp)
+![Approved main artboard](assets/portrait-v2/meong-main-flow-approved.webp)
 
-![Meong Fly approved artboard](assets/portrait-v2/meong-fly-revised-approved.webp)
+![Approved revised game artboard](assets/portrait-v2/meong-fly-revised-approved.webp)
 
-[Interpretasi visual terkini](portrait-kiosk-v2-visual-spec.md) ·
-[asal dan hash aset](assets/portrait-v2/README.md). Artboard adalah arah visual;
-nominal contoh dan panah lama tidak mengubah alur/tarif source.
-
-## Pengujian dan kelanjutan
-
-Source 9433010: **688 full PASS / 0 skip**, CI tiga job SUCCESS,
-109 PNG source/hash/dimensi terverifikasi. Native CI punya satu skip aset palm
-opsional; local full dengan aset model mencakupnya. Semua bukti dibedakan dari
-perangkat/provider. [P5](qa/portrait-v2-p5/README.md) ·
-[form 26 item](qa/portrait-v2-p5/windows-checklist.html) ·
-[status fitur](FEATURE_STATUS.md) · [bug](bug_tracker.md).
-
-Gunakan [README](../README.md) untuk perintah launcher. Produksi, promo QRIS,
-scanner/POS, deployment, merge dan rilis tidak diaktifkan. Jangan menghapus
-journal untuk melewati order yang belum pasti; operator harus rekonsiliasi.
-Master/tag v1 dan seluruh branch referensi tetap dipertahankan.
+[Current visual interpretation](portrait-kiosk-v2-visual-spec.md) ·
+[asset provenance](assets/portrait-v2/README.md) ·
+[technical contracts](portrait-kiosk-v2-technical-design.md).
+Artboard sample prices/arrows/scanner pictures do not override implemented flow.
+Use [README launch instructions](../README.md), [P5 form](qa/portrait-v2-p5/windows-checklist.html)
+and [operator form](qa/portrait-v2-operator-health/windows-checklist.html).
+Production, trusted merchant promo, real scanning/POS, deployment, merge and release remain separate.

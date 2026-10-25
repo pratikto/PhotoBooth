@@ -1,18 +1,17 @@
 # Meong Photobooth — GUI v2
 
-GUI portrait untuk photobooth Meong: iklan, tutorial, 12 template strip asli,
-foto tiga pose, satu retake per desain, hasil lokal, serta Meong Fly DEMO.
-Dibangun dengan Kivy, OpenCV dan Pillow; backend foto/printer/Drive yang sudah
-bekerja dipakai kembali melalui adapter.
+Portrait Kivy photobooth with advertising, a tutorial, twelve original thermal
+strip designs, three photos per selected design, one retake per design, local
+results, and the original Meong Fly game in DEMO mode.
 
-**Pusat pengembangan: `feature/portrait-kiosk-v2-next`.** Owner menetapkan GUI v2
-sebagai calon branch utama berikutnya pada **25 Oktober 2026**. GitHub default
-branch **masih `master`**; tidak ada rename, merge atau penggantian default pada
-pembaruan dokumentasi ini. `python main.py` tetap menjalankan GUI v1.
+**Development branch: `feature/portrait-kiosk-v2-next`.** GUI v2 is the owner's
+intended future primary branch. GitHub's default remains `master`;
+`python main.py` still launches v1. See the [promotion plan](docs/gui-v2-promotion-plan.md).
 
-## Jalankan GUI v2 di Windows
+## Run GUI v2 on Windows
 
-Dari repository dan environment Kivy yang sudah digunakan:
+Use the existing checkout and Kivy environment. Preserve local changes before
+switching or pulling; do not recreate the project or overwrite configuration.
 
 ```powershell
 git switch feature/portrait-kiosk-v2-next
@@ -21,92 +20,82 @@ git pull --ff-only origin feature/portrait-kiosk-v2-next
 python tools/run_portrait_v2.py
 ```
 
-Instalasi pertama memerlukan Python 3.11+ (QA memakai Python 3.12), environment
-Python, dan `python -m pip install -r requirements.txt`. Jangan membuat ulang
-proyek atau menimpa konfigurasi/perubahan lokal untuk mengikuti panduan ini.
+First installation requires Python 3.11+ (recorded QA uses Python 3.12) and
+`python -m pip install -r requirements.txt` in a virtual environment.
 
-Alur lokal: **iklan → MULAI FOTO → tutorial → pilih template/jumlah → UJI FOTO →
-persetujuan → tiga foto → review/retake → hasil → iklan**. Jumlah 0–9 berarti
-lembar identik; satu desain tetap satu sesi tiga foto. Printer dan Drive hanya
-aktif dengan opt-in operator; default menyimpan hasil lokal.
+Local flow: **advertising → MULAI FOTO → tutorial → templates/copies → UJI FOTO →
+consent → three photos → review/retake → result → advertising**.
+Quantity zero deselects a design; 1–9 selects identical paper copies from one
+three-photo session. A zero-copy digital-only purchase is not implemented.
+Printer and Drive require operator opt-in; the default output stays local.
 
-## Pilih mode pengujian
+## Select a test mode
 
-| Mode | Cara menjalankan | Batas |
+| Mode | Launch | Boundary |
 | --- | --- | --- |
-| GUI lokal/default | `python tools/run_portrait_v2.py` | Pembayaran produksi/scanner nonaktif; foto melalui persetujuan UJI FOTO |
-| Checkout MOCK lokal | Set `$env:PHOTOBOOTH_V2_CHECKOUT_MOCK='1'`, lalu launcher biasa | QR nonpayable; simulasi konfirmasi dan diskon game, bukan settlement bank |
-| QRIS Sandbox | `python tools/run_portrait_v2_sandbox.py` setelah instalasi extras | Merchant uji + simulator resmi; belum diterima di perangkat/provider; tanpa promo game QRIS |
+| Local/default | `python tools/run_portrait_v2.py` | Explicit photo-test consent; production payments and receipt scanner disabled |
+| Local MOCK checkout | Set `$env:PHOTOBOOTH_V2_CHECKOUT_MOCK='1'`, then use the ordinary launcher | Nonpayable QR, simulated confirmation and one-use game discount |
+| QRIS Sandbox | Install `requirements-qris.txt`, then `python tools/run_portrait_v2_sandbox.py` | Isolated test merchant/backend; official simulator; no game promotion; printer/Drive forced off |
 
-Tutup aplikasi dan hapus flag MOCK (`Remove-Item Env:PHOTOBOOTH_V2_CHECKOUT_MOCK
--ErrorAction SilentlyContinue`) setelah pengujian mode tersebut. Launcher Sandbox
-memisahkan mode dan kredensial serta menonaktifkan printer/Drive untuk trial.
+Close the app and clear the MOCK flag after testing:
+`Remove-Item Env:PHOTOBOOTH_V2_CHECKOUT_MOCK -ErrorAction SilentlyContinue`.
 
-Untuk Sandbox, instal `python -m pip install -r requirements-qris.txt`.
-Login [Dashboard Midtrans](https://dashboard.midtrans.com/), pilih **Sandbox →
-Settings → Access Keys**. Merchant ID dan Server Key Sandbox (awalan
-`SB-Mid-server-`) dimasukkan secara lokal saat diminta. Sandbox dibuat saat
-pendaftaran; menunggu persetujuan produksi tidak sama dengan menunggu akses
-simulasi. [Penjelasan resmi](https://docs.midtrans.com/docs/midtrans-account).
-Jangan kirim Server Key ke chat/repository. Gunakan simulator resmi yang dicetak
-terminal, bukan aplikasi bank/dompet asli. [Panduan dan recovery](docs/qa/portrait-v2-sandbox/README.md).
+The Sandbox launcher requests Merchant ID and a hidden Sandbox Server Key
+locally. Never send keys to chat or commit them. Use the official simulator
+shown in the terminal. [Sandbox instructions and recovery](docs/qa/portrait-v2-sandbox/README.md).
+Production account approval and Sandbox access are separate; the
+[official account guide](https://docs.midtrans.com/docs/midtrans-account)
+describes the environments. Actual merchant acceptance remains pending.
 
-## Device Health operator — reuse v1
+## Operator Device Health
 
-Source **ea394e8**, 780 full PASS; [CI 40157638369](https://github.com/pratikto/PhotoBooth/actions/runs/40157638369)
-tiga job SUCCESS, 119 PNG verified. Uji perangkat aktual tetap terpisah.
+At idle advertising, press **F12** or hold the Meong header for **1.5 seconds**.
+The original v1 panel/backend/worker are reused through small v2 adapters.
+Six read-only observations and OS candidate inventory can be refreshed without
+opening another camera or sending print bytes. Access is also available in
+Sandbox RECOVERY and cannot interrupt active photo/game/payment work.
 
-Pada halaman iklan tekan **F12** atau tahan header Meong **1,5 detik**. Panel
-Device Health existing menampilkan enam indikator, inventory OS dan REFRESH di
-background. Akses juga tersedia pada Sandbox RECOVERY, tanpa mengubah order.
-Capture/game/checkout aktif tidak dapat diinterupsi lewat akses operator ini.
+**SIMPAN LAPORAN LOKAL** saves redacted metadata to `data/diagnostics`.
+READY describes a limited observation, not physical printer/provider/Drive
+acceptance. **PILIH DEVICE** is disabled.
+[Evidence and limits](docs/qa/portrait-v2-operator-health/README.md) ·
+[eight-item operator form](docs/qa/portrait-v2-operator-health/windows-checklist.html).
 
-**SIMPAN LAPORAN LOKAL** membuat JSON metadata di `data/diagnostics`, tanpa foto,
-key/token, raw logs, alamat jaringan atau queue/serial. READY hanya observasi
-terbatas, bukan bukti paper/provider/Drive siap. PILIH DEVICE nonaktif; tidak
-mengubah konfigurasi atau membuka kamera kedua. [Panduan/bukti](docs/qa/portrait-v2-operator-health/README.md)
-· [8-item form operator dengan Submit](docs/qa/portrait-v2-operator-health/windows-checklist.html).
+## Current checkpoint and remaining acceptance
 
-## Uji akhir dan status saat ini
+Latest functional source: **`ea394e8`**; **780 local tests PASS, zero skips**.
+[Matching-source CI 40157638369](https://github.com/pratikto/PhotoBooth/actions/runs/40157638369)
+succeeded in all three jobs. Its native report has one optional palm-model-assets
+skip, covered by the local run. The evidence package verifies 119 PNGs;
+required views were reviewed. These are recorded source/fixture results.
+[Current status](docs/FEATURE_STATUS.md) · [test ledger](docs/test_checklist.md).
+
+P5 is **ready for acceptance**, with merchant Sandbox, current Windows integration,
+physical printing, Drive/download/30-day retention (BUG-009), privacy and release
+signoff still awaiting complete evidence. Existing owner reports remain valid
+within their recorded limits. The preflight at HEAD `0dc6555` reported
+READY_FOR_MANUAL_TEST; it did not certify hardware or a provider.
 
 ```powershell
 python tools/check_portrait_v2.py
 Start-Process docs/qa/portrait-v2-p5/windows-checklist.html
 ```
 
-Impor `data/diagnostics/windows-readiness.json` ke form, periksa perangkat aktual,
-centang hanya tes yang lulus, lalu **Submit Hasil** untuk menyiapkan laporan chat.
-Owner telah melaporkan **READY_FOR_MANUAL_TEST pada HEAD `0dc6555`**; ini baru
-preflight, bukan bukti lulus pengujian perangkat/provider.
+Import `data/diagnostics/windows-readiness.json`, complete actual checks, then
+Submit to prepare a report for chat. Import does not pass tests or send a report.
+The eight-item operator form is separate and adds no repeat photo/game cycle gate.
 
-Baseline P5 sebelum increment operator, source **9433010**: **688 tes PASS / 0 skip**;
-[CI 40109206417](https://github.com/pratikto/PhotoBooth/actions/runs/40109206417)
-tiga job SUCCESS dan 109 PNG terverifikasi. Screenshot 800×1280 dan 452×900
-sudah direview. Native CI memiliki satu skip aset palm opsional yang tercakup
-dalam local full run. Ini bukti source/fixture, bukan sertifikasi produksi.
-[Seluruh bukti, batas dan checkpoint P5](docs/qa/portrait-v2-p5/README.md).
+## Documentation
 
-**Masih menunggu bukti:** uji merchant Sandbox dan integrasi Windows baru,
-printer fisik, Drive/download/retensi 30 hari (BUG-009), privasi, serta persetujuan
-rilis. Promo game bekerja pada simulasi lokal/MOCK; backend QRIS belum punya
-kontrak promo tepercaya, sehingga Sandbox meminta persetujuan harga penuh.
-Produksi, POS/scanner nyata, deployment dan merge tetap tidak aktif/tidak dilakukan.
+Start with the [documentation index](docs/README.md),
+[roadmap](docs/portrait-kiosk-v2.md), [technical design](docs/portrait-kiosk-v2-technical-design.md),
+[handover](docs/DEVELOPMENT_HANDOVER.md), [bug register](docs/bug_tracker.md),
+[branch reference audit](docs/gui-v2-branch-audit.md), and [working rules](AGENTS.md).
+The [documentation reconciliation](docs/qa/documentation-consistency-2026-10-25.md)
+records the cross-check and corrections.
 
-## Dokumentasi pengembangan
-
-- [Indeks dokumentasi](docs/README.md) — pilih panduan menurut tugas.
-- [Roadmap dan perilaku GUI v2](docs/portrait-kiosk-v2.md).
-- [Arsitektur dan kontrak adapter](docs/portrait-kiosk-v2-technical-design.md).
-- [Status fitur](docs/FEATURE_STATUS.md), [bug](docs/bug_tracker.md), [handover](docs/DEVELOPMENT_HANDOVER.md).
-- [Audit 19 branch beserta SHA/referensi](docs/gui-v2-branch-audit.md).
-- [Rencana GUI v2 menjadi branch utama](docs/gui-v2-promotion-plan.md).
-- [Aturan reuse, scope dan pengujian](AGENTS.md), [prompt melanjutkan](docs/DEVELOPMENT_PROMPT.md).
-
-Pakai implementasi existing sebelum menulis pengganti. Game menggunakan renderer
-asli dari `feature/meong-flappy-challenge`; QRIS menggunakan service/client/journal
-dari `feature/qris-payment`. AI Background, Device Health, WhatsApp dan update
-lab dithering di branch lain bukan otomatis fitur GUI v2.
-
-Riwayat v1 tetap tersedia di [rilis v1.0.0](docs/releases/v1.0.0.md), QA bertanggal,
-dan [README sebelum konsolidasi](https://github.com/pratikto/PhotoBooth/blob/0dc6555d299cdab19d952e92df2ae660cdc4676d/README.md).
-Tag v1 dan data/journal operasional tidak diubah oleh pembaruan dokumentasi.
+Reuse working services, UI, renderers and assets. The latest lab dithering,
+AI Background Studio, device selection and WhatsApp work on reference branches
+are not automatically part of v2. Production QRIS, trusted QRIS game promotion,
+real receipt/POS scanning, deployment, merge and release are not enabled by this
+source checkpoint. [v1.0.0](docs/releases/v1.0.0.md) remains the immutable v1 source release.
