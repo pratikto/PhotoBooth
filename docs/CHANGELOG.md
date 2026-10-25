@@ -2,6 +2,12 @@
 
 ## 2026-10-25 — Print/Drive stage 2: native automatic fulfillment
 
+Source **266b2c8**, 800 full PASS/zero skips, 15 new-feature focused PASS; CI
+40208966127 all three jobs SUCCESS, 133 verified PNGs, required delivery views
+reviewed and large QR screenshot pixels decoded. Stage 1 7b691c7 also had
+three-job CI SUCCESS. Evidence-only delivery skips Actions; actual paper/phone/
+cloud acceptance remains pending.
+
 The v2 host now follows v1 approval → composition → one background print batch,
 using existing durable PhotoTest/PhotoJobs. Explicit --drive prepares/resumes the
 original isolated queue at startup; consent reflects verified-folder readiness.

@@ -12,8 +12,10 @@ approval for features, production, deployments or repository transitions.
 
 ## Current follow-up
 
-**Owner-selected source work, 25 October:** finish v2 automatic print and
-background Drive delivery first, reusing v1. Watchdog is postponed. Explicit
+**Owner-selected increment delivered, 25 October:** v2 automatic print and
+background Drive at 266b2c8, reusing v1; 800 full PASS and matching three-job CI
+SUCCESS. Actual paper/phone/cloud checks use the eleven-item form. Watchdog is
+postponed. Explicit
 launch opt-ins, existing printer config/Drive credentials, verified queue/QR and
 uncertain-print guards remain; no deployment/cloud deletion/production.
 [Scope, staged evidence and rollback](qa/portrait-v2-print-drive/README.md).

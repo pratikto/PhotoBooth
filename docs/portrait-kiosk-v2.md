@@ -20,7 +20,10 @@ It is beyond the earlier gallery-only prototype; do not rebuild existing feature
    zero deselects; 1–9 means identical copies from one session per selected design.
 4. Local/default: UJI FOTO → consent → three captures with five-second countdowns
    → review/one retake per design → composition/result → advertising. Output is
-   local unless the operator opts into printer/Drive.
+   local unless the operator opts into --print/--drive: approved strips auto-print
+   once/design, the existing queue uploads/resumes in background, and a large
+   on-screen download QR appears only after file verification. --manual-print
+   retains deliberate manual printing.
 5. Game DEMO: intro → manual one-use DEMO code → original game → win/lose →
    tutorial if unseen → gallery. No retry; consumed codes stay consumed after restart.
    Real scanning/POS is not mounted in v2.
@@ -47,7 +50,7 @@ The printed photo-folder QR is separate from the payment QRIS.
 | P1 | One v2 audio owner, SDL2 WAV loading, SFX/minimize/close | Owner reports v2 audio normal; v1 BUG-001/007 not closed |
 | P2/P2.5/P2.6–P2.8 | Responsive advertising/overlay/tutorial/gallery, swipe/transitions, current typography/header | Automated source and dated owner reports; older P2 “no integration” scope is historical |
 | P3a | Async camera, mirrored preview, face invitation and optional palm | Owner-reported corrections accepted; missing source/device fields remain unknown; reconnect/current-integration evidence separate |
-| P3b | Three originals, one retake/design, composition/result, optional printer/Drive | Default local; fixture tests do not certify paper/download/cloud deletion |
+| P3b | Three originals, one retake/design, composition/result, opt-in auto-print/background Drive with verified result QR | Default local; fixture tests do not certify paper/download/cloud deletion |
 | P4a | Original Meong Fly Stage/Flow/render/assets/emitter and one-use DEMO ledger | Owner-reported game/visual PASS; real scanner/POS disabled |
 | P4b MOCK | Local quote/reward/admission ledger | Nonpayable simulation |
 | P4b Sandbox | Existing service/client/journal plus native v2 host and isolated launcher | Actual merchant simulator/current-device evidence pending; no trusted game promo |
@@ -58,7 +61,8 @@ The printed photo-folder QR is separate from the payment QRIS.
 Owner approved P4b/P5 with manual tests at the end, then safe source continuation
 while laptop checks wait. Health/report source is complete. The preflight at
 `0dc6555` is READY_FOR_MANUAL_TEST, not merchant/hardware acceptance.
-[Latest evidence ledger](test_checklist.md) distinguishes the 785-test BUG-018
+[Latest evidence ledger](test_checklist.md) records the 800-test print/Drive
+source (266b2c8, matching three-job CI SUCCESS/133 verified PNGs), 785-test BUG-018
 correction, 780-test original operator source and earlier 688-test P5 baseline,
 including optional CI skips. Later owner BUG-018 retest is 4/4/no issues;
 exact tested source/device metadata and external acceptance remain unverified.

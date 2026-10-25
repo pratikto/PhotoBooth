@@ -17,6 +17,9 @@ Device Health/report increment is complete in source. The English documentation
 reconciliation completed at f36ebad; the subsequent owner report authorizes the
 BUG-018 operator input correction on the same branch. Existing scope
 approval does not need to be requested again for each small change.
+The owner then prioritized printing and Drive only, selecting automatic printing
+as v1 with background upload; watchdog is postponed. Existing opt-in, isolation,
+uncertainty and retention boundaries remain.
 [Handover](DEVELOPMENT_HANDOVER.md) · [decisions](DECISIONS.md).
 
 ## Reuse and delivery

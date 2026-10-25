@@ -8,7 +8,7 @@ branch. This plan prepares that transition; no repository operation has occurred
 | Active development/commit target | `feature/portrait-kiosk-v2-next` |
 | GitHub default | `master` (the earlier branch audit pinned `27f3801`) |
 | Immutable v1 source baseline | `v1.0.0` / `07ce51d` |
-| Latest tested functional v2 source | Operator `ea394e8`; earlier P5 source/evidence `9433010` / `0dc6555` |
+| Latest tested functional v2 source | Print/Drive `266b2c8`; earlier operator `ea394e8` and P5 source/evidence `9433010` / `0dc6555` |
 | Intended next primary product/branch | GUI v2, subject to specified gates and owner instruction |
 
 ## Evidence to assess
@@ -16,7 +16,7 @@ branch. This plan prepares that transition; no repository operation has occurred
 | Area | Current evidence / remaining boundary |
 | --- | --- |
 | Source/reuse | [Dated 19-branch audit](gui-v2-branch-audit.md); game, QRIS and read-only health reused |
-| Regression | [Current test ledger](test_checklist.md): 780 local PASS/zero skips, matching three-job CI SUCCESS with one optional native model-assets skip, 119 verified PNGs |
+| Regression | [Current test ledger](test_checklist.md): 800 local PASS/zero skips, matching-source three-job CI SUCCESS with one optional native model-assets skip covered locally, 133 verified PNGs |
 | Windows metadata | Preflight `0dc6555` ready; not physical/provider acceptance |
 | Current Windows integration | Earlier owner reports retained within their limits; [P5 form](qa/portrait-v2-p5/windows-checklist.html) not supplied for the new integration |
 | Operator increment | Read-only panel/report in source; [eight-item form](qa/portrait-v2-operator-health/windows-checklist.html) separate |

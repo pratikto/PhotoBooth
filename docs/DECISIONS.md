@@ -27,6 +27,14 @@ it adds no new application feature approval. [AGENTS.md](../AGENTS.md).
 
 ## Product decisions
 
+**Owner print/Drive priority, 25 October:** after BUG-018's 4/4 monitoring retest,
+the owner redirected the next development to these two features only and chose
+automatic print after approving photos (v1 behavior), with Drive in background.
+Use existing clients/configuration/queues/QR, explicit ordinary-launcher opt-ins,
+durable one-batch/uncertainty guards and verified delivery. Watchdog is postponed;
+no production/provider/scanner, cloud deletion/deployment or repository operation
+follows. [Scope and acceptance](qa/portrait-v2-print-drive/README.md).
+
 | ID | Owner-confirmed decision | Current interpretation / boundary |
 | --- | --- | --- |
 | DEC-001 | Earlier development targeted `feature/kivy-gui` | Historical; v1 was subsequently released. Continue v2 on its existing branch under DEC-020/023 |

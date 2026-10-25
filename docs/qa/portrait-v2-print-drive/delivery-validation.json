@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-25",
+  "source": "266b2c82da71226733f95825d6dbbfc3ef8093b9",
+  "local_links_checked": 356,
+  "unchanged_functional_files": 232,
+  "unchanged_v1_backend_files": 9,
+  "full_tests": {
+    "run": 800,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 213.823
+  },
+  "ci_run": 40208966127,
+  "ci_jobs_success": 3,
+  "verified_pngs": 133,
+  "delivery_screenshots_reviewed": [
+    {
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "width": 452,
+      "height": 900
+    }
+  ],
+  "large_qr_decodes_from_right_half_of_both_screenshots": true,
+  "checklist_items": 11,
+  "fresh_checked_items": 0,
+  "metadata_import_auto_pass": false,
+  "new_twenty_cycle_gate": false,
+  "physical_paper_phone_and_retention": "NOT_RUN",
+  "bug_009": "OPEN",
+  "production_and_watchdog": "NOT_ENABLED",
+  "final_docs_change_only": true
+}

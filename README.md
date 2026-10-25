@@ -94,10 +94,10 @@ this does not certify exact source or external P5 gates.
 
 ## Current checkpoint and remaining acceptance
 
-Latest functional source: **`ebb53fd`**; **785 local tests PASS, zero skips**.
-[Matching-source CI 40189694738](https://github.com/pratikto/PhotoBooth/actions/runs/40189694738)
+Latest functional source: **`266b2c8`**; **800 local tests PASS, zero skips**.
+[Matching-source CI 40208966127](https://github.com/pratikto/PhotoBooth/actions/runs/40208966127)
 succeeded in all three jobs. Its native report has one optional palm-model-assets
-skip, covered by the local run. The evidence package verifies 119 PNGs;
+skip, covered by the local run. The evidence package verifies 133 PNGs;
 required views were reviewed. These are recorded source/fixture results.
 [Current status](docs/FEATURE_STATUS.md) · [test ledger](docs/test_checklist.md).
 

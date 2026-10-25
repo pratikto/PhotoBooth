@@ -1,0 +1,1170 @@
+{
+  "source_sha": "266b2c82da71226733f95825d6dbbfc3ef8093b9",
+  "ci_run": 40208966127,
+  "artifact_id": 12605043566,
+  "zip_sha256": "3bae68515ac7b25598f6f781373a36c2a793645e10250edbe4b6a0e3cff32890",
+  "verified_pngs": 133,
+  "synthetic_only": true,
+  "reports": [
+    {
+      "file": "report-800x600.json",
+      "source_sha": "266b2c82da71226733f95825d6dbbfc3ef8093b9",
+      "tracked_changes": false
+    },
+    {
+      "file": "report-800x1280.json",
+      "source_sha": "266b2c82da71226733f95825d6dbbfc3ef8093b9",
+      "tracked_changes": false
+    },
+    {
+      "file": "report-452x900.json",
+      "source_sha": "266b2c82da71226733f95825d6dbbfc3ef8093b9",
+      "tracked_changes": false
+    },
+    {
+      "file": "report-360x640.json",
+      "source_sha": "266b2c82da71226733f95825d6dbbfc3ef8093b9",
+      "tracked_changes": false
+    },
+    {
+      "file": "sandbox/evidence-800x1280.json",
+      "source_sha": "266b2c82da71226733f95825d6dbbfc3ef8093b9",
+      "tracked_changes": "not supplied by renderer"
+    },
+    {
+      "file": "sandbox/evidence-452x900.json",
+      "source_sha": "266b2c82da71226733f95825d6dbbfc3ef8093b9",
+      "tracked_changes": "not supplied by renderer"
+    },
+    {
+      "file": "delivery/delivery-report-452x900.json",
+      "source_sha": "266b2c82da71226733f95825d6dbbfc3ef8093b9",
+      "tracked_changes": false
+    },
+    {
+      "file": "delivery/delivery-report-800x1280.json",
+      "source_sha": "266b2c82da71226733f95825d6dbbfc3ef8093b9",
+      "tracked_changes": false
+    },
+    {
+      "file": "p4b/checkout-report-800x1280.json",
+      "source_sha": "266b2c82da71226733f95825d6dbbfc3ef8093b9",
+      "tracked_changes": false
+    },
+    {
+      "file": "p4b/checkout-report-452x900.json",
+      "source_sha": "266b2c82da71226733f95825d6dbbfc3ef8093b9",
+      "tracked_changes": false
+    },
+    {
+      "file": "p4/p4-report-800x1280.json",
+      "source_sha": "266b2c82da71226733f95825d6dbbfc3ef8093b9",
+      "tracked_changes": false
+    },
+    {
+      "file": "p4/p4-report-452x900.json",
+      "source_sha": "266b2c82da71226733f95825d6dbbfc3ef8093b9",
+      "tracked_changes": false
+    },
+    {
+      "file": "p3/p3-report-452x900.json",
+      "source_sha": "266b2c82da71226733f95825d6dbbfc3ef8093b9",
+      "tracked_changes": false
+    },
+    {
+      "file": "p3/p3-report-800x1280.json",
+      "source_sha": "266b2c82da71226733f95825d6dbbfc3ef8093b9",
+      "tracked_changes": false
+    },
+    {
+      "file": "health/health-report-452x900.json",
+      "source_sha": "266b2c82da71226733f95825d6dbbfc3ef8093b9",
+      "tracked_changes": false
+    },
+    {
+      "file": "health/health-report-800x1280.json",
+      "source_sha": "266b2c82da71226733f95825d6dbbfc3ef8093b9",
+      "tracked_changes": false
+    }
+  ],
+  "images": [
+    {
+      "file": "01-advert-800x6000001.png",
+      "size": [
+        800,
+        600
+      ],
+      "sha256": "0e3d25a92b1da8e5c743bdc71150ec38c19753945df5278dedcbdca419b5005a"
+    },
+    {
+      "file": "02-invitation-800x6000001.png",
+      "size": [
+        800,
+        600
+      ],
+      "sha256": "ea58eaa98fcffb1a8a091ffddf6067128deaf4f647d67d5205c90f2c5721ff69"
+    },
+    {
+      "file": "03-tutorial-800x6000001.png",
+      "size": [
+        800,
+        600
+      ],
+      "sha256": "4792a9b413d160114446a9261240f4740ee532ff5819f7cd4e333765a8c3ab2b"
+    },
+    {
+      "file": "04-templates-800x6000001.png",
+      "size": [
+        800,
+        600
+      ],
+      "sha256": "0a251dddbf072d5f72b8cff672e8ada560a2a3eb7505ecc0798394fd4d68d1d8"
+    },
+    {
+      "file": "05-copy-cart-800x6000001.png",
+      "size": [
+        800,
+        600
+      ],
+      "sha256": "2731091fab9bc4ce6d887261dd8a45e4d91227aaedc159db02efef4d064a08ce"
+    },
+    {
+      "file": "06-game-placeholder-800x6000001.png",
+      "size": [
+        800,
+        600
+      ],
+      "sha256": "b99b9746361fe0f9aa2dd6fe71986d2c6cdbf4a4ba2a9d99099d25b3c098647e"
+    },
+    {
+      "file": "01-advert-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "77e7d45446ca76f4196c7487e4f3c8c7552bdecb83d2cb2d23e2f8ec5c72d573"
+    },
+    {
+      "file": "02-invitation-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "d888b2e9e82f1606b4995d41b4f8af44eb3c258329d20ea93eebdc5f6fb88d7c"
+    },
+    {
+      "file": "03-tutorial-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "a0d79adc720179910c799a79d5e8cba249124d34db868fb13d5eeb31c409f3ae"
+    },
+    {
+      "file": "04-templates-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "6e2e671fb1fec3f17371c7eb44791771cb18ada24080369d892a405fdcf68319"
+    },
+    {
+      "file": "05-copy-cart-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "976abbc12d6ce023f791dbb93e05aaa20a36f69bb0207894fab40f239e2ed663"
+    },
+    {
+      "file": "06-game-placeholder-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "42d8a1d4f774a9a502fb029e6e203fb025316aee5f1f7558e32e74fff1608f0a"
+    },
+    {
+      "file": "01-advert-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "daf84848cf43d9cd0821edff0e9c39d0dd35ad735b330222c41b372f326d19e3"
+    },
+    {
+      "file": "02-invitation-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "a9bc3cc19233b768a54f37c8bf0f0ccbc73da9afc40f1a676bd9e808525bc8f8"
+    },
+    {
+      "file": "03-tutorial-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "31efe6587049868e0bf199be5b1563d98e558982b870f83fc4ef7222517f2e7a"
+    },
+    {
+      "file": "04-templates-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "a1ca35933644eede62bb59c6847d6af43ce3bb010f4cad05dafd22369d5a25fa"
+    },
+    {
+      "file": "05-copy-cart-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "3fc7ebbb41add0f27639b19ce8d2f4c42dd1ce15d0f8432103980134fb48af76"
+    },
+    {
+      "file": "06-game-placeholder-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "51f2c265ee8cc4b3fc41d1446fd1548dae7c46a6731f14736c0985a6203e6e11"
+    },
+    {
+      "file": "motion-00-rest-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "d2efeffd33d2363f2bbb99fb2d81827b5c5c986391820c97956cc1f3105d6005"
+    },
+    {
+      "file": "motion-01-next-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "c6261b2808637c298284d1582089590ef2c18ac63be391d39a4603827e3d59a0"
+    },
+    {
+      "file": "motion-02-next-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "96fb55a6e97d7763d9f38bf4ae9a3d6ad9d051ef707666b9010f48feac128fd0"
+    },
+    {
+      "file": "motion-03-next-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "2d921494082d298a3c66e59d7b6a0a72b638814645ce6dde6a19d89171316a8e"
+    },
+    {
+      "file": "motion-04-selected-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "489eb40d85b8c2009cd0927ea34ad64583b13641ccb5424531f55ef0b05f3d34"
+    },
+    {
+      "file": "motion-05-previous-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "9d11a84af7144d2c6e3d6e519afe4c43c17d95a756bc492923d848c218ccfdf8"
+    },
+    {
+      "file": "motion-06-previous-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "a9ebbb6612296e86de43e0105a67b621ade5314ddf78c6b6d31f102fe776254c"
+    },
+    {
+      "file": "motion-07-previous-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "50d2028f0cc7d98cfe0fd8dcbac355b41f38da8b1b01f683aa68492366083590"
+    },
+    {
+      "file": "motion-08-returned-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "d2efeffd33d2363f2bbb99fb2d81827b5c5c986391820c97956cc1f3105d6005"
+    },
+    {
+      "file": "01-advert-360x6400001.png",
+      "size": [
+        360,
+        640
+      ],
+      "sha256": "b9ea9e28ef2968e10f256ec12dd332686ee787432bad099769540ac02fc953e3"
+    },
+    {
+      "file": "02-invitation-360x6400001.png",
+      "size": [
+        360,
+        640
+      ],
+      "sha256": "89703c05740a2de7d9ca29b239dd8fead1a309b10431e3823fb32494c6449094"
+    },
+    {
+      "file": "03-tutorial-360x6400001.png",
+      "size": [
+        360,
+        640
+      ],
+      "sha256": "9ee8884916cb2cdbc0bb72346fe3ad3c9668771345c149400c967993f309ecd8"
+    },
+    {
+      "file": "04-templates-360x6400001.png",
+      "size": [
+        360,
+        640
+      ],
+      "sha256": "7117dca4858f37494d023ae234ab128f13b5ed95da3ce5bec4f58e22ffdb476b"
+    },
+    {
+      "file": "05-copy-cart-360x6400001.png",
+      "size": [
+        360,
+        640
+      ],
+      "sha256": "9bfaeb6f324571de759ac8d44a1dd93d4595bb57019d538119dae6069a70945e"
+    },
+    {
+      "file": "06-game-placeholder-360x6400001.png",
+      "size": [
+        360,
+        640
+      ],
+      "sha256": "bf2c4b252a0c5685d6d0e9967aaf706ff949ecc3a0f5f018646a4024061dd348"
+    },
+    {
+      "file": "sandbox/01-quote-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "892a4917b0688cd2d0220ec9ff6e1fa437639f98e60bee9f758414c6a5614eb2"
+    },
+    {
+      "file": "sandbox/02-waiting-offline-fixture-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "bfdf16b03491ea02009f726f7d05212d388a5444672612f5bdde9ee774c48a13"
+    },
+    {
+      "file": "sandbox/03-reserved-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "98d003ab52550985641087601a7a7c64a612478648c48bd0f56c61c7171ce3f3"
+    },
+    {
+      "file": "sandbox/04-consent-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "89b245746b47f9409885595796931f51b6727432b16f6a2dd60709052955bf21"
+    },
+    {
+      "file": "sandbox/05-recovery-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "63ed149eefbe62062a5c09e906f9365128442260b4114593d59dee47ff8d592b"
+    },
+    {
+      "file": "sandbox/01-quote-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "eef9cc3d6e8dcbb79cd479a9ff237571243cdf1d5b0912ee4ad37c96256fcacc"
+    },
+    {
+      "file": "sandbox/02-waiting-offline-fixture-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "990904c0d6dbaefce2f4e8313f7cf02df09ea3d38b891d2e2ca311f628f6b4ae"
+    },
+    {
+      "file": "sandbox/03-reserved-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "b9af9fdb07d4c905888709f76d1fff23ed74fb4859f77d599f696fac76abaa82"
+    },
+    {
+      "file": "sandbox/04-consent-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "68423c505a197dc1a41f0605b73bdd45255805edde899c95d1fc4838b551b612"
+    },
+    {
+      "file": "sandbox/05-recovery-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "12ebbaef4378f1ec128b581cc6d59caa2eb8625acb4daa23b1de6cda755136cf"
+    },
+    {
+      "file": "delivery/delivery-01-drive-waiting-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "388641b8d193b02244f18e91cf9253345b36f1d15f291ee2ed3aaaa12001e2c5"
+    },
+    {
+      "file": "delivery/delivery-02-drive-ready-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "c865ad659e60d9fc62e6f700502ad8d9161051d7d9e72194124e17039a303796"
+    },
+    {
+      "file": "delivery/delivery-03-print-sending-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "bbdce20139ccb5398e470616e64348e5ff79fb83f30a763f67a228418110b1a0"
+    },
+    {
+      "file": "delivery/delivery-04-offline-retry-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "ac115e8c2bc3b9b012e6f4b7d00bf1d7fa6641a2a016b3dbed6a0c5682dbed29"
+    },
+    {
+      "file": "delivery/delivery-05-upload-verified-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "3fd2d3b4f91cd5f8e649bf98a24c3215b6df5263d4865a36ec7f150f4fe6834c"
+    },
+    {
+      "file": "delivery/delivery-06-print-uncertain-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "a6b817c67688aa145bf3ce5088bb9267c63525e8e2f44bcd2cfa3de1b1d226ae"
+    },
+    {
+      "file": "delivery/delivery-07-retention-held-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "210b47b36c79a34efa4273c26751e3e9200b65100b3b7659748f3d0eddee2278"
+    },
+    {
+      "file": "delivery/delivery-01-drive-waiting-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "1e069336fae88c45934cae93e0e9b7463c424832f7c79b997833d3ea138d71b1"
+    },
+    {
+      "file": "delivery/delivery-02-drive-ready-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "c88ec6a373b25b94b59c65abc4429a4a443dcbd6b068961500509a115ba1d16b"
+    },
+    {
+      "file": "delivery/delivery-03-print-sending-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "175fdf67d500755f365511c4ac43a131f08a30d4ea32303bce3b6e03d584f1be"
+    },
+    {
+      "file": "delivery/delivery-04-offline-retry-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "749df4ea1d111ad5a711e43a8e1dbf04dba3f57a2a32c78684dfa9d37b0d3929"
+    },
+    {
+      "file": "delivery/delivery-05-upload-verified-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "444b2d18c104fe486e79d0c8c7f7f79b5ccf8d1151a6aa2b63eca40fdea2b93e"
+    },
+    {
+      "file": "delivery/delivery-06-print-uncertain-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "dcd98e6b4afcadc2eb5b9df6771686c188612b98e03d6796c2329fd85bca8eb1"
+    },
+    {
+      "file": "delivery/delivery-07-retention-held-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "9aad7557695da24d2c00adf619e328e4838559abc6cddf4f874b68dc908f9e78"
+    },
+    {
+      "file": "p4b/01-mock-gallery-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "d00be5346ded053fb200a5c4626468ee95ade9e343a6bc2c7260a776169f77d7"
+    },
+    {
+      "file": "p4b/02-regular-pending-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "3ebaaf188289e77f93c00175e2bd8a1955765238148770d39e81b456e83c3782"
+    },
+    {
+      "file": "p4b/03-cancelled-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "c4a2f95f65c88023c917988c4f9ffb6250f8e402d6d23c7a078e57fe3b348d60"
+    },
+    {
+      "file": "p4b/04-win-gallery-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "a2983fc1ca01d740395365b72e5e19ed80472e9ad049bb30e378d9a731b69730"
+    },
+    {
+      "file": "p4b/05-win-pending-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "42bfc8855a11c577e96365a852fa0afcc4347f572620c02af6694f3ca1a13b99"
+    },
+    {
+      "file": "p4b/06-unknown-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "4310e10487395392f33b7ddb4fe22767320483a23b30f07d2dd1443712fbe5d9"
+    },
+    {
+      "file": "p4b/07-confirmed-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "2f104921ea5d0ec7feb95c73d26451dc2af2b15753c526791b0f7030ef591169"
+    },
+    {
+      "file": "p4b/08-photo-consent-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "36523e351de42ae97225fa63d29efee02de4e63fb19c668ca65d2772ee7cc180"
+    },
+    {
+      "file": "p4b/09-expired-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "19ea263d3c51d7ee8254280ade7b6e423e265e4c6d4f54ddca7caf8a3b2da989"
+    },
+    {
+      "file": "p4b/10-recovered-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "63296e316ad98bf2b379d6f3e2a2e1ffff79bb0d698a14a55e6978362f41a397"
+    },
+    {
+      "file": "p4b/01-mock-gallery-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "c20c6e13873a856696df22a566938e1f2ec054013fbc4b951cbfe8fc7423876f"
+    },
+    {
+      "file": "p4b/02-regular-pending-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "8cb56fd29324ea9577a85c0d6561c5971a4eb1b77b5991da103217debdea174e"
+    },
+    {
+      "file": "p4b/03-cancelled-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "fbd695efcb7cd2595451e9115cb4cc5090f3d830c4f85be631836f9f141715d4"
+    },
+    {
+      "file": "p4b/04-win-gallery-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "a048d0938d2f3e77204eff8a0e981b1a8db08521e4d3dcc809a43dc4156eb682"
+    },
+    {
+      "file": "p4b/05-win-pending-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "1847228f8fab7e3e1a8199c0c550c47c64b6d2cbd0c056e9136ca223c197f064"
+    },
+    {
+      "file": "p4b/06-unknown-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "9593bcc0b92dcdb73388365648ef2cbc390a90b295b4f3e87a7353e2882a5872"
+    },
+    {
+      "file": "p4b/07-confirmed-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "f652506c8306d8795df85884381db947afc0b804324884d2f1807c812da501ef"
+    },
+    {
+      "file": "p4b/08-photo-consent-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "d9b9d5fcb3176edfb6fc33957abb7f32bd0b2f8b37b02a317c47bc56ac4a13fd"
+    },
+    {
+      "file": "p4b/09-expired-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "59a6b31aa5e1d747131232a0aa3da35c602c70bfc417fbab96f4e902c8e46fdf"
+    },
+    {
+      "file": "p4b/10-recovered-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "bb955d1af65e7182d6b7ed82c755e33ef8bfc9df5ddb8c97b8aabc74760911c0"
+    },
+    {
+      "file": "p4/01-intro-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "097dc9b56627c9a05fde4f7f5b4a3751a93237bca7902acef54cc72006ad6500"
+    },
+    {
+      "file": "p4/01a-print-idle-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "b891792b640adbf8c92371b6151688ce60f2255e53c30a800200cafc0b158fbb"
+    },
+    {
+      "file": "p4/01b-print-feed-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "20c7e1af8d8e668e53e44a43d4dcd35a2a2c0bb862eacbcdb43801dca6298057"
+    },
+    {
+      "file": "p4/01c-print-hold-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "8cdec3e6f5cec5591bcbd408dbd5651735585c0b4f6416b447a5e0f21d55d334"
+    },
+    {
+      "file": "p4/01d-print-fall-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "e72d79314f85d359228952b5b808d75418ec9eca974963f7724b045a53704066"
+    },
+    {
+      "file": "p4/02-code-entry-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "9d16f5b2686e9d8f8ee2546aeee08570557a4a23ef84a01d123f54d831e910d7"
+    },
+    {
+      "file": "p4/03-invalid-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "20e39c7b9f9e9fda725cdba602b7d3ac3cc53a57f0745f45818a7e42d7620b9f"
+    },
+    {
+      "file": "p4/04-original-game-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "c7e780cc806b092e44bb85c603280cbc77bc16c29f54248c7921447a497ec2d0"
+    },
+    {
+      "file": "p4/05-paused-game-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "59313db6276b704e2bc59e5d6d6fbd0b0addfda0e5223cb4425e7b6473cd30e4"
+    },
+    {
+      "file": "p4/06-win-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "0815cc48cef8b690586636ee0d34d536011e2b440374451c3b557e43fab310af"
+    },
+    {
+      "file": "p4/07-required-tutorial-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "504b0e6e100fc5968560fbd62ee0d1102c337efee6cb6045c9a2756ec7deb091"
+    },
+    {
+      "file": "p4/08-win-gallery-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "461a2ce04b9009bc584afbca3057cd428cb3b9e9bb0a6cb2e5ccccd7dc70d32e"
+    },
+    {
+      "file": "p4/09-loss-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "d947210e4161229d27f76d639ae270ecd9b3ad7389d5ce31170fd0c9ab400e9c"
+    },
+    {
+      "file": "p4/10-loss-gallery-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "ffe9113389e6a15d4d14c7510762c0b4a3dc0bf599b8529aea47c7e846a8bc18"
+    },
+    {
+      "file": "p4/11-used-code-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "896f046eb95faf9789ef33676aa2adc9500922589fdc05286ed6d292d75efe57"
+    },
+    {
+      "file": "p4/01-intro-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "592219199668c86770d24cdf1c4164195f9725d6c3fd16a21a9b86cfeaea5ba1"
+    },
+    {
+      "file": "p4/01a-print-idle-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "27ad18d30ccf578686ea8a304ed0d0a17cddb71e049bed63fed80310a8ace243"
+    },
+    {
+      "file": "p4/01b-print-feed-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "ab4cf8a04d994b4506702cb8fef93ab7e35cf8365e112b5788f9a6c95cc9f3bf"
+    },
+    {
+      "file": "p4/01c-print-hold-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "311f307c39392e29e8289f074431aa10f83606ffeefd4883244365d85edde296"
+    },
+    {
+      "file": "p4/01d-print-fall-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "2a418a362f1aa5238674f4a7a040dd47bccb0c71a8405ba93b281db4416b6b2f"
+    },
+    {
+      "file": "p4/02-code-entry-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "6d3192a8cc7551bc0b68557e02cb8ac80a3c592b05e08a8a8f1f9360ad3a99ab"
+    },
+    {
+      "file": "p4/03-invalid-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "5fd99203c8005d8a84d548f53bff7eecd1ac989d94e030e7bbc7715383384212"
+    },
+    {
+      "file": "p4/04-original-game-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "e72ac52a2827160b77a0d884feae51e697d4e089a6993070cb8803b4490ff577"
+    },
+    {
+      "file": "p4/05-paused-game-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "a744c4ef83952edc60bb95c31791160a4370cd7c1fba8d062f1e12e74ea9b05b"
+    },
+    {
+      "file": "p4/06-win-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "44611419cf22fcbcab111834da3ae27552230b847cd69a27a8931d7b033c1334"
+    },
+    {
+      "file": "p4/07-required-tutorial-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "228405712fa6b053ec78291389fcac0fc6377098a2577b355967f304f2b90cab"
+    },
+    {
+      "file": "p4/08-win-gallery-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "dd8f796c732a76ef1a6b78c085d333c0e0d10c06ea6c0afa61ae206201a2df62"
+    },
+    {
+      "file": "p4/09-loss-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "190e187964d3f5da3f30d90c65c6a1798464e912696a79875f6cd460899a7ea3"
+    },
+    {
+      "file": "p4/10-loss-gallery-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "bde42ff76068a8b06e696911f26770a9dbcc0e2dfb676256f1ff89049013b339"
+    },
+    {
+      "file": "p4/11-used-code-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "1984531662d806a12e6b2a7ea12a110441b3e30477b90bd66c7d51e82d214c36"
+    },
+    {
+      "file": "p3/01-photo-confirm-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "ad52e6844e418512aff9fadca9d7bd0c6b4f62c8c5ea067f66efa3cd61a37c27"
+    },
+    {
+      "file": "p3/02-camera-ready-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "5f62357b3657a2e5b62341834caad84524bf1746f5b71ef12eb83e9bf803165f"
+    },
+    {
+      "file": "p3/03-countdown-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "c0179169f7dee624bc9164c4c6ecfecb76a971c75b5b03a443cbdf051ffff5ec"
+    },
+    {
+      "file": "p3/04-review-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "a0d059ff046fbbbfeacc4df4399a3d244b705b07409c5419ba9aa890e3f76e53"
+    },
+    {
+      "file": "p3/05-retake-ready-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "c780f0d4cce2d51b10d17db5948596daa35c6e6803957b57f03499678c02cb4a"
+    },
+    {
+      "file": "p3/06-local-result-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "e5c179584c87b9d11f2b23c2dc174b3b63087198ff92471ec253d0b3b7b80312"
+    },
+    {
+      "file": "p3/07-print-uncertain-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "84e398163f2d7b2aca7c6b559fb7620a35b6c0ed80e6d3187ea27a70dc0cb438"
+    },
+    {
+      "file": "p3/08-camera-unavailable-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "30c284d262cabb46650987fcfa39571e71ed91dfd868a0409b3954f279185972"
+    },
+    {
+      "file": "p3/01-photo-confirm-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "f3789a2f817edb9a29dad15a2d43980541f7d1b5c4151dcbb5714776e77d33de"
+    },
+    {
+      "file": "p3/02-camera-ready-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "c50d4302bf91f0b552ffa6023f38c0c3d97877cd6a27dbc325e1e1d5d0a02dc5"
+    },
+    {
+      "file": "p3/03-countdown-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "151e42ba7d87555e3434f1c728e074eee969ac8d9445875bd616a0ff76fc0bd4"
+    },
+    {
+      "file": "p3/04-review-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "d06e996ee3f475e1cce3a903a1ddcab6226b9ee6af4151af19dbd28879dbfc8a"
+    },
+    {
+      "file": "p3/05-retake-ready-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "f624bc0ffae198d1447341a460533721ff021c0f1a0285c1aedd276dc06b03e0"
+    },
+    {
+      "file": "p3/06-local-result-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "cbdb343932c40ccded0857a27491e363018bb263efc201ca943300e5b4cbaad8"
+    },
+    {
+      "file": "p3/07-print-uncertain-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "b329717fa9c837b8e9f5b7ce605f50664a57c42e383fcdc0f3e1855abdfac01c"
+    },
+    {
+      "file": "p3/08-camera-unavailable-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "94f41fa22351e78aaa2e42047958998732ab406b6b32f954c8774c7f6bcc3ce2"
+    },
+    {
+      "file": "health/01-health-overview-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "ff42bad312b6a50661d66973c3e6154b7aa2f3696da657e30cd1fa233fb41038"
+    },
+    {
+      "file": "health/02-health-inventory-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "1177577944a0a7e982fa9450cf1a4ccdbf43ea9b01d6d22e04398c34f0edbe12"
+    },
+    {
+      "file": "health/03-local-report-saved-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "72787fb349ebd26ba2ed9ee5df41b36ff4c2f46ad06f30b87db6c5ac103cbc3d"
+    },
+    {
+      "file": "health/04-background-probe-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "7a8b546af7929ba966ed8c694050f34a366c75ef415c12103da0ff3120c1f128"
+    },
+    {
+      "file": "health/05-probe-unavailable-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "d5005601f8eae4334d84baaa66da496c9ae874c053bba878bffe3964ddc2201d"
+    },
+    {
+      "file": "health/01-health-overview-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "5dba749887e33e7c48250f57bd18ad4691f422d56c3092c6013bb8f39ab75330"
+    },
+    {
+      "file": "health/02-health-inventory-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "e179e357db987dd6f24c6fa6e8365f75e9b7a41f373dff0492a6d1b68f68d83d"
+    },
+    {
+      "file": "health/03-local-report-saved-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "2bd88fd05080bc623fdbff2703c3cab5e501c64d80030e8e5811f899c001dbea"
+    },
+    {
+      "file": "health/04-background-probe-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "06d5597cff6f821dd75e6c0ba050bc338c21653b5aaedf7dc7531894796998a5"
+    },
+    {
+      "file": "health/05-probe-unavailable-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "3dc73d6aa100a9168a19de637d4f73aace8379a79643c15cc37569a1bc8dab0f"
+    }
+  ],
+  "large_qr_pixel_decode": [
+    {
+      "file": "delivery/delivery-05-upload-verified-452x9000001.png",
+      "decoded_url": "https://example.test/photos/PB001V2_00000001/originals-and-strip",
+      "region": "right half of screenshot, excludes paper strip QR",
+      "sha256": "3fd2d3b4f91cd5f8e649bf98a24c3215b6df5263d4865a36ec7f150f4fe6834c"
+    },
+    {
+      "file": "delivery/delivery-05-upload-verified-800x12800001.png",
+      "decoded_url": "https://example.test/photos/PB001V2_00000001/originals-and-strip",
+      "region": "right half of screenshot, excludes paper strip QR",
+      "sha256": "444b2d18c104fe486e79d0c8c7f7f79b5ccf8d1151a6aa2b63eca40fdea2b93e"
+    }
+  ]
+}

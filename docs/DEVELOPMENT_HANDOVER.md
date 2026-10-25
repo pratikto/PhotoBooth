@@ -2,10 +2,22 @@
 
 Updated **25 October 2026**. Repository `pratikto/PhotoBooth`; required branch
 **`feature/portrait-kiosk-v2-next`**. Documentation baseline **`f36ebad`**, latest functional
-source **`ebb53fd`** (BUG-018). Refresh remote HEAD before continuing. GitHub's default is
+source **`266b2c8`** (automatic print/background Drive). Refresh remote HEAD before continuing. GitHub's default is
 still `master`; `main.py` launches v1. Do not restart the project or P3/P4 work.
 
 ## Latest completed increment
+
+**Owner-selected print/Drive continuation:** user postponed proposed watchdog
+work and selected automatic print as v1 with background Drive. Stage 1 **7b691c7**
+exposes launch options/contracts (29 focused PASS, matching CI SUCCESS); native
+stage 2 **266b2c8** connects the existing durable print worker, startup queue resume,
+verified-folder consent and large verified result QR. Nine original v1 backend
+files are unchanged. Default local and dedicated merchant-trial boundaries stay.
+Fifteen new-feature checks and 92 earlier native regressions pass. Final source
+has **800 full PASS/zero skips**, matching-source CI 40208966127 all three jobs
+SUCCESS and 133 verified PNGs; large screenshot QR decodes at both required sizes.
+Actual paper/phone/cloud acceptance remains pending.
+[Current print/Drive runbook and eleven-item form](qa/portrait-v2-print-drive/README.md).
 
 **Latest owner retest / BUG-018:** targeted R01–R04 **4/4 checked**, zero
 unchecked and no issue notes. Rapid/mixed buttons, busy close, reopen/minimize
@@ -46,6 +58,9 @@ These results predate this documentation-only reconciliation.
 | `5f09eff` | Operator matching-source evidence/documentation |
 | `f36ebad` | Completed English documentation consistency baseline |
 | `ebb53fd` | BUG-018 fresh-press/repeat guard; final 785 full PASS, three-job CI SUCCESS |
+| `edeec47` | Later BUG-018 owner 4/4/no issues at unknown HEAD; monitoring |
+| `7b691c7` | Explicit print/Drive options and worker setup/QR contracts; 29 focused PASS |
+| `266b2c8` | Native automatic print, background queue startup/resume and verified result QR; 800 full PASS, matching three-job CI SUCCESS |
 
 Use scoped inverse commits for code rollback after inspection; preserve all
 payment journals, consumed attempts, reports, photo/print manifests and customer

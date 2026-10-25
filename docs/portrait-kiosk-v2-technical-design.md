@@ -1,7 +1,8 @@
 # FEAT-022 — GUI v2 engineering contracts
 
 Updated **25 October 2026** against audit baseline `5f09eff`; latest functional
-source `ebb53fd` (BUG-018), original operator `ea394e8`, earlier P5 source `9433010`. Continue on the existing
+source `266b2c8` (print/Drive), input correction `ebb53fd`, original operator
+`ea394e8`, earlier P5 source `9433010`. Continue on the existing
 `feature/portrait-kiosk-v2-next`. [Roadmap](portrait-kiosk-v2.md) ·
 [current evidence](FEATURE_STATUS.md) · [architecture](ARCHITECTURE.md).
 
@@ -38,10 +39,21 @@ composition, print, QR and detector/decoder frames remain unmirrored.
 
 PhotoJobs rejects duplicate work. Minimize/page changes/camera loss cancel
 countdown; restore does not automatically capture. Printing requires operator
-opt-in/action; uncertain sends are held for inspection, not automatically retried.
+opt-in and photo approval: --print automatically submits one durable batch/design
+through existing PhotoJobs/PhotoTest; --manual-print keeps a separate print action.
+Uncertain sends are held for inspection, not automatically retried.
 Drive requires configured credentials/isolated pool and retention acknowledgement
 before upload. A folder QR is not proof that all files uploaded, download works,
 or cloud deletion is active.
+
+With --drive, the ordinary host prepares/resumes the isolated queue at startup;
+consent snapshots gate on actual verified-folder readiness. PhotoJobs owns client/
+pool initialization and original QR encoding/cache. Photo approval/composition
+triggers one optional auto-print outcome; UI rebuild/minimize/status updates do
+not print. Result polls update the existing large QR only after UPLOAD_COMPLETE.
+Old queue resume creates no new visit/counter. Renderer/runner processes clear
+ambient live delivery flags; explicit fixtures supply their own services.
+[Print/Drive contracts, checks and rollback](qa/portrait-v2-print-drive/README.md).
 
 Default photo profile: `data/kiosk-v2-p3/`; game/MOCK:
 `data/kiosk-v2-p4/`; merchant trial:

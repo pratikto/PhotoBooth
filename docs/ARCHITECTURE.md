@@ -1,7 +1,7 @@
 # Meong Photobooth — GUI v2 architecture
 
 Updated **25 October 2026** after documentation baseline `f36ebad`; latest functional source
-`ebb53fd` (BUG-018). [Current status](FEATURE_STATUS.md) distinguishes source evidence,
+`266b2c8` (automatic print/background Drive). [Current status](FEATURE_STATUS.md) distinguishes source evidence,
 owner reports and pending acceptance. Development: `feature/portrait-kiosk-v2-next`;
 GitHub default `master`, default launcher `main.py` still v1.
 
@@ -45,6 +45,14 @@ Profiles are isolated under `data/kiosk-v2-p3`, `data/kiosk-v2-p4` and
 `data/kiosk-v2-sandbox/<merchant>/<booth>`. Preserve journals/manifests on rollback.
 
 ## Operator reuse and separate candidates
+
+Ordinary v2 --print/--drive opt-ins reuse the existing saved v1 configuration,
+thermal/Drive clients and durable PhotoJobs/PhotoTest. Approved strips auto-print
+once/design; the existing isolated upload queue starts/resumes without a new
+photo visit. Status snapshots gate consent on verified folders and update a
+large result QR only after file verification. Native helpers are adapters, not
+parallel printer/cloud backends. The dedicated merchant trial keeps delivery off.
+[Contracts and proof](qa/portrait-v2-print-drive/README.md).
 
 `ui_health.py` and imported health services match `dbbe055`; the original worker
 method is extracted verbatim into `v1_health_controller.py`. V2 adapts cached

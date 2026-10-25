@@ -3,6 +3,13 @@
 Updated **25 October 2026**. Use the existing project and branch.
 [AGENTS.md](../AGENTS.md) and [protocol](DEVELOPMENT_PROTOCOL.md) govern execution.
 
+Current continuation update, 25 October: the owner prioritized print and Drive
+only, selecting automatic print after photo approval as v1. Source 266b2c8 has
+800 full local PASS/zero skips and matching-source three-job CI SUCCESS, 133
+verified PNGs. Reuse nine original v1 services; explicit --print/--drive profile,
+background queue startup/resume and verified result QR. Paper/phone/cloud gates
+remain pending; watchdog is postponed. [Current package](qa/portrait-v2-print-drive/README.md).
+
 ## Copy/paste prompt
 
 > Repository: pratikto/PhotoBooth.

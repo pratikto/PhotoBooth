@@ -81,3 +81,10 @@ opt-ins; preserve dedicated merchant-trial printer/Drive-off isolation. Cloud QA
 uses fixtures; no real paper/upload, retention deployment/deletion, production,
 branch/default change or watchdog is inferred. Physical acceptance can wait while
 safe source work proceeds. See docs/qa/portrait-v2-print-drive/README.md.
+
+Print/Drive delivery checkpoints: 7b691c7 options/contracts, 266b2c8 native
+automatic print/background queue/verified QR. Final 800 full local PASS/zero
+skips; matching-source CI three-job SUCCESS, 133 PNGs verified. Nine original
+v1 service/config files remain unchanged. Record actual Windows paper/phone/
+cloud results separately via the new eleven-item form; BUG-009 remains OPEN.
+No additional feature (including watchdog) starts from this completed scope.

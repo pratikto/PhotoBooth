@@ -1,7 +1,7 @@
 # Meong Photobooth — current feature status
 
 Updated **25 October 2026** after documentation baseline `f36ebad` on
-`feature/portrait-kiosk-v2-next`. Latest functional source: **`ebb53fd`** (BUG-018).
+`feature/portrait-kiosk-v2-next`. Latest functional source: **`266b2c8`** (automatic print/background Drive).
 The earlier **`9433010` / `0dc6555`** pair is the P5 source/evidence baseline,
 not the latest operator checkpoint. GitHub's default remains `master`.
 
@@ -24,8 +24,8 @@ closure or external P5 acceptance is inferred. No new runtime patch is needed.
 | Camera/face/optional palm | Async camera and preview, display-only mirror, existing face/palm services; manual SIAP retained | Owner-reported preview/button/palm PASS and prior twenty cycles; missing source/device fields stay unknown |
 | Capture/review/retake | Three original photos per selected design, one retake per design, local composition | Quantity 0 deselects; 1–9 means identical copies, not more sessions. New integration acceptance remains separate |
 | Audio | Single v2 owner; GUI loop for still ads/photo journey, video's own audio, distinct game loop; one cue per action | Owner-reported normal. BUG-017 is monitoring after the later report, not a proven decoder fix; v1 BUG-001/007 stay separate |
-| Thermal photo printing | Existing backend, operator opt-in, multi-copy batch and uncertain-send guards | Source/fixtures pass; prior owner paper reports retained at unknown HEAD. Dedicated Sandbox launcher forces printer off |
-| Drive/download | Opt-in adapter, assigned folder QR and retention-acknowledgement upload guard | Default local; dedicated Sandbox launcher forces Drive off. BUG-009 cloud deletion remains OPEN |
+| Thermal photo printing | Existing v1 backend/config; --print auto-sends one durable batch per approved design, --manual-print optional; uncertainty/no-replay guards | New-source fixtures pass; actual current paper/copy/QR acceptance pending. Prior owner paper reports stay at unknown HEAD. Merchant trial forces printer off |
+| Drive/download | --drive resumes existing isolated queue on startup/after visits; verified-folder consent, background retry and large verified on-screen QR, original retention guard | New-source fixtures/pixel decode available; actual phone access/offline/restart and cloud deletion unverified. Default local; merchant trial off. BUG-009 OPEN |
 | Meong Fly — FEAT-021 (game) | Original Stage/Flow/renderer/assets/emitter reused; persistent one-use v2 DEMO ledger | 26 reference files pinned to `672e3f7`. V2 uses manual DEMO entry; standalone camera scanner is not mounted |
 | Local MOCK checkout | Local SQLite quote/promotion/admission; nonpayable QR and simulated confirmation | Win discount Rp2,500 once per order, capped at subtotal; no bank settlement |
 | FEAT-020 QRIS Sandbox | Reused service/client/journal plus native v2 adapter/isolated launcher | Server quote, provider verification, one-use grant/ACK/recovery in source. Actual merchant simulator evidence pending; no trusted game-promo API |
@@ -38,6 +38,7 @@ closure or external P5 acceptance is inferred. No new runtime patch is needed.
 
 | Checkpoint | Local full regression | Matching-source CI | Screenshot evidence |
 | --- | --- | --- | --- |
+| Print/Drive source `266b2c8` | **800 PASS / 0 failures / 0 errors / 0 skips**, 213.823s | [40208966127](https://github.com/pratikto/PhotoBooth/actions/runs/40208966127), all three jobs SUCCESS; delivery 17 PASS, health 80 PASS, Sandbox 139 PASS, native 103 PASS/1 optional model-assets skip | 133 PNGs verified; delivery views reviewed at both sizes, large QR screenshot pixels decoded; [proof/form](qa/portrait-v2-print-drive/README.md) |
 | BUG-018 source `ebb53fd` | **785 PASS / 0 failures / 0 errors / 0 skips**, 321.181s | [40189694738](https://github.com/pratikto/PhotoBooth/actions/runs/40189694738), three jobs SUCCESS; health 80 PASS, Sandbox 139 PASS, native 97 PASS/1 optional model-assets skip | 119 PNGs source/hash/dimension verified; operator views reviewed at 800×1280/452×900; [proof](qa/portrait-v2-health-clicks/README.md) |
 | Operator source `ea394e8` | **780 PASS / 0 failures / 0 errors / 0 skips**, 270.671s | [40157638369](https://github.com/pratikto/PhotoBooth/actions/runs/40157638369), three jobs SUCCESS; health 80 PASS, Sandbox 139 PASS, native 92 PASS/1 optional palm-model-assets skip | 119 PNGs source/hash/dimension verified; required views reviewed; 15 local operator PNGs reviewed |
 | Earlier P5 source `9433010` | **688 PASS / 0 failures / 0 errors / 0 skips**, 211.646s | [40109206417](https://github.com/pratikto/PhotoBooth/actions/runs/40109206417), three jobs SUCCESS; native includes one optional palm-model-assets skip | 109 PNGs source/hash/dimension verified; required views reviewed |

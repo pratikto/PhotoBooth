@@ -25,8 +25,13 @@ Updated **25 October 2026 (Asia/Jakarta)**. Continue on
 
 ## Current acceptance packages
 
-- [Operator Device Health](qa/portrait-v2-operator-health/README.md): latest
-  functional source `ea394e8`, original v1 panel/worker reuse, local safe reports;
+- [Automatic print and background Drive](qa/portrait-v2-print-drive/README.md):
+  owner-selected v1 reuse, ordinary --print/--drive profile, durable auto batch,
+  startup queue resume and verified result QR; [eleven-item Submit form](qa/portrait-v2-print-drive/windows-checklist.html).
+  Source/fixture evidence remains separate from paper/phone/cloud acceptance.
+
+- [Operator Device Health](qa/portrait-v2-operator-health/README.md): earlier
+  operator source `ea394e8`, original v1 panel/worker reuse, local safe reports;
   [eight-item form](qa/portrait-v2-operator-health/windows-checklist.html).
 - [P5 baseline and runbook](qa/portrait-v2-p5/README.md): source `9433010`,
   [26-item Windows form](qa/portrait-v2-p5/windows-checklist.html), metadata import,

@@ -5,7 +5,13 @@ separately. [Canonical test ledger](../test_checklist.md) · [source status](../
 
 ## Current acceptance packages
 
-- [Operator Device Health](portrait-v2-operator-health/README.md): latest functional
+- [Automatic print and background Drive](portrait-v2-print-drive/README.md):
+  latest print/Drive increment; nine original v1 services unchanged; explicit
+  profile, native auto-print and verified result QR, background queue resume;
+  [eleven-item paper/phone/lifecycle form](portrait-v2-print-drive/windows-checklist.html).
+  Actual Windows/paper/Drive acceptance remains pending.
+
+- [Operator Device Health](portrait-v2-operator-health/README.md): earlier operator
   source `ea394e8`, 780 full local PASS/zero skips, matching three-job CI SUCCESS
   with one optional native model-assets skip covered locally, 119 verified PNGs;
   [eight-item form](portrait-v2-operator-health/windows-checklist.html).

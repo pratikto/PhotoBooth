@@ -1,6 +1,8 @@
 # Meong Photobooth — Bug register
 
-**Current GUI v2 context — 25 October 2026:** latest functional source
+**Current GUI v2 context — 25 October 2026:** latest print/Drive source
+`266b2c8` has 800 full local PASS/zero skips, matching three-job CI SUCCESS and
+133 verified PNGs; actual paper/phone/cloud acceptance pending. Earlier operator
 `ea394e8` has 780 full local PASS/zero skips; matching-source CI succeeds with
 one optional native model-assets skip covered locally. `9433010`/688 tests is
 the earlier P5 baseline. Preflight `0dc6555` ready is not physical/provider PASS.

@@ -137,3 +137,56 @@ registered deadline alone still does not close BUG-009 or prove actual deletion.
 Synthetic renderers and the unittest runner now explicitly clear ambient live
 printer/Drive opt-ins. The final fifteen checks also pass when the parent shell
 has both flags enabled; isolated fixtures opt in only within their own contexts.
+
+
+## Final local regression — 266b2c8
+
+[Complete raw output](full-tests.txt): **800 PASS / 0 failures / 0 errors /
+0 skips**, 213.823s, Python 3.12.14/Kivy 2.3.1/software GL/dummy audio with the
+prepared offline palm assets. Executed after committing/pushing and verifying
+source **266b2c82da71226733f95825d6dbbfc3ef8093b9**; no later functional edits.
+All **232 functional source hashes** match the tested tree; nine reused v1
+printer/settings/Drive/pool/sync/retention/transaction/workflow/QR files still
+match master 27f3801. Native camera/printer/cloud transports were fixtures.
+
+```text
+PHOTOBOOTH_TEST_GUI=1 PHOTOBOOTH_TEST_AUDIO=1 PHOTOBOOTH_TEST_VIDEO=1
+PHOTOBOOTH_PALM_TEST_ASSETS=<prepared-offline-assets>
+MEONG_CI_TEST_REPORT=<report> python tools/run_kiosk_unittests.py
+```
+
+Rollback checkpoints: **7b691c7** for options/contracts without native auto-flow,
+or **edeec47** for the pre-delivery baseline. Use scoped inverse code changes on
+the same authorized branch; preserve all photo/counter/pool/print/payment
+manifests, journals, reports and customer data. Never clear uncertain sends or
+reuse folder IDs to make a test pass. Windows paper/phone/retention acceptance
+remains NOT_RUN here; no watchdog, production, deployment, merge or default change.
+
+
+## Final matching-source CI and screenshots
+
+[CI 40208966127](https://github.com/pratikto/PhotoBooth/actions/runs/40208966127)
+used exact source **266b2c8** and has **all three jobs SUCCESS** ([job record](final-ci.json)).
+Raw [reports](ci-reports/): delivery **17 PASS**, health **80 PASS**, Sandbox
+**139 PASS**, native **104 cases / 103 PASS / one optional palm-model-assets
+skip**. That model case ran in the local 800-case full suite; the CI skip remains
+explicit. Foundation 7b691c7 also has three-job CI SUCCESS
+([40206118110](https://github.com/pratikto/PhotoBooth/actions/runs/40206118110), [record](stage1-ci.json)).
+
+All **133 PNGs** match source SHA, dimensions and hashes. Downloaded artifact
+**12605043566** matches GitHub's SHA-256 digest
+`3bae68515ac7b25598f6f781373a36c2a793645e10250edbe4b6a0e3cff32890`.
+[Verification](ci-screenshot-verification.json) paths refer to that artifact tree.
+Fourteen matching-source [delivery screenshots](screenshots/) preserve waiting/
+ready/sending/retry/verified/uncertain/retention-hold states at 800×1280 and 452×900.
+[Contact sheet](ci-contact.jpg) and individual compact result/consent images were
+visually reviewed. Large QR pixels decode the exact long fixture URL from the
+**right half of both screenshots, excluding the strip QR**, independently of
+underlying encoder data. This does not prove real phone/network access.
+
+Both code stages were normally pushed to the required branch and remote HEAD
+verified; final evidence-only delivery skips CI to avoid another Actions run.
+All 232 functional source hashes still match the final full run and matching
+CI. No real paper/cloud/provider acceptance is claimed, no remote deployment/
+deletion occurred, and BUG-009 remains OPEN. Use the eleven-item form on the
+actual Windows setup; the former owner twenty-cycle reports are preserved.
