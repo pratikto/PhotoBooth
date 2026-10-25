@@ -1,8 +1,17 @@
 # Original offline music and sound cues
 
-> **Release provenance:** Assets are in the source pre-release [v1.0.0](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0), from prior `feature/kivy-gui` work. Keep media/codecs, audio speaker response and printer/QR paper quality distinct from simulated CI; no change to asset bytes in this documentation cleanup.
+**Scope — shared WAV provenance and separate playback owners.** The gear-menu,
+`levels.json` Settings route and unresolved BUG-001/007 notes below refer to v1.
+V2 uses its own PortraitAudio/PCM lifecycle, soft shutter and separate game loop;
+owner-reported v2 audio passes do not close v1 bugs. Not every WAV listed below
+was present in the original v1 tag: the v2 shutter/game tracks were added later.
+[Current v2 status](../../../docs/FEATURE_STATUS.md) · [audio contracts](../../../docs/portrait-kiosk-v2-technical-design.md).
+The original score/regeneration instructions remain provenance, not a request to
+regenerate or change asset bytes during a documentation correction.
 
-> **CURRENT (2026-10-19, `master` / immutable `v1.0.0`):** Original bundled WAVs remain the Kivy music/SFX source. **Actual GUI route:** header gear → **Pengaturan Meong** → **PENGATURAN AUDIO**. An explicit **UJI MUSIK** press requests a fresh playback to diagnose silent devices; normal background music avoids unwanted restarting across pages. The Settings/music test code now covers this logic, but **audible Windows music remains an unresolved/deferred owner issue (BUG-001/007)**; synthetic CI does not prove loudspeaker output.
+> **Release provenance:** The core bank originated in the [v1.0.0](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0) source; the v2 soft shutter and game loop were added later as described below. Asset bytes are unchanged by this documentation audit. Dummy/native playback checks are distinct from actual speaker acceptance.
+
+> **V1 asset baseline (2026-10-19, `master` / immutable `v1.0.0`):** Original bundled WAVs remain the Kivy music/SFX source. **Actual GUI route:** header gear → **Pengaturan Meong** → **PENGATURAN AUDIO**. An explicit **UJI MUSIK** press requests a fresh playback to diagnose silent devices; normal background music avoids unwanted restarting across pages. The Settings/music test code now covers this logic, but **audible Windows music remains an unresolved/deferred owner issue (BUG-001/007)**; synthetic CI does not prove loudspeaker output.
 
 The legacy bank in this folder is synthesized by `photobooth/audio.py`, using original
 note sequences and deterministic instruments/noise. They contain no sampled

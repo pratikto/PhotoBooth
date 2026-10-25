@@ -1,6 +1,17 @@
 # Portrait v2 P3 — camera, photo workflow and service adapters
 
-> Latest owner retest is 21/34 with unknown tested HEAD; preview/touch and optional-palm source corrections follow in [the current P3 retest record](../portrait-v2-p3-retest/README.md). Use its new 40-item form. Earlier implementation evidence below remains historical.
+> **Dated source/QA record, retained for traceability.** Results, “latest/current”,
+> OPEN/PENDING labels, next actions and authorization limits below apply to this
+> package's recorded source and report date. Later owner reports and source work
+> can supersede its status; they do not rewrite these test results. Use
+> [current status](../../FEATURE_STATUS.md), [test ledger](../../test_checklist.md)
+> and [current handover](../../DEVELOPMENT_HANDOVER.md) for continuation. Historical
+> checklists are not an instruction to repeat already accepted tests.
+
+> **Later P3 owner result:** the [focused preview/button record](../portrait-v2-preview-redraw/README.md)
+> supersedes the earlier 21/34 report with 16/16 checked and twenty cycles at
+> unknown tested HEAD/device metadata. BUG-013/014 are owner-reported monitoring.
+> The 34/40-item forms below retain their original scope, not a new required retest.
 
 
 Owner authorization, 2026-10-23 (Asia/Jakarta): **“oke tolong eksekusi p3”**.

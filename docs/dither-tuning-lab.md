@@ -1,6 +1,20 @@
 # Meong Photobooth — Thermal Dither Tuning Lab
 
-> **CURRENT SOURCE (2026-10-19):** This functionality and related documentation are now part of `master` at the published, immutable `v1.0.0` [source pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0). The previous `feature/kivy-gui` and other feature branches remain historical references. CI passed on the tagged SHA (`07ce51d`, [Kiosk](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245), [Dither](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273)), but physical Windows acceptance is separate. BUG-001/007 audio and BUG-009 Drive retention remain unresolved; payment stays DEMO. Dither lab FEAT-011 and the approved Floyd default are included in v1; the saved standalone lab JSON still does **not** automatically control kiosk printing.
+**Scope — the lab version actually present on the GUI v2 branch.**
+This checkout's `tools/dither_compare_gui.py` compares Floyd–Steinberg, Bayer and
+Threshold. The newer `feature/dither-tuning` reference has Floyd/Bayer/Dizzy,
+Auto Tune/enhancement and its own parameter guide. Those later features are not
+in this checkout merely because the branch exists. The old branch-switch
+commands below select that other branch and may therefore display a different
+UI; to inspect this checkout's baseline tool, run it here without switching.
+[Newer pinned guide](https://github.com/pratikto/PhotoBooth/blob/e89e6ee1c758abc169ee250ee9285022f41cfc3b/docs/dither-gui-parameter-guide.md)
+· [reference map](gui-v2-branch-audit.md).
+
+Threshold remains a backend/legacy-lab mode here; its removal from the newer
+comparison UI does not remove it from the shared printer. Lab JSON is independent
+of kiosk printer settings; exporting a raster does not apply a kiosk preset.
+
+> **V1 source baseline (2026-10-19):** This functionality and related documentation are now part of `master` at the published, immutable `v1.0.0` [source pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0). The previous `feature/kivy-gui` and other feature branches remain historical references. CI passed on the tagged SHA (`07ce51d`, [Kiosk](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245), [Dither](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273)), but physical Windows acceptance is separate. BUG-001/007 audio and BUG-009 Drive retention remain unresolved; payment stays DEMO. Dither lab FEAT-011 and the approved Floyd default are included in v1; the saved standalone lab JSON still does **not** automatically control kiosk printing.
 
 **CURRENT state:** FEAT-011 lab and the approved default Floyd photo profile are available on `master` / `v1.0.0`; BUG-004/010 owner-reported PASS (not a complete printer/media test matrix).  
 **HISTORICAL origin:** `feature/dither-tuning` was created 2026-10-18 from `feature/kivy-gui` at `5e0a898` and initially kept its experiment separate. The standalone lab remains a tool, while the approved Floyd preprocessing is now on the Kivy photo-print path.
@@ -9,7 +23,7 @@
 
 Each algorithm has an independently scrollable parameter area. Hover its slider region and turn the mouse wheel, or drag the adjacent vertical scrollbar. The preview remains visible, and Print Test / Save PNG remain on screen outside the slider scroll region. This must still be checked on the operator's actual Windows screen.
 
-## Three-algorithm comparison GUI (current)
+## Three-algorithm comparison GUI in this checkout
 
 **Primary GUI for this branch**: `python tools/dither_compare_gui.py`. It shows the **same original image plus three live raster previews**: Floyd–Steinberg, Bayer 8×8, Threshold. Each column owns its own brightness, contrast, gamma and sharpening sliders; Threshold alone has a threshold slider. Tick **Sync Parameters** to copy a subsequent brightness/contrast/gamma/sharpness slider change to all three columns. Toggle it off to resume independent tuning. Width (384 or 576 dots) is deliberately shared for fair paper comparison. A central dot crop can be zoomed 1×, 2×, or 4×, rendered nearest-neighbor.
 

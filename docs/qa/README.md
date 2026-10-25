@@ -1,28 +1,46 @@
-# Indeks QA Meong Photobooth
+# Meong Photobooth — QA index
 
-## GUI v2 — bukti dan form saat ini
+Updated **25 October 2026**. Current evidence and older snapshots are listed
+separately. [Canonical test ledger](../test_checklist.md) · [source status](../FEATURE_STATUS.md).
 
-- [P5 final evidence/runbook](portrait-v2-p5/README.md): source 9433010,
-  688 full PASS/0 skip, tiga job CI SUCCESS, 109 PNG source/hash/dimension verified.
-- [26-item Windows form dengan Submit](portrait-v2-p5/windows-checklist.html):
-  import metadata, gate integrasi Sandbox baru dan laporan partial yang jujur.
-- [Sandbox source/provenance](portrait-v2-sandbox/README.md): service existing,
-  native handoff, key isolation, quote/grant/recovery, no trusted QRIS game promo.
-- [Accepted preview/buttons](portrait-v2-preview-redraw/README.md),
-  [original game reuse](portrait-v2-meong-reuse/README.md),
-  [typography/audio owner report](portrait-v2-readable-type/README.md).
+## Current acceptance packages
 
-Owner preflight **0dc6555 READY_FOR_MANUAL_TEST** pada 25 Oktober dicatat di
-[P5 owner report](portrait-v2-p5/owner-preflight-2026-10-25.json). Itu bukan
-merchant/camera/speaker/printer/Drive acceptance. Laporan lama dengan tested HEAD
-kosong tidak ditempelkan pada commit baru. [Test ledger kanonis](../test_checklist.md).
+- [Operator Device Health](portrait-v2-operator-health/README.md): latest functional
+  source `ea394e8`, 780 full local PASS/zero skips, matching three-job CI SUCCESS
+  with one optional native model-assets skip covered locally, 119 verified PNGs;
+  [eight-item form](portrait-v2-operator-health/windows-checklist.html).
+- [P5 baseline/runbook](portrait-v2-p5/README.md): `9433010`, 688 full local
+  PASS/zero skips, matching CI, 109 verified PNGs;
+  [26-item form](portrait-v2-p5/windows-checklist.html) for new Windows/Sandbox
+  integration. It remains applicable after the operator increment.
+- [Sandbox source/provenance/runbook](portrait-v2-sandbox/README.md): isolated
+  merchant keys/backend, server quote/grant/ACK/recovery; no trusted game promo.
+- [Later P3 preview/button owner acceptance](portrait-v2-preview-redraw/README.md):
+  16/16 and twenty cycles with missing source/device metadata preserved.
+- [Original game reuse](portrait-v2-meong-reuse/README.md) and
+  [readable native typography](portrait-v2-readable-type/README.md): source history.
+- [Documentation consistency audit](documentation-consistency-2026-10-25.md):
+  this English reconciliation; [earlier consolidation](gui-v2-docs-2026-10-25.md)
+  preserves the prior 19-branch snapshot.
 
-## Arsip v1 dan tahap sebelumnya
+Owner preflight **`0dc6555` → READY_FOR_MANUAL_TEST** is
+[recorded](portrait-v2-p5/owner-preflight-2026-10-25.json), not merchant/hardware
+acceptance. Historical unknown-HEAD reports are not attributed to newer commits.
+The operator form adds no repeat old photo/game twenty-cycle run; P5 new Sandbox
+cycle gates remain separate. Active forms are in English, retaining actual UI
+labels and stable test IDs/storage keys. Older forms retain their original language
+and source-specific questions; use them only for that recorded scope.
 
-Bagian di bawah mempertahankan QA v1 yang bertanggal; kata “current/latest” di
-narasi arsip adalah status pada tanggal/source aslinya. Gunakan link GUI v2 di
-atas untuk pengujian sekarang. Production, merge dan release tidak disetujui oleh
-screenshot, preflight atau form.
+## Historical records
+
+Dated folders preserve original raw outputs, manifests, screenshots and owner
+reports. Their “current/latest”, OPEN/PENDING, no-integration statements and next
+steps apply only to the recorded stage. Later owner acceptance/source status can
+supersede them without changing the evidence. Prior successful CI counts do not
+certify the latest Windows booth/provider or close BUG-009.
+
+<details>
+<summary>V1 QA index and dated evidence — historical reference</summary>
 
 ## Historical verified Kiosk GUI CI — 2026-10-18
 
@@ -400,3 +418,5 @@ Neither native weights nor sample photos are committed to this repository.
 was explicitly simulated; printing was not connected in that historical Tkinter fixture, and `ui_tkinter.py` was
 unchanged. These renders use generated geometric illustrations and fixture URLs;
 they contain no customer images, credentials, or transaction data.
+
+</details>

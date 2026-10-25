@@ -1,5 +1,12 @@
 # P5 readiness and final Windows acceptance
 
+**P5 baseline scope.** The 688-test source `9433010` below is preserved as the
+P5 checkpoint. The later read-only operator increment at `ea394e8` has 780 local
+PASS, matching CI and its own eight-item form. Use the
+[current ledger](../../test_checklist.md) for both; this P5 form/runbook remains
+the new Windows/Sandbox integration acceptance package. Source work may continue
+within approved scope while laptop checks wait.
+
 Owner approved P4b Sandbox followed by P5 preparation, with manual tests at the
 end. This package prepares regression/metadata/acceptance; **P5 commercial
 certification is pending** actual Windows hardware, merchant Sandbox, privacy,
@@ -73,7 +80,7 @@ there is no unsafe “reset paid order” button.
 The existing `tools/run_kiosk_unittests.py` now also accepts optional module names,
 preserving its full-discovery default and raw OS output. CI uses it for native
 GUI/payment steps so Kivy cannot hide failures; reports are retained alongside
-screenshots. Only one complete final regression is planned after source changes;
+screenshots. One complete final regression was run after the P5 source changes;
 focused checks cover earlier stages. Offline QR screenshots are marked fixtures.
 
 Checkpoints on `feature/portrait-kiosk-v2-next`:

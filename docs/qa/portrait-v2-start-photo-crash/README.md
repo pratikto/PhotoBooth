@@ -1,5 +1,13 @@
 # Windows MULAI FOTO crash — 2026-10-22
 
+> **Dated source/QA record, retained for traceability.** Results, “latest/current”,
+> OPEN/PENDING labels, next actions and authorization limits below apply to this
+> package's recorded source and report date. Later owner reports and source work
+> can supersede its status; they do not rewrite these test results. Use
+> [current status](../../FEATURE_STATUS.md), [test ledger](../../test_checklist.md)
+> and [current handover](../../DEVELOPMENT_HANDOVER.md) for continuation. Historical
+> checklists are not an instruction to repeat already accepted tests.
+
 Branch: `feature/portrait-kiosk-v2-next`. Starting reference:
 `6dc1f88738fecf0eb9eed4d405f7d95c10ae04db` (contains the reported regression).
 

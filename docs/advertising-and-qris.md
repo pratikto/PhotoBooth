@@ -1,6 +1,15 @@
 # Advertising and QR payment-slip setup
 
-> **CURRENT SOURCE (2026-10-19):** This functionality and related documentation are now part of `master` at the published, immutable `v1.0.0` [source pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0). The previous `feature/kivy-gui` and other feature branches remain historical references. CI passed on the tagged SHA (`07ce51d`, [Kiosk](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245), [Dither](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273)), but physical Windows acceptance is separate. BUG-001/007 audio and BUG-009 Drive retention remain unresolved; payment stays DEMO.
+**Scope — v1 advertising/payment-slip guide with shared media configuration.**
+`python main.py`, header-gear audio settings, the payment ad panel, manual DEMO
+payment confirmation and QR-slip offers below describe v1. GUI v2 uses
+`tools/run_portrait_v2.py`, still-ad BGM, a separate audio owner and opt-in native
+MOCK/Sandbox checkout. Native v2 Sandbox has no payment-ad/slip panel or manual
+PAID override. Shared playlist paths/schedules remain useful; the old phrase
+“no provider is connected” applies to v1's DEMO path, not the v2 Sandbox adapter.
+[Current launch/modes](../README.md) · [v2 visual/audio rules](portrait-kiosk-v2-visual-spec.md).
+
+> **V1 source baseline (2026-10-19):** This functionality and related documentation are now part of `master` at the published, immutable `v1.0.0` [source pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0). The previous `feature/kivy-gui` and other feature branches remain historical references. CI passed on the tagged SHA (`07ce51d`, [Kiosk](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245), [Dither](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273)), but physical Windows acceptance is separate. BUG-001/007 audio and BUG-009 Drive retention remain unresolved; payment stays DEMO.
 
 This implementation is part of the source on `master` (tagged as `v1.0.0`). It does
 not merge or change the separate `feature/thermal-printer` branch.

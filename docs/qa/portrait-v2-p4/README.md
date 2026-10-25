@@ -1,5 +1,13 @@
 # FEAT-022 P4 — staged DEMO game and checkout integration
 
+> **Dated source/QA record, retained for traceability.** Results, “latest/current”,
+> OPEN/PENDING labels, next actions and authorization limits below apply to this
+> package's recorded source and report date. Later owner reports and source work
+> can supersede its status; they do not rewrite these test results. Use
+> [current status](../../FEATURE_STATUS.md), [test ledger](../../test_checklist.md)
+> and [current handover](../../DEVELOPMENT_HANDOVER.md) for continuation. Historical
+> checklists are not an instruction to repeat already accepted tests.
+
 > **Superseded game visuals (2026-10-24):** Owner requests the complete latest Meong Fly, not a custom v2 rendering of its engine. The [reuse correction](../portrait-v2-meong-reuse/README.md) now tracks original `MeongFlyStage`/`MeongFlyFlow`, byte-identical modules and native pixel comparisons. Game entry is MAIN MEONG FLY → MAIN GAME → VALIDASI DEMO 1X; pause is the original II HUD control. Earlier custom-game screenshots below are historical. Checkout/ledger/P3 safety contracts remain valid.
 
 Owner authorization, 2026-10-23 Asia/Jakarta: **“p3 kan udah diuji.. lanjut p4 aja lah”**.

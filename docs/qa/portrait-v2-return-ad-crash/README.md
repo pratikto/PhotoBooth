@@ -1,5 +1,13 @@
 # Windows return-to-advertising crash investigation — 2026-10-23
 
+> **Dated source/QA record, retained for traceability.** Results, “latest/current”,
+> OPEN/PENDING labels, next actions and authorization limits below apply to this
+> package's recorded source and report date. Later owner reports and source work
+> can supersede its status; they do not rewrite these test results. Use
+> [current status](../../FEATURE_STATUS.md), [test ledger](../../test_checklist.md)
+> and [current handover](../../DEVELOPMENT_HANDOVER.md) for continuation. Historical
+> checklists are not an instruction to repeat already accepted tests.
+
 **Current: BUG-012 OWNER-REPORTED PASS / MONITORING (2026-10-23).**
 After the correction/diagnostic update and focused retest instructions, the owner
 replied **“sudah oke”**. Record the return-to-advertising flow as working by owner

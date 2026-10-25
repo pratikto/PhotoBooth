@@ -1,5 +1,17 @@
 # FEAT-021 to FEAT-022 — Integration Blueprint (planning only)
 
+> **Historical blueprint — 21 October 2026, not the current execution plan.**
+> Its “not authorized/not connected” statements describe P2-only approval at
+> GUI source `8b41a062`. The owner later approved P3/P4/P4b/P5. V2 now reuses the
+> original game Stage/Flow/renderer, a v2 durable DEMO ledger, local MOCK and the
+> QRIS Sandbox service/client/journal. V2 uses manual DEMO input; the proposed
+> scanner-camera integration and trusted QRIS game-promo contract are still absent.
+> The proposed reuse of the standalone receipt ledger was superseded by the
+> v2-specific ledger/adapter. Do not implement this plan from the beginning or
+> carry its old stop gate into an already authorized task.
+> [Current roadmap](portrait-kiosk-v2.md) · [contracts](portrait-kiosk-v2-technical-design.md)
+> · [source status](FEATURE_STATUS.md).
+
 **Audit date:** 2026-10-21  
 **GUI branch:** `feature/portrait-kiosk-v2-next` (baseline `8b41a062a6f071b5c1a285481680e330b6b73f90`)  
 **Game branch:** `feature/meong-flappy-challenge` (read-only at `672e3f7089bb40940e5b41644ceb656aa63aafbb`)  

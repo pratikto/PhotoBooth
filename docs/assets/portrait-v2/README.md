@@ -15,9 +15,9 @@ This folder stores the original main photobooth artboard, the **latest nine-scre
 The **approved product-flow decisions supersede the illustrative annotations or missing screen controls inside the images**. In particular:
 
 1. Idle advertising and the inline face invitation each expose direct photo and Meong Fly entry; they are not separate home pages.
-2. The **latest nine-screen revised game artboard already includes** the dedicated MASUK MINI GAME intro/rules screen before receipt scan; the v2 source must implement it in a future approved integration stage.
+2. The **latest nine-screen revised game artboard already includes** the dedicated MASUK MINI GAME intro/rules screen before receipt scan; the dedicated intro is now implemented in v2 before manual DEMO input. Real scanner/POS remains disabled.
 3. After either game result, the user goes to the mandatory tutorial if it has not been completed this visit; otherwise the **12-template picker**. Do **not** route Win/Lose directly to payment.
-4. Winning proposes a Rp2,500 per-visit promo to display in the template cart and validate authoritatively before checkout. Losing has no discount. Currently the game/discount integration is **not implemented**.
+4. Winning proposes a Rp2,500 per-visit promo to display in the template cart and validate authoritatively before checkout. Losing has no discount. Current v2 integrates the game and local/MOCK reward; the QRIS Sandbox does **not** accept that reward without a trusted backend promotion contract.
 5. One receipt equals one irreversibly consumed attempt; there must be no **Main Lagi** action after Win or Lose.
 6. The existing **12 approved physical templates** (80 × 240 mm, three photos + one customer-photo download QR) remain authoritative. Stylized concept strip pictures and the mockup example payment amount are **not** new product masters or approved commercial pricing.
 7. The QR on the thermal strip provides access to the photo folder and is not the QRIS payment code.

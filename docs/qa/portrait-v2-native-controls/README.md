@@ -1,5 +1,19 @@
 # Owner retest, larger Meong and original Meong Fly buttons
 
+> **Later owner update:** final visual/audio form is 8/8 followed by “udah clear
+> semua”, recorded in [Sandbox owner acceptance](../portrait-v2-sandbox/owner-acceptance.json).
+> BUG-017 is now OWNER-REPORTED PASS / MONITORING at unknown HEAD. The earlier
+> OPEN/unfixed statements below remain dated observations; no decoder patch or
+> measured root cause is inferred.
+
+> **Dated source/QA record, retained for traceability.** Results, “latest/current”,
+> OPEN/PENDING labels, next actions and authorization limits below apply to this
+> package's recorded source and report date. Later owner reports and source work
+> can supersede its status; they do not rewrite these test results. Use
+> [current status](../../FEATURE_STATUS.md), [test ledger](../../test_checklist.md)
+> and [current handover](../../DEVELOPMENT_HANDOVER.md) for continuation. Historical
+> checklists are not an instruction to repeat already accepted tests.
+
 > Superseded caption/icon preference: owner rejects the pixel typography and requests a minimal look. Source d52a7d8 restores native unscaled font rendering and removes main-button icons while preserving this stage's original frames and larger Meong. 546 full PASS and matching three-job CI SUCCESS. [Current proof/preview/form](../portrait-v2-readable-type/README.md).
 
 2026-10-24, branch feature/portrait-kiosk-v2-next. Starting remote/local source

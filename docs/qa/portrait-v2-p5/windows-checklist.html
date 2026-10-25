@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src data:">
@@ -11,100 +11,100 @@
 </style>
 </head>
 <body><main>
-<header><div class="tag">MEONG PHOTOBOOTH · GUI V2</div><h1>P4b Sandbox & P5 — Windows Acceptance</h1><p>Centang hanya tes yang kamu lakukan dan lulus. Kosong berarti gagal atau belum diuji. Tes perangkat di akhir; pembayaran produksi tetap nonaktif.</p></header>
-<div class="panel help"><strong>1. Metadata:</strong> jalankan <code>python tools/check_portrait_v2.py</code>. Impor file <code>data/diagnostics/windows-readiness.json</code> di bawah; periksa monitor kiosk, kamera dan speaker yang sebenarnya.<br><br>
-<strong>2. GUI biasa:</strong> <code>python tools/run_portrait_v2.py</code> untuk regresi lokal. <strong>3. Sandbox:</strong> instal <code>python -m pip install -r requirements-qris.txt</code>, lalu <code>python tools/run_portrait_v2_sandbox.py</code>. Masukkan kredensial Sandbox secara lokal. Gunakan simulator resmi Midtrans, jangan aplikasi bank/dompet asli. Printer dan Drive mati pada launcher Sandbox.<br><br>
-<label class="field">Impor laporan kesiapan (JSON lokal)<input id="readiness-file" type="file" accept=".json,application/json"></label><p id="import-status" role="status"></p>
-Laporan lama 20 putaran tetap disimpan. G01–G02 di sini menguji integrasi Sandbox baru, sehingga membutuhkan hitungan putaran baru. Jika tidak ada kredensial/perangkat, biarkan item terkait kosong.</div>
+<header><div class="tag">MEONG PHOTOBOOTH · GUI V2</div><h1>P4b Sandbox & P5 — Windows Acceptance</h1><p>Check only tests you completed successfully. Unchecked means failed or not run. Manual device tests follow source work; production stays disabled.</p></header>
+<div class="panel help"><strong>1. Metadata:</strong> run <code>python tools/check_portrait_v2.py</code>. Import <code>data/diagnostics/windows-readiness.json</code>; verify actual display, camera and speaker.<br><br>
+<strong>2. Local GUI:</strong> <code>python tools/run_portrait_v2.py</code>. <strong>3. Sandbox:</strong> install <code>python -m pip install -r requirements-qris.txt</code>, then <code>python tools/run_portrait_v2_sandbox.py</code>. Enter Sandbox credentials locally. Use only the official Midtrans simulator, never a real bank/wallet app. Dedicated Sandbox launcher forces printer/Drive off.<br><br>
+<label class="field">Import readiness report (local JSON)<input id="readiness-file" type="file" accept=".json,application/json"></label><p id="import-status" role="status"></p>
+Earlier twenty-cycle reports remain preserved. G01–G02 require cycles of the new Sandbox integration. Leave unavailable provider/device items blank. UI labels retain the actual application language.</div>
 <div class="panel meta">
 <label class="field wide">Branch<input id="branch" data-field value="feature/portrait-kiosk-v2-next"></label>
-<label class="field">HEAD yang diuji<input id="head" data-field value="" placeholder="Hasil git rev-parse --short HEAD"></label>
-<label class="field">Tanggal<input type="date" id="date" data-field value="2026-10-24"></label>
-<label class="field">Versi Windows<input id="windows" data-field placeholder="Contoh: Windows 11"></label>
-<label class="field">Resolusi layar<input id="resolution" data-field placeholder="Contoh: 800 × 1280"></label>
-<label class="field">Display scaling (%)<input id="scaling" data-field placeholder="Contoh: 100%"></label>
-<label class="field">Kamera (model / bawaan / USB)<input id="camera" data-field placeholder="Contoh: kamera bawaan laptop"></label>
-<label class="field">Index kamera<input id="camera_index" data-field placeholder="Contoh: 0"></label>
-<label class="field wide">Kapan lag terasa?<input id="lag" data-field placeholder="Sejak iklan / setelah kamera / tidak terasa; tulis halaman"></label>
-<label class="field">Putaran integrasi Sandbox yang selesai<input type="number" min="0" step="1" id="cycles" data-field placeholder="Contoh: 20"></label>
-<label class="field">Speaker / output audio<input id="speaker" data-field placeholder="Nama perangkat yang dipilih"></label>
+<label class="field">Tested HEAD<input id="head" data-field value="" placeholder="Output of git rev-parse --short HEAD"></label>
+<label class="field">Date<input type="date" id="date" data-field value="2026-10-24"></label>
+<label class="field">Windows version<input id="windows" data-field placeholder="Example: Windows 11"></label>
+<label class="field">Screen resolution<input id="resolution" data-field placeholder="Example: 800 × 1280"></label>
+<label class="field">Display scaling (%)<input id="scaling" data-field placeholder="Example: 100%"></label>
+<label class="field">Camera (model / built-in / USB)<input id="camera" data-field placeholder="Example: built-in laptop camera"></label>
+<label class="field">Camera index<input id="camera_index" data-field placeholder="Example: 0"></label>
+<label class="field wide">When does lag occur?<input id="lag" data-field placeholder="During ads / after camera / none; name the page"></label>
+<label class="field">Completed Sandbox integration cycles<input type="number" min="0" step="1" id="cycles" data-field placeholder="Example: 20"></label>
+<label class="field">Speaker / audio output<input id="speaker" data-field placeholder="Selected output device"></label>
 </div>
-<div class="summary"><div class="numbers"><strong id="count" aria-live="polite">0 / 26 lulus</strong><span id="save-status" class="help">Menyimpan…</span></div><progress id="progress" value="0" max="26" aria-label="Jumlah tes lulus"></progress></div>
+<div class="summary"><div class="numbers"><strong id="count" aria-live="polite">0 / 26 passed</strong><span id="save-status" class="help">Saving…</span></div><progress id="progress" value="0" max="26" aria-label="Number of passed tests"></progress></div>
 <div id="cycle-status" class="panel help" role="status" aria-live="polite"></div>
 <div id="sections"></div>
-<div class="panel"><h2>Catatan masalah</h2><label class="field" for="notes">Tulis ID item, langkah mengulang, yang terjadi, dan yang diharapkan.</label><textarea id="notes" data-field placeholder="Contoh: A03 — tombol terpotong saat resize ke 800×900. C03 — belum diuji karena belum menang."></textarea>
-<div class="actions"><button id="submit" type="button">Submit Hasil</button><button id="copy" class="secondary" type="button">Salin prompt</button><button id="download" type="button">Unduh hasil .txt</button><button id="print" class="secondary" type="button">Cetak / PDF</button><button id="reset" class="reset" type="button">Kosongkan checklist</button></div><div id="status" role="status" aria-live="polite"></div></div>
-<div id="submission" class="panel" hidden><h2>Prompt siap dikirim</h2><p>Tempel teks ini ke kolom chat lalu tekan Kirim. File offline ini tidak dapat mengirim otomatis ke percakapan.</p><textarea id="prompt-output" readonly aria-label="Laporan untuk prompt chat"></textarea></div>
-<p class="footer">26 item. Submit menyiapkan prompt untuk disalin ke chat; tidak mengirim otomatis. Penyimpanan terpisah dari form sebelumnya. Kosong berarti gagal atau belum diuji.</p>
+<div class="panel"><h2>Issue notes</h2><label class="field" for="notes">Record item ID, reproduction steps, actual behavior and expected behavior.</label><textarea id="notes" data-field placeholder="Example: A03 — action clipped at 800×900. Note any unavailable test and its reason."></textarea>
+<div class="actions"><button id="submit" type="button">Submit Results</button><button id="copy" class="secondary" type="button">Copy report prompt</button><button id="download" type="button">Download results .txt</button><button id="print" class="secondary" type="button">Print / PDF</button><button id="reset" class="reset" type="button">Clear checklist</button></div><div id="status" role="status" aria-live="polite"></div></div>
+<div id="submission" class="panel" hidden><h2>Report prompt ready</h2><p>Paste this text into chat and send it. This offline form cannot send to the conversation automatically.</p><textarea id="prompt-output" readonly aria-label="Report for chat"></textarea></div>
+<p class="footer">26 items. Submit prepares text to copy into chat; it does not send automatically. Saved separately from earlier forms. Unchecked means failed or not run.</p>
 </main>
 <script>
 const SECTIONS = [
   [
     "A",
-    "Versi & startup",
+    "Version and startup",
     [
-      "Impor laporan kesiapan; HEAD, branch, resolusi/scaling monitor kiosk benar. Isi model kamera/index dan speaker aktual; jangan kirim kredensial.",
-      "Launcher biasa membuka iklan tanpa crash; MULAI FOTO → tutorial → galeri merespons satu tap.",
-      "Pada launcher biasa, pembayaran/scanner produksi tetap nonaktif; tidak ada transaksi atau kiriman cetak otomatis."
+      "Import readiness metadata; verify tested HEAD, branch and actual kiosk resolution/scaling. Supply actual camera model/index and speaker; never share keys.",
+      "Ordinary launcher opens advertising without crashing; MULAI FOTO → tutorial → gallery responds to one tap.",
+      "Ordinary launcher keeps production payment/scanning disabled, with no automatic transaction or print submission."
     ]
   ],
   [
     "B",
-    "Tampilan, game & audio",
+    "Visuals, game and audio",
     [
-      "Pada 800×1280 dan 452×900: logo animasi, tipografi, strip utama, tombol dan harga utuh. Resize kecil/lebar menjaga pilihan dan jumlah.",
-      "Meong Fly memakai GUI/animasi asli, Meong tetap di kiri, kecepatan/jarak gelombang stabil; pause/resize/resume aman. Pakai kode DEMO baru.",
-      "Iklan gambar memakai musik GUI; video memakai audio sendiri. Video A → video B, video → gambar → video tidak membekukan tombol.",
-      "Klik tiap halaman sekali, musik tutorial → galeri berlanjut; minimize/pulihkan/keluar tidak menumpuk atau meninggalkan suara."
+      "At 800×1280 and 452×900 the animated logo, typography, main strip, buttons and price fit. Compact/wide resize preserves selection and quantities.",
+      "Meong Fly uses original UI/animation; Meong stays left, wave speed/spacing remains uniform, and pause/resize/resume are safe. Use a fresh DEMO code.",
+      "Still ads use GUI music; video uses its own audio. Video A → B and video → still → video do not freeze controls.",
+      "Tap once on each page; tutorial → gallery keeps music continuous. Minimize/restore/exit leaves no overlapping or lingering sound."
     ]
   ],
   [
     "C",
-    "Foto lokal yang sudah ada",
+    "Existing local photo flow",
     [
-      "GUI biasa UJI FOTO: persetujuan → tiga foto → review → hasil berjalan; preview lancar, countdown lima detik, satu shutter tiap foto berhasil.",
-      "Satu retake per desain; hasil asli tidak dicerminkan. Beberapa desain membuat sesi terpisah; jumlah lembar tidak menggandakan sesi.",
-      "Kamera hilang/minimize saat countdown membatalkan countdown; pulihkan tidak memakai frame lama atau memulai foto otomatis."
+      "Ordinary GUI UJI FOTO: consent → three photos → review → result works; preview is smooth, countdown is five seconds, one shutter per successful photo.",
+      "One retake per design; originals stay unmirrored. Different designs have separate sessions; copies do not multiply capture sessions.",
+      "Camera loss/minimize cancels countdown; restore neither reuses a stale frame nor starts capture automatically."
     ]
   ],
   [
     "S",
-    "QRIS Sandbox merchant nyata (hanya simulator)",
+    "Actual Sandbox merchant (official simulator only)",
     [
-      "Launcher khusus meminta Sandbox key tersembunyi; GUI hanya mendapat token booth. Backend/GUI terbuka tanpa error; tidak ada key di log/laporan.",
-      "Galeri → QRIS SANDBOX menunjukkan harga penuh dan persetujuan tanpa promo DEMO sebelum pesanan dibuat. Satu desain satu lembar Rp10.000; dua lembar Rp15.000.",
-      "QR resmi dari provider tampil; URL pesanan saat ini tersedia di terminal. Simulator resmi membaca amount yang sama; jangan memakai bank/dompet asli.",
-      "Sebelum settlement simulator: foto tidak dapat dimulai, UJI FOTO gratis tidak bisa melewati pembayaran, timeout browsing tidak membuang pesanan.",
-      "Settlement simulator dikonfirmasi backend otomatis → persetujuan foto → tiga foto → review → hasil → sesi selesai. Tidak ada tombol manual untuk memalsukan PAID.",
-      "Tap lanjut/cek status berulang: hanya satu order/provider charge, satu izin dan satu transaksi foto. Selesaikan seluruh desain sebelum pesanan selesai."
+      "Dedicated launcher requests a hidden Sandbox key; GUI receives booth token only. Backend/GUI open without errors; no key in logs/report.",
+      "Gallery → QRIS SANDBOX shows full price/no-DEMO-promo consent before creating an order. One design/one copy Rp10,000; two copies Rp15,000.",
+      "Official provider QR appears; current order URL is available in the terminal. Official simulator shows the same amount; do not use a real bank/wallet app.",
+      "Before simulator settlement, photos cannot start; free UJI FOTO cannot bypass checkout and browsing timeout cannot discard the order.",
+      "Backend verifies simulator settlement → photo consent → three photos → review → result → session completion. No manual PAID override.",
+      "Repeated continue/status taps create only one provider order/charge, one grant and one photo transaction. Finish every selected design before completing the order."
     ]
   ],
   [
     "R",
-    "Gangguan & pemulihan Sandbox",
+    "Sandbox interruption and recovery",
     [
-      "Putuskan koneksi/backend saat menunggu lalu pulihkan: status belum pasti menahan halaman; cek ulang memulihkan order sama, tidak meminta bayar ulang.",
-      "Batalkan order pending: keluar hanya setelah backend memastikan terminal. Jika settlement menang balapan cancel, izin foto tetap tersedia.",
-      "Tutup/buka ulang ketika pending atau sudah dibayar sebelum foto: pesanan sama dipulihkan, tidak membuat charge baru. Jangan hapus journal.",
-      "Abort foto atau restart setelah foto mungkin dimulai: tampil bantuan operator/RECOVERY; tidak capture/cetak/refund atau reset order otomatis. Operator memeriksa journal/manifest."
+      "Disconnect network/backend while waiting, then restore: uncertain status holds the page; refresh recovers the same order without another payment request.",
+      "Cancel a pending order: leave only after backend confirms terminal state. If settlement wins the race, the photo grant remains available.",
+      "Close/reopen while pending or paid before capture: recover the same order without a new charge. Do not delete the journal.",
+      "Abort/restart after photos may have started: operator help/RECOVERY appears; no automatic capture/print/refund/reset. Inspect journal/manifest first."
     ]
   ],
   [
     "O",
-    "Perangkat & privasi (opsional jika belum tersedia)",
+    "Devices and privacy (leave blank if unavailable)",
     [
-      "Pada GUI biasa, printer uji opt-in: batch tepat N lembar fisik dan tap cepat tidak menggandakan. Default off; launcher Sandbox tetap tidak mencetak.",
-      "Hasil print tidak pasti/restart: tidak diklaim sukses atau dikirim ulang otomatis; periksa paper/journal sebelum tindakan operator.",
-      "Drive hanya jika operator menyiapkan uji: URL/QR membuka foto yang benar, offline queue pulih dan penghapusan 30 hari dibuktikan di cloud. Belum dibuktikan berarti kosong (BUG-009).",
-      "Operator meninjau persetujuan foto, akses/download, penyimpanan lokal dan retensi. Tidak ada data/customer foto/kredensial produksi dalam paket bukti."
+      "Ordinary GUI with operator print opt-in produces exactly N physical copies; rapid taps do not duplicate jobs. Default off; dedicated Sandbox launcher never prints.",
+      "Uncertain print/restart is not claimed successful or automatically retried; inspect paper/journal before operator action.",
+      "Drive only in an operator-prepared trial: URL/QR opens correct photos, offline queue recovers, and thirty-day cloud deletion is evidenced. Leave unproven items blank (BUG-009).",
+      "Operator reviews photo consent, access/download, local storage and retention. Evidence contains no customer photos or production credentials."
     ]
   ],
   [
     "G",
-    "20 putaran integrasi baru & restart",
+    "Twenty new integration cycles and restart",
     [
-      "Selesaikan minimal 20 putaran Sandbox → foto → hasil → iklan dengan order baru, resize/minimize di beberapa putaran: tanpa crash, lag mengganggu, audio hilang, duplikasi charge atau sesi.",
-      "Setelah minimal 20 putaran, tutup/buka lagi: kamera/audio normal; order selesai tetap selesai dan tidak ada capture/cetak otomatis."
+      "Complete at least twenty new Sandbox → photo → result → advertising cycles, resizing/minimizing in some: no crash, disruptive lag, missing audio, duplicate charge or session.",
+      "After at least twenty cycles, close/reopen: camera/audio normal, completed orders stay complete, and no automatic capture/print."
     ]
   ]
 ];
@@ -141,13 +141,13 @@ function qualifiedCycles(){
 function enforceCycleGate(){
  const ok=qualifiedCycles();
  if(!ok)for(const item of items)if(CYCLE_ITEMS.has(item.id))item.box.checked=false;
- document.getElementById('cycle-status').textContent=ok?'Gate putaran baru terpenuhi; G01–G02 tetap mengikuti hasil yang kamu centang.':'Gate integrasi baru: belum 20 putaran. G01–G02 tidak dihitung lulus; laporan 20 putaran sebelumnya tetap disimpan.';
+ document.getElementById('cycle-status').textContent=ok?'New cycle count met; G01–G02 still require your actual checked results.':'New integration: fewer than twenty cycles. G01–G02 do not count as passed; earlier cycle reports remain preserved.';
 }
 
 function update(){
  enforceCycleGate();
  const done=items.filter(item=>item.box.checked).length;
- document.getElementById('count').textContent=done+' / '+items.length+' lulus';
+ document.getElementById('count').textContent=done+' / '+items.length+' passed';
  document.getElementById('progress').value=done;
  for(const [code,,labels] of SECTIONS)document.getElementById('count-'+code).textContent=items.filter(i=>i.code===code&&i.box.checked).length+'/'+labels.length;
  for(const item of items)item.label.classList.toggle('done',item.box.checked);
@@ -156,39 +156,39 @@ function save(){
  update();
  if(!document.getElementById('submission').hidden)document.getElementById('prompt-output').value=promptReport();
  const data={fields:Object.fromEntries(FIELDS.map(id=>[id,document.getElementById(id).value])),checked:items.filter(i=>i.box.checked).map(i=>i.id)};
- try{localStorage.setItem(KEY,JSON.stringify(data));document.getElementById('save-status').textContent='Tersimpan di browser ini';}
- catch{document.getElementById('save-status').textContent='Gunakan Unduh hasil untuk menyimpan';}
+ try{localStorage.setItem(KEY,JSON.stringify(data));document.getElementById('save-status').textContent='Saved in this browser';}
+ catch{document.getElementById('save-status').textContent='Use Download results to save a copy';}
 }
 function restore(){
  try{
   const raw=localStorage.getItem(KEY);if(!raw)return;const data=JSON.parse(raw);
   for(const id of FIELDS)if(typeof data.fields?.[id]==='string')document.getElementById(id).value=data.fields[id];
   const checked=new Set(Array.isArray(data.checked)?data.checked:[]);for(const item of items)item.box.checked=checked.has(item.id);
- }catch{document.getElementById('save-status').textContent='Gunakan Unduh hasil untuk menyimpan';}
+ }catch{document.getElementById('save-status').textContent='Use Download results to save a copy';}
 }
 function report(){
  update();
- const names={branch:'Branch',head:'HEAD yang diuji',date:'Tanggal',windows:'Versi Windows',resolution:'Resolusi layar',scaling:'Display scaling (%)',speaker:'Speaker/output audio',camera:'Kamera',camera_index:'Index kamera',lag:'Kapan lag terasa',cycles:'Putaran integrasi Sandbox yang selesai'};
- const lines=['MEONG PHOTOBOOTH GUI V2 — P4b SANDBOX & P5 (26 ITEM)'];
+ const names={branch:'Branch',head:'Tested HEAD',date:'Date',windows:'Windows version',resolution:'Screen resolution',scaling:'Display scaling (%)',speaker:'Speaker/audio output',camera:'Camera',camera_index:'Camera index',lag:'When lag occurs',cycles:'Completed Sandbox integration cycles'};
+ const lines=['MEONG PHOTOBOOTH GUI V2 — P4b SANDBOX & P5 (26 ITEMS)'];
  for(const [id,name] of Object.entries(names))lines.push(name+': '+document.getElementById(id).value);
- lines.push('Status HEAD: '+(document.getElementById('head').value.trim()?'Diisi pengguna; perlu cocokkan dengan versi yang diuji.':'BELUM DIISI — exact-HEAD acceptance belum terverifikasi.'));
- lines.push('Gate 20 putaran integrasi baru: '+(qualifiedCycles()?'Jumlah memenuhi syarat; G01–G02 mengikuti centang.':'BELUM TERPENUHI — G01–G02 tidak dihitung lulus.'));
- lines.push('Laporan 20 putaran sebelumnya tetap dicatat; tidak meluluskan integrasi Sandbox baru.');
- lines.push('Status metadata: '+(['head','resolution','scaling'].every(id=>document.getElementById(id).value.trim())?'Diisi pengguna; cocokkan dengan perangkat yang diuji.':'BELUM LENGKAP — HEAD/resolusi/scaling belum seluruhnya diisi.'));
- const done=items.filter(i=>i.box.checked).length;lines.push('','Lulus: '+done+'/'+items.length,'Belum dicentang (gagal/belum diuji): '+(items.length-done),'');
+ lines.push('HEAD status: '+(document.getElementById('head').value.trim()?'User supplied; verify against the tested version.':'NOT SUPPLIED — exact-source acceptance is unverified.'));
+ lines.push('New-integration twenty-cycle gate: '+(qualifiedCycles()?'Count qualifies; G01–G02 still follow actual checked results.':'NOT MET — G01–G02 are not counted as passed.'));
+ lines.push('Earlier twenty-cycle reports remain recorded; they do not pass the new Sandbox integration.');
+ lines.push('Metadata status: '+(['head','resolution','scaling'].every(id=>document.getElementById(id).value.trim())?'User supplied; verify against the tested device.':'INCOMPLETE — HEAD/resolution/scaling fields are not all supplied.'));
+ const done=items.filter(i=>i.box.checked).length;lines.push('','Passed: '+done+'/'+items.length,'Unchecked (failed/not run): '+(items.length-done),'');
  for(const [code,title] of SECTIONS){lines.push(code+'. '+title);for(const i of items.filter(i=>i.code===code))lines.push((i.box.checked?'[x] ':'[ ] ')+i.id+' '+i.text);lines.push('');}
- lines.push('Gate eksternal: item S/R hanya lulus jika diuji dengan merchant Sandbox dan simulator resmi. Produksi, merge dan release tidak disetujui oleh form ini.');
- lines.push('CATATAN MASALAH',document.getElementById('notes').value||'(Belum ada catatan)');return lines.join('\n');
+ lines.push('External gates: S/R items pass only after testing the actual Sandbox merchant and official simulator. This form does not authorize production, merge or release.');
+ lines.push('ISSUE NOTES',document.getElementById('notes').value||'(No notes supplied)');return lines.join('\n');
 }
 function promptReport(){
- return 'Berikut hasil retest Windows Meong Photobooth v2. Tolong analisis hasil dan catatan masalah. Item kosong berarti gagal atau belum diuji; jangan otomatis dianggap lulus.\n\n'+report();
+ return 'Here are my Meong Photobooth v2 Windows retest results. Analyze the results and issue notes. Unchecked items mean failed or not run; do not count them as passed.\n\n'+report();
 }
 function submitReport(){
  save();
  document.getElementById('submission').hidden=false;
  const output=document.getElementById('prompt-output');
  output.value=promptReport();output.focus();output.select();
- status('Prompt disiapkan. Salin lalu tempel ke kolom chat dan tekan Kirim.');
+ status('Report prepared. Copy it into chat and send it.');
 }
 function status(text){document.getElementById('status').textContent=text;}
 async function copyReport(){
@@ -197,20 +197,20 @@ async function copyReport(){
   else{
    const temp=document.createElement('textarea');temp.value=promptReport();document.body.append(temp);temp.focus();temp.select();const ok=document.execCommand('copy');temp.remove();if(!ok)throw new Error('copy');
   }
-  status('Hasil disalin. Tempelkan di chat untuk dikirim.');
- }catch{status('Browser tidak mengizinkan salin otomatis. Gunakan Unduh hasil .txt.');}
+  status('Results copied. Paste them into chat to send.');
+ }catch{status('Clipboard access is unavailable. Use Download results .txt.');}
 }
 FIELDS.forEach(id=>document.getElementById(id).addEventListener('input',()=>{update();save();}));
 document.getElementById('submit').addEventListener('click',submitReport);
 document.getElementById('copy').addEventListener('click',copyReport);
 document.getElementById('download').addEventListener('click',()=>{
- const file=new Blob([report()],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(file);const a=document.createElement('a');a.href=url;a.download='meong-windows-p4b-p5.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);status('File hasil siap disimpan.');
+ const file=new Blob([report()],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(file);const a=document.createElement('a');a.href=url;a.download='meong-windows-p4b-p5.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);status('Results file is ready to save.');
 });
 document.getElementById('print').addEventListener('click',()=>window.print());
 document.getElementById('reset').addEventListener('click',()=>{
- if(!confirm('Kosongkan semua centang, data perangkat, dan catatan pada checklist ini?'))return;
+ if(!confirm('Clear all checks, device fields and notes in this checklist?'))return;
  document.getElementById('submission').hidden=true;document.getElementById('prompt-output').value='';
- for(const i of items)i.box.checked=false;for(const id of FIELDS)document.getElementById(id).value=defaults[id];update();save();status('Checklist dikosongkan.');
+ for(const i of items)i.box.checked=false;for(const id of FIELDS)document.getElementById(id).value=defaults[id];update();save();status('Checklist cleared.');
 });
 
 document.getElementById('readiness-file').addEventListener('change',async event=>{
@@ -228,8 +228,8 @@ document.getElementById('readiness-file').addEventListener('change',async event=
   if(Number.isInteger(display.scaling_percent))put('scaling',String(display.scaling_percent));
   if(Number.isInteger(data.device.camera_index))put('camera_index',String(data.device.camera_index));
   put('camera',data.device.camera_model);put('speaker',data.device.speaker_output);
-  message.textContent='Metadata diimpor. Periksa monitor kiosk dan perangkat aktual. Tidak ada item uji yang dicentang otomatis.'+(data.source.dirty?' PERHATIAN: working tree saat laporan dibuat berisi perubahan.':'');save();
- }catch{message.textContent='File tidak valid. Pilih windows-readiness.json dari tools/check_portrait_v2.py.';}
+  message.textContent='Metadata imported. Verify the actual kiosk display and devices. No tests were automatically checked.'+(data.source.dirty?' ATTENTION: the report was created from a dirty working tree.':'');save();
+ }catch{message.textContent='Invalid file. Select windows-readiness.json from tools/check_portrait_v2.py or a compatible operator report.';}
 });
 restore();update();save();
 </script></body></html>

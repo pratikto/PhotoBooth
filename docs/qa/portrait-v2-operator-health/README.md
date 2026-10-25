@@ -1,5 +1,11 @@
 # GUI v2 operator Device Health — FEAT-008 / FEAT-022
 
+**Completed source increment.** Foundation `4c89e4f`, functional source
+`ea394e8`, evidence `5f09eff`. The “planned” section below preserves the original
+design sequence; native integration/local report and final local/CI sections
+record completion. Actual operator/P5/merchant acceptance is separate.
+[Current ledger](../../test_checklist.md).
+
 Owner authorization, **25 Oktober 2026**: continue safe roadmap development in
 cloud; do not wait for laptop acceptance, test manually tonight. Current task
 ports existing read-only Device Health service and actual panel into GUI v2,
@@ -25,7 +31,7 @@ and main-loop heartbeat. Queue/device presence is not paper, motor or physical
 operability; READY means only that named observation passed. Network checks do
 not verify Midtrans/Drive. Physical/provider/privacy gates remain NOT_RUN.
 
-## Planned native integration
+## Original native integration plan (implemented below)
 
 Operator access on idle advertising: **F12** or hold Meong header, without adding
 technical controls to the customer journey. A background worker runs one sweep;

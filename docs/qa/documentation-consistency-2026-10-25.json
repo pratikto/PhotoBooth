@@ -1,0 +1,757 @@
+{
+  "date": "2026-10-25",
+  "timezone": "Asia/Jakarta",
+  "repository": "pratikto/PhotoBooth",
+  "branch": "feature/portrait-kiosk-v2-next",
+  "baseline": "5f09eff9998c942ed54feef0cf0563fc3944611b",
+  "published_stages": [
+    {
+      "sha": "da375b3ace7048785bc558e45d10cf5a859709a1",
+      "remote_verified": true
+    },
+    {
+      "sha": "e4d0e8947c82821f5480615c0f689630a438d425",
+      "remote_verified": true
+    }
+  ],
+  "remote_metadata_checked": {
+    "default_branch": "master",
+    "master_sha": "27f3801b235d81dc0a49ab201f3e143b62314413",
+    "latest_functional_source": "ea394e8ce0b5bcd1a95f46544e6a050494ece733",
+    "latest_functional_ci": {
+      "run": 40157638369,
+      "conclusion": "success",
+      "head_sha": "ea394e8ce0b5bcd1a95f46544e6a050494ece733"
+    }
+  },
+  "scope": {
+    "original_markdown": 67,
+    "original_html": 14,
+    "reviewed_original_files": 81,
+    "current_markdown": 68,
+    "current_html": 14,
+    "changed_document_files": 82,
+    "raw_evidence": "unchanged",
+    "reference_branches": "existing dated 19-branch snapshot reconciled; no new all-branch tip scan claimed"
+  },
+  "checks": {
+    "local_links_checked": 926,
+    "missing_targets": 0,
+    "invalid_anchors": 0,
+    "protected_non_document_files_unchanged": 1152,
+    "forms_js_structure_unchanged": 2,
+    "reference_branch_rows": 19,
+    "json_parse": "PASS",
+    "diff_scope": "documentation only"
+  },
+  "provenance": {
+    "operator_functional_manifest": {
+      "matching_files": 228,
+      "mismatches": []
+    },
+    "original_game": {
+      "matching_files": 26,
+      "mismatches": []
+    },
+    "original_health": {
+      "matching_files": 11,
+      "worker_method_hash": "MATCH"
+    },
+    "qris": {
+      "matching_files": 27,
+      "existing_documented_adapter_exception": "tools/run_qris_sandbox.py; unchanged from audit baseline"
+    }
+  },
+  "form_logic": [
+    {
+      "path": "docs/qa/portrait-v2-p5/windows-checklist.html",
+      "test_method": "Node VM with minimal DOM/storage fixtures (not a browser)",
+      "items": 26,
+      "initial_checks": 0,
+      "metadata_import_no_auto_pass": "PASS",
+      "english_partial_submit": "PASS",
+      "persistent_key": "meong-windows-p4b-p5-v1",
+      "restore": "PASS",
+      "cycle_policy": "PASS",
+      "download_and_reset": "PASS",
+      "visual_rendering": "NOT_RUN: browser unavailable; browser download returned invalid archive"
+    },
+    {
+      "path": "docs/qa/portrait-v2-operator-health/windows-checklist.html",
+      "test_method": "Node VM with minimal DOM/storage fixtures (not a browser)",
+      "items": 8,
+      "initial_checks": 0,
+      "metadata_import_no_auto_pass": "PASS",
+      "english_partial_submit": "PASS",
+      "persistent_key": "meong-windows-operator-health-v1",
+      "restore": "PASS",
+      "cycle_policy": "PASS",
+      "download_and_reset": "PASS",
+      "visual_rendering": "NOT_RUN: browser unavailable; browser download returned invalid archive"
+    }
+  ],
+  "limitations": [
+    "No new application/hardware/provider tests; 780/688 results remain tied to their recorded source.",
+    "Browser rendering NOT_RUN: Chromium absent; download returned invalid archive. VM checks are minimal DOM/storage fixtures, not a real browser.",
+    "External URLs were checked for pinned reference context; all live external resources were not exhaustively HTTP-tested.",
+    "Historical raw evidence/owner quotes/forms retain original language; active guidance and two current forms are English."
+  ],
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "role": "current guidance/index/governance",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "c1336fd25fbbf4904df8f0dda87521c604697790419262664e7c9d98a6c7ba7f",
+      "after_sha256": "396402bc21a26a43c7959585a3b9d3bed6be8453456099c846b0552558e68e09",
+      "changed": true
+    },
+    {
+      "path": "README.md",
+      "role": "current guidance/index/governance",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "9d3d7f8185acfab8b727d71d8c0241117abbbbf5c5fdc80b9cc0434c7f9d480e",
+      "after_sha256": "a551d302c4d518bca66c2a4e13ebfe44f7fe1a1b1c71896388207000774342a6",
+      "changed": true
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "role": "current guidance/index/governance",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "9af0defb53851e218fbfeca121071aa3972274f0f5b5d713a37f79a323cb203c",
+      "after_sha256": "5e2036c71540674089d7e31bdf62d590ce3fb21a33c196d17ad900e2cf013664",
+      "changed": true
+    },
+    {
+      "path": "docs/CHANGELOG.md",
+      "role": "current guidance/index/governance",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "4a0ec2eadc678539eb37cb07c37c82568ca060ce82506cdc98a1647c8d61fdc7",
+      "after_sha256": "1f8db24708ab5a2347632b4ec57d2aa57e6d9a9ca8a1847e82f2d625a73706cb",
+      "changed": true
+    },
+    {
+      "path": "docs/DECISIONS.md",
+      "role": "current guidance/index/governance",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "68b86eb196ed8acc87d1789333d6c1401726a6b22e846b43dbf9a9b869d2df53",
+      "after_sha256": "f408c364e20ff8c2ba0491fb9cf7f132f197a6eacf97c8ce300b459c3bc8d348",
+      "changed": true
+    },
+    {
+      "path": "docs/DEVELOPMENT_HANDOVER.md",
+      "role": "current guidance/index/governance",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "7811c35d7c8c3649499443423a308cb911e82716b812405c8acb18e01663d6fa",
+      "after_sha256": "a2e7ae6d3c85281bfcd6d92754d32504c62ea672ba0c7bc5f3c441bc194bc1c8",
+      "changed": true
+    },
+    {
+      "path": "docs/DEVELOPMENT_PROMPT.md",
+      "role": "current guidance/index/governance",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "f1d4a5a2e34f7a2d699f82c1944f270da1d0ac3053b982e32622f28347ee0e78",
+      "after_sha256": "3f948031bd9ab01438130a76e4d5ca2c7bf56720d8f73ee19b1fbadfae4122dd",
+      "changed": true
+    },
+    {
+      "path": "docs/DEVELOPMENT_PROTOCOL.md",
+      "role": "current guidance/index/governance",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "43a625d456765e91f10f1c6ea95e0204cd6a14d47469f4697157fbd66e170b02",
+      "after_sha256": "50432ed516e479e2be52123a04c840603b8a6673e049a8b995ce1ecbb1054f3f",
+      "changed": true
+    },
+    {
+      "path": "docs/FEAT-021-to-FEAT-022-integration-plan.md",
+      "role": "historical scope/source record",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "90dde37df19be3a50d7863d9ec0df9d5dff81633c7614970dfe5e056471239f9",
+      "after_sha256": "88d9ee8641eaa9b006ed97941d2813f4713188013b77a2ea2db078bfb7e3f461",
+      "changed": true
+    },
+    {
+      "path": "docs/FEATURE_STATUS.md",
+      "role": "current guidance/index/governance",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "a3d331772028e26116da710b723fcd94aac99cbf076618592d2411ea0cf630e2",
+      "after_sha256": "f0fd5dbdf29e1ef6700a2d46bc2dbdee6703dbc7fc9ca74060cd30faea9b4364",
+      "changed": true
+    },
+    {
+      "path": "docs/NEXT_STEPS.md",
+      "role": "current guidance/index/governance",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "5e5f36a47e90bad235c85aebcf35af4704fbc405772fa7a3501a58dad0edba8f",
+      "after_sha256": "90a442c824099552ac791bd94caa8eb3c399d03066ae3055b1f69a40c73d13bb",
+      "changed": true
+    },
+    {
+      "path": "docs/README.md",
+      "role": "current guidance/index/governance",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "41ad09454fd4ca84dcaa5393e44c4b3a08d6facf45d2598321a9cd581194dedd",
+      "after_sha256": "8966f465334681415d61273e78015c56e58c10b77b6cffe5f7f6ce28dc4f5349",
+      "changed": true
+    },
+    {
+      "path": "docs/advertising-and-qris.md",
+      "role": "shared asset/backend or v1 guide with v2 scope",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "49ff54627408040b73f7462ace86e66a4c79d9a16a85060a5e6f65ffc0cc04dc",
+      "after_sha256": "2a3ff529a9ab221a051079593db68a59dca096dedb42ec55c69eeecaa4ba6a7e",
+      "changed": true
+    },
+    {
+      "path": "docs/assets/portrait-v2/README.md",
+      "role": "shared asset/backend or v1 guide with v2 scope",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "f847905601ea09881c6e3685b6c014452139e5f6d2ef7de11d19a08f96fe8147",
+      "after_sha256": "71a8e8683cf0c16657853a642a7890c7d7db4fcc08d36a27308d2f8e5aef3372",
+      "changed": true
+    },
+    {
+      "path": "docs/bug_tracker.md",
+      "role": "current guidance/index/governance",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "3322c3806393287e61866899614163876c15833825128cd621b8e1ea9e675477",
+      "after_sha256": "c269cea4c3c5465ce1511d4f32087910141dd79db5413d671173eeddcdcff993",
+      "changed": true
+    },
+    {
+      "path": "docs/dither-tuning-lab.md",
+      "role": "shared asset/backend or v1 guide with v2 scope",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "8ecbb962fb74310d3bbc613a57ab9077d4544950b3fac5838df3c7f372eeb52b",
+      "after_sha256": "65abb8a28bfec78815827fe21bb92769fdf8503576f6ffbe07ed958790841402",
+      "changed": true
+    },
+    {
+      "path": "docs/gui-v2-branch-audit.md",
+      "role": "current guidance/index/governance",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "8d6ce93ed1f720afc6a52d0d33f17b8c7d11dfd51c198de12af5090c4f5751d8",
+      "after_sha256": "b3caad354db17a3943c58451afa36fd23068bee4eeaa9d126d7d0a553059adab",
+      "changed": true
+    },
+    {
+      "path": "docs/gui-v2-promotion-plan.md",
+      "role": "current guidance/index/governance",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "62251365c32fd661701e865009c7046153625431eb458d85a8976dbc6b20d837",
+      "after_sha256": "072d73bac1268122210ad5b215a2ed2df2598d906c1bebb7204efdcd1935802f",
+      "changed": true
+    },
+    {
+      "path": "docs/next_step.md",
+      "role": "current guidance/index/governance",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "41ff4eb23a3cfd042fd7f941b30eef350c052831765776c9b97570cbb80d3c86",
+      "after_sha256": "96d92baa4006a0686b845682f385f4c4225496df36c1edd3330ef860d6bae94e",
+      "changed": true
+    },
+    {
+      "path": "docs/photo-retention.md",
+      "role": "shared asset/backend or v1 guide with v2 scope",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "f2bb02acfa3133a70943275ee727a5e0f4160f38704f49fa14bae58e95573349",
+      "after_sha256": "cfb3c545d5467a8762499e7bdd783f8d803284821b93fb4cca80a92f33f903c5",
+      "changed": true
+    },
+    {
+      "path": "docs/portrait-kiosk-v2-technical-design.md",
+      "role": "current guidance/index/governance",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "15d64ab068422499c7ff69742df6f9f8214034d1a715e918ec5e77947bd3a83b",
+      "after_sha256": "bb7471f4ad64100e87e958ff1b73915e8743f034e2bede4a070c0a02f3addb66",
+      "changed": true
+    },
+    {
+      "path": "docs/portrait-kiosk-v2-visual-spec.md",
+      "role": "current guidance/index/governance",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "193adb50127962f2db19cf53cd95734a527c1d708dda107eda8641bdf7e0aa32",
+      "after_sha256": "d17f9a21e6187442e1bb0813feae1fddcff93564e16f8112fc2088476192f758",
+      "changed": true
+    },
+    {
+      "path": "docs/portrait-kiosk-v2.md",
+      "role": "current guidance/index/governance",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "2a4b04e1aa84210b442dd2524e6ae7328830f3dd4f06e0cebf40fc1bcfe52d99",
+      "after_sha256": "8a6c94a29566575b40dfdc61c06f4954cf384ca72db9e898549b4cb00088b175",
+      "changed": true
+    },
+    {
+      "path": "docs/portrait-v2-p2-6-to-p2-8-qa-gate.md",
+      "role": "historical scope/source record",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "51b8076c5616d9dab79abaf742b798cd6e1af47770fec475789170335e4d5540",
+      "after_sha256": "30477bc202a3ea7555aa603667f78e52d4ab0d4112b8a04830dd70697d792cc0",
+      "changed": true
+    },
+    {
+      "path": "docs/printer-setup.md",
+      "role": "shared asset/backend or v1 guide with v2 scope",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "bcb8151e10a68fd7defb35ef4b60163e73d6e95bc40f9677faf3dc1d00d4f131",
+      "after_sha256": "88bcd08b5e52e558f7524fd568c77d68183a2871ac6386adfcf64fc692863f95",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/FEAT-001-BUG-011-acceptance.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "b71a0ea1b9444db00a6e23789fbf416113e902ac1522067dbc5323f35ab5c9a9",
+      "after_sha256": "56f47ed29b8af0c414ac6840e53ea35d7498caf3db9f1bef6268e9e4056c7a26",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/KIOSK-GUI-REGRESSION-2026-10-18.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "e695e42bb7f96ab69d9d671beb5e93aa12631fe7f045d81772c5b78fec3fcc34",
+      "after_sha256": "bded218703843c366bf5e4ebd17c6f1d31f616c2701da860e91777f7aa3f7215",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/README.md",
+      "role": "current guidance/index/governance",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "b50a504b2c0a93ffa36dd3cc58b3d04a9db77255e879691cad19194ae079fd64",
+      "after_sha256": "6b0951664f05e3cb9577ef6449e3b7df5d5814fc04ce3b7dcbfcdd3f06ed5d3a",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/advertising-kiosk.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "c62110eec96c7d0d97ed13a94a61ed7337a0cd96f9c7972d7bede035d5df6074",
+      "after_sha256": "cb7a0aaacce3f71bb251202fad6c549d86b7abc2863a032081424ba996f86fd6",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/branded-qr.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "d20c16239839d7730d6905d7e0aaae4a1ecabd702244f460b008ff7729c90837",
+      "after_sha256": "d8cc74d5cbbd3bca3231c33df40472bb282c6f22dd9ff21a6a77ca3c5ed060b7",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/centered-qr.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "44700c4f84bde916a9145ef15f6cd8ad7e668db008dd318400fc2005016d950b",
+      "after_sha256": "c21f7f8747536c60717a022ccad3bf18bdbd3875d24ceed46e52d17a7189d68d",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/documentation-consistency-2026-10-25.md",
+      "role": "current guidance/index/governance",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": null,
+      "after_sha256": "e1dc7d8d870a0dcf1e7386ef05593faaabd0849a05052fd96c9a9f13a17da7b4",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/gui-v2-docs-2026-10-25.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "9d35fdccd95c38852b48fc83fdadd3eca74b4f7260d3b1898e692391c78bbacd",
+      "after_sha256": "b2016cf2df62d8b810950a3fc2c3c2133c773bec0ce4886aad8629bb18677efc",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/logo-audio.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "de416bbfd60213019f85dacdbfb268f6dae52537725e7160b0b8af9142f74cda",
+      "after_sha256": "4b5c941579883389b6ff5211ad4b10a3122d884e0afa02b7fe1dcd84b5773832",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/meong-carousel.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "2e7e3530288e8c026f26f6e469085add82e4bab00547f31d0387fd9aeda4608f",
+      "after_sha256": "940853f185683d753e743fbe4b5c05495c43ee98c28e2f22067a2d02cc6ad350",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-ci/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "40116279a6aa7b166022aac1277cc1428c5c209aed8af0df65afa759724016fb",
+      "after_sha256": "0fd612b55863ff783e9d4533b9ae0b9e1c01bd93f76a82eaee16e2d3666fbb5a",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-gallery-focus/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "4d5eff1e0b86e5cab06998665ffe997ff1cc57edbabfdfdf7f72720d1b766c6b",
+      "after_sha256": "f325e4081e2efbcf08c4b3ca81e274654ecfeafab5167dde1e12cb412693e32f",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-gallery-focus/windows-checklist.html",
+      "role": "historical form (original questions/language retained)",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "e88ebc3585f78550ac855b50eea390b52c3766de2e12a46b3b18d07c2def8ef9",
+      "after_sha256": "cda96100fc1c3e9a96435d0eff0a20808e02713051c4776e75e04d5fbdf25616",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-game-followup/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "117d5f6d454723b97d07ae726ac8b4437466861916ab52126a5ad695781b4bd6",
+      "after_sha256": "618b628d709d82f49021116e03b13575f763f4377e19d2cb182db2550e65e1f0",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-meong-reuse/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "7ae76aa6e4232692297ac22f1c455ad593352743b03759c28f9aad4dcf1627df",
+      "after_sha256": "3f5e7adb9aba6a9ea1f384fd70b1c99821fd2d8e8fdad4f154c8f3507e1afb0f",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-motion-correction/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "a5d8bf473f21188560ff19c9270582ff958856cd1c26fd07e200b7badd38deca",
+      "after_sha256": "229be42d37636974eac27c8697be7f8c1a065c6906b23db36a24295f593b2642",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-motion-correction/windows-checklist.html",
+      "role": "historical form (original questions/language retained)",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "d3d0d661613d6bceb6124a840a8fe332fe7a52462dde5a42236f289d676edda9",
+      "after_sha256": "16b336b33d1d9b7d1ba3c3c941e253dd195aea712c19c5d315a2a7337233ffb2",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-native-controls/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "dc8916b871de501312473a7325da5a8c2650a503fa8b3182ee42bf1034e60a4a",
+      "after_sha256": "525563d835e1f19ac6b91d7a3b9ee336a11249c4ab3f60dcbdf46be678d6e602",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-native-controls/windows-checklist.html",
+      "role": "historical form (original questions/language retained)",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "950473d0a7e74e42294a0c17678a7804a68fa192229ddaa8fbc0baf1155c7369",
+      "after_sha256": "255829df6a1bfacf09a10174e2466f997c9cc06a33287ddbcb02ca3150d67549",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-operator-health/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "1f5557327b08664566bba40e63da080633212062fa2f873e666e1533f8ea763d",
+      "after_sha256": "9b6127020368194bf35be065ddb144434106e1cd950fc2fe0db8e2170b03aa59",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-operator-health/windows-checklist.html",
+      "role": "active acceptance form",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "0323737a6d4c9acc70bf99c3f094a57d53372cb7ce7a05068d73e710b72fafb6",
+      "after_sha256": "1af4cf20b134c2840d991d147dd4970f7b9c81d55b6246c3a55b1014560bbdf0",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-p26/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "19b6e80277704c15ac4d2309a907872cd4cf7537d627c7931a4fd657bf867e8c",
+      "after_sha256": "29d4fa9bc5c9c32e3e698c9593013b700dc62841a2a7604b5125fea7a4683fd7",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-p27/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "13c4bb4b49eda9e21d7dfd9d3d54d89ba956daff839eb6a97f93533d19d7d2fc",
+      "after_sha256": "a5d2eab1628432766c22b8de173983790f01773c161858eb3bf5dfc34668eead",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-p28/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "53ce5713359269bb4b850c709a20f28d77cc7f643f4b57680f1a53634e16524f",
+      "after_sha256": "85b045d2b2121d6f14e4cd2db6e1435d97cea15f5718ffcb91d6eab8daae532e",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-p3-retest/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "9544fd53821a37fd24767da3e2be8c0be2a3dc9cd747e6ed23edb6d2444a9e82",
+      "after_sha256": "1f8c976611df82bb4466ad71a9fe6234890969771d1fe98f70a9632ba85950fe",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-p3-retest/windows-checklist.html",
+      "role": "historical form (original questions/language retained)",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "5c7228169a568cd509325941a469d8e3df0b6577189dc95b970596c7785f1dd7",
+      "after_sha256": "19a4ecc97ae248b2fc34093e78a760b4b7541dd50d46cd0564434a87a21cacab",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-p3/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "fa59f849ab8d512dfdb89968051fc6a4d9d810b435262fb401985fd7f5a421f2",
+      "after_sha256": "154f39b4f6f7d21e26c011059095e1cdaa3082c823e2d291880e16e32b5d70f6",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-p3/windows-checklist.html",
+      "role": "historical form (original questions/language retained)",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "aecc28d8ed1a9e661455a0f4b9796616f26d719b3c72a1902c967883ba6548de",
+      "after_sha256": "e0570b0598b9286d70689fd17f12fae23b830052ce0ee5de5c37363b1fa28a9c",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-p4/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "b0a74a1aa1ae793ebab68ef0fdd7eaf6d5d9cdf8b14aa0c5a1be1e6363bc98e2",
+      "after_sha256": "8c457d8ce8acd84c0bc64d81da41ca3f2dd657e4aad3942afa4dccffef991874",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-p4/windows-checklist.html",
+      "role": "historical form (original questions/language retained)",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "011675fa806f85c13a60404029d435e8af72d77f82b2088fd61610f0bc138e5a",
+      "after_sha256": "c31d9a888b62ab11107e11718ea86813fc89fd38bd907207ba04c18f32f5ccdf",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-p5/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "e015f988fe2f3d1259a70359e0a0c5eb3cd212beb8a571936dc477f2d80faada",
+      "after_sha256": "1c5aae22dec5164001d18bd933fd165d9d1713df7569522ffe16ab23df79e911",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-p5/windows-checklist.html",
+      "role": "active acceptance form",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "e2a784d2f7b5497dada052251922cdfa091c1e44a9f8d551c1a1a7e836f100b3",
+      "after_sha256": "8d92675eac982459910e859938b75c1460e7ec0e25c8192b8b34c570ba3a40d0",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-player-anchor/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "218535f88da6a934b9b2d36c282b0e8b211b2ed422f3c3bcc28644bb515d4818",
+      "after_sha256": "fc9a6d171e8e3056a705540c392760435f4bc3ebb2b02b0555cf343fce5d61e1",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-player-anchor/windows-checklist.html",
+      "role": "historical form (original questions/language retained)",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "8eb1c329d6f9a9a58779ae1894fe9af10e86795140b9fdc5df036fe1a5c094e7",
+      "after_sha256": "77392708a341d6566c8f59c69b7503684aa604985199f7e53b5924470e8025ae",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-preview-redraw/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "638f905def04cddbafd7b42a543a25dec6ed75189a9c8d5a6a60b60496efd405",
+      "after_sha256": "677a8647d3df2f4b61f515fd63b1bf8bb605693352f7b3fc3662b591304568a3",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-preview-redraw/windows-checklist.html",
+      "role": "historical form (original questions/language retained)",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "15b1021cb0c1453511b373aebb6cef3ac983ee205481dda10bf607d80fa5921d",
+      "after_sha256": "e35fee6b709a3ae91a89fe3de07dc2c2859454b6011884eaf11ea9826fa142c8",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-readable-type/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "8146e6874bc5af2280068f908f8c41ed2bee98f6d1c7faa9fcbcf96a690189ce",
+      "after_sha256": "804922cfee1e79aacb035b32754d1e5d8568e71b6949f7dc787a2c10ede08638",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-readable-type/windows-checklist.html",
+      "role": "historical form (original questions/language retained)",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "acc544d9ccbf53b6ffcbea19e9bdca93bd4020bb3a41f2cfe2df44bbb5784bdb",
+      "after_sha256": "4b552046a5693be08e9dbac2e02d39f36a2a88d5351b02d072cf0217a2e393d2",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-responsive-scene/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "52f460e2f2921403515304e301e5605fed400591210f202ef315687c6ce7a6f6",
+      "after_sha256": "2b5dc9bedd0cd7ba169cf3399086ca3674b582e810a235461ae7070cc52295f8",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-responsive-scene/windows-checklist.html",
+      "role": "historical form (original questions/language retained)",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "5031a015c282be3790d60fe21a2009d04847f1230addf535ec152c26fb34cc15",
+      "after_sha256": "7b5f559cb3ccca1370887edd559d3b17e5786db810be07918309b4c433363eff",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-retest-9a9e18e/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "a197864ad81f19a1060b302471a618dae8bfae8c96d322f2d1569e8cd18e2336",
+      "after_sha256": "6a90a4bd7ee5c768240bfc0d19b8bdf51e9a269c88253b9e28f859de5b6b2e81",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-retest-9a9e18e/windows-checklist.html",
+      "role": "historical form (original questions/language retained)",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "32ac48422897202148e7827a79016937b3612a4d1b1557aaf4aceb20405dadae",
+      "after_sha256": "835348c5ec7a89e74e90b228bbba9459656cfc0cb293dbfd45aaa35ca232375b",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-return-ad-crash/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "89d64b13f7a1c74c3d312f2eacaaeeab59d1058915529b64f3413844f002a4f4",
+      "after_sha256": "3dae5183c23c3a7e3e1a01c408e6dcdec6c9decf379c4e1305e9727118f1014c",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-sandbox/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "38f6052245c7c811d915f56297d2452e10017a773dffbbacab153ec9d9cbaec2",
+      "after_sha256": "62e49da4de14613803ba645115728dc12464159b3b125e8ae0bb5b894b4ef95a",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-start-photo-crash/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "bdee82d53f2d769e39097b0e67806de294a7a4db802b59cf4be3f560bbeaeb4e",
+      "after_sha256": "33211b0ceeb92bbeea15db1c31ac6ed96e7a00fa198d27cf1b58c26388558f2c",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-start-photo-crash/windows-checklist.html",
+      "role": "historical form (original questions/language retained)",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "0474357df4ba98f7a576ca7c15d17f4b115e74230adedf8999efe0beb5604727",
+      "after_sha256": "d3088240de8046477a8522c477711cf3763ac972da70a497143fb1904c8d6a9c",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-windows-acceptance-3cfa9d2.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "30d21d288df57211eabe6f29772e28d1946cb78e220d75208527582352453f97",
+      "after_sha256": "e1a79f5ffab78bfc2a6632a5b42cc78c75ca896322106bf838b909d58e04ee9a",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/portrait-v2-windows-followup/README.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "8bfa4f45bf7cbc43d2baf713e791c222fa13aa63d08d7777228362033389f410",
+      "after_sha256": "84634f5831fe01890a7e99293c1dbeb4ab4565bc7b49836822e4507346e8c18c",
+      "changed": true
+    },
+    {
+      "path": "docs/qa/receipt-templates.md",
+      "role": "dated QA evidence record with current-context pointers",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "eadf81150a60a9c6f9c698a3f75e5307dee2c200e6e36fe97e1d9223d86a313c",
+      "after_sha256": "3861435e94407abec9253001bec0345fa9a0a07af6bb6bf37d08a4ee377c591c",
+      "changed": true
+    },
+    {
+      "path": "docs/releases/v1.0.0.md",
+      "role": "historical scope/source record",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "5c1122b579db1b9511072087b2529557bd5863d4d1a6bcbdc2f158c85edb210c",
+      "after_sha256": "54a9cb961995f77f88afd831d6b4037241d479b47cf47b009c2e4aaa8c428b25",
+      "changed": true
+    },
+    {
+      "path": "docs/test_checklist.md",
+      "role": "current guidance/index/governance",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "e988d91ff49c79dda2b737bdec28699d92217074aba1a503ad41dfe921272ab5",
+      "after_sha256": "07bc756a23e989b8c89df2a716519fe33ed670ba7d66908723d7e79dd6b350f7",
+      "changed": true
+    },
+    {
+      "path": "photobooth/assets/README.md",
+      "role": "shared asset/backend or v1 guide with v2 scope",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "f9c6481c4bce6ccffd7730492057c49c1d137e0b1a7ce5ec77e967a7ec5013e8",
+      "after_sha256": "2ef401d50ab3096e7ee22933fc6ccdb0df6b81980ee182986ef3ed049cd1c4d7",
+      "changed": true
+    },
+    {
+      "path": "photobooth/assets/ads/README.md",
+      "role": "shared asset/backend or v1 guide with v2 scope",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "057f240572b4c32e6e908efd553204fac059fbe54673e82892d4fc945b3989c7",
+      "after_sha256": "50d6df602e5a610d8301b795241d5a17b18576d1b9be6919e4e6ef77a68ce9cd",
+      "changed": true
+    },
+    {
+      "path": "photobooth/assets/audio/README.md",
+      "role": "shared asset/backend or v1 guide with v2 scope",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "d5f60bac36191d383b2789b3179e086fc9fb6d80259b97279857cf4815264512",
+      "after_sha256": "a2d33ff27faf4f55738a40beb71d8e8d0988be2a9da73bbfb9d6197e5a6d0b96",
+      "changed": true
+    },
+    {
+      "path": "photobooth/assets/models/README.md",
+      "role": "shared asset/backend or v1 guide with v2 scope",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "7cfc8c6b8b0fb67362e479b0174876757fbe3df8801ca1d3208657c2cb6a7e91",
+      "after_sha256": "233341eb46072dd6d748dec60e0a89ebebdaa5d4ee942c3a90f24fd9a0779ed8",
+      "changed": true
+    },
+    {
+      "path": "photobooth/assets/templates/README.md",
+      "role": "shared asset/backend or v1 guide with v2 scope",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "93b12f0a29d3985abdcb0fa553b1c4996b285b06a1e2739b7da8076c1eb7eaba",
+      "after_sha256": "5b2977e5642df7aa7cd03f7f5c3c4f27626cd26a32d0e26fe9aec67b5d9925c5",
+      "changed": true
+    },
+    {
+      "path": "photobooth/kiosk_v2/assets/README.md",
+      "role": "shared asset/backend or v1 guide with v2 scope",
+      "review": "scope/status/source consistency and links checked",
+      "before_sha256": "61640f77f3150ce02ffb0e4c06b8ac4bc323c9fce77c74abde02b9057785a0e3",
+      "after_sha256": "f78923226f0c58eebdd28d39cdf92c315f62fd59ed44060c30b9f7695bd80708",
+      "changed": true
+    }
+  ]
+}

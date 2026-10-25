@@ -1,5 +1,11 @@
 # Windows acceptance feedback — audited 3cfa9d2
 
+> **Historical QA snapshot.** This record retains its original source, date,
+> fixtures and owner-report limits. Its branch, price/session, “current” and
+> pending instructions do not override [current GUI v2 status](../FEATURE_STATUS.md)
+> or the [current test ledger](../test_checklist.md). No new test pass is claimed
+> by adding this context.
+
 **Owner report received 2026-10-22; branch `feature/portrait-kiosk-v2-next`.**
 Reported completion is **29/38**. This is owner-supplied Windows evidence,
 not a cloud rerun or complete hardware acceptance. Retain the exact audited

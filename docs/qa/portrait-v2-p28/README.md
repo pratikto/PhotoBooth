@@ -1,5 +1,13 @@
 # P2.6–P2.8 final report — non-hardware PASS
 
+> **Dated source/QA record, retained for traceability.** Results, “latest/current”,
+> OPEN/PENDING labels, next actions and authorization limits below apply to this
+> package's recorded source and report date. Later owner reports and source work
+> can supersede its status; they do not rewrite these test results. Use
+> [current status](../../FEATURE_STATUS.md), [test ledger](../../test_checklist.md)
+> and [current handover](../../DEVELOPMENT_HANDOVER.md) for continuation. Historical
+> checklists are not an instruction to repeat already accepted tests.
+
 **2026-10-22 · branch `feature/portrait-kiosk-v2-next` only.**
 All authorized non-hardware gates are complete. Windows Acceptance Test remains
 NOT RUN. No merge to master or production enablement occurred.

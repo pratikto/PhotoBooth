@@ -1,5 +1,13 @@
 # BUG-015 — resize-induced asteroid motion regression
 
+> **Dated source/QA record, retained for traceability.** Results, “latest/current”,
+> OPEN/PENDING labels, next actions and authorization limits below apply to this
+> package's recorded source and report date. Later owner reports and source work
+> can supersede its status; they do not rewrite these test results. Use
+> [current status](../../FEATURE_STATUS.md), [test ledger](../../test_checklist.md)
+> and [current handover](../../DEVELOPMENT_HANDOVER.md) for continuation. Historical
+> checklists are not an instruction to repeat already accepted tests.
+
 > Follow-up supersedes the right-aligned world and above-text header described here: BUG-016 world centering at 848a52d, and same-level animated Meong/impact header at c242b97, both pushed/remote-verified. Latest 540 full PASS and three-job CI SUCCESS. [Current evidence/form](../portrait-v2-player-anchor/README.md).
 
 Owner reports: game suddenly feels faster, and wave spacing changes from wide

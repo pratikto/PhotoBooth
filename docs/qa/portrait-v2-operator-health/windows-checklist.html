@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src data:">
@@ -11,46 +11,46 @@
 </style>
 </head>
 <body><main>
-<header><div class="tag">MEONG PHOTOBOOTH · GUI V2</div><h1>Operator Device Health — Retest</h1><p>Delapan item untuk increment operator baru. Centang hanya yang benar-benar diuji dan lulus. Laporan 20 putaran sebelumnya tetap dicatat; form ini tidak meminta mengulangnya.</p></header>
-<div class="panel help"><strong>Jalankan:</strong> <code>python tools/run_portrait_v2.py</code>. Pada halaman iklan tekan <strong>F12</strong> atau tahan header Meong <strong>1,5 detik</strong>. Panel juga bisa dibuka pada Sandbox RECOVERY untuk observasi, tanpa mengubah order.<br><br>
-Panel memakai UI/worker v1 existing. REFRESH hanya memeriksa kondisi terbatas; PILIH DEVICE sengaja nonaktif. SIMPAN LAPORAN LOKAL menyimpan metadata ke <code>data/diagnostics/device-health-*.json</code>. Report tidak memuat foto, key, raw log, alamat jaringan, queue/serial atau QR/order. READY bukan bukti kertas/provider/Drive siap.<br><br>
-<label class="field">Impor laporan operator / readiness JSON lokal<input id="readiness-file" type="file" accept=".json,application/json"></label><p id="import-status" role="status"></p>
-Belum mencoba item berarti biarkan kosong. Source/CI cloud bukan pengujian aktual laptop. Paket P5 merchant/perangkat tetap terpisah.</div>
+<header><div class="tag">MEONG PHOTOBOOTH · GUI V2</div><h1>Operator Device Health — Retest</h1><p>Eight checks for the new operator increment. Check only completed successful tests. Earlier twenty-cycle reports remain recorded; this form does not require repeating them.</p></header>
+<div class="panel help"><strong>Launch:</strong> <code>python tools/run_portrait_v2.py</code>. At idle advertising, press <strong>F12</strong> or hold the Meong header for <strong>1.5 seconds</strong>. Sandbox RECOVERY also permits observations without changing the order.<br><br>
+The original v1 panel/worker is reused. REFRESH makes bounded observations; PILIH DEVICE stays disabled. SIMPAN LAPORAN LOKAL saves safe metadata to <code>data/diagnostics/device-health-*.json</code>, excluding photos, keys, raw logs, addresses, queue/serial and QR/order references. READY is not physical paper/provider/Drive acceptance.<br><br>
+<label class="field">Import local operator / readiness JSON<input id="readiness-file" type="file" accept=".json,application/json"></label><p id="import-status" role="status"></p>
+Leave unavailable tests blank. Cloud source/CI is not actual laptop acceptance; merchant/P5 gates remain separate. UI labels remain in their actual application language.</div>
 <div class="panel meta">
 <label class="field wide">Branch<input id="branch" data-field value="feature/portrait-kiosk-v2-next"></label>
-<label class="field">HEAD yang diuji<input id="head" data-field value="" placeholder="Hasil git rev-parse --short HEAD"></label>
-<label class="field">Tanggal<input type="date" id="date" data-field value="2026-10-24"></label>
-<label class="field">Versi Windows<input id="windows" data-field placeholder="Contoh: Windows 11"></label>
-<label class="field">Resolusi layar<input id="resolution" data-field placeholder="Contoh: 800 × 1280"></label>
-<label class="field">Display scaling (%)<input id="scaling" data-field placeholder="Contoh: 100%"></label>
-<label class="field">Kamera (model / bawaan / USB)<input id="camera" data-field placeholder="Contoh: kamera bawaan laptop"></label>
-<label class="field">Index kamera<input id="camera_index" data-field placeholder="Contoh: 0"></label>
-<label class="field wide">Kapan lag terasa?<input id="lag" data-field placeholder="Sejak iklan / setelah kamera / tidak terasa; tulis halaman"></label>
-<label class="field">Putaran buka/tutup panel (opsional)<input type="number" min="0" step="1" id="cycles" data-field placeholder="Contoh: 20"></label>
-<label class="field">Speaker / output audio<input id="speaker" data-field placeholder="Nama perangkat yang dipilih"></label>
+<label class="field">Tested HEAD<input id="head" data-field value="" placeholder="Output of git rev-parse --short HEAD"></label>
+<label class="field">Date<input type="date" id="date" data-field value="2026-10-24"></label>
+<label class="field">Windows version<input id="windows" data-field placeholder="Example: Windows 11"></label>
+<label class="field">Screen resolution<input id="resolution" data-field placeholder="Example: 800 × 1280"></label>
+<label class="field">Display scaling (%)<input id="scaling" data-field placeholder="Example: 100%"></label>
+<label class="field">Camera (model / built-in / USB)<input id="camera" data-field placeholder="Example: built-in laptop camera"></label>
+<label class="field">Camera index<input id="camera_index" data-field placeholder="Example: 0"></label>
+<label class="field wide">When does lag occur?<input id="lag" data-field placeholder="During ads / after camera / none; name the page"></label>
+<label class="field">Panel open/close cycles (optional)<input type="number" min="0" step="1" id="cycles" data-field placeholder="Example: 20"></label>
+<label class="field">Speaker / audio output<input id="speaker" data-field placeholder="Selected output device"></label>
 </div>
-<div class="summary"><div class="numbers"><strong id="count" aria-live="polite">0 / 8 lulus</strong><span id="save-status" class="help">Menyimpan…</span></div><progress id="progress" value="0" max="8" aria-label="Jumlah tes lulus"></progress></div>
+<div class="summary"><div class="numbers"><strong id="count" aria-live="polite">0 / 8 passed</strong><span id="save-status" class="help">Saving…</span></div><progress id="progress" value="0" max="8" aria-label="Number of passed tests"></progress></div>
 <div id="cycle-status" class="panel help" role="status" aria-live="polite"></div>
 <div id="sections"></div>
-<div class="panel"><h2>Catatan masalah</h2><label class="field" for="notes">Tulis ID item, langkah mengulang, yang terjadi, dan yang diharapkan.</label><textarea id="notes" data-field placeholder="Contoh: A03 — tombol terpotong saat resize ke 800×900. C03 — belum diuji karena belum menang."></textarea>
-<div class="actions"><button id="submit" type="button">Submit Hasil</button><button id="copy" class="secondary" type="button">Salin prompt</button><button id="download" type="button">Unduh hasil .txt</button><button id="print" class="secondary" type="button">Cetak / PDF</button><button id="reset" class="reset" type="button">Kosongkan checklist</button></div><div id="status" role="status" aria-live="polite"></div></div>
-<div id="submission" class="panel" hidden><h2>Prompt siap dikirim</h2><p>Tempel teks ini ke kolom chat lalu tekan Kirim. File offline ini tidak dapat mengirim otomatis ke percakapan.</p><textarea id="prompt-output" readonly aria-label="Laporan untuk prompt chat"></textarea></div>
-<p class="footer">8 item. Submit menyiapkan prompt untuk disalin ke chat; tidak mengirim otomatis. Penyimpanan terpisah dari form sebelumnya. Kosong berarti gagal atau belum diuji.</p>
+<div class="panel"><h2>Issue notes</h2><label class="field" for="notes">Record item ID, reproduction steps, actual behavior and expected behavior.</label><textarea id="notes" data-field placeholder="Example: A03 — action clipped at 800×900. Note any unavailable test and its reason."></textarea>
+<div class="actions"><button id="submit" type="button">Submit Results</button><button id="copy" class="secondary" type="button">Copy report prompt</button><button id="download" type="button">Download results .txt</button><button id="print" class="secondary" type="button">Print / PDF</button><button id="reset" class="reset" type="button">Clear checklist</button></div><div id="status" role="status" aria-live="polite"></div></div>
+<div id="submission" class="panel" hidden><h2>Report prompt ready</h2><p>Paste this text into chat and send it. This offline form cannot send to the conversation automatically.</p><textarea id="prompt-output" readonly aria-label="Report for chat"></textarea></div>
+<p class="footer">8 items. Submit prepares text to copy into chat; it does not send automatically. Saved separately from earlier forms. Unchecked means failed or not run.</p>
 </main>
 <script>
 const SECTIONS = [
   [
     "H",
-    "Operator, lifecycle & laporan lokal",
+    "Operator, lifecycle and local report",
     [
-      "Pada iklan: F12 dan tahan header Meong 1,5 detik membuka satu panel. Tap pendek, drag dan klik kanan tidak membuka panel; iklan/kunjungan tidak direset.",
-      "KAMERA, PRINTER THERMAL, PENYIMPANAN FOTO, KONEKSI, MEDIA IKLAN, RESPONS APLIKASI tampil. READY dibaca sebagai observasi terbatas; tidak dianggap kertas/camera/provider/Drive pasti siap.",
-      "REFRESH berjalan di background dan jendela tetap responsif. Tap cepat tidak menumpuk probe atau membuka kamera kedua; PILIH DEVICE tetap nonaktif dan konfigurasi tidak berubah.",
-      "Tutup/buka panel ketika pemeriksaan berjalan, lalu minimize/pulihkan: hasil lama tidak mengecat panel baru, panel tidak terbuka otomatis, dan tidak ada freeze/error/audio ganda.",
-      "Periksa 800×1280, 452×900 dan 360×640 jika tersedia: enam indikator/inventory dapat di-scroll; REFRESH/TUTUP/SIMPAN LAPORAN tidak terpotong.",
-      "SIMPAN LAPORAN LOKAL membuat JSON baru di data/diagnostics. Impor ke form mengisi metadata yang ada tanpa mencentang hasil; file tidak berisi foto, key/token, alamat jaringan, serial/queue, raw log atau QR/order.",
-      "F12/tahan header tidak mengganggu countdown/capture, game, atau checkout yang aktif. Jika menguji Sandbox RECOVERY, panel hanya observasi; tidak membuka sesi, print atau charge baru.",
-      "Sesudah panel ditutup, satu tap MULAI FOTO dan tombol lain tetap berfungsi/bunyi sekali; tombol panel lama tidak beraksi. Tutup/buka aplikasi bersih tanpa popup atau suara tertinggal."
+      "At idle advertising, F12 and a 1.5-second Meong header hold each open one panel. Short taps, drags and right-click do not open it or reset the visit/ads.",
+      "KAMERA, PRINTER THERMAL, PENYIMPANAN FOTO, KONEKSI, MEDIA IKLAN and RESPONS APLIKASI appear. READY means only a limited observation, not physical camera/paper/provider/Drive acceptance.",
+      "REFRESH runs in the background while the window stays responsive. Rapid taps do not queue duplicate probes or open another camera; PILIH DEVICE stays disabled and configuration unchanged.",
+      "Close/reopen during a probe, then minimize/restore: old results do not update the new panel, no automatic popup reopening, freeze/error or duplicate audio.",
+      "Check 800×1280, 452×900 and 360×640 if available: all six indicators/inventory scroll; REFRESH/TUTUP/SIMPAN LAPORAN LOKAL remain reachable.",
+      "SIMPAN LAPORAN LOKAL creates a new JSON in data/diagnostics. Import fills available metadata without checking tests; no photos, keys/tokens, addresses, serials/queues, raw logs or QR/order references.",
+      "F12/header hold cannot interrupt active countdown/capture, game or checkout. In Sandbox RECOVERY, observations do not create a session, print or charge.",
+      "After closing, one new tap on MULAI FOTO/other actions still works and sounds once; retired panel buttons do nothing. Clean application close/reopen leaves no popup or audio."
     ]
   ]
 ];
@@ -85,13 +85,13 @@ function qualifiedCycles(){
  return raw!=='' && Number.isInteger(count) && count>=20;
 }
 function enforceCycleGate(){
- document.getElementById('cycle-status').textContent='Laporan 20 putaran sebelumnya tetap dicatat; tidak ada 20 putaran baru yang diwajibkan oleh form operator ini. Tidak ada item yang diluluskan otomatis.';
+ document.getElementById('cycle-status').textContent='Earlier twenty-cycle reports remain recorded. This operator form requires no new twenty-cycle run and automatically passes no item.';
 }
 
 function update(){
  enforceCycleGate();
  const done=items.filter(item=>item.box.checked).length;
- document.getElementById('count').textContent=done+' / '+items.length+' lulus';
+ document.getElementById('count').textContent=done+' / '+items.length+' passed';
  document.getElementById('progress').value=done;
  for(const [code,,labels] of SECTIONS)document.getElementById('count-'+code).textContent=items.filter(i=>i.code===code&&i.box.checked).length+'/'+labels.length;
  for(const item of items)item.label.classList.toggle('done',item.box.checked);
@@ -100,39 +100,39 @@ function save(){
  update();
  if(!document.getElementById('submission').hidden)document.getElementById('prompt-output').value=promptReport();
  const data={fields:Object.fromEntries(FIELDS.map(id=>[id,document.getElementById(id).value])),checked:items.filter(i=>i.box.checked).map(i=>i.id)};
- try{localStorage.setItem(KEY,JSON.stringify(data));document.getElementById('save-status').textContent='Tersimpan di browser ini';}
- catch{document.getElementById('save-status').textContent='Gunakan Unduh hasil untuk menyimpan';}
+ try{localStorage.setItem(KEY,JSON.stringify(data));document.getElementById('save-status').textContent='Saved in this browser';}
+ catch{document.getElementById('save-status').textContent='Use Download results to save a copy';}
 }
 function restore(){
  try{
   const raw=localStorage.getItem(KEY);if(!raw)return;const data=JSON.parse(raw);
   for(const id of FIELDS)if(typeof data.fields?.[id]==='string')document.getElementById(id).value=data.fields[id];
   const checked=new Set(Array.isArray(data.checked)?data.checked:[]);for(const item of items)item.box.checked=checked.has(item.id);
- }catch{document.getElementById('save-status').textContent='Gunakan Unduh hasil untuk menyimpan';}
+ }catch{document.getElementById('save-status').textContent='Use Download results to save a copy';}
 }
 function report(){
  update();
- const names={branch:'Branch',head:'HEAD yang diuji',date:'Tanggal',windows:'Versi Windows',resolution:'Resolusi layar',scaling:'Display scaling (%)',speaker:'Speaker/output audio',camera:'Kamera',camera_index:'Index kamera',lag:'Kapan lag terasa',cycles:'Putaran buka/tutup panel (opsional)'};
- const lines=['MEONG PHOTOBOOTH GUI V2 — OPERATOR DEVICE HEALTH (8 ITEM)'];
+ const names={branch:'Branch',head:'Tested HEAD',date:'Date',windows:'Windows version',resolution:'Screen resolution',scaling:'Display scaling (%)',speaker:'Speaker/audio output',camera:'Camera',camera_index:'Camera index',lag:'When lag occurs',cycles:'Panel open/close cycles (optional)'};
+ const lines=['MEONG PHOTOBOOTH GUI V2 — OPERATOR DEVICE HEALTH (8 ITEMS)'];
  for(const [id,name] of Object.entries(names))lines.push(name+': '+document.getElementById(id).value);
- lines.push('Status HEAD: '+(document.getElementById('head').value.trim()?'Diisi pengguna; perlu cocokkan dengan versi yang diuji.':'BELUM DIISI — exact-HEAD acceptance belum terverifikasi.'));
- lines.push('Putaran tambahan tidak diwajibkan form ini; laporan 20 putaran lama tetap dicatat.');
- lines.push('Item operator hanya mengikuti centang hasil aktual; tidak ada item yang diluluskan otomatis.');
- lines.push('Status metadata: '+(['head','resolution','scaling'].every(id=>document.getElementById(id).value.trim())?'Diisi pengguna; cocokkan dengan perangkat yang diuji.':'BELUM LENGKAP — HEAD/resolusi/scaling belum seluruhnya diisi.'));
- const done=items.filter(i=>i.box.checked).length;lines.push('','Lulus: '+done+'/'+items.length,'Belum dicentang (gagal/belum diuji): '+(items.length-done),'');
+ lines.push('HEAD status: '+(document.getElementById('head').value.trim()?'User supplied; verify against the tested version.':'NOT SUPPLIED — exact-source acceptance is unverified.'));
+ lines.push('This form requires no additional cycles; earlier twenty-cycle reports remain recorded.');
+ lines.push('Operator results follow actual checked observations; no item is automatically passed.');
+ lines.push('Metadata status: '+(['head','resolution','scaling'].every(id=>document.getElementById(id).value.trim())?'User supplied; verify against the tested device.':'INCOMPLETE — HEAD/resolution/scaling fields are not all supplied.'));
+ const done=items.filter(i=>i.box.checked).length;lines.push('','Passed: '+done+'/'+items.length,'Unchecked (failed/not run): '+(items.length-done),'');
  for(const [code,title] of SECTIONS){lines.push(code+'. '+title);for(const i of items.filter(i=>i.code===code))lines.push((i.box.checked?'[x] ':'[ ] ')+i.id+' '+i.text);lines.push('');}
- lines.push('Gate eksternal: operator report tidak meluluskan merchant Sandbox, paper, Drive, retensi atau release; P5 tetap terpisah.');
- lines.push('CATATAN MASALAH',document.getElementById('notes').value||'(Belum ada catatan)');return lines.join('\n');
+ lines.push('External gates: the operator report does not pass merchant Sandbox, paper, Drive, retention or release; P5 remains separate.');
+ lines.push('ISSUE NOTES',document.getElementById('notes').value||'(No notes supplied)');return lines.join('\n');
 }
 function promptReport(){
- return 'Berikut hasil retest Windows Meong Photobooth v2. Tolong analisis hasil dan catatan masalah. Item kosong berarti gagal atau belum diuji; jangan otomatis dianggap lulus.\n\n'+report();
+ return 'Here are my Meong Photobooth v2 Windows retest results. Analyze the results and issue notes. Unchecked items mean failed or not run; do not count them as passed.\n\n'+report();
 }
 function submitReport(){
  save();
  document.getElementById('submission').hidden=false;
  const output=document.getElementById('prompt-output');
  output.value=promptReport();output.focus();output.select();
- status('Prompt disiapkan. Salin lalu tempel ke kolom chat dan tekan Kirim.');
+ status('Report prepared. Copy it into chat and send it.');
 }
 function status(text){document.getElementById('status').textContent=text;}
 async function copyReport(){
@@ -141,20 +141,20 @@ async function copyReport(){
   else{
    const temp=document.createElement('textarea');temp.value=promptReport();document.body.append(temp);temp.focus();temp.select();const ok=document.execCommand('copy');temp.remove();if(!ok)throw new Error('copy');
   }
-  status('Hasil disalin. Tempelkan di chat untuk dikirim.');
- }catch{status('Browser tidak mengizinkan salin otomatis. Gunakan Unduh hasil .txt.');}
+  status('Results copied. Paste them into chat to send.');
+ }catch{status('Clipboard access is unavailable. Use Download results .txt.');}
 }
 FIELDS.forEach(id=>document.getElementById(id).addEventListener('input',()=>{update();save();}));
 document.getElementById('submit').addEventListener('click',submitReport);
 document.getElementById('copy').addEventListener('click',copyReport);
 document.getElementById('download').addEventListener('click',()=>{
- const file=new Blob([report()],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(file);const a=document.createElement('a');a.href=url;a.download='meong-windows-operator-health.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);status('File hasil siap disimpan.');
+ const file=new Blob([report()],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(file);const a=document.createElement('a');a.href=url;a.download='meong-windows-operator-health.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);status('Results file is ready to save.');
 });
 document.getElementById('print').addEventListener('click',()=>window.print());
 document.getElementById('reset').addEventListener('click',()=>{
- if(!confirm('Kosongkan semua centang, data perangkat, dan catatan pada checklist ini?'))return;
+ if(!confirm('Clear all checks, device fields and notes in this checklist?'))return;
  document.getElementById('submission').hidden=true;document.getElementById('prompt-output').value='';
- for(const i of items)i.box.checked=false;for(const id of FIELDS)document.getElementById(id).value=defaults[id];update();save();status('Checklist dikosongkan.');
+ for(const i of items)i.box.checked=false;for(const id of FIELDS)document.getElementById(id).value=defaults[id];update();save();status('Checklist cleared.');
 });
 
 document.getElementById('readiness-file').addEventListener('change',async event=>{
@@ -172,8 +172,8 @@ document.getElementById('readiness-file').addEventListener('change',async event=
   if(Number.isInteger(display.scaling_percent))put('scaling',String(display.scaling_percent));
   if(Number.isInteger(data.device.camera_index))put('camera_index',String(data.device.camera_index));
   put('camera',data.device.camera_model);put('speaker',data.device.speaker_output);
-  message.textContent='Metadata diimpor. Periksa monitor kiosk dan perangkat aktual. Tidak ada item uji yang dicentang otomatis.'+(data.source.dirty?' PERHATIAN: working tree saat laporan dibuat berisi perubahan.':'');save();
- }catch{message.textContent='File tidak valid. Pilih windows-readiness.json dari tools/check_portrait_v2.py.';}
+  message.textContent='Metadata imported. Verify the actual kiosk display and devices. No tests were automatically checked.'+(data.source.dirty?' ATTENTION: the report was created from a dirty working tree.':'');save();
+ }catch{message.textContent='Invalid file. Select windows-readiness.json from tools/check_portrait_v2.py or a compatible operator report.';}
 });
 restore();update();save();
 </script></body></html>

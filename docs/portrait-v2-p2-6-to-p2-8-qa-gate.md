@@ -1,5 +1,15 @@
 # Portrait GUI v2 — P2.6–P2.8 quality gate
 
+> **Historical P2 scope and evidence — 21–23 October 2026.** The non-hardware
+> P2 gates were closed at their recorded SHAs. “No game/camera/QRIS integration”
+> and old twenty-cycle/device stop instructions below describe that original
+> stage, not today's source or approval. P3/P4/P4b/P5 were subsequently approved
+> and implemented; later owner reports are recorded at their metadata limits.
+> Current acceptance uses the [P5 form](qa/portrait-v2-p5/windows-checklist.html)
+> plus the separate [operator form](qa/portrait-v2-operator-health/windows-checklist.html).
+> Do not repeat an old gate solely because it remains unchecked in this snapshot.
+> [Current evidence](test_checklist.md) · [roadmap](portrait-kiosk-v2.md).
+
 **Scope:** GUI v2 branch `feature/portrait-kiosk-v2-next` only. Meong Fly remains read-only; no integration, real scanner, QRIS, discounts, capture, or printing changes.
 
 ## Checkpoint and evidence policy

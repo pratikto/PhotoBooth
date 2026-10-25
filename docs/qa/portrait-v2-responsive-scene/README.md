@@ -1,5 +1,13 @@
 # Responsive Meong Fly and compact gallery — 2026-10-24
 
+> **Dated source/QA record, retained for traceability.** Results, “latest/current”,
+> OPEN/PENDING labels, next actions and authorization limits below apply to this
+> package's recorded source and report date. Later owner reports and source work
+> can supersede its status; they do not rewrite these test results. Use
+> [current status](../../FEATURE_STATUS.md), [test ledger](../../test_checklist.md)
+> and [current handover](../../DEVELOPMENT_HANDOVER.md) for continuation. Historical
+> checklists are not an instruction to repeat already accepted tests.
+
 > Subsequent owner report: BUG-015 exposed a temporal regression missed by this static QA. The piecewise approach projection is superseded by uniform motion in 144bd60. Header/gallery follow-up is tracked in [current correction QA](../portrait-v2-motion-correction/README.md); retain the earlier PASS below as historical evidence, not acceptance of wave speed.
 
 Owner requests a unified game scene, real component resizing instead of separate

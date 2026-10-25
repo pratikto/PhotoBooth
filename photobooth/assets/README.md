@@ -1,8 +1,14 @@
 # MEONG PHOTOBOOTH brand assets
 
+**Scope — shared/v1 logo and folder-QR assets.** The v1-header default below
+is not every v2 header: GUI v2's animated identity reuses separate original
+Meong Fly art plus a native wordmark. Shared folder QR branding still uses the
+existing branding service. Payment QR artwork remains separate.
+[V2 artwork](../kiosk_v2/assets/README.md) · [visual rules](../../docs/portrait-kiosk-v2-visual-spec.md).
+
 > **Release provenance:** Assets are in the source pre-release [v1.0.0](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0), from prior `feature/kivy-gui` work. Keep media/codecs, audio speaker response and printer/QR paper quality distinct from simulated CI; no change to asset bytes in this documentation cleanup.
 
-> **CURRENT (2026-10-19, `master` / immutable `v1.0.0`):** This is the active Meong logo asset for Kivy headers and new customer **folder-access** QRs. The approved source PNG and branding hash below are unchanged; the DEMO payment QR remains unbranded/non-payable. Logo artwork test history is archived in [QA](../../docs/qa/branded-qr.md).
+> **V1 asset baseline (2026-10-19, `master` / immutable `v1.0.0`):** This is the active Meong logo asset for Kivy headers and new customer **folder-access** QRs. The approved source PNG and branding hash below are unchanged; the DEMO payment QR remains unbranded/non-payable. Logo artwork test history is archived in [QA](../../docs/qa/branded-qr.md).
 
 `meong_photobooth_vivid.png` is the user's final uploaded
 **Bright pixel camera-cat with colorful trail(3).png**, preserved byte-for-byte.

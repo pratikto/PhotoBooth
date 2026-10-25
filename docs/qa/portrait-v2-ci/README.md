@@ -1,5 +1,13 @@
 # Remote QA evidence — 2026-10-22
 
+> **Dated source/QA record, retained for traceability.** Results, “latest/current”,
+> OPEN/PENDING labels, next actions and authorization limits below apply to this
+> package's recorded source and report date. Later owner reports and source work
+> can supersede its status; they do not rewrite these test results. Use
+> [current status](../../FEATURE_STATUS.md), [test ledger](../../test_checklist.md)
+> and [current handover](../../DEVELOPMENT_HANDOVER.md) for continuation. Historical
+> checklists are not an instruction to repeat already accepted tests.
+
 Only `feature/portrait-kiosk-v2-next`. All three milestone SHA/run pairs and
 both jobs were verified directly through GitHub's API after environment publish.
 The sanitized run, job/step, and artifact metadata are preserved alongside this file.

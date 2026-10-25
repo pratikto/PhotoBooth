@@ -1,8 +1,14 @@
 # Local advertising media
 
+**Scope — shared local media and v1 placements.** Idle/payment placement
+support below describes the catalog/v1 player; native v2 Sandbox has no payment
+advertisement panel. V2 still ads use GUI BGM, videos their own audio. Media
+assets do not establish decoder/speaker acceptance or centralized Drive sync.
+[Current v2 behavior](../../../docs/portrait-kiosk-v2-visual-spec.md).
+
 > **Release provenance:** Assets are in the source pre-release [v1.0.0](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0), from prior `feature/kivy-gui` work. Keep media/codecs, audio speaker response and printer/QR paper quality distinct from simulated CI; no change to asset bytes in this documentation cleanup.
 
-> **CURRENT (2026-10-19, `master` / immutable `v1.0.0`):** These are local/offline ad assets for **both idle and muted payment placements**. The owner subsequently reported video ads in both placements PASS (BUG-002), but a controlled codec/hardware matrix is not yet recorded. Videos remain local and excluded from Git; the planned per-machine Google Drive ad sync (FEAT-004) is **not implemented**. This file describes bundled media only.
+> **V1 asset baseline (2026-10-19, `master` / immutable `v1.0.0`):** These are local/offline ad assets for **both idle and muted payment placements**. The owner subsequently reported video ads in both placements PASS (BUG-002), but a controlled codec/hardware matrix is not yet recorded. Videos remain local and excluded from Git; the planned per-machine Google Drive ad sync (FEAT-004) is **not implemented**. This file describes bundled media only.
 
 The checkout includes three small still-image posters. The idle placement uses
 the first; payment has its own playlist with the other two. Videos remain on

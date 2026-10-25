@@ -1,10 +1,27 @@
-# P4b native Sandbox integration — 2026-10-24
+# Meong Photobooth — changelog
+
+## 2026-10-25 — Documentation consistency audit (English)
+
+Stage 1 [`da375b3`](https://github.com/pratikto/PhotoBooth/commit/da375b3ace7048785bc558e45d10cf5a859709a1)
+reconciles current README/index/roadmap/status/architecture/handover/backlog/test
+ledger: latest operator source ea394e8 versus earlier P5 9433010. Older status
+narratives remain available through immutable pre-audit Git links.
+
+Stage 2 [`e4d0e89`](https://github.com/pratikto/PhotoBooth/commit/e4d0e8947c82821f5480615c0f689630a438d425)
+reconciles technical/visual contracts, decisions/governance, branch applicability
+and current bug context. The final stage labels historical
+QA/blueprint stop gates; fixes obsolete
+Device Health and BUG-017 pointers; distinguishes shared v1 guides from v2; and
+provides English current P5/operator forms while retaining IDs/storage/cycle
+logic. Detailed [findings, inventory and validation](qa/documentation-consistency-2026-10-25.md).
+No application source, dependencies, workflows, assets or raw test evidence changed.
+
 
 ## 2026-10-25 — Operator increment final evidence
 
 4c89e4f reused v1 foundation (73 focused PASS), then ea394e8 mounted the original
 UI/worker with safe local reports. Final 780 full PASS/0 skips; CI 40157638369 all
-three jobs SUCCESS, 119 PNG verified/reviewed. Original v1 fourteen core files
+three jobs SUCCESS, 119 PNGs verified and required views reviewed. Original v1 fourteen core files
 unchanged. Eight-item operator Submit/import form verified; actual laptop and
 merchant/P5 gates still pending. [Proof, commands and rollback](qa/portrait-v2-operator-health/README.md).
 
@@ -27,33 +44,25 @@ async refresh method verbatim with provenance. No current v1 application,
 selection preference or customer flow changes. [Scope and proof](qa/portrait-v2-operator-health/README.md).
 
 
-## 2026-10-25 — Konsolidasi dokumentasi GUI v2 / audit semua branch
+## 2026-10-25 — Earlier GUI v2 consolidation / reference audit
 
-Owner meminta dokumentasi GUI v2 diperbarui berdasarkan tiap branch dan
-menetapkan v2 sebagai calon branch utama. Commit audit **ae90269** memetakan
-19 remote tip + primary references/hashes dan promotion gates. Konsolidasi ini
-memperbarui README/index, roadmap/visual/technical inventory, current status,
-QA/handover/backlog, DEC-023, protocol/prompt dan persistent agent guidance.
+Owner requested GUI v2 documentation using each branch as a reference and named
+v2 as the intended future primary branch. `ae90269` pinned 19 remote tips and
+reference hashes; `fdafbe2` consolidated the current launch/roadmap/design/status/
+QA/handover/backlog/decision/protocol guidance. The candidate classification of
+Device Health applied at that point and was subsequently superseded by the
+approved read-only operator increment above.
 
-Dokumen aktif sekarang menunjukkan P3 foto, original game reuse, MOCK/Sandbox
-dan P5 source readiness yang benar-benar ada, bukan placeholder P0–P2/v1. Narasi
-status lama tetap dalam arsip dokumen atau immutable Git snapshot 0dc6555;
-seluruh bukti QA bertanggal dipertahankan. Audit membedakan update lab dithering,
-Device Health, AI/WhatsApp yang belum di-port dan konflik nama FEAT-021.
+Owner preflight `0dc6555` ready was recorded without inventing metadata or passing
+merchant/hardware. The earlier audit checked links/JSON/pinned refs and 208 P5
+functional hashes; it did not rerun app tests, modify runtime/workflows or alter
+master/default/reference branches. [Earlier QA](qa/gui-v2-docs-2026-10-25.md).
 
-Output preflight Windows owner pada **0dc6555 READY_FOR_MANUAL_TEST** dicatat
-tanpa menebak isi metadata atau meluluskan merchant/perangkat. Panduan mengambil
-Sandbox credentials sebelum persetujuan produksi ditambahkan dengan referensi
-resmi, tanpa merekam kredensial.
 
-Validasi tugas ini: local Markdown links/JSON, pinned branch/document hashes,
-208 file functional-source hashes, docs-only diff dan default/remote branch
-checks. Tidak ada app/source/config/CI workflow edit atau tes GUI baru; tidak
-mererun 688-test suite/CI yang sudah hijau untuk dokumentasi. [Audit/batas](gui-v2-branch-audit.md),
-[rencana branch utama](gui-v2-promotion-plan.md), [QA dokumen](qa/gui-v2-docs-2026-10-25.md).
-GitHub default masih master; tidak ada default change/rename/merge/release atau
-aktivasi produksi, dan tidak ada push ke branch referensi.
+## Historical development entries
 
+Entries below retain their original source/date. Former “current/latest”, next
+steps and pending labels do not supersede the current status/test ledger.
 
 > P5: add read-only readiness inventory/CLI using existing diagnostics, primary Windows display metadata, secret-free JSON import into reused Submit form, and focused/full unittest runner selection with native CI report artifacts. No provider/device acceptance fabricated. [Instructions](qa/portrait-v2-p5/README.md).
 

@@ -1,8 +1,13 @@
 # Offline frontal-face presence model
 
+**Scope — shared bundled face-presence model.** Both v1 and v2 reuse this
+non-identifying model. Its license/source hash is immutable evidence, not a
+physical face-detection acceptance claim. Optional palm detection is a separate
+model/dependency. [Current sensor status](../../../docs/FEATURE_STATUS.md).
+
 > **Release provenance:** Assets are in the source pre-release [v1.0.0](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0), from prior `feature/kivy-gui` work. Keep media/codecs, audio speaker response and printer/QR paper quality distinct from simulated CI; no change to asset bytes in this documentation cleanup.
 
-> **CURRENT (2026-10-19, `master` / immutable `v1.0.0`):** Bundled OpenCV frontal-face *presence* cascade remains the local model for the ad invitation. It does **not** identify or recognize individuals. FEAT-003 display-only capture-preview mirror leaves original detector camera frames unchanged. Original source/license attribution below is a retained technical archive.
+> **V1 asset baseline (2026-10-19, `master` / immutable `v1.0.0`):** Bundled OpenCV frontal-face *presence* cascade remains the local model for the ad invitation. It does **not** identify or recognize individuals. FEAT-003 display-only capture-preview mirror leaves original detector camera frames unchanged. Original source/license attribution below is a retained technical archive.
 
 `haarcascade_frontalface_default.xml.gz` contains a lossless gzip copy from OpenCV 4.12.0:
 

@@ -1,6 +1,21 @@
 # Photo retention
 
-> **CURRENT SOURCE (2026-10-19):** This functionality and related documentation are now part of `master` at the published, immutable `v1.0.0` [source pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0). The previous `feature/kivy-gui` and other feature branches remain historical references. CI passed on the tagged SHA (`07ce51d`, [Kiosk](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245), [Dither](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273)), but physical Windows acceptance is separate. BUG-001/007 audio and BUG-009 Drive retention remain unresolved; payment stays DEMO. **BUG-009 OPEN:** Local 15-day retention exists in source, but Drive 30-day deletion trigger, deployment and permanent deletion are **not verified**. Do not promise automatic Drive cleanup; separately approved deployment and evidence are required.
+**Scope — shared retention policy/backend and v1 activation instructions.**
+Targets remain 15 days local/30 days Drive; **BUG-009 cloud deletion is OPEN**.
+V2 stores photo tests under its isolated profiles, not the v1 root `photos/`.
+Its `RetentionGuardedSync` blocks uploads until retention registration is
+acknowledged; acknowledgement does not verify the cloud timer/deletion. The
+later statement that uploads may continue during setup describes the legacy v1
+path, not the v2 guard. V2 local retention uses the existing worker; default
+Drive is off and the dedicated Sandbox launcher forces it off.
+
+Apps Script setup/deployment/permanent deletion below are operator runbook
+instructions for a separately authorized cloud change, not actions performed or
+authorized by this documentation audit. Restart v1 with `main.py` only when
+working on v1; use the [v2 launcher](../README.md) for v2. Keep photo/ad folders
+separate and test cloud deletion with authorized synthetic data.
+
+> **V1 source baseline (2026-10-19):** This functionality and related documentation are now part of `master` at the published, immutable `v1.0.0` [source pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0). The previous `feature/kivy-gui` and other feature branches remain historical references. CI passed on the tagged SHA (`07ce51d`, [Kiosk](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245), [Dither](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273)), but physical Windows acceptance is separate. BUG-001/007 audio and BUG-009 Drive retention remain unresolved; payment stays DEMO. **BUG-009 OPEN:** Local 15-day retention exists in source, but Drive 30-day deletion trigger, deployment and permanent deletion are **not verified**. Do not promise automatic Drive cleanup; separately approved deployment and evidence are required.
 
 The platform in this desktop application is the booth's local `photos/` storage.
 **Configured targets** are **15 days locally** and **30 days in Google Drive**. Local cleanup is implemented in Python; Drive cleanup requires a separately deployed and authorized Apps Script timer and is **NOT CONFIRMED ACTIVE (BUG-009)**.

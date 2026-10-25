@@ -1,5 +1,12 @@
 # P4b Sandbox → P5 readiness (FEAT-020 / FEAT-022)
 
+**Current implementation note.** The adapter and P5 stages described below
+were completed; future-tense stage descriptions are the original plan, not
+outstanding implementation tasks. P5 source `9433010` and subsequent health
+source `ea394e8` have separate evidence packages. Actual merchant simulator
+acceptance and trusted QRIS game promotion remain outstanding.
+[Current ledger](../../test_checklist.md).
+
 Owner explicitly approved QRIS Sandbox and subsequent P5 preparation on 2026-10-24,
 with Windows manual tests at the end. Production payments, scanner activation,
 deployment, merge and release remain outside scope. Baseline/rollback:

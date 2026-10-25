@@ -1,5 +1,13 @@
 # P3 Windows retest — responsiveness and optional gesture follow-up
 
+> **Dated source/QA record, retained for traceability.** Results, “latest/current”,
+> OPEN/PENDING labels, next actions and authorization limits below apply to this
+> package's recorded source and report date. Later owner reports and source work
+> can supersede its status; they do not rewrite these test results. Use
+> [current status](../../FEATURE_STATUS.md), [test ledger](../../test_checklist.md)
+> and [current handover](../../DEVELOPMENT_HANDOVER.md) for continuation. Historical
+> checklists are not an instruction to repeat already accepted tests.
+
 > Latest follow-up: [preview redraw/first-use correction and fuller 36/40 report audit](../portrait-v2-preview-redraw/README.md). This file preserves the earlier 21/34 report and source checkpoints; do not treat them as the newest Windows result. Use the [focused 16-item form](../portrait-v2-preview-redraw/windows-checklist.html) for the new correction.
 
 Owner report, 2026-10-23 Asia/Jakarta: **21/34 checked, 13 open**, Windows 11,

@@ -1,5 +1,11 @@
 # Final MEONG logo and offline audio — 17 October 2026
 
+> **Historical QA snapshot.** This record retains its original source, date,
+> fixtures and owner-report limits. Its branch, price/session, “current” and
+> pending instructions do not override [current GUI v2 status](../FEATURE_STATUS.md)
+> or the [current test ledger](../test_checklist.md). No new test pass is claimed
+> by adding this context.
+
 > **2026-10-19 v1 SOURCE FOLLOW-UP:** `feature/kivy-gui` has been promoted to `master` and tagged as the immutable [v1.0.0 source pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0) (`07ce51d`). The findings/tests dated below remain **historical snapshots**; current source/bug/physical-device status is tracked in [FEATURE_STATUS.md](../FEATURE_STATUS.md), [bug_tracker.md](../bug_tracker.md) and [release notes](../releases/v1.0.0.md). Linux synthetic CI is not production hardware certification. QRIS remains DEMO and BUG-009 Drive cleanup is OPEN.
 
 

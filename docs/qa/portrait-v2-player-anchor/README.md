@@ -1,5 +1,19 @@
 # BUG-016 — Meong shifts too far right after window resize
 
+> **Later owner update:** final visual/audio form is 8/8 followed by “udah clear
+> semua”, recorded in [Sandbox owner acceptance](../portrait-v2-sandbox/owner-acceptance.json).
+> BUG-017 is now OWNER-REPORTED PASS / MONITORING at unknown HEAD. The earlier
+> OPEN/unfixed statements below remain dated observations; no decoder patch or
+> measured root cause is inferred.
+
+> **Dated source/QA record, retained for traceability.** Results, “latest/current”,
+> OPEN/PENDING labels, next actions and authorization limits below apply to this
+> package's recorded source and report date. Later owner reports and source work
+> can supersede its status; they do not rewrite these test results. Use
+> [current status](../../FEATURE_STATUS.md), [test ledger](../../test_checklist.md)
+> and [current handover](../../DEVELOPMENT_HANDOVER.md) for continuation. Historical
+> checklists are not an instruction to repeat already accepted tests.
+
 > Owner reports 14/14 and twenty cycles passing on 2026-10-24 at unknown HEAD/device metadata; video→video ad lag is additionally reported as BUG-017 OPEN. Subsequent requested larger logo c887d30 and original-style native buttons 25fd55c have 546 local PASS and matching three-job CI SUCCESS; new visual acceptance remains separate. [Latest report, proof and 8-item form](../portrait-v2-native-controls/README.md).
 
 Owner report, 2026-10-24: live Meong is too far right at portrait and maximized
