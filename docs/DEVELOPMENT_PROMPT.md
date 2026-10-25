@@ -1,65 +1,62 @@
-# Prompt melanjutkan Meong Photobooth GUI v2
+# Continue Meong Photobooth GUI v2
 
-Diperbarui **25 Oktober 2026**. Gunakan branch yang sudah ada; jangan memulai
-ulang dari master. [Protocol](DEVELOPMENT_PROTOCOL.md) dan root [AGENTS](../AGENTS.md)
-mengatur reuse, scope, tes, push dan bukti.
+Updated **25 October 2026**. Use the existing project and branch.
+[AGENTS.md](../AGENTS.md) and [protocol](DEVELOPMENT_PROTOCOL.md) govern execution.
 
-## Copy/paste untuk melanjutkan
+## Copy/paste prompt
 
 > Repository: pratikto/PhotoBooth.
-> Branch wajib: **feature/portrait-kiosk-v2-next**.
-> GUI v2 adalah pusat pengembangan/calon branch utama, tetapi GitHub default
-> masih master. Jangan membuat branch baru, mengubah master/default/rename,
-> merge, release atau deploy tanpa instruksi operasi tersebut.
+> Required branch: **feature/portrait-kiosk-v2-next**.
+> Task/scope: **[DESCRIBE THE REQUESTED WORK]**.
+> Constraints/expected result: **[ADD IF APPLICABLE]**.
 >
-> Tugas dan scope yang saya minta: **[ISI TUGAS]**.
-> Batas/perangkat/hasil yang diharapkan: **[ISI JIKA ADA]**.
+> GUI v2 is the intended future primary branch. GitHub default remains master;
+> main.py remains v1. Do not start again from master or create a branch, rename,
+> merge, change default, release or deploy without the corresponding instruction.
 >
-> Baca README.md → docs/README.md → portrait-kiosk-v2.md → FEATURE_STATUS.md →
-> DEVELOPMENT_HANDOVER.md → bug_tracker.md → next_step.md → DECISIONS.md dan
-> test_checklist.md. Source operator terakhir ea394e8 (780 full PASS/CI SUCCESS), baseline P5 9433010, bukti 0dc6555;
-> cek HEAD remote terkini dahulu, jangan mengandalkan angka ini jika sudah maju.
+> Read README.md, docs/README.md, portrait-kiosk-v2.md, FEATURE_STATUS.md,
+> DEVELOPMENT_HANDOVER.md, bug_tracker.md, next_step.md, DECISIONS.md and
+> test_checklist.md. Refresh remote HEAD. At the 25 October documentation audit,
+> latest functional source was ea394e8 (780 full local PASS; matching CI SUCCESS,
+> one optional native model-assets skip); 9433010/0dc6555 is the earlier P5 baseline.
 >
-> Pertahankan P3 foto, original game renderer, checkout MOCK/Sandbox dan native
-> tipografi yang sudah diterima. Jangan mengulang implementasi yang sudah ada.
-> Periksa docs/gui-v2-branch-audit.md dan branch referensi terkait read-only,
-> refresh source SHA, reuse kode/GUI/renderer/aset yang bekerja, lalu catat adapter
-> yang memang diperlukan. Jangan mengintegrasikan fitur kandidat hanya karena
-> dokumentasi branch-nya ada.
+> Preserve P3 photos, actual original game renderer/assets, MOCK/Sandbox and
+> readable native typography. Read docs/gui-v2-branch-audit.md and refresh relevant
+> reference branches read-only before reuse. Reuse existing UI/controller/worker/
+> renderer/assets through small adapters; do not independently rebuild working
+> features or automatically port candidates because their docs exist.
 >
-> Kerjakan seluruh scope yang sudah diotorisasi tanpa approval per perubahan
-> kecil. Beri update singkat, lakukan tahap yang reviewable, jalankan tes relevan,
-> perbaiki failure, commit/push ke branch wajib lalu verifikasi remote HEAD.
-> Untuk source akhir jalankan satu regresi lengkap; jangan menghabiskan Actions
-> credits untuk mengulang run hijau pada perubahan dokumen. Docs-only memakai
-> validasi link/referensi/hash dan skip CI, bukan rerun GUI.
+> Complete the already authorized scope without asking again per small change.
+> Give concise updates; use logical stages, relevant local checks, fixes, commits,
+> push to the required branch and remote verification before the next stage.
+> One final full regression follows the final functional change. Documentation
+> uses link/reference/hash/scope checks and skips redundant GUI CI.
 >
-> Perubahan GUI direview pada 800×1280 dan 452×900; sertakan ukuran kecil/lebar
-> jika relevan. Jaga speed/spacing game seragam dan Meong di kiri, callback lama
-> mati, audio satu owner, foto original tidak dicerminkan, serta satu retake/desain.
+> For GUI changes review 800×1280 and 452×900 plus relevant compact/wide sizes.
+> Preserve uniform game speed/spacing, centered world, retired callback guards,
+> one audio owner, unmirrored originals and one retake/design; quantity is copies.
 >
-> Payment Sandbox harus server quote/grant/ACK; jangan pakai PAID/skor/amount dari
-> GUI sebagai authority. Promo game QRIS belum punya kontrak tepercaya; default
-> produksi/POS/scanner off. Jangan hapus journal/data atau replay charge/foto/
-> print untuk melewati status tidak pasti. Key hanya diinput lokal, tidak ke chat.
+> Sandbox requires backend quote/verification/grant/ACK. GUI PAID/score/amount
+> is not authority. Trusted QRIS game promotion is absent; require full-price
+> consent. Production/POS/scanner stay off. Do not delete journals/data or replay
+> charge/capture/print to bypass uncertainty. Enter merchant keys only locally.
 >
-> Bedakan source PASS, laporan owner, preflight, merchant dan perangkat fisik.
-> Owner preflight HEAD 0dc6555 ready belum meluluskan P5. Isi metadata kosong
-> tetap unknown; jangan menganggap checklist kosong lulus atau menjalankan ulang
-> 20 putaran lama tanpa alasan. Gate 20 Sandbox baru mengikuti form P5.
+> Distinguish source PASS, owner reports, preflight, merchant and physical acceptance.
+> READY_FOR_MANUAL_TEST at 0dc6555 is not P5 acceptance. Missing metadata stays
+> unknown; unchecked boxes do not pass. The operator eight-item form adds no old
+> photo/game twenty-cycle retest; new Sandbox cycles use the P5 form.
 >
-> Update dokumen yang faktanya berubah (status/bug/decision/QA/handover/changelog)
-> dan laporkan perubahan, tes, commit/remote, bukti, bug/gate serta langkah aman
-> berikutnya. Hentikan bagian yang tidak dapat diselesaikan aman di dalam scope;
-> jangan menyamarkan blocker provider/hardware sebagai PASS.
+> The owner permits safe approved source work while laptop checks wait. The
+> read-only operator health/report increment is complete in source; selection
+> remains disabled. This does not authorize unrelated features or deployments.
+>
+> Update only documents whose facts changed. Report scope, evidence/limits,
+> exact tested/pushed source, remote verification, outstanding gates and next
+> action. Keep original dated reports and avoid speculative repairs of working paths.
 
-## Referensi cepat
+## Quick links
 
-- [Status dan checkpoint](DEVELOPMENT_HANDOVER.md).
-- [Sandbox/P5 commands dan evidence](qa/portrait-v2-p5/README.md).
-- [26-item Windows form dengan Submit](qa/portrait-v2-p5/windows-checklist.html).
-- [Audit semua branch](gui-v2-branch-audit.md).
-- [Branch utama berikutnya: gate dan operasi yang berbeda](gui-v2-promotion-plan.md).
-
-Persetujuan terdahulu tetap berlaku pada scope yang dinyatakan. Tugas dokumen
-ini sendiri tidak memberi izin fitur baru, produksi, deployment atau merge.
+[Handover](DEVELOPMENT_HANDOVER.md) · [P5 runbook](qa/portrait-v2-p5/README.md) ·
+[P5 form](qa/portrait-v2-p5/windows-checklist.html) ·
+[operator form](qa/portrait-v2-operator-health/windows-checklist.html) ·
+[branch audit](gui-v2-branch-audit.md) · [promotion plan](gui-v2-promotion-plan.md).

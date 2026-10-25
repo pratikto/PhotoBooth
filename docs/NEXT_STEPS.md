@@ -1,7 +1,9 @@
-# Moved: Development Handover
+# Compatibility pointer — development handover
 
-> **CURRENT (2026-10-19):** Historical compatibility pointer only. Stable application baseline is `master` / immutable `v1.0.0` pre-release; use [current backlog](next_step.md) and [handover](DEVELOPMENT_HANDOVER.md). FEAT-008 remains a candidate requiring approval; BUG-001/007 audio retest and BUG-009 Drive retention remain unresolved. Do not add new tasks to this moved file.
+This historical filename is retained for old links. Use the current
+[handover](DEVELOPMENT_HANDOVER.md), [backlog](next_step.md),
+[feature status](FEATURE_STATUS.md) and [bug register](bug_tracker.md).
 
-This historical document has moved to [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md).
-
-For active tracking, use [Bug tracker](bug_tracker.md) for defects and [Feature backlog](next_step.md) for future ideas. This compatibility pointer is retained to avoid breaking old links; do not add new tasks here.
+Active development is `feature/portrait-kiosk-v2-next`; read-only operator
+Device Health/report is already in source. GitHub default remains `master`.
+Do not add tasks here or use the former 2026-10-19 candidate list as current status.

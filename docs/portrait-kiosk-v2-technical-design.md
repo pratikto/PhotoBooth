@@ -1,135 +1,129 @@
-# FEAT-022 — GUI v2: arsitektur dan kontrak integrasi
+# FEAT-022 — GUI v2 engineering contracts
 
-Snapshot dokumentasi **25 Oktober 2026** pada branch
-`feature/portrait-kiosk-v2-next`; source operator **ea394e8** (780 full PASS/CI SUCCESS), baseline P5 **9433010**.
-[Ruang lingkup/roadmap](portrait-kiosk-v2.md) · [audit reuse](gui-v2-branch-audit.md).
+Updated **25 October 2026** against audit baseline `5f09eff`; latest functional
+source `ea394e8`, earlier P5 source `9433010`. Continue on the existing
+`feature/portrait-kiosk-v2-next`. [Roadmap](portrait-kiosk-v2.md) ·
+[current evidence](FEATURE_STATUS.md) · [architecture](ARCHITECTURE.md).
 
-## 1. Prinsip kelanjutan
+## Active modules
 
-GUI v2 sudah mengintegrasikan P3/P4; tidak lagi sebatas prototype galeri atau
-placeholder game. Gunakan adapter kecil dan implementasi existing yang bekerja.
-Default GitHub masih master, launcher default main.py masih v1. Arah menuju GUI v2
-sebagai branch utama mengikuti [promotion plan](gui-v2-promotion-plan.md), tanpa
-mengotorisasi operasi repository atau produksi melalui dokumen ini.
-
-## 2. Inventaris source yang aktif
-
-| Tanggung jawab | Modul | Kontrak |
+| Responsibility | Modules | Contract |
 | --- | --- | --- |
-| Native window dan page lifecycle | `kiosk_v2/app.py`, `flow.py`, `viewport.py` | Dedicated launcher, revision guard untuk aksi halaman lama, browse timeout hanya halaman aman |
-| Tema/caption/header | `theme.py`, `button_art.py`, `branding.py`, `brand_flight.py` | Frame original game, caption native tanpa ikon wajib; animasi/pause/dispose dibatasi header |
-| Galeri dan warmup | `gallery.py`, `previews.py` | 12 strip asli, CPU preview di worker, texture preload bertahap, swipe/drag dan animasi tidak menumpuk |
-| Audio | `audio.py`, `mixer.py`, `game_music.py`, `shutter.py` | Owner v2 tunggal, tidak berbagi lifecycle AudioManager v1; musik gambar/video/game dan SFX terpisah |
-| Kamera/sensor/live preview | `devices.py`, `sensors.py`, `live_preview.py` | Async camera/frame mailbox, off-GUI preview/detector, mirror hanya display, palm memakai countdown SIAP yang sama |
-| Foto/capture/review/result | `photo_views.py`, `photos.py`, `photo_drive.py` | PhotoJobs single-flight, TransactionStore/PhotoSession/catalog/printer/Drive existing; original tidak ditimpa mirror/retake |
-| Game | `game_scene.py`, `game_layout.py`, `game_views.py`, `demo_game.py` | Original MeongFlyStage/Flow/renderer/emitter direuse; durable one-use DEMO ledger, bukan POS authority |
-| Promo/checkout MOCK | `game_offer.py`, `mock_checkout.py`, `checkout_views.py` | SQLite menghitung harga dan memvalidasi DEMO attempt; satu diskon/admission, QR nonpayable |
-| Sandbox host | `sandbox_checkout.py`, `sandbox_views.py` | KioskCheckout/QrisKioskClient existing; GameJobs single-flight, no GUI merchant key, durable photo handoff |
-| Payment service | `checkout_backend.py`, `checkout_store.py`, `payment_quote.py`, `qris_api.py`, `booth_auth.py` | Server quote, auth booth, idempotency, grant/service state, rekonsiliasi independen |
-| Provider/QR/network | `midtrans_sandbox.py`, `midtrans_verify.py`, `qris_evidence.py`, `qris_images.py`, `qris_kiosk_client.py` | Sandbox-only, verifikasi order/merchant/amount/currency/ref, bounded I/O, allowlist QR, tanpa redirect |
-| Durable visit | `qris_session.py` | Atomic journal + lease per proses; context mode/endpoint/booth, restart hold, no replay |
-| Diagnosis/readiness | `diagnostics.py`, `performance.py`, `readiness.py` | Log lokal/HEAD, pengukuran preview; inventory read-only tanpa probe camera/printer/provider dan tanpa secret |
+| Window/page lifetime | `app.py`, `flow.py`, `viewport.py` | Dedicated launcher, page revision guards; browse timeout only for safe pages |
+| Theme/buttons/header | `theme.py`, `button_art.py`, `branding.py`, `brand_flight.py` | Original game materials, native readable main-app captions without required icons; bounded animation lifetime |
+| Gallery/warmup | `gallery.py`, `previews.py` | Twelve original strips, worker CPU preparation and staged texture preload; replacement rather than queued swipe animations |
+| Audio | `audio.py`, `mixer.py`, `game_music.py`, `shutter.py` | One v2 owner; separate GUI/video/game ownership and SFX; no parallel v1 AudioManager |
+| Camera/sensors/preview | `devices.py`, `sensors.py`, `live_preview.py` | Async camera/frame mailbox, worker detection/conversion; display-only mirror; palm shares manual countdown |
+| Photo lifecycle | `photo_views.py`, `photos.py`, `photo_drive.py` | Single-flight PhotoJobs over existing PhotoSession/store/catalog/printer/Drive; preserve originals |
+| Game | `game_scene.py`, `game_layout.py`, `game_views.py`, `demo_game.py` | Original Stage/Flow/renderer/emitter; v2 persistent one-use DEMO ledger; no scanner/POS authority |
+| Local reward/MOCK | `game_offer.py`, `mock_checkout.py`, `checkout_views.py` | Local verified DEMO outcome/quote/admission; one-use reward; nonpayable QR |
+| Sandbox host | `sandbox_checkout.py`, `sandbox_views.py` | Existing KioskCheckout/QrisKioskClient and single-flight GameJobs; durable photo handoff; no GUI merchant key |
+| Operator health | `health_service.py`, `operator_health.py`, `health_report.py` | Original v1 panel/backend/extracted worker; bounded observations and safe local reports |
+| Diagnostics/readiness | `diagnostics.py`, `performance.py`, `readiness.py` | Local diagnostics/timings, safe inventory; preflight performs no device/provider readiness probes |
+| Payment service (shared) | `checkout_backend.py`, `checkout_store.py`, `payment_quote.py`, `qris_api.py`, `booth_auth.py` | Backend price, authenticated booth, idempotency, grants and reconciliation |
+| Provider/client/journal (shared) | `midtrans_sandbox.py`, `midtrans_verify.py`, `qris_evidence.py`, `qris_images.py`, `qris_kiosk_client.py`, `qris_session.py` | Sandbox-only, independent order/amount/currency/reference validation, bounded/allowlisted I/O, atomic journal and process lease |
 
-Path tanpa prefix pada baris GUI berada di `photobooth/kiosk_v2/`; shared services
-berada di `photobooth/`. Lihat [peta repository](ARCHITECTURE.md).
+V2 filenames are under `photobooth/kiosk_v2/`; shared files under `photobooth/`.
+`main.py` and v1 GUI/audio remain separate. Health reuses v1 helpers without
+instantiating its application. [Reference map](gui-v2-branch-audit.md).
 
-## 3. Alur foto dan orientasi
+## Photo data, orientation and output
 
-Default/local membutuhkan persetujuan UJI FOTO, tidak membuat pembayaran.
-Satu desain terpilih menghasilkan satu PhotoSession, tiga original dan maksimum
-satu retake. Jumlah lembar 0–9 bukan penambahan sesi. JPEG asli tetap resolusi
-capture; preview dibatasi ukurannya dan mirror dilakukan pada texture display.
-Foto yang diganti retake tetap disimpan sesuai manifest, bukan menimpa original.
+Local/default requires explicit UJI FOTO consent and creates no payment.
+Each selected design has one three-photo session and at most one selected-photo
+retake. Zero quantity deselects; 1–9 specifies copies, not capture sessions.
+JPEGs preserve capture resolution; only the bounded preview texture is mirrored.
+Retake preserves replaced originals and manifest history. Static review/result,
+composition, print, QR and detector/decoder frames remain unmirrored.
 
-`PhotoJobs` mencegah antrian tap ganda. Countdown dibatalkan saat minimize,
-pergantian halaman atau kamera hilang. Tidak ada auto-capture saat aplikasi pulih.
-Print adalah aksi operator/opt-in; hasil tidak pasti membutuhkan pemeriksaan,
-bukan retry otomatis. Drive membutuhkan konfigurasi dan retention guard; QR hasil
-hanya tersedia jika folder yang benar benar-benar tersedia.
+PhotoJobs rejects duplicate work. Minimize/page changes/camera loss cancel
+countdown; restore does not automatically capture. Printing requires operator
+opt-in/action; uncertain sends are held for inspection, not automatically retried.
+Drive requires configured credentials/isolated pool and retention acknowledgement
+before upload. A folder QR is not proof that all files uploaded, download works,
+or cloud deletion is active.
 
-Default data P3: `data/kiosk-v2-p3/`. Game/MOCK: `data/kiosk-v2-p4/`.
-Merchant Sandbox: `data/kiosk-v2-sandbox/<merchant>/<booth>/`, journal `visit.json`,
-backend `orders.sqlite`, foto di subtree `photo-tests/`. Isolasi ini tidak boleh
-dihilangkan dengan mengganti ke journal/folder v1.
+Default photo profile: `data/kiosk-v2-p3/`; game/MOCK:
+`data/kiosk-v2-p4/`; merchant trial:
+`data/kiosk-v2-sandbox/<merchant>/<booth>/`, with `visit.json`, `orders.sqlite`
+and photos under `photo-tests/`. Never substitute v1/payment journals to bypass guards.
+[Retention](photo-retention.md).
 
-## 4. Harga dan otoritas pembayaran
+## Pricing and payment authority
 
-`catalog`/`workflow` menghitung Rp5.000 per desain/sesi + Rp5.000 per lembar.
-Kemenangan DEMO menawarkan Rp2.500 sekali/order pada simulasi lokal/MOCK.
-**Skor, amount dan diskon GUI tidak menjadi bukti pembayaran atau promo QRIS.**
-Service QRIS referensi hanya menerima cart/quantities dan menghitung harga server.
-Belum ada trusted merchant promo API; native Sandbox menampilkan konfirmasi
-**harga penuh tanpa promo** sebelum order dibuat, tidak mengubah nominal diam-diam.
+Shared catalog/workflow tariff: Rp5,000/design/session + Rp5,000/copy. Local/MOCK
+win reward: Rp2,500 once/order, capped at subtotal. Backend QRIS accepts quantities
+and computes its own full-price quote; it has no trusted Meong Fly promo API.
+The native Sandbox requires explicit full-price/no-promo consent before creating
+an order. GUI scores, amounts and PAID labels are never provider authority.
 
-`tools/run_portrait_v2_sandbox.py` memanggil helper merchant trial existing dengan
-entry/environment khusus v2. Backend menerima Server Key Sandbox; GUI hanya token
-booth. Inherited merchant credentials di GUI atau mode MOCK/Sandbox bersamaan
-fail closed. Backend loopback; tidak ada public webhook/tunnel/deployment.
-Readiness backend tidak membuktikan kredensial merchant atau settlement.
+`tools/run_portrait_v2_sandbox.py` reuses the existing merchant-trial helper with
+injectable v2 entry/environment/notice. Merchant Server Key stays in the backend;
+GUI receives booth credentials only. Conflicting modes/inherited merchant keys
+fail closed. Backend uses loopback HTTP; the current trial uses status checks/
+provider reconciliation, without a public webhook/tunnel/deployment. Readiness
+of that local service does not verify account credentials or settlement.
 
-## 5. Durable Sandbox → foto
+## Durable Sandbox → photo handoff
 
 `CREATING → WAITING → RESERVED → STARTING → STARTED → COMPLETING → COMPLETED`.
-Pembatalan melalui `CANCELLING → CANCELLED`; ketidakpastian dapat berakhir di
-`RECOVERY`. Atomic journal disimpan **sebelum** request charge pertama.
+Cancellation uses `CANCELLING → CANCELLED`; uncertainty can require `RECOVERY`.
 
-- Retry memakai checkout key/order yang sama; paid/cancel race direkonsiliasi
-  backend, bukan diputuskan UI. Satu grant stabil tidak boleh menciptakan sesi baru.
-- RESERVED → persetujuan → durable STARTING → satu transaksi foto → bind txid →
-  ACK STARTED. Countdown/capture tidak tersedia sebelum ACK untuk txid yang sama.
-- Seluruh sesi desain selesai → request/ACK COMPLETED. Abort atau restart setelah
-  capture mungkin berjalan memerlukan operator recovery; tidak replay foto/cetak.
-- Pending/unknown/paid tidak bisa ditinggal lewat browse timeout atau ganti cart.
-  Recovery sengaja tidak memiliki tombol reset paid-order/refund otomatis.
-- Stop menunggu worker berakhir sebelum melepas lease; callback halaman yang
-  sudah pensiun tidak mendapat kesempatan menjalankan aksi baru.
+- Persist the atomic journal before the first create request. Retry the same
+  checkout key/order; backend reconciles cancellation/settlement races.
+- RESERVED → explicit photo consent → durable STARTING → allocate one transaction
+  → bind its ID → STARTED ACK. Countdown is unavailable before that ACK.
+- Complete all selected designs before COMPLETED ACK. Abort/restart after possible
+  capture requires operator reconciliation; never replay photo/charge/print.
+- Pending/unknown/paid cannot be discarded by browse timeout or cart changes.
+  RECOVERY has no reset-paid-order/refund/replay override.
+- Stop waits for worker I/O before releasing the journal lease. Retired page
+  callbacks cannot initiate a new action.
 
-[Runbook dan kegagalan/recovery](qa/portrait-v2-sandbox/README.md).
+[Sandbox runbook](qa/portrait-v2-sandbox/README.md) · [P5 acceptance](qa/portrait-v2-p5/README.md).
 
-## 6. Game, resize, animasi dan audio
+## Game, layout and audio
 
-26 file original Meong Fly direferensikan pada SHA `672e3f7`; service QRIS pada
-`3cc8a8e`. [Hash/provenance game](qa/portrait-v2-meong-reuse/README.md) dan
-[QRIS](qa/portrait-v2-sandbox/reused-source.json). Pengecualian yang terdokumentasi:
-adapter layout/input v2 dan injectable launcher entry/environment/notice;
-legacy UI v1 tidak ditumpangkan ke window v2.
+Original game reference `672e3f7` (26 files), QRIS `3cc8a8e`, health `dbbe055`.
+Provenance: [game](qa/portrait-v2-meong-reuse/README.md),
+[QRIS](qa/portrait-v2-sandbox/reused-source.json),
+[health](qa/portrait-v2-operator-health/reused-source.json).
+Reference SHAs are dated; refresh before borrowing future changes.
 
-World game dicenter dengan skala konsisten untuk seluruh lintasan. Jangan memakai
-skala nonlinear posisi asteroid jauh/dekat atau right-align spawn yang mendorong
-Meong ke kanan (BUG-015/016). Resize tidak mengganti fisika, spawn spacing atau
-reset skor/sesi; minimize memerlukan resume game manual. Header flight punya
-batas/pause/dispose sendiri; bukan mengubah physics engine game.
+Center the complete game world with uniform travel/spacing. Do not reintroduce
+nonlinear far/near projection or right-anchored spawn (BUG-015/016). Resize retains
+physics/score/session; game restore requires manual resume. Header animation owns
+its own bounded pause/dispose lifetime, not a second physics loop.
 
-Iklan video memiliki audio sendiri; iklan gambar memakai BGM GUI. Tutorial,
-galeri, foto dan checkout memakai satu loop GUI; game memakai loop berbeda.
-Setiap enabled action mengeluarkan satu cue; tidak ada sound owner v1 paralel.
+Still ads use GUI BGM; videos use their own audio. Tutorial/gallery/photo/checkout
+share one GUI loop; game uses its own loop. One enabled action emits one cue.
+Minimize/close retires the prior owner/callbacks.
 
-## Operator health seam / FEAT-008
+## Operator health seam
 
-Actual `HealthPanelMixin.show_health_settings` dan caption helper v1 dipakai
-direct; worker `_refresh_device_health` diekstrak verbatim ke class shell agar
-v1 app tidak diinstansiasi/ditimpa. Original lock/scheduling/error guards tetap.
-Adapter hanya memetakan root.after → Kivy Clock, frame mailbox v2 → read-only
-camera view, config printer lazy di worker, dan tombol ke audio owner v2.
+Actual `HealthPanelMixin.show_health_settings` and v1 label helper are reused.
+The original `_refresh_device_health` method is extracted verbatim into a class
+shell; original locks/scheduling/redaction guards stay intact. V2 maps `root.after`
+to Kivy Clock, the existing mailbox to a read-only camera view, lazy printer
+config to the worker, and buttons to the single v2 audio owner.
 
-F12/hold header membuka panel hanya idle atau Sandbox RECOVERY. Face invitation
-terhenti selama modal; iklan/audio/visit tetap. Input epoch menolak release lama
-setelah modal, single tap baru tetap bekerja. Close/minimize/stop mengakhiri modal
-serta guard callback. Probe/export single-flight; hasil lama tidak mengecat panel
-baru atau meninggalkan kontrol report terkunci.
+F12/header hold opens only idle without an invitation or Sandbox RECOVERY;
+active jobs cannot be interrupted. Modal input epochs reject old release events.
+Close/minimize/stop retires modal/probe/report callbacks. Manual open/refresh
+runs one worker sweep; there is no automatic polling/watchdog, device switching,
+second camera, print payload, order mutation or upload.
 
-JSON report hanya inventory aman + enam status allowlisted, bukan raw messages,
-photos/logs/keys/address/serial/queue/QR/order. Semua acceptance fisik/provider tetap
-NOT_RUN. Tidak ada device selection callback/setting writes, kamera baru, print
-payload, watchdog/restart atau upload. [Proof](qa/portrait-v2-operator-health/README.md).
+Report JSON allows safe source/OS/dependency/display metadata and six status
+observations; excludes photo pixels, keys/tokens, raw errors/logs, network addresses,
+serial/queue identities and order/QR references. Physical/provider fields remain
+NOT_RUN. READY only means the named bounded observation passed.
+[Operator proof/form](qa/portrait-v2-operator-health/README.md).
 
-## 7. Bukti dan batas
+## Evidence limits
 
-Source 9433010: 688 full PASS / nol skip; CI tiga job SUCCESS, 109 PNG diverifikasi,
-800×1280/452×900 direview. Native CI satu skip aset model opsional, tercakup local
-full. [P5 proof](qa/portrait-v2-p5/README.md). Preflight Windows owner pada HEAD
-0dc6555 = READY_FOR_MANUAL_TEST, **bukan** acceptance merchant/perangkat.
-
-P5 merchant, hardware, print/paper, Drive/retensi 30 hari, privasi dan release
-belum tersertifikasi. AI/Device Health/WhatsApp/update lab lain tetap referensi,
-bukan bagian inventory aktif hanya karena ditemukan pada branch lain.
+[Current status](FEATURE_STATUS.md) and [test ledger](test_checklist.md) record the
+780-test operator checkpoint and earlier 688-test P5 baseline, including CI skips.
+Owner preflight `0dc6555` = READY_FOR_MANUAL_TEST, not merchant/hardware acceptance.
+BUG-009, current device/provider/Drive/privacy and release gates remain open.
+Device staging/switching, AI, WhatsApp and newer lab updates are separate scopes;
+read-only Device Health is already in the active inventory above.

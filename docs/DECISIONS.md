@@ -1,133 +1,121 @@
-# Meong Photobooth — Product and technical decision record
+# Meong Photobooth — product and technical decisions
 
-Diperbarui **25 Oktober 2026**. Keputusan mengatur produk/cakupan; status source
-mengikuti [FEATURE_STATUS](FEATURE_STATUS.md), bukti [P5](qa/portrait-v2-p5/README.md).
-Persetujuan tahap lama tidak menjadi izin produksi/merge atau implementasi fitur
-lain. ID historis dipertahankan.
+Updated **25 October 2026**. Decisions establish product direction and scope;
+[current status](FEATURE_STATUS.md) and [test ledger](test_checklist.md) establish
+implementation/evidence. Preserve historical IDs and separate later authorization
+from the original decision. A design decision alone does not authorize new code.
 
-## DEC-023 — GUI v2 sebagai pusat pengembangan dan calon branch utama
+## DEC-023 — GUI v2 development focus and intended primary branch
 
-Owner pada 25 Oktober meminta dokumentasi GUI v2 diperbarui memakai referensi
-tiap branch, karena GUI v2 kelak menjadi branch utama. **Target kerja saat ini
-feature/portrait-kiosk-v2-next**, tanpa memulai ulang proyek atau membuat branch
-baru. Default GitHub yang diperiksa masih master. [Audit 19 branch](gui-v2-branch-audit.md)
-dan [rencana transisi](gui-v2-promotion-plan.md) mencatat gate/operasi yang terpisah.
-Arahan ini tidak langsung mengeksekusi rename/default change, merge, launcher
-switch, produksi, deployment atau release.
+The owner directs continued development on **`feature/portrait-kiosk-v2-next`**,
+with reference to working features on other branches, and intends GUI v2 to
+become the primary branch. GitHub default remains `master`; `main.py` remains v1.
+No new branch/restart/default change/rename/merge/release/deployment follows from
+this direction. [Reference audit](gui-v2-branch-audit.md) · [transition plan](gui-v2-promotion-plan.md).
 
-Owner sebelumnya secara eksplisit menyetujui P3, P4, kemudian **P4b QRIS Sandbox
-→ P5** dengan manual test di akhir. Tahap source telah dikerjakan; generic
-deferral/nonimplementation notices dari 19–21 Oktober tidak membatalkan scope
-itu. Batas produksi/merchant promo tepercaya/scanner dan bukti perangkat tetap ada.
-Keputusan reuse/cost: cek SHA terbaru branch terkait, pakai kode/renderer/GUI/aset
-yang sudah bekerja dan catat perbedaan adapter; jangan reinventing the wheel atau
-mengulang CI sukses hanya untuk dokumentasi. Lihat root [AGENTS](../AGENTS.md).
+The owner explicitly approved P3, P4 DEMO/MOCK and then P4b Sandbox/P5 with manual
+tests at the end. On 25 October the owner authorized safe source continuation
+while laptop checks wait, reusing the actual v1 implementation. The bounded
+read-only Device Health/local report increment is now in source. Selection,
+production, trusted merchant promotion and repository operations stay separate.
+[Operator scope/proof](qa/portrait-v2-operator-health/README.md).
 
-## 25 Oktober — continuation while manual tests are pending
+Reuse working UI/controllers/renderers/assets as well as logic; refresh reference
+SHA and record concrete adapter exceptions. Avoid redundant successful GUI CI for
+documentation. This documentation request authorizes reconciliation in English;
+it adds no new application feature approval. [AGENTS.md](../AGENTS.md).
 
-Owner explicitly requests safe further roadmap development without waiting for
-actual laptop testing, to review tonight. This supersedes the previous “wait for
-P5 form before any source work” sequencing. Current scoped next increment is
-read-only operator Device Health reusing latest source/UI, local redacted reports
-and automatic lifecycle/recovery checks. No physical/provider PASS is inferred;
-production, device switching, deployments/default change/merge stay separate.
-[Scope and evidence](qa/portrait-v2-operator-health/README.md).
+## Product decisions
 
-## Active product decisions (owner-confirmed)
-
-| ID | Decision | Implementation boundary / consequence |
+| ID | Owner-confirmed decision | Current interpretation / boundary |
 | --- | --- | --- |
-| DEC-001 (history; see DEC-020/023) | Dulu feature/kivy-gui merupakan target pengembangan; v1 kemudian dirilis. | Sekarang lanjut di feature/portrait-kiosk-v2-next. Master masih default/historical stable; tidak membuat branch baru untuk pekerjaan v2 yang sudah disetujui. |
-| DEC-002 | Use the branded colorful, elegant Meong Kivy GUI, final cat-camera logo, and existing 12 approved 80 mm photo designs. | Preserve recognizable Meong branding and readable QR artwork. |
-| DEC-003 | Alur mulai iklan → tutorial wajib sekali per kunjungan → galeri; berlaku juga setelah game jika belum dilalui. | Sudah dalam VisitFlow v2, reset saat aman ke idle; tidak reset consumed DEMO ledger. |
-| DEC-004 | Idle advertising supports images and videos; a stable nearby face for 5 seconds invites a photo session. | Manual Start always remains accessible; invitation auto-dismisses after 15 seconds; cooldown currently defaults to 45 seconds. Do not confuse optional face presence with identity recognition. |
-| DEC-005 | Video iklan memiliki audio sendiri; gambar iklan memakai BGM GUI. Tutorial/galeri/foto memakai satu loop, game loop berbeda; tombol aktif berbunyi sekali pada semua halaman. | Audio owner v2 terpisah dari v1; minimize/close aman. Aturan muted payment ads berlaku jika placement tersebut dipakai; native Sandbox v2 saat ini tidak memuat panel iklan pembayaran. |
-| DEC-006 | QR pembayaran berbeda dari QR download/folder foto. Produksi tetap nonaktif; MOCK nonpayable dan merchant Sandbox dibedakan jelas. | FEAT-020 service/client/journal Sandbox sudah direuse pada v2; simulator/provider acceptance belum diserahkan. QR/klik GUI bukan bukti settlement. |
-| DEC-007 | Desain pembayaran v1 menawarkan cetak QR tanpa menutup QR utama; print tidak mengubah validity atau mengonfirmasi pembayaran. | Fitur QR-slip v1 bukan fitur native Sandbox v2. Launcher merchant trial v2 menonaktifkan print/Drive; jangan menyatakan UI slip sudah di-port. |
-| DEC-008 | The booth supports thermal photo printing with LAN/Wi-Fi/Windows USB queue routes and Floyd–Steinberg, Bayer and threshold modes in the Kivy branch. | Implemented in source. Owner now reports **Floyd print quality PASS (BUG-004), DEMO payment-QR paper print PASS (BUG-003), and multi-copy physical paper quantity PASS after RAW printer fix (BUG-011)**. Formal complete Kiosk/printer regression and QR scan acceptance remain separate. Preserve working profiles; older thermal-printer branch is untouched. |
-| DEC-009 | **FEAT-001 pricing:** Rp5.000 base per selected template/three-capture session plus Rp5.000 per physical copy, with a separate base for each selected design. | Owner approved a **DEMO-only implementation exception** on 2026-10-18; source now builds one session per design, stores count/DEMO quote, and submits N identical image+cut streams in a **single RAW batch**. The owner confirmed pricing and, following BUG-011 fixes, **physical printed-copy count** now work; **this is owner-reported acceptance, not formal release**. Live QRIS absent; zero-print digital-only/maximum limits undecided. |
-| DEC-010 | **DESIGN ONLY, not implemented in v2 — demo receipt promotion (FEAT-002A):** scan an existing merchant-style receipt QR/barcode on the payment screen and simulate validation/discount. | Replace only payment advertisement panel with live camera while scanning; keep payment QR/order visible; successful validation closes scan and restores ads; failed validation allows immediate retry. A qualifying sample food purchase >= IDR 50,000 waives one IDR 5,000 photo base fee, **never print fees**. The sample threshold is illustrative, not universal. |
-| DEC-011 | Real merchant receipt/POS integration (FEAT-002B) is deferred until a partner and actual receipt/API evidence exist. | Detection of a code is not proof of paid food purchase, eligibility or authenticity; require replay-resistant, one-time verification. |
-| DEC-012 | Every **implemented live camera preview** should appear horizontally mirrored (FEAT-003), without changing source frames or saved/printed photos. | **IMPLEMENTED IN SOURCE AND OWNER TESTED PASS (2026-10-18)** for the existing photo-capture initial/live/countdown/retake preview; owner says **"sip udah sesuai. PASS"**. Both Pillow and BGR preview textures mirror using Kivy GPU UVs; original frames used by face/palm detection, JPEG, print, QR and static review/result images are unchanged. [Dedicated GPU regression CI](https://github.com/pratikto/PhotoBooth/actions/runs/39139208320) PASS. No explicit full Kiosk GUI regression/release claim. Future FEAT-002 receipt scanner/detection overlays do not exist; when approved, reuse the same display-only rule and correctly map bounding boxes. |
-| DEC-013 | Advertising should ultimately sync from a dedicated Meong Google Drive source to **per-machine local media**, with offline playback (FEAT-004). | Devices (e.g. BB01/BB02) receive their assigned content; updates typically weekly and must be atomic/fallback-safe. **Proposed, not present as centralized production service.** |
-| DEC-014 | **DESIGN ONLY; ordering is not implemented in v2.** For real merchants, Meong launches an existing compatible **customer-facing** web ordering solution; Meong does **not** maintain each partner's live menu/POS by default (FEAT-005). | For sales demos only, provide a standalone local dummy menu/cart/simulated checkout, with a single-use qualifying-food-order-to-photo promotion automatically passed within the same kiosk **without receipt scanning** (FEAT-005A). External cashier receipts retain their separate scanning demo path. |
-| DEC-015 | Offer configurable visually distinct Meong GUI themes using one shared codebase (FEAT-006). | Admin-controlled per-machine theme is the *proposed default*, not a separately confirmed owner choice; reconfirm before implementation. |
-| DEC-016 | Photo retention target remains 15 days on local booth and 30 days on configured Drive storage. | Existing retention logic can delete local image bytes after 15 days **even if upload failed**. Reevaluate delivery promises and customer notice before monetized digital delivery. |
-| DEC-017 | **Schedule BUG-009 (unverified 30-day cloud photo retention) with future FEAT-004 per-machine image/video advertising sync**, since both involve Google Apps Script integration/deployment. | Planning link only, **not approval to edit or deploy `Code.gs`/Python**. The repository already implements retention functions, whose actual Apps Script trigger/deployment state must be checked. Keep transaction-photo storage isolated from ad media; verify retention deletion and ad synchronization independently. The BUG-009 privacy risk remains unresolved during deferral. |
-| DEC-018 (historical deferral, scoped override) | Deferral payment lama mempunyai pengecualian eksplisit untuk P4b Sandbox/P5 yang diminta owner pada 24 Oktober. | Sandbox source tersedia; produksi, paid reprint, merchant/POS/promo settlement tetap perlu scope/kontrak tersendiri. Jangan mengulang tahap yang selesai. |
-| DEC-019 | **Accept FEAT-001 DEMO pricing and print-copy behavior as OWNER TESTED PASS; BUG-011 moves out of active fixes into MONITORING after the Windows RAW spooler correction (2026-10-18).** | Owner first said pricing correct but paper count wrong, then **"sip udah bener"**, followed by the explicit hands-on confirmation **"bug 11 udah aku test dan lolos"**, after the `EndDocPrinter` and single-job/N-cut fixes. Preserve [the QA evidence and gaps](qa/FEAT-001-BUG-011-acceptance.md): targeted 15/15 CI PASS and owner paper confirmation are distinct; precise local tested SHA/count matrix not recorded; **at the original 2026-10-18 stage the Kiosk CI had still been failing, subsequently repaired and PASS at v1 on 2026-10-19**. **This confirms BUG-011's reported physical test pass, not every-device hardware certification; the full synthetic GUI regression and source pre-release were later completed on 2026-10-19. Missing exact Windows SHA and per-case counts remain open evidence fields. No new code/deployment approval or automatic bug CLOSED / hardware-production-certified label follows from this decision; the separately approved v1 source-only merge was later completed.** |
+| DEC-001 | Earlier development targeted `feature/kivy-gui` | Historical; v1 was subsequently released. Continue v2 on its existing branch under DEC-020/023 |
+| DEC-002 | Branded colorful Meong Kivy GUI, final cat-camera identity and twelve approved 80 mm designs | Preserve artwork and readable QR; current v2 header/typography follows DEC-022 and later visual corrections |
+| DEC-003 | Advertising → acknowledged tutorial once per active visit → template gallery | Applies to direct entry and either game result if unseen; safe idle resets transient state, never consumed game attempts |
+| DEC-004 | Image/video advertising with a nearby face held for five seconds inviting entry | Manual Start retained; default offer timeout 15s, cooldown 45s. Presence detection does not recognize identity |
+| DEC-005 | Video owns its audio; still ads use GUI BGM; tutorial/gallery/photo use a continuous GUI loop, game a distinct loop; one cue/enabled action | One v2 owner, separate from v1. Muted payment-ad policy applies to v1's placement; native v2 Sandbox has no payment-ad panel |
+| DEC-006 | Payment QRIS differs from photo-folder/download QR; separate local MOCK and merchant Sandbox clearly | Backend/client/journal Sandbox source integrated; no production activation or acceptance inferred from QR/GUI clicks |
+| DEC-007 | V1 may offer a QR slip without hiding the main QR or extending validity/confirming payment | V1/shared-slip feature, not ported native v2 Sandbox UI. Dedicated merchant trial forces printer/Drive off |
+| DEC-008 | Thermal printing supports configured LAN/Wi-Fi/Windows RAW USB and Floyd–Steinberg/Bayer/threshold modes | Existing printer baseline retained; owner reports quality/QR-slip/copy counts passed (BUG-004/003/011), with formal source/device/scan limits preserved. Newer lab UI is separate |
+| DEC-009 | Rp5,000 per selected design/three-photo session plus Rp5,000 per identical paper copy | Separate base per design; N image+cut streams in one RAW batch. Zero deselects, 1–9 is current UI range. Digital-only/final commercial maximum policy undecided; Sandbox recomputes server price |
+| DEC-010 | Design-only FEAT-002A merchant-style receipt scan/discount at checkout | Replace only payment ads with live preview, preserve QR/order; success closes scanner, failure allows retry. Example Rp50,000 food order waives one Rp5,000 base fee, never print fees; illustrative campaign, not game reward or implemented v2 path |
+| DEC-011 | Real FEAT-002B POS integration waits for a partner and receipt/API evidence | Prefer existing POS receipt; detected code is not purchase/eligibility proof. Require one-use/replay-resistant verification |
+| DEC-012 | Every implemented live preview is horizontally mirrored | Display-only UV transform; preserve detector/decoder input, JPEG originals, static review/result/print/QR. Capture owner PASS recorded 18 October; future scanners inherit policy. V2 real receipt scanner not mounted |
+| DEC-013 | Future ads sync from dedicated Meong Drive into per-machine local media, typically weekly | Proposed FEAT-004, offline/atomic/fallback-safe; not a shipped central ad service |
+| DEC-014 | Real merchant ordering uses a compatible customer-facing partner service; do not maintain a full Meong production POS by default | FEAT-005A standalone local DEMO ordering proposal passes a single-use promo on the same kiosk without scanning; external receipts retain their independent path. Ordering not implemented in v2 |
+| DEC-015 | Configurable visual themes share one codebase | FEAT-006 proposal; admin-controlled per-machine default remains a recommendation pending final choice |
+| DEC-016 | Retention target: 15 days local, 30 days Drive | Local bytes may expire even after failed upload. Cloud schedule/deletion unverified; assess delivery notice/promises before monetized digital delivery |
+| DEC-017 | Coordinate BUG-009 cloud retention remediation with future FEAT-004 ads sync | Separate scopes/evidence for photo deletion and ad sync. Existing Apps Script functions may need setup/deployment rather than replacement; no deployment/deletion authorized by docs |
+| DEC-018 | Earlier payment deferral has later scoped overrides | P4b Sandbox/P5 explicitly approved 24 October and source delivered; production, paid reprints, real POS/promotion settlement remain separate |
+| DEC-019 | Accept FEAT-001 DEMO pricing and BUG-011 physical copy-count owner test; monitor after RAW fixes | Owner's successive confirmations preserved in [QA](qa/FEAT-001-BUG-011-acceptance.md). Focused 15/15 mock CI and paper report are separate; exact device SHA/count matrix missing. Earlier CI failure later repaired; not formally CLOSED or all-device certified |
+| DEC-020 | Owner approved old-master backup, tested v1 merge and immutable `v1.0.0` source release on 19 October | Completed source operation; [release notes](releases/v1.0.0.md). Not approval for future v2 merge or hardware/production certification |
 
-### DEC-003 addendum — tutorial once per active visit, including Meong Fly (design 2026-10-21; IN SOURCE v2)
+DEC-021 is not assigned in this branch's decision log; do not invent or renumber
+historical entries. The branch-local FEAT-021 collision is a separate issue.
 
-**Decision:** Preserve the mandatory illustrated tutorial before the 12-template photo-strip picker, but show it **only once per active customer visit**. A visit's `tutorial_seen` state becomes true only after the customer completes/acknowledges the tutorial (not merely after rendering its page). If an incoming path has not completed it, show the tutorial before entering the template picker; otherwise skip directly to that picker. This supplements DEC-003 without changing the current released kiosk flow.
+## DEC-003 addendum — tutorial and visit lifetime
 
-**Meong Fly route (v2):** iklan/undangan → intro → kode DEMO manual → satu
-attempt → Win/Lose → tutorial jika belum dilalui → galeri asli. Scanner/POS nyata
-nonaktif. Sandbox menuju foto hanya setelah verifikasi/grant/ACK backend;
-MOCK memakai ledger simulasi lokal. Game result tidak langsung membuka pembayaran.
+Acknowledgement, not merely rendering the tutorial, sets `tutorial_seen`.
+Direct entry and win/lose both route to the original twelve-template picker,
+showing the tutorial only if unseen. The game route is intro → manual DEMO input
+→ one irreversible attempt → result → tutorial if needed → gallery, without replay
+or direct payment jump. Local MOCK validates its reward; Sandbox requires server
+verification/grant/ACK and has no trusted game-promo contract.
 
-**Visit and safety boundary:** Keep tutorial completion and any *proposed* promo entitlement scoped to the current visitor/order. Reset these visit-scoped UI states after safe completion, abandonment, or return to idle for a new visitor; do **not** reset or undo the irreversible one-receipt/one-game-attempt ledger. Preserve the existing tutorial route for direct photo entry, the 3-photo + photo-download-QR print templates, and the separation of payment QRIS from result QR. Do not allow idle timers to interrupt active paid checkout, capture, or uncertain printing.
+Reset transient tutorial/cart/reward UI only on safe visit completion/abandonment.
+Never reset consumed attempts, pending/unknown/paid orders or uncertain print
+state using an idle timer. The original tutorial-gate branch remains historical
+design evidence; current VisitFlow integration has since been implemented.
 
-**Delivery status:** routing tutorial-once/game-result → galeri sudah diterapkan
-pada v2 melalui persetujuan P3/P4 berikutnya. Dokumen branch tutorial-gate adalah
-rekaman design-only pada SHA lamanya; bukan status v2 saat ini. Promo game MOCK
-bersifat lokal; trusted merchant promo API untuk QRIS belum tersedia.
+## DEC-022 — approved portrait direction and corrected navigation
 
-### DEC-022 — approved portrait GUI v2 artboards, greenfield rebuild and corrected navigation (OWNER-CONFIRMED DESIGN, 2026-10-21)
+Owner selected Pixel Arcade Space / original Meong Fly visuals for a new
+portrait-first 10.1-inch UI and independent audio lifecycle. This was a UI rebuild,
+not permission to replace working camera/photo/print/templates/Drive services.
+[Main artboard](assets/portrait-v2/meong-main-flow-approved.webp) and
+[revised game board](assets/portrait-v2/meong-fly-revised-approved.webp) retain
+provenance; explicit flow/price corrections override illustrative arrows and text.
 
-**Design authority:** the owner selected the Pixel Arcade Space / Meong Fly cosmic visual language for a fresh, portrait-first 10.1-inch customer-facing GUI, including a redesigned audio lifecycle to avoid simply migrating the unresolved v1 background-music behavior. **Do not rewrite the proven camera, capture, thermal print, original 12 template masters, photo QR or Google Drive backend solely for a visual redesign.** Development stays on isolated feature branches; the active branch is **feature/portrait-kiosk-v2-next**, based on existing feature/portrait-kiosk-gui, **not merged into master**.
+Advertising/invitation share one media surface and both entry paths. The game has
+its own intro before input. One receipt/code means one consumed attempt; no MAIN
+LAGI after either result. Win reward is Rp2,500 per order in local/MOCK simulation;
+a future provider promotion needs backend authority. Loss has no reward. Original
+80×240 mm strips retain three photos plus one download QR, separate from QRIS.
 
-**Actual approved visual assets (committed without content redrawing, compressed to WebP for GitHub):** [main photobooth board](assets/portrait-v2/meong-main-flow-approved.webp) and [Meong Fly board](assets/portrait-v2/meong-fly-revised-approved.webp). Together with the [annotated per-screen specification](portrait-kiosk-v2-visual-spec.md), these are the design reference for branded colors, cat-camera logo, planets/rainbow, portrait compositions and controls. The **explicit owner flow corrections supersede any misleading visual arrows or sample text** in the artwork.
+Later owner typography preference supersedes bitmap main-app captions: use native
+readable Roboto without mandatory icons, original game frames, larger animated
+Meong and strip-focused gallery. [Visual specification](portrait-kiosk-v2-visual-spec.md).
+Current source includes photo workflow, original DEMO game, MOCK/Sandbox and
+read-only health/report. [Status](FEATURE_STATUS.md) records current proof;
+P0–P2 design-only/no-camera statements apply only to their original snapshots.
 
-**Binding navigation decisions:** Keep the advertising and optional face-invitation *overlay* on the **same idle media surface**, both with a photo CTA and a **MAIN MEONG FLY** CTA (no replacement mini-game home). Give mini-game entry a dedicated intro/rules page before receipt input. After either Win or Lose, route to **tutorial if not completed during this active visit**, then to the **12-template picker**, **not immediately to payment**. Any proposed Rp2.500 win discount follows that visit to its cart and must later be checked by an authoritative checkout service; loss carries no discount. Preserve **one unique receipt = one irreversible attempt**, no **Main Lagi** after either outcome. QRIS for payment differs from the **photo download QR** printed below the three photos on the actual 80×240 mm vertical strip.
-
-**Current source boundary (25 Oktober):** v2 memuat iklan/face inviter,
-tutorial/galeri, kamera/capture/review/retake/result, print/Drive opt-in, original
-Meong Fly DEMO, checkout MOCK dan adapter Sandbox. Default lokal, produksi/scanner
-nyata nonaktif. Visual utama memakai native caption bersih tanpa ikon wajib,
-frame game, logo animasi besar dan galeri fokus strip. P5 siap acceptance, belum
-merchant/device/privacy/release certification; [source truth](FEATURE_STATUS.md).
-
-**Source and evidence:** snapshot 6e7f29a7 dan pernyataan design-only di bawah adalah sejarah P0–P2; source/evidence terbaru 9433010/0dc6555 pada [P5](qa/portrait-v2-p5/README.md). [primary spec](portrait-kiosk-v2.md), [engineering contracts](portrait-kiosk-v2-technical-design.md), [feature truth](FEATURE_STATUS.md), [test checklist](test_checklist.md). [CI run 39548798578](https://github.com/pratikto/PhotoBooth/actions/runs/39548798578) on source/assets SHA 6e7f29a7 is synthetic PASS only. This decision records design authority **without authorizing new code, payment activation, master merge or production release**.
-
-## Source release decisions (owner-confirmed)
+## Business/software direction
 
 | ID | Decision | Boundary |
 | --- | --- | --- |
-| DEC-020 | On 2026-10-19 the owner approved **preserving old `master`**, merging the tested `feature/kivy-gui` into `master`, and creating the version-one `v1.0.0` tag/release. | Snapshot the old tip as `backup/master-pre-v1-20261019`; do not force-push. Existing known issues (BUG-001/007 audio, BUG-009 cloud retention) stay open/monitoring; the GitHub version tag is a **source baseline only**, not hardware certification, real QRIS, a customer deployment or feature permission. See [release notes](releases/v1.0.0.md). |
+| BIZ-001 | Sell complete hardware as well as Meong-operated, rental/managed and contracted revenue-share arrangements | Separate hardware ownership/margin, photo income, service/warranty, operator duties and platform revenue |
+| BIZ-002 | Every sold unit has a software tier: Free (Rp0 recurring), Business or Enterprise | Free is valid licensing, not a requirement to pay a subscription; entitlement implementation remains future scope |
+| BIZ-003 | Free permits commercial core photo/capture/print operation and charging end customers | No Free revenue cap or disabling core capture/print because tier is unpaid; production gateway remains a separate undelivered capability |
+| BIZ-004 | Meong controls all Free ad content | Central per-machine delivery and enforcement not implemented; ordinary operators do not replace/remove Meong inventory under this model |
+| BIZ-005 | Business/Enterprise manage their own ads while retaining reserved Meong slots | Reserved share/frequency TBD, not illustrative 20%/10%; disclose terms and venue/competitor exclusions. Enforcement not implemented |
+| BIZ-006 | Subsidy applies only to actually redeemed eligible photo discounts | Meong-operated booth may reimburse Meong; sold booth ordinarily reimburses the operator bearing the waived fee, with separate contracted platform fees. Contract controls ownership |
+| BIZ-007 | Other monetization ideas are parked for evaluation | Premium content/events/analytics/support/warranty/white-label/ad-network candidates are not priced or approved implementations |
 
-## Business and software subscription decisions (owner-confirmed)
+## Open policies and evidence
 
-| ID | Decision | Commercial / technical boundary |
-| --- | --- | --- |
-| BIZ-001 | Meong may sell complete hardware units outright in addition to Meong-operated booths, rental/managed and contracted revenue-share arrangements. | Separate hardware title/margin, photo income, operator responsibilities, service/warranty and platform revenue in contracts. |
-| BIZ-002 | **Every sold machine must be assigned a software tier**, including **Free (IDR 0 recurring)**, Business and Enterprise paid options. | Free is a valid licensed tier; assigning a tier does not imply everyone pays recurring fees. Device identity/entitlements are future work. |
-| BIZ-003 | **Free permits full commercial photobooth operation**: the hardware buyer can charge end customers for photo sessions and prints. | Do not limit commercial use, impose revenue caps, or disable core capture/print because a device is on Free. Real payment gateway remains a separate not-yet-delivered capability for all tiers. |
-| BIZ-004 | **All Free advertising content is controlled by Meong**, not by the operator. | Free operators do not get ordinary controls to replace/remove Meong ad inventory; centralized delivery/offline operation still need design and implementation. |
-| BIZ-005 | **Business and Enterprise operators can manage their own ads, but Meong retains reserved advertising slots on both paid tiers.** | Reserved share/interval is **TBD**, not the example 20%/10% figures. Provide honest sales terms, local consent/exclusivity and competitor exclusions; slot enforcement is not implemented. |
-| BIZ-006 | Merchant promo subsidy is due only for **actually redeemed** eligible photo discounts, not merely eligible food orders. | On a **Meong-operated** booth Meong may receive the subsidy. On a **sold** booth, the operator bearing the waived photo fee generally receives the reimbursement; Meong may separately charge an agreed platform/campaign fee. Ownership depends on the signed contract—do not automatically credit every subsidy to Meong. |
-| BIZ-007 | Additional monetization ideas are **parked for later evaluation**. | Premium frames/templates, event passes, analytics, support, warranties, white-label, ad-network campaigns etc. are candidates, not priced products or implementation authorization; see [next_step.md](next_step.md). |
+Graceful paid-tier downgrade to commercially usable Free without interrupting
+orders is recommended, not finalized. Paid entitlements/prices/periods, licensing,
+Meong slot quotas, venue rights, campaign eligibility/expiry/refunds/stacking,
+merchant-of-record/settlement/fees, digital-only purchases, commercial print
+limits, warranty/SLA and partner ordering availability remain open. Mixed-template
+calculation already exists under DEC-009; future commercial revisions need approval.
 
-## Operational status and recommendations — NOT owner-finalized commercial terms
+BUG-009 remains OPEN. BUG-012/013/014/015/016/017 retain owner-reported monitoring
+within their metadata limits; v1 BUG-001/007 are not closed by v2 audio.
+Preflight `0dc6555` does not certify new Windows/merchant/paper/Drive/privacy
+acceptance. Public webhook deployment, trusted QRIS game promotion, production,
+POS/scanning, merge and release are separate scopes, not hidden prerequisites
+for a local simulator trial.
 
-- **Current source tariff (FEAT-001):** Rp5,000 base **per selected template/three-photo session** plus Rp5,000 **per printed copy**. Quantity changes paper copies, not additional captures. `photobooth/catalog.py`, `photobooth/workflow.py` and printer integration implement this; owner reports Windows pricing and paper-copy count pass (BUG-011 MONITORING). Local/MOCK tetap simulasi; Sandbox menghitung harga server dan memerlukan simulator, tidak mengaktifkan produksi.
-- **Paid subscription expiry:** graceful downgrade to commercially usable Free without interrupting existing paid customer orders is **recommended**, but final licensing/contract policy remains open.
-- **Paid feature matrix:** additional promotional tools, self-managed ads, branding, analytics, remote operations and fleet management are candidates. Exact feature entitlement, subscription prices and billing period remain open.
-- **Meong ad-share quotas:** Free = Meong controls all ads; Business/Enterprise have mixed inventory with an undetermined Meong allocation. No sample percentages are commitments.
-- **Advertising venue rights:** obtain/define location approvals, excluded advertiser categories, exclusivity, content moderation and measurement responsibility before a paid campaign or nationwide network.
-- **Merchant promotions:** define merchant and operator settlement, refunds, customer eligibility, expiration, campaign terms and reimbursement path per business model.
-- **Production payments:** merchant-of-record, settlement owner, contract/fees and production policy remain open. Midtrans dipakai hanya untuk Sandbox saat ini.
-- **Other open details:** zero-copy/digital-only photo purchase, mixed-template cart tariff, maximum prints, exact multi-theme preset rights, hardware service SLA and warranty terms, and availability of any partner ordering web interface.
-
-## Current operational risks and external gates — 25 Oktober 2026
-
-BUG-009 retensi cloud 30 hari tetap OPEN. BUG-012/013/014/015/016/017 v2 monitoring
-sesuai laporan owner pada metadata yang tersedia; tidak diformalkan CLOSED.
-Legacy v1 BUG-001/007 tidak otomatis ditutup oleh audio v2. Preflight owner HEAD
-0dc6555 READY_FOR_MANUAL_TEST belum meluluskan merchant/perangkat; P5 Windows,
-paper/Drive/privacy, public webhook dan persetujuan release masih terpisah.
-Tidak ada aktivasi produksi, POS/scanner, promo QRIS tepercaya atau merge.
-
-## Documentation governance
-
-[DEVELOPMENT_PROTOCOL.md](DEVELOPMENT_PROTOCOL.md) controls approval, triage, validation and releases. [FEATURE_STATUS.md](FEATURE_STATUS.md) describes **current implementation**, [next_step.md](next_step.md) captures **future design**, [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) captures **technical continuation**, and [CHANGELOG.md](CHANGELOG.md) captures **actual changes**.
+[Protocol](DEVELOPMENT_PROTOCOL.md) · [current features](FEATURE_STATUS.md) ·
+[backlog](next_step.md) · [handover](DEVELOPMENT_HANDOVER.md) · [changelog](CHANGELOG.md).

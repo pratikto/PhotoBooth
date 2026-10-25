@@ -1,12 +1,13 @@
 # Meong Photobooth — Bug register
 
-**Current GUI v2 context — 25 Oktober 2026:** source 9433010 has 688 full PASS;
-owner preflight HEAD 0dc6555 READY_FOR_MANUAL_TEST is not physical/provider PASS.
-BUG-012/013/014/015/016/017 retain owner-reported monitoring; old twenty-cycle
-reports remain accepted at their recorded/unknown metadata. The new P5 form has
-a separate Sandbox-integration gate. BUG-009 stays OPEN. Legacy v1 BUG-001/007
-are not closed by v2 audio. No new runtime fix or hardware test in this doc audit.
-[Current feature status](FEATURE_STATUS.md) · [P5 acceptance](qa/portrait-v2-p5/README.md).
+**Current GUI v2 context — 25 October 2026:** latest functional source
+`ea394e8` has 780 full local PASS/zero skips; matching-source CI succeeds with
+one optional native model-assets skip covered locally. `9433010`/688 tests is
+the earlier P5 baseline. Preflight `0dc6555` ready is not physical/provider PASS.
+BUG-012/013/014/015/016/017 retain owner-reported monitoring, with missing tested
+HEAD/device fields kept unknown. BUG-009 remains OPEN; v1 BUG-001/007 stay separate.
+Read-only Device Health/report is now in source, not the next unimplemented feature.
+[Current status](FEATURE_STATUS.md) · [test ledger](test_checklist.md).
 
 The stable IDs and dated evidence below are preserved. Historical v1 reports
 and prior CI counts apply to their original source, not current v2 acceptance.
@@ -18,6 +19,10 @@ and prior CI counts apply to their original source, not current v2 acceptance.
 **QA-QR-001 (CI-only, P1 stabilization, now MONITORING):** Random DEMO QR attempt UUIDs changed module patterns on each synthetic Kivy screenshot render. GitHub's one-scale OpenCV decoder intermittently failed despite no observed laptop issue. Test-harness-only commit [`e46812b8`](https://github.com/pratikto/PhotoBooth/commit/e46812b8c9f66c548bccebb1e9fc45e3c89afeef) uses deterministic synthetic IDs and bounded screenshot-pixel decoder scales, preserving exact payload assertions and negative QR tests. **Kiosk CI 3/3 SUCCESS** at `e46812b8`: [run 39178452927](https://github.com/pratikto/PhotoBooth/actions/runs/39178452927) with **233 PASS / 2 SKIP and 87 screenshot PASS** each. [Detailed QA record](qa/KIOSK-GUI-REGRESSION-2026-10-18.md). This is **not BUG-003** (QR printing) and not a production failure; monitor future regression runs.
 
 ## Current bug queue — operational defects first
+
+BUG-001/002/003/004/005/006/007/008/010/011 rows retain their v1/shared-service
+context. A v1 Settings/QR-slip or lab control is not automatically a v2 screen.
+The v2-specific monitoring rows and BUG-009 boundary below remain current.
 
 Active defects and deferred retests appear first. Monitoring items and owner-reported passes remain in the register for traceability and possible formal closure, **not as active fix tasks**.
 
@@ -41,6 +46,19 @@ Active defects and deferred retests appear first. Monitoring items and owner-rep
 | **BUG-005** | Owner confirms ad → tutorial → layout navigation is satisfactory | S2 (provisional) | **OWNER REPORTED PASS — no active repair** | Keep manual/face paths in later end-to-end regression |
 | **BUG-006** | Owner confirms opening advertisement sizing/display is satisfactory | S3 | **OWNER REPORTED PASS — no active repair** | Recheck responsive layout on future visual changes |
 
+## Current execution context
+
+Monitor reported-working paths and prioritize reproducible failures. Read-only
+health/report source work is completed; actual operator/P5/merchant acceptance
+is separate. BUG-009 remains unresolved. Refer to the [current backlog](next_step.md)
+for follow-up; the old failed CI and FEAT-008 candidate ranking below are historical.
+
+<details>
+<summary>Historical v1 reports and execution ranking — 18 October 2026</summary>
+
+These statements retain their original date/source. Later source/CI and owner
+reports above supersede old active-fix rankings and failed-CI gates.
+
 **Execution ranking (reassessed 2026-10-18 after the owner's successful print retest):** **BUG-011 leaves the active repair queue** and becomes **MONITORING — OWNER TESTED PASS**; the requested-copy/paper discrepancy is reported resolved after printer-source fixes, but formal closure/release remains subject to per-case device evidence and full GUI regression. **BUG-009 stays OPEN / provisional S1** for unresolved 30-day Google Drive photo privacy retention, deferred by owner to FEAT-004; this risk is not cancelled by the print success. BUG-001/007 audio remain deferred; BUG-008 Settings MONITORING; BUG-004/010 and BUG-002/003/005/006 owner-reported passes. [Kiosk GUI CI 39135186022](https://github.com/pratikto/PhotoBooth/actions/runs/39135186022) on `f2f52e33` **FAILED** (full unittest step); evaluate independently before release. The next normal feature candidate remains FEAT-008 device health, subject to explicit approval and quality gates.
 
 ## Latest owner feedback and CI distinction — 2026-10-18 (documentation only)
@@ -63,13 +81,16 @@ Active defects and deferred retests appear first. Monitoring items and owner-rep
 - Relevant code reviewed read-only: `photobooth/ui_kivy.py::show_settings_menu/show_audio_settings/show_printer_settings`; `drive_sync.py::DriveSyncWorker` runs periodic network work on a background thread; `retention.py::register_drive_retention` logs registration errors and preserves manifest error state; `drive_storage.py::AppsScriptDriveClient.register_retention` requires retention backend acknowledgment. None proves BUG-008 is directly caused by BUG-009.
 - Historical QA reported native sound/video test passes using fixtures and mock devices, plus a local 172-test run with failures caused in part by local merge artifacts. Do **not** transfer these results to current device acceptance. See [FEATURE_STATUS.md](FEATURE_STATUS.md), [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) and [docs/qa](qa/README.md).
 
+
+</details>
+
 ## Per-bug closure requirements
 
 1. Reproduce and record: branch commit SHA, OS/Python/Kivy, media/device config, steps, expected vs actual, terminal output/screenshot or physical evidence.
 2. Trace root cause; distinguish what source implements from what it does on actual printer/speakers/camera.
-3. **Ask for explicit owner approval** before any code fix and commit; use one focused change with regression tests and rollback pointer.
+3. Verify that the fix/commit is within an owner-approved scope; do not ask again for an already authorized small change. Use a focused fix, applicable checks and rollback pointer. New unrelated scope needs its own instruction.
 4. Mark **FIXED IN SOURCE** only after code change; **VERIFIED** only after documented applicable tests including physical confirmation where needed; **CLOSED** only after owner acceptance.
-5. Keep QRIS demo status explicit. A QR on paper or a demo button is never proof of money received.
+5. Distinguish local DEMO/MOCK, merchant Sandbox and production. A QR on paper or a local confirmation button is never proof of provider settlement.
 
 ## New bug entry template
 

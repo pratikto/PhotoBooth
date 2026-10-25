@@ -56,6 +56,9 @@ switch `main.py`, enable production or automatically port candidate features.
 Owner continuation, 2026-10-25: do safe approved source work and automatic checks
 while laptop acceptance waits; do not stop solely for missing physical tests.
 Refer to/reuse v1 whenever related, including actual UI and controller methods,
-to avoid duplicate work. Current bounded increment is read-only operator Device
-Health + local safe reports; hardware/provider gates stay explicit, no production,
-device switching, deployment or default/merge operations inferred.
+to avoid duplicate work. Latest completed bounded increment is read-only operator Device
+Health + local safe reports (functional source ea394e8); hardware/provider gates
+stay explicit. Current owner request is to cross-check all documentation and fix
+obsolete/conflicting guidance in English. Preserve dated raw evidence and distinguish
+current guidance from historical snapshots. No application changes, production,
+device switching, deployment or default/merge operations follow from that request.

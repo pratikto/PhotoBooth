@@ -1,83 +1,101 @@
-# Meong Photobooth Development Protocol v1.0
+# Meong Photobooth development protocol
 
-> **Current GUI v2 execution policy — 25 Oktober 2026:** lanjutkan branch existing
-> **feature/portrait-kiosk-v2-next**, pusat pengembangan/calon branch utama menurut
-> owner; master masih default GitHub dan v1.0.0 tetap immutable. Dokumen ini tidak
-> memerintahkan membuat branch baru atau memulai ulang P3/P4 yang sudah selesai.
-> Persetujuan scope P4b Sandbox/P5 dan push bertahap sudah diberikan; pekerjaan
-> dokumentasi lintas branch saat ini juga diminta owner. Selesaikan scope yang
-> disetujui tanpa meminta ulang setiap perubahan kecil. Operasi default/rename/
-> merge/release/deployment/produksi tetap terpisah. [Audit](gui-v2-branch-audit.md),
-> [handover](DEVELOPMENT_HANDOVER.md), [promotion plan](gui-v2-promotion-plan.md).
+Effective **18 October 2026**; current GUI v2 policy reconciled **25 October 2026**.
+Current explicit owner instructions take precedence over earlier historical rules.
 
+## Current scope and branch
 
-> **Owner reuse/cost rule (2026-10-24):** Do not reinvent an existing working feature. Inspect the latest relevant branch first, reuse its actual renderer/assets/animations as well as logic, and use a small adapter for integration. Record source SHA and concrete exceptions. Root [AGENTS.md](../AGENTS.md) makes this persistent for future sessions. Use small tested/pushed stages, local focused checks, one final full regression and matching-source CI; avoid redundant runs. Documentation-only portrait pushes are filtered, PR/manual checks retained, superseded runs cancelled by concurrency. This does not waive code validation or authorize other branches/production integration.
+Continue authorized work on **`feature/portrait-kiosk-v2-next`**. GUI v2 is the
+intended future primary branch; GitHub default remains `master`, and `main.py`
+remains v1. Do not create a new branch or restart completed P3/P4 work by default.
+Default change, rename, merge, launcher replacement, release and deployment are
+separate operations requiring the owner's corresponding instruction.
 
-> **APPROVAL UPDATE (2026-10-19):** The owner now explicitly authorizes promotion of `feature/kivy-gui` to `master` with a backup of the previous master, CI checks, and immutable `v1.0.0` source tag / GitHub pre-release. This is permission for the named repository/version-control operation and release documentation **only**, not permission for a new feature, live QRIS, Google Apps Script deployment, cloud deletion, or declaring Windows hardware certified. Earlier warnings below about an unapproved master merge are historical and superseded for this operation. See [v1 source release notes](releases/v1.0.0.md).
+The owner approved P3, P4 DEMO/MOCK, P4b Sandbox/P5 preparation and staged pushes,
+then safe source continuation while laptop acceptance waits. The read-only
+Device Health/report increment is complete in source. This request authorizes
+documentation reconciliation in English on the same branch. Existing scope
+approval does not need to be requested again for each small change.
+[Handover](DEVELOPMENT_HANDOVER.md) · [decisions](DECISIONS.md).
 
-> **CURRENT RELEASE BASELINE (2026-10-19):** Default branch `master` contains Meong Photobooth Kivy GUI. Immutable source snapshot `v1.0.0` / `07ce51d2022ab5673a7a27e744e5e5757fbb3d08` is published as a [GitHub pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0). Release-SHA CI: [Kiosk GUI 39185986245](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245) (**233 pass, 2 skipped, 87 synthetic renders, 0 errors**) and [Dither 39185986273](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273) (**48 tests pass**). Linux mock/screenshot QA is **not** certification on Windows hardware or customer deployment. Outstanding: BUG-001/007 audio speaker retest, BUG-009 30-day Drive cloud retention **OPEN**; QRIS is DEMO/non-payable (FEAT-020 not implemented), receipt scanner FEAT-002 not implemented. The earlier `feature/kivy-gui` branch and dated narratives below are **historical** where they conflict with this baseline.
+## Reuse and delivery
 
-> **History notice:** Below, earlier governance instructions describing `feature/kivy-gui` as unmerged represent the pre-release stage, not current branch/release status. Existing approval, issue-tracking, hardware-validation and evidence rules remain in force.
-Effective: 2026-10-18; release-branch policy revised 2026-10-19 | Stable branch: `master` | Published source tag: `v1.0.0`
+1. Inspect current source/HEAD, defects, roadmap and relevant reference branch
+   before implementation. Refresh its remote SHA read-only; reuse working UI,
+   renderer, controller, worker, assets and logic. Record source/provenance and
+   concrete adapter exceptions. See [AGENTS.md](../AGENTS.md).
+2. Keep changes small and reviewable. Preserve unrelated local/user work.
+   Test the affected behavior, fix failures, commit, push to the authorized branch
+   and verify remote HEAD before the next stage. Report the delivered stage.
+3. Run one applicable full regression after the final functional change; repeat
+   broad checks only for new changes/failures/unresolved concerns. Review GUI
+   screenshots at 800×1280/452×900 and relevant additional sizes.
+4. Documentation-only changes use link/anchor/reference/hash and scope checks;
+   do not spend Actions credits rerunning successful GUI workflows. Preserve
+   functional/PR checks and the existing concurrency policy.
+5. Plans/backlog are not permission for new code. Follow the authorized task;
+   stop only the dependent part when evidence/access is missing, continue safe
+   independent work, and state the actual remaining blocker.
 
-## Non-negotiable rules
-1. New ideas are **documentation-only** until the owner explicitly approves a named implementation scope. Approval to document is not approval to code.
-2. Review each incoming idea against the **latest branch source** for business priority, user/operational impact, compatibility, technical readiness, complexity, dependencies, and regression risk. If code has not been inspected, mark readiness **Unverified**, not Ready.
-3. Re-rank the entire backlog after every new idea or material bug discovery. Stable IDs (`FEAT-001`, `BUG-001`) never change; execution order may change.
-4. Prioritize critical defects and operational stability. Do not allow attractive enhancements to mask unresolved defects.
-5. Continue authorized GUI v2 work on existing `feature/portrait-kiosk-v2-next`; do not create a new branch by default. Keep historical `master`/`v1.0.0` intact. Separate future work follows its specifically authorized branch. Default change/rename/merge/release requires explicit instruction and verified scope.
-6. Small, scoped, reviewable changes; explanatory English code comments; never assert tests passed without evidence.
-7. No implementation, code commit, push, merge, or release without explicit approval of the relevant action/scope. Documentation-only approval authorizes documentation commits on the agreed branch.
+## Feature, bug and approval discipline
 
-## Idea review fields
-ID; title; problem/user value; proposed behavior; business priority (P0 critical, P1 high, P2 medium, P3 low); impact (high/medium/low); current-version compatibility; readiness (Ready/Partial/Blocked/Unverified); complexity (S/M/L/XL); confidence; dependencies; affected modules/hardware; risks; acceptance criteria; proposed execution rank; justification; status; date/reviewer.
-Priority and execution rank are distinct: prerequisites may be implemented before a higher-business-priority feature.
+Review ideas for business priority, impact, compatibility, readiness, complexity,
+dependencies and regression risk using current source. Re-rank the unified
+backlog after material new evidence; stable IDs do not imply execution order.
+Distinguish stage names P0–P5 from priority labels P0–P3.
 
-## Lifecycle
-IDEA -> REVIEW -> BACKLOG -> APPROVED -> IN PROGRESS -> IMPLEMENTED -> VERIFIED -> RELEASED. BLOCKED can interrupt any unfinished stage. Implemented means written, Verified means evidence-backed tests passed, Released means approved for operational use. DONE is reserved for released/accepted work.
+Lifecycle: IDEA → REVIEW → BACKLOG → APPROVED → IN PROGRESS → IMPLEMENTED →
+VERIFIED → RELEASED, with BLOCKED where needed. Implemented means written;
+verified means applicable evidence passed; released requires explicit operational
+acceptance. Reserve DONE/CLOSED for the relevant acceptance/owner decision.
 
-## Quality gates
-- **Before work:** establish current commit SHA, inspect relevant code, known defects and dependencies, define acceptance criteria, tests and rollback target.
-- **During work:** preserve unrelated functionality, use focused commits and traceable IDs.
-- **Before verification:** run targeted tests and full applicable regression suite; record actual outputs, environment, limitations and failures.
-- **Hardware acceptance:** owner validates actual camera, speakers, printer, screen and payment behavior where applicable; simulated success does not imply physical success.
-- **Before release:** resolve blocking defects, get explicit approval, record baseline SHA, release notes and rollback procedure.
+Severity: S0 unsafe/payment integrity/data loss/unusable kiosk; S1 failed core
+session; S2 material degradation/workaround; S3 cosmetic/nonblocking. Preserve
+observed impact, environment, reproducibility and limits. Monitor accepted fixes;
+do not patch a working path solely because an old failure remains in history.
 
-## Bug severity
-S0 Blocker: unsafe operation, payment integrity risk, data loss, or core kiosk unusable.
-S1 Critical: main customer journey fails (e.g., cannot complete capture/print).
-S2 Major: substantial degradation or workaround required.
-S3 Minor: cosmetic/non-blocking inconvenience.
-Severity reflects observed impact; reproducibility, environment, owner and evidence must be recorded.
+## Evidence and rollback
 
-## Risk-based testing
-Low: targeted visual/navigation; Medium: affected module + integration; High: end-to-end + regression + physical checks; Critical: full transaction/data integrity, failure recovery, rollback and explicit release approval.
+Before code work record task/scope, base branch/SHA, affected modules, acceptance,
+known blockers, tests and rollback. During work retain exact commands, tested
+source, OS/dependencies, PASS/FAIL/SKIP/NOT_RUN and artifacts. A successful CI job
+can contain skipped cases; identify them rather than relabeling them PASS.
 
-## Roadmap and freeze
-M1 Core Stability -> M2 Operational Reliability -> M3 Commercial Readiness -> M4 Product Enhancement -> M5 Scale & Maintenance.
-These are provisional milestones, not certified product status. Freeze feature scope during a milestone's release-candidate testing; only approved blocker fixes enter the frozen candidate.
+Keep automated fixture results, owner-reported device behavior, preflight,
+merchant simulator and physical acceptance separate. Do not borrow missing
+HEAD/device values from a different report. Sound state is not audible output;
+spool success is not paper; retention acknowledgement is not cloud deletion;
+QR/GUI PAID is not provider settlement.
 
-## Mandatory development-to-documentation synchronization
+Preserve dated failures and later retests. Use scoped inverse source commits
+after inspection for rollback; preserve all transaction journals, consumed
+attempts, photo/print manifests, reports and customer data. No automatic
+charge/capture/print replay or deletion to clear an uncertain state.
 
-Use the copy/paste operational checklist in [DEVELOPMENT_PROMPT.md](DEVELOPMENT_PROMPT.md) for new chats or task handovers. **This protocol remains authoritative** if wording differs.
+Before a release, assess blocking defects, physical/provider/privacy gates,
+source/CI evidence, owner signoff, baseline and rollback. A source tag or default
+branch change does not certify a customer deployment. The immutable v1 source
+release remains [v1.0.0](releases/v1.0.0.md); its 2026-10-19 approved merge does
+not authorize a future v2 merge.
 
-1. **Before approved code work:** record task ID (existing `BUG-XXX`/`FEAT-XXX` or an assigned new ID), exact owner-approved scope, base branch and SHA, affected modules, acceptance criteria, known blockers, rollback plan and proposed tests. Lack of documented approval means **review only**.
-2. **During approved code work:** make scoped and reviewable commits; never overwrite unrelated user/local changes. Important behavior changes must have an associated documentation update in the **same commit or explicitly linked companion documentation commit**. An implementation is not complete merely because the code was uploaded.
-3. **At the end of each significant development stage:** update only documents whose facts changed: BUG findings in `bug_tracker.md`; source/device status in `FEATURE_STATUS.md`; owner decisions in `DECISIONS.md`; future features/dependencies in `next_step.md`; actual test output/limitations in `test_checklist.md`; current blockers/continuation in `DEVELOPMENT_HANDOVER.md`; module/interface changes in `ARCHITECTURE.md`; and actual changed files/commits in `CHANGELOG.md`. Technical guides receive updates only when their instructions change. Do not copy the same detailed record into several files.
-4. **Evidence discipline:** preserve exact test command, tested SHA, OS/environment, PASS/FAIL/SKIP, limitations, and operator physical observations separately. No automated/fake video/audio/printer/payment test should silently close a real-machine issue; no `VERIFIED`, `CLOSED`, `RELEASED` or `DONE` label without the required evidence and approval.
-5. **Before declaring a stage finished:** verify documentation links and current status against the actual branch, and verify code/docs commits and resulting SHAs. Distinguish **not run**, **not supported**, **reported on device**, **passed in simulated QA**, and **passed physical acceptance**. Do not claim a commit/push succeeded without confirming it.
-6. **Final owner report:** include scoped changes, related BUG/FEAT IDs, source/document files touched, actual tests, open risks, before/after commit references, approved next action and remaining approval requests. Do not merge/release or start another task without explicit authorization.
+## Documentation synchronization and authority
 
-**Approval separation:** Permission to update documents does **not** approve application-code changes. Permission to plan, review or propose fixes does **not** approve applying them. All execution must stay within the user-approved scope and branch.
+| Document | Authority |
+| --- | --- |
+| [DECISIONS.md](DECISIONS.md) | Owner-confirmed product/scope direction, not implementation proof |
+| [FEATURE_STATUS.md](FEATURE_STATUS.md) | Current source and acceptance boundaries |
+| [bug_tracker.md](bug_tracker.md) | Stable defect register and monitoring |
+| [test_checklist.md](test_checklist.md) | Source-specific evidence, owner reports and manual gates |
+| [next_step.md](next_step.md) | Unified outstanding work/proposed feature inventory |
+| [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) | Current checkpoints/continuation, not a second backlog |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Source layers; detailed interfaces in the technical design |
+| [CHANGELOG.md](CHANGELOG.md) | Actual dated changes |
+| [README.md](README.md) | Documentation index; root README is current launch guidance |
 
-## Source of truth (paths relative to repository root)
-- [docs/DECISIONS.md](DECISIONS.md): binding **owner-confirmed product direction**, not evidence of implementation; open commercial terms must be labelled.
-- [docs/FEATURE_STATUS.md](FEATURE_STATUS.md): observed **current source** versus **owner-reported device behavior**; do not collapse those categories.
-- [docs/bug_tracker.md](bug_tracker.md): one authoritative defect register with stable IDs (including distinct BUG-001 audio output and BUG-007 unresponsive Settings test taps).
-- [docs/test_checklist.md](test_checklist.md): evidence ledger (reported physical pass/fail, historical automated tests, unverified) and release acceptance.
-- [docs/next_step.md](next_step.md): one **unified provisional** future-feature board, including deferred/parked ideas, not an approved plan.
-- [docs/DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md): current session technical context, followed by dated historical notes; not a second backlog.
-- [docs/ARCHITECTURE.md](ARCHITECTURE.md): source architecture; [docs/advertising-and-qris.md](advertising-and-qris.md): operational ad/demo QR instructions; [docs/CHANGELOG.md](CHANGELOG.md): actual commits and changes.
-- [docs/README.md](README.md) is the documentation index; the root [README.md](../README.md) includes historical setup and milestones.
-
-**Reconciliation rule:** when legacy README/QA/handover wording conflicts with a later owner report or the current source, retain historical evidence with its date, flag discrepancies, and update canonical documents. Neither historical passed tests nor a source-level feature should be treated as a physical acceptance. No documentation update permits application code changes; the owner must approve the exact implementation scope separately.
+Update changed facts in the same or linked companion commit; do not duplicate a
+detailed record everywhere. Current source and later owner instructions/reports
+supersede older status/ordering statements, while original evidence stays dated.
+Historical references cannot silently approve new implementation or close bugs.
+Before completion check links, scope, exact published commit/remote and evidence
+limits. Final reports identify changes, checks, commits, outstanding gates and any
+material limitation. [Continuation prompt](DEVELOPMENT_PROMPT.md).
