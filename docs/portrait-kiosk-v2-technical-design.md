@@ -1,7 +1,7 @@
 # FEAT-022 — GUI v2 engineering contracts
 
 Updated **25 October 2026** against audit baseline `5f09eff`; latest functional
-source `ea394e8`, earlier P5 source `9433010`. Continue on the existing
+source `ebb53fd` (BUG-018), original operator `ea394e8`, earlier P5 source `9433010`. Continue on the existing
 `feature/portrait-kiosk-v2-next`. [Roadmap](portrait-kiosk-v2.md) ·
 [current evidence](FEATURE_STATUS.md) · [architecture](ARCHITECTURE.md).
 
@@ -112,6 +112,13 @@ active jobs cannot be interrupted. Modal input epochs reject old release events.
 Close/minimize/stop retires modal/probe/report callbacks. Manual open/refresh
 runs one worker sweep; there is no automatic polling/watchdog, device switching,
 second camera, print payload, order mutation or upload.
+
+Operator button actions require a fresh permitted press and consume its release
+once. Presses rejected while disabled/cooling down cannot become valid after a
+worker finishes. Same-button repeats within 0.75 seconds are dropped, never
+queued; callback busy-state claims precede the native SFX. The gate is per
+button, so TUTUP remains available during refresh/report I/O. Customer controls
+and original v1 panel/worker stay unchanged. [BUG-018](qa/portrait-v2-health-clicks/README.md).
 
 Report JSON allows safe source/OS/dependency/display metadata and six status
 observations; excludes photo pixels, keys/tokens, raw errors/logs, network addresses,

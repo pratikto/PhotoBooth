@@ -1,15 +1,17 @@
 # Meong Photobooth — GUI v2 development handover
 
 Updated **25 October 2026**. Repository `pratikto/PhotoBooth`; required branch
-**`feature/portrait-kiosk-v2-next`**. Audit baseline **`5f09eff`**, latest functional
-source **`ea394e8`**. Refresh remote HEAD before continuing. GitHub's default is
+**`feature/portrait-kiosk-v2-next`**. Documentation baseline **`f36ebad`**, latest functional
+source **`ebb53fd`** (BUG-018). Refresh remote HEAD before continuing. GitHub's default is
 still `master`; `main.py` launches v1. Do not restart the project or P3/P4 work.
 
 ## Latest completed increment
 
 **New owner retest / BUG-018:** eight operator items checked but issue note reports
 an app hang after pressing all buttons rapidly. Preserve raw counts and missing
-HEAD/device fields; not clean acceptance. Current correction/QA takes precedence
+HEAD/device fields; not clean acceptance. Delivered input guard `ebb53fd` has 785 full PASS/zero skips, 37 focused PASS,
+matching-source CI 40189694738 all three jobs SUCCESS and 119 verified PNGs.
+Windows hang confirmation remains pending. This correction takes precedence
 over proposed watchdog work and old documentation-only task wording below.
 Reuse original v1 backend/panel/worker; fix the v2 input adapter only.
 [Reproduction, test evidence, rollback and four-item form](qa/portrait-v2-health-clicks/README.md).
@@ -40,6 +42,8 @@ These results predate this documentation-only reconciliation.
 | `4c89e4f` | Reused v1 health foundation; 73 focused PASS |
 | `ea394e8` | Mounted original health panel/worker and safe reports; 780 full PASS |
 | `5f09eff` | Operator matching-source evidence/documentation |
+| `f36ebad` | Completed English documentation consistency baseline |
+| `ebb53fd` | BUG-018 fresh-press/repeat guard; final 785 full PASS, three-job CI SUCCESS |
 
 Use scoped inverse commits for code rollback after inspection; preserve all
 payment journals, consumed attempts, reports, photo/print manifests and customer
@@ -51,7 +55,8 @@ The owner's 25 October instruction permits safe approved source work while
 laptop acceptance waits; it supersedes older “wait for P5 before any source work”
 sequencing. The bounded health/report increment is completed. Additional feature
 scope follows the owner's next instruction; do not treat the backlog as approval.
-The current request authorizes cross-checking and correcting documentation.
+The English documentation audit completed at f36ebad. The next owner report
+authorizes this BUG-018 correction; proposed watchdog work is not started.
 
 - Review the [operator form](qa/portrait-v2-operator-health/windows-checklist.html)
   without imposing another old photo/game twenty-cycle run.

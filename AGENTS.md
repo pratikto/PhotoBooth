@@ -58,10 +58,11 @@ while laptop acceptance waits; do not stop solely for missing physical tests.
 Refer to/reuse v1 whenever related, including actual UI and controller methods,
 to avoid duplicate work. Latest completed bounded increment is read-only operator Device
 Health + local safe reports (functional source ea394e8); hardware/provider gates
-stay explicit. Current owner request is to cross-check all documentation and fix
-obsolete/conflicting guidance in English. Preserve dated raw evidence and distinguish
-current guidance from historical snapshots. No application changes, production,
-device switching, deployment or default/merge operations follow from that request.
+stay explicit. A later documentation request cross-checked obsolete/conflicting
+guidance in English, completed at f36ebad. Preserve dated raw evidence and
+distinguish current guidance from historical snapshots. That documentation task
+did not authorize application changes, production, device switching, deployment
+or default/merge operations; the following owner bug report has its own scope.
 
 Owner retest continuation, 2026-10-25: the eight operator boxes were checked but
 the notes report an application hang after pressing all Device Health buttons

@@ -52,14 +52,15 @@ The printed photo-folder QR is separate from the payment QRIS.
 | P4b MOCK | Local quote/reward/admission ledger | Nonpayable simulation |
 | P4b Sandbox | Existing service/client/journal plus native v2 host and isolated launcher | Actual merchant simulator/current-device evidence pending; no trusted game promo |
 | P5 | Readiness CLI, metadata import/Submit form, regression/screenshots/rollback package | **Ready for acceptance**, not commercial certification; Windows/merchant/paper/Drive/privacy/release gates remain |
-| Operator increment | Original v1 read-only health panel/worker + safe reports | Source `ea394e8` verified; eight-item manual acceptance separate; selection disabled |
+| Operator increment | Original v1 read-only health panel/worker + safe reports; BUG-018 input guard at `ebb53fd` | Raw owner 8/8 plus repeated-button hang is not clean acceptance; [four-item retest](qa/portrait-v2-health-clicks/windows-checklist.html) pending; selection disabled |
 | Primary branch transition | Owner direction and reference audit recorded | Default/rename/merge/launcher/release operations not performed |
 
 Owner approved P4b/P5 with manual tests at the end, then safe source continuation
 while laptop checks wait. Health/report source is complete. The preflight at
 `0dc6555` is READY_FOR_MANUAL_TEST, not merchant/hardware acceptance.
-[Latest evidence ledger](test_checklist.md) distinguishes 780-test operator
-source from the earlier 688-test P5 baseline and optional CI skips.
+[Latest evidence ledger](test_checklist.md) distinguishes the 785-test BUG-018
+correction, 780-test original operator source and earlier 688-test P5 baseline,
+including optional CI skips. Windows hang confirmation remains pending.
 
 ## Visual, audio and evidence
 

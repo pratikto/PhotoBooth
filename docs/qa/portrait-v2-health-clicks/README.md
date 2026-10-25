@@ -97,3 +97,46 @@ the functional behavior of **ea394e8** / pre-fix docs baseline **f36ebad**; do n
 reset/recreate payment journals, photo/print manifests, reports or customer data.
 The original input-amplification bug would return. No merge/default/release or
 production operation is part of this correction.
+
+
+## Final delivery evidence — source ebb53fd
+
+Correction source **ebb53fd0d4c234cd594c8ba8bdaadd7219d2e809** was pushed to
+`feature/portrait-kiosk-v2-next` and remote HEAD verified. The final
+[full output](full-tests.txt) has **785 PASS / 0 failures / 0 errors / 0 skips**,
+321.181s. The run began before commit and its unchanged functional tree is bound
+by the 228-file manifest; no functional edits followed this regression.
+
+Exact command (after activating the prepared Linux/Python 3.12.14/Kivy 2.3.1
+software-GL/dummy-PCM environment, no concurrent renderer):
+
+```text
+PHOTOBOOTH_TEST_GUI=1 PHOTOBOOTH_TEST_AUDIO=1 PHOTOBOOTH_TEST_VIDEO=1
+PHOTOBOOTH_PALM_TEST_ASSETS=<prepared-offline-assets>
+MEONG_CI_TEST_REPORT=<report> python tools/run_kiosk_unittests.py
+```
+
+[CI 40189694738](https://github.com/pratikto/PhotoBooth/actions/runs/40189694738)
+used that exact committed source; [all three jobs SUCCESS](final-ci.json).
+[Raw reports](ci-reports/): health **80 PASS**, Sandbox **139 PASS**, native
+**98 cases / 97 PASS / one optional palm-model-assets skip**. That optional model
+case ran in the local full suite; the CI skip is preserved, not relabelled.
+
+All **119 artifact PNGs** match source SHA, dimensions and hashes. The downloaded
+ZIP matches GitHub's SHA-256 digest
+`4332963a697e955ccfbb4af87630e29c6aaa3c513535009097f87f1f7ac9996c`.
+[Verification](ci-screenshot-verification.json) paths refer to artifact
+**12596593980**. Ten matching-source operator captures are in
+[screenshots/](screenshots/); [contact sheet](ci-contact.jpg) reviewed at
+800×1280 and 452×900. Controls/messages/scroll remain accessible; busy views keep
+TUTUP available. All observations are fixtures, not physical readiness.
+
+The correction fixes the demonstrated input-admission amplification. **Windows
+hang confirmation remains PENDING**, with actual freeze stack and tested HEAD
+unknown in the owner's report. Raw 8/8 plus the hang note is not clean acceptance;
+use the fresh four-item form. Existing twenty-cycle results stand. No physical/
+merchant/P5 gate, production feature or watchdog is activated by this evidence.
+
+Rollback checkpoint is pre-fix **f36ebad**; use scoped inverse source changes on
+the same branch, retaining journals/reports/photos and the original v1 modules.
+Documentation-only evidence delivery uses [skip ci] to avoid another Actions run.

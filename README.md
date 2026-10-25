@@ -61,10 +61,17 @@ acceptance. **PILIH DEVICE** is disabled.
 [Evidence and limits](docs/qa/portrait-v2-operator-health/README.md) ·
 [eight-item operator form](docs/qa/portrait-v2-operator-health/windows-checklist.html).
 
+**Operator retest follow-up:** the owner checked 8/8 but also reported an app
+hang after pressing all health buttons rapidly. BUG-018 source `ebb53fd` adds
+fresh-press/one-release admission and drops rapid duplicate commands/SFX; TUTUP
+remains usable while a probe/report runs. Windows confirmation is still pending.
+[Four-item retest with Submit](docs/qa/portrait-v2-health-clicks/windows-checklist.html) ·
+[reproduction and evidence](docs/qa/portrait-v2-health-clicks/README.md).
+
 ## Current checkpoint and remaining acceptance
 
-Latest functional source: **`ea394e8`**; **780 local tests PASS, zero skips**.
-[Matching-source CI 40157638369](https://github.com/pratikto/PhotoBooth/actions/runs/40157638369)
+Latest functional source: **`ebb53fd`**; **785 local tests PASS, zero skips**.
+[Matching-source CI 40189694738](https://github.com/pratikto/PhotoBooth/actions/runs/40189694738)
 succeeded in all three jobs. Its native report has one optional palm-model-assets
 skip, covered by the local run. The evidence package verifies 119 PNGs;
 required views were reviewed. These are recorded source/fixture results.

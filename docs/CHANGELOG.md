@@ -2,6 +2,11 @@
 
 ## 2026-10-25 — BUG-018 operator repeated-click correction
 
+Source `ebb53fd`, final **785 full PASS / zero failures/errors/skips**, 37 focused
+PASS. Matching-source CI 40189694738 all three jobs SUCCESS; 119 PNGs verified,
+required operator views reviewed. Windows hang confirmation still pending.
+Evidence-only delivery skips CI; original v1 runtime/panel/worker unchanged.
+
 Owner reports an app hang after pressing all health buttons rapidly, despite
 eight checked boxes. Preserve the raw report and unknown tested HEAD; H03/H04
 need retest. Three regressions exposed duplicate releases, unbounded fast-result

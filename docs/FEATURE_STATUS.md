@@ -1,7 +1,7 @@
 # Meong Photobooth — current feature status
 
-Updated **25 October 2026** against audit baseline `5f09eff` on
-`feature/portrait-kiosk-v2-next`. Latest functional source: **`ea394e8`**.
+Updated **25 October 2026** after documentation baseline `f36ebad` on
+`feature/portrait-kiosk-v2-next`. Latest functional source: **`ebb53fd`** (BUG-018).
 The earlier **`9433010` / `0dc6555`** pair is the P5 source/evidence baseline,
 not the latest operator checkpoint. GitHub's default remains `master`.
 
@@ -13,7 +13,8 @@ None of these alone means production-certified or formally released.
 **New operator report, 25 October:** raw 8/8 checked, but rapid combined button
 presses reportedly hang the app. Treat operator acceptance as blocked by
 **BUG-018**, with H03/H04 retest required and exact HEAD/device metadata unknown.
-The input correction is under QA; previous automated evidence below predates it.
+The input correction passed final automated QA; Windows confirmation is pending.
+Previous ea394e8 evidence below remains historical, not a pass for this repair.
 [Report and correction](qa/portrait-v2-health-clicks/README.md).
 
 | Feature | Current GUI v2 source | Evidence and boundary |
@@ -36,6 +37,7 @@ The input correction is under QA; previous automated evidence below predates it.
 
 | Checkpoint | Local full regression | Matching-source CI | Screenshot evidence |
 | --- | --- | --- | --- |
+| BUG-018 source `ebb53fd` | **785 PASS / 0 failures / 0 errors / 0 skips**, 321.181s | [40189694738](https://github.com/pratikto/PhotoBooth/actions/runs/40189694738), three jobs SUCCESS; health 80 PASS, Sandbox 139 PASS, native 97 PASS/1 optional model-assets skip | 119 PNGs source/hash/dimension verified; operator views reviewed at 800×1280/452×900; [proof](qa/portrait-v2-health-clicks/README.md) |
 | Operator source `ea394e8` | **780 PASS / 0 failures / 0 errors / 0 skips**, 270.671s | [40157638369](https://github.com/pratikto/PhotoBooth/actions/runs/40157638369), three jobs SUCCESS; health 80 PASS, Sandbox 139 PASS, native 92 PASS/1 optional palm-model-assets skip | 119 PNGs source/hash/dimension verified; required views reviewed; 15 local operator PNGs reviewed |
 | Earlier P5 source `9433010` | **688 PASS / 0 failures / 0 errors / 0 skips**, 211.646s | [40109206417](https://github.com/pratikto/PhotoBooth/actions/runs/40109206417), three jobs SUCCESS; native includes one optional palm-model-assets skip | 109 PNGs source/hash/dimension verified; required views reviewed |
 

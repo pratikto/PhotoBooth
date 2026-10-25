@@ -1,7 +1,7 @@
 # Meong Photobooth — GUI v2 architecture
 
-Updated **25 October 2026** against `5f09eff`; latest functional source
-`ea394e8`. [Current status](FEATURE_STATUS.md) distinguishes source evidence,
+Updated **25 October 2026** after documentation baseline `f36ebad`; latest functional source
+`ebb53fd` (BUG-018). [Current status](FEATURE_STATUS.md) distinguishes source evidence,
 owner reports and pending acceptance. Development: `feature/portrait-kiosk-v2-next`;
 GitHub default `master`, default launcher `main.py` still v1.
 
@@ -51,6 +51,11 @@ method is extracted verbatim into `v1_health_controller.py`. V2 adapts cached
 frames, Kivy scheduling, lazy printer config and UI/audio lifetime. Manual open/
 refresh only; no second camera, print payload, device switching, watchdog,
 automatic upload or order mutation. [Provenance](qa/portrait-v2-operator-health/README.md).
+
+BUG-018 adds per-control fresh-press/consumed-release admission in the v2 adapter.
+Rapid repeats within 0.75 seconds are dropped, without deferred commands/SFX;
+close remains independent of report/probe busy state. Original v1 services/UI
+and worker remain unchanged. [Correction evidence](qa/portrait-v2-health-clicks/README.md).
 
 Device staging/switching, AI Background Studio, WhatsApp, newer dithering lab,
 central ads/licensing/fleet/POS remain separate candidate scopes. Readiness CLI,

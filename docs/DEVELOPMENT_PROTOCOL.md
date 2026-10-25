@@ -13,8 +13,9 @@ separate operations requiring the owner's corresponding instruction.
 
 The owner approved P3, P4 DEMO/MOCK, P4b Sandbox/P5 preparation and staged pushes,
 then safe source continuation while laptop acceptance waits. The read-only
-Device Health/report increment is complete in source. This request authorizes
-documentation reconciliation in English on the same branch. Existing scope
+Device Health/report increment is complete in source. The English documentation
+reconciliation completed at f36ebad; the subsequent owner report authorizes the
+BUG-018 operator input correction on the same branch. Existing scope
 approval does not need to be requested again for each small change.
 [Handover](DEVELOPMENT_HANDOVER.md) · [decisions](DECISIONS.md).
 
