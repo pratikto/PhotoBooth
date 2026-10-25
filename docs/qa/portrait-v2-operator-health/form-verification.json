@@ -1,0 +1,19 @@
+{
+  "file": "windows-checklist.html",
+  "sha256": "0323737a6d4c9acc70bf99c3f094a57d53372cb7ce7a05068d73e710b72fafb6",
+  "browser": "Chromium via Playwright",
+  "items": 8,
+  "initially_checked": 0,
+  "metadata_import_auto_pass": false,
+  "partial_submit": "1/8",
+  "persistence_and_download": "PASS",
+  "widths": [
+    360,
+    452,
+    800
+  ],
+  "horizontal_overflow": false,
+  "browser_errors": 0,
+  "new_twenty_cycle_gate": false,
+  "evidence": "browser-tests.txt"
+}

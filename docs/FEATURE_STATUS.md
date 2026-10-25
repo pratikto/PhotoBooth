@@ -1,5 +1,11 @@
 # Status fitur Meong Photobooth — GUI v2
 
+> Latest functional source **ea394e8**: **780 full PASS / 0 failures/errors/skips**,
+> matching-source CI 40157638369 all three jobs SUCCESS; 119 PNGs hash/source/
+> dimension verified, required operator views reviewed. Actual v1 panel/worker
+> reused, 14 v1 core files unchanged. [Current evidence and 8-item form](qa/portrait-v2-operator-health/README.md).
+
+
 > Latest operator increment: **780 full PASS / zero failures/errors/skips**, 27
 > focused PASS, reused v1 panel/worker, fifteen reviewed local fixture PNGs and
 > eight-item Submit/import form verified. V1 core fourteen files unchanged;

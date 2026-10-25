@@ -128,3 +128,34 @@ regression; matching-source CI/screenshots will be recorded separately.
 Rollback: foundation **4c89e4f** (customer UI unchanged), or baseline **fdafbe2**.
 Use scoped inverse code commits on the same authorized branch after inspection;
 keep all payment/photo/print journals and reports. Never reset transaction data.
+
+## Final matching-source CI and delivery checkpoint
+
+Functional source **ea394e8ce0b5bcd1a95f46544e6a050494ece733**, pushed and remote
+HEAD verified after the local full regression. [CI 40157638369](https://github.com/pratikto/PhotoBooth/actions/runs/40157638369)
+has all three jobs **SUCCESS**. [Job record](final-ci.json) and [raw reports](ci-reports/):
+health 80 PASS/0 skip; Sandbox 139 PASS/0 skip; native 93 cases, 92 PASS/one
+optional real-palm-model-assets skip. That model case is covered in the local
+780-test full run with supplied assets; the CI skip is preserved, not relabelled.
+
+All **119 PNGs** from artifact **12584847405** have matching source SHA, dimensions
+and hashes; the downloaded ZIP matches GitHub's SHA-256 digest too.
+[Verification](ci-screenshot-verification.json) paths refer to the artifact tree.
+Ten matching-source operator PNGs are preserved in [screenshots/](screenshots/).
+[Contact sheet](ci-contact.jpg) was reviewed at 800×1280 and 452×900: source v1
+panel, scroll areas, REFRESH/TUTUP/report controls and messages fit; saved/error/
+loading views describe their actual state. Local 360×640 previews also reviewed.
+All health statuses/screens are offline fixtures; actual probes/hardware/provider
+acceptance are NOT_RUN. The existing customer P3/game/MOCK/Sandbox regressions
+remain green and original Meong Fly/reference files remain unchanged.
+
+No further functional source edits followed the 780-test regression; the
+[tested-source manifest](tested-source-sha256.json) matches committed source.
+Foundation **4c89e4f** also had three-job CI SUCCESS (40156142669). Evidence-only
+updates skip CI, preserving the owner's Actions budget.
+
+For tonight: pull the required branch, launch the existing v2 launcher, press
+F12/hold header on idle, use REFRESH/SIMPAN LAPORAN LOKAL and fill the new eight-item
+operator form. Do not repeat old photo/game twenty cycles solely for this form.
+P5 merchant/printer/Drive/privacy and production release remain separate gates;
+this source increment completed without waiting for laptop testing.

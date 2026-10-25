@@ -8,7 +8,7 @@ Dokumen ini menyiapkan transisi; bukan bukti bahwa transisi GitHub sudah terjadi
 | Pusat pengembangan GUI v2 dan target commit saat ini | `feature/portrait-kiosk-v2-next` |
 | Default branch GitHub saat ini | `master` · `27f3801` |
 | Baseline source v1 yang immutable | tag `v1.0.0` · `07ce51d` |
-| Source fungsional v2 terakhir diuji | `9433010` · bukti dokumentasi `0dc6555` |
+| Source fungsional v2 terakhir diuji | Operator `ea394e8`: 780 full PASS, CI SUCCESS/119 PNG; baseline P5 `9433010` / bukti `0dc6555` |
 | Calon produk/branch utama berikutnya | GUI v2, setelah gate dan instruksi operasi GitHub |
 
 ## Gate sebelum pemindahan
@@ -16,7 +16,7 @@ Dokumen ini menyiapkan transisi; bukan bukti bahwa transisi GitHub sudah terjadi
 | Gate | Bukti / status |
 | --- | --- |
 | Source dan reuse lintas branch terdokumentasi | [Audit 19 branch](gui-v2-branch-audit.md); game/QRIS direuse, eksperimen lain dipetakan |
-| Regresi source fungsional | 688 PASS / nol skip; tiga job CI SUCCESS, 109 PNG; [P5](qa/portrait-v2-p5/README.md) |
+| Regresi source fungsional | 780 PASS / nol skip; tiga job CI SUCCESS, 119 PNG; [operator proof](qa/portrait-v2-operator-health/README.md), [baseline P5](qa/portrait-v2-p5/README.md) |
 | Windows metadata | Owner menjalankan preflight pada HEAD `0dc6555`: READY_FOR_MANUAL_TEST; bukan acceptance perangkat/provider |
 | Windows end-to-end/touch/audio/camera/resize | Laporan lama diterima sesuai batasnya; [form P5](qa/portrait-v2-p5/windows-checklist.html) dan uji integrasi baru belum diserahkan |
 | Merchant Sandbox / status / recovery | Source tersambung, uji merchant nyata belum ada. Sandbox keys tersedia lewat dashboard Sandbox; persetujuan produksi adalah proses terpisah |

@@ -1,8 +1,9 @@
 # FEAT-022 — Meong Photobooth GUI v2: spesifikasi dan roadmap
 
 Status **25 Oktober 2026**. Pusat pengembangan/calon branch utama:
-**feature/portrait-kiosk-v2-next**. Default GitHub masih master. Source fungsional
-terakhir **9433010**; bukti **0dc6555**. [Handover](DEVELOPMENT_HANDOVER.md).
+**feature/portrait-kiosk-v2-next**. Default GitHub masih master. Source operator
+terbaru **ea394e8**, 780 full PASS/CI tiga-job SUCCESS; baseline P5 **9433010**
+dan bukti **0dc6555** tetap historis. [Handover](DEVELOPMENT_HANDOVER.md).
 
 GUI v2 melanjutkan proyek yang sudah ada, dengan GUI/audio owner tersendiri dan
 reuse backend/renderer yang bekerja. Tidak memulai ulang kamera, template,

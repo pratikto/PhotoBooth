@@ -1,7 +1,7 @@
 # FEAT-022 — GUI v2: arsitektur dan kontrak integrasi
 
 Snapshot dokumentasi **25 Oktober 2026** pada branch
-`feature/portrait-kiosk-v2-next`; source fungsional **9433010**.
+`feature/portrait-kiosk-v2-next`; source operator **ea394e8** (780 full PASS/CI SUCCESS), baseline P5 **9433010**.
 [Ruang lingkup/roadmap](portrait-kiosk-v2.md) · [audit reuse](gui-v2-branch-audit.md).
 
 ## 1. Prinsip kelanjutan

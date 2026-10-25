@@ -53,6 +53,9 @@ terminal, bukan aplikasi bank/dompet asli. [Panduan dan recovery](docs/qa/portra
 
 ## Device Health operator — reuse v1
 
+Source **ea394e8**, 780 full PASS; [CI 40157638369](https://github.com/pratikto/PhotoBooth/actions/runs/40157638369)
+tiga job SUCCESS, 119 PNG verified. Uji perangkat aktual tetap terpisah.
+
 Pada halaman iklan tekan **F12** atau tahan header Meong **1,5 detik**. Panel
 Device Health existing menampilkan enam indikator, inventory OS dan REFRESH di
 background. Akses juga tersedia pada Sandbox RECOVERY, tanpa mengubah order.

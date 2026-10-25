@@ -17,7 +17,7 @@ mengatur reuse, scope, tes, push dan bukti.
 >
 > Baca README.md → docs/README.md → portrait-kiosk-v2.md → FEATURE_STATUS.md →
 > DEVELOPMENT_HANDOVER.md → bug_tracker.md → next_step.md → DECISIONS.md dan
-> test_checklist.md. Source fungsional baseline terakhir 9433010, bukti 0dc6555;
+> test_checklist.md. Source operator terakhir ea394e8 (780 full PASS/CI SUCCESS), baseline P5 9433010, bukti 0dc6555;
 > cek HEAD remote terkini dahulu, jangan mengandalkan angka ini jika sudah maju.
 >
 > Pertahankan P3 foto, original game renderer, checkout MOCK/Sandbox dan native

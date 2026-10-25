@@ -1,5 +1,14 @@
 # P4b native Sandbox integration — 2026-10-24
 
+## 2026-10-25 — Operator increment final evidence
+
+4c89e4f reused v1 foundation (73 focused PASS), then ea394e8 mounted the original
+UI/worker with safe local reports. Final 780 full PASS/0 skips; CI 40157638369 all
+three jobs SUCCESS, 119 PNG verified/reviewed. Original v1 fourteen core files
+unchanged. Eight-item operator Submit/import form verified; actual laptop and
+merchant/P5 gates still pending. [Proof, commands and rollback](qa/portrait-v2-operator-health/README.md).
+
+
 ## 2026-10-25 — v1 operator panel/worker mounted in v2
 
 Read-only Device Health reuse now has native v2 entry (F12/header hold), original

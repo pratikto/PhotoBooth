@@ -1,7 +1,7 @@
 # Arsitektur Meong Photobooth — GUI v2
 
 **25 Oktober 2026** · active development `feature/portrait-kiosk-v2-next` ·
-source fungsional teruji `9433010`. Default repository masih master/v1;
+source operator teruji `ea394e8` (780 full PASS/CI SUCCESS); baseline P5 `9433010`. Default repository masih master/v1;
 GUI v2 adalah calon utama menurut owner. [Rencana](gui-v2-promotion-plan.md).
 
 ## Entry point dan lapisan
