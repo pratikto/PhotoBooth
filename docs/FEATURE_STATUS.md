@@ -1,3 +1,52 @@
+# Status fitur Meong Photobooth — GUI v2
+
+Diperbarui **25 Oktober 2026**. Branch aktif/calon utama
+**feature/portrait-kiosk-v2-next**; default GitHub masih master. Source fungsional
+**9433010**, bukti **0dc6555**. [Audit 19 branch](gui-v2-branch-audit.md).
+
+IN SOURCE = implementasi ditemukan; OWNER-REPORTED = laporan operator; VERIFIED
+AUTOMATED = tes pada source tertentu; PENDING = gate belum dibuktikan. Tidak ada
+status production-certified dari form/preflight atau tes fixture.
+
+| Fitur | Source GUI v2 | Bukti dan batas sekarang |
+| --- | --- | --- |
+| GUI/iklan/tutorial/12 strip | Aktif, responsif, galeri swipe/slide, native caption dan header animasi terbaru | Screenshot source akhir + owner visual/audio 8/8 diterima pada unknown HEAD |
+| Kamera/face/optional palm | Async preview, mirror display, manual SIAP tetap tersedia | Preview/button/palm owner-reported PASS dan 20 putaran lama; metadata device/source saat laporan tidak lengkap |
+| Foto/review/retake | Tiga original, satu retake/desain, count menentukan lembar, hasil lokal | Local full/synthetic workflow lulus; device P5 spesifik integrasi baru belum diserahkan |
+| Audio | Satu owner v2, BGM gambar, audio video sendiri, game loop berbeda, satu SFX per aksi, lifecycle minimize/close | Owner-reported normal; BUG-017 video→video monitoring, tanpa klaim decoder/root-cause baru |
+| Thermal photo print | Backend existing, operator opt-in, batch N lembar, uncertain hold | Source/fixtures lulus; hasil fisik tetap bukti operator, trial Sandbox printer off |
+| Drive/download | Adapter opt-in, folder asli/QR, retention acknowledgement guard | Default lokal, trial Sandbox Drive off; BUG-009 cloud 30 hari OPEN |
+| Meong Fly (FEAT-021 game) | Original Stage/Flow/render/aset/emitter direuse, ledger DEMO sekali pakai, pause/resize | 26 reference files; branch game punya scanner local DEMO, v2 tetap input DEMO manual tanpa scanner/POS |
+| Checkout MOCK | Quote/discount/admission SQLite lokal, nonpayable QR | Menang Rp2.500 sekali/order, tidak menjadi settlement bank |
+| FEAT-020 Sandbox | Backend/client/journal existing + native v2 adapter, quote/grant/ACK/recovery | Opt-in; source verified, uji merchant simulator belum diserahkan; trusted game-promo contract belum ada |
+| P5 inventory/acceptance | CLI read-only, JSON metadata, form 26 item/import/Submit, rollback dan screenshot package | Owner preflight HEAD 0dc6555 READY_FOR_MANUAL_TEST; bukan physical/provider acceptance |
+| Production QRIS/POS/merchant promo | Tidak diaktifkan | Perlu kontrak, bukti provider dan cakupan tersendiri |
+| Device Health / AI / WhatsApp / lab dithering terbaru | Referensi branch terpisah | Bukan fitur v2 hanya karena ada pada branch lain; [peta integrasi](gui-v2-branch-audit.md) |
+
+## Bukti aktif
+
+- Source 9433010: **688 full PASS, 0 failure/error/skip**, 211.646s.
+- [CI 40109206417](https://github.com/pratikto/PhotoBooth/actions/runs/40109206417):
+  tiga job SUCCESS; payment 138 PASS/0 skip; native 81 PASS/1 optional model skip,
+  dicakup oleh local full dengan aset. 109 PNG terverifikasi, dua resolusi direview.
+- Laporan terakhir owner yang baru: output preflight di PowerShell pada
+  **0dc6555 → READY_FOR_MANUAL_TEST**, 25 Oktober. File metadata/form belum dikirim;
+  versi Windows/resolusi/scaling/kamera/speaker tidak ditebak dari laporan lama.
+- [P5 paket lengkap](qa/portrait-v2-p5/README.md) ·
+  [form Windows](qa/portrait-v2-p5/windows-checklist.html).
+
+**P4b source tersambung; P5 siap acceptance, belum sertifikasi komersial.** Uji
+merchant, Windows integrasi baru, paper, Drive/retensi, privacy dan release belum
+semuanya dibuktikan. V1/master tetap baseline terpisah; kegagalan musik v1
+BUG-001/007 tidak otomatis ditutup oleh audio owner v2.
+
+<details>
+<summary>Arsip sebelum konsolidasi 25 Oktober 2026 — catatan historis, bukan status/instruksi aktif</summary>
+
+Pernyataan “current”, “belum diimplementasikan”, urutan prioritas, branch dan jumlah
+tes di arsip berikut hanya berlaku pada tanggal/source aslinya. Status aktif ada
+di bagian atas dokumen; bukti QA bertanggal tetap dipertahankan.
+
 # Meong Photobooth — Current feature status
 
 > P5 functional source **9433010** pushed and remote-verified after 688 full PASS/zero skips. Clean-cloud readiness reports READY_FOR_MANUAL_TEST; hardware/merchant gates NOT_RUN. Matching-source CI 40109206417 all three jobs SUCCESS; 109 PNGs source/hash/dimension-verified, required two-size Sandbox/gallery/photo/game views reviewed. [Final package](qa/portrait-v2-p5/README.md).
@@ -212,3 +261,5 @@ provider/state/gain/mix diagnostic in the same popup.
 **Verification:** [CI 39555036023](https://github.com/pratikto/PhotoBooth/actions/runs/39555036023), code/test SHA `c4e4703a`: two jobs SUCCESS; Python compile and **21/21** audio/navigation tests PASS; updated Kivy widget smoke PASS; 12 rendered screenshots at 800×1280 and aligned 452×900 PASS. Previous intermediate test failures on [39edb3ab](https://github.com/pratikto/PhotoBooth/commit/39edb3ab4f8a9b7f126258be9ed19b7512cbf43a) occurred because the old widget test still expected only one preview texture; test logic was correctly updated for three adjacent real preview textures and the current commit is green.
 
 **Still unimplemented/untested:** physically audible Windows speakers/video audio and touch/swipe, real face trigger, QRIS/Sandbox, cafe POS/scanner, full gameplay, capture/retake, printing and Drive delivery from the v2 GUI. Continue checking [visual design requirements](portrait-kiosk-v2-visual-spec.md) and [P2.5 scope](portrait-kiosk-v2.md); do not call this an end-to-end release.
+
+</details>

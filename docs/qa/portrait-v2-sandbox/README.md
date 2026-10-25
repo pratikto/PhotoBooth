@@ -86,3 +86,13 @@ HTTP fixtures with an explicitly nonpayable QR, **not** merchant acceptance. Fin
 P5 evidence will be regenerated at the final functional source.
 
 Stage 2 verification: **195 focused PASS**, 0 failures/errors/skips, 23.535s. Includes unchanged backend/HTTP/session/launcher tests, new HTTP-to-GUI-to-P3 tests, and prior MOCK/navigation/audio regression. [Output](adapter-tests.txt). New screenshot commands: `python tools/render_portrait_sandbox.py --output-dir <folder> --width 800 --height 1280` and repeat at 452×900.
+
+## Sandbox account access clarification — 25 October 2026
+
+Midtrans documents that Sandbox is created automatically at sign-up, for free
+test transactions. Production merchant approval is separate. In the existing
+account choose Sandbox → Settings → Access Keys; read Merchant ID and Sandbox
+Server Key locally (the launcher expects `SB-Mid-server-...`).
+[Official guide](https://docs.midtrans.com/docs/midtrans-account). No merchant
+credentials or official simulator acceptance have been supplied for this v2
+trial. Missing access means NOT_RUN, not simulated merchant PASS.

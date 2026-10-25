@@ -1,14 +1,28 @@
-# Desktop GUI verification
+# Indeks QA Meong Photobooth
 
-> **Portrait v2 update (2026-10-23):** [BUG-012 confirmation and evidence](portrait-v2-return-ad-crash/README.md). After the correction/diagnostic retest instructions, the owner reports “sudah oke”: return-to-advert flow is OWNER-REPORTED PASS / MONITORING. Post-update tested HEAD/cycles were not supplied; F05/F06 twenty-cycle acceptance remains unverified. This documentation update adds no application change or new device tests.
+## GUI v2 — bukti dan form saat ini
 
-> **Portrait v2 current follow-up (2026-10-22):** [Owner audit, response timings, preview-focused gallery, floating arrows, pixel typography and native motion evidence](portrait-v2-gallery-focus/README.md). Local 71 focused PASS; full 306 run / 304 PASS / 2 optional skips; thirty page captures and nine motion frames reviewed. Source `5a568bf` passes exact-SHA CI 39803887478, all three jobs, and original artifact review. Incoming owner result is ten cycles at unknown HEAD; twenty-cycle and new source Windows acceptance remain open. Stable v1 notices below apply to that separate baseline.
+- [P5 final evidence/runbook](portrait-v2-p5/README.md): source 9433010,
+  688 full PASS/0 skip, tiga job CI SUCCESS, 109 PNG source/hash/dimension verified.
+- [26-item Windows form dengan Submit](portrait-v2-p5/windows-checklist.html):
+  import metadata, gate integrasi Sandbox baru dan laporan partial yang jujur.
+- [Sandbox source/provenance](portrait-v2-sandbox/README.md): service existing,
+  native handoff, key isolation, quote/grant/recovery, no trusted QRIS game promo.
+- [Accepted preview/buttons](portrait-v2-preview-redraw/README.md),
+  [original game reuse](portrait-v2-meong-reuse/README.md),
+  [typography/audio owner report](portrait-v2-readable-type/README.md).
 
-> **CURRENT v1.0.0 QA (2026-10-19):** **Immutable release SHA:** `07ce51d2022ab5673a7a27e744e5e5757fbb3d08` (`v1.0.0`, GitHub pre-release). [Kiosk GUI](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245) **SUCCESS**: 235 tests (233 PASS, 2 SKIP, 0 failures/errors), 87 synthetic screenshots / 0 errors. [Dither lab](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273) **SUCCESS**: 48 tests. GitHub Linux mocked tests verify code/screenshot behavior, **not** physical Windows camera/audio/printer/QR phone scan or actual settlement; QRIS is DEMO only. BUG-001/007 audio retest and BUG-009 Drive cloud retention remain unresolved. Earlier `c40f33f5`, `f129dd9e`, and `e46812b8` results are retained as *historical* evidence.
+Owner preflight **0dc6555 READY_FOR_MANUAL_TEST** pada 25 Oktober dicatat di
+[P5 owner report](portrait-v2-p5/owner-preflight-2026-10-25.json). Itu bukan
+merchant/camera/speaker/printer/Drive acceptance. Laporan lama dengan tested HEAD
+kosong tidak ditempelkan pada commit baru. [Test ledger kanonis](../test_checklist.md).
 
-> **LATEST QR visual CI stability evidence (2026-10-19):** Owner reports laptop QR has no problem. Test-only commit [`e46812b8`](https://github.com/pratikto/PhotoBooth/commit/e46812b8c9f66c548bccebb1e9fc45e3c89afeef) fixes randomized synthetic DEMO QR fixtures and single-size OpenCV screenshot sensitivity, without changing production code. [Kiosk GUI Actions 39178452927](https://github.com/pratikto/PhotoBooth/actions/runs/39178452927) completed **3/3 SUCCESS attempts at the same SHA**, **233 PASS / 2 SKIP / 87 renders each**; [Dither 39178452898](https://github.com/pratikto/PhotoBooth/actions/runs/39178452898) PASS. Exact pixel-content assertions and negative obscured/blank-QR tests remain strict. See [QA addendum](KIOSK-GUI-REGRESSION-2026-10-18.md); watch for recurrence. Documentation-only HEAD is checked separately.
+## Arsip v1 dan tahap sebelumnya
 
-> **HISTORICAL PRE-v1 QA INDEX (reviewed 2026-10-19): At source SHA `c40f33f5`, [full Kiosk CI 39145145762](https://github.com/pratikto/PhotoBooth/actions/runs/39145145762) and [Dither CI 39145145764](https://github.com/pratikto/PhotoBooth/actions/runs/39145145764) both **PASS**; 230 unittests passed, two native-palm cases skipped, 87 renders/0 errors. Owner-tested FEAT-001/003 and BUG-011 remain PASS/monitoring; physical audio BUG-001/007 and cloud photo retention BUG-009 unresolved/deferred. The dated evidence and images below are **HISTORICAL**; they do not override later current outcomes.**
+Bagian di bawah mempertahankan QA v1 yang bertanggal; kata “current/latest” di
+narasi arsip adalah status pada tanggal/source aslinya. Gunakan link GUI v2 di
+atas untuk pengujian sekarang. Production, merge dan release tidak disetujui oleh
+screenshot, preflight atau form.
 
 ## Historical verified Kiosk GUI CI — 2026-10-18
 

@@ -1,3 +1,71 @@
+# Handover Meong Photobooth — GUI v2
+
+**Mulai di sini, 25 Oktober 2026.** Repository `pratikto/PhotoBooth`, branch wajib
+**feature/portrait-kiosk-v2-next**. Owner memilih GUI v2 sebagai calon branch utama
+berikutnya; default GitHub masih master, main.py masih v1. Tidak membuat ulang
+proyek, branch baru, merge, rename/default change atau produksi.
+
+## Checkpoint dan scope aktif
+
+| Commit | Isi |
+| --- | --- |
+| d6fb5d4 | Baseline visual/lokal sebelum service Sandbox |
+| 37da798 | Reuse service/client/journal QRIS, 124 original focused PASS |
+| ce603c2 | Native Sandbox → P3 handoff, 195 focused PASS; regression standalone PhotoViews ditemukan kemudian |
+| 9433010 | Source final P5, memperbaiki hook standalone, ACK guard, inventory/readiness/Submit; 688 full PASS |
+| 0dc6555 | Bukti final CI tiga job SUCCESS, 109 PNG verified/reviewed |
+| ae90269 | Audit dokumen 19 branch dan rencana calon branch utama, docs-only |
+
+688 full PASS/0 skip, CI 40109206417, hash source dan screenshot pada
+[P5](qa/portrait-v2-p5/README.md). Native CI satu skip aset palm opsional tetap
+dicatat; local full mencakup model asli. Jangan menjalankan ulang suite/Actions
+hanya karena dokumen berubah. Runtime source tidak diubah oleh tugas dokumentasi.
+
+## Laporan user terbaru dan tindakan aman berikutnya
+
+Owner pada 25 Oktober mengirim preflight **HEAD 0dc6555 → READY_FOR_MANUAL_TEST**.
+Ini memverifikasi pemeriksaan awal, bukan kamera/paper/provider. Isi metadata file
+belum diserahkan; jangan meminjam resolusi/scaling/kamera dari retest lama.
+Owner menanyakan kredensial sebelum approval Midtrans: Sandbox dibuat saat
+pendaftaran; ambil key di dashboard mode Sandbox → Settings → Access Keys,
+masukkan lokal secara hidden. Tidak perlu menunggu persetujuan produksi untuk
+memahami/mengakses lingkungan uji; akses akun aktual tetap mengikuti Midtrans.
+
+Berikutnya jalankan/analisis [form P5](qa/portrait-v2-p5/windows-checklist.html):
+local GUI dahulu, lalu trial Sandbox saat kredensial tersedia. Kosong tetap
+failed/not-run. Laporan 20 putaran lama diterima sesuai batas; gate 20 putaran
+Sandbox baru tidak diluluskan oleh laporan lama. Tugas source tambahan menunggu
+permintaan owner; jangan mengaktifkan promo QRIS/POS/production atau menggabungkan
+fitur kandidat karena dokumentasinya tersedia.
+
+## Hal yang harus dipertahankan
+
+- Game original SHA 672e3f7, 26 file reference, direct Stage/Flow renderer/emitter.
+  Center seluruh world, uniform speed/spacing; jangan ulangi BUG-015/016.
+- QRIS reference 3cc8a8e; service/client/journal tetap reused, native v2 adapter.
+  Backend quote dan permit, STARTING sebelum alokasi tx, STARTED ACK sebelum
+  countdown, recovery tanpa replay; jangan percaya PAID/skor/amount GUI.
+- Sandbox tanpa trusted game promo, harus explicit full-price/no-promo consent.
+  Default pembayaran off, printer/Drive off pada launcher merchant trial.
+- Caption main buttons native bersih tanpa ikon wajib; frame game/aset asli,
+  logo animasi besar, harga ringkas, strip utama fokus. Jangan kembali ke bitmap
+  caption yang ditolak atau filler game terpisah.
+- BUG-009 tetap OPEN; BUG-012/013/014/015/016/017 monitoring sesuai laporan dan
+  batas metadata, bukan formal CLOSED. Simpan journal/data saat rollback.
+
+[Audit 19 branch](gui-v2-branch-audit.md) menunjukkan lab dithering lebih baru,
+Device Health read-only, AI offline dan WhatsApp. Cek remote SHA terbaru + reuse
+kode/GUI yang bekerja sebelum usul port; jangan mengulang implementasinya.
+[Promotion plan](gui-v2-promotion-plan.md) membedakan default, rename, merge,
+launcher dan production signoff. [Prompt lanjut](DEVELOPMENT_PROMPT.md).
+
+<details>
+<summary>Arsip sebelum konsolidasi 25 Oktober 2026 — catatan historis, bukan status/instruksi aktif</summary>
+
+Pernyataan “current”, “belum diimplementasikan”, urutan prioritas, branch dan jumlah
+tes di arsip berikut hanya berlaku pada tanggal/source aslinya. Status aktif ada
+di bagian atas dokumen; bukti QA bertanggal tetap dipertahankan.
+
 # Meong Photobooth — Development handover
 
 > P5 functional source **9433010** pushed and remote-verified after 688 full PASS/zero skips. Clean-cloud readiness reports READY_FOR_MANUAL_TEST; hardware/merchant gates NOT_RUN. Matching-source CI 40109206417 all three jobs SUCCESS; 109 PNGs source/hash/dimension-verified, required two-size Sandbox/gallery/photo/game views reviewed. [Final package](qa/portrait-v2-p5/README.md).
@@ -308,3 +376,5 @@ To avoid overwriting 39 existing prototype commits, follow-on work now uses `fea
 **Next action:** Operator checks Windows speaker autoplay, source ad video/audio, real 10.1-inch landscape-to-portrait orientation, four tutorial cards reachable by vertical scrolling at compact heights, direct Foto/Game and in-ad invitation callbacks, swipe left/right vs vertical scroll, 12 1:3 preview identities and DEMO cart copy totals. Use commands in [test_checklist.md](test_checklist.md), capture exact SHA/versions/logs and sanitize any real photos. Verify sound with ears, not just SoundLoader state.
 
 **Next code gate:** After on-device acceptance, request explicit owner approval for isolated P3 camera/retake/thermal/Drive adapters, then separately for live face invitation and P4 Meong Fly ledger + QRIS/discount; preserve 1 receipt = 1 consumed attempt, no replay, tutorial once then 12 templates, no free voucher issued via GUI text. Fix duplicate FEAT-021 registry before merging other branches. Keep BUG-001/007 Windows music and BUG-009 photo retention open until device/cloud evidence. Never merge to master or delete branches without owner instruction.
+
+</details>

@@ -42,3 +42,13 @@ master change or merge unless the owner later explicitly changes that scope.
 Read `docs/DEVELOPMENT_HANDOVER.md` for current checkpoints and
 `docs/DEVELOPMENT_PROTOCOL.md` for the broader project rules. Current explicit
 owner instructions take precedence over older historical documentation.
+
+## GUI v2 documentation and future primary branch
+
+Owner direction, 2026-10-25: GUI v2 is the development focus and intended future
+primary branch. Continue on existing `feature/portrait-kiosk-v2-next`; GitHub's
+default remains `master` until an explicit repository operation. Read the current
+root README and `docs/gui-v2-branch-audit.md` before borrowing branch features.
+The audit pins all 19 branch tips; refresh the relevant remote before reuse.
+Do not treat the branch direction as permission to rename, merge, change default,
+switch `main.py`, enable production or automatically port candidate features.

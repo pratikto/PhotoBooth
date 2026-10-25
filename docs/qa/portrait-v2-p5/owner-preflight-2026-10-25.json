@@ -1,0 +1,14 @@
+{
+  "reported_date": "2026-10-25",
+  "timezone": "Asia/Jakarta",
+  "evidence_type": "owner_supplied_terminal_output",
+  "command": "python tools/check_portrait_v2.py",
+  "head": "0dc6555d299cdab19d952e92df2ae660cdc4676d",
+  "preflight": "READY_FOR_MANUAL_TEST",
+  "report_relative_path": "data/diagnostics/windows-readiness.json",
+  "metadata_file_submitted": false,
+  "device_metadata": null,
+  "physical_provider_acceptance": "NOT_RUN",
+  "p5_form_submitted": false,
+  "notes": "Output only; do not infer screen, scaling, camera, speaker, merchant settlement or completed cycles."
+}

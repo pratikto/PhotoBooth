@@ -1,3 +1,58 @@
+# Pengujian dan acceptance — Meong Photobooth GUI v2
+
+Diperbarui **25 Oktober 2026**, branch **feature/portrait-kiosk-v2-next**.
+Form kanonis saat ini: **[26-item P4b/P5 Windows checklist dengan Submit](qa/portrait-v2-p5/windows-checklist.html)**.
+[Perintah/instruksi/bukti lengkap](qa/portrait-v2-p5/README.md).
+
+## Ledger bukti saat ini
+
+| Bukti | Source / status |
+| --- | --- |
+| Full source regression | 9433010: **688 PASS / 0 failure/error/skip**, 211.646s, Linux software GL/dummy PCM/synthetic I/O + offline sensor model assets |
+| Matching-source CI | 40109206417, tiga job SUCCESS; payment 138 PASS/0 skip, native 81 PASS/1 optional model-assets skip; local full mencakup model |
+| Screenshot | 109 PNG terverifikasi commit/hash/dimensi, 800×1280/452×900 review; [bukti](qa/portrait-v2-p5/ci-screenshot-verification.json) |
+| Windows preflight terbaru | Owner PowerShell: **HEAD 0dc6555 → READY_FOR_MANUAL_TEST**, 25 Oktober; stdout saja, JSON metadata/form belum dikirim |
+| Owner retest foto/preview/button | Laporan 16/16 dan 20 putaran lama diterima, tested HEAD/device metadata tidak lengkap; [audit](qa/portrait-v2-preview-redraw/README.md) |
+| Owner retest game/header/resize/audio | Laporan 14/14 dan 20 putaran lama diterima sesuai batas; [jejak](qa/portrait-v2-native-controls/README.md) |
+| Owner visual/audio terakhir | 8/8 + “udah clear semua”, unknown HEAD; [raw record](qa/portrait-v2-sandbox/owner-acceptance.json), BUG-017 monitoring |
+| Merchant Sandbox/P5 perangkat baru | **BELUM DIUJI/DISERAHKAN**; jangan diluluskan oleh preflight atau form lama |
+| Drive cloud deletion 30 hari | **BUG-009 OPEN**; backend acknowledgement bukan bukti penghapusan aktual |
+
+Tidak ada tes aplikasi baru atau klaim hardware PASS dari konsolidasi dokumen
+25 Oktober. Validasi tugas ini hanya integritas link/referensi/source hash dan
+perubahan dokumentasi. Runtime 9433010 tidak berubah, suite tidak diputar ulang.
+
+## Uji di Windows
+
+1. Pull branch yang benar, jalankan `python tools/check_portrait_v2.py`.
+2. Buka form, impor `data/diagnostics/windows-readiness.json`, verifikasi monitor
+   kiosk/kamera/index/speaker sebenarnya. Import tidak otomatis mencentang hasil.
+3. Launcher biasa untuk regresi lokal; setelah ditutup, launcher khusus Sandbox
+   untuk uji merchant dengan simulator resmi dan kredensial yang dimasukkan lokal.
+4. Centang hanya tes yang benar-benar lulus. Kosong = gagal/belum diuji. Submit
+   menyiapkan laporan untuk copy ke chat, bukan mengirim otomatis.
+5. Laporan 20 putaran lama tetap disimpan. G01/G02 pada form baru menyangkut
+   integrasi Sandbox baru dan memerlukan minimal 20 putaran integrasi itu.
+
+## Gate eksternal
+
+Merchant credential/QR/settlement/cancel/retry/restart, public HTTPS webhook,
+Windows touch/scaling/audio/camera/video, paper count/uncertain recovery,
+Drive/download/offline/30-day deletion dan privasi/signoff belum semuanya dibuktikan.
+Public webhook memerlukan endpoint yang diotorisasi; tidak dibuat tunnel/deployment.
+Sandbox tidak memakai bank/dompet asli dan tidak mengaktifkan pembayaran produksi.
+
+Bukti tambahan harus mencatat tanggal/source/perangkat, PASS/FAIL/SKIP/NOT_RUN,
+observasi serta keterbatasannya, tanpa key/token/data pelanggan. Status source,
+owner-reported dan merchant/physical acceptance tetap dibedakan.
+
+<details>
+<summary>Arsip sebelum konsolidasi 25 Oktober 2026 — catatan historis, bukan status/instruksi aktif</summary>
+
+Pernyataan “current”, “belum diimplementasikan”, urutan prioritas, branch dan jumlah
+tes di arsip berikut hanya berlaku pada tanggal/source aslinya. Status aktif ada
+di bagian atas dokumen; bukti QA bertanggal tetap dipertahankan.
+
 ## Version 1.0.0 — release-source verification (2026-10-19)
 
 > P5 functional source **9433010** pushed and remote-verified after 688 full PASS/zero skips. Clean-cloud readiness reports READY_FOR_MANUAL_TEST; hardware/merchant gates NOT_RUN. Matching-source CI 40109206417 all three jobs SUCCESS; 109 PNGs source/hash/dimension-verified, required two-size Sandbox/gallery/photo/game views reviewed. [Final package](qa/portrait-v2-p5/README.md).
@@ -536,3 +591,5 @@ Branding follow-up: 52 targeted tests PASS and twelve screenshots reviewed, incl
 - [ ] P3b implementation and its own tests, captures and checkpoints.
 
 [P3 scope, evidence and remaining Windows checklist](qa/portrait-v2-p3/README.md).
+
+</details>

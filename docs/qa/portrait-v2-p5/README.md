@@ -159,3 +159,23 @@ manual acceptance. **P5 commercial release certification remains pending** the
 external gates above. There are no remaining failing automated tests. BUG-017 is
 owner-reported PASS / monitoring; BUG-009 is still OPEN. Source rollback remains
 d6fb5d4 / 37da798 as described, preserving all runtime journals.
+
+## Owner preflight — 25 Oktober 2026
+
+Owner ran `python tools/check_portrait_v2.py` in the Windows Kivy environment
+and supplied HEAD **0dc6555d299cdab19d952e92df2ae660cdc4676d**, status
+**READY_FOR_MANUAL_TEST**, with the local report path. [Record](owner-preflight-2026-10-25.json).
+The JSON file contents/device metadata and completed P5 form have not been
+submitted; no physical/provider items become PASS.
+
+Sandbox is created on account registration and can be used for test transactions
+while production approval is pending. Select Sandbox in the Midtrans dashboard
+then Settings → Access Keys for Merchant ID and the Sandbox Server Key;
+[official account/environment guide](https://docs.midtrans.com/docs/midtrans-account)
+and [authorization guide](https://docs.midtrans.com/docs/api-authorization-headers)
+were checked on 25 October. Actual account/payment-method availability still
+depends on Midtrans. If Sandbox access is unavailable, leave merchant items
+NOT_RUN and complete local GUI tests; do not invent keys or weaken validation.
+
+GUI v2 is the intended future primary branch, with repository operations still
+separate: [promotion plan](../../gui-v2-promotion-plan.md).

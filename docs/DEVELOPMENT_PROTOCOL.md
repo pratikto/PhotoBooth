@@ -1,5 +1,16 @@
 # Meong Photobooth Development Protocol v1.0
 
+> **Current GUI v2 execution policy — 25 Oktober 2026:** lanjutkan branch existing
+> **feature/portrait-kiosk-v2-next**, pusat pengembangan/calon branch utama menurut
+> owner; master masih default GitHub dan v1.0.0 tetap immutable. Dokumen ini tidak
+> memerintahkan membuat branch baru atau memulai ulang P3/P4 yang sudah selesai.
+> Persetujuan scope P4b Sandbox/P5 dan push bertahap sudah diberikan; pekerjaan
+> dokumentasi lintas branch saat ini juga diminta owner. Selesaikan scope yang
+> disetujui tanpa meminta ulang setiap perubahan kecil. Operasi default/rename/
+> merge/release/deployment/produksi tetap terpisah. [Audit](gui-v2-branch-audit.md),
+> [handover](DEVELOPMENT_HANDOVER.md), [promotion plan](gui-v2-promotion-plan.md).
+
+
 > **Owner reuse/cost rule (2026-10-24):** Do not reinvent an existing working feature. Inspect the latest relevant branch first, reuse its actual renderer/assets/animations as well as logic, and use a small adapter for integration. Record source SHA and concrete exceptions. Root [AGENTS.md](../AGENTS.md) makes this persistent for future sessions. Use small tested/pushed stages, local focused checks, one final full regression and matching-source CI; avoid redundant runs. Documentation-only portrait pushes are filtered, PR/manual checks retained, superseded runs cancelled by concurrency. This does not waive code validation or authorize other branches/production integration.
 
 > **APPROVAL UPDATE (2026-10-19):** The owner now explicitly authorizes promotion of `feature/kivy-gui` to `master` with a backup of the previous master, CI checks, and immutable `v1.0.0` source tag / GitHub pre-release. This is permission for the named repository/version-control operation and release documentation **only**, not permission for a new feature, live QRIS, Google Apps Script deployment, cloud deletion, or declaring Windows hardware certified. Earlier warnings below about an unapproved master merge are historical and superseded for this operation. See [v1 source release notes](releases/v1.0.0.md).
@@ -14,7 +25,7 @@ Effective: 2026-10-18; release-branch policy revised 2026-10-19 | Stable branch:
 2. Review each incoming idea against the **latest branch source** for business priority, user/operational impact, compatibility, technical readiness, complexity, dependencies, and regression risk. If code has not been inspected, mark readiness **Unverified**, not Ready.
 3. Re-rank the entire backlog after every new idea or material bug discovery. Stable IDs (`FEAT-001`, `BUG-001`) never change; execution order may change.
 4. Prioritize critical defects and operational stability. Do not allow attractive enhancements to mask unresolved defects.
-5. Use `master` as stable baseline. Keep `v1.0.0` immutable; approved future work should use a scope-specific `fix/*`, `feature/*`, or `docs/*` branch and a tested PR. Never merge or change release status without explicit owner approval.
+5. Continue authorized GUI v2 work on existing `feature/portrait-kiosk-v2-next`; do not create a new branch by default. Keep historical `master`/`v1.0.0` intact. Separate future work follows its specifically authorized branch. Default change/rename/merge/release requires explicit instruction and verified scope.
 6. Small, scoped, reviewable changes; explanatory English code comments; never assert tests passed without evidence.
 7. No implementation, code commit, push, merge, or release without explicit approval of the relevant action/scope. Documentation-only approval authorizes documentation commits on the agreed branch.
 

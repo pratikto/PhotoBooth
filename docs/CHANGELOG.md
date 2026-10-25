@@ -1,5 +1,33 @@
 # P4b native Sandbox integration — 2026-10-24
 
+## 2026-10-25 — Konsolidasi dokumentasi GUI v2 / audit semua branch
+
+Owner meminta dokumentasi GUI v2 diperbarui berdasarkan tiap branch dan
+menetapkan v2 sebagai calon branch utama. Commit audit **ae90269** memetakan
+19 remote tip + primary references/hashes dan promotion gates. Konsolidasi ini
+memperbarui README/index, roadmap/visual/technical inventory, current status,
+QA/handover/backlog, DEC-023, protocol/prompt dan persistent agent guidance.
+
+Dokumen aktif sekarang menunjukkan P3 foto, original game reuse, MOCK/Sandbox
+dan P5 source readiness yang benar-benar ada, bukan placeholder P0–P2/v1. Narasi
+status lama tetap dalam arsip dokumen atau immutable Git snapshot 0dc6555;
+seluruh bukti QA bertanggal dipertahankan. Audit membedakan update lab dithering,
+Device Health, AI/WhatsApp yang belum di-port dan konflik nama FEAT-021.
+
+Output preflight Windows owner pada **0dc6555 READY_FOR_MANUAL_TEST** dicatat
+tanpa menebak isi metadata atau meluluskan merchant/perangkat. Panduan mengambil
+Sandbox credentials sebelum persetujuan produksi ditambahkan dengan referensi
+resmi, tanpa merekam kredensial.
+
+Validasi tugas ini: local Markdown links/JSON, pinned branch/document hashes,
+208 file functional-source hashes, docs-only diff dan default/remote branch
+checks. Tidak ada app/source/config/CI workflow edit atau tes GUI baru; tidak
+mererun 688-test suite/CI yang sudah hijau untuk dokumentasi. [Audit/batas](gui-v2-branch-audit.md),
+[rencana branch utama](gui-v2-promotion-plan.md), [QA dokumen](qa/gui-v2-docs-2026-10-25.md).
+GitHub default masih master; tidak ada default change/rename/merge/release atau
+aktivasi produksi, dan tidak ada push ke branch referensi.
+
+
 > P5: add read-only readiness inventory/CLI using existing diagnostics, primary Windows display metadata, secret-free JSON import into reused Submit form, and focused/full unittest runner selection with native CI report artifacts. No provider/device acceptance fabricated. [Instructions](qa/portrait-v2-p5/README.md).
 
 

@@ -1,3 +1,50 @@
+# Roadmap berikutnya dan backlog Meong Photobooth
+
+Status **25 Oktober 2026**. Pusat pengembangan/calon utama GUI v2:
+**feature/portrait-kiosk-v2-next**. Default GitHub masih master. P4b source dan
+persiapan P5 sudah ada; jangan kembali mengimplementasikan P2/P3/P4 dari awal.
+[Roadmap yang sudah dikerjakan](portrait-kiosk-v2.md).
+
+## Satu antrean aktif untuk GUI v2
+
+| Urutan | Fokus | Keadaan dan tindakan berikutnya |
+| --- | --- | --- |
+| 1 | P5 Windows integrasi baru / FEAT-022 | Preflight owner HEAD 0dc6555 ready; tunggu hasil [form](qa/portrait-v2-p5/windows-checklist.html), perbaiki hanya failure yang terbukti |
+| 2 | FEAT-020 merchant Sandbox | Dapatkan key akun Sandbox secara lokal; uji simulator/create/status/cancel/restart/recovery tanpa produksi |
+| 3 | BUG-009 / Drive/privacy + printer | Bukti download/offline/retensi cloud dan paper/uncertain outcome. Source mock bukan paper/retention PASS; deployment/cloud deletion tidak diotorisasi oleh docs |
+| 4 | Promo Meong Fly → QRIS | Kontrak backend tepercaya belum ada; pertahankan full-price consent Sandbox, jangan memakai skor lokal sebagai authority. Butuh scope/source tersendiri |
+| 5 | GUI v2 sebagai branch utama | Setelah gate dan instruksi operasi GitHub: [promotion plan](gui-v2-promotion-plan.md); belum default change/rename/merge/release |
+
+Owner-reported perbaikan visual/audio/preview/game tetap diterima sesuai tanggal
+laporan, tanpa mengisi HEAD/device yang kosong. BUG-017 monitoring; jangan patch
+lagi tanpa gejala terukur. Source 9433010/688 full PASS dan CI hijau tetap bukti
+source, bukan perintah menjalankan semua tes ulang untuk dokumentasi.
+
+## Kandidat setelah acceptance — referensi, bukan otomatis disetujui
+
+| Topik | Source yang harus dicek/direuse | Gate sebelum port v2 |
+| --- | --- | --- |
+| FEAT-008 Device Health | feature/device-health / dbbe055, read-only operator GUI dan discovery | Refresh CI/source; adapt v1 UI, startup identity/recovery; tidak auto-hot-swap |
+| FEAT-009 watchdog/autostart | Desain existing + diagnostik/performance v2 | Payment-aware restart harus menjaga pending/started/uncertain jobs; tidak auto replay |
+| FEAT-011 dither | feature/dither-tuning / e89e6ee, Auto Tune/enhancement/guide 24 Oktober | Lab tidak otomatis mengubah preset printer. Butuh paper quality/device/performance evidence |
+| FEAT-021 (AI Background Studio) | feature/ai-background-studio / eb368c1 | Reuse offline pipeline, cache/model, Original fallback; raw photo tetap utuh, GUI/latency/print QA |
+| FEAT-021 (WhatsApp) | docs/feat-021-whatsapp-photo-delivery / aebde84 | Masih rencana optional channel; QR Drive dipertahankan, consent/privacy/provider API perlu scope |
+| FEAT-004/010/012 | Existing Drive/media/config/log services | Per-machine/offline/atomic update, data privacy; jangan menambah layanan paralel tanpa audit |
+| FEAT-019 / BIZ | Keputusan Free/Business/Enterprise dan slot Meong | Riset/kontrak, belum billing/license/ad entitlement code; persentase slot tetap TBD |
+| FEAT-002/POS, FEAT-005/order, themes/events/analytics/fleet | Desain/backlog existing | Partner evidence dan persetujuan implementasi terpisah; tidak dimasukkan ke gate default branch secara otomatis |
+
+Snapshot SHA di sini merupakan audit 25 Oktober, bukan janji tetap terbaru.
+Refresh remote branch sebelum port. [Audit lengkap 19 branch](gui-v2-branch-audit.md).
+ID FEAT-021 bentrok lintas branch: selalu tulis nama fitur/branch, jangan otomatis
+menggabungkan topik atau mengganti nomor historis. Pusat integrasi v2 FEAT-022.
+
+<details>
+<summary>Arsip sebelum konsolidasi 25 Oktober 2026 — catatan historis, bukan status/instruksi aktif</summary>
+
+Pernyataan “current”, “belum diimplementasikan”, urutan prioritas, branch dan jumlah
+tes di arsip berikut hanya berlaku pada tanggal/source aslinya. Status aktif ada
+di bagian atas dokumen; bukti QA bertanggal tetap dipertahankan.
+
 # Meong Photobooth — Dynamic Feature Backlog
 
 > Current approved execution: finish P4b Sandbox integration and P5 source/readiness checks on feature/portrait-kiosk-v2-next; owner manual tests afterward. Merchant/provider acceptance, trusted backend promo, physical devices/privacy/retention and release signoff remain external gates. [Current scope](qa/portrait-v2-p5/README.md).
@@ -330,3 +377,5 @@ M1 Core Stability; M2 Operational Reliability; M3 Commercial Readiness; M4 Produ
 **P2.5 code delivered in source on `feature/portrait-kiosk-v2-next`, not physically accepted:** themed native controls, illustrated once-per-visit tutorial, idle/invitation with both entry paths, three real strip previews with swipe and correct quantity DEMO quote, and a clearly disabled Meong Fly receipt-scanning intro. [CI 39555036023](https://github.com/pratikto/PhotoBooth/actions/runs/39555036023) verified 21/21 pure tests, widget smoke and 12 synthetic screenshots; no new payment, camera, printer, POS or game adapter. **This does not reorder the backlog ahead of the previously noted outstanding BUG-009 cloud retention and BUG-001/007 Windows sound evidence.**
 
 **Remaining P2.5 priority:** operator Windows 10.1-inch portrait sound/touch/swipe/ad video QA, evidence-backed visual comparisons to the two approved mockups, then owner approval for controlled P3 camera/Drive/print and P4 game/QRIS backend integration. Actual QRIS amount trust, single-use promo ledger and FEAT-021 duplicate ID remain gating dependencies. No merge to master.
+
+</details>
