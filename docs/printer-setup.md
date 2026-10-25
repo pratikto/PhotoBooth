@@ -3,12 +3,14 @@
 **Scope — shared printer transport/configuration plus v1 operator UI.**
 Network/Windows RAW settings and uncertain-send rules apply to the reused backend.
 Gear-menu setup, automatic result printing and CETAK ULANG below are v1 UI
-instructions. V2 local photo tests require operator print opt-in
-(`PHOTOBOOTH_V2_PRINT=1`) and explicit action; the dedicated Sandbox launcher
+instructions. V2 local photo tests require operator print opt-in (`--print` or
+`PHOTOBOOTH_V2_PRINT=1`), then automatically print each approved design as v1.
+Use `--manual-print` / `PHOTOBOOTH_V2_AUTO_PRINT=0` for an explicit CETAK action.
+The dedicated Sandbox launcher
 forces printing off. V2 Device Health observes routes/queues but does not change
 saved devices or prove paper output. The source below describes product-listing
 claims, not a newly verified printer specification or device acceptance.
-[Current v2 photo/print runbook](qa/portrait-v2-p3/README.md) · [current status](FEATURE_STATUS.md).
+[Current v2 print/Drive runbook](qa/portrait-v2-print-drive/README.md) · [current status](FEATURE_STATUS.md).
 
 > **V1 source baseline (2026-10-19):** This functionality and related documentation are now part of `master` at the published, immutable `v1.0.0` [source pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0). The previous `feature/kivy-gui` and other feature branches remain historical references. CI passed on the tagged SHA (`07ce51d`, [Kiosk](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245), [Dither](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273)), but physical Windows acceptance is separate. BUG-001/007 audio and BUG-009 Drive retention remain unresolved; payment stays DEMO. Current photo/DEMO QR-slip printer routes include LAN/Wi-Fi/Windows RAW USB queue. BUG-011 copy counts were owner-tested PASS/monitoring; do not infer all media/driver/QR-scan cases were verified.
 

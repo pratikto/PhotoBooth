@@ -1,7 +1,10 @@
 """Worker-only setup/QR contracts over existing v1 photo/delivery services."""
 from pathlib import Path
+import hashlib
+import json
 from tempfile import TemporaryDirectory
 import threading
+import time
 import unittest
 from unittest.mock import Mock,patch
 
@@ -13,6 +16,42 @@ from photobooth.kiosk_v2.photos import PhotoJobs,PhotoSetupError,PhotoTest,confi
 
 
 class PhotoDeliveryTests(unittest.TestCase):
+    def test_new_service_resumes_real_existing_upload_queue_without_new_visit_or_print(self):
+        from photobooth.drive_pool import DriveSlotPool
+        from photobooth.drive_storage import RemoteDriveSlot
+        from photobooth.retention import retention_metadata
+        with TemporaryDirectory() as folder:
+            root=Path(folder);client=Mock()
+            client.ensure_folder_pool.return_value=[RemoteDriveSlot(
+                'fixture-folder','https://example.test/photos/resume','fixture-slot','READY',
+                'PB001V2_00000001',transaction_id='PB001V2_00000001',verified=True)]
+            client.register_retention.side_effect=lambda _folder,tx,started:retention_metadata(tx,started)
+            def upload(_folder,_tx,relative,path,**_kwargs):
+                data=path.read_bytes()
+                return {'id':relative,'size':len(data),'md5Checksum':hashlib.md5(data).hexdigest()}
+            client.upload_file.side_effect=upload
+            old=PhotoTest(root,drive_client=client)
+            old.pool=DriveSlotPool(old.store.photos_root,root/'drive-pool.json','PB001V2',1)
+            old.pool.refresh(client);templates=get_templates()
+            old.start(templates,{templates[0].template_id:1})
+            for _ in range(3):old.capture(np.zeros((80,120,3),dtype=np.uint8))
+            old.compose();manifest=old.transaction.manifest_path
+            counter=(root/'counter.json').read_bytes();old.close()
+            # Start the actual inherited v1 sync loop with fixture transports.
+            # It must deliver the old queue even though no new visit is started.
+            fresh=PhotoTest(root,drive_client=client)
+            try:
+                fresh.prepare();deadline=time.monotonic()+5
+                while json.loads(manifest.read_text())['upload_status']!='UPLOAD_COMPLETE' and time.monotonic()<deadline:
+                    time.sleep(.01)
+                self.assertEqual(json.loads(manifest.read_text())['upload_status'],'UPLOAD_COMPLETE')
+                self.assertIsNone(fresh.transaction);self.assertEqual((root/'counter.json').read_bytes(),counter)
+                self.assertEqual(client.upload_file.call_count,4)
+                self.assertEqual(len(list(fresh.store.photos_root.glob('*/manifest.json'))),1)
+                client.cleanup_expired.assert_not_called()
+            finally:
+                fresh.close()
+                if fresh.drive_worker:fresh.drive_worker._thread.join(timeout=1)
     def test_setup_snapshot_reports_real_pool_readiness_and_reuses_one_worker(self):
         with TemporaryDirectory() as folder:
             service=PhotoTest(folder,printer=Mock(),drive_client=Mock(),auto_print=True)

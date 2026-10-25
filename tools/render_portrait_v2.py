@@ -13,6 +13,9 @@ import hashlib
 import json
 import subprocess
 import os
+# Synthetic captures never inherit an operator's live delivery opt-ins.
+os.environ['PHOTOBOOTH_V2_PRINT'] = '0'
+os.environ['PHOTOBOOTH_V2_DRIVE'] = '0'
 from pathlib import Path
 import sys
 

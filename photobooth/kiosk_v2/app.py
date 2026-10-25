@@ -155,6 +155,7 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, SandboxViews, Ope
         if self._closed:
             return
         self._preview_preloader.start()
+        self._warm_photo_delivery()
         self.camera_device.start()
         if not self._suspended:
             self.audio_v2.prepare()

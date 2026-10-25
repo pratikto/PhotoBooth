@@ -1,5 +1,11 @@
 # Portrait v2 P3 — camera, photo workflow and service adapters
 
+> **Later print/Drive continuation, 25 October:** the owner selected automatic
+> print as v1 and background Drive. Use the current ordinary launcher `--print
+> --drive`; `--manual-print` is the explicit manual fallback. The old manual-only
+> flags/instructions below remain a dated P3 snapshot. [Current runbook, evidence
+> and eleven-item form](../portrait-v2-print-drive/README.md).
+
 > **Dated source/QA record, retained for traceability.** Results, “latest/current”,
 > OPEN/PENDING labels, next actions and authorization limits below apply to this
 > package's recorded source and report date. Later owner reports and source work

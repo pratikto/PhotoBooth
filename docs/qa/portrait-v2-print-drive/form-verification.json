@@ -1,0 +1,18 @@
+{
+  "file": "windows-checklist.html",
+  "sha256": "cf4b87146752bafe5ad83ba4f306ef1bd63a1d98f22e3ab8fc7f4795da410ef7",
+  "items": 11,
+  "initially_checked": 0,
+  "partial_submit": "1/11",
+  "metadata_import_auto_pass": false,
+  "persistence_download": "PASS",
+  "widths": [
+    360,
+    452,
+    800
+  ],
+  "horizontal_overflow": false,
+  "browser_errors": 0,
+  "new_twenty_cycle_gate": false,
+  "evidence": "browser-tests.txt"
+}

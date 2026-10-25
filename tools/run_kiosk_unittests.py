@@ -28,6 +28,10 @@ def main(argv=None) -> int:
     repository_root = Path(__file__).resolve().parent.parent
     if str(repository_root) not in sys.path:
         sys.path.insert(0, str(repository_root))
+    # Ambient operator opt-ins must not start live delivery while widgets tick.
+    # Explicit delivery fixtures override these inside their isolated contexts.
+    os.environ['PHOTOBOOTH_V2_PRINT'] = '0'
+    os.environ['PHOTOBOOTH_V2_DRIVE'] = '0'
     # The tests/ directory intentionally has no __init__.py. Allow default
     # unittest top-level discovery to import test_*.py directly, just as the
     # original 'python -m unittest discover -s tests -v' command did.

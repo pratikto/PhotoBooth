@@ -1,0 +1,23 @@
+{
+  "scope": "Full-window screenshot pixels, offline fixture URLs only; no phone/network acceptance",
+  "screenshots": [
+    {
+      "file": "delivery-05-upload-verified-452x9000002.png",
+      "size": [
+        452,
+        900
+      ],
+      "decoded_url": "https://example.test/photos/PB001V2_00000001/originals-and-strip",
+      "sha256": "a98a372b874fa11fe8e10d785157ab0e4cefb012470831b07ee4435157d1fd03"
+    },
+    {
+      "file": "delivery-05-upload-verified-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "decoded_url": "https://example.test/photos/PB001V2_00000001/originals-and-strip",
+      "sha256": "1728111404430d16c43b26c297998aad10d3b85bbcac4c971aacf0eae5725587"
+    }
+  ]
+}

@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src data:">
+<title>Meong — Operator Device Health</title>
+<style>
+:root{color-scheme:light;--bg:#f4f3fa;--ink:#18203e;--muted:#5a627a;--purple:#5542ac;--line:#dedced;--green:#16764e}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,Segoe UI,sans-serif}main{max-width:920px;margin:auto;padding:14px 18px 60px}header{padding:22px;border-radius:16px;background:#101a43;color:#fff}h1{margin:4px 0;font-size:clamp(23px,4vw,32px)}header p{color:#d6d8f0;margin:8px 0 0}.tag{font-size:12px;font-weight:800;letter-spacing:2px;color:#7ce2fc}
+.panel,section{background:white;border:1px solid var(--line);border-radius:14px;margin-top:18px;padding:20px}.meta{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:block;font-weight:650;font-size:14px}.field input,textarea{width:100%;margin-top:6px;border:1px solid #bdc0d1;border-radius:8px;padding:11px;color:var(--ink);background:#fff;font:inherit}.field input:focus,textarea:focus{outline:3px solid #dad2ff;outline-offset:1px}.wide{grid-column:1/-1}.summary{position:sticky;top:0;z-index:2;box-shadow:0 3px 16px #151a4315;background:#fffffff5;padding:14px 20px;border:1px solid var(--line);border-radius:12px;margin-top:18px}.numbers{display:flex;justify-content:space-between;gap:12px}.numbers strong{color:var(--purple)}progress{display:block;width:100%;height:13px;margin-top:9px;accent-color:var(--green)}h2{font-size:20px;margin:0 0 12px}.section-count{font-size:14px;font-weight:500;color:var(--muted);margin-left:10px}.item{display:flex;align-items:flex-start;gap:12px;padding:13px 7px;border-top:1px solid #efedf6;cursor:pointer;border-radius:6px}.item:hover{background:#f7f5ff}.item input{flex:0 0 23px;width:23px;height:23px;margin:2px 0;accent-color:var(--green);cursor:pointer}.item .id{display:inline-block;min-width:36px;color:var(--purple);font-size:13px;font-weight:750}.item.done{background:#f2faf5}.item.done .id{color:var(--green)}.help{color:var(--muted);font-size:14px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}button{border:0;border-radius:9px;padding:12px 18px;background:var(--purple);color:#fff;font:600 15px system-ui;cursor:pointer;min-height:46px}button.secondary{background:#eeebf8;color:var(--ink)}button.reset{background:#fff;color:#8c3434;border:1px solid #dcc5c5}button:hover{filter:brightness(.95)}#status{min-height:24px;margin-top:12px;color:var(--green)}textarea{min-height:150px;resize:vertical}.footer{font-size:13px;color:var(--muted);margin-top:18px}@media(max-width:580px){.meta{grid-template-columns:1fr}.panel,section{padding:15px}.summary{padding:12px}.item{padding:13px 2px}.item .id{min-width:30px}}@media print{body{background:white}.summary{position:static;box-shadow:none}.actions,#status,.footer{display:none}section{break-inside:avoid}main{padding:0;max-width:none}header{color:#101a43;background:white;border-bottom:2px solid #101a43;border-radius:0}header p{color:#4b526b}}
+</style>
+</head>
+<body><main>
+<header><div class="tag">MEONG PHOTOBOOTH · GUI V2</div><h1>Automatic Print and Drive — Retest</h1><p>Eleven checks for automatic printing and background Drive delivery. Check only actual successful tests; paper and phone download require real evidence. Earlier twenty-cycle reports remain recorded; no additional cycle gate.</p></header>
+<div class="panel help"><strong>Launch the v2 delivery profile:</strong> <code>python tools/run_portrait_v2.py --print --drive</code>.<br><br>Reuse your saved v1 printer configuration and existing private Drive settings. No credentials belong in this form/chat. For print-only testing while Drive is unavailable, use <code>--print</code>; leave unavailable Drive items unchecked. <code>--manual-print</code> is a deliberate fallback, not the automatic-print test below.<br><br>Approve three photos to automatically send one batch with the selected copy count. Printing uncertainty is held; no automatic replay. Uploads use the isolated v2 queue and continue after returning to ads/restarting. The large download QR appears only after file verification. Retention holds need operator attention; this form does not prove cloud deletion or release.<br><br><strong>Physical tests:</strong> do not pass paper items without actual sheets or phone-download items without opening the real assigned folder. If an uncertainty/offline/restart case cannot be safely tested on your test setup, leave it blank and explain why. No new twenty-cycle run is required.<br><br><label class="field">Import local operator / readiness JSON<input id="readiness-file" type="file" accept=".json,application/json"></label><p id="import-status" role="status"></p></div>
+<div class="panel meta">
+<label class="field wide">Branch<input id="branch" data-field value="feature/portrait-kiosk-v2-next"></label>
+<label class="field">Tested HEAD<input id="head" data-field value="" placeholder="Output of git rev-parse --short HEAD"></label>
+<label class="field">Date<input type="date" id="date" data-field value="2026-10-24"></label>
+<label class="field">Windows version<input id="windows" data-field placeholder="Example: Windows 11"></label>
+<label class="field">Screen resolution<input id="resolution" data-field placeholder="Example: 800 × 1280"></label>
+<label class="field">Display scaling (%)<input id="scaling" data-field placeholder="Example: 100%"></label>
+<label class="field">Camera (model / built-in / USB)<input id="camera" data-field placeholder="Example: built-in laptop camera"></label>
+<label class="field">Camera index<input id="camera_index" data-field placeholder="Example: 0"></label>
+<label class="field wide">When does lag occur?<input id="lag" data-field placeholder="During ads / after camera / none; name the page"></label>
+<label class="field">Photo visits completed (optional)<input type="number" min="0" step="1" id="cycles" data-field placeholder="Example: 20"></label>
+<label class="field">Speaker / audio output<input id="speaker" data-field placeholder="Selected output device"></label>
+</div>
+<div class="summary"><div class="numbers"><strong id="count" aria-live="polite">0 / 11 passed</strong><span id="save-status" class="help">Saving…</span></div><progress id="progress" value="0" max="11" aria-label="Number of passed tests"></progress></div>
+<div id="cycle-status" class="panel help" role="status" aria-live="polite"></div>
+<div id="sections"></div>
+<div class="panel"><h2>Issue notes</h2><label class="field" for="notes">Record item ID, reproduction steps, actual behavior and expected behavior.</label><textarea id="notes" data-field placeholder="Example: D02 — phone cannot open the real folder, despite verified-upload status. Note any unavailable test and its reason."></textarea>
+<div class="actions"><button id="submit" type="button">Submit Results</button><button id="copy" class="secondary" type="button">Copy report prompt</button><button id="download" type="button">Download results .txt</button><button id="print" class="secondary" type="button">Print / PDF</button><button id="reset" class="reset" type="button">Clear checklist</button></div><div id="status" role="status" aria-live="polite"></div></div>
+<div id="submission" class="panel" hidden><h2>Report prompt ready</h2><p>Paste this text into chat and send it. This offline form cannot send to the conversation automatically.</p><textarea id="prompt-output" readonly aria-label="Report for chat"></textarea></div>
+<p class="footer">11 items. Submit prepares text to copy into chat; it does not send automatically. Saved separately from earlier forms. Unchecked means failed or not run.</p>
+</main>
+<script>
+const SECTIONS = [
+  [
+    "P",
+    "Automatic printing",
+    [
+      "Launch the required branch with --print --drive, using the existing v1 printer settings/Drive configuration. Complete tutorial/gallery/consent without enabling payments/scanner; the source HEAD is recorded if available.",
+      "Select one design, two copies. Take three photos (optionally one retake), approve PAKAI FOTO INI: printing starts without pressing CETAK. Verify exactly two identical physical strips/cuts; a spool-success message alone does not pass.",
+      "Select A\u00d72 and B\u00d71: capture three photos per design and approve each. Verify two A strips and one B strip, with the selected designs/unmirrored photos and readable paper QR. Copies do not create extra capture sessions.",
+      "Rapidly tap approval/controls, resize and minimize/restore while printing. The window remains responsive; exactly one batch per approved design, no delayed or duplicate print. Ordinary next input works once.",
+      "On a safely controlled test-printer failure/uncertain send or interrupted-send restart, the app holds the outcome for inspection. No automatic replay/reprint or false paper-success claim. Inspect/acknowledge before continuing; leave blank if not tested."
+    ]
+  ],
+  [
+    "D",
+    "Google Drive and download",
+    [
+      "With valid existing Drive configuration, consent waits for a verified assigned folder, then unlocks. The result shows pending/retry/verified accurately; a large on-screen QR appears only after all files are verified.",
+      "Scan the actual large on-screen QR and paper QR with a phone: both open the same assigned folder. Verify all three originals, any retake and the correct composed strip; image orientation/quality preserved. UI UPLOAD_COMPLETE alone does not pass phone access.",
+      "After folder assignment, temporarily take the test setup offline. Capture/print still work with the reserved folder; originals remain local, upload shows pending/retry, no false verified download. Restore connectivity: the same queued files/folder finish without duplicates.",
+      "Finish the photo visit with uploads pending, close/reopen the app using --print --drive. The old queue resumes without starting a new photo visit, changing its folder or reprinting. Verify completion from the phone; do not delete manifests to clear a pending state."
+    ]
+  ],
+  [
+    "L",
+    "Layout, lifecycle and boundaries",
+    [
+      "At 800\u00d71280 and 452\u00d7900 (360\u00d7640 if available), consent scrolls and result/strip/QR/status/controls fit. Resize preserves photos/copy count, QR destination and print state; there is no duplicate audio.",
+      "Close/reopen cleanly: no lingering sound/popup or locked camera. Payments/scanner/production remain off; no charge/capture/print replay. If UPLOAD DITAHAN appears, record it; do not claim Drive/deletion PASS or bypass retention."
+    ]
+  ]
+];
+const KEY = 'meong-windows-print-drive-v1';
+const CYCLE_ITEMS = new Set([]);
+try {
+ const parts = new Intl.DateTimeFormat('en-CA', {timeZone:'Asia/Jakarta',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+ const date = Object.fromEntries(parts.map(part=>[part.type,part.value]));
+ document.getElementById('date').value = date.year+'-'+date.month+'-'+date.day;
+} catch { /* Keep the visible date editable when Intl is unavailable. */ }
+const FIELDS = ['branch','head','date','windows','resolution','scaling','speaker','camera','camera_index','lag','cycles','notes'];
+const defaults = Object.fromEntries(FIELDS.map(id=>[id,document.getElementById(id).value]));
+const items = [];
+for (const [code,title,labels] of SECTIONS) {
+ const section=document.createElement('section');
+ const heading=document.createElement('h2'); heading.textContent=code+'. '+title;
+ const count=document.createElement('span'); count.className='section-count';count.id='count-'+code; heading.append(count);section.append(heading);
+ labels.forEach((text,index)=>{
+  const id=code+String(index+1).padStart(2,'0');
+  const label=document.createElement('label');label.className='item';label.htmlFor=id;
+  const box=document.createElement('input');box.type='checkbox';box.id=id;
+  if(CYCLE_ITEMS.has(id))box.setAttribute('aria-describedby','cycle-status');
+  const copy=document.createElement('span');const badge=document.createElement('span');badge.className='id';badge.textContent=id;
+  copy.append(badge,document.createTextNode(text));label.append(box,copy);section.append(label);
+  items.push({id,text,code,box,label});box.addEventListener('change',()=>{update();save();});
+ });
+ document.getElementById('sections').append(section);
+}
+function qualifiedCycles(){
+ const raw=document.getElementById('cycles').value.trim();
+ const count=Number(raw);
+ return raw!=='' && Number.isInteger(count) && count>=20;
+}
+function enforceCycleGate(){
+ document.getElementById('cycle-status').textContent='Earlier twenty-cycle reports remain recorded. This print/Drive form requires no additional cycle run and automatically passes no paper/phone/other item.';
+}
+
+function update(){
+ enforceCycleGate();
+ const done=items.filter(item=>item.box.checked).length;
+ document.getElementById('count').textContent=done+' / '+items.length+' passed';
+ document.getElementById('progress').value=done;
+ for(const [code,,labels] of SECTIONS)document.getElementById('count-'+code).textContent=items.filter(i=>i.code===code&&i.box.checked).length+'/'+labels.length;
+ for(const item of items)item.label.classList.toggle('done',item.box.checked);
+}
+function save(){
+ update();
+ if(!document.getElementById('submission').hidden)document.getElementById('prompt-output').value=promptReport();
+ const data={fields:Object.fromEntries(FIELDS.map(id=>[id,document.getElementById(id).value])),checked:items.filter(i=>i.box.checked).map(i=>i.id)};
+ try{localStorage.setItem(KEY,JSON.stringify(data));document.getElementById('save-status').textContent='Saved in this browser';}
+ catch{document.getElementById('save-status').textContent='Use Download results to save a copy';}
+}
+function restore(){
+ try{
+  const raw=localStorage.getItem(KEY);if(!raw)return;const data=JSON.parse(raw);
+  for(const id of FIELDS)if(typeof data.fields?.[id]==='string')document.getElementById(id).value=data.fields[id];
+  const checked=new Set(Array.isArray(data.checked)?data.checked:[]);for(const item of items)item.box.checked=checked.has(item.id);
+ }catch{document.getElementById('save-status').textContent='Use Download results to save a copy';}
+}
+function report(){
+ update();
+ const names={branch:'Branch',head:'Tested HEAD',date:'Date',windows:'Windows version',resolution:'Screen resolution',scaling:'Display scaling (%)',speaker:'Speaker/audio output',camera:'Camera',camera_index:'Camera index',lag:'When lag occurs',cycles:'Photo visits completed (optional)'};
+ const lines=['MEONG PHOTOBOOTH GUI V2 — AUTOMATIC PRINT AND BACKGROUND DRIVE (11 ITEMS)'];
+ for(const [id,name] of Object.entries(names))lines.push(name+': '+document.getElementById(id).value);
+ lines.push('HEAD status: '+(document.getElementById('head').value.trim()?'User supplied; verify against the tested version.':'NOT SUPPLIED — exact-source acceptance is unverified.'));
+ lines.push('This form requires no additional cycles; earlier twenty-cycle reports remain recorded.');
+ lines.push('Operator results follow actual checked observations; no item is automatically passed.');
+ lines.push('Metadata status: '+(['head','resolution','scaling'].every(id=>document.getElementById(id).value.trim())?'User supplied; verify against the tested device.':'INCOMPLETE — HEAD/resolution/scaling fields are not all supplied.'));
+ const done=items.filter(i=>i.box.checked).length;lines.push('','Passed: '+done+'/'+items.length,'Unchecked (failed/not run): '+(items.length-done),'');
+ for(const [code,title] of SECTIONS){lines.push(code+'. '+title);for(const i of items.filter(i=>i.code===code))lines.push((i.box.checked?'[x] ':'[ ] ')+i.id+' '+i.text);lines.push('');}
+ lines.push('External gates: these observations cover only the actually checked paper/download cases. Merchant Sandbox, deployed 30-day cloud deletion, privacy/release and untested P5 items remain separate.');
+ lines.push('ISSUE NOTES',document.getElementById('notes').value||'(No notes supplied)');return lines.join('\n');
+}
+function promptReport(){
+ return 'Here are my Meong Photobooth v2 Windows retest results. Analyze the results and issue notes. Unchecked items mean failed or not run; do not count them as passed.\n\n'+report();
+}
+function submitReport(){
+ save();
+ document.getElementById('submission').hidden=false;
+ const output=document.getElementById('prompt-output');
+ output.value=promptReport();output.focus();output.select();
+ status('Report prepared. Copy it into chat and send it.');
+}
+function status(text){document.getElementById('status').textContent=text;}
+async function copyReport(){
+ try{
+  if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(promptReport());
+  else{
+   const temp=document.createElement('textarea');temp.value=promptReport();document.body.append(temp);temp.focus();temp.select();const ok=document.execCommand('copy');temp.remove();if(!ok)throw new Error('copy');
+  }
+  status('Results copied. Paste them into chat to send.');
+ }catch{status('Clipboard access is unavailable. Use Download results .txt.');}
+}
+FIELDS.forEach(id=>document.getElementById(id).addEventListener('input',()=>{update();save();}));
+document.getElementById('submit').addEventListener('click',submitReport);
+document.getElementById('copy').addEventListener('click',copyReport);
+document.getElementById('download').addEventListener('click',()=>{
+ const file=new Blob([report()],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(file);const a=document.createElement('a');a.href=url;a.download='meong-windows-print-drive.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);status('Results file is ready to save.');
+});
+document.getElementById('print').addEventListener('click',()=>window.print());
+document.getElementById('reset').addEventListener('click',()=>{
+ if(!confirm('Clear all checks, device fields and notes in this checklist?'))return;
+ document.getElementById('submission').hidden=true;document.getElementById('prompt-output').value='';
+ for(const i of items)i.box.checked=false;for(const id of FIELDS)document.getElementById(id).value=defaults[id];update();save();status('Checklist cleared.');
+});
+
+document.getElementById('readiness-file').addEventListener('change',async event=>{
+ const message=document.getElementById('import-status');
+ try{
+  const file=event.target.files[0];if(!file)return;
+  if(file.size>262144)throw new Error('size');
+  const data=JSON.parse(await file.text());
+  if(data.schema_version!==1||!data.source||!data.device)throw new Error('format');
+  const put=(id,value)=>{if(typeof value==='string'&&value.length<=200)document.getElementById(id).value=value;};
+  if(/^[a-f0-9]{7,40}$/.test(data.source.head||''))put('head',data.source.head);
+  put('branch',data.source.branch);put('windows',[data.device.os,data.device.os_release].filter(x=>typeof x==='string').join(' '));
+  const display=data.device.display||{};
+  if(Array.isArray(display.resolution)&&display.resolution.length===2&&display.resolution.every(n=>Number.isInteger(n)&&n>0&&n<65536))put('resolution',display.resolution.join(' × '));
+  if(Number.isInteger(display.scaling_percent))put('scaling',String(display.scaling_percent));
+  if(Number.isInteger(data.device.camera_index))put('camera_index',String(data.device.camera_index));
+  put('camera',data.device.camera_model);put('speaker',data.device.speaker_output);
+  message.textContent='Metadata imported. Verify the actual kiosk display and devices. No tests were automatically checked.'+(data.source.dirty?' ATTENTION: the report was created from a dirty working tree.':'');save();
+ }catch{message.textContent='Invalid file. Select windows-readiness.json from tools/check_portrait_v2.py or a compatible operator report.';}
+});
+restore();update();save();
+</script></body></html>

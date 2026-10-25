@@ -47,6 +47,28 @@ Production account approval and Sandbox access are separate; the
 [official account guide](https://docs.midtrans.com/docs/midtrans-account)
 describes the environments. Actual merchant acceptance remains pending.
 
+## Automatic print and background Drive
+
+Use the existing v1 printer/Drive configuration and launch the explicit delivery
+profile in your Windows Kivy environment:
+
+```powershell
+python tools/run_portrait_v2.py --print --drive
+```
+
+After approving the three photos, each design automatically sends one batch
+with its selected copy count. Drive uploads/retries in the background and
+resumes old queues on startup without a new photo visit. The result shows a
+large download QR after file verification. Uncertain prints are held for
+inspection and never replayed automatically. Paper/phone/cloud acceptance is
+separate from source tests; BUG-009 retention remains open.
+
+For print-only testing use `--print`; for deliberate manual printing add
+`--manual-print`. Default launch without operator opt-ins stays local. The
+dedicated merchant Sandbox trial keeps both transports off.
+[Runbook, evidence and rollback](docs/qa/portrait-v2-print-drive/README.md) ·
+[eleven-item Submit form](docs/qa/portrait-v2-print-drive/windows-checklist.html).
+
 ## Operator Device Health
 
 At idle advertising, press **F12** or hold the Meong header for **1.5 seconds**.

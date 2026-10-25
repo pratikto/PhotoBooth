@@ -1,0 +1,266 @@
+{
+  "synthetic_only": true,
+  "total": 14,
+  "screenshots": [
+    {
+      "state": "delivery-01-drive-waiting",
+      "page": "photo_confirm",
+      "file": "delivery-01-drive-waiting-452x9000002.png",
+      "sha256": "6df63f99f33ba32c9f271af88d30754c4d2536d0cf655e3cfba2534f5fb1b5e3",
+      "width": 452,
+      "height": 900
+    },
+    {
+      "state": "delivery-02-drive-ready",
+      "page": "photo_confirm",
+      "file": "delivery-02-drive-ready-452x9000002.png",
+      "sha256": "eca92c85de3a0884feb4cb3711f2fd44be9c05ecef02d51d61bfeb67e97f19e2",
+      "width": 452,
+      "height": 900
+    },
+    {
+      "state": "delivery-03-print-sending",
+      "page": "result",
+      "file": "delivery-03-print-sending-452x9000002.png",
+      "sha256": "3db72d8038f42e8794b91da17b09e84e86e03195c0b343be5ffba438d71903fe",
+      "width": 452,
+      "height": 900
+    },
+    {
+      "state": "delivery-04-offline-retry",
+      "page": "result",
+      "file": "delivery-04-offline-retry-452x9000002.png",
+      "sha256": "d18a982d88a321367bb8ae8d5c4a9e586b9c572eb3dcdae791b633fcaa0c0d61",
+      "width": 452,
+      "height": 900
+    },
+    {
+      "state": "delivery-05-upload-verified",
+      "page": "result",
+      "file": "delivery-05-upload-verified-452x9000002.png",
+      "sha256": "a98a372b874fa11fe8e10d785157ab0e4cefb012470831b07ee4435157d1fd03",
+      "width": 452,
+      "height": 900
+    },
+    {
+      "state": "delivery-06-print-uncertain",
+      "page": "result",
+      "file": "delivery-06-print-uncertain-452x9000002.png",
+      "sha256": "07f2a0be4f49740487e8ceeeff2bdfd4c0aaff8503bfe8ba351901f7a5402d36",
+      "width": 452,
+      "height": 900
+    },
+    {
+      "state": "delivery-07-retention-held",
+      "page": "result",
+      "file": "delivery-07-retention-held-452x9000002.png",
+      "sha256": "ce8445484697b4ae6dd3323f41aa1756f52a9b19956d177dfad7cf792b303029",
+      "width": 452,
+      "height": 900
+    },
+    {
+      "state": "delivery-01-drive-waiting",
+      "page": "photo_confirm",
+      "file": "delivery-01-drive-waiting-800x12800001.png",
+      "sha256": "c3d5f7b3a1e2d39ce10c5b82138ff33e01ba8a726b958260bb41cf28fd288508",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "delivery-02-drive-ready",
+      "page": "photo_confirm",
+      "file": "delivery-02-drive-ready-800x12800001.png",
+      "sha256": "4fa8dc2db3c45f8b81a638246a23a0436d6dbfafaea1e92b9b818967bf9ffe1e",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "delivery-03-print-sending",
+      "page": "result",
+      "file": "delivery-03-print-sending-800x12800001.png",
+      "sha256": "94379730cc64f7fc21d45d12abe3aef57b59bc228d080a6052617ec57de30096",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "delivery-04-offline-retry",
+      "page": "result",
+      "file": "delivery-04-offline-retry-800x12800001.png",
+      "sha256": "c7f64e393a772c2d442ad4c71a0ee0cfd7e297670d5827ca7b2d6837b9a36ad0",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "delivery-05-upload-verified",
+      "page": "result",
+      "file": "delivery-05-upload-verified-800x12800001.png",
+      "sha256": "1728111404430d16c43b26c297998aad10d3b85bbcac4c971aacf0eae5725587",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "delivery-06-print-uncertain",
+      "page": "result",
+      "file": "delivery-06-print-uncertain-800x12800001.png",
+      "sha256": "c5623f0285d25781fb670ec14e5c21f41f61d3b346da85fc8ed5ba51177552b5",
+      "width": 800,
+      "height": 1280
+    },
+    {
+      "state": "delivery-07-retention-held",
+      "page": "result",
+      "file": "delivery-07-retention-held-800x12800001.png",
+      "sha256": "c594a44846bea983d8646f12d3dddb1ac8b84d97f45b4c4ef1f90fc01fc33f2a",
+      "width": 800,
+      "height": 1280
+    }
+  ],
+  "reports": [
+    {
+      "source_sha": "7b691c7ba8907b6063d413f7f5260d28d8146269",
+      "tracked_changes": true,
+      "synthetic_only": true,
+      "synthetic_sensor_status": false,
+      "screenshots": [
+        {
+          "state": "delivery-01-drive-waiting",
+          "page": "photo_confirm",
+          "file": "delivery-01-drive-waiting-452x9000002.png",
+          "sha256": "6df63f99f33ba32c9f271af88d30754c4d2536d0cf655e3cfba2534f5fb1b5e3",
+          "width": 452,
+          "height": 900
+        },
+        {
+          "state": "delivery-02-drive-ready",
+          "page": "photo_confirm",
+          "file": "delivery-02-drive-ready-452x9000002.png",
+          "sha256": "eca92c85de3a0884feb4cb3711f2fd44be9c05ecef02d51d61bfeb67e97f19e2",
+          "width": 452,
+          "height": 900
+        },
+        {
+          "state": "delivery-03-print-sending",
+          "page": "result",
+          "file": "delivery-03-print-sending-452x9000002.png",
+          "sha256": "3db72d8038f42e8794b91da17b09e84e86e03195c0b343be5ffba438d71903fe",
+          "width": 452,
+          "height": 900
+        },
+        {
+          "state": "delivery-04-offline-retry",
+          "page": "result",
+          "file": "delivery-04-offline-retry-452x9000002.png",
+          "sha256": "d18a982d88a321367bb8ae8d5c4a9e586b9c572eb3dcdae791b633fcaa0c0d61",
+          "width": 452,
+          "height": 900
+        },
+        {
+          "state": "delivery-05-upload-verified",
+          "page": "result",
+          "file": "delivery-05-upload-verified-452x9000002.png",
+          "sha256": "a98a372b874fa11fe8e10d785157ab0e4cefb012470831b07ee4435157d1fd03",
+          "width": 452,
+          "height": 900
+        },
+        {
+          "state": "delivery-06-print-uncertain",
+          "page": "result",
+          "file": "delivery-06-print-uncertain-452x9000002.png",
+          "sha256": "07f2a0be4f49740487e8ceeeff2bdfd4c0aaff8503bfe8ba351901f7a5402d36",
+          "width": 452,
+          "height": 900
+        },
+        {
+          "state": "delivery-07-retention-held",
+          "page": "result",
+          "file": "delivery-07-retention-held-452x9000002.png",
+          "sha256": "ce8445484697b4ae6dd3323f41aa1756f52a9b19956d177dfad7cf792b303029",
+          "width": 452,
+          "height": 900
+        }
+      ],
+      "real_print": false,
+      "real_cloud": false,
+      "reused_v1_delivery": true,
+      "print_batches": [
+        2,
+        1
+      ],
+      "verified_qr_url": "https://example.test/photos/PB001V2_00000001/originals-and-strip"
+    },
+    {
+      "source_sha": "7b691c7ba8907b6063d413f7f5260d28d8146269",
+      "tracked_changes": true,
+      "synthetic_only": true,
+      "synthetic_sensor_status": false,
+      "screenshots": [
+        {
+          "state": "delivery-01-drive-waiting",
+          "page": "photo_confirm",
+          "file": "delivery-01-drive-waiting-800x12800001.png",
+          "sha256": "c3d5f7b3a1e2d39ce10c5b82138ff33e01ba8a726b958260bb41cf28fd288508",
+          "width": 800,
+          "height": 1280
+        },
+        {
+          "state": "delivery-02-drive-ready",
+          "page": "photo_confirm",
+          "file": "delivery-02-drive-ready-800x12800001.png",
+          "sha256": "4fa8dc2db3c45f8b81a638246a23a0436d6dbfafaea1e92b9b818967bf9ffe1e",
+          "width": 800,
+          "height": 1280
+        },
+        {
+          "state": "delivery-03-print-sending",
+          "page": "result",
+          "file": "delivery-03-print-sending-800x12800001.png",
+          "sha256": "94379730cc64f7fc21d45d12abe3aef57b59bc228d080a6052617ec57de30096",
+          "width": 800,
+          "height": 1280
+        },
+        {
+          "state": "delivery-04-offline-retry",
+          "page": "result",
+          "file": "delivery-04-offline-retry-800x12800001.png",
+          "sha256": "c7f64e393a772c2d442ad4c71a0ee0cfd7e297670d5827ca7b2d6837b9a36ad0",
+          "width": 800,
+          "height": 1280
+        },
+        {
+          "state": "delivery-05-upload-verified",
+          "page": "result",
+          "file": "delivery-05-upload-verified-800x12800001.png",
+          "sha256": "1728111404430d16c43b26c297998aad10d3b85bbcac4c971aacf0eae5725587",
+          "width": 800,
+          "height": 1280
+        },
+        {
+          "state": "delivery-06-print-uncertain",
+          "page": "result",
+          "file": "delivery-06-print-uncertain-800x12800001.png",
+          "sha256": "c5623f0285d25781fb670ec14e5c21f41f61d3b346da85fc8ed5ba51177552b5",
+          "width": 800,
+          "height": 1280
+        },
+        {
+          "state": "delivery-07-retention-held",
+          "page": "result",
+          "file": "delivery-07-retention-held-800x12800001.png",
+          "sha256": "c594a44846bea983d8646f12d3dddb1ac8b84d97f45b4c4ef1f90fc01fc33f2a",
+          "width": 800,
+          "height": 1280
+        }
+      ],
+      "real_print": false,
+      "real_cloud": false,
+      "reused_v1_delivery": true,
+      "print_batches": [
+        2,
+        1
+      ],
+      "verified_qr_url": "https://example.test/photos/PB001V2_00000001/originals-and-strip"
+    }
+  ],
+  "real_print": false,
+  "real_cloud": false
+}

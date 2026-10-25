@@ -1,5 +1,17 @@
 # Meong Photobooth — changelog
 
+## 2026-10-25 — Print/Drive stage 2: native automatic fulfillment
+
+The v2 host now follows v1 approval → composition → one background print batch,
+using existing durable PhotoTest/PhotoJobs. Explicit --drive prepares/resumes the
+original isolated queue at startup; consent reflects verified-folder readiness.
+Late prep leaves ads intact, progress updates preserve the result page, and the
+original worker-encoded QR appears only after file verification. Slow/uncertain
+prints, offline retry and retention holds stay explicit; no replay/bypass.
+New native cases and seven delivery fixture states at both required sizes, plus
+the eleven-item Submit/import form, accompany the existing v1 services.
+[Scope, checks, commands and rollback](qa/portrait-v2-print-drive/README.md).
+
 ## 2026-10-25 — Print/Drive stage 1: explicit launch and delivery contracts
 
 Owner prioritizes print and Drive only over watchdog; chooses automatic print

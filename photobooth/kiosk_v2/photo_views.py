@@ -3,6 +3,7 @@
 import math
 import time
 import logging
+import os
 
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
@@ -10,6 +11,7 @@ from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
+from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
 
 from photobooth.advertising import PROJECT_ROOT
@@ -38,21 +40,35 @@ class PhotoViews:
         self._last_live_frame = None
         self._last_preview = None
         self._photo_refresh_at = 0
+        self._photo_pending_action = None
+        self._download_qr_texture_key = None
+
+    def _ensure_photo_jobs(self):
+        if self._photo_jobs is None:
+            from .photos import PhotoJobs, configured_test
+            photo_root = (self._sandbox_jobs.store.flow.path.parent / 'photo-tests' if self._sandbox_enabled
+                          else PROJECT_ROOT / 'data' / 'kiosk-v2-p3')
+            self._photo_jobs = PhotoJobs(factory=lambda: configured_test(photo_root, configuration_root=PROJECT_ROOT) if self._sandbox_enabled else configured_test(photo_root))
+
+    def _warm_photo_delivery(self):
+        # Resume the existing isolated queue on launch, without requiring a new
+        # photo/transaction. Native clients/pool I/O initialize on PhotoJobs.
+        if (not self._sandbox_enabled and os.environ.get('PHOTOBOOTH_V2_DRIVE') == '1'
+                and self._photo_jobs is None):
+            self._ensure_photo_jobs()
+            self._photo_jobs.submit('prepare')
 
     def _enter_photo_test(self):
         if (not any(self.quantities.values()) or
                 (self._sandbox_enabled and (not self._sandbox_consent or
                  (self._sandbox_view or {}).get('phase') != 'RESERVED'))):
             return
-        from .photos import PhotoJobs, configured_test
         self.navigation.confirm_photo_test()
-        if self._photo_jobs is None:
-            photo_root = (self._sandbox_jobs.store.flow.path.parent / 'photo-tests' if self._sandbox_enabled
-                          else PROJECT_ROOT / 'data' / 'kiosk-v2-p3')
-            self._photo_jobs = PhotoJobs(factory=lambda: configured_test(photo_root, configuration_root=PROJECT_ROOT) if self._sandbox_enabled else configured_test(photo_root))
+        self._ensure_photo_jobs()
         self._photo_view = {}
         self._photo_error = ''
-        self._photo_jobs.submit('reset' if self._photo_prepared else 'prepare')
+        if not self._photo_jobs.busy:
+            self._photo_jobs.submit('reset' if self._photo_prepared else 'prepare')
         self._show()
 
     def _leave_photo_confirm(self):
@@ -66,6 +82,7 @@ class PhotoViews:
             return
         self._photo_error = ''
         if self._photo_jobs.submit(action, *args):
+            self._photo_pending_action = action
             if action != 'snapshot':
                 # Preserve the current camera/strip and layout while I/O runs.
                 # Completion rebuilds once, retiring these callbacks by revision.
@@ -73,8 +90,12 @@ class PhotoViews:
                     if isinstance(control, ArcadeButton):
                         control.disabled = True
                 self._photo_message.text = 'Sedang memproses… tunggu sebentar.'
+                if action == 'print_result':
+                    self._update_delivery_label()
 
     def _admit_photo_test(self):
+        if not self._photo_view.get('drive_ready', True):
+            return
         if self.camera_device.read() is None:
             self._photo_error = 'Kamera belum siap. Sambungkan kamera lalu coba lagi.'
             self._show()
@@ -90,14 +111,26 @@ class PhotoViews:
             return
         outcome = jobs.poll()
         if outcome is not None:
+            previous_setup = tuple(self._photo_view.get(k) for k in ('drive_ready','drive_error'))
+            self._photo_pending_action = None
             if outcome.value:
                 self._photo_view = outcome.value
             if outcome.error:
-                self._photo_error = ('Proses belum berhasil. Periksa kamera, penyimpanan atau koneksi; '
-                                     'foto yang tersimpan tetap aman. Detail ada di log.')
+                self._photo_error = {
+                    'drive_configuration': 'Drive belum dikonfigurasi. Hubungi operator; belum ada foto diunggah.',
+                    'booth_profile': 'Profil penyimpanan belum sesuai. Hubungi operator sebelum mulai foto.',
+                }.get(getattr(outcome,'setup_error',None),
+                    'Proses belum berhasil. Periksa kamera, penyimpanan atau koneksi; '
+                    'foto yang tersimpan tetap aman. Detail ada di log.')
             elif outcome.action == 'prepare':
                 self._photo_prepared = True
+            if outcome.action != 'snapshot':
+                self._photo_refresh_at = time.monotonic() + 1
             if self._sandbox_photo_outcome(outcome):
+                return
+            # A boot-time preparation/late snapshot must not rebuild the ad
+            # player or move a visitor onto an old photo screen.
+            if self.navigation.page not in PHOTO_PAGES:
                 return
             phase = self._photo_view.get('phase')
             if phase in {CAPTURE, REVIEW, RESULT, 'done'}:
@@ -107,14 +140,25 @@ class PhotoViews:
                 return
             if not self._suspended:
                 if outcome.action == 'snapshot':
-                    self._update_delivery_label()
+                    if self.navigation.page == PHOTO_CONFIRM:
+                        if previous_setup != tuple(self._photo_view.get(k) for k in ('drive_ready','drive_error')):
+                            self._show()
+                    else:
+                        self._update_delivery_label()
                 else:
                     self._show()
                 if outcome.action == 'capture' and not outcome.error:
                     self.audio_v2.cue('shutter')
                 if outcome.action == 'compose' and not outcome.error:
                     self.audio_v2.cue('success')
-        if (not self._suspended and self.navigation.page == RESULT and not jobs.busy and
+                    if (self._photo_view.get('auto_print') and self._photo_view.get('print_available')
+                            and self._photo_view.get('print_state') == 'NOT_SENT'):
+                        self._photo_submit('print_result')
+        waiting_drive = (self._photo_view.get('drive_enabled') and
+            ((self.navigation.page == PHOTO_CONFIRM and not self._photo_view.get('drive_ready')) or
+             (self.navigation.page == RESULT and self._photo_view.get('upload_status') != 'UPLOAD_COMPLETE')))
+        if (not self._suspended and waiting_drive and not jobs.busy and
+                self._photo_prepared and
                 time.monotonic() >= self._photo_refresh_at):
             self._photo_refresh_at = time.monotonic() + 3
             jobs.submit('snapshot')
@@ -235,25 +279,34 @@ class PhotoViews:
     def _build_photo_confirm(self, shell):
         card = PixelCard(orientation='vertical', padding=16, spacing=8)
         self._photo_confirm_card = card
-        card.add_widget(Widget())
-        card.add_widget(Image(source=str(CAMERA_ART), fit_mode='contain',
-                              size_hint_y=None, height=dp(90)))
-        card.add_widget(text_label('3 FOTO + 1 RETAKE PER DESAIN', size=20, height=52,
+        scroll = ScrollView(do_scroll_x=False)
+        body = BoxLayout(orientation='vertical',size_hint_y=None,spacing=dp(8))
+        body.bind(minimum_height=body.setter('height'))
+        scroll.add_widget(body);card.add_widget(scroll)
+        body.add_widget(Image(source=str(CAMERA_ART), fit_mode='contain',
+                              size_hint_y=None, height=dp(70)))
+        body.add_widget(text_label('3 FOTO + 1 RETAKE PER DESAIN', size=20, height=52,
                                    color=GOLD, bold=True))
         total = sum(self.quantities.values())
         designs = sum(value > 0 for value in self.quantities.values())
-        card.add_widget(text_label(f'{designs} desain • {total} lembar pilihan', size=19, height=36))
-        card.add_widget(text_label(
+        body.add_widget(text_label(f'{designs} desain • {total} lembar pilihan', size=19, height=36))
+        setup = self._photo_view
+        if setup.get('drive_enabled'):
+            message = ('DRIVE SIAP • folder foto sudah tersedia' if setup.get('drive_ready') else
+                       'MENYIAPKAN DRIVE • tunggu folder tersedia' if not setup.get('drive_error') else
+                       'DRIVE BELUM SIAP • periksa koneksi / hubungi operator')
+            body.add_widget(text_label(message,size=13,height=52,color=CYAN))
+        body.add_widget(text_label(
             'Foto uji disimpan di perangkat ini.\n'
             'Preview kamera memakai cermin; foto asli tetap normal.\n\n'
-            'Jumlah lembar tidak menambah sesi foto.\n'
-            'Cetak hanya dikirim setelah tombol CETAK ditekan.\n'
+            'Jumlah lembar tidak menambah sesi foto.\n' +
+            ('Setelah disetujui, strip dicetak otomatis.\n' if self._photo_view.get('auto_print') else
+             'Cetak dikirim setelah tombol CETAK ditekan.\n') +
             'Drive hanya tersedia jika dikonfigurasi operator.',
             size=16, height=190, color=MUTED))
-        card.add_widget(Widget())
         shell.add_widget(card)
         shell.add_widget(self._photo_action('SETUJU & MULAI UJI FOTO', self._admit_photo_test,
-                                            disabled=not self._photo_prepared))
+                                            disabled=not self._photo_prepared or not setup.get('drive_ready',True)))
         if not self._photo_prepared and not self._photo_jobs.busy:
             shell.add_widget(self._photo_action('COBA PERSIAPAN LAGI',
                                                 lambda: self._photo_submit('prepare'), variant='secondary'))
@@ -315,28 +368,65 @@ class PhotoViews:
             delivery = 'DRIVE TERVERIFIKASI • pindai QR pada strip untuk download'
         elif view.get('retention_error'):
             delivery = 'UPLOAD DITAHAN • operator perlu memeriksa kebijakan retensi Drive'
+        elif upload in {'ACTION_REQUIRED','LOCAL_EXPIRED'}:
+            delivery = 'DRIVE PERLU DIPERIKSA • hubungi operator; download belum terverifikasi'
+        elif upload == 'UPLOAD_RETRY':
+            delivery = 'UPLOAD TERTUNDA • foto lokal aman; dicoba lagi otomatis'
         else:
-            delivery = 'UPLOAD BELUM SELESAI • foto lokal aman; download belum terverifikasi'
+            delivery = 'MENGUNGGAH KE DRIVE • foto lokal aman; proses lanjut di background'
         printing = {'NOT_SENT': 'Cetak belum dikirim.', 'SUBMITTED': 'Terkirim ke printer • periksa lembar fisik.',
                     'SENDING': 'Mengirim ke printer…', 'UNCERTAIN': 'Hasil cetak belum pasti • periksa printer.'}
-        return delivery + '\n' + printing[view['print_state']]
+        progress = ('Menyiapkan / mengirim cetak…' if self._photo_jobs.busy and
+                    self._photo_pending_action == 'print_result' else printing[view['print_state']])
+        return delivery + '\n' + progress
 
     def _update_delivery_label(self):
         if self.navigation.page == RESULT and hasattr(self, '_delivery_label'):
             self._delivery_label.text = self._delivery_text()
+            self._update_download_qr()
+
+    def _update_download_qr(self):
+        if not getattr(self,'_download_image',None):
+            return
+        view=self._photo_view
+        photo=view.get('download_qr') if view.get('upload_status') == 'UPLOAD_COMPLETE' else None
+        key=(view.get('transaction_id'),view.get('folder_url')) if photo is not None else None
+        if key != self._download_qr_texture_key:
+            self._download_image.texture = image_texture(photo) if photo is not None else None
+            if self._download_image.texture:
+                self._download_image.texture.mag_filter = self._download_image.texture.min_filter = 'nearest'
+            self._download_qr_texture_key = key
+        self._download_image.opacity = 1 if photo is not None else 0
+        self._download_hint.text = ('SCAN UNTUK DOWNLOAD' if photo is not None else
+                                   'Foto terunggah. QR belum siap; hubungi operator.'
+                                   if view.get('upload_status') == 'UPLOAD_COMPLETE' else
+                                   'QR muncul setelah semua foto terunggah')
 
     def _build_result(self, shell):
         view = self._photo_view
-        card = PixelCard(orientation='vertical', padding=10)
+        self._download_image = None
+        self._download_qr_texture_key = None
+        card = PixelCard(orientation='horizontal', padding=10,spacing=8)
         card.add_widget(Image(texture=image_texture(view['strip']), fit_mode='contain'))
+        if view.get('drive_enabled') or view.get('folder_url'):
+            download = BoxLayout(orientation='vertical',spacing=dp(8),size_hint_x=.75)
+            download.add_widget(text_label('FOTO DIGITAL',size=16,height=35,color=GOLD,bold=True))
+            self._download_image=Image(fit_mode='contain',opacity=0)
+            download.add_widget(self._download_image)
+            self._download_hint=text_label('',size=13,height=70,color=CYAN)
+            download.add_widget(self._download_hint)
+            card.add_widget(download)
+            self._update_download_qr()
         shell.add_widget(card)
         self._delivery_label = text_label(self._delivery_text(), size=14, height=72, color=CYAN)
         shell.add_widget(self._delivery_label)
         uncertain = view['print_state'] == 'UNCERTAIN' and not view['print_checked']
+        print_title = (f"CETAK OTOMATIS • {view['copies']} LEMBAR" if view.get('auto_print') else
+                       f"CETAK UJI • {view['copies']} LEMBAR") if view['print_available'] else 'CETAK UJI • BELUM DIAKTIFKAN OPERATOR'
         shell.add_widget(self._photo_action(
-            f"CETAK UJI • {view['copies']} LEMBAR" if view['print_available'] else 'CETAK UJI • BELUM DIAKTIFKAN OPERATOR',
+            print_title,
             lambda: self._photo_submit('print_result'), variant='secondary',
-            disabled=not view['print_available'] or view['print_state'] != 'NOT_SENT'))
+            disabled=not view['print_available'] or view.get('auto_print',False) or view['print_state'] != 'NOT_SENT'))
         if uncertain:
             shell.add_widget(self._photo_action('SAYA SUDAH CEK PRINTER',
                                                 lambda: self._photo_submit('acknowledge_print'), variant='tertiary'))

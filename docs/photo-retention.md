@@ -9,6 +9,12 @@ later statement that uploads may continue during setup describes the legacy v1
 path, not the v2 guard. V2 local retention uses the existing worker; default
 Drive is off and the dedicated Sandbox launcher forces it off.
 
+The explicit ordinary v2 `--drive` profile now resumes its existing isolated
+queue on startup and keeps uploading after the photo visit. Use the same v1
+private configuration; a large result QR appears after file verification.
+[Print/Drive runbook and acceptance](qa/portrait-v2-print-drive/README.md).
+This changes neither the retention guard nor BUG-009's unverified cloud deletion.
+
 Apps Script setup/deployment/permanent deletion below are operator runbook
 instructions for a separately authorized cloud change, not actions performed or
 authorized by this documentation audit. Restart v1 with `main.py` only when

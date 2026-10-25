@@ -1,0 +1,11 @@
+test_configured_service_reuses_saved_printer_and_original_drive_factories (test_kiosk_v2_photo_delivery.PhotoDeliveryTests.test_configured_service_reuses_saved_printer_and_original_drive_factories) ... ok
+test_download_qr_only_after_verified_upload_is_encoded_off_ui_and_cached (test_kiosk_v2_photo_delivery.PhotoDeliveryTests.test_download_qr_only_after_verified_upload_is_encoded_off_ui_and_cached) ... ok
+test_missing_credentials_is_a_safe_setup_error_not_a_fake_folder (test_kiosk_v2_photo_delivery.PhotoDeliveryTests.test_missing_credentials_is_a_safe_setup_error_not_a_fake_folder) ... ok
+test_new_service_resumes_real_existing_upload_queue_without_new_visit_or_print (test_kiosk_v2_photo_delivery.PhotoDeliveryTests.test_new_service_resumes_real_existing_upload_queue_without_new_visit_or_print) ... ok
+test_setup_snapshot_reports_real_pool_readiness_and_reuses_one_worker (test_kiosk_v2_photo_delivery.PhotoDeliveryTests.test_setup_snapshot_reports_real_pool_readiness_and_reuses_one_worker) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.554s
+
+OK
+KIOSK_UNITTEST_SUMMARY: run=5 failures=0 errors=0 skipped=0 success=True
