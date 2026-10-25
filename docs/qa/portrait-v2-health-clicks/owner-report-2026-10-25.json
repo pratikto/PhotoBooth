@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-25",
+  "branch": "feature/portrait-kiosk-v2-next",
+  "tested_head": null,
+  "windows": null,
+  "resolution": null,
+  "scaling_percent": null,
+  "speaker_output": null,
+  "camera": null,
+  "camera_index": null,
+  "panel_cycles": null,
+  "raw_checked": ["H01", "H02", "H03", "H04", "H05", "H06", "H07", "H08"],
+  "raw_pass_count": "8/8",
+  "raw_issue_note": "klik tombol tombol berulang di device health windown bikin ngehang apps nya",
+  "owner_clarification": "semua nya aku pencetin bertubi2 tadi",
+  "assessment": "BLOCKED_BY_REPORTED_HANG",
+  "contradicted_or_retest_required": ["H03", "H04"],
+  "exact_source_acceptance": "UNVERIFIED",
+  "windows_freeze_stack": "NOT_SUPPLIED",
+  "prior_twenty_cycle_reports": "PRESERVED_NO_NEW_CYCLE_GATE",
+  "external_acceptance": "NOT_PASSED_BY_THIS_FORM"
+}

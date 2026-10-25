@@ -10,6 +10,12 @@ check passed; OWNER-REPORTED means a physical observation with the recorded
 metadata limits; PENDING/NOT_RUN means acceptance has not been demonstrated.
 None of these alone means production-certified or formally released.
 
+**New operator report, 25 October:** raw 8/8 checked, but rapid combined button
+presses reportedly hang the app. Treat operator acceptance as blocked by
+**BUG-018**, with H03/H04 retest required and exact HEAD/device metadata unknown.
+The input correction is under QA; previous automated evidence below predates it.
+[Report and correction](qa/portrait-v2-health-clicks/README.md).
+
 | Feature | Current GUI v2 source | Evidence and boundary |
 | --- | --- | --- |
 | Advertising/tutorial/twelve templates | Responsive media, inline invitation, tutorial once per visit, swipe gallery, native captions and animated header | Source screenshots; final owner visual/audio 8/8 at unknown HEAD |
@@ -22,7 +28,7 @@ None of these alone means production-certified or formally released.
 | Local MOCK checkout | Local SQLite quote/promotion/admission; nonpayable QR and simulated confirmation | Win discount Rp2,500 once per order, capped at subtotal; no bank settlement |
 | FEAT-020 QRIS Sandbox | Reused service/client/journal plus native v2 adapter/isolated launcher | Server quote, provider verification, one-use grant/ACK/recovery in source. Actual merchant simulator evidence pending; no trusted game-promo API |
 | P5 readiness | Read-only CLI, safe metadata JSON, 26-item Submit/import form, rollback package | Owner preflight `0dc6555` = READY_FOR_MANUAL_TEST, not hardware/provider PASS |
-| FEAT-008 operator Device Health | Original v1 backend/panel/worker reused with small v2 adapters and safe report export | F12/header hold at idle or Sandbox RECOVERY; manual refresh only; eight-item acceptance pending. Selection/switching disabled |
+| FEAT-008 operator Device Health | Original v1 backend/panel/worker reused with small v2 adapters and safe report export | Owner raw 8/8 plus rapid combined-button hang: BUG-018 blocks clean acceptance; targeted retest pending. Selection/switching disabled |
 | Other reference features | Device staging/switching, AI Background Studio, WhatsApp, newer dithering lab | Separate branches; not automatically in v2. [Reference map](gui-v2-branch-audit.md) |
 | Production payments, merchant POS/scanner, trusted QRIS promo | Disabled/not delivered in v2 | Require their own approved scope, trust contract and acceptance |
 

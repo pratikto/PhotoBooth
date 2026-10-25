@@ -1,4 +1,5 @@
 """Mount the original v1 operator panel; customer screens retain native v2 flow."""
+from time import monotonic
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.metrics import dp
@@ -50,14 +51,35 @@ class OperatorPanel(HealthPanelMixin):
         button = ArcadeButton(text, variant='tertiary' if secondary else 'secondary',height=48)
         button.font_size = dp(12)
         button.disabled = not enabled
+        armed = False
+        next_allowed = float('-inf')
+
+        def available():
+            return not (button.disabled or self._disposed or self._health_popup is None or
+                        self.app._closed or self.app._suspended)
+
+        def press(*_):
+            nonlocal armed
+            # Native releases can arrive after a disabled/held button becomes
+            # enabled again. Only its own fresh, permitted press may act.
+            armed = available() and monotonic() >= next_allowed
+
         def release(*_):
-            if (button.disabled or self._disposed or self._health_popup is None or
-                    self.app._closed or self.app._suspended):
+            nonlocal armed, next_allowed
+            accepted, armed = armed, False
+            if not accepted or not available() or monotonic() < next_allowed:
                 return
+            # Drop fast duplicates instead of scheduling them. Even an immediate
+            # probe/file result must not allow an input burst to churn threads,
+            # inventory widgets/files or native audio stop/play calls. This is
+            # per button: TUTUP stays usable while another action is busy.
+            next_allowed = monotonic() + .75
             self.app._activity()
-            self.app.audio_v2.cue('button')
+            # Let the existing callback claim/disable its controls first. No
+            # queued event can slip in while the native click provider runs.
             callback()
-        button.bind(on_release=release)
+            self.app.audio_v2.cue('button')
+        button.bind(on_press=press, on_release=release)
         return button
 
     def _refresh(self, callback):

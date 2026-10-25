@@ -69,13 +69,15 @@ class Recorder(PortraitKioskV2App):
         scroll=next(w for w in self._operator_panel._health_popup.walk() if isinstance(w,ScrollView))
         scroll.scroll_y=0
     def refresh(self,mode):
-        self.mode=mode;self._operator_panel._health_refresh_button.dispatch('on_release')
+        self.mode=mode;self.click(self._operator_panel._health_refresh_button)
+    def click(self,button):
+        button.dispatch('on_press');button.dispatch('on_release')
     def on_start(self):
         args.output_dir.mkdir(parents=True,exist_ok=True)
         self.steps=iter([
             (self._open_operator,False),(lambda:self.capture('01-health-overview'),True),
             (self.inventory,True),(lambda:self.capture('02-health-inventory'),True),
-            (lambda:self._operator_panel.export_button.dispatch('on_release'),True),
+            (lambda:self.click(self._operator_panel.export_button),True),
             (lambda:self.capture('03-local-report-saved'),True),(lambda:self.refresh('slow'),True),
             (lambda:self.capture('04-background-probe'),False),(lambda:self.refresh('error'),True),
             (lambda:self.capture('05-probe-unavailable'),True),(self.stop,True)])

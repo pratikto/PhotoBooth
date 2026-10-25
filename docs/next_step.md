@@ -13,7 +13,7 @@ approval for features, production, deployments or repository transitions.
 
 | Order | Focus | Next action / boundary |
 | --- | --- | --- |
-| 1 | FEAT-008 operator increment | Collect the [eight-item report](qa/portrait-v2-operator-health/windows-checklist.html); no repeat old photo/game twenty-cycle requirement |
+| 1 | BUG-018 operator repeated-click hang | Owner raw 8/8 conflicts with combined-button hang note. Correct/retest input admission before watchdog work; use the [four-item form](qa/portrait-v2-health-clicks/windows-checklist.html), no new twenty-cycle requirement |
 | 2 | FEAT-022 P5 current Windows integration | Collect the [P5 report](qa/portrait-v2-p5/windows-checklist.html); preflight `0dc6555` alone is not acceptance. Fix reproducible failures within authorized scope |
 | 3 | FEAT-020 actual merchant Sandbox | Enter keys locally; test official simulator/status/cancel/restart/recovery. New integration cycles are separate from old reports |
 | 4 | BUG-009 / Drive/privacy and printing | Verify download/offline behavior, physical paper and uncertain sends; cloud retention remains OPEN and deployment/deletion needs its own authorization |

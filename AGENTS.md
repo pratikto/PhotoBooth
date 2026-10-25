@@ -62,3 +62,9 @@ stay explicit. Current owner request is to cross-check all documentation and fix
 obsolete/conflicting guidance in English. Preserve dated raw evidence and distinguish
 current guidance from historical snapshots. No application changes, production,
 device switching, deployment or default/merge operations follow from that request.
+
+Owner retest continuation, 2026-10-25: the eight operator boxes were checked but
+the notes report an application hang after pressing all Device Health buttons
+rapidly. Preserve that contradiction and unknown tested HEAD; fix/retest BUG-018
+on the same branch before proposed watchdog work. Reuse the original v1 panel,
+backend and worker; scope the correction to v2 input/lifecycle integration.

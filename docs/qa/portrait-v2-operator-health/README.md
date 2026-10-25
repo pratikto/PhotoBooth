@@ -1,5 +1,11 @@
 # GUI v2 operator Device Health — FEAT-008 / FEAT-022
 
+**25 October owner retest:** raw 8/8 checked, but pressing all operator buttons
+rapidly reportedly hangs the app. This is not clean acceptance. H03/H04 require
+the targeted [BUG-018 correction/retest](../portrait-v2-health-clicks/README.md);
+the earlier automated results below remain tied to ea394e8, with tested Windows
+HEAD/device fields unknown. No repeat old twenty-cycle gate is added.
+
 **Completed source increment.** Foundation `4c89e4f`, functional source
 `ea394e8`, evidence `5f09eff`. The “planned” section below preserves the original
 design sequence; native integration/local report and final local/CI sections

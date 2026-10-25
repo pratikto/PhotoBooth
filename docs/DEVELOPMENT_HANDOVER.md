@@ -7,6 +7,13 @@ still `master`; `main.py` launches v1. Do not restart the project or P3/P4 work.
 
 ## Latest completed increment
 
+**New owner retest / BUG-018:** eight operator items checked but issue note reports
+an app hang after pressing all buttons rapidly. Preserve raw counts and missing
+HEAD/device fields; not clean acceptance. Current correction/QA takes precedence
+over proposed watchdog work and old documentation-only task wording below.
+Reuse original v1 backend/panel/worker; fix the v2 input adapter only.
+[Reproduction, test evidence, rollback and four-item form](qa/portrait-v2-health-clicks/README.md).
+
 Read-only operator Device Health now reuses the original v1 panel/backend and
 extracted worker from **`dbbe055`**. Small adapters connect v2 scheduling,
 cached-camera observations, audio/input lifecycle and redacted local reports.

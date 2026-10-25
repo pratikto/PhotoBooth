@@ -1,5 +1,19 @@
 # Meong Photobooth — changelog
 
+## 2026-10-25 — BUG-018 operator repeated-click correction
+
+Owner reports an app hang after pressing all health buttons rapidly, despite
+eight checked boxes. Preserve the raw report and unknown tested HEAD; H03/H04
+need retest. Three regressions exposed duplicate releases, unbounded fast-result
+refreshes and disabled-held release acceptance. The v2 adapter now consumes one
+fresh permitted press and drops same-button repeats for 0.75 seconds, with no
+deferred actions/SFX. TUTUP remains independent while report/probe I/O is busy.
+Original v1 UI/backend/worker stay unchanged; native mixed-pointer heartbeat/
+close/reopen coverage and a fresh four-item Submit form accompany the fix.
+The MOCK widget wait helper also drains a result completed during its final frame,
+without extending its three-second budget or changing checkout runtime.
+[Reproduction, validation and rollback](qa/portrait-v2-health-clicks/README.md).
+
 ## 2026-10-25 — Documentation consistency audit (English)
 
 Stage 1 [`da375b3`](https://github.com/pratikto/PhotoBooth/commit/da375b3ace7048785bc558e45d10cf5a859709a1)

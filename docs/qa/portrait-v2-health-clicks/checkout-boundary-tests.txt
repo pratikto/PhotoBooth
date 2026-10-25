@@ -1,0 +1,1 @@
+PASS: original settle helper falsely rejects a result completed during its final frame; final poll accepts that completed result; an unfinished job is still rejected with the unchanged three-second budget. This reproduces a fixture boundary gap, not a Windows freeze stack.

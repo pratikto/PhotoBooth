@@ -10,6 +10,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 from kivy.base import EventLoop
+from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.input.motionevent import MotionEvent
 from photobooth.device_health import HealthCheck, HealthSnapshot
@@ -32,6 +33,10 @@ class Pointer(MotionEvent):
     def move_to(self,x,y):
         self.move((x/Window.width,y/Window.height))
         self.scale_for_screen(Window.width,Window.height)
+
+def click(button):
+    button.dispatch('on_press')
+    button.dispatch('on_release')
 
 def fixture_snapshot(status='ready'):
     return HealthSnapshot('2026-10-25T05:00:00+00:00',tuple(
@@ -106,19 +111,19 @@ class OperatorWidgetTests(unittest.TestCase):
         def collector(**_):entered.set();release.wait(3);return fixture_snapshot()
         with self.booth(collector) as (app,probe,_):
             app._open_operator();self.assertTrue(entered.wait(1));old=app._operator_panel
-            old._health_refresh_button.dispatch('on_release');self.assertEqual(probe.call_count,1)
+            click(old._health_refresh_button);self.assertEqual(probe.call_count,1)
             app._close_operator();app._open_operator();fresh=app._operator_panel
             for _ in range(4):EventLoop.idle()
             self.assertIsNot(fresh,old);self.assertIsNone(fresh.snapshot)
             release.set()
             for _ in range(8):EventLoop.idle()
             self.assertIsNone(fresh.snapshot);self.assertEqual(probe.call_count,1)
-            fresh._health_refresh_button.dispatch('on_release');self.settle(app)
+            click(fresh._health_refresh_button);self.settle(app)
             self.assertIsNotNone(fresh.snapshot);self.assertEqual(probe.call_count,2)
     def test_export_is_local_and_reports_do_not_certify_provider_or_include_raw_text(self):
         with self.booth() as (app,_,root):
             app._open_operator();self.settle(app);panel=app._operator_panel
-            panel.export_button.dispatch('on_release');self.settle(app)
+            click(panel.export_button);self.settle(app)
             files=list((root/'data'/'diagnostics').glob('device-health-*.json'))
             self.assertEqual(len(files),1)
             report=json.loads(files[0].read_text())
@@ -137,7 +142,7 @@ class OperatorWidgetTests(unittest.TestCase):
                 return {'file':'retired-report.json','head':'unknown'}
             with patch.object(store,'save',side_effect=save):
                 app._health_reports.store=store
-                app._operator_panel.export_button.dispatch('on_release');self.assertTrue(entered.wait(1))
+                click(app._operator_panel.export_button);self.assertTrue(entered.wait(1))
                 app._close_operator();app._open_operator()
                 fresh=app._operator_panel
                 deadline=time.monotonic()+2
@@ -196,3 +201,109 @@ class OperatorWidgetTests(unittest.TestCase):
             captions=' '.join(w.text for w in panel._health_popup.walk() if hasattr(w,'text'))
             self.assertNotIn('SECRET DRIVER',captions)
             self.assertIn('BELUM DIKETAHUI',captions)
+
+    def test_repeated_release_without_new_press_cannot_repeat_probe_or_audio(self):
+        with self.booth() as (app,probe,_):
+            app._open_operator();self.settle(app);panel=app._operator_panel
+            refresh=panel._health_refresh_button
+            with patch.object(app.audio_v2,'cue') as cue:
+                refresh.dispatch('on_press');refresh.dispatch('on_release')
+                self.settle(app)
+                for _ in range(30):
+                    refresh.dispatch('on_release')
+                    EventLoop.idle()
+                self.assertEqual(probe.call_count,2)
+                self.assertEqual(cue.call_count,1)
+
+    def test_fast_completed_probe_and_save_click_storms_are_not_replayed(self):
+        with self.booth() as (app,_,root):
+            app._open_operator();self.settle(app);panel=app._operator_panel
+            # Synchronous delivery is intentionally harsher than a real worker:
+            # each previous command is already complete before the next click.
+            def completed(callback):callback(fixture_snapshot())
+            with patch.object(panel.controller,'refresh',side_effect=completed) as refresh,patch.object(
+                    app.audio_v2,'cue') as cue,patch(
+                    'photobooth.kiosk_v2.operator_health.monotonic',create=True,return_value=100):
+                for _ in range(100):
+                    panel._health_refresh_button.dispatch('on_press')
+                    panel._health_refresh_button.dispatch('on_release')
+                self.assertEqual(refresh.call_count,1)
+                self.assertEqual(cue.call_count,1)
+            with patch('photobooth.kiosk_v2.operator_health.monotonic',create=True,return_value=200):
+                for _ in range(8):
+                    panel.export_button.dispatch('on_press');panel.export_button.dispatch('on_release')
+                    self.settle(app)
+                self.assertEqual(len(list((root/'data'/'diagnostics').glob('device-health-*.json'))),1)
+
+    def test_busy_press_released_after_completion_is_not_a_new_command(self):
+        entered=threading.Event();release=threading.Event()
+        def collector(**_):entered.set();release.wait(3);return fixture_snapshot()
+        with self.booth(collector) as (app,probe,_):
+            app._open_operator();self.assertTrue(entered.wait(1));panel=app._operator_panel
+            refresh=panel._health_refresh_button
+            # A press made while disabled must stay rejected after completion.
+            refresh.dispatch('on_press');release.set();self.settle(app)
+            with patch.object(app.audio_v2,'cue') as cue:
+                refresh.dispatch('on_release');EventLoop.idle()
+                self.assertEqual(probe.call_count,1);cue.assert_not_called()
+
+    def test_cooldown_drops_held_press_but_next_fresh_tap_and_close_work(self):
+        with self.booth() as (app,_,__):
+            app._open_operator();self.settle(app);panel=app._operator_panel
+            refresh=panel._health_refresh_button
+            def completed(callback):callback(fixture_snapshot())
+            with patch.object(panel.controller,'refresh',side_effect=completed) as probe,patch(
+                    'photobooth.kiosk_v2.operator_health.monotonic',return_value=100) as now:
+                click(refresh)
+                now.return_value=100.1;refresh.dispatch('on_press')
+                now.return_value=101;refresh.dispatch('on_release')
+                self.assertEqual(probe.call_count,1)
+                click(refresh);self.assertEqual(probe.call_count,2)
+                close=next(w for w in panel._health_popup.walk()
+                           if isinstance(w,ArcadeButton) and w.text=='TUTUP')
+                click(close)
+                self.assertIsNone(app._operator_panel)
+                click(refresh);self.assertEqual(probe.call_count,2)
+
+    def test_native_mixed_button_storm_keeps_heartbeat_and_close_while_save_blocked(self):
+        entered=threading.Event();release=threading.Event()
+        with self.booth() as (app,_,root):
+            app._open_operator();self.settle(app);panel=app._operator_panel
+            # Wait for the native popup opening animation/coordinates to settle.
+            until=time.monotonic()+.3
+            while time.monotonic()<until:EventLoop.idle()
+            store=app._health_reports._factory()
+            def save(snapshot):
+                entered.set();release.wait(3);return {'file':'retired.json','head':'unknown'}
+            def native_click(button):
+                touch=Pointer(*button.to_window(*button.center))
+                EventLoop.post_dispatch_input('begin',touch)
+                EventLoop.post_dispatch_input('end',touch)
+            ticks=[]
+            heartbeat=Clock.schedule_interval(lambda dt:ticks.append(dt),.01)
+            try:
+                with patch.object(store,'save',side_effect=save),patch.object(
+                        panel.controller,'refresh',side_effect=lambda cb:cb(fixture_snapshot())) as probe,patch(
+                        'photobooth.kiosk_v2.operator_health.monotonic',return_value=100),patch.object(
+                        app.audio_v2,'cue') as cue:
+                    app._health_reports.store=store
+                    for _ in range(40):
+                        for button in (panel._health_refresh_button,panel.export_button,panel._health_select_button):
+                            native_click(button)
+                        EventLoop.idle()
+                    self.assertTrue(entered.wait(1))
+                    self.assertEqual(probe.call_count,1)
+                    self.assertGreater(len(ticks),5)
+                    close=next(w for w in panel._health_popup.walk()
+                               if isinstance(w,ArcadeButton) and w.text=='TUTUP')
+                    native_click(close)
+                    self.assertIsNone(app._operator_panel)
+                    self.assertTrue(app._health_reports.busy)
+                    self.assertEqual(cue.call_count,3)
+                    app._open_operator();fresh=app._operator_panel
+                    release.set();self.settle(app)
+                    self.assertNotIn('retired.json',fresh.report_message.text)
+                    self.assertFalse(fresh.export_button.disabled)
+                    self.assertEqual(len(list((root/'data'/'diagnostics').glob('device-health-*.json'))),0)
+            finally:
+                release.set();heartbeat.cancel()

@@ -1,0 +1,96 @@
+{
+  "pngs": [
+    {
+      "file": "01-health-overview-800x12800001.png",
+      "page": "advert",
+      "width": 800,
+      "height": 1280,
+      "sha256": "d0ba226dfae5ec48678e23ed64e96189c06c8cce82de8535016e796b87d0eade",
+      "source_before_commit": "f36ebad85a2b3ba5bc93b14a9bb7f3a7f88e723f",
+      "tracked_changes": true
+    },
+    {
+      "file": "02-health-inventory-800x12800001.png",
+      "page": "advert",
+      "width": 800,
+      "height": 1280,
+      "sha256": "e17c9f49196db78799d73688de94a9dbe6a0edb5360b2604b059cb2b83b10ca0",
+      "source_before_commit": "f36ebad85a2b3ba5bc93b14a9bb7f3a7f88e723f",
+      "tracked_changes": true
+    },
+    {
+      "file": "03-local-report-saved-800x12800001.png",
+      "page": "advert",
+      "width": 800,
+      "height": 1280,
+      "sha256": "f71179be13af2c7fd094d39cd911231bbbba47704d578c2c0844db05f2562fca",
+      "source_before_commit": "f36ebad85a2b3ba5bc93b14a9bb7f3a7f88e723f",
+      "tracked_changes": true
+    },
+    {
+      "file": "04-background-probe-800x12800001.png",
+      "page": "advert",
+      "width": 800,
+      "height": 1280,
+      "sha256": "1986107fc3c85093c03235646e8501579a87c4bad3773d0911ff20edae76b1e6",
+      "source_before_commit": "f36ebad85a2b3ba5bc93b14a9bb7f3a7f88e723f",
+      "tracked_changes": true
+    },
+    {
+      "file": "05-probe-unavailable-800x12800001.png",
+      "page": "advert",
+      "width": 800,
+      "height": 1280,
+      "sha256": "5597453ba67b4ae17ad0a082dd65d9d55fecde90de8605a6315ac0c13bc4ce86",
+      "source_before_commit": "f36ebad85a2b3ba5bc93b14a9bb7f3a7f88e723f",
+      "tracked_changes": true
+    },
+    {
+      "file": "01-health-overview-452x9000001.png",
+      "page": "advert",
+      "width": 452,
+      "height": 900,
+      "sha256": "dcd926f8ec662b6334f4df804371a97731ee44bce064c62faf15bc09040bb734",
+      "source_before_commit": "f36ebad85a2b3ba5bc93b14a9bb7f3a7f88e723f",
+      "tracked_changes": true
+    },
+    {
+      "file": "02-health-inventory-452x9000001.png",
+      "page": "advert",
+      "width": 452,
+      "height": 900,
+      "sha256": "c25a2a0afb403c79e5f223d90e4b9d88f7c1584f9e74b318f30c4bc504dde432",
+      "source_before_commit": "f36ebad85a2b3ba5bc93b14a9bb7f3a7f88e723f",
+      "tracked_changes": true
+    },
+    {
+      "file": "03-local-report-saved-452x9000001.png",
+      "page": "advert",
+      "width": 452,
+      "height": 900,
+      "sha256": "5b1e11a0a91eeb57306c5e4f14b0c023fac82a7889a0aee5eb327d4f84f6e265",
+      "source_before_commit": "f36ebad85a2b3ba5bc93b14a9bb7f3a7f88e723f",
+      "tracked_changes": true
+    },
+    {
+      "file": "04-background-probe-452x9000001.png",
+      "page": "advert",
+      "width": 452,
+      "height": 900,
+      "sha256": "2facfa4e7d1d0fd4b58b7097854380930861220671590c1d4c997595cad60f8a",
+      "source_before_commit": "f36ebad85a2b3ba5bc93b14a9bb7f3a7f88e723f",
+      "tracked_changes": true
+    },
+    {
+      "file": "05-probe-unavailable-452x9000001.png",
+      "page": "advert",
+      "width": 452,
+      "height": 900,
+      "sha256": "1e43319dfb469de669d62a729113148a43344e389c1cb35d5b97db0a5ee35a0e",
+      "source_before_commit": "f36ebad85a2b3ba5bc93b14a9bb7f3a7f88e723f",
+      "tracked_changes": true
+    }
+  ],
+  "synthetic_only": true,
+  "total": 10
+}

@@ -45,6 +45,10 @@ class CheckoutWidgetTests(unittest.TestCase):
         deadline=time.monotonic()+3
         while app._mock_jobs.busy and time.monotonic()<deadline:
             app._poll_checkout();EventLoop.idle()
+        # A native frame can use the last part of the wait budget while the
+        # worker finishes. Drain that already-completed result before judging
+        # busy; do not extend the deadline or accept an unfinished job.
+        app._poll_checkout()
         self.assertFalse(app._mock_jobs.busy)
 
     def gallery(self, app):
