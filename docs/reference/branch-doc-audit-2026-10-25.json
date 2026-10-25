@@ -1,0 +1,1146 @@
+{
+  "audit_date": "2026-10-25",
+  "timezone": "Asia/Jakarta",
+  "repository": "pratikto/PhotoBooth",
+  "github_default_branch": "master",
+  "active_v2_branch": "feature/portrait-kiosk-v2-next",
+  "audit_baseline": "0dc6555d299cdab19d952e92df2ae660cdc4676d",
+  "method": "read-only refs, documentation inventory and selected primary/feature document review; no branch test reruns",
+  "branches": [
+    {
+      "branch": "backup/feature-kivy-gui-pre-printer-separation-20261017",
+      "sha": "1c717b940802c0f3f4d20ef26d7ea55960cb66e7",
+      "documentation_files": [
+        "README.md",
+        "docs/photo-retention.md",
+        "docs/printer-setup.md",
+        "docs/qa/README.md",
+        "docs/qa/branded-qr.md",
+        "docs/qa/centered-qr.md",
+        "docs/qa/meong-carousel.md",
+        "docs/qa/receipt-templates.md"
+      ],
+      "latest_commit": "2026-10-17 Move LAN-first printer development to its own branch",
+      "review_sources": [
+        {
+          "path": "README.md",
+          "sha256": "ee01f78595898d3c2a0b91b77dc0e1539e60997b6e58813c32bf85398754e4fe"
+        }
+      ]
+    },
+    {
+      "branch": "backup/feature-thermal-printer-pre-rebase-20261017",
+      "sha": "105e9b3c323973c61b0134b042fd6b55d2a1ea03",
+      "documentation_files": [
+        "README.md",
+        "docs/photo-retention.md",
+        "docs/printer-setup.md",
+        "docs/qa/README.md",
+        "docs/qa/branded-qr.md",
+        "docs/qa/centered-qr.md",
+        "docs/qa/meong-carousel.md",
+        "docs/qa/receipt-templates.md"
+      ],
+      "latest_commit": "2026-10-17 Prioritize LAN, Wi-Fi, and USB printer fallback",
+      "review_sources": [
+        {
+          "path": "README.md",
+          "sha256": "f5513b1c83b6012d86b466dada351b008f2349acd8e3ca9b2545b2b50b32ab82"
+        }
+      ]
+    },
+    {
+      "branch": "backup/master-pre-v1-20261019",
+      "sha": "d4852cb56d2eea92ae135a5ab38ce3676e2f3381",
+      "documentation_files": [
+        "README.md"
+      ],
+      "latest_commit": "2026-10-14 docs: use incrementing transaction folder IDs",
+      "review_sources": [
+        {
+          "path": "README.md",
+          "sha256": "70ec785866efec473271be46417d4a41967d277925b4bc11ef2957016e347e6d"
+        }
+      ]
+    },
+    {
+      "branch": "docs/feat-021-whatsapp-photo-delivery",
+      "sha": "aebde8438833d27aeed25f3873229aca64d11636",
+      "documentation_files": [
+        "README.md",
+        "docs/ARCHITECTURE.md",
+        "docs/CHANGELOG.md",
+        "docs/DECISIONS.md",
+        "docs/DEVELOPMENT_HANDOVER.md",
+        "docs/DEVELOPMENT_PROMPT.md",
+        "docs/DEVELOPMENT_PROTOCOL.md",
+        "docs/FEATURE_STATUS.md",
+        "docs/NEXT_STEPS.md",
+        "docs/README.md",
+        "docs/advertising-and-qris.md",
+        "docs/bug_tracker.md",
+        "docs/dither-tuning-lab.md",
+        "docs/next_step.md",
+        "docs/photo-retention.md",
+        "docs/printer-setup.md",
+        "docs/qa/FEAT-001-BUG-011-acceptance.md",
+        "docs/qa/KIOSK-GUI-REGRESSION-2026-10-18.md",
+        "docs/qa/README.md",
+        "docs/qa/advertising-kiosk.md",
+        "docs/qa/branded-qr.md",
+        "docs/qa/centered-qr.md",
+        "docs/qa/logo-audio.md",
+        "docs/qa/meong-carousel.md",
+        "docs/qa/receipt-templates.md",
+        "docs/releases/v1.0.0.md",
+        "docs/test_checklist.md"
+      ],
+      "latest_commit": "2026-10-19 docs(DEC-021): preserve Google Drive QR alongside optional WhatsApp",
+      "review_sources": [
+        {
+          "path": "README.md",
+          "sha256": "3ee0c475be1be47aa0fa0719863b7c048a07c0749bb2bcaa70ad84948c8a6304"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "ff5e35e865d8e0bcd94849d4d31c852d3667cca62fcd6bbb095eb9df499628c9"
+        },
+        {
+          "path": "docs/DECISIONS.md",
+          "sha256": "f05894e7db050637f94f50cb1b051d75d1cf89f9e735af877ff4ae1cbc1fe3d1"
+        },
+        {
+          "path": "docs/DEVELOPMENT_HANDOVER.md",
+          "sha256": "9971d4a79a7fe571d74fb836188329b7e80ac9613ae7c0e78fae559590cf8f0b"
+        },
+        {
+          "path": "docs/FEATURE_STATUS.md",
+          "sha256": "86f0268e7baa146d2cc33ba6c2d739dd20679e7a7f54b98c992dc600db6bfd9e"
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "91ab6be5d1671c664aa28a58fec0dbcd0b48b2c640df1a72136fb1ff82519b05"
+        },
+        {
+          "path": "docs/dither-tuning-lab.md",
+          "sha256": "8ecbb962fb74310d3bbc613a57ab9077d4544950b3fac5838df3c7f372eeb52b"
+        },
+        {
+          "path": "docs/next_step.md",
+          "sha256": "d40dc74cebc35ca984d3cf4eebd733db42403dc006b3bd56c40ed662f49aa833"
+        }
+      ]
+    },
+    {
+      "branch": "docs/meong-fly-tutorial-gate-20261021",
+      "sha": "980af99798b67084aff517f36d76e2c1af767c02",
+      "documentation_files": [
+        "README.md",
+        "docs/ARCHITECTURE.md",
+        "docs/CHANGELOG.md",
+        "docs/DECISIONS.md",
+        "docs/DEVELOPMENT_HANDOVER.md",
+        "docs/DEVELOPMENT_PROMPT.md",
+        "docs/DEVELOPMENT_PROTOCOL.md",
+        "docs/FEATURE_STATUS.md",
+        "docs/NEXT_STEPS.md",
+        "docs/README.md",
+        "docs/advertising-and-qris.md",
+        "docs/bug_tracker.md",
+        "docs/dither-tuning-lab.md",
+        "docs/next_step.md",
+        "docs/photo-retention.md",
+        "docs/printer-setup.md",
+        "docs/qa/FEAT-001-BUG-011-acceptance.md",
+        "docs/qa/KIOSK-GUI-REGRESSION-2026-10-18.md",
+        "docs/qa/README.md",
+        "docs/qa/advertising-kiosk.md",
+        "docs/qa/branded-qr.md",
+        "docs/qa/centered-qr.md",
+        "docs/qa/logo-audio.md",
+        "docs/qa/meong-carousel.md",
+        "docs/qa/receipt-templates.md",
+        "docs/releases/v1.0.0.md",
+        "docs/test_checklist.md"
+      ],
+      "latest_commit": "2026-10-21 docs: record Meong Fly tutorial-once visit gate as design-only decision",
+      "review_sources": [
+        {
+          "path": "README.md",
+          "sha256": "3ee0c475be1be47aa0fa0719863b7c048a07c0749bb2bcaa70ad84948c8a6304"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "ff5e35e865d8e0bcd94849d4d31c852d3667cca62fcd6bbb095eb9df499628c9"
+        },
+        {
+          "path": "docs/DECISIONS.md",
+          "sha256": "f3f898af8b7e9c709ac42acce9e8d348d701d32bf8d9cefddfe9ba1f5749321f"
+        },
+        {
+          "path": "docs/DEVELOPMENT_HANDOVER.md",
+          "sha256": "9971d4a79a7fe571d74fb836188329b7e80ac9613ae7c0e78fae559590cf8f0b"
+        },
+        {
+          "path": "docs/FEATURE_STATUS.md",
+          "sha256": "86f0268e7baa146d2cc33ba6c2d739dd20679e7a7f54b98c992dc600db6bfd9e"
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "91ab6be5d1671c664aa28a58fec0dbcd0b48b2c640df1a72136fb1ff82519b05"
+        },
+        {
+          "path": "docs/dither-tuning-lab.md",
+          "sha256": "8ecbb962fb74310d3bbc613a57ab9077d4544950b3fac5838df3c7f372eeb52b"
+        },
+        {
+          "path": "docs/next_step.md",
+          "sha256": "7ea9aec62fa89f1249ede0713e17f8d5e2db75ea5cc0af9e5236df1c6db34797"
+        }
+      ]
+    },
+    {
+      "branch": "docs/post-v1-release-reconciliation-20261019",
+      "sha": "359e8e56cee8c049ff927433cab562804d082f41",
+      "documentation_files": [
+        "README.md",
+        "docs/ARCHITECTURE.md",
+        "docs/CHANGELOG.md",
+        "docs/DECISIONS.md",
+        "docs/DEVELOPMENT_HANDOVER.md",
+        "docs/DEVELOPMENT_PROMPT.md",
+        "docs/DEVELOPMENT_PROTOCOL.md",
+        "docs/FEATURE_STATUS.md",
+        "docs/NEXT_STEPS.md",
+        "docs/README.md",
+        "docs/advertising-and-qris.md",
+        "docs/bug_tracker.md",
+        "docs/dither-tuning-lab.md",
+        "docs/next_step.md",
+        "docs/photo-retention.md",
+        "docs/printer-setup.md",
+        "docs/qa/FEAT-001-BUG-011-acceptance.md",
+        "docs/qa/KIOSK-GUI-REGRESSION-2026-10-18.md",
+        "docs/qa/README.md",
+        "docs/qa/advertising-kiosk.md",
+        "docs/qa/branded-qr.md",
+        "docs/qa/centered-qr.md",
+        "docs/qa/logo-audio.md",
+        "docs/qa/meong-carousel.md",
+        "docs/qa/receipt-templates.md",
+        "docs/releases/v1.0.0.md",
+        "docs/test_checklist.md"
+      ],
+      "latest_commit": "2026-10-19 docs(governance): supersede outdated active instructions and pricing",
+      "review_sources": [
+        {
+          "path": "README.md",
+          "sha256": "3ee0c475be1be47aa0fa0719863b7c048a07c0749bb2bcaa70ad84948c8a6304"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "ff5e35e865d8e0bcd94849d4d31c852d3667cca62fcd6bbb095eb9df499628c9"
+        },
+        {
+          "path": "docs/DECISIONS.md",
+          "sha256": "bc9baffbb93c377c6772aaee25de5d2265e979951a599789a5ac5a39606b7487"
+        },
+        {
+          "path": "docs/DEVELOPMENT_HANDOVER.md",
+          "sha256": "9971d4a79a7fe571d74fb836188329b7e80ac9613ae7c0e78fae559590cf8f0b"
+        },
+        {
+          "path": "docs/FEATURE_STATUS.md",
+          "sha256": "86f0268e7baa146d2cc33ba6c2d739dd20679e7a7f54b98c992dc600db6bfd9e"
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "91ab6be5d1671c664aa28a58fec0dbcd0b48b2c640df1a72136fb1ff82519b05"
+        },
+        {
+          "path": "docs/dither-tuning-lab.md",
+          "sha256": "8ecbb962fb74310d3bbc613a57ab9077d4544950b3fac5838df3c7f372eeb52b"
+        },
+        {
+          "path": "docs/next_step.md",
+          "sha256": "7ea9aec62fa89f1249ede0713e17f8d5e2db75ea5cc0af9e5236df1c6db34797"
+        }
+      ]
+    },
+    {
+      "branch": "feature/ai-background-studio",
+      "sha": "eb368c11b52ee4e88d5644b07a79b7bdd9178f2d",
+      "documentation_files": [
+        "README.md",
+        "docs/ARCHITECTURE.md",
+        "docs/CHANGELOG.md",
+        "docs/DECISIONS.md",
+        "docs/DEVELOPMENT_HANDOVER.md",
+        "docs/DEVELOPMENT_PROMPT.md",
+        "docs/DEVELOPMENT_PROTOCOL.md",
+        "docs/FEATURE_STATUS.md",
+        "docs/NEXT_STEPS.md",
+        "docs/README.md",
+        "docs/advertising-and-qris.md",
+        "docs/bug_tracker.md",
+        "docs/dither-tuning-lab.md",
+        "docs/next_step.md",
+        "docs/photo-retention.md",
+        "docs/printer-setup.md",
+        "docs/qa/FEAT-001-BUG-011-acceptance.md",
+        "docs/qa/KIOSK-GUI-REGRESSION-2026-10-18.md",
+        "docs/qa/README.md",
+        "docs/qa/advertising-kiosk.md",
+        "docs/qa/branded-qr.md",
+        "docs/qa/centered-qr.md",
+        "docs/qa/logo-audio.md",
+        "docs/qa/meong-carousel.md",
+        "docs/qa/receipt-templates.md",
+        "docs/releases/v1.0.0.md",
+        "docs/test_checklist.md"
+      ],
+      "latest_commit": "2026-10-21 docs(FEAT-021): reconcile GUI integration and verified backend CI evidence",
+      "review_sources": [
+        {
+          "path": "README.md",
+          "sha256": "3ee0c475be1be47aa0fa0719863b7c048a07c0749bb2bcaa70ad84948c8a6304"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "b2f3cad729818f2393616764faa1038bd63b8f6860163ffccf1f68bf0ee8f93e"
+        },
+        {
+          "path": "docs/DECISIONS.md",
+          "sha256": "bc9baffbb93c377c6772aaee25de5d2265e979951a599789a5ac5a39606b7487"
+        },
+        {
+          "path": "docs/DEVELOPMENT_HANDOVER.md",
+          "sha256": "c301c54d3f1394a02ee2551d496b550a40c678a13c630747ffd9ad7a409f2f35"
+        },
+        {
+          "path": "docs/FEATURE_STATUS.md",
+          "sha256": "8d84381ffd6c71c7833cbede86e9f3db027b07d82284de8b5c5214cfb24ef5fc"
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "91ab6be5d1671c664aa28a58fec0dbcd0b48b2c640df1a72136fb1ff82519b05"
+        },
+        {
+          "path": "docs/dither-tuning-lab.md",
+          "sha256": "8ecbb962fb74310d3bbc613a57ab9077d4544950b3fac5838df3c7f372eeb52b"
+        },
+        {
+          "path": "docs/next_step.md",
+          "sha256": "54829cc73eaf49c707c40a60c32890794459564ee492f54ec19d0768985e411b"
+        }
+      ]
+    },
+    {
+      "branch": "feature/device-health",
+      "sha": "dbbe055bb1281ad065a5ba0c3593cfbfbd388bd3",
+      "documentation_files": [
+        "README.md",
+        "docs/ARCHITECTURE.md",
+        "docs/CHANGELOG.md",
+        "docs/DECISIONS.md",
+        "docs/DEVELOPMENT_HANDOVER.md",
+        "docs/DEVELOPMENT_PROMPT.md",
+        "docs/DEVELOPMENT_PROTOCOL.md",
+        "docs/FEATURE_STATUS.md",
+        "docs/NEXT_STEPS.md",
+        "docs/README.md",
+        "docs/advertising-and-qris.md",
+        "docs/bug_tracker.md",
+        "docs/device-health.md",
+        "docs/dither-tuning-lab.md",
+        "docs/next_step.md",
+        "docs/photo-retention.md",
+        "docs/printer-setup.md",
+        "docs/qa/FEAT-001-BUG-011-acceptance.md",
+        "docs/qa/KIOSK-GUI-REGRESSION-2026-10-18.md",
+        "docs/qa/README.md",
+        "docs/qa/advertising-kiosk.md",
+        "docs/qa/branded-qr.md",
+        "docs/qa/centered-qr.md",
+        "docs/qa/logo-audio.md",
+        "docs/qa/meong-carousel.md",
+        "docs/qa/receipt-templates.md",
+        "docs/releases/v1.0.0.md",
+        "docs/test_checklist.md"
+      ],
+      "latest_commit": "2026-10-20 docs(FEAT-008): log failed CI and regression repair transparently",
+      "review_sources": [
+        {
+          "path": "README.md",
+          "sha256": "3ee0c475be1be47aa0fa0719863b7c048a07c0749bb2bcaa70ad84948c8a6304"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "467f72e4a0ad7ef6fe91cf7a2cf359d7745e57ef46a24db99ebe7899dfe8239d"
+        },
+        {
+          "path": "docs/DECISIONS.md",
+          "sha256": "054240e81b518f4db31487041566b45e300c64077e9b6ead892102e18ab6d9b0"
+        },
+        {
+          "path": "docs/DEVELOPMENT_HANDOVER.md",
+          "sha256": "52996bee014992c698a21eb00fd7f719f5f7313a49c27cd1cdb00f1f6a9d7cc0"
+        },
+        {
+          "path": "docs/FEATURE_STATUS.md",
+          "sha256": "8e30ac9dc2e5a729ce5fbd686141d86ed9e0cab64268263323b36e77a0d52bc5"
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "2f8bdaafc31e77b39ade77fd89a9e90685cb9f69921057942843ee6e146b06c6"
+        },
+        {
+          "path": "docs/device-health.md",
+          "sha256": "76e6c4d2facb1d08d695b77ba340e146692a6f884ad3b7c594f1b636a2ca03ae"
+        },
+        {
+          "path": "docs/dither-tuning-lab.md",
+          "sha256": "8ecbb962fb74310d3bbc613a57ab9077d4544950b3fac5838df3c7f372eeb52b"
+        },
+        {
+          "path": "docs/next_step.md",
+          "sha256": "7ba23cdf0befdc3d01cbc02fd3bf1a2ac501ef5ea98a212474135dd17b37d048"
+        }
+      ]
+    },
+    {
+      "branch": "feature/dither-tuning",
+      "sha": "e89e6ee1c758abc169ee250ee9285022f41cfc3b",
+      "documentation_files": [
+        "README.md",
+        "docs/ARCHITECTURE.md",
+        "docs/CHANGELOG.md",
+        "docs/DECISIONS.md",
+        "docs/DEVELOPMENT_HANDOVER.md",
+        "docs/DEVELOPMENT_PROMPT.md",
+        "docs/DEVELOPMENT_PROTOCOL.md",
+        "docs/FEATURE_STATUS.md",
+        "docs/NEXT_STEPS.md",
+        "docs/README.md",
+        "docs/advertising-and-qris.md",
+        "docs/bug_tracker.md",
+        "docs/dither-gui-parameter-guide.md",
+        "docs/dither-tuning-lab.md",
+        "docs/next_step.md",
+        "docs/photo-retention.md",
+        "docs/printer-setup.md",
+        "docs/qa/README.md",
+        "docs/qa/advertising-kiosk.md",
+        "docs/qa/branded-qr.md",
+        "docs/qa/centered-qr.md",
+        "docs/qa/logo-audio.md",
+        "docs/qa/meong-carousel.md",
+        "docs/qa/receipt-templates.md",
+        "docs/test_checklist.md"
+      ],
+      "latest_commit": "2026-10-24 fix(dither): show threshold cutoff on test strips only for threshold mode",
+      "review_sources": [
+        {
+          "path": "README.md",
+          "sha256": "4d6033ed0fba4a4e06a6d1429b8b909305d780e0bc947b6830f6ca981447171b"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "1134857e97edb2a471607da5db87868132893ea5f5d7abac217ea7b8c9049f26"
+        },
+        {
+          "path": "docs/DECISIONS.md",
+          "sha256": "8ef55af9152ed27c33af2c1aa56faa29568f9ae8573de2d99aace657d0621491"
+        },
+        {
+          "path": "docs/DEVELOPMENT_HANDOVER.md",
+          "sha256": "7aaab56b1833d30188a840e6319bc13aa93edfc75d272ea2cc20f3a38063218c"
+        },
+        {
+          "path": "docs/FEATURE_STATUS.md",
+          "sha256": "f2e6852d190bc0a4353066153f12e36c13e958f555ae82de2349da187aaef74b"
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "fa79ee0bb59210ab751f3210a64301ce7b879d70f0ee333b9b7bd7b55feceb7c"
+        },
+        {
+          "path": "docs/dither-gui-parameter-guide.md",
+          "sha256": "8b172ef170f976e3c0b668f74e958e00f890e0ca1e5206fc70a710e05fb12d9e"
+        },
+        {
+          "path": "docs/dither-tuning-lab.md",
+          "sha256": "e0cace8ecee84f72a7a353a895ee7f18012107de11b24cfaa6ea70a124ebc45a"
+        },
+        {
+          "path": "docs/next_step.md",
+          "sha256": "875a7826827aff3255b8c59cf2fe80588ac6e3453327a1058a1ac991e120838a"
+        }
+      ]
+    },
+    {
+      "branch": "feature/kivy-gui",
+      "sha": "38fbaa5c8f3d599848d33c82c2b2af5cf3aa6f8f",
+      "documentation_files": [
+        "README.md",
+        "docs/ARCHITECTURE.md",
+        "docs/CHANGELOG.md",
+        "docs/DECISIONS.md",
+        "docs/DEVELOPMENT_HANDOVER.md",
+        "docs/DEVELOPMENT_PROMPT.md",
+        "docs/DEVELOPMENT_PROTOCOL.md",
+        "docs/FEATURE_STATUS.md",
+        "docs/NEXT_STEPS.md",
+        "docs/README.md",
+        "docs/advertising-and-qris.md",
+        "docs/bug_tracker.md",
+        "docs/dither-tuning-lab.md",
+        "docs/next_step.md",
+        "docs/photo-retention.md",
+        "docs/printer-setup.md",
+        "docs/qa/FEAT-001-BUG-011-acceptance.md",
+        "docs/qa/KIOSK-GUI-REGRESSION-2026-10-18.md",
+        "docs/qa/README.md",
+        "docs/qa/advertising-kiosk.md",
+        "docs/qa/branded-qr.md",
+        "docs/qa/centered-qr.md",
+        "docs/qa/logo-audio.md",
+        "docs/qa/meong-carousel.md",
+        "docs/qa/receipt-templates.md",
+        "docs/releases/v1.0.0.md",
+        "docs/test_checklist.md"
+      ],
+      "latest_commit": "2026-10-19 docs(decisions): add DEC-020 release approval",
+      "review_sources": [
+        {
+          "path": "README.md",
+          "sha256": "1a9ed40372a39140e63307256706db4d9db5751d7e85068cf0818ef2fcf568e7"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "a91b71a85d01773d6d30ee0b3c18aa187b9c561890b58ec21703c129d7c078bb"
+        },
+        {
+          "path": "docs/DECISIONS.md",
+          "sha256": "cc6b12e7ddca8d9f9a284d6166e0e7418f04d413205b29100764c1569c1b164e"
+        },
+        {
+          "path": "docs/DEVELOPMENT_HANDOVER.md",
+          "sha256": "3299049c45db5edeeeefcf1873170ab3eda4099d382e3ce8dfe89b0cc198da7d"
+        },
+        {
+          "path": "docs/FEATURE_STATUS.md",
+          "sha256": "4f57c2b14893830045ee50fbe9e396f15841f98439fea160d620dce5bbcb117c"
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "d5c94b9514cad28c8d999959d95e8dc94aed78356907e6a71c5756b4c7a688a5"
+        },
+        {
+          "path": "docs/dither-tuning-lab.md",
+          "sha256": "bfd4fbe6aaf13a8ca944047d8b3efd031cee34f9ef810e21de031b7a5c811740"
+        },
+        {
+          "path": "docs/next_step.md",
+          "sha256": "6a7cace8632212ff46df4c9014c1ba9528df1f47c4b2408bdfb72d235ae9b2dd"
+        }
+      ]
+    },
+    {
+      "branch": "feature/local-photo-session-mvp",
+      "sha": "a3c161856eab22c5d98790aa1ab03c015fa2e8c2",
+      "documentation_files": [
+        "README.md"
+      ],
+      "latest_commit": "2026-10-15 Add clear English comments across PhotoBooth code",
+      "review_sources": [
+        {
+          "path": "README.md",
+          "sha256": "9bdb987bb5cc9ebd5944eeb73239cb0c0434c5fe9b6dad383560d810271c42e6"
+        }
+      ]
+    },
+    {
+      "branch": "feature/meong-flappy-challenge",
+      "sha": "672e3f7089bb40940e5b41644ceb656aa63aafbb",
+      "documentation_files": [
+        "README.md",
+        "docs/ARCHITECTURE.md",
+        "docs/CHANGELOG.md",
+        "docs/DECISIONS.md",
+        "docs/DEVELOPMENT_HANDOVER.md",
+        "docs/DEVELOPMENT_PROMPT.md",
+        "docs/DEVELOPMENT_PROTOCOL.md",
+        "docs/FEATURE_STATUS.md",
+        "docs/NEXT_STEPS.md",
+        "docs/README.md",
+        "docs/advertising-and-qris.md",
+        "docs/bug_tracker.md",
+        "docs/dither-tuning-lab.md",
+        "docs/features/FEAT-021-meong-fly.md",
+        "docs/features/FEAT-021-scan-camera.md",
+        "docs/features/FEAT-021-v5-phase1.md",
+        "docs/features/FEAT-021-visual-overhaul-v5.md",
+        "docs/features/FEAT-021-visual-polish-v2.md",
+        "docs/next_step.md",
+        "docs/photo-retention.md",
+        "docs/printer-setup.md",
+        "docs/qa/FEAT-001-BUG-011-acceptance.md",
+        "docs/qa/FEAT-021-scan-camera/README.md",
+        "docs/qa/FEAT-021-v5-phase1/README.md",
+        "docs/qa/FEAT-021-visual-v5-acceptance.md",
+        "docs/qa/KIOSK-GUI-REGRESSION-2026-10-18.md",
+        "docs/qa/README.md",
+        "docs/qa/advertising-kiosk.md",
+        "docs/qa/branded-qr.md",
+        "docs/qa/centered-qr.md",
+        "docs/qa/logo-audio.md",
+        "docs/qa/meong-carousel.md",
+        "docs/qa/receipt-templates.md",
+        "docs/releases/v1.0.0.md",
+        "docs/test_checklist.md"
+      ],
+      "latest_commit": "2026-10-21 docs(FEAT-021): record mirrored scanner QA and physical camera acceptance",
+      "review_sources": [
+        {
+          "path": "README.md",
+          "sha256": "3ee0c475be1be47aa0fa0719863b7c048a07c0749bb2bcaa70ad84948c8a6304"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "ada977af2ed3aa26fb5c8baa4d2fa8854b39dfcfa717cde4da8b63f69113640a"
+        },
+        {
+          "path": "docs/DECISIONS.md",
+          "sha256": "6fd28d09899525c323660b8f730fd70a72c4fadf4cf89a843d42f6bfc0b58cbd"
+        },
+        {
+          "path": "docs/DEVELOPMENT_HANDOVER.md",
+          "sha256": "7aa2f1d9bfc03c0f4ccd1e4457da68acd848a78184c7f56f9175e654e11363a3"
+        },
+        {
+          "path": "docs/FEATURE_STATUS.md",
+          "sha256": "128ce563a2926f3fe62e585e91fe2b71a38f1797e1d63c713a5cfe4b70fd4a0c"
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "392005b6052d8939f409a88c2e7a8a7fa1dd87f5e10a9cd9fdfa255d42d055e6"
+        },
+        {
+          "path": "docs/dither-tuning-lab.md",
+          "sha256": "8ecbb962fb74310d3bbc613a57ab9077d4544950b3fac5838df3c7f372eeb52b"
+        },
+        {
+          "path": "docs/features/FEAT-021-meong-fly.md",
+          "sha256": "7b50f667e40dde1bfa2899e1911cad841ce251cba6ad09f33b1af52f8f7aa646"
+        },
+        {
+          "path": "docs/next_step.md",
+          "sha256": "ae0a131fcb66728bf1a6e071ca6a885383551f53ad8a978e906e55cffabb5f81"
+        }
+      ]
+    },
+    {
+      "branch": "feature/portrait-kiosk-gui",
+      "sha": "92101d9f778e0c8f282a616bb815b52dda1d37b2",
+      "documentation_files": [
+        "README.md",
+        "docs/ARCHITECTURE.md",
+        "docs/CHANGELOG.md",
+        "docs/DECISIONS.md",
+        "docs/DEVELOPMENT_HANDOVER.md",
+        "docs/DEVELOPMENT_PROMPT.md",
+        "docs/DEVELOPMENT_PROTOCOL.md",
+        "docs/FEATURE_STATUS.md",
+        "docs/NEXT_STEPS.md",
+        "docs/README.md",
+        "docs/advertising-and-qris.md",
+        "docs/bug_tracker.md",
+        "docs/dither-tuning-lab.md",
+        "docs/next_step.md",
+        "docs/photo-retention.md",
+        "docs/portrait-kiosk-v2.md",
+        "docs/printer-setup.md",
+        "docs/qa/FEAT-001-BUG-011-acceptance.md",
+        "docs/qa/KIOSK-GUI-REGRESSION-2026-10-18.md",
+        "docs/qa/README.md",
+        "docs/qa/advertising-kiosk.md",
+        "docs/qa/branded-qr.md",
+        "docs/qa/centered-qr.md",
+        "docs/qa/logo-audio.md",
+        "docs/qa/meong-carousel.md",
+        "docs/qa/receipt-templates.md",
+        "docs/releases/v1.0.0.md",
+        "docs/test_checklist.md"
+      ],
+      "latest_commit": "2026-10-21 docs(FEAT-022): record verified P0-P2 CI and outstanding Windows gates",
+      "review_sources": [
+        {
+          "path": "README.md",
+          "sha256": "3ee0c475be1be47aa0fa0719863b7c048a07c0749bb2bcaa70ad84948c8a6304"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "6254dbef4b5dcaa0c45fbace3d2edb4e330c6514aa2a21fc6362f9d0cc3f4681"
+        },
+        {
+          "path": "docs/DECISIONS.md",
+          "sha256": "f3f898af8b7e9c709ac42acce9e8d348d701d32bf8d9cefddfe9ba1f5749321f"
+        },
+        {
+          "path": "docs/DEVELOPMENT_HANDOVER.md",
+          "sha256": "b460f2d3d0e303c4adbd9636a5243400d9e75870a1707bd2ed74ba2552f16f5e"
+        },
+        {
+          "path": "docs/FEATURE_STATUS.md",
+          "sha256": "125e79bdd39e80d104bb81bda7d4442aba9ab7bda4d4c1874b503addb1b95b3b"
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "b3c7f9a0737fa806c2b73a897c7d7df85f12b5558686e76f85bdece9c8c43685"
+        },
+        {
+          "path": "docs/dither-tuning-lab.md",
+          "sha256": "8ecbb962fb74310d3bbc613a57ab9077d4544950b3fac5838df3c7f372eeb52b"
+        },
+        {
+          "path": "docs/next_step.md",
+          "sha256": "04257df4322316347b4131fd029044ba2813e78bc19c6f97369184c68abbc4cf"
+        }
+      ]
+    },
+    {
+      "branch": "feature/portrait-kiosk-v2-next",
+      "sha": "0dc6555d299cdab19d952e92df2ae660cdc4676d",
+      "documentation_files": [
+        "README.md",
+        "docs/ARCHITECTURE.md",
+        "docs/CHANGELOG.md",
+        "docs/DECISIONS.md",
+        "docs/DEVELOPMENT_HANDOVER.md",
+        "docs/DEVELOPMENT_PROMPT.md",
+        "docs/DEVELOPMENT_PROTOCOL.md",
+        "docs/FEAT-021-to-FEAT-022-integration-plan.md",
+        "docs/FEATURE_STATUS.md",
+        "docs/NEXT_STEPS.md",
+        "docs/README.md",
+        "docs/advertising-and-qris.md",
+        "docs/assets/portrait-v2/README.md",
+        "docs/bug_tracker.md",
+        "docs/dither-tuning-lab.md",
+        "docs/next_step.md",
+        "docs/photo-retention.md",
+        "docs/portrait-kiosk-v2-technical-design.md",
+        "docs/portrait-kiosk-v2-visual-spec.md",
+        "docs/portrait-kiosk-v2.md",
+        "docs/portrait-v2-p2-6-to-p2-8-qa-gate.md",
+        "docs/printer-setup.md",
+        "docs/qa/FEAT-001-BUG-011-acceptance.md",
+        "docs/qa/KIOSK-GUI-REGRESSION-2026-10-18.md",
+        "docs/qa/README.md",
+        "docs/qa/advertising-kiosk.md",
+        "docs/qa/branded-qr.md",
+        "docs/qa/centered-qr.md",
+        "docs/qa/logo-audio.md",
+        "docs/qa/meong-carousel.md",
+        "docs/qa/portrait-v2-ci/README.md",
+        "docs/qa/portrait-v2-gallery-focus/README.md",
+        "docs/qa/portrait-v2-gallery-focus/windows-checklist.html",
+        "docs/qa/portrait-v2-game-followup/README.md",
+        "docs/qa/portrait-v2-meong-reuse/README.md",
+        "docs/qa/portrait-v2-motion-correction/README.md",
+        "docs/qa/portrait-v2-motion-correction/windows-checklist.html",
+        "docs/qa/portrait-v2-native-controls/README.md",
+        "docs/qa/portrait-v2-native-controls/windows-checklist.html",
+        "docs/qa/portrait-v2-p26/README.md",
+        "docs/qa/portrait-v2-p27/README.md",
+        "docs/qa/portrait-v2-p28/README.md",
+        "docs/qa/portrait-v2-p3-retest/README.md",
+        "docs/qa/portrait-v2-p3-retest/windows-checklist.html",
+        "docs/qa/portrait-v2-p3/README.md",
+        "docs/qa/portrait-v2-p3/windows-checklist.html",
+        "docs/qa/portrait-v2-p4/README.md",
+        "docs/qa/portrait-v2-p4/windows-checklist.html",
+        "docs/qa/portrait-v2-p5/README.md",
+        "docs/qa/portrait-v2-p5/windows-checklist.html",
+        "docs/qa/portrait-v2-player-anchor/README.md",
+        "docs/qa/portrait-v2-player-anchor/windows-checklist.html",
+        "docs/qa/portrait-v2-preview-redraw/README.md",
+        "docs/qa/portrait-v2-preview-redraw/windows-checklist.html",
+        "docs/qa/portrait-v2-readable-type/README.md",
+        "docs/qa/portrait-v2-readable-type/windows-checklist.html",
+        "docs/qa/portrait-v2-responsive-scene/README.md",
+        "docs/qa/portrait-v2-responsive-scene/windows-checklist.html",
+        "docs/qa/portrait-v2-retest-9a9e18e/README.md",
+        "docs/qa/portrait-v2-retest-9a9e18e/windows-checklist.html",
+        "docs/qa/portrait-v2-return-ad-crash/README.md",
+        "docs/qa/portrait-v2-sandbox/README.md",
+        "docs/qa/portrait-v2-start-photo-crash/README.md",
+        "docs/qa/portrait-v2-start-photo-crash/windows-checklist.html",
+        "docs/qa/portrait-v2-windows-acceptance-3cfa9d2.md",
+        "docs/qa/portrait-v2-windows-followup/README.md",
+        "docs/qa/receipt-templates.md",
+        "docs/releases/v1.0.0.md",
+        "docs/test_checklist.md"
+      ],
+      "latest_commit": "2026-10-24 docs(p5): record verified final CI screenshots and Windows acceptance package [skip ci]",
+      "review_sources": [
+        {
+          "path": "README.md",
+          "sha256": "d0cc986af4402177a89b800583817edae487df83f2dbab1c9a19a9e23ea05910"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "7f20d23cd6304f5b23c4d79b477f8a8870d90eef44fffa8291ae62bcb168b6d6"
+        },
+        {
+          "path": "docs/DECISIONS.md",
+          "sha256": "76d27b65f7e3d7bff8ec40e79ec85c99d4d9f263ddb95cc52056c4c55fde6eaa"
+        },
+        {
+          "path": "docs/DEVELOPMENT_HANDOVER.md",
+          "sha256": "2b9cf744696a9a0ce95929907b5ef16ad057f62f8fa55ff5c66ab165f5001938"
+        },
+        {
+          "path": "docs/FEATURE_STATUS.md",
+          "sha256": "f108445db3ec558f5fa08164ee9594012bc8cc95c626db97493fa2da5ebf14c5"
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "f64b3346b62d71342a2b56df174a190a0f6ab9afead628a756aca92a10e774de"
+        },
+        {
+          "path": "docs/dither-tuning-lab.md",
+          "sha256": "8ecbb962fb74310d3bbc613a57ab9077d4544950b3fac5838df3c7f372eeb52b"
+        },
+        {
+          "path": "docs/next_step.md",
+          "sha256": "66621e5ec97c22b6f030026b2930afa1664d81971f4ad3d446501177c94f1510"
+        }
+      ]
+    },
+    {
+      "branch": "feature/qris-payment",
+      "sha": "3cc8a8e360e8c2100a3077b755664eb61d0216ea",
+      "documentation_files": [
+        "README.md",
+        "docs/ARCHITECTURE.md",
+        "docs/ARCHITECTURE.pre-qris-20261020.md",
+        "docs/CHANGELOG.md",
+        "docs/CHANGELOG.pre-qris-20261020.md",
+        "docs/DECISIONS.md",
+        "docs/DECISIONS.pre-qris-20261020.md",
+        "docs/DEVELOPMENT_HANDOVER.md",
+        "docs/DEVELOPMENT_HANDOVER.pre-qris-20261020.md",
+        "docs/DEVELOPMENT_PROMPT.md",
+        "docs/DEVELOPMENT_PROTOCOL.md",
+        "docs/FEAT-020-QRIS.md",
+        "docs/FEAT-020-QRIS.pre-qris-20261020.md",
+        "docs/FEATURE_STATUS.md",
+        "docs/FEATURE_STATUS.pre-qris-20261020.md",
+        "docs/NEXT_STEPS.md",
+        "docs/QRIS_SANDBOX_TRIAL.md",
+        "docs/QRIS_TRIAL.md",
+        "docs/README.md",
+        "docs/advertising-and-qris.md",
+        "docs/bug_tracker.md",
+        "docs/dither-tuning-lab.md",
+        "docs/next_step.md",
+        "docs/next_step.pre-qris-20261020.md",
+        "docs/photo-retention.md",
+        "docs/printer-setup.md",
+        "docs/qa/FEAT-001-BUG-011-acceptance.md",
+        "docs/qa/FEAT-020-acceptance-20261020.md",
+        "docs/qa/FEAT-020-backend.md",
+        "docs/qa/FEAT-020-final-checks.md",
+        "docs/qa/FEAT-020-http-v2.md",
+        "docs/qa/FEAT-020-kiosk-journal.md",
+        "docs/qa/FEAT-020-main-gui.md",
+        "docs/qa/FEAT-020-remediation.md",
+        "docs/qa/KIOSK-GUI-REGRESSION-2026-10-18.md",
+        "docs/qa/README.md",
+        "docs/qa/advertising-kiosk.md",
+        "docs/qa/branded-qr.md",
+        "docs/qa/centered-qr.md",
+        "docs/qa/logo-audio.md",
+        "docs/qa/meong-carousel.md",
+        "docs/qa/receipt-templates.md",
+        "docs/releases/v1.0.0.md",
+        "docs/test_checklist.md",
+        "docs/test_checklist.pre-qris-20261020.md"
+      ],
+      "latest_commit": "2026-10-20 test(FEAT-020): prepare credential-isolated merchant Sandbox GUI trial",
+      "review_sources": [
+        {
+          "path": "README.md",
+          "sha256": "3ee0c475be1be47aa0fa0719863b7c048a07c0749bb2bcaa70ad84948c8a6304"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "87008e303ec1c6e3593af5c9f1d08ee3e6de4846d950a0f49ba91ba5ae7d7d29"
+        },
+        {
+          "path": "docs/DECISIONS.md",
+          "sha256": "e714987c82cefae167d13937dccf5f74d7571ff28c91f3b1856fa1783863d7c2"
+        },
+        {
+          "path": "docs/DEVELOPMENT_HANDOVER.md",
+          "sha256": "c99d0ed9b072ffdc6b6aa154d39cef03bc185632194711560ac0dec1dfb8a213"
+        },
+        {
+          "path": "docs/FEAT-020-QRIS.md",
+          "sha256": "15999c4db13100d126983cb9ef595ee3d1bc4c7e9f4ab868636645462734ffde"
+        },
+        {
+          "path": "docs/FEATURE_STATUS.md",
+          "sha256": "33da2a2dc99787cae4ad9f7db90cde9a6534b4ff4db4528650cae5a0beb427cc"
+        },
+        {
+          "path": "docs/QRIS_SANDBOX_TRIAL.md",
+          "sha256": "7c3276eaebc638de8fdb2479ade9eee1791f4b1f4764af359e11515db3deea30"
+        },
+        {
+          "path": "docs/QRIS_TRIAL.md",
+          "sha256": "c5bf98151030b82d9f1bf8b31ce60f7b5e0b9566f01f3dadc7088364efa65025"
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "597a3f2293f15353cced0f25cc4f22ae16b7cd96cf1b608b5031ed3eceb5f30b"
+        },
+        {
+          "path": "docs/dither-tuning-lab.md",
+          "sha256": "8ecbb962fb74310d3bbc613a57ab9077d4544950b3fac5838df3c7f372eeb52b"
+        },
+        {
+          "path": "docs/next_step.md",
+          "sha256": "cca95a56e11c2877f9b7acc493fdb42459d2e557e5764f5825656f26f7a34f31"
+        }
+      ]
+    },
+    {
+      "branch": "feature/thermal-printer",
+      "sha": "a38d4a67e0f4938ac33d8c165c2dd52f0baf8ca7",
+      "documentation_files": [
+        "README.md",
+        "docs/photo-retention.md",
+        "docs/printer-setup.md",
+        "docs/qa/README.md",
+        "docs/qa/branded-qr.md",
+        "docs/qa/centered-qr.md",
+        "docs/qa/meong-carousel.md",
+        "docs/qa/receipt-templates.md"
+      ],
+      "latest_commit": "2026-10-17 docs(readme): link new operator printer settings GUI",
+      "review_sources": [
+        {
+          "path": "README.md",
+          "sha256": "548c87510a16c8469e2c3322b3a61664a22335cdbfa1f05ecdd1e7c69203c487"
+        }
+      ]
+    },
+    {
+      "branch": "fix/kivy-music-playback",
+      "sha": "27f3801b235d81dc0a49ab201f3e143b62314413",
+      "documentation_files": [
+        "README.md",
+        "docs/ARCHITECTURE.md",
+        "docs/CHANGELOG.md",
+        "docs/DECISIONS.md",
+        "docs/DEVELOPMENT_HANDOVER.md",
+        "docs/DEVELOPMENT_PROMPT.md",
+        "docs/DEVELOPMENT_PROTOCOL.md",
+        "docs/FEATURE_STATUS.md",
+        "docs/NEXT_STEPS.md",
+        "docs/README.md",
+        "docs/advertising-and-qris.md",
+        "docs/bug_tracker.md",
+        "docs/dither-tuning-lab.md",
+        "docs/next_step.md",
+        "docs/photo-retention.md",
+        "docs/printer-setup.md",
+        "docs/qa/FEAT-001-BUG-011-acceptance.md",
+        "docs/qa/KIOSK-GUI-REGRESSION-2026-10-18.md",
+        "docs/qa/README.md",
+        "docs/qa/advertising-kiosk.md",
+        "docs/qa/branded-qr.md",
+        "docs/qa/centered-qr.md",
+        "docs/qa/logo-audio.md",
+        "docs/qa/meong-carousel.md",
+        "docs/qa/receipt-templates.md",
+        "docs/releases/v1.0.0.md",
+        "docs/test_checklist.md"
+      ],
+      "latest_commit": "2026-10-19 revert: undo FEAT-008 Stage A merge (#5) at owner's request",
+      "review_sources": [
+        {
+          "path": "README.md",
+          "sha256": "3ee0c475be1be47aa0fa0719863b7c048a07c0749bb2bcaa70ad84948c8a6304"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "ff5e35e865d8e0bcd94849d4d31c852d3667cca62fcd6bbb095eb9df499628c9"
+        },
+        {
+          "path": "docs/DECISIONS.md",
+          "sha256": "bc9baffbb93c377c6772aaee25de5d2265e979951a599789a5ac5a39606b7487"
+        },
+        {
+          "path": "docs/DEVELOPMENT_HANDOVER.md",
+          "sha256": "9971d4a79a7fe571d74fb836188329b7e80ac9613ae7c0e78fae559590cf8f0b"
+        },
+        {
+          "path": "docs/FEATURE_STATUS.md",
+          "sha256": "86f0268e7baa146d2cc33ba6c2d739dd20679e7a7f54b98c992dc600db6bfd9e"
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "91ab6be5d1671c664aa28a58fec0dbcd0b48b2c640df1a72136fb1ff82519b05"
+        },
+        {
+          "path": "docs/dither-tuning-lab.md",
+          "sha256": "8ecbb962fb74310d3bbc613a57ab9077d4544950b3fac5838df3c7f372eeb52b"
+        },
+        {
+          "path": "docs/next_step.md",
+          "sha256": "7ea9aec62fa89f1249ede0713e17f8d5e2db75ea5cc0af9e5236df1c6db34797"
+        }
+      ]
+    },
+    {
+      "branch": "master",
+      "sha": "27f3801b235d81dc0a49ab201f3e143b62314413",
+      "documentation_files": [
+        "README.md",
+        "docs/ARCHITECTURE.md",
+        "docs/CHANGELOG.md",
+        "docs/DECISIONS.md",
+        "docs/DEVELOPMENT_HANDOVER.md",
+        "docs/DEVELOPMENT_PROMPT.md",
+        "docs/DEVELOPMENT_PROTOCOL.md",
+        "docs/FEATURE_STATUS.md",
+        "docs/NEXT_STEPS.md",
+        "docs/README.md",
+        "docs/advertising-and-qris.md",
+        "docs/bug_tracker.md",
+        "docs/dither-tuning-lab.md",
+        "docs/next_step.md",
+        "docs/photo-retention.md",
+        "docs/printer-setup.md",
+        "docs/qa/FEAT-001-BUG-011-acceptance.md",
+        "docs/qa/KIOSK-GUI-REGRESSION-2026-10-18.md",
+        "docs/qa/README.md",
+        "docs/qa/advertising-kiosk.md",
+        "docs/qa/branded-qr.md",
+        "docs/qa/centered-qr.md",
+        "docs/qa/logo-audio.md",
+        "docs/qa/meong-carousel.md",
+        "docs/qa/receipt-templates.md",
+        "docs/releases/v1.0.0.md",
+        "docs/test_checklist.md"
+      ],
+      "latest_commit": "2026-10-19 revert: undo FEAT-008 Stage A merge (#5) at owner's request",
+      "review_sources": [
+        {
+          "path": "README.md",
+          "sha256": "3ee0c475be1be47aa0fa0719863b7c048a07c0749bb2bcaa70ad84948c8a6304"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "ff5e35e865d8e0bcd94849d4d31c852d3667cca62fcd6bbb095eb9df499628c9"
+        },
+        {
+          "path": "docs/DECISIONS.md",
+          "sha256": "bc9baffbb93c377c6772aaee25de5d2265e979951a599789a5ac5a39606b7487"
+        },
+        {
+          "path": "docs/DEVELOPMENT_HANDOVER.md",
+          "sha256": "9971d4a79a7fe571d74fb836188329b7e80ac9613ae7c0e78fae559590cf8f0b"
+        },
+        {
+          "path": "docs/FEATURE_STATUS.md",
+          "sha256": "86f0268e7baa146d2cc33ba6c2d739dd20679e7a7f54b98c992dc600db6bfd9e"
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "91ab6be5d1671c664aa28a58fec0dbcd0b48b2c640df1a72136fb1ff82519b05"
+        },
+        {
+          "path": "docs/dither-tuning-lab.md",
+          "sha256": "8ecbb962fb74310d3bbc613a57ab9077d4544950b3fac5838df3c7f372eeb52b"
+        },
+        {
+          "path": "docs/next_step.md",
+          "sha256": "7ea9aec62fa89f1249ede0713e17f8d5e2db75ea5cc0af9e5236df1c6db34797"
+        }
+      ]
+    },
+    {
+      "branch": "revert/feat-008-stage-a-20261019",
+      "sha": "57ff555e15fbe6a0150900fe3d6c5177a11e46d6",
+      "documentation_files": [
+        "README.md",
+        "docs/ARCHITECTURE.md",
+        "docs/CHANGELOG.md",
+        "docs/DECISIONS.md",
+        "docs/DEVELOPMENT_HANDOVER.md",
+        "docs/DEVELOPMENT_PROMPT.md",
+        "docs/DEVELOPMENT_PROTOCOL.md",
+        "docs/FEATURE_STATUS.md",
+        "docs/NEXT_STEPS.md",
+        "docs/README.md",
+        "docs/advertising-and-qris.md",
+        "docs/bug_tracker.md",
+        "docs/dither-tuning-lab.md",
+        "docs/next_step.md",
+        "docs/photo-retention.md",
+        "docs/printer-setup.md",
+        "docs/qa/FEAT-001-BUG-011-acceptance.md",
+        "docs/qa/KIOSK-GUI-REGRESSION-2026-10-18.md",
+        "docs/qa/README.md",
+        "docs/qa/advertising-kiosk.md",
+        "docs/qa/branded-qr.md",
+        "docs/qa/centered-qr.md",
+        "docs/qa/logo-audio.md",
+        "docs/qa/meong-carousel.md",
+        "docs/qa/receipt-templates.md",
+        "docs/releases/v1.0.0.md",
+        "docs/test_checklist.md"
+      ],
+      "latest_commit": "2026-10-19 revert: remove unapproved FEAT-008 Stage A merge (#5)",
+      "review_sources": [
+        {
+          "path": "README.md",
+          "sha256": "3ee0c475be1be47aa0fa0719863b7c048a07c0749bb2bcaa70ad84948c8a6304"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "ff5e35e865d8e0bcd94849d4d31c852d3667cca62fcd6bbb095eb9df499628c9"
+        },
+        {
+          "path": "docs/DECISIONS.md",
+          "sha256": "bc9baffbb93c377c6772aaee25de5d2265e979951a599789a5ac5a39606b7487"
+        },
+        {
+          "path": "docs/DEVELOPMENT_HANDOVER.md",
+          "sha256": "9971d4a79a7fe571d74fb836188329b7e80ac9613ae7c0e78fae559590cf8f0b"
+        },
+        {
+          "path": "docs/FEATURE_STATUS.md",
+          "sha256": "86f0268e7baa146d2cc33ba6c2d739dd20679e7a7f54b98c992dc600db6bfd9e"
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "91ab6be5d1671c664aa28a58fec0dbcd0b48b2c640df1a72136fb1ff82519b05"
+        },
+        {
+          "path": "docs/dither-tuning-lab.md",
+          "sha256": "8ecbb962fb74310d3bbc613a57ab9077d4544950b3fac5838df3c7f372eeb52b"
+        },
+        {
+          "path": "docs/next_step.md",
+          "sha256": "7ea9aec62fa89f1249ede0713e17f8d5e2db75ea5cc0af9e5236df1c6db34797"
+        }
+      ]
+    }
+  ]
+}
