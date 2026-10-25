@@ -22,13 +22,22 @@ LOG = logging.getLogger(__name__)
 PURPOSE = 'PORTRAIT_V2_PHOTO_TEST'
 
 
+class PhotoSetupError(ValueError):
+    """Allowlisted operator hint; never carry credentials/driver exception text."""
+    def __init__(self, code):
+        self.code = code
+        super().__init__(code)
+
+
 class PhotoTest:
     """Single admitted test run; originals, retake quota and copies remain v1 rules."""
 
-    def __init__(self, root, *, booth_id='PB001V2', printer=None, drive_client=None):
+    def __init__(self, root, *, booth_id='PB001V2', printer=None, drive_client=None,
+                 auto_print=False):
         self.root = Path(root)
         self.store = TransactionStore(self.root / 'photos', self.root / 'counter.json', booth_id)
         self.printer = printer
+        self.auto_print = bool(auto_print and printer is not None)
         self.drive_client = drive_client
         self.pool = None
         self.drive_worker = None
@@ -40,6 +49,8 @@ class PhotoTest:
         self._retake = False
         self._closed = threading.Event()
         self.recovered_prints = 0
+        self._download_qr = None
+        self._download_qr_url = None
 
     def prepare(self):
         """Called off the GUI; recover uncertain sends without replaying them."""
@@ -71,6 +82,7 @@ class PhotoTest:
                                       self.store.booth_id, target_ready=2)
             self.drive_worker = RetentionGuardedSync(self.store.photos_root, self.drive_client, self.pool)
             self.drive_worker.start()
+        return self.snapshot()
 
     def reset(self):
         if self.phase not in {'confirm', 'done'}:
@@ -224,8 +236,15 @@ class PhotoTest:
         return self.snapshot()
 
     def snapshot(self):
+        configuration = {
+            'print_available': self.printer is not None, 'auto_print': self.auto_print,
+            'drive_enabled': self.drive_client is not None,
+            'drive_ready': self.drive_client is None or bool(self.pool and self.pool.has_ready_slot()),
+            'drive_error': bool(self.pool and self.pool.last_error),
+            'recovered_prints': self.recovered_prints,
+        }
         if self.transaction is None:
-            return {'phase': self.phase}
+            return {'phase': self.phase, **configuration}
         manifest = json.loads(self.transaction.manifest_path.read_text(encoding='utf-8'))
         session = self.session
         job = manifest.get('test_print_jobs', {}).get(session.plan.session_id, {})
@@ -240,12 +259,28 @@ class PhotoTest:
             with Image.open(session.output_path) as photo:
                 strip = photo.convert('RGB')
                 strip.thumbnail((320, 960))
+        # Use the original v1 QR encoder off the GUI thread. An assigned folder
+        # alone is not verified delivery; only the existing queue's completed
+        # state exposes a large download QR on screen.
+        folder_url = manifest.get('drive_folder_url')
+        download_qr = None
+        if manifest['upload_status'] == 'UPLOAD_COMPLETE' and folder_url:
+            if self._download_qr_url != folder_url:
+                from photobooth.qr_code import create_qr_image
+                try:
+                    self._download_qr = create_qr_image(folder_url)
+                    self._download_qr_url = folder_url
+                except (ValueError, OSError, RuntimeError):
+                    LOG.warning('Verified photo folder QR is not available', exc_info=True)
+            if self._download_qr_url == folder_url:
+                download_qr = self._download_qr.copy()
         return {'phase': self.phase, 'transaction_id': self.transaction.transaction_id,
+                **configuration, 'download_qr': download_qr,
                 'session_number': self.index + 1, 'session_count': len(self.sessions),
                 'template': session.plan.template.name, 'copies': session.plan.print_copies,
                 'captured': len(session.initial_photo_paths), 'retake': self._retake,
                 'retake_used': session.retake_used, 'thumbnails': thumbnails, 'strip': strip,
-                'print_available': self.printer is not None, 'print_state': job.get('state', 'NOT_SENT'),
+                'print_state': job.get('state', 'NOT_SENT'),
                 'print_checked': job.get('operator_checked', False),
                 'upload_status': manifest['upload_status'],
                 'folder_url': manifest.get('drive_folder_url'),
@@ -265,6 +300,7 @@ class PhotoOutcome:
     action: str
     value: dict | None = None
     error: str | None = None
+    setup_error: str | None = None
 
 
 class PhotoJobs:
@@ -293,7 +329,8 @@ class PhotoJobs:
                 result = PhotoOutcome(action, value)
             except Exception as error:
                 LOG.warning('Photo test action failed: %s', action, exc_info=True)
-                result = PhotoOutcome(action, error=type(error).__name__)
+                result = PhotoOutcome(action, error=type(error).__name__,
+                    setup_error=error.code if isinstance(error, PhotoSetupError) else None)
                 try:
                     if self.service is not None:
                         result.value = self.service.snapshot()
@@ -336,9 +373,10 @@ def configured_test(root, *, configuration_root=None):
         from photobooth.drive_storage import AppsScriptDriveClient, GoogleDriveClient
         client = AppsScriptDriveClient.from_configuration() or GoogleDriveClient.from_environment()
         if client is None:
-            raise ValueError('Drive opt-in requires configured credentials; no fake download QR.')
+            raise PhotoSetupError('drive_configuration')
     booth_id = os.environ.get('PHOTOBOOTH_V2_BOOTH_ID', 'PB001V2')
     if not booth_id.endswith('V2'):
-        raise ValueError('P3 booth IDs must end in V2 to isolate the remote pool from v1.')
+        raise PhotoSetupError('booth_profile')
     return PhotoTest(root, booth_id=booth_id,
-                     printer=printer, drive_client=client)
+                     printer=printer, drive_client=client,
+                     auto_print=printer is not None and os.environ.get('PHOTOBOOTH_V2_AUTO_PRINT', '1') == '1')

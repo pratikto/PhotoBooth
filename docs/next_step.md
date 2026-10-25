@@ -12,6 +12,12 @@ approval for features, production, deployments or repository transitions.
 
 ## Current follow-up
 
+**Owner-selected source work, 25 October:** finish v2 automatic print and
+background Drive delivery first, reusing v1. Watchdog is postponed. Explicit
+launch opt-ins, existing printer config/Drive credentials, verified queue/QR and
+uncertain-print guards remain; no deployment/cloud deletion/production.
+[Scope, staged evidence and rollback](qa/portrait-v2-print-drive/README.md).
+
 | Order | Focus | Next action / boundary |
 | --- | --- | --- |
 | 1 | FEAT-022 P5 current Windows integration | Collect the [P5 report](qa/portrait-v2-p5/windows-checklist.html); preflight `0dc6555` alone is not acceptance. Fix reproducible failures within authorized scope |

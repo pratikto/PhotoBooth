@@ -28,7 +28,9 @@ def configure_kivy(config):
     # This only disables mouse emulation; physical touchscreen input remains.
     config.set('input', 'mouse', 'mouse,disable_multitouch')
 
-def main():
+def main(argv=()):
+    from photobooth.kiosk_v2.delivery_options import configure_delivery
+    configure_delivery(argv)
     # Install before importing native window/audio/video providers. Keep the
     # stream open through App.run/on_stop so fatal Windows exceptions can be
     # inspected even when there is no Python traceback in the terminal.
@@ -71,4 +73,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])

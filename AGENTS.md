@@ -72,3 +72,12 @@ A later targeted retest reports R01–R04 4/4 with no issue notes: BUG-018 is no
 OWNER-REPORTED PASS / MONITORING. Do not patch the reported-working path or require
 another old twenty-cycle run. Exact tested source/device metadata remains unknown;
 recording the pass does not authorize proposed watchdog work or external gates.
+
+Owner priority correction, 2026-10-25: develop **printing and Google Drive only**
+before watchdog. The owner selected automatic print after approving photos (v1
+behavior), with Drive in the background. Reuse existing v1 printer/config/Drive/
+pool/QR services and v2 durable jobs/retention guard. Use explicit operator launch
+opt-ins; preserve dedicated merchant-trial printer/Drive-off isolation. Cloud QA
+uses fixtures; no real paper/upload, retention deployment/deletion, production,
+branch/default change or watchdog is inferred. Physical acceptance can wait while
+safe source work proceeds. See docs/qa/portrait-v2-print-drive/README.md.

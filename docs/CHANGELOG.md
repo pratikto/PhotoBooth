@@ -1,5 +1,15 @@
 # Meong Photobooth — changelog
 
+## 2026-10-25 — Print/Drive stage 1: explicit launch and delivery contracts
+
+Owner prioritizes print and Drive only over watchdog; chooses automatic print
+as v1 and background Drive. Reuse nine unchanged v1 backend/config/pool/queue/QR
+files. Add explicit --print/--drive/--manual-print launch options, safe missing-
+configuration code, true pool readiness and worker-encoded cached download QR
+only after verified upload. Native auto-print/readiness/QR wiring follows in
+stage 2; no actual device/provider/cloud action in fixture QA.
+[Current scope/provenance/evidence](qa/portrait-v2-print-drive/README.md).
+
 ## 2026-10-25 — BUG-018 owner retest accepted for monitoring
 
 Later targeted R01–R04 report: **4/4 checked, zero unchecked, no issue notes**.

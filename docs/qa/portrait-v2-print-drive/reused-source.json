@@ -1,0 +1,64 @@
+{
+  "reference": "master",
+  "sha": "27f3801b235d81dc0a49ab201f3e143b62314413",
+  "verified_remote": "2026-10-25",
+  "v1_gui_reference": "feature/kivy-gui / 38fbaa5c8f3d599848d33c82c2b2af5cf3aa6f8f",
+  "thermal_reference": "feature/thermal-printer / a38d4a67e0f4938ac33d8c165c2dd52f0baf8ca7",
+  "newer_dither_reference_not_ported": "feature/dither-tuning / e89e6ee1c758abc169ee250ee9285022f41cfc3b",
+  "files": [
+    {
+      "file": "photobooth/printer.py",
+      "reference_sha256": "5820a87ecd256573617fbdbcea52f3b3c757cbcdb29f481fdc5f2a809509b374",
+      "current_sha256": "5820a87ecd256573617fbdbcea52f3b3c757cbcdb29f481fdc5f2a809509b374",
+      "identical": true
+    },
+    {
+      "file": "photobooth/printer_settings.py",
+      "reference_sha256": "f639b21dc2270f08e1b203527d7e9ee126eda71982ef7a1fff444b8ce45ef89e",
+      "current_sha256": "f639b21dc2270f08e1b203527d7e9ee126eda71982ef7a1fff444b8ce45ef89e",
+      "identical": true
+    },
+    {
+      "file": "photobooth/drive_storage.py",
+      "reference_sha256": "0bb540e8cb21fa1a4f12ba65376a99ae13cdd0e9a214ec92f829aef3fe67c81d",
+      "current_sha256": "0bb540e8cb21fa1a4f12ba65376a99ae13cdd0e9a214ec92f829aef3fe67c81d",
+      "identical": true
+    },
+    {
+      "file": "photobooth/drive_pool.py",
+      "reference_sha256": "7dc891774f753f2f260b738d71a5d9275a30d04b36586a600e273bfd12ff3aa9",
+      "current_sha256": "7dc891774f753f2f260b738d71a5d9275a30d04b36586a600e273bfd12ff3aa9",
+      "identical": true
+    },
+    {
+      "file": "photobooth/drive_sync.py",
+      "reference_sha256": "d77d8d3e0d0236c100d0a7400e5094c8efdfce499ff23e91896a233a087bef79",
+      "current_sha256": "d77d8d3e0d0236c100d0a7400e5094c8efdfce499ff23e91896a233a087bef79",
+      "identical": true
+    },
+    {
+      "file": "photobooth/retention.py",
+      "reference_sha256": "68bf37118e913610ab99e0ea434cd3863833b168f9705687ca03f2ae5747dcb1",
+      "current_sha256": "68bf37118e913610ab99e0ea434cd3863833b168f9705687ca03f2ae5747dcb1",
+      "identical": true
+    },
+    {
+      "file": "photobooth/transaction_store.py",
+      "reference_sha256": "176bc520d198e9993382187a4e35dd14a2aa411177cf3eff9a668c5d680d3691",
+      "current_sha256": "176bc520d198e9993382187a4e35dd14a2aa411177cf3eff9a668c5d680d3691",
+      "identical": true
+    },
+    {
+      "file": "photobooth/workflow.py",
+      "reference_sha256": "9a4979678e7685869ee9e53256b37c86cea18a20cc4068ae2b8e031479f47d99",
+      "current_sha256": "9a4979678e7685869ee9e53256b37c86cea18a20cc4068ae2b8e031479f47d99",
+      "identical": true
+    },
+    {
+      "file": "photobooth/qr_code.py",
+      "reference_sha256": "0e568678dd261b2c436b3e3a1d561d3660faeb7e644ec01d9bffe316298a2fd7",
+      "current_sha256": "0e568678dd261b2c436b3e3a1d561d3660faeb7e644ec01d9bffe316298a2fd7",
+      "identical": true
+    }
+  ]
+}
