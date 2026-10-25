@@ -1,15 +1,26 @@
 # Meong Photobooth — changelog
 
+## 2026-10-25 — BUG-018 owner retest accepted for monitoring
+
+Later targeted R01–R04 report: **4/4 checked, zero unchecked, no issue notes**.
+Preserve initial 8/8 plus the hang note; later evidence supports OWNER-REPORTED
+PASS / MONITORING for repeated/mixed input, busy close, lifecycle and next input/
+restart. Tested HEAD/OS/display/device fields remain unknown; no exact-source
+verification, formal closure or external P5 pass is inferred. Documentation-only
+record, no runtime changes or new Actions run; prior twenty-cycle reports stand.
+[Raw report and assessment](qa/portrait-v2-health-clicks/owner-retest-2026-10-25.json).
+
 ## 2026-10-25 — BUG-018 operator repeated-click correction
 
 Source `ebb53fd`, final **785 full PASS / zero failures/errors/skips**, 37 focused
 PASS. Matching-source CI 40189694738 all three jobs SUCCESS; 119 PNGs verified,
-required operator views reviewed. Windows hang confirmation still pending.
+required operator views reviewed. At source delivery Windows confirmation was
+pending; the later owner retest above records 4/4/no issues.
 Evidence-only delivery skips CI; original v1 runtime/panel/worker unchanged.
 
 Owner reports an app hang after pressing all health buttons rapidly, despite
-eight checked boxes. Preserve the raw report and unknown tested HEAD; H03/H04
-need retest. Three regressions exposed duplicate releases, unbounded fast-result
+eight checked boxes. Preserve the initial raw report and unknown tested HEAD;
+H03/H04 prompted the later targeted retest. Three regressions exposed duplicate releases, unbounded fast-result
 refreshes and disabled-held release acceptance. The v2 adapter now consumes one
 fresh permitted press and drops same-button repeats for 0.75 seconds, with no
 deferred actions/SFX. TUTUP remains independent while report/probe I/O is busy.

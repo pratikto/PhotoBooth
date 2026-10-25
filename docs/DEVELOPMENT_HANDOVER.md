@@ -7,14 +7,16 @@ still `master`; `main.py` launches v1. Do not restart the project or P3/P4 work.
 
 ## Latest completed increment
 
-**New owner retest / BUG-018:** eight operator items checked but issue note reports
-an app hang after pressing all buttons rapidly. Preserve raw counts and missing
-HEAD/device fields; not clean acceptance. Delivered input guard `ebb53fd` has 785 full PASS/zero skips, 37 focused PASS,
+**Latest owner retest / BUG-018:** targeted R01–R04 **4/4 checked**, zero
+unchecked and no issue notes. Rapid/mixed buttons, busy close, reopen/minimize
+and next input/restart are owner-reported PASS; move BUG-018 to **MONITORING**,
+not formally CLOSED. Tested HEAD/device fields and specific display sizes remain
+unknown. Preserve the earlier raw 8/8 plus hang note as the initial failure.
+Delivered input guard `ebb53fd` has 785 full PASS/zero skips, 37 focused PASS,
 matching-source CI 40189694738 all three jobs SUCCESS and 119 verified PNGs.
-Windows hang confirmation remains pending. This correction takes precedence
-over proposed watchdog work and old documentation-only task wording below.
-Reuse original v1 backend/panel/worker; fix the v2 input adapter only.
-[Reproduction, test evidence, rollback and four-item form](qa/portrait-v2-health-clicks/README.md).
+No new runtime patch or old twenty-cycle repetition follows this passing report.
+Watchdog remains a proposed feature scope, not implemented by recording this retest.
+[Raw reports, evidence and rollback](qa/portrait-v2-health-clicks/README.md).
 
 Read-only operator Device Health now reuses the original v1 panel/backend and
 extracted worker from **`dbbe055`**. Small adapters connect v2 scheduling,
@@ -58,8 +60,9 @@ scope follows the owner's next instruction; do not treat the backlog as approval
 The English documentation audit completed at f36ebad. The next owner report
 authorizes this BUG-018 correction; proposed watchdog work is not started.
 
-- Review the [operator form](qa/portrait-v2-operator-health/windows-checklist.html)
-  without imposing another old photo/game twenty-cycle run.
+- Preserve the [later operator 4/4 retest](qa/portrait-v2-health-clicks/owner-retest-2026-10-25.json)
+  at unknown HEAD/device metadata; BUG-018 monitoring, no new patch while working.
+  Do not impose another old photo/game twenty-cycle run.
 - Collect the [P5 form](qa/portrait-v2-p5/windows-checklist.html) and actual merchant
   simulator evidence when available; the new Sandbox integration cycle checks
   are distinct from earlier photo/game reports.

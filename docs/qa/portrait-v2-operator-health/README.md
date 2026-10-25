@@ -1,7 +1,13 @@
 # GUI v2 operator Device Health — FEAT-008 / FEAT-022
 
-**25 October owner retest:** raw 8/8 checked, but pressing all operator buttons
-rapidly reportedly hangs the app. This is not clean acceptance. H03/H04 require
+**Later 25 October retest:** targeted BUG-018 R01–R04 **4/4 checked**, zero
+unchecked, no issue notes. Operator repeated/mixed input, busy close, lifecycle
+and next input/restart are OWNER-REPORTED PASS / MONITORING at unknown HEAD/device
+metadata. [Raw retest and limits](../portrait-v2-health-clicks/README.md).
+The initial contradictory 8/8/hang report below remains historical evidence.
+
+**Initial 25 October owner retest:** raw 8/8 checked, but pressing all operator buttons
+rapidly reportedly hangs the app. This was not clean acceptance. H03/H04 prompted
 the targeted [BUG-018 correction/retest](../portrait-v2-health-clicks/README.md);
 the earlier automated results below remain tied to ea394e8, with tested Windows
 HEAD/device fields unknown. No repeat old twenty-cycle gate is added.

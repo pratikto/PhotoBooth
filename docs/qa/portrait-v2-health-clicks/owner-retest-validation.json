@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-25",
+  "task": "Record later BUG-018 owner retest without changing runtime",
+  "documentation_baseline": "8e8120baaea449395ab1e3dfedd5d779e471f87f",
+  "functional_source_unchanged": "ebb53fd0d4c234cd594c8ba8bdaadd7219d2e809",
+  "raw_report": "owner-retest-2026-10-25.txt",
+  "assessment_record": "owner-retest-2026-10-25.json",
+  "raw_and_structured_counts_agree": true,
+  "reported_checked": 4,
+  "reported_unchecked": 0,
+  "issue_notes_supplied": false,
+  "missing_metadata_preserved": true,
+  "exact_tested_head": "UNKNOWN",
+  "bug_status": "OWNER_REPORTED_PASS_MONITORING",
+  "local_links_checked": 226,
+  "unchanged_functional_files": 228,
+  "application_tests": "NOT_RERUN_DOCUMENTATION_ONLY",
+  "previous_automated_results": "Preserved at their tested source, not newly executed or substituted for owner metadata",
+  "additional_cycles_required": false,
+  "external_gates": "NOT_PASSED_BY_THIS_REPORT"
+}

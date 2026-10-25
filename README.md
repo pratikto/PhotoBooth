@@ -64,7 +64,9 @@ acceptance. **PILIH DEVICE** is disabled.
 **Operator retest follow-up:** the owner checked 8/8 but also reported an app
 hang after pressing all health buttons rapidly. BUG-018 source `ebb53fd` adds
 fresh-press/one-release admission and drops rapid duplicate commands/SFX; TUTUP
-remains usable while a probe/report runs. Windows confirmation is still pending.
+remains usable while a probe/report runs. The later owner retest reports **4/4
+PASS, no issues**: BUG-018 is monitoring. Tested HEAD/device fields are unknown;
+this does not certify exact source or external P5 gates.
 [Four-item retest with Submit](docs/qa/portrait-v2-health-clicks/windows-checklist.html) ·
 [reproduction and evidence](docs/qa/portrait-v2-health-clicks/README.md).
 

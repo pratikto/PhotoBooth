@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-25",
+  "branch": "feature/portrait-kiosk-v2-next",
+  "tested_head": null,
+  "windows": null,
+  "resolution": null,
+  "scaling_percent": null,
+  "speaker_output": null,
+  "camera": null,
+  "camera_index": null,
+  "when_lag_occurs": null,
+  "panel_cycles": null,
+  "raw_checked": ["R01", "R02", "R03", "R04"],
+  "raw_pass_count": "4/4",
+  "raw_unchecked_count": 0,
+  "raw_issue_notes": "(No notes supplied)",
+  "raw_report": "owner-retest-2026-10-25.txt",
+  "assessment": "OWNER_REPORTED_PASS_MONITORING",
+  "reported_observations": [
+    "Repeated refresh remains responsive, without queued commands or sounds; a later single tap works.",
+    "Mixed rapid button input does not hang; close works during I/O, configuration unchanged and no burst of report files.",
+    "Reopen and minimize/restore do not apply stale results, freeze or duplicate audio; fresh refresh/save works.",
+    "Next photo input and application restart work without lingering popup/audio, camera lock or charge/print replay."
+  ],
+  "exact_source_acceptance": "UNVERIFIED",
+  "specific_tested_resolutions": "NOT_SUPPLIED",
+  "windows_freeze_stack": "NOT_SUPPLIED",
+  "prior_failure_report": "owner-report-2026-10-25.json",
+  "prior_twenty_cycle_reports": "PRESERVED_NO_NEW_CYCLE_GATE",
+  "external_acceptance": "NOT_PASSED_BY_THIS_FORM",
+  "new_runtime_change": false
+}

@@ -1,0 +1,31 @@
+Here are my Meong Photobooth v2 Windows retest results. Analyze the results and issue notes. Unchecked items mean failed or not run; do not count them as passed.
+
+MEONG PHOTOBOOTH GUI V2 — OPERATOR BUTTON STORM / BUG-018 (4 ITEMS)
+Branch: feature/portrait-kiosk-v2-next
+Tested HEAD:
+Date: 2026-10-25
+Windows version:
+Screen resolution:
+Display scaling (%):
+Speaker/audio output:
+Camera:
+Camera index:
+When lag occurs:
+Panel open/close cycles (optional):
+HEAD status: NOT SUPPLIED — exact-source acceptance is unverified.
+This form requires no additional cycles; earlier twenty-cycle reports remain recorded.
+Operator results follow actual checked observations; no item is automatically passed.
+Metadata status: INCOMPLETE — HEAD/resolution/scaling fields are not all supplied.
+
+Passed: 4/4
+Unchecked (failed/not run): 0
+
+R. Repeated clicks and recovery
+[x] R01 At idle, open Device Health. Press REFRESH repeatedly for several seconds, including while results arrive. The GUI/ads/scroll remain responsive; no queued refreshes or click sounds continue after stopping. Wait one second: a new single tap still works.
+[x] R02 Press REFRESH, SIMPAN LAPORAN LOKAL and disabled PILIH DEVICE rapidly in combination; press TUTUP while work is running. It closes promptly, no device/configuration changes occur, and report files are not multiplied by a rapid burst.
+[x] R03 Reopen via F12/header hold during/after a probe or save, then minimize/restore. No old result/message appears on the new panel, no automatic reopening or freeze/audio duplication; a fresh refresh/save works and creates a safe local JSON.
+[x] R04 After closing, one tap MULAI FOTO works/sounds once. Check 800×1280 and 452×900 (360×640 if available): controls remain reachable. Close/reopen the app without lingering sound, popup, camera lock or replayed print/charge.
+
+External gates: the operator report does not pass merchant Sandbox, paper, Drive, retention or release; P5 remains separate.
+ISSUE NOTES
+(No notes supplied)

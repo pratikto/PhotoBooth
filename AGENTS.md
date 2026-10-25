@@ -66,6 +66,9 @@ or default/merge operations; the following owner bug report has its own scope.
 
 Owner retest continuation, 2026-10-25: the eight operator boxes were checked but
 the notes report an application hang after pressing all Device Health buttons
-rapidly. Preserve that contradiction and unknown tested HEAD; fix/retest BUG-018
-on the same branch before proposed watchdog work. Reuse the original v1 panel,
-backend and worker; scope the correction to v2 input/lifecycle integration.
+rapidly. Preserve that initial contradiction and unknown tested HEAD. The scoped
+v2 input correction reused the original v1 panel/backend/worker at ebb53fd.
+A later targeted retest reports R01–R04 4/4 with no issue notes: BUG-018 is now
+OWNER-REPORTED PASS / MONITORING. Do not patch the reported-working path or require
+another old twenty-cycle run. Exact tested source/device metadata remains unknown;
+recording the pass does not authorize proposed watchdog work or external gates.

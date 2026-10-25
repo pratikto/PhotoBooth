@@ -1,13 +1,35 @@
 # BUG-018 — repeated operator button input
 
+## Latest owner retest — 25 October 2026
+
+**OWNER-REPORTED PASS / MONITORING:** later targeted R01–R04 report has **4/4
+checked**, zero unchecked and no issue notes. The owner reports normal repeated
+refresh/mixed input, close during I/O, reopen/minimize and next input/restart.
+[Submitted text](owner-retest-2026-10-25.txt) ·
+[structured record/assessment](owner-retest-2026-10-25.json).
+
+Tested HEAD, OS version, resolution/scaling, camera/index and speaker fields were
+blank and remain unknown. R04 was checked, but specific tested dimensions cannot
+be inferred from empty metadata. Do not attribute this result to ebb53fd, 8e8120b
+or another commit; keep source-specific automated proof below separate. The
+initial raw 8/8/hang report remains preserved and is superseded for current
+symptom status by this later clean targeted report, not deleted.
+
+No new runtime patch or repeated twenty-cycle run is needed. Investigate a
+recurrence with evidence; formal exact-source verification/closure and merchant,
+paper, Drive/retention, privacy/release/P5 gates are not passed by this form.
+This documentation-only acceptance record does not start watchdog development.
+
+## Initial owner report — before the correction
+
 Owner report, **25 October 2026**, on required branch
 `feature/portrait-kiosk-v2-next`: the eight operator boxes were all checked, but
 the issue note says repeated Device Health button clicks hang the entire app.
 The owner clarified: **all buttons were pressed in rapid succession**.
 [Recorded report](owner-report-2026-10-25.json).
 
-Raw checked count **8/8 is preserved**, not treated as clean acceptance. H03/H04
-responsiveness/lifecycle require targeted retesting; tested HEAD, OS/display and
+Raw checked count **8/8 is preserved**, not treated as clean acceptance at that
+stage. H03/H04 prompted the later targeted retest above; tested HEAD, OS/display and
 device metadata were blank and remain unknown. Previous photo/game twenty-cycle
 reports stand; no additional twenty-cycle run is imposed here.
 
@@ -131,11 +153,12 @@ ZIP matches GitHub's SHA-256 digest
 800×1280 and 452×900. Controls/messages/scroll remain accessible; busy views keep
 TUTUP available. All observations are fixtures, not physical readiness.
 
-The correction fixes the demonstrated input-admission amplification. **Windows
-hang confirmation remains PENDING**, with actual freeze stack and tested HEAD
-unknown in the owner's report. Raw 8/8 plus the hang note is not clean acceptance;
-use the fresh four-item form. Existing twenty-cycle results stand. No physical/
-merchant/P5 gate, production feature or watchdog is activated by this evidence.
+The correction fixes the demonstrated input-admission amplification. At source
+delivery, Windows confirmation was pending. The later owner retest above reports
+**4/4/no issues**, moving BUG-018 to monitoring at unknown HEAD/device metadata;
+the actual original freeze stack remains unknown. The initial raw 8/8/hang is
+retained as a failure at that stage. Existing twenty-cycle results stand; no
+external P5 gate, production feature or watchdog follows from this record.
 
 Rollback checkpoint is pre-fix **f36ebad**; use scoped inverse source changes on
 the same branch, retaining journals/reports/photos and the original v1 modules.

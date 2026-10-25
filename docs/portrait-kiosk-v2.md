@@ -52,7 +52,7 @@ The printed photo-folder QR is separate from the payment QRIS.
 | P4b MOCK | Local quote/reward/admission ledger | Nonpayable simulation |
 | P4b Sandbox | Existing service/client/journal plus native v2 host and isolated launcher | Actual merchant simulator/current-device evidence pending; no trusted game promo |
 | P5 | Readiness CLI, metadata import/Submit form, regression/screenshots/rollback package | **Ready for acceptance**, not commercial certification; Windows/merchant/paper/Drive/privacy/release gates remain |
-| Operator increment | Original v1 read-only health panel/worker + safe reports; BUG-018 input guard at `ebb53fd` | Raw owner 8/8 plus repeated-button hang is not clean acceptance; [four-item retest](qa/portrait-v2-health-clicks/windows-checklist.html) pending; selection disabled |
+| Operator increment | Original v1 read-only health panel/worker + safe reports; BUG-018 input guard at `ebb53fd` | Initial raw 8/8/hang preserved; later [four-item retest](qa/portrait-v2-health-clicks/README.md) 4/4/no issues, OWNER-REPORTED PASS / MONITORING at unknown HEAD; selection disabled |
 | Primary branch transition | Owner direction and reference audit recorded | Default/rename/merge/launcher/release operations not performed |
 
 Owner approved P4b/P5 with manual tests at the end, then safe source continuation
@@ -60,7 +60,8 @@ while laptop checks wait. Health/report source is complete. The preflight at
 `0dc6555` is READY_FOR_MANUAL_TEST, not merchant/hardware acceptance.
 [Latest evidence ledger](test_checklist.md) distinguishes the 785-test BUG-018
 correction, 780-test original operator source and earlier 688-test P5 baseline,
-including optional CI skips. Windows hang confirmation remains pending.
+including optional CI skips. Later owner BUG-018 retest is 4/4/no issues;
+exact tested source/device metadata and external acceptance remain unverified.
 
 ## Visual, audio and evidence
 

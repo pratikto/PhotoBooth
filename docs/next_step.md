@@ -3,7 +3,8 @@
 Updated **25 October 2026**. Continue on `feature/portrait-kiosk-v2-next`.
 P3 photo, original game reuse, MOCK/Sandbox and P5 tooling already exist; do not
 reimplement them. The read-only Device Health/report increment is now complete
-in source (`ea394e8`), with actual operator acceptance pending.
+in source (`ea394e8`, input correction `ebb53fd`). Later operator retest R01–R04
+is 4/4/no issues, OWNER-REPORTED PASS / MONITORING at unknown HEAD/device metadata.
 
 The owner permits safe approved source development while laptop tests wait.
 Evidence gates below do not block every source task. The backlog is not blanket
@@ -13,15 +14,14 @@ approval for features, production, deployments or repository transitions.
 
 | Order | Focus | Next action / boundary |
 | --- | --- | --- |
-| 1 | BUG-018 operator repeated-click hang | Owner raw 8/8 conflicts with combined-button hang note. Correct/retest input admission before watchdog work; use the [four-item form](qa/portrait-v2-health-clicks/windows-checklist.html), no new twenty-cycle requirement |
-| 2 | FEAT-022 P5 current Windows integration | Collect the [P5 report](qa/portrait-v2-p5/windows-checklist.html); preflight `0dc6555` alone is not acceptance. Fix reproducible failures within authorized scope |
-| 3 | FEAT-020 actual merchant Sandbox | Enter keys locally; test official simulator/status/cancel/restart/recovery. New integration cycles are separate from old reports |
-| 4 | BUG-009 / Drive/privacy and printing | Verify download/offline behavior, physical paper and uncertain sends; cloud retention remains OPEN and deployment/deletion needs its own authorization |
-| 5 | Game → trusted QRIS promotion | Backend eligibility/redeem contract absent; preserve full-price Sandbox consent. Define approved scope before implementation |
-| 6 | Intended primary-branch transition | Follow the [promotion plan](gui-v2-promotion-plan.md) when the owner specifies the repository operation; not yet performed |
+| 1 | FEAT-022 P5 current Windows integration | Collect the [P5 report](qa/portrait-v2-p5/windows-checklist.html); preflight `0dc6555` alone is not acceptance. Fix reproducible failures within authorized scope |
+| 2 | FEAT-020 actual merchant Sandbox | Enter keys locally; test official simulator/status/cancel/restart/recovery. New integration cycles are separate from old reports |
+| 3 | BUG-009 / Drive/privacy and printing | Verify download/offline behavior, physical paper and uncertain sends; cloud retention remains OPEN and deployment/deletion needs its own authorization |
+| 4 | Game → trusted QRIS promotion | Backend eligibility/redeem contract absent; preserve full-price Sandbox consent. Define approved scope before implementation |
+| 5 | Intended primary-branch transition | Follow the [promotion plan](gui-v2-promotion-plan.md) when the owner specifies the repository operation; not yet performed |
 
 Source evidence: [feature status](FEATURE_STATUS.md), [test ledger](test_checklist.md).
-BUG-012/013/014/015/016/017 are monitoring per recorded owner reports; do not
+BUG-012/013/014/015/016/017/018 are monitoring per recorded owner reports; do not
 speculatively patch working paths. Missing tested HEAD/device metadata stays unknown.
 
 ## Stable feature inventory and candidates

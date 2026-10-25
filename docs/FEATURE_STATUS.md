@@ -10,12 +10,13 @@ check passed; OWNER-REPORTED means a physical observation with the recorded
 metadata limits; PENDING/NOT_RUN means acceptance has not been demonstrated.
 None of these alone means production-certified or formally released.
 
-**New operator report, 25 October:** raw 8/8 checked, but rapid combined button
-presses reportedly hang the app. Treat operator acceptance as blocked by
-**BUG-018**, with H03/H04 retest required and exact HEAD/device metadata unknown.
-The input correction passed final automated QA; Windows confirmation is pending.
-Previous ea394e8 evidence below remains historical, not a pass for this repair.
-[Report and correction](qa/portrait-v2-health-clicks/README.md).
+**Latest owner retest, 25 October:** targeted R01–R04 **4/4 checked**, zero
+unchecked and no issue notes. BUG-018 moves to **OWNER-REPORTED PASS / MONITORING**:
+rapid/mixed clicks, close while busy, reopen/minimize and next input/restart are
+reported working. Preserve the earlier contradictory raw 8/8/hang report.
+Tested HEAD/device fields remain unknown; no exact-source verification, formal
+closure or external P5 acceptance is inferred. No new runtime patch is needed.
+[Reports and correction](qa/portrait-v2-health-clicks/README.md).
 
 | Feature | Current GUI v2 source | Evidence and boundary |
 | --- | --- | --- |
@@ -29,7 +30,7 @@ Previous ea394e8 evidence below remains historical, not a pass for this repair.
 | Local MOCK checkout | Local SQLite quote/promotion/admission; nonpayable QR and simulated confirmation | Win discount Rp2,500 once per order, capped at subtotal; no bank settlement |
 | FEAT-020 QRIS Sandbox | Reused service/client/journal plus native v2 adapter/isolated launcher | Server quote, provider verification, one-use grant/ACK/recovery in source. Actual merchant simulator evidence pending; no trusted game-promo API |
 | P5 readiness | Read-only CLI, safe metadata JSON, 26-item Submit/import form, rollback package | Owner preflight `0dc6555` = READY_FOR_MANUAL_TEST, not hardware/provider PASS |
-| FEAT-008 operator Device Health | Original v1 backend/panel/worker reused with small v2 adapters and safe report export | Owner raw 8/8 plus rapid combined-button hang: BUG-018 blocks clean acceptance; targeted retest pending. Selection/switching disabled |
+| FEAT-008 operator Device Health | Original v1 backend/panel/worker reused with small v2 adapters and safe report export | Later R01–R04 owner retest 4/4, no issues: BUG-018 monitoring at unknown HEAD/device metadata. Selection/switching disabled |
 | Other reference features | Device staging/switching, AI Background Studio, WhatsApp, newer dithering lab | Separate branches; not automatically in v2. [Reference map](gui-v2-branch-audit.md) |
 | Production payments, merchant POS/scanner, trusted QRIS promo | Disabled/not delivered in v2 | Require their own approved scope, trust contract and acceptance |
 
