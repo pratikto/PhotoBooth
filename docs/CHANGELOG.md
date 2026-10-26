@@ -1,5 +1,18 @@
 # Meong Photobooth — changelog
 
+## 2026-10-26 — BUG-009 retention activation repair
+
+Owner resumes photo retention separately from FEAT-004 ad sync and reports
+setup/redeployment not confirmed. Reuse original v1 Apps Script cleanup/setup:
+require an actual owning-account CLOCK trigger before active registration ACK;
+repair setup that previously accepted a non-clock trigger with the same handler.
+Add authenticated read-only status using the existing Drive metadata request;
+never run setup/cleanup from diagnosis. Two source defects reproduced before
+fix; 19 actual-Code.gs VM and 25 focused Python PASS, no skips. Add VM checks to
+the existing portrait workflow, retaining its three-job shape. BUG-009 stays
+OPEN pending installed-account/deletion evidence.
+[Scope, proof, activation guide and rollback](qa/bug-009-retention/README.md).
+
 ## 2026-10-26 — Simpler photo entry with mandatory tutorial
 
 Remove idle CARA PAKAI and its two-column wrapper. Keep the existing full-width

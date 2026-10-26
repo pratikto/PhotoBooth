@@ -27,6 +27,14 @@ it adds no new application feature approval. [AGENTS.md](../AGENTS.md).
 
 ## Product decisions
 
+**Owner BUG-009 continuation, 26 October:** resume bounded photo-retention
+remediation; setup and redeployment have not been confirmed. This supersedes
+the earlier deferral for this bug, without starting FEAT-004 advertising sync.
+Reuse v1 setup/cleanup/client/configuration, preserve immutable deadlines and
+v2 upload holds. Prepare tested source/diagnostics and a concrete activation
+guide; installed-account changes/deletion evidence remain separate from source
+verification. [Current repair](qa/bug-009-retention/README.md).
+
 **Owner print/Drive priority, 25 October:** after BUG-018's 4/4 monitoring retest,
 the owner redirected the next development to these two features only and chose
 automatic print after approving photos (v1 behavior), with Drive in background.

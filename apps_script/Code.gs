@@ -53,6 +53,8 @@ function doPost(event) {
       result = withPhotoLock_(function () { return uploadTransactionFile_(body, properties); });
     } else if (action === "register_retention") {
       result = withPhotoLock_(function () { return registerRetention_(body, properties); });
+    } else if (action === "retention_status") {
+      result = { retention_status: inspectPhotoRetention_(properties) };
     } else if (action === "cleanup_retention") {
       result = cleanupPhotoRetention();
     } else if (action === "legacy_upload") {
@@ -484,13 +486,54 @@ function setupPhotoRetention() {
   const triggers = ScriptApp.getProjectTriggers().filter(function (trigger) {
     return trigger.getHandlerFunction() === PHOTO_RETENTION_TRIGGER;
   });
-  if (!triggers.length) {
-    ScriptApp.newTrigger(PHOTO_RETENTION_TRIGGER).timeBased().everyHours(1).create();
-  } else {
-    triggers.slice(1).forEach(function (trigger) { ScriptApp.deleteTrigger(trigger); });
-  }
+  const clocks = triggers.filter(function (trigger) {
+    return trigger.getEventType() === ScriptApp.EventType.CLOCK;
+  });
+  const keep = clocks.length ? clocks[0]
+    : ScriptApp.newTrigger(PHOTO_RETENTION_TRIGGER).timeBased().everyHours(1).create();
+  triggers.filter(function (trigger) { return trigger !== keep; })
+    .forEach(function (trigger) { ScriptApp.deleteTrigger(trigger); });
   properties.setProperty(PHOTO_RETENTION_ENABLED, "true");
   return { enabled: true, retention_days: PHOTO_RETENTION_DAYS, interval_hours: 1 };
+}
+
+/** A saved enable flag is insufficient if its owning-account timer has gone. */
+function photoRetentionActivation_(properties) {
+  const configured = !!properties.getProperty("DRIVE_FOLDER_ID");
+  const enabled = properties.getProperty(PHOTO_RETENTION_ENABLED) === "true";
+  const status = { protocol_version: 1, managed_by: PHOTO_RETENTION_MARKER,
+    retention_days: PHOTO_RETENTION_DAYS, enabled: enabled,
+    clock_trigger_count: null, drive_api_accessible: null, state: "TRIGGER_ACCESS_REQUIRED" };
+  try {
+    status.clock_trigger_count = ScriptApp.getProjectTriggers().filter(function (trigger) {
+      return trigger.getHandlerFunction() === PHOTO_RETENTION_TRIGGER
+        && trigger.getEventType() === ScriptApp.EventType.CLOCK;
+    }).length;
+    status.state = !configured ? "CONFIGURATION_REQUIRED" : !enabled ? "SETUP_REQUIRED"
+      : status.clock_trigger_count === 0 ? "TRIGGER_MISSING"
+      : status.clock_trigger_count > 1 ? "DUPLICATE_TRIGGERS" : "READY";
+  } catch (_) { /* Only an allowlisted state leaves the Web App. */ }
+  return status;
+}
+
+/** Authenticated diagnosis: read one parent's metadata; no sweep, marker or trigger writes. */
+function inspectPhotoRetention_(properties) {
+  const status = photoRetentionActivation_(properties);
+  const parentId = properties.getProperty("DRIVE_FOLDER_ID");
+  if (!parentId) return status;
+  try {
+    const response = driveRetentionRequest_("get", parentId, "fields=id,mimeType");
+    status.drive_api_accessible = response.getResponseCode() === 200;
+    if (!status.drive_api_accessible) {
+      if (status.state === "READY") status.state = "DRIVE_API_UNAVAILABLE";
+    } else if (JSON.parse(response.getContentText()).mimeType !== "application/vnd.google-apps.folder") {
+      status.state = "DRIVE_PARENT_INVALID";
+    }
+  } catch (_) {
+    status.drive_api_accessible = false;
+    if (status.state === "READY") status.state = "DRIVE_API_UNAVAILABLE";
+  }
+  return status;
 }
 
 /** Serialize photo uploads, deadline registration and cleanup, without nesting existing locks. */
@@ -520,7 +563,9 @@ function registerRetention_(body, properties) {
   const pool = readPool_(properties, key);
   pool.slots = pool.slots.filter(function (slot) { return slot.folder_id !== folder.getId(); });
   writePool_(properties, key, pool);
-  return { retention: policy, retention_enabled: properties.getProperty(PHOTO_RETENTION_ENABLED) === "true" };
+  const activation = photoRetentionActivation_(properties);
+  return { retention: policy, retention_enabled: activation.state === "READY",
+    retention_state: activation.state };
 }
 
 /** A timestamp retry can shorten a known clock but must never extend it. */

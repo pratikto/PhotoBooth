@@ -1,0 +1,88 @@
+✔ 30-day boundary uses permanent scoped deletion, without Trash (10.639016ms)
+✔ unused pre-created READY slots remain, even with an old or forged deadline (1.641579ms)
+✔ original transaction registration is immutable across retries and removes the READY slot (1.45399ms)
+✔ adoption uses the oldest photo date, never the old empty-folder creation date (1.663181ms)
+✔ unrelated/foreign folders, malformed metadata, and unknown nested content are preserved (1.754429ms)
+✔ legacy root photo pattern expires, arbitrary root images remain untouched (1.177687ms)
+✔ Drive permission failures are reported and retried; successful deletion is idempotent (1.065496ms)
+✔ preview is read-only before activation and reports only candidates (1.233958ms)
+✔ setup installs one hourly trigger, does not delete content, and refuses to sweep before activation (3.359419ms)
+✔ expired folders reject uploads and invalid tokens never reach cleanup (2.426893ms)
+✔ corrupt slot ledgers fail closed before any deletion (1.978803ms)
+✔ large backlogs are bounded and retain an iterator cursor for the next hourly pass (2.472783ms)
+✖ a stale enabled flag without an owning-account clock never acknowledges active retention (2.032673ms)
+✖ setup repairs a same-name non-clock trigger without touching unrelated triggers or photos (1.751777ms)
+✖ authenticated retention status only reads activation and Drive metadata, never content or configuration (1.228257ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 12
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 119.487424
+
+✖ failing tests:
+
+test at tests/test_apps_script_retention.cjs:232:1
+✖ a stale enabled flag without an owning-account clock never acknowledges active retention (2.032673ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (/workspace/PhotoBooth/tests/test_apps_script_retention.cjs:238:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/test_apps_script_retention.cjs:243:1
+✖ setup repairs a same-name non-clock trigger without touching unrelated triggers or photos (1.751777ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'ON_OPEN' !== 'CLOCK'
+  
+      at TestContext.<anonymous> (/workspace/PhotoBooth/tests/test_apps_script_retention.cjs:253:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'ON_OPEN',
+    expected: 'CLOCK',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/test_apps_script_retention.cjs:258:1
+✖ authenticated retention status only reads activation and Drive metadata, never content or configuration (1.228257ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (/workspace/PhotoBooth/tests/test_apps_script_retention.cjs:263:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

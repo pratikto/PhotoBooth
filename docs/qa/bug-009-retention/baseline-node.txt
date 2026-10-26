@@ -1,0 +1,20 @@
+✔ 30-day boundary uses permanent scoped deletion, without Trash (17.792496ms)
+✔ unused pre-created READY slots remain, even with an old or forged deadline (3.644615ms)
+✔ original transaction registration is immutable across retries and removes the READY slot (1.102519ms)
+✔ adoption uses the oldest photo date, never the old empty-folder creation date (3.244996ms)
+✔ unrelated/foreign folders, malformed metadata, and unknown nested content are preserved (4.225207ms)
+✔ legacy root photo pattern expires, arbitrary root images remain untouched (0.861126ms)
+✔ Drive permission failures are reported and retried; successful deletion is idempotent (2.967825ms)
+✔ preview is read-only before activation and reports only candidates (0.827045ms)
+✔ setup installs one hourly trigger, does not delete content, and refuses to sweep before activation (4.303207ms)
+✔ expired folders reject uploads and invalid tokens never reach cleanup (6.605663ms)
+✔ corrupt slot ledgers fail closed before any deletion (0.80673ms)
+✔ large backlogs are bounded and retain an iterator cursor for the next hourly pass (4.041449ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 186.318477

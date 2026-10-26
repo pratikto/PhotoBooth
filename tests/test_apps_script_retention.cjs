@@ -20,7 +20,10 @@ function iterator(items) {
     getContinuationToken: () => String(index) };
 }
 function harness() {
-  const objects = new Map(), requests = [], triggers = [], settings = {
+  const clockTrigger = (handler = 'cleanupPhotoRetention') => ({
+    getHandlerFunction: () => handler, getEventType: () => 'CLOCK',
+  });
+  const objects = new Map(), requests = [], triggers = [clockTrigger()], settings = {
     DRIVE_FOLDER_ID: 'booth-parent', UPLOAD_TOKEN: 'fixture-token', PHOTOBOOTH_RETENTION_ENABLED: 'true',
   };
   const properties = { getProperty: key => settings[key] || null,
@@ -58,11 +61,11 @@ function harness() {
     LockService: { getScriptLock: () => ({ waitLock() {}, tryLock: () => true, releaseLock() {} }) },
     DriveApp: { getFolderById(id) { if (!objects.has(id)) throw Error('Unknown folder'); return objects.get(id); },
       continueFolderIterator: () => iterator(root.children) },
-    ScriptApp: { getOAuthToken: () => 'fixture-oauth', getProjectTriggers: () => triggers,
+    ScriptApp: { EventType: { CLOCK: 'CLOCK' }, getOAuthToken: () => 'fixture-oauth', getProjectTriggers: () => triggers,
       deleteTrigger(item) { triggers.splice(triggers.indexOf(item), 1); },
       newTrigger(handler) { return { timeBased() { return this; }, everyHours(hours) {
         assert.equal(hours, 1); return this;
-      }, create() { const trigger = { getHandlerFunction: () => handler }; triggers.push(trigger); return trigger; } }; } },
+      }, create() { const trigger = clockTrigger(handler); triggers.push(trigger); return trigger; } }; } },
     UrlFetchApp: { fetch(url, options) {
       const id = decodeURIComponent(new URL(url).pathname.split('/').pop());
       requests.push({ id, method: options.method });
@@ -224,4 +227,94 @@ test('large backlogs are bounded and retain an iterator cursor for the next hour
   const result = h.context.cleanupPhotoRetention();
   assert.equal(result.deleted.length, 100);
   assert.equal(h.settings.PHOTOBOOTH_RETENTION_CURSOR, '100');
+});
+
+test('a stale enabled flag without an owning-account clock never acknowledges active retention', () => {
+  const h = harness();
+  h.triggers.length = 0;
+  const folder = h.folder('claimed', 'PB001_00000001');
+  const result = h.context.registerRetention_({folder_id: folder.id,
+    transaction_id: folder.name, started_at: new ClockDate().toISOString()}, h.properties);
+  assert.equal(result.retention_enabled, false);
+  assert.equal(result.retention_state, 'TRIGGER_MISSING');
+  assert.equal(h.requests.length, 0);
+});
+
+test('setup repairs a same-name non-clock trigger without touching unrelated triggers or photos', () => {
+  const h = harness();
+  h.triggers.length = 0;
+  h.triggers.push({getHandlerFunction: () => 'cleanupPhotoRetention', getEventType: () => 'ON_OPEN'});
+  const unrelated = {getHandlerFunction: () => 'otherJob', getEventType: () => 'CLOCK'};
+  h.triggers.push(unrelated);
+  h.context.setupPhotoRetention();
+  h.context.setupPhotoRetention();
+  const own = h.triggers.filter(t => t.getHandlerFunction() === 'cleanupPhotoRetention');
+  assert.equal(own.length, 1);
+  assert.equal(own[0].getEventType(), 'CLOCK');
+  assert.ok(h.triggers.includes(unrelated));
+  assert.equal(h.requests.filter(r => r.method === 'delete').length, 0);
+});
+
+test('authenticated retention status only reads activation and Drive metadata, never content or configuration', () => {
+  const h = harness();
+  const before = JSON.stringify(h.settings);
+  const result = h.context.doPost({postData: {contents: JSON.stringify({
+    action: 'retention_status', token: 'fixture-token'})}}).body;
+  assert.equal(result.ok, true);
+  assert.equal(result.retention_status.state, 'READY');
+  assert.equal(result.retention_status.clock_trigger_count, 1);
+  assert.equal(result.retention_status.drive_api_accessible, true);
+  assert.equal(JSON.stringify(h.settings), before);
+  assert.deepEqual(h.requests, [{id: 'booth-parent', method: 'get'}]);
+  assert.equal(h.triggers.length, 1);
+  assert.doesNotMatch(JSON.stringify(result), /fixture-token|booth-parent|fixture-oauth/);
+});
+
+test('status distinguishes setup, missing and duplicate clocks without installing or sweeping', () => {
+  for (const [enabled, count, state] of [[false, 1, 'SETUP_REQUIRED'], [true, 0, 'TRIGGER_MISSING'],
+    [true, 2, 'DUPLICATE_TRIGGERS']]) {
+    const h = harness();
+    h.settings.PHOTOBOOTH_RETENTION_ENABLED = String(enabled);
+    const trigger = h.triggers[0]; h.triggers.length = 0;
+    for (let n = 0; n < count; n++) h.triggers.push(trigger);
+    const before = JSON.stringify(h.settings);
+    const result = h.context.inspectPhotoRetention_(h.properties);
+    assert.equal(result.state, state);
+    assert.equal(result.clock_trigger_count, count);
+    assert.equal(h.triggers.length, count);
+    assert.equal(JSON.stringify(h.settings), before);
+    assert.ok(h.requests.every(r => r.method === 'get'));
+  }
+});
+
+test('status rejects invalid tokens before even a Drive metadata read', () => {
+  const h = harness();
+  const result = h.context.doPost({postData: {contents: JSON.stringify({
+    action: 'retention_status', token: 'wrong'})}}).body;
+  assert.equal(result.ok, false);
+  assert.equal(result.code, 401);
+  assert.equal(h.requests.length, 0);
+});
+
+test('status reports Drive and trigger permission failures without echoing raw account errors', () => {
+  const h = harness();
+  h.context.UrlFetchApp.fetch = () => { throw Error('fixture-private-url-token'); };
+  assert.equal(h.context.inspectPhotoRetention_(h.properties).state, 'DRIVE_API_UNAVAILABLE');
+  h.context.ScriptApp.getProjectTriggers = () => { throw Error('fixture-private-owner'); };
+  const result = h.context.inspectPhotoRetention_(h.properties);
+  assert.equal(result.state, 'TRIGGER_ACCESS_REQUIRED');
+  assert.equal(result.clock_trigger_count, null);
+  assert.doesNotMatch(JSON.stringify(result), /fixture-private/);
+});
+
+test('setup repairs duplicate own clocks, leaves other tasks alone and never deletes photos', () => {
+  const h = harness();
+  h.triggers.push(h.triggers[0]);
+  // Distinct trigger instances, as returned by Apps Script.
+  h.triggers[1] = {getHandlerFunction: () => 'cleanupPhotoRetention', getEventType: () => 'CLOCK'};
+  h.triggers.push({getHandlerFunction: () => 'otherJob', getEventType: () => 'CLOCK'});
+  h.context.setupPhotoRetention();
+  assert.equal(h.triggers.filter(t => t.getHandlerFunction() === 'cleanupPhotoRetention').length, 1);
+  assert.equal(h.triggers.filter(t => t.getHandlerFunction() === 'otherJob').length, 1);
+  assert.ok(h.requests.every(r => r.method === 'get'));
 });
