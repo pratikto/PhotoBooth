@@ -25,7 +25,9 @@ approval for features, production, deployments or repository transitions.
 records per-booth roots, at least 25 READY directories, Photo/NN/raw-color-bw,
 booth-local assets and complete local copies of global ads/templates. Owner
 selects local photo/print with deferred upload/QR if Drive/reserves are absent.
-Audit/specification is complete; implementation/cutover is not performed.
+That audit-only snapshot predates the delivered local implementation and the
+later `0bd69a9` numbered-cloud/verified-link repair. Source is integrated; actual
+installed Google deployment and delivery/retention acceptance remain pending.
 Coordinate paths, counters/pool, raster persistence, upload, retention and asset
 snapshots before switching storage. Entire `old` contents remain excluded.
 
@@ -74,7 +76,7 @@ fresh source/readiness review and relevant owner instruction before code work.
 | FEAT-001 pricing/copies | Implemented: Rp5,000/design + Rp5,000/copy, one three-photo session/design | Quantity zero deselects; mixed A×2+B×1 = Rp25,000/two sessions; digital-only and commercial maximum policy remain undecided |
 | FEAT-002A/B merchant receipt promotion | Separate design: receipt scan at checkout; example Rp50,000 food purchase waives one Rp5,000 base fee | Existing POS receipt first; scan is not purchase proof. Partner/API, one-use eligibility, offline/stacking and reimbursement terms unresolved; not the game discount |
 | FEAT-003 mirror | V2 live/review and photo areas of result/printed/digital strip mirror; v1 defaults unchanged | Full-resolution original JPEGs and detector inputs stay original; template/text/QR stay normal |
-| FEAT-004 ads + BUG-009 storage/global content | Owner-linked per-booth/global ads/templates/offline-cache/retention contract audited; coordinated implementation pending | Reuse existing services, versioned packs and atomic local snapshots; photo/ad separation and retention must match new paths; never inspect/change `old` |
+| FEAT-004 ads + BUG-009 storage/global content | Local storage/content integrated; `0bd69a9` corrects numbered cloud folders and verified QR links | Installed Web App deployment, actual upload/phone/deletion acceptance pending; preserve local journals and exclude all `old` contents |
 | FEAT-005A/B ordering | Small standalone DEMO proposal; real merchant supplies compatible customer-facing ordering | Same-kiosk DEMO order-to-photo offer needs no receipt scan; retain external-receipt path. Do not build a full production POS by default |
 | FEAT-006 themes | Proposed configurable shared-codebase themes | Final admin/preset policy and approval pending |
 | FEAT-007 transaction recovery | Some durable Sandbox admission already implemented; broader operational paid fulfillment remains future scope | No replay on restart; paid reprint/refund/production recovery not implied |

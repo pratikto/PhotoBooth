@@ -200,3 +200,19 @@ read-only/bounded recovery decisions and pre-GUI hold are checked automatically;
 actual Ubuntu sign-in/service/desktop/device behavior remains NOT_RUN. Global
 recovery, refunds, automatic restart, Google deployment and production are outside
 this stage. The docs-first rule and Windows/Ubuntu distinction persist in AGENTS.
+
+## Publication and Windows CI diagnosis
+
+Source `b99c613542139e0ca666b1d990dd811731da12a1` was pushed and its remote HEAD
+verified on the required branch. Matching run
+[40421965274](https://github.com/pratikto/PhotoBooth/actions/runs/40421965274)
+passed the Linux pure job but failed the new Windows portable-check step.
+Direct job-log access redirected to a denied log-storage endpoint; the check
+annotation exposed only exit code 1, so the underlying case was not established.
+No Windows PASS is inferred from the local Linux regression.
+
+The follow-up reuses the existing `run_kiosk_unittests.py` raw-report runner for
+this step, retains `-S`, preserves a Windows report artifact and emits the
+synthetic unittest failure as a check annotation if needed. This is CI evidence
+plumbing, not a weakened assertion or payment/recovery implementation change.
+The original failed run is retained; final verification is recorded separately.
