@@ -102,8 +102,14 @@ this does not certify exact source or external P5 gates.
 
 ## Current checkpoint and remaining acceptance
 
-Latest functional source: **`20453fe`**; **800 local tests PASS, zero skips**.
-The 26 October entry refinement removes the separate CARA PAKAI button while
+Latest functional source: **`887ba39`**; **807 local Python tests PASS, zero skips**,
+plus **19 actual-Code.gs VM tests PASS**. BUG-009 now has corrected real-CLOCK
+activation and a safe diagnostic/guide; Google-account activation/deletion
+remains unverified. [Current proof](docs/qa/bug-009-retention/README.md).
+[Matching-source CI 40255716011](https://github.com/pratikto/PhotoBooth/actions/runs/40255716011)
+succeeded in all three jobs; one optional native model-assets skip is covered locally.
+
+Earlier source `20453fe` has 800 local PASS. The entry refinement removes the separate CARA PAKAI button while
 preserving the required tutorial. Twelve clean-source PNGs were verified;
 idle/invitation/tutorial were reviewed at 800×1280 and 452×900.
 [Current checks/screenshots and Windows spot checks](docs/qa/portrait-v2-photo-entry/README.md).

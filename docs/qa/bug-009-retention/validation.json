@@ -1,0 +1,74 @@
+{
+  "date": "2026-10-26",
+  "timezone": "Asia/Jakarta",
+  "source_sha": "887ba391dbf9909d94ee2120398346ceffbaf96e",
+  "base_sha": "a432acabfd98c0c12607f08f799b569f245cf610",
+  "full_python": {
+    "cases": 807,
+    "passed": 807,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 238.684
+  },
+  "focused_python": {
+    "passed": 44,
+    "skipped": 0
+  },
+  "actual_codegs_vm": {
+    "passed": 19,
+    "skipped": 0
+  },
+  "functional_files_hashed": 238,
+  "ci": {
+    "run_id": 40255716011,
+    "successful_jobs": 3,
+    "reports": {
+      "health-tests.txt": {
+        "cases": 80,
+        "passed": 80,
+        "skipped": 0
+      },
+      "native-tests.txt": {
+        "cases": 104,
+        "passed": 103,
+        "skipped": 1
+      },
+      "delivery-tests.txt": {
+        "cases": 44,
+        "passed": 44,
+        "skipped": 0
+      },
+      "sandbox-tests.txt": {
+        "cases": 139,
+        "passed": 139,
+        "skipped": 0
+      }
+    },
+    "optional_skip": "Native palm model assets omitted in CI; covered by local full run."
+  },
+  "visual": {
+    "native_ci_views_reviewed": 4,
+    "form_views_reviewed": 2,
+    "required_sizes": [
+      [
+        800,
+        1280
+      ],
+      [
+        452,
+        900
+      ]
+    ]
+  },
+  "cloud_configuration_available": false,
+  "cloud_setup_deployment_deletion": "NOT_RUN",
+  "bug_status": "OPEN \u2014 source repaired; installed-account evidence pending",
+  "owner_setup_reply": "Belum / belum tahu",
+  "limits": [
+    "No Google connector/private settings/environment credentials present.",
+    "Readonly CLI without configuration makes no request.",
+    "Cloud permanent deletion and hourly execution are not proven by source tests or READY.",
+    "Full run began before final source commit; 238 final hashes match published source."
+  ]
+}

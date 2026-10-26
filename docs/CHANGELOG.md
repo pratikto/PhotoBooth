@@ -25,6 +25,12 @@ PASS and browser checks pass. Owner-account activation/deployment and actual
 eligible synthetic deletion remain NOT_RUN; BUG-009 stays OPEN.
 [Commands, activation guide, evidence and rollback](qa/bug-009-retention/README.md).
 
+BUG-009 final matching-source CI **40255716011**: all three jobs SUCCESS,
+delivery/retention 44 PASS, health 80 PASS, Sandbox 139 PASS, native 103 PASS/one
+optional model-assets skip covered by local 807-case run. Four native CI views
+and two form views reviewed at both required sizes. Final evidence/docs delivery
+skips redundant Actions; actual Google activation/deletion still NOT_RUN.
+
 ## 2026-10-26 — Simpler photo entry with mandatory tutorial
 
 Remove idle CARA PAKAI and its two-column wrapper. Keep the existing full-width

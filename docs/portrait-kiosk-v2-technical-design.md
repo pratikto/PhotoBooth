@@ -21,6 +21,7 @@ source `266b2c8` (print/Drive), input correction `ebb53fd`, original operator
 | Sandbox host | `sandbox_checkout.py`, `sandbox_views.py` | Existing KioskCheckout/QrisKioskClient and single-flight GameJobs; durable photo handoff; no GUI merchant key |
 | Operator health | `health_service.py`, `operator_health.py`, `health_report.py` | Original v1 panel/backend/extracted worker; bounded observations and safe local reports |
 | Diagnostics/readiness | `diagnostics.py`, `performance.py`, `readiness.py` | Local diagnostics/timings, safe inventory; preflight performs no device/provider readiness probes |
+| Retention diagnosis (shared) | `retention_readiness.py`, `drive_storage.py`; `tools/check_drive_retention.py` | Explicit one-action authenticated status/parent-metadata read through original v1 configuration; no setup/upload/delete; original UTC retention/deletion unchanged |
 | Payment service (shared) | `checkout_backend.py`, `checkout_store.py`, `payment_quote.py`, `qris_api.py`, `booth_auth.py` | Backend price, authenticated booth, idempotency, grants and reconciliation |
 | Provider/client/journal (shared) | `midtrans_sandbox.py`, `midtrans_verify.py`, `qris_evidence.py`, `qris_images.py`, `qris_kiosk_client.py`, `qris_session.py` | Sandbox-only, independent order/amount/currency/reference validation, bounded/allowlisted I/O, atomic journal and process lease |
 

@@ -2,10 +2,23 @@
 
 Updated **26 October 2026**. Repository `pratikto/PhotoBooth`; required branch
 **`feature/portrait-kiosk-v2-next`**. Documentation baseline **`f36ebad`**, latest functional
-source **`20453fe`** (simpler mandatory-tutorial entry, after print/Drive `266b2c8`). Refresh remote HEAD before continuing. GitHub's default is
+source **`887ba39`** (BUG-009 activation/diagnosis, after tutorial entry `20453fe` and print/Drive `266b2c8`). Refresh remote HEAD before continuing. GitHub's default is
 still `master`; `main.py` launches v1. Do not restart the project or P3/P4 work.
 
 ## Latest completed increment
+
+**26 October BUG-009:** owner explicitly resumes this previously deferred bug;
+setup/redeployment not confirmed. Source 130aae1 repairs stale-flag ACK and
+incorrect same-handler trigger setup, reusing v1 cleanup unchanged. Source
+887ba39 adds one authenticated read-only status request/CLI with original private
+configuration, redacted report and eight-item Submit form. Full 807 Python
+PASS/zero skips, 44 focused PASS, 19 actual-Code.gs VM PASS; matching-source CI
+40255716011 all three jobs SUCCESS, optional native model-assets skip covered
+locally, four native and two form views reviewed at both required sizes. Original 15/30-day
+clocks, v2 upload hold and deletion selection preserved. No Google deployment,
+trigger write or actual deletion performed; BUG-009 remains OPEN until owning
+account and authorized synthetic evidence. No ad sync/watchdog scope.
+[Current guide, checkpoints and proof](qa/bug-009-retention/README.md).
 
 **26 October owner flow refinement:** remove only idle CARA PAKAI; reuse the
 existing Start/invitation/postgame tutorial gate and acknowledgement/reset rules.
@@ -71,6 +84,8 @@ These results predate this documentation-only reconciliation.
 | `7b691c7` | Explicit print/Drive options and worker setup/QR contracts; 29 focused PASS |
 | `266b2c8` | Native automatic print, background queue startup/resume and verified result QR; 800 full PASS, matching three-job CI SUCCESS |
 | `20453fe` | Remove redundant idle help action; mandatory Start/invitation/postgame tutorial unchanged; 800 full PASS/zero skips |
+| `130aae1` | BUG-009 real-CLOCK activation/setup correction and authenticated read-only backend status; 19 VM + 25 Python PASS |
+| `887ba39` | Safe existing-config diagnosis/report and Submit form; 807 full Python PASS/zero skips, 19 VM PASS |
 
 Use scoped inverse commits for code rollback after inspection; preserve all
 payment journals, consumed attempts, reports, photo/print manifests and customer
@@ -95,7 +110,9 @@ authorizes this BUG-018 correction; proposed watchdog work is not started.
   metadata/form were not supplied. Do not borrow missing device fields from older reports.
 - Preserve owner-reported P3/visual/audio/game passes and BUG-012–017 monitoring.
   Investigate recurrence with evidence rather than patching reported-working paths.
-- BUG-009 cloud retention is OPEN. V2 retention acknowledgement is an upload guard,
+- BUG-009 cloud retention is OPEN; owner resumed source remediation at 130aae1/887ba39.
+  Use the new read-only diagnostic/activation guide; installed-account evidence is pending.
+  V2 retention acknowledgement is an upload guard,
   not proof of deployed 30-day deletion. V1 BUG-001/007 are not closed by v2 audio.
 
 ## Implementation invariants

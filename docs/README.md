@@ -25,6 +25,11 @@ Updated **26 October 2026 (Asia/Jakarta)**. Continue on
 
 ## Current acceptance packages
 
+- [BUG-009 retention](qa/bug-009-retention/README.md): existing v1 activation
+  repair, read-only diagnostic, setup/deployment guide and [eight-item Submit
+  form](qa/bug-009-retention/windows-checklist.html). Source proof is separate
+  from actual owning-account timer/permanent-deletion evidence.
+
 - [Simpler photo entry](qa/portrait-v2-photo-entry/README.md): 26 October removal
   of the separate idle CARA PAKAI button; mandatory tutorial flow and short
   Windows spot checks remain.

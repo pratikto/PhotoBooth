@@ -186,3 +186,24 @@ Form [800×1280](screenshots/bug009-form-800x1280.png) and
 browser fixtures, **not Google observations**. Main GUI layout/assets/flow are
 unchanged by this backend/tool increment; its existing cloud renderer remains
 in the portrait CI. Actual Windows/cloud acceptance stays NOT_RUN.
+
+## Published source and matching CI
+
+Stage 2 functional source **887ba391dbf9909d94ee2120398346ceffbaf96e** is
+committed/pushed/remote-verified after stage 1 **130aae1**. All 238 tested
+code/test/workflow/form hashes match it; no later functional change follows.
+[CI 40255716011](https://github.com/pratikto/PhotoBooth/actions/runs/40255716011)
+has **all three jobs SUCCESS** ([job record](final-ci.json)). The original VM
+checks run in its pure job. Raw [CI reports](ci-reports/) contain delivery/retention
+**44 PASS**, health **80 PASS**, Sandbox **139 PASS**, native **104 cases /
+103 PASS / one optional palm-model-assets skip**, covered by the local full run.
+CI Windows audio uses dummy output; none of these results certifies a device or
+Google account. [Combined validation](validation.json) · [artifact inventory](ci-artifacts.json).
+
+Four clean-source CI views (idle and retention-held result at both required
+sizes) were hash/dimension checked and reviewed, preserving the existing hold
+message and missing large download QR before verified upload:
+[native visual manifest](ci-visual-verification.json). The two form images above
+are separately labelled browser fixtures. No actual customer photo or Google
+retention action is used by these captures. Final documentation-only evidence
+delivery skips redundant Actions.

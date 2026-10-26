@@ -12,6 +12,13 @@ approval for features, production, deployments or repository transitions.
 
 ## Current follow-up
 
+**BUG-009 resumed by owner, 26 October:** source 130aae1/887ba39 repairs actual
+CLOCK activation and adds read-only existing-config diagnosis/Submit form, reusing
+v1 cleanup. Full 807 Python PASS/zero skips and 19 Code.gs VM PASS; cloud project
+setup/deployment and actual synthetic deletion are unverified. The owner says
+setup is not confirmed. Use the [activation guide](qa/bug-009-retention/README.md);
+keep BUG-009 OPEN. This continuation excludes FEAT-004 ad sync and watchdog.
+
 **Owner-selected increment delivered, 25 October:** v2 automatic print and
 background Drive at 266b2c8, reusing v1; 800 full PASS and matching three-job CI
 SUCCESS. Actual paper/phone/cloud checks use the eleven-item form. Watchdog is
@@ -24,7 +31,7 @@ uncertain-print guards remain; no deployment/cloud deletion/production.
 | --- | --- | --- |
 | 1 | FEAT-022 P5 current Windows integration | Collect the [P5 report](qa/portrait-v2-p5/windows-checklist.html); preflight `0dc6555` alone is not acceptance. Fix reproducible failures within authorized scope |
 | 2 | FEAT-020 actual merchant Sandbox | Enter keys locally; test official simulator/status/cancel/restart/recovery. New integration cycles are separate from old reports |
-| 3 | BUG-009 / Drive/privacy and printing | Verify download/offline behavior, physical paper and uncertain sends; cloud retention remains OPEN and deployment/deletion needs its own authorization |
+| 3 | BUG-009 / Drive/privacy and printing | Source activation/diagnosis repaired at 887ba39; complete installed-project setup/deployment and authorized synthetic cloud evidence using the current guide. Verify download/offline, paper/uncertain sends separately; bug remains OPEN |
 | 4 | Game → trusted QRIS promotion | Backend eligibility/redeem contract absent; preserve full-price Sandbox consent. Define approved scope before implementation |
 | 5 | Intended primary-branch transition | Follow the [promotion plan](gui-v2-promotion-plan.md) when the owner specifies the repository operation; not yet performed |
 

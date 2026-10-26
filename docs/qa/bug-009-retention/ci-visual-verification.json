@@ -1,0 +1,50 @@
+{
+  "source_sha": "887ba391dbf9909d94ee2120398346ceffbaf96e",
+  "synthetic_only": true,
+  "screenshots": [
+    {
+      "state": "01-advert",
+      "page": "advert",
+      "file": "screenshots/01-advert-800x12800001.png",
+      "width": 800,
+      "height": 1280,
+      "sha256": "e730aaa23a3f7567c1c6695f78b8d4a8603dd13436f25026035d311fae932520",
+      "source_sha": "887ba391dbf9909d94ee2120398346ceffbaf96e",
+      "tracked_changes": false,
+      "reviewed": true
+    },
+    {
+      "state": "01-advert",
+      "page": "advert",
+      "file": "screenshots/01-advert-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "9b2e669e7097474af0a3bfb9281ad1e9738bcdee1992c4fe40cfdb2c3e229d8f",
+      "source_sha": "887ba391dbf9909d94ee2120398346ceffbaf96e",
+      "tracked_changes": false,
+      "reviewed": true
+    },
+    {
+      "state": "delivery-07-retention-held",
+      "page": "result",
+      "file": "screenshots/delivery-07-retention-held-800x12800001.png",
+      "sha256": "47bbd1e31b0fbfae825fdcbb98b14206ed59c48260cac35172be1bc52f7e8ed5",
+      "width": 800,
+      "height": 1280,
+      "source_sha": "887ba391dbf9909d94ee2120398346ceffbaf96e",
+      "tracked_changes": false,
+      "reviewed": true
+    },
+    {
+      "state": "delivery-07-retention-held",
+      "page": "result",
+      "file": "screenshots/delivery-07-retention-held-452x9000001.png",
+      "sha256": "cc5ed829152fa40463f533f0fd814faed96475a360181a7c4dec5ceec1fe3566",
+      "width": 452,
+      "height": 900,
+      "source_sha": "887ba391dbf9909d94ee2120398346ceffbaf96e",
+      "tracked_changes": false,
+      "reviewed": true
+    }
+  ]
+}

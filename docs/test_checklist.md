@@ -9,6 +9,9 @@ not inferred. Earlier audit-only evidence remains tied to its original source.
 
 | Evidence | Source and result | Limits |
 | --- | --- | --- |
+| BUG-009 source repair/diagnosis | `887ba39`: **807 full Python PASS / zero failures/errors/skips**, 238.684s; 44 focused Python PASS; 19 actual-Code.gs VM PASS | Reproduced stale enabled flag/missing clock and setup accepting wrong trigger type. Original cleanup reused; no live Google setup/deploy/delete. [Raw evidence](qa/bug-009-retention/README.md) |
+| BUG-009 Submit form | Eight fresh unchecked items; metadata/READY/forged pass fields do not pass cloud checks; partial Submit/persistence/download; 360/452/800px no overflow, zero browser errors | Form screenshots are synthetic fixtures, reviewed 800×1280/452×900. Windows/Google evidence NOT_RUN; no new twenty-cycle gate |
+| BUG-009 matching-source CI | [40255716011](https://github.com/pratikto/PhotoBooth/actions/runs/40255716011): all three jobs SUCCESS; delivery/retention 44 PASS, health 80 PASS, Sandbox 139 PASS, native 103 PASS/one optional model-assets skip | Skipped model case covered locally; four clean-source native views reviewed at both required sizes. [Raw reports/visual manifest](qa/bug-009-retention/README.md) |
 | Simpler photo entry | `20453fe`: **800 PASS / zero failures/errors/skips**, 217.888s; preliminary focused 55 PASS/two opt-in skips covered by final full run | Twelve clean-source PNGs verified; six idle/invitation/tutorial views reviewed at 800×1280/452×900. Windows spot checks NOT_RUN. [Raw proof/checklist/rollback](qa/portrait-v2-photo-entry/README.md) |
 | Photo-entry matching-source CI | [40248962384](https://github.com/pratikto/PhotoBooth/actions/runs/40248962384): all three jobs SUCCESS; delivery 17 PASS, health 80 PASS, Sandbox 139 PASS, native 103 PASS/one optional palm-assets skip | Skipped model case covered locally; Windows audio uses dummy PCM. [Raw reports](qa/portrait-v2-photo-entry/ci-reports/) |
 | Print/Drive final source | `266b2c8`: **800 PASS / zero failures/errors/skips**, 213.823s; 15 new-feature focused PASS | Linux/software GL/dummy PCM/offline assets; nine reused v1 files unchanged. Physical paper/phone/cloud acceptance NOT_RUN. [Raw proof](qa/portrait-v2-print-drive/README.md) |
@@ -45,6 +48,7 @@ unknown-HEAD reports to a newer source or formally close bugs from preflight.
 
 | Form | Purpose | Cycle rule |
 | --- | --- | --- |
+| [BUG-009 eight-item form](qa/bug-009-retention/windows-checklist.html) | Existing project/setup/new-version deployment, safe status, authorized synthetic deletion and actual clock execution | No new photo/game cycle gate; READY/import does not pass cloud tests |
 | [Print/Drive eleven-item form](qa/portrait-v2-print-drive/windows-checklist.html) | New automatic print, actual paper/phone download, offline queue/restart, layout/lifecycle | No new twenty-cycle gate; paper/phone items require actual evidence and start unchecked |
 | [BUG-018 four-item form](qa/portrait-v2-health-clicks/windows-checklist.html) | Repeated/mixed operator clicks, close while busy, reopen/minimize and normal next input | No additional twenty-cycle run; fresh unchecked results |
 | [P5 26-item form](qa/portrait-v2-p5/windows-checklist.html) | New Windows/Sandbox integration, metadata, source/device/provider/privacy gates | G01/G02 concern twenty cycles of the new integration; old photo/game reports do not pass these |

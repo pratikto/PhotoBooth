@@ -68,6 +68,12 @@ correction, 780-test original operator source and earlier 688-test P5 baseline,
 including optional CI skips. Later owner BUG-018 retest is 4/4/no issues;
 exact tested source/device metadata and external acceptance remain unverified.
 
+Owner then resumed BUG-009 on 26 October: source 887ba39 adds safe retention
+diagnosis and follows the actual-CLOCK activation correction 130aae1, reusing
+v1 cleanup. **807 full Python PASS/zero skips and 19 Code.gs VM PASS**; actual
+Google setup/deployment/timer/deletion remain unverified, and BUG-009 stays OPEN.
+[Current activation/evidence package](qa/bug-009-retention/README.md).
+
 ## Visual, audio and evidence
 
 Portrait 10.1-inch target; required reference sizes **800×1280** and **452×900**,

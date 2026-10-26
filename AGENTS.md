@@ -88,3 +88,10 @@ skips; matching-source CI three-job SUCCESS, 133 PNGs verified. Nine original
 v1 service/config files remain unchanged. Record actual Windows paper/phone/
 cloud results separately via the new eleven-item form; BUG-009 remains OPEN.
 No additional feature (including watchdog) starts from this completed scope.
+
+Owner continuation, 26 October: resume BUG-009 photo-retention remediation;
+setup/redeployment is not confirmed. Reuse v1 setup/cleanup/configuration. Sources
+130aae1/887ba39 repair CLOCK activation and add read-only redacted diagnosis;
+807 full Python PASS/zero skips and 19 Code.gs VM PASS. Installed Google-account
+activation/actual deletion is not verified; BUG-009 stays OPEN. No FEAT-004 ad
+sync or watchdog is included. See docs/qa/bug-009-retention/README.md.

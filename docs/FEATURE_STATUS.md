@@ -1,7 +1,7 @@
 # Meong Photobooth — current feature status
 
 Updated **26 October 2026** after documentation baseline `f36ebad` on
-`feature/portrait-kiosk-v2-next`. Latest functional source: **`20453fe`** (simpler mandatory-tutorial entry), following automatic print/background Drive `266b2c8`.
+`feature/portrait-kiosk-v2-next`. Latest functional source: **`887ba39`** (BUG-009 activation diagnosis), following simpler tutorial entry `20453fe` and print/Drive `266b2c8`.
 The earlier **`9433010` / `0dc6555`** pair is the P5 source/evidence baseline,
 not the latest operator checkpoint. GitHub's default remains `master`.
 
@@ -31,6 +31,7 @@ closure or external P5 acceptance is inferred. No new runtime patch is needed.
 | Audio | Single v2 owner; GUI loop for still ads/photo journey, video's own audio, distinct game loop; one cue per action | Owner-reported normal. BUG-017 is monitoring after the later report, not a proven decoder fix; v1 BUG-001/007 stay separate |
 | Thermal photo printing | Existing v1 backend/config; --print auto-sends one durable batch per approved design, --manual-print optional; uncertainty/no-replay guards | New-source fixtures pass; actual current paper/copy/QR acceptance pending. Prior owner paper reports stay at unknown HEAD. Merchant trial forces printer off |
 | Drive/download | --drive resumes existing isolated queue on startup/after visits; verified-folder consent, background retry and large verified on-screen QR, original retention guard | New-source fixtures/pixel decode available; actual phone access/offline/restart and cloud deletion unverified. Default local; merchant trial off. BUG-009 OPEN |
+| BUG-009 retention activation | Reused v1 setup/cleanup; real CLOCK required for active registration ACK, incorrect trigger setup repaired; read-only redacted CLI/status and eight-item Submit form | 807 full Python PASS/zero skips; 19 actual-Code.gs VM PASS. Owner setup/deployment unconfirmed. Google timer/deletion NOT_RUN; bug stays OPEN. [Guide/evidence](qa/bug-009-retention/README.md) |
 | Meong Fly — FEAT-021 (game) | Original Stage/Flow/renderer/assets/emitter reused; persistent one-use v2 DEMO ledger | 26 reference files pinned to `672e3f7`. V2 uses manual DEMO entry; standalone camera scanner is not mounted |
 | Local MOCK checkout | Local SQLite quote/promotion/admission; nonpayable QR and simulated confirmation | Win discount Rp2,500 once per order, capped at subtotal; no bank settlement |
 | FEAT-020 QRIS Sandbox | Reused service/client/journal plus native v2 adapter/isolated launcher | Server quote, provider verification, one-use grant/ACK/recovery in source. Actual merchant simulator evidence pending; no trusted game-promo API |
@@ -43,6 +44,7 @@ closure or external P5 acceptance is inferred. No new runtime patch is needed.
 
 | Checkpoint | Local full regression | Matching-source CI | Screenshot evidence |
 | --- | --- | --- | --- |
+| BUG-009 source `887ba39` | **807 PASS / zero failures/errors/skips**, 238.684s; 44 focused Python and 19 Node VM PASS | [40255716011](https://github.com/pratikto/PhotoBooth/actions/runs/40255716011), all three jobs SUCCESS; native 103 PASS/one optional model-assets skip covered locally | No main GUI layout change; four native CI and two form views reviewed at 800×1280/452×900, 360px form overflow check; [proof](qa/bug-009-retention/README.md). Fixtures are not Google acceptance |
 | Photo-entry source `20453fe` | **800 PASS / zero failures/errors/skips**, 217.888s | [40248962384](https://github.com/pratikto/PhotoBooth/actions/runs/40248962384), all three jobs SUCCESS; native 103 PASS/one optional palm-assets skip covered locally | Twelve clean-source PNGs hash/dimension verified; six affected idle/invitation/tutorial views reviewed at both required sizes; [proof](qa/portrait-v2-photo-entry/README.md) |
 | Print/Drive source `266b2c8` | **800 PASS / 0 failures / 0 errors / 0 skips**, 213.823s | [40208966127](https://github.com/pratikto/PhotoBooth/actions/runs/40208966127), all three jobs SUCCESS; delivery 17 PASS, health 80 PASS, Sandbox 139 PASS, native 103 PASS/1 optional model-assets skip | 133 PNGs verified; delivery views reviewed at both sizes, large QR screenshot pixels decoded; [proof/form](qa/portrait-v2-print-drive/README.md) |
 | BUG-018 source `ebb53fd` | **785 PASS / 0 failures / 0 errors / 0 skips**, 321.181s | [40189694738](https://github.com/pratikto/PhotoBooth/actions/runs/40189694738), three jobs SUCCESS; health 80 PASS, Sandbox 139 PASS, native 97 PASS/1 optional model-assets skip | 119 PNGs source/hash/dimension verified; operator views reviewed at 800×1280/452×900; [proof](qa/portrait-v2-health-clicks/README.md) |
