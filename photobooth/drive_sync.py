@@ -43,6 +43,14 @@ def sync_manifest(manifest_path: Path, client: GoogleDriveClient) -> dict[str, A
         if record.get("status") == "ACTION_REQUIRED":
             continue
 
+        if manifest.get('storage_layout') == 2:
+            from photobooth.booth_storage import checked_path
+            try:
+                checked_path(manifest_path.parent / relative_path)
+            except ValueError:
+                record.update(status='ACTION_REQUIRED', error='Unsafe transaction path.')
+                _persist_upload_progress(manifest_path, manifest)
+                continue
         local_path = (manifest_path.parent / relative_path).resolve()
         try:
             local_path.relative_to(manifest_path.parent.resolve())
@@ -111,6 +119,9 @@ def _refresh_upload_status(manifest: dict[str, Any]) -> None:
     records = list(manifest.get("upload_files", {}).values())
     if manifest.get('local_photos_expired_at') and any(record.get('status') != 'VERIFIED' for record in records):
         manifest['upload_status'] = 'LOCAL_EXPIRED'
+        return
+    if manifest.get("drive_intent") and not manifest.get("drive_folder_id"):
+        manifest["upload_status"] = "PENDING_DRIVE_BINDING"
         return
     if any(record.get("status") == "ACTION_REQUIRED" for record in records):
         manifest["upload_status"] = "ACTION_REQUIRED"

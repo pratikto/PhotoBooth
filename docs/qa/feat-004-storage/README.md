@@ -45,3 +45,29 @@ executes the new storage fixtures to check the Windows lock implementation.
 Rollback: scoped inverse source changes after inspection. Keep active/previous
 counter ledgers, transaction/photo/print/payment state and content; never clear
 an uncertain outcome or touch `old`. No source push is a Drive deployment.
+
+## Stage 2 — backend and reconnect adapters
+
+Code.gs now supports manual sibling-root setup, isolated physical booth roots,
+empty READY reservations and idempotent offline binding with an ownership digest.
+The private local claim token never enters the public manifest. Bound folders
+have Photo/NN/raw,color,bw and a safe manifest. Legacy API defaults stay available.
+Storage identity PB001V2S2 maps to physical PB001, avoiding ID reuse with legacy
+PB001V2 server leases; no legacy/archive counters or transactions are scanned.
+
+Layout-2 client/worker reuses AppsScriptDriveClient, original file verification,
+manifest revision merges, immutable retention registration and worker lifecycle.
+Missing network/timer never prevents a new local claim and never replays print.
+Retried controller saves preserve newer remote bindings. The content API inventories
+only four configured source roots and reads checksum-bound 512-KiB ranges.
+
+Cloud cleanup scopes registered booths, protects reserve/assets/archive content,
+uses original transaction deadlines even when folders were created on late reconnect,
+and validates known descendants before permanent deletion. With the new root enabled,
+the legacy upload parent is excluded from this sweep; no migration is inferred.
+
+Focused evidence: [Python 34 PASS / zero skips](stage2-tests.txt),
+[actual Code.gs VM 24 PASS / zero skips](stage2-codegs.txt). Fixtures include
+25 empty reserves, independent booths, binding retries/conflicts, bytes verification,
+archive pruning, range isolation and retention guards. No Google deployment/test.
+The ordinary GUI/cache integration follows in stage 3.

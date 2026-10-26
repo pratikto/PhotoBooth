@@ -7,6 +7,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
+const crypto = require('node:crypto');
 const source = fs.readFileSync(path.join(__dirname, '../apps_script/Code.gs'), 'utf8');
 const NOW = Date.parse('2026-10-16T00:00:00Z');
 const DAY = 86400000;
@@ -33,14 +34,21 @@ function harness() {
   function object(id, name, parent = 'booth-parent', imageAge = null) {
     const entry = { id, name, parent, description: '', deleted: false, children: [], files: [],
       getId() { return this.id; }, getName() { return this.name; },
+      getUrl() { return 'https://drive.google.com/drive/folders/' + this.id; },
+      getFoldersByName(name) { return iterator(this.children.filter(f => f.name === name && !f.deleted)); },
+      getFilesByName(name) { return iterator(this.files.filter(f => f.name === name && !f.deleted)); },
+      createFolder(name) { return folder('new-' + objects.size, name, this); },
+      createFile(blob) { const f = file('new-' + objects.size, blob.name, 0, this); f.bytes = blob.getBytes(); return f; },
+      setSharing() { this.shared = true; }, getSharingAccess() { return this.shared ? 'anyone' : 'private'; },
+      getBlob() { return { getBytes: () => this.bytes || [] }; },
       getDescription() { return this.description; }, setDescription(value) { this.description = value; },
       isTrashed() { return false; },
       getDateCreated() { return new ClockDate(NOW - (imageAge === null ? 200 : imageAge) * DAY); },
       getParents() { return iterator(this.parent ? [objects.get(this.parent)] : []); },
       getFiles() { return iterator(this.files.filter(file => !file.deleted)); },
       getFolders() { return iterator(this.children.filter(folder => !folder.deleted)); },
-      searchFolders(query) { assert.match(query, /createdDate <=/); return this.getFolders(); },
-      searchFiles(query) { assert.match(query, /createdDate <=/); return this.getFiles(); },
+      searchFolders(query) { assert.match(query, /trashed = false/); return this.getFolders(); },
+      searchFiles(query) { assert.match(query, /trashed = false/); return this.getFiles(); },
     };
     objects.set(id, entry);
     return entry;
@@ -59,7 +67,10 @@ function harness() {
   const context = vm.createContext({ Date: ClockDate, console: { log() {} },
     PropertiesService: { getScriptProperties: () => properties },
     LockService: { getScriptLock: () => ({ waitLock() {}, tryLock: () => true, releaseLock() {} }) },
-    DriveApp: { getFolderById(id) { if (!objects.has(id)) throw Error('Unknown folder'); return objects.get(id); },
+    Utilities: { DigestAlgorithm: { MD5: 'md5' }, computeDigest: (_, bytes) => Array.from(crypto.createHash('md5').update(Buffer.from(bytes)).digest()),
+      newBlob: (value, mime, name) => ({ name, getBytes: () => Array.from(typeof value === 'string' ? Buffer.from(value) : value) }),
+      base64Decode: value => Array.from(Buffer.from(value, 'base64')), base64Encode: bytes => Buffer.from(bytes).toString('base64') },
+    DriveApp: { Access: { ANYONE_WITH_LINK: 'anyone' }, Permission: { VIEW: 'view' }, getRootFolder: () => root, getFolderById(id) { if (!objects.has(id)) throw Error('Unknown folder'); return objects.get(id); },
       continueFolderIterator: () => iterator(root.children) },
     ScriptApp: { EventType: { CLOCK: 'CLOCK' }, getOAuthToken: () => 'fixture-oauth', getProjectTriggers: () => triggers,
       deleteTrigger(item) { triggers.splice(triggers.indexOf(item), 1); },
@@ -70,8 +81,15 @@ function harness() {
       const id = decodeURIComponent(new URL(url).pathname.split('/').pop());
       requests.push({ id, method: options.method });
       if (options.method === 'delete' && deleteStatus === 204) objects.get(id).deleted = true;
-      return { getResponseCode: () => options.method === 'get' ? 200 : deleteStatus,
-        getContentText: () => JSON.stringify({ id, mimeType: 'application/vnd.google-apps.folder' }) };
+      return { getResponseCode: () => options.headers.Range ? 206 : options.method === 'get' ? 200 : deleteStatus,
+        getBlob: () => ({ getBytes: () => {
+          const entry = objects.get(id), match = /bytes=(\d+)-(\d+)/.exec(options.headers.Range);
+          return entry.bytes.slice(Number(match[1]), Number(match[2]) + 1);
+        } }),
+        getContentText: () => { const entry = objects.get(id); return JSON.stringify(entry && entry.bytes ? {
+          id, name: entry.name, size: String(entry.bytes.length), md5Checksum: crypto.createHash('md5').update(Buffer.from(entry.bytes)).digest('hex'),
+          mimeType: 'application/octet-stream', parents: [entry.parent], trashed: false
+        } : { id, mimeType: 'application/vnd.google-apps.folder' }); } };
     } },
     ContentService: { MimeType: { JSON: 'json' }, createTextOutput(value) {
       return { body: JSON.parse(value), setMimeType() { return this; } };
@@ -317,4 +335,65 @@ test('setup repairs duplicate own clocks, leaves other tasks alone and never del
   assert.equal(h.triggers.filter(t => t.getHandlerFunction() === 'cleanupPhotoRetention').length, 1);
   assert.equal(h.triggers.filter(t => t.getHandlerFunction() === 'otherJob').length, 1);
   assert.ok(h.requests.every(r => r.method === 'get'));
+});
+
+function storageHarness() {
+  const h = harness(); h.context.setupBoothStorage();
+  h.post = (action, body = {}) => h.context.doPost({ postData: { contents: JSON.stringify({action,
+    storage_layout: 2, booth_id: 'PB001V2S2', token: 'fixture-token', ...body}) } }).body;
+  h.claim = {transaction_id: 'PB001V2S2_00000001', claim_token: 'a'.repeat(32)};
+  h.bind = () => h.post('bind_transaction', {...h.claim, started_at: new ClockDate(NOW-2*DAY).toISOString(), session_count: 2});
+  return h;
+}
+test('layout 2 creates named siblings, separate booths, 25 truly empty reserves; retry is idempotent', () => {
+  const h = storageHarness(), slots = Array.from({length:25}, (_, i) => ({transaction_id:'PB001V2S2_'+String(i+1).padStart(8,'0'), claim_token:'a'.repeat(32)}));
+  const first = h.post('reserve_transactions', {slots}); assert.equal(first.ok, true); assert.equal(first.slots.length,25);
+  const again = h.post('reserve_transactions', {slots}); assert.equal(again.slots[0].folder_id,first.slots[0].folder_id);
+  const p1 = h.context.storageBoothFolder_(h.properties,'PB001V2S2',false);
+  for (const tx of p1.children.filter(f => f.name.startsWith('PB001V2S2_'))) { assert.equal(tx.children.length,0); assert.equal(tx.files.length,0); }
+  const second = h.post('reserve_transactions',{booth_id:'PB002V2S2', slots:[{...h.claim,transaction_id:'PB002V2S2_00000001'}]});
+  assert.equal(second.ok,true); assert.notEqual(second.slots[0].folder_id,first.slots[0].folder_id);
+  assert.equal(h.settings.DRIVE_FOLDER_ID,'booth-parent');
+});
+test('offline bind uses original deadline, session hierarchy and safe manifest; conflicts never reuse a folder', () => {
+  const h = storageHarness(), first = h.bind(); assert.equal(first.ok,true);
+  const parent = h.context.storageBoothFolder_(h.properties,'PB001V2S2',false), tx = parent.children.find(f => f.name === h.claim.transaction_id);
+  assert.deepEqual(tx.children[0].children.map(f => f.name),['01','02']);
+  assert.deepEqual(tx.children[0].children[0].children.map(f => f.name),['raw','color','bw']);
+  assert.equal(tx.files[0].name,'manifest.json'); assert.doesNotMatch(Buffer.from(tx.files[0].bytes).toString(),/claim_token|claim_key/);
+  const expiry = JSON.parse(tx.description).expires_at;
+  assert.equal(h.post('bind_transaction',{...h.claim,session_count:2,started_at:new ClockDate().toISOString()}).folder_id,first.folder_id);
+  assert.equal(JSON.parse(tx.description).expires_at,expiry);
+  assert.equal(h.post('bind_transaction',{...h.claim,claim_token:'b'.repeat(32),session_count:2,started_at:new ClockDate().toISOString()}).code,409);
+  assert.equal(h.post('reserve_transactions',{slots:[h.claim]}).code,409);
+});
+test('layout 2 scoped upload verifies bytes and cannot upload through old or legacy paths', () => {
+  const h = storageHarness(), bound=h.bind(), bytes=Buffer.from('fixture image'), md5=crypto.createHash('md5').update(bytes).digest('hex');
+  const payload={folder_id:bound.folder_id,transaction_id:h.claim.transaction_id,relative_path:'Photo/01/raw/capture.jpg',filename:'capture.jpg',size_bytes:bytes.length,md5_checksum:md5,image_base64:bytes.toString('base64')};
+  assert.equal(h.post('upload_file',payload).ok,true); assert.equal(h.post('upload_file',payload).ok,true);
+  assert.equal(h.post('upload_file',{...payload,relative_path:'Photo/01/old/capture.jpg'}).code,400);
+  assert.equal(h.post('upload_file',{...payload,relative_path:'raw/session_001/capture.jpg'}).code,400);
+  assert.equal(h.post('upload_file',{...payload,booth_id:'PB002V2S2'}).ok,false);
+});
+test('new-root cleanup keeps unused reserves, all assets and old untouched; legacy parent is excluded', () => {
+  const h=storageHarness(); h.bind();
+  const p=h.context.storageBoothFolder_(h.properties,'PB001V2S2',false), tx=p.children.find(f=>f.name===h.claim.transaction_id);
+  h.mark(tx,31); const archive=h.folder('excluded','old',tx);
+  archive.getFiles=archive.getFolders=()=>{throw Error('Archive was entered');};
+  h.mark(h.folder('legacy-expired','PB001_00009999'),40);
+  assert.equal(h.context.cleanupPhotoRetention().deleted.length,0); assert.equal(archive.deleted,false);
+  tx.children=tx.children.filter(f=>f!==archive);
+  assert.deepEqual(Array.from(h.context.cleanupPhotoRetention().deleted),[h.claim.transaction_id]);
+  assert.equal(h.root.children.find(f=>f.id==='legacy-expired').deleted,false);
+});
+test('content inventory prunes old before access, chunks are scoped and checksum/version verified', () => {
+  const h=storageHarness(); h.bind();
+  const globals=h.root.children.find(f=>f.name==='Global_Advertisement'), media=h.file('ad','demo.png',0,globals); media.bytes=Array.from(Buffer.from('hello content'));
+  const archive=h.folder('excluded','old',globals); archive.getFiles=archive.getFolders=()=>{throw Error('Archive was entered');};
+  const manifest=h.post('asset_manifest'); assert.equal(manifest.ok,true); assert.equal(manifest.files.length,1);
+  const f=manifest.files[0], chunk=h.post('asset_chunk',{file_id:f.id,namespace:'Global_Advertisement',offset:2,length:5,md5:f.md5});
+  assert.equal(Buffer.from(chunk.data,'base64').toString(),'llo c');
+  assert.equal(h.post('asset_chunk',{file_id:f.id,namespace:'Global_Template',offset:0,length:2,md5:f.md5}).code,403);
+  assert.equal(h.post('asset_chunk',{file_id:f.id,namespace:'Global_Advertisement',offset:0,length:2,md5:'b'.repeat(32)}).code,409);
+  assert.equal(h.post('asset_manifest',{token:'wrong'}).code,401);
 });

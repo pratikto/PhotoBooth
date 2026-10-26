@@ -25,10 +25,10 @@ def checked_path(path):
 class BoothWorkspace:
     """One writer per booth, monotonic IDs and durable claims; never scans old."""
     def __init__(self, data_root, booth_id='PB001V2', *, target_ready=25, seed_counter=None):
-        if not re.fullmatch(r'PB[0-9]+(?:V2)?', booth_id):
+        if not re.fullmatch(r'PB[0-9]+(?:V2(?:S2)?)?', booth_id):
             raise ValueError('Use a PB001-style booth identity.')
         self.booth_id = booth_id
-        self.physical_id = booth_id[:-2] if booth_id.endswith('V2') else booth_id
+        self.physical_id = re.sub(r'V2(?:S2)?$', '', booth_id)
         self.root = checked_path(Path(data_root) / self.physical_id)
         self.state_root = self.root / '_state'
         self.state_path = self.state_root / ('pool-' + booth_id + '.json')

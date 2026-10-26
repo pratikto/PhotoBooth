@@ -277,7 +277,7 @@ class TransactionStore:
             # VERIFIED flag or late upload response cannot bless the new file.
             # This is queue metadata, not a new Drive name or idempotency key.
             "content_version": uuid4().hex,
-            "status": "PENDING_UPLOAD" if transaction.manifest.get("drive_folder_id") else "LOCAL_ONLY",
+            "status": "PENDING_UPLOAD" if transaction.manifest.get("drive_folder_id") or transaction.manifest.get("drive_intent") else "LOCAL_ONLY",
             "size_bytes": photo_path.stat().st_size,
             "drive_file_id": None,
             "md5_checksum": None,
@@ -326,7 +326,7 @@ class TransactionStore:
             # Composition retries obey the same revision boundary as raw
             # captures. Keep the established path and customer folder URL.
             "content_version": uuid4().hex,
-            "status": "PENDING_UPLOAD" if transaction.manifest.get("drive_folder_id") else "LOCAL_ONLY",
+            "status": "PENDING_UPLOAD" if transaction.manifest.get("drive_folder_id") or transaction.manifest.get("drive_intent") else "LOCAL_ONLY",
             "size_bytes": output_path.stat().st_size,
             "drive_file_id": None,
             "md5_checksum": None,
@@ -410,7 +410,7 @@ class TransactionStore:
                             raise RuntimeError('This transaction has reached its local photo retention deadline.')
                         # Background retention acknowledgement must survive a
                         # controller save based on an older in-memory manifest.
-                        for key in ('drive_retention_registered_at', 'drive_photos_expire_at', 'drive_retention_error'):
+                        for key in ('drive_retention_registered_at', 'drive_photos_expire_at', 'drive_retention_error', 'drive_folder_id', 'drive_folder_url', 'drive_binding_error'):
                             if key in persisted:
                                 transaction.manifest[key] = persisted[key]
                         persisted_files = persisted.get("upload_files", {})
@@ -442,6 +442,8 @@ class TransactionStore:
                             transaction.manifest["upload_status"] = "UPLOAD_RETRY"
                         elif transaction.manifest.get("drive_folder_id"):
                             transaction.manifest["upload_status"] = "PENDING_UPLOAD"
+                        elif transaction.manifest.get("drive_intent"):
+                            transaction.manifest["upload_status"] = "PENDING_DRIVE_BINDING"
                 except (OSError, json.JSONDecodeError, TypeError):
                     # The current in-memory transaction remains the source if the
                     # last atomic manifest write cannot be read.
