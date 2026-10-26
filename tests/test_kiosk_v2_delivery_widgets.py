@@ -200,14 +200,14 @@ class DeliveryWidgetTests(unittest.TestCase):
         with self.booth(layout2=True) as (app,service,printer,_,root):
             service.workspace.prepare();slot=service.workspace.ready_slots()[0]
             url='https://drive.google.com/drive/folders/fixture-reserved'
-            service.workspace.remember_remote([{**slot,'folder_id':'fixture-reserved','folder_url':url}])
+            service.workspace.remember_remote([{**slot,'folder_id':'fixture-reserved','folder_url':url,'photo_number_layout':1,'link_verified':True}])
             self.enter(app);self.review(app);app._photo_submit('compose');self.settle(app)
             tx=service.transaction
             before={p: p.read_bytes() for p in (tx.folder_path/'Photo/01/color/strip.png',tx.folder_path/'Photo/01/bw/strip.png')}
             self.assertEqual(app._photo_view['folder_url'],url)
             self.assertIsNone(app._photo_view['download_qr'])
             client=Mock();client.reserve_transactions.return_value=[]
-            client.bind_transaction.return_value={'folder_id':'fixture-reserved','folder_url':url}
+            client.bind_transaction.return_value={'folder_id':'fixture-reserved','folder_url':url,'photo_number_layout':1,'link_verified':True}
             client.register_retention.side_effect=lambda folder,txid,started:retention_metadata(txid,started)
             def upload(folder,txid,relative,path,**kwargs):
                 data=path.read_bytes();return {'id':relative,'size':len(data),'md5Checksum':hashlib.md5(data).hexdigest()}
@@ -219,3 +219,12 @@ class DeliveryWidgetTests(unittest.TestCase):
             self.assertIsNotNone(app._photo_view['download_qr'])
             self.assertEqual({p:p.read_bytes() for p in before},before)
             self.assertEqual(printer.print_raster.call_count,1);printer.print_image.assert_not_called()
+
+
+    def test_binding_failure_is_visible_in_result_instead_of_an_upload_spinner(self):
+        with self.booth() as (app,service,printer,_,root):
+            app._photo_view={'upload_status':'PENDING_UPLOAD','binding_error':'DRIVE_SETUP_REQUIRED','print_state':'SUBMITTED'}
+            app._ensure_photo_jobs()
+            text=app._delivery_text()
+            self.assertIn('DRIVE GAGAL TERSAMBUNG',text)
+            self.assertNotIn('MENGUNGGAH KE DRIVE',text)

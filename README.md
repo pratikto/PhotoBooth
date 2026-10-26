@@ -80,10 +80,10 @@ dedicated merchant Sandbox trial keeps both transports off.
 [earlier eleven-item delivery form](docs/qa/portrait-v2-print-drive/windows-checklist.html).
 
 The ordinary launcher now uses per-booth storage: 25 empty local reserves,
-Photo/NN/raw/color/bw, offline photo/print with deferred Drive binding and
+`Photobooth/PB001/Photo/00000001/{raw,bw,color}` in Drive, offline photo/print with deferred Drive binding and
 verified global/local asset caches. Code.gs needs a manual update/setup and a
 new version of the existing deployment; the cloud environment did not deploy it.
-[Setup and rollback](docs/qa/feat-004-storage/SETUP.md) ·
+[Current Drive/QR repair](docs/qa/drive-photo-layout/README.md) · [Earlier setup and rollback](docs/qa/feat-004-storage/SETUP.md) ·
 [12-item Submit checklist](docs/qa/feat-004-storage/windows-checklist.html).
 
 If Drive is held by retention setup, run `python tools/check_drive_retention.py`.
@@ -174,3 +174,4 @@ AI Background Studio, device selection and WhatsApp work on reference branches
 are not automatically part of v2. Production QRIS, trusted QRIS game promotion,
 real receipt/POS scanning, deployment, merge and release are not enabled by this
 source checkpoint. [v1.0.0](docs/releases/v1.0.0.md) remains the immutable v1 source release.
+

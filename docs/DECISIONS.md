@@ -1,5 +1,10 @@
 # Meong Photobooth — product and technical decisions
 
+## Owner correction — customer Drive folders (26 October 2026)
+
+The owner explicitly clarifies PB001/Photo/00000001/{raw,bw,color}; internal transaction IDs are not customer Drive folder names. This supersedes the previous cloud tree. Preserve local state, QR folder IDs and no print replay.
+
+
 Updated **26 October 2026**. Decisions establish product direction and scope;
 [current status](FEATURE_STATUS.md) and [test ledger](test_checklist.md) establish
 implementation/evidence. Preserve historical IDs and separate later authorization
@@ -30,7 +35,7 @@ it adds no new application feature approval. [AGENTS.md](../AGENTS.md).
 **Owner storage target, 26 October:** ignore the entire `old` archive without
 inspection/change. Requested new data layout is `Photobooth/PB001...PB00X`,
 booth-specific assets, at least 25 empty transaction reserves and
-`Photo/NN/{raw,color,bw}`. Root `Global_Advertisement` and `Global_Template` are
+`PB001/Photo/00000001/{raw,bw,color}` in Drive (26 October correction). Root `Global_Advertisement` and `Global_Template` are
 shared sources with complete offline copies in every booth. The
 [audit/target contract](photobooth-storage-layout.md) records current gaps and
 reuse; it does not claim implementation or an actual Drive cutover. The owner
@@ -158,3 +163,4 @@ for a local simulator trial.
 
 [Protocol](DEVELOPMENT_PROTOCOL.md) · [current features](FEATURE_STATUS.md) ·
 [backlog](next_step.md) · [handover](DEVELOPMENT_HANDOVER.md) · [changelog](CHANGELOG.md).
+

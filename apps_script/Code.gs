@@ -49,7 +49,7 @@ function doPost(event) {
     const action = body.action || "legacy_upload";
     if (body.storage_layout === 2 && ["upload_file", "register_retention", "retention_status"].includes(action)) {
       const boothId = validateStorageBooth_(body.booth_id || String(body.transaction_id || "").split("_")[0]);
-      properties = storageProperties_(properties, storageBoothFolder_(properties, boothId, false), boothId);
+      properties = storageProperties_(properties, storagePhotoFolder_(properties, boothId, false), boothId);
     }
     let result;
     if (action === "reserve_transactions") {
@@ -141,6 +141,19 @@ function storageBoothFolder_(p, booth, create) {
   }
   return folder;
 }
+// Customer photos are numbered directly beneath the physical booth's Photo.
+function storagePhotoFolder_(p, booth, create) {
+  const parent = storageBoothFolder_(p, booth, create);
+  const photo = uniqueStorageChild_(parent, "Photo", create);
+  if (!photo) throw apiError_("Photo storage has not been prepared.", 409);
+  return photo;
+}
+function storageLinkReady_(folder) {
+  folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  if (folder.getSharingAccess() !== DriveApp.Access.ANYONE_WITH_LINK
+      || folder.getSharingPermission() !== DriveApp.Permission.VIEW)
+    throw apiError_("Download link must be Anyone with the link / Viewer.", 409);
+}
 function storageProperties_(p, parent, booth) {
   const cursor = "PHOTOBOOTH_RETENTION_CURSOR_" + physicalBooth_(booth);
   return { getProperty: function (key) { return key === "STORAGE_LAYOUT" ? "2" : key === "DRIVE_FOLDER_ID" ? parent.getId() : p.getProperty(key === "PHOTOBOOTH_RETENTION_CURSOR" ? cursor : key); },
@@ -154,9 +167,25 @@ function storageClaim_(body, booth) {
   return { transaction_id: tx, claim_key: md5Hex_(Utilities.newBlob(body.claim_token).getBytes()) };
 }
 function storageTransaction_(parent, claim, create) {
-  let folder = uniqueStorageChild_(parent, claim.transaction_id, false);
+  const number = claim.transaction_id.split("_").pop();
+  let folder = uniqueStorageChild_(parent, number, false) || uniqueStorageChild_(parent, claim.transaction_id, false);
+  if (!folder) {
+    // Recover only this exact authenticated empty reserve, preserving printed URLs.
+    const parents = parent.getParents();
+    const booth = parents.hasNext() ? parents.next() : null;
+    const prior = booth && uniqueStorageChild_(booth, claim.transaction_id, false);
+    if (prior) {
+      let owner;
+      try { owner = JSON.parse(prior.getDescription()); } catch (_) { owner = {}; }
+      if (owner.transaction_id !== claim.transaction_id || owner.claim_key !== claim.claim_key
+          || owner.managed_slot !== STORAGE_SLOT_MARKER || prior.getFiles().hasNext()
+          || prior.getFolders().hasNext())
+        throw apiError_("Existing transaction needs operator review; no data was moved.", 409);
+      prior.moveTo(parent); folder = prior;
+    }
+  }
   if (!folder && create) {
-    folder = parent.createFolder(claim.transaction_id);
+    folder = parent.createFolder(number);
     folder.setDescription(JSON.stringify({ managed_slot: STORAGE_SLOT_MARKER, transaction_id: claim.transaction_id, claim_key: claim.claim_key }));
   }
   if (!folder) throw apiError_("Transaction folder is missing.", 409);
@@ -165,19 +194,21 @@ function storageTransaction_(parent, claim, create) {
   if (owner.transaction_id !== claim.transaction_id || owner.claim_key !== claim.claim_key
       || (owner.managed_slot !== STORAGE_SLOT_MARKER && owner.storage_layout !== 2))
     throw apiError_("Transaction ownership conflict; folder was not reused.", 409);
+  if (folder.getName() !== number) folder.setName(number);
   return folder;
 }
 function reserveStorageTransactions_(body, p) {
   const booth = validateStorageBooth_(body.booth_id);
   if (!Array.isArray(body.slots) || body.slots.length > 100) throw apiError_("Invalid reserve list.", 400);
   const claims = body.slots.map(function (slot) { return storageClaim_(slot, booth); });
-  const parent = storageBoothFolder_(p, booth, true);
+  const parent = storagePhotoFolder_(p, booth, true);
   const slots = claims.map(function (claim) {
     const folder = storageTransaction_(parent, claim, true);
     if (folder.getFiles().hasNext() || folder.getFolders().hasNext()
         || JSON.parse(folder.getDescription()).managed_slot !== STORAGE_SLOT_MARKER)
       throw apiError_("A reserve must be genuinely empty and unclaimed.", 409);
-    return {transaction_id: claim.transaction_id, folder_id: folder.getId(), folder_url: folder.getUrl(), status: "READY"};
+    storageLinkReady_(folder);
+    return {transaction_id: claim.transaction_id, folder_id: folder.getId(), folder_url: folder.getUrl(), status: "READY", photo_number_layout: 1, link_verified: true};
   });
   return {storage_layout: 2, slots: slots};
 }
@@ -186,26 +217,22 @@ function bindStorageTransaction_(body, p) {
   const started = new Date(body.started_at), count = Number(body.session_count);
   if (!Number.isFinite(started.getTime()) || started.getTime() > Date.now() + 300000
       || !Number.isInteger(count) || count < 1 || count > 99) throw apiError_("Invalid original transaction metadata.", 400);
-  const parent = storageBoothFolder_(p, booth, true), folder = storageTransaction_(parent, claim, true);
+  const parent = storagePhotoFolder_(p, booth, true), folder = storageTransaction_(parent, claim, true);
   const existing = readPhotoRetention_(folder.getDescription(), claim.transaction_id);
   const policy = Object.assign({}, existing || {}, photoRetention_(claim.transaction_id,
     existing && new Date(existing.started_at) < started ? existing.started_at : started),
     {storage_layout: 2, claim_key: claim.claim_key});
   folder.setDescription(JSON.stringify(policy));
+  if (new Date(policy.expires_at).getTime() <= Date.now()) throw apiError_("Photo delivery has expired.", 410);
   if (new Date(policy.expires_at).getTime() > Date.now()) {
-    folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-    if (folder.getSharingAccess() !== DriveApp.Access.ANYONE_WITH_LINK) throw apiError_("Download link sharing needs attention.", 409);
-    const photo = uniqueStorageChild_(folder, "Photo", true);
-    for (let i = 1; i <= count; i++) {
-      const session = uniqueStorageChild_(photo, String(i).padStart(2, "0"), true);
-      ["raw", "color", "bw"].forEach(function (kind) { uniqueStorageChild_(session, kind, true); });
-    }
+    storageLinkReady_(folder);
+    ["raw", "color", "bw"].forEach(function (kind) { uniqueStorageChild_(folder, kind, true); });
     // Write once, without the private claim token. Retry never overwrites photos.
     if (!folder.getFilesByName("manifest.json").hasNext()) folder.createFile(Utilities.newBlob(JSON.stringify({
       storage_layout: 2, transaction_id: claim.transaction_id, booth_id: physicalBooth_(booth),
       started_at: policy.started_at, session_count: count }), "application/json", "manifest.json"));
   }
-  return {storage_layout: 2, transaction_id: claim.transaction_id, folder_id: folder.getId(), folder_url: folder.getUrl()};
+  return {storage_layout: 2, photo_number_layout: 1, link_verified: true, transaction_id: claim.transaction_id, folder_id: folder.getId(), folder_url: folder.getUrl()};
 }
 
 function storageAssetRoots_(body, p) {
@@ -403,8 +430,8 @@ function uploadTransactionFile_(body, properties) {
   const transactionId = validateTransactionId_(body.transaction_id, boothId);
   const folderId = String(body.folder_id || "");
   const relativePath = validateRelativePath_(body.relative_path, body.filename);
-  if (body.storage_layout === 2 && !/^Photo\/[0-9]{2}\/(raw|color|bw)\/[^/]+\.(jpg|jpeg|png)$/i.test(relativePath))
-    throw apiError_("Layout 2 uploads must use Photo/NN/raw,color,bw.", 400);
+  if (body.storage_layout === 2 && !/^(raw|color|bw)\/session_[0-9]{3}_[^/]+\.(jpg|jpeg|png)$/i.test(relativePath))
+    throw apiError_("Layout 2 uploads must use raw,color,bw/session_NNN_filename.", 400);
   const expectedSize = Number(body.size_bytes);
   const expectedMd5 = String(body.md5_checksum || "").toLowerCase();
   if (!Number.isInteger(expectedSize) || expectedSize < 0 || !/^[a-f0-9]{32}$/.test(expectedMd5)) {
@@ -420,7 +447,7 @@ function uploadTransactionFile_(body, properties) {
   });
 
   const rootFolder = DriveApp.getFolderById(folderId);
-  if (rootFolder.getName() !== transactionId || !hasParent_(rootFolder, DriveApp.getFolderById(parentId))) {
+  if (rootFolder.getName() !== (body.storage_layout === 2 ? transactionId.split("_").pop() : transactionId) || !hasParent_(rootFolder, DriveApp.getFolderById(parentId))) {
     throw apiError_("Transaction folder name does not match its ID.", 409);
   }
   if (body.storage_layout === 2 && !(readPhotoRetention_(rootFolder.getDescription(), transactionId) || {}).storage_layout)
@@ -765,7 +792,7 @@ function registerRetention_(body, properties) {
   const transactionId = validateTransactionId_(body.transaction_id, boothId);
   const folder = DriveApp.getFolderById(String(body.folder_id || ""));
   const parent = DriveApp.getFolderById(properties.getProperty("DRIVE_FOLDER_ID"));
-  if (folder.isTrashed() || folder.getName() !== transactionId || !hasParent_(folder, parent)) {
+  if (folder.isTrashed() || folder.getName() !== (properties.getProperty("STORAGE_LAYOUT") === "2" ? transactionId.split("_").pop() : transactionId) || !hasParent_(folder, parent)) {
     throw apiError_("Retention folder is outside this booth transaction.", 409);
   }
   const started = new Date(body.started_at);
@@ -838,7 +865,7 @@ function oldestTransactionPhoto_(folder, depth, layout) {
   while (folders.hasNext()) {
     const child = folders.next();
     const name = child.getName();
-    const allowed = depth === 0 ? /^(raw|output|Photo)$/ : layout === 2
+    const allowed = depth === 0 ? /^(raw|output|Photo|color|bw)$/ : layout === 2
       ? (depth === 1 ? /^[0-9]{2}$/ : depth === 2 ? /^(raw|color|bw)$/ : /(?!)^/)
       : depth === 1 ? /^session_[0-9]{3}$/ : /(?!)^/;
     if (!allowed.test(name)) {
@@ -885,7 +912,7 @@ function cleanupPhotoRetention(options) {
     try {
       const folder = storageFolder_(saved[key]);
       if (folder.getName() !== physical || !hasParent_(folder, root)) throw apiError_("Invalid booth retention parent.", 409);
-      const result = cleanupPhotoParent_(options, storageProperties_(properties, folder, physical));
+      const result = cleanupPhotoParent_(options, storageProperties_(properties, storagePhotoFolder_(properties, physical, false), physical));
       ["deleted", "candidates", "errors"].forEach(function (field) { report[field].push.apply(report[field], result[field] || []); });
     } catch (_) { report.errors.push({booth: physical, error: "Booth cleanup requires operator attention."}); }
   }
@@ -929,10 +956,19 @@ function cleanupPhotoParent_(options, properties) {
     while (folders.hasNext() && Date.now() < deadline && report.candidates.length < 100) {
       const folder = folders.next();
       const name = folder.getName();
-      if (ready.has(folder.getId()) || !/^[A-Za-z0-9]+_[0-9]{8}$/.test(name)
+      if (ready.has(folder.getId()) || !(properties.getProperty("STORAGE_LAYOUT") === "2" ? /^[0-9]{8}$/ : /^[A-Za-z0-9]+_[0-9]{8}$/).test(name)
           || folder.isTrashed() || !hasParent_(folder, parent)) continue;
       try {
-        let policy = readPhotoRetention_(folder.getDescription(), name);
+        let identity = name;
+        if (properties.getProperty("STORAGE_LAYOUT") === "2") {
+          let metadata;
+          try { metadata = JSON.parse(folder.getDescription()); } catch (_) { continue; }
+          identity = metadata.transaction_id;
+          if (!/^PB[0-9]+V2S2_[0-9]{8}$/.test(identity || "")
+              || identity.split("_").pop() !== name
+              || physicalBooth_(identity.split("_")[0]) !== parent.getParents().next().getName()) continue;
+        }
+        let policy = readPhotoRetention_(folder.getDescription(), identity);
         if (!policy && !folder.getDescription()) {
           const oldest = oldestTransactionPhoto_(folder, 0);
           if (oldest) {
@@ -984,3 +1020,4 @@ function cleanupPhotoParent_(options, properties) {
     return report;
   } finally { lock.releaseLock(); }
 }
+

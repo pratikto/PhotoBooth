@@ -413,8 +413,10 @@ class TransactionStore:
                         for key in ('drive_retention_registered_at', 'drive_photos_expire_at', 'drive_retention_error'):
                             if key in persisted:
                                 transaction.manifest[key] = persisted[key]
+                        if persisted.get('storage_layout') == 2 and 'drive_binding_error' in persisted:
+                            transaction.manifest['drive_binding_error'] = persisted['drive_binding_error']
                         if persisted.get('storage_layout') == 2 and persisted.get('drive_folder_id'):
-                            for key in ('drive_folder_id', 'drive_folder_url', 'drive_binding_error', 'drive_binding_verified'):
+                            for key in ('drive_folder_id', 'drive_folder_url', 'drive_binding_error', 'drive_binding_verified', 'photo_number_layout'):
                                 if key in persisted:
                                     transaction.manifest[key] = persisted[key]
                         persisted_files = persisted.get("upload_files", {})
@@ -478,3 +480,4 @@ class TransactionStore:
             except FileNotFoundError:
                 pass
             raise
+

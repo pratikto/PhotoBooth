@@ -121,7 +121,7 @@ class BoothWorkspace:
             for slot in state['ready']:
                 reply = by_id.get(slot['transaction_id'])
                 if reply:
-                    slot.update(folder_id=reply['folder_id'], folder_url=reply['folder_url'])
+                    slot.update(folder_id=reply['folder_id'], folder_url=reply['folder_url'], photo_number_layout=reply.get('photo_number_layout'), link_verified=reply.get('link_verified', False))
             write_json_atomic(self.state_path, state)
 
     def claim(self):
@@ -155,3 +155,4 @@ class BoothWorkspace:
             manifest = checked_path(folder / 'manifest.json')
             if manifest.is_file():
                 yield manifest
+

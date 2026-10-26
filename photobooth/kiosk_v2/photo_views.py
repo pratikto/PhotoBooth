@@ -367,6 +367,8 @@ class PhotoViews:
             delivery = 'MODE LOKAL • foto tersimpan di perangkat; tanpa QR download'
         elif upload == 'UPLOAD_COMPLETE':
             delivery = 'DRIVE TERVERIFIKASI • pindai QR di layar untuk download'
+        elif view.get('binding_error'):
+            delivery = 'DRIVE GAGAL TERSAMBUNG • operator perlu memeriksa setup/deployment Drive'
         elif upload == 'PENDING_DRIVE_BINDING':
             delivery = 'DRIVE TERTUNDA • foto lokal aman; upload & QR menyusul saat online'
         elif view.get('retention_error'):
@@ -435,3 +437,4 @@ class PhotoViews:
                                                 lambda: self._photo_submit('acknowledge_print'), variant='tertiary'))
         label = 'SESI BERIKUTNYA' if view['session_number'] < view['session_count'] else 'SELESAI • KEMBALI IKLAN'
         shell.add_widget(self._photo_action(label, lambda: self._photo_submit('next'), disabled=uncertain))
+

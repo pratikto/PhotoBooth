@@ -1,5 +1,10 @@
 # Meong Photobooth — test evidence and acceptance
 
+## Drive layout repair acceptance (26 October 2026)
+
+Verify PB001/Photo/eight-digit-number/{raw,bw,color}, actual bytes and signed-out QR access after updating both Python and the existing Web App deployment. Automatic fixture passes do not close live delivery or BUG-009. See qa/drive-photo-layout/README.md.
+
+
 Updated **26 October 2026** for `feature/portrait-kiosk-v2-next`.
 Recorded execution evidence remains tied to its tested source. BUG-018 final
 source has new automatic checks below; actual Windows/provider acceptance is
@@ -111,3 +116,4 @@ later successful retests. [Current bugs](bug_tracker.md).
 ## Historical record
 
 The [pre-audit version](https://github.com/pratikto/PhotoBooth/blob/5f09eff9998c942ed54feef0cf0563fc3944611b/docs/test_checklist.md) preserves the complete dated history. Its former “current”, approval, branch and next-step statements apply only to their recorded stage. Use the current documents linked above for continuation.
+

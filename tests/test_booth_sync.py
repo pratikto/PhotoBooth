@@ -84,3 +84,68 @@ class BoothSyncTests(unittest.TestCase):
                 self.assertIsNone(service.drive_worker)
                 self.assertFalse((Path(folder)/'data'/'kiosk-v2-p3'/'photos').exists())
             finally:service.close()
+
+
+    def test_flat_upload_mapping_keeps_sessions_distinct_and_verifies_real_bytes(self):
+        session=Mock();existing=AppsScriptDriveClient('https://script.google.com/macros/s/fixture/exec','fixture',session=session)
+        client=BoothDriveClient(existing,'PB001V2S2')
+        session.post.return_value.status_code=200
+        with TemporaryDirectory() as folder:
+            path=Path(folder)/'strip.png';path.write_bytes(b'fixture pixels')
+            session.post.return_value.json.return_value={'ok':True,'file':{'id':'file',
+                'size_bytes':path.stat().st_size,'md5_checksum':hashlib.md5(path.read_bytes()).hexdigest()}}
+            for number in ('01','02'):
+                client.upload_file('folder','PB001V2S2_00000001',f'Photo/{number}/color/strip.png',path)
+                payload=session.post.call_args.kwargs['json']
+                self.assertEqual(payload['relative_path'],f'color/session_{int(number):03d}_strip.png')
+                self.assertEqual(payload['filename'],f'session_{int(number):03d}_strip.png')
+
+    def test_private_reserve_response_is_rejected_before_its_url_can_reach_print(self):
+        session=Mock();existing=AppsScriptDriveClient('https://script.google.com/macros/s/fixture/exec','fixture',session=session)
+        client=BoothDriveClient(existing,'PB001V2S2');session.post.return_value.status_code=200
+        slot={'transaction_id':'PB001V2S2_00000001','folder_id':'folder',
+              'folder_url':'https://drive.google.com/drive/folders/folder','status':'READY'}
+        session.post.return_value.json.return_value={'ok':True,'storage_layout':2,'slots':[slot]}
+        with self.assertRaises(DriveApiError):client.reserve_transactions([{'transaction_id':slot['transaction_id']}])
+        slot.update(photo_number_layout=1,link_verified=True)
+        self.assertEqual(client.reserve_transactions([{'transaction_id':slot['transaction_id']}])[0]['folder_id'],'folder')
+
+    def test_layout2_background_delivery_completes_and_exposes_qr_without_print_replay(self):
+        import numpy as np
+        from photobooth.kiosk_v2.photos import PhotoTest
+        with TemporaryDirectory() as folder:
+            workspace=BoothWorkspace(folder,'PB001V2S2')
+            service=PhotoTest(folder,workspace=workspace,drive_requested=True)
+            try:
+                service.prepare();service.start(get_templates(),{'template_a':1})
+                for _ in range(3):service.capture(np.zeros((60,80,3),dtype=np.uint8))
+                service.compose()
+                client=Mock();client.reserve_transactions.return_value=[]
+                client.bind_transaction.return_value={'folder_id':'bound','folder_url':'https://drive.google.com/drive/folders/bound',
+                    'photo_number_layout':1,'link_verified':True}
+                client.register_retention.side_effect=lambda _folder,tx,stamp:retention_metadata(tx,stamp)
+                def uploaded(_folder,_tx,_relative,path,**_kwargs):
+                    data=Path(path).read_bytes()
+                    return {'id':str(path),'size':str(len(data)),'md5Checksum':hashlib.md5(data).hexdigest()}
+                client.upload_file.side_effect=uploaded
+                worker=BoothDriveWorker(workspace,client);worker.run_once()
+                view=service.snapshot()
+                self.assertEqual(view['upload_status'],'UPLOAD_COMPLETE')
+                self.assertIsNotNone(view['download_qr'])
+                self.assertEqual(client.upload_file.call_count,5)
+                worker.run_once();self.assertEqual(client.upload_file.call_count,5)
+                self.assertEqual(view['print_state'],'NOT_SENT')
+            finally:service.close()
+
+    def test_pre_fix_private_cached_url_is_withheld_from_a_new_visit(self):
+        from photobooth.kiosk_v2.photos import PhotoTest
+        with TemporaryDirectory() as folder:
+            workspace=BoothWorkspace(folder,'PB001V2S2');workspace.prepare()
+            slot=workspace.ready_slots()[0]
+            workspace.remember_remote([{**slot,'folder_id':'private','folder_url':'https://drive.google.com/drive/folders/private'}])
+            service=PhotoTest(folder,workspace=workspace,drive_requested=True)
+            try:
+                service.prepare();view=service.start(get_templates(),{'template_a':1})
+                self.assertIsNone(view['folder_url'])
+                self.assertEqual(view['upload_status'],'PENDING_DRIVE_BINDING')
+            finally:service.close()

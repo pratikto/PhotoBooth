@@ -137,8 +137,8 @@ class PhotoTest:
         if self.workspace:
             slot = self.workspace.claim()
             tx = self.store.start_transaction(plans, transaction_id=slot['transaction_id'], folder_path=slot['staging_path'],
-                drive_slot=slot if self.drive_requested and slot.get('folder_id') else None)
-            tx.manifest.update(drive_intent=self.drive_requested, drive_claim_token=slot['claim_token'],
+                drive_slot=slot if self.drive_requested and slot.get('folder_id') and slot.get('link_verified') is True and slot.get('photo_number_layout') == 1 else None)
+            tx.manifest.update(photo_number_layout=slot.get('photo_number_layout') if slot.get('link_verified') is True else None, drive_intent=self.drive_requested, drive_claim_token=slot['claim_token'],
                 upload_status='PENDING_DRIVE_BINDING' if self.drive_requested else 'LOCAL_ONLY')
             self.store._write_manifest(tx)
         elif self.pool is not None:
@@ -197,7 +197,7 @@ class PhotoTest:
             latest = json.loads(self.transaction.manifest_path.read_text(encoding='utf-8'))
             compose_result(session.final_photo_paths, session.plan.template, output,
                            self.transaction.transaction_id, session.plan.session_id,
-                           latest.get('drive_folder_url'),
+                           (latest.get('drive_folder_url') if not self.workspace or latest.get('photo_number_layout') == 1 else None),
                            mirror_photos=True, download_pending=bool(self.workspace and latest.get('drive_intent')))
             self.store.record_output(self.transaction, session.plan.session_id,
                                      session.final_photo_paths, output)
@@ -301,7 +301,7 @@ class PhotoTest:
         # state exposes a large download QR on screen.
         folder_url = manifest.get('drive_folder_url')
         download_qr = None
-        if manifest['upload_status'] == 'UPLOAD_COMPLETE' and folder_url:
+        if manifest['upload_status'] == 'UPLOAD_COMPLETE' and folder_url and (not self.workspace or manifest.get('photo_number_layout') == 1):
             if self._download_qr_url != folder_url:
                 from photobooth.qr_code import create_qr_image
                 try:
@@ -322,6 +322,7 @@ class PhotoTest:
                 'upload_status': manifest['upload_status'],
                 'folder_url': manifest.get('drive_folder_url'),
                 'folder': str(self.transaction.folder_path),
+                'binding_error': manifest.get('drive_binding_error'),
                 'retention_error': bool(manifest.get('drive_retention_error'))}
 
     def close(self):
@@ -438,3 +439,4 @@ def configured_test(root, *, configuration_root=None, storage_layout=None):
                      drive_requested=os.environ.get('PHOTOBOOTH_V2_DRIVE') == '1', raster_printer=raster_printer,
                      printer=printer, drive_client=client,
                      auto_print=printer is not None and os.environ.get('PHOTOBOOTH_V2_AUTO_PRINT', '1') == '1')
+

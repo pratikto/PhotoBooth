@@ -45,16 +45,23 @@ remain separate. [Retention scope](photo-retention.md).
 Profiles are isolated under `data/kiosk-v2-p3`, `data/kiosk-v2-p4` and
 `data/kiosk-v2-sandbox/<merchant>/<booth>`. Preserve journals/manifests on rollback.
 
-## Requested booth storage and shared-content target
+## Booth storage and shared content
 
-The owner requested per-booth `Photobooth/PB001...PB00X` roots, at least 25 empty
-transaction reserves, `Photo/NN/raw,color,bw`, booth-specific local assets and
-offline copies of root `Global_Advertisement`/`Global_Template`. The
-[audited contract](photobooth-storage-layout.md) separates Drive/local/code trees,
-existing-service reuse and coordinated implementation stages. This is **not yet
-the runtime layout**: native v2 still targets two cached Drive slots and uses
-`raw/session_NNN`/`output`; 1-bit rasters are not persisted, and global sync is
-absent. No data/cloud parent was moved. Entire `old` contents are excluded.
+The ordinary launcher uses 25 empty per-booth reserves, durable claims,
+Photo/NN/raw,color,bw local session files and offline content caches. The owner
+corrected the **cloud** tree to Photobooth/PB001/Photo/00000001/{raw,bw,color}.
+BoothDriveClient maps existing local session paths into these three flat remote
+directories, prefixing filenames with session IDs. Code.gs scopes reserve,
+binding, uploads and retention to the numbered Photo folders. Local state is
+preserved; physical copies reuse the saved exact BW raster.
+
+Reserve/bind acknowledgements require verified anyone-reader sharing plus a
+numbered-layout marker before Python trusts their links. Binding errors persist
+safe GUI categories instead of silently waiting. An authenticated empty legacy
+reserve can be moved without changing its folder ID; unrelated/nonempty content
+requires review. The installed Apps Script deployment still needs updating.
+See [contract](photobooth-storage-layout.md) and
+[repair setup/evidence](qa/drive-photo-layout/README.md). All old contents remain excluded.
 
 ## Operator reuse and separate candidates
 
@@ -84,3 +91,4 @@ health observations and physical acceptance answer different questions.
 ## Historical record
 
 The [pre-audit version](https://github.com/pratikto/PhotoBooth/blob/5f09eff9998c942ed54feef0cf0563fc3944611b/docs/ARCHITECTURE.md) preserves the complete dated history. Its former “current”, approval, branch and next-step statements apply only to their recorded stage. Use the current documents linked above for continuation.
+

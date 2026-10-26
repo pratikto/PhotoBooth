@@ -1,5 +1,10 @@
 # Meong Photobooth — changelog
 
+## Drive photo layout / private QR correction (26 October 2026)
+
+Corrected source to PB001/Photo/00000001/{raw,bw,color}, session-prefixed files, verified READY/bind sharing, safe empty-reserve recovery preserving folder IDs, durable setup feedback, and numbered retention scope. Added backend/Python regressions; no live Google change.
+
+
 ## 2026-10-26 — Consolidated outstanding acceptance checklist
 
 Owner asks for all untested gates. Reuse the existing offline form for 49 grouped
@@ -676,3 +681,4 @@ For changes made before the documentation effort, inspect Git commits and the da
 **Verified code-level QA:** [GitHub Actions 39555036023](https://github.com/pratikto/PhotoBooth/actions/runs/39555036023) at code/test SHA **c4e4703a**: **21/21** pure tests PASS; Kivy widget smoke PASS; 12 synthetic portrait screenshots PASS at 800×1280 and 452×900; two jobs SUCCESS. An earlier CI run between gallery changes and updated assertions failed due *stale test expectation* of 1 texture; after updating test to cover 3 previews the current run succeeded. Screenshot artifacts visually inspected, including legible compact-height game introduction. No new device/hardware tests were performed.
 
 **Explicitly NOT delivered:** Real face detection, playable Meong Fly/POS struk/one-attempt backend and redeemable discount, provider QRIS, camera capture, thermal paper print and Drive delivery inside v2. Remaining P2.5 design pixel-font/animation polish plus physical Windows 10.1-inch audio/video and touch/swipe acceptance are still open; owner approval is required before master promotion.
+

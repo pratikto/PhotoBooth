@@ -1,5 +1,10 @@
 # Meong Photobooth — Bug register
 
+## Drive photo delivery recurrence — OPEN (26 October 2026)
+
+Owner reports private printed QR, empty folder and GUI waiting on upload. Meong account confirms the reported folder is empty and lacks anyone-reader access. Source correction prepared; installed backend version/logs and successful live delivery remain unverified. See docs/qa/drive-photo-layout/README.md.
+
+
 **26 October BUG-009 continuation:** owner resumed this repair and says setup/
 redeployment has not been confirmed. Sources **130aae1 / 887ba39** repair real
 CLOCK activation/setup and add safe existing-config diagnosis. **807 full Python
@@ -118,3 +123,4 @@ reports above supersede old active-fix rankings and failed-CI gates.
 - Suspected area vs *proven* root cause:
 - Dependencies / related FEAT IDs:
 - Explicit fix approval, tests run, on-device verification and rollback commit:
+

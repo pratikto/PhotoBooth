@@ -5,6 +5,7 @@ private local state, and clocks always originate in the transaction manifest.
 """
 import base64
 import json
+import logging
 import re
 import time
 
@@ -21,6 +22,13 @@ class BoothDriveClient(AppsScriptDriveClient):
         self.booth_id = booth_id
 
     def _post(self, payload):
+        if payload.get('action') == 'upload_file':
+            match = re.fullmatch(r'Photo/(\d{2})/(raw|color|bw)/([^/]+)', payload['relative_path'])
+            if not match:
+                raise DriveApiError('Invalid local session upload path.', 400)
+            session, kind, filename = match.groups()
+            filename = f'session_{int(session):03d}_{filename}'
+            payload = {**payload, 'relative_path': f'{kind}/{filename}', 'filename': filename}
         return super()._post({**payload, 'storage_layout': 2, 'booth_id': self.booth_id})
 
     def reserve_transactions(self, slots):
@@ -34,7 +42,8 @@ class BoothDriveClient(AppsScriptDriveClient):
         folder_ids = set()
         for slot in result['slots']:
             folder_id = slot['folder_id']
-            if (folder_id in folder_ids or not re.fullmatch(r'[A-Za-z0-9_-]+', folder_id)
+            if (slot.get('link_verified') is not True or slot.get('photo_number_layout') != 1
+                    or folder_id in folder_ids or not re.fullmatch(r'[A-Za-z0-9_-]+', folder_id)
                     or slot.get('folder_url') != 'https://drive.google.com/drive/folders/' + folder_id):
                 raise DriveApiError('Remote reserve links could not be verified.', 409)
             folder_ids.add(folder_id)
@@ -44,7 +53,8 @@ class BoothDriveClient(AppsScriptDriveClient):
         result = self._post({'action': 'bind_transaction',
             'transaction_id': manifest['transaction_id'], 'claim_token': manifest['drive_claim_token'],
             'started_at': manifest['created_at'], 'session_count': len(manifest['sessions'])})
-        if (result.get('storage_layout') != 2 or result.get('transaction_id') != manifest['transaction_id']
+        if (result.get('photo_number_layout') != 1 or result.get('link_verified') is not True
+                or result.get('storage_layout') != 2 or result.get('transaction_id') != manifest['transaction_id']
                 or not result.get('folder_id') or not re.fullmatch(
                     r'https://drive\.google\.com/drive/folders/[A-Za-z0-9_-]+', str(result.get('folder_url', '')))):
             raise DriveApiError('Remote transaction binding could not be verified.', 409)
@@ -90,7 +100,7 @@ class BoothDriveWorker(DriveSyncWorker):
                 manifest = json.loads(checked_path(path).read_text(encoding='utf-8'))
                 if manifest.get('storage_layout') != 2 or not manifest.get('drive_intent'):
                     continue
-                if not manifest.get('drive_binding_verified'):
+                if not manifest.get('drive_binding_verified') or manifest.get('photo_number_layout') != 1:
                     bound = self.client.bind_transaction(manifest)
                     with manifest_lock(path):
                         latest = json.loads(path.read_text(encoding='utf-8'))
@@ -99,7 +109,7 @@ class BoothDriveWorker(DriveSyncWorker):
                         if latest.get('drive_folder_id') and latest['drive_folder_id'] != bound['folder_id']:
                             raise ValueError('A known reserved folder cannot be replaced.')
                         latest.update(drive_folder_id=bound['folder_id'], drive_folder_url=bound['folder_url'],
-                                      drive_binding_verified=True, drive_binding_error=None)
+                                      drive_binding_verified=True, drive_binding_error=None, photo_number_layout=1)
                         write_json_atomic(path, latest)
                 # Expiry tombstones also register their original deadline; no
                 # image can be resurrected by a late reconnect.
@@ -107,8 +117,13 @@ class BoothDriveWorker(DriveSyncWorker):
                 manifest = json.loads(path.read_text(encoding='utf-8'))
                 if manifest.get('drive_retention_registered_at') and manifest.get('upload_status') not in {'UPLOAD_COMPLETE', 'LOCAL_EXPIRED'}:
                     sync_manifest(path, self.client)
-            except (OSError, ValueError, TypeError, RuntimeError):
+            except (OSError, ValueError, TypeError, RuntimeError) as error:
                 self.last_error = True
+                logging.getLogger(__name__).warning('Drive binding/upload failed for %s (%s)', path.parent.name, type(error).__name__)
+                with manifest_lock(path):
+                    latest = json.loads(path.read_text(encoding='utf-8'))
+                    latest['drive_binding_error'] = 'DRIVE_SETUP_REQUIRED' if isinstance(error, DriveApiError) and error.status_code == 409 else 'DRIVE_RETRY'
+                    write_json_atomic(path, latest)
                 continue
         slots = self.workspace.ready_slots()
         fingerprint = tuple(s['transaction_id'] for s in slots)
@@ -129,3 +144,4 @@ class BoothDriveWorker(DriveSyncWorker):
                 self.last_error = True
             self._wake.wait(self.interval_seconds)
             self._wake.clear()
+

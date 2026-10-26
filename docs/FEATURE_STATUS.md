@@ -1,5 +1,10 @@
 # Meong Photobooth — current feature status
 
+## Drive layout and QR source correction (26 October 2026)
+
+Numbered Photo folders, flat raw/bw/color uploads and verified link-sharing acknowledgements are implemented in the repair source. Actual installed deployment, cloud upload and signed-out phone scan remain pending.
+
+
 Updated **26 October 2026** after documentation baseline `f36ebad` on
 `feature/portrait-kiosk-v2-next`. Latest functional source **53e7b4c** is the coordinated [storage integration](qa/feat-004-storage/README.md), after mirrored v2 **fc26e3d**, following BUG-009 diagnosis `887ba39`, tutorial entry `20453fe` and print/Drive `266b2c8`.
 The earlier **`9433010` / `0dc6555`** pair is the P5 source/evidence baseline,
@@ -78,3 +83,4 @@ availability. [Test ledger](test_checklist.md) · [bug register](bug_tracker.md)
 ## Historical record
 
 The [pre-audit version](https://github.com/pratikto/PhotoBooth/blob/5f09eff9998c942ed54feef0cf0563fc3944611b/docs/FEATURE_STATUS.md) preserves the complete dated history. Its former “current”, approval, branch and next-step statements apply only to their recorded stage. Use the current documents linked above for continuation.
+

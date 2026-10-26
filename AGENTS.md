@@ -1,5 +1,13 @@
 # Repository working instructions
 
+Latest owner correction, 26 October: Google Drive photos must be at
+`Photobooth/PB001/Photo/00000001/{raw,bw,color}` and subsequent numbers.
+This supersedes the older transaction-root/Photo/NN cloud contract below.
+Keep internal IDs/local journals intact; see docs/photobooth-storage-layout.md
+and docs/qa/drive-photo-layout/README.md. No live Apps Script deployment follows
+from source publication; installed cloud activation is separate.
+
+
 ## Excluded archive and requested storage target
 
 Owner direction, 26 October: ignore **all contents of `old`**. Never inspect,
@@ -134,3 +142,4 @@ offline Drive intent, private claim state and no print replay. Code.gs requires
 manual setupBoothStorage/setupPhotoRetention and redeployment at the existing
 URL; source fixtures cannot close BUG-009. See implementation QA/SETUP/Submit
 form. Legacy profile may finish its own existing queues, never migrate old.
+

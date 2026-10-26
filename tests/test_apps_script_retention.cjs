@@ -39,6 +39,9 @@ function harness() {
       getFilesByName(name) { return iterator(this.files.filter(f => f.name === name && !f.deleted)); },
       createFolder(name) { return folder('new-' + objects.size, name, this); },
       createFile(blob) { const f = file('new-' + objects.size, blob.name, 0, this); f.bytes = blob.getBytes(); return f; },
+      setName(name) { this.name = name; },
+      moveTo(parent) { const previous = objects.get(this.parent); previous.children = previous.children.filter(f => f !== this); this.parent = parent.id; parent.children.push(this); },
+      getSharingPermission() { return 'view'; },
       setSharing() { this.shared = true; }, getSharingAccess() { return this.shared ? 'anyone' : 'private'; },
       getBlob() { return { getBytes: () => this.bytes || [] }; },
       getDescription() { return this.description; }, setDescription(value) { this.description = value; },
@@ -349,17 +352,19 @@ test('layout 2 creates named siblings, separate booths, 25 truly empty reserves;
   const h = storageHarness(), slots = Array.from({length:25}, (_, i) => ({transaction_id:'PB001V2S2_'+String(i+1).padStart(8,'0'), claim_token:'a'.repeat(32)}));
   const first = h.post('reserve_transactions', {slots}); assert.equal(first.ok, true); assert.equal(first.slots.length,25);
   const again = h.post('reserve_transactions', {slots}); assert.equal(again.slots[0].folder_id,first.slots[0].folder_id);
-  const p1 = h.context.storageBoothFolder_(h.properties,'PB001V2S2',false);
-  for (const tx of p1.children.filter(f => f.name.startsWith('PB001V2S2_'))) { assert.equal(tx.children.length,0); assert.equal(tx.files.length,0); }
+  const p1 = h.context.storagePhotoFolder_(h.properties,'PB001V2S2',false);
+  for (const tx of p1.children.filter(f => /^[0-9]{8}$/.test(f.name))) { assert.equal(tx.children.length,0); assert.equal(tx.files.length,0); }
   const second = h.post('reserve_transactions',{booth_id:'PB002V2S2', slots:[{...h.claim,transaction_id:'PB002V2S2_00000001'}]});
   assert.equal(second.ok,true); assert.notEqual(second.slots[0].folder_id,first.slots[0].folder_id);
   assert.equal(h.settings.DRIVE_FOLDER_ID,'booth-parent');
 });
 test('offline bind uses original deadline, session hierarchy and safe manifest; conflicts never reuse a folder', () => {
   const h = storageHarness(), first = h.bind(); assert.equal(first.ok,true);
-  const parent = h.context.storageBoothFolder_(h.properties,'PB001V2S2',false), tx = parent.children.find(f => f.name === h.claim.transaction_id);
-  assert.deepEqual(tx.children[0].children.map(f => f.name),['01','02']);
-  assert.deepEqual(tx.children[0].children[0].children.map(f => f.name),['raw','color','bw']);
+  const parent = h.context.storagePhotoFolder_(h.properties,'PB001V2S2',false), tx = parent.children.find(f => f.name === '00000001');
+  assert.deepEqual(tx.children.map(f => f.name),['raw','color','bw']);
+  assert.equal(parent.name,'Photo');
+  assert.equal(parent.getParents().next().name,'PB001');
+  assert.equal(tx.shared,true);
   assert.equal(tx.files[0].name,'manifest.json'); assert.doesNotMatch(Buffer.from(tx.files[0].bytes).toString(),/claim_token|claim_key/);
   const expiry = JSON.parse(tx.description).expires_at;
   assert.equal(h.post('bind_transaction',{...h.claim,session_count:2,started_at:new ClockDate().toISOString()}).folder_id,first.folder_id);
@@ -369,7 +374,7 @@ test('offline bind uses original deadline, session hierarchy and safe manifest; 
 });
 test('layout 2 scoped upload verifies bytes and cannot upload through old or legacy paths', () => {
   const h = storageHarness(), bound=h.bind(), bytes=Buffer.from('fixture image'), md5=crypto.createHash('md5').update(bytes).digest('hex');
-  const payload={folder_id:bound.folder_id,transaction_id:h.claim.transaction_id,relative_path:'Photo/01/raw/capture.jpg',filename:'capture.jpg',size_bytes:bytes.length,md5_checksum:md5,image_base64:bytes.toString('base64')};
+  const payload={folder_id:bound.folder_id,transaction_id:h.claim.transaction_id,relative_path:'raw/session_001_capture.jpg',filename:'session_001_capture.jpg',size_bytes:bytes.length,md5_checksum:md5,image_base64:bytes.toString('base64')};
   assert.equal(h.post('upload_file',payload).ok,true); assert.equal(h.post('upload_file',payload).ok,true);
   assert.equal(h.post('upload_file',{...payload,relative_path:'Photo/01/old/capture.jpg'}).code,400);
   assert.equal(h.post('upload_file',{...payload,relative_path:'raw/session_001/capture.jpg'}).code,400);
@@ -377,15 +382,15 @@ test('layout 2 scoped upload verifies bytes and cannot upload through old or leg
 });
 test('new-root cleanup keeps unused reserves, all assets and old untouched; legacy parent is excluded', () => {
   const h=storageHarness(); h.bind();
-  const p=h.context.storageBoothFolder_(h.properties,'PB001V2S2',false), tx=p.children.find(f=>f.name===h.claim.transaction_id);
-  h.mark(tx,31); tx.getDateCreated=()=>new ClockDate();
+  const p=h.context.storagePhotoFolder_(h.properties,'PB001V2S2',false), tx=p.children.find(f=>f.name==='00000001');
+  tx.description=JSON.stringify({...JSON.parse(tx.description), ...h.context.photoRetention_(h.claim.transaction_id,new ClockDate(NOW-31*DAY))}); tx.getDateCreated=()=>new ClockDate();
   p.searchFolders=query=>iterator(p.children.filter(f=>!f.deleted && (!query.includes('createdDate') || f.getDateCreated()<new ClockDate(NOW-30*DAY))));
   const archive=h.folder('excluded','old',tx);
   archive.getFiles=archive.getFolders=()=>{throw Error('Archive was entered');};
   h.mark(h.folder('legacy-expired','PB001_00009999'),40);
   assert.equal(h.context.cleanupPhotoRetention().deleted.length,0); assert.equal(archive.deleted,false);
   tx.children=tx.children.filter(f=>f!==archive);
-  assert.deepEqual(Array.from(h.context.cleanupPhotoRetention().deleted),[h.claim.transaction_id]);
+  assert.deepEqual(Array.from(h.context.cleanupPhotoRetention().deleted),['00000001']);
   assert.equal(h.root.children.find(f=>f.id==='legacy-expired').deleted,false);
 });
 test('content inventory prunes old before access, chunks are scoped and checksum/version verified', () => {
@@ -398,4 +403,40 @@ test('content inventory prunes old before access, chunks are scoped and checksum
   assert.equal(h.post('asset_chunk',{file_id:f.id,namespace:'Global_Template',offset:0,length:2,md5:f.md5}).code,403);
   assert.equal(h.post('asset_chunk',{file_id:f.id,namespace:'Global_Advertisement',offset:0,length:2,md5:'b'.repeat(32)}).code,409);
   assert.equal(h.post('asset_manifest',{token:'wrong'}).code,401);
+});
+
+
+test('reserved photo numbers are genuinely empty and link-readable; denied sharing never returns READY', () => {
+  const h = storageHarness();
+  const result = h.post('reserve_transactions', {slots:[h.claim]});
+  assert.equal(result.ok,true); assert.equal(result.slots[0].link_verified,true);
+  const folder = h.context.DriveApp.getFolderById(result.slots[0].folder_id);
+  assert.equal(folder.name,'00000001'); assert.equal(folder.children.length,0); assert.equal(folder.files.length,0);
+  folder.getSharingPermission = () => 'edit';
+  assert.equal(h.post('reserve_transactions',{slots:[h.claim]}).ok,false);
+});
+test('repair authenticates an empty legacy reserve and keeps its exact QR folder ID', () => {
+  const h=storageHarness(), booth=h.context.storageBoothFolder_(h.properties,'PB001V2S2',true);
+  const prior=h.folder('printed-qr','PB001V2S2_00000001',booth);
+  prior.description=JSON.stringify({managed_slot:'meong-empty-slot-v2',transaction_id:h.claim.transaction_id,
+    claim_key:crypto.createHash('md5').update(h.claim.claim_token).digest('hex')});
+  const result=h.bind(); assert.equal(result.ok,true); assert.equal(result.folder_id,'printed-qr');
+  assert.equal(prior.name,'00000001'); assert.equal(prior.getParents().next().name,'Photo');
+  assert.equal(h.bind().folder_id,'printed-qr');
+});
+test('interrupted empty-reserve rename retries with the original folder ID', () => {
+  const h=storageHarness(), booth=h.context.storageBoothFolder_(h.properties,'PB001V2S2',true);
+  const prior=h.folder('interrupted-qr',h.claim.transaction_id,booth);
+  prior.description=JSON.stringify({managed_slot:'meong-empty-slot-v2',transaction_id:h.claim.transaction_id,
+    claim_key:crypto.createHash('md5').update(h.claim.claim_token).digest('hex')});
+  let fail=true;prior.setName=function(name){if(fail){fail=false;throw Error('transient rename');}this.name=name;};
+  assert.equal(h.bind().ok,false);assert.equal(prior.getParents().next().name,'Photo');
+  const result=h.bind();assert.equal(result.ok,true);assert.equal(result.folder_id,'interrupted-qr');
+  assert.equal(prior.name,'00000001');
+});
+test('an unrelated numbered folder is neither overwritten nor link-shared', () => {
+  const h=storageHarness(), photo=h.context.storagePhotoFolder_(h.properties,'PB001V2S2',true);
+  const foreign=h.folder('foreign-number','00000001',photo);
+  assert.equal(h.bind().ok,false);assert.equal(foreign.description,'');assert.equal(foreign.shared,undefined);
+  assert.equal(foreign.children.length,0);
 });
