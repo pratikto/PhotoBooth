@@ -96,11 +96,16 @@ this does not certify exact source or external P5 gates.
 
 ## Current checkpoint and remaining acceptance
 
-Latest functional source: **`266b2c8`**; **800 local tests PASS, zero skips**.
-[Matching-source CI 40208966127](https://github.com/pratikto/PhotoBooth/actions/runs/40208966127)
-succeeded in all three jobs. Its native report has one optional palm-model-assets
-skip, covered by the local run. The evidence package verifies 133 PNGs;
-required views were reviewed. These are recorded source/fixture results.
+Latest functional source: **`20453fe`**; **800 local tests PASS, zero skips**.
+The 26 October entry refinement removes the separate CARA PAKAI button while
+preserving the required tutorial. Twelve clean-source PNGs were verified;
+idle/invitation/tutorial were reviewed at 800×1280 and 452×900.
+[Current checks/screenshots and Windows spot checks](docs/qa/portrait-v2-photo-entry/README.md).
+[Matching-source CI 40248962384](https://github.com/pratikto/PhotoBooth/actions/runs/40248962384)
+succeeded in all three jobs; its optional palm-assets skip is covered locally.
+Earlier Print/Drive source `266b2c8` has its own
+[three-job successful CI](https://github.com/pratikto/PhotoBooth/actions/runs/40208966127)
+and 133 verified PNGs. These are recorded source/fixture results.
 [Current status](docs/FEATURE_STATUS.md) · [test ledger](docs/test_checklist.md).
 
 P5 is **ready for acceptance**, with merchant Sandbox, current Windows integration,

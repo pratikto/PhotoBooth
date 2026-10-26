@@ -7,6 +7,10 @@ invitation demo control; MULAI FOTO, invitation AYO FOTO and postgame photo
 entry retain the existing once-per-visit tutorial gate. Tutorial acknowledgement
 and safe return-to-idle reset remain. Reuse current v2 UI/actions/VisitFlow;
 no new router or unrelated feature work.
+Source `20453fe`: 800 full PASS/zero skips, 217.888s; twelve clean-source PNGs
+verified and six affected views reviewed at both required sizes.
+Matching-source CI 40248962384 all three jobs SUCCESS; optional native palm-assets
+skip covered locally. Documentation/evidence follow-up skips redundant Actions.
 [Scope, validation, Windows spot checks and rollback](qa/portrait-v2-photo-entry/README.md).
 
 ## 2026-10-25 — Print/Drive stage 2: native automatic fulfillment

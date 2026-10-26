@@ -1,15 +1,18 @@
 # Meong Photobooth — GUI v2 development handover
 
-Updated **25 October 2026**. Repository `pratikto/PhotoBooth`; required branch
+Updated **26 October 2026**. Repository `pratikto/PhotoBooth`; required branch
 **`feature/portrait-kiosk-v2-next`**. Documentation baseline **`f36ebad`**, latest functional
-source **`266b2c8`** (automatic print/background Drive). Refresh remote HEAD before continuing. GitHub's default is
+source **`20453fe`** (simpler mandatory-tutorial entry, after print/Drive `266b2c8`). Refresh remote HEAD before continuing. GitHub's default is
 still `master`; `main.py` launches v1. Do not restart the project or P3/P4 work.
 
 ## Latest completed increment
 
 **26 October owner flow refinement:** remove only idle CARA PAKAI; reuse the
 existing Start/invitation/postgame tutorial gate and acknowledgement/reset rules.
-Full-width UNDANGAN (DEMO) replaces the redundant split row. [Scope, exact
+Full-width UNDANGAN (DEMO) replaces the redundant split row. Source `20453fe`
+has 800 full PASS/zero skips and twelve clean-source PNGs verified, six affected
+views reviewed. Matching-source CI 40248962384 has all three jobs SUCCESS
+(one optional native palm-assets skip covered locally). [Scope, exact
 evidence and rollback](qa/portrait-v2-photo-entry/README.md). This does not start
 retention/watchdog or any other backlog candidate.
 
@@ -67,6 +70,7 @@ These results predate this documentation-only reconciliation.
 | `edeec47` | Later BUG-018 owner 4/4/no issues at unknown HEAD; monitoring |
 | `7b691c7` | Explicit print/Drive options and worker setup/QR contracts; 29 focused PASS |
 | `266b2c8` | Native automatic print, background queue startup/resume and verified result QR; 800 full PASS, matching three-job CI SUCCESS |
+| `20453fe` | Remove redundant idle help action; mandatory Start/invitation/postgame tutorial unchanged; 800 full PASS/zero skips |
 
 Use scoped inverse commits for code rollback after inspection; preserve all
 payment journals, consumed attempts, reports, photo/print manifests and customer

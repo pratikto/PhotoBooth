@@ -1,7 +1,7 @@
 # FEAT-022 — GUI v2 visual and interaction specification
 
-Updated **25 October 2026**. Branch `feature/portrait-kiosk-v2-next`; latest
-functional source `ea394e8`. This document separates owner design decisions,
+Updated **26 October 2026**. Branch `feature/portrait-kiosk-v2-next`; latest
+functional source `20453fe`. This document separates owner design decisions,
 implemented UI and acceptance. [Roadmap](portrait-kiosk-v2.md) · [status](FEATURE_STATUS.md).
 
 ## Approved concept boards

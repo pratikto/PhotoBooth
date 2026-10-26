@@ -1,7 +1,7 @@
 # Meong Photobooth — current feature status
 
-Updated **25 October 2026** after documentation baseline `f36ebad` on
-`feature/portrait-kiosk-v2-next`. Latest functional source: **`266b2c8`** (automatic print/background Drive).
+Updated **26 October 2026** after documentation baseline `f36ebad` on
+`feature/portrait-kiosk-v2-next`. Latest functional source: **`20453fe`** (simpler mandatory-tutorial entry), following automatic print/background Drive `266b2c8`.
 The earlier **`9433010` / `0dc6555`** pair is the P5 source/evidence baseline,
 not the latest operator checkpoint. GitHub's default remains `master`.
 
@@ -43,6 +43,7 @@ closure or external P5 acceptance is inferred. No new runtime patch is needed.
 
 | Checkpoint | Local full regression | Matching-source CI | Screenshot evidence |
 | --- | --- | --- | --- |
+| Photo-entry source `20453fe` | **800 PASS / zero failures/errors/skips**, 217.888s | [40248962384](https://github.com/pratikto/PhotoBooth/actions/runs/40248962384), all three jobs SUCCESS; native 103 PASS/one optional palm-assets skip covered locally | Twelve clean-source PNGs hash/dimension verified; six affected idle/invitation/tutorial views reviewed at both required sizes; [proof](qa/portrait-v2-photo-entry/README.md) |
 | Print/Drive source `266b2c8` | **800 PASS / 0 failures / 0 errors / 0 skips**, 213.823s | [40208966127](https://github.com/pratikto/PhotoBooth/actions/runs/40208966127), all three jobs SUCCESS; delivery 17 PASS, health 80 PASS, Sandbox 139 PASS, native 103 PASS/1 optional model-assets skip | 133 PNGs verified; delivery views reviewed at both sizes, large QR screenshot pixels decoded; [proof/form](qa/portrait-v2-print-drive/README.md) |
 | BUG-018 source `ebb53fd` | **785 PASS / 0 failures / 0 errors / 0 skips**, 321.181s | [40189694738](https://github.com/pratikto/PhotoBooth/actions/runs/40189694738), three jobs SUCCESS; health 80 PASS, Sandbox 139 PASS, native 97 PASS/1 optional model-assets skip | 119 PNGs source/hash/dimension verified; operator views reviewed at 800×1280/452×900; [proof](qa/portrait-v2-health-clicks/README.md) |
 | Operator source `ea394e8` | **780 PASS / 0 failures / 0 errors / 0 skips**, 270.671s | [40157638369](https://github.com/pratikto/PhotoBooth/actions/runs/40157638369), three jobs SUCCESS; health 80 PASS, Sandbox 139 PASS, native 92 PASS/1 optional palm-model-assets skip | 119 PNGs source/hash/dimension verified; required views reviewed; 15 local operator PNGs reviewed |

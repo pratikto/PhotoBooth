@@ -1,6 +1,6 @@
 # Meong Photobooth documentation — GUI v2
 
-Updated **25 October 2026 (Asia/Jakarta)**. Continue on
+Updated **26 October 2026 (Asia/Jakarta)**. Continue on
 `feature/portrait-kiosk-v2-next`; the GitHub default remains `master` and
 `python main.py` remains the v1 entry point.
 

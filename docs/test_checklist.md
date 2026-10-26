@@ -1,6 +1,6 @@
 # Meong Photobooth — test evidence and acceptance
 
-Updated **25 October 2026** for `feature/portrait-kiosk-v2-next`.
+Updated **26 October 2026** for `feature/portrait-kiosk-v2-next`.
 Recorded execution evidence remains tied to its tested source. BUG-018 final
 source has new automatic checks below; actual Windows/provider acceptance is
 not inferred. Earlier audit-only evidence remains tied to its original source.
@@ -9,6 +9,8 @@ not inferred. Earlier audit-only evidence remains tied to its original source.
 
 | Evidence | Source and result | Limits |
 | --- | --- | --- |
+| Simpler photo entry | `20453fe`: **800 PASS / zero failures/errors/skips**, 217.888s; preliminary focused 55 PASS/two opt-in skips covered by final full run | Twelve clean-source PNGs verified; six idle/invitation/tutorial views reviewed at 800×1280/452×900. Windows spot checks NOT_RUN. [Raw proof/checklist/rollback](qa/portrait-v2-photo-entry/README.md) |
+| Photo-entry matching-source CI | [40248962384](https://github.com/pratikto/PhotoBooth/actions/runs/40248962384): all three jobs SUCCESS; delivery 17 PASS, health 80 PASS, Sandbox 139 PASS, native 103 PASS/one optional palm-assets skip | Skipped model case covered locally; Windows audio uses dummy PCM. [Raw reports](qa/portrait-v2-photo-entry/ci-reports/) |
 | Print/Drive final source | `266b2c8`: **800 PASS / zero failures/errors/skips**, 213.823s; 15 new-feature focused PASS | Linux/software GL/dummy PCM/offline assets; nine reused v1 files unchanged. Physical paper/phone/cloud acceptance NOT_RUN. [Raw proof](qa/portrait-v2-print-drive/README.md) |
 | Print/Drive CI/screens | [40208966127](https://github.com/pratikto/PhotoBooth/actions/runs/40208966127): all three jobs SUCCESS; 133 PNGs source/hash/dimension verified | Delivery 17 PASS, health 80 PASS, Sandbox 139 PASS, native 103 PASS/1 optional model-assets skip covered locally; large right-panel QR screenshot pixels decode at both sizes |
 | BUG-018 final source / full regression | `ebb53fd`: **785 PASS / 0 failure/error/skip**, 321.181s; focused 37 PASS | Two earlier MOCK fixture timeouts preserved; final helper drains an already-completed result, unchanged deadline/runtime. [Raw evidence](qa/portrait-v2-health-clicks/README.md) |
