@@ -1,9 +1,21 @@
 # Meong Photobooth — GUI v2 development handover
 
+**27 October continuation (local working tree):** user requests next roadmap
+development while manual tests wait. FEAT-009 stage 1 adds an opt-in external
+liveness observer and Windows startup-script generator. It never kills/restarts
+the kiosk or replays fulfillment. Ordinary launch behavior is retained; merchant
+Sandbox keeps its dedicated launcher. Base `5639400`; remote refresh currently
+fails because the configured proxy is unreachable. No push/CI claim.
+[Scope, commands, limitations, acceptance and rollback](qa/portrait-v2-watchdog/README.md).
+Focused 22 PASS, package-free 15 PASS and actual native launcher lifecycle PASS;
+full suite NOT VERIFIED (blocked in existing API TestClient), isolated Sandbox
+widget checks 6 FAIL (`Worker did not settle`). Trace/raw reports preserved in
+the runbook; no full-source certification or payment fix is claimed.
+Earlier latest-source references below describe the prior committed baseline.
+
 ## Latest Drive/QR repair (26 October 2026)
 
 Continue from the correction in docs/qa/drive-photo-layout/README.md. The earlier per-transaction-root cloud tree is superseded by owner instruction. The existing Web App needs a new deployment version; this session performed read-only Drive inspection only.
-
 
 Updated **26 October 2026**. Repository `pratikto/PhotoBooth`; required branch
 **`feature/portrait-kiosk-v2-next`**. Documentation baseline **`f36ebad`**, latest functional

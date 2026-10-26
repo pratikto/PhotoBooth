@@ -1,5 +1,14 @@
 # FEAT-022 — GUI v2 engineering contracts
 
+## FEAT-009 observation hook — 27 October 2026 (local increment)
+
+The optional `run_portrait_v2_watchdog.py` parent starts the ordinary launcher
+in its own process group. Only that parent supplies an ephemeral heartbeat path
+and run ID; the ordinary launcher then schedules `AppHeartbeat` on Kivy's main
+thread and cancels it before waiting for workers during teardown. An independent
+`WatchdogMonitor` validates PID/run/sequence and writes bounded, redacted status
+reports. It has no business-state adapter or process kill/restart action.
+Default direct launch schedules no extra event. [Scope and startup runbook](qa/portrait-v2-watchdog/README.md).
 Updated **25 October 2026** against audit baseline `5f09eff`; latest functional
 source `266b2c8` (print/Drive), input correction `ebb53fd`, original operator
 `ea394e8`, earlier P5 source `9433010`. Continue on the existing

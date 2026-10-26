@@ -1,0 +1,1045 @@
+Timeout (0:01:30)!
+Thread 0x00007ff619547740 (most recent call first):
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/core/text/__init__.py", line 762 in _render_real
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/core/text/__init__.py", line 769 in render
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/core/text/__init__.py", line 828 in _texture_fill
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/core/window/__init__.py", line 1676 in on_draw
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/base.py", line 400 in idle
+  File "/workspace/PhotoBooth/tests/test_kiosk_motion_audio.py", line 53 in settle
+  File "/workspace/PhotoBooth/tests/test_kiosk_motion_audio.py", line 71 in tap
+  File "/workspace/PhotoBooth/tests/test_kiosk_motion_audio.py", line 96 in open_audio_settings_from_header
+  File "/workspace/PhotoBooth/tests/test_kiosk_motion_audio.py", line 281 in test_settings_remain_in_the_header_on_all_six_screens
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/case.py", line 589 in _callTestMethod
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/case.py", line 634 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/case.py", line 690 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 122 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 84 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 122 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 84 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 122 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 84 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/runner.py", line 240 in run
+  File "/workspace/PhotoBooth/tools/run_kiosk_unittests.py", line 48 in main
+  File "/workspace/PhotoBooth/work/watchdog-progress-suite.py", line 18 in <module>
+Timeout (0:01:30)!
+Thread 0x00007ff52bfff6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/thread.py", line 90 in _worker
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff619547740 (most recent call first):
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/core/window/__init__.py", line 1676 in on_draw
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/base.py", line 400 in idle
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_operator_widgets.py", line 214 in test_repeated_release_without_new_press_cannot_repeat_probe_or_audio
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/case.py", line 589 in _callTestMethod
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/case.py", line 634 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/case.py", line 690 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 122 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 84 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 122 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 84 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 122 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 84 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/runner.py", line 240 in run
+  File "/workspace/PhotoBooth/tools/run_kiosk_unittests.py", line 48 in main
+  File "/workspace/PhotoBooth/work/watchdog-progress-suite.py", line 18 in <module>
+Timeout (0:01:30)!
+Thread 0x00007ff54cdfa6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1169 in _wait_for_tstate_lock
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1149 in join
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 124 in cleanup
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff56e6ff6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 468 in select
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 1961 in _run_once
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 645 in run_forever
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 678 in run_until_complete
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py", line 118 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2548 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py", line 83 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 538 in run_blocking_portal
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff58aebc6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 355 in wait
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 451 in result
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2780 in run_sync_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 119 in run_sync
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 303 in _spawn_task_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 384 in start_task_soon
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 340 in call
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 344 in handle_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1014 in _send_single_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 979 in _send_handling_redirects
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 942 in _send_handling_auth
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 914 in send
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 825 in request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 445 in request
+  File "/workspace/PhotoBooth/tests/qris_v2_fixture.py", line 25 in request
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 40 in _call
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 66 in create_order
+  File "/workspace/PhotoBooth/photobooth/qris_session.py", line 147 in refresh
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 85 in check
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 82 in begin
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/demo_game.py", line 100 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff52affd6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1169 in _wait_for_tstate_lock
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1149 in join
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 124 in cleanup
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff54d5fb6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 468 in select
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 1961 in _run_once
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 645 in run_forever
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 678 in run_until_complete
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py", line 118 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2548 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py", line 83 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 538 in run_blocking_portal
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff52bfff6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 355 in wait
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 451 in result
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2780 in run_sync_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 119 in run_sync
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 303 in _spawn_task_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 384 in start_task_soon
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 340 in call
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 344 in handle_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1014 in _send_single_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 979 in _send_handling_redirects
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 942 in _send_handling_auth
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 914 in send
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 825 in request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 445 in request
+  File "/workspace/PhotoBooth/tests/qris_v2_fixture.py", line 25 in request
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 40 in _call
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 66 in create_order
+  File "/workspace/PhotoBooth/photobooth/qris_session.py", line 147 in refresh
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 85 in check
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 82 in begin
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/demo_game.py", line 100 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff619547740 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1169 in _wait_for_tstate_lock
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1153 in join
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 132 in wait_closed
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 37 in booth
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py", line 158 in __exit__
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 115 in test_missing_started_ack_blocks_countdown_until_same_transaction_ack
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/case.py", line 589 in _callTestMethod
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/case.py", line 634 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/case.py", line 690 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 122 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 84 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 122 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 84 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 122 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 84 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/runner.py", line 240 in run
+  File "/workspace/PhotoBooth/tools/run_kiosk_unittests.py", line 48 in main
+  File "/workspace/PhotoBooth/work/watchdog-progress-suite.py", line 18 in <module>
+Timeout (0:01:30)!
+Thread 0x00007ff5267f46c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1169 in _wait_for_tstate_lock
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1149 in join
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 124 in cleanup
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff526ff56c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 468 in select
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 1961 in _run_once
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 645 in run_forever
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 678 in run_until_complete
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py", line 118 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2548 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py", line 83 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 538 in run_blocking_portal
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff5277f66c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 355 in wait
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 451 in result
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2780 in run_sync_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 119 in run_sync
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 303 in _spawn_task_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 384 in start_task_soon
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 340 in call
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 344 in handle_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1014 in _send_single_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 979 in _send_handling_redirects
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 942 in _send_handling_auth
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 914 in send
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 825 in request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 445 in request
+  File "/workspace/PhotoBooth/tests/qris_v2_fixture.py", line 25 in request
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 40 in _call
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 66 in create_order
+  File "/workspace/PhotoBooth/photobooth/qris_session.py", line 147 in refresh
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 85 in check
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 82 in begin
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/demo_game.py", line 100 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff527ff76c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1169 in _wait_for_tstate_lock
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1149 in join
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 124 in cleanup
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff5287f86c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 468 in select
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 1961 in _run_once
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 645 in run_forever
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 678 in run_until_complete
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py", line 118 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2548 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py", line 83 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 538 in run_blocking_portal
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff528ff96c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 355 in wait
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 451 in result
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2780 in run_sync_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 119 in run_sync
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 303 in _spawn_task_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 384 in start_task_soon
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 340 in call
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 344 in handle_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1014 in _send_single_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 979 in _send_handling_redirects
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 942 in _send_handling_auth
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 914 in send
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 825 in request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 445 in request
+  File "/workspace/PhotoBooth/tests/qris_v2_fixture.py", line 25 in request
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 40 in _call
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 66 in create_order
+  File "/workspace/PhotoBooth/photobooth/qris_session.py", line 147 in refresh
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 85 in check
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 82 in begin
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/demo_game.py", line 100 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff5297fa6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1169 in _wait_for_tstate_lock
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1149 in join
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 124 in cleanup
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff529ffb6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 468 in select
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 1961 in _run_once
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 645 in run_forever
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 678 in run_until_complete
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py", line 118 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2548 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py", line 83 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 538 in run_blocking_portal
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff52a7fc6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 355 in wait
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 451 in result
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2780 in run_sync_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 119 in run_sync
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 303 in _spawn_task_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 384 in start_task_soon
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 340 in call
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 344 in handle_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1014 in _send_single_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 979 in _send_handling_redirects
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 942 in _send_handling_auth
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 914 in send
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 825 in request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 445 in request
+  File "/workspace/PhotoBooth/tests/qris_v2_fixture.py", line 25 in request
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 40 in _call
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 66 in create_order
+  File "/workspace/PhotoBooth/photobooth/qris_session.py", line 147 in refresh
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 85 in check
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 82 in begin
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/demo_game.py", line 100 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff54cdfa6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1169 in _wait_for_tstate_lock
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1149 in join
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 124 in cleanup
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff56e6ff6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 468 in select
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 1961 in _run_once
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 645 in run_forever
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 678 in run_until_complete
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py", line 118 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2548 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py", line 83 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 538 in run_blocking_portal
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff58aebc6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 355 in wait
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 451 in result
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2780 in run_sync_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 119 in run_sync
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 303 in _spawn_task_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 384 in start_task_soon
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 340 in call
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 344 in handle_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1014 in _send_single_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 979 in _send_handling_redirects
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 942 in _send_handling_auth
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 914 in send
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 825 in request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 445 in request
+  File "/workspace/PhotoBooth/tests/qris_v2_fixture.py", line 25 in request
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 40 in _call
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 66 in create_order
+  File "/workspace/PhotoBooth/photobooth/qris_session.py", line 147 in refresh
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 85 in check
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 82 in begin
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/demo_game.py", line 100 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff52affd6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1169 in _wait_for_tstate_lock
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1149 in join
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 124 in cleanup
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff54d5fb6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 468 in select
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 1961 in _run_once
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 645 in run_forever
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 678 in run_until_complete
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py", line 118 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2548 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py", line 83 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 538 in run_blocking_portal
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff52bfff6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 355 in wait
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 451 in result
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2780 in run_sync_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 119 in run_sync
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 303 in _spawn_task_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 384 in start_task_soon
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 340 in call
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 344 in handle_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1014 in _send_single_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 979 in _send_handling_redirects
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 942 in _send_handling_auth
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 914 in send
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 825 in request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 445 in request
+  File "/workspace/PhotoBooth/tests/qris_v2_fixture.py", line 25 in request
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 40 in _call
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 66 in create_order
+  File "/workspace/PhotoBooth/photobooth/qris_session.py", line 147 in refresh
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 85 in check
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 82 in begin
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/demo_game.py", line 100 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff619547740 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1169 in _wait_for_tstate_lock
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1153 in join
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 132 in wait_closed
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 37 in booth
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py", line 158 in __exit__
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 90 in test_resize_persists_reserved_order_and_abort_requires_recovery
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/case.py", line 589 in _callTestMethod
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/case.py", line 634 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/case.py", line 690 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 122 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 84 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 122 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 84 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 122 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 84 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/runner.py", line 240 in run
+  File "/workspace/PhotoBooth/tools/run_kiosk_unittests.py", line 48 in main
+  File "/workspace/PhotoBooth/work/watchdog-progress-suite.py", line 18 in <module>
+Timeout (0:01:30)!
+Thread 0x00007ff524ff16c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1169 in _wait_for_tstate_lock
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1149 in join
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 124 in cleanup
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff5257f26c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 468 in select
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 1961 in _run_once
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 645 in run_forever
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 678 in run_until_complete
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py", line 118 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2548 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py", line 83 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 538 in run_blocking_portal
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff525ff36c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 355 in wait
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 451 in result
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2780 in run_sync_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 119 in run_sync
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 303 in _spawn_task_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 384 in start_task_soon
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 340 in call
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 344 in handle_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1014 in _send_single_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 979 in _send_handling_redirects
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 942 in _send_handling_auth
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 914 in send
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 825 in request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 445 in request
+  File "/workspace/PhotoBooth/tests/qris_v2_fixture.py", line 25 in request
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 40 in _call
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 66 in create_order
+  File "/workspace/PhotoBooth/photobooth/qris_session.py", line 147 in refresh
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 85 in check
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 82 in begin
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/demo_game.py", line 100 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff5267f46c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1169 in _wait_for_tstate_lock
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1149 in join
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 124 in cleanup
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff526ff56c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 468 in select
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 1961 in _run_once
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 645 in run_forever
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 678 in run_until_complete
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py", line 118 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2548 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py", line 83 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 538 in run_blocking_portal
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff5277f66c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 355 in wait
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 451 in result
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2780 in run_sync_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 119 in run_sync
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 303 in _spawn_task_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 384 in start_task_soon
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 340 in call
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 344 in handle_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1014 in _send_single_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 979 in _send_handling_redirects
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 942 in _send_handling_auth
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 914 in send
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 825 in request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 445 in request
+  File "/workspace/PhotoBooth/tests/qris_v2_fixture.py", line 25 in request
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 40 in _call
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 66 in create_order
+  File "/workspace/PhotoBooth/photobooth/qris_session.py", line 147 in refresh
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 85 in check
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 82 in begin
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/demo_game.py", line 100 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff527ff76c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1169 in _wait_for_tstate_lock
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1149 in join
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 124 in cleanup
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff5287f86c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 468 in select
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 1961 in _run_once
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 645 in run_forever
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 678 in run_until_complete
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py", line 118 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2548 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py", line 83 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 538 in run_blocking_portal
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff528ff96c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 355 in wait
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 451 in result
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2780 in run_sync_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 119 in run_sync
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 303 in _spawn_task_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 384 in start_task_soon
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 340 in call
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 344 in handle_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1014 in _send_single_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 979 in _send_handling_redirects
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 942 in _send_handling_auth
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 914 in send
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 825 in request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 445 in request
+  File "/workspace/PhotoBooth/tests/qris_v2_fixture.py", line 25 in request
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 40 in _call
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 66 in create_order
+  File "/workspace/PhotoBooth/photobooth/qris_session.py", line 147 in refresh
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 85 in check
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 82 in begin
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/demo_game.py", line 100 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff5297fa6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1169 in _wait_for_tstate_lock
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1149 in join
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 124 in cleanup
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff529ffb6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 468 in select
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 1961 in _run_once
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 645 in run_forever
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 678 in run_until_complete
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py", line 118 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2548 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py", line 83 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 538 in run_blocking_portal
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff52a7fc6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 355 in wait
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 451 in result
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2780 in run_sync_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 119 in run_sync
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 303 in _spawn_task_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 384 in start_task_soon
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 340 in call
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 344 in handle_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1014 in _send_single_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 979 in _send_handling_redirects
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 942 in _send_handling_auth
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 914 in send
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 825 in request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 445 in request
+  File "/workspace/PhotoBooth/tests/qris_v2_fixture.py", line 25 in request
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 40 in _call
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 66 in create_order
+  File "/workspace/PhotoBooth/photobooth/qris_session.py", line 147 in refresh
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 85 in check
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 82 in begin
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/demo_game.py", line 100 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff54cdfa6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1169 in _wait_for_tstate_lock
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1149 in join
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 124 in cleanup
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff56e6ff6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 468 in select
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 1961 in _run_once
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 645 in run_forever
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 678 in run_until_complete
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py", line 118 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2548 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py", line 83 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 538 in run_blocking_portal
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff58aebc6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 355 in wait
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 451 in result
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2780 in run_sync_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 119 in run_sync
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 303 in _spawn_task_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 384 in start_task_soon
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 340 in call
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 344 in handle_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1014 in _send_single_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 979 in _send_handling_redirects
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 942 in _send_handling_auth
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 914 in send
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 825 in request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 445 in request
+  File "/workspace/PhotoBooth/tests/qris_v2_fixture.py", line 25 in request
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 40 in _call
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 66 in create_order
+  File "/workspace/PhotoBooth/photobooth/qris_session.py", line 147 in refresh
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 85 in check
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 82 in begin
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/demo_game.py", line 100 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff52affd6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1169 in _wait_for_tstate_lock
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1149 in join
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 124 in cleanup
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff54d5fb6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 468 in select
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 1961 in _run_once
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 645 in run_forever
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 678 in run_until_complete
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py", line 118 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2548 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py", line 83 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 538 in run_blocking_portal
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff52bfff6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 355 in wait
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 451 in result
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2780 in run_sync_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 119 in run_sync
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 303 in _spawn_task_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 384 in start_task_soon
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 340 in call
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 344 in handle_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1014 in _send_single_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 979 in _send_handling_redirects
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 942 in _send_handling_auth
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 914 in send
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 825 in request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 445 in request
+  File "/workspace/PhotoBooth/tests/qris_v2_fixture.py", line 25 in request
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 40 in _call
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 66 in create_order
+  File "/workspace/PhotoBooth/photobooth/qris_session.py", line 147 in refresh
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 85 in check
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 82 in begin
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/demo_game.py", line 100 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff619547740 (most recent call first):
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/PIL/Image.py", line 895 in tobytes
+  File "/workspace/PhotoBooth/photobooth/ui_brand.py", line 48 in picture
+  File "/workspace/PhotoBooth/photobooth/ui_brand.py", line 117 in __init__
+  File "/workspace/PhotoBooth/photobooth/ui_ads.py", line 93 in __init__
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/app.py", line 555 in _build_advert
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/app.py", line 428 in _show
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/app.py", line 147 in build
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 863 in test_shared_advert_photo_buttons_require_tutorial_without_help_action
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/case.py", line 589 in _callTestMethod
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/case.py", line 634 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/case.py", line 690 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 122 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 84 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 122 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 84 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 122 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 84 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/runner.py", line 240 in run
+  File "/workspace/PhotoBooth/tools/run_kiosk_unittests.py", line 48 in main
+  File "/workspace/PhotoBooth/work/watchdog-progress-suite.py", line 18 in <module>
+Timeout (0:01:30)!
+Thread 0x00007ff50ffff6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 468 in select
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 1961 in _run_once
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 645 in run_forever
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 678 in run_until_complete
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py", line 118 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2548 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py", line 83 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 538 in run_blocking_portal
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff524ff16c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1169 in _wait_for_tstate_lock
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1149 in join
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 124 in cleanup
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff5257f26c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 468 in select
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 1961 in _run_once
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 645 in run_forever
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 678 in run_until_complete
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py", line 118 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2548 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py", line 83 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 538 in run_blocking_portal
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff525ff36c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 355 in wait
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 451 in result
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2780 in run_sync_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 119 in run_sync
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 303 in _spawn_task_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 384 in start_task_soon
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 340 in call
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 344 in handle_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1014 in _send_single_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 979 in _send_handling_redirects
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 942 in _send_handling_auth
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 914 in send
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 825 in request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 445 in request
+  File "/workspace/PhotoBooth/tests/qris_v2_fixture.py", line 25 in request
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 40 in _call
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 66 in create_order
+  File "/workspace/PhotoBooth/photobooth/qris_session.py", line 147 in refresh
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 85 in check
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 82 in begin
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/demo_game.py", line 100 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff5267f46c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1169 in _wait_for_tstate_lock
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1149 in join
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 124 in cleanup
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff526ff56c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 468 in select
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 1961 in _run_once
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 645 in run_forever
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 678 in run_until_complete
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py", line 118 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2548 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py", line 83 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 538 in run_blocking_portal
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff5277f66c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 355 in wait
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 451 in result
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2780 in run_sync_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 119 in run_sync
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 303 in _spawn_task_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 384 in start_task_soon
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 340 in call
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 344 in handle_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1014 in _send_single_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 979 in _send_handling_redirects
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 942 in _send_handling_auth
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 914 in send
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 825 in request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 445 in request
+  File "/workspace/PhotoBooth/tests/qris_v2_fixture.py", line 25 in request
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 40 in _call
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 66 in create_order
+  File "/workspace/PhotoBooth/photobooth/qris_session.py", line 147 in refresh
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 85 in check
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 82 in begin
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/demo_game.py", line 100 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff527ff76c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1169 in _wait_for_tstate_lock
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1149 in join
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 124 in cleanup
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff5287f86c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 468 in select
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 1961 in _run_once
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 645 in run_forever
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 678 in run_until_complete
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py", line 118 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2548 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py", line 83 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 538 in run_blocking_portal
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff528ff96c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 355 in wait
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 451 in result
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2780 in run_sync_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 119 in run_sync
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 303 in _spawn_task_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 384 in start_task_soon
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 340 in call
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 344 in handle_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1014 in _send_single_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 979 in _send_handling_redirects
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 942 in _send_handling_auth
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 914 in send
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 825 in request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 445 in request
+  File "/workspace/PhotoBooth/tests/qris_v2_fixture.py", line 25 in request
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 40 in _call
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 66 in create_order
+  File "/workspace/PhotoBooth/photobooth/qris_session.py", line 147 in refresh
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 85 in check
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 82 in begin
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/demo_game.py", line 100 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff5297fa6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1169 in _wait_for_tstate_lock
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1149 in join
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 124 in cleanup
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff529ffb6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 468 in select
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 1961 in _run_once
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 645 in run_forever
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 678 in run_until_complete
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py", line 118 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2548 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py", line 83 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 538 in run_blocking_portal
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff52a7fc6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 355 in wait
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 451 in result
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2780 in run_sync_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 119 in run_sync
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 303 in _spawn_task_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 384 in start_task_soon
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 340 in call
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 344 in handle_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1014 in _send_single_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 979 in _send_handling_redirects
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 942 in _send_handling_auth
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 914 in send
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 825 in request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 445 in request
+  File "/workspace/PhotoBooth/tests/qris_v2_fixture.py", line 25 in request
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 40 in _call
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 66 in create_order
+  File "/workspace/PhotoBooth/photobooth/qris_session.py", line 147 in refresh
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 85 in check
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 82 in begin
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/demo_game.py", line 100 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff54cdfa6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1169 in _wait_for_tstate_lock
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1149 in join
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 124 in cleanup
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff56e6ff6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 468 in select
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 1961 in _run_once
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 645 in run_forever
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 678 in run_until_complete
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py", line 118 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2548 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py", line 83 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 538 in run_blocking_portal
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff58aebc6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 355 in wait
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 451 in result
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2780 in run_sync_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 119 in run_sync
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 303 in _spawn_task_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 384 in start_task_soon
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 340 in call
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 344 in handle_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1014 in _send_single_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 979 in _send_handling_redirects
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 942 in _send_handling_auth
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 914 in send
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 825 in request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 445 in request
+  File "/workspace/PhotoBooth/tests/qris_v2_fixture.py", line 25 in request
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 40 in _call
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 66 in create_order
+  File "/workspace/PhotoBooth/photobooth/qris_session.py", line 147 in refresh
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 85 in check
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 82 in begin
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/demo_game.py", line 100 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff52affd6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1169 in _wait_for_tstate_lock
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1149 in join
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 124 in cleanup
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff54d5fb6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 468 in select
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 1961 in _run_once
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 645 in run_forever
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py", line 678 in run_until_complete
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py", line 118 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2548 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py", line 83 in run
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 538 in run_blocking_portal
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff52bfff6c0 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 355 in wait
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 451 in result
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2780 in run_sync_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 119 in run_sync
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 303 in _spawn_task_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 384 in start_task_soon
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 340 in call
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 344 in handle_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1014 in _send_single_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 979 in _send_handling_redirects
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 942 in _send_handling_auth
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 914 in send
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 825 in request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 445 in request
+  File "/workspace/PhotoBooth/tests/qris_v2_fixture.py", line 25 in request
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 40 in _call
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 66 in create_order
+  File "/workspace/PhotoBooth/photobooth/qris_session.py", line 147 in refresh
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 85 in check
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 82 in begin
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/demo_game.py", line 100 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007ff619547740 (most recent call first):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 355 in wait
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 451 in result
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2780 in run_sync_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 119 in run_sync
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 303 in _spawn_task_from_thread
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 384 in start_task_soon
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/anyio/from_thread.py", line 340 in call
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 344 in handle_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1014 in _send_single_request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 979 in _send_handling_redirects
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 942 in _send_handling_auth
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 914 in send
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 825 in request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 445 in request
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1144 in post
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/starlette/testclient.py", line 546 in post
+  File "/workspace/PhotoBooth/tests/test_qris_api.py", line 37 in test_authenticated_order
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/case.py", line 589 in _callTestMethod
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/case.py", line 634 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/case.py", line 690 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 122 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 84 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 122 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 84 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 122 in run
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/suite.py", line 84 in __call__
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/runner.py", line 240 in run
+  File "/workspace/PhotoBooth/tools/run_kiosk_unittests.py", line 48 in main
+  File "/workspace/PhotoBooth/work/watchdog-progress-suite.py", line 18 in <module>

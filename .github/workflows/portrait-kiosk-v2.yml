@@ -34,7 +34,10 @@ jobs:
           node --check < apps_script/Code.gs
           node --test tests/test_apps_script_retention.cjs
       - name: Kivy-independent navigation and fake audio tests
+        # Watchdog fixtures never launch a camera, payment service or printer.
         run: python -m unittest tests.test_kiosk_v2_flow tests.test_kiosk_v2_audio tests.test_kiosk_v2_design_tokens tests.test_kiosk_v2_previews tests.test_kiosk_v2_live_preview tests.test_kiosk_v2_sensors tests.test_kiosk_v2_diagnostics tests.test_kiosk_v2_readiness tests.test_kiosk_v2_devices tests.test_kiosk_v2_game_engine tests.test_kiosk_v2_demo_game tests.test_kiosk_v2_mock_checkout tests.test_kiosk_v2_game_offer tests.test_kiosk_v2_meong_reference.ReferenceSourceTests tests.test_kiosk_v2_health_reference tests.test_kiosk_v2_delivery_options -v
+      - name: Observation-only supervisor and startup safety
+        run: python -m unittest tests.test_kiosk_v2_watchdog -v
 
   desktop:
     name: Synthetic Kivy screen/nav smoke (no hardware)

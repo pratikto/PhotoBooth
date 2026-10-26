@@ -51,9 +51,16 @@ def main(argv=()):
         logging.getLogger('photobooth.kiosk_v2').info('Window startup')
         print("MEONG v2 P4 DEMO - no production payment, scanner or actual discount", flush=True)
         app = PortraitKioskV2App()
+        heartbeat = None
+        if os.environ.get('MEONG_WATCHDOG_HEARTBEAT'):
+            from kivy.clock import Clock
+            from photobooth.kiosk_v2.watchdog import attach_heartbeat
+            heartbeat = attach_heartbeat(app, Clock)
         try:
             app.run()
         finally:
+            if heartbeat is not None:
+                heartbeat.close()
             if getattr(app, 'camera_device', None):
                 app.camera_device.close()
                 app.camera_device.wait_closed()

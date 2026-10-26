@@ -1,0 +1,31 @@
+{
+  "base_commit": "5639400b45fa833de292884031de0ef366db8e76",
+  "working_tree": true,
+  "focused": {
+    "run": 22,
+    "failures": 0,
+    "errors": 0
+  },
+  "without_site_packages": {
+    "run": 15,
+    "failures": 0,
+    "errors": 0
+  },
+  "native_launcher_lifecycle": "PASS",
+  "full_suite": {
+    "status": "NOT_VERIFIED",
+    "attempts": 2,
+    "first": "terminated after >10 min without completed report",
+    "second": "terminated while blocked in test_qris_api.QRISApiTests.test_authenticated_order",
+    "test_cases_started": 715
+  },
+  "isolated_sandbox": {
+    "run": 6,
+    "failures": 6,
+    "errors": 0,
+    "seconds": 230.953,
+    "reason": "Worker did not settle"
+  },
+  "remote": "NOT_PUSHED_PROXY_UNREACHABLE",
+  "windows_acceptance": "NOT_RUN"
+}

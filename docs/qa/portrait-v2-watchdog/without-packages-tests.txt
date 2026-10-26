@@ -1,0 +1,21 @@
+test_actual_child_exit_and_crash_are_observed_without_relaunch (tests.test_kiosk_v2_watchdog.WatchdogTests.test_actual_child_exit_and_crash_are_observed_without_relaunch) ... ok
+test_ctrl_c_and_disk_failure_do_not_terminate_an_uncertain_visit (tests.test_kiosk_v2_watchdog.WatchdogTests.test_ctrl_c_and_disk_failure_do_not_terminate_an_uncertain_visit) ... ok
+test_exit_is_authoritative_even_after_stopping_heartbeat (tests.test_kiosk_v2_watchdog.WatchdogTests.test_exit_is_authoritative_even_after_stopping_heartbeat) ... ok
+test_frozen_event_loop_detected_and_recovers_only_on_new_pulse (tests.test_kiosk_v2_watchdog.WatchdogTests.test_frozen_event_loop_detected_and_recovers_only_on_new_pulse) ... ok
+test_invalid_timeout_rejected (tests.test_kiosk_v2_watchdog.WatchdogTests.test_invalid_timeout_rejected) ... ok
+test_launcher_heartbeat_is_closed_even_when_app_run_raises (tests.test_kiosk_v2_watchdog.WatchdogTests.test_launcher_heartbeat_is_closed_even_when_app_run_raises) ... ok
+test_launcher_help_does_not_import_kivy_or_open_a_device (tests.test_kiosk_v2_watchdog.WatchdogTests.test_launcher_help_does_not_import_kivy_or_open_a_device) ... ok
+test_malformed_foreign_replayed_and_stale_messages_do_not_refresh (tests.test_kiosk_v2_watchdog.WatchdogTests.test_malformed_foreign_replayed_and_stale_messages_do_not_refresh) ... ok
+test_startup_has_own_grace_even_with_starting_pulses (tests.test_kiosk_v2_watchdog.WatchdogTests.test_startup_has_own_grace_even_with_starting_pulses) ... ok
+test_startup_script_is_reviewable_and_has_no_restart_loop_or_secret_dump (tests.test_kiosk_v2_watchdog.WatchdogTests.test_startup_script_is_reviewable_and_has_no_restart_loop_or_secret_dump) ... ok
+test_supervision_records_hang_recovery_and_exit_without_process_mutations (tests.test_kiosk_v2_watchdog.WatchdogTests.test_supervision_records_hang_recovery_and_exit_without_process_mutations) ... ok
+test_suspension_is_visible_but_does_not_mask_a_later_hang (tests.test_kiosk_v2_watchdog.WatchdogTests.test_suspension_is_visible_but_does_not_mask_a_later_hang) ... ok
+test_ui_hook_has_no_business_actions_and_cancels_its_clock (tests.test_kiosk_v2_watchdog.WatchdogTests.test_ui_hook_has_no_business_actions_and_cancels_its_clock) ... ok
+test_unwritable_heartbeat_does_not_interrupt_application (tests.test_kiosk_v2_watchdog.WatchdogTests.test_unwritable_heartbeat_does_not_interrupt_application) ... Watchdog heartbeat unavailable
+ok
+test_writer_is_redacted_and_uses_atomic_replacement (tests.test_kiosk_v2_watchdog.WatchdogTests.test_writer_is_redacted_and_uses_atomic_replacement) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.140s
+
+OK

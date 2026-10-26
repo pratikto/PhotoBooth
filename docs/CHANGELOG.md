@@ -1,9 +1,16 @@
 # Meong Photobooth — changelog
 
+## 27 October 2026 — FEAT-009 stage 1 (local, uncommitted)
+
+Add `kiosk_v2/watchdog.py`, `tools/run_portrait_v2_watchdog.py`, optional ordinary
+launcher heartbeat hook and focused CI/tests. Separate-process observation detects
+missed main-thread ticks/startup timeout/crash without terminating or restarting
+fulfillment. Windows-only cmd generation is explicit and never installs/overwrites.
+Base `5639400`; remote refresh unavailable. [Runbook/evidence](qa/portrait-v2-watchdog/README.md).
+
 ## Drive photo layout / private QR correction (26 October 2026)
 
 Corrected source to PB001/Photo/00000001/{raw,bw,color}, session-prefixed files, verified READY/bind sharing, safe empty-reserve recovery preserving folder IDs, durable setup feedback, and numbered retention scope. Added backend/Python regressions; no live Google change.
-
 
 ## 2026-10-26 — Consolidated outstanding acceptance checklist
 

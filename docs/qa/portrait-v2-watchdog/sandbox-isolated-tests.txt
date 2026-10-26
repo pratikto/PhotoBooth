@@ -1,0 +1,103 @@
+test_lost_creation_reply_cannot_leave_or_create_second_charge (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_lost_creation_reply_cannot_leave_or_create_second_charge) ... FAIL
+test_missing_started_ack_blocks_countdown_until_same_transaction_ack (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_missing_started_ack_blocks_countdown_until_same_transaction_ack) ... FAIL
+test_operator_health_in_recovery_never_changes_order_or_replays_service (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_operator_health_in_recovery_never_changes_order_or_replays_service) ... FAIL
+test_real_photo_handoff_completion_and_duplicate_taps (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_real_photo_handoff_completion_and_duplicate_taps) ... FAIL
+test_resize_persists_reserved_order_and_abort_requires_recovery (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_resize_persists_reserved_order_and_abort_requires_recovery) ... FAIL
+test_unpaid_guard_and_explicit_quote_then_authoritative_cancel (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_unpaid_guard_and_explicit_quote_then_authoritative_cancel) ... FAIL
+
+======================================================================
+FAIL: test_lost_creation_reply_cannot_leave_or_create_second_charge (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_lost_creation_reply_cannot_leave_or_create_second_charge)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 106, in test_lost_creation_reply_cannot_leave_or_create_second_charge
+    self.pending(app)
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 50, in pending
+    self.quote(app);app._sandbox_begin();self.settle(app)
+                                         ^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 46, in settle
+    self.fail('Worker did not settle')
+AssertionError: Worker did not settle
+
+======================================================================
+FAIL: test_missing_started_ack_blocks_countdown_until_same_transaction_ack (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_missing_started_ack_blocks_countdown_until_same_transaction_ack)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 116, in test_missing_started_ack_blocks_countdown_until_same_transaction_ack
+    self.reserve(app,f);app._sandbox_photo_consent();self.settle(app)
+    ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 52, in reserve
+    self.pending(app);fixture.paid();app._sandbox_retry();self.settle(app)
+    ^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 50, in pending
+    self.quote(app);app._sandbox_begin();self.settle(app)
+                                         ^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 46, in settle
+    self.fail('Worker did not settle')
+AssertionError: Worker did not settle
+
+======================================================================
+FAIL: test_operator_health_in_recovery_never_changes_order_or_replays_service (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_operator_health_in_recovery_never_changes_order_or_replays_service)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 132, in test_operator_health_in_recovery_never_changes_order_or_replays_service
+    self.reserve(app,f);app._sandbox_photo_consent();self.settle(app)
+    ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 52, in reserve
+    self.pending(app);fixture.paid();app._sandbox_retry();self.settle(app)
+    ^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 50, in pending
+    self.quote(app);app._sandbox_begin();self.settle(app)
+                                         ^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 46, in settle
+    self.fail('Worker did not settle')
+AssertionError: Worker did not settle
+
+======================================================================
+FAIL: test_real_photo_handoff_completion_and_duplicate_taps (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_real_photo_handoff_completion_and_duplicate_taps)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 71, in test_real_photo_handoff_completion_and_duplicate_taps
+    self.reserve(app,f)
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 52, in reserve
+    self.pending(app);fixture.paid();app._sandbox_retry();self.settle(app)
+    ^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 50, in pending
+    self.quote(app);app._sandbox_begin();self.settle(app)
+                                         ^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 46, in settle
+    self.fail('Worker did not settle')
+AssertionError: Worker did not settle
+
+======================================================================
+FAIL: test_resize_persists_reserved_order_and_abort_requires_recovery (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_resize_persists_reserved_order_and_abort_requires_recovery)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 91, in test_resize_persists_reserved_order_and_abort_requires_recovery
+    self.reserve(app,f);before=f.flow.snapshot()['checkout_key'];size=Window.size
+    ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 52, in reserve
+    self.pending(app);fixture.paid();app._sandbox_retry();self.settle(app)
+    ^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 50, in pending
+    self.quote(app);app._sandbox_begin();self.settle(app)
+                                         ^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 46, in settle
+    self.fail('Worker did not settle')
+AssertionError: Worker did not settle
+
+======================================================================
+FAIL: test_unpaid_guard_and_explicit_quote_then_authoritative_cancel (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_unpaid_guard_and_explicit_quote_then_authoritative_cancel)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 59, in test_unpaid_guard_and_explicit_quote_then_authoritative_cancel
+    app._sandbox_begin();self.settle(app)
+                         ^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 46, in settle
+    self.fail('Worker did not settle')
+AssertionError: Worker did not settle
+
+----------------------------------------------------------------------
+Ran 6 tests in 230.953s
+
+FAILED (failures=6)
+KIOSK_UNITTEST_SUMMARY: run=6 failures=6 errors=0 skipped=0 success=False

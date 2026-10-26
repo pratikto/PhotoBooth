@@ -1,5 +1,12 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+**27 October continuation:** owner requests next development with manual tests
+later. FEAT-009 stage 1 is implemented locally: observation-only external
+watchdog and reviewable Windows startup cmd. Next FEAT-009 stage is recovery
+policy with durable payment/uncertain-print guards; automatic restart is not
+enabled by liveness monitoring. Existing merchant/Drive/hardware evidence remains
+pending. [Runbook and current limits](qa/portrait-v2-watchdog/README.md).
+
 Updated **26 October 2026**. Continue on `feature/portrait-kiosk-v2-next`.
 P3 photo, original game reuse, MOCK/Sandbox and P5 tooling already exist; do not
 reimplement them. The read-only Device Health/report increment is now complete
@@ -70,7 +77,7 @@ fresh source/readiness review and relevant owner instruction before code work.
 | FEAT-006 themes | Proposed configurable shared-codebase themes | Final admin/preset policy and approval pending |
 | FEAT-007 transaction recovery | Some durable Sandbox admission already implemented; broader operational paid fulfillment remains future scope | No replay on restart; paid reprint/refund/production recovery not implied |
 | FEAT-008 Device Health | Read-only panel/report integrated; active selection/staging/switching not mounted | Reuse `feature/device-health` / `dbbe055`; actual device acceptance separate |
-| FEAT-009 watchdog/autostart | Candidate | Preserve pending/started/uncertain state; never automatic capture/charge/print replay |
+| FEAT-009 watchdog/autostart | Stage 1 in local source: external observation and Windows startup generator; acceptance pending | Recovery/restart policy remains future scope; preserve pending/started/uncertain state and never replay capture/charge/print |
 | FEAT-010 device identity/config | Candidate | Authenticated per-machine config; tenant separation and offline behavior |
 | FEAT-011 dithering | Existing lab/printer baseline present; newer branch lab separate | Refresh `feature/dither-tuning` (audit `e89e6ee`) before reuse; Auto Tune/enhancement is not automatically the kiosk preset |
 | FEAT-012 diagnostics | Existing local diagnostics/readiness and safe health reports present; broader support scope candidate | Data minimization and explicit upload/remote-support policy |

@@ -1,9 +1,15 @@
 # Meong Photobooth — current feature status
 
+**27 October local increment:** FEAT-009 stage 1 is IN SOURCE / PARTIAL:
+optional external heartbeat observer and Windows startup generator. Automatic
+restart/recovery and startup installation remain unimplemented. Device acceptance
+is deferred by owner; no remote-source CI claim. [Current scope/evidence](qa/portrait-v2-watchdog/README.md).
+Focused checks and native launcher lifecycle pass; complete regression remains
+NOT VERIFIED because API/Sandbox fixtures stall (isolated Sandbox: six failures).
+
 ## Drive layout and QR source correction (26 October 2026)
 
 Numbered Photo folders, flat raw/bw/color uploads and verified link-sharing acknowledgements are implemented in the repair source. Actual installed deployment, cloud upload and signed-out phone scan remain pending.
-
 
 Updated **26 October 2026** after documentation baseline `f36ebad` on
 `feature/portrait-kiosk-v2-next`. Latest functional source **53e7b4c** is the coordinated [storage integration](qa/feat-004-storage/README.md), after mirrored v2 **fc26e3d**, following BUG-009 diagnosis `887ba39`, tutorial entry `20453fe` and print/Drive `266b2c8`.

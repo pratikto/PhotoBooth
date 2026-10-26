@@ -1,9 +1,20 @@
 # Meong Photobooth — test evidence and acceptance
 
+## FEAT-009 stage 1 — 27 October 2026 local continuation
+
+New-source validation and pending Windows/startup checks are tracked in the
+[watchdog runbook](qa/portrait-v2-watchdog/README.md). Baseline `5639400`, working
+tree changes; existing dated CI below does not cover this increment. User defers
+manual device testing. Hardware/provider/cloud/startup sign-in checks NOT_RUN.
+New-source checks: 22 focused PASS, 15 package-free PASS, native launcher
+pause/resume/exit PASS; twelve synthetic render hashes/dimensions verified.
+Full regression NOT VERIFIED: two terminated attempts, latest blocked in existing
+API TestClient after 715 case starts. Separate unchanged Sandbox widget fixtures:
+6 tests / 6 FAIL (`Worker did not settle`). Raw reports/stacks are in the runbook.
+
 ## Drive layout repair acceptance (26 October 2026)
 
 Verify PB001/Photo/eight-digit-number/{raw,bw,color}, actual bytes and signed-out QR access after updating both Python and the existing Web App deployment. Automatic fixture passes do not close live delivery or BUG-009. See qa/drive-photo-layout/README.md.
-
 
 Updated **26 October 2026** for `feature/portrait-kiosk-v2-next`.
 Recorded execution evidence remains tied to its tested source. BUG-018 final

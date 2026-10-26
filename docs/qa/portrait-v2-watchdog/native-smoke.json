@@ -1,0 +1,20 @@
+{
+  "exit_code": 0,
+  "states": [
+    "MEONG watchdog: STARTING",
+    "MEONG watchdog: RUNNING",
+    "MEONG watchdog: SUSPENDED",
+    "MEONG watchdog: RUNNING",
+    "MEONG watchdog: EXITED"
+  ],
+  "report": {
+    "schema_version": 1,
+    "run_id": "native-smoke",
+    "pid": 1205,
+    "status": "EXITED",
+    "phase": "stopping",
+    "exit_code": 0,
+    "operator_attention": false,
+    "automatic_restart": false
+  }
+}
