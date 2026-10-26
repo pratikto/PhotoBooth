@@ -39,6 +39,11 @@ upload and QR deferred until online; this requires explicit deferred-binding
 state, not silently uploading previously local-only visits. Asset-priority
 recommendations are labelled separately.
 
+The owner explicitly links this target to **FEAT-004 ads + BUG-009**. Treat
+foldering, global/local caches and photo-retention integration as coordinated
+work. Preserve separate source/device/cloud evidence and keep BUG-009 OPEN
+until its real deletion gate is verified; do not call the linkage implemented.
+
 **Owner BUG-009 continuation, 26 October:** resume bounded photo-retention
 remediation; setup and redeployment have not been confirmed. This supersedes
 the earlier deferral for this bug, without starting FEAT-004 advertising sync.

@@ -7,6 +7,14 @@ still `master`; `main.py` launches v1. Do not restart the project or P3/P4 work.
 
 ## Latest completed increment
 
+**Latest owner instruction — FEAT-004 + BUG-009 implementation:** implement the
+application and Code.gs against the audited new structure, beyond documentation.
+Proceed in tested/pushed stages, tracking actual progress in the
+[implementation package](qa/feat-004-storage/README.md). Local storage/session/
+native-raster foundation has 70 focused PASS; new native/backend/content wiring
+follows. Do not stop at the audit or wait solely for laptop tests. No archive
+access, branch change, production activation or live cloud deployment is inferred.
+
 **26 October foldering audit:** owner asks to check current organization against
 per-booth/25-reserve/Photo/NN/raw-color-bw/global-cache requirements and excludes
 all contents of `old` from inspection/change. Owner selects continued local
@@ -16,6 +24,12 @@ runtime/cloud cutover. Existing source fixtures: 38 tests PASS plus controlled
 two-session/three-copy/retake, native raster and pool checks. Current runtime
 still has target 2 and old active paths; real Drive was not accessible. Do not
 infer new-layout implementation or scan/migrate the archive from this audit.
+
+Owner then clarifies that this target belongs to **FEAT-004 ads + BUG-009**.
+Keep storage roots/reserves/session paths, shared content caches and retention
+in one coordinated implementation sequence; content-sync success and actual
+photo-deletion acceptance remain distinct. The earlier retention-only source
+scope describes what was delivered then, not an exclusion of this new linkage.
 
 **26 October mirrored outputs:** owner explicitly chooses mirrored review,
 result/printed/digital strips. Source 977d26b extends the v1 compositor via a

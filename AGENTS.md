@@ -10,6 +10,19 @@ roots, 25 READY transactions, Photo/NN/raw/color/bw and global/local asset cache
 That document distinguishes the requested target from the current runtime;
 the audit did not implement or perform a path/cloud cutover.
 
+Owner clarification: that requested layout/global-local offline cache belongs
+to **FEAT-004 ads + BUG-009** as one coordinated workstream. Align booth roots,
+25-slot reserves, Photo/NN/raw-color-bw, content sync and retention before a
+cutover; keep asset-sync and actual photo-deletion evidence distinct. Earlier
+retention-only increments did not implement sync. This scope linkage is
+documentation, not a completed source implementation or cloud deployment.
+
+The owner then explicitly requests implementation in the application and
+Code.gs, not only documentation. Proceed through the coordinated contract on
+the same branch, with tested staged pushes. Track delivered source in
+docs/qa/feat-004-storage/README.md. Keep archive exclusion, v1/Sandbox isolation,
+no print/charge replay and no automatic live Google deployment/deletion.
+
 ## Reuse existing working features first
 
 Owner instruction, 2026-10-24: **Do not reinvent the wheel or waste GitHub

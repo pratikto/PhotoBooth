@@ -1,10 +1,28 @@
-# Photobooth storage and shared-content layout
+# FEAT-004 ads + BUG-009 — booth storage and shared content
 
 Owner-requested target, **26 October 2026 (Asia/Jakarta)**. Audited source:
 `19e3f4d4f0b4148b5daba6d25f6b5fe0387a4802` on
 `feature/portrait-kiosk-v2-next`; functional mirror source remains `fc26e3d`.
 
-**Status: audit and target contract, not implemented storage/synchronization.**
+**Status: implementation in progress after the owner explicitly requested application and Code.gs changes.**
+The initial audit remains available; [staged implementation evidence](qa/feat-004-storage/README.md)
+records what is actually delivered versus not yet wired/deployed.
+
+Owner clarification: this foldering/offline-cache request belongs to the
+coordinated **FEAT-004 ads + BUG-009** workstream. The per-booth layout, 25-slot
+reserve, `Photo/NN/raw,color,bw`, asset sync and retention are shared integration
+work, not unrelated new features. Earlier retention-only source repairs did not
+implement asset sync; this linkage does not retrospectively claim they did.
+
+| Responsibility | Scope in this workstream | Acceptance |
+| --- | --- | --- |
+| FEAT-004 ads/content | Root global ads/templates, booth-specific assets, complete verified local caches and offline playback/catalog snapshots | Every booth uses cached content offline; invalid/partial updates retain the last working version |
+| BUG-009 photo retention | Registration, owning-account hourly cleanup and 15-day local/30-day Drive deadlines over the new photo paths | Actual authorized synthetic expiry/deletion evidence; source tests/READY alone do not close the bug |
+| Shared storage/backend | Booth parents, 25 READY directories, session/raw/color/bw paths, counters, deferred upload/QR and existing Apps Script protocol | No ID reuse, cross-booth mix, duplicate print, expired-photo revival or deletion of assets/READY slots/`old` |
+
+Implement and review these together before switching an operational root or
+deployment. Keep evidence separate: successful content sync does not certify
+photo deletion, and successful retention setup does not certify asset sync.
 The actual Google Drive account was not accessible/configured in this workspace.
 Source inspection and isolated fixtures describe code behavior, not the installed
 Drive tree. No folders in an account were created, moved, deleted or synchronized.

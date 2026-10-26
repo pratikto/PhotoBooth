@@ -456,22 +456,8 @@ class ThermalPrinter:
                 break
         return tuple(results)
 
-    def _build_payload(
-        self,
-        image_path: Path,
-        *,
-        dither_mode: str | None = None,
-        header_label: str | None = None,
-    ) -> bytes:
-        """Render one image as a native-width, one-bit ESC/POS raster."""
-        try:
-            from escpos.printer import Dummy
-        except ImportError as error:
-            raise RuntimeError(
-                "python-escpos belum terpasang. Jalankan "
-                "python -m pip install -r requirements.txt."
-            ) from error
-
+    def render_image(self, image_path, *, dither_mode=None, header_label=None):
+        """Reuse the calibrated production render, without opening a transport."""
         from PIL import Image
 
         with Image.open(image_path) as source:
@@ -534,14 +520,36 @@ class ThermalPrinter:
         if header_label:
             thermal_bitmap = _add_binary_header(thermal_bitmap, header_label)
 
-        # The J-82ULW supports 58 mm and 80 mm thermal rolls. Its 80 mm print
-        # width is commonly 576 dots (about 72 mm printable area); retain the
-        # 640 px master ratio while fitting the print head. The bitmap is
-        # already one bit so python-escpos does not choose a second halftone.
+        return thermal_bitmap
+
+    @staticmethod
+    def raster_payload(thermal_bitmap):
+        """Encode already-dithered pixels, without resizing/tuning a second time."""
+        if thermal_bitmap.mode != '1':
+            raise ValueError('Prepared printer raster must be one bit.')
+        try:
+            from escpos.printer import Dummy
+        except ImportError as error:
+            raise RuntimeError('python-escpos is required to encode a print raster.') from error
         job = Dummy()
         job.image(thermal_bitmap, impl="bitImageRaster", fragment_height=960)
         job.cut()
         return job.output
+
+    def print_raster(self, image_path, *, copies=1):
+        """Send saved BW bytes through the original batching/routes/uncertainty rules."""
+        from PIL import Image
+        with Image.open(image_path) as raster:
+            if raster.mode != '1' or raster.width > self.config.print_width_dots:
+                raise ValueError('Saved BW raster does not match the printer profile.')
+            payload = self.raster_payload(raster)
+        sender = ThermalPrinter(self.config, payload_builder=lambda _path: payload,
+                                network_sender=self._network_sender, usb_sender=self._usb_sender)
+        return sender.print_image(image_path, copies=copies)
+
+    def _build_payload(self, image_path, *, dither_mode=None, header_label=None):
+        return self.raster_payload(self.render_image(image_path, dither_mode=dither_mode,
+                                                     header_label=header_label))
 
     def _send_network(self, host: str, port: int, payload: bytes) -> None:
         """Write raw ESC/POS bytes to a configured printer TCP endpoint."""

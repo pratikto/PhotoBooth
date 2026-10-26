@@ -20,12 +20,20 @@ Audit/specification is complete; implementation/cutover is not performed.
 Coordinate paths, counters/pool, raster persistence, upload, retention and asset
 snapshots before switching storage. Entire `old` contents remain excluded.
 
+Owner clarification: this is **FEAT-004 ads + BUG-009**, one coordinated
+storage/content/retention workstream. Share booth-root/backend/path integration
+while verifying asset sync and real photo deletion independently. The older
+retention-only increment below did not include sync; it is not a reason to
+treat the newly linked foldering target as unrelated work.
+
 **BUG-009 resumed by owner, 26 October:** source 130aae1/887ba39 repairs actual
 CLOCK activation and adds read-only existing-config diagnosis/Submit form, reusing
 v1 cleanup. Full 807 Python PASS/zero skips and 19 Code.gs VM PASS; cloud project
 setup/deployment and actual synthetic deletion are unverified. The owner says
 setup is not confirmed. Use the [activation guide](qa/bug-009-retention/README.md);
-keep BUG-009 OPEN. This continuation excludes FEAT-004 ad sync and watchdog.
+keep BUG-009 OPEN. That delivered retention-only increment did not include
+FEAT-004 sync; the later foldering target is now owner-linked to FEAT-004 +
+BUG-009 as described above. Watchdog remains separate.
 
 **Owner-selected increment delivered, 25 October:** v2 automatic print and
 background Drive at 266b2c8, reusing v1; 800 full PASS and matching three-job CI
@@ -57,7 +65,7 @@ fresh source/readiness review and relevant owner instruction before code work.
 | FEAT-001 pricing/copies | Implemented: Rp5,000/design + Rp5,000/copy, one three-photo session/design | Quantity zero deselects; mixed A×2+B×1 = Rp25,000/two sessions; digital-only and commercial maximum policy remain undecided |
 | FEAT-002A/B merchant receipt promotion | Separate design: receipt scan at checkout; example Rp50,000 food purchase waives one Rp5,000 base fee | Existing POS receipt first; scan is not purchase proof. Partner/API, one-use eligibility, offline/stacking and reimbursement terms unresolved; not the game discount |
 | FEAT-003 mirror | V2 live/review and photo areas of result/printed/digital strip mirror; v1 defaults unchanged | Full-resolution original JPEGs and detector inputs stay original; template/text/QR stay normal |
-| FEAT-004 global/local content + storage target | Owner-requested per-booth/global ads/templates/offline-cache contract audited; implementation pending | Reuse existing services, versioned packs and atomic local snapshots; photo/ad separation and retention must match new paths; never inspect/change `old` |
+| FEAT-004 ads + BUG-009 storage/global content | Owner-linked per-booth/global ads/templates/offline-cache/retention contract audited; coordinated implementation pending | Reuse existing services, versioned packs and atomic local snapshots; photo/ad separation and retention must match new paths; never inspect/change `old` |
 | FEAT-005A/B ordering | Small standalone DEMO proposal; real merchant supplies compatible customer-facing ordering | Same-kiosk DEMO order-to-photo offer needs no receipt scan; retain external-receipt path. Do not build a full production POS by default |
 | FEAT-006 themes | Proposed configurable shared-codebase themes | Final admin/preset policy and approval pending |
 | FEAT-007 transaction recovery | Some durable Sandbox admission already implemented; broader operational paid fulfillment remains future scope | No replay on restart; paid reprint/refund/production recovery not implied |

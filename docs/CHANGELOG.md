@@ -1,5 +1,14 @@
 # Meong Photobooth — changelog
 
+## 2026-10-26 — Link storage target to FEAT-004 ads + BUG-009
+
+Owner clarifies the foldering/global-local offline-cache target belongs to this
+existing coordinated workstream. Map shared booth-root/pool/path/backend work,
+FEAT-004 content sync and BUG-009 retention; preserve separate acceptance for
+cached assets versus actual photo deletion. Qualify older retention-only scope
+statements as delivered history. Documentation only, no application/archive/
+cloud change or redundant Actions run.
+
 ## 2026-10-26 — Per-booth storage/global-content source audit
 
 Record the owner's requested Photobooth/PB00X roots, 25 empty reserves,

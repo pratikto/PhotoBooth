@@ -44,12 +44,14 @@ class TransactionStore:
         photos_root: Path,
         state_path: Path,
         booth_id: str = "PB001",
+        *, layout_version: int = 1,
     ) -> None:
         # Keep storage paths and the booth prefix together, and reject unsafe IDs before they are
         # used to build transaction folder names. The counter is read when an ID is reserved.
         self.photos_root = Path(photos_root)
         self.state_path = Path(state_path)
         self.booth_id = booth_id
+        self.layout_version = layout_version
         if not re.fullmatch(r"[A-Za-z0-9]+", self.booth_id):
             raise ValueError("Booth ID may contain letters and numbers only.")
 
@@ -139,7 +141,7 @@ class TransactionStore:
         created_at = datetime.now(timezone.utc).isoformat()
         policy = retention_metadata(transaction_id, created_at)
         manifest: dict[str, Any] = {
-            "schema_version": 1,
+            "schema_version": self.layout_version,
             "transaction_id": transaction_id,
             "booth_id": self.booth_id,
             "created_at": created_at,
@@ -172,8 +174,40 @@ class TransactionStore:
             manifest_path=manifest_path,
             manifest=manifest,
         )
+        if self.layout_version == 2:
+            manifest['storage_layout'] = 2
         self._write_manifest(transaction)
+        if self.layout_version == 2:
+            for plan in plans:
+                for kind in ('raw', 'color', 'bw'):
+                    self.session_path(transaction, plan, kind).mkdir(parents=True, exist_ok=True)
         return transaction
+
+    def session_path(self, transaction, plan, kind):
+        if kind not in {'raw', 'color', 'bw'}:
+            raise ValueError('Unknown session artifact kind.')
+        if self.layout_version == 2:
+            from photobooth.booth_storage import checked_path
+            return checked_path(transaction.folder_path / 'Photo' / f'{plan.order_number:02d}' / kind)
+        return transaction.folder_path / ('raw' if kind == 'raw' else 'output') / plan.session_id
+
+    def output_path(self, transaction, plan):
+        if self.layout_version == 2:
+            return self.session_path(transaction, plan, 'color') / 'strip.png'
+        return transaction.folder_path / 'output' / f'{plan.session_id}.png'
+
+    def record_artifact(self, transaction, session_id, path, *, kind):
+        if kind != 'bw' or not Path(path).is_file():
+            raise ValueError('A saved BW raster is required.')
+        relative = self._relative_path(transaction, path)
+        self._session_record(transaction, session_id)['bw_path'] = relative
+        transaction.manifest['upload_files'][relative] = {
+            'path': relative, 'content_version': uuid4().hex,
+            'status': 'PENDING_UPLOAD' if transaction.manifest.get('drive_folder_id') or transaction.manifest.get('drive_intent') else 'LOCAL_ONLY',
+            'size_bytes': Path(path).stat().st_size, 'drive_file_id': None,
+            'md5_checksum': None, 'upload_session_url': None,
+        }
+        self._write_manifest(transaction)
 
     @contextmanager
     def photo_write_lock(self, transaction: LocalTransaction):
@@ -217,7 +251,8 @@ class TransactionStore:
         if role not in {"capture", "retake"}:
             raise ValueError("Photo role must be capture or retake.")
 
-        relative_path = Path("raw") / session.session_id / filename
+        relative_path = (Path('Photo') / f'{session.order_number:02d}' / 'raw' / filename
+                         if self.layout_version == 2 else Path("raw") / session.session_id / filename)
         photo_path = transaction.folder_path / relative_path
         photo_path.parent.mkdir(parents=True, exist_ok=True)
         temporary_path = photo_path.with_name(f".{photo_path.stem}.tmp.jpg")

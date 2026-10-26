@@ -136,6 +136,8 @@ def purge_local_photos(photos_root, *, now=None):
     if not root.is_dir() or _is_link(root):
         return report
     for folder in root.iterdir():
+        if folder.name.casefold() == 'old':
+            continue
         if _is_link(folder) or not folder.is_dir() or not TRANSACTION_ID.fullmatch(folder.name):
             continue
         path = folder / 'manifest.json'
@@ -146,11 +148,12 @@ def purge_local_photos(photos_root, *, now=None):
                 manifest = json.loads(path.read_text(encoding='utf-8'))
                 if manifest.get('transaction_id') != folder.name or not local_photos_expired(manifest, now):
                     continue
-                if manifest.get('local_photos_purged_at') and not any((folder / name).exists() for name in ('raw', 'output')):
+                managed_names = ('Photo',) if manifest.get('storage_layout') == 2 else ('raw', 'output')
+                if manifest.get('local_photos_purged_at') and not any((folder / name).exists() for name in managed_names):
                     continue
                 mark_local_expired(manifest, now)
                 write_json_atomic(path, manifest)  # Tombstone precedes any image deletion.
-                for name in ('raw', 'output'):
+                for name in managed_names:
                     managed = folder / name
                     if _is_link(managed):
                         raise ValueError('Refusing to traverse a linked photo directory.')
@@ -160,6 +163,8 @@ def purge_local_photos(photos_root, *, now=None):
                     for directory, folders, files in os.walk(managed, topdown=True, followlinks=False):
                         visited.append(Path(directory))
                         for dirname in list(folders):
+                            if dirname.casefold() == 'old':
+                                raise ValueError('Archive directory excluded from retention.')
                             child = Path(directory) / dirname
                             if _is_link(child):
                                 folders.remove(dirname)  # Prune before os.walk can descend into a junction.
@@ -168,6 +173,8 @@ def purge_local_photos(photos_root, *, now=None):
                                 else:
                                     child.rmdir()
                         for filename in files:
+                            if filename.casefold() == 'old':
+                                raise ValueError('Archive path excluded from retention.')
                             item = Path(directory) / filename
                             # These dedicated subtrees contain customer photo
                             # bytes and temporary image writes, not booth settings.
@@ -180,6 +187,8 @@ def purge_local_photos(photos_root, *, now=None):
         except (OSError, ValueError, TypeError) as error:
             report['errors'].append({'transaction_id': folder.name, 'error': str(error)})
     for item in root.iterdir():
+        if item.name.casefold() == 'old':
+            continue
         if _is_link(item) or not item.is_file() or not LEGACY_PHOTO.fullmatch(item.name):
             continue
         try:
