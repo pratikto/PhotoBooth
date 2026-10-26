@@ -75,22 +75,51 @@ def _pixel_box(spec: dict) -> tuple[int, int, int, int]:
             round((y + spec["height_mm"]) * DOTS_PER_MM))
 
 
-def _read_catalog() -> tuple[BoothTemplate, ...]:
+def _read_catalog(asset_root=ASSET_ROOT, prefix=None) -> tuple[BoothTemplate, ...]:
     """Load the committed layout and fail visibly if a design is incomplete."""
-    data = json.loads((ASSET_ROOT / "layout_80mm.json").read_text(encoding="utf-8"))
+    def path(name):
+        candidate = asset_root / name
+        if prefix is not None:
+            from photobooth.booth_storage import checked_path
+            if Path(name).is_absolute() or '\\' in name or '..' in Path(name).parts:
+                raise ValueError('Template files must stay inside the content pack.')
+            return checked_path(candidate)
+        return candidate
+    data = json.loads(path("layout_80mm.json").read_text(encoding="utf-8"))
+    if not isinstance(data.get('templates'), list) or not 1 <= len(data['templates']) <= 64:
+        raise ValueError('A template pack must contain 1–64 designs.')
     result = []
     for index, entry in enumerate(data["templates"]):
-        frames = tuple(PhotoAperture(_pixel_box(frame), ASSET_ROOT / frame["mask_file"],
+        frames = tuple(PhotoAperture(_pixel_box(frame), path(frame["mask_file"]),
                                      frame["shape"]) for frame in entry["photo_apertures"])
-        artwork = ASSET_ROOT / entry["png_file"]
+        artwork = path(entry["png_file"])
         if len(frames) != 3 or not artwork.is_file() or any(
                 not frame.mask_path.is_file() for frame in frames):
             raise ValueError(f"Incomplete assets for receipt template {entry['id']}.")
         result.append(BoothTemplate(
-            template_id=f"template_{chr(ord('a') + index)}", name=entry["name"],
+            template_id=(f"{prefix}_{entry['id']}" if prefix else f"template_{chr(ord('a') + index)}"), name=entry["name"],
             description="3 foto · thermal 80 mm", source_id=entry["id"],
             artwork_path=artwork, apertures=frames, qr_box=_pixel_box(entry["qr_area"])))
     return tuple(result)
+
+
+def load_template_pack(root, prefix):
+    """Validate cached operator art with the original renderer/geometry off the GUI."""
+    import re
+    templates = _read_catalog(Path(root), prefix)
+    identifiers = set()
+    for item in templates:
+        if not re.fullmatch(r'[A-Za-z0-9_-]{1,100}', item.template_id) or item.template_id in identifiers:
+            raise ValueError('Template IDs must be stable, safe and unique.')
+        identifiers.add(item.template_id)
+        for box in (item.qr_box, *(frame.box for frame in item.apertures)):
+            x1,y1,x2,y2 = box
+            if not (0 <= x1 < x2 <= CANVAS_SIZE[0] and 0 <= y1 < y2 <= CANVAS_SIZE[1]):
+                raise ValueError('Template windows must fit the original strip size.')
+        _artwork(item)
+        for aperture in item.apertures:
+            _mask(aperture)
+    return templates
 
 
 TEMPLATES = _read_catalog()
@@ -187,7 +216,8 @@ def _font(size: int, bold: bool = False):
 
 
 def _download_area(canvas: Image.Image, template: BoothTemplate,
-                   folder_url: str | None, transaction_id: str, session_id: str):
+                   folder_url: str | None, transaction_id: str, session_id: str,
+                   download_pending: bool = False):
     """Replace the whole QR placeholder while leaving themed borders intact."""
     left, top, right, bottom = template.qr_box
     canvas.paste("white", template.qr_box)
@@ -205,12 +235,13 @@ def _download_area(canvas: Image.Image, template: BoothTemplate,
         # Local development has no public download destination. Keep an honest
         # empty-state message and do not encode a local path or dummy website.
         draw.multiline_text(((left + right) // 2, (top + bottom) // 2),
-                            "MODE LOKAL\nFoto tersimpan\ndi perangkat ini",
+                            ("UPLOAD TERTUNDA\nQR menyusul\ndi layar" if download_pending else
+                             "MODE LOKAL\nFoto tersimpan\ndi perangkat ini"),
                             font=_font(20), fill="#38483d", anchor="mm", align="center", spacing=9)
         # All approved masters reserve their two caption lines directly below
         # the QR. Clear only their central text area, preserving the outer art.
         draw.rectangle((128, bottom + 22, 512, bottom + 61), fill="white")
-        draw.text((320, bottom + 41), "HASIL TERSIMPAN DI PERANGKAT",
+        draw.text((320, bottom + 41), ("DOWNLOAD SETELAH ONLINE" if download_pending else "HASIL TERSIMPAN DI PERANGKAT"),
                   font=_font(15, True), fill="black", anchor="mm")
     # Replace the construction note with the stable order/session reference.
     # It stays outside the QR white margin and inside the existing caption band.
@@ -221,7 +252,8 @@ def _download_area(canvas: Image.Image, template: BoothTemplate,
 
 def compose_result(photo_paths: Sequence[Path], template: BoothTemplate,
                    output_path: Path, transaction_id: str, session_id: str,
-                   folder_url: str | None = None, *, mirror_photos: bool = False) -> Path:
+                   folder_url: str | None = None, *, mirror_photos: bool = False,
+                   download_pending: bool = False) -> Path:
     """Save three photos inside the chosen 80 × 240 mm design as a PNG.
 
     PNG density is 203.2 dpi (640 × 1920 dots). Photos retain their colors for
@@ -243,7 +275,7 @@ def compose_result(photo_paths: Sequence[Path], template: BoothTemplate,
         with Image.open(path) as source:
             frame = render_photo_frame(source, template, index, mirror_photo=mirror_photos)
         canvas.paste(frame, template.apertures[index].box[:2])
-    _download_area(canvas, template, folder_url, transaction_id, session_id)
+    _download_area(canvas, template, folder_url, transaction_id, session_id, download_pending)
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     canvas.save(output_path, format="PNG", dpi=(PRINT_DPI, PRINT_DPI))

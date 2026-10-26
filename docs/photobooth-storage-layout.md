@@ -4,9 +4,10 @@ Owner-requested target, **26 October 2026 (Asia/Jakarta)**. Audited source:
 `19e3f4d4f0b4148b5daba6d25f6b5fe0387a4802` on
 `feature/portrait-kiosk-v2-next`; functional mirror source remains `fc26e3d`.
 
-**Status: implementation in progress after the owner explicitly requested application and Code.gs changes.**
+**Status: application/Code.gs implementation integrated in source; actual Google deployment and physical acceptance pending.**
 The initial audit remains available; [staged implementation evidence](qa/feat-004-storage/README.md)
-records what is actually delivered versus not yet wired/deployed.
+records delivered source checks versus not-yet-deployed cloud behavior.
+[Windows/setup guide](qa/feat-004-storage/SETUP.md) · [Submit checklist](qa/feat-004-storage/windows-checklist.html).
 
 Owner clarification: this foldering/offline-cache request belongs to the
 coordinated **FEAT-004 ads + BUG-009** workstream. The per-booth layout, 25-slot
@@ -47,8 +48,8 @@ Drive root/
     │   ├── Local/
     │   │   ├── Advertisement/
     │   │   └── Template/
-    │   ├── PB001_00000001/          # READY: genuinely empty until claimed
-    │   ├── PB001_00000002/
+    │   ├── PB001V2S2_00000001/          # READY: genuinely empty until claimed
+    │   ├── PB001V2S2_00000002/
     │   └── ...                    # target at least 25 READY transactions
     ├── PB002/
     │   ├── Local/Advertisement/
@@ -59,7 +60,7 @@ Drive root/
 ```
 
 `Local/Advertisement` and `Local/Template` are booth-specific content, distinct
-from the shared global sources. Folder names under `Local` are the proposed
+from the shared global sources. Folder names under `Local` are the implemented
 concrete spelling for the owner's unspecified local-asset subfolder names.
 Keep booth/global asset parents private; retain transaction-specific download
 sharing rather than publishing the entire booth parent and other visitors.
@@ -67,7 +68,7 @@ sharing rather than publishing the entire booth parent and other visitors.
 After a READY transaction is claimed, create only its actual session directories:
 
 ```text
-PB001/PB001_00000001/
+PB001/PB001V2S2_00000001/
 ├── manifest.json
 └── Photo/
     ├── 01/
@@ -112,8 +113,8 @@ C:\MeongData\Photobooth\PB001\
 │   ├── Global_Advertisement\       # local copy of shared ads
 │   └── Global_Template\            # local copy of shared template packs
 ├── _state\                        # private counters, pool/queue, sync versions
-├── PB001_00000001\                 # READY: empty
-├── PB001_00000002\
+├── PB001V2S2_00000001\                 # READY: empty
+├── PB001V2S2_00000002\
 └── ...
 ```
 
@@ -128,9 +129,9 @@ version is active. Existing verified local copies continue working offline.
 A file never downloaded cannot be available offline: first installation needs
 an initial sync or approved local seed, retaining the working bundled fallback.
 
-## Source audit: current behavior versus target
+## Historical source audit before implementation (19e3f4d)
 
-| Area | Current active source | Required change |
+| Area | Audited active source (before implementation) | Required change implemented in the new profile |
 | --- | --- | --- |
 | Booth roots | V2 uses `data/kiosk-v2-p3/photos`; test identity defaults to `PB001V2`. Cloud transactions are direct children of the configured parent | Explicit per-booth data/Drive parent. Do not strip test suffixes or mix v1/Sandbox counters just to match display names |
 | Ready pool | Shared v1 pool defaults to 25, but v2 overrides it to **2**; empty local staging is `photos/.pool/<Drive-folder-id>` | At least 25 preallocated READY transaction directories per booth, with stable IDs and a durable external ledger |
@@ -164,7 +165,7 @@ Their audited hashes are retained with the evidence.
 - **Owner-selected empty-pool behavior:** continue local photo/print even when
   Drive is offline and the 25 reserves are exhausted or never synchronized;
   upload and download QR follow after reconnection. This is the approved target,
-  not current v2 behavior or a performed cloud operation.
+  now implemented in the ordinary launcher; not a performed cloud operation.
 - Record explicit Drive intent for that fallback, e.g.
   `PENDING_DRIVE_BINDING`, separately from deliberate `LOCAL_ONLY`. Bind the same
   booth/transaction ID idempotently on reconnect **before** replenishing remote

@@ -11,7 +11,10 @@
  * Deploy this project as a Web App (execute as the deploying account, access
  * available to anyone). The old upload-only request remains supported when
  * `action` is omitted. New booth clients use ensure_folder_pool, assign_slot,
- * and upload_file actions.
+ * and upload_file actions. Layout 2 adds reserve_transactions/bind_transaction
+ * and asset_manifest/asset_chunk after manual setupBoothStorage; keep the same
+ * token/deployment. PHOTOBOOTH_ROOT_ID and GLOBAL_ADVERTISEMENT_ID/
+ * GLOBAL_TEMPLATE_ID identify named siblings, never an archive parent.
  */
 
 const PHOTO_RETENTION_DAYS = 30;
@@ -128,6 +131,7 @@ function setupBoothStorage() {
 }
 function storageBoothFolder_(p, booth, create) {
   const physical = physicalBooth_(booth), root = storageFolder_(p.getProperty("PHOTOBOOTH_ROOT_ID"));
+  if (root.getName() !== "Photobooth") throw apiError_("The active booth root must be Photobooth.", 409);
   const folder = uniqueStorageChild_(root, physical, create);
   if (!folder) throw apiError_("This booth is not prepared yet.", 409);
   if (create) {
@@ -173,7 +177,7 @@ function reserveStorageTransactions_(body, p) {
     if (folder.getFiles().hasNext() || folder.getFolders().hasNext()
         || JSON.parse(folder.getDescription()).managed_slot !== STORAGE_SLOT_MARKER)
       throw apiError_("A reserve must be genuinely empty and unclaimed.", 409);
-    return {transaction_id: claim.transaction_id, folder_id: folder.getId(), status: "READY"};
+    return {transaction_id: claim.transaction_id, folder_id: folder.getId(), folder_url: folder.getUrl(), status: "READY"};
   });
   return {storage_layout: 2, slots: slots};
 }
@@ -207,10 +211,18 @@ function bindStorageTransaction_(body, p) {
 function storageAssetRoots_(body, p) {
   const booth = validateStorageBooth_(body.booth_id), parent = storageBoothFolder_(p, booth, false);
   const local = uniqueStorageChild_(parent, "Local", false);
-  return { Global_Advertisement: storageFolder_(p.getProperty("GLOBAL_ADVERTISEMENT_ID")),
+  const roots = { Global_Advertisement: storageFolder_(p.getProperty("GLOBAL_ADVERTISEMENT_ID")),
     Global_Template: storageFolder_(p.getProperty("GLOBAL_TEMPLATE_ID")),
     "Local/Advertisement": local && uniqueStorageChild_(local, "Advertisement", false),
     "Local/Template": local && uniqueStorageChild_(local, "Template", false) };
+  const parents = storageFolder_(p.getProperty("PHOTOBOOTH_ROOT_ID")).getParents();
+  if (!parents.hasNext()) throw apiError_("Managed roots require one common parent.", 409);
+  const common = parents.next();
+  ["Global_Advertisement", "Global_Template"].forEach(function (key) {
+    if (roots[key].getName() !== key || !hasParent_(roots[key], common))
+      throw apiError_("Global content roots must be named siblings of Photobooth.", 409);
+  });
+  return roots;
 }
 function storageFileMeta_(id) {
   const response = driveRetentionRequest_("get", id, "fields=id,name,size,md5Checksum,mimeType,modifiedTime,parents,trashed");

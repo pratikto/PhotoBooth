@@ -23,7 +23,7 @@ HINTS = {
 }
 
 
-def check(root, *, client_factory=None):
+def check(root, *, client_factory=None, storage_layout=1):
     """Perform one authenticated status request, never pool/registration/cleanup."""
     report = inventory(root)
     state, status = 'CHECK_FAILED', None
@@ -37,6 +37,10 @@ def check(root, *, client_factory=None):
             if client is None:
                 state = 'NOT_CONFIGURED'
             else:
+                if storage_layout == 2:
+                    from photobooth.booth_sync import BoothDriveClient
+                    from photobooth.kiosk_v2.photos import configured_workspace
+                    client = BoothDriveClient(client, configured_workspace(root).booth_id)
                 status = client.retention_status()
                 state = status['state']
     except DriveApiError as error:
@@ -48,6 +52,7 @@ def check(root, *, client_factory=None):
     except Exception:
         state = 'CHECK_FAILED'
     report['kind'] = 'drive-retention-readiness'
+    report['storage_layout'] = storage_layout
     report['drive_retention'] = {
         'state': state, 'next_action': HINTS[state], 'backend': status,
         'read_only': True, 'cloud_deletion_verified': False,

@@ -1,5 +1,21 @@
 # Meong Photobooth — changelog
 
+## 2026-10-26 — Implement coordinated per-booth storage and offline global content
+
+Ordinary v2 now uses PB00X roots, 25 empty local reserves, atomic claims and
+Photo/NN/raw,color,bw. Reuse original capture/retake/renderer/calibrated printer;
+send the saved final 1-bit raster once, with existing batch/journal guards.
+Drive opt-in records offline intent, reuses the original upload/retention engine
+and binds the same ID on reconnect; no print replay or rewritten paper.
+
+Code.gs adds manual sibling-root setup, per-booth reserves/binding, scoped
+manifest/range reads and registered-booth cleanup using original timestamps.
+Verified immutable global/local content snapshots feed the existing ad catalog
+and template renderer only at idle; interruptions retain the last good cache.
+v1/Sandbox/default-branch/production remain separate; all old contents excluded.
+[Source checks, screenshots, setup, Windows Submit form and rollback](qa/feat-004-storage/README.md).
+Actual Google setup/deployment/deletion, phone and physical paper NOT_RUN.
+
 ## 2026-10-26 — Link storage target to FEAT-004 ads + BUG-009
 
 Owner clarifies the foldering/global-local offline-cache target belongs to this

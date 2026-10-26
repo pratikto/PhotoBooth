@@ -1,5 +1,6 @@
 """Small v2 observation adapters for the verbatim v1 diagnostic worker."""
 from dataclasses import replace
+import os
 from pathlib import Path
 import threading
 from types import SimpleNamespace
@@ -52,6 +53,9 @@ class V2HealthController(V1HealthController):
         self.printer = SimpleNamespace(config=DeferredPrinterConfig(
             self.project_root/'data'/'printer_settings.json'))
         self.photos_root = self.project_root/'data'/'kiosk-v2-p3'/'photos'
+        if not getattr(app, '_sandbox_enabled', False) and os.environ.get('PHOTOBOOTH_V2_STORAGE') == '2':
+            from .photos import configured_workspace
+            self.photos_root = configured_workspace(self.project_root).root
         if app._sandbox_jobs and app._sandbox_jobs.store:
             self.photos_root = app._sandbox_jobs.store.flow.path.parent/'photo-tests'/'photos'
         self.ui.ad_catalog = app.catalog

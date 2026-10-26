@@ -71,3 +71,59 @@ Focused evidence: [Python 34 PASS / zero skips](stage2-tests.txt),
 25 empty reserves, independent booths, binding retries/conflicts, bytes verification,
 archive pruning, range isolation and retention guards. No Google deployment/test.
 The ordinary GUI/cache integration follows in stage 3.
+
+## Stage 3 — ordinary GUI integration and atomic content cache
+
+Ordinary `tools/run_portrait_v2.py` defaults to layout 2; dedicated merchant
+Sandbox explicitly remains on its prior isolated layout/transports-off profile.
+The source reuses v1's original template renderer, ad catalog/player, calibrated
+printer, upload verification and durable journal/worker lifecycle. It does not
+replace the game or move v1/main.py/master. [Windows + manual Apps Script setup](SETUP.md)
+includes the [12-item offline Submit form](windows-checklist.html).
+
+Per-booth local admission no longer depends on Drive. Actual reserved folder
+IDs/URLs are cached in the private ledger; unreserved offline visits explicitly
+record deferred Drive intent. Reconnect binds the same ID/original clock before
+upload and remote reserve refill. Deliberate LOCAL_ONLY never silently uploads.
+Original JPEG captures/retake, mirrored-photo color strip and exact final 1-bit
+BW raster occupy Photo/NN/raw,color,bw. Print uses the saved BW pixels through
+the original batch/uncertainty guard. No reconnect changes existing strip bytes
+or replays a print; real on-screen QR follows full file verification.
+
+ContentCache downloads all four namespaces using checksum-bound chunks, validates
+complete original-schema packs, rechecks the inventory and atomically replaces
+one private pointer. Per-booth version directories keep prior assets intact.
+Existing bundled/manual booth content works before initial sync; verified cache
+works offline. A native GUI reference swap occurs only at idle; active visitor
+selections are pinned. The existing player/audio lifecycle and default twelve
+original designs remain available. MOCK quote/template IDs stay isolated.
+
+A broad GUI run exposed a legacy retake regression: the new background-binding
+merge initially copied a persisted null folder over v1's controller assignment.
+The fix scopes binding merges to layout-2 manifests with an actual folder.
+The original v1 same-filename-retake test now passes alongside the new offline
+and reconnect tests. Intermediate failed/skipped runs are not final acceptance.
+Browser file:// navigation is blocked by this environment's browser policy;
+the same offline form was tested over a loopback-only static server instead.
+
+Focused evidence: 42 integration/service tests, 13 merge/native handoff tests
+(including the original failed retake), 11 configuration/diagnostic tests and
+24 actual-Code.gs VM tests pass with zero failures/errors/skips. The
+configuration test covers first-offline missing credentials and proves layout 2
+does not fall back to the legacy OAuth parent. Final full regression and clean
+source screenshots are recorded below when complete, not inferred from these
+focused checks. A verified 12-item browser test covers empty checks, safe metadata
+import, partial Submit, local persistence/download and 360/452/800px overflow.
+
+Live limits remain: no Apps Script deployment/root creation/trigger activation,
+real Drive file sync/expiry, phone QR or physical paper was performed here.
+BUG-009 therefore remains OPEN for actual deletion evidence. Content-cache
+old generations are intentionally retained; capacity maintenance needs a
+separate operator policy, not photo-retention deletion.
+
+Final stage-3 [full local suite](full-tests.txt): **823 PASS / zero failures,
+errors or skips**, 224.496s, with original-v1 GUI, native video/audio and real
+public palm-model fixtures enabled. The additional missing-credentials test was
+added after full-suite discovery and passed in the recorded 11-test configuration
+suite; no later runtime change was made. [Exact tested code hashes](tested-source.json).
+This is synthetic/provider-fixture evidence, not physical Windows acceptance.

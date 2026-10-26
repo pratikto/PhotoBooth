@@ -1,0 +1,1 @@
+PASS: 12 fresh unchecked items; metadata import passes nothing; partial Submit 1/12 preserves all unchecked cloud/paper items; persistence and download; 360/452/800 px no overflow; zero browser errors. Browser checked S01 synthetically, not Windows acceptance.

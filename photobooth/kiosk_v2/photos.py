@@ -33,9 +33,14 @@ class PhotoTest:
     """Single admitted test run; originals, retake quota and copies remain v1 rules."""
 
     def __init__(self, root, *, booth_id='PB001V2', printer=None, drive_client=None,
-                 auto_print=False):
+                 auto_print=False, workspace=None, drive_requested=None, raster_printer=None):
         self.root = Path(root)
-        self.store = TransactionStore(self.root / 'photos', self.root / 'counter.json', booth_id)
+        self.workspace = workspace
+        self.store = (TransactionStore(workspace.root, workspace.counter_path, workspace.booth_id, layout_version=2)
+                      if workspace else TransactionStore(self.root / 'photos', self.root / 'counter.json', booth_id))
+        self.drive_requested = bool(drive_client) if drive_requested is None else bool(drive_requested)
+        self.raster_printer = raster_printer or printer
+        self.content = None
         self.printer = printer
         self.auto_print = bool(auto_print and printer is not None)
         self.drive_client = drive_client
@@ -55,13 +60,19 @@ class PhotoTest:
     def prepare(self):
         """Called off the GUI; recover uncertain sends without replaying them."""
         from photobooth.retention import purge_local_photos
+        if self.workspace:
+            self.workspace.prepare()
+            if self.content is None:
+                from photobooth.content_cache import ContentCache
+                self.content = ContentCache(self.workspace)
+                self.content.load()
         purge_local_photos(self.store.photos_root)
         if self.retention_worker is None and not self._closed.is_set():
             from photobooth.retention import PhotoRetentionWorker
             # Isolated local cleanup only. Never invoke remote cleanup on legacy folders.
             self.retention_worker = PhotoRetentionWorker(self.store.photos_root, client=None)
             self.retention_worker.start()
-        for path in self.store.photos_root.glob('*/manifest.json'):
+        for path in (self.workspace.manifests() if self.workspace else self.store.photos_root.glob('*/manifest.json')):
             with manifest_lock(path):
                 manifest = json.loads(path.read_text(encoding='utf-8'))
                 if manifest.get('purpose') != PURPOSE:
@@ -76,6 +87,11 @@ class PhotoTest:
                 if changed:
                     write_json_atomic(path, manifest)
         if self.drive_client is not None and self.drive_worker is None and not self._closed.is_set():
+            if self.workspace:
+                from photobooth.booth_sync import BoothDriveWorker
+                self.drive_worker = BoothDriveWorker(self.workspace, self.drive_client, self.content)
+                self.drive_worker.start()
+                return self.snapshot()
             from photobooth.drive_pool import DriveSlotPool
             from .photo_drive import RetentionGuardedSync
             self.pool = DriveSlotPool(self.store.photos_root, self.root / 'drive-pool.json',
@@ -118,7 +134,14 @@ class PhotoTest:
         plans = build_session_plans(templates, quantities)
         if not plans:
             raise ValueError('Choose at least one template.')
-        if self.pool is not None:
+        if self.workspace:
+            slot = self.workspace.claim()
+            tx = self.store.start_transaction(plans, transaction_id=slot['transaction_id'], folder_path=slot['staging_path'],
+                drive_slot=slot if self.drive_requested and slot.get('folder_id') else None)
+            tx.manifest.update(drive_intent=self.drive_requested, drive_claim_token=slot['claim_token'],
+                upload_status='PENDING_DRIVE_BINDING' if self.drive_requested else 'LOCAL_ONLY')
+            self.store._write_manifest(tx)
+        elif self.pool is not None:
             if not self.pool.has_ready_slot():
                 raise ValueError('Drive is enabled but no verified folder is ready; wait and retry.')
             slot = self.pool.claim()
@@ -169,14 +192,21 @@ class PhotoTest:
         if self.phase != 'review' or not self.session.ready_for_review:
             raise ValueError('Three reviewed photos are required.')
         session = self.session
-        output = self.transaction.folder_path / 'output' / f'{session.plan.session_id}.png'
+        output = self.store.output_path(self.transaction, session.plan)
         with self.store.photo_write_lock(self.transaction):
+            latest = json.loads(self.transaction.manifest_path.read_text(encoding='utf-8'))
             compose_result(session.final_photo_paths, session.plan.template, output,
                            self.transaction.transaction_id, session.plan.session_id,
-                           self.transaction.manifest.get('drive_folder_url'),
-                           mirror_photos=True)
+                           latest.get('drive_folder_url'),
+                           mirror_photos=True, download_pending=bool(self.workspace and latest.get('drive_intent')))
             self.store.record_output(self.transaction, session.plan.session_id,
                                      session.final_photo_paths, output)
+            if self.workspace:
+                from photobooth.printer import ThermalPrinter, PrinterConfig
+                renderer = self.raster_printer or ThermalPrinter(PrinterConfig())
+                bw = self.store.session_path(self.transaction, session.plan, 'bw') / 'strip.png'
+                renderer.render_image(output).save(bw, format='PNG')
+                self.store.record_artifact(self.transaction, session.plan.session_id, bw, kind='bw')
         session.output_path = output
         self.phase = 'result'
         if self.index == len(self.sessions) - 1:
@@ -198,7 +228,11 @@ class PhotoTest:
         # Fsync BEFORE the external side effect. Any uncertainty prevents a duplicate retry.
         self._edit(reserve)
         try:
-            result = self.printer.print_image(session.output_path, copies=session.plan.print_copies)
+            if self.workspace:
+                bw = self.store.session_path(self.transaction, session.plan, 'bw') / 'strip.png'
+                result = self.printer.print_raster(bw, copies=session.plan.print_copies)
+            else:
+                result = self.printer.print_image(session.output_path, copies=session.plan.print_copies)
             state = 'SUBMITTED' if result.success else 'UNCERTAIN'
         except Exception:
             LOG.warning('Photo test print outcome uncertain', exc_info=True)
@@ -239,10 +273,11 @@ class PhotoTest:
     def snapshot(self):
         configuration = {
             'print_available': self.printer is not None, 'auto_print': self.auto_print,
-            'drive_enabled': self.drive_client is not None,
-            'drive_ready': self.drive_client is None or bool(self.pool and self.pool.has_ready_slot()),
-            'drive_error': bool(self.pool and self.pool.last_error),
+            'drive_enabled': self.drive_requested if self.workspace else self.drive_client is not None,
+            'drive_ready': bool(self.workspace) or self.drive_client is None or bool(self.pool and self.pool.has_ready_slot()),
+            'drive_error': (bool(self.drive_requested and (self.drive_client is None or self.drive_worker and self.drive_worker.last_error)) if self.workspace else bool(self.pool and self.pool.last_error)),
             'recovered_prints': self.recovered_prints,
+            'storage_layout': 2 if self.workspace else 1,
         }
         if self.transaction is None:
             return {'phase': self.phase, **configuration}
@@ -362,10 +397,20 @@ class PhotoJobs:
             self._thread.join(timeout=timeout)
 
 
-def configured_test(root, *, configuration_root=None):
+def configured_workspace(configuration_root):
+    import os
+    from photobooth.booth_storage import BoothWorkspace
+    booth = os.environ.get("PHOTOBOOTH_V2_BOOTH_ID", "PB001V2")
+    if not booth.endswith("V2S2"):
+        booth = booth + "S2" if booth.endswith("V2") else booth + "V2S2"
+    return BoothWorkspace(os.environ.get("PHOTOBOOTH_V2_STORAGE_ROOT", str(Path(configuration_root)/"data"/"Photobooth")), booth)
+
+
+def configured_test(root, *, configuration_root=None, storage_layout=None):
     """Operator opt-ins affect only P3 photo tests, never payment admission."""
     import os
-    printer = client = None
+    printer = client = raster_printer = None
+    layout2 = (str(storage_layout) if storage_layout is not None else os.environ.get('PHOTOBOOTH_V2_STORAGE', '1')) == '2'
     configuration_root = Path(configuration_root) if configuration_root else Path(root).parents[1]
     if os.environ.get('PHOTOBOOTH_V2_PRINT') == '1':
         from photobooth.printer import ThermalPrinter
@@ -373,12 +418,23 @@ def configured_test(root, *, configuration_root=None):
         printer = ThermalPrinter(load_printer_config(configuration_root / 'data' / 'printer_settings.json'))
     if os.environ.get('PHOTOBOOTH_V2_DRIVE') == '1':
         from photobooth.drive_storage import AppsScriptDriveClient, GoogleDriveClient
-        client = AppsScriptDriveClient.from_configuration() or GoogleDriveClient.from_environment()
-        if client is None:
+        client = AppsScriptDriveClient.from_configuration()
+        if layout2 and client:
+            from photobooth.booth_sync import BoothDriveClient
+            client = BoothDriveClient(client, configured_workspace(configuration_root).booth_id)
+        if not layout2:
+            client = client or GoogleDriveClient.from_environment()
+        if client is None and not layout2:
             raise PhotoSetupError('drive_configuration')
     booth_id = os.environ.get('PHOTOBOOTH_V2_BOOTH_ID', 'PB001V2')
-    if not booth_id.endswith('V2'):
+    if not layout2 and not booth_id.endswith('V2'):
         raise PhotoSetupError('booth_profile')
+    if layout2:
+        from photobooth.printer import ThermalPrinter
+        from photobooth.printer_settings import load_printer_config
+        raster_printer = printer or ThermalPrinter(load_printer_config(configuration_root / 'data' / 'printer_settings.json'))
     return PhotoTest(root, booth_id=booth_id,
+                     workspace=configured_workspace(configuration_root) if layout2 else None,
+                     drive_requested=os.environ.get('PHOTOBOOTH_V2_DRIVE') == '1', raster_printer=raster_printer,
                      printer=printer, drive_client=client,
                      auto_print=printer is not None and os.environ.get('PHOTOBOOTH_V2_AUTO_PRINT', '1') == '1')

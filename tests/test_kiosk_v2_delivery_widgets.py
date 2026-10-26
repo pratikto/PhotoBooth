@@ -25,14 +25,21 @@ from photobooth.kiosk_v2.theme import ArcadeButton
 
 class DeliveryWidgetTests(unittest.TestCase):
     @contextmanager
-    def booth(self,service_factory=None,*,drive=False):
+    def booth(self,service_factory=None,*,drive=False,layout2=False):
         with TemporaryDirectory() as temp,patch.dict(os.environ,{
                 'PHOTOBOOTH_AUDIO':'0','PHOTOBOOTH_AD_VIDEO':'0','PHOTOBOOTH_CAMERA':'0',
                 'PHOTOBOOTH_FACE_TRIGGER':'0','PHOTOBOOTH_PALM_TRIGGER':'0',
                 'PHOTOBOOTH_V2_CHECKOUT_MOCK':'0','PHOTOBOOTH_V2_CHECKOUT_SANDBOX':'0',
-                'PHOTOBOOTH_V2_DRIVE':'1' if drive else '0'}):
+                'PHOTOBOOTH_V2_DRIVE':'1' if drive else '0', 'PHOTOBOOTH_V2_STORAGE':'2' if layout2 else '1'}):
             root=Path(temp);printer=Mock();printer.print_image.return_value=SimpleNamespace(success=True)
-            service=PhotoTest(root,printer=printer,auto_print=True)
+            if layout2:
+                from photobooth.booth_storage import BoothWorkspace
+                from photobooth.printer import ThermalPrinter,PrinterConfig
+                workspace=BoothWorkspace(root/'Photobooth','PB001V2S2')
+                printer.render_image.side_effect=ThermalPrinter(PrinterConfig()).render_image
+                printer.print_raster.return_value=SimpleNamespace(success=True)
+            else:workspace=None
+            service=PhotoTest(root,printer=printer,auto_print=True,workspace=workspace,drive_requested=layout2)
             camera=Mock();camera.read.return_value=np.zeros((80,120,3),dtype=np.uint8)
             with patch('photobooth.kiosk_v2.photos.configured_test',side_effect=service_factory or (lambda *_a,**_k:service)) as factory:
                 app=PortraitKioskV2App(camera_device=camera);Window.add_widget(app.build())
@@ -146,3 +153,66 @@ class DeliveryWidgetTests(unittest.TestCase):
             import cv2
             photo=app._photo_view['download_qr'];decoded,_,_=cv2.QRCodeDetector().detectAndDecode(np.asarray(photo))
             self.assertEqual(decoded,url)
+
+    def test_layout2_offline_admits_captures_retake_color_bw_and_sends_saved_raster_once(self):
+        from PIL import Image
+        with self.booth(layout2=True) as (app,service,printer,_,root):
+            self.enter(app);self.assertTrue(app._photo_view['drive_ready']);self.review(app)
+            app._photo_submit('retake',0);self.settle(app)
+            app._photo_submit('capture',app.camera_device.read());self.settle(app)
+            raw=service.session.final_photo_paths[0].read_bytes()
+            app._photo_submit('compose');self.settle(app)
+            self.assertEqual(app.navigation.page,RESULT)
+            self.assertEqual(app._photo_view['upload_status'],'PENDING_DRIVE_BINDING')
+            self.assertEqual(app._photo_view['print_state'],'SUBMITTED')
+            tx=service.transaction.folder_path
+            self.assertTrue((tx/'Photo/01/raw/retake.jpg').is_file())
+            self.assertTrue((tx/'Photo/01/color/strip.png').is_file())
+            with Image.open(tx/'Photo/01/bw/strip.png') as bw:self.assertEqual((bw.mode,bw.width),('1',576))
+            self.assertEqual(service.session.final_photo_paths[0].read_bytes(),raw)
+            printer.print_image.assert_not_called();printer.print_raster.assert_called_once_with(tx/'Photo/01/bw/strip.png',copies=2)
+            self.assertEqual(len(service.workspace.ready_slots()),25)
+            app._photo_submit('next');self.settle(app);self.assertEqual(app.navigation.page,ADVERT)
+
+    def test_content_activation_waits_for_idle_keeps_visit_selection_and_never_decodes_on_ui(self):
+        with self.booth() as (app,service,printer,_,root):
+            from photobooth.advertising import AdCatalog
+            app._ensure_photo_jobs();app._photo_jobs.service=service
+            service.content=SimpleNamespace(current={'version':'a'*32,'templates':get_templates()[:2],'catalog':AdCatalog()})
+            app._choose_photo();old=app.templates
+            app._apply_cached_content();self.assertIs(app.templates,old)
+            app._complete_tutorial();app._change_copies(2)
+            app._apply_cached_content();self.assertEqual(app.quantities[get_templates()[0].template_id],2)
+            app._return_ad()
+            with patch('photobooth.catalog.load_template_pack',side_effect=AssertionError('GUI decode')):
+                app._apply_cached_content()
+            self.assertEqual(len(app.templates),2);self.assertEqual(app.template_index,0)
+            self.assertTrue(all(n==0 for n in app.quantities.values()))
+            self.assertEqual(app._content_version,'a'*32)
+
+    def test_cached_real_reserve_binds_after_offline_print_without_rewriting_strip_or_reprinting(self):
+        import hashlib
+        from photobooth.booth_sync import BoothDriveWorker
+        from photobooth.retention import retention_metadata
+        with self.booth(layout2=True) as (app,service,printer,_,root):
+            service.workspace.prepare();slot=service.workspace.ready_slots()[0]
+            url='https://drive.google.com/drive/folders/fixture-reserved'
+            service.workspace.remember_remote([{**slot,'folder_id':'fixture-reserved','folder_url':url}])
+            self.enter(app);self.review(app);app._photo_submit('compose');self.settle(app)
+            tx=service.transaction
+            before={p: p.read_bytes() for p in (tx.folder_path/'Photo/01/color/strip.png',tx.folder_path/'Photo/01/bw/strip.png')}
+            self.assertEqual(app._photo_view['folder_url'],url)
+            self.assertIsNone(app._photo_view['download_qr'])
+            client=Mock();client.reserve_transactions.return_value=[]
+            client.bind_transaction.return_value={'folder_id':'fixture-reserved','folder_url':url}
+            client.register_retention.side_effect=lambda folder,txid,started:retention_metadata(txid,started)
+            def upload(folder,txid,relative,path,**kwargs):
+                data=path.read_bytes();return {'id':relative,'size':len(data),'md5Checksum':hashlib.md5(data).hexdigest()}
+            client.upload_file.side_effect=upload
+            worker=BoothDriveWorker(service.workspace,client);worker.run_once()
+            client.bind_transaction.assert_called_once()
+            app._photo_submit('snapshot');self.settle(app)
+            self.assertEqual(app._photo_view['upload_status'],'UPLOAD_COMPLETE')
+            self.assertIsNotNone(app._photo_view['download_qr'])
+            self.assertEqual({p:p.read_bytes() for p in before},before)
+            self.assertEqual(printer.print_raster.call_count,1);printer.print_image.assert_not_called()

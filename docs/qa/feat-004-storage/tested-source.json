@@ -1,0 +1,106 @@
+{
+  "base_sha": "6e2f77706fff255538472fc46d18c99f40fc7f47",
+  "stage": "3 integration working tree before commit",
+  "full_python": {
+    "run": 823,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 224.496
+  },
+  "extra_configuration_suite": {
+    "run": 11,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "note": "Includes one new missing-credentials test added after full-suite discovery; no extra runtime changes."
+  },
+  "codegs": {
+    "run": 24,
+    "failures": 0,
+    "skipped": 0
+  },
+  "files": [
+    {
+      "file": ".github/workflows/portrait-kiosk-v2.yml",
+      "sha256": "95e74623a12e3c026d81b59e7c952970b3e456c5399dd0da2b14a5fdd02b9895"
+    },
+    {
+      "file": "apps_script/Code.gs",
+      "sha256": "623d7e5f396b330eed4cc209e0394d66505733d7af284e4baf8c74e1ba292076"
+    },
+    {
+      "file": "photobooth/booth_storage.py",
+      "sha256": "03f0e1e740a8fb209a06e7e7643c28f8909e8f0d285ffdfdb399a88e0e38b669"
+    },
+    {
+      "file": "photobooth/booth_sync.py",
+      "sha256": "e2efeec69ee4df54ef5ff8082e4876dfaee9e2cd57934a27984fcc3f7fbe1d2a"
+    },
+    {
+      "file": "photobooth/catalog.py",
+      "sha256": "82bb45ed27ace41413e5236009df53f7295a89646c12b29d743b5b2c7b701436"
+    },
+    {
+      "file": "photobooth/content_cache.py",
+      "sha256": "6db589a928fbdbc9327038cf153d3d5151d604b8fa77e5c306d39e125aac9608"
+    },
+    {
+      "file": "photobooth/kiosk_v2/app.py",
+      "sha256": "be2edc808569207a66cbd101eba377b4e5da63d00d815700275267ad6cd819f9"
+    },
+    {
+      "file": "photobooth/kiosk_v2/health_service.py",
+      "sha256": "a8220ee04dd6c9b28f232af3727f7cec922c86375cda9d51bda4415c76e41f0b"
+    },
+    {
+      "file": "photobooth/kiosk_v2/photo_views.py",
+      "sha256": "43f6d1d6b0780d10326f777e136699d850f9439da316437e2fb0e819afef4ff0"
+    },
+    {
+      "file": "photobooth/kiosk_v2/photos.py",
+      "sha256": "22158a06dcd85eb8538f5f9d8d98a6ed5029eda0653ea1abac6575274f2a39fb"
+    },
+    {
+      "file": "photobooth/retention_readiness.py",
+      "sha256": "6ae55b9b7b5c271c9feb6c64a8d5615437ec34bcdbafc847712f88593ec3c1b8"
+    },
+    {
+      "file": "photobooth/transaction_store.py",
+      "sha256": "1764212940c6f02e46491ab38b46048c8af2faee39c3a84340d3a7002a2f8b2f"
+    },
+    {
+      "file": "tests/test_apps_script_retention.cjs",
+      "sha256": "5c988e074e36be32961ea98f1d25fc710a5c6ac50bd2f4e42fa58ec465f9a1a8"
+    },
+    {
+      "file": "tests/test_booth_sync.py",
+      "sha256": "c653f9bba11400a5a18caac0b6e21864a47e7db128b688f037b34b332c803c4f"
+    },
+    {
+      "file": "tests/test_content_cache.py",
+      "sha256": "ce7c3364fc2107335ab7d7b5d66f5ff70141a506e1ebb6559fb60ae6d1ac35d8"
+    },
+    {
+      "file": "tests/test_kiosk_v2_delivery_widgets.py",
+      "sha256": "049597ca73005f9ba7f8b312c7fd803402a0176a24ad21eb124f21c51e88d89d"
+    },
+    {
+      "file": "tools/check_drive_retention.py",
+      "sha256": "a9123495ca4489f045d8e9b15058eef898f8c7b6157327cf6f1b826ff9df72bc"
+    },
+    {
+      "file": "tools/render_portrait_p3.py",
+      "sha256": "a6031af72674eda0fbb1533483b123b7a1aa7e08febbc91900f0295d1fdb397b"
+    },
+    {
+      "file": "tools/run_kiosk_unittests.py",
+      "sha256": "1b3b67b56764761de91b832991a8097d9112fc5c0780c7b90aaebd73b6c1311d"
+    },
+    {
+      "file": "tools/run_portrait_v2.py",
+      "sha256": "5954b074150178662d4ea0c94cde1cbfb81214476daf570b3dd34d9ca03135a2"
+    }
+  ],
+  "live_google_or_paper": "NOT_RUN"
+}

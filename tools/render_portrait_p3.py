@@ -28,8 +28,11 @@ parser.add_argument('--width', type=int, default=800)
 parser.add_argument('--height', type=int, default=1280)
 parser.add_argument('--output-dir', type=Path, required=True)
 parser.add_argument('--sensors', action='store_true', help='Add clearly synthetic face/palm status views')
+parser.add_argument('--storage-layout', type=int, choices=(1,2), default=1, help='Capture layout 2 with temporary offline storage only')
 parser.add_argument('--delivery', action='store_true', help='Capture automatic print/Drive with offline transports only')
 args = parser.parse_args()
+if args.storage_layout == 2 and (args.delivery or args.sensors):
+    parser.error("Capture layout 2 separately from legacy delivery/sensor fixtures.")
 if args.delivery and args.sensors:
     parser.error('Choose separate sensor or delivery fixture runs.')
 
@@ -160,8 +163,15 @@ class Recorder(PortraitKioskV2App):
 
     def enter(self):
         self.navigation.confirm_photo_test()
-        service = PhotoTest(self.temp.name, printer=SimpleNamespace(
-            print_image=lambda *a, **kw: SimpleNamespace(success=False)))
+        printer = SimpleNamespace(print_image=lambda *a, **kw: SimpleNamespace(success=False))
+        workspace = None
+        if args.storage_layout == 2:
+            from photobooth.booth_storage import BoothWorkspace
+            from photobooth.printer import ThermalPrinter, PrinterConfig
+            workspace = BoothWorkspace(Path(self.temp.name)/'Photobooth', 'PB001V2S2')
+            printer.render_image = ThermalPrinter(PrinterConfig()).render_image
+            printer.print_raster = lambda *a, **kw: SimpleNamespace(success=False)
+        service = PhotoTest(self.temp.name, printer=printer, workspace=workspace, drive_requested=args.storage_layout==2)
         self._photo_jobs = PhotoJobs(service)
         self._photo_jobs.submit('prepare')
         self._show()
@@ -262,7 +272,7 @@ if __name__ == '__main__':
             raise SystemExit(f'Incomplete P3 evidence: {len(app.evidence)}/{expected}')
         report = {'source_sha': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
                   'tracked_changes': bool(subprocess.check_output(['git','status','--porcelain','--untracked-files=no'],cwd=ROOT)),
-                  'synthetic_only': True, 'synthetic_sensor_status': args.sensors, 'screenshots': app.evidence}
+                  'storage_layout':args.storage_layout, 'synthetic_only': True, 'synthetic_sensor_status': args.sensors, 'screenshots': app.evidence}
         if args.delivery:
             assert app.print_batches==[2,1]
             report.update(real_print=False,real_cloud=False,reused_v1_delivery=True,print_batches=app.print_batches,

@@ -13,10 +13,12 @@ from photobooth.retention_readiness import check
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--storage-layout', type=int, choices=(1, 2), default=2,
+                        help='Default: current v2 booth root; 1 checks the legacy parent')
     parser.add_argument('--output', type=Path,
                         default=ROOT / 'data' / 'diagnostics' / 'drive-retention-readiness.json')
     args = parser.parse_args(argv)
-    report = check(ROOT)
+    report = check(ROOT, storage_layout=args.storage_layout)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     write_json_atomic(args.output, report)
     status = report['drive_retention']

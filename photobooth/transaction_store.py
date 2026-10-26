@@ -410,9 +410,13 @@ class TransactionStore:
                             raise RuntimeError('This transaction has reached its local photo retention deadline.')
                         # Background retention acknowledgement must survive a
                         # controller save based on an older in-memory manifest.
-                        for key in ('drive_retention_registered_at', 'drive_photos_expire_at', 'drive_retention_error', 'drive_folder_id', 'drive_folder_url', 'drive_binding_error'):
+                        for key in ('drive_retention_registered_at', 'drive_photos_expire_at', 'drive_retention_error'):
                             if key in persisted:
                                 transaction.manifest[key] = persisted[key]
+                        if persisted.get('storage_layout') == 2 and persisted.get('drive_folder_id'):
+                            for key in ('drive_folder_id', 'drive_folder_url', 'drive_binding_error', 'drive_binding_verified'):
+                                if key in persisted:
+                                    transaction.manifest[key] = persisted[key]
                         persisted_files = persisted.get("upload_files", {})
                         current_files = transaction.manifest.setdefault("upload_files", {})
                         for relative_path, record in persisted_files.items():

@@ -30,6 +30,7 @@ def main(argv=None) -> int:
         sys.path.insert(0, str(repository_root))
     # Ambient operator opt-ins must not start live delivery while widgets tick.
     # Explicit delivery fixtures override these inside their isolated contexts.
+    os.environ['PHOTOBOOTH_V2_STORAGE'] = '1'
     os.environ['PHOTOBOOTH_V2_PRINT'] = '0'
     os.environ['PHOTOBOOTH_V2_DRIVE'] = '0'
     # The tests/ directory intentionally has no __init__.py. Allow default

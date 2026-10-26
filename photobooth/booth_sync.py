@@ -31,6 +31,13 @@ class BoothDriveClient(AppsScriptDriveClient):
         received = {s.get('transaction_id') for s in result['slots'] if s.get('status') == 'READY' and s.get('folder_id')}
         if expected != received:
             raise DriveApiError('Remote reserves did not match the local ledger.', 409)
+        folder_ids = set()
+        for slot in result['slots']:
+            folder_id = slot['folder_id']
+            if (folder_id in folder_ids or not re.fullmatch(r'[A-Za-z0-9_-]+', folder_id)
+                    or slot.get('folder_url') != 'https://drive.google.com/drive/folders/' + folder_id):
+                raise DriveApiError('Remote reserve links could not be verified.', 409)
+            folder_ids.add(folder_id)
         return result['slots']
 
     def bind_transaction(self, manifest):
@@ -83,13 +90,16 @@ class BoothDriveWorker(DriveSyncWorker):
                 manifest = json.loads(checked_path(path).read_text(encoding='utf-8'))
                 if manifest.get('storage_layout') != 2 or not manifest.get('drive_intent'):
                     continue
-                if not manifest.get('drive_folder_id'):
+                if not manifest.get('drive_binding_verified'):
                     bound = self.client.bind_transaction(manifest)
                     with manifest_lock(path):
                         latest = json.loads(path.read_text(encoding='utf-8'))
                         if latest.get('transaction_id') != manifest['transaction_id']:
                             raise ValueError('Transaction identity changed.')
-                        latest.update(drive_folder_id=bound['folder_id'], drive_folder_url=bound['folder_url'], drive_binding_error=None)
+                        if latest.get('drive_folder_id') and latest['drive_folder_id'] != bound['folder_id']:
+                            raise ValueError('A known reserved folder cannot be replaced.')
+                        latest.update(drive_folder_id=bound['folder_id'], drive_folder_url=bound['folder_url'],
+                                      drive_binding_verified=True, drive_binding_error=None)
                         write_json_atomic(path, latest)
                 # Expiry tombstones also register their original deadline; no
                 # image can be resurrected by a late reconnect.
@@ -103,7 +113,8 @@ class BoothDriveWorker(DriveSyncWorker):
         slots = self.workspace.ready_slots()
         fingerprint = tuple(s['transaction_id'] for s in slots)
         if fingerprint != self._reserved:
-            self.client.reserve_transactions(slots)
+            remote = self.client.reserve_transactions([{k: s[k] for k in ('transaction_id','claim_token')} for s in slots])
+            self.workspace.remember_remote(remote)
             self._reserved = fingerprint
         if self.content and time.monotonic() - self._content_checked >= 60:
             self._content_checked = time.monotonic()

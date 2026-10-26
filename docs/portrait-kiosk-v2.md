@@ -9,6 +9,13 @@ GUI v2 owns its portrait UI/audio lifecycle and reuses working camera, capture,
 templates, printer, Drive, original game and QRIS services through small adapters.
 It is beyond the earlier gallery-only prototype; do not rebuild existing features.
 
+The coordinated FEAT-004 + BUG-009 storage implementation now mounts per-booth
+25-slot local reserves, Photo/NN/raw/color/bw and verified global/local caches
+in the ordinary launcher. Offline admission does not require a remote slot;
+Drive binding/upload and verified QR follow reconnect, without print replay.
+Actual Google setup/deployment, expiry and hardware acceptance remain pending.
+[Source evidence](qa/feat-004-storage/README.md) · [Setup](qa/feat-004-storage/SETUP.md).
+
 ## Product flow
 
 1. Advertising opens first; MULAI FOTO and MAIN MEONG FLY share the same media

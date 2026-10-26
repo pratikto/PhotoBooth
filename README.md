@@ -60,7 +60,7 @@ python tools/run_portrait_v2.py --print --drive
 
 After approving the three photos, each design automatically sends one batch
 with its selected copy count. Drive uploads/retries in the background and
-resumes old queues on startup without a new photo visit. The result shows a
+resumes its current-profile queues on startup without a new photo visit. The result shows a
 large download QR after file verification. Uncertain prints are held for
 inspection and never replayed automatically. Paper/phone/cloud acceptance is
 separate from source tests; BUG-009 retention remains open.
@@ -75,6 +75,13 @@ For print-only testing use `--print`; for deliberate manual printing add
 dedicated merchant Sandbox trial keeps both transports off.
 [Runbook, evidence and rollback](docs/qa/portrait-v2-print-drive/README.md) ·
 [eleven-item Submit form](docs/qa/portrait-v2-print-drive/windows-checklist.html).
+
+The ordinary launcher now uses per-booth storage: 25 empty local reserves,
+Photo/NN/raw/color/bw, offline photo/print with deferred Drive binding and
+verified global/local asset caches. Code.gs needs a manual update/setup and a
+new version of the existing deployment; the cloud environment did not deploy it.
+[Setup and rollback](docs/qa/feat-004-storage/SETUP.md) ·
+[12-item Submit checklist](docs/qa/feat-004-storage/windows-checklist.html).
 
 If Drive is held by retention setup, run `python tools/check_drive_retention.py`.
 It uses the existing v1 configuration and requests status only, saving a redacted

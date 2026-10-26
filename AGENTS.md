@@ -125,3 +125,12 @@ JPEGs/resolution and detector inputs original; artwork/text/logo/QR stay normal.
 Reuse the existing compositor through a default-off option (v1 stays normal);
 v2 opts in. New output only: never rewrite old strips or replay a print/upload.
 See docs/qa/portrait-v2-mirrored-output/README.md and the five-item Submit form.
+
+Storage integration continuation, 26 October: ordinary v2 launcher mounts layout 2
+(data/Photobooth or explicit PHOTOBOOTH_V2_STORAGE_ROOT); physical PB001 maps to
+transaction namespace PB001V2S2 to avoid legacy lease reuse. Reuse original
+render/print/queue/ad services and preserve immutable cache generations, explicit
+offline Drive intent, private claim state and no print replay. Code.gs requires
+manual setupBoothStorage/setupPhotoRetention and redeployment at the existing
+URL; source fixtures cannot close BUG-009. See implementation QA/SETUP/Submit
+form. Legacy profile may finish its own existing queues, never migrate old.

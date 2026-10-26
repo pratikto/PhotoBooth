@@ -48,12 +48,12 @@ class PhotoViews:
             from .photos import PhotoJobs, configured_test
             photo_root = (self._sandbox_jobs.store.flow.path.parent / 'photo-tests' if self._sandbox_enabled
                           else PROJECT_ROOT / 'data' / 'kiosk-v2-p3')
-            self._photo_jobs = PhotoJobs(factory=lambda: configured_test(photo_root, configuration_root=PROJECT_ROOT) if self._sandbox_enabled else configured_test(photo_root))
+            self._photo_jobs = PhotoJobs(factory=lambda: configured_test(photo_root, configuration_root=PROJECT_ROOT, storage_layout=1) if self._sandbox_enabled else configured_test(photo_root))
 
     def _warm_photo_delivery(self):
         # Resume the existing isolated queue on launch, without requiring a new
         # photo/transaction. Native clients/pool I/O initialize on PhotoJobs.
-        if (not self._sandbox_enabled and os.environ.get('PHOTOBOOTH_V2_DRIVE') == '1'
+        if (not self._sandbox_enabled and (os.environ.get('PHOTOBOOTH_V2_DRIVE') == '1' or os.environ.get('PHOTOBOOTH_V2_STORAGE') == '2')
                 and self._photo_jobs is None):
             self._ensure_photo_jobs()
             self._photo_jobs.submit('prepare')
@@ -292,7 +292,8 @@ class PhotoViews:
         body.add_widget(text_label(f'{designs} desain • {total} lembar pilihan', size=19, height=36))
         setup = self._photo_view
         if setup.get('drive_enabled'):
-            message = ('DRIVE SIAP • folder foto sudah tersedia' if setup.get('drive_ready') else
+            message = ('DRIVE DI BACKGROUND • foto & cetak tetap bisa offline' if setup.get('storage_layout') == 2 else
+                       'DRIVE SIAP • folder foto sudah tersedia' if setup.get('drive_ready') else
                        'MENYIAPKAN DRIVE • tunggu folder tersedia' if not setup.get('drive_error') else
                        'DRIVE BELUM SIAP • periksa koneksi / hubungi operator')
             body.add_widget(text_label(message,size=13,height=52,color=CYAN))
@@ -365,7 +366,9 @@ class PhotoViews:
         if upload == 'LOCAL_ONLY':
             delivery = 'MODE LOKAL • foto tersimpan di perangkat; tanpa QR download'
         elif upload == 'UPLOAD_COMPLETE':
-            delivery = 'DRIVE TERVERIFIKASI • pindai QR pada strip untuk download'
+            delivery = 'DRIVE TERVERIFIKASI • pindai QR di layar untuk download'
+        elif upload == 'PENDING_DRIVE_BINDING':
+            delivery = 'DRIVE TERTUNDA • foto lokal aman; upload & QR menyusul saat online'
         elif view.get('retention_error'):
             delivery = 'UPLOAD DITAHAN • operator perlu memeriksa kebijakan retensi Drive'
         elif upload in {'ACTION_REQUIRED','LOCAL_EXPIRED'}:

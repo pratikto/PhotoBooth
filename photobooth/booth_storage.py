@@ -72,6 +72,9 @@ class BoothWorkspace:
                         or txid in seen):
                     raise ValueError('Invalid or duplicate reserved identity.')
                 seen.add(txid)
+                if slot.get('folder_id') and (not re.fullmatch(r'[A-Za-z0-9_-]+', str(slot['folder_id']))
+                        or slot.get('folder_url') != 'https://drive.google.com/drive/folders/' + slot['folder_id']):
+                    raise ValueError('Reserved remote folder link is invalid.')
             if state['ready'] or state['claimed']:
                 if not checked_path(self.counter_path).is_file():
                     raise ValueError('Restore the missing counter before allocating new IDs.')
@@ -109,6 +112,17 @@ class BoothWorkspace:
     def ready_slots(self):
         with self.locked():
             return [dict(slot) for slot in self._load()['ready']]
+
+    def remember_remote(self, remote):
+        """Cache actual reserved IDs/URLs, never manufacture a download address."""
+        with self.locked():
+            state = self._load()
+            by_id = {slot['transaction_id']: slot for slot in remote}
+            for slot in state['ready']:
+                reply = by_id.get(slot['transaction_id'])
+                if reply:
+                    slot.update(folder_id=reply['folder_id'], folder_url=reply['folder_url'])
+            write_json_atomic(self.state_path, state)
 
     def claim(self):
         with self.locked():

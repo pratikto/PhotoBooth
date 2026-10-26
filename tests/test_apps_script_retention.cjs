@@ -378,7 +378,9 @@ test('layout 2 scoped upload verifies bytes and cannot upload through old or leg
 test('new-root cleanup keeps unused reserves, all assets and old untouched; legacy parent is excluded', () => {
   const h=storageHarness(); h.bind();
   const p=h.context.storageBoothFolder_(h.properties,'PB001V2S2',false), tx=p.children.find(f=>f.name===h.claim.transaction_id);
-  h.mark(tx,31); const archive=h.folder('excluded','old',tx);
+  h.mark(tx,31); tx.getDateCreated=()=>new ClockDate();
+  p.searchFolders=query=>iterator(p.children.filter(f=>!f.deleted && (!query.includes('createdDate') || f.getDateCreated()<new ClockDate(NOW-30*DAY))));
+  const archive=h.folder('excluded','old',tx);
   archive.getFiles=archive.getFolders=()=>{throw Error('Archive was entered');};
   h.mark(h.folder('legacy-expired','PB001_00009999'),40);
   assert.equal(h.context.cleanupPhotoRetention().deleted.length,0); assert.equal(archive.deleted,false);

@@ -31,6 +31,8 @@ def configure_kivy(config):
 def main(argv=()):
     from photobooth.kiosk_v2.delivery_options import configure_delivery
     configure_delivery(argv)
+    if os.environ.get("PHOTOBOOTH_V2_CHECKOUT_SANDBOX") != "1":
+        os.environ.setdefault("PHOTOBOOTH_V2_STORAGE", "2")
     # Install before importing native window/audio/video providers. Keep the
     # stream open through App.run/on_stop so fatal Windows exceptions can be
     # inspected even when there is no Python traceback in the terminal.

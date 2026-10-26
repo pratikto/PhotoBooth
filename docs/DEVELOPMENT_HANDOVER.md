@@ -7,13 +7,14 @@ still `master`; `main.py` launches v1. Do not restart the project or P3/P4 work.
 
 ## Latest completed increment
 
-**Latest owner instruction — FEAT-004 + BUG-009 implementation:** implement the
-application and Code.gs against the audited new structure, beyond documentation.
-Proceed in tested/pushed stages, tracking actual progress in the
-[implementation package](qa/feat-004-storage/README.md). Local storage/session/
-native-raster foundation has 70 focused PASS; new native/backend/content wiring
-follows. Do not stop at the audit or wait solely for laptop tests. No archive
-access, branch change, production activation or live cloud deployment is inferred.
+**Latest owner instruction — FEAT-004 + BUG-009 implementation:** application
+and Code.gs integration is implemented in the ordinary launcher: per-booth
+25 empty local/remote reserves, Photo/NN/raw,color,bw, immutable offline claims,
+verified global/local caches and original deadline retention. Foundation 76bb9a0
+and backend 6e2f777 are pushed/verified. Final integration source/evidence and
+setup/Submit checklist live in the [implementation package](qa/feat-004-storage/README.md).
+Actual Google deployment/deletion, phone/paper and release remain NOT_RUN. Keep
+all archive contents excluded and v1/Sandbox state isolated.
 
 **26 October foldering audit:** owner asks to check current organization against
 per-booth/25-reserve/Photo/NN/raw-color-bw/global-cache requirements and excludes

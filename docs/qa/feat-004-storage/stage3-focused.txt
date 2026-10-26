@@ -1,0 +1,177 @@
+Drive retention registration failed for PB001V2_00000001: Backend did not acknowledge the photo retention policy.
+Photo test print outcome uncertain
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/photos.py", line 234, in print_result
+    result = self.printer.print_image(session.output_path, copies=session.plan.print_copies)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+OSError: partial send
+Drive retention registration failed for PB001V2_00000001: clock missing
+Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/content_cache.py", line 119, in load
+    manifest=json.loads(checked_path(self.pointer).read_text(encoding='utf-8'))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmp5kwbf8gs/PB001/_state/content-current.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+test_copies_one_batch_and_durable_no_duplicate_print (test_kiosk_v2_photos.PhotoWorkflowTests.test_copies_one_batch_and_durable_no_duplicate_print) ... ok
+test_drive_pool_capture_offline_retry_and_verified_delivery_use_v2_namespace (test_kiosk_v2_photos.PhotoWorkflowTests.test_drive_pool_capture_offline_retry_and_verified_delivery_use_v2_namespace) ... ok
+test_drive_retention_guard_blocks_upload_without_backend_ack (test_kiosk_v2_photos.PhotoWorkflowTests.test_drive_retention_guard_blocks_upload_without_backend_ack) ... ok
+test_early_exit_preserves_files_and_next_run_never_reuses_id (test_kiosk_v2_photos.PhotoWorkflowTests.test_early_exit_preserves_files_and_next_run_never_reuses_id) ... ok
+test_failed_save_does_not_advance_photo_or_consume_retake (test_kiosk_v2_photos.PhotoWorkflowTests.test_failed_save_does_not_advance_photo_or_consume_retake) ... ok
+test_invalid_quantities_and_early_composition_are_rejected (test_kiosk_v2_photos.PhotoWorkflowTests.test_invalid_quantities_and_early_composition_are_rejected) ... ok
+test_isolated_admission_three_photos_and_unmirrored_original_pixels (test_kiosk_v2_photos.PhotoWorkflowTests.test_isolated_admission_three_photos_and_unmirrored_original_pixels) ... ok
+test_preview_conversion_is_bounded_rgb_and_preserves_original_bgr_orientation (test_kiosk_v2_photos.PhotoWorkflowTests.test_preview_conversion_is_bounded_rgb_and_preserves_original_bgr_orientation) ... ok
+test_retake_quota_preserves_original_and_is_per_design_not_per_copy (test_kiosk_v2_photos.PhotoWorkflowTests.test_retake_quota_preserves_original_and_is_per_design_not_per_copy) ... ok
+test_twenty_complete_test_runs_keep_unique_ids_and_fresh_quotas (test_kiosk_v2_photos.PhotoWorkflowTests.test_twenty_complete_test_runs_keep_unique_ids_and_fresh_quotas) ... ok
+test_uncertain_send_requires_operator_check_and_restart_never_replays (test_kiosk_v2_photos.PhotoWorkflowTests.test_uncertain_send_requires_operator_check_and_restart_never_replays) ... ok
+test_worker_is_nonblocking_single_flight_and_discards_completion_after_close (test_kiosk_v2_photos.PhotoWorkflowTests.test_worker_is_nonblocking_single_flight_and_discards_completion_after_close) ... ok
+test_configured_service_reuses_saved_printer_and_original_drive_factories (test_kiosk_v2_photo_delivery.PhotoDeliveryTests.test_configured_service_reuses_saved_printer_and_original_drive_factories) ... ok
+test_download_qr_only_after_verified_upload_is_encoded_off_ui_and_cached (test_kiosk_v2_photo_delivery.PhotoDeliveryTests.test_download_qr_only_after_verified_upload_is_encoded_off_ui_and_cached) ... ok
+test_missing_credentials_is_a_safe_setup_error_not_a_fake_folder (test_kiosk_v2_photo_delivery.PhotoDeliveryTests.test_missing_credentials_is_a_safe_setup_error_not_a_fake_folder) ... ok
+test_new_service_resumes_real_existing_upload_queue_without_new_visit_or_print (test_kiosk_v2_photo_delivery.PhotoDeliveryTests.test_new_service_resumes_real_existing_upload_queue_without_new_visit_or_print) ... ok
+test_setup_snapshot_reports_real_pool_readiness_and_reuses_one_worker (test_kiosk_v2_photo_delivery.PhotoDeliveryTests.test_setup_snapshot_reports_real_pool_readiness_and_reuses_one_worker) ... ok
+test_archive_paths_and_corrupt_identity_fail_before_claim (test_booth_storage.BoothStorageTests.test_archive_paths_and_corrupt_identity_fail_before_claim) ... ok
+test_booth_roots_and_active_counter_checkpoint_stay_isolated (test_booth_storage.BoothStorageTests.test_booth_roots_and_active_counter_checkpoint_stay_isolated) ... ok
+test_new_sessions_keep_raw_color_bw_and_retention_does_not_touch_assets_or_ready (test_booth_storage.BoothStorageTests.test_new_sessions_keep_raw_color_bw_and_retention_does_not_touch_assets_or_ready) ... ok
+test_saved_bw_print_reuses_original_batching_without_second_render (test_booth_storage.BoothStorageTests.test_saved_bw_print_reuses_original_batching_without_second_render) ... ok
+test_twenty_five_empty_direct_reserves_survive_restart_and_offline_exhaustion (test_booth_storage.BoothStorageTests.test_twenty_five_empty_direct_reserves_survive_restart_and_offline_exhaustion) ... ok
+test_client_reuses_existing_transport_and_rejects_mismatched_bind_chunk (test_booth_sync.BoothSyncTests.test_client_reuses_existing_transport_and_rejects_mismatched_bind_chunk) ... ok
+test_missing_retention_clock_does_not_upload_or_block_new_local_claims (test_booth_sync.BoothSyncTests.test_missing_retention_clock_does_not_upload_or_block_new_local_claims) ... ok
+test_offline_claim_reconnect_keeps_bytes_id_deadline_and_binding_on_stale_save (test_booth_sync.BoothSyncTests.test_offline_claim_reconnect_keeps_bytes_id_deadline_and_binding_on_stale_save) ... ok
+test_each_preview_uses_the_selected_master_and_returns_an_independent_image (test_templates.ReceiptTemplateTests.test_each_preview_uses_the_selected_master_and_returns_an_independent_image) ... ok
+test_every_design_places_three_ordered_photos_and_preserves_ink_and_margins (test_templates.ReceiptTemplateTests.test_every_design_places_three_ordered_photos_and_preserves_ink_and_margins)
+All 36 apertures must fill, with zero edits outside the clip masks. ... ok
+test_invalid_folder_link_cannot_replace_an_existing_result (test_templates.ReceiptTemplateTests.test_invalid_folder_link_cannot_replace_an_existing_result) ... ok
+test_irregular_apertures_retain_their_distinctive_cutouts (test_templates.ReceiptTemplateTests.test_irregular_apertures_retain_their_distinctive_cutouts)
+A rectangular paste would fill the heart's top center and corners. ... ok
+test_landscape_portrait_and_exif_sources_cover_each_aperture_without_mutation (test_templates.ReceiptTemplateTests.test_landscape_portrait_and_exif_sources_cover_each_aperture_without_mutation)
+The exact selected frame, rather than a global aspect, sets the crop. ... ok
+test_local_result_has_no_dummy_or_file_system_qr (test_templates.ReceiptTemplateTests.test_local_result_has_no_dummy_or_file_system_qr) ... ok
+test_archive_traversal_windows_collisions_and_outside_playlist_fail_before_download (test_content_cache.ContentCacheTests.test_archive_traversal_windows_collisions_and_outside_playlist_fail_before_download) ... ok
+test_manual_local_ads_and_scheduled_global_playlist_reuse_original_ad_catalog (test_content_cache.ContentCacheTests.test_manual_local_ads_and_scheduled_global_playlist_reuse_original_ad_catalog) ... ok
+test_original_pack_renderer_validates_cache_before_activation_and_keeps_active_paths (test_content_cache.ContentCacheTests.test_original_pack_renderer_validates_cache_before_activation_and_keeps_active_paths) ... ok
+test_verified_global_local_copies_survive_offline_restart_and_partial_new_generation (test_content_cache.ContentCacheTests.test_verified_global_local_copies_survive_offline_restart_and_partial_new_generation) ... ok
+test_atomic_report_is_local_unique_and_readiness_form_compatible (test_kiosk_v2_health_service.HealthBridgeTests.test_atomic_report_is_local_unique_and_readiness_form_compatible) ... ok
+test_missing_snapshot_cannot_export_as_pass (test_kiosk_v2_health_service.HealthBridgeTests.test_missing_snapshot_cannot_export_as_pass) ... ok
+test_no_frame_does_not_claim_camera_handle_offline_or_ready (test_kiosk_v2_health_service.HealthBridgeTests.test_no_frame_does_not_claim_camera_handle_offline_or_ready) ... ok
+test_old_worker_single_flight_and_closing_ignores_late_result (test_kiosk_v2_health_service.HealthBridgeTests.test_old_worker_single_flight_and_closing_ignores_late_result) ... ok
+test_original_worker_receives_cached_frame_and_lazy_config_off_ui (test_kiosk_v2_health_service.HealthBridgeTests.test_original_worker_receives_cached_frame_and_lazy_config_off_ui) ... ok
+test_printer_settings_are_read_only_and_deferred (test_kiosk_v2_health_service.HealthBridgeTests.test_printer_settings_are_read_only_and_deferred) ... ok
+test_report_excludes_driver_messages_environment_secrets_and_device_identity (test_kiosk_v2_health_service.HealthBridgeTests.test_report_excludes_driver_messages_environment_secrets_and_device_identity) ... ok
+
+----------------------------------------------------------------------
+Ran 42 tests in 13.550s
+
+OK
+KIOSK_UNITTEST_SUMMARY: run=42 failures=0 errors=0 skipped=0 success=True

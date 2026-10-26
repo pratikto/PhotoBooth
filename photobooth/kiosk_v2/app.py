@@ -337,7 +337,33 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, SandboxViews, Ope
         if self._warning_label is not None:
             self._warning_label.text = ""
 
+    def _apply_cached_content(self):
+        # Worker owns all network/JSON/image decoding. Swap references only at
+        # idle; active visitors keep immutable artwork paths through capture.
+        if (self._closed or self._suspended or self._sandbox_enabled
+                or self.navigation.page != ADVERT or self._invitation is not None):
+            return
+        jobs = self._photo_jobs
+        service = jobs.service if jobs and not jobs.busy else None
+        content = getattr(service, 'content', None)
+        snapshot = content.current if content else None
+        if not snapshot or snapshot['version'] == getattr(self, '_content_version', None):
+            return
+        self._content_version = snapshot['version']
+        self.catalog = snapshot['catalog']
+        if not self._mock_enabled:
+            self.templates = snapshot['templates']
+            self.quantities = {t.template_id: 0 for t in self.templates}
+            self.template_index = 0
+            self._preview_preloader.close()
+            self._preview_preloader = PreviewPreloader(self.templates)
+            self._preview_preloader.start()
+            self._textures.clear()
+            self._idle_failed_previews.clear()
+        self._show()
+
     def _tick(self, _dt):
+        self._apply_cached_content()
         if self._closed or self._suspended or self.navigation.page not in BROWSING_PAGES:
             return
         duration = time.monotonic() - self._last_activity

@@ -1,7 +1,7 @@
 # Meong Photobooth — current feature status
 
 Updated **26 October 2026** after documentation baseline `f36ebad` on
-`feature/portrait-kiosk-v2-next`. Latest functional source: **`fc26e3d`** (mirrored v2 outputs/copy), following BUG-009 diagnosis `887ba39`, tutorial entry `20453fe` and print/Drive `266b2c8`.
+`feature/portrait-kiosk-v2-next`. Latest functional source is the coordinated [storage integration](qa/feat-004-storage/README.md), after mirrored v2 **fc26e3d**, following BUG-009 diagnosis `887ba39`, tutorial entry `20453fe` and print/Drive `266b2c8`.
 The earlier **`9433010` / `0dc6555`** pair is the P5 source/evidence baseline,
 not the latest operator checkpoint. GitHub's default remains `master`.
 
@@ -30,7 +30,7 @@ closure or external P5 acceptance is inferred. No new runtime patch is needed.
 | Capture/review/retake | Three original photos/design, one retake/design; v2 review and photo areas in the shared result/print/digital PNG mirror | Raw JPEGs retain original orientation/resolution; template/text/QR and v1 defaults stay normal. Old outputs unchanged; quantity means copies, not more sessions. [Mirror proof/form](qa/portrait-v2-mirrored-output/README.md) |
 | Audio | Single v2 owner; GUI loop for still ads/photo journey, video's own audio, distinct game loop; one cue per action | Owner-reported normal. BUG-017 is monitoring after the later report, not a proven decoder fix; v1 BUG-001/007 stay separate |
 | Thermal photo printing | Existing v1 backend/config; --print auto-sends one durable batch per approved design, --manual-print optional; uncertainty/no-replay guards | New-source fixtures pass; actual current paper/copy/QR acceptance pending. Prior owner paper reports stay at unknown HEAD. Merchant trial forces printer off |
-| Drive/download | --drive resumes existing isolated queue on startup/after visits; verified-folder consent, background retry and large verified on-screen QR, original retention guard | New-source fixtures/pixel decode available; actual phone access/offline/restart and cloud deletion unverified. Default local; merchant trial off. BUG-009 OPEN |
+| Drive/download | --drive resumes existing isolated queue on startup/after visits; offline-safe admission, background binding/retry and large verified on-screen QR, original retention guard | New-source fixtures/pixel decode available; actual phone access/offline/restart and cloud deletion unverified. Default local; merchant trial off. BUG-009 OPEN |
 | BUG-009 retention activation | Reused v1 setup/cleanup; real CLOCK required for active registration ACK, incorrect trigger setup repaired; read-only redacted CLI/status and eight-item Submit form | 807 full Python PASS/zero skips; 19 actual-Code.gs VM PASS. Owner setup/deployment unconfirmed. Google timer/deletion NOT_RUN; bug stays OPEN. [Guide/evidence](qa/bug-009-retention/README.md) |
 | Meong Fly — FEAT-021 (game) | Original Stage/Flow/renderer/assets/emitter reused; persistent one-use v2 DEMO ledger | 26 reference files pinned to `672e3f7`. V2 uses manual DEMO entry; standalone camera scanner is not mounted |
 | Local MOCK checkout | Local SQLite quote/promotion/admission; nonpayable QR and simulated confirmation | Win discount Rp2,500 once per order, capped at subtotal; no bank settlement |
@@ -38,7 +38,7 @@ closure or external P5 acceptance is inferred. No new runtime patch is needed.
 | P5 readiness | Read-only CLI, safe metadata JSON, 26-item Submit/import form, rollback package | Owner preflight `0dc6555` = READY_FOR_MANUAL_TEST, not hardware/provider PASS |
 | FEAT-008 operator Device Health | Original v1 backend/panel/worker reused with small v2 adapters and safe report export | Later R01–R04 owner retest 4/4, no issues: BUG-018 monitoring at unknown HEAD/device metadata. Selection/switching disabled |
 | Other reference features | Device staging/switching, AI Background Studio, WhatsApp, newer dithering lab | Separate branches; not automatically in v2. [Reference map](gui-v2-branch-audit.md) |
-| FEAT-004 ads + BUG-009 storage/global-content target | Owner explicitly requests application and Code.gs implementation of the audited contract; local root/reserve/session/raster foundation delivered first | **IMPLEMENTATION IN PROGRESS**, not yet fully mounted/deployed. Stage 1 has 70 focused PASS; current GUI remains on its prior profile until the integration stage. Actual Drive NOT_INSPECTED. [Stage evidence](qa/feat-004-storage/README.md) |
+| FEAT-004 ads + BUG-009 booth storage/content | Ordinary v2 launcher uses PB00X roots, 25 empty reserves, Photo/NN/raw,color,bw, saved 1-bit print and verified global/local caches; Code.gs supplies scoped reservations/binding/content/cleanup | IN SOURCE; focused Python/Code.gs/native checks recorded in the [stage package](qa/feat-004-storage/README.md). Actual Google setup/deploy, phone/paper and deletion NOT_RUN. BUG-009 stays OPEN until real expiry evidence |
 | Production payments, merchant POS/scanner, trusted QRIS promo | Disabled/not delivered in v2 | Require their own approved scope, trust contract and acceptance |
 
 ## Latest recorded automated evidence
