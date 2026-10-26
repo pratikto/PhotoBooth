@@ -1,0 +1,1 @@
+PASS: eight fresh unchecked items; safe metadata/status import; READY/forged pass fields do not check cloud items; partial Submit 1/8; unchecked C01/C03 preserved; no extra cycle gate; persistence/download; 360/452/800px without horizontal overflow; zero browser errors.

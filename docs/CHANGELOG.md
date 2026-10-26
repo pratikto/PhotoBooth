@@ -13,6 +13,18 @@ the existing portrait workflow, retaining its three-job shape. BUG-009 stays
 OPEN pending installed-account/deletion evidence.
 [Scope, proof, activation guide and rollback](qa/bug-009-retention/README.md).
 
+## 2026-10-26 — BUG-009 desktop diagnostic and acceptance package
+
+Add `check_drive_retention.py` using the existing v1 client/configuration and P5
+safe inventory. One authenticated status request distinguishes setup, missing
+clock, stale deployment, authorization and API failures without raw secrets or
+cloud writes. Original v1 transport behavior/deletion selection are retained.
+Add an eight-item offline Submit/import form; READY/import never passes cloud
+checks. 44 focused Python PASS, final full 807 PASS/zero skips, 19 Code.gs VM
+PASS and browser checks pass. Owner-account activation/deployment and actual
+eligible synthetic deletion remain NOT_RUN; BUG-009 stays OPEN.
+[Commands, activation guide, evidence and rollback](qa/bug-009-retention/README.md).
+
 ## 2026-10-26 — Simpler photo entry with mandatory tutorial
 
 Remove idle CARA PAKAI and its two-column wrapper. Keep the existing full-width

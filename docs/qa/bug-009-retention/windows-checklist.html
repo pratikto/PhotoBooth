@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src data:">
+<title>Meong — BUG-009 Drive Retention</title>
+<style>
+:root{color-scheme:light;--bg:#f4f3fa;--ink:#18203e;--muted:#5a627a;--purple:#5542ac;--line:#dedced;--green:#16764e}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,Segoe UI,sans-serif}main{max-width:920px;margin:auto;padding:14px 18px 60px}header{padding:22px;border-radius:16px;background:#101a43;color:#fff}h1{margin:4px 0;font-size:clamp(23px,4vw,32px)}header p{color:#d6d8f0;margin:8px 0 0}.tag{font-size:12px;font-weight:800;letter-spacing:2px;color:#7ce2fc}
+.panel,section{background:white;border:1px solid var(--line);border-radius:14px;margin-top:18px;padding:20px}.meta{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:block;font-weight:650;font-size:14px}.field input,textarea{width:100%;margin-top:6px;border:1px solid #bdc0d1;border-radius:8px;padding:11px;color:var(--ink);background:#fff;font:inherit}.field input:focus,textarea:focus{outline:3px solid #dad2ff;outline-offset:1px}.wide{grid-column:1/-1}.summary{position:sticky;top:0;z-index:2;box-shadow:0 3px 16px #151a4315;background:#fffffff5;padding:14px 20px;border:1px solid var(--line);border-radius:12px;margin-top:18px}.numbers{display:flex;justify-content:space-between;gap:12px}.numbers strong{color:var(--purple)}progress{display:block;width:100%;height:13px;margin-top:9px;accent-color:var(--green)}h2{font-size:20px;margin:0 0 12px}.section-count{font-size:14px;font-weight:500;color:var(--muted);margin-left:10px}.item{display:flex;align-items:flex-start;gap:12px;padding:13px 7px;border-top:1px solid #efedf6;cursor:pointer;border-radius:6px}.item:hover{background:#f7f5ff}.item input{flex:0 0 23px;width:23px;height:23px;margin:2px 0;accent-color:var(--green);cursor:pointer}.item .id{display:inline-block;min-width:36px;color:var(--purple);font-size:13px;font-weight:750}.item.done{background:#f2faf5}.item.done .id{color:var(--green)}.help{color:var(--muted);font-size:14px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}button{border:0;border-radius:9px;padding:12px 18px;background:var(--purple);color:#fff;font:600 15px system-ui;cursor:pointer;min-height:46px}button.secondary{background:#eeebf8;color:var(--ink)}button.reset{background:#fff;color:#8c3434;border:1px solid #dcc5c5}button:hover{filter:brightness(.95)}#status{min-height:24px;margin-top:12px;color:var(--green)}textarea{min-height:150px;resize:vertical}.footer{font-size:13px;color:var(--muted);margin-top:18px}@media(max-width:580px){.meta{grid-template-columns:1fr}.panel,section{padding:15px}.summary{padding:12px}.item{padding:13px 2px}.item .id{min-width:30px}}@media print{body{background:white}.summary{position:static;box-shadow:none}.actions,#status,.footer{display:none}section{break-inside:avoid}main{padding:0;max-width:none}header{color:#101a43;background:white;border-bottom:2px solid #101a43;border-radius:0}header p{color:#4b526b}}
+</style>
+</head>
+<body><main>
+<header><div class="tag">MEONG PHOTOBOOTH · GUI V2</div><h1>BUG-009 — Drive Retention</h1><p>Eight actual checks. Source tests and an API READY report do not prove cloud deletion. Check only completed successful observations.</p></header>
+<div class="panel help"><strong>Diagnosis:</strong> <code>python tools/check_drive_retention.py</code>. This uses the existing v1 Apps Script configuration and only requests status. See <code>docs/qa/bug-009-retention/README.md</code> for activation steps.<br><br>
+Setup installs an hourly job that permanently deletes eligible managed photos after 30 days. Verify the dedicated photo parent and intended scope before activating it. No cloud activation/deletion was performed by Codex. Leave missing synthetic/deployment evidence unchecked; do not enter secrets, folder IDs or raw logs here.<br><br>
+<label class="field">Import safe retention / readiness JSON<input id="readiness-file" type="file" accept=".json,application/json"></label><p id="import-status" role="status"></p>
+Import fills available source/device/status metadata only; it never passes a checkbox.</div>
+<div class="panel meta">
+<label class="field wide">Branch<input id="branch" data-field value="feature/portrait-kiosk-v2-next"></label>
+<label class="field">Tested HEAD<input id="head" data-field value="" placeholder="Output of git rev-parse --short HEAD"></label>
+<label class="field">Date<input type="date" id="date" data-field value="2026-10-24"></label>
+<label class="field">Windows version<input id="windows" data-field placeholder="Example: Windows 11"></label>
+<label class="field wide">Diagnostic status (optional)<input id="lag" data-field placeholder="Example: SETUP_REQUIRED / TRIGGER_MISSING / READY"></label>
+<label class="field">Observed cloud timer runs (optional)<input type="number" min="0" step="1" id="cycles" data-field placeholder="Example: 1"></label>
+</div>
+<div class="summary"><div class="numbers"><strong id="count" aria-live="polite">0 / 8 passed</strong><span id="save-status" class="help">Saving…</span></div><progress id="progress" value="0" max="8" aria-label="Number of passed tests"></progress></div>
+<div id="cycle-status" class="panel help" role="status" aria-live="polite"></div>
+<div id="sections"></div>
+<div class="panel"><h2>Issue notes</h2><label class="field" for="notes">Record item ID, reproduction steps, actual behavior and expected behavior.</label><textarea id="notes" data-field placeholder="Example: S03 — still SETUP_REQUIRED after deploying; C01 not run because no authorized old synthetic fixture exists. No credentials or customer identifiers."></textarea>
+<div class="actions"><button id="submit" type="button">Submit Results</button><button id="copy" class="secondary" type="button">Copy report prompt</button><button id="download" type="button">Download results .txt</button><button id="print" class="secondary" type="button">Print / PDF</button><button id="reset" class="reset" type="button">Clear checklist</button></div><div id="status" role="status" aria-live="polite"></div></div>
+<div id="submission" class="panel" hidden><h2>Report prompt ready</h2><p>Paste this text into chat and send it. This offline form cannot send to the conversation automatically.</p><textarea id="prompt-output" readonly aria-label="Report for chat"></textarea></div>
+<p class="footer">8 items. Submit prepares text to copy into chat; it does not send automatically. Saved separately from earlier forms. Unchecked means failed or not run.</p>
+</main>
+<script>
+const SECTIONS = [
+  [
+    "S",
+    "Setup and deployed status",
+    [
+      "Confirm the existing Apps Script project and dedicated PHOTO parent, separate from advertisements. Preserve the old source/version and existing private URL/token locally; do not paste credentials into chat.",
+      "After reviewing activation: update Code.gs, enable Drive API v3, run setupPhotoRetention as the Web App owner. Verify exactly one cleanupPhotoRetention CLOCK trigger configured hourly; no unrelated trigger was removed.",
+      "Deploy a NEW VERSION of the EXISTING Web App deployment, keeping its /exec URL and token. Run python tools/check_drive_retention.py: READY is observed, and import the safe JSON below without automatically checking tests.",
+      "Run diagnosis again: it reports status without creating a pool, registering a customer folder, installing a trigger, uploading or requesting a deletion. No raw credentials, IDs/URLs or error logs appear in the saved report."
+    ]
+  ],
+  [
+    "C",
+    "Actual cloud evidence \u2014 authorized synthetic data only",
+    [
+      "On an explicitly authorized synthetic fixture eligible for the existing 30-day folder-age filter: the actual cleanup job permanently removes the expired marked transaction. Confirm it is gone, not merely in Trash. If no suitable old synthetic fixture exists, leave this unchecked; never use customer photos as test data.",
+      "In that same synthetic test, recent transactions, unused READY slots and unrelated/ad folders remain. Original registered dates are not renewed by a registration retry or kiosk restart.",
+      "Observe an actual successful hourly trigger execution while the kiosk is closed. Record the date/result locally; a READY report alone does not pass this item."
+    ]
+  ],
+  [
+    "V",
+    "GUI v2 recovery",
+    [
+      "Reopen GUI v2 with the existing explicit --drive profile: a NEW authorized test visit uploads only after retention acknowledgement, verifies its files and exposes the download QR. Photo counts, printing and tutorial flow stay normal; no old print/charge is replayed."
+    ]
+  ]
+];
+const KEY = 'meong-windows-retention-v1';
+const CYCLE_ITEMS = new Set([]);
+try {
+ const parts = new Intl.DateTimeFormat('en-CA', {timeZone:'Asia/Jakarta',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+ const date = Object.fromEntries(parts.map(part=>[part.type,part.value]));
+ document.getElementById('date').value = date.year+'-'+date.month+'-'+date.day;
+} catch { /* Keep the visible date editable when Intl is unavailable. */ }
+const FIELDS = ['branch','head','date','windows','lag','cycles','notes'];
+const defaults = Object.fromEntries(FIELDS.map(id=>[id,document.getElementById(id).value]));
+const items = [];
+for (const [code,title,labels] of SECTIONS) {
+ const section=document.createElement('section');
+ const heading=document.createElement('h2'); heading.textContent=code+'. '+title;
+ const count=document.createElement('span'); count.className='section-count';count.id='count-'+code; heading.append(count);section.append(heading);
+ labels.forEach((text,index)=>{
+  const id=code+String(index+1).padStart(2,'0');
+  const label=document.createElement('label');label.className='item';label.htmlFor=id;
+  const box=document.createElement('input');box.type='checkbox';box.id=id;
+  if(CYCLE_ITEMS.has(id))box.setAttribute('aria-describedby','cycle-status');
+  const copy=document.createElement('span');const badge=document.createElement('span');badge.className='id';badge.textContent=id;
+  copy.append(badge,document.createTextNode(text));label.append(box,copy);section.append(label);
+  items.push({id,text,code,box,label});box.addEventListener('change',()=>{update();save();});
+ });
+ document.getElementById('sections').append(section);
+}
+function qualifiedCycles(){
+ const raw=document.getElementById('cycles').value.trim();
+ const count=Number(raw);
+ return raw!=='' && Number.isInteger(count) && count>=20;
+}
+function enforceCycleGate(){
+ document.getElementById('cycle-status').textContent='No new twenty-cycle gate. Cloud deletion and timer execution require actual evidence; import/READY automatically passes no item.';
+}
+
+function update(){
+ enforceCycleGate();
+ const done=items.filter(item=>item.box.checked).length;
+ document.getElementById('count').textContent=done+' / '+items.length+' passed';
+ document.getElementById('progress').value=done;
+ for(const [code,,labels] of SECTIONS)document.getElementById('count-'+code).textContent=items.filter(i=>i.code===code&&i.box.checked).length+'/'+labels.length;
+ for(const item of items)item.label.classList.toggle('done',item.box.checked);
+}
+function save(){
+ update();
+ if(!document.getElementById('submission').hidden)document.getElementById('prompt-output').value=promptReport();
+ const data={fields:Object.fromEntries(FIELDS.map(id=>[id,document.getElementById(id).value])),checked:items.filter(i=>i.box.checked).map(i=>i.id)};
+ try{localStorage.setItem(KEY,JSON.stringify(data));document.getElementById('save-status').textContent='Saved in this browser';}
+ catch{document.getElementById('save-status').textContent='Use Download results to save a copy';}
+}
+function restore(){
+ try{
+  const raw=localStorage.getItem(KEY);if(!raw)return;const data=JSON.parse(raw);
+  for(const id of FIELDS)if(typeof data.fields?.[id]==='string')document.getElementById(id).value=data.fields[id];
+  const checked=new Set(Array.isArray(data.checked)?data.checked:[]);for(const item of items)item.box.checked=checked.has(item.id);
+ }catch{document.getElementById('save-status').textContent='Use Download results to save a copy';}
+}
+function report(){
+ update();
+ const names={branch:'Branch',head:'Tested HEAD',date:'Date',windows:'Windows version',lag:'Diagnostic status',cycles:'Observed cloud timer runs (optional)'};
+ const lines=['MEONG PHOTOBOOTH GUI V2 — BUG-009 DRIVE RETENTION (8 ITEMS)'];
+ for(const [id,name] of Object.entries(names))lines.push(name+': '+document.getElementById(id).value);
+ lines.push('HEAD status: '+(document.getElementById('head').value.trim()?'User supplied; verify against the tested version.':'NOT SUPPLIED — exact-source acceptance is unverified.'));
+ lines.push('No additional photo/game cycles required; old acceptance remains recorded. Cloud evidence is separate.');
+ lines.push('Retention results follow actual checked observations; no item is automatically passed.');
+ lines.push('Metadata status: '+(['head','windows'].every(id=>document.getElementById(id).value.trim())?'User supplied; verify against the tested device.':'INCOMPLETE — HEAD/Windows fields are not all supplied.'));
+ const done=items.filter(i=>i.box.checked).length;lines.push('','Passed: '+done+'/'+items.length,'Unchecked (failed/not run): '+(items.length-done),'');
+ for(const [code,title] of SECTIONS){lines.push(code+'. '+title);for(const i of items.filter(i=>i.code===code))lines.push((i.box.checked?'[x] ':'[ ] ')+i.id+' '+i.text);lines.push('');}
+ lines.push('External gates: source/API READY is not permanent deletion or hourly execution evidence. Merchant, physical printing and release remain separate.');
+ lines.push('ISSUE NOTES',document.getElementById('notes').value||'(No notes supplied)');return lines.join('\n');
+}
+function promptReport(){
+ return 'Here are my Meong Photobooth v2 Windows retest results. Analyze the results and issue notes. Unchecked items mean failed or not run; do not count them as passed.\n\n'+report();
+}
+function submitReport(){
+ save();
+ document.getElementById('submission').hidden=false;
+ const output=document.getElementById('prompt-output');
+ output.value=promptReport();output.focus();output.select();
+ status('Report prepared. Copy it into chat and send it.');
+}
+function status(text){document.getElementById('status').textContent=text;}
+async function copyReport(){
+ try{
+  if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(promptReport());
+  else{
+   const temp=document.createElement('textarea');temp.value=promptReport();document.body.append(temp);temp.focus();temp.select();const ok=document.execCommand('copy');temp.remove();if(!ok)throw new Error('copy');
+  }
+  status('Results copied. Paste them into chat to send.');
+ }catch{status('Clipboard access is unavailable. Use Download results .txt.');}
+}
+FIELDS.forEach(id=>document.getElementById(id).addEventListener('input',()=>{update();save();}));
+document.getElementById('submit').addEventListener('click',submitReport);
+document.getElementById('copy').addEventListener('click',copyReport);
+document.getElementById('download').addEventListener('click',()=>{
+ const file=new Blob([report()],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(file);const a=document.createElement('a');a.href=url;a.download='meong-windows-retention.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);status('Results file is ready to save.');
+});
+document.getElementById('print').addEventListener('click',()=>window.print());
+document.getElementById('reset').addEventListener('click',()=>{
+ if(!confirm('Clear all checks, device fields and notes in this checklist?'))return;
+ document.getElementById('submission').hidden=true;document.getElementById('prompt-output').value='';
+ for(const i of items)i.box.checked=false;for(const id of FIELDS)document.getElementById(id).value=defaults[id];update();save();status('Checklist cleared.');
+});
+
+document.getElementById('readiness-file').addEventListener('change',async event=>{
+ const message=document.getElementById('import-status');
+ try{
+  const file=event.target.files[0];if(!file)return;
+  if(file.size>262144)throw new Error('size');
+  const data=JSON.parse(await file.text());
+  if(data.schema_version!==1||!data.source||!data.device)throw new Error('format');
+  const put=(id,value)=>{if(document.getElementById(id)&&typeof value==='string'&&value.length<=200)document.getElementById(id).value=value;};
+  if(/^[a-f0-9]{7,40}$/.test(data.source.head||''))put('head',data.source.head);
+  put('branch',data.source.branch);put('windows',[data.device.os,data.device.os_release].filter(x=>typeof x==='string').join(' '));
+  const display=data.device.display||{};
+  if(Array.isArray(display.resolution)&&display.resolution.length===2&&display.resolution.every(n=>Number.isInteger(n)&&n>0&&n<65536))put('resolution',display.resolution.join(' × '));
+  if(Number.isInteger(display.scaling_percent))put('scaling',String(display.scaling_percent));
+  if(Number.isInteger(data.device.camera_index))put('camera_index',String(data.device.camera_index));
+  put('camera',data.device.camera_model);put('speaker',data.device.speaker_output);
+  if(data.kind==='drive-retention-readiness'&&typeof data.drive_retention?.state==='string')put('lag',data.drive_retention.state);
+  message.textContent='Metadata imported. No tests were automatically checked; READY does not prove deletion.'+(data.source.dirty?' ATTENTION: the report was created from a dirty working tree.':'');save();
+ }catch{message.textContent='Invalid file. Select drive-retention-readiness.json from tools/check_drive_retention.py or compatible readiness metadata.';}
+});
+restore();update();save();
+</script></body></html>

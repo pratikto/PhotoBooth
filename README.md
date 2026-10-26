@@ -71,6 +71,12 @@ dedicated merchant Sandbox trial keeps both transports off.
 [Runbook, evidence and rollback](docs/qa/portrait-v2-print-drive/README.md) ·
 [eleven-item Submit form](docs/qa/portrait-v2-print-drive/windows-checklist.html).
 
+If Drive is held by retention setup, run `python tools/check_drive_retention.py`.
+It uses the existing v1 configuration and requests status only, saving a redacted
+JSON without activation/upload/deletion. [BUG-009 activation guide and Submit
+form](docs/qa/bug-009-retention/README.md) distinguish setup, missing trigger,
+old deployment and access errors. Actual cloud expiry remains unverified.
+
 ## Operator Device Health
 
 At idle advertising, press **F12** or hold the Meong header for **1.5 seconds**.

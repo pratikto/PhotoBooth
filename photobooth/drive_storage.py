@@ -24,7 +24,7 @@ from urllib.parse import urlencode
 
 import requests
 
-from photobooth.retention import read_drive_retention, retention_metadata, utc_datetime
+from photobooth.retention import RETENTION_MARKER, read_drive_retention, retention_metadata, utc_datetime
 
 
 API_ROOT = "https://www.googleapis.com/drive/v3"
@@ -838,6 +838,29 @@ class AppsScriptDriveClient:
     ) -> None:
         """Compatibility alias; assignment only changes slot state, never its name."""
         self.assign_slot(folder_id, transaction_id, booth_id, slot_key)
+
+    def retention_status(self):
+        """Read activation/API metadata only; never invoke setup or cleanup."""
+        status = self._post({'action': 'retention_status'}).get('retention_status')
+        states = {'READY', 'CONFIGURATION_REQUIRED', 'SETUP_REQUIRED', 'TRIGGER_MISSING',
+                  'DUPLICATE_TRIGGERS', 'TRIGGER_ACCESS_REQUIRED', 'DRIVE_API_UNAVAILABLE',
+                  'DRIVE_PARENT_INVALID'}
+        if (not isinstance(status, dict) or type(status.get('protocol_version')) is not int
+                or status['protocol_version'] != 1 or status.get('managed_by') != RETENTION_MARKER
+                or type(status.get('retention_days')) is not int or status['retention_days'] != 30
+                or type(status.get('enabled')) is not bool
+                or not isinstance(status.get('state'), str) or status['state'] not in states
+                or (status.get('clock_trigger_count') is not None
+                    and (type(status['clock_trigger_count']) is not int or status['clock_trigger_count'] < 0))
+                or (status.get('drive_api_accessible') is not None
+                    and type(status['drive_api_accessible']) is not bool)
+                or (status.get('state') == 'READY' and not (
+                    status['enabled'] and status.get('clock_trigger_count') == 1
+                    and status.get('drive_api_accessible') is True))):
+            raise DriveApiError('Retention status protocol mismatch; update the existing Web App.', 409)
+        # Deliberately exclude unknown fields (URLs, IDs or raw errors) from reports.
+        return {key: status.get(key) for key in ('protocol_version', 'managed_by',
+            'retention_days', 'enabled', 'clock_trigger_count', 'drive_api_accessible', 'state')}
 
     def register_retention(self, folder_id, transaction_id, started_at):
         """Send the original transaction date; backend retries cannot renew it."""

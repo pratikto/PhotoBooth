@@ -1,5 +1,14 @@
 # Photo retention
 
+**26 October BUG-009 continuation:** the owner resumed this repair and reports
+setup/redeployment has not been confirmed. The existing v1 setup/cleanup is reused;
+activation now checks a real owning-account CLOCK trigger, and setup repairs
+incorrect same-handler trigger types. Use `python tools/check_drive_retention.py`
+for a read-only redacted status report, then follow the [current activation
+guide and eight-item Submit form](qa/bug-009-retention/README.md).
+No real Google setup/deployment/deletion has been performed by cloud source work;
+BUG-009 remains OPEN pending installed-account and actual synthetic expiry evidence.
+
 **Scope — shared retention policy/backend and v1 activation instructions.**
 Targets remain 15 days local/30 days Drive; **BUG-009 cloud deletion is OPEN**.
 V2 stores photo tests under its isolated profiles, not the v1 root `photos/`.

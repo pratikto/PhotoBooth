@@ -1,0 +1,27 @@
+✔ 30-day boundary uses permanent scoped deletion, without Trash (5.539209ms)
+✔ unused pre-created READY slots remain, even with an old or forged deadline (0.959798ms)
+✔ original transaction registration is immutable across retries and removes the READY slot (1.114605ms)
+✔ adoption uses the oldest photo date, never the old empty-folder creation date (0.99343ms)
+✔ unrelated/foreign folders, malformed metadata, and unknown nested content are preserved (1.033185ms)
+✔ legacy root photo pattern expires, arbitrary root images remain untouched (0.936908ms)
+✔ Drive permission failures are reported and retried; successful deletion is idempotent (0.924897ms)
+✔ preview is read-only before activation and reports only candidates (1.618949ms)
+✔ setup installs one hourly trigger, does not delete content, and refuses to sweep before activation (0.995147ms)
+✔ expired folders reject uploads and invalid tokens never reach cleanup (1.537011ms)
+✔ corrupt slot ledgers fail closed before any deletion (0.750185ms)
+✔ large backlogs are bounded and retain an iterator cursor for the next hourly pass (2.090289ms)
+✔ a stale enabled flag without an owning-account clock never acknowledges active retention (0.812179ms)
+✔ setup repairs a same-name non-clock trigger without touching unrelated triggers or photos (0.800379ms)
+✔ authenticated retention status only reads activation and Drive metadata, never content or configuration (0.960093ms)
+✔ status distinguishes setup, missing and duplicate clocks without installing or sweeping (1.81871ms)
+✔ status rejects invalid tokens before even a Drive metadata read (0.684473ms)
+✔ status reports Drive and trigger permission failures without echoing raw account errors (0.80791ms)
+✔ setup repairs duplicate own clocks, leaves other tasks alone and never deletes photos (0.689946ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 95.403896

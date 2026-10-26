@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "captures": [
+    {
+      "file": "screenshots/bug009-form-452x900.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "562b51eb176e8ff95d8f0684d9eb6a6a6b499c1ffeb797334e87f06d41fdb376"
+    },
+    {
+      "file": "screenshots/bug009-form-800x1280.png",
+      "width": 800,
+      "height": 1280,
+      "sha256": "130c70e83122ba09a7226d8a33453dc726724f97354231086faa77f1cf994392"
+    }
+  ],
+  "synthetic_browser_only": true,
+  "fixture_notes": "Metadata imported from cloud NOT_CONFIGURED observation, then a fabricated READY/verified payload to prove no boxes pass automatically; S01 checked by the browser test only. Not actual Google acceptance."
+}

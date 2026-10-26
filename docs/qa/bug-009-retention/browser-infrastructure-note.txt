@@ -1,0 +1,1 @@
+First browser invocation: file:// navigation blocked by managed Chromium policy (net::ERR_BLOCKED_BY_ADMINISTRATOR); the HTML was not loaded. Use a loopback-only static HTTP server for browser QA. No application/form source changed for this environment workaround.
