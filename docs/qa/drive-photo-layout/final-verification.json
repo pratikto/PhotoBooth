@@ -1,0 +1,29 @@
+{
+  "source_sha": "0bd69a91693b87637777d00d2971e2caa368a6c8",
+  "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40342788877",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "Windows Python 3.12 native SDL audio (dummy output)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Navigation and audio lifecycle",
+      "conclusion": "success"
+    }
+  ],
+  "local": {
+    "targeted_services_pass": 77,
+    "native_widgets_pass": 10,
+    "codegs_vm_pass": 28,
+    "failures": 0,
+    "skips": 0,
+    "full_monolithic_suite": "NOT_COMPLETED: native process stopped producing output and consuming CPU after about seven minutes; interrupted/terminated without response, then killed. No full-suite PASS claimed."
+  },
+  "live_google_deployment": "NOT_RUN",
+  "phone_scan": "NOT_RUN"
+}

@@ -55,5 +55,21 @@ Final targeted verification: **77 Python PASS**, **10 native Kivy widget PASS**
 (SDL offscreen/dummy audio), **28 actual-Code.gs VM PASS**; zero final failures
 or skips. Python syntax compilation passed. Earlier native fixture failures
 were corrected (new sharing acknowledgement fixture and initialized test worker);
-the complete final 10-case rerun passed. Full 824-case suite was not rerun.
+the complete final 10-case rerun passed. A full local monolithic run was attempted later but stalled in native execution and was stopped; no full-suite PASS is claimed.
 These results do not certify live Google deployment, actual upload, phone or paper.
+
+## Published source and CI
+
+Repair source `0bd69a91693b87637777d00d2971e2caa368a6c8` is verified on the required branch.
+[Matching-source CI 40342788877](https://github.com/pratikto/PhotoBooth/actions/runs/40342788877)
+completed with **all three jobs SUCCESS**. Desktop delivery 80, Sandbox 139 and
+health 80 cases passed without failures/skips; native widgets 108 ran with one
+optional model-assets skip. Windows dummy-audio and pure/backend jobs passed.
+These are synthetic checks, not actual speakers, Drive deployment or phone scanning.
+
+The separate full local monolithic run stopped progressing in native execution
+(no completed unittest summary). Interrupt and normal termination did not finish
+it; it was killed as test-process cleanup. Its cause is not established; do not
+infer a product or Drive acceptance result from it. The 77 targeted services,
+10 native delivery-widget and 28 Code.gs final passes remain independently recorded.
+No runtime source changed after those passes or the matching successful CI.
