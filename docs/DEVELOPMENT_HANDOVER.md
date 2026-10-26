@@ -2,7 +2,7 @@
 
 Updated **26 October 2026**. Repository `pratikto/PhotoBooth`; required branch
 **`feature/portrait-kiosk-v2-next`**. Documentation baseline **`f36ebad`**, latest functional
-source **`fc26e3d`** (mirrored v2 outputs/copy; earlier BUG-009 `887ba39`, tutorial `20453fe`, print/Drive `266b2c8`). Refresh remote HEAD before continuing. GitHub's default is
+source **`53e7b4c`** (coordinated per-booth storage/content; mirror `fc26e3d`, BUG-009 `887ba39`, print/Drive `266b2c8`). Refresh remote HEAD before continuing. GitHub's default is
 still `master`; `main.py` launches v1. Do not restart the project or P3/P4 work.
 
 ## Latest completed increment
@@ -13,6 +13,8 @@ and Code.gs integration is implemented in the ordinary launcher: per-booth
 verified global/local caches and original deadline retention. Foundation 76bb9a0
 and backend 6e2f777 are pushed/verified. Final integration source/evidence and
 setup/Submit checklist live in the [implementation package](qa/feat-004-storage/README.md).
+Final source 53e7b4c has 824 full local PASS/zero skips, 24 Code.gs PASS and
+matching three-job CI SUCCESS (40273343183); 28 final native PNGs verified.
 Actual Google deployment/deletion, phone/paper and release remain NOT_RUN. Keep
 all archive contents excluded and v1/Sandbox state isolated.
 
@@ -22,8 +24,8 @@ all contents of `old` from inspection/change. Owner selects continued local
 photo/print when Drive/reserves are unavailable, with upload/QR later. The
 [audited target contract](photobooth-storage-layout.md) is documentation, not a
 runtime/cloud cutover. Existing source fixtures: 38 tests PASS plus controlled
-two-session/three-copy/retake, native raster and pool checks. Current runtime
-still has target 2 and old active paths; real Drive was not accessible. Do not
+two-session/three-copy/retake, native raster and pool checks. At that audit checkpoint the runtime
+still had target 2 and its prior active paths; real Drive was not accessible. Do not
 infer new-layout implementation or scan/migrate the archive from this audit.
 
 Owner then clarifies that this target belongs to **FEAT-004 ads + BUG-009**.

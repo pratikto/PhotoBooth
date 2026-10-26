@@ -126,6 +126,9 @@ silently. Existing reserved real folder IDs/URLs are cached and can be printed
 while offline. If no real folder was known at composition, paper explicitly
 reports pending upload; the verified on-screen QR follows online. Saved paper
 pixels cannot acquire a QR later: reconnect never rewrites color/BW or reprints.
+The on-screen QR updates while that result remains open. If the visitor leaves
+without a reserved URL, later retrieval needs the operator and the transaction
+reference; idle never reveals a previous visitor's photos.
 Uploaded photos are held until the original retention policy is acknowledged by
 an active timer; repeated upload uses the original checksum/revision engine.
 
@@ -135,7 +138,7 @@ Network failures with valid configuration retry automatically. No QR is shown
 as verified until every queued raw/color/BW file has a verified acknowledgement.
 
 Rollback checkpoints: foundation **76bb9a0**, backend **6e2f777**; final source is
-recorded in README evidence. Revert source in a new scoped commit after review;
+**53e7b4c**, recorded in README evidence. Revert source in a new scoped commit after review;
 never reset/delete state or replay uncertain external actions. Close the GUI
 before profile changes. Explicit `$env:PHOTOBOOTH_V2_STORAGE='1'` selects the
 previous v2 profile for its own existing queues, counters and paper journal; it

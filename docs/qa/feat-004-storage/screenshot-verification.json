@@ -1,0 +1,268 @@
+{
+  "source_sha": "53e7b4c16650feb46e3ecb1e0645a11c316da763",
+  "clean_source_native_captures": 28,
+  "dimensions": [
+    [
+      800,
+      1280
+    ],
+    [
+      452,
+      900
+    ]
+  ],
+  "checks": "Source SHA, clean tracked tree, PNG dimensions, nonblack pixels and SHA256 verified. P3 phase and settled native FBO verified.",
+  "visually_reviewed": [
+    "04-templates",
+    "06-local-result",
+    "windows-form"
+  ],
+  "review_each_size": true,
+  "notes": [
+    "Synthetic captures, not camera/paper/Google acceptance.",
+    "Form has older safe fixture metadata and one synthetic check, not Windows acceptance.",
+    "A preliminary 800px result captured a stale window frame; it was replaced with settled-state native FBO evidence without source/runtime changes."
+  ],
+  "files": [
+    {
+      "state": "01-photo-confirm",
+      "page": "photo_confirm",
+      "file": "01-photo-confirm-800x12800001.png",
+      "sha256": "e997614de0420968b0a624ea6731521c278692abf04c95640d94b1e0e46d3260",
+      "width": 800,
+      "height": 1280,
+      "verified_phase": "confirm"
+    },
+    {
+      "state": "02-camera-ready",
+      "page": "capture",
+      "file": "02-camera-ready-800x12800001.png",
+      "sha256": "b7406592a0bf0513a824a780cf365ff4077e843c7dbca5141282537f996fdde4",
+      "width": 800,
+      "height": 1280,
+      "verified_phase": "capture"
+    },
+    {
+      "state": "03-countdown",
+      "page": "capture",
+      "file": "03-countdown-800x12800001.png",
+      "sha256": "b8f2adadb76c6ff5b2ddcb2c9e7796196431fcbd4f2f81cee2bf43922c90781b",
+      "width": 800,
+      "height": 1280,
+      "verified_phase": "capture"
+    },
+    {
+      "state": "04-review",
+      "page": "review",
+      "file": "04-review-800x12800001.png",
+      "sha256": "aaf3348e9b391183032c3793ac345aeecc68560de58984b2494f321e8bd9362f",
+      "width": 800,
+      "height": 1280,
+      "verified_phase": "review"
+    },
+    {
+      "state": "05-retake-ready",
+      "page": "capture",
+      "file": "05-retake-ready-800x12800001.png",
+      "sha256": "1c89d5af93e46173822d84cb01d25629aa51583fcd7f655af6e78d332a1a97f8",
+      "width": 800,
+      "height": 1280,
+      "verified_phase": "capture"
+    },
+    {
+      "state": "06-local-result",
+      "page": "result",
+      "file": "06-local-result-800x12800001.png",
+      "sha256": "74ce66d66a5ef3eecb4621ce93b9d92461db2e2f2271b4d1876838500a01ca15",
+      "width": 800,
+      "height": 1280,
+      "verified_phase": "result"
+    },
+    {
+      "state": "07-print-uncertain",
+      "page": "result",
+      "file": "07-print-uncertain-800x12800001.png",
+      "sha256": "3266025cab7ff46d8740811e5509415b264c9014aa8c2d6f33ed16707e706ba9",
+      "width": 800,
+      "height": 1280,
+      "verified_phase": "result"
+    },
+    {
+      "state": "08-camera-unavailable",
+      "page": "capture",
+      "file": "08-camera-unavailable-800x12800001.png",
+      "sha256": "d7088248784bc553dbd06fbaa0b155db18bc22619bb33a56c990bc505902285c",
+      "width": 800,
+      "height": 1280,
+      "verified_phase": "capture"
+    },
+    {
+      "state": "01-photo-confirm",
+      "page": "photo_confirm",
+      "file": "01-photo-confirm-452x9000001.png",
+      "sha256": "b3397433911d29a2bd841b184cc1822c5d14eab1b2d09d7176d0a8a08b92d744",
+      "width": 452,
+      "height": 900,
+      "verified_phase": "confirm"
+    },
+    {
+      "state": "02-camera-ready",
+      "page": "capture",
+      "file": "02-camera-ready-452x9000001.png",
+      "sha256": "fb7137bf0f6ff2b892cb040e67d537e5b04ff5ec0de570e296df2ab9af40e96a",
+      "width": 452,
+      "height": 900,
+      "verified_phase": "capture"
+    },
+    {
+      "state": "03-countdown",
+      "page": "capture",
+      "file": "03-countdown-452x9000001.png",
+      "sha256": "9c7571866e19ae2746ce5144b86011922f64ba7962fc5a24921b54f70cbef108",
+      "width": 452,
+      "height": 900,
+      "verified_phase": "capture"
+    },
+    {
+      "state": "04-review",
+      "page": "review",
+      "file": "04-review-452x9000001.png",
+      "sha256": "0e3d7935c372f27b4ba6d730bc82b1222abfde8ad7e3ec26ffc5369d44fbe4e4",
+      "width": 452,
+      "height": 900,
+      "verified_phase": "review"
+    },
+    {
+      "state": "05-retake-ready",
+      "page": "capture",
+      "file": "05-retake-ready-452x9000001.png",
+      "sha256": "7c2435f48f355dac3661685a53ad6c8b44b82082cf6eb0289551ff9f5c1d92f4",
+      "width": 452,
+      "height": 900,
+      "verified_phase": "capture"
+    },
+    {
+      "state": "06-local-result",
+      "page": "result",
+      "file": "06-local-result-452x9000001.png",
+      "sha256": "045d420f0a08d29940c3179c182c639ae6d47219aa29f53411931f81378207c9",
+      "width": 452,
+      "height": 900,
+      "verified_phase": "result"
+    },
+    {
+      "state": "07-print-uncertain",
+      "page": "result",
+      "file": "07-print-uncertain-452x9000001.png",
+      "sha256": "90e428bf25602681f6a41004f96960233a5a36f33ab63d1e63271c9ac2912661",
+      "width": 452,
+      "height": 900,
+      "verified_phase": "result"
+    },
+    {
+      "state": "08-camera-unavailable",
+      "page": "capture",
+      "file": "08-camera-unavailable-452x9000001.png",
+      "sha256": "f082961d4a6e85df2adf23b1989d2e93a73e2535c35e460da74270508a7726e3",
+      "width": 452,
+      "height": 900,
+      "verified_phase": "capture"
+    },
+    {
+      "state": "01-advert",
+      "page": "advert",
+      "file": "01-advert-800x12800001.png",
+      "width": 800,
+      "height": 1280,
+      "sha256": "0fc77eb1fe180b98bd098a68ac52cc2863df6c312d1d87a81db99cab2c7fd8c1"
+    },
+    {
+      "state": "02-invitation",
+      "page": "advert",
+      "file": "02-invitation-800x12800001.png",
+      "width": 800,
+      "height": 1280,
+      "sha256": "347d28c8c5e2b6cd397c59a2abdc430ec5e866bddb3328e5265a3207d2aa7f80"
+    },
+    {
+      "state": "03-tutorial",
+      "page": "tutorial",
+      "file": "03-tutorial-800x12800001.png",
+      "width": 800,
+      "height": 1280,
+      "sha256": "f686126d10db6dd1eba4efff4e2f83adb43f028420f93c230a872ea5d00a5d9a"
+    },
+    {
+      "state": "04-templates",
+      "page": "templates",
+      "file": "04-templates-800x12800001.png",
+      "width": 800,
+      "height": 1280,
+      "sha256": "b144698fc93dd7d58f140995ace847c01548f026aaae9c9334ed382c2c481901"
+    },
+    {
+      "state": "05-copy-cart",
+      "page": "templates",
+      "file": "05-copy-cart-800x12800001.png",
+      "width": 800,
+      "height": 1280,
+      "sha256": "e4abd51479a4cbbf43430dbb51860c9b80ca0491e9be5d5d4bf003e3ac7e9a25"
+    },
+    {
+      "state": "06-game-placeholder",
+      "page": "game_preview",
+      "file": "06-game-placeholder-800x12800001.png",
+      "width": 800,
+      "height": 1280,
+      "sha256": "64ee9a80dd1f64ae142f27fa9b151921b5874e0042f9a8d17451a235bfe4664c"
+    },
+    {
+      "state": "01-advert",
+      "page": "advert",
+      "file": "01-advert-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "c03b5623de4d37626943a5123f9773ccbb427deb555d42e1b3c44054a5a670e5"
+    },
+    {
+      "state": "02-invitation",
+      "page": "advert",
+      "file": "02-invitation-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "5ae78f4ff81b15b8e3e7df94191e70b7554482041a2ba56605c013aa06c98ecc"
+    },
+    {
+      "state": "03-tutorial",
+      "page": "tutorial",
+      "file": "03-tutorial-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "28f397ba4a0426d3f0d766b1aebcc13ccdfc7d1f0c78edb6818861ec5434031a"
+    },
+    {
+      "state": "04-templates",
+      "page": "templates",
+      "file": "04-templates-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "58a97c0c0200aee816a148995cc78c102c8b14cd52665f1dae8335f4978fec8c"
+    },
+    {
+      "state": "05-copy-cart",
+      "page": "templates",
+      "file": "05-copy-cart-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "c9a0884297a32a4c3911fee2ac4d0086d8a4b843762e4d3469f67af0b75d1f77"
+    },
+    {
+      "state": "06-game-placeholder",
+      "page": "game_preview",
+      "file": "06-game-placeholder-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "e7fa38e9d6704f2630bb809b2b60d2e24ca1386d08bfabb856a1fe9241a8cb8e"
+    }
+  ]
+}

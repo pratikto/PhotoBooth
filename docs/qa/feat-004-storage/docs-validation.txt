@@ -1,0 +1,4 @@
+PASS: final integration code SHA256 manifest matches source 53e7b4c.
+PASS: 40 local links in implementation README, SETUP and storage contract exist.
+PASS: evidence JSON files parse; git diff --check clean.
+Documentation/evidence update only; no repeated code-change CI requested.

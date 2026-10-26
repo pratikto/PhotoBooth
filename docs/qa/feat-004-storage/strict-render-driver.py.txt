@@ -1,0 +1,51 @@
+"""Reuse the original P3 recorder/actions; settle phases and export native FBOs.
+Run from repository root with the original render_portrait_p3 CLI arguments.
+No image editing, real printer, cloud, camera, or source modification.
+"""
+import hashlib,importlib.util,json,subprocess,time
+from pathlib import Path
+from unittest.mock import patch
+root=Path.cwd()
+spec=importlib.util.spec_from_file_location('storage_recorder',root/'tools/render_portrait_p3.py')
+module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+from kivy.clock import Clock
+from kivy.core.window import Window
+original_capture=module.Recorder.capture_screen
+original_advance=module.Recorder.advance
+expected={'01-photo-confirm':'confirm','02-camera-ready':'capture','03-countdown':'capture',
+          '04-review':'review','05-retake-ready':'capture','06-local-result':'result',
+          '07-print-uncertain':'result','08-camera-unavailable':'capture'}
+def advance(self,dt):
+    if getattr(self,'_qa_capture_pending',False):
+        Clock.schedule_once(self.advance,.05);return
+    return original_advance(self,dt)
+def capture(self,name):
+    self._qa_capture_pending=True;started=time.monotonic()
+    def wait(dt):
+        self._poll_photos()
+        if self._photo_jobs.busy or self._photo_view.get('phase')!=expected[name]:
+            if time.monotonic()-started>12:raise AssertionError('Wrong settled phase for '+name)
+            Clock.schedule_once(wait,.05);return
+        Clock.schedule_once(export,.15)
+    def export(dt):
+        assert not self._photo_jobs.busy and self._photo_view['phase']==expected[name]
+        def fbo(*,name):
+            path=Path(name);path=path.with_name(path.stem+'0001'+path.suffix)
+            self.stage.export_to_png(str(path));return str(path)
+        with patch.object(Window,'screenshot',side_effect=fbo):original_capture(self,name)
+        self.evidence[-1]['verified_phase']=expected[name]
+        self._qa_capture_pending=False
+    Clock.schedule_once(wait,0)
+module.Recorder.advance=advance;module.Recorder.capture_screen=capture
+app=module.Recorder()
+try:
+    app.run();assert len(app.evidence)==8
+    report={'source_sha':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
+       'tracked_changes':bool(subprocess.check_output(['git','status','--porcelain','--untracked-files=no'])),
+       'storage_layout':2,'synthetic_only':True,'capture_protocol':'Original recorder/actions, settled phase + native Widget FBO',
+       'capture_driver_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'screenshots':app.evidence}
+    (module.args.output_dir/f'p3-report-{module.args.width}x{module.args.height}.json').write_text(json.dumps(report,indent=2)+'\n')
+    print('PASS: eight phase-verified native FBO captures')
+finally:
+    if app._photo_jobs:app._photo_jobs.wait_closed()
+    app.temp.cleanup()

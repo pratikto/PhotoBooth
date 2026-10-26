@@ -141,3 +141,58 @@ skipped** in that invocation; both skipped real-palm/native-audio cases then ran
 separately with their assets/flags, **2 PASS / zero skips**. See
 [operator/cache native run](operator-cache-tests.txt) and
 [explicit native supplement](extra-native-tests.txt). No layout/geometry changed.
+
+## Final source — 53e7b4c16650feb46e3ecb1e0645a11c316da763
+
+The final guard is now also covered by a complete matching-source run:
+[**824 Python PASS / zero failures, errors or skips**](head-full-tests.txt),
+241.156s; 24 actual-Code.gs VM PASS. Original-v1 GUI, native video/audio and
+public real-palm model fixtures were all enabled. [Final code hashes](tested-source-head.json)
+separate this result from the earlier bf9be57 run. The actual ordinary launcher
+also cold-booted a temporary layout-2 profile: advertising first, 25 empty READY
+folders, printer/Drive disabled ([smoke outcome](launcher-smoke.json)).
+
+Matching-source [CI 40273343183](https://github.com/pratikto/PhotoBooth/actions/runs/40273343183):
+all **three jobs SUCCESS**. [Run result](ci-result.json) ·
+[artifact/source verification](ci-verification.json). The 133 CI PNGs and 14 clean
+source reports were checked; delivery 76, Sandbox 139 and health 80 report no
+failures/errors/skips. Native CI reports 107 cases with one optional palm-assets
+skip; the complete local run above includes and passes that real-model test.
+Windows CI uses dummy PCM, so successful audio loading is not speaker acceptance.
+
+[Final screenshot verification](screenshot-verification.json): 28 native PNGs at
+800×1280/452×900, source SHA, clean tracked tree, dimensions, nonblack pixels and
+SHA256 verified; two browser form views also published. Gallery and settled
+result were visually reviewed at both sizes, plus both form views. Additional
+advert/consent views were reviewed at bf9be57; the later guard changed no geometry.
+
+A preliminary 800px Window readback still showed the preceding review frame.
+That preliminary capture is replaced, not counted as a correct result. The
+[reproducible QA driver](strict-render-driver.py.txt) reuses the original P3
+recorder/actions, waits for the expected photo phase and exports actual native
+Widget FBOs after layout settles. No application or image pixels were edited.
+Each of the 16 P3 frames records its verified phase; the gallery/advert captures
+use the original recorder. [Browser checks](browser-tests.txt) prove Submit does
+not automatically pass unchecked tests; fixture-imported metadata/one synthetic
+check in the form pictures is not a Windows observation.
+
+| View | 800×1280 | 452×900 |
+| --- | --- | --- |
+| Gallery | [PNG](screenshots/04-templates-800x12800001.png) | [PNG](screenshots/04-templates-452x9000001.png) |
+| Offline result | [PNG](screenshots/06-local-result-800x12800001.png) | [PNG](screenshots/06-local-result-452x9000001.png) |
+| Test form | [PNG](screenshots/windows-form-800x1280.png) | [PNG](screenshots/windows-form-452x900.png) |
+
+Checkpoints: 76bb9a0 foundation → 6e2f777 backend → bf9be57 integration →
+53e7b4c operator-overlay guard/final runtime. All were pushed to the required
+branch and remote HEAD verified. This subsequent evidence-only publication
+uses skip-ci and changes no runtime. Rollback rules and exact Windows/Code.gs
+steps are in [SETUP](SETUP.md); preserve all counters, journals, original files
+and archive exclusion. Never infer a new print/charge from a recovered queue.
+
+Remaining acceptance: Apps Script/manual root/timer deployment, actual global
+sync on each physical booth, live 30-day permanent deletion, phone QR and paper.
+No Google credentials/connector was available here; **BUG-009 stays OPEN** until
+actual authorized deletion evidence. FEAT-004 is implemented/tested in source,
+with real-account acceptance pending. There is no newly known automated/native
+layout failure after the corrections above. No production payment/scanner/game
+integration, master/default/merge or archive changes occurred.

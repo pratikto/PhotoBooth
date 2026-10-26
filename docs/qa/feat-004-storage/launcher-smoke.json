@@ -1,0 +1,8 @@
+{
+  "result": "PASS",
+  "storage_layout": 2,
+  "ready_empty": 25,
+  "boot_page": "advert",
+  "synthetic_only": true,
+  "physical_google_print": "NOT_RUN"
+}

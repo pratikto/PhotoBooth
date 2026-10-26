@@ -1,0 +1,82 @@
+{
+  "source_sha": "53e7b4c16650feb46e3ecb1e0645a11c316da763",
+  "tracked_changes": false,
+  "storage_layout": 2,
+  "synthetic_only": true,
+  "capture_protocol": "Original recorder/actions, settled phase + native Widget FBO",
+  "capture_driver_sha256": "533dce2d10e4baadf6b15fc30823d95ace0d2a2d7df99cc3e1c46ff60d1db34c",
+  "screenshots": [
+    {
+      "state": "01-photo-confirm",
+      "page": "photo_confirm",
+      "file": "01-photo-confirm-800x12800001.png",
+      "sha256": "e997614de0420968b0a624ea6731521c278692abf04c95640d94b1e0e46d3260",
+      "width": 800,
+      "height": 1280,
+      "verified_phase": "confirm"
+    },
+    {
+      "state": "02-camera-ready",
+      "page": "capture",
+      "file": "02-camera-ready-800x12800001.png",
+      "sha256": "b7406592a0bf0513a824a780cf365ff4077e843c7dbca5141282537f996fdde4",
+      "width": 800,
+      "height": 1280,
+      "verified_phase": "capture"
+    },
+    {
+      "state": "03-countdown",
+      "page": "capture",
+      "file": "03-countdown-800x12800001.png",
+      "sha256": "b8f2adadb76c6ff5b2ddcb2c9e7796196431fcbd4f2f81cee2bf43922c90781b",
+      "width": 800,
+      "height": 1280,
+      "verified_phase": "capture"
+    },
+    {
+      "state": "04-review",
+      "page": "review",
+      "file": "04-review-800x12800001.png",
+      "sha256": "aaf3348e9b391183032c3793ac345aeecc68560de58984b2494f321e8bd9362f",
+      "width": 800,
+      "height": 1280,
+      "verified_phase": "review"
+    },
+    {
+      "state": "05-retake-ready",
+      "page": "capture",
+      "file": "05-retake-ready-800x12800001.png",
+      "sha256": "1c89d5af93e46173822d84cb01d25629aa51583fcd7f655af6e78d332a1a97f8",
+      "width": 800,
+      "height": 1280,
+      "verified_phase": "capture"
+    },
+    {
+      "state": "06-local-result",
+      "page": "result",
+      "file": "06-local-result-800x12800001.png",
+      "sha256": "74ce66d66a5ef3eecb4621ce93b9d92461db2e2f2271b4d1876838500a01ca15",
+      "width": 800,
+      "height": 1280,
+      "verified_phase": "result"
+    },
+    {
+      "state": "07-print-uncertain",
+      "page": "result",
+      "file": "07-print-uncertain-800x12800001.png",
+      "sha256": "3266025cab7ff46d8740811e5509415b264c9014aa8c2d6f33ed16707e706ba9",
+      "width": 800,
+      "height": 1280,
+      "verified_phase": "result"
+    },
+    {
+      "state": "08-camera-unavailable",
+      "page": "capture",
+      "file": "08-camera-unavailable-800x12800001.png",
+      "sha256": "d7088248784bc553dbd06fbaa0b155db18bc22619bb33a56c990bc505902285c",
+      "width": 800,
+      "height": 1280,
+      "verified_phase": "capture"
+    }
+  ]
+}

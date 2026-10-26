@@ -1,0 +1,32 @@
+{
+  "source_sha": "53e7b4c16650feb46e3ecb1e0645a11c316da763",
+  "run_id": 40273343183,
+  "run_url": "https://github.com/pratikto/PhotoBooth/actions/runs/40273343183",
+  "conclusion": "success",
+  "artifact_id": 12629710407,
+  "artifact_sha256": "345814b425ba58bbf320aadec64dbd9f84d37bfb402c11dc7343817990f5bf7f",
+  "pngs_verified": 133,
+  "clean_source_reports": [
+    "report-360x640.json",
+    "report-800x1280.json",
+    "report-452x900.json",
+    "report-800x600.json",
+    "delivery/delivery-report-800x1280.json",
+    "delivery/delivery-report-452x900.json",
+    "p4b/checkout-report-800x1280.json",
+    "p4b/checkout-report-452x900.json",
+    "p3/p3-report-800x1280.json",
+    "p3/p3-report-452x900.json",
+    "health/health-report-800x1280.json",
+    "health/health-report-452x900.json",
+    "p4/p4-report-452x900.json",
+    "p4/p4-report-800x1280.json"
+  ],
+  "summaries": {
+    "reports/sandbox-tests.txt": "KIOSK_UNITTEST_SUMMARY: run=139 failures=0 errors=0 skipped=0 success=True",
+    "reports/health-tests.txt": "KIOSK_UNITTEST_SUMMARY: run=80 failures=0 errors=0 skipped=0 success=True",
+    "reports/delivery-tests.txt": "KIOSK_UNITTEST_SUMMARY: run=76 failures=0 errors=0 skipped=0 success=True",
+    "reports/native-tests.txt": "KIOSK_UNITTEST_SUMMARY: run=107 failures=0 errors=0 skipped=1 success=True"
+  },
+  "physical_provider_acceptance": "NOT_RUN"
+}

@@ -74,7 +74,7 @@ For print-only testing use `--print`; for deliberate manual printing add
 `--manual-print`. Default launch without operator opt-ins stays local. The
 dedicated merchant Sandbox trial keeps both transports off.
 [Runbook, evidence and rollback](docs/qa/portrait-v2-print-drive/README.md) ·
-[eleven-item Submit form](docs/qa/portrait-v2-print-drive/windows-checklist.html).
+[earlier eleven-item delivery form](docs/qa/portrait-v2-print-drive/windows-checklist.html).
 
 The ordinary launcher now uses per-booth storage: 25 empty local reserves,
 Photo/NN/raw/color/bw, offline photo/print with deferred Drive binding and
