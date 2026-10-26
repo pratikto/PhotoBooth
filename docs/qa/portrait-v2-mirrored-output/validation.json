@@ -1,0 +1,74 @@
+{
+  "date": "2026-10-26",
+  "timezone": "Asia/Jakarta",
+  "base_sha": "568a2585379e17ff2671fb8ef1eb928170eae324",
+  "source_sha": "fc26e3d7225cf202d76ad16ca600cef0349b8cd1",
+  "earlier_source": "977d26b83a4cb6f9af2ae23c81f0ed936038c7e0",
+  "full_python": {
+    "cases": 808,
+    "passed": 808,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 230.67
+  },
+  "initial_full_python": {
+    "passed": 808,
+    "seconds": 224.094,
+    "reason_for_repeat": "Visual review found obsolete preview/consent wording. Final full run follows the two-line copy correction."
+  },
+  "focused": {
+    "passed": 42,
+    "skipped": 0
+  },
+  "renderer_templates": {
+    "passed": 19,
+    "all_templates": 12
+  },
+  "functional_hashes": 240,
+  "visual": {
+    "native_captures_verified": 16,
+    "native_selected_reviewed": 8,
+    "form_views_reviewed": 2,
+    "sizes": [
+      [
+        800,
+        1280
+      ],
+      [
+        452,
+        900
+      ]
+    ]
+  },
+  "ci": {
+    "run_id": 40263151709,
+    "successful_jobs": 3,
+    "raw_reports": {
+      "health-tests.txt": {
+        "cases": 80,
+        "passed": 80,
+        "skipped": 0
+      },
+      "native-tests.txt": {
+        "cases": 104,
+        "passed": 103,
+        "skipped": 1
+      },
+      "delivery-tests.txt": {
+        "cases": 63,
+        "passed": 63,
+        "skipped": 0
+      },
+      "sandbox-tests.txt": {
+        "cases": 139,
+        "passed": 139,
+        "skipped": 0
+      }
+    },
+    "optional_skip": "CI palm model assets omitted; actual model case covered by local 808-test full run."
+  },
+  "owner_choice": "Strip hasil, cetakan, dan strip digital sama-sama mirror",
+  "scope": "GUI v2 new review and photo areas of shared result/print/digital strip only. Raw JPEGs, masks/artwork/text/QR, v1 default and existing outputs stay unchanged.",
+  "physical_paper_windows_cloud": "NOT_RUN"
+}

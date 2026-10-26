@@ -1,0 +1,81 @@
+{
+  "source_sha": "fc26e3d7225cf202d76ad16ca600cef0349b8cd1",
+  "tracked_changes": false,
+  "synthetic_only": true,
+  "screenshots_verified": 16,
+  "reviewed_native_views": [
+    {
+      "state": "01-photo-confirm",
+      "page": "photo_confirm",
+      "file": "screenshots/01-photo-confirm-452x9000001.png",
+      "sha256": "302c4fc9c8e41f42625ae5ed25804a1383934b1610f67795e398c7daa670f8b6",
+      "width": 452,
+      "height": 900,
+      "reviewed": true
+    },
+    {
+      "state": "02-camera-ready",
+      "page": "capture",
+      "file": "screenshots/02-camera-ready-452x9000001.png",
+      "sha256": "d6ffee7f499585170ab666f90556e7ce5c126cfef1a2873d2c85d902ed640ce4",
+      "width": 452,
+      "height": 900,
+      "reviewed": true
+    },
+    {
+      "state": "04-review",
+      "page": "review",
+      "file": "screenshots/04-review-452x9000001.png",
+      "sha256": "88fb9162f5fe37ddf3c724d0038846935e59334802cebad788211ba1b41c0141",
+      "width": 452,
+      "height": 900,
+      "reviewed": true
+    },
+    {
+      "state": "06-local-result",
+      "page": "result",
+      "file": "screenshots/06-local-result-452x9000001.png",
+      "sha256": "4be3736a7a43569202b5071fe15bd956c3c0f6d04f4f0b4c8b5cdc74a25560a5",
+      "width": 452,
+      "height": 900,
+      "reviewed": true
+    },
+    {
+      "state": "03-countdown",
+      "page": "capture",
+      "file": "screenshots/03-countdown-800x12800001.png",
+      "sha256": "54db07cf73d91d2655c99dbbb0a515d43cb79d3d9d07d350ef06beae7302a67f",
+      "width": 800,
+      "height": 1280,
+      "reviewed": true
+    },
+    {
+      "state": "04-review",
+      "page": "review",
+      "file": "screenshots/04-review-800x12800001.png",
+      "sha256": "ed3cfc6459e5712b59b313b0f87d6db0d3afdd89599955797432ee37b2ad27f3",
+      "width": 800,
+      "height": 1280,
+      "reviewed": true
+    },
+    {
+      "state": "05-retake-ready",
+      "page": "capture",
+      "file": "screenshots/05-retake-ready-800x12800001.png",
+      "sha256": "9d1dc822de390879c507c8ada64713eb2bac03da02fdd63783bd9c79b1221b9c",
+      "width": 800,
+      "height": 1280,
+      "reviewed": true
+    },
+    {
+      "state": "06-local-result",
+      "page": "result",
+      "file": "screenshots/06-local-result-800x12800001.png",
+      "sha256": "00319f62a3a162a9b00f3101fc883266943b0f558182023296e22c8f319e9ff6",
+      "width": 800,
+      "height": 1280,
+      "reviewed": true
+    }
+  ],
+  "note": "The initial 800x1280 camera-ready capture is still in preparation; it is not used as ready-preview evidence. Countdown and retake captures show the actual mirrored frame and corrected caption at 800x1280. All selected native views were reviewed."
+}

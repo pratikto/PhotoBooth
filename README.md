@@ -107,7 +107,14 @@ this does not certify exact source or external P5 gates.
 
 ## Current checkpoint and remaining acceptance
 
-Latest functional source: **`887ba39`**; **807 local Python tests PASS, zero skips**,
+Latest functional source: **`fc26e3d`**; **808 local Python tests PASS, zero skips**.
+V2 review/result/printed/digital photo areas mirror consistently; raw JPEGs and
+template/text/QR stay original. Native captures were reviewed at 800×1280 and
+452×900. [Current mirror proof and five-item form](docs/qa/portrait-v2-mirrored-output/README.md).
+[Matching-source CI 40263151709](https://github.com/pratikto/PhotoBooth/actions/runs/40263151709)
+succeeded in all three jobs; its optional model-assets skip is covered locally.
+
+Earlier source **`887ba39`** has **807 local Python tests PASS, zero skips**,
 plus **19 actual-Code.gs VM tests PASS**. BUG-009 now has corrected real-CLOCK
 activation and a safe diagnostic/guide; Google-account activation/deletion
 remains unverified. [Current proof](docs/qa/bug-009-retention/README.md).

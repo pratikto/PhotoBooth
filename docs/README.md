@@ -25,6 +25,10 @@ Updated **26 October 2026 (Asia/Jakarta)**. Continue on
 
 ## Current acceptance packages
 
+- [Mirrored v2 output](qa/portrait-v2-mirrored-output/README.md): consistent
+  review/result/printed/digital photo areas, unchanged original JPEGs/art/QR,
+  all-twelve renderer checks and [five-item Submit form](qa/portrait-v2-mirrored-output/windows-checklist.html).
+
 - [BUG-009 retention](qa/bug-009-retention/README.md): existing v1 activation
   repair, read-only diagnostic, setup/deployment guide and [eight-item Submit
   form](qa/bug-009-retention/windows-checklist.html). Source proof is separate

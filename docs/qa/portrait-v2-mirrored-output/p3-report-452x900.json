@@ -1,0 +1,72 @@
+{
+  "source_sha": "fc26e3d7225cf202d76ad16ca600cef0349b8cd1",
+  "tracked_changes": false,
+  "synthetic_only": true,
+  "synthetic_sensor_status": false,
+  "screenshots": [
+    {
+      "state": "01-photo-confirm",
+      "page": "photo_confirm",
+      "file": "01-photo-confirm-452x9000001.png",
+      "sha256": "302c4fc9c8e41f42625ae5ed25804a1383934b1610f67795e398c7daa670f8b6",
+      "width": 452,
+      "height": 900
+    },
+    {
+      "state": "02-camera-ready",
+      "page": "capture",
+      "file": "02-camera-ready-452x9000001.png",
+      "sha256": "d6ffee7f499585170ab666f90556e7ce5c126cfef1a2873d2c85d902ed640ce4",
+      "width": 452,
+      "height": 900
+    },
+    {
+      "state": "03-countdown",
+      "page": "capture",
+      "file": "03-countdown-452x9000001.png",
+      "sha256": "41b4da52fdc575d1c4e3ce8cb7acb6bfbb6397e3d1b779eac1341916b97c05bc",
+      "width": 452,
+      "height": 900
+    },
+    {
+      "state": "04-review",
+      "page": "review",
+      "file": "04-review-452x9000001.png",
+      "sha256": "88fb9162f5fe37ddf3c724d0038846935e59334802cebad788211ba1b41c0141",
+      "width": 452,
+      "height": 900
+    },
+    {
+      "state": "05-retake-ready",
+      "page": "capture",
+      "file": "05-retake-ready-452x9000001.png",
+      "sha256": "ccea9b0f0ec70e9faa7d08033e6cc6d35c73990efe6e9776375269c5138c58da",
+      "width": 452,
+      "height": 900
+    },
+    {
+      "state": "06-local-result",
+      "page": "result",
+      "file": "06-local-result-452x9000001.png",
+      "sha256": "4be3736a7a43569202b5071fe15bd956c3c0f6d04f4f0b4c8b5cdc74a25560a5",
+      "width": 452,
+      "height": 900
+    },
+    {
+      "state": "07-print-uncertain",
+      "page": "result",
+      "file": "07-print-uncertain-452x9000001.png",
+      "sha256": "9ea452963d44c9c8a51ccef4582d47e2e09fb8c161a4196f09d1152f03616cc8",
+      "width": 452,
+      "height": 900
+    },
+    {
+      "state": "08-camera-unavailable",
+      "page": "capture",
+      "file": "08-camera-unavailable-452x9000001.png",
+      "sha256": "d32cf5a5d9e75252db918f9aa8d575c781432789c2568fafef0c7b1721a1dc89",
+      "width": 452,
+      "height": 900
+    }
+  ]
+}

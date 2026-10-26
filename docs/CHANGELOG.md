@@ -16,6 +16,12 @@ preview/consent now explicitly describe mirrored strips and unchanged raw photos
 The final full run after this copy correction also has 808 PASS/zero skips,
 230.670s; the first source/test/image evidence is preserved separately.
 
+Final source fc26e3d has matching-source CI 40263151709 all three jobs SUCCESS
+(native optional model-assets skip covered locally). Sixteen clean-source native
+captures verified; eight selected native and two form views reviewed at both
+required sizes. Documentation-only evidence delivery skips redundant CI;
+physical paper orientation remains NOT_RUN.
+
 ## 2026-10-26 — BUG-009 retention activation repair
 
 Owner resumes photo retention separately from FEAT-004 ad sync and reports

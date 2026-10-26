@@ -2,10 +2,25 @@
 
 Updated **26 October 2026**. Repository `pratikto/PhotoBooth`; required branch
 **`feature/portrait-kiosk-v2-next`**. Documentation baseline **`f36ebad`**, latest functional
-source **`887ba39`** (BUG-009 activation/diagnosis, after tutorial entry `20453fe` and print/Drive `266b2c8`). Refresh remote HEAD before continuing. GitHub's default is
+source **`fc26e3d`** (mirrored v2 outputs/copy; earlier BUG-009 `887ba39`, tutorial `20453fe`, print/Drive `266b2c8`). Refresh remote HEAD before continuing. GitHub's default is
 still `master`; `main.py` launches v1. Do not restart the project or P3/P4 work.
 
 ## Latest completed increment
+
+**26 October mirrored outputs:** owner explicitly chooses mirrored review,
+result/printed/digital strips. Source 977d26b extends the v1 compositor via a
+default-off photo-only option; v2 opts in. Full-resolution original JPEGs and
+detector inputs remain original; frame/text/logo/QR and v1 defaults stay normal.
+One saved PNG serves result/print/Drive, no old output migration/replay. Source
+fc26e3d corrects obsolete preview/consent wording found by screenshot review.
+Final 808 full PASS/zero skips (230.670s); 42 focused PASS, all-twelve-renderer
+checks pass. Sixteen clean-source native captures verified; eight selected
+native and two form views reviewed at 800×1280/452×900. Matching-source CI
+40263151709 has all three jobs SUCCESS; optional native model-assets skip covered
+locally. Paper orientation NOT_RUN.
+Use the fresh five-item Submit form; no extra twenty-cycle gate. Updated older
+delivery P03 has a new storage key, preserving old answers without passing the
+new orientation automatically. [Evidence/rollback](qa/portrait-v2-mirrored-output/README.md).
 
 **26 October BUG-009:** owner explicitly resumes this previously deferred bug;
 setup/redeployment not confirmed. Source 130aae1 repairs stale-flag ACK and
@@ -86,6 +101,8 @@ These results predate this documentation-only reconciliation.
 | `20453fe` | Remove redundant idle help action; mandatory Start/invitation/postgame tutorial unchanged; 800 full PASS/zero skips |
 | `130aae1` | BUG-009 real-CLOCK activation/setup correction and authenticated read-only backend status; 19 VM + 25 Python PASS |
 | `887ba39` | Safe existing-config diagnosis/report and Submit form; 807 full Python PASS/zero skips, 19 VM PASS |
+| `977d26b` | Mirror photo areas consistently via existing compositor; 808 full PASS, first matching three-job CI SUCCESS |
+| `fc26e3d` | Preview/consent copy correction after visual review; final 808 full PASS/zero skips |
 
 Use scoped inverse commits for code rollback after inspection; preserve all
 payment journals, consumed attempts, reports, photo/print manifests and customer

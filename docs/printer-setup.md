@@ -12,6 +12,12 @@ saved devices or prove paper output. The source below describes product-listing
 claims, not a newly verified printer specification or device acceptance.
 [Current v2 print/Drive runbook](qa/portrait-v2-print-drive/README.md) · [current status](FEATURE_STATUS.md).
 
+**26 October v2 orientation:** the compositor now mirrors only photo areas for
+review/result/paper/digital strip. The existing printer receives the same PNG;
+do not add another driver/software flip. Template/text/QR and full-resolution
+raw JPEGs stay original, as do v1 defaults and old saved outputs.
+[Mirror proof and focused paper form](qa/portrait-v2-mirrored-output/README.md).
+
 > **V1 source baseline (2026-10-19):** This functionality and related documentation are now part of `master` at the published, immutable `v1.0.0` [source pre-release](https://github.com/pratikto/PhotoBooth/releases/tag/v1.0.0). The previous `feature/kivy-gui` and other feature branches remain historical references. CI passed on the tagged SHA (`07ce51d`, [Kiosk](https://github.com/pratikto/PhotoBooth/actions/runs/39185986245), [Dither](https://github.com/pratikto/PhotoBooth/actions/runs/39185986273)), but physical Windows acceptance is separate. BUG-001/007 audio and BUG-009 Drive retention remain unresolved; payment stays DEMO. Current photo/DEMO QR-slip printer routes include LAN/Wi-Fi/Windows RAW USB queue. BUG-011 copy counts were owner-tested PASS/monitoring; do not infer all media/driver/QR-scan cases were verified.
 
 The booth prints each saved result image as a monochrome ESC/POS raster. Photo

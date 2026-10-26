@@ -87,3 +87,44 @@ follow-up corrects preview/consent wording; the final full run above follows
 that source correction. Initial [tested hashes](initial-tested-source-sha256.json)
 and before image remain separate from final evidence. No orientation/print
 algorithm changed in the wording follow-up.
+
+## Final published source and native review
+
+Functional source **fc26e3d7225cf202d76ad16ca600cef0349b8cd1**, after initial
+mirror source **977d26b**, is committed/pushed/remote-verified. The final full
+run and all 240 code/workflow/form hashes match it. Subsequent changes are
+documentation/evidence only.
+
+The unchanged P3 renderer produced **sixteen clean-source native screenshots**;
+source/hash/dimensions verified, eight selected views reviewed alongside both
+form screenshots. The teal-left/pink-right synthetic pose matches in live/
+countdown/retake, review and composed strip, while Special Day typography stays
+normal. Corrected preview and consent copy fit at both required sizes.
+[Native manifest](visual-verification.json) · [800×1280 report](p3-report-800x1280.json) ·
+[452×900 report](p3-report-452x900.json) · [form fixtures](form-verification.json).
+
+| View | 800×1280 | 452×900 |
+| --- | --- | --- |
+| Mirrored live preview | [Countdown](screenshots/03-countdown-800x12800001.png) | [Ready](screenshots/02-camera-ready-452x9000001.png) |
+| Review | [Screenshot](screenshots/04-review-800x12800001.png) | [Screenshot](screenshots/04-review-452x9000001.png) |
+| Same saved result sent to printer | [Screenshot](screenshots/06-local-result-800x12800001.png) | [Screenshot](screenshots/06-local-result-452x9000001.png) |
+
+The initial 800×1280 camera-ready capture is still in preparation; it is retained
+but is **not** ready-preview evidence. Its subsequent countdown/retake captures
+show the actual frame. Browser images use older synthetic metadata and one
+fixture checkbox, not actual Windows/paper observations. Real printer paper,
+touch/audio, phone/Drive and BUG-009 cloud acceptance remain separate.
+
+## Matching final-source CI
+
+[CI 40263151709](https://github.com/pratikto/PhotoBooth/actions/runs/40263151709)
+used exact final source fc26e3d and completed with **all three jobs SUCCESS**
+([job record](final-ci.json)). Raw [CI reports](ci-reports/) record **63 delivery/
+retention/renderer PASS**, **80 health PASS**, **139 Sandbox PASS**, and native
+**104 cases / 103 PASS / one optional palm-model-assets skip**, covered by the
+local full run. Windows audio uses dummy PCM, not a speaker/paper certification.
+[Combined validation](validation.json) · [CI artifact reference](ci-artifacts.json).
+
+Final documentation/evidence delivery uses link/JSON/hash/dimension checks and
+skips another Actions run. Rollback remains the scoped inverse of this feature
+to the 568a258 baseline, preserving all data, old outputs and uncertain jobs.

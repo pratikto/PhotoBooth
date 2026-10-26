@@ -9,6 +9,9 @@ not inferred. Earlier audit-only evidence remains tied to its original source.
 
 | Evidence | Source and result | Limits |
 | --- | --- | --- |
+| Mirrored v2 output | `fc26e3d`: **808 full PASS / zero failures/errors/skips**, 230.670s; 42 focused PASS; 19 shared renderer/template checks PASS | Asymmetric all-twelve tests preserve QR/art/masks/original hashes and actual print path/copies; first 808-PASS source 977d26b kept separately. [Proof](qa/portrait-v2-mirrored-output/README.md) |
+| Mirror visual/form checks | Sixteen clean-source native captures hash/dimension verified, eight selected native + two form views reviewed at 800×1280/452×900; browser 360px overflow check | Five fresh unchecked items, safe import/Submit/persistence/download; old P03 passes do not transfer. Actual paper/Windows NOT_RUN |
+| Mirror final-source CI | [40263151709](https://github.com/pratikto/PhotoBooth/actions/runs/40263151709): all three jobs SUCCESS; delivery/retention/renderer 63 PASS, health 80 PASS, Sandbox 139 PASS, native 103 PASS/one optional model-assets skip | Skipped model case covered locally; Windows audio dummy output. [Raw proof](qa/portrait-v2-mirrored-output/README.md) |
 | BUG-009 source repair/diagnosis | `887ba39`: **807 full Python PASS / zero failures/errors/skips**, 238.684s; 44 focused Python PASS; 19 actual-Code.gs VM PASS | Reproduced stale enabled flag/missing clock and setup accepting wrong trigger type. Original cleanup reused; no live Google setup/deploy/delete. [Raw evidence](qa/bug-009-retention/README.md) |
 | BUG-009 Submit form | Eight fresh unchecked items; metadata/READY/forged pass fields do not pass cloud checks; partial Submit/persistence/download; 360/452/800px no overflow, zero browser errors | Form screenshots are synthetic fixtures, reviewed 800×1280/452×900. Windows/Google evidence NOT_RUN; no new twenty-cycle gate |
 | BUG-009 matching-source CI | [40255716011](https://github.com/pratikto/PhotoBooth/actions/runs/40255716011): all three jobs SUCCESS; delivery/retention 44 PASS, health 80 PASS, Sandbox 139 PASS, native 103 PASS/one optional model-assets skip | Skipped model case covered locally; four clean-source native views reviewed at both required sizes. [Raw reports/visual manifest](qa/bug-009-retention/README.md) |
@@ -48,6 +51,7 @@ unknown-HEAD reports to a newer source or formally close bugs from preflight.
 
 | Form | Purpose | Cycle rule |
 | --- | --- | --- |
+| [Mirror five-item form](qa/portrait-v2-mirrored-output/windows-checklist.html) | Live/review/strip/paper orientation, unchanged raw JPEGs, frame/QR and no replay | No new twenty-cycle gate; paper requires actual sheets |
 | [BUG-009 eight-item form](qa/bug-009-retention/windows-checklist.html) | Existing project/setup/new-version deployment, safe status, authorized synthetic deletion and actual clock execution | No new photo/game cycle gate; READY/import does not pass cloud tests |
 | [Print/Drive eleven-item form](qa/portrait-v2-print-drive/windows-checklist.html) | New automatic print, actual paper/phone download, offline queue/restart, layout/lifecycle | No new twenty-cycle gate; paper/phone items require actual evidence and start unchecked |
 | [BUG-018 four-item form](qa/portrait-v2-health-clicks/windows-checklist.html) | Repeated/mixed operator clicks, close while busy, reopen/minimize and normal next input | No additional twenty-cycle run; fresh unchecked results |

@@ -95,3 +95,10 @@ setup/redeployment is not confirmed. Reuse v1 setup/cleanup/configuration. Sourc
 807 full Python PASS/zero skips and 19 Code.gs VM PASS. Installed Google-account
 activation/actual deletion is not verified; BUG-009 stays OPEN. No FEAT-004 ad
 sync or watchdog is included. See docs/qa/bug-009-retention/README.md.
+
+Owner orientation refinement, 26 October: GUI v2 review and photo areas of the
+result, printed and digital strip must all mirror consistently. Keep raw camera
+JPEGs/resolution and detector inputs original; artwork/text/logo/QR stay normal.
+Reuse the existing compositor through a default-off option (v1 stays normal);
+v2 opts in. New output only: never rewrite old strips or replay a print/upload.
+See docs/qa/portrait-v2-mirrored-output/README.md and the five-item Submit form.
