@@ -153,6 +153,9 @@ Start with the [documentation index](docs/README.md),
 [roadmap](docs/portrait-kiosk-v2.md), [technical design](docs/portrait-kiosk-v2-technical-design.md),
 [handover](docs/DEVELOPMENT_HANDOVER.md), [bug register](docs/bug_tracker.md),
 [branch reference audit](docs/gui-v2-branch-audit.md), and [working rules](AGENTS.md).
+The [storage/global-content target](docs/photobooth-storage-layout.md) records
+the requested per-booth/25-reserve/Photo/raw-color-bw/offline-cache structure and
+current implementation gaps. The `old` archive is excluded and untouched.
 The [documentation reconciliation](docs/qa/documentation-consistency-2026-10-25.md)
 records the cross-check and corrections.
 

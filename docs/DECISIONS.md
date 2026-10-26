@@ -27,6 +27,18 @@ it adds no new application feature approval. [AGENTS.md](../AGENTS.md).
 
 ## Product decisions
 
+**Owner storage target, 26 October:** ignore the entire `old` archive without
+inspection/change. Requested new data layout is `Photobooth/PB001...PB00X`,
+booth-specific assets, at least 25 empty transaction reserves and
+`Photo/NN/{raw,color,bw}`. Root `Global_Advertisement` and `Global_Template` are
+shared sources with complete offline copies in every booth. The
+[audit/target contract](photobooth-storage-layout.md) records current gaps and
+reuse; it does not claim implementation or an actual Drive cutover. The owner
+selected continued local photo/print if Drive/25 reserves are unavailable, with
+upload and QR deferred until online; this requires explicit deferred-binding
+state, not silently uploading previously local-only visits. Asset-priority
+recommendations are labelled separately.
+
 **Owner BUG-009 continuation, 26 October:** resume bounded photo-retention
 remediation; setup and redeployment have not been confirmed. This supersedes
 the earlier deferral for this bug, without starting FEAT-004 advertising sync.

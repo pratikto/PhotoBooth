@@ -10,6 +10,7 @@ Updated **26 October 2026 (Asia/Jakarta)**. Continue on
 | --- | --- |
 | Installation, launchers and test modes | [Repository README](../README.md) |
 | Implemented roadmap and customer flow | [GUI v2 specification](portrait-kiosk-v2.md) |
+| Requested per-booth folders and offline global/local assets | [Storage target and source audit](photobooth-storage-layout.md) — target not yet implemented |
 | Current implementation and acceptance boundaries | [Feature status](FEATURE_STATUS.md) |
 | Modules, workers and service contracts | [Technical design](portrait-kiosk-v2-technical-design.md) · [architecture](ARCHITECTURE.md) |
 | Current visual decisions and artwork provenance | [Visual specification](portrait-kiosk-v2-visual-spec.md) · [artboards](assets/portrait-v2/README.md) |

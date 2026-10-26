@@ -1,5 +1,15 @@
 # Repository working instructions
 
+## Excluded archive and requested storage target
+
+Owner direction, 26 October: ignore **all contents of `old`**. Never inspect,
+modify, delete, migrate, import or include it in discovery/sync/retention. Prune
+it before descending directories; do not use it as a reuse source. Current
+foldering audit/target is documented in docs/photobooth-storage-layout.md: per-booth
+roots, 25 READY transactions, Photo/NN/raw/color/bw and global/local asset caches.
+That document distinguishes the requested target from the current runtime;
+the audit did not implement or perform a path/cloud cutover.
+
 ## Reuse existing working features first
 
 Owner instruction, 2026-10-24: **Do not reinvent the wheel or waste GitHub

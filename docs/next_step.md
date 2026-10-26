@@ -1,6 +1,6 @@
 # Meong Photobooth — outstanding work and feature backlog
 
-Updated **25 October 2026**. Continue on `feature/portrait-kiosk-v2-next`.
+Updated **26 October 2026**. Continue on `feature/portrait-kiosk-v2-next`.
 P3 photo, original game reuse, MOCK/Sandbox and P5 tooling already exist; do not
 reimplement them. The read-only Device Health/report increment is now complete
 in source (`ea394e8`, input correction `ebb53fd`). Later operator retest R01–R04
@@ -11,6 +11,14 @@ Evidence gates below do not block every source task. The backlog is not blanket
 approval for features, production, deployments or repository transitions.
 
 ## Current follow-up
+
+**Owner foldering request, 26 October:** the [source audit/target contract](photobooth-storage-layout.md)
+records per-booth roots, at least 25 READY directories, Photo/NN/raw-color-bw,
+booth-local assets and complete local copies of global ads/templates. Owner
+selects local photo/print with deferred upload/QR if Drive/reserves are absent.
+Audit/specification is complete; implementation/cutover is not performed.
+Coordinate paths, counters/pool, raster persistence, upload, retention and asset
+snapshots before switching storage. Entire `old` contents remain excluded.
 
 **BUG-009 resumed by owner, 26 October:** source 130aae1/887ba39 repairs actual
 CLOCK activation and adds read-only existing-config diagnosis/Submit form, reusing
@@ -48,8 +56,8 @@ fresh source/readiness review and relevant owner instruction before code work.
 | --- | --- | --- |
 | FEAT-001 pricing/copies | Implemented: Rp5,000/design + Rp5,000/copy, one three-photo session/design | Quantity zero deselects; mixed A×2+B×1 = Rp25,000/two sessions; digital-only and commercial maximum policy remain undecided |
 | FEAT-002A/B merchant receipt promotion | Separate design: receipt scan at checkout; example Rp50,000 food purchase waives one Rp5,000 base fee | Existing POS receipt first; scan is not purchase proof. Partner/API, one-use eligibility, offline/stacking and reimbursement terms unresolved; not the game discount |
-| FEAT-003 live mirror | In source; display-only mirror across implemented live previews | Originals/review/print/QR/decode input unmirrored; future scanner inherits policy |
-| FEAT-004 ads + BUG-009 | Proposed per-machine local-first Drive ad sync; coordinate retention work | Separate ad/photo folders, atomic updates/offline cache; verify deployment/trigger and deletion independently |
+| FEAT-003 mirror | V2 live/review and photo areas of result/printed/digital strip mirror; v1 defaults unchanged | Full-resolution original JPEGs and detector inputs stay original; template/text/QR stay normal |
+| FEAT-004 global/local content + storage target | Owner-requested per-booth/global ads/templates/offline-cache contract audited; implementation pending | Reuse existing services, versioned packs and atomic local snapshots; photo/ad separation and retention must match new paths; never inspect/change `old` |
 | FEAT-005A/B ordering | Small standalone DEMO proposal; real merchant supplies compatible customer-facing ordering | Same-kiosk DEMO order-to-photo offer needs no receipt scan; retain external-receipt path. Do not build a full production POS by default |
 | FEAT-006 themes | Proposed configurable shared-codebase themes | Final admin/preset policy and approval pending |
 | FEAT-007 transaction recovery | Some durable Sandbox admission already implemented; broader operational paid fulfillment remains future scope | No replay on restart; paid reprint/refund/production recovery not implied |

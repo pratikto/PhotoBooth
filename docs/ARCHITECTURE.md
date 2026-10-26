@@ -1,7 +1,7 @@
 # Meong Photobooth — GUI v2 architecture
 
-Updated **25 October 2026** after documentation baseline `f36ebad`; latest functional source
-`266b2c8` (automatic print/background Drive). [Current status](FEATURE_STATUS.md) distinguishes source evidence,
+Updated **26 October 2026** after documentation baseline `f36ebad`; latest functional source
+`fc26e3d` (mirrored v2 output/copy), current audit base `19e3f4d`. [Current status](FEATURE_STATUS.md) distinguishes source evidence,
 owner reports and pending acceptance. Development: `feature/portrait-kiosk-v2-next`;
 GitHub default `master`, default launcher `main.py` still v1.
 
@@ -27,8 +27,9 @@ Shared filenames without a prefix are under `photobooth/`.
 ## Trust and durability
 
 One selected design creates three originals and permits one retake; quantity
-means copies. Display-only mirroring leaves detector input, originals, review,
-composition and print unchanged. Single-flight photo/game/payment/report workers
+means copies. V2 review and photo areas of result/printed/digital strip mirror;
+full-resolution original JPEGs and detector input stay original, artwork/text/QR
+stay normal, and v1 defaults/old saved outputs are unchanged. Single-flight photo/game/payment/report workers
 and page/epoch guards prevent stale actions and duplicate work.
 
 Sandbox uses backend quotes and independently verified settlement. A stable
@@ -43,6 +44,17 @@ remain separate. [Retention scope](photo-retention.md).
 
 Profiles are isolated under `data/kiosk-v2-p3`, `data/kiosk-v2-p4` and
 `data/kiosk-v2-sandbox/<merchant>/<booth>`. Preserve journals/manifests on rollback.
+
+## Requested booth storage and shared-content target
+
+The owner requested per-booth `Photobooth/PB001...PB00X` roots, at least 25 empty
+transaction reserves, `Photo/NN/raw,color,bw`, booth-specific local assets and
+offline copies of root `Global_Advertisement`/`Global_Template`. The
+[audited contract](photobooth-storage-layout.md) separates Drive/local/code trees,
+existing-service reuse and coordinated implementation stages. This is **not yet
+the runtime layout**: native v2 still targets two cached Drive slots and uses
+`raw/session_NNN`/`output`; 1-bit rasters are not persisted, and global sync is
+absent. No data/cloud parent was moved. Entire `old` contents are excluded.
 
 ## Operator reuse and separate candidates
 

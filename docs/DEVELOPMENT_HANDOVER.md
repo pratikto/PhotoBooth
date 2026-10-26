@@ -7,6 +7,16 @@ still `master`; `main.py` launches v1. Do not restart the project or P3/P4 work.
 
 ## Latest completed increment
 
+**26 October foldering audit:** owner asks to check current organization against
+per-booth/25-reserve/Photo/NN/raw-color-bw/global-cache requirements and excludes
+all contents of `old` from inspection/change. Owner selects continued local
+photo/print when Drive/reserves are unavailable, with upload/QR later. The
+[audited target contract](photobooth-storage-layout.md) is documentation, not a
+runtime/cloud cutover. Existing source fixtures: 38 tests PASS plus controlled
+two-session/three-copy/retake, native raster and pool checks. Current runtime
+still has target 2 and old active paths; real Drive was not accessible. Do not
+infer new-layout implementation or scan/migrate the archive from this audit.
+
 **26 October mirrored outputs:** owner explicitly chooses mirrored review,
 result/printed/digital strips. Source 977d26b extends the v1 compositor via a
 default-off photo-only option; v2 opts in. Full-resolution original JPEGs and

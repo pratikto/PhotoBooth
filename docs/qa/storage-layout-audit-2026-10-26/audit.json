@@ -1,0 +1,97 @@
+{
+  "date": "2026-10-26",
+  "timezone": "Asia/Jakarta",
+  "source_sha": "19e3f4d4f0b4148b5daba6d25f6b5fe0387a4802",
+  "required_branch": "feature/portrait-kiosk-v2-next",
+  "old": {
+    "contents_inspected": false,
+    "changed": false,
+    "excluded": true
+  },
+  "live_drive_inspected": false,
+  "real_print": false,
+  "real_upload": false,
+  "configuration_presence": {
+    "private_settings_file": false,
+    "apps_script_environment": false,
+    "oauth_parent_environment": false
+  },
+  "reviewed_source_sha256": {
+    "photobooth/transaction_store.py": "176bc520d198e9993382187a4e35dd14a2aa411177cf3eff9a668c5d680d3691",
+    "photobooth/drive_pool.py": "7dc891774f753f2f260b738d71a5d9275a30d04b36586a600e273bfd12ff3aa9",
+    "photobooth/drive_storage.py": "2766149e1523abeb6c53820236285c3ecb05587e7abf878e23a3c4a20b676f07",
+    "photobooth/drive_sync.py": "d77d8d3e0d0236c100d0a7400e5094c8efdfce499ff23e91896a233a087bef79",
+    "photobooth/retention.py": "68bf37118e913610ab99e0ea434cd3863833b168f9705687ca03f2ae5747dcb1",
+    "photobooth/printer.py": "5820a87ecd256573617fbdbcea52f3b3c757cbcdb29f481fdc5f2a809509b374",
+    "photobooth/dither_print.py": "7a7aca433afeb66a2f068993e88b2646e6503cee9d524b3e8dc8081d4226e68d",
+    "photobooth/advertising.py": "cca008b18f0fda284ba101a21d1d59d9d1bcaacae859426904a69ff1706d9c2b",
+    "photobooth/catalog.py": "fc8b152d1c32170c83124b5fc1d7acee1f805d8882e4664bce6a665a12a4331d",
+    "photobooth/kiosk_v2/photos.py": "f2a2cd8ac9112d832dbd9d459e6d6c3694e5d31f66b1e3353df9a132658bc4c7",
+    "photobooth/kiosk_v2/photo_views.py": "8e9ab0a1e3cf13c07962258a550c0b7ba7fb010391839eb5c5a729598f5877ca",
+    "photobooth/kiosk_v2/photo_drive.py": "c0bcbe4eb496ba5059812429ef7b7c97f1976f9a42bf0518be99047646cb953d",
+    "photobooth/kiosk_v2/health_service.py": "6e7e5a03e25d536959267d6507f17252dfa0913978f6480f9f041f8b22ebb2e8",
+    "apps_script/Code.gs": "7cfec1f7148ca0dbad2069c54362c0b67fe9388eddf5afe4cc6db5eb433fffe4"
+  },
+  "actual_existing_visit_fixture": {
+    "transaction_id": "PB001V2_00000001",
+    "manifest_schema_version": 1,
+    "sessions": 2,
+    "copies": 3,
+    "files": [
+      "manifest.json",
+      "output/session_001.png",
+      "output/session_002.png",
+      "raw/session_001/photo_01.jpg",
+      "raw/session_001/photo_02.jpg",
+      "raw/session_001/photo_03.jpg",
+      "raw/session_001/retake.jpg",
+      "raw/session_002/photo_01.jpg",
+      "raw/session_002/photo_02.jpg",
+      "raw/session_002/photo_03.jpg"
+    ],
+    "raw_captures_including_retake": 7,
+    "raw_unchanged": true,
+    "color_outputs": [
+      {
+        "path": "output/session_001.png",
+        "mode": "RGB",
+        "size": [
+          640,
+          1920
+        ]
+      },
+      {
+        "path": "output/session_002.png",
+        "mode": "RGB",
+        "size": [
+          640,
+          1920
+        ]
+      }
+    ],
+    "printer_raster": {
+      "mode": "1",
+      "size": [
+        576,
+        1728
+      ]
+    },
+    "bw_saved_to_transaction": false,
+    "photo_session_hierarchy_present": false,
+    "drive_status": "LOCAL_ONLY"
+  },
+  "existing_pool_fixture": {
+    "target_ready": 25,
+    "empty_staging_folders_after_refresh": 25,
+    "staging_layout": "photos/.pool/<drive-folder-id>",
+    "cached_claim_without_network": true,
+    "remaining_ready": 24,
+    "claimed_layout": "photos/PB001_00000001",
+    "requires_previous_verified_drive_slots": true
+  },
+  "native_v2_pool_fixture": {
+    "target_ready": 2,
+    "empty_drive_pool_blocks_start": true,
+    "new_transaction_allocated": false
+  }
+}

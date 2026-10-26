@@ -38,6 +38,7 @@ closure or external P5 acceptance is inferred. No new runtime patch is needed.
 | P5 readiness | Read-only CLI, safe metadata JSON, 26-item Submit/import form, rollback package | Owner preflight `0dc6555` = READY_FOR_MANUAL_TEST, not hardware/provider PASS |
 | FEAT-008 operator Device Health | Original v1 backend/panel/worker reused with small v2 adapters and safe report export | Later R01–R04 owner retest 4/4, no issues: BUG-018 monitoring at unknown HEAD/device metadata. Selection/switching disabled |
 | Other reference features | Device staging/switching, AI Background Studio, WhatsApp, newer dithering lab | Separate branches; not automatically in v2. [Reference map](gui-v2-branch-audit.md) |
+| Requested storage/global-content target | Owner specifies per-booth roots, 25 READY transactions, Photo/NN/raw-color-bw and offline global/local assets; selected local photo/print fallback with delayed upload/QR | **Audit/spec only, not implemented.** Source fixtures confirm current v2 target 2, old active session paths and no saved BW/global sync. Actual Drive NOT_INSPECTED. [Contract/proof](photobooth-storage-layout.md) |
 | Production payments, merchant POS/scanner, trusted QRIS promo | Disabled/not delivered in v2 | Require their own approved scope, trust contract and acceptance |
 
 ## Latest recorded automated evidence

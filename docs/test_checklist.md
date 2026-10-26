@@ -9,6 +9,7 @@ not inferred. Earlier audit-only evidence remains tied to its original source.
 
 | Evidence | Source and result | Limits |
 | --- | --- | --- |
+| Foldering source audit, 26 October | Source `19e3f4d`: **38 existing-service tests PASS / zero failures/errors/skips**, 5.660s; temporary visit/pool/native-raster experiments PASS | Proves current behavior/gaps, **not** target implementation or live Drive readiness. `old` contents excluded/untouched. [Audit](qa/storage-layout-audit-2026-10-26/README.md) |
 | Mirrored v2 output | `fc26e3d`: **808 full PASS / zero failures/errors/skips**, 230.670s; 42 focused PASS; 19 shared renderer/template checks PASS | Asymmetric all-twelve tests preserve QR/art/masks/original hashes and actual print path/copies; first 808-PASS source 977d26b kept separately. [Proof](qa/portrait-v2-mirrored-output/README.md) |
 | Mirror visual/form checks | Sixteen clean-source native captures hash/dimension verified, eight selected native + two form views reviewed at 800×1280/452×900; browser 360px overflow check | Five fresh unchecked items, safe import/Submit/persistence/download; old P03 passes do not transfer. Actual paper/Windows NOT_RUN |
 | Mirror final-source CI | [40263151709](https://github.com/pratikto/PhotoBooth/actions/runs/40263151709): all three jobs SUCCESS; delivery/retention/renderer 63 PASS, health 80 PASS, Sandbox 139 PASS, native 103 PASS/one optional model-assets skip | Skipped model case covered locally; Windows audio dummy output. [Raw proof](qa/portrait-v2-mirrored-output/README.md) |

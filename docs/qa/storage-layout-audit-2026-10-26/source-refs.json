@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-26",
+  "timezone": "Asia/Jakarta",
+  "method": "git ls-remote read-only; no checkout/switch/merge of reference branches",
+  "active_branch": {
+    "name": "feature/portrait-kiosk-v2-next",
+    "sha": "19e3f4d4f0b4148b5daba6d25f6b5fe0387a4802"
+  },
+  "reference_tips": {
+    "master": "27f3801b235d81dc0a49ab201f3e143b62314413",
+    "feature/kivy-gui": "38fbaa5c8f3d599848d33c82c2b2af5cf3aa6f8f",
+    "feature/dither-tuning": "e89e6ee1c758abc169ee250ee9285022f41cfc3b",
+    "feature/local-photo-session-mvp": "a3c161856eab22c5d98790aa1ab03c015fa2e8c2"
+  },
+  "notes": [
+    "Current original printer/profile remains the reuse candidate; newer lab was not ported.",
+    "old contents excluded from this audit and all mutations."
+  ]
+}

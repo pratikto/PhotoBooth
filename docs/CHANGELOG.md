@@ -1,5 +1,17 @@
 # Meong Photobooth — changelog
 
+## 2026-10-26 — Per-booth storage/global-content source audit
+
+Record the owner's requested Photobooth/PB00X roots, 25 empty reserves,
+Photo/NN/raw-color-bw and global/local offline asset copies. Owner selects local
+photo/print with deferred upload/QR if Drive/reserves are unavailable. Exclude
+all `old` contents from inspection/mutation. Document current v2 target 2, active
+raw/session_NNN/output layout, in-memory BW only and absent global sync; identify
+existing renderer/printer/pool/worker reuse and staged path/retention changes.
+38 existing tests and isolated fixtures pass; no new runtime, actual Drive
+inspection/sync, migration, deletion or operational cutover. Documentation-only
+publication skips Actions. [Contract](photobooth-storage-layout.md) ·
+[Evidence and rollback](qa/storage-layout-audit-2026-10-26/README.md).
 ## 2026-10-26 — Consistent mirrored photo output for GUI v2
 
 Owner chooses mirrored result/printed/digital strips. Extend the original v1

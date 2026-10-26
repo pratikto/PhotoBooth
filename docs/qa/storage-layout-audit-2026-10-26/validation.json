@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-26",
+  "timezone": "Asia/Jakarta",
+  "audited_source": "19e3f4d4f0b4148b5daba6d25f6b5fe0387a4802",
+  "runtime_hashes_unchanged": 14,
+  "changed_markdown_files": 12,
+  "local_links_checked": 286,
+  "changed_paths_exclude_old": true,
+  "contents_of_old_inspected": false,
+  "application_changed": false,
+  "live_drive_inspected": false,
+  "target_layout_implemented": false,
+  "existing_tests": {
+    "passed": 38,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 5.66
+  },
+  "controlled_source_experiments": "PASS, current behavior only",
+  "owner_offline_choice": "Continue local photo/print; upload and download QR deferred until online",
+  "json_valid": true,
+  "documentation_only": true
+}

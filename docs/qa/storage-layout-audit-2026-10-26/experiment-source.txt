@@ -1,0 +1,147 @@
+"""Read active source and exercise existing services only inside temporary fixtures.
+
+Never enumerates or opens any old directory, contacts Drive, or sends print bytes.
+"""
+import hashlib
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+from tempfile import TemporaryDirectory
+from types import ModuleType
+from unittest.mock import patch
+
+ROOT = Path('/workspace/PhotoBooth')
+sys.path.insert(0, str(ROOT))
+import numpy as np
+from PIL import Image
+from photobooth.catalog import get_templates
+from photobooth.drive_pool import DriveSlotPool
+from photobooth.drive_storage import RemoteDriveSlot
+from photobooth.kiosk_v2.photos import PhotoTest
+from photobooth.printer import PrinterConfig, ThermalPrinter
+
+paths = ['photobooth/transaction_store.py', 'photobooth/drive_pool.py',
+         'photobooth/drive_storage.py', 'photobooth/drive_sync.py',
+         'photobooth/retention.py', 'photobooth/printer.py',
+         'photobooth/dither_print.py', 'photobooth/advertising.py',
+         'photobooth/catalog.py', 'photobooth/kiosk_v2/photos.py',
+         'photobooth/kiosk_v2/photo_views.py', 'photobooth/kiosk_v2/photo_drive.py',
+         'photobooth/kiosk_v2/health_service.py', 'apps_script/Code.gs']
+record = {
+    'date': '2026-10-26', 'timezone': 'Asia/Jakarta',
+    'source_sha': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
+    'required_branch': subprocess.check_output(['git', 'branch', '--show-current'], cwd=ROOT, text=True).strip(),
+    'old': {'contents_inspected': False, 'changed': False, 'excluded': True},
+    'live_drive_inspected': False, 'real_print': False, 'real_upload': False,
+    'configuration_presence': {
+        'private_settings_file': (ROOT/'photobooth/local_settings.py').exists(),
+        'apps_script_environment': bool(os.environ.get('PHOTOBOOTH_WEB_APP_URL') and os.environ.get('PHOTOBOOTH_UPLOAD_TOKEN')),
+        'oauth_parent_environment': bool(os.environ.get('PHOTOBOOTH_DRIVE_PARENT_ID'))},
+    'reviewed_source_sha256': {p: hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in paths},
+}
+with TemporaryDirectory(prefix='meong-storage-audit-') as temporary:
+    scratch = Path(temporary)
+    service = PhotoTest(scratch/'active-visit')
+    templates = get_templates()
+    frame = np.zeros((96, 128, 3), dtype=np.uint8)
+    frame[:, :64] = [0, 0, 255]
+    frame[:, 64:] = [255, 0, 0]
+    try:
+        service.start(templates, {templates[0].template_id: 2, templates[1].template_id: 1})
+        for i in range(2):
+            for _ in range(3):
+                service.capture(frame)
+            if i == 0:
+                service.retake(1)
+                service.capture(frame // 2)
+            service.compose()
+            if i == 0:
+                service.next()
+        tx = service.transaction.folder_path
+        raw_before = {str(p.relative_to(tx)): hashlib.sha256(p.read_bytes()).hexdigest()
+                      for p in (tx/'raw').rglob('*.jpg')}
+        outputs = []
+        for p in sorted((tx/'output').glob('*.png')):
+            with Image.open(p) as image:
+                outputs.append({'path': str(p.relative_to(tx)), 'mode': image.mode,
+                                'size': list(image.size)})
+        raster_observations = []
+        class Dummy:
+            output = b'synthetic-audit-payload'
+            def image(self, raster, **_kwargs):
+                raster_observations.append({'mode': raster.mode, 'size': list(raster.size)})
+            def cut(self):
+                pass
+        fake = ModuleType('escpos.printer')
+        fake.Dummy = Dummy
+        before = {str(p.relative_to(tx)) for p in tx.rglob('*') if p.is_file()}
+        with patch.dict(sys.modules, {'escpos': ModuleType('escpos'), 'escpos.printer': fake}):
+            printer = ThermalPrinter(PrinterConfig(print_width_dots=576))
+            printer._build_payload(service.session.output_path)
+        after = {str(p.relative_to(tx)) for p in tx.rglob('*') if p.is_file()}
+        assert before == after
+        assert raster_observations[0]['mode'] == '1'
+        assert len(raw_before) == 7 and len(outputs) == 2
+        assert all(hashlib.sha256((tx/p).read_bytes()).hexdigest() == digest for p, digest in raw_before.items())
+        record['actual_existing_visit_fixture'] = {
+            'transaction_id': service.transaction.transaction_id,
+            'manifest_schema_version': service.transaction.manifest['schema_version'],
+            'sessions': len(service.sessions), 'copies': sum(s.plan.print_copies for s in service.sessions),
+            'files': sorted(before), 'raw_captures_including_retake': len(raw_before),
+            'raw_unchanged': True, 'color_outputs': outputs,
+            'printer_raster': raster_observations[0], 'bw_saved_to_transaction': False,
+            'photo_session_hierarchy_present': (tx/'Photo').exists(),
+            'drive_status': service.transaction.manifest['upload_status'],
+        }
+    finally:
+        service.close()
+
+    pool_root, pool_state = scratch/'pool-photos', scratch/'pool.json'
+    pool = DriveSlotPool(pool_root, pool_state, 'PB001', target_ready=25)
+    class FakeDrive:
+        def ensure_folder_pool(self, booth_id, target_ready):
+            assert booth_id == 'PB001' and target_ready == 25
+            return [RemoteDriveSlot(f'fixture-{i:02d}', f'https://example.test/folder/{i}',
+                                    f'PB001_{i:08d}', 'READY', f'PB001_{i:08d}',
+                                    f'PB001_{i:08d}', True) for i in range(1, 26)]
+    pool.refresh(FakeDrive())
+    assert pool.ready_count == 25
+    staged = list((pool_root/'.pool').iterdir())
+    assert len(staged) == 25 and all(not any(p.iterdir()) for p in staged)
+    reloaded = DriveSlotPool(pool_root, pool_state, 'PB001', target_ready=25)
+    claimed = reloaded.claim()  # No client or network: claims a cached slot.
+    assert reloaded.ready_count == 24 and claimed.transaction_id == 'PB001_00000001'
+    record['existing_pool_fixture'] = {
+        'target_ready': 25, 'empty_staging_folders_after_refresh': 25,
+        'staging_layout': 'photos/.pool/<drive-folder-id>',
+        'cached_claim_without_network': True, 'remaining_ready': 24,
+        'claimed_layout': 'photos/PB001_00000001',
+        'requires_previous_verified_drive_slots': True,
+    }
+
+    guard = PhotoTest(scratch/'native-pool', drive_client=object())
+    try:
+        with patch('photobooth.retention.PhotoRetentionWorker'), \
+             patch('photobooth.kiosk_v2.photo_drive.RetentionGuardedSync.start'):
+            guard.prepare()
+        assert guard.pool.target_ready == 2
+        try:
+            guard.start(templates, {templates[0].template_id: 1})
+        except ValueError as error:
+            assert 'no verified folder' in str(error)
+        else:
+            raise AssertionError('Expected current v2 no-ready-slot gate')
+        record['native_v2_pool_fixture'] = {'target_ready': guard.pool.target_ready,
+            'empty_drive_pool_blocks_start': True,
+            'new_transaction_allocated': guard.transaction is not None}
+        assert guard.transaction is None
+    finally:
+        guard.close()
+
+destination = Path('/workspace/.photobooth-cloud/storage-audit.json')
+destination.write_text(json.dumps(record, indent=2)+'\n')
+print('PASS: active source audit fixtures; 2 sessions / 3 copies / 7 raw / 2 RGB outputs; 1-bit raster not persisted.')
+print('PASS: original 25-slot pool persists/claims offline; native v2 overrides target to 2 and blocks empty Drive pool.')
+print('No old traversal, real Drive request, print send, customer data or repository runtime change.')
