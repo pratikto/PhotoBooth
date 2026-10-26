@@ -1,6 +1,32 @@
 # Meong Photobooth — GUI v2 development handover
 
-**27 October continuation (local working tree):** user requests next roadmap
+## Current — 27 October FEAT-009 stage 2 and primary working rule
+
+Owner requires comprehensive/careful documentation review before code, then
+documentation updates after code. Persisted in AGENTS, protocol and continuation
+prompt. Windows is development; Ubuntu mini PC is deployment. Continue on this
+branch; read [stage-2 review/runbook](qa/portrait-v2-recovery/README.md) first.
+Current source adds read-only recovery review, pre-GUI watchdog holds,
+per-checkout launcher ownership and Ubuntu graphical-session unit generation.
+No automatic restart, replay, service installation or production/deployment.
+
+Remote refresh works with network permission; synchronized remote `a7815d9`
+(includes Drive/QR repair `0bd69a9`) before rebasing the unpublished watchdog
+checkpoint to `ae5c62a`. Do not undo the current cloud numbered-Photo correction.
+The older source/ordering paragraphs below are dated historical checkpoints.
+Final local regression: **869 run / 866 PASS / 3 optional palm-assets SKIP /
+0 failures/errors**, 261.246s. Focused 47 PASS with site packages disabled;
+API/Sandbox 16 PASS and actual native launch/pause/resume/lease/exit PASS.
+Earlier HTTP stalls reproduce under restricted command-network access and clear
+with network permission; no payment/fixture code patch was needed. Raw old
+failures stay preserved. [Current evidence/limits](qa/portrait-v2-recovery/README.md).
+
+Ubuntu mini-PC/Windows hardware, graphical sign-in/service start, paper, actual
+merchant and Google deployment/retention acceptance remain NOT_RUN. No source
+success grants release or closes BUG-009. Future FEAT-009 automatic recovery
+requires a durable safe-idle contract; the current unit deliberately uses Restart=no.
+
+**Historical stage-1 checkpoint (before stage 2):** user requests next roadmap
 development while manual tests wait. FEAT-009 stage 1 adds an opt-in external
 liveness observer and Windows startup-script generator. It never kills/restarts
 the kiosk or replays fulfillment. Ordinary launch behavior is retained; merchant

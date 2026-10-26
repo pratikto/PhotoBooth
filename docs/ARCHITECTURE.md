@@ -1,5 +1,12 @@
 # Meong Photobooth — GUI v2 architecture
 
+**27 October FEAT-009 addition:** `kiosk_v2/recovery.py` reads existing local
+state without service/device imports, and the ordinary launcher owns a kernel
+lease for its full lifetime. The external watchdog requests the extra pre-GUI
+recovery gate. Windows cmd / Ubuntu graphical-session unit are generated, never
+installed; automatic restart stays off. Windows is the development host, Ubuntu
+the deployment target. [Detailed scope, evidence and limits](qa/portrait-v2-recovery/README.md).
+
 Updated **26 October 2026** after documentation baseline `f36ebad`; latest functional source
 `fc26e3d` (mirrored v2 output/copy), current audit base `19e3f4d`. [Current status](FEATURE_STATUS.md) distinguishes source evidence,
 owner reports and pending acceptance. Development: `feature/portrait-kiosk-v2-next`;

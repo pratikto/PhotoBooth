@@ -1,0 +1,16 @@
+[Unit]
+Description=Meong portrait kiosk v2 watchdog
+PartOf=graphical-session.target
+After=graphical-session-pre.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/meong/PhotoBooth
+ExecStart="/opt/meong/PhotoBooth/.venv/bin/python" "/opt/meong/PhotoBooth/tools/run_portrait_v2_watchdog.py"
+Restart=no
+KillSignal=SIGINT
+TimeoutStopSec=90
+SendSIGKILL=no
+
+[Install]
+WantedBy=graphical-session.target

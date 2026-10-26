@@ -1,5 +1,19 @@
 # Meong Photobooth — test evidence and acceptance
 
+## FEAT-009 stage 2 — 27 October 2026
+
+Final local **869 run / 866 PASS / 3 SKIP / 0 failures/errors**, 261.246s;
+the three skips require optional native palm assets (camera recovery, v2 palm
+countdown and standalone palm inference). 47 focused stdlib-only checks PASS;
+16 real-API/Sandbox fixture checks PASS. Native launcher rejects duplicate
+ownership while UI runs, resumes after suspension and releases its lock after
+teardown. Generated Ubuntu user unit passes systemd-analyze verification.
+Source hashes, raw reports, review scope and manual Windows/Ubuntu gates are in
+the [stage-2 evidence](qa/portrait-v2-recovery/README.md). No physical acceptance.
+Prior API hangs were reproduced with command-network restriction; granting
+network permission resolves the fixture without changing payment/API source.
+Keep older failed reports below as dated evidence, not current unresolved tests.
+
 ## FEAT-009 stage 1 — 27 October 2026 local continuation
 
 New-source validation and pending Windows/startup checks are tracked in the

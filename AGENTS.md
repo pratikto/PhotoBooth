@@ -1,5 +1,26 @@
 # Repository working instructions
 
+## Primary rule — documentation before and after code
+
+Owner instruction, 27 October 2026: **Before changing any code, read the
+documentation thoroughly, comprehensively and carefully. After changing code,
+update the documentation. This is the primary working rule.**
+
+Read the documentation index and all current authoritative documents relevant
+to the work, including handover, architecture, decisions, feature/bug status,
+roadmap, protocol, specifications and acceptance evidence. Follow linked
+contracts that affect the change; reconcile later owner corrections with dated
+historical guidance before editing. A keyword search or a quick skim alone is
+not sufficient. Record the sources reviewed and keep code, behavior, tests,
+limitations and continuation instructions synchronized in the same delivery.
+If the scope changes, review the additional documentation before further code.
+
+Platform clarification, 27 October 2026: development runs on **Windows**;
+the intended mini-PC deployment runs on **Ubuntu**. Support both where relevant.
+Do not treat Windows-only startup files or Windows test results as Ubuntu
+deployment acceptance. Startup generation must use explicit target paths when
+the developer and deployment machines differ.
+
 Latest owner correction, 26 October: Google Drive photos must be at
 `Photobooth/PB001/Photo/00000001/{raw,bw,color}` and subsequent numbers.
 This supersedes the older transaction-root/Photo/NN cloud contract below.

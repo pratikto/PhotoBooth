@@ -93,7 +93,7 @@ class WatchdogMonitor:
             self.phase = payload['phase']
             self.last_seen = now
         if exit_code is not None:
-            status = 'EXITED' if exit_code == 0 else 'CRASHED'
+            status = {0: 'EXITED', 2: 'STARTUP_BLOCKED', 3: 'RECOVERY_HOLD'}.get(exit_code, 'CRASHED')
         elif not self.sequence or self.phase == 'starting':
             status = 'STARTUP_TIMEOUT' if now - self.started >= self.startup_timeout else 'STARTING'
         elif now - self.last_seen >= self.stale_timeout:
@@ -102,7 +102,8 @@ class WatchdogMonitor:
             status = self.phase.upper()
         return {'schema_version': 1, 'run_id': self.run_id, 'pid': self.pid,
                 'status': status, 'phase': self.phase, 'exit_code': exit_code,
-                'operator_attention': status in {'CRASHED', 'STARTUP_TIMEOUT', 'UNRESPONSIVE'},
+                'operator_attention': status in {'CRASHED', 'STARTUP_TIMEOUT', 'UNRESPONSIVE',
+                                                 'STARTUP_BLOCKED', 'RECOVERY_HOLD'},
                 'automatic_restart': False}
 
 
@@ -166,3 +167,32 @@ def windows_startup_script(root, executable, arguments=()):
             f'"{python}" "{folder}\\tools\\run_portrait_v2_watchdog.py"{options}\n'
             'set "MEONG_EXIT=%ERRORLEVEL%"\n'
             'if not "%MEONG_EXIT%"=="0" pause\nexit /b %MEONG_EXIT%\n')
+
+
+def systemd_user_unit(root, executable, arguments=()):
+    """Generate an Ubuntu graphical-session unit, including from Windows.
+
+    Target paths are POSIX paths on the mini PC, never resolved on the developer
+    machine. systemd receives an argv directly; no shell or embedded credentials.
+    """
+    from pathlib import PurePosixPath
+    paths = [str(root), str(executable)]
+    if any(not PurePosixPath(value).is_absolute() or value != value.strip() or '\\' in value
+           or any(ord(c) < 32 or ord(c) == 127 or c in '%$' for c in value)
+           or '..' in PurePosixPath(value).parts for value in paths):
+        raise ValueError('Use absolute Ubuntu paths without control characters, variables or traversal')
+    if any(arg not in {'--print', '--drive', '--manual-print'} for arg in arguments):
+        raise ValueError('Only delivery flags are supported')
+    if '--manual-print' in arguments and '--print' not in arguments:
+        raise ValueError('--manual-print requires --print in the startup launcher')
+    def quote(value):
+        return '"' + value.replace('"', '\\"') + '"'
+    folder, python = paths
+    command = [quote(python), quote(str(PurePosixPath(folder) / 'tools/run_portrait_v2_watchdog.py')),
+               *arguments]
+    return ('[Unit]\nDescription=Meong portrait kiosk v2 watchdog\n'
+            'PartOf=graphical-session.target\nAfter=graphical-session-pre.target\n\n'
+            '[Service]\nType=simple\n'
+            f'WorkingDirectory={folder}\nExecStart={" ".join(command)}\n'
+            'Restart=no\nKillSignal=SIGINT\nTimeoutStopSec=90\nSendSIGKILL=no\n\n'
+            '[Install]\nWantedBy=graphical-session.target\n')

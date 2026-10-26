@@ -1,5 +1,18 @@
 # Meong Photobooth — changelog
 
+## 27 October 2026 — FEAT-009 recovery and Ubuntu startup
+
+Synchronize same-branch Drive repair `a7815d9`, retaining numbered cloud folders
+and existing local journals; rebase unpublished stage 1 to `ae5c62a`. Add bounded
+read-only recovery review, pre-GUI watchdog hold, kernel launch ownership and
+Ubuntu user-service generation with explicit cross-machine paths. Preserve
+Windows cmd support; no auto-restart/replay/installation. Add portable Linux and
+Windows CI fixtures. Persist the owner's primary docs-before/after rule and
+Windows-development/Ubuntu-deployment clarification in AGENTS and canonical docs.
+Local full regression: 869 run, 866 PASS, three optional palm SKIP, zero failures/
+errors; 47 focused and 16 API/Sandbox PASS; native lifecycle and systemd verify
+PASS. [Runbook and reports](qa/portrait-v2-recovery/README.md).
+
 ## 27 October 2026 — FEAT-009 stage 1 (local, uncommitted)
 
 Add `kiosk_v2/watchdog.py`, `tools/run_portrait_v2_watchdog.py`, optional ordinary

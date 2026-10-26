@@ -36,6 +36,14 @@ Printer and Drive require operator opt-in; the default output stays local.
 
 ## Select a test mode
 
+**Platform clarification (27 October): Windows for development, Ubuntu mini PC
+for deployment.** The ordinary launcher now prevents duplicate v2 launcher
+processes per checkout. Optional watchdog startup reviews local journals before
+opening devices; pending/uncertain work is held for operator review. Generate an
+Ubuntu systemd user service from either platform with explicit Ubuntu paths;
+generation never installs/enables it. Automatic restart remains off.
+[Windows/Ubuntu commands, setup, recovery and rollback](docs/qa/portrait-v2-recovery/README.md).
+
 | Mode | Launch | Boundary |
 | --- | --- | --- |
 | Local/default | `python tools/run_portrait_v2.py` | Explicit photo-test consent; production payments and receipt scanner disabled |
@@ -117,7 +125,14 @@ this does not certify exact source or external P5 gates.
 
 ## Current checkpoint and remaining acceptance
 
-Latest functional source: **`fc26e3d`**; **808 local Python tests PASS, zero skips**.
+**27 October FEAT-009 checkpoint:** recovery review, launch ownership and Ubuntu
+startup generation are in source; final local regression runs **869 tests:
+866 PASS, 3 optional palm-assets SKIP, zero failures/errors**. Windows development
+and Ubuntu deployment are distinct acceptance targets. Documentation-first and
+documentation-after-code are the primary rules in AGENTS/protocol.
+[Current startup/recovery proof and manual checks](docs/qa/portrait-v2-recovery/README.md).
+
+Earlier mirror source: **`fc26e3d`**; **808 local Python tests PASS, zero skips**.
 V2 review/result/printed/digital photo areas mirror consistently; raw JPEGs and
 template/text/QR stay original. Native captures were reviewed at 800×1280 and
 452×900. [Current mirror proof and five-item form](docs/qa/portrait-v2-mirrored-output/README.md).

@@ -26,6 +26,10 @@ Updated **26 October 2026 (Asia/Jakarta)**. Continue on
 
 ## Current acceptance packages
 
+- [FEAT-009 stage 2: recovery and Ubuntu startup](qa/portrait-v2-recovery/README.md):
+  Windows development/Ubuntu deployment, docs-first rule, guarded startup and
+  single-instance ownership; generated user service requires manual installation.
+
 - [Mirrored v2 output](qa/portrait-v2-mirrored-output/README.md): consistent
   review/result/printed/digital photo areas, unchanged original JPEGs/art/QR,
   all-twelve renderer checks and [five-item Submit form](qa/portrait-v2-mirrored-output/windows-checklist.html).

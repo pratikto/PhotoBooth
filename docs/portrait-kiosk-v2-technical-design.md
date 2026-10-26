@@ -1,5 +1,22 @@
 # FEAT-022 — GUI v2 engineering contracts
 
+## Current FEAT-009 stage 2 — 27 October 2026
+
+`recovery.py` performs a bounded, metadata-only read of existing local manifests,
+Sandbox journals and MOCK SQLite state. The watchdog child checks this while
+holding a native launch lease, before importing Kivy/devices. OPERATOR_REVIEW
+exits 3/RECOVERY_HOLD; duplicate/unavailable ownership exits 2/STARTUP_BLOCKED.
+All ordinary and merchant-trial GUI launchers share that per-checkout lease
+through worker teardown. Direct ordinary launch retains existing operator
+recovery; only the watchdog sets the additional journal gate. No payment, printer,
+upload or journal reset logic is replaced. Empty reserves/deferred Drive are
+distinct from interrupted capture and uncertain paper sends.
+
+Windows development and Ubuntu mini-PC deployment use the same Python launcher;
+startup output is cmd versus a graphical-session systemd user unit. Generation
+uses explicit POSIX target paths from Windows and never installs or enables a
+service. Restart=no and no replay remain intentional. [Contracts/runbook](qa/portrait-v2-recovery/README.md).
+
 ## FEAT-009 observation hook — 27 October 2026 (local increment)
 
 The optional `run_portrait_v2_watchdog.py` parent starts the ordinary launcher

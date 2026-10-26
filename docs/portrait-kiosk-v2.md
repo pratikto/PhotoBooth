@@ -1,5 +1,13 @@
 # FEAT-022 — GUI v2 specification and roadmap
 
+**27 October operational continuation:** FEAT-009 stages 1–2 add observer,
+read-only recovery/startup holds and shared launch ownership, plus generated
+Ubuntu graphical-session startup alongside Windows development support. Automatic
+restart and all physical/cloud/provider/release gates remain separate.
+[Current stage, tests and Ubuntu guide](qa/portrait-v2-recovery/README.md).
+The primary working rule is comprehensive documentation review before code and
+documentation synchronization after code, persisted in AGENTS/protocol.
+
 Updated **26 October 2026**. Active development and intended future primary
 branch: **`feature/portrait-kiosk-v2-next`**. GitHub default remains `master`;
 `main.py` remains v1. [Current checkpoint/evidence](FEATURE_STATUS.md) ·

@@ -1,0 +1,14 @@
+{
+  "states": [
+    "STARTING",
+    "RUNNING",
+    "SUSPENDED",
+    "RUNNING",
+    "STOPPING",
+    "EXITED"
+  ],
+  "exit_code": 0,
+  "duplicate_blocked_in_ui": true,
+  "lease_released_after_teardown": true,
+  "synthetic_only": true
+}

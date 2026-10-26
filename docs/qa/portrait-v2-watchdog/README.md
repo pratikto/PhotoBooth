@@ -1,5 +1,12 @@
 # FEAT-009 stage 1 — observation and Windows startup
 
+**Historical stage-1 evidence.** Current [stage 2](../portrait-v2-recovery/README.md)
+adds guarded startup, launch ownership and Ubuntu service generation. Its final
+regression is successful with optional skips disclosed. The old API/Sandbox
+stalls below reproduce under restricted command-network access and resolve with
+network permission; the raw failures remain unchanged. Stage 1 was rebased to
+`ae5c62a` on the newer same-branch Drive repair before stage 2.
+
 Date **27 October 2026, Asia/Jakarta**. User request: “kahukan next roadmap
 developement.. nanti aku tes belakangan” (continue the next development roadmap;
 manual tests later). This continuation selects the next payment-independent

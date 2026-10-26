@@ -1,0 +1,22 @@
+test_lost_creation_reply_cannot_leave_or_create_second_charge (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_lost_creation_reply_cannot_leave_or_create_second_charge) ... ok
+test_missing_started_ack_blocks_countdown_until_same_transaction_ack (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_missing_started_ack_blocks_countdown_until_same_transaction_ack) ... ok
+test_operator_health_in_recovery_never_changes_order_or_replays_service (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_operator_health_in_recovery_never_changes_order_or_replays_service) ... ok
+test_real_photo_handoff_completion_and_duplicate_taps (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_real_photo_handoff_completion_and_duplicate_taps) ... ok
+test_resize_persists_reserved_order_and_abort_requires_recovery (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_resize_persists_reserved_order_and_abort_requires_recovery) ... ok
+test_unpaid_guard_and_explicit_quote_then_authoritative_cancel (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_unpaid_guard_and_explicit_quote_then_authoritative_cancel) ... ok
+test_authenticated_order (test_qris_api.QRISApiTests.test_authenticated_order) ... ok
+test_checkout_provider_outage_is_503 (test_qris_api.QRISApiTests.test_checkout_provider_outage_is_503) ... ok
+test_claim_requires_auth (test_qris_api.QRISApiTests.test_claim_requires_auth) ... ok
+test_health (test_qris_api.QRISApiTests.test_health) ... ok
+test_invalid_webhook_rejected (test_qris_api.QRISApiTests.test_invalid_webhook_rejected) ... ok
+test_status_is_booth_scoped (test_qris_api.QRISApiTests.test_status_is_booth_scoped) ... ok
+test_unauthenticated_order_denied (test_qris_api.QRISApiTests.test_unauthenticated_order_denied) ... ok
+test_webhook_bad_content_length_rejected (test_qris_api.QRISApiTests.test_webhook_bad_content_length_rejected) ... ok
+test_webhook_large_body_rejected (test_qris_api.QRISApiTests.test_webhook_large_body_rejected) ... ok
+test_webhook_provider_outage_is_503 (test_qris_api.QRISApiTests.test_webhook_provider_outage_is_503) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 7.047s
+
+OK
+KIOSK_UNITTEST_SUMMARY: run=16 failures=0 errors=0 skipped=0 success=True

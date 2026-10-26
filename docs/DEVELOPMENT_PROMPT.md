@@ -1,5 +1,12 @@
 # Continue Meong Photobooth GUI v2
 
+**Primary owner rule, 27 October:** read the documentation comprehensively and
+carefully before modifying code; update the docs after code changes. Read the
+index/current contracts/evidence in full for the affected scope and reconcile
+historical statements; record what was reviewed. Persisted in AGENTS/protocol.
+Windows is the development host; Ubuntu is the mini-PC deployment target.
+Current FEAT-009 stage-2 continuation: [recovery/Ubuntu runbook](qa/portrait-v2-recovery/README.md).
+
 Updated **25 October 2026**. Use the existing project and branch.
 [AGENTS.md](../AGENTS.md) and [protocol](DEVELOPMENT_PROTOCOL.md) govern execution.
 

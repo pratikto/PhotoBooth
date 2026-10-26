@@ -1,0 +1,29 @@
+{
+  "base_commit": "ae5c62a",
+  "remote_base": "a7815d97660f9ec30cd65c891b2a4789d45b6fcb",
+  "source_state": "working tree before stage-2 commit",
+  "sha256": {
+    "photobooth/kiosk_v2/recovery.py": "195de549f85805e4f92c70e99734a8554225d32f93de7bc62cefb16d70cfbabd",
+    "photobooth/kiosk_v2/watchdog.py": "bd8d6e6413ba05e5377d880211cb186cb0a86c0098017416e9d92117e055359d",
+    "tools/run_portrait_v2.py": "7cd67e10a38191164bff35cd41796b781cffd3e84a09ad1d2f72c9e321429197",
+    "tools/run_portrait_v2_watchdog.py": "0740d271144d5c66e351d8ece1ca0e68be3c9f2a0c70b6b7f0fcccda213394b5",
+    "tests/test_kiosk_v2_recovery.py": "70f81f1d012a74d3e577fba94e21b50619028f121477f5838b2433c98f221d2a",
+    "tests/test_kiosk_v2_watchdog.py": "635b79a2717e4e3d820eb3fc24b1481f10f3c361a9166ecee486fa603acd091c",
+    ".github/workflows/portrait-kiosk-v2.yml": "75f166523e6a286a3a074076e1b95b9407931c7bfc0c6de061e4923b937d608c"
+  },
+  "full_suite": {
+    "run": 869,
+    "passed": 866,
+    "skipped": 3,
+    "failures": 0,
+    "errors": 0,
+    "seconds": 261.246,
+    "skip_reason": "optional native palm model assets not supplied"
+  },
+  "focused": 47,
+  "api_sandbox": 16,
+  "systemd_user_unit_parser": "PASS with explicit command network permission and temporary XDG_RUNTIME_DIR",
+  "physical_windows_ubuntu": "NOT_RUN",
+  "service_installation": "NOT_RUN",
+  "cloud_provider_deployment": "NOT_RUN"
+}

@@ -1,5 +1,20 @@
 # Meong Photobooth development protocol
 
+## Primary rule — 27 October 2026 owner instruction
+
+Read documentation thoroughly, comprehensively and carefully **before any code
+change**, then update documentation **after the code change**. Start at the index
+and read the current authoritative scope, architecture, decisions, status,
+defects, roadmap, contracts and evidence; follow affected links and reconcile
+later owner corrections. A keyword-only search is insufficient. Record reviewed
+sources and keep code, tests, limitations and handover synchronized. If scope
+changes, review its additional documents before further code. This rule is also
+persisted in [AGENTS.md](../AGENTS.md) and the continuation prompt.
+
+Development platform: Windows. Intended mini-PC deployment: Ubuntu. Validate
+portable behavior and document platform-specific startup/device acceptance;
+Windows success alone is not Ubuntu acceptance.
+
 Effective **18 October 2026**; current GUI v2 policy reconciled **25 October 2026**.
 Current explicit owner instructions take precedence over earlier historical rules.
 

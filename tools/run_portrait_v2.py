@@ -31,6 +31,24 @@ def configure_kivy(config):
 def main(argv=()):
     from photobooth.kiosk_v2.delivery_options import configure_delivery
     configure_delivery(argv)
+    from photobooth.kiosk_v2.recovery import LaunchLease, review_recovery, RECOVERY_EXIT
+    try:
+        lease = LaunchLease(PROJECT_ROOT)
+    except (OSError, ValueError):
+        print('MEONG v2 startup blocked: another launcher is active or its lock is unavailable.',
+              file=sys.stderr, flush=True)
+        return 2
+    with lease:
+        if os.environ.get('MEONG_WATCHDOG_RECOVERY_GATE') == '1':
+            review = review_recovery(PROJECT_ROOT)
+            if review['status'] != 'CLEAR_FOR_MANUAL_START':
+                import json
+                print(json.dumps(review, sort_keys=True), flush=True)
+                return RECOVERY_EXIT
+        return run_app()
+
+
+def run_app():
     if os.environ.get("PHOTOBOOTH_V2_CHECKOUT_SANDBOX") != "1":
         os.environ.setdefault("PHOTOBOOTH_V2_STORAGE", "2")
     # Install before importing native window/audio/video providers. Keep the
@@ -82,4 +100,4 @@ def main(argv=()):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    sys.exit(main(sys.argv[1:]))

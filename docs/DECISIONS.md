@@ -1,5 +1,16 @@
 # Meong Photobooth — product and technical decisions
 
+## Owner working rule and platform — 27 October 2026
+
+Documentation review must be thorough/comprehensive/careful before code changes;
+documentation updates follow code. This is the primary rule, persisted in
+AGENTS, protocol and continuation prompt. Development runs on Windows; deployment
+will use an Ubuntu mini PC. Preserve Windows support and provide target-specific
+Ubuntu startup guidance without claiming actual Ubuntu device acceptance.
+The next roadmap request continues FEAT-009 with a read-only recovery gate,
+per-checkout launch ownership and generated Ubuntu user service. No automatic
+restart, replay, service installation or production deployment follows.
+
 ## Owner correction — customer Drive folders (26 October 2026)
 
 The owner explicitly clarifies PB001/Photo/00000001/{raw,bw,color}; internal transaction IDs are not customer Drive folder names. This supersedes the previous cloud tree. Preserve local state, QR folder IDs and no print replay.

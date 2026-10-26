@@ -1,6 +1,16 @@
 # Meong Photobooth — current feature status
 
-**27 October local increment:** FEAT-009 stage 1 is IN SOURCE / PARTIAL:
+**27 October current increment:** FEAT-009 stages 1–2 IN SOURCE: observer,
+read-only local recovery review, guarded watchdog startup, per-checkout launcher
+lease, Windows cmd and Ubuntu graphical-session service generation. Owner develops
+on Windows and deploys to an Ubuntu mini PC; actual deployment/hardware pending.
+Documentation-before-code / documentation-after-code is the primary rule.
+Final local **869 run: 866 PASS, 3 optional model SKIP, 0 failures/errors**;
+47 focused PASS, 16 API/Sandbox PASS, native launcher and systemd unit verification
+PASS. No automatic restart, replay, service installation or commercial release.
+[Stage-2 scope, reviewed sources and evidence](qa/portrait-v2-recovery/README.md).
+
+**Historical stage-1 checkpoint (superseded by stage 2 above):**
 optional external heartbeat observer and Windows startup generator. Automatic
 restart/recovery and startup installation remain unimplemented. Device acceptance
 is deferred by owner; no remote-source CI claim. [Current scope/evidence](qa/portrait-v2-watchdog/README.md).
