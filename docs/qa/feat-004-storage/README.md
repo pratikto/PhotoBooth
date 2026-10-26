@@ -127,3 +127,17 @@ public palm-model fixtures enabled. The additional missing-credentials test was
 added after full-suite discovery and passed in the recorded 11-test configuration
 suite; no later runtime change was made. [Exact tested code hashes](tested-source.json).
 This is synthetic/provider-fixture evidence, not physical Windows acceptance.
+
+
+Final UI review follow-up: cache activation now also waits for the original
+Device Health panel to close; an idle page with an operator overlay must not be
+rebuilt behind the operator. This is a single native guard, with the existing
+cache-pinning test extended. The full 823-test run above is at bf9be57, before
+this final guard. Subsequent native/CI results are recorded separately rather
+than claiming the earlier full suite ran on a later source.
+
+Guard follow-up checks: 57 native cases ran, **55 PASS, two optional cases
+skipped** in that invocation; both skipped real-palm/native-audio cases then ran
+separately with their assets/flags, **2 PASS / zero skips**. See
+[operator/cache native run](operator-cache-tests.txt) and
+[explicit native supplement](extra-native-tests.txt). No layout/geometry changed.

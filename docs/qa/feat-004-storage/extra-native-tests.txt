@@ -1,0 +1,8 @@
+test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture) ... ok
+test_start_photo_with_enabled_native_audio_keeps_gui_on_tutorial_and_gallery (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_start_photo_with_enabled_native_audio_keeps_gui_on_tutorial_and_gallery) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 3.871s
+
+OK
+KIOSK_UNITTEST_SUMMARY: run=2 failures=0 errors=0 skipped=0 success=True

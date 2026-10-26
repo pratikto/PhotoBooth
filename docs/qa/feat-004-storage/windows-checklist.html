@@ -12,8 +12,8 @@
 </head>
 <body><main>
 <header><div class="tag">MEONG PHOTOBOOTH · GUI V2</div><h1>Booth Storage & Offline Drive</h1><p>Per-booth folders, offline photo/print, global/local caches and deployed retention. Check only actual observations.</p></header>
-<div class="panel help"><strong>Print test:</strong> <code>python tools/run_portrait_v2.py --print</code>. Use your existing saved v1 test-printer configuration. Add <code>--drive</code> only when the existing Drive setup is ready; it is not needed to check paper orientation.<br><br>
-Only photo pixels mirror. Template text, logos, clipping masks and QR stay normal. Old saved strips are not rewritten. Check only actual observations; paper requires a physical sheet. Retake/copy/uncertain-print guards remain; there is no new twenty-cycle gate.<br><br>
+<div class="panel help"><strong>Current storage profile:</strong> <code>python tools/run_portrait_v2.py</code> uses per-booth local folders. Add <code>--print --drive</code> only for the saved test printer and existing Apps Script configuration.<br><br>
+Install the matching Code.gs, run manual setupBoothStorage/setupPhotoRetention and redeploy before cloud tests. The cache and folder structure are tested separately from actual Google deletion. Never open, migrate or edit <code>old</code>. Check only real observations; leave unavailable tests unchecked. There is no new twenty-cycle gate.<br><br>
 <label class="field">Import local operator / readiness JSON<input id="readiness-file" type="file" accept=".json,application/json"></label><p id="import-status" role="status"></p></div>
 <div class="panel meta">
 <label class="field wide">Branch<input id="branch" data-field value="feature/portrait-kiosk-v2-next"></label>

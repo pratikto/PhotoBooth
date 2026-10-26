@@ -184,6 +184,9 @@ class DeliveryWidgetTests(unittest.TestCase):
             app._complete_tutorial();app._change_copies(2)
             app._apply_cached_content();self.assertEqual(app.quantities[get_templates()[0].template_id],2)
             app._return_ad()
+            app._operator_panel=object()
+            app._apply_cached_content();self.assertIs(app.templates,old)
+            app._operator_panel=None
             with patch('photobooth.catalog.load_template_pack',side_effect=AssertionError('GUI decode')):
                 app._apply_cached_content()
             self.assertEqual(len(app.templates),2);self.assertEqual(app.template_index,0)

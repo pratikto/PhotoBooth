@@ -341,7 +341,7 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, SandboxViews, Ope
         # Worker owns all network/JSON/image decoding. Swap references only at
         # idle; active visitors keep immutable artwork paths through capture.
         if (self._closed or self._suspended or self._sandbox_enabled
-                or self.navigation.page != ADVERT or self._invitation is not None):
+                or self.navigation.page != ADVERT or self._invitation is not None or self._operator_active):
             return
         jobs = self._photo_jobs
         service = jobs.service if jobs and not jobs.busy else None
