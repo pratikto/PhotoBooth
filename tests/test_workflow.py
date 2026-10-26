@@ -242,6 +242,46 @@ if __name__ == "__main__":
 class EmbeddedFolderQRTests(unittest.TestCase):
     """Each saved template must carry a decodable folder QR outside photo areas."""
 
+    def test_optional_photo_mirror_preserves_all_twelve_masks_artwork_qr_and_raw_pixels(self):
+        import hashlib
+        from PIL import ImageChops
+        url = 'https://example.test/photos/mirrored-strip'
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            raw = root / 'raw.png'
+            image = Image.new('RGB', (640, 480), 'red')
+            ImageDraw.Draw(image).rectangle((320, 0, 639, 479), fill='blue')
+            image.save(raw)
+            original_hash = hashlib.sha256(raw.read_bytes()).hexdigest()
+            for template in get_templates():
+                with self.subTest(template=template.template_id):
+                    normal = compose_result([raw] * 3, template, root / 'normal.png',
+                                            'PB001_00000001', 'session_001', url)
+                    mirrored = compose_result([raw] * 3, template, root / 'mirrored.png',
+                                              'PB001_00000001', 'session_001', url,
+                                              mirror_photos=True)
+                    with Image.open(normal) as before, Image.open(mirrored) as after:
+                        self.assertEqual(after.size, CANVAS_SIZE)
+                        self.assertAlmostEqual(after.info['dpi'][0], 203.2, places=1)
+                        self.assertEqual(before.crop(template.qr_box).tobytes(),
+                                         after.crop(template.qr_box).tobytes())
+                        differences = ImageChops.difference(before.convert('RGB'), after.convert('RGB'))
+                        for aperture in template.apertures:
+                            x0, y0, x1, y1 = aperture.box
+                            y = (y0 + y1) // 2
+                            left, right = (x0 + (x1-x0)//3, y), (x0 + 2*(x1-x0)//3, y)
+                            self.assertEqual(before.getpixel(left), (255, 0, 0))
+                            self.assertEqual(before.getpixel(right), (0, 0, 255))
+                            self.assertEqual(after.getpixel(left), (0, 0, 255))
+                            self.assertEqual(after.getpixel(right), (255, 0, 0))
+                            with Image.open(aperture.mask_path) as mask:
+                                protected = ImageOps.invert(mask.convert('L')).point(lambda p: 255 if p == 255 else 0)
+                                self.assertIsNone(ImageChops.multiply(
+                                    differences.crop(aperture.box).convert('L'), protected).getbbox())
+                            differences.paste('black', aperture.box)
+                        self.assertIsNone(differences.getbbox(), 'Artwork/text/QR outside photos changed')
+                    self.assertEqual(hashlib.sha256(raw.read_bytes()).hexdigest(), original_hash)
+
     def test_all_templates_embed_the_same_folder_destination(self):
         import cv2
         import numpy as np

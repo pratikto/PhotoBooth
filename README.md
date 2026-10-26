@@ -65,6 +65,11 @@ large download QR after file verification. Uncertain prints are held for
 inspection and never replayed automatically. Paper/phone/cloud acceptance is
 separate from source tests; BUG-009 retention remains open.
 
+New v2 photo areas are mirrored consistently in review, result, paper and the
+digital strip. Template/text/logo/QR stay normal; original camera JPEGs retain
+their original orientation/resolution. Existing saved strips are not rewritten.
+[Mirror scope and acceptance](docs/qa/portrait-v2-mirrored-output/README.md).
+
 For print-only testing use `--print`; for deliberate manual printing add
 `--manual-print`. Default launch without operator opt-ins stays local. The
 dedicated merchant Sandbox trial keeps both transports off.

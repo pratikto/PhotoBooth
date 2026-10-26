@@ -1,5 +1,11 @@
 # GUI v2 automatic print and background Drive delivery
 
+**26 October orientation refinement:** owner now selects mirrored v2 review and
+photo areas of result/printed/digital strip; raw camera JPEGs remain original,
+and artwork/text/QR stay normal. [Current mirror checks](../portrait-v2-mirrored-output/README.md).
+The current form updates P03 and uses fresh browser storage; old stored answers
+and source-specific evidence below are preserved, not transferred to the new policy.
+
 Owner continuation, **25 October 2026**: prioritize **printing and Google Drive
 only**, postponing proposed watchdog work. The owner selected automatic printing
 after approving three photos, as v1, with Drive uploading in the background.

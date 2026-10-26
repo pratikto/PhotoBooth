@@ -104,11 +104,23 @@ class PhotoWorkflowTests(unittest.TestCase):
 
     def test_copies_one_batch_and_durable_no_duplicate_print(self):
         self.start_review()
+        originals = [p.read_bytes() for p in self.service.session.initial_photo_paths]
+        thumbnails = self.service.snapshot()['thumbnails']
+        self.assertTrue(all(p.getpixel((10, 40))[2] > 240 for p in thumbnails))
         self.service.compose()
         def send(path, *, copies):
             manifest = json.loads(self.service.transaction.manifest_path.read_text())
             self.assertEqual(manifest['test_print_jobs']['session_001']['state'], 'SENDING')
             self.assertEqual(copies, 3)
+            self.assertEqual(path, self.service.session.output_path)
+            with Image.open(path) as strip:
+                for aperture in self.service.session.plan.template.apertures:
+                    x0, y0, x1, y1 = aperture.box
+                    left = strip.getpixel((x0 + (x1-x0)//3, (y0+y1)//2))
+                    right = strip.getpixel((x0 + 2*(x1-x0)//3, (y0+y1)//2))
+                    self.assertGreater(left[2], 240, 'Print path lost the mirrored blue LEFT')
+                    self.assertGreater(right[0], 240, 'Print path lost the mirrored red RIGHT')
+            self.assertEqual([p.read_bytes() for p in self.service.session.initial_photo_paths], originals)
             return SimpleNamespace(success=True)
         self.service.printer = Mock()
         self.service.printer.print_image.side_effect = send
@@ -131,11 +143,14 @@ class PhotoWorkflowTests(unittest.TestCase):
         manifest = json.loads(path.read_text())
         manifest['test_print_jobs']['session_001']['state'] = 'SENDING'
         path.write_text(json.dumps(manifest))
+        saved_output = self.service.session.output_path.read_bytes()
         restarted = PhotoTest(self.root, printer=self.service.printer)
         restarted.prepare()
         self.assertEqual(restarted.recovered_prints, 1)
         self.assertEqual(json.loads(path.read_text())['test_print_jobs']['session_001']['state'], 'UNCERTAIN')
         self.service.printer.print_image.assert_called_once()
+        self.assertEqual(self.service.session.output_path.read_bytes(), saved_output,
+                         'Restart rewrote an already composed strip')
         restarted.close()
 
     def test_invalid_quantities_and_early_composition_are_rejected(self):

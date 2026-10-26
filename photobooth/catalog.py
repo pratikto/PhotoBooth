@@ -140,7 +140,7 @@ def fit_result_photo(source: Image.Image, template: BoothTemplate | None = None,
 
 
 def render_photo_frame(source: Image.Image, template: BoothTemplate,
-                       photo_index: int) -> Image.Image:
+                       photo_index: int, *, mirror_photo: bool = False) -> Image.Image:
     """Return exactly the frame pixels used by both review and saved output.
 
     Paper and ink outside the aperture remain from the master. The same rule
@@ -148,7 +148,10 @@ def render_photo_frame(source: Image.Image, template: BoothTemplate,
     """
     frame = template.apertures[photo_index]
     result = _artwork(template).crop(frame.box)
-    result.paste(fit_result_photo(source, template, photo_index), (0, 0), _mask(frame))
+    photo = fit_result_photo(source, template, photo_index)
+    if mirror_photo:
+        photo = ImageOps.mirror(photo)
+    result.paste(photo, (0, 0), _mask(frame))
     return result
 
 
@@ -218,7 +221,7 @@ def _download_area(canvas: Image.Image, template: BoothTemplate,
 
 def compose_result(photo_paths: Sequence[Path], template: BoothTemplate,
                    output_path: Path, transaction_id: str, session_id: str,
-                   folder_url: str | None = None) -> Path:
+                   folder_url: str | None = None, *, mirror_photos: bool = False) -> Path:
     """Save three photos inside the chosen 80 × 240 mm design as a PNG.
 
     PNG density is 203.2 dpi (640 × 1920 dots). Photos retain their colors for
@@ -226,6 +229,8 @@ def compose_result(photo_paths: Sequence[Path], template: BoothTemplate,
     printer adapter can dither photos separately without damaging QR modules.
     The destination is the transaction's cached real folder URL, so composing
     and showing results never depends on a new network request.
+    Optional photo mirroring happens before masking; artwork and QR never flip.
+    The default preserves existing v1 and command-line callers.
     """
     if len(photo_paths) != 3:
         raise ValueError("A session output must contain exactly three photos.")
@@ -236,7 +241,7 @@ def compose_result(photo_paths: Sequence[Path], template: BoothTemplate,
     canvas = _artwork(template).copy()
     for index, path in enumerate(photo_paths):
         with Image.open(path) as source:
-            frame = render_photo_frame(source, template, index)
+            frame = render_photo_frame(source, template, index, mirror_photo=mirror_photos)
         canvas.paste(frame, template.apertures[index].box[:2])
     _download_area(canvas, template, folder_url, transaction_id, session_id)
     output_path = Path(output_path)

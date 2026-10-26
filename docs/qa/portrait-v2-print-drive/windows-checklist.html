@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src data:">
-<title>Meong — Operator Device Health</title>
+<title>Meong — Automatic Print and Drive</title>
 <style>
 :root{color-scheme:light;--bg:#f4f3fa;--ink:#18203e;--muted:#5a627a;--purple:#5542ac;--line:#dedced;--green:#16764e}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,Segoe UI,sans-serif}main{max-width:920px;margin:auto;padding:14px 18px 60px}header{padding:22px;border-radius:16px;background:#101a43;color:#fff}h1{margin:4px 0;font-size:clamp(23px,4vw,32px)}header p{color:#d6d8f0;margin:8px 0 0}.tag{font-size:12px;font-weight:800;letter-spacing:2px;color:#7ce2fc}
@@ -42,7 +42,7 @@ const SECTIONS = [
     [
       "Launch the required branch with --print --drive, using the existing v1 printer settings/Drive configuration. Complete tutorial/gallery/consent without enabling payments/scanner; the source HEAD is recorded if available.",
       "Select one design, two copies. Take three photos (optionally one retake), approve PAKAI FOTO INI: printing starts without pressing CETAK. Verify exactly two identical physical strips/cuts; a spool-success message alone does not pass.",
-      "Select A\u00d72 and B\u00d71: capture three photos per design and approve each. Verify two A strips and one B strip, with the selected designs/unmirrored photos and readable paper QR. Copies do not create extra capture sessions.",
+      "Select A\u00d72 and B\u00d71: capture three photos per design and approve each. Verify two A strips and one B strip, with the selected designs/mirrored photo areas, normal template text and readable paper QR. Copies do not create extra capture sessions.",
       "Rapidly tap approval/controls, resize and minimize/restore while printing. The window remains responsive; exactly one batch per approved design, no delayed or duplicate print. Ordinary next input works once.",
       "On a safely controlled test-printer failure/uncertain send or interrupted-send restart, the app holds the outcome for inspection. No automatic replay/reprint or false paper-success claim. Inspect/acknowledge before continuing; leave blank if not tested."
     ]
@@ -66,7 +66,7 @@ const SECTIONS = [
     ]
   ]
 ];
-const KEY = 'meong-windows-print-drive-v1';
+const KEY = 'meong-windows-print-drive-v2-mirror';
 const CYCLE_ITEMS = new Set([]);
 try {
  const parts = new Intl.DateTimeFormat('en-CA', {timeZone:'Asia/Jakarta',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());

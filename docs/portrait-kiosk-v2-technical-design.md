@@ -34,9 +34,12 @@ instantiating its application. [Reference map](gui-v2-branch-audit.md).
 Local/default requires explicit UJI FOTO consent and creates no payment.
 Each selected design has one three-photo session and at most one selected-photo
 retake. Zero quantity deselects; 1–9 specifies copies, not capture sessions.
-JPEGs preserve capture resolution; only the bounded preview texture is mirrored.
-Retake preserves replaced originals and manifest history. Static review/result,
-composition, print, QR and detector/decoder frames remain unmirrored.
+JPEGs preserve capture resolution and original orientation. Live preview uses
+the bounded GPU mirror. Owner refinement, 26 October: v2 review thumbnails mirror
+and the shared compositor mirrors photo pixels before applying the original masks.
+One saved PNG serves result, print and digital strip; template/text/logo/QR stay
+normal. Retake preserves replaced originals/history; detector/decoder frames stay
+unmirrored. V1 composition defaults and previously saved outputs remain unchanged.
 
 PhotoJobs rejects duplicate work. Minimize/page changes/camera loss cancel
 countdown; restore does not automatically capture. Printing requires operator

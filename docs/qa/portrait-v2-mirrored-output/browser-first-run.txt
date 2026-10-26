@@ -1,0 +1,1 @@
+First browser run failed its updated-orientation-wording assertion because the test helper inspected P02. The unchanged mixed-design orientation item is P03. Corrected the browser helper to inspect/seed P03 and the companion guide item number; no runtime, form HTML or Python source changed for this correction.

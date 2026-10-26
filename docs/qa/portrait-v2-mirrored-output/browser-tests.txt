@@ -1,0 +1,1 @@
+PASS: five fresh unchecked items; metadata import passes nothing; partial Submit 1/5 leaves physical paper unchecked; persistence/download; no new cycle gate; 360/452/800px no overflow. Updated eleven-item delivery form rejects old unmirrored P03 pass while preserving old stored answers. Zero browser errors.

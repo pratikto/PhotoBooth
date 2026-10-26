@@ -25,6 +25,8 @@ It is beyond the earlier gallery-only prototype; do not rebuild existing feature
    once/design, the existing queue uploads/resumes in background, and a large
    on-screen download QR appears only after file verification. --manual-print
    retains deliberate manual printing.
+   Photo areas in v2 review/result/printed/digital strips are mirrored, matching
+   live preview; full-resolution JPEG originals stay untouched and template/text/QR stay normal.
 5. Game DEMO: intro → manual one-use DEMO code → original game → win/lose →
    tutorial if unseen → gallery. No retry; consumed codes stay consumed after restart.
    Real scanning/POS is not mounted in v2.

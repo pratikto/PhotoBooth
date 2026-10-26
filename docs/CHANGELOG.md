@@ -1,5 +1,15 @@
 # Meong Photobooth — changelog
 
+## 2026-10-26 — Consistent mirrored photo output for GUI v2
+
+Owner chooses mirrored result/printed/digital strips. Extend the original v1
+renderer with a default-off photo-only mirror before clipping; v2 opts in and
+mirrors bounded review thumbnails. Reuse one saved PNG for result/print/Drive.
+Keep original JPEG bytes/resolution, masks/artwork/text/logo/QR, 640×1920/203.2 dpi,
+v1 defaults and copy/uncertainty/no-replay guards. No existing output migration.
+Asymmetric tests cover all twelve designs, untouched QR/art and the actual print
+path. [Checks, Windows form and rollback](qa/portrait-v2-mirrored-output/README.md).
+
 ## 2026-10-26 — BUG-009 retention activation repair
 
 Owner resumes photo retention separately from FEAT-004 ad sync and reports

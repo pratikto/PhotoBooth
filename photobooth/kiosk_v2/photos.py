@@ -11,7 +11,7 @@ from pathlib import Path
 import queue
 import threading
 
-from PIL import Image
+from PIL import Image, ImageOps
 
 from photobooth.catalog import compose_result
 from photobooth.manifest_io import manifest_lock, write_json_atomic
@@ -173,7 +173,8 @@ class PhotoTest:
         with self.store.photo_write_lock(self.transaction):
             compose_result(session.final_photo_paths, session.plan.template, output,
                            self.transaction.transaction_id, session.plan.session_id,
-                           self.transaction.manifest.get('drive_folder_url'))
+                           self.transaction.manifest.get('drive_folder_url'),
+                           mirror_photos=True)
             self.store.record_output(self.transaction, session.plan.session_id,
                                      session.final_photo_paths, output)
         session.output_path = output
@@ -253,7 +254,8 @@ class PhotoTest:
             with Image.open(path) as photo:
                 photo = photo.convert('RGB')
                 photo.thumbnail((320, 240))
-                thumbnails.append(photo.copy())
+                # Match the mirrored output/print while retaining untouched raw JPEGs.
+                thumbnails.append(ImageOps.mirror(photo))
         strip = None
         if session.output_path:
             with Image.open(session.output_path) as photo:

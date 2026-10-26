@@ -31,7 +31,7 @@ not establish tariff, production integration or the current screen inventory.
 | Mouse | Right-click creates neither multitouch markers nor accepted actions |
 | Audio | Still ads + GUI BGM; video + own audio; distinct game loop; one cue/enabled action; no leftover sound on minimize/close |
 | Price | One session/design + N copies; one MOCK win reward; Sandbox explicit full-price/no-promo consent |
-| Camera/results | Display-only live mirror; originals/review/print unchanged; one selected-photo retake/design |
+| Camera/results | Live/review and photo areas of v2 result/printed/digital strip mirror; JPEG originals remain original. Template/text/logo/QR stay normal; one retake/design |
 | Operator | Hidden F12/1.5-second header-hold access at safe states; original six-row health panel, scrolling, disabled selection and local report action |
 
 Indonesian UI labels are quoted exactly so operators can find the actual controls;
