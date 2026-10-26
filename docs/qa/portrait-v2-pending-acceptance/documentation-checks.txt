@@ -1,0 +1,3 @@
+PASS: 49 unique items; HTML, canonical JSON and plain checklist match.
+PASS: 15 guide/evidence links exist; form JS syntax and browser behavior verified.
+PASS: runtime 53e7b4c code hashes unchanged; no provider/device/old/production operation.

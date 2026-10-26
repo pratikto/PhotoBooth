@@ -1,0 +1,1 @@
+PASS: 49-item combined form, metadata/import, partial Submit, independent Sandbox cycle guard, persistence/download/reset, 360/452/800px bounds; zero browser errors.

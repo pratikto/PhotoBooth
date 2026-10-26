@@ -1,0 +1,47 @@
+{
+  "result": "PASS",
+  "synthetic_only": true,
+  "checks": [
+    "49 fresh unchecked items",
+    "older form answers preserved separately",
+    "metadata import cannot pass paper/cloud/provider or borrow cycle count",
+    "partial Submit 2/49 with 47 unchecked",
+    "twenty NEW Sandbox cycles only; no automatic pass; lower/stale count clears gate results",
+    "independent other groups",
+    "optional metadata persistence",
+    "download and reset",
+    "360/452/800px bounds and reachable Submit",
+    "zero browser errors"
+  ],
+  "screenshots": [
+    {
+      "file": "screenshots/form-452x900.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "35d602afd932b50def085ab83b778dd1498df4c43ba6e5ac37b8b6e56d2ebb92"
+    },
+    {
+      "file": "screenshots/submit-452x900.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "d4d0352a0d3f8cc60338d200f3bdd8701725d6400d273b107438a9710380cd6f"
+    },
+    {
+      "file": "screenshots/form-800x1280.png",
+      "width": 800,
+      "height": 1280,
+      "sha256": "5137aacf99200d4d154f3ca661e3d9822b889133efd09315670687f37f6c5c84"
+    },
+    {
+      "file": "screenshots/submit-800x1280.png",
+      "width": 800,
+      "height": 1280,
+      "sha256": "e9a5a61eb563b838b275469960e085ec0578ec38a1866f51e10dd5309ae936d4"
+    }
+  ],
+  "note": "Browser checks do not pass any actual Windows, printer, Google/provider or retention test.",
+  "runtime_source": "53e7b4c16650feb46e3ecb1e0645a11c316da763",
+  "documentation_base": "6ab54d33a91228ea826cf94239a6bc04d60b9596",
+  "form_sha256": "03e28c86d7ba8c26b46270aeed345066bc1f7b14046819de038a2e901b376ad7",
+  "visually_reviewed": "Top and Submit/footer at both 800x1280 and 452x900; no clipped controls."
+}

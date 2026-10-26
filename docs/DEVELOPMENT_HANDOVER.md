@@ -5,6 +5,14 @@ Updated **26 October 2026**. Repository `pratikto/PhotoBooth`; required branch
 source **`53e7b4c`** (coordinated per-booth storage/content; mirror `fc26e3d`, BUG-009 `887ba39`, print/Drive `266b2c8`). Refresh remote HEAD before continuing. GitHub's default is
 still `master`; `main.py` launches v1. Do not restart the project or P3/P4 work.
 
+## Latest requested acceptance checklist
+
+Owner asks for every still-untested gate. The [49-item combined form](qa/portrait-v2-pending-acceptance/windows-checklist.html)
+and [coverage/runbook](qa/portrait-v2-pending-acceptance/README.md) reuse the existing
+offline Submit/metadata/persistence implementation. Prior passes remain recorded;
+twenty cycles apply only to the existing NEW Sandbox gate. This is documentation,
+not runtime/provider/production work or a newly reported device failure.
+
 ## Latest completed increment
 
 **Latest owner instruction — FEAT-004 + BUG-009 implementation:** application

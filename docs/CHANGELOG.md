@@ -1,5 +1,18 @@
 # Meong Photobooth — changelog
 
+## 2026-10-26 — Consolidated outstanding acceptance checklist
+
+Owner asks for all untested gates. Reuse the existing offline form for 49 grouped
+current-build/device, actual paper/mirror, Drive/offline, global/local content,
+retention, official Sandbox/recovery/cycles and privacy-review checks. Add a plain
+checkbox version, source coverage, run commands and safe independent groups.
+Previous owner passes/local twenty-cycle reports remain preserved; only the
+existing new Sandbox cycle gate is enforced. New storage key, metadata-only
+import and Submit never pass untested cases. Correct stale bug-ledger statements
+that called the delivered storage integration unimplemented.
+[Form and scope](qa/portrait-v2-pending-acceptance/README.md).
+Documentation only; no production/repository operation or runtime changes.
+
 ## 2026-10-26 — Implement coordinated per-booth storage and offline global content
 
 Ordinary v2 now uses PB00X roots, 25 empty local reserves, atomic claims and

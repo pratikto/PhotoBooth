@@ -62,6 +62,12 @@ CI audio job also using dummy output. They are not physical acceptance.
 
 ## Outstanding acceptance
 
+Use the [49-item consolidated outstanding checklist](qa/portrait-v2-pending-acceptance/windows-checklist.html)
+for current-build Windows/paper/Drive/cache/retention, real Sandbox/recovery
+and privacy review. It retains earlier owner passes; only the existing NEW
+Sandbox integration gate requires twenty cycles. Import never checks tests.
+[Scope and instructions](qa/portrait-v2-pending-acceptance/README.md).
+
 P5 is ready for acceptance, with current Windows integration, actual merchant
 Sandbox, physical paper/uncertain-job handling, Drive/download/offline/cloud
 retention, privacy and release signoff still awaiting complete evidence. Keep

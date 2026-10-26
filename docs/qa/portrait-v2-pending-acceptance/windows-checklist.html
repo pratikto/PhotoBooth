@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src data:">
+<title>Meong — Semua Gate yang Belum Teruji</title>
+<style>
+:root{color-scheme:light;--bg:#f4f3fa;--ink:#18203e;--muted:#5a627a;--purple:#5542ac;--line:#dedced;--green:#16764e}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,Segoe UI,sans-serif}main{max-width:920px;margin:auto;padding:14px 18px 60px}header{padding:22px;border-radius:16px;background:#101a43;color:#fff}h1{margin:4px 0;font-size:clamp(23px,4vw,32px)}header p{color:#d6d8f0;margin:8px 0 0}.tag{font-size:12px;font-weight:800;letter-spacing:2px;color:#7ce2fc}
+.panel,section{background:white;border:1px solid var(--line);border-radius:14px;margin-top:18px;padding:20px}.meta{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:block;font-weight:650;font-size:14px}.field input,textarea{width:100%;margin-top:6px;border:1px solid #bdc0d1;border-radius:8px;padding:11px;color:var(--ink);background:#fff;font:inherit}.field input:focus,textarea:focus{outline:3px solid #dad2ff;outline-offset:1px}.wide{grid-column:1/-1}.summary{position:sticky;top:0;z-index:2;box-shadow:0 3px 16px #151a4315;background:#fffffff5;padding:14px 20px;border:1px solid var(--line);border-radius:12px;margin-top:18px}.numbers{display:flex;justify-content:space-between;gap:12px}.numbers strong{color:var(--purple)}progress{display:block;width:100%;height:13px;margin-top:9px;accent-color:var(--green)}h2{font-size:20px;margin:0 0 12px}.section-count{font-size:14px;font-weight:500;color:var(--muted);margin-left:10px}.item{display:flex;align-items:flex-start;gap:12px;padding:13px 7px;border-top:1px solid #efedf6;cursor:pointer;border-radius:6px}.item:hover{background:#f7f5ff}.item input{flex:0 0 23px;width:23px;height:23px;margin:2px 0;accent-color:var(--green);cursor:pointer}.item .id{display:inline-block;min-width:36px;color:var(--purple);font-size:13px;font-weight:750}.item.done{background:#f2faf5}.item.done .id{color:var(--green)}.help{color:var(--muted);font-size:14px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}button{border:0;border-radius:9px;padding:12px 18px;background:var(--purple);color:#fff;font:600 15px system-ui;cursor:pointer;min-height:46px}button.secondary{background:#eeebf8;color:var(--ink)}button.reset{background:#fff;color:#8c3434;border:1px solid #dcc5c5}button:hover{filter:brightness(.95)}#status{min-height:24px;margin-top:12px;color:var(--green)}textarea{min-height:150px;resize:vertical}.footer{font-size:13px;color:var(--muted);margin-top:18px}@media(max-width:580px){.meta{grid-template-columns:1fr}.panel,section{padding:15px}.summary{padding:12px}.item{padding:13px 2px}.item .id{min-width:30px}}@media print{body{background:white}.summary{position:static;box-shadow:none}.actions,#status,.footer{display:none}section{break-inside:avoid}main{padding:0;max-width:none}header{color:#101a43;background:white;border-bottom:2px solid #101a43;border-radius:0}header p{color:#4b526b}}
+code{overflow-wrap:anywhere}.item>span{min-width:0;overflow-wrap:anywhere}.field{min-width:0}
+</style>
+</head>
+<body><main>
+<header><div class="tag">MEONG PHOTOBOOTH · GUI V2</div><h1>Checklist Semua Gate yang Belum Teruji</h1><p>49 pemeriksaan perangkat, cetak, Drive/cache, retensi, Sandbox dan privasi. Centang hanya hasil yang benar-benar kamu uji dan lulus.</p></header>
+<div class="panel help"><strong>Urutan:</strong> A → B → C/D → E. F/G dikerjakan terpisah jika akun QRIS Sandbox tersedia; H untuk review bukti.<br><br>
+<strong>Lokal:</strong> <code>python tools/run_portrait_v2.py</code>. Printer/Drive uji: tambah <code>--print --drive</code> sesudah konfigurasi siap.
+<strong>Sandbox:</strong> tutup GUI biasa, lalu <code>python tools/run_portrait_v2_sandbox.py</code> dengan akun uji/simulator resmi; printer dan Drive tetap nonaktif di launcher ini.<br><br>
+Ambil metadata: <code>python tools/check_portrait_v2.py</code>, lalu impor JSON di bawah. Catat HEAD dari build yang benar-benar dipakai. Laporan lulus sebelumnya tetap disimpan; pemeriksaan singkat bagian A mengaitkan integrasi terbaru ke perangkat aktual, tidak mengulang gate 20 putaran foto/game lama.<br><br>
+<strong>Belum tersedia/belum dicoba = kosong.</strong> CI/READY tidak meluluskan kertas, ponsel, merchant atau penghapusan. Retensi diuji hanya dengan fixture sintetis yang diotorisasi. Jangan membuka/mengubah isi <code>old</code>, menghapus journal/counter, atau menempelkan key/token.<br><br>
+<label class="field">Impor metadata readiness / operator JSON<input id="readiness-file" type="file" accept=".json,application/json"></label><p id="import-status" role="status"></p></div>
+<div class="panel meta">
+<label class="field wide">Branch<input id="branch" data-field value="feature/portrait-kiosk-v2-next"></label>
+<label class="field">HEAD yang diuji<input id="head" data-field value="" placeholder="Hasil git rev-parse --short HEAD"></label>
+<label class="field">Tanggal<input type="date" id="date" data-field value="2026-10-26"></label>
+<label class="field">Versi Windows<input id="windows" data-field placeholder="Contoh: Windows 11"></label>
+<label class="field">Resolusi layar<input id="resolution" data-field placeholder="Contoh: 800 × 1280"></label>
+<label class="field">Display scaling (%)<input id="scaling" data-field placeholder="Contoh: 100%"></label>
+<label class="field">Kamera (model / bawaan / USB)<input id="camera" data-field placeholder="Contoh: kamera bawaan laptop"></label>
+<label class="field">Index kamera<input id="camera_index" data-field placeholder="Contoh: 0"></label>
+<label class="field">Booth / profil yang diuji<input id="booth" data-field placeholder="Contoh: PB001V2 / PB001"></label>
+<label class="field">Printer uji / lebar cetak<input id="printer" data-field placeholder="Model dan lebar dots; tanpa serial/alamat"></label>
+<label class="field wide">Kapan lag terasa?<input id="lag" data-field placeholder="Halaman dan kondisi; tulis tidak ada bila normal"></label>
+<label class="field">Jumlah putaran Sandbox BARU selesai<input type="number" min="0" step="1" id="cycles" data-field placeholder="0 jika belum menjalankan Sandbox"></label>
+<label class="field">Speaker / output audio<input id="speaker" data-field placeholder="Perangkat output yang dipakai"></label>
+</div>
+<div class="summary"><div class="numbers"><strong id="count" aria-live="polite">0 / 49 lulus</strong><span id="save-status" class="help">Menyimpan…</span></div><progress id="progress" value="0" max="49" aria-label="Jumlah pemeriksaan lulus"></progress></div>
+<div id="cycle-status" class="panel help" role="status" aria-live="polite"></div>
+<div id="sections"></div>
+<div class="panel help" id="separate-scope"><strong>Dicatat terpisah, tidak dihitung sebagai tes fitur GUI v2 saat ini:</strong> webhook HTTPS publik belum dideploy; kontrak promo QRIS tepercaya, scanner/POS dan pembayaran produksi belum diaktifkan; perpindahan branch utama/merge/rilis memerlukan instruksi terpisah. BUG-001/007 pada Settings/audio v1 juga terpisah dari launcher v2. BUG-012–018 yang telah dilaporkan lulus tetap MONITORING; tidak otomatis dibuka ulang oleh form ini.</div>
+
+<div class="panel"><h2>Catatan masalah / tes yang belum bisa dijalankan</h2><label class="field" for="notes">Tulis ID item, langkah uji, hasil aktual, hasil yang diharapkan dan alasan belum diuji.</label><textarea id="notes" data-field placeholder="Contoh: C04 — masih menunggu Drive saat offline. F01 belum bisa diuji karena akses Sandbox belum tersedia. Jangan isi key/token."></textarea>
+<div class="actions"><button id="submit" type="button">Submit Hasil Uji</button><button id="copy" class="secondary" type="button">Salin prompt hasil</button><button id="download" type="button">Unduh hasil .txt</button><button id="print" class="secondary" type="button">Cetak / PDF</button><button id="reset" class="reset" type="button">Kosongkan checklist</button></div><div id="status" role="status" aria-live="polite"></div></div>
+<div id="submission" class="panel" hidden><h2>Prompt hasil siap disalin</h2><p>Salin teks di bawah ke chat lalu kirim. Form offline ini tidak mengirim otomatis.</p><textarea id="prompt-output" readonly aria-label="Laporan untuk chat"></textarea></div>
+<p class="footer">49 item. Submit menyiapkan prompt untuk chat; tidak mengirim otomatis. Tersimpan terpisah dari form lama. Kosong berarti gagal atau belum diuji.</p>
+</main>
+<script>
+const SECTIONS = [
+  [
+    "A",
+    "Profil Windows dan integrasi build terbaru",
+    [
+      "Jalankan check_portrait_v2.py; impor JSON, lalu cocokkan HEAD/branch, Windows, resolusi, scaling, kamera/index dan speaker dengan perangkat yang benar. READY_FOR_MANUAL_TEST tidak meluluskan tes.",
+      "Launcher biasa membuka iklan lalu tutorial wajib dan galeri. Profil layout 2 membuat PB00X/Local, Cache, _state dan minimal 25 folder READY lokal yang benar-benar kosong. Default tanpa --print/--drive tidak mengirim cetak/upload atau transaksi.",
+      "Pada profil baru, pilih A×2 + B×1: dua sesi Photo/01 dan Photo/02. Tiga foto dan satu retake per desain bekerja; raw menyimpan semua JPEG asli pada resolusi/orientasi kamera, color dan bw berisi strip yang disetujui.",
+      "Cek touchscreen pada 800×1280 dan 452×900; bila tersedia 360×640 dan scaling Windows yang dipakai. Consent, strip/QR/status, panel operator dan semua tombol terjangkau; resize tidak menghapus foto, pilihan atau jumlah.",
+      "Cek singkat kamera pada profil baru: preview bergerak tanpa perlu tap, countdown lima detik, satu shutter per foto berhasil. Kamera terputus/minimize membatalkan countdown; pulihkan tidak memakai frame lama atau memotret otomatis.",
+      "Cek singkat game/audio/tombol pada build yang dicatat: game asli dan kode DEMO sekali pakai, posisi/gerak saat resize, satu aksi/satu bunyi. Musik gambar/video/game sesuai halaman; minimize/keluar tidak meninggalkan suara. Laporan lulus lama tetap disimpan; tidak perlu mengulang 20 putaran lokal."
+    ]
+  ],
+  [
+    "B",
+    "Cetak fisik dan hasil mirror — printer uji",
+    [
+      "Dengan --print, pilih satu desain dua lembar. Setelah tiga foto disetujui, cetak mulai otomatis dan benar-benar keluar tepat dua strip identik/cut. Status spool sukses saja tidak cukup.",
+      "Pilih A×2 + B×1: keluar dua strip A dan satu B dari dua sesi foto, bukan tiga sesi. Desain dan jumlah lembar fisik sama dengan pilihan.",
+      "Bandingkan preview/review, color, bw, kertas dan strip digital: area foto mirror konsisten, teks/logo/QR normal, tanpa mirror dua kali. Cek desain kotak dan hati, clipping serta kualitas pada lebar printer yang dikonfigurasi.",
+      "Saat folder Drive nyata sudah diketahui, pindai QR di KERTAS dengan ponsel. QR terbaca dan membuka folder transaksi yang benar; cek margin/ukuran QR dan hasil cetak, bukan hanya QR di layar.",
+      "Saat printer uji mengirim, tap persetujuan/kontrol cepat, resize dan minimize/pulihkan. GUI tetap responsif; tepat satu batch per desain, tanpa antrean aksi lama atau lembar tambahan.",
+      "Pada kegagalan printer/interupsi kirim yang diuji secara terkontrol, aplikasi menahan hasil UNCERTAIN untuk inspeksi. Restart tidak mengaku kertas sudah keluar atau mengirim ulang otomatis; operator memeriksa kertas/journal sebelum lanjut."
+    ]
+  ],
+  [
+    "C",
+    "Drive nyata, offline dan pemulihan antrean",
+    [
+      "Dengan --drive dan backend siap, transaksi uji mengunggah semua raw termasuk retake, color dan bw ke Photo/NN yang benar. Status terverifikasi baru muncul setelah semua berkas diakui; tidak bercampur dengan transaksi/booth lain.",
+      "Pindai QR BESAR DI LAYAR menggunakan ponsel sebagaimana pengunjung tanpa login operator. Folder/unduhan benar dan berkas lengkap; raw tetap asli, strip digital mirror sesuai hasil. UPLOAD_COMPLETE saja tidak cukup.",
+      "Setelah folder nyata tercadangkan dan tersimpan lokal, putuskan koneksi. Foto/cetak tetap bekerja memakai tujuan yang sama; setelah online, berkas masuk ke folder yang sama tanpa duplikasi dan tanpa cetak ulang.",
+      "Pada profil uji yang pertama kali dijalankan OFFLINE tanpa cadangan Drive, foto/cetak lokal tetap bisa dimulai. Tanpa tujuan nyata, tidak ada QR palsu; kertas menyebut upload tertunda. Online kembali mengikat ID transaksi yang sama.",
+      "Uji kondisi cadangan Drive HABIS pada profil uji khusus: transaksi berikut tetap berjalan lokal dengan ID unik, termasuk setelah restart. Jangan menghapus counter/ledger untuk memaksa kondisi ini. Belum mencoba kondisi habis berarti kosong.",
+      "Selesaikan kunjungan saat upload tertunda, tutup lalu buka lagi dengan --drive. Antrean lama selesai tanpa foto/charge/cetak baru dan tanpa menulis ulang color/bw. Jika halaman hasil sudah ditutup, operator mengambil hasil menurut ID; idle tidak menampilkan foto pengunjung lama.",
+      "Buat foto dengan Drive NONAKTIF, lalu buka aplikasi dengan --drive. Foto LOCAL_ONLY tersebut tidak ikut diunggah diam-diam; hanya transaksi dengan niat Drive yang melanjutkan antrean."
+    ]
+  ],
+  [
+    "D",
+    "Setup Google dan cache global/lokal — FEAT-004",
+    [
+      "Perbarui Code.gs di project yang benar, jalankan setupBoothStorage dan deploy versi baru pada /exec yang sama. Root memiliki Global_Advertisement, Global_Template dan Photobooth/PB00X/Local/Advertisement serta Local/Template; token tetap lokal, isi old tidak dibuka/diubah.",
+      "Setelah --drive tersambung, tiap booth/profil uji memiliki minimal 25 folder transaksi READY Drive yang kosong. Jika dua profil tersedia, cek PB001 dan PB002 memakai folder/ID/ledger yang terpisah; jangan menganggap booth kedua lulus tanpa dicoba.",
+      "Pasang aset iklan global dan aset khusus booth: setiap booth yang diuji punya salinan global, aset lokal hanya tampil di booth tujuan. Playlist/jadwal/durasi sesuai konfigurasi; gambar memakai musik GUI, video audio sendiri dan pergantian video tidak membekukan kontrol.",
+      "Sinkronkan pack template lengkap (layout_80mm.json, PNG dan mask) dan template lokal. Galeri/hasil sesuai pack; global berlaku di semua booth yang diuji, lokal hanya di booth tujuan. Tanpa pack global, 12 desain bawaan tetap tersedia.",
+      "Setelah sinkronisasi lengkap, putuskan Drive lalu tutup/buka aplikasi: iklan dan template global/lokal tetap tersedia dari cache. Aset yang belum pernah diunduh tidak dianggap tersedia offline.",
+      "Putuskan unduhan pembaruan atau gunakan pack uji yang tidak valid: versi lama tetap dapat dipakai; pembaruan tidak aktif sebagian. Sesudah berkas lengkap dan valid, versi baru dapat diaktifkan.",
+      "Saat sinkron selesai di tengah pemilihan/foto/review atau panel Device Health terbuka, halaman/pilihan/foto/panel tetap utuh. Konten baru aktif hanya saat idle setelah overlay/panel ditutup, tanpa audio ganda atau data sesi tereset."
+    ]
+  ],
+  [
+    "E",
+    "Retensi aktual — BUG-009 tetap terbuka sampai ada bukti",
+    [
+      "Jalankan setupPhotoRetention sebagai akun pelaksana Web App yang benar. Drive API v3 siap dan tepat satu trigger cleanupPhotoRetention bertipe CLOCK dijadwalkan tiap jam; trigger lain tetap utuh.",
+      "Deploy versi baru backend, lalu check_drive_retention.py dengan default layout 2 menunjukkan READY untuk booth yang dipakai. Catat hasil aman; READY tidak dianggap bukti foto terhapus.",
+      "Jalankan diagnosis lagi: hanya membaca status, tanpa membuat folder, upload, memasang trigger atau meminta penghapusan. Laporan tidak memuat token/key, URL/ID sensitif atau raw log.",
+      "Pada kondisi uji ketika ACK retensi/timer belum siap, upload ditahan tanpa status terverifikasi palsu. Foto/cetak lokal tetap berjalan; setelah setup benar, transaksi yang sama dapat melanjutkan tanpa reprint.",
+      "HANYA pada fixture sintetis yang diotorisasi, buktikan foto lokal setelah 15 hari dihapus dari raw/color/bw, sementara manifest/tombstone/counter, aset/cache dan folder READY tetap ada. Jangan memakai foto pelanggan atau mengubah jam Windows.",
+      "HANYA pada fixture sintetis yang diotorisasi, cleanup aktual menghapus permanen transaksi Drive yang lewat 30 hari, bukan sekadar Trash. Termasuk transaksi lama yang baru mendapat folder saat reconnect; tanpa pengujian penghapusan nyata, kosong.",
+      "Retry registrasi, reconnect dan restart tidak memperpanjang tanggal mulai/kedaluwarsa asli. Foto lokal yang sudah kedaluwarsa tidak hidup kembali/terunggah ulang akibat callback atau reconnect terlambat.",
+      "Amati eksekusi trigger per jam yang benar-benar sukses saat GUI tertutup. Foto yang belum kedaluwarsa, aset, READY dan booth di luar scope tetap terlindungi; buktikan scope/log tanpa membuka isi old."
+    ]
+  ],
+  [
+    "F",
+    "QRIS Sandbox akun asli — simulator resmi saja",
+    [
+      "Akun Sandbox benar-benar dapat diakses. Launcher khusus meminta Merchant ID dan Sandbox Server Key tersembunyi; backend/GUI terbuka. Key tidak ada di GUI/laporan. Tanpa akses akun, bagian Sandbox tetap belum diuji.",
+      "Gallery → QRIS SANDBOX menampilkan persetujuan harga penuh/tanpa promo game sebelum order dibuat. Harga satu desain satu/dua lembar Rp10.000/Rp15.000; A×2 + B×1 Rp25.000. Diskon DEMO tidak mengotorisasi diskon provider.",
+      "QR dari provider Sandbox nyata tampil dan simulator RESMI menunjukkan order/jumlah yang sama. Jangan menggunakan aplikasi bank/dompet atau endpoint produksi.",
+      "Sebelum settlement simulator diverifikasi backend, foto tidak dapat dimulai; UJI FOTO tidak bisa melewati checkout, timeout browsing tidak membuang order aktif.",
+      "Settlement simulator diverifikasi backend → consent foto → tiga foto/review/hasil → seluruh desain selesai. STARTED/COMPLETED tercatat sesuai alur; tidak ada override PAID manual.",
+      "Tap lanjut/status cepat berulang: hanya satu order/charge provider, satu grant dan satu transaksi foto. Saldo/hasil yang belum diverifikasi tidak dianggap lunas.",
+      "Putuskan koneksi/backend saat menunggu, kemudian pulihkan: status tak pasti tetap menahan alur; refresh memulihkan order yang sama tanpa permintaan pembayaran baru.",
+      "Batalkan order pending: keluar hanya setelah status terminal dikonfirmasi backend. Jika settlement menang saat pembatalan, hak foto tetap terjaga.",
+      "Tutup/buka saat pending atau sudah dibayar tetapi belum capture: order yang sama dipulihkan tanpa charge baru. Jangan menghapus journal untuk melewati recovery.",
+      "Abort/restart setelah capture mungkin dimulai: masuk bantuan operator/RECOVERY; tidak otomatis mengulang foto, cetak, refund atau reset. Operator mencocokkan journal dan manifest dahulu."
+    ]
+  ],
+  [
+    "G",
+    "Ketahanan integrasi Sandbox baru",
+    [
+      "Selesaikan minimal 20 putaran BARU Sandbox → foto → hasil → iklan, dengan resize/minimize di beberapa putaran: tanpa crash, lag mengganggu, audio hilang, charge atau sesi ganda. Dua puluh putaran foto/game lama tidak dihitung di sini.",
+      "Sesudah minimal 20 putaran Sandbox tersebut, tutup/buka aplikasi: kamera/audio normal, order selesai tetap selesai, tidak ada charge/capture/cetak otomatis atau suara tertinggal."
+    ]
+  ],
+  [
+    "H",
+    "Privasi dan review paket acceptance",
+    [
+      "Operator meninjau consent foto, siapa yang dapat mengakses folder/unduhan, retensi dan penyimpanan lokal. Parent booth/global tidak dibuka untuk pengunjung; QR hanya menunjuk transaksi sendiri, idle tidak membocorkan foto lama.",
+      "Impor/simpan laporan readiness, operator dan retensi dari perangkat aktual: metadata sesuai, tanpa foto pelanggan, token/key, raw log atau identitas sensitif. Bukti yang dibagikan cukup disamarkan.",
+      "Operator/owner meninjau hasil yang benar-benar diuji, kegagalan/item kosong, source yang dipakai dan checkpoint rollback. Journal/counter dipertahankan; review ini tidak menjalankan atau mengotorisasi merge, perubahan default branch, deployment layanan atau rilis produksi."
+    ]
+  ]
+];
+const KEY = 'meong-windows-pending-all-20261026-v1';
+const CYCLE_ITEMS = new Set(['G01','G02']);
+try {
+ const parts = new Intl.DateTimeFormat('en-CA', {timeZone:'Asia/Jakarta',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+ const date = Object.fromEntries(parts.map(part=>[part.type,part.value]));
+ document.getElementById('date').value = date.year+'-'+date.month+'-'+date.day;
+} catch { /* Keep the visible date editable when Intl is unavailable. */ }
+const FIELDS = ['branch','head','date','windows','resolution','scaling','speaker','camera','camera_index','lag','cycles','booth','printer','notes'];
+const defaults = Object.fromEntries(FIELDS.map(id=>[id,document.getElementById(id).value]));
+const items = [];
+for (const [code,title,labels] of SECTIONS) {
+ const section=document.createElement('section');
+ const heading=document.createElement('h2'); heading.textContent=code+'. '+title;
+ const count=document.createElement('span'); count.className='section-count';count.id='count-'+code; heading.append(count);section.append(heading);
+ labels.forEach((text,index)=>{
+  const id=code+String(index+1).padStart(2,'0');
+  const label=document.createElement('label');label.className='item';label.htmlFor=id;
+  const box=document.createElement('input');box.type='checkbox';box.id=id;
+  if(CYCLE_ITEMS.has(id))box.setAttribute('aria-describedby','cycle-status');
+  const copy=document.createElement('span');const badge=document.createElement('span');badge.className='id';badge.textContent=id;
+  copy.append(badge,document.createTextNode(text));label.append(box,copy);section.append(label);
+  items.push({id,text,code,box,label});box.addEventListener('change',()=>{update();save();});
+ });
+ document.getElementById('sections').append(section);
+}
+function qualifiedCycles(){
+ const raw=document.getElementById('cycles').value.trim();
+ const count=Number(raw);
+ return raw!=='' && Number.isInteger(count) && count>=20;
+}
+function enforceCycleGate(){
+ const ok=qualifiedCycles();
+ for(const item of items){
+  if(!CYCLE_ITEMS.has(item.id))continue;
+  item.box.disabled=!ok;
+  if(!ok)item.box.checked=false;
+ }
+ document.getElementById('cycle-status').textContent=ok
+  ? 'Jumlah putaran Sandbox memenuhi batas 20. G01/G02 tetap mengikuti hasil centang aktual, tidak otomatis lulus. Laporan putaran lokal lama tetap dicatat.'
+  : 'G01/G02 belum dapat dicentang: isi minimal 20 putaran BARU integrasi Sandbox yang selesai. Putaran foto/game lama tidak dihitung. Bagian A–F/H tetap bisa dikerjakan tanpa menunggu gate ini.';
+}
+
+function update(){
+ enforceCycleGate();
+ const done=items.filter(item=>item.box.checked).length;
+ document.getElementById('count').textContent=done+' / '+items.length+' lulus';
+ document.getElementById('progress').value=done;
+ for(const [code,,labels] of SECTIONS)document.getElementById('count-'+code).textContent=items.filter(i=>i.code===code&&i.box.checked).length+'/'+labels.length;
+ for(const item of items)item.label.classList.toggle('done',item.box.checked);
+}
+function save(){
+ update();
+ if(!document.getElementById('submission').hidden)document.getElementById('prompt-output').value=promptReport();
+ const data={fields:Object.fromEntries(FIELDS.map(id=>[id,document.getElementById(id).value])),checked:items.filter(i=>i.box.checked).map(i=>i.id)};
+ try{localStorage.setItem(KEY,JSON.stringify(data));document.getElementById('save-status').textContent='Tersimpan di browser ini';}
+ catch{document.getElementById('save-status').textContent='Gunakan Unduh hasil untuk menyimpan salinan';}
+}
+function restore(){
+ try{
+  const raw=localStorage.getItem(KEY);if(!raw)return;const data=JSON.parse(raw);
+  for(const id of FIELDS)if(typeof data.fields?.[id]==='string')document.getElementById(id).value=data.fields[id];
+  const checked=new Set(Array.isArray(data.checked)?data.checked:[]);for(const item of items)item.box.checked=checked.has(item.id);
+ }catch{document.getElementById('save-status').textContent='Gunakan Unduh hasil untuk menyimpan salinan';}
+}
+function report(){
+ update();
+ const names={branch:'Branch',head:'HEAD yang diuji',date:'Tanggal',windows:'Versi Windows',resolution:'Resolusi layar',scaling:'Display scaling (%)',speaker:'Speaker/output audio',camera:'Kamera',camera_index:'Index kamera',booth:'Booth/profil',printer:'Printer uji/lebar cetak',lag:'Kapan lag terasa',cycles:'Putaran Sandbox BARU selesai'};
+ const lines=['MEONG PHOTOBOOTH GUI V2 — SEMUA GATE BELUM TERUJI (49 ITEM)'];
+ for(const [id,name] of Object.entries(names))lines.push(name+': '+document.getElementById(id).value);
+ lines.push('Status HEAD: '+(document.getElementById('head').value.trim()?'Diisi pengguna; cocokkan dengan build yang benar-benar diuji.':'BELUM DIISI — acceptance pada source yang tepat belum terverifikasi.'));
+ lines.push('Gate 20 putaran Sandbox: '+(qualifiedCycles()?'Jumlah memenuhi batas; G01/G02 mengikuti centang aktual.':'BELUM TERPENUHI — G01/G02 tidak dihitung lulus.'));
+ lines.push('Laporan lulus/20 putaran foto-game lama tetap dicatat; tidak otomatis meluluskan integrasi terbaru atau Sandbox.');
+ lines.push('Impor metadata, READY dan CI bukan bukti lulus pengujian fisik/provider.');
+ lines.push('Status metadata: '+(['head','resolution','scaling'].every(id=>document.getElementById(id).value.trim())?'Diisi pengguna; cocokkan perangkat aktual.':'BELUM LENGKAP — HEAD/resolusi/scaling belum seluruhnya diisi.'));
+
+ const done=items.filter(i=>i.box.checked).length;lines.push('','Lulus: '+done+'/'+items.length,'Belum dicentang (gagal/belum diuji): '+(items.length-done),'');
+ for(const [code,title] of SECTIONS){lines.push(code+'. '+title);for(const i of items.filter(i=>i.code===code))lines.push((i.box.checked?'[x] ':'[ ] ')+i.id+' '+i.text);lines.push('');}
+ lines.push('Batas scope: tidak ada aktivasi pembayaran produksi/scanner, promo QRIS tepercaya, webhook publik, merge/default branch atau rilis. Review checklist tidak mengotorisasi operasi tersebut.');
+ lines.push('CATATAN MASALAH',document.getElementById('notes').value||'(Belum ada catatan)');return lines.join('\n');
+}
+function promptReport(){
+ return 'Berikut hasil uji Meong Photobooth v2. Tolong analisis hasil dan catatan masalah. Item kosong berarti gagal atau belum diuji; jangan otomatis dianggap lulus. Pertahankan laporan lulus sebelumnya sesuai source/metadata aslinya.\n\n'+report();
+}
+function submitReport(){
+ save();
+ document.getElementById('submission').hidden=false;
+ const output=document.getElementById('prompt-output');
+ output.value=promptReport();output.focus();output.select();
+ status('Prompt siap. Salin ke chat lalu kirim.');
+}
+function status(text){document.getElementById('status').textContent=text;}
+async function copyReport(){
+ try{
+  if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(promptReport());
+  else{
+   const temp=document.createElement('textarea');temp.value=promptReport();document.body.append(temp);temp.focus();temp.select();const ok=document.execCommand('copy');temp.remove();if(!ok)throw new Error('copy');
+  }
+  status('Hasil disalin. Tempel ke chat lalu kirim.');
+ }catch{status('Clipboard tidak tersedia. Gunakan Unduh hasil .txt.');}
+}
+FIELDS.forEach(id=>document.getElementById(id).addEventListener('input',()=>{update();save();}));
+document.getElementById('submit').addEventListener('click',submitReport);
+document.getElementById('copy').addEventListener('click',copyReport);
+document.getElementById('download').addEventListener('click',()=>{
+ const file=new Blob([report()],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(file);const a=document.createElement('a');a.href=url;a.download='meong-v2-semua-belum-teruji.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);status('Berkas hasil siap disimpan.');
+});
+document.getElementById('print').addEventListener('click',()=>window.print());
+document.getElementById('reset').addEventListener('click',()=>{
+ if(!confirm('Kosongkan centang, metadata perangkat dan catatan pada form ini?'))return;
+ document.getElementById('submission').hidden=true;document.getElementById('prompt-output').value='';
+ for(const i of items)i.box.checked=false;for(const id of FIELDS)document.getElementById(id).value=defaults[id];update();save();status('Checklist dikosongkan.');
+});
+
+document.getElementById('readiness-file').addEventListener('change',async event=>{
+ const message=document.getElementById('import-status');
+ try{
+  const file=event.target.files[0];if(!file)return;
+  if(file.size>262144)throw new Error('size');
+  const data=JSON.parse(await file.text());
+  if(data.schema_version!==1||!data.source||!data.device)throw new Error('format');
+  const put=(id,value)=>{if(typeof value==='string'&&value.length<=200)document.getElementById(id).value=value;};
+  if(/^[a-f0-9]{7,40}$/.test(data.source.head||''))put('head',data.source.head);
+  put('branch',data.source.branch);put('windows',[data.device.os,data.device.os_release].filter(x=>typeof x==='string').join(' '));
+  const display=data.device.display||{};
+  if(Array.isArray(display.resolution)&&display.resolution.length===2&&display.resolution.every(n=>Number.isInteger(n)&&n>0&&n<65536))put('resolution',display.resolution.join(' × '));
+  if(Number.isInteger(display.scaling_percent))put('scaling',String(display.scaling_percent));
+  if(Number.isInteger(data.device.camera_index))put('camera_index',String(data.device.camera_index));
+  put('camera',data.device.camera_model);put('speaker',data.device.speaker_output);
+  message.textContent='Metadata diimpor. Cocokkan perangkat/layar aktual. Tidak ada item yang dicentang otomatis.'+(data.source.dirty?' PERHATIAN: laporan berasal dari working tree dengan perubahan lokal.':'');save();
+ }catch{message.textContent='Berkas tidak valid. Pilih windows-readiness.json dari tools/check_portrait_v2.py atau laporan operator yang kompatibel.';}
+});
+restore();update();save();
+</script></body></html>

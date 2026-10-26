@@ -9,6 +9,7 @@ not inferred. Earlier audit-only evidence remains tied to its original source.
 
 | Evidence | Source and result | Limits |
 | --- | --- | --- |
+| Latest storage/content source | 53e7b4c: **824 full Python PASS / zero failures/errors/skips**, 24 Code.gs VM PASS; matching-source CI 40273343183 all three jobs SUCCESS | 28 final native captures + two form views; 133 CI PNGs verified. No real Google/paper/phone/provider acceptance. [Evidence](qa/feat-004-storage/README.md) |
 | Foldering source audit, 26 October | Source `19e3f4d`: **38 existing-service tests PASS / zero failures/errors/skips**, 5.660s; temporary visit/pool/native-raster experiments PASS | Proves current behavior/gaps, **not** target implementation or live Drive readiness. `old` contents excluded/untouched. [Audit](qa/storage-layout-audit-2026-10-26/README.md) |
 | Mirrored v2 output | `fc26e3d`: **808 full PASS / zero failures/errors/skips**, 230.670s; 42 focused PASS; 19 shared renderer/template checks PASS | Asymmetric all-twelve tests preserve QR/art/masks/original hashes and actual print path/copies; first 808-PASS source 977d26b kept separately. [Proof](qa/portrait-v2-mirrored-output/README.md) |
 | Mirror visual/form checks | Sixteen clean-source native captures hash/dimension verified, eight selected native + two form views reviewed at 800×1280/452×900; browser 360px overflow check | Five fresh unchecked items, safe import/Submit/persistence/download; old P03 passes do not transfer. Actual paper/Windows NOT_RUN |
@@ -47,6 +48,23 @@ window rendering do not prove audible speakers or touchscreen accuracy.
 
 Keep accepted observations at their original metadata limits. Do not attach
 unknown-HEAD reports to a newer source or formally close bugs from preflight.
+
+## Consolidated outstanding acceptance — 26 October
+
+[49-item combined checklist + Submit](qa/portrait-v2-pending-acceptance/windows-checklist.html)
+covers current Windows integration, physical print/mirror, actual Drive/offline,
+per-booth global/local cache, BUG-009 activation/expiry, official merchant
+Sandbox/recovery, its twenty NEW integration cycles, privacy and operator review.
+[Coverage/scope/run instructions](qa/portrait-v2-pending-acceptance/README.md) ·
+[plain checkboxes](qa/portrait-v2-pending-acceptance/checklist.md).
+
+Earlier owner PASS/monitoring and twenty local photo/game cycles stay recorded;
+no new old-cycle gate or production action is inferred. All new checkboxes start
+empty. Imported metadata/READY/CI does not pass physical/provider tests. Missing
+Sandbox access leaves F/G NOT_RUN while other groups can proceed. G01/G02 require
+twenty new Sandbox integration cycles, as the existing P5 form already did.
+Public webhook, trusted provider game promotion, v1-specific audio/Settings and
+unapproved production/repository operations remain separately scoped.
 
 ## Current manual forms
 

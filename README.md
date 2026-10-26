@@ -8,6 +8,9 @@ results, and the original Meong Fly game in DEMO mode.
 intended future primary branch. GitHub's default remains `master`;
 `python main.py` still launches v1. See the [promotion plan](docs/gui-v2-promotion-plan.md).
 
+[Checklist gabungan: semua gate yang belum teruji (49 item + Submit)](docs/qa/portrait-v2-pending-acceptance/windows-checklist.html) ·
+[Petunjuk dan batas pengujian](docs/qa/portrait-v2-pending-acceptance/README.md).
+
 ## Run GUI v2 on Windows
 
 Use the existing checkout and Kivy environment. Preserve local changes before

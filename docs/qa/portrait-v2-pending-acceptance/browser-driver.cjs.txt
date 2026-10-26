@@ -1,0 +1,69 @@
+const {chromium}=require('/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const fs=require('fs'),crypto=require('crypto');
+(async()=>{
+ const browser=await chromium.launch({executablePath:'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
+ const page=await browser.newPage({viewport:{width:452,height:900}}),errors=[],shots=[];
+ page.on('pageerror',e=>errors.push(String(e)));
+ const assert=(ok,text)=>{if(!ok)throw Error(text)};
+ const url='http://127.0.0.1:8793/portrait-v2-pending-acceptance/windows-checklist.html';
+ await page.goto(url);
+ assert(await page.locator('input[type=checkbox]').count()===49,'49 boxes');
+ assert(await page.locator('input[type=checkbox]:checked').count()===0,'fresh empty');
+ assert(await page.isDisabled('#G01')&&await page.isDisabled('#G02'),'new Sandbox gate starts locked');
+ await page.evaluate(()=>localStorage.setItem('meong-windows-booth-storage-20261026',JSON.stringify({fields:{cycles:'20'},checked:['S01','O03','R02']})));
+ await page.reload();assert(await page.locator('input[type=checkbox]:checked').count()===0,'older form passes do not transfer');
+ const fixture={schema_version:1,source:{head:'53e7b4c16650feb46e3ecb1e0645a11c316da763',branch:'feature/portrait-kiosk-v2-next',dirty:true,token:'PRIVATE_IGNORE_ME'},
+   device:{os:'Windows',os_release:'11',display:{resolution:[800,1280],scaling_percent:100},camera_index:0,camera_model:'fixture camera',speaker_output:'fixture speaker'},
+   acceptance:{physical_print_output:'PASS'},checked:['B01','F01','G01'],cycles:20};
+ await page.locator('#readiness-file').setInputFiles({name:'windows-readiness.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(fixture))});
+ await page.waitForFunction(()=>document.querySelector('#head').value.length===40);
+ assert(await page.locator('input[type=checkbox]:checked').count()===0,'metadata/forged pass does not check items');
+ assert((await page.inputValue('#cycles'))==='','import does not borrow old cycles');
+ assert(await page.isDisabled('#G01'),'import does not unlock Sandbox cycles');
+ await page.fill('#booth','PB001');await page.fill('#printer','fixture thermal / 576 dots');
+ await page.check('#A01');await page.check('#B01');await page.click('#submit');
+ let report=await page.inputValue('#prompt-output');
+ assert(report.includes('Lulus: 2/49')&&report.includes('Belum dicentang (gagal/belum diuji): 47'),'partial tally');
+ assert(report.includes('[ ] E06')&&report.includes('[ ] F05')&&report.includes('[ ] G01'),'cloud/provider/cycle remain unpassed');
+ assert(report.includes('Booth/profil: PB001')&&report.includes('fixture thermal / 576 dots'),'optional device fields included');
+ assert(!report.includes('PRIVATE_IGNORE_ME'),'unknown secret fields omitted');
+ assert(report.includes('BELUM TERPENUHI'),'cycle status in prompt');
+ await page.fill('#cycles','19');assert(await page.isDisabled('#G01'),'19 locked');
+ await page.fill('#cycles','20');assert(!await page.isDisabled('#G01'),'20 allows actual observations');
+ assert(!(await page.isChecked('#G01'))&&!(await page.isChecked('#G02')),'20 does not auto pass');
+ await page.check('#G01');await page.check('#G02');
+ assert((await page.inputValue('#prompt-output')).includes('Lulus: 4/49'),'live prepared report updates');
+ await page.fill('#cycles','1');
+ assert(await page.isDisabled('#G01')&&!(await page.isChecked('#G01'))&&!(await page.isChecked('#G02')),'lowering count clears only cycle results');
+ assert(await page.isChecked('#A01')&&await page.isChecked('#B01'),'other groups remain independent');
+ await page.reload();assert(await page.isChecked('#A01')&&await page.isChecked('#B01'),'persistence');
+ assert((await page.inputValue('#booth'))==='PB001','optional metadata persists');
+ await page.evaluate(()=>{const key='meong-windows-pending-all-20261026-v1';let x=JSON.parse(localStorage.getItem(key));x.fields.cycles='0';x.checked.push('G01','G02');localStorage.setItem(key,JSON.stringify(x));});
+ await page.reload();assert(!(await page.isChecked('#G01'))&&await page.isDisabled('#G01'),'stale persisted cycle results cannot pass without count');
+ await page.click('#submit');report=await page.inputValue('#prompt-output');
+ const pending=page.waitForEvent('download');await page.click('#download');const download=await pending;
+ assert(download.suggestedFilename()==='meong-v2-semua-belum-teruji.txt','download filename');
+ const output='/workspace/.photobooth-cloud/pending-all-download.txt';await download.saveAs(output);
+ assert(fs.readFileSync(output,'utf8').includes('Lulus: 2/49'),'download actual partial results');
+ page.on('dialog',d=>d.accept());await page.click('#reset');
+ assert(await page.locator('input[type=checkbox]:checked').count()===0,'reset has no carry-over passes');
+ assert((await page.inputValue('#head'))===''&&(await page.inputValue('#booth'))==='','reset clears actual metadata');
+ for(const [width,height] of [[360,900],[452,900],[800,1280]]){
+   await page.setViewportSize({width,height});
+   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'no horizontal overflow '+width);
+   assert(await page.evaluate(()=>Array.from(document.querySelectorAll('.item,button')).every(el=>el.getBoundingClientRect().right<=innerWidth+1)),'controls within bounds '+width);
+   if(width!==360){
+     await page.evaluate(()=>scrollTo(0,0));
+     const file='/workspace/.photobooth-cloud/pending-all-form-'+width+'x'+height+'.png';await page.screenshot({path:file});
+     shots.push({file,width,height,sha256:crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex')});
+     await page.locator('#submit').scrollIntoViewIfNeeded();
+     const footer='/workspace/.photobooth-cloud/pending-all-submit-'+width+'x'+height+'.png';await page.screenshot({path:footer});
+     shots.push({file:footer,width,height,sha256:crypto.createHash('sha256').update(fs.readFileSync(footer)).digest('hex')});
+   }
+ }
+ assert(errors.length===0,'zero browser JS errors');
+ const result={result:'PASS',synthetic_only:true,checks:['49 fresh unchecked items','older form answers preserved separately','metadata import cannot pass paper/cloud/provider or borrow cycle count','partial Submit 2/49 with 47 unchecked','twenty NEW Sandbox cycles only; no automatic pass; lower/stale count clears gate results','independent other groups','optional metadata persistence','download and reset','360/452/800px bounds and reachable Submit','zero browser errors'],screenshots:shots,note:'Browser checks do not pass any actual Windows, printer, Google/provider or retention test.'};
+ fs.writeFileSync('/workspace/.photobooth-cloud/pending-all-browser-results.json',JSON.stringify(result,null,2)+'\n');
+ process.stdout.write('PASS: 49-item combined form, metadata/import, partial Submit, independent Sandbox cycle guard, persistence/download/reset, 360/452/800px bounds; zero browser errors.\n');
+ await browser.close();
+})().catch(e=>{console.error(e);process.exit(1)});
