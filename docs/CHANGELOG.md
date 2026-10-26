@@ -1,5 +1,14 @@
 # Meong Photobooth — changelog
 
+## 2026-10-26 — Simpler photo entry with mandatory tutorial
+
+Remove idle CARA PAKAI and its two-column wrapper. Keep the existing full-width
+invitation demo control; MULAI FOTO, invitation AYO FOTO and postgame photo
+entry retain the existing once-per-visit tutorial gate. Tutorial acknowledgement
+and safe return-to-idle reset remain. Reuse current v2 UI/actions/VisitFlow;
+no new router or unrelated feature work.
+[Scope, validation, Windows spot checks and rollback](qa/portrait-v2-photo-entry/README.md).
+
 ## 2026-10-25 — Print/Drive stage 2: native automatic fulfillment
 
 Source **266b2c8**, 800 full PASS/zero skips, 15 new-feature focused PASS; CI

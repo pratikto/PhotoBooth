@@ -1,6 +1,6 @@
 # FEAT-022 — GUI v2 specification and roadmap
 
-Updated **25 October 2026**. Active development and intended future primary
+Updated **26 October 2026**. Active development and intended future primary
 branch: **`feature/portrait-kiosk-v2-next`**. GitHub default remains `master`;
 `main.py` remains v1. [Current checkpoint/evidence](FEATURE_STATUS.md) ·
 [handover](DEVELOPMENT_HANDOVER.md) · [promotion plan](gui-v2-promotion-plan.md).
@@ -11,8 +11,9 @@ It is beyond the earlier gallery-only prototype; do not rebuild existing feature
 
 ## Product flow
 
-1. Advertising opens first; direct photo, MAIN MEONG FLY and CARA PAKAI share the
-   same media surface. The face invitation is an overlay, with manual entry retained.
+1. Advertising opens first; MULAI FOTO and MAIN MEONG FLY share the same media
+   surface. The face invitation is an overlay, with manual entry retained. There
+   is no separate CARA PAKAI action: photo entry already requires the tutorial.
 2. Tutorial acknowledgement is required once per active visit, including after
    either game result if unseen. Safe return to idle resets transient visit state.
 3. Gallery: twelve original 80×240 mm strips, three photo slots plus one download

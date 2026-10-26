@@ -1,6 +1,6 @@
 # Meong Photobooth — product and technical decisions
 
-Updated **25 October 2026**. Decisions establish product direction and scope;
+Updated **26 October 2026**. Decisions establish product direction and scope;
 [current status](FEATURE_STATUS.md) and [test ledger](test_checklist.md) establish
 implementation/evidence. Preserve historical IDs and separate later authorization
 from the original decision. A design decision alone does not authorize new code.
@@ -62,6 +62,12 @@ DEC-021 is not assigned in this branch's decision log; do not invent or renumber
 historical entries. The branch-local FEAT-021 collision is a separate issue.
 
 ## DEC-003 addendum — tutorial and visit lifetime
+
+**Owner refinement, 26 October 2026:** remove the separate idle CARA PAKAI
+button. MULAI FOTO and invitation AYO FOTO already open the required tutorial
+for a fresh visit; keep acknowledgement, cancellation and postgame routing.
+This simplifies entry without bypassing or duplicating the existing tutorial gate.
+[Scope, checks and rollback](qa/portrait-v2-photo-entry/README.md).
 
 Acknowledgement, not merely rendering the tutorial, sets `tutorial_seen`.
 Direct entry and win/lose both route to the original twelve-template picker,

@@ -25,6 +25,8 @@ First installation requires Python 3.11+ (recorded QA uses Python 3.12) and
 
 Local flow: **advertising → MULAI FOTO → tutorial → templates/copies → UJI FOTO →
 consent → three photos → review/retake → result → advertising**.
+There is no separate CARA PAKAI button on idle: MULAI FOTO and invitation
+AYO FOTO already open the required tutorial for a new visit.
 Quantity zero deselects a design; 1–9 selects identical paper copies from one
 three-photo session. A zero-copy digital-only purchase is not implemented.
 Printer and Drive require operator opt-in; the default output stays local.

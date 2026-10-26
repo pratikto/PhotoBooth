@@ -25,6 +25,10 @@ Updated **25 October 2026 (Asia/Jakarta)**. Continue on
 
 ## Current acceptance packages
 
+- [Simpler photo entry](qa/portrait-v2-photo-entry/README.md): 26 October removal
+  of the separate idle CARA PAKAI button; mandatory tutorial flow and short
+  Windows spot checks remain.
+
 - [Automatic print and background Drive](qa/portrait-v2-print-drive/README.md):
   owner-selected v1 reuse, ordinary --print/--drive profile, durable auto batch,
   startup queue resume and verified result QR; [eleven-item Submit form](qa/portrait-v2-print-drive/windows-checklist.html).

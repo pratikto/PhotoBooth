@@ -542,16 +542,11 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, SandboxViews, Ope
             "MAIN MEONG FLY", lambda: self._choose_game("manual"),
             variant="secondary"))
 
-        # Cara Pakai enters the already mandatory tutorial and keeps the
-        # single-visit gate. Invitation remains a PREVIEW-only operator action.
-        tools = BoxLayout(size_hint_y=None, height=dp(48), spacing=dp(10))
-        tools.add_widget(self._action(
-            "CARA PAKAI", lambda: self._choose_photo("help"),
-            variant="tertiary", height=48))
-        tools.add_widget(self._action(
+        # Photo entry already requires the tutorial; no separate help action.
+        # Invitation remains a PREVIEW-only operator action.
+        shell.add_widget(self._action(
             "UNDANGAN (DEMO)", self._show_invitation,
             variant="tertiary", height=48))
-        shell.add_widget(tools)
         shell.add_widget(text_label(
             "Mode iklan aktif saat idle • Game dan QRIS masih prototype",
             size=12, height=31, color=MUTED,

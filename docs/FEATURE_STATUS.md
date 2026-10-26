@@ -10,6 +10,11 @@ check passed; OWNER-REPORTED means a physical observation with the recorded
 metadata limits; PENDING/NOT_RUN means acceptance has not been demonstrated.
 None of these alone means production-certified or formally released.
 
+**Owner flow refinement, 26 October:** idle no longer has a separate CARA PAKAI
+button. Direct/invitation photo entry still requires the four-step tutorial for
+a fresh visit, using the existing navigation/actions. [Current change and
+validation](qa/portrait-v2-photo-entry/README.md).
+
 **Latest owner retest, 25 October:** targeted R01–R04 **4/4 checked**, zero
 unchecked and no issue notes. BUG-018 moves to **OWNER-REPORTED PASS / MONITORING**:
 rapid/mixed clicks, close while busy, reopen/minimize and next input/restart are
@@ -20,7 +25,7 @@ closure or external P5 acceptance is inferred. No new runtime patch is needed.
 
 | Feature | Current GUI v2 source | Evidence and boundary |
 | --- | --- | --- |
-| Advertising/tutorial/twelve templates | Responsive media, inline invitation, tutorial once per visit, swipe gallery, native captions and animated header | Source screenshots; final owner visual/audio 8/8 at unknown HEAD |
+| Advertising/tutorial/twelve templates | Responsive media, inline invitation, tutorial once per visit via photo entry (no separate help button), swipe gallery, native captions and animated header | Source screenshots; final owner visual/audio 8/8 at unknown HEAD; later entry refinement has its own source checks |
 | Camera/face/optional palm | Async camera and preview, display-only mirror, existing face/palm services; manual SIAP retained | Owner-reported preview/button/palm PASS and prior twenty cycles; missing source/device fields stay unknown |
 | Capture/review/retake | Three original photos per selected design, one retake per design, local composition | Quantity 0 deselects; 1–9 means identical copies, not more sessions. New integration acceptance remains separate |
 | Audio | Single v2 owner; GUI loop for still ads/photo journey, video's own audio, distinct game loop; one cue per action | Owner-reported normal. BUG-017 is monitoring after the later report, not a proven decoder fix; v1 BUG-001/007 stay separate |

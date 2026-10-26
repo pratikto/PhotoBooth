@@ -7,6 +7,12 @@ still `master`; `main.py` launches v1. Do not restart the project or P3/P4 work.
 
 ## Latest completed increment
 
+**26 October owner flow refinement:** remove only idle CARA PAKAI; reuse the
+existing Start/invitation/postgame tutorial gate and acknowledgement/reset rules.
+Full-width UNDANGAN (DEMO) replaces the redundant split row. [Scope, exact
+evidence and rollback](qa/portrait-v2-photo-entry/README.md). This does not start
+retention/watchdog or any other backlog candidate.
+
 **Owner-selected print/Drive continuation:** user postponed proposed watchdog
 work and selected automatic print as v1 with background Drive. Stage 1 **7b691c7**
 exposes launch options/contracts (29 focused PASS, matching CI SUCCESS); native

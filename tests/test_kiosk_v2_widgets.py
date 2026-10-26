@@ -836,7 +836,7 @@ class PortraitKivySmokeTests(unittest.TestCase):
                 for child in root.children:
                     yield from widgets(child)
 
-            app._choose_photo("help")
+            app._choose_photo("manual")
             self.assertEqual(app.navigation.page, TUTORIAL)
             figures = [w for w in widgets(app.stage)
                        if isinstance(w, TutorialIcon)]
@@ -858,7 +858,7 @@ class PortraitKivySmokeTests(unittest.TestCase):
         finally:
             app.on_stop()
 
-    def test_shared_advert_entry_has_help_and_game_without_second_home(self):
+    def test_shared_advert_photo_buttons_require_tutorial_without_help_action(self):
         app = PortraitKioskV2App()
         app.build()
         try:
@@ -870,17 +870,34 @@ class PortraitKivySmokeTests(unittest.TestCase):
                     all_buttons.extend(buttons(child))
                 return all_buttons
 
-            labels = {w.text for w in buttons(app.stage)}
-            self.assertIn("MULAI FOTO", labels)
-            self.assertIn("MAIN MEONG FLY", labels)
-            self.assertIn("CARA PAKAI", labels)
-            app._show_invitation()
+            controls = {w.text: w for w in buttons(app.stage)}
+            self.assertEqual(set(controls),
+                             {"MULAI FOTO", "MAIN MEONG FLY", "UNDANGAN (DEMO)"})
+            controls["MULAI FOTO"].dispatch("on_release")
+            self.assertEqual(app.stage.current, TUTORIAL)
+            self.assertFalse(app.navigation.tutorial_seen)
+            done = next(w for w in buttons(app.stage)
+                        if w.text == "LANJUT PILIH TEMPLATE")
+            done.dispatch("on_release")
+            self.assertEqual(app.stage.current, TEMPLATES)
+            app._return_ad()
+            self.assertFalse(app.navigation.tutorial_seen)
+
+            controls = {w.text: w for w in buttons(app.stage)}
+            self.assertNotIn("CARA PAKAI", controls)
+            controls["UNDANGAN (DEMO)"].dispatch("on_release")
             self.assertEqual(app.stage.current, ADVERT)
-            labels = {w.text for w in buttons(app._invitation)}
+            invitation = {w.text: w for w in buttons(app._invitation)}
             self.assertEqual({"AYO FOTO", "MAIN MEONG FLY",
-                              "NANTI SAJA"}, labels)
+                              "NANTI SAJA"}, set(invitation))
+            invitation["AYO FOTO"].dispatch("on_release")
+            self.assertEqual(app.stage.current, TUTORIAL)
+            self.assertFalse(app.navigation.tutorial_seen)
             app._return_ad()
             self.assertEqual(app.stage.current, ADVERT)
+            start = next(w for w in buttons(app.stage) if w.text == "MULAI FOTO")
+            start.dispatch("on_release")
+            self.assertEqual(app.stage.current, TUTORIAL)
         finally:
             app.on_stop()
 

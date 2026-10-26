@@ -21,7 +21,7 @@ not establish tariff, production integration or the current screen inventory.
 | Identity | Cosmic navy pixel-space, cyan/pink/gold, original game frames and Meong art |
 | Typography | Pixel wordmark; **main-app captions use readable native Roboto without mandatory icons**. Rejected stretched bitmap captions are historical |
 | Header | Centered wordmark and larger animated Meong at the same level; limbs/rainbow/print motion and a contact-gated single wordmark spin |
-| First page | Media plus direct/game/help entry; invitation overlays the same advertising surface |
+| First page | Media plus direct photo/game entry and UNDANGAN (DEMO); invitation overlays the same advertising surface. No separate CARA PAKAI action |
 | Tutorial | Four illustrated steps, vertical scroll and explicit acknowledgement once per visit; reset only on safe idle return |
 | Gallery | Twelve original 1:3 strips, three full previews with center focus; floating PILIH TEMPLATE STRIP title |
 | Navigation | Floating lower-corner arrows; drag follows image and settles with real sliding; short/vertical gestures do not change selection |
@@ -53,7 +53,7 @@ consent. No manual PAID override is shown in Sandbox.
 
 | ID | State | Current source |
 | --- | --- | --- |
-| M00 | Advertising | Image/video/fallback, direct/game/help actions |
+| M00 | Advertising | Image/video/fallback, direct photo/game actions and invitation demo |
 | M01 | Inline invitation | Optional face inviter/manual demo; same ad surface |
 | M02 | Tutorial | Four steps, scroll, acknowledgement |
 | M03/M04 | Gallery/cart/reward | Original templates, swipe, copies/quote, local reward validation |
