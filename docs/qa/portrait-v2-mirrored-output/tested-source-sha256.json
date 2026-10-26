@@ -60,7 +60,7 @@
   "photobooth/kiosk_v2/operator_health.py": "db17b4e667f50dcfa0acea483111e4d98304433f6b786fbdfad66496db2a7aea",
   "photobooth/kiosk_v2/performance.py": "d46431b2df6d4ea8703c4cbbb9e5e1ea1b92cd4b5d71bcdec8ea3e00005d1386",
   "photobooth/kiosk_v2/photo_drive.py": "c0bcbe4eb496ba5059812429ef7b7c97f1976f9a42bf0518be99047646cb953d",
-  "photobooth/kiosk_v2/photo_views.py": "b396b4ba3f6e14cf7666c5c47718cac7998602ed64852f5386cf1561572bdb97",
+  "photobooth/kiosk_v2/photo_views.py": "8e9ab0a1e3cf13c07962258a550c0b7ba7fb010391839eb5c5a729598f5877ca",
   "photobooth/kiosk_v2/photos.py": "f2a2cd8ac9112d832dbd9d459e6d6c3694e5d31f66b1e3353df9a132658bc4c7",
   "photobooth/kiosk_v2/pixel_type.py": "84401bcb8ca1f36bc933def324ad13add7d1a8a2bc9604f7656f984369db4dcb",
   "photobooth/kiosk_v2/previews.py": "16f24981d5a5320d5ad6ebce913f6044bcd76ef4cadc9ef3569ff60a55f027d5",

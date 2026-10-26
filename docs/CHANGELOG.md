@@ -10,6 +10,12 @@ v1 defaults and copy/uncertainty/no-replay guards. No existing output migration.
 Asymmetric tests cover all twelve designs, untouched QR/art and the actual print
 path. [Checks, Windows form and rollback](qa/portrait-v2-mirrored-output/README.md).
 
+Initial source 977d26b has 808 full PASS and matching three-job CI SUCCESS.
+Screenshot review exposed obsolete preview wording about unmirrored results;
+preview/consent now explicitly describe mirrored strips and unchanged raw photos.
+The final full run after this copy correction also has 808 PASS/zero skips,
+230.670s; the first source/test/image evidence is preserved separately.
+
 ## 2026-10-26 — BUG-009 retention activation repair
 
 Owner resumes photo retention separately from FEAT-004 ad sync and reports

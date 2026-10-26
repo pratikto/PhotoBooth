@@ -869,7 +869,7 @@ test_shared_crop_preserves_aspect_ratio_and_original_pixels (test_workflow.Workf
 Crop to the actual receipt aperture without changing the source. ... ok
 
 ----------------------------------------------------------------------
-Ran 808 tests in 224.094s
+Ran 808 tests in 230.670s
 
 OK
 KIOSK_UNITTEST_SUMMARY: run=808 failures=0 errors=0 skipped=0 success=True

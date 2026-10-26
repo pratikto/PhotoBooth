@@ -1,0 +1,6 @@
+{
+  "source_sha": "977d26b83a4cb6f9af2ae23c81f0ed936038c7e0",
+  "file": "screenshots/before-caption-452x900.png",
+  "sha256": "a723339f5b5c3e5e42d8b7f3384861f1ce51e7807b76abaf3403e7e5ba3c0543",
+  "finding": "Photo orientation is correctly mirrored; obsolete preview caption says the result is unmirrored. Preview/consent copy corrected in the following source checkpoint."
+}

@@ -237,7 +237,7 @@ class PhotoViews:
             # Like v1, invalidate the canvas after updating a reused texture.
             # Its identity is unchanged, so Image.texture emits no redraw.
             self._live_image.canvas.ask_update()
-            self._camera_hint.text = 'PREVIEW CERMIN • hasil foto tidak dicerminkan'
+            self._camera_hint.text = 'PREVIEW & STRIP CERMIN • foto asli tetap normal'
             if self._countdown_event is None:
                 self._count_label.text = ''
             self.performance.upload(time.perf_counter() - started)
@@ -298,7 +298,7 @@ class PhotoViews:
             body.add_widget(text_label(message,size=13,height=52,color=CYAN))
         body.add_widget(text_label(
             'Foto uji disimpan di perangkat ini.\n'
-            'Preview kamera memakai cermin; foto asli tetap normal.\n\n'
+            'Preview dan strip memakai cermin; foto asli tetap normal.\n\n'
             'Jumlah lembar tidak menambah sesi foto.\n' +
             ('Setelah disetujui, strip dicetak otomatis.\n' if self._photo_view.get('auto_print') else
              'Cetak dikirim setelah tombol CETAK ditekan.\n') +

@@ -1,0 +1,18 @@
+{
+  "synthetic_only": true,
+  "fixture_notes": "M01 checked by browser test only; metadata from an older cloud fixture is not Windows/paper acceptance.",
+  "captures": [
+    {
+      "file": "screenshots/mirrored-form-452x900.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "7f72cb6defa2ecac50613cc12105e0220015c5e2705852747b4ba3af410b09a8"
+    },
+    {
+      "file": "screenshots/mirrored-form-800x1280.png",
+      "width": 800,
+      "height": 1280,
+      "sha256": "1a660d040556562b249af586bd572c20f5b5cec146ec7db760cd5d619dd4f2fc"
+    }
+  ]
+}

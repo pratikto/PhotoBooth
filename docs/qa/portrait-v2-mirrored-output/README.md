@@ -64,7 +64,7 @@ text/artwork and protected mask cutouts stay identical, raw-file hashes unchange
 retake, Drive and uncertainty/no-replay behavior.
 
 [Final full regression](full-tests.txt): **808 PASS / zero failures/errors/skips**,
-224.094s, Linux/Python 3.12.14/Kivy 2.3.1/software GL/dummy PCM and prepared offline
+230.670s, Linux/Python 3.12.14/Kivy 2.3.1/software GL/dummy PCM and prepared offline
 models. Includes the added restart assertion that a saved strip is not rewritten.
 All [240 code/workflow/form hashes](tested-source-sha256.json) match the final
 tested tree. Physical paper/audibility/cloud acceptance is NOT_RUN.
@@ -76,3 +76,14 @@ updated delivery form leaves old stored P03 answers intact but does not carry
 them into the changed orientation. [Initial helper failure](browser-first-run.txt)
 records a wrong P02 selector; correcting the test to actual P03 required no form
 HTML/runtime/Python change and does not replace a failed app result with PASS.
+
+Initial functional source **977d26b** was pushed and remote-verified, with an
+[earlier 808-PASS full run](initial-full-tests.txt), 224.094s, and matching-source
+[CI 40262386195](https://github.com/pratikto/PhotoBooth/actions/runs/40262386195)
+all three jobs SUCCESS ([record](stage1-ci.json)). Clean-source screenshot review
+confirmed mirrored photos but exposed the obsolete camera caption saying the
+result was not mirrored ([before image/finding](before-caption.json)). A small
+follow-up corrects preview/consent wording; the final full run above follows
+that source correction. Initial [tested hashes](initial-tested-source-sha256.json)
+and before image remain separate from final evidence. No orientation/print
+algorithm changed in the wording follow-up.
