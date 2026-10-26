@@ -1,5 +1,6 @@
 """Durable startup review and native launch ownership, without service imports."""
 import importlib.util
+from contextlib import closing
 import json
 import os
 from pathlib import Path
@@ -138,7 +139,7 @@ class RecoveryTests(unittest.TestCase):
     def test_mock_review_does_not_expire_or_mutate_pending_order(self):
         path = self.root / 'data/kiosk-v2-p4/demo-attempts.sqlite3'
         path.parent.mkdir(parents=True)
-        with sqlite3.connect(path) as db:
+        with closing(sqlite3.connect(path)) as db, db:
             db.execute('CREATE TABLE mock_orders (state TEXT)')
             db.executemany('INSERT INTO mock_orders VALUES (?)', [('PENDING',), ('UNKNOWN',), ('ADMITTED',)])
         before = path.read_bytes()
@@ -149,7 +150,7 @@ class RecoveryTests(unittest.TestCase):
     def test_game_only_ledger_is_valid_but_corrupt_database_is_held(self):
         path = self.root / 'data/kiosk-v2-p4/demo-attempts.sqlite3'
         path.parent.mkdir(parents=True)
-        with sqlite3.connect(path) as db:
+        with closing(sqlite3.connect(path)) as db, db:
             db.execute('CREATE TABLE attempts (token TEXT)')
         self.assertEqual(self.review()['status'], 'CLEAR_FOR_MANUAL_START')
         path.write_bytes(b'broken database')

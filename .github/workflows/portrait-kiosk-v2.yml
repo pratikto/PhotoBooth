@@ -144,7 +144,10 @@ jobs:
           python -S tools/run_kiosk_unittests.py test_kiosk_v2_watchdog test_kiosk_v2_recovery
           $testExit = $LASTEXITCODE
           if ($testExit -ne 0) {
-            $report = (Get-Content -Raw $env:MEONG_CI_TEST_REPORT).Replace('%','%25').Replace("`r",'%0D').Replace("`n",'%0A')
+            $report = Get-Content -Raw $env:MEONG_CI_TEST_REPORT
+            $failureStart = $report.IndexOf('======================================================================')
+            if ($failureStart -ge 0) { $report = $report.Substring($failureStart) }
+            $report = $report.Replace('%','%25').Replace("`r",'%0D').Replace("`n",'%0A')
             Write-Output "::error title=Portable startup recovery regression::$report"
           }
           exit $testExit

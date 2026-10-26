@@ -216,3 +216,12 @@ this step, retains `-S`, preserves a Windows report artifact and emits the
 synthetic unittest failure as a check annotation if needed. This is CI evidence
 plumbing, not a weakened assertion or payment/recovery implementation change.
 The original failed run is retained; final verification is recorded separately.
+
+Follow-up `abb95b5` / run 40422635023 identifies an ERROR in
+`test_game_only_ledger_is_valid_but_corrupt_database_is_held`; passing-case text
+filled the annotation before its traceback. Inspection finds the test's SQLite
+connection context committed but did not close its file handle before the fixture
+overwrote that file. Both SQLite fixture creators now explicitly close connections
+with `contextlib.closing`, preserving assertions and production behavior. The
+annotation now starts at the failure section. Final Windows verification must
+confirm this correction; no earlier failed run is relabelled successful.
