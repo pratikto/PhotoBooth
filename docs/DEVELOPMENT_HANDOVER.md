@@ -8,7 +8,16 @@ reference a62721f refreshed read-only. Shared app/gallery and their regression
 tests reuse the exact eb0297d five-picture correction. Package original .b85 game
 art (missing from A0 staging), preserve Back/game state, pin p4a/NDK/API and
 provide a local-cache build helper plus manual APK workflow. Focused package/
-native checks pass; real compilation and final regression are in progress.
+native checks pass. Source 293b22b compiled a signed 42.7 MB debug APK:
+valid signature, no requested permissions, 144 ARM ELF libraries, 65 exact
+assets, twelve masters/game artwork and 16 KB alignment verified. Matching
+preview CI 40495526267 SUCCESS. Evidence closure was published 28 October.
+The last recovered full local run is 881 cases / 878 PASS / 3 optional palm
+SKIP at 6260435; the later 293b22b full summary remains unrecovered after cloud
+restart. Do not promote that run to PASS. Build/policy/CI checks are independent.
+Next is actual Android install/touch/keyboard/Back/Home/private-persistence QA,
+then the native A2 camera bridge. This offline preview keeps camera, audio/video,
+print, Drive and provider services off; it is not full Android hardware parity.
 [Scope, reviewed documents, commands and results](android-build-readiness.md).
 
 ## Android branch continuation — 27 October

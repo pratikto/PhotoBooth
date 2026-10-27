@@ -3,8 +3,12 @@
 **Android A1 continuation:** curated package now includes original game .b85 art,
 uses current five-image GUI v2 carousel, handles Back without exiting/losing the
 game, and has pinned p4a/NDK plus local-cache build helper/manual APK workflow.
-Native isolated-package checks pass; APK compilation/final verification is
-in progress. [Current A1 evidence](android-build-readiness.md). Camera and other
+Native isolated-package checks pass. Functional source 293b22b compiled a
+signed arm64 debug APK with zero permissions, all 144 ELF libraries verified
+as ARM, 65 exact assets, twelve templates/game artwork and 16 KB alignment PASS.
+Matching preview CI 40495526267 SUCCESS. Evidence recorded 28 October;
+installation on Android hardware remains NOT_RUN. The later full-run summary
+has not been recovered after cloud restart; see the evidence ledger. [Current A1 evidence](android-build-readiness.md). Camera and other
 hardware/service adapters remain unavailable in this offline profile.
 
 **Android branch A0 (27 October):** preview host/private data and curated

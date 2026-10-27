@@ -1,5 +1,18 @@
 # Meong Photobooth — changelog
 
+## 28 October — Publish verified Android A1 build evidence
+
+Record the 27 October signed APK from functional source 293b22b: signature v2,
+zero permissions, 144 ARM ELF libraries including nested Python extensions,
+65 exact assets, twelve original masters/game artwork and 16 KB alignment PASS.
+Publish artifact metadata/SHA-256 and matching-source preview CI 40495526267
+SUCCESS. Synchronize current status, handover and build guidance without changing
+application source or rerunning successful GUI CI. Distinguish the recovered
+881-case run at 6260435 from the unrecovered later 293b22b full-run summary.
+Cloud startup is still pending on continuation; the APK binary is not published
+as a release. The manual build workflow supplies a downloadable artifact.
+Android device installation and hardware/services remain separate.
+
 ## 27 October — Android APK manifest and native-payload verification
 
 Inspect the actual signed APK: omit the permission key instead of emitting an
@@ -8,7 +21,8 @@ Python payload as well as lib/. Lock all pure dependencies, selecting chardet
 5.2.0 instead of seventeen host-x86 extensions in chardet 7.7.0. Include constraints
 in staging hashes and rebuild only generated distribution/installer outputs on
 resume, preserving native objects, SDKs and app-private data. Nine focused policy
-checks pass; final artifact/full-source evidence follows after completion.
+checks pass; final artifact evidence is published above, with the unrecovered
+later full-run summary explicitly distinguished.
 
 ## 27 October — Android native packaging compatibility
 

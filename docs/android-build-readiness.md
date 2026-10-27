@@ -39,7 +39,28 @@ all private state. No operational cloud/provider deployment or data migration.
 
 ## Results
 
-Implementation and verification in progress. No new APK success is claimed yet.
+**Debug APK build VERIFIED on functional source 293b22b**, observed 27 October
+2026; final evidence published 28 October. Signature v2 valid; zero requested permissions; 144 AArch64 ELF libraries; 65 exact asset hashes; all twelve original template masters and .b85 game artwork; 16 KB ZIP alignment PASS.
+
+Package id.meong.meongpreview; Android minimum API 24 / target API 35;
+arm64-v8a. The inspected APK is 42,731,442 bytes; SHA-256:
+`ec5d4fca5bbafc467605697cf1298eca6fc06c29077c72d5aeaa964eb083bc59`.
+[Structured build evidence](qa/android-build/apk-verification.json).
+Other machines' debug keys/build metadata can change APK bytes; this identifies
+the inspected artifact, not every future rebuild.
+
+Matching-source [preview CI 40495526267](https://github.com/pratikto/PhotoBooth/actions/runs/40495526267)
+is SUCCESS at 293b22b. The last recovered complete local result is 881 run /
+878 PASS / 3 optional palm-assets SKIP / zero failures/errors at 6260435.
+Nine packaging-policy tests passed after the final build corrections.
+A further full run at 293b22b was launched; its final summary has not been
+recovered after the cloud restart and is not counted as a confirmed PASS.
+APK inspection and CI results remain independently verified.
+
+The APK binary remains in the previous cloud build workspace, which is not
+currently accessible. It has not been published as a release or attached to
+this repository. Use the manual workflow below to produce a downloadable
+`meong-android-debug` artifact. Actual Android install/device acceptance is NOT_RUN.
 
 Initial focused verification: **8 Android policy/native tests PASS**, zero
 skips/failures/errors (11.908s). This includes a completely isolated staged-app

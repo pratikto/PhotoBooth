@@ -1,5 +1,29 @@
 # Android A1 verification — 27 October 2026
 
+## Final artifact evidence — published 28 October
+
+Functional source **293b22b1bee4082551e5ef79a29a8cc60573694c** compiled a signed
+arm64 debug APK on 27 October. Signature v2 valid; zero requested permissions; 144 AArch64 ELF libraries; 65 exact asset hashes; all twelve original template masters and .b85 game artwork; 16 KB ZIP alignment PASS.
+[Structured evidence](apk-verification.json) preserves the observed tool results,
+package/version/size and artifact SHA-256. Those results were obtained from the
+actual APK before the environment restart; they are not inferred from CI.
+
+Matching-source [preview CI 40495526267](https://github.com/pratikto/PhotoBooth/actions/runs/40495526267)
+SUCCESS was rechecked through GitHub on continuation. The APK job was not run
+in that push workflow; it was the separate local compilation that succeeded.
+Nine policy tests passed after the last corrections. The recovered 881-case
+run at 6260435 is recorded below. A further full run at 293b22b was launched;
+its final summary is not currently recoverable while cloud startup is pending,
+so no final full-run PASS is claimed.
+
+The raw APK/extended library hashes and last raw test log remain in the prior
+cloud workspace. This closure publishes the observed summary, not invented raw
+transcripts. No APK release or automatic cloud/provider deployment is created.
+Use [the manual build workflow](../../android-build-readiness.md#manual-github-build)
+for a downloadable APK artifact; preserve the same private debug keystore for
+compatible updates. Actual Android install/touch/camera/speaker/printer/Drive/
+provider acceptance remains NOT_RUN.
+
 Owner scope: continue the existing Android branch to APK build readiness,
 following current GUI v2, with comprehensive documentation review and no new
 development branch. [Review/scope/build guide](../../android-build-readiness.md).

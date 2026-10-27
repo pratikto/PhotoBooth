@@ -1,5 +1,14 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+**Android stream — 28 October:** A1 debug-APK compilation and binary inspection
+are verified on existing feature/portrait-kiosk-android, functional source
+293b22b. Next: actual arm64 Android install/portrait/touch/keyboard/Back/Home
+and private persistence. Native camera (A2), audio/video/print (A3) and optional
+Drive/authenticated Sandbox (A4) remain unavailable in the offline preview.
+The last full-run summary after 293b22b awaits workspace recovery; previous
+881-case results and exact-source preview CI remain recorded separately.
+[Current build and acceptance guide](android-build-readiness.md).
+
 **27 October continuation:** FEAT-009 stages 1–2 now supply external observation,
 read-only recovery review/pre-GUI holds, per-checkout launcher ownership and
 Windows/Ubuntu startup generation. Next: actual Ubuntu mini-PC graphical-session/

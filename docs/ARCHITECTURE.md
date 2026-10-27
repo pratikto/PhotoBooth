@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 architecture
 
+**Android A1 build closure — 28 October:** the curated manifest now includes
+178 build/source inputs, including dependency constraints. The helper recreates
+only generated installer/distribution outputs while retaining native objects,
+SDKs and private app state; this avoids stale foreign wheels. The APK workflow
+checks outer ELF libraries and extensions inside the gzip libpybundle.so payload.
+The inspected artifact has 144 AArch64 libraries and zero requested permissions.
+[Build evidence](qa/android-build/apk-verification.json). Desktop source and
+entry points remain unchanged by this evidence-only publication.
+
 **Android A1:** the opt-in Android host imports the same current app/gallery
 (five-picture carousel from eb0297d), tutorial and original game. Curated
 packaging includes the original .b85 artwork required by camera_frames(); a

@@ -1,5 +1,11 @@
 # Android parallel development
 
+**Current A1 build result — recorded 28 October:** functional source 293b22b
+compiled a signed arm64 debug APK on 27 October. Signature v2 valid; zero requested permissions; 144 AArch64 ELF libraries; 65 exact asset hashes; all twelve original template masters and .b85 game artwork; 16 KB ZIP alignment PASS.
+[Build guide and current evidence](android-build-readiness.md). Native Android
+installation, camera, sound/video, printing, Drive and provider acceptance stay
+NOT_RUN. The earlier A0 plan/results below are retained as dated history.
+
 **Current continuation (27 October):** the owner requests APK build readiness
 on this existing branch, without creating another development branch. A1 pins
 the native toolchain, fixes missing original-game artwork in staging, reuses
@@ -27,7 +33,7 @@ Reused source: actual PortraitKioskV2App, original Meong Fly scene/renderer,
 gallery, twelve approved template masters, tutorial/visit guards and DEMO ledger.
 All `old` contents are excluded. No account/service deployment is performed.
 
-## Stages and boundaries
+## Original A0 stages and boundaries (retained history)
 
 | Stage | Deliverable | State |
 | --- | --- | --- |

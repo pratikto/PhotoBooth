@@ -1,13 +1,23 @@
 # Meong Photobooth — test evidence and acceptance
 
+**Android A1 artifact closure — published 28 October:** source **293b22b**
+built a signed debug APK on 27 October. Signature v2 valid; zero requested permissions; 144 AArch64 ELF libraries; 65 exact asset hashes; all twelve original template masters and .b85 game artwork; 16 KB ZIP alignment PASS.
+Matching-source [preview CI 40495526267](https://github.com/pratikto/PhotoBooth/actions/runs/40495526267)
+SUCCESS. Nine final packaging-policy tests PASS. Last recovered complete local
+result: **881 run / 878 PASS / 3 optional palm SKIP / zero failures/errors** at
+6260435 (294.081s). A later full run at 293b22b was started but its final summary
+is currently unrecovered after the cloud restart; it is not certified PASS.
+[Structured artifact evidence and limits](qa/android-build/apk-verification.json).
+Actual Android installation/hardware acceptance remains NOT_RUN.
+
 **Android A1 continuation (27 October):** 8 focused policy/native tests PASS,
 zero skips/failures/errors (11.908s), including isolated curated-package asset
 loading, real DEMO claim, Back/game pause/resume and private-ledger reuse guard.
 Earlier combined carousel run: 41 cases, 39 PASS, 2 opt-in SKIP, no failures/errors.
 Required-size native captures reviewed. Source a4ba8aa pushed/remote verified;
 [matching preview CI 40491067949](https://github.com/pratikto/PhotoBooth/actions/runs/40491067949)
-SUCCESS. This is still separate from APK compilation, final regression and
-Android device acceptance. [Current results/build guide](android-build-readiness.md).
+SUCCESS. That initial preview-CI checkpoint remains separate from the later
+APK verification above and Android device acceptance. [Current results/build guide](android-build-readiness.md).
 
 **Android A0 (27 October):** source `0cacc27` on `feature/portrait-kiosk-android`;
 875 local cases: 872 PASS, 3 optional palm-assets SKIP, zero failures/errors,

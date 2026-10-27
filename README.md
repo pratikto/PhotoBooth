@@ -2,6 +2,12 @@
 
 ## Android APK build
 
+**Build verified at 293b22b (27 October):** signed arm64 debug APK compiled and
+inspected, including every native ELF inside the Python payload. Signature,
+zero permissions, all twelve templates/artwork and 16 KB alignment pass.
+This is the offline GUI/game preview; native device capabilities remain gated.
+[Published evidence and limits](docs/qa/android-build/apk-verification.json).
+
 Continue on the existing `feature/portrait-kiosk-android` branch. Use **Ubuntu
 or WSL2**, Python 3.12, JDK 17 and the native build prerequisites described in
 [the Android build guide](docs/android-build-readiness.md). From the repository:
