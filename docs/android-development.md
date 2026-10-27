@@ -1,5 +1,13 @@
 # Android parallel development
 
+**Current continuation (27 October):** the owner requests APK build readiness
+on this existing branch, without creating another development branch. A1 pins
+the native toolchain, fixes missing original-game artwork in staging, reuses
+the current GUI v2 five-image carousel and adds isolated staged-app checks.
+Use [the current build guide and verification](android-build-readiness.md);
+the original A0 record below remains dated evidence, including its NOT_RUN
+APK result. The current recipe requires API 24+, superseding A0's API 23 candidate.
+
 Owner authorization: **27 October 2026, Asia/Jakarta** — create a new branch and
 develop Android in parallel, with staged Git pushes. Branch
 `feature/portrait-kiosk-android` starts from desktop checkpoint

@@ -1,5 +1,16 @@
 # Meong Photobooth — GUI v2 development handover
 
+## Android A1 continuation — 27 October
+
+Current owner request continues **feature/portrait-kiosk-android**, no new branch,
+through APK build readiness using the current GUI v2. Base c10f9dd; desktop
+reference a62721f refreshed read-only. Shared app/gallery and their regression
+tests reuse the exact eb0297d five-picture correction. Package original .b85 game
+art (missing from A0 staging), preserve Back/game state, pin p4a/NDK/API and
+provide a local-cache build helper plus manual APK workflow. Focused package/
+native checks pass; real compilation and final regression are in progress.
+[Scope, reviewed documents, commands and results](android-build-readiness.md).
+
 ## Android branch continuation — 27 October
 
 A0 source `0cacc27` pushed/remote verified; matching Android-preview CI

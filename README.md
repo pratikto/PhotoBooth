@@ -1,5 +1,25 @@
 # Meong Photobooth — GUI v2
 
+## Android APK build
+
+Continue on the existing `feature/portrait-kiosk-android` branch. Use **Ubuntu
+or WSL2**, Python 3.12, JDK 17 and the native build prerequisites described in
+[the Android build guide](docs/android-build-readiness.md). From the repository:
+
+```bash
+python3.12 -m venv work/android-build-venv
+work/android-build-venv/bin/python -m pip install -r android/requirements-build.txt
+work/android-build-venv/bin/python tools/build_android.py --accept-sdk-license
+```
+
+Output: `work/android-project/bin/*.apk`. The helper stages the curated app,
+checks source hashes on `--resume`, and keeps build caches under `work/`.
+Alternatively run **Build Android debug APK** manually in GitHub Actions with
+the Android branch selected; download its `meong-android-debug` artifact.
+This is the offline GUI v2/game preview. Camera, printing, Drive, payment,
+audio and video remain disabled pending their native Android adapters/device
+acceptance. [Current validation and exact toolchain](docs/android-build-readiness.md).
+
 Portrait Kivy photobooth with advertising, a tutorial, twelve original thermal
 strip designs, three photos per selected design, one retake per design, local
 results, and the original Meong Fly game in DEMO mode.

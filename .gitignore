@@ -13,6 +13,11 @@ photobooth/local_settings.py
 # Dependencies are installed from requirements.txt, not committed to Git.
 .venv-kivy/
 
+# Local staging, native SDKs and build evidence.
+work/
+.buildozer/
+bin/
+
 # Advertising videos are installed locally by the operator, never published.
 *.[mM][pP]4
 *.[mM][kK][vV]

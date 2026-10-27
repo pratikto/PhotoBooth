@@ -806,18 +806,16 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, SandboxViews, Ope
 
     def _update_template(self, *, step=0):
         template = self.templates[self.template_index]
-        previous = self.templates[(self.template_index - 1) % len(self.templates)]
-        following = self.templates[(self.template_index + 1) % len(self.templates)]
+        neighbours = tuple(self.templates[(self.template_index + rank) % len(self.templates)]
+                           for rank in (-2, -1, 0, 1, 2))
         self._template_name.text = (
             f"{self.template_index + 1:02d} / {len(self.templates):02d}  •  {template.name}"
         )
-        for item in (previous, template, following):
+        for item in neighbours:
             if item.template_id not in self._textures:
                 self._textures[item.template_id] = _portrait_strip_texture(
                     item, self._preview_preloader.get(item))
-        self._carousel.show((self._textures[previous.template_id],
-                             self._textures[template.template_id],
-                             self._textures[following.template_id]), step=step)
+        self._carousel.show(tuple(self._textures[item.template_id] for item in neighbours), step=step)
         self._update_order()
 
     def _update_order(self):

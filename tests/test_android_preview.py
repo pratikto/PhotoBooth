@@ -7,6 +7,7 @@ import tempfile
 import unittest
 
 from photobooth.kiosk_v2.android_preview import configure_preview
+from tools.build_android import verify_project
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('prepare_android', ROOT/'tools/prepare_android.py')
@@ -42,6 +43,11 @@ class AndroidPolicyTests(unittest.TestCase):
         config.read(ROOT/'android/buildozer.spec')
         self.assertEqual(config['app']['android.permissions'], '')
         self.assertEqual(config['app']['orientation'], 'portrait')
+        # Current numpy recipe requires API 24; p4a must not float on master.
+        self.assertGreaterEqual(int(config['app']['android.minapi']), 24)
+        self.assertEqual(config['app']['android.ndk_api'], config['app']['android.minapi'])
+        self.assertEqual(len(config['app']['p4a.commit']), 40)
+        self.assertIn('b85', config['app']['source.include_exts'].split(','))
         for desktop in ('pywin32','opencv-contrib-python','ffpyplayer','python-escpos'):
             self.assertNotIn(desktop, config['app']['requirements'])
 
@@ -51,9 +57,23 @@ class AndroidPolicyTests(unittest.TestCase):
             manifest = packaging.prepare(destination)
             self.assertEqual((destination/'main.py').read_bytes(), (ROOT/'android/main.py').read_bytes())
             self.assertIn('photobooth/kiosk_v2/android_preview.py',manifest)
+            artwork = 'photobooth/assets/meong_fly_gif_logo.b85'
+            self.assertIn(artwork, manifest)
+            self.assertEqual((destination/artwork).read_bytes(), (ROOT/artwork).read_bytes())
             self.assertNotIn('photobooth/local_settings.py',manifest)
             self.assertFalse((destination/'data').exists())
             with self.assertRaises(ValueError): packaging.prepare(destination)
+
+    def test_resume_rejects_modified_package_without_overwriting_it(self):
+        with tempfile.TemporaryDirectory() as directory:
+            destination = Path(directory)/'app'
+            packaging.prepare(destination)
+            verify_project(destination)
+            artwork = destination/'photobooth/assets/meong_fly_gif_logo.b85'
+            artwork.write_text('changed')
+            with self.assertRaisesRegex(ValueError, 'Staged source changed'):
+                verify_project(destination)
+            self.assertEqual(artwork.read_text(), 'changed')
 
 
 if __name__ == '__main__': unittest.main()

@@ -1,5 +1,12 @@
 # Meong Photobooth — current feature status
 
+**Android A1 continuation:** curated package now includes original game .b85 art,
+uses current five-image GUI v2 carousel, handles Back without exiting/losing the
+game, and has pinned p4a/NDK plus local-cache build helper/manual APK workflow.
+Native isolated-package checks pass; APK compilation/final verification is
+in progress. [Current A1 evidence](android-build-readiness.md). Camera and other
+hardware/service adapters remain unavailable in this offline profile.
+
 **Android branch A0 (27 October):** preview host/private data and curated
 Buildozer source staging implemented on `feature/portrait-kiosk-android`.
 Existing GUI/template/game reused; desktop hardware/payment flags forced off.

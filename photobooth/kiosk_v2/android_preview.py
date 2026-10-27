@@ -21,11 +21,14 @@ def configure_preview(private_root, *, environ=None):
         'PHOTOBOOTH_AD_VIDEO', 'PHOTOBOOTH_AUDIO')})
     env.update(PHOTOBOOTH_V2_STORAGE='1', KIVY_VIDEO='null', KIVY_NO_ARGS='1',
                KIVY_HOME=str(root / 'kivy'))
+    env.setdefault('KIVY_LOG_MODE', 'MIXED')
     return root
 
 
 def create_preview(private_root):
     root = configure_preview(private_root)
+    from kivy.config import Config
+    Config.set('kivy', 'exit_on_escape', '0')
     # These are data consumers of the desktop PROJECT_ROOT constant. Artwork
     # and catalogue/media paths remain relative to their original source files.
     for name in DATA_MODULES:
@@ -35,6 +38,14 @@ def create_preview(private_root):
 
     class AndroidPreviewApp(PortraitKioskV2App):
         title = 'MEONG ANDROID PREVIEW'
+
+        def _operator_key(self, window, key, *args):
+            code = key[0] if isinstance(key, (tuple, list)) else key
+            if code == 27:  # Android Back: keep durable game state and the app alive.
+                if not self._closed and not self._suspended:
+                    self._pause_game()
+                return True
+            return super()._operator_key(window, key, *args)
 
         def _operator_allowed(self):
             return False  # No desktop device probes on the Android preview.

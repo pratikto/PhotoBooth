@@ -1,0 +1,4 @@
+# Host tools only; APK runtime dependencies are in buildozer.spec.
+buildozer==1.6.0
+Cython==0.29.37
+setuptools==80.9.0

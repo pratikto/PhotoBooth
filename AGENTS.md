@@ -1,5 +1,15 @@
 # Repository working instructions
 
+## Android continuation — 27 October 2026
+
+The owner now requests continuation of the **existing**
+`feature/portrait-kiosk-android` through APK build readiness, following current
+GUI v2, without a new development branch. Read
+docs/android-build-readiness.md and docs/android-development.md. The earlier
+branch-creation authorization below is completed history, not an instruction
+to create another branch. Keep the shared UI/game/assets and truthful native
+hardware gates; Windows/Ubuntu and master remain separate.
+
 ## Android parallel branch — 27 October 2026 owner authorization
 
 The owner explicitly requests a new branch and parallel Android development,

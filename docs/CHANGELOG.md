@@ -1,5 +1,15 @@
 # Meong Photobooth — changelog
 
+## 27 October — Android A1 build readiness continuation
+
+Continue the existing Android branch at owner request, without another branch.
+Reuse current GUI v2 carousel source/tests from a62721f/eb0297d. Fix .b85
+original-game artwork exclusion from curated staging; add isolated staged-app
+verification and Back/pause/resume coverage. Pin p4a v2026.05.09/NDK 28c/API 24
+minimum and add workspace-cache build helper plus manual APK workflow.
+Native checks at 452×900/800×1280 pass. Compilation/final regression in progress;
+hardware/service capabilities remain gated. [Scope and results](android-build-readiness.md).
+
 ## 27 October — Android A0 parallel branch
 
 Published `0cacc27`; five policy checks and two-resolution native UI checks pass.

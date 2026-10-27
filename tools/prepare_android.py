@@ -8,7 +8,7 @@ import subprocess
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
-ASSET_EXTENSIONS = {'.png', '.jpg', '.jpeg', '.webp', '.json', '.wav', '.gz', '.ttf', '.kv', '.atlas'}
+ASSET_EXTENSIONS = {'.png', '.jpg', '.jpeg', '.webp', '.json', '.wav', '.gz', '.ttf', '.kv', '.atlas', '.b85'}
 
 
 def eligible(relative):

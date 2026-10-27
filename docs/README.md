@@ -26,6 +26,10 @@ Updated **26 October 2026 (Asia/Jakarta)**. Continue on
 
 ## Current acceptance packages
 
+- [Android A1 APK build readiness](android-build-readiness.md): current owner
+  continuation on the existing Android branch, pinned toolchain, staged package
+  checks and repeatable debug-build commands; native hardware gates stay separate.
+
 - [Android parallel branch and A0 preview](android-development.md): reused GUI,
   private storage and curated Buildozer input; APK/device acceptance NOT_RUN.
 
