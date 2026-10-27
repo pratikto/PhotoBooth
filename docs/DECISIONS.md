@@ -1,5 +1,16 @@
 # Meong Photobooth — product and technical decisions
 
+## Owner delivery-performance continuation — 27 October 2026
+
+Owner approves same-branch investigation/implementation/tests/documentation and
+staged pushes for Google Drive latency and v2 responsiveness. Subsequently asks
+to inspect v1's faster link generation, with no blind port. V1 publishes a real
+folder URL before upload completion; v2 keeps the stricter UPLOAD_COMPLETE screen
+QR contract, while the strip may use an earlier verified real folder. Preserve
+operator-disabled printing, original clocks/claims/checksums/durable queues and
+numbered cloud layout. No live Apps Script deployment/cloud deletion is authorized.
+[Implementation, limits, comparison and update guide](qa/drive-delivery-performance/README.md).
+
 ## Owner working rule and platform — 27 October 2026
 
 Documentation review must be thorough/comprehensive/careful before code changes;

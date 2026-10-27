@@ -1,5 +1,13 @@
 # Meong Photobooth — GUI v2 development handover
 
+Final delivery source **2e140c1**: full local **877 run / 874 PASS / 3 optional
+palm-assets SKIP / zero failures/errors**, 262.743s; 29 Code.gs VM PASS,
+11 focused native delivery PASS. Matching-source CI **40448427344**, all three
+jobs SUCCESS; 14 native FBO screenshots verified at both required sizes.
+[Final evidence, update/manual deployment, timing export and limits](qa/drive-delivery-performance/README.md).
+Runtime unchanged in the final evidence publication. No production Drive-speed,
+Windows/Ubuntu hardware, cloud deployment or deletion acceptance is inferred.
+
 ## Current delivery continuation
 
 Owner-approved Drive/GUI improvement continues from fcabfbb. Background delivery

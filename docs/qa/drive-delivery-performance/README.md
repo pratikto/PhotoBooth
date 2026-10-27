@@ -198,3 +198,45 @@ local_settings.py, raw HTTP logs, tokens, claim ledger, manifests or photo data.
 Runtime evidence still needed: actual Windows/Ubuntu network, payload sizes,
 server contention/deployed version, five-minute stage breakdown and phone access.
 BUG-009 deletion acceptance remains OPEN; no cloud deletion test was run.
+
+## Native visual verification at functional source 2e140c1
+
+Fourteen native screenshots (seven states at 800×1280 and 452×900) are stored in
+[screenshots](screenshots/), with source SHA/size/hash/state reports beside this
+runbook. Verified result views at both sizes visibly show the large QR, active
+Finish and empty processing footer; automatic print remains unavailable for a
+completed batch. The separate native test covers operator-disabled printing.
+Right-panel screenshot pixels decode to the exact fixture folder URL at both
+sizes; this is not a real phone or signed-out Google test.
+
+An initial standard 800px Window screenshot captured an older frame although
+worker state had advanced. It is excluded from final evidence. Reused the
+existing storage QA approach: original recorder/actions, settled worker state,
+then native Widget FBO export, without editing image pixels or application code.
+[Reproducible adapter](strict-render-driver.py.txt); source hashes in
+[tested-source.json](tested-source.json). No GUI geometry was changed.
+
+## Final regression and publication
+
+Functional source **2e140c1a169fe1a10830ccecd4a6cb63a6e1ac0b**:
+[complete local regression](full-tests.txt), **877 run / 874 PASS / 3 SKIP /
+0 failures / 0 errors**, 262.743s. Skips are optional real-palm assets in device
+recovery, v2 countdown and standalone inference. Native GUI/audio/video opt-ins
+were enabled; Linux/Python 3.12, SDL offscreen/software GL and dummy audio.
+[Tested-source metadata](tested-source.json) pins all 311 functional source/test/
+tool hashes and exact dependency versions. Hashes remain unchanged after testing.
+The ordinary DiagnosticSession was separately checked to persist the new safe
+INFO timing records. Physical speakers/camera/paper and Google remain unverified.
+
+[Matching-source CI 40448427344](https://github.com/pratikto/PhotoBooth/actions/runs/40448427344)
+is **SUCCESS in all three jobs**: pure/Linux, desktop/Linux, Windows portable
+startup/native dummy audio. [Recorded jobs/steps](ci-result.json). Job success
+is not a claim that optional cases all ran or that hardware passed.
+
+Staged source pushes and remote HEAD verified: **58dc76f** foreground fix →
+**2e140c1** scheduling/cache/reserve/Apps Script. This final evidence/documentation
+publication changes no runtime and skips CI. Baseline is fcabfbb; the prior local
+work branch and unrelated changes were preserved. Standard Git transport became
+available with the environment's supported command network permission; no proxy
+policy was bypassed. No archive contents were read or modified. No master merge,
+default-branch change, Apps Script deployment or cloud deletion occurred.

@@ -1,0 +1,49 @@
+"""Reuse repository recorder; native FBO avoids stale Window readback frames."""
+import hashlib, importlib.util, json, subprocess, time
+from pathlib import Path
+from unittest.mock import patch
+root=Path.cwd()
+spec=importlib.util.spec_from_file_location('delivery_recorder',root/'tools/render_portrait_p3.py')
+module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+from kivy.clock import Clock
+from kivy.core.window import Window
+original_capture=module.Recorder.capture_screen
+original_advance=module.Recorder.advance
+
+def advance(self,dt):
+    if getattr(self,'_qa_capture_pending',False):
+        Clock.schedule_once(self.advance,.05);return
+    return original_advance(self,dt)
+
+def capture(self,name):
+    def fbo(*,name):
+        path=Path(name);path=path.with_name(path.stem+'0001'+path.suffix)
+        self.stage.export_to_png(str(path));return str(path)
+    def export(dt):
+        with patch.object(Window,'screenshot',side_effect=fbo):original_capture(self,name)
+        self.evidence[-1]['foreground_busy']=self._photo_jobs.foreground_busy
+        self.evidence[-1]['footer']=self._photo_message.text
+        self.evidence[-1]['upload_status']=self._photo_view.get('upload_status')
+        self._qa_capture_pending=False
+    self._qa_capture_pending=True
+    if 'print-sending' in name:export(0);return
+    started=time.monotonic()
+    def wait(dt):
+        self._poll_photos()
+        if self._photo_jobs.busy:
+            assert time.monotonic()-started<12
+            Clock.schedule_once(wait,.05);return
+        Clock.schedule_once(export,.15)
+    Clock.schedule_once(wait,0)
+module.Recorder.advance=advance;module.Recorder.capture_screen=capture
+app=module.Recorder()
+try:
+    app.run();assert len(app.evidence)==7
+    report={'source_sha':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
+            'capture_protocol':'original recorder, settled state and native widget FBO',
+            'synthetic_only':True,'screenshots':app.evidence}
+    (module.args.output_dir/f'delivery-report-{module.args.width}x{module.args.height}.json').write_text(json.dumps(report,indent=2)+'\n')
+    print('PASS seven native FBO captures')
+finally:
+    if app._photo_jobs:app._photo_jobs.wait_closed()
+    app.temp.cleanup()

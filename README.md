@@ -62,6 +62,12 @@ describes the environments. Actual merchant acceptance remains pending.
 
 ## Automatic print and background Drive
 
+27 October: customer uploads now take priority over chunk-yielding content and
+bounded incremental reserve maintenance. Background snapshots no longer lock
+result controls/footer. The large QR still requires verified UPLOAD_COMPLETE.
+[Timing, v1 comparison, actual test evidence and Windows/update instructions](docs/qa/drive-delivery-performance/README.md).
+
+
 Use the existing v1 printer/Drive configuration and launch the explicit delivery
 profile in your Windows Kivy environment:
 

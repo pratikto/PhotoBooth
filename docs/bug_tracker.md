@@ -1,5 +1,16 @@
 # Meong Photobooth — Bug register
 
+## Delivery latency / result input follow-up — 27 October 2026
+
+Owner reports >5 minutes before large QR, then verified Drive with disabled
+Finish/processing footer; printing intentionally disabled. No duration log or
+exact failing-source/device evidence is available. Source/controlled tests confirm
+maintenance can delay a customer and snapshot busy-state can persist in rebuilt
+result controls. Bounded source fixes are in 58dc76f/2e140c1; actual five-minute
+root cause is **unproven**, device retest pending. Related FEAT-004/FEAT-022 and
+BUG-009 delivery work; privacy deletion BUG-009 stays OPEN. Prior private-link
+incident below remains separate evidence. [Tests/runbook](qa/drive-delivery-performance/README.md).
+
 ## Drive photo delivery recurrence — OPEN (26 October 2026)
 
 Owner reports private printed QR, empty folder and GUI waiting on upload. Meong account confirms the reported folder is empty and lacks anyone-reader access. Source correction prepared; installed backend version/logs and successful live delivery remain unverified. See docs/qa/drive-photo-layout/README.md.

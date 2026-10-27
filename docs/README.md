@@ -26,6 +26,12 @@ Updated **26 October 2026 (Asia/Jakarta)**. Continue on
 
 ## Current acceptance packages
 
+- [Drive delivery performance and GUI state](qa/drive-delivery-performance/README.md):
+  customer-priority scheduling, bounded reserves/content yield/cache reuse, monotonic
+  timing, v1 comparison, Windows update/manual deployment and short manual checks.
+  Production five-minute delay remains unmeasured.
+
+
 - [FEAT-009 stage 2: recovery and Ubuntu startup](qa/portrait-v2-recovery/README.md):
   Windows development/Ubuntu deployment, docs-first rule, guarded startup and
   single-instance ownership; generated user service requires manual installation.
