@@ -6,7 +6,9 @@ Baseline reproduction: two new-format checks error at the unchanged prefix
 guard. Corrected source: 136 focused launcher/provider/backend/session checks
 PASS, zero failures/errors/skips, 0.420s. Both key formats retain Sandbox-only
 requests and server-only credentials; HTTP 401 never falls back to Production.
-Final full regression/CI and actual merchant NOT_RUN limits are tracked in the
+Source `6a271de`: final full 901 run / 898 PASS / 3 optional native palm-assets
+SKIP / zero failures/errors, 277.362s. Matching CI 40572395949 all three jobs
+SUCCESS (Sandbox group 142 PASS). Raw results and merchant NOT_RUN limits are in the
 [correction evidence](qa/portrait-v2-sandbox/KEY-FORMAT.md).
 
 Matching-source CI **40481718367**: all three jobs SUCCESS.

@@ -22,5 +22,32 @@
   },
   "actual_merchant_authentication": "NOT_RUN",
   "official_simulator": "NOT_RUN",
-  "windows_hidden_input": "NOT_RUN"
+  "windows_hidden_input": "NOT_RUN",
+  "tested_sha": "6a271de6bc263851fae6ef688ae99aa063b2ea2a",
+  "full_regression": {
+    "run": 901,
+    "pass": 898,
+    "skipped": 3,
+    "failures": 0,
+    "errors": 0,
+    "seconds": 277.362,
+    "report": "key-full-tests.txt"
+  },
+  "focused": {
+    "run": 136,
+    "pass": 136,
+    "skipped": 0,
+    "failures": 0,
+    "errors": 0,
+    "seconds": 0.42,
+    "report": "key-focused-tests.txt"
+  },
+  "matching_source_ci": {
+    "run_id": 40572395949,
+    "head_sha": "6a271de6bc263851fae6ef688ae99aa063b2ea2a",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs_success": 3,
+    "record": "key-ci-result.json"
+  }
 }

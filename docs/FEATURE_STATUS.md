@@ -4,7 +4,9 @@
 
 IN SOURCE: launcher accepts both dashboard Server Key formats; fixed Sandbox
 host, redirect refusal and server-only secrets remain. 136 focused tests PASS;
-full regression/CI and actual merchant acceptance are tracked separately in the
+full local source `6a271de` has 901 run / 898 PASS / 3 optional palm-assets SKIP /
+zero failures/errors. CI 40572395949 all three jobs SUCCESS; actual merchant
+acceptance remains pending. Exact evidence is tracked in the
 [source-specific record](qa/portrait-v2-sandbox/KEY-FORMAT.md).
 
 Matching-source CI **40481718367**: all three jobs SUCCESS.

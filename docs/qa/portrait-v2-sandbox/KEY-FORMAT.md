@@ -49,7 +49,9 @@ scoped source change after inspection; preserve all journals/photos/queues.
 
 ## Results
 
-The launcher-only correction is implemented. The provider, backend factory,
+Functional source **`6a271de6bc263851fae6ef688ae99aa063b2ea2a`** is pushed and
+remote-verified on `feature/portrait-kiosk-v2-next`. The launcher-only correction
+is implemented. The provider, backend factory,
 v2 environment adapter and all photo/Drive/payment state services are unchanged.
 
 - [Before](key-before-tests.txt): two tests, two errors at the old prefix guard
@@ -62,9 +64,20 @@ v2 environment adapter and all photo/Drive/payment state services are unchanged.
   cancellation-race and recovery checks also pass.
 - [Tested-source hashes and environment](key-tested-source.json) identify seven
   relevant source/test files, including unchanged runtime adapters/transport.
-- Final full local regression is running; matching-source CI is pending. No
-  PASS is claimed until their results are recorded here. Windows hidden-input, merchant
-  authentication and official simulator acceptance remain NOT_RUN.
+- [Full local regression](key-full-tests.txt): **901 run / 898 PASS / 3 optional
+  native palm-assets SKIP / zero failures/errors**, 277.362s. The skipped cases
+  are camera-recovery palm inference, v2 palm countdown, and standalone native
+  palm inference; none is a credential/payment test.
+- Matching-source [CI 40572395949](https://github.com/pratikto/PhotoBooth/actions/runs/40572395949)
+  has **all three jobs SUCCESS**: Linux navigation/audio lifecycle, Linux native
+  synthetic GUI/Sandbox and Windows portable/native dummy audio. The CI Sandbox
+  group has 142 PASS/zero skips. [Exact job summaries](key-ci-result.json).
+  The pure job skips one real-Kivy logging integration because Kivy is absent
+  there; that case passes in the local full run. Native CI skips its optional
+  real-palm model case. No new GUI layout was introduced.
+
+Local checks and CI do not establish actual merchant authentication, official
+simulator acceptance or Windows hidden-input behavior; those remain NOT_RUN.
 
 Focused command (existing Kivy venv; offline protocol fixtures):
 

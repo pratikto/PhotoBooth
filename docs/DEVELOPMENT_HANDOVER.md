@@ -5,7 +5,9 @@
 Owner's Sandbox dashboard shows `Mid-server-`; the launcher previously rejected
 it locally. Both Server Key spellings are accepted without changing the fixed
 Sandbox endpoint, credential isolation or payment authority. 136 focused protocol/
-launcher checks PASS; final regression/CI and exact source are recorded in the
+launcher checks PASS. Source `6a271de`: full local 901 run / 898 PASS / 3 optional
+palm-assets SKIP / zero failures/errors; CI 40572395949 all three jobs SUCCESS.
+Exact source, raw reports and update instructions are recorded in the
 [correction runbook](qa/portrait-v2-sandbox/KEY-FORMAT.md). Actual merchant
 authentication and simulator acceptance still need the owner's local test.
 

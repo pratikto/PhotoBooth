@@ -7,7 +7,9 @@ from a visibly Sandbox dashboard. Reproduced in launcher validation before any
 provider call; exact installed SHA and complete credential remain unknown.
 IN SOURCE: both complete Server Key formats accepted, with Sandbox-only transport
 and credential/payment isolation preserved. 136 focused PASS; final regression
-and CI in the [runbook](qa/portrait-v2-sandbox/KEY-FORMAT.md). Actual Windows
+and CI in the [runbook](qa/portrait-v2-sandbox/KEY-FORMAT.md): source `6a271de`
+has 901 run / 898 PASS / 3 optional palm-assets SKIP, zero failures/errors;
+matching CI 40572395949 all three jobs SUCCESS. Actual Windows
 hidden-input/authentication/simulator retest pending; not CLOSED.
 
 ## BUG-019 — incoming carousel strip absent during held drag (27 October)
