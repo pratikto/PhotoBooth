@@ -1,0 +1,27 @@
+{
+  "source": "7d49f34b4cb09a9eca56921ac56ecfbd73a86e6b",
+  "date": "2026-10-28",
+  "timezone": "Asia/Jakarta",
+  "jdk": "Temurin 17.0.16+8; official SHA256 verified",
+  "sdk_cli": "13114758; official repository checksum verified",
+  "sdk_api": 35,
+  "build_tools": "35.0.0",
+  "ndk": "28.2.13676358",
+  "camera_java_compile": "PASS against Android API35",
+  "native_build_exit": 1,
+  "runtime_apk": "NOT_PRODUCED",
+  "blocker": {
+    "phase": "freetype 2.14.1 recipe download",
+    "host": "download.savannah.gnu.org",
+    "error": "Tunnel connection failed: 403 Forbidden"
+  },
+  "draft_network_additions": [
+    "download.savannah.gnu.org",
+    "www.openssl.org",
+    "api.github.com"
+  ],
+  "draft_saved": true,
+  "runtime_policy_changed": false,
+  "remote_workflow_dispatched": false,
+  "device_acceptance": "NOT_RUN"
+}

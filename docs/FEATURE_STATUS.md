@@ -4,7 +4,9 @@
 checks and nested ELF rejection fixtures are now implemented in the existing
 Android build workflow. Current cloud regression/build/access evidence and
 remaining device gates: [continuation record](qa/android-runtime/continuation.md).
-This is not a new APK or Android hardware PASS.
+Final source `7d49f34`: 929 run / 926 PASS / 3 optional palm-assets SKIP,
+zero failures/errors. Native APK build is blocked by FreeType download policy
+(403); this is not a new APK or Android hardware PASS.
 
 **Android runtime continuation — 28 October 2026:** Android runtime now implements the owner-selected built-in Camera2 and USB OTG adapters, shared v2 photo/auto-print and QRIS Sandbox, plus native media/detectors and optional ordinary-mode Drive. Focused native fixtures pass; new APK/device acceptance remains in progress.
 [Scope, setup and source evidence](android-v2-runtime.md).

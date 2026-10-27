@@ -1,0 +1,26 @@
+test_nv21_channels_rotation_and_bounded_preview (test_android_runtime.MobileCameraTests.test_nv21_channels_rotation_and_bounded_preview) ... ok
+test_pause_during_native_still_cannot_publish_old_capture (test_android_runtime.MobileCameraTests.test_pause_during_native_still_cannot_publish_old_capture) ... ok
+test_backend_restart_reuses_booth_token_and_keeps_merchant_key_out_of_export (test_android_runtime.MobileConfigurationTests.test_backend_restart_reuses_booth_token_and_keeps_merchant_key_out_of_export) ... ok
+test_environment_uses_private_root_and_only_booth_credentials (test_android_runtime.MobileConfigurationTests.test_environment_uses_private_root_and_only_booth_credentials) ... ok
+test_persist_settings_and_preserve_pending_identity (test_android_runtime.MobileConfigurationTests.test_persist_settings_and_preserve_pending_identity) ... ok
+test_private_settings_never_accept_merchant_keys_and_reject_insecure_backends (test_android_runtime.MobileConfigurationTests.test_private_settings_never_accept_merchant_keys_and_reject_insecure_backends) ... ok
+test_local_native_capture_full_resolution_retake_auto_usb_print_and_pause (test_android_runtime.MobileRuntimeWidgetTests.test_local_native_capture_full_resolution_retake_auto_usb_print_and_pause) ... ok
+test_mobile_settings_same_safe_entry_with_masked_tokens (test_android_runtime.MobileRuntimeWidgetTests.test_mobile_settings_same_safe_entry_with_masked_tokens) ... ok
+test_sandbox_ack_guard_then_same_photo_print_path_uncertain_not_replayed (test_android_runtime.MobileRuntimeWidgetTests.test_sandbox_ack_guard_then_same_photo_print_path_uncertain_not_replayed) ... ok
+test_chunks_once_and_releases_after_short_writes (test_android_runtime.UsbAdapterTests.test_chunks_once_and_releases_after_short_writes) ... ok
+test_denied_permission_sends_zero_bytes (test_android_runtime.UsbAdapterTests.test_denied_permission_sends_zero_bytes) ... ok
+test_partial_failure_never_reopens_or_retries_payload (test_android_runtime.UsbAdapterTests.test_partial_failure_never_reopens_or_retries_payload) ... ok
+test_curated_project_runs_without_repository_assets (test_android_widgets.AndroidWidgetTests.test_curated_project_runs_without_repository_assets) ... ok
+test_original_ui_private_data_and_hardware_gates (test_android_widgets.AndroidWidgetTests.test_original_ui_private_data_and_hardware_gates) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 15.099s
+
+OK
+KIOSK_UNITTEST_SUMMARY: run=14 failures=0 errors=0 skipped=0 success=True
+The media.width.pixel field of the printer profile is not set. The center flag will have no effect.
+The media.width.pixel field of the printer profile is not set. The center flag will have no effect.
+The media.width.pixel field of the printer profile is not set. The center flag will have no effect.
+The media.width.pixel field of the printer profile is not set. The center flag will have no effect.
+The media.width.pixel field of the printer profile is not set. The center flag will have no effect.
+The media.width.pixel field of the printer profile is not set. The center flag will have no effect.

@@ -1,0 +1,21 @@
+{
+  "source": "7d49f34b4cb09a9eca56921ac56ecfbd73a86e6b",
+  "run": 929,
+  "passed": 926,
+  "skipped": 3,
+  "failures": 0,
+  "errors": 0,
+  "seconds": 264.923,
+  "skip_reason": "Optional external native palm model/fixture assets unavailable",
+  "package_policy_and_verifier": {
+    "run": 14,
+    "passed": 14
+  },
+  "android_widgets_portrait": {
+    "run": 14,
+    "passed": 14
+  },
+  "java_camera_api35": "PASS",
+  "compiled_runtime_apk": "BLOCKED_BY_NETWORK_POLICY",
+  "new_ci_result": "NOT_VERIFIED"
+}

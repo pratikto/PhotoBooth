@@ -43,6 +43,9 @@ python tools/verify_android_apk.py "$APK" --badging work/apk-manifest.txt \
 Fixture APKs are deliberately synthetic ZIP/ELF inputs; their successful checks
 are not a newly compiled/signed Android artifact. Fresh runtime build and
 regression results are tracked in `docs/qa/android-runtime/continuation.md`.
+Use the [Android-specific device acceptance checklist](qa/android-runtime/device-acceptance.md)
+to record actual installation, camera/USB, lifecycle, media, Sandbox and Drive
+results once a fresh runtime APK is available.
 Rollback only this verification/workflow increment; preserve app-private state,
 photos, claims and uncertain print/payment journals.
 

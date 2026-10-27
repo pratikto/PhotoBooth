@@ -67,3 +67,35 @@ Further recipe redirects may require their own observed domain additions.
 All TLS/checksum verification remains enabled. GitHub source fetches worked;
 the workflow API request was Forbidden and no remote build was dispatched.
 The prepared SDK/NDK/native caches remain in the workspace for resumption.
+
+## Final source verification
+
+Functional source **7d49f34b4cb09a9eca56921ac56ecfbd73a86e6b** was pushed to
+`feature/portrait-kiosk-android`; Git HTTPS confirmed the exact remote SHA.
+Final [complete regression](continuation-full-tests.txt): **929 run, 926 PASS,
+3 optional native palm-assets SKIP, zero failures/errors**, 264.923 seconds.
+GUI/audio/video/Android opt-ins were enabled with software GL and dummy audio;
+local HTTP fixtures used command network permission. A prior 928-case PASS
+predated the final report/input-preservation test and is not relabelled final.
+
+[Portable package/verifier](package-verifier-tests.txt): **14 PASS**, zero skips.
+Negative inputs include obsolete preview identity, changed APIs/permissions,
+foreign or truncated native extensions, missing Python bundle, stale reports
+and attempted output/input overlap. These are synthetic binary fixtures.
+[Portrait Android widgets](portrait-widget-tests.txt): **14 PASS**, zero skips.
+YAML parsing, Python compilation and `git diff --check` also pass.
+
+[Structured results](continuation-results.json), [build blocker](build-status.json)
+and [18 screenshot hashes/dimensions](visual-verification.json) identify the
+actual checks. Captures are Linux synthetic widget views at 452×900/800×1280,
+not Android device screenshots. Two stage views were manually inspected; the
+stage-only settings capture excludes its popup and does not prove popup layout.
+No UI source changed in this increment. Actual paper/provider/media/retention
+acceptance uses the [unchecked device checklist](device-acceptance.md).
+
+Matching-source remote CI has not been queried successfully; Git push/remote
+verification is independent of CI success. The evidence/checklist-only follow-up
+changes no functional source and should not rerun successful GUI workflows.
+The next dependent step is applying the saved network-domain additions, resuming
+the real APK build, then running the verifier/signature/alignment checks and
+actual device acceptance. No APK, hardware or merchant PASS is claimed yet.

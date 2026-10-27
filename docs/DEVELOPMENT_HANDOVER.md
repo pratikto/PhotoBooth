@@ -4,7 +4,9 @@
 checks and nested ELF rejection fixtures are now implemented in the existing
 Android build workflow. Current cloud regression/build/access evidence and
 remaining device gates: [continuation record](qa/android-runtime/continuation.md).
-This is not a new APK or Android hardware PASS.
+Final source `7d49f34`: 929 run / 926 PASS / 3 optional palm-assets SKIP,
+zero failures/errors. Native APK build is blocked by FreeType download policy
+(403); this is not a new APK or Android hardware PASS.
 
 **Android runtime continuation — 28 October 2026:** Continue Android camera/USB OTG/Sandbox parity at the same branch. Portable c001095 reuse is pushed at 795b64c; current native/runtime stage has focused source checks and a new full regression/build in progress. Preserve the named pre-restart evidence stash and all app-private journals.
 [Scope, setup and source evidence](android-v2-runtime.md).

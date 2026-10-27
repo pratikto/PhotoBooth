@@ -1,0 +1,155 @@
+{
+  "source": "7d49f34b4cb09a9eca56921ac56ecfbd73a86e6b",
+  "kind": "Linux synthetic Kivy widgets; not Android device captures",
+  "images": [
+    {
+      "file": "gallery-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "77d01141d916f3716df0520193c51620485f3d58d718b9712801d50fe36f5a23"
+    },
+    {
+      "file": "gallery-800x1280.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "2d509f6ec9caaa8ed072767f82ca61d12c09e7da1f55bb7448055a562433d3bf"
+    },
+    {
+      "file": "game-intro-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "87e15633765aa5a8b72d20c4a26a57cee62eeb32e0691eedd6dc9490a39d4a65"
+    },
+    {
+      "file": "game-intro-800x1280.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "f1974a315d4a2c537a4c911f010917bbb668ac03276ce673cc15b17771f91eaa"
+    },
+    {
+      "file": "idle-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "a4b026080caee35f6997494d00ef92964963d776fa43da97233f895e7d930fec"
+    },
+    {
+      "file": "idle-800x1280.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "37453d4d14387dcfb1afbca46e3bde135e937ca35878beb000c21e6d57c533a2"
+    },
+    {
+      "file": "mobile-camera-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "2abebb9c54c988aa825ca7c126b35194de7b96b6ad4831a89279318037b74624"
+    },
+    {
+      "file": "mobile-camera-800x1280.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "04a5e4ba8a20d965cb67b0787e9090a4bd8fcfc26b622426939bfacffe3681e6"
+    },
+    {
+      "file": "mobile-health-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "58552b75b768590ac77db4d540f3eab7052da483fac5811cca5f6796eb9fef2f"
+    },
+    {
+      "file": "mobile-health-800x1280.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "449d9600fa9366ca78ba6c9f9c2494fa85d1062a9677dbe7edf5f424324763df"
+    },
+    {
+      "file": "mobile-result-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "beea82e4f2b3d55c8c0a70e65345cf1837363e1051b5a0b529ac36c7e0d9caeb"
+    },
+    {
+      "file": "mobile-result-800x1280.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "4c2b437571fc49b62f7528c27b2e9e19d34d477a42a5b9063466e8aa13482a92"
+    },
+    {
+      "file": "mobile-review-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "bd334f70d1324201090c25bb352a319433185bc0e11035197b262b4c69107d6d"
+    },
+    {
+      "file": "mobile-review-800x1280.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "f1f8e0325220005a7bb5cd6c42107f944983e13c11d3adca094e5caa92f94127"
+    },
+    {
+      "file": "mobile-sandbox-waiting-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "a0837dc46aa38e99ab4fe8fa196a897d31f31eada3f2ca90a7eef0228ba48129"
+    },
+    {
+      "file": "mobile-sandbox-waiting-800x1280.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "2f0531a33d457624e45873c3b61f7c511df09aa4301f86e13b3863b58e1f17e1"
+    },
+    {
+      "file": "mobile-settings-452x900.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "a4b026080caee35f6997494d00ef92964963d776fa43da97233f895e7d930fec"
+    },
+    {
+      "file": "mobile-settings-800x1280.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "470645c7897bab7ccbf43fb4d16d0c567bf5b3b1ff6cdd0f8bbd5e73ef765d44"
+    }
+  ],
+  "manually_viewed": [
+    "mobile-review-452x900.png",
+    "mobile-settings-800x1280.png"
+  ],
+  "limits": "Stage-only settings capture shows underlying idle surface; popup is not included and this image does not prove settings appearance."
+}

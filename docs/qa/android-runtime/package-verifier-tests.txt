@@ -1,0 +1,29 @@
+test_inherited_desktop_opt_ins_are_forced_off (tests.test_android_preview.AndroidPolicyTests.test_inherited_desktop_opt_ins_are_forced_off) ... ok
+test_package_allowlist_excludes_credentials_archives_and_customer_data (tests.test_android_preview.AndroidPolicyTests.test_package_allowlist_excludes_credentials_archives_and_customer_data) ... ok
+test_relative_storage_is_rejected (tests.test_android_preview.AndroidPolicyTests.test_relative_storage_is_rejected) ... ok
+test_resume_only_recreates_generated_installer_and_preserves_native_cache (tests.test_android_preview.AndroidPolicyTests.test_resume_only_recreates_generated_installer_and_preserves_native_cache) ... ok
+test_resume_reassembles_distribution_without_deleting_native_objects (tests.test_android_preview.AndroidPolicyTests.test_resume_reassembles_distribution_without_deleting_native_objects) ... ok
+test_resume_refuses_linked_installer (tests.test_android_preview.AndroidPolicyTests.test_resume_refuses_linked_installer) ... ok
+test_resume_rejects_modified_package_without_overwriting_it (tests.test_android_preview.AndroidPolicyTests.test_resume_rejects_modified_package_without_overwriting_it) ... ok
+test_spec_is_portrait_camera_usb_sandbox_and_uses_mobile_recipes (tests.test_android_preview.AndroidPolicyTests.test_spec_is_portrait_camera_usb_sandbox_and_uses_mobile_recipes) ... ok
+test_staging_has_correct_entry_and_preserves_existing_destination (tests.test_android_preview.AndroidPolicyTests.test_staging_has_correct_entry_and_preserves_existing_destination) ... ok
+test_checks_python_bundle_as_well_as_outer_libraries (tests.test_android_apk.AndroidApkTests.test_checks_python_bundle_as_well_as_outer_libraries) ... ok
+test_rejects_old_preview_wrong_api_permission_and_abi (tests.test_android_apk.AndroidApkTests.test_rejects_old_preview_wrong_api_permission_and_abi) ... ok
+test_report_cannot_overwrite_apk_or_other_inputs (tests.test_android_apk.AndroidApkTests.test_report_cannot_overwrite_apk_or_other_inputs) ... usage: python -m unittest [-h] --badging BADGING --spec SPEC --output OUTPUT
+                          apk
+python -m unittest: error: Report output must not replace a verification input
+usage: python -m unittest [-h] --badging BADGING --spec SPEC --output OUTPUT
+                          apk
+python -m unittest: error: Report output must not replace a verification input
+usage: python -m unittest [-h] --badging BADGING --spec SPEC --output OUTPUT
+                          apk
+python -m unittest: error: Report output must not replace a verification input
+ok
+test_report_identifies_bytes_and_removes_stale_success_on_failure (tests.test_android_apk.AndroidApkTests.test_report_identifies_bytes_and_removes_stale_success_on_failure) ... ok
+test_runtime_identity_and_exact_permissions (tests.test_android_apk.AndroidApkTests.test_runtime_identity_and_exact_permissions) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.182s
+
+OK
+{"abi": "arm64-v8a", "android_device_acceptance": "NOT_RUN", "arm64_native_libraries": 2, "bytes": 485, "minimum_api": 24, "package": "id.meong.meongpreview", "permissions": ["android.permission.CAMERA", "android.permission.INTERNET"], "sha256": "bea72dbd32fa434c04a91ee3c4d5cefc92fb093c6c037795a6b82f382048becf", "target_api": 35, "version_name": "0.2.0"}
