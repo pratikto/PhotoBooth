@@ -136,23 +136,34 @@ class DeliveryWidgetTests(unittest.TestCase):
             self.assertIn('Drive belum dikonfigurasi',app._photo_error)
             self.assertFalse(app._photo_prepared);self.assertIsNone(service.transaction)
             self.assertFalse(list(root.rglob('manifest.json')))
-    def test_verified_qr_arrives_without_rebuilding_result_or_reprinting(self):
+    def test_early_qr_arrives_during_upload_without_rebuilding_result_or_reprinting(self):
         with self.booth() as (app,service,printer,_,root):
             self.enter(app);self.review(app)
-            manifest=service.transaction.manifest;url='https://example.test/photos/v2'
-            manifest.update(drive_folder_url=url,upload_status='PENDING_UPLOAD')
-            write_json_atomic(service.transaction.manifest_path,manifest)
+            url='https://example.test/photos/v2'
             app._photo_submit('compose');self.settle(app)
+            # Explicit Drive opt-in is normally what reserves this panel offline.
+            app._photo_view['drive_enabled']=True;app._show()
             self.assertIsNotNone(app._download_image);self.assertEqual(app._download_image.opacity,0)
             image=app._download_image;stage=app.stage.current_screen
-            manifest=json.loads(service.transaction.manifest_path.read_text());manifest['upload_status']='UPLOAD_COMPLETE'
+            manifest=json.loads(service.transaction.manifest_path.read_text())
+            manifest.update(drive_folder_url=url,upload_status='PENDING_UPLOAD')
             write_json_atomic(service.transaction.manifest_path,manifest)
             app._photo_submit('snapshot');self.settle(app)
             self.assertIs(app._download_image,image);self.assertIs(app.stage.current_screen,stage)
             self.assertEqual(image.opacity,1);self.assertEqual(printer.print_image.call_count,1)
+            self.assertEqual(app._photo_view['upload_status'],'PENDING_UPLOAD')
+            self.assertIn('30 menit',app._download_hint.text)
+            self.assertNotIn('kurang dari',app._download_hint.text)
             import cv2
             photo=app._photo_view['download_qr'];decoded,_,_=cv2.QRCodeDetector().detectAndDecode(np.asarray(photo))
             self.assertEqual(decoded,url)
+            texture=image.texture
+            for state,hint in (('UPLOAD_RETRY','Upload tertunda'),('UPLOAD_COMPLETE','SCAN UNTUK DOWNLOAD')):
+                manifest['upload_status']=state;write_json_atomic(service.transaction.manifest_path,manifest)
+                app._photo_submit('snapshot');self.settle(app)
+                self.assertIs(image.texture,texture);self.assertIn(hint,app._download_hint.text)
+                self.assertIs(app.stage.current_screen,stage)
+                self.assertEqual(printer.print_image.call_count,1)
 
     def test_layout2_offline_admits_captures_retake_color_bw_and_sends_saved_raster_once(self):
         from PIL import Image
@@ -205,7 +216,9 @@ class DeliveryWidgetTests(unittest.TestCase):
             tx=service.transaction
             before={p: p.read_bytes() for p in (tx.folder_path/'Photo/01/color/strip.png',tx.folder_path/'Photo/01/bw/strip.png')}
             self.assertEqual(app._photo_view['folder_url'],url)
-            self.assertIsNone(app._photo_view['download_qr'])
+            self.assertIsNotNone(app._photo_view['download_qr'])
+            self.assertNotEqual(app._photo_view['upload_status'],'UPLOAD_COMPLETE')
+            self.assertIn('30 menit',app._download_hint.text)
             client=Mock();client.reserve_transactions.return_value=[]
             client.bind_transaction.return_value={'folder_id':'fixture-reserved','folder_url':url,'photo_number_layout':1,'link_verified':True}
             client.register_retention.side_effect=lambda folder,txid,started:retention_metadata(txid,started)

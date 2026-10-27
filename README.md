@@ -64,7 +64,10 @@ describes the environments. Actual merchant acceptance remains pending.
 
 27 October: customer uploads now take priority over chunk-yielding content and
 bounded incremental reserve maintenance. Background snapshots no longer lock
-result controls/footer. The large QR still requires verified UPLOAD_COMPLETE.
+result controls/footer. Latest owner correction: customer sessions upload FIFO,
+with old retries/maintenance held while customer work remains. A verified
+assigned-folder QR appears before upload completion, with a 30-minute check-back
+suggestion. [Current behavior and evidence](docs/qa/drive-delivery-performance/CUSTOMER-PRIORITY.md).
 [Timing, v1 comparison, actual test evidence and Windows/update instructions](docs/qa/drive-delivery-performance/README.md).
 
 
@@ -78,7 +81,7 @@ python tools/run_portrait_v2.py --print --drive
 After approving the three photos, each design automatically sends one batch
 with its selected copy count. Drive uploads/retries in the background and
 resumes its current-profile queues on startup without a new photo visit. The result shows a
-large download QR after file verification. Uncertain prints are held for
+large download QR once the assigned folder is verified; uploads can still be pending. Uncertain prints are held for
 inspection and never replayed automatically. Paper/phone/cloud acceptance is
 separate from source tests; BUG-009 retention remains open.
 

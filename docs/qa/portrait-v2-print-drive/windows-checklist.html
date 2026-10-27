@@ -12,7 +12,7 @@
 </head>
 <body><main>
 <header><div class="tag">MEONG PHOTOBOOTH · GUI V2</div><h1>Automatic Print and Drive — Retest</h1><p>Eleven checks for automatic printing and background Drive delivery. Check only actual successful tests; paper and phone download require real evidence. Earlier twenty-cycle reports remain recorded; no additional cycle gate.</p></header>
-<div class="panel help"><strong>Launch the v2 delivery profile:</strong> <code>python tools/run_portrait_v2.py --print --drive</code>.<br><br>Reuse your saved v1 printer configuration and existing private Drive settings. No credentials belong in this form/chat. For print-only testing while Drive is unavailable, use <code>--print</code>; leave unavailable Drive items unchecked. <code>--manual-print</code> is a deliberate fallback, not the automatic-print test below.<br><br>Approve three photos to automatically send one batch with the selected copy count. Printing uncertainty is held; no automatic replay. Uploads use the isolated v2 queue and continue after returning to ads/restarting. The large download QR appears only after file verification. Retention holds need operator attention; this form does not prove cloud deletion or release.<br><br><strong>Physical tests:</strong> do not pass paper items without actual sheets or phone-download items without opening the real assigned folder. If an uncertainty/offline/restart case cannot be safely tested on your test setup, leave it blank and explain why. No new twenty-cycle run is required.<br><br><label class="field">Import local operator / readiness JSON<input id="readiness-file" type="file" accept=".json,application/json"></label><p id="import-status" role="status"></p></div>
+<div class="panel help"><strong>Launch the v2 delivery profile:</strong> <code>python tools/run_portrait_v2.py --print --drive</code>.<br><br>Reuse your saved v1 printer configuration and existing private Drive settings. No credentials belong in this form/chat. For print-only testing while Drive is unavailable, use <code>--print</code>; leave unavailable Drive items unchecked. <code>--manual-print</code> is a deliberate fallback, not the automatic-print test below.<br><br>Approve three photos to automatically send one batch with the selected copy count. Printing uncertainty is held; no automatic replay. Uploads use the isolated v2 queue and continue after returning to ads/restarting. The large download QR appears when the assigned folder is verified, while uploads may still be pending. Save the link and check again later; 30 minutes is a check-back suggestion, not a delivery guarantee. Retention holds need operator attention; this form does not prove cloud deletion or release.<br><br><strong>Physical tests:</strong> do not pass paper items without actual sheets or phone-download items without opening the real assigned folder. If an uncertainty/offline/restart case cannot be safely tested on your test setup, leave it blank and explain why. No new twenty-cycle run is required.<br><br><label class="field">Import local operator / readiness JSON<input id="readiness-file" type="file" accept=".json,application/json"></label><p id="import-status" role="status"></p></div>
 <div class="panel meta">
 <label class="field wide">Branch<input id="branch" data-field value="feature/portrait-kiosk-v2-next"></label>
 <label class="field">Tested HEAD<input id="head" data-field value="" placeholder="Output of git rev-parse --short HEAD"></label>
@@ -51,7 +51,7 @@ const SECTIONS = [
     "D",
     "Google Drive and download",
     [
-      "With valid existing Drive configuration, consent waits for a verified assigned folder, then unlocks. The result shows pending/retry/verified accurately; a large on-screen QR appears only after all files are verified.",
+      "With valid existing Drive configuration, local layout-2 capture remains available offline. At result, a large QR appears as soon as its assigned folder is verified, including before all files are uploaded. Check the pending/30-minute check-back notice and the accurate retry/complete labels; QR alone does not mark upload complete.",
       "Scan the actual large on-screen QR and paper QR with a phone: both open the same assigned folder. Verify all three originals, any retake and the correct composed strip; image orientation/quality preserved. UI UPLOAD_COMPLETE alone does not pass phone access.",
       "After folder assignment, temporarily take the test setup offline. Capture/print still work with the reserved folder; originals remain local, upload shows pending/retry, no false verified download. Restore connectivity: the same queued files/folder finish without duplicates.",
       "Finish the photo visit with uploads pending, close/reopen the app using --print --drive. The old queue resumes without starting a new photo visit, changing its folder or reprinting. Verify completion from the phone; do not delete manifests to clear a pending state."
@@ -66,7 +66,7 @@ const SECTIONS = [
     ]
   ]
 ];
-const KEY = 'meong-windows-print-drive-v2-mirror';
+const KEY = 'meong-windows-print-drive-v3-early-qr';
 const CYCLE_ITEMS = new Set([]);
 try {
  const parts = new Intl.DateTimeFormat('en-CA', {timeZone:'Asia/Jakarta',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());

@@ -249,11 +249,16 @@ class Recorder(PortraitKioskV2App):
             view=self._photo_view
             if 'waiting' in name:assert not view['drive_ready']
             if 'drive-ready' in name:assert view['drive_ready']
-            if 'print-sending' in name:assert self._photo_jobs.busy
-            if 'offline-retry' in name:assert view['upload_status']=='UPLOAD_RETRY' and view['download_qr'] is None
+            if 'print-sending' in name:
+                assert self._photo_jobs.busy and view['download_qr'] is not None
+                assert view['upload_status'] != 'UPLOAD_COMPLETE'
+                assert '30 menit' in self._download_hint.text
+            if 'offline-retry' in name:assert view['upload_status']=='UPLOAD_RETRY' and view['download_qr'] is not None
             if 'upload-verified' in name:assert view['upload_status']=='UPLOAD_COMPLETE' and view['download_qr'] is not None
             if 'print-uncertain' in name:assert view['print_state']=='UNCERTAIN'
-            if 'retention-held' in name:assert view['retention_error'] and view['download_qr'] is None
+            if 'retention-held' in name:
+                assert view['retention_error'] and view['download_qr'] is not None
+                assert 'Upload tertunda' in self._download_hint.text
         path = Path(Window.screenshot(name=str(args.output_dir / f'{name}-{args.width}x{args.height}.png')))
         with Image.open(path) as screenshot:
             if screenshot.size != (args.width, args.height) or screenshot.convert('RGB').getextrema() == ((0,0),)*3:

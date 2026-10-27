@@ -1,5 +1,10 @@
 # Drive photo layout / QR repair — 26 October 2026
 
+**Latest 27 October contract:** [customer FIFO, early verified-folder QR and
+immutable mapping](../drive-delivery-performance/CUSTOMER-PRIORITY.md) supersedes
+the completion-only screen QR in this earlier source record. Original test
+results remain tied to their source, not the later behavior.
+
 Owner report: `python tools/run_portrait_v2.py --print --drive` printed a QR,
 GUI kept waiting for upload, scan asked for access, and photos were absent.
 Owner clarification requires `PB001/Photo/00000001/{raw,bw,color}` directly.

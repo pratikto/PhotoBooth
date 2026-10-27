@@ -50,8 +50,16 @@ Complete verified global/local content caches remain per booth and offline-safe.
 - Reserve and bind responses must acknowledge the numbered layout and actual
   sharing verification. Python rejects older/private responses before composing
   a new QR. Previously cached unverified reserve URLs are withheld.
-- Result-screen QR appears only after all saved bytes are verified in Drive.
+- Latest owner instruction, 27 October: result-screen QR appears once the
+  individual assigned folder/link is verified, including before file upload.
+  QR visibility does not mark bytes uploaded. Pending/retry notices remain;
+  checking back in 30 minutes is a suggestion, not a guaranteed deadline.
   Automatic physical printing remains independent of network availability.
+- One folder belongs to one transaction. Ready/claimed ledger checks reject
+  duplicate folders across batches and replacements; bindings persist the same
+  claim/folder mapping before publishing the manifest. Existing manifest ownership
+  also rejects reuse. The manifest maps exact local upload paths to this folder;
+  claimed IDs/folders never return to READY, including after retention/restart.
 - A missing folder URL produces download-pending paper, never a fabricated QR.
   Existing printed pixels are never rewritten and prints are never replayed.
 - Binding/setup failures persist a safe error category for the result GUI;

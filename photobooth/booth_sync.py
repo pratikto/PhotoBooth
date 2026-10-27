@@ -125,17 +125,17 @@ class BoothDriveWorker(DriveSyncWorker):
     def _interrupted(self):
         return self._stop.is_set() or self._wake.is_set()
 
-    def _record_failure(self, path, tx, code, phase, error=None):
+    def _record_failure(self, path, tx, code, phase, error=None, *, customer=False):
         self.last_error = True
-        retry = self.retries.failed(tx, code, phase)
+        retry = self.retries.failed(tx, code, phase, customer=customer)
         event('transaction_error', tx, error=type(error).__name__ if error else None,
               error_code=code, phase=phase, retry_seconds=retry['delay_seconds'],
-              failure_count=retry['failures'], result='retry')
+              failure_count=retry['failures'], customer_priority=retry['customer_priority'], result='retry')
         try:
             with manifest_lock(path):
                 latest = json.loads(checked_path(path).read_text(encoding='utf-8'))
                 # A mismatched identity must never receive another transaction's metadata.
-                if latest.get('transaction_id') != tx:
+                if not isinstance(latest, dict) or latest.get('transaction_id') != tx:
                     return
                 latest['drive_delivery_retry'] = retry
                 if phase == 'bind':
@@ -146,18 +146,20 @@ class BoothDriveWorker(DriveSyncWorker):
             # Unreadable state remains intact; memory backoff bounds log/retry churn.
             pass
 
-    def _clear_failure(self, path, tx):
+    def _clear_failure(self, path, tx, *, background=False):
         if tx not in self.retries.states:
             return
         with manifest_lock(path):
             latest = json.loads(checked_path(path).read_text(encoding='utf-8'))
             if latest.get('transaction_id') != tx:
                 raise DriveBindingError('BIND_TRANSACTION_CHANGED')
-            latest['drive_delivery_retry'] = None
+            background = background and self._needs_delivery(latest)
+            latest['drive_delivery_retry'] = ({'failures': 0, 'delay_seconds': 0,
+                'not_before_unix': time.time(), 'background_only': True} if background else None)
             if latest.get('drive_binding_verified'):
                 latest['drive_binding_error'] = None
             write_json_atomic(path, latest)
-        self.retries.recovered(tx)
+        self.retries.recovered(tx, background=background)
         event('transaction_recovered', tx, result='ok')
 
     @staticmethod
@@ -171,6 +173,7 @@ class BoothDriveWorker(DriveSyncWorker):
 
     def _process_transaction(self, path, tx, *, lane):
         phase = 'manifest'
+        customer = lane == 'customer'
         try:
             manifest = json.loads(checked_path(path).read_text(encoding='utf-8'))
             if manifest.get('transaction_id') != tx:
@@ -192,71 +195,119 @@ class BoothDriveWorker(DriveSyncWorker):
                         raise DriveBindingError('BIND_TRANSACTION_CHANGED')
                     if latest.get('drive_folder_id') and latest['drive_folder_id'] != bound['folder_id']:
                         raise DriveBindingError('BIND_FOLDER_CONFLICT')
+                    # Existing manifests also protect pre-update offline bindings
+                    # whose folder has not yet been added to the claim ledger.
+                    for other in self.workspace.manifests():
+                        if other == path:
+                            continue
+                        try:
+                            previous = json.loads(other.read_text(encoding='utf-8'))
+                        except (OSError, ValueError, TypeError):
+                            continue  # Its ledger/server claim remains protected.
+                        if isinstance(previous, dict) and previous.get('drive_folder_id') == bound['folder_id']:
+                            raise DriveBindingError('BIND_FOLDER_CONFLICT')
+                    try:
+                        self.workspace.remember_binding(tx, latest['drive_claim_token'], bound)
+                    except ValueError as error:
+                        raise DriveBindingError('BIND_FOLDER_CONFLICT') from error
                     latest.update(drive_folder_id=bound['folder_id'], drive_folder_url=bound['folder_url'],
                                   drive_binding_verified=True, drive_binding_error=None, photo_number_layout=1)
                     write_json_atomic(path, latest)
+            # Let an admitted request finish, then yield old recovery before its
+            # next network stage when a customer arrives during that request.
+            if not customer and self._interrupted():
+                return False
             phase = 'retention'
             with span('retention', tx):
                 register_drive_retention(path, self.client)
             manifest = json.loads(path.read_text(encoding='utf-8'))
             if manifest.get('drive_retention_error'):
-                self._record_failure(path, tx, 'RETENTION_HOLD', phase)
+                self._record_failure(path, tx, 'RETENTION_HOLD', phase, customer=customer)
+                return False
+            if not customer and self._interrupted():
                 return False
             phase = 'upload'
             if manifest.get('drive_retention_registered_at') and manifest.get('upload_status') not in {'UPLOAD_COMPLETE', 'LOCAL_EXPIRED'}:
                 before = manifest.get('upload_files', {})
-                result = sync_manifest(path, self.client, max_files=1, cancelled=self._stop.is_set)
+                result = sync_manifest(path, self.client, max_files=1,
+                                       cancelled=self._stop.is_set if customer else self._interrupted)
                 records = result.get('upload_files', {})
                 failed = any(r.get('status') == 'UPLOAD_RETRY' and
                              r.get('attempts', 0) > before.get(key, {}).get('attempts', 0)
                              for key, r in records.items())
                 if failed:
-                    self._record_failure(path, tx, 'UPLOAD_RETRY', phase)
+                    self._record_failure(path, tx, 'UPLOAD_RETRY', phase, customer=customer)
                     return False
-                self._clear_failure(path, tx)
+                self._clear_failure(path, tx, background=not customer)
                 return any(r.get('status') not in {'VERIFIED', 'ACTION_REQUIRED', 'LOCAL_EXPIRED'}
                            for r in records.values())
-            self._clear_failure(path, tx)
+            self._clear_failure(path, tx, background=not customer)
         except (OSError, ValueError, TypeError, RuntimeError, KeyError) as error:
-            self._record_failure(path, tx, self._error_code(error, phase), phase, error)
+            self._record_failure(path, tx, self._error_code(error, phase), phase, error, customer=customer)
         return False
 
-    def run_once(self):
-        more = False
+    @staticmethod
+    def _needs_delivery(manifest):
+        if manifest.get('upload_status') in {'UPLOAD_COMPLETE', 'LOCAL_EXPIRED', 'LOCAL_ONLY', 'ACTION_REQUIRED'}:
+            return False
+        return (not manifest.get('drive_binding_verified') or manifest.get('photo_number_layout') != 1
+                or not manifest.get('drive_retention_registered_at')
+                or any(r.get('status') not in {'VERIFIED', 'ACTION_REQUIRED', 'LOCAL_EXPIRED', 'LOCAL_ONLY'}
+                       for r in manifest.get('upload_files', {}).values()))
+
+    def _pending_deliveries(self):
+        customers = []
         recovery = []
-        # Discover first, then serve every healthy transaction before a bounded
-        # recovery turn. Historical errors cannot precede each new customer file.
         for path in sorted(self.workspace.manifests()):
             if self._stop.is_set():
-                return False
+                break
             tx = path.parent.name
             try:
                 manifest = json.loads(checked_path(path).read_text(encoding='utf-8'))
+                if not isinstance(manifest, dict):
+                    raise ValueError('Invalid transaction metadata.')
                 if manifest.get('storage_layout') != 2 or not manifest.get('drive_intent'):
                     continue
-                if (manifest.get('drive_binding_verified') and manifest.get('photo_number_layout') == 1
-                        and manifest.get('drive_retention_registered_at')
-                        and manifest.get('upload_status') in {'UPLOAD_COMPLETE', 'LOCAL_EXPIRED'}):
+                if not self._needs_delivery(manifest):
                     continue
-                if self.retries.state(tx, manifest) is not None:
+                state = self.retries.state(tx, manifest)
+                if state is not None and (state.get('background_only') or not state.get('customer_priority')):
                     recovery.append((tx, path))
                 else:
-                    more = self._process_transaction(path, tx, lane='healthy') or more
+                    customers.append((tx, path))
             except (OSError, ValueError, TypeError, KeyError) as error:
                 state = self.retries.states.get(tx)
                 if state is None or state['due'] <= time.monotonic():
                     self._record_failure(path, tx, 'MANIFEST_INVALID', 'manifest', error)
-        # One due recovery turn remains possible under continuous arrivals.
-        # A new kick cannot cancel a request already admitted; the global
-        # interval bounds that cost, and the next pass handles the new work.
-        if not self._stop.is_set():
+        return customers, recovery
+
+    def run_once(self):
+        customers, recovery = self._pending_deliveries()
+        # Stable monotonic transaction IDs provide FIFO across customer sessions.
+        # Keep the head through its files and two short retries; no old recovery,
+        # reserves or content requests are admitted while customer work remains.
+        if customers and not self._stop.is_set():
+            tx, path = customers[0]
+            state = self.retries.states.get(tx)
+            if state is not None and state['due'] > time.monotonic():
+                return False  # Wait for its persisted deadline, without busy-spinning.
+            self._process_transaction(path, tx, lane='customer')
+            customers, recovery = self._pending_deliveries()
+            if customers:
+                state = self.retries.states.get(customers[0][0])
+                return state is None or state['due'] <= time.monotonic()
+        # Background resumes after verified completion or bounded failure release.
+        more = False
+        if not self._interrupted():
             selected = self.retries.choose(recovery)
             if selected is not None:
                 tx, path = selected
+                recovering = not self.retries.states[tx].get('background_only')
                 try:
                     more = self._process_transaction(path, tx, lane='recovery') or more
                 finally:
-                    self.retries.finish_turn()
+                    if recovering:
+                        self.retries.finish_turn()
         if more or self._interrupted():
             return more
         self._maintain_reserves()

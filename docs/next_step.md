@@ -1,5 +1,17 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+## 27 October — customer upload priority and early folder QR
+
+Latest owner instruction supersedes the earlier completion-only screen QR and
+interleaved old-recovery policy. Customer uploads now run FIFO to completion;
+old retries/reserves/content wait at request boundaries. Two short retry delays
+(5s, 15s) precede release to bounded background retry after a third consecutive
+failure. Verified assigned-folder QR can appear while bytes are pending, with
+truthful upload/retry messaging and a 30-minute check-back suggestion, not an SLA.
+Folder claims/manifest mapping survive restart; duplicate/replaced customer
+folders are rejected. Code.gs and physical printing policy are unchanged.
+[Current contract, evidence, update and limits](qa/drive-delivery-performance/CUSTOMER-PRIORITY.md).
+
 ## Current delivery recurrence — 27 October
 
 Prioritize on-device retest of the console-recursion correction after the new

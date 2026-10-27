@@ -1,5 +1,10 @@
 # FEAT-004 ads + BUG-009 — implementation checkpoints
 
+**Latest 27 October contract:** [customer FIFO, early verified-folder QR and
+immutable mapping](../drive-delivery-performance/CUSTOMER-PRIORITY.md) supersedes
+the completion-only screen QR in this earlier source record. Original test
+results remain tied to their source, not the later behavior.
+
 Owner explicitly requested application **and Code.gs implementation** after the
 foldering audit. Base **504c6cc9451e652da56ebe8e62a287891bef31a6** on required
 `feature/portrait-kiosk-v2-next`; source stays on this branch. Exclude all `old`

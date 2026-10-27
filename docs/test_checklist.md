@@ -1,5 +1,17 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 27 October — customer upload priority and early folder QR
+
+Latest owner instruction supersedes the earlier completion-only screen QR and
+interleaved old-recovery policy. Customer uploads now run FIFO to completion;
+old retries/reserves/content wait at request boundaries. Two short retry delays
+(5s, 15s) precede release to bounded background retry after a third consecutive
+failure. Verified assigned-folder QR can appear while bytes are pending, with
+truthful upload/retry messaging and a 30-minute check-back suggestion, not an SLA.
+Folder claims/manifest mapping survive restart; duplicate/replaced customer
+folders are rejected. Code.gs and physical printing policy are unchanged.
+[Current contract, evidence, update and limits](qa/drive-delivery-performance/CUSTOMER-PRIORITY.md).
+
 Logging correction source **4c31406**: full local **888 run / 885 PASS /
 3 optional palm-model SKIP / zero failures/errors**, 262.543s; real-Kivy
 console-active integration, broken-sink worker survival and 11 delivery widget

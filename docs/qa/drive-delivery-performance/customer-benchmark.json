@@ -1,0 +1,25 @@
+{
+  "baseline": "e3ac0f94af1402ae4eec1de0295fa43e6bc8c19e",
+  "kind": "offline deterministic retry simulation",
+  "assumptions": {
+    "failed_old_transactions": 3,
+    "healthy_files": 5,
+    "failed_bind_virtual_seconds": 5,
+    "file_upload_virtual_seconds": 8
+  },
+  "before": {
+    "queued_to_upload_complete_virtual_seconds": 115.0,
+    "failed_old_bind_requests": 15,
+    "healthy_file_uploads": 5,
+    "first_network_action_lane": "failed_old",
+    "original_reserved_folders_preserved": true
+  },
+  "after": {
+    "queued_to_upload_complete_virtual_seconds": 40.0,
+    "failed_old_bind_requests": 1,
+    "healthy_file_uploads": 5,
+    "first_network_action_lane": "healthy",
+    "original_reserved_folders_preserved": true
+  },
+  "limits": "Synthetic scheduling evidence; not a forecast or measurement of Google Drive speed."
+}

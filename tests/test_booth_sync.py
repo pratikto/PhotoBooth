@@ -152,7 +152,8 @@ class BoothSyncTests(unittest.TestCase):
                 for index in range(5):
                     worker.run_once()
                     if index < 4:
-                        self.assertIsNone(service.snapshot()['download_qr'])
+                        self.assertIsNotNone(service.snapshot()['download_qr'])
+                        self.assertNotEqual(service.snapshot()['upload_status'],'UPLOAD_COMPLETE')
                 view=service.snapshot()
                 self.assertEqual(view['upload_status'],'UPLOAD_COMPLETE')
                 self.assertIsNotNone(view['download_qr'])
@@ -211,7 +212,7 @@ class BoothSyncTests(unittest.TestCase):
             client.reserve_transactions.reset_mock();BoothDriveWorker(w,client).run_once()
             self.assertEqual(sum(len(c.args[0]) for c in client.reserve_transactions.call_args_list),25)
 
-    def test_reserve_yields_at_batch_boundary_and_customer_files_are_round_robin(self):
+    def test_reserve_yields_at_batch_boundary_and_customer_sessions_are_fifo(self):
         with TemporaryDirectory() as folder:
             w=BoothWorkspace(folder);w.prepare();client=self.reserve_client();worker=BoothDriveWorker(w,client)
             reserve=client.reserve_transactions.side_effect
@@ -227,10 +228,11 @@ class BoothSyncTests(unittest.TestCase):
             txs.append(self.queued_transaction(w,client))
             worker._wake.clear()
             self.assertTrue(worker.run_once())
-            self.assertEqual([c.args[1] for c in client.upload_file.call_args_list],[t.transaction_id for t in txs])
+            self.assertEqual([c.args[1] for c in client.upload_file.call_args_list],[txs[0].transaction_id])
             self.assertEqual(client.reserve_transactions.call_count,1) # Uploads still pending; no maintenance.
-            worker.run_once()
-            self.assertEqual([c.args[1] for c in client.upload_file.call_args_list],[t.transaction_id for t in txs]*2)
+            for _ in range(3):worker.run_once()
+            self.assertEqual([c.args[1] for c in client.upload_file.call_args_list],
+                             [txs[0].transaction_id]*2+[txs[1].transaction_id]*2)
             for tx in txs:self.assertEqual(json.loads(tx.manifest_path.read_text())['upload_status'],'UPLOAD_COMPLETE')
 
     def test_customer_arrival_inside_content_chunk_uploads_before_remaining_content_and_resumes(self):
@@ -288,7 +290,7 @@ class BoothSyncTests(unittest.TestCase):
         self.assertIn('PB001V2S2_00000001',message)
         self.assertNotIn('private-token-photo-payload',message)
 
-    def test_known_failures_run_after_healthy_files_and_only_one_recovery_per_interval(self):
+    def test_old_retries_reserves_and_content_wait_for_all_customer_files(self):
         with TemporaryDirectory() as folder,patch('time.monotonic') as clock:
             now=[100.0];clock.side_effect=lambda:now[0]
             w=BoothWorkspace(folder);w.prepare();client=self.reserve_client()
@@ -306,16 +308,19 @@ class BoothSyncTests(unittest.TestCase):
             def uploading(*a,**kw):
                 order.append(('upload',a[1]));now[0]+=8;return upload(*a,**kw)
             client.bind_transaction.side_effect=binding;client.upload_file.side_effect=uploading
-            worker=BoothDriveWorker(w,client)
+            content=Mock();content.pending=True
+            worker=BoothDriveWorker(w,client,content)
             for _ in range(5):
-                worker.kick()  # Continuous customer notifications cannot starve due recovery.
                 worker.run_once()
+                if len([a for a,t in order if a=='upload']) < 5:
+                    self.assertTrue(all(t==good.transaction_id for _,t in order))
+                    client.reserve_transactions.assert_not_called();content.sync.assert_not_called()
             self.assertEqual(order[:2],[('bind',good.transaction_id),('upload',good.transaction_id)])
-            self.assertEqual(sum(action=='bind' and tx!=good.transaction_id for action,tx in order),2)
+            self.assertEqual(sum(action=='bind' and tx!=good.transaction_id for action,tx in order),1)
             self.assertEqual(json.loads(good.manifest_path.read_text())['upload_status'],'UPLOAD_COMPLETE')
             # Oldest due recovery is not starved by successful customer progress.
             now[0]=200;worker.run_once()
-            self.assertEqual(order[-1],('bind',failed[2].transaction_id))
+            self.assertEqual(order[-1],('bind',failed[1].transaction_id))
 
     def test_binding_conflict_keeps_folder_bytes_and_clock_and_survives_stale_controller_save(self):
         with TemporaryDirectory() as folder,patch('time.monotonic',return_value=100):
@@ -363,7 +368,121 @@ class BoothSyncTests(unittest.TestCase):
             self.assertIsNone(json.loads(tx.manifest_path.read_text())['drive_delivery_retry'])
             client.upload_file.side_effect=DriveApiError('offline',503);worker.run_once()
             state=json.loads(tx.manifest_path.read_text())['drive_delivery_retry']
-            self.assertEqual((state['failures'],state['delay_seconds']),(1,30))
+            self.assertEqual((state['failures'],state['delay_seconds']),(1,5))
+
+    def test_customer_short_retries_survive_restart_and_release_fifo_after_third_failure(self):
+        with TemporaryDirectory() as folder,patch('time.monotonic') as clock,patch('time.time') as wall:
+            now=[100.0];clock.side_effect=lambda:now[0];wall.side_effect=lambda:1000+now[0]
+            w=BoothWorkspace(folder);w.prepare();client=self.reserve_client()
+            old=self.queued_transaction(w,client,1)
+            m=json.loads(old.manifest_path.read_text());m['drive_binding_error']='DRIVE_RETRY'
+            old.manifest_path.write_text(json.dumps(m))
+            head=self.queued_transaction(w,client,1);next_tx=self.queued_transaction(w,client,1)
+            upload=client.upload_file.side_effect;order=[]
+            def send(*a,**kw):
+                order.append(a[1])
+                if a[1]==head.transaction_id:raise DriveApiError('fixture offline',503)
+                return upload(*a,**kw)
+            client.upload_file.side_effect=send;worker=BoothDriveWorker(w,client)
+            worker.run_once();worker.run_once()
+            self.assertEqual(order,[head.transaction_id])
+            self.assertEqual(json.loads(head.manifest_path.read_text())['drive_delivery_retry']['delay_seconds'],5)
+            client.reserve_transactions.assert_not_called()
+            worker=BoothDriveWorker(w,client)  # Durable priority and deadline survive a process restart.
+            worker.notify_transaction(head.transaction_id);worker._wake.clear();worker.run_once()
+            self.assertEqual(order,[head.transaction_id])
+            now[0]=105;worker.run_once()
+            self.assertEqual(json.loads(head.manifest_path.read_text())['drive_delivery_retry']['delay_seconds'],15)
+            now[0]=120;self.assertTrue(worker.run_once())
+            retry=json.loads(head.manifest_path.read_text())['drive_delivery_retry']
+            self.assertFalse(retry['customer_priority']);self.assertEqual(retry['delay_seconds'],120)
+            self.assertEqual(order,[head.transaction_id]*3)
+            worker.run_once()
+            self.assertEqual(order,[head.transaction_id]*3+[next_tx.transaction_id,old.transaction_id])
+            self.assertEqual(json.loads(next_tx.manifest_path.read_text())['upload_status'],'UPLOAD_COMPLETE')
+            self.assertEqual(json.loads(head.manifest_path.read_text())['upload_status'],'UPLOAD_RETRY')
+
+    def test_customer_arriving_inside_old_bind_holds_next_old_network_request(self):
+        with TemporaryDirectory() as folder:
+            w=BoothWorkspace(folder);w.prepare();client=self.reserve_client()
+            old=self.queued_transaction(w,client,1)
+            m=json.loads(old.manifest_path.read_text());m['drive_binding_error']='DRIVE_RETRY'
+            old.manifest_path.write_text(json.dumps(m))
+            worker=BoothDriveWorker(w,client);arrivals=[];bind=client.bind_transaction.side_effect
+            def binding(m):
+                arrivals.append(self.queued_transaction(w,client,1))
+                worker.notify_transaction(arrivals[0].transaction_id)
+                return bind(m)
+            client.bind_transaction.side_effect=binding
+            worker.run_once()
+            client.register_retention.assert_not_called();client.upload_file.assert_not_called()
+            self.assertTrue(json.loads(old.manifest_path.read_text())['drive_binding_verified'])
+            worker._wake.clear();worker.run_once()
+            self.assertEqual(client.upload_file.call_args.args[1],arrivals[0].transaction_id)
+
+    def test_two_transactions_keep_exact_local_folder_mapping_across_restart(self):
+        with TemporaryDirectory() as folder:
+            w=BoothWorkspace(folder);w.prepare();client=self.reserve_client()
+            transactions=[self.queued_transaction(w,client,2) for _ in range(2)]
+            original={tx.transaction_id:json.loads(tx.manifest_path.read_text()) for tx in transactions}
+            worker=BoothDriveWorker(w,client);worker.run_once()
+            w=BoothWorkspace(folder);w.prepare();worker=BoothDriveWorker(w,client)
+            for _ in range(3):worker.run_once()
+            expected={tx.transaction_id:tx for tx in transactions}
+            for call in client.upload_file.call_args_list:
+                folder_id,txid,relative,local_path=call.args
+                self.assertEqual(folder_id,txid)
+                self.assertEqual(local_path,expected[txid].folder_path/relative)
+                record=json.loads(expected[txid].manifest_path.read_text())['upload_files'][relative]
+                self.assertEqual(record['md5_checksum'],hashlib.md5(local_path.read_bytes()).hexdigest())
+            state=json.loads(w.state_path.read_text())
+            for tx in transactions:
+                m=json.loads(tx.manifest_path.read_text())
+                self.assertEqual(m['drive_folder_id'],tx.transaction_id)
+                self.assertEqual(m['upload_status'],'UPLOAD_COMPLETE')
+                self.assertEqual(m['drive_claim_token'],original[tx.transaction_id]['drive_claim_token'])
+                self.assertEqual(m['created_at'],original[tx.transaction_id]['created_at'])
+                self.assertEqual(state['claimed'][tx.transaction_id]['folder_id'],m['drive_folder_id'])
+                self.assertNotIn(tx.transaction_id,{s['transaction_id'] for s in w.ready_slots()})
+
+    def test_binding_cannot_reuse_another_transactions_customer_folder(self):
+        with TemporaryDirectory() as folder:
+            w=BoothWorkspace(folder);w.prepare();client=self.reserve_client()
+            a=self.queued_transaction(w,client,1);b=self.queued_transaction(w,client,1)
+            client.bind_transaction.side_effect=lambda m:{'folder_id':'same-folder',
+                'folder_url':'https://drive.google.com/drive/folders/same-folder'}
+            worker=BoothDriveWorker(w,client);worker.run_once()
+            before=a.manifest_path.read_bytes();worker.run_once()
+            self.assertEqual(a.manifest_path.read_bytes(),before)
+            self.assertIsNone(json.loads(b.manifest_path.read_text())['drive_folder_id'])
+            self.assertEqual(json.loads(b.manifest_path.read_text())['drive_delivery_retry']['error_code'],'BIND_FOLDER_CONFLICT')
+            self.assertEqual(client.upload_file.call_count,1)
+
+    def test_successful_old_retry_stays_background_after_restart_and_new_customer_arrival(self):
+        with TemporaryDirectory() as folder:
+            w=BoothWorkspace(folder);w.prepare();client=self.reserve_client()
+            old=self.queued_transaction(w,client,3)
+            m=json.loads(old.manifest_path.read_text());m['drive_binding_error']='DRIVE_RETRY'
+            old.manifest_path.write_text(json.dumps(m))
+            worker=BoothDriveWorker(w,client);worker.run_once()
+            self.assertTrue(json.loads(old.manifest_path.read_text())['drive_delivery_retry']['background_only'])
+            customer=self.queued_transaction(w,client,2)
+            worker=BoothDriveWorker(BoothWorkspace(folder),client)
+            for _ in range(3):worker.run_once()
+            self.assertEqual([c.args[1] for c in client.upload_file.call_args_list],
+                [old.transaction_id]+[customer.transaction_id]*2+[old.transaction_id]*2)
+            self.assertEqual(json.loads(old.manifest_path.read_text())['upload_status'],'UPLOAD_COMPLETE')
+            self.assertEqual(json.loads(customer.manifest_path.read_text())['upload_status'],'UPLOAD_COMPLETE')
+
+    def test_invalid_old_metadata_cannot_interrupt_a_new_customer_or_get_overwritten(self):
+        with TemporaryDirectory() as folder:
+            w=BoothWorkspace(folder);w.prepare();client=self.reserve_client()
+            old=self.queued_transaction(w,client,1);old.manifest_path.write_text('[]')
+            customer=self.queued_transaction(w,client,1)
+            worker=BoothDriveWorker(w,client);worker.run_once()
+            self.assertEqual(old.manifest_path.read_text(),'[]')
+            self.assertEqual(json.loads(customer.manifest_path.read_text())['upload_status'],'UPLOAD_COMPLETE')
+            self.assertEqual(client.upload_file.call_count,1)
 
 
 class DeliveryRetryPolicyTests(unittest.TestCase):

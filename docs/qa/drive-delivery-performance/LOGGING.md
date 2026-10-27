@@ -1,5 +1,9 @@
 # Delivery logging recursion correction — 27 October 2026
 
+**Later owner correction:** [customer FIFO / held retries / early folder QR](CUSTOMER-PRIORITY.md).
+Earlier completion-only QR or interleaved-recovery statements below are dated
+source history, superseded by this later contract. Raw evidence stays unchanged.
+
 Base/rollback: **15854e05021e30f65bc0e81074e72338ea88625b**, clean workspace on
 feature/portrait-kiosk-v2-next; remote FETCH_HEAD verified unchanged. Owner reports
 >10 minutes with no verified file and provides a fresh timing extract. Continue

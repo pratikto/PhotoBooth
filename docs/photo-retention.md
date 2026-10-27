@@ -20,7 +20,9 @@ Drive is off and the dedicated Sandbox launcher forces it off.
 
 The explicit ordinary v2 `--drive` profile now resumes its existing isolated
 queue on startup and keeps uploading after the photo visit. Use the same v1
-private configuration; a large result QR appears after file verification.
+private configuration; latest 27 October instruction exposes the assigned-folder
+QR before upload completion when its destination is verified. QR visibility
+never extends retention or proves complete delivery.
 [Print/Drive runbook and acceptance](qa/portrait-v2-print-drive/README.md).
 This changes neither the retention guard nor BUG-009's unverified cloud deletion.
 

@@ -38,7 +38,10 @@ Actual Google setup/deployment, expiry and hardware acceptance remain pending.
    → review/one retake per design → composition/result → advertising. Output is
    local unless the operator opts into --print/--drive: approved strips auto-print
    once/design, the existing queue uploads/resumes in background, and a large
-   on-screen download QR appears only after file verification. --manual-print
+   on-screen download QR appears once the assigned folder is verified, even while
+   uploads are pending. Its message suggests checking back in 30 minutes without
+   guaranteeing delivery time. Customer uploads run FIFO ahead of old retries
+   and maintenance, with bounded failure release. --manual-print
    retains deliberate manual printing.
    Photo areas in v2 review/result/printed/digital strips are mirrored, matching
    live preview; full-resolution JPEG originals stay untouched and template/text/QR stay normal.

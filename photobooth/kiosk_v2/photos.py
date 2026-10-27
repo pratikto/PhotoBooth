@@ -305,12 +305,16 @@ class PhotoTest:
             with Image.open(session.output_path) as photo:
                 strip = photo.convert('RGB')
                 strip.thumbnail((320, 960))
-        # Use the original v1 QR encoder off the GUI thread. An assigned folder
-        # alone is not verified delivery; only the existing queue's completed
-        # state exposes a large download QR on screen.
+        # Reuse the original v1 QR encoder off the GUI thread. The owner now
+        # allows the verified destination before delivery finishes; upload
+        # progress remains independent and never becomes complete just for a QR.
         folder_url = manifest.get('drive_folder_url')
         download_qr = None
-        if manifest['upload_status'] == 'UPLOAD_COMPLETE' and folder_url and (not self.workspace or manifest.get('photo_number_layout') == 1):
+        if (folder_url and not manifest.get('drive_binding_error')
+                and manifest['upload_status'] not in {'LOCAL_ONLY', 'LOCAL_EXPIRED', 'ACTION_REQUIRED'}
+                and (not self.workspace or (manifest.get('photo_number_layout') == 1
+                     and manifest.get('drive_folder_id')
+                     and folder_url == 'https://drive.google.com/drive/folders/' + manifest['drive_folder_id']))):
             if self._download_qr_url != folder_url:
                 from photobooth.qr_code import create_qr_image
                 try:

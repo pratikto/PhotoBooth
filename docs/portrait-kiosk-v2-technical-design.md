@@ -80,7 +80,12 @@ With --drive, the ordinary host prepares/resumes the isolated queue at startup;
 consent snapshots gate on actual verified-folder readiness. PhotoJobs owns client/
 pool initialization and original QR encoding/cache. Photo approval/composition
 triggers one optional auto-print outcome; UI rebuild/minimize/status updates do
-not print. Result polls update the existing large QR only after UPLOAD_COMPLETE.
+not print. Result polls update the existing large QR as soon as the verified
+assigned destination exists, including during upload. QR visibility never sets
+UPLOAD_COMPLETE; the worker still verifies all required file bytes. Customer
+uploads run FIFO; old recovery/reserves/content wait at request boundaries,
+with bounded short customer retries before background failure release.
+[Current scheduling, folder ownership and evidence](qa/drive-delivery-performance/CUSTOMER-PRIORITY.md).
 Old queue resume creates no new visit/counter. Renderer/runner processes clear
 ambient live delivery flags; explicit fixtures supply their own services.
 [Print/Drive contracts, checks and rollback](qa/portrait-v2-print-drive/README.md).

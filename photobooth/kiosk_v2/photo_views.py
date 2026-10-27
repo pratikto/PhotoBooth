@@ -400,7 +400,7 @@ class PhotoViews:
         if not getattr(self,'_download_image',None):
             return
         view=self._photo_view
-        photo=view.get('download_qr') if view.get('upload_status') == 'UPLOAD_COMPLETE' else None
+        photo=view.get('download_qr')
         key=(view.get('transaction_id'),view.get('folder_url')) if photo is not None else None
         if key != self._download_qr_texture_key:
             self._download_image.texture = image_texture(photo) if photo is not None else None
@@ -408,12 +408,21 @@ class PhotoViews:
                 self._download_image.texture.mag_filter = self._download_image.texture.min_filter = 'nearest'
             self._download_qr_texture_key = key
             if key is not None:
-                event('gui_qr_visible', view.get('transaction_id'), result='ok')
+                event('gui_qr_visible', view.get('transaction_id'), result='ok',
+                      upload_complete=view.get('upload_status') == 'UPLOAD_COMPLETE')
         self._download_image.opacity = 1 if photo is not None else 0
-        self._download_hint.text = ('SCAN UNTUK DOWNLOAD' if photo is not None else
-                                   'Foto terunggah. QR belum siap; hubungi operator.'
-                                   if view.get('upload_status') == 'UPLOAD_COMPLETE' else
-                                   'QR muncul setelah semua foto terunggah')
+        if photo is not None:
+            if view.get('upload_status') == 'UPLOAD_COMPLETE':
+                hint = 'SCAN UNTUK DOWNLOAD'
+            elif view.get('retention_error') or view.get('upload_status') == 'UPLOAD_RETRY':
+                hint = 'SCAN & SIMPAN LINK\nUpload tertunda.\nHubungi operator.'
+            else:
+                hint = 'SCAN & SIMPAN LINK\nFoto sedang diunggah.\nCek lagi dalam 30 menit.'
+        elif view.get('binding_error') or view.get('upload_status') in {'UPLOAD_COMPLETE', 'LOCAL_EXPIRED', 'ACTION_REQUIRED'}:
+            hint = 'Link foto belum siap; hubungi operator.'
+        else:
+            hint = 'Menyiapkan link foto.\nQR muncul saat folder siap.'
+        self._download_hint.text = hint
 
     def _build_result(self, shell):
         view = self._photo_view

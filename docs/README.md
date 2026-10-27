@@ -1,5 +1,9 @@
 # Meong Photobooth documentation — GUI v2
 
+Latest delivery contract: [customer FIFO, held background retries, early verified
+folder QR and immutable mapping](qa/drive-delivery-performance/CUSTOMER-PRIORITY.md).
+This supersedes earlier completion-only screen-QR guidance below.
+
 Updated **26 October 2026 (Asia/Jakarta)**. Continue on
 `feature/portrait-kiosk-v2-next`; the GitHub default remains `master` and
 `python main.py` remains the v1 entry point.

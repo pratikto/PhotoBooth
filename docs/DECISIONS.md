@@ -1,5 +1,15 @@
 # Meong Photobooth — product and technical decisions
 
+## Latest owner delivery instruction — 27 October 2026
+
+Owner authorizes implementation of holding old retries, reserves and content
+while customer uploads run, FIFO across waiting sessions and bounded failure
+release. A subsequent explicit correction requests the real download QR before
+upload success, superseding the former UPLOAD_COMPLETE screen-QR rule. Every
+customer keeps a distinct immutable folder and a durable local-file mapping.
+The UI suggests checking again in 30 minutes; no unverified upload deadline is
+guaranteed. [Contract and evidence](qa/drive-delivery-performance/CUSTOMER-PRIORITY.md).
+
 Owner accepts the 27 October recommendation to isolate old failed delivery
 retries and add specific safe bind diagnostics. This scope preserves claims,
 folder identity and retention; no automatic repair/deletion or batch-upload

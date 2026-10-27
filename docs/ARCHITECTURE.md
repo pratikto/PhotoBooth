@@ -1,5 +1,17 @@
 # Meong Photobooth — GUI v2 architecture
 
+## 27 October — customer upload priority and early folder QR
+
+Latest owner instruction supersedes the earlier completion-only screen QR and
+interleaved old-recovery policy. Customer uploads now run FIFO to completion;
+old retries/reserves/content wait at request boundaries. Two short retry delays
+(5s, 15s) precede release to bounded background retry after a third consecutive
+failure. Verified assigned-folder QR can appear while bytes are pending, with
+truthful upload/retry messaging and a 30-minute check-back suggestion, not an SLA.
+Folder claims/manifest mapping survive restart; duplicate/replaced customer
+folders are rejected. Code.gs and physical printing policy are unchanged.
+[Current contract, evidence, update and limits](qa/drive-delivery-performance/CUSTOMER-PRIORITY.md).
+
 ## 27 October — delivery logging recursion recurrence
 
 Owner reports >10 minutes and supplies RecursionError timing; new queued work
@@ -106,7 +118,8 @@ Ordinary v2 --print/--drive opt-ins reuse the existing saved v1 configuration,
 thermal/Drive clients and durable PhotoJobs/PhotoTest. Approved strips auto-print
 once/design; the existing isolated upload queue starts/resumes without a new
 photo visit. Status snapshots gate consent on verified folders and update a
-large result QR only after file verification. Native helpers are adapters, not
+large result QR once its assigned destination is verified, independently of
+upload completion (latest 27 October instruction). Native helpers are adapters, not
 parallel printer/cloud backends. The dedicated merchant trial keeps delivery off.
 [Contracts and proof](qa/portrait-v2-print-drive/README.md).
 

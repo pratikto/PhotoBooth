@@ -1,5 +1,10 @@
 # GUI v2 automatic print and background Drive delivery
 
+**Latest 27 October contract:** [customer FIFO, early verified-folder QR and
+immutable mapping](../drive-delivery-performance/CUSTOMER-PRIORITY.md) supersedes
+the completion-only screen QR in this earlier source record. Original test
+results remain tied to their source, not the later behavior.
+
 **26 October orientation refinement:** owner now selects mirrored v2 review and
 photo areas of result/printed/digital strip; raw camera JPEGs remain original,
 and artwork/text/QR stay normal. [Current mirror checks](../portrait-v2-mirrored-output/README.md).

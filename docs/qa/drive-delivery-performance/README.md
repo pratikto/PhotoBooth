@@ -1,5 +1,9 @@
 # FEAT-004 / BUG-009 / FEAT-022 delivery performance — 27 October 2026
 
+**Later owner correction:** [customer FIFO / held retries / early folder QR](CUSTOMER-PRIORITY.md).
+Earlier completion-only QR or interleaved-recovery statements below are dated
+source history, superseded by this later contract. Raw evidence stays unchanged.
+
 **Current incident:** [console logging recursion correction and Windows restart](LOGGING.md).
 
 **Latest continuation:** [runtime timing, failed-retry isolation and Windows update](RETRY.md).

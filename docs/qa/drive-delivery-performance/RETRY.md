@@ -1,5 +1,9 @@
 # Delivery retry isolation — 27 October 2026
 
+**Later owner correction:** [customer FIFO / held retries / early folder QR](CUSTOMER-PRIORITY.md).
+Earlier completion-only QR or interleaved-recovery statements below are dated
+source history, superseded by this later contract. Raw evidence stays unchanged.
+
 **Later incident:** [RecursionError in logging and correction](LOGGING.md).
 The ten-minute report is not established as a backoff-only delay.
 
