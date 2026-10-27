@@ -1,5 +1,7 @@
 # Meong Photobooth documentation — GUI v2
 
+Latest Sandbox setup: [saved local credentials without repeated terminal entry](qa/portrait-v2-sandbox/LOCAL-SETTINGS.md).
+
 Latest Sandbox correction: [BUG-020 dashboard Server Key formats](qa/portrait-v2-sandbox/KEY-FORMAT.md).
 
 Latest gallery correction: [BUG-019 held-drag incoming neighbours](qa/portrait-v2-carousel-hold/README.md).

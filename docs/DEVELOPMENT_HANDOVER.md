@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 28 October — saved Sandbox credentials
+
+Owner requests ignored local Merchant ID/Server Key defaults. The shared launcher
+reads only the two Sandbox literal fields without executing local settings,
+keeps environment-pair precedence and missing-value prompts, and forwards the
+key only to the backend child environment. Existing Drive values/profile/payment
+journals are preserved. CI source/results and local-executor limits are recorded
+in the [setup/evidence package](qa/portrait-v2-sandbox/LOCAL-SETTINGS.md).
+
 ## 28 October — BUG-020 Sandbox Server Key format
 
 Owner's Sandbox dashboard shows `Mid-server-`; the launcher previously rejected

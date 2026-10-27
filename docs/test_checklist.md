@@ -1,5 +1,13 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 28 October — saved Sandbox credentials
+
+New offline tests cover file defaults, pair precedence, prompt fallback, no code
+execution, sanitized errors and shared/v2 backend-only forwarding. Existing
+Sandbox CI and Windows stdlib-only CI include the new module. Local execution
+became unavailable before edits: do not transfer prior 901-case evidence to this
+source. [Exact CI/source results](qa/portrait-v2-sandbox/LOCAL-SETTINGS.md).
+
 ## 28 October — BUG-020 Sandbox key syntax
 
 Baseline reproduction: two new-format checks error at the unchanged prefix

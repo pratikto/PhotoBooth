@@ -53,9 +53,12 @@ generation never installs/enables it. Automatic restart remains off.
 Close the app and clear the MOCK flag after testing:
 `Remove-Item Env:PHOTOBOOTH_V2_CHECKOUT_MOCK -ErrorAction SilentlyContinue`.
 
-The Sandbox launcher requests Merchant ID and a hidden Sandbox Server Key
-locally. Never send keys to chat or commit them. Use the official simulator
-shown in the terminal. [Sandbox instructions and recovery](docs/qa/portrait-v2-sandbox/README.md).
+The Sandbox launcher can read saved Merchant ID and Server Key from the ignored
+`photobooth/local_settings.py`; add the Sandbox-specific fields without replacing
+existing Drive values. Missing values retain local/hidden prompts.
+[Saved-settings setup and precedence](docs/qa/portrait-v2-sandbox/LOCAL-SETTINGS.md).
+Never send keys to chat or commit them. Use the official simulator shown in the
+terminal. [Sandbox instructions and recovery](docs/qa/portrait-v2-sandbox/README.md).
 Copy the Server Key exactly from the Sandbox dashboard: both `SB-Mid-server-`
 and `Mid-server-` formats are accepted. The prefix does not select the environment;
 provider requests remain fixed to Sandbox. [Key-format correction](docs/qa/portrait-v2-sandbox/KEY-FORMAT.md).

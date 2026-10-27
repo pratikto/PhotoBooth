@@ -1,5 +1,15 @@
 # Meong Photobooth — product and technical decisions
 
+## Owner saved Sandbox credentials request — 28 October 2026
+
+The owner explicitly requests persisting Merchant ID and Server Key locally,
+for example beside Drive settings in ignored `photobooth/local_settings.py`.
+This supersedes the earlier prompt/environment-only source restriction. Reuse
+the ignored file with separate Sandbox-specific fields; no private values are
+written/published by this source change. Preserve backend-only credential
+forwarding, fixed Sandbox transport and existing payment/Drive state.
+[Implementation and source precedence](qa/portrait-v2-sandbox/LOCAL-SETTINGS.md).
+
 ## Latest owner delivery instruction — 27 October 2026
 
 Owner authorizes implementation of holding old retries, reserves and content

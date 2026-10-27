@@ -1,13 +1,15 @@
 """Local merchant Sandbox trial; never a mock settlement or production launcher.
 
-Prompt for credentials locally (no command-line key, file, or clipboard). The
-GUI child receives a generated booth token, not the Midtrans server key. The
-ordinary application camera/printing behavior is preserved. Transaction/visit
+Use ignored local Sandbox settings, environment values or a hidden prompt.
+Never put a key in command arguments. The GUI child receives a generated booth
+token, not the Midtrans server key. Ordinary application camera/printing behavior
+is preserved. Transaction/visit
 journals persist; stopping the launcher never cancels, pays, or deletes orders.
 """
 from __future__ import annotations
 
 import argparse
+import ast
 import getpass
 import json
 import os
@@ -29,6 +31,36 @@ SIMULATOR_URL = 'https://simulator.sandbox.midtrans.com/v2/qris/index'
 class NoRedirect(HTTPRedirectHandler):
     def redirect_request(self, *args, **kwargs):
         return None
+
+
+class LocalSandboxSettingsError(ValueError):
+    """Settings cannot be read safely; never include their text in diagnostics."""
+
+
+def local_sandbox_credentials(path: Path) -> tuple[str, str]:
+    """Read literal Sandbox fields without importing/executing shared Drive settings."""
+    try:
+        tree = ast.parse(path.read_text(encoding='utf-8-sig'))
+    except FileNotFoundError:
+        return '', ''
+    except (OSError, UnicodeError, SyntaxError, ValueError, RecursionError):
+        raise LocalSandboxSettingsError from None
+    names = ('MIDTRANS_SANDBOX_MERCHANT_ID', 'MIDTRANS_SANDBOX_SERVER_KEY')
+    values = {}
+    for node in tree.body:
+        if isinstance(node, ast.Assign):
+            targets = node.targets
+        elif isinstance(node, ast.AnnAssign):
+            targets = [node.target]
+        else:
+            continue
+        for target in targets:
+            if not isinstance(target, ast.Name) or target.id not in names:
+                continue
+            if not isinstance(node.value, ast.Constant) or not isinstance(node.value.value, str):
+                raise LocalSandboxSettingsError from None
+            values[target.id] = node.value.value
+    return values.get(names[0], ''), values.get(names[1], '')
 
 
 def trial_environments(parent: dict[str, str], merchant: str, key: str,
@@ -150,8 +182,12 @@ def main(argv=None, *, environment_factory=trial_environments, gui_entry=('main.
         print('MIDTRANS SANDBOX ONLY. Do NOT scan/pay using a real banking or wallet app.', flush=True)
         print('Payment is NOT automatic after 8 seconds; use the official simulator.', flush=True)
         print(trial_notice or 'The existing photo/printer configuration is retained: completing a session may print.', flush=True)
-        merchant = os.environ.get('MIDTRANS_MERCHANT_ID') or input('Sandbox Merchant ID: ').strip()
+        merchant = os.environ.get('MIDTRANS_MERCHANT_ID', '')
         key = os.environ.get('MIDTRANS_SERVER_KEY', '')
+        # An environment override selects the pair; never silently mix accounts.
+        if not merchant and not key:
+            merchant, key = local_sandbox_credentials(ROOT / 'photobooth' / 'local_settings.py')
+        merchant = merchant or input('Sandbox Merchant ID: ').strip()
         if not key:
             # Never silently fall back to echoing a password in an unsupported terminal.
             with warnings.catch_warnings():
@@ -191,6 +227,11 @@ def main(argv=None, *, environment_factory=trial_environments, gui_entry=('main.
         return 130
     except (EOFError, getpass.GetPassWarning):
         print('Use an interactive terminal with hidden password input. Never paste a key in chat.', file=sys.stderr)
+        return 2
+    except LocalSandboxSettingsError:
+        print('Sandbox settings stopped. Check photobooth/local_settings.py syntax and '
+              'quoted MIDTRANS_SANDBOX_MERCHANT_ID / MIDTRANS_SANDBOX_SERVER_KEY values.',
+              file=sys.stderr)
         return 2
     except (ValueError, OSError, RuntimeError):
         # No exception repr, URLs with credentials, environment dumps, or secret values.

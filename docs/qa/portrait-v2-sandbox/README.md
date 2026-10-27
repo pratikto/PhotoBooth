@@ -65,9 +65,20 @@ python -m pip install -r requirements-qris.txt
 python tools/run_portrait_v2_sandbox.py
 ```
 
-Enter Sandbox Merchant ID and hidden **Sandbox Server Key locally**. Never paste
-keys into chat, command arguments or repository files. GUI receives only booth
-authentication, never merchant secrets. The helper owns a loopback backend and
+Optionally save the Sandbox pair as literal strings in the existing ignored
+`photobooth/local_settings.py`, alongside its unchanged Drive settings:
+
+```python
+MIDTRANS_SANDBOX_MERCHANT_ID = "YOUR_SANDBOX_MERCHANT_ID"
+MIDTRANS_SANDBOX_SERVER_KEY = "YOUR_COMPLETE_SANDBOX_SERVER_KEY"
+```
+
+[Saved-settings details, environment precedence and tests](LOCAL-SETTINGS.md).
+Complete saved values remove both terminal prompts. Existing MIDTRANS environment
+overrides select the pair first and never silently mix accounts with saved values;
+missing fields are prompted locally. The launcher reads literal values without
+executing the settings file. Never paste keys into chat, command arguments or
+tracked files. The GUI child environment receives booth authentication only. The helper owns a loopback backend and
 prints the official simulator URL/current verified QR image URL. Do not scan
 with a banking/wallet app. Backend readiness does not prove valid merchant
 credentials; the actual official simulator trial is a remaining device gate.

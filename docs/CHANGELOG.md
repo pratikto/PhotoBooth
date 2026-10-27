@@ -1,5 +1,14 @@
 # Meong Photobooth — changelog
 
+## 2026-10-28 — optional saved Sandbox credentials
+
+Read Sandbox Merchant ID/Server Key from literal fields in ignored shared local
+settings, with existing environment overrides and prompts for missing values.
+Keep Drive settings intact; no settings import/execution or secret echo, no key
+in the GUI child environment or command arguments. Publish blank example fields
+and add Linux/Windows offline regression coverage.
+[Setup, results and limits](qa/portrait-v2-sandbox/LOCAL-SETTINGS.md).
+
 ## 2026-10-28 — Sandbox dashboard Server Key format (BUG-020)
 
 Accept complete `Mid-server-` and `SB-Mid-server-` keys copied from the Sandbox

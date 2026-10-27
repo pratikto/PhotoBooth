@@ -1,5 +1,11 @@
 # Meong Photobooth — GUI v2 architecture
 
+The dedicated Sandbox launcher now reads optional literal Sandbox credentials
+from ignored `photobooth/local_settings.py` without importing/executing that file.
+Environment overrides select a complete source pair, with prompts for missing
+fields; no silent mixing with saved accounts. Only the backend child environment
+receives merchant credentials. [28 October setup/contracts](qa/portrait-v2-sandbox/LOCAL-SETTINGS.md).
+
 The Sandbox launcher accepts both dashboard Server Key formats (`SB-Mid-server-`
 and `Mid-server-`); key spelling never selects a provider endpoint. The unchanged
 transport fixes HTTPS requests to Sandbox and refuses redirects. GUI credentials,

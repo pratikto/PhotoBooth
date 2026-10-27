@@ -1,5 +1,14 @@
 # FEAT-022 — GUI v2 engineering contracts
 
+Optional local Sandbox defaults are top-level string literals named
+`MIDTRANS_SANDBOX_MERCHANT_ID` and `MIDTRANS_SANDBOX_SERVER_KEY` in ignored
+`photobooth/local_settings.py`. The launcher parses these without executing Drive
+settings. If either existing MIDTRANS environment value is supplied, the file
+is not read and the other value retains its prompt. Otherwise saved values are
+used and only missing fields are prompted. Malformed/unreadable/computed settings
+stop before subprocess startup with a fixed error; values never enter argv/logs
+or the GUI child environment. [Contract/evidence](qa/portrait-v2-sandbox/LOCAL-SETTINGS.md).
+
 Sandbox key syntax accepts both `SB-Mid-server-` and `Mid-server-` with a nonempty
 printable ASCII suffix, at most 512 characters total. The dashboard key is passed
 unchanged to the backend. Environment is fixed by the Sandbox-only transport,

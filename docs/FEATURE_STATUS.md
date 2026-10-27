@@ -1,5 +1,13 @@
 # Meong Photobooth — current feature status
 
+## 28 October — saved Sandbox credentials
+
+IN SOURCE: optional ignored local defaults remove repeated terminal entry;
+static literal read, source-pair precedence, safe errors and backend-only
+credential forwarding. Linux/Windows automated results and local-executor limits
+are tracked in the [current package](qa/portrait-v2-sandbox/LOCAL-SETTINGS.md).
+Actual merchant authentication remains a separate acceptance check.
+
 ## 28 October — BUG-020 Sandbox key syntax
 
 IN SOURCE: launcher accepts both dashboard Server Key formats; fixed Sandbox
