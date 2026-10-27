@@ -84,3 +84,41 @@ class ContentCacheTests(unittest.TestCase):
             self.assertEqual(cache.current['catalog'].timing.landing_idle,120)
             self.assertEqual(cache.current['catalog'].items[0].seconds,11)
             self.assertEqual(cache.current['catalog'].items[0].placements,('idle',))
+
+    def test_yield_inside_file_resumes_without_duplicate_ranges_or_partial_publication(self):
+        with TemporaryDirectory() as folder:
+            w=BoothWorkspace(folder);w.prepare();cache=ContentCache(w)
+            cache.sync(fixture({'Global_Advertisement/old.png':image_bytes()}))
+            original=cache.current;pointer=cache.pointer.read_bytes()
+            data=b'x'*(512*1024+73)
+            client=fixture({'Global_Advertisement/new.mp4':data})
+            interrupted=[False]
+            def chunk(entry,offset,length):
+                interrupted[0]=True
+                return data[offset:offset+length]
+            client.asset_chunk.side_effect=chunk
+            self.assertFalse(cache.sync(client,cancelled=lambda:interrupted[0]))
+            self.assertIs(cache.current,original);self.assertEqual(cache.pointer.read_bytes(),pointer)
+            self.assertTrue(cache.pending)
+            client.asset_chunk.side_effect=lambda e,o,n:data[o:o+n]
+            self.assertTrue(cache.sync(client))
+            self.assertEqual([c.args[1] for c in client.asset_chunk.call_args_list],[0,512*1024])
+            self.assertEqual(cache.current['catalog'].items[0].path.read_bytes(),data)
+            self.assertTrue(original['catalog'].items[0].path.is_file())
+
+    def test_changed_snapshot_reuses_verified_bytes_and_corrupt_prior_cache_is_redownloaded(self):
+        with TemporaryDirectory() as folder:
+            w=BoothWorkspace(folder);w.prepare();cache=ContentCache(w)
+            data=image_bytes();cache.sync(fixture({'Global_Advertisement/a.png':data}))
+            source=cache.current['catalog'].items[0].path
+            client=fixture({'Global_Advertisement/a.png':data,'Local/Advertisement/new.png':data})
+            self.assertTrue(cache.sync(client))
+            self.assertEqual([c.args[0]['path'] for c in client.asset_chunk.call_args_list],['Local/Advertisement/new.png'])
+            self.assertTrue(source.is_file())
+            # A matching descriptor alone never authorizes reuse of corrupted disk bytes.
+            cache.current['catalog'].items[0].path.write_bytes(b'x'*len(data))
+            third=fixture({'Global_Advertisement/a.png':data,'Local/Advertisement/new.png':data,
+                           'Local/Advertisement/second.png':data})
+            self.assertTrue(cache.sync(third))
+            self.assertEqual(len(third.asset_chunk.call_args_list),2)
+            self.assertEqual(cache.current['catalog'].items[0].path.read_bytes(),data)

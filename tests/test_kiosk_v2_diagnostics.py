@@ -128,5 +128,92 @@ class DiagnosticSessionTests(unittest.TestCase):
             self.assertIn('diagnostic file unavailable', output.call_args_list[0].args[0])
 
 
+class DeliveryLoggingTests(unittest.TestCase):
+    def test_timing_bypasses_root_and_file_handler_is_released(self):
+        from photobooth.delivery_timing import LOG as delivery, event
+        class RootBomb(logging.Handler):
+            def emit(self,record):
+                if record.name=='photobooth.delivery':raise AssertionError('timing leaked into root')
+        bomb=RootBomb();root=logging.getLogger();root.addHandler(bomb)
+        previous=list(delivery.handlers)
+        try:
+            with tempfile.TemporaryDirectory() as folder:
+                with DiagnosticSession(folder) as session:
+                    event('queued','PB001V2S2_00000008',queue_depth=1)
+                    text=session.path.read_text()
+                    self.assertIn('delivery_timing ',text);self.assertIn('monotonic_ms',text)
+                    self.assertEqual(text.count('"stage": "queued"'),1)
+                self.assertEqual(delivery.handlers,previous)
+        finally:root.removeHandler(bomb)
+
+    def test_broken_sink_and_recursive_callback_do_not_escape_or_hide_business_error(self):
+        from photobooth.delivery_timing import LOG as delivery, event, span
+        class Broken(logging.Handler):
+            def emit(self,record):raise RecursionError('synthetic broken logging sink')
+        class Reentrant(logging.Handler):
+            calls=0
+            def emit(self,record):
+                self.calls+=1;event('nested','PB001V2S2_00000008')
+        for handler in (Broken(),Reentrant()):
+            delivery.addHandler(handler)
+            try:
+                event('queued','PB001V2S2_00000008')
+                with span('request','PB001V2S2_00000008'):pass
+                with self.assertRaisesRegex(ValueError,'real business failure'):
+                    with span('request','PB001V2S2_00000008'):raise ValueError('real business failure')
+                if isinstance(handler,Reentrant):self.assertEqual(handler.calls,3)
+            finally:delivery.removeHandler(handler)
+
+    @unittest.skipUnless(importlib.util.find_spec('kivy'), 'Real Kivy logging integration needs Kivy')
+    def test_real_launcher_console_active_keeps_stderr_and_records_native_and_delivery_once(self):
+        import json
+        import os
+        import sys
+        import textwrap
+        root=Path(__file__).resolve().parents[1]
+        code=textwrap.dedent('''
+            import json,logging,runpy,sys,tempfile
+            from pathlib import Path
+            from types import SimpleNamespace
+            initial_stderr=sys.stderr
+            launcher=runpy.run_path('tools/run_portrait_v2.py',run_name='logging_fixture')
+            from photobooth.delivery_timing import event
+            class App:
+                def run(self):
+                    import kivy.logger as native
+                    assert native.KIVY_LOG_MODE=='MIXED'
+                    assert sys.stderr is initial_stderr
+                    late=logging.StreamHandler(sys.stderr)
+                    logging.getLogger().addHandler(late)
+                    try:
+                        logging.getLogger('fixture').warning('ordinary console path')
+                        native.Logger.warning('fixture native path')
+                        event('queued','PB001V2S2_00000008',queue_depth=1)
+                    finally:logging.getLogger().removeHandler(late)
+            sys.modules['photobooth.kiosk_v2.app']=SimpleNamespace(PortraitKioskV2App=App)
+            with tempfile.TemporaryDirectory() as folder:
+                # run_path functions retain this dictionary as their globals.
+                launcher['run_app'].__globals__['PROJECT_ROOT']=Path(folder)
+                launcher['run_app']()
+                paths=list((Path(folder)/'data/diagnostics').glob('portrait-v2-*.log'))
+                assert len(paths)==1
+                data=paths[0].read_text()
+                assert data.count('"stage": "queued"')==1
+                assert 'fixture native path' in data
+                assert 'ordinary console path' in data
+                assert 'Session end' in data
+            print('CONSOLE_LOGGING_PASS')
+        ''')
+        with tempfile.TemporaryDirectory() as folder:
+            env=dict(os.environ,KIVY_HOME=folder,KIVY_NO_ARGS='1',KIVY_NO_FILELOG='1')
+            env.pop('KIVY_NO_CONSOLELOG',None);env.pop('KIVY_LOG_MODE',None)
+            result=subprocess.run([sys.executable,'-c',code],cwd=root,env=env,
+                                  capture_output=True,text=True,timeout=20)
+        self.assertEqual(result.returncode,0,result.stderr[-5000:])
+        self.assertIn('CONSOLE_LOGGING_PASS',result.stdout)
+        self.assertIn('fixture native path',result.stderr)
+        self.assertNotIn('RecursionError',result.stderr)
+
+
 if __name__ == '__main__':
     unittest.main()

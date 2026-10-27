@@ -49,6 +49,10 @@ def main(argv=()):
 
 
 def run_app():
+    # Keep stderr as a real stream. Kivy's default stderr-to-root forwarding can
+    # recurse with console handlers installed by Python or native libraries.
+    # This is process-local to v2; explicit operator logging modes are respected.
+    os.environ.setdefault('KIVY_LOG_MODE', 'MIXED')
     if os.environ.get("PHOTOBOOTH_V2_CHECKOUT_SANDBOX") != "1":
         os.environ.setdefault("PHOTOBOOTH_V2_STORAGE", "2")
     # Install before importing native window/audio/video providers. Keep the
@@ -64,6 +68,8 @@ def run_app():
         if session is not None:
             print(f"MEONG v2 HEAD={session.head} diagnostic log: {session.path}", flush=True)
         from kivy.config import Config
+        if session is not None:
+            session.attach_kivy_logger()
         configure_kivy(Config)
         from photobooth.kiosk_v2.app import PortraitKioskV2App
         logging.getLogger('photobooth.kiosk_v2').info('Window startup')

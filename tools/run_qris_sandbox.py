@@ -36,11 +36,13 @@ def trial_environments(parent: dict[str, str], merchant: str, key: str,
     """Separate backend credentials from kiosk environment; do not mutate parent."""
     if not isinstance(merchant, str) or re.fullmatch(r'[A-Za-z0-9_-]{1,64}', merchant) is None:
         raise ValueError('Invalid Sandbox Merchant ID')
-    # A defensive operator guard, not proof that Midtrans accepts this key.
-    if (not isinstance(key, str) or not key.startswith('SB-Mid-server-')
-            or len(key) <= len('SB-Mid-server-') or len(key) > 512
-            or any(c.isspace() for c in key) or not key.isascii()):
-        raise ValueError('Use the Server Key from the Sandbox dashboard, not Client Key or Production')
+    # Check syntax only: the prefix does not prove the issuing environment.
+    # MidtransSandboxClient always uses its fixed Sandbox host, never a key-
+    # selected endpoint. Preserve the dashboard key exactly for authentication.
+    if (not isinstance(key, str) or len(key) > 512
+            or re.fullmatch(r'(?:SB-)?Mid-server-[!-~]+', key) is None):
+        raise ValueError('Copy the complete Server Key from the Sandbox dashboard; '
+                         'Client Keys, spaces and control characters are not accepted')
     if not isinstance(booth, str) or re.fullmatch(r'PB[0-9]{3,8}', booth) is None:
         raise ValueError('Booth ID must be PB followed by 3 to 8 digits')
     if type(port) is not int or not 1024 <= port <= 65535:

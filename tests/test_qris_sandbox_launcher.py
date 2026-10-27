@@ -67,9 +67,29 @@ class SandboxLauncherTests(unittest.TestCase):
                          self.root / 'data/qris-sandbox-trial/MTEST/PB001')
         self.assertFalse(self.root.joinpath('data').exists())
 
-    def test_production_client_empty_and_malformed_keys_are_rejected(self):
-        for key in ('Mid-server-production', 'SB-Mid-client-test', '', 'SB-Mid-server-',
-                    KEY + '\n', KEY + ' space', True, 'SB-Mid-server-' + '\u00e9'):
+    def test_dashboard_server_key_formats_preserve_sandbox_isolation(self):
+        for prefix in ('SB-Mid-server-', 'Mid-server-'):
+            key = prefix + 'TEST-ONLY-NOT-A-CREDENTIAL'
+            parent = {'MEONG_QRIS_MODE': 'production',
+                      'MEONG_QRIS_API_URL': 'https://api.midtrans.com',
+                      'MIDTRANS_SERVER_KEY': 'inherited-secret'}
+            original = dict(parent)
+            with self.subTest(prefix=prefix):
+                backend, gui = self.config(parent=parent, key=key)
+                self.assertEqual(backend['MIDTRANS_SERVER_KEY'], key)
+                self.assertFalse(any(name.startswith('MIDTRANS_') for name in gui))
+                for env in (backend, gui):
+                    self.assertEqual(env['MEONG_QRIS_MODE'], 'sandbox')
+                    self.assertEqual(env['MEONG_PAYMENT_MODE'], 'qris-sandbox')
+                    self.assertEqual(env['MEONG_QRIS_API_URL'], 'http://127.0.0.1:8000')
+                self.assertEqual(parent, original)
+                self.assertFalse(self.root.joinpath('data').exists())
+
+    def test_client_empty_and_malformed_keys_are_rejected(self):
+        for key in ('Mid-client-test', 'SB-Mid-client-test', '', 'SB-Mid-server-',
+                    'Mid-server-', 'arbitrary-key', KEY + '\n', KEY + ' space',
+                    KEY + '\x00', KEY + '\x7f', True, 'SB-Mid-server-' + '\u00e9',
+                    'Mid-server-' + '\u00e9', 'Mid-server-' + 'x' * 512):
             with self.subTest(key_type=type(key).__name__), self.assertRaises(ValueError):
                 self.config(key=key)
 
@@ -160,6 +180,11 @@ class SandboxLauncherTests(unittest.TestCase):
         process.kill.assert_called_once()
 
     def test_launch_separates_environments_and_never_prints_key(self):
+        for key in (KEY, KEY.removeprefix('SB-')):
+            with self.subTest(prefix=key.split('TEST')[0]):
+                self.check_launch(key)
+
+    def check_launch(self, key):
         recorded = []
         server, gui = Mock(), Mock()
         server.poll.return_value = None
@@ -169,7 +194,7 @@ class SandboxLauncherTests(unittest.TestCase):
             recorded.append((command, dict(kwargs['env'])))
             return server if len(recorded) == 1 else gui
         output = io.StringIO()
-        with patch.dict('os.environ', {'MIDTRANS_SERVER_KEY': KEY,
+        with patch.dict('os.environ', {'MIDTRANS_SERVER_KEY': key,
                                       'MIDTRANS_MERCHANT_ID': 'MTEST'}, clear=True), \
              patch('importlib.util.find_spec', return_value=object()), \
              patch('tools.run_qris_sandbox.socket.socket'), \
@@ -179,10 +204,10 @@ class SandboxLauncherTests(unittest.TestCase):
             self.assertEqual(main([]), 0)
         self.assertEqual(len(recorded), 2)
         self.assertIn('uvicorn', recorded[0][0])
-        self.assertEqual(recorded[0][1]['MIDTRANS_SERVER_KEY'], KEY)
+        self.assertEqual(recorded[0][1]['MIDTRANS_SERVER_KEY'], key)
         self.assertNotIn('MIDTRANS_SERVER_KEY', recorded[1][1])
-        self.assertNotIn(KEY, str(recorded[0][0]))
-        self.assertNotIn(KEY, output.getvalue())
+        self.assertNotIn(key, str(recorded[0][0]))
+        self.assertNotIn(key, output.getvalue())
         server.terminate.assert_called_once()
 
     def test_help_has_no_process_or_credential_side_effects(self):

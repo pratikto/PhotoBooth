@@ -85,7 +85,7 @@ class PhotoDeliveryTests(unittest.TestCase):
                 'photobooth.drive_storage.GoogleDriveClient.from_environment',return_value=None):
             with self.assertRaises(PhotoSetupError) as result:configured_test(folder)
             self.assertEqual(result.exception.code,'drive_configuration')
-    def test_download_qr_only_after_verified_upload_is_encoded_off_ui_and_cached(self):
+    def test_download_qr_before_upload_is_encoded_off_ui_cached_and_preserves_progress(self):
         import json
         with TemporaryDirectory() as folder:
             service=PhotoTest(folder);templates=get_templates()
@@ -99,10 +99,35 @@ class PhotoDeliveryTests(unittest.TestCase):
                 calls.append((value,threading.get_ident()));return Image.new('RGB',(180,180),'white')
             jobs=PhotoJobs(service)
             with patch('photobooth.qr_code.create_qr_image',side_effect=encode):
-                self.assertIsNone(service.snapshot()['download_qr'])
-                manifest['upload_status']='UPLOAD_COMPLETE';path.write_text(json.dumps(manifest))
+                before=path.read_bytes()
                 jobs.submit('snapshot');jobs.wait_closed();view=jobs.poll().value
                 self.assertEqual(view['download_qr'].size,(180,180))
+                self.assertEqual(view['upload_status'],'PENDING_UPLOAD')
+                self.assertEqual(path.read_bytes(),before)
+                manifest['upload_status']='UPLOAD_COMPLETE';path.write_text(json.dumps(manifest))
                 service.snapshot();self.assertEqual(len(calls),1)
                 self.assertEqual(calls[0][0],url);self.assertNotEqual(calls[0][1],ui)
             jobs.close()
+
+    def test_layout2_early_qr_requires_verified_destination_and_withholds_unsafe_states(self):
+        from photobooth.booth_storage import BoothWorkspace
+        with TemporaryDirectory() as folder:
+            workspace=BoothWorkspace(Path(folder)/'Photobooth','PB001V2S2')
+            service=PhotoTest(folder,workspace=workspace,drive_requested=True)
+            templates=get_templates();service.start(templates,{templates[0].template_id:1})
+            path=service.transaction.manifest_path;manifest=json.loads(path.read_text())
+            manifest.update(drive_folder_id='fixture-folder',
+                drive_folder_url='https://drive.google.com/drive/folders/fixture-folder',
+                photo_number_layout=1)
+            path.write_text(json.dumps(manifest))
+            # A cached reserve already verified by the transport can precede bind/upload.
+            self.assertIsNotNone(service.snapshot()['download_qr'])
+            for fields in ({'drive_folder_url':None},{'photo_number_layout':None},
+                           {'drive_folder_id':'different-folder'},
+                           {'drive_binding_error':'DRIVE_RETRY'},
+                           {'upload_status':'LOCAL_ONLY'},{'upload_status':'LOCAL_EXPIRED'},
+                           {'upload_status':'ACTION_REQUIRED'}):
+                with self.subTest(fields=fields):
+                    path.write_text(json.dumps({**manifest,**fields}))
+                    self.assertIsNone(service.snapshot()['download_qr'])
+            service.close()

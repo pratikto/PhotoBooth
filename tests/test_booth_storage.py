@@ -16,6 +16,21 @@ from photobooth.workflow import build_session_plans
 
 
 class BoothStorageTests(unittest.TestCase):
+    def test_remote_folders_cannot_be_reused_across_reserve_batches_or_claims(self):
+        with TemporaryDirectory() as folder:
+            w=BoothWorkspace(folder);w.prepare();a,b=w.ready_slots()[:2]
+            def reply(slot):
+                return {**slot,'folder_id':'one-folder',
+                    'folder_url':'https://drive.google.com/drive/folders/one-folder',
+                    'photo_number_layout':1,'link_verified':True}
+            w.remember_remote([reply(a)]);claimed=w.claim();before=w.state_path.read_bytes()
+            with self.assertRaises(ValueError):w.remember_remote([reply(b)])
+            self.assertEqual(w.state_path.read_bytes(),before)
+            fresh=BoothWorkspace(folder)
+            with self.assertRaises(ValueError):fresh.remember_binding(b['transaction_id'],b['claim_token'],reply(b))
+            self.assertEqual(fresh.state_path.read_bytes(),before)
+            self.assertEqual(claimed['transaction_id'],a['transaction_id'])
+
     def test_twenty_five_empty_direct_reserves_survive_restart_and_offline_exhaustion(self):
         with TemporaryDirectory() as folder:
             workspace = BoothWorkspace(Path(folder)/'Photobooth')

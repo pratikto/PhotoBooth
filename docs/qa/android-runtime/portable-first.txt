@@ -1,0 +1,1333 @@
+[ERROR  ] Error while activating FileHandler logger
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/logger.py", line 310, in emit
+    self._configure()
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/logger.py", line 283, in _configure
+    FileHandler.fd = open(filename, 'w', encoding=FileHandler.encoding)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/home/agent/.kivy/logs/kivy_26-10-27_2.txt'
+[INFO   ] [Kivy        ] v2.3.1
+[INFO   ] [Kivy        ] Installed at "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/__init__.py"
+[INFO   ] [Python      ] v3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]
+[INFO   ] [Python      ] Interpreter at "/workspace/PhotoBooth/.venv/bin/python"
+[INFO   ] [Logger      ] Purge log fired. Processing...
+[INFO   ] [Logger      ] Purge finished!
+[INFO   ] [Factory     ] 195 symbols loaded
+[INFO   ] [ImageLoaderFFPy] Using ffpyplayer 4.5.3
+[INFO   ] [Image       ] Providers: img_tex, img_dds, img_sdl2, img_pil, img_ffpyplayer 
+[INFO   ] [Window      ] Provider: sdl2
+[INFO   ] [GL          ] Using the "OpenGL" graphics system
+[INFO   ] [GL          ] Backend used <sdl2>
+[INFO   ] [GL          ] OpenGL version <b'4.5 (Compatibility Profile) Mesa 25.0.7-2+deb13u1'>
+[INFO   ] [GL          ] OpenGL vendor <b'Mesa'>
+[INFO   ] [GL          ] OpenGL renderer <b'llvmpipe (LLVM 19.1.7, 256 bits)'>
+[INFO   ] [GL          ] OpenGL parsed version: 4, 5
+[INFO   ] [GL          ] Shading version <b'4.50'>
+[INFO   ] [GL          ] Texture max size <16384>
+[INFO   ] [GL          ] Texture max units <32>
+[INFO   ] [Window      ] auto add sdl2 input provider
+[INFO   ] [Window      ] virtual keyboard not allowed, single mode, not docked
+[INFO   ] [Text        ] Provider: sdl2
+[INFO   ] [VideoFFPy   ] Using ffpyplayer 4.5.3
+[INFO   ] [Video       ] Provider: ffpyplayer(['video_ffmpeg'] ignored)
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'IDAT' 41 536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'IDAT' 41 536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'IDAT' 41 536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'IDAT' 41 34539
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'IDAT' 41 2042
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'IDAT' 41 2056
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'IDAT' 41 2076
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'IDAT' 41 45928
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'IDAT' 41 457
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/content_cache.py", line 121, in load
+    manifest=json.loads(checked_path(self.pointer).read_text(encoding='utf-8'))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpzh4w1w2v/Photobooth/PB001/_state/content-current.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/content_cache.py", line 121, in load
+    manifest=json.loads(checked_path(self.pointer).read_text(encoding='utf-8'))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpur9g6q_b/PB001/_state/content-current.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/content_cache.py", line 121, in load
+    manifest=json.loads(checked_path(self.pointer).read_text(encoding='utf-8'))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpveibmrn4/PB001/_state/content-current.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'IDAT' 41 4096
+[DEBUG  ] STREAM b'IDAT' 1764526 6
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[WARNING] [Drive retention registration failed for PB001V2_00000001] clock missing
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/content_cache.py", line 121, in load
+    manifest=json.loads(checked_path(self.pointer).read_text(encoding='utf-8'))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmplg5d51kr/PB001/_state/content-current.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/content_cache.py", line 121, in load
+    manifest=json.loads(checked_path(self.pointer).read_text(encoding='utf-8'))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpna3oqldu/PB001/_state/content-current.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'IDAT' 41 536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'IDAT' 41 536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'IDAT' 41 536
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[INFO   ] [SoundFFPy   ] Using ffpyplayer 4.5.3
+[INFO   ] [Audio       ] Providers: audio_ffpyplayer, audio_sdl2 
+[INFO   ] Input configuration camera_enabled=False camera_index=0 face_enabled=False palm_enabled=False
+[INFO   ] Page rebuild begin from=None to=advert revision=1
+[INFO   ] Page media retired; audio owner=advert; building view
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'PLTE' 41 84
+[DEBUG  ] STREAM b'tRNS' 137 28
+[DEBUG  ] STREAM b'IDAT' 177 1915
+[INFO   ] [GL          ] NPOT texture support is available
+[INFO   ] Page ready page=advert revision=1 build_ms=26.2
+[INFO   ] Page rebuild begin from=advert to=tutorial revision=2
+[INFO   ] Page media retired; audio owner=tutorial; building view
+[INFO   ] Page ready page=tutorial revision=2 build_ms=12.4
+[INFO   ] Page rebuild begin from=tutorial to=templates revision=3
+[INFO   ] Page media retired; audio owner=templates; building view
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Page ready page=templates revision=3 build_ms=201.2
+[INFO   ] Page rebuild begin from=templates to=photo_confirm revision=4
+[INFO   ] Page media retired; audio owner=photo_confirm; building view
+[INFO   ] Page ready page=photo_confirm revision=4 build_ms=9.5
+[INFO   ] Page rebuild begin from=photo_confirm to=photo_confirm revision=5
+[INFO   ] Page media retired; audio owner=photo_confirm; building view
+[INFO   ] Page ready page=photo_confirm revision=5 build_ms=7.4
+[INFO   ] Detection face_state=disabled palm_state=disabled
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Page rebuild begin from=photo_confirm to=capture revision=6
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=6 build_ms=13.4
+[INFO   ] Performance page=photo_confirm seconds=0.54 ui_ticks_s=3.7 new_frames_s=1.9 preview_frames_s=0.0 max_tick_gap_ms=410.7 max_upload_ms=0.0
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Page rebuild begin from=capture to=capture revision=7
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=7 build_ms=9.0
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Page rebuild begin from=capture to=capture revision=8
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=8 build_ms=8.4
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Page rebuild begin from=capture to=review revision=9
+[INFO   ] Page media retired; audio owner=review; building view
+[INFO   ] Page ready page=review revision=9 build_ms=54.9
+[INFO   ] Performance page=capture seconds=0.35 ui_ticks_s=11.3 new_frames_s=2.8 preview_frames_s=2.8 max_tick_gap_ms=122.2 max_upload_ms=0.4
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Page rebuild begin from=review to=result revision=10
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=10 build_ms=12.9
+[INFO   ] Performance page=review seconds=0.29 ui_ticks_s=20.6 new_frames_s=3.4 preview_frames_s=0.0 max_tick_gap_ms=102.5 max_upload_ms=0.0
+[INFO   ] Page rebuild begin from=result to=result revision=11
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=11 build_ms=14.7
+[INFO   ] Page rebuild begin from=result to=result revision=12
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=12 build_ms=11.1
+[INFO   ] Page rebuild begin from=result to=result revision=13
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=13 build_ms=81.1
+[INFO   ] Performance page=result seconds=0.44 ui_ticks_s=13.8 new_frames_s=2.3 preview_frames_s=0.0 max_tick_gap_ms=197.6 max_upload_ms=0.0
+[INFO   ] Page rebuild begin from=result to=result revision=14
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=14 build_ms=9.7
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Page rebuild begin from=result to=result revision=15
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=15 build_ms=9.4
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[INFO   ] Input configuration camera_enabled=False camera_index=0 face_enabled=False palm_enabled=False
+[INFO   ] Page rebuild begin from=None to=advert revision=1
+[INFO   ] Page media retired; audio owner=advert; building view
+[INFO   ] Page ready page=advert revision=1 build_ms=18.0
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[INFO   ] Input configuration camera_enabled=False camera_index=0 face_enabled=False palm_enabled=False
+[INFO   ] Page rebuild begin from=None to=advert revision=1
+[INFO   ] Page media retired; audio owner=advert; building view
+[INFO   ] Page ready page=advert revision=1 build_ms=18.4
+[INFO   ] Detection face_state=disabled palm_state=disabled
+[INFO   ] Page rebuild begin from=advert to=tutorial revision=2
+[INFO   ] Page media retired; audio owner=tutorial; building view
+[INFO   ] Page ready page=tutorial revision=2 build_ms=92.7
+[INFO   ] Page rebuild begin from=tutorial to=templates revision=3
+[INFO   ] Page media retired; audio owner=templates; building view
+[INFO   ] Page ready page=templates revision=3 build_ms=24.4
+[INFO   ] Page rebuild begin from=templates to=photo_confirm revision=4
+[INFO   ] Page media retired; audio owner=photo_confirm; building view
+[INFO   ] Page ready page=photo_confirm revision=4 build_ms=7.6
+[INFO   ] Page rebuild begin from=photo_confirm to=photo_confirm revision=5
+[INFO   ] Page media retired; audio owner=photo_confirm; building view
+[INFO   ] Page ready page=photo_confirm revision=5 build_ms=8.0
+[INFO   ] Page rebuild begin from=photo_confirm to=photo_confirm revision=6
+[INFO   ] Page media retired; audio owner=photo_confirm; building view
+[INFO   ] Page ready page=photo_confirm revision=6 build_ms=8.1
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[INFO   ] Input configuration camera_enabled=False camera_index=0 face_enabled=False palm_enabled=False
+[INFO   ] Page rebuild begin from=None to=advert revision=1
+[INFO   ] Page media retired; audio owner=advert; building view
+[INFO   ] Page ready page=advert revision=1 build_ms=15.6
+[INFO   ] Page rebuild begin from=advert to=tutorial revision=2
+[INFO   ] Page media retired; audio owner=tutorial; building view
+[INFO   ] Page ready page=tutorial revision=2 build_ms=11.3
+[INFO   ] Page rebuild begin from=tutorial to=templates revision=3
+[INFO   ] Page media retired; audio owner=templates; building view
+[INFO   ] Page ready page=templates revision=3 build_ms=23.2
+[INFO   ] Page rebuild begin from=templates to=photo_confirm revision=4
+[INFO   ] Page media retired; audio owner=photo_confirm; building view
+[INFO   ] Page ready page=photo_confirm revision=4 build_ms=8.8
+[INFO   ] Detection face_state=disabled palm_state=disabled
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/content_cache.py", line 121, in load
+    manifest=json.loads(checked_path(self.pointer).read_text(encoding='utf-8'))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpoz4hok0h/Photobooth/PB001/_state/content-current.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[INFO   ] Page rebuild begin from=photo_confirm to=photo_confirm revision=5
+[INFO   ] Page media retired; audio owner=photo_confirm; building view
+[INFO   ] Page ready page=photo_confirm revision=5 build_ms=8.3
+[INFO   ] Page rebuild begin from=photo_confirm to=capture revision=6
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=6 build_ms=8.8
+[INFO   ] Performance page=photo_confirm seconds=0.34 ui_ticks_s=8.8 new_frames_s=2.9 preview_frames_s=0.0 max_tick_gap_ms=115.3 max_upload_ms=0.0
+[INFO   ] Page rebuild begin from=capture to=capture revision=7
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=7 build_ms=7.9
+[INFO   ] Page rebuild begin from=capture to=capture revision=8
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=8 build_ms=8.7
+[INFO   ] Page rebuild begin from=capture to=review revision=9
+[INFO   ] Page media retired; audio owner=review; building view
+[INFO   ] Page ready page=review revision=9 build_ms=14.2
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Page rebuild begin from=review to=result revision=10
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=10 build_ms=11.4
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Performance page=review seconds=0.40 ui_ticks_s=22.3 new_frames_s=2.5 preview_frames_s=0.0 max_tick_gap_ms=101.7 max_upload_ms=0.0
+[INFO   ] Page rebuild begin from=result to=result revision=11
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=11 build_ms=13.4
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Performance page=result seconds=0.33 ui_ticks_s=12.1 new_frames_s=3.0 preview_frames_s=0.0 max_tick_gap_ms=74.6 max_upload_ms=0.0
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[INFO   ] Input configuration camera_enabled=False camera_index=0 face_enabled=False palm_enabled=False
+[INFO   ] Page rebuild begin from=None to=advert revision=1
+[INFO   ] Page media retired; audio owner=advert; building view
+[INFO   ] Page ready page=advert revision=1 build_ms=18.0
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[INFO   ] Page rebuild begin from=advert to=tutorial revision=2
+[INFO   ] Page media retired; audio owner=tutorial; building view
+[INFO   ] Page ready page=tutorial revision=2 build_ms=14.5
+[INFO   ] Page rebuild begin from=tutorial to=templates revision=3
+[INFO   ] Page media retired; audio owner=templates; building view
+[INFO   ] Page ready page=templates revision=3 build_ms=108.3
+[INFO   ] Return to advertising requested from=templates
+[INFO   ] Page rebuild begin from=templates to=advert revision=4
+[INFO   ] Page media retired; audio owner=advert; building view
+[INFO   ] Page ready page=advert revision=4 build_ms=21.6
+[INFO   ] Page rebuild begin from=advert to=advert revision=5
+[INFO   ] Page media retired; audio owner=advert; building view
+[INFO   ] Page ready page=advert revision=5 build_ms=16.1
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[INFO   ] Input configuration camera_enabled=False camera_index=0 face_enabled=False palm_enabled=False
+[INFO   ] Page rebuild begin from=None to=advert revision=1
+[INFO   ] Page media retired; audio owner=advert; building view
+[INFO   ] Page ready page=advert revision=1 build_ms=15.6
+[INFO   ] Page rebuild begin from=advert to=tutorial revision=2
+[INFO   ] Page media retired; audio owner=tutorial; building view
+[INFO   ] Page ready page=tutorial revision=2 build_ms=12.9
+[INFO   ] Page rebuild begin from=tutorial to=templates revision=3
+[INFO   ] Page media retired; audio owner=templates; building view
+[INFO   ] Page ready page=templates revision=3 build_ms=131.0
+[INFO   ] Page rebuild begin from=templates to=photo_confirm revision=4
+[INFO   ] Page media retired; audio owner=photo_confirm; building view
+[INFO   ] Page ready page=photo_confirm revision=4 build_ms=9.1
+[INFO   ] Detection face_state=disabled palm_state=disabled
+[INFO   ] Page rebuild begin from=photo_confirm to=photo_confirm revision=5
+[INFO   ] Page media retired; audio owner=photo_confirm; building view
+[INFO   ] Page ready page=photo_confirm revision=5 build_ms=7.6
+[INFO   ] Page rebuild begin from=photo_confirm to=capture revision=6
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=6 build_ms=7.9
+[INFO   ] Page rebuild begin from=capture to=capture revision=7
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=7 build_ms=8.9
+[INFO   ] Page rebuild begin from=capture to=capture revision=8
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=8 build_ms=9.0
+[INFO   ] Page rebuild begin from=capture to=review revision=9
+[INFO   ] Page media retired; audio owner=review; building view
+[INFO   ] Page ready page=review revision=9 build_ms=11.3
+[INFO   ] Performance page=capture seconds=0.30 ui_ticks_s=13.2 new_frames_s=3.3 preview_frames_s=3.3 max_tick_gap_ms=118.2 max_upload_ms=0.3
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Page rebuild begin from=review to=result revision=10
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=10 build_ms=10.4
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Page rebuild begin from=result to=result revision=11
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=11 build_ms=9.6
+[INFO   ] Page rebuild begin from=result to=result revision=12
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=12 build_ms=12.3
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Performance page=result seconds=0.64 ui_ticks_s=17.3 new_frames_s=1.6 preview_frames_s=0.0 max_tick_gap_ms=163.3 max_upload_ms=0.0
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[INFO   ] Input configuration camera_enabled=False camera_index=0 face_enabled=False palm_enabled=False
+[INFO   ] Page rebuild begin from=None to=advert revision=1
+[INFO   ] Page media retired; audio owner=advert; building view
+[INFO   ] Page ready page=advert revision=1 build_ms=15.5
+[INFO   ] Page rebuild begin from=advert to=tutorial revision=2
+[INFO   ] Page media retired; audio owner=tutorial; building view
+[INFO   ] Page ready page=tutorial revision=2 build_ms=12.2
+[INFO   ] Page rebuild begin from=tutorial to=templates revision=3
+[INFO   ] Page media retired; audio owner=templates; building view
+[INFO   ] Page ready page=templates revision=3 build_ms=19.3
+[INFO   ] Page rebuild begin from=templates to=photo_confirm revision=4
+[INFO   ] Page media retired; audio owner=photo_confirm; building view
+[INFO   ] Page ready page=photo_confirm revision=4 build_ms=8.5
+[INFO   ] Detection face_state=disabled palm_state=disabled
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/content_cache.py", line 121, in load
+    manifest=json.loads(checked_path(self.pointer).read_text(encoding='utf-8'))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpn4ihx6e7/Photobooth/PB001/_state/content-current.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[INFO   ] Page rebuild begin from=photo_confirm to=photo_confirm revision=5
+[INFO   ] Page media retired; audio owner=photo_confirm; building view
+[INFO   ] Page ready page=photo_confirm revision=5 build_ms=8.2
+[INFO   ] Page rebuild begin from=photo_confirm to=capture revision=6
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=6 build_ms=8.5
+[INFO   ] Performance page=photo_confirm seconds=0.32 ui_ticks_s=9.4 new_frames_s=3.1 preview_frames_s=0.0 max_tick_gap_ms=184.6 max_upload_ms=0.0
+[INFO   ] Page rebuild begin from=capture to=capture revision=7
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=7 build_ms=7.9
+[INFO   ] Page rebuild begin from=capture to=capture revision=8
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=8 build_ms=8.3
+[INFO   ] Page rebuild begin from=capture to=review revision=9
+[INFO   ] Page media retired; audio owner=review; building view
+[INFO   ] Page ready page=review revision=9 build_ms=12.6
+[INFO   ] Performance page=capture seconds=0.31 ui_ticks_s=12.9 new_frames_s=3.2 preview_frames_s=3.2 max_tick_gap_ms=123.7 max_upload_ms=0.3
+[INFO   ] Page rebuild begin from=review to=capture revision=10
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=10 build_ms=10.7
+[INFO   ] Page rebuild begin from=capture to=review revision=11
+[INFO   ] Page media retired; audio owner=review; building view
+[INFO   ] Page ready page=review revision=11 build_ms=12.3
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Page rebuild begin from=review to=result revision=12
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=12 build_ms=135.2
+[INFO   ] Performance page=review seconds=0.41 ui_ticks_s=16.9 new_frames_s=2.4 preview_frames_s=0.0 max_tick_gap_ms=72.1 max_upload_ms=0.0
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Page rebuild begin from=result to=result revision=13
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=13 build_ms=9.6
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'IDAT' 41 18458
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Return to advertising requested from=photo_confirm
+[INFO   ] Page rebuild begin from=result to=advert revision=14
+[INFO   ] Page media retired; audio owner=advert; building view
+[INFO   ] Page ready page=advert revision=14 build_ms=15.2
+[INFO   ] Idle asset ready kind=audio name=count prepare_ms=0.0
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[INFO   ] Input configuration camera_enabled=False camera_index=0 face_enabled=False palm_enabled=False
+[INFO   ] Page rebuild begin from=None to=advert revision=1
+[INFO   ] Page media retired; audio owner=advert; building view
+[INFO   ] Page ready page=advert revision=1 build_ms=14.1
+[INFO   ] Page rebuild begin from=advert to=tutorial revision=2
+[INFO   ] Page media retired; audio owner=tutorial; building view
+[INFO   ] Page ready page=tutorial revision=2 build_ms=11.9
+[INFO   ] Page rebuild begin from=tutorial to=templates revision=3
+[INFO   ] Page media retired; audio owner=templates; building view
+[INFO   ] Page ready page=templates revision=3 build_ms=107.5
+[WARNING] [Photo test action failed] prepare
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/photos.py", line 384, in run
+    self.service = self._factory()
+                   ^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/photo_views.py", line 52, in <lambda>
+    self._photo_jobs = PhotoJobs(factory=lambda: configured_test(photo_root, configuration_root=PROJECT_ROOT, storage_layout=1) if self._sandbox_enabled else configured_test(photo_root))
+                                                                                                                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1204, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_delivery_widgets.py", line 131, in unavailable
+    def unavailable(*_a,**_k):raise PhotoSetupError('drive_configuration')
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+photobooth.kiosk_v2.photos.PhotoSetupError: drive_configuration
+[INFO   ] Page rebuild begin from=templates to=photo_confirm revision=4
+[INFO   ] Page media retired; audio owner=photo_confirm; building view
+[INFO   ] Page ready page=photo_confirm revision=4 build_ms=9.2
+[INFO   ] Page rebuild begin from=photo_confirm to=photo_confirm revision=5
+[INFO   ] Page media retired; audio owner=photo_confirm; building view
+[INFO   ] Page ready page=photo_confirm revision=5 build_ms=9.4
+[INFO   ] Detection face_state=disabled palm_state=disabled
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[INFO   ] Input configuration camera_enabled=False camera_index=0 face_enabled=False palm_enabled=False
+[INFO   ] Page rebuild begin from=None to=advert revision=1
+[INFO   ] Page media retired; audio owner=advert; building view
+[INFO   ] Page ready page=advert revision=1 build_ms=14.7
+[INFO   ] Page rebuild begin from=advert to=tutorial revision=2
+[INFO   ] Page media retired; audio owner=tutorial; building view
+[INFO   ] Page ready page=tutorial revision=2 build_ms=12.7
+[INFO   ] Page rebuild begin from=tutorial to=templates revision=3
+[INFO   ] Page media retired; audio owner=templates; building view
+[INFO   ] Page ready page=templates revision=3 build_ms=95.6
+[INFO   ] Page rebuild begin from=templates to=photo_confirm revision=4
+[INFO   ] Page media retired; audio owner=photo_confirm; building view
+[INFO   ] Page ready page=photo_confirm revision=4 build_ms=9.5
+[INFO   ] Detection face_state=disabled palm_state=disabled
+[INFO   ] Page rebuild begin from=photo_confirm to=photo_confirm revision=5
+[INFO   ] Page media retired; audio owner=photo_confirm; building view
+[INFO   ] Page ready page=photo_confirm revision=5 build_ms=7.7
+[INFO   ] Page rebuild begin from=photo_confirm to=capture revision=6
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=6 build_ms=26.2
+[INFO   ] Performance page=photo_confirm seconds=0.30 ui_ticks_s=6.6 new_frames_s=3.3 preview_frames_s=0.0 max_tick_gap_ms=65.7 max_upload_ms=0.0
+[INFO   ] Page rebuild begin from=capture to=capture revision=7
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=7 build_ms=208.5
+[INFO   ] Page rebuild begin from=capture to=capture revision=8
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=8 build_ms=7.5
+[INFO   ] Page rebuild begin from=capture to=review revision=9
+[INFO   ] Page media retired; audio owner=review; building view
+[INFO   ] Page ready page=review revision=9 build_ms=11.3
+[INFO   ] Performance page=capture seconds=0.65 ui_ticks_s=7.6 new_frames_s=1.5 preview_frames_s=3.1 max_tick_gap_ms=418.2 max_upload_ms=2.1
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Page rebuild begin from=review to=result revision=10
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=10 build_ms=13.2
+[INFO   ] Page rebuild begin from=result to=result revision=11
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=11 build_ms=160.3
+[INFO   ] Performance page=review seconds=0.41 ui_ticks_s=12.2 new_frames_s=2.4 preview_frames_s=0.0 max_tick_gap_ms=100.6 max_upload_ms=0.0
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Return to advertising requested from=photo_confirm
+[INFO   ] Page rebuild begin from=result to=advert revision=12
+[INFO   ] Page media retired; audio owner=advert; building view
+[INFO   ] Page ready page=advert revision=12 build_ms=16.9
+[INFO   ] Performance page=result seconds=0.34 ui_ticks_s=8.9 new_frames_s=3.0 preview_frames_s=0.0 max_tick_gap_ms=37.1 max_upload_ms=0.0
+[INFO   ] Idle asset ready kind=audio name=count prepare_ms=0.0
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[INFO   ] Input configuration camera_enabled=False camera_index=0 face_enabled=False palm_enabled=False
+[INFO   ] Page rebuild begin from=None to=advert revision=1
+[INFO   ] Page media retired; audio owner=advert; building view
+[INFO   ] Page ready page=advert revision=1 build_ms=14.0
+[INFO   ] Page rebuild begin from=advert to=tutorial revision=2
+[INFO   ] Page media retired; audio owner=tutorial; building view
+[INFO   ] Page ready page=tutorial revision=2 build_ms=12.9
+[INFO   ] Page rebuild begin from=tutorial to=templates revision=3
+[INFO   ] Page media retired; audio owner=templates; building view
+[INFO   ] Page ready page=templates revision=3 build_ms=22.5
+[INFO   ] Page rebuild begin from=templates to=photo_confirm revision=4
+[INFO   ] Page media retired; audio owner=photo_confirm; building view
+[INFO   ] Page ready page=photo_confirm revision=4 build_ms=108.9
+[INFO   ] Detection face_state=disabled palm_state=disabled
+[INFO   ] Page rebuild begin from=photo_confirm to=photo_confirm revision=5
+[INFO   ] Page media retired; audio owner=photo_confirm; building view
+[INFO   ] Page ready page=photo_confirm revision=5 build_ms=9.6
+[INFO   ] Page rebuild begin from=photo_confirm to=capture revision=6
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=6 build_ms=10.5
+[INFO   ] Page rebuild begin from=capture to=capture revision=7
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=7 build_ms=8.4
+[INFO   ] Page rebuild begin from=capture to=capture revision=8
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=8 build_ms=108.7
+[INFO   ] Page rebuild begin from=capture to=review revision=9
+[INFO   ] Page media retired; audio owner=review; building view
+[INFO   ] Page ready page=review revision=9 build_ms=13.5
+[INFO   ] Performance page=capture seconds=0.33 ui_ticks_s=12.2 new_frames_s=3.0 preview_frames_s=3.0 max_tick_gap_ms=169.0 max_upload_ms=0.5
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Page rebuild begin from=review to=result revision=10
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=10 build_ms=11.0
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Page rebuild begin from=result to=result revision=11
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=11 build_ms=8.4
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Page rebuild begin from=result to=capture revision=12
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=12 build_ms=160.8
+[INFO   ] Performance page=result seconds=0.36 ui_ticks_s=8.2 new_frames_s=2.7 preview_frames_s=0.0 max_tick_gap_ms=47.4 max_upload_ms=0.0
+[INFO   ] Page rebuild begin from=capture to=capture revision=13
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=13 build_ms=7.1
+[INFO   ] Page rebuild begin from=capture to=capture revision=14
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=14 build_ms=7.7
+[INFO   ] Page rebuild begin from=capture to=review revision=15
+[INFO   ] Page media retired; audio owner=review; building view
+[INFO   ] Page ready page=review revision=15 build_ms=14.1
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Page rebuild begin from=review to=result revision=16
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=16 build_ms=93.2
+[INFO   ] Performance page=review seconds=0.33 ui_ticks_s=21.4 new_frames_s=3.1 preview_frames_s=0.0 max_tick_gap_ms=41.6 max_upload_ms=0.0
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Page rebuild begin from=result to=result revision=17
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=17 build_ms=10.1
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Return to advertising requested from=photo_confirm
+[INFO   ] Page rebuild begin from=result to=advert revision=18
+[INFO   ] Page media retired; audio owner=advert; building view
+[INFO   ] Page ready page=advert revision=18 build_ms=20.1
+[INFO   ] Performance page=result seconds=0.28 ui_ticks_s=14.2 new_frames_s=3.6 preview_frames_s=0.0 max_tick_gap_ms=121.4 max_upload_ms=0.0
+[INFO   ] Idle asset ready kind=audio name=count prepare_ms=0.0
+[WARNING] Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+[INFO   ] Input configuration camera_enabled=False camera_index=0 face_enabled=False palm_enabled=False
+[INFO   ] Page rebuild begin from=None to=advert revision=1
+[INFO   ] Page media retired; audio owner=advert; building view
+[INFO   ] Page ready page=advert revision=1 build_ms=15.0
+[INFO   ] Page rebuild begin from=advert to=tutorial revision=2
+[INFO   ] Page media retired; audio owner=tutorial; building view
+[INFO   ] Page ready page=tutorial revision=2 build_ms=14.2
+[INFO   ] Page rebuild begin from=tutorial to=templates revision=3
+[INFO   ] Page media retired; audio owner=templates; building view
+[INFO   ] Page ready page=templates revision=3 build_ms=100.6
+[INFO   ] Page rebuild begin from=templates to=photo_confirm revision=4
+[INFO   ] Page media retired; audio owner=photo_confirm; building view
+[INFO   ] Page ready page=photo_confirm revision=4 build_ms=8.5
+[INFO   ] Detection face_state=disabled palm_state=disabled
+[INFO   ] Page rebuild begin from=photo_confirm to=photo_confirm revision=5
+[INFO   ] Page media retired; audio owner=photo_confirm; building view
+[INFO   ] Page ready page=photo_confirm revision=5 build_ms=8.9
+[INFO   ] Page rebuild begin from=photo_confirm to=capture revision=6
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=6 build_ms=9.6
+[INFO   ] Page rebuild begin from=capture to=capture revision=7
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=7 build_ms=121.8
+[INFO   ] Page rebuild begin from=capture to=capture revision=8
+[INFO   ] Page media retired; audio owner=capture; building view
+[INFO   ] Page ready page=capture revision=8 build_ms=11.6
+[INFO   ] Page rebuild begin from=capture to=review revision=9
+[INFO   ] Page media retired; audio owner=review; building view
+[INFO   ] Page ready page=review revision=9 build_ms=11.1
+[INFO   ] Performance page=capture seconds=0.33 ui_ticks_s=12.1 new_frames_s=3.0 preview_frames_s=3.0 max_tick_gap_ms=179.9 max_upload_ms=0.7
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Page rebuild begin from=review to=result revision=10
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=10 build_ms=10.4
+[WARNING] Photo test print outcome uncertain
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/photos.py", line 244, in print_result
+    result = self.printer.print_image(session.output_path, copies=session.plan.print_copies)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+OSError: fixture uncertain send
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Page rebuild begin from=result to=result revision=11
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=11 build_ms=10.6
+[INFO   ] Page rebuild begin from=result to=result revision=12
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=12 build_ms=10.0
+[INFO   ] Page rebuild begin from=result to=result revision=13
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=13 build_ms=11.5
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Page rebuild begin from=result to=result revision=14
+[INFO   ] Page media retired; audio owner=result; building view
+[INFO   ] Page ready page=result revision=14 build_ms=10.2
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Return to advertising requested from=photo_confirm
+[INFO   ] Page rebuild begin from=result to=advert revision=15
+[INFO   ] Page media retired; audio owner=advert; building view
+[INFO   ] Page ready page=advert revision=15 build_ms=14.4
+[INFO   ] Performance page=result seconds=0.31 ui_ticks_s=15.9 new_frames_s=3.2 preview_frames_s=0.0 max_tick_gap_ms=140.6 max_upload_ms=0.0
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[DEBUG  ] STREAM b'IHDR' 16 13
+[DEBUG  ] STREAM b'pHYs' 41 9
+[DEBUG  ] STREAM b'IDAT' 62 65536
+[INFO   ] Session start HEAD=unknown Python=3.12.14 OS=Linux
+[INFO   ] Native fatal tracebacks=True destination=this file
+[INFO   ] Session end
+[INFO   ] Session start HEAD=tested123 Python=3.12.14 OS=Linux
+[INFO   ] Native fatal tracebacks=True destination=this file
+[INFO   ] Return to advertising requested
+[ERROR  ] Application exited with an exception
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_diagnostics.py", line 27, in test_exception_is_flushed_to_file_and_not_swallowed
+    raise ValueError('return-to-advert failure')
+ValueError: return-to-advert failure
+[INFO   ] Session end
+[INFO   ] Session start HEAD=test Python=3.12.14 OS=Linux
+[INFO   ] Native fatal tracebacks=True destination=existing handler
+[INFO   ] Session end
+[INFO   ] Session start HEAD=test-head Python=3.12.14 OS=Linux
+[INFO   ] Native fatal tracebacks=True destination=this file
+[INFO   ] Window startup
+[INFO   ] Session end
+[INFO   ] Window startup
+[INFO   ] Session start HEAD=test Python=3.12.14 OS=Linux
+[INFO   ] Native fatal tracebacks=False destination=this file
+[INFO   ] Session end
+[INFO   ] Session start HEAD=test Python=3.12.14 OS=Linux
+[INFO   ] Native fatal tracebacks=True destination=this file
+[ERROR  ] Unhandled worker exception thread=decoder-worker
+RuntimeError: decoder worker failed
+[INFO   ] Session end
+test_archive_paths_and_corrupt_identity_fail_before_claim (test_booth_storage.BoothStorageTests.test_archive_paths_and_corrupt_identity_fail_before_claim) ... ok
+test_booth_roots_and_active_counter_checkpoint_stay_isolated (test_booth_storage.BoothStorageTests.test_booth_roots_and_active_counter_checkpoint_stay_isolated) ... ok
+test_new_sessions_keep_raw_color_bw_and_retention_does_not_touch_assets_or_ready (test_booth_storage.BoothStorageTests.test_new_sessions_keep_raw_color_bw_and_retention_does_not_touch_assets_or_ready) ... ok
+test_remote_folders_cannot_be_reused_across_reserve_batches_or_claims (test_booth_storage.BoothStorageTests.test_remote_folders_cannot_be_reused_across_reserve_batches_or_claims) ... ok
+test_saved_bw_print_reuses_original_batching_without_second_render (test_booth_storage.BoothStorageTests.test_saved_bw_print_reuses_original_batching_without_second_render) ... ok
+test_twenty_five_empty_direct_reserves_survive_restart_and_offline_exhaustion (test_booth_storage.BoothStorageTests.test_twenty_five_empty_direct_reserves_survive_restart_and_offline_exhaustion) ... ok
+test_binding_cannot_reuse_another_transactions_customer_folder (test_booth_sync.BoothSyncTests.test_binding_cannot_reuse_another_transactions_customer_folder) ... ok
+test_binding_conflict_keeps_folder_bytes_and_clock_and_survives_stale_controller_save (test_booth_sync.BoothSyncTests.test_binding_conflict_keeps_folder_bytes_and_clock_and_survives_stale_controller_save) ... ok
+test_binding_identity_changed_during_request_is_not_overwritten (test_booth_sync.BoothSyncTests.test_binding_identity_changed_during_request_is_not_overwritten) ... ok
+test_binding_protocol_errors_have_specific_safe_codes (test_booth_sync.BoothSyncTests.test_binding_protocol_errors_have_specific_safe_codes) ... ok
+test_client_reuses_existing_transport_and_rejects_mismatched_bind_chunk (test_booth_sync.BoothSyncTests.test_client_reuses_existing_transport_and_rejects_mismatched_bind_chunk) ... ok
+test_configured_layout2_without_credentials_is_offline_ready_and_never_falls_back_to_legacy_oauth (test_booth_sync.BoothSyncTests.test_configured_layout2_without_credentials_is_offline_ready_and_never_falls_back_to_legacy_oauth) ... ok
+test_customer_arrival_inside_content_chunk_uploads_before_remaining_content_and_resumes (test_booth_sync.BoothSyncTests.test_customer_arrival_inside_content_chunk_uploads_before_remaining_content_and_resumes) ... ok
+test_customer_arriving_inside_old_bind_holds_next_old_network_request (test_booth_sync.BoothSyncTests.test_customer_arriving_inside_old_bind_holds_next_old_network_request) ... ok
+test_customer_short_retries_survive_restart_and_release_fifo_after_third_failure (test_booth_sync.BoothSyncTests.test_customer_short_retries_survive_restart_and_release_fifo_after_third_failure) ... ok
+test_flat_upload_mapping_keeps_sessions_distinct_and_verifies_real_bytes (test_booth_sync.BoothSyncTests.test_flat_upload_mapping_keeps_sessions_distinct_and_verifies_real_bytes) ... ok
+test_invalid_old_metadata_cannot_interrupt_a_new_customer_or_get_overwritten (test_booth_sync.BoothSyncTests.test_invalid_old_metadata_cannot_interrupt_a_new_customer_or_get_overwritten) ... ok
+test_layout2_background_delivery_completes_and_exposes_qr_without_print_replay (test_booth_sync.BoothSyncTests.test_layout2_background_delivery_completes_and_exposes_qr_without_print_replay) ... ok
+test_missing_retention_clock_does_not_upload_or_block_new_local_claims (test_booth_sync.BoothSyncTests.test_missing_retention_clock_does_not_upload_or_block_new_local_claims) ... ok
+test_offline_claim_reconnect_keeps_bytes_id_deadline_and_binding_on_stale_save (test_booth_sync.BoothSyncTests.test_offline_claim_reconnect_keeps_bytes_id_deadline_and_binding_on_stale_save) ... ok
+test_old_retries_reserves_and_content_wait_for_all_customer_files (test_booth_sync.BoothSyncTests.test_old_retries_reserves_and_content_wait_for_all_customer_files) ... ok
+test_one_consumed_reserve_sends_one_slot_and_full_reconcile_runs_after_deadline_and_restart (test_booth_sync.BoothSyncTests.test_one_consumed_reserve_sends_one_slot_and_full_reconcile_runs_after_deadline_and_restart) ... ok
+test_pre_fix_private_cached_url_is_withheld_from_a_new_visit (test_booth_sync.BoothSyncTests.test_pre_fix_private_cached_url_is_withheld_from_a_new_visit) ... ok
+test_private_reserve_response_is_rejected_before_its_url_can_reach_print (test_booth_sync.BoothSyncTests.test_private_reserve_response_is_rejected_before_its_url_can_reach_print) ... ok
+test_reserve_yields_at_batch_boundary_and_customer_sessions_are_fifo (test_booth_sync.BoothSyncTests.test_reserve_yields_at_batch_boundary_and_customer_sessions_are_fifo) ... ok
+test_successful_old_retry_stays_background_after_restart_and_new_customer_arrival (test_booth_sync.BoothSyncTests.test_successful_old_retry_stays_background_after_restart_and_new_customer_arrival) ... ok
+test_successful_recovery_clears_failure_and_future_failure_starts_at_base_delay (test_booth_sync.BoothSyncTests.test_successful_recovery_clears_failure_and_future_failure_starts_at_base_delay) ... ok
+test_timeout_yields_retry_interval_restart_resumes_same_transaction_without_duplicate_success (test_booth_sync.BoothSyncTests.test_timeout_yields_retry_interval_restart_resumes_same_transaction_without_duplicate_success) ... ok
+test_timing_separates_queue_and_request_and_omits_private_error_payload (test_booth_sync.BoothSyncTests.test_timing_separates_queue_and_request_and_omits_private_error_payload) ... ok
+test_two_transactions_keep_exact_local_folder_mapping_across_restart (test_booth_sync.BoothSyncTests.test_two_transactions_keep_exact_local_folder_mapping_across_restart) ... ok
+test_broken_timing_sink_does_not_kill_worker_or_requeue_verified_files (test_booth_sync.DeliveryLoggingWorkerTests.test_broken_timing_sink_does_not_kill_worker_or_requeue_verified_files) ... ok
+test_backoff_caps_and_oldest_due_recovery_retains_a_turn (test_booth_sync.DeliveryRetryPolicyTests.test_backoff_caps_and_oldest_due_recovery_retains_a_turn) ... ok
+test_restart_uses_wall_deadline_once_then_monotonic_and_bounds_corrupt_future_clock (test_booth_sync.DeliveryRetryPolicyTests.test_restart_uses_wall_deadline_once_then_monotonic_and_bounds_corrupt_future_clock) ... ok
+test_archive_traversal_windows_collisions_and_outside_playlist_fail_before_download (test_content_cache.ContentCacheTests.test_archive_traversal_windows_collisions_and_outside_playlist_fail_before_download) ... ok
+test_changed_snapshot_reuses_verified_bytes_and_corrupt_prior_cache_is_redownloaded (test_content_cache.ContentCacheTests.test_changed_snapshot_reuses_verified_bytes_and_corrupt_prior_cache_is_redownloaded) ... ok
+test_manual_local_ads_and_scheduled_global_playlist_reuse_original_ad_catalog (test_content_cache.ContentCacheTests.test_manual_local_ads_and_scheduled_global_playlist_reuse_original_ad_catalog) ... ok
+test_original_pack_renderer_validates_cache_before_activation_and_keeps_active_paths (test_content_cache.ContentCacheTests.test_original_pack_renderer_validates_cache_before_activation_and_keeps_active_paths) ... ok
+test_verified_global_local_copies_survive_offline_restart_and_partial_new_generation (test_content_cache.ContentCacheTests.test_verified_global_local_copies_survive_offline_restart_and_partial_new_generation) ... ok
+test_yield_inside_file_resumes_without_duplicate_ranges_or_partial_publication (test_content_cache.ContentCacheTests.test_yield_inside_file_resumes_without_duplicate_ranges_or_partial_publication) ... ok
+test_approved_strip_auto_prints_once_with_responsive_heartbeat_resize_and_minimize (test_kiosk_v2_delivery_widgets.DeliveryWidgetTests.test_approved_strip_auto_prints_once_with_responsive_heartbeat_resize_and_minimize) ... ok
+test_binding_failure_is_visible_in_result_instead_of_an_upload_spinner (test_kiosk_v2_delivery_widgets.DeliveryWidgetTests.test_binding_failure_is_visible_in_result_instead_of_an_upload_spinner) ... ok
+test_boot_preparation_is_background_no_ad_reset_no_second_service_and_live_ready_gate (test_kiosk_v2_delivery_widgets.DeliveryWidgetTests.test_boot_preparation_is_background_no_ad_reset_no_second_service_and_live_ready_gate) ... ok
+test_cached_real_reserve_binds_after_offline_print_without_rewriting_strip_or_reprinting (test_kiosk_v2_delivery_widgets.DeliveryWidgetTests.test_cached_real_reserve_binds_after_offline_print_without_rewriting_strip_or_reprinting) ... ok
+test_content_activation_waits_for_idle_keeps_visit_selection_and_never_decodes_on_ui (test_kiosk_v2_delivery_widgets.DeliveryWidgetTests.test_content_activation_waits_for_idle_keeps_visit_selection_and_never_decodes_on_ui) ... ok
+test_early_qr_arrives_during_upload_without_rebuilding_result_or_reprinting (test_kiosk_v2_delivery_widgets.DeliveryWidgetTests.test_early_qr_arrives_during_upload_without_rebuilding_result_or_reprinting) ... ok
+test_layout2_offline_admits_captures_retake_color_bw_and_sends_saved_raster_once (test_kiosk_v2_delivery_widgets.DeliveryWidgetTests.test_layout2_offline_admits_captures_retake_color_bw_and_sends_saved_raster_once) ... ok
+test_missing_drive_config_stays_on_consent_without_fake_qr_or_capture (test_kiosk_v2_delivery_widgets.DeliveryWidgetTests.test_missing_drive_config_stays_on_consent_without_fake_qr_or_capture) ... ok
+test_result_rebuilt_during_background_snapshot_keeps_finish_and_footer_ready (test_kiosk_v2_delivery_widgets.DeliveryWidgetTests.test_result_rebuilt_during_background_snapshot_keeps_finish_and_footer_ready) ... ok
+test_two_designs_print_exact_copy_counts_and_no_new_capture_for_copies (test_kiosk_v2_delivery_widgets.DeliveryWidgetTests.test_two_designs_print_exact_copy_counts_and_no_new_capture_for_copies) ... ok
+test_uncertain_auto_send_does_not_retry_and_requires_operator_ack (test_kiosk_v2_delivery_widgets.DeliveryWidgetTests.test_uncertain_auto_send_does_not_retry_and_requires_operator_ack) ... ok
+test_configured_service_reuses_saved_printer_and_original_drive_factories (test_kiosk_v2_photo_delivery.PhotoDeliveryTests.test_configured_service_reuses_saved_printer_and_original_drive_factories) ... ok
+test_download_qr_before_upload_is_encoded_off_ui_cached_and_preserves_progress (test_kiosk_v2_photo_delivery.PhotoDeliveryTests.test_download_qr_before_upload_is_encoded_off_ui_cached_and_preserves_progress) ... ok
+test_layout2_early_qr_requires_verified_destination_and_withholds_unsafe_states (test_kiosk_v2_photo_delivery.PhotoDeliveryTests.test_layout2_early_qr_requires_verified_destination_and_withholds_unsafe_states) ... ok
+test_missing_credentials_is_a_safe_setup_error_not_a_fake_folder (test_kiosk_v2_photo_delivery.PhotoDeliveryTests.test_missing_credentials_is_a_safe_setup_error_not_a_fake_folder) ... ok
+test_new_service_resumes_real_existing_upload_queue_without_new_visit_or_print (test_kiosk_v2_photo_delivery.PhotoDeliveryTests.test_new_service_resumes_real_existing_upload_queue_without_new_visit_or_print) ... ok
+test_setup_snapshot_reports_real_pool_readiness_and_reuses_one_worker (test_kiosk_v2_photo_delivery.PhotoDeliveryTests.test_setup_snapshot_reports_real_pool_readiness_and_reuses_one_worker) ... ok
+test_broken_sink_and_recursive_callback_do_not_escape_or_hide_business_error (test_kiosk_v2_diagnostics.DeliveryLoggingTests.test_broken_sink_and_recursive_callback_do_not_escape_or_hide_business_error) ... ok
+test_real_launcher_console_active_keeps_stderr_and_records_native_and_delivery_once (test_kiosk_v2_diagnostics.DeliveryLoggingTests.test_real_launcher_console_active_keeps_stderr_and_records_native_and_delivery_once) ... FAIL
+test_timing_bypasses_root_and_file_handler_is_released (test_kiosk_v2_diagnostics.DeliveryLoggingTests.test_timing_bypasses_root_and_file_handler_is_released) ... ok
+test_exception_is_flushed_to_file_and_not_swallowed (test_kiosk_v2_diagnostics.DiagnosticSessionTests.test_exception_is_flushed_to_file_and_not_swallowed) ... ok
+test_existing_explicit_fatal_handler_is_not_replaced (test_kiosk_v2_diagnostics.DiagnosticSessionTests.test_existing_explicit_fatal_handler_is_not_replaced) ... ok
+test_launcher_runs_with_configured_window_and_a_persistent_log (test_kiosk_v2_diagnostics.DiagnosticSessionTests.test_launcher_runs_with_configured_window_and_a_persistent_log) ... ok
+test_launcher_still_runs_if_diagnostic_directory_cannot_be_created (test_kiosk_v2_diagnostics.DiagnosticSessionTests.test_launcher_still_runs_if_diagnostic_directory_cannot_be_created) ... ok
+test_native_fatal_destination_stays_open_through_session_then_releases_ownership (test_kiosk_v2_diagnostics.DiagnosticSessionTests.test_native_fatal_destination_stays_open_through_session_then_releases_ownership) ... ok
+test_source_head_is_local_bounded_and_tolerates_missing_git (test_kiosk_v2_diagnostics.DiagnosticSessionTests.test_source_head_is_local_bounded_and_tolerates_missing_git) ... ok
+test_worker_exception_records_context_and_delegates_to_previous_hook (test_kiosk_v2_diagnostics.DiagnosticSessionTests.test_worker_exception_records_context_and_delegates_to_previous_hook) ... ok
+test_camera_and_existing_operator_configuration_retained (test_qris_sandbox_launcher.SandboxLauncherTests.test_camera_and_existing_operator_configuration_retained) ... ok
+test_client_empty_and_malformed_keys_are_rejected (test_qris_sandbox_launcher.SandboxLauncherTests.test_client_empty_and_malformed_keys_are_rejected) ... ok
+test_current_sandbox_qr_can_be_shown (test_qris_sandbox_launcher.SandboxLauncherTests.test_current_sandbox_qr_can_be_shown) ... ok
+test_dashboard_server_key_formats_preserve_sandbox_isolation (test_qris_sandbox_launcher.SandboxLauncherTests.test_dashboard_server_key_formats_preserve_sandbox_isolation) ... ok
+test_help_has_no_process_or_credential_side_effects (test_qris_sandbox_launcher.SandboxLauncherTests.test_help_has_no_process_or_credential_side_effects) ... ok
+test_inherited_mock_and_production_settings_cannot_select_mode (test_qris_sandbox_launcher.SandboxLauncherTests.test_inherited_mock_and_production_settings_cannot_select_mode) ... ok
+test_invalid_merchant_booth_and_ports_rejected (test_qris_sandbox_launcher.SandboxLauncherTests.test_invalid_merchant_booth_and_ports_rejected) ... ok
+test_journal_from_before_gui_launch_is_not_shown (test_qris_sandbox_launcher.SandboxLauncherTests.test_journal_from_before_gui_launch_is_not_shown) ... ok
+test_launch_separates_environments_and_never_prints_key (test_qris_sandbox_launcher.SandboxLauncherTests.test_launch_separates_environments_and_never_prints_key) ... ok
+test_midtrans_secrets_never_enter_gui_environment (test_qris_sandbox_launcher.SandboxLauncherTests.test_midtrans_secrets_never_enter_gui_environment) ... ok
+test_missing_journal_is_ignored (test_qris_sandbox_launcher.SandboxLauncherTests.test_missing_journal_is_ignored) ... ok
+test_mock_paid_recovery_and_other_booth_qr_not_shown (test_qris_sandbox_launcher.SandboxLauncherTests.test_mock_paid_recovery_and_other_booth_qr_not_shown) ... ok
+test_oversized_or_malformed_journal_never_used (test_qris_sandbox_launcher.SandboxLauncherTests.test_oversized_or_malformed_journal_never_used) ... ok
+test_parent_environment_is_not_mutated (test_qris_sandbox_launcher.SandboxLauncherTests.test_parent_environment_is_not_mutated) ... ok
+test_paths_are_persistent_and_separate_from_mock (test_qris_sandbox_launcher.SandboxLauncherTests.test_paths_are_persistent_and_separate_from_mock) ... ok
+test_same_generated_booth_token_without_logging (test_qris_sandbox_launcher.SandboxLauncherTests.test_same_generated_booth_token_without_logging) ... ok
+test_stop_kills_only_child_after_timeout (test_qris_sandbox_launcher.SandboxLauncherTests.test_stop_kills_only_child_after_timeout) ... ok
+test_stop_waits_and_does_not_touch_files (test_qris_sandbox_launcher.SandboxLauncherTests.test_stop_waits_and_does_not_touch_files) ... ok
+test_stopped_backend_is_not_ready (test_qris_sandbox_launcher.SandboxLauncherTests.test_stopped_backend_is_not_ready) ... ok
+test_untrusted_and_malformed_qr_urls_not_shown (test_qris_sandbox_launcher.SandboxLauncherTests.test_untrusted_and_malformed_qr_urls_not_shown) ... ok
+test_verification_pending_is_not_presented_as_current (test_qris_sandbox_launcher.SandboxLauncherTests.test_verification_pending_is_not_presented_as_current) ... ok
+test_cancel_uses_sandbox (test_midtrans_sandbox.MidtransSandboxTests.test_cancel_uses_sandbox) ... ok
+test_charge_uses_sandbox_and_qris (test_midtrans_sandbox.MidtransSandboxTests.test_charge_uses_sandbox_and_qris) ... ok
+test_empty_key_rejected (test_midtrans_sandbox.MidtransSandboxTests.test_empty_key_rejected) ... ok
+test_invalid_amount_rejected_before_network (test_midtrans_sandbox.MidtransSandboxTests.test_invalid_amount_rejected_before_network) ... ok
+test_invalid_order_id_rejected (test_midtrans_sandbox.MidtransSandboxTests.test_invalid_order_id_rejected) ... ok
+test_nonfinite_timeout_rejected (test_midtrans_sandbox.MidtransSandboxTests.test_nonfinite_timeout_rejected) ... ok
+test_redirect_is_not_followed (test_midtrans_sandbox.MidtransSandboxTests.test_redirect_is_not_followed) ... ok
+test_rejected_key_has_no_production_fallback (test_midtrans_sandbox.MidtransSandboxTests.test_rejected_key_has_no_production_fallback) ... ok
+test_server_key_spelling_never_selects_production_or_rewrites_auth (test_midtrans_sandbox.MidtransSandboxTests.test_server_key_spelling_never_selects_production_or_rewrites_auth) ... ok
+test_status_url (test_midtrans_sandbox.MidtransSandboxTests.test_status_url) ... ok
+test_abort_recovery_blocks_replay (test_kiosk_v2_sandbox.SandboxAdapterTests.test_abort_recovery_blocks_replay) ... ok
+test_cancel_racing_settlement_preserves_reserved_permit (test_kiosk_v2_sandbox.SandboxAdapterTests.test_cancel_racing_settlement_preserves_reserved_permit) ... ok
+test_cannot_reuse_legacy_profile (test_kiosk_v2_sandbox.SandboxAdapterTests.test_cannot_reuse_legacy_profile) ... ok
+test_cart_server_quote_and_once_only_start_complete (test_kiosk_v2_sandbox.SandboxAdapterTests.test_cart_server_quote_and_once_only_start_complete) ... ok
+test_failed_qr_download_retains_same_order (test_kiosk_v2_sandbox.SandboxAdapterTests.test_failed_qr_download_retains_same_order) ... ok
+test_mode_and_credential_isolation (test_kiosk_v2_sandbox.SandboxAdapterTests.test_mode_and_credential_isolation) ... ok
+test_nine_copy_ui_limit_and_no_client_discount_input (test_kiosk_v2_sandbox.SandboxAdapterTests.test_nine_copy_ui_limit_and_no_client_discount_input) ... ok
+test_restart_cannot_replay_partial_service (test_kiosk_v2_sandbox.SandboxAdapterTests.test_restart_cannot_replay_partial_service) ... ok
+test_unpaid_cannot_start (test_kiosk_v2_sandbox.SandboxAdapterTests.test_unpaid_cannot_start) ... ok
+
+======================================================================
+FAIL: test_real_launcher_console_active_keeps_stderr_and_records_native_and_delivery_once (test_kiosk_v2_diagnostics.DeliveryLoggingTests.test_real_launcher_console_active_keeps_stderr_and_records_native_and_delivery_once)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_diagnostics.py", line 212, in test_real_launcher_console_active_keeps_stderr_and_records_native_and_delivery_once
+    self.assertEqual(result.returncode,0,result.stderr[-5000:])
+AssertionError: 1 != 0 : [WARNING] [Config      ] Older configuration version detected (0 instead of 27)
+[WARNING] [Config      ] Upgrading configuration in progress.
+[DEBUG  ] [Config      ] Upgrading from 0 to 1
+[INFO   ] [Kivy        ] v2.3.1
+[INFO   ] [Kivy        ] Installed at "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/__init__.py"
+[INFO   ] [Python      ] v3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]
+[INFO   ] [Python      ] Interpreter at "/workspace/PhotoBooth/.venv/bin/python"
+[INFO   ] Window startup
+[ERROR  ] Application exited with an exception
+Traceback (most recent call last):
+  File "tools/run_portrait_v2.py", line 78, in run_app
+    app.run()
+  File "<string>", line 11, in run
+AssertionError
+[INFO   ] Session end
+ Traceback (most recent call last):
+   File "<string>", line 24, in <module>
+   File "tools/run_portrait_v2.py", line 78, in run_app
+     app.run()
+   File "<string>", line 11, in run
+ AssertionError
+
+
+----------------------------------------------------------------------
+Ran 106 tests in 15.835s
+
+FAILED (failures=1)
+KIOSK_UNITTEST_SUMMARY: run=106 failures=1 errors=0 skipped=0 success=False

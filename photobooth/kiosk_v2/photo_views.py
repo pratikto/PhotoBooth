@@ -19,6 +19,7 @@ from .flow import PHOTO_CONFIRM, CAPTURE, REVIEW, RESULT, PHOTO_PAGES, TEMPLATES
 from .theme import PixelCard, text_label, GOLD, MUTED, CYAN
 from .branding import CAMERA_ART
 from .theme import ArcadeButton
+from photobooth.delivery_timing import event
 
 
 def image_texture(photo):
@@ -140,6 +141,7 @@ class PhotoViews:
                 return
             if not self._suspended:
                 if outcome.action == 'snapshot':
+                    self._photo_message.text = self._photo_error
                     if self.navigation.page == PHOTO_CONFIRM:
                         if previous_setup != tuple(self._photo_view.get(k) for k in ('drive_ready','drive_error')):
                             self._show()
@@ -268,13 +270,13 @@ class PhotoViews:
             self._build_review(shell)
         else:
             self._build_result(shell)
-        status = ('Sedang memproses… tunggu sebentar.' if self._photo_jobs.busy else self._photo_error)
+        status = ('Sedang memproses… tunggu sebentar.' if self._photo_jobs.foreground_busy else self._photo_error)
         self._photo_message = text_label(status, size=13, height=62, color=GOLD)
         shell.add_widget(self._photo_message)
 
     def _photo_action(self, title, callback, *, disabled=False, variant='primary', height=56):
         return self._action(title, callback, variant=variant, height=height,
-                            disabled=disabled or self._photo_jobs.busy)
+                            disabled=disabled or self._photo_jobs.foreground_busy)
 
     def _build_photo_confirm(self, shell):
         card = PixelCard(orientation='vertical', padding=16, spacing=8)
@@ -370,7 +372,7 @@ class PhotoViews:
         elif view.get('binding_error'):
             delivery = 'DRIVE GAGAL TERSAMBUNG • operator perlu memeriksa setup/deployment Drive'
         elif upload == 'PENDING_DRIVE_BINDING':
-            delivery = 'DRIVE TERTUNDA • foto lokal aman; upload & QR menyusul saat online'
+            delivery = 'MENYIAPKAN FOLDER • foto lokal aman; upload & QR menyusul saat online'
         elif view.get('retention_error'):
             delivery = 'UPLOAD DITAHAN • operator perlu memeriksa kebijakan retensi Drive'
         elif upload in {'ACTION_REQUIRED','LOCAL_EXPIRED'}:
@@ -378,7 +380,11 @@ class PhotoViews:
         elif upload == 'UPLOAD_RETRY':
             delivery = 'UPLOAD TERTUNDA • foto lokal aman; dicoba lagi otomatis'
         else:
-            delivery = 'MENGUNGGAH KE DRIVE • foto lokal aman; proses lanjut di background'
+            total = view.get('upload_total', 0)
+            verified = view.get('upload_verified', 0)
+            delivery = (f'MENGUNGGAH FOTO {min(verified+1,total)} DARI {total} • foto lokal aman'
+                        if total and verified < total else
+                        'MEMVERIFIKASI FOTO • proses lanjut di background')
         printing = {'NOT_SENT': 'Cetak belum dikirim.', 'SUBMITTED': 'Terkirim ke printer • periksa lembar fisik.',
                     'SENDING': 'Mengirim ke printer…', 'UNCERTAIN': 'Hasil cetak belum pasti • periksa printer.'}
         progress = ('Menyiapkan / mengirim cetak…' if self._photo_jobs.busy and
@@ -394,18 +400,29 @@ class PhotoViews:
         if not getattr(self,'_download_image',None):
             return
         view=self._photo_view
-        photo=view.get('download_qr') if view.get('upload_status') == 'UPLOAD_COMPLETE' else None
+        photo=view.get('download_qr')
         key=(view.get('transaction_id'),view.get('folder_url')) if photo is not None else None
         if key != self._download_qr_texture_key:
             self._download_image.texture = image_texture(photo) if photo is not None else None
             if self._download_image.texture:
                 self._download_image.texture.mag_filter = self._download_image.texture.min_filter = 'nearest'
             self._download_qr_texture_key = key
+            if key is not None:
+                event('gui_qr_visible', view.get('transaction_id'), result='ok',
+                      upload_complete=view.get('upload_status') == 'UPLOAD_COMPLETE')
         self._download_image.opacity = 1 if photo is not None else 0
-        self._download_hint.text = ('SCAN UNTUK DOWNLOAD' if photo is not None else
-                                   'Foto terunggah. QR belum siap; hubungi operator.'
-                                   if view.get('upload_status') == 'UPLOAD_COMPLETE' else
-                                   'QR muncul setelah semua foto terunggah')
+        if photo is not None:
+            if view.get('upload_status') == 'UPLOAD_COMPLETE':
+                hint = 'SCAN UNTUK DOWNLOAD'
+            elif view.get('retention_error') or view.get('upload_status') == 'UPLOAD_RETRY':
+                hint = 'SCAN & SIMPAN LINK\nUpload tertunda.\nHubungi operator.'
+            else:
+                hint = 'SCAN & SIMPAN LINK\nFoto sedang diunggah.\nCek lagi dalam 30 menit.'
+        elif view.get('binding_error') or view.get('upload_status') in {'UPLOAD_COMPLETE', 'LOCAL_EXPIRED', 'ACTION_REQUIRED'}:
+            hint = 'Link foto belum siap; hubungi operator.'
+        else:
+            hint = 'Menyiapkan link foto.\nQR muncul saat folder siap.'
+        self._download_hint.text = hint
 
     def _build_result(self, shell):
         view = self._photo_view

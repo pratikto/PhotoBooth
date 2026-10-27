@@ -65,6 +65,7 @@ class BoothWorkspace:
             if not isinstance(state.get('ready'), list) or not isinstance(state.get('claimed'), dict):
                 raise ValueError('Booth reserve ledger is invalid.')
             seen = set()
+            folders = set()
             for slot in [*state['ready'], *state['claimed'].values()]:
                 txid = slot.get('transaction_id') if isinstance(slot, dict) else None
                 if (not isinstance(txid, str) or not re.fullmatch(re.escape(self.booth_id) + r'_[0-9]{8}', txid)
@@ -75,6 +76,10 @@ class BoothWorkspace:
                 if slot.get('folder_id') and (not re.fullmatch(r'[A-Za-z0-9_-]+', str(slot['folder_id']))
                         or slot.get('folder_url') != 'https://drive.google.com/drive/folders/' + slot['folder_id']):
                     raise ValueError('Reserved remote folder link is invalid.')
+                if slot.get('folder_id'):
+                    if slot['folder_id'] in folders:
+                        raise ValueError('A customer folder cannot belong to two transactions.')
+                    folders.add(slot['folder_id'])
             if state['ready'] or state['claimed']:
                 if not checked_path(self.counter_path).is_file():
                     raise ValueError('Restore the missing counter before allocating new IDs.')
@@ -121,7 +126,31 @@ class BoothWorkspace:
             for slot in state['ready']:
                 reply = by_id.get(slot['transaction_id'])
                 if reply:
+                    if slot.get('folder_id') and slot['folder_id'] != reply['folder_id']:
+                        raise ValueError('A reserved customer folder cannot be replaced.')
                     slot.update(folder_id=reply['folder_id'], folder_url=reply['folder_url'], photo_number_layout=reply.get('photo_number_layout'), link_verified=reply.get('link_verified', False))
+            self._check_folder_owners(state)
+            write_json_atomic(self.state_path, state)
+
+    @staticmethod
+    def _check_folder_owners(state):
+        folders = [slot['folder_id'] for slot in [*state['ready'], *state['claimed'].values()]
+                   if slot.get('folder_id')]
+        if len(folders) != len(set(folders)):
+            raise ValueError('A customer folder cannot belong to two transactions.')
+
+    def remember_binding(self, transaction_id, claim_token, bound):
+        """Retain an offline claim's actual folder before publishing its manifest."""
+        with self.locked():
+            state = self._load()
+            slot = state['claimed'].get(transaction_id)
+            if slot is None or slot['claim_token'] != claim_token:
+                raise ValueError('Binding does not belong to the existing local claim.')
+            if slot.get('folder_id') and slot['folder_id'] != bound['folder_id']:
+                raise ValueError('The claimed customer folder cannot be replaced.')
+            slot.update(folder_id=bound['folder_id'], folder_url=bound['folder_url'],
+                        photo_number_layout=1, link_verified=True)
+            self._check_folder_owners(state)
             write_json_atomic(self.state_path, state)
 
     def claim(self):
