@@ -1,5 +1,8 @@
 # Delivery retry isolation — 27 October 2026
 
+**Later incident:** [RecursionError in logging and correction](LOGGING.md).
+The ten-minute report is not established as a backoff-only delay.
+
 Owner accepts the recommendation to isolate failed transactions and improve
 safe bind diagnosis. Continue on feature/portrait-kiosk-v2-next; base/rollback
 **e3ac0f94af1402ae4eec1de0295fa43e6bc8c19e**, remote verified unchanged, clean

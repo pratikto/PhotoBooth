@@ -1,5 +1,16 @@
 # Meong Photobooth — current feature status
 
+## 27 October — delivery logging recursion recurrence
+
+Owner reports >10 minutes and supplies RecursionError timing; new queued work
+has no worker_start in the extract. Old-folder BIND_FOLDER_CONFLICT is confirmed
+for one transaction. Real-Kivy console-active reproduction exposes root/stderr
+logging recursion missed by earlier console-disabled QA. Timing now uses the
+session file directly, contains sink failures/re-entry, and v2 defaults to MIXED
+logging with native diagnostics retained. 54 targeted tests PASS; final checks
+are recorded in the [correction runbook](qa/drive-delivery-performance/LOGGING.md).
+Code.gs unchanged; no redeploy, reset or known-folder replacement is required.
+
 Retry source **8578825**: complete local **884 run / 881 PASS / 3 optional
 palm-assets SKIP / 0 failures/errors**, 268.095s. 67 focused service and
 11 native delivery PASS. Matching-source CI 40455236898: all three jobs SUCCESS.

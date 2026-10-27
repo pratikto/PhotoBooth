@@ -26,6 +26,10 @@ Updated **26 October 2026 (Asia/Jakarta)**. Continue on
 
 ## Current acceptance packages
 
+- [Delivery logging recursion correction](qa/drive-delivery-performance/LOGGING.md):
+  console-active regression, durable queue survival and MIXED-mode update.
+
+
 - [Failed Drive retry isolation](qa/drive-delivery-performance/RETRY.md): runtime
   timing, healthy-first scheduling, persistent backoff and safe bind diagnosis.
 

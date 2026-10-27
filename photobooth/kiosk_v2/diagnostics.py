@@ -40,6 +40,10 @@ class DiagnosticSession:
         self.handler = logging.StreamHandler(self.stream)
         self.handler.setLevel(logging.INFO)
         self.handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(name)s: %(message)s'))
+        from photobooth.delivery_timing import LOG as delivery_log
+        self._delivery_log = delivery_log
+        self._delivery_log.addHandler(self.handler)
+        self._native_logger = None
         self._namespace = logging.getLogger('photobooth.kiosk_v2')
         self._previous_level = self._namespace.level
         self._previous_thread_hook = threading.excepthook
@@ -70,6 +74,13 @@ class DiagnosticSession:
     def __enter__(self):
         return self
 
+    def attach_kivy_logger(self):
+        """MIXED mode keeps native logs off root; retain them in this session too."""
+        logger = logging.getLogger('kivy')
+        if not logger.propagate and self.handler not in logger.handlers:
+            logger.addHandler(self.handler)
+            self._native_logger = logger
+
     def __exit__(self, kind, value, trace):
         if kind is not None:
             LOG.error('Application exited with an exception', exc_info=(kind, value, trace))
@@ -86,6 +97,9 @@ class DiagnosticSession:
         if self._owns_fatal_handler:
             faulthandler.disable()
         logging.getLogger().removeHandler(self.handler)
+        self._delivery_log.removeHandler(self.handler)
+        if self._native_logger is not None:
+            self._native_logger.removeHandler(self.handler)
         self.handler.close()
         self.stream.close()
         self._namespace.setLevel(self._previous_level)

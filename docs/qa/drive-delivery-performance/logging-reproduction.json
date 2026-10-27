@@ -1,0 +1,11 @@
+{
+  "kivy_version": "2.3.1",
+  "console_enabled": true,
+  "fixture": "late root StreamHandler bound to Kivy-redirected stderr",
+  "before": "RecursionError escaped from timing event",
+  "after": "event recorded once; no escaped error",
+  "user_exact_triggering_handler": "UNVERIFIED",
+  "user_worker_exit_point": "UNVERIFIED from partial extract",
+  "actual_worker_fault_injection": "PASS: thread alive and queued file verified once",
+  "production_upload_speed": "NOT_MEASURED"
+}

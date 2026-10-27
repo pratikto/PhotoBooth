@@ -389,3 +389,31 @@ class DeliveryRetryPolicyTests(unittest.TestCase):
             self.assertIsNone(policy.choose([('tx','path')]))
         with patch('time.monotonic',return_value=590):
             self.assertEqual(policy.choose([('tx','path')]),('tx','path'))
+
+
+class DeliveryLoggingWorkerTests(unittest.TestCase):
+    # Reuse the transaction/client fixture, without rediscovering the parent suite.
+    reserve_client = BoothSyncTests.reserve_client
+    queued_transaction = BoothSyncTests.queued_transaction
+    def test_broken_timing_sink_does_not_kill_worker_or_requeue_verified_files(self):
+        import logging
+        import threading
+        from photobooth.delivery_timing import LOG
+        class Broken(logging.Handler):
+            def emit(self,record):raise RecursionError('synthetic recursive sink')
+        class ObservedWorker(BoothDriveWorker):
+            def run_once(self):
+                result=super().run_once();finished.set();return result
+        finished=threading.Event();handler=Broken()
+        with TemporaryDirectory() as folder:
+            w=BoothWorkspace(folder);w.prepare();client=self.reserve_client();tx=self.queued_transaction(w,client,1)
+            worker=ObservedWorker(w,client);LOG.addHandler(handler)
+            try:
+                worker.start();self.assertTrue(finished.wait(3),'worker died before completing its pass')
+                self.assertTrue(worker._thread.is_alive())
+                manifest=json.loads(tx.manifest_path.read_text())
+                self.assertEqual(manifest['upload_status'],'UPLOAD_COMPLETE')
+                self.assertIsNone(manifest.get('drive_delivery_retry'))
+                self.assertEqual(client.upload_file.call_count,1)
+            finally:
+                worker.stop();worker._thread.join(timeout=3);LOG.removeHandler(handler)

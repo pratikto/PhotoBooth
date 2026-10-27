@@ -1,5 +1,7 @@
 # FEAT-004 / BUG-009 / FEAT-022 delivery performance — 27 October 2026
 
+**Current incident:** [console logging recursion correction and Windows restart](LOGGING.md).
+
 **Latest continuation:** [runtime timing, failed-retry isolation and Windows update](RETRY.md).
 Earlier source/results below retain their original scope and dates.
 
