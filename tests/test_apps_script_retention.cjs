@@ -440,3 +440,18 @@ test('an unrelated numbered folder is neither overwritten nor link-shared', () =
   assert.equal(h.bind().ok,false);assert.equal(foreign.description,'');assert.equal(foreign.shared,undefined);
   assert.equal(foreign.children.length,0);
 });
+
+test('verified reserve retry rechecks permissions without redundant ACL writes', () => {
+  const h=storageHarness(), first=h.post('reserve_transactions',{slots:[h.claim]});
+  assert.equal(first.ok,true);
+  const folder=h.context.DriveApp.getFolderById(first.slots[0].folder_id);
+  let writes=0;
+  folder.setSharing=function () { writes++; this.shared=true; };
+  assert.equal(h.post('reserve_transactions',{slots:[h.claim]}).ok,true);
+  assert.equal(writes,0);
+  folder.shared=false;
+  assert.equal(h.post('reserve_transactions',{slots:[h.claim]}).ok,true);
+  assert.equal(writes,1);
+  folder.shared=false;folder.setSharing=()=>{writes++;};
+  assert.equal(h.post('reserve_transactions',{slots:[h.claim]}).ok,false);
+});

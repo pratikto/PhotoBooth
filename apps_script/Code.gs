@@ -149,6 +149,9 @@ function storagePhotoFolder_(p, booth, create) {
   return photo;
 }
 function storageLinkReady_(folder) {
+  // Recheck actual policy on every request; avoid rewriting an already correct ACL.
+  if (folder.getSharingAccess() === DriveApp.Access.ANYONE_WITH_LINK
+      && folder.getSharingPermission() === DriveApp.Permission.VIEW) return;
   folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
   if (folder.getSharingAccess() !== DriveApp.Access.ANYONE_WITH_LINK
       || folder.getSharingPermission() !== DriveApp.Permission.VIEW)
@@ -450,11 +453,13 @@ function uploadTransactionFile_(body, properties) {
   if (rootFolder.getName() !== (body.storage_layout === 2 ? transactionId.split("_").pop() : transactionId) || !hasParent_(rootFolder, DriveApp.getFolderById(parentId))) {
     throw apiError_("Transaction folder name does not match its ID.", 409);
   }
-  if (body.storage_layout === 2 && !(readPhotoRetention_(rootFolder.getDescription(), transactionId) || {}).storage_layout)
+  // The enclosing action lock keeps this policy stable through validation.
+  const recordedRetention = readPhotoRetention_(rootFolder.getDescription(), transactionId);
+  if (body.storage_layout === 2 && !(recordedRetention || {}).storage_layout)
     throw apiError_("Bind the transaction before uploading images.", 409);
   // New Python clients register the transaction's original time first. Older
   // clients are adopted from their oldest photo, never an empty slot's age.
-  const retention = readPhotoRetention_(rootFolder.getDescription(), transactionId)
+  const retention = recordedRetention
     || ensureFolderRetention_(rootFolder, transactionId, oldestTransactionPhoto_(rootFolder, 0) || new Date());
   if (new Date(retention.expires_at).getTime() <= Date.now()) {
     throw apiError_("This transaction's 30-day Drive retention has expired.", 410);

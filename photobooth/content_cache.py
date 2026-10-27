@@ -35,6 +35,8 @@ class ContentCache:
     def __init__(self, workspace):
         self.workspace = workspace
         self.pointer = workspace.state_root/'content-current.json'
+        self._pending = None
+        self._manifest = None
         self.current = None  # Replaced atomically by the single background worker.
 
     def _file(self, version, path):
@@ -118,39 +120,81 @@ class ContentCache:
         try:
             manifest=json.loads(checked_path(self.pointer).read_text(encoding='utf-8'))
             self.current=self._snapshot(manifest)
+            self._manifest=manifest
         except (OSError,ValueError,TypeError,KeyError):
             # First offline launch still uses bundled art + manual local assets.
             self.current=self._snapshot({'version':'0'*32,'files':[]})
         return self.current
 
+    @property
+    def pending(self):
+        return self._pending is not None
+
     def sync(self, client, *, cancelled=lambda:False):
+        """Yield at request/chunk boundaries, retaining staged bytes and old publication."""
+        if self._pending is None:
+            self._pending = self._download(client)
+        try:
+            while not cancelled():
+                try:
+                    next(self._pending)
+                except StopIteration as finished:
+                    self._pending = None
+                    return bool(finished.value)
+            return False
+        except Exception:
+            self._pending.close()
+            self._pending = None
+            raise
+
+    def _download(self, client):
         manifest=client.asset_manifest();version,files,total=self._validate_manifest(manifest)
+        yield  # A newly arrived customer takes priority over the first asset.
         if self.current and self.current['version']==version:
             return False
         if shutil.disk_usage(self.workspace.root).free < total+100*1024**2:
             raise OSError('Insufficient cache staging space.')
         for entry in files:
-            if cancelled():return False
             target=self._file(version,entry['path']);target.parent.mkdir(parents=True,exist_ok=True)
             if target.is_file():
                 with target.open('rb') as stream:
-                    if hashlib.file_digest(stream,'md5').hexdigest()==entry['md5']:continue
+                    if target.stat().st_size == entry['size'] and hashlib.file_digest(stream,'md5').hexdigest()==entry['md5']:
+                        yield
+                        continue
             temporary=checked_path(target.with_name(target.name+'.'+uuid4().hex+'.part'))
             digest=hashlib.md5()
+            previous = next((f for f in (self._manifest or {}).get('files', [])
+                             if f['path'] == entry['path'] and f['size'] == entry['size']
+                             and f['md5'] == entry['md5']), None)
             try:
+                if previous:
+                    source = self._file(self._manifest['version'], previous['path'])
+                    if source.is_file() and source.stat().st_size == entry['size']:
+                        # Copy rather than link: a corrupt/new generation cannot mutate active bytes.
+                        with source.open('rb') as old, temporary.open('xb') as new:
+                            while chunk := old.read(512*1024):
+                                new.write(chunk); digest.update(chunk)
+                                yield
+                        if digest.hexdigest() == entry['md5']:
+                            temporary.replace(target)
+                            yield
+                            continue
+                        temporary.unlink()
+                        digest = hashlib.md5()
                 with temporary.open('xb') as stream:
                     for offset in range(0,entry['size'],512*1024):
-                        if cancelled():return False
                         chunk=client.asset_chunk(entry,offset,min(512*1024,entry['size']-offset))
                         if len(chunk)!=min(512*1024,entry['size']-offset):raise ValueError('Truncated content range.')
                         stream.write(chunk);digest.update(chunk)
+                        yield
                 if digest.hexdigest()!=entry['md5']:raise ValueError('Content checksum mismatch.')
                 temporary.replace(target)
             finally:
                 temporary.unlink(missing_ok=True)
         # A source edit during download cannot publish a mixed generation.
-        if cancelled() or client.asset_manifest()!=manifest:return False
+        if client.asset_manifest()!=manifest:return False
         snapshot=self._snapshot(manifest)  # Decode/validate all template art first.
         write_json_atomic(self.pointer,manifest)
         self.current=snapshot
+        self._manifest=manifest
         return True

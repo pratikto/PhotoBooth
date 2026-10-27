@@ -212,7 +212,8 @@ class DeliveryWidgetTests(unittest.TestCase):
             def upload(folder,txid,relative,path,**kwargs):
                 data=path.read_bytes();return {'id':relative,'size':len(data),'md5Checksum':hashlib.md5(data).hexdigest()}
             client.upload_file.side_effect=upload
-            worker=BoothDriveWorker(service.workspace,client);worker.run_once()
+            worker=BoothDriveWorker(service.workspace,client)
+            for _ in range(6):worker.run_once()
             client.bind_transaction.assert_called_once()
             app._photo_submit('snapshot');self.settle(app)
             self.assertEqual(app._photo_view['upload_status'],'UPLOAD_COMPLETE')

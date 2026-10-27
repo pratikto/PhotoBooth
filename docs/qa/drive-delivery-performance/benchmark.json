@@ -1,0 +1,28 @@
+{
+  "baseline": "fcabfbb8559778055631ff3a066f14108392ef71",
+  "kind": "deterministic offline simulation",
+  "assumptions": {
+    "chunk_seconds": 1,
+    "manifest_seconds": 0.2,
+    "reserve_slot_seconds": 0.1
+  },
+  "before": {
+    "customer_wait_after_arrival_seconds": 7.2,
+    "reserve_request_sizes_after_one_claim": [
+      25
+    ],
+    "reserve_slots_revalidated_after_one_claim": 25,
+    "content_requests_new_generation": 9,
+    "content_bytes_new_generation": 4194307
+  },
+  "after": {
+    "customer_wait_after_arrival_seconds": 0.0,
+    "reserve_request_sizes_after_one_claim": [
+      1
+    ],
+    "reserve_slots_revalidated_after_one_claim": 1,
+    "content_requests_new_generation": 1,
+    "content_bytes_new_generation": 3
+  },
+  "limits": "Virtual request costs; no evidence of production Drive speed or five-minute root cause."
+}

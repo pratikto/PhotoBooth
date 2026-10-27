@@ -1,5 +1,15 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+## 27 October — Drive delivery priority and timing
+
+The owner prioritizes customer upload/GUI responsiveness. Source now uses one
+file per transaction per pass, chunk-yielding content sync, incremental five-slot
+reserve batches with startup/periodic reconciliation, and verified cross-version
+asset reuse. Structured monotonic timing distinguishes queue/request stages.
+Known-delay production root cause remains unmeasured; native/fixture evidence
+and exact update/rollback steps are in the [delivery runbook](qa/drive-delivery-performance/README.md).
+No deployed Google version, actual throughput or cloud deletion is certified.
+
 **27 October continuation:** FEAT-009 stages 1–2 now supply external observation,
 read-only recovery review/pre-GUI holds, per-checkout launcher ownership and
 Windows/Ubuntu startup generation. Next: actual Ubuntu mini-PC graphical-session/

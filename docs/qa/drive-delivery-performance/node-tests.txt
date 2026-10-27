@@ -1,0 +1,37 @@
+✔ 30-day boundary uses permanent scoped deletion, without Trash (9.150773ms)
+✔ unused pre-created READY slots remain, even with an old or forged deadline (1.086151ms)
+✔ original transaction registration is immutable across retries and removes the READY slot (1.693176ms)
+✔ adoption uses the oldest photo date, never the old empty-folder creation date (1.447829ms)
+✔ unrelated/foreign folders, malformed metadata, and unknown nested content are preserved (1.327992ms)
+✔ legacy root photo pattern expires, arbitrary root images remain untouched (1.342765ms)
+✔ Drive permission failures are reported and retried; successful deletion is idempotent (1.034111ms)
+✔ preview is read-only before activation and reports only candidates (1.088878ms)
+✔ setup installs one hourly trigger, does not delete content, and refuses to sweep before activation (1.37789ms)
+✔ expired folders reject uploads and invalid tokens never reach cleanup (2.229991ms)
+✔ corrupt slot ledgers fail closed before any deletion (1.051571ms)
+✔ large backlogs are bounded and retain an iterator cursor for the next hourly pass (4.337952ms)
+✔ a stale enabled flag without an owning-account clock never acknowledges active retention (1.369228ms)
+✔ setup repairs a same-name non-clock trigger without touching unrelated triggers or photos (2.205756ms)
+✔ authenticated retention status only reads activation and Drive metadata, never content or configuration (1.736726ms)
+✔ status distinguishes setup, missing and duplicate clocks without installing or sweeping (3.281942ms)
+✔ status rejects invalid tokens before even a Drive metadata read (1.840124ms)
+✔ status reports Drive and trigger permission failures without echoing raw account errors (1.475811ms)
+✔ setup repairs duplicate own clocks, leaves other tasks alone and never deletes photos (2.901633ms)
+✔ layout 2 creates named siblings, separate booths, 25 truly empty reserves; retry is idempotent (5.759109ms)
+✔ offline bind uses original deadline, session hierarchy and safe manifest; conflicts never reuse a folder (3.547387ms)
+✔ layout 2 scoped upload verifies bytes and cannot upload through old or legacy paths (3.195597ms)
+✔ new-root cleanup keeps unused reserves, all assets and old untouched; legacy parent is excluded (2.793708ms)
+✔ content inventory prunes old before access, chunks are scoped and checksum/version verified (5.042359ms)
+✔ reserved photo numbers are genuinely empty and link-readable; denied sharing never returns READY (1.581665ms)
+✔ repair authenticates an empty legacy reserve and keeps its exact QR folder ID (2.130887ms)
+✔ interrupted empty-reserve rename retries with the original folder ID (1.69358ms)
+✔ an unrelated numbered folder is neither overwritten nor link-shared (1.665892ms)
+✔ verified reserve retry rechecks permissions without redundant ACL writes (1.896923ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 83.0298

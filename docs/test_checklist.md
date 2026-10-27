@@ -1,5 +1,15 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 27 October — Drive delivery priority and timing
+
+The owner prioritizes customer upload/GUI responsiveness. Source now uses one
+file per transaction per pass, chunk-yielding content sync, incremental five-slot
+reserve batches with startup/periodic reconciliation, and verified cross-version
+asset reuse. Structured monotonic timing distinguishes queue/request stages.
+Known-delay production root cause remains unmeasured; native/fixture evidence
+and exact update/rollback steps are in the [delivery runbook](qa/drive-delivery-performance/README.md).
+No deployed Google version, actual throughput or cloud deletion is certified.
+
 **Final FEAT-009 verification — 27 October:** source `f023029` / matching-source
 CI [40423003641](https://github.com/pratikto/PhotoBooth/actions/runs/40423003641),
 all three jobs SUCCESS. Windows fixture cleanup preserves assertions and runtime;

@@ -35,7 +35,8 @@ class BoothSyncTests(unittest.TestCase):
             client.bind_transaction.return_value={'folder_id':'bound','folder_url':'https://drive.google.com/drive/folders/bound'}
             client.register_retention.return_value=retention_metadata(tx.transaction_id,started)
             client.upload_file.return_value={'id':'image','size':str(len(before)),'md5Checksum':hashlib.md5(before).hexdigest()}
-            worker.run_once()
+            with patch('photobooth.booth_sync.time.monotonic',return_value=10**12):
+                worker.run_once()
             remote=json.loads(tx.manifest_path.read_text());self.assertEqual(remote['drive_folder_id'],'bound')
             self.assertTrue(remote['drive_retention_registered_at']);self.assertEqual(remote['upload_files']['Photo/01/raw/photo_01.jpg']['status'],'VERIFIED')
             store.complete_transaction(tx)  # Stale controller must not erase binding/progress.
@@ -128,7 +129,11 @@ class BoothSyncTests(unittest.TestCase):
                     data=Path(path).read_bytes()
                     return {'id':str(path),'size':str(len(data)),'md5Checksum':hashlib.md5(data).hexdigest()}
                 client.upload_file.side_effect=uploaded
-                worker=BoothDriveWorker(workspace,client);worker.run_once()
+                worker=BoothDriveWorker(workspace,client)
+                for index in range(5):
+                    worker.run_once()
+                    if index < 4:
+                        self.assertIsNone(service.snapshot()['download_qr'])
                 view=service.snapshot()
                 self.assertEqual(view['upload_status'],'UPLOAD_COMPLETE')
                 self.assertIsNotNone(view['download_qr'])
@@ -149,3 +154,115 @@ class BoothSyncTests(unittest.TestCase):
                 self.assertIsNone(view['folder_url'])
                 self.assertEqual(view['upload_status'],'PENDING_DRIVE_BINDING')
             finally:service.close()
+
+    def reserve_client(self):
+        client=Mock()
+        client.reserve_transactions.side_effect=lambda slots:[{
+            **s,'folder_id':s['transaction_id'],'folder_url':'https://drive.google.com/drive/folders/'+s['transaction_id'],
+            'status':'READY','photo_number_layout':1,'link_verified':True} for s in slots]
+        return client
+
+    def queued_transaction(self,w,client,files=2):
+        slot=w.claim();store=TransactionStore(w.root,w.counter_path,w.booth_id,layout_version=2)
+        plan=build_session_plans(get_templates(),{'template_a':1})[0]
+        tx=store.start_transaction([plan],transaction_id=slot['transaction_id'],folder_path=slot['staging_path'])
+        tx.manifest.update(drive_intent=True,drive_claim_token=slot['claim_token'])
+        store._write_manifest(tx)
+        for i in range(files):
+            store.save_raw_photo(tx,plan,Image.new('RGB',(8,8),'red'),f'photo_{i}.jpg','capture')
+        store.complete_transaction(tx)
+        client.bind_transaction.side_effect=lambda m:{'folder_id':m['transaction_id'],
+            'folder_url':'https://drive.google.com/drive/folders/'+m['transaction_id']}
+        client.register_retention.side_effect=lambda folder,txid,started:retention_metadata(txid,started)
+        client.upload_file.side_effect=lambda folder,txid,relative,path,**kw:{'id':relative,
+            'size':path.stat().st_size,'md5Checksum':hashlib.md5(path.read_bytes()).hexdigest()}
+        return tx
+
+    def test_one_consumed_reserve_sends_one_slot_and_full_reconcile_runs_after_deadline_and_restart(self):
+        with TemporaryDirectory() as folder,patch('photobooth.booth_sync.time.monotonic') as clock:
+            clock.return_value=100
+            w=BoothWorkspace(folder);w.prepare();client=self.reserve_client();worker=BoothDriveWorker(w,client)
+            worker.run_once()
+            self.assertEqual([len(c.args[0]) for c in client.reserve_transactions.call_args_list],[5]*5)
+            client.reserve_transactions.reset_mock();w.claim();worker.run_once()
+            self.assertEqual([len(c.args[0]) for c in client.reserve_transactions.call_args_list],[1])
+            client.reserve_transactions.reset_mock();worker.run_once();client.reserve_transactions.assert_not_called()
+            clock.return_value=100+worker.RECONCILE_SECONDS
+            worker.run_once();self.assertEqual(sum(len(c.args[0]) for c in client.reserve_transactions.call_args_list),25)
+            client.reserve_transactions.reset_mock();BoothDriveWorker(w,client).run_once()
+            self.assertEqual(sum(len(c.args[0]) for c in client.reserve_transactions.call_args_list),25)
+
+    def test_reserve_yields_at_batch_boundary_and_customer_files_are_round_robin(self):
+        with TemporaryDirectory() as folder:
+            w=BoothWorkspace(folder);w.prepare();client=self.reserve_client();worker=BoothDriveWorker(w,client)
+            reserve=client.reserve_transactions.side_effect
+            txs=[]
+            def arrival(slots):
+                result=reserve(slots)
+                if not txs:
+                    txs.append(self.queued_transaction(w,client))
+                    worker.notify_transaction(txs[0].transaction_id)
+                return result
+            client.reserve_transactions.side_effect=arrival
+            worker.run_once();self.assertEqual(client.reserve_transactions.call_count,1)
+            txs.append(self.queued_transaction(w,client))
+            worker._wake.clear()
+            self.assertTrue(worker.run_once())
+            self.assertEqual([c.args[1] for c in client.upload_file.call_args_list],[t.transaction_id for t in txs])
+            self.assertEqual(client.reserve_transactions.call_count,1) # Uploads still pending; no maintenance.
+            worker.run_once()
+            self.assertEqual([c.args[1] for c in client.upload_file.call_args_list],[t.transaction_id for t in txs]*2)
+            for tx in txs:self.assertEqual(json.loads(tx.manifest_path.read_text())['upload_status'],'UPLOAD_COMPLETE')
+
+    def test_customer_arrival_inside_content_chunk_uploads_before_remaining_content_and_resumes(self):
+        from photobooth.content_cache import ContentCache
+        from tests.test_content_cache import fixture
+        with TemporaryDirectory() as folder:
+            w=BoothWorkspace(folder);w.prepare();client=self.reserve_client();content=ContentCache(w)
+            content.load();worker=BoothDriveWorker(w,client,content)
+            assets=fixture({'Global_Advertisement/large.mp4':b'x'*(512*1024+13)})
+            client.asset_manifest=assets.asset_manifest
+            order=[];transactions=[]
+            def chunk(entry,offset,length):
+                order.append('chunk')
+                if not transactions:
+                    transactions.append(self.queued_transaction(w,client,files=1))
+                    upload=client.upload_file.side_effect
+                    client.upload_file.side_effect=lambda *a,**kw:(order.append('upload'),upload(*a,**kw))[1]
+                    worker.notify_transaction(transactions[0].transaction_id)
+                return b'x'*length
+            client.asset_chunk.side_effect=chunk
+            worker.run_once()
+            self.assertTrue(content.pending);self.assertFalse(content.pointer.exists())
+            self.assertEqual(order,['chunk'])
+            worker._wake.clear();worker.run_once()
+            self.assertEqual(order,['chunk','upload','chunk'])
+            self.assertFalse(content.pending);self.assertTrue(content.pointer.exists())
+
+    def test_timeout_yields_retry_interval_restart_resumes_same_transaction_without_duplicate_success(self):
+        with TemporaryDirectory() as folder,patch('photobooth.booth_sync.time.monotonic') as clock:
+            clock.return_value=100
+            w=BoothWorkspace(folder);w.prepare();client=self.reserve_client()
+            tx=self.queued_transaction(w,client,files=1);upload=client.upload_file.side_effect
+            client.upload_file.side_effect=DriveApiError('fixture timeout',503)
+            worker=BoothDriveWorker(w,client);self.assertFalse(worker.run_once())
+            worker.run_once();self.assertEqual(client.upload_file.call_count,1)
+            data=json.loads(tx.manifest_path.read_text());self.assertEqual(data['upload_status'],'UPLOAD_RETRY')
+            self.assertEqual(next(iter(data['upload_files'].values()))['attempts'],1)
+            client.upload_file.side_effect=upload
+            restarted=BoothDriveWorker(w,client);restarted.run_once()
+            data=json.loads(tx.manifest_path.read_text());self.assertEqual(data['upload_status'],'UPLOAD_COMPLETE')
+            self.assertEqual(next(iter(data['upload_files'].values()))['attempts'],2)
+            restarted.run_once();self.assertEqual(client.upload_file.call_count,2)
+
+    def test_timing_separates_queue_and_request_and_omits_private_error_payload(self):
+        from photobooth.delivery_timing import span
+        with self.assertLogs('photobooth.delivery',level='INFO') as logs:
+            with patch('photobooth.delivery_timing.time.monotonic',side_effect=[10,12,12]):
+                with self.assertRaises(DriveApiError):
+                    with span('upload_file','PB001V2S2_00000001',bytes=7,attempt=2):
+                        raise DriveApiError('private-token-photo-payload',503)
+        message='\n'.join(logs.output)
+        self.assertIn('2000',message);self.assertIn('503',message)
+        self.assertIn('PB001V2S2_00000001',message)
+        self.assertNotIn('private-token-photo-payload',message)

@@ -23,6 +23,7 @@ from typing import Any, Callable
 from urllib.parse import urlencode
 
 import requests
+from photobooth.delivery_timing import span
 
 from photobooth.retention import RETENTION_MARKER, read_drive_retention, retention_metadata, utc_datetime
 
@@ -737,6 +738,12 @@ class AppsScriptDriveClient:
         return cls(web_app_url, upload_token)
 
     def _post(self, payload: dict[str, Any]) -> dict[str, Any]:
+        # This is end-to-end request time, including redirects/server/network.
+        # The protocol supplies no evidence to split those components.
+        with span('request', payload.get('transaction_id'), action=payload.get('action')):
+            return self._request(payload)
+
+    def _request(self, payload: dict[str, Any]) -> dict[str, Any]:
         # Send one JSON action to the Apps Script /exec endpoint, validate its JSON response, and
         # classify errors for safe retries.
         request_body = {"token": self.upload_token, **payload}
@@ -911,13 +918,14 @@ class AppsScriptDriveClient:
                 "image_base64": base64.b64encode(data).decode("ascii"),
             }
         )
-        remote_file = result.get("file", {})
-        if (
-            not remote_file.get("id")
-            or int(remote_file.get("size_bytes", -1)) != len(data)
-            or remote_file.get("md5_checksum") != checksum
-        ):
-            raise DriveApiError("Apps Script upload verification did not match the local file.")
+        with span('upload_validation', transaction_id, bytes=len(data)):
+            remote_file = result.get("file", {})
+            if (
+                not remote_file.get("id")
+                or int(remote_file.get("size_bytes", -1)) != len(data)
+                or remote_file.get("md5_checksum") != checksum
+            ):
+                raise DriveApiError("Apps Script upload verification did not match the local file.")
         return {
             "id": remote_file["id"],
             "size": str(remote_file["size_bytes"]),

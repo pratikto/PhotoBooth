@@ -14,9 +14,10 @@ from photobooth.drive_pool import DriveSlotPool
 from photobooth.drive_storage import DriveApiError, GoogleDriveClient
 from photobooth.manifest_io import manifest_lock, write_json_atomic
 from photobooth.retention import local_photos_expired, mark_local_expired, register_drive_retention
+from photobooth.delivery_timing import event, span
 
 
-def sync_manifest(manifest_path: Path, client: GoogleDriveClient) -> dict[str, Any]:
+def sync_manifest(manifest_path: Path, client: GoogleDriveClient, *, max_files=None, cancelled=lambda: False) -> dict[str, Any]:
     """Upload pending files for one transaction and persist verification per file."""
     manifest_path = Path(manifest_path)
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -34,7 +35,10 @@ def sync_manifest(manifest_path: Path, client: GoogleDriveClient) -> dict[str, A
     if not folder_id or not transaction_id or not upload_files:
         return manifest
 
-    for relative_path in list(upload_files):
+    attempted = 0
+    for file_index, relative_path in enumerate(list(upload_files), 1):
+        if cancelled() or (max_files is not None and attempted >= max_files):
+            break
         if manifest.get('local_photos_expired_at'):
             return manifest
         record = upload_files[relative_path]
@@ -84,14 +88,15 @@ def sync_manifest(manifest_path: Path, client: GoogleDriveClient) -> dict[str, A
             _persist_upload_progress(manifest_path, manifest)
 
         try:
-            remote_file = client.upload_file(
-                folder_id,
-                transaction_id,
-                relative_path,
-                local_path,
-                resume_url=record.get("upload_session_url"),
-                on_session_url=save_session_url,
-            )
+            attempted += 1
+            record['attempts'] = int(record.get('attempts', 0)) + 1
+            # Persist the attempt before I/O so restart/timeout diagnostics remain useful.
+            _persist_upload_progress(manifest_path, manifest)
+            with span('upload_file', transaction_id, file_index=file_index,
+                      files=len(upload_files), bytes=local_path.stat().st_size, attempt=record['attempts']):
+                remote_file = client.upload_file(
+                    folder_id, transaction_id, relative_path, local_path,
+                    resume_url=record.get("upload_session_url"), on_session_url=save_session_url)
             record.update(
                 {
                     "status": "VERIFIED",
@@ -176,9 +181,12 @@ def _persist_upload_progress(path: Path, working: dict[str, Any]) -> None:
                 persisted_record.update(progress_record)
 
         working["status"] = latest.get("status", working.get("status"))
+        previous_status = latest.get('upload_status')
         _refresh_upload_status(latest)
         working["upload_status"] = latest.get("upload_status")
         write_json_atomic(path, latest)
+        if previous_status != 'UPLOAD_COMPLETE' and latest.get('upload_status') == 'UPLOAD_COMPLETE':
+            event('upload_complete', latest.get('transaction_id'), files=len(latest_files))
 
 
 class DriveSyncWorker:
