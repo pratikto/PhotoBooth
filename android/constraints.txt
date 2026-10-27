@@ -1,3 +1,12 @@
 # Apply to p4a's resolver dry-run as well as its final host-side installation.
+certifi==2026.10.23
 charset-normalizer==3.4.2
+chardet==5.2.0
+filetype==1.2.0
+idna==3.20
+qrcode==8.2
+requests==2.34.2
+six==1.17.0
+tzdata==2026.5
+urllib3==2.8.0
 pip==26.2.2

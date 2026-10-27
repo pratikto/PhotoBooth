@@ -45,6 +45,7 @@ def prepare(destination, *, root=ROOT):
         selected = [(p, p) for p in paths if p and eligible(p)]
         # These explicit inputs also work before their first commit.
         selected.extend([('android/main.py', 'main.py'), ('android/buildozer.spec', 'buildozer.spec'),
+                         ('android/constraints.txt', 'android-constraints.txt'),
                          ('photobooth/kiosk_v2/android_preview.py', 'photobooth/kiosk_v2/android_preview.py')])
         for source, target in selected:
             original = root / source

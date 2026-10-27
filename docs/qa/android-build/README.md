@@ -46,6 +46,15 @@ overlaid pip 25.3/26.2.2. Eight focused policy tests pass for curation, hashes,
 no native-cache deletion and linked-installer rejection. The earlier 879-case
 run remains tied to a4ba8aa; final helper/spec evidence is separate below.
 
+The next complete source regression at **6260435** ran **881 cases / 878 PASS /
+3 optional palm SKIP / zero failures/errors**, 294.081s. Later APK inspection
+found a bogus empty permission and seventeen x86 chardet 7.7.0 extensions inside
+libpybundle.so. Lock chardet 5.2.0 and all ten pure dependencies, omit the empty
+permission key, hash the constraints, and regenerate only p4a's assembled
+distribution plus installer venv. Native recipe objects remain cached.
+Nine focused policy tests pass after these build-only corrections. Final
+artifact/native checks and full-source checkpoint follow below.
+
 Device installation, real Android touch/insets/keyboard/Back/Home, speaker,
 camera, printer, Drive, provider/POS and release acceptance remain NOT_RUN.
 Do not erase app-private data, consumed codes, counters or journals for a pass.

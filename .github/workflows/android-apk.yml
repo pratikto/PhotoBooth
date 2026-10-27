@@ -43,6 +43,31 @@ jobs:
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$APK"
           "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" > work/apk-manifest.txt
           sha256sum "$APK" > work/apk-sha256.txt
+      - name: Reject foreign native libraries including the Python payload
+        run: |
+          python - <<'PY'
+          import io, struct, tarfile, zipfile
+          from pathlib import Path
+          apk = next(Path('work/android-project/bin').glob('*.apk'))
+          count = 0
+          def check(name, blob):
+              global count
+              assert blob[:4] == b'\x7fELF' and struct.unpack_from('<H', blob, 18)[0] == 183, name
+              count += 1
+          with zipfile.ZipFile(apk) as archive:
+              for name in archive.namelist():
+                  if name.startswith('lib/') and name.endswith('.so'):
+                      blob = archive.read(name)
+                      if name.endswith('/libpybundle.so'):
+                          with tarfile.open(fileobj=io.BytesIO(blob), mode='r:*') as bundle:
+                              for entry in bundle.getmembers():
+                                  if entry.name.endswith('.so'):
+                                      check(entry.name, bundle.extractfile(entry).read())
+                      else:
+                          check(name, blob)
+          assert count > 0
+          print(f'Verified {count} AArch64 ELF libraries, including Python extensions')
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:

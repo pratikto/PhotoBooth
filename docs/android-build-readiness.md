@@ -105,6 +105,15 @@ and final installation: this p4a release drops requirement versions in its
 dry-run, so the spec pin alone does not prevent the incompatible transitive
 wheel. The constraints retain charset-normalizer 3.4.2 and installer pip 26.2.2.
 Use the helper rather than a raw Buildozer invocation for this validated path.
+All ten pure runtime dependencies are locked to the inspected versions; chardet
+uses **5.2.0**'s pure-Python wheel. A complete APK inspection detected seventeen
+x86 ELF extensions from floating chardet 7.7.0, even though compilation/signing
+succeeded. The manual workflow now checks every ELF both in lib/ and p4a's
+gzip libpybundle.so payload, rejecting anything other than AArch64.
+
+An empty android.permissions value also produced the invalid
+android.permission. declaration in the real APK. The key is now omitted; the
+final manifest must have no requested permissions.
 
 Resuming also exposed p4a's installer-venv overlay: ensurepip restored pip 25.3
 over an upgraded pip 26.2.2, leaving incompatible files/metadata. The build
@@ -113,6 +122,14 @@ Native objects, SDKs, packaged runtime and app-private journals remain intact.
 It refuses linked installer paths. Eight focused policy tests pass, including
 native-cache preservation and symlink rejection; actual resume follows the
 same path. This is build-tool source, not a new application/payment/data feature.
+
+p4a also reused a completed distribution containing old dependencies after
+constraints changed. The helper now reconstructs its generated dists/ output
+on invocation, preserving the expensive build/other_builds native objects,
+SDKs and private app state. The constraints file is included in staging hashes,
+so --resume rejects changed constraints too. Nine policy checks pass, including
+distribution-cache/native-object separation. Repackaging uses the newly locked
+pure dependencies rather than a stale signed runtime.
 
 The helper creates a fresh curated `work/android-project`, never builds the
 desktop root main.py, and keeps caches in `work/android-build-cache`. To retry

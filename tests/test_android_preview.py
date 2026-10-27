@@ -7,7 +7,7 @@ import tempfile
 import unittest
 
 from photobooth.kiosk_v2.android_preview import configure_preview
-from tools.build_android import verify_project, reset_installer_venv
+from tools.build_android import verify_project, reset_installer_venv, reset_distribution
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('prepare_android', ROOT/'tools/prepare_android.py')
@@ -41,7 +41,7 @@ class AndroidPolicyTests(unittest.TestCase):
     def test_spec_is_portrait_offline_and_uses_mobile_recipes(self):
         config = configparser.ConfigParser()
         config.read(ROOT/'android/buildozer.spec')
-        self.assertEqual(config['app']['android.permissions'], '')
+        self.assertEqual(config['app'].get('android.permissions', ''), '')
         self.assertEqual(config['app']['orientation'], 'portrait')
         # Current numpy recipe requires API 24; p4a must not float on master.
         self.assertGreaterEqual(int(config['app']['android.minapi']), 24)
@@ -59,6 +59,7 @@ class AndroidPolicyTests(unittest.TestCase):
             self.assertIn('photobooth/kiosk_v2/android_preview.py',manifest)
             artwork = 'photobooth/assets/meong_fly_gif_logo.b85'
             self.assertIn(artwork, manifest)
+            self.assertIn('android-constraints.txt', manifest)
             self.assertEqual((destination/artwork).read_bytes(), (ROOT/artwork).read_bytes())
             self.assertNotIn('photobooth/local_settings.py',manifest)
             self.assertFalse((destination/'data').exists())
@@ -87,6 +88,22 @@ class AndroidPolicyTests(unittest.TestCase):
             reset_installer_venv(root, ['arm64-v8a'])
             self.assertFalse(installer.exists())
             self.assertEqual(native.read_text(), 'compiled')
+
+    def test_resume_reassembles_distribution_without_deleting_native_objects(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            platform = root/'.buildozer/android/platform/build-arm64-v8a'
+            dist = platform/'dists/meongpreview'
+            dist.mkdir(parents=True)
+            (dist/'obsolete-host-wheel').write_text('stale')
+            objects = platform/'build/other_builds'
+            objects.mkdir(parents=True)
+            (objects/'compiled').write_text('keep')
+            reset_distribution(root, ['arm64-v8a'], 'meongpreview')
+            self.assertFalse(dist.exists())
+            self.assertEqual((objects/'compiled').read_text(), 'keep')
+            with self.assertRaises(ValueError):
+                reset_distribution(root, ['arm64-v8a'], '../foreign')
 
     @unittest.skipUnless(hasattr(os, 'symlink'), 'symbolic links unavailable')
     def test_resume_refuses_linked_installer(self):

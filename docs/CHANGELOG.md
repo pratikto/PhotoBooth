@@ -1,5 +1,15 @@
 # Meong Photobooth — changelog
 
+## 27 October — Android APK manifest and native-payload verification
+
+Inspect the actual signed APK: omit the permission key instead of emitting an
+empty android.permission., and reject foreign ELF libraries inside p4a's nested
+Python payload as well as lib/. Lock all pure dependencies, selecting chardet
+5.2.0 instead of seventeen host-x86 extensions in chardet 7.7.0. Include constraints
+in staging hashes and rebuild only generated distribution/installer outputs on
+resume, preserving native objects, SDKs and app-private data. Nine focused policy
+checks pass; final artifact/full-source evidence follows after completion.
+
 ## 27 October — Android native packaging compatibility
 
 Actual p4a/ARM compilation reached the final Python dependency installation.

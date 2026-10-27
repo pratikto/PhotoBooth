@@ -20,7 +20,9 @@ def verify_project(project):
         relative = Path(name)
         if relative.is_absolute() or '..' in relative.parts:
             raise ValueError('Invalid package manifest path')
-        source = ROOT / ('android/' + name if name in {'main.py', 'buildozer.spec'} else name)
+        aliases = {'main.py':'android/main.py', 'buildozer.spec':'android/buildozer.spec',
+                   'android-constraints.txt':'android/constraints.txt'}
+        source = ROOT / aliases.get(name, name)
         target = project / name
         if (not target.is_file() or target.is_symlink() or
                 hashlib.sha256(target.read_bytes()).hexdigest() != digest or
@@ -41,6 +43,19 @@ def reset_installer_venv(project, archs):
         # Only p4a's generated pure-dependency installer; never SDK/native
         # objects, packaged runtime, app-private state or customer journals.
         shutil.rmtree(path)
+
+
+def reset_distribution(project, archs, name):
+    """Reassemble runtime deps: p4a's distribution cache ignores version constraints."""
+    if not name.isidentifier() or any(arch not in {'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'} for arch in archs):
+        raise ValueError('Invalid generated distribution path')
+    path = (Path(project)/'.buildozer/android/platform'/
+            ('build-'+'_'.join(archs))/'dists'/name)
+    if any(p.is_symlink() or getattr(p, 'is_junction', lambda: False)()
+           for p in (path, *path.parents)):
+        raise ValueError('Linked distribution paths are excluded')
+    if path.exists():
+        shutil.rmtree(path)  # Preserve build/other_builds, SDK and private app data.
 
 
 def main(argv=None):
@@ -124,6 +139,8 @@ def main(argv=None):
 
     build.target.__class__ = CommandLineToolsTarget
     reset_installer_venv(project, build.config.getlist('app', 'android.archs'))
+    reset_distribution(project, build.config.getlist('app', 'android.archs'),
+                       build.config.get('app', 'package.name'))
     previous = Path.cwd()
     try:
         os.chdir(project)
