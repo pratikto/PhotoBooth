@@ -5,7 +5,7 @@
 Owner reports faster uploads and supplies runtime timings: successful session
 122.719s to QR, including 70.782s overlapping old bind attempts. Three old
 transactions repeatedly reach a successful bind response then local ValueError;
-exact cause unproven. Bounded recovery/backoff and typed diagnosis are prepared;
+exact cause unproven. Bounded recovery/backoff and typed diagnosis are published at 8578825;
 actual old-folder conflict repair remains unverified and is not automated.
 [New source/evidence/retest](qa/drive-delivery-performance/RETRY.md). Original
 five-minute incident and BUG-009 cloud deletion remain separate open evidence.

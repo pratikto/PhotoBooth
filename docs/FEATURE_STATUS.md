@@ -1,12 +1,19 @@
 # Meong Photobooth — current feature status
 
+Retry source **8578825**: complete local **884 run / 881 PASS / 3 optional
+palm-assets SKIP / 0 failures/errors**, 268.095s. 67 focused service and
+11 native delivery PASS. Matching-source CI 40455236898: all three jobs SUCCESS.
+[Exact proof/update guide](qa/drive-delivery-performance/RETRY.md).
+Functional source is unchanged in the final evidence publication; actual
+Windows/Ubuntu/Google timing after this update still needs device evidence.
+
 ## 27 October — failed-delivery retry isolation
 
 Owner timing identifies repeated old bind failures as 70.782s of a 122.719s
 queued-to-QR session; exact ValueError cause/installed SHA remain unknown.
 Healthy-first scheduling, one recovery/30s, persisted 30–300s backoff and safe
 bind codes are implemented; known folder/transaction conflicts remain protected.
-67 focused service and 11 native delivery tests PASS; full/CI evidence follows.
+Focused service/native checks PASS; final regression/CI evidence is in the linked runbook.
 Code.gs unchanged; no redeploy required. [Scope, evidence, updates and limits](qa/drive-delivery-performance/RETRY.md).
 
 Final delivery source **2e140c1**: full local **877 run / 874 PASS / 3 optional

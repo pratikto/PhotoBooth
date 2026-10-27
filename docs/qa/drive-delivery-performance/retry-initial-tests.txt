@@ -1,0 +1,163 @@
+test_client_reuses_existing_transport_and_rejects_mismatched_bind_chunk (tests.test_booth_sync.BoothSyncTests.test_client_reuses_existing_transport_and_rejects_mismatched_bind_chunk) ... ok
+test_configured_layout2_without_credentials_is_offline_ready_and_never_falls_back_to_legacy_oauth (tests.test_booth_sync.BoothSyncTests.test_configured_layout2_without_credentials_is_offline_ready_and_never_falls_back_to_legacy_oauth) ... Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/content_cache.py", line 121, in load
+    manifest=json.loads(checked_path(self.pointer).read_text(encoding='utf-8'))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmp85374cod/Photobooth/PB001/_state/content-current.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+ok
+test_customer_arrival_inside_content_chunk_uploads_before_remaining_content_and_resumes (tests.test_booth_sync.BoothSyncTests.test_customer_arrival_inside_content_chunk_uploads_before_remaining_content_and_resumes) ... Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/content_cache.py", line 121, in load
+    manifest=json.loads(checked_path(self.pointer).read_text(encoding='utf-8'))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpxf0hl6c1/PB001/_state/content-current.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+ok
+test_flat_upload_mapping_keeps_sessions_distinct_and_verifies_real_bytes (tests.test_booth_sync.BoothSyncTests.test_flat_upload_mapping_keeps_sessions_distinct_and_verifies_real_bytes) ... ok
+test_layout2_background_delivery_completes_and_exposes_qr_without_print_replay (tests.test_booth_sync.BoothSyncTests.test_layout2_background_delivery_completes_and_exposes_qr_without_print_replay) ... Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/content_cache.py", line 121, in load
+    manifest=json.loads(checked_path(self.pointer).read_text(encoding='utf-8'))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpjaetxqnn/PB001/_state/content-current.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+ok
+test_missing_retention_clock_does_not_upload_or_block_new_local_claims (tests.test_booth_sync.BoothSyncTests.test_missing_retention_clock_does_not_upload_or_block_new_local_claims) ... Drive retention registration failed for PB001V2_00000001: clock missing
+ok
+test_offline_claim_reconnect_keeps_bytes_id_deadline_and_binding_on_stale_save (tests.test_booth_sync.BoothSyncTests.test_offline_claim_reconnect_keeps_bytes_id_deadline_and_binding_on_stale_save) ... ok
+test_one_consumed_reserve_sends_one_slot_and_full_reconcile_runs_after_deadline_and_restart (tests.test_booth_sync.BoothSyncTests.test_one_consumed_reserve_sends_one_slot_and_full_reconcile_runs_after_deadline_and_restart) ... ok
+test_pre_fix_private_cached_url_is_withheld_from_a_new_visit (tests.test_booth_sync.BoothSyncTests.test_pre_fix_private_cached_url_is_withheld_from_a_new_visit) ... Could not scan local advertisements in /workspace/PhotoBooth/ad_video
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/content_cache.py", line 121, in load
+    manifest=json.loads(checked_path(self.pointer).read_text(encoding='utf-8'))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpssjq7k3p/PB001/_state/content-current.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 168, in _discover_videos
+    videos = sorted(
+             ^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/advertising.py", line 169, in <genexpr>
+    (entry for entry in directory.iterdir()
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/PhotoBooth/ad_video'
+ok
+test_private_reserve_response_is_rejected_before_its_url_can_reach_print (tests.test_booth_sync.BoothSyncTests.test_private_reserve_response_is_rejected_before_its_url_can_reach_print) ... ok
+test_reserve_yields_at_batch_boundary_and_customer_files_are_round_robin (tests.test_booth_sync.BoothSyncTests.test_reserve_yields_at_batch_boundary_and_customer_files_are_round_robin) ... ok
+test_timeout_yields_retry_interval_restart_resumes_same_transaction_without_duplicate_success (tests.test_booth_sync.BoothSyncTests.test_timeout_yields_retry_interval_restart_resumes_same_transaction_without_duplicate_success) ... FAIL
+test_timing_separates_queue_and_request_and_omits_private_error_payload (tests.test_booth_sync.BoothSyncTests.test_timing_separates_queue_and_request_and_omits_private_error_payload) ... ok
+test_backend_content_conflict_is_not_reported_as_uploaded (tests.test_upload_revisions.UploadRevisionTests.test_backend_content_conflict_is_not_reported_as_uploaded)
+Apps Script intentionally rejects changed bytes at an existing path. ... ok
+test_late_upload_response_and_resume_url_cannot_verify_a_new_capture (tests.test_upload_revisions.UploadRevisionTests.test_late_upload_response_and_resume_url_cannot_verify_a_new_capture) ... ok
+test_legacy_records_without_a_revision_still_sync_and_requeue_on_replacement (tests.test_upload_revisions.UploadRevisionTests.test_legacy_records_without_a_revision_still_sync_and_requeue_on_replacement) ... ok
+test_old_failed_upload_cannot_block_the_new_revision (tests.test_upload_revisions.UploadRevisionTests.test_old_failed_upload_cannot_block_the_new_revision)
+A delayed permission/network failure also belongs to its old bytes. ... ok
+test_revision_changed_before_upload_starts_is_left_for_the_next_pass (tests.test_upload_revisions.UploadRevisionTests.test_revision_changed_before_upload_starts_is_left_for_the_next_pass)
+Do not call the backend after the initial progress merge retires a file. ... ok
+test_rewritten_output_requeues_without_resetting_verified_raw_photos (tests.test_upload_revisions.UploadRevisionTests.test_rewritten_output_requeues_without_resetting_verified_raw_photos) ... ok
+test_saved_replacement_does_not_inherit_an_old_verified_upload (tests.test_upload_revisions.UploadRevisionTests.test_saved_replacement_does_not_inherit_an_old_verified_upload) ... ok
+test_cached_ready_slot_keeps_its_preassigned_name_and_survives_restart (tests.test_drive_workflow.DriveSlotPoolTests.test_cached_ready_slot_keeps_its_preassigned_name_and_survives_restart) ... ok
+test_completed_transaction_upload_records_each_verified_drive_file (tests.test_drive_workflow.DriveSyncTests.test_completed_transaction_upload_records_each_verified_drive_file) ... ok
+test_local_manifest_writes_preserve_background_upload_progress (tests.test_drive_workflow.DriveUploadTests.test_local_manifest_writes_preserve_background_upload_progress) ... ok
+test_offline_upload_stays_queued_and_keeps_the_local_file (tests.test_drive_workflow.DriveUploadTests.test_offline_upload_stays_queued_and_keeps_the_local_file) ... ok
+test_resumable_upload_is_verified_and_persists_session_url (tests.test_drive_workflow.DriveUploadTests.test_resumable_upload_is_verified_and_persists_session_url) ... ok
+test_unused_error_slot_recovers_but_claimed_slot_stays_assigned (tests.test_drive_workflow.PoolRecoveryRegressionTests.test_unused_error_slot_recovers_but_claimed_slot_stays_assigned) ... ok
+
+======================================================================
+FAIL: test_timeout_yields_retry_interval_restart_resumes_same_transaction_without_duplicate_success (tests.test_booth_sync.BoothSyncTests.test_timeout_yields_retry_interval_restart_resumes_same_transaction_without_duplicate_success)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_booth_sync.py", line 254, in test_timeout_yields_retry_interval_restart_resumes_same_transaction_without_duplicate_success
+    data=json.loads(tx.manifest_path.read_text());self.assertEqual(data['upload_status'],'UPLOAD_COMPLETE')
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'UPLOAD_RETRY' != 'UPLOAD_COMPLETE'
+- UPLOAD_RETRY
++ UPLOAD_COMPLETE
+
+
+----------------------------------------------------------------------
+Ran 26 tests in 1.296s
+
+FAILED (failures=1)

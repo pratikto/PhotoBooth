@@ -154,3 +154,27 @@ Source rollback: scoped inverse changes from the base after inspection, preserve
 all photos/state/claims and deadline metadata. No cloud deletion or live folder
 repair was tested. BUG-009 privacy deletion remains OPEN. Batch uploads and the
 post-QR content error are separate follow-ups, not implemented here.
+
+## Final functional-source verification
+
+Functional source **85788251ac6434267185feae99fb3f6b288474c0** was pushed to the
+required branch and remote HEAD verified before final regression. Full local
+[report](retry-full-tests.txt): **884 run / 881 PASS / 3 optional real-palm
+model-assets SKIP / zero failures/errors**, 268.095s. Native GUI/audio/video opt-ins
+were enabled; this remains software-display/dummy-audio/synthetic-I/O evidence.
+[Exact environment and 313 functional hashes](retry-tested-source.json) match the
+committed functional source; no later runtime edits. No GUI geometry/copy changed;
+existing reviewed 800×1280/452×900 layout evidence is retained for that unchanged
+presentation, and current 11 native delivery tests verify its behavior.
+
+[Initial targeted result](retry-initial-tests.txt) retains the superseded
+immediate-restart fixture failure (one expected assertion mismatch). It was
+updated to check that restart preserves cooldown before a fake-clock advance;
+all final tests pass. No assertion was dropped to hide a runtime failure.
+Code.gs remains byte-identical to e3ac0f9; no Google redeploy or deletion occurred.
+
+Matching-source [CI 40455236898](https://github.com/pratikto/PhotoBooth/actions/runs/40455236898)
+completed with **all three jobs SUCCESS**: Linux pure, Linux synthetic desktop,
+Windows portable startup/native dummy audio. [Job/step result](retry-ci-result.json).
+Job success does not imply zero optional skips or physical/provider acceptance.
+Final evidence-only publication skips CI and changes no runtime source.
