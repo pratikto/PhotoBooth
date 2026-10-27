@@ -1,0 +1,14 @@
+test_inherited_desktop_opt_ins_are_forced_off) ... ok
+test_package_allowlist_excludes_credentials_archives_and_customer_data (test_android_preview.AndroidPolicyTests.test_package_allowlist_excludes_credentials_archives_and_customer_data) ... ok
+test_relative_storage_is_rejected (test_android_preview.AndroidPolicyTests.test_relative_storage_is_rejected) ... ok
+test_resume_rejects_modified_package_without_overwriting_it (test_android_preview.AndroidPolicyTests.test_resume_rejects_modified_package_without_overwriting_it) ... ok
+test_spec_is_portrait_offline_and_uses_mobile_recipes (test_android_preview.AndroidPolicyTests.test_spec_is_portrait_offline_and_uses_mobile_recipes) ... ok
+test_staging_has_correct_entry_and_preserves_existing_destination (test_android_preview.AndroidPolicyTests.test_staging_has_correct_entry_and_preserves_existing_destination) ... ok
+test_curated_project_runs_without_repository_assets (test_android_widgets.AndroidWidgetTests.test_curated_project_runs_without_repository_assets) ... ok
+test_original_ui_private_data_and_hardware_gates (test_android_widgets.AndroidWidgetTests.test_original_ui_private_data_and_hardware_gates) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 11.908s
+
+OK
+KIOSK_UNITTEST_SUMMARY: run=8 failures=0 errors=0 skipped=0 success=True

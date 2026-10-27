@@ -4,9 +4,20 @@ on:
     branches: [feature/portrait-kiosk-android]
     paths-ignore: ['docs/**', '**/*.md']
   workflow_dispatch:
+    inputs:
+      build_apk:
+        description: Compile and upload the arm64 debug APK (long native build)
+        type: boolean
+        default: false
 permissions:
   contents: read
+concurrency:
+  group: android-preview-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
+  apk:
+    if: github.event_name == 'workflow_dispatch' && inputs.build_apk
+    uses: ./.github/workflows/android-apk.yml
   preview:
     runs-on: ubuntu-latest
     timeout-minutes: 15

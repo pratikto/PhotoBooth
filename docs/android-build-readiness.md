@@ -104,9 +104,19 @@ never disable TLS verification. Build failures omit full environment dumps.
 
 ## Manual GitHub build
 
-Actions → **Build Android debug APK** → Run workflow → select
-**feature/portrait-kiosk-android**. This workflow is manual only, to preserve
-Actions credits. It provisions Ubuntu 24.04/Python 3.12/JDK 17/official SDK,
+Actions → **Android preview foundation** → Run workflow → select
+**feature/portrait-kiosk-android** and enable **build_apk**. Or use the existing
+registered workflow from GitHub CLI:
+
+```bash
+gh workflow run android-preview.yml --ref feature/portrait-kiosk-android -f build_apk=true
+```
+
+The APK job runs only on explicit manual dispatch, to preserve Actions credits.
+It calls the reusable **Build Android debug APK** workflow on the same source.
+A newly added dispatch-only workflow on a nondefault branch is not registered
+automatically; reusing the already registered preview workflow avoids requiring
+a master/default-branch change. The job provisions Ubuntu 24.04/Python 3.12/JDK 17/official SDK,
 checks packaging, compiles, verifies debug signing and uploads
 **meong-android-debug** (APK, source hashes, build log, manifest and SHA-256).
 Automatic A0 policy/native CI remains independent; green preview CI alone

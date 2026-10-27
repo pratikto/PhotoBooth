@@ -14,8 +14,9 @@ work/android-build-venv/bin/python tools/build_android.py --accept-sdk-license
 
 Output: `work/android-project/bin/*.apk`. The helper stages the curated app,
 checks source hashes on `--resume`, and keeps build caches under `work/`.
-Alternatively run **Build Android debug APK** manually in GitHub Actions with
-the Android branch selected; download its `meong-android-debug` artifact.
+Alternatively run **Android preview foundation** manually in GitHub Actions,
+select the Android branch and enable **build_apk**; download its
+`meong-android-debug` artifact.
 This is the offline GUI v2/game preview. Camera, printing, Drive, payment,
 audio and video remain disabled pending their native Android adapters/device
 acceptance. [Current validation and exact toolchain](docs/android-build-readiness.md).

@@ -1,5 +1,15 @@
 # Meong Photobooth — GUI v2 architecture
 
+**Android A1:** the opt-in Android host imports the same current app/gallery
+(five-picture carousel from eb0297d), tutorial and original game. Curated
+packaging includes the original .b85 artwork required by camera_frames(); a
+staged subprocess test runs without repository assets. Android Back pauses the
+active original game, while inherited pause/resume and private SQLite preserve
+consumed attempts. tools/build_android.py builds that curated entry with local
+caches and pinned native recipes; the registered preview workflow optionally
+calls the APK job only on explicit manual build_apk dispatch.
+[Current native build/acceptance contract](android-build-readiness.md).
+
 **27 October FEAT-009 addition:** `kiosk_v2/recovery.py` reads existing local
 state without service/device imports, and the ordinary launcher owns a kernel
 lease for its full lifetime. The external watchdog requests the extra pre-GUI

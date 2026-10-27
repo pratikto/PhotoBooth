@@ -1,5 +1,13 @@
 # Meong Photobooth — product and technical decisions
 
+## Owner Android continuation — 27 October 2026
+
+Continue the **existing feature/portrait-kiosk-android**, following current GUI
+v2 through APK build readiness; create no new development branch. Read the
+documentation comprehensively before code and update it afterward. This
+supersedes the earlier completed branch-creation instruction for further work.
+[A1 scope, source reuse, build and acceptance](android-build-readiness.md).
+
 ## Owner Android authorization — 27 October 2026
 
 Create `feature/portrait-kiosk-android` and develop in parallel with staged Git

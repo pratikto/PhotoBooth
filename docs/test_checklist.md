@@ -1,5 +1,14 @@
 # Meong Photobooth — test evidence and acceptance
 
+**Android A1 continuation (27 October):** 8 focused policy/native tests PASS,
+zero skips/failures/errors (11.908s), including isolated curated-package asset
+loading, real DEMO claim, Back/game pause/resume and private-ledger reuse guard.
+Earlier combined carousel run: 41 cases, 39 PASS, 2 opt-in SKIP, no failures/errors.
+Required-size native captures reviewed. Source a4ba8aa pushed/remote verified;
+[matching preview CI 40491067949](https://github.com/pratikto/PhotoBooth/actions/runs/40491067949)
+SUCCESS. This is still separate from APK compilation, final regression and
+Android device acceptance. [Current results/build guide](android-build-readiness.md).
+
 **Android A0 (27 October):** source `0cacc27` on `feature/portrait-kiosk-android`;
 875 local cases: 872 PASS, 3 optional palm-assets SKIP, zero failures/errors,
 266.642s. Five packaging/policy checks and reused Kivy UI checks at two sizes
