@@ -38,17 +38,18 @@ class AndroidPolicyTests(unittest.TestCase):
                      'photobooth/kiosk_v2/assets/meong-fly-camera.png'):
             self.assertTrue(packaging.eligible(path), path)
 
-    def test_spec_is_portrait_offline_and_uses_mobile_recipes(self):
+    def test_spec_is_portrait_camera_usb_sandbox_and_uses_mobile_recipes(self):
         config = configparser.ConfigParser()
         config.read(ROOT/'android/buildozer.spec')
-        self.assertEqual(config['app'].get('android.permissions', ''), '')
+        self.assertEqual(set(config['app']['android.permissions'].split(',')), {'CAMERA','INTERNET'})
+        self.assertEqual(config['app']['android.add_src'], 'native_src')
         self.assertEqual(config['app']['orientation'], 'portrait')
         # Current numpy recipe requires API 24; p4a must not float on master.
         self.assertGreaterEqual(int(config['app']['android.minapi']), 24)
         self.assertEqual(config['app']['android.ndk_api'], config['app']['android.minapi'])
         self.assertEqual(len(config['app']['p4a.commit']), 40)
         self.assertIn('b85', config['app']['source.include_exts'].split(','))
-        for desktop in ('pywin32','opencv-contrib-python','ffpyplayer','python-escpos'):
+        for desktop in ('pywin32','opencv-contrib-python','python-escpos[usb]'):
             self.assertNotIn(desktop, config['app']['requirements'])
 
     def test_staging_has_correct_entry_and_preserves_existing_destination(self):
@@ -60,6 +61,7 @@ class AndroidPolicyTests(unittest.TestCase):
             artwork = 'photobooth/assets/meong_fly_gif_logo.b85'
             self.assertIn(artwork, manifest)
             self.assertIn('android-constraints.txt', manifest)
+            self.assertIn('native_src/id/meong/nativebridge/CameraBridge.java', manifest)
             self.assertEqual((destination/artwork).read_bytes(), (ROOT/artwork).read_bytes())
             self.assertNotIn('photobooth/local_settings.py',manifest)
             self.assertFalse((destination/'data').exists())

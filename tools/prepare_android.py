@@ -35,7 +35,7 @@ def prepare(destination, *, root=ROOT):
         raise ValueError('Archive paths are excluded')
     if any(p.is_symlink() or getattr(p, 'is_junction', lambda: False)() for p in destination.parents):
         raise ValueError('Linked staging parents are excluded')
-    paths = subprocess.run(['git', '-C', str(root), 'ls-files', '-z', '--', 'photobooth'],
+    paths = subprocess.run(['git', '-C', str(root), 'ls-files', '-z', '--', 'photobooth', 'android/native_src', 'android/recipes'],
                            check=True, capture_output=True).stdout.decode().split('\0')
     destination.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='android-stage-', dir=destination.parent) as temporary:
@@ -43,6 +43,12 @@ def prepare(destination, *, root=ROOT):
         stage.mkdir()
         hashes = {}
         selected = [(p, p) for p in paths if p and eligible(p)]
+        selected.extend((p, p.removeprefix('android/')) for p in paths
+                        if p.startswith('android/native_src/') and p.endswith('.java')
+                        and not any(part.casefold() == 'old' for part in Path(p).parts))
+        selected.extend((p, p.removeprefix('android/')) for p in paths
+                        if p.startswith('android/recipes/') and p.endswith(('.py', '.patch'))
+                        and not any(part.casefold() == 'old' for part in Path(p).parts))
         # These explicit inputs also work before their first commit.
         selected.extend([('android/main.py', 'main.py'), ('android/buildozer.spec', 'buildozer.spec'),
                          ('android/constraints.txt', 'android-constraints.txt'),

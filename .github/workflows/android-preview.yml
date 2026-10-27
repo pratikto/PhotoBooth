@@ -40,11 +40,13 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y xvfb libgl1 libegl1 libmtdev1
-          python -m pip install 'Kivy>=2.3.1,<3' pillow numpy requests qrcode tzdata
+          python -m pip install 'Kivy>=2.3.1,<3' pillow numpy requests qrcode tzdata python-escpos opencv-python-headless fastapi httpx uvicorn
       - name: Exercise actual reused UI at compact and portrait sizes
         run: |
           xvfb-run -a python -m unittest tests.test_android_widgets -v
           ANDROID_PREVIEW_WIDTH=800 xvfb-run -a python -m unittest tests.test_android_widgets -v
+          xvfb-run -a python tools/run_kiosk_unittests.py test_android_runtime
+          ANDROID_PREVIEW_WIDTH=800 xvfb-run -a python tools/run_kiosk_unittests.py test_android_runtime
       - uses: actions/upload-artifact@v4
         if: always()
         with:

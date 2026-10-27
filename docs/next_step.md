@@ -1,5 +1,8 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+**Android runtime continuation — 28 October 2026:** Current authorized Android work includes built-in camera, USB OTG auto-print and QRIS Sandbox with current v2 services. Finish native recipe/APK validation and record actual device/provider limits; the old offline A1 scope below is historical.
+[Scope, setup and source evidence](android-v2-runtime.md).
+
 **Android stream — 28 October:** A1 debug-APK compilation and binary inspection
 are verified on existing feature/portrait-kiosk-android, functional source
 293b22b. Next: actual arm64 Android install/portrait/touch/keyboard/Back/Home

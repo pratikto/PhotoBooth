@@ -1,5 +1,14 @@
 # Meong Photobooth — changelog
 
+## 2026-10-28 — Android native v2 runtime
+
+Reuse current c001095 shared services; add Camera2 original-resolution capture,
+UsbManager sender through durable auto-print, private operator configuration,
+read-only original health panel and booth-only HTTPS Sandbox with stable backend
+setup helper. Bind native face/palm/media and optional ordinary Drive.
+Focused fixtures pass; new build/full/device results are tracked in the
+[runtime runbook](android-v2-runtime.md).
+
 ## 28 October — Publish verified Android A1 build evidence
 
 Record the 27 October signed APK from functional source 293b22b: signature v2,

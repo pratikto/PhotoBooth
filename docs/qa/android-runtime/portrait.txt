@@ -1,0 +1,131 @@
+[INFO   ] [Logger      ] Record log in /workspace/PhotoBooth/work/mobile-kivy-tests/logs/kivy_26-10-27_2.txt
+[INFO   ] [Kivy        ] v2.3.1
+[INFO   ] [Kivy        ] Installed at "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/__init__.py"
+[INFO   ] [Python      ] v3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]
+[INFO   ] [Python      ] Interpreter at "/workspace/PhotoBooth/.venv/bin/python"
+[INFO   ] [Logger      ] Purge log fired. Processing...
+[INFO   ] [Logger      ] Purge finished!
+[INFO   ] [Factory     ] 195 symbols loaded
+[INFO   ] [ImageLoaderFFPy] Using ffpyplayer 4.5.3
+[INFO   ] [Image       ] Providers: img_tex, img_dds, img_sdl2, img_pil, img_ffpyplayer 
+[INFO   ] [Window      ] Provider: sdl2
+[INFO   ] [GL          ] Using the "OpenGL" graphics system
+[INFO   ] [GL          ] Backend used <sdl2>
+[INFO   ] [GL          ] OpenGL version <b'4.5 (Compatibility Profile) Mesa 25.0.7-2+deb13u1'>
+[INFO   ] [GL          ] OpenGL vendor <b'Mesa'>
+[INFO   ] [GL          ] OpenGL renderer <b'llvmpipe (LLVM 19.1.7, 256 bits)'>
+[INFO   ] [GL          ] OpenGL parsed version: 4, 5
+[INFO   ] [GL          ] Shading version <b'4.50'>
+[INFO   ] [GL          ] Texture max size <16384>
+[INFO   ] [GL          ] Texture max units <32>
+[INFO   ] [Window      ] auto add sdl2 input provider
+[INFO   ] [Window      ] virtual keyboard not allowed, single mode, not docked
+[INFO   ] [Text        ] Provider: sdl2
+[INFO   ] [VideoFFPy   ] Using ffpyplayer 4.5.3
+[INFO   ] [Video       ] Provider: ffpyplayer(['video_ffmpeg'] ignored)
+[INFO   ] [SoundFFPy   ] Using ffpyplayer 4.5.3
+[INFO   ] [Audio       ] Providers: audio_ffpyplayer, audio_sdl2 
+[INFO   ] [GL          ] NPOT texture support is available
+[INFO   ] [Clipboard   ] Provider: sdl2(['clipboard_xclip', 'clipboard_xsel', 'clipboard_dbusklipper', 'clipboard_gtk3'] ignored)
+[CRITICAL] [Cutbuffer   ] Unable to find any valuable Cutbuffer provider. Please enable debug logging (e.g. add -d if running from the command line, or change the log level in the config) and re-run your app to identify potential causes
+xclip - FileNotFoundError: [Errno 2] No such file or directory: 'xclip'
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/core/__init__.py", line 59, in core_select_lib
+    mod = importlib.__import__(name='{2}.{0}.{1}'.format(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1466, in __import__
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/core/clipboard/clipboard_xclip.py", line 17, in <module>
+    p = subprocess.Popen(['xclip', '-version'], stdout=subprocess.PIPE,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+
+xsel - FileNotFoundError: [Errno 2] No such file or directory: 'xsel'
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/core/__init__.py", line 59, in core_select_lib
+    mod = importlib.__import__(name='{2}.{0}.{1}'.format(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1466, in __import__
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/workspace/PhotoBooth/.venv/lib/python3.12/site-packages/kivy/core/clipboard/clipboard_xsel.py", line 15, in <module>
+    p = subprocess.Popen(['xsel', '--version'], stdout=subprocess.PIPE)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+
+WARNING:photobooth.kiosk_v2.demo_game:DEMO game storage unavailable action=started
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/demo_game.py", line 100, in run
+    value = getattr(self.store, action)(*args)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 98, in started
+    return self.check()
+           ^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/sandbox_checkout.py", line 85, in check
+    self.flow.refresh()
+  File "/workspace/PhotoBooth/photobooth/qris_session.py", line 128, in refresh
+    result = self.client.service_transition(order['order_id'], order['grant_id'],
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 87, in service_transition
+    result = self._order(self._call('POST', '/api/orders/' + order_id + '/service',
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/qris_kiosk_client.py", line 44, in _call
+    raise RuntimeError('Backend request rejected: HTTP ' + str(response.status_code))
+RuntimeError: Backend request rejected: HTTP 503
+WARNING:photobooth.kiosk_v2.photos:Photo test action failed: print_result
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/photos.py", line 388, in run
+    value = getattr(self.service, action)(*args)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/photos.py", line 238, in print_result
+    self._edit(reserve)
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/photos.py", line 131, in _edit
+    callback(manifest)
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/photos.py", line 234, in reserve
+    raise ValueError('This strip has already been submitted; inspect the printer.')
+ValueError: This strip has already been submitted; inspect the printer.
+WARNING:photobooth.kiosk_v2.photos:Photo test action failed: next
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/photos.py", line 388, in run
+    value = getattr(self.service, action)(*args)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/kiosk_v2/photos.py", line 264, in next
+    raise ValueError('Inspect the printer and acknowledge its uncertain outcome first.')
+ValueError: Inspect the printer and acknowledge its uncertain outcome first.
+test_nv21_channels_rotation_and_bounded_preview (test_android_runtime.MobileCameraTests.test_nv21_channels_rotation_and_bounded_preview) ... ok
+test_pause_during_native_still_cannot_publish_old_capture (test_android_runtime.MobileCameraTests.test_pause_during_native_still_cannot_publish_old_capture) ... ok
+test_backend_restart_reuses_booth_token_and_keeps_merchant_key_out_of_export (test_android_runtime.MobileConfigurationTests.test_backend_restart_reuses_booth_token_and_keeps_merchant_key_out_of_export) ... ok
+test_environment_uses_private_root_and_only_booth_credentials (test_android_runtime.MobileConfigurationTests.test_environment_uses_private_root_and_only_booth_credentials) ... ok
+test_persist_settings_and_preserve_pending_identity (test_android_runtime.MobileConfigurationTests.test_persist_settings_and_preserve_pending_identity) ... ok
+test_private_settings_never_accept_merchant_keys_and_reject_insecure_backends (test_android_runtime.MobileConfigurationTests.test_private_settings_never_accept_merchant_keys_and_reject_insecure_backends) ... ok
+test_local_native_capture_full_resolution_retake_auto_usb_print_and_pause (test_android_runtime.MobileRuntimeWidgetTests.test_local_native_capture_full_resolution_retake_auto_usb_print_and_pause) ... ok
+test_mobile_settings_same_safe_entry_with_masked_tokens (test_android_runtime.MobileRuntimeWidgetTests.test_mobile_settings_same_safe_entry_with_masked_tokens) ... ok
+test_sandbox_ack_guard_then_same_photo_print_path_uncertain_not_replayed (test_android_runtime.MobileRuntimeWidgetTests.test_sandbox_ack_guard_then_same_photo_print_path_uncertain_not_replayed) ... ok
+test_chunks_once_and_releases_after_short_writes (test_android_runtime.UsbAdapterTests.test_chunks_once_and_releases_after_short_writes) ... ok
+test_denied_permission_sends_zero_bytes (test_android_runtime.UsbAdapterTests.test_denied_permission_sends_zero_bytes) ... ok
+test_partial_failure_never_reopens_or_retries_payload (test_android_runtime.UsbAdapterTests.test_partial_failure_never_reopens_or_retries_payload) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 11.118s
+
+OK
+KIOSK_UNITTEST_SUMMARY: run=12 failures=0 errors=0 skipped=0 success=True
+The media.width.pixel field of the printer profile is not set. The center flag will have no effect.
+The media.width.pixel field of the printer profile is not set. The center flag will have no effect.
+The media.width.pixel field of the printer profile is not set. The center flag will have no effect.
+The media.width.pixel field of the printer profile is not set. The center flag will have no effect.
+The media.width.pixel field of the printer profile is not set. The center flag will have no effect.
+The media.width.pixel field of the printer profile is not set. The center flag will have no effect.

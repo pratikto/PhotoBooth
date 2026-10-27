@@ -1,5 +1,8 @@
 # Android A1 — APK build readiness
 
+**Android runtime continuation — 28 October 2026:** The current 0.2.0 packaged entry is Android v2 runtime with CAMERA/INTERNET and native camera/USB/Sandbox support. The zero-permission 0.1.0 APK evidence below identifies historical source 293b22b only; it is not evidence for this new runtime. New native build verification is in progress.
+[Scope, setup and source evidence](android-v2-runtime.md).
+
 Owner continuation, 27 October 2026 (Asia/Jakarta): continue the existing
 `feature/portrait-kiosk-android` to APK build readiness, follow current GUI v2,
 read documentation comprehensively, and create no new development branch.

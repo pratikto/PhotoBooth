@@ -1,5 +1,8 @@
 # Meong Photobooth — test evidence and acceptance
 
+**Android runtime continuation — 28 October 2026:** Android runtime focused fixtures: 23 PASS at compact size and 12 runtime PASS at portrait, no errors/failures/skips. Final full regression/new APK is in progress. Camera/USB paper/merchant/Drive/audio/video on physical Android remain NOT_RUN.
+[Scope, setup and source evidence](android-v2-runtime.md).
+
 **Android A1 artifact closure — published 28 October:** source **293b22b**
 built a signed debug APK on 27 October. Signature v2 valid; zero requested permissions; 144 AArch64 ELF libraries; 65 exact asset hashes; all twelve original template masters and .b85 game artwork; 16 KB ZIP alignment PASS.
 Matching-source [preview CI 40495526267](https://github.com/pratikto/PhotoBooth/actions/runs/40495526267)

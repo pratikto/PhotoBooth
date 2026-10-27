@@ -22,7 +22,7 @@ def verify_project(project):
             raise ValueError('Invalid package manifest path')
         aliases = {'main.py':'android/main.py', 'buildozer.spec':'android/buildozer.spec',
                    'android-constraints.txt':'android/constraints.txt'}
-        source = ROOT / aliases.get(name, name)
+        source = ROOT / ('android/'+name if name.startswith(('native_src/', 'recipes/')) else aliases.get(name, name))
         target = project / name
         if (not target.is_file() or target.is_symlink() or
                 hashlib.sha256(target.read_bytes()).hexdigest() != digest or

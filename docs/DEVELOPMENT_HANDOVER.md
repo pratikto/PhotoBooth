@@ -1,5 +1,8 @@
 # Meong Photobooth — GUI v2 development handover
 
+**Android runtime continuation — 28 October 2026:** Continue Android camera/USB OTG/Sandbox parity at the same branch. Portable c001095 reuse is pushed at 795b64c; current native/runtime stage has focused source checks and a new full regression/build in progress. Preserve the named pre-restart evidence stash and all app-private journals.
+[Scope, setup and source evidence](android-v2-runtime.md).
+
 ## Android A1 continuation — 27 October
 
 Current owner request continues **feature/portrait-kiosk-android**, no new branch,

@@ -1,5 +1,8 @@
 # Meong Photobooth — product and technical decisions
 
+**Android runtime continuation — 28 October 2026:** Owner selects QRIS Sandbox first, then explicitly requests Android built-in camera, USB OTG printing and the current v2 feature set, on the existing Android branch. This supersedes the previous offline-only runtime scope; production/provider activation and device acceptance remain distinct.
+[Scope, setup and source evidence](android-v2-runtime.md).
+
 ## Owner Android continuation — 27 October 2026
 
 Continue the **existing feature/portrait-kiosk-android**, following current GUI

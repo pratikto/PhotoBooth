@@ -1,5 +1,8 @@
 # Meong Photobooth — GUI v2 architecture
 
+**Android runtime continuation — 28 October 2026:** Android runtime injects Camera2 and UsbManager into the actual v2 app/PhotoJobs/ThermalPrinter and reuses Sandbox protocol/UI. Native face/palm/media and private configuration are separate platform bindings; all portable delivery services match c001095.
+[Scope, setup and source evidence](android-v2-runtime.md).
+
 **Android A1 build closure — 28 October:** the curated manifest now includes
 178 build/source inputs, including dependency constraints. The helper recreates
 only generated installer/distribution outputs while retaining native objects,

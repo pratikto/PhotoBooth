@@ -30,7 +30,7 @@ jobs:
           sdkmanager 'platforms;android-35' 'build-tools;35.0.0' 'ndk;28.2.13676358'
       - name: Verify packaging policy
         run: python -S -m unittest tests.test_android_preview -v
-      - name: Compile curated offline APK
+      - name: Compile curated Android v2 APK
         run: |
           set -o pipefail
           work/android-build-venv/bin/python tools/build_android.py \

@@ -2,6 +2,10 @@
 
 ## Android APK build
 
+Current Android runtime: built-in camera, USB OTG printing and QRIS Sandbox using
+the actual current v2 services/UI. [Setup, feature mapping and current verification](docs/android-v2-runtime.md).
+New 0.2.0 native build verification is in progress. The A1 result below is historical.
+
 **Build verified at 293b22b (27 October):** signed arm64 debug APK compiled and
 inspected, including every native ELF inside the Python payload. Signature,
 zero permissions, all twelve templates/artwork and 16 KB alignment pass.
@@ -26,9 +30,8 @@ checks source hashes on `--resume`, and keeps build caches under `work/`.
 Alternatively run **Android preview foundation** manually in GitHub Actions,
 select the Android branch and enable **build_apk**; download its
 `meong-android-debug` artifact.
-This is the offline GUI v2/game preview. Camera, printing, Drive, payment,
-audio and video remain disabled pending their native Android adapters/device
-acceptance. [Current validation and exact toolchain](docs/android-build-readiness.md).
+The current entry uses the native runtime; hardware/provider acceptance remains
+separate from source fixtures. [Toolchain and historical A1 evidence](docs/android-build-readiness.md).
 
 Portrait Kivy photobooth with advertising, a tutorial, twelve original thermal
 strip designs, three photos per selected design, one retake per design, local

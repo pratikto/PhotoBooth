@@ -1,5 +1,8 @@
 # Android parallel development
 
+**Android runtime continuation — 28 October 2026:** The owner now authorizes the full Android v2 runtime with built-in camera, USB OTG printing and Sandbox. The earlier A0/A1 offline plans/results below remain historical; the packaged entry has changed. New build/device verification is tracked separately.
+[Scope, setup and source evidence](android-v2-runtime.md).
+
 **Current A1 build result — recorded 28 October:** functional source 293b22b
 compiled a signed arm64 debug APK on 27 October. Signature v2 valid; zero requested permissions; 144 AArch64 ELF libraries; 65 exact asset hashes; all twelve original template masters and .b85 game artwork; 16 KB ZIP alignment PASS.
 [Build guide and current evidence](android-build-readiness.md). Native Android

@@ -1,5 +1,8 @@
 # Meong Photobooth — current feature status
 
+**Android runtime continuation — 28 October 2026:** Android runtime now implements the owner-selected built-in Camera2 and USB OTG adapters, shared v2 photo/auto-print and QRIS Sandbox, plus native media/detectors and optional ordinary-mode Drive. Focused native fixtures pass; new APK/device acceptance remains in progress.
+[Scope, setup and source evidence](android-v2-runtime.md).
+
 **Android A1 continuation:** curated package now includes original game .b85 art,
 uses current five-image GUI v2 carousel, handles Back without exiting/losing the
 game, and has pinned p4a/NDK plus local-cache build helper/manual APK workflow.
