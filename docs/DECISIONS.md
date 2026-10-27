@@ -1,5 +1,14 @@
 # Meong Photobooth — product and technical decisions
 
+## Owner Android authorization — 27 October 2026
+
+Create `feature/portrait-kiosk-android` and develop in parallel with staged Git
+pushes. This is an explicit exception to the earlier same-branch-only policy.
+Windows/Ubuntu continues independently; no master change or platform merge.
+Reuse actual v2 GUI/game/assets; first bounded increment is an offline preview
+and packaging foundation. Native Android APK/camera/device acceptance remains
+separate. [Scope and stages](android-development.md).
+
 ## Owner working rule and platform — 27 October 2026
 
 Documentation review must be thorough/comprehensive/careful before code changes;

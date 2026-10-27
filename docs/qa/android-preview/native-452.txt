@@ -1,0 +1,6 @@
+test_original_ui_private_data_and_hardware_gates (tests.test_android_widgets.AndroidWidgetTests.test_original_ui_private_data_and_hardware_gates) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.497s
+
+OK

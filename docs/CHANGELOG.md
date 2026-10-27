@@ -1,5 +1,13 @@
 # Meong Photobooth — changelog
 
+## 27 October — Android A0 parallel branch
+
+Fork desktop `fcabfbb` into owner-authorized `feature/portrait-kiosk-android`.
+Add Android preview host/entry, private data bindings, curated tracked-source
+stager, Buildozer candidate spec, policy/native reuse tests and dedicated CI.
+Preserve desktop launchers and shared GUI/game/assets. Stage-1 local focused
+checks pass; APK/SDK/device build not performed. [Scope](android-development.md).
+
 ## 27 October 2026 — FEAT-009 Windows verification and final evidence
 
 Published source `f023029` closes SQLite test-fixture connections before Windows

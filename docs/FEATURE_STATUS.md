@@ -1,5 +1,10 @@
 # Meong Photobooth — current feature status
 
+**Android branch A0 (27 October):** preview host/private data and curated
+Buildozer source staging implemented on `feature/portrait-kiosk-android`.
+Existing GUI/template/game reused; desktop hardware/payment flags forced off.
+APK compilation and Android device acceptance NOT_RUN. [Android status](android-development.md).
+
 **Final FEAT-009 source `f023029`:** matching-source CI 40423003641 succeeds in
 all three jobs (Linux pure, Linux desktop, Windows). Post-fixture-correction local
 rerun: 869 run, 866 PASS, 3 optional palm-assets SKIP, zero failures/errors,

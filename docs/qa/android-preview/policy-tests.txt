@@ -1,0 +1,10 @@
+test_inherited_desktop_opt_ins_are_forced_off (tests.test_android_preview.AndroidPolicyTests.test_inherited_desktop_opt_ins_are_forced_off) ... ok
+test_package_allowlist_excludes_credentials_archives_and_customer_data (tests.test_android_preview.AndroidPolicyTests.test_package_allowlist_excludes_credentials_archives_and_customer_data) ... ok
+test_relative_storage_is_rejected (tests.test_android_preview.AndroidPolicyTests.test_relative_storage_is_rejected) ... ok
+test_spec_is_portrait_offline_and_uses_mobile_recipes (tests.test_android_preview.AndroidPolicyTests.test_spec_is_portrait_offline_and_uses_mobile_recipes) ... ok
+test_staging_has_correct_entry_and_preserves_existing_destination (tests.test_android_preview.AndroidPolicyTests.test_staging_has_correct_entry_and_preserves_existing_destination) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.085s
+
+OK

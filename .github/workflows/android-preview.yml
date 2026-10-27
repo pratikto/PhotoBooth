@@ -1,0 +1,43 @@
+name: Android preview foundation
+on:
+  push:
+    branches: [feature/portrait-kiosk-android]
+    paths-ignore: ['docs/**', '**/*.md']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      KIVY_NO_ARGS: '1'
+      SDL_AUDIODRIVER: dummy
+      LIBGL_ALWAYS_SOFTWARE: '1'
+      PHOTOBOOTH_TEST_ANDROID: '1'
+      MEONG_ANDROID_RENDER_DIR: /tmp/meong-android-views
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify stdlib policy and curated package
+        run: |
+          python -S -m unittest tests.test_android_preview -v
+          python tools/prepare_android.py --output-dir /tmp/meong-android-package
+      - name: Install desktop reuse simulator (not Android SDK)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb libgl1 libegl1 libmtdev1
+          python -m pip install 'Kivy>=2.3.1,<3' pillow numpy requests qrcode tzdata
+      - name: Exercise actual reused UI at compact and portrait sizes
+        run: |
+          xvfb-run -a python -m unittest tests.test_android_widgets -v
+          ANDROID_PREVIEW_WIDTH=800 xvfb-run -a python -m unittest tests.test_android_widgets -v
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android-preview-native-views
+          path: /tmp/meong-android-views
+          retention-days: 7
+# APK compilation, installation and Android device tests are separate gates.

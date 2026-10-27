@@ -1,5 +1,15 @@
 # Repository working instructions
 
+## Android parallel branch — 27 October 2026 owner authorization
+
+The owner explicitly requests a new branch and parallel Android development,
+then staged Git pushes. Android work uses `feature/portrait-kiosk-android` from
+`fcabfbb8559778055631ff3a066f14108392ef71`; Windows/Ubuntu continues on
+`feature/portrait-kiosk-v2-next`. This supersedes the older no-new-branch rule for
+this named Android stream only. Do not merge Android into desktop/master or
+replace the desktop entry point. Read docs/android-development.md before edits;
+reuse the actual existing GUI/game/assets and retain docs-first/docs-after rules.
+
 ## Primary rule — documentation before and after code
 
 Owner instruction, 27 October 2026: **Before changing any code, read the

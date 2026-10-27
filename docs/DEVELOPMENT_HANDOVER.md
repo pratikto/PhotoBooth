@@ -1,5 +1,15 @@
 # Meong Photobooth — GUI v2 development handover
 
+## Android branch continuation — 27 October
+
+Owner explicitly requests a new branch, parallel Android development and staged
+pushes. `feature/portrait-kiosk-android` forks `fcabfbb`; desktop stays on
+`feature/portrait-kiosk-v2-next`. Read [Android review/scope/commands](android-development.md)
+before changes. A0 reuses the actual UI/game/templates, directs state to private
+app storage, gates unavailable hardware and stages only approved source/assets.
+Five policy checks and native 452×900/800×1280 UI reuse checks pass. Full
+regression/Android-preview CI are recorded separately; APK/SDK/device NOT_RUN.
+
 **Final published checkpoint, 27 October:** FEAT-009 source `f023029` is on the
 required branch; matching [CI 40423003641](https://github.com/pratikto/PhotoBooth/actions/runs/40423003641)
 has all three jobs SUCCESS. Windows fixture connections are explicitly closed

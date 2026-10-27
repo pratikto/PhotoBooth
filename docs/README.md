@@ -26,6 +26,9 @@ Updated **26 October 2026 (Asia/Jakarta)**. Continue on
 
 ## Current acceptance packages
 
+- [Android parallel branch and A0 preview](android-development.md): reused GUI,
+  private storage and curated Buildozer input; APK/device acceptance NOT_RUN.
+
 - [FEAT-009 stage 2: recovery and Ubuntu startup](qa/portrait-v2-recovery/README.md):
   Windows development/Ubuntu deployment, docs-first rule, guarded startup and
   single-instance ownership; generated user service requires manual installation.
