@@ -1,5 +1,13 @@
 # Meong Photobooth — current feature status
 
+## Delivery responsiveness
+
+Owner-approved Drive/GUI improvement continues from fcabfbb. Background delivery
+snapshots no longer lock result buttons/footer during rebuild. The strict
+UPLOAD_COMPLETE QR contract and operator-disabled printing remain. Controlled
+native regression PASS; actual five-minute delay is unmeasured.
+[Scope, v1 comparison, evidence and rollback](qa/drive-delivery-performance/README.md).
+
 **Final FEAT-009 source `f023029`:** matching-source CI 40423003641 succeeds in
 all three jobs (Linux pure, Linux desktop, Windows). Post-fixture-correction local
 rerun: 869 run, 866 PASS, 3 optional palm-assets SKIP, zero failures/errors,

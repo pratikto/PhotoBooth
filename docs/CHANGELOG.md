@@ -1,5 +1,13 @@
 # Meong Photobooth — changelog
 
+## 27 October — delivery foreground state
+
+Owner-approved Drive/GUI improvement continues from fcabfbb. Background delivery
+snapshots no longer lock result buttons/footer during rebuild. The strict
+UPLOAD_COMPLETE QR contract and operator-disabled printing remain. Controlled
+native regression PASS; actual five-minute delay is unmeasured.
+[Scope, v1 comparison, evidence and rollback](qa/drive-delivery-performance/README.md).
+
 ## 27 October 2026 — FEAT-009 Windows verification and final evidence
 
 Published source `f023029` closes SQLite test-fixture connections before Windows

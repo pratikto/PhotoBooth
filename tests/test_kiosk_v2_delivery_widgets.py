@@ -228,3 +228,28 @@ class DeliveryWidgetTests(unittest.TestCase):
             text=app._delivery_text()
             self.assertIn('DRIVE GAGAL TERSAMBUNG',text)
             self.assertNotIn('MENGUNGGAH KE DRIVE',text)
+
+    def test_result_rebuilt_during_background_snapshot_keeps_finish_and_footer_ready(self):
+        entered=threading.Event();release=threading.Event()
+        with self.booth() as (app,service,printer,_,root):
+            service.printer=None;service.auto_print=False
+            self.enter(app);self.review(app)
+            app._photo_submit('compose');self.settle(app)
+            original=service.snapshot
+            def delayed():
+                entered.set();release.wait(3);return original()
+            try:
+                with patch.object(service,'snapshot',side_effect=delayed):
+                    app._photo_submit('snapshot');self.assertTrue(entered.wait(2))
+                    app._show()  # Resize/rebuild while a background snapshot owns PhotoJobs.
+                    buttons=[w for w in app.stage.walk() if isinstance(w,ArcadeButton)]
+                    finish=next(w for w in buttons if 'SELESAI' in w.text)
+                    printing=next(w for w in buttons if 'BELUM DIAKTIFKAN' in w.text)
+                    self.assertFalse(finish.disabled);self.assertTrue(printing.disabled)
+                    self.assertNotIn('Sedang memproses',app._photo_message.text)
+                    release.set();self.settle(app)
+                self.assertFalse(finish.disabled)
+                app._photo_submit('next');self.settle(app)
+                self.assertEqual(app.navigation.page,ADVERT)
+                printer.print_image.assert_not_called()
+            finally:release.set()

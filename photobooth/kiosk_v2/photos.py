@@ -17,6 +17,7 @@ from photobooth.catalog import compose_result
 from photobooth.manifest_io import manifest_lock, write_json_atomic
 from photobooth.transaction_store import TransactionStore
 from photobooth.workflow import PhotoSession, build_session_plans
+from photobooth.delivery_timing import event
 
 LOG = logging.getLogger(__name__)
 PURPOSE = 'PORTRAIT_V2_PHOTO_TEST'
@@ -56,6 +57,13 @@ class PhotoTest:
         self.recovered_prints = 0
         self._download_qr = None
         self._download_qr_url = None
+
+    def _notify_delivery(self):
+        if self.drive_worker and self.transaction:
+            if self.workspace and hasattr(self.drive_worker, 'notify_transaction'):
+                self.drive_worker.notify_transaction(self.transaction.transaction_id)
+            else:
+                self.drive_worker.kick()
 
     def prepare(self):
         """Called off the GUI; recover uncertain sends without replaying them."""
@@ -155,6 +163,7 @@ class PhotoTest:
                                      financial_transaction=False, test_print_jobs={}))
         self.sessions = [PhotoSession(plan) for plan in plans]
         self.phase = 'capture'
+        self._notify_delivery()
         return self.snapshot()
 
     def capture(self, frame):
@@ -176,6 +185,7 @@ class PhotoTest:
         else:
             session.add_initial_photo(path)
         self.phase = 'review' if session.ready_for_review else 'capture'
+        self._notify_delivery()
         return self.snapshot()
 
     def retake(self, index):
@@ -211,8 +221,7 @@ class PhotoTest:
         self.phase = 'result'
         if self.index == len(self.sessions) - 1:
             self.store.complete_transaction(self.transaction)
-        if self.drive_worker:
-            self.drive_worker.kick()
+        self._notify_delivery()
         return self.snapshot()
 
     def print_result(self):
@@ -320,6 +329,8 @@ class PhotoTest:
                 'print_state': job.get('state', 'NOT_SENT'),
                 'print_checked': job.get('operator_checked', False),
                 'upload_status': manifest['upload_status'],
+                'upload_total': len(manifest.get('upload_files', {})),
+                'upload_verified': sum(r.get('status') == 'VERIFIED' for r in manifest.get('upload_files', {}).values()),
                 'folder_url': manifest.get('drive_folder_url'),
                 'folder': str(self.transaction.folder_path),
                 'binding_error': manifest.get('drive_binding_error'),
@@ -351,11 +362,18 @@ class PhotoJobs:
         self._thread = None
         self._closed = False
         self.busy = False
+        self.current_action = None
+
+    @property
+    def foreground_busy(self):
+        """A background delivery snapshot must not freeze customer controls."""
+        return self.busy and self.current_action != 'snapshot'
 
     def submit(self, action, *args):
         if self.busy or self._closed:
             return False
         self.busy = True
+        self.current_action = action
         def run():
             try:
                 if self.service is None:
@@ -386,6 +404,7 @@ class PhotoJobs:
         except queue.Empty:
             return None
         self.busy = False
+        self.current_action = None
         return result
 
     def close(self):

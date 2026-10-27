@@ -1,5 +1,13 @@
 # Meong Photobooth — GUI v2 development handover
 
+## Current delivery continuation
+
+Owner-approved Drive/GUI improvement continues from fcabfbb. Background delivery
+snapshots no longer lock result buttons/footer during rebuild. The strict
+UPLOAD_COMPLETE QR contract and operator-disabled printing remain. Controlled
+native regression PASS; actual five-minute delay is unmeasured.
+[Scope, v1 comparison, evidence and rollback](qa/drive-delivery-performance/README.md).
+
 **Final published checkpoint, 27 October:** FEAT-009 source `f023029` is on the
 required branch; matching [CI 40423003641](https://github.com/pratikto/PhotoBooth/actions/runs/40423003641)
 has all three jobs SUCCESS. Windows fixture connections are explicitly closed
