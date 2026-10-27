@@ -1,5 +1,15 @@
 # Meong Photobooth — Bug register
 
+## 27 October — delivery timing follow-up
+
+Owner reports faster uploads and supplies runtime timings: successful session
+122.719s to QR, including 70.782s overlapping old bind attempts. Three old
+transactions repeatedly reach a successful bind response then local ValueError;
+exact cause unproven. Bounded recovery/backoff and typed diagnosis are prepared;
+actual old-folder conflict repair remains unverified and is not automated.
+[New source/evidence/retest](qa/drive-delivery-performance/RETRY.md). Original
+five-minute incident and BUG-009 cloud deletion remain separate open evidence.
+
 ## Delivery latency / result input follow-up — 27 October 2026
 
 Owner reports >5 minutes before large QR, then verified Drive with disabled

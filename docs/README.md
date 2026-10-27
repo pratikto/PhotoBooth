@@ -26,6 +26,10 @@ Updated **26 October 2026 (Asia/Jakarta)**. Continue on
 
 ## Current acceptance packages
 
+- [Failed Drive retry isolation](qa/drive-delivery-performance/RETRY.md): runtime
+  timing, healthy-first scheduling, persistent backoff and safe bind diagnosis.
+
+
 - [Drive delivery performance and GUI state](qa/drive-delivery-performance/README.md):
   customer-priority scheduling, bounded reserves/content yield/cache reuse, monotonic
   timing, v1 comparison, Windows update/manual deployment and short manual checks.

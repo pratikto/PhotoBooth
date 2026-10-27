@@ -1,5 +1,10 @@
 # Meong Photobooth — product and technical decisions
 
+Owner accepts the 27 October recommendation to isolate old failed delivery
+retries and add specific safe bind diagnostics. This scope preserves claims,
+folder identity and retention; no automatic repair/deletion or batch-upload
+protocol is authorized. [Retry continuation](qa/drive-delivery-performance/RETRY.md).
+
 ## Owner delivery-performance continuation — 27 October 2026
 
 Owner approves same-branch investigation/implementation/tests/documentation and

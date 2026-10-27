@@ -69,6 +69,25 @@ class BoothSyncTests(unittest.TestCase):
         session.post.return_value.json.return_value={'ok':True,'data':'eA==','offset':1,'size':2,'md5':'a'*32}
         with self.assertRaises(DriveApiError):client.asset_chunk({'id':'x','path':'Global_Advertisement/x.png','size':2,'md5':'a'*32},0,1)
 
+    def test_binding_protocol_errors_have_specific_safe_codes(self):
+        from photobooth.booth_sync import DriveBindingError
+        session=Mock();existing=AppsScriptDriveClient('https://script.google.com/macros/s/fixture/exec','fixture',session=session)
+        client=BoothDriveClient(existing,'PB001V2S2');session.post.return_value.status_code=200
+        manifest={'transaction_id':'PB001V2S2_00000001','drive_claim_token':'a'*32,
+                  'created_at':'2026-10-26T00:00:00Z','sessions':[{}]}
+        valid={'ok':True,'storage_layout':2,'photo_number_layout':1,'link_verified':True,
+               'transaction_id':manifest['transaction_id'],'folder_id':'fixture',
+               'folder_url':'https://drive.google.com/drive/folders/fixture'}
+        for override,code in (({'storage_layout':1},'BIND_LAYOUT_UNSUPPORTED'),
+                              ({'transaction_id':'different'},'BIND_RESPONSE_ID_MISMATCH'),
+                              ({'link_verified':False},'BIND_LINK_UNVERIFIED'),
+                              ({'folder_url':'https://drive.google.com/drive/folders/different'},'BIND_RESPONSE_INVALID')):
+            session.post.return_value.json.return_value={**valid,**override}
+            with self.assertRaises(DriveBindingError) as error:client.bind_transaction(manifest)
+            self.assertEqual(error.exception.code,code)
+            self.assertEqual(error.exception.status_code,409)
+            self.assertNotIn('fixture',str(error.exception))
+
     def test_configured_layout2_without_credentials_is_offline_ready_and_never_falls_back_to_legacy_oauth(self):
         from photobooth.kiosk_v2.photos import configured_test
         with TemporaryDirectory() as folder, patch.dict('os.environ', {
@@ -251,6 +270,8 @@ class BoothSyncTests(unittest.TestCase):
             self.assertEqual(next(iter(data['upload_files'].values()))['attempts'],1)
             client.upload_file.side_effect=upload
             restarted=BoothDriveWorker(w,client);restarted.run_once()
+            self.assertEqual(client.upload_file.call_count,1)  # Restart preserves the deadline.
+            clock.return_value=131;restarted.run_once()
             data=json.loads(tx.manifest_path.read_text());self.assertEqual(data['upload_status'],'UPLOAD_COMPLETE')
             self.assertEqual(next(iter(data['upload_files'].values()))['attempts'],2)
             restarted.run_once();self.assertEqual(client.upload_file.call_count,2)
@@ -266,3 +287,105 @@ class BoothSyncTests(unittest.TestCase):
         self.assertIn('2000',message);self.assertIn('503',message)
         self.assertIn('PB001V2S2_00000001',message)
         self.assertNotIn('private-token-photo-payload',message)
+
+    def test_known_failures_run_after_healthy_files_and_only_one_recovery_per_interval(self):
+        with TemporaryDirectory() as folder,patch('time.monotonic') as clock:
+            now=[100.0];clock.side_effect=lambda:now[0]
+            w=BoothWorkspace(folder);w.prepare();client=self.reserve_client()
+            failed=[self.queued_transaction(w,client,files=1) for _ in range(3)]
+            good=self.queued_transaction(w,client,files=5)
+            for tx in failed:
+                m=json.loads(tx.manifest_path.read_text());m['drive_binding_error']='DRIVE_RETRY'
+                tx.manifest_path.write_text(json.dumps(m))
+            order=[];bind=client.bind_transaction.side_effect;upload=client.upload_file.side_effect
+            def binding(m):
+                order.append(('bind',m['transaction_id']))
+                if m['transaction_id']!=good.transaction_id:
+                    now[0]+=5;raise DriveApiError('fixture secret',503)
+                return bind(m)
+            def uploading(*a,**kw):
+                order.append(('upload',a[1]));now[0]+=8;return upload(*a,**kw)
+            client.bind_transaction.side_effect=binding;client.upload_file.side_effect=uploading
+            worker=BoothDriveWorker(w,client)
+            for _ in range(5):
+                worker.kick()  # Continuous customer notifications cannot starve due recovery.
+                worker.run_once()
+            self.assertEqual(order[:2],[('bind',good.transaction_id),('upload',good.transaction_id)])
+            self.assertEqual(sum(action=='bind' and tx!=good.transaction_id for action,tx in order),2)
+            self.assertEqual(json.loads(good.manifest_path.read_text())['upload_status'],'UPLOAD_COMPLETE')
+            # Oldest due recovery is not starved by successful customer progress.
+            now[0]=200;worker.run_once()
+            self.assertEqual(order[-1],('bind',failed[2].transaction_id))
+
+    def test_binding_conflict_keeps_folder_bytes_and_clock_and_survives_stale_controller_save(self):
+        with TemporaryDirectory() as folder,patch('time.monotonic',return_value=100):
+            w=BoothWorkspace(folder);w.prepare();client=self.reserve_client();tx=self.queued_transaction(w,client,1)
+            m=json.loads(tx.manifest_path.read_text());m.update(drive_folder_id='known-original',
+                drive_folder_url='https://drive.google.com/drive/folders/known-original')
+            tx.manifest_path.write_text(json.dumps(m));started=m['created_at']
+            raw={p:p.read_bytes() for p in tx.folder_path.glob('Photo/01/raw/*')}
+            worker=BoothDriveWorker(w,client)
+            with self.assertLogs('photobooth.delivery',level='INFO') as logs:worker.run_once()
+            self.assertIn('BIND_FOLDER_CONFLICT','\n'.join(logs.output))
+            self.assertNotIn('known-original','\n'.join(logs.output))
+            client.upload_file.assert_not_called()
+            tx.manifest['status']='COMPLETED';TransactionStore(w.root,w.counter_path,w.booth_id,layout_version=2)._write_manifest(tx)
+            final=json.loads(tx.manifest_path.read_text())
+            self.assertEqual(final['drive_folder_id'],'known-original');self.assertEqual(final['created_at'],started)
+            self.assertEqual(final['drive_delivery_retry']['error_code'],'BIND_FOLDER_CONFLICT')
+            self.assertEqual({p:p.read_bytes() for p in raw},raw)
+            worker.notify_transaction(tx.transaction_id);worker.run_once()
+            self.assertEqual(client.bind_transaction.call_count,1) # Capture kick never bypasses backoff.
+
+    def test_binding_identity_changed_during_request_is_not_overwritten(self):
+        with TemporaryDirectory() as folder:
+            w=BoothWorkspace(folder);w.prepare();client=self.reserve_client();tx=self.queued_transaction(w,client,1)
+            binding=client.bind_transaction.side_effect
+            def changed(m):
+                latest=json.loads(tx.manifest_path.read_text());latest['transaction_id']='other-identity'
+                tx.manifest_path.write_text(json.dumps(latest));return binding(m)
+            client.bind_transaction.side_effect=changed
+            worker=BoothDriveWorker(w,client)
+            with self.assertLogs('photobooth.delivery',level='INFO') as logs:worker.run_once()
+            latest=json.loads(tx.manifest_path.read_text())
+            self.assertEqual(latest['transaction_id'],'other-identity')
+            self.assertNotIn('drive_delivery_retry',latest)
+            self.assertIn('BIND_TRANSACTION_CHANGED','\n'.join(logs.output))
+            client.upload_file.assert_not_called()
+
+    def test_successful_recovery_clears_failure_and_future_failure_starts_at_base_delay(self):
+        with TemporaryDirectory() as folder,patch('time.monotonic') as clock:
+            clock.return_value=100
+            w=BoothWorkspace(folder);w.prepare();client=self.reserve_client();tx=self.queued_transaction(w,client,2)
+            upload=client.upload_file.side_effect;client.upload_file.side_effect=DriveApiError('offline',503)
+            worker=BoothDriveWorker(w,client);worker.run_once()
+            clock.return_value=130;client.upload_file.side_effect=upload;worker.run_once()
+            self.assertIsNone(json.loads(tx.manifest_path.read_text())['drive_delivery_retry'])
+            client.upload_file.side_effect=DriveApiError('offline',503);worker.run_once()
+            state=json.loads(tx.manifest_path.read_text())['drive_delivery_retry']
+            self.assertEqual((state['failures'],state['delay_seconds']),(1,30))
+
+
+class DeliveryRetryPolicyTests(unittest.TestCase):
+    def test_backoff_caps_and_oldest_due_recovery_retains_a_turn(self):
+        from photobooth.delivery_retry import DeliveryRetries
+        with patch('time.monotonic',return_value=100),patch('time.time',return_value=1000):
+            policy=DeliveryRetries()
+            delays=[policy.failed('tx','DRIVE_NETWORK_RETRY','bind')['delay_seconds'] for _ in range(8)]
+            self.assertEqual(delays,[30,60,120,240,300,300,300,300])
+            policy.state('older',{'drive_binding_error':'DRIVE_RETRY'})
+            self.assertEqual(policy.choose([('older','path'),('tx','path2')]),('older','path'))
+            policy.finish_turn();self.assertIsNone(policy.choose([('older','path')]))
+
+    def test_restart_uses_wall_deadline_once_then_monotonic_and_bounds_corrupt_future_clock(self):
+        from photobooth.delivery_retry import DeliveryRetries
+        with patch('time.monotonic',return_value=500),patch('time.time',return_value=1000):
+            policy=DeliveryRetries()
+            saved={'drive_delivery_retry':{'failures':3,'not_before_unix':1090}}
+            self.assertEqual(policy.state('tx',saved),{'failures':3,'due':590})
+            self.assertEqual(policy.state('future',{'drive_delivery_retry':{'not_before_unix':1e15}})['due'],800)
+            self.assertEqual(policy.state('bad',{'drive_delivery_retry':{'not_before_unix':float('nan')}})['due'],500)
+        with patch('time.monotonic',return_value=589),patch('time.time',return_value=1e15):
+            self.assertIsNone(policy.choose([('tx','path')]))
+        with patch('time.monotonic',return_value=590):
+            self.assertEqual(policy.choose([('tx','path')]),('tx','path'))

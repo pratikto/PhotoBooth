@@ -11,12 +11,20 @@ import time
 import threading
 
 from photobooth.delivery_timing import event, span
+from photobooth.delivery_retry import DeliveryRetries
 
 from photobooth.drive_storage import AppsScriptDriveClient, DriveApiError
 from photobooth.drive_sync import DriveSyncWorker, sync_manifest
 from photobooth.manifest_io import manifest_lock, write_json_atomic
 from photobooth.retention import register_drive_retention
 from photobooth.booth_storage import checked_path
+
+
+class DriveBindingError(DriveApiError):
+    """Fixed diagnostic codes; never include returned IDs, URLs or claim tokens."""
+    def __init__(self, code):
+        self.code = code
+        super().__init__(code, 409)
 
 
 class BoothDriveClient(AppsScriptDriveClient):
@@ -56,11 +64,16 @@ class BoothDriveClient(AppsScriptDriveClient):
         result = self._post({'action': 'bind_transaction',
             'transaction_id': manifest['transaction_id'], 'claim_token': manifest['drive_claim_token'],
             'started_at': manifest['created_at'], 'session_count': len(manifest['sessions'])})
-        if (result.get('photo_number_layout') != 1 or result.get('link_verified') is not True
-                or result.get('storage_layout') != 2 or result.get('transaction_id') != manifest['transaction_id']
-                or not result.get('folder_id') or not re.fullmatch(
-                    r'https://drive\.google\.com/drive/folders/[A-Za-z0-9_-]+', str(result.get('folder_url', '')))):
-            raise DriveApiError('Remote transaction binding could not be verified.', 409)
+        if result.get('storage_layout') != 2 or result.get('photo_number_layout') != 1:
+            raise DriveBindingError('BIND_LAYOUT_UNSUPPORTED')
+        if result.get('transaction_id') != manifest['transaction_id']:
+            raise DriveBindingError('BIND_RESPONSE_ID_MISMATCH')
+        if result.get('link_verified') is not True:
+            raise DriveBindingError('BIND_LINK_UNVERIFIED')
+        folder_id = result.get('folder_id')
+        if (not isinstance(folder_id, str) or not re.fullmatch(r'[A-Za-z0-9_-]+', folder_id)
+                or result.get('folder_url') != 'https://drive.google.com/drive/folders/' + folder_id):
+            raise DriveBindingError('BIND_RESPONSE_INVALID')
         return result
 
     def asset_manifest(self):
@@ -100,7 +113,7 @@ class BoothDriveWorker(DriveSyncWorker):
         self._content_checked = 0
         self._queue_lock = threading.Lock()
         self._queued = {}
-        self._retry_after = {}
+        self.retries = DeliveryRetries()
 
     def notify_transaction(self, transaction_id):
         with self._queue_lock:
@@ -112,61 +125,138 @@ class BoothDriveWorker(DriveSyncWorker):
     def _interrupted(self):
         return self._stop.is_set() or self._wake.is_set()
 
+    def _record_failure(self, path, tx, code, phase, error=None):
+        self.last_error = True
+        retry = self.retries.failed(tx, code, phase)
+        event('transaction_error', tx, error=type(error).__name__ if error else None,
+              error_code=code, phase=phase, retry_seconds=retry['delay_seconds'],
+              failure_count=retry['failures'], result='retry')
+        try:
+            with manifest_lock(path):
+                latest = json.loads(checked_path(path).read_text(encoding='utf-8'))
+                # A mismatched identity must never receive another transaction's metadata.
+                if latest.get('transaction_id') != tx:
+                    return
+                latest['drive_delivery_retry'] = retry
+                if phase == 'bind':
+                    latest['drive_binding_error'] = ('DRIVE_SETUP_REQUIRED' if isinstance(error, DriveApiError)
+                                                     and error.status_code == 409 else 'DRIVE_RETRY')
+                write_json_atomic(path, latest)
+        except (OSError, ValueError, TypeError):
+            # Unreadable state remains intact; memory backoff bounds log/retry churn.
+            pass
+
+    def _clear_failure(self, path, tx):
+        if tx not in self.retries.states:
+            return
+        with manifest_lock(path):
+            latest = json.loads(checked_path(path).read_text(encoding='utf-8'))
+            if latest.get('transaction_id') != tx:
+                raise DriveBindingError('BIND_TRANSACTION_CHANGED')
+            latest['drive_delivery_retry'] = None
+            if latest.get('drive_binding_verified'):
+                latest['drive_binding_error'] = None
+            write_json_atomic(path, latest)
+        self.retries.recovered(tx)
+        event('transaction_recovered', tx, result='ok')
+
+    @staticmethod
+    def _error_code(error, phase):
+        if isinstance(error, DriveBindingError):
+            return error.code
+        if isinstance(error, DriveApiError):
+            return 'DRIVE_NETWORK_RETRY' if error.transient else 'DRIVE_REMOTE_REJECTED'
+        return {'manifest': 'MANIFEST_INVALID', 'bind': 'BIND_LOCAL_STATE_INVALID',
+                'retention': 'RETENTION_LOCAL_STATE_INVALID', 'upload': 'UPLOAD_LOCAL_STATE_INVALID'}[phase]
+
+    def _process_transaction(self, path, tx, *, lane):
+        phase = 'manifest'
+        try:
+            manifest = json.loads(checked_path(path).read_text(encoding='utf-8'))
+            if manifest.get('transaction_id') != tx:
+                raise DriveBindingError('BIND_TRANSACTION_CHANGED')
+            if manifest.get('storage_layout') != 2 or not manifest.get('drive_intent'):
+                return False
+            with self._queue_lock:
+                queued = self._queued.pop(tx, None)
+            event('worker_start', tx, lane=lane,
+                  queue_wait_ms=round((time.monotonic()-queued)*1000, 1) if queued is not None else None,
+                  queue_origin='notified' if queued is not None else 'discovered')
+            phase = 'bind'
+            if not manifest.get('drive_binding_verified') or manifest.get('photo_number_layout') != 1:
+                with span('bind', tx):
+                    bound = self.client.bind_transaction(manifest)
+                with manifest_lock(path):
+                    latest = json.loads(path.read_text(encoding='utf-8'))
+                    if latest.get('transaction_id') != tx:
+                        raise DriveBindingError('BIND_TRANSACTION_CHANGED')
+                    if latest.get('drive_folder_id') and latest['drive_folder_id'] != bound['folder_id']:
+                        raise DriveBindingError('BIND_FOLDER_CONFLICT')
+                    latest.update(drive_folder_id=bound['folder_id'], drive_folder_url=bound['folder_url'],
+                                  drive_binding_verified=True, drive_binding_error=None, photo_number_layout=1)
+                    write_json_atomic(path, latest)
+            phase = 'retention'
+            with span('retention', tx):
+                register_drive_retention(path, self.client)
+            manifest = json.loads(path.read_text(encoding='utf-8'))
+            if manifest.get('drive_retention_error'):
+                self._record_failure(path, tx, 'RETENTION_HOLD', phase)
+                return False
+            phase = 'upload'
+            if manifest.get('drive_retention_registered_at') and manifest.get('upload_status') not in {'UPLOAD_COMPLETE', 'LOCAL_EXPIRED'}:
+                before = manifest.get('upload_files', {})
+                result = sync_manifest(path, self.client, max_files=1, cancelled=self._stop.is_set)
+                records = result.get('upload_files', {})
+                failed = any(r.get('status') == 'UPLOAD_RETRY' and
+                             r.get('attempts', 0) > before.get(key, {}).get('attempts', 0)
+                             for key, r in records.items())
+                if failed:
+                    self._record_failure(path, tx, 'UPLOAD_RETRY', phase)
+                    return False
+                self._clear_failure(path, tx)
+                return any(r.get('status') not in {'VERIFIED', 'ACTION_REQUIRED', 'LOCAL_EXPIRED'}
+                           for r in records.values())
+            self._clear_failure(path, tx)
+        except (OSError, ValueError, TypeError, RuntimeError, KeyError) as error:
+            self._record_failure(path, tx, self._error_code(error, phase), phase, error)
+        return False
+
     def run_once(self):
         more = False
-        # Stable ordering plus one file per visit prevents either old or new sessions
-        # from monopolizing a pass. Failed requests wait for the normal retry interval.
+        recovery = []
+        # Discover first, then serve every healthy transaction before a bounded
+        # recovery turn. Historical errors cannot precede each new customer file.
         for path in sorted(self.workspace.manifests()):
             if self._stop.is_set():
                 return False
+            tx = path.parent.name
             try:
                 manifest = json.loads(checked_path(path).read_text(encoding='utf-8'))
                 if manifest.get('storage_layout') != 2 or not manifest.get('drive_intent'):
-                    continue
-                tx = manifest['transaction_id']
-                if time.monotonic() < self._retry_after.get(tx, 0):
                     continue
                 if (manifest.get('drive_binding_verified') and manifest.get('photo_number_layout') == 1
                         and manifest.get('drive_retention_registered_at')
                         and manifest.get('upload_status') in {'UPLOAD_COMPLETE', 'LOCAL_EXPIRED'}):
                     continue
-                with self._queue_lock:
-                    queued = self._queued.pop(tx, None)
-                event('worker_start', tx, queue_wait_ms=round((time.monotonic()-queued)*1000, 1)
-                      if queued is not None else None, queue_origin='notified' if queued is not None else 'discovered')
-                if not manifest.get('drive_binding_verified') or manifest.get('photo_number_layout') != 1:
-                    with span('bind', tx):
-                        bound = self.client.bind_transaction(manifest)
-                    with manifest_lock(path):
-                        latest = json.loads(path.read_text(encoding='utf-8'))
-                        if latest.get('transaction_id') != tx:
-                            raise ValueError('Transaction identity changed.')
-                        if latest.get('drive_folder_id') and latest['drive_folder_id'] != bound['folder_id']:
-                            raise ValueError('A known reserved folder cannot be replaced.')
-                        latest.update(drive_folder_id=bound['folder_id'], drive_folder_url=bound['folder_url'],
-                                      drive_binding_verified=True, drive_binding_error=None, photo_number_layout=1)
-                        write_json_atomic(path, latest)
-                with span('retention', tx):
-                    register_drive_retention(path, self.client)
-                manifest = json.loads(path.read_text(encoding='utf-8'))
-                if manifest.get('drive_retention_error'):
-                    event('retention_hold', tx, result='retry')
-                    self._retry_after[tx] = time.monotonic() + self.interval_seconds
-                if manifest.get('drive_retention_registered_at') and manifest.get('upload_status') not in {'UPLOAD_COMPLETE', 'LOCAL_EXPIRED'}:
-                    result = sync_manifest(path, self.client, max_files=1, cancelled=self._stop.is_set)
-                    records = list(result.get('upload_files', {}).values())
-                    if any(r.get('status') == 'UPLOAD_RETRY' for r in records):
-                        self._retry_after[tx] = time.monotonic() + self.interval_seconds
-                    elif any(r.get('status') not in {'VERIFIED', 'ACTION_REQUIRED', 'LOCAL_EXPIRED'} for r in records):
-                        more = True
-            except (OSError, ValueError, TypeError, RuntimeError) as error:
-                self.last_error = True
-                self._retry_after[path.parent.name] = time.monotonic() + self.interval_seconds
-                event('transaction_error', path.parent.name, error=type(error).__name__, result='retry')
-                with manifest_lock(path):
-                    latest = json.loads(path.read_text(encoding='utf-8'))
-                    latest['drive_binding_error'] = 'DRIVE_SETUP_REQUIRED' if isinstance(error, DriveApiError) and error.status_code == 409 else 'DRIVE_RETRY'
-                    write_json_atomic(path, latest)
+                if self.retries.state(tx, manifest) is not None:
+                    recovery.append((tx, path))
+                else:
+                    more = self._process_transaction(path, tx, lane='healthy') or more
+            except (OSError, ValueError, TypeError, KeyError) as error:
+                state = self.retries.states.get(tx)
+                if state is None or state['due'] <= time.monotonic():
+                    self._record_failure(path, tx, 'MANIFEST_INVALID', 'manifest', error)
+        # One due recovery turn remains possible under continuous arrivals.
+        # A new kick cannot cancel a request already admitted; the global
+        # interval bounds that cost, and the next pass handles the new work.
+        if not self._stop.is_set():
+            selected = self.retries.choose(recovery)
+            if selected is not None:
+                tx, path = selected
+                try:
+                    more = self._process_transaction(path, tx, lane='recovery') or more
+                finally:
+                    self.retries.finish_turn()
         if more or self._interrupted():
             return more
         self._maintain_reserves()

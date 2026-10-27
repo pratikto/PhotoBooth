@@ -1,5 +1,8 @@
 # FEAT-004 / BUG-009 / FEAT-022 delivery performance — 27 October 2026
 
+**Latest continuation:** [runtime timing, failed-retry isolation and Windows update](RETRY.md).
+Earlier source/results below retain their original scope and dates.
+
 Owner authorizes investigation, implementation, tests, documentation and staged
 pushes on feature/portrait-kiosk-v2-next. Base/rollback source:
 fcabfbb8559778055631ff3a066f14108392ef71 (remote verified unchanged).

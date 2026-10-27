@@ -1,5 +1,14 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 27 October — failed-delivery retry isolation
+
+Owner timing identifies repeated old bind failures as 70.782s of a 122.719s
+queued-to-QR session; exact ValueError cause/installed SHA remain unknown.
+Healthy-first scheduling, one recovery/30s, persisted 30–300s backoff and safe
+bind codes are implemented; known folder/transaction conflicts remain protected.
+67 focused service and 11 native delivery tests PASS; full/CI evidence follows.
+Code.gs unchanged; no redeploy required. [Scope, evidence, updates and limits](qa/drive-delivery-performance/RETRY.md).
+
 Final delivery source **2e140c1**: full local **877 run / 874 PASS / 3 optional
 palm-assets SKIP / zero failures/errors**, 262.743s; 29 Code.gs VM PASS,
 11 focused native delivery PASS. Matching-source CI **40448427344**, all three

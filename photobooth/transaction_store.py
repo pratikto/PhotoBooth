@@ -415,6 +415,10 @@ class TransactionStore:
                                 transaction.manifest[key] = persisted[key]
                         if persisted.get('storage_layout') == 2 and 'drive_binding_error' in persisted:
                             transaction.manifest['drive_binding_error'] = persisted['drive_binding_error']
+                        if persisted.get('storage_layout') == 2 and 'drive_delivery_retry' in persisted:
+                            # Keep both the worker's retry deadline and its explicit
+                            # cleared value across a stale capture/controller save.
+                            transaction.manifest['drive_delivery_retry'] = persisted['drive_delivery_retry']
                         if persisted.get('storage_layout') == 2 and persisted.get('drive_folder_id'):
                             for key in ('drive_folder_id', 'drive_folder_url', 'drive_binding_error', 'drive_binding_verified', 'photo_number_layout'):
                                 if key in persisted:

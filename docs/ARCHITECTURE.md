@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 architecture
 
+## 27 October — failed-delivery retry isolation
+
+Owner timing identifies repeated old bind failures as 70.782s of a 122.719s
+queued-to-QR session; exact ValueError cause/installed SHA remain unknown.
+Healthy-first scheduling, one recovery/30s, persisted 30–300s backoff and safe
+bind codes are implemented; known folder/transaction conflicts remain protected.
+67 focused service and 11 native delivery tests PASS; full/CI evidence follows.
+Code.gs unchanged; no redeploy required. [Scope, evidence, updates and limits](qa/drive-delivery-performance/RETRY.md).
+
 ## 27 October — Drive delivery priority and timing
 
 The owner prioritizes customer upload/GUI responsiveness. Source now uses one
