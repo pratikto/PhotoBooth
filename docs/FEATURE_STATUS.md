@@ -4,6 +4,9 @@
 Buildozer source staging implemented on `feature/portrait-kiosk-android`.
 Existing GUI/template/game reused; desktop hardware/payment flags forced off.
 APK compilation and Android device acceptance NOT_RUN. [Android status](android-development.md).
+Source `0cacc27`: 875 local cases / 872 PASS / 3 optional palm SKIP, zero
+failures/errors; matching Android-preview CI 40425864227 SUCCESS. This validates
+the foundation/shared UI, not an APK or Android hardware.
 
 **Final FEAT-009 source `f023029`:** matching-source CI 40423003641 succeeds in
 all three jobs (Linux pure, Linux desktop, Windows). Post-fixture-correction local

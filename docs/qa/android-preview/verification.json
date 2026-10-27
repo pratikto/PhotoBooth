@@ -1,0 +1,35 @@
+{
+  "base": "fcabfbb8559778055631ff3a066f14108392ef71",
+  "source": "0cacc272625f83d495117ed8a814edfa02d70500",
+  "branch": "feature/portrait-kiosk-android",
+  "sha256": {
+    "photobooth/kiosk_v2/android_preview.py": "171a6ef78a81d8f6a2636d29b0a976a43de4e54ab68316a508a203aa35543e72",
+    "tools/prepare_android.py": "3e8f110f3bb6a2037cd18dc8a622961e4442b648ca55977e143e5b2d8ee78c1e",
+    "android/main.py": "3ff66374b757f2cc6304cf14a450ea9d64ff3dd6482fa63fe71df9c54040f5df",
+    "android/buildozer.spec": "3bc516c1167c6a403ff3e93702c3cb3163002ae51e72276fba03b43b3ff8a5c2",
+    "tests/test_android_preview.py": "134553326f92f8387c10ecb571cc1db8cbba8f8e037b85b78c16f967cada8ee6",
+    "tests/test_android_widgets.py": "b5ea1351e3fd02c68dc833cb13b7a83bb61e3d2e2e1190969252e764467698a5",
+    ".github/workflows/android-preview.yml": "5885db31b1dd4816045fea9421c54c7af9499310f752cfe3746d63365bcfc40b"
+  },
+  "full": {
+    "run": 875,
+    "passed": 872,
+    "skipped": 3,
+    "failures": 0,
+    "errors": 0,
+    "seconds": 266.642
+  },
+  "skip_reason": "optional native palm model fixtures not supplied",
+  "ci_run": 40425864227,
+  "apk_build": "NOT_RUN",
+  "android_device": "NOT_RUN",
+  "sdk_ndk_recipes": "NOT_VERIFIED",
+  "renders": {
+    "game-intro-452x900.png": "a647d45ad94db689a34b2763851b8dd102c2ad12004dbd4e0e0d33dbed5dcc5c",
+    "game-intro-800x1280.png": "bc6925e2bf50895cd24e080fb46c5d748c0ea306b1a8259586024a560fc17905",
+    "idle-452x900.png": "a4b026080caee35f6997494d00ef92964963d776fa43da97233f895e7d930fec",
+    "gallery-452x900.png": "77d01141d916f3716df0520193c51620485f3d58d718b9712801d50fe36f5a23",
+    "idle-800x1280.png": "37453d4d14387dcfb1afbca46e3bde135e937ca35878beb000c21e6d57c533a2",
+    "gallery-800x1280.png": "2d509f6ec9caaa8ed072767f82ca61d12c09e7da1f55bb7448055a562433d3bf"
+  }
+}

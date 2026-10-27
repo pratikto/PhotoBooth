@@ -2,6 +2,12 @@
 
 ## Android branch continuation — 27 October
 
+A0 source `0cacc27` pushed/remote verified; matching Android-preview CI
+40425864227 SUCCESS. Full 875 local cases: 872 PASS, 3 optional palm-assets SKIP,
+zero failures/errors, 266.642s. Evidence-only second push follows. Next Android
+stage: SDK/NDK/recipe and APK validation, then actual device tests; not completed
+by Linux renders. [Final evidence](android-development.md#final-a0-evidence-and-staged-publication).
+
 Owner explicitly requests a new branch, parallel Android development and staged
 pushes. `feature/portrait-kiosk-android` forks `fcabfbb`; desktop stays on
 `feature/portrait-kiosk-v2-next`. Read [Android review/scope/commands](android-development.md)

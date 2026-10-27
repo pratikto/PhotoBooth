@@ -80,7 +80,8 @@ Kivy/Pillow/numpy/requests/qrcode/tzdata, native sqlite3 and pyjnius recipes.
 Numpy is required by the reused legacy-audio import seam even while playback is
 off. Desktop pywin32/OpenCV-contrib/python-escpos/ffpyplayer are not copied from
 requirements.txt. KIVY_VIDEO=null uses the verified Kivy null provider.
-The offline A0 manifest requests no camera, Internet, USB or shared-storage access.
+The A0 spec requests no camera, Internet, USB or shared-storage access; inspect
+the merged APK manifest at A1, since a build tool/recipe may add defaults.
 SDK license auto-accept is off. No release signing key, package publication,
 background service or production endpoint is supplied.
 
@@ -116,3 +117,29 @@ Rollback: switch back to the existing Windows/Ubuntu branch, preserving its data
 Android package/private data are separate. Never erase journals, game claims or
 uncertain jobs to pass a check. Future shared fixes should be reviewed as small
 portable commits instead of blindly merging one platform branch into another.
+
+## Final A0 evidence and staged publication
+
+**Stage 1:** `0cacc272625f83d495117ed8a814edfa02d70500` pushed to the new Android
+branch and remote HEAD verified. Desktop's branch remained `fcabfbb` at the fork.
+Five [policy tests](qa/android-preview/policy-tests.txt) PASS and real-widget
+checks PASS at [452×900](qa/android-preview/native-452.txt) and
+[800×1280](qa/android-preview/native-800.txt). Six synthetic screenshots are
+preserved in [the QA directory](qa/android-preview/); compact gallery and portrait
+game intro were reviewed. These are Linux/Kivy fixtures, not Android screenshots.
+
+**Final regression:** [875 cases](qa/android-preview/full-tests.txt), **872 PASS /
+3 optional palm-assets SKIP / zero failures/errors**, 266.642s. Command in the
+existing headless environment with command network permission for local ASGI:
+`PHOTOBOOTH_TEST_ANDROID=1 PHOTOBOOTH_TEST_GUI=1 PHOTOBOOTH_TEST_AUDIO=1 PHOTOBOOTH_TEST_VIDEO=1 python tools/run_kiosk_unittests.py`.
+
+**Matching source CI:** [40425864227](https://github.com/pratikto/PhotoBooth/actions/runs/40425864227)
+SUCCESS at `0cacc27`, validating policy/staging plus the real UI at both sizes
+without installing desktop ffpyplayer/OpenCV. [Job record](qa/android-preview/final-ci.json).
+[Source/render hashes and limits](qa/android-preview/verification.json).
+
+**Stage 2:** evidence-only documentation push; no redundant successful CI rerun.
+Shared desktop production modules/entry points remain unchanged. APK compilation,
+native recipes and physical Android camera/audio/touch/device acceptance remain
+NOT_RUN. The next Android increment is A1 toolchain/APK validation; the first
+preview must not be presented as a working Android camera/printing release.

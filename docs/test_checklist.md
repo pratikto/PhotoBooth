@@ -1,5 +1,11 @@
 # Meong Photobooth — test evidence and acceptance
 
+**Android A0 (27 October):** source `0cacc27` on `feature/portrait-kiosk-android`;
+875 local cases: 872 PASS, 3 optional palm-assets SKIP, zero failures/errors,
+266.642s. Five packaging/policy checks and reused Kivy UI checks at two sizes
+pass; matching-source Android-preview CI 40425864227 SUCCESS. No APK build or
+Android hardware acceptance. [Evidence and stages](android-development.md#final-a0-evidence-and-staged-publication).
+
 **Final FEAT-009 verification — 27 October:** source `f023029` / matching-source
 CI [40423003641](https://github.com/pratikto/PhotoBooth/actions/runs/40423003641),
 all three jobs SUCCESS. Windows fixture cleanup preserves assertions and runtime;

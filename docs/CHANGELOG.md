@@ -2,6 +2,11 @@
 
 ## 27 October — Android A0 parallel branch
 
+Published `0cacc27`; five policy checks and two-resolution native UI checks pass.
+Final full regression: 875 cases, 872 PASS, three optional palm-assets SKIP,
+zero failures/errors, 266.642s. Matching Android-preview CI 40425864227 SUCCESS.
+Second push records source hashes/reports and skips redundant CI. APK NOT_RUN.
+
 Fork desktop `fcabfbb` into owner-authorized `feature/portrait-kiosk-android`.
 Add Android preview host/entry, private data bindings, curated tracked-source
 stager, Buildozer candidate spec, policy/native reuse tests and dedicated CI.
