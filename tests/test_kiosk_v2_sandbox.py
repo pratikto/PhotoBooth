@@ -63,11 +63,21 @@ class SandboxAdapterTests(unittest.TestCase):
         self.assertEqual(self.adapter.recover()['phase'],'RECOVERY')
         with self.assertRaises(RuntimeError):self.adapter.complete()
     def test_mode_and_credential_isolation(self):
-        backend,gui=v2_environments({'PHOTOBOOTH_V2_CHECKOUT_MOCK':'1'},'merchant','SB-Mid-server-test','PB001',8765,self.root)
+        for prefix in ('SB-Mid-server-', 'Mid-server-'):
+            with self.subTest(prefix=prefix):
+                self.check_mode_and_credential_isolation(prefix + 'TEST-ONLY-NOT-A-CREDENTIAL')
+    def check_mode_and_credential_isolation(self, key):
+        backend,gui=v2_environments({'PHOTOBOOTH_V2_CHECKOUT_MOCK':'1',
+                                   'PHOTOBOOTH_V2_PRINT':'1','PHOTOBOOTH_V2_DRIVE':'1'},
+                                  'merchant',key,'PB001',8765,self.root)
         self.assertTrue(sandbox_enabled(gui));self.assertNotIn('MIDTRANS_SERVER_KEY',gui)
         self.assertIn('MIDTRANS_SERVER_KEY',backend)
+        self.assertEqual(backend['MIDTRANS_SERVER_KEY'],key)
         self.assertIn('kiosk-v2-sandbox',gui['MEONG_QRIS_JOURNAL'])
         self.assertEqual(gui['PHOTOBOOTH_V2_PRINT'],'0')
+        self.assertEqual(gui['PHOTOBOOTH_V2_DRIVE'],'0')
+        self.assertEqual(backend['PHOTOBOOTH_V2_PRINT'],'0')
+        self.assertEqual(backend['PHOTOBOOTH_V2_DRIVE'],'0')
         with self.assertRaises(ValueError):sandbox_enabled(dict(gui,MIDTRANS_SERVER_KEY='secret'))
         with self.assertRaises(ValueError):sandbox_enabled(dict(gui,PHOTOBOOTH_V2_CHECKOUT_MOCK='1'))
         with self.assertRaises(ValueError):sandbox_enabled(dict(gui,MEONG_QRIS_MODE='production'))

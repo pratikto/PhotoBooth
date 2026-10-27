@@ -1,5 +1,13 @@
 # P4b Sandbox → P5 readiness (FEAT-020 / FEAT-022)
 
+**28 October — BUG-020:** the owner's Sandbox dashboard displays a Server Key
+beginning `Mid-server-`. The launcher now accepts that format and `SB-Mid-server-`
+without rewriting the credential. Copy the complete key from the Sandbox
+dashboard; its prefix alone does not prove environment or validity. Requests
+remain fixed to `https://api.sandbox.midtrans.com`, with redirects refused.
+[Reproduction, tests, update and limits](KEY-FORMAT.md). This supersedes the
+older prefix-only expectation at the end of this record.
+
 **Current implementation note.** The adapter and P5 stages described below
 were completed; future-tense stage descriptions are the original plan, not
 outstanding implementation tasks. P5 source `9433010` and subsequent health
@@ -99,7 +107,8 @@ Stage 2 verification: **195 focused PASS**, 0 failures/errors/skips, 23.535s. In
 Midtrans documents that Sandbox is created automatically at sign-up, for free
 test transactions. Production merchant approval is separate. In the existing
 account choose Sandbox → Settings → Access Keys; read Merchant ID and Sandbox
-Server Key locally (the launcher expects `SB-Mid-server-...`).
+Server Key locally (both `SB-Mid-server-...` and `Mid-server-...` syntax are now
+accepted; see the 28 October correction above).
 [Official guide](https://docs.midtrans.com/docs/midtrans-account). No merchant
 credentials or official simulator acceptance have been supplied for this v2
 trial. Missing access means NOT_RUN, not simulated merchant PASS.

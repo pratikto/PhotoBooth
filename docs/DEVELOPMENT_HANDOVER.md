@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 28 October — BUG-020 Sandbox Server Key format
+
+Owner's Sandbox dashboard shows `Mid-server-`; the launcher previously rejected
+it locally. Both Server Key spellings are accepted without changing the fixed
+Sandbox endpoint, credential isolation or payment authority. 136 focused protocol/
+launcher checks PASS; final regression/CI and exact source are recorded in the
+[correction runbook](qa/portrait-v2-sandbox/KEY-FORMAT.md). Actual merchant
+authentication and simulator acceptance still need the owner's local test.
+
 Matching-source CI **40481718367**: all three jobs SUCCESS.
 Gallery fix **eb0297d**: final local **898 run / 895 PASS / 3 optional
 palm-assets SKIP / zero failures/errors**, 291.903s; 20 targeted checks and

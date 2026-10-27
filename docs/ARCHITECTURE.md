@@ -1,5 +1,11 @@
 # Meong Photobooth — GUI v2 architecture
 
+The Sandbox launcher accepts both dashboard Server Key formats (`SB-Mid-server-`
+and `Mid-server-`); key spelling never selects a provider endpoint. The unchanged
+transport fixes HTTPS requests to Sandbox and refuses redirects. GUI credentials,
+payment verification and isolated printer/Drive-off trial remain unchanged.
+[28 October BUG-020 correction](qa/portrait-v2-sandbox/KEY-FORMAT.md).
+
 ## 27 October — BUG-019 held gallery drag
 
 Owner reports an empty incoming side while holding a carousel drag. Five pooled

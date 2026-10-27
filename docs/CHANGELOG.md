@@ -1,5 +1,13 @@
 # Meong Photobooth — changelog
 
+## 2026-10-28 — Sandbox dashboard Server Key format (BUG-020)
+
+Accept complete `Mid-server-` and `SB-Mid-server-` keys copied from the Sandbox
+dashboard. The prefix is syntax, not proof of provider environment. Preserve the
+key unchanged, the fixed Sandbox HTTPS transport, redirect refusal, backend-only
+secret and isolated printer/Drive-off profile. Reject client/empty/malformed keys.
+136 focused checks PASS; [final verification and limits](qa/portrait-v2-sandbox/KEY-FORMAT.md).
+
 ## 27 October — BUG-019 held gallery drag
 
 Owner reports an empty incoming side while holding a carousel drag. Five pooled

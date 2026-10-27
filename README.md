@@ -56,6 +56,9 @@ Close the app and clear the MOCK flag after testing:
 The Sandbox launcher requests Merchant ID and a hidden Sandbox Server Key
 locally. Never send keys to chat or commit them. Use the official simulator
 shown in the terminal. [Sandbox instructions and recovery](docs/qa/portrait-v2-sandbox/README.md).
+Copy the Server Key exactly from the Sandbox dashboard: both `SB-Mid-server-`
+and `Mid-server-` formats are accepted. The prefix does not select the environment;
+provider requests remain fixed to Sandbox. [Key-format correction](docs/qa/portrait-v2-sandbox/KEY-FORMAT.md).
 Production account approval and Sandbox access are separate; the
 [official account guide](https://docs.midtrans.com/docs/midtrans-account)
 describes the environments. Actual merchant acceptance remains pending.

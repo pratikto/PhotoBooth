@@ -1,5 +1,12 @@
 # Meong Photobooth — current feature status
 
+## 28 October — BUG-020 Sandbox key syntax
+
+IN SOURCE: launcher accepts both dashboard Server Key formats; fixed Sandbox
+host, redirect refusal and server-only secrets remain. 136 focused tests PASS;
+full regression/CI and actual merchant acceptance are tracked separately in the
+[source-specific record](qa/portrait-v2-sandbox/KEY-FORMAT.md).
+
 Matching-source CI **40481718367**: all three jobs SUCCESS.
 Gallery fix **eb0297d**: final local **898 run / 895 PASS / 3 optional
 palm-assets SKIP / zero failures/errors**, 291.903s; 20 targeted checks and

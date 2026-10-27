@@ -1,5 +1,15 @@
 # Meong Photobooth — Bug register
 
+## BUG-020 — Sandbox dashboard Server Key rejected locally (28 October)
+
+S2: dedicated merchant trial cannot start with the reported `Mid-server-` key
+from a visibly Sandbox dashboard. Reproduced in launcher validation before any
+provider call; exact installed SHA and complete credential remain unknown.
+IN SOURCE: both complete Server Key formats accepted, with Sandbox-only transport
+and credential/payment isolation preserved. 136 focused PASS; final regression
+and CI in the [runbook](qa/portrait-v2-sandbox/KEY-FORMAT.md). Actual Windows
+hidden-input/authentication/simulator retest pending; not CLOSED.
+
 ## BUG-019 — incoming carousel strip absent during held drag (27 October)
 
 S2 visual degradation. Owner screenshots show a blank incoming side before

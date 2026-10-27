@@ -1,5 +1,11 @@
 # FEAT-022 — GUI v2 engineering contracts
 
+Sandbox key syntax accepts both `SB-Mid-server-` and `Mid-server-` with a nonempty
+printable ASCII suffix, at most 512 characters total. The dashboard key is passed
+unchanged to the backend. Environment is fixed by the Sandbox-only transport,
+not inferred from the prefix; provider authentication/settlement remain separate.
+[28 October correction and evidence](qa/portrait-v2-sandbox/KEY-FORMAT.md).
+
 ## Current FEAT-009 stage 2 — 27 October 2026
 
 `recovery.py` performs a bounded, metadata-only read of existing local manifests,

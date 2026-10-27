@@ -1,0 +1,40 @@
+test_dashboard_server_key_formats_preserve_sandbox_isolation (test_qris_sandbox_launcher.SandboxLauncherTests.test_dashboard_server_key_formats_preserve_sandbox_isolation) ... 
+  test_dashboard_server_key_formats_preserve_sandbox_isolation (test_qris_sandbox_launcher.SandboxLauncherTests.test_dashboard_server_key_formats_preserve_sandbox_isolation) (prefix='Mid-server-') ... ERROR
+test_mode_and_credential_isolation (test_kiosk_v2_sandbox.SandboxAdapterTests.test_mode_and_credential_isolation) ... 
+  test_mode_and_credential_isolation (test_kiosk_v2_sandbox.SandboxAdapterTests.test_mode_and_credential_isolation) (prefix='Mid-server-') ... ERROR
+
+======================================================================
+ERROR: test_dashboard_server_key_formats_preserve_sandbox_isolation (test_qris_sandbox_launcher.SandboxLauncherTests.test_dashboard_server_key_formats_preserve_sandbox_isolation) (prefix='Mid-server-')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_qris_sandbox_launcher.py", line 78, in test_dashboard_server_key_formats_preserve_sandbox_isolation
+    backend, gui = self.config(parent=parent, key=key)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_qris_sandbox_launcher.py", line 27, in config
+    return trial_environments(**args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tools/run_qris_sandbox.py", line 43, in trial_environments
+    raise ValueError('Use the Server Key from the Sandbox dashboard, not Client Key or Production')
+ValueError: Use the Server Key from the Sandbox dashboard, not Client Key or Production
+
+======================================================================
+ERROR: test_mode_and_credential_isolation (test_kiosk_v2_sandbox.SandboxAdapterTests.test_mode_and_credential_isolation) (prefix='Mid-server-')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox.py", line 68, in test_mode_and_credential_isolation
+    self.check_mode_and_credential_isolation(prefix + 'TEST-ONLY-NOT-A-CREDENTIAL')
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox.py", line 70, in check_mode_and_credential_isolation
+    backend,gui=v2_environments({'PHOTOBOOTH_V2_CHECKOUT_MOCK':'1',
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tools/run_portrait_v2_sandbox.py", line 11, in v2_environments
+    backend, gui = trial_environments(parent, merchant, key, booth, port, root)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tools/run_qris_sandbox.py", line 43, in trial_environments
+    raise ValueError('Use the Server Key from the Sandbox dashboard, not Client Key or Production')
+ValueError: Use the Server Key from the Sandbox dashboard, not Client Key or Production
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.005s
+
+FAILED (errors=2)
+KIOSK_UNITTEST_SUMMARY: run=2 failures=0 errors=2 skipped=0 success=False

@@ -1,5 +1,10 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+Current merchant-test blocker BUG-020 has a bounded key-format correction and
+136 focused PASS. Resume the existing Sandbox launcher with the unchanged key
+from the Sandbox dashboard after updating; actual authentication/simulator
+evidence remains pending. [Update and source checks](qa/portrait-v2-sandbox/KEY-FORMAT.md).
+
 ## 27 October — BUG-019 held gallery drag
 
 Owner reports an empty incoming side while holding a carousel drag. Five pooled

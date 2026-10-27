@@ -3,6 +3,7 @@ import base64
 import io
 import json
 import unittest
+from urllib.error import HTTPError
 from photobooth.midtrans_sandbox import MidtransSandboxClient, SANDBOX_BASE
 
 
@@ -43,6 +44,35 @@ class MidtransSandboxTests(unittest.TestCase):
     def test_status_url(self):
         self.client.get_status("PB001-0001")
         self.assertEqual(self.requests[0][0].full_url, SANDBOX_BASE + "/v2/PB001-0001/status")
+
+    def test_server_key_spelling_never_selects_production_or_rewrites_auth(self):
+        self.assertEqual(SANDBOX_BASE, 'https://api.sandbox.midtrans.com')
+        for prefix in ('SB-Mid-server-', 'Mid-server-'):
+            key = prefix + 'TEST-ONLY-NOT-A-CREDENTIAL'
+            with self.subTest(prefix=prefix):
+                self.requests.clear()
+                client = MidtransSandboxClient(key, transport=self.client._transport)
+                client.create_qris('PB001-0001', 10000)
+                client.get_status('PB001-0001')
+                client.cancel('PB001-0001')
+                self.assertEqual([req.full_url for req, _ in self.requests], [
+                    'https://api.sandbox.midtrans.com/v2/charge',
+                    'https://api.sandbox.midtrans.com/v2/PB001-0001/status',
+                    'https://api.sandbox.midtrans.com/v2/PB001-0001/cancel'])
+                expected_auth = 'Basic ' + base64.b64encode((key + ':').encode()).decode()
+                for req, _ in self.requests:
+                    self.assertEqual(req.get_header('Authorization'), expected_auth)
+
+    def test_rejected_key_has_no_production_fallback(self):
+        requests = []
+        def unauthorized(request, timeout):
+            requests.append(request.full_url)
+            raise HTTPError(request.full_url, 401, 'Unauthorized', {}, None)
+        client = MidtransSandboxClient('Mid-server-TEST-ONLY-NOT-A-CREDENTIAL',
+                                      transport=unauthorized)
+        with self.assertRaises(HTTPError):
+            client.create_qris('PB001-0001', 10000)
+        self.assertEqual(requests, ['https://api.sandbox.midtrans.com/v2/charge'])
 
     def test_invalid_amount_rejected_before_network(self):
         for amount in (0, -1, True, 15.5):
