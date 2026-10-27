@@ -145,7 +145,7 @@ class StripCarousel(SwipeGallery):
         self._moving = False
         if self._textures is not None:
             for rank, image in self._images.items():
-                image.texture = self._textures[rank + 1] if rank in (-1, 0, 1) else None
+                image.texture = self._textures[rank + 2]
         self.offset = 0
         self._arrange()
 
@@ -160,9 +160,11 @@ class StripCarousel(SwipeGallery):
         if old is None or step not in (-1, 1):
             self._settle()
             return
-        for rank in (-1, 0, 1):
-            self._images[rank].texture = old[rank + 1]
-        self._images[2 if step == 1 else -2].texture = textures[2 if step == 1 else 0]
+        # Both offscreen neighbours must already exist during a held drag.
+        # Keep the old five-picture window through release, then rebase it in
+        # _settle; this also preserves the incoming picture when reversing.
+        for rank, image in self._images.items():
+            image.texture = old[rank + 2]
         self.offset = drag_offset
         self._moving = True
         self._arrange()

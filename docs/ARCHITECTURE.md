@@ -1,5 +1,15 @@
 # Meong Photobooth — GUI v2 architecture
 
+## 27 October — BUG-019 held gallery drag
+
+Owner reports an empty incoming side while holding a carousel drag. Five pooled
+Images existed, but two outer textures were cleared at rest. The existing widget
+now retains a five-picture cached window through drag, reversal and release.
+Native checks cover all 12 designs, both directions and five sizes, including
+wraparound; selection/quantity and lifecycle guards remain. Device acceptance
+is separate. [Scope, tests and update](qa/portrait-v2-carousel-hold/README.md).
+
+
 ## 27 October — customer upload priority and early folder QR
 
 Latest owner instruction supersedes the earlier completion-only screen QR and

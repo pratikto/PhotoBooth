@@ -1,0 +1,1096 @@
+test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) ... 
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=0, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=0, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=1, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=1, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=2, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=2, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=3, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=3, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=4, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=4, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=5, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=5, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=6, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=6, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=7, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=7, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=8, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=8, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=9, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=9, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=10, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=10, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=11, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=11, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=0, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=0, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=1, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=1, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=2, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=2, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=3, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=3, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=4, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=4, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=5, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=5, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=6, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=6, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=7, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=7, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=8, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=8, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=9, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=9, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=10, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=10, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=11, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=11, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=0, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=0, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=1, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=1, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=2, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=2, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=3, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=3, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=4, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=4, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=5, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=5, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=6, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=6, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=7, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=7, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=8, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=8, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=9, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=9, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=10, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=10, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=11, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=11, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=0, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=0, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=1, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=1, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=2, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=2, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=3, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=3, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=4, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=4, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=5, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=5, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=6, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=6, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=7, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=7, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=8, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=8, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=9, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=9, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=10, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=10, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=11, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=11, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=0, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=0, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=1, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=1, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=2, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=2, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=3, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=3, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=4, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=4, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=5, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=5, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=6, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=6, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=7, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=7, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=8, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=8, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=9, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=9, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=10, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=10, direction=1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=11, direction=-1) ... FAIL
+  test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=11, direction=1) ... FAIL
+test_held_carousel_can_reverse_direction_without_empty_neighbour_or_extra_selection (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_can_reverse_direction_without_empty_neighbour_or_extra_selection) ... FAIL
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=0, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=0, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=1, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=1, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=2, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=2, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=3, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=3, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=4, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=4, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=5, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=5, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=6, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=6, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=7, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=7, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=8, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=8, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=9, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=9, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=10, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=10, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=11, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 1280), index=11, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=0, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=0, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=1, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=1, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=2, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=2, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=3, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=3, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=4, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=4, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=5, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=5, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=6, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=6, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=7, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=7, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=8, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=8, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=9, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=9, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=10, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=10, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=11, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(452, 900), index=11, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=0, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=0, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=1, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=1, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=2, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=2, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=3, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=3, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=4, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=4, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=5, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=5, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=6, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=6, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=7, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=7, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=8, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=8, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=9, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=9, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=10, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=10, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=11, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(390, 736), index=11, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=0, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=0, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=1, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=1, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=2, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=2, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=3, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=3, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=4, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=4, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=5, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=5, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=6, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=6, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=7, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=7, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=8, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=8, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=9, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=9, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=10, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=10, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=11, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(360, 640), index=11, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=0, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=0, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=1, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=1, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=2, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=2, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=3, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=3, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=4, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=4, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=5, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=5, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=6, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=6, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=7, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=7, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=8, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=8, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=9, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=9, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=10, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=10, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=11, direction=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) (viewport=(800, 600), index=11, direction=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 663, in test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release
+    self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+AssertionError: unexpectedly None : Held drag exposes an empty side slot
+
+======================================================================
+FAIL: test_held_carousel_can_reverse_direction_without_empty_neighbour_or_extra_selection (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_can_reverse_direction_without_empty_neighbour_or_extra_selection)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_widgets.py", line 713, in test_held_carousel_can_reverse_direction_without_empty_neighbour_or_extra_selection
+    self.assertIsNotNone(incoming.texture)
+AssertionError: unexpectedly None
+
+----------------------------------------------------------------------
+Ran 2 tests in 2.303s
+
+FAILED (failures=121)
+KIOSK_UNITTEST_SUMMARY: run=2 failures=121 errors=0 skipped=0 success=False

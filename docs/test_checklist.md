@@ -1,5 +1,15 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 27 October — BUG-019 held gallery drag
+
+Owner reports an empty incoming side while holding a carousel drag. Five pooled
+Images existed, but two outer textures were cleared at rest. The existing widget
+now retains a five-picture cached window through drag, reversal and release.
+Native checks cover all 12 designs, both directions and five sizes, including
+wraparound; selection/quantity and lifecycle guards remain. Device acceptance
+is separate. [Scope, tests and update](qa/portrait-v2-carousel-hold/README.md).
+
+
 Final customer-delivery source **311f3d8**: **896 local run / 893 PASS /
 3 optional palm-assets SKIP / zero failures/errors**; 73 focused PASS,
 14 exact-source native captures and eight exact right-panel QR decodes.

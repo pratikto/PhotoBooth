@@ -1,0 +1,9 @@
+test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release) ... ok
+test_held_carousel_can_reverse_direction_without_empty_neighbour_or_extra_selection (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_held_carousel_can_reverse_direction_without_empty_neighbour_or_extra_selection) ... ok
+test_advert_game_invitation_tutorial_and_real_12_strip_gallery (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_advert_game_invitation_tutorial_and_real_12_strip_gallery) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 14.814s
+
+OK
+KIOSK_UNITTEST_SUMMARY: run=3 failures=0 errors=0 skipped=0 success=True

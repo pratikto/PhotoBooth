@@ -24,7 +24,7 @@ not establish tariff, production integration or the current screen inventory.
 | First page | Media plus direct photo/game entry and UNDANGAN (DEMO); invitation overlays the same advertising surface. No separate CARA PAKAI action |
 | Tutorial | Four illustrated steps, vertical scroll and explicit acknowledgement once per visit; reset only on safe idle return |
 | Gallery | Twelve original 1:3 strips, three full previews with center focus; floating PILIH TEMPLATE STRIP title |
-| Navigation | Floating lower-corner arrows; drag follows image and settles with real sliding; short/vertical gestures do not change selection |
+| Navigation | Floating lower-corner arrows; drag reveals incoming neighbours while held/reversed and settles with real sliding on release; short/vertical gestures do not change selection |
 | Summary | Centered minus/count/plus at left; brief copies/session and total/savings at right; removed CETAK caption stays removed |
 | Game | Actual original Stage/Flow/render/assets; unified window scene, centered complete world, uniform speed/spacing; Meong stays left of center |
 | Game actions | Intro/input/result omit KEMBALI KE IKLAN; active game retains AKHIRI GAME. Either result → unseen tutorial → gallery; no MAIN LAGI |

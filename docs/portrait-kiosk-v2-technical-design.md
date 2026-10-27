@@ -38,7 +38,7 @@ source `266b2c8` (print/Drive), input correction `ebb53fd`, original operator
 | --- | --- | --- |
 | Window/page lifetime | `app.py`, `flow.py`, `viewport.py` | Dedicated launcher, page revision guards; browse timeout only for safe pages |
 | Theme/buttons/header | `theme.py`, `button_art.py`, `branding.py`, `brand_flight.py` | Original game materials, native readable main-app captions without required icons; bounded animation lifetime |
-| Gallery/warmup | `gallery.py`, `previews.py` | Twelve original strips, worker CPU preparation and staged texture preload; replacement rather than queued swipe animations |
+| Gallery/warmup | `gallery.py`, `previews.py` | Twelve original strips, worker CPU preparation and five cached neighbour textures; held drag/reversal shows incoming artwork, replacement rather than queued swipe animations |
 | Audio | `audio.py`, `mixer.py`, `game_music.py`, `shutter.py` | One v2 owner; separate GUI/video/game ownership and SFX; no parallel v1 AudioManager |
 | Camera/sensors/preview | `devices.py`, `sensors.py`, `live_preview.py` | Async camera/frame mailbox, worker detection/conversion; display-only mirror; palm shares manual countdown |
 | Photo lifecycle | `photo_views.py`, `photos.py`, `photo_drive.py` | Single-flight PhotoJobs over existing PhotoSession/store/catalog/printer/Drive; preserve originals |

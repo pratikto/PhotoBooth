@@ -1,5 +1,7 @@
 # Meong Photobooth documentation — GUI v2
 
+Latest gallery correction: [BUG-019 held-drag incoming neighbours](qa/portrait-v2-carousel-hold/README.md).
+
 Latest delivery contract: [customer FIFO, held background retries, early verified
 folder QR and immutable mapping](qa/drive-delivery-performance/CUSTOMER-PRIORITY.md).
 This supersedes earlier completion-only screen-QR guidance below.

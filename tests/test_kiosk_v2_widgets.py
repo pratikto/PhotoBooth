@@ -617,6 +617,115 @@ class PortraitKivySmokeTests(unittest.TestCase):
             app.on_stop()
             Window.remove_widget(app.stage)
 
+    def test_held_carousel_drag_reveals_correct_incoming_neighbour_before_release(self):
+        from kivy.base import EventLoop
+        from kivy.core.window import Window
+        from kivy.input.motionevent import MotionEvent
+
+        class Pointer(MotionEvent):
+            def depack(self, args):
+                self.sx, self.sy = args
+                self.profile = ['pos']
+                super().depack(args)
+
+        original = Window.size
+        try:
+            for size in ((800, 1280), (452, 900), (390, 736), (360, 640), (800, 600)):
+                Window.size = size
+                app = PortraitKioskV2App()
+                Window.add_widget(app.build())
+                try:
+                    app._choose_photo()
+                    app._complete_tutorial()
+                    for _ in range(5):
+                        EventLoop.idle()
+                    gallery = app._carousel
+                    pooled = tuple(gallery.viewport.children)
+                    quantities = dict(app.quantities)
+                    for index in range(len(app.templates)):
+                        for direction in (-1, 1):
+                            with self.subTest(viewport=size, index=index, direction=direction):
+                                app.template_index = index
+                                app._update_template()
+                                for _ in range(2):
+                                    EventLoop.idle()
+                                x, y = gallery.viewport.to_window(*gallery.viewport.center)
+                                left, _ = gallery.to_window(gallery.x, gallery.y)
+                                right, _ = gallery.to_window(gallery.right, gallery.y)
+                                pointer = Pointer('held-slide', str((size, index, direction)),
+                                                  (x / Window.width, y / Window.height), is_touch=True)
+                                EventLoop.post_dispatch_input('begin', pointer)
+                                pointer.move(((x + direction * (right-left) * .35 * .9) / Window.width,
+                                              y / Window.height))
+                                EventLoop.post_dispatch_input('update', pointer)
+                                for _ in range(2):
+                                    EventLoop.idle()
+                                # This assertion is deliberately BEFORE pointer release.
+                                self.assertIn(pointer.uid, gallery._touch_origins)
+                                incoming_rank = -2 if direction > 0 else 2
+                                incoming = gallery._images[incoming_rank]
+                                expected = app.templates[(index + incoming_rank) % len(app.templates)]
+                                self.assertIsNotNone(incoming.texture, 'Held drag exposes an empty side slot')
+                                self.assertIs(incoming.texture, app._textures[expected.template_id])
+                                self.assertGreater(incoming.opacity, .4)
+                                self.assertGreater(incoming.right, gallery.viewport.x + 1)
+                                self.assertLess(incoming.x, gallery.viewport.right - 1)
+                                self.assertEqual(app.template_index, index)
+                                self.assertEqual(app.quantities, quantities)
+                                self.assertEqual(tuple(gallery.viewport.children), pooled)
+                                EventLoop.post_dispatch_input('end', pointer)
+                                target = (index - direction) % len(app.templates)
+                                self.assertEqual(app.template_index, target)
+                                # The incoming picture must stay the same through release.
+                                self.assertIs(incoming.texture, app._textures[expected.template_id])
+                                gallery.cancel_motion()
+                                self.assertIs(gallery.selected_image.texture,
+                                              app._textures[app.templates[target].template_id])
+                finally:
+                    app.on_stop()
+                    Window.remove_widget(app.stage)
+        finally:
+            Window.size = original
+
+    def test_held_carousel_can_reverse_direction_without_empty_neighbour_or_extra_selection(self):
+        from kivy.base import EventLoop
+        from kivy.core.window import Window
+        from kivy.input.motionevent import MotionEvent
+
+        class Pointer(MotionEvent):
+            def depack(self, args):
+                self.sx, self.sy = args
+                self.profile = ['pos']
+                super().depack(args)
+
+        app = PortraitKioskV2App()
+        Window.add_widget(app.build())
+        try:
+            app._choose_photo()
+            app._complete_tutorial()
+            for _ in range(5):
+                EventLoop.idle()
+            gallery = app._carousel
+            x, y = gallery.viewport.to_window(*gallery.viewport.center)
+            left, _ = gallery.to_window(gallery.x, gallery.y)
+            right, _ = gallery.to_window(gallery.right, gallery.y)
+            pointer = Pointer('held-slide', 'reverse', (x / Window.width, y / Window.height), is_touch=True)
+            EventLoop.post_dispatch_input('begin', pointer)
+            for direction in (-1, 1, -1, 1):
+                pointer.move(((x + direction * (right-left) * .35 * .9) / Window.width, y / Window.height))
+                EventLoop.post_dispatch_input('update', pointer)
+                incoming = gallery._images[-2 if direction > 0 else 2]
+                self.assertIsNotNone(incoming.texture)
+                self.assertGreater(incoming.opacity, .4)
+                self.assertEqual(app.template_index, 0)
+            EventLoop.post_dispatch_input('end', pointer)
+            self.assertEqual(app.template_index, len(app.templates)-1)
+            gallery.cancel_motion()
+            self.assertFalse(gallery._touch_origins)
+        finally:
+            app.on_stop()
+            Window.remove_widget(app.stage)
+
     def test_button_feedback_precedes_expensive_callback_and_copy_does_not_render_previews(self):
         from unittest.mock import patch
         app = PortraitKioskV2App()
@@ -810,7 +919,7 @@ class PortraitKivySmokeTests(unittest.TestCase):
             self.assertEqual(app.navigation.page, TEMPLATES)
             self.assertTrue(app.navigation.tutorial_seen)
             self.assertEqual(len(app.templates), 12)
-            self.assertEqual(len(app._textures), 3)  # selected + adjacent master strips
+            self.assertEqual(len(app._textures), 5)  # selected + two neighbours on each side
             self.assertIsNotNone(app._preview.texture)
             self.assertEqual(app.quantities[app.templates[0].template_id], 0)
             app._change_copies(1)
@@ -818,7 +927,7 @@ class PortraitKivySmokeTests(unittest.TestCase):
             self.assertEqual(quote_order(app.templates, app.quantities).total_amount, 10000)
             app._shift_template(1)
             self.assertEqual(app.template_index, 1)
-            self.assertEqual(len(app._textures), 4)  # only next new strip loaded
+            self.assertEqual(len(app._textures), 6)  # only one new outer neighbour loaded
             app._return_ad()
             self.assertEqual(app.navigation.page, ADVERT)
             self.assertFalse(app.navigation.tutorial_seen)

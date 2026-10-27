@@ -1,5 +1,14 @@
 # Meong Photobooth — Bug register
 
+## BUG-019 — incoming carousel strip absent during held drag (27 October)
+
+S2 visual degradation. Owner screenshots show a blank incoming side before
+pointer release. Five-slot/three-texture mismatch reproduced; source correction
+retains five cached neighbours. Native held/reverse/wrap checks PASS; exact owner
+HEAD and Windows/Ubuntu acceptance remain unknown. IN SOURCE / device retest
+pending, not CLOSED. [Correction and evidence](qa/portrait-v2-carousel-hold/README.md).
+
+
 ## 27 October — delivery logging recursion recurrence
 
 Owner reports >10 minutes and supplies RecursionError timing; new queued work
