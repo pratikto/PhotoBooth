@@ -92,7 +92,10 @@ mkdir -p work/android-sdk
 curl -fL https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip \
   -o work/android-commandlinetools.zip
 unzip -q work/android-commandlinetools.zip -d work/android-sdk
-work/android-sdk/cmdline-tools/bin/sdkmanager --sdk_root="$PWD/work/android-sdk" \
+mkdir -p work/android-sdk/cmdline-tools/latest
+mv work/android-sdk/cmdline-tools/{bin,lib,NOTICE.txt,source.properties} \
+  work/android-sdk/cmdline-tools/latest/
+work/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root="$PWD/work/android-sdk" \
   'platform-tools' 'platforms;android-35' 'build-tools;35.0.0' 'ndk;28.2.13676358'
 work/android-build-venv/bin/python tools/build_android.py \
   --sdk-dir work/android-sdk --ndk-dir work/android-sdk/ndk/28.2.13676358 \
@@ -107,6 +110,12 @@ not the validated path. Choose JDK 17 in
 JAVA_HOME if the host has multiple JDKs. Never copy a Windows venv into WSL.
 Ubuntu versions without a Python 3.12 package need an existing Python 3.12
 installation; the manual workflow below already supplies it.
+
+The `latest` directory is required by pinned p4a's `get_targets`, even though
+the Buildozer wrapper itself can locate `cmdline-tools/bin/sdkmanager`. A fresh
+runtime build reproduced that mismatch; installing the official tools in their
+standard `cmdline-tools/latest` layout resolves target discovery. These setup
+commands assume a fresh SDK directory; preserve existing installations.
 
 Native toolchain: Buildozer **1.6.0**, host Cython **0.29.37**, host setuptools
 **80.9.0**, p4a **v2026.05.09 / 58d21141f17c889bf8585f5665921d72028f8831**,

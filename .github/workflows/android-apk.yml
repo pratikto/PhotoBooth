@@ -29,7 +29,7 @@ jobs:
           work/android-build-venv/bin/python -m pip install -r android/requirements-build.txt
           sdkmanager 'platforms;android-35' 'build-tools;35.0.0' 'ndk;28.2.13676358'
       - name: Verify packaging policy
-        run: python -S -m unittest tests.test_android_preview -v
+        run: python -S -m unittest tests.test_android_preview tests.test_android_apk -v
       - name: Compile curated Android v2 APK
         run: |
           set -o pipefail
@@ -43,31 +43,12 @@ jobs:
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$APK"
           "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" > work/apk-manifest.txt
           sha256sum "$APK" > work/apk-sha256.txt
-      - name: Reject foreign native libraries including the Python payload
+      - name: Verify runtime package, permissions and nested ARM libraries
         run: |
-          python - <<'PY'
-          import io, struct, tarfile, zipfile
-          from pathlib import Path
-          apk = next(Path('work/android-project/bin').glob('*.apk'))
-          count = 0
-          def check(name, blob):
-              global count
-              assert blob[:4] == b'\x7fELF' and struct.unpack_from('<H', blob, 18)[0] == 183, name
-              count += 1
-          with zipfile.ZipFile(apk) as archive:
-              for name in archive.namelist():
-                  if name.startswith('lib/') and name.endswith('.so'):
-                      blob = archive.read(name)
-                      if name.endswith('/libpybundle.so'):
-                          with tarfile.open(fileobj=io.BytesIO(blob), mode='r:*') as bundle:
-                              for entry in bundle.getmembers():
-                                  if entry.name.endswith('.so'):
-                                      check(entry.name, bundle.extractfile(entry).read())
-                      else:
-                          check(name, blob)
-          assert count > 0
-          print(f'Verified {count} AArch64 ELF libraries, including Python extensions')
-          PY
+          APK=$(find work/android-project/bin -maxdepth 1 -name '*.apk' -print -quit)
+          python tools/verify_android_apk.py "$APK" --badging work/apk-manifest.txt \
+            --spec work/android-project/buildozer.spec --output work/apk-verification.json
+          "$ANDROID_HOME/build-tools/35.0.0/zipalign" -c -P 16 -v 4 "$APK" > work/apk-alignment.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -78,4 +59,6 @@ jobs:
             work/android-build.log
             work/apk-manifest.txt
             work/apk-sha256.txt
+            work/apk-verification.json
+            work/apk-alignment.txt
           retention-days: 7

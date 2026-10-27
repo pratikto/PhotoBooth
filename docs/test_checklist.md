@@ -1,5 +1,11 @@
 # Meong Photobooth — test evidence and acceptance
 
+**Android verification continuation (28 October):** runtime APK metadata/permission/ABI
+checks and nested ELF rejection fixtures are now implemented in the existing
+Android build workflow. Current cloud regression/build/access evidence and
+remaining device gates: [continuation record](qa/android-runtime/continuation.md).
+This is not a new APK or Android hardware PASS.
+
 **Android runtime continuation — 28 October 2026:** Android runtime focused fixtures: 23 PASS at compact size and 12 runtime PASS at portrait, no errors/failures/skips. Final full regression/new APK is in progress. Camera/USB paper/merchant/Drive/audio/video on physical Android remain NOT_RUN.
 [Scope, setup and source evidence](android-v2-runtime.md).
 

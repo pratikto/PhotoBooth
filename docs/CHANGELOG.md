@@ -1,5 +1,14 @@
 # Meong Photobooth — changelog
 
+## Android runtime APK verification — 28 October 2026
+
+- Enforce built package/version/API/permissions/arm64 identity against the staged
+  spec, reusing nested native-library checks and adding negative fixtures.
+- Keep signature verification, add 16 KB ZIP alignment checking and preserve
+  structured binary results in the existing manual APK artifact.
+- [Current cloud validation and build/device limits](qa/android-runtime/continuation.md).
+
+
 ## 2026-10-28 — Android native v2 runtime
 
 Reuse current c001095 shared services; add Camera2 original-resolution capture,

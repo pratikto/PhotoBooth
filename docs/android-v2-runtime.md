@@ -1,5 +1,51 @@
 # Android v2 runtime — camera, printing and Sandbox
 
+## Runtime APK verification continuation — 28 October 2026
+
+Continued from `ef08696` on the existing Android branch. Reviewed AGENTS, the
+root/documentation index, Android development/build/runtime guides, protocol,
+architecture/engineering contracts, decisions, status/bug/backlog/test ledgers
+and handover before changes. Inspected the current camera/USB/settings adapters,
+curated staging/build helpers and both Android workflows. The completed native
+runtime is reused; this increment changes build verification, not photo/payment
+authority, device behavior or the desktop launcher.
+
+The APK workflow previously printed `aapt` metadata without asserting runtime
+identity/permissions. A successfully signed stale 0.1.0 preview could therefore
+pass that step. `tools/verify_android_apk.py` now compares the actual APK badging
+with the **staged** spec: package/version, minimum/target API, exact permission
+set and arm64-only ABI. It reuses the existing nested Python-payload ELF check,
+also rejects truncated/non-ELF/foreign-ABI libraries, and requires a Python
+bundle with native extensions. It reads archive members without extracting them.
+
+The workflow keeps `apksigner` verification, adds `zipalign -c -P 16`, and uploads
+the binary SHA/size/metadata JSON and alignment log with the APK. The verifier
+cannot overwrite its input files and removes an old success report before a
+failed rerun. Signature and alignment remain separate tool checks; the JSON
+does not claim those or physical-device acceptance.
+
+Run portable policy and negative binary fixtures without Android tools:
+
+```bash
+python -S -m unittest tests.test_android_preview tests.test_android_apk -v
+```
+
+After a real build, use the build-tools version already pinned by A1:
+
+```bash
+"$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$APK"
+"$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" > work/apk-manifest.txt
+python tools/verify_android_apk.py "$APK" --badging work/apk-manifest.txt \
+  --spec work/android-project/buildozer.spec --output work/apk-verification.json
+"$ANDROID_HOME/build-tools/35.0.0/zipalign" -c -P 16 -v 4 "$APK"
+```
+
+Fixture APKs are deliberately synthetic ZIP/ELF inputs; their successful checks
+are not a newly compiled/signed Android artifact. Fresh runtime build and
+regression results are tracked in `docs/qa/android-runtime/continuation.md`.
+Rollback only this verification/workflow increment; preserve app-private state,
+photos, claims and uncertain print/payment journals.
+
 Owner continuation, 28 October 2026 (Asia/Jakarta): include QRIS Sandbox,
 camera and printing and follow the features currently in GUI v2. Continue on
 `feature/portrait-kiosk-android`; no new branch or desktop/master changes.

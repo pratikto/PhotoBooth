@@ -34,7 +34,7 @@ jobs:
           python-version: '3.12'
       - name: Verify stdlib policy and curated package
         run: |
-          python -S -m unittest tests.test_android_preview -v
+          python -S -m unittest tests.test_android_preview tests.test_android_apk -v
           python tools/prepare_android.py --output-dir /tmp/meong-android-package
       - name: Install desktop reuse simulator (not Android SDK)
         run: |
