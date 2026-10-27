@@ -9,10 +9,13 @@ or WSL2**, Python 3.12, JDK 17 and the native build prerequisites described in
 ```bash
 python3.12 -m venv work/android-build-venv
 work/android-build-venv/bin/python -m pip install -r android/requirements-build.txt
-work/android-build-venv/bin/python tools/build_android.py --accept-sdk-license
+work/android-build-venv/bin/python tools/build_android.py \
+  --sdk-dir work/android-sdk --ndk-dir work/android-sdk/ndk/28.2.13676358 \
+  --accept-sdk-license
 ```
 
-Output: `work/android-project/bin/*.apk`. The helper stages the curated app,
+Install that SDK first using the linked guide. Output:
+`work/android-project/bin/*.apk`. The helper stages the curated app,
 checks source hashes on `--resume`, and keeps build caches under `work/`.
 Alternatively run **Android preview foundation** manually in GitHub Actions,
 select the Android branch and enable **build_apk**; download its

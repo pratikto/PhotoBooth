@@ -60,15 +60,26 @@ build host; keep the checkout/build on the WSL Linux filesystem. Host Python
 ```bash
 sudo apt-get update
 sudo apt-get install -y git zip unzip autoconf automake libtool pkg-config \
-  cmake make gcc g++ patch openjdk-17-jdk python3.12-venv \
+  cmake make gcc g++ patch curl openjdk-17-jdk python3.12-venv \
   libffi-dev libssl-dev zlib1g-dev
 python3.12 -m venv work/android-build-venv
 work/android-build-venv/bin/python -m pip install -r android/requirements-build.txt
-work/android-build-venv/bin/python tools/build_android.py --accept-sdk-license
+mkdir -p work/android-sdk
+curl -fL https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip \
+  -o work/android-commandlinetools.zip
+unzip -q work/android-commandlinetools.zip -d work/android-sdk
+work/android-sdk/cmdline-tools/bin/sdkmanager --sdk_root="$PWD/work/android-sdk" \
+  'platform-tools' 'platforms;android-35' 'build-tools;35.0.0' 'ndk;28.2.13676358'
+work/android-build-venv/bin/python tools/build_android.py \
+  --sdk-dir work/android-sdk --ndk-dir work/android-sdk/ndk/28.2.13676358 \
+  --accept-sdk-license
 ```
 
-The last flag explicitly accepts SDK licenses for automatic SDK installation.
-Without it Buildozer retains its interactive license prompts. Choose JDK 17 in
+Review/accept SDK licenses when sdkmanager prompts. The last helper flag also
+permits Buildozer SDK license prompts; without it they remain interactive.
+Use the current official command-line tools above (revision 13114758 / 19.0),
+matching the local validation. Buildozer's default SDK bootstrap is older and is
+not the validated path. Choose JDK 17 in
 JAVA_HOME if the host has multiple JDKs. Never copy a Windows venv into WSL.
 Ubuntu versions without a Python 3.12 package need an existing Python 3.12
 installation; the manual workflow below already supplies it.
@@ -80,6 +91,28 @@ NDK **r28c / 28.2.13676358**, Android target **35**, minimum/NDK API **24**,
 and its own recipe build environments; host Python/Cython are separate.
 Its numpy recipe requires minimum API 24 (Android 7), so A0's API 23 candidate
 cannot be retained. No x86/32-bit APK or Play Store release is implied.
+
+`charset-normalizer==3.4.2` is explicitly pinned to its verified py3-none-any
+wheel. With the floating dependency, the current resolver selected a new
+3.5.2 cp314 Android wheel, then p4a's host-side pip installation rejected that
+platform tag. This is a reproduced packaging failure, not a native Kivy failure.
+The compatibility pin preserves the existing requests API and offline profile.
+All native recipes and application code remain unchanged; six stdlib package
+checks pass after the spec-only correction. Final APK verification follows.
+
+The helper also applies android/constraints.txt to both p4a's resolver dry-run
+and final installation: this p4a release drops requirement versions in its
+dry-run, so the spec pin alone does not prevent the incompatible transitive
+wheel. The constraints retain charset-normalizer 3.4.2 and installer pip 26.2.2.
+Use the helper rather than a raw Buildozer invocation for this validated path.
+
+Resuming also exposed p4a's installer-venv overlay: ensurepip restored pip 25.3
+over an upgraded pip 26.2.2, leaving incompatible files/metadata. The build
+helper now recreates only `.buildozer/.../build/venv` before invoking p4a.
+Native objects, SDKs, packaged runtime and app-private journals remain intact.
+It refuses linked installer paths. Eight focused policy tests pass, including
+native-cache preservation and symlink rejection; actual resume follows the
+same path. This is build-tool source, not a new application/payment/data feature.
 
 The helper creates a fresh curated `work/android-project`, never builds the
 desktop root main.py, and keeps caches in `work/android-build-cache`. To retry

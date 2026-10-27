@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import sys
 import subprocess
+import shutil
 
 if __package__:
     from .prepare_android import prepare, ROOT
@@ -25,6 +26,21 @@ def verify_project(project):
                 hashlib.sha256(target.read_bytes()).hexdigest() != digest or
                 not source.is_file() or hashlib.sha256(source.read_bytes()).hexdigest() != digest):
             raise ValueError('Staged source changed; prepare a fresh project: ' + name)
+
+
+def reset_installer_venv(project, archs):
+    """p4a reruns ensurepip; an upgraded installer venv cannot be overlaid safely."""
+    if any(arch not in {'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'} for arch in archs):
+        raise ValueError('Unsupported build architecture')
+    path = (Path(project)/'.buildozer/android/platform'/
+            ('build-'+'_'.join(archs))/'build/venv')
+    if any(p.is_symlink() or getattr(p, 'is_junction', lambda: False)()
+           for p in (path, *path.parents)):
+        raise ValueError('Linked installer paths are excluded')
+    if path.exists():
+        # Only p4a's generated pure-dependency installer; never SDK/native
+        # objects, packaged runtime, app-private state or customer journals.
+        shutil.rmtree(path)
 
 
 def main(argv=None):
@@ -64,6 +80,9 @@ def main(argv=None):
     os.environ['PATH'] = str(Path(sys.executable).parent) + os.pathsep + os.environ.get('PATH', '')
     if sys.prefix != sys.base_prefix:
         os.environ['VIRTUAL_ENV'] = sys.prefix
+    # p4a's resolver dry-run drops VERSION_* pins. Constrain both that pass
+    # and installation, so it cannot add an incompatible native wheel URL.
+    os.environ['PIP_CONSTRAINT'] = str(ROOT/'android/constraints.txt')
     from buildozer import Buildozer
     from buildozer.logger import Logger
     # Buildozer's command-failure logger otherwise dumps the full environment.
@@ -104,6 +123,7 @@ def main(argv=None):
             return super().sdkmanager_path
 
     build.target.__class__ = CommandLineToolsTarget
+    reset_installer_venv(project, build.config.getlist('app', 'android.archs'))
     previous = Path.cwd()
     try:
         os.chdir(project)

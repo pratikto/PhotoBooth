@@ -1,0 +1,3 @@
+# Apply to p4a's resolver dry-run as well as its final host-side installation.
+charset-normalizer==3.4.2
+pip==26.2.2

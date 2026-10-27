@@ -7,7 +7,7 @@ import tempfile
 import unittest
 
 from photobooth.kiosk_v2.android_preview import configure_preview
-from tools.build_android import verify_project
+from tools.build_android import verify_project, reset_installer_venv
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('prepare_android', ROOT/'tools/prepare_android.py')
@@ -74,6 +74,36 @@ class AndroidPolicyTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'Staged source changed'):
                 verify_project(destination)
             self.assertEqual(artwork.read_text(), 'changed')
+
+    def test_resume_only_recreates_generated_installer_and_preserves_native_cache(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            build = root/'.buildozer/android/platform/build-arm64-v8a/build'
+            installer = build/'venv'
+            installer.mkdir(parents=True)
+            (installer/'stale-pip').write_text('generated')
+            native = build/'native-object'
+            native.write_text('compiled')
+            reset_installer_venv(root, ['arm64-v8a'])
+            self.assertFalse(installer.exists())
+            self.assertEqual(native.read_text(), 'compiled')
+
+    @unittest.skipUnless(hasattr(os, 'symlink'), 'symbolic links unavailable')
+    def test_resume_refuses_linked_installer(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            build = root/'.buildozer/android/platform/build-arm64-v8a/build'
+            build.mkdir(parents=True)
+            outside = root/'preserved'
+            outside.mkdir()
+            (outside/'state').write_text('keep')
+            try:
+                (build/'venv').symlink_to(outside, target_is_directory=True)
+            except (OSError, NotImplementedError):
+                self.skipTest('Symbolic links require host permission')
+            with self.assertRaisesRegex(ValueError, 'Linked installer'):
+                reset_installer_venv(root, ['arm64-v8a'])
+            self.assertEqual((outside/'state').read_text(), 'keep')
 
 
 if __name__ == '__main__': unittest.main()

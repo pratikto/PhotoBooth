@@ -39,6 +39,13 @@ build markers, then resume. A partial libpython output is not successful Python
 installation: p4a can otherwise skip to a missing libpythonbin.so. No app source,
 SDK CA policy or private journal is changed for this host-toolchain correction.
 
+Later build-only corrections: pin charset-normalizer 3.4.2's independently
+downloaded py3-none-any wheel after p4a rejected a newly resolved cp314 Android
+wheel; recreate only its generated installer venv on resume after ensurepip
+overlaid pip 25.3/26.2.2. Eight focused policy tests pass for curation, hashes,
+no native-cache deletion and linked-installer rejection. The earlier 879-case
+run remains tied to a4ba8aa; final helper/spec evidence is separate below.
+
 Device installation, real Android touch/insets/keyboard/Back/Home, speaker,
 camera, printer, Drive, provider/POS and release acceptance remain NOT_RUN.
 Do not erase app-private data, consumed codes, counters or journals for a pass.

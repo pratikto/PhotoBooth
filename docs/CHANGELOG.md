@@ -1,5 +1,19 @@
 # Meong Photobooth — changelog
 
+## 27 October — Android native packaging compatibility
+
+Actual p4a/ARM compilation reached the final Python dependency installation.
+The floating charset-normalizer dependency selected an Android cp314 wheel
+that p4a then tried to install using its host pip, causing platform rejection.
+Pin 3.4.2's verified pure-Python wheel; reuse completed native recipes and retain
+unchanged GUI/game code. Six packaging tests PASS after this correction.
+Clarify current official SDK setup in the build guide instead of relying on
+Buildozer's old default SDK bootstrap. Final APK result is recorded separately.
+Resume also reproduced an ensurepip/pip installer overlay; rebuild only the
+generated pure-dependency installer venv, preserving compiled native caches.
+Add tested linked-path rejection/native-cache preservation. Eight focused
+policy checks PASS; shared GUI/game runtime remains unchanged.
+
 ## 27 October — Android A1 build readiness continuation
 
 Continue the existing Android branch at owner request, without another branch.
