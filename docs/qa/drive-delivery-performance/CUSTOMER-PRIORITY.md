@@ -138,8 +138,7 @@ isolation with two regression cases. An interim full run was stopped as test
 process cleanup after these source changes. Final regression and screenshots
 cover the completed source; earlier passes are not relabelled as final.
 
-Native screenshots and final regression/CI publication are recorded below after
-completion. Actual Windows touchscreen, Ubuntu mini-PC, Google ownership/access,
+Final native screenshots, regression and CI evidence are recorded below. Actual Windows touchscreen, Ubuntu mini-PC, Google ownership/access,
 phone download and paper acceptance remain external checks; BUG-009 is OPEN.
 
 ## Update and short device check
@@ -179,3 +178,43 @@ retention deadlines and cloud configuration remain unchanged.
 The older eleven-item delivery form now has a fresh browser storage key for the
 changed early-QR contract; previous browser answers remain under the earlier key
 and do not automatically pass this new source. No repeated twenty-cycle test is added.
+
+## Final source and evidence
+
+Functional source **311f3d8f5e379ed6647e4318c0c73a690671376c** is pushed on the
+required branch; remote HEAD verified. [Full local report](customer-full-tests.txt):
+**896 run / 893 PASS / 3 optional palm-model SKIP / zero failures/errors**,
+273.159s. The skips are optional real-palm assets in device recovery, v2 palm
+countdown and standalone inference. Installed-Kivy native cases, including the
+console-active logging regression, run locally. Earlier source passes are kept
+as historical evidence; the final run is after all functional changes.
+
+[Matching-source CI 40472339778](https://github.com/pratikto/PhotoBooth/actions/runs/40472339778)
+is **SUCCESS in all three jobs**: Linux pure/navigation/audio, Linux native
+synthetic GUI, Windows portable startup/native dummy audio. [Actual job/step
+result](customer-ci-result.json). Job success does not mean all optional cases ran
+or that real hardware/provider acceptance passed.
+
+[313 functional source/asset/test/tool hashes and environment](customer-tested-source.json)
+remain unchanged after testing and through this evidence-only publication.
+Code.gs is byte-identical to base fcf418d; no server redeploy is needed. The
+logging-recursion fix remains intact. No Google operation, physical print,
+archive inspection, data deletion, identity reset or master/default change occurred.
+
+Fourteen exact-source native FBO captures at 800×1280 and 452×900 are in
+[customer-screenshots](customer-screenshots/), with [hash/dimension/pixel-decoding
+results](customer-visual-verification.json) and per-size reports
+([800](customer-delivery-report-800x1280.json), [452](customer-delivery-report-452x900.json)).
+Pending, retry, verified and retention-held views were visually reviewed at both
+sizes. Eight large right-panel screenshot QR crops decode to the exact fixture
+folder URL; pending QR and its complete 30-minute notice are readable at 452px.
+Earlier clipped-text captures are excluded. The original recorder and existing
+[strict FBO adapter](strict-render-driver.py.txt) were reused without image edits.
+These are synthetic screenshots, not signed-out phone/Google/paper acceptance.
+The separate native test preserves operator-disabled printing/active Finish.
+
+Next device evidence: update the existing environment, let the existing pending
+queue resume, compare two actual transaction/local/Drive folder mappings, and
+check the early QR plus eventual complete files. No new photo is needed just to
+resume a pending queue. BUG-009 cloud deletion and previous old-folder conflicts
+remain unverified/protected; this work does not repair or close them.

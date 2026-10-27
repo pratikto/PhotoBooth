@@ -1,5 +1,12 @@
 # Meong Photobooth — current feature status
 
+Final customer-delivery source **311f3d8**: **896 local run / 893 PASS /
+3 optional palm-assets SKIP / zero failures/errors**; 73 focused PASS,
+14 exact-source native captures and eight exact right-panel QR decodes.
+Matching-source CI **40472339778**, all three jobs SUCCESS.
+[Exact evidence/update](qa/drive-delivery-performance/CUSTOMER-PRIORITY.md#final-source-and-evidence).
+
+
 ## 27 October — customer upload priority and early folder QR
 
 Latest owner instruction supersedes the earlier completion-only screen QR and

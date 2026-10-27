@@ -1,0 +1,84 @@
+{
+  "source_sha": "311f3d8f5e379ed6647e4318c0c73a690671376c",
+  "capture_protocol": "original recorder, settled state and native widget FBO",
+  "synthetic_only": true,
+  "screenshots": [
+    {
+      "state": "delivery-01-drive-waiting",
+      "page": "photo_confirm",
+      "file": "delivery-01-drive-waiting-800x12800001.png",
+      "sha256": "58a6114d5047b54a1a756653f7af5493639150d66cd76b543512e13d1c7420a9",
+      "width": 800,
+      "height": 1280,
+      "foreground_busy": false,
+      "footer": "",
+      "upload_status": null
+    },
+    {
+      "state": "delivery-02-drive-ready",
+      "page": "photo_confirm",
+      "file": "delivery-02-drive-ready-800x12800001.png",
+      "sha256": "ec3476b08d43f04f8e20e37ca1406e8f6ae1da66dd9485850ad3aebb62da1018",
+      "width": 800,
+      "height": 1280,
+      "foreground_busy": false,
+      "footer": "",
+      "upload_status": null
+    },
+    {
+      "state": "delivery-03-print-sending",
+      "page": "result",
+      "file": "delivery-03-print-sending-800x12800001.png",
+      "sha256": "975ad56acc3ccd290d325504190c93bbfc4b0760547fdb17be8da4bf3f54df76",
+      "width": 800,
+      "height": 1280,
+      "foreground_busy": true,
+      "footer": "Sedang memproses\u2026 tunggu sebentar.",
+      "upload_status": "PENDING_UPLOAD"
+    },
+    {
+      "state": "delivery-04-offline-retry",
+      "page": "result",
+      "file": "delivery-04-offline-retry-800x12800001.png",
+      "sha256": "80427474ed6e67991ba1fd9308d2f4645ccfee9c01771548717c61c4996f17ad",
+      "width": 800,
+      "height": 1280,
+      "foreground_busy": false,
+      "footer": "",
+      "upload_status": "UPLOAD_RETRY"
+    },
+    {
+      "state": "delivery-05-upload-verified",
+      "page": "result",
+      "file": "delivery-05-upload-verified-800x12800001.png",
+      "sha256": "51984816a693a63f51bee8777bf8c8fbc833040d6ceb210969ccc8dcf2aba33f",
+      "width": 800,
+      "height": 1280,
+      "foreground_busy": false,
+      "footer": "",
+      "upload_status": "UPLOAD_COMPLETE"
+    },
+    {
+      "state": "delivery-06-print-uncertain",
+      "page": "result",
+      "file": "delivery-06-print-uncertain-800x12800001.png",
+      "sha256": "e55282af72269ed3dfc002c0758bc5e35ba5256d6934ca986114967e4394a64e",
+      "width": 800,
+      "height": 1280,
+      "foreground_busy": false,
+      "footer": "",
+      "upload_status": "PENDING_UPLOAD"
+    },
+    {
+      "state": "delivery-07-retention-held",
+      "page": "result",
+      "file": "delivery-07-retention-held-800x12800001.png",
+      "sha256": "6e5723a201a2e668352705cd6ce788310abe6493cb4827dbea429572f269aeee",
+      "width": 800,
+      "height": 1280,
+      "foreground_busy": false,
+      "footer": "",
+      "upload_status": "PENDING_UPLOAD"
+    }
+  ]
+}
