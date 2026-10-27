@@ -1,5 +1,13 @@
 # Meong Photobooth — GUI v2 development handover
 
+Logging correction source **4c31406**: full local **888 run / 885 PASS /
+3 optional palm-model SKIP / zero failures/errors**, 262.543s; real-Kivy
+console-active integration, broken-sink worker survival and 11 delivery widget
+checks PASS. Matching-source CI 40460799605: all three jobs SUCCESS.
+[Update and exact evidence](qa/drive-delivery-performance/LOGGING.md).
+The supplied RecursionError incident is distinct from the protected old-folder
+conflict; exact on-device handler/exit traceback and post-update timing remain unverified.
+
 ## 27 October — delivery logging recursion recurrence
 
 Owner reports >10 minutes and supplies RecursionError timing; new queued work

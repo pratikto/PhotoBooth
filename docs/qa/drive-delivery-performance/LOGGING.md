@@ -124,3 +124,29 @@ Rollback: inspect a scoped inverse commit while preserving all durable queues,
 claims, counters, files and original deadlines. Retain MIXED as the mitigation;
 reverting source alone reintroduces timing propagation/sink fragility. No live
 upload/deployment, deletion or old-folder repair is performed by source QA.
+
+## Final local verification and source publication
+
+Functional source **4c31406943ad3a384d217878f7c2aa7fe074dd60** is pushed to the
+required branch and remote HEAD verified. Full local [report](logging-full-tests.txt):
+**888 run / 885 PASS / 3 optional palm-model assets SKIP / zero failures/errors**,
+262.543s. The real-Kivy console-active integration runs in its own clean child
+process and passes; it is not hidden by the outer console-disabled configuration.
+[Environment and 313 exact functional hashes](logging-tested-source.json) remain
+unchanged afterward. Native delivery widgets: 11 PASS; targeted checks: 54 PASS.
+The prior retry scheduling simulation is byte-for-byte unchanged.
+
+No GUI layout/artwork/QR-gating change was made. Earlier reviewed native layout
+captures retain their source-specific evidence; new-source behavior is tested
+through native widgets. Linux software display/dummy audio and Windows CI do not
+certify actual speakers, camera, paper, Ubuntu mini-PC or live Google performance.
+The user's complete traceback/HEAD and successful pending-session delivery after
+this correction remain external evidence to collect. No cloud deployment,
+old-folder repair, deletion, branch/default change or master merge occurred.
+
+Matching-source [CI 40460799605](https://github.com/pratikto/PhotoBooth/actions/runs/40460799605)
+completed with **all three jobs SUCCESS**, including the Windows diagnostics
+module's real-Kivy console-active subprocess. [Job/step result](logging-ci-result.json).
+Pure Linux may skip the real-Kivy check when Kivy is absent; installed-Kivy local
+and Windows runs cover it. Successful jobs are not a claim of zero optional skips.
+Final evidence-only publication skips CI and changes no runtime source.

@@ -1,5 +1,14 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+## Current delivery recurrence — 27 October
+
+Prioritize on-device retest of the console-recursion correction after the new
+RecursionError trace. Timing failures are isolated from upload and v2 uses MIXED
+logging; actual owning-account performance/recovery still needs fresh evidence.
+Keep old bind-folder conflicts protected and the post-QR content error separate.
+Do not optimize upload protocol or remove checks to compensate for a dead worker.
+[Source, evidence and restart command](qa/drive-delivery-performance/LOGGING.md).
+
 ## 27 October — failed-delivery retry isolation
 
 Owner timing identifies repeated old bind failures as 70.782s of a 122.719s
