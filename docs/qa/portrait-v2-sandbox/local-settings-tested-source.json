@@ -1,0 +1,53 @@
+{
+  "base_sha": "c001095c5ca98aae39f7a6c7cdd998e26b2a2573",
+  "tested_sha": "b496d9f2e6929d789d3ca4f55978228ec3050a9b",
+  "git_blob_shas": {
+    "tools/run_qris_sandbox.py": "f58e4307aff0b571bb09440a720cb9ea15066ac8",
+    "photobooth/local_settings.example.py": "252424f0939eb6bf8fd3b370e9316101a5afdde6",
+    "tests/test_qris_saved_credentials.py": "1da61944c9f8d9e2bd0129c89091b2f83bb87990",
+    ".github/workflows/portrait-kiosk-v2.yml": "431b24bfc0d1711afd1c74defd31b65035932d20"
+  },
+  "publication_checks": {
+    "parent": "c001095c5ca98aae39f7a6c7cdd998e26b2a2573",
+    "total_commits": 1,
+    "changed_files": [
+      ".github/workflows/portrait-kiosk-v2.yml",
+      "README.md",
+      "docs/ARCHITECTURE.md",
+      "docs/CHANGELOG.md",
+      "docs/DECISIONS.md",
+      "docs/DEVELOPMENT_HANDOVER.md",
+      "docs/FEATURE_STATUS.md",
+      "docs/README.md",
+      "docs/portrait-kiosk-v2-technical-design.md",
+      "docs/qa/portrait-v2-sandbox/LOCAL-SETTINGS.md",
+      "docs/qa/portrait-v2-sandbox/README.md",
+      "docs/test_checklist.md",
+      "photobooth/local_settings.example.py",
+      "tests/test_qris_saved_credentials.py",
+      "tools/run_qris_sandbox.py"
+    ],
+    "source_matches_published": true,
+    "source_whitespace": "PASS",
+    "private_file_in_changed_paths": false
+  },
+  "ci": {
+    "run_id": 40576392500,
+    "status": "completed",
+    "conclusion": "success",
+    "jobs_success": 3,
+    "new_saved_credential_cases_per_os": 15,
+    "linux_sandbox_cases": 157,
+    "windows_portable_cases": 55
+  },
+  "local_full_regression": {
+    "status": "NOT_RUN",
+    "reason": "Execution environment unavailable before edits; CI results are not relabeled as a local full-suite run."
+  },
+  "private_file": {
+    "path": "photobooth/local_settings.py",
+    "inspected": false,
+    "modified": false,
+    "committed": false
+  }
+}

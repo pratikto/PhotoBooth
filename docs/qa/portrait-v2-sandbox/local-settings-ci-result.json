@@ -1,0 +1,90 @@
+{
+  "head_sha": "b496d9f2e6929d789d3ca4f55978228ec3050a9b",
+  "run_id": 40576392500,
+  "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40576392500",
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "id": 122443850055,
+      "name": "Windows Python 3.12 native SDL audio (dummy output)",
+      "conclusion": "success",
+      "summaries": [
+        "2026-10-27T20:16:08.8409388Z Ran 55 tests in 0.946s",
+        "2026-10-27T20:16:08.8409849Z KIOSK_UNITTEST_SUMMARY: run=55 failures=0 errors=0 skipped=0 success=True",
+        "2026-10-27T20:16:28.6746706Z Ran 103 tests in 19.225s"
+      ],
+      "saved_credential_tests": [
+        "2026-10-27T20:16:08.8389245Z test_complete_environment_pair_overrides_file_without_reading_it (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_complete_environment_pair_overrides_file_without_reading_it) ... ok",
+        "2026-10-27T20:16:08.8390584Z test_computed_or_non_text_values_are_rejected_without_execution (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_computed_or_non_text_values_are_rejected_without_execution) ... ok",
+        "2026-10-27T20:16:08.8391864Z test_empty_and_partial_defaults_keep_missing_values_empty (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_empty_and_partial_defaults_keep_missing_values_empty) ... ok",
+        "2026-10-27T20:16:08.8393083Z test_generic_midtrans_names_are_not_adopted_from_file (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_generic_midtrans_names_are_not_adopted_from_file) ... ok",
+        "2026-10-27T20:16:08.8394300Z test_help_never_reads_private_settings_or_starts_children (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_help_never_reads_private_settings_or_starts_children) ... ok",
+        "2026-10-27T20:16:08.8395576Z test_invalid_saved_settings_stop_before_prompts_or_child_start (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_invalid_saved_settings_stop_before_prompts_or_child_start) ... ok",
+        "2026-10-27T20:16:08.8396938Z test_missing_file_keeps_interactive_fallback_and_is_not_created (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_missing_file_keeps_interactive_fallback_and_is_not_created) ... ok",
+        "2026-10-27T20:16:08.8398324Z test_only_sandbox_literals_are_read_without_executing_drive_settings (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_only_sandbox_literals_are_read_without_executing_drive_settings) ... ok",
+        "2026-10-27T20:16:08.8399724Z test_partial_environment_does_not_silently_mix_with_saved_account (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_partial_environment_does_not_silently_mix_with_saved_account) ... ok",
+        "2026-10-27T20:16:08.8401012Z test_partial_saved_pair_prompts_only_for_missing_field (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_partial_saved_pair_prompts_only_for_missing_field) ... ok",
+        "2026-10-27T20:16:08.8402647Z test_published_example_has_blank_defaults_and_target_remains_ignored (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_published_example_has_blank_defaults_and_target_remains_ignored) ... ok",
+        "2026-10-27T20:16:08.8404377Z test_shared_and_v2_launchers_use_saved_pair_without_prompts (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_shared_and_v2_launchers_use_saved_pair_without_prompts) ... ok",
+        "2026-10-27T20:16:08.8405782Z test_syntax_error_traceback_cannot_echo_secret_source (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_syntax_error_traceback_cannot_echo_secret_source) ... ok",
+        "2026-10-27T20:16:08.8407043Z test_unreadable_and_non_utf8_settings_fail_with_sanitized_error (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_unreadable_and_non_utf8_settings_fail_with_sanitized_error) ... ok",
+        "2026-10-27T20:16:08.8408292Z test_utf8_bom_and_annotated_string_assignments_work (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_utf8_bom_and_annotated_string_assignments_work) ... ok"
+      ]
+    },
+    {
+      "id": 122443850337,
+      "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+      "conclusion": "success",
+      "summaries": [
+        "2026-10-27T20:15:53.3741414Z Ran 4 tests in 0.170s",
+        "2026-10-27T20:16:16.6159972Z Ran 103 tests in 22.807s",
+        "2026-10-27T20:16:16.6160527Z KIOSK_UNITTEST_SUMMARY: run=103 failures=0 errors=0 skipped=0 success=True",
+        "2026-10-27T20:16:32.7279849Z Ran 157 tests in 9.197s",
+        "2026-10-27T20:16:32.7280679Z KIOSK_UNITTEST_SUMMARY: run=157 failures=0 errors=0 skipped=0 success=True",
+        "2026-10-27T20:16:34.3992912Z Ran 80 tests in 1.069s",
+        "2026-10-27T20:16:34.3993767Z KIOSK_UNITTEST_SUMMARY: run=80 failures=0 errors=0 skipped=0 success=True",
+        "2026-10-27T20:18:04.8560287Z test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture (tests.test_kiosk_v2_widgets.PortraitKivySmokeTests.test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture) ... skipped 'Native model assets are opt-in'",
+        "2026-10-27T20:18:04.8699110Z Ran 111 tests in 89.822s",
+        "2026-10-27T20:18:04.8699692Z KIOSK_UNITTEST_SUMMARY: run=111 failures=0 errors=0 skipped=1 success=True",
+        "2026-10-27T20:18:07.0912360Z Ran 98 tests in 1.770s",
+        "2026-10-27T20:18:20.3316723Z Ran 4 tests in 13.037s"
+      ],
+      "saved_credential_tests": [
+        "2026-10-27T20:16:32.7221737Z test_complete_environment_pair_overrides_file_without_reading_it (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_complete_environment_pair_overrides_file_without_reading_it) ... ok",
+        "2026-10-27T20:16:32.7223922Z test_computed_or_non_text_values_are_rejected_without_execution (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_computed_or_non_text_values_are_rejected_without_execution) ... ok",
+        "2026-10-27T20:16:32.7225977Z test_empty_and_partial_defaults_keep_missing_values_empty (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_empty_and_partial_defaults_keep_missing_values_empty) ... ok",
+        "2026-10-27T20:16:32.7227966Z test_generic_midtrans_names_are_not_adopted_from_file (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_generic_midtrans_names_are_not_adopted_from_file) ... ok",
+        "2026-10-27T20:16:32.7229968Z test_help_never_reads_private_settings_or_starts_children (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_help_never_reads_private_settings_or_starts_children) ... ok",
+        "2026-10-27T20:16:32.7232211Z test_invalid_saved_settings_stop_before_prompts_or_child_start (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_invalid_saved_settings_stop_before_prompts_or_child_start) ... ok",
+        "2026-10-27T20:16:32.7234357Z test_missing_file_keeps_interactive_fallback_and_is_not_created (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_missing_file_keeps_interactive_fallback_and_is_not_created) ... ok",
+        "2026-10-27T20:16:32.7236776Z test_only_sandbox_literals_are_read_without_executing_drive_settings (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_only_sandbox_literals_are_read_without_executing_drive_settings) ... ok",
+        "2026-10-27T20:16:32.7239019Z test_partial_environment_does_not_silently_mix_with_saved_account (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_partial_environment_does_not_silently_mix_with_saved_account) ... ok",
+        "2026-10-27T20:16:32.7241495Z test_partial_saved_pair_prompts_only_for_missing_field (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_partial_saved_pair_prompts_only_for_missing_field) ... ok",
+        "2026-10-27T20:16:32.7243647Z test_published_example_has_blank_defaults_and_target_remains_ignored (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_published_example_has_blank_defaults_and_target_remains_ignored) ... ok",
+        "2026-10-27T20:16:32.7245820Z test_shared_and_v2_launchers_use_saved_pair_without_prompts (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_shared_and_v2_launchers_use_saved_pair_without_prompts) ... ok",
+        "2026-10-27T20:16:32.7247844Z test_syntax_error_traceback_cannot_echo_secret_source (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_syntax_error_traceback_cannot_echo_secret_source) ... ok",
+        "2026-10-27T20:16:32.7249910Z test_unreadable_and_non_utf8_settings_fail_with_sanitized_error (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_unreadable_and_non_utf8_settings_fail_with_sanitized_error) ... ok",
+        "2026-10-27T20:16:32.7252159Z test_utf8_bom_and_annotated_string_assignments_work (test_qris_saved_credentials.SavedSandboxCredentialsTests.test_utf8_bom_and_annotated_string_assignments_work) ... ok"
+      ]
+    },
+    {
+      "id": 122443850372,
+      "name": "Navigation and audio lifecycle",
+      "conclusion": "success",
+      "summaries": [
+        "2026-10-27T20:15:38.3860700Z test_real_launcher_console_active_keeps_stderr_and_records_native_and_delivery_once (tests.test_kiosk_v2_diagnostics.DeliveryLoggingTests.test_real_launcher_console_active_keeps_stderr_and_records_native_and_delivery_once) ... skipped 'Real Kivy logging integration needs Kivy'",
+        "2026-10-27T20:15:38.6426206Z Ran 129 tests in 0.370s",
+        "2026-10-27T20:15:39.0578461Z Ran 40 tests in 0.292s"
+      ],
+      "saved_credential_tests": []
+    }
+  ],
+  "local_full_regression": {
+    "status": "NOT_RUN",
+    "reason": "Execution environment unavailable before edits; CI results are not relabeled as a local full-suite run."
+  },
+  "actual_merchant_authentication": "NOT_RUN",
+  "official_simulator": "NOT_RUN",
+  "actual_windows_hidden_input": "NOT_RUN"
+}

@@ -4,7 +4,8 @@
 
 IN SOURCE: optional ignored local defaults remove repeated terminal entry;
 static literal read, source-pair precedence, safe errors and backend-only
-credential forwarding. Linux/Windows automated results and local-executor limits
+credential forwarding. Source `b496d9f` has 15 new-case PASS on Linux and Windows,
+matching CI 40576392500 all three jobs SUCCESS. Results and local-executor limits
 are tracked in the [current package](qa/portrait-v2-sandbox/LOCAL-SETTINGS.md).
 Actual merchant authentication remains a separate acceptance check.
 

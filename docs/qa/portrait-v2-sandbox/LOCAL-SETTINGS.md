@@ -16,7 +16,7 @@ v2 adapter, Apps Script configuration loader and current tests/workflow.
 Earlier documentation was reviewed in this conversation; the additional shared
 settings contract and current source were read before this increment.
 
-## Bounded plan
+## Bounded plan (recorded before code)
 
 Read two Sandbox-specific literal string assignments from
 `photobooth/local_settings.py`, whose exact ignore rule already exists. Preserve
@@ -45,8 +45,31 @@ unless it returns, and use matching-source CI rather than borrowing earlier
 
 ## Results
 
-Implementation/CI pending. Windows hidden input, actual merchant authentication
-and official simulator acceptance remain separate from automated fixtures.
+Functional source **`b496d9f2e6929d789d3ca4f55978228ec3050a9b`** is published and
+remote-verified. Published content matches the prepared launcher/example/test/
+workflow; the provider, Drive client, v2 adapter and payment state services are
+unchanged. The private settings file was not read, created, edited or committed.
+
+- Matching-source [CI 40576392500](https://github.com/pratikto/PhotoBooth/actions/runs/40576392500)
+  has **all three jobs SUCCESS**.
+- All **15 new saved-credential cases PASS on Linux and Windows**. The Windows
+  stdlib-only portable group has **55 PASS / zero skips**, 0.946s; the Linux
+  Sandbox protocol/native-adapter group has **157 PASS / zero skips**, 9.197s.
+- Additional existing delivery, health, navigation, GUI, game and dummy-audio
+  regression stages pass. The pure group skips its Kivy-dependent logging
+  subprocess test; native GUI skips its optional real-palm model case. These
+  skips do not include the new credential tests. No GUI layout is changed.
+- [Exact job summaries and case outputs](local-settings-ci-result.json) and
+  [tested source/blob identifiers](local-settings-tested-source.json) preserve
+  the source and limits. No screenshots or logs are presented as merchant proof.
+- Local full-suite execution is **NOT_RUN** because the managed executor became
+  unavailable before edits. The earlier 901-case result belongs to `6a271de`;
+  it is not reused as verification of this source.
+
+Actual Windows hidden-input interaction, merchant authentication and official
+simulator acceptance remain **NOT_RUN**. Configuration-only test fixtures do not
+submit a payment, print or upload. After updating, the owner fills the existing
+private file locally and continues the existing Sandbox trial.
 
 ## Setup after updating
 

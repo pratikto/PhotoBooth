@@ -6,7 +6,9 @@ New offline tests cover file defaults, pair precedence, prompt fallback, no code
 execution, sanitized errors and shared/v2 backend-only forwarding. Existing
 Sandbox CI and Windows stdlib-only CI include the new module. Local execution
 became unavailable before edits: do not transfer prior 901-case evidence to this
-source. [Exact CI/source results](qa/portrait-v2-sandbox/LOCAL-SETTINGS.md).
+source. Matching source `b496d9f` / CI 40576392500: all three jobs SUCCESS,
+15 new cases PASS on each OS; Linux Sandbox 157 PASS, Windows portable 55 PASS,
+zero skips in those groups. [Exact CI/source results](qa/portrait-v2-sandbox/LOCAL-SETTINGS.md).
 
 ## 28 October — BUG-020 Sandbox key syntax
 

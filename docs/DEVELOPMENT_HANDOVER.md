@@ -6,7 +6,8 @@ Owner requests ignored local Merchant ID/Server Key defaults. The shared launche
 reads only the two Sandbox literal fields without executing local settings,
 keeps environment-pair precedence and missing-value prompts, and forwards the
 key only to the backend child environment. Existing Drive values/profile/payment
-journals are preserved. CI source/results and local-executor limits are recorded
+journals are preserved. Source `b496d9f`: all three CI jobs SUCCESS; 15 new cases
+PASS on both Linux and Windows. Exact results and local-executor limits are recorded
 in the [setup/evidence package](qa/portrait-v2-sandbox/LOCAL-SETTINGS.md).
 
 ## 28 October — BUG-020 Sandbox Server Key format
