@@ -1,5 +1,12 @@
 # Meong Photobooth — current feature status
 
+**Final FEAT-009 source `f023029`:** matching-source CI 40423003641 succeeds in
+all three jobs (Linux pure, Linux desktop, Windows). Post-fixture-correction local
+rerun: 869 run, 866 PASS, 3 optional palm-assets SKIP, zero failures/errors,
+272.035s. [Final evidence](qa/portrait-v2-recovery/README.md#final-verification--f023029).
+This supersedes the older stage-1/initial Windows CI limits below. Actual
+Windows/Ubuntu mini-PC hardware and service installation remain unverified.
+
 **27 October current increment:** FEAT-009 stages 1–2 IN SOURCE: observer,
 read-only local recovery review, guarded watchdog startup, per-checkout launcher
 lease, Windows cmd and Ubuntu graphical-session service generation. Owner develops

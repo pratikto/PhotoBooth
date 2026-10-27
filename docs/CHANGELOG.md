@@ -1,5 +1,14 @@
 # Meong Photobooth — changelog
 
+## 27 October 2026 — FEAT-009 Windows verification and final evidence
+
+Published source `f023029` closes SQLite test-fixture connections before Windows
+file replacement, with raw CI reports/failure annotations via the existing runner.
+No production runtime or assertion weakening. Final local 869 cases: 866 PASS,
+three optional palm-assets SKIP, zero failures/errors, 272.035s; matching CI
+40423003641 all three jobs SUCCESS. [Final proof](qa/portrait-v2-recovery/README.md).
+This companion evidence update skips redundant CI and installs/deploys nothing.
+
 ## 27 October 2026 — FEAT-009 recovery and Ubuntu startup
 
 Synchronize same-branch Drive repair `a7815d9`, retaining numbered cloud folders

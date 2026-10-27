@@ -1,5 +1,15 @@
 # Meong Photobooth — GUI v2 development handover
 
+**Final published checkpoint, 27 October:** FEAT-009 source `f023029` is on the
+required branch; matching [CI 40423003641](https://github.com/pratikto/PhotoBooth/actions/runs/40423003641)
+has all three jobs SUCCESS. Windows fixture connections are explicitly closed
+before database replacement; production runtime is unchanged from `b99c613`.
+Final local rerun: 869 cases, 866 PASS, three optional palm-assets SKIP, zero
+failures/errors, 272.035s. [Final proof](qa/portrait-v2-recovery/final-verification.json).
+Docs-first primary rule and Windows-development/Ubuntu-deployment direction
+are persisted in AGENTS/protocol/prompt. Next: actual target-device acceptance;
+automatic restart remains off and no service was installed.
+
 ## Current — 27 October FEAT-009 stage 2 and primary working rule
 
 Owner requires comprehensive/careful documentation review before code, then
@@ -14,7 +24,7 @@ Remote refresh works with network permission; synchronized remote `a7815d9`
 (includes Drive/QR repair `0bd69a9`) before rebasing the unpublished watchdog
 checkpoint to `ae5c62a`. Do not undo the current cloud numbered-Photo correction.
 The older source/ordering paragraphs below are dated historical checkpoints.
-Final local regression: **869 run / 866 PASS / 3 optional palm-assets SKIP /
+Initial stage-2 local regression: **869 run / 866 PASS / 3 optional palm-assets SKIP /
 0 failures/errors**, 261.246s. Focused 47 PASS with site packages disabled;
 API/Sandbox 16 PASS and actual native launch/pause/resume/lease/exit PASS.
 Earlier HTTP stalls reproduce under restricted command-network access and clear

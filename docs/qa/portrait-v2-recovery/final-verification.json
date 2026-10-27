@@ -1,0 +1,34 @@
+{
+  "source_sha": "f023029ba242d0ad2d7e077adb47b889573d10d4",
+  "source_branch": "feature/portrait-kiosk-v2-next",
+  "sha256": {
+    "photobooth/kiosk_v2/recovery.py": "195de549f85805e4f92c70e99734a8554225d32f93de7bc62cefb16d70cfbabd",
+    "photobooth/kiosk_v2/watchdog.py": "bd8d6e6413ba05e5377d880211cb186cb0a86c0098017416e9d92117e055359d",
+    "tools/run_portrait_v2.py": "7cd67e10a38191164bff35cd41796b781cffd3e84a09ad1d2f72c9e321429197",
+    "tools/run_portrait_v2_watchdog.py": "0740d271144d5c66e351d8ece1ca0e68be3c9f2a0c70b6b7f0fcccda213394b5",
+    "tests/test_kiosk_v2_recovery.py": "7bfdb8a579a62bff92c99f4ea808e777520fe1aa2985ab192d79d88ad3de00c9",
+    "tests/test_kiosk_v2_watchdog.py": "635b79a2717e4e3d820eb3fc24b1481f10f3c361a9166ecee486fa603acd091c",
+    ".github/workflows/portrait-kiosk-v2.yml": "28baf6a0178f49548df3d25b750e69e9badde8cbc22429ce4ab5875805d1b0e0"
+  },
+  "primary_rule_file_sha256": "4bc40a0bbe4dbea1e1e3faf3843d4b2c4b1859029c3d75df4dcc0e7e9f0d0963",
+  "full_suite": {
+    "run": 869,
+    "passed": 866,
+    "skipped": 3,
+    "failures": 0,
+    "errors": 0,
+    "seconds": 272.035
+  },
+  "focused": {
+    "run": 47,
+    "failed": 0,
+    "skipped": 0
+  },
+  "runtime_unchanged_since_initial_b99c613_checks": true,
+  "ci_run_id": 40423003641,
+  "ci_jobs_success": 3,
+  "windows_fixture_correction": "explicitly close SQLite fixture connections before overwriting database file",
+  "physical_acceptance": "NOT_RUN",
+  "service_installation": "NOT_RUN",
+  "release": "NOT_PERFORMED"
+}

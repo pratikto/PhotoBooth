@@ -219,9 +219,30 @@ The original failed run is retained; final verification is recorded separately.
 
 Follow-up `abb95b5` / run 40422635023 identifies an ERROR in
 `test_game_only_ledger_is_valid_but_corrupt_database_is_held`; passing-case text
-filled the annotation before its traceback. Inspection finds the test's SQLite
+filled the annotation before its traceback ([preserved annotation](windows-failed-case.json)). Inspection finds the test's SQLite
 connection context committed but did not close its file handle before the fixture
 overwrote that file. Both SQLite fixture creators now explicitly close connections
 with `contextlib.closing`, preserving assertions and production behavior. The
 annotation now starts at the failure section. Final Windows verification must
 confirm this correction; no earlier failed run is relabelled successful.
+
+## Final verification — f023029
+
+Final source **f023029ba242d0ad2d7e077adb47b889573d10d4** was pushed and remote
+HEAD verified. [Matching-source CI 40423003641](https://github.com/pratikto/PhotoBooth/actions/runs/40423003641)
+completed with **all three jobs SUCCESS**, including the Windows portable
+recovery/launch-lock step and existing native dummy-audio checks.
+[Job/step record](final-ci.json). The SQLite fixture cleanup is confirmed by
+the successful Windows rerun; production runtime files remain unchanged from
+the initial stage-2 checks. Original failed/cancelled runs stay historical.
+
+The post-correction [complete local rerun](full-tests-final.txt) passes:
+**869 run / 866 PASS / 3 optional palm-assets SKIP / zero failures/errors**,
+272.035s. [Post-correction focused 47 PASS](focused-tests-final.txt) and
+[final source hashes/result record](final-verification.json) bind this evidence
+to the final source. The earlier `full-tests.txt` and `tested-source.json` are
+retained as the pre-fixture-correction checkpoint, not silently rewritten.
+
+Evidence-only follow-up updates the docs without rerunning successful GUI CI.
+Actual Ubuntu graphical sign-in/service start, Windows/Ubuntu devices, paper,
+phone/Google deployment/expiry, merchant acceptance and release remain NOT_RUN.

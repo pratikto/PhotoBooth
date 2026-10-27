@@ -1,0 +1,212 @@
+{
+  "source_sha": "f023029ba242d0ad2d7e077adb47b889573d10d4",
+  "run_id": 40423003641,
+  "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40423003641",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "id": 121921982087,
+      "name": "Navigation and audio lifecycle",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Syntax",
+          "conclusion": "success"
+        },
+        {
+          "name": "Apps Script retention activation and scoped cleanup (offline VM)",
+          "conclusion": "success"
+        },
+        {
+          "name": "Kivy-independent navigation and fake audio tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Observation-only supervisor and startup safety",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 121921982346,
+      "name": "Windows Python 3.12 native SDL audio (dummy output)",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Windows native providers",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check portable startup, recovery holds and Windows launch ownership",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check Windows DLL loading, safe WAV fallback and twenty PCM cycles",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preserve Windows portable startup report",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 121921982455,
+      "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install minimum desktop simulator",
+          "conclusion": "success"
+        },
+        {
+          "name": "Load the bundled offline face detector and check hold/cooldown policy",
+          "conclusion": "success"
+        },
+        {
+          "name": "Isolated P3 photo, composition, retake and durable print guards",
+          "conclusion": "success"
+        },
+        {
+          "name": "Reused QRIS protocol and native v2 Sandbox handoff (offline only)",
+          "conclusion": "success"
+        },
+        {
+          "name": "Reuse original v1 read-only health backend and v2 bridge (fixtures)",
+          "conclusion": "success"
+        },
+        {
+          "name": "Exercise opt-in Kivy widgets at a virtual display",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify unchanged latest Meong Fly modules and original regression suite",
+          "conclusion": "success"
+        },
+        {
+          "name": "Reuse muted native channels across twenty audio cycles (dummy PCM output)",
+          "conclusion": "success"
+        },
+        {
+          "name": "Capture real Kivy pages at 800x1280 (fresh Xvfb process)",
+          "conclusion": "success"
+        },
+        {
+          "name": "Capture compact Kivy pages at 452x900 (RGB readback-aligned)",
+          "conclusion": "success"
+        },
+        {
+          "name": "Capture short-window Kivy pages at 360x640 and 800x600",
+          "conclusion": "success"
+        },
+        {
+          "name": "Capture P3 photo pages with an isolated store and synthetic camera",
+          "conclusion": "success"
+        },
+        {
+          "name": "Capture automatic print and background Drive using offline fixtures",
+          "conclusion": "success"
+        },
+        {
+          "name": "Capture P4 DEMO game pages with isolated attempt ledger",
+          "conclusion": "success"
+        },
+        {
+          "name": "Capture isolated P4b MOCK checkout states (never a payment provider)",
+          "conclusion": "success"
+        },
+        {
+          "name": "Capture native Sandbox views with offline HTTP fixtures (not merchant acceptance)",
+          "conclusion": "success"
+        },
+        {
+          "name": "Capture original v1 operator health panel in v2 (offline fixtures)",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preserve visual evidence for review",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Synthetic CI only; actual Windows/Ubuntu mini-PC hardware not certified.",
+    "No service installation, Google deployment, merchant acceptance or release performed."
+  ]
+}

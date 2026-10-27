@@ -1,8 +1,15 @@
 # Meong Photobooth — test evidence and acceptance
 
+**Final FEAT-009 verification — 27 October:** source `f023029` / matching-source
+CI [40423003641](https://github.com/pratikto/PhotoBooth/actions/runs/40423003641),
+all three jobs SUCCESS. Windows fixture cleanup preserves assertions and runtime;
+final local rerun 869 cases / 866 PASS / 3 optional palm-assets SKIP / zero
+failures/errors, 272.035s. Raw final reports, source hashes, initial failed runs
+and target-device NOT_RUN gates: [stage-2 package](qa/portrait-v2-recovery/README.md).
+
 ## FEAT-009 stage 2 — 27 October 2026
 
-Final local **869 run / 866 PASS / 3 SKIP / 0 failures/errors**, 261.246s;
+Initial stage-2 local **869 run / 866 PASS / 3 SKIP / 0 failures/errors**, 261.246s;
 the three skips require optional native palm assets (camera recovery, v2 palm
 countdown and standalone palm inference). 47 focused stdlib-only checks PASS;
 16 real-API/Sandbox fixture checks PASS. Native launcher rejects duplicate
