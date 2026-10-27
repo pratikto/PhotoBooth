@@ -1,0 +1,82 @@
+"""Real gallery/pointer/FBO evidence only; no alternate UI or photo/Drive work."""
+import argparse,hashlib,json,os,subprocess,sys
+from pathlib import Path
+parser=argparse.ArgumentParser();parser.add_argument('--width',type=int,required=True);parser.add_argument('--height',type=int,required=True)
+parser.add_argument('--output',type=Path,required=True);parser.add_argument('--expect-incoming',action='store_true');args=parser.parse_args()
+for key in ('PHOTOBOOTH_AUDIO','PHOTOBOOTH_AD_VIDEO','PHOTOBOOTH_CAMERA','PHOTOBOOTH_FACE_TRIGGER','PHOTOBOOTH_PALM_TRIGGER','PHOTOBOOTH_V2_PRINT','PHOTOBOOTH_V2_DRIVE','PHOTOBOOTH_V2_CHECKOUT_MOCK','PHOTOBOOTH_V2_CHECKOUT_SANDBOX'):
+    os.environ[key]='0'
+os.environ['KIVY_NO_ARGS']='1'
+sys.path.insert(0,str(Path.cwd()))
+from kivy.config import Config
+Config.set('graphics','width',str(args.width));Config.set('graphics','height',str(args.height))
+from kivy.clock import Clock
+from kivy.core.window import Window
+from kivy.base import EventLoop
+from kivy.input.motionevent import MotionEvent
+from photobooth.kiosk_v2.app import PortraitKioskV2App
+from photobooth.kiosk_v2.branding import MeongLogo
+class Pointer(MotionEvent):
+    def depack(self,values):
+        self.sx,self.sy=values;self.profile=['pos'];super().depack(values)
+class Recorder(PortraitKioskV2App):
+    def capture(self,name,rank=None):
+        g=self._carousel;p=args.output/(name+f'-{args.width}x{args.height}.png')
+        self.stage.export_to_png(str(p))
+        record={'file':p.name,'selected_index':self.template_index,'offset':g.offset,'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),
+            'held':bool(g._touch_origins),'viewport':list(Window.size)}
+        if rank is not None:
+            image=g._images[rank];x,y=image.to_window(image.x,image.y);right,top=image.to_window(image.right,image.top)
+            expected=self.templates[(self.template_index+rank)%len(self.templates)]
+            record.update(incoming_rank=rank,incoming_template=expected.template_id,
+                has_texture=image.texture is not None,opacity=image.opacity,bounds=[x,y,right,top])
+            assert record['held'];assert self.template_index in (7,11)
+            assert record['has_texture']==args.expect_incoming,record
+            if args.expect_incoming:assert image.texture is self._textures[expected.template_id] and image.opacity>.4
+        self.records.append(record)
+    def grab(self):
+        g=self._carousel;self.anchor=g.viewport.to_window(*g.viewport.center)
+        x,y=self.anchor;self.pointer=Pointer('qa-held-gallery',str(len(self.records)),(x/Window.width,y/Window.height),is_touch=True)
+        EventLoop.post_dispatch_input('begin',self.pointer)
+    def move(self,direction):
+        g=self._carousel;x,y=self.anchor;left,_=g.to_window(g.x,g.y);right,_=g.to_window(g.right,g.y)
+        self.pointer.move(((x+direction*(right-left)*.35*.9)/Window.width,y/Window.height))
+        EventLoop.post_dispatch_input('update',self.pointer)
+args.output.mkdir(parents=True,exist_ok=True)
+app=Recorder();app.records=[]
+Window.add_widget(app.build())
+try:
+    import time
+    app._choose_photo();app._complete_tutorial()
+    for _ in range(5):EventLoop.idle()
+    for brand in (w for w in app.stage.walk() if isinstance(w,MeongLogo)):
+        brand.set_active(False);brand.flight=brand.spin=0
+    app.template_index=7;app._update_template()
+    for _ in range(4):EventLoop.idle()
+    app.capture('rest')
+    app.grab();app.move(-1)
+    for _ in range(2):EventLoop.idle()
+    app.capture('held-left',2)
+    app.move(1)
+    for _ in range(2):EventLoop.idle()
+    app.capture('held-right',-2)
+    EventLoop.post_dispatch_input('end',app.pointer)
+    deadline=time.monotonic()+2
+    while app._carousel._moving and time.monotonic()<deadline:EventLoop.idle()
+    assert app.template_index==6;app.capture('released-right')
+    app.template_index=11;app._update_template()
+    for _ in range(4):EventLoop.idle()
+    app.grab();app.move(-1)
+    for _ in range(2):EventLoop.idle()
+    app.capture('held-wrap',2);EventLoop.post_dispatch_input('end',app.pointer)
+    deadline=time.monotonic()+2
+    while app._carousel._moving and time.monotonic()<deadline:EventLoop.idle()
+    assert app.template_index==0;app.capture('released-wrap')
+    meta={'source_sha':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
+          'gallery_sha256':hashlib.sha256(Path('photobooth/kiosk_v2/gallery.py').read_bytes()).hexdigest(),
+          'app_sha256':hashlib.sha256(Path('photobooth/kiosk_v2/app.py').read_bytes()).hexdigest(),
+          'protocol':'actual MotionEvent begin/update/hold/reverse/end; native Widget FBO export, no image edits',
+          'expected_incoming':args.expect_incoming,'screenshots':app.records}
+    (args.output/f'report-{args.width}x{args.height}.json').write_text(json.dumps(meta,indent=2)+'\n')
+    print('PASS held-pointer native captures',args.width,args.height,args.expect_incoming)
+finally:
+    app.on_stop();Window.remove_widget(app.stage)

@@ -1,0 +1,105 @@
+{
+  "source_sha": "eb0297d6db78f6a53cc70ee8736b28f479c56be0",
+  "gallery_sha256": "2810f307918f3fd44dee2379f790aa68b3562a60085d37ad6897e21b9ad3bdb8",
+  "app_sha256": "ef33bc3d00d67eddecac7f97f659758e15fb156736b633ca421d94e6e2713029",
+  "protocol": "actual MotionEvent begin/update/hold/reverse/end; native Widget FBO export, no image edits",
+  "expected_incoming": true,
+  "screenshots": [
+    {
+      "file": "rest-452x900.png",
+      "selected_index": 7,
+      "offset": 0,
+      "sha256": "601cc52e483c83d1d58124099d77e8b13c9e968c39c72f9cbad71d8e6c797f44",
+      "held": false,
+      "viewport": [
+        452,
+        900
+      ]
+    },
+    {
+      "file": "held-left-452x900.png",
+      "selected_index": 7,
+      "offset": -0.9000000000000001,
+      "sha256": "8c627e72514f376f3dd27410a3810836d4bb3712003312808e766bff3524420c",
+      "held": true,
+      "viewport": [
+        452,
+        900
+      ],
+      "incoming_rank": 2,
+      "incoming_template": "template_j",
+      "has_texture": true,
+      "opacity": 0.7020000000000003,
+      "bounds": [
+        331.2577599999999,
+        323.73328000000004,
+        442.1022399999999,
+        656.2667200000001
+      ]
+    },
+    {
+      "file": "held-right-452x900.png",
+      "selected_index": 7,
+      "offset": 0.8999999999999999,
+      "sha256": "19f740fe05682c8c8631a8709230f614babaa4f81976b77ac338d155c550e43b",
+      "held": true,
+      "viewport": [
+        452,
+        900
+      ],
+      "incoming_rank": -2,
+      "incoming_template": "template_f",
+      "has_texture": true,
+      "opacity": 0.702,
+      "bounds": [
+        9.897759999999998,
+        323.73328000000004,
+        120.74223999999998,
+        656.2667200000001
+      ]
+    },
+    {
+      "file": "released-right-452x900.png",
+      "selected_index": 6,
+      "offset": 0,
+      "sha256": "1425988456601bac90def4d2763496259fda5a48b69e0de460542704ca535315",
+      "held": false,
+      "viewport": [
+        452,
+        900
+      ]
+    },
+    {
+      "file": "held-wrap-452x900.png",
+      "selected_index": 11,
+      "offset": -0.9000000000000001,
+      "sha256": "155ab55ba9a5de597b5cd677714ce6999cfc42898dab0d9d1b18a13657d0f914",
+      "held": true,
+      "viewport": [
+        452,
+        900
+      ],
+      "incoming_rank": 2,
+      "incoming_template": "template_b",
+      "has_texture": true,
+      "opacity": 0.7020000000000003,
+      "bounds": [
+        331.2577599999999,
+        323.73328000000004,
+        442.1022399999999,
+        656.2667200000001
+      ]
+    },
+    {
+      "file": "released-wrap-452x900.png",
+      "selected_index": 0,
+      "offset": 0,
+      "sha256": "51f0a202df887cd6e9ab32e572b4b6f0e1fb28f7e79da3956f72508453ad8931",
+      "held": false,
+      "viewport": [
+        452,
+        900
+      ]
+    }
+  ]
+}

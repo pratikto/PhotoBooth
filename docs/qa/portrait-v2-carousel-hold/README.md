@@ -97,3 +97,65 @@ The existing motion/secondary-touch/real-swipe, preview-worker and navigation
 checks also PASS: **17 tests, zero skips/failures/errors, 3.419s**
 ([report](motion-tests.txt)). Together with the three focused held-drag cases,
 these provide 20 distinct targeted checks before source publication.
+
+## Exact-source native visual evidence
+
+[18 native PNGs](screenshots/) at 800×1280, 452×900 and 390×736 were captured
+from functional source eb0297d, including nine held-pointer views. Each viewport
+shows rest, held left, held reverse/right, released right, held last→first wrap
+and released wrap. [Hash/dimension/held-state verification](visual-verification.json)
+checks actual pointer ownership, a substantial live drag offset, the exact cached
+incoming template and its visible opacity. Native image/caption rendering is
+allowed to settle before FBO export; no PNG pixels are edited.
+The decorative header mascot is frozen in a declared neutral pose for capture.
+
+Reviewed both held directions and release/wrap outcomes at the required sizes
+and a window close to the owner's screenshot. The newly entering sides contain
+actual artwork before release. At rest only the intended three strips are
+visible; after release the selected artwork and caption agree. This is native
+software-display evidence, not physical touch, frame pacing or speaker acceptance.
+
+[Reproduce the native capture](capture.py.txt) from the repository root with
+Kivy/Pillow installed and the existing native environment, for example:
+
+```text
+python docs/qa/portrait-v2-carousel-hold/capture.py.txt --width 452 --height 900 --output work/carousel-qa --expect-incoming
+```
+
+The helper uses actual application widgets and synthetic pointer events, disables
+camera/audio/video/Drive/printing/payment opt-ins, and writes native PNGs/reports.
+The original twelve master images and current app renderer remain in use.
+[313 functional file hashes and environment](tested-source.json) pin the source
+for final regression and visual capture; later evidence publication changes no
+runtime. Full regression and matching-source CI are recorded after completion.
+
+## Final local regression
+
+Functional source **eb0297d6db78f6a53cc70ee8736b28f479c56be0**, pushed and
+remote HEAD verified: **898 run / 895 PASS / 3 optional palm-assets SKIP /
+zero failures/errors**, 291.903s. [Full report](full-tests.txt).
+GUI/audio/video test opt-ins were enabled, Linux/Python 3.12/Kivy 2.3.1,
+SDL offscreen/software GL and dummy audio. The three skips require optional
+real-palm assets in device recovery, v2 countdown and standalone inference.
+Twenty focused cases passed before publication; the full run follows every
+functional change and includes all native cases. All 313 functional hashes
+remain unchanged afterward.
+
+This source fixes the reproducible empty incoming picture. Owner screenshots
+remain unknown-HEAD Windows evidence; actual owner device retest is still pending,
+so BUG-019 is not formally CLOSED. No old owner photo/game cycle gate is reopened.
+Apps Script, upload scheduling/early QR, print state, camera, payment and all
+customer journals/identities are unchanged from e507fa3.
+
+## Matching-source CI and final publication
+
+[CI 40481718367](https://github.com/pratikto/PhotoBooth/actions/runs/40481718367)
+completed **SUCCESS in all three jobs**: Linux navigation/audio, Linux synthetic
+native GUI and Windows portable/native SDL dummy audio.
+[Actual jobs and steps](ci-result.json). Successful jobs do not certify zero
+optional skips, physical touchscreen/speakers or actual mini-PC behavior.
+
+The tested functional source remains eb0297d; the final evidence-only companion
+adds these reports/screenshots and skips redundant CI. Functional hashes, all
+existing transport/print/payment code and the original artwork remain unchanged.
+No master/default change, cloud deployment or customer-data operation occurred.

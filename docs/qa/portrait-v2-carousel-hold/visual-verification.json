@@ -1,0 +1,297 @@
+{
+  "source_sha": "eb0297d6db78f6a53cc70ee8736b28f479c56be0",
+  "native_pngs": 18,
+  "held_frames": 9,
+  "protocol": "actual native input and FBO pixels; decorative mascot neutral pose for static capture only",
+  "screenshots": [
+    {
+      "file": "rest-390x736.png",
+      "selected_index": 7,
+      "offset": 0,
+      "sha256": "ba0f2028fc0ab1ca9360101b61b20434809aa0d639d05a0fe1343835e312b986",
+      "held": false,
+      "viewport": [
+        390,
+        736
+      ]
+    },
+    {
+      "file": "held-left-390x736.png",
+      "selected_index": 7,
+      "offset": -0.9,
+      "sha256": "6009837dfe2d2e600ee3ecaca5e9b0209303c748b15adbb7e0db1ecc24eb1d08",
+      "held": true,
+      "viewport": [
+        390,
+        736
+      ],
+      "incoming_rank": 2,
+      "incoming_template": "template_j",
+      "has_texture": true,
+      "opacity": 0.702,
+      "bounds": [
+        286.28016533333334,
+        256.5236071111111,
+        382.405168,
+        544.8986151111111
+      ]
+    },
+    {
+      "file": "held-right-390x736.png",
+      "selected_index": 7,
+      "offset": 0.8999999999999999,
+      "sha256": "b091c7ca5c1af2c9d6874113eac194031a32551f2460a9942eb4799931b4b4fd",
+      "held": true,
+      "viewport": [
+        390,
+        736
+      ],
+      "incoming_rank": -2,
+      "incoming_template": "template_f",
+      "has_texture": true,
+      "opacity": 0.702,
+      "bounds": [
+        7.594832,
+        256.5236071111111,
+        103.71983466666666,
+        544.8986151111111
+      ]
+    },
+    {
+      "file": "released-right-390x736.png",
+      "selected_index": 6,
+      "offset": 0,
+      "sha256": "b72d9880ca7f256c9ae4a1101c415e53f9d3a6eda4e80c850605c30ff62a50fa",
+      "held": false,
+      "viewport": [
+        390,
+        736
+      ]
+    },
+    {
+      "file": "held-wrap-390x736.png",
+      "selected_index": 11,
+      "offset": -0.9,
+      "sha256": "a3b2789307071bb4a08ff1fe7bedff386346405f8a710337febd6aecf2f17112",
+      "held": true,
+      "viewport": [
+        390,
+        736
+      ],
+      "incoming_rank": 2,
+      "incoming_template": "template_b",
+      "has_texture": true,
+      "opacity": 0.702,
+      "bounds": [
+        286.28016533333334,
+        256.5236071111111,
+        382.405168,
+        544.8986151111111
+      ]
+    },
+    {
+      "file": "released-wrap-390x736.png",
+      "selected_index": 0,
+      "offset": 0,
+      "sha256": "b9d8517f95fae49e2d7acc6085666497c8118a7e29b21648240743064e931498",
+      "held": false,
+      "viewport": [
+        390,
+        736
+      ]
+    },
+    {
+      "file": "rest-452x900.png",
+      "selected_index": 7,
+      "offset": 0,
+      "sha256": "601cc52e483c83d1d58124099d77e8b13c9e968c39c72f9cbad71d8e6c797f44",
+      "held": false,
+      "viewport": [
+        452,
+        900
+      ]
+    },
+    {
+      "file": "held-left-452x900.png",
+      "selected_index": 7,
+      "offset": -0.9000000000000001,
+      "sha256": "8c627e72514f376f3dd27410a3810836d4bb3712003312808e766bff3524420c",
+      "held": true,
+      "viewport": [
+        452,
+        900
+      ],
+      "incoming_rank": 2,
+      "incoming_template": "template_j",
+      "has_texture": true,
+      "opacity": 0.7020000000000003,
+      "bounds": [
+        331.2577599999999,
+        323.73328000000004,
+        442.1022399999999,
+        656.2667200000001
+      ]
+    },
+    {
+      "file": "held-right-452x900.png",
+      "selected_index": 7,
+      "offset": 0.8999999999999999,
+      "sha256": "19f740fe05682c8c8631a8709230f614babaa4f81976b77ac338d155c550e43b",
+      "held": true,
+      "viewport": [
+        452,
+        900
+      ],
+      "incoming_rank": -2,
+      "incoming_template": "template_f",
+      "has_texture": true,
+      "opacity": 0.702,
+      "bounds": [
+        9.897759999999998,
+        323.73328000000004,
+        120.74223999999998,
+        656.2667200000001
+      ]
+    },
+    {
+      "file": "released-right-452x900.png",
+      "selected_index": 6,
+      "offset": 0,
+      "sha256": "1425988456601bac90def4d2763496259fda5a48b69e0de460542704ca535315",
+      "held": false,
+      "viewport": [
+        452,
+        900
+      ]
+    },
+    {
+      "file": "held-wrap-452x900.png",
+      "selected_index": 11,
+      "offset": -0.9000000000000001,
+      "sha256": "155ab55ba9a5de597b5cd677714ce6999cfc42898dab0d9d1b18a13657d0f914",
+      "held": true,
+      "viewport": [
+        452,
+        900
+      ],
+      "incoming_rank": 2,
+      "incoming_template": "template_b",
+      "has_texture": true,
+      "opacity": 0.7020000000000003,
+      "bounds": [
+        331.2577599999999,
+        323.73328000000004,
+        442.1022399999999,
+        656.2667200000001
+      ]
+    },
+    {
+      "file": "released-wrap-452x900.png",
+      "selected_index": 0,
+      "offset": 0,
+      "sha256": "51f0a202df887cd6e9ab32e572b4b6f0e1fb28f7e79da3956f72508453ad8931",
+      "held": false,
+      "viewport": [
+        452,
+        900
+      ]
+    },
+    {
+      "file": "rest-800x1280.png",
+      "selected_index": 7,
+      "offset": 0,
+      "sha256": "9d1de905c8eb42eed201dc0c7b24fdf4c7b507c8924c825eb4654e553388f3d3",
+      "held": false,
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "file": "held-left-800x1280.png",
+      "selected_index": 7,
+      "offset": -0.9,
+      "sha256": "c7187b08d90c06c5f6c1f6641c91212b3479760eff1506756858afef0f87388e",
+      "held": true,
+      "viewport": [
+        800,
+        1280
+      ],
+      "incoming_rank": 2,
+      "incoming_template": "template_j",
+      "has_texture": true,
+      "opacity": 0.702,
+      "bounds": [
+        594.1648,
+        373.2944,
+        798.6351999999999,
+        986.7056
+      ]
+    },
+    {
+      "file": "held-right-800x1280.png",
+      "selected_index": 7,
+      "offset": 0.9,
+      "sha256": "e4d063ab0632dde1605a0aa344f953668f21684828f964ad7ee3de2be5abfdbe",
+      "held": true,
+      "viewport": [
+        800,
+        1280
+      ],
+      "incoming_rank": -2,
+      "incoming_template": "template_f",
+      "has_texture": true,
+      "opacity": 0.702,
+      "bounds": [
+        1.3648000000000025,
+        373.2944,
+        205.8352,
+        986.7056
+      ]
+    },
+    {
+      "file": "released-right-800x1280.png",
+      "selected_index": 6,
+      "offset": 0,
+      "sha256": "a2238593ac6d0d015153e9fd7fc81bc70054cc3d25f6832358f57916a6104897",
+      "held": false,
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "file": "held-wrap-800x1280.png",
+      "selected_index": 11,
+      "offset": -0.9,
+      "sha256": "fd51f97967eb348430af22cac529691269a03747272b7e746368f7bfc4dd46f5",
+      "held": true,
+      "viewport": [
+        800,
+        1280
+      ],
+      "incoming_rank": 2,
+      "incoming_template": "template_b",
+      "has_texture": true,
+      "opacity": 0.702,
+      "bounds": [
+        594.1648,
+        373.2944,
+        798.6351999999999,
+        986.7056
+      ]
+    },
+    {
+      "file": "released-wrap-800x1280.png",
+      "selected_index": 0,
+      "offset": 0,
+      "sha256": "2aee18845eed84d0083276163572dad3b6cb8141df5cf41f5173223a94120049",
+      "held": false,
+      "viewport": [
+        800,
+        1280
+      ]
+    }
+  ],
+  "limits": "Synthetic software-display evidence; not physical touch or frame-pacing acceptance."
+}

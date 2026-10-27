@@ -1,5 +1,12 @@
 # Meong Photobooth — GUI v2 development handover
 
+Matching-source CI **40481718367**: all three jobs SUCCESS.
+Gallery fix **eb0297d**: final local **898 run / 895 PASS / 3 optional
+palm-assets SKIP / zero failures/errors**, 291.903s; 20 targeted checks and
+18 exact-source native captures (nine held-pointer frames). Actual device retest
+remains pending. [Exact evidence/update](qa/portrait-v2-carousel-hold/README.md).
+
+
 ## 27 October — BUG-019 held gallery drag
 
 Owner reports an empty incoming side while holding a carousel drag. Five pooled

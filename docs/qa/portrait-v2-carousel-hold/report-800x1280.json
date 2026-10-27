@@ -1,0 +1,105 @@
+{
+  "source_sha": "eb0297d6db78f6a53cc70ee8736b28f479c56be0",
+  "gallery_sha256": "2810f307918f3fd44dee2379f790aa68b3562a60085d37ad6897e21b9ad3bdb8",
+  "app_sha256": "ef33bc3d00d67eddecac7f97f659758e15fb156736b633ca421d94e6e2713029",
+  "protocol": "actual MotionEvent begin/update/hold/reverse/end; native Widget FBO export, no image edits",
+  "expected_incoming": true,
+  "screenshots": [
+    {
+      "file": "rest-800x1280.png",
+      "selected_index": 7,
+      "offset": 0,
+      "sha256": "9d1de905c8eb42eed201dc0c7b24fdf4c7b507c8924c825eb4654e553388f3d3",
+      "held": false,
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "file": "held-left-800x1280.png",
+      "selected_index": 7,
+      "offset": -0.9,
+      "sha256": "c7187b08d90c06c5f6c1f6641c91212b3479760eff1506756858afef0f87388e",
+      "held": true,
+      "viewport": [
+        800,
+        1280
+      ],
+      "incoming_rank": 2,
+      "incoming_template": "template_j",
+      "has_texture": true,
+      "opacity": 0.702,
+      "bounds": [
+        594.1648,
+        373.2944,
+        798.6351999999999,
+        986.7056
+      ]
+    },
+    {
+      "file": "held-right-800x1280.png",
+      "selected_index": 7,
+      "offset": 0.9,
+      "sha256": "e4d063ab0632dde1605a0aa344f953668f21684828f964ad7ee3de2be5abfdbe",
+      "held": true,
+      "viewport": [
+        800,
+        1280
+      ],
+      "incoming_rank": -2,
+      "incoming_template": "template_f",
+      "has_texture": true,
+      "opacity": 0.702,
+      "bounds": [
+        1.3648000000000025,
+        373.2944,
+        205.8352,
+        986.7056
+      ]
+    },
+    {
+      "file": "released-right-800x1280.png",
+      "selected_index": 6,
+      "offset": 0,
+      "sha256": "a2238593ac6d0d015153e9fd7fc81bc70054cc3d25f6832358f57916a6104897",
+      "held": false,
+      "viewport": [
+        800,
+        1280
+      ]
+    },
+    {
+      "file": "held-wrap-800x1280.png",
+      "selected_index": 11,
+      "offset": -0.9,
+      "sha256": "fd51f97967eb348430af22cac529691269a03747272b7e746368f7bfc4dd46f5",
+      "held": true,
+      "viewport": [
+        800,
+        1280
+      ],
+      "incoming_rank": 2,
+      "incoming_template": "template_b",
+      "has_texture": true,
+      "opacity": 0.702,
+      "bounds": [
+        594.1648,
+        373.2944,
+        798.6351999999999,
+        986.7056
+      ]
+    },
+    {
+      "file": "released-wrap-800x1280.png",
+      "selected_index": 0,
+      "offset": 0,
+      "sha256": "2aee18845eed84d0083276163572dad3b6cb8141df5cf41f5173223a94120049",
+      "held": false,
+      "viewport": [
+        800,
+        1280
+      ]
+    }
+  ]
+}
