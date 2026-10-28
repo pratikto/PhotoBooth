@@ -41,3 +41,24 @@ Raw reproduction/result remain in work/ar02a-before.txt and work/ar02a-tests.txt
 until final evidence publication. GET-only reconciliation cannot allocate a grant,
 resolve an operator action or start capture. Claim and first STARTED independently
 require fresh verified settlement. Existing protocol regression passes.
+
+## AR-02.b durability and verification
+
+Additive `checkout_reconciliation` table: order_id, generation, token,
+lease_until, next_at, failures, evidence_revision, checked_at, outcome,
+provider_state, observed_at. No old field/journal migration. A transaction
+reserves one bounded 45-second GET lease, then releases SQLite before network
+I/O. Valid evidence and schedule commit together; every evidence writer advances
+revision. A stale/replaced/expired token or changed revision cannot authorize
+admission or overwrite a newer observation. Claim/STARTED may demand an urgent
+fresh check, but cannot bypass an active lease. Ordinary observation polling is
+10 seconds; unknown/404 failures use jittered 10/20/40/60 seconds capped at 60.
+No cached proof is returned as checked when throttled. Clock rollback reanchors
+a bounded hold; it never extends payment/photo expiry or manufactures a proof.
+
+Initial scheduler tests: 2 FAIL/1 ERROR before implementation. Final focused
+command as AR-02.a: **126 PASS / zero FAIL/ERROR/SKIP**, including three extra
+migration/lease-expiry/clock cases. Temporary-db upgrade preserves payment/grant
+bytes. Rollback preserves this table; old source may ignore it and all prior
+financial records remain readable. Actual process/power-loss and deployment
+acceptance remain separately gated; final full regression still pending.

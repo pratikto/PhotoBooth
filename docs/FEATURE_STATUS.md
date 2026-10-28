@@ -1,5 +1,10 @@
 # Meong Photobooth — current feature status
 
+## 28 October — AR-02.b: durable bounded reconciliation scheduling and fencing
+
+Focused 126 PASS, zero failures/errors/skips. Fifteen new AR-02 cases cover cached evidence, concurrent workers, jittered backoff, stale responses, additive schema and clock rollback. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-RECONCILIATION.md).
+Physical/provider gates remain separate; no production activation.
+
 ## 28 October — AR-02.a: fresh payment observation and admission guard
 
 Nine new cases; focused 120 PASS, zero failures/errors/skips. Backend-only provider GET observation requires booth authentication; operator mutation remains PIN-gated. Cached PAID cannot authorize claim/STARTED without fresh settlement. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-RECONCILIATION.md).

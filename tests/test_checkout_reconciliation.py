@@ -21,7 +21,8 @@ class ReconciliationTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
-        self.store = CheckoutStore(Path(self.tmp.name)/'orders.sqlite')
+        self.now = [1000.0]
+        self.store = CheckoutStore(Path(self.tmp.name)/'orders.sqlite', now=lambda:self.now[0])
         self.addCleanup(self.store.close)
         self.provider = FakeProvider()
         self.backend = CheckoutBackend(self.store, self.provider, KEY, MERCHANT)
@@ -70,6 +71,7 @@ class ReconciliationTests(unittest.TestCase):
                               (dict(original, merchant_id='OTHER'), 'unknown'),
                               (dict(original, fraud_status='challenge'), 'unknown')):
             with self.subTest(outcome=outcome), patch.object(self.provider, 'get_status', return_value=data):
+                self.now[0] += 61
                 result = self.backend.reconcile(self.oid, 'PB001')
                 self.assertEqual(result['reconciliation']['outcome'], outcome)
                 self.assertFalse(result['reconciliation']['checked'])
@@ -78,6 +80,7 @@ class ReconciliationTests(unittest.TestCase):
     def test_reconciliation_never_allocates_grant_but_fresh_claim_replays_same_one(self):
         self.paid()
         for _ in range(3):
+            self.now[0] += 11
             result = self.backend.reconcile(self.oid, 'PB001')
             self.assertEqual(result['reconciliation']['outcome'], 'paid')
             self.assertIsNone(result['grant_id'])
@@ -131,3 +134,95 @@ class ReconciliationTests(unittest.TestCase):
                 finally:
                     release.set(); await task
         asyncio.run(scenario())
+
+    def test_retry_backoff_is_durable_bounded_and_not_bypassed_by_duplicate_calls(self):
+        self.provider.outage=True
+        for base in (10,20,40,60,60):
+            result=self.backend.reconcile(self.oid,'PB001')
+            delay=result['reconciliation']['retry_after']
+            self.assertGreaterEqual(delay,base)
+            self.assertLessEqual(delay,min(base*1.1+1,60))
+            reads=self.provider.reads
+            duplicate=self.backend.reconcile(self.oid,'PB001')
+            self.assertFalse(duplicate['reconciliation']['checked'])
+            self.assertEqual(self.provider.reads,reads)
+            with closing(CheckoutStore(self.store.db.execute('PRAGMA database_list').fetchone()[2],now=lambda:self.now[0])) as reopened:
+                backend=CheckoutBackend(reopened,self.provider,KEY,MERCHANT)
+                backend.reconcile(self.oid,'PB001')
+                self.assertEqual(self.provider.reads,reads)
+            self.now[0]+=delay+1
+        self.provider.outage=False
+        result=self.backend.reconcile(self.oid,'PB001')
+        self.assertTrue(result['reconciliation']['checked'])
+        self.assertEqual(result['reconciliation']['retry_after'],10)
+
+    def test_competing_workers_have_one_inflight_read_and_no_cached_permission(self):
+        entered,release=threading.Event(),threading.Event()
+        original=self.provider.get_status
+        def slow(oid):
+            entered.set(); release.wait(3); return original(oid)
+        self.provider.get_status=slow
+        from concurrent.futures import ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=1) as pool:
+            first=pool.submit(self.backend.reconcile,self.oid,'PB001')
+            try:
+                self.assertTrue(entered.wait(1))
+                duplicate=self.backend.reconcile(self.oid,'PB001')
+                self.assertFalse(duplicate['reconciliation']['checked'])
+                self.assertTrue(duplicate['verification_pending'])
+            finally:
+                release.set()
+            self.assertTrue(first.result(3)['reconciliation']['checked'])
+
+    def test_expired_worker_cannot_overwrite_newer_refund_evidence(self):
+        self.paid()
+        old=dict(self.provider.rows[self.oid])
+        entered,release=threading.Event(),threading.Event()
+        def slow(_oid):
+            entered.set(); release.wait(3); return old
+        from concurrent.futures import ThreadPoolExecutor
+        with patch.object(self.provider,'get_status',side_effect=slow),ThreadPoolExecutor(max_workers=1) as pool:
+            stale=pool.submit(self.backend.reconcile,self.oid,'PB001')
+            try:
+                self.assertTrue(entered.wait(1))
+                refund=dict(old,transaction_status='refund')
+                self.backend._apply(self.store.get(self.oid),refund)
+            finally:
+                release.set()
+            result=stale.result(3)
+        self.assertFalse(result['reconciliation']['checked'])
+        self.assertEqual(result['state'],'REVIEW_REQUIRED')
+        self.assertIsNone(result['grant_id'])
+
+    def test_expired_reservation_is_fenced_after_a_new_worker_commits(self):
+        old=self.store.begin_reconciliation(self.oid)
+        self.now[0]+=46
+        new=self.store.begin_reconciliation(self.oid)
+        self.assertIsNotNone(new)
+        evidence={'order_id':self.oid,'amount':15000,'merchant_id':MERCHANT,
+                  'transaction_id':'txn-'+self.oid,'transaction_status':'refund'}
+        self.assertTrue(self.store.finish_reconciliation(self.oid,new,evidence=evidence,outcome='review'))
+        self.assertFalse(self.store.finish_reconciliation(self.oid,old,evidence=dict(evidence,transaction_status='settlement'),outcome='paid'))
+        self.assertEqual(self.store.get(self.oid)['state'],'REVIEW_REQUIRED')
+
+    def test_clock_rollback_holds_without_extending_deadline_indefinitely(self):
+        self.backend.reconcile(self.oid,'PB001')
+        self.now[0]-=300
+        result=self.backend.reconcile(self.oid,'PB001')
+        self.assertFalse(result['reconciliation']['checked'])
+        self.assertEqual(result['reconciliation']['retry_after'],10)
+        self.now[0]+=11
+        self.assertTrue(self.backend.reconcile(self.oid,'PB001')['reconciliation']['checked'])
+
+    def test_additive_scheduler_upgrade_preserves_existing_financial_bytes(self):
+        self.paid()
+        grant=self.backend.claim(self.oid,'PB001',self.key)['grant_id']
+        before=self.store.get(self.oid)
+        # Simulate the exact absence of the new additive table on upgrade.
+        self.store.db.execute('DROP TABLE checkout_reconciliation')
+        path=self.store.db.execute('PRAGMA database_list').fetchone()[2]
+        with closing(CheckoutStore(path,now=lambda:self.now[0])) as upgraded:
+            self.assertEqual(upgraded.get(self.oid),before)
+            reservation=upgraded.begin_reconciliation(self.oid)
+            self.assertIsNotNone(reservation)
+            self.assertEqual(upgraded.get(self.oid)['grant_id'],grant)

@@ -8,6 +8,7 @@ allowed to supply payment evidence directly.
 from contextlib import contextmanager
 import hashlib
 import json
+import math
 from pathlib import Path
 import re
 import sqlite3
@@ -69,6 +70,13 @@ class CheckoutStore:
             phase TEXT NOT NULL CHECK(phase IN
               ('PREPARED','SENT','UNCERTAIN','VERIFIED','LEGACY_UNCERTAIN')),
             prepared_at REAL, sent_at REAL, verified_at REAL, updated_at REAL NOT NULL);
+          CREATE TABLE IF NOT EXISTS checkout_reconciliation (
+            order_id TEXT PRIMARY KEY, generation INTEGER NOT NULL DEFAULT 0,
+            token TEXT, lease_until REAL NOT NULL DEFAULT 0,
+            next_at REAL NOT NULL DEFAULT 0, failures INTEGER NOT NULL DEFAULT 0,
+            evidence_revision INTEGER NOT NULL DEFAULT 0,
+            checked_at REAL, outcome TEXT NOT NULL DEFAULT 'unknown',
+            provider_state TEXT, observed_at REAL NOT NULL DEFAULT 0);
         ''')
         # Never silently forget unresolved orders from the earlier prototype.
         if self.db.execute("SELECT 1 FROM sqlite_master WHERE name='orders'").fetchone():
@@ -227,38 +235,105 @@ class CheckoutStore:
 
     def apply_evidence(self, order_id, evidence):
         """Apply independently fetched evidence, never a kiosk/body PAID flag."""
+        with self.write():
+            return self._apply_evidence(order_id, evidence)
+
+    def _apply_evidence(self, order_id, evidence):
+        """Caller owns write transaction; reconciliation can commit proof atomically."""
         mapping = {'pending': 'PENDING', 'settlement': 'PAID', 'expire': 'EXPIRED',
                    'cancel': 'CANCELLED', 'deny': 'FAILED', 'failure': 'FAILED',
                    'refund': 'REVIEW_REQUIRED', 'partial_refund': 'REVIEW_REQUIRED'}
         state = mapping[evidence['transaction_status']]
+        old = self._row(order_id)
+        if (evidence['order_id'] != order_id or evidence['amount'] != old['amount']
+                or (old['provider_ref'] and old['provider_ref'] != evidence['transaction_id'])
+                or (old['merchant_id'] and old['merchant_id'] != evidence['merchant_id'])):
+            raise CheckoutConflict('Provider evidence does not match this order')
+        attempt = self.db.execute('SELECT merchant_id FROM checkout_create_attempts WHERE order_id=?',
+                                  (order_id,)).fetchone()
+        if attempt and attempt['merchant_id'] not in (None, evidence['merchant_id']):
+            raise CheckoutConflict('Provider evidence merchant mismatch')
+        # A late success belongs to the old visit, never the next customer.
+        if state == 'PAID' and (old['closed'] or old['state'] in
+                                {'EXPIRED', 'CANCELLED', 'FAILED', 'REVIEW_REQUIRED'}):
+            state = 'REVIEW_REQUIRED'
+        if old['state'] == 'REVIEW_REQUIRED':
+            state = 'REVIEW_REQUIRED'
+        elif old['state'] == 'PAID' and state != 'REVIEW_REQUIRED':
+            state = 'PAID'
+        elif old['state'] in {'EXPIRED', 'CANCELLED', 'FAILED'} and state == 'PENDING':
+            state = old['state']
+        self.db.execute('''UPDATE checkouts SET state=?,provider_ref=?,merchant_id=?,
+            expires_at=COALESCE(?,expires_at),verified_at=? WHERE id=?''',
+            (state, evidence['transaction_id'], evidence['merchant_id'],
+             evidence.get('expires_at'), self.now(), order_id))
+        self.db.execute('''UPDATE checkout_create_attempts
+            SET phase='VERIFIED',verified_at=?,updated_at=? WHERE order_id=?''',
+            (self.now(), self.now(), order_id))
+        self.db.execute('INSERT OR IGNORE INTO checkout_reconciliation(order_id) VALUES(?)', (order_id,))
+        self.db.execute('''UPDATE checkout_reconciliation
+            SET evidence_revision=evidence_revision+1 WHERE order_id=?''', (order_id,))
+        return self._row(order_id)
+
+    def begin_reconciliation(self, order_id, *, urgent=False):
+        """Reserve bounded GET outside the DB transaction; never reserve a charge."""
         with self.write():
-            old = self._row(order_id)
-            if (evidence['order_id'] != order_id or evidence['amount'] != old['amount']
-                    or (old['provider_ref'] and old['provider_ref'] != evidence['transaction_id'])
-                    or (old['merchant_id'] and old['merchant_id'] != evidence['merchant_id'])):
-                raise CheckoutConflict('Provider evidence does not match this order')
-            attempt = self.db.execute('SELECT merchant_id FROM checkout_create_attempts WHERE order_id=?',
-                                      (order_id,)).fetchone()
-            if attempt and attempt['merchant_id'] not in (None, evidence['merchant_id']):
-                raise CheckoutConflict('Provider evidence merchant mismatch')
-            # A late success belongs to the old visit, never the next customer.
-            if state == 'PAID' and (old['closed'] or old['state'] in
-                                    {'EXPIRED', 'CANCELLED', 'FAILED', 'REVIEW_REQUIRED'}):
-                state = 'REVIEW_REQUIRED'
-            if old['state'] == 'REVIEW_REQUIRED':
-                state = 'REVIEW_REQUIRED'
-            elif old['state'] == 'PAID' and state != 'REVIEW_REQUIRED':
-                state = 'PAID'
-            elif old['state'] in {'EXPIRED', 'CANCELLED', 'FAILED'} and state == 'PENDING':
-                state = old['state']
-            self.db.execute('''UPDATE checkouts SET state=?,provider_ref=?,merchant_id=?,
-                expires_at=COALESCE(?,expires_at),verified_at=? WHERE id=?''',
-                (state, evidence['transaction_id'], evidence['merchant_id'],
-                 evidence.get('expires_at'), self.now(), order_id))
-            self.db.execute('''UPDATE checkout_create_attempts
-                SET phase='VERIFIED',verified_at=?,updated_at=? WHERE order_id=?''',
-                (self.now(), self.now(), order_id))
-            return self._row(order_id)
+            self._row(order_id)
+            self.db.execute('INSERT OR IGNORE INTO checkout_reconciliation(order_id) VALUES(?)', (order_id,))
+            row = dict(self.db.execute('SELECT * FROM checkout_reconciliation WHERE order_id=?',
+                                       (order_id,)).fetchone())
+            now = self.now()
+            if now < row['observed_at']:
+                # Wall-clock rollback cannot make a distant deadline hold for
+                # hours or turn a previous proof into a new permission.
+                self.db.execute('''UPDATE checkout_reconciliation SET next_at=?,
+                    lease_until=?,observed_at=? WHERE order_id=?''',
+                    (now+10, now+45 if row['token'] else 0, now, order_id))
+                return None
+            if (row['token'] and row['lease_until'] > now) or (not urgent and row['next_at'] > now):
+                return None
+            token = uuid.uuid4().hex
+            self.db.execute('''UPDATE checkout_reconciliation SET token=?,lease_until=?,
+                generation=generation+1,observed_at=? WHERE order_id=?''', (token, now+45, now, order_id))
+            return {'token': token, 'revision': row['evidence_revision']}
+
+    def reconciliation_delay(self, order_id):
+        with self.lock:
+            row = self.db.execute('SELECT next_at,lease_until,token FROM checkout_reconciliation WHERE order_id=?',
+                                  (order_id,)).fetchone()
+            if row is None:
+                return 0
+            deadline = max(row['next_at'], row['lease_until'] if row['token'] else 0)
+            return max(0, min(60, int(math.ceil(deadline-self.now()))))
+
+    def finish_reconciliation(self, order_id, reservation, *, evidence=None, outcome='unknown', qr_url=None):
+        with self.write():
+            row = dict(self.db.execute('SELECT * FROM checkout_reconciliation WHERE order_id=?',
+                                       (order_id,)).fetchone())
+            if row['token'] != reservation['token'] or row['lease_until'] < self.now():
+                return False
+            if row['evidence_revision'] != reservation['revision']:
+                # A notification/other verified read won while this GET was
+                # in flight. Discard its stale result, including permission.
+                evidence, outcome = None, 'unknown'
+                accepted = False
+            else:
+                accepted = True
+            if evidence is not None:
+                self._apply_evidence(order_id, evidence)
+                if qr_url is not None:
+                    self.db.execute('UPDATE checkouts SET qr_url=? WHERE id=?', (qr_url, order_id))
+                failures, delay = 0, 10
+            else:
+                failures = min(row['failures']+1, 1000)
+                base = (10,20,40,60)[min(failures-1,3)]
+                jitter = int(hashlib.sha256((order_id+str(row['generation'])).encode()).hexdigest()[:2],16)/255
+                delay = min(60, base + jitter*base*.1)
+            self.db.execute('''UPDATE checkout_reconciliation SET token=NULL,lease_until=0,
+                next_at=?,failures=?,checked_at=?,outcome=?,provider_state=?,observed_at=? WHERE order_id=?''',
+                (self.now()+delay, failures, self.now() if evidence is not None else None, outcome,
+                 evidence['transaction_status'] if evidence is not None else None, self.now(), order_id))
+            return accepted
 
     def save_qr(self, order_id, url):
         with self.write():

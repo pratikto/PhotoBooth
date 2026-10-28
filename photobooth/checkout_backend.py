@@ -29,15 +29,10 @@ class CheckoutBackend:
         return self.store.validate_creation_context(order_id, self.merchant_id, self.provider_mode)
 
     def _fresh_payment(self, order_id, booth_id):
-        identifier(order_id, maximum=50)
-        order = self.store.get(order_id, booth_id)
-        self._creation_context(order_id)
-        try:
-            data = self.provider.get_status(order_id)
-            evidence = provider_evidence(data, order, self.merchant_id)
-            return self._apply(order, data), evidence['transaction_status']
-        except Exception as error:
-            raise ProviderUnavailable('Current provider evidence required') from error
+        order, checked, state, _outcome = self._observe_payment(order_id, booth_id, urgent=True)
+        if not checked:
+            raise ProviderUnavailable('Current provider evidence required')
+        return order, state
 
     def _require_settlement(self, order_id, booth_id):
         order, provider_state = self._fresh_payment(order_id, booth_id)
@@ -45,35 +40,52 @@ class CheckoutBackend:
             raise CheckoutConflict('Current verified settlement required')
         return order
 
-    def reconcile(self, order_id, booth_id):
-        """Observe provider state; never claim, resolve, allocate or replay effects.
-
-        Cached PAID is retained as financial history on outage, but its presence
-        is not a current observation or permission to admit a photo session.
-        """
+    def _observe_payment(self, order_id, booth_id, *, urgent=False):
         identifier(order_id, maximum=50)
         order = self.store.get(order_id, booth_id)
         self._creation_context(order_id)
-        outcome, state, checked = 'unknown', None, False
+        reservation = self.store.begin_reconciliation(order_id, urgent=urgent)
+        if reservation is None:
+            return order, False, None, 'unknown'
+        outcome, state, evidence, qr_url, display_valid = 'unknown', None, None, None, True
         try:
             data = self.provider.get_status(order_id)
             if isinstance(data, dict) and data.get('status_code') == '404':
                 outcome = 'provider_not_found_unproven'
             else:
                 evidence = provider_evidence(data, order, self.merchant_id)
-                order = self._apply(order, data)
-                state, checked = evidence['transaction_status'], True
-                outcome = ('review' if order['state'] == 'REVIEW_REQUIRED' else
+                state = evidence['transaction_status']
+                if state == 'pending':
+                    try:
+                        qr_url = qr_url_from_status(data, evidence, existing_url=order.get('qr_url'))
+                    except (ValueError, TypeError):
+                        display_valid = False
+                outcome = ('review' if state in {'refund', 'partial_refund'} else
                            'paid' if state == 'settlement' else
                            'pending' if state == 'pending' else 'terminal')
         except Exception as error:
-            # HTTP 404 is also ambiguity, not proof of non-creation. Do not
-            # retain provider exception text/body (may contain account data).
             if getattr(error, 'code', None) == 404:
                 outcome = 'provider_not_found_unproven'
-        result = self.view(self.store.get(order_id, booth_id), verification_pending=not checked)
+        accepted = self.store.finish_reconciliation(order_id, reservation,
+            evidence=evidence, outcome=outcome, qr_url=qr_url)
+        order = self.store.get(order_id, booth_id)
+        checked = accepted and evidence is not None and display_valid
+        if not checked:
+            return order, False, None, outcome if accepted else 'unknown'
+        if order['state'] == 'REVIEW_REQUIRED':
+            outcome = 'review'
+        return order, True, state, outcome
+
+    def reconcile(self, order_id, booth_id):
+        """Provider GET observation only; no grant, disposition or photo effects.
+
+        A throttled/in-flight response is explicitly unchecked. Its historical
+        PAID row never becomes fresh evidence just because a prior poll passed.
+        """
+        order, checked, state, outcome = self._observe_payment(order_id, booth_id)
+        result = self.view(order, verification_pending=not checked)
         result['reconciliation'] = {'checked': checked, 'outcome': outcome,
-                                    'provider_state': state}
+            'provider_state': state, 'retry_after': self.store.reconciliation_delay(order_id)}
         return result
 
     @property

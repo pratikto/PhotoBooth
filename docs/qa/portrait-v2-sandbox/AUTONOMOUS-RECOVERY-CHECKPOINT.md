@@ -34,13 +34,13 @@ The owner prefers **frequent small tested commits AND remote pushes** because a 
 | Next *small* action | File/function, intended test and AR substep |
 | Safe rollback | Previous commit and retained-data plan |
 
-## Current implementation checkpoint — AR-02.a
+## Current implementation checkpoint — AR-02.b
 
-- Base / last verified remote: `6339d13817a74fcaf8c0ae3d76d9b73e73e2ed5c`.
-- Completed: fresh payment observation and admission guard. Nine new cases; focused 120 PASS, zero failures/errors/skips. Backend-only provider GET observation requires booth authentication; operator mutation remains PIN-gated. Cached PAID cannot authorize claim/STARTED without fresh settlement.
+- Base / last verified remote: `877268f46d7360e4a6e3ef021862d93103d07f00`.
+- Completed: durable bounded reconciliation scheduling and fencing. Focused 126 PASS, zero failures/errors/skips. Fifteen new AR-02 cases cover cached evidence, concurrent workers, jittered backoff, stale responses, additive schema and clock rollback.
 - Publication SHA: this increment will be pinned after its verified push by the
   next checkpoint; obtain containing commit from Git history.
-- Remaining / exact next step: AR-02.b durable per-order reservation, bounded backoff and stale-reply fencing tests/implementation.
+- Remaining / exact next step: AR-02.c restart and existing RECOVERY observations without photo reentry, then AR-03 immutable fulfillment/allocation ledger.
 - Full suite: deferred to final functional SHA. Actual Windows/Ubuntu devices,
   merchant, paper/Drive and production: NOT_RUN / not enabled.
 - Migration/rollback: see AR-02 contract; preserve all ledgers/media/claims,

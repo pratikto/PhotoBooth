@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 28 October — AR-02.b: durable bounded reconciliation scheduling and fencing
+
+Base / last remote-verified commit `877268f46d7360e4a6e3ef021862d93103d07f00`. Focused 126 PASS, zero failures/errors/skips. Fifteen new AR-02 cases cover cached evidence, concurrent workers, jittered backoff, stale responses, additive schema and clock rollback.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, private
+photo display or customer state reset. Next: AR-02.c restart and existing RECOVERY observations without photo reentry, then AR-03 immutable fulfillment/allocation ledger.
+Only work/ scratch files local; scope and rollback in
+[AR-02 contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-RECONCILIATION.md).
+
 ## 28 October — AR-02.a: fresh payment observation and admission guard
 
 Base / last remote-verified commit `6339d13817a74fcaf8c0ae3d76d9b73e73e2ed5c`. Nine new cases; focused 120 PASS, zero failures/errors/skips. Backend-only provider GET observation requires booth authentication; operator mutation remains PIN-gated. Cached PAID cannot authorize claim/STARTED without fresh settlement.
