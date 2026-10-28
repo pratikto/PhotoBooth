@@ -1,6 +1,6 @@
 # Autonomous recovery — session checkpoint and resume contract
 
-**Checkpoint status:** AR-01.a/b VERIFIED AUTOMATED / provider resend BLOCKED, 28 October 2026 (Asia/Jakarta)
+**Checkpoint status:** AR-02.a focused VERIFIED / roadmap IN PROGRESS, 28 October 2026 (Asia/Jakarta)
 **Branch:** `feature/portrait-kiosk-v2-next` (existing; no master merge)
 **Recovery implementation:** AR-00 complete; AR-01 local attempt durability implemented; provider repeat-charge gate BLOCKED; AR-02–13 pending
 **Latest tested/pushed functional source:** `017b417d02d63a79b1c5b21c4f0613b7d15186fc`
@@ -34,7 +34,20 @@ The owner prefers **frequent small tested commits AND remote pushes** because a 
 | Next *small* action | File/function, intended test and AR substep |
 | Safe rollback | Previous commit and retained-data plan |
 
-## Current implementation checkpoint — AR-01.a/b
+## Current implementation checkpoint — AR-02.a
+
+- Base / last verified remote: `6339d13817a74fcaf8c0ae3d76d9b73e73e2ed5c`.
+- Completed: fresh payment observation and admission guard. Nine new cases; focused 120 PASS, zero failures/errors/skips. Backend-only provider GET observation requires booth authentication; operator mutation remains PIN-gated. Cached PAID cannot authorize claim/STARTED without fresh settlement.
+- Publication SHA: this increment will be pinned after its verified push by the
+  next checkpoint; obtain containing commit from Git history.
+- Remaining / exact next step: AR-02.b durable per-order reservation, bounded backoff and stale-reply fencing tests/implementation.
+- Full suite: deferred to final functional SHA. Actual Windows/Ubuntu devices,
+  merchant, paper/Drive and production: NOT_RUN / not enabled.
+- Migration/rollback: see AR-02 contract; preserve all ledgers/media/claims,
+  never drop additive tables or replay a charge/capture/print.
+- Local unpushed work: disposable work/ only; no unrelated customer/secret data.
+
+## Historical verified checkpoint — AR-01.a/b
 
 - **Date/platform:** 2026-10-28 19:36 Asia/Jakarta; Linux cloud, Python 3.12.14,
   SQLite WAL/FULL. Windows development / Ubuntu device acceptance remain separate.

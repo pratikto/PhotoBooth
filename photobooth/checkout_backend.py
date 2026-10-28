@@ -28,6 +28,54 @@ class CheckoutBackend:
     def _creation_context(self, order_id):
         return self.store.validate_creation_context(order_id, self.merchant_id, self.provider_mode)
 
+    def _fresh_payment(self, order_id, booth_id):
+        identifier(order_id, maximum=50)
+        order = self.store.get(order_id, booth_id)
+        self._creation_context(order_id)
+        try:
+            data = self.provider.get_status(order_id)
+            evidence = provider_evidence(data, order, self.merchant_id)
+            return self._apply(order, data), evidence['transaction_status']
+        except Exception as error:
+            raise ProviderUnavailable('Current provider evidence required') from error
+
+    def _require_settlement(self, order_id, booth_id):
+        order, provider_state = self._fresh_payment(order_id, booth_id)
+        if provider_state != 'settlement' or order['state'] != 'PAID' or order['closed']:
+            raise CheckoutConflict('Current verified settlement required')
+        return order
+
+    def reconcile(self, order_id, booth_id):
+        """Observe provider state; never claim, resolve, allocate or replay effects.
+
+        Cached PAID is retained as financial history on outage, but its presence
+        is not a current observation or permission to admit a photo session.
+        """
+        identifier(order_id, maximum=50)
+        order = self.store.get(order_id, booth_id)
+        self._creation_context(order_id)
+        outcome, state, checked = 'unknown', None, False
+        try:
+            data = self.provider.get_status(order_id)
+            if isinstance(data, dict) and data.get('status_code') == '404':
+                outcome = 'provider_not_found_unproven'
+            else:
+                evidence = provider_evidence(data, order, self.merchant_id)
+                order = self._apply(order, data)
+                state, checked = evidence['transaction_status'], True
+                outcome = ('review' if order['state'] == 'REVIEW_REQUIRED' else
+                           'paid' if state == 'settlement' else
+                           'pending' if state == 'pending' else 'terminal')
+        except Exception as error:
+            # HTTP 404 is also ambiguity, not proof of non-creation. Do not
+            # retain provider exception text/body (may contain account data).
+            if getattr(error, 'code', None) == 404:
+                outcome = 'provider_not_found_unproven'
+        result = self.view(self.store.get(order_id, booth_id), verification_pending=not checked)
+        result['reconciliation'] = {'checked': checked, 'outcome': outcome,
+                                    'provider_state': state}
+        return result
+
     @property
     def sandbox_recovery_supported(self):
         from photobooth.midtrans_sandbox import MidtransSandboxClient
@@ -145,13 +193,21 @@ class CheckoutBackend:
         return True
 
     def claim(self, order_id, booth_id, checkout_key):
-        self.store.get(order_id, booth_id)
+        order = self.store.get(order_id, booth_id)
+        if order['checkout_key'] != checkout_key or order['state'] != 'PAID' or order['closed']:
+            raise CheckoutConflict('Checkout identity mismatch')
         self._creation_context(order_id)
+        self._require_settlement(order_id, booth_id)
         return self.view(self.store.grant(order_id, booth_id, checkout_key))
 
     def service_transition(self, order_id, booth_id, grant_id, state, transaction_id):
-        self.store.get(order_id, booth_id)
+        order = self.store.get(order_id, booth_id)
         self._creation_context(order_id)
+        if state == 'STARTED':
+            if (not grant_id or order['grant_id'] != grant_id
+                    or order['local_transaction_id'] not in (None, transaction_id)):
+                raise CheckoutConflict('Service permit mismatch')
+            self._require_settlement(order_id, booth_id)
         return self.view(self.store.service_transition(order_id, booth_id, grant_id, state, transaction_id))
 
     def cancel(self, order_id, booth_id):

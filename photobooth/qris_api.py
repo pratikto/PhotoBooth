@@ -192,6 +192,12 @@ def create_app(service, authenticator, *, on_shutdown=None, rate_limit=120, reco
         booth = booth_identity(request, x_booth_id, authorization)
         return await invoke(service.claim, order_id, booth, key(idempotency_key))
 
+    @app.post('/api/orders/{order_id}/reconcile')
+    async def reconcile_order(order_id: str, request: Request, x_booth_id: str = Header(default=''),
+                              authorization: str = Header(default='')):
+        booth = booth_identity(request, x_booth_id, authorization)
+        return await invoke(service.reconcile, order_id, booth)
+
     @app.post('/api/orders/{order_id}/service')
     async def service_update(order_id: str, request: Request, x_booth_id: str = Header(default=''),
                              authorization: str = Header(default='')):

@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 28 October — AR-02.a: fresh payment observation and admission guard
+
+Base / last remote-verified commit `6339d13817a74fcaf8c0ae3d76d9b73e73e2ed5c`. Nine new cases; focused 120 PASS, zero failures/errors/skips. Backend-only provider GET observation requires booth authentication; operator mutation remains PIN-gated. Cached PAID cannot authorize claim/STARTED without fresh settlement.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, private
+photo display or customer state reset. Next: AR-02.b durable per-order reservation, bounded backoff and stale-reply fencing tests/implementation.
+Only work/ scratch files local; scope and rollback in
+[AR-02 contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-RECONCILIATION.md).
+
 ## 28 October — final verified AR-00/AR-01 handover
 
 Latest functional source pushed and remote verified: `017b417d02d63a79b1c5b21c4f0613b7d15186fc`.

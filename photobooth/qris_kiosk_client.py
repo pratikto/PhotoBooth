@@ -77,6 +77,16 @@ class QrisKioskClient:
         identifier(order_id, maximum=50)
         return self._order(self._call('GET', '/api/orders/' + order_id), order_id)
 
+    def reconcile(self, order_id):
+        identifier(order_id, maximum=50)
+        result = self._order(self._call('POST', '/api/orders/' + order_id + '/reconcile'), order_id)
+        observation = result.get('reconciliation')
+        if (not isinstance(observation, dict) or type(observation.get('checked')) is not bool
+                or observation.get('outcome') not in
+                {'unknown', 'pending', 'terminal', 'paid', 'review', 'provider_not_found_unproven'}):
+            raise ValueError('Invalid payment reconciliation')
+        return result
+
     def claim(self, order_id, checkout_key):
         identifier(order_id, maximum=50)
         result = self._order(self._call('POST', '/api/orders/' + order_id + '/claim',
