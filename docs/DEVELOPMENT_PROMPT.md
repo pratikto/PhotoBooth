@@ -1,5 +1,12 @@
 # Continue Meong Photobooth GUI v2
 
+## Current owner priority and future Settings decision — 29 October
+
+**FIRST: finish the owner-approved AR-00 → AR-13 autonomous recovery work**, continuing at the first unfinished verified substep from the [recovery checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md), [AR roadmap](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-ROADMAP.md), real Git HEAD and current [handover](DEVELOPMENT_HANDOVER.md). The October 25 historical material below is not today's implementation order; do not redo already verified AR source or stop financial safety validation for a new menu.
+
+**SECOND (queued future design; NOT_IMPLEMENTED):** the owner approved GUI v2 **Meong Settings** with a static per-booth camera-scanned Operator QR from **Advertising AND SAFE_IDLE**, exactly **Device Health / Audio Settings / Emulate Ticket**, and static DEMO Merchant Promo/Meong Fly QR test presets, print/history and strict anti-replay per logical visit. See the comprehensive [master spec](qa/portrait-v2-operator-settings/README.md), [OPS-00..OPS-10 roadmap](qa/portrait-v2-operator-settings/IMPLEMENTATION-ROADMAP.md), [129 tests](qa/portrait-v2-operator-settings/ACCEPTANCE-MATRIX.md), [decision ledger](qa/portrait-v2-operator-settings/DECISION-REGISTER.md) and [ready-to-copy future prompt](qa/portrait-v2-operator-settings/CODEX-HANDOVER.md). **This request authorized documentation only**, not immediate OPS code, new branch/`master` merge, production payments or Sandbox physical printer activation.
+
+
 **Primary owner rule, 27 October:** read the documentation comprehensively and
 carefully before modifying code; update the docs after code changes. Read the
 index/current contracts/evidence in full for the affected scope and reconcile
