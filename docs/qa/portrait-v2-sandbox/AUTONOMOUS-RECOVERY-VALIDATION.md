@@ -1,5 +1,24 @@
 # AR-12 — final source validation and external acceptance gates
 
+## Documentation status check and recovered historical provenance — 29 October
+
+Current authority is **f72fdbc / AR-13 CONDITIONAL**, not the earlier AR-09/AR-12
+diagnostic checkpoint. Latest published run is 1097 / 1093 PASS / 4 SKIP, matching
+CI 40767441201 all three jobs SUCCESS. This documentation check verifies recorded
+source-tree IDs against current HEAD and current CI status; it does not rerun or
+finish the separately IN_PROGRESS code-conformity review. Matrix remains 43 PASS /
+9 BLOCKED / 17 NOT_RUN; PAY-06 and other exact fault windows remain open.
+
+The earlier session's original 635de92 full report is available in this workspace:
+its digest and exact 1094 / 1091 PASS / 3 optional SKIP summary match saved metadata,
+and all 276 recorded historical source hashes match their pinned Git objects.
+[Historical provenance supplement](evidence/historical-635de92-provenance.json)
+recovers that previously unavailable provenance. Raw logs stay private/untracked.
+This is separate older evidence, not a replacement or revalidation of the newer
+f72fdbc run. Dated “unavailable here” statements below describe the earlier review
+environment before this supplement was recovered. No runtime/test/OPS change.
+
+
 ## Final source evidence — 29 October 2026
 
 Source `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`: **1,097 run / 1,093 PASS / 4 SKIP / zero failures/errors**, 428.924s, CPython 3.12.14 on Debian 13.6/cloud Linux,

@@ -1,5 +1,18 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — documentation status cross-check (no runtime change)
+
+Remote baseline be0efae / functional f72fdbc reconciled. Current docs correctly
+place development at AR-13 readiness **CONDITIONAL**, with 1097 run / 1093 PASS /
+4 SKIP and CI 40767441201 all three jobs SUCCESS. Recorded application/test/tools/
+workflow tree IDs match current HEAD. Conformity audit still IN_PROGRESS; matrix
+43 PASS / 9 BLOCKED / 17 NOT_RUN and PAY-06 next remain authoritative.
+Recovered original historical 635de92 report has 1094 / 1091 PASS / 3 SKIP; its
+SHA-256 plus 276 Git-object source hashes check out. [Provenance supplement](qa/portrait-v2-sandbox/evidence/historical-635de92-provenance.json)
+keeps that older run separate. No new full suite/runtime/OPS/production change.
+Only disposable work/ remains untracked. Continue the active AR review/exact
+fault gaps, not previously completed stages; do not start queued Settings work.
+
 ## 29 October — AR-00–13 code review checkpoint 1 (IN_PROGRESS)
 
 Owner requests a fresh implementation-versus-specification review and staged

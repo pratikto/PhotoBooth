@@ -1,0 +1,27 @@
+{
+  "status": "HISTORICAL_VERIFIED_PROVENANCE_ONLY",
+  "superseded_by": "f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88",
+  "historical_functional_sha": "635de92c0f8fba9189981ebf2f168bff8b7a52af",
+  "historical_ci_sha": "b5931c8ef2e3d7b800e024c38a653fef5b4b4a1e",
+  "full_regression": {
+    "command": "PHOTOBOOTH_TEST_GUI=1 PHOTOBOOTH_TEST_AUDIO=1 PHOTOBOOTH_TEST_VIDEO=1 KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 .venv/bin/python tools/run_kiosk_unittests.py",
+    "run": 1094,
+    "passed": 1091,
+    "skipped": 3,
+    "failures": 0,
+    "errors": 0,
+    "seconds": 337.6,
+    "status": "PASS",
+    "raw_report_sha256": "9366fc69d6ba461463c1f20b9331ac7680f07e7f72f16ceb2528ada04d2e9abd",
+    "skip_reason": "Native model assets are opt-in",
+    "skip_ids": [
+      "test_camera_recovery.CameraRecoveryTests.test_real_model_worker_drives_the_actual_controller_and_keeps_button_capture",
+      "test_kiosk_v2_widgets.PortraitKivySmokeTests.test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture",
+      "test_palm_gesture.NativePalmModelTests.test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image"
+    ]
+  },
+  "pinned_source_hashes_checked": 276,
+  "verification": "Original local report SHA-256/counts match saved metadata; each of 276 historical source hashes matches its recorded Git object. No new full run or current-source revalidation inferred.",
+  "raw_report_published": false,
+  "current_source_note": "Use ar12-final-verification.json and AR13-READINESS.md for f72fdbc / 1097 run / 1093 PASS / 4 SKIP. Do not combine denominators."
+}

@@ -13,6 +13,15 @@ report below retains its dated conclusions and remaining gates.
 **Historical audit baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
 **Current documentation handover:** See `docs/DEVELOPMENT_HANDOVER.md` and verify current remote HEAD; never assume the HEAD printed in a dated checkpoint is still current.
 
+## Documentation check — latest AR-13 status confirmed
+
+Current source-tree IDs and live matching CI confirm the newer f72fdbc assessment
+above. The 635de92 1094-case report is historical; its recovered provenance is now
+linked in [validation](AUTONOMOUS-RECOVERY-VALIDATION.md). Do not restart at AR-09
+or equate the AR-13 assessment to complete fault coverage/production approval.
+The active conformity review remains IN_PROGRESS, with PAY-06 the first exact
+source-evidence gap. No new test run/runtime/OPS work was done by this docs check.
+
 ## Mandatory workflow
 
 The owner prefers **frequent small tested commits AND remote pushes** because a five-hour ChatGPT/Codex usage limit can interrupt development. Treat a verified remote push as the durable cross-session checkpoint; a local commit, stash, or uncommitted working tree is **not** a remotely recoverable checkpoint.

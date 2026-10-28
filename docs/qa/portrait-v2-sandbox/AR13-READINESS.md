@@ -36,10 +36,7 @@ count refers to its scenario classifications and is a different denominator.
   only added CI diagnostics. Twelve subsequent owner commits through `e303cdf`
   were documentation-only. Test clock correction is `959264962bb4e64a8a4531a085676b55ad26e660`.
 - [AR-12 validation](AUTONOMOUS-RECOVERY-VALIDATION.md) records historical failures,
-  exact final command/counts, Python/OS and source/dirty metadata. The prior
-  session's 1094 run / 1091 PASS / 3 SKIP report lacks its original log here and
-  is not retroactively assigned a source SHA or command. A new final-source run
-  has separate independently captured provenance.
+  exact final command/counts, Python/OS and source/dirty metadata. At this assessment's initial publication, the prior 1094 / 1091 PASS / 3 SKIP report was unavailable in that review environment. A later [historical provenance supplement](evidence/historical-635de92-provenance.json) verifies the recovered original 635de92 report/digest and pinned source hashes. It remains separate older evidence; this f72fdbc final-source run retains independently captured provenance.
 - [Final evidence summary](evidence/ar12-final-verification.json) contains safe
   counts, source trees, report digests, skipped-test names, native hashes/QR
   verdicts and CI job references. Raw local logs and synthetic ticket QR pixels
