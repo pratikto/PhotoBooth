@@ -1,0 +1,52 @@
+{
+  "head_sha": "8ed6f11cc5ea864279f09a39304966dfa5cdbc51",
+  "run_id": 40610731638,
+  "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40610731638",
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "id": 122561344569,
+      "name": "Navigation and audio lifecycle",
+      "status": "completed",
+      "conclusion": "success",
+      "summaries": [
+        "2026-10-28T00:45:06.0797673Z test_real_launcher_console_active_keeps_stderr_and_records_native_and_delivery_once (tests.test_kiosk_v2_diagnostics.DeliveryLoggingTests.test_real_launcher_console_active_keeps_stderr_and_records_native_and_delivery_once) ... skipped 'Real Kivy logging integration needs Kivy'",
+        "2026-10-28T00:45:06.3214334Z Ran 129 tests in 0.348s",
+        "2026-10-28T00:45:06.7457497Z Ran 40 tests in 0.297s"
+      ]
+    },
+    {
+      "id": 122561344922,
+      "name": "Windows Python 3.12 native SDL audio (dummy output)",
+      "status": "completed",
+      "conclusion": "success",
+      "summaries": [
+        "2026-10-28T00:45:47.2110616Z Ran 55 tests in 0.896s",
+        "2026-10-28T00:45:47.2111087Z KIOSK_UNITTEST_SUMMARY: run=55 failures=0 errors=0 skipped=0 success=True",
+        "2026-10-28T00:46:06.8337121Z Ran 103 tests in 19.011s"
+      ]
+    },
+    {
+      "id": 122561344973,
+      "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+      "status": "completed",
+      "conclusion": "success",
+      "summaries": [
+        "2026-10-28T00:45:29.3990555Z Ran 4 tests in 0.509s",
+        "2026-10-28T00:45:46.6784321Z Ran 103 tests in 16.930s",
+        "2026-10-28T00:45:46.6784796Z KIOSK_UNITTEST_SUMMARY: run=103 failures=0 errors=0 skipped=0 success=True",
+        "2026-10-28T00:45:58.5989396Z Ran 175 tests in 10.135s",
+        "2026-10-28T00:45:58.5989886Z KIOSK_UNITTEST_SUMMARY: run=175 failures=0 errors=0 skipped=0 success=True",
+        "2026-10-28T00:46:00.2966174Z Ran 80 tests in 1.050s",
+        "2026-10-28T00:46:00.2967019Z KIOSK_UNITTEST_SUMMARY: run=80 failures=0 errors=0 skipped=0 success=True",
+        "2026-10-28T00:47:21.7341711Z test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture (tests.test_kiosk_v2_widgets.PortraitKivySmokeTests.test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture) ... skipped 'Native model assets are opt-in'",
+        "2026-10-28T00:47:21.7446999Z Ran 111 tests in 80.938s",
+        "2026-10-28T00:47:21.7447496Z KIOSK_UNITTEST_SUMMARY: run=111 failures=0 errors=0 skipped=1 success=True",
+        "2026-10-28T00:47:23.4880025Z Ran 98 tests in 1.344s",
+        "2026-10-28T00:47:36.5632013Z Ran 4 tests in 12.898s"
+      ]
+    }
+  ],
+  "limits": "Offline fixtures/software display/dummy audio. Actual merchant simulator and physical phone readability remain NOT_RUN."
+}

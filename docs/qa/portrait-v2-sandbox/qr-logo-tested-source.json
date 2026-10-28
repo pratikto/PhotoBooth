@@ -18,5 +18,48 @@
   "renderer_algorithm_changes": false,
   "renderer_docstrings_updated": true,
   "actual_merchant_acceptance": "NOT_RUN",
-  "physical_phone_readability": "NOT_RUN"
+  "physical_phone_readability": "NOT_RUN",
+  "tested_sha": "8ed6f11cc5ea864279f09a39304966dfa5cdbc51",
+  "focused": {
+    "run": 175,
+    "pass": 175,
+    "skipped": 0,
+    "failures": 0,
+    "errors": 0,
+    "seconds": 11.383
+  },
+  "native_captures": {
+    "count": 15,
+    "sizes": [
+      [
+        800,
+        1280
+      ],
+      [
+        452,
+        900
+      ],
+      [
+        640,
+        880
+      ]
+    ],
+    "pixel_verified_waiting_qrs": 3,
+    "record": "qr-logo/qr-pixel-validation.json"
+  },
+  "matching_source_ci": {
+    "run_id": 40610731638,
+    "status": "completed",
+    "conclusion": "success",
+    "jobs_success": 3
+  },
+  "full_regression": {
+    "run": 926,
+    "pass": 923,
+    "skipped": 3,
+    "failures": 0,
+    "errors": 0,
+    "seconds": 290.905,
+    "report": "qr-logo-full-tests.txt"
+  }
 }

@@ -4,8 +4,10 @@
 
 IN SOURCE: direct Drive-renderer/artwork reuse, exact provider-payload check,
 original-image fallback, nearest filtering and per-order cache. 175 focused
-checks PASS; full regression/CI and actual provider/phone limits remain
-source-specific in the [evidence package](qa/portrait-v2-sandbox/QR-LOGO.md).
+checks PASS. Source `8ed6f11`: full 926 run / 923 PASS / 3 optional palm-assets
+SKIP / zero failures/errors; matching CI 40610731638 all three jobs SUCCESS.
+Fifteen native PNGs and three screenshot decodes are verified; actual merchant/
+phone acceptance remains pending. [Evidence](qa/portrait-v2-sandbox/QR-LOGO.md).
 
 ## 28 October — saved Sandbox credentials
 

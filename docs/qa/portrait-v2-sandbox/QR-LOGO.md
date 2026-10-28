@@ -64,16 +64,48 @@ new v2 caller. The full approved artwork and original downloader remain unchange
   as required. That reader is reused only for screenshot/native tests; no runtime
   QR data or payment state was changed to satisfy the test.
 - [Source/artwork hashes](qr-logo-tested-source.json) identify the tested files.
-  Final full regression, exact-source captures and CI are pending.
+  Functional/capture source is **`8ed6f11cc5ea864279f09a39304966dfa5cdbc51`**
+  (logo increment `131e6bb`, then capture timing correction).
+- [Full local regression](qr-logo-full-tests.txt): **926 run / 923 PASS /
+  3 optional native palm-assets SKIP / zero failures/errors**, 290.905s.
+- Matching-source [CI 40610731638](https://github.com/pratikto/PhotoBooth/actions/runs/40610731638)
+  has **all three jobs SUCCESS**. Sandbox/QR group: 175 PASS/zero skips. Pure
+  CI skips one real-Kivy logging integration (covered by the full local run and
+  Windows CI); native GUI skips its optional palm-assets case.
+  [Exact CI summaries](qr-logo-ci-result.json).
+- **15 exact-source native PNGs** at 800×1280, 452×900 and 640×880 pass hash,
+  dimensions and phase/pixel checks. All three WAITING screenshot QR regions
+  independently decode the exact nonpayable fixture and show a centered color
+  logo. [Pixel validation](qr-logo/qr-pixel-validation.json).
+  Waiting views at all three sizes and reserved views at the two required sizes
+  were visually reviewed; no clipping/overlap observed.
+  [800px preview](qr-logo/02-waiting-offline-fixture-800x12800001.png) ·
+  [compact preview](qr-logo/02-waiting-offline-fixture-452x9000001.png) ·
+  [owner-shaped preview](qr-logo/02-waiting-offline-fixture-640x8800001.png).
 
 Initial native capture also exposed a stale 800×1280 framebuffer: its metadata
 already said WAITING while the previous QUOTE frame was still painted. The
 capture helper now waits for a painted frame and blocks the next scripted
 action until capture completes. A fresh 800px screenshot decodes the expected
 nonpayable fixture. This is a QA capture-timing correction, not a new app/payment
-behavior; the rejected initial pictures are not published as passing evidence.
+behavior; [the rejected original frame](qr-logo/rejected-131e6bb/stale-waiting-800x1280.png)
+and [its diagnostic metadata](qr-logo/rejected-131e6bb/rejected-capture.json)
+are retained separately and are not passing evidence.
 
 Physical phone readability, actual merchant simulator behavior and device
 acceptance remain separate. Roll back only scoped source after inspection;
 preserve all credentials, orders and photo/Drive state. The original image is
 intentionally retained when local branding cannot be verified.
+
+## Update on Windows
+
+Close the GUI, preserve any pending order/journal, then use the existing Kivy venv:
+
+```powershell
+git pull --ff-only origin feature/portrait-kiosk-v2-next
+python tools/run_portrait_v2_sandbox.py
+```
+
+Existing saved local Sandbox credentials are reused. The same pending order can
+resume; no new payment, journal deletion or reset is needed for a logo update.
+The terminal's simulator image URL remains the original Midtrans URL.

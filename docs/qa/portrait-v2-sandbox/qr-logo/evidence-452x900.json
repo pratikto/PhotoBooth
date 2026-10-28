@@ -1,0 +1,46 @@
+{
+  "head": "8ed6f11cc5ea864279f09a39304966dfa5cdbc51",
+  "fixture": "OFFLINE HTTP; NOT MERCHANT ACCEPTANCE",
+  "screenshots": [
+    {
+      "file": "01-quote-452x9000001.png",
+      "page": "sandbox_checkout",
+      "phase": "QUOTE",
+      "width": 452,
+      "height": 900,
+      "sha256": "2bfd78e48ffbe78255aa2fe56c54dd51e8ac77ed597bf4cd3b318b00097d5483"
+    },
+    {
+      "file": "02-waiting-offline-fixture-452x9000001.png",
+      "page": "sandbox_checkout",
+      "phase": "WAITING",
+      "width": 452,
+      "height": 900,
+      "sha256": "040aba0424353ef04a9d4c6477c14d3e3a5330f21c5e30a9e10c89d1ac0c5efb"
+    },
+    {
+      "file": "03-reserved-452x9000001.png",
+      "page": "sandbox_checkout",
+      "phase": "RESERVED",
+      "width": 452,
+      "height": 900,
+      "sha256": "79572053800e8b34cb30a60749025d889b7c4d6ddde0eaf0361e16e23aff33c8"
+    },
+    {
+      "file": "04-consent-452x9000001.png",
+      "page": "photo_confirm",
+      "phase": "RESERVED",
+      "width": 452,
+      "height": 900,
+      "sha256": "a87a13b33ce855fb2bcfb296bd0b2135ef850e03a5a2fd0392ae56f4a4403691"
+    },
+    {
+      "file": "05-recovery-452x9000001.png",
+      "page": "sandbox_checkout",
+      "phase": "RECOVERY",
+      "width": 452,
+      "height": 900,
+      "sha256": "2891b2d39063aa77fc2f7df5c45d6467a527b70d0e48a70478364e68bc42c18f"
+    }
+  ]
+}

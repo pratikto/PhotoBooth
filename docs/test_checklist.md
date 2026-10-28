@@ -7,7 +7,10 @@ Includes pixel-identical data, failure fallback, unchanged bounded downloads,
 same-order cache/status, native resize and the existing strict screenshot
 reader's negative tests. Initial one-scale 277px OpenCV failure is preserved
 with its diagnosis; no runtime QR data is changed to satisfy the test.
-Full regression, source hashes, native captures and CI: [logo evidence](qa/portrait-v2-sandbox/QR-LOGO.md).
+Source `8ed6f11`: final full 926 run / 923 PASS / 3 optional native palm-assets
+SKIP / zero failures/errors, 290.905s; matching CI 40610731638 all three jobs
+SUCCESS. Fifteen exact-source native PNGs and all three WAITING QR pixel decodes
+PASS. [Source, raw reports and manual limits](qa/portrait-v2-sandbox/QR-LOGO.md).
 
 ## 28 October — saved Sandbox credentials
 

@@ -1,0 +1,46 @@
+{
+  "head": "8ed6f11cc5ea864279f09a39304966dfa5cdbc51",
+  "screens_verified": 15,
+  "waiting_screens": [
+    {
+      "file": "02-waiting-offline-fixture-452x9000001.png",
+      "source_head": "8ed6f11cc5ea864279f09a39304966dfa5cdbc51",
+      "qr_bounds": [
+        88,
+        297,
+        277,
+        277
+      ],
+      "decoded_exact": true,
+      "centered_color_logo": true,
+      "sha256": "040aba0424353ef04a9d4c6477c14d3e3a5330f21c5e30a9e10c89d1ac0c5efb"
+    },
+    {
+      "file": "02-waiting-offline-fixture-640x8800001.png",
+      "source_head": "8ed6f11cc5ea864279f09a39304966dfa5cdbc51",
+      "qr_bounds": [
+        185,
+        291,
+        271,
+        271
+      ],
+      "decoded_exact": true,
+      "centered_color_logo": true,
+      "sha256": "0c7e6a046ecb8216f6a7b08a45348ceecbde525b8233892fdc61106f63549029"
+    },
+    {
+      "file": "02-waiting-offline-fixture-800x12800001.png",
+      "source_head": "8ed6f11cc5ea864279f09a39304966dfa5cdbc51",
+      "qr_bounds": [
+        72,
+        297,
+        657,
+        657
+      ],
+      "decoded_exact": true,
+      "centered_color_logo": true,
+      "sha256": "dfa3abf411aa8f9c9cc000779b3b83f4b5bb4ae14690202e7b8afa4140b52a34"
+    }
+  ],
+  "fixture": "NONPAYABLE; NOT MERCHANT ACCEPTANCE"
+}

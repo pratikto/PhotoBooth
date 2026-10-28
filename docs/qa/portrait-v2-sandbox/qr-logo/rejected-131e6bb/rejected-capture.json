@@ -1,0 +1,17 @@
+{
+  "head": "131e6bbe225d2beec1ac9fc86462049a319ec3c0",
+  "original_metadata_row": {
+    "file": "02-waiting-offline-fixture-800x12800001.png",
+    "page": "sandbox_checkout",
+    "phase": "WAITING",
+    "width": 800,
+    "height": 1280,
+    "sha256": "b7be248eec25dc5f1f3eceb148a26c349d48e2bb2314e71a40813acc5f746328"
+  },
+  "file": "stale-waiting-800x1280.png",
+  "sha256": "b7be248eec25dc5f1f3eceb148a26c349d48e2bb2314e71a40813acc5f746328",
+  "metadata_phase": "WAITING",
+  "painted_phase": "QUOTE",
+  "accepted_as_passing_evidence": false,
+  "resolution": "Capture helper waits for a painted frame and blocks its next action."
+}

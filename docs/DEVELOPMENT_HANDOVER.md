@@ -5,8 +5,10 @@
 Owner requests reuse of the Drive QR logo. The v2 adapter now calls that exact
 renderer with locally decoded provider data, checks equivalence and retains
 original pixels on failure. Renderer algorithm/artwork, download URL and payment
-authority are unchanged. 175 focused PASS; final regression/CI and exact-source
-native previews are tracked in the [logo package](qa/portrait-v2-sandbox/QR-LOGO.md).
+authority are unchanged. Source `8ed6f11`: 175 focused PASS; final full 926 run /
+923 PASS / 3 optional palm-assets SKIP / zero failures/errors, 290.905s.
+Matching CI 40610731638 all three jobs SUCCESS; 15 exact-source native PNGs and
+three screenshot QR decodes. [Evidence/update](qa/portrait-v2-sandbox/QR-LOGO.md).
 
 ## 28 October — saved Sandbox credentials
 
