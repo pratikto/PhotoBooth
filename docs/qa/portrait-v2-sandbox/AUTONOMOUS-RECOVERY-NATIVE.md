@@ -77,3 +77,37 @@ in AR-07.b3; this seam does not itself enable a new customer flow.
 Focused **35 PASS / zero FAIL/ERROR/SKIP**, including two new privacy cases:
 `.venv/bin/python tools/run_kiosk_unittests.py test_photo_reconstruction test_customer_claim_session test_kiosk_v2_photos test_photo_allocation`.
 Synthetic images only; no actual merchant/device/print/Drive acceptance inferred.
+
+## AR-07.b3 — native ticket claim, deliberate restore and privacy lifecycle
+
+Native recovery accepts a password-masked original ticket or explicitly decodes
+a copied frame from the existing camera owner using OpenCV. It opens no camera
+handle/POS scanner and never copies the credential to clipboard. Server ownership
+proof reveals only a Resume button; deliberate resume rechecks settlement, passes
+an ephemeral permit to the existing photo worker, restores exact media, and waits
+for original service ACK before showing camera/review/result. No new charge,
+allocation, countdown, capture, render, print or Drive replay follows restoration.
+COMPLETED backend service cannot admit capture. Invalid/missing media stays held
+with an actionable operator message; pre-manifest allocation recovery/remedy is
+still a following increment, not certified by this integration.
+
+Minimize and 60-second inactivity lock clear native private views/credentials,
+cancel countdown and immediately hide photo snapshots without filesystem/network
+work on the UI thread. A privacy epoch retires late checkout results; late photo
+results are hidden and cannot navigate to old media. Background reconciliation
+keeps typed ticket content intact instead of rebuilding its input every poll.
+Retired widget guards, full-price consent, payment link/branding and transport-off
+Sandbox isolation remain. Ordinary v2/MOCK/v1 lifecycle is unchanged.
+
+Initial 45 targeted PASS; the added scan/input case initially FAIL exposed manual
+status refresh rebuilding its input. Corrected final **46 PASS / zero
+FAIL/ERROR/SKIP**:
+`.venv/bin/python tools/run_kiosk_unittests.py test_kiosk_v2_sandbox_widgets test_kiosk_v2_sandbox test_customer_claim_session test_photo_reconstruction`.
+Sixteen native working-tree screenshots rendered at 800x1280/452x900 through
+claim-required, resume-ready and original one-photo capture restoration. Compact
+claim and portrait resume screens visually inspected without clipping. Copy was
+then clarified to distinguish verified ownership from required proof. Captures
+are provisional fixtures, not pinned final AR-12 or merchant/device acceptance.
+Full regression remains reserved for final functional source.
+After final copy clarification: native-widget focused rerun **16 PASS**, zero
+failures/errors/skips (`test_kiosk_v2_sandbox_widgets`, same headless settings).

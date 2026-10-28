@@ -313,3 +313,66 @@ class SandboxWidgetTests(unittest.TestCase):
                 app._close_operator()
             self.assertEqual(f.flow.snapshot(),before)
             self.assertEqual(f.provider.charges,1)
+
+    def start_private_capture(self,app,f):
+        self.quote(app);app._sandbox_begin();self.settle(app)
+        ticket=f.flow.customer_ticket();app._sandbox_ticket_saved();self.settle(app)
+        f.paid();app._sandbox_retry();self.settle(app)
+        app._sandbox_photo_consent();self.settle(app)
+        app._admit_photo_test();self.settle(app)
+        self.assertEqual(app.navigation.page,CAPTURE)
+        return ticket
+
+    def test_native_claim_and_deliberate_resume_restore_original_capture_without_new_charge(self):
+        with self.booth() as (app,f):
+            ticket=self.start_private_capture(app,f)
+            app._photo_submit('capture',np.zeros((120,160,3),dtype=np.uint8));self.settle(app)
+            original=app._photo_view['transaction_id']
+            app._sandbox_lock_customer()
+            self.assertEqual(app._photo_view,{})
+            self.assertEqual(app.navigation.page,SANDBOX_CHECKOUT)
+            self.assertFalse(app._sandbox_can_capture())
+            app._sandbox_claim_input.text=ticket;app._sandbox_claim();self.settle(app)
+            self.assertTrue(app._sandbox_view['resume_ready'])
+            self.assertEqual(app._photo_view,{})
+            app._sandbox_resume();self.settle(app)
+            self.assertEqual(app.navigation.page,CAPTURE)
+            self.assertEqual(app._photo_view['transaction_id'],original)
+            self.assertEqual(app._photo_view['captured'],1)
+            self.assertIsNone(app._countdown_event)
+            self.assertTrue(app._sandbox_can_capture())
+            self.assertEqual(f.provider.charges,1)
+
+    def test_pause_and_idle_hide_old_photos_and_retire_previous_resume_button(self):
+        with self.booth() as (app,f):
+            self.start_private_capture(app,f)
+            before=f.flow.snapshot()['transaction_id']
+            app.on_pause()
+            self.assertEqual(app._photo_view,{})
+            self.assertTrue(f.flow.customer_claim_required)
+            app.on_resume();self.settle(app)
+            self.assertEqual(app.navigation.page,SANDBOX_CHECKOUT)
+            self.assertEqual(f.flow.snapshot()['transaction_id'],before)
+            self.assertFalse(app._sandbox_can_capture())
+        with self.booth() as (app,f):
+            self.pending(app)
+            app._last_activity=time.monotonic()-61;app._tick(0)
+            self.assertTrue(f.flow.customer_claim_required)
+            self.assertEqual(app.navigation.page,SANDBOX_CHECKOUT)
+
+    def test_recovery_scan_uses_existing_camera_and_poll_preserves_typed_ticket(self):
+        import cv2
+        from photobooth.qr_code import create_qr_image
+        with self.booth() as (app,f):
+            self.quote(app);app._sandbox_begin();self.settle(app)
+            ticket=f.flow.customer_ticket();app._sandbox_lock_customer()
+            field=app._sandbox_claim_input;field.text='partial-entry'
+            app._sandbox_retry();self.settle(app)
+            self.assertIs(app._sandbox_claim_input,field)
+            self.assertEqual(field.text,'partial-entry')
+            frame=cv2.cvtColor(np.asarray(create_qr_image(ticket,with_logo=False).convert('RGB')),cv2.COLOR_RGB2BGR)
+            app.camera_device.read.return_value=frame
+            app._sandbox_scan_claim();self.settle(app)
+            self.assertFalse(app._sandbox_view['customer_claim_required'])
+            self.assertEqual(app._sandbox_view['phase'],'WAITING')
+            self.assertEqual(f.provider.charges,1)

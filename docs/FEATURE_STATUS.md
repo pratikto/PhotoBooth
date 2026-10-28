@@ -1,5 +1,10 @@
 # Meong Photobooth — current feature status
 
+## 29 October — AR-07.b3: mount native ticket claim and customer-led exact photo recovery
+
+Focused 46 PASS, zero failures/errors/skips; native HTTP-to-photo restore, cached-camera ticket decode, minimize/idle privacy and input-preserving polling covered. Sixteen provisional fixture PNGs rendered at both target sizes. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-NATIVE.md).
+Physical/provider gates remain separate; no production activation.
+
 ## 29 October — AR-07.b2: hide private photo snapshots and fence reconstruction after lock
 
 Focused 35 PASS, zero failures/errors/skips, including same-session reclaim and lock-during-reconstruction fixtures. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-NATIVE.md).

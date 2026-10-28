@@ -10,7 +10,8 @@ from photobooth.qris_evidence import sandbox_qr_url
 from .qr_branding import branded_sandbox_qr_image
 from .demo_game import GameJobs
 
-ACTIONS = {'boot', 'begin', 'check', 'cancel', 'prepare', 'started', 'complete', 'recover', 'ticket_saved'}
+ACTIONS = {'boot', 'begin', 'check', 'cancel', 'prepare', 'started', 'complete', 'recover',
+           'ticket_saved', 'customer_claim', 'scan_claim', 'resume', 'resumed'}
 
 
 def simulator_qr_url(view):
@@ -73,6 +74,13 @@ class SandboxCheckout:
             return {'phase':'IDLE'}
         order = data.get('order') or {}
         data['customer_claim_required'] = self.flow.customer_claim_required
+        data['resume_ready'] = False
+        if data['phase']=='RECOVERY' and not data['customer_claim_required']:
+            try:
+                self.flow.resume_binding()
+                data['resume_ready'] = True
+            except RuntimeError:
+                data['customer_claim_required'] = True
         data['ticket_required'] = bool(order.get('customer_capability_bound')
             and not self.flow.ticket_acknowledged and not self.flow.customer_claim_required
             and data['phase'] in {'CREATING','WAITING','RESERVED'})
@@ -124,6 +132,29 @@ class SandboxCheckout:
 
     def ticket_saved(self):
         self.flow.acknowledge_ticket()
+        return self.view()
+
+    def customer_claim(self, ticket):
+        self.flow.customer_claim(ticket)
+        return self.view()
+
+    def scan_claim(self, frame):
+        # Decode the existing camera owner's copied frame, never open a camera
+        # or enable the DEMO/POS scanner. Never log the decoded capability.
+        import cv2
+        if frame is None or frame.size > 40_000_000*3:
+            raise ValueError('Customer ticket frame required')
+        ticket, _points, _straight=cv2.QRCodeDetector().detectAndDecode(frame)
+        if not ticket.startswith('MEONG-RECOVERY-V1:'):
+            raise ValueError('Original recovery QR required')
+        return self.customer_claim(ticket)
+
+    def resume(self):
+        permit=self.flow.resume_permit()
+        return {'view':self.view(),'binding':self.flow.resume_binding(),'permit':permit}
+
+    def resumed(self, transaction_id, photo_phase):
+        self.flow.confirm_resume(transaction_id,photo_phase)
         return self.view()
 
     def prepare(self):

@@ -10,7 +10,8 @@ from pathlib import Path
 import subprocess
 import sys
 from tempfile import TemporaryDirectory
-from unittest.mock import patch
+from unittest.mock import Mock, patch
+import numpy as np
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT));sys.path.insert(0,str(ROOT/'tests'))
@@ -36,7 +37,14 @@ from qris_v2_fixture import Fixture
 class Recorder(PortraitKioskV2App):
     def __init__(self,fixture):
         self.fixture=fixture;self.evidence=[];self._capture_pending=False
-        super().__init__(sandbox_jobs=fixture.jobs)
+        camera=Mock();camera.read.return_value=np.zeros((120,160,3),dtype=np.uint8)
+        super().__init__(sandbox_jobs=fixture.jobs,camera_device=camera)
+    def save_ticket(self):
+        self._fixture_ticket=self.fixture.flow.customer_ticket()
+        self._sandbox_ticket_saved()
+    def claim_ticket(self):
+        self._sandbox_claim_input.text=self._fixture_ticket
+        self._sandbox_claim()
     def gallery(self):
         self._choose_photo();self._complete_tutorial();self._change_copies(1)
         self._open_sandbox()
@@ -63,11 +71,14 @@ class Recorder(PortraitKioskV2App):
     def on_start(self):
         args.output_dir.mkdir(parents=True,exist_ok=True)
         self.actions=iter([self.gallery,lambda:self.capture('01-quote'),self._sandbox_begin,
-            lambda:self.capture('02-recovery-ticket-fixture'),self._sandbox_ticket_saved,
+            lambda:self.capture('02-recovery-ticket-fixture'),self.save_ticket,
             lambda:self.capture('02-waiting-offline-fixture'),self.paid,
             lambda:self.capture('03-reserved'),self._sandbox_photo_consent,
-            lambda:self.capture('04-consent'),self.recovery,
-            lambda:self.capture('05-recovery'),self.stop])
+            lambda:self.capture('04-consent'),self._admit_photo_test,
+            lambda:self._photo_submit('capture',np.zeros((120,160,3),dtype=np.uint8)),
+            self._sandbox_lock_customer,lambda:self.capture('05-claim-required'),
+            self.claim_ticket,lambda:self.capture('06-resume-ready'),
+            self._sandbox_resume,lambda:self.capture('07-original-capture-restored'),self.stop])
         Clock.schedule_once(self.advance,.5)
     def advance(self,_dt):
         if self._capture_pending or self._sandbox_jobs.busy or (self._photo_jobs and self._photo_jobs.busy):

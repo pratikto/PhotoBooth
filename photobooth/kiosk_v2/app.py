@@ -259,6 +259,7 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, SandboxViews, Ope
 
     def on_pause(self):
         self._suspended = True
+        self._sandbox_lock_customer()
         self._close_operator()
         self._photo_pause()
         self._pause_game()
@@ -364,6 +365,12 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, SandboxViews, Ope
 
     def _tick(self, _dt):
         self._apply_cached_content()
+        if (not self._closed and not self._suspended and self._sandbox_enabled
+                and time.monotonic()-self._last_activity >= 60
+                and self._sandbox_jobs and self._sandbox_jobs.store
+                and self._sandbox_jobs.store.flow.active
+                and not self._sandbox_jobs.store.flow.customer_claim_required):
+            self._sandbox_lock_customer()
         if self._closed or self._suspended or self.navigation.page not in BROWSING_PAGES:
             return
         duration = time.monotonic() - self._last_activity

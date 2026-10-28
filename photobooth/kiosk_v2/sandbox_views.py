@@ -4,6 +4,7 @@ import time
 from kivy.core.clipboard import Clipboard
 from kivy.uix.image import Image
 from kivy.uix.widget import Widget
+from kivy.uix.textinput import TextInput
 
 from photobooth.advertising import PROJECT_ROOT
 from .flow import ADVERT, TEMPLATES, PHOTO_CONFIRM, SANDBOX_CHECKOUT
@@ -21,14 +22,63 @@ class SandboxViews:
         self._sandbox_link_feedback = None
         self._sandbox_refresh_at = 0
         self._sandbox_consent = False
+        self._sandbox_privacy_epoch = 0
+        self._sandbox_action_epoch = 0
+        self._sandbox_claim_input = None
 
     def _sandbox_submit(self, action, *args):
         if self._closed or self._suspended or not self._sandbox_jobs:
             return False
         if self._sandbox_jobs.submit(action, self._view_revision, *args):
+            self._sandbox_action_epoch = self._sandbox_privacy_epoch
             self._sandbox_error = ''
             return True
         return False
+
+    def _sandbox_lock_customer(self):
+        jobs=self._sandbox_jobs
+        if not self._sandbox_enabled or not jobs or not jobs.store or not jobs.store.flow.active:
+            return
+        self._sandbox_privacy_epoch += 1
+        jobs.store.flow.lock_customer()
+        jobs.store.qr=jobs.store.qr_identity=None
+        jobs.store.ticket_qr=jobs.store.ticket_identity=None
+        if self._photo_jobs and self._photo_jobs.service:
+            self._photo_jobs.service.hide_private()
+        if self._sandbox_claim_input:
+            self._sandbox_claim_input.text=''
+        self._sandbox_claim_input=None
+        self._cancel_countdown()
+        self._sandbox_consent=False
+        self._photo_view={}
+        self._last_live_frame=self._last_preview=self._camera_texture=None
+        self._sandbox_view={'phase':'RECOVERY','customer_claim_required':True}
+        self.navigation.page=SANDBOX_CHECKOUT
+        self._show()
+
+    def _sandbox_claim(self):
+        field=self._sandbox_claim_input
+        if field is None or self._sandbox_jobs.busy:
+            return
+        ticket=field.text
+        field.text=''
+        self._sandbox_submit('customer_claim',ticket)
+        self._show()
+
+    def _sandbox_scan_claim(self):
+        if self._sandbox_jobs.busy:
+            return
+        frame=self.camera_device.read()
+        if frame is None:
+            self._sandbox_error='Kamera belum siap. Gunakan isi tiket atau bantuan operator.'
+        else:
+            self._sandbox_submit('scan_claim',frame.copy())
+        self._show()
+
+    def _sandbox_resume(self):
+        if (self._sandbox_view or {}).get('resume_ready') and not self._sandbox_jobs.busy:
+            self._sandbox_submit('resume')
+            self._show()
 
     def _open_sandbox(self):
         if not self._sandbox_enabled or self.navigation.page != TEMPLATES or not any(self.quantities.values()):
@@ -47,7 +97,8 @@ class SandboxViews:
 
     def _sandbox_retry(self):
         self._sandbox_submit('boot' if not self._sandbox_view else 'check')
-        self._show()
+        if not ((self._sandbox_view or {}).get('customer_claim_required') and self._sandbox_claim_input):
+            self._show()
 
     def _sandbox_ticket_saved(self):
         if (self._sandbox_view or {}).get('ticket_required'):
@@ -107,6 +158,22 @@ class SandboxViews:
 
     def _sandbox_photo_outcome(self, outcome):
         """Called before photo navigation. No server ACK means no camera countdown."""
+        if (self._sandbox_enabled and self._sandbox_jobs.store and
+                self._sandbox_jobs.store.flow.customer_claim_required):
+            if self._photo_jobs and self._photo_jobs.service:
+                self._photo_jobs.service.hide_private()
+            self._photo_view={}
+            return True
+        if self._sandbox_enabled and outcome.action=='restore':
+            self.navigation.page=SANDBOX_CHECKOUT
+            if outcome.error:
+                self._photo_view={}
+                self._sandbox_error='Foto asli belum dapat dipulihkan. Pesanan tetap tersimpan; hubungi operator.'
+                self._sandbox_consent=False
+            else:
+                self._sandbox_submit('resumed',outcome.value['transaction_id'],outcome.value['phase'])
+            self._show()
+            return True
         if not self._sandbox_enabled or not self._sandbox_consent:
             return False
         if outcome.action in {'start', 'start_bound'}:
@@ -125,6 +192,8 @@ class SandboxViews:
     def _sandbox_can_capture(self):
         return (not self._sandbox_enabled or
                 (self._sandbox_consent and (self._sandbox_view or {}).get('phase') == 'STARTED'
+                 and not self._sandbox_jobs.store.flow.customer_claim_required
+                 and (self._sandbox_view.get('order') or {}).get('service_state') == 'STARTED'
                  and self._sandbox_view.get('transaction_id') == self._photo_view.get('transaction_id')))
 
     def _poll_sandbox(self):
@@ -132,17 +201,31 @@ class SandboxViews:
             return
         outcome = self._sandbox_jobs.poll()
         if outcome is not None:
+            if self._sandbox_action_epoch != self._sandbox_privacy_epoch:
+                self._sandbox_refresh_at=time.monotonic()+2
+                return
             if outcome.error:
-                if outcome.action != 'boot':
+                if outcome.action in {'customer_claim','scan_claim','resume','resumed'}:
+                    self._sandbox_lock_customer()
+                elif outcome.action != 'boot':
                     self._sandbox_view = {'phase':'UNCERTAIN'}
                 self._sandbox_error = 'Status belum pasti. Cek lagi; jangan membuat pesanan atau membayar ulang.'
             else:
+                if outcome.action=='resume':
+                    payload=outcome.value
+                    self._sandbox_view=payload['view']
+                    self._ensure_photo_jobs()
+                    self._photo_jobs.submit('restore',self.templates,payload['binding'],payload['permit'])
+                    self._show()
+                    return
                 self._sandbox_view = outcome.value
                 phase = (outcome.value or {}).get('phase')
                 if outcome.action == 'boot' and phase in {'IDLE','COMPLETED','CANCELLED'}:
                     self._sandbox_leave()
                     return
-                if outcome.action == 'prepare' and phase == 'STARTING':
+                if outcome.action=='resumed':
+                    self._sandbox_consent=True
+                if outcome.action == 'prepare' and phase == 'STARTING' and self._sandbox_consent:
                     # STARTING journal is durable before one local transaction is allocated.
                     self.navigation.page = PHOTO_CONFIRM
                     order = self._sandbox_view.get('order') or {}
@@ -162,7 +245,10 @@ class SandboxViews:
                 elif phase == 'COMPLETED':
                     self._sandbox_consent = False
             self._sandbox_refresh_at = time.monotonic()+2
-            self._show()
+            # Background observations must not destroy a ticket being typed.
+            if not (outcome.action=='check' and self._sandbox_claim_input is not None
+                    and (self._sandbox_view or {}).get('customer_claim_required')):
+                self._show()
         phase = (self._sandbox_view or {}).get('phase')
         if (self.navigation.page == SANDBOX_CHECKOUT and not self._sandbox_jobs.busy and
                 phase in {'CREATING','WAITING','CANCELLING','STARTING','COMPLETING','RECOVERY','UNCERTAIN'} and
@@ -175,8 +261,9 @@ class SandboxViews:
         view = self._sandbox_view or {}
         if view.get('ticket_required'):
             return self._build_recovery_ticket(canvas,view)
-        if view.get('customer_claim_required'):
+        if view.get('customer_claim_required') or view.get('resume_ready'):
             return self._build_customer_claim(canvas,view)
+        self._sandbox_claim_input=None
         shell = self._frame(canvas, brand_height=48)
         shell.spacing = 8
         self._brand(shell, 'QRIS SANDBOX', 'MODE UJI • GUNAKAN SIMULATOR SANDBOX')
@@ -256,9 +343,24 @@ class SandboxViews:
 
     def _build_customer_claim(self,canvas,view):
         shell=self._frame(canvas,brand_height=48)
-        self._brand(shell,'SESI TERSIMPAN','TIKET PELANGGAN DIPERLUKAN')
+        ready=view.get('resume_ready')
+        self._brand(shell,'SESI TERSIMPAN','BUKTI PEMILIK TERVERIFIKASI' if ready else 'TIKET PELANGGAN DIPERLUKAN')
         card=PixelCard(orientation='vertical',padding=12,spacing=8)
+        message=('Tiket sesuai dengan pesanan asli.\nPilih pulihkan untuk memeriksa foto tersimpan.\nKamera tidak memotret otomatis.' if ready else
+                 'Pesanan tetap tersimpan.\nFoto tidak ditampilkan tanpa bukti pemilik.\nGunakan tiket pemulihan atau bantuan operator.')
+        card.add_widget(text_label(message,size=16,height=150,color=MUTED))
+        self._sandbox_claim_input=None
+        if not ready:
+            field=TextInput(multiline=False,password=True,hint_text='Isi tiket pemulihan lengkap',
+                size_hint_y=None,height=52,font_size=18)
+            self._sandbox_claim_input=field
+            card.add_widget(field)
         card.add_widget(Widget())
-        card.add_widget(text_label('Pesanan tetap tersimpan.\nFoto tidak ditampilkan tanpa bukti pemilik.\nGunakan tiket pemulihan atau bantuan operator.',size=16,height=150,color=MUTED))
         shell.add_widget(card)
+        shell.add_widget(text_label(self._sandbox_error,size=13,height=76,color=GOLD))
+        if ready:
+            shell.add_widget(self._action('PULIHKAN SESI FOTO ASLI',self._sandbox_resume,height=52,disabled=self._sandbox_jobs.busy))
+        else:
+            shell.add_widget(self._action('VERIFIKASI TIKET',self._sandbox_claim,height=52,disabled=self._sandbox_jobs.busy))
+            shell.add_widget(self._action('SCAN QR TIKET DI KAMERA',self._sandbox_scan_claim,height=52,disabled=self._sandbox_jobs.busy))
         shell.add_widget(self._action('PERIKSA STATUS',self._sandbox_retry,height=52,disabled=self._sandbox_jobs.busy))
