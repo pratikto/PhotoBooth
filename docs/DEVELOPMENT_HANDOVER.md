@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-11: design public webhook boundary and verify unmounted durable inbox prototype
+
+Base / last remote-verified commit `57048882609bfeb6ff0b315dce244934a77959ce`. Focused 38 PASS, zero failures/errors/skips; no public listener, runtime mount, merchant callback, deployment or BI-SNAP migration. Infrastructure gates remain explicitly unapproved/NOT_RUN.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, unclaimed private
+photo display or customer state reset. Next: AR-12 fault-matrix gap checks, final functional regression, pinned native captures and Windows CI evidence; AR-13 production readiness/owner release gates after validation.
+Only work/ scratch files local; scope and rollback in
+[stage contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-WEBHOOK.md).
+
 ## 29 October — AR-10: bound opt-in exited-GUI recovery with durable budget and original leases
 
 Base / last remote-verified commit `a7f4dfdd087b47fa7a87e4e2c64bdb0a1ec42ddc`. Focused 93 PASS, zero failures/errors/skips; no live-process kill or automatic business effect, three restarts/ten minutes only with isolated Sandbox and released leases.
