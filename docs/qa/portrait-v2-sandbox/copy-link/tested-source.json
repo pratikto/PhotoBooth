@@ -1,0 +1,86 @@
+{
+  "source": "39e8c32967451423f3c2749570c04a97badd1248",
+  "base": "959242ddc47a3aacac7e759afec2076f288a3dc9",
+  "fixture": "OFFLINE HTTP; NOT MERCHANT ACCEPTANCE; clipboard API mocked for feedback captures",
+  "runtime_and_tests": {
+    "photobooth/kiosk_v2/sandbox_checkout.py": "e817b667e6a330d1c3cd8bb5fcafc51cbf1d130dfbd145cd353d1df01fddf767",
+    "photobooth/kiosk_v2/sandbox_views.py": "b276fed6419df4bb47a8e1a10f976fb38ae229b8511d9694ddd26c166327c9cd",
+    "tests/test_kiosk_v2_sandbox.py": "b5e355e9b9682c5ef1830df95b4375626e37694ac1225d9b67c0ecf624c8a9c5",
+    "tests/test_kiosk_v2_sandbox_widgets.py": "772bfc5ba2679e832bc3ce75b299a72653e7c64beb3a01b5fc0f3c8b8ed2c67b"
+  },
+  "screenshots": [
+    {
+      "file": "02-waiting-offline-fixture-452x9000001.png",
+      "sha256": "ce19777f01aad7e7ad2dff007310650d34ac591e9a96eeeeff7a3137c1ada6c1",
+      "review": "button and feedback readable; QR and status/cancel actions fit"
+    },
+    {
+      "file": "02-waiting-offline-fixture-800x12800001.png",
+      "sha256": "61246426bc8ea9a7ef931b8eba57f256c4e2af2d3c748c1b43a99a300a7de491",
+      "review": "button and feedback readable; QR and status/cancel actions fit"
+    },
+    {
+      "file": "copied-452x9000001.png",
+      "sha256": "c139b11b49fdc0ca2d4011d74ca3c00637fc7095db723e59cad9c711ca63d442",
+      "review": "button and feedback readable; QR and status/cancel actions fit"
+    },
+    {
+      "file": "copied-800x12800001.png",
+      "sha256": "f95a445623359be353cce959bb87471e7b24d8705257bbe27bf3e0aeb5248e08",
+      "review": "button and feedback readable; QR and status/cancel actions fit"
+    },
+    {
+      "file": "clipboard-error-452x9000001.png",
+      "sha256": "1de7505e71c0e26db27abb9c777911abf7b4b7e5cb0238ba3fc609755abbe57c",
+      "review": "button and feedback readable; QR and status/cancel actions fit"
+    },
+    {
+      "file": "clipboard-error-800x12800001.png",
+      "sha256": "315db3a6aee46da8382de8f7c2e7de9fda516bb60ec66c931bbe7e5226e18160",
+      "review": "button and feedback readable; QR and status/cancel actions fit"
+    }
+  ],
+  "qr_decode": {
+    "452x900": "MEONG OFFLINE HTTP FIXTURE - NOT PAYABLE",
+    "800x1280": "MEONG OFFLINE HTTP FIXTURE - NOT PAYABLE"
+  },
+  "merchant_and_windows_clipboard": "NOT_RUN",
+  "ci": {
+    "run_id": 40641479742,
+    "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40641479742",
+    "source": "39e8c32967451423f3c2749570c04a97badd1248",
+    "observed_state": "IN_PROGRESS; navigation and Windows jobs SUCCESS; desktop running"
+  },
+  "checks": {
+    "focused": {
+      "run": 21,
+      "pass": 21,
+      "skip": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    "full_discovery": {
+      "run": 937,
+      "pass": 864,
+      "skip": 73,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 209.36
+    },
+    "disabled_gui_complement": {
+      "run": 71,
+      "pass": 69,
+      "skip": 2,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 145.583
+    },
+    "combined_unique": {
+      "run": 937,
+      "pass": 933,
+      "skip": 4,
+      "failures": 0,
+      "errors": 0
+    }
+  }
+}

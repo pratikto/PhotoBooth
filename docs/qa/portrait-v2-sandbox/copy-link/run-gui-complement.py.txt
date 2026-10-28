@@ -1,0 +1,14 @@
+import os,re,subprocess
+from pathlib import Path
+selected=[]
+current=None
+for line in Path('work/qris-copy/full-tests.txt').read_text().splitlines():
+    match=re.match(r'(test_\w+) \(([^)]+)\)',line)
+    if match:
+        current=match.group(2)
+    if "skipped 'GUI checks are opt-in'" in line:
+        selected.append(current)
+assert len(selected)==71,(len(selected),selected)
+os.environ['PHOTOBOOTH_TEST_GUI']='1'
+os.environ['MEONG_CI_TEST_REPORT']=str(Path('work/qris-copy/gui-complement-tests.txt').resolve())
+raise SystemExit(subprocess.call(['.venv/bin/python','tools/run_kiosk_unittests.py',*selected]))

@@ -1,5 +1,13 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 28 October — Sandbox GUI link for the web simulator
+
+Owner requests a GUI action to copy the current QRIS link for pasting into
+Midtrans's simulator, keeping the existing branch. Source `39e8c32` adds
+**SALIN LINK QRIS** and feedback using native widgets/Clipboard and the shared
+URL validator. Backend/payment authority is unchanged. Exact checks and device
+limits: [copy-link runbook](qa/portrait-v2-sandbox/COPY-LINK.md).
+
 ## 28 October — BUG-021 pending QR polling
 
 Owner confirms image-only disappearance on the Sandbox page, with no duration

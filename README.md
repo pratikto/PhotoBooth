@@ -69,6 +69,11 @@ Production account approval and Sandbox access are separate; the
 [official account guide](https://docs.midtrans.com/docs/midtrans-account)
 describes the environments. Actual merchant acceptance remains pending.
 
+On the QRIS Sandbox payment page, press **SALIN LINK QRIS**, then paste the
+copied link into the [Midtrans QRIS simulator](https://simulator.sandbox.midtrans.com/v2/qris/index).
+The button copies the current verified QR image URL; confirmation still comes
+from the backend's status check. [Usage and checks](docs/qa/portrait-v2-sandbox/COPY-LINK.md).
+
 ## Automatic print and background Drive
 
 27 October: customer uploads now take priority over chunk-yielding content and

@@ -1,5 +1,13 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 28 October — Sandbox GUI copy link
+
+Source `39e8c32`: exact current image-action URL, clipboard error/retry,
+unavailable QR pixels, stale callbacks and phase/mode/busy/suspend guards tested
+with unchanged order/one charge. Six native pending/success/error screenshots
+at 800×1280 and 452×900 reviewed; both pending QR screenshots decode to the
+offline fixture. [Raw results and device/provider limits](qa/portrait-v2-sandbox/COPY-LINK.md).
+
 ## 28 October — BUG-021 pending QR image
 
 Before: seven regression cases, five failures/zero errors. After: **182 focused

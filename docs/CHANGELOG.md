@@ -1,5 +1,12 @@
 # Meong Photobooth — changelog
 
+## 2026-10-28 — Copy Sandbox QRIS link from the GUI
+
+Add **SALIN LINK QRIS** to the verified pending Sandbox page, with clipboard
+success/failure feedback and existing stale-input/busy/suspend guards. Reuse
+the current image-action URL and allowlist; no payment/order protocol changes.
+[Usage, source, checks and limits](qa/portrait-v2-sandbox/COPY-LINK.md).
+
 ## 2026-10-28 — pending QR image URL retention (BUG-021)
 
 Retain/revalidate the saved provider image action when a PENDING status omits

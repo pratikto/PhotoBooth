@@ -1,0 +1,26 @@
+from pathlib import Path
+import argparse
+import os
+import sys
+import time
+from unittest.mock import patch
+sys.path.insert(0,str(Path.cwd()))
+parser=argparse.ArgumentParser()
+parser.add_argument('--width',type=int,required=True)
+parser.add_argument('--height',type=int,required=True)
+args=parser.parse_args()
+from kivy.config import Config
+Config.set('graphics','width',str(args.width))
+Config.set('graphics','height',str(args.height))
+from tests.test_kiosk_v2_sandbox_widgets import SandboxWidgetTests
+from kivy.base import EventLoop
+from kivy.core.window import Window
+case=SandboxWidgetTests()
+with case.booth() as (app,fixture):
+    case.pending(app)
+    for label,error in [('copied',None),('clipboard-error',RuntimeError('unavailable'))]:
+        with patch('photobooth.kiosk_v2.sandbox_views.Clipboard.copy',side_effect=error) as copy:
+            app._sandbox_copy_link()
+            copy.assert_called_once_with(app._sandbox_view['order']['qr_url'])
+        for _ in range(4):EventLoop.idle();time.sleep(.03)
+        Window.screenshot(name=str(Path('work/qris-copy/final-screenshots')/f'{label}-{args.width}x{args.height}.png'))

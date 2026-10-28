@@ -1,5 +1,11 @@
 # Meong Photobooth — current feature status
 
+## 28 October — Sandbox GUI copy link
+
+IN SOURCE at `39e8c32`: **SALIN LINK QRIS** copies the verified active image
+URL for the official web simulator, with success/failure feedback. Existing
+payment and lifecycle guards remain. [Usage/checks/limits](qa/portrait-v2-sandbox/COPY-LINK.md).
+
 ## 28 October — BUG-021 pending QR polling
 
 IN SOURCE: verified image URLs survive omitted status actions and backend
