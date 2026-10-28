@@ -63,8 +63,10 @@ recoverable.
 
 **P0 before unattended pilot:** AR-01 through AR-09 and payment/capture/privacy/crash tests. **P1 for safe automatic restart:** AR-10. **P1 for production-ready external callback:** AR-11. AR-12/13 are mandatory gates. There is no acceptance of unsafe shortcuts to meet a schedule.
 
-Current source delivery: AR-00 verified; AR-01 local attempt durability implemented,
-focused 132 PASS; remaining provider and subsequent-stage gates stay open.
+Current source delivery (29 October): AR-00–08 source increments and AR-09 PIN
+inspection/dormant service-fence foundation have focused automated evidence.
+AR-09.c2 safe release/reacquisition and AR-10–13 remain pending. External/provider
+and final full-matrix gates stay open. See [published source/tests](CONTINUATION-2026-10-29.md).
 [Exact continuation/evidence](AUTONOMOUS-RECOVERY-CHECKPOINT.md).
 
 ### AR-00 — contract and fixture freeze

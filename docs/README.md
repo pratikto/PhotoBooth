@@ -1,11 +1,14 @@
 # Meong Photobooth documentation — GUI v2
 
-## Current Autonomous Recovery implementation checkpoint — 28 October
+## Current Autonomous Recovery implementation checkpoint — 29 October
 
-AR-00 contracts/fixtures and AR-01 immutable creation attempts are implemented;
-[latest exact source/tests/continuation](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md).
-AR-02–13 remain pending. Earlier design-only notices describe the initial planning
-publication, not completion of the unattended recovery target.
+AR-00–08 source increments and AR-09 PIN inspection/service-fence foundation have
+focused automated evidence. Safe booth release/reacquisition (AR-09.c2), AR-10–13
+and actual device/merchant gates remain unfinished. Read the
+[checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md) and
+[exact published source/tests](qa/portrait-v2-sandbox/CONTINUATION-2026-10-29.md).
+The dated design-only notices below describe initial planning, not current source
+or completed unattended/production acceptance.
 
 ## 28 October 2026 — autonomous QRIS and photo recovery planning (design only)
 

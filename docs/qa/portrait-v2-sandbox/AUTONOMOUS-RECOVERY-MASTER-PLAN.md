@@ -1,5 +1,11 @@
 # Autonomous QRIS and photo-session recovery — master engineering specification
 
+**Current implementation update, 29 October:** source progressed through AR-09.c1;
+[exact commits/tests and unfinished work](CONTINUATION-2026-10-29.md).
+Dated design-only/audited-baseline statements below are historical scope; they do
+not override current implementation evidence or certify full matrix/device/
+production acceptance. Safe release, AR-10–13 and external gates remain pending.
+
 **Status: APPROVED DESIGN DIRECTION / NOT YET IMPLEMENTED**  
 **Owner direction:** 28 October 2026; unattended-first, customer-safe, no reduction of existing functionality  
 **Development branch:** `feature/portrait-kiosk-v2-next`, no new branch or master merge  

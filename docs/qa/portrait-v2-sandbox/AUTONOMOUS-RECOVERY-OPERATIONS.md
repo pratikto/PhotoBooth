@@ -1,5 +1,11 @@
 # Autonomous recovery — customer, operator and deployment runbook
 
+**Current implementation update, 29 October:** source progressed through AR-09.c1;
+[exact commits/tests and unfinished work](CONTINUATION-2026-10-29.md).
+Dated design-only/audited-baseline statements below are historical scope; they do
+not override current implementation evidence or certify full matrix/device/
+production acceptance. Safe release, AR-10–13 and external gates remain pending.
+
 **Status:** DESIGN-ONLY / NOT DEPLOYED, 28 October 2026  
 **Source audit:** `2e5efe5d281a93fe8d22e53309a50147764d2939`  
 **Links:** [Master](AUTONOMOUS-RECOVERY-MASTER-PLAN.md) · [Roadmap](AUTONOMOUS-RECOVERY-ROADMAP.md) · [Midtrans sources](MIDTRANS-PROVIDER-CONTRACT.md) · [Tests](AUTONOMOUS-RECOVERY-TEST-MATRIX.md)

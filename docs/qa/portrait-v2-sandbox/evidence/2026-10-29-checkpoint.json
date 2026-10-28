@@ -1,0 +1,132 @@
+{
+  "checkpoint_source": "b38e030d2a8586f2de61dd96e8b4a590e85dde54",
+  "platform": "Linux cloud / Python 3.12.14 / SQLite WAL FULL",
+  "gui_environment": "SDL offscreen / dummy audio / disposable KIVY_HOME; permitted local HTTP fixtures",
+  "runs": [
+    {
+      "stage": "AR-07.b1",
+      "source_sha": "61571841786f5109f866157fe68e4c479d5c710f",
+      "command": ".venv/bin/python tools/run_kiosk_unittests.py test_customer_claim_session test_customer_capability test_photo_reconstruction test_qris_session",
+      "run": 37,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS",
+      "local_raw_log": "work/ar07b1-after.txt",
+      "raw_log_sha256": "0b09c3796ac269162e7f0c786290b7c0e791a62b160ffb8e6d0f4bff967fc42b"
+    },
+    {
+      "stage": "AR-07.b2",
+      "source_sha": "7cedee5b0145720c9f1eaee04ab57ca8b183ec9c",
+      "command": ".venv/bin/python tools/run_kiosk_unittests.py test_photo_reconstruction test_customer_claim_session test_kiosk_v2_photos test_photo_allocation",
+      "run": 35,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS",
+      "local_raw_log": "work/ar07b2-photo.txt",
+      "raw_log_sha256": "356da97860f88ae65d6acb125e32bf05f8942ceff02ca0fe876d7e51c364629f"
+    },
+    {
+      "stage": "AR-07.b3",
+      "source_sha": "0745f754288d4ef58e07b93685209d619c796005",
+      "command": ".venv/bin/python tools/run_kiosk_unittests.py test_kiosk_v2_sandbox_widgets test_kiosk_v2_sandbox test_customer_claim_session test_photo_reconstruction",
+      "run": 46,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS",
+      "local_raw_log": "work/ar07b3-native-final2.txt",
+      "raw_log_sha256": "d513d574525b6805073f1beacfefc22307c33ff89a632e5dbe0278499304cb3c"
+    },
+    {
+      "stage": "AR-07.b4",
+      "source_sha": "d65fb97c7244d7aff8b0242d060a7de7c072bde1",
+      "command": ".venv/bin/python tools/run_kiosk_unittests.py test_kiosk_v2_sandbox_widgets test_photo_reconstruction test_photo_allocation test_customer_claim_session",
+      "run": 42,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS",
+      "local_raw_log": "work/ar07b4.txt",
+      "raw_log_sha256": "28f1b6da994a79d6205d68bc9bb4a9e81ceb993ba00fb07fb17fe756c3b91f89"
+    },
+    {
+      "stage": "AR-08.a",
+      "source_sha": "4863aa3009d1c23e0b710ea9340db6a931a19623",
+      "command": ".venv/bin/python tools/run_kiosk_unittests.py test_recovery_readiness test_kiosk_v2_sandbox_widgets test_kiosk_v2_sandbox test_device_health",
+      "run": 57,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS",
+      "local_raw_log": "work/ar08a.txt",
+      "raw_log_sha256": "cce922c087e061b5cbe52260383bab4de7709304b1cc6a7fd231a2a1a08e3a8c"
+    },
+    {
+      "stage": "AR-08.b1",
+      "source_sha": "e84af128d296e4acae37132569e09f3f2da14049",
+      "command": ".venv/bin/python tools/run_kiosk_unittests.py test_fulfillment_issues test_checkout_fulfillment test_checkout_creation_attempts test_checkout_durability test_qris_api test_qris_http_v2",
+      "run": 56,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS",
+      "local_raw_log": "work/ar08b1.txt",
+      "raw_log_sha256": "b4e6bcee6d3e546210bec470d71004458cef2b7372fedb83f42612ac1408921d"
+    },
+    {
+      "stage": "AR-08.b2",
+      "source_sha": "4e4f95b8396f585966c9e98e9fb7ebd3f06bb28e",
+      "command": ".venv/bin/python tools/run_kiosk_unittests.py test_fulfillment_issues test_customer_claim_session test_kiosk_v2_sandbox_widgets test_qris_kiosk_client test_qris_session",
+      "run": 58,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS",
+      "local_raw_log": "work/ar08b2.txt",
+      "raw_log_sha256": "b9e42f38bac809464a303fbca58deb5260e74fb967ee2d2794438a64aec01055"
+    },
+    {
+      "stage": "AR-09.a",
+      "source_sha": "cc6032c6556dbe4fcd2f26f8a32d9b611b948ed6",
+      "command": ".venv/bin/python tools/run_kiosk_unittests.py test_kiosk_v2_sandbox test_qris_sandbox_launcher test_qris_recovery test_qris_saved_credentials",
+      "run": 64,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS",
+      "local_raw_log": "work/ar09a-final.txt",
+      "raw_log_sha256": "02dbd69fc91643706930e0cda5e442e84bab84de75430956ea8379fa45177070"
+    },
+    {
+      "stage": "AR-09.b",
+      "source_sha": "ed1612bd8f35d785d8c617db1343f9a0fc396f33",
+      "command": ".venv/bin/python tools/run_kiosk_unittests.py test_kiosk_v2_sandbox_widgets test_qris_recovery test_kiosk_v2_operator_widgets test_customer_claim_session",
+      "run": 64,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS",
+      "local_raw_log": "work/ar09b-final.txt",
+      "raw_log_sha256": "bb4ec166cf4c4371304abc35b6eb7cbab26b64b05150b6c3ea9b43db445ff521"
+    },
+    {
+      "stage": "AR-09.c1",
+      "source_sha": "b38e030d2a8586f2de61dd96e8b4a590e85dde54",
+      "command": ".venv/bin/python tools/run_kiosk_unittests.py test_service_fencing test_checkout_fulfillment test_fulfillment_issues test_customer_capability test_checkout_backend test_qris_recovery test_qris_session test_qris_http_v2",
+      "run": 86,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS",
+      "local_raw_log": "work/ar09c1.txt",
+      "raw_log_sha256": "98f41a982ebf65783a17534065300bff98aa9d209431434e6454e3c5ea494430"
+    }
+  ],
+  "raw_logs_published": false,
+  "raw_logs_note": "Disposable work/ scratch only; hashes and commands published, no customer/token screenshot payloads published.",
+  "final_full_suite": "DEFERRED until final functional roadmap source",
+  "external_acceptance": "NOT_RUN: Windows, Ubuntu mini-PC, actual merchant, paper, Drive; production NOT_ENABLED",
+  "latest_ci": "PENDING at last inspection; previous superseded runs cancelled by concurrency"
+}

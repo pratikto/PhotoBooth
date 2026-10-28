@@ -1,5 +1,19 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — published safe checkpoint through AR-09.c1
+
+Exact tested/pushed functional source `b38e030d2a8586f2de61dd96e8b4a590e85dde54`; remote HEAD verified.
+AR-07 native customer recovery and AR-08 readiness/paid remedy source increments
+are locally verified. AR-09 PIN launcher/inspection and dormant service fencing
+are locally verified; safe release/reacquisition remains unfinished. Latest 86
+focused PASS, zero FAIL/ERROR/SKIP. Final full suite deferred; CI pending, external
+Windows/Ubuntu/merchant/paper/Drive NOT_RUN. No production or release enabled.
+[Ten commits, exact tests, blockers and continuation](qa/portrait-v2-sandbox/CONTINUATION-2026-10-29.md).
+Next: AR-09.c2 two-phase audited release, token-aware service API, worker-stop ACK
+and exact returning-customer lookup. Then AR-10–13. Tracked source clean before
+this docs checkpoint; only disposable work/ local, no unpushed runtime patch.
+Do not redo published work. Documentation checkpoint's own SHA is git HEAD.
+
 ## 29 October — AR-09.c1: fence stale service workers before implementing safe booth release
 
 Base / last remote-verified commit `ed1612bd8f35d785d8c617db1343f9a0fc396f33`. Focused 86 PASS, zero failures/errors/skips; five migration/CAS/restart/race cases. Dormant internal seam only; no UI/API rotates fences and no booth release is enabled.

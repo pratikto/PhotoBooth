@@ -1,5 +1,11 @@
 # P4b Sandbox → P5 readiness (FEAT-020 / FEAT-022)
 
+**Current implementation update, 29 October:** source progressed through AR-09.c1;
+[exact commits/tests and unfinished work](CONTINUATION-2026-10-29.md).
+Dated design-only/audited-baseline statements below are historical scope; they do
+not override current implementation evidence or certify full matrix/device/
+production acceptance. Safe release, AR-10–13 and external gates remain pending.
+
 **28 October — BUG-021:** polling retains the verified stored QR image URL when
 PENDING status omits actions. Explicit replacements remain validated; expiry,
 settlement and uncertain-verification guards remain. [Evidence and limits](QR-POLLING.md).

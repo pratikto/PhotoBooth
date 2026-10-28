@@ -1,9 +1,9 @@
 # Autonomous recovery — session checkpoint and resume contract
 
-**Checkpoint status:** AR-07.b1 focused VERIFIED / roadmap IN PROGRESS, 28 October 2026 (Asia/Jakarta)
+**Checkpoint status:** AR-09.c1 focused VERIFIED / roadmap IN PROGRESS, 29 October 2026 (Asia/Jakarta)
 **Branch:** `feature/portrait-kiosk-v2-next` (existing; no master merge)
 **Recovery implementation:** Source work progressed through AR-09.c1; later stages and external gates remain unfinished
-**Latest previously tested/pushed functional source:** `6d53d91fcfcad6083aee9f17ac8f80cf635fdf2f` (AR-07.a); current increment and tests below
+**Latest tested/pushed functional source:** `b38e030d2a8586f2de61dd96e8b4a590e85dde54` (86 focused PASS; final full regression deferred)
 **Historical audit baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
 **Current documentation handover:** See `docs/DEVELOPMENT_HANDOVER.md` and verify current remote HEAD; never assume the HEAD printed in a dated checkpoint is still current.
 
@@ -38,8 +38,8 @@ The owner prefers **frequent small tested commits AND remote pushes** because a 
 
 - Base / last verified remote: `ed1612bd8f35d785d8c617db1343f9a0fc396f33`.
 - Completed: fence stale service workers before implementing safe booth release. Focused 86 PASS, zero failures/errors/skips; five migration/CAS/restart/race cases. Dormant internal seam only; no UI/API rotates fences and no booth release is enabled.
-- Publication SHA: this increment will be pinned after its verified push by the
-  next checkpoint; obtain containing commit from Git history.
+- Publication SHA / remote-verified source: `b38e030d2a8586f2de61dd96e8b4a590e85dde54`.
+- [Ten-increment evidence and exact continuation](CONTINUATION-2026-10-29.md).
 - Remaining / exact next step: AR-09.c2 implement two-phase audited suspend/release and token-aware service API, then archived exact returning-customer reacquisition and native worker-stop/ACK; AR-10–13 remain pending.
 - Full suite: deferred to final functional SHA. Actual Windows/Ubuntu devices,
   merchant, paper/Drive and production: NOT_RUN / not enabled.
