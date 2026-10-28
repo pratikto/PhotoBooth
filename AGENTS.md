@@ -1,5 +1,12 @@
 # Repository working instructions
 
+## Owner priority reaffirmation — 29 October 2026
+
+**AR-00 → AR-13 autonomous QRIS/photo recovery remains TOP IMPLEMENTATION PRIORITY.** On every Codex continuation, first read `docs/qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md`, the authoritative AR roadmap and `docs/DEVELOPMENT_HANDOVER.md`; inspect actual remote HEAD and resume the first unfinished tested AR micro-increment. This priority is not changed by any later documentation/branch commit. Never equate an AR-13 readiness report to approved production deployment.
+
+**Post-AR QUEUED DESIGN ONLY:** the owner approved a complete operator Settings package, documented under `docs/qa/portrait-v2-operator-settings/README.md`, `IMPLEMENTATION-ROADMAP.md`, `ACCEPTANCE-MATRIX.md`, `DECISION-REGISTER.md` and `CODEX-HANDOVER.md`. Its final scope is Advertising **AND SAFE_IDLE** → static QR Operator Login → exactly **Device Health / Audio Settings / Emulate Ticket**, static DEMO promo/Meong Fly ticket fixtures with once-per-visit consumption, printed preview/history and strong mode/QR isolation. AR-09 recovery PIN/exceptions remain separate. **Only documentation was requested/published; OPS code not started, acceptance NOT_RUN.** Do not start OPS ahead of AR-00–AR-13 or silently relax payment, privacy, printing or Sandbox guards. When separately authorized later, use the existing branch and micro-commit + push/checkpoint policy below.
+
+
 ## Primary rule — documentation before and after code
 
 Owner instruction, 27 October 2026: **Before changing any code, read the
