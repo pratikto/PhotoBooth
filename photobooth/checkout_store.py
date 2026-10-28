@@ -7,6 +7,7 @@ allowed to supply payment evidence directly.
 """
 from contextlib import contextmanager
 import hashlib
+import hmac
 import json
 import math
 from pathlib import Path
@@ -88,6 +89,12 @@ class CheckoutStore:
             created_at REAL NOT NULL, updated_at REAL NOT NULL);
           CREATE TABLE IF NOT EXISTS checkout_allocation_counters (
             booth_id TEXT PRIMARY KEY, next_sequence INTEGER NOT NULL CHECK(next_sequence>0));
+          CREATE TABLE IF NOT EXISTS checkout_customer_capabilities (
+            order_id TEXT PRIMARY KEY, booth_id TEXT NOT NULL, capability_hash TEXT NOT NULL UNIQUE,
+            created_at REAL NOT NULL, expires_at REAL NOT NULL,
+            claim_operation_id TEXT UNIQUE, claimed_at REAL,
+            attempts INTEGER NOT NULL DEFAULT 0, attempt_window REAL NOT NULL DEFAULT 0,
+            revoked INTEGER NOT NULL DEFAULT 0);
         ''')
         # AR-02.c is additive for the already published scheduler schema.
         with self.write():
@@ -302,18 +309,26 @@ class CheckoutStore:
             self.db.execute('UPDATE checkouts SET local_transaction_id=? WHERE id=?', (transaction_id, order_id))
             return self._row(order_id, booth_id)
 
-    def begin(self, booth_id, quantities, amount, checkout_key, *, creation_context=None, frozen_contract=None):
+    def begin(self, booth_id, quantities, amount, checkout_key, *, creation_context=None,
+              frozen_contract=None, customer_capability_hash=None):
         identifier(booth_id)
         identifier(checkout_key, minimum=16)
         if type(amount) is not int or amount <= 0 or not isinstance(quantities, dict):
             raise ValueError('Server-validated quote required')
         encoded = json.dumps(quantities, sort_keys=True, separators=(',', ':'))
+        if customer_capability_hash is not None and (not isinstance(customer_capability_hash,str)
+                or re.fullmatch(r'[a-f0-9]{64}',customer_capability_hash) is None):
+            raise ValueError('Invalid customer capability hash')
         with self.write():
             old = self.db.execute('SELECT * FROM checkouts WHERE booth_id=? AND checkout_key=?',
                                   (booth_id, checkout_key)).fetchone()
             if old:
                 if old['quantities'] != encoded or old['amount'] != amount:
                     raise CheckoutConflict('Checkout key cannot change its order')
+                capability = self.db.execute('SELECT capability_hash FROM checkout_customer_capabilities WHERE order_id=?',
+                                             (old['id'],)).fetchone()
+                if (capability['capability_hash'] if capability else None) != customer_capability_hash:
+                    raise CheckoutConflict('Original customer credential binding required')
                 return self._record(old), False
             active = self.db.execute('''SELECT 1 FROM checkouts WHERE booth_id=?
                 AND closed=0 AND state NOT IN ('EXPIRED','CANCELLED','FAILED')
@@ -337,7 +352,64 @@ class CheckoutStore:
                 contract_json = json.dumps(frozen_contract, sort_keys=True, separators=(',', ':'))
                 self.db.execute('INSERT INTO checkout_frozen_orders VALUES(?,?,?,?)',
                     (order_id, contract_json, hashlib.sha256(contract_json.encode()).hexdigest(), self.now()))
+            if customer_capability_hash is not None:
+                self.db.execute('''INSERT INTO checkout_customer_capabilities
+                    (order_id,booth_id,capability_hash,created_at,expires_at) VALUES(?,?,?,?,?)''',
+                    (order_id,booth_id,customer_capability_hash,self.now(),self.now()+86400))
             return self._row(order_id), True
+
+    def has_customer_capability(self, order_id):
+        with self.lock:
+            return self.db.execute('SELECT 1 FROM checkout_customer_capabilities WHERE order_id=?',
+                                   (order_id,)).fetchone() is not None
+
+    def verify_customer_capability(self, order_id, booth_id, capability, operation_id):
+        identifier(operation_id, minimum=16)
+        allowed = False
+        with self.write():
+            self._row(order_id,booth_id)
+            row = self.db.execute('SELECT * FROM checkout_customer_capabilities WHERE order_id=? AND booth_id=?',
+                                  (order_id,booth_id)).fetchone()
+            if row:
+                now = self.now()
+                window, attempts = row['attempt_window'], row['attempts']
+                if now-window >= 60:
+                    window,attempts = now,0
+                valid_shape = isinstance(capability,str) and re.fullmatch(r'[A-Za-z0-9_-]{43}',capability) is not None
+                digest = hashlib.sha256(capability.encode()).hexdigest() if valid_shape else '0'*64
+                allowed = (attempts < 8 and not row['revoked'] and row['created_at'] <= now
+                    and window <= now and row['expires_at'] > now
+                    and hmac.compare_digest(row['capability_hash'],digest)
+                    and row['claim_operation_id'] in (None,operation_id))
+                self.db.execute('UPDATE checkout_customer_capabilities SET attempts=?,attempt_window=? WHERE order_id=?',
+                    (attempts if allowed else attempts+1,window,order_id))
+        if not allowed:
+            raise PermissionError('Original customer proof required')
+
+    def redeem_customer_capability(self, order_id, booth_id, capability, operation_id):
+        # Recheck after fresh provider I/O: concurrent redemption/revocation or
+        # clock expiry cannot reuse the earlier validation as a cached permit.
+        self.verify_customer_capability(order_id,booth_id,capability,operation_id)
+        with self.write():
+            order = self._row(order_id,booth_id)
+            row = self.db.execute('SELECT * FROM checkout_customer_capabilities WHERE order_id=?', (order_id,)).fetchone()
+            action = self.db.execute('SELECT order_id FROM checkout_customer_capabilities WHERE claim_operation_id=?',
+                                     (operation_id,)).fetchone()
+            if action and action['order_id'] != order_id:
+                raise CheckoutConflict('Customer action identity mismatch')
+            if (row['revoked'] or row['expires_at'] <= self.now()
+                    or row['claim_operation_id'] not in (None,operation_id)):
+                raise PermissionError('Original customer proof required')
+            if order['state'] != 'PAID' or order['closed']:
+                raise CheckoutConflict('Current paid obligation required')
+            if not order['grant_id']:
+                self.db.execute("UPDATE checkouts SET grant_id=?,service_state='RESERVED' WHERE id=?",
+                                (uuid.uuid4().hex,order_id))
+            self._ensure_fulfillment(self._row(order_id,booth_id))
+            if row['claim_operation_id'] is None:
+                self.db.execute('''UPDATE checkout_customer_capabilities SET claim_operation_id=?,claimed_at=?
+                    WHERE order_id=?''',(operation_id,self.now(),order_id))
+            return self._row(order_id,booth_id)
 
     def apply_evidence(self, order_id, evidence):
         """Apply independently fetched evidence, never a kiosk/body PAID flag."""

@@ -139,6 +139,7 @@ class CheckoutBackend:
         result = {key: order[key] for key in fields}
         result['order_id'] = result.pop('id')
         result['recovery_abandoned'] = self.store.recovery_abandoned(order['id'])
+        result['customer_capability_bound'] = self.store.has_customer_capability(order['id'])
         try:
             record = self.store.fulfillment(order['id'], order['booth_id'])
             result['fulfillment'] = {key: record[key] for key in
@@ -165,11 +166,12 @@ class CheckoutBackend:
                 data, evidence, existing_url=updated.get('qr_url')))
         return self.store.get(order['id'])
 
-    def create_order(self, booth_id, quantities, checkout_key):
+    def create_order(self, booth_id, quantities, checkout_key, *, customer_capability_hash=None):
         quote = quote_checkout(quantities)
         order, first = self.store.begin(booth_id, dict(quantities), quote.total_amount, checkout_key,
                                        creation_context=(self.merchant_id, self.provider_mode),
-                                       frozen_contract=frozen_contract(quantities))
+                                       frozen_contract=frozen_contract(quantities),
+                                       customer_capability_hash=customer_capability_hash)
         self._creation_context(order['id'])
         if not first:
             return self.status(order['id'], booth_id)
@@ -228,6 +230,16 @@ class CheckoutBackend:
         self.store.get(order_id, booth_id)
         self._require_settlement(order_id, booth_id)
         return self.view(self.store.allocate_fulfillment(order_id, booth_id, grant_id, operation_id))
+
+    def customer_claim(self, order_id, booth_id, capability, operation_id):
+        self.store.get(order_id,booth_id)
+        self._creation_context(order_id)
+        self.store.verify_customer_capability(order_id,booth_id,capability,operation_id)
+        self._require_settlement(order_id,booth_id)
+        order = self.store.redeem_customer_capability(order_id,booth_id,capability,operation_id)
+        result = self.view(order)
+        result['customer_claim'] = {'verified':True,'operation_id':operation_id}
+        return result
 
     def service_transition(self, order_id, booth_id, grant_id, state, transaction_id):
         order = self.store.get(order_id, booth_id)

@@ -36,3 +36,30 @@ provider outage/refund, action/body mismatch, one-use CAS and no raw secret in
 persisted metadata. Full regression after final functional roadmap work. Real
 merchant and Windows/Ubuntu/device acceptance remain NOT_RUN. Rollback preserves
 hashed claims/obligations and disables disclosure; never reset customer state.
+
+## AR-06.a backend delivery and evidence
+
+Additive checkout_customer_capabilities binds unique order/hash, booth, original
+24-hour expiry, claimed action/time, attempt window/count and revocation flag.
+New-order hash is committed before provider I/O and cannot be replaced on retry;
+legacy rows receive no guessed credentials. Invalid/expired/wrong-booth proof
+cannot invoke provider or grant service. Eight failed attempts per persisted
+60-second window survive restart; clock rollback fails closed. Raw tokens never
+enter backend order views or persisted records. Existing financial fields stay
+intact; token expiry/revocation does not erase OWED fulfillment.
+
+Authenticated customer-claim API validates strict body and current provider
+settlement, then atomically redeems exact action and original grant. Lost ACK
+replays only the same capability/action; another action is denied. No PIN/public
+reset/operator mutation is supplied. The capability remains separate from booth
+auth and does not expose old photo bytes itself. Client ticket/UI integration
+follows; this increment does not yet issue a ResumePermit in the GUI.
+
+Initial six new tests ERROR before source. Final **137 focused PASS / zero
+FAIL/ERROR/SKIP**, including eight claim cases. Command:
+`.venv/bin/python tools/run_kiosk_unittests.py test_customer_capability test_checkout_fulfillment test_checkout_reconciliation test_checkout_creation_attempts test_checkout_backend test_checkout_durability test_qris_session test_qris_http_v2 test_qris_api test_qris_recovery test_qris_kiosk_client`.
+HTTP fixtures use explicit command network permission; an earlier restricted
+HTTP fixture attempt was terminated and the permitted run passed. No provider
+network, customer data or actual hardware was used. Full regression remains
+reserved for the last functional roadmap source; commercial token/support
+policy and device/merchant acceptance stay separate.

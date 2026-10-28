@@ -21,6 +21,7 @@ from photobooth.payment_quote import quote_checkout
 class NewOrder(BaseModel):
     model_config = ConfigDict(extra='forbid', strict=True)
     quantities: dict[str, Annotated[int, Field(strict=True, ge=1, le=10)]] = Field(min_length=1, max_length=12)
+    customer_capability_hash: str | None = Field(default=None, pattern=r'^[a-f0-9]{64}$')
 
     @field_validator('quantities')
     @classmethod
@@ -39,6 +40,12 @@ class ServiceUpdate(BaseModel):
 class AllocationUpdate(BaseModel):
     model_config = ConfigDict(extra='forbid', strict=True)
     grant_id: str = Field(pattern=r'^[a-f0-9]{32}$')
+    operation_id: str = Field(pattern=r'^[A-Za-z0-9_-]{16,64}$')
+
+
+class CustomerClaim(BaseModel):
+    model_config = ConfigDict(extra='forbid', strict=True)
+    capability: str = Field(pattern=r'^[A-Za-z0-9_-]{43}$')
     operation_id: str = Field(pattern=r'^[A-Za-z0-9_-]{16,64}$')
 
 
@@ -152,6 +159,8 @@ def create_app(service, authenticator, *, on_shutdown=None, rate_limit=120, reco
             raise HTTPException(404, 'Order not found') from error
         except CheckoutConflict as error:
             raise HTTPException(409, 'Checkout requires recovery or completion') from error
+        except PermissionError as error:
+            raise HTTPException(403, 'Original customer proof required') from error
         except ProviderUnavailable as error:
             raise HTTPException(503, 'Provider verification temporarily unavailable') from error
         except ValueError as error:
@@ -180,7 +189,10 @@ def create_app(service, authenticator, *, on_shutdown=None, rate_limit=120, reco
             body = NewOrder.model_validate(data)
         except (ValidationError, ValueError) as error:
             raise HTTPException(422, 'Invalid template quantities') from error
-        return await invoke(service.create_order, booth, body.quantities, visit)
+        if body.customer_capability_hash is None:
+            return await invoke(service.create_order, booth, body.quantities, visit)
+        return await invoke(lambda: service.create_order(booth, body.quantities, visit,
+            customer_capability_hash=body.customer_capability_hash))
 
     @app.get('/api/orders/{order_id}')
     async def order_status(order_id: str, request: Request, x_booth_id: str = Header(default=''),
@@ -226,6 +238,16 @@ def create_app(service, authenticator, *, on_shutdown=None, rate_limit=120, reco
         except ValidationError as error:
             raise HTTPException(422, 'Invalid allocation request') from error
         return await invoke(service.allocate, order_id, booth, body.grant_id, body.operation_id)
+
+    @app.post('/api/orders/{order_id}/customer-claim')
+    async def customer_claim(order_id: str, request: Request, x_booth_id: str = Header(default=''),
+                             authorization: str = Header(default='')):
+        booth = booth_identity(request, x_booth_id, authorization)
+        try:
+            body = CustomerClaim.model_validate(await bounded_json(request, 2048))
+        except ValidationError as error:
+            raise HTTPException(422, 'Invalid customer proof request') from error
+        return await invoke(service.customer_claim, order_id, booth, body.capability, body.operation_id)
 
     @app.post('/api/orders/{order_id}/cancel')
     async def cancel_order(order_id: str, request: Request, x_booth_id: str = Header(default=''),
