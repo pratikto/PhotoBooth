@@ -56,6 +56,40 @@ uncertainty and retention boundaries remain.
    stop only the dependent part when evidence/access is missing, continue safe
    independent work, and state the actual remaining blocker.
 
+## Session-limit continuity and incremental Git pushes — 28 October 2026
+
+The owner explicitly prefers **micro-commit + immediate push** as work progresses,
+not a single push at the end of a long Codex conversation. ChatGPT/Codex may hit
+its five-hour usage limit unexpectedly; the last verified remote commit and a
+durable handover must be sufficient to restart without repeating completed work.
+
+1. Break every numbered roadmap stage into narrowly scoped, testable
+   micro-increments. Commit/push each safe meaningful unit to
+   `feature/portrait-kiosk-v2-next` after focused checks; independently verify
+   local and origin HEAD. Target checkpoint opportunities roughly every 30–45
+   minutes of active work, without empty or unreviewed commits.
+2. Prefer remote, auditable, reversible checkpoints over local-only commits or
+   stashes. Keep tests, code and corresponding documentation traceable to the
+   exact source SHA. Do not push unrelated work, credentials, customer photos,
+   local SQLite databases, logs or broken/unsafe runtime changes.
+3. At the end of **each micro-increment** and before a session cutoff, update
+   [the recovery checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md)
+   (when on the recovery roadmap) and keep
+   [DEVELOPMENT_HANDOVER.md](DEVELOPMENT_HANDOVER.md) synchronized. Record
+   current AR-stage/substep, done vs pending, last remote verified SHA,
+   tests with PASS/FAIL/SKIP/NOT_RUN, source/OS, blocking facts, changed paths,
+   unpushed/dirty files and the precise next command/decision. Push the
+   checkpoint even if the next implementation step remains incomplete.
+4. Do not push a knowingly unsafe partial code patch to meet a time limit.
+   Instead commit safe separable tests/docs or disabled functionality, record
+   incomplete local-only work and state that it cannot be reconstructed from
+   GitHub. Never claim an unpushed local patch was saved remotely.
+5. On the next session, inspect branch, `git status`, last commits and remote
+   HEAD before `git pull --ff-only`; preserve any dirty work, read the
+   checkpoint and resume from the first **unfinished** verified substep.
+   No new branch, reset, reimplementation of completed increments, force push,
+   merge, production activation or relaxation of safety gates.
+
 ## Feature, bug and approval discipline
 
 Review ideas for business priority, impact, compatibility, readiness, complexity,
