@@ -1,6 +1,6 @@
 # Autonomous recovery — session checkpoint and resume contract
 
-**Checkpoint status:** AR-12.e CI history VERIFIED / deterministic fixture corrected; final evidence next, 29 October 2026 (Asia/Jakarta)
+**Checkpoint status:** AR-12.f scanner correction / final full regression, native evidence and CI next, 29 October 2026 (Asia/Jakarta)
 **Branch:** `feature/portrait-kiosk-v2-next` (existing; no master merge)
 **Recovery implementation:** Source work progressed through AR-12.d; later stages and external gates remain unfinished
 **Latest application source:** `635de92c0f8fba9189981ebf2f168bff8b7a52af`; successful three-job CI at `b5931c8ef2e3d7b800e024c38a653fef5b4b4a1e`. Current increment changes a test fixture only.
@@ -35,6 +35,18 @@ The owner prefers **frequent small tested commits AND remote pushes** because a 
 | Safe rollback | Previous commit and retained-data plan |
 
 ## Current implementation checkpoint — AR-12.e
+
+**Superseding AR-12.f:** `959264962bb4e64a8a4531a085676b55ad26e660` pushed;
+CI 40766621706 passes content and Windows, exposes separate Linux recovery scan
+failure. A 100-ticket probe reproduces ten primary OpenCV false negatives; its
+installed alternate decodes all ten. Scanner now makes one optional alternate
+attempt on empty primary result, then retains original ownership verification.
+Three new source tests: primary miss, foreign role, absent alternate; no test
+assertions removed. See [investigation](AUTONOMOUS-RECOVERY-VALIDATION.md).
+Next: commit/push focused-checked correction, one final full run, fresh native
+captures/QRs and matching three-job CI, then matrix and AR-13 readiness. Interim
+full run at 9592649 was stopped; no final result is claimed. External gates and
+OPS restrictions remain unchanged. Rollback: scoped inverse; retain all state.
 
 Remote baseline `e303cdf4db3f009d2f4ed1a075e160d17aaa8bdb` independently verified;
 clean required-branch checkout fast-forwarded without losing the prior `work`

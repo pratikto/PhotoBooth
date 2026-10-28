@@ -1,5 +1,18 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-12.f recovery scanner false negatives
+
+CI 40766621706 at pushed `9592649` passes content/Windows but fails Linux's native
+recovery scan claim assertion. Ten of 100 random synthetic QR matrices fail the
+primary OpenCV detector locally; installed alternate recovers all ten. Add only
+one optional alternate decode on empty primary output, then keep original
+customer proof. Foreign QR, missing alternate and undecodable frames fail closed.
+Test-first scanner group: 3 run / 1 ERROR before source. Focused final results
+are recorded in validation; exact next action is final full regression and fresh
+native/CI evidence at this scanner commit, followed by matrix/AR-13 assessment.
+Interim 9592649 full run stopped, no final count. `work/` contains only private
+synthetic diagnostics; no customer/merchant data, OPS or deployment changed.
+
 ## 29 October — AR-12.e verified CI history and deterministic content fixture
 
 Baseline `e303cdf4db3f009d2f4ed1a075e160d17aaa8bdb` refreshed/fast-forwarded cleanly.

@@ -2,7 +2,7 @@
 from pathlib import Path
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 
 from photobooth.kiosk_v2.sandbox_checkout import SandboxCheckout, sandbox_enabled, configured_sandbox, simulator_qr_url
 from photobooth.qris_session import KioskCheckout
@@ -32,6 +32,45 @@ class SimulatorLinkTests(unittest.TestCase):
             with self.subTest(fields=fields):
                 self.assertIsNone(simulator_qr_url(dict(view, order=dict(order, **fields))))
         self.assertIsNone(simulator_qr_url(None))
+
+
+class RecoveryScannerTests(unittest.TestCase):
+    def frame(self, text):
+        import cv2
+        import numpy as np
+        from photobooth.qr_code import create_qr_image
+        return cv2.cvtColor(np.asarray(create_qr_image(text, with_logo=False).convert('RGB')), cv2.COLOR_RGB2BGR)
+
+    def test_primary_false_negative_uses_existing_opencv_alternate_then_customer_proof(self):
+        import base64, hashlib, cv2
+        if not callable(getattr(cv2, 'QRCodeDetectorAruco', None)):
+            self.skipTest('Installed OpenCV lacks the optional alternate QR detector')
+        # Public synthetic data only; this is not a real customer capability.
+        secret = base64.urlsafe_b64encode(hashlib.sha256(b'AR12 decode fixture 2').digest()).rstrip(b'=').decode()
+        ticket = 'MEONG-RECOVERY-V1:PB001:' + 'a'*32 + ':' + secret
+        adapter = SandboxCheckout(Mock())
+        primary = Mock(); primary.detectAndDecode.return_value = ('', None, None)
+        with patch('cv2.QRCodeDetector', return_value=primary), patch.object(
+                adapter, 'customer_claim', return_value={'checked': True}) as claim:
+            self.assertEqual(adapter.scan_claim(self.frame(ticket)), {'checked': True})
+            claim.assert_called_once_with(ticket)
+            primary.detectAndDecode.assert_called_once()
+
+    def test_foreign_qr_never_falls_back_or_calls_customer_proof(self):
+        adapter = SandboxCheckout(Mock())
+        primary = Mock(); primary.detectAndDecode.return_value = ('FOREIGN-QR', None, None)
+        with patch('cv2.QRCodeDetector', return_value=primary), patch(
+                'cv2.QRCodeDetectorAruco', create=True) as alternate, patch.object(adapter, 'customer_claim') as claim:
+            with self.assertRaises(ValueError): adapter.scan_claim(self.frame('FOREIGN-QR'))
+            alternate.assert_not_called(); claim.assert_not_called()
+
+    def test_missing_alternate_and_undecodable_frame_stay_held(self):
+        adapter = SandboxCheckout(Mock())
+        primary = Mock(); primary.detectAndDecode.return_value = ('', None, None)
+        with patch('cv2.QRCodeDetector', return_value=primary), patch(
+                'cv2.QRCodeDetectorAruco', None, create=True), patch.object(adapter, 'customer_claim') as claim:
+            with self.assertRaises(ValueError): adapter.scan_claim(self.frame('NOT-A-TICKET'))
+            claim.assert_not_called()
 
 class SandboxAdapterTests(unittest.TestCase):
     def setUp(self):

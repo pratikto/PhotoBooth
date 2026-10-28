@@ -166,6 +166,13 @@ class SandboxCheckout:
         if frame is None or frame.size > 40_000_000*3:
             raise ValueError('Customer ticket frame required')
         ticket, _points, _straight=cv2.QRCodeDetector().detectAndDecode(frame)
+        if not ticket:
+            # Some valid recovery matrices are missed by the primary detector.
+            # One bounded alternate attempt uses the same copied pixels and
+            # installed OpenCV; decoded text still needs original customer proof.
+            alternate=getattr(cv2,'QRCodeDetectorAruco',None)
+            if callable(alternate):
+                ticket, _points, _straight=alternate().detectAndDecode(frame)
         if not ticket.startswith('MEONG-RECOVERY-V1:'):
             raise ValueError('Original recovery QR required')
         return self.customer_claim(ticket)

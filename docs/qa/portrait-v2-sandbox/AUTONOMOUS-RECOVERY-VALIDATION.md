@@ -2,6 +2,42 @@
 
 ## AR-12.e — independently verified CI history and deterministic fixture (29 October)
 
+### AR-12.f — recovery scanner false negatives exposed by the fresh CI
+
+Test-only checkpoint `959264962bb4e64a8a4531a085676b55ad26e660` was pushed and
+remote-verified. Its CI [40766621706](https://github.com/pratikto/PhotoBooth/actions/runs/40766621706)
+passes the repaired 103-case content group and Windows, but Linux job
+`123092367855` fails `test_recovery_scan_uses_existing_camera_and_poll_preserves_typed_ticket`:
+customer_claim_required stays true after scanning a synthetic valid ticket.
+Do not present the older green run as verification of this newer test source.
+
+A private 100-random-ticket probe at unchanged application source yields ten
+primary OpenCV decode misses; integer enlargement recovers none. OpenCV's
+already-installed `QRCodeDetectorAruco` decodes all ten identical failed frames.
+Deterministic public synthetic seed `AR12 decode fixture 2` also reproduces a
+primary miss and alternate exact decode locally (OpenCV 5.0.0). CI did not retain
+the random failing ticket, so that specific failure's payload is unrecoverable.
+
+Correction: scan the existing camera owner's copied frame with the original
+detector first; on an empty decode only, make one alternate OpenCV attempt when
+that API exists. No new dependency, camera, renderer, scanner service, namespace
+fallback, payment authority or customer-auth bypass. A foreign nonempty QR is
+rejected immediately; absent alternate/undecodable input remains held. Original
+customer_claim still verifies booth/order/secret/current settlement. New source
+tests reproduce the primary failure before the change (3 run / 1 ERROR), exercise
+real alternate pixels, reject foreign roles without fallback, and fail closed
+without the optional detector. Physical phone/camera acceptance remains NOT_RUN.
+
+The interim full run at `9592649` was stopped after this newly identified runtime
+correction became necessary; it has no authoritative final count. A complete run
+and refreshed native evidence follow the committed scanner correction. Preserve
+the original previous-session 1094/1091/3 report as unverified historical metadata.
+
+Scanner correction focused command:
+`.venv/bin/python tools/run_kiosk_unittests.py test_kiosk_v2_sandbox test_kiosk_v2_sandbox_widgets test_customer_claim_session test_customer_capability`:
+**56 PASS / zero FAIL/ERROR/SKIP**, 59.818s, Linux/Python 3.12.14/OpenCV 5.0.0,
+SDL offscreen/software GL/dummy audio, permitted local HTTP fixtures.
+
 Refreshed remote `e303cdf4db3f009d2f4ed1a075e160d17aaa8bdb`; clean checkout
 fast-forwarded on the required branch. Latest application source is
 `635de92c0f8fba9189981ebf2f168bff8b7a52af`; CI/workflow source is
