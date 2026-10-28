@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 28 October — AR-03.a: frozen order contract and independent fulfillment obligation
+
+Base / last remote-verified commit `30ebd0bad394046f99286b0f0f90785cb9e12161`. Six new fixtures and focused 133 PASS, zero failures/errors/skips. New orders freeze server pricing/template hashes before I/O; payment creates an owed fulfillment independently of UI claims. Legacy duplicate bindings quarantine both mappings without altering original evidence.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, private
+photo display or customer state reset. Next: AR-03.b unique allocation operation and preallocated local transaction, then native handoff.
+Only work/ scratch files local; scope and rollback in
+[stage contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-FULFILLMENT.md).
+
 ## 28 October — AR-02.c: private restart observation and recovery worker retry
 
 Base / last remote-verified commit `949d8e35c44f92d9a22c852df81dd3527ee041c6`. Focused 152 PASS, zero failures/errors/skips, including native Sandbox lifecycle. Four new restart tests and persisted priority-trigger test pass; RECOVERY retains original phase, grant and transaction and never resumes capture.

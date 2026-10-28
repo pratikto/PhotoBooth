@@ -5,6 +5,7 @@ Only this service plus CheckoutStore is used by the current server entrypoint.
 """
 from photobooth.checkout_store import CheckoutConflict, CheckoutMissing, identifier
 from photobooth.payment_quote import quote_checkout
+from photobooth.fulfillment_contract import frozen_contract
 from photobooth.qris_evidence import (authenticated_notification, provider_evidence,
                                      qr_url_from_status, idr_amount)
 
@@ -160,7 +161,8 @@ class CheckoutBackend:
     def create_order(self, booth_id, quantities, checkout_key):
         quote = quote_checkout(quantities)
         order, first = self.store.begin(booth_id, dict(quantities), quote.total_amount, checkout_key,
-                                       creation_context=(self.merchant_id, self.provider_mode))
+                                       creation_context=(self.merchant_id, self.provider_mode),
+                                       frozen_contract=frozen_contract(quantities))
         self._creation_context(order['id'])
         if not first:
             return self.status(order['id'], booth_id)

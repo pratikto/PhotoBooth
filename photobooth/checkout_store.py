@@ -77,6 +77,15 @@ class CheckoutStore:
             evidence_revision INTEGER NOT NULL DEFAULT 0,
             checked_at REAL, outcome TEXT NOT NULL DEFAULT 'unknown',
             provider_state TEXT, observed_at REAL NOT NULL DEFAULT 0);
+          CREATE TABLE IF NOT EXISTS checkout_frozen_orders (
+            order_id TEXT PRIMARY KEY, contract_json TEXT NOT NULL,
+            contract_hash TEXT NOT NULL, created_at REAL NOT NULL);
+          CREATE TABLE IF NOT EXISTS checkout_fulfillments (
+            fulfillment_id TEXT PRIMARY KEY, order_id TEXT NOT NULL UNIQUE,
+            grant_id TEXT UNIQUE, booth_id TEXT NOT NULL, merchant_id TEXT,
+            contract_hash TEXT, state TEXT NOT NULL, obligation_state TEXT NOT NULL,
+            transaction_id TEXT UNIQUE, allocation_operation_id TEXT UNIQUE,
+            created_at REAL NOT NULL, updated_at REAL NOT NULL);
         ''')
         # AR-02.c is additive for the already published scheduler schema.
         with self.write():
@@ -99,6 +108,16 @@ class CheckoutStore:
             self.db.execute('''INSERT OR IGNORE INTO checkout_create_attempts
                 (order_id,merchant_id,phase,updated_at)
                 SELECT id,merchant_id,'LEGACY_UNCERTAIN',? FROM checkouts''', (self.now(),))
+            for row in self.db.execute("SELECT * FROM checkouts WHERE state='PAID' OR grant_id IS NOT NULL").fetchall():
+                self._ensure_fulfillment(self._record(row))
+            duplicates = self.db.execute('''SELECT local_transaction_id FROM checkouts
+                WHERE local_transaction_id IS NOT NULL GROUP BY local_transaction_id HAVING count(*)>1''').fetchall()
+            for duplicate in duplicates:
+                # Both original rows remain intact for audit. Neither ledger
+                # may guess ownership from migration iteration/folder order.
+                self.db.execute('''UPDATE checkout_fulfillments SET transaction_id=NULL,state='LEGACY_REVIEW'
+                    WHERE order_id IN (SELECT id FROM checkouts WHERE local_transaction_id=?)''',
+                    (duplicate['local_transaction_id'],))
 
     @contextmanager
     def write(self):
@@ -207,7 +226,48 @@ class CheckoutStore:
             self.db.execute('''UPDATE checkout_create_attempts SET phase='UNCERTAIN',updated_at=?
                 WHERE order_id=? AND phase='SENT' ''', (self.now(), order_id))
 
-    def begin(self, booth_id, quantities, amount, checkout_key, *, creation_context=None):
+    def frozen_order(self, order_id):
+        with self.lock:
+            row = self.db.execute('SELECT * FROM checkout_frozen_orders WHERE order_id=?', (order_id,)).fetchone()
+            if row is None:
+                raise CheckoutConflict('Historical order has no frozen contract')
+            if hashlib.sha256(row['contract_json'].encode()).hexdigest() != row['contract_hash']:
+                raise CheckoutConflict('Frozen order contract mismatch')
+            return json.loads(row['contract_json'])
+
+    def _ensure_fulfillment(self, order):
+        """Inside a write transaction; preserve paid liabilities before any UI claim."""
+        old = self.db.execute('SELECT * FROM checkout_fulfillments WHERE order_id=?', (order['id'],)).fetchone()
+        if old:
+            if old['grant_id'] not in (None, order['grant_id']):
+                raise CheckoutConflict('Fulfillment grant mismatch')
+            if order['grant_id'] and old['grant_id'] is None:
+                self.db.execute('UPDATE checkout_fulfillments SET grant_id=?,updated_at=? WHERE order_id=?',
+                                (order['grant_id'], self.now(), order['id']))
+            return
+        contract = self.db.execute('SELECT contract_hash FROM checkout_frozen_orders WHERE order_id=?',
+                                   (order['id'],)).fetchone()
+        transaction_id = order['local_transaction_id']
+        if transaction_id and self.db.execute('SELECT 1 FROM checkout_fulfillments WHERE transaction_id=?',
+                                              (transaction_id,)).fetchone():
+            transaction_id = None
+        self.db.execute('''INSERT INTO checkout_fulfillments
+            (fulfillment_id,order_id,grant_id,booth_id,merchant_id,contract_hash,state,
+             obligation_state,transaction_id,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?)''',
+            (uuid.uuid4().hex, order['id'], order['grant_id'], order['booth_id'], order['merchant_id'],
+             contract['contract_hash'] if contract else None, 'RESERVED' if contract else 'LEGACY_REVIEW',
+             'OWED', transaction_id, self.now(), self.now()))
+
+    def fulfillment(self, order_id, booth_id):
+        with self.lock:
+            self._row(order_id, booth_id)
+            row = self.db.execute('SELECT * FROM checkout_fulfillments WHERE order_id=? AND booth_id=?',
+                                  (order_id, booth_id)).fetchone()
+            if row is None:
+                raise CheckoutMissing('Fulfillment not found')
+            return dict(row)
+
+    def begin(self, booth_id, quantities, amount, checkout_key, *, creation_context=None, frozen_contract=None):
         identifier(booth_id)
         identifier(checkout_key, minimum=16)
         if type(amount) is not int or amount <= 0 or not isinstance(quantities, dict):
@@ -236,6 +296,12 @@ class CheckoutStore:
                     (order_id,merchant_id,provider_mode,request_hash,phase,prepared_at,updated_at)
                     VALUES(?,?,?,?,'PREPARED',?,?)''',
                     (order_id, merchant_id, provider_mode, digest, self.now(), self.now()))
+            if frozen_contract is not None:
+                if frozen_contract.get('quantities') != quantities or frozen_contract.get('amount') != amount:
+                    raise CheckoutConflict('Frozen quote mismatch')
+                contract_json = json.dumps(frozen_contract, sort_keys=True, separators=(',', ':'))
+                self.db.execute('INSERT INTO checkout_frozen_orders VALUES(?,?,?,?)',
+                    (order_id, contract_json, hashlib.sha256(contract_json.encode()).hexdigest(), self.now()))
             return self._row(order_id), True
 
     def apply_evidence(self, order_id, evidence):
@@ -278,6 +344,8 @@ class CheckoutStore:
         self.db.execute('INSERT OR IGNORE INTO checkout_reconciliation(order_id) VALUES(?)', (order_id,))
         self.db.execute('''UPDATE checkout_reconciliation
             SET evidence_revision=evidence_revision+1 WHERE order_id=?''', (order_id,))
+        if state == 'PAID' or old['grant_id']:
+            self._ensure_fulfillment(self._row(order_id))
         return self._row(order_id)
 
     def begin_reconciliation(self, order_id, *, urgent=False, immediate=False):
@@ -366,6 +434,7 @@ class CheckoutStore:
             if not order['grant_id']:
                 self.db.execute('''UPDATE checkouts SET grant_id=?,service_state='RESERVED'
                                    WHERE id=?''', (uuid.uuid4().hex, order_id))
+            self._ensure_fulfillment(self._row(order_id, booth_id))
             return self._row(order_id, booth_id)
 
     def service_transition(self, order_id, booth_id, grant_id, state, local_transaction_id):
@@ -382,6 +451,10 @@ class CheckoutStore:
                 raise CheckoutConflict('Invalid service transition')
             self.db.execute('''UPDATE checkouts SET service_state=?,local_transaction_id=?
                                WHERE id=?''', (state, local_transaction_id, order_id))
+            self._ensure_fulfillment(self._row(order_id, booth_id))
+            self.db.execute('''UPDATE checkout_fulfillments SET state=?,transaction_id=?,updated_at=?
+                WHERE order_id=? AND state!='LEGACY_REVIEW' ''',
+                ('STARTED' if state == 'STARTED' else 'COMPOSED', local_transaction_id, self.now(), order_id))
             return self._row(order_id, booth_id)
 
     def recovery_action(self, order_id, booth_id, action_id, action, reason, transaction_id, actor):
@@ -436,6 +509,15 @@ class CheckoutStore:
                 if order['closed'] or order['service_state'] == 'COMPLETED':
                     raise CheckoutConflict('This test visit already ended')
                 self.db.execute('UPDATE checkouts SET closed=1 WHERE id=?', (order_id,))
+            if order['state'] == 'PAID' or order['grant_id'] or action == 'resume':
+                self._ensure_fulfillment(self._row(order_id, booth_id))
+                if action == 'abandon':
+                    self.db.execute("UPDATE checkout_fulfillments SET state='SUSPENDED',updated_at=? WHERE order_id=?",
+                                    (self.now(), order_id))
+                elif action in {'resume', 'complete'} and transaction_id:
+                    self.db.execute('''UPDATE checkout_fulfillments SET state=?,transaction_id=?,updated_at=?
+                        WHERE order_id=? AND state!='LEGACY_REVIEW' ''',
+                        ('COMPOSED' if action == 'complete' else 'STARTED', transaction_id, self.now(), order_id))
             self.db.execute('''INSERT INTO checkout_recovery_actions
                 (action_id,order_id,booth_id,request_hash,action,reason,transaction_id,actor,
                  created_at,prior_payment_state,prior_service_state) VALUES(?,?,?,?,?,?,?,?,?,?,?)''',

@@ -34,16 +34,16 @@ The owner prefers **frequent small tested commits AND remote pushes** because a 
 | Next *small* action | File/function, intended test and AR substep |
 | Safe rollback | Previous commit and retained-data plan |
 
-## Current implementation checkpoint — AR-02.c
+## Current implementation checkpoint — AR-03.a
 
-- Base / last verified remote: `949d8e35c44f92d9a22c852df81dd3527ee041c6`.
-- Completed: private restart observation and recovery worker retry. Focused 152 PASS, zero failures/errors/skips, including native Sandbox lifecycle. Four new restart tests and persisted priority-trigger test pass; RECOVERY retains original phase, grant and transaction and never resumes capture.
+- Base / last verified remote: `30ebd0bad394046f99286b0f0f90785cb9e12161`.
+- Completed: frozen order contract and independent fulfillment obligation. Six new fixtures and focused 133 PASS, zero failures/errors/skips. New orders freeze server pricing/template hashes before I/O; payment creates an owed fulfillment independently of UI claims. Legacy duplicate bindings quarantine both mappings without altering original evidence.
 - Publication SHA: this increment will be pinned after its verified push by the
   next checkpoint; obtain containing commit from Git history.
-- Remaining / exact next step: AR-03.a frozen quote/template contract and additive fulfillment/allocation migration tests.
+- Remaining / exact next step: AR-03.b unique allocation operation and preallocated local transaction, then native handoff.
 - Full suite: deferred to final functional SHA. Actual Windows/Ubuntu devices,
   merchant, paper/Drive and production: NOT_RUN / not enabled.
-- Migration/rollback: see AR-02 contract; preserve all ledgers/media/claims,
+- Migration/rollback: see stage contract; preserve all ledgers/media/claims,
   never drop additive tables or replay a charge/capture/print.
 - Local unpushed work: disposable work/ only; no unrelated customer/secret data.
 
