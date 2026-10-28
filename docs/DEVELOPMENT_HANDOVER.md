@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-09.b: mount PIN-protected native operator metadata inspection
+
+Base / last remote-verified commit `cc6032c6556dbe4fcd2f26f8a32d9b611b948ed6`. Focused 64 PASS, zero failures/errors/skips; wrong/missing/correct PIN, private media denial, journal secrecy and retired callbacks covered. Twenty provisional native PNG fixtures rendered at both required sizes.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, private
+photo display or customer state reset. Next: AR-09.c define and implement audited fenced suspend/release plus returning-customer lookup without losing OWED or allowing stale worker effects; then AR-10–13.
+Only work/ scratch files local; scope and rollback in
+[stage contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATOR.md).
+
 ## 29 October — AR-09.a: isolate a per-launch Sandbox operator PIN from the GUI
 
 Base / last remote-verified commit `4e4f95b8396f585966c9e98e9fb7ebd3f06bb28e`. Focused 64 PASS, zero failures/errors/skips; backend-only PIN and mocked launcher argv/environment/local-notice isolation covered.

@@ -36,3 +36,32 @@ Two new tests cover v2 environment isolation and actual mocked launcher spawn/
 private local notice. All launchers use fake processes/credentials, no real
 merchant/device. Rotate by restarting the dedicated launcher; no default public
 PIN or persisted operator credential is introduced.
+
+AR-09.b contract before code: on held native Sandbox session, operator explicitly
+enters the launcher PIN in a masked field; reuse recovery_inspect's fresh provider
+check and existing backend rate limit. Clear input immediately on submission,
+keep PIN only in the in-flight call, show sanitized payment/service/issue metadata
+without original media or identifiers. Inspect grants no customer proof/permit.
+Pause/close/exit retires input/report and late callbacks. Busy/stale widget guards
+remain. No resolve/reset/complete/refund/release is added by this increment.
+
+## AR-09.b delivered — native metadata inspection
+
+Held customer view now offers explicit operator assistance. Masked PIN entry is
+cleared on submit; the existing single-flight worker invokes authenticated
+recovery_inspect and fresh provider status. Only sanitized payment/service/OWED/
+issue metadata is rendered. Successful inspection creates no customer proof,
+resume permit, shutter or service transition. Exit/minimize retires credentials,
+report and widget callbacks. Background polling does not interrupt PIN entry.
+Source keeps resolve/release/completion absent pending the next reviewed step.
+
+Initial focused attempt: two ERROR (operator fixture lacked explicit Sandbox
+mode, plus a mistyped existing operator test module). Corrected fixture explicitly
+selects fake Sandbox mode only when its synthetic PIN is configured; production
+checks were preserved. Final **64 PASS / zero FAIL/ERROR/SKIP**:
+`.venv/bin/python tools/run_kiosk_unittests.py test_kiosk_v2_sandbox_widgets test_qris_recovery test_kiosk_v2_operator_widgets test_customer_claim_session`.
+Two new native cases exercise missing/wrong/correct PIN, no old media/grant,
+transient input, journal secrecy and retired buttons. Twenty provisional native
+PNG fixtures rendered at 800x1280/452x900. Operator entry/status and compact claim
+were visually checked without clipping; final pinned AR-12 captures remain due.
+No actual merchant or Windows/Ubuntu device result is implied.

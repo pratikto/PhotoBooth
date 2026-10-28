@@ -20,13 +20,13 @@ from tests.qris_v2_fixture import Fixture
 
 class SandboxWidgetTests(unittest.TestCase):
     @contextmanager
-    def booth(self):
+    def booth(self, *, recovery_pin=None):
         with TemporaryDirectory() as temp, patch.dict(os.environ,{
             'PHOTOBOOTH_V2_CHECKOUT_SANDBOX':'1','PHOTOBOOTH_V2_CHECKOUT_MOCK':'0',
             'MEONG_QRIS_MODE':'sandbox','MIDTRANS_SERVER_KEY':'','MIDTRANS_MERCHANT_ID':'',
             'PHOTOBOOTH_AUDIO':'0','PHOTOBOOTH_CAMERA':'0','PHOTOBOOTH_AD_VIDEO':'0',
             'PHOTOBOOTH_FACE_TRIGGER':'0','PHOTOBOOTH_PALM_TRIGGER':'0'}):
-            fixture=Fixture(Path(temp))
+            fixture=Fixture(Path(temp),recovery_pin=recovery_pin)
             device=Mock();device.read.return_value=np.zeros((120,160,3),dtype=np.uint8)
             service=PhotoTest(Path(temp)/'photos')
             with patch('photobooth.kiosk_v2.photos.configured_test',return_value=service):
@@ -428,4 +428,33 @@ class SandboxWidgetTests(unittest.TestCase):
             self.assertEqual(app._photo_jobs.service.transaction.manifest_path.read_bytes(),before)
             self.assertEqual(app._photo_view,{})
             self.assertFalse(app._sandbox_can_capture())
+            self.assertEqual(f.provider.charges,1)
+
+    def test_operator_pin_inspection_is_metadata_only_and_never_persists_pin(self):
+        with self.booth(recovery_pin='12345678') as (app,f):
+            self.start_private_capture(app,f)
+            tx=app._photo_view['transaction_id']
+            app._sandbox_lock_customer();app._sandbox_operator_open()
+            app._sandbox_operator_input.text='00000000';app._sandbox_operator_inspect();self.settle(app)
+            self.assertNotIn('operator_report',app._sandbox_view)
+            self.assertTrue(f.flow.customer_claim_required)
+            app._sandbox_operator_input.text='12345678';app._sandbox_operator_inspect();self.settle(app)
+            self.assertEqual(app._sandbox_view['operator_report']['payment'],'PAID')
+            self.assertEqual(app._sandbox_view['operator_report']['service'],'STARTED')
+            self.assertEqual(f.flow.snapshot()['transaction_id'],tx)
+            self.assertEqual(app._photo_view,{})
+            self.assertFalse(app._sandbox_can_capture())
+            self.assertNotIn('12345678',f.flow.path.read_text())
+            self.assertEqual(app._sandbox_operator_input.text,'')
+            old=next(w for w in app.stage.walk() if getattr(w,'text','')=='PERIKSA STATUS OPERATOR')
+            app._sandbox_operator_close();old.dispatch('on_release')
+            self.assertFalse(f.jobs.busy)
+            self.assertFalse(app._sandbox_operator_mode)
+
+    def test_operator_entry_is_disabled_when_backend_pin_not_enabled(self):
+        with self.booth() as (app,f):
+            self.pending(app);app._sandbox_lock_customer();app._sandbox_operator_open()
+            app._sandbox_operator_input.text='12345678';app._sandbox_operator_inspect();self.settle(app)
+            self.assertNotIn('operator_report',app._sandbox_view)
+            self.assertTrue(f.flow.customer_claim_required)
             self.assertEqual(f.provider.charges,1)

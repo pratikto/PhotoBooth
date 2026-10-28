@@ -26,6 +26,8 @@ class SandboxViews:
         self._sandbox_action_epoch = 0
         self._sandbox_claim_input = None
         self._sandbox_pending_issue = None
+        self._sandbox_operator_mode = False
+        self._sandbox_operator_input = None
 
     def _sandbox_submit(self, action, *args):
         if self._closed or self._suspended or not self._sandbox_jobs:
@@ -48,6 +50,10 @@ class SandboxViews:
             self._photo_jobs.service.hide_private()
         if self._sandbox_claim_input:
             self._sandbox_claim_input.text=''
+        if self._sandbox_operator_input:
+            self._sandbox_operator_input.text=''
+        self._sandbox_operator_input=None
+        self._sandbox_operator_mode=False
         self._sandbox_claim_input=None
         self._cancel_countdown()
         self._sandbox_consent=False
@@ -55,6 +61,24 @@ class SandboxViews:
         self._last_live_frame=self._last_preview=self._camera_texture=None
         self._sandbox_view={'phase':'RECOVERY','customer_claim_required':True}
         self.navigation.page=SANDBOX_CHECKOUT
+        self._show()
+
+    def _sandbox_operator_open(self):
+        if self._sandbox_jobs.busy or not self._sandbox_jobs.store:
+            return
+        self._sandbox_lock_customer()
+        self._sandbox_operator_mode=True
+        self._show()
+
+    def _sandbox_operator_close(self):
+        self._sandbox_lock_customer()
+
+    def _sandbox_operator_inspect(self):
+        field=self._sandbox_operator_input
+        if field is None or self._sandbox_jobs.busy:
+            return
+        pin=field.text;field.text=''
+        self._sandbox_submit('operator_inspect',pin)
         self._show()
 
     def _sandbox_report_issue(self, reason):
@@ -227,6 +251,10 @@ class SandboxViews:
                 self._sandbox_refresh_at=time.monotonic()+2
                 return
             if outcome.error:
+                if outcome.action=='operator_inspect':
+                    self._sandbox_error='Pemeriksaan ditolak atau provider belum tersedia. Periksa PIN dan koneksi.'
+                    self._show()
+                    return
                 if (outcome.action=='begin_ready' and self._sandbox_jobs.store
                         and not self._sandbox_jobs.store.flow.active):
                     self._sandbox_view={'phase':'QUOTE'}
@@ -284,6 +312,7 @@ class SandboxViews:
                 self._sandbox_pending_issue=None
             return
         if (self.navigation.page == SANDBOX_CHECKOUT and not self._sandbox_jobs.busy and
+                not self._sandbox_operator_mode and
                 phase in {'CREATING','WAITING','CANCELLING','STARTING','COMPLETING','RECOVERY','UNCERTAIN'} and
                 not (self._photo_jobs and self._photo_jobs.busy) and
                 time.monotonic() >= self._sandbox_refresh_at):
@@ -292,6 +321,8 @@ class SandboxViews:
 
     def _build_sandbox_checkout(self, canvas):
         view = self._sandbox_view or {}
+        if self._sandbox_operator_mode:
+            return self._build_sandbox_operator(canvas,view)
         if view.get('ticket_required'):
             return self._build_recovery_ticket(canvas,view)
         if view.get('customer_claim_required') or view.get('resume_ready'):
@@ -399,3 +430,27 @@ class SandboxViews:
             shell.add_widget(self._action('VERIFIKASI TIKET',self._sandbox_claim,height=52,disabled=self._sandbox_jobs.busy))
             shell.add_widget(self._action('SCAN QR TIKET DI KAMERA',self._sandbox_scan_claim,height=52,disabled=self._sandbox_jobs.busy))
         shell.add_widget(self._action('PERIKSA STATUS',self._sandbox_retry,height=52,disabled=self._sandbox_jobs.busy))
+        shell.add_widget(self._action('BANTUAN OPERATOR',self._sandbox_operator_open,height=48,
+            variant='tertiary',disabled=self._sandbox_jobs.busy))
+
+    def _build_sandbox_operator(self,canvas,view):
+        shell=self._frame(canvas,brand_height=48)
+        self._brand(shell,'OPERATOR SANDBOX','PEMERIKSAAN STATUS • BUKAN PENGEMBALIAN DANA')
+        card=PixelCard(orientation='vertical',padding=12,spacing=8)
+        card.add_widget(text_label('Masukkan PIN dari terminal launcher lokal.\nPIN berbeda dari tiket pelanggan.',size=16,height=90,color=MUTED))
+        field=TextInput(multiline=False,password=True,hint_text='PIN operator 8 digit',
+            input_filter='int',size_hint_y=None,height=52,font_size=18)
+        self._sandbox_operator_input=field
+        card.add_widget(field)
+        report=view.get('operator_report')
+        if report:
+            details='Pembayaran: '+report['payment']+'\nLayanan: '+report['service']
+            details+='\nKewajiban: '+str(report['obligation'] or '—')
+            details+='\nMasalah: '+str(report['issue'] or '—')
+            card.add_widget(text_label(details,size=16,height=180,color=CYAN))
+        card.add_widget(Widget())
+        shell.add_widget(card)
+        shell.add_widget(text_label(self._sandbox_error,size=13,height=90,color=GOLD))
+        shell.add_widget(self._action('PERIKSA STATUS OPERATOR',self._sandbox_operator_inspect,height=52,disabled=self._sandbox_jobs.busy))
+        shell.add_widget(self._action('KEMBALI KE TIKET PELANGGAN',self._sandbox_operator_close,height=52,
+            variant='tertiary',disabled=self._sandbox_jobs.busy))

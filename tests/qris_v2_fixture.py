@@ -28,13 +28,15 @@ class InProcessSession:
 
 
 class Fixture:
-    def __init__(self, root):
+    def __init__(self, root, *, recovery_pin=None):
         self.root=root
         self.provider=FakeProvider()
+        if recovery_pin is not None:
+            self.provider.mode='sandbox'  # Explicit isolated Sandbox operator fixture.
         self.store=CheckoutStore(root/'orders.sqlite')
         self.backend=CheckoutBackend(self.store,self.provider,KEY,MERCHANT)
         auth=BoothAuthenticator({'PB001':'a'*48})
-        self.session=InProcessSession(create_app(self.backend,auth,rate_limit=1000))
+        self.session=InProcessSession(create_app(self.backend,auth,rate_limit=1000,recovery_pin=recovery_pin))
         client=QrisKioskClient('http://127.0.0.1:8765','PB001','a'*48,allow_local_http=True,session=self.session)
         self.flow=KioskCheckout(root/'visit.json',client,mode='sandbox',booth_id='PB001',endpoint=client.base_url)
         def offline_qr(order):

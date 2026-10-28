@@ -45,6 +45,9 @@ class Recorder(PortraitKioskV2App):
     def claim_ticket(self):
         self._sandbox_claim_input.text=self._fixture_ticket
         self._sandbox_claim()
+    def inspect_operator(self):
+        self._sandbox_operator_input.text='12345678'  # Isolated fixture only.
+        self._sandbox_operator_inspect()
     def gallery(self):
         self._choose_photo();self._complete_tutorial();self._change_copies(1)
         self._open_sandbox()
@@ -78,7 +81,9 @@ class Recorder(PortraitKioskV2App):
             lambda:self._photo_submit('capture',np.zeros((120,160,3),dtype=np.uint8)),
             self._sandbox_lock_customer,lambda:self.capture('05-claim-required'),
             self.claim_ticket,lambda:self.capture('06-resume-ready'),
-            self._sandbox_resume,lambda:self.capture('07-original-capture-restored'),self.stop])
+            self._sandbox_resume,lambda:self.capture('07-original-capture-restored'),
+            self._sandbox_operator_open,lambda:self.capture('08-operator-pin-entry'),
+            self.inspect_operator,lambda:self.capture('09-operator-status'),self.stop])
         Clock.schedule_once(self.advance,.5)
     def advance(self,_dt):
         if self._capture_pending or self._sandbox_jobs.busy or (self._photo_jobs and self._photo_jobs.busy):
@@ -90,7 +95,7 @@ class Recorder(PortraitKioskV2App):
 
 if __name__=='__main__':
     with TemporaryDirectory() as temp:
-        fixture=Fixture(Path(temp))
+        fixture=Fixture(Path(temp),recovery_pin='12345678')
         with patch('photobooth.kiosk_v2.photos.configured_test',return_value=PhotoTest(Path(temp)/'photos')):
             app=Recorder(fixture)
             try:app.run()
