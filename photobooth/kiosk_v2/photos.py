@@ -54,6 +54,9 @@ class PhotoTest:
         self.phase = 'confirm'
         self._retake = False
         self._closed = threading.Event()
+        self._privacy_lock = threading.Lock()
+        self._privacy_generation = 0
+        self._private_hidden = False
         self.recovered_prints = 0
         self._download_qr = None
         self._download_qr_url = None
@@ -176,16 +179,31 @@ class PhotoTest:
             raise CaptureRecoveryRequired('Original customer authorization required')
         if self.workspace or self.printer or self.drive_client or self.drive_requested:
             raise CaptureRecoveryRequired('Private Sandbox resume requires delivery transports off')
-        if self.transaction is not None or self.phase != 'confirm' or self._closed.is_set():
+        if (self._closed.is_set() or
+                (not self._private_hidden and (self.transaction is not None or self.phase != 'confirm')) or
+                (self.transaction is not None and self.transaction.manifest.get('payment_binding') != binding)):
             raise CaptureRecoveryRequired('Photo worker already owns a session')
+        generation=self._privacy_generation
         permit.consume(binding)
         try:
             tx,sessions,index,phase,pending,_repair = reconstruct(self.store,templates,binding,repair=True)
         except (OSError, ValueError, KeyError, TypeError, AttributeError) as error:
             raise CaptureRecoveryRequired('Original photo state needs review') from error
-        self.transaction,self.sessions,self.index,self.phase,self._retake=tx,sessions,index,phase,pending
-        self.auto_print=False
+        with self._privacy_lock:
+            permit.check_current(binding)
+            if generation != self._privacy_generation or self._closed.is_set():
+                raise CaptureRecoveryRequired('Photo reconstruction belongs to a retired visit')
+            self.transaction,self.sessions,self.index,self.phase,self._retake=tx,sessions,index,phase,pending
+            self.auto_print=False
+            self._private_hidden=False
         return self.snapshot()
+
+    def hide_private(self):
+        """Immediate memory-only privacy barrier; safe while the I/O worker runs."""
+        with self._privacy_lock:
+            self._privacy_generation += 1
+            self._private_hidden = True
+            self._download_qr = self._download_qr_url = None
 
     def start(self, templates, quantities, *, transaction_id=None, payment_binding=None, frozen_order=None):
         if self.phase != 'confirm' or self._closed.is_set():
@@ -357,6 +375,9 @@ class PhotoTest:
         return self.snapshot()
 
     def snapshot(self):
+        generation=self._privacy_generation
+        if self._private_hidden:
+            return {'phase':'claim_required'}
         configuration = {
             'print_available': self.printer is not None, 'auto_print': self.auto_print,
             'drive_enabled': self.drive_requested if self.workspace else self.drive_client is not None,
@@ -401,7 +422,7 @@ class PhotoTest:
                     LOG.warning('Verified photo folder QR is not available', exc_info=True)
             if self._download_qr_url == folder_url:
                 download_qr = self._download_qr.copy()
-        return {'phase': self.phase, 'transaction_id': self.transaction.transaction_id,
+        view = {'phase': self.phase, 'transaction_id': self.transaction.transaction_id,
                 **configuration, 'download_qr': download_qr,
                 'session_number': self.index + 1, 'session_count': len(self.sessions),
                 'template': session.plan.template.name, 'copies': session.plan.print_copies,
@@ -416,6 +437,9 @@ class PhotoTest:
                 'folder': str(self.transaction.folder_path),
                 'binding_error': manifest.get('drive_binding_error'),
                 'retention_error': bool(manifest.get('drive_retention_error'))}
+        if self._private_hidden or generation != self._privacy_generation:
+            return {'phase':'claim_required'}
+        return view
 
     def close(self):
         self._closed.set()

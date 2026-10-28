@@ -1,5 +1,10 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 29 October — AR-07.b2: hide private photo snapshots and fence reconstruction after lock
+
+Focused 35 PASS, zero failures/errors/skips, including same-session reclaim and lock-during-reconstruction fixtures. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-NATIVE.md).
+Physical/provider gates remain separate; no production activation.
+
 ## 29 October — AR-07.b1: revoke stale permits and acknowledge exact resumed service
 
 Focused 37 PASS, zero failures/errors/skips; three added session cases cover privacy revocation, original STARTED acknowledgment/current refund and completed-result-only restore. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-NATIVE.md).

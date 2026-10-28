@@ -63,3 +63,17 @@ Final focused **37 PASS / zero FAIL/ERROR/SKIP**:
 `.venv/bin/python tools/run_kiosk_unittests.py test_customer_claim_session test_customer_capability test_photo_reconstruction test_qris_session`
 with offscreen SDL/dummy audio and permitted local HTTP fixtures. No real provider,
 photo, print or Drive access. Full regression remains at final functional source.
+
+## AR-07.b2 — private photo barrier
+
+PhotoTest now exposes an immediate memory-only hide barrier while the I/O worker
+runs. Hidden snapshots contain only claim_required, with no old thumbnail, strip,
+download QR or folder. Exact same-session restoration is allowed after a fresh
+permit; the worker checks privacy generation and permit validity again after slow
+reconstruction. Locking during reconstruction cannot republish private pixels.
+Manifest/capture/print/delivery state is preserved. Native lifecycle wiring follows
+in AR-07.b3; this seam does not itself enable a new customer flow.
+
+Focused **35 PASS / zero FAIL/ERROR/SKIP**, including two new privacy cases:
+`.venv/bin/python tools/run_kiosk_unittests.py test_photo_reconstruction test_customer_claim_session test_kiosk_v2_photos test_photo_allocation`.
+Synthetic images only; no actual merchant/device/print/Drive acceptance inferred.

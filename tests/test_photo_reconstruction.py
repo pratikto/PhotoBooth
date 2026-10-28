@@ -138,3 +138,23 @@ class PhotoReconstructionTests(unittest.TestCase):
         fresh=self.permit();resumed.restore(get_templates(),self.binding,fresh)
         other=PhotoTest(self.root/'photos');self.addCleanup(other.close)
         with self.assertRaises(RuntimeError):other.restore(get_templates(),self.binding,fresh)
+
+    def test_privacy_lock_hides_pixels_and_requires_new_permit_for_same_session(self):
+        photo=self.original();photo.capture(np.zeros((24,32,3),dtype=np.uint8))
+        before=photo.transaction.manifest_path.read_bytes()
+        photo.hide_private()
+        self.assertEqual(photo.snapshot(),{'phase':'claim_required'})
+        self.assertEqual(photo.transaction.manifest_path.read_bytes(),before)
+        with self.assertRaises(RuntimeError):photo.restore(get_templates(),self.binding,None)
+        view=photo.restore(get_templates(),self.binding,self.permit())
+        self.assertEqual(view['captured'],1)
+        self.assertEqual(len(view['thumbnails']),1)
+
+    def test_lock_during_reconstruction_cannot_publish_private_view(self):
+        from photobooth.kiosk_v2.photo_recovery import reconstruct
+        photo=self.original();photo.capture(np.zeros((24,32,3),dtype=np.uint8));photo.hide_private()
+        def locked(*args,**kwargs):
+            value=reconstruct(*args,**kwargs);photo.hide_private();return value
+        with patch('photobooth.kiosk_v2.photo_recovery.reconstruct',side_effect=locked):
+            with self.assertRaises(RuntimeError):photo.restore(get_templates(),self.binding,self.permit())
+        self.assertEqual(photo.snapshot(),{'phase':'claim_required'})

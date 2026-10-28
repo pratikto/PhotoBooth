@@ -32,6 +32,13 @@ class ResumePermit:
                 raise RuntimeError('Resume authorization expired, consumed or mismatched')
             self._used = True
 
+    def check_current(self, binding):
+        """Recheck privacy retirement after slow local reconstruction."""
+        with self._lock:
+            if (self._now() >= self._deadline or binding_hash(binding) != self._digest
+                    or (self._validator is not None and not self._validator())):
+                raise RuntimeError('Resume authorization retired or expired')
+
 
 def trusted_resume_permit(binding, *, ttl=60, now=time.monotonic, validator=None):
     """Trusted controller seam, never expose as an unauthenticated API action."""

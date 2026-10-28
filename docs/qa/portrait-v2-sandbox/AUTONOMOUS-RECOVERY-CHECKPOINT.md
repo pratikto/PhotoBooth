@@ -2,7 +2,7 @@
 
 **Checkpoint status:** AR-07.b1 focused VERIFIED / roadmap IN PROGRESS, 28 October 2026 (Asia/Jakarta)
 **Branch:** `feature/portrait-kiosk-v2-next` (existing; no master merge)
-**Recovery implementation:** Source work progressed through AR-07.b1; later stages and external gates remain unfinished
+**Recovery implementation:** Source work progressed through AR-07.b2; later stages and external gates remain unfinished
 **Latest previously tested/pushed functional source:** `6d53d91fcfcad6083aee9f17ac8f80cf635fdf2f` (AR-07.a); current increment and tests below
 **Historical audit baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
 **Current documentation handover:** See `docs/DEVELOPMENT_HANDOVER.md` and verify current remote HEAD; never assume the HEAD printed in a dated checkpoint is still current.
@@ -34,13 +34,13 @@ The owner prefers **frequent small tested commits AND remote pushes** because a 
 | Next *small* action | File/function, intended test and AR substep |
 | Safe rollback | Previous commit and retained-data plan |
 
-## Current implementation checkpoint — AR-07.b1
+## Current implementation checkpoint — AR-07.b2
 
-- Base / last verified remote: `6d53d91fcfcad6083aee9f17ac8f80cf635fdf2f`.
-- Completed: revoke stale permits and acknowledge exact resumed service. Focused 37 PASS, zero failures/errors/skips; three added session cases cover privacy revocation, original STARTED acknowledgment/current refund and completed-result-only restore.
+- Base / last verified remote: `61571841786f5109f866157fe68e4c479d5c710f`.
+- Completed: hide private photo snapshots and fence reconstruction after lock. Focused 35 PASS, zero failures/errors/skips, including same-session reclaim and lock-during-reconstruction fixtures.
 - Publication SHA: this increment will be pinned after its verified push by the
   next checkpoint; obtain containing commit from Git history.
-- Remaining / exact next step: AR-07.b2 mount customer ticket input/scan and exact photo restore; add minimize/inactivity privacy lock and late native callback guards.
+- Remaining / exact next step: AR-07.b3 mount ticket claim/scan, exact restore and original ACK in native UI; wire minimize/60-second idle lock with stale callback guards.
 - Full suite: deferred to final functional SHA. Actual Windows/Ubuntu devices,
   merchant, paper/Drive and production: NOT_RUN / not enabled.
 - Migration/rollback: see stage contract; preserve all ledgers/media/claims,

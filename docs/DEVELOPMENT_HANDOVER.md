@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-07.b2: hide private photo snapshots and fence reconstruction after lock
+
+Base / last remote-verified commit `61571841786f5109f866157fe68e4c479d5c710f`. Focused 35 PASS, zero failures/errors/skips, including same-session reclaim and lock-during-reconstruction fixtures.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, private
+photo display or customer state reset. Next: AR-07.b3 mount ticket claim/scan, exact restore and original ACK in native UI; wire minimize/60-second idle lock with stale callback guards.
+Only work/ scratch files local; scope and rollback in
+[stage contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-NATIVE.md).
+
 ## 29 October — AR-07.b1: revoke stale permits and acknowledge exact resumed service
 
 Base / last remote-verified commit `6d53d91fcfcad6083aee9f17ac8f80cf635fdf2f`. Focused 37 PASS, zero failures/errors/skips; three added session cases cover privacy revocation, original STARTED acknowledgment/current refund and completed-result-only restore.
