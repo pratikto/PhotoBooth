@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 28 October — AR-03.b: unique allocation before local photo creation
+
+Base / last remote-verified commit `4e0dadee16c3596d7575ee2ce2ed32a43bc0b7cf`. Focused 204 PASS, zero failures/errors/skips, including native HTTP-to-photo handoff, allocation replay/restart, initial binding, v1 workflow and retention. Server atomically assigns one PB001V2AR-style transaction before any folder creation; exact initial manifest binds original payment/permit.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, private
+photo display or customer state reset. Next: AR-04.a write-ahead immutable capture intents and crash-boundary tests; then photo reconstruction AR-05.
+Only work/ scratch files local; scope and rollback in
+[stage contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-FULFILLMENT.md).
+
 ## 28 October — AR-03.a: frozen order contract and independent fulfillment obligation
 
 Base / last remote-verified commit `30ebd0bad394046f99286b0f0f90785cb9e12161`. Six new fixtures and focused 133 PASS, zero failures/errors/skips. New orders freeze server pricing/template hashes before I/O; payment creates an owed fulfillment independently of UI claims. Legacy duplicate bindings quarantine both mappings without altering original evidence.

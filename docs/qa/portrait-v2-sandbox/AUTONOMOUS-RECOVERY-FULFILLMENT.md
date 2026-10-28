@@ -53,3 +53,30 @@ Six new fixtures, initial five ERROR and duplicate-migration FAIL before fixes;
 final focused **133 PASS / zero FAIL/ERROR/SKIP**. Command:
 `.venv/bin/python tools/run_kiosk_unittests.py test_checkout_fulfillment test_checkout_reconciliation test_checkout_creation_attempts test_autonomous_recovery_baseline test_checkout_backend test_checkout_durability test_qris_session test_qris_http_v2 test_qris_api test_qris_recovery test_qris_kiosk_client`.
 Full/device/provider acceptance remains separate; next increment binds allocation.
+
+## AR-03.b unique allocation and native handoff
+
+Authenticated `/allocate` freezes a single operation ID and transaction before
+local filesystem I/O. Per-booth additive allocation counter uses the isolated
+`PB001V2AR_00000001` namespace, compatible with existing retention IDs; ordinary
+PB001V2/PB001V2S2 counters/Drive slots remain unchanged. Fulfillment/order/grant/
+transaction/action uniqueness survives replay and restart. Legacy missing
+contract or pre-existing ambiguous capture cannot allocate a replacement.
+
+Kiosk journal saves allocation action before API, retains returned identity,
+and requires a separate local-ready ACK before STARTED. The original PhotoTest
+creates only that exact folder using the existing TransactionStore; binding and
+frozen contract are in its very first manifest. No counter reset/reserve replay.
+Current template-byte/geometry hash must match; mismatched art remains held.
+Duplicate calls return the current same run, and an existing folder after restart
+is held unchanged until AR-05 reconstruction. Sandbox printer/Drive stay off.
+
+Initial allocation tests: two ERROR before implementation. Native focused checks
+caught the first proposed namespace's incompatibility with strict retention IDs;
+corrected source uses the existing eight-digit format, without weakening retention.
+Final group **204 PASS / zero FAIL/ERROR/SKIP** including three exact-binding
+fixtures, native handoff/ACK loss, workflow/copy/retake and retention regression.
+Command extends AR-03.a with test_photo_allocation, test_qris_reconciliation_session,
+test_kiosk_v2_sandbox, test_kiosk_v2_sandbox_widgets, test_kiosk_v2_photos,
+test_retention and test_workflow in SDL offscreen/dummy audio. Full regression
+follows final functional change; device/provider checks remain NOT_RUN.

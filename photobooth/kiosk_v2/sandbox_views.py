@@ -102,7 +102,7 @@ class SandboxViews:
         """Called before photo navigation. No server ACK means no camera countdown."""
         if not self._sandbox_enabled or not self._sandbox_consent:
             return False
-        if outcome.action == 'start':
+        if outcome.action in {'start', 'start_bound'}:
             self.navigation.page = SANDBOX_CHECKOUT
             tx = (outcome.value or {}).get('transaction_id')
             self._sandbox_submit('recover' if outcome.error or not tx else 'started', *([] if outcome.error or not tx else [tx]))
@@ -138,7 +138,16 @@ class SandboxViews:
                 if outcome.action == 'prepare' and phase == 'STARTING':
                     # STARTING journal is durable before one local transaction is allocated.
                     self.navigation.page = PHOTO_CONFIRM
-                    self._photo_submit('start', self.templates, dict(self._sandbox_view['quantities']))
+                    order = self._sandbox_view.get('order') or {}
+                    allocation = order.get('fulfillment') or {}
+                    if allocation.get('allocation_operation_id'):
+                        binding = {key: allocation[key] for key in
+                            ('fulfillment_id', 'transaction_id', 'allocation_operation_id', 'contract_hash',
+                             'booth_id', 'merchant_id')}
+                        binding.update(order_id=order['order_id'], grant_id=order['grant_id'])
+                        self._photo_submit('start_bound', self.templates, dict(self._sandbox_view['quantities']), binding)
+                    else:
+                        self._photo_submit('start', self.templates, dict(self._sandbox_view['quantities']))
                     self.navigation.page = SANDBOX_CHECKOUT
                 elif phase == 'STARTED' and self._sandbox_consent:
                     self.navigation.page = PHOTO_CONFIRM

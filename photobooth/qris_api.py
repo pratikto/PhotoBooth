@@ -36,6 +36,12 @@ class ServiceUpdate(BaseModel):
     transaction_id: str = Field(pattern=r'^[A-Za-z0-9_-]{1,64}$')
 
 
+class AllocationUpdate(BaseModel):
+    model_config = ConfigDict(extra='forbid', strict=True)
+    grant_id: str = Field(pattern=r'^[a-f0-9]{32}$')
+    operation_id: str = Field(pattern=r'^[A-Za-z0-9_-]{16,64}$')
+
+
 class RecoveryUpdate(BaseModel):
     model_config = ConfigDict(extra='forbid', strict=True)
     action_id: str = Field(pattern=r'^[A-Za-z0-9_-]{16,64}$')
@@ -210,6 +216,16 @@ def create_app(service, authenticator, *, on_shutdown=None, rate_limit=120, reco
             raise HTTPException(422, 'Invalid service acknowledgement') from error
         return await invoke(service.service_transition, order_id, booth, body.grant_id,
                             body.state, body.transaction_id)
+
+    @app.post('/api/orders/{order_id}/allocate')
+    async def allocate_order(order_id: str, request: Request, x_booth_id: str = Header(default=''),
+                             authorization: str = Header(default='')):
+        booth = booth_identity(request, x_booth_id, authorization)
+        try:
+            body = AllocationUpdate.model_validate(await bounded_json(request, 2048))
+        except ValidationError as error:
+            raise HTTPException(422, 'Invalid allocation request') from error
+        return await invoke(service.allocate, order_id, booth, body.grant_id, body.operation_id)
 
     @app.post('/api/orders/{order_id}/cancel')
     async def cancel_order(order_id: str, request: Request, x_booth_id: str = Header(default=''),

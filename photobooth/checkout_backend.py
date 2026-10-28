@@ -139,6 +139,13 @@ class CheckoutBackend:
         result = {key: order[key] for key in fields}
         result['order_id'] = result.pop('id')
         result['recovery_abandoned'] = self.store.recovery_abandoned(order['id'])
+        try:
+            record = self.store.fulfillment(order['id'], order['booth_id'])
+            result['fulfillment'] = {key: record[key] for key in
+                ('fulfillment_id', 'contract_hash', 'state', 'obligation_state', 'transaction_id',
+                 'allocation_operation_id', 'booth_id', 'merchant_id')}
+        except CheckoutMissing:
+            result['fulfillment'] = None
         result['mode'] = getattr(self.provider, 'mode', 'sandbox')
         if result['mode'] == 'mock':
             result['qr_url'] = None
@@ -216,6 +223,11 @@ class CheckoutBackend:
         self._creation_context(order_id)
         self._require_settlement(order_id, booth_id)
         return self.view(self.store.grant(order_id, booth_id, checkout_key))
+
+    def allocate(self, order_id, booth_id, grant_id, operation_id):
+        self.store.get(order_id, booth_id)
+        self._require_settlement(order_id, booth_id)
+        return self.view(self.store.allocate_fulfillment(order_id, booth_id, grant_id, operation_id))
 
     def service_transition(self, order_id, booth_id, grant_id, state, transaction_id):
         order = self.store.get(order_id, booth_id)

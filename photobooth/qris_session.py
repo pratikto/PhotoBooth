@@ -143,7 +143,8 @@ class KioskCheckout:
             if phase in {'COMPLETED', 'CANCELLED', 'STARTED'}:
                 return self.snapshot()
             if phase == 'STARTING':
-                if self.data['transaction_id']:
+                if self.data['transaction_id'] and (not self.data.get('allocation_operation_id')
+                                                    or self.data.get('allocation_ready') is True):
                     result = self.client.service_transition(order['order_id'], order['grant_id'],
                                                            'STARTED', self.data['transaction_id'])
                     self._accept(result)
@@ -188,13 +189,25 @@ class KioskCheckout:
         with self.lock:
             if self.data['phase'] != 'RESERVED' or not self.data['order'].get('grant_id'):
                 raise RuntimeError('A verified permit is required')
+            allocate = getattr(self.client, 'allocate', None)
+            if callable(allocate):
+                self.data['allocation_operation_id'] = uuid.uuid4().hex
+                self.data['allocation_ready'] = False
             self.data['phase'] = 'STARTING'; self._save()
+            if callable(allocate):
+                order = self.data['order']
+                result = allocate(order['order_id'], order['grant_id'], self.data['allocation_operation_id'])
+                self._accept(result)
+                self.data['transaction_id'] = result['fulfillment']['transaction_id']
+                self._save()
 
     def bind_transaction(self, transaction_id):
         with self.lock:
             if self.data['phase'] != 'STARTING' or self.data['transaction_id'] not in (None, transaction_id):
                 raise RuntimeError('Capture transaction is already bound')
             self.data['transaction_id'] = transaction_id; self._save()
+            if self.data.get('allocation_operation_id'):
+                self.data['allocation_ready'] = True; self._save()
 
     def require_recovery(self):
         with self.lock:

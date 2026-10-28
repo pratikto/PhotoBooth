@@ -97,6 +97,7 @@ class TransactionStore:
         transaction_id: str | None = None,
         folder_path: Path | None = None,
         drive_slot: dict[str, Any] | None = None,
+        initial_metadata: dict[str, Any] | None = None,
     ) -> LocalTransaction:
         # Create the transaction folder and initial manifest before capture begins; a supplied Drive
         # slot makes the local folder match its preassigned final ID.
@@ -176,6 +177,11 @@ class TransactionStore:
         )
         if self.layout_version == 2:
             manifest['storage_layout'] = 2
+        if initial_metadata is not None:
+            if set(initial_metadata) - {'payment_binding', 'frozen_order', 'purpose', 'payment_enabled',
+                                        'financial_transaction', 'test_print_jobs'}:
+                raise ValueError('Unsupported initial transaction metadata')
+            manifest.update(initial_metadata)
         self._write_manifest(transaction)
         if self.layout_version == 2:
             for plan in plans:

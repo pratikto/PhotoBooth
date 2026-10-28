@@ -90,3 +90,23 @@ class FulfillmentTests(unittest.TestCase):
                 self.assertEqual(record['state'],'LEGACY_REVIEW')
                 self.assertIsNone(record['transaction_id'])
                 self.assertEqual(upgraded.get(oid)['local_transaction_id'],'PB001_00000001')
+
+    def test_allocation_is_unique_and_replays_same_operation_after_restart(self):
+        self.paid();grant=self.backend.claim(self.oid,'PB001',self.key)['grant_id']
+        op='b'*32
+        first=self.backend.allocate(self.oid,'PB001',grant,op)
+        self.assertEqual(first['service_state'],'RESERVED')
+        mapping=first['fulfillment']
+        self.assertTrue(mapping['transaction_id'].startswith('PB001V2AR_'))
+        self.assertEqual(mapping['allocation_operation_id'],op)
+        with closing(CheckoutStore(self.path)) as reopened:
+            backend=CheckoutBackend(reopened,self.provider,KEY,MERCHANT)
+            self.assertEqual(backend.allocate(self.oid,'PB001',grant,op)['fulfillment'],mapping)
+            with self.assertRaises(CheckoutConflict):backend.allocate(self.oid,'PB001',grant,'c'*32)
+        self.assertEqual(self.store.get(self.oid)['local_transaction_id'],mapping['transaction_id'])
+
+    def test_legacy_allocation_never_guesses_missing_contract_or_replaces_bound_capture(self):
+        self.paid();grant=self.backend.claim(self.oid,'PB001',self.key)['grant_id']
+        self.store.db.execute('DELETE FROM checkout_frozen_orders WHERE order_id=?',(self.oid,))
+        with self.assertRaises(CheckoutConflict):self.backend.allocate(self.oid,'PB001',grant,'b'*32)
+        self.assertIsNone(self.store.get(self.oid)['local_transaction_id'])

@@ -132,7 +132,29 @@ class PhotoTest:
             write_json_atomic(path, manifest)
             self.transaction.manifest = manifest
 
-    def start(self, templates, quantities):
+    def start_bound(self, templates, quantities, binding):
+        """Create only the server-reserved Sandbox folder; never substitute an ID."""
+        from photobooth.checkout_store import identifier
+        from photobooth.fulfillment_contract import frozen_contract
+        import hashlib
+        if (self.workspace or self.pool or self.printer or self.drive_client or self.drive_requested):
+            raise ValueError('Bound Sandbox capture requires delivery transports off')
+        for key in ('transaction_id', 'fulfillment_id', 'order_id', 'grant_id', 'allocation_operation_id', 'booth_id', 'merchant_id'):
+            identifier(binding.get(key))
+        if not binding['transaction_id'].startswith(binding['booth_id']+'V2AR_'):
+            raise ValueError('Allocation belongs to another namespace')
+        contract = frozen_contract(quantities, templates=templates)
+        digest = hashlib.sha256(json.dumps(contract, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+        if digest != binding.get('contract_hash'):
+            raise ValueError('Current templates differ from frozen paid order')
+        if self.transaction is not None:
+            if self.transaction.manifest.get('payment_binding') != binding:
+                raise ValueError('Photo transaction is already bound')
+            return self.snapshot()
+        return self.start(templates, quantities, transaction_id=binding['transaction_id'],
+                          payment_binding=binding, frozen_order=contract)
+
+    def start(self, templates, quantities, *, transaction_id=None, payment_binding=None, frozen_order=None):
         if self.phase != 'confirm' or self._closed.is_set():
             raise ValueError('Photo test already started or closed.')
         known = {item.template_id for item in templates}
@@ -142,10 +164,14 @@ class PhotoTest:
         plans = build_session_plans(templates, quantities)
         if not plans:
             raise ValueError('Choose at least one template.')
+        metadata = dict(purpose=PURPOSE, payment_enabled=False, financial_transaction=False, test_print_jobs={})
+        if payment_binding is not None:
+            metadata.update(payment_binding=payment_binding, frozen_order=frozen_order)
         if self.workspace:
             slot = self.workspace.claim()
             tx = self.store.start_transaction(plans, transaction_id=slot['transaction_id'], folder_path=slot['staging_path'],
-                drive_slot=slot if self.drive_requested and slot.get('folder_id') and slot.get('link_verified') is True and slot.get('photo_number_layout') == 1 else None)
+                drive_slot=slot if self.drive_requested and slot.get('folder_id') and slot.get('link_verified') is True and slot.get('photo_number_layout') == 1 else None,
+                initial_metadata=metadata)
             tx.manifest.update(photo_number_layout=slot.get('photo_number_layout') if slot.get('link_verified') is True else None, drive_intent=self.drive_requested, drive_claim_token=slot['claim_token'],
                 upload_status='PENDING_DRIVE_BINDING' if self.drive_requested else 'LOCAL_ONLY')
             self.store._write_manifest(tx)
@@ -155,12 +181,11 @@ class PhotoTest:
             slot = self.pool.claim()
             self.store.advance_counter_past(slot.transaction_id)
             tx = self.store.start_transaction(plans, transaction_id=slot.transaction_id,
-                                             folder_path=Path(slot.staging_path), drive_slot=slot.to_manifest())
+                                             folder_path=Path(slot.staging_path), drive_slot=slot.to_manifest(),
+                                             initial_metadata=metadata)
         else:
-            tx = self.store.start_transaction(plans)
+            tx = self.store.start_transaction(plans, transaction_id=transaction_id, initial_metadata=metadata)
         self.transaction = tx
-        self._edit(lambda m: m.update(purpose=PURPOSE, payment_enabled=False,
-                                     financial_transaction=False, test_print_jobs={}))
         self.sessions = [PhotoSession(plan) for plan in plans]
         self.phase = 'capture'
         self._notify_delivery()

@@ -86,6 +86,8 @@ class CheckoutStore:
             contract_hash TEXT, state TEXT NOT NULL, obligation_state TEXT NOT NULL,
             transaction_id TEXT UNIQUE, allocation_operation_id TEXT UNIQUE,
             created_at REAL NOT NULL, updated_at REAL NOT NULL);
+          CREATE TABLE IF NOT EXISTS checkout_allocation_counters (
+            booth_id TEXT PRIMARY KEY, next_sequence INTEGER NOT NULL CHECK(next_sequence>0));
         ''')
         # AR-02.c is additive for the already published scheduler schema.
         with self.write():
@@ -266,6 +268,39 @@ class CheckoutStore:
             if row is None:
                 raise CheckoutMissing('Fulfillment not found')
             return dict(row)
+
+    def allocate_fulfillment(self, order_id, booth_id, grant_id, operation_id):
+        identifier(operation_id, minimum=16)
+        with self.write():
+            order = self._row(order_id, booth_id)
+            if (order['state'] != 'PAID' or order['closed'] or not grant_id
+                    or order['grant_id'] != grant_id or order['service_state'] not in {'RESERVED', 'STARTED'}):
+                raise CheckoutConflict('Allocation requires an active original permit')
+            self.frozen_order(order_id)  # absent/corrupt historical contract stays held
+            self._ensure_fulfillment(order)
+            record = self.fulfillment(order_id, booth_id)
+            if record['allocation_operation_id']:
+                if record['allocation_operation_id'] != operation_id:
+                    raise CheckoutConflict('Allocation operation mismatch')
+                return order
+            if record['state'] == 'LEGACY_REVIEW' or order['local_transaction_id'] or record['transaction_id']:
+                raise CheckoutConflict('Existing allocation requires exact recovery')
+            # Separate Sandbox namespace: never advance/reset ordinary photo or
+            # Drive counters, and never pick a filesystem folder by recency.
+            self.db.execute('INSERT OR IGNORE INTO checkout_allocation_counters VALUES(?,1)', (booth_id,))
+            sequence = self.db.execute('SELECT next_sequence FROM checkout_allocation_counters WHERE booth_id=?',
+                                       (booth_id,)).fetchone()[0]
+            if sequence > 99999999:
+                raise CheckoutConflict('Allocation namespace exhausted')
+            transaction_id = booth_id+'V2AR_'+f'{sequence:08d}'
+            identifier(transaction_id)
+            self.db.execute('UPDATE checkout_allocation_counters SET next_sequence=? WHERE booth_id=?',
+                            (sequence+1, booth_id))
+            self.db.execute('''UPDATE checkout_fulfillments SET transaction_id=?,
+                allocation_operation_id=?,state='ALLOCATION_INTENT',updated_at=? WHERE order_id=?''',
+                (transaction_id, operation_id, self.now(), order_id))
+            self.db.execute('UPDATE checkouts SET local_transaction_id=? WHERE id=?', (transaction_id, order_id))
+            return self._row(order_id, booth_id)
 
     def begin(self, booth_id, quantities, amount, checkout_key, *, creation_context=None, frozen_contract=None):
         identifier(booth_id)

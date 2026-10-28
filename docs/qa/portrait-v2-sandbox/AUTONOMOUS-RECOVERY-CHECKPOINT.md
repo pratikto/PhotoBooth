@@ -2,7 +2,7 @@
 
 **Checkpoint status:** AR-02.a focused VERIFIED / roadmap IN PROGRESS, 28 October 2026 (Asia/Jakarta)
 **Branch:** `feature/portrait-kiosk-v2-next` (existing; no master merge)
-**Recovery implementation:** AR-00 complete; AR-01 local attempt durability implemented; provider repeat-charge gate BLOCKED; AR-02–13 pending
+**Recovery implementation:** Source work progressed through AR-03.b; later stages and external gates remain unfinished
 **Latest tested/pushed functional source:** `017b417d02d63a79b1c5b21c4f0613b7d15186fc`
 **Historical audit baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
 **Current documentation handover:** See `docs/DEVELOPMENT_HANDOVER.md` and verify current remote HEAD; never assume the HEAD printed in a dated checkpoint is still current.
@@ -34,13 +34,13 @@ The owner prefers **frequent small tested commits AND remote pushes** because a 
 | Next *small* action | File/function, intended test and AR substep |
 | Safe rollback | Previous commit and retained-data plan |
 
-## Current implementation checkpoint — AR-03.a
+## Current implementation checkpoint — AR-03.b
 
-- Base / last verified remote: `30ebd0bad394046f99286b0f0f90785cb9e12161`.
-- Completed: frozen order contract and independent fulfillment obligation. Six new fixtures and focused 133 PASS, zero failures/errors/skips. New orders freeze server pricing/template hashes before I/O; payment creates an owed fulfillment independently of UI claims. Legacy duplicate bindings quarantine both mappings without altering original evidence.
+- Base / last verified remote: `4e0dadee16c3596d7575ee2ce2ed32a43bc0b7cf`.
+- Completed: unique allocation before local photo creation. Focused 204 PASS, zero failures/errors/skips, including native HTTP-to-photo handoff, allocation replay/restart, initial binding, v1 workflow and retention. Server atomically assigns one PB001V2AR-style transaction before any folder creation; exact initial manifest binds original payment/permit.
 - Publication SHA: this increment will be pinned after its verified push by the
   next checkpoint; obtain containing commit from Git history.
-- Remaining / exact next step: AR-03.b unique allocation operation and preallocated local transaction, then native handoff.
+- Remaining / exact next step: AR-04.a write-ahead immutable capture intents and crash-boundary tests; then photo reconstruction AR-05.
 - Full suite: deferred to final functional SHA. Actual Windows/Ubuntu devices,
   merchant, paper/Drive and production: NOT_RUN / not enabled.
 - Migration/rollback: see stage contract; preserve all ledgers/media/claims,

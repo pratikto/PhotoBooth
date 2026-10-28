@@ -110,6 +110,18 @@ class QrisKioskClient:
             raise ValueError('Service acknowledgement does not match this capture')
         return result
 
+    def allocate(self, order_id, grant_id, operation_id):
+        identifier(order_id, maximum=50)
+        identifier(operation_id, minimum=16)
+        result = self._order(self._call('POST', '/api/orders/'+order_id+'/allocate',
+            payload={'grant_id': grant_id, 'operation_id': operation_id}), order_id)
+        allocation = result.get('fulfillment') or {}
+        if (result.get('grant_id') != grant_id or allocation.get('allocation_operation_id') != operation_id
+                or result.get('local_transaction_id') != allocation.get('transaction_id')):
+            raise ValueError('Allocation acknowledgement mismatch')
+        identifier(allocation.get('transaction_id'))
+        return result
+
     def cancel(self, order_id):
         identifier(order_id, maximum=50)
         return self._order(self._call('POST', '/api/orders/' + order_id + '/cancel'), order_id)
