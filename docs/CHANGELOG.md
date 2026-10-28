@@ -1,5 +1,24 @@
 # Meong Photobooth — changelog
 
+## 29 October — final AR-12 source evidence and AR-13 readiness
+
+Final runtime/test `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`: **1,097 run / 1,093 PASS / 4 SKIP / zero failures/errors**, 428.924s, Python 3.12.14 / Debian 13.6,
+GUI/audio opt-ins with offscreen software GL/dummy audio, tracked tree clean.
+[CI 40767441201](https://github.com/pratikto/PhotoBooth/actions/runs/40767441201):
+all three jobs SUCCESS at matching source. Native 28 PNGs/both portrait sizes,
+four QR checks PASS; payloads private. Previous-session 1094/1091/3 log unavailable;
+this is a new independently captured result. Matrix 43 PASS / 0 FAIL / 0 SKIP /
+9 BLOCKED / 17 NOT_RUN; exact missing fault windows are not credited as PASS.
+
+[AR-13 assessment](qa/portrait-v2-sandbox/AR13-READINESS.md): **CONDITIONAL** for
+controlled acceptance; **NOT READY for unattended commercial release**. Device,
+merchant, phone/paper/Drive/deletion, privacy/remedy/operations and owner approval
+remain open. First unfinished source-evidence task: PAY-06 abrupt exit between
+provider evidence and DB commit, then remaining matrix gaps. AR stays top priority;
+all future Settings/Emulate Ticket/QRIS Slip implementation stays NOT_STARTED.
+[Exact command/skips/provenance](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-VALIDATION.md) ·
+[checkpoint/next action](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md).
+
 ## 29 October — AR-12.d: retain Windows pass and expose Linux isolated-photo failure details
 
 CI 40756011109 Windows autonomous/native and pure jobs PASS; desktop P3 group FAIL with unknown cause. Failure-only report annotation added, no assertions/application changes. Final local full rerun still running. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-VALIDATION.md).

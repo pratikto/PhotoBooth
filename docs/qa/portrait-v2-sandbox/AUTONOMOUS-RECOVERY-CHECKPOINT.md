@@ -1,9 +1,9 @@
 # Autonomous recovery — session checkpoint and resume contract
 
-**Checkpoint status:** AR-12.f scanner correction / final full regression, native evidence and CI next, 29 October 2026 (Asia/Jakarta)
+**Checkpoint status:** AR-12 evidence reconciled / AR-13 assessment COMPLETE (CONDITIONAL); external and exact fault gaps OPEN, 29 October 2026 (Asia/Jakarta)
 **Branch:** `feature/portrait-kiosk-v2-next` (existing; no master merge)
-**Recovery implementation:** Source work progressed through AR-12.d; later stages and external gates remain unfinished
-**Latest application source:** `635de92c0f8fba9189981ebf2f168bff8b7a52af`; successful three-job CI at `b5931c8ef2e3d7b800e024c38a653fef5b4b4a1e`. Current increment changes a test fixture only.
+**Recovery implementation:** source through AR-12.f; AR-13 readiness report published; full matrix/device acceptance and release are not complete
+**Latest application source:** `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`; full 1,097 run / 1,093 PASS / 4 SKIP / zero failures/errors; matching CI 40767441201 three jobs SUCCESS.
 **Historical audit baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
 **Current documentation handover:** See `docs/DEVELOPMENT_HANDOVER.md` and verify current remote HEAD; never assume the HEAD printed in a dated checkpoint is still current.
 
@@ -34,7 +34,47 @@ The owner prefers **frequent small tested commits AND remote pushes** because a 
 | Next *small* action | File/function, intended test and AR substep |
 | Safe rollback | Previous commit and retained-data plan |
 
-## Current implementation checkpoint — AR-12.e
+## Current implementation checkpoint — AR-12 evidence / AR-13 assessment
+
+Final application/test source `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88` remotely verified. **1,097 run / 1,093 PASS / 4 SKIP / zero failures/errors**, 428.924s;
+command `.venv/bin/python tools/run_kiosk_unittests.py`, GUI/audio opt-ins,
+Python 3.12.14 / Debian 13.6 / SDL offscreen/dummy audio, tracked tree clean.
+CI [40767441201](https://github.com/pratikto/PhotoBooth/actions/runs/40767441201)
+all three jobs SUCCESS at the same SHA. Native 28 PNGs / four redacted QR
+checks PASS at both portrait sizes. Matrix **43 PASS / 0 FAIL / 0 SKIP /
+9 BLOCKED / 17 NOT_RUN**, not blanket matrix completion.
+
+AR-13 [readiness assessment](AR13-READINESS.md): **CONDITIONAL** for controlled
+owner acceptance; **NOT READY for unattended commercial release**. Hardware,
+merchant, phone/paper/Drive/retention/privacy/operations gates A01-A12 remain
+NOT_RUN/BLOCKED. Original previous-session 1094/1091/3 provenance unavailable;
+do not replace it with this new run or infer all old optional cases ran.
+
+**First unfinished source evidence:** PAY-06 exact evidence/pre-DB-commit
+child exit. Refresh remote, preserve local state, inspect existing
+`tests/test_checkout_reconciliation.py` and WAL crash fixtures; add an isolated
+process-exit fixture proving fresh GET after reopen and no duplicate grant.
+Then close CAP-01–05, CAP-11–13, CAP-16, CAP-20, PAY-21 and remaining explicit event/hang
+gaps. Do not alter production or weaken tests. If runtime changes, focused checks
+then one complete final applicable regression; docs alone need no rerun.
+
+Owner next: execute AR13 A01/A02/A04/A06/A09 with current source and record
+actual device/provider results; confirm operational/retention/remedy terms and
+separate approvals for public webhook, actual deletion, pilot or release.
+No OPS runtime, production activation, deploy/default/master/merge change.
+All five future OPS documents byte-identical to owner baseline, Emulate Ticket
+name retained. AR remains top priority until remaining gates are resolved.
+
+Delivery: `9592649` test clock and `f72fdbc` scanner fix each pushed and checked;
+this containing docs/evidence publication is the next checkpoint (obtain SHA
+from Git history/remote). Local `work/` only holds disposable synthetic diagnostics,
+private QR pixels and raw logs, untracked/not remotely backed up; no unpushed
+runtime patch. No customer data inspected. Rollback via scoped inverse of scanner
+against preceding `9592649`; preserve every ledger/fence/claim/image/job/budget.
+Full command, source trees, digests/skips, historical failures, native limits:
+[validation](AUTONOMOUS-RECOVERY-VALIDATION.md) / [safe JSON](evidence/ar12-final-verification.json).
+
+## Historical implementation checkpoint — AR-12.e/f
 
 **Superseding AR-12.f:** `959264962bb4e64a8a4531a085676b55ad26e660` pushed;
 CI 40766621706 passes content and Windows, exposes separate Linux recovery scan

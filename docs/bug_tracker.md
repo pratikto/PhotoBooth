@@ -1,5 +1,19 @@
 # Meong Photobooth — Bug register
 
+## 29 October — AR-12 source validation findings
+
+The Linux content-priority fixture has a proven host-monotonic-clock dependency;
+9592649 sets an explicit due clock with all assertions intact. Its historical
+runner clock was not logged, so the exact historical trigger stays unknown.
+Fresh CI then exposed recovery scan failure. A local 100-ticket probe reproduces
+ten primary OpenCV misses; existing alternate detector recovers those ten.
+f72fdbc adds one optional alternate decode then original backend customer proof;
+foreign/undecodable QR remains denied. Final regression/CI evidence is in the
+[AR-12 record](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-VALIDATION.md).
+Physical phone/camera and production recognition are NOT_RUN; no general device
+certification or blanket P0 closure. BUG-009 remains OPEN pending real retention
+acceptance. No previously owner-accepted path was speculatively rewritten.
+
 ## BUG-021 — QR image disappears while remaining on Sandbox page (28 October)
 
 S2: owner reports image-only disappearance, without timing/status or tested HEAD.

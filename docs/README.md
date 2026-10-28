@@ -1,5 +1,24 @@
 # Meong Photobooth documentation — GUI v2
 
+## Current Autonomous Recovery evidence and readiness — 29 October
+
+Final runtime/test `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`: **1,097 run / 1,093 PASS / 4 SKIP / zero failures/errors**, 428.924s, Python 3.12.14 / Debian 13.6,
+GUI/audio opt-ins with offscreen software GL/dummy audio, tracked tree clean.
+[CI 40767441201](https://github.com/pratikto/PhotoBooth/actions/runs/40767441201):
+all three jobs SUCCESS at matching source. Native 28 PNGs/both portrait sizes,
+four QR checks PASS; payloads private. Previous-session 1094/1091/3 log unavailable;
+this is a new independently captured result. Matrix 43 PASS / 0 FAIL / 0 SKIP /
+9 BLOCKED / 17 NOT_RUN; exact missing fault windows are not credited as PASS.
+
+[AR-13 assessment](qa/portrait-v2-sandbox/AR13-READINESS.md): **CONDITIONAL** for
+controlled acceptance; **NOT READY for unattended commercial release**. Device,
+merchant, phone/paper/Drive/deletion, privacy/remedy/operations and owner approval
+remain open. First unfinished source-evidence task: PAY-06 abrupt exit between
+provider evidence and DB commit, then remaining matrix gaps. AR stays top priority;
+all future Settings/Emulate Ticket/QRIS Slip implementation stays NOT_STARTED.
+[Exact command/skips/provenance](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-VALIDATION.md) ·
+[checkpoint/next action](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md).
+
 ## Active priority and newly approved future design — 29 October 2026
 
 **Keep AR-00 → AR-13 autonomous payment/photo recovery as the #1 implementation priority.** The dated historical paragraph below is not the current stage: inspect the [live AR checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md), [roadmap](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-ROADMAP.md), [handover](DEVELOPMENT_HANDOVER.md) and fresh remote Git HEAD, and continue its first unfinished tested increment. **Do not begin the new Settings OPS work ahead of AR.**
@@ -7,7 +26,7 @@
 **New future GUI v2 design (owner-approved, DOCUMENTATION ONLY, OPS NOT_STARTED):** [Meong Settings complete contract](qa/portrait-v2-operator-settings/README.md), [OPS-00..OPS-10 staged Codex roadmap](qa/portrait-v2-operator-settings/IMPLEMENTATION-ROADMAP.md), [129 test cases](qa/portrait-v2-operator-settings/ACCEPTANCE-MATRIX.md), [all decisions/supersessions](qa/portrait-v2-operator-settings/DECISION-REGISTER.md), [Codex handover prompt](qa/portrait-v2-operator-settings/CODEX-HANDOVER.md). Final tabs: **Device Health / Audio Settings / Emulate Ticket**. Normal operator login uses a **static booth-bound QR** at **Advertising + SAFE_IDLE**; DEMO promo/game QR tickets remain static in development but require durable once-per-visit consumption. Physical/merchant production gates stay separate.
 
 
-## Current Autonomous Recovery implementation checkpoint — 29 October
+## Historical Autonomous Recovery implementation checkpoint — earlier 29 October
 
 AR-00–08 source increments and AR-09 PIN inspection/service-fence foundation have
 focused automated evidence. Safe booth release/reacquisition (AR-09.c2), AR-10–13

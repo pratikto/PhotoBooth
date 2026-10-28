@@ -1,0 +1,1052 @@
+{
+  "date": "2026-10-29 Asia/Jakarta",
+  "branch": "feature/portrait-kiosk-v2-next",
+  "functional_sha": "f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88",
+  "full_regression": {
+    "head": "f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88",
+    "tracked_dirty_before": "",
+    "source_trees": {
+      "photobooth": "8c4fc4c3ac83f58b76135b3571cfe31dff9193c1",
+      "tests": "94a02b4be7c0683a31f5aa22e92ea0b4b2709427",
+      "tools": "62b5760a3ebd20382fb3eb632843c626e00ce2f9",
+      ".github": "526714abbeb16c80fbd7a08f0a26b3f839654dee"
+    },
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+    "os_release": {
+      "NAME": "Debian GNU/Linux",
+      "ID": "debian",
+      "PRETTY_NAME": "Debian GNU/Linux 13 (trixie)",
+      "VERSION_ID": "13",
+      "VERSION": "13 (trixie)",
+      "VERSION_CODENAME": "trixie",
+      "DEBIAN_VERSION_FULL": "13.6",
+      "HOME_URL": "https://www.debian.org/",
+      "SUPPORT_URL": "https://www.debian.org/support",
+      "BUG_REPORT_URL": "https://bugs.debian.org/"
+    },
+    "command": [
+      ".venv/bin/python",
+      "tools/run_kiosk_unittests.py"
+    ],
+    "environment_overrides": {
+      "KIVY_HOME": "/workspace/PhotoBooth/work/ar12-continuation/kivy-final",
+      "KIVY_NO_ARGS": "1",
+      "KIVY_NO_CONSOLELOG": "1",
+      "SDL_VIDEODRIVER": "offscreen",
+      "SDL_AUDIODRIVER": "dummy",
+      "LIBGL_ALWAYS_SOFTWARE": "1",
+      "XDG_CACHE_HOME": "/workspace/PhotoBooth/work/ar12-continuation/cache",
+      "PHOTOBOOTH_LOCAL_ONLY": "1",
+      "PHOTOBOOTH_AUDIO": "0",
+      "PHOTOBOOTH_PALM_TRIGGER": "0",
+      "PHOTOBOOTH_FACE_TRIGGER": "0",
+      "PHOTOBOOTH_AD_VIDEO": "0",
+      "PHOTOBOOTH_TEST_GUI": "1",
+      "PHOTOBOOTH_TEST_AUDIO": "1",
+      "MEONG_CI_TEST_REPORT": "/workspace/PhotoBooth/work/ar12-continuation/final-full-report.txt"
+    },
+    "started_utc": "2026-10-28T20:59:56.486229+00:00",
+    "exit_code": 0,
+    "finished_utc": "2026-10-28T21:07:08.532724+00:00",
+    "tracked_dirty_after": "",
+    "head_after": "f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88",
+    "report_sha256": "921e60679e88e4df9d69f69b1e74d0ac5b849c6a1404438b81ddd789895a22a9",
+    "summary": "KIOSK_UNITTEST_SUMMARY: run=1097 failures=0 errors=0 skipped=4 success=True",
+    "skips": [
+      "test_real_model_worker_drives_the_actual_controller_and_keeps_button_capture (test_camera_recovery.CameraRecoveryTests.test_real_model_worker_drives_the_actual_controller_and_keeps_button_capture) ... skipped 'Native model assets are opt-in'",
+      "test_native_video_has_frames_payment_is_muted_and_retiring_unloads_decoder (test_kiosk_advertising.KioskAdvertisingTests.test_native_video_has_frames_payment_is_muted_and_retiring_unloads_decoder) ... skipped 'Native video checks require opt-in and ffmpeg'",
+      "test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture) ... skipped 'Native model assets are opt-in'",
+      "test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image (test_palm_gesture.NativePalmModelTests.test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image) ... skipped 'Native model assets are opt-in'"
+    ],
+    "run": 1097,
+    "passed": 1093,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 4,
+    "seconds": 428.924,
+    "raw_report_published": false,
+    "reason": "Owner excludes raw local logs; digest, command, source and skips retained."
+  },
+  "limited_preliminary_run": {
+    "run": 1097,
+    "passed": 1020,
+    "skipped": 77,
+    "failures": 0,
+    "errors": 0,
+    "seconds": 248.048,
+    "reason": "GUI/audio opt-ins omitted; superseded by final applicable run, not presented as final validation."
+  },
+  "prior_session_report": {
+    "run": 1094,
+    "passed": 1091,
+    "skipped": 3,
+    "independently_verified": false,
+    "missing": "Original raw log, command, OS/Python, source SHA and tracked dirty metadata unavailable in restored workspace."
+  },
+  "focused_checks": [
+    {
+      "source": "959264962bb4e64a8a4531a085676b55ad26e660",
+      "command": ".venv/bin/python tools/run_kiosk_unittests.py test_booth_sync test_content_cache",
+      "run": 33,
+      "passed": 33,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 2.543
+    },
+    {
+      "source": "f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88",
+      "command": ".venv/bin/python tools/run_kiosk_unittests.py test_kiosk_v2_sandbox test_kiosk_v2_sandbox_widgets test_customer_claim_session test_customer_capability",
+      "run": 56,
+      "passed": 56,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 59.818
+    },
+    {
+      "source": "f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88",
+      "command": ".venv/bin/python tools/run_kiosk_unittests.py test_kiosk_advertising.KioskAdvertisingTests.test_native_video_has_frames_payment_is_muted_and_retiring_unloads_decoder",
+      "extra_environment": {
+        "PHOTOBOOTH_TEST_VIDEO": "1",
+        "PHOTOBOOTH_TEST_GUI": "1",
+        "PHOTOBOOTH_TEST_AUDIO": "1"
+      },
+      "run": 1,
+      "passed": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 5.472,
+      "note": "Covers the full-run video SKIP separately; full-run count remains unchanged."
+    }
+  ],
+  "ci": {
+    "historical_runs": [
+      {
+        "run_id": 40754677245,
+        "jobs": [
+          {
+            "id": 123050316256,
+            "name": "Navigation and audio lifecycle",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 123050316645,
+            "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+            "status": "completed",
+            "conclusion": "cancelled"
+          },
+          {
+            "id": 123050316721,
+            "name": "Windows Python 3.12 native SDL audio (dummy output)",
+            "status": "completed",
+            "conclusion": "failure"
+          }
+        ]
+      },
+      {
+        "run_id": 40755284102,
+        "jobs": [
+          {
+            "id": 123053060413,
+            "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+            "status": "completed",
+            "conclusion": "cancelled"
+          },
+          {
+            "id": 123053060742,
+            "name": "Navigation and audio lifecycle",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 123053061059,
+            "name": "Windows Python 3.12 native SDL audio (dummy output)",
+            "status": "completed",
+            "conclusion": "failure"
+          }
+        ]
+      },
+      {
+        "run_id": 40756011109,
+        "jobs": [
+          {
+            "id": 123055132850,
+            "name": "Navigation and audio lifecycle",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 123055132928,
+            "name": "Windows Python 3.12 native SDL audio (dummy output)",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 123055133199,
+            "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+            "status": "completed",
+            "conclusion": "failure"
+          }
+        ]
+      },
+      {
+        "run_id": 40756922129,
+        "jobs": [
+          {
+            "id": 123058212137,
+            "name": "Navigation and audio lifecycle",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 123058212482,
+            "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "id": 123058212487,
+            "name": "Windows Python 3.12 native SDL audio (dummy output)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      }
+    ],
+    "latest_functional_sha": "f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88",
+    "latest_run_id": 40767441201,
+    "latest_run_jobs": [
+      {
+        "id": 123095273506,
+        "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 123095273765,
+        "name": "Navigation and audio lifecycle",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 123095274020,
+        "name": "Windows Python 3.12 native SDL audio (dummy output)",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "historical_successful_run": 40756922129,
+    "historical_successful_sha": "b5931c8ef2e3d7b800e024c38a653fef5b4b4a1e",
+    "new_interim_failure": {
+      "run_id": 40766621706,
+      "sha": "959264962bb4e64a8a4531a085676b55ad26e660",
+      "job_id": 123092367855,
+      "test": "test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_recovery_scan_uses_existing_camera_and_poll_preserves_typed_ticket",
+      "assertion": "assertFalse(customer_claim_required)",
+      "run": 343,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "ci_log_source": "Connected GitHub jobs and decoded job logs; no raw logs or payloads published",
+    "latest_job_log_summaries": [
+      {
+        "id": 123095273506,
+        "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+        "head_sha": "f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88",
+        "summaries": [
+          "Successfully set up CPython (3.12.15)",
+          "Ran 4 tests in 0.564s",
+          "Ran 103 tests in 24.282s",
+          "KIOSK_UNITTEST_SUMMARY: run=103 failures=0 errors=0 skipped=0 success=True",
+          "Ran 346 tests in 44.607s",
+          "KIOSK_UNITTEST_SUMMARY: run=346 failures=0 errors=0 skipped=0 success=True",
+          "Ran 80 tests in 1.074s",
+          "KIOSK_UNITTEST_SUMMARY: run=80 failures=0 errors=0 skipped=0 success=True",
+          "Ran 111 tests in 96.474s",
+          "KIOSK_UNITTEST_SUMMARY: run=111 failures=0 errors=0 skipped=1 success=True",
+          "Ran 98 tests in 1.823s",
+          "Ran 4 tests in 13.043s"
+        ],
+        "optional_skips": [
+          "test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture (tests.test_kiosk_v2_widgets.PortraitKivySmokeTests.test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture) ... skipped 'Native model assets are opt-in'"
+        ]
+      },
+      {
+        "id": 123095273765,
+        "name": "Navigation and audio lifecycle",
+        "head_sha": "f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88",
+        "summaries": [
+          "Successfully set up CPython (3.12.15)",
+          "Ran 129 tests in 0.506s",
+          "Ran 40 tests in 0.332s"
+        ],
+        "optional_skips": [
+          "test_real_launcher_console_active_keeps_stderr_and_records_native_and_delivery_once (tests.test_kiosk_v2_diagnostics.DeliveryLoggingTests.test_real_launcher_console_active_keeps_stderr_and_records_native_and_delivery_once) ... skipped 'Real Kivy logging integration needs Kivy'"
+        ]
+      },
+      {
+        "id": 123095274020,
+        "name": "Windows Python 3.12 native SDL audio (dummy output)",
+        "head_sha": "f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88",
+        "summaries": [
+          "Successfully set up CPython (3.12.10)",
+          "Ran 47 tests in 11.608s",
+          "KIOSK_UNITTEST_SUMMARY: run=47 failures=0 errors=0 skipped=0 success=True",
+          "##[notice]KIOSK_UNITTEST_SUMMARY: run=47 failures=0 errors=0 skipped=0 success=True",
+          "Ran 15 tests in 3.616s",
+          "KIOSK_UNITTEST_SUMMARY: run=15 failures=0 errors=0 skipped=0 success=True",
+          "Ran 55 tests in 0.965s",
+          "KIOSK_UNITTEST_SUMMARY: run=55 failures=0 errors=0 skipped=0 success=True",
+          "Ran 103 tests in 21.425s"
+        ],
+        "optional_skips": []
+      }
+    ]
+  },
+  "native": {
+    "manifests": [
+      {
+        "head": "f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88",
+        "fixture": "OFFLINE HTTP; NOT MERCHANT ACCEPTANCE",
+        "dirty": false,
+        "screenshots": [
+          {
+            "file": "01-quote-452x9000001.png",
+            "page": "sandbox_checkout",
+            "phase": "QUOTE",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "6b5173083984e5a0fba5cc4c5e903da51eddd4ddecf351ccb0117367d7acec7f"
+          },
+          {
+            "file": "02-recovery-ticket-fixture-452x9000001.png",
+            "page": "sandbox_checkout",
+            "phase": "WAITING",
+            "width": 452,
+            "height": 900,
+            "qr_role": "recovery_ticket",
+            "sha256": "859c8941acccafbbc5dd78841d3a7ac813d9e668e1f44a2263fb481271ee57c3"
+          },
+          {
+            "file": "02-waiting-offline-fixture-452x9000001.png",
+            "page": "sandbox_checkout",
+            "phase": "WAITING",
+            "width": 452,
+            "height": 900,
+            "qr_role": "payment",
+            "sha256": "650fa13d16fb7e423fffd16271c05ae614a3989061f63bf888b5d9bf39ed26d2"
+          },
+          {
+            "file": "03-reserved-452x9000001.png",
+            "page": "sandbox_checkout",
+            "phase": "RESERVED",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "a0758a2dc861f81d7ffcb504805c74c36c9cf5dfbf0b61ff2a979e00779d8449"
+          },
+          {
+            "file": "04-consent-452x9000001.png",
+            "page": "photo_confirm",
+            "phase": "RESERVED",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "0d7ad30f54aeb315749e1535f55b8bb37a38f286e4b1aa552db8c2663e4eafb9"
+          },
+          {
+            "file": "05-claim-required-452x9000001.png",
+            "page": "sandbox_checkout",
+            "phase": "RECOVERY",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "3684e72b5be22035a505d098f257090bfc66d2c431c147d4a46cf517fbb16812"
+          },
+          {
+            "file": "06-resume-ready-452x9000001.png",
+            "page": "sandbox_checkout",
+            "phase": "RECOVERY",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "af9e9d0b4e74b7fd89b35ff0f85dab71044c1b0aa5ffe38e4556dc79bf2259c3"
+          },
+          {
+            "file": "07-original-capture-restored-452x9000001.png",
+            "page": "capture",
+            "phase": "STARTED",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "6f1ee87be94b7bfb3ebb0fdaf0f89c83da7c1ec6202f6289aa6cb90d5e36037b"
+          },
+          {
+            "file": "08-operator-pin-entry-452x9000001.png",
+            "page": "sandbox_checkout",
+            "phase": "RECOVERY",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "89e31f60988ad46291f5243628dc1446997cb299e81ca219ebad3aa1dbe4f4ee"
+          },
+          {
+            "file": "09-operator-status-452x9000001.png",
+            "page": "sandbox_checkout",
+            "phase": "STARTED",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "3424935cf387c382d4a48e534b74db8009758a176edbe53f84236870c374e427"
+          },
+          {
+            "file": "10-isolation-ready-452x9000001.png",
+            "page": "sandbox_checkout",
+            "phase": "RELEASING",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "8ee1e1eb8f12a030ea8d2a8e79207a2e54eceb29e3ce13285e5ef268af8014ad"
+          },
+          {
+            "file": "11-released-advert-452x9000001.png",
+            "page": "advert",
+            "phase": null,
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "ff99a7f98950c13c3b5543b36fcc73e35ca1d66285983cc7b489122b3d1a88fc"
+          },
+          {
+            "file": "12-saved-ticket-lookup-452x9000001.png",
+            "page": "sandbox_checkout",
+            "phase": "CLAIM_LOOKUP",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "b5b0f22d99b541dfe87c0afd5e2dd021025f5266229d06d00fad7cf0b771cbac"
+          },
+          {
+            "file": "13-returning-customer-restored-452x9000001.png",
+            "page": "capture",
+            "phase": "STARTED",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "22008f3d004c92530af52bdd26b4a3beffb607e41d530fe0e6173a5730183362"
+          }
+        ]
+      },
+      {
+        "head": "f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88",
+        "fixture": "OFFLINE HTTP; NOT MERCHANT ACCEPTANCE",
+        "dirty": false,
+        "screenshots": [
+          {
+            "file": "01-quote-800x12800001.png",
+            "page": "sandbox_checkout",
+            "phase": "QUOTE",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "99368bc779bb9c26790a8a76f2a3625cfd88d959205bca5d148ae20990520f90"
+          },
+          {
+            "file": "02-recovery-ticket-fixture-800x12800001.png",
+            "page": "sandbox_checkout",
+            "phase": "WAITING",
+            "width": 800,
+            "height": 1280,
+            "qr_role": "recovery_ticket",
+            "sha256": "af6ac3c28a62f327e2524d1f04c84c98ed1b01547e930251ea2b9e3a00483d9b"
+          },
+          {
+            "file": "02-waiting-offline-fixture-800x12800001.png",
+            "page": "sandbox_checkout",
+            "phase": "WAITING",
+            "width": 800,
+            "height": 1280,
+            "qr_role": "payment",
+            "sha256": "e0e66beb4dff3419ba5d311b22f3c4b574c9ab05f096ea0beee1dbf53640331a"
+          },
+          {
+            "file": "03-reserved-800x12800001.png",
+            "page": "sandbox_checkout",
+            "phase": "RESERVED",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "0d41f12432666281552cb8a675402af26c150f089e0a307c3739e494ece16713"
+          },
+          {
+            "file": "04-consent-800x12800001.png",
+            "page": "photo_confirm",
+            "phase": "RESERVED",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "169bf526d167700d358104133db39947dbbe5a8ed515e1d845c80a1370aebaa3"
+          },
+          {
+            "file": "05-claim-required-800x12800001.png",
+            "page": "sandbox_checkout",
+            "phase": "RECOVERY",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "ed5c859c28e5c50ba67189603ca972204d814b07a51fb3985cb00890b1598b36"
+          },
+          {
+            "file": "06-resume-ready-800x12800001.png",
+            "page": "sandbox_checkout",
+            "phase": "RECOVERY",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "f9abe9c3e4d2c5365a12e01a0085fd0627e82c7cc295105fdd01fee334ae3ac7"
+          },
+          {
+            "file": "07-original-capture-restored-800x12800001.png",
+            "page": "capture",
+            "phase": "STARTED",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "965349a95b6132597f3cdd81679a3b2729ad798ed29539a6babeb6e5594cce78"
+          },
+          {
+            "file": "08-operator-pin-entry-800x12800001.png",
+            "page": "sandbox_checkout",
+            "phase": "RECOVERY",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "53083182afdf252b878dd73d0bf6bdcc138dfb4521146979c4a54755db006097"
+          },
+          {
+            "file": "09-operator-status-800x12800001.png",
+            "page": "sandbox_checkout",
+            "phase": "STARTED",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "6e198a7a40b1e7db278335ebed7b160462f144f36012bdc07d3bb502ba5b0253"
+          },
+          {
+            "file": "10-isolation-ready-800x12800001.png",
+            "page": "sandbox_checkout",
+            "phase": "RELEASING",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "a58fee551fa02217af0ed677a8263d2cd2b96069d86316c7de5ad0c757a91cd1"
+          },
+          {
+            "file": "11-released-advert-800x12800001.png",
+            "page": "advert",
+            "phase": null,
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "0ad02dd38ab50a3c006434903300842a36ac5f58d651198cfe6bbcf81f53682b"
+          },
+          {
+            "file": "12-saved-ticket-lookup-800x12800001.png",
+            "page": "sandbox_checkout",
+            "phase": "CLAIM_LOOKUP",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "58d1600dc5ea12db7a9d017eac971ace61b78d45dab5d2f191adb13af4915eef"
+          },
+          {
+            "file": "13-returning-customer-restored-800x12800001.png",
+            "page": "capture",
+            "phase": "STARTED",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "18f8955c1290f4e56733165065c85d43580b2b6881a84aea5c09b9aa345167b7"
+          }
+        ]
+      }
+    ],
+    "qr_verification": {
+      "checks": [
+        {
+          "file": "02-recovery-ticket-fixture-452x9000001.png",
+          "role": "recovery_ticket",
+          "status": "PASS",
+          "payload_published": false
+        },
+        {
+          "file": "02-waiting-offline-fixture-452x9000001.png",
+          "role": "payment",
+          "status": "PASS",
+          "payload_published": false
+        },
+        {
+          "file": "02-recovery-ticket-fixture-800x12800001.png",
+          "role": "recovery_ticket",
+          "status": "PASS",
+          "payload_published": false
+        },
+        {
+          "file": "02-waiting-offline-fixture-800x12800001.png",
+          "role": "payment",
+          "status": "PASS",
+          "payload_published": false
+        }
+      ],
+      "payloads_redacted": true
+    },
+    "published_safe_scene_files": [
+      "05-claim-required-452x9000001.png",
+      "06-resume-ready-452x9000001.png",
+      "10-isolation-ready-452x9000001.png",
+      "12-saved-ticket-lookup-452x9000001.png",
+      "13-returning-customer-restored-452x9000001.png",
+      "05-claim-required-800x12800001.png",
+      "06-resume-ready-800x12800001.png",
+      "10-isolation-ready-800x12800001.png",
+      "12-saved-ticket-lookup-800x12800001.png",
+      "13-returning-customer-restored-800x12800001.png"
+    ],
+    "private_pixels_note": "Recovery-ticket QR images remain private scratch; only hashes/verdicts published. All captured images are isolated synthetic fixtures; no real photos or credentials."
+  },
+  "matrix": {
+    "total": 69,
+    "counts": {
+      "PASS": 43,
+      "FAIL": 0,
+      "SKIP": 0,
+      "BLOCKED": 9,
+      "NOT_RUN": 17
+    },
+    "rows": [
+      {
+        "id": "PAY-01",
+        "status": "PASS",
+        "test_reference": "test_checkout_creation_attempts.test_pay01_abrupt_exit_after_prepared_does_not_authorize_resubmission",
+        "scope_or_gap": "Real child PREPARED/SENT exit; original order, no resend."
+      },
+      {
+        "id": "PAY-02",
+        "status": "PASS",
+        "test_reference": "test_checkout_creation_attempts.test_lost_response_uncertainty_survives_reopen_and_status_recovers",
+        "scope_or_gap": "Synthetic provider accepted/lost reply; same identity after reopen."
+      },
+      {
+        "id": "PAY-03",
+        "status": "PASS",
+        "test_reference": "test_checkout_creation_attempts.test_provider_never_received_call_and_repeated_404_remain_uncertain",
+        "scope_or_gap": "Never-received and 404 hold, no replacement."
+      },
+      {
+        "id": "PAY-04",
+        "status": "PASS",
+        "test_reference": "test_checkout_creation_attempts.test_provider_never_received_call_and_repeated_404_remain_uncertain",
+        "scope_or_gap": "Repeated lagging 404 cannot authorize POST."
+      },
+      {
+        "id": "PAY-05",
+        "status": "PASS",
+        "test_reference": "test_checkout_creation_attempts.test_concurrent_independent_backends_send_once",
+        "scope_or_gap": "Independent concurrent backends send once."
+      },
+      {
+        "id": "PAY-06",
+        "status": "NOT_RUN",
+        "test_reference": "test_checkout_reconciliation.test_start_requires_fresh_settlement_even_with_previously_issued_grant",
+        "scope_or_gap": "Fresh admission asserted, but exact process exit between evidence and DB commit not found."
+      },
+      {
+        "id": "PAY-07",
+        "status": "PASS",
+        "test_reference": "test_checkout_reconciliation.test_retry_backoff_is_durable_bounded_and_not_bypassed_by_duplicate_calls",
+        "scope_or_gap": "Persisted bounded/jittered backoff and no duplicate I/O."
+      },
+      {
+        "id": "PAY-08",
+        "status": "NOT_RUN",
+        "test_reference": "test_checkout_reconciliation.test_restart_trigger_bypasses_backoff_once_then_is_durably_throttled",
+        "scope_or_gap": "Restart trigger is tested; actual network-restoration event after repeated errors is not separately demonstrated."
+      },
+      {
+        "id": "PAY-09",
+        "status": "PASS",
+        "test_reference": "test_checkout_backend.test_cancel_racing_payment_never_discards_paid",
+        "scope_or_gap": "Settlement/cancel race preserves original rights."
+      },
+      {
+        "id": "PAY-10",
+        "status": "PASS",
+        "test_reference": "test_checkout_backend.test_duplicate_settlement_and_claim_return_same_grant",
+        "scope_or_gap": "Signed-event dedup and fresh current status also covered by notification inbox tests."
+      },
+      {
+        "id": "PAY-11",
+        "status": "PASS",
+        "test_reference": "test_checkout_backend.test_bad_evidence_cannot_unlock",
+        "scope_or_gap": "Identity/amount mismatch rejects; tampered signature tested separately in same module."
+      },
+      {
+        "id": "PAY-12",
+        "status": "PASS",
+        "test_reference": "test_checkout_reconciliation.test_cached_paid_refund_reconciles_without_grant_or_service",
+        "scope_or_gap": "Refund denies new grant; partial refund covered by durability module."
+      },
+      {
+        "id": "PAY-13",
+        "status": "PASS",
+        "test_reference": "test_checkout_reconciliation.test_cached_paid_outage_is_unknown_never_permission",
+        "scope_or_gap": "Historical PAID liability retained; offline cannot authorize admission."
+      },
+      {
+        "id": "PAY-14",
+        "status": "PASS",
+        "test_reference": "test_autonomous_recovery_baseline.test_pay14_absent_fraud_field_and_explicit_accept_are_valid",
+        "scope_or_gap": "Present invalid fraud fields separately denied by the companion autonomous baseline case."
+      },
+      {
+        "id": "PAY-15",
+        "status": "PASS",
+        "test_reference": "test_checkout_backend.test_no_new_order_until_provider_cancel_confirmed",
+        "scope_or_gap": "Terminal states and original visit release, no inferred cancellation."
+      },
+      {
+        "id": "PAY-16",
+        "status": "PASS",
+        "test_reference": "test_checkout_durability.test_late_paid_is_review_not_next_customer",
+        "scope_or_gap": "Late paid stays original order under review."
+      },
+      {
+        "id": "PAY-17",
+        "status": "PASS",
+        "test_reference": "test_qris_http_v2.test_other_booth_cannot_read_or_claim",
+        "scope_or_gap": "Booth authentication plus creation-attempt merchant/mode mismatch tests."
+      },
+      {
+        "id": "PAY-18",
+        "status": "NOT_RUN",
+        "test_reference": "test_checkout_durability.test_lost_claim_response_replays_same_grant",
+        "scope_or_gap": "Grant replay/STARTED identity tested; combined lost STARTED and COMPLETED reply fault sequence not independently shown."
+      },
+      {
+        "id": "PAY-19",
+        "status": "PASS",
+        "test_reference": "test_qris_recovery.test_changed_action_payload_or_order_cannot_reuse_old_action_id",
+        "scope_or_gap": "Reused action body/order conflicts without mutation."
+      },
+      {
+        "id": "PAY-20",
+        "status": "PASS",
+        "test_reference": "test_checkout_reconciliation.test_clock_rollback_holds_without_extending_deadline_indefinitely",
+        "scope_or_gap": "Provider remains authority; clock/credential/retention cases use separate fixed clocks."
+      },
+      {
+        "id": "PAY-21",
+        "status": "NOT_RUN",
+        "test_reference": "test_midtrans_sandbox.test_redirect_is_not_followed",
+        "scope_or_gap": "Redirect and provider 401 rejection pass; QR-image/webhook body limits pass separately. Oversized provider status JSON plus redacted hold is not independently demonstrated."
+      },
+      {
+        "id": "PAY-22",
+        "status": "BLOCKED",
+        "test_reference": "",
+        "scope_or_gap": "Official merchant-specific Legacy repeat-charge contract and controlled Sandbox evidence absent; POST retry remains disabled."
+      },
+      {
+        "id": "CAP-01",
+        "status": "NOT_RUN",
+        "test_reference": "test_photo_allocation.test_first_manifest_binds_original_order_and_never_uses_photo_counter",
+        "scope_or_gap": "Binding logic passes; exact pre-allocation-intent child kill not demonstrated."
+      },
+      {
+        "id": "CAP-02",
+        "status": "NOT_RUN",
+        "test_reference": "test_checkout_fulfillment.test_allocation_is_unique_and_replays_same_operation_after_restart",
+        "scope_or_gap": "Allocation reopen passes; exact post-intent/pre-folder child kill not demonstrated."
+      },
+      {
+        "id": "CAP-03",
+        "status": "NOT_RUN",
+        "test_reference": "test_photo_reconstruction.test_started_missing_manifest_or_unknown_bytes_never_restarts_capture",
+        "scope_or_gap": "Empty/orphan folder denial passes; exact folder/pre-manifest child kill not demonstrated."
+      },
+      {
+        "id": "CAP-04",
+        "status": "NOT_RUN",
+        "test_reference": "test_kiosk_v2_sandbox_widgets.test_missing_started_ack_blocks_countdown_until_same_transaction_ack",
+        "scope_or_gap": "Native missing ACK guard passes; exact initial-manifest/pre-STARTED child kill not demonstrated."
+      },
+      {
+        "id": "CAP-05",
+        "status": "NOT_RUN",
+        "test_reference": "test_checkout_durability.test_service_replay_cannot_allocate_different_capture",
+        "scope_or_gap": "Idempotent STARTED replay passes; exact accepted STARTED/pre-local-save child kill not demonstrated."
+      },
+      {
+        "id": "CAP-06",
+        "status": "PASS",
+        "test_reference": "test_capture_journal.test_abrupt_process_exit_at_every_write_boundary_preserves_evidence",
+        "scope_or_gap": "Real child exit at capture intent before frame."
+      },
+      {
+        "id": "CAP-07",
+        "status": "PASS",
+        "test_reference": "test_capture_journal.test_abrupt_process_exit_at_every_write_boundary_preserves_evidence",
+        "scope_or_gap": "Real child exit at temporary/staged JPEG boundaries; unacknowledged bytes stay held."
+      },
+      {
+        "id": "CAP-08",
+        "status": "PASS",
+        "test_reference": "test_capture_journal.test_abrupt_process_exit_at_every_write_boundary_preserves_evidence",
+        "scope_or_gap": "Real published JPEG/pre-manifest exit, image/hash and no overwrite assertions."
+      },
+      {
+        "id": "CAP-09",
+        "status": "PASS",
+        "test_reference": "test_capture_journal.test_abrupt_process_exit_at_every_write_boundary_preserves_evidence",
+        "scope_or_gap": "Real committed exit; reconstruction restores manifest-authorized count."
+      },
+      {
+        "id": "CAP-10",
+        "status": "PASS",
+        "test_reference": "test_photo_reconstruction.test_partial_three_capture_states_restore_exact_count_without_new_ids",
+        "scope_or_gap": "Exact 1/2/3 original states; quota and IDs retained."
+      },
+      {
+        "id": "CAP-11",
+        "status": "NOT_RUN",
+        "test_reference": "test_photo_reconstruction.test_retake_selected_and_used_restore_without_renewing_quota",
+        "scope_or_gap": "Retake selection/reconstruction passes; retake-specific abrupt child exit absent."
+      },
+      {
+        "id": "CAP-12",
+        "status": "NOT_RUN",
+        "test_reference": "test_capture_journal.test_retake_selection_and_consumed_quota_commit_with_same_saved_bytes",
+        "scope_or_gap": "Exception/lost reply and quota pass; child fixture covers originals, not retake frame/pre-quota exit."
+      },
+      {
+        "id": "CAP-13",
+        "status": "NOT_RUN",
+        "test_reference": "test_photo_reconstruction.test_retake_selected_and_used_restore_without_renewing_quota",
+        "scope_or_gap": "Committed retake restore passes; exact retake-commit child exit not demonstrated."
+      },
+      {
+        "id": "CAP-14",
+        "status": "PASS",
+        "test_reference": "test_output_journal.test_abrupt_output_process_exit_preserves_each_publication_boundary",
+        "scope_or_gap": "Real child output intent/staged/published/committed exits; originals/hash/ACK verified."
+      },
+      {
+        "id": "CAP-15",
+        "status": "PASS",
+        "test_reference": "test_photo_reconstruction.test_multiple_designs_resume_only_unfinished_design_and_original_copies",
+        "scope_or_gap": "Saved output/copies retained on reconstruction of next unfinished design."
+      },
+      {
+        "id": "CAP-16",
+        "status": "NOT_RUN",
+        "test_reference": "test_customer_claim_session.test_completed_service_can_restore_result_only_without_capture_readmission",
+        "scope_or_gap": "Result-only guard passes; exact final-compose/COMPLETE boundary process kill absent."
+      },
+      {
+        "id": "CAP-17",
+        "status": "PASS",
+        "test_reference": "test_photo_allocation.test_mismatched_frozen_contract_does_not_create_media_or_new_id",
+        "scope_or_gap": "Frozen template/cart/hash/copies; changed contract holds."
+      },
+      {
+        "id": "CAP-18",
+        "status": "PASS",
+        "test_reference": "test_photo_reconstruction.test_corrupt_media_or_wrong_binding_stays_held_without_data_rewrite",
+        "scope_or_gap": "Corruption/binding denial plus capture symlink/archive tests; real Windows junction acceptance separate."
+      },
+      {
+        "id": "CAP-19",
+        "status": "PASS",
+        "test_reference": "test_kiosk_v2_sandbox_widgets.test_real_photo_handoff_completion_and_duplicate_taps",
+        "scope_or_gap": "Duplicate taps, privacy-lock stale callbacks and native ownership gates."
+      },
+      {
+        "id": "CAP-20",
+        "status": "NOT_RUN",
+        "test_reference": "test_capture_journal.test_failure_before_publication_never_acknowledges_a_capture",
+        "scope_or_gap": "Image publication failure and low-disk/write-probe denial pass; every intent/manifest ENOSPC/EACCES boundary not demonstrated."
+      },
+      {
+        "id": "CAP-21",
+        "status": "PASS",
+        "test_reference": "test_retention.test_expired_controller_capture_cannot_recreate_a_deleted_photo",
+        "scope_or_gap": "Expired media cannot resurrect; retained liability separately asserted."
+      },
+      {
+        "id": "UX-01",
+        "status": "PASS",
+        "test_reference": "test_customer_claim_session.test_rebooted_reserved_order_cannot_prepare_without_original_customer_proof",
+        "scope_or_gap": "Private restart hold; native neutral claim screens at both sizes."
+      },
+      {
+        "id": "UX-02",
+        "status": "PASS",
+        "test_reference": "test_photo_reconstruction.test_no_permit_inspection_reveals_no_pixels_and_restore_rejects",
+        "scope_or_gap": "No proof means no private pixel/restore permission."
+      },
+      {
+        "id": "UX-03",
+        "status": "PASS",
+        "test_reference": "test_customer_capability.test_wrong_short_expired_and_wrong_booth_proofs_cannot_grant",
+        "scope_or_gap": "Replay/action identity and durable failed-attempt budget also tested."
+      },
+      {
+        "id": "UX-04",
+        "status": "PASS",
+        "test_reference": "test_kiosk_v2_sandbox_widgets.test_native_claim_and_deliberate_resume_restore_original_capture_without_new_charge",
+        "scope_or_gap": "Original proof, exact saved image count and deliberate countdown; native return screenshots."
+      },
+      {
+        "id": "UX-05",
+        "status": "NOT_RUN",
+        "test_reference": "test_checkout_release.test_prepare_holds_booth_and_ack_releases_only_occupancy",
+        "scope_or_gap": "Paid two-phase release is covered; ambiguous creation abandonment/release is deliberately conservative, not blanket certified."
+      },
+      {
+        "id": "UX-06",
+        "status": "PASS",
+        "test_reference": "test_kiosk_v2_sandbox_widgets.test_postpaid_camera_fault_records_owed_issue_and_hides_media",
+        "scope_or_gap": "Durable paid-unfulfilled issue; no fabricated cancellation."
+      },
+      {
+        "id": "UX-07",
+        "status": "NOT_RUN",
+        "test_reference": "test_recovery_readiness.test_low_disk_or_unwritable_probe_prevents_admission",
+        "scope_or_gap": "Camera/storage/template and accidental delivery opt-in deny; purchased real-printer preflight not certified in transport-off Sandbox."
+      },
+      {
+        "id": "UX-08",
+        "status": "PASS",
+        "test_reference": "test_booth_sync.test_configured_layout2_without_credentials_is_offline_ready_and_never_falls_back_to_legacy_oauth",
+        "scope_or_gap": "Offline local progress with deferred Drive and preserved layout/claims."
+      },
+      {
+        "id": "UX-09",
+        "status": "PASS",
+        "test_reference": "test_release_session.test_uncertain_print_never_yields_isolation_receipt_or_releases_booth",
+        "scope_or_gap": "Uncertain print remains held, no automatic resend; paper outcome NOT_RUN."
+      },
+      {
+        "id": "UX-10",
+        "status": "PASS",
+        "test_reference": "test_booth_sync.test_two_transactions_keep_exact_local_folder_mapping_across_restart",
+        "scope_or_gap": "Immutable delivery mapping/retry/retention fixtures; actual Drive acceptance NOT_RUN."
+      },
+      {
+        "id": "UX-11",
+        "status": "NOT_RUN",
+        "test_reference": "test_crash_supervisor.test_normal_operator_hold_or_living_process_never_restarts",
+        "scope_or_gap": "No-kill live-child gate and responsive HTTP tested; actual frozen-worker/GUI hang scenario not exercised."
+      },
+      {
+        "id": "UX-12",
+        "status": "PASS",
+        "test_reference": "test_crash_supervisor.test_three_crashes_have_persisted_budget_and_bounded_backoff",
+        "scope_or_gap": "Persisted restart budget; kernel multi-process lease tests, no business replay."
+      },
+      {
+        "id": "UX-13",
+        "status": "PASS",
+        "test_reference": "test_qris_recovery.test_independent_pin_attempt_limit_cannot_block_regular_status",
+        "scope_or_gap": "PIN+booth auth, action audit, cross-order/replay denial."
+      },
+      {
+        "id": "UX-14",
+        "status": "PASS",
+        "test_reference": "test_checkout_fulfillment.test_abandon_preserves_paid_obligation_and_no_fabricated_refund",
+        "scope_or_gap": "Closure/composition are not liability satisfaction."
+      },
+      {
+        "id": "UX-15",
+        "status": "PASS",
+        "test_reference": "",
+        "scope_or_gap": "Final native manifests: both portrait sizes, 28 hashes/dimensions, four QR decodes; selected layouts inspected. Physical touch/phone tests NOT_RUN."
+      },
+      {
+        "id": "UX-16",
+        "status": "PASS",
+        "test_reference": "test_kiosk_v2_recovery.test_empty_install_is_clear_without_creating_files",
+        "scope_or_gap": "Existing default/MOCK/native lifecycle regressions; no new business effect."
+      },
+      {
+        "id": "UX-17",
+        "status": "PASS",
+        "test_reference": "test_customer_claim_session.test_original_ticket_is_memory_only_and_cannot_be_redisplayed_after_restart",
+        "scope_or_gap": "Memory-only ticket plus backend-only PIN/argv/export isolation assertions; no blanket forensic log certification."
+      },
+      {
+        "id": "UX-18",
+        "status": "PASS",
+        "test_reference": "test_kiosk_v2_recovery.test_old_is_pruned_and_linked_storage_is_rejected_before_descent",
+        "scope_or_gap": "Archive/link exclusion uses synthetic temporary paths only."
+      },
+      {
+        "id": "WEB-01",
+        "status": "BLOCKED",
+        "test_reference": "test_notification_inbox",
+        "scope_or_gap": "Public infrastructure/merchant approval, mounted ingress/worker, TLS and operational acceptance absent. Offline inbox prototype is supporting evidence only."
+      },
+      {
+        "id": "WEB-02",
+        "status": "BLOCKED",
+        "test_reference": "test_notification_inbox",
+        "scope_or_gap": "Public infrastructure/merchant approval, mounted ingress/worker, TLS and operational acceptance absent. Offline inbox prototype is supporting evidence only."
+      },
+      {
+        "id": "WEB-03",
+        "status": "BLOCKED",
+        "test_reference": "test_notification_inbox",
+        "scope_or_gap": "Public infrastructure/merchant approval, mounted ingress/worker, TLS and operational acceptance absent. Offline inbox prototype is supporting evidence only."
+      },
+      {
+        "id": "WEB-04",
+        "status": "BLOCKED",
+        "test_reference": "test_notification_inbox",
+        "scope_or_gap": "Public infrastructure/merchant approval, mounted ingress/worker, TLS and operational acceptance absent. Offline inbox prototype is supporting evidence only."
+      },
+      {
+        "id": "WEB-05",
+        "status": "BLOCKED",
+        "test_reference": "test_notification_inbox",
+        "scope_or_gap": "Public infrastructure/merchant approval, mounted ingress/worker, TLS and operational acceptance absent. Offline inbox prototype is supporting evidence only."
+      },
+      {
+        "id": "WEB-06",
+        "status": "BLOCKED",
+        "test_reference": "test_notification_inbox",
+        "scope_or_gap": "Public infrastructure/merchant approval, mounted ingress/worker, TLS and operational acceptance absent. Offline inbox prototype is supporting evidence only."
+      },
+      {
+        "id": "WEB-07",
+        "status": "BLOCKED",
+        "test_reference": "test_notification_inbox",
+        "scope_or_gap": "Public infrastructure/merchant approval, mounted ingress/worker, TLS and operational acceptance absent. Offline inbox prototype is supporting evidence only."
+      },
+      {
+        "id": "WEB-08",
+        "status": "BLOCKED",
+        "test_reference": "test_notification_inbox",
+        "scope_or_gap": "Public infrastructure/merchant approval, mounted ingress/worker, TLS and operational acceptance absent. Offline inbox prototype is supporting evidence only."
+      }
+    ]
+  },
+  "readiness": "CONDITIONAL for controlled acceptance; NOT READY for unattended commercial release",
+  "external_acceptance": "NOT_RUN/BLOCKED; see A01-A12 in AR13-READINESS.md",
+  "future_ops": "All five owner design files byte-identical; runtime NOT_STARTED"
+}

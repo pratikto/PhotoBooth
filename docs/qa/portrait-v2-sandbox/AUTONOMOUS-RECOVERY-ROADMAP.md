@@ -63,11 +63,15 @@ recoverable.
 
 **P0 before unattended pilot:** AR-01 through AR-09 and payment/capture/privacy/crash tests. **P1 for safe automatic restart:** AR-10. **P1 for production-ready external callback:** AR-11. AR-12/13 are mandatory gates. There is no acceptance of unsafe shortcuts to meet a schedule.
 
-Current source delivery (29 October): AR-00–08 source increments and AR-09 PIN
-inspection/dormant service-fence foundation have focused automated evidence.
-AR-09.c2 safe release/reacquisition and AR-10–13 remain pending. External/provider
-and final full-matrix gates stay open. See [published source/tests](CONTINUATION-2026-10-29.md).
-[Exact continuation/evidence](AUTONOMOUS-RECOVERY-CHECKPOINT.md).
+Current source delivery (29 October): AR-00–09 source, opt-in bounded AR-10
+supervisor, unmounted AR-11 offline inbox/design and AR-12.f scanner correction
+are published. Final full regression/three-job CI/native evidence is reconciled
+at f72fdbc. AR-13 assessment is complete as a report: CONDITIONAL controlled
+acceptance, NOT READY for unattended commercial release. Remaining exact AR-12
+fault windows and external gates are NOT_RUN/BLOCKED, not completed roadmap
+acceptance. [Assessment](AR13-READINESS.md) ·
+[current checkpoint](AUTONOMOUS-RECOVERY-CHECKPOINT.md) ·
+[matrix ledger](AUTONOMOUS-RECOVERY-TEST-MATRIX.md#executed-evidence-ledger--29-october-2026).
 
 ### AR-00 — contract and fixture freeze
 

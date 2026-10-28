@@ -1,16 +1,17 @@
 # Autonomous recovery — customer, operator and deployment runbook
 
-**Current implementation update, 29 October:** source progressed through AR-09.c1;
-[exact commits/tests and unfinished work](CONTINUATION-2026-10-29.md).
-Dated design-only/audited-baseline statements below are historical scope; they do
-not override current implementation evidence or certify full matrix/device/
-production acceptance. Safe release, AR-10–13 and external gates remain pending.
+**Current implementation, 29 October:** source through AR-12.f, final-source
+regression/CI/native evidence reconciled; [AR-13 assessment](AR13-READINESS.md)
+is CONDITIONAL. External acceptance and exact matrix gaps remain open; no
+production release. [Current checkpoint](AUTONOMOUS-RECOVERY-CHECKPOINT.md).
+The dated design-only status/audited descriptions below are historical target
+and baseline material, not current source status or certification.
 
-**Status:** DESIGN-ONLY / NOT DEPLOYED, 28 October 2026  
+**Historical design status:** DESIGN-ONLY / NOT DEPLOYED, 28 October 2026
 **Source audit:** `2e5efe5d281a93fe8d22e53309a50147764d2939`  
 **Links:** [Master](AUTONOMOUS-RECOVERY-MASTER-PLAN.md) · [Roadmap](AUTONOMOUS-RECOVERY-ROADMAP.md) · [Midtrans sources](MIDTRANS-PROVIDER-CONTRACT.md) · [Tests](AUTONOMOUS-RECOVERY-TEST-MATRIX.md)
 
-The procedures below describe the **target future design**; they are not instructions to run nonexistent recovery UI buttons or API paths in the present app. Current actual Sandbox recovery remains operator-held and the native operator integration is incomplete. Never reset journals, erase customer photos or invent Midtrans outcomes to unblock a stalled Sandbox.
+The dated baseline paragraphs below describe the original target and pre-integration source. Current Sandbox self-claim/operator release source is implemented; follow the current checkpoint and readiness report for verified behavior and remaining limits. Never reset journals, erase customer photos or invent Midtrans outcomes to unblock a stalled Sandbox.
 
 ## 1. Intended customer journeys
 
@@ -44,7 +45,7 @@ The procedures below describe the **target future design**; they are not instruc
 
 Never equate provider `200` HTTP/API status with verified QRIS settlement or local `COMPLETED` with verified physical printing/cloud delivery.
 
-## 3. Sandbox operator incident handling — current version
+## 3. Historical Sandbox operator handling — audited baseline
 
 When the current v2 GUI shows `PERLU BANTUAN OPERATOR` and no actions, it is a **known unintegrated recovery state at the audited SHA**. Do **not** alter `visit.json`, `orders.sqlite`, `counter.json`, `manifest.json`, PIN, booth ID, folders or provider transaction; do not delete/copy/recreate a profile to clear it. Preserve original evidence and time. Use the official Sandbox simulator only; never use banking/e-wallet for test payment.
 

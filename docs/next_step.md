@@ -1,5 +1,24 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+## 29 October — final AR-12 source evidence and AR-13 readiness
+
+Final runtime/test `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`: **1,097 run / 1,093 PASS / 4 SKIP / zero failures/errors**, 428.924s, Python 3.12.14 / Debian 13.6,
+GUI/audio opt-ins with offscreen software GL/dummy audio, tracked tree clean.
+[CI 40767441201](https://github.com/pratikto/PhotoBooth/actions/runs/40767441201):
+all three jobs SUCCESS at matching source. Native 28 PNGs/both portrait sizes,
+four QR checks PASS; payloads private. Previous-session 1094/1091/3 log unavailable;
+this is a new independently captured result. Matrix 43 PASS / 0 FAIL / 0 SKIP /
+9 BLOCKED / 17 NOT_RUN; exact missing fault windows are not credited as PASS.
+
+[AR-13 assessment](qa/portrait-v2-sandbox/AR13-READINESS.md): **CONDITIONAL** for
+controlled acceptance; **NOT READY for unattended commercial release**. Device,
+merchant, phone/paper/Drive/deletion, privacy/remedy/operations and owner approval
+remain open. First unfinished source-evidence task: PAY-06 abrupt exit between
+provider evidence and DB commit, then remaining matrix gaps. AR stays top priority;
+all future Settings/Emulate Ticket/QRIS Slip implementation stays NOT_STARTED.
+[Exact command/skips/provenance](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-VALIDATION.md) ·
+[checkpoint/next action](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md).
+
 ## CURRENT DEVELOPMENT PRIORITY — AR-00 through AR-13 FIRST (29 October owner reaffirmation)
 
 **TOP PRIORITY: continue and finish the existing AR-00 → AR-13 autonomous QRIS/photo-session recovery roadmap, in dependency order, from the [latest real checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md).** Do not restart completed AR increments; consult the [AR roadmap](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-ROADMAP.md) and [current handover](DEVELOPMENT_HANDOVER.md) for the actual unfinished step. AR-12/13 source validation/readiness and external NOT_RUN gates are distinct from new features. No production release or owner go/no-go is implied.
@@ -12,7 +31,7 @@ The existing secret F12 / Meong-header hold must eventually open **static QR Ope
 
 The following dated AR-00/AR-01 narrative and older "design only" descriptions are **historical snapshots**, not current remote code status; always follow the latest checkpoint/source tests.
 
-## Current autonomous recovery continuation — 28 October
+## Historical autonomous recovery continuation — 28 October
 
 Owner now explicitly requests implementation in AR dependency order. AR-00 is
 verified/pushed at `4261236694358c2f3cd2a475a4cd9cd82f436e00`. AR-01 local attempt

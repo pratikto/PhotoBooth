@@ -1,16 +1,13 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
-**Current implementation update, 29 October:** source progressed through AR-09.c1;
-[exact commits/tests and unfinished work](CONTINUATION-2026-10-29.md).
-Dated design-only/audited-baseline statements below are historical scope; they do
-not override current implementation evidence or certify full matrix/device/
-production acceptance. Safe release, AR-10–13 and external gates remain pending.
-
-**Status: PLANNED TEST CONTRACT; all newly specified tests NOT_RUN** · 28 October 2026  
-**Baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`  
-**Links:** [Master](AUTONOMOUS-RECOVERY-MASTER-PLAN.md) · [Roadmap](AUTONOMOUS-RECOVERY-ROADMAP.md) · [Provider research](MIDTRANS-PROVIDER-CONTRACT.md) · [Operations](AUTONOMOUS-RECOVERY-OPERATIONS.md)
-
-All test fixtures must be deterministic, offline, isolated, without paid provider calls/real print/Drive deletion. Additional owner-controlled on-device/provider tests are specified separately. The current code has earlier unit tests and CI evidence, but none are credited as PASS for the new matrix without rerunning/explicitly mapping exact functional SHA. Preserve historical failures and skips.
+**Current status, 29 October 2026:** execution ledger reconciled at final
+source `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`; 43 PASS / 0 FAIL / 0 SKIP /
+9 BLOCKED / 17 NOT_RUN. AR-13 assessment CONDITIONAL; production not ready.
+The original design contract below is retained. Its initial NOT_RUN values and
+baseline describe planning history, not the current executed ledger. Exact
+missing fault windows stay NOT_RUN even when a related source test passes.
+[Validation/provenance](AUTONOMOUS-RECOVERY-VALIDATION.md) ·
+[Readiness/owner gates](AR13-READINESS.md).
 
 ## A. Invariants asserted on every relevant transition
 
@@ -113,7 +110,7 @@ All test fixtures must be deterministic, offline, isolated, without paid provide
 `WEB-06` Endpoint downtime, retries, poison event quarantine, monitoring/metrics.  
 `WEB-07` Legacy-to-BI-SNAP differences explicitly gated; never confuse `X-EXTERNAL-ID`, invoice idempotency header and provider order ID.  
 `WEB-08` Public API limits, admin identity/auth, no local debug or public private records.  
-All WEB items are **NOT_RUN** until infrastructure approval.
+All public WEB items are currently **BLOCKED** on infrastructure approval; offline prototype evidence is listed separately in the execution ledger.
 
 ## F. Test harness specification
 
@@ -126,14 +123,121 @@ All WEB items are **NOT_RUN** until infrastructure approval.
 - Record expected/actual backend and local order state, fulfillment state, files present, job counts, customer-visible screen and operator log per test.
 - First write tests to reproduce the loophole; implement minimal source fixes; verify no regression in original P3/MOCK/Sandbox and v1.
 
+## Executed evidence ledger — 29 October 2026
+
+All source references below are at `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`,
+executed by the full command/environment in [validation](AUTONOMOUS-RECOVERY-VALIDATION.md).
+The [safe report](evidence/ar12-final-verification.json) pins test source trees,
+full count/skips/digest, CI and native manifests. Abbreviated `module.method`
+means that method in `tests/module.py`; PASS references were checked against
+the successful final runner output. A NOT_RUN reference is supporting evidence
+only, not a pass of the stronger scenario. Public WEB rows remain BLOCKED;
+offline inbox prototype assertions do not certify deployed ingress.
+
+| ID | Classification | Exact test reference / artifact | Actual scope or missing evidence |
+| --- | --- | --- | --- |
+| PAY-01 | **PASS** | `test_checkout_creation_attempts.test_pay01_abrupt_exit_after_prepared_does_not_authorize_resubmission` | Real child PREPARED/SENT exit; original order, no resend. |
+| PAY-02 | **PASS** | `test_checkout_creation_attempts.test_lost_response_uncertainty_survives_reopen_and_status_recovers` | Synthetic provider accepted/lost reply; same identity after reopen. |
+| PAY-03 | **PASS** | `test_checkout_creation_attempts.test_provider_never_received_call_and_repeated_404_remain_uncertain` | Never-received and 404 hold, no replacement. |
+| PAY-04 | **PASS** | `test_checkout_creation_attempts.test_provider_never_received_call_and_repeated_404_remain_uncertain` | Repeated lagging 404 cannot authorize POST. |
+| PAY-05 | **PASS** | `test_checkout_creation_attempts.test_concurrent_independent_backends_send_once` | Independent concurrent backends send once. |
+| PAY-06 | **NOT_RUN** | `test_checkout_reconciliation.test_start_requires_fresh_settlement_even_with_previously_issued_grant` | Fresh admission asserted, but exact process exit between evidence and DB commit not found. |
+| PAY-07 | **PASS** | `test_checkout_reconciliation.test_retry_backoff_is_durable_bounded_and_not_bypassed_by_duplicate_calls` | Persisted bounded/jittered backoff and no duplicate I/O. |
+| PAY-08 | **NOT_RUN** | `test_checkout_reconciliation.test_restart_trigger_bypasses_backoff_once_then_is_durably_throttled` | Restart trigger is tested; actual network-restoration event after repeated errors is not separately demonstrated. |
+| PAY-09 | **PASS** | `test_checkout_backend.test_cancel_racing_payment_never_discards_paid` | Settlement/cancel race preserves original rights. |
+| PAY-10 | **PASS** | `test_checkout_backend.test_duplicate_settlement_and_claim_return_same_grant` | Signed-event dedup and fresh current status also covered by notification inbox tests. |
+| PAY-11 | **PASS** | `test_checkout_backend.test_bad_evidence_cannot_unlock` | Identity/amount mismatch rejects; tampered signature tested separately in same module. |
+| PAY-12 | **PASS** | `test_checkout_reconciliation.test_cached_paid_refund_reconciles_without_grant_or_service` | Refund denies new grant; partial refund covered by durability module. |
+| PAY-13 | **PASS** | `test_checkout_reconciliation.test_cached_paid_outage_is_unknown_never_permission` | Historical PAID liability retained; offline cannot authorize admission. |
+| PAY-14 | **PASS** | `test_autonomous_recovery_baseline.test_pay14_absent_fraud_field_and_explicit_accept_are_valid` | Present invalid fraud fields separately denied by the companion autonomous baseline case. |
+| PAY-15 | **PASS** | `test_checkout_backend.test_no_new_order_until_provider_cancel_confirmed` | Terminal states and original visit release, no inferred cancellation. |
+| PAY-16 | **PASS** | `test_checkout_durability.test_late_paid_is_review_not_next_customer` | Late paid stays original order under review. |
+| PAY-17 | **PASS** | `test_qris_http_v2.test_other_booth_cannot_read_or_claim` | Booth authentication plus creation-attempt merchant/mode mismatch tests. |
+| PAY-18 | **NOT_RUN** | `test_checkout_durability.test_lost_claim_response_replays_same_grant` | Grant replay/STARTED identity tested; combined lost STARTED and COMPLETED reply fault sequence not independently shown. |
+| PAY-19 | **PASS** | `test_qris_recovery.test_changed_action_payload_or_order_cannot_reuse_old_action_id` | Reused action body/order conflicts without mutation. |
+| PAY-20 | **PASS** | `test_checkout_reconciliation.test_clock_rollback_holds_without_extending_deadline_indefinitely` | Provider remains authority; clock/credential/retention cases use separate fixed clocks. |
+| PAY-21 | **NOT_RUN** | `test_midtrans_sandbox.test_redirect_is_not_followed` | Redirect and provider 401 rejection pass; QR-image/webhook body limits pass separately. Oversized provider status JSON plus redacted hold is not independently demonstrated. |
+| PAY-22 | **BLOCKED** | See scope/gate | Official merchant-specific Legacy repeat-charge contract and controlled Sandbox evidence absent; POST retry remains disabled. |
+| CAP-01 | **NOT_RUN** | `test_photo_allocation.test_first_manifest_binds_original_order_and_never_uses_photo_counter` | Binding logic passes; exact pre-allocation-intent child kill not demonstrated. |
+| CAP-02 | **NOT_RUN** | `test_checkout_fulfillment.test_allocation_is_unique_and_replays_same_operation_after_restart` | Allocation reopen passes; exact post-intent/pre-folder child kill not demonstrated. |
+| CAP-03 | **NOT_RUN** | `test_photo_reconstruction.test_started_missing_manifest_or_unknown_bytes_never_restarts_capture` | Empty/orphan folder denial passes; exact folder/pre-manifest child kill not demonstrated. |
+| CAP-04 | **NOT_RUN** | `test_kiosk_v2_sandbox_widgets.test_missing_started_ack_blocks_countdown_until_same_transaction_ack` | Native missing ACK guard passes; exact initial-manifest/pre-STARTED child kill not demonstrated. |
+| CAP-05 | **NOT_RUN** | `test_checkout_durability.test_service_replay_cannot_allocate_different_capture` | Idempotent STARTED replay passes; exact accepted STARTED/pre-local-save child kill not demonstrated. |
+| CAP-06 | **PASS** | `test_capture_journal.test_abrupt_process_exit_at_every_write_boundary_preserves_evidence` | Real child exit at capture intent before frame. |
+| CAP-07 | **PASS** | `test_capture_journal.test_abrupt_process_exit_at_every_write_boundary_preserves_evidence` | Real child exit at temporary/staged JPEG boundaries; unacknowledged bytes stay held. |
+| CAP-08 | **PASS** | `test_capture_journal.test_abrupt_process_exit_at_every_write_boundary_preserves_evidence` | Real published JPEG/pre-manifest exit, image/hash and no overwrite assertions. |
+| CAP-09 | **PASS** | `test_capture_journal.test_abrupt_process_exit_at_every_write_boundary_preserves_evidence` | Real committed exit; reconstruction restores manifest-authorized count. |
+| CAP-10 | **PASS** | `test_photo_reconstruction.test_partial_three_capture_states_restore_exact_count_without_new_ids` | Exact 1/2/3 original states; quota and IDs retained. |
+| CAP-11 | **NOT_RUN** | `test_photo_reconstruction.test_retake_selected_and_used_restore_without_renewing_quota` | Retake selection/reconstruction passes; retake-specific abrupt child exit absent. |
+| CAP-12 | **NOT_RUN** | `test_capture_journal.test_retake_selection_and_consumed_quota_commit_with_same_saved_bytes` | Exception/lost reply and quota pass; child fixture covers originals, not retake frame/pre-quota exit. |
+| CAP-13 | **NOT_RUN** | `test_photo_reconstruction.test_retake_selected_and_used_restore_without_renewing_quota` | Committed retake restore passes; exact retake-commit child exit not demonstrated. |
+| CAP-14 | **PASS** | `test_output_journal.test_abrupt_output_process_exit_preserves_each_publication_boundary` | Real child output intent/staged/published/committed exits; originals/hash/ACK verified. |
+| CAP-15 | **PASS** | `test_photo_reconstruction.test_multiple_designs_resume_only_unfinished_design_and_original_copies` | Saved output/copies retained on reconstruction of next unfinished design. |
+| CAP-16 | **NOT_RUN** | `test_customer_claim_session.test_completed_service_can_restore_result_only_without_capture_readmission` | Result-only guard passes; exact final-compose/COMPLETE boundary process kill absent. |
+| CAP-17 | **PASS** | `test_photo_allocation.test_mismatched_frozen_contract_does_not_create_media_or_new_id` | Frozen template/cart/hash/copies; changed contract holds. |
+| CAP-18 | **PASS** | `test_photo_reconstruction.test_corrupt_media_or_wrong_binding_stays_held_without_data_rewrite` | Corruption/binding denial plus capture symlink/archive tests; real Windows junction acceptance separate. |
+| CAP-19 | **PASS** | `test_kiosk_v2_sandbox_widgets.test_real_photo_handoff_completion_and_duplicate_taps` | Duplicate taps, privacy-lock stale callbacks and native ownership gates. |
+| CAP-20 | **NOT_RUN** | `test_capture_journal.test_failure_before_publication_never_acknowledges_a_capture` | Image publication failure and low-disk/write-probe denial pass; every intent/manifest ENOSPC/EACCES boundary not demonstrated. |
+| CAP-21 | **PASS** | `test_retention.test_expired_controller_capture_cannot_recreate_a_deleted_photo` | Expired media cannot resurrect; retained liability separately asserted. |
+| UX-01 | **PASS** | `test_customer_claim_session.test_rebooted_reserved_order_cannot_prepare_without_original_customer_proof` | Private restart hold; native neutral claim screens at both sizes. |
+| UX-02 | **PASS** | `test_photo_reconstruction.test_no_permit_inspection_reveals_no_pixels_and_restore_rejects` | No proof means no private pixel/restore permission. |
+| UX-03 | **PASS** | `test_customer_capability.test_wrong_short_expired_and_wrong_booth_proofs_cannot_grant` | Replay/action identity and durable failed-attempt budget also tested. |
+| UX-04 | **PASS** | `test_kiosk_v2_sandbox_widgets.test_native_claim_and_deliberate_resume_restore_original_capture_without_new_charge` | Original proof, exact saved image count and deliberate countdown; native return screenshots. |
+| UX-05 | **NOT_RUN** | `test_checkout_release.test_prepare_holds_booth_and_ack_releases_only_occupancy` | Paid two-phase release is covered; ambiguous creation abandonment/release is deliberately conservative, not blanket certified. |
+| UX-06 | **PASS** | `test_kiosk_v2_sandbox_widgets.test_postpaid_camera_fault_records_owed_issue_and_hides_media` | Durable paid-unfulfilled issue; no fabricated cancellation. |
+| UX-07 | **NOT_RUN** | `test_recovery_readiness.test_low_disk_or_unwritable_probe_prevents_admission` | Camera/storage/template and accidental delivery opt-in deny; purchased real-printer preflight not certified in transport-off Sandbox. |
+| UX-08 | **PASS** | `test_booth_sync.test_configured_layout2_without_credentials_is_offline_ready_and_never_falls_back_to_legacy_oauth` | Offline local progress with deferred Drive and preserved layout/claims. |
+| UX-09 | **PASS** | `test_release_session.test_uncertain_print_never_yields_isolation_receipt_or_releases_booth` | Uncertain print remains held, no automatic resend; paper outcome NOT_RUN. |
+| UX-10 | **PASS** | `test_booth_sync.test_two_transactions_keep_exact_local_folder_mapping_across_restart` | Immutable delivery mapping/retry/retention fixtures; actual Drive acceptance NOT_RUN. |
+| UX-11 | **NOT_RUN** | `test_crash_supervisor.test_normal_operator_hold_or_living_process_never_restarts` | No-kill live-child gate and responsive HTTP tested; actual frozen-worker/GUI hang scenario not exercised. |
+| UX-12 | **PASS** | `test_crash_supervisor.test_three_crashes_have_persisted_budget_and_bounded_backoff` | Persisted restart budget; kernel multi-process lease tests, no business replay. |
+| UX-13 | **PASS** | `test_qris_recovery.test_independent_pin_attempt_limit_cannot_block_regular_status` | PIN+booth auth, action audit, cross-order/replay denial. |
+| UX-14 | **PASS** | `test_checkout_fulfillment.test_abandon_preserves_paid_obligation_and_no_fabricated_refund` | Closure/composition are not liability satisfaction. |
+| UX-15 | **PASS** | See scope/gate | Final native manifests: both portrait sizes, 28 hashes/dimensions, four QR decodes; selected layouts inspected. Physical touch/phone tests NOT_RUN. |
+| UX-16 | **PASS** | `test_kiosk_v2_recovery.test_empty_install_is_clear_without_creating_files` | Existing default/MOCK/native lifecycle regressions; no new business effect. |
+| UX-17 | **PASS** | `test_customer_claim_session.test_original_ticket_is_memory_only_and_cannot_be_redisplayed_after_restart` | Memory-only ticket plus backend-only PIN/argv/export isolation assertions; no blanket forensic log certification. |
+| UX-18 | **PASS** | `test_kiosk_v2_recovery.test_old_is_pruned_and_linked_storage_is_rejected_before_descent` | Archive/link exclusion uses synthetic temporary paths only. |
+| WEB-01 | **BLOCKED** | `test_notification_inbox` | Public infrastructure/merchant approval, mounted ingress/worker, TLS and operational acceptance absent. Offline inbox prototype is supporting evidence only. |
+| WEB-02 | **BLOCKED** | `test_notification_inbox` | Public infrastructure/merchant approval, mounted ingress/worker, TLS and operational acceptance absent. Offline inbox prototype is supporting evidence only. |
+| WEB-03 | **BLOCKED** | `test_notification_inbox` | Public infrastructure/merchant approval, mounted ingress/worker, TLS and operational acceptance absent. Offline inbox prototype is supporting evidence only. |
+| WEB-04 | **BLOCKED** | `test_notification_inbox` | Public infrastructure/merchant approval, mounted ingress/worker, TLS and operational acceptance absent. Offline inbox prototype is supporting evidence only. |
+| WEB-05 | **BLOCKED** | `test_notification_inbox` | Public infrastructure/merchant approval, mounted ingress/worker, TLS and operational acceptance absent. Offline inbox prototype is supporting evidence only. |
+| WEB-06 | **BLOCKED** | `test_notification_inbox` | Public infrastructure/merchant approval, mounted ingress/worker, TLS and operational acceptance absent. Offline inbox prototype is supporting evidence only. |
+| WEB-07 | **BLOCKED** | `test_notification_inbox` | Public infrastructure/merchant approval, mounted ingress/worker, TLS and operational acceptance absent. Offline inbox prototype is supporting evidence only. |
+| WEB-08 | **BLOCKED** | `test_notification_inbox` | Public infrastructure/merchant approval, mounted ingress/worker, TLS and operational acceptance absent. Offline inbox prototype is supporting evidence only. |
+
+### Invariants and reliability cross-check
+
+I01–I04: creation attempts, backend reconciliation and fulfillment identity tests;
+I05: paid issue/OWED and release tests; I06: capture/output/reconstruction tests;
+I07: no-replay source assertions only, with missing exact child/paper effects
+retained above; I08: capability/permit/privacy tests; I09: native stale callback,
+worker/event-loop tests (actual frozen-worker gate NOT_RUN); I10: immutable
+identity/retention/archive tests; I11: Sandbox launcher/credential/delivery-off
+tests; I12: booth authentication, frozen merchant and checked-path tests.
+These are supporting PASS assertions, not a proof of every real-world transition.
+
+WAL/FULL PREPARE/ACK child exits and integrity_check plus locked-writer BEGIN
+rollback are PASS in `test_autonomous_recovery_faults`; stale fences in
+`test_service_fencing`; paid-but-unfulfilled durability in `test_fulfillment_issues`;
+PNG INTENT/STAGED/PUBLISHED/COMMITTED child exits in `test_output_journal`;
+JPEG five-boundary child exits in `test_capture_journal`; archived completed
+result-only return in `test_release_session`. Windows native CI passes these
+portable checks, not physical power loss or Python directory-fsync equivalence.
+Offline mapping/retention are synthetic; actual Drive deletion remains BLOCKED.
+
+Every original PAY/CAP/UX/WEB ID appears once here. Full-suite optional model
+SKIPs are recorded separately in validation; they are not silently counted as
+matrix PASS or used to waive device/merchant requirements.
+
 ## G. Evidence and acceptance sheet
 
 | Gate | Evidence required | Current |
 | --- | --- | --- |
-| Source unit/integration | Exact SHA, OS, command, full count PASS/FAIL/SKIP, fixtures and no secret leakage | NOT_RUN |
-| Crash/restart fault-injection | Every PAY/CAP/UX applicable ID mapped to test output | NOT_RUN |
-| Complete GUI regression | One final applicable full suite after last functional change; no borrowed old pass | NOT_RUN |
-| GUI screenshot/pixels | Tested exact source 800×1280 and 452×900, readability and QR identity | NOT_RUN |
+| Source unit/integration | Exact SHA, OS, command, full count PASS/FAIL/SKIP, fixtures and no secret leakage | PASS at f72fdbc: 1097 run / 1093 PASS / 4 optional SKIP |
+| Crash/restart fault-injection | Every PAY/CAP/UX applicable ID mapped to test output | NOT_RUN for complete gate; see explicit missing exact windows above |
+| Complete GUI regression | One final applicable full suite after last functional change; no borrowed old pass | PASS source regression; four full-run optional SKIPs retained; native video subsequently verified separately |
+| GUI screenshot/pixels | Tested exact source 800×1280 and 452×900, readability and QR identity | PASS for 28 captured scenes / four QR checks; retake/multi-design visual scenes NOT_RUN |
 | Windows booth | Real camera/storage, app close/reopen/power interruption, native touch/keyboard | NOT_RUN |
 | Ubuntu mini PC | Actual graphical session service, permissions, startup, real camera/print hardware | NOT_RUN |
 | Android/tablet | Separate build/lifecycle/provider and storage behavior; if targeted, actual device evidence | NOT_RUN |

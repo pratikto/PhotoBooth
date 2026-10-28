@@ -1,5 +1,61 @@
 # AR-12 — final source validation and external acceptance gates
 
+## Final source evidence — 29 October 2026
+
+Source `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`: **1,097 run / 1,093 PASS / 4 SKIP / zero failures/errors**, 428.924s, CPython 3.12.14 on Debian 13.6/cloud Linux,
+SDL offscreen/software GL/dummy audio; tracked tree clean before and after.
+Command: `.venv/bin/python tools/run_kiosk_unittests.py`, with
+`PHOTOBOOTH_TEST_GUI=1 PHOTOBOOTH_TEST_AUDIO=1` and the isolated environment
+recorded in [safe provenance](evidence/ar12-final-verification.json).
+Four tests skipped in this full command: three optional palm-model assets and one native-video opt-in. The native-video case subsequently PASSed alone at the same SHA with its opt-in enabled (exact IDs/reasons below).
+Both `PHOTOBOOTH_TEST_*` opt-ins were omitted in a preliminary run: 1097 run /
+1020 PASS / 77 SKIP / zero failures/errors, 248.048s. That limited run is
+superseded; it is not substituted for the applicable final run.
+
+Matching [CI 40767441201](https://github.com/pratikto/PhotoBooth/actions/runs/40767441201)
+at the exact final source: **all three jobs SUCCESS**. Earlier requested green
+CI 40756922129 at b5931c8 is independently verified historical evidence, not
+certification of the later scanner change. Hosted Windows/Linux is not device
+acceptance. Prior session 1094/1091/3 counts remain reported/unverified because
+their raw log/provenance was unavailable; final counts above come from a new run.
+
+Final native recorder: **28 PNGs** at 800×1280 and 452×900, source `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`,
+clean tracked tree; every dimension/hash verified, **four QR decodes PASS**
+without payload logging. Ten nonsecret synthetic scenes are retained under
+[evidence/ar12-native](evidence/ar12-native); ticket QR pixels remain private.
+Selected final neutral-claim, compact release/return and archived-lookup layouts
+were inspected without clipping. Native walkthrough covers one-photo return,
+ownership, operator inspection/isolation/release and archived reentry. Retake,
+multi-design and COMPLETED-result-only invariants have source tests; their
+dedicated native screenshot scenes remain **NOT_RUN**, not borrowed from this
+single-design walkthrough. Phone/physical-camera scanning remains NOT_RUN.
+
+Matrix ledger: **43 PASS / 0 FAIL / 0 SKIP / 9 BLOCKED / 17 NOT_RUN** across
+69 required IDs. Missing exact subprocess/write-fault windows are explicitly
+retained despite successful logical/reopen/exception tests. See
+[matrix](AUTONOMOUS-RECOVERY-TEST-MATRIX.md#executed-evidence-ledger--29-october-2026).
+AR-13 assessment: **CONDITIONAL for controlled acceptance; NOT READY for
+unattended commercial release**, with [owner checklist A01-A12](AR13-READINESS.md).
+
+Native-video supplemental command (same offscreen/dummy environment plus
+`PHOTOBOOTH_TEST_VIDEO=1`):
+`.venv/bin/python tools/run_kiosk_unittests.py test_kiosk_advertising.KioskAdvertisingTests.test_native_video_has_frames_payment_is_muted_and_retiring_unloads_decoder`:
+**1 PASS / zero failures/errors/skips**, 5.472s, at the same final SHA. This
+separate pass does not rewrite the four full-run SKIPs. Only three optional
+palm-model cases remain unexecuted across this full run plus supplement.
+
+Exact optional skips in the full command:
+
+- `test_real_model_worker_drives_the_actual_controller_and_keeps_button_capture (test_camera_recovery.CameraRecoveryTests.test_real_model_worker_drives_the_actual_controller_and_keeps_button_capture)` — 'Native model assets are opt-in'
+- `test_native_video_has_frames_payment_is_muted_and_retiring_unloads_decoder (test_kiosk_advertising.KioskAdvertisingTests.test_native_video_has_frames_payment_is_muted_and_retiring_unloads_decoder)` — 'Native video checks require opt-in and ffmpeg'
+- `test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture)` — 'Native model assets are opt-in'
+- `test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image (test_palm_gesture.NativePalmModelTests.test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image)` — 'Native model assets are opt-in'
+
+No raw logs, real customer data or ticket payloads are committed. The complete
+environment, source trees, report digest, safe native manifest and CI references
+are in the evidence JSON. No code changed after the final tested source; later
+publication is documentation/evidence only.
+
 ## AR-12.e — independently verified CI history and deterministic fixture (29 October)
 
 ### AR-12.f — recovery scanner false negatives exposed by the fresh CI
