@@ -22,6 +22,13 @@ class CheckoutBackend:
         self.server_key, self.merchant_id = server_key, merchant_id
 
     @property
+    def provider_mode(self):
+        return getattr(self.provider, 'mode', 'sandbox')
+
+    def _creation_context(self, order_id):
+        return self.store.validate_creation_context(order_id, self.merchant_id, self.provider_mode)
+
+    @property
     def sandbox_recovery_supported(self):
         from photobooth.midtrans_sandbox import MidtransSandboxClient
         mode = getattr(self.provider, 'mode', None)
@@ -32,6 +39,7 @@ class CheckoutBackend:
         if not self.sandbox_recovery_supported:
             raise CheckoutConflict('Recovery is restricted to Sandbox')
         order = self.store.get(order_id, booth_id)
+        self._creation_context(order_id)
         try:
             data = self.provider.get_status(order_id)
             evidence = provider_evidence(data, order, self.merchant_id)
@@ -88,12 +96,17 @@ class CheckoutBackend:
 
     def create_order(self, booth_id, quantities, checkout_key):
         quote = quote_checkout(quantities)
-        order, first = self.store.begin(booth_id, dict(quantities), quote.total_amount, checkout_key)
+        order, first = self.store.begin(booth_id, dict(quantities), quote.total_amount, checkout_key,
+                                       creation_context=(self.merchant_id, self.provider_mode))
+        self._creation_context(order['id'])
         if not first:
+            return self.status(order['id'], booth_id)
+        if not self.store.mark_creation_sent(order['id'], self.merchant_id, self.provider_mode):
             return self.status(order['id'], booth_id)
         try:
             return self.view(self._apply(order, self.provider.create_qris(order['id'], order['amount'])))
         except Exception as error:
+            self.store.mark_creation_uncertain(order['id'])
             # The persisted key survives an ambiguous response. Retrying does
             # GET Status for the SAME order; never another charge/order ID.
             raise ProviderUnavailable('Checkout verification unavailable; retry the same visit') from error
@@ -101,6 +114,7 @@ class CheckoutBackend:
     def status(self, order_id, booth_id):
         identifier(order_id, maximum=50)
         order = self.store.get(order_id, booth_id)
+        self._creation_context(order_id)
         if order['state'] in {'CREATED', 'PENDING'} and self.store.reserve_check(order_id):
             try:
                 order = self._apply(order, self.provider.get_status(order_id))
@@ -116,6 +130,7 @@ class CheckoutBackend:
         except CheckoutMissing:
             self.store.event(notification, 'IGNORED_UNKNOWN_ORDER')
             return True
+        self._creation_context(order_id)
         if idr_amount(notification['gross_amount']) != order['amount']:
             self.store.event(notification, 'REJECTED_AMOUNT')
             raise ValueError('Notification amount mismatch')
@@ -130,13 +145,18 @@ class CheckoutBackend:
         return True
 
     def claim(self, order_id, booth_id, checkout_key):
+        self.store.get(order_id, booth_id)
+        self._creation_context(order_id)
         return self.view(self.store.grant(order_id, booth_id, checkout_key))
 
     def service_transition(self, order_id, booth_id, grant_id, state, transaction_id):
+        self.store.get(order_id, booth_id)
+        self._creation_context(order_id)
         return self.view(self.store.service_transition(order_id, booth_id, grant_id, state, transaction_id))
 
     def cancel(self, order_id, booth_id):
         order = self.store.get(order_id, booth_id)
+        self._creation_context(order_id)
         if order['state'] in {'CREATED', 'PENDING'}:
             try:
                 # Provider cancel and payment may race. Independent final

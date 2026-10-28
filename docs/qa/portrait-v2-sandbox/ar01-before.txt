@@ -1,0 +1,112 @@
+test_concurrent_independent_backends_send_once (test_checkout_creation_attempts.CreationAttemptTests.test_concurrent_independent_backends_send_once) ... ok
+test_different_merchant_or_mode_cannot_reuse_old_order_or_call_provider (test_checkout_creation_attempts.CreationAttemptTests.test_different_merchant_or_mode_cannot_reuse_old_order_or_call_provider) ... 
+  test_different_merchant_or_mode_cannot_reuse_old_order_or_call_provider (test_checkout_creation_attempts.CreationAttemptTests.test_different_merchant_or_mode_cannot_reuse_old_order_or_call_provider) (merchant='OTHER', mode='sandbox') ... FAIL
+  test_different_merchant_or_mode_cannot_reuse_old_order_or_call_provider (test_checkout_creation_attempts.CreationAttemptTests.test_different_merchant_or_mode_cannot_reuse_old_order_or_call_provider) (merchant='M12345', mode='mock') ... FAIL
+test_exception_after_payment_commit_does_not_regress_verified_attempt (test_checkout_creation_attempts.CreationAttemptTests.test_exception_after_payment_commit_does_not_regress_verified_attempt) ... ERROR
+test_fingerprint_mismatch_blocks_provider_io (test_checkout_creation_attempts.CreationAttemptTests.test_fingerprint_mismatch_blocks_provider_io) ... ERROR
+test_identity_and_sent_boundary_are_committed_before_provider_io (test_checkout_creation_attempts.CreationAttemptTests.test_identity_and_sent_boundary_are_committed_before_provider_io) ... ERROR
+test_lost_response_uncertainty_survives_reopen_and_status_recovers (test_checkout_creation_attempts.CreationAttemptTests.test_lost_response_uncertainty_survives_reopen_and_status_recovers) ... ERROR
+test_provider_never_received_call_and_repeated_404_remain_uncertain (test_checkout_creation_attempts.CreationAttemptTests.test_provider_never_received_call_and_repeated_404_remain_uncertain) ... ERROR
+test_upgrade_and_old_writer_rows_are_held_without_guessing_or_resend (test_checkout_creation_attempts.CreationAttemptTests.test_upgrade_and_old_writer_rows_are_held_without_guessing_or_resend) ... ERROR
+
+======================================================================
+ERROR: test_exception_after_payment_commit_does_not_regress_verified_attempt (test_checkout_creation_attempts.CreationAttemptTests.test_exception_after_payment_commit_does_not_regress_verified_attempt)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_checkout_creation_attempts.py", line 137, in test_exception_after_payment_commit_does_not_regress_verified_attempt
+    self.assertEqual(self.attempt(oid)['phase'], 'VERIFIED')
+                     ^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_checkout_creation_attempts.py", line 32, in attempt
+    return self.store.creation_attempt(oid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'CheckoutStore' object has no attribute 'creation_attempt'
+
+======================================================================
+ERROR: test_fingerprint_mismatch_blocks_provider_io (test_checkout_creation_attempts.CreationAttemptTests.test_fingerprint_mismatch_blocks_provider_io)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_checkout_creation_attempts.py", line 101, in test_fingerprint_mismatch_blocks_provider_io
+    self.store.db.execute('UPDATE checkout_create_attempts SET request_hash=? WHERE order_id=?',
+sqlite3.OperationalError: no such table: checkout_create_attempts
+
+======================================================================
+ERROR: test_identity_and_sent_boundary_are_committed_before_provider_io (test_checkout_creation_attempts.CreationAttemptTests.test_identity_and_sent_boundary_are_committed_before_provider_io)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/photobooth/checkout_backend.py", line 95, in create_order
+    return self.view(self._apply(order, self.provider.create_qris(order['id'], order['amount'])))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_checkout_creation_attempts.py", line 40, in inspect
+    attempt = other.creation_attempt(oid)
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'CheckoutStore' object has no attribute 'creation_attempt'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_checkout_creation_attempts.py", line 51, in test_identity_and_sent_boundary_are_committed_before_provider_io
+    view = self.create()
+           ^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_checkout_creation_attempts.py", line 29, in create
+    return self.backend.create_order('PB001', {'template_a': 2}, self.key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/photobooth/checkout_backend.py", line 99, in create_order
+    raise ProviderUnavailable('Checkout verification unavailable; retry the same visit') from error
+photobooth.checkout_backend.ProviderUnavailable: Checkout verification unavailable; retry the same visit
+
+======================================================================
+ERROR: test_lost_response_uncertainty_survives_reopen_and_status_recovers (test_checkout_creation_attempts.CreationAttemptTests.test_lost_response_uncertainty_survives_reopen_and_status_recovers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_checkout_creation_attempts.py", line 60, in test_lost_response_uncertainty_survives_reopen_and_status_recovers
+    before = self.attempt(oid)
+             ^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_checkout_creation_attempts.py", line 32, in attempt
+    return self.store.creation_attempt(oid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'CheckoutStore' object has no attribute 'creation_attempt'
+
+======================================================================
+ERROR: test_provider_never_received_call_and_repeated_404_remain_uncertain (test_checkout_creation_attempts.CreationAttemptTests.test_provider_never_received_call_and_repeated_404_remain_uncertain)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_checkout_creation_attempts.py", line 81, in test_provider_never_received_call_and_repeated_404_remain_uncertain
+    self.assertEqual(self.attempt(oid)['phase'], 'UNCERTAIN')
+                     ^^^^^^^^^^^^^^^^^
+  File "/workspace/PhotoBooth/tests/test_checkout_creation_attempts.py", line 32, in attempt
+    return self.store.creation_attempt(oid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'CheckoutStore' object has no attribute 'creation_attempt'
+
+======================================================================
+ERROR: test_upgrade_and_old_writer_rows_are_held_without_guessing_or_resend (test_checkout_creation_attempts.CreationAttemptTests.test_upgrade_and_old_writer_rows_are_held_without_guessing_or_resend)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_checkout_creation_attempts.py", line 151, in test_upgrade_and_old_writer_rows_are_held_without_guessing_or_resend
+    attempt = upgraded.creation_attempt(row['id'])
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'CheckoutStore' object has no attribute 'creation_attempt'
+
+======================================================================
+FAIL: test_different_merchant_or_mode_cannot_reuse_old_order_or_call_provider (test_checkout_creation_attempts.CreationAttemptTests.test_different_merchant_or_mode_cannot_reuse_old_order_or_call_provider) (merchant='OTHER', mode='sandbox')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_checkout_creation_attempts.py", line 93, in test_different_merchant_or_mode_cannot_reuse_old_order_or_call_provider
+    with self.assertRaises(CheckoutConflict):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: CheckoutConflict not raised
+
+======================================================================
+FAIL: test_different_merchant_or_mode_cannot_reuse_old_order_or_call_provider (test_checkout_creation_attempts.CreationAttemptTests.test_different_merchant_or_mode_cannot_reuse_old_order_or_call_provider) (merchant='M12345', mode='mock')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_checkout_creation_attempts.py", line 93, in test_different_merchant_or_mode_cannot_reuse_old_order_or_call_provider
+    with self.assertRaises(CheckoutConflict):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: CheckoutConflict not raised
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.032s
+
+FAILED (failures=2, errors=6)
+KIOSK_UNITTEST_SUMMARY: run=8 failures=2 errors=6 skipped=0 success=False

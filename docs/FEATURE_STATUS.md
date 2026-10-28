@@ -1,5 +1,13 @@
 # Meong Photobooth — current feature status
 
+## 28 October — AR-01 creation durability (source, not unattended acceptance)
+
+Backend persists immutable creation request scope/fingerprint and send ambiguity
+in an additive table. Old rows remain held; timeout/404/restart cannot create a
+replacement charge. Merchant/mode/request mismatches reject before provider I/O.
+132 focused PASS; full/CI/device/merchant gates pending at publication.
+No customer resume GUI is implemented. [AR-01 evidence](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CREATION.md).
+
 ## 28 October — Autonomous Recovery baseline
 
 AR-00 contract/fixtures verified offline: six new cases, 87 focused PASS, no

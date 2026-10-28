@@ -1,0 +1,23 @@
+{
+  "base_sha": "4261236694358c2f3cd2a475a4cd9cd82f436e00",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "focused": {
+    "run": 132,
+    "pass": 132,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "full": "NOT_RUN at micro-checkpoint",
+  "merchant": "NOT_RUN",
+  "device": "NOT_RUN",
+  "sha256": {
+    "photobooth/checkout_store.py": "7e483fc5508617d3decf6728cde59c3a1c009243aa23fa550899af42c8dd75dc",
+    "photobooth/checkout_backend.py": "65d40159b091da55ea311c8ea78787b75c7a39c59415fa0547d5cd26605b5893",
+    "tests/test_checkout_creation_attempts.py": "ca30b4ca8e48bd0d8bc7254f5619439e4251dad679016775e0343d7123e666db",
+    "tests/test_autonomous_recovery_baseline.py": "537a917a2cbbb38bfbf75facb9504defc85202d2c5c9ce4172439e53431dd621",
+    "tests/recovery_crash_fixture.py": "172ac0e5a17b0be816d11bc9fc65fa3736bf04bca92fa1ee8294994f7bc5497c",
+    ".github/workflows/portrait-kiosk-v2.yml": "e72311f9ac83e21f28b18c6640da38eeefc9b2f0ac25e64bba4b2d4f6bcef876"
+  }
+}

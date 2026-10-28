@@ -1,5 +1,15 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 28 October — AR-01 test-first creation durability
+
+Nine attempt/migration tests and six AR-00 baseline tests included in **132
+focused PASS, zero FAIL/ERROR/SKIP** (Linux/Python 3.12.14). Earlier eight new
+tests produced 2 FAIL/6 ERROR before implementation. Includes separate SQLite
+connections, concurrent backends, abrupt PREPARED/SENT/provider-accepted exits,
+old-schema preservation and rows from rollback-era writers. Full/CI/physical
+checks pending; exact commands/results/source hashes in
+[AR-01 evidence](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CREATION.md).
+
 ## 28 October — AR-00 offline baseline
 
 Base `f6736b7c739e3317e3bcc4506edb250f9e47d92b`, runtime unchanged.

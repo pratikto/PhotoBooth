@@ -1,8 +1,8 @@
 # Autonomous recovery — session checkpoint and resume contract
 
-**Checkpoint status:** AR-00.a/b VERIFIED OFFLINE, 28 October 2026 (Asia/Jakarta)
+**Checkpoint status:** AR-01.a/b IMPLEMENTED / focused VERIFIED OFFLINE, 28 October 2026 (Asia/Jakarta)
 **Branch:** `feature/portrait-kiosk-v2-next` (existing; no master merge)
-**Recovery implementation:** AR-00 contract/fixtures complete; AR-01–AR-13 pending
+**Recovery implementation:** AR-00 complete; AR-01 local attempt durability implemented; provider repeat-charge gate BLOCKED; AR-02–13 pending
 **Last audited functional baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
 **Current documentation handover:** See `docs/DEVELOPMENT_HANDOVER.md` and verify current remote HEAD; never assume the HEAD printed in a dated checkpoint is still current.
 
@@ -33,27 +33,36 @@ The owner prefers **frequent small tested commits AND remote pushes** because a 
 | Next *small* action | File/function, intended test and AR substep |
 | Safe rollback | Previous commit and retained-data plan |
 
-## Current implementation checkpoint — AR-00.a/b
+## Current implementation checkpoint — AR-01.a/b
 
-- **Done:** [Frozen field/state/migration contract](AUTONOMOUS-RECOVERY-BASELINE.md)
-  and six offline baseline tests, including actual abrupt child exit before
-  provider call and after synthetic acceptance, same-order retries/404 hold,
-  optional fraud decisions and restart capture hold. Runtime source unchanged.
-- **Base / last verified remote:** `f6736b7c739e3317e3bcc4506edb250f9e47d92b`.
-  The AR-00 commit will be pinned by its companion checkpoint after push.
-- **Focused checks:** Linux cloud / Python 3.12.14 / Pillow 13.0.0:
-  `.venv/bin/python tools/run_kiosk_unittests.py test_autonomous_recovery_baseline test_checkout_backend test_checkout_durability test_qris_session test_midtrans_sandbox test_midtrans_verify test_qris_kiosk_client test_payment_quote`:
-  **87 PASS, zero failures/errors/skips**. `git diff --check` PASS.
-- **Changed:** two fixture/test files, baseline contract and associated docs.
-  No schema/data migration, private configuration or runtime changes.
-- **Not done:** AR-01 attempt migration/fingerprint/phase, AR-02 fresh admission,
-  AR-03–13. Full suite/native/Windows/Ubuntu hardware/merchant/print/Drive NOT_RUN.
-- **Blocker:** repeating Legacy charge remains disabled pending exact official
-  contract and merchant evidence; independent durability work can proceed.
-- **Next:** AR-01.a write migration/immutable-attempt tests, then additive
-  backend attempt ledger; preserve same-order GET-only retries.
-- **Local-only:** `work/` scratch scripts/output; no unpushed runtime code.
-- **Rollback:** inverse AR-00 tests/docs only; retain all payment/customer data.
+- **Date/platform:** 28 October 2026, Asia/Jakarta; Linux cloud, Python 3.12.14,
+  SQLite WAL/FULL. Windows development / Ubuntu device acceptance remain separate.
+- **Completed AR-00 / last verified remote:** `4261236694358c2f3cd2a475a4cd9cd82f436e00`.
+  Contract plus six baseline cases, focused **87 PASS / zero FAIL/ERROR/SKIP**.
+- **AR-01 changes:** additive `checkout_create_attempts` table; atomic frozen
+  merchant/mode/booth/order/key/cart/charge fingerprint before I/O; PREPARED →
+  SENT → UNCERTAIN/VERIFIED. Legacy rows retain financial/service fields and
+  receive LEGACY_UNCERTAIN. Only original new-order request may send once;
+  duplicate/restart/404 uses same-order status, never another charge.
+- **Focused tests:** nine new migration/attempt cases, including real PREPARED
+  crash, plus six AR-00 baseline and existing payment/HTTP/operator tests:
+  `.venv/bin/python tools/run_kiosk_unittests.py test_checkout_creation_attempts test_autonomous_recovery_baseline test_checkout_backend test_checkout_durability test_qris_session test_midtrans_sandbox test_midtrans_verify test_qris_kiosk_client test_payment_quote test_qris_api test_qris_http_v2 test_qris_recovery`:
+  **132 PASS / zero failures/errors/skips**. Initial eight tests before source:
+  **2 FAIL / 6 ERROR**, preserved as test-first reproduction, then corrected.
+- **Publication:** AR-01 code commit pending; exact remote/tested SHA will be
+  pinned in companion evidence after push. Source hashes and raw focused output
+  are recorded in the [AR-01 package](AUTONOMOUS-RECOVERY-CREATION.md).
+- **Full regression/CI:** pending at this checkpoint. Real Windows/Ubuntu hardware,
+  merchant simulator, paper/Drive/retention and production NOT_RUN/not authorized.
+- **Blocker:** Legacy repeat-charge semantics unproven; repeat POST/header remains
+  disabled. This blocks repeat-charge activation, not independent AR-02 work.
+- **Next:** verify AR-01 push/full regression, then AR-02.a tests for a narrow
+  booth-authenticated fresh reconciliation (including cached PAID/refund/offline)
+  separate from operator resolve. No GUI/photo restore before AR-03–06.
+- **Local-only:** work/ scratch evidence/scripts only; no unpushed runtime code
+  after the pending commit. No merchant/customer data accessed.
+- **Rollback:** inverse scoped AR-01 source; retain additive attempt table and all
+  journals/media. Old writers remain readable; upgrade marks their new rows held.
 
 ## Historical bootstrap checkpoint — documentation publication
 

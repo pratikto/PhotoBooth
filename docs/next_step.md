@@ -1,5 +1,15 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+## Current autonomous recovery continuation — 28 October
+
+Owner now explicitly requests implementation in AR dependency order. AR-00 is
+verified/pushed at `4261236694358c2f3cd2a475a4cd9cd82f436e00`. AR-01 local attempt
+durability has 132 focused PASS; final validation/publication follows. Legacy
+repeat-charge activation is blocked on provider contract/evidence. Next independent
+increment: AR-02.a fresh reconciliation tests, preserving separate operator auth.
+[Current checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md).
+Earlier DESIGN ONLY entries below describe their original publication.
+
 ## 28 October — priority roadmap: autonomous QRIS + photo recovery (DESIGN ONLY)
 
 The owner requested a comprehensive, Codex-readable **unattended-first** design and staged implementation reference. [Master engineering contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-MASTER-PLAN.md) · [AR-00–AR-13 execution roadmap](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-ROADMAP.md) · [official Midtrans research](qa/portrait-v2-sandbox/MIDTRANS-PROVIDER-CONTRACT.md) · [crash/acceptance tests](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-TEST-MATRIX.md) · [operational safeguards](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATIONS.md).

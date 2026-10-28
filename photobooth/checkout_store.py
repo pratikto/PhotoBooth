@@ -63,6 +63,12 @@ class CheckoutStore:
             prior_payment_state TEXT NOT NULL, prior_service_state TEXT NOT NULL);
           CREATE INDEX IF NOT EXISTS checkout_recovery_order_action
             ON checkout_recovery_actions(order_id,action);
+          CREATE TABLE IF NOT EXISTS checkout_create_attempts (
+            order_id TEXT PRIMARY KEY, version INTEGER NOT NULL DEFAULT 1,
+            merchant_id TEXT, provider_mode TEXT, request_hash TEXT,
+            phase TEXT NOT NULL CHECK(phase IN
+              ('PREPARED','SENT','UNCERTAIN','VERIFIED','LEGACY_UNCERTAIN')),
+            prepared_at REAL, sent_at REAL, verified_at REAL, updated_at REAL NOT NULL);
         ''')
         # Never silently forget unresolved orders from the earlier prototype.
         if self.db.execute("SELECT 1 FROM sqlite_master WHERE name='orders'").fetchone():
@@ -73,6 +79,13 @@ class CheckoutStore:
                         VALUES(?,?,?,?,?,'REVIEW_REQUIRED',?,'REVIEW_REQUIRED')''',
                         (old['id'], old['booth_id'], 'legacy-' + old['id'],
                          old['quantities'], old['amount'], self.now()))
+        # Additive migration: absence of an attempt never proves POST was not
+        # sent. Keep old payment/service bytes and IDs intact, including rows
+        # written by older source during a rollback. Never synthesize PREPARED.
+        with self.write():
+            self.db.execute('''INSERT OR IGNORE INTO checkout_create_attempts
+                (order_id,merchant_id,phase,updated_at)
+                SELECT id,merchant_id,'LEGACY_UNCERTAIN',? FROM checkouts''', (self.now(),))
 
     @contextmanager
     def write(self):
@@ -122,7 +135,66 @@ class CheckoutStore:
                 raise CheckoutConflict('Recovery action identity mismatch')
             return old is not None
 
-    def begin(self, booth_id, quantities, amount, checkout_key):
+    @staticmethod
+    def _creation_hash(order, merchant_id, provider_mode):
+        identifier(merchant_id)
+        if provider_mode not in {'sandbox', 'mock'}:
+            raise ValueError('Only test payment environments are supported')
+        # Freeze both the exact Legacy charge body and its local ownership.
+        # This internal fingerprint is not a speculative provider header/key.
+        payload = {'version': 1, 'merchant_id': merchant_id, 'provider_mode': provider_mode,
+                   'booth_id': order['booth_id'], 'checkout_key': order['checkout_key'],
+                   'quantities': order['quantities'], 'currency': 'IDR',
+                   'charge': {'payment_type': 'qris', 'transaction_details':
+                              {'order_id': order['id'], 'gross_amount': order['amount']}}}
+        return hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+
+    def creation_attempt(self, order_id):
+        with self.lock:
+            row = self.db.execute('SELECT * FROM checkout_create_attempts WHERE order_id=?',
+                                  (order_id,)).fetchone()
+            if row is None:
+                raise CheckoutMissing('Creation attempt not found')
+            return dict(row)
+
+    def validate_creation_context(self, order_id, merchant_id, provider_mode):
+        with self.write():
+            order = self._row(order_id)
+            digest = self._creation_hash(order, merchant_id, provider_mode)
+            if order['merchant_id'] and order['merchant_id'] != merchant_id:
+                raise CheckoutConflict('Checkout merchant mismatch')
+            self.db.execute('''INSERT OR IGNORE INTO checkout_create_attempts
+                (order_id,merchant_id,phase,updated_at) VALUES(?,?,'LEGACY_UNCERTAIN',?)''',
+                (order_id, order['merchant_id'], self.now()))
+            attempt = self.creation_attempt(order_id)
+            if (attempt['version'] != 1
+                    or attempt['merchant_id'] not in (None, merchant_id)
+                    or attempt['provider_mode'] not in (None, provider_mode)
+                    or (attempt['request_hash'] is not None and attempt['request_hash'] != digest)):
+                raise CheckoutConflict('Creation request identity mismatch')
+            return attempt
+
+    def mark_creation_sent(self, order_id, merchant_id, provider_mode):
+        # Only the original new-order request may call this CAS. Restarts and
+        # duplicate checkout requests reconcile via GET, even for PREPARED.
+        self.validate_creation_context(order_id, merchant_id, provider_mode)
+        with self.write():
+            order = self._row(order_id)
+            digest = self._creation_hash(order, merchant_id, provider_mode)
+            changed = self.db.execute('''UPDATE checkout_create_attempts
+                SET phase='SENT',sent_at=?,updated_at=?
+                WHERE order_id=? AND phase='PREPARED' AND request_hash=?
+                AND merchant_id=? AND provider_mode=?''',
+                (self.now(), self.now(), order_id, digest, merchant_id, provider_mode))
+            return changed.rowcount == 1
+
+    def mark_creation_uncertain(self, order_id):
+        with self.write():
+            # A QR/display error after verified evidence cannot undo that proof.
+            self.db.execute('''UPDATE checkout_create_attempts SET phase='UNCERTAIN',updated_at=?
+                WHERE order_id=? AND phase='SENT' ''', (self.now(), order_id))
+
+    def begin(self, booth_id, quantities, amount, checkout_key, *, creation_context=None):
         identifier(booth_id)
         identifier(checkout_key, minimum=16)
         if type(amount) is not int or amount <= 0 or not isinstance(quantities, dict):
@@ -144,6 +216,13 @@ class CheckoutStore:
             self.db.execute('''INSERT INTO checkouts
                 (id,booth_id,checkout_key,quantities,amount,created_at) VALUES(?,?,?,?,?,?)''',
                 (order_id, booth_id, checkout_key, encoded, amount, self.now()))
+            if creation_context is not None:
+                merchant_id, provider_mode = creation_context
+                digest = self._creation_hash(self._row(order_id), merchant_id, provider_mode)
+                self.db.execute('''INSERT INTO checkout_create_attempts
+                    (order_id,merchant_id,provider_mode,request_hash,phase,prepared_at,updated_at)
+                    VALUES(?,?,?,?,'PREPARED',?,?)''',
+                    (order_id, merchant_id, provider_mode, digest, self.now(), self.now()))
             return self._row(order_id), True
 
     def apply_evidence(self, order_id, evidence):
@@ -158,6 +237,10 @@ class CheckoutStore:
                     or (old['provider_ref'] and old['provider_ref'] != evidence['transaction_id'])
                     or (old['merchant_id'] and old['merchant_id'] != evidence['merchant_id'])):
                 raise CheckoutConflict('Provider evidence does not match this order')
+            attempt = self.db.execute('SELECT merchant_id FROM checkout_create_attempts WHERE order_id=?',
+                                      (order_id,)).fetchone()
+            if attempt and attempt['merchant_id'] not in (None, evidence['merchant_id']):
+                raise CheckoutConflict('Provider evidence merchant mismatch')
             # A late success belongs to the old visit, never the next customer.
             if state == 'PAID' and (old['closed'] or old['state'] in
                                     {'EXPIRED', 'CANCELLED', 'FAILED', 'REVIEW_REQUIRED'}):
@@ -172,6 +255,9 @@ class CheckoutStore:
                 expires_at=COALESCE(?,expires_at),verified_at=? WHERE id=?''',
                 (state, evidence['transaction_id'], evidence['merchant_id'],
                  evidence.get('expires_at'), self.now(), order_id))
+            self.db.execute('''UPDATE checkout_create_attempts
+                SET phase='VERIFIED',verified_at=?,updated_at=? WHERE order_id=?''',
+                (self.now(), self.now(), order_id))
             return self._row(order_id)
 
     def save_qr(self, order_id, url):

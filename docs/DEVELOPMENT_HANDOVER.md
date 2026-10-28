@@ -1,5 +1,19 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 28 October — AR-01 creation-attempt durability
+
+AR-00 pushed/remote verified at `4261236694358c2f3cd2a475a4cd9cd82f436e00`.
+AR-01.a/b adds a backend-only additive attempt ledger with frozen request and
+merchant/mode binding before provider I/O; uncertain creation never retries POST.
+Nine new attempt/migration tests plus baseline/protocol/HTTP group: **132 PASS,
+zero failures/errors/skips** on Linux/Python 3.12.14. Initial failing tests are
+recorded. Full regression/CI pending at this code checkpoint; source SHA will be
+pinned after push. [AR-01 contract/evidence](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CREATION.md)
+and [latest checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md).
+Next: full validation, then AR-02.a fresh reconciliation tests. Legacy repeat-charge
+contract remains BLOCKED; independent stages may proceed without enabling resend.
+Only work/ scratch files local; no customer data/credentials or unsafe WIP pushed.
+
 ## 28 October — AR-00 contract and crash-fixture checkpoint
 
 Current owner continuation authorizes dependency-ordered AR work with immediate

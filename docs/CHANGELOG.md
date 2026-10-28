@@ -1,5 +1,13 @@
 # Meong Photobooth — changelog
 
+## 2026-10-28 — AR-01 durable creation request boundaries
+
+Add backend-only creation attempts, atomic immutable request fingerprint,
+merchant/mode validation, single-send CAS and conservative legacy migration.
+Provider charge payload/headers unchanged; duplicate/restart recovery remains
+same-order GET only. Nine new tests; focused 132 PASS. Register new crash/migration
+fixtures in existing Linux/Windows CI. [Details](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CREATION.md).
+
 ## 2026-10-28 — AR-00 frozen contract and crash fixtures
 
 Inventory actual payment/service/journal/photo fields and unresolved migration

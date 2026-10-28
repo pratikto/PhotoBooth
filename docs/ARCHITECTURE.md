@@ -1,5 +1,15 @@
 # Meong Photobooth — GUI v2 architecture
 
+## AR-01 creation-attempt ledger — 28 October
+
+CheckoutStore now atomically inserts a separate creation attempt with the new
+order, merchant/mode and canonical request fingerprint. The backend marks SENT
+before I/O; ambiguous failures stay UNCERTAIN, validated provider evidence marks
+VERIFIED atomically with payment state. Legacy/missing attempts never authorize
+POST. Request ownership is checked before provider operations or service access.
+No GUI protocol, provider header, photo engine or production path is added.
+[Schema, migration and rollback](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CREATION.md).
+
 The v2 Sandbox worker now wraps the original provider-image downloader with
 `qr_branding.py`. It decodes pixels and directly reuses the existing Drive QR
 renderer/approved logo, then verifies payload equality. Failure keeps original

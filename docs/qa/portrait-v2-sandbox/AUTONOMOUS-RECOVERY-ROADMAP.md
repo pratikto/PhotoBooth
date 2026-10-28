@@ -1,6 +1,6 @@
 # Autonomous recovery — Codex execution roadmap
 
-**Document status: APPROVED PLANNING / IMPLEMENTATION NOT STARTED**, 28 October 2026  
+**Document status: IMPLEMENTATION IN PROGRESS — see checkpoint**, 28 October 2026
 **Scope:** `feature/portrait-kiosk-v2-next` only; no master/branch/default/production operations  
 **Baseline audited:** `2e5efe5d281a93fe8d22e53309a50147764d2939` (subsequent documentation commits do **not** count as new functional source tests)  
 **Read first:** [Master specification](AUTONOMOUS-RECOVERY-MASTER-PLAN.md), [Midtrans contract](MIDTRANS-PROVIDER-CONTRACT.md), [Test matrix](AUTONOMOUS-RECOVERY-TEST-MATRIX.md), [Operations](AUTONOMOUS-RECOVERY-OPERATIONS.md), `AGENTS.md`, `docs/README.md`, `docs/DEVELOPMENT_PROTOCOL.md`, `docs/DEVELOPMENT_HANDOVER.md`, `docs/DECISIONS.md`, `docs/FEATURE_STATUS.md`, `docs/bug_tracker.md`, `docs/portrait-kiosk-v2-technical-design.md`, `docs/next_step.md`, and relevant QA links. Never inspect `old`.
@@ -62,6 +62,10 @@ recoverable.
 | 13 | AR-13 | Production readiness and owner release decision | AR-12 + provider/operational contracts | Explicit approval; no automatic merge/production enablement |
 
 **P0 before unattended pilot:** AR-01 through AR-09 and payment/capture/privacy/crash tests. **P1 for safe automatic restart:** AR-10. **P1 for production-ready external callback:** AR-11. AR-12/13 are mandatory gates. There is no acceptance of unsafe shortcuts to meet a schedule.
+
+Current source delivery: AR-00 verified; AR-01 local attempt durability implemented,
+focused 132 PASS; remaining provider and subsequent-stage gates stay open.
+[Exact continuation/evidence](AUTONOMOUS-RECOVERY-CHECKPOINT.md).
 
 ### AR-00 — contract and fixture freeze
 

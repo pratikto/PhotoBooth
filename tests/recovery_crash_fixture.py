@@ -13,6 +13,10 @@ def crash_checkout(root, boundary):
     provider = MockQrisProvider(root / 'provider.sqlite', scenario='pending', now=lambda: 1000)
     store = CheckoutStore(root / 'orders.sqlite', now=lambda: 1000)
     original = provider.create_qris
+    if boundary == 'prepared':
+        def stop_before_send(*_args):
+            os._exit(73)
+        store.mark_creation_sent = stop_before_send
 
     def interrupted(order_id, amount):
         if boundary == 'before_send':
