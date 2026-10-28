@@ -335,6 +335,15 @@ class TransactionStore:
             raise FileNotFoundError(f"Output image was not found: {output_path}")
 
         session_record = self._session_record(transaction, session_id)
+        if self.capture_protocol:
+            from photobooth.capture_journal import validate_image, CaptureRecoveryRequired
+            intent = transaction.manifest.get('output_intents', {}).get(session_id) or {}
+            if intent.get('state') != 'STAGED' or intent.get('path') != self._relative_path(transaction, output_path):
+                raise CaptureRecoveryRequired('Output intent mismatch')
+            validate_image(output_path, intent.get('sha256'), image_format='PNG', expected_size=(640,1920))
+            intent['state'] = 'COMMITTED'
+            session_record['output_sha256'] = intent['sha256']
+            session_record['output_size_bytes'] = intent['size_bytes']
         session_record["final_photos"] = [
             self._relative_path(transaction, path) for path in final_photos
         ]

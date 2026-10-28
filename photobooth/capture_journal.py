@@ -38,6 +38,62 @@ def sync_directory(path):
     return True
 
 
+def validate_image(path, expected_hash, *, image_format=None, expected_size=None):
+    from photobooth.booth_storage import checked_path
+    path = checked_path(path)
+    if not path.is_file() or not 0 < path.stat().st_size <= 64*1024*1024:
+        raise CaptureRecoveryRequired('Saved media is missing or oversized')
+    if hashlib.sha256(path.read_bytes()).hexdigest() != expected_hash:
+        raise CaptureRecoveryRequired('Saved media hash mismatch')
+    with Image.open(path) as image:
+        if image.width <= 0 or image.height <= 0 or image.width*image.height > 40_000_000:
+            raise CaptureRecoveryRequired('Saved media dimensions exceed the recovery limit')
+        image.load()
+        if (image_format and image.format != image_format) or (expected_size and image.size != tuple(expected_size)):
+            raise CaptureRecoveryRequired('Saved media format/dimensions mismatch')
+
+
+def publish_output(store, transaction, session, final_photos, render):
+    from photobooth.booth_storage import checked_path
+    transaction.manifest = json.loads(checked_path(transaction.manifest_path).read_text(encoding='utf-8'))
+    manifest = transaction.manifest
+    record = store._session_record(transaction, session.session_id)
+    raw = {p['path']: p for p in record['raw_photos']}
+    selected = [store._relative_path(transaction, p) for p in final_photos]
+    for relative in selected:
+        photo = raw.get(relative) or {}
+        validate_image(transaction.folder_path/relative, photo.get('sha256'), image_format='JPEG')
+    output = checked_path(store.output_path(transaction, session))
+    if output.exists() or session.session_id in manifest.get('output_intents', {}):
+        raise CaptureRecoveryRequired('Existing output requires exact recovery')
+    output.parent.mkdir(parents=True, exist_ok=True)
+    operation = uuid.uuid4().hex
+    temporary = checked_path(output.with_name('.'+output.stem+'.'+operation+'.tmp.png'))
+    intent = {'operation_id': operation, 'session_id': session.session_id,
+              'path': output.relative_to(transaction.folder_path).as_posix(),
+              'temporary_path': temporary.relative_to(transaction.folder_path).as_posix(),
+              'final_photos': selected, 'state': 'INTENT'}
+    manifest.setdefault('output_intents', {})[session.session_id] = intent
+    store._write_manifest(transaction)
+    boundary('output_intent')
+    with temporary.open('xb'):
+        pass
+    render(temporary)
+    with temporary.open('rb') as stream:
+        os.fsync(stream.fileno())
+    digest = hashlib.sha256(temporary.read_bytes()).hexdigest()
+    validate_image(temporary, digest, image_format='PNG', expected_size=(640,1920))
+    intent.update(state='STAGED', sha256=digest, size_bytes=temporary.stat().st_size)
+    store._write_manifest(transaction)
+    boundary('output_staged')
+    os.link(temporary, output, follow_symlinks=False)
+    sync_directory(output.parent)
+    temporary.unlink()
+    sync_directory(output.parent)
+    boundary('output_published')
+    return output
+
+
 def save_capture(store, transaction, session, image, filename, role):
     from photobooth.booth_storage import checked_path
     if role not in {'capture', 'retake'} or not isinstance(filename, str):

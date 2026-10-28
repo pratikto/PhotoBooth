@@ -143,6 +143,8 @@ class PhotoTest:
             identifier(binding.get(key))
         if not binding['transaction_id'].startswith(binding['booth_id']+'V2AR_'):
             raise ValueError('Allocation belongs to another namespace')
+        if self.store.booth_id != binding['booth_id']+'V2':
+            raise ValueError('Allocation belongs to another booth')
         contract = frozen_contract(quantities, templates=templates)
         digest = hashlib.sha256(json.dumps(contract, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
         if digest != binding.get('contract_hash'):
@@ -238,10 +240,21 @@ class PhotoTest:
         output = self.store.output_path(self.transaction, session.plan)
         with self.store.photo_write_lock(self.transaction):
             latest = json.loads(self.transaction.manifest_path.read_text(encoding='utf-8'))
-            compose_result(session.final_photo_paths, session.plan.template, output,
-                           self.transaction.transaction_id, session.plan.session_id,
-                           (latest.get('drive_folder_url') if not self.workspace or latest.get('photo_number_layout') == 1 else None),
-                           mirror_photos=True, download_pending=bool(self.workspace and latest.get('drive_intent')))
+            if latest.get('payment_binding'):
+                from photobooth.fulfillment_contract import frozen_contract
+                import hashlib
+                contract = frozen_contract({s.plan.template.template_id:s.plan.print_copies for s in self.sessions},
+                                           templates=[s.plan.template for s in self.sessions])
+                digest = hashlib.sha256(json.dumps(contract, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+                if digest != latest['payment_binding']['contract_hash']:
+                    raise ValueError('Frozen paid template changed before composition')
+            def render(target):
+                compose_result(session.final_photo_paths, session.plan.template, target,
+                    self.transaction.transaction_id, session.plan.session_id,
+                    (latest.get('drive_folder_url') if not self.workspace or latest.get('photo_number_layout') == 1 else None),
+                    mirror_photos=True, download_pending=bool(self.workspace and latest.get('drive_intent')))
+            from photobooth.capture_journal import publish_output
+            publish_output(self.store, self.transaction, session.plan, session.final_photo_paths, render)
             self.store.record_output(self.transaction, session.plan.session_id,
                                      session.final_photo_paths, output)
             if self.workspace:
@@ -484,6 +497,8 @@ def configured_test(root, *, configuration_root=None, storage_layout=None):
         if client is None and not layout2:
             raise PhotoSetupError('drive_configuration')
     booth_id = os.environ.get('PHOTOBOOTH_V2_BOOTH_ID', 'PB001V2')
+    if os.environ.get('PHOTOBOOTH_V2_CHECKOUT_SANDBOX') == '1':
+        booth_id = os.environ.get('MEONG_QRIS_BOOTH_ID', 'PB001')+'V2'
     if not layout2 and not booth_id.endswith('V2'):
         raise PhotoSetupError('booth_profile')
     if layout2:

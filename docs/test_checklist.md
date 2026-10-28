@@ -1,5 +1,10 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 28 October — AR-05.a: immutable strip publication with frozen input hashes
+
+Three new output cases; focused 71 PASS, zero failures/errors/skips, including native handoff, capture, delivery and v1 retention/workflow. PNG intent and input identities persist before rendering; published-but-unacknowledged output cannot be overwritten on retry. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-PHOTO-RESUME.md).
+Physical/provider gates remain separate; no production activation.
+
 ## 28 October — AR-04.a: write-ahead immutable JPEG capture and atomic retake quota
 
 Seven new capture cases, five abrupt process boundaries, and focused 73 PASS, zero failures/errors/skips. V2 opts in; v1 writer defaults unchanged. Existing/orphan JPEGs cannot be overwritten; retake selection/quota commit with saved bytes. Native Sandbox and retention checks pass. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CAPTURE.md).

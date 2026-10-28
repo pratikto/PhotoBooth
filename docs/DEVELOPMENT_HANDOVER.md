@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 28 October — AR-05.a: immutable strip publication with frozen input hashes
+
+Base / last remote-verified commit `879d69bf4553e84befb21705033d9eb84759b571`. Three new output cases; focused 71 PASS, zero failures/errors/skips, including native handoff, capture, delivery and v1 retention/workflow. PNG intent and input identities persist before rendering; published-but-unacknowledged output cannot be overwritten on retry.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, private
+photo display or customer state reset. Next: AR-05.b exact metadata/intent reconstruction behind an ephemeral resume permit; then AR-06 customer capability.
+Only work/ scratch files local; scope and rollback in
+[stage contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-PHOTO-RESUME.md).
+
 ## 28 October — AR-04.a: write-ahead immutable JPEG capture and atomic retake quota
 
 Base / last remote-verified commit `075e97319762cfd73a089b444340fcf0eb2deb36`. Seven new capture cases, five abrupt process boundaries, and focused 73 PASS, zero failures/errors/skips. V2 opts in; v1 writer defaults unchanged. Existing/orphan JPEGs cannot be overwritten; retake selection/quota commit with saved bytes. Native Sandbox and retention checks pass.
