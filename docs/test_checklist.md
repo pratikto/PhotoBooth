@@ -1,5 +1,10 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 29 October — AR-09.c1: fence stale service workers before implementing safe booth release
+
+Focused 86 PASS, zero failures/errors/skips; five migration/CAS/restart/race cases. Dormant internal seam only; no UI/API rotates fences and no booth release is enabled. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATOR.md).
+Physical/provider gates remain separate; no production activation.
+
 ## 29 October — AR-09.b: mount PIN-protected native operator metadata inspection
 
 Focused 64 PASS, zero failures/errors/skips; wrong/missing/correct PIN, private media denial, journal secrecy and retired callbacks covered. Twenty provisional native PNG fixtures rendered at both required sizes. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATOR.md).

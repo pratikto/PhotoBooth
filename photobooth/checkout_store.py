@@ -107,6 +107,10 @@ class CheckoutStore:
           CREATE TABLE IF NOT EXISTS checkout_fulfillment_issue_events (
             operation_id TEXT PRIMARY KEY, order_id TEXT NOT NULL,
             reason TEXT NOT NULL, created_at REAL NOT NULL);
+          CREATE TABLE IF NOT EXISTS checkout_service_fences (
+            order_id TEXT PRIMARY KEY, generation INTEGER NOT NULL,
+            token TEXT NOT NULL UNIQUE, suspended INTEGER NOT NULL,
+            updated_at REAL NOT NULL);
         ''')
         # AR-02.c is additive for the already published scheduler schema.
         with self.write():
@@ -320,10 +324,38 @@ class CheckoutStore:
                             (operation_id,order_id,reason,now))
             return self.fulfillment_issue(order_id,booth_id)
 
+    def service_fence(self, order_id, booth_id):
+        with self.lock:
+            self._row(order_id,booth_id)
+            row=self.db.execute('SELECT * FROM checkout_service_fences WHERE order_id=?',
+                                (order_id,)).fetchone()
+            return dict(row) if row else None
+
+    def assert_service_fence(self, order_id, booth_id, token=None, *, require_token=True):
+        fence=self.service_fence(order_id,booth_id)
+        if fence and (fence['suspended'] or (require_token and token!=fence['token'])):
+            raise CheckoutConflict('Retired or suspended service authority')
+
+    def rotate_service_fence(self, order_id, booth_id, expected_generation, *, suspended):
+        """Internal CAS seam; no API/UI rotation until safe release integration."""
+        if type(expected_generation) is not int or expected_generation<0 or type(suspended) is not bool:
+            raise ValueError('Explicit service generation and suspension required')
+        with self.write():
+            self._row(order_id,booth_id)
+            previous=self.service_fence(order_id,booth_id)
+            if (previous['generation'] if previous else 0)!=expected_generation:
+                raise CheckoutConflict('Service generation changed')
+            self.db.execute('''INSERT INTO checkout_service_fences VALUES (?,?,?,?,?)
+                ON CONFLICT(order_id) DO UPDATE SET generation=excluded.generation,
+                    token=excluded.token,suspended=excluded.suspended,updated_at=excluded.updated_at''',
+                (order_id,expected_generation+1,uuid.uuid4().hex,int(suspended),self.now()))
+            return self.service_fence(order_id,booth_id)
+
     def allocate_fulfillment(self, order_id, booth_id, grant_id, operation_id):
         identifier(operation_id, minimum=16)
         with self.write():
             order = self._row(order_id, booth_id)
+            self.assert_service_fence(order_id,booth_id,require_token=False)
             if (order['state'] != 'PAID' or order['closed'] or not grant_id
                     or order['grant_id'] != grant_id or order['service_state'] not in {'RESERVED', 'STARTED'}):
                 raise CheckoutConflict('Allocation requires an active original permit')
@@ -436,6 +468,7 @@ class CheckoutStore:
         self.verify_customer_capability(order_id,booth_id,capability,operation_id)
         with self.write():
             order = self._row(order_id,booth_id)
+            self.assert_service_fence(order_id,booth_id,require_token=False)
             row = self.db.execute('SELECT * FROM checkout_customer_capabilities WHERE order_id=?', (order_id,)).fetchone()
             action = self.db.execute('SELECT order_id FROM checkout_customer_capabilities WHERE claim_operation_id=?',
                                      (operation_id,)).fetchone()
@@ -582,6 +615,7 @@ class CheckoutStore:
         """Replay the SAME durable permit after a lost response or restart."""
         with self.write():
             order = self._row(order_id, booth_id)
+            self.assert_service_fence(order_id,booth_id,require_token=False)
             if (order['checkout_key'] != checkout_key or order['state'] != 'PAID'
                     or order['closed']):
                 raise CheckoutConflict('Order is not eligible for this visit')
@@ -591,10 +625,11 @@ class CheckoutStore:
             self._ensure_fulfillment(self._row(order_id, booth_id))
             return self._row(order_id, booth_id)
 
-    def service_transition(self, order_id, booth_id, grant_id, state, local_transaction_id):
+    def service_transition(self, order_id, booth_id, grant_id, state, local_transaction_id, *, service_fence=None):
         identifier(local_transaction_id)
         with self.write():
             order = self._row(order_id, booth_id)
+            self.assert_service_fence(order_id,booth_id,service_fence)
             if (not grant_id or order['grant_id'] != grant_id or order['state'] != 'PAID' or order['closed']
                     or (order['local_transaction_id'] and
                         order['local_transaction_id'] != local_transaction_id)):
@@ -637,6 +672,7 @@ class CheckoutStore:
                     raise CheckoutConflict('Recovery action identity mismatch')
                 return order, dict(old)
             if action == 'resume':
+                self.assert_service_fence(order_id,booth_id)
                 if order['closed'] or order['state'] != 'PAID':
                     raise CheckoutConflict('Recovery cannot resume this payment')
                 if order['service_state'] not in {'NONE', 'RESERVED', 'STARTED'}:
@@ -654,6 +690,7 @@ class CheckoutStore:
                     self.db.execute("UPDATE checkouts SET service_state='STARTED',local_transaction_id=? WHERE id=?",
                                     (transaction_id, order_id))
             elif action == 'complete':
+                self.assert_service_fence(order_id,booth_id)
                 if (order['closed'] or order['state'] != 'PAID' or not order['grant_id']
                         or order['service_state'] not in {'STARTED', 'COMPLETED'}
                         or not transaction_id or order['local_transaction_id'] != transaction_id):

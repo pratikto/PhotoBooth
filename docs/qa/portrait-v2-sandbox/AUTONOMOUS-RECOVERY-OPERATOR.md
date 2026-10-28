@@ -65,3 +65,34 @@ transient input, journal secrecy and retired buttons. Twenty provisional native
 PNG fixtures rendered at 800x1280/452x900. Operator entry/status and compact claim
 were visually checked without clipping; final pinned AR-12 captures remain due.
 No actual merchant or Windows/Ubuntu device result is implied.
+
+AR-09.c1 contract before code: additive per-order service fence with generation,
+opaque fencing token and suspended bit; compare-and-swap rotation invalidates old
+worker authority. Existing orders without a fence retain original behavior. Every
+sensitive store admission/transition checks suspension; service updates against
+an active fence must carry its current token. Recheck in the final write after
+provider I/O to defeat a release racing a delayed settlement response. Fencing
+alone never closes payment/fulfillment, marks delivered, frees the booth or creates
+another customer order. No endpoint/UI may rotate a fence yet; the later two-phase
+release handshake must fence, stop local workers, durably ACK isolation, and only
+then permit a new visit. Returning claim needs atomic reacquisition and new token.
+Do not enable release via legacy abandon/reset as a shortcut.
+
+## AR-09.c1 delivered — dormant service fence foundation
+
+Additive checkout_service_fences stores durable generation/token/suspended state.
+Internal CAS rotation rejects stale generations. Suspended grants, allocations,
+customer redemption and service transitions are denied; an active fence requires
+its current token for service updates. The final SQLite write rechecks authority
+after provider I/O; legacy operator resume/complete cannot bypass a fence. Fencing
+preserves order, grant, original transaction and OWED, and does not unblock another
+checkout. Orders without fence rows retain existing behavior. No HTTP/native action
+rotates or activates this foundation yet. It is not a completed release protocol.
+Rollback retains this additive table and fail-closed guards; never erase a fence
+to regain authority. Two-phase release/reacquisition remains the next source task.
+
+Initial five tests ERROR before source. Focused **86 PASS / zero FAIL/ERROR/SKIP**:
+`.venv/bin/python tools/run_kiosk_unittests.py test_service_fencing test_checkout_fulfillment test_fulfillment_issues test_customer_capability test_checkout_backend test_qris_recovery test_qris_session test_qris_http_v2`.
+Five new cases cover migration, stale CAS/token, restart, no new visitor from a
+fence alone, and delayed provider response racing suspension. CI registration
+included. No actual operator release, restart supervisor or production enabled.

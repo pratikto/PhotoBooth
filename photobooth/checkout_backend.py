@@ -254,15 +254,17 @@ class CheckoutBackend:
         result['customer_claim'] = {'verified':True,'payment_verified':paid,'operation_id':operation_id}
         return result
 
-    def service_transition(self, order_id, booth_id, grant_id, state, transaction_id):
+    def service_transition(self, order_id, booth_id, grant_id, state, transaction_id, *, service_fence=None):
         order = self.store.get(order_id, booth_id)
+        self.store.assert_service_fence(order_id,booth_id,service_fence)
         self._creation_context(order_id)
         if state == 'STARTED':
             if (not grant_id or order['grant_id'] != grant_id
                     or order['local_transaction_id'] not in (None, transaction_id)):
                 raise CheckoutConflict('Service permit mismatch')
             self._require_settlement(order_id, booth_id)
-        return self.view(self.store.service_transition(order_id, booth_id, grant_id, state, transaction_id))
+        return self.view(self.store.service_transition(order_id, booth_id, grant_id, state, transaction_id,
+                                                      service_fence=service_fence))
 
     def cancel(self, order_id, booth_id):
         order = self.store.get(order_id, booth_id)

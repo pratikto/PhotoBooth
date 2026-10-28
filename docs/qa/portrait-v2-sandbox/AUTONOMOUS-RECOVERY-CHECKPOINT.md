@@ -2,7 +2,7 @@
 
 **Checkpoint status:** AR-07.b1 focused VERIFIED / roadmap IN PROGRESS, 28 October 2026 (Asia/Jakarta)
 **Branch:** `feature/portrait-kiosk-v2-next` (existing; no master merge)
-**Recovery implementation:** Source work progressed through AR-09.b; later stages and external gates remain unfinished
+**Recovery implementation:** Source work progressed through AR-09.c1; later stages and external gates remain unfinished
 **Latest previously tested/pushed functional source:** `6d53d91fcfcad6083aee9f17ac8f80cf635fdf2f` (AR-07.a); current increment and tests below
 **Historical audit baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
 **Current documentation handover:** See `docs/DEVELOPMENT_HANDOVER.md` and verify current remote HEAD; never assume the HEAD printed in a dated checkpoint is still current.
@@ -34,13 +34,13 @@ The owner prefers **frequent small tested commits AND remote pushes** because a 
 | Next *small* action | File/function, intended test and AR substep |
 | Safe rollback | Previous commit and retained-data plan |
 
-## Current implementation checkpoint — AR-09.b
+## Current implementation checkpoint — AR-09.c1
 
-- Base / last verified remote: `cc6032c6556dbe4fcd2f26f8a32d9b611b948ed6`.
-- Completed: mount PIN-protected native operator metadata inspection. Focused 64 PASS, zero failures/errors/skips; wrong/missing/correct PIN, private media denial, journal secrecy and retired callbacks covered. Twenty provisional native PNG fixtures rendered at both required sizes.
+- Base / last verified remote: `ed1612bd8f35d785d8c617db1343f9a0fc396f33`.
+- Completed: fence stale service workers before implementing safe booth release. Focused 86 PASS, zero failures/errors/skips; five migration/CAS/restart/race cases. Dormant internal seam only; no UI/API rotates fences and no booth release is enabled.
 - Publication SHA: this increment will be pinned after its verified push by the
   next checkpoint; obtain containing commit from Git history.
-- Remaining / exact next step: AR-09.c define and implement audited fenced suspend/release plus returning-customer lookup without losing OWED or allowing stale worker effects; then AR-10–13.
+- Remaining / exact next step: AR-09.c2 implement two-phase audited suspend/release and token-aware service API, then archived exact returning-customer reacquisition and native worker-stop/ACK; AR-10–13 remain pending.
 - Full suite: deferred to final functional SHA. Actual Windows/Ubuntu devices,
   merchant, paper/Drive and production: NOT_RUN / not enabled.
 - Migration/rollback: see stage contract; preserve all ledgers/media/claims,

@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-09.c1: fence stale service workers before implementing safe booth release
+
+Base / last remote-verified commit `ed1612bd8f35d785d8c617db1343f9a0fc396f33`. Focused 86 PASS, zero failures/errors/skips; five migration/CAS/restart/race cases. Dormant internal seam only; no UI/API rotates fences and no booth release is enabled.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, private
+photo display or customer state reset. Next: AR-09.c2 implement two-phase audited suspend/release and token-aware service API, then archived exact returning-customer reacquisition and native worker-stop/ACK; AR-10–13 remain pending.
+Only work/ scratch files local; scope and rollback in
+[stage contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATOR.md).
+
 ## 29 October — AR-09.b: mount PIN-protected native operator metadata inspection
 
 Base / last remote-verified commit `cc6032c6556dbe4fcd2f26f8a32d9b611b948ed6`. Focused 64 PASS, zero failures/errors/skips; wrong/missing/correct PIN, private media denial, journal secrecy and retired callbacks covered. Twenty provisional native PNG fixtures rendered at both required sizes.
