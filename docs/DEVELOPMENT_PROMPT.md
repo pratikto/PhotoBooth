@@ -17,6 +17,28 @@ verified PNGs. Reuse nine original v1 services; explicit --print/--drive profile
 background queue startup/resume and verified result QR. Paper/phone/cloud gates
 remain pending; watchdog is postponed. [Current package](qa/portrait-v2-print-drive/README.md).
 
+## 28 October — mandatory recovery continuation and frequent pushes
+
+For autonomous Sandbox recovery use [master specification](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-MASTER-PLAN.md),
+[AR-00–AR-13 roadmap](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-ROADMAP.md),
+[latest checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md),
+[provider contract](qa/portrait-v2-sandbox/MIDTRANS-PROVIDER-CONTRACT.md),
+[test matrix](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-TEST-MATRIX.md)
+and [operations runbook](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATIONS.md).
+These define the future target, not proof of completed runtime recovery.
+
+**Copy/paste addition to every Codex prompt:** "I explicitly prefer
+incremental Git commits and pushes throughout the work, not one final push.
+Because my ChatGPT/Codex access may reach a five-hour session limit, divide
+each approved stage into small independently tested micro-increments. After
+each safe meaningful increment, update documentation and checkpoint, commit,
+push to feature/portrait-kiosk-v2-next, and verify origin HEAD before proceeding.
+Before a session ends, publish a precise handover with the last pushed SHA,
+done/pending tasks, tests, blockers, local-only dirty changes and exact next
+step. In a new session read the checkpoint first and continue only unfinished
+work; never redo pushed, verified steps. Do not push broken/unsafe code or
+secrets just for a checkpoint. No new branch or master merge." 
+
 ## Copy/paste prompt
 
 > Repository: pratikto/PhotoBooth.
