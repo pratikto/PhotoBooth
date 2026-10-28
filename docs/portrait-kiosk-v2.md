@@ -77,6 +77,20 @@ The printed photo-folder QR is separate from the payment QRIS.
 
 [QRIS scope and implementation backlog](next_step.md) · [Existing owner decision](DECISIONS.md) · [Current feature evidence](FEATURE_STATUS.md).
 
+## Future GUI v2 follow-up — Meong Settings and Emulate Ticket (owner-approved design, 29 October 2026)
+
+**DEVELOPMENT ORDER:** **AR-00 → AR-13 remains the highest priority**. See the [live AR checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md) and [AR roadmap](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-ROADMAP.md). This Settings/Emulate Ticket proposal is **DOCUMENTATION ONLY**, not implemented by approval or by a docs commit. No interruption/replacement of AR-09 protected operator actions or AR-12/13 validation/readiness.
+
+**Complete canonical contract:** [Meong Settings — operator static QR, Audio and Emulate Ticket](qa/portrait-v2-operator-settings/README.md) · [future OPS-00–OPS-10 roadmap](qa/portrait-v2-operator-settings/IMPLEMENTATION-ROADMAP.md) · [acceptance tests](qa/portrait-v2-operator-settings/ACCEPTANCE-MATRIX.md) · [decision/supersession register](qa/portrait-v2-operator-settings/DECISION-REGISTER.md) · [Codex prompt](qa/portrait-v2-operator-settings/CODEX-HANDOVER.md).
+
+- Preserve current hidden F12/1.5-second Meong-header hold **only on first Advertising + verified SAFE_IDLE** and route it to a live-camera **Operator QR Login**, not the existing direct Health popup. **Static, high-entropy per-booth operator QR for development**, locally hashed/offline, revocable/rotatable. No ordinary Settings PIN, but AR-09 financial operator PIN remains separate. OS-authenticated maintenance fallback for broken camera. Mirrored scanner preview, original QR decode and one existing camera owner. Pause ads/face invite during login; cancel/timeout/close restores Advertising; 3-minute inactivity logout.
+- Exactly **three Settings tabs:** (1) **Device Health**, reusing the current read-only health worker/reports and optional redacted copy; (2) **Audio Settings** with per-booth persistent **Master Volume, Music, Button SFX, Other SFX, Mute and Test Sound**, retaining correct normal/game/ad-video audio lifecycle; (3) **Emulate Ticket**, the owner's final name replacing “Ticket Master”.
+- **Emulate Ticket** has **Merchant Promo — DEMO** and **Meong Fly Entry — DEMO**. **Static, reusable QR fixtures** during development with Eligible/Not Eligible/Invalid and Valid Entry/Already Used/Invalid test presets. The "already used" test rescans the same **actually consumed** valid QR. Exactly one attempt or promo per logical visit, persisted across restart; same QR can be reused in a genuinely separate test visit. Original game/one-use real receipt semantics remain unchanged. No Merchant Promo + Meong Fly stacking initially; demo reward and illustrated Rp50,000/Rp5,000 waiver are not real merchant offers.
+- **Preview / Print DEMO Ticket** uses existing native 80-mm thermal transport with durable, honest attempt status, uncertain/no-auto-replay and bounded non-sensitive test history. **Midtrans Sandbox printer/Drive remain OFF**, no new payment authority, no production DEMO acceptance.
+- **QRIS Payment Slip from the preceding section remains separate**: it prints only a valid pending provider QR and is **not** a merchant promo/game/recovery/operator ticket. Customer Recovery Ticket stays securely unique per order. All role namespaces and scanners must be isolated.
+
+Only after AR priority and separate code authorization may Codex execute OPS-00–OPS-10, with independent focused checks, small commits and immediate pushes/remote verification, full handover and actual physical acceptance on Windows/Ubuntu and later tablet as applicable.
+
 ## Roadmap: implemented source versus remaining evidence
 
 | Stage | Source now | Acceptance boundary |
