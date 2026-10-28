@@ -96,12 +96,16 @@ def sandbox_qr_url(url):
     return url
 
 
-def qr_url_from_status(data, evidence):
+def qr_url_from_status(data, evidence, *, existing_url=None):
     for action in data.get('actions', []) or []:
         if isinstance(action, dict) and action.get('name') == 'generate-qr-code':
             if action.get('method', 'GET') != 'GET':
                 raise ValueError('Unexpected QR action method')
             return sandbox_qr_url(action.get('url'))
-    # GET Status need not repeat actions; the official v2 QR endpoint is keyed
-    # by the independently verified transaction ID, not a URL from the kiosk.
+    # GET Status need not repeat actions. Preserve the verified image action:
+    # its API version/image reference need not match a derived v2 endpoint.
+    if existing_url is not None:
+        return sandbox_qr_url(existing_url)
+    # Lost charge responses may leave no action URL. Keep the original recovery
+    # fallback keyed by the independently verified transaction ID.
     return sandbox_qr_url(SANDBOX_ORIGIN + '/v2/qris/' + evidence['transaction_id'] + '/qr-code')

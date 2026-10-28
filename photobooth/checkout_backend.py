@@ -41,7 +41,8 @@ class CheckoutBackend:
         # fails. QR validation cannot turn a received settlement into nothing.
         updated = self.store.apply_evidence(order['id'], evidence)
         if updated['state'] == 'PENDING':
-            self.store.save_qr(order['id'], qr_url_from_status(data, evidence))
+            self.store.save_qr(order['id'], qr_url_from_status(
+                data, evidence, existing_url=updated.get('qr_url')))
         return self.store.get(order['id'])
 
     def create_order(self, booth_id, quantities, checkout_key):

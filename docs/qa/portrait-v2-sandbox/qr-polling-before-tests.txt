@@ -1,0 +1,66 @@
+test_backend_restart_retains_the_same_durable_image (test_checkout_backend.PendingQrPollingTests.test_backend_restart_retains_the_same_durable_image) ... FAIL
+test_cached_image_url_is_revalidated_before_reuse (test_checkout_backend.PendingQrPollingTests.test_cached_image_url_is_revalidated_before_reuse) ... FAIL
+test_explicit_verified_replacement_is_retained_by_later_polls (test_checkout_backend.PendingQrPollingTests.test_explicit_verified_replacement_is_retained_by_later_polls) ... FAIL
+test_invalid_explicit_action_does_not_fall_back_to_cached_image (test_checkout_backend.PendingQrPollingTests.test_invalid_explicit_action_does_not_fall_back_to_cached_image) ... ok
+test_repeated_missing_null_empty_or_unrelated_actions_keep_charge_image (test_checkout_backend.PendingQrPollingTests.test_repeated_missing_null_empty_or_unrelated_actions_keep_charge_image) ... FAIL
+test_terminal_provider_states_still_remove_the_public_qr (test_checkout_backend.PendingQrPollingTests.test_terminal_provider_states_still_remove_the_public_qr) ... ok
+test_automatic_pending_polls_keep_verified_image_until_provider_expiry (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_automatic_pending_polls_keep_verified_image_until_provider_expiry) ... FAIL
+
+======================================================================
+FAIL: test_backend_restart_retains_the_same_durable_image (test_checkout_backend.PendingQrPollingTests.test_backend_restart_retains_the_same_durable_image)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_checkout_backend.py", line 211, in test_backend_restart_retains_the_same_durable_image
+    self.assertEqual(result['qr_url'], self.url)
+AssertionError: 'http[21 chars]ans.com/v2/qris/txn-45bd7891a26e4b198db96a362541f84e/qr-code' != 'http[21 chars]ans.com/v4/qris/image-45bd7891a26e4b198db96a362541f84e/qr-code'
+- https://api.sandbox.midtrans.com/v2/qris/txn-45bd7891a26e4b198db96a362541f84e/qr-code
+?                                   ^      ^^^
++ https://api.sandbox.midtrans.com/v4/qris/image-45bd7891a26e4b198db96a362541f84e/qr-code
+?                                   ^      ^^^^^
+
+
+======================================================================
+FAIL: test_cached_image_url_is_revalidated_before_reuse (test_checkout_backend.PendingQrPollingTests.test_cached_image_url_is_revalidated_before_reuse)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_checkout_backend.py", line 237, in test_cached_image_url_is_revalidated_before_reuse
+    self.assertTrue(result['verification_pending'])
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_explicit_verified_replacement_is_retained_by_later_polls (test_checkout_backend.PendingQrPollingTests.test_explicit_verified_replacement_is_retained_by_later_polls)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_checkout_backend.py", line 220, in test_explicit_verified_replacement_is_retained_by_later_polls
+    self.assertEqual(self.poll()['qr_url'], action['url'])
+AssertionError: 'http[19 chars]trans.com/v2/qris/txn-8bec7f7bc3e043dd94676617d8120e1e/qr-code' != 'http[19 chars]trans.com/v4/qris/image-replacement-image/qr-code'
+- https://api.sandbox.midtrans.com/v2/qris/txn-8bec7f7bc3e043dd94676617d8120e1e/qr-code
++ https://api.sandbox.midtrans.com/v4/qris/image-replacement-image/qr-code
+
+
+======================================================================
+FAIL: test_repeated_missing_null_empty_or_unrelated_actions_keep_charge_image (test_checkout_backend.PendingQrPollingTests.test_repeated_missing_null_empty_or_unrelated_actions_keep_charge_image)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_checkout_backend.py", line 196, in test_repeated_missing_null_empty_or_unrelated_actions_keep_charge_image
+    self.assertEqual(result['qr_url'], self.url)
+AssertionError: 'http[21 chars]ans.com/v2/qris/txn-2f8134626ddb4e558a8f4c73ac03f240/qr-code' != 'http[21 chars]ans.com/v4/qris/image-2f8134626ddb4e558a8f4c73ac03f240/qr-code'
+- https://api.sandbox.midtrans.com/v2/qris/txn-2f8134626ddb4e558a8f4c73ac03f240/qr-code
+?                                   ^      ^^^
++ https://api.sandbox.midtrans.com/v4/qris/image-2f8134626ddb4e558a8f4c73ac03f240/qr-code
+?                                   ^      ^^^^^
+
+
+======================================================================
+FAIL: test_automatic_pending_polls_keep_verified_image_until_provider_expiry (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_automatic_pending_polls_keep_verified_image_until_provider_expiry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 149, in test_automatic_pending_polls_keep_verified_image_until_provider_expiry
+    self.assertIsNotNone(view['qr_rgb'])
+AssertionError: unexpectedly None
+
+----------------------------------------------------------------------
+Ran 7 tests in 1.237s
+
+FAILED (failures=5)
+KIOSK_UNITTEST_SUMMARY: run=7 failures=5 errors=0 skipped=0 success=False

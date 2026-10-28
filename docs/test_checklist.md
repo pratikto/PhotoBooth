@@ -1,5 +1,12 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 28 October — BUG-021 pending QR image
+
+Before: seven regression cases, five failures/zero errors. After: **182 focused
+PASS / zero failures/errors/skips**, 14.158s. Repeated automatic native polling,
+durable restart, replacement/cache validation and terminal removal covered.
+Final source/full/CI/device limits: [raw evidence](qa/portrait-v2-sandbox/QR-POLLING.md).
+
 ## 28 October — Sandbox QR logo
 
 175 focused Sandbox/QR checks PASS, zero failures/errors/skips, 11.383s.

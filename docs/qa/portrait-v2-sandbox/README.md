@@ -1,5 +1,9 @@
 # P4b Sandbox → P5 readiness (FEAT-020 / FEAT-022)
 
+**28 October — BUG-021:** polling retains the verified stored QR image URL when
+PENDING status omits actions. Explicit replacements remain validated; expiry,
+settlement and uncertain-verification guards remain. [Evidence and limits](QR-POLLING.md).
+
 **28 October — centered Meong QR logo:** v2 reuses the existing Drive renderer
 and approved artwork for the independently decoded provider payload. Full-size/
 compact checks and an exact-payload guard protect the result; failures retain

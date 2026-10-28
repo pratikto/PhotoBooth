@@ -1,5 +1,12 @@
 # Meong Photobooth — current feature status
 
+## 28 October — BUG-021 pending QR polling
+
+IN SOURCE: verified image URLs survive omitted status actions and backend
+restart; explicit replacement validation and payment/expiry guards remain.
+182 focused PASS. Exact device cause/retest and final regression/CI are separate;
+[current evidence](qa/portrait-v2-sandbox/QR-POLLING.md).
+
 ## 28 October — centered Meong Sandbox QR
 
 IN SOURCE: direct Drive-renderer/artwork reuse, exact provider-payload check,

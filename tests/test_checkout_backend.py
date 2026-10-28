@@ -79,6 +79,8 @@ class CheckoutBackendTests(unittest.TestCase):
         self.provider.lost_charge = False
         recovered = self.backend.create_order(other, {'template_a': 2}, self.key)
         self.assertEqual(recovered['state'], 'PENDING'); self.assertEqual(self.provider.charges, 2)
+        self.assertEqual(recovered['qr_url'], 'https://api.sandbox.midtrans.com/v2/qris/' +
+                         self.provider.rows[recovered['order_id']]['transaction_id'] + '/qr-code')
 
     def test_expire_deny_cancel_are_applied(self):
         for booth, state, target in [('PB002', 'expire', 'EXPIRED'), ('PB003', 'deny', 'FAILED'), ('PB004', 'cancel', 'CANCELLED')]:
@@ -151,3 +153,100 @@ class CheckoutBackendTests(unittest.TestCase):
         result = self.backend.status(self.oid, 'PB001')
         self.assertEqual(result['state'], 'PENDING')
         self.assertTrue(result['verification_pending'])
+
+
+class PendingQrPollingTests(unittest.TestCase):
+    """Real SQLite; charge supplies an image action that GET Status omits."""
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.path = Path(self.tmp.name) / 'orders.db'
+        self.clock = [1000.0]
+        self.store = CheckoutStore(self.path, now=lambda: self.clock[0])
+        self.provider = FakeProvider()
+        self.backend = CheckoutBackend(self.store, self.provider, KEY, MERCHANT)
+        self.key = 'a' * 32
+        original_create = self.provider.create_qris
+        def create(order_id, amount):
+            data = original_create(order_id, amount)
+            data['actions'] = [self.action(order_id)]
+            return data
+        self.provider.create_qris = create
+        self.order = self.backend.create_order('PB001', {'template_a': 2}, self.key)
+        self.oid = self.order['order_id']
+        self.url = self.order['qr_url']
+
+    @staticmethod
+    def action(order_id):
+        # The image reference need not equal the provider transaction ID.
+        return {'name': 'generate-qr-code', 'method': 'GET',
+                'url': 'https://api.sandbox.midtrans.com/v4/qris/image-' + order_id + '/qr-code'}
+
+    def tearDown(self):
+        self.store.close()
+        self.tmp.cleanup()
+
+    def poll(self):
+        self.clock[0] += 4
+        return self.backend.status(self.oid, 'PB001')
+
+    def test_repeated_missing_null_empty_or_unrelated_actions_keep_charge_image(self):
+        for actions in (None, [], [{'name': 'unrelated'}]):
+            self.provider.rows[self.oid]['actions'] = actions
+            result = self.poll()
+            self.assertEqual(result['qr_url'], self.url)
+            self.assertFalse(result['verification_pending'])
+            self.assertEqual(result['state'], 'PENDING')
+            self.assertEqual(result['order_id'], self.oid)
+            self.assertEqual(result['checkout_key'], self.key)
+        del self.provider.rows[self.oid]['actions']
+        self.assertEqual(self.poll()['qr_url'], self.url)
+        self.assertEqual(self.provider.charges, 1)
+        self.assertEqual(self.provider.reads, 4)
+
+    def test_backend_restart_retains_the_same_durable_image(self):
+        self.store.close()
+        self.store = CheckoutStore(self.path, now=lambda: self.clock[0])
+        self.backend = CheckoutBackend(self.store, self.provider, KEY, MERCHANT)
+        result = self.backend.create_order('PB001', {'template_a': 2}, self.key)
+        self.assertEqual(result['qr_url'], self.url)
+        self.assertEqual(result['order_id'], self.oid)
+        self.assertEqual(self.provider.charges, 1)
+
+    def test_explicit_verified_replacement_is_retained_by_later_polls(self):
+        action = self.action('replacement-image')
+        self.provider.rows[self.oid]['actions'] = [action]
+        self.assertEqual(self.poll()['qr_url'], action['url'])
+        del self.provider.rows[self.oid]['actions']
+        self.assertEqual(self.poll()['qr_url'], action['url'])
+
+    def test_invalid_explicit_action_does_not_fall_back_to_cached_image(self):
+        for change in ({'url': 'https://evil.test/qr'}, {'method': 'POST'}):
+            with self.subTest(change=change):
+                action = dict(self.action(self.oid), **change)
+                self.provider.rows[self.oid]['actions'] = [action]
+                result = self.poll()
+                self.assertTrue(result['verification_pending'])
+                self.assertEqual(self.store.get(self.oid)['qr_url'], self.url)
+                self.assertEqual(result['state'], 'PENDING')
+                self.assertIsNone(result['grant_id'])
+        self.assertEqual(self.provider.charges, 1)
+
+    def test_cached_image_url_is_revalidated_before_reuse(self):
+        self.store.save_qr(self.oid, 'https://evil.test/qr')
+        result = self.poll()
+        self.assertTrue(result['verification_pending'])
+        self.assertIsNone(result['grant_id'])
+        self.assertEqual(self.provider.charges, 1)
+
+    def test_terminal_provider_states_still_remove_the_public_qr(self):
+        for status, code, state in (('expire', '407', 'EXPIRED'),
+                                    ('settlement', '200', 'PAID')):
+            with self.subTest(status=status):
+                # A separate booth/order avoids changing a terminal order back.
+                order = self.backend.create_order('PB-' + status, {'template_a': 2}, self.key)
+                oid = order['order_id']
+                self.provider.rows[oid].update(transaction_status=status, status_code=code)
+                self.clock[0] += 4
+                result = self.backend.status(oid, 'PB-' + status)
+                self.assertEqual(result['state'], state)
+                self.assertIsNone(result['qr_url'])

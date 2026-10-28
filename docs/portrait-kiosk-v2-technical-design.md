@@ -1,5 +1,12 @@
 # FEAT-022 — GUI v2 engineering contracts
 
+PENDING status without an image action retains and revalidates the backend's
+stored QR URL; only an order with no saved URL uses the original derived v2
+recovery endpoint. Explicit actions still undergo method/host/path validation.
+The v2 per-order/image cache therefore survives ordinary polling without a
+second image load. Terminal-state and verification-pending display guards remain.
+[BUG-021 evidence/limits](qa/portrait-v2-sandbox/QR-POLLING.md).
+
 V2 Sandbox QR branding directly reuses `qr_code.create_qr_image`: downloaded
 provider pixels are decoded locally, significant outer whitespace is rejected
 for branding, and the logo candidate must decode to the identical payload.

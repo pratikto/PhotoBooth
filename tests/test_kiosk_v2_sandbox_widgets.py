@@ -110,6 +110,58 @@ class SandboxWidgetTests(unittest.TestCase):
                 fixture.service.image_loader.assert_called_once()
         finally:
             Window.size = previous_size
+
+    def test_automatic_pending_polls_keep_verified_image_until_provider_expiry(self):
+        with self.booth() as (app, fixture):
+            original_create = fixture.provider.create_qris
+            image_url = 'https://api.sandbox.midtrans.com/v4/qris/fixture-image/qr-code'
+            def create(order_id, amount):
+                data = original_create(order_id, amount)
+                # Include the action through initial display, then omit it on polls.
+                actions = [{'name': 'generate-qr-code', 'method': 'GET', 'url': image_url}]
+                fixture.provider.rows[order_id]['actions'] = actions
+                return dict(data, actions=actions)
+            fixture.provider.create_qris = create
+            original_loader = fixture.service.image_loader
+            def load(order):
+                if order['qr_url'] != image_url:
+                    raise RuntimeError('Fixture image exists only at the supplied action URL')
+                return original_loader(order)
+            fixture.service.image_loader = Mock(side_effect=load)
+            self.pending(app)
+            before = app._sandbox_view
+            self.assertIsNotNone(before['qr_rgb'])
+            order_id = before['order']['order_id']
+            checkout_key = fixture.flow.snapshot()['checkout_key']
+            del fixture.provider.rows[order_id]['actions']
+            for _ in range(5):
+                reads = fixture.provider.reads
+                fixture.store.db.execute('UPDATE checkouts SET check_after=0')
+                app._sandbox_refresh_at = 0
+                app._poll_sandbox()  # Actual automatic-poll path, no status-button tap.
+                self.settle(app)
+                view = app._sandbox_view
+                self.assertGreater(fixture.provider.reads, reads)
+                self.assertEqual(view['phase'], 'WAITING')
+                self.assertEqual(view['order']['state'], 'PENDING')
+                self.assertEqual(view['order']['order_id'], order_id)
+                self.assertEqual(fixture.flow.snapshot()['checkout_key'], checkout_key)
+                self.assertIsNotNone(view['qr_rgb'])
+                self.assertEqual(view['qr_rgb'], before['qr_rgb'])
+                images = [w for w in app.stage.walk() if isinstance(w, KivyImage)
+                          and w.texture is not None and tuple(w.texture.size) == before['qr_rgb'][0]]
+                self.assertEqual(len(images), 1)
+            fixture.service.image_loader.assert_called_once()
+            self.assertEqual(fixture.provider.charges, 1)
+            fixture.provider.rows[order_id].update(transaction_status='expire', status_code='407')
+            fixture.store.db.execute('UPDATE checkouts SET check_after=0')
+            app._sandbox_refresh_at = 0
+            app._poll_sandbox()
+            self.settle(app)
+            self.assertEqual(app._sandbox_view['phase'], 'CANCELLED')
+            self.assertIsNone(app._sandbox_view['qr_rgb'])
+            self.assertEqual(fixture.provider.charges, 1)
+
     def test_real_photo_handoff_completion_and_duplicate_taps(self):
         with self.booth() as (app,f):
             self.reserve(app,f)

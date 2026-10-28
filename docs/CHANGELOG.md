@@ -1,5 +1,12 @@
 # Meong Photobooth — changelog
 
+## 2026-10-28 — pending QR image URL retention (BUG-021)
+
+Retain/revalidate the saved provider image action when a PENDING status omits
+actions, preventing an unintended derived-URL reload. Explicit-action checks,
+missing-create recovery, terminal removal and payment authority remain.
+182 focused PASS; [reproduction and final checks](qa/portrait-v2-sandbox/QR-POLLING.md).
+
 ## 2026-10-28 — centered Meong logo in v2 Sandbox payment QR
 
 Reuse the existing Drive QR renderer and full Meong artwork for the exact

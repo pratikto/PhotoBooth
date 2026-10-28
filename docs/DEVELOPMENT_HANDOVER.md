@@ -1,5 +1,13 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 28 October — BUG-021 pending QR polling
+
+Owner confirms image-only disappearance on the Sandbox page, with no duration
+or status text. Reproduced pending action-URL overwrite and native image loss.
+The shared backend now retains/revalidates saved URLs when actions are omitted;
+no new order, endpoint guessing or relaxed payment guards. 182 focused PASS;
+final regression/CI/device limits in the [runbook](qa/portrait-v2-sandbox/QR-POLLING.md).
+
 ## 28 October — centered Meong logo on Sandbox QR
 
 Owner requests reuse of the Drive QR logo. The v2 adapter now calls that exact
