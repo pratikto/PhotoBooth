@@ -16,6 +16,32 @@
 7. Stop only the dependent substep if external merchant API guarantee/credential, laptop, Linux hardware, refund policy or security contract is missing. Continue isolated safe code/tests; never guess results or ask to reset/delete journal.
 8. Release requires a separate explicit owner instruction. Complete a controlled pilot, compare to acceptance criteria and preserve all financial/photo obligations.
 
+## Mandatory micro-increment checkpoint and five-hour session continuity
+
+**Owner preference (28 October):** Do not defer Git pushes until an entire AR
+stage or the end of a ChatGPT/Codex session. The five-hour usage limit can
+interrupt progress; each meaningful, safely tested substep must be remotely
+recoverable.
+
+- Break AR-00–AR-13 into small, independent substeps (AR-XX.a, AR-XX.b, etc.).
+  After each safe, reviewable substep: focused tests -> update related docs ->
+  commit -> push existing branch -> verify remote HEAD. Prefer checkpoint
+  opportunities every ~30–45 minutes of active coding, never empty commits.
+- Update [the single recovery checkpoint](AUTONOMOUS-RECOVERY-CHECKPOINT.md)
+  and the repository handover with current substep, pushed SHA, tests, open
+  risks, next exact action, and any local-only changes. Publish a docs-only
+  checkpoint before the chat/session limit; preserve full report accuracy.
+- Never push unsafe/incomplete runnable code simply to save progress. Use
+  self-contained tests/docs or explicitly disabled safe increments; label
+  partial work NOT VERIFIED. If dirty changes remain on the local machine,
+  record that they are **not backed up to GitHub**. Do not commit merchant keys,
+  recovery tokens, customer photos, local databases or unrelated edits.
+- In a new session inspect branch/dirty status and remote history first, read
+  the latest checkpoint and source evidence, and start at the first incomplete
+  substep. Do not repeat completed stages, force-push, reset journals or merge
+  to master. Preserve one final full regression after the final functional
+  change and the existing security/merchant gates.
+
 ## Canonical stage ledger
 
 | Stage | ID | Deliverable | Precondition | Required exit gate |
