@@ -1,0 +1,44 @@
+{
+  "status": "VERIFIED_FOCUSED_ONLY",
+  "date": "2026-10-29 06:52 WIB",
+  "branch": "feature/portrait-kiosk-v2-next",
+  "remote_base": "647991ec013e75477c5c8564133beb68947984f4",
+  "runtime_source": "f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88",
+  "test_source": "Containing Git commit; file hashes below",
+  "python": "3.12.14",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "command": "KIVY_HOME=/tmp/meong-audit-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy MESA_SHADER_CACHE_DIR=/tmp/meong-audit-mesa MEONG_CI_TEST_REPORT=work/ar-audit-payment-report.txt .venv/bin/python tools/run_kiosk_unittests.py test_checkout_reconciliation test_checkout_creation_attempts test_checkout_fulfillment test_autonomous_recovery_faults test_checkout_backend test_checkout_durability test_midtrans_sandbox test_midtrans_verify test_qris_http_v2 test_qris_recovery",
+  "result": {
+    "run": 116,
+    "pass": 116,
+    "failure": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 1.977
+  },
+  "new_matrix_evidence": {
+    "PAY-06": "test_checkout_reconciliation.ReconciliationTests.test_pay06_abrupt_exit_before_evidence_commit_requires_fresh_get_and_one_grant",
+    "PAY-21": "test_checkout_reconciliation.ReconciliationTests.test_pay21_oversized_status_and_auth_failure_hold_and_redact_at_http_boundary"
+  },
+  "matrix": {
+    "total": 69,
+    "pass": 45,
+    "fail": 0,
+    "skip": 0,
+    "blocked": 9,
+    "not_run": 15
+  },
+  "report_sha256": "27b9923f1008f17a66e2aa97fe0ef4ce4363f381c6db2345da4a1c1e8189d038",
+  "changed_source_sha256": {
+    "tests/reconciliation_crash_fixture.py": "a9e97419ff8927bf42a3c87da7824430f2ca214043ef25a3ebc322a183386a63",
+    "tests/test_checkout_reconciliation.py": "a809dbdb7ba22e3a658dee46a9cdcfaad863337f3d8b533a28ece4828cf05b77",
+    ".github/workflows/portrait-kiosk-v2.yml": "eff0057a6765c1c9464de0d48d9c2546fb0fb850c4dfc9bec3a7830dc7a09108"
+  },
+  "ci": "PENDING at publication; Windows module added; no manual dispatch",
+  "limitations": [
+    "Tests-only; no runtime/schema/payment/OPS changes.",
+    "No new full regression or screenshots; f72fdbc historical evidence remains separately pinned.",
+    "Synthetic process exit/HTTP fixtures, not physical power-loss/device/merchant acceptance.",
+    "PAY-08/PAY-18 and exact allocation/media fault gaps remain open."
+  ]
+}

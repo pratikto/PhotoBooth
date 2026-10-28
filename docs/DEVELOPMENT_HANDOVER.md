@@ -1,5 +1,27 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR audit increment 2: exact payment crash/provider evidence
+
+Remote base `647991ec013e75477c5c8564133beb68947984f4`; application runtime unchanged at
+`f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`. Reviewed payment/store/API/provider/
+release paths against current AR contracts; no confirmed runtime defect in this
+bounded review, no full conformity verdict. Added PAY-06 real child pre-commit
+crashes and PAY-21 oversized/auth-failure redacted holds. **116 focused PASS /
+zero failures/errors/skips**, 1.977s; matrix **45 PASS / 9 BLOCKED / 15 NOT_RUN**.
+[Test command/hashes](qa/portrait-v2-sandbox/evidence/ar-audit-payment.json).
+Windows CI now includes reconciliation module; CI pending at publication.
+No new full regression/screenshots; previous full 1097/1093/4 remains pinned to
+f72fdbc. This containing commit publishes tests/workflow/docs; exact pushed SHA
+will be pinned in the next checkpoint after remote verification.
+
+Next: allocation/STARTED/COMPLETE and media reconstruction source review plus
+CAP-01–05 exact fault sequences; PAY-08/PAY-18 still open. Then remaining privacy,
+operator and supervisor review. Audit IN_PROGRESS; external gates/CONDITIONAL
+readiness retained. No OPS or production/print/Drive activation, no migration.
+Only disposable `work/` local; no unpublished runtime patch. Scoped rollback of
+these tests/workflow/docs preserves all customer records and media.
+
+
 ## 29 October — documentation status cross-check (no runtime change)
 
 Remote baseline be0efae / functional f72fdbc reconciled. Current docs correctly

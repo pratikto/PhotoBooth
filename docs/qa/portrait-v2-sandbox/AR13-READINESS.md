@@ -4,6 +4,15 @@
 `feature/portrait-kiosk-v2-next`. This is an evidence assessment and acceptance
 handoff; it grants no release, deployment, production payment or merge permission.
 
+## Later audit evidence supplement — 29 October
+
+The payment conformity audit added PAY-06/PAY-21 exact synthetic evidence against
+unchanged f72fdbc runtime: **116 focused PASS**, matrix now **45 PASS / 9 BLOCKED /
+15 NOT_RUN**. [Review](AR00-AR13-CODE-REVIEW.md#increment-2--payment-crash-and-provider-response-evidence)
+and [safe evidence](evidence/ar-audit-payment.json). The dated full regression,
+CI, screenshots and baseline counts below remain their original evidence.
+Audit is IN_PROGRESS; the CONDITIONAL decision and external gates are unchanged.
+
 ## Decision
 
 **CONDITIONAL — proceed with controlled owner acceptance under the gates below.**

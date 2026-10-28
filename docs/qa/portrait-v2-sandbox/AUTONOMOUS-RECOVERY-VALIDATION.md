@@ -1,5 +1,17 @@
 # AR-12 — final source validation and external acceptance gates
 
+## 29 October — conformity audit payment supplement
+
+Runtime is unchanged at f72fdbc. Two added scenarios (PAY-06 real pre-commit child
+exits; PAY-21 bounded oversized/status-auth failure redacted holds) pass in a
+**116-case focused run**, zero failures/errors/skips, 1.977s. Exact command,
+source hashes, report digest and scope: [safe audit evidence](evidence/ar-audit-payment.json).
+Current matrix becomes 45 PASS / 9 BLOCKED / 15 NOT_RUN; earlier 43/9/17 counts
+below describe the dated f72fdbc baseline. No new full regression/native/physical
+acceptance is inferred. Source audit remains IN_PROGRESS. Windows CI pending
+at this publication; no new runtime or schema behavior.
+
+
 ## Documentation status check and recovered historical provenance — 29 October
 
 Current authority is **f72fdbc / AR-13 CONDITIONAL**, not the earlier AR-09/AR-12

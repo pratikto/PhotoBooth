@@ -2,7 +2,9 @@
 
 **Active owner task, 29 October:** fresh AR-00–AR-13 implementation conformity
 review, IN_PROGRESS. Evidence baseline checked at f8167d8; functional source f72fdbc
-unchanged. [Review checkpoint](AR00-AR13-CODE-REVIEW.md). Finish source review and
+unchanged. Payment audit increment 2 adds verified PAY-06/PAY-21 evidence:
+116 focused PASS; current matrix 45 PASS / 9 BLOCKED / 15 NOT_RUN.
+[Review checkpoint](AR00-AR13-CODE-REVIEW.md). Finish source review and
 confirmed reproductions before making a final conformity claim. Prior readiness
 report below retains its dated conclusions and remaining gates.
 
@@ -21,6 +23,26 @@ linked in [validation](AUTONOMOUS-RECOVERY-VALIDATION.md). Do not restart at AR-
 or equate the AR-13 assessment to complete fault coverage/production approval.
 The active conformity review remains IN_PROGRESS, with PAY-06 the first exact
 source-evidence gap. No new test run/runtime/OPS work was done by this docs check.
+
+## Latest audit micro-increment — payment evidence, 2026-10-29 06:52 WIB
+
+- Base/last verified remote: `647991ec013e75477c5c8564133beb68947984f4`; runtime stays
+  `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`. Audit remains IN_PROGRESS.
+- Completed: PAY-06 actual pre-commit process exits and PAY-21 bounded/redacted
+  provider failures, tests/workflow/docs only. **116 focused PASS**, 1.977s,
+  zero failures/errors/skips. [Command/hashes](evidence/ar-audit-payment.json).
+  No runtime defect confirmed in this bounded review. Matrix now 45 PASS,
+  9 BLOCKED, 15 NOT_RUN; older counts below are dated baseline evidence.
+- Publication SHA: this containing commit (resolve via Git history); next
+  checkpoint records the exact remote-verified SHA. CI pending at publication;
+  full regression/native evidence remains at f72fdbc, not rerun for tests-only.
+- Next: review exact allocation/STARTED/COMPLETE and media-reconstruction paths;
+  first exact remaining fault sequence CAP-01–05, with PAY-08/PAY-18 still open.
+  Continue privacy/operator/supervisor review; no blanket conformity claim.
+- Blockers: original external provider/device/public ingress/retention/release
+  gates unchanged. No production, OPS, real print/Drive or new branch.
+- Local-only: disposable `work/` logs; no unpushed runtime patch. Rollback only
+  this test/workflow/docs increment and retain all financial/media records.
 
 ## Mandatory workflow
 
@@ -65,7 +87,7 @@ merchant, phone/paper/Drive/retention/privacy/operations gates A01-A12 remain
 NOT_RUN/BLOCKED. Original previous-session 1094/1091/3 provenance unavailable;
 do not replace it with this new run or infer all old optional cases ran.
 
-**First unfinished source evidence:** PAY-06 exact evidence/pre-DB-commit
+**Historical first unfinished source evidence (closed by audit increment 2 above):** PAY-06 exact evidence/pre-DB-commit
 child exit. Refresh remote, preserve local state, inspect existing
 `tests/test_checkout_reconciliation.py` and WAL crash fixtures; add an isolated
 process-exit fixture proving fresh GET after reopen and no duplicate grant.

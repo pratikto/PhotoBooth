@@ -38,6 +38,47 @@ their original source-specific meanings in [validation](AUTONOMOUS-RECOVERY-VALI
 
 ## Review work and current continuation
 
+## Increment 2 — payment crash and provider-response evidence
+
+29 October, resumed from remote-verified `647991ec013e75477c5c8564133beb68947984f4`.
+Read the current AGENTS/protocol/prompt, checkpoint/handover, roadmap/master,
+provider and AR-00–07 contracts, executed matrix and readiness assessment.
+Reviewed complete checkout store/backend/API, provider transport/evidence,
+release core and the corresponding creation/reconciliation/fulfillment tests.
+
+**No confirmed runtime defect in this bounded payment review.** This is not a
+whole-stage conformity verdict: PAY-08 connectivity integration, PAY-18 lost
+service replies and CAP-01–05 allocation boundaries remain open. The two new
+tests prove previously missing scenarios against unchanged f72fdbc runtime:
+
+- PAY-06: four actual child exits (validated evidence before transaction and
+  applied SQL before COMMIT, each without/with a previously reserved grant).
+  A new connection verifies WAL/FULL and integrity, byte-equivalent financial
+  and attempt records after rollback, held crashed lease, a fresh pending GET
+  that denies admission, then settlement with the same single grant/fulfillment.
+- PAY-21: actual transport reader stops at 65,537 bytes and closes its response;
+  oversized status JSON and provider HTTP 401 both keep cached PAID held without
+  a grant. HTTP observation/claim responses and database exclude synthetic body
+  and key markers. Every request is same-order Sandbox GET; existing redirect
+  rejection remains covered separately. No real provider request was made.
+
+Focused command/result and hashes: [safe evidence](evidence/ar-audit-payment.json).
+**116 PASS / 0 FAIL / 0 ERROR / 0 SKIP**, 1.977s, Linux/Python 3.12.14.
+An initial new-fixture run failed (2 FAIL/2 ERROR): the test failed to reset its
+parent provider to pending or reconcile settlement before claim; fixture setup
+was corrected, with no runtime/assertion weakening. The new PAY-06 test then
+passed in the 36-case focused group before the final 116-case run.
+Windows CI now includes the same reconciliation module; its result is pending
+at publication. No new complete regression/native/device/merchant claim.
+Historical 1097-case full regression and screenshots remain pinned to f72fdbc.
+Current matrix: **45 PASS / 9 BLOCKED / 15 NOT_RUN** (69 IDs, zero FAIL/SKIP).
+No schema/migration/runtime/OPS/payment setting changed. Rollback only these
+test/workflow/docs edits; retain every customer record and media file.
+
+Next: review the exact allocation/STARTED/COMPLETE paths and media reconstruction,
+then customer/native privacy and operational boundaries. Reproduce suspected
+defects in disposable fixtures; keep missing coverage separate from defects.
+
 | Area | Review status | Focus |
 | --- | --- | --- |
 | AR-00–03 | IN_PROGRESS | Baseline invariants, charge ambiguity, fresh reconciliation, frozen orders/grants and migration/concurrency |
@@ -46,7 +87,7 @@ their original source-specific meanings in [validation](AUTONOMOUS-RECOVERY-VALI
 | AR-10–13 | IN_PROGRESS | Supervisor/leases, unmounted inbox, matrix assertion quality, readiness/operational boundaries |
 | Cross-stage integration | IN_PROGRESS | Native controller/backend/media authority, I/O boundaries and evidence accuracy |
 
-Exact next action: finish these source reviews, reproduce suspected defects only
+Exact next action: continue after Increment 2, finish these source reviews, reproduce suspected defects only
 with isolated synthetic state, and publish confirmed findings with severity,
 file/line, triggering conditions, consequence and reproducible evidence. Clearly
 separate defects, missing coverage and deliberately gated external functionality.

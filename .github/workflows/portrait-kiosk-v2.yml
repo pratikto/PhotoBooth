@@ -174,8 +174,8 @@ jobs:
             Write-Output "::error title=Autonomous recovery Windows failure::$report"
           }
           exit $testExit
-      - name: Check payment creation crash boundaries and additive migration (offline)
-        run: python tools/run_kiosk_unittests.py test_autonomous_recovery_baseline test_checkout_creation_attempts
+      - name: Check payment creation and reconciliation crash boundaries (offline)
+        run: python tools/run_kiosk_unittests.py test_autonomous_recovery_baseline test_checkout_creation_attempts test_checkout_reconciliation
       - name: Check portable startup, recovery holds and Windows launch ownership
         env:
           MEONG_CI_TEST_REPORT: ${{ runner.temp }}/meong-recovery-tests.txt

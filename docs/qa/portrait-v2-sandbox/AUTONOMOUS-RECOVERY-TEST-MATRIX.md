@@ -1,8 +1,9 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
-**Current status, 29 October 2026:** execution ledger reconciled at final
-source `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`; 43 PASS / 0 FAIL / 0 SKIP /
-9 BLOCKED / 17 NOT_RUN. AR-13 assessment CONDITIONAL; production not ready.
+**Current status, 29 October 2026:** baseline execution ledger at
+`f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`, supplemented by audit increment 2
+[focused evidence](evidence/ar-audit-payment.json): 45 PASS / 0 FAIL / 0 SKIP /
+9 BLOCKED / 15 NOT_RUN. AR-13 assessment CONDITIONAL; production not ready.
 The original design contract below is retained. Its initial NOT_RUN values and
 baseline describe planning history, not the current executed ledger. Exact
 missing fault windows stay NOT_RUN even when a related source test passes.
@@ -125,7 +126,8 @@ All public WEB items are currently **BLOCKED** on infrastructure approval; offli
 
 ## Executed evidence ledger — 29 October 2026
 
-All source references below are at `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`,
+Except the explicitly added PAY-06/PAY-21 audit fixtures, source references below
+are at `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`,
 executed by the full command/environment in [validation](AUTONOMOUS-RECOVERY-VALIDATION.md).
 The [safe report](evidence/ar12-final-verification.json) pins test source trees,
 full count/skips/digest, CI and native manifests. Abbreviated `module.method`
@@ -141,7 +143,7 @@ offline inbox prototype assertions do not certify deployed ingress.
 | PAY-03 | **PASS** | `test_checkout_creation_attempts.test_provider_never_received_call_and_repeated_404_remain_uncertain` | Never-received and 404 hold, no replacement. |
 | PAY-04 | **PASS** | `test_checkout_creation_attempts.test_provider_never_received_call_and_repeated_404_remain_uncertain` | Repeated lagging 404 cannot authorize POST. |
 | PAY-05 | **PASS** | `test_checkout_creation_attempts.test_concurrent_independent_backends_send_once` | Independent concurrent backends send once. |
-| PAY-06 | **NOT_RUN** | `test_checkout_reconciliation.test_start_requires_fresh_settlement_even_with_previously_issued_grant` | Fresh admission asserted, but exact process exit between evidence and DB commit not found. |
+| PAY-06 | **PASS** | `test_checkout_reconciliation.test_pay06_abrupt_exit_before_evidence_commit_requires_fresh_get_and_one_grant` | Audit increment 2: four real child exits at validated/pre-transaction and SQL/pre-COMMIT boundaries, without/with prior grant; rollback, WAL integrity, lease hold, fresh pending denial then settlement; one original grant/fulfillment. [116-case focused evidence](evidence/ar-audit-payment.json). |
 | PAY-07 | **PASS** | `test_checkout_reconciliation.test_retry_backoff_is_durable_bounded_and_not_bypassed_by_duplicate_calls` | Persisted bounded/jittered backoff and no duplicate I/O. |
 | PAY-08 | **NOT_RUN** | `test_checkout_reconciliation.test_restart_trigger_bypasses_backoff_once_then_is_durably_throttled` | Restart trigger is tested; actual network-restoration event after repeated errors is not separately demonstrated. |
 | PAY-09 | **PASS** | `test_checkout_backend.test_cancel_racing_payment_never_discards_paid` | Settlement/cancel race preserves original rights. |
@@ -156,7 +158,7 @@ offline inbox prototype assertions do not certify deployed ingress.
 | PAY-18 | **NOT_RUN** | `test_checkout_durability.test_lost_claim_response_replays_same_grant` | Grant replay/STARTED identity tested; combined lost STARTED and COMPLETED reply fault sequence not independently shown. |
 | PAY-19 | **PASS** | `test_qris_recovery.test_changed_action_payload_or_order_cannot_reuse_old_action_id` | Reused action body/order conflicts without mutation. |
 | PAY-20 | **PASS** | `test_checkout_reconciliation.test_clock_rollback_holds_without_extending_deadline_indefinitely` | Provider remains authority; clock/credential/retention cases use separate fixed clocks. |
-| PAY-21 | **NOT_RUN** | `test_midtrans_sandbox.test_redirect_is_not_followed` | Redirect and provider 401 rejection pass; QR-image/webhook body limits pass separately. Oversized provider status JSON plus redacted hold is not independently demonstrated. |
+| PAY-21 | **PASS** | `test_checkout_reconciliation.test_pay21_oversized_status_and_auth_failure_hold_and_redact_at_http_boundary`; `test_midtrans_sandbox.test_redirect_is_not_followed` | Audit increment 2: oversized provider status JSON read bounded at 65,537 bytes/response closed; HTTP 401 and oversized responses remain unchecked and deny grant with redacted HTTP/DB evidence. Same-order Sandbox GET only; existing no-redirect guard also PASS. [Focused evidence](evidence/ar-audit-payment.json). |
 | PAY-22 | **BLOCKED** | See scope/gate | Official merchant-specific Legacy repeat-charge contract and controlled Sandbox evidence absent; POST retry remains disabled. |
 | CAP-01 | **NOT_RUN** | `test_photo_allocation.test_first_manifest_binds_original_order_and_never_uses_photo_counter` | Binding logic passes; exact pre-allocation-intent child kill not demonstrated. |
 | CAP-02 | **NOT_RUN** | `test_checkout_fulfillment.test_allocation_is_unique_and_replays_same_operation_after_restart` | Allocation reopen passes; exact post-intent/pre-folder child kill not demonstrated. |

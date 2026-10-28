@@ -1,11 +1,16 @@
 """AR-02 fresh provider evidence, authenticated observations and no replay."""
 import asyncio
 from contextlib import closing
+import io
+import json
 from pathlib import Path
+import subprocess
+import sys
 import tempfile
 import threading
 import unittest
 from unittest.mock import patch
+from urllib.error import HTTPError
 
 import httpx
 from fastapi.testclient import TestClient
@@ -13,6 +18,7 @@ from fastapi.testclient import TestClient
 from photobooth.booth_auth import BoothAuthenticator
 from photobooth.checkout_backend import CheckoutBackend, ProviderUnavailable
 from photobooth.checkout_store import CheckoutConflict, CheckoutStore
+from photobooth.midtrans_sandbox import MidtransSandboxClient, SANDBOX_BASE
 from photobooth.qris_api import create_app
 from tests.test_checkout_backend import FakeProvider, KEY, MERCHANT
 
@@ -97,11 +103,124 @@ class ReconciliationTests(unittest.TestCase):
             self.backend.service_transition(self.oid, 'PB001', grant, 'STARTED', 'PB001_00000001')
         self.assertEqual(self.store.get(self.oid)['service_state'], 'RESERVED')
 
+    def test_pay06_abrupt_exit_before_evidence_commit_requires_fresh_get_and_one_grant(self):
+        for boundary, code in (('validated', 71), ('uncommitted', 72)):
+            for reserved in (False, True):
+                with self.subTest(boundary=boundary, reserved=reserved):
+                    case = ReconciliationTests()
+                    case.setUp()
+                    try:
+                        if reserved:
+                            case.paid()
+                            case.backend.claim(case.oid, 'PB001', case.key)
+                        before = case.store.get(case.oid)
+                        attempt = case.store.creation_attempt(case.oid)
+                        path = case.store.db.execute('PRAGMA database_list').fetchone()[2]
+                        child = subprocess.run([
+                            sys.executable, '-m', 'tests.reconciliation_crash_fixture',
+                            path, case.oid, boundary,
+                        ], cwd=Path(__file__).resolve().parents[1],
+                           capture_output=True, text=True, timeout=20)
+                        self.assertEqual(child.returncode, code, child.stderr)
+                        # A different process must observe rollback, not the
+                        # child's uncommitted settlement/fulfillment writes.
+                        case.now[0] = 2001.0
+                        with closing(CheckoutStore(path, now=lambda: case.now[0])) as reopened:
+                            backend = CheckoutBackend(reopened, case.provider, KEY, MERCHANT)
+                            self.assertEqual(reopened.get(case.oid), before)
+                            self.assertEqual(reopened.creation_attempt(case.oid), attempt)
+                            self.assertEqual(reopened.db.execute('PRAGMA integrity_check').fetchone()[0], 'ok')
+                            self.assertEqual(reopened.db.execute('PRAGMA journal_mode').fetchone()[0], 'wal')
+                            self.assertEqual(reopened.db.execute('PRAGMA synchronous').fetchone()[0], 2)
+                            # The crashed read's lease holds even after reopen.
+                            reads = case.provider.reads
+                            self.assertFalse(backend.reconcile(case.oid, 'PB001')['reconciliation']['checked'])
+                            self.assertEqual(case.provider.reads, reads)
+                            case.now[0] = 2046.0
+                            # New pending evidence must beat the child's lost
+                            # settlement, including a previously cached PAID.
+                            case.provider.rows[case.oid].update(transaction_status='pending', status_code='201')
+                            observed = backend.reconcile(case.oid, 'PB001')
+                            self.assertEqual(case.provider.reads, reads + 1)
+                            self.assertEqual(observed['reconciliation']['provider_state'], 'pending')
+                            with self.assertRaises(CheckoutConflict):
+                                backend.claim(case.oid, 'PB001', case.key)
+                            self.assertEqual(reopened.get(case.oid)['grant_id'], before['grant_id'])
+                            case.provider.rows[case.oid].update(transaction_status='settlement', status_code='200')
+                            case.now[0] += 11
+                            self.assertTrue(backend.reconcile(case.oid, 'PB001')['reconciliation']['checked'])
+                            first = backend.claim(case.oid, 'PB001', case.key)
+                            replay = backend.claim(case.oid, 'PB001', case.key)
+                            self.assertEqual(first['grant_id'], replay['grant_id'])
+                            self.assertTrue(first['grant_id'])
+                            if reserved:
+                                self.assertEqual(first['grant_id'], before['grant_id'])
+                            self.assertEqual(first['service_state'], 'RESERVED')
+                            self.assertIsNone(first['local_transaction_id'])
+                            self.assertEqual(reopened.db.execute('SELECT count(*) FROM checkouts').fetchone()[0], 1)
+                            self.assertEqual(reopened.db.execute('SELECT count(*) FROM checkout_create_attempts').fetchone()[0], 1)
+                            self.assertEqual(reopened.db.execute('SELECT count(*) FROM checkout_fulfillments').fetchone()[0], 1)
+                            self.assertEqual(reopened.fulfillment(case.oid, 'PB001')['obligation_state'], 'OWED')
+                            self.assertEqual(case.provider.charges, 1)
+                    finally:
+                        case.doCleanups()
+
     def test_wrong_checkout_key_is_rejected_before_provider_read(self):
         self.paid()
         with patch.object(self.provider, 'get_status', side_effect=AssertionError('No I/O')):
             with self.assertRaises(CheckoutConflict):
                 self.backend.claim(self.oid, 'PB001', 'b'*32)
+
+    def test_pay21_oversized_status_and_auth_failure_hold_and_redact_at_http_boundary(self):
+        self.paid()
+        before = self.store.get(self.oid)
+        marker = 'SYNTHETIC-PRIVATE-PROVIDER-DETAIL'
+        key_marker = 'SYNTHETIC-SERVER-KEY-NOT-A-CREDENTIAL'
+        oversized = json.dumps(dict(self.provider.rows[self.oid],
+                                    private_detail=marker, padding='x' * 65536)).encode()
+        requests, bodies, sizes = [], [], []
+
+        class BoundedResponse(io.BytesIO):
+            def read(self, size=-1):
+                sizes.append(size)
+                return super().read(size)
+
+        for fault in ('oversized', 'unauthorized'):
+            with self.subTest(fault=fault):
+                requests.clear()
+
+                def transport(request, timeout):
+                    requests.append((request.get_method(), request.full_url))
+                    if fault == 'unauthorized':
+                        raise HTTPError(request.full_url, 401, marker + key_marker, {}, None)
+                    response = BoundedResponse(oversized)
+                    bodies.append(response)
+                    return response
+
+                self.backend.provider = MidtransSandboxClient(key_marker, transport=transport)
+                headers = {'X-Booth-ID': 'PB001', 'Authorization': 'Bearer ' + 'x' * 48,
+                           'Idempotency-Key': self.key}
+                self.now[0] += 61
+                with TestClient(create_app(self.backend, BoothAuthenticator({'PB001': 'x' * 48}))) as http:
+                    observed = http.post('/api/orders/' + self.oid + '/reconcile', headers=headers)
+                    self.assertEqual(observed.status_code, 200)
+                    self.assertFalse(observed.json()['reconciliation']['checked'])
+                    self.assertEqual(observed.json()['reconciliation']['outcome'], 'unknown')
+                    denied = http.post('/api/orders/' + self.oid + '/claim', headers=headers)
+                    self.assertEqual(denied.status_code, 503)
+                    self.assertEqual(denied.json(), {'detail': 'Provider verification temporarily unavailable'})
+                    for response in (observed, denied):
+                        self.assertNotIn(marker, response.text)
+                        self.assertNotIn(key_marker, response.text)
+                self.assertEqual(requests, [('GET', SANDBOX_BASE + '/v2/' + self.oid + '/status')] * 2)
+                self.assertEqual(self.store.get(self.oid), before)
+                self.assertIsNone(self.store.get(self.oid)['grant_id'])
+                dump = '\n'.join(self.store.db.iterdump())
+                self.assertNotIn(marker, dump)
+                self.assertNotIn(key_marker, dump)
+        self.assertEqual(sizes, [65537, 65537])
+        self.assertTrue(all(body.closed for body in bodies))
+        self.assertEqual(self.provider.charges, 1)
 
     def test_http_observation_does_not_need_pin_but_operator_mutation_still_does(self):
         auth = BoothAuthenticator({'PB001':'x'*48, 'PB002':'y'*48})
