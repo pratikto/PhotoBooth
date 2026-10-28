@@ -105,3 +105,37 @@ class SandboxAdapterTests(unittest.TestCase):
         _,gui=v2_environments({},'merchant','SB-Mid-server-test','PB001',8765,self.root)
         gui['MEONG_QRIS_JOURNAL']=str(self.root/'data'/'qris-sandbox-trial'/'visit.json')
         with self.assertRaises(ValueError):configured_sandbox(self.root,gui)
+
+class OperatorLauncherIsolationTests(unittest.TestCase):
+    def test_v2_operator_pin_is_fresh_backend_only_and_not_in_parent_or_gui(self):
+        import re
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp);parent={'MEONG_QRIS_RECOVERY_PIN':'inherited-do-not-use'}
+            original=dict(parent)
+            backend,gui=v2_environments(parent,'MTEST','SB-Mid-server-TEST','PB001',8765,root)
+            self.assertRegex(backend.get('MEONG_QRIS_RECOVERY_PIN',''),r'^[0-9]{8}$')
+            self.assertNotEqual(backend['MEONG_QRIS_RECOVERY_PIN'],parent['MEONG_QRIS_RECOVERY_PIN'])
+            self.assertNotIn('MEONG_QRIS_RECOVERY_PIN',gui)
+            self.assertEqual(parent,original)
+            self.assertFalse(root.joinpath('data').exists())
+
+    def test_launch_passes_pin_only_to_backend_and_prints_only_local_operator_notice(self):
+        import contextlib,io
+        from unittest.mock import Mock
+        from tools.run_portrait_v2_sandbox import main
+        recorded=[];backend,gui=Mock(),Mock()
+        backend.poll.return_value=None;gui.poll.return_value=0;gui.returncode=0
+        def spawn(command,**kwargs):
+            recorded.append((list(command),dict(kwargs['env'])))
+            return backend if len(recorded)==1 else gui
+        output=io.StringIO()
+        with patch.dict('os.environ',{'MIDTRANS_SERVER_KEY':'SB-Mid-server-TEST','MIDTRANS_MERCHANT_ID':'MTEST'},clear=True), \
+             patch('importlib.util.find_spec',return_value=object()), \
+             patch('tools.run_qris_sandbox.socket.socket'),patch('tools.run_qris_sandbox.wait_ready'), \
+             patch('tools.run_qris_sandbox.subprocess.Popen',side_effect=spawn),contextlib.redirect_stdout(output):
+            self.assertEqual(main([]),0)
+        pin=recorded[0][1]['MEONG_QRIS_RECOVERY_PIN']
+        self.assertNotIn('MEONG_QRIS_RECOVERY_PIN',recorded[1][1])
+        self.assertNotIn(pin,str(recorded[0][0])+str(recorded[1][0]))
+        self.assertIn('operator PIN (keep private): '+pin,output.getvalue())
+        self.assertNotIn('SB-Mid-server-TEST',output.getvalue())

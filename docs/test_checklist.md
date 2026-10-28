@@ -1,5 +1,10 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 29 October — AR-09.a: isolate a per-launch Sandbox operator PIN from the GUI
+
+Focused 64 PASS, zero failures/errors/skips; backend-only PIN and mocked launcher argv/environment/local-notice isolation covered. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATOR.md).
+Physical/provider gates remain separate; no production activation.
+
 ## 29 October — AR-08.b2: record native postpaid faults with durable same-operation retries
 
 Focused 58 PASS, zero failures/errors/skips; postpaid missing-camera, capture I/O failure and lost-ACK/restart fixtures preserve payment, OWED, manifest and one issue operation. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-READINESS.md).

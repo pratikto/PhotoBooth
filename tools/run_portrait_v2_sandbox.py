@@ -1,6 +1,7 @@
 """Run the existing credential-isolated merchant trial with the native v2 GUI."""
 from pathlib import Path
 import sys
+import secrets
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -15,6 +16,7 @@ def v2_environments(parent, merchant, key, booth, port, root=ROOT):
                    MEONG_QRIS_JOURNAL=str(directory/'visit.json'),
                    PHOTOBOOTH_V2_CHECKOUT_MOCK='0', PHOTOBOOTH_V2_CHECKOUT_SANDBOX='1',
                    PHOTOBOOTH_V2_PRINT='0', PHOTOBOOTH_V2_DRIVE='0')
+    backend['MEONG_QRIS_RECOVERY_PIN']=f'{secrets.randbelow(10**8):08d}'
     return backend, gui
 
 

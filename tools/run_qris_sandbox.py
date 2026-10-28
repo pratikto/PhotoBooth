@@ -198,10 +198,13 @@ def main(argv=None, *, environment_factory=trial_environments, gui_entry=('main.
         # Refuse an occupied port instead of accidentally connecting to another service.
         with socket.socket() as probe:
             probe.bind(('127.0.0.1', args.port))
+        if backend_env.get('MEONG_QRIS_RECOVERY_PIN'):
+            print('Local Sandbox operator PIN (keep private): '+backend_env['MEONG_QRIS_RECOVERY_PIN'],flush=True)
         server = subprocess.Popen([sys.executable, '-m', 'uvicorn',
             'photobooth.qris_server:build_sandbox_app', '--factory', '--host', '127.0.0.1',
             '--port', str(args.port), '--no-access-log'], cwd=ROOT, env=backend_env)
         backend_env.pop('MIDTRANS_SERVER_KEY', None)
+        backend_env.pop('MEONG_QRIS_RECOVERY_PIN', None)
         key = ''
         endpoint = gui_env['MEONG_QRIS_API_URL']
         wait_ready(server, endpoint)

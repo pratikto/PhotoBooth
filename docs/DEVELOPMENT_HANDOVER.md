@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-09.a: isolate a per-launch Sandbox operator PIN from the GUI
+
+Base / last remote-verified commit `4e4f95b8396f585966c9e98e9fb7ebd3f06bb28e`. Focused 64 PASS, zero failures/errors/skips; backend-only PIN and mocked launcher argv/environment/local-notice isolation covered.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, private
+photo display or customer state reset. Next: AR-09.b native operator PIN entry/metadata inspection, then audited fenced suspension/release without losing OWED or exposing previous photos; AR-10–13 pending.
+Only work/ scratch files local; scope and rollback in
+[stage contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATOR.md).
+
 ## 29 October — AR-08.b2: record native postpaid faults with durable same-operation retries
 
 Base / last remote-verified commit `e84af128d296e4acae37132569e09f3f2da14049`. Focused 58 PASS, zero failures/errors/skips; postpaid missing-camera, capture I/O failure and lost-ACK/restart fixtures preserve payment, OWED, manifest and one issue operation.
