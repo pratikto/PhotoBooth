@@ -1,5 +1,10 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 29 October — AR-12.d: retain Windows pass and expose Linux isolated-photo failure details
+
+CI 40756011109 Windows autonomous/native and pure jobs PASS; desktop P3 group FAIL with unknown cause. Failure-only report annotation added, no assertions/application changes. Final local full rerun still running. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-VALIDATION.md).
+Physical/provider gates remain separate; no production activation.
+
 ## 29 October — AR-12.c: correct Windows PNG fsync and verify real output crash boundaries
 
 First full local run 1093 run/1090 PASS/3 optional palm SKIP; Windows CI revealed read-only fsync Errno 9. Fixed non-truncating writable descriptor, added four output child-exit boundaries, retained all assertions; focused outcome recorded in validation. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-VALIDATION.md).

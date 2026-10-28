@@ -121,6 +121,24 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
+      - name: Surface failed synthetic desktop test details
+        if: failure()
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          root=Path('/tmp/meong-portrait-v2/reports')
+          for name in ('delivery-tests.txt','sandbox-tests.txt','health-tests.txt','native-tests.txt'):
+              path=root/name
+              if not path.is_file() or path.stat().st_size>2*1024*1024:
+                  continue
+              report=path.read_text(errors='replace')
+              marker=report.find('======================================================================')
+              if marker<0:
+                  continue
+              message=report[marker:marker+12000].replace('%','%25').replace('\r','%0D').replace('\n','%0A')
+              print(f'::error title=Desktop synthetic failure ({name})::{message}')
+          PY
+
   windows-audio:
     name: Windows Python 3.12 native SDL audio (dummy output)
     runs-on: windows-latest

@@ -79,3 +79,11 @@ fix evidence. Because runtime source changed, repeat full regression at the fina
 fixed source; do not relabel the earlier full pass as Windows certification.
 Portable-fix focused checks: **31 PASS / zero FAIL/ERROR/SKIP**,
 `test_output_journal test_capture_journal test_photo_reconstruction test_release_session`.
+
+Final-fix CI 40756011109: Windows job SUCCESS (including new autonomous ledgers/
+WAL/file tests) and pure job SUCCESS; desktop fails the existing isolated P3 group.
+Its annotation again contains only exit 1; underlying case is not established.
+Add failure-only desktop report annotations, preserving command/assertions and
+artifacts. No speculative application repair or unrelated test relaxation. The
+full local rerun at 635de92 remains running; the annotation-only follow-up changes
+no application/test source. Original failures remain auditable CI history.

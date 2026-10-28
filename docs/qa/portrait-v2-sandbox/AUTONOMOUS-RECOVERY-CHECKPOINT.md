@@ -2,7 +2,7 @@
 
 **Checkpoint status:** AR-09.c1 focused VERIFIED / roadmap IN PROGRESS, 29 October 2026 (Asia/Jakarta)
 **Branch:** `feature/portrait-kiosk-v2-next` (existing; no master merge)
-**Recovery implementation:** Source work progressed through AR-12.c; later stages and external gates remain unfinished
+**Recovery implementation:** Source work progressed through AR-12.d; later stages and external gates remain unfinished
 **Latest tested/pushed functional source:** `b38e030d2a8586f2de61dd96e8b4a590e85dde54` (86 focused PASS; final full regression deferred)
 **Historical audit baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
 **Current documentation handover:** See `docs/DEVELOPMENT_HANDOVER.md` and verify current remote HEAD; never assume the HEAD printed in a dated checkpoint is still current.
@@ -34,13 +34,13 @@ The owner prefers **frequent small tested commits AND remote pushes** because a 
 | Next *small* action | File/function, intended test and AR substep |
 | Safe rollback | Previous commit and retained-data plan |
 
-## Current implementation checkpoint — AR-12.c
+## Current implementation checkpoint — AR-12.d
 
-- Base / last verified remote: `cfacc18370559f4eddc44bda1c0a12572f89b5b3`.
-- Completed: correct Windows PNG fsync and verify real output crash boundaries. First full local run 1093 run/1090 PASS/3 optional palm SKIP; Windows CI revealed read-only fsync Errno 9. Fixed non-truncating writable descriptor, added four output child-exit boundaries, retained all assertions; focused outcome recorded in validation.
+- Base / last verified remote: `635de92c0f8fba9189981ebf2f168bff8b7a52af`.
+- Completed: retain Windows pass and expose Linux isolated-photo failure details. CI 40756011109 Windows autonomous/native and pure jobs PASS; desktop P3 group FAIL with unknown cause. Failure-only report annotation added, no assertions/application changes. Final local full rerun still running.
 - Publication SHA: this increment will be pinned after its verified push by the
   next checkpoint; obtain containing commit from Git history.
-- Remaining / exact next step: Push fixed source, repeat full regression because runtime changed, regenerate pinned native evidence, verify Windows and Linux CI, then finish AR-13 readiness/blocked production decision.
+- Remaining / exact next step: Inspect precise Linux P3 failure, fix only proven cause, verify final complete local regression and matching three-job CI, then publish AR-13 readiness.
 - Full suite: deferred to final functional SHA. Actual Windows/Ubuntu devices,
   merchant, paper/Drive and production: NOT_RUN / not enabled.
 - Migration/rollback: see stage contract; preserve all ledgers/media/claims,

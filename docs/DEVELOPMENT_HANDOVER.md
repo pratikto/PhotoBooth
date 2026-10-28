@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-12.d: retain Windows pass and expose Linux isolated-photo failure details
+
+Base / last remote-verified commit `635de92c0f8fba9189981ebf2f168bff8b7a52af`. CI 40756011109 Windows autonomous/native and pure jobs PASS; desktop P3 group FAIL with unknown cause. Failure-only report annotation added, no assertions/application changes. Final local full rerun still running.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, unclaimed private
+photo display or customer state reset. Next: Inspect precise Linux P3 failure, fix only proven cause, verify final complete local regression and matching three-job CI, then publish AR-13 readiness.
+Only work/ scratch files local; scope and rollback in
+[stage contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-VALIDATION.md).
+
 ## 29 October — AR-12.c: correct Windows PNG fsync and verify real output crash boundaries
 
 Base / last remote-verified commit `cfacc18370559f4eddc44bda1c0a12572f89b5b3`. First full local run 1093 run/1090 PASS/3 optional palm SKIP; Windows CI revealed read-only fsync Errno 9. Fixed non-truncating writable descriptor, added four output child-exit boundaries, retained all assertions; focused outcome recorded in validation.
