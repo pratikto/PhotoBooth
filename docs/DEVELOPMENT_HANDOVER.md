@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 28 October — AR-02.c: private restart observation and recovery worker retry
+
+Base / last remote-verified commit `949d8e35c44f92d9a22c852df81dd3527ee041c6`. Focused 152 PASS, zero failures/errors/skips, including native Sandbox lifecycle. Four new restart tests and persisted priority-trigger test pass; RECOVERY retains original phase, grant and transaction and never resumes capture.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, private
+photo display or customer state reset. Next: AR-03.a frozen quote/template contract and additive fulfillment/allocation migration tests.
+Only work/ scratch files local; scope and rollback in
+[AR-02 contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-RECONCILIATION.md).
+
 ## 28 October — AR-02.b: durable bounded reconciliation scheduling and fencing
 
 Base / last remote-verified commit `877268f46d7360e4a6e3ef021862d93103d07f00`. Focused 126 PASS, zero failures/errors/skips. Fifteen new AR-02 cases cover cached evidence, concurrent workers, jittered backoff, stale responses, additive schema and clock rollback.

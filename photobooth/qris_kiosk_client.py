@@ -33,8 +33,10 @@ class QrisKioskClient:
         self.headers = {'x-booth-id': booth_id, 'Authorization': 'Bearer ' + booth_token}
         self.timeout, self.session = timeout, session or requests.Session()
 
-    def _call(self, method, path, *, payload=None, checkout_key=None, operator_pin=None):
+    def _call(self, method, path, *, payload=None, checkout_key=None, operator_pin=None, reconciliation_trigger=None):
         headers = dict(self.headers)
+        if reconciliation_trigger is not None:
+            headers['X-Reconciliation-Trigger'] = reconciliation_trigger
         if operator_pin is not None:
             if not isinstance(operator_pin, str) or re.fullmatch(r'[0-9]{8}', operator_pin) is None:
                 raise ValueError('An eight-digit operator PIN is required')
@@ -77,9 +79,12 @@ class QrisKioskClient:
         identifier(order_id, maximum=50)
         return self._order(self._call('GET', '/api/orders/' + order_id), order_id)
 
-    def reconcile(self, order_id):
+    def reconcile(self, order_id, *, trigger='poll'):
         identifier(order_id, maximum=50)
-        result = self._order(self._call('POST', '/api/orders/' + order_id + '/reconcile'), order_id)
+        if trigger not in {'poll', 'restart', 'connectivity'}:
+            raise ValueError('Invalid reconciliation trigger')
+        result = self._order(self._call('POST', '/api/orders/' + order_id + '/reconcile',
+                                        reconciliation_trigger=trigger), order_id)
         observation = result.get('reconciliation')
         if (not isinstance(observation, dict) or type(observation.get('checked')) is not bool
                 or observation.get('outcome') not in

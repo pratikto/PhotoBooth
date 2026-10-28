@@ -40,11 +40,11 @@ class CheckoutBackend:
             raise CheckoutConflict('Current verified settlement required')
         return order
 
-    def _observe_payment(self, order_id, booth_id, *, urgent=False):
+    def _observe_payment(self, order_id, booth_id, *, urgent=False, immediate=False):
         identifier(order_id, maximum=50)
         order = self.store.get(order_id, booth_id)
         self._creation_context(order_id)
-        reservation = self.store.begin_reconciliation(order_id, urgent=urgent)
+        reservation = self.store.begin_reconciliation(order_id, urgent=urgent, immediate=immediate)
         if reservation is None:
             return order, False, None, 'unknown'
         outcome, state, evidence, qr_url, display_valid = 'unknown', None, None, None, True
@@ -76,13 +76,16 @@ class CheckoutBackend:
             outcome = 'review'
         return order, True, state, outcome
 
-    def reconcile(self, order_id, booth_id):
+    def reconcile(self, order_id, booth_id, trigger='poll'):
         """Provider GET observation only; no grant, disposition or photo effects.
 
         A throttled/in-flight response is explicitly unchecked. Its historical
         PAID row never becomes fresh evidence just because a prior poll passed.
         """
-        order, checked, state, outcome = self._observe_payment(order_id, booth_id)
+        if trigger not in {'poll', 'restart', 'connectivity'}:
+            raise ValueError('Invalid reconciliation trigger')
+        order, checked, state, outcome = self._observe_payment(order_id, booth_id,
+                                                              immediate=trigger != 'poll')
         result = self.view(order, verification_pending=not checked)
         result['reconciliation'] = {'checked': checked, 'outcome': outcome,
             'provider_state': state, 'retry_after': self.store.reconciliation_delay(order_id)}

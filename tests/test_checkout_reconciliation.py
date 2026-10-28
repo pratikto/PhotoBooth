@@ -226,3 +226,18 @@ class ReconciliationTests(unittest.TestCase):
             reservation=upgraded.begin_reconciliation(self.oid)
             self.assertIsNotNone(reservation)
             self.assertEqual(upgraded.get(self.oid)['grant_id'],grant)
+
+    def test_restart_trigger_bypasses_backoff_once_then_is_durably_throttled(self):
+        self.provider.outage=True
+        self.backend.reconcile(self.oid,'PB001')
+        self.now[0]+=12
+        self.backend.reconcile(self.oid,'PB001')
+        first=self.backend.reconcile(self.oid,'PB001',trigger='restart')
+        self.assertFalse(first['reconciliation']['checked'])
+        reads=self.provider.reads
+        self.backend.reconcile(self.oid,'PB001',trigger='restart')
+        self.assertEqual(self.provider.reads,reads)
+        path=self.store.db.execute('PRAGMA database_list').fetchone()[2]
+        with closing(CheckoutStore(path,now=lambda:self.now[0])) as reopened:
+            CheckoutBackend(reopened,self.provider,KEY,MERCHANT).reconcile(self.oid,'PB001',trigger='restart')
+        self.assertEqual(self.provider.reads,reads)

@@ -62,3 +62,25 @@ migration/lease-expiry/clock cases. Temporary-db upgrade preserves payment/grant
 bytes. Rollback preserves this table; old source may ignore it and all prior
 financial records remain readable. Actual process/power-loss and deployment
 acceptance remain separately gated; final full regression still pending.
+
+## AR-02.c restart and existing native worker integration
+
+Source retains interrupted STARTING/STARTED and a fixed recovery reason in
+version-1 journal metadata. On reopen, RECOVERY makes a private provider GET
+observation through the existing single-flight worker; phase/transaction/grant
+remain held and no old images or countdown are exposed. Local monotonic retry
+matches backend retry_after, bounded 1–60 seconds. Legacy clients without this
+method keep the original hold. Native RECOVERY/UNCERTAIN now participates in
+worker checks, without new permission/reset controls or auto-shutter.
+
+Authenticated restart/connectivity trigger may bypass error backoff once, then
+its persisted priority_after prevents another immediate bypass for ten seconds.
+It cannot bypass an active request. The additional column migrates under a write
+transaction; row/financial state are preserved. No unauthenticated force flag.
+Initial four restart tests: three FAIL; priority test initially ERROR before
+implementation. Final source: **152 focused PASS / zero FAIL/ERROR/SKIP**, including
+native Sandbox HTTP→photo handoff and existing lifecycle/QR tests. Command extends
+AR-02.b group with test_qris_reconciliation_session, test_kiosk_v2_sandbox and
+test_kiosk_v2_sandbox_widgets, in SDL offscreen/dummy-audio cloud environment.
+Full regression follows final functional roadmap increment; actual devices and
+merchant acceptance remain NOT_RUN. Next dependency: AR-03 durable fulfillment.

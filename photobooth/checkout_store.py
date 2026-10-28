@@ -78,6 +78,11 @@ class CheckoutStore:
             checked_at REAL, outcome TEXT NOT NULL DEFAULT 'unknown',
             provider_state TEXT, observed_at REAL NOT NULL DEFAULT 0);
         ''')
+        # AR-02.c is additive for the already published scheduler schema.
+        with self.write():
+            columns = {row['name'] for row in self.db.execute('PRAGMA table_info(checkout_reconciliation)')}
+            if 'priority_after' not in columns:
+                self.db.execute('ALTER TABLE checkout_reconciliation ADD COLUMN priority_after REAL NOT NULL DEFAULT 0')
         # Never silently forget unresolved orders from the earlier prototype.
         if self.db.execute("SELECT 1 FROM sqlite_master WHERE name='orders'").fetchone():
             with self.write():
@@ -275,7 +280,7 @@ class CheckoutStore:
             SET evidence_revision=evidence_revision+1 WHERE order_id=?''', (order_id,))
         return self._row(order_id)
 
-    def begin_reconciliation(self, order_id, *, urgent=False):
+    def begin_reconciliation(self, order_id, *, urgent=False, immediate=False):
         """Reserve bounded GET outside the DB transaction; never reserve a charge."""
         with self.write():
             self._row(order_id)
@@ -290,11 +295,17 @@ class CheckoutStore:
                     lease_until=?,observed_at=? WHERE order_id=?''',
                     (now+10, now+45 if row['token'] else 0, now, order_id))
                 return None
-            if (row['token'] and row['lease_until'] > now) or (not urgent and row['next_at'] > now):
+            priority = immediate and row['priority_after'] <= now
+            if ((row['token'] and row['lease_until'] > now)
+                    or (not urgent and not priority and row['next_at'] > now)
+                    or (immediate and not priority)):
                 return None
             token = uuid.uuid4().hex
             self.db.execute('''UPDATE checkout_reconciliation SET token=?,lease_until=?,
                 generation=generation+1,observed_at=? WHERE order_id=?''', (token, now+45, now, order_id))
+            if immediate:
+                self.db.execute('UPDATE checkout_reconciliation SET priority_after=? WHERE order_id=?',
+                                (now+10, order_id))
             return {'token': token, 'revision': row['evidence_revision']}
 
     def reconciliation_delay(self, order_id):

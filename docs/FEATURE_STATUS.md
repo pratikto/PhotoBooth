@@ -1,5 +1,10 @@
 # Meong Photobooth — current feature status
 
+## 28 October — AR-02.c: private restart observation and recovery worker retry
+
+Focused 152 PASS, zero failures/errors/skips, including native Sandbox lifecycle. Four new restart tests and persisted priority-trigger test pass; RECOVERY retains original phase, grant and transaction and never resumes capture. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-RECONCILIATION.md).
+Physical/provider gates remain separate; no production activation.
+
 ## 28 October — AR-02.b: durable bounded reconciliation scheduling and fencing
 
 Focused 126 PASS, zero failures/errors/skips. Fifteen new AR-02 cases cover cached evidence, concurrent workers, jittered backoff, stale responses, additive schema and clock rollback. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-RECONCILIATION.md).

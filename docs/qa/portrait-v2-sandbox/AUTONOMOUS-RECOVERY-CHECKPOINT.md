@@ -34,13 +34,13 @@ The owner prefers **frequent small tested commits AND remote pushes** because a 
 | Next *small* action | File/function, intended test and AR substep |
 | Safe rollback | Previous commit and retained-data plan |
 
-## Current implementation checkpoint — AR-02.b
+## Current implementation checkpoint — AR-02.c
 
-- Base / last verified remote: `877268f46d7360e4a6e3ef021862d93103d07f00`.
-- Completed: durable bounded reconciliation scheduling and fencing. Focused 126 PASS, zero failures/errors/skips. Fifteen new AR-02 cases cover cached evidence, concurrent workers, jittered backoff, stale responses, additive schema and clock rollback.
+- Base / last verified remote: `949d8e35c44f92d9a22c852df81dd3527ee041c6`.
+- Completed: private restart observation and recovery worker retry. Focused 152 PASS, zero failures/errors/skips, including native Sandbox lifecycle. Four new restart tests and persisted priority-trigger test pass; RECOVERY retains original phase, grant and transaction and never resumes capture.
 - Publication SHA: this increment will be pinned after its verified push by the
   next checkpoint; obtain containing commit from Git history.
-- Remaining / exact next step: AR-02.c restart and existing RECOVERY observations without photo reentry, then AR-03 immutable fulfillment/allocation ledger.
+- Remaining / exact next step: AR-03.a frozen quote/template contract and additive fulfillment/allocation migration tests.
 - Full suite: deferred to final functional SHA. Actual Windows/Ubuntu devices,
   merchant, paper/Drive and production: NOT_RUN / not enabled.
 - Migration/rollback: see AR-02 contract; preserve all ledgers/media/claims,

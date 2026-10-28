@@ -9,6 +9,7 @@ import copy
 import json
 from pathlib import Path
 import threading
+import time
 import uuid
 
 from photobooth.manifest_io import write_json_atomic
@@ -61,6 +62,7 @@ class KioskCheckout:
         self.worker_lock = threading.RLock()
         self.lease = KioskLease(str(self.path) + '.lock')
         self.data = None
+        self._reconcile_at = 0
         try:
             if self.path.exists():
                 if self.path.stat().st_size > 65536:
@@ -72,6 +74,8 @@ class KioskCheckout:
                         or len(self.data.get('checkout_key', '')) != 32):
                     raise ValueError('Payment journal needs operator recovery')
                 if self.data['phase'] in {'STARTING', 'STARTED'}:
+                    self.data['recovery'] = {'interrupted_phase': self.data['phase'],
+                                             'reason': 'restart_after_capture_intent'}
                     self.data['phase'] = 'RECOVERY'
                     self._save()
         except BaseException:
@@ -121,7 +125,22 @@ class KioskCheckout:
             if self.data is None:
                 return None
             phase, order = self.data['phase'], self.data['order']
-            if phase in {'RECOVERY', 'COMPLETED', 'CANCELLED', 'STARTED'}:
+            if phase == 'RECOVERY':
+                # Observe payment privately after restart, never allocate or
+                # display previous media. Legacy/third-party clients without
+                # this narrow method retain the original conservative hold.
+                reconcile = getattr(self.client, 'reconcile', None)
+                if order and callable(reconcile) and time.monotonic() >= self._reconcile_at:
+                    trigger = 'restart' if self._reconcile_at == 0 else 'poll'
+                    self._reconcile_at = time.monotonic()+10
+                    result = reconcile(order['order_id'], trigger=trigger)
+                    self._accept(result)
+                    delay = (result.get('reconciliation') or {}).get('retry_after', 10)
+                    if type(delay) is not int:
+                        delay = 10
+                    self._reconcile_at = time.monotonic()+max(1, min(60, delay))
+                return self.snapshot()
+            if phase in {'COMPLETED', 'CANCELLED', 'STARTED'}:
                 return self.snapshot()
             if phase == 'STARTING':
                 if self.data['transaction_id']:
@@ -179,6 +198,8 @@ class KioskCheckout:
 
     def require_recovery(self):
         with self.lock:
+            self.data.setdefault('recovery', {'interrupted_phase': self.data['phase'],
+                                               'reason': 'capture_requires_review'})
             self.data['phase'] = 'RECOVERY'; self._save()
 
     def request_complete(self):

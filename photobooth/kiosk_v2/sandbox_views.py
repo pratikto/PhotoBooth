@@ -149,7 +149,7 @@ class SandboxViews:
             self._show()
         phase = (self._sandbox_view or {}).get('phase')
         if (self.navigation.page == SANDBOX_CHECKOUT and not self._sandbox_jobs.busy and
-                phase in {'CREATING','WAITING','CANCELLING','STARTING','COMPLETING'} and
+                phase in {'CREATING','WAITING','CANCELLING','STARTING','COMPLETING','RECOVERY','UNCERTAIN'} and
                 not (self._photo_jobs and self._photo_jobs.busy) and
                 time.monotonic() >= self._sandbox_refresh_at):
             self._sandbox_refresh_at = time.monotonic()+2
