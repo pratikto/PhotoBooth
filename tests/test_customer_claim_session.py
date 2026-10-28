@@ -121,3 +121,21 @@ class CustomerClaimSessionTests(unittest.TestCase):
         view=reopened.confirm_resume(tx,'result')
         self.assertEqual(view['order']['service_state'],'COMPLETED')
         self.assertEqual(view['phase'],'STARTED')
+
+    def test_paid_issue_intent_survives_lost_ack_and_restart_replays_same_operation(self):
+        from unittest.mock import patch
+        self.fixture.service.begin({'template_a':1});self.fixture.paid();self.fixture.service.check()
+        flow=self.fixture.flow;original=flow.client.report_fulfillment_issue
+        def lost(*args):
+            original(*args);raise RuntimeError('Synthetic lost response')
+        with patch.object(flow.client,'report_fulfillment_issue',side_effect=lost):
+            with self.assertRaises(RuntimeError):flow.report_fulfillment_issue('DEVICE_UNAVAILABLE')
+        intent=flow.snapshot()['pending_fulfillment_issue']
+        self.assertEqual(intent['reason'],'DEVICE_UNAVAILABLE')
+        before=self.fixture.store.get(flow.snapshot()['order']['order_id'])
+        reopened=self.reopen();view=reopened.refresh()
+        self.assertNotIn('pending_fulfillment_issue',view)
+        self.assertEqual(self.fixture.store.get(before['id']),before)
+        self.assertEqual(self.fixture.store.db.execute('SELECT count(*) FROM checkout_fulfillment_issue_events').fetchone()[0],1)
+        self.assertEqual(view['order']['fulfillment_issue']['status'],'PAID_UNFULFILLED')
+        self.assertTrue(reopened.customer_claim_required)

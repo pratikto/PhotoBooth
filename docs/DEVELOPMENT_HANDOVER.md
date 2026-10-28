@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-08.b2: record native postpaid faults with durable same-operation retries
+
+Base / last remote-verified commit `e84af128d296e4acae37132569e09f3f2da14049`. Focused 58 PASS, zero failures/errors/skips; postpaid missing-camera, capture I/O failure and lost-ACK/restart fixtures preserve payment, OWED, manifest and one issue operation.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, private
+photo display or customer state reset. Next: AR-09 integrate separate operator PIN launcher/UI and safe fenced suspension/release; AR-10 bounded restart, AR-11 design/opt-in fixtures, AR-12 validation and AR-13 release gates remain.
+Only work/ scratch files local; scope and rollback in
+[stage contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-READINESS.md).
+
 ## 29 October — AR-08.b1: persist paid-unfulfilled issues without altering customer financial rights
 
 Base / last remote-verified commit `4863aa3009d1c23e0b710ea9340db6a931a19623`. Focused 56 PASS, zero failures/errors/skips; five new durable/concurrent/migration/authenticated HTTP issue cases; CI registration included.

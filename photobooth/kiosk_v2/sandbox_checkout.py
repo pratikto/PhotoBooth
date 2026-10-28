@@ -11,7 +11,7 @@ from .qr_branding import branded_sandbox_qr_image
 from .demo_game import GameJobs
 
 ACTIONS = {'boot', 'begin', 'begin_ready', 'check', 'cancel', 'prepare', 'started', 'complete', 'recover',
-           'ticket_saved', 'customer_claim', 'scan_claim', 'resume', 'resumed'}
+           'ticket_saved', 'customer_claim', 'scan_claim', 'resume', 'resumed','fulfillment_issue'}
 
 
 def simulator_qr_url(view):
@@ -166,6 +166,10 @@ class SandboxCheckout:
 
     def resumed(self, transaction_id, photo_phase):
         self.flow.confirm_resume(transaction_id,photo_phase)
+        return self.view()
+
+    def fulfillment_issue(self, reason):
+        self.flow.report_fulfillment_issue(reason)
         return self.view()
 
     def prepare(self):

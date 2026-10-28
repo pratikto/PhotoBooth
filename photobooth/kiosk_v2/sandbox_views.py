@@ -25,6 +25,7 @@ class SandboxViews:
         self._sandbox_privacy_epoch = 0
         self._sandbox_action_epoch = 0
         self._sandbox_claim_input = None
+        self._sandbox_pending_issue = None
 
     def _sandbox_submit(self, action, *args):
         if self._closed or self._suspended or not self._sandbox_jobs:
@@ -55,6 +56,19 @@ class SandboxViews:
         self._sandbox_view={'phase':'RECOVERY','customer_claim_required':True}
         self.navigation.page=SANDBOX_CHECKOUT
         self._show()
+
+    def _sandbox_report_issue(self, reason):
+        jobs=self._sandbox_jobs
+        if not self._sandbox_enabled or not jobs or not jobs.store:
+            return False
+        order=(jobs.store.flow.snapshot() or {}).get('order') or {}
+        if (order.get('fulfillment') or {}).get('obligation_state')!='OWED':
+            return False
+        self._sandbox_lock_customer()
+        self._sandbox_pending_issue=reason
+        if self._sandbox_submit('fulfillment_issue',reason):
+            self._sandbox_pending_issue=None
+        return True
 
     def _sandbox_claim(self):
         field=self._sandbox_claim_input
@@ -161,6 +175,11 @@ class SandboxViews:
 
     def _sandbox_photo_outcome(self, outcome):
         """Called before photo navigation. No server ACK means no camera countdown."""
+        if self._sandbox_enabled and outcome.error:
+            reason=('CAPTURE_FAILED' if outcome.action=='capture' else
+                    'COMPOSITION_FAILED' if outcome.action=='compose' else 'PHOTO_STATE_UNAVAILABLE')
+            if self._sandbox_report_issue(reason):
+                return True
         if (self._sandbox_enabled and self._sandbox_jobs.store and
                 self._sandbox_jobs.store.flow.customer_claim_required):
             if self._photo_jobs and self._photo_jobs.service:
@@ -260,6 +279,10 @@ class SandboxViews:
                     and (self._sandbox_view or {}).get('customer_claim_required')):
                 self._show()
         phase = (self._sandbox_view or {}).get('phase')
+        if self._sandbox_pending_issue and not self._sandbox_jobs.busy:
+            if self._sandbox_submit('fulfillment_issue',self._sandbox_pending_issue):
+                self._sandbox_pending_issue=None
+            return
         if (self.navigation.page == SANDBOX_CHECKOUT and not self._sandbox_jobs.busy and
                 phase in {'CREATING','WAITING','CANCELLING','STARTING','COMPLETING','RECOVERY','UNCERTAIN'} and
                 not (self._photo_jobs and self._photo_jobs.busy) and
@@ -358,7 +381,9 @@ class SandboxViews:
         card=PixelCard(orientation='vertical',padding=12,spacing=8)
         message=('Tiket sesuai dengan pesanan asli.\nPilih pulihkan untuk memeriksa foto tersimpan.\nKamera tidak memotret otomatis.' if ready else
                  'Pesanan tetap tersimpan.\nFoto tidak ditampilkan tanpa bukti pemilik.\nGunakan tiket pemulihan atau bantuan operator.')
-        card.add_widget(text_label(message,size=16,height=150,color=MUTED))
+        if (view.get('order') or {}).get('fulfillment_issue'):
+            message+='\nLayanan tertunda tercatat. Simpan tiket; hubungi operator.'
+        card.add_widget(text_label(message,size=16,height=180,color=MUTED))
         self._sandbox_claim_input=None
         if not ready:
             field=TextInput(multiline=False,password=True,hint_text='Isi tiket pemulihan lengkap',

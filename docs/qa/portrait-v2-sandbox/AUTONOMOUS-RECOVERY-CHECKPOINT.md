@@ -2,7 +2,7 @@
 
 **Checkpoint status:** AR-07.b1 focused VERIFIED / roadmap IN PROGRESS, 28 October 2026 (Asia/Jakarta)
 **Branch:** `feature/portrait-kiosk-v2-next` (existing; no master merge)
-**Recovery implementation:** Source work progressed through AR-08.b1; later stages and external gates remain unfinished
+**Recovery implementation:** Source work progressed through AR-08.b2; later stages and external gates remain unfinished
 **Latest previously tested/pushed functional source:** `6d53d91fcfcad6083aee9f17ac8f80cf635fdf2f` (AR-07.a); current increment and tests below
 **Historical audit baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
 **Current documentation handover:** See `docs/DEVELOPMENT_HANDOVER.md` and verify current remote HEAD; never assume the HEAD printed in a dated checkpoint is still current.
@@ -34,13 +34,13 @@ The owner prefers **frequent small tested commits AND remote pushes** because a 
 | Next *small* action | File/function, intended test and AR substep |
 | Safe rollback | Previous commit and retained-data plan |
 
-## Current implementation checkpoint — AR-08.b1
+## Current implementation checkpoint — AR-08.b2
 
-- Base / last verified remote: `4863aa3009d1c23e0b710ea9340db6a931a19623`.
-- Completed: persist paid-unfulfilled issues without altering customer financial rights. Focused 56 PASS, zero failures/errors/skips; five new durable/concurrent/migration/authenticated HTTP issue cases; CI registration included.
+- Base / last verified remote: `e84af128d296e4acae37132569e09f3f2da14049`.
+- Completed: record native postpaid faults with durable same-operation retries. Focused 58 PASS, zero failures/errors/skips; postpaid missing-camera, capture I/O failure and lost-ACK/restart fixtures preserve payment, OWED, manifest and one issue operation.
 - Publication SHA: this increment will be pinned after its verified push by the
   next checkpoint; obtain containing commit from Git history.
-- Remaining / exact next step: AR-08.b2 persist local reporting intent before API I/O, retry after restart and route native camera/photo faults into the ledger; then AR-09–13.
+- Remaining / exact next step: AR-09 integrate separate operator PIN launcher/UI and safe fenced suspension/release; AR-10 bounded restart, AR-11 design/opt-in fixtures, AR-12 validation and AR-13 release gates remain.
 - Full suite: deferred to final functional SHA. Actual Windows/Ubuntu devices,
   merchant, paper/Drive and production: NOT_RUN / not enabled.
 - Migration/rollback: see stage contract; preserve all ledgers/media/claims,

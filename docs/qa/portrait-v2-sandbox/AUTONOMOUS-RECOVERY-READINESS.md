@@ -63,3 +63,27 @@ FAIL/ERROR/SKIP**:
 Includes concurrency, restart, lost ACK, body conflict, tenant isolation, unpaid
 rejection, strict authenticated HTTP and empty additive migration. Registered in
 CI. Synthetic local HTTP only; actual compensation policy stays an AR-13 gate.
+
+## AR-08.b2 — native postpayment fault reporting and durable retries
+
+KioskCheckout persists allowlisted reason/operation before report I/O and enters
+RECOVERY. Lost API acknowledgment retains pending intent; reopening sends the
+same operation, bounded to one retry per ten seconds in a process. Explicit API
+ACK validates recorded operation/reason separately from current issue summary.
+Provider reconciliation never becomes a prerequisite for recording an existing
+OWED obligation, and no remedy report grants camera/photo ownership.
+
+Native camera failure before admission/countdown or during countdown, and photo
+worker errors, immediately hide media and require the original ticket again.
+The existing worker records paid-unfulfilled status without changing payment,
+grant, local ID, manifest or quota. Busy worker queues reporting until available;
+OWED already persists independently during that brief local scheduling window.
+Missing/corrupt/expired photo data uses the same held remedy path. The UI states
+service is delayed and asks to keep the ticket/contact the operator; it never
+promises a refund or compensation terms. Operator safe release follows AR-09.
+
+Focused **58 PASS / zero FAIL/ERROR/SKIP**:
+`.venv/bin/python tools/run_kiosk_unittests.py test_fulfillment_issues test_customer_claim_session test_kiosk_v2_sandbox_widgets test_qris_kiosk_client test_qris_session`.
+Three new fixtures exercise postpaid camera fault, capture write failure with
+unchanged manifest, and lost report ACK/restart/exact event replay. No real
+merchant/device/paper/cloud effect. Final full regression remains deferred.

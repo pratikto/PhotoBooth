@@ -236,7 +236,9 @@ class CheckoutBackend:
         # Record liability even while the provider is unavailable. This grants
         # no service, changes no evidence and cannot assert a refund/completion.
         self.store.report_fulfillment_issue(order_id,booth_id,operation_id,reason)
-        return self.view(self.store.get(order_id,booth_id))
+        result=self.view(self.store.get(order_id,booth_id))
+        result['issue_ack']={'recorded':True,'operation_id':operation_id,'reason':reason}
+        return result
 
     def customer_claim(self, order_id, booth_id, capability, operation_id):
         self.store.get(order_id,booth_id)

@@ -96,6 +96,18 @@ class QrisKioskClient:
             raise ValueError('Customer proof acknowledgement mismatch')
         return result
 
+    def report_fulfillment_issue(self, order_id, operation_id, reason):
+        from photobooth.checkout_store import FULFILLMENT_ISSUE_REASONS
+        identifier(order_id,maximum=50);identifier(operation_id,minimum=16)
+        if reason not in FULFILLMENT_ISSUE_REASONS:
+            raise ValueError('Allowlisted issue reason required')
+        result=self._order(self._call('POST','/api/orders/'+order_id+'/fulfillment-issue',
+            payload={'operation_id':operation_id,'reason':reason}),order_id)
+        if (result.get('issue_ack')!={'recorded':True,'operation_id':operation_id,'reason':reason}
+                or (result.get('fulfillment_issue') or {}).get('status')!='PAID_UNFULFILLED'):
+            raise ValueError('Fulfillment issue acknowledgment mismatch')
+        return result
+
     def status(self, order_id):
         identifier(order_id, maximum=50)
         return self._order(self._call('GET', '/api/orders/' + order_id), order_id)

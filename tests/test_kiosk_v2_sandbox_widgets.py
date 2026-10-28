@@ -400,3 +400,32 @@ class SandboxWidgetTests(unittest.TestCase):
             self.assertIsNone(f.flow.snapshot())
             self.assertEqual(app._sandbox_view['phase'],'QUOTE')
             self.assertTrue(any('belum siap' in getattr(w,'text','') for w in app.stage.walk()))
+
+    def test_postpaid_camera_fault_records_owed_issue_and_hides_media(self):
+        with self.booth() as (app,f):
+            self.reserve(app,f)
+            app._sandbox_photo_consent();self.settle(app)
+            app.camera_device.read.return_value=None
+            app._admit_photo_test();self.settle(app)
+            order=f.store.get(f.flow.snapshot()['order']['order_id'])
+            issue=f.store.fulfillment_issue(order['id'],'PB001')
+            self.assertEqual(issue['reason'],'DEVICE_UNAVAILABLE')
+            self.assertEqual(order['state'],'PAID')
+            self.assertEqual(order['service_state'],'RESERVED')
+            self.assertEqual(f.store.fulfillment(order['id'],'PB001')['obligation_state'],'OWED')
+            self.assertEqual(app._photo_view,{})
+            self.assertTrue(f.flow.customer_claim_required)
+            self.assertEqual(f.provider.charges,1)
+
+    def test_postpaid_capture_io_failure_keeps_original_manifest_and_remedy(self):
+        with self.booth() as (app,f):
+            self.start_private_capture(app,f)
+            before=app._photo_jobs.service.transaction.manifest_path.read_bytes()
+            with patch.object(app._photo_jobs.service,'capture',side_effect=OSError('Synthetic disk failure')):
+                app._photo_submit('capture',np.zeros((120,160,3),dtype=np.uint8));self.settle(app)
+            issue=f.store.fulfillment_issue(f.flow.snapshot()['order']['order_id'],'PB001')
+            self.assertEqual(issue['reason'],'CAPTURE_FAILED')
+            self.assertEqual(app._photo_jobs.service.transaction.manifest_path.read_bytes(),before)
+            self.assertEqual(app._photo_view,{})
+            self.assertFalse(app._sandbox_can_capture())
+            self.assertEqual(f.provider.charges,1)

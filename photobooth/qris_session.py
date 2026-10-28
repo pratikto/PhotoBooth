@@ -74,6 +74,7 @@ class KioskCheckout:
         self._last_claim_ticket = None
         self._resume_payment_confirmed = False
         self._privacy_generation = 0
+        self._issue_retry_at = 0
         try:
             if self.path.exists():
                 self._opened_existing = True
@@ -282,6 +283,10 @@ class KioskCheckout:
         with self.worker_lock:
             if self.data is None:
                 return None
+            if self.data.get('pending_fulfillment_issue'):
+                if time.monotonic() >= self._issue_retry_at:
+                    self._send_fulfillment_issue()
+                return self.snapshot()
             phase, order = self.data['phase'], self.data['order']
             if phase == 'RECOVERY' or (self.customer_claim_required and order):
                 # Observe payment privately after restart, never allocate or
@@ -380,6 +385,33 @@ class KioskCheckout:
             self.data.setdefault('recovery', {'interrupted_phase': self.data['phase'],
                                                'reason': 'capture_requires_review'})
             self.data['phase'] = 'RECOVERY'; self._save()
+
+    def report_fulfillment_issue(self, reason):
+        from photobooth.checkout_store import FULFILLMENT_ISSUE_REASONS
+        if reason not in FULFILLMENT_ISSUE_REASONS:
+            raise ValueError('Allowlisted issue reason required')
+        with self.worker_lock:
+            with self.lock:
+                order=(self.data or {}).get('order') or {}
+                if (order.get('fulfillment') or {}).get('obligation_state')!='OWED':
+                    raise RuntimeError('Original paid obligation required')
+                operations=self.data.setdefault('fulfillment_issue_operations',{})
+                operation=operations.setdefault(reason,uuid.uuid4().hex)
+                self.data['pending_fulfillment_issue']={'operation_id':operation,'reason':reason}
+                self.data['phase']='RECOVERY'
+                self._save()  # Durable report identity before API I/O.
+            return self._send_fulfillment_issue()
+
+    def _send_fulfillment_issue(self):
+        pending=self.snapshot()['pending_fulfillment_issue']
+        self._issue_retry_at=time.monotonic()+10
+        result=self.client.report_fulfillment_issue(self.data['order']['order_id'],
+            pending['operation_id'],pending['reason'])
+        self._accept(result)
+        with self.lock:
+            self.data.pop('pending_fulfillment_issue',None)
+            self._save()
+        return self.snapshot()
 
     def request_complete(self):
         with self.lock:

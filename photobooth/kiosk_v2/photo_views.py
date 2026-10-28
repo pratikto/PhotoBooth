@@ -98,6 +98,8 @@ class PhotoViews:
         if not self._photo_view.get('drive_ready', True):
             return
         if self.camera_device.read() is None:
+            if self._sandbox_enabled and self._sandbox_report_issue('DEVICE_UNAVAILABLE'):
+                return
             self._photo_error = 'Kamera belum siap. Sambungkan kamera lalu coba lagi.'
             self._show()
             return
@@ -183,6 +185,8 @@ class PhotoViews:
         if not self._photo_capture_allowed() or self._photo_jobs.busy or self._countdown_event is not None:
             return
         if self.camera_device.read() is None:
+            if self._sandbox_enabled and self._sandbox_report_issue('DEVICE_UNAVAILABLE'):
+                return
             self._photo_error = 'Kamera belum siap. Hitung mundur belum dimulai.'
             self._show()
             return
@@ -201,6 +205,8 @@ class PhotoViews:
         frame = self.camera_device.read()
         if frame is None:
             self._cancel_countdown()
+            if self._sandbox_enabled and self._sandbox_report_issue('DEVICE_UNAVAILABLE'):
+                return False
             self._photo_error = 'Kamera terputus. Sambungkan kembali, lalu ulangi hitung mundur.'
             self._show()
             return False
