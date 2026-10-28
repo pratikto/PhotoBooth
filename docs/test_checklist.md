@@ -5,7 +5,10 @@
 Before: seven regression cases, five failures/zero errors. After: **182 focused
 PASS / zero failures/errors/skips**, 14.158s. Repeated automatic native polling,
 durable restart, replacement/cache validation and terminal removal covered.
-Final source/full/CI/device limits: [raw evidence](qa/portrait-v2-sandbox/QR-POLLING.md).
+Source `4237d3f`: full **933 run / 930 PASS / 3 optional palm SKIP / zero
+failures/errors**, 289.540s; CI 40614355442 all three jobs SUCCESS (Sandbox:
+182 PASS/zero skips). Ten native captures and two actual screenshot QR decodes
+verified; [raw evidence and device limits](qa/portrait-v2-sandbox/QR-POLLING.md).
 
 ## 28 October — Sandbox QR logo
 

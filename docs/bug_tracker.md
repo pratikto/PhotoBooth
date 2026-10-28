@@ -6,8 +6,10 @@ S2: owner reports image-only disappearance, without timing/status or tested HEAD
 Offline reproduction proves pending polling replaces a verified image action
 with a derived URL; a failed reload then clears the image. Exact laptop cause
 is unconfirmed. IN SOURCE: retain/revalidate the stored URL when actions are
-absent, preserve explicit-action checks and legitimate QR removal. 182 focused
-PASS; full/CI and owner retest tracked in the [runbook](qa/portrait-v2-sandbox/QR-POLLING.md).
+absent, preserve explicit-action checks and legitimate QR removal. Source
+`4237d3f`: 182 focused PASS; full 933 run / 930 PASS / 3 optional palm SKIP;
+CI 40614355442 all three jobs SUCCESS. Owner retest and exact device cause remain
+pending; [runbook](qa/portrait-v2-sandbox/QR-POLLING.md).
 Already overwritten URLs are not reconstructed; journals are preserved. Not CLOSED.
 
 ## BUG-020 — Sandbox dashboard Server Key rejected locally (28 October)

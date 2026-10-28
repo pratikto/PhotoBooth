@@ -5,8 +5,11 @@
 Owner confirms image-only disappearance on the Sandbox page, with no duration
 or status text. Reproduced pending action-URL overwrite and native image loss.
 The shared backend now retains/revalidates saved URLs when actions are omitted;
-no new order, endpoint guessing or relaxed payment guards. 182 focused PASS;
-final regression/CI/device limits in the [runbook](qa/portrait-v2-sandbox/QR-POLLING.md).
+no new order, endpoint guessing or relaxed payment guards. Source `4237d3f`:
+182 focused PASS; full 933 run / 930 PASS / 3 optional palm SKIP / zero
+failures/errors; CI 40614355442 all three jobs SUCCESS. Ten exact-source native
+PNGs and two screenshot QR decodes verified; device limits/update in the
+[runbook](qa/portrait-v2-sandbox/QR-POLLING.md).
 
 ## 28 October — centered Meong logo on Sandbox QR
 

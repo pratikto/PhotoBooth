@@ -1,0 +1,21 @@
+{
+  "head": "4237d3f0e435245f0bce4b3ee5b158105f6af9ad",
+  "environment": {
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+    "python": "3.12.14",
+    "kivy": "2.3.1",
+    "pillow": "13.0.0",
+    "opencv": "4.14.0"
+  },
+  "sha256": {
+    "photobooth/qris_evidence.py": "fd7f81f5894ad39fc0ed1c22b16d6640803c405d0c80e26125ae7ff2dffd4a6d",
+    "photobooth/checkout_backend.py": "e8073d85cfccc14af64d58e223a961f276edd205b8d4299f319919b11d508553",
+    "photobooth/checkout_store.py": "103977f2d91f4b29ef86acc6febe5efac4ae111cb4a18b2aa3349ca0dddc787e",
+    "photobooth/qris_session.py": "8c13f93d7b452b25844bfe89602bf16f5fe22429395a500265c9f09e9ce3ebeb",
+    "photobooth/qris_images.py": "5faeb88feb7b4a40549aeaa138afbb01cded52e5a6744a16079a94cbdf7b3969",
+    "photobooth/kiosk_v2/sandbox_checkout.py": "7bb89648115b5e00fb72ac457422707a43e9dbb05f45041894210b8ecf1a20f2",
+    "photobooth/kiosk_v2/sandbox_views.py": "a7fcec4752fa6091a765b90cb651605a40e04702b7b314b69d0be3d5808e55ea",
+    "tests/test_checkout_backend.py": "f51548dd41533f6022cc16b0904bcf8e486ad3e16dee7a145d5e2ff9e0d74b65",
+    "tests/test_kiosk_v2_sandbox_widgets.py": "b073f9c1905a78862291337847b5e31cd0f6aad0f7734fa7a9abbdceb47fad2b"
+  }
+}

@@ -63,5 +63,56 @@ a replacement order to disguise that state. Actual on-device retest is pending.
   order/key/pixels; authoritative expiry still removes the image. These are
   deterministic polling checks, not a real-time soak or merchant test.
 
-Final full regression, exact-source native captures and matching-source CI are
-pending at this checkpoint; results will be appended after execution.
+## Final source and evidence
+
+Functional source **`4237d3f0e435245f0bce4b3ee5b158105f6af9ad`** is pushed and
+remote-verified on the authorized branch. [Source hashes and environment](qr-polling-tested-source.json)
+identify the two runtime changes, tests and unchanged related services.
+
+- [Full local regression](qr-polling-full-tests.txt): **933 run / 930 PASS /
+  3 optional native palm-assets SKIP / zero failures/errors**, 289.540s. The
+  skipped cases are native camera-recovery palm inference, v2 palm countdown
+  and standalone palm inference; none is a QR/payment test.
+- Matching-source [CI 40614355442](https://github.com/pratikto/PhotoBooth/actions/runs/40614355442):
+  **all three jobs SUCCESS**. Sandbox group: 182 PASS/zero skips, including all
+  seven new regression cases. Windows: 55 portable and 103 dummy-audio checks
+  PASS. The pure job skips one Kivy-dependent integration (covered locally);
+  native GUI skips its optional palm-assets case. [Exact summaries](qr-polling-ci-result.json).
+- Ten exact-source native PNGs pass phase, dimensions and SHA256 checks at
+  800×1280 and 452×900. Both WAITING images were visually reviewed: QR/centered
+  logo, amount, status and actions fit without observed clipping. Actual
+  screenshot QR pixels independently decode the exact nonpayable fixture.
+  [Pixel/hash results](qr-polling/qr-pixel-validation.json),
+  [800px view](qr-polling/02-waiting-offline-fixture-800x12800001.png),
+  [compact view](qr-polling/02-waiting-offline-fixture-452x9000001.png).
+  The initial metadata checker incorrectly expected no checkout phase during
+  photo consent; consent correctly retains RESERVED. Only that checker
+  expectation was corrected; no app change or repeat full suite was needed.
+
+These fixtures verify the reproduced source defect, not the unidentified cause
+on the owner's device. Actual merchant/simulator, Windows/Ubuntu hardware,
+phone readability and real-time idle soak remain separate acceptance. No live
+order or credential was used and no journal was reset.
+
+## Windows update and owner retest
+
+Close the Sandbox GUI/launcher so its loopback backend also loads the update.
+Keep the existing Kivy environment, saved settings and all pending-order data:
+
+```powershell
+git pull --ff-only origin feature/portrait-kiosk-v2-next
+python tools/run_portrait_v2_sandbox.py
+```
+
+Let the current verified PENDING screen poll without tapping. Its existing QR
+should remain visible; provider-confirmed payment or expiry still removes it.
+If it disappears, record the on-screen status and tested HEAD; no key, payment
+journal or photo is needed. The previous report does not identify whether expiry,
+network verification, image loading or this source defect occurred on the device.
+
+Resume the existing pending order rather than resetting its journal. This fix
+cannot recover an original action URL already overwritten before updating;
+do not infer a replacement image reference or force another charge. The shared
+backend correction also applies to clients using it; v1 GUI/launcher, Drive,
+Apps Script, payment admission and original image/branding renderers are unchanged.
+No Google deployment or real payment is part of this update.

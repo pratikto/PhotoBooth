@@ -1,0 +1,32 @@
+{
+  "head": "4237d3f0e435245f0bce4b3ee5b158105f6af9ad",
+  "screenshots_validated": 10,
+  "qr_pixels": [
+    {
+      "file": "02-waiting-offline-fixture-452x9000001.png",
+      "sha256": "7fd58275fec4d0632c874116fdef46bc0773b077c632edee51ee06e1144f1274",
+      "crop": [
+        88,
+        297,
+        365,
+        574
+      ],
+      "decoded": "MEONG OFFLINE HTTP FIXTURE - NOT PAYABLE",
+      "pass": true
+    },
+    {
+      "file": "02-waiting-offline-fixture-800x12800001.png",
+      "sha256": "74392e33b4a3de7a87f4d273c4997d3a2eddfc5ce355499326b111bfb2dea0cb",
+      "crop": [
+        72,
+        297,
+        729,
+        954
+      ],
+      "decoded": "MEONG OFFLINE HTTP FIXTURE - NOT PAYABLE",
+      "pass": true
+    }
+  ],
+  "fixture": "NONPAYABLE; NOT MERCHANT ACCEPTANCE",
+  "metadata_note": "Consent keeps RESERVED checkout phase; initial checker expected None and was corrected without app changes."
+}

@@ -4,8 +4,10 @@
 
 IN SOURCE: verified image URLs survive omitted status actions and backend
 restart; explicit replacement validation and payment/expiry guards remain.
-182 focused PASS. Exact device cause/retest and final regression/CI are separate;
-[current evidence](qa/portrait-v2-sandbox/QR-POLLING.md).
+Source `4237d3f`: 182 focused PASS; full 933 run / 930 PASS / 3 optional palm
+SKIP / zero failures/errors; CI 40614355442 all three jobs SUCCESS. Ten native
+PNGs and both WAITING screenshot QR decodes verified. Exact device cause/retest
+remains separate; [current evidence](qa/portrait-v2-sandbox/QR-POLLING.md).
 
 ## 28 October — centered Meong Sandbox QR
 

@@ -1,0 +1,77 @@
+{
+  "head": "4237d3f0e435245f0bce4b3ee5b158105f6af9ad",
+  "run_id": 40614355442,
+  "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40614355442",
+  "result": "success",
+  "jobs": [
+    {
+      "id": 122573250233,
+      "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+      "result": "success"
+    },
+    {
+      "id": 122573250493,
+      "name": "Windows Python 3.12 native SDL audio (dummy output)",
+      "result": "success"
+    },
+    {
+      "id": 122573250504,
+      "name": "Navigation and audio lifecycle",
+      "result": "success"
+    }
+  ],
+  "summaries": [
+    {
+      "id": 122573250233,
+      "lines": [
+        "2026-10-28T01:20:09.0593442Z Ran 4 tests in 0.153s",
+        "2026-10-28T01:20:09.0594199Z OK",
+        "2026-10-28T01:20:30.3887790Z Ran 103 tests in 20.887s",
+        "2026-10-28T01:20:30.3888030Z OK",
+        "2026-10-28T01:20:30.3888325Z KIOSK_UNITTEST_SUMMARY: run=103 failures=0 errors=0 skipped=0 success=True",
+        "2026-10-28T01:20:44.9131218Z test_backend_restart_retains_the_same_durable_image (test_checkout_backend.PendingQrPollingTests.test_backend_restart_retains_the_same_durable_image) ... ok",
+        "2026-10-28T01:20:44.9132936Z test_cached_image_url_is_revalidated_before_reuse (test_checkout_backend.PendingQrPollingTests.test_cached_image_url_is_revalidated_before_reuse) ... ok",
+        "2026-10-28T01:20:44.9134932Z test_explicit_verified_replacement_is_retained_by_later_polls (test_checkout_backend.PendingQrPollingTests.test_explicit_verified_replacement_is_retained_by_later_polls) ... ok",
+        "2026-10-28T01:20:44.9136915Z test_invalid_explicit_action_does_not_fall_back_to_cached_image (test_checkout_backend.PendingQrPollingTests.test_invalid_explicit_action_does_not_fall_back_to_cached_image) ... ok",
+        "2026-10-28T01:20:44.9139323Z test_repeated_missing_null_empty_or_unrelated_actions_keep_charge_image (test_checkout_backend.PendingQrPollingTests.test_repeated_missing_null_empty_or_unrelated_actions_keep_charge_image) ... ok",
+        "2026-10-28T01:20:44.9141340Z test_terminal_provider_states_still_remove_the_public_qr (test_checkout_backend.PendingQrPollingTests.test_terminal_provider_states_still_remove_the_public_qr) ... ok",
+        "2026-10-28T01:20:44.9322573Z test_automatic_pending_polls_keep_verified_image_until_provider_expiry (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_automatic_pending_polls_keep_verified_image_until_provider_expiry) ... ok",
+        "2026-10-28T01:20:44.9353805Z Ran 182 tests in 12.995s",
+        "2026-10-28T01:20:44.9354040Z OK",
+        "2026-10-28T01:20:44.9354336Z KIOSK_UNITTEST_SUMMARY: run=182 failures=0 errors=0 skipped=0 success=True",
+        "2026-10-28T01:20:46.5820388Z Ran 80 tests in 1.067s",
+        "2026-10-28T01:20:46.5820957Z OK",
+        "2026-10-28T01:20:46.5821464Z KIOSK_UNITTEST_SUMMARY: run=80 failures=0 errors=0 skipped=0 success=True",
+        "2026-10-28T01:22:19.6015130Z test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture (tests.test_kiosk_v2_widgets.PortraitKivySmokeTests.test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture) ... skipped 'Native model assets are opt-in'",
+        "2026-10-28T01:22:19.6154322Z Ran 111 tests in 92.399s",
+        "2026-10-28T01:22:19.6154562Z OK (skipped=1)",
+        "2026-10-28T01:22:19.6154900Z KIOSK_UNITTEST_SUMMARY: run=111 failures=0 errors=0 skipped=1 success=True",
+        "2026-10-28T01:22:21.8698802Z Ran 98 tests in 1.743s",
+        "2026-10-28T01:22:21.8699076Z OK",
+        "2026-10-28T01:22:35.1176850Z Ran 4 tests in 13.037s",
+        "2026-10-28T01:22:35.1177140Z OK"
+      ]
+    },
+    {
+      "id": 122573250493,
+      "lines": [
+        "2026-10-28T01:20:26.1279549Z Ran 55 tests in 1.035s",
+        "2026-10-28T01:20:26.1279836Z OK",
+        "2026-10-28T01:20:26.1280269Z KIOSK_UNITTEST_SUMMARY: run=55 failures=0 errors=0 skipped=0 success=True",
+        "2026-10-28T01:20:49.7984036Z Ran 103 tests in 23.007s",
+        "2026-10-28T01:20:49.7984321Z OK"
+      ]
+    },
+    {
+      "id": 122573250504,
+      "lines": [
+        "2026-10-28T01:19:46.7037488Z ℹ skipped 0",
+        "2026-10-28T01:19:47.1569361Z test_real_launcher_console_active_keeps_stderr_and_records_native_and_delivery_once (tests.test_kiosk_v2_diagnostics.DeliveryLoggingTests.test_real_launcher_console_active_keeps_stderr_and_records_native_and_delivery_once) ... skipped 'Real Kivy logging integration needs Kivy'",
+        "2026-10-28T01:19:47.4169125Z Ran 129 tests in 0.373s",
+        "2026-10-28T01:19:47.4169372Z OK (skipped=1)",
+        "2026-10-28T01:19:47.8217233Z Ran 40 tests in 0.283s",
+        "2026-10-28T01:19:47.8217683Z OK"
+      ]
+    }
+  ]
+}
