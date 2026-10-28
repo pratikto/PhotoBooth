@@ -1,5 +1,17 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+## CURRENT DEVELOPMENT PRIORITY — AR-00 through AR-13 FIRST (29 October owner reaffirmation)
+
+**TOP PRIORITY: continue and finish the existing AR-00 → AR-13 autonomous QRIS/photo-session recovery roadmap, in dependency order, from the [latest real checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md).** Do not restart completed AR increments; consult the [AR roadmap](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-ROADMAP.md) and [current handover](DEVELOPMENT_HANDOVER.md) for the actual unfinished step. AR-12/13 source validation/readiness and external NOT_RUN gates are distinct from new features. No production release or owner go/no-go is implied.
+
+**NEXT, NOT NOW — approved future GUI v2 Operator Settings design:** [Full operator Settings contract](qa/portrait-v2-operator-settings/README.md) · [OPS-00–OPS-10 post-AR roadmap](qa/portrait-v2-operator-settings/IMPLEMENTATION-ROADMAP.md) · [129 acceptance cases](qa/portrait-v2-operator-settings/ACCEPTANCE-MATRIX.md) · [complete approved decisions and supersessions](qa/portrait-v2-operator-settings/DECISION-REGISTER.md) · [Codex continuation prompt](qa/portrait-v2-operator-settings/CODEX-HANDOVER.md). **Documentation only; not implemented and tests NOT_RUN.**
+
+The existing secret F12 / Meong-header hold must eventually open **static QR Operator Login**, followed by exactly **Device Health, Audio Settings and Emulate Ticket**. Full Settings entry requires **both first-page Advertising and authoritative SAFE_IDLE**; keep AR-09 protected RECOVERY/PIN path separate. Static per-booth QR operator login, persistent Music/Button SFX/Other SFX plus Master/Mute/Test, and reusable **static MOCK-only** Merchant Promo/Meong Fly DEMO QR presets/80-mm thermal print/test history are approved future design. For Meong Fly, the same QR grants **only one attempt per durable test visit**, but may work once in a truly new test visit. Never accept DEMO QR in real merchant payment, disable original one-use ledger safeguards, stack promo rewards initially, or bypass Sandbox printer/Drive-off.
+
+**Separate planned v2 QRIS Payment Slip** remains tracked under FEAT-020 below and [the GUI roadmap](portrait-kiosk-v2.md): it is an optional printed copy of an *active existing provider QR*, NOT an Emulate Ticket or proof of payment.
+
+The following dated AR-00/AR-01 narrative and older "design only" descriptions are **historical snapshots**, not current remote code status; always follow the latest checkpoint/source tests.
+
 ## Current autonomous recovery continuation — 28 October
 
 Owner now explicitly requests implementation in AR dependency order. AR-00 is
