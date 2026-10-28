@@ -2,6 +2,7 @@
 from pathlib import Path
 import os
 import threading
+import hashlib
 
 from photobooth.qris_kiosk_client import QrisKioskClient
 from photobooth.qris_session import KioskCheckout
@@ -9,7 +10,7 @@ from photobooth.qris_evidence import sandbox_qr_url
 from .qr_branding import branded_sandbox_qr_image
 from .demo_game import GameJobs
 
-ACTIONS = {'boot', 'begin', 'check', 'cancel', 'prepare', 'started', 'complete', 'recover'}
+ACTIONS = {'boot', 'begin', 'check', 'cancel', 'prepare', 'started', 'complete', 'recover', 'ticket_saved'}
 
 
 def simulator_qr_url(view):
@@ -17,7 +18,8 @@ def simulator_qr_url(view):
     view = view or {}
     order = view.get('order') or {}
     if (view.get('phase') != 'WAITING' or order.get('mode') != 'sandbox'
-            or order.get('state') != 'PENDING' or order.get('verification_pending')):
+            or order.get('state') != 'PENDING' or order.get('verification_pending')
+            or view.get('ticket_required') or view.get('customer_claim_required')):
         return None
     try:
         return sandbox_qr_url(order.get('qr_url'))
@@ -63,14 +65,31 @@ class SandboxCheckout:
     def __init__(self, flow, *, image_loader=branded_sandbox_qr_image):
         self.flow, self.image_loader = flow, image_loader
         self.qr = self.qr_identity = None
+        self.ticket_qr = self.ticket_identity = None
 
     def view(self):
         data = self.flow.snapshot()
         if data is None:
             return {'phase':'IDLE'}
         order = data.get('order') or {}
+        data['customer_claim_required'] = self.flow.customer_claim_required
+        data['ticket_required'] = bool(order.get('customer_capability_bound')
+            and not self.flow.ticket_acknowledged and not self.flow.customer_claim_required
+            and data['phase'] in {'CREATING','WAITING','RESERVED'})
+        data['ticket_qr_rgb'] = None
+        ticket = self.flow.customer_ticket() if data['ticket_required'] else None
+        if ticket:
+            identity=hashlib.sha256(ticket.encode()).hexdigest()
+            if identity!=self.ticket_identity:
+                from photobooth.qr_code import create_qr_image
+                image=create_qr_image(ticket,with_logo=False).convert('RGB')
+                self.ticket_qr=(image.size,image.tobytes());self.ticket_identity=identity
+            data['ticket_qr_rgb']=self.ticket_qr
+        else:
+            self.ticket_qr=self.ticket_identity=None
         data['qr_rgb'] = None
-        if data['phase'] == 'WAITING' and order.get('state') == 'PENDING' and not order.get('verification_pending'):
+        if (data['phase'] == 'WAITING' and order.get('state') == 'PENDING' and not order.get('verification_pending')
+                and not data['customer_claim_required'] and not data['ticket_required']):
             identity = (order['order_id'], order.get('qr_url'))
             if identity != self.qr_identity:
                 try:
@@ -102,6 +121,10 @@ class SandboxCheckout:
     def cancel(self):
         self.flow.request_cancel()
         return self.check()
+
+    def ticket_saved(self):
+        self.flow.acknowledge_ticket()
+        return self.view()
 
     def prepare(self):
         self.flow.prepare_capture()

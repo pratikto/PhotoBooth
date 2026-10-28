@@ -50,9 +50,33 @@ class SandboxWidgetTests(unittest.TestCase):
         app._choose_photo();app._complete_tutorial();app._change_copies(1);app._open_sandbox()
     def pending(self,app):
         self.quote(app);app._sandbox_begin();self.settle(app)
+        if (app._sandbox_view or {}).get('ticket_required'):
+            app._sandbox_ticket_saved();self.settle(app)
     def reserve(self,app,fixture):
         self.pending(app);fixture.paid();app._sandbox_retry();self.settle(app)
         self.assertEqual(app._sandbox_view['phase'],'RESERVED')
+
+    def test_recovery_ticket_gate_precedes_payment_and_never_copies_secret_to_clipboard(self):
+        with self.booth() as (app,f):
+            self.quote(app);app._sandbox_begin();self.settle(app)
+            self.assertTrue(app._sandbox_view['ticket_required'])
+            ticket=f.flow.customer_ticket()
+            self.assertTrue(any('SIMPAN TIKET PEMULIHAN' in getattr(w,'text','') for w in app.stage.walk()))
+            self.assertFalse(any(getattr(w,'text','')=='SALIN LINK QRIS' for w in app.stage.walk()))
+            with patch('photobooth.kiosk_v2.sandbox_views.Clipboard.copy') as copy:
+                app._sandbox_copy_link();copy.assert_not_called()
+            self.assertNotIn(ticket.split(':')[-1],f.flow.path.read_text())
+            app._sandbox_ticket_saved();self.settle(app)
+            self.assertIsNone(f.flow.customer_ticket())
+            self.assertTrue(any(getattr(w,'text','')=='SALIN LINK QRIS' for w in app.stage.walk()))
+
+    def test_privacy_locked_order_never_displays_payment_or_old_media(self):
+        with self.booth() as (app,f):
+            self.pending(app);f.flow.lock_customer()
+            app._sandbox_view=f.service.view();app._show()
+            self.assertTrue(app._sandbox_view['customer_claim_required'])
+            self.assertFalse(any(getattr(w,'text','')=='SALIN LINK QRIS' for w in app.stage.walk()))
+            self.assertFalse(any(getattr(w,'text','')=='LANJUT KE PERSETUJUAN FOTO' for w in app.stage.walk()))
 
     def test_copy_current_image_action_without_changing_order_and_retire_old_button(self):
         with self.booth() as (app,f):

@@ -56,11 +56,14 @@ class Recorder(PortraitKioskV2App):
             assert image.size==(args.width,args.height)
         self.evidence.append({'file':path.name,'page':self.navigation.page,
             'phase':(self._sandbox_view or {}).get('phase'),'width':args.width,'height':args.height,
+            'qr_role':'recovery_ticket' if (self._sandbox_view or {}).get('ticket_required') else
+                      'payment' if (self._sandbox_view or {}).get('qr_rgb') else None,
             'sha256':hashlib.sha256(path.read_bytes()).hexdigest()})
         self._capture_pending=False
     def on_start(self):
         args.output_dir.mkdir(parents=True,exist_ok=True)
         self.actions=iter([self.gallery,lambda:self.capture('01-quote'),self._sandbox_begin,
+            lambda:self.capture('02-recovery-ticket-fixture'),self._sandbox_ticket_saved,
             lambda:self.capture('02-waiting-offline-fixture'),self.paid,
             lambda:self.capture('03-reserved'),self._sandbox_photo_consent,
             lambda:self.capture('04-consent'),self.recovery,

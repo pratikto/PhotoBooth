@@ -49,6 +49,11 @@ class SandboxViews:
         self._sandbox_submit('boot' if not self._sandbox_view else 'check')
         self._show()
 
+    def _sandbox_ticket_saved(self):
+        if (self._sandbox_view or {}).get('ticket_required'):
+            self._sandbox_submit('ticket_saved')
+            self._show()
+
     def _sandbox_cancel(self):
         self._sandbox_submit('cancel')
         self._show()
@@ -82,7 +87,9 @@ class SandboxViews:
             self._return_ad()
 
     def _sandbox_photo_consent(self):
-        if self._sandbox_jobs.busy or (self._sandbox_view or {}).get('phase') != 'RESERVED':
+        if (self._sandbox_jobs.busy or (self._sandbox_view or {}).get('phase') != 'RESERVED'
+                or (self._sandbox_view or {}).get('ticket_required')
+                or (self._sandbox_view or {}).get('customer_claim_required')):
             return
         cart = self._sandbox_view['quantities']
         self.quantities = {t.template_id:cart.get(t.template_id,0) for t in self.templates}
@@ -165,6 +172,11 @@ class SandboxViews:
             self._sandbox_submit('check')
 
     def _build_sandbox_checkout(self, canvas):
+        view = self._sandbox_view or {}
+        if view.get('ticket_required'):
+            return self._build_recovery_ticket(canvas,view)
+        if view.get('customer_claim_required'):
+            return self._build_customer_claim(canvas,view)
         shell = self._frame(canvas, brand_height=48)
         shell.spacing = 8
         self._brand(shell, 'QRIS SANDBOX', 'MODE UJI • GUNAKAN SIMULATOR SANDBOX')
@@ -225,3 +237,28 @@ class SandboxViews:
             action('BATALKAN PESANAN UJI',self._sandbox_cancel,'tertiary')
         elif phase != 'RECOVERY':
             action('COBA PEMERIKSAAN LAGI',self._sandbox_retry,'tertiary')
+
+    def _build_recovery_ticket(self,canvas,view):
+        shell=self._frame(canvas,brand_height=48)
+        self._brand(shell,'SIMPAN TIKET PEMULIHAN','MODE UJI • BUKAN QR PEMBAYARAN')
+        card=PixelCard(orientation='vertical',padding=12,spacing=8)
+        rgb=view.get('ticket_qr_rgb')
+        if rgb:
+            from PIL import Image as PILImage
+            texture=image_texture(PILImage.frombytes('RGB',rgb[0],rgb[1]))
+            texture.mag_filter=texture.min_filter='nearest'
+            card.add_widget(Image(texture=texture,fit_mode='contain'))
+        card.add_widget(text_label('Scan atau simpan QR ini di ponsel.\nTiket rahasia ini diperlukan jika sesi terputus.\nBerlaku 24 jam untuk uji Sandbox.',size=15,height=120,color=MUTED))
+        shell.add_widget(card)
+        shell.add_widget(text_label(self._sandbox_error,size=13,height=60,color=GOLD))
+        shell.add_widget(self._action('SUDAH SIMPAN • TAMPILKAN QRIS',self._sandbox_ticket_saved,
+            height=52,disabled=self._sandbox_jobs.busy or not rgb))
+
+    def _build_customer_claim(self,canvas,view):
+        shell=self._frame(canvas,brand_height=48)
+        self._brand(shell,'SESI TERSIMPAN','TIKET PELANGGAN DIPERLUKAN')
+        card=PixelCard(orientation='vertical',padding=12,spacing=8)
+        card.add_widget(Widget())
+        card.add_widget(text_label('Pesanan tetap tersimpan.\nFoto tidak ditampilkan tanpa bukti pemilik.\nGunakan tiket pemulihan atau bantuan operator.',size=16,height=150,color=MUTED))
+        shell.add_widget(card)
+        shell.add_widget(self._action('PERIKSA STATUS',self._sandbox_retry,height=52,disabled=self._sandbox_jobs.busy))

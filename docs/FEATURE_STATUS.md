@@ -1,5 +1,10 @@
 # Meong Photobooth — current feature status
 
+## 29 October — AR-07.a: native save-ticket gate and neutral privacy-held screen
+
+Two new native gates and focused 37 PASS, zero failures/errors/skips. Twelve native working-tree captures rendered at 800x1280/452x900; both recovery-ticket screenshot QR payloads decode correctly without logging secrets. Payment URL/copy actions remain hidden until ticket acknowledgment. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-NATIVE.md).
+Physical/provider gates remain separate; no production activation.
+
 ## 29 October — AR-06.b: memory-only customer ticket and trusted claim controller
 
 Six new session cases; focused 92 PASS, zero failures/errors/skips, including native Sandbox compatibility. Raw ticket never enters journal/backend views; restart requires original proof. Current settlement is rechecked at resume action, pending proof never issues media permission, and privacy generation rejects late callbacks. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CUSTOMER-CLAIM.md).
