@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-07.b4: recover original pre-manifest allocation without creating another session
+
+Base / last remote-verified commit `0745f754288d4ef58e07b93685209d619c796005`. Focused 42 PASS, zero failures/errors/skips; original RESERVED empty allocation recovery and STARTED/orphan denial covered in photo and native HTTP fixtures.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, private
+photo display or customer state reset. Next: AR-08 prepayment camera/storage/template readiness and durable paid-unfulfilled remedy; then AR-09–13 in dependency order.
+Only work/ scratch files local; scope and rollback in
+[stage contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-NATIVE.md).
+
 ## 29 October — AR-07.b3: mount native ticket claim and customer-led exact photo recovery
 
 Base / last remote-verified commit `7cedee5b0145720c9f1eaee04ab57ca8b183ec9c`. Focused 46 PASS, zero failures/errors/skips; native HTTP-to-photo restore, cached-camera ticket decode, minimize/idle privacy and input-preserving polling covered. Sixteen provisional fixture PNGs rendered at both target sizes.

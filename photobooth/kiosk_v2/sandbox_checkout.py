@@ -151,7 +151,9 @@ class SandboxCheckout:
 
     def resume(self):
         permit=self.flow.resume_permit()
-        return {'view':self.view(),'binding':self.flow.resume_binding(),'permit':permit}
+        view=self.view()
+        return {'view':view,'binding':self.flow.resume_binding(),'permit':permit,
+                'service_state':view['order']['service_state'],'quantities':view['quantities']}
 
     def resumed(self, transaction_id, photo_phase):
         self.flow.confirm_resume(transaction_id,photo_phase)

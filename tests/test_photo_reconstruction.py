@@ -158,3 +158,22 @@ class PhotoReconstructionTests(unittest.TestCase):
         with patch('photobooth.kiosk_v2.photo_recovery.reconstruct',side_effect=locked):
             with self.assertRaises(RuntimeError):photo.restore(get_templates(),self.binding,self.permit())
         self.assertEqual(photo.snapshot(),{'phase':'claim_required'})
+
+    def test_original_reserved_allocation_before_first_manifest_can_initialize_only_same_id(self):
+        resumed=PhotoTest(self.root/'photos');self.addCleanup(resumed.close)
+        view=resumed.restore_allocated(get_templates(),self.quantities,self.binding,self.permit(),'RESERVED')
+        self.assertEqual(view['transaction_id'],self.binding['transaction_id'])
+        self.assertEqual(view['captured'],0)
+        self.assertEqual(resumed.transaction.manifest['payment_binding'],self.binding)
+        self.assertFalse(resumed.store.state_path.exists())
+
+    def test_started_missing_manifest_or_unknown_bytes_never_restarts_capture(self):
+        resumed=PhotoTest(self.root/'photos');self.addCleanup(resumed.close)
+        with self.assertRaises(RuntimeError):
+            resumed.restore_allocated(get_templates(),self.quantities,self.binding,self.permit(),'STARTED')
+        folder=resumed.store.photos_root/self.binding['transaction_id'];folder.mkdir(parents=True)
+        unknown=folder/'unknown.bin';unknown.write_bytes(b'synthetic orphan')
+        with self.assertRaises(RuntimeError):
+            resumed.restore_allocated(get_templates(),self.quantities,self.binding,self.permit(),'RESERVED')
+        self.assertEqual(unknown.read_bytes(),b'synthetic orphan')
+        self.assertFalse((folder/'manifest.json').exists())

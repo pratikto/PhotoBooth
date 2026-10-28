@@ -164,7 +164,7 @@ class SandboxViews:
                 self._photo_jobs.service.hide_private()
             self._photo_view={}
             return True
-        if self._sandbox_enabled and outcome.action=='restore':
+        if self._sandbox_enabled and outcome.action in {'restore','restore_allocated'}:
             self.navigation.page=SANDBOX_CHECKOUT
             if outcome.error:
                 self._photo_view={}
@@ -215,7 +215,8 @@ class SandboxViews:
                     payload=outcome.value
                     self._sandbox_view=payload['view']
                     self._ensure_photo_jobs()
-                    self._photo_jobs.submit('restore',self.templates,payload['binding'],payload['permit'])
+                    self._photo_jobs.submit('restore_allocated',self.templates,payload['quantities'],
+                        payload['binding'],payload['permit'],payload['service_state'])
                     self._show()
                     return
                 self._sandbox_view = outcome.value

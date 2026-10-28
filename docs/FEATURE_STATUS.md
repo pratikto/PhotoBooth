@@ -1,5 +1,10 @@
 # Meong Photobooth — current feature status
 
+## 29 October — AR-07.b4: recover original pre-manifest allocation without creating another session
+
+Focused 42 PASS, zero failures/errors/skips; original RESERVED empty allocation recovery and STARTED/orphan denial covered in photo and native HTTP fixtures. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-NATIVE.md).
+Physical/provider gates remain separate; no production activation.
+
 ## 29 October — AR-07.b3: mount native ticket claim and customer-led exact photo recovery
 
 Focused 46 PASS, zero failures/errors/skips; native HTTP-to-photo restore, cached-camera ticket decode, minimize/idle privacy and input-preserving polling covered. Sixteen provisional fixture PNGs rendered at both target sizes. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-NATIVE.md).

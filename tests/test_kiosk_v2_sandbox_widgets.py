@@ -376,3 +376,18 @@ class SandboxWidgetTests(unittest.TestCase):
             self.assertFalse(app._sandbox_view['customer_claim_required'])
             self.assertEqual(app._sandbox_view['phase'],'WAITING')
             self.assertEqual(f.provider.charges,1)
+
+    def test_lost_pre_manifest_handoff_reuses_original_allocation_after_customer_proof(self):
+        with self.booth() as (app,f):
+            self.quote(app);app._sandbox_begin();self.settle(app)
+            ticket=f.flow.customer_ticket();app._sandbox_ticket_saved();self.settle(app)
+            f.paid();app._sandbox_retry();self.settle(app)
+            f.service.prepare();original=f.flow.snapshot()['transaction_id']
+            app._sandbox_lock_customer()
+            app._sandbox_claim_input.text=ticket;app._sandbox_claim();self.settle(app)
+            app._sandbox_resume();self.settle(app)
+            self.assertEqual(app.navigation.page,CAPTURE)
+            self.assertEqual(app._photo_view['transaction_id'],original)
+            self.assertEqual(app._photo_view['captured'],0)
+            self.assertEqual(f.provider.charges,1)
+            self.assertIsNone(app._countdown_event)

@@ -198,6 +198,32 @@ class PhotoTest:
             self._private_hidden=False
         return self.snapshot()
 
+    def restore_allocated(self, templates, quantities, binding, permit, service_state):
+        """Recover a lost first-manifest handoff only before server STARTED."""
+        from photobooth.booth_storage import checked_path
+        from photobooth.resume_authority import ResumePermit
+        from photobooth.capture_journal import CaptureRecoveryRequired
+        from photobooth.checkout_store import identifier
+        identifier(binding.get('transaction_id'))
+        folder=checked_path(self.store.photos_root/binding['transaction_id'])
+        manifest=checked_path(folder/'manifest.json')
+        if manifest.exists():
+            return self.restore(templates,binding,permit)
+        if (service_state!='RESERVED' or self.transaction is not None or self._closed.is_set()
+                or not isinstance(permit,ResumePermit)
+                or (folder.exists() and (not folder.is_dir() or any(folder.iterdir())))):
+            raise CaptureRecoveryRequired('Original missing photo state requires remedy review')
+        generation=self._privacy_generation
+        permit.consume(binding)
+        self.start_bound(templates,quantities,binding)
+        with self._privacy_lock:
+            permit.check_current(binding)
+            if generation != self._privacy_generation or self._closed.is_set():
+                raise CaptureRecoveryRequired('First manifest handoff belongs to a retired visit')
+            self._private_hidden=False
+            self.auto_print=False
+        return self.snapshot()
+
     def hide_private(self):
         """Immediate memory-only privacy barrier; safe while the I/O worker runs."""
         with self._privacy_lock:

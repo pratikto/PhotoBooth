@@ -111,3 +111,16 @@ are provisional fixtures, not pinned final AR-12 or merchant/device acceptance.
 Full regression remains reserved for final functional source.
 After final copy clarification: native-widget focused rerun **16 PASS**, zero
 failures/errors/skips (`test_kiosk_v2_sandbox_widgets`, same headless settings).
+
+AR-07.b4 contract before code: if a paid allocation was committed but the local
+first manifest never existed, reuse only the exact allocation after fresh ticket
+proof and backend RESERVED state. Validate frozen templates and permit, require
+an absent or completely empty checked folder, create its first bound manifest
+without changing sequence/order/grant. STARTED/COMPLETED missing state, unknown
+bytes or mismatched bindings remain held for AR-08 remedy; never infer no capture
+from a missing manifest once service has started. No automatic camera effects.
+AR-07.b4 delivered: focused **42 PASS / zero FAIL/ERROR/SKIP**:
+`.venv/bin/python tools/run_kiosk_unittests.py test_kiosk_v2_sandbox_widgets test_photo_reconstruction test_photo_allocation test_customer_claim_session`.
+Two new reconstruction fixtures plus native HTTP-to-first-manifest lost-handoff
+fixture cover exact ID, zero capture replay, no new counter/charge and held unknown
+bytes/STARTED missing state. Valid existing manifests still use exact reconstruction.
