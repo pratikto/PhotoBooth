@@ -96,3 +96,25 @@ Initial five tests ERROR before source. Focused **86 PASS / zero FAIL/ERROR/SKIP
 Five new cases cover migration, stale CAS/token, restart, no new visitor from a
 fence alone, and delayed provider response racing suspension. CI registration
 included. No actual operator release, restart supervisor or production enabled.
+
+AR-09.c2 contract before code (29 October continuation): PREPARE release atomically
+rotates a suspended fence and records an immutable operation/actor; booth remains
+occupied. Only after local workers retire their exact session and write an
+isolation receipt may PIN-authenticated ACK close the visit for occupancy purposes.
+OWED, grant, media, capability and financial/service states remain intact. Lost
+responses replay the same operation. No public reset, refund or fake completion.
+Returning original proof atomically reacquires only an ACKED release with no other
+active visit, rotates the fence again, and reuses original allocation. Stale tokens
+cannot START/COMPLETE even after reacquisition. Local exact archived journal lookup
+uses checkout key from the ticket, never latest-folder selection. Sandbox transport
+isolation and one-process kernel leases remain mandatory. Tests precede activation.
+AR-09.c2 core delivered (not yet mounted): additive immutable checkout_releases
+records PREPARED/ACKED/REACQUIRED with original actor, operation/generation and
+isolation receipt. PREPARED keeps occupancy, ACK closes occupancy only, valid
+original claim reacquires atomically only while booth is free and rotates token.
+Existing PAID + ACKED suspension retains financial PAID on fresh settlement;
+legacy abandon, late unexpected settlement and refund REVIEW remain conservative.
+No HTTP/UI release action exists in this core increment. Preserve both tables on
+rollback. Four tests initially ERROR before schema integration; final **48 PASS,
+zero FAIL/ERROR/SKIP**: `test_checkout_release test_service_fencing test_customer_capability test_checkout_fulfillment test_checkout_backend` via tools/run_kiosk_unittests.py.
+Actual merchant/device/paper/cloud NOT_RUN. Next: authenticated release/token API.

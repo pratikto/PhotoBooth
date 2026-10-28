@@ -1,5 +1,10 @@
 # Meong Photobooth — current feature status
 
+## 29 October — AR-09.c2: preserve paid rights through two-phase occupancy release and exact reacquisition
+
+Focused 48 PASS, zero failures/errors/skips; prepare/ACK/restart/replay and original proof/new-token/free-booth invariants covered. Core internal seam only, no release endpoint/UI yet. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATOR.md).
+Physical/provider gates remain separate; no production activation.
+
 ## 29 October — AR-09.c1: fence stale service workers before implementing safe booth release
 
 Focused 86 PASS, zero failures/errors/skips; five migration/CAS/restart/race cases. Dormant internal seam only; no UI/API rotates fences and no booth release is enabled. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATOR.md).

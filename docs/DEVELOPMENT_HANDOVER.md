@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-09.c2: preserve paid rights through two-phase occupancy release and exact reacquisition
+
+Base / last remote-verified commit `e52f143b07a6511c4e7eda30ad5b16b55628e896`. Focused 48 PASS, zero failures/errors/skips; prepare/ACK/restart/replay and original proof/new-token/free-booth invariants covered. Core internal seam only, no release endpoint/UI yet.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, private
+photo display or customer state reset. Next: AR-09.c3 authenticated release API and token-aware service calls, then durable local worker-stop/archive/returning-customer native flow; AR-10–13 afterwards.
+Only work/ scratch files local; scope and rollback in
+[stage contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATOR.md).
+
 ## 29 October — published safe checkpoint through AR-09.c1
 
 Exact tested/pushed functional source `b38e030d2a8586f2de61dd96e8b4a590e85dde54`; remote HEAD verified.

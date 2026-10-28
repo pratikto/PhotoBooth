@@ -140,6 +140,9 @@ class CheckoutBackend:
         result['order_id'] = result.pop('id')
         result['recovery_abandoned'] = self.store.recovery_abandoned(order['id'])
         result['customer_capability_bound'] = self.store.has_customer_capability(order['id'])
+        result['service_fence'] = self.store.service_fence(order['id'],order['booth_id'])
+        from photobooth.checkout_release import latest
+        result['release'] = latest(self.store,order['id'],order['booth_id'])
         result['fulfillment_issue'] = self.store.fulfillment_issue(order['id'],order['booth_id'])
         try:
             record = self.store.fulfillment(order['id'], order['booth_id'])
@@ -247,7 +250,9 @@ class CheckoutBackend:
         order,provider_state = self._fresh_payment(order_id,booth_id)
         paid = provider_state=='settlement' and order['state']=='PAID'
         pending = provider_state=='pending' and order['state']=='PENDING'
-        if (not paid and not pending) or order['closed']:
+        from photobooth.checkout_release import latest
+        release=latest(self.store,order_id,booth_id)
+        if (not paid and not pending) or (order['closed'] and not (paid and release and release['state']=='ACKED')):
             raise CheckoutConflict('Current verified payment state required')
         order = self.store.redeem_customer_capability(order_id,booth_id,capability,operation_id,payment_verified=paid)
         result = self.view(order)

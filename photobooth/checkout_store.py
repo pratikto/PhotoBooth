@@ -111,6 +111,10 @@ class CheckoutStore:
             order_id TEXT PRIMARY KEY, generation INTEGER NOT NULL,
             token TEXT NOT NULL UNIQUE, suspended INTEGER NOT NULL,
             updated_at REAL NOT NULL);
+          CREATE TABLE IF NOT EXISTS checkout_releases (
+            operation_id TEXT PRIMARY KEY, order_id TEXT NOT NULL, booth_id TEXT NOT NULL,
+            generation INTEGER NOT NULL, state TEXT NOT NULL, reason TEXT NOT NULL,
+            actor TEXT NOT NULL, isolation_id TEXT, created_at REAL NOT NULL, acked_at REAL);
         ''')
         # AR-02.c is additive for the already published scheduler schema.
         with self.write():
@@ -341,15 +345,19 @@ class CheckoutStore:
         if type(expected_generation) is not int or expected_generation<0 or type(suspended) is not bool:
             raise ValueError('Explicit service generation and suspension required')
         with self.write():
-            self._row(order_id,booth_id)
-            previous=self.service_fence(order_id,booth_id)
-            if (previous['generation'] if previous else 0)!=expected_generation:
-                raise CheckoutConflict('Service generation changed')
-            self.db.execute('''INSERT INTO checkout_service_fences VALUES (?,?,?,?,?)
-                ON CONFLICT(order_id) DO UPDATE SET generation=excluded.generation,
-                    token=excluded.token,suspended=excluded.suspended,updated_at=excluded.updated_at''',
-                (order_id,expected_generation+1,uuid.uuid4().hex,int(suspended),self.now()))
-            return self.service_fence(order_id,booth_id)
+            return self._rotate_service_fence(order_id,booth_id,expected_generation,suspended=suspended)
+
+    def _rotate_service_fence(self, order_id, booth_id, expected_generation, *, suspended):
+        # Caller owns write(); enables atomic release/reacquisition plus rotation.
+        self._row(order_id,booth_id)
+        previous=self.service_fence(order_id,booth_id)
+        if (previous['generation'] if previous else 0)!=expected_generation:
+            raise CheckoutConflict('Service generation changed')
+        self.db.execute('''INSERT INTO checkout_service_fences VALUES (?,?,?,?,?)
+            ON CONFLICT(order_id) DO UPDATE SET generation=excluded.generation,
+                token=excluded.token,suspended=excluded.suspended,updated_at=excluded.updated_at''',
+            (order_id,expected_generation+1,uuid.uuid4().hex,int(suspended),self.now()))
+        return self.service_fence(order_id,booth_id)
 
     def allocate_fulfillment(self, order_id, booth_id, grant_id, operation_id):
         identifier(operation_id, minimum=16)
@@ -468,7 +476,6 @@ class CheckoutStore:
         self.verify_customer_capability(order_id,booth_id,capability,operation_id)
         with self.write():
             order = self._row(order_id,booth_id)
-            self.assert_service_fence(order_id,booth_id,require_token=False)
             row = self.db.execute('SELECT * FROM checkout_customer_capabilities WHERE order_id=?', (order_id,)).fetchone()
             action = self.db.execute('SELECT order_id FROM checkout_customer_capabilities WHERE claim_operation_id=?',
                                      (operation_id,)).fetchone()
@@ -477,6 +484,10 @@ class CheckoutStore:
             if (row['revoked'] or row['expires_at'] <= self.now()
                     or row['claim_operation_id'] not in (None,operation_id)):
                 raise PermissionError('Original customer proof required')
+            if order['closed'] and payment_verified:
+                from photobooth.checkout_release import reacquire
+                order=reacquire(self,order)
+            self.assert_service_fence(order_id,booth_id,require_token=False)
             eligible = order['state']=='PAID' if payment_verified else (
                 order['state']=='PENDING' and order['service_state']=='NONE' and not order['local_transaction_id'])
             if not eligible or order['closed']:
@@ -512,7 +523,10 @@ class CheckoutStore:
         if attempt and attempt['merchant_id'] not in (None, evidence['merchant_id']):
             raise CheckoutConflict('Provider evidence merchant mismatch')
         # A late success belongs to the old visit, never the next customer.
-        if state == 'PAID' and (old['closed'] or old['state'] in
+        suspended_paid=(old['closed'] and old['state']=='PAID' and
+            self.db.execute("SELECT 1 FROM checkout_releases WHERE order_id=? AND state='ACKED'",
+                            (order_id,)).fetchone() is not None)
+        if state == 'PAID' and ((old['closed'] and not suspended_paid) or old['state'] in
                                 {'EXPIRED', 'CANCELLED', 'FAILED', 'REVIEW_REQUIRED'}):
             state = 'REVIEW_REQUIRED'
         if old['state'] == 'REVIEW_REQUIRED':
