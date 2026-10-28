@@ -35,7 +35,7 @@ from qris_v2_fixture import Fixture
 
 class Recorder(PortraitKioskV2App):
     def __init__(self,fixture):
-        self.fixture=fixture;self.evidence=[]
+        self.fixture=fixture;self.evidence=[];self._capture_pending=False
         super().__init__(sandbox_jobs=fixture.jobs)
     def gallery(self):
         self._choose_photo();self._complete_tutorial();self._change_copies(1)
@@ -46,12 +46,18 @@ class Recorder(PortraitKioskV2App):
         self.fixture.service.recover();self._sandbox_view=self.fixture.service.view()
         self.navigation.page=SANDBOX_CHECKOUT;self._show()
     def capture(self,name):
+        # A worker result can rebuild the page in this very Clock tick. Let
+        # the real window paint it before reading its previous-frame buffer.
+        self._capture_pending=True
+        Clock.schedule_once(lambda _dt:self._capture_frame(name),.1)
+    def _capture_frame(self,name):
         path=Path(Window.screenshot(name=str(args.output_dir/f'{name}-{args.width}x{args.height}.png')))
         with Image.open(path) as image:
             assert image.size==(args.width,args.height)
         self.evidence.append({'file':path.name,'page':self.navigation.page,
             'phase':(self._sandbox_view or {}).get('phase'),'width':args.width,'height':args.height,
             'sha256':hashlib.sha256(path.read_bytes()).hexdigest()})
+        self._capture_pending=False
     def on_start(self):
         args.output_dir.mkdir(parents=True,exist_ok=True)
         self.actions=iter([self.gallery,lambda:self.capture('01-quote'),self._sandbox_begin,
@@ -61,7 +67,7 @@ class Recorder(PortraitKioskV2App):
             lambda:self.capture('05-recovery'),self.stop])
         Clock.schedule_once(self.advance,.5)
     def advance(self,_dt):
-        if self._sandbox_jobs.busy or (self._photo_jobs and self._photo_jobs.busy):
+        if self._capture_pending or self._sandbox_jobs.busy or (self._photo_jobs and self._photo_jobs.busy):
             Clock.schedule_once(self.advance,.1);return
         try:next(self.actions)()
         except StopIteration:return

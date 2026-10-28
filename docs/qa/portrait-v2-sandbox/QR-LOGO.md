@@ -66,6 +66,13 @@ new v2 caller. The full approved artwork and original downloader remain unchange
 - [Source/artwork hashes](qr-logo-tested-source.json) identify the tested files.
   Final full regression, exact-source captures and CI are pending.
 
+Initial native capture also exposed a stale 800×1280 framebuffer: its metadata
+already said WAITING while the previous QUOTE frame was still painted. The
+capture helper now waits for a painted frame and blocks the next scripted
+action until capture completes. A fresh 800px screenshot decodes the expected
+nonpayable fixture. This is a QA capture-timing correction, not a new app/payment
+behavior; the rejected initial pictures are not published as passing evidence.
+
 Physical phone readability, actual merchant simulator behavior and device
 acceptance remain separate. Roll back only scoped source after inspection;
 preserve all credentials, orders and photo/Drive state. The original image is

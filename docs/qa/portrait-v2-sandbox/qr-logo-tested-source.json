@@ -12,7 +12,8 @@
     "tests/test_kiosk_v2_sandbox_widgets.py": "895181192763d9ee4c50815d0448b4dc8bee410050152a13e185bf6dec168301",
     "tools/ci_qr_pixels.py": "983d582c48bb0560fa1fde14a3f4c386bebe649b263ac3d6b0a94bef40653983",
     ".github/workflows/portrait-kiosk-v2.yml": "71f3534879a201e3317515e178dabf08ae2f21147ffdcd7f7616b531553441af",
-    "photobooth/assets/meong_photobooth_vivid.png": "dc1866b6e9cac905a08fec4019f971bb6daa6d243c51e13b23d082027646f61b"
+    "photobooth/assets/meong_photobooth_vivid.png": "dc1866b6e9cac905a08fec4019f971bb6daa6d243c51e13b23d082027646f61b",
+    "tools/render_portrait_sandbox.py": "a961d4d11156f384d4e5a81ca654c79567be763e460a1a71206519886144bcda"
   },
   "renderer_algorithm_changes": false,
   "renderer_docstrings_updated": true,
