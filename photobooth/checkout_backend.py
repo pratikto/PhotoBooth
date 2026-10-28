@@ -21,17 +21,58 @@ class CheckoutBackend:
         self.store, self.provider = store, provider
         self.server_key, self.merchant_id = server_key, merchant_id
 
+    @property
+    def sandbox_recovery_supported(self):
+        from photobooth.midtrans_sandbox import MidtransSandboxClient
+        mode = getattr(self.provider, 'mode', None)
+        return (getattr(self, 'mode', 'sandbox') == 'sandbox'
+                and (mode == 'sandbox' or (mode is None and isinstance(self.provider, MidtransSandboxClient))))
+
+    def _fresh_recovery(self, order_id, booth_id):
+        if not self.sandbox_recovery_supported:
+            raise CheckoutConflict('Recovery is restricted to Sandbox')
+        order = self.store.get(order_id, booth_id)
+        try:
+            data = self.provider.get_status(order_id)
+            evidence = provider_evidence(data, order, self.merchant_id)
+            order = self._apply(order, data)
+        except Exception as error:
+            raise ProviderUnavailable('Recovery requires current provider evidence') from error
+        return order, evidence['transaction_status']
+
+    def recovery_inspect(self, order_id, booth_id):
+        order, provider_state = self._fresh_recovery(order_id, booth_id)
+        result = self.view(order)
+        result.update(recovery_checked=True, recovery_provider_state=provider_state)
+        return result
+
+    def recovery_resolve(self, order_id, booth_id, action_id, action, reason, transaction_id, actor):
+        order, provider_state = self._fresh_recovery(order_id, booth_id)
+        # Monotonic PAID caching must not replace fresh settlement evidence.
+        replay = self.store.recovery_action_applied(order_id, booth_id, action_id, action, reason, transaction_id)
+        if action in {'resume', 'complete'} and provider_state != 'settlement' and not replay:
+            raise CheckoutConflict('Recovery requires current verified settlement')
+        order, record = self.store.recovery_action(order_id, booth_id, action_id, action,
+                                                  reason, transaction_id, actor)
+        result = self.view(order)
+        result.update(recovery_checked=True, recovery_provider_state=provider_state,
+                      recovery_action={key:record[key] for key in
+                          ('action_id', 'action', 'reason', 'transaction_id', 'actor', 'created_at',
+                           'prior_payment_state', 'prior_service_state')})
+        return result
+
     def view(self, order, *, verification_pending=False):
         fields = ('id', 'checkout_key', 'quantities', 'amount', 'state', 'expires_at',
                   'qr_url', 'grant_id', 'service_state', 'local_transaction_id', 'closed')
         result = {key: order[key] for key in fields}
         result['order_id'] = result.pop('id')
+        result['recovery_abandoned'] = self.store.recovery_abandoned(order['id'])
         result['mode'] = getattr(self.provider, 'mode', 'sandbox')
         if result['mode'] == 'mock':
             result['qr_url'] = None
             result['qr_payload'] = 'MEONG MOCK ONLY - NOT QRIS - ' + order['id']
         result['verification_pending'] = verification_pending
-        if order['state'] != 'PENDING':
+        if order['state'] != 'PENDING' or order['closed']:
             result['qr_url'] = None
         return result
 

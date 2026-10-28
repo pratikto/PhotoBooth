@@ -33,8 +33,12 @@ class QrisKioskClient:
         self.headers = {'x-booth-id': booth_id, 'Authorization': 'Bearer ' + booth_token}
         self.timeout, self.session = timeout, session or requests.Session()
 
-    def _call(self, method, path, *, payload=None, checkout_key=None):
+    def _call(self, method, path, *, payload=None, checkout_key=None, operator_pin=None):
         headers = dict(self.headers)
+        if operator_pin is not None:
+            if not isinstance(operator_pin, str) or re.fullmatch(r'[0-9]{8}', operator_pin) is None:
+                raise ValueError('An eight-digit operator PIN is required')
+            headers['X-Recovery-PIN'] = operator_pin
         if checkout_key is not None:
             headers['Idempotency-Key'] = identifier(checkout_key, minimum=16)
         response = self.session.request(method, self.base_url + path, headers=headers,
@@ -94,6 +98,31 @@ class QrisKioskClient:
     def cancel(self, order_id):
         identifier(order_id, maximum=50)
         return self._order(self._call('POST', '/api/orders/' + order_id + '/cancel'), order_id)
+
+    def recovery_inspect(self, order_id, pin):
+        identifier(order_id, maximum=50)
+        if self.expected_mode != 'sandbox':
+            raise ValueError('Recovery is restricted to Sandbox')
+        result = self._order(self._call('POST', '/api/orders/' + order_id + '/recovery/inspect',
+                                       operator_pin=pin), order_id)
+        if result.get('recovery_checked') is not True or result.get('verification_pending'):
+            raise ValueError('Recovery requires fresh provider evidence')
+        return result
+
+    def recovery_resolve(self, order_id, pin, action_id, action, reason, transaction_id=None):
+        identifier(order_id, maximum=50)
+        identifier(action_id, minimum=16)
+        if self.expected_mode != 'sandbox':
+            raise ValueError('Recovery is restricted to Sandbox')
+        result = self._order(self._call('POST', '/api/orders/' + order_id + '/recovery/resolve',
+            operator_pin=pin, payload={'action_id':action_id, 'action':action,
+                                      'reason':reason, 'transaction_id':transaction_id}), order_id)
+        decision = result.get('recovery_action') or {}
+        if (result.get('recovery_checked') is not True or result.get('verification_pending')
+                or decision.get('action_id') != action_id or decision.get('action') != action
+                or decision.get('transaction_id') != transaction_id or decision.get('reason') != reason):
+            raise ValueError('Recovery acknowledgement mismatch')
+        return result
 
     def close(self):
         self.session.close()

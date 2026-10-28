@@ -3,7 +3,10 @@ import asyncio
 from collections import OrderedDict
 from contextlib import asynccontextmanager
 import json
+import hmac
+import re
 import time
+import uuid
 from typing import Annotated
 
 from fastapi import FastAPI, Header, HTTPException, Request
@@ -31,6 +34,21 @@ class ServiceUpdate(BaseModel):
     grant_id: str = Field(pattern=r'^[a-f0-9]{32}$')
     state: str = Field(pattern=r'^(STARTED|COMPLETED)$')
     transaction_id: str = Field(pattern=r'^[A-Za-z0-9_-]{1,64}$')
+
+
+class RecoveryUpdate(BaseModel):
+    model_config = ConfigDict(extra='forbid', strict=True)
+    action_id: str = Field(pattern=r'^[A-Za-z0-9_-]{16,64}$')
+    action: str = Field(pattern=r'^(reconcile|resume|abandon|complete)$')
+    reason: str = Field(min_length=1, max_length=160)
+    transaction_id: str | None = Field(default=None, pattern=r'^[A-Za-z0-9_-]{1,64}$')
+
+    @field_validator('reason')
+    @classmethod
+    def valid_reason(cls, value):
+        if not value.strip() or any(ord(c) < 32 or ord(c) == 127 for c in value):
+            raise ValueError('A plain recovery reason is required')
+        return value
 
 
 def unique_object(pairs):
@@ -87,7 +105,9 @@ class LocalRateLimit:
             raise HTTPException(429, 'Too many requests', headers={'Retry-After': '60'})
 
 
-def create_app(service, authenticator, *, on_shutdown=None, rate_limit=120):
+def create_app(service, authenticator, *, on_shutdown=None, rate_limit=120, recovery_pin=None):
+    if recovery_pin is not None and (not isinstance(recovery_pin, str) or re.fullmatch(r'[0-9]{8}', recovery_pin) is None):
+        raise ValueError('Recovery requires an eight-digit operator PIN')
     @asynccontextmanager
     async def lifespan(_app):
         yield
@@ -96,6 +116,18 @@ def create_app(service, authenticator, *, on_shutdown=None, rate_limit=120):
 
     app = FastAPI(title='MEONG QRIS Sandbox', version='0.2.0', lifespan=lifespan)
     limiter = LocalRateLimit(rate_limit)
+    operator_limiter = LocalRateLimit(8, 60)
+    operator_actor = 'sandbox-operator-' + uuid.uuid4().hex
+
+    def operator_identity(request, booth_id, authorization, pin):
+        booth = booth_identity(request, booth_id, authorization)
+        if not recovery_pin or not getattr(service, 'sandbox_recovery_supported', False):
+            raise HTTPException(404, 'Sandbox recovery is not enabled')
+        peer = request.client.host if request.client else 'unknown'
+        operator_limiter.check('operator:' + peer)
+        if not isinstance(pin, str) or re.fullmatch(r'[0-9]{8}', pin) is None or not hmac.compare_digest(pin, recovery_pin):
+            raise HTTPException(401, 'Operator authentication required')
+        return booth
 
     def booth_identity(request, booth_id, authorization):
         peer = request.client.host if request.client else 'unknown'
@@ -177,6 +209,24 @@ def create_app(service, authenticator, *, on_shutdown=None, rate_limit=120):
                            authorization: str = Header(default='')):
         booth = booth_identity(request, x_booth_id, authorization)
         return await invoke(service.cancel, order_id, booth)
+
+    @app.post('/api/orders/{order_id}/recovery/inspect')
+    async def recovery_inspect(order_id: str, request: Request, x_booth_id: str = Header(default=''),
+                               authorization: str = Header(default=''), x_recovery_pin: str = Header(default='')):
+        booth = operator_identity(request, x_booth_id, authorization, x_recovery_pin)
+        return await invoke(service.recovery_inspect, order_id, booth)
+
+    @app.post('/api/orders/{order_id}/recovery/resolve')
+    async def recovery_resolve(order_id: str, request: Request, x_booth_id: str = Header(default=''),
+                               authorization: str = Header(default=''), x_recovery_pin: str = Header(default='')):
+        booth = operator_identity(request, x_booth_id, authorization, x_recovery_pin)
+        data = await bounded_json(request, 2048)
+        try:
+            body = RecoveryUpdate.model_validate(data)
+        except ValidationError as error:
+            raise HTTPException(422, 'Invalid recovery decision') from error
+        return await invoke(service.recovery_resolve, order_id, booth, body.action_id,
+                            body.action, body.reason, body.transaction_id, operator_actor)
 
     @app.post('/api/webhooks/midtrans')
     async def midtrans_webhook(request: Request):

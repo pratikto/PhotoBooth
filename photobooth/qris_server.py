@@ -29,7 +29,8 @@ def build_sandbox_app(environ=None):
     store = CheckoutStore(env.get('MEONG_QRIS_DB_PATH', 'data/qris-sandbox.sqlite'))
     try:
         service = CheckoutBackend(store, provider, server_key, merchant_id)
-        return create_app(service, auth, on_shutdown=store.close)
+        return create_app(service, auth, on_shutdown=store.close,
+                          recovery_pin=env.get('MEONG_QRIS_RECOVERY_PIN') or None)
     except BaseException:
         store.close()
         raise

@@ -56,6 +56,13 @@ class CheckoutStore:
             event_id TEXT PRIMARY KEY, order_id TEXT NOT NULL,
             provider_state TEXT NOT NULL, outcome TEXT NOT NULL,
             received_at REAL NOT NULL, updated_at REAL NOT NULL);
+          CREATE TABLE IF NOT EXISTS checkout_recovery_actions (
+            action_id TEXT PRIMARY KEY, order_id TEXT NOT NULL, booth_id TEXT NOT NULL,
+            request_hash TEXT NOT NULL, action TEXT NOT NULL, reason TEXT NOT NULL,
+            transaction_id TEXT, actor TEXT NOT NULL, created_at REAL NOT NULL,
+            prior_payment_state TEXT NOT NULL, prior_service_state TEXT NOT NULL);
+          CREATE INDEX IF NOT EXISTS checkout_recovery_order_action
+            ON checkout_recovery_actions(order_id,action);
         ''')
         # Never silently forget unresolved orders from the earlier prototype.
         if self.db.execute("SELECT 1 FROM sqlite_master WHERE name='orders'").fetchone():
@@ -97,6 +104,23 @@ class CheckoutStore:
     def get(self, order_id, booth_id=None):
         with self.lock:
             return self._row(order_id, booth_id)
+
+    def recovery_abandoned(self, order_id):
+        with self.lock:
+            return self.db.execute("SELECT 1 FROM checkout_recovery_actions WHERE order_id=? AND action='abandon'",
+                                   (order_id,)).fetchone() is not None
+
+    def recovery_action_applied(self, order_id, booth_id, action_id, action, reason, transaction_id):
+        """Acknowledge only the exact previously committed decision, never reapply it."""
+        payload = json.dumps([order_id, booth_id, action, reason, transaction_id], separators=(',', ':'))
+        digest = hashlib.sha256(payload.encode()).hexdigest()
+        with self.lock:
+            self._row(order_id, booth_id)
+            old = self.db.execute('SELECT request_hash FROM checkout_recovery_actions WHERE action_id=?',
+                                  (action_id,)).fetchone()
+            if old is not None and old['request_hash'] != digest:
+                raise CheckoutConflict('Recovery action identity mismatch')
+            return old is not None
 
     def begin(self, booth_id, quantities, amount, checkout_key):
         identifier(booth_id)
@@ -176,7 +200,7 @@ class CheckoutStore:
         identifier(local_transaction_id)
         with self.write():
             order = self._row(order_id, booth_id)
-            if (not grant_id or order['grant_id'] != grant_id or order['state'] != 'PAID'
+            if (not grant_id or order['grant_id'] != grant_id or order['state'] != 'PAID' or order['closed']
                     or (order['local_transaction_id'] and
                         order['local_transaction_id'] != local_transaction_id)):
                 raise CheckoutConflict('Service permit mismatch')
@@ -187,6 +211,67 @@ class CheckoutStore:
             self.db.execute('''UPDATE checkouts SET service_state=?,local_transaction_id=?
                                WHERE id=?''', (state, local_transaction_id, order_id))
             return self._row(order_id, booth_id)
+
+    def recovery_action(self, order_id, booth_id, action_id, action, reason, transaction_id, actor):
+        """Apply one operator decision atomically; retries never allocate another visit.
+
+        The backend must fetch fresh provider evidence before entering here.
+        Archival is a separate closed flag, not a fabricated payment/service end.
+        """
+        identifier(action_id, minimum=16)
+        identifier(actor, maximum=96)
+        if action not in {'reconcile', 'resume', 'abandon', 'complete'}:
+            raise ValueError('Invalid recovery action')
+        if (not isinstance(reason, str) or not 1 <= len(reason.strip()) <= 160
+                or any(ord(c) < 32 or ord(c) == 127 for c in reason)):
+            raise ValueError('Recovery reason required')
+        if transaction_id is not None:
+            identifier(transaction_id)
+        payload = json.dumps([order_id, booth_id, action, reason, transaction_id], separators=(',', ':'))
+        digest = hashlib.sha256(payload.encode()).hexdigest()
+        with self.write():
+            order = self._row(order_id, booth_id)
+            old = self.db.execute('SELECT * FROM checkout_recovery_actions WHERE action_id=?',
+                                  (action_id,)).fetchone()
+            if old:
+                if old['request_hash'] != digest:
+                    raise CheckoutConflict('Recovery action identity mismatch')
+                return order, dict(old)
+            if action == 'resume':
+                if order['closed'] or order['state'] != 'PAID':
+                    raise CheckoutConflict('Recovery cannot resume this payment')
+                if order['service_state'] not in {'NONE', 'RESERVED', 'STARTED'}:
+                    raise CheckoutConflict('Recovery cannot replay a completed service')
+                if transaction_id is None:
+                    if order['local_transaction_id'] or order['service_state'] == 'STARTED':
+                        raise CheckoutConflict('Recovery must retain the existing capture')
+                    grant = order['grant_id'] or uuid.uuid4().hex
+                    self.db.execute("UPDATE checkouts SET grant_id=?,service_state='RESERVED' WHERE id=?",
+                                    (grant, order_id))
+                else:
+                    if (not order['grant_id'] or order['service_state'] not in {'RESERVED', 'STARTED'}
+                            or order['local_transaction_id'] not in (None, transaction_id)):
+                        raise CheckoutConflict('Recovery capture identity mismatch')
+                    self.db.execute("UPDATE checkouts SET service_state='STARTED',local_transaction_id=? WHERE id=?",
+                                    (transaction_id, order_id))
+            elif action == 'complete':
+                if (order['closed'] or order['state'] != 'PAID' or not order['grant_id']
+                        or order['service_state'] not in {'STARTED', 'COMPLETED'}
+                        or not transaction_id or order['local_transaction_id'] != transaction_id):
+                    raise CheckoutConflict('Recovery completion identity mismatch')
+                self.db.execute("UPDATE checkouts SET service_state='COMPLETED' WHERE id=?", (order_id,))
+            elif action == 'abandon':
+                if order['closed'] or order['service_state'] == 'COMPLETED':
+                    raise CheckoutConflict('This test visit already ended')
+                self.db.execute('UPDATE checkouts SET closed=1 WHERE id=?', (order_id,))
+            self.db.execute('''INSERT INTO checkout_recovery_actions
+                (action_id,order_id,booth_id,request_hash,action,reason,transaction_id,actor,
+                 created_at,prior_payment_state,prior_service_state) VALUES(?,?,?,?,?,?,?,?,?,?,?)''',
+                (action_id, order_id, booth_id, digest, action, reason, transaction_id, actor,
+                 self.now(), order['state'], order['service_state']))
+            record = dict(self.db.execute('SELECT * FROM checkout_recovery_actions WHERE action_id=?',
+                                         (action_id,)).fetchone())
+            return self._row(order_id, booth_id), record
 
     def close_visit(self, order_id, booth_id):
         with self.write():
