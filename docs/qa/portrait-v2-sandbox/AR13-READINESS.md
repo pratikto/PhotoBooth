@@ -4,6 +4,13 @@
 `feature/portrait-kiosk-v2-next`. This is an evidence assessment and acceptance
 handoff; it grants no release, deployment, production payment or merge permission.
 
+## Later functional audit correction — BUG-022
+
+Increment 3 corrects a confirmed missing-COMMITTED-PNG hold defect; **61 focused
+PASS**, final full/matching CI PENDING at publication. [Finding/source evidence](AR00-AR13-CODE-REVIEW.md#increment-3--confirmed-missing-output-reconstruction-defect-bug-022).
+The f72fdbc full/native/CI evidence below is historical and is not reassigned to
+this correction. Audit remains IN_PROGRESS and commercial release NOT READY.
+
 ## Later audit evidence supplement — 29 October
 
 The payment conformity audit added PAY-06/PAY-21 exact synthetic evidence against

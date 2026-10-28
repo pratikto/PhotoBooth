@@ -1,8 +1,9 @@
 # Autonomous recovery — session checkpoint and resume contract
 
 **Active owner task, 29 October:** fresh AR-00–AR-13 implementation conformity
-review, IN_PROGRESS. Evidence baseline checked at f8167d8; functional source f72fdbc
-unchanged. Payment audit increment 2 adds verified PAY-06/PAY-21 evidence:
+review, IN_PROGRESS. Evidence baseline checked at f8167d8; historical full-regression source f72fdbc. Increment 3 corrects BUG-022
+missing committed output validation; 61 focused PASS, full/CI pending.
+Payment audit increment 2 adds verified PAY-06/PAY-21 evidence:
 116 focused PASS; current matrix 45 PASS / 9 BLOCKED / 15 NOT_RUN.
 [Review checkpoint](AR00-AR13-CODE-REVIEW.md). Finish source review and
 confirmed reproductions before making a final conformity claim. Prior readiness
@@ -11,7 +12,7 @@ report below retains its dated conclusions and remaining gates.
 **Checkpoint status:** AR-12 evidence reconciled / AR-13 assessment COMPLETE (CONDITIONAL); external and exact fault gaps OPEN, 29 October 2026 (Asia/Jakarta)
 **Branch:** `feature/portrait-kiosk-v2-next` (existing; no master merge)
 **Recovery implementation:** source through AR-12.f; AR-13 readiness report published; full matrix/device acceptance and release are not complete
-**Latest application source:** `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`; full 1,097 run / 1,093 PASS / 4 SKIP / zero failures/errors; matching CI 40767441201 three jobs SUCCESS.
+**Previous fully validated application source:** `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`; full 1,097 run / 1,093 PASS / 4 SKIP / zero failures/errors; matching CI 40767441201 three jobs SUCCESS.
 **Historical audit baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
 **Current documentation handover:** See `docs/DEVELOPMENT_HANDOVER.md` and verify current remote HEAD; never assume the HEAD printed in a dated checkpoint is still current.
 
@@ -24,7 +25,27 @@ or equate the AR-13 assessment to complete fault coverage/production approval.
 The active conformity review remains IN_PROGRESS, with PAY-06 the first exact
 source-evidence gap. No new test run/runtime/OPS work was done by this docs check.
 
-## Latest audit micro-increment — payment evidence, 2026-10-29 06:52 WIB
+## Latest audit micro-increment — BUG-022 missing committed PNG
+
+- Base / exact last pushed and remote-verified SHA:
+  `8ebcd123098fe5a937c59f2b88d7fe60c9bedf7b` (payment audit, 116 focused PASS).
+- Current functional correction: this containing Git commit. Confirmed S1
+  reconstruction defect: missing COMMITTED PNG passed inspection, then restore
+  installed state before FileNotFoundError. Now both paths hold before state
+  installation. No rerender, media rewrite, payment/obligation change or migration.
+- Test-first: 14 run, 2 FAIL/1 ERROR in new synthetic regression. After correction
+  **61 focused PASS**, 39.146s, zero failures/errors/skips.
+  [Exact command/digests](evidence/ar-audit-missing-output.json).
+- Matrix remains 45 PASS / 9 BLOCKED / 15 NOT_RUN; source audit IN_PROGRESS.
+  Full regression/matching CI PENDING at publication; previous f72fdbc full run
+  must not be credited to this correction. Windows reconstruction module added.
+- Next: final full suite at this pushed SHA and remaining native/privacy/operator/
+  launcher review; then exact CAP-01–05/PAY-08/PAY-18 fault evidence. External
+  provider/device/retention/public-ingress/release gates remain unchanged.
+- No production, OPS, paper/Drive activation. Local-only disposable `work/` logs;
+  no unfinished runtime patch after publication. Preserve all records on rollback.
+
+## Previous audit micro-increment — payment evidence, 2026-10-29 06:52 WIB
 
 - Base/last verified remote: `647991ec013e75477c5c8564133beb68947984f4`; runtime stays
   `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`. Audit remains IN_PROGRESS.

@@ -5,7 +5,8 @@
 [focused evidence](evidence/ar-audit-payment.json): 45 PASS / 0 FAIL / 0 SKIP /
 9 BLOCKED / 15 NOT_RUN. AR-13 assessment CONDITIONAL; production not ready.
 The original design contract below is retained. Its initial NOT_RUN values and
-baseline describe planning history, not the current executed ledger. Exact
+baseline describe planning history, not the current executed ledger. BUG-022 missing committed output is corrected with 61 focused PASS; full/CI
+for that correction are pending. Exact
 missing fault windows stay NOT_RUN even when a related source test passes.
 [Validation/provenance](AUTONOMOUS-RECOVERY-VALIDATION.md) ·
 [Readiness/owner gates](AR13-READINESS.md).
@@ -177,7 +178,7 @@ offline inbox prototype assertions do not certify deployed ingress.
 | CAP-15 | **PASS** | `test_photo_reconstruction.test_multiple_designs_resume_only_unfinished_design_and_original_copies` | Saved output/copies retained on reconstruction of next unfinished design. |
 | CAP-16 | **NOT_RUN** | `test_customer_claim_session.test_completed_service_can_restore_result_only_without_capture_readmission` | Result-only guard passes; exact final-compose/COMPLETE boundary process kill absent. |
 | CAP-17 | **PASS** | `test_photo_allocation.test_mismatched_frozen_contract_does_not_create_media_or_new_id` | Frozen template/cart/hash/copies; changed contract holds. |
-| CAP-18 | **PASS** | `test_photo_reconstruction.test_corrupt_media_or_wrong_binding_stays_held_without_data_rewrite` | Corruption/binding denial plus capture symlink/archive tests; real Windows junction acceptance separate. |
+| CAP-18 | **PASS** | `test_photo_reconstruction.test_corrupt_media_or_wrong_binding_stays_held_without_data_rewrite` | Corruption/binding denial plus capture symlink/archive tests; real Windows junction acceptance separate. BUG-022 missing committed PNG regression added in [audit increment 3](evidence/ar-audit-missing-output.json), 61 focused PASS. |
 | CAP-19 | **PASS** | `test_kiosk_v2_sandbox_widgets.test_real_photo_handoff_completion_and_duplicate_taps` | Duplicate taps, privacy-lock stale callbacks and native ownership gates. |
 | CAP-20 | **NOT_RUN** | `test_capture_journal.test_failure_before_publication_never_acknowledges_a_capture` | Image publication failure and low-disk/write-probe denial pass; every intent/manifest ENOSPC/EACCES boundary not demonstrated. |
 | CAP-21 | **PASS** | `test_retention.test_expired_controller_capture_cannot_recreate_a_deleted_photo` | Expired media cannot resurrect; retained liability separately asserted. |

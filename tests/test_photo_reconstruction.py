@@ -93,6 +93,35 @@ class PhotoReconstructionTests(unittest.TestCase):
         self.assertEqual(photo.transaction.manifest_path.read_bytes(),before)
         self.assertEqual(path.read_bytes(),b'corrupt')
 
+    def test_missing_committed_output_holds_inspection_and_restore_without_replay(self):
+        from photobooth.capture_journal import CaptureRecoveryRequired
+        photo = self.original()
+        for _ in range(3):
+            photo.capture(np.zeros((24, 32, 3), dtype=np.uint8))
+        photo.compose()
+        output = photo.session.output_path
+        self.assertTrue(output.is_file())
+        output.unlink()  # Synthetic media loss, only in this disposable fixture.
+        manifest = photo.transaction.manifest_path.read_bytes()
+        originals = {path: path.read_bytes() for path in photo.session.initial_photo_paths}
+        order = self.store.get(self.binding['order_id'])
+        resumed = PhotoTest(self.root / 'photos')
+        self.addCleanup(resumed.close)
+        with patch('photobooth.kiosk_v2.photos.compose_result', side_effect=AssertionError('No rerender')):
+            for action in ('inspect', 'restore'):
+                with self.subTest(action=action), self.assertRaises(CaptureRecoveryRequired):
+                    if action == 'inspect':
+                        resumed.inspect_resume(get_templates(), self.binding)
+                    else:
+                        resumed.restore(get_templates(), self.binding, self.permit())
+        self.assertTrue(resumed.transaction is None, 'Failed restore installed private transaction state')
+        self.assertEqual(resumed.phase, 'confirm')
+        self.assertFalse(output.exists())
+        self.assertEqual(photo.transaction.manifest_path.read_bytes(), manifest)
+        self.assertEqual({path: path.read_bytes() for path in originals}, originals)
+        self.assertEqual(self.store.get(self.binding['order_id']), order)
+        self.assertEqual(self.store.fulfillment(self.binding['order_id'], 'PB001')['obligation_state'], 'OWED')
+
     def test_multiple_designs_resume_only_unfinished_design_and_original_copies(self):
         self.store.recovery_action(self.binding['order_id'],'PB001','c'*32,'abandon','Isolated fixture cart',None,'operator')
         self.quantities={'template_a':2,'template_b':1}

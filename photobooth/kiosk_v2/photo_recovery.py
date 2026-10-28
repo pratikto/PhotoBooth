@@ -178,7 +178,9 @@ def reconstruct(store, templates, binding, *, repair=False):
                     if repair:store.record_output(transaction,plan.session_id,session.final_photo_paths,output)
                 elif output_intent.get('state')!='COMMITTED':
                     _held('Unproven output requires review')
-                if output.exists():
+                # A committed record cannot substitute for the saved PNG.
+                # Validate absence too, before installing any restored state.
+                if output.exists() or output_intent.get('state') == 'COMMITTED':
                     validate_image(output,output_intent.get('sha256'),image_format='PNG',expected_size=(640,1920))
                 if record.get('output_path') != output.relative_to(folder).as_posix():
                     if repair:_held('Output acknowledgment mismatch')

@@ -1,5 +1,20 @@
 # Meong Photobooth — Bug register
 
+## BUG-022 — missing committed PNG accepted during recovery (29 October)
+
+**S1 recovery integrity — IN SOURCE, full regression/CI pending.** Audit of
+8ebcd12 reproduces metadata inspection returning result for an absent COMMITTED
+PNG. Restore then installs transaction state before snapshot raises
+FileNotFoundError. No financial mutation, duplicate charge or privacy disclosure
+was observed. Corrected validation checks committed output even when absent,
+raising the existing held-media error before installing state. No automatic
+regeneration, print or record/media changes. Synthetic regression asserts manifest,
+original JPEGs and backend OWED rights remain intact. 14-case pre-fix run:
+2 FAIL/1 ERROR in new regression; corrected 61 focused PASS, zero failures/errors/
+skips. [Review/provenance](qa/portrait-v2-sandbox/AR00-AR13-CODE-REVIEW.md#increment-3--confirmed-missing-output-reconstruction-defect-bug-022).
+Actual device media-loss acceptance NOT_RUN; not blanket CLOSED.
+
+
 ## 29 October — AR-12 source validation findings
 
 The Linux content-priority fixture has a proven host-monotonic-clock dependency;

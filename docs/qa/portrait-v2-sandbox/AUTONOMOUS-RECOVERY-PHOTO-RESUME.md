@@ -69,3 +69,11 @@ rewrite, two designs/copy preservation, hash corruption, missing ownership and
 expired/replayed permits. No raw media exposure in pre-claim inspection.
 No private resume is mounted in GUI by this increment. Full regression, real
 merchant, Windows/Ubuntu hardware, paper and cloud gates remain NOT_RUN.
+
+## Audit correction — BUG-022, 29 October
+
+A COMMITTED output record requires the original validated PNG even when that
+path is missing. Inspection/restore now hold before installing restored state;
+no replay/rerender or right cancellation follows media loss. Test-first
+reproduction and 61 focused PASS in [audit increment 3](AR00-AR13-CODE-REVIEW.md#increment-3--confirmed-missing-output-reconstruction-defect-bug-022).
+Full matching-source regression/CI pending at this source checkpoint.

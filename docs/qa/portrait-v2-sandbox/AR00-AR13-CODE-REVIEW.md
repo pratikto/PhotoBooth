@@ -87,7 +87,45 @@ defects in disposable fixtures; keep missing coverage separate from defects.
 | AR-10–13 | IN_PROGRESS | Supervisor/leases, unmounted inbox, matrix assertion quality, readiness/operational boundaries |
 | Cross-stage integration | IN_PROGRESS | Native controller/backend/media authority, I/O boundaries and evidence accuracy |
 
-Exact next action: continue after Increment 2, finish these source reviews, reproduce suspected defects only
+## Increment 3 — confirmed missing-output reconstruction defect (BUG-022)
+
+Base / independently verified remote `8ebcd123098fe5a937c59f2b88d7fe60c9bedf7b`.
+That prior payment increment is now durably pushed; its CI run 40790391324 was
+still running at this checkpoint. Reviewed the complete checkout controller,
+PhotoTest allocation/restore/capture/compose, TransactionStore initial manifest,
+capture/output journal, photo reconstruction, typed permits/isolation receipts,
+and AR-04–11 contracts. Remaining native/launcher paths still need review.
+
+**AR-AUDIT-001 / BUG-022 — S1 recovery integrity, confirmed and fixed in source.**
+At `photobooth/kiosk_v2/photo_recovery.py` output validation previously ran only
+when the PNG existed. With a COMMITTED output record but missing PNG, metadata
+inspection incorrectly returned `result`; restore installed the transaction and
+then failed with FileNotFoundError while snapshot opened the missing output.
+This bypassed the intended missing-media hold. The reproduction does not prove
+financial mutation, repeated charging, data disclosure or automatic completion.
+
+The new regression removes only a synthetic temporary PNG, preserves the exact
+bound unexpired manifest and three JPEGs, and asserts both inspect and restore
+must hold before installing state. Before correction: **14 run, 2 FAIL/1 ERROR**
+from that test; no prior assertion removed. Fix reuses validate_image for every
+COMMITTED output, including missing files; it never regenerates/replaces media.
+After correction **61 focused PASS / zero FAIL/ERROR/SKIP**, 39.146s, including
+normal/staged reconstruction, capture/output journals, customer proof and native
+Sandbox handoff. Manifest/original bytes/backend rights remain unchanged and
+OWED remains. [Exact reproduction/result hashes](evidence/ar-audit-missing-output.json).
+
+Windows CI includes reconstruction now. One final full regression and matching
+CI follow this functional commit; both PENDING here. No UI/layout change or new
+physical/native screenshot acceptance inferred. Matrix remains **45/9/15**;
+CAP-18 is strengthened, no other missing fault sequence silently promoted.
+No schema/data migration. Scoped inverse would restore the known defect, so
+prefer held admission during rollback and preserve every ledger/media/claim.
+
+Next: complete remaining native/privacy/operator/launcher reviews, run the final
+full suite at this pushed functional SHA, inspect CI and update the safe checkpoint.
+Exact CAP-01–05/PAY-08/PAY-18 and other missing matrix scenarios remain open.
+
+Exact next action: continue after Increment 3, finish these source reviews, reproduce suspected defects only
 with isolated synthetic state, and publish confirmed findings with severity,
 file/line, triggering conditions, consequence and reproducible evidence. Clearly
 separate defects, missing coverage and deliberately gated external functionality.

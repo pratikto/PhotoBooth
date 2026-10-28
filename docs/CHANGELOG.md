@@ -1,5 +1,23 @@
 # Meong Photobooth — changelog
 
+## 29 October — AR audit BUG-022: hold missing committed output before restore
+
+Payment audit `8ebcd123098fe5a937c59f2b88d7fe60c9bedf7b` pushed/remote-verified,
+116 focused PASS; PAY-06/PAY-21 closed as synthetic evidence gaps. Matrix now
+45 PASS / 9 BLOCKED / 15 NOT_RUN. Subsequent source review confirmed **BUG-022**:
+missing COMMITTED PNG was accepted by inspection; restore installed state before
+FileNotFoundError. Corrected validation holds before installation, preserves
+originals/manifest/OWED and performs no rerender/print or payment mutation.
+New test first reproduced 2 FAIL/1 ERROR in a 14-case run; **61 focused PASS**
+after correction, zero failures/errors/skips (39.146s). This containing commit
+is the functional correction; final full regression and matching CI PENDING.
+[Review and exact evidence](qa/portrait-v2-sandbox/AR00-AR13-CODE-REVIEW.md#increment-3--confirmed-missing-output-reconstruction-defect-bug-022).
+Audit IN_PROGRESS; no production/OPS/deployment. Previous f72fdbc full/native
+results remain historical. Next: full regression at pushed correction and remaining
+native/privacy/operator/launcher review, then exact remaining matrix faults.
+Only disposable `work/` local; no unpushed runtime patch after publication.
+
+
 ## 29 October — final AR-12 source evidence and AR-13 readiness
 
 Final runtime/test `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`: **1,097 run / 1,093 PASS / 4 SKIP / zero failures/errors**, 428.924s, Python 3.12.14 / Debian 13.6,

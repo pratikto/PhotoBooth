@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-29T06:57:07.452341+07:00",
+  "status": "FOCUSED_VERIFIED_FULL_REGRESSION_PENDING",
+  "remote_base": "8ebcd123098fe5a937c59f2b88d7fe60c9bedf7b",
+  "source": "Containing Git commit; hashes below",
+  "finding": "BUG-022 / AR-AUDIT-001",
+  "severity": "S1 recovery integrity",
+  "trigger": "COMMITTED PNG is missing while original bound manifest/JPEGs remain valid and unexpired",
+  "before": "Metadata inspection returns result; restore installs transaction state then raises FileNotFoundError from snapshot",
+  "after": "Metadata inspection and restore raise CaptureRecoveryRequired before installing restored transaction; no rerender or record mutation",
+  "reproduction": {
+    "module": "test_photo_reconstruction.PhotoReconstructionTests.test_missing_committed_output_holds_inspection_and_restore_without_replay",
+    "run": 14,
+    "failures": 2,
+    "errors": 1,
+    "skips": 0,
+    "report_sha256": "71e0dbefa60fd315ae897ed9804ff764f76785c73d2ebb16842eb62669093393"
+  },
+  "focused": {
+    "command": "KIVY_HOME=/tmp/meong-audit-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy MESA_SHADER_CACHE_DIR=/tmp/meong-audit-mesa MEONG_CI_TEST_REPORT=work/ar-audit-output-report.txt .venv/bin/python tools/run_kiosk_unittests.py test_photo_reconstruction test_output_journal test_capture_journal test_photo_allocation test_customer_claim_session test_kiosk_v2_sandbox_widgets",
+    "run": 61,
+    "pass": 61,
+    "failure": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 39.146,
+    "python": "3.12.14",
+    "report_sha256": "befc5f75d26cbac21c841ae29f47a71abad875d6cfee8f797dd473340b01f1d8"
+  },
+  "source_sha256": {
+    "photobooth/kiosk_v2/photo_recovery.py": "049714222ad54d52f63f5ccb73ac0f73e2a179746e479e6b4152daa3c3708bec",
+    "tests/test_photo_reconstruction.py": "e8a85e828630fb71bd7372439e2cc47f30b77dfcafff3325b16aea33200f2021",
+    ".github/workflows/portrait-kiosk-v2.yml": "30ce1f7b63f891eb5d9eba22a2f0e1ec9af267ec0605442dbe55904ee61b6e51"
+  },
+  "ci": "PENDING; Windows recovery group now includes reconstruction module",
+  "full_regression": "PENDING after commit at exact functional SHA",
+  "limitations": [
+    "Synthetic missing media only, no customer files touched.",
+    "No observed financial mutation, duplicate charge or privacy disclosure from reproduction.",
+    "Retain all obligations/media/records; no automatic regeneration or print.",
+    "Matrix stays 45 PASS / 9 BLOCKED / 15 NOT_RUN; audit IN_PROGRESS."
+  ]
+}

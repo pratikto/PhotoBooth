@@ -1,5 +1,15 @@
 # AR-12 — final source validation and external acceptance gates
 
+## 29 October — BUG-022 reconstruction correction
+
+Confirmed missing-COMMITTED-output defect corrected with existing held-media
+validation. **61 focused PASS**, zero failures/errors/skips, 39.146s; new
+regression first fails with 2 FAIL/1 ERROR in a 14-case run. [Safe evidence](evidence/ar-audit-missing-output.json).
+This containing functional source supersedes f72fdbc runtime; final full
+regression/matching CI are PENDING here, earlier results retain original SHAs.
+Source audit IN_PROGRESS; matrix remains 45/9/15. No external gates changed.
+
+
 ## 29 October — conformity audit payment supplement
 
 Runtime is unchanged at f72fdbc. Two added scenarios (PAY-06 real pre-commit child
