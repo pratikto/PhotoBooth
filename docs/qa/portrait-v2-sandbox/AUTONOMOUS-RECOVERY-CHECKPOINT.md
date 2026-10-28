@@ -2,7 +2,7 @@
 
 **Checkpoint status:** AR-07.b1 focused VERIFIED / roadmap IN PROGRESS, 28 October 2026 (Asia/Jakarta)
 **Branch:** `feature/portrait-kiosk-v2-next` (existing; no master merge)
-**Recovery implementation:** Source work progressed through AR-08.a; later stages and external gates remain unfinished
+**Recovery implementation:** Source work progressed through AR-08.b1; later stages and external gates remain unfinished
 **Latest previously tested/pushed functional source:** `6d53d91fcfcad6083aee9f17ac8f80cf635fdf2f` (AR-07.a); current increment and tests below
 **Historical audit baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
 **Current documentation handover:** See `docs/DEVELOPMENT_HANDOVER.md` and verify current remote HEAD; never assume the HEAD printed in a dated checkpoint is still current.
@@ -34,13 +34,13 @@ The owner prefers **frequent small tested commits AND remote pushes** because a 
 | Next *small* action | File/function, intended test and AR substep |
 | Safe rollback | Previous commit and retained-data plan |
 
-## Current implementation checkpoint — AR-08.a
+## Current implementation checkpoint — AR-08.b1
 
-- Base / last verified remote: `d65fb97c7244d7aff8b0242d060a7de7c072bde1`.
-- Completed: gate native new payment on camera storage and template readiness. Focused 57 PASS, zero failures/errors/skips; offline readiness and native no-camera/no-order gates covered; new module registered in CI.
+- Base / last verified remote: `4863aa3009d1c23e0b710ea9340db6a931a19623`.
+- Completed: persist paid-unfulfilled issues without altering customer financial rights. Focused 56 PASS, zero failures/errors/skips; five new durable/concurrent/migration/authenticated HTTP issue cases; CI registration included.
 - Publication SHA: this increment will be pinned after its verified push by the
   next checkpoint; obtain containing commit from Git history.
-- Remaining / exact next step: AR-08.b durable idempotent paid-unfulfilled issue ledger/API and native postpaid fault reporting; then AR-09–13.
+- Remaining / exact next step: AR-08.b2 persist local reporting intent before API I/O, retry after restart and route native camera/photo faults into the ledger; then AR-09–13.
 - Full suite: deferred to final functional SHA. Actual Windows/Ubuntu devices,
   merchant, paper/Drive and production: NOT_RUN / not enabled.
 - Migration/rollback: see stage contract; preserve all ledgers/media/claims,

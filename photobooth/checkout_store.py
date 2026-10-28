@@ -26,6 +26,10 @@ class CheckoutMissing(LookupError):
     """Do not disclose another booth's order."""
 
 
+FULFILLMENT_ISSUE_REASONS = frozenset({'PHOTO_STATE_UNAVAILABLE', 'CAPTURE_FAILED',
+                                     'COMPOSITION_FAILED', 'DEVICE_UNAVAILABLE'})
+
+
 def identifier(value, *, minimum=1, maximum=64):
     if (not isinstance(value, str) or not minimum <= len(value) <= maximum
             or re.fullmatch(r'[A-Za-z0-9_-]+', value) is None):
@@ -95,6 +99,14 @@ class CheckoutStore:
             claim_operation_id TEXT UNIQUE, claimed_at REAL,
             attempts INTEGER NOT NULL DEFAULT 0, attempt_window REAL NOT NULL DEFAULT 0,
             revoked INTEGER NOT NULL DEFAULT 0);
+          CREATE TABLE IF NOT EXISTS checkout_fulfillment_issues (
+            order_id TEXT PRIMARY KEY, issue_id TEXT UNIQUE NOT NULL,
+            booth_id TEXT NOT NULL, fulfillment_id TEXT NOT NULL,
+            status TEXT NOT NULL, reason TEXT NOT NULL,
+            created_at REAL NOT NULL, updated_at REAL NOT NULL);
+          CREATE TABLE IF NOT EXISTS checkout_fulfillment_issue_events (
+            operation_id TEXT PRIMARY KEY, order_id TEXT NOT NULL,
+            reason TEXT NOT NULL, created_at REAL NOT NULL);
         ''')
         # AR-02.c is additive for the already published scheduler schema.
         with self.write():
@@ -275,6 +287,38 @@ class CheckoutStore:
             if row is None:
                 raise CheckoutMissing('Fulfillment not found')
             return dict(row)
+
+    def fulfillment_issue(self, order_id, booth_id):
+        with self.lock:
+            self._row(order_id,booth_id)
+            row=self.db.execute('SELECT * FROM checkout_fulfillment_issues WHERE order_id=? AND booth_id=?',
+                                (order_id,booth_id)).fetchone()
+            return dict(row) if row else None
+
+    def report_fulfillment_issue(self, order_id, booth_id, operation_id, reason):
+        identifier(operation_id,minimum=16)
+        if reason not in FULFILLMENT_ISSUE_REASONS:
+            raise ValueError('Allowlisted fulfillment issue reason required')
+        with self.write():
+            self._row(order_id,booth_id)
+            rights=self.fulfillment(order_id,booth_id)
+            if rights['obligation_state']!='OWED':
+                raise CheckoutConflict('No outstanding fulfillment obligation')
+            previous=self.db.execute('SELECT * FROM checkout_fulfillment_issue_events WHERE operation_id=?',
+                                     (operation_id,)).fetchone()
+            if previous:
+                if previous['order_id']!=order_id or previous['reason']!=reason:
+                    raise CheckoutConflict('Fulfillment issue operation mismatch')
+                return self.fulfillment_issue(order_id,booth_id)
+            now=self.now()
+            self.db.execute('''INSERT INTO checkout_fulfillment_issues
+                (order_id,issue_id,booth_id,fulfillment_id,status,reason,created_at,updated_at)
+                VALUES (?,?,?,?,'PAID_UNFULFILLED',?,?,?)
+                ON CONFLICT(order_id) DO UPDATE SET reason=excluded.reason,updated_at=excluded.updated_at''',
+                (order_id,uuid.uuid4().hex,booth_id,rights['fulfillment_id'],reason,now,now))
+            self.db.execute('INSERT INTO checkout_fulfillment_issue_events VALUES (?,?,?,?)',
+                            (operation_id,order_id,reason,now))
+            return self.fulfillment_issue(order_id,booth_id)
 
     def allocate_fulfillment(self, order_id, booth_id, grant_id, operation_id):
         identifier(operation_id, minimum=16)

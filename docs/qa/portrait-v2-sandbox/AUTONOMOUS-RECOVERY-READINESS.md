@@ -43,3 +43,23 @@ Four readiness cases plus native missing-camera/no-charge case cover stale/futur
 observations, delivery opt-in, low capacity, permission error and missing template.
 CI Sandbox group now includes the new readiness module. Physical readiness may
 change after observation and still needs Windows/Ubuntu device acceptance.
+
+## AR-08.b1 — durable paid-unfulfilled issue API
+
+Additive issue ledger binds one issue per original order/booth/fulfillment and
+unique operation audit events. Four fixed reason codes accept no customer text,
+photos or secrets. Exact retry replays; reused operation with changed order/reason
+conflicts. Only an existing OWED fulfillment may receive an issue. Reporting
+changes neither payment/service state nor grant/allocation/OWED; it does not query
+a provider, close a claim, assert delivery or fabricate refund. Booth-authenticated
+strict API and sanitized order view expose status PAID_UNFULFILLED for operator
+follow-up. Migration preserves old financial and fulfillment records. Rollback
+keeps both additive tables; disable reporting rather than drop audit records.
+Native durable-intent/retry wiring follows in AR-08.b2.
+
+Initial five cases: one FAIL/four ERROR before source. Focused **56 PASS / zero
+FAIL/ERROR/SKIP**:
+`.venv/bin/python tools/run_kiosk_unittests.py test_fulfillment_issues test_checkout_fulfillment test_checkout_creation_attempts test_checkout_durability test_qris_api test_qris_http_v2`.
+Includes concurrency, restart, lost ACK, body conflict, tenant isolation, unpaid
+rejection, strict authenticated HTTP and empty additive migration. Registered in
+CI. Synthetic local HTTP only; actual compensation policy stays an AR-13 gate.

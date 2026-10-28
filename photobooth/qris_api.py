@@ -49,6 +49,12 @@ class CustomerClaim(BaseModel):
     operation_id: str = Field(pattern=r'^[A-Za-z0-9_-]{16,64}$')
 
 
+class FulfillmentIssue(BaseModel):
+    model_config = ConfigDict(extra='forbid', strict=True)
+    operation_id: str = Field(pattern=r'^[A-Za-z0-9_-]{16,64}$')
+    reason: str = Field(pattern=r'^(PHOTO_STATE_UNAVAILABLE|CAPTURE_FAILED|COMPOSITION_FAILED|DEVICE_UNAVAILABLE)$')
+
+
 class RecoveryUpdate(BaseModel):
     model_config = ConfigDict(extra='forbid', strict=True)
     action_id: str = Field(pattern=r'^[A-Za-z0-9_-]{16,64}$')
@@ -238,6 +244,16 @@ def create_app(service, authenticator, *, on_shutdown=None, rate_limit=120, reco
         except ValidationError as error:
             raise HTTPException(422, 'Invalid allocation request') from error
         return await invoke(service.allocate, order_id, booth, body.grant_id, body.operation_id)
+
+    @app.post('/api/orders/{order_id}/fulfillment-issue')
+    async def fulfillment_issue(order_id: str, request: Request, x_booth_id: str = Header(default=''),
+                                authorization: str = Header(default='')):
+        booth = booth_identity(request,x_booth_id,authorization)
+        try:
+            body=FulfillmentIssue.model_validate(await bounded_json(request,2048))
+        except ValidationError as error:
+            raise HTTPException(422,'Invalid fulfillment issue request') from error
+        return await invoke(service.report_fulfillment_issue,order_id,booth,body.operation_id,body.reason)
 
     @app.post('/api/orders/{order_id}/customer-claim')
     async def customer_claim(order_id: str, request: Request, x_booth_id: str = Header(default=''),

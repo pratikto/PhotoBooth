@@ -140,6 +140,7 @@ class CheckoutBackend:
         result['order_id'] = result.pop('id')
         result['recovery_abandoned'] = self.store.recovery_abandoned(order['id'])
         result['customer_capability_bound'] = self.store.has_customer_capability(order['id'])
+        result['fulfillment_issue'] = self.store.fulfillment_issue(order['id'],order['booth_id'])
         try:
             record = self.store.fulfillment(order['id'], order['booth_id'])
             result['fulfillment'] = {key: record[key] for key in
@@ -230,6 +231,12 @@ class CheckoutBackend:
         self.store.get(order_id, booth_id)
         self._require_settlement(order_id, booth_id)
         return self.view(self.store.allocate_fulfillment(order_id, booth_id, grant_id, operation_id))
+
+    def report_fulfillment_issue(self, order_id, booth_id, operation_id, reason):
+        # Record liability even while the provider is unavailable. This grants
+        # no service, changes no evidence and cannot assert a refund/completion.
+        self.store.report_fulfillment_issue(order_id,booth_id,operation_id,reason)
+        return self.view(self.store.get(order_id,booth_id))
 
     def customer_claim(self, order_id, booth_id, capability, operation_id):
         self.store.get(order_id,booth_id)
