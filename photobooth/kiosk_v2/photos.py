@@ -231,6 +231,28 @@ class PhotoTest:
             self._private_hidden = True
             self._download_qr = self._download_qr_url = None
 
+    def isolate(self, order_id, transaction_id, generation):
+        """Serialized worker barrier before backend may release booth occupancy."""
+        from photobooth.release_authority import trusted_isolation_receipt
+        from photobooth.booth_storage import checked_path
+        if self.workspace or self.printer or self.drive_client or self.drive_requested or self.drive_worker:
+            raise RuntimeError('Sandbox transports must be isolated before release')
+        if self.transaction:
+            binding=self.transaction.manifest.get('payment_binding') or {}
+            if binding.get('order_id')!=order_id or binding.get('transaction_id')!=transaction_id:
+                raise RuntimeError('Exact active photo owner required')
+            path=checked_path(self.transaction.manifest_path)
+            if path.stat().st_size>2*1024*1024:raise RuntimeError('Bounded photo manifest required')
+            data=json.loads(path.read_text())
+            if any(job.get('state') in {'SENDING','UNCERTAIN'} for job in data.get('test_print_jobs',{}).values()):
+                raise RuntimeError('Uncertain printing requires physical inspection')
+        with self._privacy_lock:
+            self._privacy_generation+=1
+            self.transaction=None;self.sessions=[];self.index=0;self._retake=False
+            self.phase='confirm';self._private_hidden=False
+            self._download_qr=self._download_qr_url=None
+        return {'phase':'isolated','isolation':trusted_isolation_receipt(order_id,transaction_id,generation)}
+
     def start(self, templates, quantities, *, transaction_id=None, payment_binding=None, frozen_order=None):
         if self.phase != 'confirm' or self._closed.is_set():
             raise ValueError('Photo test already started or closed.')

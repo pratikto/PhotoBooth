@@ -129,3 +129,16 @@ release control mounted yet. Focused **58 PASS / zero FAIL/ERROR/SKIP**:
 `test_checkout_release test_service_fencing test_qris_recovery test_qris_api test_qris_http_v2 test_qris_kiosk_client` via tools/run_kiosk_unittests.py.
 New authenticated HTTP test verifies denied missing PIN, PREPARE occupancy hold,
 ACK closure and old-token denial/current-token STARTED. No production/deployment.
+AR-09.c4 delivered (controller/worker seam, native mount next): release intent and
+isolation identity are fsynced before requests; typed short-lived one-use isolation
+receipt comes from the serialized transport-off photo worker, never GUI boolean.
+Worker refuses uncertain print jobs/wrong ownership, retires in-memory session
+without deleting bytes, and ACK archives per-operation journal plus exact-key
+lookup index before marking SUSPENDED. A lost ACK repeats original IDs. Archived
+lookup validates bounded context/key/quote, preserves original claim operation,
+checks fresh customer proof and restores only original allocation with current
+service token. No newest-folder scan or raw secret/PIN persistence. New customer
+cannot preempt an active one. Focused **37 PASS / zero FAIL/ERROR/SKIP**:
+`test_release_session test_customer_claim_session test_qris_session test_photo_reconstruction`.
+Three new real-HTTP/synthetic-photo cases cover old media preservation, release/
+new visit/return, lost ACK identity and boolean-receipt denial. No hardware effect.

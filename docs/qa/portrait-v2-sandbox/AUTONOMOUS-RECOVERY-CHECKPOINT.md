@@ -2,7 +2,7 @@
 
 **Checkpoint status:** AR-09.c1 focused VERIFIED / roadmap IN PROGRESS, 29 October 2026 (Asia/Jakarta)
 **Branch:** `feature/portrait-kiosk-v2-next` (existing; no master merge)
-**Recovery implementation:** Source work progressed through AR-09.c3; later stages and external gates remain unfinished
+**Recovery implementation:** Source work progressed through AR-09.c4; later stages and external gates remain unfinished
 **Latest tested/pushed functional source:** `b38e030d2a8586f2de61dd96e8b4a590e85dde54` (86 focused PASS; final full regression deferred)
 **Historical audit baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
 **Current documentation handover:** See `docs/DEVELOPMENT_HANDOVER.md` and verify current remote HEAD; never assume the HEAD printed in a dated checkpoint is still current.
@@ -34,13 +34,13 @@ The owner prefers **frequent small tested commits AND remote pushes** because a 
 | Next *small* action | File/function, intended test and AR substep |
 | Safe rollback | Previous commit and retained-data plan |
 
-## Current implementation checkpoint — AR-09.c3
+## Current implementation checkpoint — AR-09.c4
 
-- Base / last verified remote: `51ab21c25340856de1218dd54b5bb26486869fc3`.
-- Completed: authenticate two-phase release and require current service fencing tokens. Focused 58 PASS, zero failures/errors/skips; operator HTTP release and reacquired current-token service covered. No native release control yet.
+- Base / last verified remote: `f341b1154034cbf7d609b5df3d38960cb73ae82e`.
+- Completed: persist worker isolation and exact archived customer recovery. Focused 37 PASS, zero failures/errors/skips; real HTTP and synthetic photo release/new visit/return preserves original bytes, grant and capture count; lost ACK repeats persisted IDs.
 - Publication SHA: this increment will be pinned after its verified push by the
   next checkpoint; obtain containing commit from Git history.
-- Remaining / exact next step: AR-09.c4 durable local release intent/isolation/archive and exact returning-customer lookup, then native worker-stop and release ACK flow; AR-10–13 follow.
+- Remaining / exact next step: AR-09.c5 mount deliberate native two-step PIN release, isolated-worker ACK and returning-ticket entry; then AR-10–13.
 - Full suite: deferred to final functional SHA. Actual Windows/Ubuntu devices,
   merchant, paper/Drive and production: NOT_RUN / not enabled.
 - Migration/rollback: see stage contract; preserve all ledgers/media/claims,

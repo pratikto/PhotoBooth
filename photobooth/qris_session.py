@@ -53,7 +53,7 @@ class KioskLease:
 
 class KioskCheckout:
     PHASES = {'CREATING', 'WAITING', 'RESERVED', 'STARTING', 'STARTED',
-              'COMPLETING', 'COMPLETED', 'CANCELLING', 'CANCELLED', 'RECOVERY'}
+              'COMPLETING', 'COMPLETED', 'CANCELLING', 'CANCELLED', 'RECOVERY','RELEASING','SUSPENDED'}
 
     def __init__(self, path, client, *, mode, booth_id, endpoint):
         if mode not in {'sandbox', 'mock'}:
@@ -105,7 +105,7 @@ class KioskCheckout:
     @property
     def active(self):
         state = self.snapshot()
-        return state is not None and state['phase'] not in {'COMPLETED', 'CANCELLED'}
+        return state is not None and state['phase'] not in {'COMPLETED', 'CANCELLED','SUSPENDED'}
 
     @property
     def customer_claim_required(self):
@@ -230,8 +230,7 @@ class KioskCheckout:
                 if photo_phase not in {'result', 'done'}:
                     raise RuntimeError('Completed service cannot admit another capture')
             elif order['service_state'] in {'RESERVED', 'STARTED'}:
-                result=self.client.service_transition(order['order_id'],order['grant_id'],
-                                                      'STARTED',transaction_id)
+                result=self._transition(order,'STARTED',transaction_id)
                 self._accept(result)
             else:
                 raise RuntimeError('Original service requires operator review')
@@ -277,6 +276,69 @@ class KioskCheckout:
             data['order'] = order
             self._save()
 
+    def _transition(self, order, state, transaction_id):
+        fence=order.get('service_fence') or {}
+        options={'service_fence':fence['token']} if fence else {}
+        return self.client.service_transition(order['order_id'],order['grant_id'],state,transaction_id,**options)
+
+    def prepare_release(self, pin):
+        with self.worker_lock:
+            self.lock_customer()
+            with self.lock:
+                if not self.data or not self.data.get('order') or self.data['phase']=='SUSPENDED':
+                    raise RuntimeError('Active original visit required')
+                operation=self.data.setdefault('release_operation_id',uuid.uuid4().hex)
+                self.data['phase']='RELEASING';self._save()
+            self._accept(self.client.release(self.data['order']['order_id'],pin,operation))
+            return self.snapshot()
+
+    def acknowledge_release(self, pin, receipt):
+        from photobooth.release_authority import IsolationReceipt
+        from photobooth.booth_storage import checked_path
+        with self.worker_lock:
+            data=self.snapshot();order=data['order'];release=order.get('release') or {}
+            if (data['phase']!='RELEASING' or not isinstance(receipt,IsolationReceipt)
+                    or release.get('operation_id')!=data.get('release_operation_id')):
+                raise RuntimeError('Prepared local isolation required')
+            receipt.consume(order['order_id'],data.get('transaction_id'),release['generation'])
+            with self.lock:
+                isolation=self.data.setdefault('isolation_id',receipt.isolation_id)
+                self._save()
+            self._accept(self.client.release(order['order_id'],pin,data['release_operation_id'],isolation_id=isolation))
+            archive=self.snapshot();archive['phase']='SUSPENDED'
+            directory=checked_path(self.path.parent/'visits');directory.mkdir(parents=True,exist_ok=True)
+            history=checked_path(directory/archive['checkout_key']);history.mkdir(exist_ok=True)
+            write_json_atomic(checked_path(history/(data['release_operation_id']+'.json')),archive)
+            write_json_atomic(checked_path(directory/(archive['checkout_key']+'.json')),archive)
+            with self.lock:
+                self.data=archive;self._save()
+            self.lock_customer()
+            return self.snapshot()
+
+    def open_archived(self, ticket):
+        import re
+        from photobooth.booth_storage import checked_path
+        parts=ticket.strip().split(':') if isinstance(ticket,str) and len(ticket)<=200 else []
+        if (len(parts)!=4 or parts[:2]!=['MEONG-RECOVERY-V1',self.context['booth_id']]
+                or re.fullmatch(r'[a-f0-9]{32}',parts[2]) is None):
+            raise ValueError('Original customer ticket required')
+        with self.worker_lock:
+            if self.active:raise RuntimeError('Current customer must finish first')
+            path=checked_path(self.path.parent/'visits'/(parts[2]+'.json'))
+            if path.stat().st_size>65536:raise RuntimeError('Bounded original journal required')
+            candidate=json.loads(path.read_text())
+            if (candidate.get('context')!=self.context or candidate.get('phase')!='SUSPENDED'
+                    or candidate.get('checkout_key')!=parts[2] or candidate.get('version')!=1
+                    or quote_checkout(candidate['quantities']).total_amount!=candidate['amount']):
+                raise RuntimeError('Original saved visit required')
+            self.lock_customer()
+            with self.lock:
+                self.data=candidate;self.data['phase']='RECOVERY';self._save()
+            result=self.customer_claim(ticket)
+            with self.lock:
+                self.data.pop('release_operation_id',None);self.data.pop('isolation_id',None);self._save()
+            return self.snapshot()
+
 
     def refresh(self):
         """Advance one bounded worker iteration, not a UI-thread network loop."""
@@ -288,7 +350,7 @@ class KioskCheckout:
                     self._send_fulfillment_issue()
                 return self.snapshot()
             phase, order = self.data['phase'], self.data['order']
-            if phase == 'RECOVERY' or (self.customer_claim_required and order):
+            if phase in {'RECOVERY','RELEASING'} or (self.customer_claim_required and order):
                 # Observe payment privately after restart, never allocate or
                 # display previous media. Legacy/third-party clients without
                 # this narrow method retain the original conservative hold.
@@ -303,19 +365,17 @@ class KioskCheckout:
                         delay = 10
                     self._reconcile_at = time.monotonic()+max(1, min(60, delay))
                 return self.snapshot()
-            if phase in {'COMPLETED', 'CANCELLED', 'STARTED'}:
+            if phase in {'COMPLETED', 'CANCELLED', 'STARTED','SUSPENDED'}:
                 return self.snapshot()
             if phase == 'STARTING':
                 if self.data['transaction_id'] and (not self.data.get('allocation_operation_id')
                                                     or self.data.get('allocation_ready') is True):
-                    result = self.client.service_transition(order['order_id'], order['grant_id'],
-                                                           'STARTED', self.data['transaction_id'])
+                    result = self._transition(order,'STARTED',self.data['transaction_id'])
                     self._accept(result)
                     self.data['phase'] = 'STARTED'; self._save()
                 return self.snapshot()
             if phase == 'COMPLETING':
-                result = self.client.service_transition(order['order_id'], order['grant_id'],
-                                                       'COMPLETED', self.data['transaction_id'])
+                result = self._transition(order,'COMPLETED',self.data['transaction_id'])
                 self._accept(result)
                 self.data['phase'] = 'COMPLETED'; self._save()
                 return self.snapshot()

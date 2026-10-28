@@ -155,7 +155,7 @@ class QrisKioskClient:
             operator_pin=pin,payload=payload),order_id)
         receipt=result.get('release_ack') if isolation_id else result.get('release')
         if (not receipt or receipt.get('operation_id')!=operation_id
-                or receipt.get('state')!=('ACKED' if isolation_id else 'PREPARED')
+                or receipt.get('state') not in ({'ACKED'} if isolation_id else {'PREPARED','ACKED'})
                 or (isolation_id and (receipt.get('isolation_id')!=isolation_id or not result.get('closed')))
                 or not (result.get('service_fence') or {}).get('suspended')):
             raise ValueError('Original release acknowledgment required')

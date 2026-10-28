@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-09.c4: persist worker isolation and exact archived customer recovery
+
+Base / last remote-verified commit `f341b1154034cbf7d609b5df3d38960cb73ae82e`. Focused 37 PASS, zero failures/errors/skips; real HTTP and synthetic photo release/new visit/return preserves original bytes, grant and capture count; lost ACK repeats persisted IDs.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, private
+photo display or customer state reset. Next: AR-09.c5 mount deliberate native two-step PIN release, isolated-worker ACK and returning-ticket entry; then AR-10–13.
+Only work/ scratch files local; scope and rollback in
+[stage contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATOR.md).
+
 ## 29 October — AR-09.c3: authenticate two-phase release and require current service fencing tokens
 
 Base / last remote-verified commit `51ab21c25340856de1218dd54b5bb26486869fc3`. Focused 58 PASS, zero failures/errors/skips; operator HTTP release and reacquired current-token service covered. No native release control yet.

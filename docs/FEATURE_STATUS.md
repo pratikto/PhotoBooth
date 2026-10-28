@@ -1,5 +1,10 @@
 # Meong Photobooth — current feature status
 
+## 29 October — AR-09.c4: persist worker isolation and exact archived customer recovery
+
+Focused 37 PASS, zero failures/errors/skips; real HTTP and synthetic photo release/new visit/return preserves original bytes, grant and capture count; lost ACK repeats persisted IDs. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATOR.md).
+Physical/provider gates remain separate; no production activation.
+
 ## 29 October — AR-09.c3: authenticate two-phase release and require current service fencing tokens
 
 Focused 58 PASS, zero failures/errors/skips; operator HTTP release and reacquired current-token service covered. No native release control yet. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATOR.md).
