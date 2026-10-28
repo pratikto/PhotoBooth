@@ -134,13 +134,31 @@ class QrisKioskClient:
             raise ValueError('No verified service permit')
         return result
 
-    def service_transition(self, order_id, grant_id, state, transaction_id):
+    def service_transition(self, order_id, grant_id, state, transaction_id, *, service_fence=None):
         identifier(order_id, maximum=50)
+        payload={'grant_id':grant_id,'state':state,'transaction_id':transaction_id}
+        if service_fence is not None:
+            payload['service_fence']=identifier(service_fence,minimum=32,maximum=32)
         result = self._order(self._call('POST', '/api/orders/' + order_id + '/service',
-            payload={'grant_id': grant_id, 'state': state, 'transaction_id': transaction_id}), order_id)
+            payload=payload), order_id)
         if (result.get('grant_id') != grant_id or result.get('service_state') != state
                 or result.get('local_transaction_id') != transaction_id):
             raise ValueError('Service acknowledgement does not match this capture')
+        return result
+
+    def release(self, order_id, pin, operation_id, *, isolation_id=None):
+        identifier(order_id,maximum=50);identifier(operation_id,minimum=32,maximum=32)
+        payload={'operation_id':operation_id}
+        if isolation_id is not None:
+            payload['isolation_id']=identifier(isolation_id,minimum=32,maximum=32)
+        result=self._order(self._call('POST','/api/orders/'+order_id+'/recovery/release',
+            operator_pin=pin,payload=payload),order_id)
+        receipt=result.get('release_ack') if isolation_id else result.get('release')
+        if (not receipt or receipt.get('operation_id')!=operation_id
+                or receipt.get('state')!=('ACKED' if isolation_id else 'PREPARED')
+                or (isolation_id and (receipt.get('isolation_id')!=isolation_id or not result.get('closed')))
+                or not (result.get('service_fence') or {}).get('suspended')):
+            raise ValueError('Original release acknowledgment required')
         return result
 
     def allocate(self, order_id, grant_id, operation_id):

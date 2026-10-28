@@ -35,6 +35,13 @@ class ServiceUpdate(BaseModel):
     grant_id: str = Field(pattern=r'^[a-f0-9]{32}$')
     state: str = Field(pattern=r'^(STARTED|COMPLETED)$')
     transaction_id: str = Field(pattern=r'^[A-Za-z0-9_-]{1,64}$')
+    service_fence: str | None = Field(default=None,pattern=r'^[a-f0-9]{32}$')
+
+
+class ReleaseUpdate(BaseModel):
+    model_config = ConfigDict(extra='forbid', strict=True)
+    operation_id: str = Field(pattern=r'^[a-f0-9]{32}$')
+    isolation_id: str | None = Field(default=None,pattern=r'^[a-f0-9]{32}$')
 
 
 class AllocationUpdate(BaseModel):
@@ -158,9 +165,9 @@ def create_app(service, authenticator, *, on_shutdown=None, rate_limit=120, reco
             raise HTTPException(401, 'Unauthorized')
         return identity
 
-    async def invoke(function, *args):
+    async def invoke(function, *args, **kwargs):
         try:
-            return await run_in_threadpool(function, *args)
+            return await run_in_threadpool(function, *args, **kwargs)
         except CheckoutMissing as error:
             raise HTTPException(404, 'Order not found') from error
         except CheckoutConflict as error:
@@ -232,8 +239,9 @@ def create_app(service, authenticator, *, on_shutdown=None, rate_limit=120, reco
             body = ServiceUpdate.model_validate(data)
         except ValidationError as error:
             raise HTTPException(422, 'Invalid service acknowledgement') from error
+        options={'service_fence':body.service_fence} if body.service_fence is not None else {}
         return await invoke(service.service_transition, order_id, booth, body.grant_id,
-                            body.state, body.transaction_id)
+                            body.state, body.transaction_id,**options)
 
     @app.post('/api/orders/{order_id}/allocate')
     async def allocate_order(order_id: str, request: Request, x_booth_id: str = Header(default=''),
@@ -270,6 +278,18 @@ def create_app(service, authenticator, *, on_shutdown=None, rate_limit=120, reco
                            authorization: str = Header(default='')):
         booth = booth_identity(request, x_booth_id, authorization)
         return await invoke(service.cancel, order_id, booth)
+
+    @app.post('/api/orders/{order_id}/recovery/release')
+    async def release_order(order_id: str, request: Request, x_booth_id: str = Header(default=''),
+                            authorization: str = Header(default=''), x_recovery_pin: str = Header(default='')):
+        booth=operator_identity(request,x_booth_id,authorization,x_recovery_pin)
+        try:
+            body=ReleaseUpdate.model_validate(await bounded_json(request,2048))
+        except ValidationError as error:
+            raise HTTPException(422,'Invalid release request') from error
+        if body.isolation_id is None:
+            return await invoke(service.prepare_release,order_id,booth,body.operation_id,operator_actor)
+        return await invoke(service.acknowledge_release,order_id,booth,body.operation_id,body.isolation_id)
 
     @app.post('/api/orders/{order_id}/recovery/inspect')
     async def recovery_inspect(order_id: str, request: Request, x_booth_id: str = Header(default=''),

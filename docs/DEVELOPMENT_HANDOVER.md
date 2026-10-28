@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-09.c3: authenticate two-phase release and require current service fencing tokens
+
+Base / last remote-verified commit `51ab21c25340856de1218dd54b5bb26486869fc3`. Focused 58 PASS, zero failures/errors/skips; operator HTTP release and reacquired current-token service covered. No native release control yet.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, private
+photo display or customer state reset. Next: AR-09.c4 durable local release intent/isolation/archive and exact returning-customer lookup, then native worker-stop and release ACK flow; AR-10–13 follow.
+Only work/ scratch files local; scope and rollback in
+[stage contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATOR.md).
+
 ## 29 October — AR-09.c2: preserve paid rights through two-phase occupancy release and exact reacquisition
 
 Base / last remote-verified commit `e52f143b07a6511c4e7eda30ad5b16b55628e896`. Focused 48 PASS, zero failures/errors/skips; prepare/ACK/restart/replay and original proof/new-token/free-booth invariants covered. Core internal seam only, no release endpoint/UI yet.

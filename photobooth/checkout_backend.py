@@ -118,6 +118,23 @@ class CheckoutBackend:
         result.update(recovery_checked=True, recovery_provider_state=provider_state)
         return result
 
+    def prepare_release(self, order_id, booth_id, operation_id, actor):
+        from photobooth.checkout_release import prepare
+        order,provider_state=self._fresh_recovery(order_id,booth_id)
+        if provider_state!='settlement' or order['state']!='PAID':
+            raise CheckoutConflict('Current original paid entitlement required')
+        prepare(self.store,order_id,booth_id,operation_id,actor)
+        return self.view(self.store.get(order_id,booth_id))
+
+    def acknowledge_release(self, order_id, booth_id, operation_id, isolation_id):
+        from photobooth.checkout_release import acknowledge
+        if not self.sandbox_recovery_supported:
+            raise CheckoutConflict('Release is restricted to Sandbox')
+        release=acknowledge(self.store,order_id,booth_id,operation_id,isolation_id)
+        result=self.view(self.store.get(order_id,booth_id))
+        result['release_ack']=release
+        return result
+
     def recovery_resolve(self, order_id, booth_id, action_id, action, reason, transaction_id, actor):
         order, provider_state = self._fresh_recovery(order_id, booth_id)
         # Monotonic PAID caching must not replace fresh settlement evidence.

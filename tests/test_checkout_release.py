@@ -50,3 +50,26 @@ class ReleaseTests(unittest.TestCase):
         with self.assertRaises(PermissionError):self.backend.customer_claim(self.oid,'PB001','x'*43,'b'*32)
         with self.assertRaises(CheckoutConflict):self.store.recovery_action(self.oid,'PB001','c'*32,'resume','fixture',self.tx,'operator-fixture')
         self.assertTrue(self.store.get(self.oid)['closed'])
+
+    def test_http_release_requires_operator_and_exact_two_phase_receipts(self):
+        from fastapi.testclient import TestClient
+        from photobooth.qris_api import create_app
+        from photobooth.booth_auth import BoothAuthenticator
+        self.provider.mode='sandbox'
+        http=TestClient(create_app(self.backend,BoothAuthenticator({'PB001':'x'*48}),recovery_pin='12345678'))
+        self.addCleanup(http.close)
+        url='/api/orders/'+self.oid+'/recovery/release'
+        headers={'x-booth-id':'PB001','authorization':'Bearer '+'x'*48}
+        body={'operation_id':'e'*32}
+        self.assertEqual(http.post(url,json=body,headers=headers).status_code,401)
+        headers['x-recovery-pin']='12345678'
+        response=http.post(url,json=body,headers=headers)
+        self.assertEqual(response.status_code,200)
+        self.assertFalse(response.json()['closed'])
+        response=http.post(url,json=dict(body,isolation_id='f'*32),headers=headers)
+        self.assertEqual(response.status_code,200);self.assertTrue(response.json()['closed'])
+        current=self.claim()['service_fence']['token']
+        service='/api/orders/'+self.oid+'/service'
+        update={'grant_id':self.grant,'state':'STARTED','transaction_id':self.tx}
+        self.assertEqual(http.post(service,json=update,headers=headers).status_code,409)
+        self.assertEqual(http.post(service,json=dict(update,service_fence=current),headers=headers).status_code,200)

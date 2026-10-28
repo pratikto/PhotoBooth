@@ -1,5 +1,10 @@
 # Meong Photobooth — changelog
 
+## 29 October — AR-09.c3: authenticate two-phase release and require current service fencing tokens
+
+Focused 58 PASS, zero failures/errors/skips; operator HTTP release and reacquired current-token service covered. No native release control yet. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATOR.md).
+Physical/provider gates remain separate; no production activation.
+
 ## 29 October — AR-09.c2: preserve paid rights through two-phase occupancy release and exact reacquisition
 
 Focused 48 PASS, zero failures/errors/skips; prepare/ACK/restart/replay and original proof/new-token/free-booth invariants covered. Core internal seam only, no release endpoint/UI yet. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATOR.md).

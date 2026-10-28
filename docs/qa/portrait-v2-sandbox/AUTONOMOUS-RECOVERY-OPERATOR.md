@@ -118,3 +118,14 @@ No HTTP/UI release action exists in this core increment. Preserve both tables on
 rollback. Four tests initially ERROR before schema integration; final **48 PASS,
 zero FAIL/ERROR/SKIP**: `test_checkout_release test_service_fencing test_customer_capability test_checkout_fulfillment test_checkout_backend` via tools/run_kiosk_unittests.py.
 Actual merchant/device/paper/cloud NOT_RUN. Next: authenticated release/token API.
+AR-09.c3 delivered: PIN + booth-authenticated strict /recovery/release accepts
+original operation for PREPARE and exact isolation receipt for ACK. PREPARE checks
+fresh settlement; ACK records completed isolation without another provider call.
+The API grants no local worker-stop proof by itself: trusted operator/UI must
+perform isolation before sending ACK, enforced by the following native seam.
+Service API/client accept optional current fence; legacy unfenced requests retain
+original shape. Reacquired fenced services reject omitted/old token. No native
+release control mounted yet. Focused **58 PASS / zero FAIL/ERROR/SKIP**:
+`test_checkout_release test_service_fencing test_qris_recovery test_qris_api test_qris_http_v2 test_qris_kiosk_client` via tools/run_kiosk_unittests.py.
+New authenticated HTTP test verifies denied missing PIN, PREPARE occupancy hold,
+ACK closure and old-token denial/current-token STARTED. No production/deployment.
