@@ -1,5 +1,12 @@
 # Meong Photobooth documentation — GUI v2
 
+## 28 October 2026 — autonomous QRIS and photo recovery planning (design only)
+
+**New Codex execution entrypoint:** [Autonomous recovery master specification](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-MASTER-PLAN.md) · [numbered implementation roadmap AR-00–AR-13](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-ROADMAP.md) · [Midtrans provider and idempotency research register](qa/portrait-v2-sandbox/MIDTRANS-PROVIDER-CONTRACT.md) · [fault-injection/acceptance matrix](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-TEST-MATRIX.md) · [customer/operator operations runbook](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATIONS.md).
+
+Owner direction: unattended-first safe recovery, not blind replay; maintain separated payment/fulfillment/kiosk ownership, original provider order and customer privacy. **Planning docs only**; functional source remains as previously recorded and recovery GUI/automatic process is **NOT IMPLEMENTED / NOT TESTED**. Read existing [operator recovery implementation record](qa/portrait-v2-sandbox/RECOVERY.md) as historical source; this design defines future staged work. Existing branch remains `feature/portrait-kiosk-v2-next`, with no default/master/production change. Codex starts at AR-00 and must record exact functional SHA and new evidence before advancing.
+
+
 Latest QRIS correction: [BUG-021 stable pending image URL during polling](qa/portrait-v2-sandbox/QR-POLLING.md).
 
 Latest Sandbox presentation: [centered Meong logo using the existing Drive renderer](qa/portrait-v2-sandbox/QR-LOGO.md).
