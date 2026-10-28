@@ -1,5 +1,10 @@
 # Meong Photobooth — GUI v2 development handover
 
+**Hosted build result (28 October):** source `0c0d66d` passes SDK/prerequisite
+setup and packaging policy; preview succeeds. APK build step fails and binary
+checks are skipped. Root-cause logs/artifact downloads require the new evidence
+hosts saved in the draft. [Exact outcome and next step](qa/android-runtime/published-resume.md#confirmed-hosted-outcome-after-the-sdk-correction).
+
 **Published-environment follow-up (28 October):** prior source preview CI is
 confirmed successful. Local FreeType now reaches a denied redirect mirror;
 manual hosted APK setup failed before compilation. The workflow now reuses the

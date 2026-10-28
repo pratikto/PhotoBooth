@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-28",
+  "timezone": "Asia/Jakarta",
+  "source": "0c0d66d361836030829c86eaef3555e887faf804",
+  "run_id": 40623523015,
+  "run_url": "https://github.com/pratikto/PhotoBooth/actions/runs/40623523015",
+  "conclusion": "failure",
+  "preview": "success",
+  "native_prerequisites": "success",
+  "packaging_policy": "success",
+  "compile_step": "failure",
+  "compile_root_cause": "UNKNOWN: build log download blocked",
+  "signature_manifest_checks": "skipped",
+  "elf_alignment_checks": "skipped",
+  "artifact": {
+    "id": 12788961083,
+    "name": "meong-android-debug",
+    "size_in_bytes": 147301,
+    "contents_downloaded": false,
+    "apk_presence": "NOT_VERIFIED; artifact name alone is not evidence of an APK"
+  },
+  "blocked_evidence_hosts": [
+    "results-receiver.actions.githubusercontent.com",
+    "productionresultssa18.blob.core.windows.net"
+  ],
+  "additional_local_source_host": "ftp.cc.uoc.gr",
+  "network_additions_saved_to_draft": true,
+  "environment_published_by_agent": false,
+  "android_device_acceptance": "NOT_RUN"
+}

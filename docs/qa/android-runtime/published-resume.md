@@ -64,3 +64,43 @@ remain NOT_RUN. The [device checklist](device-acceptance.md) stays unchecked.
 Rollback is a scoped inverse workflow commit; do not alter desktop/master,
 credentials, payment or print journals. Local mirror and log-host access would
 require separately reviewed network settings; none were changed here.
+
+## Confirmed hosted outcome after the SDK correction
+
+Source **0c0d66d361836030829c86eaef3555e887faf804** was pushed and its remote
+SHA verified after the owner's explicit source-push/build approval. The manual
+[run 40623523015](https://github.com/pratikto/PhotoBooth/actions/runs/40623523015)
+has now completed. Its preview job is **SUCCESS**. The APK job passes native
+prerequisite installation and packaging policy, confirming that the replacement
+SDK bootstrap gets past the earlier failed setup step. The **Compile curated
+Android v2 APK** step fails; signature/manifest/native-payload/alignment checks
+are **SKIPPED**, not passed. The compile command also owns recipe downloads, so
+this step outcome alone does not identify a C/Java compiler defect.
+
+[Exact job outcomes](hosted-sdk-fix-jobs.json),
+[artifact metadata](hosted-sdk-fix-artifacts.json) and
+[structured status](hosted-sdk-fix-status.json) preserve the current observation.
+The `meong-android-debug` artifact exists (147,301 bytes), but its name does not
+prove that it contains an APK. Its contents have not been downloaded or inspected.
+
+The detailed job-log route is blocked at
+`results-receiver.actions.githubusercontent.com`. Artifact download independently
+reaches `productionresultssa18.blob.core.windows.net`, also rejected with proxy
+Forbidden. API annotations provide only exit code 1 and deprecation warnings;
+the build's root error remains **UNKNOWN**. No application or recipe patch is
+justified by that metadata alone, and the unchanged build has not been rerun.
+Signed download URLs are deliberately excluded from this report.
+
+The latest environment draft preserves all existing custom domains and adds
+only these two observed evidence hosts plus the previously observed local
+FreeType redirect host `ftp.cc.uoc.gr`. Saving the new requirements is confirmed;
+it neither changes runtime access nor publishes the environment. After the user
+reviews/saves these network additions and publishes, download **the existing**
+run's artifact/log first, diagnose its actual error, and correct/retry only the
+affected build. There is no need to rerun passing preview/application tests just
+to retrieve existing evidence. No environment scripts, repository membership,
+credentials or earlier setup changes were reapplied here.
+
+No new runtime source was changed in this evidence-only continuation. Current
+APK binary verification and physical Android/merchant/Drive acceptance remain
+unverified. Earlier source-specific passes retain their exact scope and SHA.
