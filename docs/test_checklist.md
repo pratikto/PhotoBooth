@@ -1,5 +1,10 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 29 October — AR-12.a: close final archive binding and WAL fault gaps before full regression
+
+Focused 57 PASS, then final durability/core 25 PASS, zero failures/errors/skips. Actual child os._exit, WAL integrity and locked writer checked; Windows recovery CI and release/return renderer extended. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-VALIDATION.md).
+Physical/provider gates remain separate; no production activation.
+
 ## 29 October — AR-11: design public webhook boundary and verify unmounted durable inbox prototype
 
 Focused 38 PASS, zero failures/errors/skips; no public listener, runtime mount, merchant callback, deployment or BI-SNAP migration. Infrastructure gates remain explicitly unapproved/NOT_RUN. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-WEBHOOK.md).

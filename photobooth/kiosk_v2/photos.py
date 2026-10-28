@@ -239,7 +239,8 @@ class PhotoTest:
             raise RuntimeError('Sandbox transports must be isolated before release')
         if self.transaction:
             binding=self.transaction.manifest.get('payment_binding') or {}
-            if binding.get('order_id')!=order_id or binding.get('transaction_id')!=transaction_id:
+            if ((binding.get('order_id')!=order_id or binding.get('transaction_id')!=transaction_id)
+                    and not (self.phase=='done' and transaction_id is None)):
                 raise RuntimeError('Exact active photo owner required')
             path=checked_path(self.transaction.manifest_path)
             if path.stat().st_size>2*1024*1024:raise RuntimeError('Bounded photo manifest required')

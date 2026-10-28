@@ -61,11 +61,7 @@ def reacquire(store, order):
     release=latest(store,order['id'],order['booth_id'])
     if not release or release['state']!='ACKED' or not order['closed'] or order['state']!='PAID':
         raise CheckoutConflict('Original suspended visit required')
-    other=store.db.execute('''SELECT 1 FROM checkouts WHERE booth_id=? AND id!=?
-        AND closed=0 AND state NOT IN ('EXPIRED','CANCELLED','FAILED') AND service_state!='COMPLETED' ''',
-        (order['booth_id'],order['id'])).fetchone()
-    if other:
-        raise CheckoutConflict('Booth is serving another customer')
+    require_free_booth(store,order)
     fence=store.service_fence(order['id'],order['booth_id'])
     if not fence or not fence['suspended'] or fence['generation']!=release['generation']:
         raise CheckoutConflict('Original release generation required')
@@ -77,3 +73,11 @@ def reacquire(store, order):
     store.db.execute('UPDATE checkout_fulfillments SET state=?,updated_at=? WHERE order_id=?',
                      (state,store.now(),order['id']))
     return store._row(order['id'],order['booth_id'])
+
+
+def require_free_booth(store,order):
+    other=store.db.execute('''SELECT 1 FROM checkouts WHERE booth_id=? AND id!=?
+        AND closed=0 AND state NOT IN ('EXPIRED','CANCELLED','FAILED') AND service_state!='COMPLETED' ''',
+        (order['booth_id'],order['id'])).fetchone()
+    if other:
+        raise CheckoutConflict('Booth is serving another customer')

@@ -68,3 +68,38 @@ class ReleaseSessionTests(TestCase):
         with self.assertRaises(RuntimeError):self.retire()
         self.assertFalse(self.f.store.get(self.binding['order_id'])['closed'])
         with self.assertRaises(Exception):self.f.service.begin({'template_b':1})
+
+    def test_completed_ticket_is_archived_before_new_visit_and_restores_result_only(self):
+        for _ in range(2):self.photo.capture(np.zeros((24,32,3),dtype=np.uint8))
+        self.photo.compose();output=self.photo.session.output_path;before=output.read_bytes();self.photo.next()
+        self.f.flow.request_complete();self.f.flow.refresh()
+        original=self.f.flow.snapshot()
+        self.assertTrue((self.root/'visits'/(original['checkout_key']+'.json')).is_file())
+        self.f.service.begin({'template_a':1})
+        with self.assertRaises(RuntimeError):self.f.flow.open_archived(self.ticket)
+        self.f.service.cancel();self.photo.reset();self.f.flow.open_archived(self.ticket)
+        restored=self.photo.restore(get_templates(),self.f.flow.resume_binding(),self.f.flow.resume_permit())
+        self.assertEqual(restored['phase'],'result');self.assertEqual(output.read_bytes(),before)
+        with self.assertRaises(RuntimeError):self.f.flow.confirm_resume(self.tx,'capture')
+        self.f.flow.confirm_resume(self.tx,'result')
+
+    def test_release_recovers_server_allocation_after_lost_local_binding_ack(self):
+        self.f.flow.data['transaction_id']=None;self.f.flow._save()
+        prepared=self.f.flow.prepare_release('12345678')
+        self.assertEqual(prepared['transaction_id'],self.tx)
+        self.photo.hide_private()
+        receipt=self.photo.isolate(self.binding['order_id'],prepared['transaction_id'],prepared['order']['release']['generation'])['isolation']
+        self.f.flow.acknowledge_release('12345678',receipt)
+        self.assertEqual(self.f.flow.snapshot()['phase'],'SUSPENDED')
+
+    def test_new_unallocated_visit_can_isolate_previous_done_photo_worker(self):
+        for _ in range(2):self.photo.capture(np.zeros((24,32,3),dtype=np.uint8))
+        self.photo.compose();output=self.photo.session.output_path;before=output.read_bytes();self.photo.next()
+        self.f.flow.request_complete();self.f.flow.refresh()
+        self.f.service.begin({'template_a':1});self.f.paid();self.f.service.check()
+        prepared=self.f.flow.prepare_release('12345678')
+        self.assertIsNone(prepared['transaction_id']);self.photo.hide_private()
+        receipt=self.photo.isolate(prepared['order']['order_id'],None,prepared['order']['release']['generation'])['isolation']
+        self.f.flow.acknowledge_release('12345678',receipt)
+        self.assertEqual(output.read_bytes(),before)
+        self.assertEqual(self.f.flow.snapshot()['phase'],'SUSPENDED')

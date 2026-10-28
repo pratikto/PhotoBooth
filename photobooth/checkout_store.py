@@ -487,6 +487,9 @@ class CheckoutStore:
             if order['closed'] and payment_verified:
                 from photobooth.checkout_release import reacquire
                 order=reacquire(self,order)
+            if order['service_state']=='COMPLETED':
+                from photobooth.checkout_release import require_free_booth
+                require_free_booth(self,order)
             self.assert_service_fence(order_id,booth_id,require_token=False)
             eligible = order['state']=='PAID' if payment_verified else (
                 order['state']=='PENDING' and order['service_state']=='NONE' and not order['local_transaction_id'])

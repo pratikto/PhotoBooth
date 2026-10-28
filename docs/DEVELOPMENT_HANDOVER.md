@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-12.a: close final archive binding and WAL fault gaps before full regression
+
+Base / last remote-verified commit `f502bbf8adb3ed73f8f7388903f50a860e633152`. Focused 57 PASS, then final durability/core 25 PASS, zero failures/errors/skips. Actual child os._exit, WAL integrity and locked writer checked; Windows recovery CI and release/return renderer extended.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, unclaimed private
+photo display or customer state reset. Next: Run one complete regression at this final functional source; capture/decode native 800x1280 and 452x900; inspect matching Linux/Windows CI; map remaining external gates and publish AR-13 readiness decision.
+Only work/ scratch files local; scope and rollback in
+[stage contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-VALIDATION.md).
+
 ## 29 October — AR-11: design public webhook boundary and verify unmounted durable inbox prototype
 
 Base / last remote-verified commit `57048882609bfeb6ff0b315dce244934a77959ce`. Focused 38 PASS, zero failures/errors/skips; no public listener, runtime mount, merchant callback, deployment or BI-SNAP migration. Infrastructure gates remain explicitly unapproved/NOT_RUN.

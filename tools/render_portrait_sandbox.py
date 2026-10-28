@@ -48,6 +48,9 @@ class Recorder(PortraitKioskV2App):
     def inspect_operator(self):
         self._sandbox_operator_input.text='12345678'  # Isolated fixture only.
         self._sandbox_operator_inspect()
+    def release_operator(self):
+        self._sandbox_operator_input.text='12345678'  # Isolated fixture only.
+        self._sandbox_operator_release()
     def gallery(self):
         self._choose_photo();self._complete_tutorial();self._change_copies(1)
         self._open_sandbox()
@@ -83,7 +86,12 @@ class Recorder(PortraitKioskV2App):
             self.claim_ticket,lambda:self.capture('06-resume-ready'),
             self._sandbox_resume,lambda:self.capture('07-original-capture-restored'),
             self._sandbox_operator_open,lambda:self.capture('08-operator-pin-entry'),
-            self.inspect_operator,lambda:self.capture('09-operator-status'),self.stop])
+            self.inspect_operator,lambda:self.capture('09-operator-status'),
+            self.release_operator,lambda:self.capture('10-isolation-ready'),
+            self.release_operator,lambda:self.capture('11-released-advert'),
+            self._sandbox_open_saved,lambda:self.capture('12-saved-ticket-lookup'),
+            self.claim_ticket,self._sandbox_resume,
+            lambda:self.capture('13-returning-customer-restored'),self.stop])
         Clock.schedule_once(self.advance,.5)
     def advance(self,_dt):
         if self._capture_pending or self._sandbox_jobs.busy or (self._photo_jobs and self._photo_jobs.busy):
@@ -106,4 +114,5 @@ if __name__=='__main__':
         source=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
         (args.output_dir/f'evidence-{args.width}x{args.height}.json').write_text(json.dumps({
             'head':source,'fixture':'OFFLINE HTTP; NOT MERCHANT ACCEPTANCE',
+            'dirty':bool(subprocess.check_output(['git','status','--porcelain','--untracked-files=no'],cwd=ROOT,text=True).strip()),
             'screenshots':app.evidence},indent=2)+'\n')

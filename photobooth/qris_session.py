@@ -96,7 +96,9 @@ class KioskCheckout:
             raise
 
     def _save(self):
+        from photobooth.capture_journal import sync_directory
         write_json_atomic(self.path, self.data)
+        sync_directory(self.path.parent)
 
     def snapshot(self):
         with self.lock:
@@ -290,6 +292,13 @@ class KioskCheckout:
                 operation=self.data.setdefault('release_operation_id',uuid.uuid4().hex)
                 self.data['phase']='RELEASING';self._save()
             self._accept(self.client.release(self.data['order']['order_id'],pin,operation))
+            with self.lock:
+                allocation=(self.data['order'].get('fulfillment') or {})
+                if allocation.get('transaction_id'):
+                    if (allocation.get('allocation_operation_id')!=self.data.get('allocation_operation_id')
+                            or self.data.get('transaction_id') not in (None,allocation['transaction_id'])):
+                        raise RuntimeError('Exact original allocation requires review')
+                    self.data['transaction_id']=allocation['transaction_id'];self._save()
             return self.snapshot()
 
     def acknowledge_release(self, pin, receipt):
@@ -306,14 +315,22 @@ class KioskCheckout:
                 self._save()
             self._accept(self.client.release(order['order_id'],pin,data['release_operation_id'],isolation_id=isolation))
             archive=self.snapshot();archive['phase']='SUSPENDED'
-            directory=checked_path(self.path.parent/'visits');directory.mkdir(parents=True,exist_ok=True)
-            history=checked_path(directory/archive['checkout_key']);history.mkdir(exist_ok=True)
-            write_json_atomic(checked_path(history/(data['release_operation_id']+'.json')),archive)
-            write_json_atomic(checked_path(directory/(archive['checkout_key']+'.json')),archive)
+            self._archive_snapshot(archive,data['release_operation_id'])
             with self.lock:
                 self.data=archive;self._save()
             self.lock_customer()
             return self.snapshot()
+
+    def _archive_snapshot(self, snapshot, operation):
+        from photobooth.booth_storage import checked_path
+        from photobooth.capture_journal import sync_directory
+        directory=checked_path(self.path.parent/'visits');directory.mkdir(parents=True,exist_ok=True)
+        history=checked_path(directory/snapshot['checkout_key']);history.mkdir(exist_ok=True)
+        write_json_atomic(checked_path(history/(operation+'.json')),snapshot)
+        sync_directory(history)
+        write_json_atomic(checked_path(directory/(snapshot['checkout_key']+'.json')),snapshot)
+        sync_directory(directory)
+        sync_directory(self.path.parent)
 
     def open_archived(self, ticket):
         import re
@@ -327,7 +344,7 @@ class KioskCheckout:
             path=checked_path(self.path.parent/'visits'/(parts[2]+'.json'))
             if path.stat().st_size>65536:raise RuntimeError('Bounded original journal required')
             candidate=json.loads(path.read_text())
-            if (candidate.get('context')!=self.context or candidate.get('phase')!='SUSPENDED'
+            if (candidate.get('context')!=self.context or candidate.get('phase') not in {'SUSPENDED','COMPLETED'}
                     or candidate.get('checkout_key')!=parts[2] or candidate.get('version')!=1
                     or quote_checkout(candidate['quantities']).total_amount!=candidate['amount']):
                 raise RuntimeError('Original saved visit required')
@@ -377,7 +394,9 @@ class KioskCheckout:
             if phase == 'COMPLETING':
                 result = self._transition(order,'COMPLETED',self.data['transaction_id'])
                 self._accept(result)
-                self.data['phase'] = 'COMPLETED'; self._save()
+                finished=self.snapshot();finished['phase']='COMPLETED'
+                self._archive_snapshot(finished,'completed')
+                self.data=finished;self._save()
                 return self.snapshot()
             if phase == 'CANCELLING' and order:
                 try:

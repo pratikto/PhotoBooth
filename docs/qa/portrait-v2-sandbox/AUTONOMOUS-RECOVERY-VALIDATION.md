@@ -1,0 +1,47 @@
+# AR-12 — final source validation and external acceptance gates
+
+29 October 2026. Read all AR contracts/checkpoint/matrix/provider/operations and
+new release/supervisor/inbox tests plus original full runner, workflow and native
+renderer before final validation. Existing branch, no production/deployment.
+
+Plan before changes: close conclusive fault-matrix gaps with actual child-process
+release/SQLite WAL exits, locked writer rollback, and complete-session late return
+coverage. A normally completed customer's ticket must keep an exact bounded archive
+before another visit replaces the live journal, with current proof and busy-booth
+guards; completed service may reopen saved result only. Extend native fixture
+capture through two-phase release/return, record source hash/dirty state and verify
+screen QR formats without emitting payloads. Add portable Windows backend/file
+checks with their dependencies. Then commit/push final functional source, run one
+complete applicable regression and pinned native captures, inspect matching CI,
+and publish exact PASS/FAIL/SKIP/NOT_RUN matrix. Device/provider gaps stay explicit.
+No source test can certify actual merchant, camera, paper, retention or public TLS.
+
+## AR-12.a — final functional fault-gap increment
+
+Normal COMPLETED journals now archive before becoming replaceable. Original valid
+ticket can reopen saved result only after current proof and a free-booth check;
+it cannot admit another capture or interrupt another visitor. PREPARE recovers
+only an exact server allocation whose operation matches local intent after a lost
+binding ACK. Local isolation can retire a previously done session when the newly
+paid order has no allocation; active/uncertain ownership still refuses.
+Journal and archive renames fsync their parent directories on supported POSIX;
+Windows lacks this Python directory-fsync primitive, so actual filesystem/power-loss
+acceptance remains open rather than claimed equivalent. No media is rewritten.
+
+Fault fixtures now use actual os._exit after PREPARE/ACK, reopen SQLite WAL with
+integrity_check, and verify failed locked-writer BEGIN cannot partially fence or
+release rights. Native recorder extends through worker isolation, release/ads,
+lookup and original returning capture; source SHA plus dirty state are recorded.
+Windows CI installs backend/OpenCV extras and checks the ledgers/file/crash gates
+separately from actual hardware. Existing startup/default checks remain.
+
+Focused **57 PASS / zero FAIL/ERROR/SKIP**:
+`test_autonomous_recovery_faults test_release_session test_kiosk_v2_sandbox_widgets test_customer_claim_session test_qris_session test_checkout_release`.
+After parent-directory durability change, focused core rerun recorded below.
+Full suite and final-source native evidence follow the committed source; no actual
+Windows/Ubuntu/merchant/paper/Drive/public HTTPS acceptance inferred.
+Final durability/core rerun: **25 PASS**, zero failures/errors/skips,
+`test_release_session test_autonomous_recovery_faults test_qris_session test_checkout_release`.
+Includes a new paid/unallocated visit safely isolating the previous already-done
+photo worker while retaining its original output. Source is ready for the single
+final full regression and pinned visual/CI checks; release acceptance is not implied.
