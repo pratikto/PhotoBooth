@@ -1,5 +1,12 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+## 28 October — priority roadmap: autonomous QRIS + photo recovery (DESIGN ONLY)
+
+The owner requested a comprehensive, Codex-readable **unattended-first** design and staged implementation reference. [Master engineering contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-MASTER-PLAN.md) · [AR-00–AR-13 execution roadmap](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-ROADMAP.md) · [official Midtrans research](qa/portrait-v2-sandbox/MIDTRANS-PROVIDER-CONTRACT.md) · [crash/acceptance tests](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-TEST-MATRIX.md) · [operational safeguards](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATIONS.md).
+
+**Current state:** Documentation/planning only; the prior backend PIN recovery protocol `2e5efe5` is in source, but unattended native recovery, customer claim, photo reconstruction, ledger split and guarded automatic restart are **not yet implemented**. Do not mark roadmap stages complete, rerun stable tests merely due to docs, or claim merchant/device certification. Begin at AR-00, preserve protected `old` and original journal evidence, and use stage-local tests/commits on the existing branch. Existing prioritization/feature IDs remain in force; this scope adds implementation detail to FEAT-007/009/020/022 without treating unapproved production integration as delivered.
+
+
 Latest owner Sandbox report is BUG-021: image disappears while remaining on the
 payment page. Pending action-URL overwrite is reproduced and corrected with
 182 focused PASS; exact laptop cause and retest remain unconfirmed.
