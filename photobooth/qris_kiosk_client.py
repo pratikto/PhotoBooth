@@ -11,6 +11,7 @@ STATES = {'CREATED', 'PENDING', 'PAID', 'EXPIRED', 'FAILED', 'CANCELLED', 'REVIE
 
 
 class QrisKioskClient:
+    customer_capability_supported = True
     def __init__(self, base_url, booth_id, booth_token, *, timeout=8, session=None,
                  allow_local_http=False, expected_mode='sandbox'):
         if expected_mode not in {'sandbox', 'mock'}:
@@ -68,11 +69,31 @@ class QrisKioskClient:
             raise ValueError('Unexpected checkout response')
         return result
 
-    def create_order(self, quantities, checkout_key):
+    def create_order(self, quantities, checkout_key, *, customer_capability_hash=None):
+        payload = {'quantities': quantities}
+        if customer_capability_hash is not None:
+            if not isinstance(customer_capability_hash,str) or re.fullmatch(r'[a-f0-9]{64}',customer_capability_hash) is None:
+                raise ValueError('Invalid customer credential binding')
+            payload['customer_capability_hash'] = customer_capability_hash
         result = self._order(self._call('POST', '/api/orders',
-            payload={'quantities': quantities}, checkout_key=checkout_key))
+            payload=payload, checkout_key=checkout_key))
         if result.get('checkout_key') != checkout_key or result.get('quantities') != quantities:
             raise ValueError('Checkout identity mismatch')
+        return result
+
+    def customer_claim(self, order_id, capability, operation_id):
+        identifier(order_id,maximum=50)
+        identifier(operation_id,minimum=16)
+        if not isinstance(capability,str) or re.fullmatch(r'[A-Za-z0-9_-]{43}',capability) is None:
+            raise ValueError('Original customer ticket required')
+        result = self._order(self._call('POST','/api/orders/'+order_id+'/customer-claim',
+            payload={'capability':capability,'operation_id':operation_id}),order_id)
+        proof = result.get('customer_claim') or {}
+        if (proof.get('verified') is not True or proof.get('operation_id') != operation_id
+                or type(proof.get('payment_verified')) is not bool or result.get('closed')
+                or (proof['payment_verified'] and (result.get('state')!='PAID' or not result.get('grant_id')))
+                or (not proof['payment_verified'] and result.get('state')!='PENDING')):
+            raise ValueError('Customer proof acknowledgement mismatch')
         return result
 
     def status(self, order_id):

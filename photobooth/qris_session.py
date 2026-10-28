@@ -6,11 +6,13 @@ have started is held for operator recovery; it cannot create another session
 or resend an uncertain printer job.
 """
 import copy
+import hashlib
 import json
 from pathlib import Path
 import threading
 import time
 import uuid
+import secrets
 
 from photobooth.manifest_io import write_json_atomic
 from photobooth.payment_quote import quote_checkout
@@ -63,8 +65,18 @@ class KioskCheckout:
         self.lease = KioskLease(str(self.path) + '.lock')
         self.data = None
         self._reconcile_at = 0
+        self._customer_ticket = None
+        self._opened_existing = False
+        self._ownership_confirmed = False
+        self._ownership_expires = 0
+        self._permit_issued = False
+        self._ticket_acknowledged = False
+        self._last_claim_ticket = None
+        self._resume_payment_confirmed = False
+        self._privacy_generation = 0
         try:
             if self.path.exists():
+                self._opened_existing = True
                 if self.path.stat().st_size > 65536:
                     raise ValueError('Payment journal is too large')
                 self.data = json.loads(self.path.read_text(encoding='utf-8'))
@@ -94,6 +106,107 @@ class KioskCheckout:
         state = self.snapshot()
         return state is not None and state['phase'] not in {'COMPLETED', 'CANCELLED'}
 
+    @property
+    def customer_claim_required(self):
+        return (bool(getattr(self.client,'customer_capability_supported',False)) and self.active
+                and self._opened_existing and not self._ownership_confirmed)
+
+    def customer_ticket(self):
+        with self.lock:
+            if (not self._customer_ticket or not self.data or self._opened_existing
+                    or not (self.data.get('order') or {}).get('customer_capability_bound')):
+                return None
+            return ':'.join(('MEONG-RECOVERY-V1',self.context['booth_id'],
+                             self.data['checkout_key'],self._customer_ticket))
+
+    def acknowledge_ticket(self):
+        if not self.customer_ticket():
+            raise RuntimeError('Original live customer ticket required')
+        self._ticket_acknowledged = True
+        self._customer_ticket = None
+        self._last_claim_ticket = None
+        self._resume_payment_confirmed = False
+
+    @property
+    def ticket_acknowledged(self):
+        return self._ticket_acknowledged
+
+    def lock_customer(self):
+        """Privacy lock after inactivity/minimize; never discard payment rights."""
+        with self.lock:
+            self._privacy_generation += 1
+            self._opened_existing = True
+            self._ownership_confirmed = False
+            self._ownership_expires = 0
+            self._customer_ticket = None
+            self._last_claim_ticket = None
+            self._resume_payment_confirmed = False
+            self._ticket_acknowledged = False
+
+    def customer_claim(self, ticket):
+        if not isinstance(ticket,str) or len(ticket)>200:
+            raise ValueError('Original customer ticket required')
+        parts=ticket.strip().split(':')
+        if (len(parts)!=4 or parts[:2]!=['MEONG-RECOVERY-V1',self.context['booth_id']]
+                or not self.data or parts[2]!=self.data['checkout_key'] or not self.data.get('order')):
+            raise ValueError('Original customer ticket required')
+        with self.worker_lock:
+            with self.lock:
+                generation=self._privacy_generation
+                operation=self.data.setdefault('customer_claim_operation_id',uuid.uuid4().hex)
+                self._save()
+            result=self.client.customer_claim(self.data['order']['order_id'],parts[3],operation)
+            self._accept(result)
+            with self.lock:
+                if generation != self._privacy_generation:
+                    raise RuntimeError('Customer proof callback belongs to a retired visit')
+                allocation=result.get('fulfillment') or {}
+                if result['state']=='PENDING' and not self.data.get('transaction_id'):
+                    self.data['phase']='WAITING'
+                elif allocation.get('transaction_id'):
+                    if (self.data.get('allocation_operation_id')!=allocation.get('allocation_operation_id')
+                            or self.data.get('transaction_id') not in (None,allocation['transaction_id'])):
+                        raise RuntimeError('Original allocation requires operator review')
+                    self.data['transaction_id']=allocation['transaction_id']
+                    self.data['phase']='RECOVERY'
+                elif result['service_state']=='RESERVED' and not self.data.get('transaction_id'):
+                    self.data['phase']='RESERVED'
+                else:
+                    raise RuntimeError('Original service state requires review')
+                self._ownership_confirmed=True
+                self._ownership_expires=time.monotonic()+60
+                self._permit_issued=False
+                self._ticket_acknowledged=True
+                self._last_claim_ticket=ticket
+                self._resume_payment_confirmed=(result.get('customer_claim') or {}).get('payment_verified') is True
+                self._save()
+            return self.snapshot()
+
+    def resume_binding(self):
+        if not self._ownership_confirmed or time.monotonic()>=self._ownership_expires:
+            raise RuntimeError('Fresh original customer proof required')
+        order=self.data.get('order') or {};allocation=order.get('fulfillment') or {}
+        if (not allocation.get('transaction_id') or allocation.get('transaction_id')!=self.data.get('transaction_id')
+                or allocation.get('allocation_operation_id')!=self.data.get('allocation_operation_id')
+                or not self._resume_payment_confirmed or order.get('state')!='PAID'):
+            raise RuntimeError('Exact original photo binding required')
+        binding={key:allocation[key] for key in ('fulfillment_id','transaction_id',
+            'allocation_operation_id','contract_hash','booth_id','merchant_id')}
+        binding.update(order_id=order['order_id'],grant_id=order['grant_id'])
+        return binding
+
+    def resume_permit(self):
+        if (self._permit_issued or not self._last_claim_ticket or not self._ownership_confirmed
+                or time.monotonic()>=self._ownership_expires):
+            raise RuntimeError('Resume permission already issued')
+        # Re-verify the original secret/action and current settlement at the
+        # deliberate resume action, not a stale GUI flag or cached poll result.
+        self.customer_claim(self._last_claim_ticket)
+        from photobooth.resume_authority import trusted_resume_permit
+        permit=trusted_resume_permit(self.resume_binding())
+        self._permit_issued=True
+        return permit
+
     def begin(self, quantities):
         quote = quote_checkout(quantities)
         with self.lock:
@@ -104,6 +217,16 @@ class KioskCheckout:
             self.data = {'version': 1, 'context': self.context, 'checkout_key': uuid.uuid4().hex,
                          'quantities': dict(quantities), 'amount': quote.total_amount,
                          'phase': 'CREATING', 'order': None, 'transaction_id': None}
+            self._opened_existing=False
+            self._ownership_confirmed=False
+            self._permit_issued=False
+            self._ticket_acknowledged=False
+            self._last_claim_ticket=None
+            self._resume_payment_confirmed=False
+            self._customer_ticket=None
+            if getattr(self.client,'customer_capability_supported',False):
+                self._customer_ticket=secrets.token_urlsafe(32)
+                self.data['customer_capability_hash']=hashlib.sha256(self._customer_ticket.encode()).hexdigest()
             # This must happen BEFORE the first network request.
             self._save()
             return self.snapshot()
@@ -125,7 +248,7 @@ class KioskCheckout:
             if self.data is None:
                 return None
             phase, order = self.data['phase'], self.data['order']
-            if phase == 'RECOVERY':
+            if phase == 'RECOVERY' or (self.customer_claim_required and order):
                 # Observe payment privately after restart, never allocate or
                 # display previous media. Legacy/third-party clients without
                 # this narrow method retain the original conservative hold.
@@ -164,7 +287,9 @@ class KioskCheckout:
                     # authoritative poll determines which customer keeps it.
                     result = self.client.status(order['order_id'])
             elif order is None:
-                result = self.client.create_order(self.data['quantities'], self.data['checkout_key'])
+                options = ({'customer_capability_hash':self.data['customer_capability_hash']}
+                           if self.data.get('customer_capability_hash') else {})
+                result = self.client.create_order(self.data['quantities'], self.data['checkout_key'],**options)
             else:
                 result = self.client.status(order['order_id'])
             self._accept(result)  # persist identity before fetching an image
@@ -188,11 +313,11 @@ class KioskCheckout:
     def prepare_capture(self):
         with self.worker_lock:
             with self.lock:
-                if self.data['phase'] != 'RESERVED' or not self.data['order'].get('grant_id'):
+                if self.customer_claim_required or self.data['phase'] != 'RESERVED' or not self.data['order'].get('grant_id'):
                     raise RuntimeError('A verified permit is required')
                 allocate = getattr(self.client, 'allocate', None)
                 if callable(allocate):
-                    self.data['allocation_operation_id'] = uuid.uuid4().hex
+                    self.data.setdefault('allocation_operation_id',uuid.uuid4().hex)
                     self.data['allocation_ready'] = False
                 self.data['phase'] = 'STARTING'; self._save()
                 order = self.data['order']
@@ -235,5 +360,11 @@ class KioskCheckout:
 
     def close(self):
         with self.lock:
-            self.client.close()
-            self.lease.close()
+            self._customer_ticket=None
+            self._last_claim_ticket=None
+            self._resume_payment_confirmed=False
+            self._ownership_confirmed=False
+            try:
+                self.client.close()
+            finally:
+                self.lease.close()

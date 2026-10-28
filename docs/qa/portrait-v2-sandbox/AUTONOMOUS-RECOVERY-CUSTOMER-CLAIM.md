@@ -63,3 +63,29 @@ HTTP fixture attempt was terminated and the permitted run passed. No provider
 network, customer data or actual hardware was used. Full regression remains
 reserved for the last functional roadmap source; commercial token/support
 policy and device/merchant acceptance stay separate.
+
+## AR-06.b original-process ticket and claim controller
+
+QrisKioskClient advertises capability support. KioskCheckout mints 256-bit raw
+secret in original-process memory and persists only SHA-256 before first I/O;
+API atomically binds hash with order. Restart cannot redisplay/reissue the raw
+ticket and cannot admit a saved RESERVED grant without original proof. Old
+clients/journals without this feature remain conservative; no guessed migration.
+
+Original ticket format binds version/booth/checkout key/secret. Authenticated
+claim validates exact original context and saves only claim action ID. Pending
+ownership may reopen the payment path but cannot grant media; settled ownership
+can reuse exact allocation. In-memory proof expires for resume issuance after
+60 seconds, and the deliberate resume action rechecks the original secret/action
+and current settlement before issuing one bound ResumePermit. Close/privacy lock
+clears memory credentials; a generation check fences late claim replies.
+
+Initial four fixtures: one FAIL/three ERROR; pending-ownership test initially
+ERROR before its safe observation-only path. Final **92 focused PASS / zero
+FAIL/ERROR/SKIP**, including six new session cases and native Sandbox compatibility.
+Command extends the earlier AR-06.a groups with test_customer_claim_session,
+test_kiosk_v2_sandbox and test_kiosk_v2_sandbox_widgets (SDL offscreen/dummy audio).
+Late callbacks after privacy lock, raw-secret absence from journal, rebooted
+RESERVED denial, wrong-booth ticket and one-use restore permission are covered.
+Ticket display/claim/restore UI remains the next AR-07 increment; no photo resume
+is mounted by this source alone. Device/merchant/production gates remain separate.

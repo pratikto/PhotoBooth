@@ -235,10 +235,14 @@ class CheckoutBackend:
         self.store.get(order_id,booth_id)
         self._creation_context(order_id)
         self.store.verify_customer_capability(order_id,booth_id,capability,operation_id)
-        self._require_settlement(order_id,booth_id)
-        order = self.store.redeem_customer_capability(order_id,booth_id,capability,operation_id)
+        order,provider_state = self._fresh_payment(order_id,booth_id)
+        paid = provider_state=='settlement' and order['state']=='PAID'
+        pending = provider_state=='pending' and order['state']=='PENDING'
+        if (not paid and not pending) or order['closed']:
+            raise CheckoutConflict('Current verified payment state required')
+        order = self.store.redeem_customer_capability(order_id,booth_id,capability,operation_id,payment_verified=paid)
         result = self.view(order)
-        result['customer_claim'] = {'verified':True,'operation_id':operation_id}
+        result['customer_claim'] = {'verified':True,'payment_verified':paid,'operation_id':operation_id}
         return result
 
     def service_transition(self, order_id, booth_id, grant_id, state, transaction_id):

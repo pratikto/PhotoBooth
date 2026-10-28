@@ -386,7 +386,7 @@ class CheckoutStore:
         if not allowed:
             raise PermissionError('Original customer proof required')
 
-    def redeem_customer_capability(self, order_id, booth_id, capability, operation_id):
+    def redeem_customer_capability(self, order_id, booth_id, capability, operation_id, *, payment_verified=True):
         # Recheck after fresh provider I/O: concurrent redemption/revocation or
         # clock expiry cannot reuse the earlier validation as a cached permit.
         self.verify_customer_capability(order_id,booth_id,capability,operation_id)
@@ -400,12 +400,15 @@ class CheckoutStore:
             if (row['revoked'] or row['expires_at'] <= self.now()
                     or row['claim_operation_id'] not in (None,operation_id)):
                 raise PermissionError('Original customer proof required')
-            if order['state'] != 'PAID' or order['closed']:
+            eligible = order['state']=='PAID' if payment_verified else (
+                order['state']=='PENDING' and order['service_state']=='NONE' and not order['local_transaction_id'])
+            if not eligible or order['closed']:
                 raise CheckoutConflict('Current paid obligation required')
-            if not order['grant_id']:
+            if payment_verified and not order['grant_id']:
                 self.db.execute("UPDATE checkouts SET grant_id=?,service_state='RESERVED' WHERE id=?",
                                 (uuid.uuid4().hex,order_id))
-            self._ensure_fulfillment(self._row(order_id,booth_id))
+            if payment_verified:
+                self._ensure_fulfillment(self._row(order_id,booth_id))
             if row['claim_operation_id'] is None:
                 self.db.execute('''UPDATE checkout_customer_capabilities SET claim_operation_id=?,claimed_at=?
                     WHERE order_id=?''',(operation_id,self.now(),order_id))
