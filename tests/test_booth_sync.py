@@ -235,7 +235,10 @@ class BoothSyncTests(unittest.TestCase):
                              [txs[0].transaction_id]*2+[txs[1].transaction_id]*2)
             for tx in txs:self.assertEqual(json.loads(tx.manifest_path.read_text())['upload_status'],'UPLOAD_COMPLETE')
 
-    def test_customer_arrival_inside_content_chunk_uploads_before_remaining_content_and_resumes(self):
+    @patch('photobooth.booth_sync.time.monotonic', return_value=100.0)
+    def test_customer_arrival_inside_content_chunk_uploads_before_remaining_content_and_resumes(self, _clock):
+        # Make the first 60-second content check due independently of host uptime.
+        # This case asserts chunk-boundary customer priority, not startup timing.
         from photobooth.content_cache import ContentCache
         from tests.test_content_cache import fixture
         with TemporaryDirectory() as folder:

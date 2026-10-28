@@ -1,5 +1,20 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-12.e verified CI history and deterministic content fixture
+
+Baseline `e303cdf4db3f009d2f4ed1a075e160d17aaa8bdb` refreshed/fast-forwarded cleanly.
+Latest runtime `635de92`; three successful jobs at CI `40756922129` / `b5931c8`.
+Linux failed the content-priority test at `content.pending`, not an identified
+photo renderer failure. Mock monotonic 1.0 reproduces that assertion; 100.0 passes.
+Historical runner clock unknown. Set that fixture's clock explicitly; unchanged
+runtime/assertions. Focused **33 PASS / zero failures/errors/skips**, 2.543s.
+Next: final full run at this test commit, native manifest/QR checks, full matrix
+classification and AR-13 conditional acceptance/readiness report. Previous
+1094/1091/3 raw log unavailable here; never invent its provenance. Disposable
+`work/` only local; no unpushed runtime changes or customer state. External
+Windows/Ubuntu/merchant/paper/Drive gates stay open; OPS NOT_STARTED.
+Detailed [investigation](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-VALIDATION.md).
+
 ## 29 October — owner-approved future Operator Settings package (DOCS ONLY; AFTER AR-13 priority)
 
 **Do not switch implementation from current AR-00 → AR-13 recovery work to OPS.** Continue the first unfinished safe AR micro-increment recorded in the [live checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md), latest commits and the stage-specific handover below; do not trust historical stale stage headings. AR-12/AR-13 validation, explicit readiness, merchant/device NOT_RUN gates and separate release approval remain higher priority. This paragraph records a **queued follow-up**, not a completed feature or changed AR plan.

@@ -1,9 +1,9 @@
 # Autonomous recovery — session checkpoint and resume contract
 
-**Checkpoint status:** AR-09.c1 focused VERIFIED / roadmap IN PROGRESS, 29 October 2026 (Asia/Jakarta)
+**Checkpoint status:** AR-12.e CI history VERIFIED / deterministic fixture corrected; final evidence next, 29 October 2026 (Asia/Jakarta)
 **Branch:** `feature/portrait-kiosk-v2-next` (existing; no master merge)
 **Recovery implementation:** Source work progressed through AR-12.d; later stages and external gates remain unfinished
-**Latest tested/pushed functional source:** `b38e030d2a8586f2de61dd96e8b4a590e85dde54` (86 focused PASS; final full regression deferred)
+**Latest application source:** `635de92c0f8fba9189981ebf2f168bff8b7a52af`; successful three-job CI at `b5931c8ef2e3d7b800e024c38a653fef5b4b4a1e`. Current increment changes a test fixture only.
 **Historical audit baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
 **Current documentation handover:** See `docs/DEVELOPMENT_HANDOVER.md` and verify current remote HEAD; never assume the HEAD printed in a dated checkpoint is still current.
 
@@ -34,7 +34,27 @@ The owner prefers **frequent small tested commits AND remote pushes** because a 
 | Next *small* action | File/function, intended test and AR substep |
 | Safe rollback | Previous commit and retained-data plan |
 
-## Current implementation checkpoint — AR-12.d
+## Current implementation checkpoint — AR-12.e
+
+Remote baseline `e303cdf4db3f009d2f4ed1a075e160d17aaa8bdb` independently verified;
+clean required-branch checkout fast-forwarded without losing the prior `work`
+branch. All four requested CI runs/jobs/logs reconciled. Windows Errno 9 repair
+is confirmed. Linux failed the content-priority fixture; controlled monotonic
+1.0 reproduces the exact assertion, 100.0 passes. Historical runner uptime
+is unknown. Fixture clock now explicitly 100.0; all assertions/runtime unchanged.
+Focused **33 PASS / zero failures/errors/skips**, 2.543s:
+`.venv/bin/python tools/run_kiosk_unittests.py test_booth_sync test_content_cache`.
+See [investigation](AUTONOMOUS-RECOVERY-VALIDATION.md#ar-12e--independently-verified-ci-history-and-deterministic-fixture-29-october).
+
+Next: one complete regression at this test commit; verify native 28 PNGs/QRs
+captured at clean `e303cdf` (same runtime), pin evidence/matrix and publish AR-13
+readiness. The previous reported 1094/1091/3 log is unavailable here; do not
+invent its command/source/dirty metadata. Actual devices/merchant/phone/paper/
+Drive/public HTTPS remain NOT_RUN/BLOCKED. No OPS runtime or production enabled.
+Only disposable `work/` local evidence remains untracked; no customer data.
+Rollback: inverse the test-only patch, preserve all durable customer state.
+
+## Historical implementation checkpoint — AR-12.d
 
 - Base / last verified remote: `635de92c0f8fba9189981ebf2f168bff8b7a52af`.
 - Completed: retain Windows pass and expose Linux isolated-photo failure details. CI 40756011109 Windows autonomous/native and pure jobs PASS; desktop P3 group FAIL with unknown cause. Failure-only report annotation added, no assertions/application changes. Final local full rerun still running.

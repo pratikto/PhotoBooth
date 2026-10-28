@@ -1,5 +1,60 @@
 # AR-12 — final source validation and external acceptance gates
 
+## AR-12.e — independently verified CI history and deterministic fixture (29 October)
+
+Refreshed remote `e303cdf4db3f009d2f4ed1a075e160d17aaa8bdb`; clean checkout
+fast-forwarded on the required branch. Latest application source is
+`635de92c0f8fba9189981ebf2f168bff8b7a52af`; CI/workflow source is
+`b5931c8ef2e3d7b800e024c38a653fef5b4b4a1e`. The subsequent twelve commits
+change documentation only. No runtime changes are needed for this increment.
+
+Connected GitHub job logs now independently establish:
+
+| Run | Checked-out SHA | Pure / Linux desktop / Windows |
+| --- | --- | --- |
+| [40754677245](https://github.com/pratikto/PhotoBooth/actions/runs/40754677245) | `09788b1cd18c1dcf4be2357693543323103e2816` | PASS / cancelled / FAIL |
+| [40755284102](https://github.com/pratikto/PhotoBooth/actions/runs/40755284102) | `cfacc18370559f4eddc44bda1c0a12572f89b5b3` | PASS / cancelled / FAIL |
+| [40756011109](https://github.com/pratikto/PhotoBooth/actions/runs/40756011109) | `635de92c0f8fba9189981ebf2f168bff8b7a52af` | PASS / FAIL / PASS |
+| [40756922129](https://github.com/pratikto/PhotoBooth/actions/runs/40756922129) | `b5931c8ef2e3d7b800e024c38a653fef5b4b4a1e` | PASS / PASS / PASS |
+
+Windows diagnostic job `123053061059` records two `test_output_journal` errors:
+read-only PNG `os.fsync` raises Errno 9. Commit `635de92` uses non-truncating
+`r+b` and adds real output child-exit tests. Final Windows job `123058212487`
+runs 47 autonomous cases, 15 creation cases, 55 startup cases and 103 native
+audio cases successfully (Windows Server 2025, CPython 3.12.10, dummy audio).
+
+Linux failed job `123055133199` names
+`test_booth_sync.BoothSyncTests.test_customer_arrival_inside_content_chunk_uploads_before_remaining_content_and_resumes`:
+line 257 `assertTrue(content.pending)` failed, 103 run / 1 failure. Final job
+`123058212482` passes the same 103-case group plus 343 Sandbox/recovery cases,
+80 Health cases and 111 native cases (one opt-in model SKIP), Ubuntu 26.04,
+CPython 3.12.15. Between these runs, `b5931c8` added failure diagnostics only;
+it did not repair application code or change test assertions.
+
+Controlled local reproduction at clean `e303cdf`: the original case FAILs at
+mock monotonic time 1.0 and PASSes at 100.0. `BoothDriveWorker` initializes
+`_content_checked=0` and admits its first content check only at time >=60.
+Thus a host-clock-dependent fixture is proven; the failed runner's actual
+monotonic value was not logged, so its historical cause is not conclusively
+established. The fixture now explicitly sets monotonic time to 100.0. Every
+priority/order/pending/pointer assertion remains intact; no sleep, timeout,
+tolerance or runtime scheduling policy changes. Initial content scheduling can
+still defer on a host with uptime under 60 seconds; device timing is separate.
+
+Focused command: `.venv/bin/python tools/run_kiosk_unittests.py test_booth_sync test_content_cache`.
+Focused result: **33 PASS / zero FAIL/ERROR/SKIP**, 2.543s. Final complete regression will be pinned in the next evidence
+increment. Original 1094/1091/3 full-run log was not found in this restored
+workspace or published AR evidence: treat it as a previous report, not independently
+verified metadata. One new complete run is justified by this test correction and
+missing provenance, not by the twelve documentation commits. Final native
+captures at clean `e303cdf` use unchanged application/renderer source; hashes,
+QR checks and coverage limits follow in the evidence package.
+
+Reviewed: repository governance/current status/decisions/bugs/test ledger, all AR
+stage contracts and source tests, provider/operations/matrix, and all five queued
+OPS documents. OPS remains NOT_STARTED. Rollback this test-only change with a
+scoped inverse; retain every customer ledger, claim, image and delivery job.
+
 29 October 2026. Read all AR contracts/checkpoint/matrix/provider/operations and
 new release/supervisor/inbox tests plus original full runner, workflow and native
 renderer before final validation. Existing branch, no production/deployment.
