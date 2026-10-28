@@ -142,3 +142,16 @@ cannot preempt an active one. Focused **37 PASS / zero FAIL/ERROR/SKIP**:
 `test_release_session test_customer_claim_session test_qris_session test_photo_reconstruction`.
 Three new real-HTTP/synthetic-photo cases cover old media preservation, release/
 new visit/return, lost ACK identity and boolean-receipt denial. No hardware effect.
+AR-09.c5 delivered: native operator first PREPAREs with transient PIN, serialized
+photo worker isolates exact session, then operator re-enters PIN to ACK release.
+PIN is never retained between steps; no new visitor/ads until server ACK and
+archive are durable. Pause retires a late isolation receipt. Existing ad view has
+a Sandbox-only saved-ticket entry; archived proof returns original session and
+current service fence without another payment or capture. Busy/stale controls
+remain guarded. Wrong/uncertain local state stays held. Core source test coverage
+now includes an UNCERTAIN print that cannot yield isolation or free the booth.
+Focused **47 PASS / zero FAIL/ERROR/SKIP**:
+`test_kiosk_v2_sandbox_widgets test_release_session test_checkout_release test_qris_recovery`;
+additional isolation rerun **4 PASS** after the uncertain-print fixture. Actual
+Windows/Ubuntu/merchant/paper/cloud NOT_RUN; final native captures/full regression
+follow AR-12. Release remains Sandbox-only, no fake refund/completion or deletion.

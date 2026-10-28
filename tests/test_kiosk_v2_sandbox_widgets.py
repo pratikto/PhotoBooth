@@ -458,3 +458,26 @@ class SandboxWidgetTests(unittest.TestCase):
             self.assertNotIn('operator_report',app._sandbox_view)
             self.assertTrue(f.flow.customer_claim_required)
             self.assertEqual(f.provider.charges,1)
+
+    def test_native_two_phase_operator_release_and_returning_ticket_reuse_original_session(self):
+        with self.booth(recovery_pin='12345678') as (app,f):
+            ticket=self.start_private_capture(app,f)
+            app._photo_submit('capture',np.zeros((120,160,3),dtype=np.uint8));self.settle(app)
+            tx=app._photo_view['transaction_id'];oid=f.flow.snapshot()['order']['order_id']
+            app._sandbox_operator_open()
+            app._sandbox_operator_input.text='12345678';app._sandbox_operator_inspect();self.settle(app)
+            app._sandbox_operator_input.text='12345678';app._sandbox_operator_release();self.settle(app)
+            self.assertIsNotNone(app._sandbox_isolation)
+            self.assertFalse(f.store.get(oid)['closed'])
+            self.assertEqual(app.navigation.page,SANDBOX_CHECKOUT)
+            app._sandbox_operator_input.text='12345678';app._sandbox_operator_release();self.settle(app)
+            self.assertEqual(app.navigation.page,ADVERT)
+            self.assertTrue(f.store.get(oid)['closed'])
+            self.assertEqual(f.store.fulfillment(oid,'PB001')['obligation_state'],'OWED')
+            app._sandbox_open_saved();app._sandbox_claim_input.text=ticket
+            app._sandbox_claim();self.settle(app);app._sandbox_resume();self.settle(app)
+            self.assertEqual(app.navigation.page,CAPTURE)
+            self.assertEqual(app._photo_view['transaction_id'],tx)
+            self.assertEqual(app._photo_view['captured'],1)
+            self.assertTrue(app._sandbox_can_capture())
+            self.assertEqual(f.provider.charges,1)

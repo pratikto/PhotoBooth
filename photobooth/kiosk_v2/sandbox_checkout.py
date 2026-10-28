@@ -12,7 +12,7 @@ from .demo_game import GameJobs
 
 ACTIONS = {'boot', 'begin', 'begin_ready', 'check', 'cancel', 'prepare', 'started', 'complete', 'recover',
            'ticket_saved', 'customer_claim', 'scan_claim', 'resume', 'resumed','fulfillment_issue',
-           'operator_inspect'}
+           'operator_inspect','prepare_release','acknowledge_release'}
 
 
 def simulator_qr_url(view):
@@ -145,7 +145,18 @@ class SandboxCheckout:
         return self.view()
 
     def customer_claim(self, ticket):
-        self.flow.customer_claim(ticket)
+        if self.flow.active:
+            self.flow.customer_claim(ticket)
+        else:
+            self.flow.open_archived(ticket)
+        return self.view()
+
+    def prepare_release(self, pin):
+        self.flow.prepare_release(pin)
+        return self.view()
+
+    def acknowledge_release(self, pin, receipt):
+        self.flow.acknowledge_release(pin,receipt)
         return self.view()
 
     def scan_claim(self, frame):

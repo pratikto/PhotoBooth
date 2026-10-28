@@ -574,6 +574,9 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, SandboxViews, Ope
         shell.add_widget(self._action(
             "MAIN MEONG FLY", lambda: self._choose_game("manual"),
             variant="secondary"))
+        if self._sandbox_enabled:
+            shell.add_widget(self._action('PUNYA TIKET PEMULIHAN',self._sandbox_open_saved,
+                variant='tertiary',height=48))
 
         # Photo entry already requires the tutorial; no separate help action.
         # Invitation remains a PREVIEW-only operator action.

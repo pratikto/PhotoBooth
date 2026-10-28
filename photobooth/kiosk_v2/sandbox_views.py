@@ -28,6 +28,8 @@ class SandboxViews:
         self._sandbox_pending_issue = None
         self._sandbox_operator_mode = False
         self._sandbox_operator_input = None
+        self._sandbox_isolation = None
+        self._sandbox_isolation_epoch = 0
 
     def _sandbox_submit(self, action, *args):
         if self._closed or self._suspended or not self._sandbox_jobs:
@@ -54,6 +56,7 @@ class SandboxViews:
             self._sandbox_operator_input.text=''
         self._sandbox_operator_input=None
         self._sandbox_operator_mode=False
+        self._sandbox_isolation=None
         self._sandbox_claim_input=None
         self._cancel_countdown()
         self._sandbox_consent=False
@@ -79,6 +82,32 @@ class SandboxViews:
             return
         pin=field.text;field.text=''
         self._sandbox_submit('operator_inspect',pin)
+        self._show()
+
+    def _sandbox_operator_release(self):
+        if (not self._sandbox_operator_mode or self._sandbox_jobs.busy
+                or (self._photo_jobs and self._photo_jobs.busy) or not self._sandbox_operator_input):
+            return
+        pin=self._sandbox_operator_input.text;self._sandbox_operator_input.text=''
+        if self._sandbox_isolation:
+            receipt=self._sandbox_isolation;self._sandbox_isolation=None
+            self._sandbox_submit('acknowledge_release',pin,receipt)
+        else:
+            self._sandbox_submit('prepare_release',pin)
+        self._show()
+
+    def _sandbox_open_saved(self):
+        if (not self._sandbox_enabled or not self._sandbox_jobs.store or self._sandbox_jobs.busy
+                or self._sandbox_jobs.store.flow.active or (self._photo_jobs and self._photo_jobs.busy)):
+            return
+        if self._photo_jobs and self._photo_jobs.service and self._photo_jobs.service.transaction:
+            if self._photo_jobs.service.phase!='done':
+                return
+            self._photo_jobs.submit('reset')
+        self._sandbox_operator_mode=False;self._sandbox_consent=False
+        self._photo_view={}
+        self._sandbox_view={'phase':'CLAIM_LOOKUP','customer_claim_required':True}
+        self.navigation.page=SANDBOX_CHECKOUT
         self._show()
 
     def _sandbox_report_issue(self, reason):
@@ -169,7 +198,9 @@ class SandboxViews:
         if self._sandbox_jobs.busy:
             return
         phase = (self._sandbox_view or {}).get('phase')
-        if phase not in {'IDLE','QUOTE','CANCELLED','COMPLETED'}:
+        if phase not in {'IDLE','QUOTE','CANCELLED','COMPLETED','SUSPENDED','CLAIM_LOOKUP'}:
+            return
+        if phase=='CLAIM_LOOKUP' and self._sandbox_jobs.store.flow.active:
             return
         self._sandbox_view = None
         self.navigation.page = TEMPLATES if phase == 'QUOTE' else PHOTO_CONFIRM
@@ -199,6 +230,16 @@ class SandboxViews:
 
     def _sandbox_photo_outcome(self, outcome):
         """Called before photo navigation. No server ACK means no camera countdown."""
+        if self._sandbox_enabled and outcome.action=='isolate':
+            self._photo_view={}
+            if (self._sandbox_operator_mode and self._sandbox_isolation_epoch==self._sandbox_privacy_epoch):
+                if outcome.error:
+                    self._sandbox_error='Isolasi belum terbukti. Periksa pekerjaan perangkat; booth tetap ditahan.'
+                else:
+                    self._sandbox_isolation=outcome.value['isolation']
+                    self._sandbox_error='Sesi lokal sudah diisolasi. Masukkan PIN lagi untuk konfirmasi pelepasan.'
+                self._show()
+            return True
         if self._sandbox_enabled and outcome.error:
             reason=('CAPTURE_FAILED' if outcome.action=='capture' else
                     'COMPOSITION_FAILED' if outcome.action=='compose' else 'PHOTO_STATE_UNAVAILABLE')
@@ -251,7 +292,7 @@ class SandboxViews:
                 self._sandbox_refresh_at=time.monotonic()+2
                 return
             if outcome.error:
-                if outcome.action=='operator_inspect':
+                if outcome.action in {'operator_inspect','prepare_release','acknowledge_release'}:
                     self._sandbox_error='Pemeriksaan ditolak atau provider belum tersedia. Periksa PIN dan koneksi.'
                     self._show()
                     return
@@ -267,6 +308,20 @@ class SandboxViews:
                     self._sandbox_view = {'phase':'UNCERTAIN'}
                 self._sandbox_error = 'Status belum pasti. Cek lagi; jangan membuat pesanan atau membayar ulang.'
             else:
+                if outcome.action=='prepare_release':
+                    self._sandbox_view=outcome.value
+                    self._ensure_photo_jobs()
+                    data=outcome.value;release=data['order']['release']
+                    self._sandbox_isolation_epoch=self._sandbox_privacy_epoch
+                    self._photo_jobs.submit('isolate',data['order']['order_id'],data.get('transaction_id'),release['generation'])
+                    self._show()
+                    return
+                if outcome.action=='acknowledge_release':
+                    self._sandbox_view=outcome.value;self._sandbox_consent=False
+                    self._sandbox_operator_mode=False;self._sandbox_isolation=None
+                    self._photo_prepared=True
+                    self._sandbox_leave()
+                    return
                 if outcome.action=='resume':
                     payload=outcome.value
                     self._sandbox_view=payload['view']
@@ -277,7 +332,7 @@ class SandboxViews:
                     return
                 self._sandbox_view = outcome.value
                 phase = (outcome.value or {}).get('phase')
-                if outcome.action == 'boot' and phase in {'IDLE','COMPLETED','CANCELLED'}:
+                if outcome.action == 'boot' and phase in {'IDLE','COMPLETED','CANCELLED','SUSPENDED'}:
                     self._sandbox_leave()
                     return
                 if outcome.action=='resumed':
@@ -432,6 +487,9 @@ class SandboxViews:
         shell.add_widget(self._action('PERIKSA STATUS',self._sandbox_retry,height=52,disabled=self._sandbox_jobs.busy))
         shell.add_widget(self._action('BANTUAN OPERATOR',self._sandbox_operator_open,height=48,
             variant='tertiary',disabled=self._sandbox_jobs.busy))
+        if view.get('phase')=='CLAIM_LOOKUP':
+            shell.add_widget(self._action('KEMBALI KE IKLAN',self._sandbox_leave,height=48,
+                variant='tertiary',disabled=self._sandbox_jobs.busy))
 
     def _build_sandbox_operator(self,canvas,view):
         shell=self._frame(canvas,brand_height=48)
@@ -452,5 +510,10 @@ class SandboxViews:
         shell.add_widget(card)
         shell.add_widget(text_label(self._sandbox_error,size=13,height=90,color=GOLD))
         shell.add_widget(self._action('PERIKSA STATUS OPERATOR',self._sandbox_operator_inspect,height=52,disabled=self._sandbox_jobs.busy))
+        order=view.get('order') or {}
+        release_ready=bool(self._sandbox_isolation or (order.get('state')=='PAID' and order.get('customer_capability_bound')))
+        shell.add_widget(self._action('LEPAS BOOTH • HAK TETAP DISIMPAN' if self._sandbox_isolation else 'ISOLASI SESI LAMA',
+            self._sandbox_operator_release,height=52,disabled=self._sandbox_jobs.busy or
+            bool(self._photo_jobs and self._photo_jobs.busy) or not release_ready))
         shell.add_widget(self._action('KEMBALI KE TIKET PELANGGAN',self._sandbox_operator_close,height=52,
             variant='tertiary',disabled=self._sandbox_jobs.busy))

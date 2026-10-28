@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-09.c5: mount deliberate isolated booth release and original customer return
+
+Base / last remote-verified commit `f9aaaa2c5c39c6a1168cb1f72bb3c3b01919bcc7`. Focused 47 PASS plus four isolation PASS, zero failures/errors/skips. Native two-step PIN release waits for local receipt and server ACK; original one-photo session returns without another charge; uncertain printing stays held.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, private
+photo display or customer state reset. Next: AR-10 bounded opt-in supervisor after proven child exit, preserving default observer and business isolation; AR-11 design/offline fixture boundary, AR-12 final matrix/regression/evidence, AR-13 readiness gates.
+Only work/ scratch files local; scope and rollback in
+[stage contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATOR.md).
+
 ## 29 October — AR-09.c4: persist worker isolation and exact archived customer recovery
 
 Base / last remote-verified commit `f341b1154034cbf7d609b5df3d38960cb73ae82e`. Focused 37 PASS, zero failures/errors/skips; real HTTP and synthetic photo release/new visit/return preserves original bytes, grant and capture count; lost ACK repeats persisted IDs.

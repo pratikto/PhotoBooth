@@ -60,3 +60,11 @@ class ReleaseSessionTests(TestCase):
         self.f.flow.prepare_release('12345678')
         with self.assertRaises(RuntimeError):self.f.flow.acknowledge_release('12345678',True)
         self.assertFalse(self.f.store.get(self.binding['order_id'])['closed'])
+
+    def test_uncertain_print_never_yields_isolation_receipt_or_releases_booth(self):
+        tx=self.photo.transaction
+        tx.manifest['test_print_jobs']={'fixture':{'state':'UNCERTAIN'}}
+        self.photo.store._write_manifest(tx)
+        with self.assertRaises(RuntimeError):self.retire()
+        self.assertFalse(self.f.store.get(self.binding['order_id'])['closed'])
+        with self.assertRaises(Exception):self.f.service.begin({'template_b':1})
