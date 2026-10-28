@@ -1,0 +1,391 @@
+{
+  "source_sha": "017b417d02d63a79b1c5b21c4f0613b7d15186fc",
+  "run_id": 40688374416,
+  "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40688374416",
+  "jobs": [
+    {
+      "id": 122816541579,
+      "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-28T12:30:37Z",
+          "completed_at": "2026-10-28T12:30:38Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-28T12:30:38Z",
+          "completed_at": "2026-10-28T12:30:42Z"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-28T12:30:42Z",
+          "completed_at": "2026-10-28T12:30:46Z"
+        },
+        {
+          "name": "Install minimum desktop simulator",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-28T12:30:46Z",
+          "completed_at": "2026-10-28T12:31:06Z"
+        },
+        {
+          "name": "Load the bundled offline face detector and check hold/cooldown policy",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-28T12:31:06Z",
+          "completed_at": "2026-10-28T12:31:07Z"
+        },
+        {
+          "name": "Isolated P3 photo, composition, retake and durable print guards",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-28T12:31:07Z",
+          "completed_at": "2026-10-28T12:31:28Z"
+        },
+        {
+          "name": "Reused QRIS protocol and native v2 Sandbox handoff (offline only)",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-28T12:31:28Z",
+          "completed_at": "2026-10-28T12:31:46Z"
+        },
+        {
+          "name": "Reuse original v1 read-only health backend and v2 bridge (fixtures)",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-28T12:31:46Z",
+          "completed_at": "2026-10-28T12:31:48Z"
+        },
+        {
+          "name": "Exercise opt-in Kivy widgets at a virtual display",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-28T12:31:48Z",
+          "completed_at": "2026-10-28T12:33:24Z"
+        },
+        {
+          "name": "Verify unchanged latest Meong Fly modules and original regression suite",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-28T12:33:24Z",
+          "completed_at": "2026-10-28T12:33:26Z"
+        },
+        {
+          "name": "Reuse muted native channels across twenty audio cycles (dummy PCM output)",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-28T12:33:26Z",
+          "completed_at": "2026-10-28T12:33:39Z"
+        },
+        {
+          "name": "Capture real Kivy pages at 800x1280 (fresh Xvfb process)",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-28T12:33:39Z",
+          "completed_at": "2026-10-28T12:33:45Z"
+        },
+        {
+          "name": "Capture compact Kivy pages at 452x900 (RGB readback-aligned)",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-28T12:33:45Z",
+          "completed_at": "2026-10-28T12:33:53Z"
+        },
+        {
+          "name": "Capture short-window Kivy pages at 360x640 and 800x600",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-28T12:33:53Z",
+          "completed_at": "2026-10-28T12:34:05Z"
+        },
+        {
+          "name": "Capture P3 photo pages with an isolated store and synthetic camera",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-28T12:34:05Z",
+          "completed_at": "2026-10-28T12:34:31Z"
+        },
+        {
+          "name": "Capture automatic print and background Drive using offline fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-28T12:34:31Z",
+          "completed_at": "2026-10-28T12:34:58Z"
+        },
+        {
+          "name": "Capture P4 DEMO game pages with isolated attempt ledger",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-10-28T12:34:58Z",
+          "completed_at": "2026-10-28T12:35:20Z"
+        },
+        {
+          "name": "Capture isolated P4b MOCK checkout states (never a payment provider)",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18,
+          "started_at": "2026-10-28T12:35:20Z",
+          "completed_at": "2026-10-28T12:35:38Z"
+        },
+        {
+          "name": "Capture native Sandbox views with offline HTTP fixtures (not merchant acceptance)",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-10-28T12:35:38Z",
+          "completed_at": "2026-10-28T12:35:47Z"
+        },
+        {
+          "name": "Capture original v1 operator health panel in v2 (offline fixtures)",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20,
+          "started_at": "2026-10-28T12:35:47Z",
+          "completed_at": "2026-10-28T12:35:54Z"
+        },
+        {
+          "name": "Preserve visual evidence for review",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21,
+          "started_at": "2026-10-28T12:35:54Z",
+          "completed_at": "2026-10-28T12:35:57Z"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 41,
+          "started_at": "2026-10-28T12:35:57Z",
+          "completed_at": "2026-10-28T12:35:57Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42,
+          "started_at": "2026-10-28T12:35:57Z",
+          "completed_at": "2026-10-28T12:35:57Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 43,
+          "started_at": "2026-10-28T12:35:57Z",
+          "completed_at": "2026-10-28T12:35:57Z"
+        }
+      ]
+    },
+    {
+      "id": 122816541958,
+      "name": "Navigation and audio lifecycle",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-28T12:30:37Z",
+          "completed_at": "2026-10-28T12:30:38Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-28T12:30:38Z",
+          "completed_at": "2026-10-28T12:30:41Z"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-28T12:30:41Z",
+          "completed_at": "2026-10-28T12:30:41Z"
+        },
+        {
+          "name": "Syntax",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-28T12:30:41Z",
+          "completed_at": "2026-10-28T12:30:42Z"
+        },
+        {
+          "name": "Apps Script retention activation and scoped cleanup (offline VM)",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-28T12:30:42Z",
+          "completed_at": "2026-10-28T12:30:45Z"
+        },
+        {
+          "name": "Kivy-independent navigation and fake audio tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-28T12:30:45Z",
+          "completed_at": "2026-10-28T12:30:46Z"
+        },
+        {
+          "name": "Observation-only supervisor and startup safety",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-28T12:30:46Z",
+          "completed_at": "2026-10-28T12:30:47Z"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-28T12:30:47Z",
+          "completed_at": "2026-10-28T12:30:47Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-28T12:30:47Z",
+          "completed_at": "2026-10-28T12:30:47Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-28T12:30:47Z",
+          "completed_at": "2026-10-28T12:30:47Z"
+        }
+      ]
+    },
+    {
+      "id": 122816542024,
+      "name": "Windows Python 3.12 native SDL audio (dummy output)",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-28T12:30:36Z",
+          "completed_at": "2026-10-28T12:30:37Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-28T12:30:37Z",
+          "completed_at": "2026-10-28T12:30:45Z"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-28T12:30:45Z",
+          "completed_at": "2026-10-28T12:30:46Z"
+        },
+        {
+          "name": "Install Windows native providers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-28T12:30:46Z",
+          "completed_at": "2026-10-28T12:31:10Z"
+        },
+        {
+          "name": "Check payment creation crash boundaries and additive migration (offline)",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-28T12:31:10Z",
+          "completed_at": "2026-10-28T12:31:13Z"
+        },
+        {
+          "name": "Check portable startup, recovery holds and Windows launch ownership",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-28T12:31:13Z",
+          "completed_at": "2026-10-28T12:31:14Z"
+        },
+        {
+          "name": "Check Windows DLL loading, safe WAV fallback and twenty PCM cycles",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-28T12:31:14Z",
+          "completed_at": "2026-10-28T12:31:33Z"
+        },
+        {
+          "name": "Preserve Windows portable startup report",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-28T12:31:33Z",
+          "completed_at": "2026-10-28T12:31:35Z"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-28T12:31:35Z",
+          "completed_at": "2026-10-28T12:31:35Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-28T12:31:35Z",
+          "completed_at": "2026-10-28T12:31:37Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-10-28T12:31:37Z",
+          "completed_at": "2026-10-28T12:31:37Z"
+        }
+      ]
+    }
+  ]
+}

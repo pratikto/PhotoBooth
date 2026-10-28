@@ -1,5 +1,13 @@
 # Meong Photobooth — current feature status
 
+## 28 October — AR-01 final source evidence
+
+`017b417d02d63a79b1c5b21c4f0613b7d15186fc`: immutable attempt durability verified with
+132 focused PASS and full **968 run / 965 PASS / 3 SKIP / zero failures/errors**. Matching CI
+40688374416 all three jobs SUCCESS. This is AR-00/AR-01 source verification;
+AR-02–13, autonomous private photo resume, actual devices/provider and production
+remain pending. [Current checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md).
+
 ## 28 October — AR-01 creation durability (source, not unattended acceptance)
 
 Backend persists immutable creation request scope/fingerprint and send ambiguity

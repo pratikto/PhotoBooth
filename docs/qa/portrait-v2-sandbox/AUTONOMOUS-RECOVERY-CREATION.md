@@ -98,3 +98,16 @@ contract plus controlled merchant evidence. Invoice five-minute idempotency is
 insufficient. Safe subsequent AR-02 reconciliation can proceed independently
 without enabling POST retry. Photo reconstruction/private claim/GUI/operational
 release still require AR-03 onward and separate physical/provider acceptance.
+
+## Final source validation and publication
+
+Code `017b417d02d63a79b1c5b21c4f0613b7d15186fc` pushed and remote HEAD independently verified.
+Final local complete regression: **968 run / 965 PASS / 3 SKIP / zero failures/errors**. Three optional palm
+model-assets cases skipped; no hardware/provider acceptance inferred.
+[Full raw output](ar01-full-tests.txt), [exact command/source hashes](ar01-source.json),
+[CI job/step evidence](ar01-ci.json). Matching
+[40688374416](https://github.com/pratikto/PhotoBooth/actions/runs/40688374416)
+completed all three jobs SUCCESS. New Windows fixture step passes. Earlier
+"pending" language above records the initial micro-checkpoint; this section
+supersedes that validation status without changing runtime. Next: AR-02.a,
+while provider repeat-charge activation and unattended release stay blocked.

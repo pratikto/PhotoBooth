@@ -1,5 +1,26 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 28 October — final verified AR-00/AR-01 handover
+
+Latest functional source pushed and remote verified: `017b417d02d63a79b1c5b21c4f0613b7d15186fc`.
+AR-00.a/b contract/baseline and AR-01.a/b attempt durability are implemented and
+verified automatically. Focused **132 PASS / zero skips**; final complete local
+**968 run / 965 PASS / 3 SKIP / zero failures/errors**, at that exact source. Optional skips require
+external palm assets. Matching [CI 40688374416](https://github.com/pratikto/PhotoBooth/actions/runs/40688374416)
+completed **all three jobs SUCCESS**, including Windows creation fixtures.
+No actual merchant/Windows/Ubuntu hardware, paper/Drive/retention acceptance.
+
+First unfinished step **AR-02.a**: deterministic tests for narrow booth-authenticated
+fresh reconciliation of cached PAID/refund/offline, separate from operator resolve;
+then rate-limited/backoff implementation. Read current checkpoint/source before
+continuing. Do not repeat AR-00/AR-01 or enable repeat POST: Legacy provider
+resend contract is still BLOCKED. AR-02–13 remain unfinished; new recovery GUI,
+photo reconstruction, customer capability and unattended pilot are not delivered.
+All source/tests and required evidence are on GitHub. Only disposable work/
+scratch files remain local. [Checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md)
+contains rollback/data preservation and [evidence](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CREATION.md).
+This final safe companion checkpoint is documentation-only; no extra GUI rerun.
+
 ## 28 October — AR-01 creation-attempt durability
 
 AR-00 pushed/remote verified at `4261236694358c2f3cd2a475a4cd9cd82f436e00`.

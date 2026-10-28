@@ -4,7 +4,8 @@
 
 Owner now explicitly requests implementation in AR dependency order. AR-00 is
 verified/pushed at `4261236694358c2f3cd2a475a4cd9cd82f436e00`. AR-01 local attempt
-durability has 132 focused PASS; final validation/publication follows. Legacy
+durability source `017b417d02d63a79b1c5b21c4f0613b7d15186fc` has 132 focused PASS,
+968 full run / 965 PASS / 3 optional palm SKIP and matching three-job CI SUCCESS. Legacy
 repeat-charge activation is blocked on provider contract/evidence. Next independent
 increment: AR-02.a fresh reconciliation tests, preserving separate operator auth.
 [Current checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md).

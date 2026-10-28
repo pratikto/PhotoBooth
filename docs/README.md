@@ -1,5 +1,12 @@
 # Meong Photobooth documentation — GUI v2
 
+## Current Autonomous Recovery implementation checkpoint — 28 October
+
+AR-00 contracts/fixtures and AR-01 immutable creation attempts are implemented;
+[latest exact source/tests/continuation](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md).
+AR-02–13 remain pending. Earlier design-only notices describe the initial planning
+publication, not completion of the unattended recovery target.
+
 ## 28 October 2026 — autonomous QRIS and photo recovery planning (design only)
 
 **New Codex execution entrypoint:** [Autonomous recovery master specification](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-MASTER-PLAN.md) · [numbered implementation roadmap AR-00–AR-13](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-ROADMAP.md) · [Midtrans provider and idempotency research register](qa/portrait-v2-sandbox/MIDTRANS-PROVIDER-CONTRACT.md) · [fault-injection/acceptance matrix](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-TEST-MATRIX.md) · [customer/operator operations runbook](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATIONS.md).

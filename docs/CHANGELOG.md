@@ -1,5 +1,12 @@
 # Meong Photobooth — changelog
 
+## 2026-10-28 — final AR-01 evidence and resume checkpoint
+
+Pin remote-verified source `017b417d02d63a79b1c5b21c4f0613b7d15186fc` with final
+**968 run / 965 PASS / 3 SKIP / zero failures/errors**, 132 focused PASS and matching three-job CI
+SUCCESS (40688374416). Synchronize checkpoint/handover and first unfinished AR-02.a;
+no runtime changes or repeated GUI workflow for this documentation publication.
+
 ## 2026-10-28 — AR-01 durable creation request boundaries
 
 Add backend-only creation attempts, atomic immutable request fingerprint,

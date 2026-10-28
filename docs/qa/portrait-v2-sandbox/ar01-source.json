@@ -9,7 +9,14 @@
     "errors": 0,
     "skipped": 0
   },
-  "full": "NOT_RUN at micro-checkpoint",
+  "full": {
+    "run": 968,
+    "pass": 965,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3,
+    "command": "KIVY_HOME=/tmp/meong-ar-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 MESA_SHADER_CACHE_DIR=/tmp/meong-ar-mesa PHOTOBOOTH_CAMERA=0 PHOTOBOOTH_FACE_TRIGGER=0 PHOTOBOOTH_PALM_TRIGGER=0 PHOTOBOOTH_TEST_GUI=1 PHOTOBOOTH_TEST_AUDIO=1 PHOTOBOOTH_TEST_VIDEO=1 MEONG_CI_TEST_REPORT=work/ar01-full-tests.txt .venv/bin/python tools/run_kiosk_unittests.py"
+  },
   "merchant": "NOT_RUN",
   "device": "NOT_RUN",
   "sha256": {
@@ -19,5 +26,8 @@
     "tests/test_autonomous_recovery_baseline.py": "537a917a2cbbb38bfbf75facb9504defc85202d2c5c9ce4172439e53431dd621",
     "tests/recovery_crash_fixture.py": "172ac0e5a17b0be816d11bc9fc65fa3736bf04bca92fa1ee8294994f7bc5497c",
     ".github/workflows/portrait-kiosk-v2.yml": "e72311f9ac83e21f28b18c6640da38eeefc9b2f0ac25e64bba4b2d4f6bcef876"
-  }
+  },
+  "source_sha": "017b417d02d63a79b1c5b21c4f0613b7d15186fc",
+  "ci_run": 40688374416,
+  "final_evidence_recorded_at": "2026-10-28 19:36 Asia/Jakarta"
 }

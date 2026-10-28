@@ -1,5 +1,14 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 28 October — final AR-01 automated validation
+
+Exact functional SHA `017b417d02d63a79b1c5b21c4f0613b7d15186fc`: full **968 run / 965 PASS / 3 SKIP / zero failures/errors**;
+132 focused PASS/zero skips. Three optional palm-assets SKIP are not passed cases.
+Matching [CI 40688374416](https://github.com/pratikto/PhotoBooth/actions/runs/40688374416):
+all three jobs SUCCESS, including Windows attempt/crash fixtures. Linux local uses
+SDL offscreen/software rendering and dummy audio. [Raw reports/commands/hashes](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CREATION.md).
+Merchant, physical Windows/Ubuntu, paper/Drive/retention and release NOT_RUN.
+
 ## 28 October — AR-01 test-first creation durability
 
 Nine attempt/migration tests and six AR-00 baseline tests included in **132

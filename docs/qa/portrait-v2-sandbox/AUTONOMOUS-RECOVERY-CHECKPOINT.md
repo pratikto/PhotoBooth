@@ -1,9 +1,10 @@
 # Autonomous recovery — session checkpoint and resume contract
 
-**Checkpoint status:** AR-01.a/b IMPLEMENTED / focused VERIFIED OFFLINE, 28 October 2026 (Asia/Jakarta)
+**Checkpoint status:** AR-01.a/b VERIFIED AUTOMATED / provider resend BLOCKED, 28 October 2026 (Asia/Jakarta)
 **Branch:** `feature/portrait-kiosk-v2-next` (existing; no master merge)
 **Recovery implementation:** AR-00 complete; AR-01 local attempt durability implemented; provider repeat-charge gate BLOCKED; AR-02–13 pending
-**Last audited functional baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
+**Latest tested/pushed functional source:** `017b417d02d63a79b1c5b21c4f0613b7d15186fc`
+**Historical audit baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
 **Current documentation handover:** See `docs/DEVELOPMENT_HANDOVER.md` and verify current remote HEAD; never assume the HEAD printed in a dated checkpoint is still current.
 
 ## Mandatory workflow
@@ -35,7 +36,7 @@ The owner prefers **frequent small tested commits AND remote pushes** because a 
 
 ## Current implementation checkpoint — AR-01.a/b
 
-- **Date/platform:** 28 October 2026, Asia/Jakarta; Linux cloud, Python 3.12.14,
+- **Date/platform:** 2026-10-28 19:36 Asia/Jakarta; Linux cloud, Python 3.12.14,
   SQLite WAL/FULL. Windows development / Ubuntu device acceptance remain separate.
 - **Completed AR-00 / last verified remote:** `4261236694358c2f3cd2a475a4cd9cd82f436e00`.
   Contract plus six baseline cases, focused **87 PASS / zero FAIL/ERROR/SKIP**.
@@ -49,18 +50,24 @@ The owner prefers **frequent small tested commits AND remote pushes** because a 
   `.venv/bin/python tools/run_kiosk_unittests.py test_checkout_creation_attempts test_autonomous_recovery_baseline test_checkout_backend test_checkout_durability test_qris_session test_midtrans_sandbox test_midtrans_verify test_qris_kiosk_client test_payment_quote test_qris_api test_qris_http_v2 test_qris_recovery`:
   **132 PASS / zero failures/errors/skips**. Initial eight tests before source:
   **2 FAIL / 6 ERROR**, preserved as test-first reproduction, then corrected.
-- **Publication:** AR-01 code commit pending; exact remote/tested SHA will be
-  pinned in companion evidence after push. Source hashes and raw focused output
-  are recorded in the [AR-01 package](AUTONOMOUS-RECOVERY-CREATION.md).
-- **Full regression/CI:** pending at this checkpoint. Real Windows/Ubuntu hardware,
-  merchant simulator, paper/Drive/retention and production NOT_RUN/not authorized.
+- **Latest pushed code SHA / verified remote:** `017b417d02d63a79b1c5b21c4f0613b7d15186fc`.
+  [Exact source hashes/raw reports](AUTONOMOUS-RECOVERY-CREATION.md). This final
+  companion publication changes documentation/evidence only; obtain its SHA from
+  git log and independently verify remote before the next implementation.
+- **Full regression:** **968 run / 965 PASS / 3 SKIP / zero failures/errors** on exact source above;
+  [raw report](ar01-full-tests.txt). Three optional palm-model assets cases SKIP.
+  **Matching CI [40688374416](https://github.com/pratikto/PhotoBooth/actions/runs/40688374416):
+  all three jobs SUCCESS**, including new Windows creation fixtures.
+  Real Windows/Ubuntu hardware, merchant, paper/Drive/retention NOT_RUN; production
+  not authorized. Software offscreen/dummy audio is not hardware acceptance.
 - **Blocker:** Legacy repeat-charge semantics unproven; repeat POST/header remains
   disabled. This blocks repeat-charge activation, not independent AR-02 work.
-- **Next:** verify AR-01 push/full regression, then AR-02.a tests for a narrow
+- **Next first unfinished increment:** AR-02.a tests for a narrow
   booth-authenticated fresh reconciliation (including cached PAID/refund/offline)
   separate from operator resolve. No GUI/photo restore before AR-03–06.
-- **Local-only:** work/ scratch evidence/scripts only; no unpushed runtime code
-  after the pending commit. No merchant/customer data accessed.
+- **Local-only:** work/ scratch evidence/scripts only, disposable and NOT backed
+  up; all needed test evidence is published here. No unpushed runtime/test changes
+  or merchant/customer data. Do not redo verified AR-00/AR-01 work.
 - **Rollback:** inverse scoped AR-01 source; retain additive attempt table and all
   journals/media. Old writers remain readable; upgrade marks their new rows held.
 

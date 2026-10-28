@@ -1,5 +1,15 @@
 # Meong Photobooth — product and technical decisions
 
+## Owner Autonomous Recovery continuation — 28 October 2026
+
+The owner explicitly requests continued implementation of AR-00 through AR-13
+in dependency order on existing feature/portrait-kiosk-v2-next, preserving payment
+integrity, privacy and existing functionality. Small independently tested commits
+and immediate pushes/remote verification are required, with durable checkpoints.
+This supersedes planning-only scope for safe staged source work. It does not
+approve a new branch, master merge, production payments, real refunds or external
+deployment; provider/device/security and final release gates remain separate.
+
 ## Owner QRIS logo request — 28 October 2026
 
 The owner asks for Meong centered in the v2 Sandbox payment QR like the Drive
