@@ -1,5 +1,11 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+**Active owner task, 29 October:** fresh AR-00–AR-13 implementation conformity
+review, IN_PROGRESS. Evidence baseline checked at f8167d8; functional source f72fdbc
+unchanged. [Review checkpoint](AR00-AR13-CODE-REVIEW.md). Finish source review and
+confirmed reproductions before making a final conformity claim. Prior readiness
+report below retains its dated conclusions and remaining gates.
+
 **Checkpoint status:** AR-12 evidence reconciled / AR-13 assessment COMPLETE (CONDITIONAL); external and exact fault gaps OPEN, 29 October 2026 (Asia/Jakarta)
 **Branch:** `feature/portrait-kiosk-v2-next` (existing; no master merge)
 **Recovery implementation:** source through AR-12.f; AR-13 readiness report published; full matrix/device acceptance and release are not complete

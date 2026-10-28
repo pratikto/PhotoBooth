@@ -1,5 +1,17 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-00–13 code review checkpoint 1 (IN_PROGRESS)
+
+Owner requests a fresh implementation-versus-specification review and staged
+pushes. Remote/local f8167d8 reconciled; runtime/test source stays f72fdbc.
+Recorded source-tree IDs, final raw-report digest/counts, ten published screenshot
+hashes and 69 unique matrix IDs checked successfully. This is evidence integrity,
+not a blanket code-conformity finding or new test/acceptance result.
+[Review record and next action](qa/portrait-v2-sandbox/AR00-AR13-CODE-REVIEW.md).
+Next: complete all stage reviews and publish only confirmed synthetic reproductions
+with exact source locations. Runtime unchanged; `work/` scratch only remains local.
+AR remains top priority; OPS NOT_STARTED; no production/deployment/master changes.
+
 ## 29 October — final AR-12 source evidence and AR-13 readiness
 
 Final runtime/test `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`: **1,097 run / 1,093 PASS / 4 SKIP / zero failures/errors**, 428.924s, Python 3.12.14 / Debian 13.6,
