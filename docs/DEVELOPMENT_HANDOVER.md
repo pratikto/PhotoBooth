@@ -1,5 +1,21 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 28 October — AR-00 contract and crash-fixture checkpoint
+
+Current owner continuation authorizes dependency-ordered AR work with immediate
+safe pushes. Refreshed existing branch from clean remote
+`f6736b7c739e3317e3bcc4506edb250f9e47d92b`; no new remote branch or master change.
+AR-00.a/b freezes the actual schema/state/legacy fallback contract and adds six
+offline characterization cases, including abrupt subprocess exit/reopen of WAL.
+Focused suite **87 PASS / zero failures/errors/skips** on Linux/Python 3.12.14.
+Runtime source unchanged; full/device/merchant checks NOT_RUN. Exact command,
+changed scope, rollback and first unfinished AR-01.a are in the
+[checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md) and
+[baseline contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-BASELINE.md).
+Companion publication will pin the exact pushed AR-00 commit. Only scratch files
+under work/ are local; no unpushed runtime work. Provider repeat-charge contract
+remains open; no speculative resend/header or production activation.
+
 ## 28 October — owner preference: push in small increments for five-hour continuity
 
 The owner explicitly asks Codex to **commit and push safe, tested

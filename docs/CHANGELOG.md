@@ -1,5 +1,12 @@
 # Meong Photobooth — changelog
 
+## 2026-10-28 — AR-00 frozen contract and crash fixtures
+
+Inventory actual payment/service/journal/photo fields and unresolved migration
+boundaries before recovery changes. Add six isolated offline baseline checks,
+including real abrupt process exits before send and after provider acceptance.
+Focused 87 PASS; runtime unchanged. [Scope/evidence](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-BASELINE.md).
+
 ## 2026-10-28 — Copy Sandbox QRIS link from the GUI
 
 Add **SALIN LINK QRIS** to the verified pending Sandbox page, with clipboard

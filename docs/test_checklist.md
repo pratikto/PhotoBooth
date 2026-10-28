@@ -1,5 +1,16 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 28 October — AR-00 offline baseline
+
+Base `f6736b7c739e3317e3bcc4506edb250f9e47d92b`, runtime unchanged.
+Six new baseline fixtures plus existing focused protocol group: **87 PASS,
+0 FAIL/ERROR/SKIP**, Linux/Python 3.12.14. Actual abrupt child exits before
+provider send/after accepted synthetic charge reopen the original SQLite order;
+missing/404 evidence cannot replace it. Optional fraud semantics and capture
+restart hold covered. Command and limits in the [checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md).
+These characterize existing safeguards; AR-01–13 and physical/provider/full
+acceptance are not credited by this result.
+
 ## 28 October — Sandbox GUI copy link
 
 Source `39e8c32`: exact current image-action URL, clipboard error/retry,

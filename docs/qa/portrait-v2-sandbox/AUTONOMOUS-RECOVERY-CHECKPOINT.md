@@ -1,8 +1,8 @@
 # Autonomous recovery — session checkpoint and resume contract
 
-**Checkpoint status:** DOCUMENTATION-ONLY, 28 October 2026 (Asia/Jakarta)
+**Checkpoint status:** AR-00.a/b VERIFIED OFFLINE, 28 October 2026 (Asia/Jakarta)
 **Branch:** `feature/portrait-kiosk-v2-next` (existing; no master merge)
-**Recovery implementation:** AR-00–AR-13 NOT STARTED / NOT VERIFIED by this publication
+**Recovery implementation:** AR-00 contract/fixtures complete; AR-01–AR-13 pending
 **Last audited functional baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
 **Current documentation handover:** See `docs/DEVELOPMENT_HANDOVER.md` and verify current remote HEAD; never assume the HEAD printed in a dated checkpoint is still current.
 
@@ -33,7 +33,29 @@ The owner prefers **frequent small tested commits AND remote pushes** because a 
 | Next *small* action | File/function, intended test and AR substep |
 | Safe rollback | Previous commit and retained-data plan |
 
-## Current bootstrap checkpoint — documentation publication
+## Current implementation checkpoint — AR-00.a/b
+
+- **Done:** [Frozen field/state/migration contract](AUTONOMOUS-RECOVERY-BASELINE.md)
+  and six offline baseline tests, including actual abrupt child exit before
+  provider call and after synthetic acceptance, same-order retries/404 hold,
+  optional fraud decisions and restart capture hold. Runtime source unchanged.
+- **Base / last verified remote:** `f6736b7c739e3317e3bcc4506edb250f9e47d92b`.
+  The AR-00 commit will be pinned by its companion checkpoint after push.
+- **Focused checks:** Linux cloud / Python 3.12.14 / Pillow 13.0.0:
+  `.venv/bin/python tools/run_kiosk_unittests.py test_autonomous_recovery_baseline test_checkout_backend test_checkout_durability test_qris_session test_midtrans_sandbox test_midtrans_verify test_qris_kiosk_client test_payment_quote`:
+  **87 PASS, zero failures/errors/skips**. `git diff --check` PASS.
+- **Changed:** two fixture/test files, baseline contract and associated docs.
+  No schema/data migration, private configuration or runtime changes.
+- **Not done:** AR-01 attempt migration/fingerprint/phase, AR-02 fresh admission,
+  AR-03–13. Full suite/native/Windows/Ubuntu hardware/merchant/print/Drive NOT_RUN.
+- **Blocker:** repeating Legacy charge remains disabled pending exact official
+  contract and merchant evidence; independent durability work can proceed.
+- **Next:** AR-01.a write migration/immutable-attempt tests, then additive
+  backend attempt ledger; preserve same-order GET-only retries.
+- **Local-only:** `work/` scratch scripts/output; no unpushed runtime code.
+- **Rollback:** inverse AR-00 tests/docs only; retain all payment/customer data.
+
+## Historical bootstrap checkpoint — documentation publication
 
 - **Done:** Comprehensive unattended-first master design, provider contract, AR-00–AR-13 roadmap, failure-injection matrix, operator/customer runbook, and repository prompt/process micro-push rules are published to the existing branch.
 - **Not done:** AR-00 source baseline test fixtures; provider verification; any recovery runtime code or device/merchant tests. All new stage checks are NOT_RUN.

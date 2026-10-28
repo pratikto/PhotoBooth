@@ -1,5 +1,12 @@
 # Meong Photobooth — current feature status
 
+## 28 October — Autonomous Recovery baseline
+
+AR-00 contract/fixtures verified offline: six new cases, 87 focused PASS, no
+runtime/schema change. AR-01–13 remain pending; autonomous photo resume/customer
+claim is not delivered. [Exact source contract and gaps](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-BASELINE.md)
+and [continuation checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md).
+
 ## 28 October — Sandbox GUI copy link
 
 IN SOURCE at `39e8c32`: **SALIN LINK QRIS** copies the verified active image
