@@ -1,5 +1,10 @@
 # Meong Photobooth — GUI v2 development handover
 
+**Published-environment follow-up (28 October):** prior source preview CI is
+confirmed successful. Local FreeType now reaches a denied redirect mirror;
+manual hosted APK setup failed before compilation. The workflow now reuses the
+Ubuntu runner's official SDK. [Observed evidence and correction](qa/android-runtime/published-resume.md).
+
 **Android verification continuation (28 October):** runtime APK metadata/permission/ABI
 checks and nested ELF rejection fixtures are now implemented in the existing
 Android build workflow. Current cloud regression/build/access evidence and

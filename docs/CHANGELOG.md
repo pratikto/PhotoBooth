@@ -1,5 +1,14 @@
 # Meong Photobooth — changelog
 
+## Android hosted SDK bootstrap — 28 October 2026
+
+- Reuse Ubuntu's official Android SDK instead of the failing setup-android action;
+  retain the pinned API/build-tools/NDK and all binary verification gates.
+- Confirm prior functional-source CI and record the post-publication mirror
+  denial and initial hosted build failure without changing environment settings.
+- [Evidence and validation limits](qa/android-runtime/published-resume.md).
+
+
 ## Android runtime APK verification — 28 October 2026
 
 - Enforce built package/version/API/permissions/arm64 identity against the staged

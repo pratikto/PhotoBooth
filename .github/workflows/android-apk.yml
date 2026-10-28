@@ -20,14 +20,19 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - uses: android-actions/setup-android@v3
       - name: Install native build prerequisites
         run: |
           sudo apt-get update
           sudo apt-get install -y autoconf automake libtool pkg-config cmake libffi-dev libssl-dev zlib1g-dev
           python -m venv work/android-build-venv
           work/android-build-venv/bin/python -m pip install -r android/requirements-build.txt
-          sdkmanager 'platforms;android-35' 'build-tools;35.0.0' 'ndk;28.2.13676358'
+          # ubuntu-24.04 already supplies ANDROID_HOME and official command-line
+          # tools. Reuse them instead of downloading a second SDK via an action.
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          test -x "$SDKMANAGER"
+          "$SDKMANAGER" --sdk_root="$ANDROID_HOME" --licenses < <(yes) > /dev/null
+          "$SDKMANAGER" --sdk_root="$ANDROID_HOME" \
+            'platforms;android-35' 'build-tools;35.0.0' 'ndk;28.2.13676358'
       - name: Verify packaging policy
         run: python -S -m unittest tests.test_android_preview tests.test_android_apk -v
       - name: Compile curated Android v2 APK

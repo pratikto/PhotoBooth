@@ -1,5 +1,10 @@
 # Android v2 runtime — camera, printing and Sandbox
 
+**Published-environment follow-up (28 October):** prior source preview CI is
+confirmed successful. Local FreeType now reaches a denied redirect mirror;
+manual hosted APK setup failed before compilation. The workflow now reuses the
+Ubuntu runner's official SDK. [Observed evidence and correction](qa/android-runtime/published-resume.md).
+
 ## Runtime APK verification continuation — 28 October 2026
 
 Continued from `ef08696` on the existing Android branch. Reviewed AGENTS, the
