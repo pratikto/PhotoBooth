@@ -74,6 +74,43 @@ Actions credits on work that already exists and works.**
 - Keep existing safety and lifecycle guards when integrating; reuse does not
   authorize production payments, discounts, scanners, deployments or merges.
 
+## Mandatory incremental Git checkpoint policy — owner preference, 28 October 2026
+
+The owner prefers **small, frequent Git commits AND pushes** because ChatGPT/Codex
+work sessions can end at a five-hour usage limit. A locally committed change that
+was never pushed is **not** a reliable cross-session handoff.
+
+- Split each approved implementation stage into independently reviewable
+  **micro-increments** (for example: one contract/test, one backend invariant,
+  one GUI seam), with explicit expected tests and rollback boundary.
+- After **every meaningful, safe, locally checked increment**, commit and push
+  immediately to the already authorized `feature/portrait-kiosk-v2-next` branch.
+  Verify the remote branch HEAD equals the local pushed commit before proceeding.
+  Do **not** accumulate all work until the end of an AR stage or a long chat.
+  Aim for a checkpoint every ~30–45 minutes of active work where a meaningful
+  change is ready, rather than making empty/time-based commits.
+- Before the conversation/context window or five-hour usage limit interrupts
+  work, **stop starting new large tasks**. Push all safely isolated, reviewed
+  increments, then publish an accurate continuation checkpoint in the project's
+  handover and the [autonomous recovery checkpoint](docs/qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md).
+  Record stage/substep, commit SHA, changed files, focused tests and
+  PASS/FAIL/SKIP/NOT_RUN, remaining tasks/blockers, exact next action and any
+  local-only unpushed files. Commit/push this docs checkpoint and verify remote.
+- Never push secrets, local merchant credentials, photos, databases, logs or
+  unrelated dirty files. Do not force-push, create a branch, merge master, or
+  publish knowingly unsafe/broken code simply to create a checkpoint.
+  If source is incomplete, checkpoint **safe docs/tests or a disabled isolated
+  increment** and explicitly label implementation WIP/NOT VERIFIED; preserve
+  risky uncommitted code locally and clearly state that it is **not recoverable
+  from GitHub**. Never claim a successful backup of unpushed work.
+- In a **new Codex/chat session**, inspect `git status`, branch, remote HEAD
+  and the latest commits, read the last remote checkpoint and related specs,
+  reconcile any local-only modifications, then continue the **first unfinished
+  micro-increment**. Do not redo previously verified, pushed work or reset data.
+- This policy complements (not replaces) the documentation-first rule, small
+  logical tests, one final functional regression, feature flags/safety gates,
+  exact evidence requirements, and separate production/release authorization.
+
 ## Staged delivery and CI budget
 
 - Make small logical changes, run relevant local checks, fix failures, commit,
