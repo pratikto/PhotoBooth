@@ -1,6 +1,7 @@
 """Native v2 presentation; QRIS client and durable admission are reused unchanged."""
 import time
 
+from kivy.core.clipboard import Clipboard
 from kivy.uix.image import Image
 from kivy.uix.widget import Widget
 
@@ -8,7 +9,7 @@ from photobooth.advertising import PROJECT_ROOT
 from .flow import ADVERT, TEMPLATES, PHOTO_CONFIRM, SANDBOX_CHECKOUT
 from .photo_views import image_texture
 from .theme import PixelCard, text_label, GOLD, CYAN, MUTED
-from .sandbox_checkout import SandboxJobs, configured_sandbox, sandbox_enabled
+from .sandbox_checkout import SandboxJobs, configured_sandbox, sandbox_enabled, simulator_qr_url
 
 
 class SandboxViews:
@@ -17,6 +18,7 @@ class SandboxViews:
         self._sandbox_jobs = (self._provided_sandbox_jobs or SandboxJobs(lambda:configured_sandbox(PROJECT_ROOT))) if self._sandbox_enabled else None
         self._sandbox_view = None
         self._sandbox_error = ''
+        self._sandbox_link_feedback = None
         self._sandbox_refresh_at = 0
         self._sandbox_consent = False
 
@@ -49,6 +51,21 @@ class SandboxViews:
 
     def _sandbox_cancel(self):
         self._sandbox_submit('cancel')
+        self._show()
+
+    def _sandbox_copy_link(self):
+        if (self._closed or self._suspended or not self._sandbox_enabled
+                or self.navigation.page != SANDBOX_CHECKOUT or self._sandbox_jobs.busy):
+            return
+        url = simulator_qr_url(self._sandbox_view)
+        if not url:
+            return
+        try:
+            Clipboard.copy(url)
+            message = 'Link QRIS tersalin. Paste di simulator Midtrans.'
+        except Exception:
+            message = 'Gagal menyalin. Coba lagi atau gunakan link di terminal.'
+        self._sandbox_link_feedback = (url, message)
         self._show()
 
     def _sandbox_leave(self):
@@ -144,6 +161,7 @@ class SandboxViews:
         self._brand(shell, 'QRIS SANDBOX', 'MODE UJI • GUNAKAN SIMULATOR SANDBOX')
         view = self._sandbox_view or {'phase':'LOADING'}
         phase = view['phase']
+        simulator_url = simulator_qr_url(view)
         card = PixelCard(orientation='vertical', padding=12, spacing=6)
         money = lambda n:'Rp'+f'{n:,}'.replace(',','.')
         if phase == 'QUOTE':
@@ -169,6 +187,8 @@ class SandboxViews:
         else:
             card.add_widget(Widget())
         message = 'Gunakan simulator resmi Midtrans Sandbox.\nJangan memakai aplikasi bank atau dompet asli.'
+        if simulator_url:
+            message = 'Salin link QRIS, lalu paste di simulator Midtrans.\nJangan memakai aplikasi bank atau dompet asli.'
         if phase == 'QUOTE':
             message = 'Harga uji tanpa promo game.\nPromo DEMO belum berlaku pada QRIS Sandbox.\nPesanan dibuat setelah kamu memilih lanjut.'
         elif phase == 'RECOVERY':
@@ -177,7 +197,9 @@ class SandboxViews:
             message = 'Izin satu sesi pesanan tersedia.\nFoto dimulai setelah persetujuan kamu.'
         card.add_widget(text_label(message,size=15,height=110,color=MUTED))
         shell.add_widget(card)
-        shell.add_widget(text_label(self._sandbox_error,size=13,height=60,color=GOLD))
+        feedback = self._sandbox_link_feedback
+        status = self._sandbox_error or (feedback[1] if feedback and feedback[0] == simulator_url else '')
+        shell.add_widget(text_label(status,size=13,height=60,color=GOLD))
         def action(title,callback,variant='secondary'):
             shell.add_widget(self._action(title,callback,variant=variant,height=48,disabled=self._sandbox_jobs.busy))
         if phase == 'QUOTE':
@@ -188,6 +210,8 @@ class SandboxViews:
         elif phase in {'COMPLETED','CANCELLED','IDLE'}:
             action('SELESAI / KEMBALI IKLAN',self._sandbox_leave,'primary')
         elif phase in {'CREATING','WAITING','CANCELLING'}:
+            if simulator_url:
+                action('SALIN LINK QRIS',self._sandbox_copy_link,'primary')
             action('CEK STATUS',self._sandbox_retry)
             action('BATALKAN PESANAN UJI',self._sandbox_cancel,'tertiary')
         elif phase != 'RECOVERY':

@@ -5,10 +5,24 @@ import threading
 
 from photobooth.qris_kiosk_client import QrisKioskClient
 from photobooth.qris_session import KioskCheckout
+from photobooth.qris_evidence import sandbox_qr_url
 from .qr_branding import branded_sandbox_qr_image
 from .demo_game import GameJobs
 
 ACTIONS = {'boot', 'begin', 'check', 'cancel', 'prepare', 'started', 'complete', 'recover'}
+
+
+def simulator_qr_url(view):
+    """Return only the active Sandbox image action, never a derived URL/payload."""
+    view = view or {}
+    order = view.get('order') or {}
+    if (view.get('phase') != 'WAITING' or order.get('mode') != 'sandbox'
+            or order.get('state') != 'PENDING' or order.get('verification_pending')):
+        return None
+    try:
+        return sandbox_qr_url(order.get('qr_url'))
+    except (ValueError, TypeError):
+        return None
 
 
 def sandbox_enabled(env=None):

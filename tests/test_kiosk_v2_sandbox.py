@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from photobooth.kiosk_v2.sandbox_checkout import SandboxCheckout, sandbox_enabled, configured_sandbox
+from photobooth.kiosk_v2.sandbox_checkout import SandboxCheckout, sandbox_enabled, configured_sandbox, simulator_qr_url
 from photobooth.qris_session import KioskCheckout
 from photobooth.checkout_backend import CheckoutBackend
 from photobooth.checkout_store import CheckoutStore
@@ -13,6 +13,25 @@ from tools.run_portrait_v2_sandbox import v2_environments
 
 
 from tests.test_qris_session import LocalClient
+
+
+class SimulatorLinkTests(unittest.TestCase):
+    def test_only_verified_pending_sandbox_image_action_can_be_copied(self):
+        url = 'https://api.sandbox.midtrans.com/v4/qris/image-reference/qr-code'
+        order = {'mode':'sandbox', 'state':'PENDING', 'qr_url':url}
+        view = {'phase':'WAITING', 'order':order}
+        self.assertEqual(simulator_qr_url(view), url)
+        for phase in ('QUOTE', 'CREATING', 'UNCERTAIN', 'CANCELLING', 'CANCELLED', 'RESERVED', 'RECOVERY', 'COMPLETED'):
+            with self.subTest(phase=phase):
+                self.assertIsNone(simulator_qr_url(dict(view, phase=phase)))
+        for fields in ({'mode':'mock'}, {'mode':'production'}, {'state':'PAID'},
+                       {'state':'EXPIRED'}, {'verification_pending':True}, {'qr_url':None},
+                       {'qr_url':'https://api.midtrans.com/v2/qris/t/qr-code'},
+                       {'qr_url':'https://api.sandbox.midtrans.com.evil/v2/qris/t/qr-code'},
+                       {'qr_url':url+'?secret=x'}, {'qr_url':url.replace('.com/', '.com:invalid/')}):
+            with self.subTest(fields=fields):
+                self.assertIsNone(simulator_qr_url(dict(view, order=dict(order, **fields))))
+        self.assertIsNone(simulator_qr_url(None))
 
 class SandboxAdapterTests(unittest.TestCase):
     def setUp(self):

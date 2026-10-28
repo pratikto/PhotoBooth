@@ -53,6 +53,56 @@ class SandboxWidgetTests(unittest.TestCase):
     def reserve(self,app,fixture):
         self.pending(app);fixture.paid();app._sandbox_retry();self.settle(app)
         self.assertEqual(app._sandbox_view['phase'],'RESERVED')
+
+    def test_copy_current_image_action_without_changing_order_and_retire_old_button(self):
+        with self.booth() as (app,f):
+            self.pending(app)
+            before = f.flow.snapshot()
+            url = before['order']['qr_url']
+            button = next(w for w in app.stage.walk()
+                          if isinstance(w,ArcadeButton) and w.text == 'SALIN LINK QRIS')
+            with patch('photobooth.kiosk_v2.sandbox_views.Clipboard.copy') as copy:
+                button.dispatch('on_release')
+                copy.assert_called_once_with(url)
+                self.assertTrue(any('Link QRIS tersalin' in getattr(w,'text','') for w in app.stage.walk()))
+                self.assertEqual(f.flow.snapshot(),before)
+                self.assertEqual(f.provider.charges,1)
+                button.dispatch('on_release')  # Old page callback cannot write again.
+                copy.assert_called_once()
+                f.paid();app._sandbox_retry();self.settle(app)
+                self.assertFalse(any(getattr(w,'text','') == 'SALIN LINK QRIS' for w in app.stage.walk()))
+                app._sandbox_copy_link();button.dispatch('on_release')
+                copy.assert_called_once()
+
+    def test_copy_handles_clipboard_error_and_works_without_qr_pixels(self):
+        with self.booth() as (app,f):
+            f.service.image_loader = Mock(side_effect=OSError('image offline'))
+            self.pending(app)
+            self.assertIsNone(app._sandbox_view['qr_rgb'])
+            with patch('photobooth.kiosk_v2.sandbox_views.Clipboard.copy',side_effect=RuntimeError('clipboard unavailable')):
+                app._sandbox_copy_link()
+            self.assertTrue(any('Gagal menyalin' in getattr(w,'text','') for w in app.stage.walk()))
+            self.assertEqual(f.provider.charges,1)
+            self.assertEqual(f.flow.snapshot()['phase'],'WAITING')
+            with patch('photobooth.kiosk_v2.sandbox_views.Clipboard.copy') as copy:
+                app._sandbox_copy_link()
+                copy.assert_called_once_with(f.flow.snapshot()['order']['qr_url'])
+
+    def test_copy_guard_blocks_busy_suspended_and_unverified_views(self):
+        with self.booth() as (app,f):
+            self.pending(app)
+            view = app._sandbox_view
+            with patch('photobooth.kiosk_v2.sandbox_views.Clipboard.copy') as copy:
+                with patch.object(f.jobs,'busy',True):
+                    app._sandbox_copy_link()
+                app._suspended=True;app._sandbox_copy_link();app._suspended=False
+                app._sandbox_view=dict(view,order=dict(view['order'],verification_pending=True))
+                app._sandbox_copy_link()
+                app._sandbox_view=dict(view,order=dict(view['order'],qr_url='https://example.com/qr'))
+                app._sandbox_copy_link()
+                copy.assert_not_called()
+            app._sandbox_view=view
+
     def test_unpaid_guard_and_explicit_quote_then_authoritative_cancel(self):
         with self.booth() as (app,f):
             self.assertEqual(app.navigation.page,ADVERT)
