@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — owner-approved future Operator Settings package (DOCS ONLY; AFTER AR-13 priority)
+
+**Do not switch implementation from current AR-00 → AR-13 recovery work to OPS.** Continue the first unfinished safe AR micro-increment recorded in the [live checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md), latest commits and the stage-specific handover below; do not trust historical stale stage headings. AR-12/AR-13 validation, explicit readiness, merchant/device NOT_RUN gates and separate release approval remain higher priority. This paragraph records a **queued follow-up**, not a completed feature or changed AR plan.
+
+The owner explicitly approved the entire discussed **Meong Settings** design for future GUI v2 work: hidden F12/1.5-second Meong hold at first Advertising **AND SAFE_IDLE** → camera-based **static per-booth Operator QR Login** → three tabs **Device Health, Audio Settings, Emulate Ticket** → logout/return to Advertising. Preserve AR-09 Recovery exception and separate operator PIN, OS maintenance fallback, privacy/camera exclusivity. Audio includes Master, Music, Button SFX, Other SFX, Mute/Test, persistent per booth. **Emulate Ticket** (the final name replacing Ticket Master) provides static reusable MOCK-only QR presets for Merchant Promo and Meong Fly, with true per-visit consumption/Already Used validation, print preview/80-mm thermal, honest uncertain-print handling and safe history; real payment/Sandbox printer/Drive restrictions unchanged. Dynamic operator/game/merchant QR is an operational-phase future design, not the current implementation.
+
+**Codex-authoritative new documents:** [full master spec](qa/portrait-v2-operator-settings/README.md) · [OPS-00..OPS-10 post-AR roadmap](qa/portrait-v2-operator-settings/IMPLEMENTATION-ROADMAP.md) · [129-case acceptance matrix](qa/portrait-v2-operator-settings/ACCEPTANCE-MATRIX.md) · [50 decisions/supersessions](qa/portrait-v2-operator-settings/DECISION-REGISTER.md) · [copy/paste handover prompt](qa/portrait-v2-operator-settings/CODEX-HANDOVER.md). **OPS code NOT_STARTED; OPS tests NOT_RUN; physical/device evidence NOT_RUN.** This documentation commit does not reverify any old functional source or imply production payment, merge or deployment. Continue using small independently checked commits + immediate pushes on existing `feature/portrait-kiosk-v2-next`, and publish exact remote HEAD to survive the 5-hour usage limit.
+
+
 ## 29 October — AR-12.d: retain Windows pass and expose Linux isolated-photo failure details
 
 Base / last remote-verified commit `635de92c0f8fba9189981ebf2f168bff8b7a52af`. CI 40756011109 Windows autonomous/native and pure jobs PASS; desktop P3 group FAIL with unknown cause. Failure-only report annotation added, no assertions/application changes. Final local full rerun still running.
