@@ -87,3 +87,37 @@ class CustomerClaimSessionTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):result.result(3)
         self.assertTrue(reopened.customer_claim_required)
         with self.assertRaises(RuntimeError):reopened.resume_permit()
+
+    def allocated_reopen(self):
+        self.fixture.service.begin({'template_a':1});ticket=self.fixture.flow.customer_ticket()
+        self.fixture.paid();self.fixture.service.check();self.fixture.service.prepare()
+        tx=self.fixture.flow.snapshot()['transaction_id'];self.fixture.service.started(tx)
+        reopened=self.reopen();reopened.customer_claim(ticket)
+        return reopened,ticket,tx
+
+    def test_privacy_lock_revokes_already_issued_resume_permit(self):
+        reopened,ticket,tx=self.allocated_reopen()
+        binding=reopened.resume_binding();permit=reopened.resume_permit()
+        reopened.lock_customer()
+        with self.assertRaises(RuntimeError):permit.consume(binding)
+        reopened.customer_claim(ticket)
+        reopened.resume_permit().consume(binding)
+
+    def test_resume_ack_reuses_original_started_binding_and_rechecks_payment(self):
+        reopened,ticket,tx=self.allocated_reopen()
+        with self.assertRaises(RuntimeError):reopened.confirm_resume('other_tx','capture')
+        view=reopened.confirm_resume(tx,'capture')
+        self.assertEqual(view['phase'],'STARTED')
+        self.assertEqual(view['transaction_id'],tx)
+        self.fixture.provider.rows[view['order']['order_id']].update(transaction_status='refund')
+        with self.assertRaises(Exception):reopened.confirm_resume(tx,'capture')
+
+    def test_completed_service_can_restore_result_only_without_capture_readmission(self):
+        reopened,ticket,tx=self.allocated_reopen()
+        oid=reopened.snapshot()['order']['order_id'];grant=reopened.snapshot()['order']['grant_id']
+        self.fixture.backend.service_transition(oid,'PB001',grant,'COMPLETED',tx)
+        reopened.customer_claim(ticket)
+        with self.assertRaises(RuntimeError):reopened.confirm_resume(tx,'capture')
+        view=reopened.confirm_resume(tx,'result')
+        self.assertEqual(view['order']['service_state'],'COMPLETED')
+        self.assertEqual(view['phase'],'STARTED')

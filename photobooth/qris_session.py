@@ -203,9 +203,44 @@ class KioskCheckout:
         # deliberate resume action, not a stale GUI flag or cached poll result.
         self.customer_claim(self._last_claim_ticket)
         from photobooth.resume_authority import trusted_resume_permit
-        permit=trusted_resume_permit(self.resume_binding())
-        self._permit_issued=True
-        return permit
+        with self.lock:
+            generation=self._privacy_generation
+            permit=trusted_resume_permit(self.resume_binding(), validator=lambda:
+                generation == self._privacy_generation and self._ownership_confirmed
+                and time.monotonic() < self._ownership_expires)
+            self._permit_issued=True
+            return permit
+
+    def confirm_resume(self, transaction_id, photo_phase):
+        """Acknowledge the original validated photo session, never allocate again."""
+        if photo_phase not in {'capture', 'review', 'result', 'done'}:
+            raise RuntimeError('Validated original photo phase required')
+        with self.worker_lock:
+            with self.lock:
+                if self.resume_binding()['transaction_id'] != transaction_id:
+                    raise RuntimeError('Original transaction required')
+                generation=self._privacy_generation
+                ticket=self._last_claim_ticket
+            # Delayed local reconstruction must not admit capture against stale
+            # settlement, including when the server already completed service.
+            self.customer_claim(ticket)
+            order=self.snapshot()['order']
+            if order['service_state'] == 'COMPLETED':
+                if photo_phase not in {'result', 'done'}:
+                    raise RuntimeError('Completed service cannot admit another capture')
+            elif order['service_state'] in {'RESERVED', 'STARTED'}:
+                result=self.client.service_transition(order['order_id'],order['grant_id'],
+                                                      'STARTED',transaction_id)
+                self._accept(result)
+            else:
+                raise RuntimeError('Original service requires operator review')
+            with self.lock:
+                if generation != self._privacy_generation or self.customer_claim_required:
+                    raise RuntimeError('Resume acknowledgment belongs to a retired visit')
+                self.data['phase']='STARTED'
+                self.data['allocation_ready']=True
+                self._save()
+            return self.snapshot()
 
     def begin(self, quantities):
         quote = quote_checkout(quantities)

@@ -47,3 +47,19 @@ visually inspected and actual screenshot QR decode confirms the recovery format.
 No payload was logged. Pre-commit captures are provisional, not final-source
 merchant/device evidence; final AR-12 captures follow later functional work.
 Customer restore remains unmounted until the next AR-07.b increment.
+
+## AR-07.b1 — revocable permit and exact resume acknowledgment
+
+Privacy lock now invalidates an already issued, unused in-memory permit through
+its controller generation. Reclaiming the original ticket can issue a new permit;
+old permits cannot become valid again. The original binding acknowledgment checks
+current customer proof and payment again, reuses STARTED with the same transaction,
+and fences a late acknowledgment after lock. A server-COMPLETED service permits
+only restored result/done, never capture/review or a regressing STARTED request.
+This controller seam is not mounted in native navigation until AR-07.b2.
+
+Tests first: nine session cases yielded one FAIL/two ERROR before source.
+Final focused **37 PASS / zero FAIL/ERROR/SKIP**:
+`.venv/bin/python tools/run_kiosk_unittests.py test_customer_claim_session test_customer_capability test_photo_reconstruction test_qris_session`
+with offscreen SDL/dummy audio and permitted local HTTP fixtures. No real provider,
+photo, print or Drive access. Full regression remains at final functional source.

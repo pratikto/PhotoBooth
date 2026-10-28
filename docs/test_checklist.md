@@ -1,5 +1,10 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 29 October — AR-07.b1: revoke stale permits and acknowledge exact resumed service
+
+Focused 37 PASS, zero failures/errors/skips; three added session cases cover privacy revocation, original STARTED acknowledgment/current refund and completed-result-only restore. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-NATIVE.md).
+Physical/provider gates remain separate; no production activation.
+
 ## 29 October — AR-07.a: native save-ticket gate and neutral privacy-held screen
 
 Two new native gates and focused 37 PASS, zero failures/errors/skips. Twelve native working-tree captures rendered at 800x1280/452x900; both recovery-ticket screenshot QR payloads decode correctly without logging secrets. Payment URL/copy actions remain hidden until ticket acknowledgment. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-NATIVE.md).
