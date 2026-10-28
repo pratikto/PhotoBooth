@@ -19,6 +19,7 @@ class BoundPhotoTests(unittest.TestCase):
         self.root=Path(self.tmp.name)
         self.store=CheckoutStore(self.root/'orders.db');self.addCleanup(self.store.close)
         p=FakeProvider();b=CheckoutBackend(self.store,p,KEY,MERCHANT)
+        self.backend,self.provider=b,p
         self.quantities={'template_a':2}
         oid=b.create_order('PB001',self.quantities,'a'*32)['order_id']
         p.rows[oid].update(transaction_status='settlement',status_code='200')

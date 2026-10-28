@@ -2,7 +2,7 @@
 
 **Checkpoint status:** AR-02.a focused VERIFIED / roadmap IN PROGRESS, 28 October 2026 (Asia/Jakarta)
 **Branch:** `feature/portrait-kiosk-v2-next` (existing; no master merge)
-**Recovery implementation:** Source work progressed through AR-05.a; later stages and external gates remain unfinished
+**Recovery implementation:** Source work progressed through AR-05.b; later stages and external gates remain unfinished
 **Latest tested/pushed functional source:** `017b417d02d63a79b1c5b21c4f0613b7d15186fc`
 **Historical audit baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
 **Current documentation handover:** See `docs/DEVELOPMENT_HANDOVER.md` and verify current remote HEAD; never assume the HEAD printed in a dated checkpoint is still current.
@@ -34,13 +34,13 @@ The owner prefers **frequent small tested commits AND remote pushes** because a 
 | Next *small* action | File/function, intended test and AR substep |
 | Safe rollback | Previous commit and retained-data plan |
 
-## Current implementation checkpoint — AR-05.a
+## Current implementation checkpoint — AR-05.b
 
-- Base / last verified remote: `879d69bf4553e84befb21705033d9eb84759b571`.
-- Completed: immutable strip publication with frozen input hashes. Three new output cases; focused 71 PASS, zero failures/errors/skips, including native handoff, capture, delivery and v1 retention/workflow. PNG intent and input identities persist before rendering; published-but-unacknowledged output cannot be overwritten on retry.
+- Base / last verified remote: `3c04e31f56e5ed7e4fc30c971fc7ead28e1cc446`.
+- Completed: exact private photo reconstruction behind one-use in-memory permit. Nine new reconstruction cases pass; focused 63 PASS plus nine final guard checks, zero failures/errors/skips. Restores partial shots, selected/used retake, staged captures/PNG and multi-design copies without new IDs, shutter, renderer or print. No old media is returned without a bound ephemeral permit; UI mounting remains disabled until AR-06/07.
 - Publication SHA: this increment will be pinned after its verified push by the
   next checkpoint; obtain containing commit from Git history.
-- Remaining / exact next step: AR-05.b exact metadata/intent reconstruction behind an ephemeral resume permit; then AR-06 customer capability.
+- Remaining / exact next step: AR-06.a hashed customer capability, expiry/action CAS/rate limiting and fresh-payment redeem API.
 - Full suite: deferred to final functional SHA. Actual Windows/Ubuntu devices,
   merchant, paper/Drive and production: NOT_RUN / not enabled.
 - Migration/rollback: see stage contract; preserve all ledgers/media/claims,

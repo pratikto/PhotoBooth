@@ -42,3 +42,30 @@ with SDL offscreen/dummy audio. Tests preserve output after lost publication ACK
 reject tampered original captures, and verify exact committed input/output hashes.
 No print/Drive effect or old image regeneration follows retry. Full regression
 and actual device/provider gates remain pending; restore is not mounted yet.
+
+## AR-05.b exact reconstruction — 29 October
+
+Metadata-only inspection validates exact binding/booth, protocol/schema/purpose,
+frozen template/price/copies, original retention clock, each intent/path/hash/
+decoded image and output/final selection. Unknown/legacy/orphan/corrupt/missing
+or changed template data stays held; no latest-folder lookup. STAGED bytes are
+published/adopted only against their persisted SHA/identity. A proven intent with
+no saved bytes is retained as VOID_BEFORE_FRAME audit, permitting a new deliberate
+customer capture later; saved quota/bytes are never erased. Unhashed temp bytes
+remain held. Complete designs are retained and only unfinished design resumes.
+
+`inspect_resume` returns metadata only. `restore` requires a short-lived, bound,
+single-use ResumePermit from a trusted controller, with printer/Drive off. This
+in-process seam is not customer authentication; AR-06 validates the actual ticket
+before the controller may issue it. No HTTP/view/journal can deserialize a permit.
+Restarts lose authorization. Restore never invokes shutter/renderer/print/upload,
+and auto-print is disabled. Customer must initiate any fresh countdown.
+
+Initial fixtures ERROR before implementation. Final **63 focused PASS / zero
+FAIL/ERROR/SKIP**, plus **nine post-guard reconstruction PASS**. Command:
+`.venv/bin/python tools/run_kiosk_unittests.py test_photo_reconstruction test_output_journal test_capture_journal test_photo_allocation test_kiosk_v2_photos test_retention test_workflow`.
+Covers 1/2/3 originals, pending/consumed retake, staged JPEG/PNG adoption without
+rewrite, two designs/copy preservation, hash corruption, missing ownership and
+expired/replayed permits. No raw media exposure in pre-claim inspection.
+No private resume is mounted in GUI by this increment. Full regression, real
+merchant, Windows/Ubuntu hardware, paper and cloud gates remain NOT_RUN.

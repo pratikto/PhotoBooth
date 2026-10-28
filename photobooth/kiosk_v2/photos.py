@@ -156,6 +156,37 @@ class PhotoTest:
         return self.start(templates, quantities, transaction_id=binding['transaction_id'],
                           payment_binding=binding, frozen_order=contract)
 
+    def inspect_resume(self, templates, binding):
+        """Metadata only; never return thumbnails/strips before customer proof."""
+        from .photo_recovery import reconstruct
+        from photobooth.capture_journal import CaptureRecoveryRequired
+        try:
+            tx,sessions,index,phase,pending,repair = reconstruct(self.store,templates,binding)
+        except (OSError, ValueError, KeyError, TypeError, AttributeError) as error:
+            raise CaptureRecoveryRequired('Original photo state needs review') from error
+        return {'phase':phase,'session_index':index,
+                'captured_counts':[len(s.initial_photo_paths) for s in sessions],
+                'repair_required':repair,'retake_pending':pending}
+
+    def restore(self, templates, binding, permit):
+        from photobooth.resume_authority import ResumePermit
+        from photobooth.capture_journal import CaptureRecoveryRequired
+        from .photo_recovery import reconstruct
+        if not isinstance(permit, ResumePermit):
+            raise CaptureRecoveryRequired('Original customer authorization required')
+        if self.workspace or self.printer or self.drive_client or self.drive_requested:
+            raise CaptureRecoveryRequired('Private Sandbox resume requires delivery transports off')
+        if self.transaction is not None or self.phase != 'confirm' or self._closed.is_set():
+            raise CaptureRecoveryRequired('Photo worker already owns a session')
+        permit.consume(binding)
+        try:
+            tx,sessions,index,phase,pending,_repair = reconstruct(self.store,templates,binding,repair=True)
+        except (OSError, ValueError, KeyError, TypeError, AttributeError) as error:
+            raise CaptureRecoveryRequired('Original photo state needs review') from error
+        self.transaction,self.sessions,self.index,self.phase,self._retake=tx,sessions,index,phase,pending
+        self.auto_print=False
+        return self.snapshot()
+
     def start(self, templates, quantities, *, transaction_id=None, payment_binding=None, frozen_order=None):
         if self.phase != 'confirm' or self._closed.is_set():
             raise ValueError('Photo test already started or closed.')

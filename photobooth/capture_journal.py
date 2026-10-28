@@ -123,14 +123,16 @@ def save_capture(store, transaction, session, image, filename, role):
     relative = ((Path('Photo') / f'{session.order_number:02d}' / 'raw' / filename)
                 if store.layout_version == 2 else Path('raw') / session.session_id / filename)
     target = checked_path(transaction.folder_path / relative)
-    if target.exists() or any(i.get('path') == relative.as_posix()
+    if target.exists() or any(i.get('path') == relative.as_posix() and i.get('state') != 'VOID_BEFORE_FRAME'
                                for i in latest.get('capture_intents', {}).values()):
         raise CaptureRecoveryRequired('Existing capture evidence must not be replaced')
     target.parent.mkdir(parents=True, exist_ok=True)
     operation = uuid.uuid4().hex
     temporary = checked_path(target.with_name('.'+target.stem+'.'+operation+'.tmp.jpg'))
     intent = {'operation_id': operation, 'session_id': session.session_id,
-              'slot': slot, 'role': role, 'attempt': 1, 'path': relative.as_posix(),
+              'slot': slot, 'role': role,
+              'attempt': 1+sum(i.get('path') == relative.as_posix() for i in latest.get('capture_intents',{}).values()),
+              'path': relative.as_posix(),
               'temporary_path': temporary.relative_to(transaction.folder_path).as_posix(),
               'state': 'INTENT', 'selected_photo': selected}
     latest.setdefault('capture_intents', {})[operation] = intent
@@ -158,17 +160,23 @@ def save_capture(store, transaction, session, image, filename, role):
     temporary.unlink()
     sync_directory(target.parent)
     boundary('published')
-    record['status'] = 'CAPTURING'
-    record['raw_photos'].append({'path': relative.as_posix(), 'role': role,
-                                 'operation_id': operation, 'sha256': intent['sha256']})
-    if role == 'retake':
-        record.update(retake_used=True, selected_photo=selected)
-        record.pop('pending_retake_index', None)
-    latest['upload_files'][relative.as_posix()] = {
-        'path': relative.as_posix(), 'content_version': operation,
-        'status': 'PENDING_UPLOAD' if latest.get('drive_folder_id') or latest.get('drive_intent') else 'LOCAL_ONLY',
-        'size_bytes': size, 'drive_file_id': None, 'md5_checksum': None, 'upload_session_url': None}
-    intent['state'] = 'COMMITTED'
-    store._write_manifest(transaction)
+    commit_capture(store, transaction, intent)
     boundary('committed')
     return target
+
+
+def commit_capture(store, transaction, intent):
+    latest = transaction.manifest
+    record = store._session_record(transaction, intent['session_id'])
+    record['status'] = 'CAPTURING'
+    record['raw_photos'].append({'path': intent['path'], 'role': intent['role'],
+                                 'operation_id': intent['operation_id'], 'sha256': intent['sha256']})
+    if intent['role'] == 'retake':
+        record.update(retake_used=True, selected_photo=intent['selected_photo'])
+        record.pop('pending_retake_index', None)
+    latest['upload_files'][intent['path']] = {
+        'path': intent['path'], 'content_version': intent['operation_id'],
+        'status': 'PENDING_UPLOAD' if latest.get('drive_folder_id') or latest.get('drive_intent') else 'LOCAL_ONLY',
+        'size_bytes': intent['size_bytes'], 'drive_file_id': None, 'md5_checksum': None, 'upload_session_url': None}
+    intent['state'] = 'COMMITTED'
+    store._write_manifest(transaction)

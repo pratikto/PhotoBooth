@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-05.b: exact private photo reconstruction behind one-use in-memory permit
+
+Base / last remote-verified commit `3c04e31f56e5ed7e4fc30c971fc7ead28e1cc446`. Nine new reconstruction cases pass; focused 63 PASS plus nine final guard checks, zero failures/errors/skips. Restores partial shots, selected/used retake, staged captures/PNG and multi-design copies without new IDs, shutter, renderer or print. No old media is returned without a bound ephemeral permit; UI mounting remains disabled until AR-06/07.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, private
+photo display or customer state reset. Next: AR-06.a hashed customer capability, expiry/action CAS/rate limiting and fresh-payment redeem API.
+Only work/ scratch files local; scope and rollback in
+[stage contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-PHOTO-RESUME.md).
+
 ## 28 October — AR-05.a: immutable strip publication with frozen input hashes
 
 Base / last remote-verified commit `879d69bf4553e84befb21705033d9eb84759b571`. Three new output cases; focused 71 PASS, zero failures/errors/skips, including native handoff, capture, delivery and v1 retention/workflow. PNG intent and input identities persist before rendering; published-but-unacknowledged output cannot be overwritten on retry.
