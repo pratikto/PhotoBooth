@@ -1,5 +1,13 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 28 October — centered Meong logo on Sandbox QR
+
+Owner requests reuse of the Drive QR logo. The v2 adapter now calls that exact
+renderer with locally decoded provider data, checks equivalence and retains
+original pixels on failure. Renderer algorithm/artwork, download URL and payment
+authority are unchanged. 175 focused PASS; final regression/CI and exact-source
+native previews are tracked in the [logo package](qa/portrait-v2-sandbox/QR-LOGO.md).
+
 ## 28 October — saved Sandbox credentials
 
 Owner requests ignored local Merchant ID/Server Key defaults. The shared launcher

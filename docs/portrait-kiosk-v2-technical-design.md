@@ -1,5 +1,14 @@
 # FEAT-022 — GUI v2 engineering contracts
 
+V2 Sandbox QR branding directly reuses `qr_code.create_qr_image`: downloaded
+provider pixels are decoded locally, significant outer whitespace is rejected
+for branding, and the logo candidate must decode to the identical payload.
+The existing renderer checks full-size and 180px pixels; original images remain
+available on any branding failure. Downloads/errors, raw simulator URL, order
+identity and payment verification stay in their existing services. Work runs
+on the existing single-flight worker and is cached per order/image identity;
+QR texture filtering uses nearest sampling. [Evidence](qa/portrait-v2-sandbox/QR-LOGO.md).
+
 Optional local Sandbox defaults are top-level string literals named
 `MIDTRANS_SANDBOX_MERCHANT_ID` and `MIDTRANS_SANDBOX_SERVER_KEY` in ignored
 `photobooth/local_settings.py`. The launcher parses these without executing Drive
@@ -59,7 +68,7 @@ source `266b2c8` (print/Drive), input correction `ebb53fd`, original operator
 | Photo lifecycle | `photo_views.py`, `photos.py`, `photo_drive.py` | Single-flight PhotoJobs over existing PhotoSession/store/catalog/printer/Drive; preserve originals |
 | Game | `game_scene.py`, `game_layout.py`, `game_views.py`, `demo_game.py` | Original Stage/Flow/renderer/emitter; v2 persistent one-use DEMO ledger; no scanner/POS authority |
 | Local reward/MOCK | `game_offer.py`, `mock_checkout.py`, `checkout_views.py` | Local verified DEMO outcome/quote/admission; one-use reward; nonpayable QR |
-| Sandbox host | `sandbox_checkout.py`, `sandbox_views.py` | Existing KioskCheckout/QrisKioskClient and single-flight GameJobs; durable photo handoff; no GUI merchant key |
+| Sandbox host | `sandbox_checkout.py`, `sandbox_views.py`, `qr_branding.py` | Existing KioskCheckout/QrisKioskClient and single-flight GameJobs; durable photo handoff; verified centered Meong QR; no GUI merchant key |
 | Operator health | `health_service.py`, `operator_health.py`, `health_report.py` | Original v1 panel/backend/extracted worker; bounded observations and safe local reports |
 | Diagnostics/readiness | `diagnostics.py`, `performance.py`, `readiness.py` | Local diagnostics/timings, safe inventory; preflight performs no device/provider readiness probes |
 | Retention diagnosis (shared) | `retention_readiness.py`, `drive_storage.py`; `tools/check_drive_retention.py` | Explicit one-action authenticated status/parent-metadata read through original v1 configuration; no setup/upload/delete; original UTC retention/deletion unchanged |

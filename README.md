@@ -62,6 +62,9 @@ terminal. [Sandbox instructions and recovery](docs/qa/portrait-v2-sandbox/README
 Copy the Server Key exactly from the Sandbox dashboard: both `SB-Mid-server-`
 and `Mid-server-` formats are accepted. The prefix does not select the environment;
 provider requests remain fixed to Sandbox. [Key-format correction](docs/qa/portrait-v2-sandbox/KEY-FORMAT.md).
+The v2 payment QR now reuses the centered Drive QR logo renderer with exact
+decoded-payload checks. It retains the original image if branding cannot be
+verified. [Logo scope and pixel evidence](docs/qa/portrait-v2-sandbox/QR-LOGO.md).
 Production account approval and Sandbox access are separate; the
 [official account guide](https://docs.midtrans.com/docs/midtrans-account)
 describes the environments. Actual merchant acceptance remains pending.

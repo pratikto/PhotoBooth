@@ -8,6 +8,7 @@ from photobooth.qris_kiosk_client import QrisKioskClient
 from photobooth.qris_session import KioskCheckout
 from photobooth.kiosk_v2.sandbox_checkout import SandboxCheckout, SandboxJobs
 from photobooth.qr_code import create_qr_image
+from photobooth.kiosk_v2.qr_branding import with_meong_logo
 from tests.test_checkout_backend import FakeProvider, KEY, MERCHANT
 
 
@@ -37,7 +38,8 @@ class Fixture:
         client=QrisKioskClient('http://127.0.0.1:8765','PB001','a'*48,allow_local_http=True,session=self.session)
         self.flow=KioskCheckout(root/'visit.json',client,mode='sandbox',booth_id='PB001',endpoint=client.base_url)
         def offline_qr(order):
-            return create_qr_image('MEONG OFFLINE HTTP FIXTURE - NOT PAYABLE',with_logo=False)
+            original = create_qr_image('MEONG OFFLINE HTTP FIXTURE - NOT PAYABLE',with_logo=False)
+            return with_meong_logo(original)
         self.service=SandboxCheckout(self.flow,image_loader=offline_qr)
         self.jobs=SandboxJobs(lambda:self.service)
     def paid(self):

@@ -1,5 +1,13 @@
 # Meong Photobooth — product and technical decisions
 
+## Owner QRIS logo request — 28 October 2026
+
+The owner asks for Meong centered in the v2 Sandbox payment QR like the Drive
+download QR, then explicitly reiterates reusing the existing implementation.
+Reuse its renderer and approved artwork, without changing the encoded provider
+payload or payment state. Keep the original image when equivalence/readability
+cannot be verified. [Presentation contract and evidence](qa/portrait-v2-sandbox/QR-LOGO.md).
+
 ## Owner saved Sandbox credentials request — 28 October 2026
 
 The owner explicitly requests persisting Merchant ID and Server Key locally,

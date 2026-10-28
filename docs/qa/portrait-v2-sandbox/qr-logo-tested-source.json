@@ -1,0 +1,21 @@
+{
+  "base_sha": "4b080ce1997956a0fe57b09e544ff29126d201c0",
+  "sha256": {
+    "photobooth/kiosk_v2/qr_branding.py": "803afb35d683f7d272aebcf531456dc8f692a9159ed7f96a539a6f5b7105e32f",
+    "photobooth/kiosk_v2/sandbox_checkout.py": "7bb89648115b5e00fb72ac457422707a43e9dbb05f45041894210b8ecf1a20f2",
+    "photobooth/kiosk_v2/sandbox_views.py": "a7fcec4752fa6091a765b90cb651605a40e04702b7b314b69d0be3d5808e55ea",
+    "photobooth/qr_code.py": "0b6c3a91ac6cf84b0feec8cae2d40a2c34810f74b85d0e74941e71d8776cd30e",
+    "photobooth/branding.py": "3d9e831c4ada94e897eed6320562cd3dbf8d398a786838addc52b5f0ce06ebf5",
+    "photobooth/qris_images.py": "5faeb88feb7b4a40549aeaa138afbb01cded52e5a6744a16079a94cbdf7b3969",
+    "tests/qris_v2_fixture.py": "2dd1fe6591a2ca2a0ac9f507e7db9032c07f379970e1ceee43e22e777b7af860",
+    "tests/test_kiosk_v2_qr_branding.py": "e20ea382fdb0bea004bbd6fbdfa3afd315059b379b50baf01098beed3251d81f",
+    "tests/test_kiosk_v2_sandbox_widgets.py": "895181192763d9ee4c50815d0448b4dc8bee410050152a13e185bf6dec168301",
+    "tools/ci_qr_pixels.py": "983d582c48bb0560fa1fde14a3f4c386bebe649b263ac3d6b0a94bef40653983",
+    ".github/workflows/portrait-kiosk-v2.yml": "71f3534879a201e3317515e178dabf08ae2f21147ffdcd7f7616b531553441af",
+    "photobooth/assets/meong_photobooth_vivid.png": "dc1866b6e9cac905a08fec4019f971bb6daa6d243c51e13b23d082027646f61b"
+  },
+  "renderer_algorithm_changes": false,
+  "renderer_docstrings_updated": true,
+  "actual_merchant_acceptance": "NOT_RUN",
+  "physical_phone_readability": "NOT_RUN"
+}

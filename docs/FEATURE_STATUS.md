@@ -1,5 +1,12 @@
 # Meong Photobooth — current feature status
 
+## 28 October — centered Meong Sandbox QR
+
+IN SOURCE: direct Drive-renderer/artwork reuse, exact provider-payload check,
+original-image fallback, nearest filtering and per-order cache. 175 focused
+checks PASS; full regression/CI and actual provider/phone limits remain
+source-specific in the [evidence package](qa/portrait-v2-sandbox/QR-LOGO.md).
+
 ## 28 October — saved Sandbox credentials
 
 IN SOURCE: optional ignored local defaults remove repeated terminal entry;

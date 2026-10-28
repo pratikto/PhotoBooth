@@ -163,7 +163,9 @@ class SandboxViews:
         if qr:
             from PIL import Image as PILImage
             image = PILImage.frombytes('RGB', qr[0], qr[1])
-            card.add_widget(Image(texture=image_texture(image),fit_mode='contain'))
+            texture = image_texture(image)
+            texture.mag_filter = texture.min_filter = 'nearest'
+            card.add_widget(Image(texture=texture,fit_mode='contain'))
         else:
             card.add_widget(Widget())
         message = 'Gunakan simulator resmi Midtrans Sandbox.\nJangan memakai aplikasi bank atau dompet asli.'

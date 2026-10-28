@@ -1,5 +1,14 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 28 October — Sandbox QR logo
+
+175 focused Sandbox/QR checks PASS, zero failures/errors/skips, 11.383s.
+Includes pixel-identical data, failure fallback, unchanged bounded downloads,
+same-order cache/status, native resize and the existing strict screenshot
+reader's negative tests. Initial one-scale 277px OpenCV failure is preserved
+with its diagnosis; no runtime QR data is changed to satisfy the test.
+Full regression, source hashes, native captures and CI: [logo evidence](qa/portrait-v2-sandbox/QR-LOGO.md).
+
 ## 28 October — saved Sandbox credentials
 
 New offline tests cover file defaults, pair precedence, prompt fallback, no code

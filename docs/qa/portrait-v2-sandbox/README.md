@@ -1,5 +1,11 @@
 # P4b Sandbox → P5 readiness (FEAT-020 / FEAT-022)
 
+**28 October — centered Meong QR logo:** v2 reuses the existing Drive renderer
+and approved artwork for the independently decoded provider payload. Full-size/
+compact checks and an exact-payload guard protect the result; failures retain
+the original image. The original download/simulator URL and payment authority
+remain unchanged. [Source, tests and native previews](QR-LOGO.md).
+
 **28 October — BUG-020:** the owner's Sandbox dashboard displays a Server Key
 beginning `Mid-server-`. The launcher now accepts that format and `SB-Mid-server-`
 without rewriting the credential. Copy the complete key from the Sandbox

@@ -1,0 +1,26 @@
+test_asset_or_renderer_failure_retains_original_pixels (test_kiosk_v2_qr_branding.SandboxQrBrandingTests.test_asset_or_renderer_failure_retains_original_pixels) ... ok
+test_centered_meong_art_and_exact_payload_at_full_and_compact_sizes (test_kiosk_v2_qr_branding.SandboxQrBrandingTests.test_centered_meong_art_and_exact_payload_at_full_and_compact_sizes) ... ok
+test_download_failure_remains_an_image_failure_not_a_fake_qr (test_kiosk_v2_qr_branding.SandboxQrBrandingTests.test_download_failure_remains_an_image_failure_not_a_fake_qr) ... ok
+test_downloaded_payload_is_branded_instead_of_encoding_its_image_url (test_kiosk_v2_qr_branding.SandboxQrBrandingTests.test_downloaded_payload_is_branded_instead_of_encoding_its_image_url) ... ok
+test_mock_marker_stays_plain_and_is_not_admitted_to_sandbox_branding (test_kiosk_v2_qr_branding.SandboxQrBrandingTests.test_mock_marker_stays_plain_and_is_not_admitted_to_sandbox_branding) ... ok
+test_optional_decoder_unavailable_keeps_original (test_kiosk_v2_qr_branding.SandboxQrBrandingTests.test_optional_decoder_unavailable_keeps_original) ... ok
+test_significant_whitespace_is_not_trimmed_or_reencoded (test_kiosk_v2_qr_branding.SandboxQrBrandingTests.test_significant_whitespace_is_not_trimmed_or_reencoded) ... ok
+test_unreadable_original_is_retained_without_creating_a_substitute (test_kiosk_v2_qr_branding.SandboxQrBrandingTests.test_unreadable_original_is_retained_without_creating_a_substitute) ... ok
+test_wrong_or_unreadable_rendered_payload_retains_original (test_kiosk_v2_qr_branding.SandboxQrBrandingTests.test_wrong_or_unreadable_rendered_payload_retains_original) ... ok
+test_empty_destinations_and_impossible_sizes_fail_clearly (test_qr_code.BrandedQRTests.test_empty_destinations_and_impossible_sizes_fail_clearly) ... ok
+test_logo_is_at_the_geometric_center_for_short_and_drive_urls (test_qr_code.BrandedQRTests.test_logo_is_at_the_geometric_center_for_short_and_drive_urls)
+Measure changed output pixels instead of trusting layout metadata. ... ok
+test_overlay_preserves_finders_uncovered_alignment_marks_and_the_white_margin (test_qr_code.BrandedQRTests.test_overlay_preserves_finders_uncovered_alignment_marks_and_the_white_margin) ... ok
+test_payment_demo_can_stay_plain_and_cached_images_are_independent (test_qr_code.BrandedQRTests.test_payment_demo_can_stay_plain_and_cached_images_are_independent) ... ok
+test_realistic_folder_urls_decode_at_display_and_footer_sizes (test_qr_code.BrandedQRTests.test_realistic_folder_urls_decode_at_display_and_footer_sizes) ... ok
+test_external_origin_is_rejected_before_network (test_qris_images.QrisImageTests.test_external_origin_is_rejected_before_network) ... ok
+test_extreme_dimensions_rejected (test_qris_images.QrisImageTests.test_extreme_dimensions_rejected) ... ok
+test_redirect_is_rejected_before_read (test_qris_images.QrisImageTests.test_redirect_is_rejected_before_read) ... ok
+test_stream_stops_at_byte_limit (test_qris_images.QrisImageTests.test_stream_stops_at_byte_limit) ... ok
+test_verified_image_is_displayed_not_url_reencoded (test_qris_images.QrisImageTests.test_verified_image_is_displayed_not_url_reencoded) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 3.274s
+
+OK
+KIOSK_UNITTEST_SUMMARY: run=19 failures=0 errors=0 skipped=0 success=True

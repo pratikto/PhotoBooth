@@ -1,7 +1,9 @@
-"""Generate a centered, independently checked Meong transaction-folder QR.
+"""Generate a centered, independently checked Meong QR.
 
-The bundled full logo is a visual insert; only the folder URL is encoded.
-Each new transaction keeps its own destination, and QR generation stays offline.
+The bundled full logo is a visual insert; caller-supplied data stays unchanged.
+Folder callers encode only their own destination. The v2 Sandbox adapter may
+also supply a locally decoded provider payload, with its own equivalence guard.
+All QR generation stays offline.
 The insert covers a few QR cells, so level-H error correction, a small white
 plate, an intact outer quiet zone, and independent decoding checks are required.
 """
@@ -167,10 +169,13 @@ def create_qr_image(content: str, *, with_logo: bool = True,
     """Return a detached RGB QR image with the full logo exactly at its center.
 
     Args:
-        content: Cached folder URL or explicit demo text. Empty text fails.
+        content: Cached folder URL, explicit demo text, or a provider payload
+            independently decoded by the v2 Sandbox presentation adapter.
+            That adapter rejects significant outer whitespace before calling.
         with_logo: Include the complete approved camera-cat, approved trail,
             and MEONG PHOTOBOOTH wordmark. False keeps payment-demo codes plain;
-            this helper never edits a payment provider's actual QRIS artwork.
+            this helper never downloads or modifies the provider's original
+            image. Never supply a provider image URL as payment data.
         max_size: Optional pixel bound INCLUDING the four-module white margin.
             The square can be smaller to retain integer module widths. The
             80 mm receipt allocation uses 384px; legacy footers use 210px.

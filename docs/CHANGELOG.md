@@ -1,5 +1,13 @@
 # Meong Photobooth — changelog
 
+## 2026-10-28 — centered Meong logo in v2 Sandbox payment QR
+
+Reuse the existing Drive QR renderer and full Meong artwork for the exact
+independently decoded provider payload. Keep original pixels on branding failure,
+use nearest texture sampling and retain the existing per-order worker cache.
+Provider downloader, simulator URL and payment state/verification are unchanged.
+175 focused PASS; [native/source/final verification](qa/portrait-v2-sandbox/QR-LOGO.md).
+
 ## 2026-10-28 — optional saved Sandbox credentials
 
 Read Sandbox Merchant ID/Server Key from literal fields in ignored shared local

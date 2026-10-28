@@ -1,0 +1,17 @@
+test_center_logo_payload_and_cached_order_survive_resizing_and_status_checks (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_center_logo_payload_and_cached_order_survive_resizing_and_status_checks) ... FAIL
+
+======================================================================
+FAIL: test_center_logo_payload_and_cached_order_survive_resizing_and_status_checks (test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_center_logo_payload_and_cached_order_survive_resizing_and_status_checks)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/PhotoBooth/tests/test_kiosk_v2_sandbox_widgets.py", line 102, in test_center_logo_payload_and_cached_order_survive_resizing_and_status_checks
+    self.assertEqual(reader.detectAndDecode(np.asarray(displayed))[0], payload,
+AssertionError: '' != 'MEONG TEST ONLY - NOT PAYABLE | 012345678[147 chars]6789'
++ MEONG TEST ONLY - NOT PAYABLE | 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
+ : Window (452, 900), displayed QR (277, 277), source (488, 488)
+
+----------------------------------------------------------------------
+Ran 1 test in 1.245s
+
+FAILED (failures=1)
+KIOSK_UNITTEST_SUMMARY: run=1 failures=1 errors=0 skipped=0 success=False

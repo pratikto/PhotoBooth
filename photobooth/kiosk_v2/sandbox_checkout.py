@@ -5,7 +5,7 @@ import threading
 
 from photobooth.qris_kiosk_client import QrisKioskClient
 from photobooth.qris_session import KioskCheckout
-from photobooth.qris_images import payment_qr_image
+from .qr_branding import branded_sandbox_qr_image
 from .demo_game import GameJobs
 
 ACTIONS = {'boot', 'begin', 'check', 'cancel', 'prepare', 'started', 'complete', 'recover'}
@@ -46,7 +46,7 @@ def configured_sandbox(root, env=None):
 
 class SandboxCheckout:
     """All calls run on the existing single-flight worker, including QR download."""
-    def __init__(self, flow, *, image_loader=payment_qr_image):
+    def __init__(self, flow, *, image_loader=branded_sandbox_qr_image):
         self.flow, self.image_loader = flow, image_loader
         self.qr = self.qr_identity = None
 

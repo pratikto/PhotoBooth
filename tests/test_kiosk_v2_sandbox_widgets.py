@@ -9,6 +9,8 @@ from unittest.mock import Mock, patch
 import numpy as np
 from kivy.base import EventLoop
 from kivy.core.window import Window
+from kivy.uix.image import Image as KivyImage
+from PIL import Image as PILImage
 from photobooth.kiosk_v2.app import PortraitKioskV2App
 from photobooth.kiosk_v2.flow import ADVERT, TEMPLATES, PHOTO_CONFIRM, SANDBOX_CHECKOUT, CAPTURE
 from photobooth.kiosk_v2.photos import PhotoTest
@@ -66,6 +68,48 @@ class SandboxWidgetTests(unittest.TestCase):
             app._sandbox_cancel();self.settle(app)
             self.assertEqual(app._sandbox_view['phase'],'CANCELLED')
             app._sandbox_leave();self.assertEqual(app.navigation.page,ADVERT)
+
+    def test_center_logo_payload_and_cached_order_survive_resizing_and_status_checks(self):
+        import cv2
+        from photobooth.kiosk_v2.qr_branding import with_meong_logo
+        from photobooth.qr_code import create_qr_image
+        from tools.ci_qr_pixels import decode_rendered_qr_pixels
+        payload = 'MEONG TEST ONLY - NOT PAYABLE | ' + '0123456789' * 16
+        previous_size = Window.size
+        try:
+            with self.booth() as (app, fixture):
+                fixture.service.image_loader = Mock(side_effect=lambda order: with_meong_logo(
+                    create_qr_image(payload, with_logo=False)))
+                self.pending(app)
+                order_id = app._sandbox_view['order']['order_id']
+                checkout_key = fixture.flow.snapshot()['checkout_key']
+                for size in ((800, 1280), (452, 900), (640, 880)):
+                    Window.size = size
+                    app._sandbox_retry()
+                    self.settle(app)
+                    for _ in range(3):
+                        EventLoop.idle()
+                    native_size, pixels = app._sandbox_view['qr_rgb']
+                    widgets = [w for w in app.stage.walk() if isinstance(w, KivyImage)
+                               and w.texture is not None and tuple(w.texture.size) == native_size]
+                    self.assertEqual(len(widgets), 1)
+                    widget = widgets[0]
+                    self.assertEqual((widget.texture.min_filter, widget.texture.mag_filter),
+                                     ('nearest', 'nearest'))
+                    image = PILImage.frombytes('RGB', native_size, pixels)
+                    width, height = map(round, widget.norm_image_size)
+                    displayed = image.resize((width, height), PILImage.Resampling.NEAREST)
+                    pixels_bgr = cv2.cvtColor(np.asarray(displayed), cv2.COLOR_RGB2BGR)
+                    self.assertEqual(decode_rendered_qr_pixels(pixels_bgr), payload,
+                                     f'Window {size}, displayed QR {(width, height)}, source {native_size}')
+                    array = np.asarray(displayed)
+                    self.assertTrue(np.any(array[:, :, 0] != array[:, :, 1]))
+                    self.assertEqual(app._sandbox_view['order']['order_id'], order_id)
+                    self.assertEqual(fixture.flow.snapshot()['checkout_key'], checkout_key)
+                    self.assertEqual(fixture.provider.charges, 1)
+                fixture.service.image_loader.assert_called_once()
+        finally:
+            Window.size = previous_size
     def test_real_photo_handoff_completion_and_duplicate_taps(self):
         with self.booth() as (app,f):
             self.reserve(app,f)

@@ -1,5 +1,12 @@
 # Meong Photobooth — GUI v2 architecture
 
+The v2 Sandbox worker now wraps the original provider-image downloader with
+`qr_branding.py`. It decodes pixels and directly reuses the existing Drive QR
+renderer/approved logo, then verifies payload equality. Failure keeps original
+pixels. Nearest display filtering and per-order caching preserve clarity and
+avoid repeated rendering. Payment authority and simulator URLs are unchanged.
+[28 October source/pixel evidence](qa/portrait-v2-sandbox/QR-LOGO.md).
+
 The dedicated Sandbox launcher now reads optional literal Sandbox credentials
 from ignored `photobooth/local_settings.py` without importing/executing that file.
 Environment overrides select a complete source pair, with prompts for missing
