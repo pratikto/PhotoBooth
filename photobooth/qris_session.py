@@ -186,20 +186,26 @@ class KioskCheckout:
             return self.snapshot()
 
     def prepare_capture(self):
-        with self.lock:
-            if self.data['phase'] != 'RESERVED' or not self.data['order'].get('grant_id'):
-                raise RuntimeError('A verified permit is required')
-            allocate = getattr(self.client, 'allocate', None)
-            if callable(allocate):
-                self.data['allocation_operation_id'] = uuid.uuid4().hex
-                self.data['allocation_ready'] = False
-            self.data['phase'] = 'STARTING'; self._save()
-            if callable(allocate):
+        with self.worker_lock:
+            with self.lock:
+                if self.data['phase'] != 'RESERVED' or not self.data['order'].get('grant_id'):
+                    raise RuntimeError('A verified permit is required')
+                allocate = getattr(self.client, 'allocate', None)
+                if callable(allocate):
+                    self.data['allocation_operation_id'] = uuid.uuid4().hex
+                    self.data['allocation_ready'] = False
+                self.data['phase'] = 'STARTING'; self._save()
                 order = self.data['order']
-                result = allocate(order['order_id'], order['grant_id'], self.data['allocation_operation_id'])
+                operation_id = self.data.get('allocation_operation_id')
+            # Never hold the snapshot/UI lock during backend I/O.
+            if callable(allocate):
+                result = allocate(order['order_id'], order['grant_id'], operation_id)
                 self._accept(result)
-                self.data['transaction_id'] = result['fulfillment']['transaction_id']
-                self._save()
+                with self.lock:
+                    if self.data['phase'] != 'STARTING' or self.data.get('allocation_operation_id') != operation_id:
+                        raise RuntimeError('Allocation callback belongs to a retired phase')
+                    self.data['transaction_id'] = result['fulfillment']['transaction_id']
+                    self._save()
 
     def bind_transaction(self, transaction_id):
         with self.lock:

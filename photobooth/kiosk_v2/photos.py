@@ -37,8 +37,8 @@ class PhotoTest:
                  auto_print=False, workspace=None, drive_requested=None, raster_printer=None):
         self.root = Path(root)
         self.workspace = workspace
-        self.store = (TransactionStore(workspace.root, workspace.counter_path, workspace.booth_id, layout_version=2)
-                      if workspace else TransactionStore(self.root / 'photos', self.root / 'counter.json', booth_id))
+        self.store = (TransactionStore(workspace.root, workspace.counter_path, workspace.booth_id, layout_version=2, capture_protocol=1)
+                      if workspace else TransactionStore(self.root / 'photos', self.root / 'counter.json', booth_id, capture_protocol=1))
         self.drive_requested = bool(drive_client) if drive_requested is None else bool(drive_requested)
         self.raster_printer = raster_printer or printer
         self.content = None
@@ -219,6 +219,14 @@ class PhotoTest:
         self.session.select_photo(index)
         if not self.session.can_retake:
             raise ValueError('One retake per session has already been used.')
+        session_id = self.session.plan.session_id
+        def select(manifest):
+            for record in manifest['sessions']:
+                if record['session_id'] == session_id:
+                    record['pending_retake_index'] = index
+                    return
+            raise ValueError('Retake session is missing')
+        self._edit(select)
         self._retake = True
         self.phase = 'capture'
         return self.snapshot()

@@ -2,7 +2,7 @@
 
 **Checkpoint status:** AR-02.a focused VERIFIED / roadmap IN PROGRESS, 28 October 2026 (Asia/Jakarta)
 **Branch:** `feature/portrait-kiosk-v2-next` (existing; no master merge)
-**Recovery implementation:** Source work progressed through AR-03.b; later stages and external gates remain unfinished
+**Recovery implementation:** Source work progressed through AR-04.a; later stages and external gates remain unfinished
 **Latest tested/pushed functional source:** `017b417d02d63a79b1c5b21c4f0613b7d15186fc`
 **Historical audit baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
 **Current documentation handover:** See `docs/DEVELOPMENT_HANDOVER.md` and verify current remote HEAD; never assume the HEAD printed in a dated checkpoint is still current.
@@ -34,13 +34,13 @@ The owner prefers **frequent small tested commits AND remote pushes** because a 
 | Next *small* action | File/function, intended test and AR substep |
 | Safe rollback | Previous commit and retained-data plan |
 
-## Current implementation checkpoint — AR-03.b
+## Current implementation checkpoint — AR-04.a
 
-- Base / last verified remote: `4e0dadee16c3596d7575ee2ce2ed32a43bc0b7cf`.
-- Completed: unique allocation before local photo creation. Focused 204 PASS, zero failures/errors/skips, including native HTTP-to-photo handoff, allocation replay/restart, initial binding, v1 workflow and retention. Server atomically assigns one PB001V2AR-style transaction before any folder creation; exact initial manifest binds original payment/permit.
+- Base / last verified remote: `075e97319762cfd73a089b444340fcf0eb2deb36`.
+- Completed: write-ahead immutable JPEG capture and atomic retake quota. Seven new capture cases, five abrupt process boundaries, and focused 73 PASS, zero failures/errors/skips. V2 opts in; v1 writer defaults unchanged. Existing/orphan JPEGs cannot be overwritten; retake selection/quota commit with saved bytes. Native Sandbox and retention checks pass.
 - Publication SHA: this increment will be pinned after its verified push by the
   next checkpoint; obtain containing commit from Git history.
-- Remaining / exact next step: AR-04.a write-ahead immutable capture intents and crash-boundary tests; then photo reconstruction AR-05.
+- Remaining / exact next step: AR-05.a output publication and deterministic manifest/intent reconstruction; customer disclosure stays gated until AR-06.
 - Full suite: deferred to final functional SHA. Actual Windows/Ubuntu devices,
   merchant, paper/Drive and production: NOT_RUN / not enabled.
 - Migration/rollback: see stage contract; preserve all ledgers/media/claims,

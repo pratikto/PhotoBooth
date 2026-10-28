@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 28 October — AR-04.a: write-ahead immutable JPEG capture and atomic retake quota
+
+Base / last remote-verified commit `075e97319762cfd73a089b444340fcf0eb2deb36`. Seven new capture cases, five abrupt process boundaries, and focused 73 PASS, zero failures/errors/skips. V2 opts in; v1 writer defaults unchanged. Existing/orphan JPEGs cannot be overwritten; retake selection/quota commit with saved bytes. Native Sandbox and retention checks pass.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, private
+photo display or customer state reset. Next: AR-05.a output publication and deterministic manifest/intent reconstruction; customer disclosure stays gated until AR-06.
+Only work/ scratch files local; scope and rollback in
+[stage contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CAPTURE.md).
+
 ## 28 October — AR-03.b: unique allocation before local photo creation
 
 Base / last remote-verified commit `4e0dadee16c3596d7575ee2ce2ed32a43bc0b7cf`. Focused 204 PASS, zero failures/errors/skips, including native HTTP-to-photo handoff, allocation replay/restart, initial binding, v1 workflow and retention. Server atomically assigns one PB001V2AR-style transaction before any folder creation; exact initial manifest binds original payment/permit.

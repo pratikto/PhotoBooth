@@ -1,5 +1,10 @@
 # Meong Photobooth — current feature status
 
+## 28 October — AR-04.a: write-ahead immutable JPEG capture and atomic retake quota
+
+Seven new capture cases, five abrupt process boundaries, and focused 73 PASS, zero failures/errors/skips. V2 opts in; v1 writer defaults unchanged. Existing/orphan JPEGs cannot be overwritten; retake selection/quota commit with saved bytes. Native Sandbox and retention checks pass. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CAPTURE.md).
+Physical/provider gates remain separate; no production activation.
+
 ## 28 October — AR-03.b: unique allocation before local photo creation
 
 Focused 204 PASS, zero failures/errors/skips, including native HTTP-to-photo handoff, allocation replay/restart, initial binding, v1 workflow and retention. Server atomically assigns one PB001V2AR-style transaction before any folder creation; exact initial manifest binds original payment/permit. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-FULFILLMENT.md).

@@ -45,6 +45,7 @@ class TransactionStore:
         state_path: Path,
         booth_id: str = "PB001",
         *, layout_version: int = 1,
+        capture_protocol: int = 0,
     ) -> None:
         # Keep storage paths and the booth prefix together, and reject unsafe IDs before they are
         # used to build transaction folder names. The counter is read when an ID is reserved.
@@ -52,6 +53,13 @@ class TransactionStore:
         self.state_path = Path(state_path)
         self.booth_id = booth_id
         self.layout_version = layout_version
+        if capture_protocol not in (0, 1):
+            raise ValueError('Unsupported capture protocol')
+        self.capture_protocol = capture_protocol
+        if capture_protocol:
+            from photobooth.booth_storage import checked_path
+            checked_path(self.photos_root)
+            checked_path(self.state_path)
         if not re.fullmatch(r"[A-Za-z0-9]+", self.booth_id):
             raise ValueError("Booth ID may contain letters and numbers only.")
 
@@ -177,6 +185,9 @@ class TransactionStore:
         )
         if self.layout_version == 2:
             manifest['storage_layout'] = 2
+        if self.capture_protocol:
+            manifest['capture_protocol'] = self.capture_protocol
+            manifest['capture_intents'] = {}
         if initial_metadata is not None:
             if set(initial_metadata) - {'payment_binding', 'frozen_order', 'purpose', 'payment_enabled',
                                         'financial_transaction', 'test_print_jobs'}:
@@ -241,6 +252,9 @@ class TransactionStore:
     ) -> Path:
         """Serialize a capture with cleanup; expired sessions cannot recreate bytes."""
         with self.photo_write_lock(transaction):
+            if self.capture_protocol:
+                from photobooth.capture_journal import save_capture
+                return save_capture(self, transaction, session, image, filename, role)
             return self._save_raw_photo(transaction, session, image, filename, role)
 
     def _save_raw_photo(
