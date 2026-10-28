@@ -10,7 +10,7 @@ from photobooth.qris_evidence import sandbox_qr_url
 from .qr_branding import branded_sandbox_qr_image
 from .demo_game import GameJobs
 
-ACTIONS = {'boot', 'begin', 'check', 'cancel', 'prepare', 'started', 'complete', 'recover',
+ACTIONS = {'boot', 'begin', 'begin_ready', 'check', 'cancel', 'prepare', 'started', 'complete', 'recover',
            'ticket_saved', 'customer_claim', 'scan_claim', 'resume', 'resumed'}
 
 
@@ -121,6 +121,15 @@ class SandboxCheckout:
             raise ValueError('Choose 1..9 copies')
         self.flow.begin(cart)
         return self.check()
+
+    def begin_ready(self, quantities, camera_valid, observed_at):
+        from .recovery_readiness import prepayment_readiness
+        from photobooth.catalog import get_templates
+        if not self.flow.active:
+            prepayment_readiness(self.flow.path.parent/'photo-tests'/'photos',get_templates(),
+                {k:v for k,v in quantities.items() if v},camera_valid,observed_at,
+                delivery_enabled=any(os.environ.get('PHOTOBOOTH_V2_'+key)=='1' for key in ('PRINT','DRIVE')))
+        return self.begin(quantities)
 
     def check(self):
         self.flow.refresh()

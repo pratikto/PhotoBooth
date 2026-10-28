@@ -391,3 +391,12 @@ class SandboxWidgetTests(unittest.TestCase):
             self.assertEqual(app._photo_view['captured'],0)
             self.assertEqual(f.provider.charges,1)
             self.assertIsNone(app._countdown_event)
+
+    def test_precharge_camera_failure_keeps_quote_without_creating_any_order(self):
+        with self.booth() as (app,f):
+            self.quote(app);app.camera_device.read.return_value=None
+            app._sandbox_begin();self.settle(app)
+            self.assertEqual(f.provider.charges,0)
+            self.assertIsNone(f.flow.snapshot())
+            self.assertEqual(app._sandbox_view['phase'],'QUOTE')
+            self.assertTrue(any('belum siap' in getattr(w,'text','') for w in app.stage.walk()))

@@ -1,5 +1,10 @@
 # Meong Photobooth — changelog
 
+## 29 October — AR-08.a: gate native new payment on camera storage and template readiness
+
+Focused 57 PASS, zero failures/errors/skips; offline readiness and native no-camera/no-order gates covered; new module registered in CI. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-READINESS.md).
+Physical/provider gates remain separate; no production activation.
+
 ## 29 October — AR-07.b4: recover original pre-manifest allocation without creating another session
 
 Focused 42 PASS, zero failures/errors/skips; original RESERVED empty allocation recovery and STARTED/orphan denial covered in photo and native HTTP fixtures. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-NATIVE.md).

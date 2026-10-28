@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-08.a: gate native new payment on camera storage and template readiness
+
+Base / last remote-verified commit `d65fb97c7244d7aff8b0242d060a7de7c072bde1`. Focused 57 PASS, zero failures/errors/skips; offline readiness and native no-camera/no-order gates covered; new module registered in CI.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, private
+photo display or customer state reset. Next: AR-08.b durable idempotent paid-unfulfilled issue ledger/API and native postpaid fault reporting; then AR-09–13.
+Only work/ scratch files local; scope and rollback in
+[stage contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-READINESS.md).
+
 ## 29 October — AR-07.b4: recover original pre-manifest allocation without creating another session
 
 Base / last remote-verified commit `0745f754288d4ef58e07b93685209d619c796005`. Focused 42 PASS, zero failures/errors/skips; original RESERVED empty allocation recovery and STARTED/orphan denial covered in photo and native HTTP fixtures.

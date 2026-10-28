@@ -92,7 +92,10 @@ class SandboxViews:
 
     def _sandbox_begin(self):
         if self._sandbox_view and self._sandbox_view['phase'] == 'QUOTE':
-            self._sandbox_submit('begin', dict(self.quantities))
+            frame=self.camera_device.read()
+            valid=(frame is not None and getattr(frame,'ndim',0)==3
+                   and frame.shape[2]==3 and frame.size>0)
+            self._sandbox_submit('begin_ready', dict(self.quantities),bool(valid),time.monotonic())
             self._show()
 
     def _sandbox_retry(self):
@@ -205,6 +208,12 @@ class SandboxViews:
                 self._sandbox_refresh_at=time.monotonic()+2
                 return
             if outcome.error:
+                if (outcome.action=='begin_ready' and self._sandbox_jobs.store
+                        and not self._sandbox_jobs.store.flow.active):
+                    self._sandbox_view={'phase':'QUOTE'}
+                    self._sandbox_error='Kamera, penyimpanan atau template belum siap. Periksa perangkat lalu coba lagi.'
+                    self._show()
+                    return
                 if outcome.action in {'customer_claim','scan_claim','resume','resumed'}:
                     self._sandbox_lock_customer()
                 elif outcome.action != 'boot':
