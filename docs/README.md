@@ -1,5 +1,12 @@
 # Meong Photobooth documentation — GUI v2
 
+## Active priority and newly approved future design — 29 October 2026
+
+**Keep AR-00 → AR-13 autonomous payment/photo recovery as the #1 implementation priority.** The dated historical paragraph below is not the current stage: inspect the [live AR checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md), [roadmap](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-ROADMAP.md), [handover](DEVELOPMENT_HANDOVER.md) and fresh remote Git HEAD, and continue its first unfinished tested increment. **Do not begin the new Settings OPS work ahead of AR.**
+
+**New future GUI v2 design (owner-approved, DOCUMENTATION ONLY, OPS NOT_STARTED):** [Meong Settings complete contract](qa/portrait-v2-operator-settings/README.md), [OPS-00..OPS-10 staged Codex roadmap](qa/portrait-v2-operator-settings/IMPLEMENTATION-ROADMAP.md), [129 test cases](qa/portrait-v2-operator-settings/ACCEPTANCE-MATRIX.md), [all decisions/supersessions](qa/portrait-v2-operator-settings/DECISION-REGISTER.md), [Codex handover prompt](qa/portrait-v2-operator-settings/CODEX-HANDOVER.md). Final tabs: **Device Health / Audio Settings / Emulate Ticket**. Normal operator login uses a **static booth-bound QR** at **Advertising + SAFE_IDLE**; DEMO promo/game QR tickets remain static in development but require durable once-per-visit consumption. Physical/merchant production gates stay separate.
+
+
 ## Current Autonomous Recovery implementation checkpoint — 29 October
 
 AR-00–08 source increments and AR-09 PIN inspection/service-fence foundation have
@@ -41,6 +48,7 @@ Updated **26 October 2026 (Asia/Jakarta)**. Continue on
 | --- | --- |
 | Installation, launchers and test modes | [Repository README](../README.md) |
 | Implemented roadmap and customer flow | [GUI v2 specification](portrait-kiosk-v2.md) |
+| Approved future operator Settings after AR-00–AR-13 | [Master design](qa/portrait-v2-operator-settings/README.md) · [OPS implementation order](qa/portrait-v2-operator-settings/IMPLEMENTATION-ROADMAP.md) · [QA](qa/portrait-v2-operator-settings/ACCEPTANCE-MATRIX.md) · [Codex prompt](qa/portrait-v2-operator-settings/CODEX-HANDOVER.md) |
 | Per-booth folders and offline global/local assets | [Current storage contract](photobooth-storage-layout.md) — local source integrated; corrected numbered cloud layout still needs installed-account deployment/acceptance |
 | Current implementation and acceptance boundaries | [Feature status](FEATURE_STATUS.md) |
 | Modules, workers and service contracts | [Technical design](portrait-kiosk-v2-technical-design.md) · [architecture](ARCHITECTURE.md) |
