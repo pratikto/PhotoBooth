@@ -63,6 +63,20 @@ Sandbox does not accept the game reward: there is no trusted backend promotion
 contract. GUI scores/amounts never authorize a provider discount.
 The printed photo-folder QR is separate from the payment QRIS.
 
+## Planned GUI v2 follow-up — QRIS Payment Slip (owner request, 29 October 2026)
+
+**Status: PLANNED / DOCUMENTATION ONLY.** Add an optional customer-facing **CETAK QRIS** action to the native GUI v2 payment screen in a future separately scoped implementation. The printed thermal slip lets a customer scan the **same currently valid Midtrans payment QR** from paper when a phone cannot conveniently scan the kiosk screen. The **on-screen QR must remain visible and usable**; paper is an alternative, not a mandatory step or a new payment transaction.
+
+- **Reuse existing source; do not rebuild:** inspect `photobooth/qris_print.py` (`render_payment_slip`, `QrisPrinterWorker`) and the shared configured thermal-printer interfaces before writing v2 adapters. Existing v1/shared payment-slip behavior is not evidence of native GUI v2 integration.
+- **Payment and QR identity:** use exactly the active backend/provider-authorized payment QR payload and original merchant/order/amount/expiry; never generate a new charge, modify the QR contents, or prolong QRIS validity just because it was printed. Printing, printer acceptance and a slip on paper **never confirm settlement or authorize photography**.
+- **Visibility and controls:** show the print option only for an eligible live `PENDING` payment and configured/ready supported printer. Provide clear disabled/error states and a background print worker; preserve payment status polling, payment QR visibility, copy-link (Sandbox), and the checkout UI lifecycle. Do not print for PAID, EXPIRED, CANCELLED, ambiguous or stale QR evidence.
+- **Thermal quality and delivery safety:** preserve readable native ESC/POS QR modules/quiet zone on 80 mm paper; use existing LAN/Wi-Fi/Windows USB configuration as supported by the shared printer. Record a durable **per-order payment-slip print attempt** and cap duplicate taps. A failed/uncertain send must not be silently replayed after a crash; distinguish PREVIEW, SENT/QUEUED and physically verified paper, which the app cannot infer merely from a successful socket send.
+- **Separate QR types:** QRIS Payment Slip != customer Recovery Ticket QR != photo Google Drive download QR != merchant receipt promo QR. No raw customer recovery secrets or private photos on payment slips.
+- **Current Sandbox restriction:** the dedicated GUI v2 Midtrans Sandbox launcher currently forces printer and Drive **OFF**. This documentation does **not** relax isolation, enable physical printing, activate production payments, or authorize a new release. An isolated print-preview/mock verification may be designed, but any actual paper/provider combination needs a separately approved controlled acceptance mode.
+- **Acceptance before calling implemented:** state/identity/expiry tests, fast duplicate taps, fail-before-send and uncertain-after-send, restart/no-double-print, printer offline, payload comparison from screen/printed pixels, both 800x1280 and 452x900 GUI sizes, real configured 80 mm hardware and recorded source SHA. Preserve existing status/settlement and photo-admission gates.
+
+[QRIS scope and implementation backlog](next_step.md) · [Existing owner decision](DECISIONS.md) · [Current feature evidence](FEATURE_STATUS.md).
+
 ## Roadmap: implemented source versus remaining evidence
 
 | Stage | Source now | Acceptance boundary |
