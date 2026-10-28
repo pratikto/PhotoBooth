@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-12.b: expose Windows autonomous test failures without changing assertions
+
+Base / last remote-verified commit `09788b1cd18c1dcf4be2357693543323103e2816`. Pinned source 09788b1 native 28 PNG captures and four QR checks PASS; local full suite running. Initial Windows autonomous CI FAIL, underlying case unavailable because log-storage host is network-denied; diagnostic annotation added.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, unclaimed private
+photo display or customer state reset. Next: Inspect failure-first Windows annotation, correct actual portable issue and reverify; finish full local run, final CI and AR-13 readiness document.
+Only work/ scratch files local; scope and rollback in
+[stage contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-VALIDATION.md).
+
 ## 29 October — AR-12.a: close final archive binding and WAL fault gaps before full regression
 
 Base / last remote-verified commit `f502bbf8adb3ed73f8f7388903f50a860e633152`. Focused 57 PASS, then final durability/core 25 PASS, zero failures/errors/skips. Actual child os._exit, WAL integrity and locked writer checked; Windows recovery CI and release/return renderer extended.

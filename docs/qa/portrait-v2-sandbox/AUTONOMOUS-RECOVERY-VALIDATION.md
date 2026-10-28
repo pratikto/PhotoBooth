@@ -45,3 +45,18 @@ Final durability/core rerun: **25 PASS**, zero failures/errors/skips,
 Includes a new paid/unallocated visit safely isolating the previous already-done
 photo worker while retaining its original output. Source is ready for the single
 final full regression and pinned visual/CI checks; release acceptance is not implied.
+
+## Initial final-source CI and Windows diagnosis
+
+Source 09788b1 local native captures: 28 PNGs at both target sizes, clean tracked
+tree/source SHA recorded; four screenshot QR identities/formats decode correctly
+without logging payloads. Compact isolation/lookup and portrait returning capture
+visually inspected without clipping. Full local regression is running separately.
+CI run 40754677245 passes the pure job, but its newly added Windows autonomous
+step fails; annotation initially exposes exit code 1 only. Direct log retrieval
+redirects to a storage host denied by the environment network policy. No Windows
+PASS or cause is inferred. Add failure-first check annotation using the existing
+portable-step pattern, preserving the failing test command/exit and raw artifact.
+This is evidence plumbing only, not an application change or weakened assertion;
+the complete local run still tests functional source 09788b1. Rerun required to
+identify the actual Windows failure, then fix that cause with focused evidence.

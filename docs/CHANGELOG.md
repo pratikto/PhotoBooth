@@ -1,5 +1,10 @@
 # Meong Photobooth — changelog
 
+## 29 October — AR-12.b: expose Windows autonomous test failures without changing assertions
+
+Pinned source 09788b1 native 28 PNG captures and four QR checks PASS; local full suite running. Initial Windows autonomous CI FAIL, underlying case unavailable because log-storage host is network-denied; diagnostic annotation added. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-VALIDATION.md).
+Physical/provider gates remain separate; no production activation.
+
 ## 29 October — AR-12.a: close final archive binding and WAL fault gaps before full regression
 
 Focused 57 PASS, then final durability/core 25 PASS, zero failures/errors/skips. Actual child os._exit, WAL integrity and locked writer checked; Windows recovery CI and release/return renderer extended. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-VALIDATION.md).

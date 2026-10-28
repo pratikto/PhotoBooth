@@ -140,7 +140,18 @@ jobs:
       - name: Check autonomous recovery ledgers, WAL crashes and file protocol on Windows (synthetic)
         env:
           MEONG_CI_TEST_REPORT: ${{ runner.temp }}/meong-autonomous-recovery.txt
-        run: python tools/run_kiosk_unittests.py test_autonomous_recovery_faults test_checkout_release test_service_fencing test_fulfillment_issues test_customer_capability test_capture_journal test_output_journal test_crash_supervisor test_notification_inbox
+        run: |
+          python tools/run_kiosk_unittests.py test_autonomous_recovery_faults test_checkout_release test_service_fencing test_fulfillment_issues test_customer_capability test_capture_journal test_output_journal test_crash_supervisor test_notification_inbox
+          $testExit = $LASTEXITCODE
+          if ($testExit -ne 0 -and (Test-Path $env:MEONG_CI_TEST_REPORT)) {
+            $report = Get-Content -Raw $env:MEONG_CI_TEST_REPORT
+            $failureStart = $report.IndexOf('======================================================================')
+            if ($failureStart -ge 0) { $report = $report.Substring($failureStart) }
+            if ($report.Length -gt 12000) { $report = $report.Substring(0,12000) }
+            $report = $report.Replace('%','%25').Replace("`r",'%0D').Replace("`n",'%0A')
+            Write-Output "::error title=Autonomous recovery Windows failure::$report"
+          }
+          exit $testExit
       - name: Check payment creation crash boundaries and additive migration (offline)
         run: python tools/run_kiosk_unittests.py test_autonomous_recovery_baseline test_checkout_creation_attempts
       - name: Check portable startup, recovery holds and Windows launch ownership
