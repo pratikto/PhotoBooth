@@ -23,6 +23,7 @@ def v2_environments(parent, merchant, key, booth, port, root=ROOT):
 def main(argv=None):
     return merchant_trial(argv, environment_factory=v2_environments,
                           gui_entry=('tools/run_portrait_v2.py',),
+                          allow_crash_restart=True,
                           trial_notice='Native v2 Sandbox: printer and Drive off; photos use an isolated test profile.')
 
 

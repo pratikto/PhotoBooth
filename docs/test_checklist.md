@@ -1,5 +1,10 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 29 October — AR-10: bound opt-in exited-GUI recovery with durable budget and original leases
+
+Focused 93 PASS, zero failures/errors/skips; no live-process kill or automatic business effect, three restarts/ten minutes only with isolated Sandbox and released leases. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-SUPERVISOR.md).
+Physical/provider gates remain separate; no production activation.
+
 ## 29 October — AR-09.c5: mount deliberate isolated booth release and original customer return
 
 Focused 47 PASS plus four isolation PASS, zero failures/errors/skips. Native two-step PIN release waits for local receipt and server ACK; original one-photo session returns without another charge; uncertain printing stays held. [Scope, tests and remaining work](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATOR.md).

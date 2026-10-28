@@ -164,10 +164,13 @@ def stop(child):
 
 
 def main(argv=None, *, environment_factory=trial_environments, gui_entry=('main.py',),
-         trial_notice=None):
+         trial_notice=None, allow_crash_restart=False):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--port', type=int, default=8000)
     parser.add_argument('--booth-id', default=os.environ.get('PHOTOBOOTH_ID', 'PB001'))
+    if allow_crash_restart:
+        parser.add_argument('--restart-crashed-gui',action='store_true',
+            help='Opt-in: at most 3 exited-GUI crash restarts/10 minutes; no hung-process kill')
     args = parser.parse_args(argv)
     server = gui = None
     backend_env = gui_env = None
@@ -213,8 +216,31 @@ def main(argv=None, *, environment_factory=trial_environments, gui_entry=('main.
         print('Choose a template in the GUI; its current Sandbox QR image URL will appear here.', flush=True)
         launch_ns = time.time_ns()
         gui = subprocess.Popen([sys.executable, *gui_entry], cwd=ROOT, env=gui_env)
+        budget=None
+        if allow_crash_restart and args.restart_crashed_gui:
+            from photobooth.kiosk_v2.crash_supervisor import CrashBudget
+            budget=CrashBudget(Path(gui_env['MEONG_QRIS_JOURNAL']).parent/'crash-budget.json')
         shown = None
-        while gui.poll() is None:
+        while True:
+            code=gui.poll()
+            if code is not None:
+                delay=budget.reserve(code,gui_env,child_exited=True) if budget else None
+                if delay is None:return code
+                if server.poll() is not None:raise RuntimeError('Backend unavailable for guarded restart')
+                print('Exited GUI crash: bounded private recovery restart after cooldown.',flush=True)
+                time.sleep(delay)
+                # An exited child is insufficient if another process acquired
+                # its profile/checkout. Probe both existing kernel leases; the
+                # new child independently acquires them for its full lifetime.
+                from photobooth.qris_session import KioskLease
+                from photobooth.kiosk_v2.recovery import LaunchLease
+                lease=KioskLease(str(gui_env['MEONG_QRIS_JOURNAL'])+'.lock')
+                try:
+                    with LaunchLease(ROOT):pass
+                finally:lease.close()
+                if server.poll() is not None:raise RuntimeError('Backend unavailable for guarded restart')
+                gui=subprocess.Popen([sys.executable,*gui_entry],cwd=ROOT,env=gui_env)
+                continue
             if server.poll() is not None:
                 raise RuntimeError('Backend stopped. Preserve the journal; do not pay again')
             current = current_simulator_qr(Path(gui_env['MEONG_QRIS_JOURNAL']), endpoint, args.booth_id, after_ns=launch_ns)
@@ -224,7 +250,6 @@ def main(argv=None, *, environment_factory=trial_environments, gui_entry=('main.
                 print('Paste this QR image URL into the official simulator, then Scan QR:\n' + current[1], flush=True)
                 print('Check the simulator amount; the GUI should advance only after simulated payment.', flush=True)
             time.sleep(1)
-        return gui.returncode
     except KeyboardInterrupt:
         print('\nStopped. Persistent orders/journals retained; no automatic cancel or replay.', flush=True)
         return 130

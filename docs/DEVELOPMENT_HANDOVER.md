@@ -1,5 +1,14 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-10: bound opt-in exited-GUI recovery with durable budget and original leases
+
+Base / last remote-verified commit `a7f4dfdd087b47fa7a87e4e2c64bdb0a1ec42ddc`. Focused 93 PASS, zero failures/errors/skips; no live-process kill or automatic business effect, three restarts/ten minutes only with isolated Sandbox and released leases.
+Full regression follows final functional change; physical Windows/Ubuntu,
+merchant/print/Drive acceptance NOT_RUN. No repeat charge, production, unclaimed private
+photo display or customer state reset. Next: AR-11 secure public-backend design and opt-in offline inbox/adapter tests without infrastructure deployment, then AR-12 final validation and AR-13 readiness decision gates.
+Only work/ scratch files local; scope and rollback in
+[stage contract](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-SUPERVISOR.md).
+
 ## 29 October — AR-09.c5: mount deliberate isolated booth release and original customer return
 
 Base / last remote-verified commit `f9aaaa2c5c39c6a1168cb1f72bb3c3b01919bcc7`. Focused 47 PASS plus four isolation PASS, zero failures/errors/skips. Native two-step PIN release waits for local receipt and server ACK; original one-photo session returns without another charge; uncertain printing stays held.
