@@ -1,5 +1,19 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 28 October — owner preference: push in small increments for five-hour continuity
+
+The owner explicitly asks Codex to **commit and push safe, tested
+micro-increments continuously** rather than accumulating changes until a long
+ChatGPT/Codex session finishes. Continue from remote-verified Git history
+without redoing completed work after the five-hour limit. Follow
+[checkpoint and resume instructions](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md),
+[AR roadmap](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-ROADMAP.md)
+and [development prompt](DEVELOPMENT_PROMPT.md). Each checkpoint must record
+the last verified remote SHA, completed vs pending substeps, test evidence,
+blockers and any explicitly **unpushed** local changes. Never push unsafe
+source or sensitive values solely to manufacture a checkpoint. **No runtime
+recovery implementation or new test verification is claimed by this change.**
+
 ## 28 October — autonomous recovery master design and Codex handover (no runtime changes)
 
 Authoritative planning entrypoint: [Master](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-MASTER-PLAN.md), [Codex stages AR-00–AR-13](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-ROADMAP.md), [official Midtrans contract and open verification](qa/portrait-v2-sandbox/MIDTRANS-PROVIDER-CONTRACT.md), [fault-injection test matrix](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-TEST-MATRIX.md), [operator/customer runbook](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATIONS.md). This documentation-only increment preserves the existing operator-first backend source; target policy is unattended-first when provider/payment, photo identity and customer ownership are independently proven. Five-minute invoice idempotency does **not** establish the same TTL/header for Legacy `/v2/charge`. No implementation, fixtures, live merchant or physical tests were run for the new plan. Codex must refresh remote HEAD and start at AR-00 on `feature/portrait-kiosk-v2-next`. No new branch or master merge.
