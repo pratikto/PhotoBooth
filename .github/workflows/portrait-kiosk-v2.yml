@@ -143,6 +143,10 @@ jobs:
         run: |
           python tools/run_kiosk_unittests.py test_autonomous_recovery_faults test_checkout_release test_service_fencing test_fulfillment_issues test_customer_capability test_capture_journal test_output_journal test_crash_supervisor test_notification_inbox
           $testExit = $LASTEXITCODE
+          if ($testExit -eq 0 -and (Test-Path $env:MEONG_CI_TEST_REPORT)) {
+            $summary = (Select-String -Path $env:MEONG_CI_TEST_REPORT -Pattern '^KIOSK_UNITTEST_SUMMARY:').Line
+            Write-Output "::notice title=Autonomous recovery Windows result::$summary"
+          }
           if ($testExit -ne 0 -and (Test-Path $env:MEONG_CI_TEST_REPORT)) {
             $report = Get-Content -Raw $env:MEONG_CI_TEST_REPORT
             $failureStart = $report.IndexOf('======================================================================')

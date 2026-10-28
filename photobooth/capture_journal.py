@@ -79,7 +79,9 @@ def publish_output(store, transaction, session, final_photos, render):
     with temporary.open('xb'):
         pass
     render(temporary)
-    with temporary.open('rb') as stream:
+    # Windows CRT _commit/fsync requires a writable descriptor. Reopen without
+    # truncation after the renderer has closed its writer; bytes stay unchanged.
+    with temporary.open('r+b') as stream:
         os.fsync(stream.fileno())
     digest = hashlib.sha256(temporary.read_bytes()).hexdigest()
     validate_image(temporary, digest, image_format='PNG', expected_size=(640,1920))

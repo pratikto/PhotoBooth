@@ -60,3 +60,22 @@ portable-step pattern, preserving the failing test command/exit and raw artifact
 This is evidence plumbing only, not an application change or weakened assertion;
 the complete local run still tests functional source 09788b1. Rerun required to
 identify the actual Windows failure, then fix that cause with focused evidence.
+
+## Windows cause established and portable correction
+
+Diagnostic CI 40755284102 exposes two errors in test_output_journal: Windows
+os.fsync on the renderer's reopened read-only PNG descriptor raises OSError
+[Errno 9] Bad file descriptor. Source now reopens the completed temporary PNG
+with r+b, without truncating/changing bytes, before fsync. No assertion is removed.
+Add actual output-process os._exit fixtures at INTENT/STAGED/PUBLISHED/COMMITTED;
+originals/hash/visibility/manifest ACK remain conclusive at each boundary.
+The Windows step now emits only its aggregate result as a success notice so raw
+log-storage access is unnecessary to distinguish PASS/SKIP. Existing failure
+annotations and artifact remain. Final matching Windows rerun is required.
+
+The first complete local run at 09788b1 finished **1093 run / 1090 PASS / 3 optional
+palm-assets SKIP / zero failures/errors**, 326.951s. This remains dated pre-portable-
+fix evidence. Because runtime source changed, repeat full regression at the final
+fixed source; do not relabel the earlier full pass as Windows certification.
+Portable-fix focused checks: **31 PASS / zero FAIL/ERROR/SKIP**,
+`test_output_journal test_capture_journal test_photo_reconstruction test_release_session`.

@@ -4,6 +4,8 @@ import hashlib
 import json
 from pathlib import Path
 import tempfile
+import subprocess
+import sys
 import unittest
 from unittest.mock import patch
 
@@ -27,6 +29,23 @@ class OutputJournalTests(unittest.TestCase):
         self.assertEqual(intent['state'],'COMMITTED')
         self.assertEqual(intent['sha256'],hashlib.sha256(path.read_bytes()).hexdigest())
         self.assertEqual(intent['final_photos'],m['sessions'][0]['final_photos'])
+
+    def test_abrupt_output_process_exit_preserves_each_publication_boundary(self):
+        from PIL import Image
+        for stage in ('output_intent','output_staged','output_published','output_committed'):
+            with self.subTest(stage=stage):
+                root=Path(self.tmp.name)/stage
+                result=subprocess.run([sys.executable,'-m','tests.capture_crash_fixture',str(root),stage],
+                    cwd=Path(__file__).resolve().parents[1],capture_output=True,text=True,timeout=20)
+                self.assertEqual(result.returncode,71,result.stderr)
+                manifest=next((root/'photos').glob('*/manifest.json'));data=json.loads(manifest.read_text())
+                intent=data['output_intents']['session_001'];path=manifest.parent/intent['path']
+                self.assertEqual(len(data['sessions'][0]['raw_photos']),3)
+                self.assertEqual(path.exists(),stage in {'output_published','output_committed'})
+                self.assertEqual(bool(data['sessions'][0]['output_path']),stage=='output_committed')
+                if path.exists():
+                    self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(),intent['sha256'])
+                    with Image.open(path) as image:self.assertEqual(image.size,(640,1920));image.verify()
 
     def test_lost_reply_after_output_publication_cannot_recompose_or_overwrite(self):
         def stop(stage):
