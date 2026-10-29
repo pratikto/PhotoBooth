@@ -42,11 +42,20 @@ class AdvertisementPlayerTests(unittest.TestCase):
 
     def test_corrupt_media_is_skipped_and_still_playback_is_recorded_on_retirement(self):
         self.settle()
+        # The initial cold frame may only have retired the corrupt item.
+        # Wait for real exposure accounting before testing retirement; a
+        # fixed 100 ms pump can end before the first eligible interval tick.
+        from kivy.base import EventLoop
+        deadline = time.monotonic() + 3
+        while self.player._seconds <= 0 and time.monotonic() < deadline:
+            EventLoop.idle()
         self.assertEqual(self.player.ad_id, 'good')
         self.assertTrue(self.player._ready)
+        self.assertGreater(self.player._seconds, 0)
         self.player.close()
         self.assertTrue(self.player._closed)
         self.assertIsNone(self.player._tick_event)
+        self.events.write.assert_called_once()
         self.assertEqual(self.events.write.call_args.kwargs['ad_id'], 'good')
         self.assertGreater(self.events.write.call_args.kwargs['seconds'], 0)
 

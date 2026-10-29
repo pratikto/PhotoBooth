@@ -1,7 +1,7 @@
 {
-  "status": "FOCUSED_VERIFIED_FULL_AND_CURRENT_CI_PENDING",
+  "status": "COLLECTOR_CI_VERIFIED_FULL_EXPOSED_AD_FIXTURE_ERROR_CORRECTION_FOCUSED_VERIFIED_RETEST_PENDING",
   "base": "c8f048358aae2d475cd06f3be5269f0f3124d24d",
-  "source": "Containing diagnostic/CLI/test/workflow micro-commit; pin after push",
+  "source": "45b0b3058720ac71875240a9d4e2edf449ecc843",
   "date": "2026-10-29 Asia/Jakarta",
   "environment": {
     "os": "Debian GNU/Linux 13 cloud, not Windows/Ubuntu hardware acceptance",
@@ -61,10 +61,63 @@
   "behavior": "Default inventory never probes printer. Explicit read-only option denied in dedicated Sandbox before config access; ordinary context reuses original saved config/env fallback and check_printer. Only allowlisted status, timestamp and fixed notes are added. Existing CLI atomic report writer reused. No automatic GUI/payment integration. Requested non-ready/denied observation requires attention; no paper/payment acceptance promoted.",
   "limits": "Windows spooler API latency unbounded; TCP timeout remains per route; route/queue/node is not paper readiness. No hardware/merchant/print/Drive/deletion/GUI action here; no runtime checkout/payment/fulfillment state or schema changed.",
   "full": {
-    "status": "PENDING after source push; older 1178/1174/4 at 3a98ed9 not relabeled"
+    "source": "45b0b3058720ac71875240a9d4e2edf449ecc843",
+    "run": 1185,
+    "pass": 1180,
+    "fail": 0,
+    "error": 1,
+    "skip": 4,
+    "seconds": 534.098,
+    "report_sha256": "f1a76b26d734ee0dcb3cc58717afde559d2f7b50a47842ceef4918c4a0fdce09",
+    "error_case": "test_ad_player.AdvertisementPlayerTests.test_corrupt_media_is_skipped_and_still_playback_is_recorded_on_retirement",
+    "detail": "AttributeError: events.write.call_args was None. Original test waits 0.1s but no positive eligible exposure tick is guaranteed after corrupt-media retirement. No diagnostic test failed. Historical failed full retained, not relabeled."
   },
   "ci": {
-    "status": "PENDING after source push"
+    "source": "45b0b3058720ac71875240a9d4e2edf449ecc843",
+    "run_id": 40893472588,
+    "conclusion": "success",
+    "jobs": [
+      {
+        "databaseId": 123516157237,
+        "name": "Windows Python 3.12 native SDL audio (dummy output)",
+        "conclusion": "success"
+      },
+      {
+        "databaseId": 123516157768,
+        "name": "Navigation and audio lifecycle",
+        "conclusion": "success"
+      },
+      {
+        "databaseId": 123516157807,
+        "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+        "conclusion": "success"
+      }
+    ],
+    "new_methods_pass_windows": 7,
+    "new_methods_pass_linux": 7,
+    "windows_ledger": {
+      "run": 130,
+      "pass": 130,
+      "fail": 0,
+      "error": 0,
+      "skip": 0
+    },
+    "linux_sandbox": {
+      "run": 431,
+      "pass": 431,
+      "fail": 0,
+      "error": 0,
+      "skip": 0
+    },
+    "linux_native": {
+      "run": 113,
+      "pass": 112,
+      "fail": 0,
+      "error": 0,
+      "skip": 1
+    },
+    "annotation_receipt_sha256": "cf1aed765c45b5112719e7c83d099c047243d71a6b7d165544c6668a483d9c66",
+    "scope": "Actual collector methods PASS on Windows/Linux. Original ad-player module was absent from native CI; corrected fixture registration follows."
   },
   "matrix": {
     "pass": 59,
@@ -74,5 +127,70 @@
     "ux07": "NOT_RUN complete purchased-print gate"
   },
   "rollback": "Inverse diagnostic/CLI/tests/workflow/docs; no data migration and no financial/reward/claim/fence/media/audit/retention records changed",
-  "scratch": "/workspace/work/ux07-route-evidence holds private local synthetic reports/scripts; not backed up to GitHub, no unrelated dirty files"
+  "scratch": "/workspace/work/ux07-route-evidence holds private local synthetic reports/scripts; not backed up to GitHub, no unrelated dirty files",
+  "fixture_correction": {
+    "source": "Containing tests/CI/docs micro-commit; pin after push",
+    "runtime_changed": false,
+    "reviewed_sources": [
+      "docs/advertising-and-qris.md",
+      "docs/qa/advertising-kiosk.md",
+      "docs/qa/portrait-v2-return-ad-crash/README.md",
+      "photobooth/ui_ads.py",
+      "tests/test_ad_player.py",
+      "tests/test_kiosk_advertising.py"
+    ],
+    "change": "Retain initial native pump, then wait up to three seconds for actual positive exposure; retain all original assertions and add positive-before-close/exactly-one-event assertions. No synthetic duration assignment or direct tick call; real Kivy interval must run. Register all four original ad-player methods with GUI opt-in and exact PASS-line checks in Linux CI.",
+    "controls": [
+      {
+        "scope": "Old fixture with delayed interval after readiness, cold/warmed startup; fixture closes before ready good asset. Not the exact full-run AttributeError stack.",
+        "run": 1,
+        "fail": 1,
+        "error": 0,
+        "skip": 0,
+        "seconds": 0.764,
+        "report_sha256": "e6f379e08c392d2f6d31e1d2858234e354aac5a5fe926604ee6e0f0f3f8764c6"
+      },
+      {
+        "scope": "Same old-fixture control after explicit frame warmup",
+        "run": 1,
+        "fail": 1,
+        "error": 0,
+        "skip": 0,
+        "seconds": 7.375,
+        "report_sha256": "c998d19b06ef0d5464b872c4230790e5e64844bac87033a6879c957805fd2567"
+      },
+      {
+        "scope": "Corrected fixture accepts real delayed interval tick, not fake duration",
+        "run": 1,
+        "pass": 1,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "seconds": 2.451,
+        "report_sha256": "8e7121311b25519a80081f304e867f026dcafc4f3e8caec025121f4d27ca374b"
+      },
+      {
+        "scope": "Negative control holds interval past bound; new positive-exposure assertion must fail",
+        "run": 1,
+        "fail": 1,
+        "error": 0,
+        "skip": 0,
+        "seconds": 3.419,
+        "report_sha256": "d57800b446eff970825e25240725b31db51dd1ae9dd1b1635fddd49e29f04b0d"
+      }
+    ],
+    "focused": {
+      "run": 49,
+      "pass": 49,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 1.39,
+      "report_sha256": "14d7a5b81ca9dfe17f93e49ce9b353d2fc3b46a81fa7250bbdea3cc75917722f"
+    },
+    "focused_command": "KIVY_HOME=/tmp/meong-ux07-route-corrected-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 PHOTOBOOTH_TEST_GUI=1 MEONG_CI_TEST_REPORT=/workspace/work/ux07-route-evidence/corrected-focused.txt .venv/bin/python tools/run_kiosk_unittests.py test_ad_player test_ux07_printer_evidence test_kiosk_v2_readiness test_device_health test_printer_settings test_ux07_mock_printer",
+    "test_sha256": "bf44a298093e22d08d8022d7e4a383fd1e987d14dd0198876bc9524be9d990b7",
+    "workflow_sha256": "da6002158ee732d8e28b48e78162ea64feaea5e7cc8bd66e79d0e68119afacf5",
+    "full_and_current_ci": "PENDING after safe tests/CI micro-push. Repeat full justified by retained full failure, not claimed PASS."
+  }
 }

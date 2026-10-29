@@ -97,3 +97,24 @@ This adds a way to collect the still-missing observation; it does not mount a
 purchased-print payment path or replace the separately required actual device,
 paper, merchant, privacy/support and release acceptance. Original Windows
 spooler calls can block this explicit CLI; there is no imposed API deadline.
+
+## 29 October — UX-07.f full-run fixture correction focused-verified
+
+Collector source `45b0b30`, CI **40893472588 all three jobs SUCCESS**; seven new
+methods individually PASS Windows/Linux (groups 130/431 PASS; native 112/one
+SKIP). Full at that source: **1185 run / 1180 PASS / zero FAIL / one ERROR /
+four SKIP**, 534.098s. Error is original ad-player retirement fixture: fixed
+0.1s pump can end before positive exposure, then events.write.call_args is None.
+No collector method failed. Failed full remains evidence, never promoted PASS.
+
+Reviewed original ad accounting/lifecycle contracts and code. Tests/CI-only
+correction waits for a real positive tick within a bounded wait, preserves all
+old assertions, adds positive-before-close and exactly-once recording checks.
+Old delayed/cold-frame fixture fails; corrected delayed case PASS; held-tick
+negative control still FAILS as required. **49 focused PASS / zero skip**, 1.390s.
+Original ad GUI/runtime unchanged; no image/decoder/accounting behavior patched.
+Four original ad-player tests now registered/opted in and method-checked in
+Linux native CI. Next repeat the applicable full and current CI at this tests-
+only micro-push, then final checkpoint. [Exact history/control evidence](evidence/ux07-printer-device-evidence.json).
+UX-07 whole gate NOT_RUN; matrix **59/0/9/1**, all actual hardware/merchant/
+paper/privacy/release gates remain separate. No financial/media records touched.
