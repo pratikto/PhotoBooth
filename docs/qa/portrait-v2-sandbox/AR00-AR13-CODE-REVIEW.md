@@ -1,5 +1,15 @@
 # AR-00–AR-13 implementation conformity review
 
+## 29 October — UX-07 Sandbox components verified
+
+Test source `685b994`, **36 focused PASS / zero skip**; CI 40862328219 all three
+jobs SUCCESS. Five boundary methods on Windows/Linux; native error/no-QR/retry
+method at both portrait sizes on Linux. Runtime unchanged at 347e502; old full
+1159/1155/4 retains provenance and excludes new methods. Complete purchased-
+printer gate remains NOT_RUN; preserve transport-off Sandbox. Matrix 58/0/9/2,
+audit IN_PROGRESS. Next independent UX-11 frozen-worker/GUI evidence audit.
+[Exact evidence/remaining limits](evidence/ux07-final-verification.json).
+
 ## 29 October — UX-05 verified / BUG-024 fixed in source
 
 Source `347e502`, 52 focused PASS; full 1159/1155/4, zero failure/error.

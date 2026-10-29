@@ -1,7 +1,7 @@
 {
-  "status": "UX07_SANDBOX_BOUNDARIES_FOCUSED_VERIFIED_CI_PENDING_COMPLETE_GATE_NOT_RUN",
+  "status": "HISTORICAL_FOCUSED_BOUNDARIES_CURRENT_COMPLETE_SANDBOX_EVIDENCE_SEPARATE",
   "base": "858944cf1ef79483892b2c08f07de7d2a5be5a7e",
-  "test_source": "Containing test/workflow commit; pin after push",
+  "test_source": "4099ca1a80251c53d45c5b0e6a4b9c25f090ef4a",
   "runtime_source": "347e502b0f50d231ec05c0cbcf768f87d2002454",
   "runtime_changed": false,
   "focused": {
@@ -27,6 +27,7 @@
     "not_run": 2
   },
   "ux07": "NOT_RUN complete purchased-printer gate; Sandbox components verified separately",
-  "next": "Native quote/message/no-QR/retry checks, final matching CI/checkpoint, then UX-11",
-  "limits": "Injected failures/synthetic assets/offline HTTP; no actual device/provider/purchased-print/paper/Drive/production/OPS acceptance"
+  "next": "Do not repeat verified Sandbox tests; UX-11 next, UX-07 purchased-printer complete gate remains NOT_RUN",
+  "limits": "Injected failures/synthetic assets/offline HTTP; no actual device/provider/purchased-print/paper/Drive/production/OPS acceptance",
+  "ci": "First 40861858317 superseded; current matching result 40862328219 all three jobs SUCCESS in ux07-final-verification.json"
 }

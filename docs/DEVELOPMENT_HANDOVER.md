@@ -1,5 +1,43 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — UX-07 Sandbox evidence verified / purchased-printer gate open
+
+Micro-pushes `4099ca1a80251c53d45c5b0e6a4b9c25f090ef4a` (five HTTP boundary
+methods) and `685b994f01efd48cbe0d91d56a71f3143b8b7d11` (native widget method)
+remote verified. First CI 40861858317 superseded; **CI 40862328219 all three jobs
+SUCCESS**, five boundary methods individually PASS on Windows/Linux, new native
+method PASS in Linux Sandbox group at both 800x1280 and 452x900.
+First focused **34 PASS**, 2.990s; final **36 focused PASS / zero failure/error/
+skip**, 25.080s, Python 3.12.14/Linux software GL. Fifteen failure vectors before
+order/provider I/O; active identity protection, synthetic probe cleanup/retained
+bytes, seven healthy boundary retries. Native eight failed confirmations/eight
+healthy retries keep QUOTE, generic actionable message, no private path/payment
+QR/order until readiness succeeds; existing customer ticket gate then appears.
+[Exact commands/source/CI/results/digests/limits](qa/portrait-v2-sandbox/evidence/ux07-final-verification.json).
+
+No runtime defect/change. App/tools Git trees match **347e502**; prior full
+1159 run/1155 PASS/4 optional SKIP retains that exact source and excludes the six
+new methods, which were separately checked above. No new full/native export or
+actual hardware/provider/paper/Drive acceptance is borrowed. Tests/CI/docs only.
+
+**UX-07 whole stronger gate remains NOT_RUN**: purchased-print prepayment path/
+actual printer readiness is not mounted/certified in this transport-off Sandbox.
+PRINT/DRIVE configuration errors correctly block order creation; that is not
+certification of physical print service. Existing read-only printer checks prove
+only route/spooler observations, not paper. Preserve Sandbox print/Drive OFF.
+Matrix **69 IDs: 58 PASS / 0 FAIL / 9 BLOCKED / 2 NOT_RUN**, audit IN_PROGRESS,
+AR-13 conditional. UX-11 NOT_RUN; PAY-22/WEB-01–08 BLOCKED, external gates open.
+
+Next exact increment: **UX-11 frozen worker/GUI evidence audit**. Read supervisor/
+native worker, crash lease/restart, privacy and no-replay contracts; test stalled
+checkout/upload/QR worker without UI-thread blocking, and living-process hold
+without watchdog kill/restart/replay or lost paid rights. Keep hardware/provider/
+purchased-printer gates separate and do not redo verified UX-07 components.
+This containing docs-only publication is final safe checkpoint; exact SHA from
+Git log/remote. Only work/ scratch local, no unpublished runtime patch. No
+production/OPS/public ingress/new branch/master/default/deployment/real effects.
+Rollback inverse tests/docs; retain all financial/claim/fence/media/audit records.
+
 ## 29 October — UX-07.b native confirmation/retry verified
 
 First micro-push `4099ca1a80251c53d45c5b0e6a4b9c25f090ef4a` remote verified;
