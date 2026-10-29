@@ -1,5 +1,13 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 29 October — CAP-16 composition/intent exits focused-verified
+
+**72 focused PASS / zero failure/error/skip**, two new real child exits after
+final composition and saved COMPLETING before COMPLETE request. Original result,
+proof/ACK/binding/retention/OWED preserved. Tests/docs only; runtime unchanged.
+Matrix **55 PASS / 1 FAIL / 9 BLOCKED / 4 NOT_RUN**. CI pending; next provider/
+media denial cases, then CAP-20/AR-09. [Evidence/limits](qa/portrait-v2-sandbox/CAP16-COMPOSITION-COMPLETE.md).
+
 ## 29 October — CAP-11–13 verified
 
 Test/CI `423d9d2c9096ec897521df565f2c59572057efd5` pushed/remote verified.

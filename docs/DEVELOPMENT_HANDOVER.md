@@ -1,5 +1,29 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-05 CAP-16.a focused checkpoint
+
+Base/remote verified `73451f3f449f97fcec76e52a14db4ad5a3e8027f`.
+One new method/two actual child exits after COMMITTED final PNG/local composition
+before completion intent (106), and saved COMPLETING before API (107). Backend
+remains STARTED/OWED at both exits; restart stays private/active. Fresh original
+customer proof restores the same three-JPEG/one-PNG/two-copy result, preserves
+retention/frozen contract/manifest and reuses original STARTED/COMPLETED tuple.
+No charge/allocation/capture/render/print/upload replay; both archives become
+durable before local release. **72 focused PASS / zero failure/error/skip**,
+20.830s, Python 3.12.14/Linux. [Command/source/digest](qa/portrait-v2-sandbox/evidence/cap16-composition-verification.json).
+
+No runtime defect or runtime/schema/UI change; prior full/native provenance
+retained at e0dc594/c94696d, no new local full/native/device result claimed.
+CAP-16 synthetic PASS; matrix **55 PASS / 1 FAIL / 9 BLOCKED / 4 NOT_RUN**;
+audit IN_PROGRESS/BUG-023 OPEN. This containing tested commit is the next safe
+micro-push; resolve its SHA, push and verify remote before continuing. CI pending.
+Next CAP-16.b provider outage/refund and damaged committed PNG denial after
+these crashes, then final current CI/checkpoint, CAP-20 and AR-09 denial audit.
+UX-05/07/11/provider/device/privacy/retention/release/OPS gates unchanged.
+No production/public ingress/real paper/Drive/deletion/branch/master/default
+operation. Only work/ scratch local, no unpublished runtime patch. Scoped inverse
+of tests/docs retains all financial/media/claim/fence/budget records.
+
 ## 29 October — AR-04/05 CAP-11–13 verified checkpoint
 
 - First micro-push `d133e209629c7b6a99927169ef290cf3ed715249`; final test/CI source

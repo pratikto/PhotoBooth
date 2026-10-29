@@ -228,3 +228,81 @@ class ServiceCrashTests(unittest.TestCase):
             self.assertEqual(resumed.flow.snapshot()['phase'], 'COMPLETING')
             self.assertFalse((self.root / 'visits').exists())
             self.assertEqual(self.media(saved['transaction_id']), media)
+
+    def composition_crash(self, boundary, code):
+        with closing(AllocationHarness(self.root)) as initial, closing(PhotoTest(initial.photo_root)) as photo:
+            ticket = initial.create_reserved()
+            initial.flow.prepare_capture()
+            binding = initial.binding()
+            photo.start_bound(get_templates(), {'template_a': 2}, binding)
+            initial.flow.bind_transaction(binding['transaction_id'])
+            initial.flow.refresh()
+            before = initial.flow.snapshot()
+            manifest = json.loads(photo.transaction.manifest_path.read_text())
+            attempt = initial.store.creation_attempt(binding['order_id'])
+        saved = self.crash(boundary, code, ticket)
+        self.assertEqual(saved['order']['service_state'], 'STARTED')
+        self.assertEqual(saved['transaction_id'], binding['transaction_id'])
+        self.assertFalse((self.root / 'visits').exists())
+        return ticket, before, binding, manifest, attempt, saved
+
+    def test_cap16_composed_and_completion_intent_exits_restore_original_result_before_same_ack(self):
+        base = self.root
+        for boundary, code, phase in (('composed_before_completion_intent', 106, 'STARTED'),
+                                      ('completion_intent_before_request', 107, 'COMPLETING')):
+            with self.subTest(boundary=boundary):
+                self.root = base / boundary
+                ticket, before, binding, original_manifest, attempt, saved = self.composition_crash(boundary, code)
+                self.assertEqual(saved['phase'], phase)
+                media = self.media(saved['transaction_id'])
+                self.assertEqual(sum(p.endswith('.jpg') for p in media), 3)
+                self.assertEqual(sum(p.endswith('.png') for p in media), 1)
+                with closing(AllocationHarness(self.root)) as resumed, self.forbid_effects(resumed), \
+                        patch.object(resumed.client, 'allocate', side_effect=AssertionError('No reallocation')):
+                    self.assert_private(resumed)
+                    observed_phase = resumed.flow.snapshot()['phase']
+                    resumed.flow.refresh()
+                    self.assertEqual(resumed.flow.snapshot()['phase'], observed_phase)
+                    row = resumed.store.get(binding['order_id'])
+                    self.assertEqual((row['state'], row['service_state']), ('PAID', 'STARTED'))
+                    self.assertEqual(resumed.store.fulfillment(binding['order_id'], 'PB001')['obligation_state'], 'OWED')
+                    self.assertFalse((self.root / 'visits').exists())
+                    with patch.object(resumed.provider, 'get_status', wraps=resumed.provider.get_status) as status, \
+                            closing(PhotoTest(resumed.photo_root)) as photo:
+                        resumed.flow.customer_claim(ticket)
+                        view = photo.restore(get_templates(), binding, resumed.flow.resume_permit())
+                        self.assertEqual((view['phase'], view['captured'], view['copies'], view['print_state']),
+                                         ('result', 3, 2, 'NOT_SENT'))
+                        current = json.loads(photo.transaction.manifest_path.read_text())
+                        self.assertEqual(current['status'], 'COMPLETED')
+                        self.assertEqual(current['output_intents']['session_001']['state'], 'COMMITTED')
+                        for key in ('created_at', 'local_retention_days', 'drive_retention_days',
+                                    'drive_photos_expire_at', 'frozen_order', 'payment_binding'):
+                            self.assertEqual(current[key], original_manifest[key])
+                        self.assertEqual(resumed.store.get(binding['order_id'])['service_state'], 'STARTED')
+                        self.assertEqual(self.media(saved['transaction_id']), media)
+                        with patch.object(resumed.client, 'service_transition',
+                                          wraps=resumed.client.service_transition) as transitions:
+                            resumed.flow.confirm_resume(binding['transaction_id'], view['phase'])
+                            resumed.flow.request_complete()
+                            result = resumed.flow.refresh()
+                            self.assertEqual([call.args[:4] for call in transitions.call_args_list],
+                                [(binding['order_id'], binding['grant_id'], state, binding['transaction_id'])
+                                 for state in ('STARTED', 'COMPLETED')])
+                        self.assertGreaterEqual(status.call_count, 3)
+                        self.assertFalse(photo.auto_print)
+                        self.assertIsNone(photo.printer)
+                        self.assertIsNone(photo.drive_client)
+                    self.assertEqual(result['phase'], 'COMPLETED')
+                    self.assertFalse(resumed.flow.active)
+                    self.assert_identity(resumed, before, binding['grant_id'], attempt, saved)
+                    for path in (self.root / 'visits' / (before['checkout_key'] + '.json'),
+                                 self.root / 'visits' / before['checkout_key'] / 'completed.json'):
+                        self.assertEqual(json.loads(path.read_text()), result)
+                        self.assertNotIn(ticket.split(':')[-1], path.read_text())
+                    self.assertEqual(self.media(saved['transaction_id']), media)
+                with closing(AllocationHarness(self.root)) as again, self.forbid_effects(again):
+                    self.assertFalse(again.flow.active)
+                    self.assert_identity(again, before, binding['grant_id'], attempt, saved)
+                    self.assertEqual(self.media(saved['transaction_id']), media)
+        self.root = base

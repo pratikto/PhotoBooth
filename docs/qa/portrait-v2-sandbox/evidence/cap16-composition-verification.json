@@ -1,0 +1,49 @@
+{
+  "status": "FOCUSED_VERIFIED_CI_PENDING",
+  "branch": "feature/portrait-kiosk-v2-next",
+  "review_base": "73451f3f449f97fcec76e52a14db4ad5a3e8027f",
+  "test_commit": "Containing Git commit; pin after remote verification",
+  "runtime_source": "e0dc59435772148be86449c55140d4b9be2f6364",
+  "runtime_changed": false,
+  "python": "3.12.14",
+  "platform": "Linux cloud",
+  "command": "KIVY_HOME=/tmp/meong-cap16-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy MEONG_CI_TEST_REPORT=work/cap16-focused-report.txt .venv/bin/python tools/run_kiosk_unittests.py test_service_crash_recovery test_customer_claim_session test_qris_session test_photo_reconstruction test_output_journal test_checkout_fulfillment test_checkout_durability test_release_session",
+  "focused": {
+    "run": 72,
+    "pass": 72,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 20.83
+  },
+  "new_cap16_methods": 1,
+  "cap16_process_exits": {
+    "count": 2,
+    "distinct_boundaries": 2,
+    "codes": {
+      "composed_before_completion_intent": 106,
+      "completion_intent_before_request": 107
+    }
+  },
+  "existing_pay18_exits_in_same_module": 23,
+  "report_sha256": "79ff317c5f225f3c81354bca7915a6cdd3ed65fe1942bb1b0547ffadd19ffd77",
+  "files_sha256": {
+    "tests/service_crash_fixture.py": "cdfecbfd416dcd3b348af8b824885555ac5f895fc17eac15346992095c54f289",
+    "tests/test_service_crash_recovery.py": "ebfd1f83706568ecdb97b6d078594a7161cc79d3fb972bf1a84eeb9a3fab97dd",
+    ".github/workflows/portrait-kiosk-v2.yml": "5496002b7c34e76fba04bb37a1d2128410b6fee64dc5e11711c2b711fd9749f5"
+  },
+  "matrix": {
+    "total": 69,
+    "pass": 55,
+    "fail": 1,
+    "skip": 0,
+    "blocked": 9,
+    "not_run": 4
+  },
+  "ci": "PENDING for containing test commit; existing Windows/Linux workflow already includes module",
+  "full_native": "NOT_RERUN_TESTS_ONLY; e0dc594 full 1117/1114/3 and c94696d native 28/four retain original source and exclude new methods",
+  "privacy": "Original synthetic ticket memory/stdin only, never argv/journal/committed raw evidence",
+  "next": "CAP-16.b outage/refund/damaged-PNG denial, then current CI/checkpoint, CAP-20, AR-09 BUG-023",
+  "limits": "Software exits; extra controller/store reopen is parent-process, no actual device/power-loss/provider/paper/Drive/deletion/release acceptance",
+  "rollback": "Inverse tests/docs only; preserve all financial/media/claim/fence/budget records"
+}

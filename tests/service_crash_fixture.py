@@ -55,7 +55,8 @@ def crash_service(root, boundary):
             os._exit(92)
         harness.client.service_transition = after_started
         flow.refresh()
-    elif boundary == 'completed_reply_lost':
+    elif boundary in {'completed_reply_lost', 'composed_before_completion_intent',
+                      'completion_intent_before_request'}:
         import numpy as np
         flow.customer_claim(ticket)
         photo = PhotoTest(harness.photo_root)
@@ -67,6 +68,20 @@ def crash_service(root, boundary):
         result = photo.compose()
         assert result['phase'] == 'result'
         assert photo.transaction.manifest['output_intents']['session_001']['state'] == 'COMMITTED'
+        if boundary in {'composed_before_completion_intent', 'completion_intent_before_request'}:
+            def no_complete_request(*_args, **_options):
+                raise AssertionError('CAP-16 must exit before any COMPLETE request')
+            harness.client.service_transition = no_complete_request
+            assert harness.store.get(oid)['service_state'] == 'STARTED'
+            assert harness.store.fulfillment(oid, 'PB001')['obligation_state'] == 'OWED'
+            assert not (Path(root) / 'visits').exists()
+            if boundary == 'composed_before_completion_intent':
+                assert json.loads(flow.path.read_text())['phase'] == 'STARTED'
+                os._exit(106)
+            flow.request_complete()
+            assert json.loads(flow.path.read_text())['phase'] == 'COMPLETING'
+            assert harness.store.get(oid)['service_state'] == 'STARTED'
+            os._exit(107)
         flow.request_complete()
         original = harness.client.service_transition
         def after_completed(order_id, grant, state, transaction_id, **options):
