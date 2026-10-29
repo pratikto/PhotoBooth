@@ -1,5 +1,16 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
+## 29 October — BUG-023 fixed in source / regression verified
+
+Source `3822bb0`, 73 focused PASS; full 1153/1149/4, zero failure/error.
+CI 40852458558 all three jobs SUCCESS; four new conflict methods PASS on
+Windows/Linux. Recovery-only replay/cross-order denials durably redacted;
+SQL failure holds, successful replay idempotent. UX-13 synthetic PASS; matrix
+**57 PASS / 0 FAIL / 9 BLOCKED / 3 NOT_RUN**, overall audit IN_PROGRESS.
+Actual device acceptance NOT_RUN; no production release. Next UX-05 contract/
+source audit, then remaining UX-07/11/external gates.
+[Exact evidence/limits](evidence/bug023-conflict-http-verification.json).
+
 ## 29 October — BUG-023.c PIN audit verified
 
 Source `e6aba5a`, 69 focused PASS; full 1149/1145/4, zero failure/error.
@@ -348,7 +359,7 @@ offline inbox prototype assertions do not certify deployed ingress.
 | UX-10 | **PASS** | `test_booth_sync.test_two_transactions_keep_exact_local_folder_mapping_across_restart` | Immutable delivery mapping/retry/retention fixtures; actual Drive acceptance NOT_RUN. |
 | UX-11 | **NOT_RUN** | `test_crash_supervisor.test_normal_operator_hold_or_living_process_never_restarts` | No-kill live-child gate and responsive HTTP tested; actual frozen-worker/GUI hang scenario not exercised. |
 | UX-12 | **PASS** | `test_crash_supervisor.test_three_crashes_have_persisted_budget_and_bounded_backoff` | Persisted restart budget; kernel multi-process lease tests, no business replay. |
-| UX-13 | **FAIL** | `test_qris_recovery`; [PIN audit verification](evidence/bug023-pin-http-verification.json) | Wrong-PIN and operator-rate 401/429 denials now durably redacted on inspect/resolve/release; generic 503 if audit fails. Same-action idempotency/authentication remain. Fully audited authenticated action-conflict/replay and cross-order denials still pending; BUG-023 OPEN. Operator PIN budget remains intentionally process-local; customer capability budget separate. |
+| UX-13 | **PASS** | `test_qris_recovery`; [complete denial audit verification](evidence/bug023-conflict-http-verification.json) | Synthetic Windows/Linux: wrong PIN/429, action/reason/transaction/order identity conflicts, wrong-booth recovery (both release phases), real SQL failure -> 503, restart/redaction and successful same-action idempotency. Bounded 4096-event diagnostic journal; no secrets/customer IDs. BUG-023 fixed in source/regression verified; physical/operations acceptance separate. PIN budget remains process-local by design. |
 | UX-14 | **PASS** | `test_checkout_fulfillment.test_abandon_preserves_paid_obligation_and_no_fabricated_refund` | Closure/composition are not liability satisfaction. |
 | UX-15 | **PASS** | See scope/gate | Final native manifests: both portrait sizes, 28 hashes/dimensions, four QR decodes; selected layouts inspected. Physical touch/phone tests NOT_RUN. |
 | UX-16 | **PASS** | `test_kiosk_v2_recovery.test_empty_install_is_clear_without_creating_files` | Existing default/MOCK/native lifecycle regressions; no new business effect. |

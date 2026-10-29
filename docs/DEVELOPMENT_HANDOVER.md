@@ -1,5 +1,38 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — BUG-023 verified source remediation
+
+Source `3822bb041d90da9330457d2e4404668be278eee9` pushed/remote verified.
+**73 focused PASS / zero failure/error/skip**, 1.650s; four new HTTP tests had
+four expected FAIL before correction (24 run/zero error). Full with GUI/audio
+opt-ins **1153 run / 1149 PASS / 4 optional SKIP**, zero failure/error,
+411.186s, Python 3.12.14/Linux software GL. Skip reasons preserved in evidence.
+**CI 40852458558 all three jobs SUCCESS**; all four conflict methods individually
+PASS in both matching Windows/Linux logs, alongside prior journal/PIN tests.
+All recovery routes (release PREPARE/ACK included) persist NOT_OWNED and
+ACTION_CONFLICT before generic 404/409. Real SQL abort returns generic 503 and
+never applies rejected action. Exact successful action replay remains idempotent
+with no denial row. Wrong-booth records persist after reopen; no order/action/
+request/PIN/ticket/peer/customer bytes stored. Existing bounded 4096-event window
+and PIN/429 auditing retained. Ordinary route errors and provider observations
+unchanged; no fabricated financial rollback, charge/grant/capture/release replay.
+[Exact commands/source/CI/results/digests/limits](qa/portrait-v2-sandbox/evidence/bug023-conflict-http-verification.json).
+
+BUG-023 **FIXED IN SOURCE / REGRESSION VERIFIED**, UX-13 synthetic **PASS**.
+Not formally CLOSED or released; actual device/operational acceptance NOT_RUN.
+Matrix **69 IDs: 57 PASS / 0 FAIL / 9 BLOCKED / 3 NOT_RUN**; overall audit stays
+IN_PROGRESS and AR-13 CONDITIONAL. Original denial failure evidence retained.
+Next exact increment: **UX-05 contract/source audit** for ambiguous-payment
+abandonment/release. Read AR-01 creation uncertainty, AR-09 release/customer
+proof and provider contracts; establish safe durable separation without assuming
+cancellation, replacing charge or dropping original rights. Test/document actual
+conservative guarantees before proposing runtime changes. UX-07/11 remain
+NOT_RUN; PAY-22/WEB-01–08 BLOCKED. No repetition of verified BUG-023 work.
+No production/public ingress/new branch/master/default/OPS/deployment or real
+external effects. This containing docs-only publication is final safe checkpoint;
+exact SHA from Git log/remote. Only work/ scratch local, no unpublished source
+patch. Rollback scoped inverse source; retain all financial/audit/claim/fence/media.
+
 ## 29 October — BUG-023.d conflict audit focused checkpoint
 
 Base/remote verified `e13216af086a1bd64944bc9619bc7f70d1f7d335`.

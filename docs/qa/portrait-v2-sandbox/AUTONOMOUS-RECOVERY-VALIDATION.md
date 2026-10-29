@@ -1,5 +1,16 @@
 # AR-12 — final source validation and external acceptance gates
 
+## 29 October — BUG-023 fixed in source / regression verified
+
+Source `3822bb0`, 73 focused PASS; full 1153/1149/4, zero failure/error.
+CI 40852458558 all three jobs SUCCESS; four new conflict methods PASS on
+Windows/Linux. Recovery-only replay/cross-order denials durably redacted;
+SQL failure holds, successful replay idempotent. UX-13 synthetic PASS; matrix
+**57 PASS / 0 FAIL / 9 BLOCKED / 3 NOT_RUN**, overall audit IN_PROGRESS.
+Actual device acceptance NOT_RUN; no production release. Next UX-05 contract/
+source audit, then remaining UX-07/11/external gates.
+[Exact evidence/limits](evidence/bug023-conflict-http-verification.json).
+
 ## 29 October — BUG-023.c PIN audit verified
 
 Source `e6aba5a`, 69 focused PASS; full 1149/1145/4, zero failure/error.

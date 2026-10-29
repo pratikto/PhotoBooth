@@ -1,7 +1,7 @@
 {
-  "status": "CONFLICT_HTTP_FOCUSED_VERIFIED_FULL_CI_PENDING",
+  "status": "BUG023_FIXED_IN_SOURCE_REGRESSION_VERIFIED_UX13_SYNTHETIC_PASS",
   "base": "e13216af086a1bd64944bc9619bc7f70d1f7d335",
-  "source": "Containing source commit; pin after push",
+  "source": "3822bb041d90da9330457d2e4404668be278eee9",
   "focused": {
     "run": 73,
     "pass": 73,
@@ -26,11 +26,87 @@
     "NOT_OWNED",
     "ACTION_CONFLICT"
   ],
-  "bug023": "OPEN pending full/CI verification",
+  "bug023": "FIXED IN SOURCE / REGRESSION VERIFIED; actual device acceptance NOT_RUN, not production release",
   "files_sha256": {
     "photobooth/qris_api.py": "a8a76e4df6fe2abfc9ba20ce58143b4a8548176251413a4013371768e896f955",
     "tests/test_qris_recovery.py": "99bf28ddc5d37126dd1a15740aaf38147e68f1f4dd1f8157893502dcee0d777b"
   },
   "report_sha256": "b23d223743e1c4e667bd320dc76dbb61bb1d6d95d0d00610f1e2835fdd62dd3a",
-  "next": "Verify full/current CI; then UX-05 ambiguous-payment abandonment/release contract audit without cancelling/recharging or dropping rights"
+  "next": "UX-05 contract/source audit: ambiguous-payment abandonment/release; no speculative cancellation or replacement charge; UX-07/11 and external gates remain",
+  "ci": {
+    "run_id": 40852458558,
+    "source": "3822bb041d90da9330457d2e4404668be278eee9",
+    "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40852458558",
+    "jobs": [
+      {
+        "id": 123375062208,
+        "name": "Windows Python 3.12 native SDL audio (dummy output)",
+        "conclusion": "success"
+      },
+      {
+        "id": 123375062440,
+        "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+        "conclusion": "success"
+      },
+      {
+        "id": 123375062496,
+        "name": "Navigation and audio lifecycle",
+        "conclusion": "success"
+      }
+    ],
+    "windows_ledger": {
+      "run": 104,
+      "pass": 104,
+      "skip": 0,
+      "fail": 0,
+      "error": 0,
+      "seconds": 19.41
+    },
+    "linux_recovery": {
+      "run": 402,
+      "pass": 402,
+      "skip": 0,
+      "fail": 0,
+      "error": 0,
+      "seconds": 141.931
+    },
+    "linux_native": {
+      "run": 111,
+      "pass": 110,
+      "skip": 1,
+      "fail": 0,
+      "error": 0,
+      "seconds": 123.216
+    },
+    "conflict_methods_pass_both_platforms": [
+      "test_conflict_action_replays_are_audited_but_exact_success_replay_is_not",
+      "test_cross_booth_recovery_denials_persist_for_all_routes_and_release_phases",
+      "test_release_prepare_and_ack_conflicts_record_diagnostics_without_release",
+      "test_conflict_audit_sql_failure_remains_held_and_success_replay_needs_no_denial_write"
+    ]
+  },
+  "full": {
+    "run": 1153,
+    "pass": 1149,
+    "fail": 0,
+    "error": 0,
+    "skip": 4,
+    "seconds": 411.186
+  },
+  "full_report_sha256": "7cd9b29219345e7e4ffd10927e115ebefbc770dedfbb495d735b68bcbcbebb19",
+  "full_command": "KIVY_HOME=/tmp/meong-bug023-conflict-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 MESA_SHADER_CACHE_DIR=/tmp/meong-bug023-mesa PHOTOBOOTH_TEST_GUI=1 PHOTOBOOTH_TEST_AUDIO=1 MEONG_CI_TEST_REPORT=work/bug023-conflict-full-report.txt .venv/bin/python tools/run_kiosk_unittests.py",
+  "skip_lines": [
+    "Use real inference and mailboxes; only camera acquisition is synthetic. ... skipped 'Native model assets are opt-in'",
+    "test_native_video_has_frames_payment_is_muted_and_retiring_unloads_decoder (test_kiosk_advertising.KioskAdvertisingTests.test_native_video_has_frames_payment_is_muted_and_retiring_unloads_decoder) ... skipped 'Native video checks require opt-in and ffmpeg'",
+    "test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture) ... skipped 'Native model assets are opt-in'",
+    "test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image (test_palm_gesture.NativePalmModelTests.test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image) ... skipped 'Native model assets are opt-in'"
+  ],
+  "matrix": {
+    "total": 69,
+    "pass": 57,
+    "fail": 0,
+    "blocked": 9,
+    "not_run": 3
+  },
+  "limits": "Bounded redacted diagnostic window of 4096 events, not compliance archive; no actual provider/device/production/OPS/paper/Drive/deletion acceptance"
 }

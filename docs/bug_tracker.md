@@ -1,5 +1,16 @@
 # Meong Photobooth — Bug register
 
+## 29 October — BUG-023 fixed in source / regression verified
+
+Source `3822bb0`, 73 focused PASS; full 1153/1149/4, zero failure/error.
+CI 40852458558 all three jobs SUCCESS; four new conflict methods PASS on
+Windows/Linux. Recovery-only replay/cross-order denials durably redacted;
+SQL failure holds, successful replay idempotent. UX-13 synthetic PASS; matrix
+**57 PASS / 0 FAIL / 9 BLOCKED / 3 NOT_RUN**, overall audit IN_PROGRESS.
+Actual device acceptance NOT_RUN; no production release. Next UX-05 contract/
+source audit, then remaining UX-07/11/external gates.
+[Exact evidence/limits](qa/portrait-v2-sandbox/evidence/bug023-conflict-http-verification.json).
+
 ## 29 October — BUG-023.d conflict audit focused-verified
 
 Recovery-only 404/409 denials audited with static NOT_OWNED/ACTION_CONFLICT;
@@ -41,15 +52,21 @@ OPEN/UX-13 FAIL; matrix 56/1/9/3 unchanged.
 
 ## BUG-023 — operator wrong-PIN denial has no durable audit (29 October)
 
-**S2 conformity/security audit completeness — OPEN.** Synthetic source probe at
-4642841 confirms eight wrong PINs return 401 and ninth 429; recreated app with
-same synthetic PIN starts a new in-memory rate budget. No durable denial record
-is written. Per-launch PIN rotation and authentication remain intact; no bypass
-observed. The defect is the missing fully audited denial required by UX-13,
-previously over-credited as PASS. Customer ticket attempt persistence is separate.
-Matrix UX-13 is now FAIL; add a bounded redacted denial audit and focused
-wrong-PIN/replay/cross-order checks before restoring PASS. [Evidence](qa/portrait-v2-sandbox/evidence/ar-audit-pin-denials.json).
-No production/admin feature or credential change is implied.
+**S2 — FIXED IN SOURCE / REGRESSION VERIFIED at `3822bb041d90da9330457d2e4404668be278eee9`.**
+73 focused PASS; full 1153 run/1149 PASS/4 optional SKIP, zero
+failure/error. CI 40852458558 all three jobs SUCCESS; UX-13 synthetic PASS.
+Wrong-PIN/429 and authenticated conflict/cross-order denials now persist bounded
+redacted metadata on all recovery routes; SQL failure remains held, successful
+same-action replay stays idempotent. Actual device acceptance NOT_RUN; not a
+formal CLOSED/release decision. No production/admin activation.
+[Current verification](qa/portrait-v2-sandbox/evidence/bug023-conflict-http-verification.json).
+
+Original finding at 4642841: eight wrong PINs returned 401 and ninth 429,
+same-PIN app recreation reset the in-memory budget and no durable denial was
+written. Per-launch PIN rotation/authentication remained intact; no bypass
+observed. [Original failure evidence](qa/portrait-v2-sandbox/evidence/ar-audit-pin-denials.json)
+is retained; process-local operator budget and separate persistent customer
+ticket budget remain intentional. Financial/action ledgers are never pruned.
 
 ## BUG-022 — missing committed PNG accepted during recovery (29 October)
 
