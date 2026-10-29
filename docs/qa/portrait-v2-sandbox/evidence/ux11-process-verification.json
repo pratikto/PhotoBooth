@@ -1,0 +1,25 @@
+{
+  "status": "UX11_LIVING_PROCESS_HOLD_VERIFIED_NATIVE_CASES_NOT_RUN_CI_PENDING",
+  "base": "8ca792def8a66595ce8571460533932f42ffa341",
+  "source": "Containing test commit; pin after push",
+  "runtime_source": "347e502b0f50d231ec05c0cbcf768f87d2002454",
+  "runtime_changed": false,
+  "focused": {
+    "run": 6,
+    "pass": 6,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 0.246
+  },
+  "new_methods": 1,
+  "actual_children": 1,
+  "observation_cycles": 3,
+  "files_sha256": {
+    "tests/ux11_frozen_fixture.py": "a42f594f60dee0438a92ccf9e8e10c4b9762f340e42249682691c5226009f3eb",
+    "tests/test_ux11_process_hold.py": "ce98308a8ac6d8bf2edd19b571b7c24b06443e98d1ac914e9f038ffe8893ea87",
+    ".github/workflows/portrait-kiosk-v2.yml": "0067d33a843ad89ae58ff1b99d004e3186c093ec6d3505b4811fdeaee7b98707"
+  },
+  "report_sha256": "c99ec1465bc61d5b3d1ee2755657ab4b8608652d1441cf9ba900acd00bd82f18",
+  "limits": "Blocked-main/worker fixture, synthetic PAID/OWED and mocked backend spawn transport, no actual device/OS GUI deadlock/production/OPS acceptance; native barriers next"
+}

@@ -1,5 +1,25 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — UX-11.a living frozen process hold verified
+
+Base/remote verified `8ca792def8a66595ce8571460533932f42ffa341`.
+New real disposable child owns both kernel leases, one PAID grant/OWED ledger,
+and blocked main + checkout worker. Real launcher monitor observes it for three
+cycles: no budget reservation/extra spawn/automatic stop, unchanged financial
+rows/journal bytes and held leases. Simulated explicit operator interrupt ends
+observation; only test control input subsequently releases its child. Not a real
+OS/Kivy deadlock certification. No hardware/provider or live process killed.
+**6 focused PASS / zero failure/error/skip**, 0.246s, Python 3.12.14/Linux.
+Command: `.venv/bin/python tools/run_kiosk_unittests.py test_ux11_process_hold test_crash_supervisor`.
+Pure process module registered Windows/Linux; current CI pending. Tests/fixture/
+workflow/docs only, runtime unchanged at 347e502. Full 1159/1155/4 remains original
+source, excludes subsequent tests. UX-11 NOT_RUN until stalled checkout/QR/upload
+native responsiveness/privacy and final CI complete. UX-07 whole purchased-
+printer gate remains NOT_RUN. Matrix 58/0/9/2 unchanged. Next native I/O barriers
+and retained upload queue; no watchdog activation/new runtime behavior.
+No production/OPS/public ingress/branch/master/default or actual external effect.
+Only work/ scratch local. Rollback tests/docs only; preserve all customer state.
+
 ## 29 October — UX-07 Sandbox evidence verified / purchased-printer gate open
 
 Micro-pushes `4099ca1a80251c53d45c5b0e6a4b9c25f090ef4a` (five HTTP boundary
