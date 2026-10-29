@@ -1,5 +1,39 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 30 October — UX-07.h purchased-print contract/source audit complete
+
+Base/remote verified `613243ab956001b24cde8f7a76bf1b3673a63d2a`.
+Audited frozen quote, paid grant/COMPOSED/OWED, Sandbox begin/paid start/resume,
+original durable print jobs/operator acknowledgement, native auto-print and
+safe isolation. Frozen copy counts are not a physical delivery policy; paid
+binding deliberately rejects transports, and spool SUBMITTED/local operator_checked
+cannot satisfy a paid obligation. Existing behavior is preserved, not a new bug.
+
+[Integration contract and micro-increments](UX07-PURCHASED-PRINT-INTEGRATION.md) now define an offline
+fake-provider/fake-printer fixture host first, an additive delivery requirement
+separate from immutable version-1 hashes, pre-create readiness and exact paid
+print-job binding. Migration/storage, preflight, send/restart and native/privacy
+are independently testable future increments. No customer-facing host is mounted.
+
+Documentation/source-reference/hash/scope/link/matrix checks only; no new runtime,
+schema, test, GUI, merchant or device PASS. Previous functional source e7e09fe
+full 1188/1184/4 and CI 40959449442 retain exact provenance and are not rerun.
+Matrix remains **59 PASS / 0 FAIL / 9 BLOCKED / 1 NOT_RUN**, audit IN_PROGRESS,
+AR-13 conditional; complete UX-07 purchased-print payment/device gate NOT_RUN.
+[Source audit receipt](evidence/ux07-purchased-print-contract-audit.json).
+
+Next exact work: UX-07.i disposable SQLite migration/compatibility fixtures for
+separate delivery requirements, then additive storage; preserve legacy financial
+rows and every original frozen JSON/hash. Actual Windows/Ubuntu read-only device
+reports and an explicit customer-facing operating contract remain separate.
+PAY-22/WEB-01..08, paper/provider/Drive/privacy/support/release gates stay open.
+No production/Sandbox delivery opt-in/OPS/public ingress/new branch/master/default/
+deployment or real external effect. Only existing private work/ and superseded
+docs stash local; no unpublished runtime patch. This containing docs-only push is
+the final safe checkpoint; resolve exact SHA from Git log/remote. Rollback only
+this audit/docs; retain all financial/media/evidence records. Do not repeat the
+verified UX-05/11, MOCK, collector or report-preservation increments.
+
 ## 30 October — UX-07.g report preservation regression/CI verified
 
 Source `e7e09fea03dc9263a424dc40a3c0dc4a259308ee` pushed/remote verified.

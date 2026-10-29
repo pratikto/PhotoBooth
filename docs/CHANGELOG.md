@@ -1,5 +1,14 @@
 # Meong Photobooth — changelog
 
+## 30 October — UX-07.h purchased-print integration contract audited
+
+Documentation-only source reconciliation: frozen quantities/COMPOSED/OWED and
+Sandbox transport isolation preserved. No paid-print runtime is mounted and no
+new acceptance claimed. Next UX-07.i offline delivery-requirement migration/
+compatibility fixtures, then additive storage, before any future host integration.
+Matrix 59/0/9/1 unchanged; previous full/CI retain their original source.
+[Exact contract/next increments](qa/portrait-v2-sandbox/UX07-PURCHASED-PRINT-INTEGRATION.md).
+
 ## 30 October — UX-07.g earlier printer evidence preserved
 
 Source e7e09fe: explicit probe output collisions return 2 before observation;
