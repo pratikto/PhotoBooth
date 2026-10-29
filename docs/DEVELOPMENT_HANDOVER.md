@@ -1,5 +1,22 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-02.d1 passive connectivity reader checkpoint
+
+Base/remote verified `e0f4bb663f25247003176da555dbd30744c0e2e3`. Added an
+**unmounted** passive Windows NLM/Ubuntu NetworkManager hint reader and five-second
+edge coalescer, reusing the existing worker/backend design. **9 focused PASS**,
+zero failure/error/skip, 0.004s; OS output injected, no external probes. Child
+helpers exclude booth/merchant/PIN/customer credentials. No checkout behavior,
+schema or journal change; PAY-08 remains NOT_RUN, matrix 44 PASS / 1 FAIL /
+9 BLOCKED / 15 NOT_RUN. This containing commit publishes the safe independent
+reader/test/CI/docs increment; exact SHA will be pinned after remote verification.
+Next AR-02.d2: mount on active known-order recovery worker and test one immediate
+GET after offline→online plus duplicate/backoff/reopen/privacy guards. Final full
+regression/CI follows that functional source. BUG-023/external/OPS gates unchanged.
+Only disposable work/ local; no unpublished runtime patch after push. Rollback
+unmounts/inverses this additive source only, retaining all financial/media state.
+
+
 ## 29 October — verified AR audit checkpoint at 4642841
 
 **Functional `4642841f3e99d8c74b4b379e24922a7ba3f614c9`**, pushed/remote-verified. Full

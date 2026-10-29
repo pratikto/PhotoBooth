@@ -1,0 +1,29 @@
+{
+  "stage": "AR-02.d1",
+  "status": "FOCUSED_VERIFIED_UNMOUNTED",
+  "remote_base": "e0f4bb663f25247003176da555dbd30744c0e2e3",
+  "source": "Containing commit; file hashes below",
+  "python": "3.12.14",
+  "command": ".venv/bin/python tools/run_kiosk_unittests.py test_recovery_connectivity",
+  "result": {
+    "run": 9,
+    "pass": 9,
+    "failure": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 0.004
+  },
+  "test_first": "One module import ERROR before implementation; missing connectivity module",
+  "report_sha256": "10e85143dc8ee0479d866b349d01a721f380d5a712ad9253809217bef0070c8e",
+  "source_sha256": {
+    "photobooth/kiosk_v2/connectivity.py": "5c04f4af7cd4e8487fb63eba00cf3397b1021e9590fc47cc77b4d15d53270804",
+    "tests/test_recovery_connectivity.py": "fe86a439c22ddddd26d2e984815f4004fa65c07ce155df38595aff0b6bd29cf7",
+    ".github/workflows/portrait-kiosk-v2.yml": "4674cb943b761c88734fcc25a03da728a9f3bbf496c0c532bb7f544d4ed268c9"
+  },
+  "matrix": "UNCHANGED: 44 PASS / 1 FAIL / 9 BLOCKED / 15 NOT_RUN; integrated PAY-08 NOT_RUN",
+  "limits": [
+    "Reader/observer unmounted; no checkout behavior changed.",
+    "Windows/Linux subprocess results injected; actual OS/merchant acceptance NOT_RUN.",
+    "Full regression and matching CI reserved for final mounted source."
+  ]
+}
