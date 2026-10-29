@@ -2,22 +2,21 @@
 
 ## Current Autonomous Recovery evidence and readiness — 29 October
 
-Functional `4642841f3e99d8c74b4b379e24922a7ba3f614c9`: **1100 run / 1097 PASS /
-3 optional palm SKIP / zero failure/error**, 364.124s; native video PASS.
-Matching [CI 40790865010](https://github.com/pratikto/PhotoBooth/actions/runs/40790865010)
-all three jobs SUCCESS. PAY-06/PAY-21 exact payment evidence verified; BUG-022
-missing committed output guard corrected and regression-verified.
+Functional `e0dc59435772148be86449c55140d4b9be2f6364`: **1117 run / 1114 PASS /
+3 optional palm SKIP / zero failure/error**, 335.317s; native video PASS.
+Latest test/CI/native `c94696d243c6a345182857d28d249d2d01d7d05b` has identical application
+content; only test lease cleanup and Windows qrcode setup changed. [CI 40809459547](https://github.com/pratikto/PhotoBooth/actions/runs/40809459547)
+**all three jobs SUCCESS**. Native **28 PNGs / four QR checks PASS**, clean source,
+both portrait sizes. [Exact command/trees/limits](qa/portrait-v2-sandbox/evidence/pay08-final-verification.json).
 
-[Source audit](qa/portrait-v2-sandbox/AR00-AR13-CODE-REVIEW.md) **IN_PROGRESS**:
-first bounded source pass read, native connectivity-restored producer absent
-(PAY-08), durable wrong-PIN denial audit absent (BUG-023/UX-13 FAIL). Matrix
-**44 PASS / 1 FAIL / 9 BLOCKED / 15 NOT_RUN**; passing regression does not waive
-these gaps. [Exact source/evidence](qa/portrait-v2-sandbox/evidence/ar-audit-final-verification.json).
-Earlier f72fdbc native/full/CI evidence remains historical. Actual device/merchant/
-phone/paper/Drive/retention/privacy/operations and release gates remain open;
-[AR-13](qa/portrait-v2-sandbox/AR13-READINESS.md) is not unattended release approval.
-Continue dependency-ordered AR work from the [checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md);
-Settings/Emulate Ticket/QRIS Slip runtime stays NOT_STARTED.
+**AR-02.d/PAY-08 restoration verified**: passive OS hint on the existing worker,
+same-order GET, persisted budget/lease, customer privacy retained. [Contract](qa/portrait-v2-sandbox/PAY08-CONNECTIVITY.md).
+Matrix **45 PASS / 1 FAIL / 9 BLOCKED / 14 NOT_RUN**, BUG-023 denial audit OPEN;
+overall AR audit IN_PROGRESS. Next **AR-03 CAP-01–05 allocation/STARTED crash
+fixtures**, then remaining source evidence and AR-09 audit. Actual OS/device/
+merchant/phone/paper/Drive/deletion/privacy/operations and release gates remain.
+[Current checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md).
+Settings/Emulate Ticket/QRIS Slip runtime stays NOT_STARTED; production unapproved.
 
 ## Active priority and newly approved future design — 29 October 2026
 

@@ -1,5 +1,19 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+## 29 October — NEXT: AR-03 allocation/STARTED exact fault windows
+
+AR-02.d/PAY-08 native restoration now verified: full 1117 run / 1114 PASS /
+3 optional palm SKIP, zero failure/error; current c94696d CI three jobs SUCCESS,
+application identical to full-run e0dc594. Native 28 PNGs / four QR checks PASS.
+**First unfinished: CAP-01–05** child exits around allocation intent, folder/first
+manifest and accepted STARTED before local persistence. Reuse existing crash/
+allocation/fulfillment fixtures; prove original identities, no new charge/grant/
+transaction, no overwrite. Then PAY-18 and retake/COMPLETE/disk evidence, followed
+by AR-09 BUG-023 bounded redacted durable denial audit. Matrix **45 PASS / 1 FAIL /
+9 BLOCKED / 14 NOT_RUN**. [Checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md).
+Overall AR audit/external gates remain open; do not repeat PAY-08 or start OPS.
+
+
 ## 29 October — AR-02.d PAY-08 focused verification
 
 Passive OS restoration is connected to the native checkout worker: same-order

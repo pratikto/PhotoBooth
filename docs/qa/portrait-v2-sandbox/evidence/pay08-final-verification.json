@@ -1,0 +1,408 @@
+{
+  "status": "VERIFIED_WITH_REMAINING_AR_GATES",
+  "date": "2026-10-29T10:03:57.062727+07:00",
+  "branch": "feature/portrait-kiosk-v2-next",
+  "functional_source": "e0dc59435772148be86449c55140d4b9be2f6364",
+  "test_ci_native_source": "c94696d243c6a345182857d28d249d2d01d7d05b",
+  "reader_source": "52a9a18857580ddcc822fe77cd36af76d489a532",
+  "runtime_trees": {
+    "photobooth": "458ab5dc768ca78f56b7ebfbe910370510470f75",
+    "tools": "62b5760a3ebd20382fb3eb632843c626e00ce2f9"
+  },
+  "full_test_tree": "63213430aced542961b01a4e3708b458cec903bd",
+  "latest_test_tree": "9990f71882e65e356798a156036f9a6bb107e90c",
+  "test_revision_delta": "Only three added fixture cleanup lines; same runtime, assertions and test count. Workflow also installs missing Windows qrcode dependency. Full run is not relabeled as newer test source.",
+  "dirty_state": "Tracked clean at full-run start e0dc594. The test/workflow-only cleanup was edited after discovery loaded tests; runtime never changed. Native captures after c94696d push at tracked-clean tree.",
+  "python": "3.12.14",
+  "os": "Debian GNU/Linux 13.6; SDL offscreen/software GL/dummy audio",
+  "command": "PHOTOBOOTH_TEST_GUI=1 PHOTOBOOTH_TEST_AUDIO=1 PHOTOBOOTH_TEST_VIDEO=1 KIVY_HOME=/tmp/meong-pay08-full-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 MESA_SHADER_CACHE_DIR=/tmp/meong-pay08-full-mesa MEONG_CI_TEST_REPORT=work/pay08-full-report.txt .venv/bin/python tools/run_kiosk_unittests.py > work/pay08-full-console.txt 2>&1",
+  "full": {
+    "run": 1117,
+    "pass": 1114,
+    "fail": 0,
+    "error": 0,
+    "skip": 3,
+    "seconds": 335.317,
+    "report_sha256": "6144c8764c43d0790f45d960a1e0d25e4ad2927ac6c6f2b957223eedb79a7517",
+    "console_sha256": "e407980d3d916183974048bc3e01c199458024ddec786d1d98119734975c7bb5",
+    "skips": [
+      {
+        "test": "test_real_model_worker_drives_the_actual_controller_and_keeps_button_capture (test_camera_recovery.CameraRecoveryTests.test_real_model_worker_drives_the_actual_controller_and_keeps_button_capture)",
+        "reason": "Native model assets are opt-in"
+      },
+      {
+        "test": "test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture)",
+        "reason": "Native model assets are opt-in"
+      },
+      {
+        "test": "test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image (test_palm_gesture.NativePalmModelTests.test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image)",
+        "reason": "Native model assets are opt-in"
+      }
+    ],
+    "native_video": "PASS in same full run"
+  },
+  "focused": {
+    "integrated": {
+      "source": "e0dc59435772148be86449c55140d4b9be2f6364",
+      "run": 103,
+      "pass": 103,
+      "fail": 0,
+      "error": 0,
+      "skip": 0
+    },
+    "portable": {
+      "source": "c94696d243c6a345182857d28d249d2d01d7d05b",
+      "run": 49,
+      "pass": 49,
+      "fail": 0,
+      "error": 0,
+      "skip": 0
+    }
+  },
+  "native": {
+    "head": "c94696d243c6a345182857d28d249d2d01d7d05b",
+    "tracked_dirty": false,
+    "screens": 28,
+    "qr_checks": [
+      {
+        "file": "02-recovery-ticket-fixture-800x12800001.png",
+        "role": "recovery_ticket",
+        "valid": true
+      },
+      {
+        "file": "02-waiting-offline-fixture-800x12800001.png",
+        "role": "payment",
+        "valid": true
+      },
+      {
+        "file": "02-recovery-ticket-fixture-452x9000001.png",
+        "role": "recovery_ticket",
+        "valid": true
+      },
+      {
+        "file": "02-waiting-offline-fixture-452x9000001.png",
+        "role": "payment",
+        "valid": true
+      }
+    ],
+    "manifests": [
+      {
+        "head": "c94696d243c6a345182857d28d249d2d01d7d05b",
+        "fixture": "OFFLINE HTTP; NOT MERCHANT ACCEPTANCE",
+        "dirty": false,
+        "screenshots": [
+          {
+            "file": "01-quote-800x12800001.png",
+            "page": "sandbox_checkout",
+            "phase": "QUOTE",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "a11918da2b75c4ca0bbba73eab88ab50e7ed340789357b8463ecd9448ba2891d"
+          },
+          {
+            "file": "02-recovery-ticket-fixture-800x12800001.png",
+            "page": "sandbox_checkout",
+            "phase": "WAITING",
+            "width": 800,
+            "height": 1280,
+            "qr_role": "recovery_ticket",
+            "sha256": "d6d307440309a61d24ccfa2bbd08e46e6648fa147a11ab836c745517ed52bdb4"
+          },
+          {
+            "file": "02-waiting-offline-fixture-800x12800001.png",
+            "page": "sandbox_checkout",
+            "phase": "WAITING",
+            "width": 800,
+            "height": 1280,
+            "qr_role": "payment",
+            "sha256": "e0e66beb4dff3419ba5d311b22f3c4b574c9ab05f096ea0beee1dbf53640331a"
+          },
+          {
+            "file": "03-reserved-800x12800001.png",
+            "page": "sandbox_checkout",
+            "phase": "RESERVED",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "5592bafd0daf54cd91e1e9b05f7788eef9ed488c59e77e1d38a80995e0779d50"
+          },
+          {
+            "file": "04-consent-800x12800001.png",
+            "page": "photo_confirm",
+            "phase": "RESERVED",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "6137c72f360b74f25134c4ae526dee137148bfb47f59980e4bb1c50262121147"
+          },
+          {
+            "file": "05-claim-required-800x12800001.png",
+            "page": "sandbox_checkout",
+            "phase": "RECOVERY",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "43fe8f6b990d7b3d2d98a2466bacaeb11d7288bdd7490d85a058910ac7113d94"
+          },
+          {
+            "file": "06-resume-ready-800x12800001.png",
+            "page": "sandbox_checkout",
+            "phase": "RECOVERY",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "6dfb0b706d02446ad54f22f3c0950a8ff2876ae7f9095a512592103c29d794eb"
+          },
+          {
+            "file": "07-original-capture-restored-800x12800001.png",
+            "page": "capture",
+            "phase": "STARTED",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "c7d7c8efedf8ea9488c46397a3776766cc67937ec7007efddb8e376ab10181c2"
+          },
+          {
+            "file": "08-operator-pin-entry-800x12800001.png",
+            "page": "sandbox_checkout",
+            "phase": "RECOVERY",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "af31ef7864dc8646cdc72a66a9cc0487d4f31b921c07fec5414c80dc678e1aef"
+          },
+          {
+            "file": "09-operator-status-800x12800001.png",
+            "page": "sandbox_checkout",
+            "phase": "STARTED",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "0bea81b23a0f72ea017854d7b6e0578dac36e92a242ff75f2cafd2e6ba004318"
+          },
+          {
+            "file": "10-isolation-ready-800x12800001.png",
+            "page": "sandbox_checkout",
+            "phase": "RELEASING",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "2ab20780c6a04a051fdd5947753c6046f362be5bae6a2815e6c66a796814c464"
+          },
+          {
+            "file": "11-released-advert-800x12800001.png",
+            "page": "advert",
+            "phase": null,
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "949bf084ee716fa2abd4bac904a3ce10b053704b45f399efa93f34473a7bb0ca"
+          },
+          {
+            "file": "12-saved-ticket-lookup-800x12800001.png",
+            "page": "sandbox_checkout",
+            "phase": "CLAIM_LOOKUP",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "bfbcf2a48d5be29af6691e53e2cfaa2ac3e37983737539a35a8105ef6ea9fcaf"
+          },
+          {
+            "file": "13-returning-customer-restored-800x12800001.png",
+            "page": "capture",
+            "phase": "STARTED",
+            "width": 800,
+            "height": 1280,
+            "qr_role": null,
+            "sha256": "94c69cfd30b78ad268a89bb43b7108ed894f0626b6659ee8acb0dbd55bd27c29"
+          }
+        ]
+      },
+      {
+        "head": "c94696d243c6a345182857d28d249d2d01d7d05b",
+        "fixture": "OFFLINE HTTP; NOT MERCHANT ACCEPTANCE",
+        "dirty": false,
+        "screenshots": [
+          {
+            "file": "01-quote-452x9000001.png",
+            "page": "sandbox_checkout",
+            "phase": "QUOTE",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "013f10c991f39865f26fa942a59d7edfc4968958510217d2381c6c0ef2cb7c46"
+          },
+          {
+            "file": "02-recovery-ticket-fixture-452x9000001.png",
+            "page": "sandbox_checkout",
+            "phase": "WAITING",
+            "width": 452,
+            "height": 900,
+            "qr_role": "recovery_ticket",
+            "sha256": "f2ab4da3d2305306b334ea10231344778ce0ab57972aebfd142a57e6a3c73c68"
+          },
+          {
+            "file": "02-waiting-offline-fixture-452x9000001.png",
+            "page": "sandbox_checkout",
+            "phase": "WAITING",
+            "width": 452,
+            "height": 900,
+            "qr_role": "payment",
+            "sha256": "650fa13d16fb7e423fffd16271c05ae614a3989061f63bf888b5d9bf39ed26d2"
+          },
+          {
+            "file": "03-reserved-452x9000001.png",
+            "page": "sandbox_checkout",
+            "phase": "RESERVED",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "0c94e225f0a14982690639050230578823b7b1fa2e2e819853cc31048ab0d849"
+          },
+          {
+            "file": "04-consent-452x9000001.png",
+            "page": "photo_confirm",
+            "phase": "RESERVED",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "7d4973cfc32dc5c1c44879f1a668d21c40cf3e5684242e6b14aa9fbfa8461c78"
+          },
+          {
+            "file": "05-claim-required-452x9000001.png",
+            "page": "sandbox_checkout",
+            "phase": "RECOVERY",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "7af541826ab07b8525eefdd78ddc5d1fe9147216f74faa7ef7b5929ba3173a77"
+          },
+          {
+            "file": "06-resume-ready-452x9000001.png",
+            "page": "sandbox_checkout",
+            "phase": "RECOVERY",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "1bb2158e22b94bf443c9e25e23c72838bc84c198835d9e48eb1397a2a7dec74c"
+          },
+          {
+            "file": "07-original-capture-restored-452x9000001.png",
+            "page": "capture",
+            "phase": "STARTED",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "7da07e39bfd51a214265fec262beed9048cc7ea4b9daff52dd90735822c520ae"
+          },
+          {
+            "file": "08-operator-pin-entry-452x9000001.png",
+            "page": "sandbox_checkout",
+            "phase": "RECOVERY",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "828334ba861693687a121fc44e368ccecb22fe97dfdfa0029813bbe7b0c4593e"
+          },
+          {
+            "file": "09-operator-status-452x9000001.png",
+            "page": "sandbox_checkout",
+            "phase": "STARTED",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "4f65c63289fcfa94be780096f474a83fbabb27d39596961ffe24a2288c788c9b"
+          },
+          {
+            "file": "10-isolation-ready-452x9000001.png",
+            "page": "sandbox_checkout",
+            "phase": "RELEASING",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "1ccc0047fe2f3a7ea1bb9bb17f9a41c65df4f6b93d1d779028ac663e421c2c9a"
+          },
+          {
+            "file": "11-released-advert-452x9000001.png",
+            "page": "advert",
+            "phase": null,
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "c0e825fcb2754a9dc819e725b2948ac1c2114afd57b6d21651ef6f508ebd034d"
+          },
+          {
+            "file": "12-saved-ticket-lookup-452x9000001.png",
+            "page": "sandbox_checkout",
+            "phase": "CLAIM_LOOKUP",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "9ee2eb811e5dd29d85a979785c462f8d134f40b3335ab87d2573b9b515487774"
+          },
+          {
+            "file": "13-returning-customer-restored-452x9000001.png",
+            "page": "capture",
+            "phase": "STARTED",
+            "width": 452,
+            "height": 900,
+            "qr_role": null,
+            "sha256": "7af6fa8ddb76dd27b0e5a8ca4a59a728b822b71e39f6f96594d29686de43f53a"
+          }
+        ]
+      }
+    ],
+    "commands": [
+      "KIVY_HOME=/tmp/meong-pay08-render-800 KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 MESA_SHADER_CACHE_DIR=/tmp/meong-pay08-render-mesa .venv/bin/python tools/render_portrait_sandbox.py --output-dir work/pay08-native-800 --width 800 --height 1280",
+      "KIVY_HOME=/tmp/meong-pay08-render-452 KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 MESA_SHADER_CACHE_DIR=/tmp/meong-pay08-render-mesa .venv/bin/python tools/render_portrait_sandbox.py --output-dir work/pay08-native-452 --width 452 --height 900"
+    ],
+    "visually_inspected": [
+      "800 claim-required",
+      "452 resume-ready",
+      "800 original capture restored (one saved frame, next manual countdown)",
+      "452 operator isolation-ready"
+    ],
+    "raw_images_published": false,
+    "raw_qr_payloads_published": false
+  },
+  "matrix": {
+    "total": 69,
+    "pass": 45,
+    "fail": 1,
+    "skip": 0,
+    "blocked": 9,
+    "not_run": 14,
+    "remaining_fail": "UX-13 / BUG-023 durable denial audit"
+  },
+  "ci": {
+    "run_id": 40809459547,
+    "head_sha": "c94696d243c6a345182857d28d249d2d01d7d05b",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 123236072468,
+        "name": "Windows Python 3.12 native SDL audio (dummy output)",
+        "conclusion": "success"
+      },
+      {
+        "id": 123236072709,
+        "name": "Navigation and audio lifecycle",
+        "conclusion": "success"
+      },
+      {
+        "id": 123236072757,
+        "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+        "conclusion": "success"
+      }
+    ],
+    "detail": "pay08-final-ci.json",
+    "application_tree_matches_full_source": true,
+    "windows_portable_group": "49 PASS / zero failure/error/skip; 11.955s"
+  },
+  "limitations": [
+    "Synthetic OS edge/provider/temp SQLite, no physical reconnection or live merchant acceptance.",
+    "Missing OS helpers/short unsampled outages retain normal bounded polling.",
+    "No production, OPS, real print/Drive/deletion, service/public ingress or branch/master change."
+  ]
+}

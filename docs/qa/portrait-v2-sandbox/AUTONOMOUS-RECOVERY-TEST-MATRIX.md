@@ -1,20 +1,15 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
-**AR-02.d update:** PAY-08 producer/integration focused-verified, 103 PASS;
-[exact evidence](evidence/pay08-integration.json). Current matrix **45 PASS /
-1 FAIL / 0 SKIP / 9 BLOCKED / 14 NOT_RUN**. Full/matching CI for this functional
-increment PENDING; previous full source below remains historical.
+**Current status, 29 October:** functional `e0dc59435772148be86449c55140d4b9be2f6364`, full
+**1117 run / 1114 PASS / 3 optional palm SKIP / zero failure/error**. CI at
+c94696d (same application tree; test cleanup only), **three jobs SUCCESS**;
+28 clean native captures / four QR checks PASS. PAY-08 native restoration source
+and integrated synthetic evidence verified. [Exact sources/provenance](evidence/pay08-final-verification.json).
 
-**Current status, 29 October 2026:** current source `4642841f3e99d8c74b4b379e24922a7ba3f614c9`;
-full **1100 run / 1097 PASS / 3 optional SKIP / zero failure/error**, matching
-CI 40790865010 all three jobs SUCCESS. Current scenario matrix:
-**44 PASS / 1 FAIL / 0 SKIP / 9 BLOCKED / 15 NOT_RUN** (69 IDs).
-PAY-06/PAY-21 added by the payment audit; BUG-022 missing committed PNG guard is
-regression-verified; UX-13 corrected to FAIL because durable wrong-PIN denial audit
-is absent. PAY-08 lacks a native connectivity event producer. Audit IN_PROGRESS,
-production not ready. [Current safe evidence](evidence/ar-audit-final-verification.json).
-The original scenario contract and dated baseline evidence are retained below.
-Exact missing process-exit/device windows remain NOT_RUN/BLOCKED.
+Scenario matrix **45 PASS / 1 FAIL / 0 SKIP / 9 BLOCKED / 14 NOT_RUN** (69 IDs).
+UX-13/BUG-023 durable denial audit still FAIL; overall audit IN_PROGRESS.
+Physical OS/provider acceptance stays NOT_RUN; no production/OPS release.
+Original scenario contract and source-specific historical evidence below remain.
 
 ## A. Invariants asserted on every relevant transition
 
@@ -132,8 +127,8 @@ All public WEB items are currently **BLOCKED** on infrastructure approval; offli
 
 ## Executed evidence ledger — 29 October 2026
 
-All named test methods below also PASS in the complete 4642841 regression,
-including newly added PAY-06/PAY-21 and BUG-022. The older execution baseline was
+All named test methods below PASS in the complete e0dc594 regression,
+including PAY-06/PAY-21, BUG-022 and the new PAY-08/native connectivity cases. The older execution baseline was
 `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`,
 executed by the full command/environment in [validation](AUTONOMOUS-RECOVERY-VALIDATION.md).
 The [safe report](evidence/ar12-final-verification.json) pins test source trees,
@@ -243,10 +238,10 @@ matrix PASS or used to waive device/merchant requirements.
 
 | Gate | Evidence required | Current |
 | --- | --- | --- |
-| Source unit/integration | Exact SHA, OS, command, full count PASS/FAIL/SKIP, fixtures and no secret leakage | PASS at 4642841: 1100 run / 1097 PASS / 3 optional palm SKIP |
+| Source unit/integration | Exact SHA, OS, command, full count PASS/FAIL/SKIP, fixtures and no secret leakage | PASS at e0dc594: 1117 run / 1114 PASS / 3 optional palm SKIP |
 | Crash/restart fault-injection | Every PAY/CAP/UX applicable ID mapped to test output | NOT_RUN for complete gate; see explicit missing exact windows above |
-| Complete GUI regression | One final applicable full suite after last functional change; no borrowed old pass | PASS at 4642841; three optional palm SKIPs, native video PASS in same run |
-| GUI screenshot/pixels | Tested exact source 800×1280 and 452×900, readability and QR identity | PASS for 28 captured scenes / four QR checks; retake/multi-design visual scenes NOT_RUN |
+| Complete GUI regression | One final applicable full suite after last functional change; no borrowed old pass | PASS at e0dc594; three optional palm SKIPs, native video PASS in same run |
+| GUI screenshot/pixels | Tested exact source 800×1280 and 452×900, readability and QR identity | PASS for 28 clean c94696d scenes / four QR checks; retake/multi-design visual scenes NOT_RUN |
 | Windows booth | Real camera/storage, app close/reopen/power interruption, native touch/keyboard | NOT_RUN |
 | Ubuntu mini PC | Actual graphical session service, permissions, startup, real camera/print hardware | NOT_RUN |
 | Android/tablet | Separate build/lifecycle/provider and storage behavior; if targeted, actual device evidence | NOT_RUN |

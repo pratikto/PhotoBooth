@@ -1,5 +1,40 @@
 # AR-12 — final source validation and external acceptance gates
 
+## Final AR-02.d verification — 29 October 2026
+
+PAY-08 / AR-AUDIT-002 **SOURCE VERIFIED**. Functional source `e0dc59435772148be86449c55140d4b9be2f6364`:
+**1117 run / 1114 PASS / 3 optional palm SKIP / zero failure/error**, 335.317s,
+GUI/audio/video opt-ins, Python 3.12.14/Debian 13.6, SDL offscreen/software GL/
+dummy audio. Native video PASS. Reader: 9 focused PASS; integration: 103 focused
+PASS. Test/workflow-only portability source `c94696d243c6a345182857d28d249d2d01d7d05b`: **49 focused PASS**,
+zero failure/error/skip, 1.389s Linux and 11.955s Windows CI.
+
+[CI 40809459547](https://github.com/pratikto/PhotoBooth/actions/runs/40809459547)
+at c94696d: **all three jobs SUCCESS**. Its application/tools Git trees exactly
+match the full-run e0dc594 source. Tests differ only by explicit fixture lease
+cleanup; no assertion changed. The full run is not relabeled as a c94696d test
+run. Initial Windows missing-qrcode failure at 40808591124 is retained;
+reader CI 40807439692 also succeeded. [CI steps/counts](evidence/pay08-final-ci.json).
+
+**28 clean native PNGs / four QR checks PASS**, both 800×1280 and 452×900 at
+c94696d. Dimensions/hashes/phase transitions checked; selected claim/resume/
+capture/isolation layouts inspected. Raw ticket QR pixels/payloads/logs remain
+untracked private work/; only safe verdicts/manifests/digests are published.
+[Exact commands/trees/skips/digests/native hashes](evidence/pay08-final-verification.json).
+
+Current matrix **45 PASS / 1 FAIL / 0 SKIP / 9 BLOCKED / 14 NOT_RUN**.
+Overall AR conformity audit remains IN_PROGRESS; BUG-023/UX-13 denial audit OPEN.
+Actual Windows/Ubuntu OS reconnection, merchant/provider, phone/paper/Drive/
+retention/privacy/operations and release gates remain NOT_RUN/BLOCKED.
+Unknown/unavailable OS hints fall back to existing polling; this is no universal
+Internet/provider reachability guarantee. No production or future OPS activation.
+
+Next dependency: **AR-03 CAP-01–05 exact allocation/STARTED process-exit fixtures**
+plus PAY-18 lost service replies, then remaining retake/COMPLETE/disk evidence and
+AR-09 denial audit. Never repeat completed charge/reconciliation work or clear
+customer state. No unsafe unpublished runtime patch; only disposable work/ local.
+
+
 ## Final verification checkpoint — 29 October 2026
 
 **Functional source `4642841f3e99d8c74b4b379e24922a7ba3f614c9`; full 1,100 run /

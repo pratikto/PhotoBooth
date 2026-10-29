@@ -1,23 +1,49 @@
 # Autonomous recovery — session checkpoint and resume contract
 
-**Active owner task, 29 October:** fresh AR-00–AR-13 implementation conformity
-review, IN_PROGRESS. First bounded source pass read; current functional source
-4642841 fixes BUG-022 and has 1100 run / 1097 PASS / 3 optional SKIP, matching
-three-job CI SUCCESS. PAY-06/PAY-21 evidence verified. Matrix now 44 PASS /
-1 FAIL / 9 BLOCKED / 15 NOT_RUN at audit baseline. PAY-08 is now focused-verified
-(45 PASS / 1 FAIL / 9 BLOCKED / 14 NOT_RUN), full/CI for AR-02.d2 pending. [Review checkpoint](AR00-AR13-CODE-REVIEW.md).
-Complete remaining conformity/fault evidence before a blanket verdict; historical
-readiness reports below retain their dated source and gates.
+**Active task, 29 October:** AR-00–13 conformity/development IN_PROGRESS.
+AR-02.d/PAY-08 now source-verified. Current matrix **45 PASS / 1 FAIL /
+9 BLOCKED / 14 NOT_RUN**, BUG-023 denial audit remains open.
+**Branch:** `feature/portrait-kiosk-v2-next`; no new branch/master/production.
+**Functional source:** `e0dc59435772148be86449c55140d4b9be2f6364`.
+**Latest test/CI/native source:** `c94696d243c6a345182857d28d249d2d01d7d05b`;
+application/tools tree identical to e0dc594. Previous full source 4642841 and
+all earlier checkpoints below retain historical scope only.
 
-**Checkpoint status:** audit IN_PROGRESS; BUG-022 regression VERIFIED, BUG-023 and exact fault/external gaps OPEN, 29 October 2026 (Asia/Jakarta)
-**Branch:** `feature/portrait-kiosk-v2-next` (existing; no master merge)
-**Recovery implementation:** source through AR-12.f; AR-13 readiness report published; full matrix/device acceptance and release are not complete
-**Latest validated application source:** `4642841f3e99d8c74b4b379e24922a7ba3f614c9`; full 1100 run / 1097 PASS / 3 SKIP; matching CI 40790865010 three jobs SUCCESS.
-**Previous fully validated application source:** `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`; full 1,097 run / 1,093 PASS / 4 SKIP / zero failures/errors; matching CI 40767441201 three jobs SUCCESS.
-**Historical audit baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
-**Current documentation handover:** See `docs/DEVELOPMENT_HANDOVER.md` and verify current remote HEAD; never assume the HEAD printed in a dated checkpoint is still current.
+## Latest verified continuation — AR-02.d / PAY-08
 
-## 29 October — AR-02.d3 Windows fixture/CI correction
+- **Pushed and remote verified:** reader `52a9a18857580ddcc822fe77cd36af76d489a532`;
+  mounted runtime `e0dc59435772148be86449c55140d4b9be2f6364`;
+  Windows test/CI-only correction `c94696d243c6a345182857d28d249d2d01d7d05b`.
+  This containing docs publication is the next safe checkpoint; resolve its SHA
+  from Git HEAD and verify remote before continuing.
+- **Completed:** passive Windows NLM/Ubuntu NetworkManager sampled restoration
+  on existing Sandbox worker; same-order observation only, durable backend
+  priority/lease, no repeated charge/grant/service/media effect, private late
+  callback denial. Unknown/missing OS hints retain existing bounded polling.
+- **Tests:** reader 9 PASS; integrated 103 PASS; portable 49 PASS Linux/Windows;
+  full **1117 run / 1114 PASS / 3 optional palm SKIP / zero failure/error** at
+  e0dc594, 335.317s. No full rerun asserted for c94696d cleanup-only test change.
+  [Exact commands/trees/skips/digests](evidence/pay08-final-verification.json).
+- **CI/native:** 40809459547 at c94696d **three jobs SUCCESS**. Initial missing
+  qrcode Windows failure preserved; reader CI also SUCCESS. Clean c94696d native
+  **28 PNGs / four QR checks PASS** at both portrait targets. Raw pixels/logs
+  private untracked work/; only safe manifests/verdicts published.
+- **Remaining:** matrix 45 PASS / 1 FAIL / 9 BLOCKED / 14 NOT_RUN. Overall audit
+  IN_PROGRESS; BUG-023/UX-13 durable denial audit OPEN, no blanket conformity.
+- **Next exact increment:** AR-03 CAP-01–05 child exits before/after allocation
+  intent, first folder/manifest, STARTED accepted before local ACK. Start from
+  tests/test_checkout_fulfillment.py, tests/test_photo_allocation.py and existing
+  crash fixtures; bind original key/grant/operation/transaction and no new charge/
+  counter/media rewrite. Then PAY-18, remaining retake/COMPLETE/disk and AR-09.
+- **External gates unchanged:** actual Windows/Ubuntu reconnection, merchant/
+  provider/phone/paper/Drive/deletion/privacy/operations, public ingress/release.
+  Future Settings/Emulate Ticket/QRIS Slip runtime NOT_STARTED; OPS docs unchanged.
+- **Local-only:** disposable work/ synthetic diagnostics/images/raw logs, not
+  remotely backed up; no unfinished runtime patch. No schema/journal migration.
+  Scoped inverse unmounts OS hint and retains all financial/media/claim/fences;
+  never reset or replay effects to recover usability.
+
+## Historical intermediate — AR-02.d3 Windows fixture/CI correction
 
 Mounted e0dc594 pushed/remote verified; full **1117 run / 1114 PASS / 3 optional
 palm SKIP / zero failure/error**, 335.317s. Windows CI 40808591124 fails at fixture
@@ -31,7 +57,7 @@ Next: verify new CI, clean native captures/QRs, publish final source checkpoint;
 then AR-03 CAP-01–05. Matrix 45 PASS / 1 FAIL / 9 BLOCKED / 14 NOT_RUN. BUG-023,
 external and OPS gates unchanged. No unpublished runtime patch, only work/ local.
 
-## 29 October — AR-02.d2 connectivity recovery mounted, focused PASS
+## Historical intermediate — AR-02.d2 mounted, focused PASS
 
 Previous reader micro-push `52a9a18857580ddcc822fe77cd36af76d489a532` pushed/remote-verified.
 Native known-order recovery now coalesces OS offline→online on the existing
@@ -47,7 +73,7 @@ No schema/journal migration or new layout; unknown OS hint retains bounded polls
 Next: final full/matching CI at pushed source, then AR-03 CAP-01–05 crash fixtures.
 Only disposable work/ local; scoped inverse retains every order/claim/media/fence.
 
-## 29 October — AR-02.d1 passive connectivity reader checkpoint
+## Historical intermediate — AR-02.d1 reader checkpoint
 
 Base/remote verified `e0f4bb663f25247003176da555dbd30744c0e2e3`. Added an
 **unmounted** passive Windows NLM/Ubuntu NetworkManager hint reader and five-second

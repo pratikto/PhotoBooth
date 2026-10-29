@@ -1,5 +1,27 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 29 October — AR-02.d PAY-08 verified and remotely checkpointed
+
+Functional `e0dc59435772148be86449c55140d4b9be2f6364`: **1117 run / 1114 PASS /
+3 optional palm SKIP / zero failure/error**, 335.317s; native video PASS.
+Reader micro-push `52a9a18857580ddcc822fe77cd36af76d489a532`; mounted source e0dc594;
+Windows test/setup correction `c94696d243c6a345182857d28d249d2d01d7d05b`, **49 focused PASS**.
+[CI 40809459547](https://github.com/pratikto/PhotoBooth/actions/runs/40809459547)
+at c94696d **all three jobs SUCCESS**; same application/tools tree as full-run
+source, test delta only explicit lease cleanup (full not relabeled). Integration
+103 focused PASS; native **28 PNGs / four QR checks PASS**, both portrait sizes,
+clean c94696d. Initial Windows qrcode import failure retained in provenance.
+[Exact command/source/evidence](qa/portrait-v2-sandbox/evidence/pay08-final-verification.json).
+
+PAY-08 synthetic PASS / AR-AUDIT-002 resolved; matrix **45 PASS / 1 FAIL /
+9 BLOCKED / 14 NOT_RUN**, overall audit IN_PROGRESS, **BUG-023 OPEN**.
+Next **AR-03 CAP-01–05 exact allocation/STARTED process exits**, PAY-18 lost ACKs,
+then remaining media/COMPLETE/disk cases and AR-09 redacted denial audit.
+Real OS/device/provider/privacy/retention/operational acceptance stays separate;
+no production/OPS/print/Drive activation. Only work/ scratch local; no unpublished
+runtime patch. This containing docs checkpoint follows remote-verified c94696d.
+
+
 ## 29 October — AR-02.d PAY-08 focused verification
 
 Passive OS restoration is connected to the native checkout worker: same-order
