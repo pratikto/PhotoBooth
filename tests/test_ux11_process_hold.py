@@ -55,7 +55,12 @@ class FrozenProcessHoldTests(TestCase):
                         self.assertEqual((directory/'visit.json').read_bytes(),journal)
                         self.assertEqual(financial(),original)
                         self.assertFalse((directory/'crash-budget.json').exists())
-                        with self.assertRaises(RuntimeError):KioskLease(str(directory/'visit.json')+'.lock')
+                        # Windows mandatory byte locks may reject the initial
+                        # read with OSError before KioskLease wraps lock failure.
+                        # Both outcomes deny the second owner; no error message
+                        # or platform-specific errno is part of this contract.
+                        with self.assertRaises((RuntimeError,OSError)):
+                            KioskLease(str(directory/'visit.json')+'.lock')
                         with self.assertRaises(OSError):LaunchLease(root)
                         cycles.append(delay)
                         if len(cycles)==3:raise KeyboardInterrupt

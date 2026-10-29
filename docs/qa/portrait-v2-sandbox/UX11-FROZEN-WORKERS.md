@@ -78,3 +78,26 @@ provider/purchased-printer/device/operations/release gate handoff. No watchdog
 activation/kill/replay, production/OPS/public ingress/branch/master/default or
 real external effect. Only work/ scratch local; rollback tests/docs only, keep
 all financial/claim/fence/media/audit records.
+
+## 29 October — UX-11.c portable owned-lease denial fixture
+
+Source `07734b22609cd1740fcfc43e6040507b0a729e0b` pushed/remote verified.
+Its CI 40865074759 Windows job 123417828871: 116 run/one fixture FAIL, `2 != 130`;
+not a successful matching run. Launcher deliberately maps OSError to generic
+setup-stop; Windows mandatory byte locks may reject KioskLease's initial read
+with OSError before its later lock-failure RuntimeError wrapper. Historical
+inner exception was hidden by the intentional generic launcher response.
+Controlled PermissionError injection reproduces exactly `2 != 130` with old
+fixture: one expected FAIL/zero error, 0.271s; corrected fixture one PASS/0.239s.
+Accept either specific owned-lease denial class (RuntimeError/OSError); retain
+actual child-alive, both held leases, no spawn/budget/stop and exact financial/
+journal assertions. No exception message/errno guarantee, no broad catch-all,
+no production lease/launcher/runtime change. Real Windows retest still required.
+**9 focused PASS / zero failure/error/skip**, 3.104s, same checkout/QR/upload
+barriers plus real held process. Exact command/source/report digests in
+`evidence/ux11-final-verification.json`. This containing tests/docs micro-push
+corrects portability; current new CI pending. UX-11 NOT_RUN until current CI,
+UX-07 stronger printer gate NOT_RUN; matrix 58/0/9/2. Next verify new Windows/
+Linux CI and final safe checkpoint. Retain failed run and controlled evidence.
+No runtime/OPS/production/branch/master/default/external effect. Only work/
+scratch local; rollback tests/docs only, preserve all financial/media state.

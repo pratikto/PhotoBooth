@@ -1,7 +1,7 @@
 {
-  "status": "UX11_FOCUSED_VERIFIED_MATCHING_CI_PENDING",
+  "status": "UX11_PORTABLE_FIXTURE_FOCUSED_VERIFIED_CI_PENDING",
   "first_process_commit": "c588d5a635a1f427b997d8b003a13b2aedf732d5",
-  "test_source": "Containing native test commit; pin after push",
+  "test_source": "Containing portable fixture commit; pin after push",
   "runtime_source": "347e502b0f50d231ec05c0cbcf768f87d2002454",
   "runtime_changed": false,
   "focused": {
@@ -10,7 +10,7 @@
     "fail": 0,
     "error": 0,
     "skip": 0,
-    "seconds": 2.979
+    "seconds": 3.104
   },
   "new_process_methods": 1,
   "new_native_methods": 3,
@@ -18,13 +18,13 @@
   "process_observation_cycles": 3,
   "files_sha256": {
     "tests/ux11_frozen_fixture.py": "a42f594f60dee0438a92ccf9e8e10c4b9762f340e42249682691c5226009f3eb",
-    "tests/test_ux11_process_hold.py": "ce98308a8ac6d8bf2edd19b571b7c24b06443e98d1ac914e9f038ffe8893ea87",
+    "tests/test_ux11_process_hold.py": "4d60c5e4c6f45765ceb612589c32f718c5b18828b07dd0602eafb0f4e57b1251",
     "tests/test_kiosk_v2_sandbox_widgets.py": "b13ca1a53c33494ccc77289618a1bb8d3fc576fd4e0e1e7dc37304ae565185d5",
     "tests/test_kiosk_v2_photo_delivery.py": "3bdc4fea1b09eb32ef59091a3a2af150a7f433fad18260ff4711bc13d6ca6d4b",
     ".github/workflows/portrait-kiosk-v2.yml": "0067d33a843ad89ae58ff1b99d004e3186c093ec6d3505b4811fdeaee7b98707"
   },
-  "report_sha256": "ac94758c71977556735c30a9e8f00d8d0c9f975a6da37db387c3488e43459707",
-  "command": "KIVY_HOME=/tmp/meong-ux11-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 MESA_SHADER_CACHE_DIR=/tmp/meong-ux11-mesa MEONG_CI_TEST_REPORT=work/ux11-all-focused.txt .venv/bin/python tools/run_kiosk_unittests.py test_ux11_process_hold test_crash_supervisor tests.test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_ux11_stalled_checkout_worker_keeps_clock_live_and_retired_result_private tests.test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_ux11_stalled_payment_qr_worker_keeps_clock_live_without_late_disclosure tests.test_kiosk_v2_photo_delivery.PhotoDeliveryTests.test_ux11_stalled_real_upload_queue_keeps_clock_live_and_original_files_once",
+  "report_sha256": "d2fe5eb9eed12abb147d1201fd8fc7dc3623a51715a99ae64ad1f315ea9842f6",
+  "command": "KIVY_HOME=/tmp/meong-ux11-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 MESA_SHADER_CACHE_DIR=/tmp/meong-ux11-mesa MEONG_CI_TEST_REPORT=work/ux11-portable-focused.txt .venv/bin/python tools/run_kiosk_unittests.py test_ux11_process_hold test_crash_supervisor tests.test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_ux11_stalled_checkout_worker_keeps_clock_live_and_retired_result_private tests.test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_ux11_stalled_payment_qr_worker_keeps_clock_live_without_late_disclosure tests.test_kiosk_v2_photo_delivery.PhotoDeliveryTests.test_ux11_stalled_real_upload_queue_keeps_clock_live_and_original_files_once",
   "full_regression": "NOT_RERUN_TESTS_ONLY; 347e502 full 1159/1155/4 excludes ten subsequent UX-07/11 methods",
   "limits": "Bounded native fixture I/O stalls, actual disposable blocked-main process/mock backend transport; not physical OS GUI hang acceptance. No real charge/printer/Drive/production/OPS effect",
   "matrix": {
@@ -34,5 +34,31 @@
     "blocked": 9,
     "not_run": 2
   },
-  "next": "Current matching CI/final checkpoint then outstanding UX-07/purchased-printer and external provider/device/operations/release gates"
+  "next": "Current matching CI/final checkpoint then outstanding UX-07/purchased-printer and external provider/device/operations/release gates",
+  "prior_native_test_source": "07734b22609cd1740fcfc43e6040507b0a729e0b",
+  "focused_before_portability": {
+    "run": 9,
+    "pass": 9,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 2.979
+  },
+  "initial_ci_windows": {
+    "run_id": 40865074759,
+    "job_id": 123417828871,
+    "source": "07734b22609cd1740fcfc43e6040507b0a729e0b",
+    "run": 116,
+    "fail": 1,
+    "error": 0,
+    "cause": "Fixture too narrow for owned-lease error class; exact historical inner exception not logged"
+  },
+  "controlled_windows_read_denial": {
+    "before": "1 expected FAIL, zero error, 0.271s; exact 2 != 130",
+    "after": "1 PASS, zero error, 0.239s",
+    "report_sha256": {
+      "work/ux11-windows-probe-before.txt": "50524d9c8385ad32d3cff9125309a140949db1ce872e9e31ed169ebf8eb29e1c",
+      "work/ux11-windows-probe-after.txt": "90830bdd9b0240b544bb33e3f49d6e871d8bf394cc3f7d9ddca9fd27299b6f4b"
+    }
+  }
 }
