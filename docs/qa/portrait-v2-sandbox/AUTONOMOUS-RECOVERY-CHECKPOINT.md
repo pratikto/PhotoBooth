@@ -1,15 +1,47 @@
 # Autonomous recovery — session checkpoint and resume contract
 
-**Active task, 29 October:** AR-00–13 conformity/development IN_PROGRESS.
-AR-02.d/PAY-08 now source-verified. Current matrix **45 PASS / 1 FAIL /
-9 BLOCKED / 14 NOT_RUN**, BUG-023 denial audit remains open.
-**Branch:** `feature/portrait-kiosk-v2-next`; no new branch/master/production.
-**Functional source:** `e0dc59435772148be86449c55140d4b9be2f6364`.
-**Latest test/CI/native source:** `c94696d243c6a345182857d28d249d2d01d7d05b`;
-application/tools tree identical to e0dc594. Previous full source 4642841 and
-all earlier checkpoints below retain historical scope only.
+**Active task, 29 October:** AR conformity/development IN_PROGRESS.
+**Completed now:** AR-03.c / CAP-01–05 exact process exits, 66 focused PASS;
+matching CI 40815197373 all three jobs SUCCESS. **Matrix 50 PASS / 1 FAIL /
+9 BLOCKED / 9 NOT_RUN**, BUG-023 still OPEN.
+**Branch:** `feature/portrait-kiosk-v2-next` (existing).
+**Application runtime:** `e0dc59435772148be86449c55140d4b9be2f6364`, unchanged.
+**Latest test/CI source:** `e72e28bdf8b0cbb080ef0c35aa8a1e3906bf55cb`.
+**Native/full baseline:** retained at original e0dc594/c94696d sources; not rerun
+or relabeled for this tests-only coverage increment.
 
-## 29 October — AR-03.c2 CAP-01–05 focused evidence complete
+## Latest verified continuation — AR-03.c / CAP-01–05
+
+- **Exact pushed/remote-verified tests:** `c87050eeb4f0223577d68796ff0ace4f4a1d2a95` CAP-01/02,
+  `e72e28bdf8b0cbb080ef0c35aa8a1e3906bf55cb` CAP-03–05/orphan. This containing final docs publication
+  is the next safe checkpoint; resolve its exact SHA from Git log/remote.
+- **Completed:** seven os._exit children at six distinct boundaries; original
+  customer proof/current provider evidence, one paid order/grant/operation/
+  allocation/counter, first manifest/existing-byte preservation, no automatic
+  shutter/render/print/upload. Unknown/orphan bytes remain held without recency
+  scanning. No runtime defect, schema/journal/UI/application change.
+- **Tests/CI:** 66 focused PASS / zero failure/error/skip, 5.965s. CI 40815197373
+  at e72e28b **three jobs SUCCESS**, Windows payment/allocation group 55 PASS,
+  zero skip. First 40814744796 superseded/CANCELLED, not standalone PASS.
+  [Exact command/hashes/counts](evidence/cap01-05-final-verification.json).
+- **Retained evidence:** prior full 1117 run/1114 PASS/3 optional palm SKIP at
+  e0dc594, native 28 PNGs/four QR at c94696d. New methods are focused/CI-verified;
+  no new full/native/physical outcome claimed. Application/tools tree IDs match.
+- **Remaining:** matrix 50 PASS / 1 FAIL / 9 BLOCKED / 9 NOT_RUN; audit IN_PROGRESS.
+  BUG-023/UX-13 durable operator-denial audit OPEN, no blanket conformity/release.
+- **Next exact increment:** PAY-18 combined lost claim/STARTED/COMPLETED replies.
+  Reuse tests/test_checkout_durability.py, current real-process fixture and
+  qris_session COMPLETING/archive path. Prove same original grant/transaction/
+  ACK, no service/capture/print replay; do not mark completed from a GUI flag.
+  Then CAP-11–13 retake, CAP-16 compose/COMPLETE, CAP-20 disk/permission, AR-09
+  denial audit. UX-05/07/11 and all external provider/device/privacy gates remain.
+- **Boundaries:** no production, OPS, actual printer/Drive/deletion, public ingress,
+  branch/default/master change. Five queued OPS docs unchanged/NOT_STARTED.
+- **Local-only/rollback:** work/ disposable synthetic reports/diagnostics, not
+  remotely backed up; no unsafe unpublished runtime patch. Inverse tests/CI/docs
+  only, preserve every financial/media/claim/fence/budget record.
+
+## Historical focused checkpoint — AR-03.c2 CAP-01–05
 
 Prior micro-push `c87050eeb4f0223577d68796ff0ace4f4a1d2a95` pushed/remote-verified.
 Added folder/pre-manifest, manifest/pre-STARTED and committed STARTED/lost-reply
@@ -25,7 +57,7 @@ no new full/device/provider evidence inferred. Next matching CI then PAY-18
 combined service-reply faults, retake/COMPLETE/disk and AR-09 BUG-023. External/
 OPS gates unchanged; only disposable work/ local, no unpublished runtime patch.
 
-## 29 October — AR-03.c1 CAP-01/02 abrupt allocation evidence
+## Historical focused checkpoint — AR-03.c1 CAP-01/02
 
 Base/remote verified `c4c1847bd8086c36f3ec1d3a755728896321495f`. Added three
 actual child exit boundaries against unchanged runtime e0dc594: before local

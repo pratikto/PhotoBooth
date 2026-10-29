@@ -1,5 +1,25 @@
 # Meong Photobooth — current feature status
 
+## 29 October — AR-03.c CAP-01–05 verified checkpoint
+
+Test/CI `e72e28bdf8b0cbb080ef0c35aa8a1e3906bf55cb` pushed/remote-verified; first micro-push
+`c87050eeb4f0223577d68796ff0ace4f4a1d2a95`. **66 focused PASS / zero failure/error/skip**,
+5.965s; seven real child exits at six allocation/folder/manifest/STARTED boundaries,
+including orphan/no-recency hold. [CI 40815197373](https://github.com/pratikto/PhotoBooth/actions/runs/40815197373)
+**all three jobs SUCCESS**, Windows payment/allocation group 55 PASS/zero skip.
+Original proof/paid identities/counter/manifest/OWED retained; no repeated effects.
+[Exact commands/source/evidence](qa/portrait-v2-sandbox/evidence/cap01-05-final-verification.json).
+
+Tests/CI/docs only; no runtime defect, application/schema/UI change or new full/
+native run. Prior full e0dc594 (1117/1114/3) and native c94696d (28/four) remain
+separately pinned; the six new methods are verified by focused/CI results.
+Matrix **50 PASS / 1 FAIL / 9 BLOCKED / 9 NOT_RUN**; overall audit IN_PROGRESS,
+BUG-023 OPEN. Next **PAY-18 combined lost service replies including COMPLETED**,
+then remaining retake/COMPLETE/disk and AR-09 denial audit. External/OPS/production
+boundaries unchanged; only disposable work/ local, no unpublished runtime patch.
+This containing docs commit publishes the final safe continuation checkpoint.
+
+
 ## 29 October — AR-03.c CAP-01–05 exact process-exit evidence
 
 **66 focused PASS**, zero failure/error/skip; seven actual child exits across six

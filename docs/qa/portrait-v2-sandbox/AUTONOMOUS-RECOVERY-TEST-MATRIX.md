@@ -1,25 +1,15 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
-**AR-03.c2 update:** CAP-01–05 exact child exits now verified, **66 focused PASS**.
-Current matrix **50 PASS / 1 FAIL / 0 SKIP / 9 BLOCKED / 9 NOT_RUN**.
-[Exact evidence](evidence/cap01-05-verification.json); no runtime change or new
-full/native/physical result. CI pending at this test publication.
+**Current status, 29 October:** CAP-01–05 actual child-exit coverage verified
+at test source `e72e28bdf8b0cbb080ef0c35aa8a1e3906bf55cb`: **66 focused PASS**, matching
+CI 40815197373 **three jobs SUCCESS**, Windows payment/allocation group 55 PASS.
+Application unchanged from e0dc594; no new full/native/physical result inferred.
+[Exact command/trees/limits](evidence/cap01-05-final-verification.json).
 
-**AR-03.c1 update:** CAP-01/02 exact child exits now verified, 34 focused PASS.
-Current scenario matrix **47 PASS / 1 FAIL / 9 BLOCKED / 12 NOT_RUN**.
-[Exact new evidence](evidence/cap01-02-verification.json); older counts below
-retain their prior source scope. CAP-03–05 and CI for this increment pending.
-
-**Current status, 29 October:** functional `e0dc59435772148be86449c55140d4b9be2f6364`, full
-**1117 run / 1114 PASS / 3 optional palm SKIP / zero failure/error**. CI at
-c94696d (same application tree; test cleanup only), **three jobs SUCCESS**;
-28 clean native captures / four QR checks PASS. PAY-08 native restoration source
-and integrated synthetic evidence verified. [Exact sources/provenance](evidence/pay08-final-verification.json).
-
-Scenario matrix **45 PASS / 1 FAIL / 0 SKIP / 9 BLOCKED / 14 NOT_RUN** (69 IDs).
-UX-13/BUG-023 durable denial audit still FAIL; overall audit IN_PROGRESS.
-Physical OS/provider acceptance stays NOT_RUN; no production/OPS release.
-Original scenario contract and source-specific historical evidence below remain.
+Scenario matrix **50 PASS / 1 FAIL / 0 SKIP / 9 BLOCKED / 9 NOT_RUN** (69 IDs).
+UX-13/BUG-023 denial audit remains FAIL/OPEN; overall audit IN_PROGRESS.
+Next PAY-18 combined lost service replies, then remaining media/disk and AR-09.
+Original scenario contract and dated full/native evidence remain below.
 
 ## A. Invariants asserted on every relevant transition
 
@@ -137,8 +127,9 @@ All public WEB items are currently **BLOCKED** on infrastructure approval; offli
 
 ## Executed evidence ledger — 29 October 2026
 
-All named test methods below PASS in the complete e0dc594 regression,
-including PAY-06/PAY-21, BUG-022 and the new PAY-08/native connectivity cases. The older execution baseline was
+Existing test references retain the complete e0dc594 regression evidence.
+The six new CAP-01–05/orphan methods are separately verified by the 66-case
+focused run and three-job CI at e72e28b; they were absent from that older full run. The older execution baseline was
 `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`,
 executed by the full command/environment in [validation](AUTONOMOUS-RECOVERY-VALIDATION.md).
 The [safe report](evidence/ar12-final-verification.json) pins test source trees,

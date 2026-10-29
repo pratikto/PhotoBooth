@@ -88,3 +88,8 @@ STARTED replies, empty-folder initialization, existing manifest preservation and
 orphan hold without recency scanning. **66 focused PASS**, no runtime defect or
 schema/UI change. [Source/command/limits](CAP01-05-ALLOCATION-CRASHES.md).
 Full combined PAY-18 completion-reply and physical power-loss gates stay open.
+
+Final AR-03.c evidence at e72e28b: **66 focused PASS**, matching CI 40815197373
+three jobs SUCCESS (Windows payment/allocation group 55 PASS/zero skip).
+Tests-only, application unchanged; full/native baseline not rerun.
+[Exact source/limits](evidence/cap01-05-final-verification.json).

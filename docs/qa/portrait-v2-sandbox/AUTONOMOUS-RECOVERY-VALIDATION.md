@@ -1,5 +1,45 @@
 # AR-12 — final source validation and external acceptance gates
 
+## Final verification — AR-03.c / CAP-01–05, 29 October
+
+**Test/CI source `e72e28bdf8b0cbb080ef0c35aa8a1e3906bf55cb` pushed and remote verified.**
+First micro-push `c87050eeb4f0223577d68796ff0ace4f4a1d2a95` covered CAP-01/02; final fixture
+extends CAP-03–05 plus orphan denial. **66 focused PASS / zero failure/error/skip**,
+5.965s, Python 3.12.14/Linux. Six test methods execute seven actual os._exit
+children at six distinct boundaries. [Command/source/digests](evidence/cap01-05-final-verification.json).
+
+[CI 40815197373](https://github.com/pratikto/PhotoBooth/actions/runs/40815197373)
+at this exact SHA: **all three jobs SUCCESS**. Windows payment/allocation group
+**55 PASS / zero failure/error/skip**, 17.765s. [Job/step evidence](evidence/cap01-05-final-ci.json).
+First run 40814744796 was superseded/CANCELLED by normal concurrency, not credited
+as standalone PASS. No manual dispatch or assertions weakened.
+
+No runtime defect found and **no application/schema/UI change**. Application/tools
+Git trees remain identical to e0dc594. Prior full 1117 run / 1114 PASS / three
+optional palm SKIP at e0dc594 and native 28 PNG/four QR at c94696d retain original
+sources. They do not include the six new methods; new coverage is verified by
+focused/CI evidence, without claiming another complete regression or screenshot run.
+
+For CAP-01 before any saved intent there is provably no backend allocation:
+only the first allocation may be created. Where an intent already persisted,
+its original operation/mapping is retained. The original customer capability is
+passed only through memory/stdin, fresh provider status remains authoritative,
+existing manifest bytes/OWED survive, no new order/charge/counter/shutter/render/
+print/upload follows restore. Nonempty/orphan folders stay held with no parent
+transaction enumeration. This is software-exit evidence, not disk power-loss or
+actual merchant/device acceptance.
+
+Current matrix **50 PASS / 1 FAIL / 0 SKIP / 9 BLOCKED / 9 NOT_RUN**; overall
+AR conformity audit IN_PROGRESS. BUG-023/UX-13 remains OPEN/FAIL. Next **PAY-18
+combined lost service replies including COMPLETED**, then CAP-11–13 retakes,
+CAP-16 composition/COMPLETE, CAP-20 disk/permission and AR-09 denial audit.
+UX-05/07/11 and external device/provider/privacy/retention/operations/public
+infrastructure/release gates remain. No production, OPS, physical printer/Drive,
+cloud deletion or branch/default/master change. Only disposable work/ local;
+no unpublished runtime patch. Rollback removes these tests/docs/CI only and
+retains every customer ledger/media/claim/fence/budget.
+
+
 ## Final AR-02.d verification — 29 October 2026
 
 PAY-08 / AR-AUDIT-002 **SOURCE VERIFIED**. Functional source `e0dc59435772148be86449c55140d4b9be2f6364`:

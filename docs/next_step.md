@@ -1,5 +1,20 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+## 29 October — NEXT: PAY-18 lost service replies
+
+CAP-01–05 exact allocation/STARTED child exits are verified: 66 focused PASS and
+CI 40815197373 three jobs SUCCESS at e72e28b; no runtime change. **Next AR-03
+increment: combined lost claim/STARTED/COMPLETED response sequence**, preserving
+original grant/transaction/ACK and OWED without capture/print replay. Reuse current
+real-process fixture, test_checkout_durability.py and qris_session COMPLETING/
+archive path. CAP-05 proves lost STARTED only; it does not close aggregate PAY-18.
+Then CAP-11–13 retakes, CAP-16 compose/COMPLETE, CAP-20 disk/permission, and AR-09
+BUG-023 bounded redacted durable denial audit. Matrix **50 PASS / 1 FAIL /
+9 BLOCKED / 9 NOT_RUN**; UX-05/07/11 and external gates remain.
+[Checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md).
+Do not repeat completed CAP-01–05/PAY-08 or start queued OPS/production.
+
+
 ## 29 October — NEXT: AR-03 allocation/STARTED exact fault windows
 
 AR-02.d/PAY-08 native restoration now verified: full 1117 run / 1114 PASS /

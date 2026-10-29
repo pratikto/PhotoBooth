@@ -2,21 +2,20 @@
 
 ## Current Autonomous Recovery evidence and readiness — 29 October
 
-Functional `e0dc59435772148be86449c55140d4b9be2f6364`: **1117 run / 1114 PASS /
-3 optional palm SKIP / zero failure/error**, 335.317s; native video PASS.
-Latest test/CI/native `c94696d243c6a345182857d28d249d2d01d7d05b` has identical application
-content; only test lease cleanup and Windows qrcode setup changed. [CI 40809459547](https://github.com/pratikto/PhotoBooth/actions/runs/40809459547)
-**all three jobs SUCCESS**. Native **28 PNGs / four QR checks PASS**, clean source,
-both portrait sizes. [Exact command/trees/limits](qa/portrait-v2-sandbox/evidence/pay08-final-verification.json).
+**CAP-01–05 source evidence verified:** test/CI `e72e28bdf8b0cbb080ef0c35aa8a1e3906bf55cb`,
+**66 focused PASS / zero failure/error/skip**, seven actual child exits, same
+paid identities and orphan hold. [CI 40815197373](https://github.com/pratikto/PhotoBooth/actions/runs/40815197373)
+**all three jobs SUCCESS**; Windows payment/allocation group 55 PASS/zero skip.
+[Contract/evidence](qa/portrait-v2-sandbox/CAP01-05-ALLOCATION-CRASHES.md).
 
-**AR-02.d/PAY-08 restoration verified**: passive OS hint on the existing worker,
-same-order GET, persisted budget/lease, customer privacy retained. [Contract](qa/portrait-v2-sandbox/PAY08-CONNECTIVITY.md).
-Matrix **45 PASS / 1 FAIL / 9 BLOCKED / 14 NOT_RUN**, BUG-023 denial audit OPEN;
-overall AR audit IN_PROGRESS. Next **AR-03 CAP-01–05 allocation/STARTED crash
-fixtures**, then remaining source evidence and AR-09 audit. Actual OS/device/
-merchant/phone/paper/Drive/deletion/privacy/operations and release gates remain.
-[Current checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md).
-Settings/Emulate Ticket/QRIS Slip runtime stays NOT_STARTED; production unapproved.
+Application unchanged from e0dc594; prior full **1117 run / 1114 PASS / 3 optional
+palm SKIP** and native c94696d **28 PNGs / four QR checks** retain original sources.
+No new full/native/physical result inferred from this tests-only increment.
+Matrix **50 PASS / 1 FAIL / 9 BLOCKED / 9 NOT_RUN**, audit IN_PROGRESS,
+BUG-023/UX-13 durable denial audit OPEN. Next **PAY-18 lost service replies including
+COMPLETED**, then remaining retake/COMPLETE/disk and AR-09. [Checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md).
+Device/merchant/privacy/retention/public ingress/release gates remain; queued
+Settings/Emulate Ticket/QRIS Slip runtime NOT_STARTED, no production approval.
 
 ## Active priority and newly approved future design — 29 October 2026
 

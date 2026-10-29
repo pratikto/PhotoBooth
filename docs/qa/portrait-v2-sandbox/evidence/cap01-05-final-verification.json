@@ -1,0 +1,104 @@
+{
+  "status": "VERIFIED_TESTS_ONLY_WITH_REMAINING_AR_GATES",
+  "branch": "feature/portrait-kiosk-v2-next",
+  "review_base": "c4c1847bd8086c36f3ec1d3a755728896321495f",
+  "first_test_commit": "c87050eeb4f0223577d68796ff0ace4f4a1d2a95",
+  "latest_test_commit": "e72e28bdf8b0cbb080ef0c35aa8a1e3906bf55cb",
+  "runtime_source": "e0dc59435772148be86449c55140d4b9be2f6364",
+  "runtime_changed": false,
+  "runtime_trees": {
+    "photobooth": "458ab5dc768ca78f56b7ebfbe910370510470f75",
+    "tools": "62b5760a3ebd20382fb3eb632843c626e00ce2f9"
+  },
+  "test_tree": "7ee1a8bc9ae96194bbac7fbc44b107370918b776",
+  "command": "KIVY_HOME=/tmp/meong-cap-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy MEONG_CI_TEST_REPORT=work/cap01-05-focused-report.txt .venv/bin/python tools/run_kiosk_unittests.py test_fulfillment_crash_recovery test_checkout_fulfillment test_photo_allocation test_qris_session test_customer_claim_session test_photo_reconstruction test_checkout_durability",
+  "focused": {
+    "run": 66,
+    "pass": 66,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 5.965
+  },
+  "report_sha256": "992b0c1b1c0ec5f2ea368296479ebad72096047b8770cb0bf26dc57256ff7ed8",
+  "process_exits": {
+    "count": 7,
+    "distinct_boundaries": 6,
+    "codes": {
+      "before_local_intent": 81,
+      "before_backend_intent": 82,
+      "allocated_reply_lost": 83,
+      "folder_before_manifest": 84,
+      "manifest_before_started": 85,
+      "started_reply_lost": 86
+    },
+    "extra_negative_case": "Repeat folder crash with original unknown bytes plus unrelated neighbor; deny parent-root enumeration and preserve both files."
+  },
+  "matrix": {
+    "total": 69,
+    "pass": 50,
+    "fail": 1,
+    "skip": 0,
+    "blocked": 9,
+    "not_run": 9
+  },
+  "full_regression": {
+    "status": "NOT_RERUN_TESTS_ONLY",
+    "baseline_source": "e0dc59435772148be86449c55140d4b9be2f6364",
+    "baseline_run": 1117,
+    "baseline_pass": 1114,
+    "baseline_skip": 3,
+    "baseline_fail": 0,
+    "baseline_error": 0,
+    "detail": "pay08-final-verification.json",
+    "limit": "Baseline report does not include the six newly added allocation methods; these are separately focused/CI-verified."
+  },
+  "native": {
+    "status": "NOT_RERUN_NO_GUI_CHANGE",
+    "baseline_source": "c94696d243c6a345182857d28d249d2d01d7d05b",
+    "screens": 28,
+    "qr_checks": 4,
+    "detail": "pay08-final-verification.json"
+  },
+  "ci": {
+    "run_id": 40815197373,
+    "head_sha": "e72e28bdf8b0cbb080ef0c35aa8a1e3906bf55cb",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 123254658343,
+        "name": "Windows Python 3.12 native SDL audio (dummy output)",
+        "conclusion": "success"
+      },
+      {
+        "id": 123254658563,
+        "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+        "conclusion": "success"
+      },
+      {
+        "id": 123254658703,
+        "name": "Navigation and audio lifecycle",
+        "conclusion": "success"
+      }
+    ],
+    "windows_allocation_payment_group": "55 PASS / zero failure/error/skip; 17.765s",
+    "detail": "cap01-05-final-ci.json",
+    "superseded_run": {
+      "run_id": 40814744796,
+      "source": "c87050eeb4f0223577d68796ff0ace4f4a1d2a95",
+      "conclusion": "cancelled",
+      "reason": "Existing workflow concurrency; not claimed as standalone PASS"
+    }
+  },
+  "privacy": "Original synthetic ticket stays in parent/child memory and stdin only, never argv/journal/committed report. Temporary fixtures only.",
+  "remaining": [
+    "PAY-18 combined lost service replies including COMPLETED",
+    "CAP-11\u201313 retake exits",
+    "CAP-16 composition/COMPLETE exit",
+    "CAP-20 disk/permission faults",
+    "UX-05 ambiguous unpaid release, UX-07 printer gate, UX-11 frozen-worker case",
+    "BUG-023 / UX-13 durable denial audit",
+    "Provider repeat-charge/public ingress/device/merchant/retention/privacy/release gates"
+  ],
+  "rollback": "Inverse test/docs/CI changes only; preserve all real customer state. No runtime/schema migration or production/OPS activation."
+}
