@@ -177,12 +177,16 @@ def create_app(service, authenticator, *, on_shutdown=None, rate_limit=120, reco
             raise HTTPException(401, 'Unauthorized')
         return identity
 
-    async def invoke(function, *args, **kwargs):
+    async def invoke(function, *args, operator_route=None, **kwargs):
         try:
             return await run_in_threadpool(function, *args, **kwargs)
         except CheckoutMissing as error:
+            if operator_route is not None:
+                await audit_operator_denial(operator_route, 'NOT_OWNED')
             raise HTTPException(404, 'Order not found') from error
         except CheckoutConflict as error:
+            if operator_route is not None:
+                await audit_operator_denial(operator_route, 'ACTION_CONFLICT')
             raise HTTPException(409, 'Checkout requires recovery or completion') from error
         except PermissionError as error:
             raise HTTPException(403, 'Original customer proof required') from error
@@ -300,14 +304,16 @@ def create_app(service, authenticator, *, on_shutdown=None, rate_limit=120, reco
         except ValidationError as error:
             raise HTTPException(422,'Invalid release request') from error
         if body.isolation_id is None:
-            return await invoke(service.prepare_release,order_id,booth,body.operation_id,operator_actor)
-        return await invoke(service.acknowledge_release,order_id,booth,body.operation_id,body.isolation_id)
+            return await invoke(service.prepare_release,order_id,booth,body.operation_id,operator_actor,
+                                operator_route='release')
+        return await invoke(service.acknowledge_release,order_id,booth,body.operation_id,body.isolation_id,
+                            operator_route='release')
 
     @app.post('/api/orders/{order_id}/recovery/inspect')
     async def recovery_inspect(order_id: str, request: Request, x_booth_id: str = Header(default=''),
                                authorization: str = Header(default=''), x_recovery_pin: str = Header(default='')):
         booth = await operator_identity(request, x_booth_id, authorization, x_recovery_pin, 'inspect')
-        return await invoke(service.recovery_inspect, order_id, booth)
+        return await invoke(service.recovery_inspect, order_id, booth, operator_route='inspect')
 
     @app.post('/api/orders/{order_id}/recovery/resolve')
     async def recovery_resolve(order_id: str, request: Request, x_booth_id: str = Header(default=''),
@@ -319,7 +325,8 @@ def create_app(service, authenticator, *, on_shutdown=None, rate_limit=120, reco
         except ValidationError as error:
             raise HTTPException(422, 'Invalid recovery decision') from error
         return await invoke(service.recovery_resolve, order_id, booth, body.action_id,
-                            body.action, body.reason, body.transaction_id, operator_actor)
+                            body.action, body.reason, body.transaction_id, operator_actor,
+                            operator_route='resolve')
 
     @app.post('/api/webhooks/midtrans')
     async def midtrans_webhook(request: Request):

@@ -1,0 +1,36 @@
+{
+  "status": "CONFLICT_HTTP_FOCUSED_VERIFIED_FULL_CI_PENDING",
+  "base": "e13216af086a1bd64944bc9619bc7f70d1f7d335",
+  "source": "Containing source commit; pin after push",
+  "focused": {
+    "run": 73,
+    "pass": 73,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 1.65
+  },
+  "before": {
+    "run": 24,
+    "fail": 4,
+    "error": 0
+  },
+  "new_methods": 4,
+  "routes": [
+    "inspect",
+    "resolve",
+    "release_prepare",
+    "release_ack"
+  ],
+  "reasons": [
+    "NOT_OWNED",
+    "ACTION_CONFLICT"
+  ],
+  "bug023": "OPEN pending full/CI verification",
+  "files_sha256": {
+    "photobooth/qris_api.py": "a8a76e4df6fe2abfc9ba20ce58143b4a8548176251413a4013371768e896f955",
+    "tests/test_qris_recovery.py": "99bf28ddc5d37126dd1a15740aaf38147e68f1f4dd1f8157893502dcee0d777b"
+  },
+  "report_sha256": "b23d223743e1c4e667bd320dc76dbb61bb1d6d95d0d00610f1e2835fdd62dd3a",
+  "next": "Verify full/current CI; then UX-05 ambiguous-payment abandonment/release contract audit without cancelling/recharging or dropping rights"
+}

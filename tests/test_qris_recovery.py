@@ -203,6 +203,85 @@ class SandboxRecoveryTests(unittest.TestCase):
         self.assertEqual(self.resolve('resume', reason='Changed reason').status_code, 409)
         self.assertEqual(self.count_actions(), 1)
 
+    def test_conflict_action_replays_are_audited_but_exact_success_replay_is_not(self):
+        self.paid()
+        first = self.resolve('resume').json()
+        self.assertEqual(self.resolve('resume').json()['recovery_action'], first['recovery_action'])
+        self.assertEqual(self.store.db.execute('SELECT COUNT(*) FROM checkout_operator_denials').fetchone()[0], 0)
+        for change in ({'action':'abandon'}, {'action':'resume','reason':'Changed private reason'},
+                       {'action':'resume','transaction_id':'PB001_00000001'}):
+            action = change.pop('action')
+            self.assertEqual(self.resolve(action, **change).status_code, 409)
+        other_headers = dict(OPERATOR, **{'X-Booth-ID':'PB002','Authorization':'Bearer '+'b'*48})
+        other = self.http.post('/api/orders', headers=other_headers,
+                               json={'quantities':{'template_a':1}}).json()['order_id']
+        self.provider.rows[other].update(transaction_status='settlement', status_code='200')
+        response = self.http.post('/api/orders/'+other+'/recovery/resolve', headers=other_headers,
+            json={'action_id':'b'*32,'action':'resume','reason':'Operator resumes test','transaction_id':None})
+        self.assertEqual(response.status_code, 409)
+        rows = [dict(r) for r in self.store.db.execute('SELECT * FROM checkout_operator_denials')]
+        self.assertEqual([(r['route'],r['reason']) for r in rows], [('resolve','ACTION_CONFLICT')]*4)
+        self.assertEqual(self.count_actions(), 1)
+        self.assertEqual(self.store.get(self.oid)['grant_id'], first['grant_id'])
+        self.assertIsNone(self.store.get(other)['grant_id'])
+        for private in (self.oid,other,PIN,'Changed private reason','b'*32):
+            self.assertNotIn(private, json.dumps(rows))
+
+    def test_cross_booth_recovery_denials_persist_for_all_routes_and_release_phases(self):
+        other = dict(OPERATOR, **{'X-Booth-ID':'PB002','Authorization':'Bearer '+'b'*48})
+        requests = [('inspect',None),('resolve',{'action_id':'c'*32,'action':'resume','reason':'Private reason'}),
+                    ('release',{'operation_id':'d'*32}),
+                    ('release',{'operation_id':'d'*32,'isolation_id':'e'*32})]
+        before = self.store.get(self.oid)
+        for route, body in requests:
+            self.assertEqual(self.http.post('/api/orders/'+self.oid+'/recovery/'+route,
+                                           headers=other,json=body).status_code, 404)
+        rows = [dict(r) for r in self.store.db.execute('SELECT * FROM checkout_operator_denials ORDER BY sequence')]
+        self.assertEqual([(r['route'],r['reason']) for r in rows],[(r,'NOT_OWNED') for r,_ in requests])
+        self.assertEqual(self.provider.reads, 0)
+        self.assertEqual(self.store.get(self.oid), before)
+        self.assertEqual(self.http.get('/api/orders/'+self.oid, headers=other).status_code, 404)
+        self.assertEqual(self.store.db.execute('SELECT COUNT(*) FROM checkout_operator_denials').fetchone()[0], 4)
+        self.http.close(); self.store.close()
+        self.store = CheckoutStore(Path(self.temp.name)/'orders.sqlite')
+        self.backend = CheckoutBackend(self.store,self.provider,KEY,MERCHANT)
+        self.http = TestClient(create_app(self.backend,self.auth,recovery_pin=PIN))
+        self.assertEqual([dict(r) for r in self.store.db.execute('SELECT * FROM checkout_operator_denials ORDER BY sequence')],rows)
+
+    def test_release_prepare_and_ack_conflicts_record_diagnostics_without_release(self):
+        before = self.store.get(self.oid)
+        for body in ({'operation_id':'d'*32},{'operation_id':'d'*32,'isolation_id':'e'*32}):
+            self.assertEqual(self.http.post('/api/orders/'+self.oid+'/recovery/release',
+                                           headers=OPERATOR,json=body).status_code,409)
+        rows = self.store.db.execute('SELECT route,reason FROM checkout_operator_denials').fetchall()
+        self.assertEqual([tuple(r) for r in rows],[('release','ACTION_CONFLICT')]*2)
+        self.assertEqual(self.store.db.execute('SELECT COUNT(*) FROM checkout_releases').fetchone()[0],0)
+        self.assertEqual(self.store.db.execute('SELECT COUNT(*) FROM checkout_service_fences').fetchone()[0],0)
+        current = self.store.get(self.oid)
+        for field in ('state','service_state','grant_id','closed','local_transaction_id'):
+            self.assertEqual(current[field],before[field])
+
+    def test_conflict_audit_sql_failure_remains_held_and_success_replay_needs_no_denial_write(self):
+        self.paid(); first = self.resolve('resume').json()
+        self.store.db.execute("CREATE TRIGGER reject_operator_audit BEFORE INSERT ON checkout_operator_denials BEGIN SELECT RAISE(ABORT,'private-storage-error'); END")
+        self.assertEqual(self.resolve('resume').json()['recovery_action'],first['recovery_action'])
+        conflict = self.resolve('abandon')
+        self.assertEqual(conflict.status_code,503)
+        self.assertNotIn('private-storage-error',conflict.text)
+        other = dict(OPERATOR, **{'X-Booth-ID':'PB002','Authorization':'Bearer '+'b'*48})
+        for route,body in [('inspect',None),('resolve',{'action_id':'c'*32,'action':'resume','reason':'Private'}),
+                           ('release',{'operation_id':'d'*32}),
+                           ('release',{'operation_id':'d'*32,'isolation_id':'e'*32})]:
+            response=self.http.post('/api/orders/'+self.oid+'/recovery/'+route,headers=other,json=body)
+            self.assertEqual(response.status_code,503)
+            self.assertNotIn('private-storage-error',response.text)
+        self.assertEqual(self.count_actions(),1)
+        self.assertEqual(self.store.db.execute('SELECT COUNT(*) FROM checkout_operator_denials').fetchone()[0],0)
+        current=self.store.get(self.oid)
+        self.assertEqual(current['grant_id'],first['grant_id'])
+        self.assertEqual(current['service_state'],'RESERVED')
+        self.assertFalse(current['closed'])
+
     def test_resume_reattaches_same_transaction_and_never_starts_another(self):
         self.paid(); self.resolve('resume')
         first = self.resolve('resume', action_id='c'*32, transaction_id='PB001_00000001')

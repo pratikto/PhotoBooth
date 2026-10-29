@@ -1,5 +1,13 @@
 # Meong Photobooth — changelog
 
+## 29 October — BUG-023.d conflict audit focused-verified
+
+Recovery-only 404/409 denials audited with static NOT_OWNED/ACTION_CONFLICT;
+SQL failure holds with generic 503, exact successful replay remains idempotent.
+73 focused PASS, full/current CI pending. BUG-023 OPEN/UX-13 FAIL pending final
+verification; matrix 56/1/9/3 unchanged.
+[Contract/results/next](qa/portrait-v2-sandbox/BUG023-DENIAL-AUDIT.md).
+
 ## 29 October — BUG-023.c PIN audit verified
 
 Source `e6aba5a`, 69 focused PASS; full 1149/1145/4, zero failure/error.

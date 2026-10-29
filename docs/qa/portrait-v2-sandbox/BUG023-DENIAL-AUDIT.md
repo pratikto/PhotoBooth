@@ -152,3 +152,43 @@ OPS remain separate; no production/public ingress/branch/master/default/real
 effects. This containing docs-only publication is final safe checkpoint; exact
 SHA from Git log/remote. Only work/ scratch local, no unpublished source patch.
 Rollback scoped source only; retain additive audit and all financial records.
+
+## Conflict endpoint contract before implementation
+
+Extend only recovery calls through existing invoke error mapping with an explicit
+static operator-route argument. CheckoutMissing -> NOT_OWNED before generic 404;
+CheckoutConflict -> ACTION_CONFLICT before generic 409. No audit for successful
+same-action replay, non-recovery routes, provider outages or unrelated validation
+errors. Reuse existing bounded write/thread pool and generic audit-failure 503.
+Audit failure never retries or changes the rejected operation. Fresh provider
+observation may legitimately precede a conflict; do not roll back trusted payment
+evidence, and never add a charge/grant/service effect to report a denial.
+Test changed action body/order identity, successful replay, wrong booth on all
+routes (both release phases), release conflict, actual SQL insert failure and
+restart/redaction. Preserve financial/claim/fence/media and successful action
+journals; only diagnostic audit rows change. UX-13 promotion waits for focused,
+full and matching Windows/Linux CI verification; device/release gates separate.
+
+## 29 October — BUG-023.d conflict audit focused checkpoint
+
+Base/remote verified `e13216af086a1bd64944bc9619bc7f70d1f7d335`.
+Recovery-only invoke context now audits CheckoutMissing as NOT_OWNED and
+CheckoutConflict as ACTION_CONFLICT on inspect/resolve/release (PREPARE/ACK).
+Original generic 404/409 retained; audit SQL failure -> generic 503, no rejected
+action retry/effect. Valid exact action replay is successful and creates no
+denial. Ordinary routes/provider outages/validation mapping remain unchanged.
+Fresh trusted provider observation may precede conflict; do not erase it to
+simulate rollback. No new grant/completion/release/charge/media action from audit.
+Four new HTTP tests: baseline 24 run/four expected FAIL; corrected **73 focused
+PASS / zero failure/error/skip**, 1.650s, Python 3.12.14/Linux synthetic.
+Command: `.venv/bin/python tools/run_kiosk_unittests.py test_qris_recovery test_checkout_durability test_checkout_release test_service_fencing test_qris_api test_qris_http_v2`.
+Real SQL abort/redaction/reopen, wrong-booth all routes/both release phases,
+changed action/reason/transaction/order and unchanged successful replay covered.
+Full GUI/audio-opt-in regression running; matching Windows/Linux CI pending for
+this containing micro-push. BUG-023 stays OPEN/UX-13 FAIL until full/CI verified;
+matrix 56/1/9/3 unchanged. Next final evidence/checkpoint then UX-05 contract/
+source audit (ambiguous payment abandonment, preserve claims/rights, no assumed
+cancellation/new charge). UX-07/11 and external/OPS/release gates separate.
+No production/public ingress/branch/master/default or real external effect.
+Only work/ scratch local, no unpublished source patch after push. Rollback scoped
+source only; retain bounded audit and all financial/claim/fence/media records.
