@@ -1,5 +1,21 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-03.c1 CAP-01/02 abrupt allocation evidence
+
+Base/remote verified `c4c1847bd8086c36f3ec1d3a755728896321495f`. Added three
+actual child exit boundaries against unchanged runtime e0dc594: before local
+intent, before backend request and after committed allocation/lost response.
+Authenticated original customer proof, one grant/order/operation/transaction,
+WAL/FULL/provider integrity and no repeated charge/counter/media action verified.
+**34 focused PASS**, zero failure/error/skip, 2.647s. No runtime defect or source/
+schema/UI change. [Contract/evidence](qa/portrait-v2-sandbox/CAP01-05-ALLOCATION-CRASHES.md).
+CAP-01/02 synthetic PASS; matrix **47 PASS / 1 FAIL / 9 BLOCKED / 12 NOT_RUN**.
+This containing test/workflow/docs commit is the next micro-push; current CI
+pending. Existing full/native source evidence stays separately pinned.
+Next CAP-03–05 exact folder/first-manifest/accepted STARTED exits. BUG-023/external/
+OPS gates unchanged. Only disposable work/ local; no unpublished runtime patch.
+
+
 ## 29 October — AR-02.d PAY-08 verified and remotely checkpointed
 
 Functional `e0dc59435772148be86449c55140d4b9be2f6364`: **1117 run / 1114 PASS /

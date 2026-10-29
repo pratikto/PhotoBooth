@@ -1,5 +1,10 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
+**AR-03.c1 update:** CAP-01/02 exact child exits now verified, 34 focused PASS.
+Current scenario matrix **47 PASS / 1 FAIL / 9 BLOCKED / 12 NOT_RUN**.
+[Exact new evidence](evidence/cap01-02-verification.json); older counts below
+retain their prior source scope. CAP-03–05 and CI for this increment pending.
+
 **Current status, 29 October:** functional `e0dc59435772148be86449c55140d4b9be2f6364`, full
 **1117 run / 1114 PASS / 3 optional palm SKIP / zero failure/error**. CI at
 c94696d (same application tree; test cleanup only), **three jobs SUCCESS**;
@@ -162,8 +167,8 @@ offline inbox prototype assertions do not certify deployed ingress.
 | PAY-20 | **PASS** | `test_checkout_reconciliation.test_clock_rollback_holds_without_extending_deadline_indefinitely` | Provider remains authority; clock/credential/retention cases use separate fixed clocks. |
 | PAY-21 | **PASS** | `test_checkout_reconciliation.test_pay21_oversized_status_and_auth_failure_hold_and_redact_at_http_boundary`; `test_midtrans_sandbox.test_redirect_is_not_followed` | Audit increment 2: oversized provider status JSON read bounded at 65,537 bytes/response closed; HTTP 401 and oversized responses remain unchecked and deny grant with redacted HTTP/DB evidence. Same-order Sandbox GET only; existing no-redirect guard also PASS. [Focused evidence](evidence/ar-audit-payment.json). |
 | PAY-22 | **BLOCKED** | See scope/gate | Official merchant-specific Legacy repeat-charge contract and controlled Sandbox evidence absent; POST retry remains disabled. |
-| CAP-01 | **NOT_RUN** | `test_photo_allocation.test_first_manifest_binds_original_order_and_never_uses_photo_counter` | Binding logic passes; exact pre-allocation-intent child kill not demonstrated. |
-| CAP-02 | **NOT_RUN** | `test_checkout_fulfillment.test_allocation_is_unique_and_replays_same_operation_after_restart` | Allocation reopen passes; exact post-intent/pre-folder child kill not demonstrated. |
+| CAP-01 | **PASS** | `test_fulfillment_crash_recovery.test_cap01_exit_before_local_or_backend_intent_creates_only_first_original_allocation` | Two real child exits before local intent and after it/before backend request; original proof/key/grant/op, first allocation once, no new order/charge/counter. [AR-03.c1 evidence](evidence/cap01-02-verification.json). |
+| CAP-02 | **PASS** | `test_fulfillment_crash_recovery.test_cap02_exit_after_backend_commit_recovers_same_allocation_before_first_folder` | Real backend COMMIT/pre-reply/pre-folder exit; exact operation/ID recovered after original proof, first manifest/STARTED reuse, no shutter/render or second allocation. [AR-03.c1 evidence](evidence/cap01-02-verification.json). |
 | CAP-03 | **NOT_RUN** | `test_photo_reconstruction.test_started_missing_manifest_or_unknown_bytes_never_restarts_capture` | Empty/orphan folder denial passes; exact folder/pre-manifest child kill not demonstrated. |
 | CAP-04 | **NOT_RUN** | `test_kiosk_v2_sandbox_widgets.test_missing_started_ack_blocks_countdown_until_same_transaction_ack` | Native missing ACK guard passes; exact initial-manifest/pre-STARTED child kill not demonstrated. |
 | CAP-05 | **NOT_RUN** | `test_checkout_durability.test_service_replay_cannot_allocate_different_capture` | Idempotent STARTED replay passes; exact accepted STARTED/pre-local-save child kill not demonstrated. |

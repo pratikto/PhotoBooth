@@ -1,0 +1,46 @@
+{
+  "stage": "AR-03.c1 / CAP-01\u201302",
+  "status": "FOCUSED_VERIFIED_TESTS_ONLY",
+  "remote_base": "c4c1847bd8086c36f3ec1d3a755728896321495f",
+  "runtime_source": "e0dc59435772148be86449c55140d4b9be2f6364",
+  "test_source": "Containing commit, hashes below",
+  "command": "KIVY_HOME=/tmp/meong-cap-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy MEONG_CI_TEST_REPORT=work/cap01-02-focused-report.txt .venv/bin/python tools/run_kiosk_unittests.py test_fulfillment_crash_recovery test_checkout_fulfillment test_photo_allocation test_qris_session test_customer_claim_session",
+  "result": {
+    "run": 34,
+    "pass": 34,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 2.647
+  },
+  "report_sha256": "61fc93fd6803265835e6bfa41ce8f74de37ed7d13e3cd140f598c28a111ddfde",
+  "source_sha256": {
+    "tests/fulfillment_crash_fixture.py": "ea7441994d06fab9ca593d6560588193c39b92e281ba50870d4ecbd32cb79f67",
+    "tests/test_fulfillment_crash_recovery.py": "c0554c4e9f9a8dbadfe91fb6efa99f2fe435ba1965a2eab1a2e03b75a3b11dd0",
+    ".github/workflows/portrait-kiosk-v2.yml": "8aa689b545ba9f603375cc4d5090dede31b387add7622795fdf83f19689296ab"
+  },
+  "process_boundaries": {
+    "CAP-01": [
+      "before_local_intent: exit81",
+      "before_backend_intent: exit82"
+    ],
+    "CAP-02": [
+      "allocated_reply_lost: exit83"
+    ]
+  },
+  "matrix": {
+    "total": 69,
+    "pass": 47,
+    "fail": 1,
+    "skip": 0,
+    "blocked": 9,
+    "not_run": 12
+  },
+  "scope": [
+    "Real child os._exit, authenticated API/client, checkout WAL/FULL + separate synthetic provider DB.",
+    "Original ticket passed over stdin only, memory-only; no ticket in argv/journal/evidence.",
+    "First original allocation or same committed mapping; provider/create-order calls forbidden after setup.",
+    "No runtime/schema/UI change or confirmed defect; CAP-03\u201305 still NOT_RUN.",
+    "Prior full/native evidence remains pinned to its original source; current CI pending."
+  ]
+}
