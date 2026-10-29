@@ -1,5 +1,6 @@
 """Nonpayable causal purchase integration using original backend and SQLite."""
 from pathlib import Path
+import hashlib
 from tempfile import TemporaryDirectory
 import unittest
 from unittest.mock import Mock,patch
@@ -25,7 +26,8 @@ class PrintPurchaseTests(unittest.TestCase):
         self.key='k'*32
 
     def begin(self,**overrides):
-        args=dict(quantities={'template_a':2},key=self.key,camera_valid=True,observed_at=100)
+        args=dict(quantities={'template_a':2},key=self.key,camera_valid=True,observed_at=100,
+                  capability_hash=hashlib.sha256(('C'*43).encode()).hexdigest())
         args.update(overrides);return self.host.begin(**args)
 
     def assert_empty(self):

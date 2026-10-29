@@ -299,3 +299,33 @@ production/public ingress/new branch/master/default/deployment or real external
 effect. Rollback scoped inverse code; retain additive requirements and all
 financial/media/audit records. Only private work/ and superseded docs stash local.
 Containing source commit is the safe checkpoint; exact SHA via Git log/remote.
+
+Final review refinement before code: newly issued PRINT_REQUIRED_V1 mock orders
+must include the existing validated customer capability hash. Legacy/default
+orders retain their optional-field behavior. This ensures the new fixture policy
+cannot create a paid-print obligation with no original self-claim credential.
+No token is generated/logged by the backend. Missing hash rejects before any
+order/requirement/provider effect. An initial full invocation at 9417e9d is
+superseded/interrupted, not counted as a final regression; repeat after this fix.
+
+## 30 October — credential focused source checkpoint
+
+Base/remote 9417e9d5985319fa6f30d147f95b8f36ff93047c.
+Final mock-policy refinement: new PRINT_REQUIRED_V1 orders require the existing
+validated customer capability hash before any order/requirement/provider effect.
+Default/legacy optional-field behavior remains unchanged; no backend token logging
+or automatic token generation. Missing hash is now an explicit issuance rejection
+vector; healthy purchase fixtures carry a hash of a known synthetic capability.
+29 combined native/job/purchase/issuance/schema PASS, zero failure/error/skip,
+12.580s. Initial full invocation at 9417e9d was deliberately interrupted/superseded
+(exit137, no final report), never counted PASS; disposable unittest only, no live
+customer process or records. Next final full at this source and current Windows/
+Linux CI, then checkpoint. No further functional edits planned before final checks.
+Continue session until verified; actual customer-facing host remains unmounted.
+
+Whole UX-07 NOT_RUN, matrix59/0/9/1; actual devices/provider/paper/privacy/
+release and PAY-22/WEB gates remain separate. No Sandbox delivery opt-in/OPS/
+production/public ingress/new branch/master/default/deployment or real external
+effect. Rollback scoped inverse code; retain additive requirements and all
+financial/media/audit records. Only private work/ and superseded docs stash local.
+Containing source commit is the safe checkpoint; exact SHA via Git log/remote.

@@ -1,5 +1,20 @@
 # Meong Photobooth — current feature status
 
+## 30 October — credential focused checkpoint
+
+Final mock-policy refinement: new PRINT_REQUIRED_V1 orders require the existing
+validated customer capability hash before any order/requirement/provider effect.
+Default/legacy optional-field behavior remains unchanged; no backend token logging
+or automatic token generation. Missing hash is now an explicit issuance rejection
+vector; healthy purchase fixtures carry a hash of a known synthetic capability.
+29 combined native/job/purchase/issuance/schema PASS, zero failure/error/skip,
+12.580s. Initial full invocation at 9417e9d was deliberately interrupted/superseded
+(exit137, no final report), never counted PASS; disposable unittest only, no live
+customer process or records. Next final full at this source and current Windows/
+Linux CI, then checkpoint. No further functional edits planned before final checks.
+Continue session until verified; actual customer-facing host remains unmounted.
+[Full scope/limits/next](qa/portrait-v2-sandbox/UX07-PURCHASED-PRINT-INTEGRATION.md).
+
 ## 30 October — l focused checkpoint
 
 UX-07.l native fixture subset uses original PhotoJobs/PhotoViews/result layout

@@ -431,7 +431,7 @@ class CheckoutStore:
         if delivery_policy is not None:
             if (delivery_policy != 'PRINT_REQUIRED_V1' or type(creation_context) not in (tuple, list)
                     or len(creation_context) != 2 or creation_context[1] != 'mock'
-                    or not isinstance(frozen_contract, dict)):
+                    or not isinstance(frozen_contract, dict) or customer_capability_hash is None):
                 raise ValueError('Frozen mock-only delivery policy required')
             from photobooth.delivery_requirements import DeliveryRequirements
             delivery = DeliveryRequirements(self)

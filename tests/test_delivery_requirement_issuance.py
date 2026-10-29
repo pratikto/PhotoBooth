@@ -63,7 +63,7 @@ class RequirementIssuanceTests(unittest.TestCase):
 
     def test_sandbox_missing_contract_and_invalid_policy_reject_before_new_order(self):
         for args in ({'creation_context':('MERCHANT','sandbox')},{'frozen_contract':None},
-                     {'creation_context':None},{'delivery_policy':True}):
+                     {'creation_context':None},{'delivery_policy':True},{'customer_capability_hash':None}):
             with self.subTest(args=args),self.assertRaises(ValueError):self.begin(**args)
         self.assertEqual(self.counts(),[0,0,0,0])
 
