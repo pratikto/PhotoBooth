@@ -329,3 +329,35 @@ production/public ingress/new branch/master/default/deployment or real external
 effect. Rollback scoped inverse code; retain additive requirements and all
 financial/media/audit records. Only private work/ and superseded docs stash local.
 Containing source commit is the safe checkpoint; exact SHA via Git log/remote.
+
+Post-regression review: source 520b1a6 full 1217/1213/4 and CI 40967942002
+SUCCESS remain historical. A new targeted counterexample shows active mock-print
+replay still depends on current artwork via backend frozen_contract(). Same order
+and one provider effect are preserved, but recovery raises when artwork is absent.
+For explicit mock delivery configuration only, replay must read/validate the
+original persisted frozen contract, not today's assets. Missing/corrupt historical
+snapshot stays held; no fallback repair/adoption. Default backend behavior stays
+unchanged. Add exact regression, then rerun final applicable full/current CI.
+
+## 30 October — replay focused source checkpoint
+
+Base/remote 520b1a6791c6e8da4b891bf230a8bd5709bf25f4.
+Mock print recovery now reads the original persisted frozen contract on existing
+keys instead of requiring current artwork. Original source 520b1a6 passes its
+1217/1213/4 full suite (627.965s) and CI40967942002, but a new targeted missing-
+artwork counterexample correctly exposed this new-profile recovery gap; those
+results remain historical, not final evidence for the correction. One original
+order/provider effect was preserved even in the failing probe; no payment loss.
+New regression verifies recovery with no current templates/assets and holds a
+corrupt old snapshot without repair/adoption. Default backend behavior unchanged.
+53 focused PASS/zero failure/error/skip, 10.702s, including both native methods,
+all paid fixture stages and original backend/polling regression. Seven purchase
+methods now required in CI receipts. Next one final full/current CI at corrected
+source, then final checkpoint. Continue session; no live customer-facing host.
+
+Whole UX-07 NOT_RUN, matrix59/0/9/1; actual devices/provider/paper/privacy/
+release and PAY-22/WEB gates remain separate. No Sandbox delivery opt-in/OPS/
+production/public ingress/new branch/master/default/deployment or real external
+effect. Rollback scoped inverse code; retain additive requirements and all
+financial/media/audit records. Only private work/ and superseded docs stash local.
+Containing source commit is the safe checkpoint; exact SHA via Git log/remote.

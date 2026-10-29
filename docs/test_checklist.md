@@ -1,5 +1,21 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 30 October — replay focused checkpoint
+
+Mock print recovery now reads the original persisted frozen contract on existing
+keys instead of requiring current artwork. Original source 520b1a6 passes its
+1217/1213/4 full suite (627.965s) and CI40967942002, but a new targeted missing-
+artwork counterexample correctly exposed this new-profile recovery gap; those
+results remain historical, not final evidence for the correction. One original
+order/provider effect was preserved even in the failing probe; no payment loss.
+New regression verifies recovery with no current templates/assets and holds a
+corrupt old snapshot without repair/adoption. Default backend behavior unchanged.
+53 focused PASS/zero failure/error/skip, 10.702s, including both native methods,
+all paid fixture stages and original backend/polling regression. Seven purchase
+methods now required in CI receipts. Next one final full/current CI at corrected
+source, then final checkpoint. Continue session; no live customer-facing host.
+[Full scope/limits/next](qa/portrait-v2-sandbox/UX07-PURCHASED-PRINT-INTEGRATION.md).
+
 ## 30 October — credential focused checkpoint
 
 Final mock-policy refinement: new PRINT_REQUIRED_V1 orders require the existing

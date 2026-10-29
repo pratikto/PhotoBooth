@@ -200,9 +200,23 @@ class CheckoutBackend:
 
     def create_order(self, booth_id, quantities, checkout_key, *, customer_capability_hash=None):
         quote = quote_checkout(quantities)
+        contract = None
+        if self.delivery_policy is not None:
+            # Recovery of an issued fixture policy depends on its immutable
+            # snapshot, never on the availability of today's artwork files.
+            identifier(booth_id)
+            identifier(checkout_key, minimum=16)
+            with self.store.lock:
+                previous = self.store.db.execute(
+                    'SELECT id FROM checkouts WHERE booth_id=? AND checkout_key=?',
+                    (booth_id, checkout_key)).fetchone()
+                if previous is not None:
+                    contract = self.store.frozen_order(previous['id'])
+        if contract is None:
+            contract = frozen_contract(quantities)
         order, first = self.store.begin(booth_id, dict(quantities), quote.total_amount, checkout_key,
                                        creation_context=(self.merchant_id, self.provider_mode),
-                                       frozen_contract=frozen_contract(quantities),
+                                       frozen_contract=contract,
                                        customer_capability_hash=customer_capability_hash,
                                        delivery_policy=self.delivery_policy)
         self._creation_context(order['id'])

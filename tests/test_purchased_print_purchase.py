@@ -98,3 +98,15 @@ class PrintPurchaseTests(unittest.TestCase):
         view=self.begin(camera_valid=False,observed_at=0)
         self.assertEqual(view['order_id'],oid);self.assertEqual(view['delivery_requirement'],requirement)
         self.assertEqual(self.provider.charges,1)
+
+    def test_active_recovery_uses_original_contract_without_current_artwork_or_repair(self):
+        first=self.begin();self.host.templates=[]
+        frozen=[tuple(r) for r in self.store.db.execute('SELECT * FROM checkout_frozen_orders')]
+        with patch('photobooth.checkout_backend.frozen_contract',side_effect=AssertionError('Must not read current artwork')):
+            view=self.begin(camera_valid=False,observed_at=0)
+            self.assertEqual(view['order_id'],first['order_id'])
+            self.assertEqual(view['delivery_requirement'],first['delivery_requirement'])
+            self.assertEqual([tuple(r) for r in self.store.db.execute('SELECT * FROM checkout_frozen_orders')],frozen)
+            self.store.db.execute("UPDATE checkout_frozen_orders SET contract_json='{}'")
+            with self.assertRaises(CheckoutConflict):self.begin(camera_valid=False,observed_at=0)
+        self.assertEqual(self.provider.charges,1);self.assertEqual(self.probe.call_count,1)

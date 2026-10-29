@@ -1,5 +1,28 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 30 October — replay focused source checkpoint
+
+Base/remote 520b1a6791c6e8da4b891bf230a8bd5709bf25f4.
+Mock print recovery now reads the original persisted frozen contract on existing
+keys instead of requiring current artwork. Original source 520b1a6 passes its
+1217/1213/4 full suite (627.965s) and CI40967942002, but a new targeted missing-
+artwork counterexample correctly exposed this new-profile recovery gap; those
+results remain historical, not final evidence for the correction. One original
+order/provider effect was preserved even in the failing probe; no payment loss.
+New regression verifies recovery with no current templates/assets and holds a
+corrupt old snapshot without repair/adoption. Default backend behavior unchanged.
+53 focused PASS/zero failure/error/skip, 10.702s, including both native methods,
+all paid fixture stages and original backend/polling regression. Seven purchase
+methods now required in CI receipts. Next one final full/current CI at corrected
+source, then final checkpoint. Continue session; no live customer-facing host.
+
+Whole UX-07 NOT_RUN, matrix59/0/9/1; actual devices/provider/paper/privacy/
+release and PAY-22/WEB gates remain separate. No Sandbox delivery opt-in/OPS/
+production/public ingress/new branch/master/default/deployment or real external
+effect. Rollback scoped inverse code; retain additive requirements and all
+financial/media/audit records. Only private work/ and superseded docs stash local.
+Containing source commit is the safe checkpoint; exact SHA via Git log/remote.
+
 ## 30 October — credential focused source checkpoint
 
 Base/remote 9417e9d5985319fa6f30d147f95b8f36ff93047c.

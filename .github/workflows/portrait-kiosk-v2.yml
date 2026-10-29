@@ -95,7 +95,7 @@ jobs:
                   ('test_ux07_printer_evidence.PrinterRouteEvidenceTests.', 10),
                   ('test_delivery_requirements.DeliveryRequirementTests.', 6),
                   ('test_delivery_requirement_issuance.RequirementIssuanceTests.', 8),
-                  ('test_purchased_print_purchase.PrintPurchaseTests.', 6),
+                  ('test_purchased_print_purchase.PrintPurchaseTests.', 7),
                   ('test_purchased_print_jobs.PaidPrintJobTests.', 7),
               ],
               'native-tests.txt': [
