@@ -1,0 +1,32 @@
+{
+  "status": "UX07_SANDBOX_BOUNDARIES_FOCUSED_VERIFIED_CI_PENDING_COMPLETE_GATE_NOT_RUN",
+  "base": "858944cf1ef79483892b2c08f07de7d2a5be5a7e",
+  "test_source": "Containing test/workflow commit; pin after push",
+  "runtime_source": "347e502b0f50d231ec05c0cbcf768f87d2002454",
+  "runtime_changed": false,
+  "focused": {
+    "run": 34,
+    "pass": 34,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 2.99
+  },
+  "new_methods": 5,
+  "failure_vectors": 15,
+  "files_sha256": {
+    "tests/test_ux07_readiness.py": "5e2bd4e5c7496da24de974f25808d242c76cddbd553450ac5b54edad4955d41c",
+    ".github/workflows/portrait-kiosk-v2.yml": "e451f9c8584bbbcf142cf0376ba79e0635316fc4ca74081e88082e81183bd513"
+  },
+  "report_sha256": "700e3bdf0be21d2a3862de8ccb008e57b40d2f3aca6c82f689dc115ef825ed2d",
+  "matrix": {
+    "total": 69,
+    "pass": 58,
+    "fail": 0,
+    "blocked": 9,
+    "not_run": 2
+  },
+  "ux07": "NOT_RUN complete purchased-printer gate; Sandbox components verified separately",
+  "next": "Native quote/message/no-QR/retry checks, final matching CI/checkpoint, then UX-11",
+  "limits": "Injected failures/synthetic assets/offline HTTP; no actual device/provider/purchased-print/paper/Drive/production/OPS acceptance"
+}

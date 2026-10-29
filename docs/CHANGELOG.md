@@ -1,5 +1,13 @@
 # Meong Photobooth — changelog
 
+## 29 October — UX-07.a Sandbox readiness boundaries verified
+
+34 focused PASS/zero skip, five new integration methods: no charge/order before
+readiness, probe cleanup, safe retry and existing identity preserved. No runtime
+change; Linux/Windows CI registered/pending. UX-07 stronger purchased-printer
+gate NOT_RUN, matrix 58/0/9/2 unchanged. Native message/retry evidence next.
+[Contract/results/limits](qa/portrait-v2-sandbox/UX07-PREPAYMENT-READINESS.md).
+
 ## 29 October — UX-05 verified / BUG-024 fixed in source
 
 Source `347e502`, 52 focused PASS; full 1159/1155/4, zero failure/error.

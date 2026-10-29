@@ -1,5 +1,27 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — UX-07.a offline prepayment boundary verified
+
+Base/remote verified `858944cf1ef79483892b2c08f07de7d2a5be5a7e`.
+Five new HTTP/controller/SQLite methods cover 15 failure vectors (camera 5,
+storage/template 7, delivery opt-in 2, expiry during validation 1), plus active
+order protection. Rejected readiness creates no visit/order/attempt/provider
+I/O; temporary probes cleaned, existing synthetic bytes unchanged, seven healthy
+retries each create one order. Active original identity reconciles despite new
+bad observations. Sandbox PRINT/DRIVE flags reject before printer probe/order.
+**34 focused PASS / zero failure/error/skip**, 2.990s, Python 3.12.14/Linux.
+Command: `.venv/bin/python tools/run_kiosk_unittests.py test_ux07_readiness test_recovery_readiness test_device_health` (headless SDL/dummy audio).
+No runtime defect/change. New module registered in Linux/Windows ledger CI;
+matching CI pending for this containing micro-push. Prior full 1159/1155/4 at
+347e502 retained, excludes five new methods; no redundant full repeat.
+Next native QUOTE/error/no-QR/healthy-retry checks at both portrait sizes, then
+final current CI/checkpoint. UX-07 complete stronger gate remains NOT_RUN on
+purchased-printer integration/actual acceptance absent from transport-off
+Sandbox; verified components will be recorded without a blanket PASS. Matrix
+58/0/9/2 unchanged; UX-11 independent validation follows. No production/OPS/
+public ingress/branch/master/default/printer/Drive effect. Only work/ scratch
+local. Rollback tests/docs only; retain all financial/claim/fence/media records.
+
 ## 29 October — UX-05 verified / BUG-024 source remediation
 
 First test/workflow micro-push `be6f96e579796a6f7e23b732a80cb972a86aa234` and
