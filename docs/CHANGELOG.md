@@ -1,5 +1,13 @@
 # Meong Photobooth — changelog
 
+## 29 October — CAP-11–13 focused evidence complete
+
+**80 focused PASS / zero failure/error/skip**, seven actual child exits at six
+retake boundaries; original bytes/binding/quota/retention/OWED preserved, unknown
+or tampered bytes held. No runtime change. Matrix **54 PASS / 1 FAIL / 9 BLOCKED /
+5 NOT_RUN**. Matching CI pending; next verification/checkpoint, then CAP-16.
+[Source, command and limits](qa/portrait-v2-sandbox/CAP11-13-RETAKE-CRASHES.md).
+
 ## 29 October — CAP-11 focused evidence
 
 **76 focused PASS / zero failure/error/skip**, two actual retake process exits;

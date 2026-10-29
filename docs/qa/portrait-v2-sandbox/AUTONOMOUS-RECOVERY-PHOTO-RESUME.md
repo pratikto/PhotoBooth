@@ -81,3 +81,10 @@ Full matching-source regression/CI pending at this source checkpoint.
 BUG-022 final verification at `4642841f3e99d8c74b4b379e24922a7ba3f614c9`:
 1100 run / 1097 PASS / 3 optional palm SKIP, zero failure/error; matching CI
 40790865010 all three jobs SUCCESS. [Pinned audit evidence](evidence/ar-audit-final-verification.json).
+
+## CAP-11–13 exact retake exits — 29 October
+
+80 focused PASS, seven actual children/six boundaries, original selected index,
+quota/bytes/copies/retention/OWED preserved; temporary/tampered bytes held.
+Tests-only, no runtime change. [Exact contract/evidence](CAP11-13-RETAKE-CRASHES.md).
+Matching CI pending; actual device/power-loss/merchant gates remain separate.

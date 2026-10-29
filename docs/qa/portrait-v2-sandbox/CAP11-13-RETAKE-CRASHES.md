@@ -53,3 +53,28 @@ intent retained as VOID audit, quota untouched until explicit new synthetic fram
 second controller reopen restores review/consumed quota without a new capture.
 No runtime defect found. Linux/Windows CI includes the new module, result pending.
 Matrix 52/1/9/7; CAP-12/13 NOT_RUN until next increment. [Exact command/hashes](evidence/cap11-verification.json).
+
+## Increment 2 — all three retake scenarios focused-verified
+
+First micro-push `d133e209629c7b6a99927169ef290cf3ed715249` remote verified.
+Extension covers temporary fsynced but unhashed frame (102), STAGED hash/temp
+(103), published/pre-quota JPEG (104), committed manifest/quota before worker
+memory acknowledgment (105), plus repeated STAGED exit with corrupted temp.
+Unknown/unhashed/corrupt bytes remain held and unchanged, with no installed
+private session. Proven saved bytes recover the original operation/slot/hash,
+commit retake quota once and preserve all three original JPEGs. No auto-shutter,
+renderer, print/upload, replacement order/allocation or retention extension.
+After actual post-commit exit, two fresh controller/DB reopens retain byte-identical
+manifest and consumed quota. These extra reopens are in the parent process;
+only the seven child exits are credited as actual subprocess fault boundaries.
+
+Initial module run: **5 PASS**, 7.074s. Final focused: **80 PASS / zero failures/
+errors/skips**, 20.913s. Five test methods execute **seven actual children at six
+boundaries** (selection, intent, temporary, staged, published, committed; extra
+staged tamper). Fresh original customer proof/current provider status protect
+all private restores. No runtime defect found; no runtime/schema/UI change.
+[Exact source/command/report digest](evidence/cap11-13-verification.json).
+
+CAP-11–13 synthetic PASS; matrix 54/1/9/5. Matching CI pending at this containing
+commit; no old full/native result relabeled. Next verify current CI, publish
+checkpoint, then CAP-16 pre-COMPLETE boundary. BUG-023/external/OPS gates remain.

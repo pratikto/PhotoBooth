@@ -52,3 +52,10 @@ work/ar04-focused.txt pending final evidence publication. No real shutter,
 printer, provider, Drive, Windows or Ubuntu hardware acceptance is claimed.
 AR-05 handles exact intent reconciliation; this increment intentionally holds
 uncertain files rather than silently adopting or overwriting them.
+
+## CAP-11–13 exact retake exits — 29 October
+
+80 focused PASS, seven actual children/six boundaries, original selected index,
+quota/bytes/copies/retention/OWED preserved; temporary/tampered bytes held.
+Tests-only, no runtime change. [Exact contract/evidence](CAP11-13-RETAKE-CRASHES.md).
+Matching CI pending; actual device/power-loss/merchant gates remain separate.

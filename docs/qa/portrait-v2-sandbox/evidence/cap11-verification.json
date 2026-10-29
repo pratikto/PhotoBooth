@@ -2,7 +2,7 @@
   "status": "FOCUSED_VERIFIED_CI_PENDING",
   "branch": "feature/portrait-kiosk-v2-next",
   "review_base": "8c5553b77f0264622b19810d86e95a08a105c7eb",
-  "test_commit": "Containing Git commit; pin after push",
+  "test_commit": "d133e209629c7b6a99927169ef290cf3ed715249",
   "runtime_source": "e0dc59435772148be86449c55140d4b9be2f6364",
   "runtime_changed": false,
   "python": "3.12.14",
@@ -39,9 +39,15 @@
     "not_run": 7
   },
   "full_native": "NOT_RERUN_TESTS_ONLY; e0dc594 full 1117/1114/3 and c94696d native 28/four retain original source, new method absent",
-  "ci": "PENDING for containing test commit",
+  "ci": {
+    "run_id": 40830915281,
+    "head_sha": "d133e209629c7b6a99927169ef290cf3ed715249",
+    "status_at_next_increment": "in_progress",
+    "conclusion": null
+  },
   "next": "CAP-12 temporary/staged/published retake exits, then CAP-13 committed retake exit",
   "privacy": "Synthetic ticket memory/stdin only, no argv/journal/raw evidence; synthetic temporary images only",
   "rollback": "Inverse new tests/CI/docs; retain every financial/media/claim/fence/budget record",
-  "limits": "No power-loss/device/merchant/physical paper/Drive/deletion/production/OPS acceptance"
+  "limits": "No power-loss/device/merchant/physical paper/Drive/deletion/production/OPS acceptance",
+  "remote_verified": true
 }

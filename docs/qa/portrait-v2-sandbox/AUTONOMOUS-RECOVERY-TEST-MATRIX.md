@@ -1,5 +1,13 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
+## 29 October — CAP-11–13 focused evidence complete
+
+**80 focused PASS / zero failure/error/skip**, seven actual child exits at six
+retake boundaries; original bytes/binding/quota/retention/OWED preserved, unknown
+or tampered bytes held. No runtime change. Matrix **54 PASS / 1 FAIL / 9 BLOCKED /
+5 NOT_RUN**. Matching CI pending; next verification/checkpoint, then CAP-16.
+[Source, command and limits](CAP11-13-RETAKE-CRASHES.md).
+
 ## 29 October — CAP-11 focused evidence
 
 **76 focused PASS / zero failure/error/skip**, two actual retake process exits;
@@ -246,8 +254,8 @@ offline inbox prototype assertions do not certify deployed ingress.
 | CAP-09 | **PASS** | `test_capture_journal.test_abrupt_process_exit_at_every_write_boundary_preserves_evidence` | Real committed exit; reconstruction restores manifest-authorized count. |
 | CAP-10 | **PASS** | `test_photo_reconstruction.test_partial_three_capture_states_restore_exact_count_without_new_ids` | Exact 1/2/3 original states; quota and IDs retained. |
 | CAP-11 | **PASS** | `test_retake_crash_recovery.test_cap11_selection_and_empty_intent_exits_keep_selected_original_and_one_deliberate_retake` | Two actual child exits after durable selection and retake INTENT/pre-bytes. Fresh customer proof/settlement, original index/three originals/copies/retention/OWED preserved; no auto-capture, explicit retake once, consumed quota survives next reopen. [76-case focused evidence](evidence/cap11-verification.json). |
-| CAP-12 | **NOT_RUN** | `test_capture_journal.test_retake_selection_and_consumed_quota_commit_with_same_saved_bytes` | Exception/lost reply and quota pass; child fixture covers originals, not retake frame/pre-quota exit. |
-| CAP-13 | **NOT_RUN** | `test_photo_reconstruction.test_retake_selected_and_used_restore_without_renewing_quota` | Committed retake restore passes; exact retake-commit child exit not demonstrated. |
+| CAP-12 | **PASS** | `test_retake_crash_recovery.test_cap12_staged_and_published_retake_exits_adopt_only_same_bytes_and_consume_quota_once`; `test_cap12_unhashed_temporary_retake_exit_holds_original_bytes_and_unconsumed_quota`; `test_cap12_tampered_staged_retake_is_held_without_overwrite_or_quota_commit` | Four actual exits at temporary/STAGED/published (+ repeated STAGED with tamper); exact saved hash/operation adopted once without shutter, unknown/corrupt bytes held unchanged, original quota/selection/OWED retained across two controller reopens. [80-case evidence](evidence/cap11-13-verification.json). |
+| CAP-13 | **PASS** | `test_retake_crash_recovery.test_cap13_committed_retake_exit_preserves_original_selection_bytes_and_consumed_quota` | Actual post-manifest-commit exit before worker memory ACK; fresh proof restores original retake at selected index 1, three originals/one retake/two copies, consumed quota and byte-identical manifest through two reopens; no replay. [80-case evidence](evidence/cap11-13-verification.json). |
 | CAP-14 | **PASS** | `test_output_journal.test_abrupt_output_process_exit_preserves_each_publication_boundary` | Real child output intent/staged/published/committed exits; originals/hash/ACK verified. |
 | CAP-15 | **PASS** | `test_photo_reconstruction.test_multiple_designs_resume_only_unfinished_design_and_original_copies` | Saved output/copies retained on reconstruction of next unfinished design. |
 | CAP-16 | **NOT_RUN** | `test_customer_claim_session.test_completed_service_can_restore_result_only_without_capture_readmission` | Result-only guard passes; exact final-compose/COMPLETE boundary process kill absent. |
