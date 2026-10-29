@@ -13,7 +13,7 @@ from kivy.uix.widget import Widget
 from photobooth.advertising import PROJECT_ROOT
 from .demo_game import GameJobs
 from .flow import MOCK_CHECKOUT, TEMPLATES
-from .mock_checkout import MockCheckoutStore, MockCheckoutPresentation
+from .mock_checkout import configured_mock_checkout
 from .theme import PixelCard, text_label, GOLD, CYAN, MUTED
 
 
@@ -21,7 +21,7 @@ class CheckoutViews:
     def _init_checkout(self):
         self._mock_enabled = os.environ.get('PHOTOBOOTH_V2_CHECKOUT_MOCK', '0') == '1'
         self._mock_jobs = self._provided_checkout_jobs or GameJobs(
-            lambda: MockCheckoutPresentation(MockCheckoutStore(PROJECT_ROOT/'data'/'kiosk-v2-p4')),
+            lambda: configured_mock_checkout(PROJECT_ROOT/'data'/'kiosk-v2-p4', configuration_root=PROJECT_ROOT),
             actions={'open_checkout', 'status', 'transition', 'admit'})
         self._mock_view = None
         self._mock_error = ''
@@ -95,6 +95,7 @@ class CheckoutViews:
                     'promo-used': 'Potensi promo DEMO sudah dipakai pada pesanan sebelumnya.',
                     'unresolved': 'Status belum pasti. Selesaikan simulasi atau periksa status dahulu.',
                     'not-admissible': 'Izin MOCK belum tersedia atau sudah pernah digunakan.',
+                    'printer-not-ready': 'Koneksi printer belum terkonfirmasi. Periksa printer lalu coba lagi.',
                 }.get(outcome.error, 'Belum berhasil. Periksa status MOCK; belum ada izin foto baru.')
             else:
                 self._mock_view = outcome.value

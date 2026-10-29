@@ -1,5 +1,14 @@
 # Meong Photobooth — changelog
 
+## 29 October — UX-07.c nonpayable MOCK printer preflight
+
+53 focused PASS/zero skip; seven causal methods. Configured MOCK uses original
+read-only printer/config on its worker before a new opt-in print simulation.
+Failures deny order/QR; active identity recovers, retry reads fresh settings.
+Native/full/current CI pending. Dedicated Sandbox printer/Drive OFF; UX-07 whole
+purchased-print gate NOT_RUN, matrix 59/0/9/1 unchanged.
+[Contract/evidence/next](qa/portrait-v2-sandbox/UX07-MOCK-PRINTER-PREFLIGHT.md).
+
 ## 29 October — UX-11 synthetic PASS / remaining external gates
 
 Test source `7ca46b5`, **9 focused PASS / zero skip**; CI 40865822670 all three

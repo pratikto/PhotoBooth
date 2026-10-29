@@ -1,5 +1,33 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — UX-07.c opt-in nonpayable MOCK printer gate
+
+Base/remote verified `605496ef1e0812eb804dfef219a41569d84cbb4e`. Ordinary
+configured MOCK worker now reuses the original read-only check_printer and saved
+settings before a new nonpayable order/QR when PRINT=1. Opt-out never reads
+settings/probes; failed/unknown/error observations yield only printer-not-ready,
+no new order/reward reservation/admission. Deliberate retry reads current config;
+active PENDING/UNKNOWN/CONFIRMED recovers original identity without a new health
+prerequisite. No ThermalPrinter/print job/Drive/backend/financial authority added.
+
+**53 focused PASS / zero failure/error/skip**, 0.156s, Python 3.12.14/Linux;
+seven new causal methods plus existing MOCK/config/health/isolation regression.
+Expected pre-implementation run: seven methods/nine missing-adapter errors
+(including subtests), not a discovered production defect. Two runtime adapters,
+new test module and both-platform CI registration; no schema/data migration.
+[Contract, source, command and safe evidence](qa/portrait-v2-sandbox/UX07-MOCK-PRINTER-PREFLIGHT.md).
+
+Native integration/full/current matching CI pending; source is this containing
+micro-commit and will be pinned after immediate push/remote verification. Next:
+real Kivy Clock while probe held, duplicate/retired callbacks, error/retry at
+800x1280/452x900, then one final applicable full and current Windows/Linux CI.
+Matrix remains **59 PASS / 0 FAIL / 9 BLOCKED / 1 NOT_RUN**; full UX-07 purchased-
+print payment/device gate NOT_RUN. Route/queue READY never proves paper.
+Dedicated Sandbox printer/Drive stay OFF; no merchant/production/OPS/public
+infrastructure/branch/master/default/deployment or actual external effects.
+Only work/ synthetic scratch local. Rollback inverse adapters/tests/docs, retain
+all financial/reward/claim/fence/media/audit records and existing original probes.
+
 ## 29 October — UX-11 verified synthetic worker/hold evidence
 
 Process source `c588d5a635a1f427b997d8b003a13b2aedf732d5`, native test source

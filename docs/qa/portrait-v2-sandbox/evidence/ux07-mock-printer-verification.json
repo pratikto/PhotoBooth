@@ -1,0 +1,38 @@
+{
+  "status": "MOCK_ONLY_PRINTER_PREFLIGHT_FOCUSED_VERIFIED_NATIVE_FULL_CI_PENDING",
+  "base": "605496ef1e0812eb804dfef219a41569d84cbb4e",
+  "source": "Containing functional micro-commit; final checkpoint pins exact SHA",
+  "new_methods": 7,
+  "before": {
+    "run": 7,
+    "fail": 0,
+    "error": 9,
+    "skip": 0,
+    "seconds": 0.014,
+    "scope": "Expected missing configured adapter; nine errors include subtests, not a pre-existing runtime defect"
+  },
+  "focused": {
+    "run": 53,
+    "pass": 53,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 0.156
+  },
+  "command": "KIVY_HOME=/tmp/meong-ux07-printer-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy MEONG_CI_TEST_REPORT=work/ux07-mock-focused.txt .venv/bin/python tools/run_kiosk_unittests.py test_ux07_mock_printer test_kiosk_v2_mock_checkout test_device_health test_printer_settings test_kiosk_v2_delivery_options",
+  "files_sha256": {
+    "photobooth/kiosk_v2/mock_checkout.py": "13a7fc95ec5bfa8f07a3e20245bcc0c104d4afe7bb90ebad8903d0b06de25f18",
+    "photobooth/kiosk_v2/checkout_views.py": "3391a9ecb3a4d8f0e1f448e067b4c952fed8f068d2800c2aaa3d61493d4822c3",
+    "tests/test_ux07_mock_printer.py": "66e15b1629892aaede9b8d7cf8351408bab3cc664995f257fc2003ce9857ee16",
+    ".github/workflows/portrait-kiosk-v2.yml": "e64d54eff8ceb705645684cdf2afedeefaaffbdec70139101488ce3236fb2862"
+  },
+  "report_sha256": "ad0f555f93d123ca4c57c49f5566697ed87ec32071c191aaf4f49988c49717e9",
+  "matrix": {
+    "total": 69,
+    "pass": 59,
+    "fail": 0,
+    "blocked": 9,
+    "not_run": 1
+  },
+  "limits": "Nonpayable MOCK opt-in only. Original route/queue/node probe never proves physical printer/paper or purchased QRIS service. Dedicated Sandbox printer/Drive OFF, full UX-07 NOT_RUN. No real network/Drive/print/payment effect. Native/full/current CI pending."
+}

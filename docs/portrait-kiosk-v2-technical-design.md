@@ -1,5 +1,12 @@
 # FEAT-022 — GUI v2 engineering contracts
 
+Ordinary configured MOCK with explicit PRINT=1 now probes the original saved
+printer routes on GameJobs before creating a new nonpayable simulation. Failure
+returns a static retryable message; active original orders bypass this new-order
+gate. No cached success, print payload or payment authority. Opt-out/default and
+dedicated Sandbox delivery-off are preserved; route READY is not paper proof.
+[AR-08 contract and validation](qa/portrait-v2-sandbox/UX07-MOCK-PRINTER-PREFLIGHT.md).
+
 PENDING status without an image action retains and revalidates the backend's
 stored QR URL; only an order with no saved URL uses the original derived v2
 recovery endpoint. Explicit actions still undergo method/host/path validation.

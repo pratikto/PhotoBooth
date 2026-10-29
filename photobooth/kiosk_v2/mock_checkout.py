@@ -6,6 +6,8 @@ backend must independently validate receipts/results and calculate its quote.
 
 from contextlib import closing
 import json
+import os
+from pathlib import Path
 import re
 import time
 import uuid
@@ -161,8 +163,9 @@ class MockCheckoutStore(DemoGameStore):
 class MockCheckoutPresentation:
     """Worker-only QR encoding, separate from the pure persistence API."""
 
-    def __init__(self, store):
+    def __init__(self, store, *, before_create=None):
         self.store = store
+        self.before_create = before_create
         self._qr_cache = None
 
     def _present(self, view):
@@ -175,6 +178,11 @@ class MockCheckoutPresentation:
         return view
 
     def open_checkout(self, *args):
+        # Health gates apply only to a new nonpayable simulation. Recover the
+        # original outstanding cart even when today's printer is unavailable.
+        # Store.open_checkout still owns idempotency, quote and cart validation.
+        if self.before_create is not None and self.store.recover() is None:
+            self.before_create()
         return self._present(self.store.open_checkout(*args))
 
     def status(self, *args):
@@ -185,3 +193,25 @@ class MockCheckoutPresentation:
 
     def admit(self, *args):
         return self._present(self.store.admit(*args))
+
+
+def configured_mock_checkout(root, *, configuration_root):
+    """Worker-only ordinary MOCK adapter; never a purchased QRIS payment path."""
+    def check_new_order_printer():
+        if os.environ.get('PHOTOBOOTH_V2_PRINT') != '1':
+            return
+        # No printer probes may be enabled through the isolated merchant trial.
+        if os.environ.get('PHOTOBOOTH_V2_CHECKOUT_SANDBOX') == '1':
+            raise MockCheckoutError('printer-not-ready')
+        try:
+            from photobooth.device_health import check_printer, READY
+            from photobooth.printer_settings import load_printer_config
+            config = load_printer_config(Path(configuration_root)/'data'/'printer_settings.json')
+            if check_printer(config).status != READY:
+                raise MockCheckoutError('printer-not-ready')
+        except Exception:
+            # Original platform adapters/configuration can fail with driver-
+            # specific exception classes. Do not export/log their private text.
+            raise MockCheckoutError('printer-not-ready') from None
+
+    return MockCheckoutPresentation(MockCheckoutStore(root), before_create=check_new_order_printer)
