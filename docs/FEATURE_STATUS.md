@@ -1,5 +1,24 @@
 # Meong Photobooth — current feature status
 
+## 29 October — UX-07.f read-only device evidence preparation verified
+
+Collector source `45b0b30`, corrected test source `b6c3d01`: **49 focused PASS**;
+final full **1185 run/1181 PASS/4 optional SKIP**, zero FAIL/ERROR.
+CI **40896422532 all three jobs SUCCESS**; seven collector methods individually
+PASS Windows/Linux, four original ad-player methods PASS Linux. Windows
+**130/72/55/103 PASS**; Linux Sandbox **431 PASS**, native **116 PASS/1 SKIP**.
+Initial full's one ad-fixture ERROR is retained; causal wait correction keeps
+all assertions, requires real exposure and fails its held-tick negative control.
+Ad GUI/runtime unchanged. [Exact evidence/history](qa/portrait-v2-sandbox/evidence/ux07-printer-device-evidence.json).
+
+Use existing `check_portrait_v2.py --probe-printer` only in ordinary diagnostic
+context to collect status-only redacted route evidence; default no printer
+probe, dedicated Sandbox refused. [Device commands](qa/portrait-v2-sandbox/UX07-PRINTER-DEVICE-EVIDENCE.md). Route readiness
+is not paper proof; Windows spooler API latency remains unbounded. Actual printer
+observations/purchased-print prepayment integration still **NOT_RUN**; whole
+UX-07 and matrix **59/0/9/1** unchanged. Sandbox printer/Drive OFF; provider,
+privacy/operations/retention/release gates remain separate.
+
 ## 29 October — UX-07.f device evidence collector focused-verified
 
 Base/remote `c8f0483`. Existing P5 inventory/CLI gains explicit `--probe-printer`:

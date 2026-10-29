@@ -1,5 +1,50 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 29 October — UX-07.f device evidence collector verified
+
+Functional source `45b0b3058720ac71875240a9d4e2edf449ecc843`; corrected test/CI
+source `b6c3d015f85100939c86925155e7a1b0f6e5b09f`. Final full **1185 run / 1181 PASS /
+zero FAIL/ERROR / 4 optional SKIP**, 504.379s, Python 3.12.14 /
+Debian 13 software GL/dummy audio. Fresh corrected focused **49 PASS**, 1.390s,
+zero failure/error/skip; initial collector focused 45 PASS remains historical.
+**CI 40896422532 all three jobs SUCCESS** at the corrected source: seven new
+collector methods individually PASS Windows/Linux, four original ad-player
+methods individually PASS Linux. Windows groups **130/72/55/103 PASS**, zero skips;
+Linux Sandbox **431 PASS**, native **116 PASS/1 SKIP**, pure
+**128 PASS/1 SKIP**, supervisor **40 PASS**. Actual method receipts
+verified via logs/check annotations. [Commands/source/digests/history](evidence/ux07-printer-device-evidence.json).
+
+The first full at 45b0b30 remains **1185/1180/one ERROR/four SKIP**, 534.098s:
+original ad fixture's fixed 0.1s pump could close before a positive exposure
+interval. Test-only bounded causal wait preserves original assertions and adds
+positive duration/exactly-once recording; delayed case passes and held-tick
+negative control still fails. All ad GUI/runtime and collector code remain
+unchanged by that correction. Four ad tests are now actually registered/opted
+in in Linux CI; prior successful CI did not run that module.
+
+Existing P5 CLI now offers `--probe-printer`: default no printer access, dedicated
+Sandbox refusal before settings/probe; original saved config/route probe reused,
+status-only redacted report. Requested non-ready probe requires attention.
+Even READY leaves paper and purchased-payment acceptance NOT_RUN. No order,
+print bytes, payment/Drive action or financial/media mutation; no GUI mounting.
+Route/queue/node never proves paper; Windows spooler API latency remains
+unbounded. [Actual-device command and contract](UX07-PRINTER-DEVICE-EVIDENCE.md).
+
+This software preparation increment is verified. **UX-07 whole purchased-print
+payment/device gate remains NOT_RUN**, matrix **59 PASS / 0 FAIL / 9 BLOCKED /
+1 NOT_RUN**, audit IN_PROGRESS. Actual Windows/Ubuntu printer observations and
+purchased-print prepayment integration remain missing; keep Sandbox printer/
+Drive OFF. PAY-22/WEB-01–08 and actual merchant/paper/phone/Drive/deletion/
+privacy/support/release gates remain separate. No OPS/public/production deployment or new branch/default/master change. Next collect real read-only evidence and resolve the
+purchased-print path within its scope; never infer paid-print acceptance.
+
+No new local screenshot review: CLI/test-only scope; prior GUI images retain
+original source/hashes. Rollback the diagnostic/test/CI/docs inverse only,
+preserving every financial/reward/claim/fence/media/audit/retention record.
+Private work/ reports/fixture-control scripts are local-only, not backed up to
+GitHub; no unpublished runtime patch. Final docs SHA is its containing Git
+commit; last verified source checkpoint is the full b6c3d01 SHA above.
+
 ## 29 October — UX-07.f full-run fixture correction focused-verified
 
 Collector source `45b0b30`, CI **40893472588 all three jobs SUCCESS**; seven new

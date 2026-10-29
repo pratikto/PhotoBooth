@@ -1,5 +1,24 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
+## 29 October — UX-07.f read-only device evidence preparation verified
+
+Collector source `45b0b30`, corrected test source `b6c3d01`: **49 focused PASS**;
+final full **1185 run/1181 PASS/4 optional SKIP**, zero FAIL/ERROR.
+CI **40896422532 all three jobs SUCCESS**; seven collector methods individually
+PASS Windows/Linux, four original ad-player methods PASS Linux. Windows
+**130/72/55/103 PASS**; Linux Sandbox **431 PASS**, native **116 PASS/1 SKIP**.
+Initial full's one ad-fixture ERROR is retained; causal wait correction keeps
+all assertions, requires real exposure and fails its held-tick negative control.
+Ad GUI/runtime unchanged. [Exact evidence/history](evidence/ux07-printer-device-evidence.json).
+
+Use existing `check_portrait_v2.py --probe-printer` only in ordinary diagnostic
+context to collect status-only redacted route evidence; default no printer
+probe, dedicated Sandbox refused. [Device commands](UX07-PRINTER-DEVICE-EVIDENCE.md). Route readiness
+is not paper proof; Windows spooler API latency remains unbounded. Actual printer
+observations/purchased-print prepayment integration still **NOT_RUN**; whole
+UX-07 and matrix **59/0/9/1** unchanged. Sandbox printer/Drive OFF; provider,
+privacy/operations/retention/release gates remain separate.
+
 ## 29 October — UX-07 MOCK component final validation verified
 
 CI source `8d0b9bb`, run **40887868676: all three jobs SUCCESS**. Five readiness/
@@ -416,7 +435,7 @@ offline inbox prototype assertions do not certify deployed ingress.
 | UX-04 | **PASS** | `test_kiosk_v2_sandbox_widgets.test_native_claim_and_deliberate_resume_restore_original_capture_without_new_charge` | Original proof, exact saved image count and deliberate countdown; native return screenshots. |
 | UX-05 | **PASS** | `test_ux05_abandonment` (six methods); [complete verification](evidence/ux05-final-verification.json) | Synthetic Windows/Linux HTTP/controller/DB reopens: ambiguous creation/cancel/404 holds original identity and private claim, no replacement charge; fresh terminal unpaid cancellation archives before new visitor, writer/cached-proof faults hold; late settlement preserves OWED and exact paid isolation/lost ACK/archive/return rights. BUG-024 fixed in source/regression verified; actual device/provider acceptance separate. |
 | UX-06 | **PASS** | `test_kiosk_v2_sandbox_widgets.test_postpaid_camera_fault_records_owed_issue_and_hides_media` | Durable paid-unfulfilled issue; no fabricated cancellation. |
-| UX-07 | **NOT_RUN** | `test_ux07_readiness` (five methods), native `test_ux07_precharge_faults_show_safe_quote_and_retry_at_both_portrait_sizes`; [verified components](evidence/ux07-final-verification.json) | Sandbox camera/storage/template/delivery-isolation/freshness failures deny before order/charge; probe cleanup, active identity, eight native error/retry cases at both sizes PASS. Ordinary opt-in nonpayable MOCK gate additionally has 67 focused PASS, full 1178/1174/4, four reviewed error/retry images and matching-source CI 40887868676 with exact Windows/Linux method evidence; [final local/full/CI scope](evidence/ux07-mock-printer-final-validation.json). Complete purchased-print prepayment integration/actual printer readiness not mounted/certified in transport-off Sandbox; whole stronger gate remains NOT_RUN. |
+| UX-07 | **NOT_RUN** | `test_ux07_readiness` (five methods), native `test_ux07_precharge_faults_show_safe_quote_and_retry_at_both_portrait_sizes`; [verified components](evidence/ux07-final-verification.json) | Sandbox camera/storage/template/delivery-isolation/freshness failures deny before order/charge; probe cleanup, active identity, eight native error/retry cases at both sizes PASS. Ordinary opt-in nonpayable MOCK gate additionally has 67 focused PASS, full 1178/1174/4, four reviewed error/retry images and matching-source CI 40887868676 with exact Windows/Linux method evidence; [final local/full/CI scope](evidence/ux07-mock-printer-final-validation.json). Explicit read-only device evidence collector has seven methods PASS Windows/Linux; [source/limits](evidence/ux07-printer-device-evidence.json), actual hardware observations NOT_RUN. Complete purchased-print prepayment integration/actual printer readiness not mounted/certified in transport-off Sandbox; whole stronger gate remains NOT_RUN. |
 | UX-08 | **PASS** | `test_booth_sync.test_configured_layout2_without_credentials_is_offline_ready_and_never_falls_back_to_legacy_oauth` | Offline local progress with deferred Drive and preserved layout/claims. |
 | UX-09 | **PASS** | `test_release_session.test_uncertain_print_never_yields_isolation_receipt_or_releases_booth` | Uncertain print remains held, no automatic resend; paper outcome NOT_RUN. |
 | UX-10 | **PASS** | `test_booth_sync.test_two_transactions_keep_exact_local_folder_mapping_across_restart` | Immutable delivery mapping/retry/retention fixtures; actual Drive acceptance NOT_RUN. |
