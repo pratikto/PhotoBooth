@@ -1,5 +1,27 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — UX-07.b native confirmation/retry verified
+
+First micro-push `4099ca1a80251c53d45c5b0e6a4b9c25f090ef4a` remote verified;
+initial CI 40861858317 pending/superseded, not claimed whole-run PASS.
+New native widget method covers low disk, probe permission, actual corrupt
+synthetic template bytes and accidental PRINT flag at 800x1280/452x900: eight
+failed confirmations and eight healthy deliberate retries. Real app/worker/HTTP/
+SQLite remains QUOTE with actionable generic message, no private path/QR/order;
+retry creates exactly one order, then existing private-ticket gate appears.
+**36 focused PASS / zero failure/error/skip**, 25.080s, Python 3.12.14/Linux
+software GL; includes five new boundary methods, one new native method and
+existing camera/health checks. Command: `.venv/bin/python tools/run_kiosk_unittests.py test_ux07_readiness test_recovery_readiness test_device_health tests.test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_ux07_precharge_faults_show_safe_quote_and_retry_at_both_portrait_sizes tests.test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_precharge_camera_failure_keeps_quote_without_creating_any_order`.
+No runtime defect/change. App/tools remain 347e502; full 1159/1155/4 retains
+original provenance and excludes six new methods. Tests/CI/docs only, no repeat
+full/native export. Matching CI pending for this containing micro-push; pure
+boundary methods run Windows/Linux, new native method Linux virtual display.
+UX-07 stronger purchased-printer gate remains NOT_RUN (not mounted/certified in
+transport-off Sandbox), matrix 58/0/9/2 unchanged. Next final current CI/checkpoint
+then independent UX-11 frozen-worker/GUI evidence audit. Preserve physical/
+provider/production/OPS/release gates. Only work/ scratch local, no unpublished
+runtime patch. Rollback tests/docs only; retain financial/claim/fence/media data.
+
 ## 29 October — UX-07.a offline prepayment boundary verified
 
 Base/remote verified `858944cf1ef79483892b2c08f07de7d2a5be5a7e`.

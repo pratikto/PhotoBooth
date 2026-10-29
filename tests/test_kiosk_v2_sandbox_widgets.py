@@ -451,6 +451,48 @@ class SandboxWidgetTests(unittest.TestCase):
             self.assertEqual(app._sandbox_view['phase'],'QUOTE')
             self.assertTrue(any('belum siap' in getattr(w,'text','') for w in app.stage.walk()))
 
+    def test_ux07_precharge_faults_show_safe_quote_and_retry_at_both_portrait_sizes(self):
+        from dataclasses import replace
+        from photobooth.device_health import HealthCheck, WARNING
+        original_size=Window.size
+        try:
+            for size in ((800,1280),(452,900)):
+                Window.size=size
+                for kind in ('low_disk','probe_permission','corrupt_template','delivery_optin'):
+                    with self.subTest(size=size,kind=kind), self.booth() as (app,f):
+                        self.quote(app)
+                        if kind=='low_disk':
+                            fault=patch('photobooth.kiosk_v2.recovery_readiness.check_disk',
+                                return_value=HealthCheck('disk',WARNING,'private-fixture-path'))
+                        elif kind=='probe_permission':
+                            fault=patch('photobooth.kiosk_v2.recovery_readiness.tempfile.NamedTemporaryFile',
+                                        side_effect=PermissionError('private-fixture-path'))
+                        elif kind=='corrupt_template':
+                            bad=f.root/'private-fixture-path.png';bad.write_bytes(b'NOT AN IMAGE')
+                            template=next(t for t in app.templates if t.template_id=='template_a')
+                            fault=patch('photobooth.catalog.get_templates',
+                                        return_value=[replace(template,artwork_path=bad)])
+                        else:
+                            fault=patch.dict(os.environ,PHOTOBOOTH_V2_PRINT='1')
+                        with fault:
+                            app._sandbox_begin();self.settle(app)
+                        self.assertEqual(app.navigation.page,SANDBOX_CHECKOUT)
+                        self.assertEqual(app._sandbox_view['phase'],'QUOTE')
+                        self.assertIsNone(f.flow.snapshot())
+                        self.assertEqual(f.provider.charges,0)
+                        self.assertEqual(f.store.db.execute('SELECT COUNT(*) FROM checkouts').fetchone()[0],0)
+                        labels=[getattr(w,'text','') for w in app.stage.walk()]
+                        self.assertTrue(any('belum siap' in label and 'coba lagi' in label for label in labels))
+                        self.assertFalse(any('private-fixture-path' in label for label in labels))
+                        self.assertFalse(any(label=='SALIN LINK QRIS' for label in labels))
+                        self.assertIsNone(f.service.view().get('qr_rgb'))
+                        app._sandbox_begin();self.settle(app)
+                        self.assertEqual(f.provider.charges,1)
+                        self.assertEqual(f.store.db.execute('SELECT COUNT(*) FROM checkouts').fetchone()[0],1)
+                        self.assertTrue(app._sandbox_view['ticket_required'])
+        finally:
+            Window.size=original_size
+
     def test_postpaid_camera_fault_records_owed_issue_and_hides_media(self):
         with self.booth() as (app,f):
             self.reserve(app,f)

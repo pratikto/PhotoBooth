@@ -1,0 +1,47 @@
+{
+  "status": "UX07_SANDBOX_COMPONENTS_FOCUSED_VERIFIED_CI_PENDING_COMPLETE_GATE_NOT_RUN",
+  "first_test_source": "4099ca1a80251c53d45c5b0e6a4b9c25f090ef4a",
+  "test_source": "Containing native-test commit; pin after push",
+  "runtime_source": "347e502b0f50d231ec05c0cbcf768f87d2002454",
+  "runtime_changed": false,
+  "focused": {
+    "run": 36,
+    "pass": 36,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 25.08
+  },
+  "new_boundary_methods": 5,
+  "new_native_methods": 1,
+  "native_failed_confirmation_cases": 8,
+  "native_healthy_retry_cases": 8,
+  "sizes": [
+    [
+      800,
+      1280
+    ],
+    [
+      452,
+      900
+    ]
+  ],
+  "files_sha256": {
+    "tests/test_ux07_readiness.py": "5e2bd4e5c7496da24de974f25808d242c76cddbd553450ac5b54edad4955d41c",
+    "tests/test_kiosk_v2_sandbox_widgets.py": "2bbcd3ef77a777ecfdbb33f80f244c60cd97ce9040f9361347aa45f2f7c3eab0",
+    ".github/workflows/portrait-kiosk-v2.yml": "e451f9c8584bbbcf142cf0376ba79e0635316fc4ca74081e88082e81183bd513"
+  },
+  "report_sha256": "6991a9fa0deab94669339c00f4fac6c0c6b7228c0dd3b80ec4172a311078a915",
+  "matrix": {
+    "total": 69,
+    "pass": 58,
+    "fail": 0,
+    "blocked": 9,
+    "not_run": 2
+  },
+  "ux07": "NOT_RUN complete purchased-printer gate; current Sandbox component tests PASS separately",
+  "full_regression": "NOT_RERUN_TESTS_ONLY; 347e502 1159/1155/4 retains source, excludes six new methods",
+  "native_exports": "NOT_RERUN_NO_GUI_RUNTIME_CHANGE; widget assertions only, no ticket/image artifacts published",
+  "limits": "Synthetic injected hardware/storage/template failures; no real camera/merchant/paper/Drive/production/OPS acceptance, native method Linux only",
+  "next": "Current matching CI/final checkpoint then UX-11, keep purchased-printer gate open"
+}

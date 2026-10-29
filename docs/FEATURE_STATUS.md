@@ -1,5 +1,13 @@
 # Meong Photobooth — current feature status
 
+## 29 October — UX-07.b native error/retry verified
+
+36 focused PASS/zero skip. Five boundary methods plus one native method:
+eight failures/eight retries at both portrait sizes; QUOTE/message/redaction/
+no QR/order and exactly-one healthy retry verified. No runtime change; current
+CI pending. UX-07 stronger purchased-printer gate NOT_RUN, matrix 58/0/9/2.
+[Evidence/limits/next](qa/portrait-v2-sandbox/UX07-PREPAYMENT-READINESS.md).
+
 ## 29 October — UX-07.a Sandbox readiness boundaries verified
 
 34 focused PASS/zero skip, five new integration methods: no charge/order before
