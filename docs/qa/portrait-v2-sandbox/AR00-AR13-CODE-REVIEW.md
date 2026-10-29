@@ -1,5 +1,16 @@
 # AR-00–AR-13 implementation conformity review
 
+## 29 October — UX-05 verified / BUG-024 fixed in source
+
+Source `347e502`, 52 focused PASS; full 1159/1155/4, zero failure/error.
+CI 40856740113 all three jobs SUCCESS, six UX-05 methods PASS on Windows/Linux.
+Unknown cancellation stays held; fresh confirmed unpaid cancellation archives
+before new visitor; write failure holds. Late paid/typed isolation/ACK/archive/
+return preserves original rights. UX-05 synthetic PASS; BUG-024 regression
+verified, actual device acceptance NOT_RUN. Matrix **58/0/9/2**, audit IN_PROGRESS.
+Next UX-07 readiness/printer scope audit, preserve Sandbox transport-off.
+[Exact evidence/limits](evidence/ux05-final-verification.json).
+
 ## 29 October — BUG-023 fixed in source / regression verified
 
 Source `3822bb0`, 73 focused PASS; full 1153/1149/4, zero failure/error.

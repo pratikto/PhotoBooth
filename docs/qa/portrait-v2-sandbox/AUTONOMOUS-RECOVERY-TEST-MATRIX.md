@@ -1,5 +1,16 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
+## 29 October — UX-05 verified / BUG-024 fixed in source
+
+Source `347e502`, 52 focused PASS; full 1159/1155/4, zero failure/error.
+CI 40856740113 all three jobs SUCCESS, six UX-05 methods PASS on Windows/Linux.
+Unknown cancellation stays held; fresh confirmed unpaid cancellation archives
+before new visitor; write failure holds. Late paid/typed isolation/ACK/archive/
+return preserves original rights. UX-05 synthetic PASS; BUG-024 regression
+verified, actual device acceptance NOT_RUN. Matrix **58/0/9/2**, audit IN_PROGRESS.
+Next UX-07 readiness/printer scope audit, preserve Sandbox transport-off.
+[Exact evidence/limits](evidence/ux05-final-verification.json).
+
 ## 29 October — BUG-023 fixed in source / regression verified
 
 Source `3822bb0`, 73 focused PASS; full 1153/1149/4, zero failure/error.
@@ -351,7 +362,7 @@ offline inbox prototype assertions do not certify deployed ingress.
 | UX-02 | **PASS** | `test_photo_reconstruction.test_no_permit_inspection_reveals_no_pixels_and_restore_rejects` | No proof means no private pixel/restore permission. |
 | UX-03 | **PASS** | `test_customer_capability.test_wrong_short_expired_and_wrong_booth_proofs_cannot_grant` | Replay/action identity and durable failed-attempt budget also tested. |
 | UX-04 | **PASS** | `test_kiosk_v2_sandbox_widgets.test_native_claim_and_deliberate_resume_restore_original_capture_without_new_charge` | Original proof, exact saved image count and deliberate countdown; native return screenshots. |
-| UX-05 | **NOT_RUN** | `test_checkout_release.test_prepare_holds_booth_and_ack_releases_only_occupancy` | Paid two-phase release is covered; ambiguous creation abandonment/release is deliberately conservative, not blanket certified. |
+| UX-05 | **PASS** | `test_ux05_abandonment` (six methods); [complete verification](evidence/ux05-final-verification.json) | Synthetic Windows/Linux HTTP/controller/DB reopens: ambiguous creation/cancel/404 holds original identity and private claim, no replacement charge; fresh terminal unpaid cancellation archives before new visitor, writer/cached-proof faults hold; late settlement preserves OWED and exact paid isolation/lost ACK/archive/return rights. BUG-024 fixed in source/regression verified; actual device/provider acceptance separate. |
 | UX-06 | **PASS** | `test_kiosk_v2_sandbox_widgets.test_postpaid_camera_fault_records_owed_issue_and_hides_media` | Durable paid-unfulfilled issue; no fabricated cancellation. |
 | UX-07 | **NOT_RUN** | `test_recovery_readiness.test_low_disk_or_unwritable_probe_prevents_admission` | Camera/storage/template and accidental delivery opt-in deny; purchased real-printer preflight not certified in transport-off Sandbox. |
 | UX-08 | **PASS** | `test_booth_sync.test_configured_layout2_without_credentials_is_offline_ready_and_never_falls_back_to_legacy_oauth` | Offline local progress with deferred Drive and preserved layout/claims. |

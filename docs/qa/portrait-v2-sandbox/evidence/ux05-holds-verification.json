@@ -1,7 +1,7 @@
 {
-  "status": "UX05_HOLDS_VERIFIED_REMAINING_CASES_NOT_RUN_CI_PENDING",
+  "status": "HISTORICAL_HOLDS_FOCUSED_VERIFIED_COMPLETE_CURRENT_EVIDENCE_SEPARATE",
   "base": "206f408efd369d85d40774861edd7746c4a6050a",
-  "source": "Containing test commit; pin after push",
+  "source": "be6f96e579796a6f7e23b732a80cb972a86aa234",
   "runtime_source": "3822bb041d90da9330457d2e4404668be278eee9",
   "runtime_changed": false,
   "focused": {
@@ -19,6 +19,12 @@
     ".github/workflows/portrait-kiosk-v2.yml": "f734924b902b958695bfe33a948467b2fe139dd4a69a0b1318d07ad2e206f1d9"
   },
   "report_sha256": "e6dff5f81fe59a438e864875ce4de2d311ba7191bc2973ce206b1947cfbd7af6",
-  "next": "Confirmed-terminal restart/faults and paid isolation/archive chain; UX-05 remains NOT_RUN",
-  "limits": "Synthetic Linux; hosted CI pending, actual provider/device/production/OPS gates unchanged; parent controller/DB reopens, not power-loss acceptance"
+  "next": "Do not repeat holds; UX-05 complete at 347e502, see ux05-final-verification.json. Next UX-07 readiness/printer scope audit.",
+  "limits": "Synthetic Linux; hosted CI pending, actual provider/device/production/OPS gates unchanged; parent controller/DB reopens, not power-loss acceptance",
+  "ci": "40855861581 superseded; complete current CI/results pinned in ux05-final-verification.json",
+  "first_ci": {
+    "run_id": 40855861581,
+    "conclusion": "cancelled",
+    "scope": "Superseded first two-method source; current complete CI 40856740113 SUCCESS"
+  }
 }

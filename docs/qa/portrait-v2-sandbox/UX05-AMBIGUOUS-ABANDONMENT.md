@@ -98,3 +98,42 @@ final verification pending. UX-05 remains NOT_RUN until final evidence, matrix
 UX-11, PAY-22/WEB-01–08 and device/provider/release/OPS gates remain separate.
 No production/public ingress/branch/master/default or real external effects.
 Only work/ scratch local, no unpublished source patch after push.
+
+## 29 October — UX-05 verified / BUG-024 source remediation
+
+First test/workflow micro-push `be6f96e579796a6f7e23b732a80cb972a86aa234` and
+final runtime/test micro-push `347e502b0f50d231ec05c0cbcf768f87d2002454` pushed/
+remote verified. First CI 40855861581 CANCELLED/superseded; current **CI 40856740113 all
+three jobs SUCCESS**, all six UX-05 methods individually PASS on Windows/Linux.
+First holds increment 33 focused PASS/2.337s; final **52 focused PASS**, zero
+failure/error/skip, 2.833s. Full with GUI/audio opt-ins **1159 run / 1155 PASS /
+4 optional SKIP**, zero failure/error, 412.727s, Python 3.12.14/Linux
+software GL. Native asset/video skips retain exact reasons; no real hardware.
+
+Six integrated HTTP/SQLite/controller/worker scenarios: lost creation reply,
+404/outage and denied replacement/operator abandonment; cancelled response lost
+then restart/late settlement preserving private claim/OWED; checked terminal
+cancellation archives before new visitor; archive/final-save failures hold;
+unchecked cached terminal holds; paid PREPARE/typed isolation/lost ACK/reopen/
+archive/new visit/return preserves exact original claim/grant with no new charge.
+No automatic media/capture/print/upload/refund or ambiguous charge replacement.
+
+BUG-024 S2 reproduced at be6f96e (six run/four PASS/two FAIL): confirmed
+cancellation after restart stayed CANCELLING. Fixed only for explicit unpaid
+cancellation with current checked terminal proof and no service/grant/OWED/
+photo allocation. Exact-key archive precedes final CANCELLED journal; failed
+write remains active. No provider/schema/version change; keep archives on rollback.
+**FIXED IN SOURCE / REGRESSION VERIFIED**, not formally CLOSED or released.
+[Exact sources/commands/tests/CI/hashes/limits](evidence/ux05-final-verification.json).
+
+UX-05 synthetic **PASS**; matrix **69 IDs: 58 PASS / 0 FAIL / 9 BLOCKED /
+2 NOT_RUN**. Audit IN_PROGRESS/AR-13 conditional. UX-07 and UX-11 NOT_RUN,
+PAY-22/WEB-01–08 BLOCKED; actual merchant/device/privacy/operations/release remain
+separate. Next exact increment: **UX-07** prepayment readiness/printer scope and
+fixture evidence audit; reuse existing v1/readiness services, preserve Sandbox
+printer/Drive-off, do not enable actual printing to certify a test. UX-11 follows.
+Do not repeat verified UX-05/BUG-023. This containing docs-only publication is
+final safe checkpoint; resolve exact SHA from Git log/remote. Only work/ scratch
+local, no unpublished source patch. No production/OPS/public ingress/new branch/
+master/default/deployment or real external effects. Rollback inverse scoped source,
+retain all financial/action/claim/fence/media/history and additive audit records.

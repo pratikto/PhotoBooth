@@ -2,14 +2,17 @@
 
 ## BUG-024 — confirmed cancellation remains held after restart (29 October)
 
-**S2 availability — FIXED IN SOURCE / FOCUSED VERIFIED; full/CI pending.**
-Real cancel succeeded but response/status unavailable; after reopen fresh
-terminal observation updated backend/order while local phase stayed CANCELLING.
-Six-case baseline four PASS/two FAIL. No double charge/lost payment/media leak
-observed. Explicit unpaid cancel now archives exact visit before final local
-commit; failed archive/save, cached proof and any paid/service identity hold.
-52 focused PASS/zero skip. UX-05 pending final verification; no production.
-[Contract/evidence](qa/portrait-v2-sandbox/UX05-AMBIGUOUS-ABANDONMENT.md).
+**S2 — FIXED IN SOURCE / REGRESSION VERIFIED at `347e502b0f50d231ec05c0cbcf768f87d2002454`.**
+52 focused PASS; full 1159 run/1155 PASS/4 optional SKIP, zero failure/
+error; CI 40856740113 all three jobs SUCCESS, six UX-05 methods PASS on Windows/
+Linux. UX-05 synthetic PASS; actual device acceptance NOT_RUN, no formal closure
+or production release. Original six-case baseline at be6f96e: four PASS/two FAIL.
+Fresh provider cancellation updated backend after lost reply/restart, but local
+phase stayed CANCELLING. No duplicate charge/payment loss/private media leak.
+Only explicit unpaid cancel with checked terminal proof now archives exact visit
+before final local commit; write failure/cached proof/paid rights remain held.
+No provider/schema/version change. Preserve all archives/financial rights on rollback.
+[Evidence](qa/portrait-v2-sandbox/evidence/ux05-final-verification.json).
 
 ## 29 October — BUG-023 fixed in source / regression verified
 
