@@ -1,5 +1,16 @@
 # AR-12 — final source validation and external acceptance gates
 
+## 29 October — source audit denial qualification
+
+At pushed functional 4642841, source review and an isolated same-PIN app-recreation
+probe confirm process-local operator limits and no durable wrong-PIN denial record.
+UX-13's stronger fully-audited requirement is therefore **FAIL**, while rejection/
+rate-limit supporting checks still pass. [Safe probe](evidence/ar-audit-pin-denials.json).
+Current matrix **44 PASS / 1 FAIL / 9 BLOCKED / 15 NOT_RUN**; no inferred auth bypass.
+Full regression/CI at this source are running at this docs checkpoint; results
+follow separately. No new runtime or physical acceptance from this finding.
+
+
 ## 29 October — BUG-022 reconstruction correction
 
 Confirmed missing-COMMITTED-output defect corrected with existing held-media

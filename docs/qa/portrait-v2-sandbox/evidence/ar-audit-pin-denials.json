@@ -1,0 +1,39 @@
+{
+  "scope": "Synthetic same-PIN app recreation, not normal launcher PIN rotation",
+  "first_app_statuses": [
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    429
+  ],
+  "after_app_recreation_status": 401,
+  "durable_audit_row_counts": {
+    "checkout_recovery_actions": 0,
+    "checkout_releases": 0,
+    "checkout_events": 0
+  },
+  "conclusion": "PIN attempt budget is process-local; denied PIN attempts are not recorded in these durable ledgers. Customer capability budget is a separate persisted table.",
+  "date": "2026-10-29T07:02:20.864202+07:00",
+  "reviewed_source": "4642841f3e99d8c74b4b379e24922a7ba3f614c9",
+  "finding": "AR-AUDIT-003 / BUG-023",
+  "classification": "Confirmed UX-13 conformity gap, no authentication bypass observed",
+  "expected": "Wrong PIN and replay/cross-order resolutions have rate-limited fully audited denials",
+  "actual": "Eight wrong PIN requests return 401, ninth 429; same-PIN app recreation returns 401 again; no durable denial record in operator action/release/provider event ledgers",
+  "source_refs": [
+    "photobooth/qris_api.py:145",
+    "photobooth/qris_api.py:153",
+    "photobooth/qris_api.py:155"
+  ],
+  "limits": [
+    "Per-launch PIN rotation remains intentional and verified; process-local rate budget alone is not newly treated as a bug.",
+    "Durable customer capability budget is separate and unaffected.",
+    "No real credential, order or customer data used.",
+    "Public/production auth remains gated."
+  ],
+  "probe_report_sha256": "68c09d2bdede2be6ff20e5ef211ec9733c2d250ea68c549d24c8ca9dcac5ff51"
+}

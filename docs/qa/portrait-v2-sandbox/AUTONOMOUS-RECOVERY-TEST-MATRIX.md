@@ -3,7 +3,9 @@
 **Current status, 29 October 2026:** baseline execution ledger at
 `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`, supplemented by audit increment 2
 [focused evidence](evidence/ar-audit-payment.json): 45 PASS / 0 FAIL / 0 SKIP /
-9 BLOCKED / 15 NOT_RUN. AR-13 assessment CONDITIONAL; production not ready.
+9 BLOCKED / 15 NOT_RUN at increment 2. Later source audit reclassifies UX-13:
+**44 PASS / 1 FAIL / 0 SKIP / 9 BLOCKED / 15 NOT_RUN**. Fully audited wrong-PIN
+denial is absent; see [probe](evidence/ar-audit-pin-denials.json). Production not ready.
 The original design contract below is retained. Its initial NOT_RUN values and
 baseline describe planning history, not the current executed ledger. BUG-022 missing committed output is corrected with 61 focused PASS; full/CI
 for that correction are pending. Exact
@@ -146,7 +148,7 @@ offline inbox prototype assertions do not certify deployed ingress.
 | PAY-05 | **PASS** | `test_checkout_creation_attempts.test_concurrent_independent_backends_send_once` | Independent concurrent backends send once. |
 | PAY-06 | **PASS** | `test_checkout_reconciliation.test_pay06_abrupt_exit_before_evidence_commit_requires_fresh_get_and_one_grant` | Audit increment 2: four real child exits at validated/pre-transaction and SQL/pre-COMMIT boundaries, without/with prior grant; rollback, WAL integrity, lease hold, fresh pending denial then settlement; one original grant/fulfillment. [116-case focused evidence](evidence/ar-audit-payment.json). |
 | PAY-07 | **PASS** | `test_checkout_reconciliation.test_retry_backoff_is_durable_bounded_and_not_bypassed_by_duplicate_calls` | Persisted bounded/jittered backoff and no duplicate I/O. |
-| PAY-08 | **NOT_RUN** | `test_checkout_reconciliation.test_restart_trigger_bypasses_backoff_once_then_is_durably_throttled` | Restart trigger is tested; actual network-restoration event after repeated errors is not separately demonstrated. |
+| PAY-08 | **NOT_RUN** | `test_checkout_reconciliation.test_restart_trigger_bypasses_backoff_once_then_is_durably_throttled` | Restart trigger is tested. Source review also finds no native connectivity-event producer (controller emits restart/poll only); backend/client accept connectivity. Native immediate network-restoration integration remains absent/unverified (AR-AUDIT-002). |
 | PAY-09 | **PASS** | `test_checkout_backend.test_cancel_racing_payment_never_discards_paid` | Settlement/cancel race preserves original rights. |
 | PAY-10 | **PASS** | `test_checkout_backend.test_duplicate_settlement_and_claim_return_same_grant` | Signed-event dedup and fresh current status also covered by notification inbox tests. |
 | PAY-11 | **PASS** | `test_checkout_backend.test_bad_evidence_cannot_unlock` | Identity/amount mismatch rejects; tampered signature tested separately in same module. |
@@ -194,7 +196,7 @@ offline inbox prototype assertions do not certify deployed ingress.
 | UX-10 | **PASS** | `test_booth_sync.test_two_transactions_keep_exact_local_folder_mapping_across_restart` | Immutable delivery mapping/retry/retention fixtures; actual Drive acceptance NOT_RUN. |
 | UX-11 | **NOT_RUN** | `test_crash_supervisor.test_normal_operator_hold_or_living_process_never_restarts` | No-kill live-child gate and responsive HTTP tested; actual frozen-worker/GUI hang scenario not exercised. |
 | UX-12 | **PASS** | `test_crash_supervisor.test_three_crashes_have_persisted_budget_and_bounded_backoff` | Persisted restart budget; kernel multi-process lease tests, no business replay. |
-| UX-13 | **PASS** | `test_qris_recovery.test_independent_pin_attempt_limit_cannot_block_regular_status` | PIN+booth auth, action audit, cross-order/replay denial. |
+| UX-13 | **FAIL** | `test_qris_recovery.test_independent_pin_attempt_limit_cannot_block_regular_status`; [audit denial probe](evidence/ar-audit-pin-denials.json) | Rate-limited PIN rejection and action replay/conflict tests PASS, but the stronger fully audited denial requirement fails: wrong PIN returns 401/429 with no durable denial record. Operator budget is process-local; only customer capability attempts persist. BUG-023 OPEN. No authentication bypass observed. |
 | UX-14 | **PASS** | `test_checkout_fulfillment.test_abandon_preserves_paid_obligation_and_no_fabricated_refund` | Closure/composition are not liability satisfaction. |
 | UX-15 | **PASS** | See scope/gate | Final native manifests: both portrait sizes, 28 hashes/dimensions, four QR decodes; selected layouts inspected. Physical touch/phone tests NOT_RUN. |
 | UX-16 | **PASS** | `test_kiosk_v2_recovery.test_empty_install_is_clear_without_creating_files` | Existing default/MOCK/native lifecycle regressions; no new business effect. |

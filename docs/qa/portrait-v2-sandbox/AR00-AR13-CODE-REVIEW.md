@@ -10,7 +10,7 @@ Branch `feature/portrait-kiosk-v2-next`; refreshed origin and local HEAD were
 both `f8167d83cfa2cc0d683a35da60f593682b8c9038`. Application/test source remains
 `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`. Tracked tree was clean; existing
 untracked `work/` diagnostics are preserved. No protected archive, customer data
-or merchant credentials are inspected. Review findings are not implemented fixes.
+or merchant credentials are inspected. The initial checkpoint was read-only; later independently tested corrections are explicitly identified below.
 
 Review contracts: repository AGENTS/protocol/handover, AR master, numbered roadmap,
 provider contract, per-stage creation/reconciliation/fulfillment/capture/photo
@@ -124,6 +124,64 @@ prefer held admission during rollback and preserve every ledger/media/claim.
 Next: complete remaining native/privacy/operator/launcher reviews, run the final
 full suite at this pushed functional SHA, inspect CI and update the safe checkpoint.
 Exact CAP-01–05/PAY-08/PAY-18 and other missing matrix scenarios remain open.
+
+## Increment 4 — native/operational source pass and remaining findings
+
+Source inspected at remote-verified **4642841f3e99d8c74b4b379e24922a7ba3f614c9**.
+Completed the first bounded source-reading pass through AR-00–13, including
+native Sandbox adapter/views/app pause/idle/worker handling, readiness gate,
+PIN/client/launcher environment boundaries, release/claim/archive flow, media
+journal/manifest/retention guards, observation watchdog, crash supervisor and
+unmounted inbox. This is a source review, not complete scenario verification.
+Audit stays IN_PROGRESS while the following confirmed gaps and exact fault
+assertions remain open. No assertion or gate was waived.
+
+### AR-AUDIT-002 — native connectivity restoration integration absent (S2)
+
+The backend/client accept `trigger='connectivity'` with a durable priority budget,
+but `qris_session.py:376` chooses only restart/poll and the native adapter/views
+have no connectivity-restored producer. Recovery therefore waits for its bounded
+poll/retry schedule instead of demonstrating the specified immediate single
+refresh on restoration. No new charge or cached-PAID admission follows; this is
+a responsiveness/conformity gap. PAY-08 stays NOT_RUN, not PASS from the existing
+restart-trigger test. Next implementation must define the native event source
+and prove outage→restore→one priority GET plus repeated-event throttling, without
+opening another camera/network loop or resetting order identity.
+
+### AR-AUDIT-003 / BUG-023 — wrong-PIN denial lacks durable audit (S2)
+
+`qris_api.py:145,153–155` keeps the operator rate counter in LocalRateLimit and
+raises 401/429 before any durable denial audit. A disposable real TestClient
+probe shows eight 401s, a ninth 429, then 401 again after recreating the app with
+the same synthetic PIN; action/release/provider-event audit tables retain zero
+rows. [Exact safe probe](evidence/ar-audit-pin-denials.json).
+
+This does **not** demonstrate an authentication bypass or weaken the intended
+per-launch PIN rotation. Process-local limiting is documented Sandbox behavior;
+the incorrect AR13 assertion of persisted PIN attempts is corrected. The separate
+customer-capability counter is durable. However UX-13 explicitly requires fully
+audited denials: its previous blanket PASS overstated evidence. It is now **FAIL**
+for audit completeness, with rejection/replay safeguards retaining their actual
+supporting PASS results. Add a bounded redacted durable denial audit, with no raw
+PIN/token/customer body, and verify wrong PIN/replay/cross-order failures before
+claiming that full requirement. Runtime security expansion is not silently added
+by this documentation correction.
+
+### Source review coverage and limits
+
+| Area | First source pass | Outstanding evidence/conformity |
+| --- | --- | --- |
+| AR-00–03 | Creation context/CAS, current provider proof/revisions/leases, one grant/allocation, migrations, booth auth reviewed | PAY-06/PAY-21 newly verified; PAY-08 native producer absent, PAY-18 and CAP-01–05 exact process exits open; PAY-22 external contract BLOCKED |
+| AR-04–05 | Capture/output no-clobber/hash/quota, reconstruction, retention and manifest locks reviewed | BUG-022 corrected; retake/COMPLETE/ENOSPC exact fault sequences still missing, no power-loss certification |
+| AR-06–09 | Ticket hash/memory proof/permit, epochs/idle/pause, health/remedy, PIN separation, two-phase isolate/ACK/archive/return reviewed | BUG-023 denial audit OPEN; actual clipboard/phone/device/print acceptance remains separate; no lost-owner/uncertain-charge release shortcut |
+| AR-10–11 | Default observer/no live kill, exited-child opt-in budget/leases/environment, unmounted inbox/dedup/retry/quarantine reviewed | Frozen-live-worker integration not demonstrated; public ingress/admin/BI-SNAP explicitly unmounted/gated |
+| AR-12–13 | Scenario references, source/digest/CI boundaries and owner gate report reviewed | Historical PASS evidence does not certify every scenario; matrix now **44 PASS / 1 FAIL / 9 BLOCKED / 15 NOT_RUN**, no unattended release approval |
+
+The current full regression/CI at 4642841 is recorded in the next verification
+checkpoint; no current full PASS is inferred in advance. Historical f72fdbc
+native pixels have not been recaptured for this non-visual validation change.
+Future OPS documents remain byte-identical and NOT_STARTED. No production,
+merchant, real print/Drive, cloud deletion or branch/default/master operation.
 
 Exact next action: continue after Increment 3, finish these source reviews, reproduce suspected defects only
 with isolated synthetic state, and publish confirmed findings with severity,

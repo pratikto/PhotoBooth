@@ -4,7 +4,8 @@
 review, IN_PROGRESS. Evidence baseline checked at f8167d8; historical full-regression source f72fdbc. Increment 3 corrects BUG-022
 missing committed output validation; 61 focused PASS, full/CI pending.
 Payment audit increment 2 adds verified PAY-06/PAY-21 evidence:
-116 focused PASS; current matrix 45 PASS / 9 BLOCKED / 15 NOT_RUN.
+116 focused PASS; increment-2 matrix 45 PASS / 9 BLOCKED / 15 NOT_RUN; latest classification below
+is 44 PASS / 1 FAIL / 9 BLOCKED / 15 NOT_RUN.
 [Review checkpoint](AR00-AR13-CODE-REVIEW.md). Finish source review and
 confirmed reproductions before making a final conformity claim. Prior readiness
 report below retains its dated conclusions and remaining gates.
@@ -25,7 +26,32 @@ or equate the AR-13 assessment to complete fault coverage/production approval.
 The active conformity review remains IN_PROGRESS, with PAY-06 the first exact
 source-evidence gap. No new test run/runtime/OPS work was done by this docs check.
 
-## Latest audit micro-increment — BUG-022 missing committed PNG
+## Latest source audit checkpoint — first pass read, verification OPEN
+
+- Exact pushed/remote-verified functional SHA: `4642841f3e99d8c74b4b379e24922a7ba3f614c9`.
+  Payment evidence commit: `8ebcd123098fe5a937c59f2b88d7fe60c9bedf7b`.
+- Completed: bounded source-reading pass AR-00–13; PAY-06/PAY-21 new evidence
+  (116 focused PASS), BUG-022 missing committed PNG correction (61 focused PASS).
+- Confirmed remaining findings: AR-AUDIT-002 has no native connectivity-restored
+  producer (PAY-08 NOT_RUN); **BUG-023 OPEN**, wrong-PIN denials are rate-limited
+  but have no durable audit (UX-13 **FAIL**, previous PASS corrected). Operator
+  PIN counter is process-local; customer-capability budget is separately durable.
+- Current matrix **44 PASS / 1 FAIL / 0 SKIP / 9 BLOCKED / 15 NOT_RUN**. Earlier
+  45/0/9/15 and 43/0/9/17 below remain dated historical classifications.
+- Full regression at 4642841 running; CI 40790865010 has pure/Windows SUCCESS,
+  desktop still running at this checkpoint. Superseded 40790391324 CANCELLED by
+  existing concurrency policy, not recorded as PASS. No full result inferred.
+- Next: finish current full/CI verification and pin results. Then AR-02 PAY-08
+  native event contract/fixture, AR-03 CAP-01–05 exact allocation/STARTED faults,
+  remaining media/COMPLETE faults, and AR-09 bounded redacted denial audit with
+  wrong-PIN/replay/cross-order tests. Preserve stage dependency order.
+- Audit IN_PROGRESS; no blanket conformity verdict. External provider/device/
+  retention/public ingress/release gates, future OPS NOT_STARTED remain unchanged.
+- This docs/evidence checkpoint adds no runtime changes. Local-only `work/` raw
+  synthetic diagnostics, no unsafe/unpublished runtime patch. Scoped rollback
+  retains every financial/claim/media/fencing record.
+
+## Previous audit micro-increment — BUG-022 missing committed PNG
 
 - Base / exact last pushed and remote-verified SHA:
   `8ebcd123098fe5a937c59f2b88d7fe60c9bedf7b` (payment audit, 116 focused PASS).

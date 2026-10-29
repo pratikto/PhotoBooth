@@ -4,6 +4,17 @@
 `feature/portrait-kiosk-v2-next`. This is an evidence assessment and acceptance
 handoff; it grants no release, deployment, production payment or merge permission.
 
+## Latest audit qualification — operator denial evidence
+
+Current matrix is **44 PASS / 1 FAIL / 9 BLOCKED / 15 NOT_RUN** after a direct
+UX-13 denial probe. Wrong-PIN rate limiting works, but denied attempts are not
+recorded in a durable operator audit. PIN limits are process-local; the persisted
+customer-ticket attempt budget is a separate mechanism. Earlier wording claiming
+persisted PIN attempts was incorrect and is corrected below. **BUG-023 OPEN**,
+without an observed authentication bypass. [Evidence](evidence/ar-audit-pin-denials.json).
+PAY-08 also has no native connectivity-event producer; bounded polling remains
+available. Neither item is waived by a passing regression or controlled testing.
+
 ## Later functional audit correction — BUG-022
 
 Increment 3 corrects a confirmed missing-COMMITTED-PNG hold defect; **61 focused
@@ -106,7 +117,7 @@ was composed. Define actual fulfillment closeout and support responsibility.
 | Next visitor privacy | Neutral restart/claim views; no old images without one-use in-memory permit; minimize/idle hides views and retires callbacks | Actual Windows/Ubuntu kiosk transitions, screen persistence, clipboard and OS access review NOT_RUN |
 | Customer verification | Wrong/short/expired/replayed/cross-booth proof denied; fresh settlement and exact media binding required | Lost/stolen ticket support, consent, validity and privacy notice require owner policy |
 | Credential roles | Customer proof cannot resolve operator action; booth bearer alone cannot unlock private media/operator actions | Production role-based admin identity/auth and secure provisioning NOT_RUN; future static Operator QR is not implemented |
-| AR-09 PIN | Separate per-launch backend PIN, transient GUI entry, persisted attempt limits, metadata-only inspection, exact audited action IDs | Local operator terminal is a deliberate trusted Sandbox channel; not a production remote-admin identity or hardware-security certification |
+| AR-09 PIN | Separate per-launch backend PIN, transient GUI entry, process-local PIN attempt limit, metadata-only inspection, exact audited successful action IDs | Local operator terminal is a deliberate trusted Sandbox channel; not a production remote-admin identity or hardware-security certification |
 | Safe release/archive | PREPARE fences, serialized photo worker receipt, backend ACK before new visitor; archive exact key and original bytes | Actual operating procedures, authorized staff and ambiguous nonpaid-order abandonment path not universally certified |
 | Logs/QR | Source assertions exclude raw ticket from journal/snapshots, PIN from argv/GUI env/reports; published evidence contains hashes/verdicts only | No exhaustive forensic audit of real device logs/backups or production secret rotation. Synthetic probes do not establish that all future logs are safe |
 | Retention | Local 15-day/Drive 30-day original-clock/no-resurrection source tests; protected archive excluded | Actual owning-account deployed cleanup and approved synthetic deletion evidence absent. BUG-009 remains a release privacy blocker |

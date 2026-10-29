@@ -1,5 +1,17 @@
 # Meong Photobooth — Bug register
 
+## BUG-023 — operator wrong-PIN denial has no durable audit (29 October)
+
+**S2 conformity/security audit completeness — OPEN.** Synthetic source probe at
+4642841 confirms eight wrong PINs return 401 and ninth 429; recreated app with
+same synthetic PIN starts a new in-memory rate budget. No durable denial record
+is written. Per-launch PIN rotation and authentication remain intact; no bypass
+observed. The defect is the missing fully audited denial required by UX-13,
+previously over-credited as PASS. Customer ticket attempt persistence is separate.
+Matrix UX-13 is now FAIL; add a bounded redacted denial audit and focused
+wrong-PIN/replay/cross-order checks before restoring PASS. [Evidence](qa/portrait-v2-sandbox/evidence/ar-audit-pin-denials.json).
+No production/admin feature or credential change is implied.
+
 ## BUG-022 — missing committed PNG accepted during recovery (29 October)
 
 **S1 recovery integrity — IN SOURCE, full regression/CI pending.** Audit of

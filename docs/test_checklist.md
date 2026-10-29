@@ -1,5 +1,24 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 29 October — AR source audit first pass and corrected denial verdict
+
+Functional `4642841f3e99d8c74b4b379e24922a7ba3f614c9` pushed and remote HEAD verified. Payment
+8ebcd12: 116 focused PASS; BUG-022 correction: 61 focused PASS. Bounded source
+pass now covers AR-00–13. **BUG-023 OPEN**: wrong-PIN requests are rejected/rate-
+limited but lack durable denial audit; UX-13 corrected from PASS to **FAIL**.
+Operator rate budget is process-local, customer ticket budget separately durable.
+Native connectivity-restored producer is absent (AR-AUDIT-002/PAY-08 NOT_RUN).
+Current matrix **44 PASS / 1 FAIL / 9 BLOCKED / 15 NOT_RUN**; no blanket conformity
+verdict. [Findings/probe](qa/portrait-v2-sandbox/AR00-AR13-CODE-REVIEW.md#increment-4--nativeoperational-source-pass-and-remaining-findings).
+
+Full regression at 4642841 running; CI 40790865010 pure/Windows SUCCESS, desktop
+still running. Superseded 40790391324 CANCELLED by concurrency. Finish both and
+pin actual results, then dependency-ordered PAY-08/CAP-01–05 fault evidence and
+AR-09 denial audit. External/device/production gates unchanged, OPS NOT_STARTED.
+This containing docs checkpoint preserves exact source/findings; only disposable
+work/ diagnostics local, no unpublished runtime patch.
+
+
 ## 29 October — AR audit BUG-022: hold missing committed output before restore
 
 Payment audit `8ebcd123098fe5a937c59f2b88d7fe60c9bedf7b` pushed/remote-verified,
