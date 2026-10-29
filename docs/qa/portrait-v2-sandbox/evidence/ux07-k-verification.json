@@ -1,0 +1,22 @@
+{
+  "status": "FOCUSED_VERIFIED_FULL_CURRENT_CI_PENDING",
+  "stage": "k",
+  "base": "a349996d988bebac45d11c38940add43ab646938",
+  "source": "Containing micro-commit; final checkpoint pins SHA",
+  "focused": {
+    "run": 63,
+    "pass": 63,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 15.568
+  },
+  "files_sha256": {
+    "tests/paid_print_fixture.py": "46a2a5942935576938aab7ce35f22a2317b0d3cf4c1cb4e0e5fa3b8ec2f5cc34",
+    "tests/paid_print_scenario.py": "725b0f26c809f53e4e3940a424b13aa6bfb14bf1f33a74ea1692caf3db9f4e83",
+    "tests/test_purchased_print_jobs.py": "d3a3c70d9409ae93db7f5277bdd29902300d9eaec56afb8892f9ba7669af2ae1",
+    ".github/workflows/portrait-kiosk-v2.yml": "a010ff13d13ebf5905db8a17ce2536714a5853b36bb0147c0ac32bc9d219bdec"
+  },
+  "report_sha256": "5a122a2c6c6900482b6f3a5e661049f212fb30cc29890c04e381c34ba5489140",
+  "limits": "Mock-only offline integration, no production/merchant/paper/Drive/OPS effects. Whole UX07 NOT_RUN, matrix59/0/9/1. Full/current CI pending until chain completes."
+}

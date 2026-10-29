@@ -1,5 +1,26 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 30 October — k focused checkpoint
+
+UX-07.k separate mock-only fixture print host authenticates original customer
+capability and fresh settlement, validates original allocation/copies/output with
+original reconstruction/ResumePermit, owns original KioskLease, reuses actual
+PhotoTest.print_result/_edit without attaching a printer to bound Sandbox photos.
+Requirement/binding/output-hash persist in SENDING before synthetic transport.
+SUBMITTED/UNCERTAIN never satisfy OWED or permit replay. Close retires media but
+holds native lease through in-flight worker completion. Seven new methods include
+two real child exits after intent/after modeled effect, duplicate/restart hold,
+wrong customer/refund/corrupt media/fence denial and two-design copy mapping.
+63 focused PASS/zero failure/error/skip, 15.568s. Initial fixture used two-digit
+session IDs (actual original IDs have three digits): 26 run/two FAIL/five ERROR;
+corrected intermediate 26 PASS/4.889s. Expanded initial invocation was interrupted
+without a final report; exact hang cause unknown. Fresh software-GL/network-enabled
+repeat at unchanged source gives the 63 PASS above; no runtime patched for that.
+Next native fixture registration/push (tests/test_purchased_print_widgets.py is
+local-only until that next micro-push), then one final full/current CI. Continue
+this session. No customer-facing host or physical send enabled.
+[Full scope/limits/next](qa/portrait-v2-sandbox/UX07-PURCHASED-PRINT-INTEGRATION.md).
+
 ## 30 October — j focused checkpoint
 
 UX-07.j nonpayable purchase/preflight fixture host on original backend/store.

@@ -1,5 +1,33 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 30 October — k focused source checkpoint
+
+Base/remote a349996d988bebac45d11c38940add43ab646938.
+UX-07.k separate mock-only fixture print host authenticates original customer
+capability and fresh settlement, validates original allocation/copies/output with
+original reconstruction/ResumePermit, owns original KioskLease, reuses actual
+PhotoTest.print_result/_edit without attaching a printer to bound Sandbox photos.
+Requirement/binding/output-hash persist in SENDING before synthetic transport.
+SUBMITTED/UNCERTAIN never satisfy OWED or permit replay. Close retires media but
+holds native lease through in-flight worker completion. Seven new methods include
+two real child exits after intent/after modeled effect, duplicate/restart hold,
+wrong customer/refund/corrupt media/fence denial and two-design copy mapping.
+63 focused PASS/zero failure/error/skip, 15.568s. Initial fixture used two-digit
+session IDs (actual original IDs have three digits): 26 run/two FAIL/five ERROR;
+corrected intermediate 26 PASS/4.889s. Expanded initial invocation was interrupted
+without a final report; exact hang cause unknown. Fresh software-GL/network-enabled
+repeat at unchanged source gives the 63 PASS above; no runtime patched for that.
+Next native fixture registration/push (tests/test_purchased_print_widgets.py is
+local-only until that next micro-push), then one final full/current CI. Continue
+this session. No customer-facing host or physical send enabled.
+
+Whole UX-07 NOT_RUN, matrix59/0/9/1; actual devices/provider/paper/privacy/
+release and PAY-22/WEB gates remain separate. No Sandbox delivery opt-in/OPS/
+production/public ingress/new branch/master/default/deployment or real external
+effect. Rollback scoped inverse code; retain additive requirements and all
+financial/media/audit records. Only private work/ and superseded docs stash local.
+Containing source commit is the safe checkpoint; exact SHA via Git log/remote.
+
 ## 30 October — j focused source checkpoint
 
 Base/remote 6aebbc0e538f637a45a821556c1e270527abcbc3.
