@@ -1,0 +1,22 @@
+{
+  "status": "FOCUSED_VERIFIED_FULL_CURRENT_CI_PENDING",
+  "stage": "j",
+  "base": "6aebbc0e538f637a45a821556c1e270527abcbc3",
+  "source": "Containing micro-commit; final checkpoint pins SHA",
+  "focused": {
+    "run": 47,
+    "pass": 47,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 0.612
+  },
+  "files_sha256": {
+    "photobooth/checkout_backend.py": "0a1eb46ea6204d1c1dee017cb5cd19e20524823bb6307d4d09e4532e71bfed26",
+    "tests/purchased_print_fixture.py": "e91140acf102e9891cd761b4b6613f7e968e990efd8bc5adcdae36df75f41cbe",
+    "tests/test_purchased_print_purchase.py": "48fcd5489ea6f7b10d88e7b07528983f5a4708c854ce360e0e1345b65a2fde0a",
+    ".github/workflows/portrait-kiosk-v2.yml": "5aa9bf7f675af05fd315348c5b770ffae33ec87000fd2a8bec2e33421213420b"
+  },
+  "report_sha256": "bec83e8dba64c50880c938ced84c32fd04867921fabf5d4ca8dfd3011bfe0a10",
+  "limits": "Mock-only offline integration, no production/merchant/paper/Drive/OPS effects. Whole UX07 NOT_RUN, matrix59/0/9/1. Full/current CI pending until chain completes."
+}

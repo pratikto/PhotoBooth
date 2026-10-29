@@ -1,5 +1,20 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 30 October — j focused checkpoint
+
+UX-07.j nonpayable purchase/preflight fixture host on original backend/store.
+Explicit backend delivery policy is mock-only/default None; HTTP bodies and
+launchers unchanged. Fixture checks original camera/storage/template readiness,
+printer observation and post-probe freshness before create. Existing key returns
+same original order without a probe; different key/cart cannot replace it.
+Lost provider reply retains requirement and retries only GET for same identity.
+Six new methods; 47 focused PASS/zero failure/error/skip, 0.612s. Provider callback
+checks requirement persisted before its one synthetic effect. No real QRIS URL,
+printer send, Drive or customer-facing mounting. Next UX-07.k exact paid job binding
+and real exit/no-replay fixtures, then native worker/UI evidence. Full/current CI
+pending until the final functional chain increment; continue after source push.
+[Full scope/limits/next](qa/portrait-v2-sandbox/UX07-PURCHASED-PRINT-INTEGRATION.md).
+
 ## 30 October — i2 focused checkpoint
 
 UX-07.i2 atomic mock-only issuance: trusted storage policy defaults None;

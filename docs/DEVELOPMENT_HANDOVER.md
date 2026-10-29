@@ -1,5 +1,27 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 30 October — j focused source checkpoint
+
+Base/remote 6aebbc0e538f637a45a821556c1e270527abcbc3.
+UX-07.j nonpayable purchase/preflight fixture host on original backend/store.
+Explicit backend delivery policy is mock-only/default None; HTTP bodies and
+launchers unchanged. Fixture checks original camera/storage/template readiness,
+printer observation and post-probe freshness before create. Existing key returns
+same original order without a probe; different key/cart cannot replace it.
+Lost provider reply retains requirement and retries only GET for same identity.
+Six new methods; 47 focused PASS/zero failure/error/skip, 0.612s. Provider callback
+checks requirement persisted before its one synthetic effect. No real QRIS URL,
+printer send, Drive or customer-facing mounting. Next UX-07.k exact paid job binding
+and real exit/no-replay fixtures, then native worker/UI evidence. Full/current CI
+pending until the final functional chain increment; continue after source push.
+
+Whole UX-07 NOT_RUN, matrix59/0/9/1; actual devices/provider/paper/privacy/
+release and PAY-22/WEB gates remain separate. No Sandbox delivery opt-in/OPS/
+production/public ingress/new branch/master/default/deployment or real external
+effect. Rollback scoped inverse code; retain additive requirements and all
+financial/media/audit records. Only private work/ and superseded docs stash local.
+Containing source commit is the safe checkpoint; exact SHA via Git log/remote.
+
 ## 30 October — i2 focused source checkpoint
 
 Base/remote f90bcea79a10d735f5b7c6dd2c4c564317e6d683.

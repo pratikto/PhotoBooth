@@ -15,12 +15,20 @@ class ProviderUnavailable(RuntimeError):
 
 
 class CheckoutBackend:
-    def __init__(self, store, provider, server_key, merchant_id):
+    def __init__(self, store, provider, server_key, merchant_id, *, delivery_policy=None):
         if not isinstance(server_key, str) or not server_key:
             raise ValueError('Sandbox server key required')
         identifier(merchant_id)
+        if delivery_policy is not None and (delivery_policy != 'PRINT_REQUIRED_V1'
+                or getattr(provider, 'mode', 'sandbox') != 'mock'):
+            raise ValueError('Delivery requirements are restricted to explicit mock configuration')
         self.store, self.provider = store, provider
         self.server_key, self.merchant_id = server_key, merchant_id
+        self.delivery_policy = delivery_policy
+        self._delivery_requirements = None
+        if delivery_policy is not None:
+            from photobooth.delivery_requirements import DeliveryRequirements
+            self._delivery_requirements = DeliveryRequirements(store)
 
     @property
     def provider_mode(self):
@@ -175,6 +183,9 @@ class CheckoutBackend:
         result['verification_pending'] = verification_pending
         if order['state'] != 'PENDING' or order['closed']:
             result['qr_url'] = None
+        if self.delivery_policy is not None:
+            result['delivery_requirement'] = self._delivery_requirements.get(
+                order['id'], order['booth_id'], self.merchant_id)
         return result
 
     def _apply(self, order, data):
@@ -192,7 +203,8 @@ class CheckoutBackend:
         order, first = self.store.begin(booth_id, dict(quantities), quote.total_amount, checkout_key,
                                        creation_context=(self.merchant_id, self.provider_mode),
                                        frozen_contract=frozen_contract(quantities),
-                                       customer_capability_hash=customer_capability_hash)
+                                       customer_capability_hash=customer_capability_hash,
+                                       delivery_policy=self.delivery_policy)
         self._creation_context(order['id'])
         if not first:
             return self.status(order['id'], booth_id)
