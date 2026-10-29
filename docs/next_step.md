@@ -1,5 +1,14 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+## 29 October — UX-11 stalled worker evidence focused-verified
+
+9 focused PASS, zero skip. Actual blocked-main/worker process remains held
+without restart/paid mutation; native checkout/QR/upload stalls leave Kivy Clock
+responsive, late results private, original upload files delivered once. No
+runtime change; matching CI pending. UX-11 NOT_RUN pending final verification,
+UX-07 stronger printer gate remains open; matrix 58/0/9/2.
+[Contract/results/limits](qa/portrait-v2-sandbox/UX11-FROZEN-WORKERS.md).
+
 ## 29 October — UX-07 Sandbox components verified
 
 Test source `685b994`, **36 focused PASS / zero skip**; CI 40862328219 all three

@@ -1,5 +1,31 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 29 October — UX-11.b native stalled-I/O evidence verified
+
+First process micro-push `c588d5a635a1f427b997d8b003a13b2aedf732d5` remote
+verified. New native checkout/QR barriers prove actual Kivy Clock ticks while
+single-flight I/O is blocked; repeated taps do not create another order; privacy
+epoch retirement suppresses late QR/payment display and no grant/media admitted.
+Real inherited retention-guarded upload queue pauses inside fixture upload_file:
+Clock and PhotoJobs metadata remain responsive, original queue/counter/files
+preserved, no old active transaction exposed, four files upload exactly once
+when released, no print/cleanup/new visit. The actual blocked-main child test
+separately holds both leases/PAID/OWED without restart or mutation.
+**9 focused PASS / zero failure/error/skip**, 2.979s, Python 3.12.14/Linux software
+GL: one process method, two new native checkout/QR methods, one native upload
+method, five prior crash-budget/launcher guards. Pure process initial six PASS/
+0.246s; native checkout/QR intermediate eight PASS/3.149s. Barriers are bounded
+fixture stalls, blocked-main process is synthetic, not real OS hang certification.
+Tests/fixtures/docs only, no runtime defect/change; full 1159/1155/4 remains
+347e502 and excludes ten later UX-07/UX-11 methods. Current matching CI pending
+for containing micro-push: process method Windows/Linux, native methods Linux.
+UX-11 stays NOT_RUN until final CI; matrix 58/0/9/2, UX-07 purchased-printer
+stronger gate NOT_RUN. Next final current CI/checkpoint and exact remaining
+provider/purchased-printer/device/operations/release gate handoff. No watchdog
+activation/kill/replay, production/OPS/public ingress/branch/master/default or
+real external effect. Only work/ scratch local; rollback tests/docs only, keep
+all financial/claim/fence/media/audit records.
+
 ## 29 October — UX-11.a living frozen process hold verified
 
 Base/remote verified `8ca792def8a66595ce8571460533932f42ffa341`.

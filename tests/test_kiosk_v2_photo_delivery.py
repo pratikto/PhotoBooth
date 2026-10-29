@@ -16,6 +16,65 @@ from photobooth.kiosk_v2.photos import PhotoJobs,PhotoSetupError,PhotoTest,confi
 
 
 class PhotoDeliveryTests(unittest.TestCase):
+    def test_ux11_stalled_real_upload_queue_keeps_clock_live_and_original_files_once(self):
+        from kivy.base import EventLoop
+        from kivy.clock import Clock
+        from kivy.core.window import Window  # Ensure actual SDL event loop exists.
+        from photobooth.drive_pool import DriveSlotPool
+        from photobooth.drive_storage import RemoteDriveSlot
+        from photobooth.retention import retention_metadata
+        entered,release=threading.Event(),threading.Event()
+        with TemporaryDirectory() as folder:
+            root=Path(folder);client=Mock()
+            client.ensure_folder_pool.return_value=[RemoteDriveSlot(
+                'fixture-folder','https://example.test/photos/frozen','fixture-slot','READY',
+                'PB001V2_00000001',transaction_id='PB001V2_00000001',verified=True)]
+            client.register_retention.side_effect=lambda _folder,tx,started:retention_metadata(tx,started)
+            ui=threading.get_ident();threads=[]
+            def upload(_folder,_tx,relative,path,**_kwargs):
+                threads.append(threading.get_ident());entered.set()
+                if not release.wait(8):raise AssertionError('Synthetic upload barrier timeout')
+                data=path.read_bytes()
+                return {'id':relative,'size':len(data),'md5Checksum':hashlib.md5(data).hexdigest()}
+            client.upload_file.side_effect=upload
+            old=PhotoTest(root,drive_client=client)
+            old.pool=DriveSlotPool(old.store.photos_root,root/'drive-pool.json','PB001V2',1)
+            old.pool.refresh(client);templates=get_templates()
+            old.start(templates,{templates[0].template_id:1})
+            for _ in range(3):old.capture(np.zeros((24,32,3),dtype=np.uint8))
+            old.compose();manifest=old.transaction.manifest_path
+            files={p:p.read_bytes() for p in (*old.session.initial_photo_paths,old.session.output_path)}
+            counter=(root/'counter.json').read_bytes();old.close()
+            fresh=PhotoTest(root,drive_client=client);jobs=PhotoJobs(fresh)
+            ticks=[];timer=Clock.schedule_interval(lambda dt:ticks.append(dt),0)
+            try:
+                fresh.prepare();self.assertTrue(entered.wait(2))
+                self.assertTrue(jobs.submit('snapshot'))
+                outcome=None;deadline=time.monotonic()+2
+                while outcome is None and time.monotonic()<deadline:
+                    EventLoop.idle();outcome=jobs.poll()
+                self.assertIsNotNone(outcome)
+                self.assertIsNone(outcome.error)
+                self.assertEqual(outcome.value['phase'],'confirm')
+                for _ in range(5):EventLoop.idle()
+                self.assertGreaterEqual(len(ticks),3)
+                self.assertIsNone(fresh.transaction)
+                self.assertEqual(client.upload_file.call_count,1)
+                self.assertTrue(all(t!=ui for t in threads))
+                self.assertEqual(json.loads(manifest.read_text())['upload_status'],'UPLOADING')
+                release.set();deadline=time.monotonic()+5
+                while json.loads(manifest.read_text())['upload_status']!='UPLOAD_COMPLETE' and time.monotonic()<deadline:
+                    EventLoop.idle()
+                self.assertEqual(json.loads(manifest.read_text())['upload_status'],'UPLOAD_COMPLETE')
+                self.assertEqual(client.upload_file.call_count,4)
+                self.assertEqual((root/'counter.json').read_bytes(),counter)
+                self.assertEqual({p:p.read_bytes() for p in files},files)
+                self.assertEqual(len(list(fresh.store.photos_root.glob('*/manifest.json'))),1)
+                client.cleanup_expired.assert_not_called()
+            finally:
+                release.set();timer.cancel();jobs.close();jobs.wait_closed()
+                if fresh.drive_worker:fresh.drive_worker._thread.join(timeout=5)
+
     def test_new_service_resumes_real_existing_upload_queue_without_new_visit_or_print(self):
         from photobooth.drive_pool import DriveSlotPool
         from photobooth.drive_storage import RemoteDriveSlot

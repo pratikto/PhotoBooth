@@ -451,6 +451,76 @@ class SandboxWidgetTests(unittest.TestCase):
             self.assertEqual(app._sandbox_view['phase'],'QUOTE')
             self.assertTrue(any('belum siap' in getattr(w,'text','') for w in app.stage.walk()))
 
+    def test_ux11_stalled_checkout_worker_keeps_clock_live_and_retired_result_private(self):
+        from kivy.clock import Clock
+        entered,release=threading.Event(),threading.Event()
+        with self.booth() as (app,f):
+            self.quote(app)
+            create=f.provider.create_qris
+            def blocked(*args):
+                result=create(*args)
+                entered.set()
+                if not release.wait(8):raise AssertionError('Synthetic checkout barrier timeout')
+                return result
+            ticks=[];timer=Clock.schedule_interval(lambda dt:ticks.append(dt),0)
+            try:
+                with patch.object(f.provider,'create_qris',side_effect=blocked):
+                    app._sandbox_begin()
+                    self.assertTrue(entered.wait(2))
+                    for _ in range(5):EventLoop.idle()
+                    self.assertGreaterEqual(len(ticks),3)
+                    self.assertTrue(f.jobs.busy)
+                    key=f.flow.snapshot()['checkout_key']
+                    app._sandbox_begin()  # Repeated tap cannot enqueue another create.
+                    self.assertEqual(f.provider.charges,1)
+                    app._sandbox_lock_customer()
+                    self.assertEqual(f.flow.snapshot()['checkout_key'],key)
+                    release.set();self.settle(app)
+                self.assertTrue(f.flow.customer_claim_required)
+                self.assertTrue(app._sandbox_view.get('customer_claim_required'))
+                self.assertFalse(app._sandbox_consent)
+                self.assertEqual(app._photo_view,{})
+                self.assertIsNone(f.service.view()['qr_rgb'])
+                self.assertEqual(f.provider.charges,1)
+                self.assertEqual(f.store.db.execute('SELECT COUNT(*) FROM checkouts').fetchone()[0],1)
+                self.assertIsNone(f.flow.snapshot()['order']['grant_id'])
+            finally:
+                release.set();timer.cancel()
+
+    def test_ux11_stalled_payment_qr_worker_keeps_clock_live_without_late_disclosure(self):
+        from kivy.clock import Clock
+        entered,release=threading.Event(),threading.Event()
+        with self.booth() as (app,f):
+            self.quote(app);app._sandbox_begin();self.settle(app)
+            self.assertTrue(app._sandbox_view['ticket_required'])
+            load=f.service.image_loader
+            def blocked(order):
+                entered.set()
+                if not release.wait(8):raise AssertionError('Synthetic QR barrier timeout')
+                return load(order)
+            ticks=[];timer=Clock.schedule_interval(lambda dt:ticks.append(dt),0)
+            try:
+                with patch.object(f.service,'image_loader',side_effect=blocked) as loader:
+                    app._sandbox_ticket_saved()
+                    self.assertTrue(entered.wait(2))
+                    before=f.flow.snapshot()
+                    for _ in range(5):EventLoop.idle()
+                    self.assertGreaterEqual(len(ticks),3)
+                    self.assertTrue(f.jobs.busy)
+                    self.assertFalse(f.jobs.submit('check',app._view_revision))
+                    app._sandbox_lock_customer()
+                    release.set();self.settle(app)
+                    self.assertEqual(loader.call_count,1)
+                self.assertEqual(f.flow.snapshot()['checkout_key'],before['checkout_key'])
+                self.assertTrue(f.flow.customer_claim_required)
+                self.assertTrue(app._sandbox_view.get('customer_claim_required'))
+                self.assertIsNone(f.service.view()['qr_rgb'])
+                self.assertFalse(any(getattr(w,'text','')=='SALIN LINK QRIS' for w in app.stage.walk()))
+                self.assertEqual(f.provider.charges,1)
+                self.assertEqual(app._photo_view,{})
+            finally:
+                release.set();timer.cancel()
+
     def test_ux07_precharge_faults_show_safe_quote_and_retry_at_both_portrait_sizes(self):
         from dataclasses import replace
         from photobooth.device_health import HealthCheck, WARNING
