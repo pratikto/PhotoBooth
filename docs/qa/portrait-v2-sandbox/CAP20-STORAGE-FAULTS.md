@@ -127,3 +127,52 @@ Drive/deletion/privacy/operations/release gates stay open. OPS unchanged. No
 production/public ingress/new branch/master/default or real external effect.
 Only disposable work/ remains local; no unpublished runtime patch. Rollback
 tests/docs only, retain all financial/media/claim/fence/budget records.
+
+## 29 October — CAP-20 verified final checkpoint
+
+- Micro-pushes remote verified: JPEG `2ac9e82ce72de49d6a7ade385c3db37b2e1707d5`,
+  full storage `9f3568b0dd6ea5ab67e0c49b1ef6936cedabc8d4`, native test fixture
+  `da3f4447b15dc733dba6792394dace6ce1b0644e`. This containing docs-only commit
+  publishes the final safe checkpoint; resolve its exact SHA from Git log/remote.
+- **57 storage focused PASS / zero failure/error/skip**, 43.617s. Six methods,
+  74 ENOSPC/EACCES cases: **48 actual child exits** (JPEG 14, retake 16, PNG 16,
+  initial manifest 2), plus 26 parent cases (issue intent 2, atomic writers 24).
+- First JPEG-only CI 40838609747 all three jobs SUCCESS. Full-source initial
+  40839833482 FAILED at native flip `8 != 7`; storage/recovery Linux and Windows
+  passed. Historical triggering callback is unknown. Controlled unrelated Clock
+  callback reproduces old fixture failure; corrected fixture isolates existing
+  callbacks only during quiet-poll observation, preserves real RGB/flip checks,
+  rejects newly scheduled work, and both mutation controls still fail correctly.
+- Corrected fixture **111 focused run / 110 PASS / one optional palm SKIP**,
+  zero failure/error, 138.089s. **CI 40842036384 all three jobs SUCCESS**, exact
+  source da3f444: Windows payment/recovery **72 PASS**, 193.062s;
+  Linux Sandbox/recovery **389 PASS**, 125.141s; both zero skip
+  and all six CAP-20 methods PASS. Linux native **111 run / 110 PASS / one
+  optional palm SKIP**, 102.715s. No retry or runtime patch.
+- Original paid binding/proof/grant/allocation/copies/deadlines/OWED preserved;
+  failed operation never falsely ACKs. Unknown bytes held; proved bytes recover
+  same operation once; previous committed output survives final-status failure.
+  Failed issue-intent save preserves existing OWED; later explicit report once.
+  No shutter/render/charge/allocation/print/upload replay. Targeted injected calls
+  model writable reporting after media fault removal, not a globally full disk.
+- No runtime/schema/UI change. App/tools still e0dc594; prior full
+  **1117/1114/3** and local native **c94696d 28 PNG/four QR** retain original
+  provenance and are not borrowed for new methods. BUG-013 remains monitoring.
+- CAP-20 synthetic PASS; **69 IDs: 56 PASS / 1 FAIL / 9 BLOCKED / 3 NOT_RUN**.
+  Overall audit IN_PROGRESS, AR-13 conditional, BUG-023/UX-13 OPEN/FAIL.
+  [Exact source/commands/results/digests/CI/limits](evidence/cap20-final-verification.json).
+
+Next exact increment: **AR-09 BUG-023 bounded redacted durable operator-denial
+audit**. Re-read operator/master/roadmap/privacy/audit contract and current routes/
+schema/rate-limit/replay tests before code; reuse existing booth-authenticated
+PIN routes and action journal, first reproduce missing durable wrong-PIN/429,
+replay/cross-order denials without weakening authentication. Define bounded
+redacted storage/retention and fail-closed behavior; no PIN/ticket/raw order/
+customer data in audit. Focused tests/docs then immediate micro-push/remote check;
+one applicable final full regression if runtime changes. Do not repeat CAP-20.
+UX-05/07/11 remain NOT_RUN; PAY-22/WEB-01–08 BLOCKED. Actual Windows/Ubuntu booth,
+provider/merchant, phone/paper/Drive/deletion/privacy/operations/release gates and
+OPS queued design stay separate. No production/public ingress/new branch/
+master/default/deployment or real external effects. Only work/ scratch remains
+local, no unpublished runtime patch. Rollback tests/CI/docs only, preserve all
+financial/media/claim/fence/budget records.

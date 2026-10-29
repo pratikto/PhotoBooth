@@ -1,5 +1,18 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
+## 29 October — CAP-20 verified
+
+Storage source `9f3568b`, corrected native fixture `da3f444`, both pushed/remote
+verified. **57 storage focused PASS**, 74 injected faults/48 actual children.
+**CI 40842036384 all three jobs SUCCESS**: Windows payment/recovery 72 PASS,
+Linux Sandbox/recovery 389 PASS, native 111/110/one optional palm SKIP. All six
+CAP-20 methods PASS on Windows/Linux. Initial CI 40839833482 native failure
+preserved; corrected test-only Clock isolation retains pixel/flip assertions,
+111 focused/110 PASS/one optional SKIP and two effective mutation controls.
+Runtime unchanged. Matrix **56 PASS / 1 FAIL / 9 BLOCKED / 3 NOT_RUN**;
+audit IN_PROGRESS, BUG-023/UX-13 OPEN/FAIL, external/OPS gates remain.
+Next **AR-09 bounded redacted durable denial audit**. [Exact evidence/limits](evidence/cap20-final-verification.json).
+
 ## 29 October — CAP-20 native CI fixture correction
 
 Storage source `9f3568b` CI 40839833482: Windows/pure SUCCESS, Linux native
@@ -312,7 +325,7 @@ offline inbox prototype assertions do not certify deployed ingress.
 | CAP-17 | **PASS** | `test_photo_allocation.test_mismatched_frozen_contract_does_not_create_media_or_new_id` | Frozen template/cart/hash/copies; changed contract holds. |
 | CAP-18 | **PASS** | `test_photo_reconstruction.test_corrupt_media_or_wrong_binding_stays_held_without_data_rewrite` | Corruption/binding denial plus capture symlink/archive tests; real Windows junction acceptance separate. BUG-022 missing committed PNG regression added in [audit increment 3](evidence/ar-audit-missing-output.json), 61 focused PASS. |
 | CAP-19 | **PASS** | `test_kiosk_v2_sandbox_widgets.test_real_photo_handoff_completion_and_duplicate_taps` | Duplicate taps, privacy-lock stale callbacks and native ownership gates. |
-| CAP-20 | **PASS** | `test_storage_fault_recovery` (six `test_cap20_*` methods) | 74 ENOSPC/EACCES cases: 48 actual media/manifest-fault child exits (JPEG, retake, PNG, first manifest), two issue-intent and 24 atomic JSON writer cases. No false ACK/quota/completion; original bytes/paid OWED/remedy preserved, proved bytes adopted once, unknown held; shared writers retain prior bytes/absence at create/write/fsync/replace. [57-case focused evidence](evidence/cap20-all-verification.json). |
+| CAP-20 | **PASS** | `test_storage_fault_recovery` (six `test_cap20_*` methods) | 74 ENOSPC/EACCES cases: 48 actual media/manifest-fault child exits (JPEG, retake, PNG, first manifest), two issue-intent and 24 atomic JSON writer cases. No false ACK/quota/completion; original bytes/paid OWED/remedy preserved, proved bytes adopted once, unknown held; shared writers retain prior bytes/absence at create/write/fsync/replace. [57 focused + matching Windows/Linux CI evidence](evidence/cap20-final-verification.json). |
 | CAP-21 | **PASS** | `test_retention.test_expired_controller_capture_cannot_recreate_a_deleted_photo` | Expired media cannot resurrect; retained liability separately asserted. |
 | UX-01 | **PASS** | `test_customer_claim_session.test_rebooted_reserved_order_cannot_prepare_without_original_customer_proof` | Private restart hold; native neutral claim screens at both sizes. |
 | UX-02 | **PASS** | `test_photo_reconstruction.test_no_permit_inspection_reveals_no_pixels_and_restore_rejects` | No proof means no private pixel/restore permission. |

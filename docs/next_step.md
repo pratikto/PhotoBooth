@@ -1,5 +1,18 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+## 29 October — CAP-20 verified
+
+Storage source `9f3568b`, corrected native fixture `da3f444`, both pushed/remote
+verified. **57 storage focused PASS**, 74 injected faults/48 actual children.
+**CI 40842036384 all three jobs SUCCESS**: Windows payment/recovery 72 PASS,
+Linux Sandbox/recovery 389 PASS, native 111/110/one optional palm SKIP. All six
+CAP-20 methods PASS on Windows/Linux. Initial CI 40839833482 native failure
+preserved; corrected test-only Clock isolation retains pixel/flip assertions,
+111 focused/110 PASS/one optional SKIP and two effective mutation controls.
+Runtime unchanged. Matrix **56 PASS / 1 FAIL / 9 BLOCKED / 3 NOT_RUN**;
+audit IN_PROGRESS, BUG-023/UX-13 OPEN/FAIL, external/OPS gates remain.
+Next **AR-09 bounded redacted durable denial audit**. [Exact evidence/limits](qa/portrait-v2-sandbox/evidence/cap20-final-verification.json).
+
 ## 29 October — CAP-20 native CI fixture correction
 
 Storage source `9f3568b` CI 40839833482: Windows/pure SUCCESS, Linux native

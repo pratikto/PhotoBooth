@@ -1,8 +1,8 @@
 {
-  "status": "NATIVE_FIXTURE_FOCUSED_VERIFIED_CI_PENDING",
+  "status": "NATIVE_FIXTURE_FOCUSED_AND_MATCHING_CI_VERIFIED",
   "branch": "feature/portrait-kiosk-v2-next",
   "storage_test_source": "9f3568b0dd6ea5ab67e0c49b1ef6936cedabc8d4",
-  "fixture_source": "Containing Git commit; pin after push and remote verification",
+  "fixture_source": "da3f4447b15dc733dba6792394dace6ce1b0644e",
   "runtime_source": "e0dc59435772148be86449c55140d4b9be2f6364",
   "runtime_changed": false,
   "historical_ci": {
@@ -10,7 +10,7 @@
     "pure_job": 123333251036,
     "windows_job": 123333251404,
     "linux_job": 123333251491,
-    "conclusion": "FAILURE: native same-packet global Clock interference; 8 != 7",
+    "conclusion": "FAILURE: native same-packet flip assertion 8 != 7; historical triggering callback/cause unobserved",
     "windows_payment": "72 PASS, zero skip, 221.038s; six CAP-20 methods PASS",
     "linux_sandbox": "389 PASS, zero skip; native step 111 run, one failure, one optional palm skip",
     "historical_callback_identity": "UNKNOWN; not logged by historical job"
@@ -60,6 +60,72 @@
   "unchanged_storage_verification": "57 PASS / zero skip at 9f3568b; 74 fault cases, 48 actual child exits; not rerun for native test-only isolation",
   "full_regression": "Prior e0dc594 1117 run / 1114 PASS / 3 optional skips retained at original source; not rerun for tests-only edit",
   "limits": "No runtime/device/provider/merchant/paper/Drive/deletion/release/OPS acceptance; BUG-013 owner-reported working remains monitoring, no runtime patch",
-  "next": "Matching CI and final safe checkpoint, then AR-09 BUG-023; UX-05/07/11 and external gates stay open",
-  "privacy": "Only source, commands, counts and digests published; probes/raw logs/images remain disposable local work/"
+  "next": "AR-09 BUG-023: bounded redacted durable operator-denial audit; UX-05/07/11 and external gates remain open",
+  "privacy": "Only source, commands, counts and digests published; probes/raw logs/images remain disposable local work/",
+  "ci": {
+    "run_id": 40842036384,
+    "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40842036384",
+    "head_sha": "da3f4447b15dc733dba6792394dace6ce1b0644e",
+    "jobs": [
+      {
+        "id": 123340452778,
+        "name": "Navigation and audio lifecycle",
+        "conclusion": "success",
+        "completed_at": "2026-10-29T08:25:48Z"
+      },
+      {
+        "id": 123340453139,
+        "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+        "conclusion": "success",
+        "completed_at": "2026-10-29T08:33:19Z"
+      },
+      {
+        "id": 123340453181,
+        "name": "Windows Python 3.12 native SDL audio (dummy output)",
+        "conclusion": "success",
+        "completed_at": "2026-10-29T08:30:33Z"
+      }
+    ],
+    "windows_payment": {
+      "run": 72,
+      "pass": 72,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 193.062,
+      "cap20_methods_pass": [
+        "test_cap20_both_atomic_json_writers_preserve_absence_or_prior_bytes_on_create_write_fsync_faults",
+        "test_cap20_capture_write_faults_preserve_saved_ack_and_owed_or_hold_unproven_bytes",
+        "test_cap20_failed_issue_intent_write_keeps_preexisting_owed_before_reporting_recovers",
+        "test_cap20_initial_manifest_fault_can_initialize_only_the_same_reserved_allocation",
+        "test_cap20_output_write_and_final_status_failures_preserve_original_composition_or_hold",
+        "test_cap20_retake_selection_and_write_failures_never_false_commit_or_renew_quota"
+      ]
+    },
+    "linux_sandbox": {
+      "run": 389,
+      "pass": 389,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 125.141,
+      "cap20_methods_pass": [
+        "test_cap20_both_atomic_json_writers_preserve_absence_or_prior_bytes_on_create_write_fsync_faults",
+        "test_cap20_capture_write_faults_preserve_saved_ack_and_owed_or_hold_unproven_bytes",
+        "test_cap20_failed_issue_intent_write_keeps_preexisting_owed_before_reporting_recovers",
+        "test_cap20_initial_manifest_fault_can_initialize_only_the_same_reserved_allocation",
+        "test_cap20_output_write_and_final_status_failures_preserve_original_composition_or_hold",
+        "test_cap20_retake_selection_and_write_failures_never_false_commit_or_renew_quota"
+      ]
+    },
+    "linux_native": {
+      "run": 111,
+      "pass": 110,
+      "fail": 0,
+      "error": 0,
+      "skip": 1,
+      "seconds": 102.715
+    },
+    "provenance": "Exact matching GitHub job decoded logs; metadata/counts only, no raw logs or private images published"
+  }
 }
