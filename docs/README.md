@@ -1,5 +1,17 @@
 # Meong Photobooth documentation — GUI v2
 
+## 30 October — UX-07.g earlier printer evidence preserved
+
+Source e7e09fe: explicit probe output collisions return 2 before observation;
+prior bytes and incomplete reservations retained, concurrent collectors observe
+only once. Default inventory/all application services unchanged. **41 focused
+PASS**, final **1188 run/1184 PASS/4 optional SKIP**, zero failure/error.
+CI 40959449442 all three jobs SUCCESS; ten collector methods Windows/Linux.
+Whole UX-07 purchased-print payment/device gate NOT_RUN; matrix **59/0/9/1**,
+audit IN_PROGRESS/AR-13 conditional. Actual device/provider/privacy/release gates
+stay separate; Sandbox delivery OFF, queued OPS untouched.
+[Exact commands/source/CI/hashes/next](qa/portrait-v2-sandbox/evidence/ux07-printer-evidence-preservation.json).
+
 ## 29 October — UX-11 synthetic PASS / remaining external gates
 
 Test source `7ca46b5`, **9 focused PASS / zero skip**; CI 40865822670 all three

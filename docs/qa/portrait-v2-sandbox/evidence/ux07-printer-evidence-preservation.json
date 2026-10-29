@@ -1,7 +1,7 @@
 {
-  "status": "FOCUSED_VERIFIED_FULL_CURRENT_CI_PENDING",
+  "status": "PRINTER_EVIDENCE_PRESERVATION_REGRESSION_AND_CURRENT_CI_VERIFIED_UX07_WHOLE_NOT_RUN",
   "base": "de4b5e923081b20c28241dc4a5148136ae29da74",
-  "source": "Containing source micro-commit; pin after push",
+  "source": "e7e09fea03dc9263a424dc40a3c0dc4a259308ee",
   "new_methods": 3,
   "baseline": {
     "run": 10,
@@ -41,5 +41,97 @@
     "not_run": 1
   },
   "limits": "Explicit diagnostic probe report destinations only; default inventory unchanged. Interrupted invocation retains its own incomplete reservation, never valid evidence or acceptance. No device/provider/paper/Drive/financial effect; whole UX-07 remains NOT_RUN. GUI and all application services unchanged.",
-  "local_draft": "Older MOCK final-doc draft stashed and patched privately because remote de4b5e9 already superseded it; not reapplied. Raw work reports and that draft are local-only, not an unpublished runtime patch."
+  "local_draft": "Older MOCK final-doc draft stashed and patched privately because remote de4b5e9 already superseded it; not reapplied. Raw work reports and that draft are local-only, not an unpublished runtime patch.",
+  "ci": {
+    "run_id": 40959449442,
+    "source": "e7e09fea03dc9263a424dc40a3c0dc4a259308ee",
+    "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40959449442",
+    "jobs": [
+      {
+        "id": 123748065726,
+        "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+        "conclusion": "success"
+      },
+      {
+        "id": 123748066020,
+        "name": "Navigation and audio lifecycle",
+        "conclusion": "success"
+      },
+      {
+        "id": 123748066059,
+        "name": "Windows Python 3.12 native SDL audio (dummy output)",
+        "conclusion": "success"
+      }
+    ],
+    "windows_ledger": {
+      "run": 133,
+      "pass": 133,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 83.31
+    },
+    "linux_recovery": {
+      "run": 434,
+      "pass": 434,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 120.254
+    },
+    "linux_native": {
+      "run": 117,
+      "pass": 116,
+      "fail": 0,
+      "error": 0,
+      "skip": 1,
+      "seconds": 91.194
+    },
+    "collector_methods_pass_windows_linux": [
+      "test_cli_persists_sanitized_failed_probe_and_returns_attention",
+      "test_competing_probe_invocations_reserve_one_report_and_observe_only_once",
+      "test_default_cli_runs_without_site_packages_and_preserves_not_run",
+      "test_default_never_reads_settings_or_probes_despite_print_opt_in",
+      "test_failed_probe_report_write_keeps_incomplete_reservation_without_reprobe",
+      "test_original_tcp_observation_closes_without_sending_or_mutating_records",
+      "test_original_windows_queue_probe_reloads_settings_without_printing_or_certifying_paper",
+      "test_probe_output_collision_preserves_previous_bytes_before_inventory_or_printer_access",
+      "test_sandbox_refuses_explicit_probe_before_configuration_access",
+      "test_status_and_exception_details_are_allowlisted_and_redacted"
+    ],
+    "new_preservation_methods_pass_windows_linux": [
+      "test_competing_probe_invocations_reserve_one_report_and_observe_only_once",
+      "test_failed_probe_report_write_keeps_incomplete_reservation_without_reprobe",
+      "test_probe_output_collision_preserves_previous_bytes_before_inventory_or_printer_access"
+    ]
+  },
+  "full": {
+    "run": 1188,
+    "pass": 1184,
+    "fail": 0,
+    "error": 0,
+    "skip": 4,
+    "seconds": 400.415
+  },
+  "full_optional_skips": [
+    "test_real_model_worker_drives_the_actual_controller_and_keeps_button_capture (test_camera_recovery.CameraRecoveryTests.test_real_model_worker_drives_the_actual_controller_and_keeps_button_capture) Use real inference and mailboxes; only camera acquisition is synthetic. ... skipped 'Native model assets are opt-in'",
+    "test_native_video_has_frames_payment_is_muted_and_retiring_unloads_decoder (test_kiosk_advertising.KioskAdvertisingTests.test_native_video_has_frames_payment_is_muted_and_retiring_unloads_decoder) ... skipped 'Native video checks require opt-in and ffmpeg'",
+    "test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture) ... skipped 'Native model assets are opt-in'",
+    "test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image (test_palm_gesture.NativePalmModelTests.test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image) ... skipped 'Native model assets are opt-in'"
+  ],
+  "full_command": "KIVY_HOME=/tmp/meong-ux07-preserve-full-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 MESA_SHADER_CACHE_DIR=/tmp/meong-ux07-preserve-full-mesa PHOTOBOOTH_TEST_GUI=1 PHOTOBOOTH_TEST_AUDIO=1 MEONG_CI_TEST_REPORT=work/ux07-preserve-full-report.txt .venv/bin/python tools/run_kiosk_unittests.py",
+  "full_report_sha256": "10e8685a593fb6286c5edbf375ff7617fb6fdc89a140360740048585df542a82",
+  "photobooth_tree": "4e387d8a5c8e44ac4c51f29d1036d28b9b5fec8b",
+  "tools_tree": "1c97b54762f0cbe8f4275ce7f5a6453ac77ca8ea",
+  "tests_tree": "4745f1dd6afc570eeec1ffcae96de435489ae845",
+  "prior_published_full": {
+    "source": "b6c3d015f85100939c86925155e7a1b0f6e5b09f",
+    "run": 1185,
+    "pass": 1181,
+    "fail": 0,
+    "error": 0,
+    "skip": 4,
+    "scope": "Remote collector/ad-fixture checkpoint retained; fresh final full above includes three additional preservation methods"
+  },
+  "next": "Collect original read-only printer observations on actual Windows/Ubuntu devices and resolve an explicit purchased-print payment contract/integration host without changing dedicated Sandbox printer/Drive OFF. PAY-22 official merchant-specific Legacy repeat-charge contract and WEB-01..08 infrastructure/operations BLOCKED. Real merchant/paper/phone/Drive/deletion/privacy/support/release acceptance separate. Do not repeat verified UX-05/11, MOCK preflight, collector or evidence preservation; queued OPS unchanged."
 }

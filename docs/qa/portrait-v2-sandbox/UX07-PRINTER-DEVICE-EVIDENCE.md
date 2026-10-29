@@ -1,5 +1,10 @@
 # UX-07.f — explicit read-only printer route evidence
 
+Current, 30 October: UX-07.g report collision protection is regression/CI
+verified at `e7e09fe` (41 focused PASS; full 1188/1184/4; all three CI jobs
+SUCCESS). [Exact evidence](evidence/ux07-printer-evidence-preservation.json).
+Complete purchased-print payment/device acceptance remains NOT_RUN.
+
 ## 30 October — UX-07.g preserve earlier device observations (contract)
 
 Continuation base/remote `de4b5e923081b20c28241dc4a5148136ae29da74`.
@@ -219,3 +224,47 @@ No OPS/production/public ingress/new branch/master/default/deployment or actual
 external effect. Only work/ scratch and superseded docs stash are local-only;
 no unpublished runtime patch after containing push. Rollback inverse CLI/tests/
 workflow/docs only, preserve prior reports and every financial/media record.
+
+## 30 October — UX-07.g report preservation regression/CI verified
+
+Source `e7e09fea03dc9263a424dc40a3c0dc4a259308ee` pushed/remote verified.
+Latest remote collector/ad-fixture/full checkpoint de4b5e9 was fast-forwarded
+and retained. Superseded older local MOCK docs were preserved privately rather
+than reapplied; no verified source repeated or foreign changes overwritten.
+
+Explicit --probe-printer exclusively reserves a fresh destination before any
+inventory/settings/probe. An existing output or concurrent invocation returns 2
+with fixed new-filename guidance and preserves prior bytes without probing.
+The winner uses the original inventory and atomic JSON writer. A failed write
+retains its own empty/incomplete reservation; it is not valid evidence and cannot
+be overwritten/reprobed on retry. Default inventory and all application/GUI/
+financial/photo/health/config/transport/OPS services remain unchanged.
+
+**41 focused PASS / zero failure/error/skip**, 0.145s. Real pre-fix baseline:
+ten run/seven PASS/three FAIL, zero error/skip, 0.143s; initial fixture error is
+separately retained. **Final full 1188 run / 1184 PASS / 4 optional SKIP**,
+zero failure/error, 400.415s, Python 3.12.14/Linux software GL/dummy audio.
+Skips are three opt-in palm assets and one native video, never counted PASS.
+**CI 40959449442 all three jobs SUCCESS** on the exact source. Ten collector
+methods individually PASS Windows/Linux, including all three new persistence/
+collision cases. Windows ledger 133 PASS; Linux recovery
+434 PASS; native 117 run/
+116 PASS/1 optional SKIP.
+No screenshot rerun: no GUI change, prior image/source evidence retained.
+[Exact source/commands/counts/CI/report hashes/limits](evidence/ux07-printer-evidence-preservation.json).
+
+Matrix remains **69 IDs: 59 PASS / 0 FAIL / 9 BLOCKED / 1 NOT_RUN**; audit
+IN_PROGRESS and AR-13 conditional. Whole UX-07 purchased-print payment/device
+integration remains NOT_RUN. Original route/queue/node READY never proves paper;
+Windows spooler API latency remains unbounded. Next dependent work is actual
+Windows/Ubuntu read-only observations and an explicit purchased-print contract/
+integration host, keeping dedicated Sandbox printer/Drive OFF. PAY-22 official
+merchant-specific Legacy repeat-charge contract and WEB-01..08 approved public
+infrastructure/operations remain BLOCKED. Actual merchant/paper/phone/Drive/
+deletion/privacy/support/release gates stay separate. Do not repeat verified
+UX-05/11, MOCK preflight, collector or preservation; queued OPS untouched.
+No production/public ingress/branch/master/default/deployment or real external
+effect. This containing docs-only push is the final safe checkpoint; exact SHA
+from Git log/remote. Only work/ scratch and superseded docs stash remain local,
+no unpublished runtime patch. Rollback inverse CLI/tests/CI/docs only; keep
+prior reports and all financial/reward/claim/fence/media/audit/retention records.
