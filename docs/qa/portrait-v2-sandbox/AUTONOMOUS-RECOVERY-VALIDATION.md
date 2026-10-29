@@ -1,5 +1,26 @@
 # AR-12 — final source validation and external acceptance gates
 
+## 29 October — AR-03.d1 PAY-18 combined lost replies
+
+Base/remote verified `03189012b5f4c6204ef4f8718bb218a1baac32d5`.
+**85 focused PASS / zero failure/error/skip**, 12.257s. Two new methods run
+**eight actual child exits at four boundaries**: original booth claim, customer
+claim, STARTED and COMPLETED committed before local acknowledgment. Same
+order/grant/claim operation/allocation/transaction/result; one provider charge,
+three synthetic JPEGs/one composition, original OWED and private proof preserved.
+Outage HTTP 503/refund HTTP 409 deny cached-PAID recovery; existing bytes remain.
+[Contract/commands/provenance](PAY18-SERVICE-REPLIES.md).
+
+Tests/CI/docs only; no runtime defect or application/schema/UI change. Current
+CI pending at this containing test commit. Prior full e0dc594 (1117/1114/3) and
+native c94696d (28 PNG/four QR) retain original source; no new full/native result.
+Matrix **51 PASS / 1 FAIL / 9 BLOCKED / 8 NOT_RUN**; PAY-18 synthetic PASS,
+BUG-023 OPEN, overall audit IN_PROGRESS. Next AR-03.d2 completion/archive exits,
+then CAP-11–13, CAP-16 pre-request boundary, CAP-20 and AR-09 denial audit.
+External/OPS/production gates unchanged; only disposable work/ local, no
+unpublished runtime patch. This containing commit is the next micro-push;
+resolve its SHA from Git, push and verify remote before continuing.
+
 ## Final verification — AR-03.c / CAP-01–05, 29 October
 
 **Test/CI source `e72e28bdf8b0cbb080ef0c35aa8a1e3906bf55cb` pushed and remote verified.**

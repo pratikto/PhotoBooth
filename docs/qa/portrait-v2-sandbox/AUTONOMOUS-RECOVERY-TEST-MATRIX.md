@@ -1,6 +1,27 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
-**Current status, 29 October:** CAP-01–05 actual child-exit coverage verified
+## 29 October — AR-03.d1 PAY-18 combined lost replies
+
+Base/remote verified `03189012b5f4c6204ef4f8718bb218a1baac32d5`.
+**85 focused PASS / zero failure/error/skip**, 12.257s. Two new methods run
+**eight actual child exits at four boundaries**: original booth claim, customer
+claim, STARTED and COMPLETED committed before local acknowledgment. Same
+order/grant/claim operation/allocation/transaction/result; one provider charge,
+three synthetic JPEGs/one composition, original OWED and private proof preserved.
+Outage HTTP 503/refund HTTP 409 deny cached-PAID recovery; existing bytes remain.
+[Contract/commands/provenance](PAY18-SERVICE-REPLIES.md).
+
+Tests/CI/docs only; no runtime defect or application/schema/UI change. Current
+CI pending at this containing test commit. Prior full e0dc594 (1117/1114/3) and
+native c94696d (28 PNG/four QR) retain original source; no new full/native result.
+Matrix **51 PASS / 1 FAIL / 9 BLOCKED / 8 NOT_RUN**; PAY-18 synthetic PASS,
+BUG-023 OPEN, overall audit IN_PROGRESS. Next AR-03.d2 completion/archive exits,
+then CAP-11–13, CAP-16 pre-request boundary, CAP-20 and AR-09 denial audit.
+External/OPS/production gates unchanged; only disposable work/ local, no
+unpublished runtime patch. This containing commit is the next micro-push;
+resolve its SHA from Git, push and verify remote before continuing.
+
+**Historical CAP-01–05 status, 29 October:** CAP-01–05 actual child-exit coverage verified
 at test source `e72e28bdf8b0cbb080ef0c35aa8a1e3906bf55cb`: **66 focused PASS**, matching
 CI 40815197373 **three jobs SUCCESS**, Windows payment/allocation group 55 PASS.
 Application unchanged from e0dc594; no new full/native/physical result inferred.
@@ -158,7 +179,7 @@ offline inbox prototype assertions do not certify deployed ingress.
 | PAY-15 | **PASS** | `test_checkout_backend.test_no_new_order_until_provider_cancel_confirmed` | Terminal states and original visit release, no inferred cancellation. |
 | PAY-16 | **PASS** | `test_checkout_durability.test_late_paid_is_review_not_next_customer` | Late paid stays original order under review. |
 | PAY-17 | **PASS** | `test_qris_http_v2.test_other_booth_cannot_read_or_claim` | Booth authentication plus creation-attempt merchant/mode mismatch tests. |
-| PAY-18 | **NOT_RUN** | `test_checkout_durability.test_lost_claim_response_replays_same_grant` | Grant replay/STARTED identity tested; combined lost STARTED and COMPLETED reply fault sequence not independently shown. |
+| PAY-18 | **PASS** | `test_service_crash_recovery.test_pay18_combined_lost_claim_started_completed_replies_restore_original_result_and_ack`; `test_pay18_completed_reply_loss_cannot_use_cached_paid_during_outage_or_refund` | Eight real child exits/four boundaries across original claim/customer proof/STARTED/COMPLETED; same original ACK tuple/operation/allocation, immutable three-JPEG/one-output result and OWED. Fresh outage/refund deny recovery; no repeated charge/media/delivery. [85-case focused evidence](evidence/pay18-replies-verification.json). |
 | PAY-19 | **PASS** | `test_qris_recovery.test_changed_action_payload_or_order_cannot_reuse_old_action_id` | Reused action body/order conflicts without mutation. |
 | PAY-20 | **PASS** | `test_checkout_reconciliation.test_clock_rollback_holds_without_extending_deadline_indefinitely` | Provider remains authority; clock/credential/retention cases use separate fixed clocks. |
 | PAY-21 | **PASS** | `test_checkout_reconciliation.test_pay21_oversized_status_and_auth_failure_hold_and_redact_at_http_boundary`; `test_midtrans_sandbox.test_redirect_is_not_followed` | Audit increment 2: oversized provider status JSON read bounded at 65,537 bytes/response closed; HTTP 401 and oversized responses remain unchecked and deny grant with redacted HTTP/DB evidence. Same-order Sandbox GET only; existing no-redirect guard also PASS. [Focused evidence](evidence/ar-audit-payment.json). |
