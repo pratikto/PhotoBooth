@@ -89,3 +89,35 @@ invalid-PIN/429 audit across inspect/resolve/release with generic 503 on audit
 failure; replay/cross-order denials follow. No production/OPS/external effects.
 Only work/ scratch local. Existing full foundation evidence retains ab6fbbb
 source; no repeat full regression for workflow registration. Retain all ledgers.
+
+## PIN endpoint contract before integration
+
+Reuse existing operator identity guard after booth authentication and explicit
+Sandbox/PIN gates. Audit only INVALID_PIN and operator RATE_LIMITED in this
+increment; pass a static route label, never request path/body/order/credential.
+Run SQLite write on existing thread pool, including failure handling, before
+returning the original 401 or 429. If audit cannot commit, return generic 503;
+never continue into service/provider. Keep same eight-attempt/minute in-memory
+budget, ordinary status independence, per-launch PIN rotation and no audit for
+unauthenticated booth requests/disabled recovery. Four new HTTP tests reproduce
+missing audit/fail-closed behavior: 20 run / four expected FAIL / zero error.
+Later replay/cross-order conflict audit remains separate; UX-13 stays FAIL.
+
+## 29 October — BUG-023.c PIN audit integrated, focused verified
+
+Windows-registration micro-push `c967ac3471c6089cfbc562ab3386acbe5d3d7afb`
+remote verified. Its CI 40849916482 Windows ledger step SUCCESS, including
+registered journal module; entire run not claimed PASS while pending/superseded.
+Current increment audits INVALID_PIN and operator RATE_LIMITED on all three
+Sandbox endpoints after booth authentication/explicit recovery gates. Static
+route/reason only, SQLite write on thread pool, generic 503 if audit fails.
+No service/provider call on denied PIN; original 401/429 and status independence
+preserved. Four new HTTP tests: original code 20 run/four expected FAIL; corrected
+**69 focused PASS / zero failure/error/skip**, 1.740s, Python 3.12.14/Linux.
+Command: `.venv/bin/python tools/run_kiosk_unittests.py test_qris_recovery test_checkout_durability test_checkout_release test_service_fencing test_qris_api test_qris_http_v2`.
+Windows ledger job also registers test_qris_recovery now, so current matching CI
+will cover both journal and HTTP tests. Full regression running with GUI/audio
+opt-ins; matching CI pending for this containing safe micro-push. Next finish
+full/CI checkpoint, then audit replay/cross-order conflicts. BUG-023 OPEN/UX-13
+FAIL; matrix 56/1/9/3 unchanged. No production/OPS/new branch/master/default or
+external effects. Only work/ scratch local; retain all financial/audit records.

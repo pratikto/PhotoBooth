@@ -145,13 +145,25 @@ def create_app(service, authenticator, *, on_shutdown=None, rate_limit=120, reco
     operator_limiter = LocalRateLimit(8, 60)
     operator_actor = 'sandbox-operator-' + uuid.uuid4().hex
 
-    def operator_identity(request, booth_id, authorization, pin):
+    async def audit_operator_denial(route, reason):
+        try:
+            await run_in_threadpool(service.store.record_operator_denial, route, reason)
+        except Exception:
+            raise HTTPException(503, 'Operator authentication temporarily unavailable') from None
+
+    async def operator_identity(request, booth_id, authorization, pin, route):
         booth = booth_identity(request, booth_id, authorization)
         if not recovery_pin or not getattr(service, 'sandbox_recovery_supported', False):
             raise HTTPException(404, 'Sandbox recovery is not enabled')
         peer = request.client.host if request.client else 'unknown'
-        operator_limiter.check('operator:' + peer)
+        try:
+            operator_limiter.check('operator:' + peer)
+        except HTTPException as error:
+            if error.status_code == 429:
+                await audit_operator_denial(route, 'RATE_LIMITED')
+            raise
         if not isinstance(pin, str) or re.fullmatch(r'[0-9]{8}', pin) is None or not hmac.compare_digest(pin, recovery_pin):
+            await audit_operator_denial(route, 'INVALID_PIN')
             raise HTTPException(401, 'Operator authentication required')
         return booth
 
@@ -282,7 +294,7 @@ def create_app(service, authenticator, *, on_shutdown=None, rate_limit=120, reco
     @app.post('/api/orders/{order_id}/recovery/release')
     async def release_order(order_id: str, request: Request, x_booth_id: str = Header(default=''),
                             authorization: str = Header(default=''), x_recovery_pin: str = Header(default='')):
-        booth=operator_identity(request,x_booth_id,authorization,x_recovery_pin)
+        booth=await operator_identity(request,x_booth_id,authorization,x_recovery_pin,'release')
         try:
             body=ReleaseUpdate.model_validate(await bounded_json(request,2048))
         except ValidationError as error:
@@ -294,13 +306,13 @@ def create_app(service, authenticator, *, on_shutdown=None, rate_limit=120, reco
     @app.post('/api/orders/{order_id}/recovery/inspect')
     async def recovery_inspect(order_id: str, request: Request, x_booth_id: str = Header(default=''),
                                authorization: str = Header(default=''), x_recovery_pin: str = Header(default='')):
-        booth = operator_identity(request, x_booth_id, authorization, x_recovery_pin)
+        booth = await operator_identity(request, x_booth_id, authorization, x_recovery_pin, 'inspect')
         return await invoke(service.recovery_inspect, order_id, booth)
 
     @app.post('/api/orders/{order_id}/recovery/resolve')
     async def recovery_resolve(order_id: str, request: Request, x_booth_id: str = Header(default=''),
                                authorization: str = Header(default=''), x_recovery_pin: str = Header(default='')):
-        booth = operator_identity(request, x_booth_id, authorization, x_recovery_pin)
+        booth = await operator_identity(request, x_booth_id, authorization, x_recovery_pin, 'resolve')
         data = await bounded_json(request, 2048)
         try:
             body = RecoveryUpdate.model_validate(data)

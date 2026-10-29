@@ -159,7 +159,7 @@ jobs:
         env:
           MEONG_CI_TEST_REPORT: ${{ runner.temp }}/meong-autonomous-recovery.txt
         run: |
-          python tools/run_kiosk_unittests.py test_checkout_durability test_autonomous_recovery_faults test_checkout_release test_service_fencing test_fulfillment_issues test_customer_capability test_capture_journal test_output_journal test_photo_reconstruction test_crash_supervisor test_notification_inbox
+          python tools/run_kiosk_unittests.py test_checkout_durability test_qris_recovery test_autonomous_recovery_faults test_checkout_release test_service_fencing test_fulfillment_issues test_customer_capability test_capture_journal test_output_journal test_photo_reconstruction test_crash_supervisor test_notification_inbox
           $testExit = $LASTEXITCODE
           if ($testExit -eq 0 -and (Test-Path $env:MEONG_CI_TEST_REPORT)) {
             $summary = (Select-String -Path $env:MEONG_CI_TEST_REPORT -Pattern '^KIOSK_UNITTEST_SUMMARY:').Line

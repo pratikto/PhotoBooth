@@ -1,5 +1,12 @@
 # Meong Photobooth — changelog
 
+## 29 October — BUG-023.c PIN denials integrated
+
+All three Sandbox endpoints audit wrong PIN/429, generic 503 on audit failure.
+69 focused PASS; full/current CI pending. Windows now registers journal and
+HTTP tests. Replay/cross-order audit pending; BUG-023 OPEN/UX-13 FAIL.
+[Contract/evidence/next](qa/portrait-v2-sandbox/BUG023-DENIAL-AUDIT.md).
+
 ## 29 October — BUG-023.a foundation verified
 
 Source `ab6fbbb`, 45 focused PASS; full 1145/1068/77, followed by 75 GUI/audio

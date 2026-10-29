@@ -112,6 +112,59 @@ class SandboxRecoveryTests(unittest.TestCase):
         self.assertEqual(self.inspect().status_code, 429)
         self.assertEqual(self.http.get('/api/orders/'+self.oid, headers=HEADERS).status_code, 200)
 
+    def test_all_operator_routes_persist_pin_and_rate_denials_without_request_data(self):
+        for route in ('inspect', 'resolve', 'release'):
+            with TestClient(create_app(self.backend, self.auth, recovery_pin=PIN)) as http:
+                url = '/api/orders/' + self.oid + '/recovery/' + route
+                for _ in range(8):
+                    response = http.post(url, headers=dict(OPERATOR, **{'X-Recovery-PIN':'00000000'}),
+                                         content=b'private-unparsed-ticket')
+                    self.assertEqual(response.status_code, 401)
+                self.assertEqual(http.post(url, headers=OPERATOR).status_code, 429)
+        rows = [dict(r) for r in self.store.db.execute('SELECT * FROM checkout_operator_denials')]
+        self.assertEqual(len(rows), 27)
+        for route in ('inspect', 'resolve', 'release'):
+            self.assertEqual(sum(r['route']==route and r['reason']=='INVALID_PIN' for r in rows), 8)
+            self.assertEqual(sum(r['route']==route and r['reason']=='RATE_LIMITED' for r in rows), 1)
+        encoded = json.dumps(rows)
+        for secret in (PIN, TOKEN, self.oid, '00000000', 'private-unparsed-ticket'):
+            self.assertNotIn(secret, encoded)
+        self.assertEqual(self.provider.reads, 0)
+        self.assertEqual(self.count_actions(), 0)
+
+    def test_pin_audit_failure_returns_generic_unavailable_without_authority(self):
+        from unittest.mock import patch
+        before = self.store.get(self.oid)
+        for route in ('inspect', 'resolve', 'release'):
+            with patch.object(self.store, 'record_operator_denial', side_effect=OSError('private-secret-path')):
+                response = self.http.post('/api/orders/'+self.oid+'/recovery/'+route,
+                    headers=dict(OPERATOR, **{'X-Recovery-PIN':'00000000'}))
+            self.assertEqual(response.status_code, 503)
+            self.assertNotIn('private-secret-path', response.text)
+        self.assertEqual(self.provider.reads, 0)
+        self.assertEqual(self.store.get(self.oid), before)
+
+    def test_rate_audit_failure_does_not_block_ordinary_status_or_unlock_operator(self):
+        from unittest.mock import patch
+        for _ in range(8):
+            self.assertEqual(self.inspect(**{'X-Recovery-PIN':'00000000'}).status_code, 401)
+        with patch.object(self.store, 'record_operator_denial', side_effect=OSError('private-storage')):
+            self.assertEqual(self.inspect().status_code, 503)
+        self.assertEqual(self.inspect().status_code, 429)
+        self.assertEqual(self.http.get('/api/orders/'+self.oid, headers=HEADERS).status_code, 200)
+
+    def test_pin_denial_survives_reopen_and_pre_auth_requests_do_not_write_it(self):
+        self.assertEqual(self.inspect(**{'Authorization':'Bearer wrong'}).status_code, 401)
+        with TestClient(create_app(self.backend, self.auth)) as http:
+            self.assertEqual(http.post('/api/orders/'+self.oid+'/recovery/inspect', headers=OPERATOR).status_code, 404)
+        self.assertEqual(self.store.db.execute('SELECT COUNT(*) FROM checkout_operator_denials').fetchone()[0], 0)
+        self.assertEqual(self.inspect(**{'X-Recovery-PIN':'00000000'}).status_code, 401)
+        self.http.close(); self.store.close()
+        self.store = CheckoutStore(Path(self.temp.name)/'orders.sqlite')
+        self.backend = CheckoutBackend(self.store, self.provider, KEY, MERCHANT)
+        self.http = TestClient(create_app(self.backend, self.auth, recovery_pin=PIN))
+        self.assertEqual(self.store.db.execute('SELECT COUNT(*) FROM checkout_operator_denials').fetchone()[0], 1)
+
     def test_inspection_rechecks_cached_paid_and_detects_refund(self):
         self.paid()
         reads = self.provider.reads
