@@ -1,0 +1,23 @@
+{
+  "status": "EXPLICIT_SCHEMA_READ_ADAPTER_FOCUSED_VERIFIED_FULL_CI_PENDING",
+  "base": "d4580122cc34375d1ac44d6ce5663ee503a5950a",
+  "source": "Containing source micro-commit; pin after push",
+  "focused": {
+    "run": 17,
+    "pass": 17,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 0.097
+  },
+  "new_methods": 6,
+  "files_sha256": {
+    "photobooth/delivery_requirements.py": "2a2de9698eab88d6f382f56dba30ee457437bb6af1b260c9fc6e1d9f7cf26947",
+    "tests/test_delivery_requirements.py": "2c2ccf94cebfbf97d9a669b70f59332142b210ad27e04a0e328bc17817f3bbd4",
+    ".github/workflows/portrait-kiosk-v2.yml": "8b42fdd0c730a47b349f9f3dcbaabc3dbefa36db53f9622bb3182e6283d9dd9c"
+  },
+  "report_sha256": "3510d3dd453abdb0db8e641ba2c8ba9aee38a634b3ecc876383ae8dd598c4475",
+  "command": "KIVY_HOME=/tmp/meong-delivery-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 MEONG_CI_TEST_REPORT=work/delivery-requirements-final-focused.txt .venv/bin/python tools/run_kiosk_unittests.py test_delivery_requirements test_checkout_fulfillment test_photo_allocation",
+  "limits": "Explicit unmounted additive schema/read adapter only. No issuer, default CheckoutStore migration, backend/HTTP/GUI call, provider/print/Drive effect or acceptance. Fixture SQL seeds requirements. UX07 whole NOT_RUN; matrix59/0/9/1.",
+  "next": "After final full/current CI, UX07.i2 atomically freeze a separately versioned requirement during new-order creation before POST; no retrofit API for old orders and no dedicated Sandbox opt-in."
+}

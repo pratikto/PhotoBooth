@@ -1,5 +1,12 @@
 # Meong Photobooth — current feature status
 
+## 30 October — UX-07.i1 explicit requirement schema/read adapter
+
+17 focused PASS/zero skip; six new migration/identity/rollback fixtures.
+No default backend/HTTP/GUI mount or issuance API. Full/current CI pending.
+Whole UX-07 NOT_RUN, matrix59/0/9/1 unchanged.
+[Exact scope/evidence/next](qa/portrait-v2-sandbox/UX07-PURCHASED-PRINT-INTEGRATION.md).
+
 ## 30 October — UX-07.h purchased-print integration contract audited
 
 Documentation-only source reconciliation: frozen quantities/COMPOSED/OWED and

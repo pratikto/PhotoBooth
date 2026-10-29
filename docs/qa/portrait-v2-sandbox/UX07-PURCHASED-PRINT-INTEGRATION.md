@@ -98,3 +98,37 @@ a fresh filename. Local cloud fixtures cannot supply those physical observations
 
 No production payments, physical print/Drive action, live provider call, OPS,
 public ingress, branch/master/default change, deployment or data deletion.
+
+## 30 October — UX-07.i1 implementation boundary before code
+
+Begin with an explicitly initialized additive table and validated read-only
+adapter on the existing CheckoutStore connection. No default store/HTTP/backend/
+launcher calls it. Missing records return unspecified (None), never print-free
+or fulfilled. Fixture-only SQL seeds candidate records for validation. Validate
+order/booth/merchant, original frozen hash, version/policy and exact frozen copies;
+reject corruption/foreign identity. Creating the table must leave every existing
+financial/frozen/fulfillment row unchanged and survive reopen/rollback compatibility.
+No public issuer is added: atomically freezing a requirement during original new-
+order creation is UX-07.i2, before any provider POST. Do not provide an attachment
+API that could retrofit an old PREPARED/paid order from today's settings.
+
+## 30 October — UX-07.i1 additive requirement schema/read fixtures
+
+Base/remote d4580122cc34375d1ac44d6ce5663ee503a5950a. Explicitly initialized
+DeliveryRequirements adds only a separate table on the existing store connection;
+default CheckoutStore/backend/HTTP/GUI never calls it. Validated reads bind original
+order/booth/merchant/frozen hash/copies; absent record is unspecified, corrupt or
+foreign records hold. Fixture SQL seeds candidates; no public issuance API can
+retrofit old orders. Six new fixtures preserve old financial/frozen/OWED rows,
+reopen exact identity and roll back duplicate insertion without replacement.
+17 focused PASS, zero failure/error/skip, 0.097s. Intermediate 16 PASS/0.093s
+preceded the duplicate-rollback case. Windows/Linux registration includes actual
+six-method receipt checking on Linux. Full/current CI pending for this containing
+source micro-push. Next final applicable full/current receipts, then UX-07.i2
+atomic issuance during original new-order creation, before provider POST.
+[Implementation boundary](UX07-PURCHASED-PRINT-INTEGRATION.md) / [source/results/hashes](evidence/ux07-delivery-requirements.json).
+Whole UX-07 NOT_RUN, matrix59/0/9/1; actual devices/provider/paper/privacy/release
+separate, Sandbox printer/Drive OFF and OPS unchanged. No schema rewriting or
+automatic backfill; rollback disables adapter and retains additive table/records.
+Only existing work/ and superseded docs stash local; no unpublished source after
+push. This source micro-push is a safe checkpoint; resolve containing SHA via Git.

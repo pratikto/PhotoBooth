@@ -1,5 +1,26 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 30 October — UX-07.i1 additive requirement schema/read fixtures
+
+Base/remote d4580122cc34375d1ac44d6ce5663ee503a5950a. Explicitly initialized
+DeliveryRequirements adds only a separate table on the existing store connection;
+default CheckoutStore/backend/HTTP/GUI never calls it. Validated reads bind original
+order/booth/merchant/frozen hash/copies; absent record is unspecified, corrupt or
+foreign records hold. Fixture SQL seeds candidates; no public issuance API can
+retrofit old orders. Six new fixtures preserve old financial/frozen/OWED rows,
+reopen exact identity and roll back duplicate insertion without replacement.
+17 focused PASS, zero failure/error/skip, 0.097s. Intermediate 16 PASS/0.093s
+preceded the duplicate-rollback case. Windows/Linux registration includes actual
+six-method receipt checking on Linux. Full/current CI pending for this containing
+source micro-push. Next final applicable full/current receipts, then UX-07.i2
+atomic issuance during original new-order creation, before provider POST.
+[Implementation boundary](qa/portrait-v2-sandbox/UX07-PURCHASED-PRINT-INTEGRATION.md) / [source/results/hashes](qa/portrait-v2-sandbox/evidence/ux07-delivery-requirements.json).
+Whole UX-07 NOT_RUN, matrix59/0/9/1; actual devices/provider/paper/privacy/release
+separate, Sandbox printer/Drive OFF and OPS unchanged. No schema rewriting or
+automatic backfill; rollback disables adapter and retains additive table/records.
+Only existing work/ and superseded docs stash local; no unpublished source after
+push. This source micro-push is a safe checkpoint; resolve containing SHA via Git.
+
 ## 30 October — UX-07.h purchased-print contract/source audit complete
 
 Base/remote verified `613243ab956001b24cde8f7a76bf1b3673a63d2a`.
