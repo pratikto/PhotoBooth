@@ -12,6 +12,11 @@ end. This package prepares regression/metadata/acceptance; **P5 commercial
 certification is pending** actual Windows hardware, merchant Sandbox, privacy,
 Drive retention and explicit release approval. No production activation or merge.
 
+The inventory still performs no printer probe by default. For the new explicit
+read-only UX-07 route evidence option and its Windows/Ubuntu limitations, use
+[the device-evidence contract](../portrait-v2-sandbox/UX07-PRINTER-DEVICE-EVIDENCE.md).
+Route observations never pass physical or purchased-payment acceptance.
+
 ## Start on Windows
 
 Use the existing working Kivy environment, not a new project:

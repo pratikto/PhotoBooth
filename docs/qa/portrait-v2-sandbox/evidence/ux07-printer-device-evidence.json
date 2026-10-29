@@ -1,0 +1,78 @@
+{
+  "status": "FOCUSED_VERIFIED_FULL_AND_CURRENT_CI_PENDING",
+  "base": "c8f048358aae2d475cd06f3be5269f0f3124d24d",
+  "source": "Containing diagnostic/CLI/test/workflow micro-commit; pin after push",
+  "date": "2026-10-29 Asia/Jakarta",
+  "environment": {
+    "os": "Debian GNU/Linux 13 cloud, not Windows/Ubuntu hardware acceptance",
+    "python": "3.12.14"
+  },
+  "changes": [
+    "photobooth/kiosk_v2/readiness.py",
+    "tools/check_portrait_v2.py",
+    "tests/test_ux07_printer_evidence.py",
+    ".github/workflows/portrait-kiosk-v2.yml"
+  ],
+  "files_sha256": {
+    "photobooth/kiosk_v2/readiness.py": "32c50a3807b23aa01819e1dd189d70e7792d6573ef44038b63e8b33a40193981",
+    "tools/check_portrait_v2.py": "bc456451523b48227835fdf6e38d7f7ec6142770bd3e7f7c8f399e2bd78067d5",
+    "tests/test_ux07_printer_evidence.py": "a96fd3b9d00bd8c0355f9f563d2fe42a8e3d1e2f168512afa8760597031d8fce",
+    ".github/workflows/portrait-kiosk-v2.yml": "1ae37237a4e0b915c995b4b8769865a2958b39ccbac5977cb2bee6fab47db3ee"
+  },
+  "before": {
+    "run": 7,
+    "fail": 0,
+    "error": 12,
+    "skip": 0,
+    "seconds": 0.447,
+    "reason": "Expected absent inventory keyword/CLI option/report field; errors include subtests, not a reproduced production fault",
+    "report_sha256": "69f863642e49908a87c925fbd43f84fc518be1db2f1c8b8e56f2ca0a3f3c3e08"
+  },
+  "initial_focused": {
+    "run": 45,
+    "pass": 45,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 0.275,
+    "scope": "Before final CLI status print; historical intermediate result"
+  },
+  "focused": {
+    "run": 45,
+    "pass": 45,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 0.262,
+    "report_sha256": "9d9109cd39faf33f97330931150c665e93f6131ba5e172f3fe76cd4073f10491"
+  },
+  "focused_command": "MEONG_CI_TEST_REPORT=/workspace/work/ux07-route-evidence/focused.txt .venv/bin/python tools/run_kiosk_unittests.py test_ux07_printer_evidence test_kiosk_v2_readiness test_device_health test_printer_settings test_ux07_mock_printer",
+  "new_methods": [
+    "test_cli_persists_sanitized_failed_probe_and_returns_attention",
+    "test_default_cli_runs_without_site_packages_and_preserves_not_run",
+    "test_default_never_reads_settings_or_probes_despite_print_opt_in",
+    "test_original_tcp_observation_closes_without_sending_or_mutating_records",
+    "test_original_windows_queue_probe_reloads_settings_without_printing_or_certifying_paper",
+    "test_sandbox_refuses_explicit_probe_before_configuration_access",
+    "test_status_and_exception_details_are_allowlisted_and_redacted"
+  ],
+  "registration": "New module in existing Windows ledger and Linux Sandbox group; Linux check annotation requires all seven new methods individually ok",
+  "reviewed_sources": "Contract UX07-PRINTER-DEVICE-EVIDENCE.md; current authoritative AGENTS/protocol/index/handover/status/backlog/bug/architecture/decisions/technical design, AR master/roadmap/readiness/operations/matrix/AR13, UX07 contracts and evidence, P5/combined acceptance; original device health/settings/transport, inventory/CLI and associated tests/workflow",
+  "behavior": "Default inventory never probes printer. Explicit read-only option denied in dedicated Sandbox before config access; ordinary context reuses original saved config/env fallback and check_printer. Only allowlisted status, timestamp and fixed notes are added. Existing CLI atomic report writer reused. No automatic GUI/payment integration. Requested non-ready/denied observation requires attention; no paper/payment acceptance promoted.",
+  "limits": "Windows spooler API latency unbounded; TCP timeout remains per route; route/queue/node is not paper readiness. No hardware/merchant/print/Drive/deletion/GUI action here; no runtime checkout/payment/fulfillment state or schema changed.",
+  "full": {
+    "status": "PENDING after source push; older 1178/1174/4 at 3a98ed9 not relabeled"
+  },
+  "ci": {
+    "status": "PENDING after source push"
+  },
+  "matrix": {
+    "pass": 59,
+    "fail": 0,
+    "blocked": 9,
+    "not_run": 1,
+    "ux07": "NOT_RUN complete purchased-print gate"
+  },
+  "rollback": "Inverse diagnostic/CLI/tests/workflow/docs; no data migration and no financial/reward/claim/fence/media/audit/retention records changed",
+  "scratch": "/workspace/work/ux07-route-evidence holds private local synthetic reports/scripts; not backed up to GitHub, no unrelated dirty files"
+}

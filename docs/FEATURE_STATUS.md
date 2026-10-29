@@ -1,5 +1,22 @@
 # Meong Photobooth — current feature status
 
+## 29 October — UX-07.f device evidence collector focused-verified
+
+Base/remote `c8f0483`. Existing P5 inventory/CLI gains explicit `--probe-printer`:
+default no probe; dedicated Sandbox refuses before settings/probe; ordinary
+context reuses original settings/health service and exports only allowlisted
+status/fixed notes. No print bytes, new order, payment/Drive call or financial/
+media mutation; no automatic GUI/prepayment mounting. Route READY never proves
+paper or purchased-print acceptance; Windows spooler API remains unbounded.
+**45 focused PASS / zero failure/error/skip**, Python 3.12.14/Debian 13, 0.262s.
+Seven new causal tests registered Windows/Linux, with actual method annotation
+checking on Linux. Full/current CI PENDING after this source micro-push; next
+one final full at its exact SHA, verify CI method receipts, then checkpoint.
+[Contract/device commands/source evidence](qa/portrait-v2-sandbox/UX07-PRINTER-DEVICE-EVIDENCE.md).
+UX-07 whole gate NOT_RUN; matrix **59/0/9/1** unchanged. All actual hardware/
+merchant/paper/Drive/deletion/privacy/release gates remain separate. Only private
+work/ scratch local; rollback source/tests/docs only, preserve every record.
+
 ## 29 October — UX-07 MOCK component final validation verified
 
 CI source `8d0b9bb`, run **40887868676: all three jobs SUCCESS**. Five readiness/
