@@ -1,5 +1,35 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 29 October — CAP-20.c native fixture isolation checkpoint
+
+Storage source `9f3568b0dd6ea5ab67e0c49b1ef6936cedabc8d4` pushed/remote verified:
+57 focused PASS, 74 injected cases/48 actual children. Its CI 40839833482 has
+pure/Windows SUCCESS (Windows payment 72 PASS, zero skip, 221.038s) and Linux
+FAILURE at native redraw test `8 != 7`; Linux Sandbox/recovery 389 PASS, zero skip.
+This failed run is preserved, never relabeled successful. Historical callback
+identity is unknown. Controlled unrelated Clock redraw reproduces the exact
+failure on the old fixture and passes after test-only isolation. Six real RGB
+readbacks/new-frame flips/texture identity/labels and exact quiet-poll flip count
+remain; a new guard rejects additional scheduled same-packet work. Two mutation
+controls still fail as expected (missing new-frame redraw, new same-packet timer).
+
+**111 native focused run / 110 PASS / one optional palm SKIP / zero failure/error**,
+138.089s, Python 3.12.14/Linux software GL. No retries, relaxed tolerance or
+runtime change. Earlier native attempt interrupted before report; no result
+claimed. BUG-013 remains owner-reported working/monitoring. Runtime/tools remain
+e0dc594; prior full 1117/1114/3 and native c94696d 28/four retain original source.
+[Exact command/source/digests](evidence/cap20-native-fixture-verification.json).
+
+CAP-20 synthetic PASS; matrix **56 PASS / 1 FAIL / 9 BLOCKED / 3 NOT_RUN**;
+overall audit IN_PROGRESS/AR-13 conditional, BUG-023/UX-13 OPEN/FAIL.
+This containing tests/docs micro-push pins the corrected fixture; next matching
+CI and final safe checkpoint, then AR-09 bounded redacted durable denial audit.
+UX-05/07/11, PAY-22/WEB-01–08 and actual Windows/Ubuntu booth/provider/paper/phone/
+Drive/deletion/privacy/operations/release gates stay open. OPS unchanged. No
+production/public ingress/new branch/master/default or real external effect.
+Only disposable work/ remains local; no unpublished runtime patch. Rollback
+tests/docs only, retain all financial/media/claim/fence/budget records.
+
 ## 29 October — AR-04/05/08 CAP-20.b focused checkpoint
 
 First micro-push `2ac9e82ce72de49d6a7ade385c3db37b2e1707d5` pushed/remote verified;

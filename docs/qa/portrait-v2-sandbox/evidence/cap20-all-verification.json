@@ -1,9 +1,9 @@
 {
-  "status": "FOCUSED_CAP20_VERIFIED_CI_PENDING",
+  "status": "FOCUSED_CAP20_VERIFIED_INITIAL_CI_NATIVE_FIXTURE_FAILED",
   "branch": "feature/portrait-kiosk-v2-next",
   "review_base": "2ac9e82ce72de49d6a7ade385c3db37b2e1707d5",
   "first_test_commit": "2ac9e82ce72de49d6a7ade385c3db37b2e1707d5",
-  "test_commit": "Containing Git commit; pin after remote verification",
+  "test_commit": "9f3568b0dd6ea5ab67e0c49b1ef6936cedabc8d4",
   "runtime_source": "e0dc59435772148be86449c55140d4b9be2f6364",
   "runtime_changed": false,
   "python": "3.12.14",
@@ -48,7 +48,7 @@
     "blocked": 9,
     "not_run": 3
   },
-  "ci": "PENDING for containing full test commit; first JPEG-only 40838609747 SUCCESS",
+  "ci": "40839833482: pure/Windows SUCCESS; Linux recovery 389 PASS, native flip assertion failure. Corrected fixture evidence separate; matching new CI pending",
   "full_regression": "NOT_RERUN_TESTS_ONLY; e0dc594 1117/1114/3 excludes six new methods",
   "native": "NOT_RERUN_NO_GUI_CHANGE; c94696d 28 PNG/four QR retains original source",
   "next": "Current matching CI/final checkpoint, then AR-09 BUG-023; UX-05/07/11 and external gates remain",

@@ -1,5 +1,16 @@
 # AR-12 — final source validation and external acceptance gates
 
+## 29 October — CAP-20 native CI fixture correction
+
+Storage source `9f3568b` CI 40839833482: Windows/pure SUCCESS, Linux native
+same-packet flip FAIL (`8 != 7`); recovery group 389 PASS. Reproduced unrelated
+Clock interference; test-only isolation preserves pixel/flip checks and rejects
+new scheduled work. Both negative controls detect mutations. **111 native focused
+run / 110 PASS / one optional palm SKIP**, zero failure/error, 138.089s.
+57 storage PASS/74 faults/48 children unchanged at 9f3568b. Runtime unchanged;
+corrected-fixture CI pending. Matrix 56/1/9/3, BUG-023/external gates OPEN.
+Next current CI/final checkpoint, then AR-09. [Evidence/limits](evidence/cap20-native-fixture-verification.json).
+
 ## 29 October — AR-04/05/08 CAP-20.b focused checkpoint
 
 First micro-push `2ac9e82ce72de49d6a7ade385c3db37b2e1707d5` pushed/remote verified;

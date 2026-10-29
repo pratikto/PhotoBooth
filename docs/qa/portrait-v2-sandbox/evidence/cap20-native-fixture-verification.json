@@ -1,0 +1,65 @@
+{
+  "status": "NATIVE_FIXTURE_FOCUSED_VERIFIED_CI_PENDING",
+  "branch": "feature/portrait-kiosk-v2-next",
+  "storage_test_source": "9f3568b0dd6ea5ab67e0c49b1ef6936cedabc8d4",
+  "fixture_source": "Containing Git commit; pin after push and remote verification",
+  "runtime_source": "e0dc59435772148be86449c55140d4b9be2f6364",
+  "runtime_changed": false,
+  "historical_ci": {
+    "run": 40839833482,
+    "pure_job": 123333251036,
+    "windows_job": 123333251404,
+    "linux_job": 123333251491,
+    "conclusion": "FAILURE: native same-packet global Clock interference; 8 != 7",
+    "windows_payment": "72 PASS, zero skip, 221.038s; six CAP-20 methods PASS",
+    "linux_sandbox": "389 PASS, zero skip; native step 111 run, one failure, one optional palm skip",
+    "historical_callback_identity": "UNKNOWN; not logged by historical job"
+  },
+  "controlled_reproduction": "Queue unrelated Clock callback requesting Window.canvas redraw immediately before same-packet observation: exact 8 != 7 on original test; corrected test PASS",
+  "probe_before": {
+    "run": 1,
+    "fail": 1,
+    "error": 0,
+    "seconds": 0.52,
+    "expected": "FAIL"
+  },
+  "probe_after": {
+    "run": 1,
+    "pass": 1,
+    "error": 0,
+    "seconds": 0.384,
+    "expected": "PASS"
+  },
+  "negative_controls": {
+    "missing_new_frame_redraw": "1 expected FAIL, zero error, 0.986s",
+    "new_timer_on_same_packet": "1 expected FAIL, zero error, 0.959s"
+  },
+  "correction": "Test only: retain six real RGB GL readbacks, texture identity, unchanged labels, exact no-extra-flip assertion; freeze prior Clock dispatch during quiet poll, assert no newly scheduled events, cancel unrelated sentinel",
+  "native_focused": {
+    "run": 111,
+    "pass": 110,
+    "fail": 0,
+    "error": 0,
+    "skip": 1,
+    "skip_reason": "Optional native palm model assets opt-in",
+    "seconds": 138.089
+  },
+  "command": "KIVY_HOME=/tmp/meong-cap20-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 MESA_SHADER_CACHE_DIR=/tmp/meong-cap20-mesa PHOTOBOOTH_TEST_AUDIO=1 MEONG_CI_TEST_REPORT=work/cap20-native-focused-report.txt .venv/bin/python tools/run_kiosk_unittests.py tests.test_kiosk_v2_widgets tests.test_kiosk_v2_game_widgets tests.test_kiosk_v2_checkout_widgets tests.test_kiosk_v2_meong_reference tests.test_kiosk_v2_game_followup tests.test_kiosk_v2_brand_flight tests.test_kiosk_v2_button_art tests.test_kiosk_v2_operator_widgets tests.test_kiosk_v2_delivery_widgets",
+  "python": "3.12.14",
+  "platform": "Linux cloud, software OpenGL/offscreen SDL",
+  "files_sha256": {
+    "tests/test_kiosk_v2_widgets.py": "cad8efefd57f1915577192aafce08c622aece3011c72a7ae4e0de313d0d979fa"
+  },
+  "report_sha256": {
+    "work/cap20-native-focused-report.txt": "7121a3436ed7b7ac019473c68baf2f77796fa1ef1d0d97ed0e9a8dba81629c56",
+    "work/cap20-redraw-probe-before.txt": "52d3f3a73e216bd5548ab0f0ae2b79a279898409a90606d08774578795858b20",
+    "work/cap20-redraw-probe-after.txt": "0a81fdf93cd695d96e79cef0d6900e1d04e5b63e6f1efaeff4ee85b8ce4e75b2",
+    "work/cap20-redraw-control-missing_redraw.txt": "3864265faeb125e49353be9698cabd1bb04eea043b4f8a1148c48321286811cf",
+    "work/cap20-redraw-control-new_timer_on_same_packet.txt": "d91bda6b3b61178b7f0be57b26b18e2f99f22ac7f43eaa6d53f365deb5788b3e"
+  },
+  "unchanged_storage_verification": "57 PASS / zero skip at 9f3568b; 74 fault cases, 48 actual child exits; not rerun for native test-only isolation",
+  "full_regression": "Prior e0dc594 1117 run / 1114 PASS / 3 optional skips retained at original source; not rerun for tests-only edit",
+  "limits": "No runtime/device/provider/merchant/paper/Drive/deletion/release/OPS acceptance; BUG-013 owner-reported working remains monitoring, no runtime patch",
+  "next": "Matching CI and final safe checkpoint, then AR-09 BUG-023; UX-05/07/11 and external gates stay open",
+  "privacy": "Only source, commands, counts and digests published; probes/raw logs/images remain disposable local work/"
+}

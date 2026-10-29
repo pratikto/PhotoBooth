@@ -1,5 +1,16 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 29 October — CAP-20 native CI fixture correction
+
+Storage source `9f3568b` CI 40839833482: Windows/pure SUCCESS, Linux native
+same-packet flip FAIL (`8 != 7`); recovery group 389 PASS. Reproduced unrelated
+Clock interference; test-only isolation preserves pixel/flip checks and rejects
+new scheduled work. Both negative controls detect mutations. **111 native focused
+run / 110 PASS / one optional palm SKIP**, zero failure/error, 138.089s.
+57 storage PASS/74 faults/48 children unchanged at 9f3568b. Runtime unchanged;
+corrected-fixture CI pending. Matrix 56/1/9/3, BUG-023/external gates OPEN.
+Next current CI/final checkpoint, then AR-09. [Evidence/limits](qa/portrait-v2-sandbox/evidence/cap20-native-fixture-verification.json).
+
 ## 29 October — CAP-20 storage matrix focused-complete
 
 **57 focused PASS / zero failure/error/skip**, 74 fault cases: 48 real child

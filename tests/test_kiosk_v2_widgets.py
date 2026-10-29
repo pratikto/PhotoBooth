@@ -85,7 +85,9 @@ class PortraitKivySmokeTests(unittest.TestCase):
     def test_reused_camera_texture_redraws_without_touch_countdown_or_text_changes(self):
         """Pixel uploads must reach the window even when all labels stay still."""
         from types import SimpleNamespace
+        from unittest.mock import patch
         from kivy.base import EventLoop
+        from kivy.clock import Clock
         from kivy.core.window import Window
         from kivy.graphics.opengl import glReadPixels, GL_RGBA, GL_UNSIGNED_BYTE
         from kivy.uix.image import Image
@@ -131,10 +133,24 @@ class PortraitKivySmokeTests(unittest.TestCase):
             # Polling the same packet must not force an unnecessary redraw.
             for _ in range(4):
                 EventLoop.idle()
-            before = len(flips)
-            view._update_live_photo(frame, view._last_preview)
-            EventLoop.idle()
-            self.assertEqual(len(flips), before)
+            # A global timer may legitimately redraw another widget. Keep
+            # real canvas drawing but isolate this method's quiet poll from
+            # existing Clock callbacks, including a deliberate unrelated draw.
+            unrelated = Clock.schedule_once(lambda _dt: Window.canvas.ask_update(), 0)
+            try:
+                with patch.object(Clock, 'tick', return_value=None), \
+                        patch.object(Clock, 'tick_draw', return_value=None):
+                    EventLoop.idle()  # Drain already requested canvas updates.
+                    before = len(flips)
+                    def scheduled():
+                        return {id(event) for event in (*Clock.get_events(), *Clock.get_before_frame_events())}
+                    queued = scheduled()
+                    view._update_live_photo(frame, view._last_preview)
+                    self.assertEqual(scheduled(), queued, 'Same packet scheduled new UI work')
+                    EventLoop.idle()
+                    self.assertEqual(len(flips), before)
+            finally:
+                unrelated.cancel()
         finally:
             Window.unbind(on_flip=record_flip)
             Window.remove_widget(view._live_image)
