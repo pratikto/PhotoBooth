@@ -497,9 +497,9 @@ matrix PASS or used to waive device/merchant requirements.
 
 | Gate | Evidence required | Current |
 | --- | --- | --- |
-| Source unit/integration | Exact SHA, OS, command, full count PASS/FAIL/SKIP, fixtures and no secret leakage | PASS at e7e09fe: 1188 run / 1184 PASS / 4 optional SKIP (three palm assets, one video); current safe evidence above |
+| Source unit/integration | Exact SHA, OS, command, full count PASS/FAIL/SKIP, fixtures and no secret leakage | PASS at 0b8aaa8: 1194 run / 1190 PASS / 4 optional SKIP (three palm assets, one video); current safe evidence above |
 | Crash/restart fault-injection | Every PAY/CAP/UX applicable ID mapped to test output | NOT_RUN for complete gate; see explicit missing exact windows above |
-| Complete GUI regression | One final applicable full suite after last functional change; no borrowed old pass | PASS at e7e09fe with four optional SKIPs; native model/video checks remain separate from physical acceptance |
+| Complete GUI regression | One final applicable full suite after last functional change; no borrowed old pass | PASS at 0b8aaa8 with four optional SKIPs; native model/video checks remain separate from physical acceptance |
 | GUI screenshot/pixels | Tested exact source 800×1280 and 452×900, readability and QR identity | PASS for 28 clean c94696d scenes / four QR checks; retake/multi-design visual scenes NOT_RUN |
 | Windows booth | Real camera/storage, app close/reopen/power interruption, native touch/keyboard | NOT_RUN |
 | Ubuntu mini PC | Actual graphical session service, permissions, startup, real camera/print hardware | NOT_RUN |

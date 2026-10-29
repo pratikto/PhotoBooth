@@ -1,5 +1,14 @@
 # Meong Photobooth documentation — GUI v2
 
+## 30 October — UX-07.i1 explicit schema/read adapter verified
+
+17 focused PASS; full 1194/1190/4, zero failure/error. Current three-job CI
+SUCCESS; six new methods PASS Windows/Linux. Adapter/table initialization is
+explicit, unmounted; no issuer or default checkout/GUI change. Next UX-07.i2
+atomic new-order issuance before POST, then offline purchase/preflight adapter.
+Whole UX-07 NOT_RUN, matrix59/0/9/1; actual device/provider/release gates separate.
+[Exact evidence/next](qa/portrait-v2-sandbox/evidence/ux07-delivery-requirements.json).
+
 ## 30 October — UX-07.h purchased-print integration contract audited
 
 Documentation-only source reconciliation: frozen quantities/COMPOSED/OWED and

@@ -1,8 +1,8 @@
 # UX-07.h — purchased-print integration contract and source audit
 
-30 October 2026 (Asia/Jakarta). Status: CONTRACT/AUDIT COMPLETE; implementation
-below is PLANNED, not mounted or certified. Branch/remote base:
-`613243ab956001b24cde8f7a76bf1b3673a63d2a`. Last functional evidence remains
+30 October 2026 (Asia/Jakarta). Status: UX-07.i1 explicit schema/read adapter VERIFIED;
+issuance and host integration remain PLANNED, not mounted or certified. Branch/remote base:
+`613243ab956001b24cde8f7a76bf1b3673a63d2a`. Pre-implementation baseline evidence was
 e7e09fe: 1188 run / 1184 PASS / 4 optional SKIP, CI 40959449442 SUCCESS.
 
 Reviewed AGENTS/protocol/prompt, checkpoint/handover, AR roadmap/master,
@@ -85,12 +85,11 @@ Do not rerun the verified MOCK/collector/preservation work to inflate evidence.
 
 UX-07 whole gate stays NOT_RUN, matrix 59 PASS / 0 FAIL / 9 BLOCKED / 1 NOT_RUN;
 AR-13 conditional. PAY-22 official Legacy contract and WEB-01..08 public
-infrastructure/operations remain BLOCKED. This audit supplies no new automated,
-merchant, physical-paper or provider PASS. No runtime/schema/GUI changes.
+infrastructure/operations remain BLOCKED. The UX-07.h audit supplied no new automated, merchant or device PASS.
+UX-07.i1 below adds explicit schema/read validation; physical gates stay open.
 
-Next implement UX-07.i migration fixtures against disposable SQLite using the
-original frozen-order/fulfillment APIs, before adding a delivery-requirement
-storage seam. Review this contract plus existing fulfillment/allocation and
+UX-07.i1 fixtures/schema/read validation are now verified below. Next UX-07.i2
+adds atomic new-order issuance before POST, with unchanged legacy contracts. Review this contract plus existing fulfillment/allocation and
 schema tests before code. Do not mount the new policy in the dedicated Sandbox.
 In parallel, collect actual reports using the existing
 [read-only commands](UX07-PRINTER-DEVICE-EVIDENCE.md); preserve each report with
@@ -132,3 +131,32 @@ separate, Sandbox printer/Drive OFF and OPS unchanged. No schema rewriting or
 automatic backfill; rollback disables adapter and retains additive table/records.
 Only existing work/ and superseded docs stash local; no unpublished source after
 push. This source micro-push is a safe checkpoint; resolve containing SHA via Git.
+
+## 30 October — UX-07.i1 schema/read adapter regression verified
+
+Source `0b8aaa85ff692cf21d4c1c390815f1e4c634ef2b` pushed/remote verified. Explicit additive table and read-only
+adapter remain unmounted: default CheckoutStore/backend/HTTP/GUI do not initialize
+or call it. No issuance API. Candidate requirements are seeded only by fixture SQL.
+Reads validate original order/booth/merchant, frozen hash and exact copies; absent
+owned records are unspecified, unknown legacy merchant context stays held. Existing
+paid OWED rows, frozen JSON/hash and all financial rows remain unchanged. Duplicate
+insertion rolls back; independent reopen returns the same requirement identity.
+
+17 focused PASS/zero failure/error/skip, 0.097s. Final full **1194 run / 1190 PASS /
+4 optional SKIP**, zero failure/error, 409.581s, Python 3.12.14/Linux
+software GL/dummy audio. Three palm assets and one native video skipped, not PASS.
+CI 40962843450 all three jobs SUCCESS on exact source; six new methods individually
+PASS on Windows/Linux. [Commands/source/results/receipts/hashes](evidence/ux07-delivery-requirements.json).
+No screenshot rerun: no GUI change. Original backend/store/native/tools/OPS remain
+unchanged from d458012; the only application addition is the unmounted module.
+
+Next UX-07.i2: atomically issue requirements inside original new-order creation
+before POST; policy/absence replay conflicts must hold, never retrofit old orders
+from today's settings. Then UX-07.j offline fake-provider/fake-printer adapter.
+Whole UX-07 NOT_RUN; matrix59/0/9/1, audit IN_PROGRESS/AR-13 conditional. Real device/
+provider/paper/privacy/support/release gates remain separate. Sandbox printer/Drive
+OFF; no OPS/production/public ingress/branch/master/default/deployment or actual
+external effects. Rollback disables adapter but preserves its additive table and
+all original financial/media/audit records. Only work/ scratch and superseded docs
+stash local; no unpublished runtime patch. This containing docs-only push is the
+final safe checkpoint; exact SHA from Git log/remote. Do not repeat verified work.

@@ -1,5 +1,12 @@
 # AR-13 — release-readiness assessment
 
+## 30 October — UX-07.i1 explicit schema/read adapter verified
+
+Source 0b8aaa8: 17 focused PASS; full 1194/1190/4, zero failure/error; CI
+40962843450 all three jobs SUCCESS, six new methods PASS Windows/Linux.
+No issuer/default checkout/GUI mount. UX-07 whole NOT_RUN, matrix59/0/9/1.
+[Exact source/receipts/limits/next](evidence/ux07-delivery-requirements.json).
+
 ## 30 October — UX-07.g earlier printer evidence preserved
 
 Source e7e09fe: explicit probe output collisions return 2 before observation;

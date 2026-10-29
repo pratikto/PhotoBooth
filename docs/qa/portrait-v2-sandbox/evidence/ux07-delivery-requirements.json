@@ -1,7 +1,7 @@
 {
-  "status": "EXPLICIT_SCHEMA_READ_ADAPTER_FOCUSED_VERIFIED_FULL_CI_PENDING",
+  "status": "UX07_I1_EXPLICIT_SCHEMA_READ_ADAPTER_FULL_AND_CI_VERIFIED_NOT_MOUNTED",
   "base": "d4580122cc34375d1ac44d6ce5663ee503a5950a",
-  "source": "Containing source micro-commit; pin after push",
+  "source": "0b8aaa85ff692cf21d4c1c390815f1e4c634ef2b",
   "focused": {
     "run": 17,
     "pass": 17,
@@ -19,5 +19,69 @@
   "report_sha256": "3510d3dd453abdb0db8e641ba2c8ba9aee38a634b3ecc876383ae8dd598c4475",
   "command": "KIVY_HOME=/tmp/meong-delivery-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 MEONG_CI_TEST_REPORT=work/delivery-requirements-final-focused.txt .venv/bin/python tools/run_kiosk_unittests.py test_delivery_requirements test_checkout_fulfillment test_photo_allocation",
   "limits": "Explicit unmounted additive schema/read adapter only. No issuer, default CheckoutStore migration, backend/HTTP/GUI call, provider/print/Drive effect or acceptance. Fixture SQL seeds requirements. UX07 whole NOT_RUN; matrix59/0/9/1.",
-  "next": "After final full/current CI, UX07.i2 atomically freeze a separately versioned requirement during new-order creation before POST; no retrofit API for old orders and no dedicated Sandbox opt-in."
+  "next": "UX07.i2: atomic requirement issuance in the same original new-order transaction before POST; policy replay/absence conflicts, no retrofit, no default mount or Sandbox opt-in. Then UX07.j offline readiness purchase adapter.",
+  "ci": {
+    "run_id": 40962843450,
+    "source": "0b8aaa85ff692cf21d4c1c390815f1e4c634ef2b",
+    "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40962843450",
+    "jobs": [
+      {
+        "id": 123759785118,
+        "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+        "conclusion": "success"
+      },
+      {
+        "id": 123759785550,
+        "name": "Windows Python 3.12 native SDL audio (dummy output)",
+        "conclusion": "success"
+      },
+      {
+        "id": 123759785656,
+        "name": "Navigation and audio lifecycle",
+        "conclusion": "success"
+      }
+    ],
+    "methods_pass_windows_linux": [
+      "test_conflicting_record_rolls_back_without_replacing_original",
+      "test_existing_paid_owed_order_is_not_backfilled_or_satisfied",
+      "test_explicit_migration_preserves_all_original_rows_and_absence_is_unspecified",
+      "test_seeded_requirement_reopens_with_same_identity_copies_and_original_bytes",
+      "test_tampered_binding_copies_or_frozen_bytes_hold_without_financial_mutation",
+      "test_wrong_tenant_never_discloses_requirement"
+    ],
+    "windows_ledger": {
+      "run": 139,
+      "pass": 139,
+      "skip": 0,
+      "seconds": 30.73
+    },
+    "linux_recovery": {
+      "run": 440,
+      "pass": 440,
+      "skip": 0,
+      "seconds": 117.952
+    },
+    "linux_native": {
+      "run": 117,
+      "pass": 116,
+      "skip": 1,
+      "seconds": 84.324
+    }
+  },
+  "full": {
+    "run": 1194,
+    "pass": 1190,
+    "fail": 0,
+    "error": 0,
+    "skip": 4,
+    "seconds": 409.581
+  },
+  "full_optional_skips": [
+    "Use real inference and mailboxes; only camera acquisition is synthetic. ... skipped 'Native model assets are opt-in'",
+    "test_native_video_has_frames_payment_is_muted_and_retiring_unloads_decoder (test_kiosk_advertising.KioskAdvertisingTests.test_native_video_has_frames_payment_is_muted_and_retiring_unloads_decoder) ... skipped 'Native video checks require opt-in and ffmpeg'",
+    "test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture) ... skipped 'Native model assets are opt-in'",
+    "test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image (test_palm_gesture.NativePalmModelTests.test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image) ... skipped 'Native model assets are opt-in'"
+  ],
+  "full_report_sha256": "c63f42291954aaa968f7fe04395a7a3d7c7302180274e71b9f43dd1256c45e4f",
+  "full_command": "KIVY_HOME=/tmp/meong-delivery-full-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 MESA_SHADER_CACHE_DIR=/tmp/meong-delivery-full-mesa PHOTOBOOTH_TEST_GUI=1 PHOTOBOOTH_TEST_AUDIO=1 MEONG_CI_TEST_REPORT=work/delivery-i1-full.txt .venv/bin/python tools/run_kiosk_unittests.py"
 }
