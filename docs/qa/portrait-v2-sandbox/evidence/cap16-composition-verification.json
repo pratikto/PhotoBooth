@@ -1,5 +1,5 @@
 {
-  "status": "FOCUSED_VERIFIED_CI_PENDING",
+  "status": "FOCUSED_VERIFIED_CI_SUPERSEDED",
   "branch": "feature/portrait-kiosk-v2-next",
   "review_base": "73451f3f449f97fcec76e52a14db4ad5a3e8027f",
   "test_commit": "fcc0ae96b5de96bc962b4a2e9d25285cf9a3c7de",
@@ -43,8 +43,9 @@
   "ci": {
     "run_id": 40834453941,
     "head_sha": "fcc0ae96b5de96bc962b4a2e9d25285cf9a3c7de",
-    "status_at_next_increment": "in_progress",
-    "conclusion": null
+    "status": "completed",
+    "conclusion": "cancelled",
+    "reason": "Existing workflow concurrency; not credited standalone PASS"
   },
   "full_native": "NOT_RERUN_TESTS_ONLY; e0dc594 full 1117/1114/3 and c94696d native 28/four retain original source and exclude new methods",
   "privacy": "Original synthetic ticket memory/stdin only, never argv/journal/committed raw evidence",

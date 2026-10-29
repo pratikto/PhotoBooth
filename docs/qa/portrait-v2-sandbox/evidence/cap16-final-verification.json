@@ -1,0 +1,90 @@
+{
+  "status": "VERIFIED_TESTS_ONLY_WITH_REMAINING_AR_GATES",
+  "branch": "feature/portrait-kiosk-v2-next",
+  "review_base": "fcc0ae96b5de96bc962b4a2e9d25285cf9a3c7de",
+  "first_test_commit": "fcc0ae96b5de96bc962b4a2e9d25285cf9a3c7de",
+  "test_commit": "1ef7d29454a926d6eccc7cb2ba15162fbfbfa0c8",
+  "runtime_source": "e0dc59435772148be86449c55140d4b9be2f6364",
+  "runtime_changed": false,
+  "python": "3.12.14",
+  "platform": "Linux cloud",
+  "command": "KIVY_HOME=/tmp/meong-cap16-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy MEONG_CI_TEST_REPORT=work/cap16-final-focused-report.txt .venv/bin/python tools/run_kiosk_unittests.py test_service_crash_recovery test_customer_claim_session test_qris_session test_photo_reconstruction test_output_journal test_checkout_fulfillment test_checkout_durability test_release_session",
+  "focused": {
+    "run": 74,
+    "pass": 74,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 22.333
+  },
+  "new_cap16_methods": 3,
+  "cap16_process_exits": {
+    "count": 4,
+    "distinct_boundaries": 2,
+    "codes": {
+      "composed_before_completion_intent": 106,
+      "completion_intent_before_request": 107
+    },
+    "extra_cases": "Pre-request exit repeated for outage/refund and corrupt PNG denials"
+  },
+  "existing_pay18_exits_in_same_module": 23,
+  "report_sha256": "24690a5bf18046123b91898b80f960a8da0a75356c66256496f7bb08f641d444",
+  "files_sha256": {
+    "tests/service_crash_fixture.py": "cdfecbfd416dcd3b348af8b824885555ac5f895fc17eac15346992095c54f289",
+    "tests/test_service_crash_recovery.py": "13681e5249f164c8939d8cd6bc70967aa10cefc9fe96e7fbcc1421422ba246b0",
+    ".github/workflows/portrait-kiosk-v2.yml": "5496002b7c34e76fba04bb37a1d2128410b6fee64dc5e11711c2b711fd9749f5"
+  },
+  "matrix": {
+    "total": 69,
+    "pass": 55,
+    "fail": 1,
+    "skip": 0,
+    "blocked": 9,
+    "not_run": 4
+  },
+  "ci": {
+    "run_id": 40834950593,
+    "head_sha": "1ef7d29454a926d6eccc7cb2ba15162fbfbfa0c8",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 123317592099,
+        "name": "Windows Python 3.12 native SDL audio (dummy output)",
+        "conclusion": "success"
+      },
+      {
+        "id": 123317592170,
+        "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+        "conclusion": "success"
+      },
+      {
+        "id": 123317592611,
+        "name": "Navigation and audio lifecycle",
+        "conclusion": "success"
+      }
+    ],
+    "windows_payment_recovery": "66 PASS / zero failure/error/skip, 48.445s; all three CAP-16 methods PASS",
+    "linux_protocol_recovery": "383 PASS / zero failure/error/skip, 53.191s; all three CAP-16 methods PASS",
+    "linux_native": "111 run / 110 PASS / 1 optional palm SKIP",
+    "detail": "cap16-final-ci.json",
+    "superseded": {
+      "run_id": 40834453941,
+      "head_sha": "fcc0ae96b5de96bc962b4a2e9d25285cf9a3c7de",
+      "conclusion": "cancelled",
+      "reason": "Existing workflow concurrency, not credited standalone PASS"
+    }
+  },
+  "full_regression": "NOT_RERUN_TESTS_ONLY; baseline e0dc594 1117/1114/3 excludes new CAP-16 methods",
+  "native": "NOT_RERUN_NO_GUI_CHANGE; baseline c94696d 28 PNG/four QR retains original source",
+  "privacy": "Synthetic ticket memory/stdin only, no argv/journal/committed raw evidence; corrupt PNG belongs only to temporary synthetic fixture",
+  "next": "CAP-20 intent/image/manifest write faults; then AR-09 BUG-023 durable redacted denial audit; UX-05/07/11 and external gates remain",
+  "limits": "Software exits; extra controller/store reopens are parent-process, no physical power-loss/device/provider/paper/cloud/deletion/release acceptance",
+  "rollback": "Inverse test/docs only; retain all customer/financial/media/claim/fence/budget records",
+  "remote_verified": true,
+  "runtime_trees": {
+    "photobooth": "458ab5dc768ca78f56b7ebfbe910370510470f75",
+    "tools": "62b5760a3ebd20382fb3eb632843c626e00ce2f9"
+  },
+  "test_tree": "b906fbf285ac4141f17a4cde180664d4b525cb03",
+  "workflow_blob": "a9319cdf8feaa32b1d7cf43b798a18ae5ef86bba"
+}

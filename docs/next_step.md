@@ -1,13 +1,16 @@
 # Meong Photobooth — outstanding work and feature backlog
 
-## 29 October — CAP-16 completion and denial evidence complete
+## 29 October — CAP-16 verified
 
-**74 focused PASS / zero failure/error/skip**, four new CAP-16 children/two
-pre-COMPLETE boundaries. Fresh proof restores original result/ACK; outage,
-refund and corrupted committed PNG remain held without false completion or
-lost OWED. Tests/docs only, no runtime change. Matrix **55 PASS / 1 FAIL /
-9 BLOCKED / 4 NOT_RUN**. CI pending; next final CI/checkpoint then CAP-20/AR-09.
-[Evidence/limits](qa/portrait-v2-sandbox/CAP16-COMPOSITION-COMPLETE.md).
+Tests/CI `1ef7d29454a926d6eccc7cb2ba15162fbfbfa0c8` pushed/remote verified.
+**74 focused PASS**, zero failure/error/skip; four new CAP-16 children/two
+pre-COMPLETE boundaries. CI **40834950593 all three jobs SUCCESS**, all three
+CAP-16 methods PASS on Windows/Linux (groups 66/383 PASS, zero skip); native
+one optional palm SKIP. Original result/ACK/retention/OWED preserved; outage,
+refund/corrupt PNG deny false completion. Tests/docs only, runtime unchanged.
+Matrix **55 PASS / 1 FAIL / 9 BLOCKED / 4 NOT_RUN**, audit IN_PROGRESS/BUG-023 OPEN.
+Next **CAP-20**, then AR-09; real device/provider/OPS/release gates unchanged.
+[Exact evidence/limits](qa/portrait-v2-sandbox/evidence/cap16-final-verification.json).
 
 ## 29 October — CAP-16 composition/intent exits focused-verified
 

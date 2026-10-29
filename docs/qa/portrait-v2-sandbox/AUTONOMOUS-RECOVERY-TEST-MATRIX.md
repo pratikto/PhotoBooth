@@ -1,13 +1,16 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
-## 29 October — CAP-16 completion and denial evidence complete
+## 29 October — CAP-16 verified
 
-**74 focused PASS / zero failure/error/skip**, four new CAP-16 children/two
-pre-COMPLETE boundaries. Fresh proof restores original result/ACK; outage,
-refund and corrupted committed PNG remain held without false completion or
-lost OWED. Tests/docs only, no runtime change. Matrix **55 PASS / 1 FAIL /
-9 BLOCKED / 4 NOT_RUN**. CI pending; next final CI/checkpoint then CAP-20/AR-09.
-[Evidence/limits](CAP16-COMPOSITION-COMPLETE.md).
+Tests/CI `1ef7d29454a926d6eccc7cb2ba15162fbfbfa0c8` pushed/remote verified.
+**74 focused PASS**, zero failure/error/skip; four new CAP-16 children/two
+pre-COMPLETE boundaries. CI **40834950593 all three jobs SUCCESS**, all three
+CAP-16 methods PASS on Windows/Linux (groups 66/383 PASS, zero skip); native
+one optional palm SKIP. Original result/ACK/retention/OWED preserved; outage,
+refund/corrupt PNG deny false completion. Tests/docs only, runtime unchanged.
+Matrix **55 PASS / 1 FAIL / 9 BLOCKED / 4 NOT_RUN**, audit IN_PROGRESS/BUG-023 OPEN.
+Next **CAP-20**, then AR-09; real device/provider/OPS/release gates unchanged.
+[Exact evidence/limits](evidence/cap16-final-verification.json).
 
 ## 29 October — CAP-16 composition/intent exits focused-verified
 
@@ -277,7 +280,7 @@ offline inbox prototype assertions do not certify deployed ingress.
 | CAP-13 | **PASS** | `test_retake_crash_recovery.test_cap13_committed_retake_exit_preserves_original_selection_bytes_and_consumed_quota` | Actual post-manifest-commit exit before worker memory ACK; fresh proof restores original retake at selected index 1, three originals/one retake/two copies, consumed quota and byte-identical manifest through two reopens; no replay. [80-case focused/CI evidence](evidence/cap11-13-final-verification.json). |
 | CAP-14 | **PASS** | `test_output_journal.test_abrupt_output_process_exit_preserves_each_publication_boundary` | Real child output intent/staged/published/committed exits; originals/hash/ACK verified. |
 | CAP-15 | **PASS** | `test_photo_reconstruction.test_multiple_designs_resume_only_unfinished_design_and_original_copies` | Saved output/copies retained on reconstruction of next unfinished design. |
-| CAP-16 | **PASS** | `test_service_crash_recovery.test_cap16_composed_and_completion_intent_exits_restore_original_result_before_same_ack` | Two actual final-compose/pre-intent and saved-COMPLETING/pre-request exits; backend STARTED/OWED, private restart, fresh proof restores immutable original result/two copies and same ACK tuple; durable archive before release, no effects replay. [72-case focused evidence](evidence/cap16-composition-verification.json). |
+| CAP-16 | **PASS** | `test_service_crash_recovery.test_cap16_composed_and_completion_intent_exits_restore_original_result_before_same_ack`; `test_cap16_provider_outage_and_refund_cannot_complete_a_cached_composed_result`; `test_cap16_corrupt_committed_png_after_crash_holds_without_render_or_completion` | Four actual final-compose/pre-intent and saved-COMPLETING/pre-request child exits; backend STARTED/OWED, private proof/result restoration and same ACK tuples without replay. Outage/refund/corrupt PNG cannot fabricate completion; original bytes/rights held, both archives before release. [74-case focused/CI evidence](evidence/cap16-final-verification.json). |
 | CAP-17 | **PASS** | `test_photo_allocation.test_mismatched_frozen_contract_does_not_create_media_or_new_id` | Frozen template/cart/hash/copies; changed contract holds. |
 | CAP-18 | **PASS** | `test_photo_reconstruction.test_corrupt_media_or_wrong_binding_stays_held_without_data_rewrite` | Corruption/binding denial plus capture symlink/archive tests; real Windows junction acceptance separate. BUG-022 missing committed PNG regression added in [audit increment 3](evidence/ar-audit-missing-output.json), 61 focused PASS. |
 | CAP-19 | **PASS** | `test_kiosk_v2_sandbox_widgets.test_real_photo_handoff_completion_and_duplicate_taps` | Duplicate taps, privacy-lock stale callbacks and native ownership gates. |

@@ -1,27 +1,43 @@
 # Meong Photobooth — GUI v2 development handover
 
-## 29 October — AR-05 CAP-16.b focused checkpoint
+## 29 October — AR-05 CAP-16 verified checkpoint
 
-First micro-push `fcc0ae96b5de96bc962b4a2e9d25285cf9a3c7de` pushed/remote verified.
-**74 focused PASS / zero failure/error/skip**, 22.333s, Python 3.12.14/Linux.
-Three CAP-16 methods/four actual children at two pre-request boundaries; the
-same focused module separately retains 23 prior PAY-18 child exits. Positive
-cases restore immutable original result and original ACK tuples; outage/refund
-and corrupted committed PNG cannot expose pixels, fabricate ACK/archive/release
-or erase STARTED/OWED. Corrupt bytes and manifest remain held across two parent
-controller/store reopens. [Exact command/source/digest](qa/portrait-v2-sandbox/evidence/cap16-denials-verification.json).
+- First micro-push `fcc0ae96b5de96bc962b4a2e9d25285cf9a3c7de`; final test/CI source
+  `1ef7d29454a926d6eccc7cb2ba15162fbfbfa0c8`, both pushed/remote verified.
+- **74 focused PASS / zero failure/error/skip**, 22.333s, Python 3.12.14/Linux.
+  Three new CAP-16 methods/four actual children/two distinct boundaries: final
+  COMMITTED composition before completion intent (106), saved COMPLETING before
+  COMPLETE request (107), repeated for provider/refund and corrupt-PNG denials.
+  Existing PAY-18 methods separately retain 23 child exits in the same module.
+- **CI 40834950593 all three jobs SUCCESS**. Windows payment/recovery **66 PASS**
+  (48.445s), Linux protocol/recovery **383 PASS** (53.191s), both zero skip and all
+  three CAP-16 methods PASS. Native 111 run/110 PASS/one optional palm SKIP.
+  First 40834453941 superseded/CANCELLED, not standalone PASS.
+- Backend remains STARTED/OWED before COMPLETE despite locally composed result;
+  private restart/original fresh proof, immutable three JPEGs/one PNG/two copies,
+  frozen contract/retention and same ACK tuples preserved. Both archives precede
+  release. Outage/refund/corrupt PNG hold without ACK/replay/rights loss.
+- No runtime defect or runtime/schema/UI change. Application/tools match e0dc594;
+  prior full 1117/1114/3 and native c94696d 28/four retain original source. No new
+  local full/native/device/provider acceptance is claimed.
+- CAP-16 synthetic PASS; matrix **55 PASS / 1 FAIL / 9 BLOCKED / 4 NOT_RUN**.
+  Overall audit IN_PROGRESS; BUG-023/UX-13 OPEN/FAIL. [Exact evidence](qa/portrait-v2-sandbox/evidence/cap16-final-verification.json).
+- This containing docs-only publication is the final safe checkpoint; resolve
+  its SHA from Git log/remote. Only disposable work/ diagnostics are untracked/
+  not backed up, no unpublished runtime patch.
 
-Tests/docs only; application unchanged at e0dc594, no runtime defect/schema/UI
-change or new local full/native/device evidence. Matrix **55 PASS / 1 FAIL /
-9 BLOCKED / 4 NOT_RUN**, CAP-16 synthetic PASS; BUG-023 OPEN/audit IN_PROGRESS.
-This containing tested commit is the next micro-push; pin exact SHA after push/
-remote verification. Matching CI pending, first 40834453941 still in progress
-at latest check. Next verify current Windows/Linux CI and publish final safe
-checkpoint, then CAP-20 intent/image/manifest write faults and AR-09 BUG-023.
-UX-05/07/11 and external provider/device/privacy/retention/release/OPS gates
-remain unchanged; no production/public ingress/real paper/Drive/deletion/new
-branch/default/master operation. Only disposable work/ local, no unpublished
-runtime patch. Rollback tests/docs, preserve all financial/media/claim/fences.
+Next exact increment: **CAP-20**. Reuse capture/output journal, TransactionStore/
+manifest atomic writer and existing original-proof fixtures. Inject ENOSPC and
+EACCES at intent, temporary image/publication and manifest acknowledgment writes;
+assert no false capture/output/quota/service commit, no overwrite/replay and
+original paid OWED/binding/bytes retained after reopen. Use temporary synthetic
+fixtures, never fill the actual disk or change customer permissions. Focused
+checks/docs/commit/immediate push and remote verification per safe increment.
+Then AR-09 BUG-023 bounded redacted durable denial audit; UX-05/07/11 still NOT_RUN.
+PAY-22/WEB-01–08 BLOCKED; actual Windows/Ubuntu booth, merchant/provider, phone/
+paper/Drive/deletion/privacy/operations/release remain separate. No production,
+OPS/public ingress/new branch/default/master or real external effect. Rollback
+only tests/docs, preserve all financial/media/claim/fence/budget records.
 
 ## 29 October — AR-05 CAP-16.a focused checkpoint
 

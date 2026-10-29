@@ -1,5 +1,17 @@
 # AR-05 — CAP-16 final composition before COMPLETE
 
+## 29 October — CAP-16 verified
+
+Tests/CI `1ef7d29454a926d6eccc7cb2ba15162fbfbfa0c8` pushed/remote verified.
+**74 focused PASS**, zero failure/error/skip; four new CAP-16 children/two
+pre-COMPLETE boundaries. CI **40834950593 all three jobs SUCCESS**, all three
+CAP-16 methods PASS on Windows/Linux (groups 66/383 PASS, zero skip); native
+one optional palm SKIP. Original result/ACK/retention/OWED preserved; outage,
+refund/corrupt PNG deny false completion. Tests/docs only, runtime unchanged.
+Matrix **55 PASS / 1 FAIL / 9 BLOCKED / 4 NOT_RUN**, audit IN_PROGRESS/BUG-023 OPEN.
+Next **CAP-20**, then AR-09; real device/provider/OPS/release gates unchanged.
+[Exact evidence/limits](evidence/cap16-final-verification.json).
+
 29 October 2026 (Asia/Jakarta). Base/remote verified
 `73451f3f449f97fcec76e52a14db4ad5a3e8027f`, existing feature branch.
 Owner continues the first unfinished checkpoint; BUG-023 and real-device/

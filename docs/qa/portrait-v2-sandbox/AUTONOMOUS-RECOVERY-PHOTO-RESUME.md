@@ -90,3 +90,11 @@ Tests-only, no runtime change. [Exact contract/evidence](CAP11-13-RETAKE-CRASHES
 Final test source 423d9d2: CI 40831396874 all three jobs SUCCESS; all five
 retake methods PASS on Windows/Linux. [Pinned evidence](evidence/cap11-13-final-verification.json).
 Actual device/power-loss/merchant gates remain separate.
+
+## CAP-16 exact composition/COMPLETE exits — 29 October
+
+74 focused PASS, four new children/two pre-request boundaries; original result/
+ACK/retention/OWED preserved, outage/refund/corrupt PNG held without replay.
+Runtime unchanged. Source 1ef7d29 / CI 40834950593 all three jobs SUCCESS; all
+three CAP-16 methods PASS on Windows/Linux. [Exact evidence](evidence/cap16-final-verification.json).
+Actual device/provider/power-loss and BUG-023/release gates remain separate.
