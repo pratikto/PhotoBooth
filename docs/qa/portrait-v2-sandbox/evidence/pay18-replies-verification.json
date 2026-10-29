@@ -2,7 +2,7 @@
   "status": "FOCUSED_VERIFIED_CI_PENDING",
   "branch": "feature/portrait-kiosk-v2-next",
   "review_base": "03189012b5f4c6204ef4f8718bb218a1baac32d5",
-  "test_commit": "Containing Git commit; pinned after push in next checkpoint",
+  "test_commit": "3ad80da74da2a0fc3c9d5e3dbe3d84f91a483f4a",
   "runtime_source": "e0dc59435772148be86449c55140d4b9be2f6364",
   "runtime_changed": false,
   "python": "3.12.14",
@@ -44,8 +44,14 @@
   "full_regression": "NOT_RERUN_TESTS_ONLY: baseline e0dc594 1117 run/1114 PASS/3 optional palm SKIP; new methods absent from that run",
   "native": "NOT_RERUN_NO_GUI_CHANGE: baseline c94696d 28 PNG/four QR checks",
   "privacy": "Synthetic ticket only in memory/stdin, never argv/file/evidence; temporary synthetic media only",
-  "ci": "PENDING for containing test commit; no prior CI borrowed",
+  "ci": {
+    "run_id": 40818395624,
+    "head_sha": "3ad80da74da2a0fc3c9d5e3dbe3d84f91a483f4a",
+    "status_at_next_increment": "in_progress",
+    "conclusion": null
+  },
   "next": "AR-03.d2 completion/archive child exits, then CAP-11\u201313, CAP-16 pre-request, CAP-20, AR-09 BUG-023",
   "limits": "Software exits, not disk power-loss/device/merchant/physical print/Drive/deletion/release acceptance",
-  "rollback": "Inverse test/CI/docs only; preserve every financial/media/claim/fence/budget record"
+  "rollback": "Inverse test/CI/docs only; preserve every financial/media/claim/fence/budget record",
+  "remote_verified": true
 }

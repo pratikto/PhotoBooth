@@ -114,3 +114,22 @@ then CAP-11–13, CAP-16 pre-request boundary, CAP-20 and AR-09 denial audit.
 External/OPS/production gates unchanged; only disposable work/ local, no
 unpublished runtime patch. This containing commit is the next micro-push;
 resolve its SHA from Git, push and verify remote before continuing.
+
+## 29 October — AR-03.d2 completion/archive process exits
+
+Previous micro-push `3ad80da74da2a0fc3c9d5e3dbe3d84f91a483f4a` remote verified.
+**86 focused PASS / zero failure/error/skip**, 22.532s; three PAY-18 methods,
+23 real child exits at seven distinct boundaries. New archive exits hold local
+COMPLETING after accepted ACK, operation history and lookup index; no new visit
+or archive bypass before original proof and durable final journal. Original
+three JPEGs/one PNG/manifest/copies/OWED remain unchanged, no repeated effects.
+[Command/source/limits](PAY18-SERVICE-REPLIES.md).
+
+Tests only; no runtime defect/application/schema/UI change. Matching CI pending
+at this containing commit; first run 40818395624 still running at publication.
+Matrix **51 PASS / 1 FAIL / 9 BLOCKED / 8 NOT_RUN**, BUG-023 OPEN/audit IN_PROGRESS.
+Next: matching CI/final checkpoint, then **CAP-11–13 retake child exits**;
+CAP-16 pre-request, CAP-20 and AR-09 denial audit follow. Prior full/native stay
+at e0dc594/c94696d; no new full/native/device/provider/production/OPS acceptance.
+Only disposable work/ local, no unpublished runtime patch. Scoped inverse of
+new tests/docs retains every customer record; containing SHA resolved after push.

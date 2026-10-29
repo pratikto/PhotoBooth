@@ -80,6 +80,59 @@ def crash_service(root, boundary):
             os._exit(93)
         harness.client.service_transition = after_completed
         flow.refresh()
+    elif boundary in {'completed_ack_before_archive', 'archive_operation_before_index',
+                      'archive_index_before_final_journal'}:
+        from unittest.mock import patch
+        import photobooth.qris_session as session_module
+        def forbidden(*_args, **_options):
+            raise AssertionError('Archive recovery cannot repeat media or delivery effects')
+        for method in ('capture', 'compose', 'print_result', '_notify_delivery'):
+            setattr(PhotoTest, method, forbidden)
+        flow.customer_claim(ticket)
+        photo = PhotoTest(harness.photo_root)
+        view = photo.restore(get_templates(), flow.resume_binding(), flow.resume_permit())
+        assert view['phase'] == 'result' and view['captured'] == 3
+        flow.confirm_resume(view['transaction_id'], view['phase'])
+        flow.request_complete()
+        key = flow.snapshot()['checkout_key']
+        directory = Path(root) / 'visits'
+        operation_path = directory / key / 'completed.json'
+        index_path = directory / (key + '.json')
+        def assert_ack():
+            saved = json.loads(flow.path.read_text())
+            assert saved['phase'] == 'COMPLETING'
+            assert saved['order']['service_state'] == 'COMPLETED'
+            assert harness.store.get(oid)['service_state'] == 'COMPLETED'
+        if boundary == 'completed_ack_before_archive':
+            def before_archive(snapshot, operation):
+                assert_ack()
+                assert snapshot['phase'] == 'COMPLETED' and operation == 'completed'
+                assert not operation_path.exists() and not index_path.exists()
+                os._exit(94)
+            flow._archive_snapshot = before_archive
+            flow.refresh()
+        elif boundary == 'archive_operation_before_index':
+            original = session_module.write_json_atomic
+            def before_index(path, payload):
+                if Path(path) == index_path:
+                    assert_ack()
+                    assert json.loads(operation_path.read_text()) == payload
+                    assert not index_path.exists()
+                    os._exit(95)
+                return original(path, payload)
+            with patch.object(session_module, 'write_json_atomic', side_effect=before_index):
+                flow.refresh()
+        else:
+            original = flow._save
+            def before_final_save():
+                if flow.data['phase'] == 'COMPLETED':
+                    assert_ack()
+                    assert json.loads(operation_path.read_text()) == flow.snapshot()
+                    assert json.loads(index_path.read_text()) == flow.snapshot()
+                    os._exit(96)
+                return original()
+            flow._save = before_final_save
+            flow.refresh()
     else:
         raise ValueError('Unknown service crash boundary')
     raise AssertionError('Service crash boundary was not reached')

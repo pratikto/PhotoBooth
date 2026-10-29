@@ -77,11 +77,11 @@ class ServiceCrashTests(unittest.TestCase):
 
     def forbid_effects(self, harness):
         stack = ExitStack()
-        self.addCleanup(stack.close)
         harness.forbid_new_charge()
         for method in ('capture', 'compose', 'print_result', '_notify_delivery'):
             stack.enter_context(patch.object(PhotoTest, method,
                 side_effect=AssertionError('Recovery cannot repeat a media/delivery effect')))
+        return stack
 
     def assert_private(self, harness):
         self.assertTrue(harness.flow.active)
@@ -114,17 +114,18 @@ class ServiceCrashTests(unittest.TestCase):
         self.assertEqual(harness.store.db.execute('PRAGMA journal_mode').fetchone()[0], 'wal')
         self.assertEqual(harness.store.db.execute('PRAGMA synchronous').fetchone()[0], 2)
 
-    def test_pay18_combined_lost_claim_started_completed_replies_restore_original_result_and_ack(self):
-        ticket, before, grant, attempt, saved = self.chain()
+    def complete_original(self, ticket, before, grant, attempt, saved):
         media = self.media(saved['transaction_id'])
         self.assertEqual(sum(name.endswith('.jpg') for name in media), 3)
         self.assertEqual(sum(name.endswith('.png') for name in media), 1)
-        with closing(AllocationHarness(self.root)) as resumed:
-            self.forbid_effects(resumed)
+        archives = self.root / 'visits'
+        archived_bytes = {str(p.relative_to(archives)): p.read_bytes() for p in archives.rglob('*.json')}
+        with closing(AllocationHarness(self.root)) as resumed, self.forbid_effects(resumed):
             self.assert_private(resumed)
             resumed.flow.refresh()  # Private observation cannot release this visit.
             self.assertEqual(resumed.flow.snapshot()['phase'], 'COMPLETING')
-            self.assertFalse((self.root / 'visits').exists())
+            self.assertEqual({str(p.relative_to(archives)): p.read_bytes()
+                              for p in archives.rglob('*.json')}, archived_bytes)
             with patch.object(resumed.provider, 'get_status', wraps=resumed.provider.get_status) as status:
                 resumed.flow.customer_claim(ticket)
                 self.assertGreaterEqual(status.call_count, 1)
@@ -132,6 +133,8 @@ class ServiceCrashTests(unittest.TestCase):
                     binding = resumed.flow.resume_binding()
                     view = photo.restore(get_templates(), binding, resumed.flow.resume_permit())
                     self.assertEqual((view['phase'], view['captured']), ('result', 3))
+                    self.assertEqual((view['copies'], view['session_count'], view['print_state']),
+                                     (2, 1, 'NOT_SENT'))
                     self.assertIsNone(photo.printer)
                     self.assertIsNone(photo.drive_client)
                     self.assertFalse(photo.auto_print)
@@ -153,18 +156,61 @@ class ServiceCrashTests(unittest.TestCase):
             for archive in (self.root / 'visits' / (before['checkout_key'] + '.json'),
                             self.root / 'visits' / before['checkout_key'] / 'completed.json'):
                 self.assertEqual(json.loads(archive.read_text()), result)
+                self.assertNotIn(ticket.split(':')[-1], archive.read_text())
             self.assertEqual(self.media(saved['transaction_id']), media)
-        with closing(AllocationHarness(self.root)) as reopened:
-            self.forbid_effects(reopened)
+        with closing(AllocationHarness(self.root)) as reopened, self.forbid_effects(reopened):
             self.assertFalse(reopened.flow.active)
             self.assert_identity(reopened, before, grant, attempt, saved)
             self.assertEqual(self.media(saved['transaction_id']), media)
 
+    def test_pay18_combined_lost_claim_started_completed_replies_restore_original_result_and_ack(self):
+        original = self.chain()
+        self.assertFalse((self.root / 'visits').exists())
+        self.complete_original(*original)
+
+    def test_pay18_completion_archive_exits_hold_until_history_index_and_final_journal_are_durable(self):
+        base = self.root
+        boundaries = (('completed_ack_before_archive', 94, False, False),
+                      ('archive_operation_before_index', 95, True, False),
+                      ('archive_index_before_final_journal', 96, True, True))
+        for boundary, code, history_exists, index_exists in boundaries:
+            with self.subTest(boundary=boundary):
+                self.root = base / boundary
+                original = self.chain()
+                ticket, before, grant, attempt, completed = original
+                media = self.media(completed['transaction_id'])
+                saved = self.crash(boundary, code, ticket)
+                self.assertEqual(saved['phase'], 'COMPLETING')
+                self.assertEqual(saved['order']['service_state'], 'COMPLETED')
+                self.assertEqual(saved['customer_claim_operation_id'], completed['customer_claim_operation_id'])
+                directory = self.root / 'visits'
+                history = directory / before['checkout_key'] / 'completed.json'
+                index = directory / (before['checkout_key'] + '.json')
+                self.assertEqual(history.exists(), history_exists)
+                self.assertEqual(index.exists(), index_exists)
+                for path in (history, index):
+                    if path.exists():
+                        archive = json.loads(path.read_text())
+                        self.assertEqual(archive['phase'], 'COMPLETED')
+                        self.assertEqual(archive['transaction_id'], completed['transaction_id'])
+                        self.assertEqual(archive['order']['grant_id'], grant)
+                with closing(AllocationHarness(self.root)) as held, self.forbid_effects(held):
+                    self.assert_private(held)
+                    with self.assertRaises(RuntimeError):
+                        held.flow.begin({'template_b': 1})
+                    with self.assertRaises(RuntimeError):
+                        held.flow.open_archived(ticket)
+                    self.assertEqual(held.flow.snapshot()['phase'], 'COMPLETING')
+                    self.assert_identity(held, before, grant, attempt, saved)
+                self.assertEqual(self.media(completed['transaction_id']), media)
+                self.complete_original(*original)
+                self.assertEqual(self.media(completed['transaction_id']), media)
+        self.root = base
+
     def test_pay18_completed_reply_loss_cannot_use_cached_paid_during_outage_or_refund(self):
         ticket, before, grant, attempt, saved = self.chain()
         media = self.media(saved['transaction_id'])
-        with closing(AllocationHarness(self.root)) as resumed:
-            self.forbid_effects(resumed)
+        with closing(AllocationHarness(self.root)) as resumed, self.forbid_effects(resumed):
             self.assert_private(resumed)
             with patch.object(resumed.provider, 'get_status', side_effect=ConnectionError('Synthetic outage')):
                 with self.assertRaisesRegex(RuntimeError, 'HTTP 503'):

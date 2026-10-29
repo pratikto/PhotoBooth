@@ -56,3 +56,30 @@ No runtime defect found. PAY-18 synthetic PASS; matrix 51/1/9/8, audit IN_PROGRE
 [Exact command/source/digest](evidence/pay18-replies-verification.json).
 Linux/Windows CI now includes the new module; matching result pending.
 Next: completion/archive exits; CAP-16 pre-request kill remains NOT_RUN.
+
+## AR-03.d2 — completion/archive durability
+
+First increment pushed/remote verified at
+`3ad80da74da2a0fc3c9d5e3dbe3d84f91a483f4a`. New child exits: 94 after the
+COMPLETED reply is locally accepted but before archive; 95 after the per-operation
+history write/directory sync but before lookup index; 96 after both history/index
+and their supported directory syncs, before final COMPLETED visit journal.
+Disk journal remains COMPLETING in each case, backend COMPLETED/COMPOSED + OWED.
+New-cart admission and archived lookup cannot bypass the active visit. Private
+observation changes no archive bytes. Original customer proof/current settlement
+restores only original result and replays the same completion tuple, then writes
+both exact archives and final journal. No capture/compose/print/upload repeats.
+
+New archive test has three subcases, each reusing the four preceding reply exits:
+15 child exits. Together with the two original methods: **23 exits at seven
+boundaries**, three new methods. Module-only initial run: 3 PASS, 15.827s.
+Final combined focused run: **86 PASS / zero failure/error/skip**, 22.532s.
+Two original copies/one design/three JPEGs/one PNG and NOT_SENT remain preserved;
+raw synthetic ticket absent from journal and both archives. No runtime defect.
+[Exact command/source/digests](evidence/pay18-archive-verification.json).
+
+Linux/Windows matching CI pending at this containing test commit. Prior first
+run 40818395624 is in progress at publication; do not infer success. No new full/
+native/device/merchant result. PAY-18 stays synthetic PASS, matrix 51/1/9/8.
+CAP-16 final-compose/pre-request process exit remains NOT_RUN; it is stronger
+than these after-backend-completion exits. Next CAP-11–13 after CI/checkpoint.
