@@ -1,5 +1,13 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 29 October — BUG-023.a foundation verified
+
+Source `ab6fbbb`, 45 focused PASS; full 1145/1068/77, followed by 75 GUI/audio
+opt-in run/73 PASS/two SKIP (three model and one video skip remain overall). CI 40843692911 all three jobs
+SUCCESS; new journal methods PASS on Linux, Windows registration next.
+Dormant only: HTTP not integrated, BUG-023 OPEN/UX-13 FAIL, matrix 56/1/9/3.
+[Evidence/next step](qa/portrait-v2-sandbox/BUG023-DENIAL-AUDIT.md).
+
 ## 29 October — BUG-023.a denial journal foundation
 
 Dormant additive bounded redacted journal, no HTTP integration yet. Five new

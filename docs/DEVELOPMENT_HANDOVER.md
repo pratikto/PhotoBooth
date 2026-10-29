@@ -1,5 +1,31 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — BUG-023.a verified foundation checkpoint
+
+Source/micro-push `ab6fbbb4e6af4665f4082f66b9a5b9b6a2562c67` remote verified.
+Dormant additive denial journal only, no HTTP integration. **45 focused PASS**,
+zero failure/error/skip, 0.893s. Full discovery **1145 run / 1068 PASS / 77 SKIP**,
+zero failure/error, 260.586s. Follow-up explicitly enables GUI/audio and executes
+exactly the 75 previously opt-out cases: **75 run / 73 PASS / two optional SKIP**, 143.139s.
+Three optional model skips and one native-video/ffmpeg skip remain across both commands; these are separate commands,
+not a relabeled zero-skip full run. Python 3.12.14/Linux software GL/offline fixtures.
+**CI 40843692911 all three jobs SUCCESS**. Linux recovery 394 PASS/zero skip,
+112.454s, all five new journal tests PASS; native 111/110/one optional palm SKIP,
+90.486s. Windows existing recovery/payment/portable/audio groups SUCCESS, but
+the new journal methods were NOT_RUN there: their module is not registered yet.
+
+Next exact increment: register test_checkout_durability in Windows CI and verify
+new methods; then mount invalid-PIN/429 audit on inspect/resolve/release with
+generic unavailable on audit-write failure. Check replay/cross-order denials
+before UX-13 can PASS. BUG-023 OPEN, matrix 56/1/9/3 and audit IN_PROGRESS remain.
+No authentication/PIN-budget/customer-proof/paid-rights change, no new endpoint.
+Only latest 4096 redacted diagnostic events are pruned, never financial/action/
+claim/fence/media records. See [evidence](qa/portrait-v2-sandbox/evidence/bug023-foundation-verification.json) for commands/source/digests/limits.
+This containing docs-only push is final safe checkpoint; resolve its SHA from
+Git log/remote. Only disposable work/ stays local, no unpublished source patch.
+No production/OPS/public ingress/new branch/default/master/deployment or actual
+device/provider/paper/Drive/deletion acceptance. Retain additive tables on rollback.
+
 ## 29 October — AR-09 BUG-023.a dormant denial journal
 
 Base/remote verified `fc73a486288bc35b2244b9f89f2f278044d6ea22`.
