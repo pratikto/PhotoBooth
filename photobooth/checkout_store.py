@@ -418,7 +418,7 @@ class CheckoutStore:
             return self._row(order_id, booth_id)
 
     def begin(self, booth_id, quantities, amount, checkout_key, *, creation_context=None,
-              frozen_contract=None, customer_capability_hash=None):
+              frozen_contract=None, customer_capability_hash=None, delivery_policy=None):
         identifier(booth_id)
         identifier(checkout_key, minimum=16)
         if type(amount) is not int or amount <= 0 or not isinstance(quantities, dict):
@@ -427,6 +427,14 @@ class CheckoutStore:
         if customer_capability_hash is not None and (not isinstance(customer_capability_hash,str)
                 or re.fullmatch(r'[a-f0-9]{64}',customer_capability_hash) is None):
             raise ValueError('Invalid customer capability hash')
+        delivery = None
+        if delivery_policy is not None:
+            if (delivery_policy != 'PRINT_REQUIRED_V1' or type(creation_context) not in (tuple, list)
+                    or len(creation_context) != 2 or creation_context[1] != 'mock'
+                    or not isinstance(frozen_contract, dict)):
+                raise ValueError('Frozen mock-only delivery policy required')
+            from photobooth.delivery_requirements import DeliveryRequirements
+            delivery = DeliveryRequirements(self)
         with self.write():
             old = self.db.execute('SELECT * FROM checkouts WHERE booth_id=? AND checkout_key=?',
                                   (booth_id, checkout_key)).fetchone()
@@ -437,6 +445,13 @@ class CheckoutStore:
                                              (old['id'],)).fetchone()
                 if (capability['capability_hash'] if capability else None) != customer_capability_hash:
                     raise CheckoutConflict('Original customer credential binding required')
+                has_table = self.db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='checkout_delivery_requirements'").fetchone()
+                requirement = (self.db.execute('SELECT policy FROM checkout_delivery_requirements WHERE order_id=?',
+                                               (old['id'],)).fetchone() if has_table else None)
+                if (requirement['policy'] if requirement else None) != delivery_policy:
+                    raise CheckoutConflict('Original delivery policy required')
+                if delivery is not None:
+                    delivery.get(old['id'], booth_id, creation_context[0])
                 return self._record(old), False
             active = self.db.execute('''SELECT 1 FROM checkouts WHERE booth_id=?
                 AND closed=0 AND state NOT IN ('EXPIRED','CANCELLED','FAILED')
@@ -464,6 +479,8 @@ class CheckoutStore:
                 self.db.execute('''INSERT INTO checkout_customer_capabilities
                     (order_id,booth_id,capability_hash,created_at,expires_at) VALUES(?,?,?,?,?)''',
                     (order_id,booth_id,customer_capability_hash,self.now(),self.now()+86400))
+            if delivery is not None:
+                delivery._freeze_new(order_id, booth_id, creation_context[0])
             return self._row(order_id), True
 
     def has_customer_capability(self, order_id):

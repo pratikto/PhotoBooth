@@ -1,5 +1,6 @@
-"""Explicit, unmounted delivery schema/read adapter; no issuance or effects."""
+"""Explicit mock-only delivery requirement storage; no delivery effects."""
 import json
+import uuid
 
 from photobooth.checkout_store import CheckoutConflict, CheckoutMissing, identifier
 
@@ -7,8 +8,8 @@ from photobooth.checkout_store import CheckoutConflict, CheckoutMissing, identif
 class DeliveryRequirements:
     """Missing requirements are unspecified, never permission or fulfillment.
 
-    Initialization is explicit; ordinary CheckoutStore/HTTP/GUI never calls it.
-    Issuance must later join original new-order creation in one transaction.
+    Default CheckoutStore/HTTP/GUI never initializes it. Only explicit mock
+    policy issuance joins original new-order creation in one transaction.
     """
     def __init__(self, store):
         self.store = store
@@ -20,6 +21,20 @@ class DeliveryRequirements:
                 booth_id TEXT NOT NULL, merchant_id TEXT NOT NULL,
                 contract_hash TEXT NOT NULL, copies_json TEXT NOT NULL,
                 created_at REAL NOT NULL)''')
+
+    def _freeze_new(self, order_id, booth_id, merchant_id):
+        """Private begin() seam, never an attachment API for existing orders."""
+        if not self.store.db.in_transaction:
+            raise RuntimeError('Original new-order transaction required')
+        contract = self.store.frozen_order(order_id)
+        digest = self.store.db.execute(
+            'SELECT contract_hash FROM checkout_frozen_orders WHERE order_id=?',
+            (order_id,)).fetchone()['contract_hash']
+        self.store.db.execute('INSERT INTO checkout_delivery_requirements VALUES(?,?,?,?,?,?,?,?,?)',
+            (order_id, uuid.uuid4().hex, 1, 'PRINT_REQUIRED_V1', booth_id, merchant_id,
+             digest, json.dumps(contract['quantities'],sort_keys=True,separators=(',',':')),
+             self.store.now()))
+        self.get(order_id, booth_id, merchant_id)  # Validate before the enclosing commit.
 
     def get(self, order_id, booth_id, merchant_id):
         identifier(merchant_id)

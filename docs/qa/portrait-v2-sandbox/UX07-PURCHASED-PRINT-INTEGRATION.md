@@ -160,3 +160,49 @@ external effects. Rollback disables adapter but preserves its additive table and
 all original financial/media/audit records. Only work/ scratch and superseded docs
 stash local; no unpublished runtime patch. This containing docs-only push is the
 final safe checkpoint; exact SHA from Git log/remote. Do not repeat verified work.
+
+## 30 October — i2/j execution contract before code
+
+Continue through dependent safe source increments without ending the session at
+micro-push boundaries (owner request). UX-07.i2 adds a keyword-only trusted
+storage policy, default None. PRINT_REQUIRED_V1 is allowed only in mock creation
+context with a frozen quote; dedicated Sandbox issuance rejects. Initialize the
+additive table explicitly before begin, then insert the requirement inside the
+same BEGIN IMMEDIATE as original order/frozen/capability/attempt rows. Any failure
+rolls everything back. Same-key replay must match stored policy/absence; never
+attach a new policy to an existing order. Freeze copies from the original hash,
+not caller print quantities. Add independent-connection concurrency, SQL rollback
+and actual child exit tests before accepting the transaction seam.
+
+UX-07.j then exposes that storage option only through an explicit mock-provider
+backend configuration, default None, not through HTTP request bodies or launcher
+flags. An offline fixture host reuses camera/storage/template readiness plus
+original read-only printer probe off the UI; freshness is rechecked after probe.
+A same-key existing order reconciles without a new probe or POST, but must still
+match original cart/policy. Probe failure cannot create an order or consume a
+capability. All provider/printer transports in the host are synthetic. Physical
+acceptance and customer-facing mounting remain separate external gates.
+
+## 30 October — i2 focused source checkpoint
+
+Base/remote f90bcea79a10d735f5b7c6dd2c4c564317e6d683.
+UX-07.i2 atomic mock-only issuance: trusted storage policy defaults None;
+PRINT_REQUIRED_V1 requires mock creation context and frozen quote. Original new
+order, attempt, frozen JSON/hash, capability and requirement commit in one
+transaction. Existing policy/absence conflicts hold, no retrofit/downgrade.
+Default store does not initialize the schema. Sandbox issuance rejects.
+Eight new methods include two actual child exits before/after commit, SQL and
+invalid frozen-contract rollback, independent-connection concurrency, replay and
+old default compatibility. 73 focused PASS, zero failure/error/skip, 0.632s.
+Initial missing-interface baseline seven run/one FAIL/nine ERROR (subtests),
+not a pre-existing payment defect. Intermediate 72 PASS/0.620s retained locally.
+No backend/HTTP/GUI mounting. Next UX-07.j offline purchase/readiness host;
+continue this session after immediate source push. Full/current CI pending,
+one full after final functional chain increment.
+
+Whole UX-07 NOT_RUN, matrix59/0/9/1; actual devices/provider/paper/privacy/
+release and PAY-22/WEB gates remain separate. No Sandbox delivery opt-in/OPS/
+production/public ingress/new branch/master/default/deployment or real external
+effect. Rollback scoped inverse code; retain additive requirements and all
+financial/media/audit records. Only private work/ and superseded docs stash local.
+Containing source commit is the safe checkpoint; exact SHA via Git log/remote.

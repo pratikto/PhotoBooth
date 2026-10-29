@@ -1,5 +1,29 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 30 October — i2 focused source checkpoint
+
+Base/remote f90bcea79a10d735f5b7c6dd2c4c564317e6d683.
+UX-07.i2 atomic mock-only issuance: trusted storage policy defaults None;
+PRINT_REQUIRED_V1 requires mock creation context and frozen quote. Original new
+order, attempt, frozen JSON/hash, capability and requirement commit in one
+transaction. Existing policy/absence conflicts hold, no retrofit/downgrade.
+Default store does not initialize the schema. Sandbox issuance rejects.
+Eight new methods include two actual child exits before/after commit, SQL and
+invalid frozen-contract rollback, independent-connection concurrency, replay and
+old default compatibility. 73 focused PASS, zero failure/error/skip, 0.632s.
+Initial missing-interface baseline seven run/one FAIL/nine ERROR (subtests),
+not a pre-existing payment defect. Intermediate 72 PASS/0.620s retained locally.
+No backend/HTTP/GUI mounting. Next UX-07.j offline purchase/readiness host;
+continue this session after immediate source push. Full/current CI pending,
+one full after final functional chain increment.
+
+Whole UX-07 NOT_RUN, matrix59/0/9/1; actual devices/provider/paper/privacy/
+release and PAY-22/WEB gates remain separate. No Sandbox delivery opt-in/OPS/
+production/public ingress/new branch/master/default/deployment or real external
+effect. Rollback scoped inverse code; retain additive requirements and all
+financial/media/audit records. Only private work/ and superseded docs stash local.
+Containing source commit is the safe checkpoint; exact SHA via Git log/remote.
+
 ## 30 October — UX-07.i1 schema/read adapter regression verified
 
 Source `0b8aaa85ff692cf21d4c1c390815f1e4c634ef2b` pushed/remote verified. Explicit additive table and read-only

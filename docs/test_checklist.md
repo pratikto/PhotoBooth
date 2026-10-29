@@ -1,5 +1,22 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 30 October — i2 focused checkpoint
+
+UX-07.i2 atomic mock-only issuance: trusted storage policy defaults None;
+PRINT_REQUIRED_V1 requires mock creation context and frozen quote. Original new
+order, attempt, frozen JSON/hash, capability and requirement commit in one
+transaction. Existing policy/absence conflicts hold, no retrofit/downgrade.
+Default store does not initialize the schema. Sandbox issuance rejects.
+Eight new methods include two actual child exits before/after commit, SQL and
+invalid frozen-contract rollback, independent-connection concurrency, replay and
+old default compatibility. 73 focused PASS, zero failure/error/skip, 0.632s.
+Initial missing-interface baseline seven run/one FAIL/nine ERROR (subtests),
+not a pre-existing payment defect. Intermediate 72 PASS/0.620s retained locally.
+No backend/HTTP/GUI mounting. Next UX-07.j offline purchase/readiness host;
+continue this session after immediate source push. Full/current CI pending,
+one full after final functional chain increment.
+[Full scope/limits/next](qa/portrait-v2-sandbox/UX07-PURCHASED-PRINT-INTEGRATION.md).
+
 ## 30 October — UX-07.i1 explicit schema/read adapter verified
 
 17 focused PASS; full 1194/1190/4, zero failure/error. Current three-job CI
