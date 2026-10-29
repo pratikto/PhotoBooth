@@ -361,6 +361,27 @@ class KioskCheckout:
         self._reconcile_at = time.monotonic()+10
         result = self.client.reconcile(self.data['order']['order_id'], trigger=trigger)
         self._accept(result)
+        # An explicit cancellation may have completed while its reply was lost.
+        # Fresh terminal proof can retire an unpaid visit after restart; cached
+        # state and any prior service/owed/photo identity must remain held.
+        if (self.data['phase'] == 'CANCELLING'
+                and (result.get('reconciliation') or {}).get('checked') is True
+                and result['state'] in {'EXPIRED', 'CANCELLED', 'FAILED'}
+                and result.get('service_state') == 'NONE' and not result.get('grant_id')
+                and not result.get('fulfillment') and not result.get('fulfillment_issue')
+                and not self.data.get('transaction_id') and not self.data.get('allocation_operation_id')):
+            finished = self.snapshot()
+            finished['phase'] = 'CANCELLED'
+            self._archive_snapshot(finished, 'cancelled')
+            with self.lock:
+                previous = self.data
+                self.data = finished
+                try:
+                    self._save()
+                except BaseException:
+                    self.data = previous
+                    raise
+            self.lock_customer()
         delay = (result.get('reconciliation') or {}).get('retry_after', 10)
         if type(delay) is not int:
             delay = 10

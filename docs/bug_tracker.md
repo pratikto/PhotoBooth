@@ -1,5 +1,16 @@
 # Meong Photobooth — Bug register
 
+## BUG-024 — confirmed cancellation remains held after restart (29 October)
+
+**S2 availability — FIXED IN SOURCE / FOCUSED VERIFIED; full/CI pending.**
+Real cancel succeeded but response/status unavailable; after reopen fresh
+terminal observation updated backend/order while local phase stayed CANCELLING.
+Six-case baseline four PASS/two FAIL. No double charge/lost payment/media leak
+observed. Explicit unpaid cancel now archives exact visit before final local
+commit; failed archive/save, cached proof and any paid/service identity hold.
+52 focused PASS/zero skip. UX-05 pending final verification; no production.
+[Contract/evidence](qa/portrait-v2-sandbox/UX05-AMBIGUOUS-ABANDONMENT.md).
+
 ## 29 October — BUG-023 fixed in source / regression verified
 
 Source `3822bb0`, 73 focused PASS; full 1153/1149/4, zero failure/error.

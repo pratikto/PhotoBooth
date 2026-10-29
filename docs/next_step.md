@@ -1,5 +1,13 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+## 29 October — UX-05.b confirmed cancellation recovery
+
+BUG-024 reproduced: confirmed cancellation held CANCELLING after restart.
+Controller now archives/commits unpaid terminal cancellation before new visitor;
+write failure/cached evidence/paid rights hold. Six UX-05 scenarios; **52 focused
+PASS**, full/CI pending. UX-05 NOT_RUN pending final, matrix 57/0/9/3.
+[Contract/results/limits](qa/portrait-v2-sandbox/UX05-AMBIGUOUS-ABANDONMENT.md).
+
 ## 29 October — UX-05.a uncertainty holds verified
 
 33 focused PASS, zero skip; two new HTTP/controller abandonment/restart cases

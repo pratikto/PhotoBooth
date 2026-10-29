@@ -1,0 +1,39 @@
+{
+  "status": "UX05_BUG024_FOCUSED_VERIFIED_FULL_CI_PENDING",
+  "first_test_commit": "be6f96e579796a6f7e23b732a80cb972a86aa234",
+  "source": "Containing runtime/test commit; pin after push",
+  "bug024": "FIXED IN SOURCE / FOCUSED VERIFIED; full/CI pending",
+  "focused": {
+    "run": 52,
+    "pass": 52,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 2.833
+  },
+  "before": {
+    "run": 6,
+    "pass": 4,
+    "fail": 2,
+    "error": 0,
+    "seconds": 0.577
+  },
+  "ux05_methods": 6,
+  "files_sha256": {
+    "photobooth/qris_session.py": "65b13e38ce3936b25f232b577353af562fdf4316b384bf30aebc100630c067aa",
+    "tests/test_ux05_abandonment.py": "7a74ef3a55910152087b46ca544293af888f8e6f8d917fe7efee3840a3f352d7",
+    ".github/workflows/portrait-kiosk-v2.yml": "f734924b902b958695bfe33a948467b2fe139dd4a69a0b1318d07ad2e206f1d9"
+  },
+  "focused_report_sha256": "176ff13abeebebc5e278701be4f6ecd095773dc2c580044b28ab1fd3b991a6f9",
+  "before_report_sha256": "1462c99cedf4c9fa8014d31ca52e52a0ac4dd8624221636ba1f8e5c94d078842",
+  "matrix": {
+    "total": 69,
+    "pass": 57,
+    "fail": 0,
+    "blocked": 9,
+    "not_run": 3
+  },
+  "migration": "No schema/version change; reuse exact-key JSON archive; keep cancelled history and all financial/claim/fence/media records on rollback",
+  "limits": "Synthetic provider/controller/DB reopens and targeted writer exceptions, no actual merchant/device/power-loss/production/OPS acceptance",
+  "next": "Current full/CI final checkpoint; then UX-07 preflight scope/readiness evidence"
+}
