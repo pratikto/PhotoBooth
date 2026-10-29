@@ -64,8 +64,11 @@ def configured_sandbox(root, env=None):
 
 class SandboxCheckout:
     """All calls run on the existing single-flight worker, including QR download."""
-    def __init__(self, flow, *, image_loader=branded_sandbox_qr_image):
+    def __init__(self, flow, *, image_loader=branded_sandbox_qr_image, connectivity=None):
+        from .connectivity import ConnectivityRestoration
         self.flow, self.image_loader = flow, image_loader
+        self.connectivity = ConnectivityRestoration() if connectivity is None else connectivity
+        self._connectivity_needed = False
         self.qr = self.qr_identity = None
         self.ticket_qr = self.ticket_identity = None
 
@@ -112,8 +115,7 @@ class SandboxCheckout:
         return data
 
     def boot(self):
-        self.flow.refresh()
-        return self.view()
+        return self.check()
 
     def begin(self, quantities):
         cart = {key:value for key,value in quantities.items() if value}
@@ -133,7 +135,23 @@ class SandboxCheckout:
         return self.begin(quantities)
 
     def check(self):
-        self.flow.refresh()
+        data = self.flow.snapshot() or {}
+        order = data.get('order') or {}
+        if (self.flow.context['mode'] == 'sandbox' and self.flow.active and order
+                and (self._connectivity_needed or order.get('verification_pending'))
+                and (data['phase'] in {'CREATING', 'WAITING', 'RECOVERY', 'RELEASING'}
+                     or self.flow.customer_claim_required)
+                and self.connectivity.poll() and self.flow.connectivity_restored()):
+            # Do not follow the priority GET with an ordinary refresh/claim in
+            # this iteration. The native privacy/ownership guards still apply.
+            self._connectivity_needed = bool(self.flow.snapshot()['order'].get('verification_pending'))
+            return self.view()
+        try:
+            self.flow.refresh()
+        except Exception:
+            self._connectivity_needed = True
+            raise
+        self._connectivity_needed = bool(((self.flow.snapshot() or {}).get('order') or {}).get('verification_pending'))
         return self.view()
 
     def cancel(self):

@@ -1,6 +1,7 @@
 """Native GUI → real HTTP API/client → durable grant → real P3 synthetic photos."""
 from contextlib import contextmanager
 import os
+import threading
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import time
@@ -77,6 +78,55 @@ class SandboxWidgetTests(unittest.TestCase):
             self.assertTrue(app._sandbox_view['customer_claim_required'])
             self.assertFalse(any(getattr(w,'text','')=='SALIN LINK QRIS' for w in app.stage.walk()))
             self.assertFalse(any(getattr(w,'text','')=='LANJUT KE PERSETUJUAN FOTO' for w in app.stage.walk()))
+
+    def test_connectivity_edge_runs_on_worker_and_late_result_remains_private(self):
+        from photobooth.kiosk_v2.connectivity import ConnectivityRestoration
+        with self.booth() as (app, f):
+            now = [time.time()]
+            f.store.now = lambda: now[0]
+            self.reserve(app, f)
+            original = f.flow.snapshot()
+            app._sandbox_lock_customer()
+            f.flow.require_recovery()
+            f.provider.outage = True
+            f.service.check()
+            sample_time = [100.0]
+            reader = Mock(return_value=False)
+            f.service.connectivity = ConnectivityRestoration(read=reader, clock=lambda: sample_time[0])
+            app._sandbox_submit('check')
+            self.settle(app)  # Observe offline on the native single worker.
+            self.assertLess(time.monotonic(), f.flow._reconcile_at)
+            entered, release = threading.Event(), threading.Event()
+            main_thread = threading.get_ident()
+            def online():
+                self.assertNotEqual(threading.get_ident(), main_thread)
+                entered.set()
+                if not release.wait(3):
+                    raise AssertionError('Synthetic OS reader barrier timed out')
+                return True
+            reader.side_effect = online
+            sample_time[0] += 5
+            now[0] += 11  # Existing persisted priority budget has elapsed.
+            f.provider.outage = False
+            reads = f.provider.reads
+            app._sandbox_submit('check')
+            try:
+                self.assertTrue(entered.wait(1))
+                EventLoop.idle()  # OS observation never blocks the Kivy thread.
+                self.assertTrue(f.jobs.busy)
+                app._sandbox_lock_customer()  # Retire this in-flight callback.
+            finally:
+                release.set()
+            self.settle(app)
+            self.assertEqual(f.provider.reads, reads + 1)
+            self.assertEqual(f.provider.charges, 1)
+            self.assertEqual(f.flow.snapshot()['order']['grant_id'], original['order']['grant_id'])
+            self.assertTrue(f.flow.customer_claim_required)
+            self.assertFalse(app._sandbox_consent)
+            self.assertEqual(app._photo_view, {})
+            self.assertEqual(app.navigation.page, SANDBOX_CHECKOUT)
+            self.assertFalse(any(isinstance(w, KivyImage) and w.texture is not None
+                                 for w in app.stage.walk()))
 
     def test_copy_current_image_action_without_changing_order_and_retire_old_button(self):
         with self.booth() as (app,f):

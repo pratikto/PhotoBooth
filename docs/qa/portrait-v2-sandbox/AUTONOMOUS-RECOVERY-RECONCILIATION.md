@@ -84,3 +84,12 @@ AR-02.b group with test_qris_reconciliation_session, test_kiosk_v2_sandbox and
 test_kiosk_v2_sandbox_widgets, in SDL offscreen/dummy-audio cloud environment.
 Full regression follows final functional roadmap increment; actual devices and
 merchant acceptance remain NOT_RUN. Next dependency: AR-03 durable fulfillment.
+
+## AR-02.d — native connectivity restoration, 29 October
+
+The earlier AR-02.c priority seam now has a passive Windows NLM/Ubuntu
+NetworkManager producer mounted on the existing Sandbox worker. Five-second
+sampled offline→online edges bypass local retry only for same-order observation;
+persisted backend priority/lease/revision and customer ownership remain intact.
+103 focused PASS; actual OS/merchant reconnection and final full/CI are separate.
+[Contract, exact evidence and limitations](PAY08-CONNECTIVITY.md).

@@ -4,8 +4,8 @@
 review, IN_PROGRESS. First bounded source pass read; current functional source
 4642841 fixes BUG-022 and has 1100 run / 1097 PASS / 3 optional SKIP, matching
 three-job CI SUCCESS. PAY-06/PAY-21 evidence verified. Matrix now 44 PASS /
-1 FAIL / 9 BLOCKED / 15 NOT_RUN: BUG-023 denial audit and native connectivity
-producer remain open. [Review checkpoint](AR00-AR13-CODE-REVIEW.md).
+1 FAIL / 9 BLOCKED / 15 NOT_RUN at audit baseline. PAY-08 is now focused-verified
+(45 PASS / 1 FAIL / 9 BLOCKED / 14 NOT_RUN), full/CI for AR-02.d2 pending. [Review checkpoint](AR00-AR13-CODE-REVIEW.md).
 Complete remaining conformity/fault evidence before a blanket verdict; historical
 readiness reports below retain their dated source and gates.
 
@@ -16,6 +16,22 @@ readiness reports below retain their dated source and gates.
 **Previous fully validated application source:** `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`; full 1,097 run / 1,093 PASS / 4 SKIP / zero failures/errors; matching CI 40767441201 three jobs SUCCESS.
 **Historical audit baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
 **Current documentation handover:** See `docs/DEVELOPMENT_HANDOVER.md` and verify current remote HEAD; never assume the HEAD printed in a dated checkpoint is still current.
+
+## 29 October — AR-02.d2 connectivity recovery mounted, focused PASS
+
+Previous reader micro-push `52a9a18857580ddcc822fe77cd36af76d489a532` pushed/remote-verified.
+Native known-order recovery now coalesces OS offline→online on the existing
+single worker and immediately requests same-order read-only reconciliation;
+backend persisted priority/lease still bounds GET. No refresh/claim follows in
+that iteration; ownership/media/service remain held. **103 focused PASS**,
+zero failure/error/skip, 39.392s. Test-first integrated run: 7 run, 3 FAIL/3 ERROR.
+[Contract/command/source evidence](PAY08-CONNECTIVITY.md).
+This containing functional commit is the mounted source; final full/CI PENDING.
+PAY-08 synthetic PASS / AR-AUDIT-002 resolved; matrix **45 PASS / 1 FAIL /
+9 BLOCKED / 14 NOT_RUN**, BUG-023 and physical/provider/OPS gates unchanged.
+No schema/journal migration or new layout; unknown OS hint retains bounded polls.
+Next: final full/matching CI at pushed source, then AR-03 CAP-01–05 crash fixtures.
+Only disposable work/ local; scoped inverse retains every order/claim/media/fence.
 
 ## 29 October — AR-02.d1 passive connectivity reader checkpoint
 

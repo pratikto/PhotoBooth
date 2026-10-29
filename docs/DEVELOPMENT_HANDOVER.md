@@ -1,5 +1,22 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-02.d2 connectivity recovery mounted, focused PASS
+
+Previous reader micro-push `52a9a18857580ddcc822fe77cd36af76d489a532` pushed/remote-verified.
+Native known-order recovery now coalesces OS offline→online on the existing
+single worker and immediately requests same-order read-only reconciliation;
+backend persisted priority/lease still bounds GET. No refresh/claim follows in
+that iteration; ownership/media/service remain held. **103 focused PASS**,
+zero failure/error/skip, 39.392s. Test-first integrated run: 7 run, 3 FAIL/3 ERROR.
+[Contract/command/source evidence](qa/portrait-v2-sandbox/PAY08-CONNECTIVITY.md).
+This containing functional commit is the mounted source; final full/CI PENDING.
+PAY-08 synthetic PASS / AR-AUDIT-002 resolved; matrix **45 PASS / 1 FAIL /
+9 BLOCKED / 14 NOT_RUN**, BUG-023 and physical/provider/OPS gates unchanged.
+No schema/journal migration or new layout; unknown OS hint retains bounded polls.
+Next: final full/matching CI at pushed source, then AR-03 CAP-01–05 crash fixtures.
+Only disposable work/ local; scoped inverse retains every order/claim/media/fence.
+
+
 ## 29 October — AR-02.d1 passive connectivity reader checkpoint
 
 Base/remote verified `e0f4bb663f25247003176da555dbd30744c0e2e3`. Added an

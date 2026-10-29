@@ -1,0 +1,50 @@
+{
+  "stage": "AR-02.d2 / PAY-08",
+  "status": "FOCUSED_VERIFIED_FULL_AND_CI_PENDING",
+  "remote_base": "52a9a18857580ddcc822fe77cd36af76d489a532",
+  "source": "Containing functional commit; hashes below",
+  "python": "3.12.14",
+  "platform": "Linux cloud, SDL offscreen/dummy",
+  "command": "KIVY_HOME=/tmp/meong-pay08-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy MESA_SHADER_CACHE_DIR=/tmp/meong-pay08-mesa MEONG_CI_TEST_REPORT=work/pay08-focused-report.txt .venv/bin/python tools/run_kiosk_unittests.py test_pay08_connectivity test_recovery_connectivity test_qris_reconciliation_session test_checkout_reconciliation test_qris_session test_kiosk_v2_sandbox test_kiosk_v2_sandbox_widgets test_customer_claim_session test_service_fencing",
+  "focused": {
+    "run": 103,
+    "pass": 103,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 39.392
+  },
+  "before": {
+    "run": 7,
+    "failures": 3,
+    "errors": 3,
+    "skips": 0,
+    "report_sha256": "d343ce0f7c1b67df861b281e3a39e363d4812021505b2b5b66794f0171f07ca3"
+  },
+  "report_sha256": "95f4070c2a696fa2c0270d7aebfeb273a3f2aced28d51240339d5b2f44a907c9",
+  "source_sha256": {
+    "photobooth/qris_session.py": "c7adaccf8a06b68f963ed15788ec6af888b43258da4f5bf20534a14d913d29d4",
+    "photobooth/kiosk_v2/sandbox_checkout.py": "c56abcecce1d2c4208965655e13437d8362e8198e0d5f41847b1b65e13ae7bc1",
+    "photobooth/kiosk_v2/connectivity.py": "5c04f4af7cd4e8487fb63eba00cf3397b1021e9590fc47cc77b4d15d53270804",
+    "tests/test_pay08_connectivity.py": "d11f2c887daa5c5205640e4eca17db92e761430cef47ea10526300c46072477c",
+    "tests/test_kiosk_v2_sandbox_widgets.py": "ef1e3a0c02897b0d7e4ec972d3fa352b5e914e58c0158ae3c983b6a3c235acaf",
+    "tests/test_recovery_connectivity.py": "fe86a439c22ddddd26d2e984815f4004fa65c07ce155df38595aff0b6bd29cf7",
+    ".github/workflows/portrait-kiosk-v2.yml": "81998791af1ac14ca41d59b04a61d6052171d807428f28fc9f2c6597c98efae0"
+  },
+  "scenario": "test_pay08_connectivity.ConnectivityRecoveryTests.test_pay08_observed_restoration_bypasses_backoff_with_one_get_and_no_new_effects",
+  "native_case": "test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_connectivity_edge_runs_on_worker_and_late_result_remains_private",
+  "matrix": {
+    "total": 69,
+    "pass": 45,
+    "fail": 1,
+    "skip": 0,
+    "blocked": 9,
+    "not_run": 14
+  },
+  "limits": [
+    "OS results and provider responses synthetic; real Windows/Ubuntu network reconnection NOT_RUN.",
+    "Unknown/missing OS helpers retain original bounded polling; short/unreported outages may not produce an edge.",
+    "Only same-order observation; no charge/grant/service/media effect.",
+    "No full regression or matching CI claim before final verification."
+  ]
+}

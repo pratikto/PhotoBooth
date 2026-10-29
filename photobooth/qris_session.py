@@ -356,6 +356,29 @@ class KioskCheckout:
                 self.data.pop('release_operation_id',None);self.data.pop('isolation_id',None);self._save()
             return self.snapshot()
 
+    def _reconcile_payment(self, trigger):
+        """Observe only; callers already own the single checkout worker."""
+        self._reconcile_at = time.monotonic()+10
+        result = self.client.reconcile(self.data['order']['order_id'], trigger=trigger)
+        self._accept(result)
+        delay = (result.get('reconciliation') or {}).get('retry_after', 10)
+        if type(delay) is not int:
+            delay = 10
+        self._reconcile_at = time.monotonic()+max(1, min(60, delay))
+
+    def connectivity_restored(self):
+        """One same-order GET hint, never a claim, service ACK or camera action."""
+        with self.worker_lock:
+            data = self.snapshot() or {}
+            if (not self.active or not data.get('order')
+                    or not (data['phase'] in {'CREATING', 'WAITING', 'RECOVERY', 'RELEASING'}
+                            or self.customer_claim_required)
+                    or not callable(getattr(self.client, 'reconcile', None))):
+                return False
+            # The backend's persisted priority budget and in-flight lease are
+            # authoritative even when this bypasses the local retry deadline.
+            self._reconcile_payment('connectivity')
+            return True
 
     def refresh(self):
         """Advance one bounded worker iteration, not a UI-thread network loop."""
@@ -374,13 +397,7 @@ class KioskCheckout:
                 reconcile = getattr(self.client, 'reconcile', None)
                 if order and callable(reconcile) and time.monotonic() >= self._reconcile_at:
                     trigger = 'restart' if self._reconcile_at == 0 else 'poll'
-                    self._reconcile_at = time.monotonic()+10
-                    result = reconcile(order['order_id'], trigger=trigger)
-                    self._accept(result)
-                    delay = (result.get('reconciliation') or {}).get('retry_after', 10)
-                    if type(delay) is not int:
-                        delay = 10
-                    self._reconcile_at = time.monotonic()+max(1, min(60, delay))
+                    self._reconcile_payment(trigger)
                 return self.snapshot()
             if phase in {'COMPLETED', 'CANCELLED', 'STARTED','SUSPENDED'}:
                 return self.snapshot()

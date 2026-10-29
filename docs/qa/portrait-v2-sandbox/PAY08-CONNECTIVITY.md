@@ -85,3 +85,31 @@ CI groups include the new portable module. Full regression/native integration
 and PAY-08 classification stay pending until AR-02.d2. No schema/journal change.
 Next: sample on existing recovery check worker and submit only same-order GET;
 verify outage/backoff/edge/duplicate/reopen/privacy invariants before activation.
+
+## AR-02.d2 delivered and focused-verified
+
+Reader micro-push `52a9a18857580ddcc822fe77cd36af76d489a532` verified on origin.
+Native Sandbox check/boot now samples only active known-order recovery after
+verification_pending or a prior check failure. Healthy/nonactive/MOCK paths do
+not sample OS. No new timer/thread/network probe; SandboxJobs' existing worker
+runs the read. An edge invokes KioskCheckout.connectivity_restored, which reuses
+the exact original order and scheduler helper, observes only, then returns without
+an ordinary refresh/claim in that iteration. Backend priority_after/lease remain
+persisted and authoritative. Privacy/ownership/late callback barriers are unchanged.
+
+Before implementation the seven integrated tests produce 3 FAIL/3 ERROR.
+After implementation **103 focused PASS / zero failure/error/skip**, 39.392s:
+[exact command/source/report hashes](evidence/pay08-integration.json).
+Real API/client/temp SQLite demonstrate three successive provider errors, ~40s
+backoff, an OS restoration before its deadline, exactly one fresh same-order GET,
+no new charge/grant/service/media effect, duplicate throttling after DB/client
+reopen, active-lease denial, continued outage/refund denial and unknown fallback.
+The actual Kivy fixture proves OS read runs on the checkout worker while the main
+thread remains responsive; privacy locking during it retires the late callback.
+
+PAY-08 now PASS for this synthetic scope, AR-AUDIT-002 source gap resolved;
+physical OS/provider reconnection remains NOT_RUN. Matrix **45 PASS / 1 FAIL /
+9 BLOCKED / 14 NOT_RUN**, BUG-023 still OPEN. Windows/Linux CI includes both
+modules. Full regression/matching CI PENDING at this containing functional commit.
+Next implementation: AR-03 CAP-01–05 exact allocation/STARTED crash evidence;
+no new production/OPS/print/Drive/public ingress authorization.

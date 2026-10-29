@@ -1,5 +1,16 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+## 29 October — AR-02.d PAY-08 focused verification
+
+Passive OS restoration is connected to the native checkout worker: same-order
+GET only, existing durable retry/lease and privacy guards preserved. **103
+focused PASS**, zero failure/error/skip; final full/CI pending at this functional
+publication. Matrix **45 PASS / 1 FAIL / 9 BLOCKED / 14 NOT_RUN**; BUG-023 OPEN.
+[Contract/evidence/limits](qa/portrait-v2-sandbox/PAY08-CONNECTIVITY.md).
+Next: final verification, then AR-03 CAP-01–05 exact allocation/STARTED crashes.
+Actual devices/provider and queued OPS remain unverified/NOT_STARTED.
+
+
 ## 29 October — current AR audit continuation after verified 4642841
 
 PAY-06/PAY-21 verified, BUG-022 corrected; full 1100 run / 1097 PASS / 3 optional

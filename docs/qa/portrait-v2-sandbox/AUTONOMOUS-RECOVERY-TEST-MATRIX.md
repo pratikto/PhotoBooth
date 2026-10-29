@@ -1,5 +1,10 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
+**AR-02.d update:** PAY-08 producer/integration focused-verified, 103 PASS;
+[exact evidence](evidence/pay08-integration.json). Current matrix **45 PASS /
+1 FAIL / 0 SKIP / 9 BLOCKED / 14 NOT_RUN**. Full/matching CI for this functional
+increment PENDING; previous full source below remains historical.
+
 **Current status, 29 October 2026:** current source `4642841f3e99d8c74b4b379e24922a7ba3f614c9`;
 full **1100 run / 1097 PASS / 3 optional SKIP / zero failure/error**, matching
 CI 40790865010 all three jobs SUCCESS. Current scenario matrix:
@@ -147,7 +152,7 @@ offline inbox prototype assertions do not certify deployed ingress.
 | PAY-05 | **PASS** | `test_checkout_creation_attempts.test_concurrent_independent_backends_send_once` | Independent concurrent backends send once. |
 | PAY-06 | **PASS** | `test_checkout_reconciliation.test_pay06_abrupt_exit_before_evidence_commit_requires_fresh_get_and_one_grant` | Audit increment 2: four real child exits at validated/pre-transaction and SQL/pre-COMMIT boundaries, without/with prior grant; rollback, WAL integrity, lease hold, fresh pending denial then settlement; one original grant/fulfillment. [116-case focused evidence](evidence/ar-audit-payment.json). |
 | PAY-07 | **PASS** | `test_checkout_reconciliation.test_retry_backoff_is_durable_bounded_and_not_bypassed_by_duplicate_calls` | Persisted bounded/jittered backoff and no duplicate I/O. |
-| PAY-08 | **NOT_RUN** | `test_checkout_reconciliation.test_restart_trigger_bypasses_backoff_once_then_is_durably_throttled` | Restart trigger is tested. Source review also finds no native connectivity-event producer (controller emits restart/poll only); backend/client accept connectivity. Native immediate network-restoration integration remains absent/unverified (AR-AUDIT-002). |
+| PAY-08 | **PASS** | `test_pay08_connectivity.test_pay08_observed_restoration_bypasses_backoff_with_one_get_and_no_new_effects`; native `test_connectivity_edge_runs_on_worker_and_late_result_remains_private` | AR-02.d: repeated provider failures/backoff, passive OS edge on native worker, one same-order GET before retry deadline, duplicate/lease/reopen throttling, no grant/service/media effect, late privacy denial. Actual Windows/Ubuntu/merchant reconnection NOT_RUN; unknown/missing OS hints use polling. [103-case focused evidence](evidence/pay08-integration.json). |
 | PAY-09 | **PASS** | `test_checkout_backend.test_cancel_racing_payment_never_discards_paid` | Settlement/cancel race preserves original rights. |
 | PAY-10 | **PASS** | `test_checkout_backend.test_duplicate_settlement_and_claim_return_same_grant` | Signed-event dedup and fresh current status also covered by notification inbox tests. |
 | PAY-11 | **PASS** | `test_checkout_backend.test_bad_evidence_cannot_unlock` | Identity/amount mismatch rejects; tampered signature tested separately in same module. |

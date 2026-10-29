@@ -2,6 +2,17 @@
 
 29 October 2026 (Asia/Jakarta). **IN_PROGRESS — no blanket conformity verdict.**
 
+## AR-AUDIT-002 resolution — AR-02.d, 29 October
+
+PAY-08 native producer/worker integration now focused-verified: **103 PASS**,
+zero failure/error/skip, including three outages→OS edge→one immediate same-order
+GET during backoff, durable duplicate/lease limits, refund/offline denial and
+native main-thread/late-privacy guards. [Contract/evidence](PAY08-CONNECTIVITY.md).
+Reader micro-push 52a9a18 verified; mounted source is this containing functional
+commit. Full/matching CI pending. Synthetic PAY-08 PASS; real OS/merchant gates
+remain NOT_RUN. Current matrix 45 PASS / 1 FAIL / 9 BLOCKED / 14 NOT_RUN; BUG-023
+OPEN, overall audit IN_PROGRESS. Prior findings below are dated review evidence.
+
 ## Final verification checkpoint — 29 October 2026
 
 **Functional source `4642841f3e99d8c74b4b379e24922a7ba3f614c9`; full 1,100 run /
