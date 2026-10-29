@@ -1,5 +1,12 @@
 # Meong Photobooth — Bug register
 
+## 29 October — BUG-023.a denial journal foundation
+
+Dormant additive bounded redacted journal, no HTTP integration yet. Five new
+tests; **45 focused PASS**, zero failure/error/skip. Full/CI pending. BUG-023
+OPEN/UX-13 FAIL; matrix 56/1/9/3 unchanged.
+[Contract/results/next step](qa/portrait-v2-sandbox/BUG023-DENIAL-AUDIT.md).
+
 ## BUG-023 — operator wrong-PIN denial has no durable audit (29 October)
 
 **S2 conformity/security audit completeness — OPEN.** Synthetic source probe at

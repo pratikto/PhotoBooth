@@ -1,5 +1,26 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 29 October — AR-09 BUG-023.a dormant denial journal
+
+Base/remote verified `fc73a486288bc35b2244b9f89f2f278044d6ea22`.
+Additive checkout_operator_denials stores only sequence/server time/allowlisted
+route and reason. Latest 4096 events retained by sequence in the same transaction;
+no order, action, customer, peer, PIN, ticket or bearer field. Reuses existing
+WAL/FULL/BEGIN IMMEDIATE. Audit failures propagate and roll back; financial,
+claim, fence, action and media records untouched. HTTP integration NOT STARTED;
+BUG-023 OPEN/UX-13 FAIL, matrix 56 PASS/1 FAIL/9 BLOCKED/3 NOT_RUN unchanged.
+Five new tests initially ERROR before implementation; **45 focused PASS / zero
+failure/error/skip**, 0.893s, Python 3.12.14/Linux synthetic. Command:
+`.venv/bin/python tools/run_kiosk_unittests.py test_checkout_durability test_qris_recovery test_checkout_release test_service_fencing`.
+Full regression running; current CI pending. This containing source/tests/docs
+commit is the next immediate micro-push; pin exact SHA after remote verification.
+Next finish full/CI evidence, then integrate wrong-PIN/429 audit on all three
+Sandbox routes, generic unavailable on audit failure; verify replay/cross-order
+conflicts before restoring UX-13 PASS. See [contract](BUG023-DENIAL-AUDIT.md).
+No production/OPS/public ingress/new branch/master/default/deployment/device
+operation. Only work/ diagnostics local; no unpublished source patch after push.
+Rollback inverse source only; retain additive audit and all financial records.
+
 ## 29 October — CAP-20 verified final checkpoint
 
 - Micro-pushes remote verified: JPEG `2ac9e82ce72de49d6a7ade385c3db37b2e1707d5`,

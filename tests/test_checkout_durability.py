@@ -6,6 +6,81 @@ import unittest
 from photobooth.checkout_store import CheckoutStore, CheckoutConflict, CheckoutMissing
 
 
+class OperatorDenialAuditTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.path = Path(self.tmp.name) / 'checkout.db'
+        self.store = CheckoutStore(self.path, now=lambda: 1000)
+
+    def tearDown(self):
+        self.store.close()
+        self.tmp.cleanup()
+
+    def rows(self):
+        return [dict(r) for r in self.store.db.execute('SELECT * FROM checkout_operator_denials ORDER BY sequence')]
+
+    def test_additive_migration_and_reopen_preserve_existing_visit_and_denial(self):
+        order, _ = self.store.begin('PB001', {'template_a': 1}, 10000, 'a' * 32)
+        self.store.db.execute('DROP TABLE checkout_operator_denials')
+        self.store.close()
+        self.store = CheckoutStore(self.path)
+        before = self.store.get(order['id'])
+        self.store.record_operator_denial('inspect', 'INVALID_PIN')
+        saved = self.rows()
+        self.store.close()
+        self.store = CheckoutStore(self.path)
+        self.assertEqual(self.rows(), saved)
+        self.assertEqual(self.store.get(order['id']), before)
+        self.assertEqual(set(saved[0]), {'sequence', 'created_at', 'route', 'reason'})
+
+    def test_only_allowlisted_metadata_can_be_written(self):
+        for route, reason in [('inspect', '12345678'), ('private-ticket', 'INVALID_PIN'),
+                              ('resolve', 'secret\nbody'), (None, 'INVALID_PIN')]:
+            with self.assertRaises(ValueError):
+                self.store.record_operator_denial(route, reason)
+        self.assertEqual(self.rows(), [])
+        for route in ('inspect', 'resolve', 'release'):
+            self.store.record_operator_denial(route, 'INVALID_PIN')
+        self.assertEqual(len(self.rows()), 3)
+
+    def test_capacity_evicts_by_sequence_despite_clock_rollback(self):
+        with self.store.write():
+            self.store.db.executemany('INSERT INTO checkout_operator_denials(created_at,route,reason) VALUES(?,?,?)',
+                                     [(1000, 'inspect', 'INVALID_PIN')] * 4096)
+        self.store.now = lambda: 1
+        self.store.record_operator_denial('release', 'RATE_LIMITED')
+        rows = self.rows()
+        self.assertEqual(len(rows), 4096)
+        self.assertEqual(rows[0]['sequence'], 2)
+        self.assertEqual(rows[-1]['created_at'], 1)
+
+    def test_pruning_failure_rolls_back_new_event_and_retains_old_rows(self):
+        import sqlite3
+        self.store.record_operator_denial('inspect', 'INVALID_PIN')
+        before = self.rows()
+        self.store.db.execute("CREATE TRIGGER reject_audit_delete BEFORE DELETE ON checkout_operator_denials BEGIN SELECT RAISE(ABORT,'synthetic failure'); END")
+        # Force a prune candidate without thousands of individual transactions.
+        with self.store.write():
+            self.store.db.executemany('INSERT INTO checkout_operator_denials(created_at,route,reason) VALUES(?,?,?)',
+                                     [(1000, 'inspect', 'INVALID_PIN')] * 4095)
+        before = self.rows()
+        with self.assertRaises(sqlite3.IntegrityError):
+            self.store.record_operator_denial('resolve', 'ACTION_CONFLICT')
+        self.assertEqual(self.rows(), before)
+
+    def test_independent_connections_serialize_audit_writes(self):
+        other = CheckoutStore(self.path)
+        try:
+            def record(i):
+                (self.store if i % 2 else other).record_operator_denial('resolve', 'NOT_OWNED')
+            with ThreadPoolExecutor(max_workers=4) as pool:
+                list(pool.map(record, range(40)))
+            self.assertEqual(len(self.rows()), 40)
+            self.assertEqual(len({r['sequence'] for r in self.rows()}), 40)
+        finally:
+            other.close()
+
+
 class CheckoutDurabilityTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()

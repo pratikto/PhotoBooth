@@ -1,5 +1,12 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+## 29 October — BUG-023.a denial journal foundation
+
+Dormant additive bounded redacted journal, no HTTP integration yet. Five new
+tests; **45 focused PASS**, zero failure/error/skip. Full/CI pending. BUG-023
+OPEN/UX-13 FAIL; matrix 56/1/9/3 unchanged.
+[Contract/results/next step](qa/portrait-v2-sandbox/BUG023-DENIAL-AUDIT.md).
+
 ## 29 October — CAP-20 verified
 
 Storage source `9f3568b`, corrected native fixture `da3f444`, both pushed/remote

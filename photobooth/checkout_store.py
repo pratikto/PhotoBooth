@@ -67,6 +67,12 @@ class CheckoutStore:
             request_hash TEXT NOT NULL, action TEXT NOT NULL, reason TEXT NOT NULL,
             transaction_id TEXT, actor TEXT NOT NULL, created_at REAL NOT NULL,
             prior_payment_state TEXT NOT NULL, prior_service_state TEXT NOT NULL);
+          CREATE TABLE IF NOT EXISTS checkout_operator_denials (
+            sequence INTEGER PRIMARY KEY AUTOINCREMENT,
+            created_at REAL NOT NULL,
+            route TEXT NOT NULL CHECK(route IN ('inspect','resolve','release')),
+            reason TEXT NOT NULL CHECK(reason IN
+              ('INVALID_PIN','RATE_LIMITED','ACTION_CONFLICT','NOT_OWNED')));
           CREATE INDEX IF NOT EXISTS checkout_recovery_order_action
             ON checkout_recovery_actions(order_id,action);
           CREATE TABLE IF NOT EXISTS checkout_create_attempts (
@@ -159,6 +165,24 @@ class CheckoutStore:
                 raise
             else:
                 self.db.commit()
+
+    def record_operator_denial(self, route, reason):
+        """Bounded redacted diagnostics; never pass request data or credentials.
+
+        Not mounted by HTTP yet. Failure propagates: callers must never treat
+        an audit write failure as permission. Financial ledgers are untouched.
+        """
+        if (route not in ('inspect', 'resolve', 'release') or reason not in
+                ('INVALID_PIN', 'RATE_LIMITED', 'ACTION_CONFLICT', 'NOT_OWNED')):
+            raise ValueError('Invalid operator denial metadata')
+        timestamp = self.now()
+        if not isinstance(timestamp, (int, float)) or not math.isfinite(timestamp):
+            raise ValueError('Invalid audit clock')
+        with self.write():
+            self.db.execute('''INSERT INTO checkout_operator_denials(created_at,route,reason)
+                VALUES(?,?,?)''', (timestamp, route, reason))
+            self.db.execute('''DELETE FROM checkout_operator_denials WHERE sequence NOT IN
+                (SELECT sequence FROM checkout_operator_denials ORDER BY sequence DESC LIMIT 4096)''')
 
     @staticmethod
     def _record(row):

@@ -1,0 +1,25 @@
+{
+  "status": "DORMANT_FOUNDATION_FOCUSED_VERIFIED_FULL_CI_PENDING",
+  "base": "fc73a486288bc35b2244b9f89f2f278044d6ea22",
+  "source": "Containing source commit; pin after push",
+  "focused": {
+    "run": 45,
+    "pass": 45,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 0.893
+  },
+  "before": {
+    "run": 5,
+    "errors": 5
+  },
+  "http_integrated": false,
+  "bug023": "OPEN",
+  "files_sha256": {
+    "photobooth/checkout_store.py": "9f31e8efdfe58332d3b23ad5766351e71f4ea60f1b83e7264b3858b704e8a00b",
+    "tests/test_checkout_durability.py": "0dd82892418a89590130a45baa0088336714f664d44250698ab06c642d4b2209"
+  },
+  "report_sha256": "687c89a8d04a6b6343ff3251034237fbf4ddabe89b0e0c99898a056da3495ad1",
+  "limits": "Synthetic Linux only, no merchant/hardware/production/OPS acceptance; full/CI pending"
+}
