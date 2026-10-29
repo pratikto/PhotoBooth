@@ -1,5 +1,14 @@
 # Meong Photobooth — changelog
 
+## 29 October — CAP-16 completion and denial evidence complete
+
+**74 focused PASS / zero failure/error/skip**, four new CAP-16 children/two
+pre-COMPLETE boundaries. Fresh proof restores original result/ACK; outage,
+refund and corrupted committed PNG remain held without false completion or
+lost OWED. Tests/docs only, no runtime change. Matrix **55 PASS / 1 FAIL /
+9 BLOCKED / 4 NOT_RUN**. CI pending; next final CI/checkpoint then CAP-20/AR-09.
+[Evidence/limits](qa/portrait-v2-sandbox/CAP16-COMPOSITION-COMPLETE.md).
+
 ## 29 October — CAP-16 composition/intent exits focused-verified
 
 **72 focused PASS / zero failure/error/skip**, two new real child exits after

@@ -1,5 +1,28 @@
 # AR-13 — release-readiness assessment
 
+## 29 October — AR-05 CAP-16.b focused checkpoint
+
+First micro-push `fcc0ae96b5de96bc962b4a2e9d25285cf9a3c7de` pushed/remote verified.
+**74 focused PASS / zero failure/error/skip**, 22.333s, Python 3.12.14/Linux.
+Three CAP-16 methods/four actual children at two pre-request boundaries; the
+same focused module separately retains 23 prior PAY-18 child exits. Positive
+cases restore immutable original result and original ACK tuples; outage/refund
+and corrupted committed PNG cannot expose pixels, fabricate ACK/archive/release
+or erase STARTED/OWED. Corrupt bytes and manifest remain held across two parent
+controller/store reopens. [Exact command/source/digest](evidence/cap16-denials-verification.json).
+
+Tests/docs only; application unchanged at e0dc594, no runtime defect/schema/UI
+change or new local full/native/device evidence. Matrix **55 PASS / 1 FAIL /
+9 BLOCKED / 4 NOT_RUN**, CAP-16 synthetic PASS; BUG-023 OPEN/audit IN_PROGRESS.
+This containing tested commit is the next micro-push; pin exact SHA after push/
+remote verification. Matching CI pending, first 40834453941 still in progress
+at latest check. Next verify current Windows/Linux CI and publish final safe
+checkpoint, then CAP-20 intent/image/manifest write faults and AR-09 BUG-023.
+UX-05/07/11 and external provider/device/privacy/retention/release/OPS gates
+remain unchanged; no production/public ingress/real paper/Drive/deletion/new
+branch/default/master operation. Only disposable work/ local, no unpublished
+runtime patch. Rollback tests/docs, preserve all financial/media/claim/fences.
+
 ## 29 October — AR-05 CAP-16.a focused checkpoint
 
 Base/remote verified `73451f3f449f97fcec76e52a14db4ad5a3e8027f`.

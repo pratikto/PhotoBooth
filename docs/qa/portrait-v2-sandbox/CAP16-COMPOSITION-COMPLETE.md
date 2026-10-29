@@ -51,3 +51,22 @@ second controller/store reopen preserves original identities/manifest/media.
 No runtime defect found, no runtime/schema/UI change. CI pending at containing
 commit; prior full/native provenance retained. [Exact evidence](evidence/cap16-composition-verification.json).
 Next provider/refund/damaged-PNG denial cases, then matching CI/checkpoint.
+
+## Increment 2 — denied recovery cannot fake completion
+
+First micro-push fcc0ae96b5de96bc962b4a2e9d25285cf9a3c7de remote verified.
+Two additional CAP-16 methods each run the actual saved-COMPLETING/pre-request
+child exit (107). Provider outage yields HTTP 503, then current refund HTTP 409;
+even an explicit local request_complete intent cannot bypass private worker
+reconciliation and create an ACK. Original STARTED/OWED/grant/allocation and
+composed bytes remain. A corrupted synthetic committed PNG fails typed restore
+before any private session installation; no rerender/service ACK/archive/release.
+Two fresh parent controller/store reopens retain those corrupt bytes, exact
+manifest and owed service. No actual customer data is damaged or inspected.
+
+Initial denial run 2 PASS, 1.951s. Final focused **74 PASS / zero failure/error/
+skip**, 22.333s. Three CAP-16 methods/four new children/two distinct boundaries;
+the reused PAY-18 methods retain their separate 23-exit coverage. No runtime
+defect found or runtime/schema/UI change. [Exact evidence](evidence/cap16-denials-verification.json).
+Matching CI pending at this containing test commit; matrix 55/1/9/4, audit and
+BUG-023 remain open. Next current CI/checkpoint, then CAP-20 and AR-09.

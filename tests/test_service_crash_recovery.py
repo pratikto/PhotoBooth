@@ -10,6 +10,7 @@ import unittest
 from unittest.mock import patch
 
 from photobooth.catalog import get_templates
+from photobooth.capture_journal import CaptureRecoveryRequired
 from photobooth.kiosk_v2.photos import PhotoTest
 from tests.fulfillment_crash_fixture import AllocationHarness
 
@@ -206,6 +207,69 @@ class ServiceCrashTests(unittest.TestCase):
                 self.complete_original(*original)
                 self.assertEqual(self.media(completed['transaction_id']), media)
         self.root = base
+
+    def assert_composition_held(self, harness, binding, before, attempt):
+        row = harness.store.get(binding['order_id'])
+        self.assertEqual((row['checkout_key'], row['grant_id'], row['local_transaction_id'], row['service_state']),
+                         (before['checkout_key'], binding['grant_id'], binding['transaction_id'], 'STARTED'))
+        fulfillment = harness.store.fulfillment(binding['order_id'], 'PB001')
+        self.assertEqual((fulfillment['state'], fulfillment['obligation_state']), ('STARTED', 'OWED'))
+        self.assertEqual(fulfillment['allocation_operation_id'], binding['allocation_operation_id'])
+        self.assertEqual(harness.store.creation_attempt(binding['order_id']), attempt)
+        self.assertEqual(harness.store.db.execute('SELECT count(*) FROM checkouts').fetchone()[0], 1)
+        self.assertEqual(harness.provider.db.execute('SELECT count(*) FROM mock_orders').fetchone()[0], 1)
+        self.assertEqual(harness.store.db.execute('SELECT next_sequence FROM checkout_allocation_counters').fetchone()[0], 2)
+        self.assertTrue(harness.flow.active)
+        self.assertFalse((self.root / 'visits').exists())
+
+    def test_cap16_provider_outage_and_refund_cannot_complete_a_cached_composed_result(self):
+        ticket, before, binding, manifest, attempt, saved = self.composition_crash('completion_intent_before_request', 107)
+        media = self.media(binding['transaction_id'])
+        with closing(AllocationHarness(self.root)) as held, self.forbid_effects(held), \
+                patch.object(held.client, 'service_transition', side_effect=AssertionError('No ACK without fresh proof')):
+            self.assert_private(held)
+            with patch.object(held.provider, 'get_status', side_effect=ConnectionError('Synthetic outage')):
+                with self.assertRaisesRegex(RuntimeError, 'HTTP 503'):
+                    held.flow.customer_claim(ticket)
+                held.flow.request_complete()  # Saved intent alone cannot grant an ACK.
+                held.flow.refresh()
+            self.assert_private(held)
+            self.assert_composition_held(held, binding, before, attempt)
+            self.assertEqual(held.store.get(binding['order_id'])['state'], 'PAID')
+            held.provider.db.execute("UPDATE mock_orders SET state='refund' WHERE id=?", (binding['order_id'],))
+            with self.assertRaisesRegex(RuntimeError, 'HTTP 409'):
+                held.flow.customer_claim(ticket)
+            held.flow.request_complete()
+            held.flow.refresh()
+            self.assert_private(held)
+            self.assert_composition_held(held, binding, before, attempt)
+            self.assertEqual(held.store.get(binding['order_id'])['state'], 'REVIEW_REQUIRED')
+            self.assertEqual(self.media(binding['transaction_id']), media)
+
+    def test_cap16_corrupt_committed_png_after_crash_holds_without_render_or_completion(self):
+        ticket, before, binding, initial_manifest, attempt, saved = self.composition_crash('completion_intent_before_request', 107)
+        folder = self.root / 'photo-test' / 'photos' / binding['transaction_id']
+        manifest_path = folder / 'manifest.json'
+        manifest_bytes = manifest_path.read_bytes()
+        output = folder / json.loads(manifest_bytes)['output_intents']['session_001']['path']
+        output.write_bytes(b'SYNTHETIC CORRUPT PNG')
+        media = self.media(binding['transaction_id'])
+        for _ in range(2):
+            with closing(AllocationHarness(self.root)) as held, self.forbid_effects(held), \
+                    closing(PhotoTest(held.photo_root)) as photo, \
+                    patch.object(held.client, 'service_transition', side_effect=AssertionError('No ACK for missing valid result')):
+                self.assert_private(held)
+                held.flow.customer_claim(ticket)
+                with self.assertRaises(CaptureRecoveryRequired):
+                    photo.restore(get_templates(), binding, held.flow.resume_permit())
+                self.assertIsNone(photo.transaction)
+                self.assertNotIn('thumbnails', photo.snapshot())
+                with self.assertRaises(RuntimeError):
+                    held.flow.request_complete()
+                held.flow.refresh()
+                self.assert_composition_held(held, binding, before, attempt)
+                self.assertEqual(manifest_path.read_bytes(), manifest_bytes)
+                self.assertEqual(self.media(binding['transaction_id']), media)
 
     def test_pay18_completed_reply_loss_cannot_use_cached_paid_during_outage_or_refund(self):
         ticket, before, grant, attempt, saved = self.chain()

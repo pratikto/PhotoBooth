@@ -2,7 +2,7 @@
   "status": "FOCUSED_VERIFIED_CI_PENDING",
   "branch": "feature/portrait-kiosk-v2-next",
   "review_base": "73451f3f449f97fcec76e52a14db4ad5a3e8027f",
-  "test_commit": "Containing Git commit; pin after remote verification",
+  "test_commit": "fcc0ae96b5de96bc962b4a2e9d25285cf9a3c7de",
   "runtime_source": "e0dc59435772148be86449c55140d4b9be2f6364",
   "runtime_changed": false,
   "python": "3.12.14",
@@ -40,10 +40,16 @@
     "blocked": 9,
     "not_run": 4
   },
-  "ci": "PENDING for containing test commit; existing Windows/Linux workflow already includes module",
+  "ci": {
+    "run_id": 40834453941,
+    "head_sha": "fcc0ae96b5de96bc962b4a2e9d25285cf9a3c7de",
+    "status_at_next_increment": "in_progress",
+    "conclusion": null
+  },
   "full_native": "NOT_RERUN_TESTS_ONLY; e0dc594 full 1117/1114/3 and c94696d native 28/four retain original source and exclude new methods",
   "privacy": "Original synthetic ticket memory/stdin only, never argv/journal/committed raw evidence",
   "next": "CAP-16.b outage/refund/damaged-PNG denial, then current CI/checkpoint, CAP-20, AR-09 BUG-023",
   "limits": "Software exits; extra controller/store reopen is parent-process, no actual device/power-loss/provider/paper/Drive/deletion/release acceptance",
-  "rollback": "Inverse tests/docs only; preserve all financial/media/claim/fence/budget records"
+  "rollback": "Inverse tests/docs only; preserve all financial/media/claim/fence/budget records",
+  "remote_verified": true
 }
