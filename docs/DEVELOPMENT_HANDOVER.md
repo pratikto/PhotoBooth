@@ -1,5 +1,18 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — BUG-023.b Windows coverage registration
+
+Base/remote verified `5d74c518c807ab4dbe976e9666df145e1b33ab69`.
+Windows ledger job now explicitly runs test_checkout_durability, including all
+five denial journal methods. Local Linux module **19 PASS**, zero failure/error/
+skip, 0.149s; this is not Windows acceptance. No runtime change. Current hosted
+Windows verification pending for this containing micro-push. BUG-023 OPEN,
+UX-13 FAIL, matrix 56/1/9/3 unchanged. Next verify Windows methods then integrate
+invalid-PIN/429 audit across inspect/resolve/release with generic 503 on audit
+failure; replay/cross-order denials follow. No production/OPS/external effects.
+Only work/ scratch local. Existing full foundation evidence retains ab6fbbb
+source; no repeat full regression for workflow registration. Retain all ledgers.
+
 ## 29 October — BUG-023.a verified foundation checkpoint
 
 Source/micro-push `ab6fbbb4e6af4665f4082f66b9a5b9b6a2562c67` remote verified.
