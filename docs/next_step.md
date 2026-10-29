@@ -1,5 +1,13 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+## 29 October — CAP-20 JPEG write faults focused-verified
+
+**52 focused PASS / zero failure/error/skip**, 14 child exits covering ENOSPC/
+EACCES at seven JPEG write boundaries. No false capture ACK, original paid
+OWED/issue/bytes preserved, proved bytes recover once; unknown bytes held.
+CAP-20 remains NOT_RUN pending retake/PNG/initial/reporting faults; matrix
+55/1/9/4. Tests/CI/docs only; matching CI pending. [Evidence/limits](qa/portrait-v2-sandbox/CAP20-STORAGE-FAULTS.md).
+
 ## 29 October — CAP-16 verified
 
 Tests/CI `1ef7d29454a926d6eccc7cb2ba15162fbfbfa0c8` pushed/remote verified.

@@ -1,5 +1,29 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-04/08 CAP-20.a JPEG fault checkpoint
+
+Base/remote verified `abc44d67d69783ae429918d8e6a457f9d13724f9`.
+One new method/14 actual child exits after injected ENOSPC/EACCES at intent JSON
+replace, image open, partial write, fsync, staged JSON replace, publication link
+and capture/quota commit JSON replace. **52 focused PASS / zero failure/error/
+skip**, 14.598s, Python 3.12.14/Linux. [Exact command/source/digest](qa/portrait-v2-sandbox/evidence/cap20-jpeg-verification.json).
+
+Caller never ACKs failed capture; old frame remains, unknown/unhashed temp held,
+proved staged/published frame adopts same operation/slot once without shutter.
+Original proof/fresh provider required on both controller/DB reopens; frozen
+contract/copies/retention/OWED and durable redacted paid issue survive. Targeted
+media fault is removed before issue reporting; no global-full-volume guarantee.
+No runtime defect or runtime/schema/UI change, prior full/native retained at
+original e0dc594/c94696d. CAP-20 remains NOT_RUN until retake/PNG/initial/reporting
+matrix is exercised; scenario totals 55 PASS/1 FAIL/9 BLOCKED/4 NOT_RUN.
+This containing test/CI/docs commit is the next micro-push; pin exact SHA after
+remote verification. Matching CI pending. Next extend same fixture for retake,
+PNG output/status and initial manifest faults, plus issue-intent write failure;
+then current CI/final checkpoint and AR-09 BUG-023. UX-05/07/11/external/OPS gates
+remain open. No production/public ingress/real paper/Drive/deletion/new branch/
+master/default operation. Only disposable work/ local, no unpublished runtime
+patch; rollback tests/CI/docs, retain all financial/media/claim/fence/budget data.
+
 ## 29 October — AR-05 CAP-16 verified checkpoint
 
 - First micro-push `fcc0ae96b5de96bc962b4a2e9d25285cf9a3c7de`; final test/CI source

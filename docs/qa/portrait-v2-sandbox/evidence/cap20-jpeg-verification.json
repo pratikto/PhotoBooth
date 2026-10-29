@@ -1,0 +1,55 @@
+{
+  "status": "PARTIAL_CAP20_JPEG_VERIFIED_CI_PENDING",
+  "branch": "feature/portrait-kiosk-v2-next",
+  "review_base": "abc44d67d69783ae429918d8e6a457f9d13724f9",
+  "test_commit": "Containing Git commit; pin after remote verification",
+  "runtime_source": "e0dc59435772148be86449c55140d4b9be2f6364",
+  "runtime_changed": false,
+  "python": "3.12.14",
+  "platform": "Linux cloud",
+  "command": "KIVY_HOME=/tmp/meong-cap20-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy MEONG_CI_TEST_REPORT=work/cap20-capture-focused-report.txt .venv/bin/python tools/run_kiosk_unittests.py test_storage_fault_recovery test_capture_journal test_photo_reconstruction test_fulfillment_issues test_checkout_fulfillment test_customer_claim_session test_photo_allocation test_output_journal",
+  "focused": {
+    "run": 52,
+    "pass": 52,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 14.598
+  },
+  "new_methods": 1,
+  "fault_cases": 14,
+  "actual_child_exits": 14,
+  "distinct_write_boundaries": 7,
+  "errno": [
+    "ENOSPC",
+    "EACCES"
+  ],
+  "boundaries": [
+    "intent_manifest",
+    "image_open",
+    "image_write",
+    "image_fsync",
+    "staged_manifest",
+    "publish",
+    "commit_manifest"
+  ],
+  "report_sha256": "58eba1188235bdf8f6cc7da4f56e2b7afcb644df6ff27e754b3a60d2b75511bc",
+  "files_sha256": {
+    "tests/storage_fault_fixture.py": "699555f9d5688674292e75d43a350a16422e7e62ec25accc18de6565ef3b14f1",
+    "tests/test_storage_fault_recovery.py": "e6fc780fd66f5ac5ed4d4fd5c22abd5b42f5794519b4f1c8fe0762c02cd56a3b",
+    ".github/workflows/portrait-kiosk-v2.yml": "c9a138bee8493ce633d8e87873d1077b8d9b4c0e072c362994153437e6201f89"
+  },
+  "matrix": {
+    "total": 69,
+    "pass": 55,
+    "fail": 1,
+    "blocked": 9,
+    "not_run": 4
+  },
+  "ci": "PENDING at containing test commit; Linux/Windows workflow includes module",
+  "full_native": "NOT_RERUN_TESTS_ONLY; older full e0dc594/native c94696d retain original source and exclude new methods",
+  "privacy": "Synthetic ticket memory/stdin only; no raw logs/images/DB/customer material committed",
+  "next": "Retake/PNG/initial manifest and issue-intent write faults, then CI/checkpoint; AR-09 BUG-023 follows",
+  "limits": "Targeted injected OS calls with reporting storage available; not real disk filling/chmod/power-loss/device/merchant acceptance",
+  "rollback": "Inverse tests/CI/docs; retain all financial/media/claim/fence/budget records"
+}
