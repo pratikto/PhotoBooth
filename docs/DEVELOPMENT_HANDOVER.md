@@ -1,5 +1,36 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — BUG-023.c PIN audit verified checkpoint
+
+Micro-pushes `c967ac3471c6089cfbc562ab3386acbe5d3d7afb` (Windows registration)
+and `e6aba5a45ccdee8f99a3b1cb9f7fafae30b1adb8` (PIN HTTP integration) remote
+verified. First CI 40849916482 CANCELLED/superseded; completed Windows ledger
+step 80 PASS/17.004s, all five journal methods PASS, not whole-run PASS.
+Current **CI 40850382603 all three jobs SUCCESS**, both Windows journal+HTTP
+and Linux HTTP/journal method results verified in exact matching job logs.
+**69 focused PASS**, zero failure/error/skip, 1.740s. Full with GUI/audio opt-ins:
+**1149 run / 1145 PASS / 4 optional SKIP**, zero failure/error,
+412.112s, Python 3.12.14/Linux software GL. Skip reasons preserved in evidence.
+All three Sandbox endpoints persist INVALID_PIN/429 before denying; write on
+thread pool, no request/credential/order data recorded. Audit failure -> generic
+503 without service/provider access. Unauthenticated booth/disabled recovery
+never writes audit; existing ordinary status and PIN budget/rotation preserved.
+Fresh restart retains denial records. No financial/media/claim/fence alteration.
+[Exact command/source/results/CI/digests/limits](qa/portrait-v2-sandbox/evidence/bug023-pin-http-verification.json).
+
+BUG-023 OPEN/UX-13 FAIL: wrong-PIN gap fixed in source, but authenticated action
+conflicts/replay and cross-order denial audit still pending. Matrix 56/1/9/3,
+overall audit IN_PROGRESS and AR-13 conditional. Next exact increment: use
+existing invoke/CheckoutConflict/CheckoutMissing seams to audit only recovery
+inspect/resolve/release denials; verify changed action body/order, same-action
+successful replay remains idempotent, no provider/paid/service mutation from
+audit failure. Focused checks/docs/micro-push, final applicable regression after
+runtime change. Do not repeat verified PIN/Windows work. External acceptance and
+OPS remain separate; no production/public ingress/branch/master/default/real
+effects. This containing docs-only publication is final safe checkpoint; exact
+SHA from Git log/remote. Only work/ scratch local, no unpublished source patch.
+Rollback scoped source only; retain additive audit and all financial records.
+
 ## 29 October — BUG-023.c PIN audit integrated, focused verified
 
 Windows-registration micro-push `c967ac3471c6089cfbc562ab3386acbe5d3d7afb`

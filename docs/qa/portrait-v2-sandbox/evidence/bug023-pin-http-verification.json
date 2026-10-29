@@ -1,7 +1,7 @@
 {
-  "status": "PIN_HTTP_FOCUSED_VERIFIED_FULL_CI_PENDING",
+  "status": "PIN_HTTP_VERIFIED_CONFLICT_AUDIT_PENDING",
   "base": "c967ac3471c6089cfbc562ab3386acbe5d3d7afb",
-  "source": "Containing commit; pin after remote verification",
+  "source": "e6aba5a45ccdee8f99a3b1cb9f7fafae30b1adb8",
   "focused": {
     "run": 69,
     "pass": 69,
@@ -30,5 +30,76 @@
     "tests/test_qris_recovery.py": "f38b13c092efda8a261ee3920df4c10a8f8b7395133051c1cd2ad833fb0300c0",
     ".github/workflows/portrait-kiosk-v2.yml": "09d27f277db840bfc751cabf01ba816211bfb8735036edd654895fa87fd515cd"
   },
-  "report_sha256": "d1b4cba5eccfb92a01e69e1897e621558143e08fc4f441bc99b0825a97e79ad2"
+  "report_sha256": "d1b4cba5eccfb92a01e69e1897e621558143e08fc4f441bc99b0825a97e79ad2",
+  "ci": {
+    "run_id": 40850382603,
+    "source": "e6aba5a45ccdee8f99a3b1cb9f7fafae30b1adb8",
+    "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40850382603",
+    "jobs": [
+      {
+        "id": 123368325818,
+        "name": "Windows Python 3.12 native SDL audio (dummy output)",
+        "conclusion": "success"
+      },
+      {
+        "id": 123368326092,
+        "name": "Navigation and audio lifecycle",
+        "conclusion": "success"
+      },
+      {
+        "id": 123368326170,
+        "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+        "conclusion": "success"
+      }
+    ],
+    "windows_ledger": {
+      "run": 100,
+      "pass": 100,
+      "skip": 0,
+      "fail": 0,
+      "error": 0,
+      "seconds": 34.115
+    },
+    "linux_recovery": {
+      "run": 398,
+      "pass": 398,
+      "skip": 0,
+      "fail": 0,
+      "error": 0,
+      "seconds": 88.356
+    },
+    "linux_native": {
+      "run": 111,
+      "pass": 110,
+      "skip": 1,
+      "fail": 0,
+      "error": 0,
+      "seconds": 66.949
+    },
+    "verified": "Five journal and four new HTTP methods PASS individually in both exact-source job logs"
+  },
+  "full": {
+    "run": 1149,
+    "pass": 1145,
+    "fail": 0,
+    "error": 0,
+    "skip": 4,
+    "seconds": 412.112
+  },
+  "full_report_sha256": "ff5deb7fb97b0492057144f71125e81bfe4303cfbed0b92e24a4b0e30b00b5f9",
+  "full_command": "KIVY_HOME=/tmp/meong-bug023-pin-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 MESA_SHADER_CACHE_DIR=/tmp/meong-bug023-mesa PHOTOBOOTH_TEST_GUI=1 PHOTOBOOTH_TEST_AUDIO=1 MEONG_CI_TEST_REPORT=work/bug023-pin-full-report.txt .venv/bin/python tools/run_kiosk_unittests.py",
+  "skip_lines": [
+    "Use real inference and mailboxes; only camera acquisition is synthetic. ... skipped 'Native model assets are opt-in'",
+    "test_native_video_has_frames_payment_is_muted_and_retiring_unloads_decoder (test_kiosk_advertising.KioskAdvertisingTests.test_native_video_has_frames_payment_is_muted_and_retiring_unloads_decoder) ... skipped 'Native video checks require opt-in and ffmpeg'",
+    "test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture) ... skipped 'Native model assets are opt-in'",
+    "test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image (test_palm_gesture.NativePalmModelTests.test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image) ... skipped 'Native model assets are opt-in'"
+  ],
+  "first_ci": {
+    "run": 40849916482,
+    "source": "c967ac3471c6089cfbc562ab3386acbe5d3d7afb",
+    "conclusion": "CANCELLED/superseded",
+    "windows_ledger": "80 PASS, 17.004s, five denial journal methods PASS before cancellation"
+  },
+  "next": "Audit authenticated replay/action conflicts and cross-order NOT_OWNED denials; preserve same-action success idempotency; BUG-023/UX-13 remains OPEN/FAIL",
+  "limits": "Synthetic fixture tests/hosted runners only; no real device/provider/paper/Drive/deletion/production/OPS acceptance"
 }

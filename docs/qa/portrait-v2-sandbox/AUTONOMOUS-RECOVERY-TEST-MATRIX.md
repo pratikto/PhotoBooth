@@ -1,5 +1,14 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
+## 29 October — BUG-023.c PIN audit verified
+
+Source `e6aba5a`, 69 focused PASS; full 1149/1145/4, zero failure/error.
+CI 40850382603 all three jobs SUCCESS, journal and HTTP tests on Windows/Linux.
+Wrong-PIN and operator 429 now durably audited on all three Sandbox routes;
+audit failure denies with generic 503. Replay/cross-order denial audit remains
+pending: BUG-023 OPEN/UX-13 FAIL, matrix 56/1/9/3.
+[Exact evidence/next step](evidence/bug023-pin-http-verification.json).
+
 ## 29 October — CAP-20 verified
 
 Storage source `9f3568b`, corrected native fixture `da3f444`, both pushed/remote
@@ -339,7 +348,7 @@ offline inbox prototype assertions do not certify deployed ingress.
 | UX-10 | **PASS** | `test_booth_sync.test_two_transactions_keep_exact_local_folder_mapping_across_restart` | Immutable delivery mapping/retry/retention fixtures; actual Drive acceptance NOT_RUN. |
 | UX-11 | **NOT_RUN** | `test_crash_supervisor.test_normal_operator_hold_or_living_process_never_restarts` | No-kill live-child gate and responsive HTTP tested; actual frozen-worker/GUI hang scenario not exercised. |
 | UX-12 | **PASS** | `test_crash_supervisor.test_three_crashes_have_persisted_budget_and_bounded_backoff` | Persisted restart budget; kernel multi-process lease tests, no business replay. |
-| UX-13 | **FAIL** | `test_qris_recovery.test_independent_pin_attempt_limit_cannot_block_regular_status`; [audit denial probe](evidence/ar-audit-pin-denials.json) | Rate-limited PIN rejection and action replay/conflict tests PASS, but the stronger fully audited denial requirement fails: wrong PIN returns 401/429 with no durable denial record. Operator budget is process-local; only customer capability attempts persist. BUG-023 OPEN. No authentication bypass observed. |
+| UX-13 | **FAIL** | `test_qris_recovery`; [PIN audit verification](evidence/bug023-pin-http-verification.json) | Wrong-PIN and operator-rate 401/429 denials now durably redacted on inspect/resolve/release; generic 503 if audit fails. Same-action idempotency/authentication remain. Fully audited authenticated action-conflict/replay and cross-order denials still pending; BUG-023 OPEN. Operator PIN budget remains intentionally process-local; customer capability budget separate. |
 | UX-14 | **PASS** | `test_checkout_fulfillment.test_abandon_preserves_paid_obligation_and_no_fabricated_refund` | Closure/composition are not liability satisfaction. |
 | UX-15 | **PASS** | See scope/gate | Final native manifests: both portrait sizes, 28 hashes/dimensions, four QR decodes; selected layouts inspected. Physical touch/phone tests NOT_RUN. |
 | UX-16 | **PASS** | `test_kiosk_v2_recovery.test_empty_install_is_clear_without_creating_files` | Existing default/MOCK/native lifecycle regressions; no new business effect. |

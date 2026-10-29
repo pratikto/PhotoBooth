@@ -1,5 +1,14 @@
 # Meong Photobooth — current feature status
 
+## 29 October — BUG-023.c PIN audit verified
+
+Source `e6aba5a`, 69 focused PASS; full 1149/1145/4, zero failure/error.
+CI 40850382603 all three jobs SUCCESS, journal and HTTP tests on Windows/Linux.
+Wrong-PIN and operator 429 now durably audited on all three Sandbox routes;
+audit failure denies with generic 503. Replay/cross-order denial audit remains
+pending: BUG-023 OPEN/UX-13 FAIL, matrix 56/1/9/3.
+[Exact evidence/next step](qa/portrait-v2-sandbox/evidence/bug023-pin-http-verification.json).
+
 ## 29 October — BUG-023.c PIN denials integrated
 
 All three Sandbox endpoints audit wrong PIN/429, generic 503 on audit failure.
