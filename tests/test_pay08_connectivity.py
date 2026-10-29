@@ -24,6 +24,9 @@ class ConnectivityRecoveryTests(unittest.TestCase):
         self.addCleanup(self.tmp.cleanup)
         self.fixture = Fixture(Path(self.tmp.name))
         self.addCleanup(self.fixture.close)
+        # Direct service calls do not initialize jobs.store. Explicitly close
+        # the current (possibly reopened) GUI flow before Windows temp cleanup.
+        self.addCleanup(lambda: self.fixture.flow.close())
         self.now = [1000.0]
         self.fixture.store.now = lambda: self.now[0]
         clock_patch = patch('photobooth.qris_session.time', SimpleNamespace(monotonic=lambda: self.now[0]))

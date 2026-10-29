@@ -113,3 +113,20 @@ physical OS/provider reconnection remains NOT_RUN. Matrix **45 PASS / 1 FAIL /
 modules. Full regression/matching CI PENDING at this containing functional commit.
 Next implementation: AR-03 CAP-01–05 exact allocation/STARTED crash evidence;
 no new production/OPS/print/Drive/public ingress authorization.
+
+## AR-02.d3 — Windows fixture/dependency correction
+
+Mounted source `e0dc59435772148be86449c55140d4b9be2f6364` pushed/remote verified.
+Local full **1117 run / 1114 PASS / 3 optional palm SKIP / zero failure/error**,
+335.317s, GUI/audio/video opt-ins. CI 40808591124 Windows fails before integrated
+cases import: **43 run / 1 ERROR**, missing qrcode. Its independent 61-case
+recovery step PASS. [Confirmed original failure](evidence/pay08-windows-initial-failure.json).
+
+Windows install list now includes the same bounded qrcode[pil] range as desktop.
+Direct-use integrated fixtures explicitly close their current/reopened GUI lease
+before Windows temp cleanup; a local probe confirmed Fixture.close alone does
+not initialize/close jobs.store when service calls are direct. Only test/CI setup
+changes, all assertions and runtime unchanged. **49 focused PASS**, zero
+failure/error/skip, 1.389s: [command/digests](evidence/pay08-portability.json).
+Full runtime evidence stays pinned to e0dc594; do not relabel its test tree as
+this newer cleanup. Matching CI and clean native captures follow this commit.

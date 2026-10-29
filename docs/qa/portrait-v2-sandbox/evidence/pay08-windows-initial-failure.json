@@ -1,0 +1,20 @@
+{
+  "run_id": 40808591124,
+  "source": "e0dc59435772148be86449c55140d4b9be2f6364",
+  "job_id": 123233309212,
+  "step": "Check payment creation and reconciliation crash boundaries (offline)",
+  "python": "3.12.10",
+  "result": {
+    "run": 43,
+    "failures": 0,
+    "errors": 1,
+    "skipped": 0
+  },
+  "cause": "Fixture import needs qrcode, missing from Windows install list",
+  "selected_details": [
+    "ModuleNotFoundError: No module named 'qrcode'\r",
+    "Ran 43 tests in 7.329s\r",
+    "KIOSK_UNITTEST_SUMMARY: run=43 failures=0 errors=1 skipped=0 success=False\r"
+  ],
+  "fix": "Install the same qrcode[pil]>=7.4,<9 range as desktop; explicitly close direct-use current flow before Windows temporary-directory cleanup; no runtime/assertion changes"
+}

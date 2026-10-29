@@ -17,6 +17,20 @@ readiness reports below retain their dated source and gates.
 **Historical audit baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
 **Current documentation handover:** See `docs/DEVELOPMENT_HANDOVER.md` and verify current remote HEAD; never assume the HEAD printed in a dated checkpoint is still current.
 
+## 29 October — AR-02.d3 Windows fixture/CI correction
+
+Mounted e0dc594 pushed/remote verified; full **1117 run / 1114 PASS / 3 optional
+palm SKIP / zero failure/error**, 335.317s. Windows CI 40808591124 fails at fixture
+import (qrcode missing, 43 run / 1 ERROR); independent 61-case recovery step PASS.
+This containing increment adds the missing Windows QR dependency and explicitly
+closes the direct-use current flow before temp cleanup. **49 focused PASS**,
+zero failure/error/skip, 1.389s. Runtime/assertions unchanged; prior full retains
+exact e0dc594 test tree, newer test/CI revision verified separately.
+[Failure/command/evidence](PAY08-CONNECTIVITY.md).
+Next: verify new CI, clean native captures/QRs, publish final source checkpoint;
+then AR-03 CAP-01–05. Matrix 45 PASS / 1 FAIL / 9 BLOCKED / 14 NOT_RUN. BUG-023,
+external and OPS gates unchanged. No unpublished runtime patch, only work/ local.
+
 ## 29 October — AR-02.d2 connectivity recovery mounted, focused PASS
 
 Previous reader micro-push `52a9a18857580ddcc822fe77cd36af76d489a532` pushed/remote-verified.

@@ -1,0 +1,37 @@
+{
+  "stage": "AR-02.d3",
+  "status": "PORTABILITY_FOCUSED_VERIFIED_CI_PENDING",
+  "remote_base": "e0dc59435772148be86449c55140d4b9be2f6364",
+  "source": "Containing test/workflow-only commit",
+  "runtime_change": false,
+  "command": "KIVY_HOME=/tmp/meong-pay08-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy MEONG_CI_TEST_REPORT=work/pay08-portable-report.txt .venv/bin/python tools/run_kiosk_unittests.py test_autonomous_recovery_baseline test_checkout_creation_attempts test_checkout_reconciliation test_recovery_connectivity test_pay08_connectivity",
+  "focused": {
+    "run": 49,
+    "pass": 49,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 1.389
+  },
+  "report_sha256": "b3bfe435fb5b5b4d940577e441dcce2b60d843a47ed42a3cd85a670854e22a14",
+  "source_sha256": {
+    "tests/test_pay08_connectivity.py": "e890dda3546598b9948ee2ac173fdd312f87b1137a49620d3782bb87e673bdfb",
+    ".github/workflows/portrait-kiosk-v2.yml": "14a8facdcdf2e305af9f61c335fcbf9370062be2c1e82e48f89b8e6b0dd87d5d"
+  },
+  "prior_runtime_full": {
+    "source": "e0dc59435772148be86449c55140d4b9be2f6364",
+    "run": 1117,
+    "pass": 1114,
+    "fail": 0,
+    "error": 0,
+    "skip": 3,
+    "seconds": 335.317,
+    "report_sha256": "6144c8764c43d0790f45d960a1e0d25e4ad2927ac6c6f2b957223eedb79a7517"
+  },
+  "notes": [
+    "Windows import failure confirmed in GitHub logs: qrcode absent.",
+    "Direct-use fixture left GUI lease open; explicitly closes current/reopened flow before temporary cleanup.",
+    "No assertion removed or relaxed. New Windows CI pending; earlier run is not claimed successful.",
+    "Runtime remains exactly e0dc594; a passing prior full run is not relabeled as a run of changed test/workflow source."
+  ]
+}
