@@ -98,3 +98,44 @@ WEB-01..08 BLOCKED, all actual device/provider/privacy/release gates separate.
 Dedicated Sandbox printer/Drive OFF; no production/OPS/public ingress/branch/
 master/default/deployment or real external effects. Only work/ synthetic scratch
 local. Rollback inverse adapters/tests/docs, retain all financial/media records.
+
+## 29 October — UX-07 final local validation / CI method reporting
+
+Test source `3a98ed977c86ad9d7eb0f8407103e097f1b9208a`; runtime remains
+`2f598fd1136e3d2db0d410a0cdd640c74ef9cf6d`. Final full **1178 run / 1174 PASS /
+zero FAIL/ERROR / four optional SKIP**, 594.860s, Python 3.12.14 / Debian 13
+software GL/dummy audio. Three native-model skips and one opt-in video skip
+remain explicit. Fresh focused **67 PASS**, 23.472s, and **12 PASS**, 1.042s,
+zero failure/error/skip. No runtime/tests changed; no full result borrowed from
+older evidence. Workflow-only reporting was edited near the end of the full run;
+application/tools/tests stayed identical to the tested source throughout.
+
+Four fresh native FBO error/held-retry captures at 800x1280/452x900 visually
+PASS: readable message/controls, no clipping/private details/order/QR/customer
+media, disabled retry while busy; release creates exactly one nonpayable MOCK
+order without admission/print. Initial corrupt Window readbacks rejected.
+Raw synthetic captures/reports remain private local work/; paths/SHA-256 and
+commands are recorded in [the validation evidence](evidence/ux07-mock-printer-final-validation.json).
+
+CI `40882031887` at `3a98ed9` reports all three jobs SUCCESS. Windows ledger
+**123 PASS** (all seven new MOCK and five readiness methods individually ok);
+other Windows groups **72/55/103 PASS**, zero skips. Linux pure **129 run/128
+PASS/one SKIP**, supervisor **40 PASS**. Linux native step reports success but
+its blob-host log/artifact downloads receive proxy CONNECT 403; individual
+native execution is **not yet verified** from that run. No blanket PASS claim.
+
+New CI-only reporting reads existing reports and requires the exact 5 readiness,
+7 MOCK and 2 native PASS lines before emitting source/digest/method notices via
+accessible GitHub check annotations. Actual local reports accepted; removing a
+method, skipping it or failing the summary each rejects. Existing assertions,
+workflows and safety checks remain. This micro-push's matching CI is PENDING;
+next read its notices and publish the final source/remote checkpoint.
+
+UX-07 complete purchased-print payment/device gate remains **NOT_RUN**; matrix
+**59 PASS / 0 FAIL / 9 BLOCKED / 1 NOT_RUN**, audit IN_PROGRESS. No physical paper
+readiness guarantee; Windows spooler API latency is not bounded by this adapter.
+Sandbox printer/Drive OFF. PAY-22/WEB-01–08 and actual merchant/Windows/Ubuntu
+hardware/phone/paper/Drive/deletion/privacy/support/release gates remain separate.
+No production/OPS/public infrastructure/deployment/default/master operation or
+real effects. Only private work/ scratch is untracked outside the repository.
+Rollback workflow/docs only, preserving all financial/media/audit records.

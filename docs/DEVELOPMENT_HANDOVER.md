@@ -1,5 +1,25 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — UX-07 final local validation / CI reporting pending
+
+Source `3a98ed9`, runtime `2f598fd` unchanged: fresh **67 + 12 focused PASS**;
+full **1178 run / 1174 PASS / zero FAIL/ERROR / four optional SKIP**, 594.860s,
+Python 3.12.14/Debian 13 software GL. Four error/held-retry native FBO images
+visually PASS at 800x1280/452x900; no private data/order/QR before readiness.
+CI 40882031887 three jobs SUCCESS; Windows 123 PASS includes seven MOCK/five
+readiness methods, other Windows groups 72/55/103 PASS. Linux native individual
+method output inaccessible (blob-host proxy 403), not counted as verified PASS.
+New CI-only report checker requires exact 5 readiness/7 MOCK/2 native PASS lines,
+emits source/digest/method notices; local actual/missing/skipped/failed controls
+PASS. Matching new CI PENDING; next verify notices and checkpoint remote SHA.
+[Exact commands/source/counts/image hashes/limits](qa/portrait-v2-sandbox/evidence/ux07-mock-printer-final-validation.json).
+
+Whole UX-07 purchased-printer payment/device gate **NOT_RUN**, matrix **59/0/9/1**.
+Sandbox printer/Drive OFF; Windows spooler API latency unbounded by this adapter,
+no paper guarantee. PAY-22/WEB-01–08 and all actual hardware/merchant/privacy/
+release gates remain separate. No runtime/tests or customer records changed.
+Rollback workflow/docs only; no unpublished runtime patch. Private work/ only.
+
 ## 29 October — UX-07.d actual MOCK factory/native worker verified
 
 Functional micro-push `2f598fd1136e3d2db0d410a0cdd640c74ef9cf6d` remote verified.

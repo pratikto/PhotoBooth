@@ -1,0 +1,388 @@
+{
+  "status": "LOCAL_MOCK_VALIDATION_COMPLETE_CI_REPORTING_CHECKED_CURRENT_CI_PENDING_UX07_WHOLE_NOT_RUN",
+  "date": "2026-10-29 Asia/Jakarta",
+  "test_source": "3a98ed977c86ad9d7eb0f8407103e097f1b9208a",
+  "runtime_source": "2f598fd1136e3d2db0d410a0cdd640c74ef9cf6d",
+  "runtime_changed": false,
+  "environment": {
+    "os": "Debian GNU/Linux 13 (trixie), cloud; not Ubuntu device acceptance",
+    "python": "Python 3.12.14",
+    "graphics": "Kivy 2.3.1, SDL offscreen, software GL; dummy audio",
+    "network": "Execution network permission enabled for synthetic loopback HTTP; no real merchant/printer/Drive access"
+  },
+  "reviewed_sources": [
+    "AGENTS.md",
+    "docs/DEVELOPMENT_PROTOCOL.md",
+    "docs/DEVELOPMENT_HANDOVER.md",
+    "docs/FEATURE_STATUS.md",
+    "docs/bug_tracker.md",
+    "docs/next_step.md",
+    "docs/README.md",
+    "docs/qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md",
+    "docs/qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-MASTER-PLAN.md",
+    "docs/qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-ROADMAP.md",
+    "docs/qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATIONS.md",
+    "docs/qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-READINESS.md",
+    "docs/qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-OPERATOR.md",
+    "docs/qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-TEST-MATRIX.md",
+    "docs/qa/portrait-v2-sandbox/AR13-READINESS.md",
+    "docs/qa/portrait-v2-sandbox/UX07-MOCK-PRINTER-PREFLIGHT.md",
+    "docs/qa/portrait-v2-sandbox/UX07-PREPAYMENT-READINESS.md",
+    "docs/qa/portrait-v2-sandbox/evidence/ux07-mock-printer-verification.json",
+    "docs/qa/portrait-v2-sandbox/evidence/ux07-final-verification.json"
+  ],
+  "files_sha256": {
+    "photobooth/kiosk_v2/mock_checkout.py": "13a7fc95ec5bfa8f07a3e20245bcc0c104d4afe7bb90ebad8903d0b06de25f18",
+    "photobooth/kiosk_v2/checkout_views.py": "3391a9ecb3a4d8f0e1f448e067b4c952fed8f068d2800c2aaa3d61493d4822c3",
+    "photobooth/device_health.py": "f06e46db4c6c9428b0623337274763988ce700d7e764026189413cc6bc24f901",
+    "photobooth/printer_settings.py": "f639b21dc2270f08e1b203527d7e9ee126eda71982ef7a1fff444b8ce45ef89e",
+    "tests/test_ux07_mock_printer.py": "66e15b1629892aaede9b8d7cf8351408bab3cc664995f257fc2003ce9857ee16",
+    "tests/test_kiosk_v2_checkout_widgets.py": "1a4172c67642e8d870033793cc9b24161f39e3ea77fc7941f3fc727d6287d606",
+    ".github/workflows/portrait-kiosk-v2.yml": "e64d54eff8ceb705645684cdf2afedeefaaffbdec70139101488ce3236fb2862"
+  },
+  "full": {
+    "run": 1178,
+    "pass": 1174,
+    "fail": 0,
+    "error": 0,
+    "skip": 4,
+    "success": true,
+    "seconds": 594.86,
+    "source": "3a98ed977c86ad9d7eb0f8407103e097f1b9208a",
+    "report_sha256": "c863712acdea3db4e72c3c13d4eb40d7bdafa0712d231f766dc09be0a0667c31",
+    "skipped_tests": [
+      "test_real_model_worker_drives_the_actual_controller_and_keeps_button_capture (test_camera_recovery.CameraRecoveryTests.test_real_model_worker_drives_the_actual_controller_and_keeps_button_capture) Use real inference and mailboxes; only camera acquisition is synthetic. ... skipped 'Native model assets are opt-in'",
+      "test_native_video_has_frames_payment_is_muted_and_retiring_unloads_decoder (test_kiosk_advertising.KioskAdvertisingTests.test_native_video_has_frames_payment_is_muted_and_retiring_unloads_decoder) ... skipped 'Native video checks require opt-in and ffmpeg'",
+      "test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture) ... skipped 'Native model assets are opt-in'",
+      "test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image (test_palm_gesture.NativePalmModelTests.test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image) ... skipped 'Native model assets are opt-in'"
+    ],
+    "mock_focused_subset": {
+      "run": 67,
+      "pass": 67,
+      "scope": "Methods selected by the previous 67-test focused command; executed within this current full discovery, not a separate focused rerun"
+    },
+    "tree_note": "Launched clean at 3a98ed9. Only CI annotation workflow edited near end of run; photobooth/tools/tests unchanged throughout. No full rerun needed for reporting/docs-only follow-up."
+  },
+  "full_command": "KIVY_HOME=/tmp/meong-ux07-final-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 MESA_SHADER_CACHE_DIR=/tmp/meong-ux07-final-mesa PHOTOBOOTH_TEST_GUI=1 PHOTOBOOTH_TEST_AUDIO=1 MEONG_CI_TEST_REPORT=/workspace/work/ux07-final/full-report.txt .venv/bin/python tools/run_kiosk_unittests.py",
+  "initial_attempt": {
+    "status": "ABORTED_ENVIRONMENT_RESTRICTION",
+    "source": "3a98ed977c86ad9d7eb0f8407103e097f1b9208a",
+    "counts": "Unavailable: interrupted before unittest report",
+    "reason": "Initial execution lacked network permission: loopback bind raised PermissionError. Process stopped; no test result claimed. Final full run uses required execution network permission."
+  },
+  "focused_history": {
+    "test_source": "3a98ed977c86ad9d7eb0f8407103e097f1b9208a",
+    "runtime_source": "2f598fd1136e3d2db0d410a0cdd640c74ef9cf6d",
+    "run": 67,
+    "pass": 67,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 24.283,
+    "evidence": "ux07-mock-printer-verification.json",
+    "scope": "Previously recorded focused run; retained historical provenance, not relabeled as a new run"
+  },
+  "ci": {
+    "run_id": 40882031887,
+    "source": "3a98ed977c86ad9d7eb0f8407103e097f1b9208a",
+    "reported_conclusion": "success",
+    "jobs": [
+      {
+        "databaseId": 123476354835,
+        "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+        "conclusion": "success",
+        "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40882031887/job/123476354835",
+        "relevant_steps": [
+          {
+            "name": "Reused QRIS protocol and native v2 Sandbox handoff (offline only)",
+            "conclusion": "success"
+          },
+          {
+            "name": "Exercise opt-in Kivy widgets at a virtual display",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "databaseId": 123476355265,
+        "name": "Windows Python 3.12 native SDL audio (dummy output)",
+        "conclusion": "success",
+        "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40882031887/job/123476355265",
+        "relevant_steps": [
+          {
+            "name": "Check autonomous recovery ledgers, WAL crashes and file protocol on Windows (synthetic)",
+            "conclusion": "success"
+          },
+          {
+            "name": "Check payment creation and reconciliation crash boundaries (offline)",
+            "conclusion": "success"
+          },
+          {
+            "name": "Check portable startup, recovery holds and Windows launch ownership",
+            "conclusion": "success"
+          },
+          {
+            "name": "Check Windows DLL loading, safe WAV fallback and twenty PCM cycles",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "databaseId": 123476355662,
+        "name": "Navigation and audio lifecycle",
+        "conclusion": "success",
+        "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40882031887/job/123476355662",
+        "relevant_steps": [
+          {
+            "name": "Kivy-independent navigation and fake audio tests",
+            "conclusion": "success"
+          },
+          {
+            "name": "Observation-only supervisor and startup safety",
+            "conclusion": "success"
+          }
+        ]
+      }
+    ],
+    "windows_ledger": {
+      "run": 123,
+      "pass": 123,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 24.422,
+      "step": "Check autonomous recovery ledgers, WAL crashes and file protocol on Windows (synthetic)",
+      "intended_mock_printer_methods_individually_pass": [
+        "test_conflicting_sandbox_print_opt_in_denies_before_any_printer_probe (test_ux07_mock_printer.MockPrinterPreflightTests.test_conflicting_sandbox_print_opt_in_denies_before_any_printer_probe)",
+        "test_degraded_unknown_and_exceptions_deny_before_order_qr_or_reward_reservation (test_ux07_mock_printer.MockPrinterPreflightTests.test_degraded_unknown_and_exceptions_deny_before_order_qr_or_reward_reservation)",
+        "test_existing_pending_unknown_confirmed_recover_without_new_health_or_identity (test_ux07_mock_printer.MockPrinterPreflightTests.test_existing_pending_unknown_confirmed_recover_without_new_health_or_identity)",
+        "test_opt_out_never_loads_config_probes_or_constructs_printer (test_ux07_mock_printer.MockPrinterPreflightTests.test_opt_out_never_loads_config_probes_or_constructs_printer)",
+        "test_original_lan_wifi_fallback_closes_without_print_bytes_before_order (test_ux07_mock_printer.MockPrinterPreflightTests.test_original_lan_wifi_fallback_closes_without_print_bytes_before_order)",
+        "test_retry_reads_current_saved_config_and_creates_exactly_one_mock_order (test_ux07_mock_printer.MockPrinterPreflightTests.test_retry_reads_current_saved_config_and_creates_exactly_one_mock_order)",
+        "test_success_is_not_cached_for_a_later_new_order (test_ux07_mock_printer.MockPrinterPreflightTests.test_success_is_not_cached_for_a_later_new_order)"
+      ],
+      "ux07_readiness_methods_individually_pass": 5
+    },
+    "windows_other_steps": [
+      {
+        "step": "Check payment creation and reconciliation crash boundaries (offline)",
+        "run": 72,
+        "pass": 72,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "seconds": 108.128
+      },
+      {
+        "step": "Check portable startup, recovery holds and Windows launch ownership",
+        "run": 55,
+        "pass": 55,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "seconds": 0.679
+      },
+      {
+        "step": "Check Windows DLL loading, safe WAV fallback and twenty PCM cycles",
+        "run": 103,
+        "pass": 103,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "seconds": 18.429
+      }
+    ],
+    "linux_pure": [
+      {
+        "step": "Kivy-independent navigation and fake audio tests",
+        "run": 129,
+        "pass": 128,
+        "fail": 0,
+        "error": 0,
+        "skip": 1,
+        "seconds": 0.408
+      },
+      {
+        "step": "Observation-only supervisor and startup safety",
+        "run": 40,
+        "pass": 40,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "seconds": 0.257
+      }
+    ],
+    "linux_native": {
+      "job_id": 123476354835,
+      "step": "Exercise opt-in Kivy widgets at a virtual display",
+      "step_reported_conclusion": "success",
+      "registration": "tests.test_kiosk_v2_checkout_widgets in workflow at tested SHA",
+      "method_execution_verification": "BLOCKED; not counted as verified PASS",
+      "intended_methods": [
+        "test_ux07_configured_printer_probe_keeps_clock_live_and_retry_creates_one_mock_at_both_sizes",
+        "test_ux07_retired_printer_probe_result_stays_hidden_then_recovers_original_mock_at_both_sizes"
+      ],
+      "counts": null,
+      "reason": "Proxy CONNECT to productionresultssa16.blob.core.windows.net returns 403 Forbidden for native job log and artifact 12902075021. GitHub job/step metadata reports success but method-level output cannot be read."
+    },
+    "log_sha256": "f0761562d903249a22f369a0574748a54a08a7b8facf8f2fef84143c945dbc1e",
+    "historical_first_source_run": {
+      "id": 40881383641,
+      "status": "Previously pending/superseded; not used as passing evidence"
+    }
+  },
+  "screenshots": {
+    "renderer": "Native stage.export_to_png (FBO), separate fresh process initialized at each exact size; no postprocessing",
+    "capture_command_template": "KIVY_HOME=/tmp/meong-ux07-capture-SIZE-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 MESA_SHADER_CACHE_DIR=/tmp/meong-ux07-capture-mesa .venv/bin/python /workspace/work/ux07-final/capture_mock_retry.py WIDTH HEIGHT",
+    "fixture_sha256": "8c6792fe8ec74ba5fb55c847fff93a0a1f70f8871bad220b446f11ebfccc20eb",
+    "review": "PASS, four native images visually inspected at 800x1280 and 452x900; no clipping/privacy disclosure; denied retry enabled, held retry disabled; deliberate release creates one nonpayable order, no photo admission or printer constructed",
+    "rejected_initial_capture": "Window.screenshot readback after resize produced corrupt/black upper regions; rejected, retained privately in rejected-window-readback, not accepted evidence or a demonstrated application defect",
+    "artifacts_private_local_only": true,
+    "images": [
+      {
+        "path": "/workspace/work/ux07-final/screenshots/mock-printer-error-800x1280.png",
+        "sha256": "982e89f850ff788a22676ac905f1c58c9f7fce860af058dff1f3856276a7906a",
+        "size": [
+          800,
+          1280
+        ],
+        "state": "error",
+        "retry_enabled": true,
+        "message": "Koneksi printer belum terkonfirmasi. Periksa printer lalu coba lagi.",
+        "orders": 0,
+        "qr": false,
+        "photo_jobs": false,
+        "private_error_text_visible": false,
+        "review": {
+          "readable": true,
+          "clipped_text_or_controls": false,
+          "retry_affordance_correct": true,
+          "private_error_order_payment_qr_or_customer_data_visible": false
+        }
+      },
+      {
+        "path": "/workspace/work/ux07-final/screenshots/mock-printer-retry-pending-800x1280.png",
+        "sha256": "36acb13f63883a9917bb17b74ec7482a827a58cc46b7d08cd2e18c92caecd89a",
+        "size": [
+          800,
+          1280
+        ],
+        "state": "retry-pending",
+        "retry_enabled": false,
+        "message": "Memeriksa catatan MOCK\u2026",
+        "orders": 0,
+        "qr": false,
+        "photo_jobs": false,
+        "private_error_text_visible": false,
+        "released_retry_creates_one_nonpayable_mock": true,
+        "review": {
+          "readable": true,
+          "clipped_text_or_controls": false,
+          "retry_affordance_correct": true,
+          "private_error_order_payment_qr_or_customer_data_visible": false
+        }
+      },
+      {
+        "path": "/workspace/work/ux07-final/screenshots/mock-printer-error-452x900.png",
+        "sha256": "4b2ad3cbab13b1927d4bc96ea5937ab3f5831090baf8b4bbdcd5343427347041",
+        "size": [
+          452,
+          900
+        ],
+        "state": "error",
+        "retry_enabled": true,
+        "message": "Koneksi printer belum terkonfirmasi. Periksa printer lalu coba lagi.",
+        "orders": 0,
+        "qr": false,
+        "photo_jobs": false,
+        "private_error_text_visible": false,
+        "review": {
+          "readable": true,
+          "clipped_text_or_controls": false,
+          "retry_affordance_correct": true,
+          "private_error_order_payment_qr_or_customer_data_visible": false
+        }
+      },
+      {
+        "path": "/workspace/work/ux07-final/screenshots/mock-printer-retry-pending-452x900.png",
+        "sha256": "40a425150e4df3604aadb893f515978a6b4c0e13237887d9bda65517235dfcdb",
+        "size": [
+          452,
+          900
+        ],
+        "state": "retry-pending",
+        "retry_enabled": false,
+        "message": "Memeriksa catatan MOCK\u2026",
+        "orders": 0,
+        "qr": false,
+        "photo_jobs": false,
+        "private_error_text_visible": false,
+        "released_retry_creates_one_nonpayable_mock": true,
+        "review": {
+          "readable": true,
+          "clipped_text_or_controls": false,
+          "retry_affordance_correct": true,
+          "private_error_order_payment_qr_or_customer_data_visible": false
+        }
+      }
+    ]
+  },
+  "matrix": {
+    "total": 69,
+    "pass": 59,
+    "fail": 0,
+    "blocked": 9,
+    "not_run": 1
+  },
+  "ux07": "NOT_RUN complete purchased-printer prepayment/device gate. Local nonpayable MOCK printer component validated; Linux CI individual native method evidence still blocked.",
+  "remaining": [
+    "Verify new CI reporter notices via checks API at exact pushed source; old native job logs remain inaccessible and unverified. Do not relabel 40882031887 native method evidence.",
+    "Purchased-printer payment/preflight integration and Windows/Ubuntu device evidence not certified; do not enable Sandbox transport",
+    "PAY-22 official Legacy charge replay contract BLOCKED; WEB-01..08 infrastructure/operations BLOCKED",
+    "Actual merchant/camera/paper/phone/Drive/deletion/privacy/support/release acceptance remains separate and unperformed"
+  ],
+  "limits": "Original read-only route/queue/node readiness is not paper readiness. TCP checks bounded per route; Windows spooler API latency not bounded by this adapter. Dedicated Sandbox printer/Drive OFF; no financial/reward/claim/fence/media/audit/retention mutation or real effects; old archive excluded.",
+  "rollback": "Inverse workflow reporting/docs only; preserve every financial, reward, claim, fence, media, audit and retention record. Runtime/tests unchanged.",
+  "focused_current": [
+    {
+      "report": "native-tests.txt",
+      "source": "3a98ed977c86ad9d7eb0f8407103e097f1b9208a",
+      "run": 67,
+      "pass": 67,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 23.472,
+      "report_sha256": "02937a864faf0a003c9e1037940874109d934d80940590247993d61dad756907",
+      "command": "KIVY_HOME=/tmp/meong-ux07-native-final-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 MESA_SHADER_CACHE_DIR=/tmp/meong-ux07-final-mesa MEONG_CI_TEST_REPORT=/workspace/work/ux07-final/reporter-inputs/native-tests.txt .venv/bin/python tools/run_kiosk_unittests.py test_ux07_mock_printer test_kiosk_v2_mock_checkout test_device_health test_printer_settings test_kiosk_v2_delivery_options tests.test_kiosk_v2_checkout_widgets"
+    },
+    {
+      "report": "sandbox-tests.txt",
+      "source": "3a98ed977c86ad9d7eb0f8407103e097f1b9208a",
+      "run": 12,
+      "pass": 12,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 1.042,
+      "report_sha256": "557c8a7ee2d2a65d6984a73c45d22f5be3a10a92289cd2b6da8b70ec1ab4c591",
+      "command": "KIVY_HOME=/tmp/meong-ux07-boundary-final-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy MEONG_CI_TEST_REPORT=/workspace/work/ux07-final/reporter-inputs/sandbox-tests.txt .venv/bin/python tools/run_kiosk_unittests.py test_ux07_readiness test_ux07_mock_printer"
+    }
+  ],
+  "ci_reporting_change": {
+    "source": "Containing workflow/docs micro-commit; pin after push",
+    "workflow_sha256": "70fa85168e8aceb6183f736ae07797b4e2101f0fabe38c6ca1305443ea675a13",
+    "local_validation": {
+      "result": "PASS",
+      "checks": [
+        "Actual 12-test and 67-test reports accepted; two annotations include exact methods and digests",
+        "missing method rejected",
+        "skipped method rejected",
+        "failed summary rejected"
+      ]
+    },
+    "validation_command": ".venv/bin/python /workspace/work/ux07-final/check_ci_reporter.py",
+    "scope": "Read actual reports, require all five readiness/seven MOCK/two native methods individually ok, require successful summary, emit source/report digest/names as notices accessible via GitHub check annotations. No test assertions, runtime, schema or device behavior altered.",
+    "current_ci": "PENDING after immediate push; do not count old inaccessible native log as method evidence"
+  }
+}
