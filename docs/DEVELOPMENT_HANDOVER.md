@@ -1,5 +1,22 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-03.c2 CAP-01–05 focused evidence complete
+
+Prior micro-push `c87050eeb4f0223577d68796ff0ace4f4a1d2a95` pushed/remote-verified.
+Added folder/pre-manifest, manifest/pre-STARTED and committed STARTED/lost-reply
+process exits plus orphan/no-parent-scan denial. **66 focused PASS**, zero
+failure/error/skip, 5.965s; seven real exits/six distinct boundaries. Actual
+original customer claim and current provider status restore only the same paid
+allocation; existing manifest bytes preserved, zero shutter/render/print replay.
+[Exact evidence](qa/portrait-v2-sandbox/CAP01-05-ALLOCATION-CRASHES.md).
+No runtime defect or runtime/schema/UI change. Matrix **50 PASS / 1 FAIL /
+9 BLOCKED / 9 NOT_RUN**, CAP-01–05 synthetic PASS. This containing commit is the
+next tested micro-push; CI pending. Prior full/native source results retained,
+no new full/device/provider evidence inferred. Next matching CI then PAY-18
+combined service-reply faults, retake/COMPLETE/disk and AR-09 BUG-023. External/
+OPS gates unchanged; only disposable work/ local, no unpublished runtime patch.
+
+
 ## 29 October — AR-03.c1 CAP-01/02 abrupt allocation evidence
 
 Base/remote verified `c4c1847bd8086c36f3ec1d3a755728896321495f`. Added three

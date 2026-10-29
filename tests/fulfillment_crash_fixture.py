@@ -95,6 +95,38 @@ def crash_allocation(root, boundary):
             assert not harness.photo_root.exists()
             os._exit(83)
         harness.client.allocate = allocate
+    elif boundary in {'folder_before_manifest', 'manifest_before_started', 'started_reply_lost'}:
+        from photobooth.catalog import get_templates
+        from photobooth.kiosk_v2.photos import PhotoTest
+        harness.flow.prepare_capture()
+        binding = harness.binding()
+        photo = PhotoTest(harness.photo_root)
+        if boundary == 'folder_before_manifest':
+            def before_manifest(transaction):
+                assert transaction.folder_path.is_dir() and not any(transaction.folder_path.iterdir())
+                assert not transaction.manifest_path.exists()
+                assert harness.store.get(oid)['service_state'] == 'RESERVED'
+                os._exit(84)
+            photo.store._write_manifest = before_manifest
+        photo.start_bound(get_templates(), {'template_a': 2}, binding)
+        assert photo.transaction.manifest_path.is_file()
+        assert photo.transaction.manifest['payment_binding'] == binding
+        if boundary == 'manifest_before_started':
+            assert harness.store.get(oid)['service_state'] == 'RESERVED'
+            assert harness.flow.snapshot()['allocation_ready'] is False
+            os._exit(85)
+        harness.flow.bind_transaction(binding['transaction_id'])
+        original = harness.client.service_transition
+        def after_started(order_id, grant, state, transaction_id, **options):
+            value = original(order_id, grant, state, transaction_id, **options)
+            assert state == 'STARTED' and value['service_state'] == 'STARTED'
+            assert harness.store.get(oid)['service_state'] == 'STARTED'
+            saved = json.loads(harness.flow.path.read_text())
+            assert saved['phase'] == 'STARTING' and saved['order']['service_state'] == 'RESERVED'
+            os._exit(86)
+        harness.client.service_transition = after_started
+        harness.flow.refresh()
+        raise AssertionError('STARTED crash boundary was not reached')
     else:
         raise ValueError('Unknown allocation crash boundary')
     harness.flow.prepare_capture()

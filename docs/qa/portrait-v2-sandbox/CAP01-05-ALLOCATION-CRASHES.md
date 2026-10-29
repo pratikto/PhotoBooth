@@ -74,3 +74,28 @@ PASS; CAP-03–05 remain NOT_RUN. Matrix **47 PASS / 1 FAIL / 9 BLOCKED /
 containing test commit. No new full/native/physical acceptance inferred.
 Next AR-03.c2: extend the same child fixture to folder/first-manifest/STARTED
 reply boundaries; preserve unknown/orphan bytes with no replacement allocation.
+
+## AR-03.c2 — all five allocation/STARTED scenarios focused-verified
+
+CAP-01/02 micro-push `c87050eeb4f0223577d68796ff0ace4f4a1d2a95` verified on
+origin. Extension adds actual child exit after empty folder/before manifest,
+after first manifest/before local-ready STARTED, and after STARTED server commit
+before client/journal acknowledgment. A repeated folder-crash negative case puts
+unknown bytes in the original allocation and a synthetic neighbor: original bytes
+remain held, and enumerating the parent transaction root is explicitly forbidden.
+
+**66 focused PASS / zero failure/error/skip**, 5.965s. Six new methods execute
+seven real child exits across six distinct boundaries. Original high-entropy
+customer proof, current provider evidence, same grant/op/transaction/counter,
+WAL/provider integrity, byte-identical existing manifest, zero capture/retake and
+no shutter/render/print replay are asserted. A second fresh controller/store
+reopen retains original mapping; no unsupported second-process claim is inferred
+for that extra parent reopen. [Exact command/source/digest](evidence/cap01-05-verification.json).
+
+No runtime defect or runtime/schema/UI change. CAP-01–05 now synthetic PASS;
+matrix **50 PASS / 1 FAIL / 9 BLOCKED / 9 NOT_RUN**. Current CI pending at this
+containing test publication. Prior full/native evidence stays pinned to e0dc594/
+c94696d; no new complete regression/device/merchant/paper acceptance is claimed.
+Next: inspect matching Windows/Linux CI, final docs checkpoint, then PAY-18
+combined lost service replies (including COMPLETED), CAP-11–13 retake, CAP-16
+compose/COMPLETE, CAP-20 disk/permission and AR-09 BUG-023 denial audit.

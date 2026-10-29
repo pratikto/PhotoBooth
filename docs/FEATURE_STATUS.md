@@ -1,5 +1,15 @@
 # Meong Photobooth — current feature status
 
+## 29 October — AR-03.c CAP-01–05 exact process-exit evidence
+
+**66 focused PASS**, zero failure/error/skip; seven actual child exits across six
+allocation/folder/manifest/STARTED boundaries, original proof/identities and orphan
+hold verified. Tests/CI/docs only, no runtime defect or behavior change. Matrix
+**50 PASS / 1 FAIL / 9 BLOCKED / 9 NOT_RUN**; matching CI pending at this commit.
+[Exact source/commands/limits](qa/portrait-v2-sandbox/CAP01-05-ALLOCATION-CRASHES.md).
+Prior full/native evidence retains its actual source; BUG-023/external gates OPEN.
+
+
 ## 29 October — AR-02.d PAY-08 verified and remotely checkpointed
 
 Functional `e0dc59435772148be86449c55140d4b9be2f6364`: **1117 run / 1114 PASS /

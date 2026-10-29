@@ -80,3 +80,11 @@ Command extends AR-03.a with test_photo_allocation, test_qris_reconciliation_ses
 test_kiosk_v2_sandbox, test_kiosk_v2_sandbox_widgets, test_kiosk_v2_photos,
 test_retention and test_workflow in SDL offscreen/dummy audio. Full regression
 follows final functional change; device/provider checks remain NOT_RUN.
+
+## AR-03.c — exact allocation/STARTED crash evidence, 29 October
+
+Existing runtime passes CAP-01–05 actual child exits, including lost allocation/
+STARTED replies, empty-folder initialization, existing manifest preservation and
+orphan hold without recency scanning. **66 focused PASS**, no runtime defect or
+schema/UI change. [Source/command/limits](CAP01-05-ALLOCATION-CRASHES.md).
+Full combined PAY-18 completion-reply and physical power-loss gates stay open.

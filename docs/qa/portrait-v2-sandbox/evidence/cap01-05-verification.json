@@ -1,0 +1,50 @@
+{
+  "stage": "AR-03.c2 / CAP-01\u201305",
+  "status": "FOCUSED_VERIFIED_TESTS_ONLY_CI_PENDING",
+  "remote_base": "c87050eeb4f0223577d68796ff0ace4f4a1d2a95",
+  "runtime_source": "e0dc59435772148be86449c55140d4b9be2f6364",
+  "test_source": "Containing commit; file hashes below",
+  "command": "KIVY_HOME=/tmp/meong-cap-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy MEONG_CI_TEST_REPORT=work/cap01-05-focused-report.txt .venv/bin/python tools/run_kiosk_unittests.py test_fulfillment_crash_recovery test_checkout_fulfillment test_photo_allocation test_qris_session test_customer_claim_session test_photo_reconstruction test_checkout_durability",
+  "result": {
+    "run": 66,
+    "pass": 66,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 5.965
+  },
+  "report_sha256": "992b0c1b1c0ec5f2ea368296479ebad72096047b8770cb0bf26dc57256ff7ed8",
+  "source_sha256": {
+    "tests/fulfillment_crash_fixture.py": "70de1c63da305e362249c00d0caf8fc1441bc32e8b5d24863e708ca8a670249e",
+    "tests/test_fulfillment_crash_recovery.py": "b4110c07dabb5be0570c8695d38aa5f5e56371669a2f0c1cfd07f39a6c9f565f"
+  },
+  "process_exits": {
+    "count": 7,
+    "distinct_boundaries": 6,
+    "codes": {
+      "before_local_intent": 81,
+      "before_backend_intent": 82,
+      "allocated_reply_lost": 83,
+      "folder_before_manifest": 84,
+      "manifest_before_started": 85,
+      "started_reply_lost": 86
+    },
+    "extra_negative_case": "Repeat folder crash with original unknown bytes plus unrelated neighbor; deny parent-root enumeration and preserve both files."
+  },
+  "matrix": {
+    "total": 69,
+    "pass": 50,
+    "fail": 1,
+    "skip": 0,
+    "blocked": 9,
+    "not_run": 9
+  },
+  "scope": [
+    "CAP-01\u201305 synthetic PASS. Real child exits and original customer proof, separate persisted provider, current backend settlement, one mapping/counter/grant and no repeated create.",
+    "CAP-03 empty folder recoverable; nonempty/orphan folder held with no recency scan.",
+    "CAP-04 first manifest byte-identical after restore; CAP-05 backend STARTED/local RESERVED discrepancy recovered with same ACK.",
+    "Additional fresh controller/DB reopen retains exact mapping; no capture/render/print/upload or ordinary counter replay.",
+    "No runtime defect or runtime/schema/UI change. Prior full/native evidence kept at original sources; not rerun.",
+    "PAY-18 combined lost COMPLETED reply and other matrix gates remain open."
+  ]
+}

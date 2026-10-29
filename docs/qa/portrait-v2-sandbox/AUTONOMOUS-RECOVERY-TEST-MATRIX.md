@@ -1,5 +1,10 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
+**AR-03.c2 update:** CAP-01–05 exact child exits now verified, **66 focused PASS**.
+Current matrix **50 PASS / 1 FAIL / 0 SKIP / 9 BLOCKED / 9 NOT_RUN**.
+[Exact evidence](evidence/cap01-05-verification.json); no runtime change or new
+full/native/physical result. CI pending at this test publication.
+
 **AR-03.c1 update:** CAP-01/02 exact child exits now verified, 34 focused PASS.
 Current scenario matrix **47 PASS / 1 FAIL / 9 BLOCKED / 12 NOT_RUN**.
 [Exact new evidence](evidence/cap01-02-verification.json); older counts below
@@ -169,9 +174,9 @@ offline inbox prototype assertions do not certify deployed ingress.
 | PAY-22 | **BLOCKED** | See scope/gate | Official merchant-specific Legacy repeat-charge contract and controlled Sandbox evidence absent; POST retry remains disabled. |
 | CAP-01 | **PASS** | `test_fulfillment_crash_recovery.test_cap01_exit_before_local_or_backend_intent_creates_only_first_original_allocation` | Two real child exits before local intent and after it/before backend request; original proof/key/grant/op, first allocation once, no new order/charge/counter. [AR-03.c1 evidence](evidence/cap01-02-verification.json). |
 | CAP-02 | **PASS** | `test_fulfillment_crash_recovery.test_cap02_exit_after_backend_commit_recovers_same_allocation_before_first_folder` | Real backend COMMIT/pre-reply/pre-folder exit; exact operation/ID recovered after original proof, first manifest/STARTED reuse, no shutter/render or second allocation. [AR-03.c1 evidence](evidence/cap01-02-verification.json). |
-| CAP-03 | **NOT_RUN** | `test_photo_reconstruction.test_started_missing_manifest_or_unknown_bytes_never_restarts_capture` | Empty/orphan folder denial passes; exact folder/pre-manifest child kill not demonstrated. |
-| CAP-04 | **NOT_RUN** | `test_kiosk_v2_sandbox_widgets.test_missing_started_ack_blocks_countdown_until_same_transaction_ack` | Native missing ACK guard passes; exact initial-manifest/pre-STARTED child kill not demonstrated. |
-| CAP-05 | **NOT_RUN** | `test_checkout_durability.test_service_replay_cannot_allocate_different_capture` | Idempotent STARTED replay passes; exact accepted STARTED/pre-local-save child kill not demonstrated. |
+| CAP-03 | **PASS** | `test_fulfillment_crash_recovery.test_cap03_exit_after_empty_folder_before_manifest_initializes_only_original_id`; `test_cap03_orphan_bytes_after_folder_crash_are_held_without_recency_lookup` | Real empty-folder/pre-manifest exit recovers only same RESERVED allocation. Repeated exit + unknown bytes stays held; parent enumeration forbidden, neighbor/original bytes untouched. [AR-03.c2 evidence](evidence/cap01-05-verification.json). |
+| CAP-04 | **PASS** | `test_fulfillment_crash_recovery.test_cap04_exit_after_first_manifest_before_started_preserves_manifest_and_same_ack` | Real first-manifest/pre-STARTED exit; original ticket/fresh provider validation, byte-identical manifest, original ACK, zero capture. [AR-03.c2 evidence](evidence/cap01-05-verification.json). |
+| CAP-05 | **PASS** | `test_fulfillment_crash_recovery.test_cap05_exit_after_started_acceptance_replays_original_ack_without_capture` | Real backend STARTED/local RESERVED exit, exact original ACK/reopen, same allocation/counter, no capture/render/print. [AR-03.c2 evidence](evidence/cap01-05-verification.json). |
 | CAP-06 | **PASS** | `test_capture_journal.test_abrupt_process_exit_at_every_write_boundary_preserves_evidence` | Real child exit at capture intent before frame. |
 | CAP-07 | **PASS** | `test_capture_journal.test_abrupt_process_exit_at_every_write_boundary_preserves_evidence` | Real child exit at temporary/staged JPEG boundaries; unacknowledged bytes stay held. |
 | CAP-08 | **PASS** | `test_capture_journal.test_abrupt_process_exit_at_every_write_boundary_preserves_evidence` | Real published JPEG/pre-manifest exit, image/hash and no overwrite assertions. |
