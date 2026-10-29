@@ -1,11 +1,13 @@
 """Read-only route evidence must never become paper or payment acceptance."""
 from contextlib import redirect_stdout
+from concurrent.futures import ThreadPoolExecutor
 import io
 import json
 import os
 from pathlib import Path
 import subprocess
 import sys
+import threading
 from tempfile import TemporaryDirectory
 from types import SimpleNamespace
 import unittest
@@ -147,3 +149,63 @@ class PrinterRouteEvidenceTests(unittest.TestCase):
         report = json.loads(output.read_text())
         self.assertEqual(report['printer_route']['status'], 'not_run')
         self.assertEqual(set(report['acceptance'].values()), {'NOT_RUN'})
+
+    def test_probe_output_collision_preserves_previous_bytes_before_inventory_or_printer_access(self):
+        destination = self.root / 'prior-observation.json'
+        previous = b'{"prior_synthetic_observation":"warning","acceptance":"NOT_RUN"}\n'
+        destination.write_bytes(previous)
+        with (patch('tools.check_portrait_v2.inventory', return_value={
+                  'source': {'head': 'a'*40},
+                  'preflight': {'status': 'READY_FOR_MANUAL_TEST'},
+                  'printer_route': {'status': READY}}) as collect,
+              patch('photobooth.printer_settings.load_printer_config') as settings,
+              patch('photobooth.device_health.check_printer') as probe,
+              redirect_stdout(io.StringIO()) as output):
+            result = check_portrait_v2.main(['--probe-printer', '--output', str(destination)])
+        self.assertEqual(result, 2)
+        self.assertEqual(destination.read_bytes(), previous)
+        self.assertIn('Choose a new --output filename', output.getvalue())
+        collect.assert_not_called(); settings.assert_not_called(); probe.assert_not_called()
+
+    def test_competing_probe_invocations_reserve_one_report_and_observe_only_once(self):
+        destination = self.root / 'diagnostics' / 'one-observation.json'
+        entered, release = threading.Event(), threading.Event()
+        def probe(_config):
+            entered.set()
+            if not release.wait(5): raise TimeoutError('synthetic barrier timeout')
+            return HealthCheck('printer', READY, 'route only; paper unknown')
+        with (self.metadata(),
+              patch('photobooth.kiosk_v2.readiness.importlib.metadata.version', return_value='1.0'),
+              patch('tools.check_portrait_v2.ROOT', self.root),
+              patch.dict(os.environ, {'PHOTOBOOTH_V2_CHECKOUT_SANDBOX':'0',
+                                     'MIDTRANS_SERVER_KEY':'', 'MIDTRANS_MERCHANT_ID':''}),
+              patch('photobooth.device_health.check_printer', side_effect=probe) as observed,
+              patch('tools.check_portrait_v2.print'), ThreadPoolExecutor(max_workers=1) as executor):
+            first = executor.submit(check_portrait_v2.main,
+                                    ['--probe-printer', '--output', str(destination)])
+            try:
+                self.assertTrue(entered.wait(2))
+                self.assertTrue(destination.is_file())
+                second = check_portrait_v2.main(['--probe-printer', '--output', str(destination)])
+                self.assertEqual(second, 2)
+                observed.assert_called_once()
+            finally: release.set()
+            self.assertEqual(first.result(timeout=5), 0)
+        report = json.loads(destination.read_text())
+        self.assertEqual(report['printer_route']['status'], READY)
+        self.assertEqual(set(report['acceptance'].values()), {'NOT_RUN'})
+        self.assertEqual(list(destination.parent.iterdir()), [destination])
+
+    def test_failed_probe_report_write_keeps_incomplete_reservation_without_reprobe(self):
+        destination = self.root / 'interrupted-observation.json'
+        with (patch('tools.check_portrait_v2.inventory', return_value={}) as collect,
+              patch('tools.check_portrait_v2.write_json_atomic', side_effect=OSError('synthetic write fault'))):
+            with self.assertRaises(OSError):
+                check_portrait_v2.main(['--probe-printer', '--output', str(destination)])
+        self.assertTrue(destination.exists())
+        incomplete = destination.read_bytes()
+        with patch('tools.check_portrait_v2.inventory') as retry, redirect_stdout(io.StringIO()):
+            self.assertEqual(check_portrait_v2.main(['--probe-printer', '--output', str(destination)]), 2)
+            retry.assert_not_called()
+        self.assertEqual(destination.read_bytes(), incomplete)
+        collect.assert_called_once()

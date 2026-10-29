@@ -1,5 +1,14 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 30 October — UX-07.g preserve previous probe reports
+
+Explicit printer-probe CLI reserves output before any observation. Existing or
+concurrent output returns 2 without probe/overwrite; failed write keeps incomplete
+reservation. Default inventory and all application services unchanged.
+41 focused PASS/zero skip; three new causal methods, full/current CI pending.
+Whole UX-07 NOT_RUN; matrix 59/0/9/1.
+[Contract/evidence/next](qa/portrait-v2-sandbox/UX07-PRINTER-DEVICE-EVIDENCE.md).
+
 ## 29 October — UX-07.d actual MOCK factory/native probe verified
 
 67 focused PASS/zero skip; real configured app worker at both portrait sizes,

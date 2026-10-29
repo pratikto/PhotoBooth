@@ -1,0 +1,45 @@
+{
+  "status": "FOCUSED_VERIFIED_FULL_CURRENT_CI_PENDING",
+  "base": "de4b5e923081b20c28241dc4a5148136ae29da74",
+  "source": "Containing source micro-commit; pin after push",
+  "new_methods": 3,
+  "baseline": {
+    "run": 10,
+    "pass": 7,
+    "fail": 3,
+    "error": 0,
+    "skip": 0,
+    "seconds": 0.143
+  },
+  "initial_fixture_attempt": {
+    "run": 10,
+    "fail": 2,
+    "error": 1,
+    "seconds": 0.157,
+    "scope": "Existing-output fixture originally supplied unserializable MagicMock; fixed before unchanged-runtime baseline, not a production defect"
+  },
+  "focused": {
+    "run": 41,
+    "pass": 41,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 0.145
+  },
+  "command": "KIVY_HOME=/tmp/meong-ux07-preserve-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 MEONG_CI_TEST_REPORT=work/ux07-preserve-focused.txt .venv/bin/python tools/run_kiosk_unittests.py test_ux07_printer_evidence test_kiosk_v2_readiness test_device_health test_printer_settings",
+  "files_sha256": {
+    "tools/check_portrait_v2.py": "531b3ac043ad604d34f15f125e613984bfbab0a6f2e010ff5591963603209b30",
+    "tests/test_ux07_printer_evidence.py": "e40c2579bfbfc99d896381be64754886c5c8c6c1ea247a3e536bcc86f3645530",
+    ".github/workflows/portrait-kiosk-v2.yml": "7154870d537b0bb2b2ff6dfe8b6c8c7c8d0a95bcb0fcef5abf3b2b500f5b07dd"
+  },
+  "report_sha256": "4963fe11eb0a38972e1c2be3776d34d1c187f44e16d5ccedd808daee3e2da46b",
+  "matrix": {
+    "total": 69,
+    "pass": 59,
+    "fail": 0,
+    "blocked": 9,
+    "not_run": 1
+  },
+  "limits": "Explicit diagnostic probe report destinations only; default inventory unchanged. Interrupted invocation retains its own incomplete reservation, never valid evidence or acceptance. No device/provider/paper/Drive/financial effect; whole UX-07 remains NOT_RUN. GUI and all application services unchanged.",
+  "local_draft": "Older MOCK final-doc draft stashed and patched privately because remote de4b5e9 already superseded it; not reapplied. Raw work reports and that draft are local-only, not an unpublished runtime patch."
+}

@@ -19,6 +19,18 @@ def main(argv=None):
     parser.add_argument('--probe-printer',action='store_true',
                         help='Explicit read-only printer route/queue check outside Sandbox; never prints or certifies paper.')
     args=parser.parse_args(argv)
+    if args.probe_printer:
+        # Own a new destination before touching settings/devices. Exclusive
+        # creation also arbitrates concurrent collectors; the original atomic
+        # writer may replace only this invocation's reservation afterwards.
+        args.output.parent.mkdir(parents=True,exist_ok=True)
+        try:
+            with args.output.open('x',encoding='utf-8'):
+                pass
+        except FileExistsError:
+            print('Preflight: OUTPUT_EXISTS')
+            print('Report already exists. Choose a new --output filename.')
+            return 2
     report=inventory(ROOT,probe_printer=args.probe_printer)
     args.output.parent.mkdir(parents=True,exist_ok=True)
     write_json_atomic(args.output,report)

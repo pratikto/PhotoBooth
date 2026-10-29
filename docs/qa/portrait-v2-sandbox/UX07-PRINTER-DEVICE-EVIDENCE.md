@@ -1,5 +1,29 @@
 # UX-07.f — explicit read-only printer route evidence
 
+## 30 October — UX-07.g preserve earlier device observations (contract)
+
+Continuation base/remote `de4b5e923081b20c28241dc4a5148136ae29da74`.
+The newer remote collector and corrected full regression supersede the older
+local MOCK final-doc draft; that draft is retained privately, not reapplied.
+Do not repeat verified UX-07.e/f source or the ad-fixture correction.
+
+Audit of the CLI's existing atomic writer shows that repeating --output can
+replace an earlier observation. Implement collision protection for explicit
+--probe-printer runs: reserve a new destination exclusively **before** inventory,
+settings or printer access. An existing file/directory or competing invocation
+returns exit 2 with fixed guidance to choose a new filename; preserve all prior
+bytes and do not probe. The winning invocation continues through the original
+inventory and atomic JSON writer. Default inventory behavior stays unchanged.
+
+A failed/interrupted collector may leave its own empty/incomplete reservation;
+keep it as incomplete evidence, never count it as a valid report or delete it
+automatically. A later invocation must choose a fresh name. Test a pre-existing
+report, concurrent invocations and failed final write before claiming success.
+No financial/photo/print/Drive records, original health/config/transport or GUI
+change. Focused tests -> docs/micro-push/remote check -> final applicable full/
+current Windows/Linux CI -> final safe checkpoint. Whole UX-07 remains NOT_RUN,
+matrix 59/0/9/1; all provider/device/privacy/release gates stay separate.
+
 29 October 2026 (Asia/Jakarta). Base/remote verified
 `c8f048358aae2d475cd06f3be5269f0f3124d24d`, clean existing feature branch.
 The UX-07.e MOCK validation is complete. Purchased-print payment/preflight
@@ -163,3 +187,35 @@ preserving every financial/reward/claim/fence/media/audit/retention record.
 Private work/ reports/fixture-control scripts are local-only, not backed up to
 GitHub; no unpublished runtime patch. Final docs SHA is its containing Git
 commit; last verified source checkpoint is the full b6c3d01 SHA above.
+
+## 30 October — UX-07.g printer evidence collision protection
+
+Remote/fast-forward base `de4b5e923081b20c28241dc4a5148136ae29da74`. Its latest
+collector/ad-fixture/full/CI work is retained, not repeated. Earlier local MOCK
+final-doc draft was superseded remotely; retained only in private stash/patch.
+Latest published prior full remains b6c3d01: 1185/1181/zero FAIL/ERROR/four SKIP.
+
+Explicit --probe-printer now reserves its output exclusively before inventory/
+settings/printer access. Existing output or a concurrent collector returns 2
+with fixed new-filename guidance and preserves prior bytes without probing.
+The winning invocation uses the original inventory and atomic report writer.
+A failed write can leave its own empty/incomplete reservation: keep it as
+incomplete, never accept it as a valid observation or overwrite it on retry.
+Default inventory, all GUI/payment/photo/health/config/transport services and
+Sandbox printer/Drive isolation unchanged. No schema/data migration.
+
+**41 focused PASS / zero failure/error/skip**, 0.145s, Python 3.12.14/Linux.
+Three new methods; unchanged-runtime baseline ten run/seven PASS/three FAIL,
+zero ERROR/SKIP, 0.143s. Initial fixture's MagicMock serialization error corrected
+before that baseline and retained in evidence. [Contract/results/hashes](evidence/ux07-printer-evidence-preservation.json).
+Native screenshots not rerun: no GUI change. Full/current matching CI pending
+for this source micro-push; next one applicable full and Windows/Linux receipts,
+then final safe checkpoint. CI now requires ten collector method PASS lines.
+
+Matrix unchanged **59 PASS / 0 FAIL / 9 BLOCKED / 1 NOT_RUN**; complete UX-07
+purchased-print payment/device path NOT_RUN. PAY-22/WEB-01..08 and real device/
+merchant/paper/phone/Drive/deletion/privacy/support/release gates remain separate.
+No OPS/production/public ingress/new branch/master/default/deployment or actual
+external effect. Only work/ scratch and superseded docs stash are local-only;
+no unpublished runtime patch after containing push. Rollback inverse CLI/tests/
+workflow/docs only, preserve prior reports and every financial/media record.

@@ -1,5 +1,37 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 30 October — UX-07.g printer evidence collision protection
+
+Remote/fast-forward base `de4b5e923081b20c28241dc4a5148136ae29da74`. Its latest
+collector/ad-fixture/full/CI work is retained, not repeated. Earlier local MOCK
+final-doc draft was superseded remotely; retained only in private stash/patch.
+Latest published prior full remains b6c3d01: 1185/1181/zero FAIL/ERROR/four SKIP.
+
+Explicit --probe-printer now reserves its output exclusively before inventory/
+settings/printer access. Existing output or a concurrent collector returns 2
+with fixed new-filename guidance and preserves prior bytes without probing.
+The winning invocation uses the original inventory and atomic report writer.
+A failed write can leave its own empty/incomplete reservation: keep it as
+incomplete, never accept it as a valid observation or overwrite it on retry.
+Default inventory, all GUI/payment/photo/health/config/transport services and
+Sandbox printer/Drive isolation unchanged. No schema/data migration.
+
+**41 focused PASS / zero failure/error/skip**, 0.145s, Python 3.12.14/Linux.
+Three new methods; unchanged-runtime baseline ten run/seven PASS/three FAIL,
+zero ERROR/SKIP, 0.143s. Initial fixture's MagicMock serialization error corrected
+before that baseline and retained in evidence. [Contract/results/hashes](evidence/ux07-printer-evidence-preservation.json).
+Native screenshots not rerun: no GUI change. Full/current matching CI pending
+for this source micro-push; next one applicable full and Windows/Linux receipts,
+then final safe checkpoint. CI now requires ten collector method PASS lines.
+
+Matrix unchanged **59 PASS / 0 FAIL / 9 BLOCKED / 1 NOT_RUN**; complete UX-07
+purchased-print payment/device path NOT_RUN. PAY-22/WEB-01..08 and real device/
+merchant/paper/phone/Drive/deletion/privacy/support/release gates remain separate.
+No OPS/production/public ingress/new branch/master/default/deployment or actual
+external effect. Only work/ scratch and superseded docs stash are local-only;
+no unpublished runtime patch after containing push. Rollback inverse CLI/tests/
+workflow/docs only, preserve prior reports and every financial/media record.
+
 ## 29 October — UX-07.f device evidence collector verified
 
 Functional source `45b0b3058720ac71875240a9d4e2edf449ecc843`; corrected test/CI
