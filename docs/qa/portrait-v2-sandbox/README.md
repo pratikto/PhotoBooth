@@ -1,5 +1,19 @@
 # P4b Sandbox → P5 readiness (FEAT-020 / FEAT-022)
 
+## 30 October — mock purchased-print chain verified
+
+Seven source/test micro-pushes through2cac0ba (functional e82d0ee); atomic original
+order/requirement issuance, mock readiness/purchase, paid print no-replay jobs,
+native result-worker fixture and original HTTP/recovery compatibility verified.
+Full **1221 run/1217 PASS/4 optional SKIP**, zero failure/error;
+CI40970539519 all three jobs SUCCESS,25 pure methods Windows/Linux and2 native
+methods Linux. Earlier native-audio full failure retained; isolated unchanged
+repeat and final full PASS, initial cause unproven. No runtime guard relaxed.
+Whole UX-07 NOT_RUN, matrix59/0/9/1, AR-13 conditional/audit IN_PROGRESS. Next
+UX-07.l2 original claim/pause/resume/safe-release lifecycle contract/fixture;
+commercial mounting/operating policy and actual devices/provider/release remain.
+Sandbox delivery OFF; no production/OPS. [Exact evidence/limits/next](evidence/ux07-paid-chain-final-verification.json).
+
 **Current implementation update, 29 October:** source progressed through AR-09.c1;
 [exact commits/tests and unfinished work](CONTINUATION-2026-10-29.md).
 Dated design-only/audited-baseline statements below are historical scope; they do

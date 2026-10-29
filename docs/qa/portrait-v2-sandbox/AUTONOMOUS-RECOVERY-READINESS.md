@@ -1,5 +1,19 @@
 # AR-08 — prepayment readiness and paid-unfulfilled remedy
 
+## 30 October — mock purchased-print chain verified
+
+Seven source/test micro-pushes through2cac0ba (functional e82d0ee); atomic original
+order/requirement issuance, mock readiness/purchase, paid print no-replay jobs,
+native result-worker fixture and original HTTP/recovery compatibility verified.
+Full **1221 run/1217 PASS/4 optional SKIP**, zero failure/error;
+CI40970539519 all three jobs SUCCESS,25 pure methods Windows/Linux and2 native
+methods Linux. Earlier native-audio full failure retained; isolated unchanged
+repeat and final full PASS, initial cause unproven. No runtime guard relaxed.
+Whole UX-07 NOT_RUN, matrix59/0/9/1, AR-13 conditional/audit IN_PROGRESS. Next
+UX-07.l2 original claim/pause/resume/safe-release lifecycle contract/fixture;
+commercial mounting/operating policy and actual devices/provider/release remain.
+Sandbox delivery OFF; no production/OPS. [Exact evidence/limits/next](evidence/ux07-paid-chain-final-verification.json).
+
 29 October 2026, Asia/Jakarta. Read master/operations/matrix/provider, native
 AR-07 contract, original device_health/check_disk, AsyncCamera mailbox, template
 contract, photo/retention and checkout fulfillment source before this stage.

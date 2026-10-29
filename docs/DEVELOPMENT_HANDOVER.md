@@ -1,5 +1,57 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 30 October — mock paid-print chain regression and current CI verified
+
+Latest source/test GitHub HEAD **2cac0ba0dda4df996ab514080a071e99f79272dd**; functional source **e82d0eef032edfcbedec0a9f4c172e9c5edaad5e**.
+Owner-requested interim checkpoint **9ea05be4142ec856e33c913d2a7a1156c6dd4f36** also pushed/remote verified.
+Seven safe micro-increments were committed/pushed independently with focused
+tests and documentation: atomic mock requirement issuance (i2), original
+prepayment/printer-readiness purchase fixture (j), bound durable print jobs and
+two real crash exits/no resend (k), original native result-worker/close fixture
+(l subset), mandatory original recovery capability, artwork-independent replay
+of original DB contract, and original HTTP/client/controller compatibility.
+Exact seven commit SHAs and historical focused results/hashes are in the receipt.
+Default/legacy contracts, Sandbox transport guards, original printer/controller/
+renderer/audio/Drive services and queued OPS remain unchanged. Requirement,
+original order/attempt/frozen snapshot/capability commit together before POST;
+recovery never creates a new identity. Fake SUBMITTED/UNCERTAIN remains OWED.
+
+Final full at 2cac0ba: **1221 run / 1217 PASS /0 FAIL/0 ERROR/
+4 optional SKIP**, 449.903s, Python 3.12.14/Linux.
+Includes all three later HTTP methods; no exclusion in this final full. The four
+skips are three opt-in palm-model asset tests and one optional native video test.
+CI **40970539519 all three jobs SUCCESS**, exact source 2cac0ba; 25 new pure methods
+individually PASS Windows/Linux; 2 new native methods PASS Linux at 800x1280 and
+452x900. Windows ledger 164 PASS; Linux recovery
+465 PASS; native 119 run/
+118 PASS/one optional palm SKIP. Native result tests are
+worker/truthful-submission/privacy assertions, not new commercial host screens.
+
+Preserved e82 full attempt: 1218 run/1213 PASS/one FAIL/zero ERROR/four SKIP,
+463.881s. Unchanged native PCM cycle 7 collected no samples in its observation;
+exact cause unknown. Isolated unchanged 20-cycle audio test then 2 PASS/12.866s;
+final full retry above passes without source/assertion/skip changes. This
+unresolved failure justified repeating the broad suite. Earlier 520 full success
+is historical before replay refinement; interrupted 9417 full has no final PASS.
+No failing report discarded or relabelled. [Exact source/results/hashes](qa/portrait-v2-sandbox/evidence/ux07-paid-chain-final-verification.json).
+
+Whole UX-07 **NOT_RUN**; 69 matrix IDs remain **59 PASS/0 FAIL/9 BLOCKED/1 NOT_RUN**.
+AR-13 conditional/audit IN_PROGRESS. PAY-22 official Legacy contract and WEB-01..08
+approved infrastructure/operations BLOCKED. Actual Windows/Ubuntu devices,
+provider/paper/phone/Drive/deletion/privacy/support/release acceptance separate.
+Next: UX-07.l2: use the recorded lifecycle source audit to define and test the offline original customer-claim/pause/resume/safe-release fixture on original controllers/fences/leases. The source audit is documentation only; l2 fixtures remain NOT_RUN. The current l subset verifies result worker and close retirement only; do not claim commercial host mounting or paid release. Refuse uncertain/SENDING replay, preserve OWED and privacy, no new financial identity. Operating physical-delivery principal/evidence, support/compensation and controlled Windows/Ubuntu/provider/paper/phone/Drive/privacy/release acceptance remain separate. Keep dedicated Sandbox delivery OFF, PAY-22/WEB-01..08 BLOCKED, OPS queued docs only.
+
+Do not redo these seven stages or reapply the superseded local documentation
+stash. In a new account/session first inspect branch/status/latest remote and
+this checkpoint; review l2 contracts before further source work. Raw private
+synthetic work/ remains local; no unpublished application patch. Rollback uses
+scoped reviewed inverse code while retaining additive requirement/financial/
+capability/audit/media records. This final docs-only publication is the safe
+checkpoint; resolve its containing SHA from Git log/remote after push. No real
+provider/print/Drive/deletion, production/public ingress/deployment/OPS/new
+branch/master/default operation. All checked/pushed progress is recoverable
+from GitHub; scratch data is intentionally excluded.
+
 ## 30 October — owner-requested durable progress checkpoint / final regression pending
 
 All seven source/test increments are pushed on feature/portrait-kiosk-v2-next.

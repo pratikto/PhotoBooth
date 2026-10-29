@@ -1,0 +1,317 @@
+{
+  "status": "MOCK_ATOMIC_ISSUANCE_AND_OFFLINE_PAID_PRINT_FIXTURE_FULL_CURRENT_CI_VERIFIED_UX07_WHOLE_NOT_RUN",
+  "base": "f90bcea79a10d735f5b7c6dd2c4c564317e6d683",
+  "source": "2cac0ba0dda4df996ab514080a071e99f79272dd",
+  "functional_source": "e82d0eef032edfcbedec0a9f4c172e9c5edaad5e",
+  "last_verified_progress_checkpoint": "9ea05be4142ec856e33c913d2a7a1156c6dd4f36",
+  "stages": {
+    "i2": {
+      "source": "6aebbc0e538f637a45a821556c1e270527abcbc3",
+      "focused": {
+        "run": 73,
+        "pass": 73,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "seconds": 0.632
+      },
+      "report_sha256": "7ce5c259a3f41be2f09c13bfef68a8a546f69b073c6a27d3fc4d23790ffbf0c6"
+    },
+    "j": {
+      "source": "a349996d988bebac45d11c38940add43ab646938",
+      "focused": {
+        "run": 47,
+        "pass": 47,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "seconds": 0.612
+      },
+      "report_sha256": "bec83e8dba64c50880c938ced84c32fd04867921fabf5d4ca8dfd3011bfe0a10"
+    },
+    "k": {
+      "source": "9739ce4d0a06b9e112662ffdd323bff94df25bde",
+      "focused": {
+        "run": 63,
+        "pass": 63,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "seconds": 15.568
+      },
+      "report_sha256": "5a122a2c6c6900482b6f3a5e661049f212fb30cc29890c04e381c34ba5489140"
+    },
+    "l": {
+      "source": "9417e9d5985319fa6f30d147f95b8f36ff93047c",
+      "focused": {
+        "run": 29,
+        "pass": 29,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "seconds": 8.736
+      },
+      "report_sha256": "b333b3e98ae73ebe2987fba830a11bb336c86780fb773413170c421d269b2643"
+    },
+    "credential": {
+      "source": "520b1a6791c6e8da4b891bf230a8bd5709bf25f4",
+      "focused": {
+        "run": 29,
+        "pass": 29,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "seconds": 12.58
+      },
+      "report_sha256": "672f6cff0bfdfa8b02536e2eb711a1f8ce2a37d13e43acfdedd54f6a64a0133e"
+    },
+    "replay": {
+      "source": "e82d0eef032edfcbedec0a9f4c172e9c5edaad5e",
+      "focused": {
+        "run": 53,
+        "pass": 53,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "seconds": 10.702
+      },
+      "report_sha256": "f307961d18d1063eb9a9df365666dcf160741f157df5882247df378dfcba7fdd"
+    },
+    "http": {
+      "source": "2cac0ba0dda4df996ab514080a071e99f79272dd",
+      "focused": {
+        "run": 18,
+        "pass": 18,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "seconds": 0.825
+      },
+      "report_sha256": "e9f6318f9fae768062c32ad57d60243a61952a0fec527ccbc71d0144429184cb"
+    }
+  },
+  "full": {
+    "run": 1221,
+    "pass": 1217,
+    "fail": 0,
+    "error": 0,
+    "skip": 4,
+    "seconds": 449.903,
+    "report_sha256": "68c2ea632c333c30abedc46109b6fbd7ad80f4fb5c913c4a558fcc576e2dff4a"
+  },
+  "full_source": "2cac0ba0dda4df996ab514080a071e99f79272dd",
+  "full_command": "KIVY_HOME=/tmp/meong-paid-chain-final-retry-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 MESA_SHADER_CACHE_DIR=/tmp/meong-paid-chain-final-retry-mesa PHOTOBOOTH_TEST_GUI=1 PHOTOBOOTH_TEST_AUDIO=1 MEONG_CI_TEST_REPORT=work/paid-chain-final-retry-full.txt .venv/bin/python tools/run_kiosk_unittests.py",
+  "full_optional_skips": [
+    "test_real_model_worker_drives_the_actual_controller_and_keeps_button_capture (test_camera_recovery.CameraRecoveryTests.test_real_model_worker_drives_the_actual_controller_and_keeps_button_capture) Use real inference and mailboxes; only camera acquisition is synthetic. ... skipped 'Native model assets are opt-in'",
+    "test_native_video_has_frames_payment_is_muted_and_retiring_unloads_decoder (test_kiosk_advertising.KioskAdvertisingTests.test_native_video_has_frames_payment_is_muted_and_retiring_unloads_decoder) ... skipped 'Native video checks require opt-in and ffmpeg'",
+    "test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture) ... skipped 'Native model assets are opt-in'",
+    "test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image (test_palm_gesture.NativePalmModelTests.test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image) ... skipped 'Native model assets are opt-in'"
+  ],
+  "ci": {
+    "run_id": 40970539519,
+    "source": "2cac0ba0dda4df996ab514080a071e99f79272dd",
+    "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40970539519",
+    "jobs": [
+      {
+        "id": 123785885018,
+        "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+        "conclusion": "success",
+        "head_sha": "2cac0ba0dda4df996ab514080a071e99f79272dd"
+      },
+      {
+        "id": 123785885331,
+        "name": "Navigation and audio lifecycle",
+        "conclusion": "success",
+        "head_sha": "2cac0ba0dda4df996ab514080a071e99f79272dd"
+      },
+      {
+        "id": 123785885436,
+        "name": "Windows Python 3.12 native SDL audio (dummy output)",
+        "conclusion": "success",
+        "head_sha": "2cac0ba0dda4df996ab514080a071e99f79272dd"
+      }
+    ],
+    "methods_pass_windows_linux": [
+      "test_delivery_requirement_issuance.RequirementIssuanceTests.test_concurrent_connections_issue_one_original_requirement",
+      "test_delivery_requirement_issuance.RequirementIssuanceTests.test_invalid_frozen_delivery_shape_rolls_back_without_partial_identity",
+      "test_delivery_requirement_issuance.RequirementIssuanceTests.test_legacy_order_cannot_gain_policy_and_default_does_not_initialize_table",
+      "test_delivery_requirement_issuance.RequirementIssuanceTests.test_new_order_freezes_original_copies_before_any_send_and_replays_exactly",
+      "test_delivery_requirement_issuance.RequirementIssuanceTests.test_policy_omission_change_or_wrong_merchant_cannot_rebind_an_order",
+      "test_delivery_requirement_issuance.RequirementIssuanceTests.test_real_child_exit_before_commit_rolls_back_and_after_commit_replays",
+      "test_delivery_requirement_issuance.RequirementIssuanceTests.test_sandbox_missing_contract_and_invalid_policy_reject_before_new_order",
+      "test_delivery_requirement_issuance.RequirementIssuanceTests.test_sql_failure_rolls_back_order_frozen_attempt_and_capability",
+      "test_purchased_print_http.PaidPrintHttpTests.test_client_policy_injection_missing_ticket_and_foreign_booth_are_rejected",
+      "test_purchased_print_http.PaidPrintHttpTests.test_http_replay_uses_original_snapshot_and_refuses_changed_cart",
+      "test_purchased_print_http.PaidPrintHttpTests.test_original_controller_ticket_and_restart_claim_preserve_requirement",
+      "test_purchased_print_jobs.PaidPrintJobTests.test_close_during_send_keeps_native_lease_and_hides_late_result",
+      "test_purchased_print_jobs.PaidPrintJobTests.test_failed_send_and_restart_never_resend_original_job",
+      "test_purchased_print_jobs.PaidPrintJobTests.test_original_copies_and_hash_persist_before_send_without_satisfying_owed",
+      "test_purchased_print_jobs.PaidPrintJobTests.test_original_native_lease_prevents_a_second_print_owner",
+      "test_purchased_print_jobs.PaidPrintJobTests.test_real_child_exits_after_intent_or_effect_hold_without_replay",
+      "test_purchased_print_jobs.PaidPrintJobTests.test_two_designs_keep_each_frozen_copy_count_without_extra_capture",
+      "test_purchased_print_jobs.PaidPrintJobTests.test_wrong_customer_refund_corrupt_media_and_retired_fence_deny_send",
+      "test_purchased_print_purchase.PrintPurchaseTests.test_active_identity_recovers_without_probe_and_cannot_be_replaced",
+      "test_purchased_print_purchase.PrintPurchaseTests.test_active_recovery_uses_original_contract_without_current_artwork_or_repair",
+      "test_purchased_print_purchase.PrintPurchaseTests.test_camera_storage_template_and_printer_failures_create_no_order",
+      "test_purchased_print_purchase.PrintPurchaseTests.test_lost_reply_retains_requirement_and_recovery_only_reads_status",
+      "test_purchased_print_purchase.PrintPurchaseTests.test_policy_rejects_sandbox_and_fixture_rejects_default_backend",
+      "test_purchased_print_purchase.PrintPurchaseTests.test_retry_freezes_requirement_before_one_nonpayable_provider_effect",
+      "test_purchased_print_purchase.PrintPurchaseTests.test_slow_probe_expires_before_creation_and_preserves_existing_files"
+    ],
+    "native_methods_pass_linux": [
+      "tests.test_purchased_print_widgets.PaidPrintWidgetTests.test_clock_single_flight_and_truthful_submission_at_both_portrait_sizes",
+      "tests.test_purchased_print_widgets.PaidPrintWidgetTests.test_closed_result_callback_cannot_restore_private_strip_at_both_sizes"
+    ],
+    "windows_ledger": {
+      "run": 164,
+      "pass": 164,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 39.362
+    },
+    "windows_other_groups": [
+      {
+        "run": 72,
+        "pass": 72,
+        "seconds": 113.882
+      },
+      {
+        "run": 55,
+        "pass": 55,
+        "seconds": 0.698
+      },
+      {
+        "run": 103,
+        "pass": 103,
+        "seconds": 18.469
+      }
+    ],
+    "linux_recovery": {
+      "run": 465,
+      "pass": 465,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 127.438
+    },
+    "linux_native": {
+      "run": 119,
+      "pass": 118,
+      "fail": 0,
+      "error": 0,
+      "skip": 1,
+      "seconds": 93.712
+    },
+    "linux_native_pcm": {
+      "run": 4,
+      "pass": 4,
+      "seconds": 12.982
+    },
+    "pure_groups": [
+      {
+        "run": 129,
+        "pass": 129,
+        "seconds": 0.429
+      },
+      {
+        "run": 40,
+        "pass": 40,
+        "seconds": 0.29
+      }
+    ],
+    "evidence": "Read actual decoded matching-source job logs, verified exact new method PASS lines, deduplicated Linux notice echoes. Native widget fixture Linux only; Windows portable ledgers include both real child-exit methods. No physical device/provider/paper proof."
+  },
+  "superseded_failed_full": {
+    "source": "e82d0eef032edfcbedec0a9f4c172e9c5edaad5e",
+    "result": {
+      "run": 1218,
+      "pass": 1213,
+      "fail": 1,
+      "error": 0,
+      "skip": 4,
+      "seconds": 463.881,
+      "report_sha256": "8d6b040a8e0d9ca0e9b975c5c8a025ddc84fa60c2e8e17efad4912e63686c8dc"
+    },
+    "case": "test_kiosk_v2_native_audio.NativeChannelReuseTests.test_repeated_muted_video_channel_reuse_has_real_pcm_and_keeps_active_ad_gain",
+    "subtest": "cycle7",
+    "observed": "empty PCM sample list in .12-second postmix observation",
+    "isolated_unchanged_repeat": {
+      "run": 2,
+      "pass": 2,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 12.866,
+      "report_sha256": "c6a47a2f30032f5fca7538089dbd75eefb6ea54b3b62406cd258fc24b0a86a81"
+    },
+    "analysis": "Exact initial cause unproven; unchanged audio/runtime/assertions. Full repeated because this unresolved failure required verification. Failure retained, never silently relabelled PASS. e82 full excludes later HTTP3; final full includes them."
+  },
+  "historical_full_before_replay_fix": {
+    "source": "520b1a6791c6e8da4b891bf230a8bd5709bf25f4",
+    "result": {
+      "run": 1217,
+      "pass": 1213,
+      "fail": 0,
+      "error": 0,
+      "skip": 4,
+      "seconds": 627.965,
+      "report_sha256": "728fb1703956e8598b72ebad6970347cc27fb759329e3e94b657930b7d20669c"
+    },
+    "scope": "Before artwork-independent replay regression/fix; not final evidence."
+  },
+  "interrupted_full": "9417e9d full deliberately superseded (exit137/no report), no PASS claimed. An earlier expanded mixed focused invocation was interrupted without final report; exact hang cause unknown. Unchanged-source softwareGL/network-enabled focused repeat63 PASS is separately pinned at k.",
+  "files_sha256": {
+    ".github/workflows/portrait-kiosk-v2.yml": "3ca94ef81db7c91b405d6105a81a5ce4619a09cb745e66f27a835d55f8170488",
+    "photobooth/checkout_backend.py": "7bde993111dc3da53d8ee456e94173eb92f9b520ffd4e470326f84434fbbb291",
+    "photobooth/checkout_store.py": "ca2092e7c828c938e4c5b7b6310769ffe05a80345c25ede81c7cf0d0cd8276f9",
+    "photobooth/delivery_requirements.py": "e2c047828c29100069fe600eb4e485ddd2166bd1f21e9cf90bd0d0e63c1a110a",
+    "tests/paid_print_fixture.py": "46a2a5942935576938aab7ce35f22a2317b0d3cf4c1cb4e0e5fa3b8ec2f5cc34",
+    "tests/paid_print_scenario.py": "725b0f26c809f53e4e3940a424b13aa6bfb14bf1f33a74ea1692caf3db9f4e83",
+    "tests/purchased_print_fixture.py": "e91140acf102e9891cd761b4b6613f7e968e990efd8bc5adcdae36df75f41cbe",
+    "tests/test_delivery_requirement_issuance.py": "7e4d638900e9b1a47f4c9f3a1a67f418f2494b960d4fd8cb133c752497aec23f",
+    "tests/test_purchased_print_http.py": "af4054e1bc6c368e3688e504f82964ba058e9357024de0c77056b762920bff54",
+    "tests/test_purchased_print_jobs.py": "d3a3c70d9409ae93db7f5277bdd29902300d9eaec56afb8892f9ba7669af2ae1",
+    "tests/test_purchased_print_purchase.py": "045d2e9a86696b0b931ed92a1d96e3cc19cdaa3018b836ac02d15cf5e2ab81bb",
+    "tests/test_purchased_print_widgets.py": "401ef17b115979fced383989d55853eaf50bb89dfd4c7143f37e6f3f3ffdf3e9"
+  },
+  "unchanged_reused_paths": [
+    "photobooth/device_health.py",
+    "photobooth/printer.py",
+    "photobooth/printer_settings.py",
+    "photobooth/kiosk_v2/photos.py",
+    "photobooth/kiosk_v2/photo_views.py",
+    "photobooth/kiosk_v2/sandbox_views.py",
+    "photobooth/kiosk_v2/sandbox_checkout.py",
+    "photobooth/qris_session.py",
+    "photobooth/qris_api.py",
+    "photobooth/qris_kiosk_client.py",
+    "photobooth/fulfillment_contract.py",
+    "photobooth/kiosk_v2/audio.py",
+    "photobooth/kiosk_v2/mixer.py",
+    "tests/test_kiosk_v2_native_audio.py",
+    "tools",
+    "docs/qa/portrait-v2-operator-settings"
+  ],
+  "unchanged_paths_against": "f90bcea79a10d735f5b7c6dd2c4c564317e6d683",
+  "application_tree": "479be36479fa2616de8e280345d4e98e809256a1",
+  "tools_tree": "1c97b54762f0cbe8f4275ce7f5a6453ac77ca8ea",
+  "tests_tree": "c9406e609a329004caf236b7b458b93eb88117e2",
+  "environment": {
+    "os": "Linux-6.18.55-x86_64-with-glibc2.41",
+    "python": "3.12.14",
+    "native": "Linux software GL/offscreen SDL/dummy audio; not physical speakers/camera/printer"
+  },
+  "acceptance_matrix": {
+    "ids": 69,
+    "pass": 59,
+    "fail": 0,
+    "blocked": 9,
+    "not_run": 1,
+    "ux07": "NOT_RUN",
+    "ar13": "CONDITIONAL",
+    "audit": "IN_PROGRESS"
+  },
+  "limits": "New requirement schema/policy is explicit mock-only/default OFF. No application entrypoint imports the offline purchase/print fixture. Native fixture manually injects mock adapter into original result widgets; not commercial claim/pause/release acceptance. SUBMITTED or operator_checked never satisfies OWED; no paid-delivery acknowledgement/refund API. Actual Windows/Ubuntu/provider/paper/phone/Drive/deletion/privacy/support/release gates unverified. No production, Sandbox delivery opt-in, OPS code, public ingress/deployment/new branch/master/default changes. Raw synthetic scratch/local reports and old superseded docs stash excluded.",
+  "next": "UX-07.l2: use the recorded lifecycle source audit to define and test the offline original customer-claim/pause/resume/safe-release fixture on original controllers/fences/leases. The source audit is documentation only; l2 fixtures remain NOT_RUN. The current l subset verifies result worker and close retirement only; do not claim commercial host mounting or paid release. Refuse uncertain/SENDING replay, preserve OWED and privacy, no new financial identity. Operating physical-delivery principal/evidence, support/compensation and controlled Windows/Ubuntu/provider/paper/phone/Drive/privacy/release acceptance remain separate. Keep dedicated Sandbox delivery OFF, PAY-22/WEB-01..08 BLOCKED, OPS queued docs only."
+}

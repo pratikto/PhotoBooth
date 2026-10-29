@@ -1,5 +1,19 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
+## 30 October — mock purchased-print chain verified
+
+Seven source/test micro-pushes through2cac0ba (functional e82d0ee); atomic original
+order/requirement issuance, mock readiness/purchase, paid print no-replay jobs,
+native result-worker fixture and original HTTP/recovery compatibility verified.
+Full **1221 run/1217 PASS/4 optional SKIP**, zero failure/error;
+CI40970539519 all three jobs SUCCESS,25 pure methods Windows/Linux and2 native
+methods Linux. Earlier native-audio full failure retained; isolated unchanged
+repeat and final full PASS, initial cause unproven. No runtime guard relaxed.
+Whole UX-07 NOT_RUN, matrix59/0/9/1, AR-13 conditional/audit IN_PROGRESS. Next
+UX-07.l2 original claim/pause/resume/safe-release lifecycle contract/fixture;
+commercial mounting/operating policy and actual devices/provider/release remain.
+Sandbox delivery OFF; no production/OPS. [Exact evidence/limits/next](evidence/ux07-paid-chain-final-verification.json).
+
 ## 30 October — UX-07.g earlier printer evidence preserved
 
 Source e7e09fe: explicit probe output collisions return 2 before observation;
@@ -447,7 +461,7 @@ offline inbox prototype assertions do not certify deployed ingress.
 | UX-04 | **PASS** | `test_kiosk_v2_sandbox_widgets.test_native_claim_and_deliberate_resume_restore_original_capture_without_new_charge` | Original proof, exact saved image count and deliberate countdown; native return screenshots. |
 | UX-05 | **PASS** | `test_ux05_abandonment` (six methods); [complete verification](evidence/ux05-final-verification.json) | Synthetic Windows/Linux HTTP/controller/DB reopens: ambiguous creation/cancel/404 holds original identity and private claim, no replacement charge; fresh terminal unpaid cancellation archives before new visitor, writer/cached-proof faults hold; late settlement preserves OWED and exact paid isolation/lost ACK/archive/return rights. BUG-024 fixed in source/regression verified; actual device/provider acceptance separate. |
 | UX-06 | **PASS** | `test_kiosk_v2_sandbox_widgets.test_postpaid_camera_fault_records_owed_issue_and_hides_media` | Durable paid-unfulfilled issue; no fabricated cancellation. |
-| UX-07 | **NOT_RUN** | `test_ux07_readiness` (five methods), native `test_ux07_precharge_faults_show_safe_quote_and_retry_at_both_portrait_sizes`; [verified components](evidence/ux07-final-verification.json) | Sandbox camera/storage/template/delivery-isolation/freshness failures deny before order/charge; probe cleanup, active identity, eight native error/retry cases at both sizes PASS. Ordinary opt-in nonpayable MOCK gate additionally has 67 focused PASS, full 1178/1174/4, four reviewed error/retry images and matching-source CI 40887868676 with exact Windows/Linux method evidence; [final local/full/CI scope](evidence/ux07-mock-printer-final-validation.json). Explicit read-only device evidence collector has ten methods PASS Windows/Linux, including [report preservation](evidence/ux07-printer-evidence-preservation.json); [source/limits](evidence/ux07-printer-device-evidence.json), actual hardware observations NOT_RUN. [Purchased-print contract/source audit](UX07-PURCHASED-PRINT-INTEGRATION.md) complete, implementation/acceptance pending. Complete purchased-print prepayment integration/actual printer readiness not mounted/certified in transport-off Sandbox; whole stronger gate remains NOT_RUN. |
+| UX-07 | **NOT_RUN** | `test_ux07_readiness` (five methods), native `test_ux07_precharge_faults_show_safe_quote_and_retry_at_both_portrait_sizes`; [verified components](evidence/ux07-final-verification.json) | Sandbox camera/storage/template/delivery-isolation/freshness failures deny before order/charge; probe cleanup, active identity, eight native error/retry cases at both sizes PASS. Ordinary opt-in nonpayable MOCK gate additionally has 67 focused PASS, full 1178/1174/4, four reviewed error/retry images and matching-source CI 40887868676 with exact Windows/Linux method evidence; [final local/full/CI scope](evidence/ux07-mock-printer-final-validation.json). Explicit read-only device evidence collector has ten methods PASS Windows/Linux, including [report preservation](evidence/ux07-printer-evidence-preservation.json); [source/limits](evidence/ux07-printer-device-evidence.json), actual hardware observations NOT_RUN. [Purchased-print contract](UX07-PURCHASED-PRINT-INTEGRATION.md): explicit atomic mock issuance and offline purchase/job/native-result/HTTP fixtures verified; [exact full/current CI](evidence/ux07-paid-chain-final-verification.json). Original claim/pause/resume/safe-release fixture and commercial mounting/physical acceptance remain pending. Complete purchased-print prepayment integration/actual printer readiness not mounted/certified in transport-off Sandbox; whole stronger gate remains NOT_RUN. |
 | UX-08 | **PASS** | `test_booth_sync.test_configured_layout2_without_credentials_is_offline_ready_and_never_falls_back_to_legacy_oauth` | Offline local progress with deferred Drive and preserved layout/claims. |
 | UX-09 | **PASS** | `test_release_session.test_uncertain_print_never_yields_isolation_receipt_or_releases_booth` | Uncertain print remains held, no automatic resend; paper outcome NOT_RUN. |
 | UX-10 | **PASS** | `test_booth_sync.test_two_transactions_keep_exact_local_folder_mapping_across_restart` | Immutable delivery mapping/retry/retention fixtures; actual Drive acceptance NOT_RUN. |
@@ -497,9 +511,9 @@ matrix PASS or used to waive device/merchant requirements.
 
 | Gate | Evidence required | Current |
 | --- | --- | --- |
-| Source unit/integration | Exact SHA, OS, command, full count PASS/FAIL/SKIP, fixtures and no secret leakage | PASS at 0b8aaa8: 1194 run / 1190 PASS / 4 optional SKIP (three palm assets, one video); current safe evidence above |
+| Source unit/integration | Exact SHA, OS, command, full count PASS/FAIL/SKIP, fixtures and no secret leakage | PASS at2cac0ba: 1221 run/1217 PASS/4 optional SKIP (three palm assets, one video); prior native-audio failure retained in exact-source receipt above |
 | Crash/restart fault-injection | Every PAY/CAP/UX applicable ID mapped to test output | NOT_RUN for complete gate; see explicit missing exact windows above |
-| Complete GUI regression | One final applicable full suite after last functional change; no borrowed old pass | PASS at 0b8aaa8 with four optional SKIPs; native model/video checks remain separate from physical acceptance |
+| Complete GUI regression | One final applicable full suite after last functional change; no borrowed old pass | PASS at2cac0ba with four optional SKIPs; native model/video checks remain separate from physical acceptance |
 | GUI screenshot/pixels | Tested exact source 800×1280 and 452×900, readability and QR identity | PASS for 28 clean c94696d scenes / four QR checks; retake/multi-design visual scenes NOT_RUN |
 | Windows booth | Real camera/storage, app close/reopen/power interruption, native touch/keyboard | NOT_RUN |
 | Ubuntu mini PC | Actual graphical session service, permissions, startup, real camera/print hardware | NOT_RUN |

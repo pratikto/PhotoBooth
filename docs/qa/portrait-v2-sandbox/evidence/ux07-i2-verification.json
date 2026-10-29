@@ -1,5 +1,5 @@
 {
-  "status": "FOCUSED_VERIFIED_HISTORICAL_SNAPSHOT_FINAL_REGRESSION_PENDING",
+  "status": "HISTORICAL_FOCUSED_SNAPSHOT_FINAL_CHAIN_VERIFIED",
   "stage": "i2",
   "base": "f90bcea79a10d735f5b7c6dd2c4c564317e6d683",
   "source": "6aebbc0e538f637a45a821556c1e270527abcbc3",
@@ -18,6 +18,7 @@
     ".github/workflows/portrait-kiosk-v2.yml": "44ad109b586d7ab5edc5a2679619235f798cc62e3be7f210673b77010a0907f2"
   },
   "report_sha256": "7ce5c259a3f41be2f09c13bfef68a8a546f69b073c6a27d3fc4d23790ffbf0c6",
-  "limits": "Historical focused snapshot at its pinned source. Application changes remain explicit mock-only; final aggregate full/CI verification pending. Whole UX07 NOT_RUN, matrix59/0/9/1; no production/provider/paper/Drive/OPS acceptance.",
-  "current_checkpoint_source": "2cac0ba0dda4df996ab514080a071e99f79272dd"
+  "limits": "Historical focused result and file hashes remain pinned to their original micro-commit; final aggregate full/CI receipt covers later refinements. Mock-only and fixture-only scope; UX07 whole NOT_RUN, matrix59/0/9/1. No merchant/device/paper/Drive/production acceptance.",
+  "current_checkpoint_source": "2cac0ba0dda4df996ab514080a071e99f79272dd",
+  "final_verification": "ux07-paid-chain-final-verification.json"
 }

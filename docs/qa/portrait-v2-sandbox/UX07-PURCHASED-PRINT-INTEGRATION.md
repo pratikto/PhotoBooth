@@ -2,7 +2,7 @@
 
 30 October 2026 (Asia/Jakarta). Status: UX-07.i1/i2 schema and atomic mock issuance, j/k offline
 purchase/paid-print fixtures and l native result-widget subset focused-verified;
-commercial host remains unmounted, final regression pending (checkpoint below).
+commercial host remains unmounted; final full/current CI verified below.
 Historical pre-i1 branch/remote base:
 `613243ab956001b24cde8f7a76bf1b3673a63d2a`. Pre-implementation baseline evidence was
 e7e09fe: 1188 run / 1184 PASS / 4 optional SKIP, CI 40959449442 SUCCESS.
@@ -11,7 +11,7 @@ Reviewed AGENTS/protocol/prompt, checkpoint/handover, AR roadmap/master,
 readiness/fulfillment/operations, print/Drive contract, current device evidence
 and preservation records. Audited the source seams below; no archive access.
 
-## Existing behavior and precise missing integration
+## Baseline source audit before i1/i2/j/k integration
 
 | Source seam | Existing behavior | Purchased-print requirement |
 | --- | --- | --- |
@@ -90,9 +90,11 @@ AR-13 conditional. PAY-22 official Legacy contract and WEB-01..08 public
 infrastructure/operations remain BLOCKED. The UX-07.h audit supplied no new automated, merchant or device PASS.
 UX-07.i1 below adds explicit schema/read validation; physical gates stay open.
 
-UX-07.i1 fixtures/schema/read validation are now verified below. Next UX-07.i2
-adds atomic new-order issuance before POST, with unchanged legacy contracts. Review this contract plus existing fulfillment/allocation and
-schema tests before code. Do not mount the new policy in the dedicated Sandbox.
+UX-07.i1/i2 and j/k fixtures are verified; l result-worker/close subset is
+verified. Next UX-07.l2: audit the original customer-claim/pause/resume/safe-release
+lifecycle and write its offline fixture contract before source. Commercial host
+mounting and operating delivery/support policy are separate. Do not enable
+dedicated Sandbox delivery or treat UI close/SUBMITTED as safe paid release.
 In parallel, collect actual reports using the existing
 [read-only commands](UX07-PRINTER-DEVICE-EVIDENCE.md); preserve each report with
 a fresh filename. Local cloud fixtures cannot supply those physical observations.
@@ -440,3 +442,87 @@ No real provider/printer/Drive/deletion/public ingress/production/default/master
 branch change. Only private synthetic work/ and old superseded docs stash remain
 local; no unpublished application patch. This docs-only checkpoint must be
 micro-pushed immediately and remote HEAD verified before continuing tests.
+
+## 30 October — mock paid-print chain regression and current CI verified
+
+Latest source/test GitHub HEAD **2cac0ba0dda4df996ab514080a071e99f79272dd**; functional source **e82d0eef032edfcbedec0a9f4c172e9c5edaad5e**.
+Owner-requested interim checkpoint **9ea05be4142ec856e33c913d2a7a1156c6dd4f36** also pushed/remote verified.
+Seven safe micro-increments were committed/pushed independently with focused
+tests and documentation: atomic mock requirement issuance (i2), original
+prepayment/printer-readiness purchase fixture (j), bound durable print jobs and
+two real crash exits/no resend (k), original native result-worker/close fixture
+(l subset), mandatory original recovery capability, artwork-independent replay
+of original DB contract, and original HTTP/client/controller compatibility.
+Exact seven commit SHAs and historical focused results/hashes are in the receipt.
+Default/legacy contracts, Sandbox transport guards, original printer/controller/
+renderer/audio/Drive services and queued OPS remain unchanged. Requirement,
+original order/attempt/frozen snapshot/capability commit together before POST;
+recovery never creates a new identity. Fake SUBMITTED/UNCERTAIN remains OWED.
+
+Final full at2cac0ba: **1221 run / 1217 PASS /0 FAIL/0 ERROR/
+4 optional SKIP**, 449.903s, Python3.12.14/Linux.
+Includes all three later HTTP methods; no exclusion in this final full. The four
+skips are three opt-in palm-model asset tests and one optional native video test.
+CI **40970539519 all three jobs SUCCESS**, exact source2cac0ba;25 new pure methods
+individually PASS Windows/Linux;2 new native methods PASS Linux at800x1280 and
+452x900. Windows ledger164 PASS; Linux recovery
+465 PASS; native119 run/
+118 PASS/one optional palm SKIP. Native result tests are
+worker/truthful-submission/privacy assertions, not new commercial host screens.
+
+Preserved e82 full attempt:1218 run/1213 PASS/one FAIL/zero ERROR/four SKIP,
+463.881s. Unchanged native PCM cycle7 collected no samples in its observation;
+exact cause unknown. Isolated unchanged20-cycle audio test then2 PASS/12.866s;
+final full retry above passes without source/assertion/skip changes. This
+unresolved failure justified repeating the broad suite. Earlier520 full success
+is historical before replay refinement; interrupted9417 full has no final PASS.
+No failing report discarded or relabelled. [Exact source/results/hashes](evidence/ux07-paid-chain-final-verification.json).
+
+Whole UX-07 **NOT_RUN**;69 matrix IDs remain **59 PASS/0 FAIL/9 BLOCKED/1 NOT_RUN**.
+AR-13 conditional/audit IN_PROGRESS. PAY-22 official Legacy contract and WEB-01..08
+approved infrastructure/operations BLOCKED. Actual Windows/Ubuntu devices,
+provider/paper/phone/Drive/deletion/privacy/support/release acceptance separate.
+Next: UX-07.l2: use the recorded lifecycle source audit to define and test the offline original customer-claim/pause/resume/safe-release fixture on original controllers/fences/leases. The source audit is documentation only; l2 fixtures remain NOT_RUN. The current l subset verifies result worker and close retirement only; do not claim commercial host mounting or paid release. Refuse uncertain/SENDING replay, preserve OWED and privacy, no new financial identity. Operating physical-delivery principal/evidence, support/compensation and controlled Windows/Ubuntu/provider/paper/phone/Drive/privacy/release acceptance remain separate. Keep dedicated Sandbox delivery OFF, PAY-22/WEB-01..08 BLOCKED, OPS queued docs only.
+
+Do not redo these seven stages or reapply the superseded local documentation
+stash. In a new account/session first inspect branch/status/latest remote and
+this checkpoint; review l2 contracts before further source work. Raw private
+synthetic work/ remains local; no unpublished application patch. Rollback uses
+scoped reviewed inverse code while retaining additive requirement/financial/
+capability/audit/media records. This final docs-only publication is the safe
+checkpoint; resolve its containing SHA from Git log/remote after push. No real
+provider/print/Drive/deletion, production/public ingress/deployment/OPS/new
+branch/master/default operation. All checked/pushed progress is recoverable
+from GitHub; scratch data is intentionally excluded.
+
+## UX-07.l2 remaining lifecycle source audit — not executed acceptance
+
+Read-only source at2cac0ba, after reviewing original AR-06 customer claim,
+AR-09 operator/release and operations contracts. Reuse these exact seams:
+
+| Original seam | Audited behavior | Next fixture evidence required |
+| --- | --- | --- |
+| `PortraitKioskV2App.on_pause` / `SandboxViews._sandbox_lock_customer` | Bound Sandbox flow clears customer proof, photo media, QR/input and privacy epoch; ordinary result injection has Sandbox flags OFF | Pause/late callback must remain private after resume until original ticket is revalidated; do not infer this from the current close-only fixture |
+| `PhotoViews._photo_pause` | Cancels countdown; does not implement customer re-claim by itself | No automatic shutter/print on resume; original customer proof and deliberate continuation |
+| `KioskCheckout.lock_customer` / `customer_claim` | Retires in-memory proof/generation, original capability/action and fresh settlement required | Wrong/expired/foreign ticket and late reply deny, original paid identity/copies/OWED unchanged |
+| `PhotoTest.hide_private` / `isolate` | Original transport-off worker issues typed isolation receipt; SENDING/UNCERTAIN holds | Run on serialized original worker only after synthetic sender drains; no boolean or forced advertising |
+| `KioskCheckout.prepare_release` / `acknowledge_release` | Durable original operation, exact allocation/isolation generation, archive before suspended/new visit | Lost ACK/restart preserves one original release; no new visit before durable ACK/archive |
+| `KioskCheckout.open_archived` / original service fence | Original ticket may reacquire only a free booth, same allocation and new current fence | New visitor cannot see old strip; returning customer cannot preempt active visitor or replay old print |
+
+The existing fixture adapter must not simply become active again when its
+`active` predicate returns true after resume. Its current native tests deliberately
+cover result/close only; this audit does not establish a production privacy bug
+in the unchanged Sandbox host. Use the original proof/privacy generation, not a
+new UI boolean or a permit minted without original customer authentication.
+
+Next source micro-increment: isolated lifecycle fixture/test contract on the
+original controller and transport-off photo worker, with the mock print job kept
+separate and lease held through its in-flight completion. Test SENDING and
+UNCERTAIN refusal before any release, then exact original PREPARE/isolation/ACK
+for an eligible drained worker; ACK releases occupancy only, never satisfies OWED
+or proves paper. Do not attach a printer to bound Sandbox PhotoTest, weaken its
+transport guard, fabricate delivery/compensation, auto-restart/print or mount a
+commercial host. Focused fixtures, Windows/Linux receipts and both portrait sizes
+precede any PASS claim. Operating physical-delivery/support/compensation and real
+device/provider/release acceptance remain open. No l2 tests or source added by
+this audit; original existing release tests retain their own earlier evidence.
