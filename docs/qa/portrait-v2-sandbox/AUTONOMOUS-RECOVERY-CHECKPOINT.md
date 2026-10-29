@@ -1,5 +1,46 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 30 October — owner-requested durable progress checkpoint / final regression pending
+
+All seven source/test increments are pushed on feature/portrait-kiosk-v2-next.
+Latest verified GitHub/source HEAD: **2cac0ba0dda4df996ab514080a071e99f79272dd**.
+Application functional source: **e82d0eef032edfcbedec0a9f4c172e9c5edaad5e**;
+2cac0ba adds only three HTTP compatibility methods and CI/docs registration.
+Atomic mock requirement issuance, mock purchase/preflight fixture, paid print
+intent/no-replay fixture, original native result-widget fixture, mandatory original
+recovery credential, original-contract artwork-independent replay and original
+HTTP/client/controller compatibility are all focused-verified/pushed. Exact stage
+SHAs and historical file hashes are pinned in evidence/ux07-{stage}-verification.json.
+
+Latest HTTP-focused **18 PASS/0 FAIL/0 ERROR/0 SKIP**, 0.825s. Source e82d0ee CI
+**40969577970: all three jobs SUCCESS**; current 2cac0ba CI **40970539519 pending**.
+The e82d0ee full attempt is **1218 run/1213 PASS/1 FAIL/0 ERROR/4 optional SKIP**,
+463.881s: unchanged native audio PCM test, cycle7, empty samples. Preserve this
+failure; do not report final full PASS. Isolated unchanged native audio then
+**2 PASS**, 12.866s, including its20-cycle PCM check; exact initial cause unknown.
+A fresh full regression is RUNNING at 2cac0ba, including HTTP3; no code/assertion
+changes or skip introduced to hide the failure. Source520's earlier1217/1213/4
+full success is historical only, before the replay correction.
+
+Private progress files: work/paid-chain-replay-full.txt (failed full),
+work/paid-chain-audio-isolated.txt (2 PASS), work/paid-chain-final-retry-full.txt
+(final full report written on completion), work/paid-chain-final-retry-console.txt.
+Active local test session20325 is disposable synthetic unittest only. On a new
+session, inspect current Git/remote and those reports; process IDs may be stale.
+Next: finish/check retry, investigate any repeat failure, read actual current CI
+job/method receipts, publish aggregate exact-source evidence and final verified
+checkpoint. No additional functional change is pending locally. Do not redo the
+seven delivered stages or mistake an interrupted test for PASS.
+
+UX-07 whole NOT_RUN; matrix59 PASS/0 FAIL/9 BLOCKED/1 NOT_RUN. Native commercial
+claim/pause/release host remains unmounted; operating paper acceptance/support/
+compensation and actual Windows/Ubuntu/provider/privacy/release gates remain.
+AR-13 conditional/audit IN_PROGRESS; Sandbox delivery OFF, OPS queued docs only.
+No real provider/printer/Drive/deletion/public ingress/production/default/master/
+branch change. Only private synthetic work/ and old superseded docs stash remain
+local; no unpublished application patch. This docs-only checkpoint must be
+micro-pushed immediately and remote HEAD verified before continuing tests.
+
 ## 30 October — http focused source checkpoint
 
 Base/remote e82d0eef032edfcbedec0a9f4c172e9c5edaad5e.

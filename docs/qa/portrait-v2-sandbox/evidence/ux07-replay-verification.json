@@ -1,8 +1,8 @@
 {
-  "status": "FOCUSED_VERIFIED_FULL_CURRENT_CI_PENDING",
+  "status": "FOCUSED_VERIFIED_HISTORICAL_SNAPSHOT_FINAL_REGRESSION_PENDING",
   "stage": "replay",
   "base": "520b1a6791c6e8da4b891bf230a8bd5709bf25f4",
-  "source": "Containing micro-commit; final checkpoint pins SHA",
+  "source": "e82d0eef032edfcbedec0a9f4c172e9c5edaad5e",
   "focused": {
     "run": 53,
     "pass": 53,
@@ -17,5 +17,6 @@
     ".github/workflows/portrait-kiosk-v2.yml": "64f237f5d6c7b532e1d9076e2d14c3a4db6b8e7db474dcc37a4f24befac93865"
   },
   "report_sha256": "f307961d18d1063eb9a9df365666dcf160741f157df5882247df378dfcba7fdd",
-  "limits": "Mock-only offline integration, no production/merchant/paper/Drive/OPS effects. Whole UX07 NOT_RUN, matrix59/0/9/1. Full/current CI pending until chain completes."
+  "limits": "Historical focused snapshot at its pinned source. Application changes remain explicit mock-only; final aggregate full/CI verification pending. Whole UX07 NOT_RUN, matrix59/0/9/1; no production/provider/paper/Drive/OPS acceptance.",
+  "current_checkpoint_source": "2cac0ba0dda4df996ab514080a071e99f79272dd"
 }
