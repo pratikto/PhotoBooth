@@ -1,5 +1,17 @@
 # Meong Photobooth documentation — GUI v2
 
+## 29 October — UX-11 synthetic PASS / remaining external gates
+
+Test source `7ca46b5`, **9 focused PASS / zero skip**; CI 40865822670 all three
+jobs SUCCESS. Real held process on Windows/Linux; native stalled checkout/QR/
+upload Clock/privacy/no-replay on Linux. Windows owned-lease fixture failure at
+07734b2 preserved with controlled reproduction/correction. No runtime change;
+old full 347e502 1159/1155/4 excludes ten new methods, separately verified.
+Matrix **59 PASS / 0 FAIL / 9 BLOCKED / 1 NOT_RUN**, audit IN_PROGRESS.
+UX-07 whole purchased-printer gate remains NOT_RUN; provider/webhook/device/
+operations/release gates stay separate. No production or Sandbox delivery enabled.
+[Exact evidence/next work](qa/portrait-v2-sandbox/evidence/ux11-final-verification.json).
+
 ## 29 October — UX-11 stalled worker evidence focused-verified
 
 9 focused PASS, zero skip. Actual blocked-main/worker process remains held

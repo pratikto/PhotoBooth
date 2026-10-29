@@ -119,3 +119,7 @@ This containing docs-only publication is final safe checkpoint; exact SHA from
 Git log/remote. Only work/ scratch local, no unpublished runtime patch. No
 production/OPS/public ingress/new branch/master/default/deployment/real effects.
 Rollback inverse tests/docs; retain all financial/claim/fence/media/audit records.
+
+Subsequent dependency update: UX-11 synthetic validation is complete at
+7ca46b5; [exact evidence](evidence/ux11-final-verification.json). Do not repeat
+those verified tests. The complete purchased-printer gate above remains NOT_RUN.

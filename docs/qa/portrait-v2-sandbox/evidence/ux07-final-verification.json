@@ -43,7 +43,7 @@
   "full_regression": "NOT_RERUN_TESTS_ONLY; 347e502 1159/1155/4 retains source, excludes six new methods",
   "native_exports": "NOT_RERUN_NO_GUI_RUNTIME_CHANGE; widget assertions only, no ticket/image artifacts published",
   "limits": "Synthetic injected hardware/storage/template failures; no real camera/merchant/paper/Drive/production/OPS acceptance, native method Linux only",
-  "next": "UX-11 frozen-worker/GUI + supervisor hold/no-replay evidence audit; preserve purchased-printer/device/merchant/release gates",
+  "next": "UX-11 completed in ux11-final-verification.json; retain whole UX-07 purchased-printer integration/acceptance and provider/device/release gates.",
   "ci": {
     "run_id": 40862328219,
     "source": "685b994f01efd48cbe0d91d56a71f3143b8b7d11",

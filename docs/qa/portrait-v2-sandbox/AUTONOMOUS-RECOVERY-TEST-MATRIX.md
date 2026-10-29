@@ -1,5 +1,17 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
+## 29 October — UX-11 synthetic PASS / remaining external gates
+
+Test source `7ca46b5`, **9 focused PASS / zero skip**; CI 40865822670 all three
+jobs SUCCESS. Real held process on Windows/Linux; native stalled checkout/QR/
+upload Clock/privacy/no-replay on Linux. Windows owned-lease fixture failure at
+07734b2 preserved with controlled reproduction/correction. No runtime change;
+old full 347e502 1159/1155/4 excludes ten new methods, separately verified.
+Matrix **59 PASS / 0 FAIL / 9 BLOCKED / 1 NOT_RUN**, audit IN_PROGRESS.
+UX-07 whole purchased-printer gate remains NOT_RUN; provider/webhook/device/
+operations/release gates stay separate. No production or Sandbox delivery enabled.
+[Exact evidence/next work](evidence/ux11-final-verification.json).
+
 ## 29 October — UX-07 Sandbox components verified
 
 Test source `685b994`, **36 focused PASS / zero skip**; CI 40862328219 all three
@@ -378,7 +390,7 @@ offline inbox prototype assertions do not certify deployed ingress.
 | UX-08 | **PASS** | `test_booth_sync.test_configured_layout2_without_credentials_is_offline_ready_and_never_falls_back_to_legacy_oauth` | Offline local progress with deferred Drive and preserved layout/claims. |
 | UX-09 | **PASS** | `test_release_session.test_uncertain_print_never_yields_isolation_receipt_or_releases_booth` | Uncertain print remains held, no automatic resend; paper outcome NOT_RUN. |
 | UX-10 | **PASS** | `test_booth_sync.test_two_transactions_keep_exact_local_folder_mapping_across_restart` | Immutable delivery mapping/retry/retention fixtures; actual Drive acceptance NOT_RUN. |
-| UX-11 | **NOT_RUN** | `test_crash_supervisor.test_normal_operator_hold_or_living_process_never_restarts` | No-kill live-child gate and responsive HTTP tested; actual frozen-worker/GUI hang scenario not exercised. |
+| UX-11 | **PASS** | `test_ux11_process_hold`; native `test_ux11_stalled_*`; [complete fixture verification](evidence/ux11-final-verification.json) | Synthetic blocked checkout/QR/upload keeps actual Kivy Clock responsive; single-flight and privacy epochs fence late results; four original uploads once with unchanged files/counter. Real blocked-main/worker fixture process retains PAID/OWED and both leases under launcher observation, no restart/budget/spawn/automatic stop. Process method Windows/Linux, native Linux; real OS/GUI/device hangs remain external acceptance. |
 | UX-12 | **PASS** | `test_crash_supervisor.test_three_crashes_have_persisted_budget_and_bounded_backoff` | Persisted restart budget; kernel multi-process lease tests, no business replay. |
 | UX-13 | **PASS** | `test_qris_recovery`; [complete denial audit verification](evidence/bug023-conflict-http-verification.json) | Synthetic Windows/Linux: wrong PIN/429, action/reason/transaction/order identity conflicts, wrong-booth recovery (both release phases), real SQL failure -> 503, restart/redaction and successful same-action idempotency. Bounded 4096-event diagnostic journal; no secrets/customer IDs. BUG-023 fixed in source/regression verified; physical/operations acceptance separate. PIN budget remains process-local by design. |
 | UX-14 | **PASS** | `test_checkout_fulfillment.test_abandon_preserves_paid_obligation_and_no_fabricated_refund` | Closure/composition are not liability satisfaction. |
@@ -401,7 +413,8 @@ I01–I04: creation attempts, backend reconciliation and fulfillment identity te
 I05: paid issue/OWED and release tests; I06: capture/output/reconstruction tests;
 I07: no-replay source assertions only, with missing exact child/paper effects
 retained above; I08: capability/permit/privacy tests; I09: native stale callback,
-worker/event-loop tests (actual frozen-worker gate NOT_RUN); I10: immutable
+worker/event-loop and real held-process tests (UX-11 synthetic PASS; physical
+OS/GUI hangs remain unverified); I10: immutable
 identity/retention/archive tests; I11: Sandbox launcher/credential/delivery-off
 tests; I12: booth authentication, frozen merchant and checked-path tests.
 These are supporting PASS assertions, not a proof of every real-world transition.

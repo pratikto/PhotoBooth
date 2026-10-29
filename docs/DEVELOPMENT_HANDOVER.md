@@ -1,5 +1,52 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — UX-11 verified synthetic worker/hold evidence
+
+Process source `c588d5a635a1f427b997d8b003a13b2aedf732d5`, native test source
+`07734b22609cd1740fcfc43e6040507b0a729e0b`, portable fixture source
+`7ca46b531bab190cdc61479a3d5d492e7232fa15` pushed/remote verified. First CI
+40864175072 CANCELLED/superseded; 40865074759 superseded with recorded Windows
+fixture failure (116 run/one FAIL, generic 2 != 130). Controlled Windows-style
+PermissionError reproduces old failure, corrected fixture PASS; retains actual
+live child, both lease denials, no spawn/budget/automatic stop and exact financial
+rows/journal bytes. Runtime lease/authentication behavior never changed.
+
+**9 final focused PASS / zero failure/error/skip**, 3.104s, Python 3.12.14/Linux
+software GL. Initial process six PASS/0.246s, native checkout/QR eight PASS/3.149s,
+initial combined nine PASS/2.979s retained. **CI 40865822670 all three jobs
+SUCCESS**: actual blocked-main/worker process method individually PASS on
+Windows/Linux; native checkout/QR and real upload queue methods PASS on Linux.
+Clock ticks while I/O barriers hold; duplicate taps stay single-flight; retired
+late callbacks cannot show private QR/payment/media. Upload resumes four original
+files exactly once with unchanged counter/bytes and no new visit/print. Actual
+living fixture process retains PAID/OWED/leases without restart or mutation.
+Observation ends by simulated explicit operator interruption; only test control
+input subsequently cleans its own disposable child. Bounded stalls and blocked-
+main fixture are synthetic, not physical OS/GUI hang or device certification.
+[Exact commands/source/results/CI/digests/limits](qa/portrait-v2-sandbox/evidence/ux11-final-verification.json).
+
+No runtime change. App/tools trees match 347e502; old full **1159/1155/4** retains
+that provenance and excludes ten later UX-07/UX-11 methods, checked separately.
+No repeated full/native export or old result relabeled as current full/device
+acceptance. UX-07 component CI 40862328219 separately remains SUCCESS.
+
+**UX-11 synthetic PASS**. Matrix **69 IDs: 59 PASS / 0 FAIL / 9 BLOCKED /
+1 NOT_RUN**, audit IN_PROGRESS, AR-13 conditional. Remaining UX-07 whole gate:
+purchased-print prepayment path/actual printer readiness is not mounted/certified
+in this transport-off Sandbox. Camera/storage/template/isolation/native error/
+retry component evidence is verified; preserve printer/Drive OFF. Next work is
+the purchased-print contract/integration and target-device evidence, with original
+read-only printer services and explicit privacy/payment/physical acceptance.
+Do not infer that route/spooler availability proves paper or enable Sandbox
+printing to satisfy a gate. PAY-22 official Legacy contract and WEB-01–08 approved
+infrastructure/operations remain BLOCKED; real merchant/Windows/Ubuntu hardware,
+phone/paper/Drive/deletion/privacy/support/release acceptance remains separate.
+No automatic deployment, production payment, OPS, public ingress or branch/
+master/default operation. Do not repeat verified UX-05/UX-11 or BUG-023/024.
+This containing docs-only push is final safe checkpoint; exact SHA from Git
+log/remote. Only work/ scratch local, no unpublished runtime patch. Rollback
+inverse tests/docs, retain all financial/action/claim/fence/media/audit records.
+
 ## 29 October — UX-11.c portable owned-lease denial fixture
 
 Source `07734b22609cd1740fcfc43e6040507b0a729e0b` pushed/remote verified.

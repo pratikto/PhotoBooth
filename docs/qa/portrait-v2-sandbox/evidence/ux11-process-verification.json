@@ -1,7 +1,7 @@
 {
-  "status": "UX11_LIVING_PROCESS_HOLD_VERIFIED_NATIVE_CASES_NOT_RUN_CI_PENDING",
+  "status": "HISTORICAL_PROCESS_FOCUSED_VERIFIED_COMPLETE_CURRENT_EVIDENCE_SEPARATE",
   "base": "8ca792def8a66595ce8571460533932f42ffa341",
-  "source": "Containing test commit; pin after push",
+  "source": "c588d5a635a1f427b997d8b003a13b2aedf732d5",
   "runtime_source": "347e502b0f50d231ec05c0cbcf768f87d2002454",
   "runtime_changed": false,
   "focused": {
@@ -21,5 +21,6 @@
     ".github/workflows/portrait-kiosk-v2.yml": "0067d33a843ad89ae58ff1b99d004e3186c093ec6d3505b4811fdeaee7b98707"
   },
   "report_sha256": "c99ec1465bc61d5b3d1ee2755657ab4b8608652d1441cf9ba900acd00bd82f18",
-  "limits": "Blocked-main/worker fixture, synthetic PAID/OWED and mocked backend spawn transport, no actual device/OS GUI deadlock/production/OPS acceptance; native barriers next"
+  "limits": "Blocked-main/worker fixture, synthetic PAID/OWED and mocked backend spawn transport, no actual device/OS GUI deadlock/production/OPS acceptance; native barriers next",
+  "ci": "40864175072 CANCELLED/superseded; complete corrected current CI 40865822670 SUCCESS, see ux11-final-verification.json"
 }
