@@ -75,7 +75,7 @@ jobs:
       - name: Reuse original v1 read-only health backend and v2 bridge (fixtures)
         run: MEONG_CI_TEST_REPORT=/tmp/meong-portrait-v2/reports/health-tests.txt xvfb-run -a python tools/run_kiosk_unittests.py test_device_health test_device_recovery test_device_selection test_hardware_adapters test_hardware_discovery test_kiosk_v2_health_service test_kiosk_v2_health_reference
       - name: Exercise opt-in Kivy widgets at a virtual display
-        run: MEONG_CI_TEST_REPORT=/tmp/meong-portrait-v2/reports/native-tests.txt PHOTOBOOTH_TEST_GUI=1 PHOTOBOOTH_TEST_AUDIO=1 xvfb-run -a python tools/run_kiosk_unittests.py tests.test_ad_player tests.test_kiosk_v2_widgets tests.test_kiosk_v2_game_widgets tests.test_kiosk_v2_checkout_widgets tests.test_kiosk_v2_meong_reference tests.test_kiosk_v2_game_followup tests.test_kiosk_v2_brand_flight tests.test_kiosk_v2_button_art tests.test_kiosk_v2_operator_widgets tests.test_kiosk_v2_delivery_widgets
+        run: MEONG_CI_TEST_REPORT=/tmp/meong-portrait-v2/reports/native-tests.txt PHOTOBOOTH_TEST_GUI=1 PHOTOBOOTH_TEST_AUDIO=1 xvfb-run -a python tools/run_kiosk_unittests.py tests.test_ad_player tests.test_kiosk_v2_widgets tests.test_kiosk_v2_game_widgets tests.test_kiosk_v2_checkout_widgets tests.test_kiosk_v2_meong_reference tests.test_kiosk_v2_game_followup tests.test_kiosk_v2_brand_flight tests.test_kiosk_v2_button_art tests.test_kiosk_v2_operator_widgets tests.test_kiosk_v2_delivery_widgets tests.test_purchased_print_widgets
       - name: Verify and surface actual UX-07 test execution
         # Check annotations remain readable when artifact/log storage is unavailable.
         # Registration or job success alone is not method-level passing evidence.
@@ -100,6 +100,7 @@ jobs:
               ],
               'native-tests.txt': [
                   ('tests.test_ad_player.AdvertisementPlayerTests.', 4),
+                  ('tests.test_purchased_print_widgets.PaidPrintWidgetTests.', 2),
                   (native + 'test_ux07_configured_printer_probe_keeps_clock_live_and_retry_creates_one_mock_at_both_sizes', 1),
                   (native + 'test_ux07_retired_printer_probe_result_stays_hidden_then_recovers_original_mock_at_both_sizes', 1),
               ],

@@ -272,3 +272,30 @@ production/public ingress/new branch/master/default/deployment or real external
 effect. Rollback scoped inverse code; retain additive requirements and all
 financial/media/audit records. Only private work/ and superseded docs stash local.
 Containing source commit is the safe checkpoint; exact SHA via Git log/remote.
+
+## 30 October — l focused source checkpoint
+
+Base/remote 9739ce4d0a06b9e112662ffdd323bff94df25bde.
+UX-07.l native fixture subset uses original PhotoJobs/PhotoViews/result layout
+with the separate paid mock print adapter, at 800x1280 and 452x900. Real Clock
+progresses while send is held; duplicate taps remain single-flight, displayed
+SUBMITTED says inspect physical paper and never satisfies OWED. Closing a retired
+view prevents queued results/private strip from reappearing and retains ownership
+through worker completion. No forced advertising transition or paid booth release.
+29 combined focused PASS, zero failure/error/skip, 8.736s; includes two new native
+methods and all 27 issuance/purchase/job/schema methods. Initial native attempt:
+two run/two ERROR because existing navigation correctly refused active-photo
+return to advertising. Next 29 run/two ERROR from fixture Window.walk misuse;
+fixed to inspect Window child widgets. Original app/guards/layout unchanged.
+No commercial native paid host or automatic pause/resume claim journey mounted;
+these and actual device/provider/paper/privacy/release acceptance remain separate.
+Next one final full regression and current Windows/Linux CI, then final safe
+checkpoint. Earlier intermediate source CI runs may be superseded; do not claim
+whole-run success without final matching receipts. Continue session until verified.
+
+Whole UX-07 NOT_RUN, matrix59/0/9/1; actual devices/provider/paper/privacy/
+release and PAY-22/WEB gates remain separate. No Sandbox delivery opt-in/OPS/
+production/public ingress/new branch/master/default/deployment or real external
+effect. Rollback scoped inverse code; retain additive requirements and all
+financial/media/audit records. Only private work/ and superseded docs stash local.
+Containing source commit is the safe checkpoint; exact SHA via Git log/remote.

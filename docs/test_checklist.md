@@ -1,5 +1,25 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 30 October — l focused checkpoint
+
+UX-07.l native fixture subset uses original PhotoJobs/PhotoViews/result layout
+with the separate paid mock print adapter, at 800x1280 and 452x900. Real Clock
+progresses while send is held; duplicate taps remain single-flight, displayed
+SUBMITTED says inspect physical paper and never satisfies OWED. Closing a retired
+view prevents queued results/private strip from reappearing and retains ownership
+through worker completion. No forced advertising transition or paid booth release.
+29 combined focused PASS, zero failure/error/skip, 8.736s; includes two new native
+methods and all 27 issuance/purchase/job/schema methods. Initial native attempt:
+two run/two ERROR because existing navigation correctly refused active-photo
+return to advertising. Next 29 run/two ERROR from fixture Window.walk misuse;
+fixed to inspect Window child widgets. Original app/guards/layout unchanged.
+No commercial native paid host or automatic pause/resume claim journey mounted;
+these and actual device/provider/paper/privacy/release acceptance remain separate.
+Next one final full regression and current Windows/Linux CI, then final safe
+checkpoint. Earlier intermediate source CI runs may be superseded; do not claim
+whole-run success without final matching receipts. Continue session until verified.
+[Full scope/limits/next](qa/portrait-v2-sandbox/UX07-PURCHASED-PRINT-INTEGRATION.md).
+
 ## 30 October — k focused checkpoint
 
 UX-07.k separate mock-only fixture print host authenticates original customer
