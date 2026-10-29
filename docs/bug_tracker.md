@@ -14,7 +14,7 @@ No production/admin feature or credential change is implied.
 
 ## BUG-022 — missing committed PNG accepted during recovery (29 October)
 
-**S1 recovery integrity — IN SOURCE, full regression/CI pending.** Audit of
+**S1 recovery integrity — FIXED IN SOURCE / REGRESSION VERIFIED at 4642841.** Full 1100 run / 1097 PASS / 3 optional SKIP, zero failure/error; matching CI 40790865010 all three jobs SUCCESS. Actual device acceptance remains NOT_RUN. Audit of
 8ebcd12 reproduces metadata inspection returning result for an absent COMMITTED
 PNG. Restore then installs transaction state before snapshot raises
 FileNotFoundError. No financial mutation, duplicate charge or privacy disclosure

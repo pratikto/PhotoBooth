@@ -1,23 +1,52 @@
 # Autonomous recovery — session checkpoint and resume contract
 
 **Active owner task, 29 October:** fresh AR-00–AR-13 implementation conformity
-review, IN_PROGRESS. Evidence baseline checked at f8167d8; historical full-regression source f72fdbc. Increment 3 corrects BUG-022
-missing committed output validation; 61 focused PASS, full/CI pending.
-Payment audit increment 2 adds verified PAY-06/PAY-21 evidence:
-116 focused PASS; increment-2 matrix 45 PASS / 9 BLOCKED / 15 NOT_RUN; latest classification below
-is 44 PASS / 1 FAIL / 9 BLOCKED / 15 NOT_RUN.
-[Review checkpoint](AR00-AR13-CODE-REVIEW.md). Finish source review and
-confirmed reproductions before making a final conformity claim. Prior readiness
-report below retains its dated conclusions and remaining gates.
+review, IN_PROGRESS. First bounded source pass read; current functional source
+4642841 fixes BUG-022 and has 1100 run / 1097 PASS / 3 optional SKIP, matching
+three-job CI SUCCESS. PAY-06/PAY-21 evidence verified. Matrix now 44 PASS /
+1 FAIL / 9 BLOCKED / 15 NOT_RUN: BUG-023 denial audit and native connectivity
+producer remain open. [Review checkpoint](AR00-AR13-CODE-REVIEW.md).
+Complete remaining conformity/fault evidence before a blanket verdict; historical
+readiness reports below retain their dated source and gates.
 
-**Checkpoint status:** AR-12 evidence reconciled / AR-13 assessment COMPLETE (CONDITIONAL); external and exact fault gaps OPEN, 29 October 2026 (Asia/Jakarta)
+**Checkpoint status:** audit IN_PROGRESS; BUG-022 regression VERIFIED, BUG-023 and exact fault/external gaps OPEN, 29 October 2026 (Asia/Jakarta)
 **Branch:** `feature/portrait-kiosk-v2-next` (existing; no master merge)
 **Recovery implementation:** source through AR-12.f; AR-13 readiness report published; full matrix/device acceptance and release are not complete
+**Latest validated application source:** `4642841f3e99d8c74b4b379e24922a7ba3f614c9`; full 1100 run / 1097 PASS / 3 SKIP; matching CI 40790865010 three jobs SUCCESS.
 **Previous fully validated application source:** `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`; full 1,097 run / 1,093 PASS / 4 SKIP / zero failures/errors; matching CI 40767441201 three jobs SUCCESS.
 **Historical audit baseline:** `2e5efe5d281a93fe8d22e53309a50147764d2939`
 **Current documentation handover:** See `docs/DEVELOPMENT_HANDOVER.md` and verify current remote HEAD; never assume the HEAD printed in a dated checkpoint is still current.
 
-## Documentation check — latest AR-13 status confirmed
+## Latest verified continuation — audit evidence and BUG-022
+
+- **Latest functional SHA / pushed and remote-verified:** `4642841f3e99d8c74b4b379e24922a7ba3f614c9`.
+  Payment evidence: `8ebcd123098fe5a937c59f2b88d7fe60c9bedf7b`.
+  Previous docs checkpoint: `5d318f803df9e7570ceb6f1f8124691f7051540d`.
+  Current docs publication SHA is this containing Git commit (resolve via Git log).
+- **Completed:** bounded first source pass AR-00–13, PAY-06/PAY-21 exact synthetic
+  evidence and BUG-022 committed-PNG loss hold correction. Focused 116 and 61 PASS;
+  full **1,100 run / 1,097 PASS / 3 optional palm SKIP / zero failure/error**,
+  364.124s. Native video PASS. [Command/source/digests](evidence/ar-audit-final-verification.json).
+- **Matching CI:** 40790865010 at 4642841, all three jobs SUCCESS. Prior
+  40790391324 superseded/CANCELLED, not standalone PASS. Source trees unchanged
+  through docs updates. No new local native PNG/phone/physical evidence claimed.
+- **Open audit findings:** AR-AUDIT-002 missing native connectivity-restored
+  producer (PAY-08 NOT_RUN); BUG-023 missing durable wrong-PIN denial audit
+  (UX-13 FAIL). PIN budget is process-local; customer ticket budget durable.
+  Matrix **44 PASS / 1 FAIL / 0 SKIP / 9 BLOCKED / 15 NOT_RUN**. Audit IN_PROGRESS;
+  AR-13 historical CONDITIONAL report is not full conformity or release approval.
+- **Next exact action:** AR-02 define/wire a bounded native connectivity-restored
+  signal and test repeated outage→restore→one immediate GET/throttled duplicates
+  with unchanged order/grant; then AR-03 CAP-01–05 exact allocation/STARTED exits,
+  PAY-18/COMPLETE/retake/disk evidence and AR-09 bounded redacted denial audit.
+- **Blockers unchanged:** merchant/provider contract, actual Windows/Ubuntu/
+  phone/paper/Drive/deletion/privacy/operations, public webhook and release gates.
+  No production/OPS code, print/Drive activation, new branch/default/master change.
+- **Local-only:** work/ disposable synthetic logs, private fixture pixels and
+  diagnostics; not remotely backed up, no unfinished runtime patch. Scoped inverse
+  rollback retains all records/media/fences, never recharges/renders/reprints.
+
+## Historical documentation check — f72fdbc AR-13 status confirmed
 
 Current source-tree IDs and live matching CI confirm the newer f72fdbc assessment
 above. The 635de92 1094-case report is historical; its recovered provenance is now
@@ -26,7 +55,7 @@ or equate the AR-13 assessment to complete fault coverage/production approval.
 The active conformity review remains IN_PROGRESS, with PAY-06 the first exact
 source-evidence gap. No new test run/runtime/OPS work was done by this docs check.
 
-## Latest source audit checkpoint — first pass read, verification OPEN
+## Historical interim source audit checkpoint — full/CI still running
 
 - Exact pushed/remote-verified functional SHA: `4642841f3e99d8c74b4b379e24922a7ba3f614c9`.
   Payment evidence commit: `8ebcd123098fe5a937c59f2b88d7fe60c9bedf7b`.

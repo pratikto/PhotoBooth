@@ -1,17 +1,15 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
-**Current status, 29 October 2026:** baseline execution ledger at
-`f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`, supplemented by audit increment 2
-[focused evidence](evidence/ar-audit-payment.json): 45 PASS / 0 FAIL / 0 SKIP /
-9 BLOCKED / 15 NOT_RUN at increment 2. Later source audit reclassifies UX-13:
-**44 PASS / 1 FAIL / 0 SKIP / 9 BLOCKED / 15 NOT_RUN**. Fully audited wrong-PIN
-denial is absent; see [probe](evidence/ar-audit-pin-denials.json). Production not ready.
-The original design contract below is retained. Its initial NOT_RUN values and
-baseline describe planning history, not the current executed ledger. BUG-022 missing committed output is corrected with 61 focused PASS; full/CI
-for that correction are pending. Exact
-missing fault windows stay NOT_RUN even when a related source test passes.
-[Validation/provenance](AUTONOMOUS-RECOVERY-VALIDATION.md) ·
-[Readiness/owner gates](AR13-READINESS.md).
+**Current status, 29 October 2026:** current source `4642841f3e99d8c74b4b379e24922a7ba3f614c9`;
+full **1100 run / 1097 PASS / 3 optional SKIP / zero failure/error**, matching
+CI 40790865010 all three jobs SUCCESS. Current scenario matrix:
+**44 PASS / 1 FAIL / 0 SKIP / 9 BLOCKED / 15 NOT_RUN** (69 IDs).
+PAY-06/PAY-21 added by the payment audit; BUG-022 missing committed PNG guard is
+regression-verified; UX-13 corrected to FAIL because durable wrong-PIN denial audit
+is absent. PAY-08 lacks a native connectivity event producer. Audit IN_PROGRESS,
+production not ready. [Current safe evidence](evidence/ar-audit-final-verification.json).
+The original scenario contract and dated baseline evidence are retained below.
+Exact missing process-exit/device windows remain NOT_RUN/BLOCKED.
 
 ## A. Invariants asserted on every relevant transition
 
@@ -129,8 +127,9 @@ All public WEB items are currently **BLOCKED** on infrastructure approval; offli
 
 ## Executed evidence ledger — 29 October 2026
 
-Except the explicitly added PAY-06/PAY-21 audit fixtures, source references below
-are at `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`,
+All named test methods below also PASS in the complete 4642841 regression,
+including newly added PAY-06/PAY-21 and BUG-022. The older execution baseline was
+`f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`,
 executed by the full command/environment in [validation](AUTONOMOUS-RECOVERY-VALIDATION.md).
 The [safe report](evidence/ar12-final-verification.json) pins test source trees,
 full count/skips/digest, CI and native manifests. Abbreviated `module.method`
@@ -239,9 +238,9 @@ matrix PASS or used to waive device/merchant requirements.
 
 | Gate | Evidence required | Current |
 | --- | --- | --- |
-| Source unit/integration | Exact SHA, OS, command, full count PASS/FAIL/SKIP, fixtures and no secret leakage | PASS at f72fdbc: 1097 run / 1093 PASS / 4 optional SKIP |
+| Source unit/integration | Exact SHA, OS, command, full count PASS/FAIL/SKIP, fixtures and no secret leakage | PASS at 4642841: 1100 run / 1097 PASS / 3 optional palm SKIP |
 | Crash/restart fault-injection | Every PAY/CAP/UX applicable ID mapped to test output | NOT_RUN for complete gate; see explicit missing exact windows above |
-| Complete GUI regression | One final applicable full suite after last functional change; no borrowed old pass | PASS source regression; four full-run optional SKIPs retained; native video subsequently verified separately |
+| Complete GUI regression | One final applicable full suite after last functional change; no borrowed old pass | PASS at 4642841; three optional palm SKIPs, native video PASS in same run |
 | GUI screenshot/pixels | Tested exact source 800×1280 and 452×900, readability and QR identity | PASS for 28 captured scenes / four QR checks; retake/multi-design visual scenes NOT_RUN |
 | Windows booth | Real camera/storage, app close/reopen/power interruption, native touch/keyboard | NOT_RUN |
 | Ubuntu mini PC | Actual graphical session service, permissions, startup, real camera/print hardware | NOT_RUN |

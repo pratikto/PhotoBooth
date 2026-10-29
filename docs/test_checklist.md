@@ -1,5 +1,26 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 29 October — verified AR audit checkpoint at 4642841
+
+**Functional `4642841f3e99d8c74b4b379e24922a7ba3f614c9`**, pushed/remote-verified. Full
+**1,100 run / 1,097 PASS / 3 optional palm SKIP / zero failure/error**, 364.124s;
+native video PASS, GUI/audio/video opt-ins, Python 3.12.14/Debian 13.6/offscreen/
+dummy audio. Matching [CI 40790865010](https://github.com/pratikto/PhotoBooth/actions/runs/40790865010)
+**all three jobs SUCCESS**, including Windows payment/reconstruction cases.
+[Exact command/source/digests](qa/portrait-v2-sandbox/evidence/ar-audit-final-verification.json).
+Payment micro-push 8ebcd12: 116 focused PASS; BUG-022 fix 4642841: 61 focused PASS;
+source audit/docs 5d318f8 pinned. No new local native/physical evidence inferred.
+
+BUG-022 fixed/verified; **BUG-023 OPEN**, no durable wrong-PIN denial audit (UX-13
+FAIL), and native connectivity-restored producer absent (PAY-08 NOT_RUN).
+Matrix **44 PASS / 1 FAIL / 9 BLOCKED / 15 NOT_RUN**. First source pass read;
+overall audit **IN_PROGRESS**, no blanket conformity/unattended release verdict.
+Next: AR-02 bounded native connectivity event/fixture, AR-03 exact allocation/
+STARTED faults, remaining service/media cases, AR-09 redacted denial audit.
+External gates/OPS NOT_STARTED unchanged. Current containing docs publication
+pins the safe handover; only disposable work/ local, no unpublished runtime patch.
+
+
 ## 29 October — AR source audit first pass and corrected denial verdict
 
 Functional `4642841f3e99d8c74b4b379e24922a7ba3f614c9` pushed and remote HEAD verified. Payment

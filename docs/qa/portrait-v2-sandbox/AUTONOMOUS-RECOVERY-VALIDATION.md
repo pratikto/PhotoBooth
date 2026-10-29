@@ -1,5 +1,39 @@
 # AR-12 — final source validation and external acceptance gates
 
+## Final verification checkpoint — 29 October 2026
+
+**Functional source `4642841f3e99d8c74b4b379e24922a7ba3f614c9`; full 1,100 run /
+1,097 PASS / 3 SKIP / zero FAIL/ERROR**, 364.124s. Linux cloud/Debian 13.6,
+Python 3.12.14, GUI/audio/video opted in, SDL offscreen/software GL/dummy audio.
+Only three optional native palm-model tests skipped; native video PASS in this
+run. All three new payment/media regressions PASS. Tracked source clean at run
+start; subsequent docs-only commits leave all four recorded source trees equal.
+[Exact command/skips/digests](evidence/ar-audit-final-verification.json).
+
+[CI 40790865010](https://github.com/pratikto/PhotoBooth/actions/runs/40790865010)
+at this exact SHA: **all three jobs SUCCESS**, including Windows reconciliation
+and reconstruction. [Job/step evidence](evidence/ar-audit-final-ci.json).
+Prior payment-only 40790391324 was superseded/CANCELLED by existing concurrency;
+it is not a successful standalone CI claim. No new local PNG/QR capture is
+claimed for this nonvisual validation correction. Earlier f72fdbc native evidence
+retains its original SHA; matching CI native capture steps succeed.
+
+First source-reading pass AR-00–13 is recorded, **overall audit IN_PROGRESS**.
+BUG-022 is corrected/verified in source, actual device media-loss acceptance
+NOT_RUN. AR-AUDIT-002 native connectivity producer and BUG-023 denial audit stay
+OPEN. Matrix **44 PASS / 1 FAIL / 0 SKIP / 9 BLOCKED / 15 NOT_RUN**; UX-13 fails
+its stronger fully-audited-denial requirement despite a passing regression.
+No blanket conformity or unattended release verdict follows from test counts.
+
+Next small work: AR-02 PAY-08 native connectivity event/fixture, then AR-03
+CAP-01–05 exact allocation/STARTED crashes and PAY-18/COMPLETE/retake/disk faults;
+AR-09 bounded redacted durable denials with replay/cross-order assertions.
+External provider/device/privacy/deletion/operations/public ingress gates remain.
+No unsafe unpushed runtime changes; only disposable untracked work/ raw evidence.
+Rollback preserves every payment/grant/claim/fence/manifest/media/budget; do not
+remove the new missing-output guard to force a recovery.
+
+
 ## 29 October — source audit denial qualification
 
 At pushed functional 4642841, source review and an isolated same-PIN app-recreation

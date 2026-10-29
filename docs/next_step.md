@@ -1,6 +1,22 @@
 # Meong Photobooth — outstanding work and feature backlog
 
-## 29 October — final AR-12 source evidence and AR-13 readiness
+## 29 October — current AR audit continuation after verified 4642841
+
+PAY-06/PAY-21 verified, BUG-022 corrected; full 1100 run / 1097 PASS / 3 optional
+palm SKIP, zero failure/error, matching CI 40790865010 three jobs SUCCESS.
+Audit first source pass read; **IN_PROGRESS**, matrix **44 PASS / 1 FAIL /
+9 BLOCKED / 15 NOT_RUN**. **Next small AR-02 task:** define and wire a bounded
+native connectivity-restored signal, proving one immediate original-order GET
+and durable duplicate throttling; backend/client seam already exists. Then
+AR-03 CAP-01–05 exact allocation/STARTED exits, remaining PAY-18/COMPLETE/retake/
+disk cases and AR-09 **BUG-023** bounded redacted durable operator-denial audit.
+Do not repeat completed creation/payment/source fixes or start queued OPS.
+[Current checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md) ·
+[Confirmed findings](qa/portrait-v2-sandbox/AR00-AR13-CODE-REVIEW.md).
+External device/merchant/privacy/production gates remain open.
+
+
+## Historical 29 October — f72fdbc AR-12 evidence and AR-13 readiness
 
 Final runtime/test `f72fdbc53041dd785fbcf7d8ef6b8eb0c17dcc88`: **1,097 run / 1,093 PASS / 4 SKIP / zero failures/errors**, 428.924s, Python 3.12.14 / Debian 13.6,
 GUI/audio opt-ins with offscreen software GL/dummy audio, tracked tree clean.

@@ -4,6 +4,18 @@
 `feature/portrait-kiosk-v2-next`. This is an evidence assessment and acceptance
 handoff; it grants no release, deployment, production payment or merge permission.
 
+## Latest verified source supplement — audit 4642841
+
+Functional `4642841f3e99d8c74b4b379e24922a7ba3f614c9`: **1,100 run / 1,097 PASS /
+3 optional palm SKIP / zero failure/error**, 364.124s; native video PASS.
+Matching [CI 40790865010](https://github.com/pratikto/PhotoBooth/actions/runs/40790865010)
+all three jobs SUCCESS. [Command/trees/digests](evidence/ar-audit-final-verification.json).
+BUG-022 is fixed and regression-verified. Audit remains IN_PROGRESS: native
+connectivity producer absent, BUG-023 denial audit OPEN. Current matrix
+**44 PASS / 1 FAIL / 9 BLOCKED / 15 NOT_RUN**, no unattended commercial release.
+Earlier f72fdbc full/native/CI evidence below remains historical. No device,
+merchant, phone, printing, upload/deletion or release approval is inferred.
+
 ## Latest audit qualification — operator denial evidence
 
 Current matrix is **44 PASS / 1 FAIL / 9 BLOCKED / 15 NOT_RUN** after a direct
@@ -15,14 +27,14 @@ without an observed authentication bypass. [Evidence](evidence/ar-audit-pin-deni
 PAY-08 also has no native connectivity-event producer; bounded polling remains
 available. Neither item is waived by a passing regression or controlled testing.
 
-## Later functional audit correction — BUG-022
+## Historical intermediate functional checkpoint — BUG-022
 
 Increment 3 corrects a confirmed missing-COMMITTED-PNG hold defect; **61 focused
 PASS**, final full/matching CI PENDING at publication. [Finding/source evidence](AR00-AR13-CODE-REVIEW.md#increment-3--confirmed-missing-output-reconstruction-defect-bug-022).
 The f72fdbc full/native/CI evidence below is historical and is not reassigned to
 this correction. Audit remains IN_PROGRESS and commercial release NOT READY.
 
-## Later audit evidence supplement — 29 October
+## Historical payment audit supplement — before UX-13 reclassification
 
 The payment conformity audit added PAY-06/PAY-21 exact synthetic evidence against
 unchanged f72fdbc runtime: **116 focused PASS**, matrix now **45 PASS / 9 BLOCKED /
@@ -45,7 +57,11 @@ AR-13's source-readiness assessment is complete when this report and its linked
 evidence are published. AR-12 remaining acceptance/fault gaps and release approval
 remain open. Do not restart completed AR stages or start OPS implementation.
 
-## Final verification summary
+## Historical f72fdbc assessment and verification summary
+
+The remaining assessment below preserves the original f72fdbc baseline. Its
+source/counts and then-open PAY-06/PAY-21 entries are historical; the latest
+4642841 verification and audit qualifications above supersede those facts.
 
 **1,097 run / 1,093 PASS / 4 SKIP / zero failures/errors**, 428.924s; `.venv/bin/python tools/run_kiosk_unittests.py` with GUI/audio opt-ins,
 CPython 3.12.14 / Debian 13.6 / SDL offscreen / dummy audio, clean tracked tree.

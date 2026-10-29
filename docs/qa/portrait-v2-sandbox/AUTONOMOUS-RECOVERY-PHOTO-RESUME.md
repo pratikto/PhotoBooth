@@ -77,3 +77,7 @@ path is missing. Inspection/restore now hold before installing restored state;
 no replay/rerender or right cancellation follows media loss. Test-first
 reproduction and 61 focused PASS in [audit increment 3](AR00-AR13-CODE-REVIEW.md#increment-3--confirmed-missing-output-reconstruction-defect-bug-022).
 Full matching-source regression/CI pending at this source checkpoint.
+
+BUG-022 final verification at `4642841f3e99d8c74b4b379e24922a7ba3f614c9`:
+1100 run / 1097 PASS / 3 optional palm SKIP, zero failure/error; matching CI
+40790865010 all three jobs SUCCESS. [Pinned audit evidence](evidence/ar-audit-final-verification.json).

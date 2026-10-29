@@ -1,0 +1,118 @@
+{
+  "status": "VERIFIED_REGRESSION_WITH_OPEN_CONFORMITY_GAPS",
+  "date": "2026-10-29T07:06:34.003730+07:00",
+  "branch": "feature/portrait-kiosk-v2-next",
+  "functional_source": "4642841f3e99d8c74b4b379e24922a7ba3f614c9",
+  "documentation_base": "5d318f803df9e7570ceb6f1f8124691f7051540d",
+  "source_trees": {
+    "photobooth": "8bae6dc582af66b509507fc2b5285815328f88f7",
+    "tests": "b6e2bd650fd55edf8633f5ee2135edc803006354",
+    "tools": "62b5760a3ebd20382fb3eb632843c626e00ce2f9",
+    ".github/workflows": "2370cd4f2288c2a5d4f681a437b0bff4df4b8fcc"
+  },
+  "dirty_state": "Tracked clean when full run started at functional SHA. Only docs/evidence commits followed during run; all application/tests/tools/workflow tree IDs checked unchanged. Untracked work/ synthetic diagnostics preserved.",
+  "environment": {
+    "python": "3.12.14",
+    "os": "Debian GNU/Linux 13.6",
+    "display": "SDL offscreen; software GL",
+    "audio": "SDL dummy",
+    "gui_audio_video_optins": true
+  },
+  "command": "PHOTOBOOTH_TEST_GUI=1 PHOTOBOOTH_TEST_AUDIO=1 PHOTOBOOTH_TEST_VIDEO=1 KIVY_HOME=/tmp/meong-audit-full-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 MESA_SHADER_CACHE_DIR=/tmp/meong-audit-full-mesa MEONG_CI_TEST_REPORT=work/ar-audit-final-full-report.txt .venv/bin/python tools/run_kiosk_unittests.py > work/ar-audit-final-full-console.txt 2>&1",
+  "full": {
+    "run": 1100,
+    "pass": 1097,
+    "failure": 0,
+    "error": 0,
+    "skip": 3,
+    "seconds": 364.124,
+    "report_sha256": "5505d7a53e4fb0c3277f832773936c57fbd0dd91c60dbd80b394b94d09b690b2",
+    "console_sha256": "b2dc29798d932717e9e6f0bd35503af293a0b82a1f7e20d55ce6397d11f84308",
+    "skips": [
+      {
+        "test": "test_real_model_worker_drives_the_actual_controller_and_keeps_button_capture (test_camera_recovery.CameraRecoveryTests.test_real_model_worker_drives_the_actual_controller_and_keeps_button_capture)",
+        "reason": "Native model assets are opt-in"
+      },
+      {
+        "test": "test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture)",
+        "reason": "Native model assets are opt-in"
+      },
+      {
+        "test": "test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image (test_palm_gesture.NativePalmModelTests.test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image)",
+        "reason": "Native model assets are opt-in"
+      }
+    ],
+    "new_methods_all_pass": [
+      "test_pay06_abrupt_exit_before_evidence_commit_requires_fresh_get_and_one_grant",
+      "test_pay21_oversized_status_and_auth_failure_hold_and_redact_at_http_boundary",
+      "test_missing_committed_output_holds_inspection_and_restore_without_replay"
+    ],
+    "native_video": "PASS in this full run; not a fourth skip"
+  },
+  "focused": {
+    "payment": {
+      "run": 116,
+      "pass": 116,
+      "fail": 0,
+      "error": 0,
+      "skip": 0
+    },
+    "photo_correction": {
+      "run": 61,
+      "pass": 61,
+      "fail": 0,
+      "error": 0,
+      "skip": 0
+    }
+  },
+  "ci": {
+    "run_id": 40790865010,
+    "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40790865010",
+    "head_sha": "4642841f3e99d8c74b4b379e24922a7ba3f614c9",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 123175733454,
+        "name": "Navigation and audio lifecycle",
+        "conclusion": "success"
+      },
+      {
+        "id": 123175733687,
+        "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+        "conclusion": "success"
+      },
+      {
+        "id": 123175733692,
+        "name": "Windows Python 3.12 native SDL audio (dummy output)",
+        "conclusion": "success"
+      }
+    ],
+    "detail": "ar-audit-final-ci.json",
+    "superseded_payment_run": {
+      "id": 40790391324,
+      "conclusion": "cancelled",
+      "reason": "Existing branch concurrency policy superseded by functional correction"
+    }
+  },
+  "matrix": {
+    "total": 69,
+    "pass": 44,
+    "fail": 1,
+    "skip": 0,
+    "blocked": 9,
+    "not_run": 15,
+    "failed_id": "UX-13",
+    "failure_reason": "BUG-023 durable wrong-PIN denial audit absent; rejection/rate limiting still pass"
+  },
+  "findings": {
+    "BUG-022": "CORRECTED_AND_REGRESSION_VERIFIED; device media-loss acceptance NOT_RUN",
+    "AR-AUDIT-002": "OPEN: native connectivity-restored producer absent; PAY-08 NOT_RUN",
+    "BUG-023": "OPEN: denied operator PIN attempt not durably audited; UX-13 FAIL"
+  },
+  "native_visual_evidence": "No new local PNG/QR evidence. f72fdbc manifests remain historical; this nonvisual validation change retains those layouts. Matching CI native capture steps SUCCESS; no new phone/touch acceptance inferred.",
+  "limitations": [
+    "Three optional native palm model tests skipped; no device/provider certification.",
+    "A passing full regression is distinct from the current 1 FAIL / 15 NOT_RUN / 9 BLOCKED scenario matrix.",
+    "No production, external merchant, real paper/upload/deletion, branch merge/default or queued OPS implementation."
+  ]
+}
