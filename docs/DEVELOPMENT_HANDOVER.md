@@ -1,5 +1,32 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — AR-04/05/08 CAP-20.b focused checkpoint
+
+First micro-push `2ac9e82ce72de49d6a7ade385c3db37b2e1707d5` pushed/remote verified;
+JPEG-only CI 40838609747 SUCCESS. Current complete source is this containing
+micro-push; pin exact SHA after push/remote verification. **57 focused PASS /
+zero failure/error/skip**, 43.617s, Python 3.12.14/Linux. Six methods/74 injected
+ENOSPC/EACCES cases: JPEG 14, retake 16, PNG 16, initial manifest 2, issue intent
+2, both atomic writers 24; **48 actual child exits**, 26 parent-process cases.
+[Exact command/source/digest](qa/portrait-v2-sandbox/evidence/cap20-all-verification.json).
+
+No false failed-operation ACK or paid service completion. Original proof/current
+provider, grant/allocation/copies/deadlines/OWED preserved. Partial/unhashed bytes
+held; known staged/published bytes adopt once. Retake selection/quota atomic;
+previous committed PNG survives failure of final transaction-status write.
+Failed issue-intent save cannot erase pre-existing OWED; report succeeds once
+when writable again. Both JSON writers retain prior bytes/absence and clean temp
+on create/partial-write/fsync faults. Two parent controller/store reopens keep
+same ACKs/bytes; no shutter/render/print/upload/charge/allocation replay.
+No runtime defect or runtime/schema/UI change; prior full/native retained at
+original source. CAP-20 synthetic PASS; matrix **56 PASS / 1 FAIL / 9 BLOCKED /
+3 NOT_RUN**, audit IN_PROGRESS/BUG-023 OPEN. Current matching CI pending.
+Next verify current Linux/Windows CI and publish final safe checkpoint; then
+AR-09 bounded redacted durable denials for BUG-023. UX-05/07/11/external/OPS gates
+stay open. No production/public ingress/real paper/Drive/deletion/new branch/
+master/default operation. Only work/ scratch local, no unpublished runtime patch.
+Rollback tests/CI/docs, retain all financial/media/claim/fence/budget records.
+
 ## 29 October — AR-04/08 CAP-20.a JPEG fault checkpoint
 
 Base/remote verified `abc44d67d69783ae429918d8e6a457f9d13724f9`.

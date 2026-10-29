@@ -1,8 +1,8 @@
 {
-  "status": "PARTIAL_CAP20_JPEG_VERIFIED_CI_PENDING",
+  "status": "PARTIAL_CAP20_JPEG_VERIFIED_CI_SUCCESS",
   "branch": "feature/portrait-kiosk-v2-next",
   "review_base": "abc44d67d69783ae429918d8e6a457f9d13724f9",
-  "test_commit": "Containing Git commit; pin after remote verification",
+  "test_commit": "2ac9e82ce72de49d6a7ade385c3db37b2e1707d5",
   "runtime_source": "e0dc59435772148be86449c55140d4b9be2f6364",
   "runtime_changed": false,
   "python": "3.12.14",
@@ -46,10 +46,17 @@
     "blocked": 9,
     "not_run": 4
   },
-  "ci": "PENDING at containing test commit; Linux/Windows workflow includes module",
+  "ci": {
+    "run_id": 40838609747,
+    "head_sha": "2ac9e82ce72de49d6a7ade385c3db37b2e1707d5",
+    "status": "completed",
+    "conclusion": "success",
+    "scope": "JPEG-only increment; does not cover later retake/PNG/initial/reporting/shared-writer cases"
+  },
   "full_native": "NOT_RERUN_TESTS_ONLY; older full e0dc594/native c94696d retain original source and exclude new methods",
   "privacy": "Synthetic ticket memory/stdin only; no raw logs/images/DB/customer material committed",
   "next": "Retake/PNG/initial manifest and issue-intent write faults, then CI/checkpoint; AR-09 BUG-023 follows",
   "limits": "Targeted injected OS calls with reporting storage available; not real disk filling/chmod/power-loss/device/merchant acceptance",
-  "rollback": "Inverse tests/CI/docs; retain all financial/media/claim/fence/budget records"
+  "rollback": "Inverse tests/CI/docs; retain all financial/media/claim/fence/budget records",
+  "remote_verified": true
 }

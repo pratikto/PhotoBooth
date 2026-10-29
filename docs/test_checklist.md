@@ -1,5 +1,14 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 29 October — CAP-20 storage matrix focused-complete
+
+**57 focused PASS / zero failure/error/skip**, 74 fault cases: 48 real child
+exits plus 26 issue/atomic-writer cases. JPEG/retake/PNG/initial-manifest and
+reporting rights preserve original ACKs/bytes/quota/OWED or hold safely.
+No runtime change. Matrix **56 PASS / 1 FAIL / 9 BLOCKED / 3 NOT_RUN**.
+First JPEG-only CI 40838609747 SUCCESS; current matching CI pending.
+Next final CI/checkpoint then AR-09 BUG-023. [Evidence/limits](qa/portrait-v2-sandbox/CAP20-STORAGE-FAULTS.md).
+
 ## 29 October — CAP-20 JPEG write faults focused-verified
 
 **52 focused PASS / zero failure/error/skip**, 14 child exits covering ENOSPC/
