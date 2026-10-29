@@ -14,7 +14,7 @@ Sandbox begin_ready/delivery isolation and existing native MOCK fixtures.
 The dedicated merchant Sandbox rejects print/Drive opt-ins. It has no approved
 purchased-print payment path; do not mount one, print a payment slip, or infer
 production permission from this increment. Ordinary local photo/MOCK already
-supports explicit printer opt-in. Add a bounded QA seam there, reusing the
+supports explicit printer opt-in. Add a worker-based QA seam there, reusing the
 original read-only check_printer and saved configuration, on its existing
 single-flight worker before a **new nonpayable MOCK** order/QR is created.
 
@@ -74,3 +74,27 @@ Dedicated Sandbox printer/Drive stay OFF; no merchant/production/OPS/public
 infrastructure/branch/master/default/deployment or actual external effects.
 Only work/ synthetic scratch local. Rollback inverse adapters/tests/docs, retain
 all financial/reward/claim/fence/media/audit records and existing original probes.
+
+## 29 October — UX-07.d actual MOCK factory/native worker verified
+
+Functional micro-push `2f598fd1136e3d2db0d410a0cdd640c74ef9cf6d` remote verified.
+**67 focused PASS / zero failure/error/skip**, 24.283s, Python 3.12.14/Linux
+software GL. Two new native methods use the actual app-configured factory,
+with no injected checkout_jobs, at 800x1280 and 452x900. Clock ticks during a
+held printer probe, duplicate taps are rejected, unknown result shows fixed
+retryable text with no private error/order/QR/admission; deliberate retry creates
+one nonpayable original order. Real page-revision retirement hides late result;
+explicit recovery finds that same persisted order without another probe.
+No runtime edits after 2f598fd. Original TCP checks are bounded per route;
+Windows spooler API latency itself is not bounded by this adapter. No paper
+readiness guarantee. [Commands/digests/limits](evidence/ux07-mock-printer-verification.json).
+
+This tests/docs-only micro-push registers through the existing native group.
+Current first-source CI 40881383641 pending/superseded, not claimed PASS.
+Next one final full applicable regression and native error/retry image review,
+then matching current Windows/Linux CI/final safe checkpoint. Matrix unchanged
+59/0/9/1; UX-07 complete purchased-print payment/device gate NOT_RUN. PAY-22 and
+WEB-01..08 BLOCKED, all actual device/provider/privacy/release gates separate.
+Dedicated Sandbox printer/Drive OFF; no production/OPS/public ingress/branch/
+master/default/deployment or real external effects. Only work/ synthetic scratch
+local. Rollback inverse adapters/tests/docs, retain all financial/media records.

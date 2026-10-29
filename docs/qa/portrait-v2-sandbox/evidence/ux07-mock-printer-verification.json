@@ -1,7 +1,7 @@
 {
-  "status": "MOCK_ONLY_PRINTER_PREFLIGHT_FOCUSED_VERIFIED_NATIVE_FULL_CI_PENDING",
+  "status": "MOCK_ONLY_PRINTER_PREFLIGHT_NATIVE_FOCUSED_VERIFIED_FULL_CI_PENDING",
   "base": "605496ef1e0812eb804dfef219a41569d84cbb4e",
-  "source": "Containing functional micro-commit; final checkpoint pins exact SHA",
+  "source": "2f598fd1136e3d2db0d410a0cdd640c74ef9cf6d",
   "new_methods": 7,
   "before": {
     "run": 7,
@@ -24,7 +24,8 @@
     "photobooth/kiosk_v2/mock_checkout.py": "13a7fc95ec5bfa8f07a3e20245bcc0c104d4afe7bb90ebad8903d0b06de25f18",
     "photobooth/kiosk_v2/checkout_views.py": "3391a9ecb3a4d8f0e1f448e067b4c952fed8f068d2800c2aaa3d61493d4822c3",
     "tests/test_ux07_mock_printer.py": "66e15b1629892aaede9b8d7cf8351408bab3cc664995f257fc2003ce9857ee16",
-    ".github/workflows/portrait-kiosk-v2.yml": "e64d54eff8ceb705645684cdf2afedeefaaffbdec70139101488ce3236fb2862"
+    ".github/workflows/portrait-kiosk-v2.yml": "e64d54eff8ceb705645684cdf2afedeefaaffbdec70139101488ce3236fb2862",
+    "tests/test_kiosk_v2_checkout_widgets.py": "1a4172c67642e8d870033793cc9b24161f39e3ea77fc7941f3fc727d6287d606"
   },
   "report_sha256": "ad0f555f93d123ca4c57c49f5566697ed87ec32071c191aaf4f49988c49717e9",
   "matrix": {
@@ -34,5 +35,27 @@
     "blocked": 9,
     "not_run": 1
   },
-  "limits": "Nonpayable MOCK opt-in only. Original route/queue/node probe never proves physical printer/paper or purchased QRIS service. Dedicated Sandbox printer/Drive OFF, full UX-07 NOT_RUN. No real network/Drive/print/payment effect. Native/full/current CI pending."
+  "limits": "Nonpayable MOCK opt-in only; original TCP probe has 0.75s per route, original Windows spooler API latency is not bounded by this adapter. Route/queue/node never proves paper or purchased QRIS service. Dedicated Sandbox printer/Drive OFF, UX-07 whole gate NOT_RUN. No real network/Drive/print/payment effect. Full/current CI pending.",
+  "native_test_source": "Containing tests-only micro-commit; pin after push",
+  "native_focused": {
+    "run": 67,
+    "pass": 67,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 24.283
+  },
+  "native_command": "KIVY_HOME=/tmp/meong-ux07-printer-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 MESA_SHADER_CACHE_DIR=/tmp/meong-ux07-printer-mesa MEONG_CI_TEST_REPORT=work/ux07-mock-native-focused.txt .venv/bin/python tools/run_kiosk_unittests.py test_ux07_mock_printer test_kiosk_v2_mock_checkout test_device_health test_printer_settings test_kiosk_v2_delivery_options tests.test_kiosk_v2_checkout_widgets",
+  "native_report_sha256": "8b63bdd7b583b3097d65e896c587f84e008be81643e63fa1d840545481020279",
+  "new_native_methods": 2,
+  "sizes": [
+    [
+      800,
+      1280
+    ],
+    [
+      452,
+      900
+    ]
+  ]
 }

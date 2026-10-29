@@ -1,7 +1,8 @@
 """Real widget checks for opt-in MOCK mode, never payment-provider acceptance."""
 
-from contextlib import contextmanager
+from contextlib import contextmanager, closing
 import os
+from pathlib import Path
 from tempfile import TemporaryDirectory
 import threading
 import time
@@ -15,6 +16,7 @@ except ImportError:
 else:
     HAS_KIVY = True
     from kivy.base import EventLoop
+    from kivy.clock import Clock
     from kivy.core.window import Window
     from photobooth.kiosk_v2.app import PortraitKioskV2App
     from photobooth.kiosk_v2.demo_game import GameJobs
@@ -25,6 +27,29 @@ else:
 
 @unittest.skipUnless(HAS_KIVY, 'Native widget environment required')
 class CheckoutWidgetTests(unittest.TestCase):
+    @contextmanager
+    def configured_print_booth(self):
+        # Exercise the actual application factory, not injected checkout_jobs.
+        # All device probes are separately replaced by each test's barrier.
+        with (TemporaryDirectory() as temp,
+              patch.dict(os.environ, {'PHOTOBOOTH_V2_CHECKOUT_MOCK':'1',
+                  'PHOTOBOOTH_V2_CHECKOUT_SANDBOX':'0', 'PHOTOBOOTH_V2_PRINT':'1',
+                  'PHOTOBOOTH_V2_DRIVE':'0', 'PHOTOBOOTH_AUDIO':'0',
+                  'PHOTOBOOTH_AD_VIDEO':'0', 'PHOTOBOOTH_CAMERA':'0',
+                  'PHOTOBOOTH_FACE_TRIGGER':'0', 'PHOTOBOOTH_PALM_TRIGGER':'0'}),
+              patch('photobooth.kiosk_v2.checkout_views.PROJECT_ROOT', Path(temp))):
+            store = MockCheckoutStore(Path(temp)/'data'/'kiosk-v2-p4')
+            app = PortraitKioskV2App()
+            Window.add_widget(app.build())
+            try: yield app, store
+            finally:
+                app.on_stop(); app._mock_jobs.wait_closed(); Window.remove_widget(app.stage)
+                if app._photo_jobs: app._photo_jobs.wait_closed()
+
+    def mock_orders(self, store):
+        with closing(store._connect()) as db:
+            return [dict(row) for row in db.execute('SELECT * FROM mock_orders ORDER BY rowid')]
+
     @contextmanager
     def booth(self, root=None, factory=None, enabled=True):
         with TemporaryDirectory() as temp, patch.dict(os.environ, {
@@ -67,6 +92,99 @@ class CheckoutWidgetTests(unittest.TestCase):
             self.assertEqual(app.navigation.page,TEMPLATES)
             self.assertFalse(any('UJI CHECKOUT MOCK' in w.text for w in self.buttons(app)))
             self.assertTrue(next(w for w in self.buttons(app) if 'PEMBAYARAN' in w.text).disabled)
+
+    def test_ux07_configured_printer_probe_keeps_clock_live_and_retry_creates_one_mock_at_both_sizes(self):
+        from photobooth.device_health import HealthCheck, READY, UNKNOWN
+        original = Window.size
+        try:
+            for size in ((800,1280),(452,900)):
+                with self.subTest(size=size):
+                    entered, release = threading.Event(), threading.Event()
+                    probe_threads = []
+                    def probe(_config):
+                        probe_threads.append(threading.get_ident())
+                        if len(probe_threads) == 1:
+                            entered.set()
+                            if not release.wait(8): raise TimeoutError('synthetic barrier timeout')
+                            return HealthCheck('printer', UNKNOWN, 'PRIVATE driver/address/path')
+                        return HealthCheck('printer', READY, 'route only; paper unknown')
+                    try:
+                        with (patch('photobooth.device_health.check_printer', side_effect=probe) as observed,
+                              patch('photobooth.printer.ThermalPrinter') as printer,
+                              self.configured_print_booth() as (app,store)):
+                            Window.size = size
+                            self.gallery(app); app._open_mock_checkout()
+                            self.assertTrue(entered.wait(2))
+                            ticks = []
+                            event = Clock.schedule_interval(lambda dt: ticks.append(dt), 0)
+                            try:
+                                deadline = time.monotonic()+2
+                                while len(ticks)<3 and time.monotonic()<deadline: EventLoop.idle()
+                                self.assertGreaterEqual(len(ticks), 3)
+                                app._open_mock_checkout(); app._mock_status(); app._mock_without_promo()
+                                self.assertTrue(app._mock_jobs.busy)
+                                self.assertEqual(self.mock_orders(store), [])
+                                self.assertIsNone(app._mock_view)
+                            finally:
+                                event.cancel(); release.set()
+                            self.settle(app)
+                            self.assertEqual(app.navigation.page, MOCK_CHECKOUT)
+                            self.assertIsNone(app._mock_view)
+                            self.assertIsNone(app._photo_jobs)
+                            self.assertIn('Koneksi printer belum terkonfirmasi', app._mock_message.text)
+                            texts = ' '.join(getattr(w,'text','') for w in app.stage.walk())
+                            self.assertNotIn('PRIVATE', texts)
+                            self.assertEqual(self.mock_orders(store), [])
+                            app._mock_status(); self.settle(app)
+                            view = app._mock_view
+                            self.assertEqual(view['state'], 'PENDING')
+                            self.assertTrue(view['qr_payload'].startswith('MEONG MOCK ONLY - NOT QRIS - '))
+                            self.assertIsNotNone(app._mock_qr.texture)
+                            self.assertIsNone(view['admission_id'])
+                            self.assertIsNone(app._photo_jobs)
+                            self.assertEqual(len(self.mock_orders(store)), 1)
+                            app._mock_status(); self.settle(app)
+                            self.assertEqual(app._mock_view['order_id'], view['order_id'])
+                            self.assertEqual(observed.call_count, 2)
+                            self.assertTrue(all(t != threading.get_ident() for t in probe_threads))
+                            printer.assert_not_called()
+                    finally: release.set()
+        finally: Window.size = original
+
+    def test_ux07_retired_printer_probe_result_stays_hidden_then_recovers_original_mock_at_both_sizes(self):
+        from photobooth.device_health import HealthCheck, READY
+        original = Window.size
+        try:
+            for size in ((800,1280),(452,900)):
+                with self.subTest(size=size):
+                    entered, release = threading.Event(), threading.Event()
+                    def probe(_config):
+                        entered.set()
+                        if not release.wait(8): raise TimeoutError('synthetic barrier timeout')
+                        return HealthCheck('printer', READY, 'route only; paper unknown')
+                    try:
+                        with (patch('photobooth.device_health.check_printer', side_effect=probe) as observed,
+                              self.configured_print_booth() as (app,store)):
+                            Window.size = size
+                            self.gallery(app); app._open_mock_checkout()
+                            self.assertTrue(entered.wait(2))
+                            revision = app._view_revision
+                            app._show()  # Real page retirement; old worker result must be fenced.
+                            self.assertGreater(app._view_revision, revision)
+                            release.set(); app._mock_jobs.wait_closed(); app._poll_checkout()
+                            self.assertFalse(app._mock_jobs.busy)
+                            self.assertIsNone(app._mock_view)
+                            self.assertFalse(any('MEONG MOCK ONLY' in getattr(w,'text','') for w in app.stage.walk()))
+                            rows = self.mock_orders(store)
+                            self.assertEqual(len(rows), 1)
+                            self.assertIsNone(rows[0]['admission_id'])
+                            self.assertIsNone(app._photo_jobs)
+                            app._mock_status(); self.settle(app)  # Explicit recovery, no new probe/order.
+                            self.assertEqual(app._mock_view['order_id'], rows[0]['order_id'])
+                            self.assertEqual(observed.call_count, 1)
+                            self.assertEqual(len(self.mock_orders(store)), 1)
+                    finally: release.set()
+        finally: Window.size = original
 
     def test_pending_unknown_cancel_resolution_and_no_browse_timeout(self):
         with self.booth() as (app,store):

@@ -1,5 +1,13 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 29 October — UX-07.d actual MOCK factory/native probe verified
+
+67 focused PASS/zero skip; real configured app worker at both portrait sizes,
+Clock progress, duplicate/retired input fences, generic error/one fresh retry
+and original-order recovery verified. Runtime remains 2f598fd; full/current CI
+pending. UX-07 whole purchased-print gate NOT_RUN, matrix 59/0/9/1 unchanged.
+[Exact evidence/limits/next](qa/portrait-v2-sandbox/UX07-MOCK-PRINTER-PREFLIGHT.md).
+
 ## 29 October — UX-07.c nonpayable MOCK printer preflight
 
 53 focused PASS/zero skip; seven causal methods. Configured MOCK uses original
