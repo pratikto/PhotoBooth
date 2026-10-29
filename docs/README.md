@@ -1,5 +1,29 @@
 # Meong Photobooth documentation — GUI v2
 
+## 29 October — PAY-18 verified; next CAP-11–13
+
+Tests/CI source `74155c13787fc608304a6214eb374a20e424ebdd` and first micro-push
+`3ad80da74da2a0fc3c9d5e3dbe3d84f91a483f4a` pushed/remote-verified.
+**86 focused PASS / zero failure/error/skip**, 22.532s; three methods execute
+23 actual child exits at seven claim/STARTED/COMPLETED/archive boundaries.
+[CI 40818696969](https://github.com/pratikto/PhotoBooth/actions/runs/40818696969)
+**all three jobs SUCCESS**: Windows payment/recovery 58 PASS/zero skip, Linux
+protocol/recovery 375 PASS/zero skip; native 111 run/110 PASS/one optional palm
+SKIP. First CI 40818395624 superseded/CANCELLED, not standalone PASS.
+[Exact source/commands/limits](qa/portrait-v2-sandbox/evidence/pay18-final-verification.json).
+
+No runtime defect/application/schema/UI change. Original paid identities, proof,
+OWED, copies and result bytes survive with no repeated charge/capture/render/
+print/upload. Final archive interruption remains active/private until durable
+history/index/journal. Prior full e0dc594 (1117/1114/3) and native c94696d
+(28 PNG/four QR) retain original source; no new local full/native run
+or physical acceptance is claimed.
+Matrix **51 PASS / 1 FAIL / 9 BLOCKED / 8 NOT_RUN**, BUG-023 OPEN/audit IN_PROGRESS.
+Next **CAP-11–13 retake child exits**, then CAP-16 pre-request, CAP-20 and AR-09
+redacted denial audit. External/OPS/production gates unchanged; work/ scratch only,
+no unpublished runtime patch. This docs-only publication is the final safe
+checkpoint; resolve its exact SHA from Git/remote, then continue unfinished work.
+
 ## 29 October — AR-03.d2 completion/archive process exits
 
 Previous micro-push `3ad80da74da2a0fc3c9d5e3dbe3d84f91a483f4a` remote verified.

@@ -1,5 +1,29 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
+## 29 October — PAY-18 verified; next CAP-11–13
+
+Tests/CI source `74155c13787fc608304a6214eb374a20e424ebdd` and first micro-push
+`3ad80da74da2a0fc3c9d5e3dbe3d84f91a483f4a` pushed/remote-verified.
+**86 focused PASS / zero failure/error/skip**, 22.532s; three methods execute
+23 actual child exits at seven claim/STARTED/COMPLETED/archive boundaries.
+[CI 40818696969](https://github.com/pratikto/PhotoBooth/actions/runs/40818696969)
+**all three jobs SUCCESS**: Windows payment/recovery 58 PASS/zero skip, Linux
+protocol/recovery 375 PASS/zero skip; native 111 run/110 PASS/one optional palm
+SKIP. First CI 40818395624 superseded/CANCELLED, not standalone PASS.
+[Exact source/commands/limits](evidence/pay18-final-verification.json).
+
+No runtime defect/application/schema/UI change. Original paid identities, proof,
+OWED, copies and result bytes survive with no repeated charge/capture/render/
+print/upload. Final archive interruption remains active/private until durable
+history/index/journal. Prior full e0dc594 (1117/1114/3) and native c94696d
+(28 PNG/four QR) retain original source; no new local full/native run
+or physical acceptance is claimed.
+Matrix **51 PASS / 1 FAIL / 9 BLOCKED / 8 NOT_RUN**, BUG-023 OPEN/audit IN_PROGRESS.
+Next **CAP-11–13 retake child exits**, then CAP-16 pre-request, CAP-20 and AR-09
+redacted denial audit. External/OPS/production gates unchanged; work/ scratch only,
+no unpublished runtime patch. This docs-only publication is the final safe
+checkpoint; resolve its exact SHA from Git/remote, then continue unfinished work.
+
 ## 29 October — AR-03.d2 completion/archive process exits
 
 Previous micro-push `3ad80da74da2a0fc3c9d5e3dbe3d84f91a483f4a` remote verified.
@@ -198,7 +222,7 @@ offline inbox prototype assertions do not certify deployed ingress.
 | PAY-15 | **PASS** | `test_checkout_backend.test_no_new_order_until_provider_cancel_confirmed` | Terminal states and original visit release, no inferred cancellation. |
 | PAY-16 | **PASS** | `test_checkout_durability.test_late_paid_is_review_not_next_customer` | Late paid stays original order under review. |
 | PAY-17 | **PASS** | `test_qris_http_v2.test_other_booth_cannot_read_or_claim` | Booth authentication plus creation-attempt merchant/mode mismatch tests. |
-| PAY-18 | **PASS** | `test_service_crash_recovery.test_pay18_combined_lost_claim_started_completed_replies_restore_original_result_and_ack`; `test_pay18_completed_reply_loss_cannot_use_cached_paid_during_outage_or_refund` | Eight real child exits/four boundaries across original claim/customer proof/STARTED/COMPLETED; same original ACK tuple/operation/allocation, immutable three-JPEG/one-output result and OWED. Fresh outage/refund deny recovery; no repeated charge/media/delivery. [85-case focused evidence](evidence/pay18-replies-verification.json). |
+| PAY-18 | **PASS** | `test_service_crash_recovery.test_pay18_combined_lost_claim_started_completed_replies_restore_original_result_and_ack`; `test_pay18_completed_reply_loss_cannot_use_cached_paid_during_outage_or_refund`; `test_pay18_completion_archive_exits_hold_until_history_index_and_final_journal_are_durable` | 23 real child exits/seven claim/customer-proof/STARTED/COMPLETED/archive boundaries; same original ACK tuple/operation/allocation, immutable three-JPEG/one-output result/copies/OWED. Outage/refund deny recovery, partial archive stays active/private, no repeated effects. [86-case focused/CI evidence](evidence/pay18-final-verification.json). |
 | PAY-19 | **PASS** | `test_qris_recovery.test_changed_action_payload_or_order_cannot_reuse_old_action_id` | Reused action body/order conflicts without mutation. |
 | PAY-20 | **PASS** | `test_checkout_reconciliation.test_clock_rollback_holds_without_extending_deadline_indefinitely` | Provider remains authority; clock/credential/retention cases use separate fixed clocks. |
 | PAY-21 | **PASS** | `test_checkout_reconciliation.test_pay21_oversized_status_and_auth_failure_hold_and_redact_at_http_boundary`; `test_midtrans_sandbox.test_redirect_is_not_followed` | Audit increment 2: oversized provider status JSON read bounded at 65,537 bytes/response closed; HTTP 401 and oversized responses remain unchecked and deny grant with redacted HTTP/DB evidence. Same-order Sandbox GET only; existing no-redirect guard also PASS. [Focused evidence](evidence/ar-audit-payment.json). |

@@ -1,5 +1,5 @@
 {
-  "status": "FOCUSED_VERIFIED_CI_PENDING",
+  "status": "FOCUSED_VERIFIED_CI_SUPERSEDED",
   "branch": "feature/portrait-kiosk-v2-next",
   "review_base": "03189012b5f4c6204ef4f8718bb218a1baac32d5",
   "test_commit": "3ad80da74da2a0fc3c9d5e3dbe3d84f91a483f4a",
@@ -47,8 +47,9 @@
   "ci": {
     "run_id": 40818395624,
     "head_sha": "3ad80da74da2a0fc3c9d5e3dbe3d84f91a483f4a",
-    "status_at_next_increment": "in_progress",
-    "conclusion": null
+    "status": "completed",
+    "conclusion": "cancelled",
+    "reason": "Existing workflow concurrency; Windows job success alone is not entire run PASS"
   },
   "next": "AR-03.d2 completion/archive child exits, then CAP-11\u201313, CAP-16 pre-request, CAP-20, AR-09 BUG-023",
   "limits": "Software exits, not disk power-loss/device/merchant/physical print/Drive/deletion/release acceptance",

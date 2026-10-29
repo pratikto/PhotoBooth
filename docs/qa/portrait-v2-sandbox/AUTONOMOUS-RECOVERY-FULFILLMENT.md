@@ -133,3 +133,11 @@ CAP-16 pre-request, CAP-20 and AR-09 denial audit follow. Prior full/native stay
 at e0dc594/c94696d; no new full/native/device/provider/production/OPS acceptance.
 Only disposable work/ local, no unpublished runtime patch. Scoped inverse of
 new tests/docs retains every customer record; containing SHA resolved after push.
+
+## Final AR-03.d verification
+
+PAY-18 source 74155c1 pushed/remote verified: 86 focused PASS, 23 real exits/seven
+boundaries; CI 40818696969 all three jobs SUCCESS (Windows payment/recovery 58
+PASS, Linux protocol/recovery 375 PASS, native one optional palm SKIP). No runtime
+change. [Exact source/evidence/continuation](evidence/pay18-final-verification.json).
+Next CAP-11–13; matrix 51/1/9/8, audit and BUG-023/external/OPS gates unchanged.

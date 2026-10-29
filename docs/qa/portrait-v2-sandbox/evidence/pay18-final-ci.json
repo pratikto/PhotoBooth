@@ -1,0 +1,348 @@
+{
+  "run_id": 40818696969,
+  "head_sha": "74155c13787fc608304a6214eb374a20e424ebdd",
+  "status": "completed",
+  "conclusion": "success",
+  "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/40818696969",
+  "jobs": [
+    {
+      "id": 123266013988,
+      "name": "Windows Python 3.12 native SDL audio (dummy output)",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "number": 1,
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 2,
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 3,
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 4,
+          "name": "Install Windows native providers",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 5,
+          "name": "Check autonomous recovery ledgers, WAL crashes and file protocol on Windows (synthetic)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 6,
+          "name": "Check payment creation and reconciliation crash boundaries (offline)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 7,
+          "name": "Check portable startup, recovery holds and Windows launch ownership",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 8,
+          "name": "Check Windows DLL loading, safe WAV fallback and twenty PCM cycles",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 9,
+          "name": "Preserve Windows portable startup report",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 17,
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 18,
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 19,
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 123266014274,
+      "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "number": 1,
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 2,
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 3,
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 4,
+          "name": "Install minimum desktop simulator",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 5,
+          "name": "Load the bundled offline face detector and check hold/cooldown policy",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 6,
+          "name": "Isolated P3 photo, composition, retake and durable print guards",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 7,
+          "name": "Reused QRIS protocol and native v2 Sandbox handoff (offline only)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 8,
+          "name": "Reuse original v1 read-only health backend and v2 bridge (fixtures)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 9,
+          "name": "Exercise opt-in Kivy widgets at a virtual display",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 10,
+          "name": "Verify unchanged latest Meong Fly modules and original regression suite",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 11,
+          "name": "Reuse muted native channels across twenty audio cycles (dummy PCM output)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 12,
+          "name": "Capture real Kivy pages at 800x1280 (fresh Xvfb process)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 13,
+          "name": "Capture compact Kivy pages at 452x900 (RGB readback-aligned)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 14,
+          "name": "Capture short-window Kivy pages at 360x640 and 800x600",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 15,
+          "name": "Capture P3 photo pages with an isolated store and synthetic camera",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 16,
+          "name": "Capture automatic print and background Drive using offline fixtures",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 17,
+          "name": "Capture P4 DEMO game pages with isolated attempt ledger",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 18,
+          "name": "Capture isolated P4b MOCK checkout states (never a payment provider)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 19,
+          "name": "Capture native Sandbox views with offline HTTP fixtures (not merchant acceptance)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 20,
+          "name": "Capture original v1 operator health panel in v2 (offline fixtures)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 21,
+          "name": "Preserve visual evidence for review",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 22,
+          "name": "Surface failed synthetic desktop test details",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "number": 43,
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 44,
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 45,
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 123266014325,
+      "name": "Navigation and audio lifecycle",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "number": 1,
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 2,
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 3,
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 4,
+          "name": "Syntax",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 5,
+          "name": "Apps Script retention activation and scoped cleanup (offline VM)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 6,
+          "name": "Kivy-independent navigation and fake audio tests",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 7,
+          "name": "Observation-only supervisor and startup safety",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 13,
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 14,
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "number": 15,
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "windows_payment_recovery": {
+    "run": 58,
+    "pass": 58,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 43.356
+  },
+  "superseded": {
+    "run_id": 40818395624,
+    "head_sha": "3ad80da74da2a0fc3c9d5e3dbe3d84f91a483f4a",
+    "conclusion": "cancelled",
+    "reason": "Existing workflow concurrency; Windows job success is partial evidence, not entire run PASS"
+  },
+  "limits": "Hosted Windows/Linux fixtures, not physical device/merchant/printing/Drive/deletion/release acceptance",
+  "linux_protocol_recovery": {
+    "run": 375,
+    "pass": 375,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 65.811
+  },
+  "linux_native": {
+    "run": 111,
+    "pass": 110,
+    "fail": 0,
+    "error": 0,
+    "skip": 1,
+    "seconds": 93.236,
+    "skipped_test": "tests.test_kiosk_v2_widgets.PortraitKivySmokeTests.test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture",
+    "reason": "Native model assets are opt-in"
+  }
+}

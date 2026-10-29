@@ -1,5 +1,48 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 29 October — PAY-18 verified; next CAP-11–13
+
+Tests/CI source `74155c13787fc608304a6214eb374a20e424ebdd` and first micro-push
+`3ad80da74da2a0fc3c9d5e3dbe3d84f91a483f4a` pushed/remote-verified.
+**86 focused PASS / zero failure/error/skip**, 22.532s; three methods execute
+23 actual child exits at seven claim/STARTED/COMPLETED/archive boundaries.
+[CI 40818696969](https://github.com/pratikto/PhotoBooth/actions/runs/40818696969)
+**all three jobs SUCCESS**: Windows payment/recovery 58 PASS/zero skip, Linux
+protocol/recovery 375 PASS/zero skip; native 111 run/110 PASS/one optional palm
+SKIP. First CI 40818395624 superseded/CANCELLED, not standalone PASS.
+[Exact source/commands/limits](evidence/pay18-final-verification.json).
+
+No runtime defect/application/schema/UI change. Original paid identities, proof,
+OWED, copies and result bytes survive with no repeated charge/capture/render/
+print/upload. Final archive interruption remains active/private until durable
+history/index/journal. Prior full e0dc594 (1117/1114/3) and native c94696d
+(28 PNG/four QR) retain original source; no new local full/native run
+or physical acceptance is claimed.
+Matrix **51 PASS / 1 FAIL / 9 BLOCKED / 8 NOT_RUN**, BUG-023 OPEN/audit IN_PROGRESS.
+Next **CAP-11–13 retake child exits**, then CAP-16 pre-request, CAP-20 and AR-09
+redacted denial audit. External/OPS/production gates unchanged; work/ scratch only,
+no unpublished runtime patch. This docs-only publication is the final safe
+checkpoint; resolve its exact SHA from Git/remote, then continue unfinished work.
+
+### Exact next implementation step
+
+Start AR-04/05 retake evidence, not completed AR-03/PAY-08/PAY-18 work.
+Reuse tests/capture_crash_fixture.py, test_capture_journal.py,
+test_photo_reconstruction.py and the original bound AllocationHarness/customer
+proof. Add real exits after saved retake selection, after saved retake frame
+before quota/manifest acknowledgment, and after committed retake. Check selected
+original index, exactly three retained originals/one immutable retake, original
+consumed quota, frozen copies/retention and OWED; no automatic shutter or media
+replacement. Unknown/unhashed bytes remain held. Then focused tests, docs,
+commit/push and exact remote verification before the next increment.
+
+Remaining NOT_RUN: CAP-11/12/13/16/20 and UX-05/07/11. UX-13/BUG-023 is FAIL,
+PAY-22 and WEB-01–08 BLOCKED. Physical Windows/Ubuntu, provider/merchant, paper/
+phone/Drive/deletion/privacy/operations/release remain separate. No production,
+OPS, public listener, branch/default/master change. Rollback only tests/CI/docs;
+preserve all financial/media/claim/fence/budget records. Local work/ diagnostics
+are untracked and not backed up; no unsafe source patch remains.
+
 ## 29 October — AR-03.d2 completion/archive process exits
 
 Previous micro-push `3ad80da74da2a0fc3c9d5e3dbe3d84f91a483f4a` remote verified.
