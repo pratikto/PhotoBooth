@@ -1,5 +1,13 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
+## 29 October — CAP-11 focused evidence
+
+**76 focused PASS / zero failure/error/skip**, two actual retake process exits;
+original selection/quota/paid binding/bytes/OWED preserved. Tests/CI/docs only,
+no runtime change. Matrix **52 PASS / 1 FAIL / 9 BLOCKED / 7 NOT_RUN**.
+CI pending at this containing test commit. Next CAP-12–13, BUG-023/external/OPS
+gates unchanged. [Evidence and limits](CAP11-13-RETAKE-CRASHES.md).
+
 ## 29 October — PAY-18 verified; next CAP-11–13
 
 Tests/CI source `74155c13787fc608304a6214eb374a20e424ebdd` and first micro-push
@@ -237,7 +245,7 @@ offline inbox prototype assertions do not certify deployed ingress.
 | CAP-08 | **PASS** | `test_capture_journal.test_abrupt_process_exit_at_every_write_boundary_preserves_evidence` | Real published JPEG/pre-manifest exit, image/hash and no overwrite assertions. |
 | CAP-09 | **PASS** | `test_capture_journal.test_abrupt_process_exit_at_every_write_boundary_preserves_evidence` | Real committed exit; reconstruction restores manifest-authorized count. |
 | CAP-10 | **PASS** | `test_photo_reconstruction.test_partial_three_capture_states_restore_exact_count_without_new_ids` | Exact 1/2/3 original states; quota and IDs retained. |
-| CAP-11 | **NOT_RUN** | `test_photo_reconstruction.test_retake_selected_and_used_restore_without_renewing_quota` | Retake selection/reconstruction passes; retake-specific abrupt child exit absent. |
+| CAP-11 | **PASS** | `test_retake_crash_recovery.test_cap11_selection_and_empty_intent_exits_keep_selected_original_and_one_deliberate_retake` | Two actual child exits after durable selection and retake INTENT/pre-bytes. Fresh customer proof/settlement, original index/three originals/copies/retention/OWED preserved; no auto-capture, explicit retake once, consumed quota survives next reopen. [76-case focused evidence](evidence/cap11-verification.json). |
 | CAP-12 | **NOT_RUN** | `test_capture_journal.test_retake_selection_and_consumed_quota_commit_with_same_saved_bytes` | Exception/lost reply and quota pass; child fixture covers originals, not retake frame/pre-quota exit. |
 | CAP-13 | **NOT_RUN** | `test_photo_reconstruction.test_retake_selected_and_used_restore_without_renewing_quota` | Committed retake restore passes; exact retake-commit child exit not demonstrated. |
 | CAP-14 | **PASS** | `test_output_journal.test_abrupt_output_process_exit_preserves_each_publication_boundary` | Real child output intent/staged/published/committed exits; originals/hash/ACK verified. |

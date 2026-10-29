@@ -1,5 +1,26 @@
 # AR-00–AR-13 implementation conformity review
 
+## 29 October — AR-04/05.a CAP-11 focused checkpoint
+
+Base/last remote verified `8c5553b77f0264622b19810d86e95a08a105c7eb`.
+One new method, two actual os._exit children after durable selection and retake
+INTENT before bytes. **76 focused PASS / zero failure/error/skip**, 20.288s,
+Python 3.12.14/Linux cloud. Original claim/fresh settlement, index 1, three
+unchanged originals/two copies/retention/OWED, VOID audit and one explicit
+synthetic retake verified; fresh controller reopen retains consumed quota.
+[Command/source/digest](evidence/cap11-verification.json).
+
+Tests/CI/docs only; application unchanged at e0dc594. No runtime defect found,
+no schema/UI migration or new full/native run; previous provenance unchanged.
+CAP-11 synthetic PASS; matrix **52 PASS / 1 FAIL / 9 BLOCKED / 7 NOT_RUN**.
+This containing tested commit is the next micro-push; resolve/push/verify its
+exact SHA before continuing. Matching Linux/Windows CI pending at publication.
+Next CAP-12 temporary/STAGED/published frame exits, unknown bytes held and proved
+bytes adopted once, then CAP-13 post-commit exit/consumed quota; no auto-shutter.
+BUG-023 and CAP-16/20, UX-05/07/11/external/OPS gates remain. No production,
+real paper/Drive/deletion, branch/default/master change. Only disposable work/
+local, no unpublished runtime patch; rollback tests/CI/docs, retain every record.
+
 ## 29 October — PAY-18 verified; next CAP-11–13
 
 Tests/CI source `74155c13787fc608304a6214eb374a20e424ebdd` and first micro-push

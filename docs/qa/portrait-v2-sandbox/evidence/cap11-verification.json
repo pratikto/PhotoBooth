@@ -1,0 +1,47 @@
+{
+  "status": "FOCUSED_VERIFIED_CI_PENDING",
+  "branch": "feature/portrait-kiosk-v2-next",
+  "review_base": "8c5553b77f0264622b19810d86e95a08a105c7eb",
+  "test_commit": "Containing Git commit; pin after push",
+  "runtime_source": "e0dc59435772148be86449c55140d4b9be2f6364",
+  "runtime_changed": false,
+  "python": "3.12.14",
+  "platform": "Linux cloud",
+  "command": "KIVY_HOME=/tmp/meong-retake-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy MEONG_CI_TEST_REPORT=work/cap11-focused-report.txt .venv/bin/python tools/run_kiosk_unittests.py test_retake_crash_recovery test_capture_journal test_photo_reconstruction test_photo_allocation test_customer_claim_session test_workflow test_retention test_kiosk_v2_photos",
+  "focused": {
+    "run": 76,
+    "pass": 76,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 20.288
+  },
+  "new_methods": 1,
+  "process_exits": {
+    "count": 2,
+    "distinct_boundaries": 2,
+    "codes": {
+      "selection": 100,
+      "intent": 101
+    }
+  },
+  "report_sha256": "97d29906add2831e049d0118bf32750de542af4b0a89f8ee4d94c6b1852b5f08",
+  "files_sha256": {
+    "tests/retake_crash_fixture.py": "f8e1b1cac01ae69a72c5aa7cac2ce6ff3c5d0455c52162e9326fe56e563d71d9",
+    "tests/test_retake_crash_recovery.py": "549c95db6e3d46d1e818cc7faf9c46ba25cea88313ec959e749cbee32e83a1c3",
+    ".github/workflows/portrait-kiosk-v2.yml": "5496002b7c34e76fba04bb37a1d2128410b6fee64dc5e11711c2b711fd9749f5"
+  },
+  "matrix": {
+    "total": 69,
+    "pass": 52,
+    "fail": 1,
+    "blocked": 9,
+    "not_run": 7
+  },
+  "full_native": "NOT_RERUN_TESTS_ONLY; e0dc594 full 1117/1114/3 and c94696d native 28/four retain original source, new method absent",
+  "ci": "PENDING for containing test commit",
+  "next": "CAP-12 temporary/staged/published retake exits, then CAP-13 committed retake exit",
+  "privacy": "Synthetic ticket memory/stdin only, no argv/journal/raw evidence; synthetic temporary images only",
+  "rollback": "Inverse new tests/CI/docs; retain every financial/media/claim/fence/budget record",
+  "limits": "No power-loss/device/merchant/physical paper/Drive/deletion/production/OPS acceptance"
+}

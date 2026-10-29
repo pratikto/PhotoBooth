@@ -1,5 +1,13 @@
 # Meong Photobooth — changelog
 
+## 29 October — CAP-11 focused evidence
+
+**76 focused PASS / zero failure/error/skip**, two actual retake process exits;
+original selection/quota/paid binding/bytes/OWED preserved. Tests/CI/docs only,
+no runtime change. Matrix **52 PASS / 1 FAIL / 9 BLOCKED / 7 NOT_RUN**.
+CI pending at this containing test commit. Next CAP-12–13, BUG-023/external/OPS
+gates unchanged. [Evidence and limits](qa/portrait-v2-sandbox/CAP11-13-RETAKE-CRASHES.md).
+
 ## 29 October — PAY-18 verified; next CAP-11–13
 
 Tests/CI source `74155c13787fc608304a6214eb374a20e424ebdd` and first micro-push
