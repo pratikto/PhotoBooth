@@ -1,5 +1,44 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 29 October — UX-07.e final MOCK validation verified
+
+Remote-verified CI source `8d0b9bb7cf125a714e3aeb277e0ce29930b00fb3`;
+**CI 40887868676 all three jobs SUCCESS**. Actual check annotations verify five
+readiness/seven MOCK methods on Linux, and **both new native configured-factory
+printer lifecycle methods PASS** at both portrait sizes. Windows individually
+verifies the same five readiness/seven MOCK methods. Linux Sandbox **424 PASS**;
+native **113 run / 112 PASS / one SKIP**; pure **129/128/one SKIP**, supervisor
+**40 PASS**. Windows groups **123/72/55/103 PASS**, zero FAIL/ERROR/SKIP.
+New native methods run on Linux only. The prior 40882031887 native blob-log
+restriction is preserved, not relabeled; current notices resolve that evidence
+gap at the new exact source. [Full receipts/commands/hashes](evidence/ux07-mock-printer-final-validation.json).
+
+Application/tools/tests trees match local test source `3a98ed9`; runtime remains
+`2f598fd`. Fresh focused **67 PASS** and **12 PASS**, zero failure/error/skip.
+Final full **1178 run / 1174 PASS / zero FAIL/ERROR / four optional SKIP**,
+594.860s, Python 3.12.14 / Debian 13 software GL/dummy audio. Three optional
+model checks and one opt-in native-video check skipped, never counted PASS.
+Four fresh FBO error/held-retry images at 800x1280/452x900 visually PASS:
+readable controls/message, no clipping/private error/order/QR/customer data;
+retry single-flight and exactly one nonpayable order after deliberate success.
+No runtime/test change or repeated full run for CI/docs-only follow-up.
+
+This validation increment is complete; **UX-07 whole purchased-printer payment/
+device gate remains NOT_RUN**, matrix **59 PASS / 0 FAIL / 9 BLOCKED / 1 NOT_RUN**.
+Purchased-print prepayment integration and actual Windows/Ubuntu printer/device
+acceptance remain uncertified. Route/queue readiness never proves paper; Windows
+spooler API latency is not bounded by this adapter. Sandbox printer/Drive OFF.
+PAY-22 official Legacy contract and WEB-01–08 infrastructure/operations BLOCKED;
+real merchant/phone/paper/Drive/deletion/privacy/support/release gates separate.
+Next resolve those exact gates within their scope; no Operator Settings, Emulate
+Ticket, public deployment, production payment or unrelated GUI work started.
+
+Only safe workflow reporting/docs changed. Rollback their inverse, retaining all
+financial/reward/claim/fence/media/audit/retention records. Private work/ reports,
+images and fixture scripts are local-only, not backed up to GitHub; no unpublished
+runtime/test patch. Final docs publication SHA is its containing commit from Git
+log/remote; prior remote checkpoint is the full `8d0b9bb...` SHA above.
+
 ## 29 October — UX-07 final local validation / CI method reporting
 
 Test source `3a98ed977c86ad9d7eb0f8407103e097f1b9208a`; runtime remains

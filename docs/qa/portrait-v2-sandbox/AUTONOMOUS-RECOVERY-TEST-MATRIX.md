@@ -1,5 +1,23 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
+## 29 October — UX-07 MOCK component final validation verified
+
+CI source `8d0b9bb`, run **40887868676: all three jobs SUCCESS**. Five readiness/
+seven MOCK methods individually PASS Windows/Linux; both new native lifecycle
+methods individually PASS Linux at both portrait sizes, verified via annotations.
+Linux Sandbox **424 PASS**, native **112 PASS/one SKIP**; Windows groups
+**123/72/55/103 PASS**. Application/tools/tests unchanged from `3a98ed9`:
+fresh **67 + 12 focused PASS**; full **1178 run / 1174 PASS / zero FAIL/ERROR /
+four optional SKIP**. Four native error/held-retry images visually PASS; no
+clipping/private data/order/QR before readiness. [Exact evidence](evidence/ux07-mock-printer-final-validation.json).
+
+Whole purchased-printer UX-07 **NOT_RUN**; matrix **59/0/9/1** unchanged. Next:
+purchased payment/preflight integration and actual Windows/Ubuntu printer/device
+evidence; keep Sandbox printer/Drive OFF. Queue/route is not paper readiness;
+Windows spooler API latency is not bounded here. PAY-22/WEB-01–08 and actual
+merchant/paper/phone/Drive/deletion/privacy/support/release acceptance remain
+separate. No runtime/tests or financial/media records changed.
+
 ## 29 October — final MOCK printer validation / CI reporting pending
 
 Source `3a98ed9`: fresh **67 + 12 focused PASS**, full **1178 run / 1174 PASS /
@@ -398,7 +416,7 @@ offline inbox prototype assertions do not certify deployed ingress.
 | UX-04 | **PASS** | `test_kiosk_v2_sandbox_widgets.test_native_claim_and_deliberate_resume_restore_original_capture_without_new_charge` | Original proof, exact saved image count and deliberate countdown; native return screenshots. |
 | UX-05 | **PASS** | `test_ux05_abandonment` (six methods); [complete verification](evidence/ux05-final-verification.json) | Synthetic Windows/Linux HTTP/controller/DB reopens: ambiguous creation/cancel/404 holds original identity and private claim, no replacement charge; fresh terminal unpaid cancellation archives before new visitor, writer/cached-proof faults hold; late settlement preserves OWED and exact paid isolation/lost ACK/archive/return rights. BUG-024 fixed in source/regression verified; actual device/provider acceptance separate. |
 | UX-06 | **PASS** | `test_kiosk_v2_sandbox_widgets.test_postpaid_camera_fault_records_owed_issue_and_hides_media` | Durable paid-unfulfilled issue; no fabricated cancellation. |
-| UX-07 | **NOT_RUN** | `test_ux07_readiness` (five methods), native `test_ux07_precharge_faults_show_safe_quote_and_retry_at_both_portrait_sizes`; [verified components](evidence/ux07-final-verification.json) | Sandbox camera/storage/template/delivery-isolation/freshness failures deny before order/charge; probe cleanup, active identity, eight native error/retry cases at both sizes PASS. Ordinary opt-in nonpayable MOCK gate additionally has 67 focused PASS and four error/retry images; [final local/full/CI scope](evidence/ux07-mock-printer-final-validation.json). Complete purchased-print prepayment integration/actual printer readiness not mounted/certified in transport-off Sandbox; whole stronger gate remains NOT_RUN. |
+| UX-07 | **NOT_RUN** | `test_ux07_readiness` (five methods), native `test_ux07_precharge_faults_show_safe_quote_and_retry_at_both_portrait_sizes`; [verified components](evidence/ux07-final-verification.json) | Sandbox camera/storage/template/delivery-isolation/freshness failures deny before order/charge; probe cleanup, active identity, eight native error/retry cases at both sizes PASS. Ordinary opt-in nonpayable MOCK gate additionally has 67 focused PASS, full 1178/1174/4, four reviewed error/retry images and matching-source CI 40887868676 with exact Windows/Linux method evidence; [final local/full/CI scope](evidence/ux07-mock-printer-final-validation.json). Complete purchased-print prepayment integration/actual printer readiness not mounted/certified in transport-off Sandbox; whole stronger gate remains NOT_RUN. |
 | UX-08 | **PASS** | `test_booth_sync.test_configured_layout2_without_credentials_is_offline_ready_and_never_falls_back_to_legacy_oauth` | Offline local progress with deferred Drive and preserved layout/claims. |
 | UX-09 | **PASS** | `test_release_session.test_uncertain_print_never_yields_isolation_receipt_or_releases_booth` | Uncertain print remains held, no automatic resend; paper outcome NOT_RUN. |
 | UX-10 | **PASS** | `test_booth_sync.test_two_transactions_keep_exact_local_folder_mapping_across_restart` | Immutable delivery mapping/retry/retention fixtures; actual Drive acceptance NOT_RUN. |

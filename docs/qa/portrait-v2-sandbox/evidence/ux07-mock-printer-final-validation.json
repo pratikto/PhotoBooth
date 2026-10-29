@@ -1,5 +1,5 @@
 {
-  "status": "LOCAL_MOCK_VALIDATION_COMPLETE_CI_REPORTING_CHECKED_CURRENT_CI_PENDING_UX07_WHOLE_NOT_RUN",
+  "status": "MOCK_COMPONENT_LOCAL_FULL_NATIVE_IMAGES_WINDOWS_LINUX_CI_VERIFIED_UX07_WHOLE_NOT_RUN",
   "date": "2026-10-29 Asia/Jakarta",
   "test_source": "3a98ed977c86ad9d7eb0f8407103e097f1b9208a",
   "runtime_source": "2f598fd1136e3d2db0d410a0cdd640c74ef9cf6d",
@@ -228,7 +228,7 @@
     "log_sha256": "f0761562d903249a22f369a0574748a54a08a7b8facf8f2fef84143c945dbc1e",
     "historical_first_source_run": {
       "id": 40881383641,
-      "status": "Previously pending/superseded; not used as passing evidence"
+      "status": "cancelled/superseded; no passing evidence borrowed"
     }
   },
   "screenshots": {
@@ -334,9 +334,8 @@
     "blocked": 9,
     "not_run": 1
   },
-  "ux07": "NOT_RUN complete purchased-printer prepayment/device gate. Local nonpayable MOCK printer component validated; Linux CI individual native method evidence still blocked.",
+  "ux07": "NOT_RUN complete purchased-printer prepayment/device gate. Nonpayable MOCK component verified locally and in current Windows/Linux CI with exact native method evidence.",
   "remaining": [
-    "Verify new CI reporter notices via checks API at exact pushed source; old native job logs remain inaccessible and unverified. Do not relabel 40882031887 native method evidence.",
     "Purchased-printer payment/preflight integration and Windows/Ubuntu device evidence not certified; do not enable Sandbox transport",
     "PAY-22 official Legacy charge replay contract BLOCKED; WEB-01..08 infrastructure/operations BLOCKED",
     "Actual merchant/camera/paper/phone/Drive/deletion/privacy/support/release acceptance remains separate and unperformed"
@@ -370,7 +369,7 @@
     }
   ],
   "ci_reporting_change": {
-    "source": "Containing workflow/docs micro-commit; pin after push",
+    "source": "8d0b9bb7cf125a714e3aeb277e0ce29930b00fb3",
     "workflow_sha256": "70fa85168e8aceb6183f736ae07797b4e2101f0fabe38c6ca1305443ea675a13",
     "local_validation": {
       "result": "PASS",
@@ -383,6 +382,153 @@
     },
     "validation_command": ".venv/bin/python /workspace/work/ux07-final/check_ci_reporter.py",
     "scope": "Read actual reports, require all five readiness/seven MOCK/two native methods individually ok, require successful summary, emit source/report digest/names as notices accessible via GitHub check annotations. No test assertions, runtime, schema or device behavior altered.",
-    "current_ci": "PENDING after immediate push; do not count old inaccessible native log as method evidence"
-  }
+    "current_ci": "40887868676 all three jobs SUCCESS; exact methods verified via check annotations"
+  },
+  "current_ci": {
+    "run_id": 40887868676,
+    "source": "8d0b9bb7cf125a714e3aeb277e0ce29930b00fb3",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "databaseId": 123496343582,
+        "name": "Windows Python 3.12 native SDL audio (dummy output)",
+        "conclusion": "success",
+        "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40887868676/job/123496343582"
+      },
+      {
+        "databaseId": 123496344038,
+        "name": "Navigation and audio lifecycle",
+        "conclusion": "success",
+        "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40887868676/job/123496344038"
+      },
+      {
+        "databaseId": 123496344244,
+        "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+        "conclusion": "success",
+        "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40887868676/job/123496344244"
+      }
+    ],
+    "linux_method_evidence": [
+      {
+        "annotation_title": "UX-07 executed methods (native-tests.txt)",
+        "run": 113,
+        "pass": 112,
+        "fail": 0,
+        "error": 0,
+        "skip": 1,
+        "report_sha256": "c0c1f988a5bdf8cc689a8dc01af4d19d2b49f5544365a15e36dd7f44b554710a",
+        "method_pass_lines": [
+          "test_ux07_configured_printer_probe_keeps_clock_live_and_retry_creates_one_mock_at_both_sizes (tests.test_kiosk_v2_checkout_widgets.CheckoutWidgetTests.test_ux07_configured_printer_probe_keeps_clock_live_and_retry_creates_one_mock_at_both_sizes) ... ok",
+          "test_ux07_retired_printer_probe_result_stays_hidden_then_recovers_original_mock_at_both_sizes (tests.test_kiosk_v2_checkout_widgets.CheckoutWidgetTests.test_ux07_retired_printer_probe_result_stays_hidden_then_recovers_original_mock_at_both_sizes) ... ok"
+        ]
+      },
+      {
+        "annotation_title": "UX-07 executed methods (sandbox-tests.txt)",
+        "run": 424,
+        "pass": 424,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "report_sha256": "a8b8693e363ceedb24661dd4cc4a38c073a5fca7a051d1334a0a5b1e9d5007ec",
+        "method_pass_lines": [
+          "test_ux07_camera_failures_deny_before_order_or_provider (test_ux07_readiness.PrepaymentBoundaryTests.test_ux07_camera_failures_deny_before_order_or_provider) ... ok",
+          "test_ux07_delivery_optins_fail_before_any_printer_probe_or_order (test_ux07_readiness.PrepaymentBoundaryTests.test_ux07_delivery_optins_fail_before_any_printer_probe_or_order) ... ok",
+          "test_ux07_expiration_during_worker_validation_denies_before_order (test_ux07_readiness.PrepaymentBoundaryTests.test_ux07_expiration_during_worker_validation_denies_before_order) ... ok",
+          "test_ux07_failed_current_readiness_cannot_replace_or_recharge_active_order (test_ux07_readiness.PrepaymentBoundaryTests.test_ux07_failed_current_readiness_cannot_replace_or_recharge_active_order) ... ok",
+          "test_ux07_storage_and_template_failures_preserve_bytes_then_retry_once (test_ux07_readiness.PrepaymentBoundaryTests.test_ux07_storage_and_template_failures_preserve_bytes_then_retry_once) ... ok",
+          "test_conflicting_sandbox_print_opt_in_denies_before_any_printer_probe (test_ux07_mock_printer.MockPrinterPreflightTests.test_conflicting_sandbox_print_opt_in_denies_before_any_printer_probe) ... ok",
+          "test_degraded_unknown_and_exceptions_deny_before_order_qr_or_reward_reservation (test_ux07_mock_printer.MockPrinterPreflightTests.test_degraded_unknown_and_exceptions_deny_before_order_qr_or_reward_reservation) ... ok",
+          "test_existing_pending_unknown_confirmed_recover_without_new_health_or_identity (test_ux07_mock_printer.MockPrinterPreflightTests.test_existing_pending_unknown_confirmed_recover_without_new_health_or_identity) ... ok",
+          "test_opt_out_never_loads_config_probes_or_constructs_printer (test_ux07_mock_printer.MockPrinterPreflightTests.test_opt_out_never_loads_config_probes_or_constructs_printer) ... ok",
+          "test_original_lan_wifi_fallback_closes_without_print_bytes_before_order (test_ux07_mock_printer.MockPrinterPreflightTests.test_original_lan_wifi_fallback_closes_without_print_bytes_before_order) ... ok",
+          "test_retry_reads_current_saved_config_and_creates_exactly_one_mock_order (test_ux07_mock_printer.MockPrinterPreflightTests.test_retry_reads_current_saved_config_and_creates_exactly_one_mock_order) ... ok",
+          "test_success_is_not_cached_for_a_later_new_order (test_ux07_mock_printer.MockPrinterPreflightTests.test_success_is_not_cached_for_a_later_new_order) ... ok"
+        ]
+      }
+    ],
+    "annotation_receipt_sha256": "71bd3ed5659de7bcd03f8bfcaa9620e20f70b0c47a7d0ea2dc811e51c5ac2758",
+    "retrieval_commands": [
+      "gh run view 40887868676 --repo pratikto/PhotoBooth --json headSha,status,conclusion,jobs",
+      "gh api repos/pratikto/PhotoBooth/check-runs/123496344244/annotations",
+      "gh run view 40887868676 --repo pratikto/PhotoBooth --log"
+    ],
+    "windows_ledger": {
+      "run": 123,
+      "pass": 123,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 37.517,
+      "mock_printer_methods_individually_ok": [
+        "test_conflicting_sandbox_print_opt_in_denies_before_any_printer_probe (test_ux07_mock_printer.MockPrinterPreflightTests.test_conflicting_sandbox_print_opt_in_denies_before_any_printer_probe)",
+        "test_degraded_unknown_and_exceptions_deny_before_order_qr_or_reward_reservation (test_ux07_mock_printer.MockPrinterPreflightTests.test_degraded_unknown_and_exceptions_deny_before_order_qr_or_reward_reservation)",
+        "test_existing_pending_unknown_confirmed_recover_without_new_health_or_identity (test_ux07_mock_printer.MockPrinterPreflightTests.test_existing_pending_unknown_confirmed_recover_without_new_health_or_identity)",
+        "test_opt_out_never_loads_config_probes_or_constructs_printer (test_ux07_mock_printer.MockPrinterPreflightTests.test_opt_out_never_loads_config_probes_or_constructs_printer)",
+        "test_original_lan_wifi_fallback_closes_without_print_bytes_before_order (test_ux07_mock_printer.MockPrinterPreflightTests.test_original_lan_wifi_fallback_closes_without_print_bytes_before_order)",
+        "test_retry_reads_current_saved_config_and_creates_exactly_one_mock_order (test_ux07_mock_printer.MockPrinterPreflightTests.test_retry_reads_current_saved_config_and_creates_exactly_one_mock_order)",
+        "test_success_is_not_cached_for_a_later_new_order (test_ux07_mock_printer.MockPrinterPreflightTests.test_success_is_not_cached_for_a_later_new_order)"
+      ],
+      "readiness_methods_individually_ok": 5
+    },
+    "windows_other_steps": [
+      {
+        "run": 72,
+        "pass": 72,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "seconds": 174.476,
+        "step": "Check payment creation and reconciliation crash boundaries (offline)"
+      },
+      {
+        "run": 55,
+        "pass": 55,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "seconds": 0.96,
+        "step": "Check portable startup, recovery holds and Windows launch ownership"
+      },
+      {
+        "run": 103,
+        "pass": 103,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "seconds": 20.858,
+        "step": "Check Windows DLL loading, safe WAV fallback and twenty PCM cycles"
+      }
+    ],
+    "linux_pure": [
+      {
+        "run": 129,
+        "pass": 128,
+        "fail": 0,
+        "error": 0,
+        "skip": 1,
+        "seconds": 0.644,
+        "step": "Kivy-independent navigation and fake audio tests"
+      },
+      {
+        "run": 40,
+        "pass": 40,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "seconds": 0.303,
+        "step": "Observation-only supervisor and startup safety"
+      }
+    ],
+    "other_desktop_steps": "Reported success; individual counts not extracted from inaccessible blob-host reports. No full Windows/Linux/device claim inferred.",
+    "console_sha256": "50de954354a946d1350fc71ea8809cb9fe7e0186bded9d2c3229a80ddfce549e",
+    "commands_for_test_groups": ".github/workflows/portrait-kiosk-v2.yml at this exact source; unchanged test commands, added method report validation only",
+    "scope": "Five readiness and seven MOCK methods PASS Windows/Linux. Two configured-app native printer lifecycle methods PASS Linux, exercising both portrait sizes; these methods are not registered in Windows native group. Current Linux native skip count is one; raw skipped-method detail unavailable via old blob downloads, not promoted to PASS."
+  },
+  "source_tree_equivalence": {
+    "photobooth": "13f1344047b2cb06d0bb5c44b65a4245a3878b8b",
+    "tools": "62b5760a3ebd20382fb3eb632843c626e00ce2f9",
+    "tests": "85d8ad0f9e65b23538eda01a957948e78ee7a9bc"
+  },
+  "next": "Current validation increment complete. Complete separately scoped purchased-print payment/preflight integration and actual Windows/Ubuntu printer/device evidence before promoting UX-07; preserve Sandbox print/Drive OFF and all provider/operational/release gates. No new GUI/OPS/production work started.",
+  "local_artifacts": "Full/focused reports, images and capture/checker scripts under /workspace/work/ux07-final are private local-only, not backed up to GitHub. Sanitized source/counts/commands/hashes and CI receipts are recorded here; no unpublished runtime/test patch."
 }

@@ -1,5 +1,23 @@
 # Meong Photobooth — current feature status
 
+## 29 October — UX-07 MOCK component final validation verified
+
+CI source `8d0b9bb`, run **40887868676: all three jobs SUCCESS**. Five readiness/
+seven MOCK methods individually PASS Windows/Linux; both new native lifecycle
+methods individually PASS Linux at both portrait sizes, verified via annotations.
+Linux Sandbox **424 PASS**, native **112 PASS/one SKIP**; Windows groups
+**123/72/55/103 PASS**. Application/tools/tests unchanged from `3a98ed9`:
+fresh **67 + 12 focused PASS**; full **1178 run / 1174 PASS / zero FAIL/ERROR /
+four optional SKIP**. Four native error/held-retry images visually PASS; no
+clipping/private data/order/QR before readiness. [Exact evidence](qa/portrait-v2-sandbox/evidence/ux07-mock-printer-final-validation.json).
+
+Whole purchased-printer UX-07 **NOT_RUN**; matrix **59/0/9/1** unchanged. Next:
+purchased payment/preflight integration and actual Windows/Ubuntu printer/device
+evidence; keep Sandbox printer/Drive OFF. Queue/route is not paper readiness;
+Windows spooler API latency is not bounded here. PAY-22/WEB-01–08 and actual
+merchant/paper/phone/Drive/deletion/privacy/support/release acceptance remain
+separate. No runtime/tests or financial/media records changed.
+
 ## 29 October — UX-07 final local validation / CI reporting pending
 
 Source `3a98ed9`, runtime `2f598fd` unchanged: fresh **67 + 12 focused PASS**;
