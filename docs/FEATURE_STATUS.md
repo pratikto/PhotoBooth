@@ -1,5 +1,13 @@
 # Meong Photobooth — current feature status
 
+## 29 October — UX-05.a uncertainty holds verified
+
+33 focused PASS, zero skip; two new HTTP/controller abandonment/restart cases
+preserve original identity/OWED/private proof, deny replacement under 404/outage.
+No runtime change. Linux/Windows CI registered/pending; UX-05 NOT_RUN until
+terminal/paid-release continuation checks. Matrix 57/0/9/3 unchanged.
+[Contract/evidence/next](qa/portrait-v2-sandbox/UX05-AMBIGUOUS-ABANDONMENT.md).
+
 ## 29 October — BUG-023 fixed in source / regression verified
 
 Source `3822bb0`, 73 focused PASS; full 1153/1149/4, zero failure/error.

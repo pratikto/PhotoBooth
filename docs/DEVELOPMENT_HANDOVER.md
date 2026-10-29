@@ -1,5 +1,25 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 29 October — UX-05.a conservative abandonment holds
+
+Base/remote verified `206f408efd369d85d40774861edd7746c4a6050a`.
+Two new real HTTP/SQLite/controller cases cover lost creation reply + repeated
+404 + operator abandon/release denial, and cancel outage/reopen/late settlement.
+One original order/key/fingerprint/hash/OWED preserved, no replacement POST,
+private restart/no QR; original ticket alone later obtains one grant. Expected
+409/503 codes asserted, not arbitrary exceptions. Reopen uses explicit lease
+retirement (initial fixture attempt two ERROR corrected, no runtime defect).
+**33 focused PASS / zero failure/error/skip**, 2.337s, Python 3.12.14/Linux.
+Command: `.venv/bin/python tools/run_kiosk_unittests.py test_ux05_abandonment test_checkout_creation_attempts test_checkout_release test_release_session test_customer_claim_session` (SDL offscreen/dummy audio).
+Tests/workflow/docs only, runtime unchanged at 3822bb0. New module registered
+in both Linux/Windows ledger groups; matching CI pending. UX-05 stays NOT_RUN
+until confirmed-terminal and combined paid isolation/archive acceptance tested.
+Matrix 57/0/9/3 unchanged. Next test confirmed cancellation after restart and
+paid proof -> PREPARE -> typed worker isolation -> ACK/archive -> new visitor;
+fix only a reproduced defect. No production/OPS/public ingress/new branch/
+master/default/device/provider effects. Only work/ scratch local. Rollback
+inverse tests/docs only; retain all financial/claim/fence/media/history records.
+
 ## 29 October — BUG-023 verified source remediation
 
 Source `3822bb041d90da9330457d2e4404668be278eee9` pushed/remote verified.

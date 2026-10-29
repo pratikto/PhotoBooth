@@ -1,0 +1,24 @@
+{
+  "status": "UX05_HOLDS_VERIFIED_REMAINING_CASES_NOT_RUN_CI_PENDING",
+  "base": "206f408efd369d85d40774861edd7746c4a6050a",
+  "source": "Containing test commit; pin after push",
+  "runtime_source": "3822bb041d90da9330457d2e4404668be278eee9",
+  "runtime_changed": false,
+  "focused": {
+    "run": 33,
+    "pass": 33,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 2.337
+  },
+  "new_methods": 2,
+  "initial_fixture": "Two lease cleanup ERROR; explicit direct-flow.close fixed fixture, no runtime defect",
+  "files_sha256": {
+    "tests/test_ux05_abandonment.py": "fd1a43eb6216700eee1cc3b2dbeed881b2aeffb14bb990ef04dbb22796a1cec3",
+    ".github/workflows/portrait-kiosk-v2.yml": "f734924b902b958695bfe33a948467b2fe139dd4a69a0b1318d07ad2e206f1d9"
+  },
+  "report_sha256": "e6dff5f81fe59a438e864875ce4de2d311ba7191bc2973ce206b1947cfbd7af6",
+  "next": "Confirmed-terminal restart/faults and paid isolation/archive chain; UX-05 remains NOT_RUN",
+  "limits": "Synthetic Linux; hosted CI pending, actual provider/device/production/OPS gates unchanged; parent controller/DB reopens, not power-loss acceptance"
+}
