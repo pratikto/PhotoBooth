@@ -1,5 +1,25 @@
 # Meong Photobooth — test evidence and acceptance
 
+## 30 October — http focused checkpoint
+
+UX-07 HTTP/client/controller compatibility: three new methods use original
+FastAPI API, QrisKioskClient and KioskCheckout against explicitly selected mock
+backend with no live network/provider. Original recovery ticket survives local
+journal restart and customer claim, retains the same frozen requirement and OWED
+obligation; one provider effect only. Original HTTP idempotent replay reads the
+original DB snapshot without current artwork, rejects changed cart. Client-sent
+delivery_policy, missing recovery credential and foreign-booth reads reject.
+18 focused PASS, zero failure/error/skip, 0.825s. Initial fixture invocation
+omitted refresh (begin only journals locally): 18 run/one ERROR, then corrected
+test sequencing; no runtime guard change. Added all three tests to Windows/Linux
+ledgers and exact Linux method receipts. Application code unchanged from e82d0ee.
+Full regression already running at functional e82d0ee excludes these three later
+test-only methods; this focused receipt plus matching current CI cover them.
+No endpoint/controller/launcher mounting or commercial lifecycle claim. Next:
+finish full regression, actual matching CI receipts, reconcile all docs and push
+a final verified safe checkpoint; do not repeat already verified source work.
+[Full scope/limits/next](qa/portrait-v2-sandbox/UX07-PURCHASED-PRINT-INTEGRATION.md).
+
 ## 30 October — replay focused checkpoint
 
 Mock print recovery now reads the original persisted frozen contract on existing

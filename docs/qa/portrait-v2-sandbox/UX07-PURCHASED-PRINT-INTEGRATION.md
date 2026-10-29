@@ -361,3 +361,39 @@ production/public ingress/new branch/master/default/deployment or real external
 effect. Rollback scoped inverse code; retain additive requirements and all
 financial/media/audit records. Only private work/ and superseded docs stash local.
 Containing source commit is the safe checkpoint; exact SHA via Git log/remote.
+
+Additional test-only compatibility increment while the corrected final functional
+source regression runs: exercise the original FastAPI/TestClient/QrisKioskClient/
+KioskCheckout path with the explicitly configured mock policy. Verify generated
+recovery-ticket hashes, private restart/customer proof and preserved requirements;
+reject a client-supplied delivery policy, missing hash and foreign booth. These
+are additional tests, not a new endpoint/launcher or live HTTP server. The full
+functional-source snapshot excludes these later tests; focused/current CI must
+verify them separately without borrowing counts or rerunning unchanged runtime.
+
+## 30 October — http focused source checkpoint
+
+Base/remote e82d0eef032edfcbedec0a9f4c172e9c5edaad5e.
+UX-07 HTTP/client/controller compatibility: three new methods use original
+FastAPI API, QrisKioskClient and KioskCheckout against explicitly selected mock
+backend with no live network/provider. Original recovery ticket survives local
+journal restart and customer claim, retains the same frozen requirement and OWED
+obligation; one provider effect only. Original HTTP idempotent replay reads the
+original DB snapshot without current artwork, rejects changed cart. Client-sent
+delivery_policy, missing recovery credential and foreign-booth reads reject.
+18 focused PASS, zero failure/error/skip, 0.825s. Initial fixture invocation
+omitted refresh (begin only journals locally): 18 run/one ERROR, then corrected
+test sequencing; no runtime guard change. Added all three tests to Windows/Linux
+ledgers and exact Linux method receipts. Application code unchanged from e82d0ee.
+Full regression already running at functional e82d0ee excludes these three later
+test-only methods; this focused receipt plus matching current CI cover them.
+No endpoint/controller/launcher mounting or commercial lifecycle claim. Next:
+finish full regression, actual matching CI receipts, reconcile all docs and push
+a final verified safe checkpoint; do not repeat already verified source work.
+
+Whole UX-07 NOT_RUN, matrix59/0/9/1; actual devices/provider/paper/privacy/
+release and PAY-22/WEB gates remain separate. No Sandbox delivery opt-in/OPS/
+production/public ingress/new branch/master/default/deployment or real external
+effect. Rollback scoped inverse code; retain additive requirements and all
+financial/media/audit records. Only private work/ and superseded docs stash local.
+Containing source commit is the safe checkpoint; exact SHA via Git log/remote.
