@@ -1,28 +1,38 @@
 # Meong Photobooth — GUI v2 development handover
 
-## 29 October — AR-04/05.b CAP-11–13 focused checkpoint
+## 29 October — AR-04/05 CAP-11–13 verified checkpoint
 
-First micro-push `d133e209629c7b6a99927169ef290cf3ed715249` pushed/remote verified.
-**80 focused PASS / zero failure/error/skip**, 20.913s, Python 3.12.14/Linux cloud.
-Five methods, seven actual os._exit children/six distinct boundaries: selection,
-INTENT, unhashed temporary JPEG, STAGED, published, committed. Extra staged exit
-checks tampered bytes. Original proof/fresh settlement, same grant/claim/allocation,
-three originals/one retake/two copies/retention/OWED preserved. Staged/published
-bytes adopted once; temporary/tampered bytes stay held. Post-commit and second
-fresh controller/store reopen retain consumed quota, selected index/final path,
-byte-identical manifest and no replay. [Exact evidence](qa/portrait-v2-sandbox/evidence/cap11-13-verification.json).
+- First micro-push `d133e209629c7b6a99927169ef290cf3ed715249`; final test/CI source
+  `423d9d2c9096ec897521df565f2c59572057efd5`, both pushed/remote verified.
+- **80 focused PASS / zero failure/error/skip**, 20.913s, Python 3.12.14/Linux.
+  Five methods/seven actual children at six retake boundaries: selection, intent,
+  temporary, staged, published, committed; extra staged tamper case.
+- **CI 40831396874 all three jobs SUCCESS**. Windows payment/recovery **63 PASS**
+  (53.091s), Linux protocol/recovery **380 PASS** (67.954s), both zero skip and all
+  five retake methods PASS. Native 111 run/110 PASS/one optional palm SKIP.
+  First CI 40830915281 superseded/CANCELLED, never credited standalone PASS.
+- Exact original claim/fresh settlement, grant/allocation, selected index 1,
+  three originals/one retake/two copies/retention/OWED retained. Proved bytes
+  adopted once; unhashed/tampered bytes held. No replay, overwrite or quota renewal.
+  Second parent-process controller/store reopen preserves committed state.
+- No runtime defect or runtime/schema/UI change. Application/tools trees match
+  e0dc594; prior full (1117/1114/3) and native c94696d (28/four) keep original
+  source. No new local full/native/device/provider acceptance claimed.
+- Matrix **54 PASS / 1 FAIL / 9 BLOCKED / 5 NOT_RUN**; CAP-11/12/13 synthetic PASS.
+  Overall audit IN_PROGRESS, BUG-023/UX-13 OPEN/FAIL. [Exact evidence](qa/portrait-v2-sandbox/evidence/cap11-13-final-verification.json).
+- This containing docs-only publication is the final safe checkpoint; obtain
+  its exact SHA from Git log/remote. Only disposable work/ diagnostics remain
+  untracked/not backed up, no unpublished runtime patch.
 
-Tests/docs only; runtime unchanged at e0dc594, no defect/schema/UI migration.
-No new full/native/device result; prior source-specific evidence remains valid
-at its original source. CAP-11/12/13 synthetic PASS; matrix **54 PASS / 1 FAIL /
-9 BLOCKED / 5 NOT_RUN**, BUG-023 OPEN/audit IN_PROGRESS. This containing tested
-commit is the next micro-push; pin exact SHA after push/remote verification.
-Matching CI pending; first 40830915281 in progress at latest check, not claimed
-PASS. Next verify latest Linux/Windows CI and publish final safe checkpoint.
-Then CAP-16 final-compose/pre-COMPLETE kill, CAP-20 and AR-09 BUG-023; UX-05/07/11
-and all external/OPS/production gates stay open. No new branch/master/default,
-real payment/print/Drive/deletion or public ingress. Only work/ scratch local,
-no unpublished runtime patch; rollback tests/CI/docs, retain all customer records.
+Next exact increment: **CAP-16**, reusing tests/service_crash_fixture.py and
+current original-proof/result restoration. Exit after final saved composition
+while backend remains STARTED/OWED, before COMPLETE API; restore only original
+result and replay original ACK without camera/render/print/upload. Then CAP-20
+intent/image/manifest write faults and AR-09 BUG-023 durable redacted denial audit.
+Remaining NOT_RUN CAP-16/20 and UX-05/07/11; PAY-22/WEB-01–08 BLOCKED. Actual
+Windows/Ubuntu booth, provider/merchant, paper/phone/Drive/deletion/privacy/
+operations/release remain separate. No production/OPS/public ingress/new branch/
+master/default operation. Rollback only tests/CI/docs, preserve all customer data.
 
 ## 29 October — AR-04/05.a CAP-11 focused checkpoint
 

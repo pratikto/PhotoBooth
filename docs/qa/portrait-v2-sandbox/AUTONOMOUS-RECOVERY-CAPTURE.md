@@ -58,4 +58,6 @@ uncertain files rather than silently adopting or overwriting them.
 80 focused PASS, seven actual children/six boundaries, original selected index,
 quota/bytes/copies/retention/OWED preserved; temporary/tampered bytes held.
 Tests-only, no runtime change. [Exact contract/evidence](CAP11-13-RETAKE-CRASHES.md).
-Matching CI pending; actual device/power-loss/merchant gates remain separate.
+Final test source 423d9d2: CI 40831396874 all three jobs SUCCESS; all five
+retake methods PASS on Windows/Linux. [Pinned evidence](evidence/cap11-13-final-verification.json).
+Actual device/power-loss/merchant gates remain separate.

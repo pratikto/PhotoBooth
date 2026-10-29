@@ -1,0 +1,93 @@
+{
+  "status": "VERIFIED_TESTS_ONLY_WITH_REMAINING_AR_GATES",
+  "branch": "feature/portrait-kiosk-v2-next",
+  "review_base": "d133e209629c7b6a99927169ef290cf3ed715249",
+  "first_test_commit": "d133e209629c7b6a99927169ef290cf3ed715249",
+  "test_commit": "423d9d2c9096ec897521df565f2c59572057efd5",
+  "runtime_source": "e0dc59435772148be86449c55140d4b9be2f6364",
+  "runtime_changed": false,
+  "python": "3.12.14",
+  "platform": "Linux cloud",
+  "command": "KIVY_HOME=/tmp/meong-retake-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy MEONG_CI_TEST_REPORT=work/cap11-13-focused-report.txt .venv/bin/python tools/run_kiosk_unittests.py test_retake_crash_recovery test_capture_journal test_photo_reconstruction test_photo_allocation test_customer_claim_session test_workflow test_retention test_kiosk_v2_photos",
+  "focused": {
+    "run": 80,
+    "pass": 80,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 20.913
+  },
+  "new_methods": 5,
+  "process_exits": {
+    "count": 7,
+    "distinct_boundaries": 6,
+    "codes": {
+      "selection": 100,
+      "intent": 101,
+      "temporary": 102,
+      "staged": 103,
+      "published": 104,
+      "committed": 105
+    },
+    "extra_negative_case": "Repeat STAGED exit then tamper only synthetic saved temporary bytes; two controller reopens hold without mutation"
+  },
+  "report_sha256": "9c746401d485f8d9144f0e146ba383a5eb1d267cf273d4668d30ef0374d47f1c",
+  "files_sha256": {
+    "tests/retake_crash_fixture.py": "fc79fbdda5448b4967e346bfdad4212f9bf9864a6fecda4b2cd64c996b128bc4",
+    "tests/test_retake_crash_recovery.py": "8c13b2feb44cfdbfa11899353a064ff7bdd65650bd249985989e33702658e3a0",
+    ".github/workflows/portrait-kiosk-v2.yml": "5496002b7c34e76fba04bb37a1d2128410b6fee64dc5e11711c2b711fd9749f5"
+  },
+  "matrix": {
+    "total": 69,
+    "pass": 54,
+    "fail": 1,
+    "skip": 0,
+    "blocked": 9,
+    "not_run": 5
+  },
+  "full_regression": "NOT_RERUN_TESTS_ONLY; baseline e0dc594 1117/1114/3 excludes five new methods",
+  "native": "NOT_RERUN_NO_GUI_CHANGE; baseline c94696d 28 PNG/four QR checks retains original source",
+  "ci": {
+    "run_id": 40831396874,
+    "head_sha": "423d9d2c9096ec897521df565f2c59572057efd5",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 123306369014,
+        "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+        "conclusion": "success"
+      },
+      {
+        "id": 123306369460,
+        "name": "Navigation and audio lifecycle",
+        "conclusion": "success"
+      },
+      {
+        "id": 123306369477,
+        "name": "Windows Python 3.12 native SDL audio (dummy output)",
+        "conclusion": "success"
+      }
+    ],
+    "windows_payment_recovery": "63 PASS / zero failure/error/skip, 53.091s; all five retake methods PASS",
+    "linux_protocol_recovery": "380 PASS / zero failure/error/skip, 67.954s; all five retake methods PASS",
+    "linux_native": "111 run / 110 PASS / 1 optional palm SKIP",
+    "detail": "cap11-13-final-ci.json",
+    "superseded": {
+      "run_id": 40830915281,
+      "head_sha": "d133e209629c7b6a99927169ef290cf3ed715249",
+      "conclusion": "cancelled",
+      "reason": "Existing workflow concurrency; not credited standalone PASS"
+    }
+  },
+  "next": "CAP-16 final-compose/pre-COMPLETE process exit; then CAP-20 and AR-09 BUG-023; UX-05/07/11 and external gates remain",
+  "privacy": "Original synthetic ticket memory/stdin only, no argv/journal/committed images/DB/raw logs",
+  "limits": "Software exits; extra fresh controller/store reopens are parent-process, no physical power-loss/device/merchant/paper/cloud/release acceptance",
+  "rollback": "Inverse tests/CI/docs only; preserve all financial/media/claim/fence/budget records",
+  "remote_verified": true,
+  "runtime_trees": {
+    "photobooth": "458ab5dc768ca78f56b7ebfbe910370510470f75",
+    "tools": "62b5760a3ebd20382fb3eb632843c626e00ce2f9"
+  },
+  "test_tree": "9bbd44a16312d9e0f2242b0296e3ac5787f7279e",
+  "workflow_blob": "a9319cdf8feaa32b1d7cf43b798a18ae5ef86bba"
+}

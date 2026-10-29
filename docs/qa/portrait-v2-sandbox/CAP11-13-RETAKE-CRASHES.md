@@ -1,5 +1,15 @@
 # AR-04/05 — CAP-11–13 retake process-exit evidence
 
+## 29 October — CAP-11–13 verified
+
+Test/CI `423d9d2c9096ec897521df565f2c59572057efd5` pushed/remote verified.
+**80 focused PASS**, zero failure/error/skip; seven real child exits/six retake
+boundaries. CI **40831396874 all three jobs SUCCESS**; all five retake methods
+PASS on Windows/Linux (groups 63/380 PASS, zero skip); native one optional palm
+SKIP. Tests/CI/docs only, runtime unchanged. Matrix **54 PASS / 1 FAIL / 9 BLOCKED /
+5 NOT_RUN**, audit IN_PROGRESS/BUG-023 OPEN. Next **CAP-16**, then CAP-20/AR-09;
+external/OPS/production gates unchanged. [Exact evidence/limits](evidence/cap11-13-final-verification.json).
+
 29 October 2026 (Asia/Jakarta). Owner explicitly requests completion through
 CAP-13. Base/remote verified `8c5553b77f0264622b19810d86e95a08a105c7eb`, existing
 feature branch; work/ scratch only. Contract recorded before new test code.

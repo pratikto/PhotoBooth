@@ -1,28 +1,14 @@
 # AR-00–AR-13 implementation conformity review
 
-## 29 October — AR-04/05.b CAP-11–13 focused checkpoint
+## 29 October — CAP-11–13 verified
 
-First micro-push `d133e209629c7b6a99927169ef290cf3ed715249` pushed/remote verified.
-**80 focused PASS / zero failure/error/skip**, 20.913s, Python 3.12.14/Linux cloud.
-Five methods, seven actual os._exit children/six distinct boundaries: selection,
-INTENT, unhashed temporary JPEG, STAGED, published, committed. Extra staged exit
-checks tampered bytes. Original proof/fresh settlement, same grant/claim/allocation,
-three originals/one retake/two copies/retention/OWED preserved. Staged/published
-bytes adopted once; temporary/tampered bytes stay held. Post-commit and second
-fresh controller/store reopen retain consumed quota, selected index/final path,
-byte-identical manifest and no replay. [Exact evidence](evidence/cap11-13-verification.json).
-
-Tests/docs only; runtime unchanged at e0dc594, no defect/schema/UI migration.
-No new full/native/device result; prior source-specific evidence remains valid
-at its original source. CAP-11/12/13 synthetic PASS; matrix **54 PASS / 1 FAIL /
-9 BLOCKED / 5 NOT_RUN**, BUG-023 OPEN/audit IN_PROGRESS. This containing tested
-commit is the next micro-push; pin exact SHA after push/remote verification.
-Matching CI pending; first 40830915281 in progress at latest check, not claimed
-PASS. Next verify latest Linux/Windows CI and publish final safe checkpoint.
-Then CAP-16 final-compose/pre-COMPLETE kill, CAP-20 and AR-09 BUG-023; UX-05/07/11
-and all external/OPS/production gates stay open. No new branch/master/default,
-real payment/print/Drive/deletion or public ingress. Only work/ scratch local,
-no unpublished runtime patch; rollback tests/CI/docs, retain all customer records.
+Test/CI `423d9d2c9096ec897521df565f2c59572057efd5` pushed/remote verified.
+**80 focused PASS**, zero failure/error/skip; seven real child exits/six retake
+boundaries. CI **40831396874 all three jobs SUCCESS**; all five retake methods
+PASS on Windows/Linux (groups 63/380 PASS, zero skip); native one optional palm
+SKIP. Tests/CI/docs only, runtime unchanged. Matrix **54 PASS / 1 FAIL / 9 BLOCKED /
+5 NOT_RUN**, audit IN_PROGRESS/BUG-023 OPEN. Next **CAP-16**, then CAP-20/AR-09;
+external/OPS/production gates unchanged. [Exact evidence/limits](evidence/cap11-13-final-verification.json).
 
 ## 29 October — AR-04/05.a CAP-11 focused checkpoint
 
