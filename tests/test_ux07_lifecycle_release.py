@@ -95,9 +95,11 @@ class PurchasedReleaseTests(unittest.TestCase):
         with self.assertRaises(RuntimeError):self.flow.acknowledge_release(PIN,True)
         with self.assertRaises(RuntimeError):self.flow.begin({'template_b':1})
         worker.close()
-        with self.assertRaises(RuntimeError):KioskLease(str(self.photo.root/'paid-print.lock'))
+        with self.assertRaises((RuntimeError,PermissionError)):
+            KioskLease(str(self.photo.root/'paid-print.lock'))
         self.assertFalse(self.h.store.get(self.oid)['closed']);self.assert_rights()
         release.set();worker.wait_closed(5);self.assertFalse(worker._thread.is_alive())
+        available=KioskLease(str(self.photo.root/'paid-print.lock'));available.close()
         with self.assertRaises(RuntimeError):adapter.print_result()
         self.assertEqual(printer.print_image.call_count,1)
         result=self.isolate();self.assertIsNone(result.error)

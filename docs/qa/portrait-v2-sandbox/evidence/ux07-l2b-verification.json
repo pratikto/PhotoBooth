@@ -34,7 +34,24 @@
   "acceptance": "Whole UX-07 NOT_RUN; 59 PASS/0 FAIL/9 BLOCKED/1 NOT_RUN unchanged; operating/commercial host/provider/device/paper gates separate",
   "hashes": {
     "tests/paid_lifecycle_fixture.py": "889f7c5c7af3d7c64cd33378b5fb79a3d9f2a1eb71f29a1a48aa645da0a6e206",
-    "tests/test_ux07_lifecycle_release.py": "182c72deac585eb62cd5ccc1a549391495b987c697469416d3c16ae0db61d844",
+    "tests/test_ux07_lifecycle_release.py": "081fcb816ef5db764436a8e8c8282082a97ca2a705d662b5d7fe67f4de8bc980",
     "tests/paid_print_fixture.py": "0a4cd3e3e05f630ff9a4abe8786dbc7449b1e65ceb9baf517866049ad31fcdca"
+  },
+  "portability_correction": {
+    "failed_source": "d0911b603129f72eef16324162935bd496f64da2",
+    "ci_run": 40985455735,
+    "windows_job": 123835303390,
+    "result": "170 run/169 PASS/one ERROR/zero FAIL/zero SKIP, 65.547s",
+    "cause": "Windows native locked-file read raises PermissionError before KioskLease locking wrapper; Linux contention raises RuntimeError. Second-owner denial is correct.",
+    "correction": "Accept explicit OS PermissionError or RuntimeError; additionally require same lease acquisition to succeed after original sender drains, ruling out unrelated permanent path denial. No application/guard change.",
+    "focused": {
+      "run": 5,
+      "pass": 5,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 3.432
+    },
+    "superseded_full": "d0911b6 disposable full invocation interrupted with SIGINT/exit130; no final report/PASS; new final source regression follows."
   }
 }

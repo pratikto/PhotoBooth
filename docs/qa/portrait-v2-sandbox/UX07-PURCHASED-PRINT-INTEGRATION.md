@@ -1,5 +1,24 @@
 # UX-07.h — purchased-print integration contract and source audit
 
+## 30 October — l2b Windows lease portability correction
+
+Source d0911b6 CI40985455735 Windows170 run/169PASS/oneERROR (65.547s):
+second owner was correctly denied by native locked-file read PermissionError,
+before KioskLease's locking wrapper. Linux returns RuntimeError. Fixture now
+accepts either explicit denial AND requires that exact lease be obtainable after
+sender drain. No application/lock/assertion invariant weakened. Five corrected
+methods PASS/zero failure/error/skip locally,3.432s. Failed run remains historical.
+The disposable d091 full invocation was superseded/interrupted exit130 without
+final summary/PASS. Final full/current Windows/Linux CI now required; no repeated
+functional change. [Receipt](evidence/ux07-l2b-verification.json).
+
+[Owner laptop checklist](UX07-LAPTOP-CHECK.md) lists nine initially NOT_RUN
+checks and distinguishes original Sandbox from unmounted commercial paid print.
+Whole UX-07 NOT_RUN; matrix59/0/9/1 unchanged, PAY-22/WEB01–08 BLOCKED.
+Next finish final full/current CI then publish exact owner/manual handoff;
+no production/merchant/physical/OPS/deployment/master/default operation.
+
+
 ## 30 October — UX-07.l2b original release/drain fixture focused-verified
 
 Base3b0bdc1. Five new methods reuse original controller/store two-phase release,
