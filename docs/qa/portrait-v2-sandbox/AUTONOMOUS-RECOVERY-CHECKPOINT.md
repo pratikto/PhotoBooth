@@ -1,5 +1,33 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 30 October — UX-07.l2b original release/drain fixture focused-verified
+
+Base3b0bdc1. Five new methods reuse original controller/store two-phase release,
+original serialized transport-off PhotoJobs/PhotoTest isolation and separate mock
+sender/lease. SENDING/UNCERTAIN hold; drained SUBMITTED permits occupancy release
+only after exact isolation/ACK/archive. LostACK/controller restart repeats one
+operation/isolation; archive failure blocks new visitor; original ticket returns
+only to free booth. Old mock adapter captures original controller privacy
+generation/permit, so a fresh claim cannot reactivate a retired adapter.
+Original PAID/OWED, identities, frozen copies/requirement/output hash and every
+manifest field outside legitimate print-job updates remain unchanged.
+
+The private test wire calls original fresh-payment verifier and release-store
+functions; it is NOT a runtime/API/operator-auth host. Original mock HTTP release
+is explicitly asserted rejected, and Sandbox PhotoTest still has no transports.
+No production guard changed. Initial4methods/3fixture ERROR from budgeted poll
+and exception-type mismatch retained privately; corrected fixture uses existing
+fresh verifier/actual RuntimeError, no assertion/skip dilution. Expanded final
+16 focused PASS/zero failure/error/skip,9.499s (five new methods). New Windows/
+Linux CI and final complete-suite evidence PENDING. Application code unchanged.
+[Receipt](evidence/ux07-l2b-verification.json).
+
+Next finish current full/CI, synchronize evidence and laptop instructions.
+Whole UX-07 remains NOT_RUN; matrix59/0/9/1 and PAY-22/WEB01–08 BLOCKED unchanged.
+Commercial host/physical delivery principal/support/compensation and actual
+Windows/Ubuntu/provider/paper/privacy/release acceptance remain open.
+
+
 ## 30 October — UX-07.l2a original privacy/controller fixture
 
 Continuation refreshed remote/base to `8ab955b` (same branch); previous source

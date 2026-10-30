@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-30",
+  "increment": "UX-07.l2b",
+  "base": "3b0bdc180779eabbc9be21d20ddb642fce92b93b",
+  "runtime": "unchanged; fixtures/tests/CI/docs only",
+  "focused": {
+    "command": "python tools/run_kiosk_unittests.py test_ux07_lifecycle_release test_purchased_print_jobs test_purchased_print_http test_ux07_lifecycle",
+    "run": 16,
+    "pass": 16,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 9.499,
+    "new_methods": 5
+  },
+  "initial": "4 run/3 ERROR due fixture polling budget and wrong expected exception type; replaced budgeted poll with existing fresh-payment verifier and specified actual RuntimeError; no production guard/assertion removed",
+  "scope": "Unmounted private mock release wire invokes original fresh evidence and checkout_release functions; original mock HTTP release is asserted denied. Real transport-off PhotoTest emits original typed isolation receipt on serialized PhotoJobs. Mock sender/lease separate; no printer/Drive attached to bound Sandbox PhotoTest.",
+  "cases": [
+    "SENDING denies isolation/ACK and holds native sender lease",
+    "UNCERTAIN denies isolation after sender drains; no replay",
+    "drained SUBMITTED lostACK/restart exact operation/isolation/archive and original return",
+    "archive failure keeps controller active/new visit blocked until durable retry",
+    "old mock adapter privacy generation cannot reactivate after new valid original customer proof"
+  ],
+  "preserved": [
+    "PAID/OWED",
+    "order/grant/allocation/transaction",
+    "frozen copies/requirement",
+    "output hash",
+    "all manifest fields except legitimate test_print_jobs"
+  ],
+  "ci": "PENDING",
+  "full": "PENDING final source suite",
+  "acceptance": "Whole UX-07 NOT_RUN; 59 PASS/0 FAIL/9 BLOCKED/1 NOT_RUN unchanged; operating/commercial host/provider/device/paper gates separate",
+  "hashes": {
+    "tests/paid_lifecycle_fixture.py": "889f7c5c7af3d7c64cd33378b5fb79a3d9f2a1eb71f29a1a48aa645da0a6e206",
+    "tests/test_ux07_lifecycle_release.py": "182c72deac585eb62cd5ccc1a549391495b987c697469416d3c16ae0db61d844",
+    "tests/paid_print_fixture.py": "0a4cd3e3e05f630ff9a4abe8786dbc7449b1e65ceb9baf517866049ad31fcdca"
+  }
+}

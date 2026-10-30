@@ -13,11 +13,13 @@ from photobooth.resume_authority import trusted_resume_permit
 
 class OfflinePaidPrint:
     def __init__(self, backend, binding, photo_root, templates, printer, capability,
-                 claim_operation, session_id, *, active=lambda:True):
+                 claim_operation, session_id, *, active=lambda:True, controller=None):
         if backend.provider_mode != 'mock' or backend.delivery_policy != 'PRINT_REQUIRED_V1':
             raise ValueError('Explicit mock print fixture required')
         self.backend,self.binding,self.templates=backend,dict(binding),templates
         self.capability,self.claim_operation=capability,claim_operation
+        self.controller=controller
+        self.privacy_generation=controller._privacy_generation if controller is not None else None
         self.active=active;self._closed=threading.Event();self._gate=threading.Lock();self._printing=False
         self.photo=PhotoTest(photo_root);self.lease=None
         try:
@@ -25,7 +27,8 @@ class OfflinePaidPrint:
             self.requirement=view['delivery_requirement']
             self.fence=view['service_fence']
             self.lease=KioskLease(str(self.photo.root/'paid-print.lock'))
-            self.photo.restore(templates,binding,trusted_resume_permit(binding,validator=self._active))
+            self.photo.restore(templates,binding,controller.resume_permit() if controller is not None
+                               else trusted_resume_permit(binding,validator=self._active))
             self.store=self.photo.store
             self.transaction,self.sessions,*_=reconstruct(self.store,templates,binding)
             self.index=next(i for i,s in enumerate(self.sessions) if s.plan.session_id==session_id)
@@ -47,7 +50,14 @@ class OfflinePaidPrint:
             if self.lease:self.lease.close()
             raise
 
-    def _active(self):return not self._closed.is_set() and self.active()
+    def _active(self):
+        if self._closed.is_set() or not self.active():return False
+        if self.controller is not None:
+            if self.controller._privacy_generation!=self.privacy_generation:return False
+            try:
+                if self.controller.resume_binding()!=self.binding:return False
+            except RuntimeError:return False
+        return True
 
     def _authenticate(self):
         if not self._active():raise RuntimeError('Original customer visit required')
