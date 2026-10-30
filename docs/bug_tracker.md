@@ -1,5 +1,11 @@
 # Meong Photobooth — Bug register
 
+## 30 October — BUG-025 — legacy Sandbox session without customer ticket
+
+S1 — FIXED IN SOURCE / FINAL REGRESSION PENDING. Owner reports PAID/STARTED/OWED and disabled isolation; no saved ticket. Exact laptop SHA/capability unknown. Explicit PIN-authenticated legacy-only Sandbox archive now preserves rights/media via existing fence/isolation/ACK/archive. No customer proof bypass or ticket replacement. Focused backend41 and native28 plus final pair2 PASS; full/current CI next.
+[Contract/evidence](qa/portrait-v2-sandbox/BUG025-LEGACY-NO-TICKET.md).
+
+
 30 October l2 final: ca7827c full1229/1225PASS/4optionalSKIP, zero failure/error; CI40985975287 all three SUCCESS. Six new portable methods Windows/Linux and two native methods Linux at both portrait sizes PASS. No application defect found. Offline l2 fixture checks verified; owner laptop checklist remains NOT_RUN. Whole UX-07 NOT_RUN; matrix59/0/9/1 unchanged; external/operating/commercial host gates remain.
 
 30 October UX-07.l2a: three new original privacy/controller fixture methods PASS locally; source abb086c CI40977963717 all three jobs SUCCESS, portable method Windows/Linux and both native methods Linux PASS. No application defect reproduced. Whole UX-07 NOT_RUN, matrix59/0/9/1 unchanged; combined purchased-job release/drain lifecycle remains next. See UX07-PURCHASED-PRINT-INTEGRATION.md and its l2a receipt.

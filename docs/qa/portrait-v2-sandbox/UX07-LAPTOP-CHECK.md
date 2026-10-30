@@ -76,6 +76,28 @@ berlaku 24 jam; simpan secara pribadi sebelum menampilkan QR pembayaran.
 
 Tanpa tiket lama, BANTUAN OPERATOR jika tersedia hanya untuk membaca status
 dengan PIN launcher terbaru; PIN tidak menggantikan bukti pemilik foto.
+Jika hasil pemeriksaan menunjukkan **PAID / STARTED / OWED** dan muncul
+**ARSIPKAN UJI TANPA TIKET**, ini jalur khusus pesanan Sandbox lama yang tidak
+pernah terikat tiket. Kamu sendiri boleh menjalankannya:
+
+1. Klik **ARSIPKAN UJI TANPA TIKET**. Baca konfirmasi; klik pertama belum
+   mengarsipkan/melepas apa pun. Foto lama tetap terkunci. Batal tersedia.
+2. Masukkan PIN launcher terbaru lagi, lalu **KONFIRMASI ISOLASI UJI**.
+3. Tunggu pesan sesi lokal sudah diisolasi. Masukkan PIN lagi lalu
+   **LEPAS BOOTH • HAK TETAP DISIMPAN**.
+4. Setelah kembali ke iklan, mulai kunjungan uji baru melalui alur biasa.
+   Simpan tiket baru sebelum menampilkan QR pembayaran, lalu mulai L02 dari awal.
+
+Pesanan/foto/kewajiban lama tetap disimpan untuk pemeriksaan pemilik; ini tidak
+menghasilkan tiket pengganti, membuka foto lama, menyatakan layanan selesai,
+atau mengembalikan uang. Jika tombol tetap nonaktif, operasi ditolak atau
+statusnya berbeda, catat pesan dan berhenti pada langkah itu. Tiket yang
+sudah terikat tetapi hilang/kedaluwarsa bukan pesanan legacy tanpa tiket.
+Untuk kasus dengan tiket terikat, jalur isolasi biasa tetap berlaku sesuai
+syaratnya; tidak ada bypass akses foto melalui PIN. Catat uji legacy ini di
+L08 sebagai hasil parsial; jangan menganggap uji kembali dengan tiket A lulus
+jika tiket A memang tidak pernah ada.
+
 Jika hanya `PERLU BANTUAN OPERATOR` tanpa tombol seperti screenshot lama,
 catat SHA/perintah/teks halaman dan kirim hasil parsial. Jangan mengedit
 `visit.json`, database, manifest, counter, mengganti booth, menghapus foto,

@@ -65,3 +65,11 @@ zero failure/error/skip, 2.974s. Raw private report work/bug025-backend.txt.
 Initial two failing tests reproduced absent API path. One placement error moved
 an unchanged original fixture method into the new class; restored original name
 and setup, final focused rerun PASS. GUI/full/current CI still pending.
+
+## Native checkpoint
+
+GUI confirmation/cancel, PIN/receipt/ACK and missing-ticket explanation implemented.
+Native group28 PASS, then final compact-layout/normal release pair2 PASS. Six
+clean-process native captures at both sizes, private source logs work/bug025-*.
+Windows release-session registration added. Final full/current CI pending;
+[evidence](evidence/bug025-verification.json). No laptop result claimed.

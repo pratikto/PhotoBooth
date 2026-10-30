@@ -643,3 +643,54 @@ class SandboxWidgetTests(unittest.TestCase):
             self.assertEqual(app._photo_view['captured'],1)
             self.assertTrue(app._sandbox_can_capture())
             self.assertEqual(f.provider.charges,1)
+
+    def test_ticketless_legacy_archive_requires_confirmation_pin_isolation_and_ack(self):
+        for size in [(800,1280),(452,900)]:
+            with self.subTest(size=size),self.booth(recovery_pin='12345678') as (app,f):
+                Window.size=size
+                f.flow.client.customer_capability_supported=False
+                self.reserve(app,f)
+                app._sandbox_photo_consent();self.settle(app)
+                app._admit_photo_test();self.settle(app)
+                app._photo_submit('capture',np.zeros((120,160,3),dtype=np.uint8));self.settle(app)
+                oid=f.flow.snapshot()['order']['order_id'];tx=app._photo_jobs.service.transaction
+                path=app._photo_jobs.service.session.initial_photo_paths[0];before=path.read_bytes()
+                self.assertFalse(f.store.has_customer_capability(oid))
+                f.flow.client.customer_capability_supported=True
+                app._sandbox_operator_open()
+                app._sandbox_operator_input.text='12345678';app._sandbox_operator_inspect();self.settle(app)
+                def button(text):
+                    return next(w for w in app.stage.walk() if isinstance(w,ArcadeButton) and w.text==text)
+                self.assertFalse(button('ARSIPKAN UJI TANPA TIKET').disabled)
+                old=button('ARSIPKAN UJI TANPA TIKET');old.dispatch('on_release')
+                self.assertTrue(app._sandbox_legacy_confirm)
+                EventLoop.idle()
+                message=next(w for w in app.stage.walk() if getattr(w,'text','').startswith('Uji lama tanpa tiket'))
+                self.assertLessEqual(message.top,message.parent.top)
+                self.assertGreaterEqual(message.y,message.parent.y)
+                self.assertIsNone(f.store.service_fence(oid,'PB001'))
+                self.assertEqual(app._sandbox_operator_input.text,'')
+                button('BATALKAN PENGARSIPAN UJI').dispatch('on_release')
+                self.assertFalse(app._sandbox_legacy_confirm)
+                old.dispatch('on_release');self.assertFalse(app._sandbox_legacy_confirm)
+                button('ARSIPKAN UJI TANPA TIKET').dispatch('on_release')
+                # Privacy pause also retires an outstanding confirmation.
+                app.on_pause();app.on_resume();self.settle(app)
+                self.assertFalse(app._sandbox_legacy_confirm)
+                app._sandbox_operator_open()
+                app._sandbox_operator_input.text='12345678';app._sandbox_operator_inspect();self.settle(app)
+                button('ARSIPKAN UJI TANPA TIKET').dispatch('on_release')
+                app._sandbox_operator_input.text='00000000';button('KONFIRMASI ISOLASI UJI').dispatch('on_release');self.settle(app)
+                self.assertIsNone(f.store.service_fence(oid,'PB001'));self.assertFalse(f.store.get(oid)['closed'])
+                app._sandbox_operator_input.text='12345678';button('KONFIRMASI ISOLASI UJI').dispatch('on_release');self.settle(app)
+                self.assertIsNotNone(app._sandbox_isolation);self.assertFalse(f.store.get(oid)['closed'])
+                self.assertEqual(app._photo_view,{})
+                app._sandbox_operator_input.text='12345678';button('LEPAS BOOTH • HAK TETAP DISIMPAN').dispatch('on_release');self.settle(app)
+                self.assertEqual(app.navigation.page,ADVERT);self.assertTrue(f.store.get(oid)['closed'])
+                self.assertEqual(f.store.fulfillment(oid,'PB001')['obligation_state'],'OWED')
+                self.assertEqual(f.store.get(oid)['service_state'],'STARTED')
+                self.assertEqual(path.read_bytes(),before);self.assertFalse(f.store.has_customer_capability(oid))
+                self.assertTrue((f.root/'visits'/(f.flow.snapshot()['checkout_key']+'.json')).is_file())
+                self.quote(app);app._sandbox_begin();self.settle(app)
+                self.assertTrue(app._sandbox_view['ticket_required'])
+                self.assertEqual(f.provider.charges,2)

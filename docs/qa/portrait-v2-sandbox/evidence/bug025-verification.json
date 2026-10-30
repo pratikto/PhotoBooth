@@ -1,0 +1,76 @@
+{
+  "date": "2026-10-30",
+  "backend_source": "cceded673d51cf29a0b93c04770979686137cf5f",
+  "status": "FOCUSED_VERIFIED_FINAL_FULL_AND_CI_PENDING",
+  "focused": {
+    "backend": {
+      "run": 41,
+      "pass": 41,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 2.974
+    },
+    "native_before_height_adjustment": {
+      "run": 28,
+      "pass": 28,
+      "seconds": 55.066
+    },
+    "native_final_height_and_normal_release": {
+      "run": 2,
+      "pass": 2,
+      "seconds": 11.927,
+      "sizes": [
+        [
+          800,
+          1280
+        ],
+        [
+          452,
+          900
+        ]
+      ]
+    }
+  },
+  "new_methods": {
+    "portable_http": 2,
+    "portable_controller": 3,
+    "native": 1
+  },
+  "screenshots": [
+    {
+      "file": "bug025-native/01-legacy-inspected-452x9000001.png",
+      "sha256": "c1a136edfcace2b44582e42fe396b3b5481e4413386111324aeb6d8b4c9b032d"
+    },
+    {
+      "file": "bug025-native/01-legacy-inspected-800x12800001.png",
+      "sha256": "2c8fbb16b8ff8a3da6691ea14968f837a471e8ef7f1157f31c674686a4f3c102"
+    },
+    {
+      "file": "bug025-native/02-confirm-archive-452x9000001.png",
+      "sha256": "7ee86f02565c1abd3ca2e0b64549e92d06d394913ded5e190782168183df55a6"
+    },
+    {
+      "file": "bug025-native/02-confirm-archive-800x12800001.png",
+      "sha256": "f274c3af1ddd693fb2ae2b6f96f0fdb9046ae9af3c73cb32143480589ea6c232"
+    },
+    {
+      "file": "bug025-native/03-isolated-before-ack-452x9000001.png",
+      "sha256": "d7433a0e6a133a84c3a4c1fcb07b7e7f8b7e6d4e7b18f023b49b4f21c8f6bb2f"
+    },
+    {
+      "file": "bug025-native/03-isolated-before-ack-800x12800001.png",
+      "sha256": "f7369b9e72a407982e37faae02a6cb5768bd1505477d010fcf8a677299fc4bb8"
+    }
+  ],
+  "capture": "Original native widget/test fixture; Config set before Window in one clean process per size, following tools/render_portrait_v2.py. No real merchant/device/media. Initial live-resize software-GL captures were corrupt and rejected; clean-process captures replace them. Compact confirmation message height adjusted to stay in card; targeted final native rerun PASS.",
+  "full": "PENDING at final functional commit",
+  "ci": "PENDING at final functional commit",
+  "limits": [
+    "Owner screenshot exact SHA/capability flag unknown; source confirms absent capability is one disabled-button condition.",
+    "New action applies ONLY to fresh-settled Sandbox paid OWED records without any capability row. Existing bound/lost/expired/revoked tickets cannot use it.",
+    "Original two-phase isolation/ACK/archive, no replay, privacy and transport guards retained; no credential reissue or private media access.",
+    "No actual user state is read, edited, deleted or migrated. No production or commercial acceptance implied.",
+    "Whole UX-07 NOT_RUN and matrix59/0/9/1 unchanged; actual owner laptop/provider acceptance next."
+  ]
+}

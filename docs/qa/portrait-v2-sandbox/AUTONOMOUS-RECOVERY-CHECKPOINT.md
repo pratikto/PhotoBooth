@@ -1,5 +1,26 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 30 October — BUG-025 native ticketless Sandbox archive focused-verified
+
+Backend cceded6 pushed/remote-verified. Existing operator UI now explains the
+legacy missing-ticket hold, offers explicit ARSIPKAN UJI TANPA TIKET then
+confirmation/cancel, fresh local PIN, original serialized isolation, second PIN
+and LEPAS BOOTH. First click/cancel makes no backend mutation; pause/stale widgets
+retire confirmation and wrong PIN holds. Original normal-ticket release unchanged.
+New visits retain mandatory ticket screen. PAID/STARTED/OWED and media stay kept;
+legacy archive grants no photo access or replacement ticket. Checklist now gives
+these exact owner steps. Windows registers original release session fixtures;
+Linux exact-method receipts include all six new cases.
+
+Focused backend41 PASS; native28 PASS (55.066s), then final compact card/message
+adjustment plus bounds assertion and normal-path regression **2 PASS (11.927s)**.
+Six final synthetic native PNGs at800x1280/452x900; initial software-GL live-resize
+captures rejected, regenerated in separate preconfigured processes using the
+existing renderer convention. Functional fix focused-verified; final full/CI now
+required at containing commit before laptop handoff. No release/matrix change.
+Contract: BUG025-LEGACY-NO-TICKET.md; exact provisional receipt: evidence/bug025-verification.json.
+
+
 ## 30 October — BUG-025 legacy ticketless Sandbox archive backend
 
 Owner cannot proceed from PAID/STARTED/OWED and has no saved ticket. Source

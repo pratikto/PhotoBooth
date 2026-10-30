@@ -29,6 +29,7 @@ class SandboxViews:
         self._sandbox_operator_mode = False
         self._sandbox_operator_input = None
         self._sandbox_isolation = None
+        self._sandbox_legacy_confirm = False
         self._sandbox_isolation_epoch = 0
 
     def _sandbox_submit(self, action, *args):
@@ -57,6 +58,7 @@ class SandboxViews:
         self._sandbox_operator_input=None
         self._sandbox_operator_mode=False
         self._sandbox_isolation=None
+        self._sandbox_legacy_confirm=False
         self._sandbox_claim_input=None
         self._cancel_countdown()
         self._sandbox_consent=False
@@ -88,12 +90,30 @@ class SandboxViews:
         if (not self._sandbox_operator_mode or self._sandbox_jobs.busy
                 or (self._photo_jobs and self._photo_jobs.busy) or not self._sandbox_operator_input):
             return
+        order=(self._sandbox_view or {}).get('order') or {}
+        legacy=(order.get('mode')=='sandbox' and order.get('state')=='PAID'
+                and order.get('customer_capability_bound') is False)
+        if legacy and not self._sandbox_isolation and not self._sandbox_legacy_confirm:
+            self._sandbox_operator_input.text=''
+            self._sandbox_legacy_confirm=True
+            self._sandbox_error='Konfirmasi arsip uji lama. Foto tetap terkunci; hak dan data tidak dihapus.'
+            self._show()
+            return
         pin=self._sandbox_operator_input.text;self._sandbox_operator_input.text=''
         if self._sandbox_isolation:
             receipt=self._sandbox_isolation;self._sandbox_isolation=None
             self._sandbox_submit('acknowledge_release',pin,receipt)
         else:
-            self._sandbox_submit('prepare_release',pin)
+            self._sandbox_submit('prepare_legacy_release' if legacy else 'prepare_release',pin)
+        self._show()
+
+    def _sandbox_cancel_legacy_release(self):
+        if self._sandbox_jobs.busy or self._sandbox_isolation:
+            return
+        if self._sandbox_operator_input:
+            self._sandbox_operator_input.text=''
+        self._sandbox_legacy_confirm=False
+        self._sandbox_error='Pengarsipan belum dilakukan. Sesi lama tetap disimpan.'
         self._show()
 
     def _sandbox_open_saved(self):
@@ -292,7 +312,7 @@ class SandboxViews:
                 self._sandbox_refresh_at=time.monotonic()+2
                 return
             if outcome.error:
-                if outcome.action in {'operator_inspect','prepare_release','acknowledge_release'}:
+                if outcome.action in {'operator_inspect','prepare_release','prepare_legacy_release','acknowledge_release'}:
                     self._sandbox_error='Pemeriksaan ditolak atau provider belum tersedia. Periksa PIN dan koneksi.'
                     self._show()
                     return
@@ -308,7 +328,7 @@ class SandboxViews:
                     self._sandbox_view = {'phase':'UNCERTAIN'}
                 self._sandbox_error = 'Status belum pasti. Cek lagi; jangan membuat pesanan atau membayar ulang.'
             else:
-                if outcome.action=='prepare_release':
+                if outcome.action in {'prepare_release','prepare_legacy_release'}:
                     self._sandbox_view=outcome.value
                     self._ensure_photo_jobs()
                     data=outcome.value;release=data['order']['release']
@@ -319,6 +339,7 @@ class SandboxViews:
                 if outcome.action=='acknowledge_release':
                     self._sandbox_view=outcome.value;self._sandbox_consent=False
                     self._sandbox_operator_mode=False;self._sandbox_isolation=None
+                    self._sandbox_legacy_confirm=False
                     self._photo_prepared=True
                     self._sandbox_leave()
                     return
@@ -495,7 +516,12 @@ class SandboxViews:
         shell=self._frame(canvas,brand_height=48)
         self._brand(shell,'OPERATOR SANDBOX','PEMERIKSAAN STATUS • BUKAN PENGEMBALIAN DANA')
         card=PixelCard(orientation='vertical',padding=12,spacing=8)
-        card.add_widget(text_label('Masukkan PIN dari terminal launcher lokal.\nPIN berbeda dari tiket pelanggan.',size=16,height=90,color=MUTED))
+        order=view.get('order') or {}
+        legacy=(order.get('mode')=='sandbox' and order.get('state')=='PAID'
+                and order.get('customer_capability_bound') is False)
+        message=('Uji lama tanpa tiket pemulihan.\nArsip menyimpan pesanan, foto dan kewajiban.\nFoto tetap terkunci; bukan refund atau selesai.\nGunakan PIN launcher terbaru.' if legacy else
+                 'Masukkan PIN dari terminal launcher lokal.\nPIN berbeda dari tiket pelanggan.')
+        card.add_widget(text_label(message,size=14 if legacy else 16,height=90,color=MUTED))
         field=TextInput(multiline=False,password=True,hint_text='PIN operator 8 digit',
             input_filter='int',size_hint_y=None,height=52,font_size=18)
         self._sandbox_operator_input=field
@@ -505,15 +531,20 @@ class SandboxViews:
             details='Pembayaran: '+report['payment']+'\nLayanan: '+report['service']
             details+='\nKewajiban: '+str(report['obligation'] or '—')
             details+='\nMasalah: '+str(report['issue'] or '—')
-            card.add_widget(text_label(details,size=16,height=180,color=CYAN))
+            card.add_widget(text_label(details,size=16,height=112 if legacy else 180,color=CYAN))
         card.add_widget(Widget())
         shell.add_widget(card)
         shell.add_widget(text_label(self._sandbox_error,size=13,height=90,color=GOLD))
         shell.add_widget(self._action('PERIKSA STATUS OPERATOR',self._sandbox_operator_inspect,height=52,disabled=self._sandbox_jobs.busy))
-        order=view.get('order') or {}
-        release_ready=bool(self._sandbox_isolation or (order.get('state')=='PAID' and order.get('customer_capability_bound')))
-        shell.add_widget(self._action('LEPAS BOOTH • HAK TETAP DISIMPAN' if self._sandbox_isolation else 'ISOLASI SESI LAMA',
+        release_ready=bool(self._sandbox_isolation or legacy or (order.get('state')=='PAID' and order.get('customer_capability_bound')))
+        title=('LEPAS BOOTH • HAK TETAP DISIMPAN' if self._sandbox_isolation else
+               'KONFIRMASI ISOLASI UJI' if legacy and self._sandbox_legacy_confirm else
+               'ARSIPKAN UJI TANPA TIKET' if legacy else 'ISOLASI SESI LAMA')
+        shell.add_widget(self._action(title,
             self._sandbox_operator_release,height=52,disabled=self._sandbox_jobs.busy or
             bool(self._photo_jobs and self._photo_jobs.busy) or not release_ready))
+        if legacy and self._sandbox_legacy_confirm and not self._sandbox_isolation:
+            shell.add_widget(self._action('BATALKAN PENGARSIPAN UJI',self._sandbox_cancel_legacy_release,
+                height=48,variant='tertiary',disabled=self._sandbox_jobs.busy))
         shell.add_widget(self._action('KEMBALI KE TIKET PELANGGAN',self._sandbox_operator_close,height=52,
             variant='tertiary',disabled=self._sandbox_jobs.busy))

@@ -1,5 +1,11 @@
 # Meong Photobooth — current feature status
 
+## 30 October — BUG-025 — owner-only Sandbox legacy archive
+
+Explicit no-ticket legacy Sandbox operator archive now mounted in native UI with confirmation/cancel and two-phase release. Normal ticket/privacy and printer/Drive-off boundaries preserved. Focused checks PASS; final full/current CI pending; user laptop NOT_RUN. Commercial acceptance unchanged.
+[Contract/evidence](qa/portrait-v2-sandbox/BUG025-LEGACY-NO-TICKET.md).
+
+
 ## 30 October — UX-07.l2 automatic fixture checks verified / laptop handoff
 
 Final test/fixture source **ca7827c28c02e8fb2650f0a86cacdeb129c8434c**.

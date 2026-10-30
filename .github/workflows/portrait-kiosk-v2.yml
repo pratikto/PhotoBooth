@@ -100,6 +100,9 @@ jobs:
                   ('test_purchased_print_http.PaidPrintHttpTests.', 3),
                   ('test_ux07_lifecycle.PurchasedLifecycleTests.', 1),
                   ('test_ux07_lifecycle_release.PurchasedReleaseTests.', 5),
+                  ('test_checkout_release.ReleaseTests.test_legacy_', 2),
+                  ('test_release_session.LegacyReleaseSessionTests.', 3),
+                  ('test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_ticketless_legacy_', 1),
               ],
               'native-tests.txt': [
                   ('tests.test_ad_player.AdvertisementPlayerTests.', 4),
@@ -209,7 +212,7 @@ jobs:
         env:
           MEONG_CI_TEST_REPORT: ${{ runner.temp }}/meong-autonomous-recovery.txt
         run: |
-          python tools/run_kiosk_unittests.py test_checkout_durability test_qris_recovery test_autonomous_recovery_faults test_checkout_release test_ux05_abandonment test_ux07_readiness test_ux07_mock_printer test_ux07_printer_evidence test_delivery_requirements test_delivery_requirement_issuance test_purchased_print_purchase test_purchased_print_jobs test_purchased_print_http test_ux07_lifecycle test_ux07_lifecycle_release test_ux11_process_hold test_service_fencing test_fulfillment_issues test_customer_capability test_capture_journal test_output_journal test_photo_reconstruction test_crash_supervisor test_notification_inbox
+          python tools/run_kiosk_unittests.py test_checkout_durability test_qris_recovery test_autonomous_recovery_faults test_checkout_release test_release_session test_ux05_abandonment test_ux07_readiness test_ux07_mock_printer test_ux07_printer_evidence test_delivery_requirements test_delivery_requirement_issuance test_purchased_print_purchase test_purchased_print_jobs test_purchased_print_http test_ux07_lifecycle test_ux07_lifecycle_release test_ux11_process_hold test_service_fencing test_fulfillment_issues test_customer_capability test_capture_journal test_output_journal test_photo_reconstruction test_crash_supervisor test_notification_inbox
           $testExit = $LASTEXITCODE
           if ($testExit -eq 0 -and (Test-Path $env:MEONG_CI_TEST_REPORT)) {
             $summary = (Select-String -Path $env:MEONG_CI_TEST_REPORT -Pattern '^KIOSK_UNITTEST_SUMMARY:').Line

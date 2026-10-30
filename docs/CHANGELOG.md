@@ -1,5 +1,11 @@
 # Meong Photobooth — changelog
 
+## 30 October — BUG-025 — Sandbox legacy archive
+
+Added explicit PIN-confirmed archive for paid Sandbox test orders that predate customer tickets. Retains PAID/STARTED/OWED, original media, fence/isolation/ACK/archive; creates no replacement credential or financial effect. Added five HTTP/controller regressions and one native two-size scenario; novice guide updated. Final full/current CI pending.
+[Contract/evidence](qa/portrait-v2-sandbox/BUG025-LEGACY-NO-TICKET.md).
+
+
 ## 30 October — mock purchased-print chain verified
 
 Seven source/test micro-pushes through2cac0ba (functional e82d0ee); atomic original
