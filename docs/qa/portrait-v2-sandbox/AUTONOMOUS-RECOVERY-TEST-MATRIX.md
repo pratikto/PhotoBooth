@@ -1,5 +1,7 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
+30 October UX-07.l2a: three new original privacy/controller fixture methods PASS locally; CI pending. No application defect reproduced. Whole UX-07 NOT_RUN, matrix59/0/9/1 unchanged; combined purchased-job release/drain lifecycle remains next. See UX07-PURCHASED-PRINT-INTEGRATION.md and its l2a receipt.
+
 ## 30 October — mock purchased-print chain verified
 
 Seven source/test micro-pushes through2cac0ba (functional e82d0ee); atomic original

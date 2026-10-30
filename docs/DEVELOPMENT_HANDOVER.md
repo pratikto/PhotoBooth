@@ -1,5 +1,33 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 30 October — UX-07.l2a original privacy/controller fixture
+
+Continuation refreshed remote/base to `8ab955b` (same branch); previous source
+2cac0ba/full1221 and CI40970539519 remain historical exact-source evidence.
+New test-only micro-increment: original Sandbox app/controller/PhotoJobs with
+transport OFF exercises pause/resume, original/incorrect/foreign ticket, retired
+claim callback and deliberate continuation at800x1280/452x900. Original mock
+PRINT_REQUIRED_V1 HTTP/controller + transport-off PhotoTest additionally proves
+retired/expired resume permission cannot restore photos; original requirement,
+allocation/copies, file/manifest bytes, one provider effect and PAID/OWED preserved.
+Two native methods PASS/15.702s; one portable method PASS/0.214s; no skips/errors/
+failures in final focused runs. Initial fixture2methods/4subtest ERROR used the
+wrong LocalTransaction attribute; fixed fixture to existing folder_path, no
+application guard/assertion change. [Receipt](qa/portrait-v2-sandbox/evidence/ux07-l2a-verification.json).
+CI registers portable method Windows/Linux and both native methods Linux with
+exact method receipts. New CI pending; no native Windows/device acceptance.
+No application/runtime or commercial host change, no physical/provider/cloud
+operation; do not rerun unchanged historical full solely for these test additions.
+
+Next UX-07.l2b: original paid-print worker drain, SENDING/UNCERTAIN release holds,
+exact PREPARE/isolation/ACK/archive/lostACK/restart/return fixture. Current source
+subset is not the complete purchased lifecycle or commercial acceptance. Whole
+UX-07 NOT_RUN; matrix59PASS/0FAIL/9BLOCKED/1NOT_RUN unchanged; PAY-22/WEB01–08
+remain BLOCKED and AR-13 conditional/audit IN_PROGRESS. Original dirty workspace
+at /workspace/PhotoBooth was preserved; this increment uses a clean same-branch
+checkout, no new branch or restoration of obsolete local patches.
+
+
 ## 30 October — mock paid-print chain regression and current CI verified
 
 Latest source/test GitHub HEAD **2cac0ba0dda4df996ab514080a071e99f79272dd**; functional source **e82d0eef032edfcbedec0a9f4c172e9c5edaad5e**.

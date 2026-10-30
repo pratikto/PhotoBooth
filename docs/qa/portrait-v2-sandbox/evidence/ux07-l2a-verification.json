@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-30",
+  "increment": "UX-07.l2a",
+  "base": "8ab955bdd1959a30ba5a1471df6247dd2cad67ed",
+  "runtime": "unchanged from published e82d0ee; tests and CI only",
+  "platform": "Linux/Python3.12.14/SDL offscreen softwareGL, synthetic provider/media only",
+  "results": [
+    {
+      "command": "python tools/run_kiosk_unittests.py test_ux07_lifecycle_widgets",
+      "run": 2,
+      "pass": 2,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 15.702,
+      "sizes": [
+        [
+          800,
+          1280
+        ],
+        [
+          452,
+          900
+        ]
+      ]
+    },
+    {
+      "command": "python tools/run_kiosk_unittests.py test_ux07_lifecycle",
+      "run": 1,
+      "pass": 1,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 0.214
+    }
+  ],
+  "initial_fixture_error": "2 methods/4 subtest ERROR, wrong LocalTransaction.root attribute; corrected to existing folder_path; no application/assertion changes",
+  "matrix": "59 PASS / 0 FAIL / 9 BLOCKED / 1 NOT_RUN",
+  "ci": "PENDING new push",
+  "remaining": "UX-07.l2b: combined original purchased job/transport-off worker drain, SENDING/UNCERTAIN release refusal, PREPARE/isolation/ACK/archive/lost ACK/restart/return fixture. Commercial/device UX-07 NOT_RUN; PAY-22/WEB01-08 BLOCKED.",
+  "hashes": {
+    "tests/test_ux07_lifecycle.py": "b5e031fbc4d403e98116f41eb87dc06a5be1bdf84343e9bb37181523882aa024",
+    "tests/test_ux07_lifecycle_widgets.py": "12da0750dbc4cd57fd2470870e3adc4175180e72863132f2c13468257afa3c4d"
+  }
+}
