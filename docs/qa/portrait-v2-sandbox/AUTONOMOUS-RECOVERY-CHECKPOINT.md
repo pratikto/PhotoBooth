@@ -1,5 +1,19 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 30 October — offline laptop checkbox/report form
+
+Owner requests tick boxes and a report prompt to paste into chat. Added
+`windows-checklist-ux07.html`, reusing the established health checklist layout
+and report pattern, with nine UX-07 checks, mutually exclusive PASS/FAIL, blank
+NOT_RUN, unknown actual laptop SHA, local browser save, copy/TXT/manual fallback.
+Chromium automation PASS: initial/mixed states, exclusivity, persistence, escaped
+notes, copy and denied-clipboard fallback, TXT content, 800/452/360 widths, reset
+and unavailable storage. Real file:// navigation was blocked by this managed
+browser; browser verification used a temporary loopback-only document preview.
+Local HTML file use on the actual laptop remains manual, not inferred PASS.
+No application code/acceptance/matrix changed; source full/CI retain ca7827c.
+[Open the local form](windows-checklist-ux07.html).
+
 ## 30 October — UX-07.l2 automatic fixture checks verified / laptop handoff
 
 Final test/fixture source **ca7827c28c02e8fb2650f0a86cacdeb129c8434c**.

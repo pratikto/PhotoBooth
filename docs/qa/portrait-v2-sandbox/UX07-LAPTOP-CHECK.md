@@ -1,5 +1,7 @@
 # UX-07 lifecycle — owner laptop check
 
+**Interactive form:** open [windows-checklist-ux07.html](windows-checklist-ux07.html) locally in your browser. Tick Lulus/Gagal, then Salin Hasil untuk Chat. Blank items export as NOT_RUN; actual laptop SHA starts blank. The form stores data only in the browser and offers TXT/manual-copy fallbacks.
+
 30 October 2026. Fixture source ca7827c: full1229/1225 PASS/4optional SKIP,
 zero failures/errors; CI40985975287 all three jobs SUCCESS.
 Automated lifecycle fixtures are separate from these **NOT_RUN**

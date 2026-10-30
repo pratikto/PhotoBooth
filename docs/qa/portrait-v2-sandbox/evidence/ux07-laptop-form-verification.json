@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-30",
+  "base": "f1bdff65d7fc3813592db80726464c92e7cb9677",
+  "file": "docs/qa/portrait-v2-sandbox/windows-checklist-ux07.html",
+  "sha256": "ed37286b7d72ba48b83965f922bf9f0b45d5f574385f515d6e04f8f356699be0",
+  "reuse": "docs/qa/portrait-v2-health-clicks/windows-checklist.html layout/report pattern; nine current UX07-LAPTOP-CHECK items",
+  "browser": "Chromium headless + Playwright; local loopback document preview only",
+  "result": "PASS",
+  "cases": [
+    "nine initial NOT_RUN and unknown SHA",
+    "mixed PASS/FAIL/NOT_RUN output",
+    "mutually exclusive result checkboxes",
+    "localStorage restore",
+    "notes rendered as text including script-shaped strings",
+    "clipboard action generated exact report",
+    "clipboard denied fallback visible selected text",
+    "TXT download content and filename",
+    "800/452/360 widths no horizontal overflow",
+    "confirmed reset clears metadata/results",
+    "unavailable storage keeps form usable"
+  ],
+  "limits": [
+    "managed browser blocks file:// navigation; actual offline-file use on laptop NOT_RUN",
+    "clipboard API success branch stubbed in browser test; actual OS clipboard remains manual; fallback verified",
+    "no actual device/merchant/manual gate passed by this form"
+  ],
+  "scope": "docs-only form; no application code or matrix status changed; no repeat GUI CI"
+}

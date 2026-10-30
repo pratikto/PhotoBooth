@@ -1,0 +1,82 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src data:; base-uri 'none'; form-action 'none'"><title>Checklist Laptop Meong — UX-07</title><style>
+:root{color-scheme:light;--bg:#f4f3fa;--ink:#18203e;--muted:#5a627a;--purple:#5542ac;--line:#dedced;--green:#16764e}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,Segoe UI,sans-serif}main{max-width:920px;margin:auto;padding:14px 18px 60px}header{padding:22px;border-radius:16px;background:#101a43;color:#fff}h1{margin:4px 0;font-size:clamp(23px,4vw,32px)}header p{color:#d6d8f0;margin:8px 0 0}.tag{font-size:12px;font-weight:800;letter-spacing:2px;color:#7ce2fc}
+.panel,section{background:white;border:1px solid var(--line);border-radius:14px;margin-top:18px;padding:20px}.meta{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:block;font-weight:650;font-size:14px}.field input,.field select,textarea{width:100%;margin-top:6px;border:1px solid #bdc0d1;border-radius:8px;padding:11px;color:var(--ink);background:#fff;font:inherit}.field input:focus,textarea:focus{outline:3px solid #dad2ff;outline-offset:1px}.wide{grid-column:1/-1}.summary{position:sticky;top:0;z-index:2;box-shadow:0 3px 16px #151a4315;background:#fffffff5;padding:14px 20px;border:1px solid var(--line);border-radius:12px;margin-top:18px}.numbers{display:flex;justify-content:space-between;gap:12px}.numbers strong{color:var(--purple)}progress{display:block;width:100%;height:13px;margin-top:9px;accent-color:var(--green)}h2{font-size:20px;margin:0 0 12px}.section-count{font-size:14px;font-weight:500;color:var(--muted);margin-left:10px}.item{display:flex;align-items:flex-start;gap:12px;padding:13px 7px;border-top:1px solid #efedf6;cursor:pointer;border-radius:6px}.item:hover{background:#f7f5ff}.item input{flex:0 0 23px;width:23px;height:23px;margin:2px 0;accent-color:var(--green);cursor:pointer}.item .id{display:inline-block;min-width:36px;color:var(--purple);font-size:13px;font-weight:750}.item.done{background:#f2faf5}.item.done .id{color:var(--green)}.help{color:var(--muted);font-size:14px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}button{border:0;border-radius:9px;padding:12px 18px;background:var(--purple);color:#fff;font:600 15px system-ui;cursor:pointer;min-height:46px}button.secondary{background:#eeebf8;color:var(--ink)}button.reset{background:#fff;color:#8c3434;border:1px solid #dcc5c5}button:hover{filter:brightness(.95)}#status{min-height:24px;margin-top:12px;color:var(--green)}textarea{min-height:150px;resize:vertical}.footer{font-size:13px;color:var(--muted);margin-top:18px}@media(max-width:580px){.meta{grid-template-columns:1fr}.panel,section{padding:15px}.summary{padding:12px}.item{padding:13px 2px}.item .id{min-width:30px}}@media print{body{background:white}.summary{position:static;box-shadow:none}.actions,#status,.footer{display:none}section{break-inside:avoid}main{padding:0;max-width:none}header{color:#101a43;background:white;border-bottom:2px solid #101a43;border-radius:0}header p{color:#4b526b}}
+
+.result-row{border-top:1px solid var(--line);padding:14px 0}.result-row p{margin:0 0 10px}.choices{display:flex;flex-wrap:wrap;gap:18px}.choices label{display:flex;gap:8px;align-items:center;cursor:pointer}.choices input{width:22px;height:22px;accent-color:var(--green)}.failed{background:#fff1ef}.result-row.done{background:#f2faf5}#prompt-output{min-height:340px}.hint{font-size:13px;color:var(--muted)}code{overflow-wrap:anywhere}.numbers{flex-wrap:wrap}.meta input{min-width:0}.field{min-width:0}
+</style></head><body><main>
+<header><div class="tag">MEONG PHOTOBOOTH · UX-07</div><h1>Checklist cek laptop</h1><p>Centang <strong>Lulus</strong> hanya setelah berhasil dicoba. Centang <strong>Gagal</strong> bila ada masalah. Kosong berarti <strong>belum diuji</strong>.</p></header>
+<div class="panel help">Buka file ini langsung di browser laptop. Isi hasil, klik <strong>Salin Hasil untuk Chat</strong>, lalu paste dan kirim di percakapan ini. Form berjalan offline dan tidak mengirim data otomatis.<br><br>Jalankan <code>python tools/run_portrait_v2_sandbox.py</code> pada branch <code>feature/portrait-kiosk-v2-next</code>. Sandbox: <strong>printer/Drive OFF</strong>, hanya simulator Midtrans. Jangan menulis PIN, kunci, isi tiket asli atau foto pribadi di catatan. Jangan hapus jurnal/foto atau bayar lagi untuk melewati status yang belum pasti.</div>
+<div class="panel meta">
+<label class="field wide">SHA yang benar-benar diuji<input id="head" data-field placeholder="Hasil git rev-parse HEAD — boleh kosong jika belum tahu" maxlength="40"></label>
+<label class="field">Tanggal pengujian<input type="date" id="date" data-field></label>
+<label class="field">Kondisi file lokal<select id="dirty" data-field><option value="UNKNOWN">Belum diperiksa</option><option value="CLEAN">Bersih / clean</option><option value="DIRTY">Ada perubahan lokal / dirty</option></select></label>
+<label class="field">OS dan versi<input id="os" data-field placeholder="Contoh: Windows 11" maxlength="200"></label>
+<label class="field">Versi Python / Kivy / OpenCV<input id="versions" data-field placeholder="Kosong bila belum diketahui" maxlength="200"></label>
+<label class="field">Resolusi layar<input id="display" data-field placeholder="Contoh: 1920×1080" maxlength="100"></label>
+<label class="field">Scaling (%)<input id="scale" data-field placeholder="Contoh: 100%" maxlength="50"></label>
+<label class="field wide">Kamera<input id="camera" data-field placeholder="Model / bawaan laptop / USB / indeks kamera" maxlength="200"></label>
+<label class="field wide">Perintah yang dipakai<input id="launch" data-field value="python tools/run_portrait_v2_sandbox.py" maxlength="300"></label>
+</div>
+<div class="summary"><div class="numbers"><strong id="count" aria-live="polite"></strong><span id="save-status" class="help"></span></div><progress id="progress" max="9" value="0" aria-label="Jumlah cek lulus"></progress></div>
+<section><h2>Hasil pengujian</h2><p class="help">Semua item mulai dari belum diuji. Hasil otomatis sebelumnya tidak mencentang form ini.</p><div id="items"></div></section>
+<div class="panel"><h2>Catatan masalah / yang belum diuji</h2><label class="field" for="notes">Tulis ID item, langkah, hasil yang terlihat, dan alasan bila belum bisa diuji.</label><textarea id="notes" data-field placeholder="Contoh: L04 — setelah minimize, masih terlihat foto lama. L09 — ukuran 800×1280 belum dicoba." maxlength="8000"></textarea>
+<div class="actions"><button type="button" id="copy">Salin Hasil untuk Chat</button><button type="button" class="secondary" id="prepare">Tampilkan Prompt</button><button type="button" class="secondary" id="download">Unduh Hasil .txt</button><button type="button" class="reset" id="reset">Kosongkan Form</button></div><div id="status" role="status" aria-live="polite"></div></div>
+<div class="panel" id="submission" hidden><h2>Siap ditempel ke chat</h2><p class="help">Jika clipboard tidak tersedia, klik kotak ini lalu Ctrl+A dan Ctrl+C. Setelah paste ke chat, kirim pesannya.</p><textarea id="prompt-output" readonly aria-label="Prompt hasil pengujian"></textarea></div>
+<p class="footer">Referensi fixture otomatis: ca7827c, CI 40985975287. Referensi ini tidak mengisi SHA laptop dan tidak membuktikan hasil manual. Pengujian paper/merchant/infrastruktur/komersial serta penyelesaian UX-07/AR-13 tetap terpisah.</p>
+</main><script>
+const ITEMS = [["L01", "Data laptop dan versi tercatat", "Catat SHA yang benar-benar diuji, kondisi file lokal, OS, versi Python/Kivy/OpenCV, resolusi, scaling dan kamera."], ["L02", "QR pembayaran dan paste link Sandbox", "QR pesanan yang sama dan SALIN LINK QRIS bekerja di simulator Midtrans. Restart tidak membuat tagihan baru. Simpan tiket pemulihan secara pribadi."], ["L03", "Foto setelah pembayaran simulasi", "Setelah settlement simulasi dan persetujuan, ambil satu/dua foto. Hitung mundur menunggu tindakan kamu; desain dan jumlah lembar tetap."], ["L04", "Minimize lalu kembali", "Foto/strip lama, QR pembayaran dan input pemulihan lama tersembunyi. Tidak ada countdown, shutter, cetak atau upload otomatis."], ["L05", "Tiket salah ditolak", "Coba tiket tidak valid tanpa mengedit database/file. Halaman tetap privat; foto tidak terbuka dan tidak ada pembayaran tambahan."], ["L06", "Tiket asli dan lanjut secara sengaja", "Tiket asli menemukan sesi yang sama. Foto baru tampil setelah memilih lanjut; jumlah foto, jatah retake dan jumlah lembar tetap. Tidak ada charge/foto ulang otomatis."], ["L07", "Tutup dan buka aplikasi lagi", "Ulangi setelah foto sebagian dan setelah retake/hasil. Tiket asli melanjutkan sesi asli. Foto/output tersimpan tetap utuh; tidak ada efek otomatis."], ["L08", "Pelepasan terlindungi dan pelanggan berikutnya", "Gunakan kontrol pemulihan/PIN dari terminal. Pelanggan baru diterima setelah isolasi, ACK dan arsip terkonfirmasi. Foto lama tidak terlihat; tiket lama tidak mengambil alih pelanggan aktif. Saat kiosk bebas, tiket lama hanya membuka sesi aslinya."], ["L09", "Layout dan respons kontrol", "Cek 800×1280 dan 452×900 bila tersedia. Tombol, input, mouse/touch/keyboard, kamera reconnect dan klik cepat berfungsi. Ukuran yang belum bisa diuji dicatat sebagai belum diuji, bukan lulus."]];
+const KEY='meong-ux07-laptop-2026-10-30-v1';
+const FIELDS=['head','date','dirty','os','versions','display','scale','camera','launch','notes'];
+const el=id=>document.getElementById(id);
+try{const p=Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Jakarta',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).map(x=>[x.type,x.value]));el('date').value=p.year+'-'+p.month+'-'+p.day;}catch{el('date').value='2026-10-30';}
+const defaults=Object.fromEntries(FIELDS.map(id=>[id,el(id).value]));
+for(const [id,title,description] of ITEMS){
+ const row=document.createElement('div');row.className='result-row';row.id='row-'+id;
+ const p=document.createElement('p'),strong=document.createElement('strong');strong.textContent=id+' · '+title;
+ const help=document.createElement('span');help.className='help';help.textContent=description;
+ p.append(strong,document.createElement('br'),help);row.append(p);
+ const choices=document.createElement('div');choices.className='choices';choices.setAttribute('role','group');choices.setAttribute('aria-label',id+' '+title);
+ for(const [state,label] of [['PASS','Lulus'],['FAIL','Gagal']]){
+  const wrap=document.createElement('label'),box=document.createElement('input');box.type='checkbox';box.id=id+'-'+state;
+  box.addEventListener('change',()=>{if(box.checked)el(id+'-'+(state==='PASS'?'FAIL':'PASS')).checked=false;save();});
+  wrap.append(box,document.createTextNode(label));choices.append(wrap);
+ }
+ row.append(choices);el('items').append(row);
+}
+function state(id){return el(id+'-PASS').checked?'PASS':el(id+'-FAIL').checked?'FAIL':'NOT_RUN';}
+function values(){return Object.fromEntries(FIELDS.map(id=>[id,el(id).value]));}
+function report(){
+ const v=values(),counts={PASS:0,FAIL:0,NOT_RUN:0};ITEMS.forEach(([id])=>counts[state(id)]++);
+ const lines=['Berikut hasil cek manual Meong PhotoBooth UX-07 di laptop saya. Tolong analisis masalah dan langkah berikutnya. Hitung hanya PASS sebagai lulus; FAIL adalah gagal dan NOT_RUN belum diuji. Jangan menyatakan UX-07/AR-13 atau gate komersial selesai berdasarkan form ini.',
+ '', 'BRANCH: feature/portrait-kiosk-v2-next','MODE: QRIS Sandbox — printer/Drive OFF',
+ 'SHA laptop: '+(v.head.trim()||'UNKNOWN — belum diisi'),
+ 'Status SHA: '+(/^[a-f0-9]{7,40}$/i.test(v.head.trim())?'Diberikan pengguna; belum diverifikasi':'BELUM TERVERIFIKASI — SHA kosong/tidak valid'),
+ 'Kondisi file lokal: '+v.dirty,'Tanggal: '+(v.date||'UNKNOWN'),'OS: '+(v.os||'UNKNOWN'),
+ 'Python/Kivy/OpenCV: '+(v.versions||'UNKNOWN'),'Resolusi: '+(v.display||'UNKNOWN'),
+ 'Scaling: '+(v.scale||'UNKNOWN'),'Kamera: '+(v.camera||'UNKNOWN'),'Perintah: '+(v.launch||'UNKNOWN'),'',
+ 'RINGKASAN: '+counts.PASS+' PASS / '+counts.FAIL+' FAIL / '+counts.NOT_RUN+' NOT_RUN (9 item)',''];
+ ITEMS.forEach(([id,title,description])=>lines.push('['+state(id)+'] '+id+' — '+title+'\n  '+description));
+ lines.push('','CATATAN / ALASAN BELUM DIUJI:',v.notes.trim()||'(Belum ada catatan)',
+ '','Referensi otomatis: fixture ca7827c / CI 40985975287; terpisah dari SHA dan hasil manual laptop di atas.',
+ 'Gate lain: PAY-22/WEB-01–08 BLOCKED; perangkat/merchant/paper/Drive/privacy/operasional/host komersial/release belum diluluskan oleh form ini.');
+ return lines.join('\n');
+}
+function update(){
+ const counts={PASS:0,FAIL:0,NOT_RUN:0};for(const [id] of ITEMS){const s=state(id);counts[s]++;el('row-'+id).classList.toggle('done',s==='PASS');el('row-'+id).classList.toggle('failed',s==='FAIL');}
+ el('count').textContent=counts.PASS+' lulus · '+counts.FAIL+' gagal · '+counts.NOT_RUN+' belum diuji';el('progress').value=counts.PASS;
+ if(!el('submission').hidden)el('prompt-output').value=report();
+}
+function save(){update();try{localStorage.setItem(KEY,JSON.stringify({version:1,fields:values(),results:Object.fromEntries(ITEMS.map(([id])=>[id,state(id)]))}));el('save-status').textContent='Tersimpan di browser ini';}catch{el('save-status').textContent='Penyimpanan browser tidak tersedia; gunakan Unduh Hasil';}}
+function restore(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(!d||d.version!==1)return;for(const id of FIELDS)if(typeof d.fields?.[id]==='string')el(id).value=d.fields[id];for(const [id] of ITEMS){el(id+'-PASS').checked=d.results?.[id]==='PASS';el(id+'-FAIL').checked=d.results?.[id]==='FAIL';}}catch{}}
+function prepare(){save();el('submission').hidden=false;el('prompt-output').value=report();el('prompt-output').focus();el('prompt-output').select();el('status').textContent='Prompt siap. Salin, paste ke chat, lalu kirim.';}
+async function copy(){prepare();let copied=false;try{if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(el('prompt-output').value);copied=true;}}catch{}
+ if(!copied){try{el('prompt-output').focus();el('prompt-output').select();copied=document.execCommand('copy');}catch{}}
+ el('status').textContent=copied?'Hasil tersalin. Paste ke chat lalu kirim.':'Clipboard diblokir. Teks sudah dipilih: tekan Ctrl+C, atau gunakan Unduh Hasil .txt.';
+}
+FIELDS.forEach(id=>el(id).addEventListener('input',save));
+el('prepare').addEventListener('click',prepare);el('copy').addEventListener('click',copy);
+el('download').addEventListener('click',()=>{prepare();const url=URL.createObjectURL(new Blob([report()],{type:'text/plain;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='hasil-cek-laptop-meong-ux07.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);el('status').textContent='File .txt siap disimpan dan isinya bisa ditempel ke chat.';});
+el('reset').addEventListener('click',()=>{if(!confirm('Kosongkan hasil, data laptop dan catatan pada form ini?'))return;FIELDS.forEach(id=>el(id).value=defaults[id]);ITEMS.forEach(([id])=>{el(id+'-PASS').checked=false;el(id+'-FAIL').checked=false;});el('submission').hidden=true;el('prompt-output').value='';save();el('status').textContent='Form dikosongkan. Semua item belum diuji.';});
+restore();save();
+</script></body></html>
