@@ -36,10 +36,46 @@
   ],
   "initial_fixture_error": "2 methods/4 subtest ERROR, wrong LocalTransaction.root attribute; corrected to existing folder_path; no application/assertion changes",
   "matrix": "59 PASS / 0 FAIL / 9 BLOCKED / 1 NOT_RUN",
-  "ci": "PENDING new push",
+  "ci": {
+    "run": 40977963717,
+    "url": "https://github.com/pratikto/PhotoBooth/actions/runs/40977963717",
+    "source": "abb086cef3ef98484bb271ee807f982e24739afc",
+    "jobs": "all three SUCCESS",
+    "windows": {
+      "job_id": 123810583900,
+      "portable_method": "test_ux07_lifecycle.PurchasedLifecycleTests.test_original_paid_requirement_proof_expiry_and_deliberate_restore",
+      "method_result": "PASS",
+      "ledger": {
+        "run": 165,
+        "pass": 165,
+        "skip": 0
+      }
+    },
+    "linux": {
+      "job_id": 123810584210,
+      "recovery_ledger": {
+        "run": 466,
+        "pass": 466,
+        "skip": 0
+      },
+      "native_ledger": {
+        "run": 121,
+        "pass": 120,
+        "skip": 1
+      },
+      "new_methods": [
+        "test_original_paid_requirement_proof_expiry_and_deliberate_restore",
+        "test_claim_reply_retired_by_pause_cannot_restore_media_at_both_sizes",
+        "test_pause_resume_requires_original_proof_and_deliberate_continuation_at_both_sizes"
+      ],
+      "new_method_results": "all PASS; native methods each exercise 800x1280 and 452x900",
+      "native_skip": "optional palm assets; not counted PASS"
+    }
+  },
   "remaining": "UX-07.l2b: combined original purchased job/transport-off worker drain, SENDING/UNCERTAIN release refusal, PREPARE/isolation/ACK/archive/lost ACK/restart/return fixture. Commercial/device UX-07 NOT_RUN; PAY-22/WEB01-08 BLOCKED.",
   "hashes": {
     "tests/test_ux07_lifecycle.py": "b5e031fbc4d403e98116f41eb87dc06a5be1bdf84343e9bb37181523882aa024",
     "tests/test_ux07_lifecycle_widgets.py": "12da0750dbc4cd57fd2470870e3adc4175180e72863132f2c13468257afa3c4d"
-  }
+  },
+  "source": "abb086cef3ef98484bb271ee807f982e24739afc"
 }

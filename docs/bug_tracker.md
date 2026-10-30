@@ -1,6 +1,6 @@
 # Meong Photobooth — Bug register
 
-30 October UX-07.l2a: three new original privacy/controller fixture methods PASS locally; CI pending. No application defect reproduced. Whole UX-07 NOT_RUN, matrix59/0/9/1 unchanged; combined purchased-job release/drain lifecycle remains next. See UX07-PURCHASED-PRINT-INTEGRATION.md and its l2a receipt.
+30 October UX-07.l2a: three new original privacy/controller fixture methods PASS locally; source abb086c CI40977963717 all three jobs SUCCESS, portable method Windows/Linux and both native methods Linux PASS. No application defect reproduced. Whole UX-07 NOT_RUN, matrix59/0/9/1 unchanged; combined purchased-job release/drain lifecycle remains next. See UX07-PURCHASED-PRINT-INTEGRATION.md and its l2a receipt.
 
 ## BUG-024 — confirmed cancellation remains held after restart (29 October)
 

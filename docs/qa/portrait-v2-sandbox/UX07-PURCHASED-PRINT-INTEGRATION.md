@@ -541,8 +541,11 @@ Two native methods PASS/15.702s; one portable method PASS/0.214s; no skips/error
 failures in final focused runs. Initial fixture2methods/4subtest ERROR used the
 wrong LocalTransaction attribute; fixed fixture to existing folder_path, no
 application guard/assertion change. [Receipt](evidence/ux07-l2a-verification.json).
-CI registers portable method Windows/Linux and both native methods Linux with
-exact method receipts. New CI pending; no native Windows/device acceptance.
+Test source `abb086c`: CI **40977963717 all three jobs SUCCESS**. Exact log
+receipts confirm the portable method PASS Windows/Linux and both native methods
+PASS Linux at both portrait sizes. Windows ledger165 PASS; Linux recovery466
+PASS; native121 run/120 PASS/one optional palm SKIP. No native Windows/device
+acceptance. The containing docs-only follow-up preserves these test hashes.
 No application/runtime or commercial host change, no physical/provider/cloud
 operation; do not rerun unchanged historical full solely for these test additions.
 
