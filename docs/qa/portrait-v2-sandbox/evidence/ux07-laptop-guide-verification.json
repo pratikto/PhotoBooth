@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-30",
+  "base": "fb7657f39e8ce7b2a6e5cf4e71a78a44cfed7336",
+  "scope": "Owner asks novice-friendly elaboration of existing offline laptop checklist. Documentation/form only; application, launchers, acceptance ledger and transport guards unchanged.",
+  "files": {
+    "windows-checklist-ux07.html": "4b1da4bbab4e802cc1ca9c2289a36e9fcd38ab99d0e04c4e76844ba7adfec67e",
+    "UX07-LAPTOP-CHECK.md": "40deeb665cee4e006d219cdf1301185ca54793f677f544ae13979a74ce2fae72"
+  },
+  "reuse": "Existing nine-item form at fb7657f; existing result/localStorage/report/clipboard/TXT flow retained. No prior results relabeled or automatically migrated to a new test result.",
+  "reviewed": [
+    "AGENTS.md",
+    "README.md",
+    "docs/README.md",
+    "docs/DEVELOPMENT_PROTOCOL.md",
+    "docs/DEVELOPMENT_HANDOVER.md current checkpoint",
+    "AUTONOMOUS-RECOVERY-CHECKPOINT.md current checkpoint",
+    "AUTONOMOUS-RECOVERY-ROADMAP.md",
+    "AUTONOMOUS-RECOVERY-OPERATIONS.md",
+    "AUTONOMOUS-RECOVERY-CUSTOMER-CLAIM.md",
+    "AUTONOMOUS-RECOVERY-NATIVE.md",
+    "AUTONOMOUS-RECOVERY-OPERATOR.md",
+    "UX07-PURCHASED-PRINT-INTEGRATION.md current limits",
+    "COPY-LINK.md",
+    "LOCAL-SETTINGS.md",
+    "tools/run_portrait_v2_sandbox.py",
+    "tools/run_qris_sandbox.py",
+    "tools/run_portrait_v2.py",
+    "photobooth/kiosk_v2/sandbox_views.py",
+    "photobooth/kiosk_v2/photo_views.py",
+    "photobooth/kiosk_v2/app.py relevant entry/privacy methods"
+  ],
+  "content": "Nine guided scenarios, 44 numbered actions each paired with expected result; purpose/preconditions/PASS/FAIL/NOT_RUN/example per scenario; preparation, metadata commands, terms, existing-hold/setup troubleshooting; nine per-item notes included in report; explicit NOT_RUN buttons and jump-to-report link.",
+  "browser": {
+    "engine": "headless Chromium / Playwright on Linux",
+    "transport": "temporary loopback-only static-document preview; not payment backend or public hosting",
+    "result": "PASS",
+    "command": "node work/checklist/guided-browser.cjs",
+    "cases": [
+      "nine guides, 44 steps and 44 expected outcomes",
+      "nine separate notes; partial results stay NOT_RUN",
+      "placeholder examples never autofill reports",
+      "script-shaped note data stays inert",
+      "note save/restore and report export",
+      "mutually exclusive PASS/FAIL and explicit NOT_RUN",
+      "collapsing guide preserves verdict",
+      "clipboard API stub receives exact report",
+      "denied clipboard has selected manual fallback",
+      "TXT matches report byte-for-byte",
+      "800/452/360 widths no horizontal overflow and item navigation",
+      "reset clears per-item notes as well as metadata/results",
+      "old schema without notes restores previous results/metadata",
+      "unavailable storage leaves notes/report usable",
+      "no page errors"
+    ]
+  },
+  "content_checks": {
+    "result": "PASS",
+    "cases": [
+      "all 44 actions/expected outcomes and nine purpose/precondition/verdict/example sets match Markdown",
+      "no remote scripts/styles/frames; connect-src none",
+      "git diff --check"
+    ]
+  },
+  "initial_issue": "First guided browser attempt failed narrow-width overflow assertion: long simulator URL in numbered guide. Corrected guide list wrapping; complete browser verification rerun PASS. No app source/guard changes.",
+  "limits": [
+    "Actual Windows file:// opening and OS clipboard remain manual; managed browser file navigation was previously blocked. This turn reuses temporary loopback preview without changing policy.",
+    "No user manual results claimed. Metadata unknown until user records it. Previous locally saved results require separate report/reset before testing a new SHA.",
+    "Cannot infer precise Kivy window dimensions from display resolution or browser width. Unavailable size/reconnect checks remain NOT_RUN with notes.",
+    "Old-ticket submission to active visitor backend, lost ACK, sender failure and archive fault remain original automatic fixture proof; checklist does not ask user to bypass GUI or corrupt files.",
+    "Source fixtures/full/CI retain ca7827c and CI40985975287 provenance. No broad app rerun for documentation-only change; no merchant/physical/production approval inferred."
+  ]
+}

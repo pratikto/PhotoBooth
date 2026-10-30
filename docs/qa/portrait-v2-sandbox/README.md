@@ -1,5 +1,12 @@
 # P4b Sandbox → P5 readiness (FEAT-020 / FEAT-022)
 
+**Current owner laptop check:** [44-step beginner guide](UX07-LAPTOP-CHECK.md)
+and [offline tick/copy form](windows-checklist-ux07.html). Includes setup, actual
+button names, expected results, per-item notes and partial NOT_RUN reporting.
+Latest verified l2 fixtures retain ca7827c/full1229/1225 PASS/4optional SKIP and
+CI40985975287 all three SUCCESS; actual laptop/merchant and commercial gates
+remain separate. See the [current checkpoint](AUTONOMOUS-RECOVERY-CHECKPOINT.md).
+
 ## 30 October — mock purchased-print chain verified
 
 Seven source/test micro-pushes through2cac0ba (functional e82d0ee); atomic original

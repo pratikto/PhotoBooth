@@ -1,5 +1,31 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 30 October — detailed owner laptop instructions
+
+Base fb7657f, same branch. Owner requests beginner-friendly explanation of every
+check. Reused the nine-item offline form and expanded to 44 numbered actions,
+each with expected result, plus purpose/precondition/verdict/examples, setup and
+metadata commands, current GUI labels, recovery/setup troubleshooting and terms.
+Added per-item saved/exported notes, explicit NOT_RUN and report navigation.
+Partial upstream failures do not falsely fail downstream untried checks.
+Owner can act as local operator with latest launcher PIN; no extra staff needed.
+Separate automatic sender/lost-ACK/archive/backend-rejection evidence from what
+the mounted Sandbox GUI can actually exercise. No manual data edits/fault bypass,
+new merchant profile, repeat payment for recovery or transport enablement.
+
+Final focused Chromium/Playwright verification PASS (notes/state/report/storage,
+copy/TXT/fallback, legacy state, 800/452/360 layout/navigation); first long-URL
+overflow fixed and rerun PASS. All 44 steps/outcomes and nine guide sets match
+Markdown; diff checks PASS. Windows file:// and actual OS clipboard/manual
+device/provider results remain NOT_RUN. [Guide](UX07-LAPTOP-CHECK.md) ·
+[Exact evidence](evidence/ux07-laptop-guide-verification.json).
+Docs/form only: application, launcher, matrix59/0/9/1 and release gates unchanged;
+full/CI retain ca7827c/40985975287. No further l2 fixture work added by this task.
+Next owner opens the updated form, follows L01–L07 then optional L08 and records
+L09 throughout; returns copied actual/partial report. Safe docs increment pushed
+on existing branch; resolve containing SHA from Git. Current work/ scratch and
+unrelated dirty /workspace/PhotoBooth remain uncommitted/local-only, preserved.
+
 ## 30 October — offline laptop checkbox/report form
 
 Owner requests tick boxes and a report prompt to paste into chat. Added

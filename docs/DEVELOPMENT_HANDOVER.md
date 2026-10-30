@@ -1,5 +1,31 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 30 October — novice-friendly laptop checklist elaborated
+
+Owner found the nine-item form too terse. Extended the existing offline HTML
+and its Markdown guide: 44 numbered actions with expected outcomes, actual GUI
+button names, setup/metadata instructions, recovery-page troubleshooting,
+plain-language terms and PASS/FAIL/NOT_RUN examples. Nine individual note fields
+persist/export with the existing prompt/TXT flow; partial checks remain NOT_RUN.
+L08 explains the single owner can use the latest launcher PIN, re-enter it per
+action, and test only GUI-accessible paths; no manual DB/provider/fault bypass.
+L09 distinguishes screen resolution from measured app dimensions and unavailable
+hardware checks. Old saved reports remain recoverable; export/reset before a
+new SHA, never infer newly tested results from old ticks.
+
+Chromium/Playwright PASS: nine guides/44 outcomes, notes/persistence/report,
+partial state, result exclusivity/explicit NOT_RUN, old schema, copy/TXT/manual
+fallback, reset/storage unavailable, 800/452/360 layout/navigation. Initial long
+URL overflow corrected, final complete focused rerun PASS. Markdown/HTML content
+parity and diff checks PASS. Actual Windows file opening/clipboard/device and
+merchant results remain manual. No app/launcher source, matrix or release status
+changed; full/CI retain ca7827c/40985975287, no broad GUI rerun.
+[Guide and form](qa/portrait-v2-sandbox/UX07-LAPTOP-CHECK.md) ·
+[Evidence](qa/portrait-v2-sandbox/evidence/ux07-laptop-guide-verification.json).
+Next: owner updates same branch, opens the form and returns actual/partial
+results. Private work/ scratch and the unrelated dirty legacy checkout remain
+local-only, excluded from this docs-only increment.
+
 ## 30 October — offline laptop checkbox/report form
 
 Owner requests tick boxes and a report prompt to paste into chat. Added

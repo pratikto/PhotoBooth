@@ -1,6 +1,6 @@
 # Meong Photobooth — GUI v2
 
-[Interactive laptop checklist — tick and copy report](docs/qa/portrait-v2-sandbox/windows-checklist-ux07.html) (open the HTML locally).
+[Interactive laptop checklist — 44 guided steps, expected results, notes and copy report](docs/qa/portrait-v2-sandbox/windows-checklist-ux07.html) (open the HTML locally).
 
 Latest owner check: [UX-07 lifecycle laptop checklist](docs/qa/portrait-v2-sandbox/UX07-LAPTOP-CHECK.md). Offline fixture checks verified; actual devices/merchant and commercial acceptance remain separate.
 
