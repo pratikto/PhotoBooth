@@ -1,6 +1,8 @@
 # UX-07 lifecycle — owner laptop check
 
-30 October 2026. Automated lifecycle fixtures are separate from these **NOT_RUN**
+30 October 2026. Fixture source ca7827c: full1229/1225 PASS/4optional SKIP,
+zero failures/errors; CI40985975287 all three jobs SUCCESS.
+Automated lifecycle fixtures are separate from these **NOT_RUN**
 manual checks. Record the actual source/device below; do not import old passes.
 The dedicated Midtrans Sandbox still keeps printer and Drive OFF. The purchased
 print host is an unmounted offline fixture, not a customer-facing commercial GUI.

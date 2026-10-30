@@ -1,5 +1,7 @@
 # Meong Photobooth — GUI v2
 
+Latest owner check: [UX-07 lifecycle laptop checklist](docs/qa/portrait-v2-sandbox/UX07-LAPTOP-CHECK.md). Offline fixture checks verified; actual devices/merchant and commercial acceptance remain separate.
+
 Portrait Kivy photobooth with advertising, a tutorial, twelve original thermal
 strip designs, three photos per selected design, one retake per design, local
 results, and the original Meong Fly game in DEMO mode.

@@ -1,5 +1,49 @@
 # UX-07.h — purchased-print integration contract and source audit
 
+## 30 October — UX-07.l2 automatic fixture checks verified / laptop handoff
+
+Final test/fixture source **ca7827c28c02e8fb2650f0a86cacdeb129c8434c**.
+Full **1229 run /1225 PASS /0 FAIL/0 ERROR/4 optional SKIP**,544.661s,
+Linux/Python3.12.14/Kivy2.3.1/softwareGL/dummy audio. Current CI
+**40985975287 all three jobs SUCCESS**, exact sourceca7827c. Six new l2 portable
+methods individually PASS Windows/Linux; two l2a native methods individually
+PASS Linux at800x1280/452x900. Windows ledger170 PASS; Linux recovery471 PASS;
+native121 run/120 PASS/one optional palm SKIP. Full's four skips are three
+optional native palm-assets methods and one native-video opt-in.
+
+Source d091 Windows failed job170/169PASS/oneERROR is retained; run40985455735
+was superseded/cancelled. The locked-file PermissionError fixture correction
+adds post-drain reacquisition proof, preserving original source guards. Earlier
+d091 disposable full was interrupted exit130/no final PASS. Final current full
+above includes all eight l2 methods; no exclusion or lowered assertion/skip.
+[Exact source/results/hashes](evidence/ux07-l2b-verification.json).
+
+The approved offline lifecycle fixture increment is verified: original ticket/
+privacy generation, explicit resume, frozen copies/output, separate mock sender,
+SENDING/UNCERTAIN hold, original worker isolation, PREPARE/ACK/archive, lost ACK/
+restart/return and unexpired same-owner fencing. No application, launcher,
+production or Sandbox transport guard changed; no commercial host mounted.
+Private mock release wire is not HTTP/operator/merchant acceptance.
+
+**Next owner action:** [nine-item laptop check](UX07-LAPTOP-CHECK.md), recording
+actual SHA/device/results and keeping all secrets/private media out of reports.
+No further independent l2 fixture source step is pending. Commercial paid-host
+mounting still requires its explicit operating/acceptance contract; laptop tests
+alone do not close that gap. Whole UX-07 **NOT_RUN**, matrix**59 PASS/0 FAIL/
+9 BLOCKED/1 NOT_RUN**; AR-13 conditional/audit IN_PROGRESS. PAY-22 Legacy contract
+and WEB01–08 infrastructure stay BLOCKED; Windows/Ubuntu/device/merchant/paper/
+Drive/deletion/privacy/support/compensation/release are separate manual/external
+gates. OPS stays queued docs only; no default/master/new branch/deployment.
+
+All safe new work is pushed on the same branch; source/CI receipt above pins the
+fixture code. The containing follow-up is documentation only; resolve its SHA
+from Git/remote. Original dirty legacy workspace /workspace/PhotoBooth remains
+untouched/local-only, not reapplied or backed up by these pushes. Current clean
+same-branch checkout is /workspace/work/photobooth-ux07-l2; only private work/
+scratch remains untracked. Rollback reviewed inverse tests/fixture changes only;
+never alter orders, obligations, manifests, photos, copies, grants or retention.
+
+
 ## 30 October — l2b Windows lease portability correction
 
 Source d0911b6 CI40985455735 Windows170 run/169PASS/oneERROR (65.547s):
