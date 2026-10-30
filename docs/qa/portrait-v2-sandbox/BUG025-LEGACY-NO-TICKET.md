@@ -82,3 +82,21 @@ could not close the directly-used service. Fixture now closes original service
 in that case. Added actual closed-handle check; focused42 PASS/3.103s. No runtime
 change or skipped cases. Original full interrupted exit130, no final PASS.
 New final-source full/current CI required; original failure retained in evidence.
+
+## Final verified result / owner retest next
+
+Test source7069bf0 (functional GUI f5f6225 unchanged): full1236/1232 PASS/4optional
+SKIP, zero failure/error,505.094s. Matching CI41001339113 all three SUCCESS.
+Windows183 PASS and Linux recovery478 PASS; Linux native121/120 PASS/1optional
+palm SKIP. Six portable new methods individually PASS Windows/Linux, new native
+method PASS Linux at both sizes. All six final operator captures visually checked.
+[Exact receipt/history/limits](evidence/bug025-verification.json).
+
+FIXED IN SOURCE / REGRESSION VERIFIED; owner laptop/provider retest NOT_RUN.
+Close app/launcher, update same branch and relaunch dedicated Sandbox. Inspect
+with latest local PIN, then ARSIPKAN UJI TANPA TIKET → read confirmation → PIN +
+KONFIRMASI ISOLASI UJI → wait for local isolation → PIN + LEPAS BOOTH. Once idle,
+start another normal Sandbox visit and SAVE its ticket. No old photos are unlocked
+without proof; old PAID/STARTED/OWED remains retained for owner review. If the
+backend reports a bound ticket instead, use existing normal release conditions;
+this exception never applies to expired/revoked/missing-in-hand credentials.

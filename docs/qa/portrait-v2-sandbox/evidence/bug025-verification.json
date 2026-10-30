@@ -1,7 +1,7 @@
 {
   "date": "2026-10-30",
   "backend_source": "cceded673d51cf29a0b93c04770979686137cf5f",
-  "status": "PORTABILITY_CORRECTION_FOCUSED_VERIFIED_FINAL_FULL_CI_PENDING",
+  "status": "REGRESSION_AND_MATCHING_CI_VERIFIED_OWNER_LAPTOP_NOT_RUN",
   "focused": {
     "backend": {
       "run": 41,
@@ -72,8 +72,41 @@
     }
   ],
   "capture": "Original native widget/test fixture; Config set before Window in one clean process per size, following tools/render_portrait_v2.py. No real merchant/device/media. Initial live-resize software-GL captures were corrupt and rejected; clean-process captures replace them. Compact confirmation message height adjusted to stay in card; targeted final native rerun PASS.",
-  "full": "PENDING at final functional commit",
-  "ci": "PENDING at final functional commit",
+  "full": {
+    "source": "7069bf02853ee282f1269d86e147ba1e6c8e1b30",
+    "run": 1236,
+    "pass": 1232,
+    "fail": 0,
+    "error": 0,
+    "skip": 4,
+    "seconds": 505.094,
+    "sha256": "43faa65e9926229a34484beb8ce24d028fb3bdcdf98b978ebc57f7a384f7916f",
+    "environment": "Linux Python3.12.14 Kivy2.3.1 SDL offscreen/softwareGL/dummy audio; GUI and audio opt-ins enabled",
+    "skip_reasons": "three optional native palm assets; one native video opt-in",
+    "command": "PHOTOBOOTH_TEST_GUI=1 PHOTOBOOTH_TEST_AUDIO=1 KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy MESA_SHADER_CACHE_DISABLE=true LIBGL_ALWAYS_SOFTWARE=1 /workspace/PhotoBooth/.venv/bin/python tools/run_kiosk_unittests.py"
+  },
+  "ci": {
+    "source": "7069bf02853ee282f1269d86e147ba1e6c8e1b30",
+    "run": 41001339113,
+    "windows_job": 123886496936,
+    "windows": "SUCCESS",
+    "windows_ledger_run": 183,
+    "windows_ledger_pass": 183,
+    "windows_ledger_error": 0,
+    "pure": "SUCCESS",
+    "linux": "SUCCESS",
+    "all_jobs": "SUCCESS",
+    "linux_job": 123886496812,
+    "pure_job": 123886496700,
+    "linux_recovery_run": 478,
+    "linux_recovery_pass": 478,
+    "linux_native_run": 121,
+    "linux_native_pass": 120,
+    "linux_native_skip": 1,
+    "windows_new_portable_methods_pass": 6,
+    "linux_new_methods_pass": 7,
+    "run_url": "https://github.com/pratikto/PhotoBooth/actions/runs/41001339113"
+  },
   "limits": [
     "Owner screenshot exact SHA/capability flag unknown; source confirms absent capability is one disabled-button condition.",
     "New action applies ONLY to fresh-settled Sandbox paid OWED records without any capability row. Existing bound/lost/expired/revoked tickets cannot use it.",
@@ -97,5 +130,9 @@
       "full": "interrupted exit130 after Windows fixture issue found; no final full PASS"
     }
   ],
-  "fixture_correction": "tests/qris_v2_fixture.close now closes direct original service when lazy worker never started. One portable regression asserts actual lease file closed; no runtime changes or skipped tests. Existing Windows ten cases retained."
+  "fixture_correction": "tests/qris_v2_fixture.close now closes direct original service when lazy worker never started. One portable regression asserts actual lease file closed; no runtime changes or skipped tests. Existing Windows ten cases retained.",
+  "tested_source": "7069bf02853ee282f1269d86e147ba1e6c8e1b30",
+  "functional_source": "f5f6225cc67690e8421427fd291e6c7199aa14bc",
+  "screenshots_review": "All six final operator inspect/confirm/isolated views visually reviewed at 800x1280 and 452x900; no old media or PIN shown, instructions/buttons fit. Synthetic fixture, not laptop/device evidence.",
+  "next": "Owner closes old launcher, pulls same branch, starts Sandbox launcher, inspects with latest PIN, explicitly archives legacy no-ticket test with confirmation + isolation + second PIN ACK, then saves ticket for next normal Sandbox visit. If not a legacy missing-capability row, normal release conditions remain; do not force or reset."
 }

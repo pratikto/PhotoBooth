@@ -2,7 +2,7 @@
 
 ## 30 October — BUG-025 — legacy Sandbox session without customer ticket
 
-S1 — FIXED IN SOURCE / FINAL REGRESSION PENDING. Owner reports PAID/STARTED/OWED and disabled isolation; no saved ticket. Exact laptop SHA/capability unknown. Explicit PIN-authenticated legacy-only Sandbox archive now preserves rights/media via existing fence/isolation/ACK/archive. No customer proof bypass or ticket replacement. Focused backend41 and native28 plus final pair2 PASS; full/current CI next.
+S1 — FIXED IN SOURCE / REGRESSION VERIFIED at7069bf0; owner retest NOT_RUN. Owner reports PAID/STARTED/OWED and disabled isolation; no saved ticket. Exact laptop SHA/capability unknown. Explicit PIN-authenticated legacy-only Sandbox archive now preserves rights/media via existing fence/isolation/ACK/archive. No customer proof bypass or ticket replacement. Focused backend41 and native28 plus final pair2 PASS. Final source7069bf0 full1236/1232 PASS/4optional SKIP, zero failure/error; CI41001339113 all three SUCCESS. Windows fixture failure/cleanup correction retained in evidence.
 [Contract/evidence](qa/portrait-v2-sandbox/BUG025-LEGACY-NO-TICKET.md).
 
 

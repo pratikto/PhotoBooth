@@ -1,5 +1,38 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 30 October — BUG-025 final regression and matching CI verified
+
+Final tested source **7069bf02853ee282f1269d86e147ba1e6c8e1b30**, functional GUI
+f5f6225 (unchanged by fixture-only correction7069bf0). Full **1236 run/1232 PASS/
+0 FAIL/0 ERROR/4 optional SKIP**,505.094s, Linux/Python3.12.14/Kivy2.3.1 softwareGL,
+dummy audio, GUI/audio opt-ins. Three skips require native palm assets, one native
+video opt-in. **CI41001339113 all three jobs SUCCESS** at exact7069bf0: Windows
+ledger183 PASS, Linux recovery478 PASS, native121/120 PASS/one optional palm SKIP.
+All six new portable methods individually PASS Windows/Linux; new native method
+individually PASS Linux at800x1280/452x900. Six final native operator PNGs visually
+reviewed. Initial f5f6225 Windows182/172PASS/10cleanup ERROR and interrupted full
+exit130 retained; no failures relabeled or skipped. [Exact evidence](evidence/bug025-verification.json).
+
+Native Sandbox owner can now inspect PIN → ARSIPKAN UJI TANPA TIKET → confirmation
+with PIN → original worker isolation → PIN + LEPAS BOOTH. Only legacy paid OWED
+orders with NO capability row qualify; normal valid-ticket release unchanged.
+First click/cancel never releases, wrong PIN/provider failure/uncertain worker
+holds, ACK/archive before new visit. PAID/STARTED/OWED, identity, originals and
+selected outputs retained; no replacement ticket or unproved photo access.
+This is a deliberate Sandbox test archive, not a refund/completed service or
+commercial no-ticket recovery policy. New visit must save its own ticket.
+
+**Next:** owner closes app/launcher, pulls existing branch, relaunches dedicated
+Sandbox, uses latest per-launch PIN and follows [updated guide](UX07-LAPTOP-CHECK.md). Actual
+owner SHA/capability unknown until retest; if action unavailable, report state,
+never reset records or change booth. Owner laptop/provider result **NOT_RUN**;
+BUG-025 FIXED IN SOURCE / REGRESSION VERIFIED, owner retest pending. Whole UX-07
+NOT_RUN, matrix59/0/9/1, AR-13 conditional and external/commercial/release gates
+unchanged. Printer/Drive OFF, OPS queued, no production/new branch/merge/default.
+Old dirty /workspace/PhotoBooth and private work/ scratch preserved/local-only.
+This containing final checkpoint is documentation only; resolve its SHA in Git.
+
+
 ## 30 October — BUG-025 Windows fixture lease cleanup corrected
 
 Functional GUI source f5f6225 published. CI41000950756 Windows job123884948089

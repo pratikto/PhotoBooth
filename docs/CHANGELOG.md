@@ -2,7 +2,7 @@
 
 ## 30 October — BUG-025 — Sandbox legacy archive
 
-Added explicit PIN-confirmed archive for paid Sandbox test orders that predate customer tickets. Retains PAID/STARTED/OWED, original media, fence/isolation/ACK/archive; creates no replacement credential or financial effect. Added five HTTP/controller regressions and one native two-size scenario; novice guide updated. Final full/current CI pending.
+Added explicit PIN-confirmed archive for paid Sandbox test orders that predate customer tickets. Retains PAID/STARTED/OWED, original media, fence/isolation/ACK/archive; creates no replacement credential or financial effect. Added five HTTP/controller regressions and one native two-size scenario; novice guide updated. Final source7069bf0 full1236/1232 PASS/4optional SKIP, zero failure/error; CI41001339113 all three SUCCESS. Direct-service fixture lease cleanup corrected for Windows; original failure preserved.
 [Contract/evidence](qa/portrait-v2-sandbox/BUG025-LEGACY-NO-TICKET.md).
 
 

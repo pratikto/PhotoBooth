@@ -2,7 +2,7 @@
 
 ## 30 October — BUG-025 — owner-only Sandbox legacy archive
 
-Explicit no-ticket legacy Sandbox operator archive now mounted in native UI with confirmation/cancel and two-phase release. Normal ticket/privacy and printer/Drive-off boundaries preserved. Focused checks PASS; final full/current CI pending; user laptop NOT_RUN. Commercial acceptance unchanged.
+Explicit no-ticket legacy Sandbox operator archive now mounted in native UI with confirmation/cancel and two-phase release. Normal ticket/privacy and printer/Drive-off boundaries preserved. Source7069bf0 full1236/1232 PASS/4optional SKIP, zero failure/error; CI41001339113 all three SUCCESS. User laptop NOT_RUN. Commercial acceptance unchanged.
 [Contract/evidence](qa/portrait-v2-sandbox/BUG025-LEGACY-NO-TICKET.md).
 
 
