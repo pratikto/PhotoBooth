@@ -126,12 +126,13 @@ class CheckoutBackend:
         result.update(recovery_checked=True, recovery_provider_state=provider_state)
         return result
 
-    def prepare_release(self, order_id, booth_id, operation_id, actor):
+    def prepare_release(self, order_id, booth_id, operation_id, actor, *, legacy_without_ticket=False):
         from photobooth.checkout_release import prepare
         order,provider_state=self._fresh_recovery(order_id,booth_id)
         if provider_state!='settlement' or order['state']!='PAID':
             raise CheckoutConflict('Current original paid entitlement required')
-        prepare(self.store,order_id,booth_id,operation_id,actor)
+        prepare(self.store,order_id,booth_id,operation_id,actor,
+                legacy_without_ticket=legacy_without_ticket)
         return self.view(self.store.get(order_id,booth_id))
 
     def acknowledge_release(self, order_id, booth_id, operation_id, isolation_id):

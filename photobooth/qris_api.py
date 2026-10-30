@@ -42,6 +42,7 @@ class ReleaseUpdate(BaseModel):
     model_config = ConfigDict(extra='forbid', strict=True)
     operation_id: str = Field(pattern=r'^[a-f0-9]{32}$')
     isolation_id: str | None = Field(default=None,pattern=r'^[a-f0-9]{32}$')
+    legacy_without_ticket: bool = False
 
 
 class AllocationUpdate(BaseModel):
@@ -305,7 +306,10 @@ def create_app(service, authenticator, *, on_shutdown=None, rate_limit=120, reco
             raise HTTPException(422,'Invalid release request') from error
         if body.isolation_id is None:
             return await invoke(service.prepare_release,order_id,booth,body.operation_id,operator_actor,
+                                legacy_without_ticket=body.legacy_without_ticket,
                                 operator_route='release')
+        if body.legacy_without_ticket:
+            raise HTTPException(422,'Legacy intent belongs to release preparation only')
         return await invoke(service.acknowledge_release,order_id,booth,body.operation_id,body.isolation_id,
                             operator_route='release')
 

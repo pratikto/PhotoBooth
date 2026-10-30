@@ -283,15 +283,29 @@ class KioskCheckout:
         options={'service_fence':fence['token']} if fence else {}
         return self.client.service_transition(order['order_id'],order['grant_id'],state,transaction_id,**options)
 
-    def prepare_release(self, pin):
+    def prepare_release(self, pin, *, legacy_without_ticket=False):
         with self.worker_lock:
             self.lock_customer()
             with self.lock:
                 if not self.data or not self.data.get('order') or self.data['phase']=='SUSPENDED':
                     raise RuntimeError('Active original visit required')
+                if type(legacy_without_ticket) is not bool:
+                    raise ValueError('Explicit legacy release intent required')
+                if (not legacy_without_ticket and not self.data.get('release_operation_id')
+                        and self.data['order'].get('customer_capability_bound') is False):
+                    raise RuntimeError('Ticketless tests require explicit legacy archival')
+                if legacy_without_ticket and (self.context['mode']!='sandbox'
+                        or self.data['order'].get('customer_capability_bound') is not False):
+                    raise RuntimeError('Only original ticketless Sandbox tests may be archived')
+                if (self.data.get('release_operation_id') and
+                        bool(self.data.get('release_legacy_without_ticket'))!=legacy_without_ticket):
+                    raise RuntimeError('Original release intent required')
                 operation=self.data.setdefault('release_operation_id',uuid.uuid4().hex)
+                if legacy_without_ticket:
+                    self.data['release_legacy_without_ticket']=True
                 self.data['phase']='RELEASING';self._save()
-            self._accept(self.client.release(self.data['order']['order_id'],pin,operation))
+            options={'legacy_without_ticket':True} if legacy_without_ticket else {}
+            self._accept(self.client.release(self.data['order']['order_id'],pin,operation,**options))
             with self.lock:
                 allocation=(self.data['order'].get('fulfillment') or {})
                 if allocation.get('transaction_id'):

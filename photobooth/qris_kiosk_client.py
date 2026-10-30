@@ -146,9 +146,15 @@ class QrisKioskClient:
             raise ValueError('Service acknowledgement does not match this capture')
         return result
 
-    def release(self, order_id, pin, operation_id, *, isolation_id=None):
+    def release(self, order_id, pin, operation_id, *, isolation_id=None, legacy_without_ticket=False):
         identifier(order_id,maximum=50);identifier(operation_id,minimum=32,maximum=32)
         payload={'operation_id':operation_id}
+        if type(legacy_without_ticket) is not bool or (legacy_without_ticket and isolation_id):
+            raise ValueError('Explicit legacy preparation intent required')
+        if legacy_without_ticket:
+            if self.expected_mode!='sandbox':
+                raise ValueError('Legacy test archival is restricted to Sandbox')
+            payload['legacy_without_ticket']=True
         if isolation_id is not None:
             payload['isolation_id']=identifier(isolation_id,minimum=32,maximum=32)
         result=self._order(self._call('POST','/api/orders/'+order_id+'/recovery/release',

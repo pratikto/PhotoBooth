@@ -10,19 +10,24 @@ def latest(store, order_id, booth_id):
         return dict(row) if row else None
 
 
-def prepare(store, order_id, booth_id, operation_id, actor):
+def prepare(store, order_id, booth_id, operation_id, actor, *, legacy_without_ticket=False):
     identifier(operation_id,minimum=16);identifier(actor,maximum=96)
+    if type(legacy_without_ticket) is not bool:
+        raise ValueError('Explicit legacy release intent required')
+    reason='SANDBOX_LEGACY_NO_TICKET' if legacy_without_ticket else 'OPERATOR_SUSPEND'
     with store.write():
         order=store._row(order_id,booth_id)
         old=store.db.execute('SELECT * FROM checkout_releases WHERE operation_id=?',(operation_id,)).fetchone()
         if old:
-            if old['order_id']!=order_id or old['booth_id']!=booth_id:
+            if old['order_id']!=order_id or old['booth_id']!=booth_id or old['reason']!=reason:
                 raise CheckoutConflict('Release operation mismatch')
             return dict(old)
         capability=store.db.execute('SELECT * FROM checkout_customer_capabilities WHERE order_id=?',(order_id,)).fetchone()
         rights=store.fulfillment(order_id,booth_id)
+        valid_capability=(capability is None if legacy_without_ticket else
+                          bool(capability and not capability['revoked'] and capability['expires_at']>store.now()))
         if (order['closed'] or order['state']!='PAID' or rights['obligation_state']!='OWED'
-                or not capability or capability['revoked'] or capability['expires_at']<=store.now()):
+                or not valid_capability):
             raise CheckoutConflict('Original recoverable paid rights required')
         previous=latest(store,order_id,booth_id)
         if previous and previous['state']=='PREPARED':
@@ -30,7 +35,7 @@ def prepare(store, order_id, booth_id, operation_id, actor):
         fence=store.service_fence(order_id,booth_id)
         fence=store._rotate_service_fence(order_id,booth_id,fence['generation'] if fence else 0,suspended=True)
         store.db.execute('INSERT INTO checkout_releases VALUES (?,?,?,?,?,?,?,NULL,?,NULL)',
-            (operation_id,order_id,booth_id,fence['generation'],'PREPARED','OPERATOR_SUSPEND',actor,store.now()))
+            (operation_id,order_id,booth_id,fence['generation'],'PREPARED',reason,actor,store.now()))
         return latest(store,order_id,booth_id)
 
 

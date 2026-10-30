@@ -12,7 +12,7 @@ from .demo_game import GameJobs
 
 ACTIONS = {'boot', 'begin', 'begin_ready', 'check', 'cancel', 'prepare', 'started', 'complete', 'recover',
            'ticket_saved', 'customer_claim', 'scan_claim', 'resume', 'resumed','fulfillment_issue',
-           'operator_inspect','prepare_release','acknowledge_release'}
+           'operator_inspect','prepare_release','prepare_legacy_release','acknowledge_release'}
 
 
 def simulator_qr_url(view):
@@ -171,6 +171,10 @@ class SandboxCheckout:
 
     def prepare_release(self, pin):
         self.flow.prepare_release(pin)
+        return self.view()
+
+    def prepare_legacy_release(self, pin):
+        self.flow.prepare_release(pin,legacy_without_ticket=True)
         return self.view()
 
     def acknowledge_release(self, pin, receipt):

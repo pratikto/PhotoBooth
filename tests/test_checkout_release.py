@@ -73,3 +73,62 @@ class ReleaseTests(unittest.TestCase):
         update={'grant_id':self.grant,'state':'STARTED','transaction_id':self.tx}
         self.assertEqual(http.post(service,json=update,headers=headers).status_code,409)
         self.assertEqual(http.post(service,json=dict(update,service_fence=current),headers=headers).status_code,200)
+
+    def test_legacy_without_ticket_requires_explicit_sandbox_audited_two_phase_release(self):
+        from fastapi.testclient import TestClient
+        from photobooth.qris_api import create_app
+        from photobooth.booth_auth import BoothAuthenticator
+        # A separate order is issued by the pre-ticket client, without deleting
+        # credentials from any existing order (all data here is disposable).
+        oid=self.backend.create_order('PB002',{'template_b':1},'8'*32)['order_id']
+        self.provider.rows[oid].update(transaction_status='settlement',status_code='200')
+        self.backend._apply(self.store.get(oid),self.provider.get_status(oid))
+        grant=self.backend.claim(oid,'PB002','8'*32)['grant_id']
+        self.backend.service_transition(oid,'PB002',grant,'STARTED','legacy-photo-fixture')
+        before=self.store.get(oid);contract=self.store.frozen_order(oid)
+        self.provider.mode='sandbox'
+        with TestClient(create_app(self.backend,BoothAuthenticator({'PB002':'x'*48}),recovery_pin='12345678')) as http:
+            url='/api/orders/'+oid+'/recovery/release'
+            headers={'x-booth-id':'PB002','authorization':'Bearer '+'x'*48,'x-recovery-pin':'12345678'}
+            body={'operation_id':'7'*32,'legacy_without_ticket':True}
+            self.assertEqual(http.post(url,json={'operation_id':'7'*32},headers=headers).status_code,409)
+            self.assertEqual(http.post(url,json=body,headers=dict(headers,**{'x-recovery-pin':'00000000'})).status_code,401)
+            result=http.post(url,json=body,headers=headers)
+            self.assertEqual(result.status_code,200,result.text)
+            prepared=result.json();self.assertFalse(prepared['closed'])
+            self.assertEqual(prepared['release']['reason'],'SANDBOX_LEGACY_NO_TICKET')
+            self.assertFalse(prepared['customer_capability_bound'])
+            self.assertTrue(prepared['service_fence']['suspended'])
+            self.assertEqual(http.post(url,json=body,headers=headers).json()['release'],prepared['release'])
+            self.assertEqual(http.post(url,json={'operation_id':'7'*32},headers=headers).status_code,409)
+            with self.assertRaises(CheckoutConflict):self.backend.create_order('PB002',{'template_a':1},'6'*32)
+            self.assertEqual(http.post(url,json={'operation_id':'7'*32,'isolation_id':'5'*32},headers=headers).status_code,200)
+        after=self.store.get(oid)
+        for key in ('state','grant_id','service_state','local_transaction_id','checkout_key','quantities','amount'):
+            self.assertEqual(after[key],before[key],key)
+        self.assertTrue(after['closed']);self.assertEqual(self.store.frozen_order(oid),contract)
+        self.assertEqual(self.store.fulfillment(oid,'PB002')['obligation_state'],'OWED')
+        self.assertFalse(self.store.has_customer_capability(oid))
+        with self.assertRaises(CheckoutConflict):self.backend.service_transition(oid,'PB002',grant,'STARTED','legacy-photo-fixture')
+        self.backend.create_order('PB002',{'template_a':1},'6'*32)
+
+    def test_legacy_exception_rejects_existing_capability_expired_or_revoked_and_wrong_mode(self):
+        from fastapi.testclient import TestClient
+        from photobooth.qris_api import create_app
+        from photobooth.booth_auth import BoothAuthenticator
+        self.provider.mode='sandbox'
+        with TestClient(create_app(self.backend,BoothAuthenticator({'PB001':'x'*48}),recovery_pin='12345678')) as http:
+            url='/api/orders/'+self.oid+'/recovery/release'
+            headers={'x-booth-id':'PB001','authorization':'Bearer '+'x'*48,'x-recovery-pin':'12345678'}
+            body={'operation_id':'7'*32,'legacy_without_ticket':True}
+            for revoked,expiry in [(0,self.store.now()+3600),(1,self.store.now()+3600),(0,self.store.now()-1)]:
+                self.store.db.execute('UPDATE checkout_customer_capabilities SET revoked=?,expires_at=? WHERE order_id=?',(revoked,expiry,self.oid))
+                self.assertEqual(http.post(url,json=body,headers=headers).status_code,409)
+            for mode in ('mock','production'):
+                self.provider.mode=mode
+                self.assertEqual(http.post(url,json=body,headers=headers).status_code,404)
+            self.provider.mode='sandbox'
+            for value in ('true',1,None):
+                self.assertEqual(http.post(url,json=dict(body,legacy_without_ticket=value),headers=headers).status_code,422)
+        self.assertIsNone(checkout_release.latest(self.store,self.oid,'PB001'))
+        self.assertFalse(self.store.get(self.oid)['closed'])

@@ -1,5 +1,22 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 30 October — BUG-025 legacy ticketless Sandbox archive backend
+
+Owner cannot proceed from PAID/STARTED/OWED and has no saved ticket. Source
+shows missing-capability orders lack the native release action. Added explicit
+legacy-without-ticket preparation on the existing PIN-authenticated Sandbox
+release route; default still requires a usable capability. Only absent capability
+qualifies (not expired/revoked). Distinct audit reason bound to operation ID,
+original fence/isolation/ACK/archive preserved, PAID/STARTED/OWED/media retained;
+no replacement ticket or photo access. Five new HTTP/controller cases plus prior
+release/recovery: **41 PASS/0 FAIL/ERROR/SKIP, 2.974s**. Initial pre-source two
+expected failures and one fixture placement error were corrected/retained in
+private work logs; original test names/guards retained. No actual records touched.
+GUI confirmation/help remains next, so laptop fix is not usable until that
+increment. Full/current CI reserved for final functional source; no production
+or commercial acceptance, matrix unchanged. Contract/next: BUG025-LEGACY-NO-TICKET.md.
+
+
 ## 30 October — detailed owner laptop instructions
 
 Base fb7657f, same branch. Owner requests beginner-friendly explanation of every

@@ -92,6 +92,7 @@ class ReleaseSessionTests(TestCase):
         self.f.flow.acknowledge_release('12345678',receipt)
         self.assertEqual(self.f.flow.snapshot()['phase'],'SUSPENDED')
 
+
     def test_new_unallocated_visit_can_isolate_previous_done_photo_worker(self):
         for _ in range(2):self.photo.capture(np.zeros((24,32,3),dtype=np.uint8))
         self.photo.compose();output=self.photo.session.output_path;before=output.read_bytes();self.photo.next()
@@ -103,3 +104,76 @@ class ReleaseSessionTests(TestCase):
         self.f.flow.acknowledge_release('12345678',receipt)
         self.assertEqual(output.read_bytes(),before)
         self.assertEqual(self.f.flow.snapshot()['phase'],'SUSPENDED')
+
+
+class LegacyReleaseSessionTests(TestCase):
+    def setUp(self):
+        self.tmp=TemporaryDirectory();self.addCleanup(self.tmp.cleanup);self.root=Path(self.tmp.name)
+        self.f=Fixture(self.root,recovery_pin='12345678');self.addCleanup(self.f.close)
+        self.f.flow.client.customer_capability_supported=False  # Original pre-ticket client.
+        self.f.service.begin({'template_a':1});self.f.paid();self.f.service.check();self.f.service.prepare()
+        data=self.f.flow.snapshot();self.tx=data['transaction_id'];a=data['order']['fulfillment']
+        binding={k:a[k] for k in ('fulfillment_id','transaction_id','allocation_operation_id','contract_hash','booth_id','merchant_id')}
+        self.oid=data['order']['order_id'];binding.update(order_id=self.oid,grant_id=data['order']['grant_id'])
+        self.photo=PhotoTest(self.root/'photo-tests');self.addCleanup(self.photo.close)
+        self.photo.start_bound(get_templates(),{'template_a':1},binding)
+        self.photo.capture(np.zeros((24,32,3),dtype=np.uint8));self.f.service.started(self.tx)
+        self.path=self.photo.session.initial_photo_paths[0];self.before=self.path.read_bytes()
+        self.f.flow.client.customer_capability_supported=True;self.f.flow.lock_customer()
+
+    def prepare(self):
+        data=self.f.service.prepare_legacy_release('12345678');self.photo.hide_private()
+        return self.photo.isolate(self.oid,self.tx,data['order']['release']['generation'])['isolation']
+
+    def test_legacy_archive_preserves_original_bytes_rights_and_requires_new_visit_ticket(self):
+        with self.assertRaises(RuntimeError):self.f.flow.prepare_release('12345678')
+        self.assertNotIn('release_operation_id',self.f.flow.snapshot())
+        before=self.f.store.get(self.oid);receipt=self.prepare()
+        with self.assertRaises(RuntimeError):self.f.flow.acknowledge_release('12345678',True)
+        self.assertTrue(self.f.flow.active)
+        data=self.f.flow.acknowledge_release('12345678',receipt)
+        self.assertEqual(data['phase'],'SUSPENDED');self.assertFalse(self.f.flow.active)
+        self.assertTrue((self.root/'visits'/(data['checkout_key']+'.json')).is_file())
+        after=self.f.store.get(self.oid)
+        for key in ('state','service_state','grant_id','local_transaction_id','quantities','amount'):
+            self.assertEqual(before[key],after[key],key)
+        self.assertEqual(self.path.read_bytes(),self.before)
+        self.assertEqual(self.f.store.fulfillment(self.oid,'PB001')['obligation_state'],'OWED')
+        self.assertFalse(self.f.store.has_customer_capability(self.oid))
+        self.f.service.begin({'template_b':1})
+        self.assertTrue(self.f.service.view()['ticket_required']);self.assertIsNotNone(self.f.flow.customer_ticket())
+        self.assertEqual(self.f.provider.charges,2)
+
+    def test_legacy_lost_ack_restart_and_failed_archive_hold_until_original_retry(self):
+        from photobooth.qris_session import KioskCheckout
+        receipt=self.prepare();original=self.f.flow.client.release
+        def lose(*args,**kwargs):
+            original(*args,**kwargs);raise RuntimeError('Synthetic lost legacy ACK')
+        with patch.object(self.f.flow.client,'release',side_effect=lose):
+            with self.assertRaises(RuntimeError):self.f.flow.acknowledge_release('12345678',receipt)
+        pending=self.f.flow.snapshot();client=self.f.flow.client
+        self.f.flow.lease.close()
+        self.f.flow=KioskCheckout(self.root/'visit.json',client,**pending['context'])
+        self.f.service.flow=self.f.flow
+        with self.assertRaises(RuntimeError):self.f.flow.prepare_release('12345678')
+        receipt=self.prepare()
+        with patch.object(self.f.flow,'_archive_snapshot',side_effect=OSError('Synthetic disk fault')):
+            with self.assertRaises(OSError):self.f.flow.acknowledge_release('12345678',receipt)
+        self.assertTrue(self.f.flow.active)
+        with self.assertRaises(RuntimeError):self.f.service.begin({'template_b':1})
+        receipt=self.prepare();data=self.f.flow.acknowledge_release('12345678',receipt)
+        self.assertEqual(data['release_operation_id'],pending['release_operation_id'])
+        self.assertEqual(data['isolation_id'],pending['isolation_id'])
+        self.assertEqual(self.f.store.db.execute('SELECT count(*) FROM checkout_releases').fetchone()[0],1)
+        self.assertEqual(self.path.read_bytes(),self.before);self.assertEqual(self.f.provider.charges,1)
+
+    def test_legacy_provider_and_worker_denials_cannot_free_booth(self):
+        self.f.provider.outage=True
+        with self.assertRaises(Exception):self.f.service.prepare_legacy_release('12345678')
+        self.assertIsNone(self.f.store.service_fence(self.oid,'PB001'))
+        self.assertFalse(self.f.store.get(self.oid)['closed']);self.f.provider.outage=False
+        tx=self.photo.transaction;tx.manifest['test_print_jobs']={'synthetic':{'state':'UNCERTAIN'}}
+        self.photo.store._write_manifest(tx)
+        with self.assertRaises(RuntimeError):self.prepare()
+        self.assertTrue(self.f.flow.active);self.assertFalse(self.f.store.get(self.oid)['closed'])
+        self.assertEqual(self.path.read_bytes(),self.before)
