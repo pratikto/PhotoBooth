@@ -73,3 +73,12 @@ Native group28 PASS, then final compact-layout/normal release pair2 PASS. Six
 clean-process native captures at both sizes, private source logs work/bug025-*.
 Windows release-session registration added. Final full/current CI pending;
 [evidence](evidence/bug025-verification.json). No laptop result claimed.
+
+## Windows portability correction
+
+CI41000950756 Windows182/172PASS/10ERROR exposed existing direct-service fixture
+lease cleanup (WinError32 on visit.json.lock). Lazy worker had no store, so it
+could not close the directly-used service. Fixture now closes original service
+in that case. Added actual closed-handle check; focused42 PASS/3.103s. No runtime
+change or skipped cases. Original full interrupted exit130, no final PASS.
+New final-source full/current CI required; original failure retained in evidence.

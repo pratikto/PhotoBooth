@@ -1,7 +1,7 @@
 {
   "date": "2026-10-30",
   "backend_source": "cceded673d51cf29a0b93c04770979686137cf5f",
-  "status": "FOCUSED_VERIFIED_FINAL_FULL_AND_CI_PENDING",
+  "status": "PORTABILITY_CORRECTION_FOCUSED_VERIFIED_FINAL_FULL_CI_PENDING",
   "focused": {
     "backend": {
       "run": 41,
@@ -30,11 +30,19 @@
           900
         ]
       ]
+    },
+    "portable_final": {
+      "run": 42,
+      "pass": 42,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 3.103
     }
   },
   "new_methods": {
     "portable_http": 2,
-    "portable_controller": 3,
+    "portable_controller": 4,
     "native": 1
   },
   "screenshots": [
@@ -72,5 +80,22 @@
     "Original two-phase isolation/ACK/archive, no replay, privacy and transport guards retained; no credential reissue or private media access.",
     "No actual user state is read, edited, deleted or migrated. No production or commercial acceptance implied.",
     "Whole UX-07 NOT_RUN and matrix59/0/9/1 unchanged; actual owner laptop/provider acceptance next."
-  ]
+  ],
+  "history": [
+    {
+      "source": "f5f6225cc67690e8421427fd291e6c7199aa14bc",
+      "ci_run": 41000950756,
+      "windows_job": 123884948089,
+      "run": 182,
+      "pass": 172,
+      "error": 10,
+      "fail": 0,
+      "reason": "WinError32 visit.json.lock in direct-service fixture cleanup. All ten release-session methods left original journal lease open because lazy worker never constructed its store. Original application guards not changed."
+    },
+    {
+      "source": "f5f6225cc67690e8421427fd291e6c7199aa14bc",
+      "full": "interrupted exit130 after Windows fixture issue found; no final full PASS"
+    }
+  ],
+  "fixture_correction": "tests/qris_v2_fixture.close now closes direct original service when lazy worker never started. One portable regression asserts actual lease file closed; no runtime changes or skipped tests. Existing Windows ten cases retained."
 }

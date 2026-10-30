@@ -1,5 +1,20 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 30 October — BUG-025 Windows fixture lease cleanup corrected
+
+Functional GUI source f5f6225 published. CI41000950756 Windows job123884948089
+failed **182 run/172 PASS/10 ERROR**: direct-service release-session fixtures
+never start the lazy SandboxJobs store, so Fixture.close did not close the real
+visit.json.lock lease. Linux direct reproduction confirmed closed=False. Fix
+closes original service only when the worker never owned it; added real lease
+closed assertion. No application source/guard/assertion relaxed or skip added;
+all ten original Windows cases remain registered. Final focused **42 PASS**,
+zero failure/error/skip,3.103s. Previous disposable full interrupted exit130
+because this new portability issue required final-source validation; not PASS.
+New final full and matching CI required at containing commit. Exact evidence:
+evidence/bug025-verification.json. Actual laptop/merchant remain NOT_RUN; no production/matrix change.
+
+
 ## 30 October — BUG-025 native ticketless Sandbox archive focused-verified
 
 Backend cceded6 pushed/remote-verified. Existing operator UI now explains the

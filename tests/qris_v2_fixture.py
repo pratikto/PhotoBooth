@@ -49,4 +49,10 @@ class Fixture:
         self.provider.rows[oid].update(transaction_status='settlement',status_code='200')
         self.store.db.execute('UPDATE checkouts SET check_after=0')
     def close(self):
-        self.jobs.close();self.jobs.wait_closed();self.store.close()
+        self.jobs.close();self.jobs.wait_closed()
+        # Domain tests may use service directly without starting the lazy worker.
+        # That worker cannot close a store it never opened; release the original
+        # journal lease before TemporaryDirectory cleanup, especially on Windows.
+        if self.jobs.store is None:
+            self.service.close()
+        self.store.close()

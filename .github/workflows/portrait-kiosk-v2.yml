@@ -101,7 +101,7 @@ jobs:
                   ('test_ux07_lifecycle.PurchasedLifecycleTests.', 1),
                   ('test_ux07_lifecycle_release.PurchasedReleaseTests.', 5),
                   ('test_checkout_release.ReleaseTests.test_legacy_', 2),
-                  ('test_release_session.LegacyReleaseSessionTests.', 3),
+                  ('test_release_session.LegacyReleaseSessionTests.', 4),
                   ('test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_ticketless_legacy_', 1),
               ],
               'native-tests.txt': [

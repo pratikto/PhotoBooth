@@ -177,3 +177,8 @@ class LegacyReleaseSessionTests(TestCase):
         with self.assertRaises(RuntimeError):self.prepare()
         self.assertTrue(self.f.flow.active);self.assertFalse(self.f.store.get(self.oid)['closed'])
         self.assertEqual(self.path.read_bytes(),self.before)
+
+    def test_direct_fixture_close_releases_original_lease_without_worker_start(self):
+        self.assertIsNone(self.f.jobs.store)
+        self.f.close()
+        self.assertTrue(self.f.flow.lease.file.closed)
