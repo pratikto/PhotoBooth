@@ -1,6 +1,6 @@
 # Meong Photobooth documentation — GUI v2
 
-31 October — [verified Sandbox expiry renewal and30s return](qa/portrait-v2-sandbox/BUG026-QR-RENEWAL.md): full1251/1247PASS/4optionalSKIP; corrected-source three-job CI SUCCESS. Actual owner manual gate separate.
+31 October latest — [owner correction: automatic QR1→QR2→QR3→ads, ticket after payment](qa/portrait-v2-sandbox/BUG026-QR-RENEWAL.md). Owner retest FAIL at ecc6733; follow-up focused50 +configured5 PASS, full/current CI pending. Earlier renewal/new-ticket/30s evidence is historical.
 
 ## 30 October — mock purchased-print chain verified
 

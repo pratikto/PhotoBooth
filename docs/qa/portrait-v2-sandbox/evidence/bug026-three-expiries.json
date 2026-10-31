@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-31",
+  "base": "ecc67335b8b9c36d3d5bb3fa04b166d14eba39be",
+  "status": "FOLLOWUP_FOCUSED_VERIFIED_FULL_CI_PENDING_OWNER_RETEST_PENDING",
+  "scope": "Dedicated Sandbox: QR1 expiry -> QR2, QR2 expiry -> QR3, QR3 expiry -> ads. Fresh unpaid provider proof and old archive required. Same cart/amount. No formatted recovery ticket or ticket image before paid. Internal capability binding retained. Saved expiry boot automatic, stale busy claim controls repaired.",
+  "owner_retest_at_base": "FAIL",
+  "regression_before": {
+    "run": 3,
+    "fail": 3,
+    "error": 0,
+    "seconds": 2.866
+  },
+  "focused": {
+    "run": 50,
+    "pass": 50,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 65.75
+  },
+  "final_configured_boot": {
+    "run": 5,
+    "pass": 5,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 3.112
+  },
+  "ci_required_methods": {
+    "portable": 12,
+    "native_renewal": 10,
+    "native_busy_claim": 1
+  },
+  "source_sha256": {
+    "photobooth/qris_session.py": "6338def237d74782726bd4033c92efe6d679fddd3c167a7b1864e635ed5ec4b7",
+    "photobooth/kiosk_v2/sandbox_checkout.py": "439d7e7d451fc5f378e4aba03cc72308c2d07bcc21736b8e843b3da6376f671a",
+    "photobooth/kiosk_v2/sandbox_views.py": "f76d489810dc832dae4439957806296a0ebb076ea98603a93b6c9636ac6bdc75"
+  },
+  "full": {
+    "status": "NOT_RUN"
+  },
+  "ci": {
+    "status": "NOT_RUN"
+  },
+  "owner_laptop": "NOT_RUN_AT_FOLLOWUP",
+  "actual_midtrans": "NOT_RUN",
+  "limits": [
+    "Synthetic HTTP/SQLite/native fixtures, no real merchant or owner journal accessed.",
+    "Paid/owed/photo/release/uncertain states never become replacement permission.",
+    "No production/default/new branch/merge/deployment or printer/Drive activation."
+  ]
+}

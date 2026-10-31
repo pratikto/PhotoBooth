@@ -1,5 +1,10 @@
 # Meong Photobooth — changelog
 
+## 31 October — BUG-026 owner correction (latest)
+
+Owner retest FAIL at ecc6733. Follow-up automatically renews verified unpaid QR twice; third expiration returns ads. No visitor ticket before payment; ticket after PAID before photo consent. Configured saved-expired startup and busy claim buttons corrected; counter persists and core rejects QR4. Focused50 +final configured5 PASS; full/current CI pending. Dedicated Sandbox only, paid/photo rights retained. [Current contract](qa/portrait-v2-sandbox/BUG026-QR-RENEWAL.md).
+
+
 ## 31 October — BUG-026 expiry renewal and30s return
 
 Added verified unpaid-expiry QR renewal on existing Sandbox checkout with preserved selection, original archive, new order/ticket and bounded automation. Added owner-requested30s idle return only from safe expired renewal page. Eleven portable +four native regressions; final15 focused PASS. Functional5201c10 full1251/1247 PASS/4optional SKIP, zero failure/error; CI41205340183 at0d92831 all three SUCCESS after CI-only ffpyplayer4.5.3 binary pin. Owner manual acceptance remains NOT_RUN.

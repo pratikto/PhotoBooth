@@ -1,6 +1,6 @@
 # Meong Photobooth — GUI v2
 
-Sandbox: [QR kedaluwarsa → QR baru, tiket baru, dan kembali iklan setelah30detik](docs/qa/portrait-v2-sandbox/UX07-LAPTOP-CHECK.md#jika-qr-pembayaran-kedaluwarsa-saat-l02).
+Sandbox: [QR kedaluwarsa otomatis diganti; kedaluwarsa ketiga kembali iklan, tiket setelah bayar](docs/qa/portrait-v2-sandbox/UX07-LAPTOP-CHECK.md#jika-qr-pembayaran-kedaluwarsa-saat-l02).
 
 Sandbox lama tanpa tiket pemulihan: [langkah arsip uji dengan PIN lokal](docs/qa/portrait-v2-sandbox/BUG025-LEGACY-NO-TICKET.md#final-verified-result--owner-retest-next). Pesanan/foto/hak lama tetap disimpan; printer/Drive tetap OFF.
 

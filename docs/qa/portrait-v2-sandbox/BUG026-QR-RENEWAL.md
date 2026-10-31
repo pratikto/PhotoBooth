@@ -1,5 +1,44 @@
 # BUG-026 — verified expired QR renewal in the existing Sandbox checkout
 
+## 31 October — latest owner correction (supersedes earlier flow below)
+
+Unpaid customers must see payment QR directly, without generating/rendering or
+acknowledging a visitor ticket. Recovery ticket presentation starts only after
+confirmed payment, before photo consent. Existing internal capability binding
+at order creation remains an ownership safeguard, not a visitor ticket screen.
+Fresh Midtrans EXPIRED + unpaid/no entitlement archives the original and
+automatically replaces it with a new ID/QR, same designs/copies/amount, including
+reopening the reported saved expired session. Show exactly: “QR sebelumnya
+kedaluwarsa. Silakan gunakan QR terbaru.” No renewal-button or ticket detour.
+Three expirations total per visit: QR1 expires → QR2; QR2 expires → QR3;
+QR3 expires → advertising, no QR4. Persist the replacement counter across restart;
+core rejects renewals beyond this cap, including manual/stale requests.
+Fresh verification, archival-before-creation, unknown/paid/photo/owed/privacy/
+readiness guards still apply. The previous manual-button/30-second requirement
+is superseded by this explicit automatic three-expiration instruction.
+Regression tests must cover real configured factory startup, provider reservation,
+three expirations, deferred paid ticket, lost reply/restart and claim buttons.
+
+## 31 October — owner retest FAIL at ecc6733 / startup follow-up
+
+Owner confirms exact laptop SHA ecc6733 and again sees SESI TERSIMPAN with all
+four claim actions disabled. Prior full/CI PASS remain historical synthetic
+evidence; owner case is NOT resolved. No more owner diagnostic commands required.
+Reproduce actual configured factory + persisted EXPIRED/NONE checkout, including
+persisted provider reservation/unchecked observation, and native page rebuilt
+while reconciliation is busy. Existing live-renewal fixtures did not cover that
+combination. Do not delete/edit owner journal, payment or media to unblock it.
+
+Bounded fix: known unused expired checkout awaits provider verification on a
+neutral payment-check page (no old-ticket input and no replacement before fresh
+proof). Verified saved expiry offers BUAT QR BARU directly in the same checkout,
+not the ticket page or an automatic replacement charge. Existing30s untouched
+button return applies. Rebuilt private-claim buttons must reflect actual worker
+completion without losing typed proof or re-enabling a held release/paid action.
+Retain all existing expiry, grant/photo/OWED/review, privacy and provider guards.
+Add failing regressions first, focused checks, staged push, final full/current CI.
+Real laptop outcome remains pending until owner confirms; do not infer it from CI.
+
 31 October 2026 (Asia/Jakarta). Base/remote c478bce, same feature branch.
 Owner explicitly approves implementation with "oke gass", then requests staged
 commit/push checkpoints to survive session limits. Earlier unsolicited draft was

@@ -1,5 +1,40 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 31 October — BUG-026 owner retest correction: three expirations, ticket after payment
+
+Owner confirms laptop ecc6733 and reports the saved-ticket lock again: previous
+owner acceptance is FAIL, despite historical synthetic PASS. Latest explicit
+owner flow supersedes the earlier one-auto/manual-renewal/save-ticket-before-pay
+contract: unpaid expiry → fresh Midtrans proof → old archive → automatic same-cart
+new ID/QR; QR1→QR2→QR3, third expiration returns advertising with no QR4. Unpaid
+customers get no formatted ticket/QR image or acknowledgment gate. Existing internal
+capability hash still binds the order; visitor ticket is shown only after PAID,
+before photo consent. Existing paid recovery remains private and order-bound.
+
+Reproduced three original FAIL cases at ecc6733: configured saved EXPIRED boot
+returned ads instead of renewal; reserved provider observation routed to ticket;
+claim controls rebuilt busy stayed grey after poll deliberately preserved input.
+Controller/adapter now classify unused payments without granting private rights,
+wait on fresh provider proof, authorize bounded boot/live renewal, persist/hard-cap
+the existing counter, and reverify already archived expiry before replacement.
+Claim controls synchronize worker busy state in place without losing typed proof.
+Only dedicated configured Sandbox opts in; merchant/print/Drive stay OFF.
+
+Focused **50 PASS/0 FAIL/ERROR/SKIP,65.750s**; then final configured-boot seam
+**5 PASS/0 FAIL/ERROR/SKIP,3.112s** with synthetic QR pixels (no external image GET).
+Twelve portable renewal methods +ten native renewal methods +one button regression
+registered in CI receipts. Covers both native sizes, post-paid ticket/consent/
+original capture, count cap after restart, delayed verification and saved PAID
+privacy. Updated beginner Markdown/HTML guide; original historical evidence kept.
+
+Final full regression, screenshots and matching-source CI are NEXT, not yet PASS.
+Owner actual Windows/Midtrans retest remains pending; do not claim laptop resolved.
+See BUG026-QR-RENEWAL.md and evidence/bug026-three-expiries.json. Source commit is
+this containing Git checkpoint; resolve its exact SHA from Git. Same existing
+branch, no production/default/merge/deploy/new branch or OPS implementation.
+Unrelated dirty /workspace/PhotoBooth and untracked work/ remain local-only.
+
+
 ## 31 October — BUG-026 renewal +30s return fully source-verified
 
 Functional **5201c1012d85412635f438219d8a4c1e96fbea34**: full **1251 run/1247 PASS/

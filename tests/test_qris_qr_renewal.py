@@ -13,8 +13,10 @@ class QrRenewalTests(TestCase):
         self.tmp=TemporaryDirectory();self.addCleanup(self.tmp.cleanup);self.root=Path(self.tmp.name)
         self.f=Fixture(self.root,recovery_pin='12345678');self.addCleanup(lambda:self.f.close())
         self.f.flow.qr_renewal_enabled=True
-        self.f.service.begin({'template_a':2});self.ticket=self.f.flow.customer_ticket()
-        self.f.service.ticket_saved();self.original=self.f.flow.snapshot();self.oid=self.original['order']['order_id']
+        self.f.service.begin({'template_a':2})
+        self.assertIsNone(self.f.flow.customer_ticket())
+        self.original=self.f.flow.snapshot();self.oid=self.original['order']['order_id']
+        self.ticket=':'.join(('MEONG-RECOVERY-V1','PB001',self.original['checkout_key'],self.f.flow._customer_ticket))
 
     def expire(self):
         oid=self.f.flow.snapshot()['order']['order_id']
@@ -33,32 +35,41 @@ class QrRenewalTests(TestCase):
         provider=self.f.provider;self.f.close();self.f=Fixture(self.root,recovery_pin='12345678')
         self.f.provider=provider;self.f.backend.provider=provider;self.f.flow.qr_renewal_enabled=True
 
-    def test_verified_expiry_archives_before_same_cart_new_key_and_new_ticket(self):
+    def test_verified_expiry_archives_same_cart_without_ticket_until_paid(self):
         view=self.expire();self.assertEqual(view['phase'],'CANCELLED')
         self.assertTrue(self.f.flow.expiry_auto_available);self.assertTrue(self.f.flow.expiry_proof_ready)
         archive=self.root/'visits'/(self.original['checkout_key']+'.json')
         saved=json.loads(archive.read_text());self.assertEqual(saved['order']['order_id'],self.oid)
         self.assertNotIn(self.ticket.split(':')[-1],archive.read_text())
-        new=self.renew(automatic=True);ticket=self.f.flow.customer_ticket()
+        new=self.renew(automatic=True)
         self.assertNotEqual(new['checkout_key'],self.original['checkout_key'])
-        self.assertNotEqual(new['order']['order_id'],self.oid);self.assertNotEqual(ticket,self.ticket)
+        self.assertNotEqual(new['order']['order_id'],self.oid)
         self.assertEqual(new['quantities'],self.original['quantities']);self.assertEqual(new['amount'],self.original['amount'])
         self.assertEqual(new['qr_replaces'],self.original['checkout_key']);self.assertEqual(new['qr_renewal_count'],1)
-        self.assertTrue(new['ticket_required']);self.assertEqual(self.f.provider.charges,2)
-        self.f.service.ticket_saved();self.f.paid();self.f.service.check();self.f.flow.lock_customer()
+        self.assertFalse(new['ticket_required']);self.assertIsNone(self.f.flow.customer_ticket())
+        self.assertEqual(self.f.provider.charges,2)
+        self.f.paid();paid=self.f.service.check();ticket=self.f.flow.customer_ticket()
+        self.assertTrue(paid['ticket_required']);self.assertTrue(ticket)
+        self.f.service.ticket_saved();self.f.flow.lock_customer()
         with self.assertRaises(ValueError):self.f.flow.customer_claim(self.ticket)
         self.f.flow.customer_claim(ticket)
         self.assertEqual(self.f.flow.snapshot()['order']['state'],'PAID')
         self.assertIsNone(self.f.store.get(self.oid)['grant_id'])
 
-    def test_second_expiry_requires_manual_action_and_never_loops_provider_posts(self):
-        self.expire();self.renew(automatic=True);self.f.service.ticket_saved()
+    def test_three_expirations_allow_two_automatic_replacements_and_never_qr_four(self):
+        for count in (1,2):
+            self.expire();self.assertTrue(self.f.flow.expiry_auto_available)
+            self.renew(automatic=True)
+            self.assertEqual(self.f.provider.charges,count+1)
+            self.assertEqual(self.f.flow.snapshot()['qr_renewal_count'],count)
         self.expire();self.assertFalse(self.f.flow.expiry_auto_available)
+        key=self.f.flow.snapshot()['checkout_key']
+        for automatic in (False,True):
+            with self.assertRaises(RuntimeError):self.f.flow.verify_qr_renewal(key,automatic)
+            with self.assertRaises(RuntimeError):self.f.flow.renew_expired_qr(key,lambda _:None,automatic)
         for _ in range(3):self.f.service.check()
-        self.assertEqual(self.f.provider.charges,2)
-        with self.assertRaises(RuntimeError):self.renew(automatic=True)
-        self.renew();self.assertEqual(self.f.provider.charges,3)
-        self.assertEqual(self.f.flow.snapshot()['qr_renewal_count'],2)
+        self.assertEqual(self.f.provider.charges,3)
+        self.assertFalse(self.f.flow.active)
 
     def test_pause_or_restart_retires_automatic_authority_and_proof(self):
         self.expire();key=self.f.flow.snapshot()['checkout_key']
@@ -94,6 +105,19 @@ class QrRenewalTests(TestCase):
                 with patch.object(self.f.flow.client,'reconcile',return_value=result):self.f.service.check()
                 self.assertTrue(self.f.flow.active);self.assertFalse(self.f.flow.expiry_proof_ready)
         self.assertFalse((self.root/'visits').exists())
+
+    def test_live_unchecked_expiry_waits_then_renews_automatically_when_fresh(self):
+        self.f.provider.rows[self.oid].update(transaction_status='expire',status_code='407')
+        self.f.backend.reconcile(self.oid,'PB001','restart')
+        self.f.provider.outage=True
+        self.f.flow._reconcile_at=0;held=self.f.service.check()
+        self.assertEqual(held['phase'],'VERIFYING_QR');self.assertEqual(self.f.provider.charges,1)
+        self.assertFalse(self.f.flow.expiry_proof_ready)
+        self.f.provider.outage=False
+        created=self.f.store.get(self.oid)['created_at'];self.f.store.now=lambda:created+120
+        self.f.flow._reconcile_at=0;verified=self.f.service.check()
+        self.assertEqual(verified['phase'],'CANCELLED');self.assertTrue(self.f.flow.expiry_auto_available)
+        self.renew(automatic=True);self.assertEqual(self.f.provider.charges,2)
 
     def test_archive_save_and_replacement_journal_faults_never_send_new_charge(self):
         self.f.provider.rows[self.oid].update(transaction_status='expire',status_code='407')

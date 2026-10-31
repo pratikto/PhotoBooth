@@ -1,5 +1,10 @@
 # Meong Photobooth — current feature status
 
+## 31 October — BUG-026 owner correction (latest)
+
+Owner retest FAIL at ecc6733. Follow-up automatically renews verified unpaid QR twice; third expiration returns ads. No visitor ticket before payment; ticket after PAID before photo consent. Configured saved-expired startup and busy claim buttons corrected; counter persists and core rejects QR4. Focused50 +final configured5 PASS; full/current CI pending. Dedicated Sandbox only, paid/photo rights retained. [Current contract](qa/portrait-v2-sandbox/BUG026-QR-RENEWAL.md).
+
+
 ## 31 October — BUG-026 Sandbox QR renewal
 
 Same-checkout verified expiry replacement preserves design/copies/amount, new key and ticket; one automatic then manual renewal, untouched button returns to ads after30s. Dedicated Sandbox only, camera/storage/privacy/financial guards retained. Final15 focused PASS; functional5201c10 full1251/1247 PASS/4optional SKIP, zero failure/error; corrected-source0d92831 CI41205340183 all three SUCCESS. Owner laptop NOT_RUN.

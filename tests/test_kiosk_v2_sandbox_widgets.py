@@ -21,6 +21,51 @@ from tests.qris_v2_fixture import Fixture
 
 class SandboxWidgetTests(unittest.TestCase):
     @contextmanager
+    def saved_expired_booth(self, *, reserve_provider=False, renewal_count=0, provider_state='expire', archived=False):
+        """Real configured_sandbox factory on an original persisted checkout."""
+        from photobooth.kiosk_v2.sandbox_checkout import configured_sandbox, SandboxJobs
+        from photobooth.qris_api import create_app
+        from photobooth.booth_auth import BoothAuthenticator
+        from photobooth.qris_kiosk_client import QrisKioskClient
+        from tests.qris_v2_fixture import InProcessSession
+        with TemporaryDirectory() as directory,patch.dict(os.environ,{
+            'PHOTOBOOTH_V2_CHECKOUT_SANDBOX':'1','PHOTOBOOTH_V2_CHECKOUT_MOCK':'0',
+            'MEONG_QRIS_MODE':'sandbox','MIDTRANS_SERVER_KEY':'','MIDTRANS_MERCHANT_ID':'',
+            'PHOTOBOOTH_AUDIO':'0','PHOTOBOOTH_CAMERA':'0','PHOTOBOOTH_AD_VIDEO':'0',
+            'PHOTOBOOTH_FACE_TRIGGER':'0','PHOTOBOOTH_PALM_TRIGGER':'0'}):
+            root=Path(directory);profile=root/'data'/'kiosk-v2-sandbox'/'fixture'/'PB001'
+            profile.mkdir(parents=True);f=Fixture(profile,recovery_pin='12345678')
+            f.service.begin({'template_a':1});oid=f.flow.snapshot()['order']['order_id']
+            f.provider.rows[oid].update(transaction_status=provider_state,
+                                      status_code='200' if provider_state=='settlement' else '407')
+            f.flow.qr_renewal_enabled=archived
+            f.service.operator_inspect('12345678')  # Old source cached EXPIRED, not retired.
+            f.flow.data['qr_renewal_count']=renewal_count;f.flow._save()
+            f.flow.close();f.jobs.close();f.jobs.wait_closed()
+            if reserve_provider:f.store.begin_reconciliation(oid,urgent=True)
+            session=InProcessSession(create_app(f.backend,BoothAuthenticator({'PB001':'a'*48}),recovery_pin='12345678'))
+            client=QrisKioskClient('http://127.0.0.1:8765','PB001','a'*48,allow_local_http=True,session=session)
+            env=dict(os.environ,MEONG_QRIS_JOURNAL=str(profile/'visit.json'),
+                     MEONG_QRIS_API_URL=client.base_url,MEONG_QRIS_BOOTH_ID='PB001',
+                     MEONG_QRIS_BOOTH_TOKEN='a'*48,MEONG_QRIS_LOCAL_PREVIEW='1')
+            with patch('photobooth.kiosk_v2.sandbox_checkout.QrisKioskClient',return_value=client):
+                service=configured_sandbox(root,env)
+            service.image_loader=f.service.image_loader  # Synthetic pixels; no external QR download.
+            f.flow=service.flow;f.service=service;f.jobs=SandboxJobs(lambda:service)
+            device=Mock();device.read.return_value=np.zeros((120,160,3),dtype=np.uint8)
+            photo=PhotoTest(profile/'photo-tests')
+            with patch('photobooth.kiosk_v2.photos.configured_test',return_value=photo):
+                app=PortraitKioskV2App(camera_device=device,sandbox_jobs=f.jobs)
+                Window.add_widget(app.build())
+                try:
+                    self.settle(app);yield app,f
+                finally:
+                    app.on_stop();f.jobs.wait_closed()
+                    if app._photo_jobs:app._photo_jobs.wait_closed()
+                    else:photo.close()
+                    f.store.close();Window.remove_widget(app.stage)
+
+    @contextmanager
     def booth(self, *, recovery_pin=None):
         with TemporaryDirectory() as temp, patch.dict(os.environ,{
             'PHOTOBOOTH_V2_CHECKOUT_SANDBOX':'1','PHOTOBOOTH_V2_CHECKOUT_MOCK':'0',
@@ -695,34 +740,48 @@ class SandboxWidgetTests(unittest.TestCase):
                 self.assertTrue(app._sandbox_view['ticket_required'])
                 self.assertEqual(f.provider.charges,2)
 
-    def test_qr_renewal_auto_then_manual_keeps_cart_and_uses_new_ticket_at_both_sizes(self):
+    def test_qr_renewal_three_expirations_then_ads_without_unpaid_ticket_at_both_sizes(self):
         for size in [(800,1280),(452,900)]:
             with self.subTest(size=size),self.booth(recovery_pin='12345678') as (app,f):
                 Window.size=size;f.flow.qr_renewal_enabled=True
                 self.quote(app);app._sandbox_begin();self.settle(app)
-                ticket=f.flow.customer_ticket();app._sandbox_ticket_saved();self.settle(app)
-                original=f.flow.snapshot()
-                def expire():
-                    oid=f.flow.snapshot()['order']['order_id']
+                original=f.flow.snapshot();keys={original['checkout_key']}
+                for number in (1,2,3):
+                    labels=[getattr(w,'text','') for w in app.stage.walk()]
+                    self.assertIn('SALIN LINK QRIS',labels)
+                    self.assertFalse(app._sandbox_view['ticket_required']);self.assertIsNone(f.flow.customer_ticket())
+                    self.assertNotIn('VERIFIKASI TIKET',labels);self.assertNotIn('SIMPAN TIKET PEMULIHAN',labels)
+                    oid=f.flow.snapshot()['order']['order_id'];key=f.flow.snapshot()['checkout_key']
                     f.provider.rows[oid].update(transaction_status='expire',status_code='407')
-                    f.store.db.execute('UPDATE checkouts SET check_after=0')
-                    f.flow._reconcile_at=0
+                    f.store.db.execute('UPDATE checkouts SET check_after=0');f.flow._reconcile_at=0
                     app._sandbox_retry();self.settle(app)
-                expire();new=f.flow.snapshot()
-                self.assertNotEqual(new['checkout_key'],original['checkout_key'])
-                self.assertEqual(new['quantities'],original['quantities']);self.assertEqual(new['amount'],original['amount'])
-                self.assertEqual(new['qr_renewal_count'],1);self.assertEqual(f.provider.charges,2)
-                self.assertNotEqual(ticket,f.flow.customer_ticket());self.assertTrue(app._sandbox_view['ticket_required'])
-                self.assertIn('SIMPAN TIKET BARU',[getattr(w,'text','') for w in app.stage.walk()])
-                self.assertNotIn('SALIN LINK QRIS',[getattr(w,'text','') for w in app.stage.walk()])
-                app._sandbox_ticket_saved();self.settle(app)
-                self.assertIn('SALIN LINK QRIS',[getattr(w,'text','') for w in app.stage.walk()])
-                expire();self.assertEqual(f.provider.charges,2)
-                self.assertIn('BUAT QR BARU',[getattr(w,'text','') for w in app.stage.walk()])
-                old=next(w for w in app.stage.walk() if isinstance(w,ArcadeButton) and w.text=='BUAT QR BARU')
-                old.dispatch('on_release');self.settle(app)
-                self.assertEqual(f.provider.charges,3);self.assertEqual(f.flow.snapshot()['qr_renewal_count'],2)
-                old.dispatch('on_release');self.settle(app);self.assertEqual(f.provider.charges,3)
+                    self.assertTrue((f.root/'visits'/(key+'.json')).is_file())
+                    self.assertEqual(f.provider.charges,min(number+1,3))
+                    if number<3:
+                        new=f.flow.snapshot();self.assertNotIn(new['checkout_key'],keys);keys.add(new['checkout_key'])
+                        self.assertEqual(new['quantities'],original['quantities']);self.assertEqual(new['amount'],original['amount'])
+                        self.assertEqual(new['qr_renewal_count'],number)
+                        self.assertIn('QR sebelumnya kedaluwarsa. Silakan gunakan QR terbaru.',
+                                      [getattr(w,'text','') for w in app.stage.walk()])
+                        self.assertEqual(app.navigation.page,SANDBOX_CHECKOUT)
+                self.assertEqual(app.navigation.page,ADVERT);self.assertFalse(f.flow.active)
+                app._poll_sandbox();self.assertEqual(f.provider.charges,3)
+
+    def test_qr_renewal_ticket_is_presented_only_after_confirmed_payment(self):
+        with self.booth() as (app,f):
+            f.flow.qr_renewal_enabled=True;self.pending(app)
+            self.assertIsNone(f.flow.customer_ticket());self.assertFalse(app._sandbox_view['ticket_required'])
+            f.paid();app._sandbox_retry();self.settle(app)
+            labels=[getattr(w,'text','') for w in app.stage.walk()]
+            self.assertIn('SIMPAN TIKET PEMULIHAN',labels);self.assertNotIn('SALIN LINK QRIS',labels)
+            self.assertNotIn('LANJUT KE PERSETUJUAN FOTO',labels)
+            self.assertTrue(f.flow.customer_ticket());self.assertEqual(f.provider.charges,1)
+            app._sandbox_photo_consent();self.assertFalse(app._sandbox_consent)
+            app._sandbox_ticket_saved();self.settle(app)
+            self.assertIn('LANJUT KE PERSETUJUAN FOTO',[getattr(w,'text','') for w in app.stage.walk()])
+            app._sandbox_photo_consent();self.settle(app)
+            app._admit_photo_test();self.settle(app)
+            self.assertEqual(app.navigation.page,CAPTURE);self.assertEqual(f.provider.charges,1)
 
     def test_qr_renewal_operator_expired_does_not_need_ticket_or_paid_isolation(self):
         with self.booth(recovery_pin='12345678') as (app,f):
@@ -736,7 +795,7 @@ class SandboxWidgetTests(unittest.TestCase):
             self.assertIn('BUAT QR BARU',labels);self.assertNotIn('VERIFIKASI TIKET',labels)
             self.assertEqual(f.provider.charges,1)
             app._sandbox_renew_qr();self.settle(app)
-            self.assertEqual(f.provider.charges,2);self.assertTrue(app._sandbox_view['ticket_required'])
+            self.assertEqual(f.provider.charges,2);self.assertFalse(app._sandbox_view['ticket_required'])
 
     def test_qr_renewal_missing_camera_and_pause_cannot_create_replacement(self):
         with self.booth(recovery_pin='12345678') as (app,f):
@@ -771,3 +830,70 @@ class SandboxWidgetTests(unittest.TestCase):
             self.assertEqual(app.navigation.page,ADVERT);self.assertEqual(f.provider.charges,1)
             self.assertEqual(f.store.get(oid)['state'],'EXPIRED')
             self.assertTrue((f.root/'visits'/(f.flow.snapshot()['checkout_key']+'.json')).is_file())
+
+    def test_qr_renewal_saved_expired_boot_real_factory_automatically_replaces_without_ticket(self):
+        with self.saved_expired_booth() as (app,f):
+            self.assertTrue(f.flow.qr_renewal_enabled)
+            labels=[getattr(w,'text','') for w in app.stage.walk()]
+            self.assertIn('SALIN LINK QRIS',labels);self.assertNotIn('VERIFIKASI TIKET',labels)
+            self.assertNotIn('SIMPAN TIKET PEMULIHAN',labels)
+            self.assertEqual(app.navigation.page,SANDBOX_CHECKOUT)
+            self.assertEqual(f.provider.charges,2);self.assertTrue(f.flow.active)
+            self.assertEqual(f.flow.snapshot()['qr_renewal_count'],1)
+
+    def test_qr_renewal_saved_expired_boot_waits_for_fresh_provider_without_requesting_ticket(self):
+        with self.saved_expired_booth(reserve_provider=True) as (app,f):
+            labels=[getattr(w,'text','') for w in app.stage.walk()]
+            self.assertIn('MEMERIKSA STATUS QR',labels);self.assertNotIn('VERIFIKASI TIKET',labels)
+            self.assertNotIn('BUAT QR BARU',labels)
+            self.assertTrue(f.flow.active);self.assertEqual(f.provider.charges,1)
+            original=f.flow.snapshot();created=f.store.get(original['order']['order_id'])['created_at']
+            f.store.now=lambda:created+120;f.flow._reconcile_at=0
+            app._sandbox_retry();self.settle(app)
+            labels=[getattr(w,'text','') for w in app.stage.walk()]
+            self.assertIn('SALIN LINK QRIS',labels);self.assertNotIn('VERIFIKASI TIKET',labels)
+            self.assertEqual(f.provider.charges,2)
+
+    def test_qr_renewal_saved_third_expiry_returns_to_ads_without_fourth_charge(self):
+        with self.saved_expired_booth(renewal_count=2) as (app,f):
+            self.assertEqual(app.navigation.page,ADVERT);self.assertFalse(f.flow.active)
+            self.assertEqual(f.provider.charges,1);self.assertEqual(f.flow.snapshot()['qr_renewal_count'],2)
+            app._poll_sandbox();self.assertEqual(f.provider.charges,1)
+
+    def test_qr_renewal_already_archived_expiry_reopens_with_fresh_check_and_new_qr(self):
+        with self.saved_expired_booth(archived=True) as (app,f):
+            self.assertEqual(app.navigation.page,SANDBOX_CHECKOUT)
+            self.assertEqual(f.provider.charges,2);self.assertEqual(f.flow.snapshot()['qr_renewal_count'],1)
+            labels=[getattr(w,'text','') for w in app.stage.walk()]
+            self.assertIn('SALIN LINK QRIS',labels);self.assertNotIn('VERIFIKASI TIKET',labels)
+            self.assertFalse(app._sandbox_view['ticket_required'])
+
+    def test_qr_renewal_saved_paid_order_keeps_original_ticket_and_photo_privacy(self):
+        with self.saved_expired_booth(provider_state='settlement') as (app,f):
+            self.assertEqual(f.flow.snapshot()['order']['state'],'PAID')
+            self.assertTrue(f.flow.active);self.assertEqual(f.provider.charges,1)
+            labels=[getattr(w,'text','') for w in app.stage.walk()]
+            self.assertIn('VERIFIKASI TIKET',labels);self.assertNotIn('SALIN LINK QRIS',labels)
+            self.assertNotIn('BUAT QR BARU',labels);self.assertFalse(app._sandbox_can_capture())
+            self.assertEqual(app._photo_view,{})
+
+    def test_recovery_buttons_unlock_after_busy_rebuild_and_keep_typed_ticket(self):
+        with self.booth(recovery_pin='12345678') as (app,f):
+            self.start_private_capture(app,f);app._sandbox_lock_customer()
+            entered,release=threading.Event(),threading.Event();original=f.service.check
+            def check():
+                entered.set()
+                if not release.wait(5):raise AssertionError('Synthetic recovery check barrier')
+                return original()
+            with patch.object(f.service,'check',side_effect=check):
+                try:
+                    app._sandbox_submit('check');self.assertTrue(entered.wait(2));app._show()
+                    field=app._sandbox_claim_input;field.text='synthetic-ticket-being-typed'
+                    buttons=[w for w in app.stage.walk() if isinstance(w,ArcadeButton)]
+                    self.assertTrue(all(w.disabled for w in buttons))
+                    release.set();self.settle(app)
+                    self.assertIs(app._sandbox_claim_input,field)
+                    self.assertEqual(field.text,'synthetic-ticket-being-typed')
+                    self.assertTrue(all(not w.disabled for w in buttons))
+                    self.assertFalse(app._sandbox_can_capture());self.assertEqual(app._photo_view,{})
+                finally:release.set()

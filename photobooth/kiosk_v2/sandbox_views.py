@@ -25,6 +25,7 @@ class SandboxViews:
         self._sandbox_privacy_epoch = 0
         self._sandbox_action_epoch = 0
         self._sandbox_claim_input = None
+        self._sandbox_claim_controls = []
         self._sandbox_pending_issue = None
         self._sandbox_operator_mode = False
         self._sandbox_operator_input = None
@@ -40,8 +41,14 @@ class SandboxViews:
         if self._sandbox_jobs.submit(action, self._view_revision, *args):
             self._sandbox_action_epoch = self._sandbox_privacy_epoch
             self._sandbox_error = ''
+            self._sync_sandbox_claim_controls()
             return True
         return False
+
+    def _sync_sandbox_claim_controls(self):
+        busy=bool(self._closed or self._suspended or not self._sandbox_jobs or self._sandbox_jobs.busy)
+        for button in self._sandbox_claim_controls:
+            button.disabled=busy
 
     def _sandbox_lock_customer(self):
         jobs=self._sandbox_jobs
@@ -329,6 +336,7 @@ class SandboxViews:
         if self._sandbox_expired_idle_tick():
             return
         outcome = self._sandbox_jobs.poll()
+        self._sync_sandbox_claim_controls()
         if outcome is not None:
             if self._sandbox_action_epoch != self._sandbox_privacy_epoch:
                 self._sandbox_refresh_at=time.monotonic()+2
@@ -386,7 +394,12 @@ class SandboxViews:
                 phase = (outcome.value or {}).get('phase')
                 if outcome.action=='operator_inspect' and phase=='CANCELLED':
                     self._sandbox_operator_mode=False;self._sandbox_legacy_confirm=False
-                if outcome.action == 'boot' and phase in {'IDLE','COMPLETED','CANCELLED','SUSPENDED'}:
+                expired=(phase=='CANCELLED' and self._sandbox_view.get('qr_expiry_verified') is True)
+                if expired and self._sandbox_view.get('qr_renewal_count',0)>=2:
+                    self._sandbox_leave()
+                    return
+                if (outcome.action == 'boot' and phase in {'IDLE','COMPLETED','CANCELLED','SUSPENDED'}
+                        and not expired):
                     self._sandbox_leave()
                     return
                 if outcome.action=='verify_renewal' and self._sandbox_view.get('qr_renewal_ready'):
@@ -395,7 +408,7 @@ class SandboxViews:
                 if outcome.action=='renew_ready':
                     self.quantities=dict(self._sandbox_view['quantities'])
                     self._sandbox_link_feedback=None
-                if (outcome.action=='check' and phase=='CANCELLED' and self._sandbox_view.get('qr_renewal_auto')
+                if (outcome.action in {'boot','check'} and phase=='CANCELLED' and self._sandbox_view.get('qr_renewal_auto')
                         and self._sandbox_jobs.store.flow.expiry_auto_available
                         and not self._sandbox_operator_mode):
                     self._sandbox_renew_qr(automatic=True)
@@ -464,6 +477,7 @@ class SandboxViews:
         return False
 
     def _build_sandbox_checkout(self, canvas):
+        self._sandbox_claim_controls=[]
         view = self._sandbox_view or {}
         if self._sandbox_operator_mode:
             return self._build_sandbox_operator(canvas,view)
@@ -547,8 +561,7 @@ class SandboxViews:
 
     def _build_recovery_ticket(self,canvas,view):
         shell=self._frame(canvas,brand_height=48)
-        renewed=bool(view.get('qr_replaces'))
-        self._brand(shell,'SIMPAN TIKET BARU' if renewed else 'SIMPAN TIKET PEMULIHAN','MODE UJI • BUKAN QR PEMBAYARAN')
+        self._brand(shell,'SIMPAN TIKET PEMULIHAN','PEMBAYARAN TERKONFIRMASI • BUKAN QR PEMBAYARAN')
         card=PixelCard(orientation='vertical',padding=12,spacing=8)
         rgb=view.get('ticket_qr_rgb')
         if rgb:
@@ -556,12 +569,11 @@ class SandboxViews:
             texture=image_texture(PILImage.frombytes('RGB',rgb[0],rgb[1]))
             texture.mag_filter=texture.min_filter='nearest'
             card.add_widget(Image(texture=texture,fit_mode='contain'))
-        message=('QRIS diperbarui; simpan tiket BARU ini.\nTiket lama bukan untuk pesanan baru.\nBerlaku 24 jam untuk uji Sandbox.' if renewed else
-                 'Scan atau simpan QR ini di ponsel.\nTiket rahasia ini diperlukan jika sesi terputus.\nBerlaku 24 jam untuk uji Sandbox.')
+        message='Pembayaran diterima. Simpan tiket ini di ponsel.\nTiket diperlukan jika sesi foto terputus.\nBerlaku 24 jam untuk uji Sandbox.'
         card.add_widget(text_label(message,size=15,height=120,color=MUTED))
         shell.add_widget(card)
         shell.add_widget(text_label(self._sandbox_error,size=13,height=60,color=GOLD))
-        shell.add_widget(self._action('SUDAH SIMPAN • TAMPILKAN QRIS',self._sandbox_ticket_saved,
+        shell.add_widget(self._action('SUDAH SIMPAN • LANJUT',self._sandbox_ticket_saved,
             height=52,disabled=self._sandbox_jobs.busy or not rgb))
 
     def _build_customer_claim(self,canvas,view):
@@ -583,17 +595,19 @@ class SandboxViews:
         card.add_widget(Widget())
         shell.add_widget(card)
         shell.add_widget(text_label(self._sandbox_error,size=13,height=76,color=GOLD))
+        def action(title,callback,variant='secondary',height=52):
+            button=self._action(title,callback,variant=variant,height=height,disabled=self._sandbox_jobs.busy)
+            self._sandbox_claim_controls.append(button)
+            shell.add_widget(button)
         if ready:
-            shell.add_widget(self._action('PULIHKAN SESI FOTO ASLI',self._sandbox_resume,height=52,disabled=self._sandbox_jobs.busy))
+            action('PULIHKAN SESI FOTO ASLI',self._sandbox_resume)
         else:
-            shell.add_widget(self._action('VERIFIKASI TIKET',self._sandbox_claim,height=52,disabled=self._sandbox_jobs.busy))
-            shell.add_widget(self._action('SCAN QR TIKET DI KAMERA',self._sandbox_scan_claim,height=52,disabled=self._sandbox_jobs.busy))
-        shell.add_widget(self._action('PERIKSA STATUS',self._sandbox_retry,height=52,disabled=self._sandbox_jobs.busy))
-        shell.add_widget(self._action('BANTUAN OPERATOR',self._sandbox_operator_open,height=48,
-            variant='tertiary',disabled=self._sandbox_jobs.busy))
+            action('VERIFIKASI TIKET',self._sandbox_claim)
+            action('SCAN QR TIKET DI KAMERA',self._sandbox_scan_claim)
+        action('PERIKSA STATUS',self._sandbox_retry)
+        action('BANTUAN OPERATOR',self._sandbox_operator_open,variant='tertiary',height=48)
         if view.get('phase')=='CLAIM_LOOKUP':
-            shell.add_widget(self._action('KEMBALI KE IKLAN',self._sandbox_leave,height=48,
-                variant='tertiary',disabled=self._sandbox_jobs.busy))
+            action('KEMBALI KE IKLAN',self._sandbox_leave,variant='tertiary',height=48)
 
     def _build_sandbox_operator(self,canvas,view):
         shell=self._frame(canvas,brand_height=48)

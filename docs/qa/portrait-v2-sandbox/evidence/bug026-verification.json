@@ -123,5 +123,11 @@
   "functional_source": "5201c1012d85412635f438219d8a4c1e96fbea34",
   "ci_source": "0d92831d82fbd72248085509768748d844f63e26",
   "source_identity": "Full at functional5201c10; corrected CI at0d92831 changes only workflow dependency pin/docs. git diff --quiet confirms identical photobooth/tests/tools. Existing local full already used ffpyplayer4.5.3.",
-  "next": "Owner closes old launcher, pulls same branch and runs dedicated Sandbox. Verify official provider expiry (no file/time edits), one live renewal + new-ticket save + latest simulator URL; repeat expiry tests manual button, leave untouched30s to ads. Pending/paid/unknown cases remain original holds. Record actual SHA/device and partial results in L02."
+  "next": "Owner closes old launcher, pulls same branch and runs dedicated Sandbox. Verify official provider expiry (no file/time edits), one live renewal + new-ticket save + latest simulator URL; repeat expiry tests manual button, leave untouched30s to ads. Pending/paid/unknown cases remain original holds. Record actual SHA/device and partial results in L02.",
+  "superseded_by": "bug026-three-expiries.json",
+  "owner_retest": {
+    "sha": "ecc67335b8b9c36d3d5bb3fa04b166d14eba39be",
+    "result": "FAIL",
+    "observation": "Saved customer ticket page/all claim controls disabled; latest owner requires three expirations and no unpaid ticket."
+  }
 }

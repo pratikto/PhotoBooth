@@ -78,6 +78,7 @@ class KioskCheckout:
         self.qr_renewal_enabled = False
         self._expiry_proof = None
         self._expiry_auto_generation = None
+        self._expiry_boot_generation = None
         try:
             if self.path.exists():
                 self._opened_existing = True
@@ -86,6 +87,8 @@ class KioskCheckout:
                 self.data = json.loads(self.path.read_text(encoding='utf-8'))
                 if (self.data.get('version') != 1 or self.data.get('context') != self.context
                         or self.data.get('phase') not in self.PHASES
+                        or type(self.data.get('qr_renewal_count',0)) is not int
+                        or self.data.get('qr_renewal_count',0)<0
                         or quote_checkout(self.data['quantities']).total_amount != self.data['amount']
                         or len(self.data.get('checkout_key', '')) != 32):
                     raise ValueError('Payment journal needs operator recovery')
@@ -121,7 +124,9 @@ class KioskCheckout:
     def customer_ticket(self):
         with self.lock:
             if (not self._customer_ticket or not self.data or self._opened_existing
-                    or not (self.data.get('order') or {}).get('customer_capability_bound')):
+                    or not (self.data.get('order') or {}).get('customer_capability_bound')
+                    or (self.qr_renewal_enabled and self.context['mode']=='sandbox'
+                        and (self.data.get('order') or {}).get('state')!='PAID')):
                 return None
             return ':'.join(('MEONG-RECOVERY-V1',self.context['booth_id'],
                              self.data['checkout_key'],self._customer_ticket))
@@ -144,6 +149,7 @@ class KioskCheckout:
             self._privacy_generation += 1
             self._expiry_proof=None
             self._expiry_auto_generation=None
+            self._expiry_boot_generation=None
             self._opened_existing = True
             self._ownership_confirmed = False
             self._ownership_expires = 0
@@ -268,6 +274,7 @@ class KioskCheckout:
                                  qr_renewal_count=replacement.get('qr_renewal_count',0)+1)
             self._expiry_proof=None
             self._expiry_auto_generation=None
+            self._expiry_boot_generation=None
             self._opened_existing=False
             self._ownership_confirmed=False
             self._permit_issued=False
@@ -401,11 +408,38 @@ class KioskCheckout:
         data=self.snapshot() or {}
         return bool(self.qr_renewal_enabled and self.context['mode']=='sandbox'
                     and self._expiry_auto_generation==self._privacy_generation
-                    and data.get('qr_expiry_verified') is True and data.get('qr_renewal_count',0)==0)
+                    and data.get('qr_expiry_verified') is True
+                    and type(data.get('qr_renewal_count',0)) is int
+                    and 0<=data.get('qr_renewal_count',0)<2)
+
+    @property
+    def unused_payment(self):
+        """Readonly classification; never authorizes replacement or photo access."""
+        data=self.snapshot() or {};order=data.get('order') or {}
+        return bool(self.qr_renewal_enabled and self.context['mode']=='sandbox'
+                    and order.get('state') in {'PENDING','EXPIRED'}
+                    and self._unused_payment(data,order))
+
+    @staticmethod
+    def _unused_payment(data, order):
+        return (data.get('phase') in {'CREATING','WAITING','RECOVERY','VERIFYING_QR','CANCELLED'}
+                and order.get('service_state')=='NONE' and not order.get('grant_id')
+                and not any(order.get(key) for key in ('fulfillment','fulfillment_issue',
+                    'local_transaction_id','service_fence','release'))
+                and not any(data.get(key) for key in ('transaction_id','allocation_operation_id',
+                    'allocation_ready','release_operation_id','isolation_id','pending_fulfillment_issue'))
+                and (data.get('recovery') or {}).get('interrupted_phase') not in {'STARTING','STARTED','COMPLETING'})
+
+    def prepare_boot_renewal(self):
+        with self.lock:
+            if self.unused_payment:
+                self._expiry_boot_generation=self._privacy_generation
 
     def invalidate_qr_renewal(self, *, retire=False):
         with self.lock:
-            if retire:self._privacy_generation+=1
+            if retire:
+                self._privacy_generation+=1
+                self._expiry_boot_generation=None
             self._expiry_proof=None;self._expiry_auto_generation=None
 
     def _archive_verified_expiry(self, result, *, checked, provider_state):
@@ -413,18 +447,14 @@ class KioskCheckout:
         if (not self.qr_renewal_enabled or self.context['mode']!='sandbox'
                 or checked is not True or provider_state!='expire'
                 or result.get('verification_pending') is not False or result.get('state')!='EXPIRED'
-                or data.get('phase') not in {'CREATING','WAITING','RECOVERY','VERIFYING_QR','CANCELLED'}
-                or result.get('service_state')!='NONE' or result.get('grant_id')
-                or result.get('fulfillment') or result.get('fulfillment_issue')
-                or result.get('local_transaction_id') or result.get('service_fence') or result.get('release')
-                or data.get('transaction_id') or data.get('allocation_operation_id') or data.get('allocation_ready')
-                or data.get('release_operation_id') or data.get('isolation_id') or data.get('pending_fulfillment_issue')
-                or (data.get('recovery') or {}).get('interrupted_phase') in {'STARTING','STARTED','COMPLETING'}):
+                or not self._unused_payment(data,result)):
             return False
         generation=self._privacy_generation
         observed_at=time.monotonic()
-        automatic=(self.expiry_auto_available or (not self._opened_existing and self._ticket_acknowledged
-                   and data['phase']=='WAITING' and data.get('qr_renewal_count',0)==0))
+        count=data.get('qr_renewal_count',0)
+        automatic=(type(count) is int and 0<=count<2 and (self.expiry_auto_available
+                   or not self._opened_existing
+                   or self._expiry_boot_generation==generation))
         data['phase']='CANCELLED';data['qr_expiry_verified']=True
         self._archive_snapshot(data,'expired')
         with self.lock:
@@ -446,6 +476,8 @@ class KioskCheckout:
             if (not self.qr_renewal_enabled or self.context['mode']!='sandbox'
                     or data.get('checkout_key')!=checkout_key or not data.get('qr_expiry_verified')
                     or data.get('phase') not in {'CANCELLED','VERIFYING_QR'}
+                    or type(data.get('qr_renewal_count',0)) is not int
+                    or not 0<=data.get('qr_renewal_count',0)<2
                     or (automatic and not self.expiry_auto_available)):
                 raise RuntimeError('Original expired checkout required')
             if self.expiry_proof_ready:return self.snapshot()
@@ -460,6 +492,8 @@ class KioskCheckout:
     def renew_expired_qr(self, checkout_key, readiness, automatic=False):
         with self.worker_lock:
             if (not self.expiry_proof_ready or self.data['checkout_key']!=checkout_key
+                    or type(self.data.get('qr_renewal_count',0)) is not int
+                    or not 0<=self.data.get('qr_renewal_count',0)<2
                     or (automatic and not self.expiry_auto_available)):
                 raise RuntimeError('Fresh original expiry proof required')
             generation=self._privacy_generation;old=self.snapshot()

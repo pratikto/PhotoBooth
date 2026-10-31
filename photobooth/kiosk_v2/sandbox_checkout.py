@@ -82,6 +82,11 @@ class SandboxCheckout:
         data['qr_renewal_auto']=self.flow.expiry_auto_available
         data['qr_renewal_ready']=self.flow.expiry_proof_ready
         data['customer_claim_required'] = self.flow.customer_claim_required
+        if data['customer_claim_required'] and self.flow.unused_payment:
+            # Observing unused payment needs no customer proof. It grants no
+            # photo/resume access and no authority to replace a cached QR.
+            data['customer_claim_required']=False
+            data['phase']='VERIFYING_QR'
         data['resume_ready'] = False
         if data['phase']=='RECOVERY' and not data['customer_claim_required']:
             try:
@@ -91,7 +96,8 @@ class SandboxCheckout:
                 data['customer_claim_required'] = True
         data['ticket_required'] = bool(order.get('customer_capability_bound')
             and not self.flow.ticket_acknowledged and not self.flow.customer_claim_required
-            and data['phase'] in {'CREATING','WAITING','RESERVED'})
+            and data['phase'] in {'CREATING','WAITING','RESERVED'}
+            and (not self.flow.qr_renewal_enabled or order.get('state')=='PAID'))
         data['ticket_qr_rgb'] = None
         ticket = self.flow.customer_ticket() if data['ticket_required'] else None
         if ticket:
@@ -119,6 +125,12 @@ class SandboxCheckout:
         return data
 
     def boot(self):
+        self.flow.prepare_boot_renewal()
+        data=self.flow.snapshot() or {}
+        if (self.flow.unused_payment and data.get('phase')=='CANCELLED'
+                and data.get('qr_expiry_verified') is True and data.get('qr_renewal_count',0)<2):
+            self.flow.verify_qr_renewal(data['checkout_key'])
+            return self.view()
         return self.check()
 
     def begin(self, quantities):

@@ -69,40 +69,33 @@ contoh bukan hasil pengujian dan tidak ikut disalin jika tidak kamu isi.
 
 ## Jika QR pembayaran kedaluwarsa saat L02
 
-Ini berbeda dari restart pesanan yang masih PENDING. Tunggu status expire resmi
-dari Midtrans; jangan mengubah jam, database, jurnal atau status lewat kode.
-Saat kunjungan masih aktif, expiry yang terverifikasi dan belum dibayar akan
-diarsipkan, lalu satu QR pengganti disiapkan di checkout yang sama. Desain,
-jumlah lembar dan nominal tetap. Pesanan/ID/QR pengganti serta tiketnya baru.
+Tidak perlu tiket pengunjung selama belum membayar. Aplikasi memeriksa Midtrans:
 
-1. Di **SIMPAN TIKET BARU**, simpan QR tiket baru secara pribadi. Tiket lama
-   bukan bukti untuk pesanan pengganti. Klik **SUDAH SIMPAN • TAMPILKAN QRIS**.
-2. Lihat pesan **QR sebelumnya kedaluwarsa. Silakan gunakan QR terbaru.**
-   Salin link QRIS lagi; jangan memakai URL lama di simulator.
-3. Jika QR pengganti kedaluwarsa lagi, app menampilkan **BUAT QR BARU**. Klik
-   jika masih ingin melanjutkan; pilihan tidak perlu diulang. Jika tombol itu
-   tidak ditekan selama **30 detik**, app kembali ke iklan dan arsip tetap ada.
-4. Untuk cek timeout, catat bahwa tetap di checkout sebelum 30 detik, lalu
-   kembali ke iklan setelah 30 detik. Rebuild/status background tidak mengulang
-   hitungannya. Timer tidak melepas status yang belum pasti atau proses sibuk.
+1. QR pertama kedaluwarsa dan dipastikan belum dibayar: pesanan lama diarsipkan,
+   lalu QR kedua dibuat otomatis dengan ID baru. Desain, jumlah lembar dan nominal tetap.
+2. Gunakan link QR terbaru. Layar menampilkan **QR sebelumnya kedaluwarsa.
+   Silakan gunakan QR terbaru.** Tidak ada langkah simpan tiket atau pilih ulang.
+3. Jika QR kedua kedaluwarsa, aplikasi otomatis membuat QR ketiga dengan cara sama.
+4. Jika QR ketiga kedaluwarsa dan status belum dibayar terkonfirmasi, aplikasi
+   kembali ke halaman iklan. Tidak ada QR keempat atau pesanan baru otomatis.
+5. Tiket pemulihan baru ditampilkan setelah pembayaran terkonfirmasi. Simpan
+   tiket itu sebelum melanjutkan foto; tiket bukan QR pembayaran.
 
-Jika kamera/penyimpanan/koneksi belum siap, QR baru ditahan dengan pesan retry.
-PAID tetap mengikuti sesi asli; pembayaran terlambat setelah terminal mengikuti
-peninjauan pesanan lama, bukan melunasi pesanan pengganti. Restart/minimize
-tidak mengizinkan pembaruan otomatis. Saat startup, unpaid expiry terverifikasi
-bisa kembali ke iklan. Tidak perlu PIN/tiket untuk menutup pesanan yang memang
-belum dibayar dan tidak punya layanan/foto/kewajiban. Kasus paid tetap terpisah.
+Alur ini juga berlaku ketika membuka ulang sesi kedaluwarsa yang belum dibayar.
+Jika status/koneksi belum pasti, layar memeriksa status tanpa meminta tiket lama
+atau membuat QR pengganti. Kamera/penyimpanan/template yang belum siap menahan
+pembuatan QR baru dan memberi pesan coba lagi. PAID tetap memakai pesanan asli;
+pembayaran terlambat setelah terminal masuk peninjauan pesanan lama.
 
-Isi catatan L02 dengan hasil pembaruan/timeout. Jika belum menunggu expiry resmi,
-tulis bagian ini NOT_RUN; perubahan ID setelah expiry terverifikasi memang
-diharapkan. Perbandingan ID harus tetap sama pada uji restart **selama PENDING**.
+Untuk cek bagian ini, tunggu expiry resmi Midtrans tanpa mengubah jam/database/
+jurnal. Catat pergantian otomatis pertama dan kedua, lalu kembali iklan pada
+expiry ketiga. Jika belum menunggu semuanya, tulis hasil parsial di L02.
 
 ## Jika langsung ke pemulihan atau gagal mulai
 
-`SESI TERSIMPAN / TIKET PELANGGAN DIPERLUKAN` setelah restart merupakan penjagaan
-privasi. Pakai tiket asli → VERIFIKASI TIKET → PULIHKAN SESI FOTO ASLI.
+`SESI TERSIMPAN / TIKET PELANGGAN DIPERLUKAN` berlaku untuk sesi yang sudah dibayar/foto tersimpan. QR belum dibayar yang kedaluwarsa mengikuti alur otomatis di atas; tidak perlu tiket lama. Pakai tiket asli → VERIFIKASI TIKET → PULIHKAN SESI FOTO ASLI.
 Tiket berbeda dari QR pembayaran, PIN operator dan Server Key. Tiket Sandbox
-berlaku 24 jam; simpan secara pribadi sebelum menampilkan QR pembayaran.
+berlaku 24 jam; simpan secara pribadi setelah pembayaran diterima, sebelum foto.
 
 Tanpa tiket lama, BANTUAN OPERATOR jika tersedia hanya untuk membaca status
 dengan PIN launcher terbaru; PIN tidak menggantikan bukti pemilik foto.
@@ -116,7 +109,7 @@ pernah terikat tiket. Kamu sendiri boleh menjalankannya:
 3. Tunggu pesan sesi lokal sudah diisolasi. Masukkan PIN lagi lalu
    **LEPAS BOOTH • HAK TETAP DISIMPAN**.
 4. Setelah kembali ke iklan, mulai kunjungan uji baru melalui alur biasa.
-   Simpan tiket baru sebelum menampilkan QR pembayaran, lalu mulai L02 dari awal.
+   Mulai L02 dari awal; tiket baru ditampilkan setelah pembayaran diterima.
 
 Pesanan/foto/kewajiban lama tetap disimpan untuk pemeriksaan pemilik; ini tidak
 menghasilkan tiket pengganti, membuka foto lama, menyatakan layanan selesai,
@@ -170,41 +163,41 @@ untuk melewati status tersimpan. Tidak perlu memaksa crash/Task Manager/cabut li
 
 Contoh catatan (bukan hasil): L01 — Python 3.12, Windows 11, kamera bawaan. Versi OpenCV belum diketahui; belum diuji lengkap.
 
-## L02 — QR pembayaran, salin link, restart pending
+## L02 — QR pembayaran dan paste link Sandbox
 
-**Untuk apa:** Menguji tombol salin link, transaksi Sandbox, serta kemampuan melanjutkan pesanan yang sama setelah app ditutup.
+**Untuk apa:** Menguji QR/link Sandbox langsung tanpa tiket sebelum bayar, pembaruan QR otomatis dan tiket setelah pembayaran.
 
-**Sebelum mulai:** Internet tersedia, akun Midtrans pada Sandbox, aplikasi dijalankan dengan launcher Sandbox. Siapkan ponsel untuk menyimpan tiket. Sesi ini disebut A; itu hanya label catatan.
+**Sebelum mulai:** Internet dan akun Midtrans Sandbox tersedia; jalankan launcher Sandbox. Siapkan ponsel untuk menyimpan tiket setelah pembayaran. Sesi disebut A.
 
-1. Dari iklan pilih MULAI FOTO, ikuti tutorial, lalu pilih SATU desain dan SATU lembar. Catat nama desain dan nominal. Pilih QRIS SANDBOX lalu LANJUT SANDBOX TANPA PROMO.
+1. Dari iklan pilih MULAI FOTO, ikuti tutorial, lalu pilih SATU desain dan SATU lembar. Catat desain dan nominal. Pilih QRIS SANDBOX lalu LANJUT SANDBOX TANPA PROMO.
 
-   **Seharusnya:** Pilihan/nominal sesuai. Tidak ada diskon game yang diterapkan ke Sandbox. Jika app langsung meminta tiket sesi lama, ikuti petunjuk halaman pemulihan di atas; jangan membuat pengganti.
+   **Seharusnya:** App langsung menunjukkan QR pembayaran/MENUNGGU SIMULATOR. Tidak meminta simpan atau isi tiket selama belum dibayar. Pilihan dan nominal sesuai, tanpa diskon game.
 
-2. Di SIMPAN TIKET PEMULIHAN, simpan QR ke ponsel secara pribadi, misalnya foto layar yang jelas. Jika scanner QR ponsel menampilkan teks lengkap tiket, simpan teks itu di catatan pribadi. Ini BUKAN QR untuk bayar. Baru klik SUDAH SIMPAN • TAMPILKAN QRIS.
+2. Pada MENUNGGU SIMULATOR klik SALIN LINK QRIS. Buka https://simulator.sandbox.midtrans.com/v2/qris/index di browser dan paste ke kolom QRIS URL/URL QR.
 
-   **Seharusnya:** Tiket tersedia di ponsel untuk L05–L08. Jangan unggah tiket atau teksnya ke chat. Tiket uji berlaku 24 jam; jangan menunda rangkaian cek ke hari lain.
+   **Seharusnya:** GUI memberi pesan Link QRIS tersalin. Paste di simulator Midtrans. Link yang disalin adalah QR pembayaran aktif, bukan tiket pemulihan.
 
-3. Pada MENUNGGU SIMULATOR klik SALIN LINK QRIS. Buka https://simulator.sandbox.midtrans.com/v2/qris/index di browser. Paste ke kolom QRIS URL/URL QR lalu gunakan Scan QR. Periksa nominal dan identitas pesanan yang ditampilkan secara pribadi, tetapi JANGAN konfirmasi pembayaran dulu.
+3. Di simulator pilih Scan QR. Periksa nominal dan identitas pesanan secara pribadi. Jangan konfirmasi pembayaran dulu.
 
-   **Seharusnya:** GUI memberi pesan Link QRIS tersalin. Paste di simulator Midtrans. Simulator membaca URL dan nominal benar. Jika clipboard gagal, coba sekali lagi; fallback URL di terminal hanya workaround, tombol salin belum Lulus.
+   **Seharusnya:** Simulator membaca URL dan nominal yang sesuai. Sebelum konfirmasi bayar, app tetap menunggu dan belum menampilkan tiket/foto.
 
-4. Saat masih belum dibayar, tutup jendela app dengan X. Tunggu PowerShell kembali siap menerima perintah, lalu jalankan launcher Sandbox yang sama lagi. Pertahankan akun/booth/konfigurasi yang sama. Jika diminta bukti pemilik, gunakan tiket A dan VERIFIKASI TIKET.
+4. Jika ingin menguji kedaluwarsa, ikuti bagian kedaluwarsa di atas: tunggu QR pertama dan kedua diganti otomatis, lalu expiry ketiga kembali ke iklan. Untuk meneruskan cek foto setelah itu, mulai satu kunjungan uji baru. Bila tidak menunggu expiry, tulis bagian expiry belum diuji.
 
-   **Seharusnya:** App memeriksa/membuka pesanan A yang sama; tidak meminta memilih dan membayar pesanan pengganti. Jika launcher lama belum berhenti, jangan buka instance kedua.
+   **Seharusnya:** Setiap pengganti mempertahankan desain/lembar/nominal, ID dan link QR berubah, tanpa tiket atau pemilihan ulang. Setelah expiry ketiga tidak ada QR keempat.
 
-5. Salin link lagi jika tombol tersedia. Baca pesanan di simulator dan bandingkan identitas/nominal dengan sebelum restart. Jangan hanya mengandalkan rupa QR; provider bisa memperbarui gambar. Jika identitas tidak bisa dibandingkan, catat bagian restart BELUM DIUJI.
+5. Sekarang konfirmasi pembayaran simulasi untuk QR yang masih aktif di simulator resmi. Kembali ke app, tunggu polling sekitar 10 detik atau klik CEK STATUS satu kali.
 
-   **Seharusnya:** Pesanan tetap A, nominal sama, belum terjadi pembayaran kedua. Identitas pesanan cukup disimpan pribadi; laporan chat cukup tulis sama/berubah/tidak dapat dibandingkan.
+   **Seharusnya:** Hanya setelah pembayaran diterima, layar SIMPAN TIKET PEMULIHAN muncul. Submit browser saja belum membuktikan app sudah menerima pembayaran; jangan bayar ulang jika status belum pasti.
 
-6. Sekarang pada simulator resmi konfirmasi pembayaran simulasi untuk A. Kembali ke app, tunggu polling sekitar 10 detik atau klik CEK STATUS satu kali. Catat waktu tunggu bila lama.
+6. Simpan QR tiket pemulihan ke ponsel secara pribadi, misalnya foto layar. Jika scanner ponsel menampilkan teks tiket, simpan di catatan pribadi. Klik SUDAH SIMPAN • LANJUT.
 
-   **Seharusnya:** App akhirnya menunjukkan PEMBAYARAN UJI TERKONFIRMASI dan LANJUT KE PERSETUJUAN FOTO. Berhasil submit di browser saja belum membuktikan app sudah menerima hasilnya.
+   **Seharusnya:** App menampilkan PEMBAYARAN UJI TERKONFIRMASI dan LANJUT KE PERSETUJUAN FOTO. Tiket tersedia untuk L05–L08; jangan kirim tiket ke chat. Tidak ada foto otomatis.
 
-- **Lulus:** Tombol salin berhasil, simulator membaca nominal benar, restart mempertahankan pesanan yang sama, dan app menerima pembayaran simulasi.
-- **Gagal:** Tombol salin tidak menyalin, URL ditolak, nominal salah, muncul pesanan pengganti, atau pembayaran sudah dikonfirmasi tetapi app tetap error/tertahan. Catat titiknya.
-- **Belum diuji:** Akun/internet belum tersedia, tiket belum tersimpan, atau sebagian rangkaian (termasuk restart) belum dicoba. Jangan bayar lagi untuk mengatasi status tidak pasti.
+- **Lulus:** Link dan nominal benar, belum bayar tidak meminta tiket, pembayaran diterima lalu tiket bisa disimpan. Catat hasil expiry terpisah jika belum menunggu tiga kali.
+- **Gagal:** App meminta tiket sebelum bayar, QR kedaluwarsa terkonfirmasi tetap terkunci, pilihan berubah, QR keempat dibuat, atau pembayaran diterima tetapi tetap tertahan.
+- **Belum diuji:** Internet/akun belum tersedia atau tahap belum dicoba. Hasil expiry parsial tulis apa adanya; jangan mengedit file atau membayar ulang untuk memaksa lanjut.
 
-Contoh catatan (bukan hasil): L02 langkah 6 — simulator sudah konfirmasi; app tetap MENUNGGU SIMULATOR selama 90 detik, CEK STATUS sekali tidak berubah.
+Contoh catatan (bukan hasil): L02 — QR1 dan QR2 terganti otomatis, expiry QR3 kembali iklan. Kunjungan berikutnya dibayar: tiket muncul, bisa lanjut persetujuan foto.
 
 ## L03 — Foto setelah pembayaran simulasi
 

@@ -1,6 +1,6 @@
 # P4b Sandbox → P5 readiness (FEAT-020 / FEAT-022)
 
-31 October — [expiry renewal/new-ticket/30s idle guide](UX07-LAPTOP-CHECK.md#jika-qr-pembayaran-kedaluwarsa-saat-l02). BUG-026 source verified: full1251/1247PASS/4optionalSKIP; corrected-source CI41205340183 all three SUCCESS. Actual owner simulator/device acceptance remains manual.
+31 October latest — [owner correction: automatic QR1→QR2→QR3→ads, ticket after payment](BUG026-QR-RENEWAL.md). Owner retest FAIL at ecc6733; follow-up focused50 +configured5 PASS, full/current CI pending. Earlier renewal/new-ticket/30s evidence is historical.
 
 **Current owner laptop check:** [44-step beginner guide](UX07-LAPTOP-CHECK.md)
 and [offline tick/copy form](windows-checklist-ux07.html). Includes setup, actual
