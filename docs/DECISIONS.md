@@ -1,5 +1,27 @@
 # Meong Photobooth — product and technical decisions
 
+
+## 1 November — 30-second on-screen Recovery Ticket if printer does not respond (design only)
+
+The owner requests a new **conditional fallback** after fresh PAID: if the one
+recovery-receipt printer submission is unavailable, fails or produces no
+acknowledgment, show the **same original Recovery Ticket QR and complete code**
+on the kiosk screen for **30 seconds with a visible countdown and a NEXT/LANJUT
+button**. The button advances immediately; at zero the display closes and
+the system advances automatically. Both exits must wait for the same original
+local photo allocation/STARTED readiness before opening the camera; no new
+payment, grant, ticket, print attempt, automatic shutter or privacy bypass.
+An acknowledged receipt retains the direct-to-camera happy path.
+
+This supersedes the prior **no on-screen ticket even on printer failure**
+interpretation, but **not** the no-mandatory-ticket-screen happy path or the
+one-send/UNCERTAIN/no-reprint rule. Sensitive ticket pixels/code must be
+cleared after NEXT, expiry or privacy lock; restart and previously private
+sessions still require original proof. **DOCUMENTATION ONLY: not implemented or
+tested; do not import old BUG-027 PASS as fallback acceptance.**
+[Authoritative contract and acceptance plan](qa/portrait-v2-sandbox/RECOVERY-TICKET-ONSCREEN-FALLBACK.md).
+
+
 ## 31 October — dedicated Sandbox printed recovery receipt and approved photos
 
 Latest owner correction recorded in BUG-027 selects both receipt and photo-strip
