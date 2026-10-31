@@ -12,7 +12,8 @@ from .demo_game import GameJobs
 
 ACTIONS = {'boot', 'begin', 'begin_ready', 'check', 'cancel', 'prepare', 'started', 'complete', 'recover',
            'ticket_saved', 'customer_claim', 'scan_claim', 'resume', 'resumed','fulfillment_issue',
-           'operator_inspect','prepare_release','prepare_legacy_release','acknowledge_release'}
+           'operator_inspect','prepare_release','prepare_legacy_release','acknowledge_release',
+           'verify_renewal','renew_ready'}
 
 
 def simulator_qr_url(view):
@@ -56,6 +57,7 @@ def configured_sandbox(root, env=None):
     try:
         flow = KioskCheckout(path, client, mode='sandbox', booth_id=client.booth_id,
                              endpoint=client.base_url)
+        flow.qr_renewal_enabled=True
     except BaseException:
         client.close()
         raise
@@ -77,6 +79,8 @@ class SandboxCheckout:
         if data is None:
             return {'phase':'IDLE'}
         order = data.get('order') or {}
+        data['qr_renewal_auto']=self.flow.expiry_auto_available
+        data['qr_renewal_ready']=self.flow.expiry_proof_ready
         data['customer_claim_required'] = self.flow.customer_claim_required
         data['resume_ready'] = False
         if data['phase']=='RECOVERY' and not data['customer_claim_required']:
@@ -161,6 +165,21 @@ class SandboxCheckout:
     def ticket_saved(self):
         self.flow.acknowledge_ticket()
         return self.view()
+
+    def verify_renewal(self, checkout_key, automatic=False):
+        self.flow.verify_qr_renewal(checkout_key,automatic)
+        view=self.view();view['renewal_automatic']=bool(automatic)
+        return view
+
+    def renew_ready(self, checkout_key, automatic, camera_valid, observed_at):
+        from .recovery_readiness import prepayment_readiness
+        from photobooth.catalog import get_templates
+        def ready(quantities):
+            prepayment_readiness(self.flow.path.parent/'photo-tests'/'photos',get_templates(),
+                quantities,camera_valid,observed_at,
+                delivery_enabled=any(os.environ.get('PHOTOBOOTH_V2_'+key)=='1' for key in ('PRINT','DRIVE')))
+        self.flow.renew_expired_qr(checkout_key,ready,automatic)
+        return self.check()
 
     def customer_claim(self, ticket):
         if self.flow.active:

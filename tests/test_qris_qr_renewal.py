@@ -77,7 +77,8 @@ class QrRenewalTests(TestCase):
                {'reconciliation':dict(result['reconciliation'],provider_state='pending')},
                {'state':'PAID'},{'service_state':'STARTED'},{'grant_id':'a'*32},
                {'fulfillment':{'obligation_state':'OWED'}},{'local_transaction_id':'fixture-photo'},
-               {'fulfillment_issue':{'reason':'PHOTO_STATE_UNAVAILABLE'}},{'service_fence':{'suspended':True}}]
+               {'fulfillment_issue':{'reason':'PHOTO_STATE_UNAVAILABLE'}},{'service_fence':{'suspended':True}},
+               {'release':{'state':'PREPARED'}}]
         for change in cases:
             with self.subTest(change=change):
                 self.f.flow.data=copy.deepcopy(base);candidate=copy.deepcopy(result);candidate.update(change)
@@ -85,6 +86,13 @@ class QrRenewalTests(TestCase):
                 with patch.object(self.f.flow.client,'reconcile',return_value=candidate):self.f.service.check()
                 self.assertFalse(self.f.flow.expiry_proof_ready);self.assertTrue(self.f.flow.active)
                 self.assertEqual(self.f.provider.charges,1)
+        for local in [{'transaction_id':'fixture-photo'},{'allocation_operation_id':'b'*32},
+                      {'release_operation_id':'c'*32},{'isolation_id':'d'*32},
+                      {'recovery':{'interrupted_phase':'STARTED'}},{'allocation_ready':True}]:
+            with self.subTest(local=local):
+                self.f.flow.data=copy.deepcopy(base);self.f.flow.data.update(local);self.f.flow._reconcile_at=0
+                with patch.object(self.f.flow.client,'reconcile',return_value=result):self.f.service.check()
+                self.assertTrue(self.f.flow.active);self.assertFalse(self.f.flow.expiry_proof_ready)
         self.assertFalse((self.root/'visits').exists())
 
     def test_archive_save_and_replacement_journal_faults_never_send_new_charge(self):
@@ -122,7 +130,8 @@ class QrRenewalTests(TestCase):
     def test_late_settlement_during_reverification_holds_original_paid_rights(self):
         self.expire();self.f.flow.invalidate_qr_renewal();self.f.paid()
         created=self.f.store.get(self.oid)['created_at'];self.f.store.now=lambda:created+120
-        self.f.flow.verify_qr_renewal(self.original['checkout_key'])
+        self.f.flow.data['phase']='VERIFYING_QR';self.f.flow._reconcile_at=0
+        self.f.service.check()
         self.assertEqual(self.f.flow.snapshot()['phase'],'RECOVERY')
         self.assertTrue(self.f.flow.active);self.assertFalse(self.f.flow.expiry_proof_ready)
         self.assertEqual(self.f.store.get(self.oid)['state'],'REVIEW_REQUIRED')
@@ -154,4 +163,13 @@ class QrRenewalTests(TestCase):
         with patch('photobooth.qris_session.time.monotonic',return_value=deadline+1):
             self.assertFalse(self.f.flow.expiry_proof_ready)
             with self.assertRaises(RuntimeError):self.f.flow.renew_expired_qr(key,lambda _:None)
+        self.assertEqual(self.f.provider.charges,1)
+
+    def test_operator_late_settlement_revokes_recent_expiry_proof_and_keeps_original_identity(self):
+        self.expire();self.assertTrue(self.f.flow.expiry_proof_ready)
+        self.f.paid();self.f.flow.inspect_recovery('12345678')
+        self.assertFalse(self.f.flow.expiry_proof_ready)
+        self.assertEqual(self.f.flow.snapshot()['phase'],'RECOVERY')
+        self.assertEqual(self.f.flow.snapshot()['checkout_key'],self.original['checkout_key'])
+        with self.assertRaises(RuntimeError):self.f.flow.renew_expired_qr(self.original['checkout_key'],lambda _:None)
         self.assertEqual(self.f.provider.charges,1)

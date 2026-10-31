@@ -1,5 +1,28 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 31 October — BUG-026 native renewal and 30-second idle focused-verified
+
+Core93f2c95 pushed/remote verified; dedicated configured native Sandbox now opts
+in. Original selection/amount retained; checked unpaid expiry archives old visit,
+then one auto replacement while live. Next expiry offers BUAT QR BARU on checkout;
+no press for30seconds returns to advertising (original key, no busy/uncertain or
+paid release, no rebuild reset). New key/counter/parent saved before provider I/O,
+new ticket gate clearly labeled, old ticket denied for successor. Existing
+camera/storage/template ready gate, busy/privacy/stale widget guards retained.
+Restart can retire unused expiry to idle, not auto-create another visitor order.
+
+Final **15 focused PASS/zero FAIL/ERROR/SKIP,8.229s**,11 portable +4 native methods;
+auto/manual/new-ticket at800x1280/452x900, missing camera/pause and exact30s boundary.
+Six nonpayable native views reviewed; no recovery-ticket/PIN exported. Initial
+GUI error-handler placement and recent-proof late-settlement issues caught by
+regressions, corrected; backend never granted replacement rights. Exact receipt:
+evidence/bug026-verification.json. Final complete-suite/current CI now required at containing source.
+Owner laptop/merchant NOT_RUN; no matrix/production/OPS/default/merge change.
+Updated novice HTML/Markdown guide includes renewal/new ticket and30s timeout.
+Next complete full/matching CI, then final docs-only checkpoint and manual handoff.
+Only work/ scratch and unrelated dirty legacy checkout remain local-only.
+
+
 ## 31 October — BUG-026 QR renewal core focused-verified (GUI next)
 
 Owner explicitly approves expiry renewal via "oke gass" and staged pushes.

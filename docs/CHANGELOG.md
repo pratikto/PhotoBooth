@@ -1,5 +1,11 @@
 # Meong Photobooth — changelog
 
+## 31 October — BUG-026 expiry renewal and30s return
+
+Added verified unpaid-expiry QR renewal on existing Sandbox checkout with preserved selection, original archive, new order/ticket and bounded automation. Added owner-requested30s idle return only from safe expired renewal page. Eleven portable +four native regressions; final15 focused PASS, full/current CI pending.
+[Contract/evidence](qa/portrait-v2-sandbox/BUG026-QR-RENEWAL.md).
+
+
 ## 30 October — BUG-025 — Sandbox legacy archive
 
 Added explicit PIN-confirmed archive for paid Sandbox test orders that predate customer tickets. Retains PAID/STARTED/OWED, original media, fence/isolation/ACK/archive; creates no replacement credential or financial effect. Added five HTTP/controller regressions and one native two-size scenario; novice guide updated. Final source7069bf0 full1236/1232 PASS/4optional SKIP, zero failure/error; CI41001339113 all three SUCCESS. Direct-service fixture lease cleanup corrected for Windows; original failure preserved.

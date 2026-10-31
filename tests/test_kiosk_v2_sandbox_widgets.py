@@ -694,3 +694,80 @@ class SandboxWidgetTests(unittest.TestCase):
                 self.quote(app);app._sandbox_begin();self.settle(app)
                 self.assertTrue(app._sandbox_view['ticket_required'])
                 self.assertEqual(f.provider.charges,2)
+
+    def test_qr_renewal_auto_then_manual_keeps_cart_and_uses_new_ticket_at_both_sizes(self):
+        for size in [(800,1280),(452,900)]:
+            with self.subTest(size=size),self.booth(recovery_pin='12345678') as (app,f):
+                Window.size=size;f.flow.qr_renewal_enabled=True
+                self.quote(app);app._sandbox_begin();self.settle(app)
+                ticket=f.flow.customer_ticket();app._sandbox_ticket_saved();self.settle(app)
+                original=f.flow.snapshot()
+                def expire():
+                    oid=f.flow.snapshot()['order']['order_id']
+                    f.provider.rows[oid].update(transaction_status='expire',status_code='407')
+                    f.store.db.execute('UPDATE checkouts SET check_after=0')
+                    f.flow._reconcile_at=0
+                    app._sandbox_retry();self.settle(app)
+                expire();new=f.flow.snapshot()
+                self.assertNotEqual(new['checkout_key'],original['checkout_key'])
+                self.assertEqual(new['quantities'],original['quantities']);self.assertEqual(new['amount'],original['amount'])
+                self.assertEqual(new['qr_renewal_count'],1);self.assertEqual(f.provider.charges,2)
+                self.assertNotEqual(ticket,f.flow.customer_ticket());self.assertTrue(app._sandbox_view['ticket_required'])
+                self.assertIn('SIMPAN TIKET BARU',[getattr(w,'text','') for w in app.stage.walk()])
+                self.assertNotIn('SALIN LINK QRIS',[getattr(w,'text','') for w in app.stage.walk()])
+                app._sandbox_ticket_saved();self.settle(app)
+                self.assertIn('SALIN LINK QRIS',[getattr(w,'text','') for w in app.stage.walk()])
+                expire();self.assertEqual(f.provider.charges,2)
+                self.assertIn('BUAT QR BARU',[getattr(w,'text','') for w in app.stage.walk()])
+                old=next(w for w in app.stage.walk() if isinstance(w,ArcadeButton) and w.text=='BUAT QR BARU')
+                old.dispatch('on_release');self.settle(app)
+                self.assertEqual(f.provider.charges,3);self.assertEqual(f.flow.snapshot()['qr_renewal_count'],2)
+                old.dispatch('on_release');self.settle(app);self.assertEqual(f.provider.charges,3)
+
+    def test_qr_renewal_operator_expired_does_not_need_ticket_or_paid_isolation(self):
+        with self.booth(recovery_pin='12345678') as (app,f):
+            f.flow.qr_renewal_enabled=True;self.pending(app)
+            original=f.flow.snapshot();oid=original['order']['order_id']
+            f.provider.rows[oid].update(transaction_status='expire',status_code='407')
+            app._sandbox_operator_open()
+            app._sandbox_operator_input.text='12345678';app._sandbox_operator_inspect();self.settle(app)
+            self.assertFalse(app._sandbox_operator_mode);self.assertFalse(f.flow.active)
+            labels=[getattr(w,'text','') for w in app.stage.walk()]
+            self.assertIn('BUAT QR BARU',labels);self.assertNotIn('VERIFIKASI TIKET',labels)
+            self.assertEqual(f.provider.charges,1)
+            app._sandbox_renew_qr();self.settle(app)
+            self.assertEqual(f.provider.charges,2);self.assertTrue(app._sandbox_view['ticket_required'])
+
+    def test_qr_renewal_missing_camera_and_pause_cannot_create_replacement(self):
+        with self.booth(recovery_pin='12345678') as (app,f):
+            f.flow.qr_renewal_enabled=True;self.pending(app)
+            oid=f.flow.snapshot()['order']['order_id']
+            f.provider.rows[oid].update(transaction_status='expire',status_code='407')
+            f.store.db.execute('UPDATE checkouts SET check_after=0')
+            app.camera_device.read.return_value=None
+            app._sandbox_retry();self.settle(app)
+            self.assertEqual(f.provider.charges,1);self.assertIn('QR belum dapat diperbarui',app._sandbox_error)
+            app.on_pause();app.on_resume();self.settle(app)
+            self.assertFalse(f.flow.expiry_auto_available);self.assertFalse(f.flow.expiry_proof_ready)
+            self.assertEqual(f.provider.charges,1)
+
+    def test_qr_renewal_unpressed_button_returns_to_ads_at_30_seconds_without_rebuild_reset(self):
+        with self.booth(recovery_pin='12345678') as (app,f):
+            f.flow.qr_renewal_enabled=True;self.pending(app)
+            oid=f.flow.snapshot()['order']['order_id']
+            f.provider.rows[oid].update(transaction_status='expire',status_code='407')
+            app._sandbox_operator_open()
+            app._sandbox_operator_input.text='12345678';app._sandbox_operator_inspect();self.settle(app)
+            app._sandbox_expired_idle_tick();deadline=app._sandbox_qr_idle_deadline
+            self.assertGreater(deadline,0)
+            with patch('photobooth.kiosk_v2.sandbox_views.time.monotonic',return_value=deadline-.01):
+                self.assertFalse(app._sandbox_expired_idle_tick());app._show()
+                self.assertEqual(app._sandbox_qr_idle_deadline,deadline)
+                self.assertEqual(app.navigation.page,SANDBOX_CHECKOUT)
+            with patch.object(app._sandbox_jobs,'busy',True),patch('photobooth.kiosk_v2.sandbox_views.time.monotonic',return_value=deadline):
+                self.assertFalse(app._sandbox_expired_idle_tick())
+            with patch('photobooth.kiosk_v2.sandbox_views.time.monotonic',return_value=deadline):
+                self.assertTrue(app._sandbox_expired_idle_tick())
+            self.assertEqual(app.navigation.page,ADVERT);self.assertEqual(f.provider.charges,1)
+            self.assertEqual(f.store.get(oid)['state'],'EXPIRED')
+            self.assertTrue((f.root/'visits'/(f.flow.snapshot()['checkout_key']+'.json')).is_file())

@@ -1,5 +1,11 @@
 # Meong Photobooth — current feature status
 
+## 31 October — BUG-026 Sandbox QR renewal
+
+Same-checkout verified expiry replacement preserves design/copies/amount, new key and ticket; one automatic then manual renewal, untouched button returns to ads after30s. Dedicated Sandbox only, camera/storage/privacy/financial guards retained. Final15 focused PASS; full/current CI pending, owner laptop NOT_RUN.
+[Contract/evidence](qa/portrait-v2-sandbox/BUG026-QR-RENEWAL.md).
+
+
 ## 30 October — BUG-025 — owner-only Sandbox legacy archive
 
 Explicit no-ticket legacy Sandbox operator archive now mounted in native UI with confirmation/cancel and two-phase release. Normal ticket/privacy and printer/Drive-off boundaries preserved. Source7069bf0 full1236/1232 PASS/4optional SKIP, zero failure/error; CI41001339113 all three SUCCESS. User laptop NOT_RUN. Commercial acceptance unchanged.

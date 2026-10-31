@@ -72,3 +72,20 @@ Ten new portable cases; focused original HTTP/controller/privacy/cancel group
 New core is disabled by default, native mounting/full/current CI are next.
 Initial wrapper integration/fixture expectation issue corrected; original backend
 late-settlement REVIEW_REQUIRED retained. No actual merchant/device result claimed.
+
+## Owner refinement — 30-second untouched renewal button
+
+Owner requests return to ads if BUAT QR BARU is not pressed for30seconds.
+Timer applies only to current original conclusively archived unpaid expiry,
+not provider verification, PAID/OWED, active photo work or busy replacement I/O.
+It is bound to that checkout key, not reset by a page rebuild/status observation.
+Pressing renewal starts a new attempt; stale callbacks retain original guards.
+No provider/financial/media operation is performed by the navigation timeout.
+
+## Native checkpoint
+
+Dedicated Sandbox enabled, same-checkout auto/manual renewal + new-ticket gate
+and30s untouched-button return implemented. Final15 focused PASS/8.229s. Eleven
+portable and four native methods registered with strict Linux receipts; six
+nonpayable native views reviewed. Initial regression failures/corrections retained
+in [evidence](evidence/bug026-verification.json). Full/current CI now required.

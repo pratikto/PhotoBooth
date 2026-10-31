@@ -5,7 +5,7 @@
 S2 — IN_PROGRESS. Owner screenshot EXPIRED/NONE/no obligation; exact laptop SHA
 unknown. Approved same-page renewal preserves design/copies, creates new order/QR
 after fresh proof, archives old record, keeps late-paid/review/uncertain cases.
-Disabled core focused41 PASS; native auto/manual mounting and final checks next.
+Core checkpoint41 PASS, native renewal/30s idle now mounted, final15 focused PASS. Full/current CI pending; owner laptop NOT_RUN.
 [Contract/checkpoint](qa/portrait-v2-sandbox/BUG026-QR-RENEWAL.md).
 
 

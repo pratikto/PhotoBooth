@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-31",
+  "base": "c478bce2e63478ead03d88b52efe8ad3738ef715",
+  "core_source": "93f2c9562c01d362ef578e39b73878663f65bb1d",
+  "status": "GUI_FOCUSED_VERIFIED_FULL_CI_PENDING",
+  "scope": "Approved same-checkout Sandbox expiry renewal, same selection/amount; one auto renewal while live, then manual button; user refinement: untouched button returns to advertising after30s. New order gets its own save-ticket gate.",
+  "focused": {
+    "core_checkpoint": {
+      "run": 41,
+      "pass": 41,
+      "seconds": 2.626
+    },
+    "final": {
+      "run": 15,
+      "pass": 15,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 8.229
+    }
+  },
+  "cases": {
+    "portable_methods": 11,
+    "native_methods": 4,
+    "native_sizes": [
+      [
+        800,
+        1280
+      ],
+      [
+        452,
+        900
+      ]
+    ]
+  },
+  "history": [
+    "Initial core39 run/37PASS/1FAIL/1ERROR corrected adapter wrapper integration and fixture expecting OWED rather than original terminal-to-settlement REVIEW_REQUIRED.",
+    "Initial GUI/core41 run/40PASS/1FAIL: renewal failure handler inserted in restore outcome instead of checkout outcome; charged count remained1. Handler moved to correct worker result path.",
+    "Additional operator late-settlement regression first FAIL: recent expiry proof remained valid after a newer review response. Backend active-order guard already refused a replacement; local proof revocation and original RECOVERY identity now enforced; new regression PASS."
+  ],
+  "screenshots": [
+    {
+      "file": "qr-renewal-native/01-renewed-payment-452x9000001.png",
+      "sha256": "44db7d5922471b53314c754ad9670d8f9202b0e9f9ec018d3444d19fae7ca542"
+    },
+    {
+      "file": "qr-renewal-native/01-renewed-payment-800x12800001.png",
+      "sha256": "64054aef9df8116c63158cb5e30da36b6008df589acde3bcb6c4174304b7af9a"
+    },
+    {
+      "file": "qr-renewal-native/02-manual-next-renewal-452x9000001.png",
+      "sha256": "cb1df92efa797fc1a809557401280888350ac1c674eb211f55aae0832c0f3cd9"
+    },
+    {
+      "file": "qr-renewal-native/02-manual-next-renewal-800x12800001.png",
+      "sha256": "6bf0602534980430267b4dd3afbc27c62b5fc339aa5c25b7c6b34162ea5c4987"
+    },
+    {
+      "file": "qr-renewal-native/03-unverified-held-452x9000001.png",
+      "sha256": "bbb955b5dc39e332de3dad20697130b5b8a78d6e4f6b7ab3f50ec7a891ff065d"
+    },
+    {
+      "file": "qr-renewal-native/03-unverified-held-800x12800001.png",
+      "sha256": "01cde1d58370024019b3ee120d9c8e15f7b960c6b3e6c1315ced7d4df8c1ab8c"
+    }
+  ],
+  "capture": "Six original native payment/expired/unchecked views reviewed, clean process per size following existing render convention. Only nonpayable synthetic payment QR exported; no customer recovery-ticket payload/PIN/merchant secret.",
+  "full": "PENDING final functional commit",
+  "ci": "PENDING final functional commit",
+  "limits": [
+    "No actual customer records, merchant requests, photos, print or Drive used. Dedicated Sandbox remains transport OFF.",
+    "Actual Windows/Ubuntu/device/simulator/clipboard acceptance remains manual; screenshot owner SHA unknown.",
+    "Original root paid/review records remain retained, never silently assigned to successor. Late settlement after terminal expiry keeps original backend REVIEW_REQUIRED policy.",
+    "Withdrawn/unpublished closure-page draft stays private in work/; only approved renewal implementation is published.",
+    "Whole UX-07 NOT_RUN, matrix59/0/9/1, AR-13 conditional and external/commercial gates unchanged; OPS queued; no production/new branch/default/merge/deploy."
+  ]
+}

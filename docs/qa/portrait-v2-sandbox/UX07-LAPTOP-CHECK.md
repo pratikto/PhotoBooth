@@ -67,6 +67,36 @@ bukti untuk SHA baru. Salin/unduh laporan lama sebelum Kosongkan Form untuk cek
 versi baru. Catatan per item dan hasil parsial ikut masuk prompt. Placeholder
 contoh bukan hasil pengujian dan tidak ikut disalin jika tidak kamu isi.
 
+## Jika QR pembayaran kedaluwarsa saat L02
+
+Ini berbeda dari restart pesanan yang masih PENDING. Tunggu status expire resmi
+dari Midtrans; jangan mengubah jam, database, jurnal atau status lewat kode.
+Saat kunjungan masih aktif, expiry yang terverifikasi dan belum dibayar akan
+diarsipkan, lalu satu QR pengganti disiapkan di checkout yang sama. Desain,
+jumlah lembar dan nominal tetap. Pesanan/ID/QR pengganti serta tiketnya baru.
+
+1. Di **SIMPAN TIKET BARU**, simpan QR tiket baru secara pribadi. Tiket lama
+   bukan bukti untuk pesanan pengganti. Klik **SUDAH SIMPAN • TAMPILKAN QRIS**.
+2. Lihat pesan **QR sebelumnya kedaluwarsa. Silakan gunakan QR terbaru.**
+   Salin link QRIS lagi; jangan memakai URL lama di simulator.
+3. Jika QR pengganti kedaluwarsa lagi, app menampilkan **BUAT QR BARU**. Klik
+   jika masih ingin melanjutkan; pilihan tidak perlu diulang. Jika tombol itu
+   tidak ditekan selama **30 detik**, app kembali ke iklan dan arsip tetap ada.
+4. Untuk cek timeout, catat bahwa tetap di checkout sebelum 30 detik, lalu
+   kembali ke iklan setelah 30 detik. Rebuild/status background tidak mengulang
+   hitungannya. Timer tidak melepas status yang belum pasti atau proses sibuk.
+
+Jika kamera/penyimpanan/koneksi belum siap, QR baru ditahan dengan pesan retry.
+PAID tetap mengikuti sesi asli; pembayaran terlambat setelah terminal mengikuti
+peninjauan pesanan lama, bukan melunasi pesanan pengganti. Restart/minimize
+tidak mengizinkan pembaruan otomatis. Saat startup, unpaid expiry terverifikasi
+bisa kembali ke iklan. Tidak perlu PIN/tiket untuk menutup pesanan yang memang
+belum dibayar dan tidak punya layanan/foto/kewajiban. Kasus paid tetap terpisah.
+
+Isi catatan L02 dengan hasil pembaruan/timeout. Jika belum menunggu expiry resmi,
+tulis bagian ini NOT_RUN; perubahan ID setelah expiry terverifikasi memang
+diharapkan. Perbandingan ID harus tetap sama pada uji restart **selama PENDING**.
+
 ## Jika langsung ke pemulihan atau gagal mulai
 
 `SESI TERSIMPAN / TIKET PELANGGAN DIPERLUKAN` setelah restart merupakan penjagaan

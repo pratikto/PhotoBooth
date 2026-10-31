@@ -290,6 +290,8 @@ class KioskCheckout:
                     or (data['order'] and order.get('order_id') != data['order']['order_id'])):
                 raise ValueError('Backend returned a different visit')
             data['order'] = order
+            if order.get('state')!='EXPIRED' or order.get('verification_pending') is not False:
+                self.invalidate_qr_renewal()
             self._save()
 
     def _transition(self, order, state, transaction_id):
@@ -389,6 +391,8 @@ class KioskCheckout:
         data=self.snapshot() or {};proof=self._expiry_proof
         return bool(self.qr_renewal_enabled and self.context['mode']=='sandbox' and proof
                     and data.get('phase')=='CANCELLED' and data.get('qr_expiry_verified') is True
+                    and (data.get('order') or {}).get('state')=='EXPIRED'
+                    and (data.get('order') or {}).get('verification_pending') is False
                     and proof[:2]==(data['checkout_key'],self._privacy_generation)
                     and time.monotonic()<proof[2])
 
@@ -399,8 +403,9 @@ class KioskCheckout:
                     and self._expiry_auto_generation==self._privacy_generation
                     and data.get('qr_expiry_verified') is True and data.get('qr_renewal_count',0)==0)
 
-    def invalidate_qr_renewal(self):
+    def invalidate_qr_renewal(self, *, retire=False):
         with self.lock:
+            if retire:self._privacy_generation+=1
             self._expiry_proof=None;self._expiry_auto_generation=None
 
     def _archive_verified_expiry(self, result, *, checked, provider_state):
@@ -417,6 +422,7 @@ class KioskCheckout:
                 or (data.get('recovery') or {}).get('interrupted_phase') in {'STARTING','STARTED','COMPLETING'}):
             return False
         generation=self._privacy_generation
+        observed_at=time.monotonic()
         automatic=(self.expiry_auto_available or (not self._opened_existing and self._ticket_acknowledged
                    and data['phase']=='WAITING' and data.get('qr_renewal_count',0)==0))
         data['phase']='CANCELLED';data['qr_expiry_verified']=True
@@ -430,7 +436,7 @@ class KioskCheckout:
         self.lock_customer()
         with self.lock:
             if self._privacy_generation==generation+1:
-                self._expiry_proof=(data['checkout_key'],self._privacy_generation,time.monotonic()+5)
+                self._expiry_proof=(data['checkout_key'],self._privacy_generation,observed_at+5)
                 if automatic:self._expiry_auto_generation=self._privacy_generation
         return True
 
@@ -473,6 +479,8 @@ class KioskCheckout:
         with self.worker_lock:
             result=self.client.recovery_inspect(self.data['order']['order_id'],pin)
             self._accept(result)
+            if self.data.get('qr_expiry_verified') and result['state']!='EXPIRED':
+                self.data['phase']='RECOVERY';self.lock_customer();self._save()
             self._archive_verified_expiry(result,checked=result.get('recovery_checked'),
                                           provider_state=result.get('recovery_provider_state'))
             return result
@@ -485,6 +493,10 @@ class KioskCheckout:
         if self.qr_renewal_enabled:
             self._archive_verified_expiry(result,checked=(result.get('reconciliation') or {}).get('checked'),
                                           provider_state=(result.get('reconciliation') or {}).get('provider_state'))
+            if (self.data.get('qr_expiry_verified') and self.data['phase'] in {'VERIFYING_QR','CANCELLED'}
+                    and result['state']!='EXPIRED'):
+                self.data['phase']='RECOVERY'
+                self.lock_customer();self._save()
         # An explicit cancellation may have completed while its reply was lost.
         # Fresh terminal proof can retire an unpaid visit after restart; cached
         # state and any prior service/owed/photo identity must remain held.
