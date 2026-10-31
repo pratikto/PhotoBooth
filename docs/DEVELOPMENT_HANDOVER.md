@@ -1,5 +1,31 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 31 October — BUG-027 printed receipt/direct camera, first safe increment
+
+Owner corrects paid flow: no on-screen save-ticket step; print one recovery
+receipt with explanation after PAID, then go straight to camera. Explicit answer
+“Tiket pemulihan + hasil foto” authorizes both recovery receipt and approved
+photo-strip printing in this dedicated Sandbox profile; Drive OFF, no production.
+Current scope supersedes older blanket Sandbox printing-OFF and paid-ticket gate.
+
+First isolated increment: original ThermalPrinter routes factored into shared
+_send_payload; new in-memory one-bit bitmap input avoids writing private receipt
+PNG/spool files. Native384/576 receipt renderer uses original capability QR,
+clear Indonesian recovery/no-repeat-payment/24h instructions. No GUI mounting
+or printer enabled yet. Focused **38 PASS/0 FAIL/ERROR/SKIP,0.378s** including
+all existing printer/Windows RAW/shared payment-printer tests +five new receipt
+pixel/context/transport tests; new module registered in Windows/Linux CI.
+No actual merchant/printer/paper or customer data accessed. Full regression at
+final functional source remains pending. Contract BUG027-PAID-TO-PHOTO.md.
+
+Next: durable one-receipt-per-order worker state/no replay, paid→receipt→camera
+native integration and old-wait timer fix, then explicit Sandbox-only photo-print
+mount with original start/restore/isolation/uncertain-manifest guards. Test before
+enabling; preserve ownership for restarted/private sessions. Same branch, no
+new branch/default/merge/deploy/OPS. Containing commit resolves source SHA in Git;
+old dirty legacy checkout and untracked work/ remain private/local-only.
+
+
 ## 31 October — BUG-026 three-expiration flow source-verified; owner follow-up pending
 
 Functional **118b7630f5692b171c2659f23f48ce5a22556664** pushed/remote verified on

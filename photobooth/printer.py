@@ -341,6 +341,18 @@ class ThermalPrinter:
                 f"terpasang dan file PNG dapat dibuka ({error}).",
             )
 
+        return self._send_payload(payload, copies=copies)
+
+    def print_bitmap(self, bitmap, *, copies=1):
+        """Print a private in-memory one-bit receipt without saving its pixels."""
+        if bitmap.mode != '1' or bitmap.width > self.config.print_width_dots:
+            raise ValueError('Receipt bitmap does not match the printer profile')
+        return self._send_payload(self.raster_payload(bitmap), copies=copies)
+
+    def _send_payload(self, payload, *, copies=1):
+        """Shared original route/fallback rules for photographs and receipts."""
+        if isinstance(copies, bool) or not isinstance(copies, int) or copies < 1:
+            return PrintResult(False, 'printer', 'Jumlah lembar cetak tidak valid.')
         # The base stream already includes ESC/POS image bytes followed by
         # one physical cut. Repeating the *complete* stream produces N strips
         # with N independent cuts in a single RAW spool/transport submission.
