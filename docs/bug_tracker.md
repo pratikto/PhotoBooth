@@ -1,13 +1,21 @@
 # Meong Photobooth — Bug register
 
-## BUG-028 — PAID preparing-photo hold / live allocation retry
+## BUG-028 — PAID preparation / premature customer-ticket hold
 
-S1 provisional — owner reports PAID/STARTING; printer absent, actual laptop SHA
-and exact original cause unknown. Synthetic before/after-commit allocation
-reply loss reproduced live hold; configured missing-printer alone passes.
-Original-operation/fresh-proof retry and native handoff now focused-verified:
-57 PASS/zero skip. Live pre-local-ready idle/pause also retains original ownership; private/restart guards remain. Full/current CI and owner retest pending, not CLOSED.
-[Contract and limits](qa/portrait-v2-sandbox/BUG028-PAID-STARTING.md).
+S1 provisional — FIXED IN SOURCE52d69fd / LOCAL REGRESSION VERIFIED; current
+matching CI8fc3675 all three SUCCESS; owner retest PENDING, not CLOSED.
+Original live STARTING
+operation retries same identity; idle/pause before local-ready retains proof.
+Full1288run/1284PASS/4optionalSKIP, zero fail/error,481.717s. Corrected focused58
+PASS including128 native receipt images through original scanner; four native
+scenes reviewed at both portrait sizes. Both previous Linux CI fixture failures
+retained/corrected; original runtime
+unchanged. Windows214PASS/Linux530PASS/native121run,120PASS/1optional palm SKIP.
+Actual owner laptop SHA and exact original cause remain unknown. Printer absent
+alone does not block original camera in configured fixture. Old/private/restart
+proof rules remain; no payment or journal reset.
+[Contract](qa/portrait-v2-sandbox/BUG028-PAID-STARTING.md) ·
+[Exact verification](qa/portrait-v2-sandbox/evidence/bug028-final-verification.json).
 
 ## BUG-027 — paid ticket detour / direct camera and approved print
 

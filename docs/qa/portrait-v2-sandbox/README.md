@@ -1,8 +1,28 @@
 # P4b Sandbox → P5 readiness (FEAT-020 / FEAT-022)
 
-31 October current scope — [BUG-027](BUG027-PAID-TO-PHOTO.md) mounts Sandbox recovery-receipt and approved-photo printing; Drive OFF. Source e05a358 CI41215811123 all three jobs SUCCESS. Final full at e05a358: 1280 run/1276 PASS/4 optional SKIP, zero failure/error. Eight native views and receipt/guide checks are verified; [final source evidence](evidence/bug027-final-verification.json). Actual owner laptop/paper next. The beginner guide/form now describe the actual print profile; prior printer-OFF records below retain their original source/date.
+## 31 October — BUG-028 live preparation / matching CI verified
 
-31 October latest — [automatic QR1→QR2→QR3→ads, ticket after payment](BUG026-QR-RENEWAL.md). Functional118b763 full1259/1255PASS/4optionalSKIP, zero fail/error; matching CI41208622748 all three SUCCESS. Saved-expired startup and grey controls reproduced/fixed in source; actual owner follow-up pending. Earlier one-auto/manual/new-ticket/30s evidence is historical.
+Functional52d69fd: original live STARTING retains ownership through idle/pause
+before local-ready, retries the same allocation, enters camera with unavailable
+printer; no new payment/receipt/capture. Existing old/private/restart proof holds.
+Full1288run/1284PASS/4optionalSKIP, zero fail/error,481.717s, exit0. Tests-only
+8fc3675:58 focused PASS/34.029s, including128 full native receipt images through
+the original bounded scanner; actual paid-photo restore uses original worker/
+backend proof. Both earlier CI fixture failures retained; current41223201896
+all three SUCCESS: Windows214PASS/Linux530PASS/native121run,120PASS/1optional
+palm SKIP. Application/runner unchanged since52d69fd. Four native scenes reviewed,
+9-group/44-step guide parity and10 Chromium scenarios PASS. Owner Windows/paper/
+provider retest PENDING, actual SHA/cause unknown. WholeUX07 NOT_RUN;matrix59PASS/
+0FAIL/9BLOCKED/1NOT_RUN,AR13conditional,production not approved. Next owner Windows/paper/provider retest; never reset journals or pay again for recovery.
+[Exact source, failures, checks and limits](evidence/bug028-final-verification.json).
+
+Queued owner UX contract at b27f95f: [30-second on-screen recovery ticket fallback](RECOVERY-TICKET-ONSCREEN-FALLBACK.md). Documentation only, NOT_IMPLEMENTED/NOT_TESTED; current source behavior above remains unchanged.
+
+## Earlier 31 October checkpoints
+
+31 October BUG-027 checkpoint — [BUG-027](BUG027-PAID-TO-PHOTO.md) mounts Sandbox recovery-receipt and approved-photo printing; Drive OFF. Source e05a358 CI41215811123 all three jobs SUCCESS. Final full at e05a358: 1280 run/1276 PASS/4 optional SKIP, zero failure/error. Eight native views and receipt/guide checks are verified; [final source evidence](evidence/bug027-final-verification.json). Actual owner laptop/paper next. The beginner guide/form now describe the actual print profile; prior printer-OFF records below retain their original source/date.
+
+31 October earlier QR checkpoint — [automatic QR1→QR2→QR3→ads, ticket after payment](BUG026-QR-RENEWAL.md). Functional118b763 full1259/1255PASS/4optionalSKIP, zero fail/error; matching CI41208622748 all three SUCCESS. Saved-expired startup and grey controls reproduced/fixed in source; actual owner follow-up pending. Earlier one-auto/manual/new-ticket/30s evidence is historical.
 
 **Current owner laptop check:** [44-step beginner guide](UX07-LAPTOP-CHECK.md)
 and [offline tick/copy form](windows-checklist-ux07.html). Includes setup, actual

@@ -98,9 +98,27 @@ Untuk cek bagian ini, tunggu expiry resmi Midtrans tanpa mengubah jam/database/
 jurnal. Catat pergantian otomatis pertama dan kedua, lalu kembali iklan pada
 expiry ketiga. Jika belum menunggu semuanya, tulis hasil parsial di L02.
 
+## Jika PAID tertahan di MENYIAPKAN IZIN FOTO
+
+Pada sesi asli yang masih berjalan dan belum masuk kamera, persiapan yang lambat
+atau jawaban alokasi terputus bisa diperiksa ulang dengan **COBA PEMERIKSAAN LAGI**.
+App mempertahankan pesanan dan izin asli; selama tahap ini idle/minimize tidak
+seharusnya mengirim kamu ke kolom tiket. Tidak perlu membayar ulang. Printer yang
+belum terpasang boleh membuat tiket tidak terkonfirmasi tercetak, tetapi kamera
+pada sesi asli tetap dapat terbuka. Catat hasil kamera dan kertas secara terpisah;
+tes kertas dan pemulihan yang memerlukan tiket tetap belum lulus.
+
+Perbaikan ini tidak membuka sesi lama yang sudah terkunci. Setelah masuk kamera,
+terdapat foto pribadi, app dibuka ulang, atau sesi dilepas, gunakan bukti pemilik
+sesuai alur pemulihan. Tanpa tiket, BANTUAN OPERATOR dapat memeriksa status dan,
+bila syarat terpenuhi, mengisolasi sesi/melepas booth sambil menyimpan hak lama.
+Itu bukan pemulihan foto, refund atau layanan selesai. Jangan hapus jurnal atau
+membayar pesanan pengganti untuk membuka sesi lama. Bila masih tertahan, catat
+SHA, teks layar dan durasi tanpa mengirim PIN, isi tiket atau foto pribadi.
+
 ## Jika langsung ke pemulihan atau gagal mulai
 
-`SESI TERSIMPAN / TIKET PELANGGAN DIPERLUKAN` berlaku untuk sesi yang sudah dibayar/foto tersimpan. QR belum dibayar yang kedaluwarsa mengikuti alur otomatis di atas; tidak perlu tiket lama. Pakai tiket asli → VERIFIKASI TIKET → PULIHKAN SESI FOTO ASLI.
+`SESI TERSIMPAN / TIKET PELANGGAN DIPERLUKAN` berlaku untuk sesi lama yang perlu bukti pemilik; persiapan awal PAID pada proses asli mengikuti bagian di atas. QR belum dibayar yang kedaluwarsa mengikuti alur otomatis di atas; tidak perlu tiket lama. Pakai tiket asli → VERIFIKASI TIKET → PULIHKAN SESI FOTO ASLI.
 Tiket berbeda dari QR pembayaran, PIN operator dan Server Key. Tiket Sandbox
 berlaku 24 jam sejak pesanan dibuat; simpan tiket kertas yang dicetak setelah PAID.
 

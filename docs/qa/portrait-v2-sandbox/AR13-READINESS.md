@@ -1,5 +1,21 @@
 # AR-13 — release-readiness assessment
 
+## 31 October — BUG-028 live preparation / matching CI verified
+
+Functional52d69fd: original live STARTING retains ownership through idle/pause
+before local-ready, retries the same allocation, enters camera with unavailable
+printer; no new payment/receipt/capture. Existing old/private/restart proof holds.
+Full1288run/1284PASS/4optionalSKIP, zero fail/error,481.717s, exit0. Tests-only
+8fc3675:58 focused PASS/34.029s, including128 full native receipt images through
+the original bounded scanner; actual paid-photo restore uses original worker/
+backend proof. Both earlier CI fixture failures retained; current41223201896
+all three SUCCESS: Windows214PASS/Linux530PASS/native121run,120PASS/1optional
+palm SKIP. Application/runner unchanged since52d69fd. Four native scenes reviewed,
+9-group/44-step guide parity and10 Chromium scenarios PASS. Owner Windows/paper/
+provider retest PENDING, actual SHA/cause unknown. WholeUX07 NOT_RUN;matrix59PASS/
+0FAIL/9BLOCKED/1NOT_RUN,AR13conditional,production not approved. Next owner Windows/paper/provider retest; never reset journals or pay again for recovery.
+[Exact source, failures, checks and limits](evidence/bug028-final-verification.json).
+
 ## 31 October — BUG-027 verified / actual laptop and paper next
 
 Source e05a358 (functional 4c74ece): full 1280 run/1276 PASS/4 optional SKIP,

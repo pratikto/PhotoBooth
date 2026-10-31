@@ -1,5 +1,51 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 31 October — BUG-028 source/full/current CI verified; owner retest next
+
+Functional source **52d69fd57b69201e3af1b016a90690945e8e1e1a**; latest tested
+micro-push **8fc3675877177a9c216dae132e9950ceae9c51a4**, remote HEAD verified.
+Application/runner unchanged after52d69fd; later24ead05/8fc3675 fix test isolation
+and reuse the existing recovery scanner. Complete functional full **1288run/
+1284PASS/0FAIL/0ERROR/4optionalSKIP,481.717s**, exit0. Final focused **58PASS/
+0FAIL/ERROR/SKIP,34.029s**. Current matching CI **41223201896 all three SUCCESS**:
+Windows214/214; Linux recovery530/530; native121run/120PASS/1optional palm SKIP.
+Five STARTING portable methods Windows/Linux, three new native methods Linux,
+13 receipt methods Windows/Linux and seven paid-camera methods Linux all PASS.
+Includes128 full native receipt bitmaps through original primary/alternate
+scanner with exact payload and actual worker/backend proof for photo restoration.
+
+Original live STARTING retains ownership through delayed setup/idle/pause before
+local-ready and retries only the original allocation operation. Original backend
+settlement and local-ready/STARTED still gate camera. Missing-printer fixture
+enters camera, one charge/receipt attempt, zero capture; no payment/print replay.
+Four original App.run synthetic screens reviewed at800×1280/452×900, source52;
+original receipt QR matched in memory, never published. Guide/form9groups/44steps
+match;10 loopback Chromium cases PASS, actual offline-file/laptop use NOT_RUN.
+Earlier CI41221421520 optional-encoder failure and41222182150 primary-only
+fixture failure, red controls and abandoned QR experiments are preserved; no
+experimental renderer change published. [Exact evidence and source hashes](qa/portrait-v2-sandbox/evidence/bug028-final-verification.json).
+
+Owner actual laptop SHA/duration/API cause unknown; owner follow-up PENDING.
+Update prevents this demonstrated live-preparation detour; it does not unlock an
+already locked/private/restarted/released session. Original ticket/operator safe
+handling remains; no journal deletion, replacement payment, false refund or
+fulfillment. Operator release retains PAID/OWED rights. WholeUX07 NOT_RUN;
+69-ID matrix59PASS/0FAIL/9BLOCKED/1NOT_RUN unchanged;AR13conditional. Actual
+Windows/paper/provider/privacy/Ubuntu/Drive/retention/operating/release evidence
+is next. No production/Drive/OPS/deployment/master/default/new branch actions.
+Do not redo verified AR source. Final documentation-only checkpoint records this
+published test/source SHA; its own containing commit is available in Git log.
+Latest remote documentation **b27f95f9928326c24703e9c40ef2897fa90a55c4**
+(1 November owner requirement) was read and preserved before this docs checkpoint:
+[30-second on-screen ticket fallback](qa/portrait-v2-sandbox/RECOVERY-TICKET-ONSCREEN-FALLBACK.md) is **DOCUMENTATION ONLY /
+NOT_IMPLEMENTED / NOT_TESTED**. It is a separate queued extension, not current
+BUG-028 behavior or acceptance. Its explicit scope does not authorize runtime/
+test/deployment changes; retain current validated direct-camera path. Final
+docs-only commit was rebased onto that remote document without overwriting it;
+no force-push or published-source rewrite. Source/CI8fc3675 remains applicable.
+
+Only private work/ and superseded docs stash remain outside GitHub.
+
 ## 31 October — BUG-028 scanner-fixture correction focused-verified
 
 Functional **52d69fd57b69201e3af1b016a90690945e8e1e1a**, previous test-only

@@ -1,0 +1,394 @@
+{
+  "status": "SOURCE_REGRESSION_CURRENT_CI_NATIVE_VERIFIED_OWNER_RETEST_PENDING",
+  "functional_source": "52d69fd57b69201e3af1b016a90690945e8e1e1a",
+  "test_only_source": "8fc3675877177a9c216dae132e9950ceae9c51a4",
+  "application_unchanged_since_full": true,
+  "owner_report": {
+    "printer": "not installed",
+    "followup": "returned to saved-session/customer-ticket page; dislikes repeated ticket prompts",
+    "laptop_sha": "UNKNOWN",
+    "exact_owner_cause": "UNCONFIRMED",
+    "owner_retest": "PENDING"
+  },
+  "scope": "Original live same-process STARTING before local-ready preserves consent through idle/pause; retry exact original allocation operation after before/after-commit reply loss. Fresh backend settlement and local-ready/STARTED gates retained. No bypass for restarted/private/admitted/released/unknown sessions.",
+  "reports": {
+    "bug028-full": {
+      "run": 1288,
+      "seconds": 481.717,
+      "failures": 0,
+      "errors": 0,
+      "skips": 4,
+      "success": true,
+      "report_sha256": "d3e72565652150d26d11a3e2dff1fd88d40ecd6aac0c8f5065ab74f7d57a88ce"
+    },
+    "bug028-fixture-final-focused": {
+      "run": 57,
+      "seconds": 27.197,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "success": true,
+      "report_sha256": "bbda331696a4cfc80ac594525509e85a3c8a67d5eac2aa44395d23abdffffbdf"
+    },
+    "bug028-encoder-absence-before": {
+      "run": 3,
+      "seconds": 11.959,
+      "failures": 8,
+      "errors": 0,
+      "skips": 0,
+      "success": false,
+      "report_sha256": "84b487e1e1b661a037da0c1bab488c88dd28d5e5f7cb85a45e580effff8c72d3"
+    },
+    "bug028-encoder-absence-corrected": {
+      "run": 3,
+      "seconds": 15.357,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "success": true,
+      "report_sha256": "6708f943f73d29cc3214a79e35e1f82ecce6a779daf5ea39c5cead8f8b07f570"
+    },
+    "bug028-receipt-corpus-before": {
+      "run": 13,
+      "seconds": 6.926,
+      "failures": 4,
+      "errors": 0,
+      "skips": 0,
+      "success": false,
+      "report_sha256": "927f7e54713d6a1e00dc60191fb4990e5b2d518a93d334698b2f6c9b68f5c910"
+    },
+    "bug028-receipt-final-focused": {
+      "run": 58,
+      "seconds": 33.978,
+      "failures": 9,
+      "errors": 0,
+      "skips": 0,
+      "success": false,
+      "report_sha256": "fc1710142b00942174a99fa92611313bf4d9b94d193c290197113f943bd77bf5"
+    },
+    "bug028-scanner-final-focused": {
+      "run": 58,
+      "seconds": 34.029,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "success": true,
+      "report_sha256": "8801dcb5c1bd57148e904cc55e77a048d21b4ae9ccd288ec6b8c6348efcaa968"
+    }
+  },
+  "full_source": "52d69fd57b69201e3af1b016a90690945e8e1e1a",
+  "full_process_exit": 0,
+  "full_pass": 1284,
+  "full_skips": [
+    "native video opt-in",
+    "three native palm-model opt-ins"
+  ],
+  "full_environment": {
+    "python": "3.12.14",
+    "Kivy": "2.3.1",
+    "ffpyplayer": "4.5.3",
+    "gui_optin": true,
+    "audio_optin": true,
+    "SDL_VIDEODRIVER": "offscreen",
+    "SDL_AUDIODRIVER": "dummy",
+    "LIBGL_ALWAYS_SOFTWARE": "1",
+    "PHOTOBOOTH_V2_SANDBOX_PRINT": "0 (fixtures explicitly inject print route; no physical device)"
+  },
+  "prior_red_history": [
+    "38 focused PASS/19.307s for initial allocation correction",
+    "56 expanded focused PASS/30.268s before idle/pause scenario",
+    "57run/3FAIL/0ERROR,28.241s during incomplete UI patch and obsolete pre-local-ready expectation; not credited PASS",
+    "Final57 PASS/28.677s at complete correction; explicit local-ready/private holds retained"
+  ],
+  "initial_allocation_reproduction": "At1df9d80 missing-printer configured photo-worker case PASS both sizes. Lost allocation reply before acceptance/after backend commit fails to reach camera on subsequent check (2 methods run, one method PASS, other method two subtest FAIL; errors0,5.617s).",
+  "idle_reproduction": "One held-worker method fails two viewport subcases at old live-prephoto guard: idle retires customer proof during STARTING before local worker admission.1run/2subtest FAIL/0ERROR,2.863s.",
+  "failed_ci": {
+    "run_id": 41221421520,
+    "source": "52d69fd57b69201e3af1b016a90690945e8e1e1a",
+    "linux_job": 124596594781,
+    "recovery_run": 529,
+    "subtest_failures": 8,
+    "cause": "Optional encoder absent before injected sender; fixture isolated without removing assertions",
+    "windows_job": 124596595065,
+    "windows_conclusion": "success",
+    "navigation_job": 124596595150,
+    "navigation_conclusion": "success"
+  },
+  "current_ci": {
+    "run_id": 41223201896,
+    "source": "8fc3675877177a9c216dae132e9950ceae9c51a4",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 124601855384,
+        "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+        "head_sha": "8fc3675877177a9c216dae132e9950ceae9c51a4",
+        "conclusion": "success",
+        "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/41223201896/job/124601855384",
+        "completed_at": "2026-10-31T17:17:44Z"
+      },
+      {
+        "id": 124601855640,
+        "name": "Windows Python 3.12 native SDL audio (dummy output)",
+        "head_sha": "8fc3675877177a9c216dae132e9950ceae9c51a4",
+        "conclusion": "success",
+        "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/41223201896/job/124601855640",
+        "completed_at": "2026-10-31T17:15:15Z"
+      },
+      {
+        "id": 124601855731,
+        "name": "Navigation and audio lifecycle",
+        "head_sha": "8fc3675877177a9c216dae132e9950ceae9c51a4",
+        "conclusion": "success",
+        "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/41223201896/job/124601855731",
+        "completed_at": "2026-10-31T17:10:22Z"
+      }
+    ],
+    "linux": {
+      "recovery": {
+        "run": 530,
+        "pass": 530,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "seconds": 143.68
+      },
+      "native": {
+        "run": 121,
+        "pass": 120,
+        "failures": 0,
+        "errors": 0,
+        "skips": 1,
+        "seconds": 97.913
+      },
+      "portable_methods": 5,
+      "starting_native_methods": 3,
+      "receipt_methods": 13,
+      "paid_camera_methods": 7
+    },
+    "windows": {
+      "ledger": {
+        "run": 214,
+        "pass": 214,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "seconds": 73.208
+      },
+      "portable_methods": 5,
+      "receipt_methods": 13
+    },
+    "method_receipts": {
+      "linux": [
+        "test_intent_save_failure_never_sends_and_can_retry_before_any_submission (test_recovery_receipt.RecoveryReceiptSessionTests.test_intent_save_failure_never_sends_and_can_retry_before_any_submission) ... ok",
+        "test_lost_final_journal_ack_keeps_sending_and_never_resubmits (test_recovery_receipt.RecoveryReceiptSessionTests.test_lost_final_journal_ack_keeps_sending_and_never_resubmits) ... ok",
+        "test_paid_receipt_is_submitted_once_and_contains_no_ticket_in_journal (test_recovery_receipt.RecoveryReceiptSessionTests.test_paid_receipt_is_submitted_once_and_contains_no_ticket_in_journal) ... ok",
+        "test_partial_or_unknown_send_is_uncertain_without_auto_reprint (test_recovery_receipt.RecoveryReceiptSessionTests.test_partial_or_unknown_send_is_uncertain_without_auto_reprint) ... ok",
+        "test_restart_converts_sending_to_uncertain_and_keeps_private_owner_hold (test_recovery_receipt.RecoveryReceiptSessionTests.test_restart_converts_sending_to_uncertain_and_keeps_private_owner_hold) ... ok",
+        "test_transient_prephoto_pause_retains_live_proof_but_allocated_session_cannot_bypass_lock (test_recovery_receipt.RecoveryReceiptSessionTests.test_transient_prephoto_pause_retains_live_proof_but_allocated_session_cannot_bypass_lock) ... ok",
+        "test_unpaid_and_privacy_locked_paid_receipts_cannot_print (test_recovery_receipt.RecoveryReceiptSessionTests.test_unpaid_and_privacy_locked_paid_receipts_cannot_print) ... ok",
+        "test_bitmap_validates_size_and_copy_count_before_transport (test_recovery_receipt.RecoveryReceiptTests.test_bitmap_validates_size_and_copy_count_before_transport) ... ok",
+        "test_memory_bitmap_uses_original_route_without_saving_secret_preview (test_recovery_receipt.RecoveryReceiptTests.test_memory_bitmap_uses_original_route_without_saving_secret_preview) ... ok",
+        "test_native_receipt_qr_decodes_original_capability_at_both_paper_widths (test_recovery_receipt.RecoveryReceiptTests.test_native_receipt_qr_decodes_original_capability_at_both_paper_widths) ... ok",
+        "test_partial_memory_bitmap_send_cannot_fallback_or_retry (test_recovery_receipt.RecoveryReceiptTests.test_partial_memory_bitmap_send_cannot_fallback_or_retry) ... ok",
+        "test_public_payload_corpus_scans_exact_original_at_both_native_paper_widths (test_recovery_receipt.RecoveryReceiptTests.test_public_payload_corpus_scans_exact_original_at_both_native_paper_widths) ... ok",
+        "test_unpaid_foreign_context_and_invalid_payload_cannot_render_recovery_receipt (test_recovery_receipt.RecoveryReceiptTests.test_unpaid_foreign_context_and_invalid_payload_cannot_render_recovery_receipt) ... ok",
+        "test_after_commit_retry_recovers_same_transaction_without_second_allocation (test_paid_starting.StartingRetryTests.test_after_commit_retry_recovers_same_transaction_without_second_allocation) ... ok",
+        "test_before_accept_retry_reuses_original_operation_and_allocation (test_paid_starting.StartingRetryTests.test_before_accept_retry_reuses_original_operation_and_allocation) ... ok",
+        "test_missing_original_operation_cannot_invent_a_replacement_allocation (test_paid_starting.StartingRetryTests.test_missing_original_operation_cannot_invent_a_replacement_allocation) ... ok",
+        "test_outage_or_refund_cannot_allocate_from_cached_paid (test_paid_starting.StartingRetryTests.test_outage_or_refund_cannot_allocate_from_cached_paid) ... ok",
+        "test_privacy_lock_prevents_retry_and_retires_late_allocation_reply (test_paid_starting.StartingRetryTests.test_privacy_lock_prevents_retry_and_retires_late_allocation_reply) ... ok",
+        "test_allocated_private_photos_still_lock_and_never_reprint_receipt_on_check (test_paid_camera_widgets.PaidCameraTests.test_allocated_private_photos_still_lock_and_never_reprint_receipt_on_check) ... ok",
+        "test_dedicated_configuration_mounts_both_printers_with_drive_off (test_paid_camera_widgets.PaidCameraTests.test_dedicated_configuration_mounts_both_printers_with_drive_off) ... ok",
+        "test_minimized_live_checkout_can_accept_payment_without_unprinted_ticket_claim (test_paid_camera_widgets.PaidCameraTests.test_minimized_live_checkout_can_accept_payment_without_unprinted_ticket_claim) ... ok",
+        "test_old_payment_idle_time_does_not_lock_newly_paid_camera (test_paid_camera_widgets.PaidCameraTests.test_old_payment_idle_time_does_not_lock_newly_paid_camera) ... ok",
+        "test_paid_prints_one_receipt_enters_camera_then_approved_photo_prints_once_at_both_sizes (test_paid_camera_widgets.PaidCameraTests.test_paid_prints_one_receipt_enters_camera_then_approved_photo_prints_once_at_both_sizes) ... ok",
+        "test_print_failure_keeps_paid_camera_and_never_automatically_resubmits_ticket (test_paid_camera_widgets.PaidCameraTests.test_print_failure_keeps_paid_camera_and_never_automatically_resubmits_ticket) ... ok",
+        "test_printed_ticket_restores_private_photo_without_reprinting_receipt (test_paid_camera_widgets.PaidCameraTests.test_printed_ticket_restores_private_photo_without_reprinting_receipt) ... ok",
+        "test_live_allocation_reply_failure_then_check_enters_same_camera_without_recharge_or_reprint (test_paid_starting_widgets.PaidStartingTests.test_live_allocation_reply_failure_then_check_enters_same_camera_without_recharge_or_reprint) ... ok",
+        "test_missing_physical_printer_still_enters_original_camera_with_configured_photo_worker (test_paid_starting_widgets.PaidStartingTests.test_missing_physical_printer_still_enters_original_camera_with_configured_photo_worker) ... ok",
+        "test_slow_original_admission_survives_idle_and_pause_without_customer_ticket_at_both_sizes (test_paid_starting_widgets.PaidStartingTests.test_slow_original_admission_survives_idle_and_pause_without_customer_ticket_at_both_sizes) ... ok"
+      ],
+      "windows": [
+        "test_intent_save_failure_never_sends_and_can_retry_before_any_submission (test_recovery_receipt.RecoveryReceiptSessionTests.test_intent_save_failure_never_sends_and_can_retry_before_any_submission) ... ok\r",
+        "test_lost_final_journal_ack_keeps_sending_and_never_resubmits (test_recovery_receipt.RecoveryReceiptSessionTests.test_lost_final_journal_ack_keeps_sending_and_never_resubmits) ... ok\r",
+        "test_paid_receipt_is_submitted_once_and_contains_no_ticket_in_journal (test_recovery_receipt.RecoveryReceiptSessionTests.test_paid_receipt_is_submitted_once_and_contains_no_ticket_in_journal) ... ok\r",
+        "test_partial_or_unknown_send_is_uncertain_without_auto_reprint (test_recovery_receipt.RecoveryReceiptSessionTests.test_partial_or_unknown_send_is_uncertain_without_auto_reprint) ... ok\r",
+        "test_restart_converts_sending_to_uncertain_and_keeps_private_owner_hold (test_recovery_receipt.RecoveryReceiptSessionTests.test_restart_converts_sending_to_uncertain_and_keeps_private_owner_hold) ... ok\r",
+        "test_transient_prephoto_pause_retains_live_proof_but_allocated_session_cannot_bypass_lock (test_recovery_receipt.RecoveryReceiptSessionTests.test_transient_prephoto_pause_retains_live_proof_but_allocated_session_cannot_bypass_lock) ... ok\r",
+        "test_unpaid_and_privacy_locked_paid_receipts_cannot_print (test_recovery_receipt.RecoveryReceiptSessionTests.test_unpaid_and_privacy_locked_paid_receipts_cannot_print) ... ok\r",
+        "test_bitmap_validates_size_and_copy_count_before_transport (test_recovery_receipt.RecoveryReceiptTests.test_bitmap_validates_size_and_copy_count_before_transport) ... ok\r",
+        "test_memory_bitmap_uses_original_route_without_saving_secret_preview (test_recovery_receipt.RecoveryReceiptTests.test_memory_bitmap_uses_original_route_without_saving_secret_preview) ... ok\r",
+        "test_native_receipt_qr_decodes_original_capability_at_both_paper_widths (test_recovery_receipt.RecoveryReceiptTests.test_native_receipt_qr_decodes_original_capability_at_both_paper_widths) ... ok\r",
+        "test_partial_memory_bitmap_send_cannot_fallback_or_retry (test_recovery_receipt.RecoveryReceiptTests.test_partial_memory_bitmap_send_cannot_fallback_or_retry) ... ok\r",
+        "test_public_payload_corpus_scans_exact_original_at_both_native_paper_widths (test_recovery_receipt.RecoveryReceiptTests.test_public_payload_corpus_scans_exact_original_at_both_native_paper_widths) ... ok\r",
+        "test_unpaid_foreign_context_and_invalid_payload_cannot_render_recovery_receipt (test_recovery_receipt.RecoveryReceiptTests.test_unpaid_foreign_context_and_invalid_payload_cannot_render_recovery_receipt) ... ok\r",
+        "test_after_commit_retry_recovers_same_transaction_without_second_allocation (test_paid_starting.StartingRetryTests.test_after_commit_retry_recovers_same_transaction_without_second_allocation) ... ok\r",
+        "test_before_accept_retry_reuses_original_operation_and_allocation (test_paid_starting.StartingRetryTests.test_before_accept_retry_reuses_original_operation_and_allocation) ... ok\r",
+        "test_missing_original_operation_cannot_invent_a_replacement_allocation (test_paid_starting.StartingRetryTests.test_missing_original_operation_cannot_invent_a_replacement_allocation) ... ok\r",
+        "test_outage_or_refund_cannot_allocate_from_cached_paid (test_paid_starting.StartingRetryTests.test_outage_or_refund_cannot_allocate_from_cached_paid) ... ok\r",
+        "test_privacy_lock_prevents_retry_and_retires_late_allocation_reply (test_paid_starting.StartingRetryTests.test_privacy_lock_prevents_retry_and_retires_late_allocation_reply) ... ok\r"
+      ]
+    }
+  },
+  "native": {
+    "scenes": [
+      {
+        "file": "01-live-preparation-after-idle-and-pause-800x12800001.png",
+        "width": 800,
+        "height": 1280,
+        "page": "sandbox_checkout",
+        "sha256": "61f9f9b46ebc39d00ebd4bac05c453e91a640afb79f6ce5ba44a7a9ff822957f",
+        "private_recovery_qr_exported": false,
+        "synthetic_transport_submissions": 1,
+        "path": "docs/qa/portrait-v2-sandbox/bug028-native/01-live-preparation-after-idle-and-pause-800x12800001.png",
+        "visual_review": "PASS",
+        "capture_source": "52d69fd57b69201e3af1b016a90690945e8e1e1a"
+      },
+      {
+        "file": "02-camera-without-ticket-detour-800x12800001.png",
+        "width": 800,
+        "height": 1280,
+        "page": "capture",
+        "sha256": "b5bdd37d6cc636bab212baf9cdc85ee60f3807124d98dc709b6123488553b13a",
+        "private_recovery_qr_exported": false,
+        "synthetic_transport_submissions": 1,
+        "path": "docs/qa/portrait-v2-sandbox/bug028-native/02-camera-without-ticket-detour-800x12800001.png",
+        "visual_review": "PASS",
+        "capture_source": "52d69fd57b69201e3af1b016a90690945e8e1e1a"
+      },
+      {
+        "file": "01-live-preparation-after-idle-and-pause-452x9000001.png",
+        "width": 452,
+        "height": 900,
+        "page": "sandbox_checkout",
+        "sha256": "121d11814ab2e048263e39f70cbed0e9cbe265afbd446a886c27d3d6652dcef6",
+        "private_recovery_qr_exported": false,
+        "synthetic_transport_submissions": 1,
+        "path": "docs/qa/portrait-v2-sandbox/bug028-native/01-live-preparation-after-idle-and-pause-452x9000001.png",
+        "visual_review": "PASS",
+        "capture_source": "52d69fd57b69201e3af1b016a90690945e8e1e1a"
+      },
+      {
+        "file": "02-camera-without-ticket-detour-452x9000001.png",
+        "width": 452,
+        "height": 900,
+        "page": "capture",
+        "sha256": "2564d4f21db7eee20ea6040f925865896257ac697a68691a490cf5ae61f01f8e",
+        "private_recovery_qr_exported": false,
+        "synthetic_transport_submissions": 1,
+        "path": "docs/qa/portrait-v2-sandbox/bug028-native/02-camera-without-ticket-detour-452x9000001.png",
+        "visual_review": "PASS",
+        "capture_source": "52d69fd57b69201e3af1b016a90690945e8e1e1a"
+      }
+    ],
+    "receipt_qr": "original synthetic receipt decoded/equal in memory only; token and bitmap never saved",
+    "captures": 0,
+    "sender_attempts_per_case": 1,
+    "physical_printer": "NOT_RUN",
+    "native_processes_exit": 0
+  },
+  "guide_browser": {
+    "status": "PASS",
+    "browser": "Local Chromium/Playwright on temporary loopback-only document preview; no external network",
+    "cases": [
+      "new print form starts9 NOT_RUN with unknown SHA",
+      "old printer-OFF saved results not imported or deleted",
+      "current print mode visible and exported",
+      "mixed results, exclusive choices and note persistence",
+      "script-shaped notes stay text",
+      "800/452/360 no horizontal overflow",
+      "clipboard denied fallback",
+      "TXT download exactly matches report",
+      "reset clears new form only",
+      "unavailable localStorage remains usable"
+    ],
+    "page_errors": 0,
+    "limits": "Managed Chromium blocked file:// navigation (initial attempt not PASS). Loopback-only preview validates identical HTML; actual offline-file laptop use remains manual. No printer/provider/credentials."
+  },
+  "source_sha256": {
+    "photobooth/qris_session.py": "401fe48ed70dae4d2cf63c4a8031808e75aa3b469c7dc1e33d8a8d9e98348862",
+    "photobooth/kiosk_v2/sandbox_views.py": "f5d62b1e5de8fb316aae3831a6987d8b6c8484d626c58405c98e60bb59a2ffe1",
+    "tests/test_paid_starting.py": "1ece5787f7210d4236a5a18855826d484542a71ea26c8f23d274ea82ef16d455",
+    "tests/test_paid_starting_widgets.py": "c6fd49b95f374823a84ff9029c15642f0639201e7345b170d2e3101fa79a4390",
+    "tests/test_recovery_receipt.py": "50b74e196ea687ed97049793878121806ed4233016a2ab45d90c8048aca80616",
+    ".github/workflows/portrait-kiosk-v2.yml": "460520d85710f6b5a49c11c0b6f747c5a5e9474224694a8701f81a9514298fe2",
+    "tools/run_kiosk_unittests.py": "1b3b67b56764761de91b832991a8097d9112fc5c0780c7b90aaebd73b6c1311d",
+    "photobooth/kiosk_v2/recovery_receipt.py": "c1c183b46d70a105e7bc3adceebab79b98000be59dd277a829283d3d551654bc",
+    "photobooth/kiosk_v2/sandbox_checkout.py": "34f9248a4f1962e13e92f036181f8a0d60b34cd43f2b89c3671bd74a7f70a2b0",
+    "tests/test_paid_camera_widgets.py": "5694b3ce8a0d6a594c3ec26fe5f754ee7b460065cd5e568b78b1870e69a136ed"
+  },
+  "manual_gate": {
+    "matrix_ids": 69,
+    "PASS": 59,
+    "FAIL": 0,
+    "BLOCKED": 9,
+    "NOT_RUN": 1,
+    "UX07_whole": "NOT_RUN",
+    "AR13": "conditional",
+    "production": "not approved"
+  },
+  "next": "Owner Windows retest of original live paid preparation/retry at actual recorded SHA; missing physical printer may leave receipt UNCERTAIN but should not block original camera. Old already-locked sessions retain original proof/operator handling. No payment or journal reset; real paper/provider/privacy/Ubuntu/Drive/retention/operating/release gates remain.",
+  "full_command": "KIVY_HOME=/tmp/meong-bug028-full-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 MESA_SHADER_CACHE_DIR=/tmp/meong-bug028-full-mesa PHOTOBOOTH_TEST_GUI=1 PHOTOBOOTH_TEST_AUDIO=1 PHOTOBOOTH_V2_SANDBOX_PRINT=0 MEONG_CI_TEST_REPORT=work/bug028-full.txt .venv/bin/python tools/run_kiosk_unittests.py",
+  "focused_modules": [
+    "test_paid_starting",
+    "test_paid_starting_widgets",
+    "test_paid_camera_widgets",
+    "test_recovery_receipt",
+    "test_qris_session",
+    "test_photo_allocation",
+    "test_fulfillment_crash_recovery",
+    "test_customer_claim_session"
+  ],
+  "test_only_intermediate": "24ead05a45cd6cda70ad3630d4a62ca85395b7e5",
+  "second_failed_ci": {
+    "run_id": 41222182150,
+    "source": "24ead05a45cd6cda70ad3630d4a62ca85395b7e5",
+    "linux_job": 124598878099,
+    "recovery_run": 529,
+    "failures": 1,
+    "errors": 0,
+    "seconds": 164.661,
+    "cause": "Existing paid-photo fixture bypassed actual bounded primary/alternate scanner and used primary only; renderer/scanner runtime unchanged",
+    "windows_job": 124598878013,
+    "windows": "success",
+    "navigation_job": 124598877899,
+    "navigation": "success",
+    "portable5_native3": "PASS"
+  },
+  "receipt_corpus": {
+    "public_payloads": 64,
+    "native_widths": [
+      384,
+      576
+    ],
+    "total_full_native_bitmaps": 128,
+    "original_renderer": "unchanged M-level native integer dots",
+    "original_scanner": "unchanged primary + one bounded Aruco fallback",
+    "exact_decoded_ticket_asserted_before_proof": true,
+    "actual_paid_photo_restore": "Original scan_claim worker + actual original backend claim; original capture/one-charge/one-send assertions retained",
+    "experiment": "Q-level and border trials failed additional primary-only cases; not published and runtime restored exactly",
+    "physical_paper_webcam": "NOT_RUN"
+  },
+  "guide_parity": "9 groups/44 instruction+expectation pairs exactly match HTML GUIDE and Markdown",
+  "guide_files_sha256": {
+    "docs/qa/portrait-v2-sandbox/UX07-LAPTOP-CHECK.md": "4cf24941cec49385a2d7786c1766454e895627a283e76511871f92b514833fba",
+    "docs/qa/portrait-v2-sandbox/windows-checklist-ux07.html": "2d9aa28e80dc4343f81ce11b86f4c09f666f2ad711e5c869741b384c94076f5e"
+  },
+  "no_redundant_full_repeat": "One final functional full at52d69fd. Later24ead05 and8fc3675 change tests/workflow/docs only; focused58 and current matching CI verify corrections. No claim of1289-method full at8fc3675.",
+  "documentation_checks": {
+    "guide_groups": 9,
+    "guide_step_pairs": 44,
+    "guide_instruction_expectation_parity": "PASS",
+    "guide_browser_cases": 10,
+    "source_native_guide_hashes": "PASS",
+    "diff_check": "PASS"
+  },
+  "concurrent_remote_document": {
+    "commit": "b27f95f9928326c24703e9c40ef2897fa90a55c4",
+    "path": "docs/qa/portrait-v2-sandbox/RECOVERY-TICKET-ONSCREEN-FALLBACK.md",
+    "status": "OWNER-APPROVED UX REQUIREMENT / DOCUMENTATION ONLY / NOT_IMPLEMENTED / NOT_TESTED",
+    "scope": "Read/preserved remote new contract; unpublished final documentation commit rebased onto it. No runtime/test/deployment changes authorized by that document. Existing original missing-printer direct camera behavior remains current; future30s fallback has no implementation acceptance.",
+    "integration": "No force push or rewriting published source; normal fast-forward push after docs-only rebase"
+  }
+}
