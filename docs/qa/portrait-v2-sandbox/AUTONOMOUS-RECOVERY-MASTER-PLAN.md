@@ -1,5 +1,11 @@
 # Autonomous QRIS and photo-session recovery — master engineering specification
 
+## 1 November 2026 — Latest OWNER-APPROVED handoff specification (NO CODE CHANGES)
+
+**Current owner precedence:** [Unattended session handoff, ticket accountability, and automatic isolation — 6 flowcharts and 50 acceptance cases](UNATTENDED-SESSION-HANDOFF-OWNER-APPROVED.md). This detailed 1 November target **supplements** the original AR-00–AR-13 master and supersedes earlier intent to route every locked private customer directly to SESI TERSIMPAN. The **actual source** still uses operator-PIN AR-09 release and currently lacks the new auto-isolation and 30s on-screen Recovery Ticket fallback. No new implementation or device acceptance has been performed.
+
+The owner approved: ticket print once after verified PAID; same original QR/full code on screen for 30s + NEXT if the printer is absent/fails/uncertain; genuine opportunity to save the ticket, then lost/not-saved ticket **forfeits self-service protected photo recovery**; private old visit -> neutral Advertising with ADS_PROTECTED occupancy -> on next visitor's Photo/Game request safe, scoped machine-authorized PREPARE/fence/local isolate/ACK/archive -> new checkout only once old booth occupancy is provably free. Active-locked/archived original ticket claim must use fresh provider evidence, and valid ticket with booth occupied means WAIT/DEFER rather than default operator. No automatic refund or old PAID/OWED erasure; no pretend physical-paper ACK based solely on printer SUBMITTED. PENDING/UNKNOWN needs separate original-order evidence/terminal closure (not PAID release). The owner asked for **documentation changes only**; AR-00–AR-13 financial/privacy invariants, actual release guards, existing tests, conditional AR-13 gates and production prohibitions remain authoritative.
+
 **Current implementation, 29 October:** source through AR-12.f, final-source
 regression/CI/native evidence reconciled; [AR-13 assessment](AR13-READINESS.md)
 is CONDITIONAL. External acceptance and exact matrix gaps remain open; no
