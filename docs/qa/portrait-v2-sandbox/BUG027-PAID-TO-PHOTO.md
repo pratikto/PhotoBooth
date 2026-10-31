@@ -63,3 +63,9 @@ fail/error/skip. First failed fixture/context assertions corrected and preserved
 in the continuation checkpoint. Both printing switches now explicitly active
 only in the dedicated Sandbox GUI; no extra confirmation/ticket screen. Full/
 CI/native previews next; actual paper/device/provider still NOT_RUN.
+
+CI41215406163 Windows: one stale crash-fixture expectation FAIL; runtime refuses
+restart for printing as required. Reproduced locally5run/oneFAIL, fixed fixture
+selects transport-off and adds explicit printing-profile denial. Corrected6PASS,
+0.096s; application source unchanged4c74ece. Superseded local full stopped; final
+corrected-source full/CI remain pending, no false PASS.

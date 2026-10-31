@@ -48,7 +48,11 @@ class CrashSupervisorTests(TestCase):
             calls.append((list(command),dict(kwargs['env'])))
             return [server,crashed,finished][len(calls)-1]
         def environments(parent,merchant,key,booth,port):
-            return v2_environments(parent,merchant,key,booth,port,self.root)
+            backend,gui=v2_environments(parent,merchant,key,booth,port,self.root)
+            # This case exercises the original transport-off restart path.
+            # The current Sandbox print profile deliberately cannot restart.
+            gui.update(PHOTOBOOTH_V2_PRINT='0',PHOTOBOOTH_V2_SANDBOX_PRINT='0')
+            return backend,gui
         with patch.dict(os.environ,{'MIDTRANS_SERVER_KEY':'SB-Mid-server-TEST','MIDTRANS_MERCHANT_ID':'MTEST'},clear=True), \
              patch('importlib.util.find_spec',return_value=object()),patch('tools.run_qris_sandbox.socket.socket'), \
              patch('tools.run_qris_sandbox.wait_ready'),patch('tools.run_qris_sandbox.subprocess.Popen',side_effect=spawn), \
@@ -62,3 +66,10 @@ class CrashSupervisorTests(TestCase):
         self.assertEqual(calls[1],calls[2])
         self.assertNotIn('MIDTRANS_SERVER_KEY',calls[2][1])
         self.assertFalse(crashed.terminate.called)
+
+    def test_current_sandbox_print_profile_never_reserves_automatic_crash_restart(self):
+        from tools.run_portrait_v2_sandbox import v2_environments
+        _,gui=v2_environments({},'MTEST','SB-Mid-server-TEST','PB001',8765,self.root)
+        self.assertEqual(gui['PHOTOBOOTH_V2_PRINT'],'1')
+        self.assertIsNone(self.budget.reserve(1,gui,child_exited=True))
+        self.assertFalse(self.budget.path.exists())

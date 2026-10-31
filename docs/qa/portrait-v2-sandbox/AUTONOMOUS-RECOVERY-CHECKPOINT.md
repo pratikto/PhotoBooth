@@ -1,5 +1,19 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 31 October — BUG-027 test-only crash-policy correction
+
+Functional4c74ece pushed/verified; matching CI41215406163 Windows failed exactly
+one outdated crash-supervisor fixture: it used the now-printing v2 environment
+while expecting automatic restart. Existing runtime correctly refuses restart
+when printing is active; do not relax that guard. Same case reproduced locally
+5run/4PASS/1FAIL. Fixture now explicitly selects transport-OFF for its original
+restart test; new case verifies current print profile cannot reserve restart.
+Corrected **6 PASS/0 FAIL/ERROR/SKIP,0.096s**. Application/tools/workflow unchanged
+from4c74ece, verified by Git. Initial local full was superseded/stopped after CI
+identified this deterministic obsolete expectation; no full PASS claimed there.
+Next one corrected-source full + matching CI, then final native/evidence docs.
+
+
 ## 31 October — BUG-027 paid receipt → direct camera + approved-photo print mounted
 
 Owner explicitly authorizes both prints in Sandbox. Live PAID/reserved original
