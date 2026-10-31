@@ -214,9 +214,7 @@ class SandboxCheckout:
         return self.view()
 
     def operator_inspect(self, pin):
-        order=(self.flow.snapshot() or {}).get('order') or {}
-        result=self.flow.client.recovery_inspect(order['order_id'],pin)
-        self.flow._accept(result)
+        result=self.flow.inspect_recovery(pin)
         view=self.view()
         view['operator_report']={'payment':result['state'],'service':result['service_state'],
             'issue':(result.get('fulfillment_issue') or {}).get('reason'),

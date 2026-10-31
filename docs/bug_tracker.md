@@ -1,5 +1,14 @@
 # Meong Photobooth — Bug register
 
+## BUG-026 — expired unpaid QR trapped in customer recovery (31 October)
+
+S2 — IN_PROGRESS. Owner screenshot EXPIRED/NONE/no obligation; exact laptop SHA
+unknown. Approved same-page renewal preserves design/copies, creates new order/QR
+after fresh proof, archives old record, keeps late-paid/review/uncertain cases.
+Disabled core focused41 PASS; native auto/manual mounting and final checks next.
+[Contract/checkpoint](qa/portrait-v2-sandbox/BUG026-QR-RENEWAL.md).
+
+
 ## 30 October — BUG-025 — legacy Sandbox session without customer ticket
 
 S1 — FIXED IN SOURCE / REGRESSION VERIFIED at7069bf0; owner retest NOT_RUN. Owner reports PAID/STARTED/OWED and disabled isolation; no saved ticket. Exact laptop SHA/capability unknown. Explicit PIN-authenticated legacy-only Sandbox archive now preserves rights/media via existing fence/isolation/ACK/archive. No customer proof bypass or ticket replacement. Focused backend41 and native28 plus final pair2 PASS. Final source7069bf0 full1236/1232 PASS/4optional SKIP, zero failure/error; CI41001339113 all three SUCCESS. Windows fixture failure/cleanup correction retained in evidence.

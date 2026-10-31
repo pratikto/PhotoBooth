@@ -1,5 +1,29 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 31 October — BUG-026 QR renewal core focused-verified (GUI next)
+
+Owner explicitly approves expiry renewal via "oke gass" and staged pushes.
+New contract BUG026-QR-RENEWAL.md replaces the withdrawn/unpublished closure-page
+proposal; its scratch draft stays private in work/. Core reuses original fresh
+provider proof, original archive/journal and checkout. Sandbox opt-in is OFF by
+default pending native mounting: checked raw expire/no entitlement archives old
+identity, short-lived privacy-bound proof permits same-cart new key/counter and
+new ticket; missing/cached proof, paid/review/photo/release signals deny. One
+automatic candidate only; restart/pause retire its authority. Backend maps late
+settlement after terminal expiry to original REVIEW_REQUIRED (retained), not a
+new paid grant; tests preserve that existing rule.
+
+Focused **41 PASS/0 FAIL/ERROR/SKIP,2.626s**; ten new portable methods registered
+Windows/Linux with exact Linux receipts. Initial39 run/one FAIL/one ERROR from
+adapter wrapper not yet wired and fixture expecting OWED instead of existing
+REVIEW_REQUIRED; corrected integration/fixture, no provider guard changed.
+Runtime core is disabled for ordinary/default/MOCK and not mounted in real GUI
+until next increment. Full/current CI/owner manual acceptance pending; no formal
+UX-07/matrix/AR-13/production/default/branch/OPS change. Next enable only dedicated
+native Sandbox and mount auto/manual UI + original readiness/new-ticket gate,
+then focused screenshots/full/matching CI. Resolve this checkpoint's SHA in Git.
+
+
 ## 30 October — BUG-025 final regression and matching CI verified
 
 Final tested source **7069bf02853ee282f1269d86e147ba1e6c8e1b30**, functional GUI
