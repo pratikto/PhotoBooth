@@ -1,8 +1,12 @@
 # Meong Photobooth — GUI v2
 
+31 October — Sandbox prints one recovery receipt after verified PAID, enters
+camera directly, then prints approved photo strips. Drive remains OFF.
+[Current print scope and verification](docs/qa/portrait-v2-sandbox/BUG027-PAID-TO-PHOTO.md).
+
 Sandbox: [QR kedaluwarsa otomatis diganti; kedaluwarsa ketiga kembali iklan, tiket setelah bayar](docs/qa/portrait-v2-sandbox/UX07-LAPTOP-CHECK.md#jika-qr-pembayaran-kedaluwarsa-saat-l02).
 
-Sandbox lama tanpa tiket pemulihan: [langkah arsip uji dengan PIN lokal](docs/qa/portrait-v2-sandbox/BUG025-LEGACY-NO-TICKET.md#final-verified-result--owner-retest-next). Pesanan/foto/hak lama tetap disimpan; printer/Drive tetap OFF.
+Sandbox lama tanpa tiket pemulihan: [langkah arsip uji dengan PIN lokal](docs/qa/portrait-v2-sandbox/BUG025-LEGACY-NO-TICKET.md#final-verified-result--owner-retest-next). Pesanan/foto/hak lama tetap disimpan. Profil cetak Sandbox terbaru mengikuti BUG-027 di bawah.
 
 [Interactive laptop checklist — 44 guided steps, expected results, notes and copy report](docs/qa/portrait-v2-sandbox/windows-checklist-ux07.html) (open the HTML locally).
 
@@ -56,7 +60,7 @@ generation never installs/enables it. Automatic restart remains off.
 | --- | --- | --- |
 | Local/default | `python tools/run_portrait_v2.py` | Explicit photo-test consent; production payments and receipt scanner disabled |
 | Local MOCK checkout | Set `$env:PHOTOBOOTH_V2_CHECKOUT_MOCK='1'`, then use the ordinary launcher | Nonpayable QR, simulated confirmation and one-use game discount |
-| QRIS Sandbox | Install `requirements-qris.txt`, then `python tools/run_portrait_v2_sandbox.py` | Isolated test merchant/backend; official simulator; no game promotion; printer/Drive forced off |
+| QRIS Sandbox | Install `requirements-qris.txt`, then `python tools/run_portrait_v2_sandbox.py` | Isolated test merchant/backend; official simulator; no game promotion; one recovery receipt after verified PAID and approved photo strips print automatically; Drive OFF |
 
 Close the app and clear the MOCK flag after testing:
 `Remove-Item Env:PHOTOBOOTH_V2_CHECKOUT_MOCK -ErrorAction SilentlyContinue`.
@@ -114,7 +118,9 @@ their original orientation/resolution. Existing saved strips are not rewritten.
 
 For print-only testing use `--print`; for deliberate manual printing add
 `--manual-print`. Default launch without operator opt-ins stays local. The
-dedicated merchant Sandbox trial keeps both transports off.
+dedicated merchant Sandbox trial now prints one recovery receipt after verified PAID and
+approved photo strips automatically (31 October BUG-027 scope); Drive stays OFF.
+Prepare the existing printer configuration and paper before running that profile.
 [Runbook, evidence and rollback](docs/qa/portrait-v2-print-drive/README.md) ·
 [earlier eleven-item delivery form](docs/qa/portrait-v2-print-drive/windows-checklist.html).
 

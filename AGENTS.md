@@ -1,5 +1,16 @@
 # Repository working instructions
 
+## Current Sandbox printing exception — 31 October 2026
+
+The owner explicitly selected recovery receipt AND approved photo-strip printing
+in the dedicated Sandbox profile (BUG-027). Latest source e05a358/functional
+4c74ece enables those prints in the GUI; Drive and production remain OFF. Older
+blanket Sandbox printer-OFF statements below are historical, superseded only
+for this explicit profile. Reuse original printer/settings/durable no-replay
+guards; no real paper action in cloud QA. Never restore the old OFF behavior or
+permit automatic crash restart while printing. See
+[the contract](docs/qa/portrait-v2-sandbox/BUG027-PAID-TO-PHOTO.md).
+
 ## Owner priority reaffirmation — 29 October 2026
 
 **AR-00 → AR-13 autonomous QRIS/photo recovery remains TOP IMPLEMENTATION PRIORITY.** On every Codex continuation, first read `docs/qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md`, the authoritative AR roadmap and `docs/DEVELOPMENT_HANDOVER.md`; inspect actual remote HEAD and resume the first unfinished tested AR micro-increment. This priority is not changed by any later documentation/branch commit. Never equate an AR-13 readiness report to approved production deployment.

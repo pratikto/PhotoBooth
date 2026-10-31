@@ -1,5 +1,7 @@
 # P4b Sandbox → P5 readiness (FEAT-020 / FEAT-022)
 
+31 October current scope — [BUG-027](BUG027-PAID-TO-PHOTO.md) mounts Sandbox recovery-receipt and approved-photo printing; Drive OFF. Source e05a358 CI41215811123 all three jobs SUCCESS. Final full at e05a358: 1280 run/1276 PASS/4 optional SKIP, zero failure/error. Native evidence finalization is next. The beginner guide/form now describe the actual print profile; prior printer-OFF records below retain their original source/date.
+
 31 October latest — [automatic QR1→QR2→QR3→ads, ticket after payment](BUG026-QR-RENEWAL.md). Functional118b763 full1259/1255PASS/4optionalSKIP, zero fail/error; matching CI41208622748 all three SUCCESS. Saved-expired startup and grey controls reproduced/fixed in source; actual owner follow-up pending. Earlier one-auto/manual/new-ticket/30s evidence is historical.
 
 **Current owner laptop check:** [44-step beginner guide](UX07-LAPTOP-CHECK.md)

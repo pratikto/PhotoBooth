@@ -1,5 +1,33 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 31 October — BUG-027 laptop guide synchronized / browser verified
+
+Remote/test source e05a3581963c2fd45e87566672684369598ac2d2, functional
+4c74ececb69a84a64a9619fd0d3980e5bdea6fc6. Current CI41215811123 all three jobs
+SUCCESS, exact e05a358. Application/tests/tools/workflow unchanged by this
+increment. Final full at e05a358 is now **1280 run/1276 PASS/0 FAIL/0 ERROR/
+4 optional SKIP**,455.632s. Report work/bug027-final-full.txt, console companion;
+raw synthetic reports stay private. Next complete native capture/receipt
+in-memory verification and aggregate final evidence; no full rerun for docs.
+
+Corrected preparation/root launch instructions/exported mode to receipt+approved
+photo printing, Drive OFF; paper ticket scan and first physical strip verdicts
+are explicit. Nine groups/44 steps remain. New form namespace starts NOT_RUN
+and leaves old printer-OFF data intact rather than importing old PASS results.
+Chromium/Playwright10 meaningful browser scenarios PASS, zero page errors,
+800/452/360 widths, mode/export/persistence/clipboard/TXT/reset/storage denial.
+Managed browser file:// navigation blocked (not PASS); identical HTML checked
+via temporary loopback-only preview. Actual laptop offline-file/paper/provider
+acceptance still NOT_RUN. Scope and old failures remain in BUG027 contract.
+[Guide evidence](qa/portrait-v2-sandbox/evidence/bug027-guide-verification.json).
+
+Whole UX-07 NOT_RUN; matrix59/0/9/1; AR-13 conditional/audit IN_PROGRESS. PAY-22/
+WEB gates, real Windows/Ubuntu/paper/phone/Drive/retention/support/release and OPS
+remain separate. No production/provider/physical printer/Drive/delete/deploy/
+new branch/master/default action. Private work/ and earlier superseded docs
+stash stay local-only; no unpublished application patch. Push this safe docs
+increment immediately, verify remote, then continue final verification.
+
 ## 31 October — BUG-027 test-only crash-policy correction
 
 Functional4c74ece pushed/verified; matching CI41215406163 Windows failed exactly

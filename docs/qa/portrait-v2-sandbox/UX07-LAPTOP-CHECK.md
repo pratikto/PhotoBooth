@@ -7,8 +7,13 @@ Petunjuk di bawah sama dengan petunjuk di dalam form. Hasil manual masih
 ## Persiapan
 
 Siapkan laptop Windows, internet, kamera, ponsel untuk menyimpan tiket dan
-akun **Midtrans Sandbox**. Printer/Drive tetap **OFF**. Jangan memakai bank atau
-e-wallet asli. Uji dengan foto/objek yang boleh kamu gunakan.
+akun **Midtrans Sandbox**, printer dan kertas dengan pengaturan booth yang biasa.
+Profil terbaru mencetak satu tiket pemulihan setelah PAID dan hasil foto setelah
+disetujui; **Drive tetap OFF**. Jangan memakai bank atau e-wallet asli.
+Uji dengan foto/objek yang boleh kamu gunakan. Catat printer/lebar kertas pada
+catatan L01. Form tidak menjalankan printer. Jika tiket tidak keluar, catat L02
+Gagal; L04–L08 yang membutuhkan tiket asli tetap Belum diuji. Jangan memaksa
+cetak ulang atau membayar lagi.
 
 Buka folder PhotoBooth di File Explorer, klik bilah alamat, ketik `powershell`,
 lalu Enter. Periksa branch dan perubahan lokal:
@@ -62,7 +67,9 @@ setelah membandingkan foto/retake pada L07. L08 lanjutan dan boleh ditunda.
 L09 diamati sepanjang rangkaian. Kamu sendiri boleh memakai PIN operator lokal;
 tidak perlu orang pendamping. PIN berubah saat launcher dimulai ulang.
 
-Form menyimpan hasil di browser itu saja. Jika hasil lama muncul, itu bukan
+Form cetak versi 31 Oktober memakai penyimpanan hasil terpisah; hasil dari
+versi printer-OFF tidak diimpor atau dinyatakan lulus untuk profil cetak. Data
+versi lama tetap ada pada versi form lama. Form menyimpan hasil di browser itu saja. Jika hasil lama muncul, itu bukan
 bukti untuk SHA baru. Salin/unduh laporan lama sebelum Kosongkan Form untuk cek
 versi baru. Catatan per item dan hasil parsial ikut masuk prompt. Placeholder
 contoh bukan hasil pengujian dan tidak ikut disalin jika tidak kamu isi.
@@ -109,7 +116,8 @@ pernah terikat tiket. Kamu sendiri boleh menjalankannya:
 3. Tunggu pesan sesi lokal sudah diisolasi. Masukkan PIN lagi lalu
    **LEPAS BOOTH • HAK TETAP DISIMPAN**.
 4. Setelah kembali ke iklan, mulai kunjungan uji baru melalui alur biasa.
-   Mulai L02 dari awal; tiket baru ditampilkan setelah pembayaran diterima.
+   Mulai L02 dari awal; satu tiket baru dicetak setelah pembayaran diterima,
+   lalu kamera langsung terbuka.
 
 Pesanan/foto/kewajiban lama tetap disimpan untuk pemeriksaan pemilik; ini tidak
 menghasilkan tiket pengganti, membuka foto lama, menyatakan layanan selesai,
@@ -222,7 +230,7 @@ Contoh catatan (bukan hasil): L02 — PAID: tiket pemulihan 1 lembar, kamera lan
 
    **Seharusnya:** Dua foto tersimpan dalam sesi A dan menunggu tindakan berikutnya. Jangan tekan AKHIRI UJI saat sedang menyiapkan uji pemulihan.
 
-- **Lulus:** Persetujuan dan jumlah lembar sesuai; dua capture hanya terjadi setelah tindakan, dengan hitung mundur dan urutan benar.
+- **Lulus:** Desain dan jumlah lembar sesuai; dua capture hanya terjadi setelah tindakan, dengan hitung mundur dan urutan benar.
 - **Gagal:** App memotret tanpa tindakan, melewati hitung mundur, menambah capture ganda, atau mengubah desain/jumlah lembar.
 - **Belum diuji:** Pembayaran belum terkonfirmasi atau kamera belum bisa digunakan. Catat penyebabnya; jangan menganggap dua foto sudah tersimpan jika belum terlihat kemajuannya.
 
@@ -281,9 +289,9 @@ Contoh catatan (bukan hasil): L05 — tiket salah ditolak, input kosong tidak me
 
 **Untuk apa:** Memastikan hanya pemilik tiket asli yang dapat melanjutkan sesi yang sama, tanpa mengulang pembayaran/foto.
 
-**Sebelum mulai:** Punya tiket A yang disimpan pada L02 dan sedang di halaman tiket. L03 menyisakan dua foto.
+**Sebelum mulai:** Punya tiket kertas A yang dicetak setelah PAID pada L02 dan sedang di halaman tiket. L03 menyisakan dua foto.
 
-1. Masukkan TEKS LENGKAP tiket A ke kolom, lalu VERIFIKASI TIKET. Jika hanya punya gambar QR di ponsel, tampilkan gambar itu di depan webcam yang sudah dipakai app lalu pilih SCAN QR TIKET DI KAMERA. Jangan gunakan QR pembayaran, PIN operator, nomor pendek atau nama file gambar.
+1. Tunjukkan QR pada tiket kertas A ke webcam yang sudah dipakai app, lalu pilih SCAN QR TIKET DI KAMERA. Jika kamu memiliki teks tiket lengkap secara pribadi, kolom tiket juga bisa dipakai. Jangan gunakan QR pembayaran, PIN operator, nomor pendek atau nama file gambar.
 
    **Seharusnya:** App menunjukkan BUKTI PEMILIK TERVERIFIKASI dan tombol PULIHKAN SESI FOTO ASLI. Foto belum tampil hanya karena tiket terverifikasi. Scan gagal karena fokus/silau perlu dicatat terpisah dari validitas tiket.
 
@@ -335,8 +343,8 @@ Contoh catatan (bukan hasil): L06 — tiket diterima; sebelum pulihkan tidak ada
 
    **Seharusnya:** Satu hasil Lulus L07 mencakup ketiga titik. Jika hanya A berhasil, hasil keseluruhan masih Belum diuji dengan catatan A berhasil.
 
-- **Lulus:** Ketiga titik A/B/C berhasil; foto terpilih, retake, kemajuan dan strip tetap benar, tanpa efek otomatis.
-- **Gagal:** Salah satu titik yang benar-benar dicoba kehilangan/mengubah foto, mengembalikan jatah retake, membuka foto tanpa bukti atau memulai tindakan otomatis.
+- **Lulus:** Ketiga titik A/B/C pulih sesuai tahap, pilihan retake/strip sama, dan foto tercetak tepat sesuai jumlah lembar saat pertama disetujui. Tutup/buka tidak menambah tiket, foto, retake atau cetak.
+- **Gagal:** Kemajuan/retake/output berubah, foto atau tiket dicetak ulang saat pemulihan, hasil cetak pertama tidak sesuai jumlah lembar, foto bocor sebelum bukti, atau app memberi tagihan baru untuk sesi yang sama.
 - **Belum diuji:** Baru sebagian titik dicoba atau langkah sebelumnya menghalangi. Catat A/B/C agar bagian yang sudah berhasil tidak perlu diulang tanpa alasan.
 
 Contoh catatan (bukan hasil): L07 — A berhasil, B berhasil (A2-R tetap dan retake habis), C belum dicoba; hasil keseluruhan Belum diuji.
@@ -437,7 +445,10 @@ CI40985975287 ketiga job SUCCESS. Ini terpisah dari SHA/hasil laptop.
 Paid-print host komersial belum dipasang. PAY-22 dan WEB-01–08 tetap BLOCKED;
 Windows/Ubuntu mini-PC, merchant, kertas, ponsel/Drive/deletion, privasi operasional,
 support/kompensasi dan release punya gate sendiri. Form ini tidak menyatakan
-seluruh UX-07/AR-13 selesai dan tidak mengaktifkan produksi atau transport Sandbox.
+seluruh UX-07/AR-13 selesai dan tidak mengaktifkan produksi. Launcher Sandbox
+terbaru memang mengaktifkan cetak tiket dan hasil foto sesuai lingkup BUG-027;
+Drive tetap OFF. Catatan source ca7827c di atas adalah bukti fixture historis,
+bukan hasil paket cetak terbaru. Ikuti checkpoint BUG-027 untuk source/hasil final.
 
 ## Kirim hasil
 

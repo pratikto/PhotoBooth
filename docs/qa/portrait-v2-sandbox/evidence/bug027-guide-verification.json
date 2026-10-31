@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "browser": "Local Chromium/Playwright on temporary loopback-only document preview; no external network",
+  "cases": [
+    "new print form starts9 NOT_RUN with unknown SHA",
+    "old printer-OFF saved results not imported or deleted",
+    "current print mode visible and exported",
+    "mixed results, exclusive choices and note persistence",
+    "script-shaped notes stay text",
+    "800/452/360 no horizontal overflow",
+    "clipboard denied fallback",
+    "TXT download exactly matches report",
+    "reset clears new form only",
+    "unavailable localStorage remains usable"
+  ],
+  "page_errors": 0,
+  "limits": "Managed Chromium blocked file:// navigation (initial attempt not PASS). Loopback-only preview validates identical HTML; actual offline-file laptop use remains manual. No printer/provider/credentials.",
+  "date": "2026-10-31",
+  "source": "e05a3581963c2fd45e87566672684369598ac2d2",
+  "scope": "Docs/form synchronization only. Existing application/tests/tools/workflow unchanged.",
+  "guide_groups": 9,
+  "guide_steps": 44,
+  "guide_and_form_exact_strings": "MATCH all purposes/start/steps/verdicts/examples",
+  "files_sha256": {
+    "docs/qa/portrait-v2-sandbox/UX07-LAPTOP-CHECK.md": "c0289a5450b954c5f5285f5137c0f27099c5fcf41f9cc5121593671fd12a2a07",
+    "docs/qa/portrait-v2-sandbox/windows-checklist-ux07.html": "e99529801749f163da15d0118a8866c37fe99d2a40d2a9dde5d010ce002f7afd"
+  },
+  "full_source": "e05a3581963c2fd45e87566672684369598ac2d2",
+  "full": {
+    "run": 1280,
+    "pass": 1276,
+    "fail": 0,
+    "error": 0,
+    "skip": 4,
+    "seconds": 455.632,
+    "report_sha256": "0c2f66a5341a0c95eb910ebd06659a34e29751a6efb990d497c46ca3ddbdb7cd"
+  }
+}
