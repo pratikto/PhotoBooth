@@ -1,5 +1,15 @@
 # Autonomous recovery — customer, operator and deployment runbook
 
+## 1 November 2026 — New approved unattended advertising handoff and support boundary (DESIGN ONLY)
+
+**Full authoritative target and diagrams:** [UNATTENDED-SESSION-HANDOFF-OWNER-APPROVED](UNATTENDED-SESSION-HANDOFF-OWNER-APPROVED.md). The owner approved the complete staged priority plan and explicitly requested **no code changes**. This supersedes historical *target navigation* in which privacy lock automatically showed SESI TERSIMPAN, but **not** existing safe AR-09 operator-only release or the current runtime. The old backend source still requires PIN for release; auto-isolation is **not implemented**.
+
+**Customer journey:** eligible protected privacy lock -> wipe all private data -> public Advertising in ADS_PROTECTED -> new Photo/Game intent triggers authenticated PAID PREPARE/fence/local-isolation/ACK/archive only when safe -> ADS_READY permits next visitor. PENDING/UNKNOWN cannot use PAID release; original order must be verified and appropriately closed or remain safely held. A saved original Recovery Ticket can claim locked active/archived rights from ads once proof/current settlement and free camera are established; valid proof while another visitor owns the booth means **WAIT/DEFER, not a mandatory operator**.
+
+**Ticket responsibility:** print once after PAID; when printer unavailable/fails/UNCERTAIN display original ticket QR + full code for 30 seconds/NEXT; owner chooses forfeiture of **self-service access to previous private photos** when a genuinely offered ticket is not saved. Never issue a substitute, show old media to a tokenless operator, or confuse operator PIN/DEMO/QRIS/download credentials. Do not treat printer transport acknowledgment alone as proof of paper in a customer's hand. Preserve PAID/OWED and a separate financial/help channel for verifiable service failure; no auto refund. The on-screen fallback itself remains NOT_IMPLEMENTED.
+
+**Exception triage:** FULL AUTO (confirmed original-order statuses/allocations and verified safe isolation); WAIT/DEFER (booth busy, provider transient offline, retryable ACK); HUMAN ONLY (persistent payment conflict/refund review, uncertain physical paper, damaged media, irrecoverable camera/storage, failed release/fence/worker isolation, credential incident or authorized financial remedy). Split human roles between on-site technician, customer support, financial reviewer and backend/security admin with redacted audit. Production eligibility, merchant policy, real POS80 paper and Windows checks remain NOT_RUN/BLOCKED; no new operational capability was deployed.
+
 **Current implementation, 29 October:** source through AR-12.f, final-source
 regression/CI/native evidence reconciled; [AR-13 assessment](AR13-READINESS.md)
 is CONDITIONAL. External acceptance and exact matrix gaps remain open; no
