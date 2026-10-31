@@ -1,5 +1,18 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 31 October — BUG-026 CI dependency install correction
+
+GUI source5201c10 pushed/remote verified; full running at exact functional source.
+CI41203929916 core Linux install and CI41205080811 GUI Linux install failed before
+application tests: newly selected ffpyplayer4.5.4 sdist lacks SDL_version.h on the
+minimal runner. These are retained FAILED, not application PASS. Workflow now
+pins the existing tested4.5.3 binary on both Linux/Windows; both CPython3.12 wheels
+downloaded and ZIP-validated. No application requirements/runtime/test source
+changed by this pin. Existing local full uses4.5.3 and continues at5201c10; do not
+restart it for CI-only correction. Matching corrected-source CI now required.
+Receipt: qa/portrait-v2-sandbox/evidence/bug026-verification.json. No user/device install, production or data changes.
+
+
 ## 31 October — BUG-026 native renewal and 30-second idle focused-verified
 
 Core93f2c95 pushed/remote verified; dedicated configured native Sandbox now opts

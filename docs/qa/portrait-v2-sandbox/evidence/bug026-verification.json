@@ -73,5 +73,20 @@
     "Original root paid/review records remain retained, never silently assigned to successor. Late settlement after terminal expiry keeps original backend REVIEW_REQUIRED policy.",
     "Withdrawn/unpublished closure-page draft stays private in work/; only approved renewal implementation is published.",
     "Whole UX-07 NOT_RUN, matrix59/0/9/1, AR-13 conditional and external/commercial gates unchanged; OPS queued; no production/new branch/default/merge/deploy."
-  ]
+  ],
+  "ci_install_history": [
+    {
+      "source": "93f2c9562c01d362ef578e39b73878663f65bb1d",
+      "run": 41203929916,
+      "failed_linux_job": 124545069690,
+      "failure": "Install minimum desktop simulator: ffpyplayer4.5.4 sdist compilation, SDL_version.h missing; Linux application tests did not run. Other jobs SUCCESS."
+    },
+    {
+      "source": "5201c1012d85412635f438219d8a4c1e96fbea34",
+      "run": 41205080811,
+      "failed_linux_job": 124548409598,
+      "failure": "Same upstream4.5.4 source-build install failure, not application test PASS. Superseded by CI-only4.5.3 pin."
+    }
+  ],
+  "ci_pin": "Portrait workflow only pins ffpyplayer4.5.3 on Linux/Windows, matching existing local tested runtime. Both CPython3.12 wheels downloaded and ZIP-validated; application requirements/source unchanged. No live machine installation."
 }

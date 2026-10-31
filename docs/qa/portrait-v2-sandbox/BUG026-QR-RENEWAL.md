@@ -89,3 +89,11 @@ and30s untouched-button return implemented. Final15 focused PASS/8.229s. Eleven
 portable and four native methods registered with strict Linux receipts; six
 nonpayable native views reviewed. Initial regression failures/corrections retained
 in [evidence](evidence/bug026-verification.json). Full/current CI now required.
+
+## CI installation correction
+
+Core run41203929916 and GUI run41205080811 Linux failed during dependency setup,
+not tests: ffpyplayer4.5.4 selected an sdist requiring absent SDL_version.h.
+CI-only pin4.5.3 matches installed local runtime; Linux/Windows CPython3.12 wheel
+availability validated. Application requirements/source unchanged. Original full
+continues at5201c10; matching corrected workflow CI required. Failures retained.
