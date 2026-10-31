@@ -1,5 +1,14 @@
 # On-screen Recovery Ticket fallback when the receipt printer is unavailable
 
+## 1 November 2026 — Supplemental owner policy: responsibility to keep ticket
+
+**See the newer canonical whole-booth contract:** [Unattended session handoff and automatic isolation](UNATTENDED-SESSION-HANDOFF-OWNER-APPROVED.md). This existing 30-second fallback specification **remains valid**; the owner explicitly approved it again with a customer-accountability clarification:
+
+- The kiosk must genuinely offer the **original** Recovery Ticket through its normal one-time printed receipt, or if that transport is unavailable, failed, timed out or uncertain, through the original QR/full code on screen with a visible **30s countdown and NEXT**. Continue original camera only through existing STARTED/readiness gates. No re-issued ticket, no reprint of uncertain jobs, no timer extension through polling.
+- The customer must retain that genuinely offered ticket. If they ignore, lose or do not save it, **self-service private photo-session recovery is forfeited**, and the routine operator workflow must **not** bypass original proof to disclose old photos. Show prominent Indonesian warning: **"SIMPAN RECOVERY TICKET KAMU! Jika sesi foto terputus, tanpa tiket sesi terkunci tidak dapat dipulihkan."**
+- This is **not** a payment reversal, refund, or assertion that an incomplete service was delivered; preserve paid OWED/PAID_UNFULFILLED claims and a separate non-media support/financial remedy process. A transport SUBMITTED status does **not** establish that paper physically left the printer. If Meong is known not to have offered a working receipt or screen fallback, do not blame the customer.
+- All prior privacy, raw-token redaction, one-send/UNCERTAIN, QR separation, 24h Sandbox token expiry, and device acceptance requirements still apply. The fallback is **NOT IMPLEMENTED / NOT TESTED** in the current source. This note does not alter any code or create a device PASS.
+
 **Status: OWNER-APPROVED UX REQUIREMENT / DOCUMENTATION ONLY / NOT IMPLEMENTED / NOT TESTED.**
 Recorded from the owner's follow-up to the payment flowchart on 1 November 2026.
 Target: existing `feature/portrait-kiosk-v2-next` dedicated Midtrans QRIS Sandbox
