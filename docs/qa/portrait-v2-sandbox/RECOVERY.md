@@ -1,5 +1,11 @@
 # Sandbox session recovery
 
+## 1 November 2026 — Owner-approved supersession note (FUTURE TARGET ONLY)
+
+For the latest approved **unattended** customer journeys, auto-isolation, Advertising-after-lock, original Recovery Ticket retention responsibility, operator-last-resort distinctions and detailed flowcharts, read [UNATTENDED-SESSION-HANDOFF-OWNER-APPROVED](UNATTENDED-SESSION-HANDOFF-OWNER-APPROVED.md). This historical operator-oriented document remains evidence for its original source era, **not** the latest product navigation target. The owner now wants safe PAID machine-authorized isolation when a new visitor requests Photo/Game, with PREPARE -> exact local worker isolation -> ACK -> durable archive and no operator PIN *for the narrowly approved safe automated case*. Existing operator-authenticated AR-09 API is still the actual code; the new pathway is **not implemented**.
+
+After a genuinely offered original printed or 30s on-screen Recovery Ticket, losing/failing to save that ticket forfeits self-service access to an old **private photo session**, not PAID/OWED, refund or retention obligations. Valid ticket while booth is busy means WAIT, not default operator. Financial conflict, unsafe physical print, corrupt media, hardware, security and irrecoverable release still need appropriately scoped human review. No changes to code, old test evidence, deployment, production or financial records have been authorized by this document-only note.
+
 ## Approved scope and review — 28 October 2026 (Asia/Jakarta)
 
 The owner reports **PERLU BANTUAN OPERATOR** after closing and reopening the
