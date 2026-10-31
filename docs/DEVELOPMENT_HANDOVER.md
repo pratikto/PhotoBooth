@@ -1,5 +1,15 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 1 November 2026 — Owner-approved unattended auto-isolation handoff (DOCUMENTATION-ONLY)
+
+**Immediate Codex reading requirement:** [UNATTENDED-SESSION-HANDOFF-OWNER-APPROVED.md](qa/portrait-v2-sandbox/UNATTENDED-SESSION-HANDOFF-OWNER-APPROVED.md): an extensive owner-approved **implementation contract** with 20 decisions, six Mermaid diagrams including release sequence, payment/status/claim/ads state tables, support escalation, failure/crash windows, 50 numbered UAH tests (all NOT_RUN), 10 dependency-ordered UAH stages and explicit acceptance/non-goals. It also cross-links [revised decision log](DECISIONS.md), [priority backlog](next_step.md), [AR execution roadmap](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-ROADMAP.md) and [AR13 limits](qa/portrait-v2-sandbox/AR13-READINESS.md).
+
+**Owner authorization boundary:** the owner approved **all proposed recommendations for future development**, but explicitly requested **no code change in this conversation**, only comprehensive English documentation and flowcharts. Do not start implementing UAH-01–UAH-09 solely because this handover is marked approved; new source work requires a subsequent explicit instruction. Do not modify master, create a branch, merge, activate payment production, invent refunds, alter persisted money/media state or reset customer files. Maintain original AR-00–AR-13 safety and test history.
+
+**P0 work order:** (1) original Recovery Ticket printed once; if unavailable/fails/uncertain, 30-second original QR/full code + NEXT; (2) eligible privacy lock -> Advertising with ADS_PROTECTED occupancy and no private pixels; (3) automatic safe PAID/OWED two-phase release on new Photo/Game action with scoped machine identity and exact local receipt/ACK/archive; (4) separate durable unpaid/UNKNOWN/cancel race/aged paid handling; (5) original ticket claim for active locked or archived session from ads, valid ticket + busy booth -> WAIT; (6) fault/CI/actual Windows, POS80, Midtrans acceptance. **Lost/not-saved genuinely presented ticket forfeits self-service locked photo recovery, not financial OWED or payment status.** P1 BUG-029/UX-07/AR-12; P2 merchant-approved refund/remedy and AR-13 readiness. Every future increment must have exact failing/passing new UAH tests and source SHA; prior PASS cannot be recycled.
+
+**Actual status at documentation commit:** UAH code NOT_IMPLEMENTED, UAH-001–050 NOT_RUN, external AR gates still open. No app/API/test/service worker change, CI execution or owner physical device test occurred.
+
 ## 31 October — BUG-028 source/full/current CI verified; owner retest next
 
 Functional source **52d69fd57b69201e3af1b016a90690945e8e1e1a**; latest tested
