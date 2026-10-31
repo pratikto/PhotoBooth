@@ -1,5 +1,11 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
+## 1 November 2026 — Additional owner-approved UAH acceptance matrix (ALL REQUIRED / NOT_RUN)
+
+A new **separate 50-scenario matrix UAH-001–UAH-050** has been documented as part of the [approved unattended session handoff contract](UNATTENDED-SESSION-HANDOFF-OWNER-APPROVED.md#10-test-and-acceptance-matrix--all-target-cases-not-run). It covers original ticket printing vs private 30s QR fallback, token loss responsibility, privacy lock -> public ADS_PROTECTED, machine-authenticated PAID two-phase isolation, safe PENDING/UNKNOWN closure, crash/lost ACK, Drive/print uncertainty, original customer claim from Advertising, busy-booth WAIT, operator exception roles and physical Windows/POS80/Midtrans acceptance. **Every UAH row is NOT_RUN until code is separately authorized, implemented, executed and verified.**
+
+Do **not** add the 50 new unexecuted scenarios to historical PASS counts for existing 69 AR matrix IDs or imply prior BUG-027/BUG-028/UX-07 fixtures certify new functionality. Keep existing 59 PASS / 0 FAIL / 9 BLOCKED / 1 NOT_RUN historical execution claims attributed to their original source and date. Any future implementation must satisfy *both* the existing AR/PAY/CAP/UX financial/privacy invariants and the new UAH matrix, with exact SHA evidence, real owner laptop/paper/provider tests separately tracked. This update is **documentation only**, no source or CI changes.
+
 ## 31 October — BUG-028 live preparation / matching CI verified
 
 Functional52d69fd: original live STARTING retains ownership through idle/pause
