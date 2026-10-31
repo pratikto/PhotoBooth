@@ -1,5 +1,27 @@
 # BUG-027 — printed recovery receipt, then direct camera
 
+
+## Owner follow-up — 30-second ticket fallback on printer non-response (future change)
+
+New owner request: if the existing one-and-only recovery-receipt submission
+returns unavailable/error or does not respond by the supported printer deadline
+(including UNCERTAIN), show the **original paid-order Recovery Ticket QR and full
+code on screen for 30 seconds**, with a visible countdown and **NEXT/LANJUT**.
+NEXT skips the remaining display interval; a zero countdown advances
+automatically. The ordinary acknowledged-print path still goes directly to
+camera without an extra screen. Both fallback exits must preserve the original
+PAID/grant/allocation/STARTED readiness gates and never resend the receipt,
+mint a substitute ticket, bill again, capture automatically or display old
+private tickets after restart. QR/plaintext must disappear on navigation/
+privacy lock. See the [full design-only specification and test matrix]
+(RECOVERY-TICKET-ONSCREEN-FALLBACK.md).
+
+**STATUS: APPROVED REQUIREMENT, NOT IMPLEMENTED / NOT TESTED.** All BUG-027
+source, full/CI and owner-laptop records below predate this request and remain
+historical evidence only for the existing printed-receipt direct-camera flow.
+No printer, payment or GUI source was changed by this documentation addition.
+
+
 31 October 2026, Asia/Jakarta. Owner sees PAID → mandatory save-ticket screen →
 privacy claim. Latest instructions supersede the earlier paid-ticket screen:
 minimize tickets, never show a compulsory ticket page; automatically print one
