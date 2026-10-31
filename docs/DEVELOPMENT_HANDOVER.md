@@ -1,5 +1,48 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 31 October — BUG-028 live STARTING allocation recovery focused-verified
+
+Owner reports simulator PAID/native MENYIAPKAN IZIN FOTO and confirms no printer.
+Owner follow-up returns to ticket page after wait/retry; actual laptop SHA,
+duration and original API error unknown. Do not
+claim the exact owner cause proven. Base/remote1df9d80576788aa5f0843c666e4d412b450fb6bf.
+Configured missing-printer worker reaches camera at both sizes in a direct test;
+receipt becomes UNCERTAIN, one attempted send, one original payment. A separate
+before-accept/after-commit allocation reply fault reproduces a permanent live
+STARTING hold. Initial2-method run: printer case PASS, allocation method two
+subtest FAIL/zero ERROR,5.617s. Old process-restart tests did not cover live retry.
+
+Controller check now retries the exact durable original allocation operation
+only while transaction is missing; backend still freshly verifies settlement.
+Late/retired proof rejects. Existing check result performs the original bound
+local handoff once; original local-ready/STARTED confirmation still gates camera.
+No new financial identity, allocation counter, capture, receipt or print replay.
+Five portable methods cover original-operation replay, same committed ID,
+outage/refund, missing operation and privacy-lock/late reply; two native methods
+exercise actual configured missing-printer and both fault windows at both sizes.
+**57 focused PASS/0 FAIL/ERROR/SKIP,28.677s**. Prior38 PASS/19.307s and56
+PASS/30.268s preceded the live idle/pause correction. The held STARTING worker
+also reproduced unwanted ticket lock at both sizes (one method/two subtest FAIL,
+zero ERROR,2.863s). During the partial patch,57run/3FAIL/zeroERROR retained;
+complete correction now passes without removing local-ready/private holds.
+Original live STARTING ownership survives idle/pause before local worker ready;
+UI keeps original consent, clears pixels, fences stale callbacks. It does not
+unlock an old process or an admitted private photo session. Existing receipt
+fixture now explicitly marks local-ready before asserting the private hold.
+Five portable +three native methods registered, exact Linux receipt notices
+required. Full/current CI pending; no full PASS yet for this source.
+[Focused scope/receipt](qa/portrait-v2-sandbox/evidence/bug028-focused-verification.json).
+
+Next one applicable final full + current CI, native proof and accurate owner
+retest instructions. Keep the actual current app/session private; no payment or
+file reset to clear it. Restarted sessions still require original ticket: absent
+printer means no saved paper proof; do not promise an update will unlock private
+old photos. Operator release preserves rights; it is not a refund/fulfillment.
+Whole UX07 NOT_RUN, matrix59/0/9/1, AR13 conditional; real owner/device/provider
+acceptance pending. No production/Drive/OPS/deletion/public ingress/master/new
+branch/default/deployment. Only private work/ and superseded docs stash local.
+Source micro-commit is the safe checkpoint; exact SHA via Git log/remote.
+
 ## 31 October — BUG-027 final regression, native evidence and owner handoff
 
 Tested GitHub source **e05a3581963c2fd45e87566672684369598ac2d2**, functional **4c74ececb69a84a64a9619fd0d3980e5bdea6fc6**;

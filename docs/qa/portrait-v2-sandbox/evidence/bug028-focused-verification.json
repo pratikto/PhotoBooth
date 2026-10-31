@@ -1,0 +1,34 @@
+{
+  "status": "FOCUSED_VERIFIED_FULL_CURRENT_CI_PENDING",
+  "base": "1df9d80576788aa5f0843c666e4d412b450fb6bf",
+  "source": "Containing source micro-commit; final verification pins exact SHA",
+  "owner_report": "Simulator PAID + MENYIAPKAN IZIN FOTO; owner confirms printer absent. Actual laptop SHA/duration/provider error unknown. Exact owner cause not proven.",
+  "reproduction": "At1df9d80 missing-printer configured photo-worker case PASS both sizes. Lost allocation reply before acceptance/after backend commit fails to reach camera on subsequent check (2 methods run, one method PASS, other method two subtest FAIL; errors0,5.617s).",
+  "focused": {
+    "run": 57,
+    "pass": 57,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 28.677,
+    "report_sha256": "b2ae8c8b628721d18134b8d9990df6f5d4bc52f6ea07faea6f42fdd95d4fe1ae"
+  },
+  "red_report_sha256": "66704918fc7bb85d802f1cc19d3d9cc352cafb0f252117a7a668bceb6ce23f39",
+  "files_sha256": {
+    "photobooth/qris_session.py": "401fe48ed70dae4d2cf63c4a8031808e75aa3b469c7dc1e33d8a8d9e98348862",
+    "photobooth/kiosk_v2/sandbox_views.py": "f5d62b1e5de8fb316aae3831a6987d8b6c8484d626c58405c98e60bb59a2ffe1",
+    "tests/test_paid_starting.py": "1ece5787f7210d4236a5a18855826d484542a71ea26c8f23d274ea82ef16d455",
+    "tests/test_paid_starting_widgets.py": "ef765298785859b022574be728d6befb60af70c9a0da909bf2e65e67aa5db526",
+    ".github/workflows/portrait-kiosk-v2.yml": "6389490ad9433d2a61d81f285ef0a7d23b18f2fdb61e89e6c10f64b99dc59778",
+    "tests/test_recovery_receipt.py": "70644a426f7ed05166f6dd8b06c9f9429d0fbbb4b50c77b84c4ec1183dbdd411"
+  },
+  "limits": "Original immutable allocation operation only, fresh original backend verification required, no new checkout/charge/receipt/shutter. Privacy-lock/late response/outage/refund/missing operation holds; restart still requires original proof. Whole UX07 NOT_RUN, matrix59/0/9/1; owner laptop still pending. No real devices/provider/customer data touched. Same original live process may retain prephoto ownership through STARTING only before local-ready; already locally admitted/private/restarted/released/unknown operations still hold. No customer proof or media bypass.",
+  "owner_followup": "Owner confirms wait/retry returned to customer-ticket page and dislikes repeated ticket requests; exact laptop SHA still unknown.",
+  "idle_reproduction": "One held-worker method fails two viewport subcases at old live-prephoto guard: idle retires customer proof during STARTING before local worker admission.1run/2subtest FAIL/0ERROR,2.863s.",
+  "intermediate_results": [
+    "38 focused PASS/19.307s for initial allocation correction",
+    "56 expanded focused PASS/30.268s before idle/pause scenario",
+    "57run/3FAIL/0ERROR,28.241s during incomplete UI patch and obsolete pre-local-ready expectation; not credited PASS",
+    "Final57 PASS/28.677s at complete correction; explicit local-ready/private holds retained"
+  ]
+}

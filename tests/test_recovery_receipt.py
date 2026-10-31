@@ -130,5 +130,8 @@ class RecoveryReceiptSessionTests(TestCase):
         ticket=self.paid();self.assertTrue(ticket)
         self.f.service.print_recovery_receipt()
         self.f.service.prepare()
+        # A live allocation is still preparing until its local worker is ready.
+        self.assertTrue(self.f.flow.live_prephoto);self.assertTrue(self.f.flow.pause_live_prephoto())
+        self.f.flow.bind_transaction(self.f.flow.snapshot()['transaction_id'])
         self.assertFalse(self.f.flow.live_prephoto);self.assertFalse(self.f.flow.pause_live_prephoto())
         self.f.flow.lock_customer();self.assertTrue(self.f.flow.customer_claim_required)

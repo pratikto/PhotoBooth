@@ -149,15 +149,24 @@ class KioskCheckout:
     @property
     def live_prephoto(self):
         data=self.snapshot() or {};order=data.get('order') or {}
-        return bool(self.qr_renewal_enabled and self.context['mode']=='sandbox'
-                    and not self._opened_existing and data.get('customer_capability_hash')
-                    and data.get('phase') in {'CREATING','WAITING','RESERVED','VERIFYING_QR'}
+        if (not self.qr_renewal_enabled or self.context['mode']!='sandbox'
+                or self._opened_existing or not data.get('customer_capability_hash')
+                or any(data.get(key) for key in ('release_operation_id','isolation_id',
+                    'recovery','pending_fulfillment_issue'))
+                or any(order.get(key) for key in ('fulfillment_issue','release','service_fence'))):
+            return False
+        if data.get('phase')=='STARTING':
+            allocation=order.get('fulfillment') or {}
+            return bool(order.get('state')=='PAID' and order.get('service_state')=='RESERVED'
+                        and data.get('allocation_operation_id') and data.get('allocation_ready') is False
+                        and allocation.get('allocation_operation_id') in (None,data['allocation_operation_id'])
+                        and (not data.get('transaction_id')
+                             or data['transaction_id']==allocation.get('transaction_id')))
+        return bool(data.get('phase') in {'CREATING','WAITING','RESERVED','VERIFYING_QR'}
                     and order.get('state') in {None,'CREATING','PENDING','PAID','EXPIRED'}
                     and order.get('service_state') in {None,'NONE','RESERVED'}
-                    and not any(data.get(key) for key in ('transaction_id','allocation_operation_id',
-                        'release_operation_id','isolation_id','recovery','pending_fulfillment_issue'))
-                    and not any(order.get(key) for key in ('fulfillment','local_transaction_id',
-                        'fulfillment_issue','release','service_fence')))
+                    and not any(data.get(key) for key in ('transaction_id','allocation_operation_id'))
+                    and not any(order.get(key) for key in ('fulfillment','local_transaction_id')))
 
     def pause_live_prephoto(self):
         """Hide an original live checkout without losing its not-yet-printed proof."""
@@ -657,6 +666,21 @@ class KioskCheckout:
             if phase in {'COMPLETED', 'CANCELLED', 'STARTED','SUSPENDED'}:
                 return self.snapshot()
             if phase == 'STARTING':
+                # A lost allocation reply must replay only its durable original
+                # operation. It is not a new checkout or permission to capture.
+                operation = self.data.get('allocation_operation_id')
+                allocate = getattr(self.client, 'allocate', None)
+                if not self.data['transaction_id'] and operation and callable(allocate):
+                    generation = self._privacy_generation
+                    result = allocate(order['order_id'], order['grant_id'], operation)
+                    self._accept(result)
+                    with self.lock:
+                        if (self.data['phase'] != 'STARTING'
+                                or self.data.get('allocation_operation_id') != operation
+                                or generation != self._privacy_generation or self.customer_claim_required):
+                            raise RuntimeError('Allocation reply belongs to a retired visit')
+                        self.data['transaction_id'] = result['fulfillment']['transaction_id']
+                        self._save()
                 if self.data['transaction_id'] and (not self.data.get('allocation_operation_id')
                                                     or self.data.get('allocation_ready') is True):
                     result = self._transition(order,'STARTED',self.data['transaction_id'])

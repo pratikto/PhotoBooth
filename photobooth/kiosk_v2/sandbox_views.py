@@ -87,11 +87,12 @@ class SandboxViews:
                 or (self._photo_jobs and self._photo_jobs.service and self._photo_jobs.service.transaction)
                 or not jobs.store.flow.pause_live_prephoto()):
             return False
+        starting=jobs.store.flow.snapshot().get('phase')=='STARTING'
         self._sandbox_privacy_epoch+=1
-        self._sandbox_auto_photo=False;self._sandbox_consent=False
+        self._sandbox_auto_photo=False;self._sandbox_consent=starting
         self._photo_view={};self._last_live_frame=self._last_preview=self._camera_texture=None
         jobs.store.qr=jobs.store.qr_identity=None
-        self._sandbox_view={'phase':'VERIFYING_QR'}
+        self._sandbox_view={'phase':'STARTING' if starting else 'VERIFYING_QR'}
         self._sandbox_refresh_at=0
         self.navigation.page=SANDBOX_CHECKOUT
         self._show()
@@ -452,7 +453,10 @@ class SandboxViews:
                     return
                 if outcome.action=='resumed':
                     self._sandbox_consent=True
-                if outcome.action == 'prepare' and phase == 'STARTING' and self._sandbox_consent:
+                allocation_handoff = (outcome.action == 'prepare' or
+                    (outcome.action == 'check' and self._sandbox_view.get('allocation_operation_id')
+                     and self._sandbox_view.get('allocation_ready') is False))
+                if allocation_handoff and phase == 'STARTING' and self._sandbox_consent:
                     # STARTING journal is durable before one local transaction is allocated.
                     self.navigation.page = PHOTO_CONFIRM
                     order = self._sandbox_view.get('order') or {}
@@ -567,6 +571,9 @@ class SandboxViews:
             message = 'Harga uji tanpa promo game.\nPromo DEMO belum berlaku pada QRIS Sandbox.\nPesanan dibuat setelah kamu memilih lanjut.'
         elif phase == 'RECOVERY':
             message = 'Pesanan dan foto tetap disimpan.\nOperator perlu memeriksa status sebelum lanjut.\nTidak ada sesi atau cetak yang diulang otomatis.'
+        elif phase == 'STARTING':
+            message = ('Pesanan tetap tersimpan. Menyiapkan sesi foto.\n'
+                       'Jika tertahan, coba pemeriksaan lagi.\nJangan membayar ulang.')
         elif phase == 'RESERVED':
             message = ('Menyiapkan sesi foto.\nKamera akan terbuka otomatis.'
                        if self._sandbox_jobs.store and self._sandbox_jobs.store.flow.qr_renewal_enabled else

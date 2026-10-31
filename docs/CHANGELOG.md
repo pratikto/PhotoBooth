@@ -1,5 +1,12 @@
 # Meong Photobooth — changelog
 
+## 31 October — BUG-028 focused source recovery
+
+57 focused PASS/zero failure/error/skip. Live allocation reply loss now retries
+only original operation, fresh provider check, original local handoff. Missing
+printer alone succeeds; exact owner cause not yet proven. Live pre-local-ready idle/pause also retains original ownership; private/restart guards remain. Full/current CI and
+owner retest pending. [Scope](qa/portrait-v2-sandbox/BUG028-PAID-STARTING.md).
+
 ## 31 October — BUG-027 verified / actual laptop and paper next
 
 Source e05a358 (functional 4c74ece): full 1280 run/1276 PASS/4 optional SKIP,
