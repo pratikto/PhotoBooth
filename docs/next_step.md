@@ -1,5 +1,26 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+## BUG-029 — QRIS Sandbox header Meong never finishes edge-to-edge flight (OPEN)
+
+Owner reports the decorative animated Meong at the top of the QRIS Sandbox
+waiting screen does not complete a full left/right/left traversal. Read-only
+source inspection suggests that `sandbox_views.py::_poll_sandbox` rebuilds
+the whole page during regular status checks; `app.py::_show` disposes the
+old `MeongLogo` and recreates `flight=0`, interrupting the ~65 dp/s
+`branding.py` animation. **This is a hypothesis, not measured device proof.**
+Severity S2 visual; no proven payment defect.
+
+**Queued, NOT FIXED / NOT TESTED:** Preserve the animated header's phase
+across same-page status refreshes or update the status subview instead of the
+whole page. Verify full continuous round trips on portrait 800x1280, 452x900
+and compact Windows during automatic polling, manual CEK STATUS, resize,
+pause/resume and phase changes. Retain unchanged Midtrans/payment state,
+privacy/QR and animated rainbow/film/wordmark effects. No animation-speed
+workaround. Owner asked only for bug-list documentation and previously
+forbade code changes; **no code or tests are changed**. Keep AR-00–13 top
+priority. [Registered BUG-029](bug_tracker.md#bug-029--animated-meong-header-restarts-during-sandbox-qris-polling-1-november-2026).
+
+
 
 ## Upcoming UX — printer-unresponsive Recovery Ticket on-screen for 30s (NOT IMPLEMENTED)
 
