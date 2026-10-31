@@ -1,5 +1,26 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+
+## Upcoming UX — printer-unresponsive Recovery Ticket on-screen for 30s (NOT IMPLEMENTED)
+
+New owner-approved documentation request: after verified PAID, if the **single**
+recovery ticket print has no valid acknowledgment or is UNCERTAIN, show the
+**original** Recovery QR and complete code on screen with a **30-second visible
+countdown and NEXT/LANJUT**. NEXT advances immediately; at zero the same
+transition occurs automatically. Successful printer acknowledgment retains the
+direct-camera flow with no ticket page. Preserve one print attempt/no automatic
+reprint, no duplicate charge/allocation, live privacy ownership and the original
+STARTED/camera readiness gate; wipe sensitive pixels on exit/lock. Full contract,
+GUI copy, transitions, crash/privacy cases and required future native/CI/device
+tests: [RECOVERY-TICKET-ONSCREEN-FALLBACK]
+(qa/portrait-v2-sandbox/RECOVERY-TICKET-ONSCREEN-FALLBACK.md).
+
+**Documentation only in this change: source NOT CHANGED; implementation/test/
+laptop acceptance NOT RUN.** Future Codex increment only when development is
+authorized; preserve active BUG-028 closure and AR-00–13 top priority. Do not
+count earlier BUG-027/BUG-028 successes as acceptance of this new fallback.
+
+
 ## 31 October — BUG-028 live preparation / matching CI verified
 
 Functional52d69fd: original live STARTING retains ownership through idle/pause
