@@ -1,5 +1,13 @@
 # Autonomous recovery — Codex execution roadmap
 
+## 1 November 2026 — Owner-approved follow-on P0 unattended handoff (DOCUMENTATION ONLY)
+
+The owner approved the **entire** proposed recovery priority sequence and explicitly requested documentation rather than a code change. **Canonical implementation-ready contract:** [UNATTENDED-SESSION-HANDOFF-OWNER-APPROVED](UNATTENDED-SESSION-HANDOFF-OWNER-APPROVED.md), including state models, six flowcharts, 20 decisions, 50 REQUIRED/NOT_RUN fault and device tests, risk register, machine authorization boundary and 10 small Codex work packages. No existing AR-00–AR-13 source implementation status, financial/privacy invariant, completed tests or AR-13 conditional release gate is superseded.
+
+**Follow-on dependency order:** UAH-00 (this docs-only checkpoint) -> **UAH-01/P0.1** one original Recovery Ticket + genuine 30s screen fallback -> **UAH-02/P0.2** privacy lock -> ADS_READY/ADS_PROTECTED -> **UAH-03/P0.3** scoped machine-authorized safe PAID PREPARE/worker isolate/ACK/archive without operator PIN -> **UAH-04/P0.4** separately proved unpaid terminal closure, UNKNOWN reconciliation and aged PAID eligibility -> **UAH-05/P0.5** original-ticket claim from ads for active locked/archived sessions, busy booth WAIT -> **UAH-06/P0.6** comprehensive fault injection, Windows/POS80/Midtrans, regression and evidence. Later P1 BUG-029/UX-07/AR-12 physical acceptance and P2 human-approved refund/remedy/AR-13 operational decisions.
+
+**Hard guards:** no new checkout before verified safe release; no automatic refund; lost/not-saved genuinely presented ticket forfeits *self-service private media recovery* only, not paid obligations; transport SUBMITTED is not proof of physical paper; preserve original paid/owed entitlement and claim evidence; no second QRIS create for an UNKNOWN original; no unsafe print/Drive resend; never use operator PIN or tokenless media restore as a machine bypass. When later authorized for source work, do preimplementation test/contract freeze, focused tests, micro-commits and remote verification per this preexisting roadmap. This turn changed **documentation only**, no code/tests/CI/production.
+
 **Document status: IMPLEMENTATION IN PROGRESS — see checkpoint**, 28 October 2026
 **Scope:** `feature/portrait-kiosk-v2-next` only; no master/branch/default/production operations  
 **Baseline audited:** `2e5efe5d281a93fe8d22e53309a50147764d2939` (subsequent documentation commits do **not** count as new functional source tests)  
