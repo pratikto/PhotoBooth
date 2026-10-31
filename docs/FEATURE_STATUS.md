@@ -1,5 +1,17 @@
 # Meong Photobooth — current feature status
 
+## 1 November — BUG-029 QRIS header flight reset (OPEN, documentation only)
+
+Owner reports the decorative Meong fails to fly the full left-to-right
+header path and return while the QRIS Sandbox screen is waiting. Read-only
+source inspection shows frequent status-check page rebuilds disposing
+`MeongLogo` and recreating its animation; **suspected cause, not a proven
+Windows trace**. S2 visual, no known financial impact. [Bug record](bug_tracker.md#bug-029--animated-meong-header-restarts-during-sandbox-qris-polling-1-november-2026)
+and [queued next step](next_step.md#bug-029--qris-sandbox-header-meong-never-finishes-edge-to-edge-flight-open).
+**OPEN, NOT FIXED / NOT TESTED**, no code/test change, no CI/device PASS claimed.
+AR-00–13 and active commercial/privacy release gates remain prioritized.
+
+
 ## 31 October — BUG-028 live preparation / matching CI verified
 
 Functional52d69fd: original live STARTING retains ownership through idle/pause
