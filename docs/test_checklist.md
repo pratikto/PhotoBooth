@@ -1,6 +1,6 @@
 # Meong Photobooth — test evidence and acceptance
 
-31 October latest BUG-026 correction: owner FAIL at ecc6733, reproduced startup/grey buttons. Automatic three-expiration flow, no unpaid ticket. Focused50 +final configured5 PASS; full/current CI next. Actual owner/provider retest pending; historical evidence below remains unchanged.
+31 October latest BUG-026 correction: owner FAIL at ecc6733 reproduced. Follow-up118b763 full1259/1255PASS/4optionalSKIP, zero fail/error; matching CI41208622748 all three SUCCESS.12 portable methods Windows/Linux +11 native renewal/control methods Linux PASS; six native PNGs and44-step browser guide/export verified. QR1→QR2→QR3→ads, no unpaid ticket. Actual owner/provider follow-up pending; matrix unchanged. [Receipt](qa/portrait-v2-sandbox/evidence/bug026-three-expiries.json).
 
 31 October BUG-026: functional5201c10 full1251 run/1247 PASS/0 FAIL/ERROR/4optional SKIP,491.880s. Corrected CI0d92831/run41205340183 all three SUCCESS; Windows194/Linux493 PASS, native121/120PASS/1skip. Eleven new portable and four native methods individually PASS. [Receipt/history/manual limits](qa/portrait-v2-sandbox/evidence/bug026-verification.json). Owner laptop/provider NOT_RUN; whole matrix unchanged.
 

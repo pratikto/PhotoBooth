@@ -361,7 +361,7 @@ Contoh catatan (bukan hasil): L07 — A berhasil, B berhasil (A2-R tetap dan ret
 
    **Seharusnya:** Booth kembali siap kunjungan baru setelah pelepasan terkonfirmasi, tanpa mengklaim foto sudah dicetak/refund atau menghapus hak A. Jika gagal/tertahan, jangan mulai pesanan pengganti.
 
-5. Sebagai pengunjung B, klik MULAI FOTO dan pilih desain lain agar mudah dibedakan. Buat pesanan uji baru melalui alur normal dan simpan tiket B sendiri. JANGAN konfirmasi pembayaran B; cukup sampai QR menunggu simulator.
+5. Sebagai pengunjung B, klik MULAI FOTO dan pilih desain lain agar mudah dibedakan. Buat pesanan uji baru melalui alur normal. B belum memerlukan tiket. JANGAN konfirmasi pembayaran B; cukup sampai QR menunggu simulator.
 
    **Seharusnya:** Tidak ada foto/strip/input tiket A yang muncul di kunjungan B. Pesanan B memang kunjungan baru setelah pelepasan, bukan pembayaran ulang untuk memulihkan A.
 

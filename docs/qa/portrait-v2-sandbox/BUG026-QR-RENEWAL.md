@@ -19,7 +19,21 @@ is superseded by this explicit automatic three-expiration instruction.
 Regression tests must cover real configured factory startup, provider reservation,
 three expirations, deferred paid ticket, lost reply/restart and claim buttons.
 
-## 31 October — owner retest FAIL at ecc6733 / startup follow-up
+Delivered functional **118b7630f5692b171c2659f23f48ce5a22556664**. Full1259 run/
+1255PASS/4optionalSKIP, zero fail/error,489.686s. Matching CI41208622748 all three
+SUCCESS: twelve portable methods Windows/Linux, ten renewal native +one busy
+claim method Linux PASS. Six native screenshots reviewed (800x1280/452x900),
+both payment payloads verified synthetic/nonpayable; no ticket/PIN export. Native
+saved-factory fixture reuses actual configuration/journal/client and replaces
+only transport/QR pixels with in-process/offline seams. Original helper import
+path error in scratch renderer corrected, never an application-test PASS.
+Browser9 groups/44 steps/export/storage/fallback PASS. [Exact receipt](evidence/bug026-three-expiries.json).
+Owner follow-up at this source remains pending; prior ecc6733 case was FAIL.
+Manual BUAT QR BARU/30s remains only on safely held failure fallback; it does not
+interrupt the normal automatic three-expiration flow. No actual merchant or
+owner data was accessed; only dedicated Sandbox changes.
+
+## 31 October — initial owner-failure diagnosis (historical proposal, superseded above)
 
 Owner confirms exact laptop SHA ecc6733 and again sees SESI TERSIMPAN with all
 four claim actions disabled. Prior full/CI PASS remain historical synthetic

@@ -2,14 +2,15 @@
 
 ## BUG-026 — expired unpaid QR trapped in customer recovery (31 October)
 
-S2 — OWNER RETEST FAIL at ecc6733, follow-up focused-verified; actual owner retest pending.
-Latest requirement: no ticket before payment; automatic same-cart replacement
-on first/second verified unpaid expiry, third expiry returns advertising. Fixed
-saved-expired configured startup, throttled-provider ticket routing and permanently
-grey rebuilt claim controls. Focused50 +final configured5 PASS, zero fail/error/skip;
-full/screenshots/current CI next. Historical1251/CI41205340183 evidence did not
-cover owner startup case and does not resolve it.
-[Current contract/checkpoint](qa/portrait-v2-sandbox/BUG026-QR-RENEWAL.md).
+S2 — OWNER RETEST FAIL at ecc6733; follow-up SOURCE REGRESSION VERIFIED at118b763,
+actual owner/device/provider follow-up pending. No unpaid ticket; first/second
+verified unpaid expiry auto-renew same cart, third returns ads. Saved-expired
+startup/provider reservation and rebuilt grey claim controls corrected. Full1259/
+1255PASS/4optionalSKIP, zero fail/error; matching CI41208622748 all3 SUCCESS.
+All12 portable methods Windows/Linux and11 native renewal/control methods Linux
+PASS. Six native screenshots +offline guide/export verified. Preserve previous
+synthetic1251/CI41205340183 history; it did not resolve the reported owner case.
+[Current contract/evidence](qa/portrait-v2-sandbox/BUG026-QR-RENEWAL.md).
 
 
 ## 30 October — BUG-025 — legacy Sandbox session without customer ticket

@@ -2,7 +2,7 @@
   "date": "2026-10-31",
   "base": "c478bce2e63478ead03d88b52efe8ad3738ef715",
   "core_source": "93f2c9562c01d362ef578e39b73878663f65bb1d",
-  "status": "REGRESSION_AND_CORRECTED_SOURCE_CI_VERIFIED_OWNER_LAPTOP_NOT_RUN",
+  "status": "HISTORICAL_SYNTHETIC_PASS_SUPERSEDED_OWNER_RETEST_FAIL",
   "scope": "Approved same-checkout Sandbox expiry renewal, same selection/amount; one auto renewal while live, then manual button; user refinement: untouched button returns to advertising after30s. New order gets its own save-ticket gate.",
   "focused": {
     "core_checkpoint": {
@@ -129,5 +129,6 @@
     "sha": "ecc67335b8b9c36d3d5bb3fa04b166d14eba39be",
     "result": "FAIL",
     "observation": "Saved customer ticket page/all claim controls disabled; latest owner requires three expirations and no unpaid ticket."
-  }
+  },
+  "historical_status_before_owner_retest": "REGRESSION_AND_CORRECTED_SOURCE_CI_VERIFIED_OWNER_LAPTOP_NOT_RUN"
 }

@@ -1,7 +1,7 @@
 {
   "date": "2026-10-31",
   "base": "ecc67335b8b9c36d3d5bb3fa04b166d14eba39be",
-  "status": "FOLLOWUP_FOCUSED_VERIFIED_FULL_CI_PENDING_OWNER_RETEST_PENDING",
+  "status": "FULL_AND_MATCHING_SOURCE_CI_VERIFIED_OWNER_FOLLOWUP_RETEST_PENDING",
   "scope": "Dedicated Sandbox: QR1 expiry -> QR2, QR2 expiry -> QR3, QR3 expiry -> ads. Fresh unpaid provider proof and old archive required. Same cart/amount. No formatted recovery ticket or ticket image before paid. Internal capability binding retained. Saved expiry boot automatic, stale busy claim controls repaired.",
   "owner_retest_at_base": "FAIL",
   "regression_before": {
@@ -37,10 +37,113 @@
     "photobooth/kiosk_v2/sandbox_views.py": "f76d489810dc832dae4439957806296a0ebb076ea98603a93b6c9636ac6bdc75"
   },
   "full": {
-    "status": "NOT_RUN"
+    "source": "118b7630f5692b171c2659f23f48ce5a22556664",
+    "run": 1259,
+    "pass": 1255,
+    "fail": 0,
+    "error": 0,
+    "skip": 4,
+    "seconds": 489.686,
+    "environment": {
+      "os": "Linux",
+      "python": "3.12.14",
+      "Kivy": "2.3.1",
+      "ffpyplayer": "4.5.3",
+      "display": "SDL offscreen/software GL, dummy audio; GUI/audio opt-ins"
+    },
+    "skip_reasons": [
+      "Three optional native palm-model asset checks",
+      "One native video/ffmpeg opt-in check"
+    ],
+    "required_method_receipts": {
+      "portable": 12,
+      "native_renewal": 10,
+      "native_busy_claim": 1
+    }
   },
   "ci": {
-    "status": "NOT_RUN"
+    "run": 41208622748,
+    "url": "https://github.com/pratikto/PhotoBooth/actions/runs/41208622748",
+    "source": "118b7630f5692b171c2659f23f48ce5a22556664",
+    "jobs": [
+      {
+        "id": 124558758495,
+        "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+        "conclusion": "success"
+      },
+      {
+        "id": 124558758706,
+        "name": "Navigation and audio lifecycle",
+        "conclusion": "success"
+      },
+      {
+        "id": 124558758857,
+        "name": "Windows Python 3.12 native SDL audio (dummy output)",
+        "conclusion": "success"
+      }
+    ],
+    "linux": {
+      "recovery": {
+        "run": 501,
+        "pass": 501,
+        "skip": 0
+      },
+      "native": {
+        "run": 121,
+        "pass": 120,
+        "skip": 1
+      },
+      "portable_methods": [
+        "test_qris_qr_renewal.QrRenewalTests.test_archive_save_and_replacement_journal_faults_never_send_new_charge",
+        "test_qris_qr_renewal.QrRenewalTests.test_cached_expired_raw_mismatch_and_entitlements_never_grant_replacement",
+        "test_qris_qr_renewal.QrRenewalTests.test_disabled_and_mock_profiles_cannot_issue_expiry_replacement_authority",
+        "test_qris_qr_renewal.QrRenewalTests.test_expired_runtime_proof_cannot_be_replaced_by_a_cached_journal_flag",
+        "test_qris_qr_renewal.QrRenewalTests.test_late_settlement_during_reverification_holds_original_paid_rights",
+        "test_qris_qr_renewal.QrRenewalTests.test_live_unchecked_expiry_waits_then_renews_automatically_when_fresh",
+        "test_qris_qr_renewal.QrRenewalTests.test_lost_replacement_reply_reuses_durable_new_key_after_restart",
+        "test_qris_qr_renewal.QrRenewalTests.test_operator_late_settlement_revokes_recent_expiry_proof_and_keeps_original_identity",
+        "test_qris_qr_renewal.QrRenewalTests.test_pause_or_restart_retires_automatic_authority_and_proof",
+        "test_qris_qr_renewal.QrRenewalTests.test_readiness_failure_or_privacy_change_in_preflight_blocks_creation",
+        "test_qris_qr_renewal.QrRenewalTests.test_three_expirations_allow_two_automatic_replacements_and_never_qr_four",
+        "test_qris_qr_renewal.QrRenewalTests.test_verified_expiry_archives_same_cart_without_ticket_until_paid"
+      ],
+      "native_renewal_methods": [
+        "test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_qr_renewal_already_archived_expiry_reopens_with_fresh_check_and_new_qr",
+        "test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_qr_renewal_missing_camera_and_pause_cannot_create_replacement",
+        "test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_qr_renewal_operator_expired_does_not_need_ticket_or_paid_isolation",
+        "test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_qr_renewal_saved_expired_boot_real_factory_automatically_replaces_without_ticket",
+        "test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_qr_renewal_saved_expired_boot_waits_for_fresh_provider_without_requesting_ticket",
+        "test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_qr_renewal_saved_paid_order_keeps_original_ticket_and_photo_privacy",
+        "test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_qr_renewal_saved_third_expiry_returns_to_ads_without_fourth_charge",
+        "test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_qr_renewal_three_expirations_then_ads_without_unpaid_ticket_at_both_sizes",
+        "test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_qr_renewal_ticket_is_presented_only_after_confirmed_payment",
+        "test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_qr_renewal_unpressed_button_returns_to_ads_at_30_seconds_without_rebuild_reset"
+      ],
+      "busy_claim_methods": [
+        "test_kiosk_v2_sandbox_widgets.SandboxWidgetTests.test_recovery_buttons_unlock_after_busy_rebuild_and_keep_typed_ticket"
+      ]
+    },
+    "windows": {
+      "ledger": {
+        "run": 195,
+        "pass": 195,
+        "skip": 0
+      },
+      "portable_methods": [
+        "test_qris_qr_renewal.QrRenewalTests.test_archive_save_and_replacement_journal_faults_never_send_new_charge",
+        "test_qris_qr_renewal.QrRenewalTests.test_cached_expired_raw_mismatch_and_entitlements_never_grant_replacement",
+        "test_qris_qr_renewal.QrRenewalTests.test_disabled_and_mock_profiles_cannot_issue_expiry_replacement_authority",
+        "test_qris_qr_renewal.QrRenewalTests.test_expired_runtime_proof_cannot_be_replaced_by_a_cached_journal_flag",
+        "test_qris_qr_renewal.QrRenewalTests.test_late_settlement_during_reverification_holds_original_paid_rights",
+        "test_qris_qr_renewal.QrRenewalTests.test_live_unchecked_expiry_waits_then_renews_automatically_when_fresh",
+        "test_qris_qr_renewal.QrRenewalTests.test_lost_replacement_reply_reuses_durable_new_key_after_restart",
+        "test_qris_qr_renewal.QrRenewalTests.test_operator_late_settlement_revokes_recent_expiry_proof_and_keeps_original_identity",
+        "test_qris_qr_renewal.QrRenewalTests.test_pause_or_restart_retires_automatic_authority_and_proof",
+        "test_qris_qr_renewal.QrRenewalTests.test_readiness_failure_or_privacy_change_in_preflight_blocks_creation",
+        "test_qris_qr_renewal.QrRenewalTests.test_three_expirations_allow_two_automatic_replacements_and_never_qr_four",
+        "test_qris_qr_renewal.QrRenewalTests.test_verified_expiry_archives_same_cart_without_ticket_until_paid"
+      ]
+    }
   },
   "owner_laptop": "NOT_RUN_AT_FOLLOWUP",
   "actual_midtrans": "NOT_RUN",
@@ -48,5 +151,62 @@
     "Synthetic HTTP/SQLite/native fixtures, no real merchant or owner journal accessed.",
     "Paid/owed/photo/release/uncertain states never become replacement permission.",
     "No production/default/new branch/merge/deployment or printer/Drive activation."
-  ]
+  ],
+  "functional_source": "118b7630f5692b171c2659f23f48ce5a22556664",
+  "screenshots": [
+    {
+      "file": "qr-renewal-three-native/01-auto-renewed-payment-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "062f50a4d3112344a4609f505070b601f0f799d136f8760c369bb59829115cf2"
+    },
+    {
+      "file": "qr-renewal-three-native/01-auto-renewed-payment-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "1cadbb97585d80f28649ef16171034ce9ca3f2c62d76bb45ecd40c057c6a726f"
+    },
+    {
+      "file": "qr-renewal-three-native/02-third-expiry-advertising-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "849ffdff04fd7221226084efe1b2bac6bb38ecf647499b197372b584a697153a"
+    },
+    {
+      "file": "qr-renewal-three-native/02-third-expiry-advertising-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "d5763cc524c7c23f13f25a39d0443f91f2846f2deda6cb141bc0779ae93acc7c"
+    },
+    {
+      "file": "qr-renewal-three-native/03-saved-expiry-verification-452x9000001.png",
+      "size": [
+        452,
+        900
+      ],
+      "sha256": "a79ce6e3125ecb4055ced630017a28f014afd732916670e1dd1d672e79ec6a21"
+    },
+    {
+      "file": "qr-renewal-three-native/03-saved-expiry-verification-800x12800001.png",
+      "size": [
+        800,
+        1280
+      ],
+      "sha256": "a554cd08aae83032433238d89a057bb35bbaed20763ae040403e77e4c27223e2"
+    }
+  ],
+  "screenshots_review": "All six original native PNGs reviewed at 800x1280/452x900: auto replacement notice/link, advertising after third expiry, saved unused verification with no ticket field. Synthetic payment payload only, no ticket or PIN captured.",
+  "checklist_browser": "PASS: original 9 groups/44 expected steps, copy/TXT/notes/localStorage/reset/fallback and 800/452/360 browser layouts, no page errors. Instruction changes only; not device/payment evidence.",
+  "screenshots_synthetic_payment_decode": {
+    "452x900": true,
+    "800x1280": true
+  }
 }

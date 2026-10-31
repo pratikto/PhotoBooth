@@ -1,6 +1,6 @@
 # Meong Photobooth documentation — GUI v2
 
-31 October latest — [owner correction: automatic QR1→QR2→QR3→ads, ticket after payment](qa/portrait-v2-sandbox/BUG026-QR-RENEWAL.md). Owner retest FAIL at ecc6733; follow-up focused50 +configured5 PASS, full/current CI pending. Earlier renewal/new-ticket/30s evidence is historical.
+31 October latest — [automatic QR1→QR2→QR3→ads, ticket after payment](qa/portrait-v2-sandbox/BUG026-QR-RENEWAL.md). Functional118b763 full1259/1255PASS/4optionalSKIP, zero fail/error; matching CI41208622748 all three SUCCESS. Saved-expired startup and grey controls reproduced/fixed in source; actual owner follow-up pending. Earlier one-auto/manual/new-ticket/30s evidence is historical.
 
 ## 30 October — mock purchased-print chain verified
 

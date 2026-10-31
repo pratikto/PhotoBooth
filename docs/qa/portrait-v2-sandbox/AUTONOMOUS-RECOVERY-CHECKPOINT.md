@@ -1,38 +1,47 @@
 # Autonomous recovery — session checkpoint and resume contract
 
-## 31 October — BUG-026 owner retest correction: three expirations, ticket after payment
+## 31 October — BUG-026 three-expiration flow source-verified; owner follow-up pending
 
-Owner confirms laptop ecc6733 and reports the saved-ticket lock again: previous
-owner acceptance is FAIL, despite historical synthetic PASS. Latest explicit
-owner flow supersedes the earlier one-auto/manual-renewal/save-ticket-before-pay
-contract: unpaid expiry → fresh Midtrans proof → old archive → automatic same-cart
-new ID/QR; QR1→QR2→QR3, third expiration returns advertising with no QR4. Unpaid
-customers get no formatted ticket/QR image or acknowledgment gate. Existing internal
-capability hash still binds the order; visitor ticket is shown only after PAID,
-before photo consent. Existing paid recovery remains private and order-bound.
+Functional **118b7630f5692b171c2659f23f48ce5a22556664** pushed/remote verified on
+feature/portrait-kiosk-v2-next. Latest owner instruction supersedes the previous
+one-auto/manual/save-ticket-before-pay behavior: unpaid QR directly, first and
+second verified expiry automatically archive/replace with same designs/copies/
+amount and new ID/QR; third verified expiry returns ads, no QR4. Ticket is only
+formatted/rendered after PAID and before photo consent; original internal hash
+binding remains. Saved expired sessions follow this automatically, including
+already archived expiry after fresh recheck. Unknown/cached expiry waits on a
+neutral check screen, no old-ticket input or replacement permission. Paid/photo/
+OWED/release rights remain private, unchanged and attached to the original order.
 
-Reproduced three original FAIL cases at ecc6733: configured saved EXPIRED boot
-returned ads instead of renewal; reserved provider observation routed to ticket;
-claim controls rebuilt busy stayed grey after poll deliberately preserved input.
-Controller/adapter now classify unused payments without granting private rights,
-wait on fresh provider proof, authorize bounded boot/live renewal, persist/hard-cap
-the existing counter, and reverify already archived expiry before replacement.
-Claim controls synchronize worker busy state in place without losing typed proof.
-Only dedicated configured Sandbox opts in; merchant/print/Drive stay OFF.
+Owner retest at ecc6733 was FAIL, now preserved accurately. Three failing
+regressions reproduced startup routing/provider reservation/permanently grey
+claim controls. Claim busy state now updates in place while keeping typed proof.
+Existing counter is durable and core rejects third replacement/stale/manual
+requests. Existing readiness, privacy generation, lost-response idempotency,
+archive/save failure and provider-evidence guards remain. The old30s button is
+only a failure/manual fallback; normal approved path has no renewal-button stop.
 
-Focused **50 PASS/0 FAIL/ERROR/SKIP,65.750s**; then final configured-boot seam
-**5 PASS/0 FAIL/ERROR/SKIP,3.112s** with synthetic QR pixels (no external image GET).
-Twelve portable renewal methods +ten native renewal methods +one button regression
-registered in CI receipts. Covers both native sizes, post-paid ticket/consent/
-original capture, count cap after restart, delayed verification and saved PAID
-privacy. Updated beginner Markdown/HTML guide; original historical evidence kept.
+Final full **1259 run/1255 PASS/0 FAIL/0 ERROR/4 optional SKIP,489.686s**, Linux/
+Python3.12.14/Kivy2.3.1/ffpyplayer4.5.3, softwareGL/dummy audio, GUI/audio opt-ins.
+Three optional palm asset checks and one native-video opt-in remain SKIP. Exact
+same-source **CI41208622748 all three SUCCESS**: Windows ledger195 PASS; Linux
+recovery501 PASS, native121/120PASS/1optional palm SKIP. All12 portable methods
+PASS Windows/Linux; all10 renewal native +one busy-claim method PASS Linux and
+full. Earlier focused50 +final configured5 PASS. Six native original PNGs at
+800x1280/452x900 reviewed; both payment payloads decode to synthetic nonpayable
+fixture, no ticket/PIN exported. Offline checklist9 groups/44 expected steps,
+notes/copy/TXT/reset/storage/fallback/browser sizes PASS; instructions reconciled.
+Exact receipt: evidence/bug026-three-expiries.json (QA-relative path).
 
-Final full regression, screenshots and matching-source CI are NEXT, not yet PASS.
-Owner actual Windows/Midtrans retest remains pending; do not claim laptop resolved.
-See BUG026-QR-RENEWAL.md and evidence/bug026-three-expiries.json. Source commit is
-this containing Git checkpoint; resolve its exact SHA from Git. Same existing
-branch, no production/default/merge/deploy/new branch or OPS implementation.
-Unrelated dirty /workspace/PhotoBooth and untracked work/ remain local-only.
+**Next:** actual owner laptop/Midtrans check only. Close the app, pull --ff-only
+on the same branch and run python tools/run_portrait_v2_sandbox.py in the active
+Kivy environment. No old ticket is needed for verified unused expiry. Owner
+follow-up actual device/provider NOT_RUN; do not equate CI to owner acceptance or
+close BUG-026 formally. Whole UX-07/matrix59/0/9/1, AR-13/external/commercial and
+OPS queued gates unchanged. No production/new branch/default/merge/deploy or
+printer/Drive activation. Final checkpoint is docs/evidence only; app/tests/tools/
+workflow remain exactly118b763, verified by Git and source hashes. Old dirty
+/workspace/PhotoBooth and untracked work/ remain private/local-only.
 
 
 ## 31 October — BUG-026 renewal +30s return fully source-verified
