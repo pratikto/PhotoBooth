@@ -1,5 +1,11 @@
 # AR-13 — release-readiness assessment
 
+## 1 November 2026 — Approved UAH scope is NOT production-ready / NOT IMPLEMENTED
+
+The owner approved a new complete unattended recovery and safe auto-isolation target, **not a source or production release**. [Current canonical specification, six detailed flowcharts, decision log and 50 UAH tests](UNATTENDED-SESSION-HANDOFF-OWNER-APPROVED.md). The dependencies P0.1–P0.6 (receipt failure -> original on-screen ticket 30s + NEXT, protected lock -> Advertising, scoped machine PAID two-phase release, PENDING/UNKNOWN/aged claim safety, old-ticket recovery from ads, full fault and physical acceptance) are **NOT_IMPLEMENTED / NOT_RUN as new functionality** at the cited read-only source `81c3c6a`. Printed-ticket Sandbox path and AR-09 PIN/manual release already exist separately; they must not be relabeled as completed UAH.
+
+The owner accepts forfeiture of *self-service protected photo-session recovery* when an original printed/on-screen ticket was genuinely offered but not saved; this never satisfies PAID/OWED or automatically refunds. A printer transport SUBMITTED is not physical paper proof, and support/finance approval remains separate. Protected ads require backend occupancy fences and verified ACK before any new order; UNKNOWN provider outcome cannot be reset or treated as unpaid. The original AR-13 **CONDITIONAL / NOT READY FOR UNATTENDED COMMERCIAL RELEASE** conclusion remains unchanged; the new UAH acceptance obligations are additive. No tests, code, real devices, credentials or commercial gates were touched by this documentation update.
+
 ## 31 October — BUG-028 live preparation / matching CI verified
 
 Functional52d69fd: original live STARTING retains ownership through idle/pause
