@@ -1,5 +1,11 @@
 # P4b Sandbox → P5 readiness (FEAT-020 / FEAT-022)
 
+## 1 November 2026 — Latest owner-approved target: unattended safe release and original-ticket responsibility
+
+[Complete English design, six flowcharts, signed-off decisions, all 50 REQUIRED/NOT_RUN UAH cases and step-by-step Codex stages](UNATTENDED-SESSION-HANDOFF-OWNER-APPROVED.md). This supplements the existing AR-00–AR-13 source; **nothing in UAH is implemented by documenting it**, and the owner explicitly instructed that **no code** be changed in this discussion.
+
+**Priority:** P0.1 original receipt print and 30-second on-screen QR/full-code fallback + NEXT when not acknowledged; P0.2 privacy lock -> ADS_PROTECTED; P0.3 safe PAID/OWED automatic PREPARE/local-isolate/ACK/archive without operator PIN (requires separate scoped machine authorization); P0.4 safe terminal unpaid vs UNKNOWN/reconciliation; P0.5 original-ticket self-claim from Advertising, valid-but-busy WAIT; P0.6 full fault/device tests. Loss of a genuinely offered ticket forfeits **self-service private-session restoration only**; PAID/OWED and legitimate non-media support remain separate. No automatic refunds or print replays. Keep BUG-027/BUG-028 tested current behavior and AR-13 CONDITIONAL; P1 BUG-029 and real Windows acceptance, P2 manual financial remedy policy.
+
 ## 31 October — BUG-028 live preparation / matching CI verified
 
 Functional52d69fd: original live STARTING retains ownership through idle/pause
