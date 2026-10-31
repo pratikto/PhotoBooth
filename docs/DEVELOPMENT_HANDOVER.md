@@ -1,5 +1,40 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 31 October — BUG-027 paid receipt → direct camera + approved-photo print mounted
+
+Owner explicitly authorizes both prints in Sandbox. Live PAID/reserved original
+order now submits one recovery receipt through original ThermalPrinter settings,
+then automatically runs original prepare/allocation/STARTED handshake into camera.
+No mandatory on-screen ticket/save/extra-photo-confirmation step. SIAP/countdown,
+review/retake and photo approval remain user actions; approved strip auto-prints
+with existing batch/copy/manifest guard. New dedicated Sandbox print profile ON
+in GUI only, backend/Drive OFF, no production. Older “Sandbox all printing OFF”
+and paid ticket-screen guidance superseded by this explicit owner correction.
+
+Receipt SENDING is durable before transport, SUBMITTED/UNCERTAIN recorded without
+raw token/image/spool persistence; restart never reprints. Exact printed QR
+restores original private photo in fixture without a second receipt or charge.
+Original prephoto minimize/long payment wait retain live checkout behind hidden
+UI, old wait clock resets on photo admission. Allocated/private/restarted sessions
+still need proof. Start/restore/isolation allow only explicit Sandbox photo-printer
+mount; existing uncertain manifest checks and no replay after restore retained.
+
+Stage1 renderer/transport7e814da pushed/verified. Stage2 integration **111 PASS,
+0 FAIL/ERROR/SKIP,78.114s**, final focused **39 PASS/0 FAIL/ERROR/SKIP,21.703s**,
+including actual configuration of both printers/Drive OFF. Native both sizes:
+receipt once → camera without extra taps → approved photo once; printer failure,
+old idle/minimize, private pause and printed-proof restore. First session5ERROR
+from booth_id absent in public order (now supplied from bound controller context),
+initial native2ERROR wrong fixture key captured_count→captured and old launcher
+OFF expectation FAIL were corrected; no safety guard bypass. New12 portable
+receipt +seven native methods registered in CI; guide reconciled to printed ticket.
+
+Final full regression, current matching CI and native/receipt previews NEXT.
+Actual owner Windows/printer/paper/provider NOT_RUN; commercial matrix/AR-13/OPS
+unchanged. Same branch, no default/merge/deploy/new branch. Source commit is this
+containing checkpoint; old dirty legacy and work/ stay local-only.
+
+
 ## 31 October — BUG-027 printed receipt/direct camera, first safe increment
 
 Owner corrects paid flow: no on-screen save-ticket step; print one recovery

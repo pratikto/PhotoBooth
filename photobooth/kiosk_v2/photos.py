@@ -34,7 +34,7 @@ class PhotoTest:
     """Single admitted test run; originals, retake quota and copies remain v1 rules."""
 
     def __init__(self, root, *, booth_id='PB001V2', printer=None, drive_client=None,
-                 auto_print=False, workspace=None, drive_requested=None, raster_printer=None):
+                 auto_print=False, workspace=None, drive_requested=None, raster_printer=None, sandbox_print=False):
         self.root = Path(root)
         self.workspace = workspace
         self.store = (TransactionStore(workspace.root, workspace.counter_path, workspace.booth_id, layout_version=2, capture_protocol=1)
@@ -43,6 +43,7 @@ class PhotoTest:
         self.raster_printer = raster_printer or printer
         self.content = None
         self.printer = printer
+        self.sandbox_print=bool(sandbox_print)
         self.auto_print = bool(auto_print and printer is not None)
         self.drive_client = drive_client
         self.pool = None
@@ -140,7 +141,7 @@ class PhotoTest:
         from photobooth.checkout_store import identifier
         from photobooth.fulfillment_contract import frozen_contract
         import hashlib
-        if (self.workspace or self.pool or self.printer or self.drive_client or self.drive_requested):
+        if (self.workspace or self.pool or (self.printer and not self.sandbox_print) or self.drive_client or self.drive_requested):
             raise ValueError('Bound Sandbox capture requires delivery transports off')
         for key in ('transaction_id', 'fulfillment_id', 'order_id', 'grant_id', 'allocation_operation_id', 'booth_id', 'merchant_id'):
             identifier(binding.get(key))
@@ -177,7 +178,7 @@ class PhotoTest:
         from .photo_recovery import reconstruct
         if not isinstance(permit, ResumePermit):
             raise CaptureRecoveryRequired('Original customer authorization required')
-        if self.workspace or self.printer or self.drive_client or self.drive_requested:
+        if self.workspace or (self.printer and not self.sandbox_print) or self.drive_client or self.drive_requested:
             raise CaptureRecoveryRequired('Private Sandbox resume requires delivery transports off')
         if (self._closed.is_set() or
                 (not self._private_hidden and (self.transaction is not None or self.phase != 'confirm')) or
@@ -235,7 +236,7 @@ class PhotoTest:
         """Serialized worker barrier before backend may release booth occupancy."""
         from photobooth.release_authority import trusted_isolation_receipt
         from photobooth.booth_storage import checked_path
-        if self.workspace or self.printer or self.drive_client or self.drive_requested or self.drive_worker:
+        if self.workspace or (self.printer and not self.sandbox_print) or self.drive_client or self.drive_requested or self.drive_worker:
             raise RuntimeError('Sandbox transports must be isolated before release')
         if self.transaction:
             binding=self.transaction.manifest.get('payment_binding') or {}
@@ -609,7 +610,8 @@ def configured_test(root, *, configuration_root=None, storage_layout=None):
         from photobooth.printer import ThermalPrinter
         from photobooth.printer_settings import load_printer_config
         raster_printer = printer or ThermalPrinter(load_printer_config(configuration_root / 'data' / 'printer_settings.json'))
-    return PhotoTest(root, booth_id=booth_id,
+    from .delivery_options import sandbox_print_enabled
+    return PhotoTest(root, booth_id=booth_id, sandbox_print=sandbox_print_enabled(),
                      workspace=configured_workspace(configuration_root) if layout2 else None,
                      drive_requested=os.environ.get('PHOTOBOOTH_V2_DRIVE') == '1', raster_printer=raster_printer,
                      printer=printer, drive_client=client,

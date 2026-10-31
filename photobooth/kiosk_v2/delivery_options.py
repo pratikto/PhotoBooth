@@ -3,6 +3,23 @@ import argparse
 import os
 
 
+def sandbox_print_enabled(env=None):
+    env=os.environ if env is None else env
+    return (env.get('PHOTOBOOTH_V2_SANDBOX_PRINT')=='1'
+            and env.get('PHOTOBOOTH_V2_PRINT')=='1'
+            and env.get('PHOTOBOOTH_V2_CHECKOUT_SANDBOX')=='1'
+            and env.get('PHOTOBOOTH_V2_CHECKOUT_MOCK')!='1'
+            and env.get('MEONG_QRIS_MODE')=='sandbox'
+            and env.get('PHOTOBOOTH_V2_DRIVE')!='1'
+            and not env.get('MIDTRANS_SERVER_KEY') and not env.get('MIDTRANS_MERCHANT_ID'))
+
+
+def forbidden_sandbox_delivery(env=None):
+    env=os.environ if env is None else env
+    return (env.get('PHOTOBOOTH_V2_DRIVE')=='1'
+            or (env.get('PHOTOBOOTH_V2_PRINT')=='1' and not sandbox_print_enabled(env)))
+
+
 def configure_delivery(argv=(), *, environ=None):
     """No credentials, network, settings writes or native imports on this path."""
     env = os.environ if environ is None else environ
@@ -24,8 +41,7 @@ def configure_delivery(argv=(), *, environ=None):
             parser.error('--manual-print requires --print or PHOTOBOOTH_V2_PRINT=1')
         updates['PHOTOBOOTH_V2_AUTO_PRINT'] = '0'
     selected = {**env, **updates}
-    if selected.get('PHOTOBOOTH_V2_CHECKOUT_SANDBOX') == '1' and any(
-            selected.get(key) == '1' for key in ('PHOTOBOOTH_V2_PRINT', 'PHOTOBOOTH_V2_DRIVE')):
-        parser.error('The isolated merchant Sandbox trial keeps printer and Drive disabled.')
+    if selected.get('PHOTOBOOTH_V2_CHECKOUT_SANDBOX') == '1' and forbidden_sandbox_delivery(selected):
+        parser.error('Sandbox printing needs its dedicated profile; Drive stays disabled.')
     env.update(updates)
     return args

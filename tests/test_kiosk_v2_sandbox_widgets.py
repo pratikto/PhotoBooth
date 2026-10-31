@@ -66,15 +66,17 @@ class SandboxWidgetTests(unittest.TestCase):
                     f.store.close();Window.remove_widget(app.stage)
 
     @contextmanager
-    def booth(self, *, recovery_pin=None):
+    def booth(self, *, recovery_pin=None, printer=None):
         with TemporaryDirectory() as temp, patch.dict(os.environ,{
             'PHOTOBOOTH_V2_CHECKOUT_SANDBOX':'1','PHOTOBOOTH_V2_CHECKOUT_MOCK':'0',
             'MEONG_QRIS_MODE':'sandbox','MIDTRANS_SERVER_KEY':'','MIDTRANS_MERCHANT_ID':'',
             'PHOTOBOOTH_AUDIO':'0','PHOTOBOOTH_CAMERA':'0','PHOTOBOOTH_AD_VIDEO':'0',
             'PHOTOBOOTH_FACE_TRIGGER':'0','PHOTOBOOTH_PALM_TRIGGER':'0'}):
             fixture=Fixture(Path(temp),recovery_pin=recovery_pin)
+            fixture.service.receipt_printer=printer
             device=Mock();device.read.return_value=np.zeros((120,160,3),dtype=np.uint8)
-            service=PhotoTest(Path(temp)/'photos')
+            service=PhotoTest(Path(temp)/'photos',printer=printer,auto_print=printer is not None,
+                              sandbox_print=printer is not None)
             with patch('photobooth.kiosk_v2.photos.configured_test',return_value=service):
                 app=PortraitKioskV2App(camera_device=device,sandbox_jobs=fixture.jobs)
                 Window.add_widget(app.build())
@@ -767,21 +769,15 @@ class SandboxWidgetTests(unittest.TestCase):
                 self.assertEqual(app.navigation.page,ADVERT);self.assertFalse(f.flow.active)
                 app._poll_sandbox();self.assertEqual(f.provider.charges,3)
 
-    def test_qr_renewal_ticket_is_presented_only_after_confirmed_payment(self):
+    def test_qr_renewal_paid_enters_camera_without_ticket_gate_or_extra_confirmation(self):
         with self.booth() as (app,f):
             f.flow.qr_renewal_enabled=True;self.pending(app)
             self.assertIsNone(f.flow.customer_ticket());self.assertFalse(app._sandbox_view['ticket_required'])
             f.paid();app._sandbox_retry();self.settle(app)
+            self.assertEqual(app.navigation.page,CAPTURE)
             labels=[getattr(w,'text','') for w in app.stage.walk()]
-            self.assertIn('SIMPAN TIKET PEMULIHAN',labels);self.assertNotIn('SALIN LINK QRIS',labels)
-            self.assertNotIn('LANJUT KE PERSETUJUAN FOTO',labels)
-            self.assertTrue(f.flow.customer_ticket());self.assertEqual(f.provider.charges,1)
-            app._sandbox_photo_consent();self.assertFalse(app._sandbox_consent)
-            app._sandbox_ticket_saved();self.settle(app)
-            self.assertIn('LANJUT KE PERSETUJUAN FOTO',[getattr(w,'text','') for w in app.stage.walk()])
-            app._sandbox_photo_consent();self.settle(app)
-            app._admit_photo_test();self.settle(app)
-            self.assertEqual(app.navigation.page,CAPTURE);self.assertEqual(f.provider.charges,1)
+            self.assertNotIn('SIMPAN TIKET PEMULIHAN',labels);self.assertNotIn('LANJUT KE PERSETUJUAN FOTO',labels)
+            self.assertEqual(f.provider.charges,1);self.assertEqual(app._photo_view['captured'],0)
 
     def test_qr_renewal_operator_expired_does_not_need_ticket_or_paid_isolation(self):
         with self.booth(recovery_pin='12345678') as (app,f):

@@ -21,7 +21,8 @@ Never print pending/expired/unknown/review or an unproved reopened order. Existi
 internal hash-at-rest and no raw ticket in logs/journals/previews remain. Render
 in memory at native printer dots, reuse original ThermalPrinter routes and
 ESC/POS encoder/settings. Add an in-memory bitmap entry to avoid saving secret
-receipt images/spools. Durable SENDING before transport; interrupted/failed
+application-owned receipt images/spools (the OS printer spool is part of
+the authorized print transport). Durable SENDING before transport; interrupted/failed
 submission is UNCERTAIN, never auto-reprinted on retry/restart. Submitted is
 transport acknowledgment, not a paper sensor or fulfillment of the photo order.
 
@@ -56,3 +57,9 @@ First isolated renderer/transport increment: 38 focused PASS,0.378s, zero fail/
 error/skip. Five new native-dot/context/route methods, original printer/Windows
 RAW/shared payment printer tests. No GUI mount or device activation yet; next
 durable worker/native paid-to-camera + explicit photo-print mounting.
+
+Mounted stage2: integration111 PASS,78.114s; final focused39 PASS,21.703s, zero
+fail/error/skip. First failed fixture/context assertions corrected and preserved
+in the continuation checkpoint. Both printing switches now explicitly active
+only in the dedicated Sandbox GUI; no extra confirmation/ticket screen. Full/
+CI/native previews next; actual paper/device/provider still NOT_RUN.

@@ -147,8 +147,10 @@ class SavedSandboxCredentialsTests(unittest.TestCase):
                     self.assertEqual(env['MEONG_QRIS_MODE'], 'sandbox')
                 if entry is portrait_main:
                     self.assertIn('tools/run_portrait_v2.py', recorded[1][0])
+                    self.assertEqual(recorded[0][1]['PHOTOBOOTH_V2_PRINT'],'0')
+                    self.assertEqual(recorded[1][1]['PHOTOBOOTH_V2_PRINT'],'1')
+                    self.assertEqual(recorded[1][1]['PHOTOBOOTH_V2_SANDBOX_PRINT'],'1')
                     for _, env in recorded:
-                        self.assertEqual(env['PHOTOBOOTH_V2_PRINT'], '0')
                         self.assertEqual(env['PHOTOBOOTH_V2_DRIVE'], '0')
 
     def test_complete_environment_pair_overrides_file_without_reading_it(self):

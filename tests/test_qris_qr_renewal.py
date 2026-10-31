@@ -49,7 +49,7 @@ class QrRenewalTests(TestCase):
         self.assertFalse(new['ticket_required']);self.assertIsNone(self.f.flow.customer_ticket())
         self.assertEqual(self.f.provider.charges,2)
         self.f.paid();paid=self.f.service.check();ticket=self.f.flow.customer_ticket()
-        self.assertTrue(paid['ticket_required']);self.assertTrue(ticket)
+        self.assertFalse(paid['ticket_required']);self.assertTrue(ticket)
         self.f.service.ticket_saved();self.f.flow.lock_customer()
         with self.assertRaises(ValueError):self.f.flow.customer_claim(self.ticket)
         self.f.flow.customer_claim(ticket)

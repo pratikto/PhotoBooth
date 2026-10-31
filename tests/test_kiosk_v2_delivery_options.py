@@ -35,3 +35,14 @@ class DeliveryOptionsTests(unittest.TestCase):
             configure_delivery(['--help'],environ=env)
         self.assertEqual(result.exception.code,0);self.assertEqual(env,{})
         self.assertIn('saved v1 printer settings',output.getvalue())
+
+    def test_explicit_sandbox_receipt_and_photo_profile_allows_print_but_never_drive_or_merchant_secret(self):
+        from photobooth.kiosk_v2.delivery_options import sandbox_print_enabled
+        env={'PHOTOBOOTH_V2_CHECKOUT_SANDBOX':'1','PHOTOBOOTH_V2_PRINT':'1',
+             'PHOTOBOOTH_V2_SANDBOX_PRINT':'1','MEONG_QRIS_MODE':'sandbox','PHOTOBOOTH_V2_DRIVE':'0'}
+        self.assertTrue(sandbox_print_enabled(env));configure_delivery((),environ=env)
+        for change in ({'PHOTOBOOTH_V2_DRIVE':'1'},{'MIDTRANS_SERVER_KEY':'not-a-real-key'},
+                       {'MEONG_QRIS_MODE':'production'},{'PHOTOBOOTH_V2_CHECKOUT_MOCK':'1'}):
+            selected=dict(env,**change);self.assertFalse(sandbox_print_enabled(selected))
+            with redirect_stderr(io.StringIO()),self.assertRaises(SystemExit):
+                configure_delivery((),environ=selected)

@@ -9,11 +9,12 @@ from photobooth.qris_session import KioskCheckout
 from photobooth.qris_evidence import sandbox_qr_url
 from .qr_branding import branded_sandbox_qr_image
 from .demo_game import GameJobs
+from .delivery_options import sandbox_print_enabled, forbidden_sandbox_delivery
 
 ACTIONS = {'boot', 'begin', 'begin_ready', 'check', 'cancel', 'prepare', 'started', 'complete', 'recover',
            'ticket_saved', 'customer_claim', 'scan_claim', 'resume', 'resumed','fulfillment_issue',
            'operator_inspect','prepare_release','prepare_legacy_release','acknowledge_release',
-           'verify_renewal','renew_ready'}
+           'verify_renewal','renew_ready','print_recovery_receipt'}
 
 
 def simulator_qr_url(view):
@@ -61,18 +62,24 @@ def configured_sandbox(root, env=None):
     except BaseException:
         client.close()
         raise
-    return SandboxCheckout(flow)
+    printer=None
+    if sandbox_print_enabled(env):
+        from photobooth.printer import ThermalPrinter
+        from photobooth.printer_settings import load_printer_config
+        printer=ThermalPrinter(load_printer_config(Path(root)/'data'/'printer_settings.json'))
+    return SandboxCheckout(flow,receipt_printer=printer)
 
 
 class SandboxCheckout:
     """All calls run on the existing single-flight worker, including QR download."""
-    def __init__(self, flow, *, image_loader=branded_sandbox_qr_image, connectivity=None):
+    def __init__(self, flow, *, image_loader=branded_sandbox_qr_image, connectivity=None, receipt_printer=None):
         from .connectivity import ConnectivityRestoration
         self.flow, self.image_loader = flow, image_loader
         self.connectivity = ConnectivityRestoration() if connectivity is None else connectivity
         self._connectivity_needed = False
         self.qr = self.qr_identity = None
         self.ticket_qr = self.ticket_identity = None
+        self.receipt_printer=receipt_printer
 
     def view(self):
         data = self.flow.snapshot()
@@ -97,7 +104,7 @@ class SandboxCheckout:
         data['ticket_required'] = bool(order.get('customer_capability_bound')
             and not self.flow.ticket_acknowledged and not self.flow.customer_claim_required
             and data['phase'] in {'CREATING','WAITING','RESERVED'}
-            and (not self.flow.qr_renewal_enabled or order.get('state')=='PAID'))
+            and not self.flow.qr_renewal_enabled)
         data['ticket_qr_rgb'] = None
         ticket = self.flow.customer_ticket() if data['ticket_required'] else None
         if ticket:
@@ -147,7 +154,7 @@ class SandboxCheckout:
         if not self.flow.active:
             prepayment_readiness(self.flow.path.parent/'photo-tests'/'photos',get_templates(),
                 {k:v for k,v in quantities.items() if v},camera_valid,observed_at,
-                delivery_enabled=any(os.environ.get('PHOTOBOOTH_V2_'+key)=='1' for key in ('PRINT','DRIVE')))
+                delivery_enabled=forbidden_sandbox_delivery())
         return self.begin(quantities)
 
     def check(self):
@@ -178,6 +185,10 @@ class SandboxCheckout:
         self.flow.acknowledge_ticket()
         return self.view()
 
+    def print_recovery_receipt(self):
+        self.flow.print_recovery_receipt(self.receipt_printer)
+        return self.view()
+
     def verify_renewal(self, checkout_key, automatic=False):
         self.flow.verify_qr_renewal(checkout_key,automatic)
         view=self.view();view['renewal_automatic']=bool(automatic)
@@ -189,7 +200,7 @@ class SandboxCheckout:
         def ready(quantities):
             prepayment_readiness(self.flow.path.parent/'photo-tests'/'photos',get_templates(),
                 quantities,camera_valid,observed_at,
-                delivery_enabled=any(os.environ.get('PHOTOBOOTH_V2_'+key)=='1' for key in ('PRINT','DRIVE')))
+                delivery_enabled=forbidden_sandbox_delivery())
         self.flow.renew_expired_qr(checkout_key,ready,automatic)
         return self.check()
 

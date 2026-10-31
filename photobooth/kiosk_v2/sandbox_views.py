@@ -34,6 +34,7 @@ class SandboxViews:
         self._sandbox_isolation_epoch = 0
         self._sandbox_qr_idle_key=None
         self._sandbox_qr_idle_deadline=0
+        self._sandbox_auto_photo=False
 
     def _sandbox_submit(self, action, *args):
         if self._closed or self._suspended or not self._sandbox_jobs:
@@ -51,6 +52,7 @@ class SandboxViews:
             button.disabled=busy
 
     def _sandbox_lock_customer(self):
+        self._sandbox_auto_photo=False
         jobs=self._sandbox_jobs
         if jobs and jobs.store and jobs.store.flow.qr_renewal_enabled and not jobs.store.flow.active:
             jobs.store.flow.invalidate_qr_renewal(retire=True)
@@ -78,6 +80,22 @@ class SandboxViews:
         self._sandbox_view={'phase':'RECOVERY','customer_claim_required':True}
         self.navigation.page=SANDBOX_CHECKOUT
         self._show()
+
+    def _sandbox_pause_live_prephoto(self):
+        jobs=self._sandbox_jobs
+        if (not self._sandbox_enabled or not jobs or not jobs.store
+                or (self._photo_jobs and self._photo_jobs.service and self._photo_jobs.service.transaction)
+                or not jobs.store.flow.pause_live_prephoto()):
+            return False
+        self._sandbox_privacy_epoch+=1
+        self._sandbox_auto_photo=False;self._sandbox_consent=False
+        self._photo_view={};self._last_live_frame=self._last_preview=self._camera_texture=None
+        jobs.store.qr=jobs.store.qr_identity=None
+        self._sandbox_view={'phase':'VERIFYING_QR'}
+        self._sandbox_refresh_at=0
+        self.navigation.page=SANDBOX_CHECKOUT
+        self._show()
+        return True
 
     def _sandbox_operator_open(self):
         if self._sandbox_jobs.busy or not self._sandbox_jobs.store:
@@ -310,6 +328,11 @@ class SandboxViews:
             return True
         if not self._sandbox_enabled or not self._sandbox_consent:
             return False
+        if (self._sandbox_auto_photo and outcome.action in {'prepare','reset'}
+                and not outcome.error and self.navigation.page==PHOTO_CONFIRM):
+            self._sandbox_auto_photo=False
+            self._admit_photo_test()
+            return True
         if outcome.action in {'start', 'start_bound'}:
             self.navigation.page = SANDBOX_CHECKOUT
             tx = (outcome.value or {}).get('transaction_id')
@@ -392,6 +415,20 @@ class SandboxViews:
                     return
                 self._sandbox_view = outcome.value
                 phase = (outcome.value or {}).get('phase')
+                order=self._sandbox_view.get('order') or {}
+                direct=(self._sandbox_jobs.store.flow.qr_renewal_enabled and phase=='RESERVED'
+                        and self.navigation.page==SANDBOX_CHECKOUT and not self._sandbox_operator_mode
+                        and not self._sandbox_view.get('customer_claim_required')
+                        and order.get('state')=='PAID' and order.get('verification_pending') is False)
+                if direct:
+                    self._activity()
+                    if not self._sandbox_view.get('recovery_receipt'):
+                        self._sandbox_submit('print_recovery_receipt')
+                        self._show()
+                    else:
+                        self._sandbox_auto_photo=True
+                        self._sandbox_photo_consent()
+                    return
                 if outcome.action=='operator_inspect' and phase=='CANCELLED':
                     self._sandbox_operator_mode=False;self._sandbox_legacy_confirm=False
                 expired=(phase=='CANCELLED' and self._sandbox_view.get('qr_expiry_verified') is True)
@@ -430,6 +467,10 @@ class SandboxViews:
                         self._photo_submit('start', self.templates, dict(self._sandbox_view['quantities']))
                     self.navigation.page = SANDBOX_CHECKOUT
                 elif phase == 'STARTED' and self._sandbox_consent:
+                    self._activity()
+                    receipt=(self._sandbox_view.get('recovery_receipt') or {}).get('state')
+                    if receipt in {'UNCERTAIN','SENDING','NOT_CONFIGURED'} and self._sandbox_jobs.store.receipt_printer:
+                        self._photo_error='Tiket pemulihan belum terkonfirmasi tercetak. Sesi foto tetap dapat dilanjutkan.'
                     self.navigation.page = PHOTO_CONFIRM
                     self.navigation.photo_step(self._photo_view['phase'])
                 elif phase == 'COMPLETED':
@@ -527,7 +568,9 @@ class SandboxViews:
         elif phase == 'RECOVERY':
             message = 'Pesanan dan foto tetap disimpan.\nOperator perlu memeriksa status sebelum lanjut.\nTidak ada sesi atau cetak yang diulang otomatis.'
         elif phase == 'RESERVED':
-            message = 'Izin satu sesi pesanan tersedia.\nFoto dimulai setelah persetujuan kamu.'
+            message = ('Menyiapkan sesi foto.\nKamera akan terbuka otomatis.'
+                       if self._sandbox_jobs.store and self._sandbox_jobs.store.flow.qr_renewal_enabled else
+                       'Izin satu sesi pesanan tersedia.\nFoto dimulai setelah persetujuan kamu.')
         elif view.get('qr_expiry_verified') and phase=='CANCELLED':
             message = 'Pilihan desain dan jumlah lembar tetap.\nPilih BUAT QR BARU untuk melanjutkan.\nTanpa pilihan, kembali ke iklan dalam 30 detik.'
         elif phase=='VERIFYING_QR':
@@ -545,7 +588,8 @@ class SandboxViews:
             action('LANJUT SANDBOX TANPA PROMO',self._sandbox_begin,'primary')
             action('KEMBALI PILIH TEMPLATE',self._sandbox_leave,'tertiary')
         elif phase == 'RESERVED':
-            action('LANJUT KE PERSETUJUAN FOTO',self._sandbox_photo_consent,'primary')
+            if not self._sandbox_jobs.store.flow.qr_renewal_enabled:
+                action('LANJUT KE PERSETUJUAN FOTO',self._sandbox_photo_consent,'primary')
         elif phase=='CANCELLED' and view.get('qr_expiry_verified'):
             action('BUAT QR BARU',self._sandbox_renew_qr,'primary')
             action('KEMBALI KE HALAMAN AWAL',self._sandbox_leave,'tertiary')

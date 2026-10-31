@@ -78,8 +78,8 @@ Tidak perlu tiket pengunjung selama belum membayar. Aplikasi memeriksa Midtrans:
 3. Jika QR kedua kedaluwarsa, aplikasi otomatis membuat QR ketiga dengan cara sama.
 4. Jika QR ketiga kedaluwarsa dan status belum dibayar terkonfirmasi, aplikasi
    kembali ke halaman iklan. Tidak ada QR keempat atau pesanan baru otomatis.
-5. Tiket pemulihan baru ditampilkan setelah pembayaran terkonfirmasi. Simpan
-   tiket itu sebelum melanjutkan foto; tiket bukan QR pembayaran.
+5. Setelah pembayaran terkonfirmasi, satu tiket pemulihan dicetak otomatis dan
+   kamera langsung terbuka. Ambil/simpan tiket kertas; tidak ada halaman simpan tiket.
 
 Alur ini juga berlaku ketika membuka ulang sesi kedaluwarsa yang belum dibayar.
 Jika status/koneksi belum pasti, layar memeriksa status tanpa meminta tiket lama
@@ -95,7 +95,7 @@ expiry ketiga. Jika belum menunggu semuanya, tulis hasil parsial di L02.
 
 `SESI TERSIMPAN / TIKET PELANGGAN DIPERLUKAN` berlaku untuk sesi yang sudah dibayar/foto tersimpan. QR belum dibayar yang kedaluwarsa mengikuti alur otomatis di atas; tidak perlu tiket lama. Pakai tiket asli → VERIFIKASI TIKET → PULIHKAN SESI FOTO ASLI.
 Tiket berbeda dari QR pembayaran, PIN operator dan Server Key. Tiket Sandbox
-berlaku 24 jam; simpan secara pribadi setelah pembayaran diterima, sebelum foto.
+berlaku 24 jam sejak pesanan dibuat; simpan tiket kertas yang dicetak setelah PAID.
 
 Tanpa tiket lama, BANTUAN OPERATOR jika tersedia hanya untuk membaca status
 dengan PIN launcher terbaru; PIN tidak menggantikan bukti pemilik foto.
@@ -165,9 +165,9 @@ Contoh catatan (bukan hasil): L01 — Python 3.12, Windows 11, kamera bawaan. Ve
 
 ## L02 — QR pembayaran dan paste link Sandbox
 
-**Untuk apa:** Menguji QR/link Sandbox langsung tanpa tiket sebelum bayar, pembaruan QR otomatis dan tiket setelah pembayaran.
+**Untuk apa:** Menguji QR/link Sandbox, pembayaran, satu tiket pemulihan tercetak dan perpindahan langsung ke kamera.
 
-**Sebelum mulai:** Internet dan akun Midtrans Sandbox tersedia; jalankan launcher Sandbox. Siapkan ponsel untuk menyimpan tiket setelah pembayaran. Sesi disebut A.
+**Sebelum mulai:** Internet dan akun Midtrans Sandbox tersedia; printer dan kertas siap dengan pengaturan printer booth yang biasa. Jalankan launcher Sandbox. Sesi disebut A.
 
 1. Dari iklan pilih MULAI FOTO, ikuti tutorial, lalu pilih SATU desain dan SATU lembar. Catat desain dan nominal. Pilih QRIS SANDBOX lalu LANJUT SANDBOX TANPA PROMO.
 
@@ -187,29 +187,30 @@ Contoh catatan (bukan hasil): L01 — Python 3.12, Windows 11, kamera bawaan. Ve
 
 5. Sekarang konfirmasi pembayaran simulasi untuk QR yang masih aktif di simulator resmi. Kembali ke app, tunggu polling sekitar 10 detik atau klik CEK STATUS satu kali.
 
-   **Seharusnya:** Hanya setelah pembayaran diterima, layar SIMPAN TIKET PEMULIHAN muncul. Submit browser saja belum membuktikan app sudah menerima pembayaran; jangan bayar ulang jika status belum pasti.
+   **Seharusnya:** Setelah PAID diterima, satu tiket pemulihan dikirim ke printer dan kamera terbuka otomatis. Tidak ada halaman wajib simpan tiket atau tombol lanjut tambahan. Jangan bayar ulang jika status belum pasti.
 
-6. Simpan QR tiket pemulihan ke ponsel secara pribadi, misalnya foto layar. Jika scanner ponsel menampilkan teks tiket, simpan di catatan pribadi. Klik SUDAH SIMPAN • LANJUT.
+6. Ambil tiket pemulihan yang keluar. Periksa judul Sandbox, QR dan petunjuk pemulihan/tidak perlu membayar ulang. Simpan kertas sampai sesi selesai; jangan kirim QR tiket ke chat.
 
-   **Seharusnya:** App menampilkan PEMBAYARAN UJI TERKONFIRMASI dan LANJUT KE PERSETUJUAN FOTO. Tiket tersedia untuk L05–L08; jangan kirim tiket ke chat. Tidak ada foto otomatis.
+   **Seharusnya:** Tiket tercetak satu kali, kamera sudah terbuka dan penghitung foto masih 0. Jika kertas tidak keluar, catat hasil cetak terpisah dari hasil kamera; jangan memaksa cetak ulang atau pembayaran baru.
 
-- **Lulus:** Link dan nominal benar, belum bayar tidak meminta tiket, pembayaran diterima lalu tiket bisa disimpan. Catat hasil expiry terpisah jika belum menunggu tiga kali.
-- **Gagal:** App meminta tiket sebelum bayar, QR kedaluwarsa terkonfirmasi tetap terkunci, pilihan berubah, QR keempat dibuat, atau pembayaran diterima tetapi tetap tertahan.
+- **Lulus:** Link/nominal benar, satu tiket pemulihan tercetak setelah PAID dan kamera terbuka otomatis tanpa layar simpan tiket. Catat hasil tiga expiry terpisah jika belum ditunggu.
+- **Gagal:** App meminta simpan tiket/klik lanjut setelah PAID, tiket tercetak ganda, kamera tertahan, atau kertas tiket tidak keluar. Catat tahap dan status printer tanpa QR rahasia.
 - **Belum diuji:** Internet/akun belum tersedia atau tahap belum dicoba. Hasil expiry parsial tulis apa adanya; jangan mengedit file atau membayar ulang untuk memaksa lanjut.
 
-Contoh catatan (bukan hasil): L02 — QR1 dan QR2 terganti otomatis, expiry QR3 kembali iklan. Kunjungan berikutnya dibayar: tiket muncul, bisa lanjut persetujuan foto.
+Contoh catatan (bukan hasil): L02 — PAID: tiket pemulihan 1 lembar, kamera langsung terbuka, 0/3 foto. Expiry belum ditunggu.
+
 
 ## L03 — Foto setelah pembayaran simulasi
 
 **Untuk apa:** Memastikan pembayaran tidak langsung memotret dan kemajuan foto bertambah hanya setelah tindakan kamu.
 
-**Sebelum mulai:** L02 sudah sampai PEMBAYARAN UJI TERKONFIRMASI. Gunakan sesi A, bukan transaksi baru.
+**Sebelum mulai:** L02 sudah PAID dan kamera terbuka otomatis. Gunakan sesi A dan tiket kertasnya, bukan transaksi baru.
 
-1. Klik LANJUT KE PERSETUJUAN FOTO. Periksa jumlah desain dan lembar pada persetujuan; cocokkan dengan pilihan awal.
+1. Di layar kamera, periksa desain dan jumlah lembar, lalu cocokkan dengan pilihan awal.
 
-   **Seharusnya:** Satu desain/satu lembar tetap sama. Satu lembar adalah jumlah salinan strip; setiap desain berisi 3 foto, bukan satu foto per lembar.
+   **Seharusnya:** Desain/lembar sama. Kamera sudah siap tanpa persetujuan tambahan; satu desain tetap terdiri dari 3 foto.
 
-2. Klik SETUJU & MULAI UJI FOTO. Ketika preview kamera siap, diam 5–10 detik tanpa menekan SIAP dan tanpa menunjukkan gestur telapak ke kamera.
+2. Ketika preview kamera siap, diam 5–10 detik tanpa menekan SIAP dan tanpa menunjukkan gestur telapak ke kamera.
 
    **Seharusnya:** Kamera boleh menampilkan preview, tetapi hitung mundur dan foto baru tidak berjalan sendiri.
 
@@ -226,6 +227,7 @@ Contoh catatan (bukan hasil): L02 — QR1 dan QR2 terganti otomatis, expiry QR3 
 - **Belum diuji:** Pembayaran belum terkonfirmasi atau kamera belum bisa digunakan. Catat penyebabnya; jangan menganggap dua foto sudah tersimpan jika belum terlihat kemajuannya.
 
 Contoh catatan (bukan hasil): L03 — dua foto A1/A2 tersimpan; layar FOTO 3 / 3 menunggu SIAP. Satu desain, satu lembar.
+
 
 ## L04 — Minimize dan privasi
 
@@ -323,7 +325,7 @@ Contoh catatan (bukan hasil): L06 — tiket diterima; sebelum pulihkan tidak ada
 
 4. Klik PAKAI FOTO INI • BUAT STRIP. Tunggu hasil strip selesai. Cocokkan tiga pose/penanda, desain dan jumlah lembar dengan catatan awal. Simpan catatan hasil secara pribadi; jangan kirim wajah/foto asli ke chat.
 
-   **Seharusnya:** Strip sesuai pilihan terakhir. Di Sandbox cetak belum diaktifkan dan Drive OFF; tidak adanya kertas atau QR download bukan Gagal pengujian ini.
+   **Seharusnya:** Strip sesuai pilihan terakhir dan tercetak otomatis sesuai jumlah lembar setelah review disetujui. Ini terpisah dari satu tiket pemulihan setelah PAID. Drive tetap OFF; QR download belum menjadi bukti upload.
 
 5. Bagian C — saat hasil stabil, JANGAN klik SELESAI • KEMBALI IKLAN dulu. Tutup/buka app lagi, gunakan tiket A dan tindakan pulihkan. Cocokkan strip/pose yang sama.
 

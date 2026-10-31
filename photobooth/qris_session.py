@@ -97,6 +97,9 @@ class KioskCheckout:
                                              'reason': 'restart_after_capture_intent'}
                     self.data['phase'] = 'RECOVERY'
                     self._save()
+                if (self.data.get('recovery_receipt') or {}).get('state')=='SENDING':
+                    self.data['recovery_receipt']['state']='UNCERTAIN'
+                    self._save()
         except BaseException:
             self.lease.close()
             raise
@@ -142,6 +145,67 @@ class KioskCheckout:
     @property
     def ticket_acknowledged(self):
         return self._ticket_acknowledged
+
+    @property
+    def live_prephoto(self):
+        data=self.snapshot() or {};order=data.get('order') or {}
+        return bool(self.qr_renewal_enabled and self.context['mode']=='sandbox'
+                    and not self._opened_existing and data.get('customer_capability_hash')
+                    and data.get('phase') in {'CREATING','WAITING','RESERVED','VERIFYING_QR'}
+                    and order.get('state') in {None,'CREATING','PENDING','PAID','EXPIRED'}
+                    and order.get('service_state') in {None,'NONE','RESERVED'}
+                    and not any(data.get(key) for key in ('transaction_id','allocation_operation_id',
+                        'release_operation_id','isolation_id','recovery','pending_fulfillment_issue'))
+                    and not any(order.get(key) for key in ('fulfillment','local_transaction_id',
+                        'fulfillment_issue','release','service_fence')))
+
+    def pause_live_prephoto(self):
+        """Hide an original live checkout without losing its not-yet-printed proof."""
+        with self.lock:
+            if not self.live_prephoto:return False
+            self.invalidate_qr_renewal(retire=True)
+            return True
+
+    def print_recovery_receipt(self, printer):
+        """One durable submission per paid order; no saved secret image or replay."""
+        from photobooth.kiosk_v2.recovery_receipt import render_recovery_receipt
+        with self.worker_lock:
+            data=self.snapshot() or {};order=data.get('order') or {}
+            if (not self.qr_renewal_enabled or self.context['mode']!='sandbox'
+                    or self.customer_claim_required or data.get('phase')!='RESERVED'
+                    or order.get('state')!='PAID' or order.get('verification_pending') is not False
+                    or order.get('service_state')!='RESERVED' or not order.get('grant_id')):
+                raise RuntimeError('Original verified paid reservation required')
+            if data.get('recovery_receipt'):return self.snapshot()
+            ticket=self.customer_ticket();generation=self._privacy_generation
+            if not ticket:
+                if not self.ticket_acknowledged:raise RuntimeError('Original recovery proof required')
+                state='ALREADY_SAVED'
+            elif printer is None:state='NOT_CONFIGURED'
+            else:state='SENDING'
+            receipt_order=dict(order,booth_id=self.context['booth_id'])
+            image=None
+            if state=='SENDING':
+                try:image=render_recovery_receipt(ticket,receipt_order,printer.config.print_width_dots)
+                except (ValueError,OSError):state='NOT_CONFIGURED'
+            with self.lock:
+                if generation!=self._privacy_generation:raise RuntimeError('Receipt belongs to a retired view')
+                self.data['recovery_receipt']={'state':state,'order_id':order['order_id']}
+                try:self._save()
+                except BaseException:
+                    self.data.pop('recovery_receipt',None)
+                    raise
+            if state!='SENDING':return self.snapshot()
+            try:state='SUBMITTED' if printer.print_bitmap(image).success else 'UNCERTAIN'
+            except Exception:state='UNCERTAIN'
+            with self.lock:
+                self.data['recovery_receipt']['state']=state
+                try:self._save()
+                except BaseException:
+                    self.data['recovery_receipt']['state']='SENDING'
+                    raise
+                if state=='SUBMITTED' and self.customer_ticket():self.acknowledge_ticket()
+            return self.snapshot()
 
     def lock_customer(self):
         """Privacy lock after inactivity/minimize; never discard payment rights."""
