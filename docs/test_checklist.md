@@ -1,8 +1,23 @@
 # Meong Photobooth — test evidence and acceptance
 
-31 October latest BUG-026 correction: owner FAIL at ecc6733 reproduced. Follow-up118b763 full1259/1255PASS/4optionalSKIP, zero fail/error; matching CI41208622748 all three SUCCESS.12 portable methods Windows/Linux +11 native renewal/control methods Linux PASS; six native PNGs and44-step browser guide/export verified. QR1→QR2→QR3→ads, no unpaid ticket. Actual owner/provider follow-up pending; matrix unchanged. [Receipt](qa/portrait-v2-sandbox/evidence/bug026-three-expiries.json).
+## 31 October — BUG-027 verified / actual laptop and paper next
 
-31 October BUG-026: functional5201c10 full1251 run/1247 PASS/0 FAIL/ERROR/4optional SKIP,491.880s. Corrected CI0d92831/run41205340183 all three SUCCESS; Windows194/Linux493 PASS, native121/120PASS/1skip. Eleven new portable and four native methods individually PASS. [Receipt/history/manual limits](qa/portrait-v2-sandbox/evidence/bug026-verification.json). Owner laptop/provider NOT_RUN; whole matrix unchanged.
+Source e05a358 (functional 4c74ece): full 1280 run/1276 PASS/4 optional SKIP,
+zero failure/error; CI 41215811123 all three jobs SUCCESS. 12 receipt +6 crash
+methods Windows/Linux and 7 paid-camera native methods Linux PASS. Eight original
+native screens reviewed at both portrait sizes; 384/576 receipt QR checked only
+in memory. Beginner guide/form synchronized (9 groups/44 steps,10 browser
+scenarios PASS), previous printer-OFF passes not imported. Current dedicated
+Sandbox prints recovery receipt after verified PAID, enters camera directly,
+and prints approved strips; Drive OFF, no automatic restart while printing.
+Whole UX-07 NOT_RUN, matrix 59/0/9/1; AR-13 conditional. Next owner Windows/
+configured paper printer/official Midtrans retest, actual results only; remaining
+provider/webhook/Ubuntu/Drive/retention/privacy/operating/release and queued OPS
+gates separate. [Exact evidence and current limits](qa/portrait-v2-sandbox/evidence/bug027-final-verification.json).
+
+31 October latest BUG-026 correction: owner FAIL at ecc6733 reproduced. Follow-up118b763 full1259/1255PASS/4optionalSKIP, zero fail/error; matching CI 41208622748 all three SUCCESS. 12 portable methods Windows/Linux +11 native renewal/control methods Linux PASS; six native PNGs and44-step browser guide/export verified. QR1→QR2→QR3→ads, no unpaid ticket. Actual owner/provider follow-up pending; matrix unchanged. [Receipt](qa/portrait-v2-sandbox/evidence/bug026-three-expiries.json).
+
+31 October BUG-026: functional5201c10 full1251 run/1247 PASS/0 FAIL/ERROR/4optional SKIP,491.880s. Corrected CI0d92831/run41205340183 all three SUCCESS; Windows194/Linux493 PASS, native 121/120PASS/1skip. Eleven new portable and four native methods individually PASS. [Receipt/history/manual limits](qa/portrait-v2-sandbox/evidence/bug026-verification.json). Owner laptop/provider NOT_RUN; whole matrix unchanged.
 
 ## 30 October — mock purchased-print chain verified
 

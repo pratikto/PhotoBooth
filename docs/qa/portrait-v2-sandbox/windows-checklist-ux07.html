@@ -108,7 +108,7 @@ function report(){
  'RINGKASAN: '+counts.PASS+' PASS / '+counts.FAIL+' FAIL / '+counts.NOT_RUN+' NOT_RUN (9 item)',''];
  ITEMS.forEach(([id,title,description])=>lines.push('['+state(id)+'] '+id+' — '+title+'\n  '+description+'\n  Catatan '+id+': '+(v['note-'+id].trim()||'(Belum ada catatan per item)')));
  lines.push('','CATATAN / ALASAN BELUM DIUJI:',v.notes.trim()||'(Belum ada catatan)',
- '','Referensi otomatis: fixture ca7827c / CI 40985975287; terpisah dari SHA dan hasil manual laptop di atas.',
+ '','Referensi otomatis terbaru: source e05a358 / CI 41215811123 / 1280 run, 1276 PASS, 4 skip opsional; terpisah dari SHA dan hasil manual laptop di atas.',
  'Gate lain: PAY-22/WEB-01–08 BLOCKED; perangkat/merchant/paper/Drive/privacy/operasional/host komersial/release belum diluluskan oleh form ini.');
  return lines.join('\n');
 }

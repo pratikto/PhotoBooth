@@ -1,0 +1,101 @@
+"""Private scratch capture over original HTTP/app/photo/printer fixtures only."""
+import os
+os.environ.update(KIVY_NO_ARGS='1',KIVY_NO_CONSOLELOG='1',PHOTOBOOTH_V2_PRINT='0',PHOTOBOOTH_V2_DRIVE='0',PHOTOBOOTH_V2_SANDBOX_PRINT='0',PHOTOBOOTH_V2_STORAGE='1',PHOTOBOOTH_V2_CHECKOUT_SANDBOX='1',PHOTOBOOTH_V2_CHECKOUT_MOCK='0',MEONG_QRIS_MODE='sandbox',MIDTRANS_SERVER_KEY='',MIDTRANS_MERCHANT_ID='')
+for key in ['CAMERA','FACE_TRIGGER','PALM_TRIGGER','AD_VIDEO','AUDIO']:os.environ['PHOTOBOOTH_'+key]='0'
+from pathlib import Path
+import sys,argparse,hashlib,json,subprocess,time
+from tempfile import TemporaryDirectory
+from unittest.mock import Mock,patch
+ROOT=next(p for p in Path(__file__).resolve().parents if (p/'AGENTS.md').is_file() and (p/'photobooth').is_dir());sys.path.insert(0,str(ROOT));sys.path.insert(0,str(ROOT/'tests'))
+p=argparse.ArgumentParser();p.add_argument('--width',type=int,required=True);p.add_argument('--height',type=int,required=True);p.add_argument('--failure',action='store_true');args=p.parse_args()
+from kivy.config import Config
+Config.set('graphics','width',str(args.width));Config.set('graphics','height',str(args.height))
+from kivy.clock import Clock
+from kivy.core.window import Window
+from PIL import Image
+import numpy as np,cv2
+from photobooth.kiosk_v2.app import PortraitKioskV2App
+from photobooth.kiosk_v2.photos import PhotoTest
+from photobooth.kiosk_v2.flow import CAPTURE,RESULT,SANDBOX_CHECKOUT
+from photobooth.printer import ThermalPrinter,PrinterConfig
+from tests.qris_v2_fixture import Fixture
+OUT=ROOT/'work'/'bug027-native';OUT.mkdir(exist_ok=True)
+
+class Recorder(PortraitKioskV2App):
+ def __init__(self,f,printer,sender):
+  self.fixture=f;self.sender=sender;self.evidence=[];self.error=None;self.capture_pending=False;self.receipt_verified=False
+  frame=np.zeros((120,160,3),np.uint8);frame[:,:80]=(200,80,20);frame[:,80:]=(20,80,200)
+  self.synthetic_frame=frame;camera=Mock();camera.read.return_value=frame.copy()
+  super().__init__(camera_device=camera,sandbox_jobs=f.jobs)
+ def gallery(self):
+  self._choose_photo();self._complete_tutorial();self._change_copies(1);self._open_sandbox()
+ def paid(self):self.fixture.paid();self._sandbox_retry()
+ def camera(self):
+  assert self.navigation.page==CAPTURE,'Expected direct camera'
+  assert self.sender.call_count==1,'Receipt must submit once'
+  assert self._photo_view['captured']==0 and self._countdown_event is None
+  state=self.fixture.flow.snapshot()['recovery_receipt']['state'];assert state==('UNCERTAIN' if args.failure else 'SUBMITTED')
+  labels=[getattr(w,'text','') for w in self.stage.walk()]
+  assert 'SIMPAN TIKET PEMULIHAN' not in labels and 'SUDAH SIMPAN • LANJUT' not in labels
+  assert self.receipt_verified,'Original in-memory receipt QR not verified'
+  self.capture('04-receipt-uncertain-camera' if args.failure else '01-paid-direct-camera')
+ def result(self):
+  assert self.navigation.page==RESULT and self._photo_view['print_state']=='SUBMITTED'
+  assert self.sender.call_count==2 and self.fixture.provider.charges==1
+  self.capture('02-approved-photo-submitted')
+ def privacy(self):self.on_pause();self.on_resume();self._sandbox_retry()
+ def private(self):
+  assert self.navigation.page==SANDBOX_CHECKOUT and self.fixture.flow.customer_claim_required
+  assert self._photo_view=={} and self.sender.call_count==2
+  self.capture('03-private-after-pause')
+ def capture(self,name):
+  self.capture_pending=True;Clock.schedule_once(lambda dt:self.write_frame(name),.3)
+ def write_frame(self,name):
+  try:
+   path=Path(Window.screenshot(name=str(OUT/f'{name}-{args.width}x{args.height}.png')))
+   with Image.open(path) as im:
+    assert im.size==(args.width,args.height)
+    assert len(im.convert('RGB').getcolors(im.width*im.height))>100,'Blank/incomplete render'
+    decoded,*_=cv2.QRCodeDetector().detectAndDecode(np.asarray(im.convert('RGB')))
+    assert not decoded.startswith('MEONG-RECOVERY-V1:'),'Private ticket must never be captured'
+   self.evidence.append({'file':path.name,'width':args.width,'height':args.height,'page':self.navigation.page,'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'private_recovery_qr_exported':False,'synthetic_transport_submissions':self.sender.call_count})
+  except BaseException as error:self.fail(type(error).__name__)
+  finally:self.capture_pending=False
+ def fail(self,reason):self.error=reason;self.stop()
+ def on_start(self):
+  actions=[self.gallery,self._sandbox_begin,self.paid,self.camera]
+  if not args.failure:
+   actions.extend([lambda:self._photo_submit('capture',self.synthetic_frame.copy()) for _ in range(3)])
+   actions.extend([lambda:self._photo_submit('compose'),self.result,self.privacy,self.private])
+  actions.append(self.stop);self.actions=iter(actions);Clock.schedule_once(self.advance,.5);Clock.schedule_once(lambda dt:self.fail('FixtureTimeout'),75)
+ def advance(self,dt):
+  if self.capture_pending or self._sandbox_jobs.busy or (self._photo_jobs and self._photo_jobs.busy):Clock.schedule_once(self.advance,.1);return
+  try:next(self.actions)()
+  except StopIteration:return
+  except BaseException as error:self.fail(type(error).__name__);return
+  Clock.schedule_once(self.advance,.3)
+
+with TemporaryDirectory() as temporary:
+ root=Path(temporary);f=Fixture(root);f.flow.qr_renewal_enabled=True
+ sender=Mock(side_effect=OSError('Synthetic unavailable sender') if args.failure else None)
+ printer=ThermalPrinter(PrinterConfig(print_width_dots=384),usb_sender=sender);f.service.receipt_printer=printer
+ photo=PhotoTest(root/'photos',printer=printer,auto_print=True,sandbox_print=True)
+ app=Recorder(f,printer,sender)
+ def encode(image):
+  if sender.call_count==0:
+   payload,*_=cv2.QRCodeDetector().detectAndDecode(np.asarray(image.convert('RGB')))
+   # This is the synthetic fixture's memory-only original ticket. Never save it.
+   assert payload and payload==f.flow.customer_ticket()
+   app.receipt_verified=True
+  return b'SYNTHETIC RASTER - NO DEVICE'
+ try:
+  with patch('photobooth.kiosk_v2.photos.configured_test',return_value=photo),patch.object(ThermalPrinter,'raster_payload',side_effect=encode):app.run()
+ finally:
+  f.jobs.close();f.jobs.wait_closed()
+  if app._photo_jobs:app._photo_jobs.wait_closed()
+  f.close()
+ assert app.error is None,'Native capture failed: '+str(app.error)
+ expected=1 if args.failure else 3;assert len(app.evidence)==expected
+ result={'source':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'tested_source':'e05a3581963c2fd45e87566672684369598ac2d2','functional_source':'4c74ececb69a84a64a9619fd0d3980e5bdea6fc6','fixture':'Actual App.run/HTTP/controller/photo/printer routes; original sender replaced by synthetic Mock; no real device/provider','in_memory_receipt_qr_exact_match':app.receipt_verified,'receipt_bitmap_or_token_saved':False,'failure_scenario':args.failure,'images':app.evidence}
+ (OUT/f'verification-{args.width}x{args.height}-{int(args.failure)}.json').write_text(json.dumps(result,indent=2)+'\n')
+ print(json.dumps({'status':'PASS','images':len(app.evidence),'width':args.width,'height':args.height,'failure':args.failure}))

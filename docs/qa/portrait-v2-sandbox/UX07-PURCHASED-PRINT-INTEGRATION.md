@@ -1,5 +1,20 @@
 # UX-07.h — purchased-print integration contract and source audit
 
+## 31 October — BUG-027 verified / actual laptop and paper next
+
+Source e05a358 (functional 4c74ece): full 1280 run/1276 PASS/4 optional SKIP,
+zero failure/error; CI 41215811123 all three jobs SUCCESS. 12 receipt +6 crash
+methods Windows/Linux and 7 paid-camera native methods Linux PASS. Eight original
+native screens reviewed at both portrait sizes; 384/576 receipt QR checked only
+in memory. Beginner guide/form synchronized (9 groups/44 steps,10 browser
+scenarios PASS), previous printer-OFF passes not imported. Current dedicated
+Sandbox prints recovery receipt after verified PAID, enters camera directly,
+and prints approved strips; Drive OFF, no automatic restart while printing.
+Whole UX-07 NOT_RUN, matrix 59/0/9/1; AR-13 conditional. Next owner Windows/
+configured paper printer/official Midtrans retest, actual results only; remaining
+provider/webhook/Ubuntu/Drive/retention/privacy/operating/release and queued OPS
+gates separate. [Exact evidence and current limits](evidence/bug027-final-verification.json).
+
 ## 30 October — UX-07.l2 automatic fixture checks verified / laptop handoff
 
 Final test/fixture source **ca7827c28c02e8fb2650f0a86cacdeb129c8434c**.

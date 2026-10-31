@@ -1,5 +1,20 @@
 # Meong Photobooth — current feature status
 
+## 31 October — BUG-027 verified / actual laptop and paper next
+
+Source e05a358 (functional 4c74ece): full 1280 run/1276 PASS/4 optional SKIP,
+zero failure/error; CI 41215811123 all three jobs SUCCESS. 12 receipt +6 crash
+methods Windows/Linux and 7 paid-camera native methods Linux PASS. Eight original
+native screens reviewed at both portrait sizes; 384/576 receipt QR checked only
+in memory. Beginner guide/form synchronized (9 groups/44 steps,10 browser
+scenarios PASS), previous printer-OFF passes not imported. Current dedicated
+Sandbox prints recovery receipt after verified PAID, enters camera directly,
+and prints approved strips; Drive OFF, no automatic restart while printing.
+Whole UX-07 NOT_RUN, matrix 59/0/9/1; AR-13 conditional. Next owner Windows/
+configured paper printer/official Midtrans retest, actual results only; remaining
+provider/webhook/Ubuntu/Drive/retention/privacy/operating/release and queued OPS
+gates separate. [Exact evidence and current limits](qa/portrait-v2-sandbox/evidence/bug027-final-verification.json).
+
 ## 31 October — BUG-026 owner correction (latest verified source)
 
 Owner retest FAIL at ecc6733, follow-up functional118b763 source verified: no visitor ticket before payment, automatic QR1→QR2→QR3→ads with same cart/amount, ticket after PAID. Saved-expired configured startup and rebuilt busy controls fixed. Full1259/1255PASS/4optionalSKIP, zero fail/error; matching CI41208622748 all three SUCCESS, twelve portable methods Windows/Linux and eleven native renewal/control methods Linux PASS. Six native screenshots reviewed, offline44-step guide/export checked. Actual owner/provider follow-up pending; dedicated Sandbox only. [Current contract/evidence](qa/portrait-v2-sandbox/BUG026-QR-RENEWAL.md).

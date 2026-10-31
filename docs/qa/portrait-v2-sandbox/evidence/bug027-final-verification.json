@@ -1,0 +1,312 @@
+{
+  "date": "2026-10-31",
+  "status": "BUG027_SOURCE_REGRESSION_CURRENT_CI_NATIVE_AND_GUIDE_VERIFIED_OWNER_ACCEPTANCE_NOT_RUN",
+  "source": "e05a3581963c2fd45e87566672684369598ac2d2",
+  "functional_source": "4c74ececb69a84a64a9619fd0d3980e5bdea6fc6",
+  "prior_verified_guide_commit": "e71aa1923f9df2f9d4fd4e58709c360f888db7fd",
+  "scope": "Continuation finalizes already-pushed BUG027 source; application/tests/tools/workflow unchanged. Only docs/form synchronization and synthetic evidence published. Dedicated Sandbox GUI recovery-receipt/approved-photo print ON by owner correction; backend/Drive/production OFF.",
+  "full": {
+    "run": 1280,
+    "pass": 1276,
+    "fail": 0,
+    "error": 0,
+    "skip": 4,
+    "seconds": 455.632,
+    "exit_code": 0,
+    "report_sha256": "0c2f66a5341a0c95eb910ebd06659a34e29751a6efb990d497c46ca3ddbdb7cd"
+  },
+  "full_optional_skips": [
+    "test_real_model_worker_drives_the_actual_controller_and_keeps_button_capture (test_camera_recovery.CameraRecoveryTests.test_real_model_worker_drives_the_actual_controller_and_keeps_button_capture) Use real inference and mailboxes; only camera acquisition is synthetic. ... skipped 'Native model assets are opt-in'",
+    "test_native_video_has_frames_payment_is_muted_and_retiring_unloads_decoder (test_kiosk_advertising.KioskAdvertisingTests.test_native_video_has_frames_payment_is_muted_and_retiring_unloads_decoder) ... skipped 'Native video checks require opt-in and ffmpeg'",
+    "test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture (test_kiosk_v2_widgets.PortraitKivySmokeTests.test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture) ... skipped 'Native model assets are opt-in'",
+    "test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image (test_palm_gesture.NativePalmModelTests.test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image) ... skipped 'Native model assets are opt-in'"
+  ],
+  "full_command": "KIVY_HOME=/tmp/meong-bug027-final-kivy KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 MESA_SHADER_CACHE_DIR=/tmp/meong-bug027-final-mesa PHOTOBOOTH_TEST_GUI=1 PHOTOBOOTH_TEST_AUDIO=1 PHOTOBOOTH_V2_SANDBOX_PRINT=0 MEONG_CI_TEST_REPORT=work/bug027-final-full.txt .venv/bin/python tools/run_kiosk_unittests.py",
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "Kivy": "2.3.1",
+    "ffpyplayer": "4.5.3",
+    "display": "SDL offscreen/softwareGL/dummy audio; actual devices not accessed"
+  },
+  "ci": {
+    "run": 41215811123,
+    "source": "e05a3581963c2fd45e87566672684369598ac2d2",
+    "url": "https://github.com/pratikto/PhotoBooth/actions/runs/41215811123",
+    "jobs": [
+      {
+        "id": 124579971748,
+        "name": "Windows Python 3.12 native SDL audio (dummy output)",
+        "head_sha": "e05a3581963c2fd45e87566672684369598ac2d2",
+        "conclusion": "success"
+      },
+      {
+        "id": 124579971791,
+        "name": "Navigation and audio lifecycle",
+        "head_sha": "e05a3581963c2fd45e87566672684369598ac2d2",
+        "conclusion": "success"
+      },
+      {
+        "id": 124579971877,
+        "name": "Synthetic Kivy screen/nav smoke (no hardware)",
+        "head_sha": "e05a3581963c2fd45e87566672684369598ac2d2",
+        "conclusion": "success"
+      }
+    ],
+    "receipt_methods_windows_linux": [
+      "test_recovery_receipt.RecoveryReceiptSessionTests.test_intent_save_failure_never_sends_and_can_retry_before_any_submission",
+      "test_recovery_receipt.RecoveryReceiptSessionTests.test_lost_final_journal_ack_keeps_sending_and_never_resubmits",
+      "test_recovery_receipt.RecoveryReceiptSessionTests.test_paid_receipt_is_submitted_once_and_contains_no_ticket_in_journal",
+      "test_recovery_receipt.RecoveryReceiptSessionTests.test_partial_or_unknown_send_is_uncertain_without_auto_reprint",
+      "test_recovery_receipt.RecoveryReceiptSessionTests.test_restart_converts_sending_to_uncertain_and_keeps_private_owner_hold",
+      "test_recovery_receipt.RecoveryReceiptSessionTests.test_transient_prephoto_pause_retains_live_proof_but_allocated_session_cannot_bypass_lock",
+      "test_recovery_receipt.RecoveryReceiptSessionTests.test_unpaid_and_privacy_locked_paid_receipts_cannot_print",
+      "test_recovery_receipt.RecoveryReceiptTests.test_bitmap_validates_size_and_copy_count_before_transport",
+      "test_recovery_receipt.RecoveryReceiptTests.test_memory_bitmap_uses_original_route_without_saving_secret_preview",
+      "test_recovery_receipt.RecoveryReceiptTests.test_native_receipt_qr_decodes_original_capability_at_both_paper_widths",
+      "test_recovery_receipt.RecoveryReceiptTests.test_partial_memory_bitmap_send_cannot_fallback_or_retry",
+      "test_recovery_receipt.RecoveryReceiptTests.test_unpaid_foreign_context_and_invalid_payload_cannot_render_recovery_receipt"
+    ],
+    "crash_methods_windows_linux": [
+      "test_crash_supervisor.CrashSupervisorTests.test_bad_budget_and_clock_rollback_never_reset_restart_allowance",
+      "test_crash_supervisor.CrashSupervisorTests.test_current_sandbox_print_profile_never_reserves_automatic_crash_restart",
+      "test_crash_supervisor.CrashSupervisorTests.test_delivery_production_and_corrupt_journal_fail_closed",
+      "test_crash_supervisor.CrashSupervisorTests.test_launcher_restarts_exited_child_once_then_preserves_normal_exit",
+      "test_crash_supervisor.CrashSupervisorTests.test_normal_operator_hold_or_living_process_never_restarts",
+      "test_crash_supervisor.CrashSupervisorTests.test_three_crashes_have_persisted_budget_and_bounded_backoff"
+    ],
+    "native_methods_linux": [
+      "test_paid_camera_widgets.PaidCameraTests.test_allocated_private_photos_still_lock_and_never_reprint_receipt_on_check",
+      "test_paid_camera_widgets.PaidCameraTests.test_dedicated_configuration_mounts_both_printers_with_drive_off",
+      "test_paid_camera_widgets.PaidCameraTests.test_minimized_live_checkout_can_accept_payment_without_unprinted_ticket_claim",
+      "test_paid_camera_widgets.PaidCameraTests.test_old_payment_idle_time_does_not_lock_newly_paid_camera",
+      "test_paid_camera_widgets.PaidCameraTests.test_paid_prints_one_receipt_enters_camera_then_approved_photo_prints_once_at_both_sizes",
+      "test_paid_camera_widgets.PaidCameraTests.test_print_failure_keeps_paid_camera_and_never_automatically_resubmits_ticket",
+      "test_paid_camera_widgets.PaidCameraTests.test_printed_ticket_restores_private_photo_without_reprinting_receipt"
+    ],
+    "windows_ledger": {
+      "run": 208,
+      "pass": 208,
+      "skip": 0,
+      "seconds": 71.851
+    },
+    "linux_recovery": {
+      "run": 521,
+      "pass": 521,
+      "skip": 0,
+      "seconds": 144.843
+    },
+    "linux_native": {
+      "run": 121,
+      "pass": 120,
+      "skip": 1,
+      "seconds": 89.296
+    },
+    "linux_note": "Seven paid-camera native methods execute in the recovery step and are counted within521; standalone native121 is a separate group. Do not add duplicate receipts.",
+    "verification": "Actual matching-source job metadata and decoded logs; deduplicated notice echoes. No physical device/merchant/printing acceptance."
+  },
+  "historical_focused": {
+    "renderer_source": "7e814dacd41d7c54d99c0313d4eb22083632d374",
+    "renderer": {
+      "pass": 38,
+      "seconds": 0.378
+    },
+    "functional_source": "4c74ececb69a84a64a9619fd0d3980e5bdea6fc6",
+    "integration": {
+      "pass": 111,
+      "seconds": 78.114
+    },
+    "final_feature": {
+      "pass": 39,
+      "seconds": 21.703
+    },
+    "crash_fixture_source": "e05a3581963c2fd45e87566672684369598ac2d2",
+    "corrected_crash": {
+      "pass": 6,
+      "seconds": 0.096
+    },
+    "provenance": "Focused results recorded in original pushed BUG027 checkpoint; final full and actual matching-source CI above independently cover them."
+  },
+  "retained_failure": {
+    "source": "4c74ececb69a84a64a9619fd0d3980e5bdea6fc6",
+    "ci_run": 41215406163,
+    "result": "Windows job failed one outdated restart expectation under newly printing profile; runtime refusal correct. Same five-method fixture reproduced4PASS/1FAIL.",
+    "correction": "At e05a358 original restart case explicitly uses transport-OFF; new case proves printing profile cannot reserve automatic restart. Application/tools/workflow unchanged. Corrected six methods individually PASS Windows/Linux.",
+    "superseded_full": "Initial4c74ece full stopped/superseded; no final report/PASS claimed. Final e05a3581280 full is the complete applicable result."
+  },
+  "native": {
+    "capture_head": "e71aa1923f9df2f9d4fd4e58709c360f888db7fd",
+    "tested_source": "e05a3581963c2fd45e87566672684369598ac2d2",
+    "capture_app_tree": "1f954efe1a1da33e75282bf788939c6c31d14eb7",
+    "images": [
+      {
+        "file": "01-paid-direct-camera-800x12800001.png",
+        "width": 800,
+        "height": 1280,
+        "page": "capture",
+        "sha256": "0020cf1db15bf06a893c2350154d68b7f40bd3fc5a85cd250fb3462f7e7ce65c",
+        "private_recovery_qr_exported": false,
+        "synthetic_transport_submissions": 1
+      },
+      {
+        "file": "02-approved-photo-submitted-800x12800001.png",
+        "width": 800,
+        "height": 1280,
+        "page": "result",
+        "sha256": "c310efeb9f6fca1caba1511088f4cd53fd65bd3ed2132a3813cc52b4e87eae7e",
+        "private_recovery_qr_exported": false,
+        "synthetic_transport_submissions": 2
+      },
+      {
+        "file": "03-private-after-pause-800x12800001.png",
+        "width": 800,
+        "height": 1280,
+        "page": "sandbox_checkout",
+        "sha256": "205c998366a16e1bd29d1876af93982624ba5af7146fb1fabf7649584c3f3dd3",
+        "private_recovery_qr_exported": false,
+        "synthetic_transport_submissions": 2
+      },
+      {
+        "file": "01-paid-direct-camera-452x9000001.png",
+        "width": 452,
+        "height": 900,
+        "page": "capture",
+        "sha256": "612d63aaac8e392e3272a5914ef4a78ed85b49a2cc98d3f4dd2a64ac57046c9a",
+        "private_recovery_qr_exported": false,
+        "synthetic_transport_submissions": 1
+      },
+      {
+        "file": "02-approved-photo-submitted-452x9000001.png",
+        "width": 452,
+        "height": 900,
+        "page": "result",
+        "sha256": "f8e1372f97e704872329ef07495030b3cad971c8b9311ffb9cd5248d7b5a9032",
+        "private_recovery_qr_exported": false,
+        "synthetic_transport_submissions": 2
+      },
+      {
+        "file": "03-private-after-pause-452x9000001.png",
+        "width": 452,
+        "height": 900,
+        "page": "sandbox_checkout",
+        "sha256": "2fb9e239da5e0f11c8c32f816010cf74896ee8fd4e24d3bd8dcae1e839012cc2",
+        "private_recovery_qr_exported": false,
+        "synthetic_transport_submissions": 2
+      },
+      {
+        "file": "04-receipt-uncertain-camera-800x12800001.png",
+        "width": 800,
+        "height": 1280,
+        "page": "capture",
+        "sha256": "b5bdd37d6cc636bab212baf9cdc85ee60f3807124d98dc709b6123488553b13a",
+        "private_recovery_qr_exported": false,
+        "synthetic_transport_submissions": 1
+      },
+      {
+        "file": "04-receipt-uncertain-camera-452x9000001.png",
+        "width": 452,
+        "height": 900,
+        "page": "capture",
+        "sha256": "03a0a7e3f322fae7f54012e59629f95c773e7272a773f810a5b178dbc56f0677",
+        "private_recovery_qr_exported": false,
+        "synthetic_transport_submissions": 1
+      }
+    ],
+    "visual_review": "PASS all eight individually reviewed frames at800x1280 and452x900: direct camera with controls, truthful SUBMITTED result, private blank claim with empty input, readable UNCERTAIN receipt warning. No clipping of primary controls found.",
+    "receipt_in_memory": {
+      "status": "PASS",
+      "fixture": "Existing deterministic unit-test context, no live order/customer token; original renderer used without edits.",
+      "checks": [
+        {
+          "width": 384,
+          "height": 789,
+          "mode": "1",
+          "qr_exact_match": true,
+          "left_ink_margin": 42,
+          "right_ink_margin": 43,
+          "bitmap_or_payload_saved": false
+        },
+        {
+          "width": 576,
+          "height": 1045,
+          "mode": "1",
+          "qr_exact_match": true,
+          "left_ink_margin": 62,
+          "right_ink_margin": 63,
+          "bitmap_or_payload_saved": false
+        }
+      ],
+      "limits": "In-memory native-dot QR/ink-margin checks, not physical printer/paper or phone scan acceptance."
+    },
+    "receipt_recovery_qr_exported": false,
+    "capture_method": "Actual App.run plus original offline HTTP/controller/photo/printer fixtures, fresh process per viewport/sender condition. Original transport replaced with synthetic Mock only. Three actual original captures/compose for result, then original pause/privacy. No private receipt bitmap/payload saved.",
+    "reproduction_driver": "bug027-native/capture-fixture.py.txt; ROOT location normalization only versus locally executed scratch driver, rendering/scenarios identical",
+    "driver_sha256": "daa4b68a6d3b320ea93c57b6b3efaf8655e7190a3c7d77deb330fe4576457b0b",
+    "limits": "Local exact-code evidence, not CI artifact screenshots or physical paper/phone/Windows/Ubuntu device acceptance."
+  },
+  "guide": {
+    "groups": 9,
+    "steps": 44,
+    "exact_guide_form_strings": "MATCH",
+    "browser": {
+      "status": "PASS",
+      "browser": "Local Chromium/Playwright on temporary loopback-only document preview; no external network",
+      "cases": [
+        "new print form starts9 NOT_RUN with unknown SHA",
+        "old printer-OFF saved results not imported or deleted",
+        "current print mode visible and exported",
+        "mixed results, exclusive choices and note persistence",
+        "script-shaped notes stay text",
+        "800/452/360 no horizontal overflow",
+        "clipboard denied fallback",
+        "TXT download exactly matches report",
+        "reset clears new form only",
+        "unavailable localStorage remains usable"
+      ],
+      "page_errors": 0,
+      "limits": "Managed Chromium blocked file:// navigation (initial attempt not PASS). Loopback-only preview validates identical HTML; actual offline-file laptop use remains manual. No printer/provider/credentials."
+    },
+    "current_files_sha256": {
+      "docs/qa/portrait-v2-sandbox/UX07-LAPTOP-CHECK.md": "1539d7613f8ab052feb86210047ded7fad60d9a1e1ddb56e8d3691c8cf644056",
+      "docs/qa/portrait-v2-sandbox/windows-checklist-ux07.html": "c752f4ca21d7c5e4e911fe09b6e5bb5a56b5a2aafffb4392af8f09d0fa39a223"
+    },
+    "old_printer_off_results": "New namespace/schema2 starts NOT_RUN; previous namespace untouched, not imported. Actual laptop SHA remains unknown until owner fills it.",
+    "scope": "Report mode and paper/QR steps match current printed receipt/camera/approved-strip flow; no execution/deployment by the form."
+  },
+  "files_sha256": {
+    ".github/workflows/portrait-kiosk-v2.yml": "3276bd8a45c9d359cfc09589a0f08c498ffc7f9b78d5db3599e61b30399df07e",
+    "photobooth/kiosk_v2/app.py": "845970ba46893128c73b9c90588195c9fca31700a6a8c7cd53e458503a5aac05",
+    "photobooth/kiosk_v2/delivery_options.py": "28fa52951802a4676835ac250b411ae65c230f8aa27dce8e564d832317dde98f",
+    "photobooth/kiosk_v2/photos.py": "bee8257ea04919fe37c524b4c42ef70dcbb68ab5aac478083ad9929eb728759e",
+    "photobooth/kiosk_v2/recovery_receipt.py": "c1c183b46d70a105e7bc3adceebab79b98000be59dd277a829283d3d551654bc",
+    "photobooth/kiosk_v2/sandbox_checkout.py": "34f9248a4f1962e13e92f036181f8a0d60b34cd43f2b89c3671bd74a7f70a2b0",
+    "photobooth/kiosk_v2/sandbox_views.py": "0e55ce5d2d1fad600708e2f58a5f6a513de46fe97d8e9040539f73ea9cd927cd",
+    "photobooth/printer.py": "c75996ed1a580d84a5056760a075d82280bc68434ae09f6910cf4e6d210bb99a",
+    "photobooth/qris_session.py": "f5e3cfee535077adaf840d4dfaba97268d44ca5e4ff20b9dcad460baf4886a6f",
+    "tests/test_crash_supervisor.py": "ba464f368ef47fca086506757113dcd16c7290a62a166f4234eba7416935a71c",
+    "tests/test_kiosk_v2_delivery_options.py": "05913e789ecd0b5a08f28f38e2a02ac218efbf5b6f8623e60d5d9d3161b73555",
+    "tests/test_kiosk_v2_sandbox.py": "8055f7fe9efb4c361f14cb689c8b1b5dc422fee1e708d4786e78eae986545ae5",
+    "tests/test_kiosk_v2_sandbox_widgets.py": "760a40795f499fd8ccd258caf2ebd22fc38ae87b80dc6e3a63385a7cbcaf3b56",
+    "tests/test_paid_camera_widgets.py": "99ea1092c1e47c3fd9a5c9eecc168d6030152535b0140113a6081e82f763b2f1",
+    "tests/test_qris_qr_renewal.py": "ae4cfea3453cfb3454e02881cdbdcca39ca8fc1b8f3bf3332f9e307133801878",
+    "tests/test_qris_saved_credentials.py": "c06ff3297e466184b09841d4f8054c2ec28ef5d5df207cb34ad6d00b45183719",
+    "tests/test_recovery_receipt.py": "5aec1a3fb2d6719e7c4f0b91053119325693be88c8b025788ef1ce7ce852dbe5",
+    "tools/run_portrait_v2_sandbox.py": "f0b5a109a6e7b88e9abc0f0539c64329002353e4233c53b3e1c8558d85b039b4"
+  },
+  "source_application_tree": "1f954efe1a1da33e75282bf788939c6c31d14eb7",
+  "source_tests_tree": "4ac3056618e9919bd84259220fa09ffb7aa61400",
+  "source_tools_tree": "bc960125831d4a5adeb789cd1041d38e29599210",
+  "acceptance_matrix": {
+    "ids": 69,
+    "pass": 59,
+    "fail": 0,
+    "blocked": 9,
+    "not_run": 1,
+    "UX07": "NOT_RUN",
+    "AR13": "CONDITIONAL",
+    "audit": "IN_PROGRESS"
+  },
+  "additional_diagnostics": "Initial browser file:// navigation blocked by managed policy (not PASS); identical HTML verified on temporary loopback-only preview. Initial private receipt-layout scratch invocation omitted repo import path and ERRORed; corrected script uses original renderer/tests without application edits, both widths PASS. No customer/provider/device defect inferred.",
+  "limits": "Actual owner Windows/Midtrans/paper/phone/Ubuntu/Drive/deletion/privacy/support/compensation/commercial release gates remain NOT_RUN/BLOCKED. Dedicated approved Sandbox print profile is not a production or unattended commercial release. PAY22 and WEB01..08 remain blocked; OPS queued docs only. No real provider/printer/Drive/delete/deploy/default/master/new branch operation; no raw secrets/customer media/logs/DBs published. Private work/ and superseded docs stash remain local-only.",
+  "next": "Owner Windows laptop + configured printer/paper + official Midtrans simulator retest using the updated nine-group/44-step guide/form. Confirm exactly one recovery receipt after verified PAID, direct camera with deliberate SIAP, one approved strip batch with original copy count, no reprint/recharge on privacy/restart. Record exact laptop SHA and actual PASS/FAIL/NOT_RUN. Do not repeat completed synthetic work or enable production/Drive/OPS. Genuine device/provider failures get a new isolated regression before any source fix."
+}

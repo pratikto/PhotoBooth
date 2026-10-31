@@ -1,5 +1,15 @@
 # Meong Photobooth — Bug register
 
+## BUG-027 — paid ticket detour / direct camera and approved print
+
+S2 — FIXED IN SOURCE / REGRESSION VERIFIED at4c74ece, test-only crash correction
+e05a358. Full1280/1276 PASS/4 optional SKIP, zero failure/error; matching
+CI 41215811123 all three SUCCESS. Sandbox receipt once after verified PAID, direct
+camera, original deliberate countdown/review and approved strip once. Original
+privacy/restart/unknown-send/OWED guards retained; no production/Drive. Actual
+owner Windows/printer/paper/provider retest NOT_RUN; not formally CLOSED.
+[Exact verification and preserved failure](qa/portrait-v2-sandbox/evidence/bug027-final-verification.json).
+
 ## BUG-026 — expired unpaid QR trapped in customer recovery (31 October)
 
 S2 — OWNER RETEST FAIL at ecc6733; follow-up SOURCE REGRESSION VERIFIED at118b763,

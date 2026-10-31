@@ -1,8 +1,23 @@
 # Autonomous recovery — mandatory fault-injection, QA and acceptance matrix
 
-30 October l2 final: ca7827c full1229/1225PASS/4optionalSKIP, zero failure/error; CI40985975287 all three SUCCESS. Six new portable methods Windows/Linux and two native methods Linux at both portrait sizes PASS. No application defect found. Offline l2 fixture checks verified; owner laptop checklist remains NOT_RUN. Whole UX-07 NOT_RUN; matrix59/0/9/1 unchanged; external/operating/commercial host gates remain.
+## 31 October — BUG-027 verified / actual laptop and paper next
 
-30 October UX-07.l2a: three new original privacy/controller fixture methods PASS locally; source abb086c CI40977963717 all three jobs SUCCESS, portable method Windows/Linux and both native methods Linux PASS. No application defect reproduced. Whole UX-07 NOT_RUN, matrix59/0/9/1 unchanged; combined purchased-job release/drain lifecycle remains next. See UX07-PURCHASED-PRINT-INTEGRATION.md and its l2a receipt.
+Source e05a358 (functional 4c74ece): full 1280 run/1276 PASS/4 optional SKIP,
+zero failure/error; CI 41215811123 all three jobs SUCCESS. 12 receipt +6 crash
+methods Windows/Linux and 7 paid-camera native methods Linux PASS. Eight original
+native screens reviewed at both portrait sizes; 384/576 receipt QR checked only
+in memory. Beginner guide/form synchronized (9 groups/44 steps,10 browser
+scenarios PASS), previous printer-OFF passes not imported. Current dedicated
+Sandbox prints recovery receipt after verified PAID, enters camera directly,
+and prints approved strips; Drive OFF, no automatic restart while printing.
+Whole UX-07 NOT_RUN, matrix 59/0/9/1; AR-13 conditional. Next owner Windows/
+configured paper printer/official Midtrans retest, actual results only; remaining
+provider/webhook/Ubuntu/Drive/retention/privacy/operating/release and queued OPS
+gates separate. [Exact evidence and current limits](evidence/bug027-final-verification.json).
+
+30 October l2 final: ca7827c full1229/1225PASS/4optionalSKIP, zero failure/error; CI40985975287 all three SUCCESS. Six new portable methods Windows/Linux and two native methods Linux at both portrait sizes PASS. No application defect found. Offline l2 fixture checks verified; owner laptop checklist remains NOT_RUN. Whole UX-07 NOT_RUN; matrix 59/0/9/1 unchanged; external/operating/commercial host gates remain.
+
+30 October UX-07.l2a: three new original privacy/controller fixture methods PASS locally; source abb086c CI40977963717 all three jobs SUCCESS, portable method Windows/Linux and both native methods Linux PASS. No application defect reproduced. Whole UX-07 NOT_RUN, matrix 59/0/9/1 unchanged; combined purchased-job release/drain lifecycle remains next. See UX07-PURCHASED-PRINT-INTEGRATION.md and its l2a receipt.
 
 ## 30 October — mock purchased-print chain verified
 
@@ -465,7 +480,7 @@ offline inbox prototype assertions do not certify deployed ingress.
 | UX-04 | **PASS** | `test_kiosk_v2_sandbox_widgets.test_native_claim_and_deliberate_resume_restore_original_capture_without_new_charge` | Original proof, exact saved image count and deliberate countdown; native return screenshots. |
 | UX-05 | **PASS** | `test_ux05_abandonment` (six methods); [complete verification](evidence/ux05-final-verification.json) | Synthetic Windows/Linux HTTP/controller/DB reopens: ambiguous creation/cancel/404 holds original identity and private claim, no replacement charge; fresh terminal unpaid cancellation archives before new visitor, writer/cached-proof faults hold; late settlement preserves OWED and exact paid isolation/lost ACK/archive/return rights. BUG-024 fixed in source/regression verified; actual device/provider acceptance separate. |
 | UX-06 | **PASS** | `test_kiosk_v2_sandbox_widgets.test_postpaid_camera_fault_records_owed_issue_and_hides_media` | Durable paid-unfulfilled issue; no fabricated cancellation. |
-| UX-07 | **NOT_RUN** | `test_ux07_readiness` (five methods), native `test_ux07_precharge_faults_show_safe_quote_and_retry_at_both_portrait_sizes`; [verified components](evidence/ux07-final-verification.json) | Sandbox camera/storage/template/delivery-isolation/freshness failures deny before order/charge; probe cleanup, active identity, eight native error/retry cases at both sizes PASS. Ordinary opt-in nonpayable MOCK gate additionally has 67 focused PASS, full 1178/1174/4, four reviewed error/retry images and matching-source CI 40887868676 with exact Windows/Linux method evidence; [final local/full/CI scope](evidence/ux07-mock-printer-final-validation.json). Explicit read-only device evidence collector has ten methods PASS Windows/Linux, including [report preservation](evidence/ux07-printer-evidence-preservation.json); [source/limits](evidence/ux07-printer-device-evidence.json), actual hardware observations NOT_RUN. [Purchased-print contract](UX07-PURCHASED-PRINT-INTEGRATION.md): explicit atomic mock issuance and offline purchase/job/native-result/HTTP fixtures verified; [exact full/current CI](evidence/ux07-paid-chain-final-verification.json). Original claim/pause/resume/safe-release fixture and commercial mounting/physical acceptance remain pending. Complete purchased-print prepayment integration/actual printer readiness not mounted/certified in transport-off Sandbox; whole stronger gate remains NOT_RUN. |
+| UX-07 | **NOT_RUN** | `test_ux07_readiness` (five methods), native `test_ux07_precharge_faults_show_safe_quote_and_retry_at_both_portrait_sizes`; [verified components](evidence/ux07-final-verification.json) | Sandbox camera/storage/template/delivery-isolation/freshness failures deny before order/charge; probe cleanup, active identity, eight native error/retry cases at both sizes PASS. Ordinary opt-in nonpayable MOCK gate additionally has 67 focused PASS, full 1178/1174/4, four reviewed error/retry images and matching-source CI 40887868676 with exact Windows/Linux method evidence; [final local/full/CI scope](evidence/ux07-mock-printer-final-validation.json). Explicit read-only device evidence collector has ten methods PASS Windows/Linux, including [report preservation](evidence/ux07-printer-evidence-preservation.json); [source/limits](evidence/ux07-printer-device-evidence.json), actual hardware observations NOT_RUN. [Purchased-print contract](UX07-PURCHASED-PRINT-INTEGRATION.md): explicit atomic mock issuance and offline purchase/job/native-result/HTTP fixtures verified; [exact full/current CI](evidence/ux07-paid-chain-final-verification.json). Original claim/pause/resume/safe-release fixture verified at ca7827c; dedicated Sandbox now mounts approved receipt/photo printing under [BUG-027 verification](evidence/bug027-final-verification.json). Stronger purchased-print prepayment/paper and unattended commercial/operating acceptance remain unverified; whole gate NOT_RUN. |
 | UX-08 | **PASS** | `test_booth_sync.test_configured_layout2_without_credentials_is_offline_ready_and_never_falls_back_to_legacy_oauth` | Offline local progress with deferred Drive and preserved layout/claims. |
 | UX-09 | **PASS** | `test_release_session.test_uncertain_print_never_yields_isolation_receipt_or_releases_booth` | Uncertain print remains held, no automatic resend; paper outcome NOT_RUN. |
 | UX-10 | **PASS** | `test_booth_sync.test_two_transactions_keep_exact_local_folder_mapping_across_restart` | Immutable delivery mapping/retry/retention fixtures; actual Drive acceptance NOT_RUN. |
@@ -515,9 +530,9 @@ matrix PASS or used to waive device/merchant requirements.
 
 | Gate | Evidence required | Current |
 | --- | --- | --- |
-| Source unit/integration | Exact SHA, OS, command, full count PASS/FAIL/SKIP, fixtures and no secret leakage | PASS at2cac0ba: 1221 run/1217 PASS/4 optional SKIP (three palm assets, one video); prior native-audio failure retained in exact-source receipt above |
+| Source unit/integration | Exact SHA, OS, command, full count PASS/FAIL/SKIP, fixtures and no secret leakage | PASS at e05a358:1280 run/1276 PASS/4 optional SKIP (three palm assets, one video); exact-source receipt above retains prior crash-fixture failure |
 | Crash/restart fault-injection | Every PAY/CAP/UX applicable ID mapped to test output | NOT_RUN for complete gate; see explicit missing exact windows above |
-| Complete GUI regression | One final applicable full suite after last functional change; no borrowed old pass | PASS at2cac0ba with four optional SKIPs; native model/video checks remain separate from physical acceptance |
+| Complete GUI regression | One final applicable full suite after last functional change; no borrowed old pass | PASS at e05a358 with four optional SKIPs; native model/video checks remain separate from physical acceptance |
 | GUI screenshot/pixels | Tested exact source 800×1280 and 452×900, readability and QR identity | PASS for 28 clean c94696d scenes / four QR checks; retake/multi-design visual scenes NOT_RUN |
 | Windows booth | Real camera/storage, app close/reopen/power interruption, native touch/keyboard | NOT_RUN |
 | Ubuntu mini PC | Actual graphical session service, permissions, startup, real camera/print hardware | NOT_RUN |

@@ -1,5 +1,5 @@
 {
-  "status": "PASS",
+  "status": "HISTORICAL_VERIFIED_GUIDE_SNAPSHOT",
   "browser": "Local Chromium/Playwright on temporary loopback-only document preview; no external network",
   "cases": [
     "new print form starts9 NOT_RUN with unknown SHA",
@@ -34,5 +34,7 @@
     "skip": 4,
     "seconds": 455.632,
     "report_sha256": "0c2f66a5341a0c95eb910ebd06659a34e29751a6efb990d497c46ca3ddbdb7cd"
-  }
+  },
+  "documentation_source": "e71aa1923f9df2f9d4fd4e58709c360f888db7fd",
+  "final_verification": "bug027-final-verification.json"
 }

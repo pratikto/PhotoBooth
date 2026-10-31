@@ -1,5 +1,16 @@
 # Meong Photobooth — product and technical decisions
 
+## 31 October — dedicated Sandbox printed recovery receipt and approved photos
+
+Latest owner correction recorded in BUG-027 selects both receipt and photo-strip
+printing in this test profile: receipt once after verified PAID, direct camera,
+manual SIAP/countdown/review, approved strips automatically. Drive/production
+remain OFF. This narrow profile supersedes older blanket Sandbox printer-OFF
+and mandatory on-screen ticket-save guidance; ordinary profiles keep opt-ins.
+No uncertainty replay, false paper fulfillment, automatic printing-profile
+crash restart, commercial release or privacy/financial bypass follows.
+[Current contract and source verification](qa/portrait-v2-sandbox/BUG027-PAID-TO-PHOTO.md).
+
 ## Owner-approved GUI v2 Operator Settings / Emulate Ticket — 29 October 2026 (future implementation)
 
 The owner approved **all the recorded Settings/QR/audio/demo-ticket recommendations and their subsequent corrections**, requested exhaustive English Codex documentation, and explicitly reaffirmed **AR-00 → AR-13 as highest development priority**. No new Settings source has been implemented under this documentation request. Read the complete [operator Settings decision register](qa/portrait-v2-operator-settings/DECISION-REGISTER.md) with **50 numbered decisions and supersession table**, [master requirements](qa/portrait-v2-operator-settings/README.md), [post-AR implementation roadmap](qa/portrait-v2-operator-settings/IMPLEMENTATION-ROADMAP.md), [QA matrix](qa/portrait-v2-operator-settings/ACCEPTANCE-MATRIX.md) and [Codex handover](qa/portrait-v2-operator-settings/CODEX-HANDOVER.md).

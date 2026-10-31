@@ -1,5 +1,53 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 31 October — BUG-027 final regression, native evidence and owner handoff
+
+Tested GitHub source **e05a3581963c2fd45e87566672684369598ac2d2**, functional **4c74ececb69a84a64a9619fd0d3980e5bdea6fc6**;
+first verified guide micro-push **e71aa1923f9df2f9d4fd4e58709c360f888db7fd**. No application/test/tool/
+workflow changes in this continuation. Final full **1280 run/1276 PASS/0 FAIL/
+0 ERROR/4 optional SKIP**,455.632s, process exit0. Python3.12.14/Kivy2.3.1/
+ffpyplayer4.5.3, Linux softwareGL/dummy audio, GUI/audio opt-ins. Skips: three
+native palm-assets cases and one native-video opt-in, never counted PASS.
+
+**CI 41215811123 all three jobs SUCCESS**, exact e05a358, verified actual job
+metadata/logs: 12 receipt methods and 6 crash-policy methods individually PASS
+Windows/Linux; 7 paid-camera methods individually PASS Linux within recovery 521.
+Windows ledger 208 PASS, Linux recovery 521 PASS; separate native 121/120 PASS/
+one optional palm SKIP. Source 4c74ece CI 41215406163 one stale crash-fixture FAIL
+retained; runtime correctly denies printing profile restart. Corrected test-only
+source e05a358 preserves that guard. Superseded 4c full has no final PASS.
+
+Eight actual App.run synthetic screens reviewed at 800x1280 and 452x900: one
+receipt submission then direct camera; approved strip once with truthful
+SUBMITTED; private claim after pause; readable unknown-receipt warning without
+resend. Original HTTP/controller/photo/printer choreography used, injected sender
+only. Both native-dot 384/576 receipt QR payloads match original public test
+context in memory with safe ink margins; no receipt bitmap/token exported.
+Guide/form 9 groups/44 steps match exactly. Chromium 10 browser scenarios PASS,
+zero page errors; new namespace prevents old printer-OFF passes being imported.
+Managed browser blocked file:// (not PASS); identical HTML verified over local
+preview; actual offline-file laptop use still manual. One scratch import-path
+error corrected without application change, not a runtime regression.
+[Exact source/results/CI/hashes/screens/limits](evidence/bug027-final-verification.json).
+
+Approved current test profile: verified Sandbox PAID → one recovery receipt →
+direct camera → deliberate SIAP/countdown/review/retake → approved photo-strip
+print. Drive OFF, no production. No receipt/strip automatic replay on restore;
+SENDING/UNCERTAIN retains inspection hold, SUBMITTED is not proof of paper or
+satisfied OWED. Printing profile cannot reserve automatic crash restart.
+Older blanket Sandbox printer-OFF/mandatory-ticket-screen guidance is historical.
+
+**Next:** Owner Windows laptop + configured printer/paper + official Midtrans simulator retest using the updated nine-group/44-step guide/form. Confirm exactly one recovery receipt after verified PAID, direct camera with deliberate SIAP, one approved strip batch with original copy count, no reprint/recharge on privacy/restart. Record exact laptop SHA and actual PASS/FAIL/NOT_RUN. Do not repeat completed synthetic work or enable production/Drive/OPS. Genuine device/provider failures get a new isolated regression before any source fix.
+Whole UX-07 NOT_RUN;69 IDs remain 59 PASS/0 FAIL/9 BLOCKED/1 NOT_RUN. AR-13
+conditional/audit IN_PROGRESS. Stronger purchased-print prepayment/paper and
+commercial/operating acceptance are not closed by this Sandbox mount. All safe
+progress is in the same branch; this containing docs/artifact publication is the
+final safe checkpoint (resolve containing SHA through Git/remote). Only private
+synthetic work/ and prior superseded docs stash stay local; no unpublished
+application patch. No new branch/master/default/deploy/production/Drive/deletion/
+OPS or real provider/physical printer operation. Rollback scoped reviewed inverse
+code only; retain all financial, receipt/print, claim, audit and media records.
+
 ## 31 October — BUG-027 laptop guide synchronized / browser verified
 
 Remote/test source e05a3581963c2fd45e87566672684369598ac2d2, functional

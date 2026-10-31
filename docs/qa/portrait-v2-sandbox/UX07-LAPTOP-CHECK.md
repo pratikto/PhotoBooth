@@ -440,15 +440,18 @@ SENDING/UNCERTAIN, lost ACK, kegagalan arsip, fence dan kesamaan hash sudah puny
 bukti otomatis tersendiri; tidak diminta direkayasa pengguna lewat file/DB/printer.
 L08 hanya bukti GUI Sandbox, bukan bukti host paid-print komersial.
 
-Source fixture ca7827c: **1229 run / 1225 PASS / 4 optional SKIP / 0 FAIL/ERROR**;
-CI40985975287 ketiga job SUCCESS. Ini terpisah dari SHA/hasil laptop.
-Paid-print host komersial belum dipasang. PAY-22 dan WEB-01–08 tetap BLOCKED;
-Windows/Ubuntu mini-PC, merchant, kertas, ponsel/Drive/deletion, privasi operasional,
-support/kompensasi dan release punya gate sendiri. Form ini tidak menyatakan
-seluruh UX-07/AR-13 selesai dan tidak mengaktifkan produksi. Launcher Sandbox
-terbaru memang mengaktifkan cetak tiket dan hasil foto sesuai lingkup BUG-027;
-Drive tetap OFF. Catatan source ca7827c di atas adalah bukti fixture historis,
-bukan hasil paket cetak terbaru. Ikuti checkpoint BUG-027 untuk source/hasil final.
+Source BUG-027 terbaru **e05a358**: **1280 run / 1276 PASS / 4 optional SKIP /
+0 FAIL/ERROR**, CI41215811123 ketiga job SUCCESS. Kamera langsung setelah satu
+tiket, cetak hasil disetujui, privasi/pemulihan dan larangan cetak ulang diuji
+secara sintetis; ini terpisah dari SHA/hasil laptop. Lihat
+[bukti dan batas pengujian](evidence/bug027-final-verification.json).
+
+Fixture l2 terdahulu ca7827c (1229 run/1225 PASS/4 skip, CI40985975287) tetap
+catatan historisnya sendiri. Cetak Sandbox sekarang memang terpasang sesuai
+BUG-027; penerimaan layanan komersial/produksi belum diberikan. PAY-22 dan
+WEB-01–08 tetap BLOCKED; Windows/Ubuntu mini-PC, merchant, kertas, ponsel/Drive/
+deletion, privasi operasional, support/kompensasi dan release punya gate sendiri.
+Form tidak meluluskan seluruh UX-07/AR-13 atau mengaktifkan produksi. Drive OFF.
 
 ## Kirim hasil
 
