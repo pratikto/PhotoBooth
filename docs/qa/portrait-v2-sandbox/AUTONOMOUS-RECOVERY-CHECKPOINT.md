@@ -1,5 +1,31 @@
 # Autonomous recovery — session checkpoint and resume contract
 
+## 31 October — BUG-028 minimum-CI encoder fixture correction
+
+Functional source **52d69fd57b69201e3af1b016a90690945e8e1e1a** full regression
+completed: **1288 run /1284 PASS /0 FAIL /0 ERROR /4 optional SKIP,481.717s**,
+process exit0. Optional native video and three palm-model opt-ins are not PASS.
+CI41221421520: Windows and navigation SUCCESS; Linux recovery529 methods failed
+8 subcases because optional python-escpos was absent before the injected sender.
+Controlled encoder-absence reproduction:3 methods/8 subtest FAIL/0 ERROR,11.959s.
+Test-only correction injects synthetic ESC/POS bytes, as existing receipt fixtures
+do, preserving every original one-send/one-charge/no-capture assertion. Application,
+workflow and test runner unchanged from52d69fd. Controlled corrected3 PASS/15.357s;
+corrected focused **57 PASS/0 FAIL/ERROR/SKIP,27.197s**. This fixture correction
+micro-commit requires matching current CI; no current CI success is claimed yet.
+Native original App.run captures at800×1280 and452×900 show live slow preparation
+surviving120s simulated idle +pause/resume and reaching camera without a ticket,
+with one unavailable sender attempt and no capture. Four synthetic screenshots
+visually reviewed; final artifact publication pending. No receipt QR/token saved.
+
+Next: verify matching-source CI, publish native/final receipts and update owner
+laptop instructions, then docs-only micro-push/remote verification. Actual owner
+retest remains pending; exact owner laptop SHA/cause unknown. Already locked old
+sessions retain original proof rules; no reset/new payment to unlock. WholeUX07
+NOT_RUN; matrix59PASS/0FAIL/9BLOCKED/1NOT_RUN; AR13conditional. No production,
+Drive, real printer/provider/customer data, OPS, deployment or branch changes.
+Only private work/ and superseded local docs stash remain outside GitHub.
+
 ## 31 October — BUG-028 live STARTING allocation recovery focused-verified
 
 Owner reports simulator PAID/native MENYIAPKAN IZIN FOTO and confirms no printer.

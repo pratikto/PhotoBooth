@@ -1,0 +1,32 @@
+{
+  "functional_source": "52d69fd57b69201e3af1b016a90690945e8e1e1a",
+  "scope": "Test-only optional encoder isolation; runtime/workflow/runner unchanged",
+  "failed_ci": {
+    "run_id": 41221421520,
+    "linux_job": 124596594781,
+    "conclusion": "failure",
+    "recovery_methods": 529,
+    "subtest_failures": 8,
+    "errors": 0,
+    "windows": "success",
+    "navigation": "success"
+  },
+  "reports": {
+    "bug028-full": {
+      "sha256": "d3e72565652150d26d11a3e2dff1fd88d40ecd6aac0c8f5065ab74f7d57a88ce",
+      "summary": "KIOSK_UNITTEST_SUMMARY: run=1288 failures=0 errors=0 skipped=4 success=True"
+    },
+    "bug028-encoder-absence-before": {
+      "sha256": "84b487e1e1b661a037da0c1bab488c88dd28d5e5f7cb85a45e580effff8c72d3",
+      "summary": "KIOSK_UNITTEST_SUMMARY: run=3 failures=8 errors=0 skipped=0 success=False"
+    },
+    "bug028-encoder-absence-corrected": {
+      "sha256": "6708f943f73d29cc3214a79e35e1f82ecce6a779daf5ea39c5cead8f8b07f570",
+      "summary": "KIOSK_UNITTEST_SUMMARY: run=3 failures=0 errors=0 skipped=0 success=True"
+    },
+    "bug028-fixture-final-focused": {
+      "sha256": "bbda331696a4cfc80ac594525509e85a3c8a67d5eac2aa44395d23abdffffbdf",
+      "summary": "KIOSK_UNITTEST_SUMMARY: run=57 failures=0 errors=0 skipped=0 success=True"
+    }
+  }
+}

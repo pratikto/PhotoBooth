@@ -10,6 +10,13 @@ from photobooth.printer import ThermalPrinter,PrinterConfig
 import tests.test_kiosk_v2_sandbox_widgets as fixture
 
 class PaidStartingTests(TestCase):
+    def setUp(self):
+        # The minimum CI environment intentionally omits optional python-escpos.
+        # These cases exercise the original route and an unavailable sender;
+        # receipt pixel/QR encoding has its own original unit coverage.
+        encoder=patch.object(ThermalPrinter,'raster_payload',return_value=b'SYNTHETIC ESC/POS')
+        encoder.start();self.addCleanup(encoder.stop)
+
     def test_missing_physical_printer_still_enters_original_camera_with_configured_photo_worker(self):
         from photobooth.kiosk_v2.photos import configured_test
         original=Window.size
