@@ -2,7 +2,7 @@
 
 ## 31 October — BUG-026 Sandbox QR renewal
 
-Same-checkout verified expiry replacement preserves design/copies/amount, new key and ticket; one automatic then manual renewal, untouched button returns to ads after30s. Dedicated Sandbox only, camera/storage/privacy/financial guards retained. Final15 focused PASS; full/current CI pending, owner laptop NOT_RUN.
+Same-checkout verified expiry replacement preserves design/copies/amount, new key and ticket; one automatic then manual renewal, untouched button returns to ads after30s. Dedicated Sandbox only, camera/storage/privacy/financial guards retained. Final15 focused PASS; functional5201c10 full1251/1247 PASS/4optional SKIP, zero failure/error; corrected-source0d92831 CI41205340183 all three SUCCESS. Owner laptop NOT_RUN.
 [Contract/evidence](qa/portrait-v2-sandbox/BUG026-QR-RENEWAL.md).
 
 

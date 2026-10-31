@@ -97,3 +97,18 @@ not tests: ffpyplayer4.5.4 selected an sdist requiring absent SDL_version.h.
 CI-only pin4.5.3 matches installed local runtime; Linux/Windows CPython3.12 wheel
 availability validated. Application requirements/source unchanged. Original full
 continues at5201c10; matching corrected workflow CI required. Failures retained.
+
+## Final source verification / owner manual next
+
+Functional5201c10 full1251/1247 PASS/4optional SKIP, zero failure/error,491.880s.
+Corrected CI source0d92831 (only dependency pin/docs differ) CI41205340183 all
+three SUCCESS: Windows194 PASS, Linux recovery493 PASS, native121/120PASS/1skip.
+Eleven portable cases individually PASS Windows/Linux and four native cases
+PASS Linux; six native views checked. [Exact results/history](evidence/bug026-verification.json).
+
+FIXED IN SOURCE / REGRESSION VERIFIED; owner laptop/provider NOT_RUN.
+[Manual renewal/new-ticket/30s instructions](UX07-LAPTOP-CHECK.md#jika-qr-pembayaran-kedaluwarsa-saat-l02).
+Current source supports automatic first renewal only for a live acknowledged
+visit; each replacement requires its own saved ticket. No old-ticket alias or
+customer photo bypass. Pending/review/paid/unknown and physical obligations retain
+original guards. No production/commercial certification or transport activation.

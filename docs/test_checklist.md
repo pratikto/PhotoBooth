@@ -1,5 +1,7 @@
 # Meong Photobooth — test evidence and acceptance
 
+31 October BUG-026: functional5201c10 full1251 run/1247 PASS/0 FAIL/ERROR/4optional SKIP,491.880s. Corrected CI0d92831/run41205340183 all three SUCCESS; Windows194/Linux493 PASS, native121/120PASS/1skip. Eleven new portable and four native methods individually PASS. [Receipt/history/manual limits](qa/portrait-v2-sandbox/evidence/bug026-verification.json). Owner laptop/provider NOT_RUN; whole matrix unchanged.
+
 ## 30 October — mock purchased-print chain verified
 
 Seven source/test micro-pushes through2cac0ba (functional e82d0ee); atomic original

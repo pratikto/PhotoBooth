@@ -1,5 +1,43 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 31 October — BUG-026 renewal +30s return fully source-verified
+
+Functional **5201c1012d85412635f438219d8a4c1e96fbea34**: full **1251 run/1247 PASS/
+0 FAIL/0 ERROR/4 optional SKIP**,491.880s, Linux/Python3.12.14/Kivy2.3.1/
+ffpyplayer4.5.3/softwareGL/dummy audio, GUI/audio opt-ins. Three optional native
+palm asset skips and one native-video opt-in retained. Corrected CI source
+**0d92831d82fbd72248085509768748d844f63e26**, **CI41205340183 all three SUCCESS**:
+Windows194 PASS, Linux recovery493 PASS, native121/120 PASS/1optional palm skip.
+All11 new portable methods individually PASS Windows/Linux; all4 new native
+methods PASS Linux, auto/manual/ticket at800x1280/452x900. Six native synthetic
+views reviewed; no recovery credential exported. No source change to app/tests/
+tools between functional/full and CI pin; verified by Git. [Exact receipt](qa/portrait-v2-sandbox/evidence/bug026-verification.json).
+
+Delivered approved same-checkout expiry flow: fresh raw unpaid expire → exact old
+archive → one live automatic new order/QR with same designs/copies/amount → new
+save-ticket gate and clear renewed-QR notice. Later expiry uses BUAT QR BARU;
+untouched30seconds returns to advertising without billing/media mutation. Busy,
+verification/unknown/paid/photo/owed states never released by this timer. Original
+privacy generation and readiness gate fence renewal; restart cannot auto-create
+for a new visitor. Original late-terminal settlement REVIEW_REQUIRED remains on
+old order; never credited silently to successor. Original Sandbox transports OFF.
+
+Core93f2c95, native5201c10 and CI-pin0d92831 each pushed/remote verified. Old Linux
+install failure4.5.4 sdist/SDL_version.h and superseded run remain recorded; later
+4.5.3 binary pin passes, no application requirements/device installation changed.
+Initial focused regressions/error-handler placement and recent-proof invalidation
+corrections retained in receipt. No false PASS from failed or cancelled runs.
+
+**Next:** owner [manual L02 renewal/new-ticket/30s check](qa/portrait-v2-sandbox/UX07-LAPTOP-CHECK.md#jika-qr-pembayaran-kedaluwarsa-saat-l02) on actual laptop
+and official Midtrans simulator, with source/device and partial results. Source
+fix REGRESSION VERIFIED, owner/device/provider acceptance **NOT_RUN**; BUG-026 not
+formally closed/released. Whole UX-07 NOT_RUN, matrix59/0/9/1 and AR-13/external/
+commercial gates unchanged; OPS queued, no production/master/default/new branch/
+merge/deploy. Old dirty /workspace/PhotoBooth and private work/ (including withdrawn
+draft and synthetic wheel downloads) remain untouched/local-only, not backed up by
+these pushes. Containing final checkpoint is docs only; resolve its SHA in Git.
+
+
 ## 31 October — BUG-026 CI dependency install correction
 
 GUI source5201c10 pushed/remote verified; full running at exact functional source.

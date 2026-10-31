@@ -1,5 +1,7 @@
 # P4b Sandbox → P5 readiness (FEAT-020 / FEAT-022)
 
+31 October — [expiry renewal/new-ticket/30s idle guide](UX07-LAPTOP-CHECK.md#jika-qr-pembayaran-kedaluwarsa-saat-l02). BUG-026 source verified: full1251/1247PASS/4optionalSKIP; corrected-source CI41205340183 all three SUCCESS. Actual owner simulator/device acceptance remains manual.
+
 **Current owner laptop check:** [44-step beginner guide](UX07-LAPTOP-CHECK.md)
 and [offline tick/copy form](windows-checklist-ux07.html). Includes setup, actual
 button names, expected results, per-item notes and partial NOT_RUN reporting.

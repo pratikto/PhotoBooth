@@ -1,5 +1,7 @@
 # Meong Photobooth — GUI v2
 
+Sandbox: [QR kedaluwarsa → QR baru, tiket baru, dan kembali iklan setelah30detik](docs/qa/portrait-v2-sandbox/UX07-LAPTOP-CHECK.md#jika-qr-pembayaran-kedaluwarsa-saat-l02).
+
 Sandbox lama tanpa tiket pemulihan: [langkah arsip uji dengan PIN lokal](docs/qa/portrait-v2-sandbox/BUG025-LEGACY-NO-TICKET.md#final-verified-result--owner-retest-next). Pesanan/foto/hak lama tetap disimpan; printer/Drive tetap OFF.
 
 [Interactive laptop checklist — 44 guided steps, expected results, notes and copy report](docs/qa/portrait-v2-sandbox/windows-checklist-ux07.html) (open the HTML locally).

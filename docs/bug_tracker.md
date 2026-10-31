@@ -2,10 +2,10 @@
 
 ## BUG-026 — expired unpaid QR trapped in customer recovery (31 October)
 
-S2 — IN_PROGRESS. Owner screenshot EXPIRED/NONE/no obligation; exact laptop SHA
+S2 — FIXED IN SOURCE / REGRESSION VERIFIED; owner retest NOT_RUN. Owner screenshot EXPIRED/NONE/no obligation; exact laptop SHA
 unknown. Approved same-page renewal preserves design/copies, creates new order/QR
 after fresh proof, archives old record, keeps late-paid/review/uncertain cases.
-Core checkpoint41 PASS, native renewal/30s idle now mounted, final15 focused PASS. Full/current CI pending; owner laptop NOT_RUN.
+Core checkpoint41 PASS, native renewal/30s idle now mounted, final15 focused PASS. Functional5201c10 full1251/1247 PASS/4optional SKIP, zero failure/error. CI41205340183 at0d92831 all three SUCCESS; source unchanged by CI-only pin. Owner laptop NOT_RUN.
 [Contract/checkpoint](qa/portrait-v2-sandbox/BUG026-QR-RENEWAL.md).
 
 

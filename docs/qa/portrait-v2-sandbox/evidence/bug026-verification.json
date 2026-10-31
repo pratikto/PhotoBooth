@@ -2,7 +2,7 @@
   "date": "2026-10-31",
   "base": "c478bce2e63478ead03d88b52efe8ad3738ef715",
   "core_source": "93f2c9562c01d362ef578e39b73878663f65bb1d",
-  "status": "GUI_FOCUSED_VERIFIED_FULL_CI_PENDING",
+  "status": "REGRESSION_AND_CORRECTED_SOURCE_CI_VERIFIED_OWNER_LAPTOP_NOT_RUN",
   "scope": "Approved same-checkout Sandbox expiry renewal, same selection/amount; one auto renewal while live, then manual button; user refinement: untouched button returns to advertising after30s. New order gets its own save-ticket gate.",
   "focused": {
     "core_checkpoint": {
@@ -65,8 +65,38 @@
     }
   ],
   "capture": "Six original native payment/expired/unchecked views reviewed, clean process per size following existing render convention. Only nonpayable synthetic payment QR exported; no customer recovery-ticket payload/PIN/merchant secret.",
-  "full": "PENDING final functional commit",
-  "ci": "PENDING final functional commit",
+  "full": {
+    "source": "5201c1012d85412635f438219d8a4c1e96fbea34",
+    "run": 1251,
+    "pass": 1247,
+    "fail": 0,
+    "error": 0,
+    "skip": 4,
+    "seconds": 491.88,
+    "sha256": "689273ebbf82920f86e7cc0ba23af3315d574b29bfe93c90aff11e59efc8165b",
+    "environment": "Linux Python3.12.14 Kivy2.3.1 ffpyplayer4.5.3 softwareGL/SDLoffscreen/dummy audio; GUI/audio opt-ins",
+    "optional_skips": "three native palm assets; one native video opt-in"
+  },
+  "ci": {
+    "run": 41205340183,
+    "source": "0d92831d82fbd72248085509768748d844f63e26",
+    "run_url": "https://github.com/pratikto/PhotoBooth/actions/runs/41205340183",
+    "pure": "SUCCESS",
+    "windows": "SUCCESS",
+    "windows_job": 124549176406,
+    "windows_ledger_run": 194,
+    "windows_new_portable_methods_pass": 11,
+    "linux": "SUCCESS",
+    "all_jobs": "SUCCESS",
+    "linux_job": 124549176159,
+    "pure_job": 124549176329,
+    "linux_ledger_run": 493,
+    "linux_ledger_pass": 493,
+    "linux_native_run": 121,
+    "linux_native_pass": 120,
+    "linux_native_skip": 1,
+    "linux_new_methods_pass": 15
+  },
   "limits": [
     "No actual customer records, merchant requests, photos, print or Drive used. Dedicated Sandbox remains transport OFF.",
     "Actual Windows/Ubuntu/device/simulator/clipboard acceptance remains manual; screenshot owner SHA unknown.",
@@ -85,8 +115,13 @@
       "source": "5201c1012d85412635f438219d8a4c1e96fbea34",
       "run": 41205080811,
       "failed_linux_job": 124548409598,
-      "failure": "Same upstream4.5.4 source-build install failure, not application test PASS. Superseded by CI-only4.5.3 pin."
+      "failure": "Same upstream4.5.4 source-build install failure, not application test PASS. Superseded by CI-only4.5.3 pin.",
+      "overall": "CANCELLED/superseded after CI pin push; Linux install job failed before tests"
     }
   ],
-  "ci_pin": "Portrait workflow only pins ffpyplayer4.5.3 on Linux/Windows, matching existing local tested runtime. Both CPython3.12 wheels downloaded and ZIP-validated; application requirements/source unchanged. No live machine installation."
+  "ci_pin": "Portrait workflow only pins ffpyplayer4.5.3 on Linux/Windows, matching existing local tested runtime. Both CPython3.12 wheels downloaded and ZIP-validated; application requirements/source unchanged. No live machine installation.",
+  "functional_source": "5201c1012d85412635f438219d8a4c1e96fbea34",
+  "ci_source": "0d92831d82fbd72248085509768748d844f63e26",
+  "source_identity": "Full at functional5201c10; corrected CI at0d92831 changes only workflow dependency pin/docs. git diff --quiet confirms identical photobooth/tests/tools. Existing local full already used ffpyplayer4.5.3.",
+  "next": "Owner closes old launcher, pulls same branch and runs dedicated Sandbox. Verify official provider expiry (no file/time edits), one live renewal + new-ticket save + latest simulator URL; repeat expiry tests manual button, leave untouched30s to ads. Pending/paid/unknown cases remain original holds. Record actual SHA/device and partial results in L02."
 }
