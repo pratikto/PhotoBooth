@@ -1,5 +1,13 @@
 # Meong Photobooth — current feature status
 
+## 1 November — Unattended handoff and auto-isolation approved (DESIGN ONLY, NOT IMPLEMENTED)
+
+Owner explicitly approved the proposed complete recovery/auto-isolation roadmap and asked to update **documentation only, without touching code**. [Canonical 55KB owner specification](qa/portrait-v2-sandbox/UNATTENDED-SESSION-HANDOFF-OWNER-APPROVED.md) includes **six Mermaid flowcharts**, 20 signed-off owner decisions, detailed state/authority/payment matrices, risk controls and **50 UAH-001–050 NOT_RUN test scenarios**.
+
+**P0.1** original receipt print -> 30s onscreen full-ticket QR/code fallback on unavailable/failed/uncertain receipt (printed path present, fallback NOT_IMPLEMENTED); **P0.2** protected privacy lock -> public Advertising (NOT_IMPLEMENTED); **P0.3** on new Photo/Game click, machine-authorized safe PAID isolation PREPARE/local receipt/ACK/archive (NOT_IMPLEMENTED, current operator PIN required); **P0.4** terminal unpaid vs UNKNOWN/settlement race and aged paid claim separation (NEW PATH NOT_IMPLEMENTED); **P0.5** active-locked and archived ticket claim from ads with busy booth WAIT (NEW PATH NOT_IMPLEMENTED); **P0.6** regression/device acceptance (NOT_RUN). Followed by **P1** BUG-029/UX-07/AR-12 actual acceptance and **P2** human-approved refund/remedy/AR-13 release controls.
+
+The owner accepts that, after an **actual opportunity** to save the genuine original printed or 30s-screen ticket, failure to save it forfeits self-service access to a locked photo session. It does **not** erase old PAID/OWED obligations or warrant automatic refund; real paper delivery is not proved by printer transport SUBMITTED. No source changes, new branch, CI/device test, deployment, release or readiness upgrade occurred. Keep AR-00–AR-13 financial/privacy safeguards authoritative; existing AR-13 remains CONDITIONAL.
+
 ## 1 November — BUG-029 QRIS header flight reset (OPEN, documentation only)
 
 Owner reports the decorative Meong fails to fly the full left-to-right
