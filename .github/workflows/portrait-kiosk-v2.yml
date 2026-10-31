@@ -102,7 +102,7 @@ jobs:
                   ('test_ux07_lifecycle.PurchasedLifecycleTests.', 1),
                   ('test_ux07_lifecycle_release.PurchasedReleaseTests.', 5),
                   ('test_qris_qr_renewal.QrRenewalTests.', 12),
-                  ('test_recovery_receipt.RecoveryReceiptTests.', 5),
+                  ('test_recovery_receipt.RecoveryReceiptTests.', 6),
                   ('test_recovery_receipt.RecoveryReceiptSessionTests.', 7),
                   ('test_paid_camera_widgets.PaidCameraTests.', 7),
                   ('test_paid_starting.StartingRetryTests.', 5),

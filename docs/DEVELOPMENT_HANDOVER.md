@@ -1,5 +1,36 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 31 October — BUG-028 scanner-fixture correction focused-verified
+
+Functional **52d69fd57b69201e3af1b016a90690945e8e1e1a**, previous test-only
+**24ead05a45cd6cda70ad3630d4a62ca85395b7e5** (pushed/remote verified).
+Current increment changes tests/workflow only; original receipt renderer/scanner,
+all application and runner files remain identical to52d69fd. Its complete full
+1288run/1284PASS/4optionalSKIP, zero fail/error,481.717s and native4 scenes apply.
+Current focused **58 PASS/0 FAIL/ERROR/SKIP,34.029s**, including128 full native
+receipts (64 public synthetic payloads ×384/576), original primary/alternate
+scanner exact-text assertion and real paid-photo restore worker/backend proof.
+
+Previous CI41222182150: Windows/navigation SUCCESS; Linux529run/1FAIL/0ERROR,
+164.661s, old fixture decoded with primary only. All five portable and three
+new STARTING native methods PASS. Existing scanner already has one bounded
+Aruco fallback; reuse it rather than mock decoded tickets or change production.
+Primary-only corpus13run/4subtestFAIL/0ERROR,6.926s; experimental Q-level focused
+58run/9subtestFAIL/0ERROR,33.978s not a fix, restored original M renderer. No
+runtime experiment published. Earlier optional-encoder CI failure also retained.
+[Exact focused fixture receipt](qa/portrait-v2-sandbox/evidence/bug028-scanner-fixture-verification.json).
+
+Original live slow STARTING survives idle/pause before local-ready, retries same
+operation and reaches camera with unavailable printer; no new payment/capture/
+receipt. Old/private/restarted proof rules remain; owner laptop SHA/cause unknown,
+actual retest PENDING. Native/full source52 unchanged, actual paper/webcam not
+verified. Next matching-source CI, final evidence/guide checkpoint and docs-only
+micro-push; no redundant full rerun for these tests-only corrections. WholeUX07
+NOT_RUN;matrix59/0/9/1;AR13conditional. No production/Drive/OPS/device/customer
+operations. Other final docs/artifacts remain local pending matching CI; work/
+and superseded docs stash private. Containing micro-commit SHA via Git log;
+next final checkpoint pins it exactly and verifies remote HEAD.
+
 ## 31 October — BUG-028 minimum-CI encoder fixture correction
 
 Functional source **52d69fd57b69201e3af1b016a90690945e8e1e1a** full regression

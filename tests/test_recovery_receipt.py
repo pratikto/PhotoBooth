@@ -26,6 +26,26 @@ class RecoveryReceiptTests(TestCase):
                 self.assertIn('Tidak perlu membayar ulang.',INSTRUCTIONS)
                 self.assertIn('Pilih SCAN QR TIKET DI KAMERA.',INSTRUCTIONS)
 
+    def test_public_payload_corpus_scans_exact_original_at_both_native_paper_widths(self):
+        import base64,hashlib
+        from photobooth.kiosk_v2.sandbox_checkout import SandboxCheckout
+        adapter=SandboxCheckout(Mock())
+        # Public deterministic synthetic corpus includes the two M-level decoder
+        # counterexamples; no merchant/customer capability or bitmap is stored.
+        for index in range(64):
+            digest=hashlib.sha256(('synthetic-receipt-'+str(index)).encode()).digest()
+            key=digest.hex()[:32]
+            token=base64.urlsafe_b64encode(digest).decode().rstrip('=')
+            ticket='MEONG-RECOVERY-V1:PB001:'+key+':'+token
+            order=dict(self.order,checkout_key=key)
+            for width in (384,576):
+                with self.subTest(index=index,width=width):
+                    image=render_recovery_receipt(ticket,order,width)
+                    self.assertEqual(image.width,width);self.assertEqual(image.mode,'1')
+                    with patch.object(adapter,'customer_claim',return_value={'checked':True}) as claim:
+                        self.assertEqual(adapter.scan_claim(np.asarray(image.convert('RGB'))),{'checked':True})
+                        claim.assert_called_once_with(ticket)
+
     def test_unpaid_foreign_context_and_invalid_payload_cannot_render_recovery_receipt(self):
         for values in ({'state':'PENDING'},{'state':'EXPIRED'},{'mode':'production'},
                        {'booth_id':'PB002'},{'checkout_key':'c'*32},{'amount':True}):

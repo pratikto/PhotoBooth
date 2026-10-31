@@ -104,7 +104,6 @@ class PaidCameraTests(TestCase):
                 self.assertEqual(sender.call_count,1);self.assertEqual(f.provider.charges,1)
 
     def test_printed_ticket_restores_private_photo_without_reprinting_receipt(self):
-        import cv2
         images=[]
         def encode(image):images.append(image.copy());return b'SYNTHETIC RASTER'
         with patch.object(ThermalPrinter,'raster_payload',side_effect=encode):
@@ -113,12 +112,14 @@ class PaidCameraTests(TestCase):
             with h.booth(printer=printer) as (app,f):
                 f.flow.qr_renewal_enabled=True;h.pending(app)
                 f.paid();app._sandbox_retry();h.settle(app)
-                ticket,*_=cv2.QRCodeDetector().detectAndDecode(np.asarray(images[0].convert('RGB')))
-                self.assertTrue(bool(ticket))
+                self.assertEqual(len(images),1)
+                ticket_frame=np.asarray(images[0].convert('RGB'))
                 app._photo_submit('capture',np.zeros((120,160,3),dtype=np.uint8));h.settle(app)
                 transaction=f.flow.snapshot()['transaction_id']
                 app.on_pause();app.on_resume();app._sandbox_retry();h.settle(app)
-                app._sandbox_claim_input.text=ticket;app._sandbox_claim();h.settle(app)
+                # Use the original scanner's bounded primary/alternate route,
+                # then actual backend proof, rather than a primary-only decoder.
+                app._sandbox_submit('scan_claim',ticket_frame);h.settle(app)
                 app._sandbox_resume();h.settle(app)
                 self.assertEqual(app.navigation.page,CAPTURE);self.assertEqual(app._photo_view['captured'],1)
                 self.assertEqual(f.flow.snapshot()['transaction_id'],transaction)

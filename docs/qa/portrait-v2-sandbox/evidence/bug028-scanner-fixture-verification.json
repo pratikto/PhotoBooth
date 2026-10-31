@@ -1,0 +1,39 @@
+{
+  "functional_source": "52d69fd57b69201e3af1b016a90690945e8e1e1a",
+  "parent_source": "24ead05a45cd6cda70ad3630d4a62ca85395b7e5",
+  "scope": "Test-only reuse original scanner/real worker/backend proof; deterministic128 full native receipt corpus. Renderer, scanner, all runtime/runner unchanged.",
+  "failed_ci": {
+    "run": 41222182150,
+    "linux_job": 124598878099,
+    "recovery_methods": 529,
+    "failures": 1,
+    "errors": 0,
+    "seconds": 164.661,
+    "windows_job": 124598878013,
+    "windows": "success",
+    "navigation_job": 124598877899,
+    "navigation": "success",
+    "new_portable5_and_native3": "PASS"
+  },
+  "reports": {
+    "bug028-receipt-corpus-before": {
+      "sha256": "927f7e54713d6a1e00dc60191fb4990e5b2d518a93d334698b2f6c9b68f5c910",
+      "summary": "KIOSK_UNITTEST_SUMMARY: run=13 failures=4 errors=0 skipped=0 success=False"
+    },
+    "bug028-receipt-final-focused": {
+      "sha256": "fc1710142b00942174a99fa92611313bf4d9b94d193c290197113f943bd77bf5",
+      "summary": "KIOSK_UNITTEST_SUMMARY: run=58 failures=9 errors=0 skipped=0 success=False"
+    },
+    "bug028-scanner-final-focused": {
+      "sha256": "8801dcb5c1bd57148e904cc55e77a048d21b4ae9ccd288ec6b8c6348efcaa968",
+      "summary": "KIOSK_UNITTEST_SUMMARY: run=58 failures=0 errors=0 skipped=0 success=True"
+    }
+  },
+  "files_sha256": {
+    "tests/test_recovery_receipt.py": "50b74e196ea687ed97049793878121806ed4233016a2ab45d90c8048aca80616",
+    "tests/test_paid_camera_widgets.py": "5694b3ce8a0d6a594c3ec26fe5f754ee7b460065cd5e568b78b1870e69a136ed",
+    ".github/workflows/portrait-kiosk-v2.yml": "460520d85710f6b5a49c11c0b6f747c5a5e9474224694a8701f81a9514298fe2"
+  },
+  "current_ci": "PENDING after containing micro-push",
+  "limits": "Original production scanner bounded fallback reused; exact backend proof retained. No decoder/payload mock in actual paid-photo restoration. Physical paper/webcam NOT_RUN; owner cause unconfirmed."
+}

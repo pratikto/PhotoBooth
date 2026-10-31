@@ -1,33 +1,35 @@
 # BUG-028 — PAID remains on preparing photo permission
 
-Owner screenshot: official Sandbox simulator shows PAID, native app shows
-MENYIAPKAN IZIN FOTO / COBA PEMERIKSAAN LAGI. Owner confirms printer is not
-connected. Actual laptop SHA, duration and backend error are unknown. This is
-an owner-reported failure under investigation; do not infer provider settlement
-verification, a lost payment or a proven printer cause from the screenshot.
+## 31 October — BUG-028 scanner-fixture correction focused-verified
 
-Expected current BUG-027 scope: unavailable receipt printer is UNCERTAIN and
-must not prevent original paid photo admission. No payment, receipt or photo
-may be repeated to escape the screen. Keep original order, grant, allocation
-operation, transaction, media, obligation and private customer proof intact.
+Functional **52d69fd57b69201e3af1b016a90690945e8e1e1a**, previous test-only
+**24ead05a45cd6cda70ad3630d4a62ca85395b7e5** (pushed/remote verified).
+Current increment changes tests/workflow only; original receipt renderer/scanner,
+all application and runner files remain identical to52d69fd. Its complete full
+1288run/1284PASS/4optionalSKIP, zero fail/error,481.717s and native4 scenes apply.
+Current focused **58 PASS/0 FAIL/ERROR/SKIP,34.029s**, including128 full native
+receipts (64 public synthetic payloads ×384/576), original primary/alternate
+scanner exact-text assertion and real paid-photo restore worker/backend proof.
 
-Reviewed before changes: AGENTS/protocol/prompt, current checkpoint/handover,
-BUG-027/AR-03 fulfillment and CAP01-05 allocation contracts, native photo/session/
-backend/client/API implementation, exact-source prior full/CI and configured
-printer/native/capture/recovery fixtures. Existing tests cover process-restart
-allocation recovery; a transient live allocation reply failure also needs a
-bounded retry of the SAME operation and one local handoff, without a reset.
+Previous CI41222182150: Windows/navigation SUCCESS; Linux529run/1FAIL/0ERROR,
+164.661s, old fixture decoded with primary only. All five portable and three
+new STARTING native methods PASS. Existing scanner already has one bounded
+Aruco fallback; reuse it rather than mock decoded tickets or change production.
+Primary-only corpus13run/4subtestFAIL/0ERROR,6.926s; experimental Q-level focused
+58run/9subtestFAIL/0ERROR,33.978s not a fix, restored original M renderer. No
+runtime experiment published. Earlier optional-encoder CI failure also retained.
+[Exact focused fixture receipt](evidence/bug028-scanner-fixture-verification.json).
 
-First diagnostic fixtures: actual configured Sandbox photo worker with injected
-unavailable sender, plus before-accept/after-commit allocation reply loss followed
-by the existing check action. These tests distinguish printer absence from a
-live STARTING recovery gap. The owner's exact cause stays unconfirmed until
-reproduced with corresponding evidence. No actual merchant/printer/customer
-journals are accessed, no archive inspection, new branch/production/Drive/OPS/
-refund/deletion/deployment. Runtime fix only after a failing regression; preserve
-fresh provider verification, original proof/privacy epochs and all existing
-no-overwrite/no-replay/paid rights. Focused checks and micro-push, final full and
-matching CI after the final functional change, then accurate owner instructions.
+Original live slow STARTING survives idle/pause before local-ready, retries same
+operation and reaches camera with unavailable printer; no new payment/capture/
+receipt. Old/private/restarted proof rules remain; owner laptop SHA/cause unknown,
+actual retest PENDING. Native/full source52 unchanged, actual paper/webcam not
+verified. Next matching-source CI, final evidence/guide checkpoint and docs-only
+micro-push; no redundant full rerun for these tests-only corrections. WholeUX07
+NOT_RUN;matrix59/0/9/1;AR13conditional. No production/Drive/OPS/device/customer
+operations. Other final docs/artifacts remain local pending matching CI; work/
+and superseded docs stash private. Containing micro-commit SHA via Git log;
+next final checkpoint pins it exactly and verifies remote HEAD.
 
 ## 31 October — BUG-028 live STARTING allocation recovery focused-verified
 
@@ -106,3 +108,45 @@ sessions retain original proof rules; no reset/new payment to unlock. WholeUX07
 NOT_RUN; matrix59PASS/0FAIL/9BLOCKED/1NOT_RUN; AR13conditional. No production,
 Drive, real printer/provider/customer data, OPS, deployment or branch changes.
 Only private work/ and superseded local docs stash remain outside GitHub.
+
+## Current CI follow-up — receipt decoder fixture under investigation
+
+Run41222182150 corrected all eight new STARTING subcases; Linux recovery529
+methods instead failed one existing printed-ticket restore assertion (OpenCV
+returned empty text for the randomized synthetic receipt). Exact failed random
+payload was never logged/saved. No assertion waived and no current CI PASS.
+Before another source change, distinguish receipt-renderer behavior from random
+fixture/OpenCV sensitivity; preserve original QR equality/recovery assertions.
+Actual physical-paper/scanner acceptance remains NOT_RUN.
+
+## Bounded receipt-readability follow-up contract
+
+The unchanged native renderer with error correction M fails exact OpenCV decode
+for two of64 deterministic public synthetic payloads (indexes24/59), both384/576
+native widths, including QR-only controls. Local OpenCV5.0.0; CI4.14.0.94 had one
+empty randomized decode; its payload was not saved, so exact identity unconfirmed.
+Changing QR error correction to Q passes all128 QR-only controls; H also fails
+some patterns, so it is not a blanket fix. Before runtime change add a deterministic
+64-payload/two-width full-receipt regression and reproduce failure. Then use Q in
+the original encoder, retaining native integer dots, quiet zone, minimum module
+size, exact original capability, no saved token and original send/recovery rules.
+Do not replace actual QR decode/equality with a mocked ticket or remove assertions.
+Focused checks and immediate micro-push, then a new final functional full/current
+CI and fresh original native proof. This is bounded synthetic readability evidence,
+not universal decoder, paper/printer or webcam acceptance.
+
+### Follow-up finding — reuse existing scanner, renderer unchanged
+
+Q-only experimental full-receipt focused run58/9subtest FAIL/0ERROR,33.978s;
+not a correction and never published. Border6/8 experiments also did not solve
+all full-receipt primary detections. The original Sandbox scan_claim ALREADY
+performs one bounded QRCodeDetectorAruco fallback before original backend proof,
+with existing false-negative/foreign/missing-alternate guards. The failing native
+fixture bypassed that working scanner and called only the primary decoder.
+Restore original renderer unchanged; test the real scanner worker and real
+backend claim in the paid-photo restoration case. Corpus now uses both original
+installed detectors on unchanged full native receipts, with only downstream
+claim intercepted to assert exact original synthetic payload. No decoder mock,
+resizing, QR alteration or financial/privacy assertion removed. Functional52
+full/native evidence stays applicable; corrected focused/current CI required.
+Physical printer/webcam acceptance remains separate.
