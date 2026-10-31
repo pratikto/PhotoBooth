@@ -1,5 +1,69 @@
 # Meong Photobooth — Bug register
 
+## BUG-029 — animated Meong header restarts during Sandbox QRIS polling (1 November 2026)
+
+**Severity: S2 (visual / customer experience; no demonstrated payment integrity issue).**
+**Status: OPEN — OWNER REPORTED, SOURCE-LEVEL HYPOTHESIS; NOT FIXED / NOT DEVICE-VERIFIED.**
+Priority: queue after the currently authorized AR-00–AR-13 payment/privacy/recovery
+work and higher-impact defects; do not silently change code on this report.
+
+**Observed:** Owner screenshot of the native Windows Portrait GUI v2 on
+`QRIS SANDBOX / MENUNGGU SIMULATOR` shows animated Meong at the left of the
+header. Owner reports that it cannot fly fully from one edge of the header
+to the other and back. Exact laptop SHA, Kivy display scale, time-series video
+and repeat count were not provided. A static screenshot alone cannot prove
+the entire motion path; treat the owner's motion report as owner evidence.
+
+**Expected:** Meong travels smoothly left -> right -> left across the
+available header space, including its rainbow, animated limbs/film and
+contact-triggered wordmark spin, without jumping back to the initial position
+when payment polling updates the QRIS status or a harmless button refresh
+occurs. Payment/cancellation/receipt status must still update safely.
+
+**Read-only source trace (branch `feature/portrait-kiosk-v2-next`, observed
+GitHub HEAD `a1358c6`):**
+- `photobooth/kiosk_v2/branding.py`:
+  `MeongLogo._start_flight` animates `flight` between 0 and 1, turns
+  direction at each completion, and uses roughly `dp(65)`/second.
+  `photobooth/kiosk_v2/brand_flight.py` derives horizontal travel from the
+  header width. The intended cycle is implemented in the animation itself.
+- `photobooth/kiosk_v2/sandbox_views.py::_poll_sandbox` schedules repeated
+  `check` requests (typically around two seconds in the QRIS view) and
+  calls `_show()` for their successful results.
+- `photobooth/kiosk_v2/app.py::_show` calls `_retire_gestures()`, disposes
+  existing `MeongLogo` widgets, clears the page, and rebuilds the native
+  view, constructing a new logo/animation with initial `flight=0`.
+- Therefore **repeated full-page rebuilds are a strong suspected reason**
+  that the animation restarts before completing one traversal. This is a
+  source-level explanation, **not yet a measured Windows/root-cause proof**.
+
+**Reproduction / required evidence:** Run the dedicated Sandbox GUI on Windows,
+reach QRIS Sandbox PENDING without paying, watch continuously across at least
+two intended full header traversals while normal status polling continues.
+Record screen/video with payment QR and private identifiers redacted; note the
+local `git rev-parse HEAD`, viewport/resolution, display scale, observed reset
+frequency and actual time of the first interruption. Confirm whether Meong
+restarts at each `Page rebuild begin` / `Page ready` log event. Also check
+manual CEK STATUS and payment phase transition. Do not use real money or
+alter payment/visit journals to reproduce this visual bug.
+
+**Proposed future fix (not authorized by this report):** Keep the decorative
+header widget alive across same-page payment status observations, or persist
+and restore phase/direction through a narrowly scoped nonvisual update.
+Prefer updating QR/status/actions without retiring the whole view. Preserve
+existing QRIS reconciliation, quote, privacy, operator hold entry, animated
+rainbow/film and source animation; do **not** simply accelerate Meong to
+mask resets, and do not borrow/correct mini-game movement unnecessarily.
+Regression should cover native 800x1280, 452x900 and Windows compact size,
+polling over >=2 full passes, manual check, resize, transition and
+pause/minimize, with zero payment/QR/secret leakage or button regressions.
+
+**Status of work:** Documentation/triage only. Code, tests, animation and
+printer/payment behavior are unchanged. No focused regression, CI or physical
+acceptance result is claimed. This bug is distinct from historical BUG-016
+(Meong Fly **gameplay** player anchor after resize).
+
+
 ## BUG-028 — PAID preparation / premature customer-ticket hold
 
 S1 provisional — FIXED IN SOURCE52d69fd / LOCAL REGRESSION VERIFIED; current
