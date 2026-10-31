@@ -1,5 +1,22 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+## 1 November — OWNER-APPROVED P0 unattended handoff, original Recovery Ticket and safe auto-isolation (DESIGN ONLY)
+
+**Read first:** [full implementation contract, six flowcharts, UAH-D01–D20 decisions and UAH-001–050 NOT_RUN acceptance cases](qa/portrait-v2-sandbox/UNATTENDED-SESSION-HANDOFF-OWNER-APPROVED.md). This is an explicit owner-approved **documentation-only** update; no software/API/schema/tests have been changed, and no feature has been marked complete.
+
+| Priority / sequence | Requested work | Current state / dependencies |
+| --- | --- | --- |
+| **P0.1 / UAH-01** | After verified PAID print Recovery Ticket once; if unavailable/failure/uncertain show **same original** QR/full code 30s + NEXT, then original camera | Printed happy path exists; **on-screen fallback NOT IMPLEMENTED** |
+| **P0.2 / UAH-02** | Eligible privacy lock hides private data then lands on **Advertising** with internal ADS_READY/ADS_PROTECTED | Existing source navigates locked sessions to Sandbox recovery; **new behavior NOT IMPLEMENTED** |
+| **P0.3 / UAH-03** | On new Photo/Game click in protected ads, automatic PAID/OWED PREPARE/fence -> typed local isolate -> ACK -> archive -> free booth; scoped machine auth without operator PIN | Existing AR-09 release requires PIN and valid PAID/unexpired proof; **auto path NOT IMPLEMENTED** |
+| **P0.4 / UAH-04** | Verified terminal unpaid close and same-order PENDING/UNKNOWN reconciliation; preserve payment identity, cancel/settlement race, expired ticket/aged paid exceptions | Reconciliation exists; comprehensive unattended release **NOT IMPLEMENTED** |
+| **P0.5 / UAH-05** | PUNYA TIKET PEMULIHAN from ads supports active-locked and archived ACKED visits; valid ticket+busy booth -> **WAIT**, no preemption | Archived path exists; full protected-ads claim path **NOT IMPLEMENTED** |
+| **P0.6 / UAH-06** | Fault injection, native 800x1280 and 452x900, owner Windows/POS80/Midtrans, all 50 UAH cases and relevant AR regression | **NOT RUN** for new flow |
+| **P1 / UAH-07/08** | BUG-029 header animation; actual UX-07/AR-12 Windows, webcam, printer, provider acceptance | BUG-029 OPEN; external acceptance pending |
+| **P2 / UAH-09** | Approved human refund/remedy policy, monitoring, AR-13 pilot gates | No automatic refund; commercial readiness conditional |
+
+**Ticket responsibility:** the owner accepts forfeiture of **self-service session photo recovery** when the original receipt or 30s on-screen display was genuinely offered but not saved. Do not provide tokenless photo restoration; **do not** clear PAID/OWED, promise refund or claim that SUBMITTED proves physical paper. Retain a separate authorized support/remedy path. Every future stage requires separate source authorization, tested micro-commits on existing branch and exact-source evidence; keep AR-00–AR-13 safety gates first, no master/production/new branch. See [owner decision](DECISIONS.md) and [AR-13 readiness](qa/portrait-v2-sandbox/AR13-READINESS.md).
+
 ## BUG-029 — QRIS Sandbox header Meong never finishes edge-to-edge flight (OPEN)
 
 Owner reports the decorative animated Meong at the top of the QRIS Sandbox
