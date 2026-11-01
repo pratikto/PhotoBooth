@@ -52,7 +52,11 @@ LaunchLease so another ordinary/merchant GUI launcher cannot run concurrently.
    captures and consumed retake. Newly selected designs need their own three.
 6. Payment button remains disabled. All-design preview does not freeze checkout
    automatically or mark the purchase/service paid/completed.
-7. Minimize/explicit cancellation/exit to Ads after admission privacy-lock the
+7. Phase-aware true inactivity warns before retiring the UI; active countdown/
+   legitimate worker I/O has no hard visit cutoff. Pilot defaults: gallery 90s,
+   capture/review/final preview 120s, warning 15s; configurable in the development
+   policy and not production-validated.
+8. Minimize/explicit cancellation/exit to Ads after admission privacy-lock the
    old session. Late worker replies cannot restore private pixels. Restart holds
    unresolved ownership; it never automatically restores photos for another user.
 
@@ -61,7 +65,7 @@ proof are unfinished. A locked development draft stays held; no reset/unlock/
 customer-data deletion command is provided. For a separate synthetic-only test,
 use a different explicit empty private root, leaving prior data intact. Never use
 that as a way to bypass a real active booth/payment/print obligation. No commercial
-flow is available in this profile. Adaptive inactivity/recovery policy, genuine
+flow is available in this profile. Full safe recovery policy, genuine
 payment, CCP/vault, mandatory ticket concurrency, paid Drive/print, diagnostics and
 refund state still need implementation/integration before full physical UAT.
 

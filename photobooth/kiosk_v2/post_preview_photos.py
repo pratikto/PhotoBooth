@@ -79,6 +79,12 @@ class PrivatePhotoService:
     def abort(self):
         return self.retire('USER_CANCEL')
 
+    def warn(self):
+        self._active()
+        if self.lease is not None:
+            self.ledger.lifecycle_event(self.lease, 'INACTIVITY_WARNING')
+        return self.snapshot()
+
     @property
     def template(self):
         return self.selected[self.index]

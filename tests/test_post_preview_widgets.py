@@ -43,14 +43,17 @@ class PrivateWidgetTests(unittest.TestCase):
                 app._photo_jobs.wait_closed(10)
                 service.wait_closed(10)
 
-    def settle(self, app):
+    def settle(self, app, *, allow_warning=False):
         deadline = time.monotonic()+10
         while app._photo_jobs.busy and time.monotonic()<deadline:
             app._poll_photos()
             Clock.tick()
             time.sleep(.005)
         self.assertFalse(app._photo_jobs.busy)
-        self.assertFalse(app._photo_error, app._photo_error)
+        if allow_warning:
+            self.assertTrue(app._photo_error.startswith('Sesi tidak aktif.'))
+        else:
+            self.assertFalse(app._photo_error, app._photo_error)
 
     def start(self, app):
         app._choose_photo()
@@ -169,6 +172,31 @@ class PrivateWidgetTests(unittest.TestCase):
             self.assertEqual({'phase': 'hold'}, service.snapshot())
             self.assertEqual('APP_SUSPENDED', service.ledger.db.execute(
                 'SELECT lifecycle FROM pp_drafts').fetchone()[0])
+
+    def test_true_inactivity_warns_then_holds_but_active_countdown_is_not_abandoned(self):
+        with self.booth() as (app, service, camera):
+            self.start(app)
+            app._last_activity = time.monotonic()-1000
+            app._tick(0)
+            self.settle(app, allow_warning=True)
+            self.assertEqual('ACTIVE', service.ledger.db.execute(
+                'SELECT lifecycle FROM pp_drafts').fetchone()[0])
+            self.assertIn('Sesi tidak aktif.', app._photo_error)
+            self.assertEqual(CAPTURE, app.navigation.page)
+            app._start_countdown()
+            app._tick(0)
+            self.assertIsNone(app._private_warning_at)
+            self.assertIsNotNone(app._countdown_event)
+            self.assertLess(time.monotonic()-app._last_activity, 1)
+            app._cancel_countdown()
+            app._last_activity = time.monotonic()-1000
+            app._private_warning_at = time.monotonic()-16
+            app._tick(0)
+            self.settle(app)
+            self.assertEqual({'phase': 'hold'}, app._photo_view)
+            self.assertEqual('INACTIVITY_EXPIRED', service.ledger.db.execute(
+                'SELECT lifecycle FROM pp_drafts').fetchone()[0])
+            self.assertFalse(list(service.root.rglob('*.jpg')))
 
 
 if __name__ == '__main__': unittest.main()

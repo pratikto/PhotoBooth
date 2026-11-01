@@ -16,11 +16,12 @@ from .flow import BROWSING_PAGES, CAPTURE, RESULT, TEMPLATES
 from .photo_views import image_texture
 from .photos import PhotoJobs
 from .post_preview_photos import PrivatePhotoService
+from .post_preview_idle import PrivateInactivityPolicy
 from .theme import ArcadeButton, CYAN, GOLD, MUTED, PixelCard, text_label
 
 
 class PrivatePreviewApp(PortraitKioskV2App):
-    def __init__(self, private_root, *, private_service=None, **kwargs):
+    def __init__(self, private_root, *, private_service=None, idle_policy=None, **kwargs):
         # Refuse mixed profiles rather than changing ambient merchant settings.
         if any(os.environ.get(key) == '1' for key in (
                 'PHOTOBOOTH_V2_CHECKOUT_SANDBOX', 'PHOTOBOOTH_V2_CHECKOUT_MOCK',
@@ -29,6 +30,10 @@ class PrivatePreviewApp(PortraitKioskV2App):
         self._private_root = private_root
         self._private_service = private_service
         self._private_pending_event = None
+        self._private_idle_policy = idle_policy or PrivateInactivityPolicy()
+        if not isinstance(self._private_idle_policy, PrivateInactivityPolicy):
+            raise TypeError('Validated phase-aware inactivity policy required')
+        self._private_warning_at = None
         super().__init__(**kwargs)
 
     def _init_photos(self):
@@ -73,6 +78,7 @@ class PrivatePreviewApp(PortraitKioskV2App):
             service.hide_private()
         self._cancel_countdown()
         self._photo_view = {'phase': 'hold'}
+        self._photo_error = ''
         self._camera_texture = None
         self._last_live_frame = self._last_preview = None
         if self._live_image is not None:
@@ -113,10 +119,39 @@ class PrivatePreviewApp(PortraitKioskV2App):
 
     def _tick(self, dt):
         service = self._photo_jobs.service
-        if (not self._closed and not self._suspended and service is not None
-                and service.lease is not None and self.navigation.page in BROWSING_PAGES
-                and time.monotonic()-self._last_activity >= self.catalog.timing.landing_idle):
-            self._queue_private_retirement('INACTIVITY_EXPIRED')
+        if service is not None and service.lease is not None:
+            if self._closed or self._suspended or service._hidden.is_set():
+                return
+            phase = self.navigation.page if self.navigation.page in BROWSING_PAGES else self._photo_view.get('phase')
+            active_worker = bool(self._photo_jobs.busy and self._photo_jobs.current_action not in {'snapshot', 'warn'})
+            now = time.monotonic()
+            decision = self._private_idle_policy.decision(phase, now-self._last_activity,
+                worker_busy=active_worker, countdown_active=self._countdown_event is not None)
+            if decision == 'ACTIVE_WORK':
+                self._last_activity = now
+                self._private_warning_at = None
+                if self._photo_error.startswith('Sesi tidak aktif.'):
+                    self._photo_error = ''
+                    if getattr(self, '_photo_message', None) is not None:
+                        self._photo_message.text = ''
+            elif decision in {'WARNING', 'EXPIRED'}:
+                if self._private_warning_at is None:
+                    self._private_warning_at = now
+                    if not self._photo_jobs.busy:
+                        self._photo_jobs.submit('warn')
+                if (decision == 'EXPIRED' and
+                        now-self._private_warning_at >= self._private_idle_policy.warning_seconds):
+                    self._queue_private_retirement('INACTIVITY_EXPIRED')
+                else:
+                    self._photo_error = 'Sesi tidak aktif. Sentuh layar untuk melanjutkan.'
+                    if getattr(self, '_photo_message', None) is not None:
+                        self._photo_message.text = self._photo_error
+            else:
+                self._private_warning_at = None
+                if self._photo_error.startswith('Sesi tidak aktif.'):
+                    self._photo_error = ''
+                    if getattr(self, '_photo_message', None) is not None:
+                        self._photo_message.text = ''
             return
         return super()._tick(dt)
 

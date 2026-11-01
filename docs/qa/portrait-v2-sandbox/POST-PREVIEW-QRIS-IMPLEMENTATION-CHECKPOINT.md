@@ -13,16 +13,55 @@ worker safeguards remain binding. Production deployment, actual charges/refunds,
 merchant activation, live customer/cloud deletion and other branches are excluded.
 
 - Authorized branch: `feature/post-preview-qris-checkout`.
-- Last independently verified remote: `be73aa8c15a412d8786f515f25eb368e57bb81ea` (PP-01.c worker; verified remote, CI run 41283303752 SUCCESS).
+- Last independently verified remote: `1c70ee3fb513329c712103148348eda87ee78e8f` (PP-01.d/PP-02.b private native UI; verified remote, CI run 41284159506 all three jobs SUCCESS).
 - Original audited base: `b68e514dd57c989df47fa1b222d45f3f71c38347`.
-- Current micro-increment: **PP-01.d / PP-02.b — isolated native private-preview development UI**.
+- Current micro-increment: **PP-01.e — phase-aware private inactivity warnings and retirement**.
 - Overall: PP-00 dependency audit continuing; PP-01 private capture and isolated development UI implemented; PP-02 preview/freeze backend and all-design UI implemented, real charge-readiness adapters NOT_IMPLEMENTED; PP-03..07 NOT_STARTED.
 - This checkpoint travels with the implementation commit. Resolve its containing
   SHA using `git log -1 --format=%H`; after push independently compare `git
   ls-remote origin refs/heads/feature/post-preview-qris-checkout`. A commit cannot
   truthfully contain its own SHA. The next increment records this verified tip.
 
-## PP-01.d / PP-02.b — current isolated native preview UI and evidence
+## PP-01.e — current inactivity policy and evidence
+
+Configurable nonproduction phase policy: gallery/consent 90s; capture/review/
+per-design result/all-design preview 120s; warning 15s. These are pilot engineering
+recommendations, not commercial terms. A live countdown or legitimate I/O worker
+extends the activity anchor rather than applying a hard total visit cutoff.
+Unknown/payment states are not assigned a generic financial timeout.
+
+The native private profile shows a warning and durably records INACTIVITY_WARNING
+without cancelling/abandoning ownership. A delayed UI tick must still offer the
+warning interval before privacy retirement. Customer activity clears warning;
+active countdown clears it without cancellation. True inactivity expiry hides
+private media and records INACTIVITY_EXPIRED, retaining local ownership unresolved;
+APP_SUSPENDED and USER_CANCEL remain distinct. No financial action or FREE proof.
+
+Actual focused native/worker/idle/original-photo/navigation group: **40 PASS /
+0 FAIL / 0 SKIP**, 14.567s. Fresh-venv backend/legacy workflow: **138 PASS / 0 FAIL /
+0 SKIP**, 20.215s. Initial native fixture helper incorrectly classified the
+intentional warning as an error; corrected to explicitly permit only that warning,
+and private hold now clears stale warning text. No failure is hidden. Compile/
+diff PASS. New matching-source CI pending this push; previous private UI run
+41284159506 all three jobs SUCCESS (Windows/Ubuntu private state plus native UI).
+
+The first full-suite process lacked permitted local HTTP fixture networking and
+stalled; it was terminated without a result and is NOT PASS. The permitted re-run
+uses a scratch progress-only adapter over the original test runner, not changed
+test semantics; final summary is still pending. Its worktree predates this idle
+increment, so do not call it final-source regression without a later matching run.
+
+Changed: new pure idle policy and tests, private App/worker warning integration,
+new native warning/countdown/retirement method, workflow and current notices.
+Original normal/legacy App, capture, paid service and provider files unchanged.
+Next **PP-03.a**: protected OS vault interface, Windows DPAPI implementation,
+explicit unsupported-platform hold, typed original CCP/hash verifier and genuine
+offer journal; synthetic secure adapter for isolated fault tests. Then PP-04
+payment reconciliation, PP-05 mandatory original ticket/paid delivery, PP-06
+proof/release/diagnostics, PP-06R refund and PP-07 final candidate. Full PP stages
+and 112 acceptance remain incomplete; no physical-UAT readiness claimed.
+
+## PP-01.d / PP-02.b — previously delivered isolated native preview UI and evidence
 
 The separate `PrivatePreviewApp` subclasses/reuses the original portrait App and
 PhotoViews. Advertising/tutorial/gallery -> private consent -> 5-second deliberate
