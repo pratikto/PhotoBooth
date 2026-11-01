@@ -1,3 +1,11 @@
+## 1 November 2026 — New owner-approved post-preview QRIS target (DOCUMENTATION ONLY)
+
+**On branch `feature/post-preview-qris-checkout`, for new orders:** template selection -> 3 photos + maximum one retake **per selected template**, all previews completed -> editable final preview only before QRIS -> freeze exact cart/artifacts -> secure Checkout Claim Proof offered before PAID -> verified provider settlement -> original Recovery Ticket once (30-second same-ticket onscreen fallback if receipt fails/uncertain) -> final photo printing only after genuine verified individual Drive download URL, with background upload. Five approved refinements: (1) pre-PAID secure checkout claim for late settlement; (2) verified Drive link gate for MVP print; (3) adaptive genuine-inactivity timeout without active hard cap; (4) frozen order and preserved retake after editing; (5) encrypted original credentials escrow for safe crash recovery. QR1->QR2->QR3 remains only while original visitor active; abandonment uses same-order cancel/reconciliation, no unattended renewal; late PAID -> private PAID_UNCLAIMED/OWED and proof-gated return. New flow has no unpaid print/download, automatic refund or uncertain printer replay.
+
+**Branch-version precedence:** payment-before-camera ordering below is retained only as historical/current-source or legacy prepaid behavior. AR-00–13/UAH safety, provider verification, service-fence, secure isolation and original legacy PAID capture are preserved. New postpay work **NOT_IMPLEMENTED**; all **72 PP cases NOT_RUN**, real device and production release NOT approved. [Owner 24 decisions / 11 diagrams](POST-PREVIEW-QRIS-OWNER-APPROVED.md) · [security/states](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [PP QA matrix](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md) · [Codex handover](POST-PREVIEW-QRIS-CODEX-HANDOVER.md).
+
+---
+
 # AR-13 — release-readiness assessment
 
 ## 1 November 2026 — Approved UAH scope is NOT production-ready / NOT IMPLEMENTED
