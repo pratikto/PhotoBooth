@@ -8,13 +8,13 @@
 2. Separate **unpaid private photo draft** from payment authority, service grant and paid delivery. Private local capture/compose may run before payment; photo-strip printer and publicly readable Drive files/folder QR may not. The existing compose-to-auto-print code path is an implementation gap requiring a hard guard.
 3. Independent provider evidence, one logical purchase group across QR1/QR2/QR3, exact settled merchant/booth/amount, idempotent payment-attempt creation, reconciliation after timeout/404, and no double service even if two attempts settle. Only **actively continuing** visitors get automatic replacement after verified terminal unpaid expiry. Abandonment stops renewal and requests guarded cancellation/reconciliation.
 4. Separate **secure Checkout Claim Proof** (CCP, offered privately at first QRIS before PAID, no ability to see unpaid photos) from **Recovery Ticket** (original post-PAID service capability), QRIS payment QR, download QR, QRIS Payment Slip, operator QR, merchant promo and Meong Fly test QRs. Never treat a receipt/order number or ordinary payment screenshot as authorization to open photos.
-5. Customer returning with original CCP after delayed PAID must pass fresh provider settlement, exact order/draft/booth proof, valid capability and occupancy/fence checks. **PAID_UNCLAIMED** with no live owner must not publicly print a ticket, strips or reveal photo. Valid claim while B occupies booth -> WAIT/DEFER. No proof -> redacted support/financial remedy, never tokenless private-media restoration. Lost proof after genuine offer forfeits self-service photo recovery only, not PAID/OWED obligations.
+5. Customer returning with original CCP after delayed PAID must pass fresh provider settlement, exact order/draft/booth proof, valid capability and occupancy/fence checks. **PAID_UNCLAIMED** without live owner never publicly prints a ticket/strip or reveals photo. Valid claim while B occupies booth -> WAIT/DEFER. No proof -> redacted support/financial complaint path, never tokenless media restoration. **Customer lost genuinely offered proof alone => NO_AUTO_REFUND_PROOF_LOST** and lost self-service recovery; independent merchant failure and PAID/OWED are evaluated separately, not automatically forfeited.
 6. **Encrypted credential escrow** allows recovery of the *same original* CCP/Recovery secret after crash only under identity and scope checks; the historical memory-only prohibition is superseded **only for ciphertext in a controlled OS-/hardware-protected vault**. Keep normal journals/SQLite/logs/screenshots/telemetry free of raw secrets, with verifier hashes, rate limits, access audit, version, revocation, TTL and key lifecycle. No decrypt/show on reboot or automatic reissue. Windows DPAPI, Ubuntu TPM/secret service and Android Keystore are candidates requiring validation rather than assumed installed features.
 7. **Verified Drive URL before purchased-strip printing for MVP**, including final 3-photo+real-download-QR format. Verified individual folder URL may exist while uploads pending; truthful background retry continues. If Drive service is known unavailable before QRIS, hold new payable checkout; if exact customer URL remains unverified after PAID, preserve owed service/secure claim and do not invent a URL, print false QR or wait forever. Future stable resolver QR is **not** included in MVP and needs separate backend/hosting/security approval.
 8. **Adaptive phase-aware inactivity**, with warning, not a blanket wall-clock cutoff for active multi-template photo work. A live countdown, file write, legitimate preview composition or provider status unknown is not inactivity. Sample pilot thresholds are not approved production constants. Unpaid no-payment drafts may be isolated/cleaned only with safe file-worker proof. Once a payment attempt exists, no deletion or release based solely on local timeout.
 9. **Edits only before first QRIS attempt.** Copy quantity re-quotes, adding a design requires its own 3 photos, revisiting existing design does not reset used retake; every change increases draft revision. Freeze exact template IDs/artwork hashes, 3 final image IDs/byte checksums per design, retake lineage, copies, discounts authorized by server, currency, amount and approved preview. Final paid raster may differ from preview only by adding the authorized real download QR; three photos/design/copy commitment must match.
 10. **Mandatory parallel Recovery Ticket presentation after verified PAID:** for the authorized still-live original customer, **always** show the same original Recovery Ticket QR/full code on the kiosk for **30 visible seconds + NEXT** AND **concurrently dispatch exactly one print of that ticket** through the exclusive receipt/photo printer lane. The screen is NOT a conditional printer-failure fallback: even with printer SUBMITTED, it remains visible. Never wait for printer ACK to show it; printer unavailable/failed/timed out/UNCERTAIN changes only the print job's recorded state, never triggers a second send or reissued token. One rightful presentation per original credential, no poll/reboot redisplay; PAID_UNCLAIMED/visitor B still receives no old ticket until valid claim/lease. SUBMITTED does not prove physical paper.
-11. Print job reservations per original paid template/output/copies, one exclusive printer worker shared by ticket and photos; SENDING/UNCERTAIN is never replayed automatically after timeout/crash. Partial paper output needs physical evidence and operator-last-resort remedy. Photo composition is not service completion. Never automatically refund or destroy PAID/OWED on isolation.
+11. Print job reservations per original paid template/output/copies, one exclusive printer worker shared by ticket and photos; SENDING/UNCERTAIN is never replayed automatically after timeout/crash. Partial paper output needs exact physical evidence; refund-first can settle a **genuinely irrecoverable confirmed paid service failure**, but NEVER from transport uncertainty alone. Photo composition is not service completion. **Isolation itself is not grounds for refund**, cannot destroy PAID/OWED and cannot be bypassed by a later refund. Merchant refund API remains UNVERIFIED.
 12. Prior AR-00–13 and unattended handoff safety remain binding: fence private pixels immediately before Advertising, durable PREPARE/local isolate/ACK/archive when safe, no new payable admission on unresolved original financial state, busy visitor never preempted, historical paid-before-photo orders continue legacy versioned recovery unchanged.
 
 ## 2. Source-of-truth domains and fields
@@ -95,7 +95,7 @@ Use exact original release operation, worker fence, typed local receipt, backend
 - Original checkout CCP is a **pre-PAID claim capability**, not the customer's Recovery Ticket, photo download permission, or proof of payment. On live PAID with intact owner lease, ticket issuance does **not** require CCP re-scan.
 - On returning PAID claim: verify exact original CCP or original still-valid ticket, fresh provider PAID, frozen draft/booth, valid one-grant entitlement, rate limit and exclusive free booth before decrypting any credential or showing private pixels.
 - Receipt `NOT_SENT`, `SENDING`, `SUBMITTED`, `UNCERTAIN`, and customer presentation `NOT_OFFERED`/`RENDERING`/`VISIBLE`/`DISMISSED` are **separate durable dimensions**. At first authorized live post-PAID presentation, **always show the original QR + full code on screen and concurrently enqueue one receipt print**, irrespective of printer health. The original screen remains available for 30 seconds of actual visible QR/code (or until NEXT); the visible timer does not start during loading and does not restart on status polling or printer ACK. Receipt SENDING/UNCERTAIN never auto-replays; receipt SUBMITTED never bypasses this first screen. If the customer was privacy-retired before any genuine presentation, keep PAID_UNCLAIMED/OWED and require exact original CCP/valid claim before first lawful rendering. Previously dismissed original ticket is not automatically redisplayed on boot/return.
-- On service failure before any genuine offer, preserve PAID/OWED and an authorized support/financial remedy; no tokenless private-media restoration, no automatic refund.
+- On service failure before any genuine offer, preserve PAID/OWED and authorized support/financial remedy; no tokenless private-media restoration. Under RF-D01..26, **if independently proven permanently unfulfillable and merchant refund channel is approved and safe**, the original paid order may be an auto FULL refund candidate. Do not equate never-offered proof, genuinely lost proof, and irrecoverable service failure.
 - Vault content is protected original credential ciphertext only; the public/ordinary backend holds hash-based verifiers, never plaintext keys or secrets. Decrypt only with specific post-PAID scope and customer authorization; machine escrow is **not** a new recovery-ticket issuance mechanism.
 
 ### Drive pool and financial readiness
@@ -132,5 +132,70 @@ The requirement is **concurrent screen availability and print dispatch**, not a 
 - Suggested **pilot-only** starting points: gallery 60–90s, capture/review 120s, final preview 90–120s of actual inactivity, with warning. These are tunable and NOT fixed owner-approved numbers. No automatic hard cap interrupting active photos; payment uncertainty uses provider reconciliation, never a UI inactivity shortcut.
 - CCP and original ticket should use cryptographically secure unpredictable secrets, constant-time comparisons, hashes/verifiers, version/scope/expiry and replay protections; offer CCP privately when QRIS starts, not as the charge QR. Screenshot/payment number is not private-media authorization. Do not treat storing a token server-side as evidence it was presented to the customer.
 - Threats: shoulder-surfing, lost proof, duplicate/cross-type QR, stale camera callbacks, accidental old photo thumbnail, malicious kiosk operator, disk theft, malicious OS account, wrong-booth cloud folder, webhook replay, fake settlement, paper left for B, key escrow loss. Appropriate operational monitoring and real device testing required.
-- Separate merchant-finance remediation (refund/credit/customer dispute) requires explicit authorization; no auto-refund as a technical timeout response.
+- **New refund-first policy, strictly gated (new post-preview orders only):** genuine irrecoverable independently proven paid delivery failure can trigger an automatic full original-provider refund only after merchant refund API activation/eligibility verification, durable original refund intent, print/Drive safe fence and exact provider response handling; unambiguous duplicate-settled excess charge may refund excess only. No auto-refund **solely from a technical timeout, customer-lost proof, abandoned session, unknown provider, or UNCERTAIN paper**. Finance/merchant/legal/production activation remain separately required; legacy code still issues no refunds.
 - No code, schema, payment credentials, secrets, OS vault provisioning, physical/cloud effects or deployments authorized by these documentation changes. Never inspect or change excluded archive `old`.
+
+## 7. Refund, lost proof, and financial fulfillment separation (new owner-approved design)
+
+**Authoritative detail:** [RF-D01–RF-D26 refund-first and lost-proof policy](POST-PREVIEW-QRIS-REFUND-AND-LOST-PROOF-POLICY.md), [all owner decisions](POST-PREVIEW-QRIS-COMPLETE-DECISION-LEDGER.md). All states in this section are **PROPOSED / NOT IMPLEMENTED**; the merchant Refund API has not been enabled/tested.
+
+### Cross-product outcome: refund is a separate axis, not a payment-state rewrite
+
+| Original provider payment | Service fulfillment | Refund subledger | Meaning and permitted next action |
+| --- | --- | --- | --- |
+| PENDING / UNKNOWN | Private draft frozen | NONE | Same original cancel/status reconciliation, no refund |
+| PAID | Original paid service available/delivered | NONE | No refund merely due to lost CCP/ticket; no tokenless media unlock |
+| PAID | Original OWED, safely recoverable | NONE | Continue bounded original recovery with honest pending state |
+| PAID | Independently proven irrecoverable merchant failure | ELIGIBILITY_REVIEW | Verify full-payment refund support, original print/Drive quiescence and merchant guard |
+| PAID | Independently proven unambiguous duplicate-settled *excess attempt* | EXCESS_REFUND_ELIGIBLE | Refund the excess settled attempt only; preserve exactly one paid service entitlement |
+| PAID | Original media/print worker SENDING/UNCERTAIN | ON_HOLD | No blind reprint/refund/assumed zero physical paper; safe physical/technical classification |
+| PAID | Customer genuinely lost valid proof, no separately proven merchant fault | NO_AUTO_REFUND_PROOF_LOST | No self-service photo recovery and no automatic refund *solely for proof loss*. Preserve financial audit and lawful complaint handling |
+| PAID | CCP/ticket never genuinely offered, original service uncertain | PAID_OWED_REMEDY | No consumer blame; original safe claim/remedy and refund if separately proven irrecoverable |
+| PAID | Safe classified irrecoverable service | REFUND_INTENT_PREPARED / REQUESTED / PROCESSING | Original provider refund key, same-original reconciliation; service delivery stays fenced |
+| PAID | Safe failure / duplicate excess and independently confirmed refund | REFUND_CONFIRMED | Record original provider/refund evidence; never auto-unlock original paid print or media afterward |
+| PAID | Refund API disabled/rejected or conflicting financial facts | REFUND_REVIEW_REQUIRED | Authenticated finance/support/security, no fabricated successful refund |
+
+**Never mutate PAID back to UNPAID** merely because refund was requested or confirmed. Maintain original paid financial identity and immutable fulfillment obligations with a separate refund audit ledger; closure/waiver only upon verified delivered/replaced/refunded amount according to approved accounting and consumer rules. A refund does **not** release machine occupancy or erase physical print SENDING/UNCERTAIN.
+
+### Required refund journal, identifiers and provider verification
+
+- Original `refund_intent_id`, merchant ID, booth ID, purchase_group_id, **exact provider payment attempt/order/transaction ID** (important for QR1/QR2/QR3), settled original amount/currency, eligible refund amount, reason, copy/print/Drive outcome, original refund_key and API schema version, timestamps, authorization and current verified refund state.
+- First independently verify original provider SETTLEMENT. Never refund on PENDING/UNKNOWN/CREATE_UNCERTAIN, local timer expiry, GUI ERROR or mere abandoned claim.
+- For genuine merchant delivery failure, prove bounded idempotent recovery exhausted, exact entitlement missing, authorized refund policy and safe original worker/paper/Drive stop or quarantine. If a paper job is UNCERTAIN and could still eject, classify/hold instead of pretending the refund stops hardware.
+- Persist one uniquely keyed refund intent **before provider I/O**. Lost response/timeout/restart/409 -> reconcile same original key/reference; no second random refund POST. Do not assume Midtrans Core refund semantics without official merchant verification.
+- Official GoPay QRIS POS may have online refund **disabled by default**; time windows, issuer/on-us/off-us, merchant balance and status can prevent online automatic refund. An ineligible case goes `REFUND_REVIEW_REQUIRED`, not fake `REFUND_CONFIRMED`. Never automatically send money to a user-entered account at a public kiosk.
+- Frontend refund statuses distinguish intent, provider accepted, processing and provider confirmed; customer bank/wallet funds visible is a separate real-world outcome. Never promise fixed return-time or successful automatic refund without real provider evidence.
+- Refund decision after genuinely lost CCP/Recovery Ticket when **no independent merchant failure** is explicitly `NO_AUTO_REFUND_PROOF_LOST`, not `REFUND_ELIGIBLE`. A generated but never-visible QR, printer receipt merely SUBMITTED, or crash before genuine offer cannot be classified as genuine customer loss.
+- Suspected forged claim, compromised escrow, disputed refund, two settlements with mismatching merchant/amount, false fulfillment or unsafe machine fencing require proper scoped human review. Support may review redacted money/status but cannot manufacture customer secret or reveal protected photos.
+- Consumer-protection terms require legal-reviewed wording. No automatic refund **solely** for losing a genuinely offered proof is a narrow policy, not an unconditional "money can never be refunded" waiver.
+
+### Refund eligibility decision diagram
+
+~~~mermaid
+flowchart TD
+    F([Original paid service problem]) --> P{Fresh independently verified SETTLED?}
+    P -->|No / UNKNOWN| RECON[Same original provider reconciliation; no refund]
+    P -->|Yes| CAUSE{Evidence-backed cause?}
+    CAUSE -->|Lost genuinely offered CCP/ticket only| LOST[NO_AUTO_REFUND_PROOF_LOST; no photo unlock]
+    CAUSE -->|Departed / late PAID / recoverable hold| WAIT[PAID_UNCLAIMED / OWED; original claim and bounded retry]
+    CAUSE -->|Fraud / payment conflicts / refund not enabled| REVIEW[FINANCIAL / SECURITY REVIEW]
+    CAUSE -->|Irrecoverable merchant delivery failure| FENCE[Quarantine exact original print/upload/media]
+    CAUSE -->|Independently proved duplicate settled excess| EXCESS[Refund excess original payment attempt only]
+    FENCE --> SAFE{Original worker/physical outcome safe and merchant API eligible?}
+    SAFE -->|No| REVIEW
+    SAFE -->|Yes| ELIG[Full original-payment refund eligible]
+    EXCESS --> ELIG2[Exact excess payment eligible; no extra service]
+    ELIG --> INTENT[Persist original refund intent/key]
+    ELIG2 --> INTENT
+    INTENT --> POST[Request original merchant-provider refund ONCE]
+    POST --> R{Provider refund status?}
+    R -->|Processing| PENDING[REFUND_PROCESSING; no claim money arrived]
+    R -->|Unknown| REC[Reconcile SAME refund key, no duplicate]
+    REC --> R
+    R -->|Provider confirmed| CONF[REFUND_CONFIRMED; independent paid/worker ledger preserved]
+    R -->|Rejected / unsupported| REVIEW
+    PENDING --> R
+~~~
+
+**External and production acceptance:** refund-first remains **not executable until separate permission**, source update, provider Refund API activation, protected backend, refund reconciliation, true printer/Drive failure tests, merchant limits/legal review and recorded sign-off. [Refund decision details](POST-PREVIEW-QRIS-REFUND-AND-LOST-PROOF-POLICY.md).
+
