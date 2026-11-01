@@ -1,5 +1,30 @@
 # Midtrans QRIS provider contract and research register
 
+## 1 November 2026 — NEWER refund-first owner decision (future feature, NOT merchant-enabled)
+
+For NEW post-preview purchases, the owner prefers *automatic full refund of the original settled paid amount when purchased service is independently proven irrecoverable*, **instead of requiring an onsite operator just for payment reimbursement**. Exception: a separately verified excess settled QRIS attempt for the same frozen original order can refund **the excess payment only**. **Customer-lost genuinely offered CCP/Recovery Ticket alone explicitly does NOT trigger any automatic refund or access to protected photos**. Evidence that Meong never genuinely offered the proof or independently failed its paid service must be evaluated separately.
+
+This supersedes the older **unconditional no-auto-refund DESIGN** sentence in Section 2.4 only for the new order/version **AFTER actual merchant/provider/legal enablement**; it does **NOT** change what the current code can do or authorize real money actions. **GoPay QRIS POS integration documents online refund via API/dashboard may be disabled by default**, requiring merchant support/account enablement. General Midtrans QRIS refund API support is **not evidence** that this merchant's POS QRIS is activated, eligible, funded, or refundable; issuer/acquirer timing/limits vary.
+
+**Proposed safe refund API contract (NEW, NOT VERIFIED FOR MEONG ACCOUNT):**
+1. Independently re-fetch settlement on the **exact original provider order/transaction ID**, merchant, amount, and checkout group. Never refund `PENDING`, `UNKNOWN`, expired unpaid, a stale cached GUI status or an unverified provider create attempt.
+2. Verify *why* service is owed: irrecoverable paid photo printer/Drive/media failure after bounded authorized retry, or unambiguous extra settled attempt. Ticket/CCP lost *alone*, abandoned paid session, or SENDING/UNCERTAIN paper *alone* are **not** sufficient causes. Genuine proof never offered by Meong is a service incident, not customer negligence.
+3. Before refund transport, persist merchant-scoped original refund intent with provider transaction ID, exact amount, reason, request key/refund_key and original paid service ledger. Stop or quarantine original purchased-strip print, download/Drive upload and stale workers as far as safely proven; an unsafe printer lease still blocks **booth admission** even if finance later refunds.
+4. Issue refund **to original payment method only** through merchant-activated, officially supported Midtrans API. On response timeout/404/restart, query/reconcile the **same refund intent/key**; never create a fresh second refund request from ambiguity. Distinguish `REQUESTED`/`PROCESSING`/`PROVIDER_CONFIRMED`; accepted HTTP request is **not** confirmation customer wallet/bank funds have arrived.
+5. Provider rejected/not available/refund expired/acquirer disallowed/insufficient settlement or identity conflict -> `REFUND_REVIEW_REQUIRED`, with authenticated finance/support and lawful remedy; never tell the customer an unsupported refund succeeded. Any two settled QR attempts require unambiguous duplicate identification; otherwise financial hold, not automatic money movement.
+6. **Merchant go-live gates:** verified active API entitlement, endpoint/status query and refund_key semantics, full/excess refund monetary limits, refund time windows, current provider docs and actual merchant Sandbox evidence, role/Audit safeguards, Indonesian consumer policy and separate explicit owner production approval.
+
+**Official verification references:**
+- [GoPay QRIS POS Integration](https://docs.midtrans.com/docs/gopay-qris-pos-integration) — POS online refund not necessarily enabled; merchant sales/support consultation required.
+- [Refund Transactions](https://docs.midtrans.com/reference/refund-transaction) — Core refund `POST /v2/{order_id OR transaction_id}/refund`, transaction identity, activation and eligible time windows.
+- [QRIS refund availability and times](https://docs.midtrans.com/docs/metode-pembayaran-apa-yang-memiliki-fitur-refund) — on-/off-us/acquirer-specific windows and timing, no guarantee to kiosk customers.
+- [UU No. 8 Tahun 1999](https://peraturan.bpk.go.id/Home/Download/33784/UU%20Nomor%208%20Tahun%201999.pdf) — standard refund blanket refusal restricted, consumer fault is a separately provable exception.
+
+**Read alongside:** [RF-D01–RF-D26 refund/lost-proof owner decision](POST-PREVIEW-QRIS-REFUND-AND-LOST-PROOF-POLICY.md) · [complete consolidated ledger](POST-PREVIEW-QRIS-COMPLETE-DECISION-LEDGER.md) · [secure refund state machine](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [PP-085..112 acceptance tests](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md). All NEW refund behavior and tests **NOT IMPLEMENTED / NOT RUN**; the original MIDTRANS DOCUMENTED vs OPEN VERIFICATION tags below remain authoritative.
+
+---
+
+
 ## 1 November 2026 — Post-preview QRIS semantics and idempotency clarification (design only)
 
 For new `feature/post-preview-qris-checkout` logical purchases, create a QRIS attempt **only after** every selected template's three photos/at most one retake are approved and a frozen, independently quoted manifest exists. Store the original internal purchase-group, provider order ID, durable CREATE_PREPARED intent and request fingerprint before external I/O; a lost create reply, status 404, polling outage or UI countdown expiry does **not** prove the attempt was unpaid. Preserve and reconcile the **same original provider order**. Internal idempotency keys **are not evidence** that Legacy Core `POST /v2/charge` supports a particular `Idempotency-Key` header or repeat-POST guarantee; Sections 2.5 and 5 below remain open external verification.
