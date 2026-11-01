@@ -27,7 +27,7 @@
 | PP-016 | Preview manifest corrupted | No charge |
 | PP-017 | Camera/disk not ready before capture | No payment |
 | PP-018 | Printer known unavailable pre-charge | No new charge |
-| PP-019 | Drive URL not verified pre-charge | Hold new checkout |
+| PP-019 | Drive API/sharing unavailable or READY reserve pool empty before charge | Hold checkout; do not require a bound customer URL pre-PAID |
 | PP-020 | Server quote/artifact mismatch | Reject, preserve draft |
 
 ## PP-PAY/QR — provider reconciliation (12)
@@ -112,7 +112,7 @@ These tests are additional to PP-001..072. They specifically prevent the previou
 | PP-078 | Restart during paid authorized upload while a photo print is UNCERTAIN | Resume only idempotent upload; retain paid/print obligations; no blind print or unsafe release |
 | PP-079 | Ticket receipt already SUBMITTED; polling/restart/returning claimant | Do not automatically re-display or reset original fallback; preserve presentation journal |
 | PP-080 | Live paid owner has intact original booth lease, no CCP scan | Go directly to original Recovery Ticket; no extra mandatory claim step |
-| PP-081 | Precharge sees unclaimed valid READY folder, but exact folder binding fails after PAID | No paid strip or invented QR; PAID/OWED retained; no unpaid READY consumption |
+| PP-081 | Precharge sees healthy Drive and available unclaimed READY pool, but atomic customer folder binding/URL verification fails after PAID | No paid strip or invented QR; PAID/OWED retained; no unpaid READY consumption |
 | PP-082 | Legacy Sandbox Drive OFF vs new purchased synthetic verified-link profile | Existing BUG-027/028 profile unchanged; isolated fake link never represented as real cloud evidence |
 | PP-083 | Attempt-create timed out; provider Legacy /v2/charge idempotency-header behavior unknown | No unverified provider header or repeated POST; same original identity/status reconciliation |
 | PP-084 | Draft/QR1/QR2/PAID/ticket timestamps across restart and expiry | Different versioned TTL and 15-day/30-day anchors; no silent extension, deletion or mixing legacy 24h Sandbox claim rule |
