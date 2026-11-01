@@ -3,7 +3,7 @@
   "timezone": "Asia/Jakarta",
   "status": "NOT_READY_FOR_PHYSICAL_UAT",
   "scope": "112 full acceptance cases remain NOT_RUN. Listed module passes are partial software subassertions only.",
-  "verified_remote_base": "2dc2f07f91a4e042552ae63beb28d18c7f049d33",
+  "verified_remote_base": "992fd52e9d576a8ac13e186552b57aba367ef60b",
   "payment_source_sha256": "7234ebfc53535bc5e4a68c6c3eb70b56ddada0178abd8f90c762b08e5db74156",
   "summary": {
     "PASS": 0,
@@ -243,7 +243,8 @@
       "stage": "PP-02",
       "component_test_modules": [
         "tests/test_post_preview_checkout.py",
-        "tests/test_post_preview_readiness.py"
+        "tests/test_post_preview_readiness.py",
+        "tests/test_post_preview_drive_readiness.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -722,7 +723,8 @@
       "stage": "PP-05",
       "component_test_modules": [
         "tests/test_post_preview_checkout.py",
-        "tests/test_post_preview_readiness.py"
+        "tests/test_post_preview_readiness.py",
+        "tests/test_post_preview_drive_readiness.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -733,7 +735,9 @@
       "required_outcome": "Binding rejected",
       "full_case_status": "NOT_RUN",
       "stage": "PP-05",
-      "component_test_modules": [],
+      "component_test_modules": [
+        "tests/test_post_preview_drive_readiness.py"
+      ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
     },
@@ -1024,7 +1028,8 @@
       "stage": "PP-04/05/06/07",
       "component_test_modules": [
         "tests/test_post_preview_checkout.py",
-        "tests/test_post_preview_readiness.py"
+        "tests/test_post_preview_readiness.py",
+        "tests/test_post_preview_drive_readiness.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -1402,7 +1407,12 @@
       "skipped": 0
     },
     "full_PP_acceptance": "NOT_RUN",
-    "CI": "PENDING_PUSH",
+    "CI": {
+      "run_id": 41307908892,
+      "conclusion": "SUCCESS",
+      "all_three_jobs": "SUCCESS",
+      "sha": "992fd52e9d576a8ac13e186552b57aba367ef60b"
+    },
     "next": "PP-04.d3 actual read-only Drive/payment/worker readiness adapters and fixture mounting"
   },
   "readiness_source_sha256": {
@@ -1411,5 +1421,32 @@
     "photobooth/post_preview_photos.py": "ddc0e5228a288536757ddb58836fa7ceb1ea86a901b30ba59ae7c45f91d2375d",
     "photobooth/post_preview_payments.py": "f886cf74031088d3bb2d3415f9ca1b054692f972078bfe1eca772cfab24f9aff",
     "tests/test_post_preview_readiness.py": "12ca8689845400f52a88be9e1507b2f2b342a5164c5e3b040ae3d9d51628370c"
+  },
+  "drive_readiness_increment": {
+    "stage": "PP-04.d3",
+    "status": "COMPONENT_PASS_ONLY",
+    "private_state_tests": {
+      "run": 297,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "actual_Code_gs_VM": {
+      "run": 34,
+      "failures": 0,
+      "skipped": 0
+    },
+    "deployed_Web_App": "NOT_DEPLOYED",
+    "live_Drive_acceptance": "NOT_RUN",
+    "full_PP_acceptance": "NOT_RUN",
+    "CI": "PENDING_PUSH",
+    "next": "PP-04.d4 actual authenticated payment and authoritative worker ownership probes, native fixture mounting"
+  },
+  "drive_readiness_source_sha256": {
+    "apps_script/Code.gs": "e07ce0c572dc21ee96e5a17dd064597d5579d78b3247ec3e0c89f382e438c2eb",
+    "photobooth/booth_sync.py": "ad6b351d0ec1e51df51ad53199e8d5c196f11843ef4c514493971bf338741e4e",
+    "photobooth/post_preview_readiness.py": "12150c16af7918b8453687ef31dce34cea6d08024059aa8169f11453cfb976cc",
+    "tests/test_post_preview_drive_readiness.py": "dfd365087cd76bc3ba5d9d31d0b6cd832bee3e1bceb50c32b6b495583429a089",
+    "tests/test_apps_script_retention.cjs": "88dccf7fbe759ecf03628dc211157a3d267d25f12c7160da5fe777e353263005"
   }
 }

@@ -13,14 +13,83 @@ worker safeguards remain binding. Production deployment, actual charges/refunds,
 merchant activation, live customer/cloud deletion and other branches are excluded.
 
 - Authorized branch: `feature/post-preview-qris-checkout`.
-- Last independently verified remote before this increment: `2dc2f07f91a4e042552ae63beb28d18c7f049d33` (PP-04.d1; Git push/ls-remote verified). CI `41307192307`: Linux state, Windows state and native desktop all SUCCESS. Prior PP-04.c `66d3a26`/CI `41289132792` remains historical evidence.
+- Last independently verified remote before this increment: `992fd52e9d576a8ac13e186552b57aba367ef60b` (PP-04.d2; push/ls-remote verified). CI `41307908892`: Linux state, Windows state and native desktop all SUCCESS. Earlier source/CI results retain their historical scope.
 - Original audited base: `b68e514dd57c989df47fa1b222d45f3f71c38347`.
-- Current micro-increment: **PP-04.d2 — freshness-bound readiness, read-only frozen media/device validation, original PREPARED recheck**. PP-04.d remains incomplete pending read-only external Drive/payment/ownership adapters and fixture mounting.
-- Overall: PP-00 dependency audit continuing; PP-01 private capture and isolated development UI implemented; PP-02 preview/freeze backend and all-design UI implemented, trusted local charge-readiness adapter implemented; external Drive/payment/ownership readiness adapters unfinished; PP-03 protected CCP backend/native card components implemented but not mounted; PP-04 backend/API and native checkout synthetic fixture implemented; Sandbox/native payment remains unavailable until paid delivery is complete; PP-05/06/06R/07 NOT_STARTED.
+- Current micro-increment: **PP-04.d3 — actual read-only Drive readiness action/client and backend fixture integration**. PP-04.d remains incomplete pending independent payment authorization/authoritative worker-ownership probes and native fixture mounting.
+- Overall: PP-00 dependency audit continuing; PP-01 private capture and isolated development UI implemented; PP-02 preview/freeze backend and all-design UI implemented, trusted local + read-only Drive readiness adapters implemented; payment/authoritative ownership readiness adapters unfinished; PP-03 protected CCP backend/native card components implemented but not mounted; PP-04 backend/API and native checkout synthetic fixture implemented; Sandbox/native payment remains unavailable until paid delivery is complete; PP-05/06/06R/07 NOT_STARTED.
 - This checkpoint travels with the implementation commit. Resolve its containing
   SHA using `git log -1 --format=%H`; after push independently compare `git
   ls-remote origin refs/heads/feature/post-preview-qris-checkout`. A commit cannot
   truthfully contain its own SHA. The next increment records this verified tip.
+
+## PP-04.d3 — nonconsuming Drive readiness (1 November 2026)
+
+The existing layout-2 Apps Script gains authenticated `storage_readiness`.
+It checks only the requested original unclaimed reserve identities: read-only
+Drive API parent metadata/capabilities, exact numeric child/owner marker and claim
+verifier, genuinely empty contents, untrashed original parent and actual
+Anyone-with-link/Viewer ACL. Claimed/private/nonempty/foreign/wrong-proof/old-name
+reserves cannot count READY. No create, bind, assign, rename, move, setSharing,
+retention marker, trigger or customer-photo read/write is called. It cannot repair
+an old-name reserve. Zero verified candidates is NOT_READY; missing capability or
+failed observations stay UNKNOWN. Authentication/types/bounds/duplicates precede
+Drive reads. Response excludes URLs, claim tokens/verifiers and account errors.
+
+`BoothDriveClient.storage_readiness` reuses the original authenticated transport,
+sends only original candidate ID/proof fields, and strictly checks booth/layout/
+protocol/read-only marker and consistent bounded typed state/count evidence.
+`ReadOnlyDriveReadiness` compares original workspace/client namespace and physical
+booth, reads existing READY slots without replenishment/claim/counter writes,
+and makes **one** inspection for the three Drive signals. A slow result retains
+its original observation time instead of claiming fresh readiness. Missing old
+Web App support, authorization, network or correct scope stays UNKNOWN.
+`LocalChargeReadiness` composes these actual observations with local checks;
+no bare `ready=true` or guessed customer download link is introduced.
+
+A real authenticated API fixture rejects failed Drive sharing before any payment
+attempt, then safely retries the same frozen original purchase when a fresh
+inspection succeeds. Original 25-slot pool/counter and all empty reserves remain
+unchanged. Its payment-authorization and worker-ownership probes are explicitly
+synthetic and remain unfinished production adapters; this is component evidence.
+
+Test-first: new JS behavior initially **30 PASS / 3 FAIL** (the authentication
+negative also passed against unsupported action), Python missing adapter ERROR.
+Final actual Code.gs offline VM **34 PASS / 0 FAIL / 0 SKIP**, 207.268ms; mutation
+methods are forbidden in the readiness fixtures. Final Python affected group
+**67 PASS / 0 FAIL / 0 ERROR / 0 SKIP**, 8.755s. Configured private-state/legacy/
+Drive regression **297 PASS / 0 FAIL / 0 ERROR / 0 SKIP**, 54.780s. Commands:
+`node --check < apps_script/Code.gs`, `node --test tests/test_apps_script_retention.cjs`,
+`python tools/run_kiosk_unittests.py test_post_preview_drive_readiness
+ test_post_preview_readiness test_booth_sync test_booth_storage test_apps_script_drive
+ test_retention_readiness`, and the exact workflow private-state group. Seven
+new Python methods and the VM suite registered on Windows/Linux. Restricted
+network-profile Node runner initially failed without diagnostics; the same fully
+offline VM passes with the execution network profile enabled. No Google request
+was made. Compile/diff checks PASS; matching-source CI pending push.
+
+**Deployment boundary:** this changes source ONLY. Existing Google Web App was
+NOT updated/deployed and no account or cloud file was accessed. Actual deployed
+readiness support is BLOCKED until separately authorized manual deployment of the
+existing project and real-account verification. Software fixtures are PASS only;
+real Drive/API/sharing acceptance NOT_RUN. Do not use mutating reserve APIs as a
+fallback against an old deployment. Retention behavior and 15d/30d anchors remain
+unchanged; original VM retention cases all PASS with synthetic objects only.
+
+Component crosswalk adds PP-019/055/056/081 only, never complete acceptance. All
+112 PP full cases still NOT_RUN. Reviewed actual Apps Script layout-2 dispatch,
+reserve/bind/ownership/ACL/metadata helpers and VM harness, original client,
+BoothWorkspace lock/read/counter contracts, Drive storage-layout/retention policy,
+and PP freshness/admission invariants. No actual provider, printer, private
+customer media, refund, public hosting or production operation occurred.
+
+**Next PP-04.d4:** independent authenticated payment-backend availability/authority
+and authoritative original camera/service/worker ownership + unresolved-visit
+readiness, with native checkout fixture mounting and stale/timeout/restart/race
+checks. Keep incomplete adapters UNKNOWN; no client readiness authority. Revisit
+freshness latency/calibration honestly before real-account/device testing. Then
+finish PP-04.d acceptance/CI and proceed to PP-05 mandatory original ticket screen
++ concurrent same-ticket receipt, verified paid folder/URL and exact strip jobs.
+PP-06/06R/07 remain unfinished software; all external release gates stay explicit.
 
 ## PP-04.d2 — trusted freshness and local readiness (1 November 2026)
 
@@ -69,8 +138,9 @@ final configured private-state + legacy group includes all **16** new methods:
 fixtures. Focused command: `python tools/run_kiosk_unittests.py
  test_post_preview_readiness test_post_preview_payments test_post_preview_photos
  test_post_preview_checkout test_post_preview_payment_crashes`; final group is
-exactly the workflow private-state command. Compile/diff checks PASS; containing
-source CI pending push. All testing synthetic, no external provider/Drive calls,
+exactly the workflow private-state command. Compile/diff checks PASS; published
+source `992fd52e9d576a8ac13e186552b57aba367ef60b` remote verified; CI
+`41307908892` all three jobs SUCCESS. All testing synthetic, no external provider/Drive calls,
 real paper/customer data, credential screenshots, refunds or production actions.
 
 Component crosswalk adds PP-009/014/016..020/031/055/063/069/081/083 only; all 112

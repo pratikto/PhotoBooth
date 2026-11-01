@@ -60,6 +60,37 @@ class BoothDriveClient(AppsScriptDriveClient):
             folder_ids.add(folder_id)
         return result['slots']
 
+    def storage_readiness(self, slots):
+        """Inspect original unclaimed slots, never use the mutating pool API."""
+        if type(slots) is not list or len(slots) > 100:
+            raise ValueError('Bounded original reserve observations required')
+        claims, seen = [], set()
+        for slot in slots:
+            if (not isinstance(slot, dict) or not isinstance(slot.get('transaction_id'), str)
+                    or re.fullmatch(re.escape(self.booth_id)+r'_[0-9]{8}', slot['transaction_id']) is None
+                    or slot['transaction_id'] in seen or not isinstance(slot.get('claim_token'), str)
+                    or re.fullmatch(r'[a-f0-9]{32}', slot['claim_token']) is None):
+                raise ValueError('Exact original unclaimed reserve scope required')
+            seen.add(slot['transaction_id'])
+            claims.append({k: slot[k] for k in ('transaction_id', 'claim_token')})
+        result = self._post({'action': 'storage_readiness', 'slots': claims})
+        status = result.get('readiness')
+        states = {'READY', 'NOT_READY', 'UNKNOWN'}
+        if (type(result.get('storage_layout')) is not int or result['storage_layout'] != 2
+                or not isinstance(status, dict) or type(status.get('protocol_version')) is not int
+                or status['protocol_version'] != 1 or status.get('booth_id') != self.booth_id
+                or status.get('read_only') is not True
+                or any(type(status.get(k)) is not str or status[k] not in states
+                       for k in ('drive_api', 'drive_sharing', 'capacity_state'))
+                or type(status.get('ready_count')) is not int or type(status.get('checked_count')) is not int
+                or not 0 <= status['ready_count'] <= status['checked_count'] <= len(claims)
+                or (status['capacity_state'] == 'READY') != (status['ready_count'] > 0)
+                or status['capacity_state'] == 'READY' and
+                   (status['drive_api'] != 'READY' or status['drive_sharing'] != 'READY')):
+            raise DriveApiError('Read-only readiness protocol mismatch; update the existing Web App.', 409)
+        return {k: status[k] for k in ('protocol_version', 'booth_id', 'read_only',
+                'drive_api', 'drive_sharing', 'capacity_state', 'ready_count', 'checked_count')}
+
     def bind_transaction(self, manifest):
         result = self._post({'action': 'bind_transaction',
             'transaction_id': manifest['transaction_id'], 'claim_token': manifest['drive_claim_token'],

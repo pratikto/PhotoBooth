@@ -52,7 +52,9 @@ function doPost(event) {
       properties = storageProperties_(properties, storagePhotoFolder_(properties, boothId, false), boothId);
     }
     let result;
-    if (action === "reserve_transactions") {
+    if (action === "storage_readiness") {
+      result = inspectStorageReadiness_(body, properties);
+    } else if (action === "reserve_transactions") {
       result = withPhotoLock_(function () { return reserveStorageTransactions_(body, properties); });
     } else if (action === "bind_transaction") {
       result = withPhotoLock_(function () { return bindStorageTransaction_(body, properties); });
@@ -214,6 +216,69 @@ function reserveStorageTransactions_(body, p) {
     return {transaction_id: claim.transaction_id, folder_id: folder.getId(), folder_url: folder.getUrl(), status: "READY", photo_number_layout: 1, link_verified: true};
   });
   return {storage_layout: 2, slots: slots};
+}
+
+/** Post-preview precharge: inspect existing exact reserves only, never repair.
+ * No creation, claim, rename, move, marker/retention write or ACL change is
+ * permitted here. A healthy observation cannot guarantee a later paid binding.
+ */
+function inspectStorageReadiness_(body, p) {
+  if (body.storage_layout !== 2 || typeof body.booth_id !== "string"
+      || !Array.isArray(body.slots) || body.slots.length > 100)
+    throw apiError_("Bounded layout-2 readiness request required.", 400);
+  const booth = validateStorageBooth_(body.booth_id), seen = new Set();
+  const claims = body.slots.map(function (slot) {
+    if (!slot || Array.isArray(slot) || typeof slot !== "object"
+        || typeof slot.transaction_id !== "string" || typeof slot.claim_token !== "string")
+      throw apiError_("Exact readiness identity required.", 400);
+    const claim = storageClaim_(slot, booth);
+    if (seen.has(claim.transaction_id)) throw apiError_("Duplicate readiness identity.", 400);
+    seen.add(claim.transaction_id);
+    return claim;
+  });
+  const status = {protocol_version: 1, booth_id: booth, read_only: true,
+    drive_api: "UNKNOWN", drive_sharing: "UNKNOWN", capacity_state: "UNKNOWN",
+    ready_count: 0, checked_count: 0};
+  try {
+    const parent = storagePhotoFolder_(p, booth, false);
+    const response = driveRetentionRequest_("get", parent.getId(),
+      "fields=id,mimeType,capabilities(canShare,canAddChildren)");
+    const code = response.getResponseCode();
+    if (code !== 200) {
+      status.drive_api = [401,403,404].includes(code) ? "NOT_READY" : "UNKNOWN";
+      return {storage_layout: 2, readiness: status};
+    }
+    const metadata = JSON.parse(response.getContentText());
+    if (metadata.id !== parent.getId() || metadata.mimeType !== "application/vnd.google-apps.folder") {
+      status.drive_api = "NOT_READY";
+      return {storage_layout: 2, readiness: status};
+    }
+    status.drive_api = "READY";
+    const capability = metadata.capabilities || {};
+    status.drive_sharing = capability.canShare === true && capability.canAddChildren === true ? "READY"
+      : capability.canShare === false || capability.canAddChildren === false ? "NOT_READY" : "UNKNOWN";
+    if (status.drive_sharing !== "READY") return {storage_layout: 2, readiness: status};
+    claims.forEach(function (claim) {
+      // Unlike storageTransaction_, this lookup cannot move/rename an old slot.
+      const folder = uniqueStorageChild_(parent, claim.transaction_id.split("_").pop(), false);
+      status.checked_count += 1;
+      if (!folder || folder.isTrashed() || !hasParent_(folder, parent)) return;
+      let owner;
+      try { owner = JSON.parse(folder.getDescription()); } catch (_) { return; }
+      if (owner.managed_slot !== STORAGE_SLOT_MARKER || owner.transaction_id !== claim.transaction_id
+          || owner.claim_key !== claim.claim_key || owner.storage_layout === 2
+          || folder.getFiles().hasNext() || folder.getFolders().hasNext()
+          || folder.getSharingAccess() !== DriveApp.Access.ANYONE_WITH_LINK
+          || folder.getSharingPermission() !== DriveApp.Permission.VIEW) return;
+      status.ready_count += 1;
+    });
+    status.capacity_state = status.ready_count > 0 ? "READY" : "NOT_READY";
+  } catch (_) {
+    // No provider exception, account ID, claim verifier or token leaves here.
+    status.capacity_state = "UNKNOWN";
+    status.ready_count = 0;
+  }
+  return {storage_layout: 2, readiness: status};
 }
 function bindStorageTransaction_(body, p) {
   const booth = validateStorageBooth_(body.booth_id), claim = storageClaim_(body, booth);

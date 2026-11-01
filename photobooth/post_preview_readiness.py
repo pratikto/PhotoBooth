@@ -99,12 +99,14 @@ class LocalChargeReadiness:
     """
     LOCAL_CHECKS = frozenset({'media', 'artwork', 'disk', 'camera', 'printer_route'})
 
-    def __init__(self, checkout, templates, *, probes=None, camera=None, printer_config=None):
+    def __init__(self, checkout, templates, *, probes=None, camera=None, printer_config=None,
+                 drive_probe=None):
         if self.LOCAL_CHECKS.intersection(probes or {}):
             raise ValueError('Local checks cannot be replaced by caller readiness flags')
         self.checkout, self.templates = checkout, tuple(templates)
         self.probes = dict(probes or {})
         self.camera, self.printer_config = camera, printer_config
+        self.drive_probe = drive_probe
 
     def __call__(self, group):
         from photobooth.device_health import check_camera, check_printer
@@ -122,6 +124,11 @@ class LocalChargeReadiness:
         # saved media, manifest, reserve, counter or payment journal is changed.
         self.checkout.photos.policy.inspect(private, probe=True)
         probes = dict(self.probes)
+        if self.drive_probe is not None:
+            for name, observation in self.drive_probe.observe(scope).items():
+                if name not in {'drive_api', 'drive_sharing', 'unclaimed_ready_capacity'}:
+                    raise ValueError('Drive readiness cannot replace other trusted checks')
+                probes[name] = lambda _scope, value=observation: value
         for name in ('media', 'artwork', 'disk'):
             probes[name] = lambda _scope: CheckObservation('READY', started)
 
@@ -138,3 +145,29 @@ class LocalChargeReadiness:
         probes['camera'] = lambda _scope: device(check_camera, self.camera)
         probes['printer_route'] = lambda _scope: device(check_printer, self.printer_config)
         return TrustedChargeReadiness.observe(scope, probes)
+
+
+class ReadOnlyDriveReadiness:
+    """One fresh authenticated layout-2 inspection, no folder consumption."""
+    CHECKS = ('drive_api', 'drive_sharing', 'unclaimed_ready_capacity')
+
+    def __init__(self, client, workspace, *, now):
+        self.client, self.workspace, self.now = client, workspace, now
+
+    def observe(self, scope):
+        unknown = {name: CheckObservation('UNKNOWN', None) for name in self.CHECKS}
+        try:
+            if (scope.booth_id != self.workspace.physical_id
+                    or self.client.booth_id != self.workspace.booth_id
+                    or not self.workspace.state_path.is_file()):
+                return unknown
+            stamp = self.now()
+            # Existing ready_slots reads original identities under the workspace
+            # lock. It does not replenish, claim or change counter/pool state.
+            status = self.client.storage_readiness(self.workspace.ready_slots())
+            return {'drive_api': CheckObservation(status['drive_api'], stamp),
+                    'drive_sharing': CheckObservation(status['drive_sharing'], stamp),
+                    'unclaimed_ready_capacity': CheckObservation(status['capacity_state'], stamp)}
+        except Exception:
+            # Credentials/URLs and raw account failures never enter diagnostics.
+            return unknown

@@ -348,6 +348,110 @@ function storageHarness() {
   h.bind = () => h.post('bind_transaction', {...h.claim, started_at: new ClockDate(NOW-2*DAY).toISOString(), session_count: 2});
   return h;
 }
+
+function forbidStorageWrites(h) {
+  const fail = () => { throw Error('Unexpected readiness mutation'); };
+  const visit = entry => {
+    for (const child of entry.children) visit(child);
+    for (const child of entry.files) visit(child);
+    for (const method of ['createFolder', 'createFile', 'setName', 'moveTo', 'setDescription', 'setSharing']) entry[method] = fail;
+  };
+  visit(h.root);
+  h.properties.setProperty = h.properties.deleteProperty = fail;
+  h.context.ScriptApp.newTrigger = h.context.ScriptApp.deleteTrigger = fail;
+}
+
+function readinessFixture() {
+  const h = storageHarness();
+  const slots = Array.from({length: 3}, (_, i) => ({...h.claim, transaction_id: 'PB001V2S2_'+String(i+1).padStart(8,'0')}));
+  assert.equal(h.post('reserve_transactions', {slots}).ok, true);
+  const read = h.context.UrlFetchApp.fetch;
+  h.context.UrlFetchApp.fetch = (url, options) => {
+    assert.equal(options.method, 'get');
+    const response = read(url, options);
+    return {...response, getContentText: () => JSON.stringify({...JSON.parse(response.getContentText()),
+      capabilities: {canShare: true, canAddChildren: true}})};
+  };
+  h.slots = slots;
+  return h;
+}
+
+test('post-preview readiness reads exact unclaimed reserves without creating, claiming or changing sharing', () => {
+  const h = readinessFixture(), settings = JSON.stringify(h.settings);
+  forbidStorageWrites(h);
+  const result = h.post('storage_readiness', {slots: h.slots});
+  assert.equal(result.ok, true);
+  assert.equal(result.readiness.read_only, true);
+  assert.equal(result.readiness.booth_id, 'PB001V2S2');
+  assert.equal(result.readiness.drive_api, 'READY');
+  assert.equal(result.readiness.drive_sharing, 'READY');
+  assert.equal(result.readiness.capacity_state, 'READY');
+  assert.equal(result.readiness.ready_count, 3);
+  assert.equal(JSON.stringify(h.settings), settings);
+  assert.ok(h.requests.every(r => r.method === 'get'));
+  assert.doesNotMatch(JSON.stringify(result), /claim_token|claim_key|folder_url|fixture-token/);
+});
+
+test('readiness never counts claimed, private, nonempty, foreign or wrong-proof reserves', () => {
+  for (const kind of ['claimed', 'private', 'nonempty', 'foreign', 'wrong-proof', 'legacy-name']) {
+    const h = readinessFixture();
+    const parent = h.context.storagePhotoFolder_(h.properties, 'PB001V2S2', false);
+    const folder = parent.children[0];
+    if (kind === 'claimed') h.bind();
+    if (kind === 'private') folder.shared = false;
+    if (kind === 'nonempty') h.file('private-photo', 'photo.jpg', 0, folder);
+    if (kind === 'foreign') folder.description = '{}';
+    if (kind === 'legacy-name') folder.name = h.claim.transaction_id;
+    const slot = kind === 'wrong-proof' ? {...h.slots[0], claim_token: 'b'.repeat(32)} : h.slots[0];
+    forbidStorageWrites(h);
+    const result = h.post('storage_readiness', {slots: [slot]});
+    assert.equal(result.ok, true, kind);
+    assert.equal(result.readiness.ready_count, 0, kind);
+    assert.equal(result.readiness.capacity_state, 'NOT_READY', kind);
+  }
+});
+
+test('readiness authentication, scope and bounds precede Drive reads', () => {
+  const h = readinessFixture();
+  forbidStorageWrites(h);
+  const before = h.requests.length;
+  assert.equal(h.post('storage_readiness', {slots: h.slots, token: 'wrong'}).code, 401);
+  assert.equal(h.post('storage_readiness', {slots: Array(101).fill(h.claim)}).code, 400);
+  assert.equal(h.post('storage_readiness', {slots: [h.claim, h.claim]}).code, 400);
+  assert.equal(h.post('storage_readiness', {slots: h.slots, booth_id: 'PB002V2S2'}).code, 400);
+  assert.equal(h.post('storage_readiness', {slots: h.slots, booth_id: ['PB001V2S2']}).code, 400);
+  assert.equal(h.post('storage_readiness', {slots: [{...h.claim, claim_token: [h.claim.claim_token]}]}).code, 400);
+  assert.equal(h.requests.length, before);
+});
+
+test('readiness provider failures stay unknown and never echo private errors', () => {
+  const h = readinessFixture();
+  forbidStorageWrites(h);
+  h.context.UrlFetchApp.fetch = () => { throw Error('private-account-token-detail'); };
+  const result = h.post('storage_readiness', {slots: h.slots});
+  assert.equal(result.ok, true);
+  assert.equal(result.readiness.drive_api, 'UNKNOWN');
+  assert.equal(result.readiness.capacity_state, 'UNKNOWN');
+  assert.doesNotMatch(JSON.stringify(result), /private-account-token-detail/);
+});
+
+test('readiness distinguishes denied sharing capability, absent capability and API authorization failure', () => {
+  for (const [code, capabilities, apiState, sharingState] of [
+    [200, {canShare: false, canAddChildren: true}, 'READY', 'NOT_READY'],
+    [200, {}, 'READY', 'UNKNOWN'], [403, {}, 'NOT_READY', 'UNKNOWN'],
+  ]) {
+    const h = readinessFixture();
+    forbidStorageWrites(h);
+    const parent = h.context.storagePhotoFolder_(h.properties, 'PB001V2S2', false);
+    h.context.UrlFetchApp.fetch = () => ({getResponseCode: () => code,
+      getContentText: () => JSON.stringify({id: parent.id, mimeType: 'application/vnd.google-apps.folder', capabilities})});
+    const result = h.post('storage_readiness', {slots: h.slots});
+    assert.equal(result.readiness.drive_api, apiState);
+    assert.equal(result.readiness.drive_sharing, sharingState);
+    assert.equal(result.readiness.capacity_state, 'UNKNOWN');
+    assert.equal(result.readiness.ready_count, 0);
+  }
+});
 test('layout 2 creates named siblings, separate booths, 25 truly empty reserves; retry is idempotent', () => {
   const h = storageHarness(), slots = Array.from({length:25}, (_, i) => ({transaction_id:'PB001V2S2_'+String(i+1).padStart(8,'0'), claim_token:'a'.repeat(32)}));
   const first = h.post('reserve_transactions', {slots}); assert.equal(first.ok, true); assert.equal(first.slots.length,25);
