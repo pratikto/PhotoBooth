@@ -13,14 +13,40 @@ worker safeguards remain binding. Production deployment, actual charges/refunds,
 merchant activation, live customer/cloud deletion and other branches are excluded.
 
 - Authorized branch: `feature/post-preview-qris-checkout`.
-- Last independently verified remote before this increment: `992fd52e9d576a8ac13e186552b57aba367ef60b` (PP-04.d2; push/ls-remote verified). CI `41307908892`: Linux state, Windows state and native desktop all SUCCESS. Earlier source/CI results retain their historical scope.
+- Last independently verified remote before this increment: `f1b2b4c594895e1e2e537bcfe7c402e83d8c251f` (PP-04.d3; push/ls-remote verified). CI `41308665185`: Linux state/native SUCCESS; Windows 297 run, 1 FAIL + 4 ERROR from timezone dependency/path-alias fixture. Corrective CI/fixture increment below; no runtime rollback or safety relaxation.
 - Original audited base: `b68e514dd57c989df47fa1b222d45f3f71c38347`.
-- Current micro-increment: **PP-04.d3 — actual read-only Drive readiness action/client and backend fixture integration**. PP-04.d remains incomplete pending independent payment authorization/authoritative worker-ownership probes and native fixture mounting.
+- Current micro-increment: **PP-04.d3.ci — Windows expanded Drive regression portability**. PP-04.d4 payment/authoritative ownership probes and native fixture mounting remain next; PP-04.d still IN_PROGRESS.
 - Overall: PP-00 dependency audit continuing; PP-01 private capture and isolated development UI implemented; PP-02 preview/freeze backend and all-design UI implemented, trusted local + read-only Drive readiness adapters implemented; payment/authoritative ownership readiness adapters unfinished; PP-03 protected CCP backend/native card components implemented but not mounted; PP-04 backend/API and native checkout synthetic fixture implemented; Sandbox/native payment remains unavailable until paid delivery is complete; PP-05/06/06R/07 NOT_STARTED.
 - This checkpoint travels with the implementation commit. Resolve its containing
   SHA using `git log -1 --format=%H`; after push independently compare `git
   ls-remote origin refs/heads/feature/post-preview-qris-checkout`. A commit cannot
   truthfully contain its own SHA. The next increment records this verified tip.
+
+## PP-04.d3.ci — Windows coverage correction (1 November 2026)
+
+Published PP-04.d3 `f1b2b4c594895e1e2e537bcfe7c402e83d8c251f`, run
+`41308665185`: Linux state and native desktop SUCCESS; actual Code.gs VM passes
+on both OSes. Windows Python **297 run / 1 FAIL / 4 ERROR / 0 SKIP**. All new
+readiness methods pass; four expanded legacy Drive cases require `tzdata`,
+already declared by requirements.txt but omitted from this minimal CI install.
+One pre-existing mapping assertion compared Windows 8.3 TEMP spelling with the
+worker's canonical long path. No payment/readiness runtime defect is inferred.
+
+Adds declared `tzdata` to the private-state install and compares both **existing
+canonical paths** with `resolve(strict=True)`. This preserves the exact original
+folder/file-mapping safety assertion, rejects another customer path and requires
+both files to exist. No fallback timezone, skipped case, relaxed payment guard,
+provider/Drive mutation or runtime module change. `photobooth/` and `apps_script/`
+remain byte-identical to PP-04.d3. Focused Linux `python tools/run_kiosk_unittests.py
+ test_booth_sync test_post_preview_drive_readiness`: **34 PASS / 0 FAIL / 0 ERROR /
+0 SKIP**, 2.753s. Prior full 297 PASS/34 VM PASS keep their original functional
+source scope; no redundant full local rerun for this fixture/dependency correction.
+Matching-source Windows/Linux/native CI pending push; failed run is preserved.
+
+Next remains **PP-04.d4** independent authenticated payment-backend and original
+worker/occupancy readiness plus native fixture integration, then PP-05. Real
+Windows hardware, merchant provider, deployed Drive, printer and full 112 PP
+acceptance remain NOT_RUN; Google source remains NOT_DEPLOYED.
 
 ## PP-04.d3 — nonconsuming Drive readiness (1 November 2026)
 
@@ -65,7 +91,9 @@ Drive regression **297 PASS / 0 FAIL / 0 ERROR / 0 SKIP**, 54.780s. Commands:
 new Python methods and the VM suite registered on Windows/Linux. Restricted
 network-profile Node runner initially failed without diagnostics; the same fully
 offline VM passes with the execution network profile enabled. No Google request
-was made. Compile/diff checks PASS; matching-source CI pending push.
+was made. Compile/diff checks PASS; published source `f1b2b4c` CI
+`41308665185` Linux/native SUCCESS, Windows portability failures corrected in
+PP-04.d3.ci above.
 
 **Deployment boundary:** this changes source ONLY. Existing Google Web App was
 NOT updated/deployed and no account or cloud file was accessed. Actual deployed

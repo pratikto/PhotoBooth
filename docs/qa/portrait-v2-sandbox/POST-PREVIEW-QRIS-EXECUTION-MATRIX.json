@@ -3,7 +3,7 @@
   "timezone": "Asia/Jakarta",
   "status": "NOT_READY_FOR_PHYSICAL_UAT",
   "scope": "112 full acceptance cases remain NOT_RUN. Listed module passes are partial software subassertions only.",
-  "verified_remote_base": "992fd52e9d576a8ac13e186552b57aba367ef60b",
+  "verified_remote_base": "f1b2b4c594895e1e2e537bcfe7c402e83d8c251f",
   "payment_source_sha256": "7234ebfc53535bc5e4a68c6c3eb70b56ddada0178abd8f90c762b08e5db74156",
   "summary": {
     "PASS": 0,
@@ -1439,8 +1439,23 @@
     "deployed_Web_App": "NOT_DEPLOYED",
     "live_Drive_acceptance": "NOT_RUN",
     "full_PP_acceptance": "NOT_RUN",
-    "CI": "PENDING_PUSH",
-    "next": "PP-04.d4 actual authenticated payment and authoritative worker ownership probes, native fixture mounting"
+    "CI": "CORRECTIVE_PUSH_PENDING",
+    "next": "PP-04.d4 actual authenticated payment and authoritative worker ownership probes, native fixture mounting",
+    "CI_attempts": [
+      {
+        "run_id": 41308665185,
+        "sha": "f1b2b4c594895e1e2e537bcfe7c402e83d8c251f",
+        "Linux_state": "SUCCESS",
+        "native": "SUCCESS",
+        "Windows": {
+          "run": 297,
+          "failures": 1,
+          "errors": 4,
+          "skipped": 0,
+          "cause": "Missing declared tzdata and Windows short/long TEMP path fixture comparison"
+        }
+      }
+    ]
   },
   "drive_readiness_source_sha256": {
     "apps_script/Code.gs": "e07ce0c572dc21ee96e5a17dd064597d5579d78b3247ec3e0c89f382e438c2eb",
@@ -1448,5 +1463,16 @@
     "photobooth/post_preview_readiness.py": "12150c16af7918b8453687ef31dce34cea6d08024059aa8169f11453cfb976cc",
     "tests/test_post_preview_drive_readiness.py": "dfd365087cd76bc3ba5d9d31d0b6cd832bee3e1bceb50c32b6b495583429a089",
     "tests/test_apps_script_retention.cjs": "88dccf7fbe759ecf03628dc211157a3d267d25f12c7160da5fe777e353263005"
+  },
+  "windows_Drive_fixture_correction": {
+    "runtime_unchanged_from": "f1b2b4c594895e1e2e537bcfe7c402e83d8c251f",
+    "focused": {
+      "run": 34,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "scope": "Declared tzdata CI dependency and strict existing canonical-path fixture assertion",
+    "CI": "PENDING_PUSH"
   }
 }

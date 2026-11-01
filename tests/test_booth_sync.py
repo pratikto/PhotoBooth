@@ -435,7 +435,11 @@ class BoothSyncTests(unittest.TestCase):
             for call in client.upload_file.call_args_list:
                 folder_id,txid,relative,local_path=call.args
                 self.assertEqual(folder_id,txid)
-                self.assertEqual(local_path,expected[txid].folder_path/relative)
+                # Windows TEMP may use an 8.3 spelling while the upload worker
+                # resolves the same file to its long name. Require the exact
+                # existing canonical path, still rejecting a different folder.
+                self.assertEqual(local_path.resolve(strict=True),
+                                 (expected[txid].folder_path/relative).resolve(strict=True))
                 record=json.loads(expected[txid].manifest_path.read_text())['upload_files'][relative]
                 self.assertEqual(record['md5_checksum'],hashlib.md5(local_path.read_bytes()).hexdigest())
             state=json.loads(w.state_path.read_text())
