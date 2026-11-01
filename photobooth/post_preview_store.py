@@ -61,7 +61,7 @@ class PostPreviewStore:
             singleton INTEGER PRIMARY KEY CHECK(singleton=1), version INTEGER NOT NULL);
           INSERT OR IGNORE INTO pp_schema VALUES(1,1);
         ''')
-        if self.db.execute('SELECT version FROM pp_schema').fetchone()[0] not in (1, 2, 3, 4, 5, 6, 7):
+        if self.db.execute('SELECT version FROM pp_schema').fetchone()[0] not in (1, 2, 3, 4, 5, 6, 7, 8):
             self.db.close()
             raise DraftHeld('Unsupported private draft schema')
         self.db.executescript('''
@@ -352,6 +352,45 @@ class PostPreviewStore:
                     'PRAGMA table_info(pp_isolation_ops)')}
                 if not needed <= actual:
                     raise DraftHeld('Original isolation journal is missing or invalid')
+
+        # PP-06b permits multiple securely re-fenced visits of the SAME
+        # paid original, without reusing an operation ID or resetting a proof.
+        # Upgrade existing v7 receipts non-destructively to a per-generation
+        # uniqueness key. Old ACKed receipts remain permanently ACKed.
+        with self.write():
+            version=self.db.execute('SELECT version FROM pp_schema').fetchone()[0]
+            if version < 8:
+                self.db.execute('DROP TRIGGER IF EXISTS pp_isolation_identity_immutable')
+                self.db.execute('DROP TRIGGER IF EXISTS pp_isolation_no_replay')
+                self.db.execute('''CREATE TABLE pp_isolation_ops_v8 (
+                    operation_id TEXT PRIMARY KEY, draft_id TEXT NOT NULL REFERENCES pp_drafts(draft_id),
+                    booth_id TEXT NOT NULL, original_generation INTEGER NOT NULL,
+                    financial_class TEXT NOT NULL CHECK(financial_class IN
+                      ('NO_PAYMENT','TERMINAL_UNPAID','PAID_OWED')),
+                    state TEXT NOT NULL CHECK(state IN ('PREPARED','ACKED')),
+                    prepared_at REAL NOT NULL, acknowledged_at REAL,
+                    UNIQUE(draft_id,original_generation))''')
+                self.db.execute('''INSERT INTO pp_isolation_ops_v8
+                    (operation_id,draft_id,booth_id,original_generation,
+                     financial_class,state,prepared_at,acknowledged_at)
+                    SELECT operation_id,draft_id,booth_id,original_generation,
+                           financial_class,state,prepared_at,acknowledged_at
+                    FROM pp_isolation_ops''')
+                self.db.execute('DROP TABLE pp_isolation_ops')
+                self.db.execute('ALTER TABLE pp_isolation_ops_v8 RENAME TO pp_isolation_ops')
+                self.db.execute('''CREATE TRIGGER pp_isolation_identity_immutable
+                    BEFORE UPDATE OF operation_id,draft_id,booth_id,original_generation,
+                    financial_class,prepared_at ON pp_isolation_ops
+                    BEGIN SELECT RAISE(ABORT,'Original isolation identity is immutable'); END''')
+                self.db.execute('''CREATE TRIGGER pp_isolation_no_replay
+                    BEFORE UPDATE OF state ON pp_isolation_ops
+                    WHEN OLD.state='ACKED' AND NEW.state!='ACKED'
+                    BEGIN SELECT RAISE(ABORT,'Original isolation cannot be reopened'); END''')
+                self.db.execute('UPDATE pp_schema SET version=8')
+            elif not {'operation_id','draft_id','booth_id','original_generation',
+                      'financial_class','state','prepared_at','acknowledged_at'} <= {
+                        r['name'] for r in self.db.execute('PRAGMA table_info(pp_isolation_ops)')}:
+                raise DraftHeld('Original isolation generation journal is missing')
 
     def close(self):
         with self.lock:

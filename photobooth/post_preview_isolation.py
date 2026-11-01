@@ -104,8 +104,8 @@ class OriginalMockIsolation:
             self._quiescent(draft)
             financial=self._financial(draft)
             existing=self.ledger.db.execute(
-                'SELECT * FROM pp_isolation_ops WHERE draft_id=?',
-                (draft['draft_id'],)).fetchone()
+                'SELECT * FROM pp_isolation_ops WHERE draft_id=? AND original_generation=?',
+                (draft['draft_id'],draft['generation'])).fetchone()
             if existing:
                 if (existing['original_generation']!=draft['generation']
                         or existing['financial_class']!=financial
