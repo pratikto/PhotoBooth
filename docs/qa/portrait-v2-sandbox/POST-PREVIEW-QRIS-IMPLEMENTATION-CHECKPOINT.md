@@ -1,5 +1,12 @@
 # Post-preview QRIS implementation checkpoint
 
+## 1 November 2026 — PP-05.d1 original purchased copy batching (new; CI pending)
+
+**Original PAID print dispatch is prepared as an isolated mock-only component**, not a customer/Sandbox printer activation. `OriginalPaidPrintDispatcher` validates the paid entitlement, original ticket genuinely displayed/dismissed, receipt no longer SENDING, individual Drive URL and saved 640×1920 output SHA **before** persisting the single original job SENDING. It requires the same external printer lane as the original ticket, then uses the existing calibrated `ThermalPrinter.print_image(path,copies=N)` so purchased duplicate copies form one complete RAW document. Only transport SUBMITTED is recorded on success, UNCERTAIN on any ambiguous failure, NOT_SENT when unavailable; no automatic replay, no false claim of physical paper, PAID/OWED preserved. The print order number is read from the exact persisted paid manifest, **not inferred by sorting template IDs**.
+
+New five test scenarios in `test_post_preview_paid_print` test original ticket gate, one-copy-batched submission, UNCERTAIN no-replay, no device and corrupt bitmap refusal, including callback mock only. This is PP-05.d1 staging and not physical customer UAT, genuine paper evidence, actual printer connection or service completion. CI pending; all PP-001..112 remain NOT_RUN. Next PP-05.d2 paid Drive worker/remaining obligation integration, PP-06 original claim + machine-fenced isolation, PP-06R merchant-gated refund, PP-07 actual owner device acceptance.
+
+
 ## 1 November 2026 — PP-05.c3b after-publish manifest correction (new; CI pending)
 
 CI run `41320578133`: native desktop SUCCESS, Linux **383 tests / 3 ERROR**, Windows cancelled. All three new paid strip cases reached the original successful output compositor but failed recording `paid_strip_bindings` because original `publish_output` reloads `tx.manifest` from durable storage, discarding the empty map just initialized before output. The correction uses `setdefault` **after** the trusted publish/record step so a resumed original manifest has an immutable per-design binding. No photo/QR hash guard, printing, Drive ACL or payment authorization has been relaxed. These tests/real external provider gates remain NOT_RUN for full PP acceptance until rerun succeeds.
