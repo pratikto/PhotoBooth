@@ -185,7 +185,18 @@ class OriginalPaidMediaImporter:
             staged={}
             for plan in plans:
                 design=rows[plan.template.template_id]
-                row=self.binder.checkout.photos._selected(lease,plan.template)
+                # Prepaid frozen contracts are intentionally NOT editable.
+                # _selected() is a capture/edit-only helper, so read the exact
+                # immutable selected lineage under a non-editing owner check.
+                with self.binder.ledger.write():
+                    self.binder.ledger._owned(lease)
+                    row=self.binder.ledger.db.execute('''SELECT * FROM pp_templates
+                        WHERE draft_id=? AND template_id=?''',
+                        (lease.draft_id,plan.template.template_id)).fetchone()
+                    if (row is None or not row['selected'] or not row['approved']
+                            or row['lineage_id']!=design['lineage_id']
+                            or row['copies']!=plan.print_copies):
+                        raise DraftHeld('Original frozen selected-photo lineage changed')
                 source_store,source_tx,source_plan=self.binder.checkout.photos._open(
                     lease,plan.template,row,repair=False)
                 source_session=self.binder.checkout.photos._session(source_tx,source_plan)

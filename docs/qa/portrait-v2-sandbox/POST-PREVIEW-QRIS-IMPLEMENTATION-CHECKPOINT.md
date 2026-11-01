@@ -1,5 +1,10 @@
 # Post-preview QRIS implementation checkpoint
 
+## 1 November 2026 — PP-05.c3a frozen contract read-only fix (CI pending)
+
+Initial PP-05.c3a CI `41320076932` Linux failed **2 errors / 371 tests** (native desktop SUCCESS; Windows cancelled). Both were triggered because the new import mistakenly called `PrivateDraftPhotos._selected`, whose contract correctly requires **editable** drafts and therefore rejects any post-provider-create paid purchase. This fix replaces that call with an original, non-editing `ledger._owned(lease)` check and direct selected `pp_templates` row verification against the frozen template, approved flag, unchanged lineage and copy quantity. Keep immutable CREATE_PREPARED lock, original source hashes, retake quota and all runtime safety guards unchanged. Recheck CI after push; no full PP acceptance, real Drive or printed photo is claimed.
+
+
 ## 1 November 2026 — PP-05.c3a original PAID raw media import (new; CI pending)
 
 New `OriginalPaidMediaImporter` (isolated synthetic-only) verifies the same immutable provider-paid OWED service, trusted original still-live worker lease and **full frozen source-photo/artwork hashes** before creating an exact paid storage-layout-2 manifest in the **already journaled, remotely verified original folder**. It copies the original three JPEGs per design and any consumed retake as **byte-identical, source-sha-verified immutable files**, with durable per-file PREPARED/COMMITTED import intents, hard-link no-overwrite publication, and recovery that verifies existing outputs rather than creating new transaction identities. Manifest preserves original purchase/entitlement binding, exact copies and retake lineage. `drive_intent=False` and no strip output until verified Drive-link QR composition later; no public upload or print. All financial obligations remain PAID/OWED.
