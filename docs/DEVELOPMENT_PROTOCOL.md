@@ -1,12 +1,9 @@
-## 1 November 2026 — New post-preview QRIS branch precedence (DESIGN ONLY)
-
-**Owner-approved NEW-order target on `feature/post-preview-qris-checkout`:** every selected template captures 3 photos with max 1 retake, all template previews completed before **one** frozen checkout/QRIS; independent private Checkout Claim Proof offered before PAID for late settlement; original Recovery Ticket remains issued only **after** PAID (one print attempt or original 30-second on-screen fallback). Final photo printing waits for verified customer Drive link; uploads may be pending. Approved adaptive inactivity without hard cap during active capture, editing only before first QRIS attempt with used retake preserved, and controlled encrypted credential escrow for crash recovery. Active visitor can renew verified-expired unpaid QR1->QR2->QR3; departed visitor instead follows original-attempt cancel/reconciliation, no automatic renewal. Late PAID without live ownership -> PAID_UNCLAIMED/OWED; original claim only with proof and free booth; no public print/ticket/photo. No automatic refunds or uncertain paper job retries.
-
-**This new-order ordering supersedes historical QRIS-before-photo, PAID-to-camera and ticket-before-camera sequencing below ONLY for new orders on this branch.** Existing source/legacy prepaid PAID orders still require old photo-resume behavior and original AR/UAH safety. This is documented target **NOT IMPLEMENTED/NOT TESTED**; preserve original source evidence/CI status. [Approved 24 decisions and 11 flowcharts](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-OWNER-APPROVED.md) · [security](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [72 NOT_RUN QA cases](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md) · [Codex handover](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-CODEX-HANDOVER.md).
-
----
-
 # Meong Photobooth development protocol
+
+> **Branch-specific owner-approved design — 1 November 2026, NOT IMPLEMENTED.** For NEW orders only on `feature/post-preview-qris-checkout`: select template(s)/copies -> **3 captures and at most one retake per template** -> approve every design -> editable final preview (until provider CREATE_PREPARED) -> immutable one-cart QRIS checkout with private **pre-PAID Checkout Claim Proof** -> independently verified PAID -> one original Recovery Ticket (same-token 30-second screen fallback if needed) -> photo strips only after exact Drive customer URL is verified, with original background upload. Approved: guarded encrypted credential escrow, adaptive phase-aware inactivity without active-session hard cap, QR1/QR2/QR3 renewal **only** for active original visitors after verified expiry, distinct explicit cancel/abandonment, automatic isolation only after worker fence/ACK, and PAID_UNCLAIMED/OWED proof-gated return. No automatic refund, unpaid public media/print, duplicate service or uncertain print replay.
+>
+> **Execution precedence:** On THIS PP branch, PP-00..07 is the implementation workstream **when separately authorized**; AR-00..13/UAH financial, privacy, ticket, reconciliation, worker isolation, and legacy PAID-before-camera behaviors remain mandatory safety/regression dependencies. On parent `feature/portrait-kiosk-v2-next`, the original AR work priority remains. Historical source status/CI PASS below is not new-flow evidence; **all 84 PP acceptance cases NOT_RUN**; no code, payment, actual Drive, device or master change is authorized here. Read [24 owner decisions and 11 revised flowcharts](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-OWNER-APPROVED.md), [state/security](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md), [84 NOT_RUN cases](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md), [Codex staged handover](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-CODEX-HANDOVER.md).
+
 
 ## Primary rule — 27 October 2026 owner instruction
 
@@ -28,7 +25,7 @@ Current explicit owner instructions take precedence over earlier historical rule
 
 ## Current scope and branch
 
-Continue authorized work on **`feature/portrait-kiosk-v2-next`**. GUI v2 is the
+For historical original AR work, continue on **`feature/portrait-kiosk-v2-next`**. For new post-preview design or separately authorized implementation, work only on **`feature/post-preview-qris-checkout`**. Never automatically switch branches. GUI v2 is the
 intended future primary branch; GitHub default remains `master`, and `main.py`
 remains v1. Do not create a new branch or restart completed P3/P4 work by default.
 Default change, rename, merge, launcher replacement, release and deployment are
