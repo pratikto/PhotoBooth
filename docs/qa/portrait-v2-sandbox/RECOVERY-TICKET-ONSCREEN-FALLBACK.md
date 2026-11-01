@@ -1,4 +1,4 @@
-# On-screen Recovery Ticket fallback when the receipt printer is unavailable
+# Recovery Ticket delivery — mandatory screen + concurrent paper (post-preview); historical failure-only fallback
 
 > **POST-PREVIEW QRIS BRANCH ADDENDUM (1 November 2026; APPROVED DESIGN, NOT IMPLEMENTED).** For *new* `feature/post-preview-qris-checkout` orders: each template 3 photos + max one retake, all previews -> permitted edits before immutable provider create -> single frozen checkout with original private pre-PAID CCP -> verified PAID -> original post-PAID Recovery Ticket -> purchased strips **only after exact Drive download URL verified**; pending uploads may retry. Distinct USER_CANCEL vs provider expiry (QR1→QR2→QR3 for actively continuing original customer only), encrypted crash-proof original credential escrow, adaptive true inactivity, late-PAID private OWED, safe machine fence/ACK and no blind print replay are binding. **Legacy source and old prepaid flow evidence below remain historical and valid in their original scope**; AR/UAH safety and AR-13 external gates remain unchanged. On THIS branch the future PP roadmap is active when separately authorized; the AR roadmap remains active on the parent branch. **84 PP test cases NOT_RUN; no source/production/actual cloud change.** [Owner flowcharts and 24 decisions](POST-PREVIEW-QRIS-OWNER-APPROVED.md) · [security contract](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [84 QA cases](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md) · [Codex roadmap](POST-PREVIEW-QRIS-CODEX-HANDOVER.md).
 
@@ -7,7 +7,44 @@
 
 The pre-PAID **Checkout Claim Proof** is a separate capability for late-settled original purchases. The original Recovery Ticket is given only after verified PAID. Existing memory-only/no-plaintext ticket safeguards still apply to ordinary files/DB/logs; **only protected ciphertext in an access-controlled escrow vault** is allowed for crash survival. A still-live PAID owner does not have to rescan CCP. Never redisplay an already SUBMITTED receipt merely on restart/poll; UNCERTAIN transport cannot be reprinted automatically. Genuine offer versus merely attempted paper submission is recorded separately. Prior prepaid ticket-before-camera flow stays legacy. New after-preview ticket proceeds to fulfillment, not new capture.
 
-## 1 November 2026 — Supplemental owner policy: responsibility to keep ticket
+## 1 November 2026 — NEWER owner-approved rule for post-preview purchases: ALWAYS show ticket while printing
+
+**Current authoritative rule for NEW \`feature/post-preview-qris-checkout\` orders only (DESIGN / NOT IMPLEMENTED):** After independently verified PAID and the original live customer owns the kiosk, **the Recovery Ticket screen MUST ALWAYS appear**, even when the printer is fully functional. At the **same time**, start exactly **one** authorized receipt print dispatch carrying **the identical original Recovery Ticket QR/code**. The screen is not a fallback for printing failures. It stays visible with the original QR, FULL code, "SIMPAN RECOVERY TICKET" guidance, **visible 30-second countdown and LANJUT/NEXT** regardless of SUBMITTED, failed, timeout, UNCERTAIN or printer not configured.
+
+### Required parallel flow (new-order target)
+
+~~~mermaid
+flowchart TD
+    A([Freshly verified PAID, original live customer]) --> B[Confirm exact original paid grant, original ticket and printer job identity]
+    B --> C[Persist initial ticket presentation intent and one receipt-send reservation]
+    C --> D[SCREEN TRACK: ALWAYS render exact original ticket QR + FULL code]
+    C --> E[PRINTER TRACK: concurrently enqueue one exact SAME-ticket print]
+    D --> F{QR and code visibly rendered to rightful owner?}
+    F -->|No / ownership lost| X[No successful offer; privacy lock / PAID_OWED claim path]
+    F -->|Yes| G[30 actual visible seconds + LANJUT]
+    G --> H{LANJUT or zero?}
+    H -->|Yes| I[Wipe original QR/code from UI and record one offer, never restart on polling]
+    E --> J{Transport result?}
+    J -->|SUBMITTED| K[Keep original screen; no second send]
+    J -->|NOT_SENT / unavailable| L[Keep original screen; record hardware issue]
+    J -->|SENDING / UNCERTAIN| M[Keep screen; original print job quarantined, no replay]
+    K --> N[Original printer worker ordered, quiescent or safely fenced]
+    L --> N
+    M --> N
+    I --> O[Paid fulfillment can continue when original printer lane safe]
+    N --> O
+    O --> P[Bind verified Drive URL and print purchased strips as authorized]
+~~~
+
+This describes concurrency of **display and receipt dispatch**, not a guarantee that paper exits the thermal slot at the same millisecond. The 30-second timer starts **only when QR and complete code are actually visible**. Printer ACK must not suppress or delay opening the ticket screen. Printer failure must never trigger a separate new fallback screen or cause auto-reprinting. Screen NEXT/timeout does not void/duplicate an already submitted original receipt; one exclusive printer worker preserves ordered paper effects before photos. Screen/print credentials never appear while unpaid, PAID_UNCLAIMED without original proof, under another visitor's lease, in public Advertising, or automatically after restart. An original returning CCP claimant may see a first lawful presentation only after successful proof and free booth; a previously presented ticket is not silently reissued.
+
+### Older policy below: strictly historical/legacy
+
+The older 1 November text below describes the **legacy paid-before-camera version**, whose original receipt printer success bypassed the on-screen fallback and whose conditional fallback was displayed only when the receipt failed/was uncertain. It remains as a historical source/UAH reference and is **superseded for new post-preview purchases** by this newer owner instruction. New flow Codex must apply the mandatory parallel-screen contract above, [the master owner decision/Flow G](POST-PREVIEW-QRIS-OWNER-APPROVED.md), [state/security](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md), and [PP-041/042/051/079/080 acceptance](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md). All new PP checks remain NOT_RUN; no source/hardware code changed.
+
+---
+
+## Historical 1 November 2026 — Supplemental owner policy: responsibility to keep ticket
 
 **See the newer canonical whole-booth contract:** [Unattended session handoff and automatic isolation](UNATTENDED-SESSION-HANDOFF-OWNER-APPROVED.md). This existing 30-second fallback specification **remains valid**; the owner explicitly approved it again with a customer-accountability clarification:
 
