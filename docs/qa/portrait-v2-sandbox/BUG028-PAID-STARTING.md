@@ -1,5 +1,10 @@
 # BUG-028 — PAID remains on preparing photo permission
 
+## 1 November 2026 — Existing PAID->camera regression boundary
+
+BUG-028 concerns **historical paid-first Sandbox** whose original customer may reach camera after confirmed PAID and original STARTED. This checkpoint remains relevant for **legacy existing PAID orders** and must be regression-tested, not removed when adding new orders on `feature/post-preview-qris-checkout`. New post-preview orders instead finish photo capture/retake/preview before QRIS; verified PAID advances to original Recovery Ticket and exact paid print/Drive fulfillment without generating a *new* photo allocation or asking the live original owner to re-scan CCP. Late PAID without a live owner is PAID_UNCLAIMED/OWED with secure claim and free-booth proof. Do not treat earlier BUG-028 source/device PASS as proof of the new route; all 84 PP cases NOT_RUN. [Owner master](POST-PREVIEW-QRIS-OWNER-APPROVED.md) · [implementation handover](POST-PREVIEW-QRIS-CODEX-HANDOVER.md).
+
+
 ## 31 October — BUG-028 source/full/current CI verified; owner retest next
 
 Functional source **52d69fd57b69201e3af1b016a90690945e8e1e1a**; latest tested
