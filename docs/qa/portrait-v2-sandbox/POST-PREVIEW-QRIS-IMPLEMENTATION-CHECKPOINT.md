@@ -1,5 +1,12 @@
 # Post-preview QRIS implementation checkpoint
 
+## 1 November 2026 — PP-05.b2 native ticket card + visible countdown contract (NEW; CI pending)
+
+**Additive, still disabled from customer payment:** Reuse the original Kivy private CCP render/visibility/redaction gate for the typed PAID Recovery Ticket, maintaining QR bitmap cache bypass and complete code fit at 800×1280 and 452×900. Add a pure UI-only `VisibleTicketWindow` clock: 30 seconds start only after genuine visible offer is acknowledged, provider polling or print ACK never restarts it, NEXT and actual timeout dismiss at most once, pause/retirement cannot re-open. The original CCP title and visual path remain the default; new typed Recovery Ticket Card cannot accept a CCP role. Neither the native view nor countdown provides payment, print, media, or service authority.
+
+**Tests:** `test_post_preview_ticket_view` (native, two portrait sizes, role/hidden gates) and `test_post_preview_ticket_window` (pure clock, early NEXT, timer, replay and retirement). These are component contracts only; **no live ticket screen integration yet**. PP-05.b3 will wire actual PAID→ticket worker→visible callback→receipt job→30s/NEXT→protected paid output hold. PP-05.c verified Drive and PP-05.d purchased strips remain future work. All 112 full PP scenarios NOT_RUN. CI/result for this commit pending verification; earlier PP-05.b1 CI retains its actual source scope.
+
+
 ## 1 November 2026 — PP-05.b1 receipt transport safety micro-increment (NEW; verification pending)
 
 **Scope of this commit:** Add original post-preview ticket in-memory thermal bitmap renderer and a single-use worker-side receipt send contract. Original PAID and a genuinely visible ticket render permit are required. Persist SENDING before any printer bytes; terminal SUBMITTED / NOT_SENT / UNCERTAIN states never replay after crashes, lost ACK or restart. The exact original token is never written as a receipt PNG or stored in ordinary logs; a shared printer transport lock is required before real transmission, and no caller can silently use a separate lane. No new payment, producer output, auto-isolation, Drive upload, merchant activation or legacy ticket change.

@@ -17,7 +17,9 @@ from .theme import GOLD, MUTED, text_label
 
 
 class PrivateCCPCard(BoxLayout):
-    def __init__(self, offer, qr_image, on_visible, *, is_current, **kwargs):
+    def __init__(self, offer, qr_image, on_visible, *, is_current,
+                 heading='SIMPAN CHECKOUT CLAIM PROOF',
+                 description='Bukti klaim privat • bukan QR pembayaran', **kwargs):
         if not isinstance(offer, PendingCCPOffer):
             raise TypeError('Original private offer required')
         super().__init__(orientation='vertical', spacing=dp(8), padding=dp(12), **kwargs)
@@ -29,9 +31,8 @@ class PrivateCCPCard(BoxLayout):
         self._notified = False
         self._clock = None
         self._ready_at = time.monotonic()+.1
-        self.add_widget(text_label('SIMPAN CHECKOUT CLAIM PROOF', size=18, height=50, color=GOLD))
-        self.add_widget(text_label('Bukti klaim privat • bukan QR pembayaran',
-                                   size=13, height=42, color=MUTED))
+        self.add_widget(text_label(heading, size=18, height=50, color=GOLD))
+        self.add_widget(text_label(description, size=13, height=42, color=MUTED))
         texture = image_texture(qr_image)
         texture.mag_filter = texture.min_filter = 'nearest'
         self.qr_image = Image(texture=texture, fit_mode='contain')
@@ -93,3 +94,19 @@ class PrivateCCPCard(BoxLayout):
         self.code.text = ''
         self._offer = None
         self._on_visible = lambda *_: None
+
+class PrivateRecoveryTicketCard(PrivateCCPCard):
+    """Same native QR visibility/redaction gate, with the PAID ticket identity.
+
+    Countdown and NEXT are owned by the checkout's lifetime controller, not
+    the card; reattachment cannot reset an original ticket presentation.
+    """
+    def __init__(self, offer, qr_image, on_visible, *, is_current, **kwargs):
+        from photobooth.post_preview_ticket import PendingRecoveryOffer
+        if not isinstance(offer, PendingRecoveryOffer):
+            raise TypeError('Only the original verified PAID ticket can be displayed')
+        super().__init__(
+            offer, qr_image, on_visible, is_current=is_current,
+            heading='SIMPAN RECOVERY TICKET',
+            description='QR ini privat • simpan sebelum menekan LANJUT',
+            **kwargs)
