@@ -57,9 +57,9 @@
 | PP-038 | Wrong booth, forged, expired claim | Deny private access |
 | PP-039 | Replay/brute force attempts | Rate-limited, scoped, audited |
 | PP-040 | Customer paid but claim proof never offered | Owed/remedy; no customer blame |
-| PP-041 | Recovery Ticket after PAID | One original receipt submission |
-| PP-042 | Ticket printer unavailable/uncertain | Same token 30s + NEXT if original live owner |
-| PP-043 | Crash after PAID before ticket | Vault/recovery policy; no public ticket on boot |
+| PP-041 | Fresh PAID, original customer owns booth, printer healthy and acknowledges SUBMITTED | **Mandatory on-screen original QR + full code with 30s visible timer/NEXT** starts while **one same-token ticket receipt job is enqueued concurrently**, without waiting for ACK; successful printing MUST NOT skip or dismiss screen |
+| PP-042 | Ticket printer unavailable, failed, timeout, delayed SUBMITTED or UNCERTAIN | **Same mandatory 30s ticket screen shown regardless of print outcome**; no reissue/auto-reprint, no timer reset on late printer callback, correct private cleanup on NEXT/zero |
+| PP-043 | Crash after PAID before any genuine first ticket screen became visible / printer SENDING | Vault and owed policy; no public ticket on boot, no duplicate send; first lawful screen requires original customer proof and free booth |
 | PP-044 | Crash after ticket SENDING | Never auto-reprint |
 | PP-045 | Vault key/ciphertext missing | Fail closed, OWED retained |
 | PP-046 | Operator/DEMO/QRIS/download QR as customer proof | Reject cross-type use |
@@ -71,7 +71,7 @@
 | PP-048 | 3 designs with 2+1+3 copies | Six paid copies; only 9 captures |
 | PP-049 | SUBMITTED but no paper physically emerged | Not recorded as physical delivery |
 | PP-050 | Partial RAW bytes sent then timeout | UNCERTAIN, no replay |
-| PP-051 | Ticket and strips share printer | Exclusive, separate jobs |
+| PP-051 | Ticket screen shown while thermal printer lane holds original receipt job; NEXT pressed before printer returns | Screen timer operates independently; serialized exclusive original receipt / photo-strip jobs, no lost job, overlapping raw sends or reprint |
 | PP-052 | Design A printed, B uncertain | No A replay or blind B replay |
 | PP-053 | Paid, Drive URL unverified | Hold strip, retain OWED |
 | PP-054 | Verified Drive URL, upload pending | Real QR, honest upload status |
@@ -110,14 +110,25 @@ These tests are additional to PP-001..072. They specifically prevent the previou
 | PP-076 | Inactivity warning during valid camera countdown or ongoing write/compose | Active work not abandoned; retained original capture/retake quota |
 | PP-077 | Restart after terminal unpaid but stale camera/file worker active | No new visitor before exact quiescence, fence and durable release ACK |
 | PP-078 | Restart during paid authorized upload while a photo print is UNCERTAIN | Resume only idempotent upload; retain paid/print obligations; no blind print or unsafe release |
-| PP-079 | Ticket receipt already SUBMITTED; polling/restart/returning claimant | Do not automatically re-display or reset original fallback; preserve presentation journal |
-| PP-080 | Live paid owner has intact original booth lease, no CCP scan | Go directly to original Recovery Ticket; no extra mandatory claim step |
+| PP-079 | Receipt SUBMITTED early while first mandatory 30s screen active, then polling/restart/returning claimant | First screen remains visible independent of SUBMITTED; when dismissed, never automatically re-display or reset countdown on provider/paper callback, polling, reboot or returning claim; preserve exact original presentation journal |
+| PP-080 | Live paid owner has intact original booth lease, no CCP scan | Open **mandatory** original Recovery Ticket screen and dispatch **same ticket receipt** concurrently once; no extra claim/CCP step |
 | PP-081 | Precharge sees healthy Drive and available unclaimed READY pool, but atomic customer folder binding/URL verification fails after PAID | No paid strip or invented QR; PAID/OWED retained; no unpaid READY consumption |
 | PP-082 | Legacy Sandbox Drive OFF vs new purchased synthetic verified-link profile | Existing BUG-027/028 profile unchanged; isolated fake link never represented as real cloud evidence |
 | PP-083 | Attempt-create timed out; provider Legacy /v2/charge idempotency-header behavior unknown | No unverified provider header or repeated POST; same original identity/status reconciliation |
 | PP-084 | Draft/QR1/QR2/PAID/ticket timestamps across restart and expiry | Different versioned TTL and 15-day/30-day anchors; no silent extension, deletion or mixing legacy 24h Sandbox claim rule |
 
 **Mapping check:** K01 privacy/ownership -> PP-HAND and PP-CRASH; K11 OWED/COMPOSED -> PP-PRINT and PP-DRIVE. `PP-PRIV` and `PP-OWED` are not standalone acceptance groups. All PP-001..084 remain NOT_RUN until newly implemented, executed and individually evidenced.
+
+### Mandatory ticket-screen parallelism — subassertions of PP-041/042/043/051/079/080, all NOT_RUN
+
+- **Screen always on healthy printer:** first fresh PAID opens original Recovery Ticket screen **even when printer acknowledges SUBMITTED immediately**. Assert the same original secret encoded in onscreen QR/full code and in receipt bytes; record both effects from one event.
+- **True concurrency:** a deliberately slow/nonresponsive printer does **not** delay first visible QR or block the independent 30s countdown; the first single printer dispatch begins during screen visibility, not after NEXT/zero.
+- **Timer starts on actual visibility:** QR/code must be fully legible at portrait kiosk sizes before countdown; screen closes once on NEXT or zero, with no reset from provider polling, printer ACK, stale callback or screen rebuild.
+- **No repeat effects:** zero/early NEXT while receipt SENDING does not issue a new print or drop original in-flight journal; no RAW overlap with purchased strips. Never mint second Recovery Ticket.
+- **No cross-customer disclosure:** PAID_UNCLAIMED and returning customer without verified original proof/lease must not trigger either the screen or receipt; boot does not show ticket; escrow does not authorize unsolicited screen.
+- **Known printer unavailable:** mandatory screen still offered to the rightful customer, job outcome honestly NOT_SENT/FAILED without an automatic second send. Physical paper presence remains distinct from transport SUBMITTED.
+
+**Historical UAH/BUG-027 test descriptions that require *no mandatory overlay on successful receipt* are legacy-version expectations and MUST NOT be used as acceptance assertions for the new post-preview route.** They remain unchanged as historical evidence until a separately authorized migration/change.
 
 **External gates, all NOT_RUN:** physical POS80 receipt, partial paper, QR scanning and Windows/Ubuntu camera; genuine configured Midtrans Sandbox status and webhook; Google Drive sharing/retention/deletion; vault/OS key compromise, restart and reinstall; CCP/QRIS/ticket UX at 800x1280 and 452x900; merchant/support policy and AR-13 release; Android only if separately approved.
 
