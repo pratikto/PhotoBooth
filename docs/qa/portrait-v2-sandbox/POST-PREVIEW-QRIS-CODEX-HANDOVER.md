@@ -23,23 +23,27 @@ Owner agreed: secure CCP before settlement for returning late-paid customers, en
 | Original booth_storage / booth_sync / Drive | No anonymous reserve consumption or public unpaid photo, verified URL paid binding/upload checksum |
 | New OS-specific protected vault | Original encrypted CCP/ticket, proof-gated retrieval, no boot display and no plaintext secret sidecar |
 
-## Planned code stages (all NOT_STARTED; future separate authorization required)
+## Planned code stages (all NOT_STARTED; requires separately authorized implementation)
 
-| Stage | Deliverable | Exit evidence |
+**Branch-specific execution priority:** on `feature/post-preview-qris-checkout`, PP-00..PP-07 is the planned development workstream. **AR-00–13/UAH financial, privacy, provider, ticket, release and legacy-prepaid safeguards remain higher-priority nonnegotiable dependency/regression gates**, not a competing instruction to resume and push arbitrary old AR steps to the parent branch. On `feature/portrait-kiosk-v2-next`, the original owner AR order remains authoritative. Never treat the latest dated docs banner as authorization to edit source.
+
+| Stage | Deliverable | Unit / integration exit evidence |
 | --- | --- | --- |
-| PP-00 | Detailed source/contract audit, versioning schema and failure-first tests | All older AR/UAH assertions preserved |
-| PP-01 | Unpaid private draft/capture/retake durability and fence | PP-001–010, PP-059–061 |
-| PP-02 | Multi-design final preview/edit/freeze, two-stage readiness | PP-011–020 |
-| PP-03 | Logical checkout, CCP, same-group QR1/2/3 and abandonment/late-paid | PP-021–040 |
-| PP-04 | Protected credential vault, original post-PAID Recovery Ticket/fallback | PP-041–046 plus OS-specific review |
-| PP-05 | Paid exact draft binding, valid Drive URL gate, print jobs/partial uncertainty | PP-047–058 |
-| PP-06 | Safe auto-isolation, returning claimant, reboot and legacy PAID capture | PP-059–072 plus relevant UAH |
-| PP-07 | Full native/Windows/Ubuntu/POS80/official Midtrans/Drive/escrow/security acceptance | All new PP and external gates; AR-13 remains conditional until separate release |
+| PP-00 | Read latest source and original AR/UAH/UX07/Midtrans/Drive contracts; verify provider retry/idempotency uncertainty, create versioned draft/payment/occupancy model | Freeze architecture and failing synthetic tests, historical evidence unchanged |
+| PP-01 | Private unpaid 3+1/template draft, durable retake/edit lineage, camera/privacy worker fencing | PP-001..010 and isolated PP-059..061/063/069; zero public media or photo print |
+| PP-02 | Multi-template final preview/edit, frozen pre-create revision/quote, two-stage readiness incl nonconsuming READY observation | PP-011..020, PP-081 target unit fixtures |
+| PP-03 | **Credential-vault interface, original CCP issuance/presentation/verifier, crash/expiry/rate-limit model and isolated synthetic fixture** BEFORE accepting claims | PP-033..034, PP-038..040, PP-043..046 (unit-only; no payment-claim acceptance yet) |
+| PP-04 | One logical purchase, immutable CREATE_PREPARED, exact same-order provider reconciliation; QR1/2/3 **expiry only**; USER_CANCEL vs suspend/abandon, duplicate PAID and guarded claim/payment mapping | PP-021..032 + PP-073..076/083; live cross-component claim still NOT_RUN |
+| PP-05 | PAID->same draft grant/OWED, original post-PAID receipt once + 30s fallback, unique verified Drive folder, paid print journal + background upload | PP-041..058, PP-077..081 when dependencies exist; no UNCERTAIN replay |
+| PP-06 | End-to-end **original** CCP/ticket claim, PAID_UNCLAIMED, free-booth wait/defer, safe machine PREPARE/fence/ACK/archive, reboot and legacy prepaid compatibility | PP-033..046 and PP-059..072 + PP-077..080/084 integrated; full legacy UAH/AR regression |
+| PP-07 | Full synthetic faults/CI/native physical acceptance with existing Windows + Ubuntu targets, POS80, configured Midtrans Sandbox, Drive, OS escrow and merchant policy | PP-001..084 actual tracked outcomes; distinct external release gates and AR-13 CONDITIONAL until separately approved |
+
+**Dependency rule:** a PP-03 vault unit test does not mean post-PAID claimant flow is working; a PP-04 simulated settlement does not grant paper/photo access until PP-05; full claimant ownership/release only passes after PP-06. Existing 72-case source evidence is not transferable; the current proposed PP matrix has **84 NOT_RUN scenarios**. Treat checkouts with actual Drive OFF as **legacy Sandbox only**; new purchased-flow synthetic tests must use an isolated verified-URL fake (no live publication, no false hardware evidence). Existing server Core QRIS provider idempotency-header support is **unverified**: always preserve original provider order ID and reconcile on timeout/404; never assume a provider retry guarantee from an internal idempotency key.
 
 ## Implementation discipline
-No code changes in the present documentation delivery. Before later code, verify current branch HEAD and local modifications, review all linked authoritative docs, add failing regression tests for chosen scope, implement minimal isolated features with exact version guard, run focused and full relevant tests, then update docs with source SHA/CI/device limits in each microcommit. Push only to this existing branch. Never merge/master/default branch, change merchant production or webhook, execute real charge/refund, delete cloud photos, alter existing customer media, migrate prior paid records, or inspect `old` without explicit permission.
+No code changes in this documentation-only audit/correction. Before any later code, verify the active branch is `feature/post-preview-qris-checkout`, read the canonical 84-case suite and all source/AR/UAH contracts, add focused failing regression tests, implement minimal versioned features without changing legacy grants, run focused and applicable full regressions, then update docs with exact source SHA/CI/device limits per microcommit. Push only to this existing branch. Never merge/master/default branch, change merchant production or webhook, execute real charge/refund, delete cloud photos, alter existing customer media, migrate prior paid records, or inspect `old` without explicit permission.
 
 ## Details for QA/UX follow-up
 CCP must be an independently distinguishable QR/code on the checkout screen, not the payment QR or post-PAID Recovery Ticket. No proof presentation after A has departed; record evidence of genuine offer, keep OWED for never-offered cases. Idle thresholds are pilot recommendations only (gallery 60–90s, capture/review ~120s, final preview 90–120s). Drive URL must be verified before paid strip regardless of upload completion; no fake QR. Secure vault implementation candidates (Windows DPAPI, Ubuntu TPM/secret service, Android Keystore) need real supported-device evaluation, expiry/key loss tests, and least-privilege authorization; don't claim platform acceptance from synthetic tests. Future stable Meong resolver URL is out of MVP.
 
-**STATUS:** Design owner-approved; all 72 new tests NOT_RUN; source unchanged; prior AR/UAH historical test evidence remains as recorded.
+**STATUS:** Design owner-approved; all 84 new PP tests NOT_RUN; source unchanged; prior AR/UAH historical evidence remains as recorded.
