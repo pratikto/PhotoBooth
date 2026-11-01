@@ -1,5 +1,12 @@
 # Post-preview QRIS implementation checkpoint
 
+## 1 November 2026 — PP-05.b3a synthetic paid-ticket worker integration (NEW; CI pending)
+
+The isolated noncommercial `PrivateCheckoutService` now accepts an **explicit synthetic-only, same-ledger/matching-merchant** original paid-ticket service and a shared bitmap printer lane. New worker actions `prepare_ticket`, `ticket_visible`, `ticket_send_receipt`, and `ticket_dismiss` preserve PAID/OWED while using the original encrypted credential and one receipt job; no photo print, Drive or payment authority is granted. A failed/hidden original visit cannot offer/print; dismissal is irreversible and cannot restart the ticket. Fixture records only bitmap dimensions, not customer/ticket pixels.
+
+**Software evidence pending:** four new `test_post_preview_checkout_ticket` cases run under Linux/Windows CI in the existing offline private-state group, alongside PP-05.b1/b2 and legacy regressions. This increment intentionally **does not mount the customer UI**: PP-05.b3b must connect the new typed private card + visible timer to the current synthetic native checkout and prove NEXT while receipt is in-flight. Production and Sandbox checkout remain disabled, 112 complete PP cases remain NOT_RUN; actual paper/cloud/provider remain untouched.
+
+
 ## 1 November 2026 — PP-05.b2 native ticket card + visible countdown contract (NEW; CI pending)
 
 **Additive, still disabled from customer payment:** Reuse the original Kivy private CCP render/visibility/redaction gate for the typed PAID Recovery Ticket, maintaining QR bitmap cache bypass and complete code fit at 800×1280 and 452×900. Add a pure UI-only `VisibleTicketWindow` clock: 30 seconds start only after genuine visible offer is acknowledged, provider polling or print ACK never restarts it, NEXT and actual timeout dismiss at most once, pause/retirement cannot re-open. The original CCP title and visual path remain the default; new typed Recovery Ticket Card cannot accept a CCP role. Neither the native view nor countdown provides payment, print, media, or service authority.

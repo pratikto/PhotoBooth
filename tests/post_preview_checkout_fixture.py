@@ -1,5 +1,6 @@
 """Real HTTP boundary with isolated synthetic provider/camera/vault adapters."""
 import os
+import threading
 from types import SimpleNamespace
 from PIL import Image
 from fastapi.testclient import TestClient
@@ -79,6 +80,26 @@ class CheckoutFixture:
         self.session = SessionAdapter(self.http)
         self.client._transport.session.close()
         self.client._transport.session = self.session
+
+    def enable_paid_ticket(self):
+        """Synthetic original ticket and bitmap-only receipt; no device or network."""
+        from photobooth.post_preview_ticket import OriginalRecoveryTicketService
+        if hasattr(self,'ticket'):
+            raise AssertionError('Original paid ticket already bound')
+        self.ticket = OriginalRecoveryTicketService(
+            self.backend,self.protector,allow_synthetic=True)
+        self.receipt_sizes = []
+        self.receipt_entered = self.receipt_release = None
+        def send(bitmap, *, copies):
+            assert copies == 1 and bitmap.mode == '1'
+            if self.receipt_entered is not None: self.receipt_entered.set()
+            if self.receipt_release is not None: self.receipt_release.wait(10)
+            self.receipt_sizes.append(bitmap.size)  # never store bitmap/token
+            return SimpleNamespace(success=True)
+        printer=SimpleNamespace(config=SimpleNamespace(print_width_dots=576),
+                                print_bitmap=send)
+        self.service.attach_paid_ticket(
+            self.ticket, printer=printer, shared_lane=threading.Lock())
 
     def _drive_read(self, _url, **kwargs):
         body = kwargs['json']

@@ -8,10 +8,12 @@ from photobooth.post_preview_ccp import OriginalCCPService, render_private_ccp
 from photobooth.post_preview_checkout import ChargeReadiness
 from photobooth.post_preview_client import PostPreviewClient
 from photobooth.post_preview_store import DraftHeld
+from photobooth.post_preview_ticket import OriginalRecoveryTicketService
 from .post_preview_photos import PrivatePhotoService
 
 
-CHECKOUT_PHASES = frozenset({'claim_proof', 'checkout_ready', 'payment_pending', 'payment_hold', 'paid_hold'})
+TICKET_PHASES = frozenset({'ticket_offer', 'ticket_visible'})
+CHECKOUT_PHASES = frozenset({'claim_proof', 'checkout_ready', 'payment_pending', 'payment_hold', 'paid_hold'}) | TICKET_PHASES
 
 
 class PrivateCheckoutService(PrivatePhotoService):
@@ -26,8 +28,75 @@ class PrivateCheckoutService(PrivatePhotoService):
         self.client, self.readiness, self.qr_loader = payment_client, readiness, qr_loader
         self.group = self._offer = self._claim_qr = self._payment = self._payment_qr = None
         self._ccp = None
+        self._paid_ticket = self._receipt_printer = self._receipt_lane = None
+        self._ticket_offer = self._ticket_qr = self._ticket_receipt = None
+        self._ticket_was_dismissed = False
         super().__init__(root, booth_id=payment_client.booth_id, **kwargs)
         self._ccp = OriginalCCPService(self.ledger, protector, merchant_id, allow_synthetic=True)
+
+
+    @property
+    def paid_ticket_enabled(self):
+        return self._paid_ticket is not None
+
+    def attach_paid_ticket(self, service, *, printer=None, shared_lane=None):
+        """Explicit synthetic-only injection until paid-delivery/claim is complete.
+
+        No customer/Sandbox launch can attach a money or printer transport here.
+        The service must use our original backend payment ledger and merchant.
+        """
+        if (self._paid_ticket is not None or not isinstance(service, OriginalRecoveryTicketService)
+                or service.ledger is not self.ledger or service.merchant_id != self._ccp.merchant_id
+                or not getattr(service.protector, 'synthetic', False)
+                or self.phase not in {'confirm', 'final_preview'}):
+            raise DraftHeld('Exact original fixture ticket authority required')
+        self._paid_ticket, self._receipt_printer, self._receipt_lane = (
+            service, printer, shared_lane)
+
+    def prepare_ticket(self):
+        self._active()
+        if (self.phase != 'paid_hold' or self._paid_ticket is None
+                or self._ticket_was_dismissed or
+                (self._payment or {}).get('obligation_state') != 'OWED'):
+            raise DraftHeld('Fresh original paid obligation required for ticket')
+        self._paid_ticket.prepare(self.lease)
+        offer = self._paid_ticket.private_offer(self.lease)
+        qr = render_private_ccp(offer)
+        self._active()
+        self._ticket_offer, self._ticket_qr = offer, qr
+        self.phase = 'ticket_offer'
+        return self.snapshot()
+
+    def ticket_visible(self, offer):
+        self._active()
+        if (self.phase != 'ticket_offer' or offer is not self._ticket_offer
+                or not self._paid_ticket):
+            raise DraftHeld('Genuinely visible original Recovery Ticket required')
+        self._paid_ticket.mark_visible(self.lease, offer)
+        self._active()
+        self.phase = 'ticket_visible'
+        return self.snapshot()
+
+    def ticket_send_receipt(self):
+        self._active()
+        if (self.phase != 'ticket_visible' or self._ticket_offer is None
+                or self._paid_ticket is None):
+            raise DraftHeld('Original ticket must be genuinely visible before receipt')
+        self._ticket_receipt = self._paid_ticket.send_receipt_once(
+            self.lease, self._ticket_offer, self._receipt_printer,
+            send_lock=self._receipt_lane)
+        return self.snapshot()
+
+    def ticket_dismiss(self):
+        self._active()
+        if (self.phase != 'ticket_visible' or self._ticket_offer is None
+                or self._paid_ticket is None):
+            raise DraftHeld('Original visible ticket must precede dismissal')
+        self._paid_ticket.dismiss(self.lease, self._ticket_offer)
+        self._ticket_offer = self._ticket_qr = None
+        self._ticket_was_dismissed = True
+        self.phase = 'paid_hold'  # Paid strips and Drive remain OWED until PP-05.c/d.
+        return self.snapshot()
 
     def freeze_checkout(self, revision, expected_amount):
         self._active()
@@ -124,7 +193,10 @@ class PrivateCheckoutService(PrivatePhotoService):
         super().hide_private()
         if self._ccp is not None:
             self._ccp.hide_private()
+        if self._paid_ticket is not None:
+            self._paid_ticket.hide_private()
         self._offer = self._claim_qr = self._payment_qr = None
+        self._ticket_offer = self._ticket_qr = None
 
     def retire(self, event):
         # Local durable event precedes HTTP; shared-ledger backend recovers this
@@ -150,6 +222,11 @@ class PrivateCheckoutService(PrivatePhotoService):
             result.update(ccp_offer=self._offer, ccp_qr=self._claim_qr)
         if self.phase == 'payment_pending':
             result['payment_qr'] = self._payment_qr
+        if self.phase in TICKET_PHASES:
+            result.update(ticket_offer=self._ticket_offer, ticket_qr=self._ticket_qr,
+                          ticket_receipt=self._ticket_receipt)
+        if self.phase == 'paid_hold':
+            result['ticket_dismissed'] = self._ticket_was_dismissed
         if self._hidden.is_set() or self._closed.is_set():
             return {'phase': 'hold'}
         return result
