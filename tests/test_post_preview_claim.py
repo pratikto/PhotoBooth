@@ -82,7 +82,9 @@ class OriginalMockClaimTests(unittest.TestCase):
 
     def test_unknown_reconciled_provider_cannot_claim_original_media(self):
         group,proof=self.paid()
-        self.fixture.session.lose_response=True
+        # One transient HTTP loss is recoverable by the following fresh GET.
+        # A continuous provider outage must never be interpreted as fresh PAID.
+        self.fixture.provider.outage=True
         with self.assertRaises(Exception):
             self.claim.claim(group,'PB001',proof)
         self.assertEqual(1,self.service.ledger.db.execute(

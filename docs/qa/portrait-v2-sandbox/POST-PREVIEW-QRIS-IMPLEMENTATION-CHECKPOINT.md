@@ -1,5 +1,10 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — PP-06 recovering-claim outage test correction (CI pending)
+
+Full latest CI run `41334103568` was 453 Linux tests / **one assertion failure**, desktop SUCCESS and Windows cancelled. The failing assertion expected a claim failure after **only one** lost HTTP status response, but the original coordinator correctly performed a subsequent fresh successful provider GET. Updated the scenario to simulate a **persistent provider outage**, which must fail closed; do not ban legitimate recovery after a transient lost reply. No source authorization guard was removed.
+
+
 ## 2 November 2026 — supervised Windows pilot real worker ownership correction (CI pending)
 
 The explicit synthetic payment pilot now binds `OriginalWorkerReadiness` to the **actual live Kivy `PhotoJobs` and camera object** at `BoundPilotApp.build`, rather than accidentally trusting setup-time synthetic fixture camera/worker objects for readiness. The original `PrivateCheckoutFixtureApp` and existing native tests are unaffected. The synthetic simulator remains incapable of charging real Midtrans, and physical printer use still requires dual explicit opt-in.
