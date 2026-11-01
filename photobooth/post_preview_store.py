@@ -61,7 +61,7 @@ class PostPreviewStore:
             singleton INTEGER PRIMARY KEY CHECK(singleton=1), version INTEGER NOT NULL);
           INSERT OR IGNORE INTO pp_schema VALUES(1,1);
         ''')
-        if self.db.execute('SELECT version FROM pp_schema').fetchone()[0] not in (1, 2, 3, 4):
+        if self.db.execute('SELECT version FROM pp_schema').fetchone()[0] not in (1, 2, 3, 4, 5):
             self.db.close()
             raise DraftHeld('Unsupported private draft schema')
         self.db.executescript('''
@@ -183,6 +183,31 @@ class PostPreviewStore:
         if missing_payment_journal:
             self.db.close()
             raise DraftHeld('Original payment journal is unavailable')
+
+        missing_inbox = False
+        with self.write():
+            version = self.db.execute('SELECT version FROM pp_schema').fetchone()[0]
+            if version < 5:
+                self.db.execute("""CREATE TABLE pp_notification_inbox (
+                    event_id TEXT PRIMARY KEY,
+                    purchase_group_id TEXT NOT NULL REFERENCES pp_purchase_finance(purchase_group_id),
+                    attempt_id TEXT NOT NULL REFERENCES pp_payment_attempts(attempt_id),
+                    booth_id TEXT NOT NULL, state TEXT NOT NULL CHECK(state IN
+                      ('NEW','PROCESSING','RETRY','APPLIED','QUARANTINED')),
+                    attempts INTEGER NOT NULL DEFAULT 0, next_at REAL NOT NULL,
+                    token TEXT, lease_until REAL NOT NULL DEFAULT 0,
+                    created_at REAL NOT NULL, updated_at REAL NOT NULL)""")
+                self.db.execute('UPDATE pp_schema SET version=5')
+            elif not self.db.execute("SELECT 1 FROM sqlite_master WHERE name='pp_notification_inbox' AND type='table'").fetchone():
+                missing_inbox = True
+            else:
+                columns = {r['name'] for r in self.db.execute('PRAGMA table_info(pp_notification_inbox)')}
+                if not {'event_id', 'purchase_group_id', 'attempt_id', 'booth_id', 'state',
+                        'attempts', 'next_at', 'token', 'lease_until', 'created_at', 'updated_at'} <= columns:
+                    missing_inbox = True
+        if missing_inbox:
+            self.db.close()
+            raise DraftHeld('Original notification journal is unavailable')
 
     def close(self):
         with self.lock:

@@ -13,16 +13,69 @@ worker safeguards remain binding. Production deployment, actual charges/refunds,
 merchant activation, live customer/cloud deletion and other branches are excluded.
 
 - Authorized branch: `feature/post-preview-qris-checkout`.
-- Last independently verified remote: `b8655adb834c9b2e612458ba5b46a8cc45e6d8ef` (PP-03.c native private card; verified remote, CI run 41286019681 all three jobs SUCCESS).
+- Last independently verified remote: `e7bfca56021f4420ca6e614a9e99afa86e0dd0f8` (PP-04.a payment journal; verified remote, CI run 41287834790 all three jobs SUCCESS).
 - Original audited base: `b68e514dd57c989df47fa1b222d45f3f71c38347`.
-- Current micro-increment: **PP-04.a — purchase-group/QRIS attempt coordinator and synthetic financial races**.
-- Overall: PP-00 dependency audit continuing; PP-01 private capture and isolated development UI implemented; PP-02 preview/freeze backend and all-design UI implemented, real charge-readiness adapters NOT_IMPLEMENTED; PP-03..07 NOT_STARTED.
+- Current micro-increment: **PP-04.b — authenticated backend/client, durable webhook inbox and financial process-death tests**.
+- Overall: PP-00 dependency audit continuing; PP-01 private capture and isolated development UI implemented; PP-02 preview/freeze backend and all-design UI implemented, real charge-readiness adapters NOT_IMPLEMENTED; PP-03 protected CCP backend/native card components implemented but not mounted; PP-04 backend/API components implemented but native payment not mounted; PP-05/06/06R/07 NOT_STARTED.
 - This checkpoint travels with the implementation commit. Resolve its containing
   SHA using `git log -1 --format=%H`; after push independently compare `git
   ls-remote origin refs/heads/feature/post-preview-qris-checkout`. A commit cannot
   truthfully contain its own SHA. The next increment records this verified tip.
 
-## PP-04.a — current purchase/attempt coordinator and evidence
+## PP-04.b — authenticated boundary and durable webhook delivery
+
+New isolated `post_preview_api.create_app` reuses original BoothAuthenticator,
+bounded duplicate-rejecting JSON parser, bounded rate limiter and worker-thread
+I/O. Routes accept exact original visit/generation and authenticated booth; no
+caller amount, evidence, provider URL, CCP-offer timestamp or fulfillment setter.
+Original frozen group supplies quote/context. Strict types reject coercion; errors
+do not echo request bodies or credentials. Legacy endpoints are not mounted or
+changed. Cached inspection never claims fresh PAID. Reconciliation covers all
+original attempts, with existing normal/priority pacing. Financial observations
+always have `fulfillment_authorized=False`.
+
+New restricted PostPreviewClient composes original QrisKioskClient TLS/loopback,
+timeout, bounded response and redirect safeguards. It validates original group,
+booth, version, mode, amount, typed freshness and lack of fulfillment authority.
+Merchant keys remain injected server-side only. This factory/client is an isolated
+software seam, not a running backend, production deployment or enabled native UI.
+Trusted local capture/backend may share the new ledger; remote production server
+media/readiness attestation is not implemented or claimed.
+
+Schema v5 adds bounded pp_notification_inbox. Signature and amount verified before
+allocation; only authenticated order/group/attempt scope and event digest persist,
+not raw signature, key or notification status payload. ACK occurs after FULL/WAL
+commit, with no provider GET. Explicit process_one worker independently fetches
+original provider status; durable leased claims, exact completion token, bounded
+retry/backoff, crash reclaim and quarantine preserve unknown evidence. Inbox
+capacity/disk failure returns retryable failure, not false ACK. Missing/partial
+current-schema inbox holds instead of recreating. Worker scheduler/listener wiring
+is deliberately unfinished; no public callback has been published.
+
+**17 authenticated API/client/inbox methods PASS** in the final focused group; **6 actual child-process
+death methods PASS**, 1.963s, using a separate persistent FULL/WAL synthetic provider
+ledger. Killed after PREPARED, SENT-before-remote-commit, remote-create-commit,
+provider-GET-before-local-apply, remote-cancel-commit and leased inbox claim. Exact
+original attempt survives; SENT never re-POSTs; original cancellation never repeats;
+paid settlement produces one entitlement; acknowledged notification survives worker
+death. No actual payment/refund/provider/Drive operation occurred. Final clean-venv focused group **210 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,
+31.718s, including private state/capture/CCP/payment and legacy checkout/workflow
+regression. Additive v1/v4 upgrades and missing/partial v5 inbox covered. An initial
+migration test fixture retained a v5 table while pretending to be v1; corrected
+the fixture to reconstruct actual v1 tables before upgrade. Compile/diff PASS.
+Containing-source CI pending push; e7bfca5 CI all three jobs SUCCESS.
+
+Sources reviewed: original qris_api/qris_kiosk_client, booth_auth,
+LegacyNotificationInbox lease/backoff, strict qris_evidence and current provider,
+PP security/owner contracts and MIDTRANS-PROVIDER-CONTRACT. No legacy payment,
+notification, capture, printer or Drive runtime changed.
+
+Next unfinished increment: PP-04.c native checkout/CCP/API worker integration and
+actual read-only readiness adapters, then PP-05 original ticket + paid output/Drive,
+PP-06 secure claims/worker-fenced release, PP-06R refund guards and PP-07 all 112
+cases/UAT runbook. Do not call those unfinished software tasks hardware blockers.
+
+## PP-04.a — historical purchase/attempt coordinator and evidence
 
 Server-side `PostPreviewPayments`, not yet mounted by a native payment/API route.
 Reuses original strict provider evidence/signature/Sandbox URL rules and fixed
