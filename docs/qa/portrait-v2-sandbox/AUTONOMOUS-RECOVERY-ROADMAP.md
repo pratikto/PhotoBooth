@@ -1,5 +1,12 @@
 # Autonomous recovery — Codex execution roadmap
 
+## 1 November 2026 — Branch-aware roadmap precedence (documentation only)
+
+**For the existing parent `feature/portrait-kiosk-v2-next`, the original AR-00–13 / follow-on UAH sequence below is still the intended authorized safety/recovery priority.** For `feature/post-preview-qris-checkout`, the new user-authorized *post-preview design* uses [PP-00–07 staged work](POST-PREVIEW-QRIS-CODEX-HANDOVER.md) when source implementation is separately requested. All existing AR/UAH financial, paid/owed, ticket, privacy, provider retry, legacy paid-camera and physical printer uncertainty gates are prerequisites, **not permission to switch branches and resume unrelated original AR code on the PP branch**. Original post-PAID Recovery Ticket remains once; new pre-PAID CCP and protected encrypted vault are design-only. QR1–QR3 expiry renewal is limited to an active continuing customer; cancel/abandonment uses exact provider status and safe release. Existing dates, CI evidence, conditional AR-13 and parent priorities below are historical/contextual and not new PP acceptance; **84 PP test cases NOT_RUN**.
+
+[24 owner decisions + corrected flowcharts](POST-PREVIEW-QRIS-OWNER-APPROVED.md) · [security/state contract](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [PP acceptance](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md).
+
+
 ## 1 November 2026 — Owner-approved follow-on P0 unattended handoff (DOCUMENTATION ONLY)
 
 The owner approved the **entire** proposed recovery priority sequence and explicitly requested documentation rather than a code change. **Canonical implementation-ready contract:** [UNATTENDED-SESSION-HANDOFF-OWNER-APPROVED](UNATTENDED-SESSION-HANDOFF-OWNER-APPROVED.md), including state models, six flowcharts, 20 decisions, 50 REQUIRED/NOT_RUN fault and device tests, risk register, machine authorization boundary and 10 small Codex work packages. No existing AR-00–AR-13 source implementation status, financial/privacy invariant, completed tests or AR-13 conditional release gate is superseded.
