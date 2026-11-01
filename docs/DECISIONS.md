@@ -1,23 +1,9 @@
-## 1 November 2026 — New-branch owner approval: post-preview QRIS (DOCUMENTATION ONLY)
-
-**On `feature/post-preview-qris-checkout`, NEW orders only:** Gallery -> each selected design captures **3 original photos + at most 1 retake** -> approve every design -> final preview/edit **only before QRIS** -> immutable one-cart checkout and **secure Checkout Claim Proof privately offered before PAID** -> provider-verified PAID -> original Recovery Ticket printed once (same token 30-second display fallback on printer uncertainty) -> exact paid printing **only with verified customer Drive URL** and background upload. Original Recovery Ticket remains post-PAID. Approved additional rules: encrypted credential escrow for crash recovery, adaptive inactivity without active hard cutoff, QR1->QR2->QR3 only while original visitor active; abandoned pending/unknown uses same-order cancel/reconciliation. Late PAID without live owner is PAID_UNCLAIMED/OWED, no public photo/ticket printing, proof-gated self-claim. Retake and print quantities remain independent; no photo upload/link/printing before payment.
-
-**Precedence and status:** This new-order sequence supersedes historical *pay-before-camera* text **on this branch only**, not AR-00–AR-13/UAH financial, privacy, idempotency, safe isolation, no-uncertain-reprint, original PAID/OWED or legacy prepaid-order recovery. **Approved product DESIGN; NOT IMPLEMENTED; new tests NOT_RUN; production NOT approved.** Parent branch and master unchanged. This message authorizes documentation updates only.
-
-**Canonical:** [owner decisions + 11 Mermaid charts](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-OWNER-APPROVED.md) · [durable state/security](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [72 NOT_RUN scenarios](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md) · [Codex roadmap](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-CODEX-HANDOVER.md).
-
----
-
-## 1 November 2026 — Owner-approved POST-PREVIEW QRIS on new branch (DESIGN ONLY)
-
-**New-order target on `feature/post-preview-qris-checkout` ONLY:** Gallery -> **3 photos + max 1 retake per selected template** -> all templates previewed -> final editable preview (only before first QRIS create) -> frozen one-cart checkout with **pre-PAID secure Checkout Claim Proof** -> Midtrans verified PAID -> original Recovery Ticket (one attempt / 30-second same-token fallback) -> print only after verified customer Drive URL, with background upload. Adaptive genuine-inactivity timeout without interrupting active capture; original encrypted credential escrow for crash. QR1->QR2->QR3 only for actively continuing original visitor, never for absent customer; cancellation/unknown require original-provider verification. PAID after customer departs is PAID_UNCLAIMED/OWED, not public printing. No free photo print/link, duplicate service, secret disclosure, auto refund, uncertain print replay or unsafe isolation.
-
-**Precedence:** On this branch/new-order version, the new ordering supersedes historical **QRIS before photo** wording in the remainder of this document. It does **not** waive legacy prepaid-order recovery, AR-00–13/UAH safety, receipt uncertainty, privacy, Drive retention, nor prior source-specific PASS/NOT_RUN evidence. This is **owner-approved documentation only, NOT IMPLEMENTED/NOT TESTED**, not production sign-off. Parent branch and master unchanged.
-
-**Read first:** [complete 24 owner decisions and 11 flowcharts](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-OWNER-APPROVED.md) · [security/state](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [72 new NOT_RUN tests](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md) · [Codex handover](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-CODEX-HANDOVER.md).
-
----
 # Meong Photobooth — product and technical decisions
+
+> **New-order design on `feature/post-preview-qris-checkout` (owner-approved 1 November 2026; NOT IMPLEMENTED).** Templates/copies -> 3 photos and max one retake **per template** -> all previews -> edit only before durable provider-create intent -> one frozen QRIS checkout + privately offered **pre-PAID Checkout Claim Proof** -> verified PAID -> original Recovery Ticket once (30s same-token fallback) -> photo strips only with verified individual Drive URL; upload may remain pending. Encrypted credential escrow, adaptive inactivity, expiry-only QR1/2/3 for active original customer, distinct cancel/abandonment, PAID_UNCLAIMED/OWED and exact worker-fenced auto-isolation are approved; no unpaid photo printing/download, uncertain print replay, duplicate service or automatic refund.
+>
+> **Branch authority:** PP-00..07 is the planned implementation workstream here **only when separately authorized**, constrained by all AR-00..13/UAH payment, privacy, machine release, legacy prepaid and physical print safety requirements. Parent `feature/portrait-kiosk-v2-next` continues the original AR roadmap. Historical source/CI statements below retain their original dates/branches; they do not prove the new flow. **All 84 PP tests NOT_RUN; no source, actual provider/Drive, hardware or master changes in this documentation revision.** [Master decisions/11 corrected diagrams](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-OWNER-APPROVED.md) · [security/state](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [84 QA cases](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md) · [Codex handover](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-CODEX-HANDOVER.md).
+
 
 ## 1 November 2026 — Owner approval: unattended handoff, automatic isolation and ticket responsibility (DESIGN ONLY)
 
