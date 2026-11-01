@@ -165,6 +165,57 @@ class PrivateCheckoutService(PrivatePhotoService):
         self._delivery_state=self._paid_delivery.inspect(self.lease,self.group)
         return self.snapshot()
 
+
+    def recover_original_owed(self, lease, purchase_group_id):
+        """Resume an authenticated original claim without another photo/charge.
+
+        A separate proof-gated coordinator must have freshly rechecked PAID
+        and atomically reacquired the same original DraftLease. This facade
+        re-validates frozen bytes; no camera or printer effect occurs here.
+        """
+        from photobooth.catalog import get_templates
+        from photobooth.post_preview_store import DraftLease
+        if (not isinstance(lease, DraftLease) or self.lease is not None
+                or self.phase!='confirm' or self._hidden.is_set()
+                or not self.paid_ticket_enabled):
+            raise DraftHeld('New protected original claim service required')
+        with self.ledger.write():
+            self.ledger._owned(lease)
+            intent=self.ledger.db.execute(
+                'SELECT * FROM pp_checkout_intents WHERE draft_id=?',
+                (lease.draft_id,)).fetchone()
+            finance=self.ledger.db.execute(
+                'SELECT * FROM pp_purchase_finance WHERE purchase_group_id=?',
+                (purchase_group_id,)).fetchone()
+            if (intent is None or finance is None
+                    or intent['purchase_group_id']!=purchase_group_id
+                    or finance['entitlement_id'] is None or finance['review_required']):
+                raise DraftHeld('Original frozen paid claim cannot be resumed')
+            stored=self.ledger.db.execute(
+                'SELECT * FROM pp_ticket_presentations WHERE purchase_group_id=?',
+                (purchase_group_id,)).fetchone()
+            previous_ticket=stored['screen_state'] if stored else None
+        templates=get_templates()
+        self.checkout.verify_frozen(purchase_group_id,templates)
+        payment=self.client.inspect(purchase_group_id)
+        if (payment.get('obligation_state')!='OWED'
+                or payment.get('entitlement_id')!=finance['entitlement_id']
+                or payment.get('state')!='PAID_LIVE'):
+            raise DraftHeld('Original claimed paid status requires backend proof')
+        self._active()
+        self.lease=lease
+        self.group=purchase_group_id
+        self._generation=lease.generation
+        self.templates=list(templates)
+        self.selected=[tpl for tpl in templates if tpl.template_id in
+                       __import__('json').loads(intent['contract_json'])['quantities']]
+        self._payment=payment
+        # An earlier genuinely visible ticket cannot be redisplayed. An
+        # unshown original ticket is still eligible for its FIRST display.
+        self._ticket_was_dismissed=previous_ticket in {'VISIBLE','DISMISSED'}
+        self.phase='paid_hold'
+        return self.snapshot()
+
     def freeze_checkout(self, revision, expected_amount):
         self._active()
         if self.phase != 'final_preview':

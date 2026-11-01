@@ -89,4 +89,42 @@ class OriginalMockClaimTests(unittest.TestCase):
             'SELECT closed FROM pp_drafts').fetchone()[0])
 
 
+    def test_claimed_paid_media_rehydrates_original_worker_without_recapture(self):
+        from photobooth.kiosk_v2.post_preview_checkout import PrivateCheckoutService
+        from photobooth.post_preview_ticket import OriginalRecoveryTicketService
+        group,proof=self.paid()
+        valid=self.claim.claim(group,'PB001',proof)
+        self.assertEqual('REACQUIRED',valid['state'])
+        root=self.service.root
+        fresh=PrivateCheckoutService(
+            root,payment_client=self.fixture.client,protector=self.fixture.protector,
+            merchant_id='MTEST',readiness=lambda:self.fixture.ready,
+            qr_loader=lambda _:None,allow_incomplete_fixture=True,
+            trusted_ledger=self.service.ledger)
+        self.addCleanup(fresh.close)
+        fresh.attach_paid_ticket(
+            OriginalRecoveryTicketService(self.fixture.backend,self.fixture.protector,
+                                          allow_synthetic=True),
+            printer=None,shared_lane=threading.Lock())
+        restored=fresh.recover_original_owed(valid['lease'],group)
+        self.assertEqual('paid_hold',restored['phase'])
+        self.assertEqual('OWED',restored['payment']['obligation_state'])
+        self.assertFalse(restored['ticket_dismissed'])
+        self.assertEqual(1,self.fixture.provider.charges)
+        first=fresh.prepare_ticket()
+        self.assertEqual('ticket_offer',first['phase'])
+        with self.assertRaises(DraftHeld):
+            fresh.recover_original_owed(valid['lease'],group)
+
+    def test_wrong_directory_cannot_inject_foreign_trusted_ledger(self):
+        from photobooth.kiosk_v2.post_preview_checkout import PrivateCheckoutService
+        with self.assertRaises(DraftHeld):
+            PrivateCheckoutService(
+                Path(self.tmp.name)/'other',
+                payment_client=self.fixture.client,protector=self.fixture.protector,
+                merchant_id='MTEST',readiness=lambda:self.fixture.ready,
+                qr_loader=lambda _:None,allow_incomplete_fixture=True,
+                trusted_ledger=self.service.ledger)
+
+
 if __name__=='__main__':unittest.main()

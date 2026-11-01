@@ -15,9 +15,18 @@ from photobooth.post_preview_store import DraftHeld, PostPreviewStore
 
 
 class PrivatePhotoService:
-    def __init__(self, root, *, booth_id='PB001', policy=None):
+    def __init__(self, root, *, booth_id='PB001', policy=None, trusted_ledger=None):
         self.root = checked_path(root)
-        self.ledger = PostPreviewStore(self.root/'drafts.sqlite3')
+        if trusted_ledger is not None:
+            if not isinstance(trusted_ledger, PostPreviewStore):
+                raise DraftHeld('Original trusted shared ledger required')
+            # A recovered owner may use the SAME in-process backend ledger,
+            # never another booth's SQLite DB or an arbitrary caller source.
+            files=list(trusted_ledger.db.execute('PRAGMA database_list'))
+            actual=checked_path(files[0]['file']) if files and files[0]['file'] else None
+            if actual!=checked_path(self.root/'drafts.sqlite3'):
+                raise DraftHeld('Trusted recovery ledger does not belong to this booth root')
+        self.ledger = trusted_ledger or PostPreviewStore(self.root/'drafts.sqlite3')
         self.photos = PrivateDraftPhotos(self.ledger, self.root/'media', policy=policy)
         self.checkout = PrivateDraftCheckout(self.photos)
         self.booth_id = booth_id

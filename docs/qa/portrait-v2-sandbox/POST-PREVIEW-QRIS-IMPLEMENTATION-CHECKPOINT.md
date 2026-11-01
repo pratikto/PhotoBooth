@@ -1,5 +1,10 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — PP-06.c original paid claimant worker rehydration (CI pending)
+
+The new `PrivateCheckoutService.recover_original_owed` accepts only the exact **freshly proof-reacquired original DraftLease**, validates immutable checkout metadata and **every frozen source photo/artwork digest** and reads original PAID/OWED state through the authenticated in-process payment client before showing any paid result. It reuses the original group, customer media and current fenced generation; no new capture, retake, provider attempt, Drive allocation or print send. A previous genuine ticket display is never replayed. The associated `PrivatePhotoService` may reuse an in-process trusted `PostPreviewStore` only if its SQLite file path matches this exact root. Tests reject foreign ledger injection and verify original worker state from an isolated old customer. GUI scanner and real Sandbox server authorization remain deliberately gated and cannot yet be called full PP-06.
+
+
 ## 2 November 2026 — PP-06 migration/fixture CI correction (verification pending)
 
 PP-06.a containing-source run `41333291884` failed 2 assertions plus 2 fixture errors: the earlier v1/v4 migration tests expected final private schema version 6 even though v7 release operations were added, and the new isolation test borrowed a capture fixture without creating its synthetic numpy frame. With PP-06.b in place, all preserved upgrade tests now expect **schema v8** and the isolation fixture supplies a synthetic frame. All original SQL/finance/print/claim guards remain intact; no production activation or content reset. Exact cumulative CI rerun pending.
