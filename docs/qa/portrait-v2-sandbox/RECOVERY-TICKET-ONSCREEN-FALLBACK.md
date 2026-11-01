@@ -31,9 +31,11 @@ flowchart TD
     K --> N[Original printer worker ordered, quiescent or safely fenced]
     L --> N
     M --> N
-    I --> O[Paid fulfillment can continue when original printer lane safe]
+    I --> O{UI ticket dismissed AND original printer lane safely serialized?}
     N --> O
-    O --> P[Bind verified Drive URL and print purchased strips as authorized]
+    O -->|No| H[Retain original owed state; no duplicate receipt or unsafe strip bytes]
+    H --> O
+    O -->|Yes| P[Bind verified Drive URL and print purchased strips as authorized]
 ~~~
 
 This describes concurrency of **display and receipt dispatch**, not a guarantee that paper exits the thermal slot at the same millisecond. The 30-second timer starts **only when QR and complete code are actually visible**. Printer ACK must not suppress or delay opening the ticket screen. Printer failure must never trigger a separate new fallback screen or cause auto-reprinting. Screen NEXT/timeout does not void/duplicate an already submitted original receipt; one exclusive printer worker preserves ordered paper effects before photos. Screen/print credentials never appear while unpaid, PAID_UNCLAIMED without original proof, under another visitor's lease, in public Advertising, or automatically after restart. An original returning CCP claimant may see a first lawful presentation only after successful proof and free booth; a previously presented ticket is not silently reissued.
