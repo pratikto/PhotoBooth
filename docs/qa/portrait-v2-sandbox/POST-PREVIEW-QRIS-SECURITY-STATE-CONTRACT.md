@@ -111,7 +111,7 @@ Use separate `draft_created_at`, `checkout_create_intent_at`, `provider_attempt_
 
 ### Execution dependency guard
 
-Build the **vault interface/secure CCP contract before** enabling actual late-payment claims. Keep end-to-end claim tests NOT_RUN until payment reconciliation, auth, paid manifest binding, vault, UI and safe release are all present; unit fixture PASS alone never marks the whole flow shipped. All 84 proposed PP acceptance cases remain NOT_RUN as of this documentation-only revision.
+Build the **vault interface/secure CCP contract before** enabling actual late-payment claims. Keep end-to-end claim tests NOT_RUN until payment reconciliation, auth, paid manifest binding, vault, UI and safe release are all present; unit fixture PASS alone never marks the whole flow shipped. All 112 proposed PP acceptance cases remain NOT_RUN as of this documentation-only revision.
 
 ### Exactly-once dual-channel ticket presentation: UI and paper independent
 
