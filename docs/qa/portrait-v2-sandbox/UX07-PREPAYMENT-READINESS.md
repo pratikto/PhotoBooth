@@ -1,5 +1,12 @@
 # AR-08 — UX-07 prepayment readiness evidence
 
+## 1 November 2026 — New-order two-stage readiness interpretation (design only)
+
+Keep all original UX-07 source-specific readiness and old Sandbox Drive-OFF evidence below unchanged. The **new purchased post-preview route** performs a **capture preflight before camera** (camera/available disk/templates/write barrier) and a separate **charge preflight after all approved previews** (frozen final 3-photo/template manifest/quote, original printer route and authenticated payment/Drive service, plus read-only READY reserve capacity). It must **not claim the customer's numbered Drive folder pre-PAID** or require a pre-bound customer download URL at precharge: that exact individual URL is verified after PAID binding, **before paid-strip printing**. When Drive/sharing is known unavailable or no READY reserve exists, do not knowingly create a new payable checkout. Actual printer paper and a future successful paid folder binding cannot be proven by preflight. If failure emerges post-PAID, retain original OWED and protected claim; no false delivery QR or auto refund.
+
+A separate **synthetic purchased-flow verified-link test profile** must be introduced by separately authorized source work; legacy dedicated BUG-027 Sandbox has Drive OFF and its past source/test PASS does not certify the new purchased QR/link gate. Provider create-idempotency header remains unverified for Legacy Midtrans; keep original attempt identity. [Master](POST-PREVIEW-QRIS-OWNER-APPROVED.md) · [state/security](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [84 test cases NOT_RUN](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md).
+
+
 29 October 2026 (Asia/Jakarta). Base/remote verified
 858944cf1ef79483892b2c08f07de7d2a5be5a7e; existing feature branch only.
 Reviewed AGENTS/protocol/prompt, checkpoint/handover, current index/status/
