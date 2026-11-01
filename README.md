@@ -1,5 +1,12 @@
 # Meong Photobooth — GUI v2
 
+## New post-preview checkout branch — approved DESIGN, not running code (1 November 2026)
+
+The source instructions and test launchers below still describe the **current legacy paid-before-camera flow**, and their published CI evidence has not been rerun for the new flow. Dedicated branch **`feature/post-preview-qris-checkout`** now carries an owner-approved **documentation-only target**: per design 3 photos + at most 1 retake -> all previews -> frozen one-cart QRIS -> original post-PAID Recovery Ticket -> photo printing only after verified customer Drive URL. Pre-PAID private Checkout Claim Proof, scoped encrypted credential escrow, live-only QR expiry renewal, late-PAID private claim and safe isolation are part of this future version; 84 new PP tests **NOT_RUN**. Do not mistake this README's legacy Sandbox camera/Drive OFF state for shipped new behavior. **On this PP branch follow the [new staged Codex plan](docs/qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-CODEX-HANDOVER.md) only when implementation is separately authorized**, with all AR/UAH safety and legacy PAID recovery preserved. Master, parent branch and source unchanged.
+
+[24 decisions + corrected flowcharts](docs/qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-OWNER-APPROVED.md) · [state/security](docs/qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [84 acceptance cases](docs/qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md).
+
+
 31 October — Sandbox prints one recovery receipt after verified PAID, enters
 camera directly, then prints approved photo strips. Drive remains OFF.
 [Current print scope and verification](docs/qa/portrait-v2-sandbox/BUG027-PAID-TO-PHOTO.md).
@@ -16,7 +23,7 @@ Portrait Kivy photobooth with advertising, a tutorial, twelve original thermal
 strip designs, three photos per selected design, one retake per design, local
 results, and the original Meong Fly game in DEMO mode.
 
-**Development branch: `feature/portrait-kiosk-v2-next`.** GUI v2 is the owner's
+**Original implemented GUI v2 development branch: `feature/portrait-kiosk-v2-next`. New design-only branch: `feature/post-preview-qris-checkout` (no flow code yet).** GUI v2 is the owner's
 intended future primary branch. GitHub's default remains `master`;
 `python main.py` still launches v1. See the [promotion plan](docs/gui-v2-promotion-plan.md).
 
