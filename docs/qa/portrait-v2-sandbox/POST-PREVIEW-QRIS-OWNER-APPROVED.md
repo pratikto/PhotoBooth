@@ -5,6 +5,8 @@
 **Status:** **OWNER-APPROVED DESIGN / DOCUMENTATION ONLY / NOT IMPLEMENTED / NOT TESTED**. This document authorizes a detailed documentation baseline, **not** a source-code, API, schema, test, payment, OS-vault, production, hardware, cloud, default-branch or master change.  
 **Companions:** [security and state contract](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [acceptance matrix](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md) · [Codex handover](POST-PREVIEW-QRIS-CODEX-HANDOVER.md). · [20-finding consistency reconciliation](POST-PREVIEW-QRIS-CONSISTENCY-AUDIT.md).
 
+
+> **NEW OWNER-APPROVED REFUND DECISION (same branch, design only):** When paid photos cannot be fulfilled after safe bounded recovery, prefer merchant-authorized auto **FULL refund** of the original settled payment (with exact print/Drive fencing/provider refund-key verification); if two attempts independently settle, return only the **unambiguous excess** charge. **Lost genuinely offered CCP/Recovery Ticket alone never triggers an automatic refund or tokenless media recovery**. Never-offered proof or separately proven merchant failure remain PAID/OWED/remedy candidates. No blanket contractual 'uang hangus' or waiver of Indonesian consumer rights; current Midtrans POS refund capability is **UNVERIFIED**. This newer narrow policy supersedes previous unconditional no-auto-refund prose for NEW orders only. [Complete owner ledger](POST-PREVIEW-QRIS-COMPLETE-DECISION-LEDGER.md) · [refund/proof-loss contract](POST-PREVIEW-QRIS-REFUND-AND-LOST-PROOF-POLICY.md).
 > **Branch-specific precedence.** For **new post-preview orders**, this owner approval supersedes the **payment-before-capture ordering** in earlier GUI v2/Sandbox, BUG-026/027/028, AR and unattended-handoff diagrams; **it does not supersede their safety properties**. Existing prepaid customer orders and in-flight legacy PAID -> camera recovery MUST keep their original versioned fulfillment route. Earlier documented CI PASS, on-device reports and historical proofs remain valid only for the old source/flow. Existing AR-00–AR-13/UAH no-double-charge, privacy/fencing, paid/owed, strict provider evidence, no uncertain reprint, retention and operator-last-resort protections stay mandatory. Existing measured production readiness remains CONDITIONAL / NOT APPROVED.
 
 ## 1. Owner decision register — final product policy (PP-D01–PP-D24)
@@ -29,12 +31,12 @@
 | PP-D16 | Preview composition may complete before payment, but **service fulfillment must not**. | `DRAFT_READY` ≠ `PAID` ≠ `FULFILLED`. Final printed strip may replace a prepay QR placeholder with the real paid-only QR, while final three photos/layout/design/copy requirement remain matched. |
 | PP-D17 | Before capture check camera/disk/templates/local staging; **before QRIS** verify frozen outputs, local durability, printer-route readiness, payment connectivity, and delivery-URL policy. | Precharge checks are read-only: authenticated Drive service/sharing capability, available unclaimed READY pool capacity and known delivery health, **without consuming a reserve or assuming that a customer URL already exists before binding**. After PAID atomically bind a customer folder and verify its exact viewer URL; if this fails retain PAID/OWED and withhold photo-strip printing. Route observation ≠ physical paper detection. Isolated legacy Sandbox and future purchased post-preview test profile are distinct. |
 | PP-D18 | Automatic session isolation only with proven fence/worker quiescence/backend release or safe local draft closure. | Prior PAID/OWED remains auditable. Protected Advertising is only a public UI, not authority to admit a new charge or show prior media. Operator only for unsafe/ambiguous financial, hardware, security or corrupt-data cases. |
-| PP-D19 | One immutable draft-to-paid binding and one entitlement per logical purchase across all QR attempts. | Detect and HOLD multiple settled attempts/amount mismatches; never double-fulfill, silently treat extra payment as a free service or refund automatically. |
-| PP-D20 | Purchase printing uses durable job reservations with exact design/output/copies, one printer owner and no uncertain replay. | `SENDING`/`UNCERTAIN` are NOT paper-success evidence; partial print requires separately approved physical inspection/remedy. Printed Recovery Ticket and purchased photo jobs have independent identities, same printer exclusivity. |
+| PP-D19 | One immutable draft-to-paid binding and one entitlement per logical purchase across all QR attempts. | Detect multiple settled attempts/amount mismatches; never double-fulfill or silently treat excess payment as free service. **New refund-first policy:** independently verified unambiguous excess settlement may initiate a **single provider-authorized refund of only the excess charge** after exact identity/worker/merchant gates; ambiguous financial conflicts remain REVIEW. |
+| PP-D20 | Purchase printing uses durable job reservations with exact design/output/copies, one printer owner and no uncertain replay. | `SENDING`/`UNCERTAIN` are NOT paper-success evidence; partial print requires independently classified physical evidence, no automatic reprint. **New refund-first:** irrecoverable independently established merchant failure may become FULL refund candidate only after original print/Drive work fenced and merchant refund enabled; uncertain paper alone cannot trigger unconditional refund. Ticket and strips have independent job identities but shared printer exclusivity. |
 | PP-D21 | Google Drive must be gated on authenticated PAID entitlement and exact folder identity. | Use existing `Photobooth/PB001/Photo/00000001/{raw,bw,color}` contract; 25 READY reserves must not be consumed by arbitrary unpaid visitors. Verify anyone-reader link for the right individual customer folder only and use retention guards. |
 | PP-D22 | Existing Meong Fly one-use ticket and single-game-attempt ledger remain authoritative. | Unpaid checkout abandonment cannot reset the game or discount. Sandbox reward remains demonstrative/full-price unless a **trusted backend promotion** contract exists. No stacking without separate approval. |
 | PP-D23 | Historical prepaid legacy orders remain on their original **PAID -> photo** recovery semantics, versioned separately. | No forced conversion of old paid grants/manifests/print jobs into unpaid drafts. |
-| PP-D24 | No automatic refund, production gateway activation, Android rollout, public webhook, customer-data deletion, branch merge or master/default change in this documentation delivery. | AR-13 commercial gates and real Windows/Ubuntu/POS80/provider/cloud/security acceptance remain open. |
+| PP-D24 | This **documentation-only task does not execute any refund**, activate a production gateway, roll out Android, publish a webhook, delete customer data, modify application code or merge/master. **New owner-approved design, separately:** refund-first for verified irrecoverable merchant service failure or unambiguous excess settlement, but **NO_AUTO_REFUND solely due to genuinely offered CCP/Recovery Ticket being lost**. | Merchant-specific Midtrans refund API activation, provider/merchant/consumer-law compliance and AR-13 external gates remain **NOT VERIFIED / NOT IMPLEMENTED**. Refer to RF-D01..26. |
 
 ### Policy precedence and explicit supersessions
 
@@ -106,7 +108,10 @@ flowchart TD
     OWNER -->|Yes| TICKET[Always show same Recovery Ticket QR/full code 30s + NEXT; concurrently send ONE ticket print]
     TICKET --> DELIVERY[Bind exact paid Drive folder, verify URL, print strips + upload]
     DELIVERY --> OBL{Original paid obligations resolved?}
-    OBL -->|No / uncertain| OWED[Keep PAID/OWED; restricted recovery and isolation]
+    OBL -->|Temporary failure / uncertain| OWED[Keep PAID/OWED; original bounded recovery, no blind refund]
+    OBL -->|Verified irrecoverable merchant service failure| RF[Refund-first eligibility: exact paid evidence + safe printer/Drive fence + merchant provider capability]
+    RF -->|Eligible and API verified| RFI[One original refund intent/key; REQUESTED/PROCESSING until provider confirmation]
+    RF -->|Ambiguous / unsupported| REVIEW[Financial/technical review; preserve owed and audit]
     OBL -->|Yes| DONE[Completed: fence private UI + verified booth release]
     DONE --> ADS
 ~~~
@@ -445,7 +450,7 @@ flowchart TD
     G -->|Yes: separately approved| DISC[Verify reward only once server-side; prevent stacking]
     FULL --> QR[Post-preview frozen checkout and QRIS]
     DISC --> QR
-    QR --> H[Abandonment never refunds a consumed game attempt]
+    QR --> H[Game attempt remains consumed on abandonment; **no refund solely for loss/abandonment**. Separately verified merchant PAID-service failure follows full-order refund-first policy]
 ~~~
 
 ## 3. Critical failure decisions and risk register
@@ -466,7 +471,7 @@ flowchart TD
 | K12 Reboot/fencing | stale callback alters next session | Generation+lease checks, protected startup, exact journal restore | PP-CRASH |
 | K13 Game promo | discount forgery/attempt reset | Server authority, one-use ledger, no production DEMO | PP-GAME |
 | K14 Excessive free use | repeated unpaid captures, storage exhaustion | Adaptive inactivity, rate/resource metrics; no hard cutoff on active work | PP-ABUSE |
-| K15 Lost ticket/proof | customer has no original credential | Never expose media without proof; retain financial remedy and evidence of offer | PP-SEC |
+| K15 Lost ticket/proof | customer has no original credential | **NO_AUTO_REFUND solely for lost genuinely offered proof** and never media without proof. Proof never offered or independent service failure -> PAID/OWED + authorized remedy; record offer evidence | PP-SEC, PP-CLAIM |
 
 ## 4. Owner-approved product choices versus engineering parameters not yet calibrated
 
@@ -495,6 +500,14 @@ flowchart TD
 ### Ticket presentation correction — explicitly approved
 
 This section supersedes any *printer failure -> screen only* or *SUBMITTED -> skip screen* instructions for **new post-preview orders** appearing in older UAH, receipt fallback, decision summaries, QA plans, or historical source descriptions. For an authorized live freshly-PAID customer, **screen ALWAYS + concurrent one-time paper submission**, same credential. Keep the initial 30-second screen and NEXT; printer failure affects the print lane only. The old dedicated paid-first Sandbox and historical UAH pass/fail/NOT_RUN evidence are not retroactively changed. This owner correction is **design only** until explicitly implemented/tested; the real UI, physical POS80 send and two-track race tests must be verified separately.
+
+### New refund-first policy and evidence hierarchy — binding new-order addendum
+
+**The owner's latest request is to avoid calling an operator just to reimburse a customer for a truly failed paid service.** For **new** orders, keep a safe `REFUND_ELIGIBLE` review gate after fresh verified PAID, bounded original recovery, exact paid photo obligations, worker-safe printer/Drive fencing and merchant-specific Refund API activation. A safe irrecoverable original service may receive an automatic full merchant refund; a second independently proven duplicate-settled attempt may receive a refund of that excess only. This is **not** permission to refund on UI ERROR, timeout, print `UNCERTAIN`, unknown provider status, unverified merchant support, or every physically partial output. Refund accepted/processing/confirmed are distinct; never imply the money is already visible on the customer's payment instrument. Technician may still be needed to repair an unsafe kiosk, independent of financial outcome.
+
+**Customer lost-proof rule:** Meong genuinely offered the pre-PAID CCP and, upon lawful live PAID, **always showed original Recovery Ticket QR/full code for 30 visible seconds + NEXT while sending the same ticket to printer once**. If customer later lost these proofs, **no automatic refund solely due to proof loss**, no operator shortcut to photos, no reissued secret. This does NOT make Meong's own verified paid-service failures go away, does NOT turn a printer SUBMITTED into proof paper delivered, and is not a legal blanket forfeiture of consumer money. If actual claim/ticket was never offered, keep `PAID/OWED` and a legitimate remedy. Indonesian consumer-protection and merchant-specific provider policy require formal validation before public terms.
+
+Canonical detail: [RF-D01–RF-D26 refund/lost-proof](POST-PREVIEW-QRIS-REFUND-AND-LOST-PROOF-POLICY.md) · [complete all-decisions crosswalk](POST-PREVIEW-QRIS-COMPLETE-DECISION-LEDGER.md). **No actual refund implemented or executed.**
 
 ## 5. Scope exclusions, audit and go/no-go
 
