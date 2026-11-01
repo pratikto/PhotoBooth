@@ -8,6 +8,7 @@ The original BoothDriveClient independently verifies the exact remote folder.
 import json
 import re
 import threading
+from datetime import datetime, timezone
 
 from photobooth.booth_storage import BoothWorkspace
 from photobooth.booth_sync import BoothDriveClient
@@ -115,7 +116,7 @@ class OriginalPaidDriveBinding:
                 bound=self.client.bind_transaction({
                     'transaction_id':txid,
                     'drive_claim_token':claimed['claim_token'],
-                    'created_at':contract.get('paid_at',self._paid_anchor(group)),
+                    'created_at':datetime.fromtimestamp(self._paid_anchor(group),timezone.utc).isoformat(),
                     'sessions':[None]*len(contract['designs']),
                 })
                 fid,url=self._verified(bound,claimed)

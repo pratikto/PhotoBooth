@@ -1,5 +1,10 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — PP-05.c verified real Apps Script timestamp format correction (CI pending)
+
+Existing `OriginalPaidDriveBinding.bind` prepared `created_at` using a UNIX **seconds** number from `paid_first_observed_at`. The actual Apps Script `bindStorageTransaction_` parses `started_at` using JavaScript `new Date(value)` (numeric input means milliseconds), so a real cloud attempt would appear to be in 1970 and retention would reject the folder as expired. The original immutable PAID anchor is now converted into an ISO 8601 UTC timestamp before binding, never replaced with current time on retry. Added regression verifying exact PAID-anchor round-trip. Synthetic previous tests did not catch live Code.gs contract mismatch; no external Drive operations were made.
+
+
 ## 2 November 2026 — PP-06 recovering-claim outage test correction (CI pending)
 
 Full latest CI run `41334103568` was 453 Linux tests / **one assertion failure**, desktop SUCCESS and Windows cancelled. The failing assertion expected a claim failure after **only one** lost HTTP status response, but the original coordinator correctly performed a subsequent fresh successful provider GET. Updated the scenario to simulate a **persistent provider outage**, which must fail closed; do not ban legitimate recovery after a transient lost reply. No source authorization guard was removed.

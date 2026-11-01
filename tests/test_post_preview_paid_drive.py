@@ -103,6 +103,12 @@ class OriginalPaidDriveReservationTests(unittest.TestCase):
         self.assertEqual(first,second)
         self.assertEqual('VERIFIED',first['drive_state'])
         self.assertEqual(1,len(sent))
+        from datetime import datetime,timezone
+        stamp=sent[0]['created_at']
+        self.assertEqual('UTC',str(datetime.fromisoformat(stamp).tzinfo))
+        self.assertLess(abs(datetime.fromisoformat(stamp).timestamp()-
+                            fixture.service.ledger.db.execute(
+                                'SELECT retention_anchor FROM pp_paid_services').fetchone()[0]),1)
         self.assertEqual('OWED',fixture.service.ledger.db.execute(
             'SELECT status FROM pp_paid_services').fetchone()[0])
         self.assertEqual(25,len(self.workspace.ready_slots()))
