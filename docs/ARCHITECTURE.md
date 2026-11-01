@@ -1,5 +1,8 @@
 # Meong Photobooth — GUI v2 architecture
 
+**Newer owner correction (post-preview orders):** A live verified-PAID customer ALWAYS sees the original Recovery Ticket QR/full code for 30 visible seconds + NEXT while the SAME original ticket is printed ONCE concurrently. Healthy receipt printing never skips the screen. Existing paid-first legacy UAH/BUG-027 behavior below is historical; no source change or new PP test execution. [Canonical dual-channel Flow G](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-OWNER-APPROVED.md).
+
+
 ## 1 November 2026 — Versioned architecture scope (documentation only)
 
 This architecture's original 26–28 October transport-off table is **source-era historical**, not a universal Sandbox guarantee: the separately documented BUG-027/BUG-028 current dedicated Sandbox can print its original receipt and approved strips **after PAID**, while Drive stays OFF. This old source and payment-before-camera route must remain functional for legacy orders. The new `feature/post-preview-qris-checkout` design adds a **separately versioned** private unpaid draft/preview and a frozen purchase group, post-preview QRIS, a pre-PAID private Checkout Claim Proof, post-PAID original ticket, guarded encrypted credential escrow, protected PAID_UNCLAIMED, and exact verified paid Drive URL before final purchased-strip printing. Nothing here asserts a deployed new host, actual Drive permission, completed print, or provider acceptance. The new synthetic purchased-flow profile must **not** silently enable real Drive or overwrite the legacy dedicated Sandbox.
