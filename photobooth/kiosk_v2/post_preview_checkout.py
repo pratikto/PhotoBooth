@@ -9,10 +9,12 @@ from photobooth.post_preview_checkout import ChargeReadiness
 from photobooth.post_preview_client import PostPreviewClient
 from photobooth.post_preview_store import DraftHeld
 from photobooth.post_preview_ticket import OriginalRecoveryTicketService
+from photobooth.post_preview_paid_delivery import OriginalPaidDeliveryMonitor
+from photobooth.post_preview_paid_print import OriginalPaidPrintDispatcher
 from .post_preview_photos import PrivatePhotoService
 
 
-TICKET_PHASES = frozenset({'ticket_offer', 'ticket_visible'})
+TICKET_PHASES = frozenset({'ticket_offer', 'ticket_visible', 'paid_delivery'})
 CHECKOUT_PHASES = frozenset({'claim_proof', 'checkout_ready', 'payment_pending', 'payment_hold', 'paid_hold'}) | TICKET_PHASES
 
 
@@ -31,6 +33,8 @@ class PrivateCheckoutService(PrivatePhotoService):
         self._paid_ticket = self._receipt_printer = self._receipt_lane = None
         self._ticket_offer = self._ticket_qr = self._ticket_receipt = None
         self._ticket_was_dismissed = False
+        self._paid_delivery = self._paid_print = self._paid_printer = None
+        self._paid_printer_lane = self._delivery_state = None
         super().__init__(root, booth_id=payment_client.booth_id, **kwargs)
         self._ccp = OriginalCCPService(self.ledger, protector, merchant_id, allow_synthetic=True)
 
@@ -96,6 +100,69 @@ class PrivateCheckoutService(PrivatePhotoService):
         self._ticket_offer = self._ticket_qr = None
         self._ticket_was_dismissed = True
         self.phase = 'paid_hold'  # Paid strips and Drive remain OWED until PP-05.c/d.
+        return self.snapshot()
+
+
+    @property
+    def paid_delivery_enabled(self):
+        return self._paid_delivery is not None and self._paid_print is not None
+
+    def attach_paid_delivery(self, monitor, dispatcher, *, printer=None, shared_lane=None):
+        """Bind exact *synthetic* paid delivery only before checkout admission.
+
+        A real Sandbox/merchant launcher must use a separately verified adapter
+        and cannot accidentally select the incomplete fixture-only path.
+        """
+        if (not isinstance(monitor,OriginalPaidDeliveryMonitor)
+                or not isinstance(dispatcher,OriginalPaidPrintDispatcher)
+                or monitor.binder.ledger is not self.ledger
+                or dispatcher.binder is not monitor.binder
+                or dispatcher.preparer is not monitor.preparer
+                or self._paid_ticket is None
+                or shared_lane is None or shared_lane is not self._receipt_lane
+                or self._paid_delivery is not None
+                or self.phase not in {'confirm','final_preview'}):
+            raise DraftHeld('Exact original synthetic paid delivery/receipt lane required')
+        self._paid_delivery, self._paid_print = monitor, dispatcher
+        self._paid_printer, self._paid_printer_lane = printer, shared_lane
+
+    def prepare_paid_delivery(self):
+        """Resolve one original PAID folder and stage its saved approved photos."""
+        self._active()
+        if (self.phase!='paid_hold' or not self.paid_delivery_enabled
+                or self._ticket_was_dismissed is not True):
+            raise DraftHeld('Original paid ticket must precede purchased photo fulfillment')
+        self._paid_delivery.binder.bind(self.lease,self.group,self.templates)
+        view=self._paid_delivery.enqueue(self.lease,self.group,self.templates)
+        self._active()
+        self._delivery_state=view
+        self.phase='paid_delivery'
+        return self.snapshot()
+
+    def paid_delivery_status(self):
+        self._active()
+        if self.phase!='paid_delivery' or not self.paid_delivery_enabled:
+            raise DraftHeld('Original paid delivery session not available')
+        self._delivery_state=self._paid_delivery.inspect(self.lease,self.group)
+        return self.snapshot()
+
+    def paid_print_next(self):
+        """Send the next PREPARED *purchased* strip once on the shared lane."""
+        self._active()
+        if self.phase!='paid_delivery' or not self.paid_delivery_enabled:
+            raise DraftHeld('Original paid strip is unavailable')
+        before=self._paid_delivery.inspect(self.lease,self.group)
+        if self._paid_printer is None:
+            raise DraftHeld('No configured photo printer; preserve all original print jobs')
+        pending=[t.template_id for t in self.templates
+                 if before['print_states'].get(t.template_id)=='PREPARED']
+        if not pending:
+            return self.snapshot()
+        result=self._paid_print.send_once(
+            self.lease,self.group,pending[0],self._paid_printer,
+            shared_lane=self._paid_printer_lane)
+        self._active()
+        self._delivery_state=self._paid_delivery.inspect(self.lease,self.group)
         return self.snapshot()
 
     def freeze_checkout(self, revision, expected_amount):
@@ -189,6 +256,11 @@ class PrivateCheckoutService(PrivatePhotoService):
             self.phase = 'payment_hold'
         return self.snapshot()
 
+    def close(self):
+        if self._paid_delivery is not None and self._paid_delivery.worker is not None:
+            self._paid_delivery.worker.stop()
+        super().close()
+
     def hide_private(self):
         super().hide_private()
         if self._ccp is not None:
@@ -227,6 +299,9 @@ class PrivateCheckoutService(PrivatePhotoService):
                           ticket_receipt=self._ticket_receipt)
         if self.phase == 'paid_hold':
             result['ticket_dismissed'] = self._ticket_was_dismissed
+        if self.phase == 'paid_delivery':
+            result['delivery'] = self._delivery_state
+            result['ticket_dismissed'] = True
         if self._hidden.is_set() or self._closed.is_set():
             return {'phase': 'hold'}
         return result

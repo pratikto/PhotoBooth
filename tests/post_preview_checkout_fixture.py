@@ -101,6 +101,41 @@ class CheckoutFixture:
         self.service.attach_paid_ticket(
             self.ticket, printer=printer, shared_lane=threading.Lock())
 
+
+    def enable_paid_delivery(self):
+        """Explicit in-process, no-cloud test driver bound to the actual paid path."""
+        from photobooth.post_preview_paid_drive import OriginalPaidDriveBinding
+        from photobooth.post_preview_paid_media import OriginalPaidMediaImporter
+        from photobooth.post_preview_paid_strips import OriginalPaidStripPreparer
+        from photobooth.post_preview_paid_delivery import OriginalPaidDeliveryMonitor
+        from photobooth.post_preview_paid_print import OriginalPaidPrintDispatcher
+        if not hasattr(self,'ticket') or hasattr(self,'paid_monitor'):
+            raise AssertionError('One original paid ticket fixture required first')
+        def simulated_remote(manifest):
+            return {'transaction_id':manifest['transaction_id'],
+                    'folder_id':'syntheticPaidFolder123',
+                    'folder_url':'https://drive.google.com/drive/folders/syntheticPaidFolder123',
+                    'link_verified':True,'photo_number_layout':1}
+        # Explicit synthetic fixture only. Not an Apps Script or Google Drive call.
+        self.drive.bind_transaction=simulated_remote
+        self.paid_binder=OriginalPaidDriveBinding(
+            self.backend,self.service.checkout,self.workspace,self.drive,
+            allow_incomplete_fixture=True)
+        importer=OriginalPaidMediaImporter(self.paid_binder,allow_incomplete_fixture=True)
+        preparer=OriginalPaidStripPreparer(importer,allow_incomplete_fixture=True)
+        self.paid_monitor=OriginalPaidDeliveryMonitor(
+            preparer,allow_incomplete_fixture=True)
+        self.paid_dispatcher=OriginalPaidPrintDispatcher(
+            preparer,allow_incomplete_fixture=True)
+        self.paid_print_sends=[]
+        def photo_send(path,*,copies):
+            self.paid_print_sends.append((str(path),copies))
+            return SimpleNamespace(success=True)
+        printer=SimpleNamespace(print_image=photo_send)
+        self.service.attach_paid_delivery(
+            self.paid_monitor,self.paid_dispatcher,printer=printer,
+            shared_lane=self.service._receipt_lane)
+
     def _drive_read(self, _url, **kwargs):
         body = kwargs['json']
         if body['action'] != 'storage_readiness':
