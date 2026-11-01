@@ -9,7 +9,7 @@
 
 ## 1 November 2026 — NEWER owner correction: Recovery Ticket ALWAYS visible + concurrent original paper print (post-preview new orders)
 
-**Owner explicitly changed the previous conditional screen fallback.** In the **new \`feature/post-preview-qris-checkout\` order version**, once independent Midtrans PAID and rightful live booth lease are verified:
+**Owner explicitly changed the previous conditional screen fallback.** In the **new `feature/post-preview-qris-checkout` order version**, once independent Midtrans PAID and rightful live booth lease are verified:
 
 1. **Always present the original Recovery Ticket QR and entire code on the customer-facing screen** for **30 actually visible seconds** with an explicit **LANJUT/NEXT** button; do this **even when the receipt printer is healthy, immediately acknowledges SUBMITTED and produces paper**. This is now the mandatory first paid-ticket screen, NOT a hardware-error fallback.
 2. **At the same time**, initiate a single durable printer receipt intent and enqueue/dispatch **exactly one** physical ticket bearing that same original credential; the on-screen QR does not wait for printer status. Physically emitting thermal paper may complete later; one exclusive printer worker serializes ticket/photo-strip sends.
