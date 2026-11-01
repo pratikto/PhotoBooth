@@ -24,13 +24,14 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
     shot = widget_helpers.PrivateWidgetTests.shot
 
     @contextmanager
-    def booth(self):
+    def booth(self, *, paid_ticket=False):
         with tempfile.TemporaryDirectory() as directory, patch.dict(os.environ, {
                 'PHOTOBOOTH_V2_CHECKOUT_SANDBOX':'0', 'PHOTOBOOTH_V2_CHECKOUT_MOCK':'0',
                 'PHOTOBOOTH_V2_PRINT':'0', 'PHOTOBOOTH_V2_DRIVE':'0', 'PHOTOBOOTH_AUDIO':'0',
                 'PHOTOBOOTH_AD_VIDEO':'0', 'PHOTOBOOTH_FACE_TRIGGER':'0', 'PHOTOBOOTH_PALM_TRIGGER':'0'}):
             root = Path(directory)
             fixture = CheckoutFixture(root)
+            if paid_ticket: fixture.enable_paid_ticket()
             camera = Mock()
             camera.read.return_value = np.zeros((32,48,3), dtype=np.uint8)
             camera.preview.return_value = None
@@ -132,3 +133,78 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
             self.assertEqual({'phase':'hold'}, app._photo_view)
             self.assertEqual('INACTIVITY_EXPIRED', fixture.service.ledger.db.execute('SELECT lifecycle FROM pp_drafts').fetchone()[0])
             self.assertEqual(0, fixture.provider.cancels)
+
+    def paid_ticket_screen(self, app, fixture):
+        self.proof(app)
+        self.click(app, 'SUDAH SIMPAN BUKTI • LANJUT SIMULASI')
+        self.settle(app)
+        view = app._photo_view['payment']
+        fixture.provider.state(view['attempts'][0]['provider_order_id'], 'settlement')
+        self.click(app, 'PERIKSA STATUS')
+        deadline = time.monotonic()+10
+        while time.monotonic()<deadline and app._photo_view.get('phase') != 'ticket_offer':
+            app._poll_photos(); EventLoop.idle(); time.sleep(.01)
+        self.assertEqual('ticket_offer', app._photo_view['phase'])
+        self.assertIsNotNone(app._ticket_card)
+        app._ticket_card._ready_at = 0
+        deadline = time.monotonic()+10
+        while time.monotonic()<deadline and app._photo_view.get('phase') != 'ticket_visible':
+            EventLoop.idle()
+            if app._ticket_card is not None: app._ticket_card._rendered(0)
+            app._poll_photos()
+            time.sleep(.01)
+        self.assertEqual('ticket_visible', app._photo_view['phase'])
+        self.assertTrue(app._ticket_window.active)
+        self.assertFalse(app._ticket_next_button.disabled)
+
+    def test_native_original_paid_ticket_30_seconds_and_one_receipt_at_both_sizes(self):
+        for size in ((800,1280),(452,900)):
+            with self.subTest(size=size), self.booth(paid_ticket=True) as (app,fixture):
+                Window.size=size
+                self.paid_ticket_screen(app, fixture)
+                deadline=time.monotonic()+10
+                while time.monotonic()<deadline and not fixture.receipt_sizes:
+                    app._poll_photos(); EventLoop.idle(); time.sleep(.01)
+                self.assertEqual(1,len(fixture.receipt_sizes))
+                self.assertGreaterEqual(app._ticket_window.remaining(),1)
+                card=app._ticket_card
+                self.click(app, 'LANJUT • SIMPAN TIKET')
+                self.assertIsNone(card.qr_image.texture)
+                self.assertEqual('',card.code.text)
+                deadline=time.monotonic()+10
+                while time.monotonic()<deadline and app._photo_view.get('phase')!='paid_hold':
+                    app._poll_photos(); EventLoop.idle(); time.sleep(.01)
+                self.assertEqual('paid_hold',app._photo_view['phase'])
+                self.assertTrue(app._photo_view['ticket_dismissed'])
+                self.assertEqual(1,len(fixture.receipt_sizes))
+                self.assertEqual('DISMISSED',fixture.service.ledger.db.execute(
+                    'SELECT screen_state FROM pp_ticket_presentations').fetchone()[0])
+                self.assertFalse(app._photo_view['fulfillment_authorized'])
+
+    def test_next_wipes_qr_while_original_receipt_sender_is_blocked(self):
+        with self.booth(paid_ticket=True) as (app,fixture):
+            Window.size=(452,900)
+            fixture.receipt_entered=threading.Event()
+            fixture.receipt_release=threading.Event()
+            try:
+                self.paid_ticket_screen(app,fixture)
+                deadline=time.monotonic()+5
+                while not fixture.receipt_entered.is_set() and time.monotonic()<deadline:
+                    app._poll_photos(); EventLoop.idle(); time.sleep(.01)
+                self.assertTrue(fixture.receipt_entered.is_set())
+                self.assertTrue(app._photo_jobs.busy)
+                card=app._ticket_card
+                self.click(app,'LANJUT • SIMPAN TIKET')
+                self.assertIsNone(card.qr_image.texture)
+                self.assertFalse(card.code.text)
+                self.assertEqual('ticket_visible',app._photo_view['phase'])
+            finally:
+                fixture.receipt_release.set()
+            deadline=time.monotonic()+10
+            while time.monotonic()<deadline and app._photo_view.get('phase')!='paid_hold':
+                app._poll_photos(); EventLoop.idle(); time.sleep(.01)
+            self.assertEqual('paid_hold',app._photo_view['phase'])
+            self.assertEqual(1,len(fixture.receipt_sizes))
+            self.assertEqual('SUBMITTED',fixture.service.ledger.db.execute(
+                'SELECT receipt_state FROM pp_ticket_presentations').fetchone()[0])
+

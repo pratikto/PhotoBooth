@@ -1,5 +1,12 @@
 # Post-preview QRIS implementation checkpoint
 
+## 1 November 2026 — PP-05.b3b typed native ticket / independent receipt handoff (NEW; CI pending)
+
+For **explicit incomplete synthetic mock fixture only** the first independently observed original PAID/OWED now queues its original ticket through PhotoJobs, displays the native typed Recovery Ticket card with full-code visibility gate, begins one 30-second monotonic clock only after worker-confirmed genuine UI render, and queues exactly one receipt send through the same serialized worker lane. NEXT/timeout immediately wipes private code/texture even when the printer worker remains in-flight; a deferred original dismissal occurs only after the single-flight worker completes. The late print outcome never rebuilds or restarts the card. Original CCP, legacy/prepaid route, provider, Drive, automatic release and refund stay unchanged.
+
+**Native software tests added:** at 800×1280 and 452×900 prove first paid ticket, full original QR, one in-memory receipt send, 30-second clock and no duplicate after NEXT, and NEXT while an intentionally blocked in-memory printer is sending. The source is deliberately unavailable to default/Sandbox/production launchers; this is not customer physical UAT, real receipt/paper proof or PP-001..112 full-case PASS. Independent Windows/Linux/native CI must finish before claiming regression success. Next PP-05.c requires exact verified Drive binding/URL and PP-05.d paid strip print, then PP-06 recovery, PP-06R and PP-07.
+
+
 ## 1 November 2026 — PP-05.b3a synthetic paid-ticket worker integration (NEW; CI pending)
 
 The isolated noncommercial `PrivateCheckoutService` now accepts an **explicit synthetic-only, same-ledger/matching-merchant** original paid-ticket service and a shared bitmap printer lane. New worker actions `prepare_ticket`, `ticket_visible`, `ticket_send_receipt`, and `ticket_dismiss` preserve PAID/OWED while using the original encrypted credential and one receipt job; no photo print, Drive or payment authority is granted. A failed/hidden original visit cannot offer/print; dismissal is irreversible and cannot restart the ticket. Fixture records only bitmap dimensions, not customer/ticket pixels.
