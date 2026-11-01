@@ -1,5 +1,12 @@
 # Post-preview QRIS implementation checkpoint
 
+## 1 November 2026 — PP-05.c2 guarded original PAID Drive binding (NEW; CI pending)
+
+**Synthetic-only authenticated integration, no live Drive operations:** new `OriginalPaidDriveBinding` checks the independently verified original PAID/OWED entitlement, exact still-live photo/worker lease, frozen media/artwork/checksums, merchant binding and original PB001V2S2 storage namespace. It writes the immutable original `transaction_id` to `pp_paid_services` **before** taking any slot, then calls `BoothWorkspace.claim_exact`. A provider timeout, lost ACK, worker restart or malformed/foreign folder response can never select a different paid transaction ID. Existing `BoothDriveClient.bind_transaction` is the only remote verification boundary; exact transaction ID, fixed Drive folder URL, link_verified and photo layout 1 must all match. Only after the workspace remembers the original claim may the paid service become `drive_state=VERIFIED`. Failures hold OWED/UNKNOWN with original folder identity, never invent a URL.
+
+Five additional synthetic cases cover idempotent original binding, network failure/retry, forged wrong URL, no unpaid folder claim and wrong transaction response. `original_slot` is an exact trust-boundary lookup of local original READY/claimed identity, not a public token API. No paid strip composition, print, photo upload, retention activation or public download has been enabled. **This is not complete PP-05.c**, nor full PP-001–112 acceptance; next create paid transaction manifest and exact verified-URL strip, then ensure serialized printer and isolated background upload. Current code is still mock-only and actual Apps Script Code.gs deployment is unverified. This commit's CI is pending.
+
+
 ## 1 November 2026 — PP-05.c1 original PAID folder claim primitive (new; CI pending)
 
 Extend existing `BoothWorkspace` with `claim_exact(transaction_id, claim_token)` to claim **only** a selected original READY queue-head identity or recover **the same** already-claimed folder after restart. No second allocation, token substitution, foreign booth ID, nonempty pre-claim folder or missing previously claimed folder may silently pass. Its caller must first journal the original paid transaction identity; the method cannot create payment, bind remote Drive, upload media, print or release customer data. Original `claim()` is unchanged.

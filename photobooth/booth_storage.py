@@ -153,6 +153,26 @@ class BoothWorkspace:
             self._check_folder_owners(state)
             write_json_atomic(self.state_path, state)
 
+    def original_slot(self, transaction_id):
+        """Read an exact claimed/READY original identity for crash reconciliation.
+
+        Only trusted workers may receive its local claim token. Returning a
+        bound remote URL is NOT proof of current public ACL; binding must still
+        be verified by the authenticated Drive API before paid output.
+        """
+        if (not isinstance(transaction_id,str)
+                or re.fullmatch(re.escape(self.booth_id)+r'_[0-9]{8}',transaction_id) is None):
+            raise ValueError('Original transaction ID required')
+        with self.locked():
+            state=self._load()
+            for slot in [*state['ready'],*state['claimed'].values()]:
+                if slot['transaction_id']==transaction_id:
+                    path=checked_path(self.root/transaction_id)
+                    if not path.is_dir():
+                        raise ValueError('Original reserved transaction folder is missing')
+                    return dict(slot)
+        raise ValueError('Original reserved transaction identity is unavailable')
+
     def claim_exact(self, transaction_id, claim_token):
         """Claim or recover ONE preselected original reserved identity.
 
