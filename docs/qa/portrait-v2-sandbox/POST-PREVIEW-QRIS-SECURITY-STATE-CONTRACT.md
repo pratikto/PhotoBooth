@@ -161,7 +161,7 @@ The requirement is **concurrent screen availability and print dispatch**, not a 
 
 - Original `refund_intent_id`, merchant ID, booth ID, purchase_group_id, **exact provider payment attempt/order/transaction ID** (important for QR1/QR2/QR3), settled original amount/currency, eligible refund amount, reason, copy/print/Drive outcome, original refund_key and API schema version, timestamps, authorization and current verified refund state.
 - First independently verify original provider SETTLEMENT. Never refund on PENDING/UNKNOWN/CREATE_UNCERTAIN, local timer expiry, GUI ERROR or mere abandoned claim.
-- For genuine merchant delivery failure, prove bounded idempotent recovery exhausted, exact entitlement missing, authorized refund policy and safe original worker/paper/Drive stop or quarantine. If a paper job is UNCERTAIN and could still eject, classify/hold instead of pretending the refund stops hardware.
+- For **full refund of irrecoverable merchant delivery failure**, prove bounded original recovery exhausted, exact entitlement missing, authorized policy and safe original worker/paper/Drive stop or quarantine. If a paper job is UNCERTAIN and could still eject, classify/hold instead of pretending the refund stops hardware. For **verified duplicate excess-only refund**, preserve the one rightful original service/print/upload while reconciling and refunding only the excess paid attempt. Never globally halt valid paid work because a duplicate charge is returned.
 - Persist one uniquely keyed refund intent **before provider I/O**. Lost response/timeout/restart/409 -> reconcile same original key/reference; no second random refund POST. Do not assume Midtrans Core refund semantics without official merchant verification.
 - Official GoPay QRIS POS may have online refund **disabled by default**; time windows, issuer/on-us/off-us, merchant balance and status can prevent online automatic refund. An ineligible case goes `REFUND_REVIEW_REQUIRED`, not fake `REFUND_CONFIRMED`. Never automatically send money to a user-entered account at a public kiosk.
 - Frontend refund statuses distinguish intent, provider accepted, processing and provider confirmed; customer bank/wallet funds visible is a separate real-world outcome. Never promise fixed return-time or successful automatic refund without real provider evidence.
@@ -180,7 +180,7 @@ flowchart TD
     CAUSE -->|Departed / late PAID / recoverable hold| WAIT[PAID_UNCLAIMED / OWED; original claim and bounded retry]
     CAUSE -->|Fraud / payment conflicts / refund not enabled| REVIEW[FINANCIAL / SECURITY REVIEW]
     CAUSE -->|Irrecoverable merchant delivery failure| FENCE[Quarantine exact original print/upload/media]
-    CAUSE -->|Independently proved duplicate settled excess| EXCESS[Refund excess original payment attempt only]
+    CAUSE -->|Independently proved duplicate settled excess| EXCESS[Refund excess attempt ONLY; rightful single paid service continues]
     FENCE --> SAFE{Original worker/physical outcome safe and merchant API eligible?}
     SAFE -->|No| REVIEW
     SAFE -->|Yes| ELIG[Full original-payment refund eligible]
