@@ -14,6 +14,8 @@ from starlette.concurrency import run_in_threadpool
 
 from photobooth.post_preview_inbox import PostPreviewNotificationInbox
 from photobooth.post_preview_lifecycle import PostPreviewLifecycleWorker
+from photobooth.post_preview_authority import authenticated_charge_request
+from photobooth.post_preview_readiness import ReadinessScope
 from photobooth.post_preview_store import DraftHeld, DraftLease, ORDER_VERSION
 from photobooth.qris_api import LocalRateLimit, bounded_json
 
@@ -102,6 +104,17 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
     def envelope(view):
         return dict(view, mode=payments.mode, order_version=ORDER_VERSION)
 
+    def charge_call(function, group, token, **kwargs):
+        # This runs only after authenticated booth/visit parsing above. No ready
+        # flag, bearer secret or caller observation enters the readiness report.
+        with payments.ledger.write():
+            payments.ledger._owned(token)
+            intent, _ = payments._group(group, token.booth_id)
+            scope = ReadinessScope(group, token.booth_id, intent['contract_sha256'], token.generation)
+            stamp = payments._now()
+        with authenticated_charge_request(scope, stamp):
+            return function(token, **kwargs)
+
     @app.get('/api/postpay/health')
     async def health():
         return {'api_version': 1, 'order_version': ORDER_VERSION, 'mode': payments.mode,
@@ -117,14 +130,15 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
         booth = identity(request, x_booth_id, authorization)
         owner = await body(request, OwnerRequest)
         token = await invoke(lease, group, booth, owner)
-        return envelope(await invoke(payments.begin, token))
+        return envelope(await invoke(charge_call, payments.begin, group, token))
 
     @app.post('/api/postpay/groups/{group}/continue')
     async def renew(group: str, request: Request, x_booth_id: str = Header(default=''), authorization: str = Header(default='')):
         booth = identity(request, x_booth_id, authorization)
         owner = await body(request, ContinueRequest)
         token = await invoke(lease, group, booth, owner)
-        return envelope(await invoke(payments.continue_expired, token, actively_continuing=owner.actively_continuing))
+        return envelope(await invoke(charge_call, payments.continue_expired, group, token,
+                                     actively_continuing=owner.actively_continuing))
 
     @app.post('/api/postpay/groups/{group}/reconcile')
     async def reconcile(group: str, request: Request, x_booth_id: str = Header(default=''), authorization: str = Header(default='')):

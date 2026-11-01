@@ -1,5 +1,6 @@
 """Real HTTP boundary with isolated synthetic provider/camera/vault adapters."""
 import os
+from types import SimpleNamespace
 from PIL import Image
 from fastapi.testclient import TestClient
 from photobooth.booth_auth import BoothAuthenticator
@@ -9,6 +10,15 @@ from photobooth.post_preview_checkout import ChargeReadiness
 from photobooth.post_preview_client import PostPreviewClient
 from photobooth.post_preview_payments import PostPreviewPayments
 from photobooth.kiosk_v2.post_preview_checkout import PrivateCheckoutService
+from photobooth.kiosk_v2.photos import PhotoJobs
+from photobooth.kiosk_v2.recovery import LaunchLease
+from photobooth.checkout_store import CheckoutStore
+from photobooth.booth_storage import BoothWorkspace
+from photobooth.booth_sync import BoothDriveClient
+from photobooth.drive_storage import AppsScriptDriveClient
+from photobooth.printer import PrinterConfig
+from photobooth.post_preview_authority import OriginalWorkerReadiness, authenticated_payment_readiness
+from photobooth.post_preview_readiness import LocalChargeReadiness, ReadOnlyDriveReadiness
 from tests import test_post_preview_payments as payment_fixtures
 
 
@@ -51,16 +61,55 @@ class CheckoutFixture:
         self.service = PrivateCheckoutService(root, payment_client=self.client, protector=self.protector,
             merchant_id='MTEST', readiness=lambda: self.ready,
             qr_loader=lambda _: Image.new('RGB', (180,180), 'white'), allow_incomplete_fixture=True)
+        self.jobs = PhotoJobs(self.service)
+        self.launch_lease = LaunchLease(root)
+        self.legacy = CheckoutStore(root/'legacy-fixture.sqlite3')
+        self.authority = OriginalWorkerReadiness(self.service, self.jobs, self.launch_lease, self.legacy)
+        self.workspace = BoothWorkspace(root/'synthetic-drive', 'PB001V2S2')
+        self.workspace.prepare()
+        self.camera = SimpleNamespace(capture=SimpleNamespace(isOpened=lambda: True), read=lambda: object())
+        self.drive = BoothDriveClient(AppsScriptDriveClient(
+            'https://script.google.com/macros/s/SYNTHETIC/exec', 'SYNTHETIC-NONDEPLOYED',
+            session=SimpleNamespace(post=self._drive_read)), 'PB001V2S2')
         self.provider = payment_fixtures.SyntheticProvider()
         self.backend = PostPreviewPayments(self.service.ledger, self.provider, 'MTEST',
-            readiness=lambda _: self.ready, poll_seconds=0)
+            readiness=self._readiness, poll_seconds=0)
         auth = BoothAuthenticator({'PB001':'SYNTHETIC-BOOTH-'+'a'*48})
         self.http = TestClient(create_app(self.backend, auth))
         self.session = SessionAdapter(self.http)
         self.client._transport.session.close()
         self.client._transport.session = self.session
 
+    def _drive_read(self, _url, **kwargs):
+        body = kwargs['json']
+        if body['action'] != 'storage_readiness':
+            raise AssertionError('Fixture readiness must not mutate Drive')
+        count = self.ready.unclaimed_ready_capacity
+        count = min(count, len(body['slots'])) if type(count) is int and count > 0 else 0
+        api = 'READY' if self.ready.drive_authenticated else 'NOT_READY'
+        sharing = 'READY' if self.ready.drive_sharing and api == 'READY' else 'NOT_READY'
+        if sharing != 'READY': count = 0
+        status = dict(protocol_version=1, booth_id=body['booth_id'], read_only=True,
+                      drive_api=api, drive_sharing=sharing, capacity_state='READY' if count else 'NOT_READY',
+                      ready_count=count, checked_count=len(body['slots']))
+        return SimpleNamespace(status_code=200, json=lambda: dict(ok=True, storage_layout=2, readiness=status))
+
+    def _readiness(self, group):
+        adapter = LocalChargeReadiness(self.service.checkout, self.service.templates,
+            probes={'payment_authorization': authenticated_payment_readiness,
+                    'worker_ownership': self.authority}, camera=self.camera,
+            printer_config=PrinterConfig(lan_host='synthetic-no-paper'),
+            printer_dial=lambda *args: SimpleNamespace(close=lambda: None),
+            drive_probe=ReadOnlyDriveReadiness(self.drive, self.workspace, now=self.service.ledger.now))
+        return adapter(group)
+
+    def bind_app(self, app):
+        self.authority.jobs = app._photo_jobs
+        self.camera = app.camera_device
+
     def close(self):
         self.service.close()
         self.service.wait_closed(10)
         self.client.close()
+        self.legacy.close()
+        self.launch_lease.close()

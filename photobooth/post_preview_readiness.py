@@ -100,13 +100,14 @@ class LocalChargeReadiness:
     LOCAL_CHECKS = frozenset({'media', 'artwork', 'disk', 'camera', 'printer_route'})
 
     def __init__(self, checkout, templates, *, probes=None, camera=None, printer_config=None,
-                 drive_probe=None):
+                 drive_probe=None, printer_dial=None):
         if self.LOCAL_CHECKS.intersection(probes or {}):
             raise ValueError('Local checks cannot be replaced by caller readiness flags')
         self.checkout, self.templates = checkout, tuple(templates)
         self.probes = dict(probes or {})
         self.camera, self.printer_config = camera, printer_config
         self.drive_probe = drive_probe
+        self.printer_dial = printer_dial
 
     def __call__(self, group):
         from photobooth.device_health import check_camera, check_printer
@@ -132,18 +133,26 @@ class LocalChargeReadiness:
         for name in ('media', 'artwork', 'disk'):
             probes[name] = lambda _scope: CheckObservation('READY', started)
 
-        def device(check, value):
+        def device(check, value, **kwargs):
             stamp = ledger.now()
             try:
-                status = check(value).status
+                status = check(value, **kwargs).status
                 state = ('READY' if status == 'ready' else 'NOT_READY'
                          if status in {'unavailable', 'warning'} else 'UNKNOWN')
                 return CheckObservation(state, stamp)
             except Exception:
                 return CheckObservation('UNKNOWN', None)
 
-        probes['camera'] = lambda _scope: device(check_camera, self.camera)
-        probes['printer_route'] = lambda _scope: device(check_printer, self.printer_config)
+        def camera(_scope):
+            from photobooth.kiosk_v2.devices import AsyncCamera
+            if isinstance(self.camera, AsyncCamera):
+                # The original AsyncCamera owns acquisition/freshness. Adapt a
+                # new mailbox observation each time, never retain a cached frame.
+                from photobooth.kiosk_v2.health_service import CachedCamera
+                return device(check_camera, CachedCamera(self.camera.read(), self.camera.index))
+            return device(check_camera, self.camera)
+        probes['camera'] = camera
+        probes['printer_route'] = lambda _scope: device(check_printer, self.printer_config, dial=self.printer_dial)
         return TrustedChargeReadiness.observe(scope, probes)
 
 

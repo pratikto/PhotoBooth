@@ -36,6 +36,7 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
             camera.preview.return_value = None
             app = PrivateCheckoutFixtureApp(root, private_service=fixture.service, camera_device=camera)
             app.build(); app.root = app.stage
+            fixture.bind_app(app)
             Window.add_widget(app.stage)
             try:
                 yield app, fixture

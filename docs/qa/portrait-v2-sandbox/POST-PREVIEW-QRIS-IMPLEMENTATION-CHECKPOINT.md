@@ -15,14 +15,65 @@ merchant activation, live customer/cloud deletion and other branches are exclude
 - Authorized branch: `feature/post-preview-qris-checkout`.
 - Last independently verified functional/test remote: `5ff093e15b7425542fe173082ca55adaf8d95f79` (push/ls-remote verified). CI `41309087008` all three jobs SUCCESS: Linux 297/297, Windows 297/297, native 41/41, zero failures/errors/skips; actual Code.gs VM 34 PASS. Runtime source is unchanged from `f1b2b4c594895e1e2e537bcfe7c402e83d8c251f`.
 - Original audited base: `b68e514dd57c989df47fa1b222d45f3f71c38347`.
-- Current checkpoint: **PP-04.d1/d2/d3 + Windows CI correction verified and pushed; PP-04.d IN_PROGRESS**. Next is PP-04.d4 independent payment authorization/authoritative worker ownership and native mounting. No PP-05/06/06R/07 completion is claimed.
+- Current increment: **PP-04.d4 trusted authenticated request + original worker readiness/native fixture**. Local software gate verified; containing-source CI pending. Next PP-05 after remote/CI verification; real device/provider/cloud gates remain NOT_RUN.
 - Overall: PP-00 dependency audit continuing; PP-01 private capture and isolated development UI implemented; PP-02 preview/freeze backend and all-design UI implemented, trusted local + read-only Drive readiness adapters implemented; payment/authoritative ownership readiness adapters unfinished; PP-03 protected CCP backend/native card components implemented but not mounted; PP-04 backend/API and native checkout synthetic fixture implemented; Sandbox/native payment remains unavailable until paid delivery is complete; PP-05/06/06R/07 NOT_STARTED.
 - This checkpoint travels with the implementation commit. Resolve its containing
   SHA using `git log -1 --format=%H`; after push independently compare `git
   ls-remote origin refs/heads/feature/post-preview-qris-checkout`. A commit cannot
   truthfully contain its own SHA. The next increment records this verified tip.
 
-## Verified continuation checkpoint — PP-04.d still incomplete
+## PP-04.d4 — authenticated request and original worker readiness
+
+Owner continuation (1 November, Asia/Jakarta) explicitly requests autonomous
+completion to a laptop physical-test candidate, without routine confirmation.
+Existing branch/push authorization and production/cloud/refund exclusions persist.
+
+The authenticated begin/continue route establishes a scoped in-memory request
+observation only after BoothAuthenticator, strict body parsing and original
+worker-lease validation. Local readiness independently reads that observation;
+JSON ready flags and direct unauthenticated coordinator calls cannot supply it.
+Context is retired on success and failure and carries no bearer credential.
+This proves payment-backend availability/booth authorization for the actual
+request, not merchant-provider account acceptance or guaranteed settlement.
+
+OriginalWorkerReadiness reuses original LaunchLease, PhotoJobs/PrivatePhotoService,
+private generation/contract checks, legacy CheckoutStore/release/fence facts and
+read-only recovery review. Missing journals/owner are UNKNOWN; retired/wrong
+customer/generation, active capture, unresolved legacy/PP finance and unsafe old
+service hold. Existing paid legacy closure needs fulfilled rights or exact ACKED
+release/suspended fence evidence; no PIN bypass, new release, claim, cancellation
+or reset occurs. Prior PP services remain held until the later PP-05/06 durable
+delivery/release integration proves their outcomes.
+
+Local camera readiness now adapts each actual AsyncCamera fresh mailbox read
+through the original CachedCamera health adapter; no second handle/open/shutter
+or permanently cached frame. Original printer-route probe keeps real defaults;
+only explicit synthetic fixtures inject a no-paper dial. Native CheckoutFixture
+now mounts actual local/Drive protocol/request/worker checks, including the actual
+app PhotoJobs/camera registration, with synthetic provider/vault/cloud responses.
+The legacy frozen-preview boolean fixture is not server charge authority.
+
+Test-first missing module ERROR; two new legacy fixture setup errors (quote field
+and positional begin signature) corrected without runtime/assertion relaxation.
+Seven new authority methods cover authenticated route vs direct call, context
+cleanup, wrong owner/generation, missing journal, current capture, closed launch
+lease, privacy retirement, unresolved old purchase and stale AsyncCamera mailbox.
+Configured private-state/legacy/Drive group **304 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,
+61.072s. Native original six-module group **41 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,
+25.742s, both portrait sizes in the native fixture. Compile/diff PASS. Tests and
+fixture are registered in existing Windows/Linux/native CI; CI pending push.
+No merchant/Drive/printer/account action, hosting, raw credential artifact or
+customer-data mutation occurred. All 112 complete acceptance cases remain NOT_RUN.
+
+PP-04.d software components are integrated; actual merchant/device/Google account
+acceptance and remote-hosted media attestation are not claimed. Customer/Sandbox
+checkout stays disabled until PP-05 paid delivery is integrated. Next after this
+increment's remote/CI gate: **PP-05.a** bind verified PAID to original media and
+one entitlement, original protected Recovery Ticket and durable dual-channel
+presentation/receipt intent, then native 30-visible-second/NEXT screen and paid
+Drive/strip delivery. PP-06/06R/07 remain required before laptop candidate handoff.
+
+## Historical verified continuation checkpoint — PP-04.d incomplete at ab57cd7
 
 All changes in this continuation were pushed only to the existing authorized
 branch, with remote SHA checked after each push. No merge, other branch push,
