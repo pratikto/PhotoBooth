@@ -1,5 +1,12 @@
 # Autonomous QRIS and photo-session recovery — master engineering specification
 
+## 1 November 2026 — Post-preview new-order scope (approved design, not source)
+
+The AR-00–AR-13 **financial/privacy/fulfillment safety invariants remain binding for every flow**. Their existing pay-before-camera sequence, token-before-camera, and unpaid checkout behavior describe the **legacy original prepaid order version**, not the new order version on `feature/post-preview-qris-checkout`. For new orders, the owner approved private 3-photo + max one retake **per selected template**, all previews before checkout, one frozen QRIS payment, private pre-PAID Checkout Claim Proof, original post-PAID Recovery Ticket, encrypted escrow, verified paid Drive link before purchased photo-strip printing, and original claim/PAID_UNCLAIMED after customer departure. No new customer is admitted before payment/worker isolation closure with original release/ACK. No legacy PAID grant is converted into an unpaid draft; no refund or print replay.
+
+**Branch-specific implementation:** the original AR roadmap remains active on `feature/portrait-kiosk-v2-next`. When separately authorized, PP-00..07 is the **new-order** workstream on `feature/post-preview-qris-checkout` and must pass every relevant AR/UAH provider evidence, receipt, worker and photo-history regression. [Authoritative new-order contract](POST-PREVIEW-QRIS-OWNER-APPROVED.md) · [secure state and expiry](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [84 NOT_RUN tests](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md). Historical AR stage/source/CI status below is not changed.
+
+
 ## 1 November 2026 — Latest OWNER-APPROVED handoff specification (NO CODE CHANGES)
 
 **Current owner precedence:** [Unattended session handoff, ticket accountability, and automatic isolation — 6 flowcharts and 50 acceptance cases](UNATTENDED-SESSION-HANDOFF-OWNER-APPROVED.md). This detailed 1 November target **supplements** the original AR-00–AR-13 master and supersedes earlier intent to route every locked private customer directly to SESI TERSIMPAN. The **actual source** still uses operator-PIN AR-09 release and currently lacks the new auto-isolation and 30s on-screen Recovery Ticket fallback. No new implementation or device acceptance has been performed.
