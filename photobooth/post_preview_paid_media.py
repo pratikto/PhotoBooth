@@ -35,7 +35,7 @@ class OriginalPaidMediaImporter:
         binder=self.binder
         with binder.ledger.write():
             service,contract=binder._record(lease,group)
-            if (service['drive_state']!='VERIFIED' or not service['transaction_id']
+            if (service['drive_state'] not in {'VERIFIED','UPLOADED'} or not service['transaction_id']
                     or not service['folder_id'] or not service['folder_url']):
                 raise DraftHeld('Exact paid Drive folder and viewer URL required')
         slot=binder.workspace.original_slot(service['transaction_id'])

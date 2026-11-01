@@ -35,7 +35,7 @@ class OriginalPaidPrintDispatcher:
         with self._lock,self.preparer._lock,self.binder._lock:
             with self.binder.ledger.write():
                 service,_=self.binder._record(lease,group)
-                if (service['drive_state']!='VERIFIED' or service['status']!='OWED'
+                if (service['drive_state'] not in {'VERIFIED','UPLOADED'} or service['status']!='OWED'
                         or not service['transaction_id'] or not service['folder_id']):
                     raise DraftHeld('Original paid Drive/fulfillment evidence required')
                 presentation=self.binder.ledger.db.execute(

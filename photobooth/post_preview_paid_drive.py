@@ -82,7 +82,7 @@ class OriginalPaidDriveBinding:
             self.checkout.verify_frozen(group,templates)
             with self.ledger.write():
                 service,contract=self._record(lease,group)
-                if service['drive_state']=='VERIFIED':
+                if service['drive_state'] in {'VERIFIED','UPLOADED'}:
                     if (not service['transaction_id'] or not service['folder_id']
                             or service['folder_url']!='https://drive.google.com/drive/folders/'+service['folder_id']):
                         raise DraftHeld('Original paid folder journal is inconsistent')

@@ -1,5 +1,12 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — PP-05.d2b original upload worker and owed-status monitor (CI pending)
+
+Added a non-public, mock-only `OriginalPaidDeliveryMonitor` which binds the existing post-preview JPEG/verified-folder/QR strip pipeline to the original `BoothDriveWorker` serialized cloud uploader. It can queue a named original transaction only after paid assets and print intents are durably prepared. If no uploader is configured it reports NOT_CONFIGURED, not success. Its status monitor rejects foreign folder/service IDs, changed original print SHA, missing/corrupt local files, forged remote MD5/file ID or mismatched Drive metadata. Only ALL independently VERIFIED uploads with retained Drive retention evidence can advance `pp_paid_services.drive_state` to UPLOADED; **PAID/OWED, paper evidence and privacy fences are preserved**. Five offline tests cover no uploader, complete-only proof, invalid MD5, mismatched folder/strip, idempotent polling. Existing `BoothDriveWorker` is the actual adapter for future authorized Drive deployment; offline fixtures do not call real Google Drive.
+
+This is not a live merchant approval or full safe machine release. PP-06 original proof/auto-isolation, PP-06R refunds and PP-07 physical UAT remain; all PP-001–112 full-case PASS are still withheld until integrated end-to-end tests.
+
+
 ## 2 November 2026 — PP-05.d2a paid Drive completion status (CI pending)
 
 **Bug fixed in original upload status aggregation:** `POST_PREVIEW_PAID` manifests in `READY_FOR_PAID_DELIVERY` may now reach `UPLOAD_COMPLETE` once ALL individual files are independently VERIFIED and the paid media import, exact Drive binding and photo layout evidence are present. The original completed legacy transaction rule is unchanged. Both the Drive worker's `_refresh_upload_status` and the transaction writer's same-revision merge use the identical strictly scoped rule so an app/controller save cannot silently revert verified customer delivery. Any single PENDING/UPLOAD_RETRY/ACTION_REQUIRED file or incomplete original paid gates still prevent completion. Five regression cases added in `test_post_preview_paid_upload_status`.

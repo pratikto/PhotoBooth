@@ -74,7 +74,7 @@ class OriginalPaidStripPreparer:
             staged=self.importer.prepare(lease,group,templates)
             with self.binder.ledger.write():
                 service,contract=self.binder._record(lease,group)
-                if (service['drive_state']!='VERIFIED' or not service['folder_id']
+                if (service['drive_state'] not in {'VERIFIED','UPLOADED'} or not service['folder_id']
                         or service['transaction_id']!=staged['transaction_id']
                         or not service['folder_url']):
                     raise DraftHeld('Verified original paid customer Drive URL required')
