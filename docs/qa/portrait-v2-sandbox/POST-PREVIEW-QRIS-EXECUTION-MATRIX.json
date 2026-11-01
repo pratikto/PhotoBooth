@@ -3,7 +3,7 @@
   "timezone": "Asia/Jakarta",
   "status": "NOT_READY_FOR_PHYSICAL_UAT",
   "scope": "112 full acceptance cases remain NOT_RUN. Listed module passes are partial software subassertions only.",
-  "verified_remote_base": "f1b2b4c594895e1e2e537bcfe7c402e83d8c251f",
+  "verified_remote_base": "5ff093e15b7425542fe173082ca55adaf8d95f79",
   "payment_source_sha256": "7234ebfc53535bc5e4a68c6c3eb70b56ddada0178abd8f90c762b08e5db74156",
   "summary": {
     "PASS": 0,
@@ -1439,7 +1439,35 @@
     "deployed_Web_App": "NOT_DEPLOYED",
     "live_Drive_acceptance": "NOT_RUN",
     "full_PP_acceptance": "NOT_RUN",
-    "CI": "CORRECTIVE_PUSH_PENDING",
+    "CI": {
+      "run_id": 41309087008,
+      "sha": "5ff093e15b7425542fe173082ca55adaf8d95f79",
+      "conclusion": "SUCCESS",
+      "all_three_jobs": "SUCCESS",
+      "Windows_state": {
+        "run": 297,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "Linux_state": {
+        "run": 297,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "native": {
+        "run": 41,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "actual_Code_gs_VM": {
+        "run": 34,
+        "failures": 0,
+        "skipped": 0
+      }
+    },
     "next": "PP-04.d4 actual authenticated payment and authoritative worker ownership probes, native fixture mounting",
     "CI_attempts": [
       {
@@ -1453,6 +1481,35 @@
           "errors": 4,
           "skipped": 0,
           "cause": "Missing declared tzdata and Windows short/long TEMP path fixture comparison"
+        }
+      },
+      {
+        "run_id": 41309087008,
+        "sha": "5ff093e15b7425542fe173082ca55adaf8d95f79",
+        "conclusion": "SUCCESS",
+        "all_three_jobs": "SUCCESS",
+        "Windows_state": {
+          "run": 297,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "Linux_state": {
+          "run": 297,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "native": {
+          "run": 41,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "actual_Code_gs_VM": {
+          "run": 34,
+          "failures": 0,
+          "skipped": 0
         }
       }
     ]
@@ -1473,6 +1530,44 @@
       "skipped": 0
     },
     "scope": "Declared tzdata CI dependency and strict existing canonical-path fixture assertion",
-    "CI": "PENDING_PUSH"
+    "CI": {
+      "run_id": 41309087008,
+      "sha": "5ff093e15b7425542fe173082ca55adaf8d95f79",
+      "conclusion": "SUCCESS",
+      "all_three_jobs": "SUCCESS",
+      "Windows_state": {
+        "run": 297,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "Linux_state": {
+        "run": 297,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "native": {
+        "run": 41,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "actual_Code_gs_VM": {
+        "run": 34,
+        "failures": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "continuation_checkpoint": {
+    "PP_04_d": "IN_PROGRESS",
+    "next": "PP-04.d4 independent authenticated payment-backend and authoritative original worker/occupancy readiness, native fixture integration",
+    "PP_05_through_PP_07": "NOT_STARTED",
+    "full_PP_acceptance": "112 NOT_RUN",
+    "customer_checkout": "DISABLED",
+    "runtime_source": "f1b2b4c594895e1e2e537bcfe7c402e83d8c251f",
+    "verified_test_workflow_tip": "5ff093e15b7425542fe173082ca55adaf8d95f79",
+    "local_only_source_changes": false
   }
 }

@@ -13,14 +13,61 @@ worker safeguards remain binding. Production deployment, actual charges/refunds,
 merchant activation, live customer/cloud deletion and other branches are excluded.
 
 - Authorized branch: `feature/post-preview-qris-checkout`.
-- Last independently verified remote before this increment: `f1b2b4c594895e1e2e537bcfe7c402e83d8c251f` (PP-04.d3; push/ls-remote verified). CI `41308665185`: Linux state/native SUCCESS; Windows 297 run, 1 FAIL + 4 ERROR from timezone dependency/path-alias fixture. Corrective CI/fixture increment below; no runtime rollback or safety relaxation.
+- Last independently verified functional/test remote: `5ff093e15b7425542fe173082ca55adaf8d95f79` (push/ls-remote verified). CI `41309087008` all three jobs SUCCESS: Linux 297/297, Windows 297/297, native 41/41, zero failures/errors/skips; actual Code.gs VM 34 PASS. Runtime source is unchanged from `f1b2b4c594895e1e2e537bcfe7c402e83d8c251f`.
 - Original audited base: `b68e514dd57c989df47fa1b222d45f3f71c38347`.
-- Current micro-increment: **PP-04.d3.ci — Windows expanded Drive regression portability**. PP-04.d4 payment/authoritative ownership probes and native fixture mounting remain next; PP-04.d still IN_PROGRESS.
+- Current checkpoint: **PP-04.d1/d2/d3 + Windows CI correction verified and pushed; PP-04.d IN_PROGRESS**. Next is PP-04.d4 independent payment authorization/authoritative worker ownership and native mounting. No PP-05/06/06R/07 completion is claimed.
 - Overall: PP-00 dependency audit continuing; PP-01 private capture and isolated development UI implemented; PP-02 preview/freeze backend and all-design UI implemented, trusted local + read-only Drive readiness adapters implemented; payment/authoritative ownership readiness adapters unfinished; PP-03 protected CCP backend/native card components implemented but not mounted; PP-04 backend/API and native checkout synthetic fixture implemented; Sandbox/native payment remains unavailable until paid delivery is complete; PP-05/06/06R/07 NOT_STARTED.
 - This checkpoint travels with the implementation commit. Resolve its containing
   SHA using `git log -1 --format=%H`; after push independently compare `git
   ls-remote origin refs/heads/feature/post-preview-qris-checkout`. A commit cannot
   truthfully contain its own SHA. The next increment records this verified tip.
+
+## Verified continuation checkpoint — PP-04.d still incomplete
+
+All changes in this continuation were pushed only to the existing authorized
+branch, with remote SHA checked after each push. No merge, other branch push,
+force-push, default-branch operation, production/deployment, real merchant action,
+cloud/customer mutation or paper send occurred.
+
+| Increment | Verified source | CI / exact evidence |
+| --- | --- | --- |
+| PP-04.d1 lifecycle scheduler | `2dc2f07f91a4e042552ae63beb28d18c7f049d33` | `41307192307` all 3 SUCCESS; local 230 private/legacy + 41 native PASS |
+| PP-04.d2 freshness/local checks | `992fd52e9d576a8ac13e186552b57aba367ef60b` | `41307908892` all 3 SUCCESS; local 246 private/legacy + 41 native PASS |
+| PP-04.d3 read-only Drive | `f1b2b4c594895e1e2e537bcfe7c402e83d8c251f` | local 297 Python + 34 VM PASS; `41308665185` Linux/native SUCCESS, Windows 1 FAIL/4 ERROR retained |
+| Windows fixture/dependency correction | `5ff093e15b7425542fe173082ca55adaf8d95f79` | `41309087008` all 3 SUCCESS; Windows/Linux each 297 PASS, native 41 PASS, VM 34 PASS; zero skips |
+
+Counts overlap and must not be summed as unique full acceptance. The containing
+checkpoint commit changes documentation only; runtime/tests/workflow remain
+identical to verified `5ff093e`. Its own SHA is obtained from Git log/remote.
+All **112 complete PP cases remain NOT_RUN**; customer checkout is still disabled
+and NOT_READY_FOR_PHYSICAL_UAT. Code.gs remains source-only NOT_DEPLOYED, real
+Drive acceptance NOT_RUN; existing deployed support is an external authorization
+and verification gate, never a reason to call a mutating fallback.
+
+**Exact next micro-increment PP-04.d4:** implement independent authenticated
+payment-backend availability/authorization and trusted original camera/service/
+worker ownership checks, including unresolved legacy/PP visits. Reuse original
+BoothAuthenticator/PostPreviewClient, LaunchLease/PhotoJobs and existing recovery/
+occupancy journals; do not accept a GUI ready flag or turn public Advertising
+into free-booth proof. Integrate the local + read-only Drive + independent probes
+into the native synthetic CheckoutFixture. Native AsyncCamera uses a mailbox
+adapter rather than the v1 Camera handle shape; reuse the original cached-camera
+health adapter and preserve actual observation timestamps. Missing ownership/
+legacy state stays UNKNOWN. Test stale/suspended/restarted generations, another
+customer, unknown old finance, missing backend authorization and delayed replies
+before any new create. Keep all merchant/cloud/hardware gates disabled.
+
+After PP-04.d4 and remaining PP-04.d fault/CI gates, proceed to **PP-05** mandatory
+original 30-visible-second ticket screen + concurrent one-time same-ticket receipt,
+paid folder/URL binding and purchased-strip journals. Then PP-06, PP-06R and PP-07
+in order. They are unfinished software requirements, not merely hardware tests.
+No initial ticket, paid delivery, claim/isolation/refund or 112-case PASS was
+manufactured by these readiness/scheduler increments.
+
+Scratch logs are retained outside the checkout under `/workspace/work/` and are
+not a Git backup or customer deliverable. No local-only source change is intended
+at this checkpoint. Resume with clean status, current local/remote SHA inspection,
+this document and the exact affected AR/UAH contracts before implementing d4.
 
 ## PP-04.d3.ci — Windows coverage correction (1 November 2026)
 
@@ -41,7 +88,10 @@ remain byte-identical to PP-04.d3. Focused Linux `python tools/run_kiosk_unittes
  test_booth_sync test_post_preview_drive_readiness`: **34 PASS / 0 FAIL / 0 ERROR /
 0 SKIP**, 2.753s. Prior full 297 PASS/34 VM PASS keep their original functional
 source scope; no redundant full local rerun for this fixture/dependency correction.
-Matching-source Windows/Linux/native CI pending push; failed run is preserved.
+Corrective source `5ff093e15b7425542fe173082ca55adaf8d95f79` remote verified.
+CI `41309087008` all three jobs SUCCESS: Linux and Windows each **297 PASS /
+0 FAIL / 0 ERROR / 0 SKIP**, native **41 PASS / 0 FAIL / 0 ERROR / 0 SKIP**.
+Actual Code.gs VM **34 PASS**; earlier failed run is preserved.
 
 Next remains **PP-04.d4** independent authenticated payment-backend and original
 worker/occupancy readiness plus native fixture integration, then PP-05. Real
