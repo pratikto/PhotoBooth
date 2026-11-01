@@ -41,7 +41,7 @@ class OriginalMockClaimTests(unittest.TestCase):
         proof=frozen['ccp_offer'].qr_payload
         self.service.ccp_visible(frozen['ccp_offer'])
         v=self.service.begin_payment()
-        self.fixture.provider.state(v['attempts'][0]['provider_order_id'],'settlement')
+        self.fixture.provider.state(v['payment']['attempts'][0]['provider_order_id'],'settlement')
         self.service.check_payment('connectivity')
         self.fixture.ticket.prepare(self.service.lease)
         group=self.service.group

@@ -114,8 +114,8 @@ class OriginalMockIsolation:
                 return existing['operation_id']
             key=uuid.uuid4().hex
             self.ledger.db.execute('''INSERT INTO pp_isolation_ops
-                (draft_id,operation_id,booth_id,original_generation,financial_class,prepared_at)
-                VALUES(?,?,?,?,?,?)''',
+                (draft_id,operation_id,booth_id,original_generation,financial_class,state,prepared_at)
+                VALUES(?,?,?,?,?,'PREPARED',?)''',
                 (draft['draft_id'],key,booth_id,draft['generation'],financial,self.ledger.now()))
             self.ledger._event(draft['draft_id'],'ISOLATION_PREPARED')
             return key
