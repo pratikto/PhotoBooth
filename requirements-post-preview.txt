@@ -1,0 +1,2 @@
+# Optional post-preview synthetic encrypted-vault fixtures; no merchant activation.
+cryptography>=46,<50

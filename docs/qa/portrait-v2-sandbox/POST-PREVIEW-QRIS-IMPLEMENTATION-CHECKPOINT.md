@@ -13,16 +13,56 @@ worker safeguards remain binding. Production deployment, actual charges/refunds,
 merchant activation, live customer/cloud deletion and other branches are excluded.
 
 - Authorized branch: `feature/post-preview-qris-checkout`.
-- Last independently verified remote: `1c70ee3fb513329c712103148348eda87ee78e8f` (PP-01.d/PP-02.b private native UI; verified remote, CI run 41284159506 all three jobs SUCCESS).
+- Last independently verified remote: `aeab952935c8403dc2032812fad5886a9685f9ea` (PP-01.e inactivity; verified remote, CI run 41284460093 all three jobs SUCCESS).
 - Original audited base: `b68e514dd57c989df47fa1b222d45f3f71c38347`.
-- Current micro-increment: **PP-01.e — phase-aware private inactivity warnings and retirement**.
+- Current micro-increment: **PP-03.a — protected credential primitives and explicit OS support**.
 - Overall: PP-00 dependency audit continuing; PP-01 private capture and isolated development UI implemented; PP-02 preview/freeze backend and all-design UI implemented, real charge-readiness adapters NOT_IMPLEMENTED; PP-03..07 NOT_STARTED.
 - This checkpoint travels with the implementation commit. Resolve its containing
   SHA using `git log -1 --format=%H`; after push independently compare `git
   ls-remote origin refs/heads/feature/post-preview-qris-checkout`. A commit cannot
   truthfully contain its own SHA. The next increment records this verified tip.
 
-## PP-01.e — current inactivity policy and evidence
+## PP-03.a — current protected vault primitives and evidence
+
+`credential_vault.py`: Windows current-user DPAPI with order-scope optional entropy,
+UI_FORBIDDEN, bounded envelopes, no LOCAL_MACHINE broad scope, no plaintext/key-file
+fallback, allowlisted errors and ciphertext-redacted repr. Windows API buffers are
+zeroed/freed after use; this is not a claim to erase every CPython in-memory copy.
+Unsupported/headless Linux fails closed. Ubuntu Secret Service/TPM provisioning/
+adapter acceptance is still NOT_IMPLEMENTED, not assumed safe from mock tests.
+
+The explicitly fixture-only AES-GCM adapter uses injected in-memory test keys,
+random nonces and authenticated scope. It does not persist its key or claim OS
+security. `requirements-post-preview.txt` contains its optional dependency. Existing
+legacy capability hash/token flow was reviewed; it remains unchanged. Typed new
+CCP issuance/verifier/offer/persistence is next, not yet delivered by this primitive.
+No credential is displayed or payment accepted by this increment.
+
+Actual **7 new protector tests PASS / 0 FAIL / 0 SKIP**, including ciphertext/
+wrong-scope/key/tampering rejection, bounded inputs, redaction, original recovery
+with same fixture key and explicit unsupported-platform behavior. Fresh-venv
+combined group **145 PASS / 0 FAIL / 0 SKIP**, 17.169s. Windows CI executes actual
+DPAPI protect/unprotect/wrong-entropy tests; Linux executes unsupported behavior.
+New matching-source CI pending push. Prior idle CI 41284460093 all three jobs SUCCESS.
+No actual device/reinstall/key-loss or production security certification inferred.
+
+Broad regression re-run completed **1346 run / 1269 PASS / 0 FAIL / 77 SKIP**,
+316.199s. This worktree preceded the final idle/vault changes, so it is a baseline,
+not final-source PP-07 readiness. Skips: opt-in original GUI/audio and optional
+native palm assets; the opt-in GUI/audio group is now running separately with
+synthetic camera and dummy SDL audio. Never relabel skipped scenarios PASS.
+No complete PP-001..112 acceptance is established by these existing regressions.
+
+Changed: `photobooth/credential_vault.py`, `tests/test_credential_vault.py`, optional
+requirements, focused workflow and current documentation. No source credential,
+real customer photo, merchant call, production config, refund or live Drive change.
+Next **PP-03.b**: versioned original CCP ciphertext/verifier/TTL/rate-limit/offer
+journal bound to exact frozen purchase group, with wrong-kind/booth/draft checks,
+no raw token in DB/logs and no automatic decrypt/display on reboot. Then genuine
+private checkout-screen offer before provider payment, preserving later PP-04..07
+and unfinished claims/release/delivery/refund work. No physical-UAT readiness.
+
+## PP-01.e — previously delivered inactivity policy and evidence
 
 Configurable nonproduction phase policy: gallery/consent 90s; capture/review/
 per-design result/all-design preview 120s; warning 15s. These are pilot engineering
