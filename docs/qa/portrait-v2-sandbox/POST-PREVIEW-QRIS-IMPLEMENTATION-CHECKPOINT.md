@@ -1,5 +1,12 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — PP-05.d2d native original paid delivery page (CI pending)
+
+The **existing native checkout fixture**, not the production or legacy GUI, now continues automatically from the verified PAID ticket NEXT into the original paid folder/strip preparation worker. It then displays a native purchased-output result with the **actual verified customer folder URL** QR, separately labeled Drive upload progress (never assumes complete), paid print states and a one-time guarded `CETAK FOTO YANG SUDAH DIBAYAR` button. A transparent `CEK STATUS UPLOAD` checks only the same transaction. Bad Drive binding leaves PAID/OWED on the hold page with a `COBA SIAPKAN DELIVERY` retry; no duplicate provider charge or strip send. The original 30-second ticket and shared printer lane are unchanged. Native tests cover 800x1280 and 452x900 full original paid-ticket→Drive QR→print and offline Drive hold.
+
+**Important:** these new visual tests are synthetic/mocked. This is not a verified physical printer receipt or real Midtrans/Google Drive operation; safe closure/recovery PP-06 and PP-06R/PP-07 are still required before customer-ready UAT.
+
+
 ## 2 November 2026 — PP-05.d2c single-flight checkout-to-delivery service wiring (CI pending)
 
 **Integrated original synthetic purchase:** `PrivateCheckoutService` now has a separately injected paid-delivery owner; only exact same original SQLite entitlement/Drive worker and **the same receipt printer lane** may attach before checkout admission. When customer genuinely saw/dismissed the original Recovery Ticket, `prepare_paid_delivery` binds the original verified Drive transaction and stages exactly the already approved JPEGs/QR strips; `paid_delivery_status` polls worker evidence and `paid_print_next` submits the first remaining original PREPARED paid strip **at most once**. The source stays in `paid_delivery` with PAID/OWED, unresolved paper and uploaded files honestly reported. No parallel printer owner, alternative transaction or auto-reprint is added. Entire route still guarded as fixture/mock-only; no real Sandbox/UAT until recovery and safe release are implemented.

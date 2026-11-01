@@ -24,14 +24,15 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
     shot = widget_helpers.PrivateWidgetTests.shot
 
     @contextmanager
-    def booth(self, *, paid_ticket=False):
+    def booth(self, *, paid_ticket=False, paid_delivery=False):
         with tempfile.TemporaryDirectory() as directory, patch.dict(os.environ, {
                 'PHOTOBOOTH_V2_CHECKOUT_SANDBOX':'0', 'PHOTOBOOTH_V2_CHECKOUT_MOCK':'0',
                 'PHOTOBOOTH_V2_PRINT':'0', 'PHOTOBOOTH_V2_DRIVE':'0', 'PHOTOBOOTH_AUDIO':'0',
                 'PHOTOBOOTH_AD_VIDEO':'0', 'PHOTOBOOTH_FACE_TRIGGER':'0', 'PHOTOBOOTH_PALM_TRIGGER':'0'}):
             root = Path(directory)
             fixture = CheckoutFixture(root)
-            if paid_ticket: fixture.enable_paid_ticket()
+            if paid_ticket or paid_delivery: fixture.enable_paid_ticket()
+            if paid_delivery: fixture.enable_paid_delivery()
             camera = Mock()
             camera.read.return_value = np.zeros((32,48,3), dtype=np.uint8)
             camera.preview.return_value = None
@@ -208,3 +209,48 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
             self.assertEqual('SUBMITTED',fixture.service.ledger.db.execute(
                 'SELECT receipt_state FROM pp_ticket_presentations').fetchone()[0])
 
+
+    def test_native_paid_ticket_to_verified_drive_qr_and_original_single_print(self):
+        for size in ((800,1280),(452,900)):
+            with self.subTest(size=size), self.booth(paid_delivery=True) as (app,fixture):
+                Window.size=size
+                self.paid_ticket_screen(app,fixture)
+                self.click(app,'LANJUT • SIMPAN TIKET')
+                deadline=time.monotonic()+15
+                while time.monotonic()<deadline and app._photo_view.get('phase')!='paid_delivery':
+                    app._poll_photos();EventLoop.idle();time.sleep(.01)
+                self.assertEqual('paid_delivery',app._photo_view['phase'],app._photo_error)
+                self.assertEqual('PENDING_UPLOAD',app._photo_view['delivery']['upload_status'])
+                self.assertEqual('https://drive.google.com/drive/folders/syntheticPaidFolder123',
+                                 app._photo_view['delivery']['folder_url'])
+                self.assertEqual('OWED',app._photo_view['delivery']['service_status'])
+                self.click(app,'CETAK FOTO YANG SUDAH DIBAYAR')
+                deadline=time.monotonic()+10
+                while time.monotonic()<deadline and not fixture.paid_print_sends:
+                    app._poll_photos();EventLoop.idle();time.sleep(.01)
+                self.assertEqual(1,len(fixture.paid_print_sends))
+                self.settle(app)
+                self.assertEqual('SUBMITTED',app._photo_view['delivery']['print_states']['template_a'])
+                self.assertEqual(1,fixture.provider.charges)
+                self.assertFalse(app._photo_view['delivery']['physical_paper_verified'])
+                self.assertFalse(app._photo_view['fulfillment_authorized'])
+                self.click(app,'CEK STATUS UPLOAD')
+                self.settle(app)
+                self.assertEqual(1,len(fixture.paid_print_sends))
+                self.assertEqual('OWED',fixture.service.ledger.db.execute(
+                    'SELECT status FROM pp_paid_services').fetchone()[0])
+
+    def test_native_paid_drive_failure_does_not_offer_print_button(self):
+        with self.booth(paid_delivery=True) as (app,fixture):
+            Window.size=(452,900)
+            self.paid_ticket_screen(app,fixture)
+            fixture.drive.bind_transaction=lambda _: (_ for _ in ()).throw(OSError('offline'))
+            self.click(app,'LANJUT • SIMPAN TIKET')
+            deadline=time.monotonic()+10
+            while time.monotonic()<deadline:
+                app._poll_photos();EventLoop.idle();time.sleep(.01)
+                if app._photo_error:break
+            self.assertEqual('paid_hold',app._photo_view['phase'])
+            self.assertEqual([],fixture.paid_print_sends)
+            self.assertEqual('OWED',fixture.service.ledger.db.execute(
+                'SELECT status FROM pp_paid_services').fetchone()[0])

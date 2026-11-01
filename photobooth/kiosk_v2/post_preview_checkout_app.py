@@ -83,6 +83,14 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
                 self._ticket_window.retire()
             self.navigation.page = RESULT
             self._show()
+            if not outcome.error and self._photo_jobs.service.paid_delivery_enabled:
+                self._photo_submit('prepare_paid_delivery')
+            return True
+        if outcome.action in {'prepare_paid_delivery','paid_delivery_status','paid_print_next'}:
+            # Render the original paid obligation; never mark service completed
+            # because a printer transport or a Drive upload acknowledged bytes.
+            self.navigation.page = RESULT
+            self._show()
             return True
         if (phase == 'paid_hold' and not outcome.error
                 and outcome.action in {'begin_payment','check_payment','continue_payment'}
@@ -213,7 +221,63 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
         shell.add_widget(self._photo_message)
         self._update_ticket_countdown()
 
+
+    def _build_paid_delivery_page(self, canvas):
+        """Native MOCK-only purchased-output page; never a completed service claim."""
+        self._live_image = None
+        self._camera_texture = None
+        self._last_live_frame = self._last_preview = None
+        shell = self._frame(canvas, brand_height=65)
+        self._brand(shell, 'HASIL FOTO BERBAYAR', 'SIMULASI • STATUS DELIVERY ASLI')
+        data=self._photo_view.get('delivery') or {}
+        shell.add_widget(text_label(
+            'FOTO SUDAH DIBAYAR • KEWAJIBAN MASIH AKTIF',
+            size=17,height=55,color=GOLD))
+        url=data.get('folder_url')
+        if url:
+            from photobooth.qr_code import create_qr_image
+            try:
+                qr=create_qr_image(url,monochrome=True)
+            except (RuntimeError,ValueError,OSError):
+                qr=None
+            if qr is not None:
+                shell.add_widget(Image(texture=image_texture(qr),
+                                       fit_mode='contain',size_hint_y=None,height=225))
+        completed=data.get('drive_verified') is True
+        uploaded=data.get('upload_verified',0)
+        total=data.get('upload_total',0)
+        shell.add_widget(text_label(
+            ('Foto tersinkron di Drive' if completed else
+             'Upload Drive: '+str(uploaded)+' dari '+str(total)+' file terverifikasi'),
+            size=15,height=50,color=GOLD if completed else MUTED))
+        states=data.get('print_states') or {}
+        for template_id,state in states.items():
+            shell.add_widget(text_label(template_id+' • '+state,size=13,height=36,color=MUTED))
+        if data.get('needs_operator_review'):
+            shell.add_widget(text_label(
+                'Status cetak tidak pasti. Jangan cetak ulang otomatis.',
+                size=13,height=55,color=GOLD))
+        elif data.get('print_all_submitted'):
+            shell.add_widget(text_label(
+                'Data cetak terkirim. Kertas fisik harus diperiksa.',
+                size=13,height=45,color=MUTED))
+        outstanding=any(state=='PREPARED' for state in states.values())
+        shell.add_widget(self._photo_action(
+            'CETAK FOTO YANG SUDAH DIBAYAR',
+            lambda: self._photo_submit('paid_print_next'),
+            disabled=not outstanding))
+        shell.add_widget(self._photo_action(
+            'CEK STATUS UPLOAD',lambda: self._photo_submit('paid_delivery_status'),
+            variant='secondary'))
+        shell.add_widget(text_label(
+            'Status PAID/OWED dilindungi. Menutup UI tidak menghapus pesanan.',
+            size=12,height=48,color=MUTED))
+        self._photo_message=text_label(self._photo_error,size=13,height=55,color=GOLD)
+        shell.add_widget(self._photo_message)
+
     def _build_photo_page(self, canvas):
+        if self._photo_view.get('phase') == 'paid_delivery':
+            return self._build_paid_delivery_page(canvas)
         if self._photo_view.get('phase') in TICKET_PHASES:
             return self._build_ticket_page(canvas)
         if self._photo_view.get('phase') not in CHECKOUT_PHASES:
@@ -240,6 +304,9 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
                 lambda: self._photo_submit('begin_payment'), disabled=phase != 'checkout_ready'))
         elif phase == 'paid_hold':
             shell.add_widget(text_label('PEMBAYARAN SIMULASI TERVERIFIKASI', size=20, height=100, color=GOLD))
+            if view.get('ticket_dismissed') and self._photo_jobs.service.paid_delivery_enabled:
+                shell.add_widget(self._photo_action('COBA SIAPKAN DELIVERY',
+                    lambda: self._photo_submit('prepare_paid_delivery')))
             shell.add_widget(text_label(
                 ('Tiket sudah diberikan. Layanan foto masih menunggu cetak dan Drive.'
                  if view.get('ticket_dismissed') else
