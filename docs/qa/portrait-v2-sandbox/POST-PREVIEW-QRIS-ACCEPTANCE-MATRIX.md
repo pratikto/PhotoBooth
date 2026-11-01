@@ -1,6 +1,6 @@
 # Post-preview QRIS — acceptance and adversarial QA matrix
 
-**1 November 2026 | OWNER-APPROVED DESIGN | all 84 scenarios NOT_RUN.** This is a test specification, not an executed test report. Refer to [canonical decisions and 11 diagrams](POST-PREVIEW-QRIS-OWNER-APPROVED.md) and [security contract](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md). Existing AR-00–13 and UAH evidence is historical, not new-flow acceptance.
+**1 November 2026 | OWNER-APPROVED DESIGN | all 112 scenarios NOT_RUN.** This is a test specification, not an executed test report. Refer to [canonical decisions and 11 diagrams](POST-PREVIEW-QRIS-OWNER-APPROVED.md) and [security contract](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md). Existing AR-00–13 and UAH evidence is historical, not new-flow acceptance.
 
 ## PP-CAP — capture/retake (10)
 | ID | Scenario | Required outcome |
@@ -117,7 +117,7 @@ These tests are additional to PP-001..072. They specifically prevent the previou
 | PP-083 | Attempt-create timed out; provider Legacy /v2/charge idempotency-header behavior unknown | No unverified provider header or repeated POST; same original identity/status reconciliation |
 | PP-084 | Draft/QR1/QR2/PAID/ticket timestamps across restart and expiry | Different versioned TTL and 15-day/30-day anchors; no silent extension, deletion or mixing legacy 24h Sandbox claim rule |
 
-**Mapping check:** K01 privacy/ownership -> PP-HAND and PP-CRASH; K11 OWED/COMPOSED -> PP-PRINT and PP-DRIVE. `PP-PRIV` and `PP-OWED` are not standalone acceptance groups. All PP-001..084 remain NOT_RUN until newly implemented, executed and individually evidenced.
+**Mapping check:** K01 privacy/ownership -> PP-HAND and PP-CRASH; K11 OWED/COMPOSED -> PP-PRINT and PP-DRIVE. `PP-PRIV` and `PP-OWED` are not standalone acceptance groups. All PP-001..112 remain NOT_RUN until newly implemented, executed and individually evidenced.
 
 ### Mandatory ticket-screen parallelism — subassertions of PP-041/042/043/051/079/080, all NOT_RUN
 
@@ -130,6 +130,49 @@ These tests are additional to PP-001..072. They specifically prevent the previou
 
 **Historical UAH/BUG-027 test descriptions that require *no mandatory overlay on successful receipt* are legacy-version expectations and MUST NOT be used as acceptance assertions for the new post-preview route.** They remain unchanged as historical evidence until a separately authorized migration/change.
 
+## PP-REFUND/PROOF — new owner refund-first and lost-proof regressions (28 scenarios, all NOT_RUN)
+
+| ID | Simulated scenario / conflicting owner rule | Required outcome |
+| --- | --- | --- |
+| PP-085 | CCP genuinely visible/offered at first QRIS, later lost, original PAID service fully delivered | `NO_AUTO_REFUND_PROOF_LOST`; cannot self-restore old photos without valid capability; no blanket legal waiver |
+| PP-086 | Mandatory 30-visible-second ticket with full QR/code + same concurrent paper ticket, customer discards both, no independent service failure | No automatic refund solely from customer-lost proof; no operator tokenless media unlock |
+| PP-087 | First CCP never offered due prepay UI crash; original charge later independently PAID | Not labeled customer negligence; PAID/OWED and secure claim/remedy, no fake proof-presented evidence |
+| PP-088 | After PAID printer SUBMITTED but mandatory Recovery Ticket screen never rendered/never visibly displayed | Printer ACK is not genuine screen offer; preserve claim/remedy, no customer-forfeiture |
+| PP-089 | Customer lost genuinely offered ticket AND paid photo strips genuinely failed permanently | Do not refuse compensation on proof-loss ground; independently evaluate merchant service failure and refund |
+| PP-090 | Customer disappears after PAID; valid CCP exists; claim window/onscreen screen timer expires | No automatic refund merely on absence/expiry; retain paid/owed, lawful remedy and original claim rules |
+| PP-091 | Recovery-ticket receipt printer broken but same original 30s screen displayed, purchased photo strips can still be safely fulfilled | Do not auto-refund solely because paper ticket failed; still permit genuine service |
+| PP-092 | PAID original order, printer failed irrecoverably after bounded retry, worker safely fenced, provider refund enabled | Refund-first full original amount candidate exactly once, not operator money-back prerequisite |
+| PP-093 | PAID, paid customer Drive URL cannot be bound/verified after bounded recovery and refund channel enabled | PAID/OWED -> eligible full refund after safe cleanup; never issue false QR or duplicate print |
+| PP-094 | Corrupt/missing paid manifest makes purchased service impossible; no safe restoration | Independently verified unrecoverable merchant fault -> refund eligibility, preserve private photo evidence |
+| PP-095 | One photo strip SENDING/UNCERTAIN and paper may have emerged | No blind retry or blind auto-refund; physical outcome/worker fence classified, conditional review |
+| PP-096 | Three templates, some purchased strips already delivered, other outputs permanently fail | Full-goodwill-refund preference only when deterministically safe, valid merchant policy and bounded abuse controls; preserve partial paper truth |
+| PP-097 | QR1 and QR2 both freshly verified PAID on same frozen logical purchase, same merchant and exact amount | One service entitlement; refund the unambiguously excess settled attempt only, one original refund key |
+| PP-098 | Two QR attempts PAID but merchant/order/amount differ or conflict | No automatic refund or duplicate service; secure financial review |
+| PP-099 | Midtrans create/status PENDING, 404, UNKNOWN, CANCELLED unpaid, or EXPIRED unpaid | **No refund request**, original cancel/status reconciliation only |
+| PP-100 | Merchant GoPay QRIS POS Refund API not activated or disabled | No pretend auto-refund; `REFUND_REVIEW_REQUIRED` with redacted truthful support remedy |
+| PP-101 | QRIS refund window elapsed or issuer/acquirer/merchant balance makes provider refund ineligible | No refund API retry loop or false success; lawful approved support/manual remedy |
+| PP-102 | Provider account refund activation, documented API endpoint, status and refund_key semantics unknown | Production/refund API feature gate remains disabled; synthetic mocks do not authorize live money |
+| PP-103 | Forged CCP, vault compromise, mismatched provider settlement or suspected refund fraud | Security/finance HOLD, no private photo release, no automatic money return |
+| PP-104 | Permanent service fault triggers refund; app crashes before external refund POST | Durable unique original refund intent/key survives; continue/reconcile same original one only |
+| PP-105 | Provider refund POST response lost/timeout or webhook repeats | Reconcile SAME refund intent/key, do not issue second unique refund or double payout |
+| PP-106 | Provider accepts refund request but money remains in process | Only `REQUESTED`/`PROCESSING`, not `REFUND_CONFIRMED` nor claim funds in customer's balance |
+| PP-107 | Provider independently confirms original refund, then stale print callback arrives | No old photo-strip reprint, no fresh Drive release or duplicated grant; ledger remains auditable |
+| PP-108 | Refund intent races in-flight printer receipt or Drive upload worker | Fence/quarantine exact original work and physical paper possibilities; no blind refund/admission while unsafe |
+| PP-109 | Verified refund completed but old camera/print lease/backend ACK still uncertain | Booth remains `ADS_PROTECTED` / `ISOLATION_HOLD`; technician if needed, never free from financial status alone |
+| PP-110 | Customer checks refund status and receipt reference | Distinct state texts, authenticated/redacted reference, no fake contact/ETA, no media or credential leakage |
+| PP-111 | Multiple real paid attempts, original order IDs, partial/different refund provider references | Refund exactly the intended original settled provider charge; no cross-merchant or wrong-attempt payout |
+| PP-112 | Policy customer copy says "uang hangus, tidak pernah bisa refund" despite system failure or statutory rights | Reject blanket waiver; narrow proof-lost NO_AUTO_REFUND policy only; legal/provider/merchant gate required |
+
+### Acceptance rules for the new refund-specific matrix
+
+- 28 new tests are **additional** to PP-001..084; total is **112 unique proposed cases**, all NOT_RUN. Keep original 84 test descriptions and their historical scope intact.
+- No Midtrans actual payout is permitted in documentation or synthetic tests. Mock provider refund `REQUESTED`/`PROCESSING`/`CONFIRMED`/`UNKNOWN`/`REJECTED` and refund-key uncertainty; merchant-activated Sandbox/integration evidence is a separate approval gate.
+- Synthetic fixtures must not contain redeemable CCP/tickets, real user photos, merchant credentials or real payment bank data.
+- Screen receipt mandatory + concurrent one paper ticket remains PP-041/042/051/079/080 and **is not conditioned** on refund functionality.
+- `NO_AUTO_REFUND_PROOF_LOST` cannot be emitted unless genuine offer and no independently proven merchant failure are established. If the original photo purchase remains OWED due merchant defect, do not claim all obligations void.
+- Merchant/provider settlement, fulfillment, print worker fencing, refund authorization/eligibility and consumer-law policy are independent axes. Evidence incomplete -> REVIEW, not fake provider-confirmed success.
+- **No blanket legal forfeiture**: owner preference addresses automation for customer-lost proof alone, not enforceability of categorical no-refund standard terms.
+
 **External gates, all NOT_RUN:** physical POS80 receipt, partial paper, QR scanning and Windows/Ubuntu camera; genuine configured Midtrans Sandbox status and webhook; Google Drive sharing/retention/deletion; vault/OS key compromise, restart and reinstall; CCP/QRIS/ticket UX at 800x1280 and 452x900; merchant/support policy and AR-13 release; Android only if separately approved.
 
-**Integrity:** all new tests must begin as expected-fail / NOT_RUN, with fixture isolation and no real charge/refund/cloud deletion, then exact SHA/command/platform outcome. No historic AR/UAH CI PASS becomes POSTPAY PASS.
+**Integrity:** all 112 proposed new tests must begin as expected-fail / NOT_RUN, with fixture isolation and no real charge/refund/cloud deletion, then exact SHA/command/platform outcome. No historic AR/UAH CI PASS becomes POSTPAY PASS.
