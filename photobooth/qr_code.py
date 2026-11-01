@@ -165,7 +165,8 @@ def _render_qr(content: str, with_logo: bool, max_size: int | None,
 
 
 def create_qr_image(content: str, *, with_logo: bool = True,
-                    max_size: int | None = None, monochrome: bool = False) -> Image.Image:
+                    max_size: int | None = None, monochrome: bool = False,
+                    cache: bool = True) -> Image.Image:
     """Return a detached RGB QR image with the full logo exactly at its center.
 
     Args:
@@ -181,6 +182,8 @@ def create_qr_image(content: str, *, with_logo: bool = True,
             80 mm receipt allocation uses 384px; legacy footers use 210px.
         monochrome: Dither only the logo into black/white thermal dots. The
             standard digital/result-screen QR retains the approved accent colors.
+        cache: False for private customer credentials: reuse the exact renderer
+            without retaining content/bitmap in the recent folder-URL cache.
 
     Returns:
         An independent Pillow RGB image for a GUI or saved photo composition.
@@ -203,4 +206,7 @@ def create_qr_image(content: str, *, with_logo: bool = True,
     if max_size is not None and (isinstance(max_size, bool)
                                 or not isinstance(max_size, int) or max_size <= 0):
         raise ValueError("QR size must be a positive integer number of pixels.")
-    return _render_qr(content.strip(), with_logo, max_size, monochrome).copy()
+    if type(cache) is not bool:
+        raise ValueError('QR cache policy must be explicit boolean')
+    render = _render_qr if cache else _render_qr.__wrapped__
+    return render(content.strip(), with_logo, max_size, monochrome).copy()

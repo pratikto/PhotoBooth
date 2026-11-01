@@ -1,6 +1,7 @@
 """Original encrypted CCP fixtures; no paid claim/photo admission implied."""
 from dataclasses import replace
 import json
+import hmac
 import os
 from pathlib import Path
 import tempfile
@@ -65,12 +66,12 @@ class OriginalCCPTests(unittest.TestCase):
         offer = self.service.private_offer(self.lease)
         self.assertTrue(offer.qr_payload.startswith('MEONG:CCP:1:PB001:'))
         self.assertIsNone(self.row()['offered_at'])
-        self.assertNotIn(offer.qr_payload, repr(offer)+str(offer))
-        self.assertNotIn(offer.qr_payload.encode(), self.row()['ciphertext'])
-        self.assertNotIn(offer.qr_payload.encode(), self.ledger.db.execute('SELECT scope_json FROM pp_ccp_credentials').fetchone()[0].encode())
+        self.assertFalse(offer.qr_payload in repr(offer)+str(offer))
+        self.assertFalse(offer.qr_payload.encode() in self.row()['ciphertext'])
+        self.assertFalse(offer.qr_payload.encode() in self.ledger.db.execute('SELECT scope_json FROM pp_ccp_credentials').fetchone()[0].encode())
         for name in ('drafts.db', 'drafts.db-wal'):
             path = self.root/name
-            if path.exists(): self.assertNotIn(offer.qr_payload.encode(), path.read_bytes())
+            if path.exists(): self.assertFalse(offer.qr_payload.encode() in path.read_bytes())
 
     def test_idempotent_issue_and_restart_keep_exact_original_and_expiry(self):
         first = self.offer()
@@ -80,7 +81,7 @@ class OriginalCCPTests(unittest.TestCase):
         restarted = self.new_service(SyntheticAeadProtector(self.key, fixture=True))
         restarted.issue_once(self.lease)
         second = restarted.private_offer(self.lease)
-        self.assertEqual(first.qr_payload, second.qr_payload)
+        self.assertTrue(hmac.compare_digest(first.qr_payload, second.qr_payload))
         self.assertEqual(cipher, self.row()['ciphertext'])
         self.assertEqual(expiry, self.row()['expires_at'])
         self.assertEqual(1, self.ledger.db.execute("SELECT count(*) FROM pp_events WHERE event='CCP_CREATED'").fetchone()[0])

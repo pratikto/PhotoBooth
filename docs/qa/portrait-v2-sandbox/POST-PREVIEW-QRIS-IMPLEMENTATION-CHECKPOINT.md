@@ -13,16 +13,63 @@ worker safeguards remain binding. Production deployment, actual charges/refunds,
 merchant activation, live customer/cloud deletion and other branches are excluded.
 
 - Authorized branch: `feature/post-preview-qris-checkout`.
-- Last independently verified remote: `0baef564a19903ba36577cfd94262a457ce99fc1` (PP-03.a protector; verified remote, CI run 41284687081 all three jobs SUCCESS, including actual Windows DPAPI round trip).
+- Last independently verified remote: `5e1491d1f621332be5ba52e260650b50ce66cee8` (PP-03.b original CCP journal; verified remote, CI run 41285153968 all three jobs SUCCESS).
 - Original audited base: `b68e514dd57c989df47fa1b222d45f3f71c38347`.
-- Current micro-increment: **PP-03.b — original scoped CCP ciphertext/verifier/offer journal**.
+- Current micro-increment: **PP-03.c — private native CCP visibility component and uncached QR rendering**.
 - Overall: PP-00 dependency audit continuing; PP-01 private capture and isolated development UI implemented; PP-02 preview/freeze backend and all-design UI implemented, real charge-readiness adapters NOT_IMPLEMENTED; PP-03..07 NOT_STARTED.
 - This checkpoint travels with the implementation commit. Resolve its containing
   SHA using `git log -1 --format=%H`; after push independently compare `git
   ls-remote origin refs/heads/feature/post-preview-qris-checkout`. A commit cannot
   truthfully contain its own SHA. The next increment records this verified tip.
 
-## PP-03.b — current original CCP journal and evidence
+## PP-03.c — current private CCP visibility component and evidence
+
+Adds `PrivateCCPCard` and worker-side private QR rendering over the original
+independently decoded/branded QR renderer. Concrete reuse adjustment: existing
+`create_qr_image` caches recent contents/bitmaps; new explicit `cache=False` bypasses
+that cache for credentials while preserving the default public-folder behavior
+and the original renderer. No QR/secret bitmap is saved or logged by these tests.
+
+The card signals the original offer only after a current attached visible QR and
+full code fit the actual window. Unconstrained text height rejects clipped codes;
+loading/unattached/transparent/stale cards never count as offered. Retire/detach
+cancels callbacks, wipes code and QR texture, and drops the offer. Native tests
+connect the actual visible callback -> original PhotoJobs -> encrypted CCP offer
+journal, once, without blocking the GUI on SQLite. No payment/media/booth grant.
+This component is not yet mounted in the customer checkout route: the current
+private-preview launcher's payment remains disabled pending PP-04 integration.
+
+Actual focused QR/card/CCP group **25 PASS / 0 FAIL / 0 SKIP**, 5.842s; native
+private-flow/card/original QR/photo/navigation group **38 PASS / 0 FAIL / 0 SKIP**,
+13.809s. New 5 native card methods cover both portrait sizes, real private QR,
+shared-cache absence, invalid visibility/clipping/detach cleanup, and genuine
+renderer-to-worker-to-journal integration. CCP tests also avoid printing raw
+fixture proofs in failure diagnostics. Compile/diff checks PASS.
+
+Initial unpublished card test stalled because Kivy Window.parent is itself;
+reproduced explicitly and fixed by stopping ancestor traversal at Window and
+rejecting cycles. That run was interrupted, not PASS. Initial native environment
+also lacked optional cryptography (15 setup errors); installed the same declared
+extra as clean-venv/CI and reran successfully. No runtime safety guard was relaxed.
+
+Previous CCP journal CI 41285153968 all three jobs SUCCESS; current matching-source
+CI pending push. Baseline full 1269 PASS/77 SKIP and separate opt-in 120 PASS/3 SKIP
+retain their earlier worktree scope, not final PP-07 evidence. Remaining optional
+model/video conditions and real OS/device/merchant gates remain explicit.
+
+Changed: shared `qr_code.py` backward-compatible cache option, new native card,
+5 new card tests, redacted-proof assertions, desktop CI optional dependency/group,
+and current checkpoint notices. No default launcher, actual payment/provider,
+printer, Drive or legacy paid-first transition changes. Full 112 acceptance still
+NOT_RUN until complete integrated software/provider/device evidence exists.
+Next **PP-04.a**: versioned purchase-group/QR1..3 attempt journal, same-order create/
+404/unknown reconciliation and one service entitlement with synthetic provider
+fault tests. Integrate this card as the private pre-PAID checkout step only when
+provider attempt admission can require genuine CCP offer. Then PP-05 mandatory
+paid Recovery Ticket plus concurrent same-ticket print and verified Drive/strips,
+PP-06 safe proof/release/diagnostics, PP-06R refund, PP-07 complete candidate.
+
+## PP-03.b — previously delivered original CCP journal and evidence
 
 Additive **schema v3** stores one original pre-PAID CCP per frozen purchase group,
 with authenticated ciphertext, scope-bound hash verifier, booth/merchant/draft/
