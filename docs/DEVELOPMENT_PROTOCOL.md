@@ -1,3 +1,11 @@
+## 1 November 2026 — New post-preview QRIS branch precedence (DESIGN ONLY)
+
+**Owner-approved NEW-order target on `feature/post-preview-qris-checkout`:** every selected template captures 3 photos with max 1 retake, all template previews completed before **one** frozen checkout/QRIS; independent private Checkout Claim Proof offered before PAID for late settlement; original Recovery Ticket remains issued only **after** PAID (one print attempt or original 30-second on-screen fallback). Final photo printing waits for verified customer Drive link; uploads may be pending. Approved adaptive inactivity without hard cap during active capture, editing only before first QRIS attempt with used retake preserved, and controlled encrypted credential escrow for crash recovery. Active visitor can renew verified-expired unpaid QR1->QR2->QR3; departed visitor instead follows original-attempt cancel/reconciliation, no automatic renewal. Late PAID without live ownership -> PAID_UNCLAIMED/OWED; original claim only with proof and free booth; no public print/ticket/photo. No automatic refunds or uncertain paper job retries.
+
+**This new-order ordering supersedes historical QRIS-before-photo, PAID-to-camera and ticket-before-camera sequencing below ONLY for new orders on this branch.** Existing source/legacy prepaid PAID orders still require old photo-resume behavior and original AR/UAH safety. This is documented target **NOT IMPLEMENTED/NOT TESTED**; preserve original source evidence/CI status. [Approved 24 decisions and 11 flowcharts](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-OWNER-APPROVED.md) · [security](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [72 NOT_RUN QA cases](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md) · [Codex handover](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-CODEX-HANDOVER.md).
+
+---
+
 # Meong Photobooth development protocol
 
 ## Primary rule — 27 October 2026 owner instruction
