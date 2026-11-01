@@ -1,5 +1,8 @@
 # Autonomous QRIS and photo-session recovery — master engineering specification
 
+> **Latest post-preview owner correction, 1 November 2026 — DESIGN ONLY:** For a new authorized PAID visit, the **original Recovery Ticket QR/full code must ALWAYS appear on screen for 30 actually visible seconds with NEXT**, while one printer receipt for the **same ticket** is **dispatched concurrently**, even when the printer succeeds. No conditional fallback-only screen; no reissue, reprint on uncertain transport, or display to a retired visitor. Legacy paid-before-camera tests and fallback narratives below remain historical. [Canonical Flow G](POST-PREVIEW-QRIS-OWNER-APPROVED.md) · [state contract](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [84 PP NOT_RUN cases](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md).
+
+
 ## 1 November 2026 — Post-preview new-order scope (approved design, not source)
 
 The AR-00–AR-13 **financial/privacy/fulfillment safety invariants remain binding for every flow**. Their existing pay-before-camera sequence, token-before-camera, and unpaid checkout behavior describe the **legacy original prepaid order version**, not the new order version on `feature/post-preview-qris-checkout`. For new orders, the owner approved private 3-photo + max one retake **per selected template**, all previews before checkout, one frozen QRIS payment, private pre-PAID Checkout Claim Proof, original post-PAID Recovery Ticket, encrypted escrow, verified paid Drive link before purchased photo-strip printing, and original claim/PAID_UNCLAIMED after customer departure. No new customer is admitted before payment/worker isolation closure with original release/ACK. No legacy PAID grant is converted into an unpaid draft; no refund or print replay.
