@@ -5,6 +5,10 @@
 
 **Review method:** Compare original 24 owner decisions/11 Mermaid flows with AR-00–13, UAH-001–050, Midtrans provider research, existing dedicated Sandbox, BUG-026/027/028, UX-07 readiness/paid printer, Drive folder layout, README/AGENTS/development protocol, current branch/HEAD and all changed Markdown references. Match conflicts to new acceptance tests rather than recycling historical CI success.
 
+## Subsequent owner correction — mandatory concurrent screen and paper ticket (new-order only)
+
+On 1 November 2026, after the 20-finding contradiction audit, the owner **changed** the ticket policy for new post-preview orders: **ALWAYS display the original Recovery Ticket QR/full code in a visible 30-second + NEXT screen while concurrently dispatching exactly one paper ticket of that same original credential**, regardless of printer success. Historical printer-failure-only fallback and healthy-printer 'no screen' conclusions apply only to legacy paid-first source/UAH. The 84 acceptance scenarios were updated (especially PP-041/042/051/079/080), remain NOT_RUN, and no source/device changes occurred. Ticket transport SUBMITTED still is not proof paper was received.
+
 ## A. Findings addressed by source-of-truth documents
 
 | Finding | Severity | Original contradiction | Documentation correction | Closure status |
