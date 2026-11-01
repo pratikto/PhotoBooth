@@ -1,5 +1,10 @@
 # Post-preview QRIS implementation checkpoint
 
+## 1 November 2026 — PP-05.c3b after-publish manifest correction (new; CI pending)
+
+CI run `41320578133`: native desktop SUCCESS, Linux **383 tests / 3 ERROR**, Windows cancelled. All three new paid strip cases reached the original successful output compositor but failed recording `paid_strip_bindings` because original `publish_output` reloads `tx.manifest` from durable storage, discarding the empty map just initialized before output. The correction uses `setdefault` **after** the trusted publish/record step so a resumed original manifest has an immutable per-design binding. No photo/QR hash guard, printing, Drive ACL or payment authorization has been relaxed. These tests/real external provider gates remain NOT_RUN for full PP acceptance until rerun succeeds.
+
+
 ## 1 November 2026 — PP-05.c3b verified URL paid strip composition (new; CI pending)
 
 Use the byte-validated original paid media import and **one original authenticated, verified customer Drive URL** to compose 640×1920 purchased strips, one per selected design with its own frozen copy count. `OriginalPaidStripPreparer` records the immutable paid source-photo/retake, URL and original entitlement binding and inserts one durable `pp_paid_strip_jobs` PREPARED intent per design. It reuses the existing `publish_output` and `record_output` journal, recovers only exact STAGED outputs and **does not replay an existing or uncertain output**. After original media and jobs are durable, it enables the paid manifest's background Drive upload intent; no actual uploads, physical printing, refunds, or customer payment activation are performed by this code.

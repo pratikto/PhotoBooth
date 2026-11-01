@@ -126,7 +126,9 @@ class OriginalPaidStripPreparer:
                                 folder_url=service['folder_url'],mirror_photos=True)
                         publish_output(store,tx,plan,photos,render)
                         store.record_output(tx,plan.session_id,photos,output)
-                    tx.manifest['paid_strip_bindings'][plan.session_id]=binding
+                    # publish_output reloads the durable manifest; create the
+                    # exact-bound field after that verified staged/committed step.
+                    tx.manifest.setdefault('paid_strip_bindings',{})[plan.session_id]=binding
                     store._write_manifest(tx)
                     intent=tx.manifest['output_intents'][plan.session_id]
                     output_sha=intent['sha256']
