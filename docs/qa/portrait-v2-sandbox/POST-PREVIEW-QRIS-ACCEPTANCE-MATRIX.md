@@ -1,6 +1,6 @@
 # Post-preview QRIS — acceptance and adversarial QA matrix
 
-**1 November 2026 | OWNER-APPROVED DESIGN | all 72 scenarios NOT_RUN.** This is a test specification, not an executed test report. Refer to [canonical decisions and 11 diagrams](POST-PREVIEW-QRIS-OWNER-APPROVED.md) and [security contract](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md). Existing AR-00–13 and UAH evidence is historical, not new-flow acceptance.
+**1 November 2026 | OWNER-APPROVED DESIGN | all 84 scenarios NOT_RUN.** This is a test specification, not an executed test report. Refer to [canonical decisions and 11 diagrams](POST-PREVIEW-QRIS-OWNER-APPROVED.md) and [security contract](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md). Existing AR-00–13 and UAH evidence is historical, not new-flow acceptance.
 
 ## PP-CAP — capture/retake (10)
 | ID | Scenario | Required outcome |
@@ -97,6 +97,27 @@
 | PP-070 | Valid proof when booth finally free | Fresh verification, original claim |
 | PP-071 | New visitor arrives during old worker uncertainty | Neutral HOLD |
 | PP-072 | Expired credential and paid liability | No illicit reveal, no erased OWED |
+
+## PP-CONFLICT — cross-document contradiction regression (12, all NOT_RUN)
+
+These tests are additional to PP-001..072. They specifically prevent the previously discovered policy/diagram contradictions from turning into unsafe runtime behavior.
+
+| ID | Conflicting edge / failure injection | Required outcome |
+| --- | --- | --- |
+| PP-073 | QR1 verified expired unpaid while same customer requests continuation | QR2 via its own guarded provider create; master flow does **not** force Advertising |
+| PP-074 | USER_CANCEL with verified cancelled/unpaid while customer remains in front of camera | Persist cancel intent and close safely; **never** QR2/QR3 |
+| PP-075 | App minimized while live QRIS PENDING, no cancel action | Privacy fence only; do not invent financial cancellation or renewed order |
+| PP-076 | Inactivity warning during valid camera countdown or ongoing write/compose | Active work not abandoned; retained original capture/retake quota |
+| PP-077 | Restart after terminal unpaid but stale camera/file worker active | No new visitor before exact quiescence, fence and durable release ACK |
+| PP-078 | Restart during paid authorized upload while a photo print is UNCERTAIN | Resume only idempotent upload; retain paid/print obligations; no blind print or unsafe release |
+| PP-079 | Ticket receipt already SUBMITTED; polling/restart/returning claimant | Do not automatically re-display or reset original fallback; preserve presentation journal |
+| PP-080 | Live paid owner has intact original booth lease, no CCP scan | Go directly to original Recovery Ticket; no extra mandatory claim step |
+| PP-081 | Precharge sees unclaimed valid READY folder, but exact folder binding fails after PAID | No paid strip or invented QR; PAID/OWED retained; no unpaid READY consumption |
+| PP-082 | Legacy Sandbox Drive OFF vs new purchased synthetic verified-link profile | Existing BUG-027/028 profile unchanged; isolated fake link never represented as real cloud evidence |
+| PP-083 | Attempt-create timed out; provider Legacy /v2/charge idempotency-header behavior unknown | No unverified provider header or repeated POST; same original identity/status reconciliation |
+| PP-084 | Draft/QR1/QR2/PAID/ticket timestamps across restart and expiry | Different versioned TTL and 15-day/30-day anchors; no silent extension, deletion or mixing legacy 24h Sandbox claim rule |
+
+**Mapping check:** K01 privacy/ownership -> PP-HAND and PP-CRASH; K11 OWED/COMPOSED -> PP-PRINT and PP-DRIVE. `PP-PRIV` and `PP-OWED` are not standalone acceptance groups. All PP-001..084 remain NOT_RUN until newly implemented, executed and individually evidenced.
 
 **External gates, all NOT_RUN:** physical POS80 receipt, partial paper, QR scanning and Windows/Ubuntu camera; genuine configured Midtrans Sandbox status and webhook; Google Drive sharing/retention/deletion; vault/OS key compromise, restart and reinstall; CCP/QRIS/ticket UX at 800x1280 and 452x900; merchant/support policy and AR-13 release; Android only if separately approved.
 
