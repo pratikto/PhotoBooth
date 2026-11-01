@@ -58,6 +58,26 @@ class VerifiedCCPScope:
 
 
 class OriginalCCPService:
+    KIND = 'CCP'
+    OFFER_TYPE = PendingCCPOffer
+    VERIFIED_TYPE = VerifiedCCPScope
+    POLICY_VERSION = 'post-preview-ccp-pilot-v1'
+
+    @property
+    def _table(self):
+        # Fixed internal profiles only; never a request-derived SQL identifier.
+        return {'CCP':'pp_ccp_credentials','RECOVERY':'pp_ticket_credentials'}[self.KIND]
+
+    @property
+    def _event_prefix(self):
+        return 'CCP' if self.KIND == 'CCP' else 'TICKET'
+
+    def _anchor(self, intent):
+        return intent['prepared_at']
+
+    def _after_visible_locked(self, lease, offer, now):
+        pass
+
     def __init__(self, ledger, protector, merchant_id, *, policy=None,
                  allow_synthetic=False, monotonic=time.monotonic):
         identifier(merchant_id)
@@ -87,7 +107,7 @@ class OriginalCCPService:
                                          (lease.draft_id,)).fetchone()
         if not intent or intent['phase'] != 'CREATE_PREPARED':
             raise DraftHeld('Original immutable checkout intent required')
-        scope = {'kind': 'CCP', 'version': 1, 'order_version': ORDER_VERSION,
+        scope = {'kind': self.KIND, 'version': 1, 'order_version': ORDER_VERSION,
                  'merchant_id': self.merchant_id, 'booth_id': lease.booth_id,
                  'draft_id': lease.draft_id, 'purchase_group_id': intent['purchase_group_id'],
                  'contract_sha256': intent['contract_sha256']}
@@ -109,38 +129,39 @@ class OriginalCCPService:
             group = intent['purchase_group_id']
             now = self._now()
             scope_json = canonical(scope)
-            row = self.ledger.db.execute('SELECT * FROM pp_ccp_credentials WHERE purchase_group_id=?',
+            row = self.ledger.db.execute(f'SELECT * FROM {self._table} WHERE purchase_group_id=?',
                                           (group,)).fetchone()
             if row:
                 self._live(row, now)
                 if row['scope_json'] != scope_json:
                     raise VaultUnavailable('Original claim scope changed')
-                return {'purchase_group_id': group, 'kind': 'CCP', 'expires_at': row['expires_at']}
-            if self.ledger.db.execute("SELECT 1 FROM pp_events WHERE draft_id=? AND event='CCP_CREATED'",
-                                       (lease.draft_id,)).fetchone():
+                return {'purchase_group_id': group, 'kind': self.KIND, 'expires_at': row['expires_at']}
+            if self.ledger.db.execute('SELECT 1 FROM pp_events WHERE draft_id=? AND event=?',
+                                       (lease.draft_id,self._event_prefix+'_CREATED')).fetchone():
                 raise VaultUnavailable('Original claim escrow is missing; no reissue')
-            expires = intent['prepared_at']+self.policy.lifetime_seconds
-            if not intent['prepared_at'] <= now < expires:
+            anchor = self._anchor(intent)
+            expires = anchor+self.policy.lifetime_seconds
+            if not anchor <= now < expires:
                 raise VaultUnavailable('Original claim issue window expired')
-            payload = f"MEONG:CCP:1:{lease.booth_id}:{group}:"+secrets.token_urlsafe(32)
+            payload = f"MEONG:{self.KIND}:1:{lease.booth_id}:{group}:"+secrets.token_urlsafe(32)
             protected = self.protector.protect(payload.encode('utf-8'), scope_json.encode('utf-8'))
             if (not isinstance(protected, ProtectedCredential)
                     or protected.protector_id != self.protector.protector_id
                     or not isinstance(protected.ciphertext, bytes) or not 0 < len(protected.ciphertext) <= 65536):
                 raise VaultUnavailable('Original claim escrow could not be protected')
-            self.ledger.db.execute('''INSERT INTO pp_ccp_credentials
+            self.ledger.db.execute(f'''INSERT INTO {self._table}
                 (purchase_group_id,booth_id,merchant_id,scope_json,verifier,protector_id,ciphertext,
                  issued_at,expires_at,policy_version,window_at) VALUES(?,?,?,?,?,?,?,?,?,?,?)''',
                 (group, lease.booth_id, self.merchant_id, scope_json, self._verifier(scope_json, payload),
-                 protected.protector_id, protected.ciphertext, now, expires, 'post-preview-ccp-pilot-v1', now))
-            self.ledger._event(lease.draft_id, 'CCP_CREATED')
-            return {'purchase_group_id': group, 'kind': 'CCP', 'expires_at': expires}
+                 protected.protector_id, protected.ciphertext, now, expires, self.POLICY_VERSION, now))
+            self.ledger._event(lease.draft_id, self._event_prefix+'_CREATED')
+            return {'purchase_group_id': group, 'kind': self.KIND, 'expires_at': expires}
 
     def private_offer(self, lease):
         """Decrypt only for a live current checkout, with an in-memory render permit."""
         with self.ledger.write():
             scope, intent = self._scope(lease)
-            row = self.ledger.db.execute('SELECT * FROM pp_ccp_credentials WHERE purchase_group_id=?',
+            row = self.ledger.db.execute(f'SELECT * FROM {self._table} WHERE purchase_group_id=?',
                                           (intent['purchase_group_id'],)).fetchone()
             self._live(row, self._now())
             if row['scope_json'] != canonical(scope):
@@ -152,7 +173,7 @@ class OriginalCCPService:
                 raise VaultUnavailable('Original claim escrow is unavailable') from None
             if not hmac.compare_digest(row['verifier'], self._verifier(row['scope_json'], payload)):
                 raise VaultUnavailable('Original claim verifier mismatch')
-            offer = PendingCCPOffer(uuid.uuid4().hex, intent['purchase_group_id'], lease.generation, payload)
+            offer = self.OFFER_TYPE(uuid.uuid4().hex, intent['purchase_group_id'], lease.generation, payload)
             with self._privacy_lock:
                 if self._hidden:
                     raise VaultUnavailable('Original private presentation has retired')
@@ -170,16 +191,17 @@ class OriginalCCPService:
                     or offer.purchase_group_id != intent['purchase_group_id']
                     or not 0 <= self.monotonic()-entry[1] <= self.policy.offer_permit_seconds):
                 raise VaultUnavailable('Original private render permit expired or retired')
-            row = self.ledger.db.execute('SELECT * FROM pp_ccp_credentials WHERE purchase_group_id=?',
+            row = self.ledger.db.execute(f'SELECT * FROM {self._table} WHERE purchase_group_id=?',
                                           (intent['purchase_group_id'],)).fetchone()
             now = self._now()
             self._live(row, now)
             if row['scope_json'] != canonical(scope):
                 raise VaultUnavailable('Original claim scope changed')
             if row['offered_at'] is None:
-                self.ledger.db.execute('UPDATE pp_ccp_credentials SET offered_at=? WHERE purchase_group_id=?',
+                self.ledger.db.execute(f'UPDATE {self._table} SET offered_at=? WHERE purchase_group_id=?',
                                        (now, intent['purchase_group_id']))
-                self.ledger._event(lease.draft_id, 'CCP_OFFERED')
+                self.ledger._event(lease.draft_id, 'CCP_OFFERED' if self.KIND == 'CCP' else 'TICKET_QR_VISIBLE')
+            self._after_visible_locked(lease, offer, now)
             return row['offered_at'] if row['offered_at'] is not None else now
 
     def verify(self, purchase_group_id, booth_id, payload):
@@ -189,7 +211,7 @@ class OriginalCCPService:
         allowed = False
         scope = None
         with self.ledger.write():
-            row = self.ledger.db.execute('SELECT * FROM pp_ccp_credentials WHERE purchase_group_id=?',
+            row = self.ledger.db.execute(f'SELECT * FROM {self._table} WHERE purchase_group_id=?',
                                           (purchase_group_id,)).fetchone()
             now = self._now()
             if row:
@@ -197,25 +219,25 @@ class OriginalCCPService:
                 if now-window >= self.policy.window_seconds:
                     window, attempts = now, 0
                 shape = (isinstance(payload, str) and len(payload) <= 256 and
-                         re.fullmatch(r'MEONG:CCP:1:[A-Za-z0-9_-]{1,64}:[a-f0-9]{32}:[A-Za-z0-9_-]{43}', payload))
+                         re.fullmatch(r'MEONG:'+re.escape(self.KIND)+r':1:[A-Za-z0-9_-]{1,64}:[a-f0-9]{32}:[A-Za-z0-9_-]{43}', payload))
                 candidate = self._verifier(row['scope_json'], payload) if shape else '0'*64
                 allowed = (row['booth_id'] == booth_id and row['merchant_id'] == self.merchant_id
                     and not row['revoked'] and row['issued_at'] <= now < row['expires_at']
                     and window <= now and attempts < self.policy.max_attempts
                     and hmac.compare_digest(row['verifier'], candidate))
-                self.ledger.db.execute('UPDATE pp_ccp_credentials SET attempts=?,window_at=? WHERE purchase_group_id=?',
+                self.ledger.db.execute(f'UPDATE {self._table} SET attempts=?,window_at=? WHERE purchase_group_id=?',
                     (attempts if allowed else attempts+1, window, purchase_group_id))
                 if allowed: scope = json.loads(row['scope_json'])
         if not allowed:
             raise PermissionError('Original Checkout Claim Proof required')
-        return VerifiedCCPScope(purchase_group_id, booth_id, scope['draft_id'])
+        return self.VERIFIED_TYPE(purchase_group_id, booth_id, scope['draft_id'])
 
     def revoke(self, lease):
         with self.ledger.write():
             scope, intent = self._scope(lease)
-            self.ledger.db.execute('UPDATE pp_ccp_credentials SET revoked=1 WHERE purchase_group_id=?',
+            self.ledger.db.execute(f'UPDATE {self._table} SET revoked=1 WHERE purchase_group_id=?',
                                    (intent['purchase_group_id'],))
-            self.ledger._event(lease.draft_id, 'CCP_REVOKED')
+            self.ledger._event(lease.draft_id, self._event_prefix+'_REVOKED')
         self._offers.clear()
 
     def hide_private(self):

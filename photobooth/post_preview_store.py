@@ -61,7 +61,7 @@ class PostPreviewStore:
             singleton INTEGER PRIMARY KEY CHECK(singleton=1), version INTEGER NOT NULL);
           INSERT OR IGNORE INTO pp_schema VALUES(1,1);
         ''')
-        if self.db.execute('SELECT version FROM pp_schema').fetchone()[0] not in (1, 2, 3, 4, 5):
+        if self.db.execute('SELECT version FROM pp_schema').fetchone()[0] not in (1, 2, 3, 4, 5, 6):
             self.db.close()
             raise DraftHeld('Unsupported private draft schema')
         self.db.executescript('''
@@ -208,6 +208,118 @@ class PostPreviewStore:
         if missing_inbox:
             self.db.close()
             raise DraftHeld('Original notification journal is unavailable')
+
+        missing_paid = False
+        with self.write():
+            version = self.db.execute('SELECT version FROM pp_schema').fetchone()[0]
+            if version < 6:
+                self.db.execute('''CREATE TABLE pp_ticket_credentials (
+                    purchase_group_id TEXT PRIMARY KEY REFERENCES pp_purchase_finance(purchase_group_id),
+                    booth_id TEXT NOT NULL, merchant_id TEXT NOT NULL,
+                    scope_json TEXT NOT NULL, verifier TEXT NOT NULL UNIQUE,
+                    protector_id TEXT NOT NULL, ciphertext BLOB NOT NULL,
+                    issued_at REAL NOT NULL, expires_at REAL NOT NULL,
+                    policy_version TEXT NOT NULL, offered_at REAL,
+                    attempts INTEGER NOT NULL DEFAULT 0, window_at REAL NOT NULL,
+                    revoked INTEGER NOT NULL DEFAULT 0 CHECK(revoked IN (0,1)))''')
+                self.db.execute('''CREATE TABLE pp_ticket_presentations (
+                    purchase_group_id TEXT PRIMARY KEY REFERENCES pp_ticket_credentials(purchase_group_id),
+                    presentation_id TEXT NOT NULL UNIQUE, receipt_job_id TEXT NOT NULL UNIQUE,
+                    screen_state TEXT NOT NULL DEFAULT 'NOT_OFFERED'
+                      CHECK(screen_state IN ('NOT_OFFERED','VISIBLE','DISMISSED')),
+                    shown_at REAL, dismissed_at REAL, render_permit_id TEXT,
+                    receipt_state TEXT NOT NULL DEFAULT 'PREPARED' CHECK(receipt_state IN
+                      ('PREPARED','SENDING','SUBMITTED','NOT_SENT','FAILED','UNCERTAIN')),
+                    receipt_updated_at REAL)''')
+                self.db.execute('''CREATE TABLE pp_paid_services (
+                    purchase_group_id TEXT PRIMARY KEY REFERENCES pp_purchase_finance(purchase_group_id),
+                    service_id TEXT NOT NULL UNIQUE, entitlement_id TEXT NOT NULL UNIQUE,
+                    contract_sha256 TEXT NOT NULL, retention_anchor REAL NOT NULL,
+                    status TEXT NOT NULL DEFAULT 'OWED' CHECK(status IN ('OWED','COMPLETED','REVIEW')),
+                    transaction_id TEXT UNIQUE, folder_id TEXT UNIQUE, folder_url TEXT,
+                    drive_state TEXT NOT NULL DEFAULT 'NONE'
+                      CHECK(drive_state IN ('NONE','PREPARED','VERIFIED','UNKNOWN','UPLOADED')),
+                    worker_generation INTEGER NOT NULL DEFAULT 1)''')
+                self.db.execute('''CREATE TABLE pp_paid_strip_jobs (
+                    purchase_group_id TEXT NOT NULL REFERENCES pp_paid_services(purchase_group_id),
+                    template_id TEXT NOT NULL, job_id TEXT NOT NULL UNIQUE,
+                    copies INTEGER NOT NULL CHECK(copies BETWEEN 1 AND 9),
+                    output_path TEXT NOT NULL, output_sha256 TEXT NOT NULL,
+                    state TEXT NOT NULL DEFAULT 'PREPARED' CHECK(state IN
+                      ('PREPARED','SENDING','SUBMITTED','UNCERTAIN','NOT_SENT')),
+                    updated_at REAL NOT NULL,
+                    PRIMARY KEY(purchase_group_id,template_id))''')
+                self.db.execute('''CREATE TRIGGER pp_ticket_identity_immutable
+                    BEFORE UPDATE OF purchase_group_id,booth_id,merchant_id,scope_json,verifier,
+                    protector_id,ciphertext,issued_at,expires_at,policy_version ON pp_ticket_credentials
+                    BEGIN SELECT RAISE(ABORT,'Original paid ticket is immutable'); END''')
+                self.db.execute('''CREATE TRIGGER pp_ticket_requires_paid
+                    BEFORE INSERT ON pp_ticket_credentials WHEN NOT EXISTS (
+                      SELECT 1 FROM pp_purchase_finance f JOIN pp_checkout_intents i USING(purchase_group_id)
+                        JOIN pp_drafts d ON d.draft_id=i.draft_id
+                      WHERE f.purchase_group_id=NEW.purchase_group_id AND f.entitlement_id IS NOT NULL
+                        AND f.merchant_id=NEW.merchant_id AND d.booth_id=NEW.booth_id)
+                    BEGIN SELECT RAISE(ABORT,'Original paid ticket entitlement required'); END''')
+                self.db.execute('''CREATE TRIGGER pp_ticket_presentation_identity_immutable
+                    BEFORE UPDATE OF purchase_group_id,presentation_id,receipt_job_id ON pp_ticket_presentations
+                    BEGIN SELECT RAISE(ABORT,'Original ticket presentation is immutable'); END''')
+                self.db.execute('''CREATE TRIGGER pp_ticket_screen_no_replay
+                    BEFORE UPDATE OF screen_state ON pp_ticket_presentations
+                    WHEN (OLD.screen_state='VISIBLE' AND NEW.screen_state='NOT_OFFERED')
+                      OR (OLD.screen_state='DISMISSED' AND NEW.screen_state!='DISMISSED')
+                    BEGIN SELECT RAISE(ABORT,'Original ticket screen cannot replay'); END''')
+                self.db.execute('''CREATE TRIGGER pp_ticket_receipt_no_replay
+                    BEFORE UPDATE OF receipt_state ON pp_ticket_presentations
+                    WHEN (OLD.receipt_state!='PREPARED' AND NEW.receipt_state='PREPARED')
+                      OR (OLD.receipt_state IN ('SUBMITTED','UNCERTAIN','NOT_SENT','FAILED')
+                          AND NEW.receipt_state!=OLD.receipt_state)
+                    BEGIN SELECT RAISE(ABORT,'Original ticket receipt cannot replay'); END''')
+                self.db.execute('''CREATE TRIGGER pp_paid_strip_identity_immutable
+                    BEFORE UPDATE OF purchase_group_id,template_id,job_id,copies,output_path,
+                    output_sha256 ON pp_paid_strip_jobs
+                    BEGIN SELECT RAISE(ABORT,'Original purchased strip intent is immutable'); END''')
+                self.db.execute('''CREATE TRIGGER pp_paid_strip_no_replay
+                    BEFORE UPDATE OF state ON pp_paid_strip_jobs
+                    WHEN (OLD.state!='PREPARED' AND NEW.state='PREPARED')
+                      OR (OLD.state IN ('SUBMITTED','UNCERTAIN','NOT_SENT') AND NEW.state!=OLD.state)
+                    BEGIN SELECT RAISE(ABORT,'Original purchased strip cannot replay'); END''')
+                self.db.execute('''CREATE TRIGGER pp_service_paid_binding
+                    BEFORE INSERT ON pp_paid_services WHEN NOT EXISTS (
+                      SELECT 1 FROM pp_purchase_finance f JOIN pp_checkout_intents i
+                        ON i.purchase_group_id=f.purchase_group_id
+                      WHERE f.purchase_group_id=NEW.purchase_group_id
+                        AND f.entitlement_id=NEW.entitlement_id
+                        AND i.contract_sha256=NEW.contract_sha256
+                        AND f.paid_first_observed_at=NEW.retention_anchor)
+                    BEGIN SELECT RAISE(ABORT,'Original verified entitlement required'); END''')
+                self.db.execute('''CREATE TRIGGER pp_paid_service_identity_immutable
+                    BEFORE UPDATE OF purchase_group_id,service_id,entitlement_id,contract_sha256,
+                    retention_anchor ON pp_paid_services
+                    BEGIN SELECT RAISE(ABORT,'Original paid service is immutable'); END''')
+                self.db.execute('''CREATE TRIGGER pp_paid_transaction_immutable
+                    BEFORE UPDATE OF transaction_id ON pp_paid_services
+                    WHEN OLD.transaction_id IS NOT NULL AND NEW.transaction_id IS NOT OLD.transaction_id
+                    BEGIN SELECT RAISE(ABORT,'Original paid transaction is immutable'); END''')
+                self.db.execute('''CREATE TRIGGER pp_paid_folder_immutable
+                    BEFORE UPDATE OF folder_id,folder_url ON pp_paid_services
+                    WHEN OLD.folder_id IS NOT NULL AND
+                      (NEW.folder_id IS NOT OLD.folder_id OR NEW.folder_url IS NOT OLD.folder_url)
+                    BEGIN SELECT RAISE(ABORT,'Original paid folder is immutable'); END''')
+                self.db.execute('UPDATE pp_schema SET version=6')
+            else:
+                required = {
+                    'pp_ticket_credentials': {'purchase_group_id','scope_json','verifier','ciphertext','offered_at','expires_at'},
+                    'pp_ticket_presentations': {'purchase_group_id','presentation_id','receipt_job_id','screen_state','receipt_state','render_permit_id'},
+                    'pp_paid_services': {'purchase_group_id','service_id','entitlement_id','contract_sha256','status','worker_generation'},
+                    'pp_paid_strip_jobs': {'purchase_group_id','template_id','job_id','copies','output_sha256','state'},
+                }
+                for table, columns in required.items():
+                    actual = {r['name'] for r in self.db.execute('PRAGMA table_info('+table+')')}
+                    if not columns <= actual:
+                        missing_paid = True
+        if missing_paid:
+            self.db.close()
+            raise DraftHeld('Original paid delivery journal is unavailable')
 
     def close(self):
         with self.lock:

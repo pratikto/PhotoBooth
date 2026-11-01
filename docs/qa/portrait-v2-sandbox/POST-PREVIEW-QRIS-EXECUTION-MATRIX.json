@@ -3,7 +3,7 @@
   "timezone": "Asia/Jakarta",
   "status": "NOT_READY_FOR_PHYSICAL_UAT",
   "scope": "112 full acceptance cases remain NOT_RUN. Listed module passes are partial software subassertions only.",
-  "verified_remote_base": "ab57cd7f43cd7997f66eee7df0f6677160a3cd83",
+  "verified_remote_base": "a3b70eb5695fee652168c18d0fd62b1320d98732",
   "payment_source_sha256": "7234ebfc53535bc5e4a68c6c3eb70b56ddada0178abd8f90c762b08e5db74156",
   "summary": {
     "PASS": 0,
@@ -410,7 +410,8 @@
         "tests/test_post_preview_api.py",
         "tests/test_post_preview_payment_crashes.py",
         "tests/test_post_preview_checkout_worker.py",
-        "tests/test_post_preview_checkout_widgets.py"
+        "tests/test_post_preview_checkout_widgets.py",
+        "tests/test_post_preview_ticket.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -426,7 +427,8 @@
         "tests/test_post_preview_api.py",
         "tests/test_post_preview_payment_crashes.py",
         "tests/test_post_preview_checkout_worker.py",
-        "tests/test_post_preview_checkout_widgets.py"
+        "tests/test_post_preview_checkout_widgets.py",
+        "tests/test_post_preview_ticket.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -506,7 +508,8 @@
         "tests/test_post_preview_payment_crashes.py",
         "tests/test_post_preview_checkout_worker.py",
         "tests/test_post_preview_checkout_widgets.py",
-        "tests/test_post_preview_lifecycle_worker.py"
+        "tests/test_post_preview_lifecycle_worker.py",
+        "tests/test_post_preview_ticket.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -576,7 +579,9 @@
       "required_outcome": "**Mandatory on-screen original QR + full code with 30s visible timer/NEXT** starts while **one same-token ticket receipt job is enqueued concurrently**, without waiting for ACK; successful printing MUST NOT skip or dismiss screen",
       "full_case_status": "NOT_RUN",
       "stage": "PP-03/05/06",
-      "component_test_modules": [],
+      "component_test_modules": [
+        "tests/test_post_preview_ticket.py"
+      ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
     },
@@ -586,7 +591,9 @@
       "required_outcome": "**Same mandatory 30s ticket screen shown regardless of print outcome**; no reissue/auto-reprint, no timer reset on late printer callback, correct private cleanup on NEXT/zero",
       "full_case_status": "NOT_RUN",
       "stage": "PP-03/05/06",
-      "component_test_modules": [],
+      "component_test_modules": [
+        "tests/test_post_preview_ticket.py"
+      ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
     },
@@ -596,7 +603,9 @@
       "required_outcome": "Vault and owed policy; no public ticket on boot, no duplicate send; first lawful screen requires original customer proof and free booth",
       "full_case_status": "NOT_RUN",
       "stage": "PP-03/05/06",
-      "component_test_modules": [],
+      "component_test_modules": [
+        "tests/test_post_preview_ticket.py"
+      ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
     },
@@ -606,7 +615,9 @@
       "required_outcome": "Never auto-reprint",
       "full_case_status": "NOT_RUN",
       "stage": "PP-03/05/06",
-      "component_test_modules": [],
+      "component_test_modules": [
+        "tests/test_post_preview_ticket.py"
+      ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
     },
@@ -618,7 +629,8 @@
       "stage": "PP-03/05/06",
       "component_test_modules": [
         "tests/test_post_preview_ccp.py",
-        "tests/test_credential_vault.py"
+        "tests/test_credential_vault.py",
+        "tests/test_post_preview_ticket.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -631,7 +643,8 @@
       "stage": "PP-03/05/06",
       "component_test_modules": [
         "tests/test_post_preview_ccp.py",
-        "tests/test_credential_vault.py"
+        "tests/test_credential_vault.py",
+        "tests/test_post_preview_ticket.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -763,7 +776,8 @@
       "full_case_status": "NOT_RUN",
       "stage": "PP-05",
       "component_test_modules": [
-        "tests/test_post_preview_checkout.py"
+        "tests/test_post_preview_checkout.py",
+        "tests/test_post_preview_ticket.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -1019,7 +1033,9 @@
       "required_outcome": "First screen remains visible independent of SUBMITTED; when dismissed, never automatically re-display or reset countdown on provider/paper callback, polling, reboot or returning claim; preserve exact original presentation journal",
       "full_case_status": "NOT_RUN",
       "stage": "PP-04/05/06/07",
-      "component_test_modules": [],
+      "component_test_modules": [
+        "tests/test_post_preview_ticket.py"
+      ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
     },
@@ -1029,7 +1045,9 @@
       "required_outcome": "Open **mandatory** original Recovery Ticket screen and dispatch **same ticket receipt** concurrently once; no extra claim/CCP step",
       "full_case_status": "NOT_RUN",
       "stage": "PP-04/05/06/07",
-      "component_test_modules": [],
+      "component_test_modules": [
+        "tests/test_post_preview_ticket.py"
+      ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
     },
@@ -1086,7 +1104,8 @@
         "tests/test_post_preview_api.py",
         "tests/test_post_preview_payment_crashes.py",
         "tests/test_post_preview_checkout_worker.py",
-        "tests/test_post_preview_checkout_widgets.py"
+        "tests/test_post_preview_checkout_widgets.py",
+        "tests/test_post_preview_ticket.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -1574,18 +1593,19 @@
     }
   },
   "continuation_checkpoint": {
-    "PP_04_d": "LOCAL_COMPONENT_PASS_CI_PENDING",
-    "next": "PP-05 original paid ticket/receipt and delivery after CI",
+    "PP_04_d": "SOFTWARE_COMPONENT_CI_PASS",
+    "next": "PP-05.b mandatory ticket screen and concurrent receipt",
     "PP_05_through_PP_07": "NOT_STARTED",
     "full_PP_acceptance": "112 NOT_RUN",
     "customer_checkout": "DISABLED",
     "runtime_source": "f1b2b4c594895e1e2e537bcfe7c402e83d8c251f",
     "verified_test_workflow_tip": "5ff093e15b7425542fe173082ca55adaf8d95f79",
-    "local_only_source_changes": false
+    "local_only_source_changes": false,
+    "PP_05": "IN_PROGRESS"
   },
   "authority_readiness_increment": {
     "stage": "PP-04.d4",
-    "status": "LOCAL_COMPONENT_PASS_CI_PENDING",
+    "status": "COMPONENT_PASS_ONLY",
     "private_state_tests": {
       "run": 304,
       "failures": 0,
@@ -1599,7 +1619,12 @@
       "skipped": 0
     },
     "next": "PP-05 after matching CI",
-    "full_PP_acceptance": "112 NOT_RUN"
+    "full_PP_acceptance": "112 NOT_RUN",
+    "CI": {
+      "run_id": 41313813800,
+      "sha": "a3b70eb5695fee652168c18d0fd62b1320d98732",
+      "all_three_jobs": "SUCCESS"
+    }
   },
   "authority_source_sha256": {
     "photobooth/post_preview_authority.py": "83cd355041d1816fa5a556a4b4fcd64db9efadb14a447f69eadc22d1501236f0",
@@ -1607,5 +1632,30 @@
     "photobooth/post_preview_readiness.py": "cb7bca373a3688eba6608d0d5778826158ac9cc8630724778101b67acff9b0b7",
     "tests/post_preview_checkout_fixture.py": "3f72efbda046fa6ca9d589dc45a800800d46500a3531ea2a9476d967c5201469",
     "tests/test_post_preview_authority.py": "a01c49abc167613ec1c86abfe63e821a1f59b9cf74f0f024fc4ee9f24fb3beb1"
+  },
+  "paid_ticket_increment": {
+    "stage": "PP-05.a",
+    "schema": 6,
+    "status": "LOCAL_COMPONENT_PASS_CI_PENDING",
+    "private_state_tests": {
+      "run": 314,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "native": {
+      "run": 41,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "next": "PP-05.b mandatory screen/concurrent same-ticket receipt",
+    "full_PP_acceptance": "112 NOT_RUN"
+  },
+  "paid_ticket_source_sha256": {
+    "photobooth/post_preview_ticket.py": "40fc06e38585b0aab5490bc5f5c84538579a6d83ff8cf843a1a6d03da510addc",
+    "photobooth/post_preview_ccp.py": "1a846d1dfd0af14cf8cbff53f5d7170cc0f6e37033eb7baa8dc8a8673cde9be5",
+    "photobooth/post_preview_store.py": "92e9b3ebe23426277bd5562876fdea822002a43ba36cf853b2780e3575ed4cea",
+    "tests/test_post_preview_ticket.py": "01c3d7f05da4c9ae52db326ce01385c8653df16d7e0486959827be7ef49b79b6"
   }
 }

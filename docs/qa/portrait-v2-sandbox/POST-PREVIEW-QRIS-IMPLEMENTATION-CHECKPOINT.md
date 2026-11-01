@@ -15,12 +15,68 @@ merchant activation, live customer/cloud deletion and other branches are exclude
 - Authorized branch: `feature/post-preview-qris-checkout`.
 - Last independently verified functional/test remote: `5ff093e15b7425542fe173082ca55adaf8d95f79` (push/ls-remote verified). CI `41309087008` all three jobs SUCCESS: Linux 297/297, Windows 297/297, native 41/41, zero failures/errors/skips; actual Code.gs VM 34 PASS. Runtime source is unchanged from `f1b2b4c594895e1e2e537bcfe7c402e83d8c251f`.
 - Original audited base: `b68e514dd57c989df47fa1b222d45f3f71c38347`.
-- Current increment: **PP-04.d4 trusted authenticated request + original worker readiness/native fixture**. Local software gate verified; containing-source CI pending. Next PP-05 after remote/CI verification; real device/provider/cloud gates remain NOT_RUN.
+- Current increment: **PP-05.a original paid ticket/entitlement/schema foundation**. PP-04.d software component CI `41313813800` all three SUCCESS at `a3b70eb5695fee652168c18d0fd62b1320d98732`; PP-05.a local checks pass, CI pending push. Next mandatory ticket screen/concurrent receipt.
 - Overall: PP-00 dependency audit continuing; PP-01 private capture and isolated development UI implemented; PP-02 preview/freeze backend and all-design UI implemented, trusted local + read-only Drive readiness adapters implemented; payment/authoritative ownership readiness adapters unfinished; PP-03 protected CCP backend/native card components implemented but not mounted; PP-04 backend/API and native checkout synthetic fixture implemented; Sandbox/native payment remains unavailable until paid delivery is complete; PP-05/06/06R/07 NOT_STARTED.
 - This checkpoint travels with the implementation commit. Resolve its containing
   SHA using `git log -1 --format=%H`; after push independently compare `git
   ls-remote origin refs/heads/feature/post-preview-qris-checkout`. A commit cannot
   truthfully contain its own SHA. The next increment records this verified tip.
+
+## PP-05.a — original paid service and protected ticket foundation
+
+Additive private schema v6 preserves original v1..5 draft/finance/CCP journals and
+adds paid service, ticket escrow, independent screen/receipt and purchased-strip
+intent tables. Current-schema missing/partial paid journals hold instead of being
+recreated. SQL guards bind service to original independently issued entitlement,
+frozen hash and first-paid anchor; ticket/service/folder/transaction and print
+identities cannot be replaced, and screen/receipt/strip states cannot replay.
+No delivery effect is enabled merely by migration or row creation.
+
+OriginalRecoveryTicketService reuses the actual protected CCP encryption,
+constant-time verification, rate limit, in-memory render permit and privacy
+retirement implementation through **fixed internal profiles**. CCP retains its
+old prefix/table/policy; new ticket is `MEONG:RECOVERY:1:<booth>:<group>:<secret>`
+with a separate verifier/table and typed non-media/non-payment verification result.
+Encrypted issuance is once per original paid entitlement. Independent recent
+original settlement and live original worker are required; no ticket from
+pending/unknown/retired visits. No plaintext, QR bitmap or vault key enters DB,
+WAL, event/diagnostic metadata or source. Key/journal loss keeps OWED and never
+reissues another ticket. A copied/rebooted render permit cannot mark an offer.
+
+Original paid service remains OWED. Ticket generation/decrypt is NOT visible
+presentation or receipt submission. Genuine renderer callback atomically records
+first TICKET_QR_VISIBLE and original render permit; dismissal is once/idempotent.
+Previously visible/dismissed tickets cannot auto-redisplay after restart; receipt
+PREPARED/SENDING/SUBMITTED/UNCERTAIN is independent. Receipt dispatch, 30-visible-
+second native timer and purchased delivery are the **next** PP-05 increment.
+Default customer/Sandbox paid route remains disabled.
+
+Versioned engineering pilot policy: ticket TTL defaults to 24h from original
+**first independently observed PAID**, not draft/QR creation. This is a distinct
+`post-preview-ticket-paid-anchor-pilot-v1`, not legacy 24h policy adoption or
+commercial/legal signoff. Paid service retention anchor is separately recorded
+and immutable; actual retention/deletion behavior is not activated by these tables.
+
+Ten new ticket methods cover paid-only binding, same-original encrypted restart,
+no offered-ticket replay, separate proof types, DB/WAL plaintext absence, wrong
+key/missing journal, privacy retirement, v5 migration, SQL no-replay guards and
+multiple-settled attempts preserving one service/ticket. Existing v1/v4 migration
+fixtures now reconstruct their true old schema before upgrade, preserving owner,
+lineage, original attempt, paid entitlement and CCP ciphertext.
+Test-first missing module ERROR, then focused **54 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,
+21.625s. Final private/legacy/Drive group **314 PASS / 0 FAIL / 0 ERROR / 0 SKIP**,
+62.357s; native group **41 PASS / 0 FAIL / 0 ERROR / 0 SKIP**, 29.924s. Compile/diff
+PASS; matching-source CI pending push. No physical/provider/cloud/refund effect.
+All 112 complete acceptance cases remain NOT_RUN; only component crosswalk grows.
+
+Reviewed original CCP/vault, schema/migrations, original receipt renderer/
+print_bitmap, native CCP visibility, PP ticket/security/refund/UAH/BUG-027 contracts
+and existing purchased-print/PhotoTest no-replay integration. Reuse is direct;
+legacy paid-first credential/receipt/service code remains unchanged.
+Next **PP-05.b**: mandatory original QR/full-code card with independent 30-visible-
+second/NEXT clock and one concurrent same-ticket receipt job through a serialized
+native printer lane. Then verified paid Drive URL, exact paid strips and durable
+remaining obligations; PP-06/06R/07 still required for laptop testing candidate.
 
 ## PP-04.d4 — authenticated request and original worker readiness
 

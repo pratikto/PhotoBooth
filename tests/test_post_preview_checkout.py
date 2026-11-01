@@ -173,7 +173,8 @@ class PreviewFreezeTests(unittest.TestCase):
 
     def test_additive_v1_schema_upgrade_preserves_private_owner_and_lineage(self):
         before = self.ledger.inspect(self.lease)
-        for table in ('pp_notification_inbox', 'pp_payment_audit', 'pp_payment_attempts',
+        for table in ('pp_paid_strip_jobs','pp_paid_services','pp_ticket_presentations','pp_ticket_credentials',
+                      'pp_notification_inbox', 'pp_payment_audit', 'pp_payment_attempts',
                       'pp_purchase_finance', 'pp_ccp_credentials', 'pp_checkout_intents'):
             self.ledger.db.execute('DROP TABLE '+table)
         self.ledger.db.execute('DROP TRIGGER pp_draft_identity_immutable')
@@ -181,7 +182,7 @@ class PreviewFreezeTests(unittest.TestCase):
         other = PostPreviewStore(self.root/'private.db')
         self.addCleanup(other.close)
         self.assertEqual(before, other.inspect(self.lease))
-        self.assertEqual(5, other.db.execute('SELECT version FROM pp_schema').fetchone()[0])
+        self.assertEqual(6, other.db.execute('SELECT version FROM pp_schema').fetchone()[0])
 
 
 if __name__ == '__main__': unittest.main()
