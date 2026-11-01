@@ -74,7 +74,7 @@ Linux Python in existing `.venv`, synthetic fixtures only:
 | `python -m unittest tests.test_post_preview_store -v` | 12 | 0 | 0 | 0 | 0 |
 | `python tools/run_kiosk_unittests.py test_checkout_backend test_checkout_durability test_payment_quote test_workflow test_capture_journal test_photo_reconstruction` (base) | 81 | 0 | 0 | 0 | 0 |
 
-CI: pending first implementation push. No full regression or native GUI run yet.
+Exact configured CI group additionally executed locally: **93 PASS / 0 FAIL / 0 SKIP** (8.400s), including all 12 new plus 81 legacy tests. CI dependency inspection added NumPy, which the existing photo-reconstruction fixtures require. First attempted push was rejected by automatic approval review; the owner then explicitly approved branch pushes in chat. Local foundation commit is `b15b29016af78c44c2a0702739521c4a2379f785`; this companion CI correction is being pushed with it. CI is pending first implementation push. No full regression or native GUI run yet.
 **PP-001..112: 112 NOT_RUN as complete acceptance scenarios**; model subassertions
 do not imply capture, payment, claim or physical acceptance. No new source/UI
 integration is inferred from the historical 81-test legacy baseline.
