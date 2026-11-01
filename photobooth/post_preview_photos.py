@@ -46,7 +46,7 @@ class PrivateDraftPhotos:
             raise DraftHeld('Original selected template required')
         return row
 
-    def _open(self, lease, template, row):
+    def _open(self, lease, template, row, *, repair=True):
         root = checked_path(self.root / lease.draft_id)
         store = TransactionStore(root, root / 'unused-counter.json', lease.booth_id,
                                  layout_version=2, capture_protocol=1)
@@ -57,6 +57,8 @@ class PrivateDraftPhotos:
         contract = frozen_contract({template.template_id: 1}, templates=[template])
         with manifest_lock(path):
             if not path.exists():
+                if not repair:
+                    raise CaptureRecoveryRequired('Original private manifest is missing')
                 if folder.exists():
                     raise CaptureRecoveryRequired('Private lineage allocation is incomplete')
                 tx = store.start_transaction([plan], transaction_id=transaction_id,
@@ -83,10 +85,10 @@ class PrivateDraftPhotos:
             utc_datetime(tx.manifest.get('created_at'))
             if local_photos_expired(tx.manifest):
                 raise CaptureRecoveryRequired('Private draft media lifetime expired')
-            self._restore(store, tx, plan, row)
+            self._restore(store, tx, plan, row, repair=repair)
             return store, tx, plan
 
-    def _restore(self, store, tx, plan, row):
+    def _restore(self, store, tx, plan, row, *, repair=True):
         data = tx.manifest
         records = data.get('sessions')
         if (not isinstance(records, list) or len(records) != 1
@@ -119,10 +121,14 @@ class PrivateDraftPhotos:
                 raise CaptureRecoveryRequired('Duplicate capture intent')
             active.add(target)
             if intent.get('state') == 'INTENT' and not target.exists() and not temporary.exists():
+                if not repair:
+                    raise CaptureRecoveryRequired('Unfinished capture cannot pass read-only readiness')
                 intent['state'] = 'VOID_BEFORE_FRAME'
                 store._write_manifest(tx)
                 continue
             if intent.get('state') == 'STAGED':
+                if not repair:
+                    raise CaptureRecoveryRequired('Uncommitted capture cannot pass read-only readiness')
                 if any(p.get('path') == intent['path'] for p in record['raw_photos']):
                     raise CaptureRecoveryRequired('Staged media already acknowledged')
                 originals = [p for p in record['raw_photos'] if p.get('role') == 'capture']
@@ -176,6 +182,8 @@ class PrivateDraftPhotos:
             if len(originals) != 3:
                 raise CaptureRecoveryRequired('Retake quota has no original trio')
             if record.get('pending_retake_index') != row['retake_slot']:
+                if not repair:
+                    raise CaptureRecoveryRequired('Unreconciled retake cannot pass read-only readiness')
                 record['pending_retake_index'] = row['retake_slot']
                 store._write_manifest(tx)
 

@@ -3,7 +3,7 @@
   "timezone": "Asia/Jakarta",
   "status": "NOT_READY_FOR_PHYSICAL_UAT",
   "scope": "112 full acceptance cases remain NOT_RUN. Listed module passes are partial software subassertions only.",
-  "verified_remote_base": "66d3a26781e4dfaad26d4ff409224930d052c106",
+  "verified_remote_base": "2dc2f07f91a4e042552ae63beb28d18c7f049d33",
   "payment_source_sha256": "7234ebfc53535bc5e4a68c6c3eb70b56ddada0178abd8f90c762b08e5db74156",
   "summary": {
     "PASS": 0,
@@ -117,7 +117,8 @@
       "full_case_status": "NOT_RUN",
       "stage": "PP-01",
       "component_test_modules": [
-        "tests/test_post_preview_photos.py"
+        "tests/test_post_preview_photos.py",
+        "tests/test_post_preview_readiness.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -177,7 +178,8 @@
       "full_case_status": "NOT_RUN",
       "stage": "PP-02",
       "component_test_modules": [
-        "tests/test_post_preview_checkout.py"
+        "tests/test_post_preview_checkout.py",
+        "tests/test_post_preview_readiness.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -201,7 +203,8 @@
       "full_case_status": "NOT_RUN",
       "stage": "PP-02",
       "component_test_modules": [
-        "tests/test_post_preview_checkout.py"
+        "tests/test_post_preview_checkout.py",
+        "tests/test_post_preview_readiness.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -213,7 +216,8 @@
       "full_case_status": "NOT_RUN",
       "stage": "PP-02",
       "component_test_modules": [
-        "tests/test_post_preview_resources.py"
+        "tests/test_post_preview_resources.py",
+        "tests/test_post_preview_readiness.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -225,7 +229,8 @@
       "full_case_status": "NOT_RUN",
       "stage": "PP-02",
       "component_test_modules": [
-        "tests/test_post_preview_checkout.py"
+        "tests/test_post_preview_checkout.py",
+        "tests/test_post_preview_readiness.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -237,7 +242,8 @@
       "full_case_status": "NOT_RUN",
       "stage": "PP-02",
       "component_test_modules": [
-        "tests/test_post_preview_checkout.py"
+        "tests/test_post_preview_checkout.py",
+        "tests/test_post_preview_readiness.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -249,7 +255,8 @@
       "full_case_status": "NOT_RUN",
       "stage": "PP-02",
       "component_test_modules": [
-        "tests/test_post_preview_checkout.py"
+        "tests/test_post_preview_checkout.py",
+        "tests/test_post_preview_readiness.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -431,7 +438,8 @@
         "tests/test_post_preview_payment_crashes.py",
         "tests/test_post_preview_checkout_worker.py",
         "tests/test_post_preview_checkout_widgets.py",
-        "tests/test_post_preview_lifecycle_worker.py"
+        "tests/test_post_preview_lifecycle_worker.py",
+        "tests/test_post_preview_readiness.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -713,7 +721,8 @@
       "full_case_status": "NOT_RUN",
       "stage": "PP-05",
       "component_test_modules": [
-        "tests/test_post_preview_checkout.py"
+        "tests/test_post_preview_checkout.py",
+        "tests/test_post_preview_readiness.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -805,7 +814,8 @@
       "full_case_status": "NOT_RUN",
       "stage": "PP-06",
       "component_test_modules": [
-        "tests/test_post_preview_widgets.py"
+        "tests/test_post_preview_widgets.py",
+        "tests/test_post_preview_readiness.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -867,7 +877,8 @@
       "full_case_status": "NOT_RUN",
       "stage": "PP-06",
       "component_test_modules": [
-        "tests/test_post_preview_resources.py"
+        "tests/test_post_preview_resources.py",
+        "tests/test_post_preview_readiness.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -1012,7 +1023,8 @@
       "full_case_status": "NOT_RUN",
       "stage": "PP-04/05/06/07",
       "component_test_modules": [
-        "tests/test_post_preview_checkout.py"
+        "tests/test_post_preview_checkout.py",
+        "tests/test_post_preview_readiness.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -1039,7 +1051,8 @@
         "tests/test_post_preview_payment_crashes.py",
         "tests/test_post_preview_checkout_worker.py",
         "tests/test_post_preview_checkout_widgets.py",
-        "tests/test_post_preview_lifecycle_worker.py"
+        "tests/test_post_preview_lifecycle_worker.py",
+        "tests/test_post_preview_readiness.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -1360,12 +1373,43 @@
       "skipped": 0
     },
     "full_PP_acceptance": "NOT_RUN",
-    "CI": "PENDING_PUSH",
+    "CI": {
+      "run_id": 41307192307,
+      "conclusion": "SUCCESS",
+      "all_three_jobs": "SUCCESS",
+      "sha": "2dc2f07f91a4e042552ae63beb28d18c7f049d33"
+    },
     "next": "PP-04.d2 trusted read-only readiness and original PREPARED admission recheck"
   },
   "lifecycle_source_sha256": {
     "photobooth/post_preview_lifecycle.py": "2e89b74ed02ebbb4865ebf794de1b681e881ab982e7d9a08981a78d90b8e3362",
     "photobooth/post_preview_api.py": "0989785ec7f447f624ac53ed0adde6d61a40478bd2fd615cd6b63c01817ea317",
     "tests/test_post_preview_lifecycle_worker.py": "b468b6695106777e10adb1a6821a0ca841307194d5858c95d653fdfe4207848d"
+  },
+  "readiness_increment": {
+    "stage": "PP-04.d2",
+    "status": "COMPONENT_PASS_ONLY",
+    "private_state_tests": {
+      "run": 246,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "native_tests": {
+      "run": 41,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "full_PP_acceptance": "NOT_RUN",
+    "CI": "PENDING_PUSH",
+    "next": "PP-04.d3 actual read-only Drive/payment/worker readiness adapters and fixture mounting"
+  },
+  "readiness_source_sha256": {
+    "photobooth/post_preview_readiness.py": "38e98a04c15d1174c47616195c610891c4256dd36152a613c650eb7e4bae64f5",
+    "photobooth/post_preview_checkout.py": "a2f9983b34f839a0db2fb2c777b560223650af5d90e32e0e837fdd52694d74b3",
+    "photobooth/post_preview_photos.py": "ddc0e5228a288536757ddb58836fa7ceb1ea86a901b30ba59ae7c45f91d2375d",
+    "photobooth/post_preview_payments.py": "f886cf74031088d3bb2d3415f9ca1b054692f972078bfe1eca772cfab24f9aff",
+    "tests/test_post_preview_readiness.py": "12ca8689845400f52a88be9e1507b2f2b342a5164c5e3b040ae3d9d51628370c"
   }
 }

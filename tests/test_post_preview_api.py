@@ -63,7 +63,7 @@ class PostPreviewApiTests(unittest.TestCase):
         self.assertEqual(0, self.fixture.provider.charges)
 
     def test_strict_input_does_not_accept_amount_or_evidence_or_echo_credentials(self):
-        for extra in ({'amount': 1}, {'paid': True}, {'qr_url': 'http://attacker'}, {'server_key': 'secret-fixture'}):
+        for extra in ({'amount': 1}, {'paid': True}, {'ready': True}, {'qr_url': 'http://attacker'}, {'server_key': 'secret-fixture'}):
             r = self.post('begin', dict(self.owner, **extra))
             self.assertEqual(422, r.status_code)
             self.assertNotIn('secret-fixture', r.text)

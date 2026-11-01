@@ -14,7 +14,7 @@ from photobooth.capture_journal import CaptureRecoveryRequired, publish_output, 
 from photobooth.catalog import compose_result
 from photobooth.kiosk_v2.photo_recovery import _publish_staged
 from photobooth.manifest_io import manifest_lock
-from photobooth.post_preview_store import DraftHeld, ORDER_VERSION, quote_post_preview
+from photobooth.post_preview_store import DraftHeld, DraftLease, ORDER_VERSION, quote_post_preview
 from photobooth.transaction_store import LocalTransaction, TransactionStore
 
 
@@ -60,6 +60,61 @@ class PrivateDraftCheckout:
     def __init__(self, photos):
         self.photos = photos
         self.ledger = photos.ledger
+
+    def verify_frozen(self, group, templates):
+        """Recheck original frozen media/artwork without restore or allocation.
+
+        File/hash I/O runs outside the SQL transaction. Original ownership is
+        rechecked afterward; a concurrent privacy retirement cannot pass charge
+        admission with a stale camera/media generation.
+        """
+        from photobooth.post_preview_readiness import ReadinessScope
+        with self.ledger.write():
+            intent = self.ledger.db.execute('''SELECT i.*,d.booth_id,d.visit_id,d.generation
+                FROM pp_checkout_intents i JOIN pp_drafts d ON d.draft_id=i.draft_id
+                WHERE i.purchase_group_id=?''', (group,)).fetchone()
+            if not intent:
+                raise DraftHeld('Original frozen purchase required')
+            lease = DraftLease(intent['draft_id'], intent['booth_id'], intent['visit_id'], intent['generation'])
+            self.ledger._owned(lease, revision=intent['revision'])
+            selected = [dict(r) for r in self.ledger.db.execute('''SELECT * FROM pp_templates
+                WHERE draft_id=? AND selected=1 ORDER BY template_id''', (lease.draft_id,))]
+            contract = json.loads(intent['contract_json'])
+            if (digest(contract) != intent['contract_sha256'] or contract.get('version') != ORDER_VERSION
+                    or contract.get('booth_id') != lease.booth_id or contract.get('draft_id') != lease.draft_id
+                    or contract.get('revision') != intent['revision'] or contract.get('currency') != 'IDR'
+                    or {r['template_id']: r['copies'] for r in selected} != contract.get('quantities')
+                    or quote_post_preview(contract['quantities']).total_amount != contract.get('amount')
+                    or len(contract.get('designs', [])) != len(selected)):
+                raise DraftHeld('Frozen purchase, quote or selection changed')
+        available = {t.template_id: t for t in templates}
+        for row, design in zip(selected, contract['designs']):
+            template = available.get(row['template_id'])
+            if (template is None or not row['approved'] or design.get('template_id') != row['template_id']
+                    or design.get('copies') != row['copies'] or design.get('lineage_id') != row['lineage_id']
+                    or design.get('retake_consumed') != bool(row['retake_consumed'])
+                    or design.get('retake_slot') != row['retake_slot']):
+                raise DraftHeld('Frozen template lineage or copy obligation changed')
+            checked_path(template.artwork_path)
+            for aperture in template.apertures:
+                checked_path(aperture.mask_path)
+            store, tx, plan = self.photos._open(lease, template, row, repair=False)
+            session = self.photos._session(tx, plan)
+            if not session.ready_for_review or row['retake_consumed'] and not session.retake_used:
+                raise DraftHeld('Original final three-photo selection required')
+            raw = {p['path']: p for p in tx.manifest['sessions'][0]['raw_photos']}
+            binding = {'version': ORDER_VERSION, 'lineage_id': row['lineage_id'],
+                       'artwork': tx.manifest['frozen_order']['templates'][0],
+                       'photos': [{'path': p.relative_to(tx.folder_path).as_posix(),
+                                   'sha256': raw[p.relative_to(tx.folder_path).as_posix()]['sha256']}
+                                  for p in session.final_photo_paths]}
+            if binding != design.get('binding') or digest(binding) != design.get('preview_key'):
+                raise DraftHeld('Original approved media or artwork changed')
+            output = checked_path(tx.folder_path/'previews'/(digest(binding)+'.png'))
+            validate_image(output, design.get('preview_sha256'), image_format='PNG', expected_size=(640, 1920))
+        with self.ledger.write():
+            self.ledger._owned(lease, revision=intent['revision'])
+        return ReadinessScope(group, lease.booth_id, intent['contract_sha256'], lease.generation)
 
     def _preview(self, lease, template, row):
         store, tx, plan = self.photos._open(lease, template, row)

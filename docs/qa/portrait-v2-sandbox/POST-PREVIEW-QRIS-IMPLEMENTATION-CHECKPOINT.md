@@ -13,14 +13,81 @@ worker safeguards remain binding. Production deployment, actual charges/refunds,
 merchant activation, live customer/cloud deletion and other branches are excluded.
 
 - Authorized branch: `feature/post-preview-qris-checkout`.
-- Last independently verified remote before this increment: `66d3a26781e4dfaad26d4ff409224930d052c106` (PP-04.c; remote connector and Git agree). Previous successful CI run `41289132792` is historical PP-04.c evidence, not this worker increment.
+- Last independently verified remote before this increment: `2dc2f07f91a4e042552ae63beb28d18c7f049d33` (PP-04.d1; Git push/ls-remote verified). CI `41307192307`: Linux state, Windows state and native desktop all SUCCESS. Prior PP-04.c `66d3a26`/CI `41289132792` remains historical evidence.
 - Original audited base: `b68e514dd57c989df47fa1b222d45f3f71c38347`.
-- Current micro-increment: **PP-04.d1 — original-order lifecycle scheduler/API lifespan integration**. PP-04.d remains incomplete pending trusted readiness adapters and charge-admission freshness.
-- Overall: PP-00 dependency audit continuing; PP-01 private capture and isolated development UI implemented; PP-02 preview/freeze backend and all-design UI implemented, real charge-readiness adapters NOT_IMPLEMENTED; PP-03 protected CCP backend/native card components implemented but not mounted; PP-04 backend/API and native checkout synthetic fixture implemented; Sandbox/native payment remains unavailable until paid delivery is complete; PP-05/06/06R/07 NOT_STARTED.
+- Current micro-increment: **PP-04.d2 — freshness-bound readiness, read-only frozen media/device validation, original PREPARED recheck**. PP-04.d remains incomplete pending read-only external Drive/payment/ownership adapters and fixture mounting.
+- Overall: PP-00 dependency audit continuing; PP-01 private capture and isolated development UI implemented; PP-02 preview/freeze backend and all-design UI implemented, trusted local charge-readiness adapter implemented; external Drive/payment/ownership readiness adapters unfinished; PP-03 protected CCP backend/native card components implemented but not mounted; PP-04 backend/API and native checkout synthetic fixture implemented; Sandbox/native payment remains unavailable until paid delivery is complete; PP-05/06/06R/07 NOT_STARTED.
 - This checkpoint travels with the implementation commit. Resolve its containing
   SHA using `git log -1 --format=%H`; after push independently compare `git
   ls-remote origin refs/heads/feature/post-preview-qris-checkout`. A commit cannot
   truthfully contain its own SHA. The next increment records this verified tip.
+
+## PP-04.d2 — trusted freshness and local readiness (1 November 2026)
+
+`post_preview_readiness` adds original purchase/booth/frozen-contract/generation
+scope and typed READY/NOT_READY/UNKNOWN observations. STALE is derived from actual
+observation age, never asserted from a successful current callback. Missing,
+failed, client-style boolean/dictionary or untyped probes remain UNKNOWN. Future,
+nonfinite and boolean timestamps fail closed. Observations retain their timestamps
+when cached. Two seconds is a conservative software pilot freshness bound, not
+merchant/device calibration. No raw media, proof or exception details are stored.
+
+The trusted same-machine `LocalChargeReadiness` reuses original private photo,
+retake, frozen-artwork and PNG/JPEG verification with **repair=False**; a readiness
+check cannot repair a staged capture, recreate a missing manifest or allocate a
+replacement lineage. Original quote, selected copies, approvals, three final
+photos, template/mask hashes and preview digest are checked. Ownership is read
+before/after file I/O, which stays outside payment SQL transactions. Existing
+capture recovery keeps its original default repair behavior.
+
+Actual private-storage reserve/entry/byte checks plus a uniquely created fsync
+probe reuse `PrivateCapturePolicy`; only that temporary probe is removed. Camera
+readiness reuses the existing opened handle/latest-frame mailbox (no acquisition
+or shutter). Printer readiness reuses original route/queue/device probes, sends
+no bytes and claims no physical paper. External authenticated payment, Drive API,
+sharing, unclaimed READY capacity and authoritative worker/occupancy probes must
+still be installed; absent adapters stay UNKNOWN. No reserve/bind/upload/print
+method is available through this adapter. Remote-hosted media attestation is not
+implemented by the local adapter.
+
+Payment admission accepts the trusted original-scope report and independently
+checks freshness both before preparing a new attempt and immediately before SENT.
+**Recovered original PREPARED now requires a new readiness observation**; stale
+or failed evidence preserves the same unsent attempt for a deliberate safe retry.
+SENT/UNKNOWN still reconcile without readiness or repeat POST. Renewals keep the
+same fresh scope checks. Untimestamped `ChargeReadiness` booleans are accepted
+only by historical explicitly MOCK synthetic fixtures, never Sandbox admission;
+HTTP request `ready=true` is rejected, just like caller amount/status authority.
+No customer/Sandbox launcher or merchant request is enabled.
+
+Test-first: initial missing module ERROR; then the nine-method partial scaffold
+showed **1 FAIL / 4 ERROR** for missing behavior. Final focused group **72 PASS /
+0 FAIL / 0 ERROR / 0 SKIP**, 22.685s, before the last two storage/journal methods;
+final configured private-state + legacy group includes all **16** new methods:
+**246 PASS / 0 FAIL / 0 ERROR / 0 SKIP**, 46.859s. Native six-module group **41 PASS /
+0 FAIL / 0 ERROR / 0 SKIP**, 27.431s, SDL offscreen, both portrait sizes in original
+fixtures. Focused command: `python tools/run_kiosk_unittests.py
+ test_post_preview_readiness test_post_preview_payments test_post_preview_photos
+ test_post_preview_checkout test_post_preview_payment_crashes`; final group is
+exactly the workflow private-state command. Compile/diff checks PASS; containing
+source CI pending push. All testing synthetic, no external provider/Drive calls,
+real paper/customer data, credential screenshots, refunds or production actions.
+
+Component crosswalk adds PP-009/014/016..020/031/055/063/069/081/083 only; all 112
+complete cases remain NOT_RUN. Reviewed original capture/preview repair behavior,
+private resource policy, device health/printer route, frozen contracts, actual
+BoothWorkspace/BoothDriveClient and Apps Script reserve/sharing implementations,
+plus storage layout and UX07/Midtrans/PP contracts. Existing cloud reserve APIs
+may create/move folders or change ACL, so they must NOT be reused as readiness.
+
+**Next PP-04.d3:** add a separate authenticated **read-only** layout-2 Drive
+readiness action/client over existing exact reserve identities (never reserve,
+claim, rename, move or setSharing), verify API/sharing and genuinely unclaimed
+capacity, then connect independent payment authorization and authoritative
+worker/occupancy probes to the trusted local/native fixture. This remains ordinary
+unfinished software, not a hardware blocker. After PP-04.d gates/CI, proceed to
+PP-05 same-original ticket screen + concurrent receipt and paid Drive/strip jobs.
+PP-06, PP-06R, PP-07 remain unfinished; actual device/provider gates NOT_RUN.
 
 ## PP-04.d1 — original-order lifecycle scheduler (1 November 2026)
 
@@ -58,7 +125,8 @@ Native group **41 PASS / 0 FAIL / 0 ERROR / 0 SKIP**, 28.303s, using
 `SDL_VIDEODRIVER=offscreen` plus the existing software GL/dummy-audio settings.
 Local `xvfb-run` is unavailable (initial command exit 127); supported SDL offscreen
 ran the original six-module native group without changing assertions or UI.
-No credential screenshots saved. Matching-source CI pending push.
+No credential screenshots saved. Published source `2dc2f07f91a4e042552ae63beb28d18c7f049d33`
+verified remote; CI `41307192307` all three jobs SUCCESS.
 All 112 full PP cases remain NOT_RUN; component crosswalk extends PP-021/022/023/
 027/028/031/032/035/062/074/075/083 only. Real Windows/POS80/webcam/Midtrans/Drive
 and public-provider gates NOT_RUN; production and refunds remain disabled.

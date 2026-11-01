@@ -12,6 +12,7 @@ import uuid
 from photobooth.checkout_store import identifier
 from photobooth.midtrans_sandbox import MidtransSandboxClient
 from photobooth.post_preview_checkout import ChargeReadiness, digest
+from photobooth.post_preview_readiness import ReadinessScope, TrustedChargeReadiness
 from photobooth.post_preview_store import DraftHeld, quote_post_preview
 from photobooth.qris_evidence import authenticated_notification, idr_amount, provider_evidence, qr_url_from_status
 
@@ -56,6 +57,17 @@ class PostPreviewPayments:
                 and scope.get('draft_id') == intent['draft_id']
                 and scope.get('contract_sha256') == intent['contract_sha256'])
 
+    def _require_readiness(self, observation, intent, booth):
+        if type(observation) is TrustedChargeReadiness:
+            observation.require(ReadinessScope(intent['purchase_group_id'], booth,
+                intent['contract_sha256'], intent['generation']), now=self._now())
+        elif self.mode == 'mock' and type(observation) is ChargeReadiness:
+            # Historical explicitly synthetic fixtures only. Sandbox admission
+            # never accepts an unscoped, untimestamped set of booleans.
+            observation.require()
+        else:
+            raise DraftHeld('Trusted fresh original-scope charge readiness required')
+
     def _group(self, group, booth):
         identifier(group); identifier(booth)
         intent = self.ledger.db.execute('''SELECT i.*,d.booth_id,d.visit_id,d.lifecycle,d.generation
@@ -89,7 +101,7 @@ class PostPreviewPayments:
             intent = self.ledger.db.execute('SELECT * FROM pp_checkout_intents WHERE draft_id=?', (lease.draft_id,)).fetchone()
             if not intent: raise DraftHeld('Frozen original checkout required')
             group = intent['purchase_group_id']
-            _, finance = self._group(group, lease.booth_id)
+            intent, finance = self._group(group, lease.booth_id)
             contract = json.loads(intent['contract_json'])
             if (digest(contract) != intent['contract_sha256'] or
                     quote_post_preview(contract['quantities']).total_amount != contract['amount']):
@@ -110,9 +122,7 @@ class PostPreviewPayments:
                 raise DraftHeld('Original payment attempt journal is missing')
             if not self._ccp_ready(intent, lease.booth_id):
                 raise DraftHeld('Genuinely offered original CCP required before payment')
-            if not isinstance(observation, ChargeReadiness):
-                raise DraftHeld('Trusted charge-readiness observation required')
-            observation.require()
+            self._require_readiness(observation, intent, lease.booth_id)
             if finance is None:
                 self.ledger.db.execute('INSERT INTO pp_purchase_finance(purchase_group_id,merchant_id,provider_mode,amount) VALUES(?,?,?,?)',
                                        (group, self.merchant_id, self.mode, contract['amount']))
@@ -130,13 +140,14 @@ class PostPreviewPayments:
             self.ledger._owned(lease)
             intent = self.ledger.db.execute('SELECT * FROM pp_checkout_intents WHERE draft_id=?', (lease.draft_id,)).fetchone()
             if not intent: raise DraftHeld('Original frozen checkout required')
-            exists = self.ledger.db.execute('SELECT 1 FROM pp_payment_attempts WHERE purchase_group_id=?', (intent['purchase_group_id'],)).fetchone()
-        observation = None if exists else self.readiness(intent['purchase_group_id'])
+            existing = self.ledger.db.execute('SELECT create_phase FROM pp_payment_attempts WHERE purchase_group_id=? ORDER BY ordinal DESC LIMIT 1', (intent['purchase_group_id'],)).fetchone()
+        observation = (self.readiness(intent['purchase_group_id'])
+                       if existing is None or existing['create_phase'] == 'PREPARED' else None)
         group, attempt = self._prepare(lease, observation=observation)
-        self._send_original(group, lease.booth_id, attempt['attempt_id'])
+        self._send_original(group, lease.booth_id, attempt['attempt_id'], observation=observation)
         return self.reconcile(group, lease.booth_id, attempt_id=attempt['attempt_id'], force=True)
 
-    def _send_original(self, group, booth, attempt_id):
+    def _send_original(self, group, booth, attempt_id, *, observation=None):
         with self.ledger.write():
             intent, finance = self._group(group, booth)
             attempt = self.ledger.db.execute('SELECT * FROM pp_payment_attempts WHERE attempt_id=? AND purchase_group_id=?',
@@ -148,6 +159,7 @@ class PostPreviewPayments:
                 self.ledger.db.execute("UPDATE pp_payment_attempts SET create_phase='WITHHELD',payment_state='NOT_CREATED' WHERE attempt_id=?", (attempt_id,))
                 self._audit(group, attempt_id, 'CREATE_WITHHELD')
                 return
+            self._require_readiness(observation, intent, booth)
             self.ledger.db.execute("UPDATE pp_payment_attempts SET create_phase='SENT' WHERE attempt_id=?", (attempt_id,))
             self._audit(group, attempt_id, 'CREATE_SENT')
             order = {'id': attempt['provider_order_id'], 'amount': finance['amount'], 'provider_ref': None}
@@ -316,7 +328,7 @@ class PostPreviewPayments:
             raise DraftHeld('Fresh original provider unpaid expiry required')
         observation = self.readiness(group)
         group, attempt = self._prepare(lease, renewal=True, expired_attempt=fresh['checked_attempt_id'], observation=observation)
-        self._send_original(group, lease.booth_id, attempt['attempt_id'])
+        self._send_original(group, lease.booth_id, attempt['attempt_id'], observation=observation)
         return self.reconcile(group, lease.booth_id, attempt_id=attempt['attempt_id'], force=True)
 
     def signal_lifecycle(self, lease, event):
