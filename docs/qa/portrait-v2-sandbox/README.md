@@ -1,3 +1,12 @@
+## 1 November 2026 — Owner-approved POST-PREVIEW QRIS on new branch (DESIGN ONLY)
+
+**New-order target on `feature/post-preview-qris-checkout` ONLY:** Gallery -> **3 photos + max 1 retake per selected template** -> all templates previewed -> final editable preview (only before first QRIS create) -> frozen one-cart checkout with **pre-PAID secure Checkout Claim Proof** -> Midtrans verified PAID -> original Recovery Ticket (one attempt / 30-second same-token fallback) -> print only after verified customer Drive URL, with background upload. Adaptive genuine-inactivity timeout without interrupting active capture; original encrypted credential escrow for crash. QR1->QR2->QR3 only for actively continuing original visitor, never for absent customer; cancellation/unknown require original-provider verification. PAID after customer departs is PAID_UNCLAIMED/OWED, not public printing. No free photo print/link, duplicate service, secret disclosure, auto refund, uncertain print replay or unsafe isolation.
+
+**Precedence:** On this branch/new-order version, the new ordering supersedes historical **QRIS before photo** wording in the remainder of this document. It does **not** waive legacy prepaid-order recovery, AR-00–13/UAH safety, receipt uncertainty, privacy, Drive retention, nor prior source-specific PASS/NOT_RUN evidence. This is **owner-approved documentation only, NOT IMPLEMENTED/NOT TESTED**, not production sign-off. Parent branch and master unchanged.
+
+**Read first:** [complete 24 owner decisions and 11 flowcharts](POST-PREVIEW-QRIS-OWNER-APPROVED.md) · [security/state](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [72 new NOT_RUN tests](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md) · [Codex handover](POST-PREVIEW-QRIS-CODEX-HANDOVER.md).
+
+---
 # P4b Sandbox → P5 readiness (FEAT-020 / FEAT-022)
 
 ## 1 November 2026 — Latest owner-approved target: unattended safe release and original-ticket responsibility
