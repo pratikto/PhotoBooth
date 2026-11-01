@@ -1,14 +1,11 @@
-## 1 November 2026 — Approved post-preview QRIS branch addendum (DESIGN ONLY)
-
-On `feature/post-preview-qris-checkout`, the owner approved capture and approval of all selected templates (**3 photos and max 1 retake per template**) **before** one QRIS checkout. The **original Recovery Ticket remains only after provider-verified PAID**, printed once; if the configured printer is unavailable, fails or produces an uncertain outcome, show the **same original** QR and full code for 30 visible seconds with NEXT. Unlike the legacy prepaid route documented below, after-ticket navigation for a NEW post-preview order leads to **authorized paid print/Drive fulfillment**, not camera capture. Legacy prepaid orders retain the original camera recovery and STARTED gates.
-
-A separately typed **Checkout Claim Proof** is offered privately at the first pre-PAID checkout so a departed customer can claim late-settled payment after fresh provider and booth-ownership verification. An encrypted, tightly controlled credential escrow is approved as a design for surviving restart without generating replacement tickets, storing plaintext in routine ledgers or revealing old tickets to new visitors. If the proof was never genuinely offered, do not blame the customer; preserve PAID/OWED and an authorized remedy. QR1/2/3 only renew for an active original visitor; abandoned pending payments use original cancel/reconciliation. Final photo print requires verified customer Drive link.
-
-This is an owner-approved specification **NOT IMPLEMENTED/NOT TESTED**, not a change to existing source or historical tests. [Complete owner decisions, flowcharts and precedence](POST-PREVIEW-QRIS-OWNER-APPROVED.md) · [state/security](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [72 new acceptance scenarios](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md) · [Codex plan](POST-PREVIEW-QRIS-CODEX-HANDOVER.md).
-
----
-
 # On-screen Recovery Ticket fallback when the receipt printer is unavailable
+
+> **POST-PREVIEW QRIS BRANCH ADDENDUM (1 November 2026; APPROVED DESIGN, NOT IMPLEMENTED).** For *new* `feature/post-preview-qris-checkout` orders: each template 3 photos + max one retake, all previews -> permitted edits before immutable provider create -> single frozen checkout with original private pre-PAID CCP -> verified PAID -> original post-PAID Recovery Ticket -> purchased strips **only after exact Drive download URL verified**; pending uploads may retry. Distinct USER_CANCEL vs provider expiry (QR1→QR2→QR3 for actively continuing original customer only), encrypted crash-proof original credential escrow, adaptive true inactivity, late-PAID private OWED, safe machine fence/ACK and no blind print replay are binding. **Legacy source and old prepaid flow evidence below remain historical and valid in their original scope**; AR/UAH safety and AR-13 external gates remain unchanged. On THIS branch the future PP roadmap is active when separately authorized; the AR roadmap remains active on the parent branch. **84 PP test cases NOT_RUN; no source/production/actual cloud change.** [Owner flowcharts and 24 decisions](POST-PREVIEW-QRIS-OWNER-APPROVED.md) · [security contract](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [84 QA cases](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md) · [Codex roadmap](POST-PREVIEW-QRIS-CODEX-HANDOVER.md).
+
+
+### Post-preview credential scope (target-only refinement)
+
+The pre-PAID **Checkout Claim Proof** is a separate capability for late-settled original purchases. The original Recovery Ticket is given only after verified PAID. Existing memory-only/no-plaintext ticket safeguards still apply to ordinary files/DB/logs; **only protected ciphertext in an access-controlled escrow vault** is allowed for crash survival. A still-live PAID owner does not have to rescan CCP. Never redisplay an already SUBMITTED receipt merely on restart/poll; UNCERTAIN transport cannot be reprinted automatically. Genuine offer versus merely attempted paper submission is recorded separately. Prior prepaid ticket-before-camera flow stays legacy. New after-preview ticket proceeds to fulfillment, not new capture.
 
 ## 1 November 2026 — Supplemental owner policy: responsibility to keep ticket
 
