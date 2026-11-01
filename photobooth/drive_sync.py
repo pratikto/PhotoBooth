@@ -132,7 +132,13 @@ def _refresh_upload_status(manifest: dict[str, Any]) -> None:
         manifest["upload_status"] = "ACTION_REQUIRED"
     elif records and all(record.get("status") == "VERIFIED" for record in records):
         manifest["upload_status"] = (
-            "UPLOAD_COMPLETE" if manifest.get("status") == "COMPLETED" else "PENDING_UPLOAD"
+            "UPLOAD_COMPLETE" if (manifest.get("status") == "COMPLETED" or
+                (manifest.get("purpose") == "POST_PREVIEW_PAID" and
+                 manifest.get("status") == "READY_FOR_PAID_DELIVERY" and
+                 manifest.get("paid_media_import_ready") is True and
+                 manifest.get("drive_binding_verified") is True and
+                 manifest.get("photo_number_layout") == 1))
+            else "PENDING_UPLOAD"
         )
     elif any(record.get("status") == "UPLOADING" for record in records):
         manifest["upload_status"] = "UPLOADING"

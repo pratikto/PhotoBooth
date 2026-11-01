@@ -1,5 +1,12 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — PP-05.d2a paid Drive completion status (CI pending)
+
+**Bug fixed in original upload status aggregation:** `POST_PREVIEW_PAID` manifests in `READY_FOR_PAID_DELIVERY` may now reach `UPLOAD_COMPLETE` once ALL individual files are independently VERIFIED and the paid media import, exact Drive binding and photo layout evidence are present. The original completed legacy transaction rule is unchanged. Both the Drive worker's `_refresh_upload_status` and the transaction writer's same-revision merge use the identical strictly scoped rule so an app/controller save cannot silently revert verified customer delivery. Any single PENDING/UPLOAD_RETRY/ACTION_REQUIRED file or incomplete original paid gates still prevent completion. Five regression cases added in `test_post_preview_paid_upload_status`.
+
+This enables accurate eventual paid Drive status; it does **not** prove paper exited, grant photo/customer ownership, close PAID/OWED, enable live Midtrans, or authorize merchant refund. The exact containing-source CI is PENDING; full 112 acceptance cases still NOT_RUN.
+
+
 ## 1 November 2026 — PP-05.d1 original purchased copy batching (new; CI pending)
 
 **Original PAID print dispatch is prepared as an isolated mock-only component**, not a customer/Sandbox printer activation. `OriginalPaidPrintDispatcher` validates the paid entitlement, original ticket genuinely displayed/dismissed, receipt no longer SENDING, individual Drive URL and saved 640×1920 output SHA **before** persisting the single original job SENDING. It requires the same external printer lane as the original ticket, then uses the existing calibrated `ThermalPrinter.print_image(path,copies=N)` so purchased duplicate copies form one complete RAW document. Only transport SUBMITTED is recorded on success, UNCERTAIN on any ambiguous failure, NOT_SENT when unavailable; no automatic replay, no false claim of physical paper, PAID/OWED preserved. The print order number is read from the exact persisted paid manifest, **not inferred by sorting template IDs**.

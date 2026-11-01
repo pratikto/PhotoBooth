@@ -472,7 +472,12 @@ class TransactionStore:
                         elif statuses and all(status == "VERIFIED" for status in statuses):
                             transaction.manifest["upload_status"] = (
                                 "UPLOAD_COMPLETE"
-                                if transaction.manifest.get("status") == "COMPLETED"
+                                if (transaction.manifest.get("status") == "COMPLETED" or
+                                    (transaction.manifest.get("purpose") == "POST_PREVIEW_PAID"
+                                     and transaction.manifest.get("status") == "READY_FOR_PAID_DELIVERY"
+                                     and transaction.manifest.get("paid_media_import_ready") is True
+                                     and transaction.manifest.get("drive_binding_verified") is True
+                                     and transaction.manifest.get("photo_number_layout") == 1))
                                 else "PENDING_UPLOAD"
                             )
                         elif "UPLOADING" in statuses:
