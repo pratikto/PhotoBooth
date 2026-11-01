@@ -13,16 +13,60 @@ worker safeguards remain binding. Production deployment, actual charges/refunds,
 merchant activation, live customer/cloud deletion and other branches are excluded.
 
 - Authorized branch: `feature/post-preview-qris-checkout`.
-- Last independently verified remote: `aeab952935c8403dc2032812fad5886a9685f9ea` (PP-01.e inactivity; verified remote, CI run 41284460093 all three jobs SUCCESS).
+- Last independently verified remote: `0baef564a19903ba36577cfd94262a457ce99fc1` (PP-03.a protector; verified remote, CI run 41284687081 all three jobs SUCCESS, including actual Windows DPAPI round trip).
 - Original audited base: `b68e514dd57c989df47fa1b222d45f3f71c38347`.
-- Current micro-increment: **PP-03.a — protected credential primitives and explicit OS support**.
+- Current micro-increment: **PP-03.b — original scoped CCP ciphertext/verifier/offer journal**.
 - Overall: PP-00 dependency audit continuing; PP-01 private capture and isolated development UI implemented; PP-02 preview/freeze backend and all-design UI implemented, real charge-readiness adapters NOT_IMPLEMENTED; PP-03..07 NOT_STARTED.
 - This checkpoint travels with the implementation commit. Resolve its containing
   SHA using `git log -1 --format=%H`; after push independently compare `git
   ls-remote origin refs/heads/feature/post-preview-qris-checkout`. A commit cannot
   truthfully contain its own SHA. The next increment records this verified tip.
 
-## PP-03.a — current protected vault primitives and evidence
+## PP-03.b — current original CCP journal and evidence
+
+Additive **schema v3** stores one original pre-PAID CCP per frozen purchase group,
+with authenticated ciphertext, scope-bound hash verifier, booth/merchant/draft/
+contract identity, issuance/expiry, genuine-offer timestamp, rate window and
+revocation. No raw token/QR bitmap/key sidecar in SQLite/WAL/events. Legacy paid-first
+capability and 24h policy are unchanged. New policy version is explicitly pilot:
+default 24h from original CREATE_PREPARED, independent issued/offered timestamps,
+8 failed attempts/60s and 60s in-memory render permit. Configurable bounded values
+are not signed commercial/legal terms and never extend on renewal/restart/offer.
+
+Issue-once returns metadata only. Original decrypt is limited to an active trusted
+checkout worker, using a redacted in-memory typed offer permit. Create/decrypt is
+not proof of offer; only a current renderer callback may record CCP_OFFERED once.
+Reboot/copied/expired/retired permits cannot do so. Slow decrypt finishing after
+privacy retirement cannot resurrect a permit. Correct CCP verification returns
+only typed identity metadata with media/payment authority explicitly false.
+Wrong QR kind/booth/merchant/group, guessed proof, expiry, clock rollback and
+revocation deny. Missing escrow row/table, corrupt ciphertext or lost key fails
+closed without second-token reissue; original frozen obligation records remain.
+
+Actual **15 CCP tests PASS / 0 FAIL / 0 SKIP** (14 initial methods plus missing-v3-
+journal regression), and combined clean-venv workflow **160 PASS / 0 FAIL / 0 SKIP**,
+20.209s. Includes actual encrypted DB/WAL plaintext-absence checks, exact original
+recovery/expiry, duplicate offer timestamp, durable rate limit and concurrent
+privacy/decrypt race. New matching-source CI pending push. Previous 41284687081
+all three jobs SUCCESS; actual DPAPI exercised on Windows, unsupported behavior
+on Linux. Native private-flow regression is being rerun for schema compatibility.
+
+Broad earlier-worktree 1346/1269 PASS/77 SKIP is retained as baseline, not final
+source evidence. Separate opt-in original GUI/audio group finished **123 run /
+120 PASS / 0 FAIL / 3 SKIP**, 167.185s; remaining skips: two opt-in native palm
+model methods and native-video opt-in/ffmpeg condition. No actual hardware proof.
+These groups overlap and must not be added as unique full-suite counts.
+
+Changed: `post_preview_ccp.py`, additive store schema, draft/checkout schema test
+assertions, `test_post_preview_ccp.py`, workflow and checkpoint/current notices.
+No native CCP/payment offer is mounted yet; no payment/photo/booth authority from
+CCP. Full PP-033/034/038..046 acceptance remains NOT_RUN until later integration.
+Next **PP-03.c**: private prepayment native CCP offer with actual render callback
+and immediate token/texture cleanup, no raw QR screenshots/logs, unsupported-vault
+hold and encrypted same-original restart; then PP-04 safe provider attempts. Keep
+real Midtrans/Drive/print/refund activation disabled and complete remaining stages.
+
+## PP-03.a — previously delivered protected vault primitives and evidence
 
 `credential_vault.py`: Windows current-user DPAPI with order-scope optional entropy,
 UI_FORBIDDEN, bounded envelopes, no LOCAL_MACHINE broad scope, no plaintext/key-file

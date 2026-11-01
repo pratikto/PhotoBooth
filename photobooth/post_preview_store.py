@@ -61,7 +61,7 @@ class PostPreviewStore:
             singleton INTEGER PRIMARY KEY CHECK(singleton=1), version INTEGER NOT NULL);
           INSERT OR IGNORE INTO pp_schema VALUES(1,1);
         ''')
-        if self.db.execute('SELECT version FROM pp_schema').fetchone()[0] not in (1, 2):
+        if self.db.execute('SELECT version FROM pp_schema').fetchone()[0] not in (1, 2, 3):
             self.db.close()
             raise DraftHeld('Unsupported private draft schema')
         self.db.executescript('''
@@ -101,6 +101,25 @@ class PostPreviewStore:
                 contract_sha256 TEXT NOT NULL, phase TEXT NOT NULL
                   CHECK(phase='CREATE_PREPARED'), prepared_at REAL NOT NULL)''')
             self.db.execute('UPDATE pp_schema SET version=2 WHERE version=1')
+        missing_credential_journal = False
+        with self.write():
+            version = self.db.execute('SELECT version FROM pp_schema').fetchone()[0]
+            if version < 3:
+                self.db.execute('''CREATE TABLE IF NOT EXISTS pp_ccp_credentials (
+                    purchase_group_id TEXT PRIMARY KEY REFERENCES pp_checkout_intents(purchase_group_id),
+                    booth_id TEXT NOT NULL, merchant_id TEXT NOT NULL,
+                    scope_json TEXT NOT NULL, verifier TEXT NOT NULL UNIQUE,
+                    protector_id TEXT NOT NULL, ciphertext BLOB NOT NULL,
+                    issued_at REAL NOT NULL, expires_at REAL NOT NULL,
+                    policy_version TEXT NOT NULL, offered_at REAL,
+                    attempts INTEGER NOT NULL DEFAULT 0, window_at REAL NOT NULL,
+                    revoked INTEGER NOT NULL DEFAULT 0 CHECK(revoked IN (0,1)))''')
+                self.db.execute('UPDATE pp_schema SET version=3')
+            elif not self.db.execute("SELECT 1 FROM sqlite_master WHERE name='pp_ccp_credentials' AND type='table'").fetchone():
+                missing_credential_journal = True
+        if missing_credential_journal:
+            self.db.close()
+            raise DraftHeld('Original credential journal is unavailable')
 
     def close(self):
         with self.lock:

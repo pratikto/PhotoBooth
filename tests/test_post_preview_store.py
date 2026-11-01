@@ -33,7 +33,7 @@ class PrivateDraftTests(unittest.TestCase):
         self.assertEqual(25000, state['amount'])
         self.assertEqual(2, len(state['templates']))
         self.assertEqual('OPEN', state['state'])
-        self.assertEqual({'pp_schema', 'pp_drafts', 'pp_templates', 'pp_events', 'pp_checkout_intents', 'sqlite_sequence'},
+        self.assertEqual({'pp_schema', 'pp_drafts', 'pp_templates', 'pp_events', 'pp_checkout_intents', 'pp_ccp_credentials', 'sqlite_sequence'},
                          {r[0] for r in self.store.db.execute("SELECT name FROM sqlite_master WHERE type='table'")})
 
     def test_twelve_templates_have_one_lineage_each_independent_of_copies(self):
