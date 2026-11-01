@@ -1,5 +1,10 @@
 # Post-preview QRIS implementation checkpoint
 
+## 1 November 2026 — PP-05.c2 CI fixture setup correction (new; rerun pending)
+
+First containing-source CI run `41319419783` **FAILED**: Linux 358 run / 4 ERROR / 0 assertion failures (Windows subsequently cancelled; native SUCCESS). All four new Drive binding tests incorrectly called `CheckoutFixture.enable_paid_ticket()` **after** payment started, which is forbidden by the existing `attach_paid_ticket` security admission guard. Correct only the fixture order: attach the synthetic ticket service before starting a new private visit; leave runtime guard unchanged. The original claim_exact tests and 354 other tests passed on the failing run. Current micro-fix CI is PENDING; this is not a full acceptance PASS or a merchant/Drive device result.
+
+
 ## 1 November 2026 — PP-05.c2 guarded original PAID Drive binding (NEW; CI pending)
 
 **Synthetic-only authenticated integration, no live Drive operations:** new `OriginalPaidDriveBinding` checks the independently verified original PAID/OWED entitlement, exact still-live photo/worker lease, frozen media/artwork/checksums, merchant binding and original PB001V2S2 storage namespace. It writes the immutable original `transaction_id` to `pp_paid_services` **before** taking any slot, then calls `BoothWorkspace.claim_exact`. A provider timeout, lost ACK, worker restart or malformed/foreign folder response can never select a different paid transaction ID. Existing `BoothDriveClient.bind_transaction` is the only remote verification boundary; exact transaction ID, fixed Drive folder URL, link_verified and photo layout 1 must all match. Only after the workspace remembers the original claim may the paid service become `drive_state=VERIFIED`. Failures hold OWED/UNKNOWN with original folder identity, never invent a URL.

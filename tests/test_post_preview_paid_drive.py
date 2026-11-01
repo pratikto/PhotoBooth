@@ -62,6 +62,7 @@ class OriginalPaidDriveReservationTests(unittest.TestCase):
         from photobooth.catalog import get_templates
         fixture=CheckoutFixture(self.root/'postpay')
         self.addCleanup(fixture.close)
+        fixture.enable_paid_ticket()  # Explicit authority must be attached BEFORE checkout admission.
         service=fixture.service
         frame=np.zeros((32,48,3),dtype=np.uint8)
         service.prepare()
@@ -76,7 +77,6 @@ class OriginalPaidDriveReservationTests(unittest.TestCase):
         self.assertEqual('payment_pending',view['phase'])
         fixture.provider.state(view['payment']['attempts'][0]['provider_order_id'],'settlement')
         service.check_payment('connectivity')
-        fixture.enable_paid_ticket()
         fixture.ticket.prepare(service.lease)
         return fixture
 
