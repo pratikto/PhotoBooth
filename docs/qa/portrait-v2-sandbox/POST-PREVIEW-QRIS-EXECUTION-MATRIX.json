@@ -1657,5 +1657,28 @@
     "photobooth/post_preview_ccp.py": "1a846d1dfd0af14cf8cbff53f5d7170cc0f6e37033eb7baa8dc8a8673cde9be5",
     "photobooth/post_preview_store.py": "92e9b3ebe23426277bd5562876fdea822002a43ba36cf853b2780e3575ed4cea",
     "tests/test_post_preview_ticket.py": "01c3d7f05da4c9ae52db326ce01385c8653df16d7e0486959827be7ef49b79b6"
+  },
+  "latest_component_checkpoint": {
+    "verified_branch_head": "6c742437ac034a5251322388fbe6176fab687cfe",
+    "source_scope": "mock-only, no actual merchant/provider/Drive device work",
+    "last_complete_three_job_ci": {
+      "source_sha": "2f394e612ed00eff9da72054ee8b1afdaae4bcb6",
+      "run_id": 41319612205,
+      "result": "SUCCESS"
+    },
+    "latest_containing_ci": {
+      "run_id": 41320976927,
+      "status": "PENDING"
+    },
+    "stages": {
+      "PP_05b": "SYNTHETIC_SOURCE_AND_PRIOR_CI_VERIFIED",
+      "PP_05c": "SYNTHETIC_SOURCE_LINUX_TESTED_WINDOWS_PENDING",
+      "PP_05d1": "SYNTHETIC_SOURCE_CI_PENDING",
+      "PP_05d2": "NOT_IMPLEMENTED",
+      "PP_06": "NOT_IMPLEMENTED",
+      "PP_06R": "NOT_IMPLEMENTED",
+      "PP_07": "NOT_RUN"
+    },
+    "full_acceptance": "ALL_112_NOT_RUN"
   }
 }
