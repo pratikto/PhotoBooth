@@ -13,16 +13,50 @@ worker safeguards remain binding. Production deployment, actual charges/refunds,
 merchant activation, live customer/cloud deletion and other branches are excluded.
 
 - Authorized branch: `feature/post-preview-qris-checkout`.
-- Last independently verified remote: `3a7e3ee20270d53144a243500f17ff2f1a0d8bac` (PP-02.a preview/freeze; verified remote, CI run 41282882700 SUCCESS).
+- Last independently verified remote: `501254f210a596ce45d8181f35d5a0e7df998f8d` (PP-01.b resources; verified remote, CI run 41283139493 SUCCESS).
 - Original audited base: `b68e514dd57c989df47fa1b222d45f3f71c38347`.
-- Current micro-increment: **PP-01.b — bounded capture resource controls**.
+- Current micro-increment: **PP-01.c — original PhotoJobs private workflow facade**.
 - Overall: PP-00 dependency audit continuing; PP-01 backend capture implemented, GUI NOT_IMPLEMENTED; PP-02 backend boundary implemented, real readiness adapters/GUI NOT_IMPLEMENTED; PP-03..07 NOT_STARTED.
 - This checkpoint travels with the implementation commit. Resolve its containing
   SHA using `git log -1 --format=%H`; after push independently compare `git
   ls-remote origin refs/heads/feature/post-preview-qris-checkout`. A commit cannot
   truthfully contain its own SHA. The next increment records this verified tip.
 
-## PP-01.b — current capture resource controls and evidence
+## PP-01.c — current private worker bridge and evidence
+
+`kiosk_v2/post_preview_photos.py` supplies an internal `PrivatePhotoService` for
+original `PhotoJobs`; it is NOT mounted in the application yet. It accepts
+explicit BGR frame/slot/revision/role/generation commands, reuses private media
+and preview adapters, returns mirrored review thumbnails, per-design review and
+all-design final preview, and retains lineages/quota when editing the cart.
+No service method creates a charge, freezes checkout automatically, prints,
+uploads, or supplies a download QR. No ordinary flow or existing launch changes.
+
+Immediate memory-only hide fences even a snapshot already reading images on the
+I/O worker. Subsequent snapshots contain only HOLD, and worker retirement records
+its distinct lifecycle without marking ownership free. Restart observes unresolved
+original ownership and holds with no automatic media restoration or B admission.
+Actual customer proof, camera fence/ACK and safe unattended release remain PP-06
+integration work. Reuse of PhotoJobs does not imply GUI countdown integration.
+
+Actual **8 new worker methods PASS / 0 FAIL / 0 SKIP** (1.357s); fresh-venv combined
+workflow **134 PASS / 0 FAIL / 0 SKIP** (16.737s). Includes exact worker duplicate
+submission test, two-design/all-preview flow, preserved retake after cart edit,
+stale frame rejection, concurrent late snapshot privacy barrier and reboot hold.
+Compile/diff checks PASS. Full existing-environment synthetic regression has
+started; result not yet known. Prior resource CI 41283139493 SUCCESS; this worker
+commit's matching-source CI pending push. Full 112-case acceptance remains NOT_RUN.
+
+Changed: `photobooth/kiosk_v2/post_preview_photos.py`,
+`tests/test_post_preview_worker.py`, focused workflow and current documentation.
+Next **PP-01.d / PP-02.b**: subclass/reuse original PhotoViews and native App only
+through an explicitly isolated development mode; bind capture metadata on GUI
+submission, add all-design preview/edit page, fence private screens on suspend/
+retirement, test native countdown/no auto-print at both portrait sizes. Keep
+payable route gated pending vault/CCP, provider attempts, paid delivery and exact
+machine-isolation implementation. Remaining software is not a hardware blocker.
+
+## PP-01.b — previously delivered capture resource controls and evidence
 
 `PrivateCapturePolicy` adds actual free-disk and bounded private-tree checks,
 image decoder limits and an off-GUI fsync write probe. Nonproduction configurable
