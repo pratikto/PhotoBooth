@@ -1,5 +1,10 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — supervised Windows local pilot (CI pending)
+
+New explicitly opted-in `tools/run_post_preview_checkout_pilot.py` launches existing native Kivy with real camera and the **in-process synthetic** original payment provider. `--synthetic-payment-only` is mandatory. A separate scoped `SIMULASI PAID • TANPA TRANSFER` button exists only with a synthetic callback, never in the default/merchant app. Receipt and photo-strip printing remain virtual unless the operator independently passes `--enable-real-printer --accept-real-paper` and supplies a configured POS80 network, Windows or USB endpoint. The Drive folder URL is deliberately fake; no cloud upload or real Midtrans transaction occurs. CLI/regression tests and Windows instructions added in `POST-PREVIEW-QRIS-WINDOWS-PILOT.md`. Not complete PP-07; privacy/isolation recovery and financial refund still require the remaining work.
+
+
 ## 2 November 2026 — PP-05.d2d native original paid delivery page (CI pending)
 
 The **existing native checkout fixture**, not the production or legacy GUI, now continues automatically from the verified PAID ticket NEXT into the original paid folder/strip preparation worker. It then displays a native purchased-output result with the **actual verified customer folder URL** QR, separately labeled Drive upload progress (never assumes complete), paid print states and a one-time guarded `CETAK FOTO YANG SUDAH DIBAYAR` button. A transparent `CEK STATUS UPLOAD` checks only the same transaction. Bad Drive binding leaves PAID/OWED on the hold page with a `COBA SIAPKAN DELIVERY` retry; no duplicate provider charge or strip send. The original 30-second ticket and shared printer lane are unchanged. Native tests cover 800x1280 and 452x900 full original paid-ticket→Drive QR→print and offline Drive hold.

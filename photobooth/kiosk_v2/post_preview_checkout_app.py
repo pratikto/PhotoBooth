@@ -17,7 +17,10 @@ from .theme import GOLD, MUTED, text_label
 
 
 class PrivateCheckoutFixtureApp(PrivatePreviewApp):
-    def __init__(self, private_root, *, private_service, **kwargs):
+    def __init__(self, private_root, *, private_service, synthetic_pay_callback=None, **kwargs):
+        if synthetic_pay_callback is not None and not callable(synthetic_pay_callback):
+            raise TypeError('An explicit synthetic paid fixture must be callable')
+        self._synthetic_pay_callback = synthetic_pay_callback
         if not isinstance(private_service, PrivateCheckoutService):
             raise TypeError('Explicit incomplete mock checkout service required')
         self._claim_card = self._claim_pending = None
@@ -56,6 +59,18 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
     def _freeze_checkout(self):
         view = self._photo_view
         self._photo_submit('freeze_checkout', view.get('revision'), view.get('amount'))
+
+    def _simulate_verified_paid(self):
+        """Explicit in-process test provider ONLY; no Midtrans API request."""
+        if (self._synthetic_pay_callback is None
+                or self._photo_view.get('phase')!='payment_pending'
+                or self._closed or self._suspended or self._photo_jobs.busy):
+            return
+        payment=self._photo_view.get('payment')
+        if not isinstance(payment,dict) or not payment.get('attempts'):
+            return
+        self._synthetic_pay_callback(payment)
+        self._photo_submit('check_payment','connectivity')
 
     def _sandbox_photo_outcome(self, outcome):
         view = outcome.value or {}
@@ -322,6 +337,10 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
                                            size=18, height=120, color=MUTED))
             shell.add_widget(self._photo_action('PERIKSA STATUS',
                 lambda: self._photo_submit('check_payment', 'connectivity'), variant='secondary'))
+            if phase == 'payment_pending' and self._synthetic_pay_callback is not None:
+                shell.add_widget(self._photo_action(
+                    'SIMULASI PAID • TANPA TRANSFER',
+                    self._simulate_verified_paid, variant='secondary'))
             if payment.get('state') == 'EXPIRED_UNPAID':
                 shell.add_widget(self._photo_action('LANJUTKAN PESANAN ASLI',
                     lambda: self._photo_submit('continue_payment', True)))
