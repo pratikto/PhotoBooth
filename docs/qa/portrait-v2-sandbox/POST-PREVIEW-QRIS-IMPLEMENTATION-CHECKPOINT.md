@@ -1,5 +1,10 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — PP-06.a two-phase offline booth isolation ledger (CI pending)
+
+Introduced additive **schema v7** `pp_isolation_ops`, with immutable original operation ID, owner generation, financial class and PREPARED/ACKED only. The new `OriginalMockIsolation` accepts **only in-process synthetic** originals with the same SQLite ledger/backend, `PhotoJobs`, launch lease and printer lane. It requires that the original private screen be retired, no in-flight photo/thermal/Drive worker exists, original provider identities and every attempt have been classified (PENDING/UNKNOWN disallowed), and any PAID/OWED order retains a genuinely offered CCP. Uncertain SENDING/UNCERTAIN ticket or strip physical print blocks automatic release. Recheck exact financial class + quiescence on ACK before flipping only the local occupancy `closed=1`, leaving original PAID/OWED, proof, media and print jobs durable. New visitor is admitted **only after ACK**, never merely because Ads are visible. Five tests cover unpaid release, PENDING refusal, PAID/OWED retention, blocked print and blocked PhotoJobs. Real Sandbox provider/backend release and returning-customer UI are NOT enabled.
+
+
 ## 2 November 2026 — supervised Windows local pilot (CI pending)
 
 New explicitly opted-in `tools/run_post_preview_checkout_pilot.py` launches existing native Kivy with real camera and the **in-process synthetic** original payment provider. `--synthetic-payment-only` is mandatory. A separate scoped `SIMULASI PAID • TANPA TRANSFER` button exists only with a synthetic callback, never in the default/merchant app. Receipt and photo-strip printing remain virtual unless the operator independently passes `--enable-real-printer --accept-real-paper` and supplies a configured POS80 network, Windows or USB endpoint. The Drive folder URL is deliberately fake; no cloud upload or real Midtrans transaction occurs. CLI/regression tests and Windows instructions added in `POST-PREVIEW-QRIS-WINDOWS-PILOT.md`. Not complete PP-07; privacy/isolation recovery and financial refund still require the remaining work.

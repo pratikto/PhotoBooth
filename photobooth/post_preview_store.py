@@ -61,7 +61,7 @@ class PostPreviewStore:
             singleton INTEGER PRIMARY KEY CHECK(singleton=1), version INTEGER NOT NULL);
           INSERT OR IGNORE INTO pp_schema VALUES(1,1);
         ''')
-        if self.db.execute('SELECT version FROM pp_schema').fetchone()[0] not in (1, 2, 3, 4, 5, 6):
+        if self.db.execute('SELECT version FROM pp_schema').fetchone()[0] not in (1, 2, 3, 4, 5, 6, 7):
             self.db.close()
             raise DraftHeld('Unsupported private draft schema')
         self.db.executescript('''
@@ -320,6 +320,38 @@ class PostPreviewStore:
         if missing_paid:
             self.db.close()
             raise DraftHeld('Original paid delivery journal is unavailable')
+
+        # PP-06 isolated booth occupancy has its own durable, non-financial
+        # operation key. Existing PAID/OWED, print, CCP and recovery journals
+        # remain immutable; public Ads alone never acknowledges release.
+        with self.write():
+            version=self.db.execute('SELECT version FROM pp_schema').fetchone()[0]
+            if version < 7:
+                self.db.execute('''CREATE TABLE IF NOT EXISTS pp_isolation_ops (
+                    draft_id TEXT PRIMARY KEY REFERENCES pp_drafts(draft_id),
+                    operation_id TEXT NOT NULL UNIQUE, booth_id TEXT NOT NULL,
+                    original_generation INTEGER NOT NULL,
+                    financial_class TEXT NOT NULL CHECK(financial_class IN
+                      ('NO_PAYMENT','TERMINAL_UNPAID','PAID_OWED')),
+                    state TEXT NOT NULL DEFAULT 'PREPARED' CHECK(state IN
+                      ('PREPARED','ACKED')),
+                    prepared_at REAL NOT NULL, acknowledged_at REAL)''')
+                self.db.execute('''CREATE TRIGGER IF NOT EXISTS pp_isolation_identity_immutable
+                    BEFORE UPDATE OF draft_id,operation_id,booth_id,
+                    original_generation,financial_class,prepared_at ON pp_isolation_ops
+                    BEGIN SELECT RAISE(ABORT,'Original isolation identity is immutable'); END''')
+                self.db.execute('''CREATE TRIGGER IF NOT EXISTS pp_isolation_no_replay
+                    BEFORE UPDATE OF state ON pp_isolation_ops
+                    WHEN OLD.state='ACKED' AND NEW.state!='ACKED'
+                    BEGIN SELECT RAISE(ABORT,'Original isolation cannot be reopened'); END''')
+                self.db.execute('UPDATE pp_schema SET version=7')
+            else:
+                needed={'draft_id','operation_id','booth_id','original_generation',
+                        'financial_class','state','prepared_at','acknowledged_at'}
+                actual={r['name'] for r in self.db.execute(
+                    'PRAGMA table_info(pp_isolation_ops)')}
+                if not needed <= actual:
+                    raise DraftHeld('Original isolation journal is missing or invalid')
 
     def close(self):
         with self.lock:

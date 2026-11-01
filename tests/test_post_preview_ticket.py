@@ -105,7 +105,7 @@ class OriginalPaidTicketTests(unittest.TestCase):
             self.ledger.db.execute('DROP TABLE '+table)
         self.ledger.db.execute('UPDATE pp_schema SET version=5')
         other=PostPreviewStore(self.fixture.fixture.root/'drafts.db');self.addCleanup(other.close)
-        self.assertEqual(6,other.db.execute('SELECT version FROM pp_schema').fetchone()[0])
+        self.assertEqual(7,other.db.execute('SELECT version FROM pp_schema').fetchone()[0])
         self.assertEqual(paid['entitlement_id'],other.db.execute('SELECT entitlement_id FROM pp_purchase_finance').fetchone()[0])
         self.assertEqual(ccp,other.db.execute('SELECT ciphertext FROM pp_ccp_credentials').fetchone()[0])
         self.assertEqual(0,other.db.execute('SELECT count(*) FROM pp_ticket_credentials').fetchone()[0])
