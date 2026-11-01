@@ -1,5 +1,10 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — supervised Windows pilot real worker ownership correction (CI pending)
+
+The explicit synthetic payment pilot now binds `OriginalWorkerReadiness` to the **actual live Kivy `PhotoJobs` and camera object** at `BoundPilotApp.build`, rather than accidentally trusting setup-time synthetic fixture camera/worker objects for readiness. The original `PrivateCheckoutFixtureApp` and existing native tests are unaffected. The synthetic simulator remains incapable of charging real Midtrans, and physical printer use still requires dual explicit opt-in.
+
+
 ## 2 November 2026 — PP-06 generation-schema and claim test corrections (CI pending)
 
 The exact containing-source CI at `8f06c99786d7` (run `41333753207`) failed eight new PP-06 cases: three isolation cases attempted to insert v8 isolation operations without explicitly journaling non-nullable `state='PREPARED'`, and five returning-owner tests read a wrapped kiosk snapshot as a raw provider response. Corrected the v8 INSERT to persist PREPARED and accessed `snapshot['payment']['attempts']` in tests. No provider proof, original occupancy or uncertain-print guard was weakened.

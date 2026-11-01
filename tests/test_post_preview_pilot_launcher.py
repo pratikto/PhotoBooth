@@ -26,4 +26,12 @@ class PilotArgsTests(unittest.TestCase):
         validate_printer(args,{})
 
 
+    def test_native_pilot_requires_explicit_live_worker_binding(self):
+        import inspect
+        from tools import run_post_preview_checkout_pilot as pilot
+        source=inspect.getsource(pilot.main)
+        self.assertIn('fixture.bind_app(self)',source)
+        self.assertIn('class BoundPilotApp',source)
+
+
 if __name__=='__main__':unittest.main()

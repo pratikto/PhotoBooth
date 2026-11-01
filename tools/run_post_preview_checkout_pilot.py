@@ -71,7 +71,15 @@ def main(argv=None):
             attempts=payment.get('attempts',[])
             if not attempts:raise ValueError('No original synthetic order')
             fixture.provider.state(attempts[-1]['provider_order_id'],'settlement')
-        app=PrivateCheckoutFixtureApp(
+        class BoundPilotApp(PrivateCheckoutFixtureApp):
+            def build(self):
+                stage=super().build()
+                # This must run at native build, not against fixture camera
+                # and worker objects before the real App constructs its owner.
+                fixture.bind_app(self)
+                return stage
+
+        app=BoundPilotApp(
             root,private_service=fixture.service,
             synthetic_pay_callback=mark_synthetic_paid)
         try:app.run()
