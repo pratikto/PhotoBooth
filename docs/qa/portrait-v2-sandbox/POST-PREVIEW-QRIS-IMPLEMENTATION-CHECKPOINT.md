@@ -1,5 +1,12 @@
 # Post-preview QRIS implementation checkpoint
 
+## 1 November 2026 — PP-05.b1 receipt transport safety micro-increment (NEW; verification pending)
+
+**Scope of this commit:** Add original post-preview ticket in-memory thermal bitmap renderer and a single-use worker-side receipt send contract. Original PAID and a genuinely visible ticket render permit are required. Persist SENDING before any printer bytes; terminal SUBMITTED / NOT_SENT / UNCERTAIN states never replay after crashes, lost ACK or restart. The exact original token is never written as a receipt PNG or stored in ordinary logs; a shared printer transport lock is required before real transmission, and no caller can silently use a separate lane. No new payment, producer output, auto-isolation, Drive upload, merchant activation or legacy ticket change.
+
+**Tests:** Added `test_post_preview_ticket_receipt` to Windows/Linux private-state CI with seven focused cases covering presentation guards, once-only bitmap transport, no-printer, missing shared lane, uncertain print, restart SENDING and wrong credential QR. Tests/CI are **PENDING** for this new SHA and will be reported after completion. Do not count any of PP-001..112 as complete PASS. Native mandatory 30s screen and exact UI-bound parallel dispatch still **NOT_IMPLEMENTED**; this is safe disabled preparation for PP-05.b2. Keep PP-05.a, PP-04.d and other historical evidence unchanged.
+
+
 Updated 1 November 2026 (Asia/Jakarta). **IN_PROGRESS / NOT_READY_FOR_PHYSICAL_UAT.**
 
 ## Authority and exact Git boundary

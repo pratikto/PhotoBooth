@@ -135,3 +135,72 @@ class OriginalRecoveryTicketService(OriginalCCPService):
         with self._privacy_lock:
             self._offers.clear()
         return True
+
+    def send_receipt_once(self, lease, offer, printer, *, send_lock=None):
+        """One durable original receipt attempt, off the UI thread.
+
+        Call after genuine ticket visibility, while the 30-second on-screen
+        opportunity continues independently. SENDING is persisted before
+        printer I/O; restart/timeout cannot replay possibly delivered paper.
+        printer=None means no transport was configured, not a successful send.
+        A shared transport lock is required whenever other paid print jobs can
+        use the same physical printer.
+        """
+        if not isinstance(offer, PendingRecoveryOffer):
+            raise VaultUnavailable('Exact original paid ticket offer required')
+        with self.ledger.write():
+            scope, _ = self._scope(lease)
+            with self._privacy_lock:
+                entry = self._offers.get(offer.presentation_id)
+            row=self.ledger.db.execute('SELECT * FROM pp_ticket_presentations WHERE purchase_group_id=?',
+                                       (scope['purchase_group_id'],)).fetchone()
+            if (not entry or entry[0] is not offer or offer.generation!=lease.generation
+                    or offer.purchase_group_id!=scope['purchase_group_id']
+                    or not row or row['screen_state']!='VISIBLE'
+                    or row['render_permit_id']!=offer.presentation_id
+                    or row['receipt_state']!='PREPARED'):
+                raise VaultUnavailable('Original visible ticket and unspent receipt intent required')
+            state='NOT_SENT' if printer is None else 'SENDING'
+            self.ledger.db.execute('''UPDATE pp_ticket_presentations
+                SET receipt_state=?,receipt_updated_at=? WHERE purchase_group_id=?''',
+                (state,self._now(),scope['purchase_group_id']))
+            self.ledger._event(lease.draft_id,'TICKET_RECEIPT_'+state)
+            job=row['receipt_job_id']
+            amount=scope['amount']
+        if printer is None:
+            return {'receipt_job_id':job,'receipt_state':'NOT_SENT'}
+        # No sensitive exception messages or printer payloads in the journal.
+        outcome='UNCERTAIN'
+        try:
+            from photobooth.post_preview_ticket_receipt import render_post_preview_receipt
+            width=printer.config.print_width_dots
+            bitmap=render_post_preview_receipt(
+                offer.qr_payload,booth_id=lease.booth_id,amount=amount,width=width)
+            if send_lock is None:
+                # The invoking worker must own the exclusive receipt/strip lane.
+                # Until that shared lane is supplied, do not transmit paper.
+                outcome='NOT_SENT'
+            else:
+                with send_lock:
+                    result=printer.print_bitmap(bitmap,copies=1)
+                outcome='SUBMITTED' if result.success is True else 'UNCERTAIN'
+        except (ValueError,TypeError):
+            # Known pre-send rendering/configuration failures have no paper effect.
+            if send_lock is None:
+                outcome='NOT_SENT'
+            # If print_bitmap itself raised ValueError, paper status could be
+            # ambiguous: do not permit another send.
+        except Exception:
+            outcome='UNCERTAIN'
+        with self.ledger.write():
+            # Never turn UNCERTAIN into success merely to let the customer leave.
+            row=self.ledger.db.execute('SELECT receipt_state FROM pp_ticket_presentations WHERE purchase_group_id=?',
+                                       (scope['purchase_group_id'],)).fetchone()
+            if not row or row['receipt_state']!='SENDING':
+                raise VaultUnavailable('Original receipt journal changed during transport')
+            self.ledger.db.execute('''UPDATE pp_ticket_presentations
+                SET receipt_state=?,receipt_updated_at=? WHERE purchase_group_id=?''',
+                (outcome,self._now(),scope['purchase_group_id']))
+            self.ledger._event(lease.draft_id,'TICKET_RECEIPT_'+outcome)
+        return {'receipt_job_id':job,'receipt_state':outcome}
+
