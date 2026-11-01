@@ -1,7 +1,7 @@
 # Post-preview QRIS — documentation consistency reconciliation
 
 **Review date:** 1 November 2026. **Target branch:** `feature/post-preview-qris-checkout`. **Starting audit HEAD:** `b72f89cffa2363e8fcb8557f24649780e19b9793`.  
-**Outcome:** Owner-approved product decisions preserved; cross-document contradictions corrected **in Markdown only**. **No Python/source change, code tests, real Midtrans, printer, Drive, vault, cloud deletion or deployment performed.** New-order workflow remains **NOT IMPLEMENTED**, all **84 new PP cases NOT_RUN**, AR-13 CONDITIONAL. Legacy PAID-before-camera rights and parent branch stay unchanged.
+**Historical audit outcome (before later refund-first decision):** owner-approved safety/flow contradictions were reconciled **in Markdown only**. No source/code test, merchant action, printer, cloud deletion or deployment was performed. At that earlier checkpoint **84 PP scenarios were documented, all NOT_RUN**, and AR-13 CONDITIONAL. **LATEST owner update:** refund-first/lost-proof policy added **28 additional PP cases (PP-085..112), all NOT_RUN**, and new RF-D01–26 plus full decision ledger. The historical K01–20 audit below is retained without rewriting its dates or counts. Legacy PAID-before-camera rights and parent branch stay unchanged.
 
 **Review method:** Compare original 24 owner decisions/11 Mermaid flows with AR-00–13, UAH-001–050, Midtrans provider research, existing dedicated Sandbox, BUG-026/027/028, UX-07 readiness/paid printer, Drive folder layout, README/AGENTS/development protocol, current branch/HEAD and all changed Markdown references. Match conflicts to new acceptance tests rather than recycling historical CI success.
 
@@ -61,3 +61,31 @@ On 1 November 2026, after the 20-finding contradiction audit, the owner **change
 - Reconcile 1..9 GUI versus backend 1..10 allowed print copies at the frozen server quote boundary.
 - Verify physical POS80 paper/ticket/strip outputs and partial/corrupt print evidence, actual Google Drive ownership/sharing and stale callback fencing; no blind automatic replay.
 - Only mark PP test PASS with source SHA and real fixture/device evidence, then review AR/UAH regression and AR-13 customer/merchant release separately.
+
+## E. Later comprehensive refund-first + lost-proof reconciliation (new decisions, no source change)
+
+**Owner explicitly approved both**: (a) favor provider-authorized **automatic full refund** when paid service has genuinely and irrecoverably failed, plus refund only exact verified **excess** duplicated settled charge, and (b) **no automatic refund solely because a customer lost genuinely offered CCP/Recovery Ticket**; no tokenless photo unlocking. **These are compatible** because customer negligence and Meong failure are independent evidence dimensions. Customer wants the money not returned on proof loss alone, **not** a legally absolute standard clause forfeiting every possible complaint. Indonesia UU 8/1999 Pasal 18/19 requires review of ToS and proof of consumer fault. This new targeted policy **supersedes unconditional no-auto-refund as a future new-order design only**. Historical paid-first source still has no refund issuance. [Full policy](POST-PREVIEW-QRIS-REFUND-AND-LOST-PROOF-POLICY.md) · [42-area all-decisions ledger](POST-PREVIEW-QRIS-COMPLETE-DECISION-LEDGER.md) · [operator matrix](POST-PREVIEW-QRIS-OPERATOR-AND-REFUND-ESCALATION.md).
+
+| Additional cross-document risk | Contradiction resolved | Exact new-order contract / test anchor |
+| --- | --- | --- |
+| K21 New owner wants refund-first vs old UAH-D18 blanket no-auto-refund | **Version distinction:** new PP merchant-failure eligible future auto refund; old paid-first UAH remains historical/current code only | RF-D01/26; PP-092/093 |
+| K22 Owner says "uang hangus" when CCP/ticket lost vs law/PAID/OWED | No **automatic** refund for genuinely lost proof *alone*, no protected photo disclosure; separate service failure and lawful complaint rights preserved | RF-D05–08/25; PP-085..090/112 |
+| K23 Recovery-ticket fallback-only vs latest mandatory screen | First genuine live PAID ticket screen **always** 30 visible seconds + NEXT while **same original ticket prints once concurrently**; printer SUBMITTED never skips UI | RF-D09; PP-041/042/051/079/080 |
+| K24 Printer SENDING/UNCERTAIN vs full automatic refund for every failure | Uncertain paper must be physically/evidentially classified; no blind reprint/refund; bounded provider-verified irrecoverable service only | RF-D18/19; PP-095/096/108 |
+| K25 Lost proof + separate genuine paid print/Drive failure | Classify merchant failure independently; cannot refuse remedy on proof-loss ground | RF-D06–08; PP-089/093 |
+| K26 General Midtrans QRIS refund docs vs GoPay QRIS POS default disabled | Merchant-specific Refund API activation/eligible original transaction still NOT VERIFIED; unprovided API -> REVIEW not fake refund | RF-D14/15; PP-100..102 |
+| K27 Refund request accepted vs customer money received | Distinct durable original intent/key, requested, processing, provider-confirmed, customer balance visibility; no second POST on timeout | RF-D16/17; PP-104..106 |
+| K28 Two QRIS attempts PAID vs one entitlement | One original paid service; refund only the exact unambiguous excess attempt; never double charge/service | RF-D04; PP-097/098/111 |
+| K29 Full service refund vs duplicate-excess refund worker fencing | Full irrecoverable-service refund fences its owed service; **excess-only refund preserves the rightful single paid print/Drive service** | RF-D18; PP-097/107/108 |
+| K30 Financial refund vs machine SAFE/FREE | Refund success does not cure printer/camera lease, paper queue, isolation/fence ACK or private-photo hazard | RF-D19; PP-109 |
+| K31 Token generated or printer SUBMITTED vs real customer opportunity | Keep proof-offered/QR-visible journal; never-presented proof is Meong failure, not lost-by-customer | RF-D07/21; PP-087/088 |
+| K32 Codex post-preview PP-00..07 vs new refund dependency | PP-06R refund stage follows verified PP-05 fulfillment and PP-06 owner/worker release; no live merchant action without separate go-live authorization | PP-085..112, PP-06R roadmap |
+
+**Complete latest record:**
+- 24 unchanged PP-D01..24 plus 26 owner refund/lost-proof RF-D01..26 and 42 topic rows in consolidated decision ledger; original AR/UAH/BUG/UX records retained historically.
+- **112 PP-001..112 unique proposed new-flow test IDs**; every new PP test **NOT_RUN**. Real Midtrans POS refund activation/actual payout, legal acceptance, Windows/Ubuntu/POS80, live Drive, encrypted vault and privacy/hardware tests **NOT VERIFIED**.
+- Existing original 11 master Mermaid charts plus refund/lost-proof, complete-decision and operator-exception supplemental charts. Only docs Markdown is changed; new project refund code and merchant financial actions **NOT IMPLEMENTED**.
+- Customer-screen policy still **always original ticket screen plus concurrent original paper receipt**, not an error-only fallback.
+- **Do not misread** this audit as runtime confirmation that all tests pass. Outstanding calibrations: account Refund API, old/new TTL and retention anchors, GUI 9 vs backend 10 copies, hardware uncertainty thresholds, merchant/legal ToS wording, abuse thresholds and refund-account settlement.
+
+**Source-of-truth ordering:** [complete decisions](POST-PREVIEW-QRIS-COMPLETE-DECISION-LEDGER.md) -> [master PP](POST-PREVIEW-QRIS-OWNER-APPROVED.md) + [new refund specific](POST-PREVIEW-QRIS-REFUND-AND-LOST-PROOF-POLICY.md) -> [security states](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) -> [provider](MIDTRANS-PROVIDER-CONTRACT.md) -> [112 QA](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md) -> [Codex stage PP-06R](POST-PREVIEW-QRIS-CODEX-HANDOVER.md). New target supersedes old wording **only for new post-preview orders**; never rewrite historical evidence or current legacy PAID -> camera code.
