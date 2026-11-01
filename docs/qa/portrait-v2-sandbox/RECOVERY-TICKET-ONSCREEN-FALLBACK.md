@@ -9,7 +9,7 @@ The pre-PAID **Checkout Claim Proof** is a separate capability for late-settled 
 
 ## 1 November 2026 — NEWER owner-approved rule for post-preview purchases: ALWAYS show ticket while printing
 
-**Current authoritative rule for NEW \`feature/post-preview-qris-checkout\` orders only (DESIGN / NOT IMPLEMENTED):** After independently verified PAID and the original live customer owns the kiosk, **the Recovery Ticket screen MUST ALWAYS appear**, even when the printer is fully functional. At the **same time**, start exactly **one** authorized receipt print dispatch carrying **the identical original Recovery Ticket QR/code**. The screen is not a fallback for printing failures. It stays visible with the original QR, FULL code, "SIMPAN RECOVERY TICKET" guidance, **visible 30-second countdown and LANJUT/NEXT** regardless of SUBMITTED, failed, timeout, UNCERTAIN or printer not configured.
+**Current authoritative rule for NEW `feature/post-preview-qris-checkout` orders only (DESIGN / NOT IMPLEMENTED):** After independently verified PAID and the original live customer owns the kiosk, **the Recovery Ticket screen MUST ALWAYS appear**, even when the printer is fully functional. At the **same time**, start exactly **one** authorized receipt print dispatch carrying **the identical original Recovery Ticket QR/code**. The screen is not a fallback for printing failures. It stays visible with the original QR, FULL code, "SIMPAN RECOVERY TICKET" guidance, **visible 30-second countdown and LANJUT/NEXT** regardless of SUBMITTED, failed, timeout, UNCERTAIN or printer not configured.
 
 ### Required parallel flow (new-order target)
 
