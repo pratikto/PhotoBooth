@@ -16,7 +16,7 @@
 | PP-D03 | One logical cart and total payment for every selected template/copy. | One frozen logical purchase, one legitimate paid fulfillment entitlement; QR replacements are individually journaled provider attempts, not extra purchases. |
 | PP-D04 | **Secure Checkout Claim Proof (CCP)** is privately offered **when payable checkout begins, before PAID**. | Random high-entropy original claim capability, bound to booth/logical purchase/frozen draft; hashed verifier, versioned/expiring/rate-limited; never an ordinary order number, QRIS payload, DEMO/operator QR, Recovery Ticket, or proof that money was paid. |
 | PP-D05 | CCP enables returning customers to claim **late-settled PAID** orders unattended after fresh independent payment/ownership checks. | Claims do not open unpaid photos; busy booth -> WAIT/DEFER, never preempt; missing customer proof never authorizes private-photo disclosure. |
-| PP-D06 | Keep the **separate original Recovery Ticket** after freshly verified PAID, printed once in the ordinary live path. | If unconfigured/failed/timed out/UNCERTAIN, display the same original QR and FULL code for 30 visible seconds + NEXT; no duplicate ticket issuance, no replay of uncertain receipt. Owner responsibility to save only follows a genuine opportunity. |
+| PP-D06 | **Always display the original Recovery Ticket screen for a newly verified PAID order with its live rightful customer, while concurrently submitting exactly one print job for that SAME ticket.** | This is the **normal dual-channel presentation**, NOT a printer-failure fallback. Screen shows original QR + FULL code for 30 visible seconds with countdown and NEXT/LANJUT whether printer succeeds, is absent, fails, times out, or returns UNCERTAIN. Launch screen rendering and single authorized print dispatch without waiting for printer ACK; serialize actual printer transport with other photo jobs. Never issue replacement ticket, auto-reprint UNCERTAIN/SENDING, reset the 30s timer on polling, or expose a ticket to a different visitor. Retired PAID_UNCLAIMED requires original CCP/ticket claim and free booth before any screen or printer dispatch. |
 | PP-D07 | Use **encrypted credential escrow** for crash survivability, with strict access controls and least-privilege redemption. | Do not save plaintext secrets/QR bitmaps in SQLite, journals, logs, screenshots, clipboard, Git or telemetry. An encrypted vault is a narrow exception to historical memory-only rules; it is NOT permission to reveal tickets on reboot or to duplicate prints. |
 | PP-D08 | **MVP printing waits for a verified customer download URL**; then final strip has 3 photos + 1 real QR. | Valid verified folder URL may precede upload completion; pending upload can continue in background. No invented QR or exposed public media before PAID. No unbounded paid wait: persist PAID/OWED and provide safe recovery/support path. |
 | PP-D09 | Preserve the old **offline local capture** capability. | When internet/Drive link is not ready at charge-readiness, do not knowingly create a payable order. Once PAID, hold printed delivery until QR URL verification; this narrowly changes old immediate-offline-print expectations for the new purchased route. |
@@ -40,7 +40,7 @@
 
 1. **Only on this dedicated branch/new version** the payment-before-camera ordering, paid-camera photo admission as the sole possible route, and mandatory ticket-before-camera diagram are superseded. **Safety guards are preserved and adapted, not bypassed.**
 2. Historical BUG-026 automatic QR1/2/3 applies while the **same original checkout remains actively owned**. Abandonment instead requests guarded original-attempt cancellation/reconciliation; no silent renewal for absent customers.
-3. Existing original ticket once-after-PAID plus 30s fallback remains approved. On the **new route**, the handoff after ticket is **fulfillment/printing**, not original camera admission; on legacy prepaid orders ticket continues to precede camera.
+3. **New owner correction:** for new post-preview purchases the Recovery Ticket screen **always appears after PAID and at the same time one original ticket print is dispatched**; the old 30-second **printer-failure-only fallback** is superseded for this new route. The UI is always shown with original QR/full code and 30s + NEXT, independent of printer response. After the ticket stage, continue to fulfillment/printing, not new camera admission. Legacy prepaid orders retain their original separate historical policy and PAID->camera route.
 4. The previously documented **do-not-persist-raw-ticket** rule remains true for ordinary databases, files, app logs, backups and media. The sole new exception is a **protected encrypted credential vault** with controlled identity binding, access/audit/expiry and policy-gated retrieval.
 5. Previous ability to print a strip fully offline persists for ordinary/local nonpayable test profiles. For new **purchased** strips with a customer Drive QR, unknown/unverified URL blocks final printed strip until resolved; a stable resolver is separate future scope.
 6. No original PAID/OWED is voided by expiration, privacy isolation, unpaid draft cleanup, loss of a genuinely presented ticket or offline inability to print. Proof absent before it was ever offered is a **service failure/claim problem**, not customer negligence.
@@ -56,7 +56,7 @@
 4. Final preview across **all** selected designs, transparent total/copies/reward rules; edit allowed only before payment-attempt creation and never replenishes prior used retake.
 5. Atomic freeze of draft/revision/templates/assets/copies/output checksums, independent server quote, charge readiness; create original payment attempt and **offer CCP privately on checkout page**.
 6. QRIS provider pending: status polling, QR1/2/3 on verified unpaid expiry only while the same visitor is active; unknown/backoff and guarded abandonment; never create second payable attempt from stale/UI-only evidence.
-7. Fresh PAID with original live customer -> exact paid draft binding -> original Recovery Ticket printed once; if unavailable/failed/UNCERTAIN show same QR/full code 30s + NEXT; no mandatory ticket-save screen on paper-submitted happy path. Ticket-only print can occur before final Drive URL; final photo strip cannot.
+7. Fresh PAID with original live customer -> exact paid draft binding -> **always open the original Recovery Ticket screen and concurrently submit ONE original ticket print job** (same QR/full code on paper and screen). Display the **visible 30-second countdown + NEXT/LANJUT** regardless of printer result, including SUBMITTED. Printer failure does **not** condition ticket screen entry, restart its timer, or authorize reprint. Dismiss on NEXT/zero once; protect privacy if the session retires. Ticket-only print may occur before final Drive URL; purchased photo strip still waits for its verified URL.
 8. Link/folder verified -> final original three-photo strip with genuine link QR -> durable paid photo print job(s) -> background upload and download presentation. Truthfully label pending uploads.
 9. Fulfillment/printing unknown -> preserve obligations, private claim and safe machine isolation; no duplicate print. Completed/archived -> wipe private UI before Advertising.
 
@@ -103,7 +103,7 @@ flowchart TD
     FREE -->|Yes| ADS[Safe Advertising and new visitor admission]
     STATUS -->|Verified PAID| OWNER{Original owner still live or valid returning CCP?}
     OWNER -->|No| UNCLAIM[PAID_UNCLAIMED + OWED, private claim only, no old public printing]
-    OWNER -->|Yes| TICKET[Original post-PAID ticket, one send/authorized 30s fallback]
+    OWNER -->|Yes| TICKET[Always show same Recovery Ticket QR/full code 30s + NEXT; concurrently send ONE ticket print]
     TICKET --> DELIVERY[Bind exact paid Drive folder, verify URL, print strips + upload]
     DELIVERY --> OBL{Original paid obligations resolved?}
     OBL -->|No / uncertain| OWED[Keep PAID/OWED; restricted recovery and isolation]
@@ -301,35 +301,41 @@ sequenceDiagram
 
 **CCP handoff requirement:** creating a token in the database does not mean the customer obtained it. Give a genuine, usable private chance to save an original claim proof when QRIS starts (clearly distinguish it visually and semantically from payment QRIS). Do not claim the customer forfeited recovery if the proof display/print never happened. This feature is an OWNER-APPROVED target; actual paper/screen payload/UI and expiry duration need security QA. A ticket on a shared public screen must never be redisplayed by a new visitor.
 
-### Flow G: live customer versus returning claim, exact receipt status and credential escrow
+### Flow G: mandatory on-screen Recovery Ticket plus concurrent one-time printed ticket
 
 ~~~mermaid
 flowchart TD
-    A([Fresh provider-verified PAID, original paid draft]) --> AUTH{Original customer authority?}
-    AUTH -->|Still-live original booth lease| L[Proceed without re-scanning CCP]
-    AUTH -->|Previous visit retired| C[Require original private CCP/ticket + fresh PAID + free booth]
-    C --> R{Valid original claim and reacquired lease?}
-    R -->|No| H[PAID_UNCLAIMED/OWED; WAIT or authorized remedy, no secret display]
-    R -->|Yes| L
-    L --> B[Ensure exactly one original ticket and scoped encrypted escrow]
-    B --> D{Durable receipt/presentation status?}
-    D -->|NOT_SENT| E[Persist original receipt SENDING intent, then submit ONCE]
-    E --> F{Printer transport result?}
-    F -->|SUBMITTED| SUB[Record SUBMITTED; do not auto-show screen fallback]
-    F -->|Unavailable / failed / timeout / UNCERTAIN| MAYBE[No resend; same-token on-screen fallback only if original live owner]
-    D -->|SENDING / UNCERTAIN| MAYBE
-    D -->|SUBMITTED| SUB
-    D -->|Already PRESENTED| PRES[Do not restart timer or auto-redisplay token]
-    MAYBE --> O{Current original customer still valid and vault permits exact token?}
-    O -->|Yes| SCREEN[Show SAME ticket QR + FULL code for 30 visible seconds and NEXT]
-    O -->|No| H
-    SCREEN --> ACK[Persist presentation opportunity; wipe QR/plaintext and retire callback]
-    SUB --> NEXT[Paid URL and photo print fulfillment; physical paper not proven]
-    ACK --> NEXT
-    PRES --> NEXT
+    A([Fresh independently verified PAID + exact paid draft]) --> AUTH{Customer authority still valid?}
+    AUTH -->|Live original booth lease| L[Authorize first original ticket presentation; NO CCP re-scan]
+    AUTH -->|Prior visit retired| C[Require original private CCP/ticket, fresh PAID and FREE booth]
+    C --> VALID{Original claim valid and booth reacquired?}
+    VALID -->|No / B active| H[PAID_UNCLAIMED / WAIT; keep secret private; no paper dispatch]
+    VALID -->|Yes| L
+    L --> B[Load same original ticket from protected escrow; never mint replacement]
+    B --> PREV{Was first ticket presentation already completed?}
+    PREV -->|Yes| EXIST[Do NOT auto-show/reprint on polling, reboot or stale callbacks; continue exact owed fulfillment]
+    PREV -->|No; authorized initial opportunity| OPEN[Persist ticket presentation intent + original receipt job identity]
+    OPEN --> SCREEN[UI TRACK: Always render SAME original QR and full code + SIMPAN warning]
+    OPEN --> PRINT[PRINT TRACK: In parallel, enqueue exactly one original receipt with same token]
+    SCREEN --> VISIBLE{Original customer still live and QR truly visible?}
+    VISIBLE -->|No; lease/privacy lost| LOCK[Immediately wipe private pixels; retain original PAID/OWED and audit]
+    VISIBLE -->|Yes| TIMER[Start 30 visible seconds; show NEXT / LANJUT]
+    TIMER --> END{NEXT or countdown reached zero?}
+    END -->|Yes| WIPE[Persist ticket offer/presentation; wipe QR and plaintext once]
+    PRINT --> SENT{Original receipt transport state?}
+    SENT -->|NOT_SENT: printer unavailable| NOSEND[Record no-send hardware reason; NO new ticket or repeated print]
+    SENT -->|SENDING / timeout / UNCERTAIN| QUAR[Quarantine same print job; NO auto-reprint]
+    SENT -->|SUBMITTED| SUB[Record submission; paper physically unproven]
+    NOSEND --> WORKER[Printer lane must be safe before photo-strip transport]
+    QUAR --> WORKER
+    SUB --> WORKER
+    WIPE --> HANDOFF[Continue original paid fulfillment independently of ticket transport result]
+    WORKER --> HANDOFF
+    HANDOFF --> NEXT[Verify customer Drive URL; then paid photo print and upload as allowed]
+    EXIST --> NEXT
 ~~~
 
-Receipt **transport** and ticket **presentation** are distinct durable records. A printer's \`SUBMITTED\` does not prove paper physically exited; a known hardware problem requires support/device evidence but does not authorize a spontaneous duplicate print. A returning claimant must not receive a new token, a reset 30-second countdown or a leaked previous QR on reboot. The encrypted escrow stores the one original credential as ciphertext, with narrow audited proof-gated redemption; ordinary application databases and logs contain only safe verifiers. Ticket presentation is post-PAID only. An original customer still live after PAID proceeds **directly** to ticket without having to scan the pre-PAID CCP.
+**Definition of concurrency:** display and receipt-print dispatch are *two effects of one verified-PAID initial presentation event*. Do not await printer readiness or acknowledgment before rendering; issue one persistent original print intent and queue the one job while the screen is visible. Physical paper ejection need not happen in the same millisecond as the first visible frame; the single printer worker serializes receipt and photo-strip bytes. UI countdown starts **only when original QR and full code are actually visible** and runs independently of receipt status. Printer \`SUBMITTED\` does not suppress the screen; printer offline/failed/UNCERTAIN does not cause a second screen or reprint. An early NEXT or timeout retires private pixels but does not cancel/replay an in-flight print; photo-strip printer transport waits for safe same-worker ordering, and any uncertain transport keeps its own obligation/evidence. If the live owner is lost before showing the QR, do not expose/print to B; retain PAID_UNCLAIMED/OWED for original secure claim. A RETURNING verified claimant receives a first lawful presentation **only if never previously presented**; an already presented original ticket is not automatically shown again. One presentation opportunity does not prove physical paper was received.
 
 ### Flow H: Drive availability and print-with-real-QR policy
 
@@ -452,7 +458,7 @@ flowchart TD
 | K06 QR renewal | delete drafts while old provider settles | Terminal unpaid + active owner + max QR3, same frozen draft | PP-QR |
 | K07 CCP late paid | A gone/B present; unauthorized prints | Non-disclosing private claim, PAID_UNCLAIMED, WAIT if busy | PP-CLAIM |
 | K08 Ticket escrow | restart after PAID before handoff | Confidential encrypted single credential + gated retrieval | PP-SEC |
-| K09 Receipt/photo print | partial paper, print SENDING crash | Exact job journal; UNCERTAIN no replay; distinct ticket/photo | PP-PRINT |
+| K09 Receipt/photo print | partial paper, print SENDING crash, or onscreen UI accidentally skipped after SUBMITTED | Always show original post-PAID ticket while one receipt is dispatched; exact job journal, single printer, UNCERTAIN no replay | PP-PRINT, PP-SEC |
 | K10 Drive QR | free download or false QR link | Authenticated paid-only publication; verified URL, held print otherwise | PP-DRIVE |
 | K11 Fulfillment owed | COMPOSED incorrectly treated as COMPLETED | Separate paid obligation ledger per design/copies and delivery | PP-PRINT, PP-DRIVE |
 | K12 Reboot/fencing | stale callback alters next session | Generation+lease checks, protected startup, exact journal restore | PP-CRASH |
@@ -480,9 +486,13 @@ flowchart TD
 - **UI privacy vs occupancy:** minimize, screen timeout and Advertising can hide pixels without cancelling the payment or releasing a booth. **Only** exact worker fence + safe original financial classification + durable isolation/ACK authorize a new visitor.
 - **Drive READY pool:** before QRIS, preflight only checks authenticated Drive readiness, sharing capability and unclaimed READY capacity; it does not require a customer-specific verified URL or consume a folder. A paid transaction later atomically binds an original folder and re-verifies exact identity/URL. If that post-paid binding fails, keep PAID/OWED and withhold purchased-strip printing. Unpaid draft must not exhaust the 25 READY reserves.
 - **Provider idempotency:** internal checkout keys and persisted immutable provider order identity are mandatory; a Legacy Midtrans Core /v2/charge idempotency header remains **UNVERIFIED** and may not be assumed.
-- **Ticket:** live paid owner does not scan CCP on the happy path. A returning owner uses CCP or original Recovery Ticket; receipt SENDING/UNCERTAIN never gets blind replay. Track receipt transport and customer presentation separately, with one 30s fallback only after original claim/ownership.
+- **Ticket (revised owner policy):** live paid owner does not scan CCP. On every newly verified PAID initial ticket opportunity, the original Recovery Ticket screen **always appears for 30 actually visible seconds with NEXT** while the same ticket's **one print dispatch starts concurrently**; transport SUBMITTED does not skip the screen. A returning original owner needs proof and a FREE booth; receipt SENDING/UNCERTAIN never gets blind replay and a completed original presentation never resets on polling/restart. Track paper transport and customer presentation independently.
 - **Timestamps:** retain distinct \`draft_created_at\`, \`payment_attempt_created_at\`, \`paid_verified_at\`, \`ticket_created_at\`, \`proof_offered_at\`, \`claim_expiry_at\`, \`transaction_retention_anchor_at\`, \`last_worker_barrier_at\`, and \`completed_at\`. Existing 24h Sandbox ticket expiry measured from original order creation applies to **legacy** orders; new post-preview expiry/CCP TTL and 15d local/30d Drive retention anchor must be explicitly versioned and verified in PP tests before shipping. **Proposal for future owner validation:** anchor paid photo retention at first genuine paid entitlement, separate unpaid staging TTL, no extension on QR renewal or restart. Do not silently adopt this proposal as a signed-off product value.
 - **Target profile:** legacy dedicated Sandbox intentionally keeps Drive OFF while allowing its historically verified receipt/photo printing. Post-preview purchased-flow fixtures require a **separate isolated synthetic verified-URL adapter**, with no real Drive access, and must not be described as live cloud delivery or production print acceptance.
+
+### Ticket presentation correction — explicitly approved
+
+This section supersedes any *printer failure -> screen only* or *SUBMITTED -> skip screen* instructions for **new post-preview orders** appearing in older UAH, receipt fallback, decision summaries, QA plans, or historical source descriptions. For an authorized live freshly-PAID customer, **screen ALWAYS + concurrent one-time paper submission**, same credential. Keep the initial 30-second screen and NEXT; printer failure affects the print lane only. The old dedicated paid-first Sandbox and historical UAH pass/fail/NOT_RUN evidence are not retroactively changed. This owner correction is **design only** until explicitly implemented/tested; the real UI, physical POS80 send and two-track race tests must be verified separately.
 
 ## 5. Scope exclusions, audit and go/no-go
 
