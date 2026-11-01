@@ -27,7 +27,7 @@
 | PP-D14 | For **abandonment during PENDING/UNKNOWN**, use same-order cancel/reconciliation and safe occupancy isolation, not automatic QR renewal. | Browser timeout, QR countdown, HTTP 404 or old cached UNPAID never equal terminal financial proof. |
 | PP-D15 | Customer data stays private in **unpaid draft local staging** before payment. | No customer-facing Drive upload/share/download QR, paid photo print or accidental background auto-print; QRIS payment-slip printing is distinct and allowed only through its own guarded pending-order path if separately implemented. |
 | PP-D16 | Preview composition may complete before payment, but **service fulfillment must not**. | `DRAFT_READY` ≠ `PAID` ≠ `FULFILLED`. Final printed strip may replace a prepay QR placeholder with the real paid-only QR, while final three photos/layout/design/copy requirement remain matched. |
-| PP-D17 | Before capture check camera/disk/templates/local staging; **before QRIS** verify frozen outputs, local durability, printer-route readiness, payment connectivity, and delivery-URL policy. | Link readiness may inspect a verified unclaimed READY reserve **without claiming it for the unpaid visitor**. After PAID perform atomic exact-identity binding and re-verification; if it fails retain PAID/OWED and hold photo-strip printing. Route observation ≠ physical paper detection. Isolated legacy Sandbox and future purchased post-preview test profile are distinct. |
+| PP-D17 | Before capture check camera/disk/templates/local staging; **before QRIS** verify frozen outputs, local durability, printer-route readiness, payment connectivity, and delivery-URL policy. | Precharge checks are read-only: authenticated Drive service/sharing capability, available unclaimed READY pool capacity and known delivery health, **without consuming a reserve or assuming that a customer URL already exists before binding**. After PAID atomically bind a customer folder and verify its exact viewer URL; if this fails retain PAID/OWED and withhold photo-strip printing. Route observation ≠ physical paper detection. Isolated legacy Sandbox and future purchased post-preview test profile are distinct. |
 | PP-D18 | Automatic session isolation only with proven fence/worker quiescence/backend release or safe local draft closure. | Prior PAID/OWED remains auditable. Protected Advertising is only a public UI, not authority to admit a new charge or show prior media. Operator only for unsafe/ambiguous financial, hardware, security or corrupt-data cases. |
 | PP-D19 | One immutable draft-to-paid binding and one entitlement per logical purchase across all QR attempts. | Detect and HOLD multiple settled attempts/amount mismatches; never double-fulfill, silently treat extra payment as a free service or refund automatically. |
 | PP-D20 | Purchase printing uses durable job reservations with exact design/output/copies, one printer owner and no uncertain replay. | `SENDING`/`UNCERTAIN` are NOT paper-success evidence; partial print requires separately approved physical inspection/remedy. Printed Recovery Ticket and purchased photo jobs have independent identities, same printer exclusivity. |
@@ -85,7 +85,7 @@ flowchart TD
     MORE -->|Yes| CAP
     MORE -->|No| FINAL[Final all-template preview; edit only before CREATE_PREPARED]
     FINAL --> FREEZE[Freeze draft and server-side quote]
-    FREEZE --> CHK[Precharge readiness: printer route + unclaimed verified Drive reserve availability]
+    FREEZE --> CHK[Precharge readiness: printer route + authenticated Drive health + unclaimed READY capacity]
     CHK --> OK{Charge-ready?}
     OK -->|No| PAUSE[Hold unpaid draft; revise pre-create or retry]
     PAUSE --> CHK
@@ -159,8 +159,8 @@ flowchart TD
     G --> H[Independent backend quote and frozen content hashes]
     H --> I{Cart/amount/media match?}
     I -->|No| D
-    I -->|Yes| J[Fresh payment transport, printer readiness and Drive URL policy]
-    J --> K{Known-unserviceable or unverified link?}
+    I -->|Yes| J[Fresh payment transport, printer route and Drive reservation/sharing capability]
+    J --> K{Known unserviceable, Drive unreachable or no READY reserve?}
     K -->|Yes| L[Hold draft; no payable order; retry or safe cancel]
     K -->|No| M[Persist logical checkout and CCP verifier]
     M --> N[Create provider payment attempt; immutable order]
@@ -179,7 +179,8 @@ flowchart TD
     V -->|UNKNOWN / not-found| HOLD[Protected bounded retry; no new charge or safe-release assumption]
     V -->|PENDING| P
     V -->|PAID| PAID[One exact original paid service entitlement]
-    V -->|Verified terminal unpaid| E[Archive original attempt with terminal evidence]
+    V -->|Verified EXPIRED unpaid| E[Archive original attempt with expiry evidence]
+    V -->|Verified CANCELLED unpaid| CLOSE[Guarded closure: no renewal]
     P --> S{Fresh provider status or distinct visitor event?}
     S -->|PENDING, active visit| P
     S -->|UNKNOWN / lost status reply| R
@@ -210,8 +211,18 @@ flowchart TD
     D3 -->|PENDING| P
     D2 -->|Unknown| R2[Reconcile own QR2 identity; do not recreate]
     D3 -->|Unknown| R3[Reconcile own QR3 identity; do not recreate]
-    R2 --> S
-    R3 --> S
+    R2 --> V2{Fresh QR2 outcome?}
+    R3 --> V3{Fresh QR3 outcome?}
+    V2 -->|Pending| P
+    V2 -->|PAID| PAID
+    V2 -->|Verified expired unpaid| E
+    V2 -->|Verified cancelled unpaid| CLOSE
+    V2 -->|Unknown| HOLD
+    V3 -->|Pending| P
+    V3 -->|PAID| PAID
+    V3 -->|Verified expired unpaid| E
+    V3 -->|Verified cancelled unpaid| CLOSE
+    V3 -->|Unknown| HOLD
     PAID --> OWNER[Check original customer lease; live -> ticket, absent -> PAID_UNCLAIMED]
 ~~~
 
@@ -346,7 +357,7 @@ flowchart TD
     M --> R
 ~~~
 
-No raw photo/preview output is publicly available before PAID. The verified folder link itself may exist earlier as an unclaimed READY reserve, but no customer media may be shared, uploaded into a public location, or customer download QR disclosed before verified payment. Do not consume the 25 READY Drive slots merely for anonymous unpaid draft attempts. When verified URL is unavailable at charge-readiness, hold checkout before creating QRIS; when unexpectedly unavailable after PAID, preserve owed service and no guaranteed finish time. The stable resolver QR is future optional infrastructure, **not** an implicit fallback.
+No raw photo/preview output is publicly available before PAID. The verified folder link itself may exist earlier as an unclaimed READY reserve, but no customer media may be shared, uploaded into a public location, or customer download QR disclosed before verified payment. Do not consume the 25 READY Drive slots merely for anonymous unpaid draft attempts. When Drive API/sharing is known unavailable or no READY reserve can be found at charge-readiness, hold checkout before QRIS; **a customer-specific link is not expected until paid binding**. If exact binding or URL verification fails after PAID, preserve owed service and no guaranteed finish time. The stable resolver QR is future optional infrastructure, **not** an implicit fallback.
 
 ### Flow I: returning customer and legacy compatibility
 
@@ -467,7 +478,7 @@ flowchart TD
 
 - **Cancel vs expiry:** persist \`USER_CANCEL\` (and separately \`VISIT_ABANDONED\`) before reconciling the original provider attempt. Neither enters QR renewal. QR1→QR2→QR3 is for a willing, actively continuing original customer after a separately *verified expired unpaid* attempt.
 - **UI privacy vs occupancy:** minimize, screen timeout and Advertising can hide pixels without cancelling the payment or releasing a booth. **Only** exact worker fence + safe original financial classification + durable isolation/ACK authorize a new visitor.
-- **Drive READY pool:** before QRIS, preflight may observe a spare verified READY folder/link without claiming it. A paid transaction later atomically binds an original folder and re-verifies exact identity/URL. If that post-paid binding fails, keep PAID/OWED and withhold purchased-strip printing. Unpaid draft must not exhaust the 25 READY reserves.
+- **Drive READY pool:** before QRIS, preflight only checks authenticated Drive readiness, sharing capability and unclaimed READY capacity; it does not require a customer-specific verified URL or consume a folder. A paid transaction later atomically binds an original folder and re-verifies exact identity/URL. If that post-paid binding fails, keep PAID/OWED and withhold purchased-strip printing. Unpaid draft must not exhaust the 25 READY reserves.
 - **Provider idempotency:** internal checkout keys and persisted immutable provider order identity are mandatory; a Legacy Midtrans Core /v2/charge idempotency header remains **UNVERIFIED** and may not be assumed.
 - **Ticket:** live paid owner does not scan CCP on the happy path. A returning owner uses CCP or original Recovery Ticket; receipt SENDING/UNCERTAIN never gets blind replay. Track receipt transport and customer presentation separately, with one 30s fallback only after original claim/ownership.
 - **Timestamps:** retain distinct \`draft_created_at\`, \`payment_attempt_created_at\`, \`paid_verified_at\`, \`ticket_created_at\`, \`proof_offered_at\`, \`claim_expiry_at\`, \`transaction_retention_anchor_at\`, \`last_worker_barrier_at\`, and \`completed_at\`. Existing 24h Sandbox ticket expiry measured from original order creation applies to **legacy** orders; new post-preview expiry/CCP TTL and 15d local/30d Drive retention anchor must be explicitly versioned and verified in PP tests before shipping. **Proposal for future owner validation:** anchor paid photo retention at first genuine paid entitlement, separate unpaid staging TTL, no extension on QR renewal or restart. Do not silently adopt this proposal as a signed-off product value.
