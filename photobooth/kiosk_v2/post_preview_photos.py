@@ -70,6 +70,15 @@ class PrivatePhotoService:
     def _revision(self):
         return self.ledger.inspect(self.lease)['revision']
 
+    def reset(self):
+        self._active()
+        if self.phase != 'confirm':
+            raise DraftHeld('A private draft cannot be reset')
+        return self.snapshot()
+
+    def abort(self):
+        return self.retire('USER_CANCEL')
+
     @property
     def template(self):
         return self.selected[self.index]

@@ -13,16 +13,66 @@ worker safeguards remain binding. Production deployment, actual charges/refunds,
 merchant activation, live customer/cloud deletion and other branches are excluded.
 
 - Authorized branch: `feature/post-preview-qris-checkout`.
-- Last independently verified remote: `501254f210a596ce45d8181f35d5a0e7df998f8d` (PP-01.b resources; verified remote, CI run 41283139493 SUCCESS).
+- Last independently verified remote: `be73aa8c15a412d8786f515f25eb368e57bb81ea` (PP-01.c worker; verified remote, CI run 41283303752 SUCCESS).
 - Original audited base: `b68e514dd57c989df47fa1b222d45f3f71c38347`.
-- Current micro-increment: **PP-01.c — original PhotoJobs private workflow facade**.
-- Overall: PP-00 dependency audit continuing; PP-01 backend capture implemented, GUI NOT_IMPLEMENTED; PP-02 backend boundary implemented, real readiness adapters/GUI NOT_IMPLEMENTED; PP-03..07 NOT_STARTED.
+- Current micro-increment: **PP-01.d / PP-02.b — isolated native private-preview development UI**.
+- Overall: PP-00 dependency audit continuing; PP-01 private capture and isolated development UI implemented; PP-02 preview/freeze backend and all-design UI implemented, real charge-readiness adapters NOT_IMPLEMENTED; PP-03..07 NOT_STARTED.
 - This checkpoint travels with the implementation commit. Resolve its containing
   SHA using `git log -1 --format=%H`; after push independently compare `git
   ls-remote origin refs/heads/feature/post-preview-qris-checkout`. A commit cannot
   truthfully contain its own SHA. The next increment records this verified tip.
 
-## PP-01.c — current private worker bridge and evidence
+## PP-01.d / PP-02.b — current isolated native preview UI and evidence
+
+The separate `PrivatePreviewApp` subclasses/reuses the original portrait App and
+PhotoViews. Advertising/tutorial/gallery -> private consent -> 5-second deliberate
+capture -> per-design review/retake/approval -> all-design scroll preview -> edit
+and return to original gallery while preserving original lineages/quota. GUI
+submission binds exact slot/revision/role/generation before worker dispatch.
+Disconnected camera cancels countdown without shutter. No private compose callback
+can auto-print, upload or mark paid completion. Payment remains visibly disabled.
+
+The profile rejects payment/print/Drive opt-ins. Default/legacy launchers and
+runtime modules remain unchanged. Explicit development-only launcher reuses the
+original native per-checkout LaunchLease and requires isolated private storage.
+[Actual commands and current limits](POST-PREVIEW-QRIS-PRIVATE-PREVIEW-DEVELOPMENT.md).
+This is NOT the complete physical-UAT candidate or the final UAT runbook.
+
+Immediate hide clears textures/private snapshots. Late worker replies cannot
+reveal media after minimize/cancel; a new regression covers suspension while the
+first draft creation is still pending, before its worker lease exists. The
+pending lifecycle event persists after exact worker completion. Returning to Ads
+from an admitted draft holds instead of fabricating booth FREE. Unresolved reboot
+holds. Safe automatic release/claims and full phase-aware inactivity remain work.
+
+Actual native group: **35 PASS / 0 FAIL / 0 SKIP**, 12.094s (4 new native methods,
+8 new private-worker and 23 original photo/navigation methods). Native full
+multi-design/copy-edit journey at 800x1280 and 452x900; zero payment/public output.
+Eight synthetic screenshots rendered in fresh separate processes (4 per size);
+both all-design screens visually inspected. Initial widget-FBO export produced
+invalid black output and was rejected, not accepted as visual proof. Corrected
+capture reuses native Window.screenshot plus EventLoop drawing, matching the
+original renderer approach. Exact source/screenshot hashes and result limits:
+[evidence JSON](evidence/post-preview-private-preview.json).
+
+Compile/diff and launcher --help PASS. Workflow adds a separate virtual desktop
+job with original dependencies, no physical devices, and fresh-process synthetic
+screenshot artifacts. Previous worker CI 41283303752 SUCCESS; this source's CI
+pending push. Full suite with original default sandbox stalled without progress
+and was interrupted; re-run with test-ID progress and permitted local HTTP fixture
+networking is underway. No full-suite PASS is claimed before its final summary.
+
+Changed: native subclass, private worker reset/cancel facade, 4 native tests,
+development launcher, synthetic renderer, focused CI, development guide/evidence
+and current checkpoint notices. No customer credentials/screenshots/real media
+are committed. 112 complete PP acceptance cases remain NOT_RUN.
+
+Next: finish private phase-aware inactivity warning/retirement without active
+worker/countdown cutoff; then PP-03 protected Windows vault/typed original CCP
+and original offer journal, before mounting any charge or returning customer claim.
+PP-04..07 and complete physical UAT deliverables remain unfinished software.
+
+## PP-01.c — previously delivered private worker bridge and evidence
 
 `kiosk_v2/post_preview_photos.py` supplies an internal `PrivatePhotoService` for
 original `PhotoJobs`; it is NOT mounted in the application yet. It accepts

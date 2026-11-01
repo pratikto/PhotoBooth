@@ -1,0 +1,108 @@
+{
+  "status": "PARTIAL_PRIVATE_PREVIEW_NOT_READY_FOR_PHYSICAL_UAT",
+  "branch": "feature/post-preview-qris-checkout",
+  "base_commit": "be73aa8c15a412d8786f515f25eb368e57bb81ea",
+  "source_sha256": {
+    "photobooth/kiosk_v2/post_preview_app.py": "1b2de81f2315733d0dfc61bd3851b70edf808803517859230bef397e1efac78e",
+    "photobooth/kiosk_v2/post_preview_photos.py": "d133625c02ecd9b3e5321cce2447ff990370aa8525f1a714603bb160e34bb97d",
+    "tests/test_post_preview_widgets.py": "87b36900b512837a8aa7dace9a2a4c3ce97f54d91a21c3a58e813c5822296ccb",
+    "tools/render_post_preview_private.py": "9f4edf73569084ae3972af562d63727e1c6537f8520eb179a8e56baa4b9e6596",
+    "tools/run_post_preview_private.py": "262b138aba6565d292ad21eb6caa4dbeaed60ce2d4355b95df22a7b9db93c983"
+  },
+  "native_focused": {
+    "run": 35,
+    "pass": 35,
+    "fail": 0,
+    "skip": 0,
+    "seconds": 12.094
+  },
+  "screenshots": [
+    {
+      "file": "private-all-designs-452x9000001.png",
+      "sha256": "a44829e875dda1d799461296feb06b6518814d75999e6e0eb506062ebcc6d90e",
+      "dimensions": [
+        452,
+        900
+      ],
+      "synthetic_pixels": true,
+      "visually_inspected": true
+    },
+    {
+      "file": "private-capture-452x9000001.png",
+      "sha256": "256854cec54a3a1e343aee7c741c60bf7f78d56fa2828851ed30c428b0e073c9",
+      "dimensions": [
+        452,
+        900
+      ],
+      "synthetic_pixels": true,
+      "visually_inspected": false
+    },
+    {
+      "file": "private-review-452x9000001.png",
+      "sha256": "7f535eaefbd6e94da455bd2b79841b8ba4f3b65891823b3e3418d2ae41515139",
+      "dimensions": [
+        452,
+        900
+      ],
+      "synthetic_pixels": true,
+      "visually_inspected": false
+    },
+    {
+      "file": "private-review-452x9000002.png",
+      "sha256": "bf2c452e50b80df0f32a7fef71168c1a5d45d43e3ee6d1aea78a7acbf8ed9df0",
+      "dimensions": [
+        452,
+        900
+      ],
+      "synthetic_pixels": true,
+      "visually_inspected": false
+    },
+    {
+      "file": "private-all-designs-800x12800001.png",
+      "sha256": "5326b46942b79f52d18684beed5241cb6d497c1962f1ccdb5ff5bcede6f07715",
+      "dimensions": [
+        800,
+        1280
+      ],
+      "synthetic_pixels": true,
+      "visually_inspected": true
+    },
+    {
+      "file": "private-capture-800x12800001.png",
+      "sha256": "ec994eda2f321c3a5c0bf907c86b01b696dd64774a7d4566fc035d66c332a448",
+      "dimensions": [
+        800,
+        1280
+      ],
+      "synthetic_pixels": true,
+      "visually_inspected": false
+    },
+    {
+      "file": "private-review-800x12800001.png",
+      "sha256": "8c1bb8d62e9d1328498326f5b5f3d39de6ae67687d6500e6cd0e67b81f15e392",
+      "dimensions": [
+        800,
+        1280
+      ],
+      "synthetic_pixels": true,
+      "visually_inspected": false
+    },
+    {
+      "file": "private-review-800x12800002.png",
+      "sha256": "b8fabddeb7c78139c8452cdb769031f5d84e4cd74892920a2399f29ef331d1ac",
+      "dimensions": [
+        800,
+        1280
+      ],
+      "synthetic_pixels": true,
+      "visually_inspected": false
+    }
+  ],
+  "limitations": [
+    "No payment/CCP/vault/ticket/paid print/Drive/claim/refund integration",
+    "No full 112-case acceptance",
+    "Windows webcam and printer acceptance not performed",
+    "Complete regression pending; original unsupervised-progress run interrupted after stall; rerun with case-ID progress and local fixture network permission"
+  ],
+  "private_media_or_credential_payload_in_record": false
+}

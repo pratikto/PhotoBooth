@@ -33,3 +33,41 @@ jobs:
         run: python -m pip install Pillow numpy requests 'qrcode[pil]>=7.4,<9' 'opencv-python-headless>=4.10,<5'
       - name: Private draft and original paid-first regression (no devices/network)
         run: python tools/run_kiosk_unittests.py test_post_preview_store test_post_preview_photos test_post_preview_checkout test_post_preview_resources test_post_preview_worker test_checkout_backend test_checkout_durability test_payment_quote test_workflow test_capture_journal test_photo_reconstruction
+
+  private-desktop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      KIVY_NO_ARGS: '1'
+      KIVY_NO_CONSOLELOG: '1'
+      SDL_AUDIODRIVER: dummy
+      LIBGL_ALWAYS_SOFTWARE: '1'
+      PHOTOBOOTH_LOCAL_ONLY: '1'
+      PHOTOBOOTH_CAMERA: '0'
+      PHOTOBOOTH_AUDIO: '0'
+      PHOTOBOOTH_AD_VIDEO: '0'
+      PHOTOBOOTH_FACE_TRIGGER: '0'
+      PHOTOBOOTH_PALM_TRIGGER: '0'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install original native portrait dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb libgl1-mesa-dri libgl1 libegl1 libmtdev1 libxkbcommon0
+          python -m pip install 'Kivy>=2.3.1,<3' 'ffpyplayer==4.5.3' Pillow numpy requests tzdata 'qrcode[pil]>=7.4,<9' 'opencv-python-headless>=4.10,<5'
+      - name: Private preview native flow and original photo regression
+        run: xvfb-run -a python tools/run_kiosk_unittests.py test_post_preview_widgets test_kiosk_v2_photos test_kiosk_v2_flow
+      - name: Synthetic screenshots in separate fresh display processes
+        run: |
+          xvfb-run -a -s '-screen 0 1600x1600x24' python tools/render_post_preview_private.py --width 800 --height 1280 --output-dir /tmp/meong-private-preview
+          xvfb-run -a -s '-screen 0 1280x1024x24' python tools/render_post_preview_private.py --width 452 --height 900 --output-dir /tmp/meong-private-preview
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: meong-private-preview-synthetic
+          path: /tmp/meong-private-preview
+          if-no-files-found: ignore
+          retention-days: 7
