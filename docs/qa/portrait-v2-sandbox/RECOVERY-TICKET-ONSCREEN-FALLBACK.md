@@ -1,3 +1,13 @@
+## 1 November 2026 — Approved post-preview QRIS branch addendum (DESIGN ONLY)
+
+On `feature/post-preview-qris-checkout`, the owner approved capture and approval of all selected templates (**3 photos and max 1 retake per template**) **before** one QRIS checkout. The **original Recovery Ticket remains only after provider-verified PAID**, printed once; if the configured printer is unavailable, fails or produces an uncertain outcome, show the **same original** QR and full code for 30 visible seconds with NEXT. Unlike the legacy prepaid route documented below, after-ticket navigation for a NEW post-preview order leads to **authorized paid print/Drive fulfillment**, not camera capture. Legacy prepaid orders retain the original camera recovery and STARTED gates.
+
+A separately typed **Checkout Claim Proof** is offered privately at the first pre-PAID checkout so a departed customer can claim late-settled payment after fresh provider and booth-ownership verification. An encrypted, tightly controlled credential escrow is approved as a design for surviving restart without generating replacement tickets, storing plaintext in routine ledgers or revealing old tickets to new visitors. If the proof was never genuinely offered, do not blame the customer; preserve PAID/OWED and an authorized remedy. QR1/2/3 only renew for an active original visitor; abandoned pending payments use original cancel/reconciliation. Final photo print requires verified customer Drive link.
+
+This is an owner-approved specification **NOT IMPLEMENTED/NOT TESTED**, not a change to existing source or historical tests. [Complete owner decisions, flowcharts and precedence](POST-PREVIEW-QRIS-OWNER-APPROVED.md) · [state/security](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [72 new acceptance scenarios](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md) · [Codex plan](POST-PREVIEW-QRIS-CODEX-HANDOVER.md).
+
+---
+
 # On-screen Recovery Ticket fallback when the receipt printer is unavailable
 
 ## 1 November 2026 — Supplemental owner policy: responsibility to keep ticket
