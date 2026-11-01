@@ -61,7 +61,7 @@ class PostPreviewStore:
             singleton INTEGER PRIMARY KEY CHECK(singleton=1), version INTEGER NOT NULL);
           INSERT OR IGNORE INTO pp_schema VALUES(1,1);
         ''')
-        if self.db.execute('SELECT version FROM pp_schema').fetchone()[0] != 1:
+        if self.db.execute('SELECT version FROM pp_schema').fetchone()[0] not in (1, 2):
             self.db.close()
             raise DraftHeld('Unsupported private draft schema')
         self.db.executescript('''
@@ -91,6 +91,16 @@ class PostPreviewStore:
             draft_id TEXT NOT NULL REFERENCES pp_drafts(draft_id),
             event TEXT NOT NULL, created_at REAL NOT NULL);
         ''')
+        # Additive v1 -> v2: immutable original pre-provider-create contract.
+        # No legacy checkout/grant tables or existing draft fields are changed.
+        with self.write():
+            self.db.execute('''CREATE TABLE IF NOT EXISTS pp_checkout_intents (
+                purchase_group_id TEXT PRIMARY KEY,
+                draft_id TEXT NOT NULL UNIQUE REFERENCES pp_drafts(draft_id),
+                revision INTEGER NOT NULL, contract_json TEXT NOT NULL,
+                contract_sha256 TEXT NOT NULL, phase TEXT NOT NULL
+                  CHECK(phase='CREATE_PREPARED'), prepared_at REAL NOT NULL)''')
+            self.db.execute('UPDATE pp_schema SET version=2 WHERE version=1')
 
     def close(self):
         with self.lock:

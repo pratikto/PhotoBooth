@@ -13,16 +13,60 @@ worker safeguards remain binding. Production deployment, actual charges/refunds,
 merchant activation, live customer/cloud deletion and other branches are excluded.
 
 - Authorized branch: `feature/post-preview-qris-checkout`.
-- Last independently verified remote: `770d3188904f86715f5c13c39cc4fa65d158685b` (PP-00 foundation/CI correction).
+- Last independently verified remote: `8c7f5dcae535ee284df86b3d1943c89b90e5893e` (PP-01.a private capture; verified remote and Windows/Ubuntu CI success).
 - Original audited base: `b68e514dd57c989df47fa1b222d45f3f71c38347`.
-- Current micro-increment: **PP-01.a — private capture and durable retake adapter**.
-- Overall: PP-00 dependency audit continuing; PP-01 backend capture implemented, GUI NOT_IMPLEMENTED; PP-02..07 NOT_STARTED.
+- Current micro-increment: **PP-02.a — private previews and immutable checkout-intent boundary**.
+- Overall: PP-00 dependency audit continuing; PP-01 backend capture implemented, GUI NOT_IMPLEMENTED; PP-02 backend boundary implemented, real readiness adapters/GUI NOT_IMPLEMENTED; PP-03..07 NOT_STARTED.
 - This checkpoint travels with the implementation commit. Resolve its containing
   SHA using `git log -1 --format=%H`; after push independently compare `git
   ls-remote origin refs/heads/feature/post-preview-qris-checkout`. A commit cannot
   truthfully contain its own SHA. The next increment records this verified tip.
 
-## PP-01.a — current delivered implementation and evidence
+## PP-02.a — current preview/freeze implementation and evidence
+
+Reuses the original `compose_result` (mirrored photo regions, unchanged raw/art),
+`publish_output`, `record_output`, staged recovery and PNG integrity validation.
+A separate immutable preview journal per exact input digest supports later
+retake without overwriting the earlier preview or completing the unpaid capture
+transaction. No download QR is generated and no delivery service is instantiated.
+All selected designs need genuine explicit approval after their final trio.
+
+New additive **schema v2** stores exactly one original purchase group, revision,
+server-quoted IDR amount, copies, template/mask artwork identity, original final
+photo hashes, lineage/retake and preview hashes. First durable `CREATE_PREPARED`
+locks edits, captures and retake selection, including after lost/replayed replies
+and restart. Existing prepared intent returns the exact original group/contract.
+No provider call is mounted; this is not a payment integration or a PAID grant.
+
+Typed trusted readiness observations fail closed for camera/disk/artwork/printer
+route/payment transport/Drive authentication/sharing or empty unclaimed READY
+capacity. This contract performs no pool reservation. Real health adapters and
+observation freshness are NOT_IMPLEMENTED and must exist before any payable GUI.
+
+Actual tests: **12 preview/freeze methods PASS / 0 FAIL / 0 SKIP**; combined
+clean-venv workflow group **118 PASS / 0 FAIL / 0 SKIP**, 14.870s. Covers multiple
+selected approvals, server amount/stale revision rejection, no unpaid QR,
+no completion/public output, immutable replay/restart, post-boundary edit/shutter
+rejection, copy requote without recapture, retake revision preview ancestry,
+corrupt preview hold, lost-render-reply exact-byte recovery and v1->v2 migration.
+Compile/import and `git diff --check` PASS. No full/native/physical acceptance.
+Remote **PP-01.a CI run 41282667399: Windows and Ubuntu both SUCCESS** (106-test
+workflow group); PP-02.a matching-source CI pending the containing push.
+
+Changed: `photobooth/post_preview_checkout.py`, `photobooth/post_preview_store.py`,
+`tests/test_post_preview_checkout.py`, schema assertions in draft tests, workflow,
+this checkpoint and current status notices. Legacy runtime/GUI/transports stay
+unchanged. All 112 full acceptance cases remain NOT_RUN; backend subassertions
+are traceable to PP-001..007/009..016/018..020/047/055/058/063/081 only, not a
+complete acceptance pass.
+
+Next: **PP-01.b/PP-02.b** explicit capture-resource preflight and GUI worker bridge,
+using original camera/countdown/screens and redacted diagnostics. Read original
+GUI/camera ownership contracts before mounting. The new customer route remains
+disabled pending proof/payment/fulfillment/worker integration. Do not present
+ordinary unimplemented work as a physical/provider-only blocker.
+
+## PP-01.a — previously delivered capture and evidence
 
 `photobooth/post_preview_photos.py` reuses the original TransactionStore protocol-1
 capture journal, PhotoSession, artwork contract and staged-file recovery helper.
