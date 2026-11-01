@@ -1,5 +1,12 @@
 # Sandbox session recovery
 
+## 1 November 2026 — Customer-claim precedence for new post-preview version (design only)
+
+This historical document's operator-PIN and paid-before-photo semantics remain source-era evidence. For new orders on `feature/post-preview-qris-checkout`, owner-approved post-preview checkout offers a **separate secure Checkout Claim Proof before PAID**. If a payer leaves before settlement, late genuine PAID becomes **PAID_UNCLAIMED/OWED**; no old ticket, photo, or print is publicly released. The original returning customer needs exact private proof, fresh provider evidence, original paid draft identity and a **free** booth (else WAIT/DEFER); legitimate live owner after PAID does **not** need CCP re-scan. Original Recovery Ticket remains only after PAID, one send / 30-second same-token fallback, with encrypted ciphertext-only vault exception for crash. No tokenless media access, new charge, implicit refund or uncertain paper replay. New version printing requires verified individual Drive customer URL; unpaid draft has no public photo link.
+
+[Owner-approved post-preview master](POST-PREVIEW-QRIS-OWNER-APPROVED.md) · [security and lifetime](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [84 NOT_RUN PP cases](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md). Old UAH/AR safety and financial evidence remain binding in original scope.
+
+
 ## 1 November 2026 — Owner-approved supersession note (FUTURE TARGET ONLY)
 
 For the latest approved **unattended** customer journeys, auto-isolation, Advertising-after-lock, original Recovery Ticket retention responsibility, operator-last-resort distinctions and detailed flowcharts, read [UNATTENDED-SESSION-HANDOFF-OWNER-APPROVED](UNATTENDED-SESSION-HANDOFF-OWNER-APPROVED.md). This historical operator-oriented document remains evidence for its original source era, **not** the latest product navigation target. The owner now wants safe PAID machine-authorized isolation when a new visitor requests Photo/Game, with PREPARE -> exact local worker isolation -> ACK -> durable archive and no operator PIN *for the narrowly approved safe automated case*. Existing operator-authenticated AR-09 API is still the actual code; the new pathway is **not implemented**.
