@@ -1,5 +1,14 @@
 # Unattended session handoff, Recovery Ticket accountability, and automatic isolation
 
+## 1 November 2026 — New-order post-preview version: interpretation/precedence (design only)
+
+**This 541-line contract remains the authoritative historical approved UAH policy and safety design for legacy PAID-before-camera orders,** including original ticket once after PAID, 30s original-token fallback, privacy-locked public Advertising, narrow machine PREPARE/fence/local isolate/ACK/archive, busy WAIT, exact original grant, no tokenless media access, no automatic refund and no uncertain print replay. For **NEW** orders on `feature/post-preview-qris-checkout`, the owner later approved **capture and preview before QRIS**: 3 photos + up to 1 retake **per template**, final edit before provider create, one frozen total charge, original Recovery Ticket only **after PAID**, followed by print/Drive fulfillment rather than camera allocation. **Do not follow the payment->ticket->camera order in Flowchart A/C below for new-order implementation.** Old legacy prepaid transactions must continue to use it with their original grants.
+
+A separate, privately **pre-PAID Checkout Claim Proof** permits proof-gated late-settlement claims; the live PAID customer does **not** need to rescan CCP. The one original Recovery Ticket is not regenerated; the memory-only prohibition still applies to unencrypted ordinary data, with an owner-approved **narrow ciphertext-only exception** for OS-protected escrow with scoped authentication/audit/expiry. Receipt transport SUBMITTED is not paper proof; receipt SENDING/UNCERTAIN never auto-reprints; a screen fallback is the *same* original ticket once for 30 seconds only when the original live owner can see it. A token not genuinely offered is an owed service failure, not customer negligence. No private photos/ticket shown to a successor. Current UAH source is not implemented; no new PP/UAH acceptance has been executed.
+
+Paid/unknown occupancy still requires durable, original-state-safe worker barrier + scoped ACK before a new visitor. The new CCP, vault, Drive binding, and postpaid print gates are specified in [master 24 decisions + 11 diagrams](POST-PREVIEW-QRIS-OWNER-APPROVED.md), [state/security](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md), and [84 NOT_RUN tests](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md); retain historical UAH-001–050 evidence and all prior AR protections.
+
+
 **Owner decision:** 1 November 2026 (Asia/Jakarta)  
 **Status:** OWNER APPROVED — COMPLETE TARGET DESIGN AND FUTURE IMPLEMENTATION CONTRACT  
 **Actual source status:** DESIGN AND DOCUMENTATION ONLY; NOT IMPLEMENTED, NOT TESTED, NOT DEPLOYED  
