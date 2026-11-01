@@ -13,14 +13,75 @@ worker safeguards remain binding. Production deployment, actual charges/refunds,
 merchant activation, live customer/cloud deletion and other branches are excluded.
 
 - Authorized branch: `feature/post-preview-qris-checkout`.
-- Last verified remote base: `b68e514dd57c989df47fa1b222d45f3f71c38347`.
-- Current micro-increment: **PP-00.a — private versioned draft foundation**.
+- Last independently verified remote: `770d3188904f86715f5c13c39cc4fa65d158685b` (PP-00 foundation/CI correction).
+- Original audited base: `b68e514dd57c989df47fa1b222d45f3f71c38347`.
+- Current micro-increment: **PP-01.a — private capture and durable retake adapter**.
+- Overall: PP-00 dependency audit continuing; PP-01 backend capture implemented, GUI NOT_IMPLEMENTED; PP-02..07 NOT_STARTED.
 - This checkpoint travels with the implementation commit. Resolve its containing
   SHA using `git log -1 --format=%H`; after push independently compare `git
   ls-remote origin refs/heads/feature/post-preview-qris-checkout`. A commit cannot
   truthfully contain its own SHA. The next increment records this verified tip.
 
-## Completed in this increment
+## PP-01.a — current delivered implementation and evidence
+
+`photobooth/post_preview_photos.py` reuses the original TransactionStore protocol-1
+capture journal, PhotoSession, artwork contract and staged-file recovery helper.
+New unpaid storage is isolated under a caller-selected private root, with one
+retained lineage transaction per template. It never uses the paid Drive READY
+pool, starts delivery workers, creates provider orders, prints, or calls paid
+completion. Paid storage layout remains unchanged.
+
+Three explicit original slots and one durable retake selection per template;
+quota commits before any retake shutter/file I/O. Deselect/reselect, copy changes
+and restart retain original lineage, photos and consumed quota. Every callback
+has exact slot/role/revision/worker ownership. Duplicate/lost replies return the
+original saved bytes rather than silently capturing the next slot. Fresh stale
+callbacks are rejected after retirement. This is an internal trusted-worker API,
+not the later customer-return proof flow.
+
+Artwork/mask contracts are pinned by hash; updates hold the draft. Original
+capture orientation is preserved. Saved JPEG hashes/path/intent/quota are checked
+before restoration; known STAGED bytes recover without capture; unhashed temp or
+foreign files hold without overwrite. Retention reuses the existing 15-day local
+maximum for this disabled nonproduction adapter; unpaid resource cleanup/quota
+and final new-order TTL policy remain work, not production-validated terms.
+
+Tests actually run: **13 new private-capture methods PASS / 0 FAIL / 0 SKIP**,
+including **10 actual abrupt child exits** (original and retake at intent,
+temporary, staged, published, committed). The existing-environment first run
+had one fixture assertion failure (expected no allocation directory after an
+invalid slot); corrected to verify no image/shutter effect. No product guard
+was relaxed. A fresh venv with exactly the workflow dependencies then ran
+**106 PASS / 0 FAIL / 0 SKIP** in 10.383s:
+
+```bash
+python tools/run_kiosk_unittests.py test_post_preview_store test_post_preview_photos test_checkout_backend test_checkout_durability test_payment_quote test_workflow test_capture_journal test_photo_reconstruction
+```
+
+CI run 41282314675 at 770d318 failed on missing `cv2` in existing QR-renderer
+fixtures (93 run, 0 assertion failures, 13 import-error results); Windows was
+matrix-cancelled, not PASS. Workflow now installs `opencv-python-headless>=4.10,<5`
+and includes private-capture tests. Fresh-venv pass verifies this actual correction;
+remote CI for the containing commit is pending. No full/native/Windows/paper/
+provider acceptance is inferred. All 112 full PP acceptance scenarios remain
+NOT_RUN; these are backend subassertions for PP-001..007/009/010/063 only.
+
+Changed this increment: `photobooth/post_preview_photos.py`,
+`tests/test_post_preview_photos.py`, `tests/post_preview_crash_fixture.py`, focused
+workflow and this checkpoint/current handover notices. Original shared capture,
+legacy recovery, printer, Drive, payment and GUI modules are unchanged.
+
+Exact next action: **PP-01.b/PP-02.a** — integrate a private all-template review/
+approval adapter and immutable media/artwork quote boundary, then GUI worker/
+countdown bridge. Validate camera/disk/resources, private preview and no compose
+completion or auto-print. PP-01 is not complete until actual GUI admission,
+countdown/camera fencing and resource controls exist. Do not skip this to enable
+payable QRIS. No customer GUI/launch candidate/runbook is ready yet.
+
+No local-only application changes intentionally remain after this micro-commit;
+disposable test logs/clean venv are `/workspace/work`, not committed artifacts.
+
+## PP-00.a — previously delivered foundation
 
 - Clean local checkout now tracks the existing authorized GitHub branch and
   exactly matched the base before edits. The environment initially had only a
@@ -79,7 +140,7 @@ Exact configured CI group additionally executed locally: **93 PASS / 0 FAIL / 0 
 do not imply capture, payment, claim or physical acceptance. No new source/UI
 integration is inferred from the historical 81-test legacy baseline.
 
-## Remaining and exact next action
+## Remaining roadmap (PP-00 historical next action below is superseded by PP-01.a above)
 
 Next **PP-01.a**: private media adapter over the original capture journal. Persist
 three originals and one durable per-template retake; pin artwork, recover exact
