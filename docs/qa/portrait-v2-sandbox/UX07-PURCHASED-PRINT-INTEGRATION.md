@@ -1,5 +1,12 @@
 # UX-07.h — purchased-print integration contract and source audit
 
+## 1 November 2026 — New paid-after-preview integration boundary (approved design only)
+
+Prior purchaser/print journal results below remain source-specific evidence and must not be reused as post-preview acceptance. For new orders on `feature/post-preview-qris-checkout`, camera/retake/compose work is private **UNPAID_DRAFT** until all selected template previews are approved, the server quote frozen and the original provider PAID independently verified. New branch future source must explicitly prevent existing compose callbacks from auto-printing and must not grant public photo Drive access before PAID. One original Recovery Ticket is offered after PAID (same-token 30s fallback on failed/uncertain receipt), but purchased strips may only print once the paid customer's exact individual Drive URL is verified; local upload can remain pending. Use per-design/copy/output durable paid print jobs and one shared exclusive printer, preserve SENDING/UNCERTAIN without reprint, and never mistake COMPOSED/SUBMITTED for physical fulfillment. Preserve pre-existing legacy paid-capture route and its printed-paper evidence.
+
+[Canonical flow](POST-PREVIEW-QRIS-OWNER-APPROVED.md) · [state/OWED contract](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [84 NOT_RUN PP tests](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md).
+
+
 ## 31 October — BUG-027 verified / actual laptop and paper next
 
 Source e05a358 (functional 4c74ece): full 1280 run/1276 PASS/4 optional SKIP,
