@@ -3,7 +3,7 @@
 **Date:** 1 November 2026 (Asia/Jakarta)  
 **Target branch:** `feature/post-preview-qris-checkout` (branched from `feature/portrait-kiosk-v2-next` at `97a6c1574f0692d8a3db8b3a4d94778f87937e18`).  
 **Status:** **OWNER-APPROVED DESIGN / DOCUMENTATION ONLY / NOT IMPLEMENTED / NOT TESTED**. This document authorizes a detailed documentation baseline, **not** a source-code, API, schema, test, payment, OS-vault, production, hardware, cloud, default-branch or master change.  
-**Companions:** [security and state contract](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [acceptance matrix](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md) · [Codex handover](POST-PREVIEW-QRIS-CODEX-HANDOVER.md).
+**Companions:** [security and state contract](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [acceptance matrix](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md) · [Codex handover](POST-PREVIEW-QRIS-CODEX-HANDOVER.md). · [20-finding consistency reconciliation](POST-PREVIEW-QRIS-CONSISTENCY-AUDIT.md).
 
 > **Branch-specific precedence.** For **new post-preview orders**, this owner approval supersedes the **payment-before-capture ordering** in earlier GUI v2/Sandbox, BUG-026/027/028, AR and unattended-handoff diagrams; **it does not supersede their safety properties**. Existing prepaid customer orders and in-flight legacy PAID -> camera recovery MUST keep their original versioned fulfillment route. Earlier documented CI PASS, on-device reports and historical proofs remain valid only for the old source/flow. Existing AR-00–AR-13/UAH no-double-charge, privacy/fencing, paid/owed, strict provider evidence, no uncertain reprint, retention and operator-last-resort protections stay mandatory. Existing measured production readiness remains CONDITIONAL / NOT APPROVED.
 
