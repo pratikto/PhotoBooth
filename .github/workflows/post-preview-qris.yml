@@ -32,4 +32,4 @@ jobs:
       - name: Install offline model dependencies
         run: python -m pip install Pillow numpy requests 'qrcode[pil]>=7.4,<9' 'opencv-python-headless>=4.10,<5'
       - name: Private draft and original paid-first regression (no devices/network)
-        run: python tools/run_kiosk_unittests.py test_post_preview_store test_post_preview_photos test_post_preview_checkout test_checkout_backend test_checkout_durability test_payment_quote test_workflow test_capture_journal test_photo_reconstruction
+        run: python tools/run_kiosk_unittests.py test_post_preview_store test_post_preview_photos test_post_preview_checkout test_post_preview_resources test_checkout_backend test_checkout_durability test_payment_quote test_workflow test_capture_journal test_photo_reconstruction

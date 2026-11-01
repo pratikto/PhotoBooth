@@ -24,9 +24,19 @@ PURPOSE = 'POST_PREVIEW_PRIVATE'
 
 
 class PrivateDraftPhotos:
-    def __init__(self, ledger, root):
+    def __init__(self, ledger, root, *, policy=None):
+        from photobooth.post_preview_resources import PrivateCapturePolicy
         self.ledger = ledger
         self.root = checked_path(Path(root))
+        self.policy = policy or PrivateCapturePolicy()
+        if not isinstance(self.policy, PrivateCapturePolicy):
+            raise TypeError('Explicit private resource policy required')
+
+    def prepare(self, lease):
+        """Actual private disk/fsync probe off the GUI thread, no shutter/cloud."""
+        with self.ledger.write():
+            self.ledger._owned(lease, editable=True)
+            return self.policy.inspect(self.root/lease.draft_id, probe=True)
 
     def _selected(self, lease, template, *, revision=None):
         self.ledger._owned(lease, editable=True, revision=revision)
@@ -217,6 +227,7 @@ class PrivateDraftPhotos:
             raise ValueError('Exact original slot and role required')
         with self.ledger.write():
             row = self._selected(lease, template, revision=revision)
+            self.policy.inspect(self.root/lease.draft_id, image=image)
             store, tx, plan = self._open(lease, template, row)
             session = self._session(tx, plan)
             if retake:

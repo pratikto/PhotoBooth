@@ -13,16 +13,45 @@ worker safeguards remain binding. Production deployment, actual charges/refunds,
 merchant activation, live customer/cloud deletion and other branches are excluded.
 
 - Authorized branch: `feature/post-preview-qris-checkout`.
-- Last independently verified remote: `8c7f5dcae535ee284df86b3d1943c89b90e5893e` (PP-01.a private capture; verified remote and Windows/Ubuntu CI success).
+- Last independently verified remote: `3a7e3ee20270d53144a243500f17ff2f1a0d8bac` (PP-02.a preview/freeze; verified remote, CI run 41282882700 SUCCESS).
 - Original audited base: `b68e514dd57c989df47fa1b222d45f3f71c38347`.
-- Current micro-increment: **PP-02.a — private previews and immutable checkout-intent boundary**.
+- Current micro-increment: **PP-01.b — bounded capture resource controls**.
 - Overall: PP-00 dependency audit continuing; PP-01 backend capture implemented, GUI NOT_IMPLEMENTED; PP-02 backend boundary implemented, real readiness adapters/GUI NOT_IMPLEMENTED; PP-03..07 NOT_STARTED.
 - This checkpoint travels with the implementation commit. Resolve its containing
   SHA using `git log -1 --format=%H`; after push independently compare `git
   ls-remote origin refs/heads/feature/post-preview-qris-checkout`. A commit cannot
   truthfully contain its own SHA. The next increment records this verified tip.
 
-## PP-02.a — current preview/freeze implementation and evidence
+## PP-01.b — current capture resource controls and evidence
+
+`PrivateCapturePolicy` adds actual free-disk and bounded private-tree checks,
+image decoder limits and an off-GUI fsync write probe. Nonproduction configurable
+defaults: 256 MiB free reserve, 512 MiB per-draft private staging, 40 million pixels
+per photo (original decoder ceiling), 4096 staging entries. These are engineering
+pilot limits, not approved commercial terms or tested device capacity. Before
+file save, budget decoded pixels/encoder workspace. No hard visit timer, automatic
+media deletion, paid-obligation closure or machine release is introduced.
+
+Low disk/quota/frame limits hold before image write. Existing frames remain exact;
+fsync failure cleans only the just-created random probe. Retired worker leases
+cannot probe or create storage. Traversal reuses checked_path symlink/junction/
+archive rejection; only the current private draft is scanned, with a hard entry
+bound. Real camera availability/countdown is still a GUI-worker dependency.
+
+Actual clean-venv **126 PASS / 0 FAIL / 0 SKIP**, 14.807s, including 8 new resource
+methods, 37 earlier PP backend methods and 81 original paid-first/capture/quote
+regressions. Compile and diff checks PASS. Workflow includes this group. New
+matching-source CI pending push. Prior preview/freeze CI run 41282882700 SUCCESS;
+prior capture CI 41282667399 SUCCESS on Windows and Ubuntu.
+
+Changed: `photobooth/post_preview_resources.py`, `photobooth/post_preview_photos.py`,
+`tests/test_post_preview_resources.py`, workflow/checkpoint/current notices.
+Next **PP-01.c**: original PhotoJobs/PhotoViews worker/screen bridge with explicit
+camera-slot/revision callback binding, private visibility fence and all-design
+final-preview routing. No new payable GUI may be enabled before PP-03..06.
+112 complete PP acceptance cases remain NOT_RUN. No physical UAT readiness.
+
+## PP-02.a — previously delivered preview/freeze implementation and evidence
 
 Reuses the original `compose_result` (mirrored photo regions, unchanged raw/art),
 `publish_output`, `record_output`, staged recovery and PNG integrity validation.
