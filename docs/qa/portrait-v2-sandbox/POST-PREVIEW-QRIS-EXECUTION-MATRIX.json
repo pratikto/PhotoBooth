@@ -1,0 +1,1259 @@
+{
+  "date": "2026-11-01",
+  "timezone": "Asia/Jakarta",
+  "status": "NOT_READY_FOR_PHYSICAL_UAT",
+  "scope": "112 full acceptance cases remain NOT_RUN. Listed module passes are partial software subassertions only.",
+  "verified_remote_base": "b8655adb834c9b2e612458ba5b46a8cc45e6d8ef",
+  "payment_source_sha256": "7234ebfc53535bc5e4a68c6c3eb70b56ddada0178abd8f90c762b08e5db74156",
+  "summary": {
+    "PASS": 0,
+    "FAIL": 0,
+    "SKIP": 0,
+    "BLOCKED_PHYSICAL": 0,
+    "BLOCKED_PROVIDER": 0,
+    "NOT_RUN": 112
+  },
+  "cases": [
+    {
+      "id": "PP-001",
+      "scenario": "One template",
+      "required_outcome": "3 original slots, at most one retake",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-01",
+      "component_test_modules": [
+        "tests/test_post_preview_photos.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-002",
+      "scenario": "Two templates",
+      "required_outcome": "6 originals, independent retakes",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-01",
+      "component_test_modules": [
+        "tests/test_post_preview_photos.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-003",
+      "scenario": "Twelve templates",
+      "required_outcome": "36 originals, max 12 retakes",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-01",
+      "component_test_modules": [
+        "tests/test_post_preview_photos.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-004",
+      "scenario": "Multiple paper copies",
+      "required_outcome": "No extra photo sessions",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-01",
+      "component_test_modules": [
+        "tests/test_post_preview_photos.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-005",
+      "scenario": "Crash during save",
+      "required_outcome": "No duplicated or lost committed shot",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-01",
+      "component_test_modules": [
+        "tests/test_post_preview_photos.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-006",
+      "scenario": "Crash during retake",
+      "required_outcome": "Correct selected slot and quota",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-01",
+      "component_test_modules": [
+        "tests/test_post_preview_photos.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-007",
+      "scenario": "Deselect/reselect template",
+      "required_outcome": "Consumed retake does not reset",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-01",
+      "component_test_modules": [
+        "tests/test_post_preview_photos.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-008",
+      "scenario": "Camera disconnect/countdown race",
+      "required_outcome": "No automatic shutter",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-01",
+      "component_test_modules": [
+        "tests/test_post_preview_widgets.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-009",
+      "scenario": "Artwork updated mid-draft",
+      "required_outcome": "Pinned version/hash or safe hold",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-01",
+      "component_test_modules": [
+        "tests/test_post_preview_photos.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-010",
+      "scenario": "Compose before payment",
+      "required_outcome": "No print, paid completion or public upload",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-01",
+      "component_test_modules": [
+        "tests/test_post_preview_widgets.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-011",
+      "scenario": "Copy change before QRIS",
+      "required_outcome": "Requote, no new captures",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-02",
+      "component_test_modules": [
+        "tests/test_post_preview_checkout.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-012",
+      "scenario": "Add template before QRIS",
+      "required_outcome": "New 3-photo session",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-02",
+      "component_test_modules": [
+        "tests/test_post_preview_checkout.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-013",
+      "scenario": "Remove template before QRIS",
+      "required_outcome": "Revised quote, private media remains safe",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-02",
+      "component_test_modules": [
+        "tests/test_post_preview_checkout.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-014",
+      "scenario": "Edit after provider-create intent",
+      "required_outcome": "Reject; same frozen cart",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-02",
+      "component_test_modules": [
+        "tests/test_post_preview_checkout.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-015",
+      "scenario": "Preview download QR attempted unpaid",
+      "required_outcome": "No accessible photo",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-02",
+      "component_test_modules": [
+        "tests/test_post_preview_checkout.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-016",
+      "scenario": "Preview manifest corrupted",
+      "required_outcome": "No charge",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-02",
+      "component_test_modules": [
+        "tests/test_post_preview_checkout.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-017",
+      "scenario": "Camera/disk not ready before capture",
+      "required_outcome": "No payment",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-02",
+      "component_test_modules": [
+        "tests/test_post_preview_resources.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-018",
+      "scenario": "Printer known unavailable pre-charge",
+      "required_outcome": "No new charge",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-02",
+      "component_test_modules": [
+        "tests/test_post_preview_checkout.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-019",
+      "scenario": "Drive API/sharing unavailable or READY reserve pool empty before charge",
+      "required_outcome": "Hold checkout; do not require a bound customer URL pre-PAID",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-02",
+      "component_test_modules": [
+        "tests/test_post_preview_checkout.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-020",
+      "scenario": "Server quote/artifact mismatch",
+      "required_outcome": "Reject, preserve draft",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-02",
+      "component_test_modules": [
+        "tests/test_post_preview_checkout.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-021",
+      "scenario": "Lost POST response after provider created order",
+      "required_outcome": "Same attempt, no duplicate",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04",
+      "component_test_modules": [
+        "tests/test_post_preview_payments.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-022",
+      "scenario": "404 during provider propagation",
+      "required_outcome": "UNKNOWN, not unpaid",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04",
+      "component_test_modules": [
+        "tests/test_post_preview_payments.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-023",
+      "scenario": "Duplicate/late webhook",
+      "required_outcome": "Independently verify fresh provider state",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04",
+      "component_test_modules": [
+        "tests/test_post_preview_payments.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-024",
+      "scenario": "QR1 verified expired, active customer",
+      "required_outcome": "QR2 same frozen draft, no recapture",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04",
+      "component_test_modules": [
+        "tests/test_post_preview_payments.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-025",
+      "scenario": "QR2 verified expired, active customer",
+      "required_outcome": "QR3 same frozen draft",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04",
+      "component_test_modules": [
+        "tests/test_post_preview_payments.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-026",
+      "scenario": "QR3 expired",
+      "required_outcome": "No QR4, guarded close",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04",
+      "component_test_modules": [
+        "tests/test_post_preview_payments.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-027",
+      "scenario": "Customer abandons PENDING",
+      "required_outcome": "No automatic renewal; original cancel/reconcile",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04",
+      "component_test_modules": [
+        "tests/test_post_preview_payments.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-028",
+      "scenario": "Cancel races settlement",
+      "required_outcome": "Retain PAID/OWED",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04",
+      "component_test_modules": [
+        "tests/test_post_preview_payments.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-029",
+      "scenario": "QR1 PAID while QR2 creating",
+      "required_outcome": "One service; conflict ledger",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04",
+      "component_test_modules": [
+        "tests/test_post_preview_payments.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-030",
+      "scenario": "QR2 and QR3 both settle",
+      "required_outcome": "No double printing; financial review",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04",
+      "component_test_modules": [
+        "tests/test_post_preview_payments.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-031",
+      "scenario": "Restart during CREATE_UNKNOWN",
+      "required_outcome": "Original identity still authoritative",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04",
+      "component_test_modules": [
+        "tests/test_post_preview_payments.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-032",
+      "scenario": "QR expires after customer departure",
+      "required_outcome": "No automatic absent-customer renewal",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04",
+      "component_test_modules": [
+        "tests/test_post_preview_payments.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-033",
+      "scenario": "Pre-PAID checkout-claim proof offered",
+      "required_outcome": "Private, distinct, strong token/verifier",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-03/05/06",
+      "component_test_modules": [
+        "tests/test_post_preview_ccp.py",
+        "tests/test_credential_vault.py",
+        "tests/test_ccp_view.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-034",
+      "scenario": "Claim proof used before PAID",
+      "required_outcome": "Cannot show unpaid photos",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-03/05/06",
+      "component_test_modules": [
+        "tests/test_post_preview_ccp.py",
+        "tests/test_credential_vault.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-035",
+      "scenario": "Late PAID after customer goes",
+      "required_outcome": "PAID_UNCLAIMED; no public print",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-03/05/06",
+      "component_test_modules": [
+        "tests/test_post_preview_payments.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-036",
+      "scenario": "Returning original proof with PAID/free booth",
+      "required_outcome": "One original entitlement restored",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-03/05/06",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-037",
+      "scenario": "Returning proof while visitor B active",
+      "required_outcome": "WAIT/DEFER, B not preempted",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-03/05/06",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-038",
+      "scenario": "Wrong booth, forged, expired claim",
+      "required_outcome": "Deny private access",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-03/05/06",
+      "component_test_modules": [
+        "tests/test_post_preview_ccp.py",
+        "tests/test_credential_vault.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-039",
+      "scenario": "Replay/brute force attempts",
+      "required_outcome": "Rate-limited, scoped, audited",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-03/05/06",
+      "component_test_modules": [
+        "tests/test_post_preview_ccp.py",
+        "tests/test_credential_vault.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-040",
+      "scenario": "Customer paid but claim proof never offered",
+      "required_outcome": "Owed/remedy; no customer blame",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-03/05/06",
+      "component_test_modules": [
+        "tests/test_post_preview_ccp.py",
+        "tests/test_credential_vault.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-041",
+      "scenario": "Fresh PAID, original customer owns booth, printer healthy and acknowledges SUBMITTED",
+      "required_outcome": "**Mandatory on-screen original QR + full code with 30s visible timer/NEXT** starts while **one same-token ticket receipt job is enqueued concurrently**, without waiting for ACK; successful printing MUST NOT skip or dismiss screen",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-03/05/06",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-042",
+      "scenario": "Ticket printer unavailable, failed, timeout, delayed SUBMITTED or UNCERTAIN",
+      "required_outcome": "**Same mandatory 30s ticket screen shown regardless of print outcome**; no reissue/auto-reprint, no timer reset on late printer callback, correct private cleanup on NEXT/zero",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-03/05/06",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-043",
+      "scenario": "Crash after PAID before any genuine first ticket screen became visible / printer SENDING",
+      "required_outcome": "Vault and owed policy; no public ticket on boot, no duplicate send; first lawful screen requires original customer proof and free booth",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-03/05/06",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-044",
+      "scenario": "Crash after ticket SENDING",
+      "required_outcome": "Never auto-reprint",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-03/05/06",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-045",
+      "scenario": "Vault key/ciphertext missing",
+      "required_outcome": "Fail closed, OWED retained",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-03/05/06",
+      "component_test_modules": [
+        "tests/test_post_preview_ccp.py",
+        "tests/test_credential_vault.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-046",
+      "scenario": "Operator/DEMO/QRIS/download QR as customer proof",
+      "required_outcome": "Reject cross-type use",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-03/05/06",
+      "component_test_modules": [
+        "tests/test_post_preview_ccp.py",
+        "tests/test_credential_vault.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-047",
+      "scenario": "Compose auto-print callback while unpaid",
+      "required_outcome": "Block paid photo print",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-05",
+      "component_test_modules": [
+        "tests/test_post_preview_widgets.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-048",
+      "scenario": "3 designs with 2+1+3 copies",
+      "required_outcome": "Six paid copies; only 9 captures",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-05",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-049",
+      "scenario": "SUBMITTED but no paper physically emerged",
+      "required_outcome": "Not recorded as physical delivery",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-05",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-050",
+      "scenario": "Partial RAW bytes sent then timeout",
+      "required_outcome": "UNCERTAIN, no replay",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-05",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-051",
+      "scenario": "Ticket screen shown while thermal printer lane holds original receipt job; NEXT pressed before printer returns",
+      "required_outcome": "Screen timer operates independently; serialized exclusive original receipt / photo-strip jobs, no lost job, overlapping raw sends or reprint",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-05",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-052",
+      "scenario": "Design A printed, B uncertain",
+      "required_outcome": "No A replay or blind B replay",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-05",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-053",
+      "scenario": "Paid, Drive URL unverified",
+      "required_outcome": "Hold strip, retain OWED",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-05",
+      "component_test_modules": [
+        "tests/test_post_preview_checkout.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-054",
+      "scenario": "Verified Drive URL, upload pending",
+      "required_outcome": "Real QR, honest upload status",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-05",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-055",
+      "scenario": "Anonymous draft and 25 READY folders",
+      "required_outcome": "No free folder claim/public upload",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-05",
+      "component_test_modules": [
+        "tests/test_post_preview_checkout.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-056",
+      "scenario": "Cross-booth/foreign folder",
+      "required_outcome": "Binding rejected",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-05",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-057",
+      "scenario": "Crash during upload",
+      "required_outcome": "Same checksum retry, no reprint",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-05",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-058",
+      "scenario": "Last compose marks payment completed",
+      "required_outcome": "Must remain pending paid obligations",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-05",
+      "component_test_modules": [
+        "tests/test_post_preview_checkout.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-059",
+      "scenario": "Unpaid draft abandoned, no QR attempt",
+      "required_outcome": "Privacy fence, safe release",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06",
+      "component_test_modules": [
+        "tests/test_post_preview_widgets.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-060",
+      "scenario": "Customer actively capturing with slow worker",
+      "required_outcome": "No hard inactivity cutoff",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06",
+      "component_test_modules": [
+        "tests/test_post_preview_widgets.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-061",
+      "scenario": "Inactive gallery/review/final preview",
+      "required_outcome": "Warning, safe suspend",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06",
+      "component_test_modules": [
+        "tests/test_post_preview_widgets.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-062",
+      "scenario": "PENDING original checkout and new visitor",
+      "required_outcome": "No unsafe new payment",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-063",
+      "scenario": "Stale A callback during B session",
+      "required_outcome": "Fenced; B unaffected",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06",
+      "component_test_modules": [
+        "tests/test_post_preview_widgets.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-064",
+      "scenario": "Crash during release/ACK lost",
+      "required_outcome": "Retry exact operation, no broad reset",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-065",
+      "scenario": "Reboot with printer SENDING",
+      "required_outcome": "UNCERTAIN, no replay",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-066",
+      "scenario": "Legacy PAID-first unfinished photo",
+      "required_outcome": "Original capture recovery unchanged",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-067",
+      "scenario": "Meong Fly consumed then unpaid abandon",
+      "required_outcome": "No new game attempt",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-068",
+      "scenario": "Untrusted game DEMO discount",
+      "required_outcome": "No real discount without verified backend",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-069",
+      "scenario": "Repeated unpaid visits filling disk",
+      "required_outcome": "Safe resource control, no active hard cutoff",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06",
+      "component_test_modules": [
+        "tests/test_post_preview_resources.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-070",
+      "scenario": "Valid proof when booth finally free",
+      "required_outcome": "Fresh verification, original claim",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-071",
+      "scenario": "New visitor arrives during old worker uncertainty",
+      "required_outcome": "Neutral HOLD",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-072",
+      "scenario": "Expired credential and paid liability",
+      "required_outcome": "No illicit reveal, no erased OWED",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-073",
+      "scenario": "QR1 verified expired unpaid while same customer requests continuation",
+      "required_outcome": "QR2 via its own guarded provider create; master flow does **not** force Advertising",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04/05/06/07",
+      "component_test_modules": [
+        "tests/test_post_preview_payments.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-074",
+      "scenario": "USER_CANCEL with verified cancelled/unpaid while customer remains in front of camera",
+      "required_outcome": "Persist cancel intent and close safely; **never** QR2/QR3",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04/05/06/07",
+      "component_test_modules": [
+        "tests/test_post_preview_payments.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-075",
+      "scenario": "App minimized while live QRIS PENDING, no cancel action",
+      "required_outcome": "Privacy fence only; do not invent financial cancellation or renewed order",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04/05/06/07",
+      "component_test_modules": [
+        "tests/test_post_preview_widgets.py",
+        "tests/test_post_preview_payments.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-076",
+      "scenario": "Inactivity warning during valid camera countdown or ongoing write/compose",
+      "required_outcome": "Active work not abandoned; retained original capture/retake quota",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04/05/06/07",
+      "component_test_modules": [
+        "tests/test_post_preview_widgets.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-077",
+      "scenario": "Restart after terminal unpaid but stale camera/file worker active",
+      "required_outcome": "No new visitor before exact quiescence, fence and durable release ACK",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04/05/06/07",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-078",
+      "scenario": "Restart during paid authorized upload while a photo print is UNCERTAIN",
+      "required_outcome": "Resume only idempotent upload; retain paid/print obligations; no blind print or unsafe release",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04/05/06/07",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-079",
+      "scenario": "Receipt SUBMITTED early while first mandatory 30s screen active, then polling/restart/returning claimant",
+      "required_outcome": "First screen remains visible independent of SUBMITTED; when dismissed, never automatically re-display or reset countdown on provider/paper callback, polling, reboot or returning claim; preserve exact original presentation journal",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04/05/06/07",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-080",
+      "scenario": "Live paid owner has intact original booth lease, no CCP scan",
+      "required_outcome": "Open **mandatory** original Recovery Ticket screen and dispatch **same ticket receipt** concurrently once; no extra claim/CCP step",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04/05/06/07",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-081",
+      "scenario": "Precharge sees healthy Drive and available unclaimed READY pool, but atomic customer folder binding/URL verification fails after PAID",
+      "required_outcome": "No paid strip or invented QR; PAID/OWED retained; no unpaid READY consumption",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04/05/06/07",
+      "component_test_modules": [
+        "tests/test_post_preview_checkout.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-082",
+      "scenario": "Legacy Sandbox Drive OFF vs new purchased synthetic verified-link profile",
+      "required_outcome": "Existing BUG-027/028 profile unchanged; isolated fake link never represented as real cloud evidence",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04/05/06/07",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-083",
+      "scenario": "Attempt-create timed out; provider Legacy /v2/charge idempotency-header behavior unknown",
+      "required_outcome": "No unverified provider header or repeated POST; same original identity/status reconciliation",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04/05/06/07",
+      "component_test_modules": [
+        "tests/test_post_preview_payments.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-084",
+      "scenario": "Draft/QR1/QR2/PAID/ticket timestamps across restart and expiry",
+      "required_outcome": "Different versioned TTL and 15-day/30-day anchors; no silent extension, deletion or mixing legacy 24h Sandbox claim rule",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-04/05/06/07",
+      "component_test_modules": [
+        "tests/test_post_preview_payments.py"
+      ],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-085",
+      "scenario": "CCP genuinely visible/offered at first QRIS, later lost, original PAID service fully delivered",
+      "required_outcome": "`NO_AUTO_REFUND_PROOF_LOST`; cannot self-restore old photos without valid capability; no blanket legal waiver",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-086",
+      "scenario": "Mandatory 30-visible-second ticket with full QR/code + same concurrent paper ticket, customer discards both, no independent service failure",
+      "required_outcome": "No automatic refund solely from customer-lost proof; no operator tokenless media unlock",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-087",
+      "scenario": "First CCP never offered due prepay UI crash; original charge later independently PAID",
+      "required_outcome": "Not labeled customer negligence; PAID/OWED and secure claim/remedy, no fake proof-presented evidence",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-088",
+      "scenario": "After PAID printer SUBMITTED but mandatory Recovery Ticket screen never rendered/never visibly displayed",
+      "required_outcome": "Printer ACK is not genuine screen offer; preserve claim/remedy, no customer-forfeiture",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-089",
+      "scenario": "Customer lost genuinely offered ticket AND paid photo strips genuinely failed permanently",
+      "required_outcome": "Do not refuse compensation on proof-loss ground; independently evaluate merchant service failure and refund",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-090",
+      "scenario": "Customer disappears after PAID; valid CCP exists; claim window/onscreen screen timer expires",
+      "required_outcome": "No automatic refund merely on absence/expiry; retain paid/owed, lawful remedy and original claim rules",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-091",
+      "scenario": "Recovery-ticket receipt printer broken but same original 30s screen displayed, purchased photo strips can still be safely fulfilled",
+      "required_outcome": "Do not auto-refund solely because paper ticket failed; still permit genuine service",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-092",
+      "scenario": "PAID original order, printer failed irrecoverably after bounded retry, worker safely fenced, provider refund enabled",
+      "required_outcome": "Refund-first full original amount candidate exactly once, not operator money-back prerequisite",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-093",
+      "scenario": "PAID, paid customer Drive URL cannot be bound/verified after bounded recovery and refund channel enabled",
+      "required_outcome": "PAID/OWED -> eligible full refund after safe cleanup; never issue false QR or duplicate print",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-094",
+      "scenario": "Corrupt/missing paid manifest makes purchased service impossible; no safe restoration",
+      "required_outcome": "Independently verified unrecoverable merchant fault -> refund eligibility, preserve private photo evidence",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-095",
+      "scenario": "One photo strip SENDING/UNCERTAIN and paper may have emerged",
+      "required_outcome": "No blind retry or blind auto-refund; physical outcome/worker fence classified, conditional review",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-096",
+      "scenario": "Three templates, some purchased strips already delivered, other outputs permanently fail",
+      "required_outcome": "Full-goodwill-refund preference only when deterministically safe, valid merchant policy and bounded abuse controls; preserve partial paper truth",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-097",
+      "scenario": "QR1 and QR2 both freshly verified PAID on same frozen logical purchase, same merchant and exact amount",
+      "required_outcome": "One service entitlement; refund the unambiguously excess settled attempt only, one original refund key",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-098",
+      "scenario": "Two QR attempts PAID but merchant/order/amount differ or conflict",
+      "required_outcome": "No automatic refund or duplicate service; secure financial review",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-099",
+      "scenario": "Midtrans create/status PENDING, 404, UNKNOWN, CANCELLED unpaid, or EXPIRED unpaid",
+      "required_outcome": "**No refund request**, original cancel/status reconciliation only",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-100",
+      "scenario": "Merchant GoPay QRIS POS Refund API not activated or disabled",
+      "required_outcome": "No pretend auto-refund; `REFUND_REVIEW_REQUIRED` with redacted truthful support remedy",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-101",
+      "scenario": "QRIS refund window elapsed or issuer/acquirer/merchant balance makes provider refund ineligible",
+      "required_outcome": "No refund API retry loop or false success; lawful approved support/manual remedy",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-102",
+      "scenario": "Provider account refund activation, documented API endpoint, status and refund_key semantics unknown",
+      "required_outcome": "Production/refund API feature gate remains disabled; synthetic mocks do not authorize live money",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-103",
+      "scenario": "Forged CCP, vault compromise, mismatched provider settlement or suspected refund fraud",
+      "required_outcome": "Security/finance HOLD, no private photo release, no automatic money return",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-104",
+      "scenario": "Permanent service fault triggers refund; app crashes before external refund POST",
+      "required_outcome": "Durable unique original refund intent/key survives; continue/reconcile same original one only",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-105",
+      "scenario": "Provider refund POST response lost/timeout or webhook repeats",
+      "required_outcome": "Reconcile SAME refund intent/key, do not issue second unique refund or double payout",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-106",
+      "scenario": "Provider accepts refund request but money remains in process",
+      "required_outcome": "Only `REQUESTED`/`PROCESSING`, not `REFUND_CONFIRMED` nor claim funds in customer's balance",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-107",
+      "scenario": "Provider independently confirms original refund, then stale print callback arrives",
+      "required_outcome": "No old photo-strip reprint, no fresh Drive release or duplicated grant; ledger remains auditable",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-108",
+      "scenario": "Refund intent races in-flight printer receipt or Drive upload worker",
+      "required_outcome": "Fence/quarantine exact original work and physical paper possibilities; no blind refund/admission while unsafe",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-109",
+      "scenario": "Verified refund completed but old camera/print lease/backend ACK still uncertain",
+      "required_outcome": "Booth remains `ADS_PROTECTED` / `ISOLATION_HOLD`; technician if needed, never free from financial status alone",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-110",
+      "scenario": "Customer checks refund status and receipt reference",
+      "required_outcome": "Distinct state texts, authenticated/redacted reference, no fake contact/ETA, no media or credential leakage",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-111",
+      "scenario": "Multiple real paid attempts, original order IDs, partial/different refund provider references",
+      "required_outcome": "Refund exactly the intended original settled provider charge; no cross-merchant or wrong-attempt payout",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    },
+    {
+      "id": "PP-112",
+      "scenario": "Policy customer copy says \"uang hangus, tidak pernah bisa refund\" despite system failure or statutory rights",
+      "required_outcome": "Reject blanket waiver; narrow proof-lost NO_AUTO_REFUND policy only; legal/provider/merchant gate required",
+      "full_case_status": "NOT_RUN",
+      "stage": "PP-06R",
+      "component_test_modules": [],
+      "component_evidence_is_full_acceptance": false,
+      "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
+    }
+  ]
+}

@@ -13,16 +13,79 @@ worker safeguards remain binding. Production deployment, actual charges/refunds,
 merchant activation, live customer/cloud deletion and other branches are excluded.
 
 - Authorized branch: `feature/post-preview-qris-checkout`.
-- Last independently verified remote: `5e1491d1f621332be5ba52e260650b50ce66cee8` (PP-03.b original CCP journal; verified remote, CI run 41285153968 all three jobs SUCCESS).
+- Last independently verified remote: `b8655adb834c9b2e612458ba5b46a8cc45e6d8ef` (PP-03.c native private card; verified remote, CI run 41286019681 all three jobs SUCCESS).
 - Original audited base: `b68e514dd57c989df47fa1b222d45f3f71c38347`.
-- Current micro-increment: **PP-03.c — private native CCP visibility component and uncached QR rendering**.
+- Current micro-increment: **PP-04.a — purchase-group/QRIS attempt coordinator and synthetic financial races**.
 - Overall: PP-00 dependency audit continuing; PP-01 private capture and isolated development UI implemented; PP-02 preview/freeze backend and all-design UI implemented, real charge-readiness adapters NOT_IMPLEMENTED; PP-03..07 NOT_STARTED.
 - This checkpoint travels with the implementation commit. Resolve its containing
   SHA using `git log -1 --format=%H`; after push independently compare `git
   ls-remote origin refs/heads/feature/post-preview-qris-checkout`. A commit cannot
   truthfully contain its own SHA. The next increment records this verified tip.
 
-## PP-03.c — current private CCP visibility component and evidence
+## PP-04.a — current purchase/attempt coordinator and evidence
+
+Server-side `PostPreviewPayments`, not yet mounted by a native payment/API route.
+Reuses original strict provider evidence/signature/Sandbox URL rules and fixed
+MidtransSandboxClient. **No actual merchant request or production endpoint is
+used.** New schema v4 has original purchase finance, QR1/2/3 attempt, cancellation,
+reconciliation reservation/pacing and redacted audit journals. Immutable SQL guards
+protect original draft identity, frozen contract, provider attempt, finance context,
+single entitlement and first paid observation anchor. Missing/partial journals hold.
+
+Requires original genuinely offered, still-valid scoped CCP and trusted readiness
+before preparing a charge. One original provider order is durably PREPARED then
+SENT before external I/O. SENT/UNKNOWN never repeats POST, including after lost
+create response/404/restart. Valid original create action (including v4 path) stays
+bound, but PAID requires independent GET and exact order/merchant/IDR amount/
+reference/method checks. No provider idempotency header guarantee is assumed.
+
+QR2/QR3 require a fresh authoritative EXPIRED-unpaid GET, same active original
+worker, explicit continuation, same frozen contract/price, no cancel/review/paid
+entitlement and maximum three attempts. Reconcile all attempts for late money.
+Exactly one entitlement audit ID per logical purchase; independently settled extra
+attempts are separately listed for later guarded financial handling, not fulfilled
+or refunded here. PAID is monotonic; fresh access evidence remains independent.
+Late/stale verified money is retained OWED without claiming fresh service authority.
+No camera, printing, media access or booth release is authorized by this coordinator.
+
+USER_CANCEL/abandonment record original cancel intent before one original cancel
+send, then independent status; lost cancel replies reconcile without another POST.
+Suspension/inactivity warning do not cancel. Inactivity expiry requires a distinct
+VISIT_ABANDONED decision before cancellation. Crash between lifecycle/finance writes
+recovers the same intent. Paid/cancel race preserves PAID_UNCLAIMED/OWED. No event
+marks machine FREE. Provider mismatch/refund evidence holds for review. Real
+Sandbox polling retains 10s normal pacing, 1s priority pacing and bounded leases;
+mocks use explicit zero-delay fixtures. Readiness I/O is outside SQL transactions.
+
+Actual **27 payment fault/race methods PASS**, included in clean-venv group
+**187 PASS / 0 FAIL / 0 SKIP**, 25.578s. Covers signed/unsigned/stale webhook and
+amount rejection, lost create/404, QR cap, cancel/settle and late-paid races,
+cross-connection concurrent starts, QR1 PAID during QR2 create, excess payments,
+unknown and stale reconciliation, interrupted cancel intent, no fake freshness,
+immutable identity/price/entitlement and paid-anchor nonextension. Compile/diff PASS.
+Earlier native private/card/QR/photo/navigation group **38 PASS / 0 FAIL / 0 SKIP**,
+13.475s for schema compatibility. Current containing-source CI pending push;
+previous card CI 41286019681 all three jobs SUCCESS. Financial fields remain
+unmounted/disabled for customers; no real merchant/provider acceptance inferred.
+
+Added [112-case execution ledger](POST-PREVIEW-QRIS-EXECUTION-MATRIX.json): exactly
+112 unique canonical cases, all complete-case NOT_RUN, with implemented component
+module crosswalk. It explicitly does NOT count module PASS as full acceptance or
+label unimplemented software as a physical/provider-only blocker. Historical matrix
+and source/CI evidence remain unchanged.
+
+Changed: payment coordinator, schema v4, payment tests, earlier schema assertions,
+focused workflow, execution ledger and current status/checkpoint notices. Original
+legacy checkout backend/store/session/paid camera/recovery logic unchanged.
+Next **PP-04.b**: authenticated backend API/client seam and persistent synthetic
+provider plus real child-process restart/unknown/cancel races; then native
+checkout/CCP/payment integration. Keep merchant keys server-side, validate actual
+frozen media and read-only readiness through trusted adapters, preserve one service
+entitlement and no unpaid output. PP-05 ticket/concurrent printer/paid Drive and
+strips, PP-06 claim/exact release/health, PP-06R refund and PP-07 full physical-test
+candidate/runbook are still ordinary unfinished software. Not ready for UAT.
+
+## PP-03.c — previously delivered private CCP visibility component and evidence
 
 Adds `PrivateCCPCard` and worker-side private QR rendering over the original
 independently decoded/branded QR renderer. Concrete reuse adjustment: existing

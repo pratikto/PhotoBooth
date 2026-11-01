@@ -61,7 +61,7 @@ class PostPreviewStore:
             singleton INTEGER PRIMARY KEY CHECK(singleton=1), version INTEGER NOT NULL);
           INSERT OR IGNORE INTO pp_schema VALUES(1,1);
         ''')
-        if self.db.execute('SELECT version FROM pp_schema').fetchone()[0] not in (1, 2, 3):
+        if self.db.execute('SELECT version FROM pp_schema').fetchone()[0] not in (1, 2, 3, 4):
             self.db.close()
             raise DraftHeld('Unsupported private draft schema')
         self.db.executescript('''
@@ -120,6 +120,69 @@ class PostPreviewStore:
         if missing_credential_journal:
             self.db.close()
             raise DraftHeld('Original credential journal is unavailable')
+        missing_payment_journal = False
+        with self.write():
+            version = self.db.execute('SELECT version FROM pp_schema').fetchone()[0]
+            if version < 4:
+                self.db.execute('''CREATE TABLE IF NOT EXISTS pp_purchase_finance (
+                    purchase_group_id TEXT PRIMARY KEY REFERENCES pp_checkout_intents(purchase_group_id),
+                    merchant_id TEXT NOT NULL, provider_mode TEXT NOT NULL,
+                    amount INTEGER NOT NULL CHECK(amount>0), entitlement_id TEXT UNIQUE,
+                    paid_first_observed_at REAL,
+                    legitimate_paid_attempt TEXT, cancel_requested INTEGER NOT NULL DEFAULT 0,
+                    review_required INTEGER NOT NULL DEFAULT 0)''')
+                self.db.execute('''CREATE TABLE IF NOT EXISTS pp_payment_attempts (
+                    attempt_id TEXT PRIMARY KEY,
+                    purchase_group_id TEXT NOT NULL REFERENCES pp_purchase_finance(purchase_group_id),
+                    ordinal INTEGER NOT NULL CHECK(ordinal BETWEEN 1 AND 3),
+                    provider_order_id TEXT NOT NULL UNIQUE, provider_ref TEXT UNIQUE,
+                    create_phase TEXT NOT NULL CHECK(create_phase IN
+                      ('PREPARED','SENT','UNKNOWN','VERIFIED','WITHHELD')),
+                    payment_state TEXT NOT NULL DEFAULT 'UNKNOWN',
+                    last_provider_state TEXT, verified_at REAL, expires_at REAL, qr_url TEXT,
+                    reconcile_token TEXT, lease_until REAL NOT NULL DEFAULT 0,
+                    cancel_phase TEXT NOT NULL DEFAULT 'NONE' CHECK(cancel_phase IN
+                      ('NONE','PREPARED','SENT','UNKNOWN','VERIFIED')),
+                    next_check_at REAL NOT NULL DEFAULT 0,
+                    priority_after REAL NOT NULL DEFAULT 0,
+                    UNIQUE(purchase_group_id,ordinal))''')
+                self.db.execute('''CREATE TABLE IF NOT EXISTS pp_payment_audit (
+                    sequence INTEGER PRIMARY KEY AUTOINCREMENT,
+                    purchase_group_id TEXT NOT NULL, attempt_id TEXT,
+                    outcome TEXT NOT NULL, created_at REAL NOT NULL)''')
+                self.db.execute('''CREATE TRIGGER IF NOT EXISTS pp_frozen_contract_immutable
+                    BEFORE UPDATE ON pp_checkout_intents BEGIN
+                    SELECT RAISE(ABORT,'Original checkout contract is immutable'); END''')
+                self.db.execute('''CREATE TRIGGER IF NOT EXISTS pp_attempt_identity_immutable
+                    BEFORE UPDATE OF purchase_group_id,ordinal,provider_order_id ON pp_payment_attempts
+                    BEGIN SELECT RAISE(ABORT,'Original provider attempt is immutable'); END''')
+                self.db.execute('''CREATE TRIGGER IF NOT EXISTS pp_original_entitlement_immutable
+                    BEFORE UPDATE OF entitlement_id ON pp_purchase_finance
+                    WHEN OLD.entitlement_id IS NOT NULL AND NEW.entitlement_id IS NOT OLD.entitlement_id
+                    BEGIN SELECT RAISE(ABORT,'Original entitlement is immutable'); END''')
+                self.db.execute('''CREATE TRIGGER IF NOT EXISTS pp_finance_context_immutable
+                    BEFORE UPDATE OF purchase_group_id,merchant_id,provider_mode,amount ON pp_purchase_finance
+                    BEGIN SELECT RAISE(ABORT,'Original payment context is immutable'); END''')
+                self.db.execute('''CREATE TRIGGER IF NOT EXISTS pp_paid_anchor_immutable
+                    BEFORE UPDATE OF paid_first_observed_at,legitimate_paid_attempt ON pp_purchase_finance
+                    WHEN OLD.entitlement_id IS NOT NULL
+                    BEGIN SELECT RAISE(ABORT,'Original paid anchor is immutable'); END''')
+                self.db.execute('''CREATE TRIGGER IF NOT EXISTS pp_draft_identity_immutable
+                    BEFORE UPDATE OF draft_id,version,booth_id,visit_id ON pp_drafts
+                    BEGIN SELECT RAISE(ABORT,'Original draft identity is immutable'); END''')
+                self.db.execute('UPDATE pp_schema SET version=4')
+            else:
+                for name in ('pp_purchase_finance', 'pp_payment_attempts', 'pp_payment_audit'):
+                    if not self.db.execute("SELECT 1 FROM sqlite_master WHERE name=? AND type='table'", (name,)).fetchone():
+                        missing_payment_journal = True
+                if not missing_payment_journal:
+                    columns = {r['name'] for r in self.db.execute('PRAGMA table_info(pp_payment_attempts)')}
+                    finance_columns = {r['name'] for r in self.db.execute('PRAGMA table_info(pp_purchase_finance)')}
+                    if not {'cancel_phase', 'priority_after', 'reconcile_token'} <= columns or 'paid_first_observed_at' not in finance_columns:
+                        missing_payment_journal = True
+        if missing_payment_journal:
+            self.db.close()
+            raise DraftHeld('Original payment journal is unavailable')
 
     def close(self):
         with self.lock:
