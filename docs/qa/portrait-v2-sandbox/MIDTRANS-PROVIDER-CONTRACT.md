@@ -1,5 +1,14 @@
 # Midtrans QRIS provider contract and research register
 
+## 1 November 2026 — Post-preview QRIS semantics and idempotency clarification (design only)
+
+For new `feature/post-preview-qris-checkout` logical purchases, create a QRIS attempt **only after** every selected template's three photos/at most one retake are approved and a frozen, independently quoted manifest exists. Store the original internal purchase-group, provider order ID, durable CREATE_PREPARED intent and request fingerprint before external I/O; a lost create reply, status 404, polling outage or UI countdown expiry does **not** prove the attempt was unpaid. Preserve and reconcile the **same original provider order**. Internal idempotency keys **are not evidence** that Legacy Core `POST /v2/charge` supports a particular `Idempotency-Key` header or repeat-POST guarantee; Sections 2.5 and 5 below remain open external verification.
+
+Distinguish `USER_CANCEL`, `APP_SUSPENDED`, `INACTIVITY_EXPIRED` and `VISIT_ABANDONED`. Only verified provider EXPIRED unpaid + active same visitor + no cancel/abandonment allows QR2/QR3; verified CANCELLED or deliberate cancellation cannot renew. A late independently verified PAID on a retired original visit leaves **PAID_UNCLAIMED/OWED**, no ticket/old photo printed in public; returning original CCP must be verified separately before access. Multiple attempts that settle are financial conflicts with at most one service entitlement, **not automatic refunds**. Existing paid-first original Sandbox and production restrictions remain as documented below.
+
+[Owner flows](POST-PREVIEW-QRIS-OWNER-APPROVED.md) · [state/security](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md) · [PP payment fault tests](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md).
+
+
 **Document status:** DESIGN REFERENCE / RESEARCH; not implementation proof or provider certification  
 **Date:** 28 October 2026 (Asia/Jakarta)  
 **Repository scope:** `pratikto/PhotoBooth`, `feature/portrait-kiosk-v2-next`  
