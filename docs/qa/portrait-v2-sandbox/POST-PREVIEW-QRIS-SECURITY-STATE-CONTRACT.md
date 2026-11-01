@@ -69,7 +69,51 @@ Before QRIS, check known route/storage/payment and verified link feasibility; on
 ### Protected handoff and old orders
 Use exact original release operation, worker fence, typed local receipt, backend ACK and archive; no operator PIN bypass or blanket reset for provider UNKNOWN. A valid ticket/CCP never preempts an occupied camera. Historical paid-first orders use the original PAID -> capture checkpoint and original entitlement, not the new draft route.
 
-## 5. Timeout, physical/security and implementation boundaries
+## 5. Mandatory transition guards resolving earlier contradictions
+
+**Versioning / source of authority:** These are TARGET rules for `post_preview_v1` orders only. Existing `prepaid_legacy` PAID->camera recovery/UAH receipt and AR states remain versioned and executable for pre-existing orders. Payment receipt, worker states, kiosk occupancy and photo media are independent authority domains; **do not use a single GUI phase as the source of truth for them all**.
+
+### Distinct lifecycle events
+
+| Durable input | May hide private media? | May request provider cancellation? | May renew verified-expired QR? | May free camera/accept new customer? |
+| --- | --- | --- | --- | --- |
+| `USER_CANCEL` (explicit customer intent) | Yes, immediately | Yes, original attempt only; verify outcome | **No**, even if visitor remains near camera | Only after terminal unpaid OR separately safe PAID/OWED isolation + worker fence + ACK |
+| `APP_SUSPENDED` / minimized | Yes, immediately | **No**, not by itself | Not automatically; retain original status | Only after separately proven lost ownership and release rules |
+| `INACTIVITY_WARNING` | No automatic abandonment | No | Original live visitor retains continuity | No |
+| `INACTIVITY_EXPIRED` after warning | Yes | Only after a distinct durable abandonment decision | **No** once abandoned | No until original finance/worker/release proof |
+| `VISIT_ABANDONED` (classified) | Yes | Yes, only for current original attempt | **No** | Only on proven safe closure/release |
+| `PROVIDER_EXPIRED_UNPAID` | Follow current owner presentation policy | Not required for verified terminal expiry | **Yes only** active original visitor, no cancel/abandon intent, max QR3 | If no continuation, exact safe isolation first |
+| `PROVIDER_CANCELLED_UNPAID` | Yes | Already terminal | **No** | Exact safe isolation first |
+| `PROVIDER_PAID` | Original customer or claim authorization only | No | No | PAID/OWED safety and worker isolation required |
+| `PROVIDER_UNKNOWN` | Yes when private ownership lost | Reconcile original only; no invented final outcome | No | No new payable checkout without separately authorized safe closure |
+
+**Proof ordering:** privacy wipe -> stop stale callbacks -> persist event intent -> provider reconciliation as needed -> worker drain/fence and local receipt -> scoped backend release ACK/archive -> independently verify FREE. Public Advertising/idle rendering may precede this only as `ADS_PROTECTED` with all capture, game and payment-admission triggers guarded. On reboot, even fresh terminal unpaid evidence does **not** skip the worker/lease barrier.
+
+### Original ticket and CCP lifecycle
+
+- `CCP_CREATED` is bound to the original frozen logical group; `CCP_OFFERED` requires genuinely usable private presentation on the QRIS checkout page. A token merely generated or written to a ledger does not prove customer receipt; do not declare forfeiture for a service that never offered proof.
+- Original checkout CCP is a **pre-PAID claim capability**, not the customer's Recovery Ticket, photo download permission, or proof of payment. On live PAID with intact owner lease, ticket issuance does **not** require CCP re-scan.
+- On returning PAID claim: verify exact original CCP or original still-valid ticket, fresh provider PAID, frozen draft/booth, valid one-grant entitlement, rate limit and exclusive free booth before decrypting any credential or showing private pixels.
+- Receipt `NOT_SENT`, `SENDING`, `SUBMITTED`, `UNCERTAIN`, and customer presentation `NOT_OFFERED`/`OFFERED`/`PRESENTED` are **separate durable dimensions**. One original printer send; SENDING/UNCERTAIN never replay. If the print is unavailable/fails/uncertain and the live original customer can receive the **same** token, show it exactly once for 30 seconds of actual visibility with NEXT. Do not automatically show fallback after SUBMITTED, on polling, or on reboot.
+- On service failure before any genuine offer, preserve PAID/OWED and an authorized support/financial remedy; no tokenless private-media restoration, no automatic refund.
+- Vault content is protected original credential ciphertext only; the public/ordinary backend holds hash-based verifiers, never plaintext keys or secrets. Decrypt only with specific post-PAID scope and customer authorization; machine escrow is **not** a new recovery-ticket issuance mechanism.
+
+### Drive pool and financial readiness
+
+- Before provider CREATE_PREPARED, observe *availability* of a verified, currently unclaimed 25-READY photo-folder reserve (and individual folder URL) without consuming the reserve or uploading any customer photo. Also check camera/disk and a printer route. **This is an availability signal, not a guaranteed future binding or proof paper will print.**
+- After PAID, bind **one** unique exact customer `Photobooth/PB001/Photo/NNNNNNNN` folder and verify its individual viewer URL/permission afresh, then compose final paid-only QR strip. If binding fails, retain PAID/OWED, do not print a false QR or create a second payment. READY pool replenishment uses existing controlled storage procedures.
+- Existing dedicated BUG-027 Sandbox (paid-first, receipt/photo printing, Drive OFF) remains legacy regression **only**. Target purchased post-preview synthetic tests use a **separately isolated verified-URL fake** without external publication; it is not live Drive acceptance. Future stable Meong resolver QR is explicitly out-of-scope.
+- One internal persistent checkout/attempt key is mandatory. Legacy Midtrans Core `POST /v2/charge` provider-level idempotency header semantics are **UNVERIFIED** and must not be invented; status reconciliation on the same original provider order ID is required on timeout/404.
+
+### Time anchors and retention (explicitly unfinished calibration)
+
+Use separate `draft_created_at`, `checkout_create_intent_at`, `provider_attempt_created_at`, `paid_verified_at`, `ticket_created_at`, `proof_offered_at`, `claim_expires_at`, `transaction_retention_anchor_at`, `last_worker_barrier_at` and `completed_at`. Existing 24-hour Sandbox ticket policy based on original order creation applies to its **legacy version only**. New post-preview CCP/ticket TTL and exact paid-retention anchor are not signed-off numerical requirements yet; document the chosen versioned policy and validate against 15-day local / 30-day Drive storage, avoiding unpaid-draft deletion tied to a generic order timestamp. No automatic clock reset on QR renew, restart or archive. Keep PAID/OWED ledger beyond loss of proof according to authorized financial retention.
+
+### Execution dependency guard
+
+Build the **vault interface/secure CCP contract before** enabling actual late-payment claims. Keep end-to-end claim tests NOT_RUN until payment reconciliation, auth, paid manifest binding, vault, UI and safe release are all present; unit fixture PASS alone never marks the whole flow shipped. All 84 proposed PP acceptance cases remain NOT_RUN as of this documentation-only revision.
+
+## 6. Timeout, physical/security and implementation boundaries
 
 - Suggested **pilot-only** starting points: gallery 60–90s, capture/review 120s, final preview 90–120s of actual inactivity, with warning. These are tunable and NOT fixed owner-approved numbers. No automatic hard cap interrupting active photos; payment uncertainty uses provider reconciliation, never a UI inactivity shortcut.
 - CCP and original ticket should use cryptographically secure unpredictable secrets, constant-time comparisons, hashes/verifiers, version/scope/expiry and replay protections; offer CCP privately when QRIS starts, not as the charge QR. Screenshot/payment number is not private-media authorization. Do not treat storing a token server-side as evidence it was presented to the customer.
