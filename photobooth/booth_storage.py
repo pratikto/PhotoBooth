@@ -153,6 +153,45 @@ class BoothWorkspace:
             self._check_folder_owners(state)
             write_json_atomic(self.state_path, state)
 
+    def claim_exact(self, transaction_id, claim_token):
+        """Claim or recover ONE preselected original reserved identity.
+
+        A paid obligation must journal its transaction_id before invoking this
+        method. Restart returns the same claimed folder, never a new allocation.
+        Reject a changed queue head, foreign token, damaged or missing folder.
+        This does not bind Google Drive, upload files or grant a payment.
+        """
+        if (not isinstance(transaction_id, str)
+                or not re.fullmatch(re.escape(self.booth_id)+r'_[0-9]{8}', transaction_id)
+                or not isinstance(claim_token, str)
+                or re.fullmatch(r'[a-f0-9]{32}', claim_token) is None):
+            raise ValueError('Exact original reserved identity required')
+        with self.locked():
+            state = self._load()
+            previously = state['claimed'].get(transaction_id)
+            if previously:
+                if previously.get('claim_token') != claim_token:
+                    raise ValueError('Original transaction claim does not match')
+                path = checked_path(self.root / transaction_id)
+                if not path.is_dir():
+                    raise ValueError('Claimed transaction folder is missing')
+                return {**previously, 'staging_path': str(path)}
+            if (not state['ready'] or state['ready'][0]['transaction_id'] != transaction_id
+                    or state['ready'][0]['claim_token'] != claim_token):
+                raise ValueError('Original reserved transaction is no longer claimable')
+            path = checked_path(self.root / transaction_id)
+            if not path.is_dir() or any(path.iterdir()):
+                raise ValueError('Original reserved transaction directory is unavailable')
+            slot = dict(state['ready'].pop(0))
+            state['claimed'][transaction_id] = slot
+            write_json_atomic(self.state_path, state)
+            try:
+                self._refill(state)
+            except OSError:
+                state['refill_error'] = 'storage_unavailable'
+                write_json_atomic(self.state_path, state)
+            return {**slot, 'staging_path': str(path)}
+
     def claim(self):
         with self.locked():
             state = self._load()

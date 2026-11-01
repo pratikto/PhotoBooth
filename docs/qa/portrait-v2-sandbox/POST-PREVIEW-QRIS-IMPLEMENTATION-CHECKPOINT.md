@@ -1,5 +1,12 @@
 # Post-preview QRIS implementation checkpoint
 
+## 1 November 2026 — PP-05.c1 original PAID folder claim primitive (new; CI pending)
+
+Extend existing `BoothWorkspace` with `claim_exact(transaction_id, claim_token)` to claim **only** a selected original READY queue-head identity or recover **the same** already-claimed folder after restart. No second allocation, token substitution, foreign booth ID, nonempty pre-claim folder or missing previously claimed folder may silently pass. Its caller must first journal the original paid transaction identity; the method cannot create payment, bind remote Drive, upload media, print or release customer data. Original `claim()` is unchanged.
+
+Added focused `test_post_preview_paid_drive` four cases (restart/original idempotence, foreign token, queue head/nonempty slot and missing claimed folder), registered in Windows/Linux CI. **CI pending**. This is a PP-05.c dependency only: durable PAID→transaction intent, actual authenticated Drive folder binding, verified URL, final QR composition, media upload and purchased-strip delivery remain NOT_IMPLEMENTED. All 112 complete PP cases remain NOT_RUN; no cloud action is enabled.
+
+
 ## 1 November 2026 — PP-05.b3b typed native ticket / independent receipt handoff (NEW; CI pending)
 
 For **explicit incomplete synthetic mock fixture only** the first independently observed original PAID/OWED now queues its original ticket through PhotoJobs, displays the native typed Recovery Ticket card with full-code visibility gate, begins one 30-second monotonic clock only after worker-confirmed genuine UI render, and queues exactly one receipt send through the same serialized worker lane. NEXT/timeout immediately wipes private code/texture even when the printer worker remains in-flight; a deferred original dismissal occurs only after the single-flight worker completes. The late print outcome never rebuilds or restarts the card. Original CCP, legacy/prepaid route, provider, Drive, automatic release and refund stay unchanged.
