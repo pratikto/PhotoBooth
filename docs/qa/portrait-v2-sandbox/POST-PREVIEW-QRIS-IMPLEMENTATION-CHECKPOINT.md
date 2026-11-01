@@ -1,5 +1,10 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — dual-opt-in real Drive pilot, still synthetic payment (CI pending)
+
+The Windows pilot can now optionally use the real existing `AppsScriptDriveClient` + `BoothDriveClient` + `BoothDriveWorker` only with **both** `--enable-real-drive --accept-public-test-upload` and explicit HTTPS `script.google.com/macros/s/.../exec` URL and upload token. The default stays 100% synthetic. Real Drive pilot prewarms 25 READY folders and relies on the server's original read-only readiness to BLOCK synthetic charge admission if the API, folder sharing or pool capacity are not independently ready. Uploaded test photos are external/public-share operations only when the user explicitly launches this opt-in; no live Midtrans charge is possible. An accompanying Windows guide documents privacy, cloud effects and retry safeguards. CI uses local contract checks only and does not access Google.
+
+
 ## 2 November 2026 — PP-05.c verified real Apps Script timestamp format correction (CI pending)
 
 Existing `OriginalPaidDriveBinding.bind` prepared `created_at` using a UNIX **seconds** number from `paid_first_observed_at`. The actual Apps Script `bindStorageTransaction_` parses `started_at` using JavaScript `new Date(value)` (numeric input means milliseconds), so a real cloud attempt would appear to be in 1970 and retention would reject the folder as expired. The original immutable PAID anchor is now converted into an ISO 8601 UTC timestamp before binding, never replaced with current time on retry. Added regression verifying exact PAID-anchor round-trip. Synthetic previous tests did not catch live Code.gs contract mismatch; no external Drive operations were made.

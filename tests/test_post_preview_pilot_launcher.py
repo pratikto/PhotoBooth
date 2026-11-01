@@ -1,6 +1,6 @@
 """Safety checks for the explicitly synthetic real-camera/optional-paper pilot."""
 import unittest
-from tools.run_post_preview_checkout_pilot import build_parser,validate_printer
+from tools.run_post_preview_checkout_pilot import build_parser,validate_printer,validate_drive
 
 
 class PilotArgsTests(unittest.TestCase):
@@ -25,6 +25,25 @@ class PilotArgsTests(unittest.TestCase):
             '--private-root','test','--synthetic-payment-only'])
         validate_printer(args,{})
 
+
+    def test_real_drive_needs_separate_upload_consent_and_deployed_script(self):
+        args=build_parser().parse_args([
+            '--private-root','test','--synthetic-payment-only','--enable-real-drive'])
+        with self.assertRaises(ValueError):validate_drive(args,{})
+        args.accept_public_test_upload=True
+        with self.assertRaises(ValueError):validate_drive(args,{})
+        validate_drive(args,{
+            'PHOTOBOOTH_WEB_APP_URL':'https://script.google.com/macros/s/TEST/exec',
+            'PHOTOBOOTH_UPLOAD_TOKEN':'EXPLICIT_TEST_TOKEN'})
+        with self.assertRaises(ValueError):
+            validate_drive(args,{
+                'PHOTOBOOTH_WEB_APP_URL':'https://example.org/macros/s/TEST/exec',
+                'PHOTOBOOTH_UPLOAD_TOKEN':'EXPLICIT_TEST_TOKEN'})
+
+    def test_virtual_drive_never_uses_external_credentials(self):
+        args=build_parser().parse_args([
+            '--private-root','test','--synthetic-payment-only'])
+        validate_drive(args,{})
 
     def test_native_pilot_requires_explicit_live_worker_binding(self):
         import inspect

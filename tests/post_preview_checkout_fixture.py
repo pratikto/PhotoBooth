@@ -102,8 +102,8 @@ class CheckoutFixture:
             self.ticket, printer=printer, shared_lane=threading.Lock())
 
 
-    def enable_paid_delivery(self):
-        """Explicit in-process, no-cloud test driver bound to the actual paid path."""
+    def enable_paid_delivery(self, *, real_drive=False):
+        """Synthetic payment, optional opt-in actual Drive transport for pilot."""
         from photobooth.post_preview_paid_drive import OriginalPaidDriveBinding
         from photobooth.post_preview_paid_media import OriginalPaidMediaImporter
         from photobooth.post_preview_paid_strips import OriginalPaidStripPreparer
@@ -116,15 +116,19 @@ class CheckoutFixture:
                     'folder_id':'syntheticPaidFolder123',
                     'folder_url':'https://drive.google.com/drive/folders/syntheticPaidFolder123',
                     'link_verified':True,'photo_number_layout':1}
-        # Explicit synthetic fixture only. Not an Apps Script or Google Drive call.
-        self.drive.bind_transaction=simulated_remote
+        # Only an explicit pilot override may use the actual Apps Script
+        # client. Default unit tests keep every cloud operation synthetic.
+        if not real_drive:
+            self.drive.bind_transaction=simulated_remote
         self.paid_binder=OriginalPaidDriveBinding(
             self.backend,self.service.checkout,self.workspace,self.drive,
             allow_incomplete_fixture=True)
         importer=OriginalPaidMediaImporter(self.paid_binder,allow_incomplete_fixture=True)
         preparer=OriginalPaidStripPreparer(importer,allow_incomplete_fixture=True)
+        from photobooth.booth_sync import BoothDriveWorker
+        worker=BoothDriveWorker(self.workspace,self.drive) if real_drive else None
         self.paid_monitor=OriginalPaidDeliveryMonitor(
-            preparer,allow_incomplete_fixture=True)
+            preparer,worker=worker,allow_incomplete_fixture=True)
         self.paid_dispatcher=OriginalPaidPrintDispatcher(
             preparer,allow_incomplete_fixture=True)
         self.paid_print_sends=[]

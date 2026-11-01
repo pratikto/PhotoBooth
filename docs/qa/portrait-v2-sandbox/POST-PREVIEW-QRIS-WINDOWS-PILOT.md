@@ -35,3 +35,36 @@ NOT tested: actual Midtrans QRIS Sandbox, Apps Script / real public Drive ACL,
 upload completeness, customer proof recovery, booth auto-isolation, refund,
 reboot or long-run hardware reliability. Neither this driver nor its
 synthetic CI tests give approval for production payments.
+
+## Optional real Google Drive test (synthetic payment only)
+
+A local test can use the **existing real Apps Script storage-v2 Web App** with
+real test photos while continuing to simulate QRIS. This intentionally creates
+customer-like files under the selected PB001 Drive folder: do not upload other
+people's photographs without permission and do not run against production
+records. Use a fresh local private root and a nonproduction test Drive account
+or explicitly approved test booth.
+
+```powershell
+$env:PHOTOBOOTH_WEB_APP_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT/exec'
+$env:PHOTOBOOTH_UPLOAD_TOKEN = '<configured upload token>'
+.\.venv\Scripts\python.exe tools/run_post_preview_checkout_pilot.py --synthetic-payment-only --private-root work\postpay-drive-test-001 --enable-real-drive --accept-public-test-upload
+```
+
+The booth worker first attempts to reserve 25 real READY folders. Payment
+readiness is **blocked** until the existing Web App reports authenticated API,
+public sharing and READY capacity; this may require waiting for asynchronous
+folder creation before retrying the same original checkout. No synthetic
+Drive URL is allowed in this opt-in route. When simulated PAID, the exact
+original transaction is bound to a real Drive folder and photo upload
+is handled through `BoothDriveWorker` with resumable checksums; view QR
+is a real folder URL only after confirmed binding. A verified link **is not**
+a guarantee upload has finished; inspect the UI verified-file counts.
+
+For camera + physical paper + real Drive in the SAME supervised test, append
+`--enable-real-printer --accept-real-paper` and configure the owned POS80
+as described above. Actual Midtrans remains fully simulated; original
+customer return-claim and refunds remain separate software readiness gates.
+
+Important: turning on this option makes **real cloud writes**. No external
+upload is performed by GitHub CI or by these documentation instructions.
