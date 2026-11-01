@@ -1,5 +1,12 @@
 # Post-preview QRIS implementation checkpoint
 
+## 1 November 2026 — PP-05.c3b verified URL paid strip composition (new; CI pending)
+
+Use the byte-validated original paid media import and **one original authenticated, verified customer Drive URL** to compose 640×1920 purchased strips, one per selected design with its own frozen copy count. `OriginalPaidStripPreparer` records the immutable paid source-photo/retake, URL and original entitlement binding and inserts one durable `pp_paid_strip_jobs` PREPARED intent per design. It reuses the existing `publish_output` and `record_output` journal, recovers only exact STAGED outputs and **does not replay an existing or uncertain output**. After original media and jobs are durable, it enables the paid manifest's background Drive upload intent; no actual uploads, physical printing, refunds, or customer payment activation are performed by this code.
+
+New `tests/test_post_preview_paid_strips.py` covers verified paid QR composition, immutable repeat/resume, and corrupt-output hold. CI pending for this new source SHA; do not claim full PP-001..112 acceptance. This is **PP-05.c staging**, not PP-05.d photo printer integration or physical UAT. Existing legacy prepaid and actual cloud/payment paths stay unchanged.
+
+
 ## 1 November 2026 — PP-05.c3a frozen contract read-only fix (CI pending)
 
 Initial PP-05.c3a CI `41320076932` Linux failed **2 errors / 371 tests** (native desktop SUCCESS; Windows cancelled). Both were triggered because the new import mistakenly called `PrivateDraftPhotos._selected`, whose contract correctly requires **editable** drafts and therefore rejects any post-provider-create paid purchase. This fix replaces that call with an original, non-editing `ledger._owned(lease)` check and direct selected `pp_templates` row verification against the frozen template, approved flag, unchanged lineage and copy quantity. Keep immutable CREATE_PREPARED lock, original source hashes, retake quota and all runtime safety guards unchanged. Recheck CI after push; no full PP acceptance, real Drive or printed photo is claimed.
