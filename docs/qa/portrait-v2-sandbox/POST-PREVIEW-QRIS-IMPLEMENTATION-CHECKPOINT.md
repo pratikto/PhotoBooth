@@ -1,5 +1,10 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — PP-06 migration/fixture CI correction (verification pending)
+
+PP-06.a containing-source run `41333291884` failed 2 assertions plus 2 fixture errors: the earlier v1/v4 migration tests expected final private schema version 6 even though v7 release operations were added, and the new isolation test borrowed a capture fixture without creating its synthetic numpy frame. With PP-06.b in place, all preserved upgrade tests now expect **schema v8** and the isolation fixture supplies a synthetic frame. All original SQL/finance/print/claim guards remain intact; no production activation or content reset. Exact cumulative CI rerun pending.
+
+
 ## 2 November 2026 — PP-06.b original customer proof-gated PAID return (CI pending)
 
 Add **schema v8** migration to let the SAME original customer be safely re-isolated in distinct generations; every previous ACKed operation ID remains immutable. Introduce `OriginalMockClaim`: accept only type-specific original CCP or Recovery Ticket proof, verify protected hash/rate-limit/booth identity, perform fresh independent original settled-provider reconciliation, re-check original PAID/OWED and exactly ACKed isolation, and **atomically reacquire the same old draft/entitlement** only if no other visitor owns the booth. If B is active, return WAIT with no private JPEG, QR or camera takeover. Proof validation alone never authorizes payment, Drive, photo access or reprints. Returning customer receives a **new internal lease generation**, never a new provider charge/retake grant. Four tests cover original rightful return, B busy, QR role/booth rejection and provider-unknown hold. This remains an in-process synthetic backend component; native scanner/UI restore and real Sandbox backend claim service are still NOT implemented.

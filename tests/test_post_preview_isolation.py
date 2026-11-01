@@ -1,6 +1,7 @@
 """PP-06 mock-only privacy fencing never resets a financial/print obligation."""
 import threading
 import unittest
+import numpy as np
 from pathlib import Path
 import tempfile
 
@@ -22,6 +23,7 @@ class OriginalMockIsolationTests(unittest.TestCase):
         self.fixture=CheckoutFixture(Path(self.temp.name))
         self.addCleanup(self.fixture.close)
         self.service=self.fixture.service
+        self.frame=np.zeros((32,48,3),dtype=np.uint8)
         self.lane=threading.Lock()
         self.iso=OriginalMockIsolation(
             self.service.ledger,self.fixture.backend,self.fixture.jobs,

@@ -178,7 +178,7 @@ class PostPreviewApiTests(unittest.TestCase):
         self.ledger.db.execute('UPDATE pp_schema SET version=4')
         other = PostPreviewStore(self.fixture.fixture.root/'drafts.db')
         self.addCleanup(other.close)
-        self.assertEqual(6, other.db.execute('SELECT version FROM pp_schema').fetchone()[0])
+        self.assertEqual(8, other.db.execute('SELECT version FROM pp_schema').fetchone()[0])
         row = other.db.execute('SELECT * FROM pp_payment_attempts').fetchone()
         self.assertEqual(before['attempts'][0]['attempt_id'], row['attempt_id'])
         self.assertEqual('PENDING', row['payment_state'])

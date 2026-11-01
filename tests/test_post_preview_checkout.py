@@ -182,7 +182,7 @@ class PreviewFreezeTests(unittest.TestCase):
         other = PostPreviewStore(self.root/'private.db')
         self.addCleanup(other.close)
         self.assertEqual(before, other.inspect(self.lease))
-        self.assertEqual(6, other.db.execute('SELECT version FROM pp_schema').fetchone()[0])
+        self.assertEqual(8, other.db.execute('SELECT version FROM pp_schema').fetchone()[0])
 
 
 if __name__ == '__main__': unittest.main()
