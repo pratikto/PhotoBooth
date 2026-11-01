@@ -1,5 +1,12 @@
 # Post-preview QRIS implementation checkpoint
 
+## 1 November 2026 — PP-05.c3a original PAID raw media import (new; CI pending)
+
+New `OriginalPaidMediaImporter` (isolated synthetic-only) verifies the same immutable provider-paid OWED service, trusted original still-live worker lease and **full frozen source-photo/artwork hashes** before creating an exact paid storage-layout-2 manifest in the **already journaled, remotely verified original folder**. It copies the original three JPEGs per design and any consumed retake as **byte-identical, source-sha-verified immutable files**, with durable per-file PREPARED/COMMITTED import intents, hard-link no-overwrite publication, and recovery that verifies existing outputs rather than creating new transaction identities. Manifest preserves original purchase/entitlement binding, exact copies and retake lineage. `drive_intent=False` and no strip output until verified Drive-link QR composition later; no public upload or print. All financial obligations remain PAID/OWED.
+
+Four new `test_post_preview_paid_media` cases assert original raw copies, no unpaid public effects, byte-identical idempotent restart, damaged source rejection and foreign-manifest hold. CI remains PENDING; no PP full-case PASS, physical UAT, remote real folder, merchant or production action. **Next PP-05.c3b:** use already VERIFIED folder URL to safely compose exact per-design purchased strips with QR and durable original one-job-per-template ledger, without printing until PP-05.d. Crash between original JPEG import and strip output is resumable or safely held; no silent regenerate of uncertain printed output.
+
+
 ## 1 November 2026 — PP-05.c2 CI fixture setup correction (new; rerun pending)
 
 First containing-source CI run `41319419783` **FAILED**: Linux 358 run / 4 ERROR / 0 assertion failures (Windows subsequently cancelled; native SUCCESS). All four new Drive binding tests incorrectly called `CheckoutFixture.enable_paid_ticket()` **after** payment started, which is forbidden by the existing `attach_paid_ticket` security admission guard. Correct only the fixture order: attach the synthetic ticket service before starting a new private visit; leave runtime guard unchanged. The original claim_exact tests and 354 other tests passed on the failing run. Current micro-fix CI is PENDING; this is not a full acceptance PASS or a merchant/Drive device result.
