@@ -222,3 +222,11 @@ class OriginalCCPService:
         with self._privacy_lock:
             self._hidden = True
             self._offers.clear()  # No future mark-visible from retired rendering.
+
+
+def render_private_ccp(offer):
+    """Worker-only original independently decoded QR; no file or bitmap cache."""
+    if not isinstance(offer, PendingCCPOffer):
+        raise TypeError('Original private offer required')
+    from photobooth.qr_code import create_qr_image
+    return create_qr_image(offer.qr_payload, max_size=320, cache=False)

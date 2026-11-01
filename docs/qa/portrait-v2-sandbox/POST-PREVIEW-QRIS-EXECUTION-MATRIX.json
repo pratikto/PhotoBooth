@@ -3,7 +3,7 @@
   "timezone": "Asia/Jakarta",
   "status": "NOT_READY_FOR_PHYSICAL_UAT",
   "scope": "112 full acceptance cases remain NOT_RUN. Listed module passes are partial software subassertions only.",
-  "verified_remote_base": "e7bfca56021f4420ca6e614a9e99afa86e0dd0f8",
+  "verified_remote_base": "348b4cb768ac7417c20fc39743ee9974968dc1d9",
   "payment_source_sha256": "7234ebfc53535bc5e4a68c6c3eb70b56ddada0178abd8f90c762b08e5db74156",
   "summary": {
     "PASS": 0,
@@ -263,7 +263,9 @@
       "component_test_modules": [
         "tests/test_post_preview_payments.py",
         "tests/test_post_preview_api.py",
-        "tests/test_post_preview_payment_crashes.py"
+        "tests/test_post_preview_payment_crashes.py",
+        "tests/test_post_preview_checkout_worker.py",
+        "tests/test_post_preview_checkout_widgets.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -277,7 +279,9 @@
       "component_test_modules": [
         "tests/test_post_preview_payments.py",
         "tests/test_post_preview_api.py",
-        "tests/test_post_preview_payment_crashes.py"
+        "tests/test_post_preview_payment_crashes.py",
+        "tests/test_post_preview_checkout_worker.py",
+        "tests/test_post_preview_checkout_widgets.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -291,7 +295,9 @@
       "component_test_modules": [
         "tests/test_post_preview_payments.py",
         "tests/test_post_preview_api.py",
-        "tests/test_post_preview_payment_crashes.py"
+        "tests/test_post_preview_payment_crashes.py",
+        "tests/test_post_preview_checkout_worker.py",
+        "tests/test_post_preview_checkout_widgets.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -305,7 +311,9 @@
       "component_test_modules": [
         "tests/test_post_preview_payments.py",
         "tests/test_post_preview_api.py",
-        "tests/test_post_preview_payment_crashes.py"
+        "tests/test_post_preview_payment_crashes.py",
+        "tests/test_post_preview_checkout_worker.py",
+        "tests/test_post_preview_checkout_widgets.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -319,7 +327,9 @@
       "component_test_modules": [
         "tests/test_post_preview_payments.py",
         "tests/test_post_preview_api.py",
-        "tests/test_post_preview_payment_crashes.py"
+        "tests/test_post_preview_payment_crashes.py",
+        "tests/test_post_preview_checkout_worker.py",
+        "tests/test_post_preview_checkout_widgets.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -333,7 +343,9 @@
       "component_test_modules": [
         "tests/test_post_preview_payments.py",
         "tests/test_post_preview_api.py",
-        "tests/test_post_preview_payment_crashes.py"
+        "tests/test_post_preview_payment_crashes.py",
+        "tests/test_post_preview_checkout_worker.py",
+        "tests/test_post_preview_checkout_widgets.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -347,7 +359,9 @@
       "component_test_modules": [
         "tests/test_post_preview_payments.py",
         "tests/test_post_preview_api.py",
-        "tests/test_post_preview_payment_crashes.py"
+        "tests/test_post_preview_payment_crashes.py",
+        "tests/test_post_preview_checkout_worker.py",
+        "tests/test_post_preview_checkout_widgets.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -361,7 +375,9 @@
       "component_test_modules": [
         "tests/test_post_preview_payments.py",
         "tests/test_post_preview_api.py",
-        "tests/test_post_preview_payment_crashes.py"
+        "tests/test_post_preview_payment_crashes.py",
+        "tests/test_post_preview_checkout_worker.py",
+        "tests/test_post_preview_checkout_widgets.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -375,7 +391,9 @@
       "component_test_modules": [
         "tests/test_post_preview_payments.py",
         "tests/test_post_preview_api.py",
-        "tests/test_post_preview_payment_crashes.py"
+        "tests/test_post_preview_payment_crashes.py",
+        "tests/test_post_preview_checkout_worker.py",
+        "tests/test_post_preview_checkout_widgets.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -389,7 +407,9 @@
       "component_test_modules": [
         "tests/test_post_preview_payments.py",
         "tests/test_post_preview_api.py",
-        "tests/test_post_preview_payment_crashes.py"
+        "tests/test_post_preview_payment_crashes.py",
+        "tests/test_post_preview_checkout_worker.py",
+        "tests/test_post_preview_checkout_widgets.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -403,7 +423,9 @@
       "component_test_modules": [
         "tests/test_post_preview_payments.py",
         "tests/test_post_preview_api.py",
-        "tests/test_post_preview_payment_crashes.py"
+        "tests/test_post_preview_payment_crashes.py",
+        "tests/test_post_preview_checkout_worker.py",
+        "tests/test_post_preview_checkout_widgets.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -417,7 +439,9 @@
       "component_test_modules": [
         "tests/test_post_preview_payments.py",
         "tests/test_post_preview_api.py",
-        "tests/test_post_preview_payment_crashes.py"
+        "tests/test_post_preview_payment_crashes.py",
+        "tests/test_post_preview_checkout_worker.py",
+        "tests/test_post_preview_checkout_widgets.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -458,7 +482,9 @@
       "component_test_modules": [
         "tests/test_post_preview_payments.py",
         "tests/test_post_preview_api.py",
-        "tests/test_post_preview_payment_crashes.py"
+        "tests/test_post_preview_payment_crashes.py",
+        "tests/test_post_preview_checkout_worker.py",
+        "tests/test_post_preview_checkout_widgets.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -875,7 +901,9 @@
       "component_test_modules": [
         "tests/test_post_preview_payments.py",
         "tests/test_post_preview_api.py",
-        "tests/test_post_preview_payment_crashes.py"
+        "tests/test_post_preview_payment_crashes.py",
+        "tests/test_post_preview_checkout_worker.py",
+        "tests/test_post_preview_checkout_widgets.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -889,7 +917,9 @@
       "component_test_modules": [
         "tests/test_post_preview_payments.py",
         "tests/test_post_preview_api.py",
-        "tests/test_post_preview_payment_crashes.py"
+        "tests/test_post_preview_payment_crashes.py",
+        "tests/test_post_preview_checkout_worker.py",
+        "tests/test_post_preview_checkout_widgets.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -904,7 +934,9 @@
         "tests/test_post_preview_widgets.py",
         "tests/test_post_preview_payments.py",
         "tests/test_post_preview_api.py",
-        "tests/test_post_preview_payment_crashes.py"
+        "tests/test_post_preview_payment_crashes.py",
+        "tests/test_post_preview_checkout_worker.py",
+        "tests/test_post_preview_checkout_widgets.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -992,7 +1024,9 @@
       "component_test_modules": [
         "tests/test_post_preview_payments.py",
         "tests/test_post_preview_api.py",
-        "tests/test_post_preview_payment_crashes.py"
+        "tests/test_post_preview_payment_crashes.py",
+        "tests/test_post_preview_checkout_worker.py",
+        "tests/test_post_preview_checkout_widgets.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -1006,7 +1040,9 @@
       "component_test_modules": [
         "tests/test_post_preview_payments.py",
         "tests/test_post_preview_api.py",
-        "tests/test_post_preview_payment_crashes.py"
+        "tests/test_post_preview_payment_crashes.py",
+        "tests/test_post_preview_checkout_worker.py",
+        "tests/test_post_preview_checkout_widgets.py"
       ],
       "component_evidence_is_full_acceptance": false,
       "remaining_gate": "Complete authenticated/native/paid delivery/recovery/refund integration first; record actual case evidence and any physical/provider limits separately."
@@ -1296,5 +1332,9 @@
     "photobooth/post_preview_api.py": "acf2d8af2cf64799c9638d33b20b190baad77052fb944f1cced70859f86c7c41",
     "photobooth/post_preview_client.py": "0aad603e28b58a170f1a4f0f1a00b953a2765ed314685ed58babbcd4332b7eae",
     "photobooth/post_preview_inbox.py": "e08fb9c84a388e272c241d0207623a9aa43fc07695b05d8d97ab46167b595837"
+  },
+  "native_checkout_source_sha256": {
+    "photobooth/kiosk_v2/post_preview_checkout.py": "d3189402cfe3bf114260f8410e7e5112fa76612ff894564d27fb3c53c7d43dd1",
+    "photobooth/kiosk_v2/post_preview_checkout_app.py": "a7f6eb945839680cf1187349fec8f5ab50d723b570bae6dda72747e51dfe4968"
   }
 }

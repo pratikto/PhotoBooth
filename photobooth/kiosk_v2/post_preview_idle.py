@@ -9,11 +9,12 @@ class PrivateInactivityPolicy:
     capture_seconds: int = 120
     review_seconds: int = 120
     final_preview_seconds: int = 120
+    checkout_seconds: int = 180
     warning_seconds: int = 15
 
     def __post_init__(self):
         values = (self.gallery_seconds, self.capture_seconds, self.review_seconds,
-                  self.final_preview_seconds, self.warning_seconds)
+                  self.final_preview_seconds, self.checkout_seconds, self.warning_seconds)
         if any(type(v) is not int or v < 1 for v in values):
             raise ValueError('Private inactivity limits must be positive integers')
         if self.warning_seconds >= min(values[:-1]):
@@ -25,7 +26,10 @@ class PrivateInactivityPolicy:
             raise ValueError('Valid true-inactivity observation required')
         limits = {'templates': self.gallery_seconds, 'confirm': self.gallery_seconds,
                   'capture': self.capture_seconds, 'review': self.review_seconds,
-                  'result': self.review_seconds, 'final_preview': self.final_preview_seconds}
+                  'result': self.review_seconds, 'final_preview': self.final_preview_seconds,
+                  'claim_proof': self.checkout_seconds, 'checkout_ready': self.checkout_seconds,
+                  'payment_pending': self.checkout_seconds, 'payment_hold': self.checkout_seconds,
+                  'paid_hold': self.checkout_seconds}
         if phase not in limits:
             return 'NONE'
         if worker_busy or countdown_active:

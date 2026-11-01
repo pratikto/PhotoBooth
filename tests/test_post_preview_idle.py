@@ -8,7 +8,9 @@ class PrivateInactivityTests(unittest.TestCase):
     def test_each_phase_warns_before_its_own_configured_expiry(self):
         policy = PrivateInactivityPolicy()
         for phase, limit in (('templates', 90), ('confirm', 90), ('capture', 120),
-                             ('review', 120), ('result', 120), ('final_preview', 120)):
+                             ('review', 120), ('result', 120), ('final_preview', 120),
+                             ('claim_proof', 180), ('checkout_ready', 180),
+                             ('payment_pending', 180), ('payment_hold', 180), ('paid_hold', 180)):
             with self.subTest(phase=phase):
                 self.assertEqual('NONE', policy.decision(phase, limit-16))
                 self.assertEqual('WARNING', policy.decision(phase, limit-15))

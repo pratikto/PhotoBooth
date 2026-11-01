@@ -18,6 +18,14 @@ class PostPreviewClient:
     def __init__(self, *args, **kwargs):
         self._transport = QrisKioskClient(*args, **kwargs)
 
+    @property
+    def mode(self):
+        return self._transport.expected_mode
+
+    @property
+    def booth_id(self):
+        return self._transport.booth_id
+
     def _request(self, method, group, suffix='', payload=None):
         if not isinstance(group, str) or re.fullmatch(r'[a-f0-9]{32}', group) is None:
             raise ValueError('Original purchase group required')

@@ -13,16 +13,73 @@ worker safeguards remain binding. Production deployment, actual charges/refunds,
 merchant activation, live customer/cloud deletion and other branches are excluded.
 
 - Authorized branch: `feature/post-preview-qris-checkout`.
-- Last independently verified remote: `e7bfca56021f4420ca6e614a9e99afa86e0dd0f8` (PP-04.a payment journal; verified remote, CI run 41287834790 all three jobs SUCCESS).
+- Last independently verified remote: `348b4cb768ac7417c20fc39743ee9974968dc1d9` (PP-04.b authenticated boundary; verified remote, CI run 41288588935 all three jobs SUCCESS).
 - Original audited base: `b68e514dd57c989df47fa1b222d45f3f71c38347`.
-- Current micro-increment: **PP-04.b — authenticated backend/client, durable webhook inbox and financial process-death tests**.
-- Overall: PP-00 dependency audit continuing; PP-01 private capture and isolated development UI implemented; PP-02 preview/freeze backend and all-design UI implemented, real charge-readiness adapters NOT_IMPLEMENTED; PP-03 protected CCP backend/native card components implemented but not mounted; PP-04 backend/API components implemented but native payment not mounted; PP-05/06/06R/07 NOT_STARTED.
+- Current micro-increment: **PP-04.c — synthetic native checkout/CCP/authenticated HTTP integration**.
+- Overall: PP-00 dependency audit continuing; PP-01 private capture and isolated development UI implemented; PP-02 preview/freeze backend and all-design UI implemented, real charge-readiness adapters NOT_IMPLEMENTED; PP-03 protected CCP backend/native card components implemented but not mounted; PP-04 backend/API and native checkout synthetic fixture implemented; Sandbox/native payment remains unavailable until paid delivery is complete; PP-05/06/06R/07 NOT_STARTED.
 - This checkpoint travels with the implementation commit. Resolve its containing
   SHA using `git log -1 --format=%H`; after push independently compare `git
   ls-remote origin refs/heads/feature/post-preview-qris-checkout`. A commit cannot
   truthfully contain its own SHA. The next increment records this verified tip.
 
-## PP-04.b — authenticated boundary and durable webhook delivery
+## PP-04.c — native authenticated checkout integration fixture
+
+New PrivateCheckoutService extends original PrivatePhotoService/PhotoJobs, reuses
+original frozen checkout/CCP/QR renderer and restricted PostPreviewClient. Native
+PrivateCheckoutFixtureApp extends the existing private portrait app and shell,
+controls, capture/review/gallery and PrivateCCPCard. No replacement visual system.
+Only explicit incomplete mock + synthetic vault adapters accepted; Sandbox mode,
+implicit activation and non-synthetic protector rejected before local setup. No
+launcher mounts this class and default private-preview launcher remains delivery-off.
+
+Flow actually exercised through real HTTP boundary: all-design final preview ->
+independently observed readiness -> immutable original freeze -> protected CCP ->
+real attached/native QR + full code visibility -> worker-journaled original offer ->
+explicit customer continuation -> server's independent readiness recheck -> same
+original payment attempt. Initial create/decrypt is never treated as a proof offer.
+Original QR renderer moved to non-GUI CCP module and reexported by the old card
+module, allowing worker/state tests without a Kivy dependency. No QR/payload cache,
+credential screenshot or ordinary secret journal introduced.
+
+Lost HTTP response holds immutable original purchase and reconciles; no new charge
+or editable cart. QR image failure leaves original attempt. Original same-proof
+redisplay can recover rendering failure before payment without reset/reissue.
+Starting payment retires decrypted offer/render permits. Late HTTP/QR worker after
+hide cannot restore pixels. Cancel/suspend are distinct; local durable lifecycle
+precedes notification and survives backend outage. Suspension never cancels. All
+views lack fulfillment authority and paid observation stays OWED/paid_hold, including
+when a later HTTP response is lost; ticket/Drive/print integration remains unfinished.
+
+Configurable nonproduction checkout inactivity default 180s with original 15s
+warning. Automatic status polling and render callbacks do not count as customer
+activity. Actual active shutter/work retains prior no-hard-visit-cutoff behavior.
+Expiry hides proof/payment images and retires original visit without automatic
+cancellation, booth release or next-customer admission.
+
+**10 worker/API integration methods** and **3 native methods** added. Native
+capture/all-design/CCP/payment/PAID-OWED path exercised at **800x1280 and 452x900**;
+checks actual durable offered_at only after attached full native presentation.
+Minimize during blocked provider create clears QR/full code immediately; late
+reply remains private HOLD, with no accidental cancel. Automatic status GET does
+not reset inactivity. Native regression group **41 PASS / 0 FAIL / 0 SKIP**, 21.330s,
+including original photos/navigation/QR/card. Initial native timer test used the
+unspecified small default window, whose clipped proof correctly could not be
+marked offered; fixed fixture to request supported 452x900. No proof screenshots
+were saved. Later worker paid-HTTP-loss correction is covered by the focused group;
+containing-source CI rechecks full native group after push.
+
+Final clean-venv backend/private/legacy group **220 PASS / 0 FAIL / 0 ERROR /
+0 SKIP**, 37.651s. Extended checkout-phase inactivity subcases also **4 PASS**,
+0.000s. Diff/compile checks PASS. Containing-source CI pending push; previous
+348b4cb CI run 41288588935 all three jobs SUCCESS.
+Production/Sandbox credentials, merchant charges, real printer/Drive and public
+hosting were not used. All 112 complete acceptance cases remain NOT_RUN.
+
+Next: PP-04.d actual trusted read-only readiness and backend lifecycle worker,
+then PP-05 original ticket/paid Drive/output integration before allowing any
+Sandbox paid path. PP-06 claim/release, PP-06R finance and PP-07 remain software work.
+
+## PP-04.b — historical authenticated boundary and durable webhook delivery
 
 New isolated `post_preview_api.create_app` reuses original BoothAuthenticator,
 bounded duplicate-rejecting JSON parser, bounded rate limiter and worker-thread

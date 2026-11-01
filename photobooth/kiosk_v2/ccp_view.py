@@ -10,17 +10,10 @@ from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
 
-from photobooth.post_preview_ccp import PendingCCPOffer
+from photobooth.post_preview_ccp import PendingCCPOffer, render_private_ccp
 from .photo_views import image_texture
 from .theme import GOLD, MUTED, text_label
 
-
-def render_private_ccp(offer):
-    """Call on the worker, using the original independently decoded QR renderer."""
-    if not isinstance(offer, PendingCCPOffer):
-        raise TypeError('Original private offer required')
-    from photobooth.qr_code import create_qr_image
-    return create_qr_image(offer.qr_payload, max_size=320, cache=False)
 
 
 class PrivateCCPCard(BoxLayout):

@@ -123,7 +123,7 @@ class PrivatePreviewApp(PortraitKioskV2App):
             if self._closed or self._suspended or service._hidden.is_set():
                 return
             phase = self.navigation.page if self.navigation.page in BROWSING_PAGES else self._photo_view.get('phase')
-            active_worker = bool(self._photo_jobs.busy and self._photo_jobs.current_action not in {'snapshot', 'warn'})
+            active_worker = bool(self._photo_jobs.busy and self._photo_jobs.current_action not in {'snapshot', 'warn', 'check_payment', 'ccp_visible'})
             now = time.monotonic()
             decision = self._private_idle_policy.decision(phase, now-self._last_activity,
                 worker_busy=active_worker, countdown_active=self._countdown_event is not None)
