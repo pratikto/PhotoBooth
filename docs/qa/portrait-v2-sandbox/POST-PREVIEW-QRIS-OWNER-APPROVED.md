@@ -22,16 +22,16 @@
 | PP-D09 | Preserve the old **offline local capture** capability. | When internet/Drive link is not ready at charge-readiness, do not knowingly create a payable order. Once PAID, hold printed delivery until QR URL verification; this narrowly changes old immediate-offline-print expectations for the new purchased route. |
 | PP-D10 | A future **stable Meong resolver QR** is the preferred follow-on architecture, **not part of MVP**. | No speculative hostname, public resolver, hosting, payment bypass or redirect service may be shipped under this design-only approval. |
 | PP-D11 | **Adaptive inactivity timeout** by current phase; no hard cutoff that interrupts an actively capturing multi-template customer. | Camera work/countdown, legitimate busy worker and payment uncertainty are not ordinary UI inactivity. Numeric pilot values are configurable recommendations to validate, not signed-off constants. |
-| PP-D12 | **Edits allowed only before creating the first QRIS attempt**, preserving consumed retake quotas and draft ancestry. | Copy-count changes re-quote; newly added template needs its own 3 captures; changing/deselecting/reselecting the same template cannot reset retake. QRIS creation freezes cart, draft revision, promotions, artifacts and amount. |
+| PP-D12 | **Edits allowed only before first provider-create intent is durably recorded**, preserving consumed retake quotas and draft ancestry. | A provisional draft snapshot can be revised before that boundary; each change re-quotes/re-freezes. Copy-count changes do not create new captures; newly added template needs its own 3; deselect/reselect cannot reset retake. Once CREATE_PREPARED is persisted, cart, revision, artifacts, promo and amount become immutable even if the provider response is lost or QR is not yet visible. |
 | PP-D13 | Maintain current **QR1 -> QR2 -> QR3 -> Advertising**, maximum three verified unpaid expirations for an **actively continuing customer**. | Replacement must use the same immutable logical draft and amount, new attempt ID, original status checked, previous safely terminal unpaid; third expires -> safeguarded isolation. No QR4; never renew for an abandoned visitor. |
 | PP-D14 | For **abandonment during PENDING/UNKNOWN**, use same-order cancel/reconciliation and safe occupancy isolation, not automatic QR renewal. | Browser timeout, QR countdown, HTTP 404 or old cached UNPAID never equal terminal financial proof. |
 | PP-D15 | Customer data stays private in **unpaid draft local staging** before payment. | No customer-facing Drive upload/share/download QR, paid photo print or accidental background auto-print; QRIS payment-slip printing is distinct and allowed only through its own guarded pending-order path if separately implemented. |
 | PP-D16 | Preview composition may complete before payment, but **service fulfillment must not**. | `DRAFT_READY` ≠ `PAID` ≠ `FULFILLED`. Final printed strip may replace a prepay QR placeholder with the real paid-only QR, while final three photos/layout/design/copy requirement remain matched. |
-| PP-D17 | Before capture check camera/disk/templates/local staging; **before QRIS** verify frozen outputs, local durability, printer-route readiness, payment connectivity, and delivery-URL policy. | Route observation ≠ paper detection; after settlement physical delivery can still fail and needs PAID/OWED recovery. Existing Sandbox trial and purchased-print roles remain distinct. |
+| PP-D17 | Before capture check camera/disk/templates/local staging; **before QRIS** verify frozen outputs, local durability, printer-route readiness, payment connectivity, and delivery-URL policy. | Link readiness may inspect a verified unclaimed READY reserve **without claiming it for the unpaid visitor**. After PAID perform atomic exact-identity binding and re-verification; if it fails retain PAID/OWED and hold photo-strip printing. Route observation ≠ physical paper detection. Isolated legacy Sandbox and future purchased post-preview test profile are distinct. |
 | PP-D18 | Automatic session isolation only with proven fence/worker quiescence/backend release or safe local draft closure. | Prior PAID/OWED remains auditable. Protected Advertising is only a public UI, not authority to admit a new charge or show prior media. Operator only for unsafe/ambiguous financial, hardware, security or corrupt-data cases. |
 | PP-D19 | One immutable draft-to-paid binding and one entitlement per logical purchase across all QR attempts. | Detect and HOLD multiple settled attempts/amount mismatches; never double-fulfill, silently treat extra payment as a free service or refund automatically. |
 | PP-D20 | Purchase printing uses durable job reservations with exact design/output/copies, one printer owner and no uncertain replay. | `SENDING`/`UNCERTAIN` are NOT paper-success evidence; partial print requires separately approved physical inspection/remedy. Printed Recovery Ticket and purchased photo jobs have independent identities, same printer exclusivity. |
-| PP-D21 | Google Drive must be gated on authenticated PAID entitlement and exact folder identity. | Use existing `Photobooth/PB001/Photo/00000001/{raw,bw,color}` contract; 25 READY reserves aren't consumed by arbitrary unpaid visitors. Verify anyone-reader link for the right individual customer folder only and use retention guards. |
+| PP-D21 | Google Drive must be gated on authenticated PAID entitlement and exact folder identity. | Use existing `Photobooth/PB001/Photo/00000001/{raw,bw,color}` contract; 25 READY reserves must not be consumed by arbitrary unpaid visitors. Verify anyone-reader link for the right individual customer folder only and use retention guards. |
 | PP-D22 | Existing Meong Fly one-use ticket and single-game-attempt ledger remain authoritative. | Unpaid checkout abandonment cannot reset the game or discount. Sandbox reward remains demonstrative/full-price unless a **trusted backend promotion** contract exists. No stacking without separate approval. |
 | PP-D23 | Historical prepaid legacy orders remain on their original **PAID -> photo** recovery semantics, versioned separately. | No forced conversion of old paid grants/manifests/print jobs into unpaid drafts. |
 | PP-D24 | No automatic refund, production gateway activation, Android rollout, public webhook, customer-data deletion, branch merge or master/default change in this documentation delivery. | AR-13 commercial gates and real Windows/Ubuntu/POS80/provider/cloud/security acceptance remain open. |
@@ -60,49 +60,58 @@
 8. Link/folder verified -> final original three-photo strip with genuine link QR -> durable paid photo print job(s) -> background upload and download presentation. Truthfully label pending uploads.
 9. Fulfillment/printing unknown -> preserve obligations, private claim and safe machine isolation; no duplicate print. Completed/archived -> wipe private UI before Advertising.
 
-### Flow A: end-to-end happy path and protected entry
+### Flow A: end-to-end route, expiry-versus-cancel and protected entry
 
 ~~~mermaid
 flowchart TD
-    BOOT([Advertising / original kiosk ownership]) --> OCC{Protected prior occupancy?}
-    OCC -->|No| ENTRY[New visitor admitted]
-    OCC -->|Yes| ISO[Original financial and worker classification]
-    ISO --> SAFE{Safe fence and isolation proven?}
-    SAFE -->|No| HOLD[Neutral HOLD; original retry/support]
-    SAFE -->|Yes| ACK[Local receipt + backend ACK + durable archive]
-    ACK --> ENTRY
+    BOOT([Public Advertising, hidden old private pixels]) --> OCC{Original booth lease FREE?}
+    OCC -->|Yes| ENTRY[Admit new visitor after durable free proof]
+    OCC -->|No| ISO[Classify original financial state and worker leases]
+    ISO --> SAFE{Safe original isolation + backend ACK proven?}
+    SAFE -->|No / unknown| HOLD[ADS_PROTECTED: neutral hold, no new charge]
+    SAFE -->|Yes| ENTRY
     ENTRY --> ROUTE{Photo or Meong Fly?}
-    ROUTE -->|Game| GAME[One-use ticket -> game result -> tutorial]
-    ROUTE -->|Photo| TUT[Tutorial if not seen]
-    GAME --> GALLERY[Choose designs and print quantities]
+    ROUTE -->|Game| GAME[One-use game ledger -> tutorial]
+    ROUTE -->|Photo| TUT[Tutorial]
+    GAME --> GALLERY[Choose templates and copies]
     TUT --> GALLERY
-    GALLERY --> PREF[Camera/disk/artwork and staging readiness]
+    GALLERY --> PREF[Camera, private disk, artwork readiness]
     PREF --> READY{Ready?}
-    READY -->|No| RETRY[Retry or safe cancel; no payment]
+    READY -->|No| RETRY[Repair or cancel without payment]
     RETRY --> PREF
-    READY -->|Yes| DRAFT[Create private unpaid draft and exact identities]
-    DRAFT --> CAP[Each design: 3 captures, max 1 retake, review]
-    CAP --> MORE{More designs?}
+    READY -->|Yes| DRAFT[Private unpaid draft, each template owns retake quota]
+    DRAFT --> CAP[3 shots, optional 1-slot retake, approval per template]
+    CAP --> MORE{Another selected template?}
     MORE -->|Yes| CAP
-    MORE -->|No| FINAL[All-design final preview and optional edit]
-    FINAL --> FREEZE[Freeze revision, outputs, copies, price]
-    FREEZE --> CHK[Charge readiness incl verified-link policy]
-    CHK --> OK{Ready?}
-    OK -->|No| PAUSE[Keep draft; no charge; retry]
+    MORE -->|No| FINAL[Final all-template preview; edit only before CREATE_PREPARED]
+    FINAL --> FREEZE[Freeze draft and server-side quote]
+    FREEZE --> CHK[Precharge readiness: printer route + unclaimed verified Drive reserve availability]
+    CHK --> OK{Charge-ready?}
+    OK -->|No| PAUSE[Hold unpaid draft; revise pre-create or retry]
     PAUSE --> CHK
-    OK -->|Yes| CCP[Create payment-group proof + QRIS1]
-    CCP --> PAY[Provider reconciliation and guarded renewals]
-    PAY --> STATUS{Fresh verified state?}
-    STATUS -->|Pending/unknown| PAY
-    STATUS -->|Terminal unpaid| EXIT[Safe protected isolation/Advertising]
-    STATUS -->|PAID| OWNER{Original visitor owns booth?}
-    OWNER -->|No| UNCLAIM[PAID_UNCLAIMED: no public print; claim from ads]
-    OWNER -->|Yes| TICKET[One Recovery Ticket receipt / 30s fallback]
-    TICKET --> DELIVERY[Verify URL; exact photo jobs + upload]
-    DELIVERY --> OBL{All required obligations resolved?}
-    OBL -->|No| OWED[Preserve PAID/OWED; recovery and operator-last-resort]
-    OBL -->|Yes| DONE[Complete / hide private UI / Advertising]
+    OK -->|Yes| CCP[Persist purchase/attempt intent + original private CCP offer]
+    CCP --> PAY[QRIS1, exact provider status and active-visitor renewal policy]
+    PAY --> STATUS{Authoritative financial outcome?}
+    STATUS -->|PENDING / UNKNOWN| GUARD[Original attempt poll/cancel intent; protected hold if unsafe]
+    GUARD --> PAY
+    STATUS -->|Verified EXPIRED unpaid| RENEW{Same visitor actively continuing and attempt count less than 3?}
+    RENEW -->|Yes| PAY
+    RENEW -->|No| ENDUNPAID[Terminal unpaid original visit; privacy + worker isolation/ACK]
+    STATUS -->|Verified CANCELLED unpaid| ENDUNPAID
+    ENDUNPAID --> FREE{Durably FREE with no old in-flight worker?}
+    FREE -->|No| HOLD
+    FREE -->|Yes| ADS[Safe Advertising and new visitor admission]
+    STATUS -->|Verified PAID| OWNER{Original owner still live or valid returning CCP?}
+    OWNER -->|No| UNCLAIM[PAID_UNCLAIMED + OWED, private claim only, no old public printing]
+    OWNER -->|Yes| TICKET[Original post-PAID ticket, one send/authorized 30s fallback]
+    TICKET --> DELIVERY[Bind exact paid Drive folder, verify URL, print strips + upload]
+    DELIVERY --> OBL{Original paid obligations resolved?}
+    OBL -->|No / uncertain| OWED[Keep PAID/OWED; restricted recovery and isolation]
+    OBL -->|Yes| DONE[Completed: fence private UI + verified booth release]
+    DONE --> ADS
 ~~~
+
+**Read with Flow D/E:** verified expiry is *not* a request to cancel the customer's continuing checkout. VERIFIED CANCELLED / deliberate USER_CANCEL must not route back to QR2/QR3 even when the customer still stands at the booth. Advertising is a public screen, not a financial or worker release receipt. On PENDING/UNKNOWN, the loop represents bounded original-order reconciliation or hold, not an infinite immediate retry and not permission to create a new QR.
 
 ### Flow B: template capture, retake, preview and cart edit
 
@@ -157,59 +166,95 @@ flowchart TD
     M --> N[Create provider payment attempt; immutable order]
 ~~~
 
-### Flow D: QR1/2/3 attempts, ambiguous statuses and customer abandonment
+### Flow D: payment attempt ledger, cancellation intent and verified QR renewal
 
 ~~~mermaid
 flowchart TD
-    A([Frozen logical purchase + original CCP]) --> B[Persist attempt/key before provider I/O]
-    B --> C[Create original provider QRIS attempt]
-    C --> D{Provider create reply?}
-    D -->|Unknown/lost| R[Same-attempt GET reconciliation; bounded backoff]
-    D -->|Valid pending| P[Show same pending QR, quote, expiry, private CCP]
-    P --> S{Fresh provider status / customer action}
-    S -->|PENDING active visitor| P
-    S -->|404/outage/UNKNOWN| R
-    S -->|PAID| Z[Exactly one paid entitlement, never second capture]
-    S -->|Cancel/inactive| CANCEL[Request original cancel and reconcile]
-    CANCEL --> R
-    R --> V{Verified provider result?}
-    V -->|PAID| Z
-    V -->|Unknown| BLOCK[HOLD payment identity; never new charge]
-    V -->|Pending| P
-    V -->|Terminal unpaid| E[Archive exact old attempt; retain frozen draft]
-    S -->|Verified EXPIRED unpaid| E
-    E --> ACTIVE{Original visitor still active and requested continuation?}
-    ACTIVE -->|No| ISO[Safe unpaid isolation; no renewal]
-    ACTIVE -->|Yes| CNT{Attempt number}
-    CNT -->|1| TWO[Create QR2 with new key, same purchase, no recapture]
-    CNT -->|2| THREE[Create QR3 with new key, same purchase, no recapture]
-    CNT -->|3| ISO
-    TWO --> P
-    THREE --> P
-    Z --> OWNER[Check ownership + original entitlement]
+    A([Approved frozen logical purchase, original CCP verifier]) --> B[Persist CREATE_PREPARED with immutable provider order ID and request fingerprint]
+    B --> C[Create QRIS1 once; unverified idempotency header is NOT assumed]
+    C --> D{Create outcome?}
+    D -->|Response lost / 404 / unknown| R[GET/reconcile SAME original provider order; no replacement POST]
+    D -->|Confirmed PENDING| P[Show exact pending QRIS and privately offer CCP]
+    R --> V{Fresh original provider outcome?}
+    V -->|UNKNOWN / not-found| HOLD[Protected bounded retry; no new charge or safe-release assumption]
+    V -->|PENDING| P
+    V -->|PAID| PAID[One exact original paid service entitlement]
+    V -->|Verified terminal unpaid| E[Archive original attempt with terminal evidence]
+    P --> S{Fresh provider status or distinct visitor event?}
+    S -->|PENDING, active visit| P
+    S -->|UNKNOWN / lost status reply| R
+    S -->|Provider verified PAID| PAID
+    S -->|USER_CANCEL| CAN[Persist cancel_intent and fence photo/QR UI]
+    S -->|Visitor abandoned after policy| ABAN[Persist abandoned_intent; no renewal]
+    CAN --> CANCEL[Request cancel ORIGINAL provider order and reconcile]
+    ABAN --> CANCEL
+    CANCEL --> CRESULT{Fresh cancellation/settlement evidence?}
+    CRESULT -->|UNKNOWN / pending| HOLD
+    CRESULT -->|PAID| PAID
+    CRESULT -->|Verified terminal unpaid| CLOSE[Safe original draft isolation and booth release protocol]
+    S -->|Provider verified CANCELLED unpaid| CLOSE
+    S -->|Provider verified EXPIRED unpaid| E
+    E --> CAUSE{cancel_intent or abandoned_intent?}
+    CAUSE -->|Yes| CLOSE
+    CAUSE -->|No, verified expired| CONT{Same visitor actively requests continuation?}
+    CONT -->|No| CLOSE
+    CONT -->|Yes| IDX{Number of just-expired attempt?}
+    IDX -->|1| TWO[Persist new QR2 identity before its first provider call]
+    IDX -->|2| THREE[Persist new QR3 identity before its first provider call]
+    IDX -->|3| CLOSE
+    TWO --> CREATE2[Create QR2 and verify its own response, same frozen group]
+    THREE --> CREATE3[Create QR3 and verify its own response, same frozen group]
+    CREATE2 --> D2{QR2 response?}
+    CREATE3 --> D3{QR3 response?}
+    D2 -->|PENDING| P
+    D3 -->|PENDING| P
+    D2 -->|Unknown| R2[Reconcile own QR2 identity; do not recreate]
+    D3 -->|Unknown| R3[Reconcile own QR3 identity; do not recreate]
+    R2 --> S
+    R3 --> S
+    PAID --> OWNER[Check original customer lease; live -> ticket, absent -> PAID_UNCLAIMED]
 ~~~
 
-The QR2/QR3 provider create stage must explicitly persist its **own** new attempt ID before provider I/O; diagram arrows to P abbreviate that verified create/receive step. If multiple attempts settle due to a provider race, quarantine excess financial settlement; do not print twice, auto-refund, misattribute photos or ignore liability. Server provider integration details, timeouts and cancellation claims must be verified against the configured Midtrans contract, not invented.
+**Critical provider constraint:** the internal attempt key is an application database identity; it is **not evidence that Legacy Midtrans \`POST /v2/charge\` honors any \`Idempotency-Key\` header**. Preserve the same request/order identity and reconcile on ambiguous creation, with provider-specific retry rules verified separately. In QR2/QR3 unknown-create cases, requery their *own* attempt and hold on unresolved uncertainty; the shorthand arrows back to S must not be implemented as assuming a usable QR. No repeated create due to 404, no unverified terminal close, no automatic refund. Simultaneous settlement on multiple attempt IDs remains a financial conflict with **one fulfillment entitlement maximum**.
 
-### Flow E: abandoned draft, payment uncertainty and privacy
+**Distinct terminal causes:** \`EXPIRED\` with a willing live customer is eligible for a *new* QR attempt up to QR3; \`CANCELLED\`, explicit \`USER_CANCEL\`, or confirmed departure is ineligible regardless of whether the camera still detects a face.
+
+### Flow E: four separate customer/lifecycle events, never one generic cancel
 
 ~~~mermaid
 flowchart TD
-    A([Inactivity, cancel, minimize, departure]) --> B[Cancel camera timer, fence callbacks, remove private pixels]
-    B --> C{Durable stage?}
-    C -->|No provider attempt| D[Finish private file writes; isolate unpaid draft safely]
-    D --> E[Free camera after exact worker/barrier receipt]
-    E --> F[Advertising; TTL cleanup per approved policy]
-    C -->|Provider PENDING/UNKNOWN| G[Stop customer renewal; exact-provider cancel/reconciliation]
-    G --> H{Terminal unpaid proven?}
-    H -->|Yes| I[Archive attempt; protect draft; safely release]
-    I --> F
-    H -->|No| J[ADS_PROTECTED / neutral hold; preserve payment identity]
-    H -->|Late PAID| K[PAID_UNCLAIMED: preserve OWED; no unattended print]
-    C -->|Verified PAID| K
-    K --> L[Original CCP claim or authorized non-media remedy]
-    J --> M[Bounded same-operation retry / support if truly unsafe]
+    A([Visitor lifecycle event]) --> EVENT{Exact event type?}
+    EVENT -->|USER_CANCEL| C[Persist deliberate cancel_intent; remove private QR/photo pixels]
+    EVENT -->|APP_SUSPENDED / minimize| S[Immediately fence private pixels; preserve original active payment and work]
+    EVENT -->|INACTIVITY_WARNING| W[Show warning only when genuinely inactive; active camera/worker exempt]
+    EVENT -->|INACTIVITY_EXPIRED after warning| I[Durably classify phase and actual customer ownership]
+    EVENT -->|VISIT_ABANDONED proven by policy| B[Persist abandoned_intent; stop automatic QR renewal]
+    W --> L{User resumes?}
+    L -->|Yes| RESUME[Continue EXACT original visit and quota]
+    L -->|No, policy deadline| I
+    S --> SRET{Same original customer safely resumes?}
+    SRET -->|Yes| RESUME
+    SRET -->|No / ownership lost| B
+    I --> ICLASS{Financial/provider attempt exists?}
+    C --> CLASS{Financial/provider attempt exists?}
+    B --> CLASS
+    ICLASS -->|No| N[Drain local camera/files, persist draft isolation]
+    CLASS -->|No| N
+    ICLASS -->|Yes| P[Original payment status/cancel intent reconciliation]
+    CLASS -->|Yes| P
+    P --> PSTATE{Authoritative original provider evidence?}
+    PSTATE -->|PAID| OWED[PAID_UNCLAIMED / OWED, never public old printing]
+    PSTATE -->|PENDING / UNKNOWN| HOLD[ADS_PROTECTED: same-order bounded retry; no new payable visitor]
+    PSTATE -->|Verified terminal unpaid| N
+    N --> F[Exact fence, worker quiescence, local receipt + backend ACK if required]
+    F --> READY{Durably safe booth free?}
+    READY -->|Yes| ADS[Advertising / new visitor eligible]
+    READY -->|No| HOLD
+    OWED --> PAIDISO[Retain entitlement and original proof; paid-safe isolate separately]
+    PAIDISO --> READY
 ~~~
+
+\`APP_SUSPENDED\` is a privacy event, **not** financial cancellation. \`INACTIVITY_EXPIRED\` only becomes abandonment under its own durable policy; active multi-template capture, five-second shutter countdown, a legitimate busy worker and provider \`UNKNOWN\` are not ordinary inactivity. Confirmed customer cancellation never re-enters QR renewal. Safe public Advertising and safe new-charge admission are separate outcomes.
 
 ### Flow F: late PAID, ownership and Checkout Claim Proof
 
@@ -245,28 +290,35 @@ sequenceDiagram
 
 **CCP handoff requirement:** creating a token in the database does not mean the customer obtained it. Give a genuine, usable private chance to save an original claim proof when QRIS starts (clearly distinguish it visually and semantically from payment QRIS). Do not claim the customer forfeited recovery if the proof display/print never happened. This feature is an OWNER-APPROVED target; actual paper/screen payload/UI and expiry duration need security QA. A ticket on a shared public screen must never be redisplayed by a new visitor.
 
-### Flow G: original Recovery Ticket, escrow and crash
+### Flow G: live customer versus returning claim, exact receipt status and credential escrow
 
 ~~~mermaid
 flowchart TD
-    A([Fresh PAID and valid current customer claim]) --> B[Original durable paid binding and one entitlement]
-    B --> C[Open protected credential lifecycle; original secret, hash and encrypted escrow]
-    C --> D{Ticket receipt job ever sent or uncertain?}
-    D -->|No| E[Persist one receipt SENDING intent, then one printer submission]
-    E --> F{Submission result}
-    F -->|SUBMITTED| G[No mandatory ticket page; paper not proven]
-    F -->|Fail/timeout/UNCERTAIN| H[No reprint; show SAME original ticket if live owner]
-    D -->|Yes/uncertain| H
-    H --> I{Live original customer and secure credential available?}
-    I -->|Yes| J[30 visible seconds original QR + full code + NEXT]
-    J --> K[Wipe ticket pixels; advance exactly once]
-    I -->|No| L[PAID_UNCLAIMED; claim via original CCP, no public exposure]
-    G --> M[Paid fulfillment URL/readiness]
-    K --> M
-    L --> N[On authentic customer claim, vault access is gated; no auto ticket reveal at boot]
+    A([Fresh provider-verified PAID, original paid draft]) --> AUTH{Original customer authority?}
+    AUTH -->|Still-live original booth lease| L[Proceed without re-scanning CCP]
+    AUTH -->|Previous visit retired| C[Require original private CCP/ticket + fresh PAID + free booth]
+    C --> R{Valid original claim and reacquired lease?}
+    R -->|No| H[PAID_UNCLAIMED/OWED; WAIT or authorized remedy, no secret display]
+    R -->|Yes| L
+    L --> B[Ensure exactly one original ticket and scoped encrypted escrow]
+    B --> D{Durable receipt/presentation status?}
+    D -->|NOT_SENT| E[Persist original receipt SENDING intent, then submit ONCE]
+    E --> F{Printer transport result?}
+    F -->|SUBMITTED| SUB[Record SUBMITTED; do not auto-show screen fallback]
+    F -->|Unavailable / failed / timeout / UNCERTAIN| MAYBE[No resend; same-token on-screen fallback only if original live owner]
+    D -->|SENDING / UNCERTAIN| MAYBE
+    D -->|SUBMITTED| SUB
+    D -->|Already PRESENTED| PRES[Do not restart timer or auto-redisplay token]
+    MAYBE --> O{Current original customer still valid and vault permits exact token?}
+    O -->|Yes| SCREEN[Show SAME ticket QR + FULL code for 30 visible seconds and NEXT]
+    O -->|No| H
+    SCREEN --> ACK[Persist presentation opportunity; wipe QR/plaintext and retire callback]
+    SUB --> NEXT[Paid URL and photo print fulfillment; physical paper not proven]
+    ACK --> NEXT
+    PRES --> NEXT
 ~~~
 
-**Crash window:** boot after PAID but before original ticket presentation must preserve OWED and encrypted original credential. Boot itself may NOT decrypt, display or print to the next visitor. An original customer proves CCP or an already-valid Recovery Ticket; only then may scoped vault access occur. Any receipt `SENDING`/`UNCERTAIN` stays non-replayable. A vault failure does not mean unpaid/fulfilled; it is a recorded remediation exception.
+Receipt **transport** and ticket **presentation** are distinct durable records. A printer's \`SUBMITTED\` does not prove paper physically exited; a known hardware problem requires support/device evidence but does not authorize a spontaneous duplicate print. A returning claimant must not receive a new token, a reset 30-second countdown or a leaked previous QR on reboot. The encrypted escrow stores the one original credential as ciphertext, with narrow audited proof-gated redemption; ordinary application databases and logs contain only safe verifiers. Ticket presentation is post-PAID only. An original customer still live after PAID proceeds **directly** to ticket without having to scan the pre-PAID CCP.
 
 ### Flow H: Drive availability and print-with-real-QR policy
 
@@ -318,29 +370,43 @@ flowchart TD
     CAP --> CONTINUE
 ~~~
 
-### Flow J: boot/restart and one-owner worker safety
+### Flow J: crash recovery and safe admission are independent from public Advertising
 
 ~~~mermaid
 flowchart TD
-    A([Process boot or crash restart]) --> B[Acquire exclusive kiosk/worker lease]
-    B --> C{Lease conflicting?}
-    C -->|Yes| BLOCK[STARTUP_HOLD / no second worker]
-    C -->|No| D[Read same original durable journals and manifests]
-    D --> E[Hide private pixels by default, fence old callbacks]
-    E --> F{Last verified durable state?}
-    F -->|Unpaid draft; never payment| G[Quiesce and safe suspend/local isolate]
-    G --> ADS[Public Advertising only after safe verified occupancy]
-    F -->|Creating/PENDING/UNKNOWN| H[Same-attempt provider reconciliation; no new create]
-    H --> I{Fresh terminal unpaid?}
-    I -->|Yes| ADS
-    I -->|Unknown/PAID| HELD[Protected hold, exact original identity preserved]
-    F -->|PAID/OWED| HELD
-    F -->|Print SENDING/UNCERTAIN| P[Mark uncertain and quarantine; no replay]
-    P --> HELD
-    F -->|Drive pending, paid authorized| UP[Resume idempotent upload worker only]
-    UP --> ADS
-    HELD --> CLAIM[Wait for original customer claim or safe machine release]
+    A([App boot / restart]) --> B[Acquire exclusive process, booth and worker fencing]
+    B --> C{Conflicting owner or unsafe lease?}
+    C -->|Yes| HOLD[STARTUP_HOLD / ADS_PROTECTED; no new charge]
+    C -->|No| D[Hide all previous private media, retire stale callbacks]
+    D --> E[Read ALL durable photo, provider, fulfillment, ticket, upload and release journals]
+    E --> CLASS{Authoritative financial state?}
+    CLASS -->|Unpaid, no attempt ever created| U[Quiesce photo writes, preserve retake audit and isolate private draft]
+    CLASS -->|CREATE_UNKNOWN / PENDING / UNKNOWN| P[Reconcile SAME original provider attempt]
+    P --> Q{Fresh provider result?}
+    Q -->|Pending / unknown| HOLD
+    Q -->|Verified terminal unpaid| U
+    Q -->|Verified PAID| PAID[Preserve original PAID/OWED, require rightful customer claim]
+    CLASS -->|Verified PAID / OWED| PAID
+    PAID --> FUL[Classify ALL paid print, receipt and upload obligations independently]
+    FUL --> PRINT{Any print job SENDING / UNCERTAIN?}
+    PRINT -->|Yes| QUAR[Quarantine exact job; never automatically reprint]
+    PRINT -->|No| UP{Authorized original Drive upload pending?}
+    QUAR --> UP
+    UP -->|Yes| RES[Resume only idempotent checksum-verified upload under separated worker lease]
+    UP -->|No| REL[Assess protected paid release; OWED remains durable]
+    RES --> REL
+    REL --> CLAIM{Original customer proof/lease for private continuation?}
+    CLAIM -->|Yes, free booth| REST[Reacquire original scoped rights, no charge/reissue]
+    CLAIM -->|No / new customer awaiting| ISOP[Attempt PAID/OWED safe machine release with original PREPARE/ACK]
+    U --> ISOU[Exact local worker quiescence, ownership fence and typed receipt/ACK]
+    ISOU --> G{Durably FREE and no unsafe worker?}
+    ISOP --> G
+    G -->|Yes| ADS[Public Advertising and new-visitor admission]
+    G -->|No| HOLD
+    REST --> PRIV[Original private continuation only, never shown on public Ads]
 ~~~
+
+**Crash-safe release rule:** a provider terminal status is insufficient without exact worker fencing and release acknowledgment. A pending paid Drive upload is not permission to print again, to mark OWED complete, or to admit a visitor before the worker can be separated safely. The public Advertising screen may be shown with protected occupancy, but new camera/charge admission waits for verified FREE. An original customer with CCP who returns while visitor B owns the booth must WAIT and never preempt B.
 
 ### Flow K: original Meong Fly into this checkout
 
@@ -367,7 +433,7 @@ flowchart TD
 
 | Critical point | Threat / failure window | Required protection | Reference acceptance |
 | --- | --- | --- | --- |
-| K01 Booth ownership | A's draft frame shown to B | Local privacy fence, worker drain, versioned lease/ACK before admitting B | PP-PRIV, PP-HAND |
+| K01 Booth ownership | A's draft frame shown to B | Local privacy fence, worker drain, versioned lease/ACK before admitting B | PP-HAND, PP-CRASH |
 | K02 Capture durability | crash after 1/2/3 captures or pending retake | Atomic intent/manifest, no duplicate shots, consumed retake lineage | PP-CAP |
 | K03 Final preview mutation | cart/copies/photos no longer match price | Frozen revision, exact outputs/assets, server quote, revalidate on resume | PP-FRZ |
 | K04 Charge-readiness | sell unserviceable print or unreachable Drive | Two-stage preflight; late hardware failure retains paid owed | PP-READY |
@@ -377,7 +443,7 @@ flowchart TD
 | K08 Ticket escrow | restart after PAID before handoff | Confidential encrypted single credential + gated retrieval | PP-SEC |
 | K09 Receipt/photo print | partial paper, print SENDING crash | Exact job journal; UNCERTAIN no replay; distinct ticket/photo | PP-PRINT |
 | K10 Drive QR | free download or false QR link | Authenticated paid-only publication; verified URL, held print otherwise | PP-DRIVE |
-| K11 Fulfillment owed | COMPOSED incorrectly treated as COMPLETED | Separate paid obligation ledger per design/copies and delivery | PP-OWED |
+| K11 Fulfillment owed | COMPOSED incorrectly treated as COMPLETED | Separate paid obligation ledger per design/copies and delivery | PP-PRINT, PP-DRIVE |
 | K12 Reboot/fencing | stale callback alters next session | Generation+lease checks, protected startup, exact journal restore | PP-CRASH |
 | K13 Game promo | discount forgery/attempt reset | Server authority, one-use ledger, no production DEMO | PP-GAME |
 | K14 Excessive free use | repeated unpaid captures, storage exhaustion | Adaptive inactivity, rate/resource metrics; no hard cutoff on active work | PP-ABUSE |
@@ -396,6 +462,16 @@ flowchart TD
 - Printer physical proof granularity for multiple copies and exact spool/USB/LAN delivery; calibration on POS80 and actual OS.
 - Commercial print maximum, QR expiry/consumer remedy policy, eventual stable resolver, cross-device recovery and production-specific support/privacy obligations.
 - Any measured abuse mitigation beyond adaptive inactivity. Hard cutoffs, user identity tracking, biometric recognition or device-facing abuse controls are NOT owner-approved.
+
+### Implementation-critical ordering and normative conflicts resolved
+
+- **Cancel vs expiry:** persist \`USER_CANCEL\` (and separately \`VISIT_ABANDONED\`) before reconciling the original provider attempt. Neither enters QR renewal. QR1→QR2→QR3 is for a willing, actively continuing original customer after a separately *verified expired unpaid* attempt.
+- **UI privacy vs occupancy:** minimize, screen timeout and Advertising can hide pixels without cancelling the payment or releasing a booth. **Only** exact worker fence + safe original financial classification + durable isolation/ACK authorize a new visitor.
+- **Drive READY pool:** before QRIS, preflight may observe a spare verified READY folder/link without claiming it. A paid transaction later atomically binds an original folder and re-verifies exact identity/URL. If that post-paid binding fails, keep PAID/OWED and withhold purchased-strip printing. Unpaid draft must not exhaust the 25 READY reserves.
+- **Provider idempotency:** internal checkout keys and persisted immutable provider order identity are mandatory; a Legacy Midtrans Core /v2/charge idempotency header remains **UNVERIFIED** and may not be assumed.
+- **Ticket:** live paid owner does not scan CCP on the happy path. A returning owner uses CCP or original Recovery Ticket; receipt SENDING/UNCERTAIN never gets blind replay. Track receipt transport and customer presentation separately, with one 30s fallback only after original claim/ownership.
+- **Timestamps:** retain distinct \`draft_created_at\`, \`payment_attempt_created_at\`, \`paid_verified_at\`, \`ticket_created_at\`, \`proof_offered_at\`, \`claim_expiry_at\`, \`transaction_retention_anchor_at\`, \`last_worker_barrier_at\`, and \`completed_at\`. Existing 24h Sandbox ticket expiry measured from original order creation applies to **legacy** orders; new post-preview expiry/CCP TTL and 15d local/30d Drive retention anchor must be explicitly versioned and verified in PP tests before shipping. **Proposal for future owner validation:** anchor paid photo retention at first genuine paid entitlement, separate unpaid staging TTL, no extension on QR renewal or restart. Do not silently adopt this proposal as a signed-off product value.
+- **Target profile:** legacy dedicated Sandbox intentionally keeps Drive OFF while allowing its historically verified receipt/photo printing. Post-preview purchased-flow fixtures require a **separate isolated synthetic verified-URL adapter**, with no real Drive access, and must not be described as live cloud delivery or production print acceptance.
 
 ## 5. Scope exclusions, audit and go/no-go
 
