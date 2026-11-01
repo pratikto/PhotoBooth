@@ -13,6 +13,7 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from starlette.concurrency import run_in_threadpool
 
 from photobooth.post_preview_inbox import PostPreviewNotificationInbox
+from photobooth.post_preview_lifecycle import PostPreviewLifecycleWorker
 from photobooth.post_preview_store import DraftHeld, DraftLease, ORDER_VERSION
 from photobooth.qris_api import LocalRateLimit, bounded_json
 
@@ -36,20 +37,30 @@ class ReconcileRequest(BaseModel):
     trigger: Literal['poll', 'restart', 'connectivity'] = 'poll'
 
 
-def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_limit=120):
+def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_limit=120,
+               background_worker=True):
+    if type(background_worker) is not bool:
+        raise ValueError('Explicit lifecycle worker selection required')
     inbox = inbox or PostPreviewNotificationInbox(payments)
+    worker = PostPreviewLifecycleWorker(payments, inbox) if background_worker else None
     limiter = LocalRateLimit(rate_limit)
 
     @asynccontextmanager
     async def lifespan(_app):
+        if worker:
+            worker.start()
         try:
             yield
         finally:
+            if worker and not await run_in_threadpool(worker.stop):
+                # Never close a ledger underneath an unfinished provider call.
+                raise RuntimeError('Original lifecycle worker remains active')
             if on_shutdown:
                 await run_in_threadpool(on_shutdown)
 
     app = FastAPI(title='MEONG post-preview isolated backend', lifespan=lifespan)
     app.state.notification_inbox = inbox
+    app.state.lifecycle_worker = worker
 
     @app.exception_handler(RequestValidationError)
     async def validation_error(_request, _error):

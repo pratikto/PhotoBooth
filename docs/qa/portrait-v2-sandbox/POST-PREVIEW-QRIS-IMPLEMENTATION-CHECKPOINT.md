@@ -13,14 +13,70 @@ worker safeguards remain binding. Production deployment, actual charges/refunds,
 merchant activation, live customer/cloud deletion and other branches are excluded.
 
 - Authorized branch: `feature/post-preview-qris-checkout`.
-- Last independently verified remote: `348b4cb768ac7417c20fc39743ee9974968dc1d9` (PP-04.b authenticated boundary; verified remote, CI run 41288588935 all three jobs SUCCESS).
+- Last independently verified remote before this increment: `66d3a26781e4dfaad26d4ff409224930d052c106` (PP-04.c; remote connector and Git agree). Previous successful CI run `41289132792` is historical PP-04.c evidence, not this worker increment.
 - Original audited base: `b68e514dd57c989df47fa1b222d45f3f71c38347`.
-- Current micro-increment: **PP-04.c — synthetic native checkout/CCP/authenticated HTTP integration**.
+- Current micro-increment: **PP-04.d1 — original-order lifecycle scheduler/API lifespan integration**. PP-04.d remains incomplete pending trusted readiness adapters and charge-admission freshness.
 - Overall: PP-00 dependency audit continuing; PP-01 private capture and isolated development UI implemented; PP-02 preview/freeze backend and all-design UI implemented, real charge-readiness adapters NOT_IMPLEMENTED; PP-03 protected CCP backend/native card components implemented but not mounted; PP-04 backend/API and native checkout synthetic fixture implemented; Sandbox/native payment remains unavailable until paid delivery is complete; PP-05/06/06R/07 NOT_STARTED.
 - This checkpoint travels with the implementation commit. Resolve its containing
   SHA using `git log -1 --format=%H`; after push independently compare `git
   ls-remote origin refs/heads/feature/post-preview-qris-checkout`. A commit cannot
   truthfully contain its own SHA. The next increment records this verified tip.
+
+## PP-04.d1 — original-order lifecycle scheduler (1 November 2026)
+
+Adds `post_preview_lifecycle.PostPreviewLifecycleWorker`, owned by the isolated
+post-preview API lifespan. Startup runs bounded durable inbox maintenance and
+round-robin original-group reconciliation; shutdown drains the worker before
+calling ledger shutdown. A timed-out worker remains active and prevents ledger
+closure/duplicate worker startup. No application launcher, listener, merchant
+configuration or customer checkout gate is enabled by this factory integration.
+
+Reuses existing inbox leases/backoff/quarantine and payment reconciliation leases,
+poll pacing, cancellation intents and strict independent provider GET evidence.
+Retired and previously terminal attempts remain eligible for late-PAID detection.
+Every original attempt is reconciled, with one original entitlement/OWED; no
+CREATE, QR renewal, media disclosure, printing, Drive allocation or booth release
+runs in the scheduler. Durable USER_CANCEL/ABANDONMENT cancellation is recovered;
+SUSPEND and expiry alone never cancel or renew. Per-scope and inbox failures are
+contained without logging private exceptions. The scan is bounded and rotates
+past historical groups instead of starving newer groups.
+
+Test-first evidence: missing worker import initially ERROR; final worker/payment/
+API/child-process group **60 PASS / 0 FAIL / 0 ERROR / 0 SKIP**, 16.184s.
+Configured private-state + legacy regression **230 PASS / 0 FAIL / 0 ERROR /
+0 SKIP**, 45.987s. Commands: `python tools/run_kiosk_unittests.py
+ test_post_preview_lifecycle_worker test_post_preview_payments test_post_preview_api
+ test_post_preview_payment_crashes`, then the workflow private-state group.
+Ten new worker methods registered in Windows/Linux CI. Initial restricted-network
+TestClient run hung and was terminated; the same synthetic loopback tests pass
+with the execution network profile enabled. No provider network was contacted.
+Two early test assertions incorrectly treated cached inspection as fresh PAID;
+corrected the assertions to check durable state/entitlement, retaining the existing
+`paid_verified=False` safeguard for cached inspection.
+
+Native group **41 PASS / 0 FAIL / 0 ERROR / 0 SKIP**, 28.303s, using
+`SDL_VIDEODRIVER=offscreen` plus the existing software GL/dummy-audio settings.
+Local `xvfb-run` is unavailable (initial command exit 127); supported SDL offscreen
+ran the original six-module native group without changing assertions or UI.
+No credential screenshots saved. Matching-source CI pending push.
+All 112 full PP cases remain NOT_RUN; component crosswalk extends PP-021/022/023/
+027/028/031/032/035/062/074/075/083 only. Real Windows/POS80/webcam/Midtrans/Drive
+and public-provider gates NOT_RUN; production and refunds remain disabled.
+
+Sources reviewed: AGENTS, index/protocol/current status/backlog/handover, PP
+checkpoint/handover/owner decisions/complete ledger/security/refund/112-case
+matrix, unattended handoff, UX07 readiness, provider contract; actual original
+payment/inbox/schema/authenticated API and normalized evidence implementations.
+No legacy payment/capture/printer/Drive source changed. Rollback is a scoped
+inverse code commit preserving every financial/media/credential journal.
+
+**Next exact increment PP-04.d2:** trusted read-only charge-readiness observations
+with READY/NOT_READY/UNKNOWN/STALE, original-scope/freshness validation, frozen
+media/artwork/quote revalidation, camera/ownership, private disk, printer route,
+authenticated payment/Drive and nonconsuming READY capacity adapters. Recheck on
+original PREPARED restart admission as well as every new attempt/renewal. Keep
+Sandbox/customer route disabled until PP-05 ticket + paid delivery integration.
+PP-05/06/06R/07 remain unfinished software, not hardware-only blockers.
 
 ## PP-04.c — native authenticated checkout integration fixture
 
