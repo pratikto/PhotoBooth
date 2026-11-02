@@ -2,7 +2,7 @@
 
 ## 2 November 2026 — automated test evidence and exact owner preflight order
 
-[Automated PP-07 simulation report](PP07-AUTOMATED-SIMULATION-2026-11-02.md): at `b071a5cc`, 490 Windows + 490 Ubuntu + 51 native Kivy tests PASS with zero failure/error/skip. A subsequent source-hardening release adds stronger dependency/profile checks and explicit synthetic Drive QR labels; its distinct [CI run 41393795509](https://github.com/pratikto/PhotoBooth/actions/runs/41393795509) must be consulted before claiming that later version verified.
+[Automated PP-07 simulation report](PP07-AUTOMATED-SIMULATION-2026-11-02.md): at `b071a5cc`, 490 Windows + 490 Ubuntu + 51 native Kivy tests PASS with zero failure/error/skip. A subsequent source-hardening release adds stronger dependency/profile checks and explicit synthetic Drive QR labels; its matching-source [CI run 41393795509](https://github.com/pratikto/PhotoBooth/actions/runs/41393795509) is now VERIFIED 493 Windows + 493 Ubuntu + 51 native PASS, with 3/3 jobs SUCCESS; no physical acceptance is implied.
 
 Before running `tools/check_post_preview_pilot.py`, explicitly set **all four** legacy profile flags to `0`; otherwise preflight now correctly says BLOCKED instead of falsely claiming READY. It checks the actual interpreter for Kivy/Pillow/numpy/requests/cryptography/FastAPI/httpx/Pydantic/qrcode/OpenCV/ffpyplayer, alongside the authorized branch and required files. Reuse an existing `.venv-kivy` rather than replacing the environment.
 
