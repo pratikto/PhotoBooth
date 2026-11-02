@@ -23,9 +23,13 @@ from photobooth.post_preview_store import DraftHeld
 
 
 class PrivateCheckoutFixtureApp(PrivatePreviewApp):
-    def __init__(self, private_root, *, private_service, synthetic_pay_callback=None, **kwargs):
+    def __init__(self, private_root, *, private_service, synthetic_pay_callback=None,
+                 synthetic_drive_url=True, **kwargs):
         if synthetic_pay_callback is not None and not callable(synthetic_pay_callback):
             raise TypeError('An explicit synthetic paid fixture must be callable')
+        if type(synthetic_drive_url) is not bool:
+            raise TypeError('Explicit Drive display mode must be boolean')
+        self._synthetic_drive_url = synthetic_drive_url
         self._synthetic_pay_callback = synthetic_pay_callback
         if not isinstance(private_service, PrivateCheckoutService):
             raise TypeError('Explicit incomplete mock checkout service required')
@@ -368,7 +372,11 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
         self._camera_texture = None
         self._last_live_frame = self._last_preview = None
         shell = self._frame(canvas, brand_height=65)
-        self._brand(shell, 'HASIL FOTO BERBAYAR', 'SIMULASI • STATUS DELIVERY ASLI')
+        # A synthetic Drive QR exercises rendering but is NOT a real download link.
+        # Keep the actual opt-in test Drive route distinct and visible to the owner.
+        subtitle = ('QR DEMO • BUKAN LINK DOWNLOAD' if self._synthetic_drive_url
+                    else 'DRIVE TEST • BAYAR SIMULASI')
+        self._brand(shell, 'HASIL FOTO BERBAYAR', subtitle)
         data=self._photo_view.get('delivery') or {}
         shell.add_widget(text_label(
             'FOTO SUDAH DIBAYAR • KEWAJIBAN MASIH AKTIF',
