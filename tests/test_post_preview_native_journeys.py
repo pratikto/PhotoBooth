@@ -140,6 +140,26 @@ class NativeCustomerJourneyMatrixTests(unittest.TestCase):
             fixture.provider.state(order, 'settlement')
             self.click(app, 'PERIKSA STATUS')
             self.await_phase(app, 'ticket_offer')
+            # Safe admission to B needs a genuinely shown original ticket and
+            # a quiescent receipt sender; an unclassified receipt blocks B.
+            app._ticket_card._ready_at = 0
+            deadline = time.monotonic() + 10
+            while time.monotonic() < deadline and app._photo_view.get('phase') != 'ticket_visible':
+                EventLoop.idle()
+                if app._ticket_card is not None:
+                    app._ticket_card._rendered(0)
+                app._poll_photos()
+                time.sleep(.01)
+            self.assertEqual('ticket_visible', app._photo_view['phase'])
+            deadline = time.monotonic() + 10
+            while time.monotonic() < deadline and not fixture.receipt_sizes:
+                app._poll_photos()
+                EventLoop.idle()
+                time.sleep(.01)
+            self.settle(app)
+            self.assertEqual(1, len(fixture.receipt_sizes))
+            self.assertEqual('SUBMITTED', fixture.service.ledger.db.execute(
+                'SELECT receipt_state FROM pp_ticket_presentations').fetchone()[0])
             old = fixture.service.lease
             app._sandbox_lock_customer()
             deadline = time.monotonic() + 10
@@ -171,6 +191,45 @@ class NativeCustomerJourneyMatrixTests(unittest.TestCase):
             self.assertEqual('OWED', fixture.service.ledger.db.execute(
                 'SELECT status FROM pp_paid_services').fetchone()[0])
             self.assertEqual(1, fixture.provider.charges)
+
+    def test_n24_uncertain_receipt_blocks_new_B_during_protected_ads(self):
+        """Public Ads cannot admit another customer when A receipt is unsafe."""
+        with self.booth(paid_ticket=True, unattended=True) as (app, fixture):
+            Window.size = (452, 900)
+            self.paid_ticket_screen(app, fixture)
+            deadline = time.monotonic() + 10
+            while time.monotonic() < deadline and not fixture.receipt_sizes:
+                app._poll_photos()
+                EventLoop.idle()
+                time.sleep(.01)
+            self.settle(app)
+            self.assertEqual(1, len(fixture.receipt_sizes))
+            old = fixture.service.lease
+            # The paper may have emerged, but a lost transport outcome must
+            # remain quarantined even if the public screen is Advertising.
+            with fixture.service.ledger.write():
+                fixture.service.ledger.db.execute(
+                    "UPDATE pp_ticket_presentations SET receipt_state='UNCERTAIN' "
+                    "WHERE purchase_group_id=?", (fixture.service.group,))
+            app._sandbox_lock_customer()
+            deadline = time.monotonic() + 10
+            while time.monotonic() < deadline:
+                app._poll_photos()
+                EventLoop.idle()
+                if app.navigation.page == 'advert' and not app._photo_jobs.busy:
+                    break
+                time.sleep(.01)
+            self.assertEqual('advert', app.navigation.page)
+            app._choose_photo()
+            self.assertEqual('advert', app.navigation.page)
+            self.assertIn('belum bisa diamankan', app._pilot_note)
+            self.assertEqual(old.draft_id, fixture.service.lease.draft_id)
+            self.assertEqual(1, fixture.provider.charges)
+            self.assertEqual('OWED', fixture.service.ledger.db.execute(
+                'SELECT status FROM pp_paid_services').fetchone()[0])
+            self.assertEqual(0, fixture.service.ledger.db.execute(
+                "SELECT count(*) FROM pp_isolation_ops WHERE state='ACKED'"
+            ).fetchone()[0])
 
     def start_B(self, app):
         app._choose_photo()
