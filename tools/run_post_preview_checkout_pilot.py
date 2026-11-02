@@ -162,7 +162,8 @@ def main(argv=None):
 
         app=BoundPilotApp(
             root,private_service=fixture.service,
-            synthetic_pay_callback=mark_synthetic_paid)
+            synthetic_pay_callback=mark_synthetic_paid,
+            synthetic_drive_url=not args.enable_real_drive)
         try:app.run()
         finally:
             if getattr(app,'_photo_jobs',None):
