@@ -273,7 +273,8 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
                 app._poll_photos();EventLoop.idle();time.sleep(.01)
             self.assertEqual('paid_delivery',app._photo_view['phase'],app._photo_error)
             self.assertTrue(any(
-                'QR DEMO' in getattr(w,'text','') and 'BUKAN LINK DOWNLOAD' in w.text
+                isinstance(getattr(w,'text',None),str)
+                and 'QR DEMO' in w.text and 'BUKAN LINK DOWNLOAD' in w.text
                 for w in app.stage.walk()))
             self.assertEqual({'template_a':'PREPARED','template_b':'PREPARED'},
                              app._photo_view['delivery']['print_states'])
