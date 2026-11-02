@@ -78,6 +78,33 @@ class OriginalPaidPrintTests(unittest.TestCase):
                                  'template_a',printer,shared_lane=threading.Lock())
         self.assertEqual(1,printer.print_image.call_count)
 
+    def test_persisted_sending_after_worker_crash_blocks_new_dispatcher_replay(self):
+        """Crash seam: SENDING was durable before external printer side effects."""
+        from photobooth.post_preview_store import DraftHeld
+        fixture, dispatcher, _ = self.prepped()
+        self.paid_ticket(fixture)
+        # Represent a process dying after the irreversible SENDING journal
+        # transaction commits but before any trusted transport ACK arrives.
+        with fixture.service.ledger.write():
+            fixture.service.ledger.db.execute(
+                "UPDATE pp_paid_strip_jobs SET state='SENDING' "
+                "WHERE purchase_group_id=? AND template_id='template_a'",
+                (fixture.service.group,))
+        restarted = OriginalPaidPrintDispatcher(
+            dispatcher.preparer, allow_incomplete_fixture=True)
+        printer = Mock()
+        with self.assertRaises(DraftHeld):
+            restarted.send_once(
+                fixture.service.lease, fixture.service.group, 'template_a',
+                printer, shared_lane=threading.Lock())
+        printer.print_image.assert_not_called()
+        state = fixture.service.ledger.db.execute(
+            "SELECT state FROM pp_paid_strip_jobs WHERE template_id='template_a'"
+        ).fetchone()[0]
+        self.assertEqual('SENDING', state)
+        self.assertEqual('OWED', fixture.service.ledger.db.execute(
+            'SELECT status FROM pp_paid_services').fetchone()[0])
+
     def test_missing_printer_is_not_sent_and_never_fabricates_paper(self):
         fixture,dispatcher,_=self.prepped()
         self.paid_ticket(fixture)
