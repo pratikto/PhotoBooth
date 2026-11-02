@@ -1,5 +1,11 @@
 # Supervised Windows pilot — synthetic payment, webcam, optional POS80
 
+## 2 November — final P0 native/Windows/Linux adversarial simulation evidence
+
+The newest `feature/post-preview-qris-checkout` code at `0548bc89` has **matching-source [CI #41404106134](https://github.com/pratikto/PhotoBooth/actions/runs/41404106134) 3/3 SUCCESS**: **494 Windows + 494 Ubuntu + 54 native Kivy test executions PASS**, zero failures/errors/skips. The [adversarial scenario report](PP07-ADVERSARIAL-GUI-FAULTS-2026-11-02.md) details QR1→QR3 no QR4, uncertain A print blocking B, late old QR1 PAID while QR2 is pending without a second entitlement, and persisted `SENDING` restart-state no replay. A failed first native test at `7f018dba` was corrected as a test-only private QR assertion and reverified at `0548bc89`.
+
+This verified **automated synthetic** evidence does not activate real merchant Midtrans, POS80 paper, Drive sharing/retention or refund. The owner's 26-case physical checklist remains **NOT_RUN** and real process-kill/peripheral failure recovery remains distinct. Existing safety flags, dedicated new root and dual opt-in for real test paper/cloud remain mandatory.
+
 ## 2 November — P0 test conditions added after the first 1,037 PASS baseline
 
 Review [adversarial QR3 / uncertain print record](PP07-ADVERSARIAL-GUI-FAULTS-2026-11-02.md) before running optional real-paper checks. The newer pilot source `c86a8e64` removes customer QR4 after verified third expiry and quarantines all remaining purchased print batches when any original job is `SENDING/UNCERTAIN`. Matching-source [CI #41402925221](https://github.com/pratikto/PhotoBooth/actions/runs/41402925221) has **native 53/53 PASS** and Ubuntu **493/493 PASS**; Windows result not yet verified in this record. The existing 26-case physical worksheet remains separate from automated coverage and requires owner observation.
