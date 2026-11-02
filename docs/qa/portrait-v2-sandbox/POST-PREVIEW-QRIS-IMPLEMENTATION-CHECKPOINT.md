@@ -1,5 +1,13 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — Broad campaign N21–N24 and P01–P02 source-specific evidence
+
+**Current code `238012f7`** has matching-source [CI #41409982930](https://github.com/pratikto/PhotoBooth/actions/runs/41409982930). **Ubuntu backend 522/522 PASS** (including 20 new J cases and P01/P02 actual process termination + independent SQLite reopening); **Ubuntu native Kivy 58/58 PASS**, including four additional genuine customer-button journeys N21–N24 (three design 2+1+3 paid output, Drive offline/retry, safe A→B handoff with fresh B tutorial, and blocked B on A ticket UNCERTAIN). **Windows 522 matching-source job remains PENDING** in this checkpoint, so 3/3 SUCCESS and final count must not be asserted until logs arrive.
+
+**Source fixes:** BUG-034 enforced global `SENDING/UNCERTAIN` original paid job quarantine in the dispatcher, not merely customer GUI/service; BUG-035 reset the new visitor's temporary tutorial, cart and game state **only after** original A's verified isolation ACK. All original A PAID/OWED, encrypted proof, media, printer journal, Drive binding and privacy conditions remain durable. These two defects were identified by full journey tests, not only by unit-test count. Earlier test failures due wrong model expectations, direct-script module path, incomplete receipt fault setup and wrong canonical `drafts.db` instead of `drafts.sqlite3` are documented alongside exact fixes.
+
+**Detailed scenario-to-acceptance mapping and evidence:** [PP-07 26-scenario broad simulation report](PP07-BROAD-SIMULATION-MATRIX-2026-11-02.md). Distinguish **20 cross-component + 4 native + 2 process-death** scenarios (26 unique new tests) from repeated platform executions, and separate all 112 complete PP acceptance cases and 26 owner hardware checks (still NOT_RUN/BLOCKED). Actual Midtrans merchant, POS80 paper, Drive public permissions/retention, real refund and long soak remain the next gates.
+
 ## 2 November 2026 — Full-spectrum simulation stage: 20 backend + native 4 + actual OS-death 2
 
 **Owner challenge addressed:** A repeated CI count is NOT end-to-end coverage. The new [PP-07 broad customer + crash matrix](PP07-BROAD-SIMULATION-MATRIX-2026-11-02.md) traces **26 distinct newly-authored connected/fault scenarios**, with a strict executed-evidence ledger and mapping to original PP-001–112. They cover 12 templates/36 real local captures, three 2+1+3-copy print batches, one charge/CCP/Recovery Ticket, offline/tampered Drive, duplicate QR1–3 PAID, multiple lost responses, printer errors and lower-layer bypass, A→B→A proof recovery, 12 protected visits, true external process termination at paid receipt/strip journal SENDING, and native Kivy multi-stage UI.
