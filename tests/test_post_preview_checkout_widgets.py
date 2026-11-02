@@ -328,7 +328,7 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
             original_entitlement = payment['entitlement_id']
             self.assertIsNotNone(original_entitlement)
             self.assertEqual('OWED', payment['obligation_state'])
-            self.assertIsNone(app._photo_view['payment_qr'])
+            self.assertIsNone(app._photo_view.get('payment_qr'))
             self.assertFalse(app._photo_view['fulfillment_authorized'])
 
             # An eventual second settlement is a finance excess, not a second
