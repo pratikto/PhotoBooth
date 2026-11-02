@@ -1,5 +1,23 @@
 # Supervised Windows pilot — synthetic payment, webcam, optional POS80
 
+## 2 November 2026 — automated test evidence and exact owner preflight order
+
+[Automated PP-07 simulation report](PP07-AUTOMATED-SIMULATION-2026-11-02.md): at `b071a5cc`, 490 Windows + 490 Ubuntu + 51 native Kivy tests PASS with zero failure/error/skip. A subsequent source-hardening release adds stronger dependency/profile checks and explicit synthetic Drive QR labels; its distinct [CI run 41393795509](https://github.com/pratikto/PhotoBooth/actions/runs/41393795509) must be consulted before claiming that later version verified.
+
+Before running `tools/check_post_preview_pilot.py`, explicitly set **all four** legacy profile flags to `0`; otherwise preflight now correctly says BLOCKED instead of falsely claiming READY. It checks the actual interpreter for Kivy/Pillow/numpy/requests/cryptography/FastAPI/httpx/Pydantic/qrcode/OpenCV/ffpyplayer, alongside the authorized branch and required files. Reuse an existing `.venv-kivy` rather than replacing the environment.
+
+```powershell
+$env:PHOTOBOOTH_V2_CHECKOUT_SANDBOX='0'
+$env:PHOTOBOOTH_V2_CHECKOUT_MOCK='0'
+$env:PHOTOBOOTH_V2_PRINT='0'
+$env:PHOTOBOOTH_V2_DRIVE='0'
+.\.venv-kivy\Scripts\python.exe -m pip install -r requirements.txt -r requirements-post-preview.txt -r requirements-qris.txt
+.\.venv-kivy\Scripts\python.exe -m unittest tests.test_post_preview_pilot_preflight tests.test_post_preview_pilot_early_root -v
+.\.venv-kivy\Scripts\python.exe tools/check_post_preview_pilot.py
+```
+
+**Important UI distinction:** with default synthetic Drive, the paid output QR is a renderer fixture and the screen labels it `QR DEMO • BUKAN LINK DOWNLOAD`. It **cannot** be opened to retrieve photographs. With the separate double-consent `--enable-real-drive --accept-public-test-upload` test mode, the display instead labels the original verified test folder `DRIVE TEST • BAYAR SIMULASI`. In both cases payment remains synthetic; no real Midtrans transaction is possible in this launcher. A verified real test folder URL still does not prove photo upload completion or public-share acceptance until independently checked.
+
 ## 2 November 2026 — PP-07 reject symlinked parent test roots
 
 The supervised, **synthetic-payment-only** pilot now rejects any symbolic link in the selected data-root's full existing ancestor chain, not merely a symlink at the final leaf. A fresh-looking directory underneath a symlink cannot redirect capture/payment/receipt journals into unrelated or previously owned filesystem data. Validation still occurs before Kivy/device runtime imports, and no occupied root is reset. See `tools/run_post_preview_checkout_pilot.py` `validate_private_root`.
