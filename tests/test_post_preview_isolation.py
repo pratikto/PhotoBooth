@@ -95,4 +95,48 @@ class OriginalMockIsolationTests(unittest.TestCase):
         self.assertEqual(0,self.service.ledger.db.execute('SELECT closed FROM pp_drafts').fetchone()[0])
 
 
+    def test_acked_isolation_allows_next_visitor_without_reopening_old_media(self):
+        self.fixture.enable_paid_ticket()
+        self.service.prepare()
+        first=self.service.start(get_templates(),{'template_a':1})
+        old=self.service.lease
+        stale_gen=first['generation']
+        self.service.retire('APP_SUSPENDED')
+        self.iso=OriginalMockIsolation(
+            self.service.ledger,self.fixture.backend,self.fixture.jobs,self.fixture.launch_lease,
+            printer_lane=self.service._receipt_lane,allow_incomplete_fixture=True)
+        op=self.iso.prepare('PB001')
+        with self.assertRaises(DraftHeld):
+            self.service.reset_after_acked_isolation(op)
+        self.assertTrue(self.iso.acknowledge('PB001',op))
+        new_idle=self.service.reset_after_acked_isolation(op)
+        self.assertEqual('confirm',new_idle['phase'])
+        self.assertFalse(self.service._hidden.is_set())
+        self.assertIsNone(self.service.lease)
+        with self.assertRaises(DraftHeld):
+            self.service.reset_after_acked_isolation(op)
+        next_view=self.service.start(get_templates(),{'template_a':1})
+        self.assertNotEqual(old.draft_id,self.service.lease.draft_id)
+        self.assertGreater(next_view['generation'],stale_gen)
+        with self.assertRaises(DraftHeld):
+            self.service.ledger.inspect(old)
+        self.assertEqual('ISOLATED',self.service.ledger.db.execute(
+            'SELECT lifecycle FROM pp_drafts WHERE draft_id=?',(old.draft_id,)).fetchone()[0])
+
+    def test_reuse_rejects_forged_or_unacknowledged_isolation(self):
+        self.fixture.enable_paid_ticket()
+        self.service.prepare()
+        self.service.start(get_templates(),{'template_a':1})
+        self.service.retire('APP_SUSPENDED')
+        self.iso=OriginalMockIsolation(
+            self.service.ledger,self.fixture.backend,self.fixture.jobs,self.fixture.launch_lease,
+            printer_lane=self.service._receipt_lane,allow_incomplete_fixture=True)
+        op=self.iso.prepare('PB001')
+        for key in ('f'*32,op):
+            with self.assertRaises(DraftHeld):
+                self.service.reset_after_acked_isolation(key)
+        self.assertTrue(self.service._hidden.is_set())
+        self.assertIsNotNone(self.service.lease)
+
+
 if __name__=='__main__':unittest.main()

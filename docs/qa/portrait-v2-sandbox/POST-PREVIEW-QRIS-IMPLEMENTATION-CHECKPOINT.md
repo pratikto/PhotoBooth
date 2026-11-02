@@ -1,5 +1,12 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — PP-06 pilot next-visitor model reset (new, CI pending)
+
+The synthetic-only `PrivateCheckoutService.reset_after_acked_isolation` may return to new-visitor CONFIRM **only** from a privacy-retired original lease that matches a durable exact `pp_isolation_ops.state=ACKED`, fenced generation, closed ISOLATED old draft and an actually free booth. It does not reopen old photos, revoke OWED, replay prior printer jobs, allocate another provider attempt or reuse any previous private CCP/ticket presenter: new original CCP and ticket presentation objects are created, with generation advanced to invalidate old callbacks. Existing `OriginalMockIsolation` remains the sole PREPARE/ACK source; no untrusted GUI/merchant release bypass.
+
+Two regression cases cover blocked PREPARED/forged receipt and safe new customer admission after ACK with old source/media still inaccessible. This is one of several **mock pilot** PP-06 dependencies. The Advertising gate and actual returning-ticket UI are not yet connected, real Midtrans/real provider release remains forbidden. CI for this exact change is pending.
+
+
 ## 2 November 2026 — Pilot-root reuse fail-closed safety (owner UAT preparation)
 
 The opt-in Windows pilot now validates its `--private-root` **before constructing any fixture, acquiring a camera, writing new payment data or opening printer/Drive transports**. It refuses a previous nonempty root (including original owed transactions and sensitive credential journals), symlinks, archived `old` locations, repository/home/drive-root parents and files. A fresh missing or existing empty directory is accepted. This keeps every successive owner's supervised attempt isolated without silently resetting old PAID obligations. Added Windows-compatible offline launcher tests for reused roots and dangerous directory choices; real POS80/Drive and Midtrans effects remain opt-in/disabled as before. Component CI is pending for this source SHA; not a full PP-001..112 acceptance result.

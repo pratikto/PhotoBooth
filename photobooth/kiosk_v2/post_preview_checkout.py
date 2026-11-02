@@ -166,6 +166,54 @@ class PrivateCheckoutService(PrivatePhotoService):
         return self.snapshot()
 
 
+    def reset_after_acked_isolation(self, operation_id):
+        """Reuse a retired MOCK fixture only after exact durable original release.
+
+        This is not a bypass of customer proof and never resurrects old media.
+        The caller must have completed OriginalMockIsolation.prepare/acknowledge
+        outside the serialized photo worker, after all sends were quiescent.
+        """
+        from photobooth.post_preview_ccp import OriginalCCPService
+        if (self._closed.is_set() or not self._hidden.is_set()
+                or self.lease is None or not self.paid_ticket_enabled
+                or not isinstance(operation_id,str)):
+            raise DraftHeld('Original retired fixture with exact release required')
+        original=self.lease
+        with self.ledger.write():
+            receipt=self.ledger.db.execute('''SELECT * FROM pp_isolation_ops
+                WHERE draft_id=? AND operation_id=? AND booth_id=?''',
+                (original.draft_id,operation_id,original.booth_id)).fetchone()
+            old=self.ledger.db.execute('SELECT * FROM pp_drafts WHERE draft_id=?',
+                                       (original.draft_id,)).fetchone()
+            new=self.ledger.db.execute('SELECT 1 FROM pp_drafts WHERE booth_id=? AND closed=0',
+                                       (original.booth_id,)).fetchone()
+            if (not receipt or receipt['state']!='ACKED'
+                    or receipt['original_generation']!=original.generation
+                    or not old or old['closed']!=1 or old['lifecycle']!='ISOLATED'
+                    or old['generation']!=original.generation+1 or new):
+                raise DraftHeld('Original release not ACKed or another visitor owns booth')
+        # PhotoJobs must be quiescent here; preserve the same ledger and fenced
+        # print/Drive lane, but give the new visitor a fresh private capability.
+        old_ccp=self._ccp
+        old_ticket=self._paid_ticket
+        self.lease=None
+        self.group=self._offer=self._claim_qr=self._payment=self._payment_qr=None
+        self._ticket_offer=self._ticket_qr=self._ticket_receipt=None
+        self._ticket_was_dismissed=False
+        self._delivery_state=None
+        self.templates=[]
+        self.selected=[]
+        self.index=0
+        self._preview=None
+        self._generation=max(self._generation+1,old['generation']+1)
+        self.phase='confirm'
+        self._ccp=OriginalCCPService(
+            self.ledger,old_ccp.protector,old_ccp.merchant_id,allow_synthetic=True)
+        self._paid_ticket=OriginalRecoveryTicketService(
+            old_ticket.payments,old_ticket.protector,allow_synthetic=True)
+        self._hidden.clear()
+        return self.snapshot()
+
     def recover_original_owed(self, lease, purchase_group_id):
         """Resume an authenticated original claim without another photo/charge.
 
