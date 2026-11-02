@@ -25,6 +25,27 @@ def build_parser():
     return p
 
 
+def validate_private_root(selected, *, project_root=ROOT):
+    """Reject every reused/personal/occupied test folder before camera or I/O.
+
+    A prior paid fixture may contain encrypted original credentials, owed
+    service and immutable print jobs. It must NEVER be reopened as a new
+    customer's pilot or reset to make the welcome page work.
+    """
+    path=Path(selected).expanduser()
+    if path.is_symlink():
+        raise ValueError('Pilot private root must not be a symlink')
+    root=path.resolve()
+    project=Path(project_root).resolve()
+    if (root==project or root in project.parents or root==Path.home().resolve()
+            or root==root.parent or any(part.casefold()=='old' for part in root.parts)):
+        raise ValueError('Select a dedicated new pilot root, never an archive or parent directory')
+    if root.exists():
+        if not root.is_dir() or any(root.iterdir()):
+            raise ValueError('Pilot root is already occupied: choose a new empty folder')
+    return root
+
+
 def validate_printer(args,env):
     if args.enable_real_printer!=args.accept_real_paper:
         raise ValueError('Both --enable-real-printer and --accept-real-paper are required')
@@ -74,9 +95,10 @@ def main(argv=None):
         return 2
     with launch:
         configure_kivy(Config)
-        root=args.private_root.expanduser().resolve()
-        if any(part.casefold()=='old' for part in root.parts):
-            p.error('Excluded old archive path')
+        try:
+            root=validate_private_root(args.private_root)
+        except ValueError as error:
+            p.error(str(error))
         fixture=CheckoutFixture(root)
         fixture.enable_paid_ticket()
         if args.enable_real_drive:

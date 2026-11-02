@@ -1,6 +1,8 @@
 """Safety checks for the explicitly synthetic real-camera/optional-paper pilot."""
 import unittest
-from tools.run_post_preview_checkout_pilot import build_parser,validate_printer,validate_drive
+from pathlib import Path
+import tempfile
+from tools.run_post_preview_checkout_pilot import build_parser,validate_printer,validate_drive,validate_private_root
 
 
 class PilotArgsTests(unittest.TestCase):
@@ -51,6 +53,37 @@ class PilotArgsTests(unittest.TestCase):
         source=inspect.getsource(pilot.main)
         self.assertIn('fixture.bind_app(self)',source)
         self.assertIn('class BoundPilotApp',source)
+
+    def test_dedicated_private_root_never_reopens_customer_data(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d)
+            clean=root/'new-pilot'
+            self.assertEqual(clean,validate_private_root(clean,project_root=root/'repo'))
+            clean.mkdir()
+            self.assertEqual(clean,validate_private_root(clean,project_root=root/'repo'))
+            (clean/'drafts.sqlite3').write_bytes(b'prior paid customer')
+            with self.assertRaisesRegex(ValueError,'occupied'):
+                validate_private_root(clean,project_root=root/'repo')
+            with self.assertRaisesRegex(ValueError,'parent directory'):
+                validate_private_root(root,project_root=root/'repo')
+            other=root/'OLD'/'saved'
+            with self.assertRaises(ValueError):
+                validate_private_root(other,project_root=root/'repo')
+            link=root/'link'
+            try: link.symlink_to(clean,target_is_directory=True)
+            except (OSError,NotImplementedError): pass
+            else:
+                with self.assertRaises(ValueError):
+                    validate_private_root(link,project_root=root/'repo')
+
+    def test_pilot_does_not_accept_repository_or_home_as_data_root(self):
+        import os
+        with self.assertRaises(ValueError):
+            validate_private_root(Path.home())
+        with self.assertRaises(ValueError):
+            validate_private_root(Path.cwd(),project_root=Path.cwd())
+        with self.assertRaises(ValueError):
+            validate_private_root(Path.cwd().parent,project_root=Path.cwd())
 
 
 if __name__=='__main__':unittest.main()

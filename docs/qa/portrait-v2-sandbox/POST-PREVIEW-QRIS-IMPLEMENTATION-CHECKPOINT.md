@@ -1,5 +1,10 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — Pilot-root reuse fail-closed safety (owner UAT preparation)
+
+The opt-in Windows pilot now validates its `--private-root` **before constructing any fixture, acquiring a camera, writing new payment data or opening printer/Drive transports**. It refuses a previous nonempty root (including original owed transactions and sensitive credential journals), symlinks, archived `old` locations, repository/home/drive-root parents and files. A fresh missing or existing empty directory is accepted. This keeps every successive owner's supervised attempt isolated without silently resetting old PAID obligations. Added Windows-compatible offline launcher tests for reused roots and dangerous directory choices; real POS80/Drive and Midtrans effects remain opt-in/disabled as before. Component CI is pending for this source SHA; not a full PP-001..112 acceptance result.
+
+
 ## 2 November 2026 — dual-opt-in real Drive pilot, still synthetic payment (CI pending)
 
 The Windows pilot can now optionally use the real existing `AppsScriptDriveClient` + `BoothDriveClient` + `BoothDriveWorker` only with **both** `--enable-real-drive --accept-public-test-upload` and explicit HTTPS `script.google.com/macros/s/.../exec` URL and upload token. The default stays 100% synthetic. Real Drive pilot prewarms 25 READY folders and relies on the server's original read-only readiness to BLOCK synthetic charge admission if the API, folder sharing or pool capacity are not independently ready. Uploaded test photos are external/public-share operations only when the user explicitly launches this opt-in; no live Midtrans charge is possible. An accompanying Windows guide documents privacy, cloud effects and retry safeguards. CI uses local contract checks only and does not access Google.

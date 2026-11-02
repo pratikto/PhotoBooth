@@ -1,7 +1,7 @@
 # Supervised Windows pilot — synthetic payment, webcam, optional POS80
 
 This is a **local supervised pilot**, not the full PP-07 customer UAT. Use
-a fresh storage root: the old visit remains privacy-fenced after shutdown.
+a **new empty** storage root for **each** trial. The launcher refuses a previously used/nonempty root, including a prior customer's encrypted credentials, payment journal or print jobs. The old visit remains privacy-fenced after shutdown; NEVER delete or reset that data to restart a test.
 
 ```powershell
 git switch feature/post-preview-qris-checkout
