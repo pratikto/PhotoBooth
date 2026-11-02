@@ -12,7 +12,7 @@ from tests.post_preview_checkout_fixture import CheckoutFixture
 
 
 def inspect(root, stage):
-    db = sqlite3.connect(root / 'drafts.db')
+    db = sqlite3.connect(root / 'drafts.sqlite3')
     try:
         owed = db.execute('SELECT status FROM pp_paid_services').fetchone()[0]
         receipt = db.execute('SELECT receipt_state FROM pp_ticket_presentations').fetchone()[0]
