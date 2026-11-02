@@ -1,5 +1,12 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — PP-06 mock-only guarded Ads admission and proof return coordinator
+
+Added `OriginalPilotAdmission`, a strictly isolated in-process coordinator for the supervised Windows pilot. A Photo/Game entry is permitted only if the booth is empty or a genuinely protected old session has completed its **original** PREPARE→ACK; its ACK crash-retry reuses the same operation ID and calls `reset_after_acked_isolation`. Pending/UNKNOWN payment, unretired live customer, in-flight worker, ambiguous paper or Drive keeps the payment gate closed. Customer CCP or Recovery Ticket proof may rehydrate the same old PAID/OWED (no rephotograph/no recharge) after fresh synthetic provider reconciliation and only when booth free; if B is genuinely active, return WAIT without interrupting. Proof payload is only passed to verifier, never logged or persisted by the coordinator.
+
+Six new mock model regression cases cover paid A→B, busy A proof wait, protected old A restoration, ACK reply-loss, pending rejection and cross-role QR denial. This is a **model component only** pending native Advertising/claim control; no API/money/print/refund activation. CI is pending, full PP acceptance 112 NOT_RUN.
+
+
 ## 2 November 2026 — PP-06 pilot next-visitor model reset (new, CI pending)
 
 The synthetic-only `PrivateCheckoutService.reset_after_acked_isolation` may return to new-visitor CONFIRM **only** from a privacy-retired original lease that matches a durable exact `pp_isolation_ops.state=ACKED`, fenced generation, closed ISOLATED old draft and an actually free booth. It does not reopen old photos, revoke OWED, replay prior printer jobs, allocate another provider attempt or reuse any previous private CCP/ticket presenter: new original CCP and ticket presentation objects are created, with generation advanced to invalidate old callbacks. Existing `OriginalMockIsolation` remains the sole PREPARE/ACK source; no untrusted GUI/merchant release bypass.
