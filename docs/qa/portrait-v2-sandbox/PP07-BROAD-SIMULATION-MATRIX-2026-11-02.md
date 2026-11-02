@@ -67,6 +67,18 @@ The verified prior baseline [CI #41404106134](https://github.com/pratikto/PhotoB
 
 **Execution status:** The first full run [#41407278546](https://github.com/pratikto/PhotoBooth/actions/runs/41407278546) **FAILED** (18/20 new Ubuntu tests PASS) due the two test assumptions documented above. The corrected source `bd70593f` has **Ubuntu 20/20 J cases PASS, backend 520/520 PASS and native 54/54 PASS** in [CI #41407613830](https://github.com/pratikto/PhotoBooth/actions/runs/41407613830). The distinct Windows job remains pending at this checkpoint. Until the actual `J01..J20` test names, PASS/FAIL and jobs are verified from matching-source logs, every new row above is `IMPLEMENTED / NOT YET VERIFIED`, not PASS. If a test fails, preserve the failure and fix actual root cause; never delete a legitimate safety assertion simply to make CI green.
 
+## Second test layer — Native Kivy customer journeys N21–N23
+
+The source now includes `tests/test_post_preview_native_journeys.py`, introduced at [`ff82b4b0`](https://github.com/pratikto/PhotoBooth/commit/ff82b4b0c797257cc7ad1ff3b09759dd47dc5dc9) and explicitly registered by [native CI change `e5ddf7d9`](https://github.com/pratikto/PhotoBooth/commit/e5ddf7d95bf0a07492f46de95f93d23b3d8a7051). Unlike J01–J20, these tests traverse actual Kivy screen widgets and customer action callbacks inside a headless Xvfb display. The source-matching [CI #41408516448](https://github.com/pratikto/PhotoBooth/actions/runs/41408516448) is **PENDING** until native run logs show individual results.
+
+| ID | Native UI scenario | Observable UI and financial assertions | Status |
+| --- | --- | --- | --- |
+| N21 | Ads/tutorial → choose three designs 2+1+3 → capture 9 images → final preview → original CCP → synthetic PAID → same Recovery Ticket → simulated Drive QR → three purchased print actions | Exactly one provider charge; one ticket receipt; one 2+1+3 paper-intent set; no false paper fulfillment | **ADDED; CI PENDING** |
+| N22 | Original paid/ticket journey, Drive deliberately offline on first binding, then route becomes available and customer presses original "retry delivery" action | No second charge/ticket, original reserved paid transaction and `OWED` preserved; one subsequent safe paid-strip submission | **ADDED; CI PENDING** |
+| N23 | A has paid, is privacy-locked to protected Ads, B enters and captures; A tries to invoke private recovery claim while B owns camera | Claim modal restricted to protected Ads only, no A proof/media leakage or camera takeover, original A remains `OWED`, one charge | **ADDED; CI PENDING** |
+
+These tests do **not** replace a real touchscreen usability check, human-readable QR scanning, true wall-clock 30-second presentation timing, cloud ACL, or physical printer-paper observation. They add an actual native GUI evidence layer missing from the first integration run.
+
 ## Deliberately separate full acceptance and test debt
 
 The canonical [PP-001..112](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md) are complete-system acceptance scenarios, not a percentage that can be inferred from 20 composed tests or 1,000 repeated runs. This package adds evidence to multiple PP numbers but does **not** turn any complete PP row into a physical/customer-provider PASS.
