@@ -46,6 +46,30 @@
 
 **Not proven:** actual POS80 partial bytes/paper/cutter state, thermal printer jam recovery, operator reconciliation, safe resume after technician classification, or true concurrency with background workers on hardware.
 
+## Second P0 simulation increment — late duplicate PAID and persisted printer SENDING
+
+**Previous source validation:** [CI 41402925221](https://github.com/pratikto/PhotoBooth/actions/runs/41402925221) at `c86a8e64` has **493 Windows + 493 Ubuntu + 53 native Kivy = 1,039 test executions PASS**, all 3 jobs SUCCESS, no failures/errors/skips. This validates the two earlier new GUI tests and their protective fixes, not the new tests below.
+
+**New exact-source test commit:** `9220940e` and `7f018dba` (test-only source additions, no merchant code/payment/refund production changes). Matching-source [CI 41403886185](https://github.com/pratikto/PhotoBooth/actions/runs/41403886185) at `7f018dba` is **PENDING** until exact Windows/Linux/native summaries are inspected.
+
+### F3 — original expired QR1 pays late while QR2 is pending
+
+**PP mapping:** PP-021, PP-024, PP-028–030 and the no-second-service invariants in PP-035.  
+**New native test:** `test_native_late_qr1_paid_while_qr2_active_never_grants_twice`.
+
+It completes two original three-photo design sessions, offers the original CCP, creates synthetic QR1, receives verified `expire`, continues to QR2, then marks QR1 as independently `settlement` **while QR2 remains active**. Native GUI must leave the pending QR, return to private `paid_hold` and show an `OWED` original entitlement, without recharging, recapturing, releasing photos to another person, or creating another paid service. A later independent QR2 settlement must preserve the exact first entitlement and record **one excess paid attempt** for separate finance/refund evaluation; it must not grant second photos or a second ticket. All settlement values are from the in-memory synthetic provider. This test does **not** authorize or execute a refund.
+
+### F4 — durable SENDING journal after printer-worker death
+
+**PP mapping:** PP-050, PP-052, PP-065, PP-078, PP-095 and print no-replay requirements.  
+**New backend test:** `test_persisted_sending_after_worker_crash_blocks_new_dispatcher_replay`.
+
+This test **injects** a durable original paid-strip `SENDING` row at the precise crash seam after journal commit and before physical printer acknowledgment. It instantiates a **new** `OriginalPaidPrintDispatcher` against the existing same ledger/preparer and asserts that replay is denied, no `print_image` call occurs, the job remains `SENDING`, and service stays `OWED`. It is a persistent-state restart **model**, **not** a verified OS-level process kill or real printer power-loss experiment. The latter remain future test gates.
+
+### Remaining after F1–F4
+
+Even when all above tests pass, complete owner PP-001–112 acceptance and 26-case Windows physical UAT are separate `NOT_RUN`; the next fault-injection stage should exercise actual process termination/reopen with original journal files, queued receipt-vs-strip lane behavior and pending paid upload, plus a live webcam/Drive/POS80 test under explicit consent. Never promote a synthetic provider duplicate to proof of genuine merchant refund capability.
+
 ## Required execution and remaining P0 gaps
 
 The matching-source GitHub Actions [run 41402925221](https://github.com/pratikto/PhotoBooth/actions/runs/41402925221) is **completed SUCCESS** on all 3 jobs. Both newly added native tests are present in the output and all 53 native tests PASS. Windows and Ubuntu each execute 493 backend regression tests with zero failures/errors/skips. Do not promote these to physical/merchant or full PP-001..112 acceptance. If a test fails, fix root cause, micro-push and rerun exact-source CI. Older full 112 PP matrix and 26 owner Windows UAT cases remain **NOT_RUN** at their acceptance scope, despite individual automated coverage.
