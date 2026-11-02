@@ -1,5 +1,7 @@
 # PP-07 automated simulation evidence — 2 November 2026
 
+> **Newer source-pinned result:** [PP-07 adversarial GUI fault tests and executed evidence](PP07-ADVERSARIAL-GUI-FAULTS-2026-11-02.md) supersede this earlier synthetic-source baseline for code coverage. Current code `0548bc89` has [CI #41404106134](https://github.com/pratikto/PhotoBooth/actions/runs/41404106134) **3/3 SUCCESS**, 494 Windows + 494 Ubuntu + 54 native Kivy = **1,042 PASS** (0 failures/errors/skips). The earlier 1,037 and 1,039 counts below remain valid for their own former SHAs, not for current coverage. All 112 full PP acceptance and 26 owner physical UAT cases remain separate NOT_RUN/BLOCKED.
+
 ## Latest matching-source automated verification — 67dc3eb5
 
 **Tested code:** [`67dc3eb502dbb1bb65b0a7139f728a4d05e5b664`](https://github.com/pratikto/PhotoBooth/commit/67dc3eb502dbb1bb65b0a7139f728a4d05e5b664)  
