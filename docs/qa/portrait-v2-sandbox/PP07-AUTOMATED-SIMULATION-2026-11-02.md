@@ -1,5 +1,29 @@
 # PP-07 automated simulation evidence — 2 November 2026
 
+## Latest matching-source automated verification — 67dc3eb5
+
+**Tested code:** [`67dc3eb502dbb1bb65b0a7139f728a4d05e5b664`](https://github.com/pratikto/PhotoBooth/commit/67dc3eb502dbb1bb65b0a7139f728a4d05e5b664)  
+**Exact workflow:** [GitHub Actions 41393795509](https://github.com/pratikto/PhotoBooth/actions/runs/41393795509) — **all three jobs SUCCESS**.
+
+| Actual job | Tests executed | Failures | Errors | Skips | Result |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Windows private-state, Python 3.12 | **493** | 0 | 0 | 0 | **PASS** |
+| Ubuntu private-state, Python 3.12 | **493** | 0 | 0 | 0 | **PASS** |
+| Ubuntu native Kivy/Xvfb desktop | **51** | 0 | 0 | 0 | **PASS** |
+| **Total test executions** | **1,037** | **0** | **0** | **0** | **3/3 jobs PASS** |
+
+**Do not call these 1,037 distinct functional scenarios:** 493 backend cases execute separately on Windows and Linux, and the 51 headless native cases run on Ubuntu. The canonical 112-case PP acceptance matrix and 26-case real owner Windows UAT still have separate NOT_RUN/BLOCKED status.
+
+**Additional source fixes now tested on the matching SHA:**
+- Three new preflight cases PASS on both OS, verifying a genuinely READY mocked environment, BLOCKED when FastAPI is missing, and BLOCKED when a legacy QRIS profile remains enabled. Actual preflight now checks all required Kivy/QR/backend/graphics dependencies and avoids echoing secrets.
+- The native two-template paid-flow test asserts that the screen contains the explicit warning `QR DEMO • BUKAN LINK DOWNLOAD`. The opt-in real test Drive route is separately labeled `DRIVE TEST • BAYAR SIMULASI`; actual cloud access was NOT used or certified.
+- Earlier five source/root startup tests continue PASS on Windows and Linux. The native payment/receipt/Drive/2+1 virtual print cycle remains one synthetic original purchase, one recovery receipt and service still `OWED` without physical-paper verification.
+- GitHub CI also executes Apps Script offline syntax/retention checks and historical paid-first regression selections. No merchant Sandbox charge, real POS80, live Drive upload, customer photos or refund happened.
+
+**Physical acceptance remains pending:** real Windows GUI with camera/touch, 30-second genuinely human-visible ticket, paper emergence and cuts, publicly accessible Drive photos/retention, actual Midtrans merchant Sandbox and original customer return under physical conditions. Software CI does not close AR-13 or authorize production.
+
+---
+
 **Branch:** `feature/post-preview-qris-checkout`  
 **Source commit tested:** [`b071a5cc0c449f0f3bf868659f0fb0b51a56bd97`](https://github.com/pratikto/PhotoBooth/commit/b071a5cc0c449f0f3bf868659f0fb0b51a56bd97)  
 **Workflow:** [GitHub Actions run 41392821079](https://github.com/pratikto/PhotoBooth/actions/runs/41392821079)  
@@ -53,12 +77,12 @@ The existing native suite additionally exercises smaller/larger portrait layouts
 
 ## Additional source increments after the verified 1,031 executions
 
-**Do not combine these newer commits with the successful b071 counts.** Follow-on changes added the missing checkout runtime dependency checks (FastAPI/httpx/Pydantic/qrcode/cv2/ffpyplayer), fail-closed legacy checkout profile detection, three new preflight regression cases, and a visibly labeled **QR DEMO / BUKAN LINK DOWNLOAD** versus actual opt-in Drive-test header in the native mock GUI. The launcher explicitly supplies the display mode. Source SHA `67dc3eb502dbb1bb65b0a7139f728a4d05e5b664` is running [CI 41393795509](https://github.com/pratikto/PhotoBooth/actions/runs/41393795509): **PENDING / no PASS claim until matching Windows, Ubuntu and native log checks**.
+**Do not combine these newer commits with the successful b071 counts.** Follow-on changes added the missing checkout runtime dependency checks (FastAPI/httpx/Pydantic/qrcode/cv2/ffpyplayer), fail-closed legacy checkout profile detection, three new preflight regression cases, and a visibly labeled **QR DEMO / BUKAN LINK DOWNLOAD** versus actual opt-in Drive-test header in the native mock GUI. The launcher explicitly supplies the display mode. Source SHA `67dc3eb502dbb1bb65b0a7139f728a4d05e5b664` was verified in [CI 41393795509](https://github.com/pratikto/PhotoBooth/actions/runs/41393795509): **3/3 jobs SUCCESS, 493 Windows + 493 Ubuntu + 51 native PASS**.
 
-The first verified b071 run totals **1,031 executed successful test instances** (490 Windows + 490 Ubuntu + 51 native). Windows/Linux reuse many identical test cases; 1,031 does **not** mean 1,031 distinct scenarios or 112 owner PP acceptance cases.
+The earlier verified b071 run totals **1,031 executed successful test instances** (490 Windows + 490 Ubuntu + 51 native). Windows/Linux reuse many identical test cases; 1,031 does **not** mean 1,031 distinct scenarios or 112 owner PP acceptance cases.
 
 ## Release / continuation gate
 
-Complete the Windows result and update this record with exact `run/tests/failures/errors/skipped`. If any job fails, fix the underlying issue and re-run exact-source CI before claiming an automated PASS. The physical-owner pilot remains strictly `--synthetic-payment-only` with a fresh private root, printer/Drive disabled by default and separate dual-consent opt-ins. Preserve all original AR/UAH, paid obligations and old customer data.
+Matching-source Windows/Linux/native execution is now verified as **3/3 SUCCESS** at `67dc3eb5`. If future source changes, rerun exact-source CI and update this record before carrying PASS forward. The physical-owner pilot remains strictly `--synthetic-payment-only` with a fresh private root, printer/Drive disabled by default and separate dual-consent opt-ins. Preserve all original AR/UAH, paid obligations and old customer data.
 
 **Related:** [Supervised Windows instructions](POST-PREVIEW-QRIS-WINDOWS-PILOT.md) · [26-case owner worksheet](PP07-SUPERVISED-WINDOWS-UAT.md) · [current implementation checkpoint](POST-PREVIEW-QRIS-IMPLEMENTATION-CHECKPOINT.md).
