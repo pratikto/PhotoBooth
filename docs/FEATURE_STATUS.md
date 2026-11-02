@@ -1,5 +1,15 @@
 # Meong Photobooth — current feature status
 
+## 2 November 2026 — P0 original QR3/paid-print fault-injection continuation
+
+**Code on `feature/post-preview-qris-checkout` only:** `1bc5c02d` adds two native GUI adversarial scenarios; `0e7a1f0b` blocks any additional purchased batch while an original job requires paper outcome review; `c86a8e64` disables the customer print-next button during `SENDING/UNCERTAIN` and removes the invalid QR4 continuation action after verified QR3 expiry. The original frozen purchase, up-to-3 separately verified QRIS identities, PAID/OWED, one Recovery Ticket, print no-replay journal, and customer privacy protections remain authoritative.
+
+**Evidence boundary:** matching-source [CI #41402925221](https://github.com/pratikto/PhotoBooth/actions/runs/41402925221), native Kivy **53/53 PASS**, Ubuntu backend **493/493 PASS**, Windows backend **PENDING** at the time of this documentation update. The two newly run native tests are `test_native_expiry_qr1_qr2_qr3_never_offers_qr4_or_recaptures` and `test_native_uncertain_design_print_quarantines_remaining_batches`. The earlier 493/493/51 baseline applies to a *different* source SHA; do not substitute it for the new CI.
+
+**Security and behavior:** QR1→QR2→QR3 after independently verified unpaid expiry keeps the same six captured originals and one frozen group, never QR4. Partial A printer-timeout yields `UNCERTAIN`, B remains `PREPARED` but customer and backend print-next are both blocked; no extra send, no new charge and service `OWED` persists. These are simulated, not verified Midtrans money or POS80 paper. The service intentionally requires independently approved resolution for an ambiguous physical print, rather than reprinting and possibly duplicating a customer purchase.
+
+**Source, detailed steps and limitations:** [PP-07 adversarial GUI fault report](qa/portrait-v2-sandbox/PP07-ADVERSARIAL-GUI-FAULTS-2026-11-02.md). These tests **do not** complete the 112-case PP acceptance matrix, the 26-case owner Windows physical worksheet, actual merchant Sandbox, physical printer, real Drive upload or refund authorization. Next independently safe P0 gaps are process restart at original ticket/paid-strip SENDING, old QR1 late settlement during QR2, and A/B consumer isolation with old job uncertainty.
+
 ## 2 November 2026 — PP-07 automated pilot verification (later source still under CI)
 
 **Previously executed and verified:** [CI run 41392821079](https://github.com/pratikto/PhotoBooth/actions/runs/41392821079) at `b071a5cc`: Windows **490/490**, Ubuntu **490/490**, native Kivy **51/51** PASS (zero failure, error or skip). The two-template original paid synthetic end-to-end path covers preview, original CCP, **one** simulated provider charge, original Recovery Ticket, fake Drive folder QR, and exactly **2+1** virtual purchased copy batches with `OWED` and `physical_paper_verified=False`. The missing CI registration for five pilot preflight/data-root tests was fixed and those tests passed on both OS.
