@@ -1,5 +1,13 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 2 November 2026 — PP-07 reject symlinked parent test roots
+
+The supervised, **synthetic-payment-only** pilot now rejects any symbolic link in the selected data-root's full existing ancestor chain, not merely a symlink at the final leaf. A fresh-looking directory underneath a symlink cannot redirect capture/payment/receipt journals into unrelated or previously owned filesystem data. Validation still occurs before Kivy/device runtime imports, and no occupied root is reset. See `tools/run_post_preview_checkout_pilot.py` `validate_private_root`.
+
+`tests/test_post_preview_pilot_early_root.py` now includes a regression using a symlink parent, asserting the target is not mutated. On Windows where ordinary users cannot create symbolic links, that single test SKIPs rather than claiming PASS; the production check still applies. New commits were pushed only to `feature/post-preview-qris-checkout`; exact-source unit/Windows/Linux/native CI and owner physical tests are **NOT_RUN** in this continuation. The local runtime cannot clone GitHub because external DNS/network access is unavailable, so test execution is deferred to an authorized checkout/CI environment. Existing PP-001..112 complete acceptance remains NOT_RUN; genuine merchant QRIS/refunds and production remain unavailable.
+
+**Next action:** run `python -m unittest tests.test_post_preview_pilot_early_root tests.test_post_preview_pilot_preflight -v`, then matching-source CI, inspect any Windows-specific failures, and continue independent PP-06/PP-07 pilot QA. Never infer real POS80 or Google Drive acceptance from synthetic tests.
+
 ## 2 November 2026 — PP-07 early fail-closed pilot-root safety
 
 The supervised synthetic pilot `tools/run_post_preview_checkout_pilot.py` now calls the **existing strict** `validate_private_root` before Kivy, camera, launcher lease or checkout-fixture imports. Occupied prior customer folders, file paths, unsafe parent/archives and symlinks are rejected before device-runtime initialization. No directory is created or old PAID/OWED journal touched by this validation; it is not an allowance to reset any previous test. Existing dual-opt-in printer/Drive flags and the synthetic-only payment gate remain unchanged. New `tests/test_post_preview_pilot_early_root.py` tests assert both an occupied customer root and a file path fail with exit 2 and original bytes remain intact. Changes micro-pushed to **this branch only**, not master.
