@@ -297,6 +297,85 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
                 getattr(w,'text',None)=='CETAK FOTO YANG SUDAH DIBAYAR'
                 and not w.disabled for w in app.stage.walk()))
 
+    def test_native_expiry_qr1_qr2_qr3_never_offers_qr4_or_recaptures(self):
+        """A live original visitor can renew only verified expired QR1/2."""
+        with self.booth() as (app, fixture):
+            Window.size = (452, 900)
+            self.proof(app)
+            original_group = fixture.service.group
+            self.click(app, 'SUDAH SIMPAN BUKTI • LANJUT SIMULASI')
+            self.settle(app)
+            self.assertEqual('payment_pending', app._photo_view['phase'])
+            original_amount = app._photo_view['payment']['amount']
+            original_images = sorted(str(p) for p in fixture.service.root.rglob('*.jpg'))
+            self.assertEqual(6, len(original_images))
+            orders = []
+            for expected_ordinal in (2, 3, 4):
+                view = app._photo_view['payment']
+                order = view['attempts'][-1]['provider_order_id']
+                orders.append(order)
+                fixture.provider.state(order, 'expire')
+                self.click(app, 'PERIKSA STATUS')
+                self.settle(app)
+                self.assertEqual('payment_hold', app._photo_view['phase'])
+                self.assertEqual('EXPIRED_UNPAID', app._photo_view['payment']['state'])
+                if expected_ordinal <= 3:
+                    self.click(app, 'LANJUTKAN PESANAN ASLI')
+                    self.settle(app)
+                    next_view = app._photo_view['payment']
+                    self.assertEqual(expected_ordinal, next_view['attempts'][-1]['ordinal'])
+                    self.assertEqual('payment_pending', app._photo_view['phase'])
+                    self.assertEqual(original_amount, next_view['amount'])
+                    self.assertEqual(original_group, next_view['purchase_group_id'])
+                else:
+                    # QR3 is the terminal attempt; no actionable QR4 button.
+                    actions = [w for w in app.stage.walk()
+                               if getattr(w, 'text', None) == 'LANJUTKAN PESANAN ASLI']
+                    self.assertFalse(actions)
+                self.assertEqual(original_images, sorted(
+                    str(p) for p in fixture.service.root.rglob('*.jpg')))
+            self.assertEqual(3, fixture.provider.charges)
+            self.assertEqual(3, len(set(orders)))
+            self.assertEqual('NONE', app._photo_view['payment']['obligation_state'])
+
+    def test_native_uncertain_design_print_quarantines_remaining_batches(self):
+        """Printer timeout must not cause automatic continuation of B after A."""
+        from photobooth.post_preview_store import DraftHeld
+        with self.booth(paid_delivery=True) as (app, fixture):
+            Window.size = (452, 900)
+            self.paid_ticket_screen(app, fixture)
+            self.click(app, 'LANJUT • SIMPAN TIKET')
+            deadline = time.monotonic() + 15
+            while time.monotonic() < deadline and app._photo_view.get('phase') != 'paid_delivery':
+                app._poll_photos(); EventLoop.idle(); time.sleep(.01)
+            self.assertEqual('paid_delivery', app._photo_view['phase'], app._photo_error)
+            sends = []
+            def uncertain_send(path, *, copies):
+                sends.append(copies)
+                raise TimeoutError('synthetic: bytes may have left the printer')
+            fixture.service._paid_printer.print_image = uncertain_send
+            self.click(app, 'CETAK FOTO YANG SUDAH DIBAYAR')
+            self.settle(app)
+            delivery = app._photo_view['delivery']
+            self.assertEqual({'template_a': 'UNCERTAIN', 'template_b': 'PREPARED'},
+                             delivery['print_states'])
+            self.assertTrue(delivery['needs_operator_review'])
+            self.assertEqual([2], sends)
+            buttons = [w for w in app.stage.walk()
+                       if getattr(w, 'text', None) == 'CETAK FOTO YANG SUDAH DIBAYAR']
+            self.assertEqual(1, len(buttons))
+            self.assertTrue(buttons[0].disabled)
+            self.click(app, 'CEK STATUS UPLOAD')
+            self.settle(app)
+            with self.assertRaises(DraftHeld):
+                fixture.service.paid_print_next()
+            self.assertEqual([2], sends)
+            self.assertEqual(1, fixture.provider.charges)
+            self.assertEqual(1, len(fixture.receipt_sizes))
+            self.assertEqual('OWED', fixture.service.ledger.db.execute(
+                'SELECT status FROM pp_paid_services').fetchone()[0])
+            self.assertFalse(app._photo_view['delivery']['physical_paper_verified'])
+
     def test_native_paid_drive_failure_does_not_offer_print_button(self):
         with self.booth(paid_delivery=True) as (app,fixture):
             Window.size=(452,900)
