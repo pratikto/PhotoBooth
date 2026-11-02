@@ -1,5 +1,11 @@
 # Meong Photobooth — current feature status
 
+## 2 November 2026 — Broad synthetic integration matrix J01–J20
+
+**Source scope:** [20 scenario specs and executable assertions](qa/portrait-v2-sandbox/PP07-BROAD-SIMULATION-MATRIX-2026-11-02.md) are now code at `tests/test_post_preview_journey_matrix.py` and registered in Windows/Ubuntu CI, covering multi-template capture/payment, multi-copy print, Drive failures and tampering, status-loss and all-QR late settlement, original customer A/B return, wrong-role QR denial and protected admission stress. **Not equivalent to 112 complete acceptance cases or the real Windows owner pilot.**
+
+**BUG-034 source fix:** original paid print dispatcher now rejects any additional purchased design while one job in the exact purchase is `SENDING/UNCERTAIN`, even through a direct newly instantiated dispatcher. First executed J results were **18 PASS, 1 FAIL, 1 ERROR on Ubuntu** (two narrow fixture assertions corrected in `bd70593f`). [Corrected CI #41407613830](https://github.com/pratikto/PhotoBooth/actions/runs/41407613830) remains **PENDING**, with no claim of all PASS before exact log inspection. See [bug tracker](bug_tracker.md) and linked comprehensive report for the failure details and remaining physical gates.
+
 ## 2 November 2026 — Second P0 fault-injection increment: late QR1 PAID and persisted print SENDING
 
 **Source changes are test-only**, still on `feature/post-preview-qris-checkout` without any merchant/production/refund action. Native `test_native_late_qr1_paid_while_qr2_active_never_grants_twice` models verified QR1 expiry, original QR2 creation, late QR1 PAID followed by excess QR2 PAID. Assert a single original entitlement, one `OWED` purchase, no new recapture/service/QR release, and separate excess paid-attempt evidence. Backend `test_persisted_sending_after_worker_crash_blocks_new_dispatcher_replay` injects a persisted `SENDING` original purchased-strip journal and creates a fresh dispatcher; it must reject transport replay and retain `OWED`. That is **not** an OS-level kill or physical POS80 restart.
