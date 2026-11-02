@@ -97,6 +97,13 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
             self._show()
             return False
         self._pilot_note=''
+        # A successful PREPARE/ACK is the only point at which a new visitor
+        # may start. Reset all transient gallery/game/tutorial state from A;
+        # never inherit A's template quantities or one-visit tutorial flag.
+        # Do not touch A's durable PAID/OWED, media or customer proof journals.
+        self._reset_visit()
+        self.navigation.tutorial_seen=False
+        self.navigation.entry_source=None
         self._photo_view={'phase':'confirm'}
         self._ticket_window=self._ticket_card=self._ticket_pending=None
         self._ticket_receipt_pending=self._ticket_dismiss_pending=False
