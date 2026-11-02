@@ -1,5 +1,7 @@
 # Meong Photobooth documentation — GUI v2
 
+> **Latest executed P0 regression (2 November 2026):** [CI #41404106134](https://github.com/pratikto/PhotoBooth/actions/runs/41404106134) code `0548bc89`, **494 Windows + 494 Ubuntu + 54 native Kivy = 1,042 PASS** (0 failure/error/skip, 3/3 SUCCESS). Detailed [fault-injection evidence and remaining hardware/provider gates](qa/portrait-v2-sandbox/PP07-ADVERSARIAL-GUI-FAULTS-2026-11-02.md). This is synthetic source evidence, not full owner UAT.
+
 > **Newest PP-07 adversarial QA and recovery edges:** [Expiry, delayed PAID, uncertain paper and print-journal restart tests](qa/portrait-v2-sandbox/PP07-ADVERSARIAL-GUI-FAULTS-2026-11-02.md). This evidence has its own source SHAs and CI results; do not confuse it with the earlier 1,037-execution baseline, 112 full acceptance tests or actual device/merchant UAT.
 
 > **PP-07 automated source verification — 2 November 2026:** [GitHub Actions #41393795509](https://github.com/pratikto/PhotoBooth/actions/runs/41393795509) at `67dc3eb5` executed **493 Windows + 493 Ubuntu + 51 native Kivy = 1,037 PASS** (no failures/errors/skips, 3/3 SUCCESS).
