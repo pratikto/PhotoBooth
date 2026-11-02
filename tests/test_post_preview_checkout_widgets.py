@@ -24,7 +24,7 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
     shot = widget_helpers.PrivateWidgetTests.shot
 
     @contextmanager
-    def booth(self, *, paid_ticket=False, paid_delivery=False):
+    def booth(self, *, paid_ticket=False, paid_delivery=False, unattended=False):
         with tempfile.TemporaryDirectory() as directory, patch.dict(os.environ, {
                 'PHOTOBOOTH_V2_CHECKOUT_SANDBOX':'0', 'PHOTOBOOTH_V2_CHECKOUT_MOCK':'0',
                 'PHOTOBOOTH_V2_PRINT':'0', 'PHOTOBOOTH_V2_DRIVE':'0', 'PHOTOBOOTH_AUDIO':'0',
@@ -39,6 +39,26 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
             app = PrivateCheckoutFixtureApp(root, private_service=fixture.service, camera_device=camera)
             app.build(); app.root = app.stage
             fixture.bind_app(app)
+            if unattended:
+                from photobooth.post_preview_isolation import OriginalMockIsolation
+                from photobooth.post_preview_claim import OriginalMockClaim
+                from photobooth.post_preview_ccp import OriginalCCPService
+                from photobooth.post_preview_ticket import OriginalRecoveryTicketService
+                from photobooth.post_preview_pilot_admission import OriginalPilotAdmission
+                isolate=OriginalMockIsolation(
+                    fixture.service.ledger,fixture.backend,app._photo_jobs,
+                    fixture.launch_lease,printer_lane=fixture.service._receipt_lane,
+                    delivery=getattr(fixture,'paid_monitor',None),
+                    allow_incomplete_fixture=True)
+                proof=OriginalMockClaim(
+                    fixture.backend,
+                    OriginalCCPService(fixture.service.ledger,fixture.protector,'MTEST',
+                                       allow_synthetic=True),
+                    OriginalRecoveryTicketService(fixture.backend,fixture.protector,
+                                                  allow_synthetic=True),
+                    allow_incomplete_fixture=True)
+                app.attach_synthetic_pilot_admission(
+                    OriginalPilotAdmission(isolate,proof,allow_synthetic_pilot=True))
             Window.add_widget(app.stage)
             try:
                 yield app, fixture
@@ -254,3 +274,38 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
             self.assertEqual([],fixture.paid_print_sends)
             self.assertEqual('OWED',fixture.service.ledger.db.execute(
                 'SELECT status FROM pp_paid_services').fetchone()[0])
+
+    def test_synthetic_unattended_ads_handoff_gate_at_small_portrait(self):
+        with self.booth(paid_ticket=True,unattended=True) as (app,fixture):
+            Window.size=(452,900)
+            self.click(app,'PUNYA TIKET PEMULIHAN • SIMULASI')
+            self.assertIsNotNone(app._pilot_popup)
+            app._close_pilot_popup()
+            self.start(app)
+            old=fixture.service.lease
+            app._photo_submit('abort')
+            deadline=time.monotonic()+8
+            while time.monotonic()<deadline:
+                app._poll_photos()
+                EventLoop.idle()
+                if not app._photo_jobs.busy and app.navigation.page=='advert':
+                    break
+                time.sleep(.01)
+            self.assertEqual('advert',app.navigation.page)
+            self.assertTrue(fixture.service._hidden.is_set())
+            self.click(app,'MULAI FOTO')
+            self.assertNotEqual('advert',app.navigation.page)
+            self.assertFalse(fixture.service._hidden.is_set())
+            self.assertIsNone(fixture.service.lease)
+            self.assertEqual('ISOLATED',fixture.service.ledger.db.execute(
+                'SELECT lifecycle FROM pp_drafts WHERE draft_id=?',
+                (old.draft_id,)).fetchone()[0])
+
+    def test_synthetic_unattended_wrong_ticket_denied_at_large_portrait(self):
+        with self.booth(paid_ticket=True,unattended=True) as (app,fixture):
+            Window.size=(800,1280)
+            app._pilot_submit_claim('MEONG:PAYMENT:1:PB001:invalid')
+            self.assertEqual('advert',app.navigation.page)
+            self.assertIn('Tiket tidak dapat diverifikasi',app._pilot_note)
+            self.assertEqual(0,fixture.provider.charges)
+

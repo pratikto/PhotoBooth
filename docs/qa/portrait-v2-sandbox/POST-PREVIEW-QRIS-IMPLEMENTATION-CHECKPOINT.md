@@ -1,5 +1,12 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — Native pilot protected Ads and masked original proof entry (CI pending)
+
+The explicit nonmerchant Windows **synthetic** pilot connects `OriginalPilotAdmission` to actual Kivy PhotoJobs, launch lease and original backend ledger. Privacy retire hides pixels and shows Advertising without assuming backend occupancy is free; new Photo/Game must obtain mock PREPARE→ACK first. A masked original proof panel accepts only CCP/Recovery Ticket and reclaims exact PAID/OWED after fresh proof and provider rechecks; a genuinely active customer B is never preempted. Wrong proof returns generic denial without leaking photos. This route is opt-in only through `tools/run_post_preview_checkout_pilot.py`; parent/legacy and actual Midtrans paths remain unchanged.
+
+Native 452×900 and 800×1280 regression cases added for Ads gate, masked ticket UI and invalid QR. This does not certify the physical Windows/Printer or full PP-001..112 UAT; CI pending.
+
+
 ## 2 November 2026 — Pilot claim QR canonical format correction (CI pending)
 
 Correct a syntactic receipt/CCP parser mismatch **before native GUI exposure**: the original issued proof profile is exactly `MEONG:<CCP|RECOVERY>:1:<booth>:<group-32hex>:<token-43>`, not a second 32-byte token. The parser extracts only the original purchase group; the existing cryptographic hash/rate-limited proof verifier remains authoritative. This is a scoped fix of the new synthetic coordinator, not any relaxation of the credential, payment or media guards.

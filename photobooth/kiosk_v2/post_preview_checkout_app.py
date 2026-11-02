@@ -5,15 +5,21 @@ production configuration mounts this incomplete paid-delivery flow.
 """
 import time
 
+from kivy.metrics import dp
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
+from kivy.uix.popup import Popup
+from kivy.uix.textinput import TextInput
 
 from .ccp_view import PrivateCCPCard, PrivateRecoveryTicketCard
 from photobooth.post_preview_ticket_window import VisibleTicketWindow
-from .flow import RESULT
+from .flow import ADVERT, RESULT
 from .photo_views import image_texture
 from .post_preview_app import PrivatePreviewApp
 from .post_preview_checkout import CHECKOUT_PHASES, TICKET_PHASES, PrivateCheckoutService
 from .theme import GOLD, MUTED, text_label
+from photobooth.post_preview_pilot_admission import OriginalPilotAdmission
+from photobooth.post_preview_store import DraftHeld
 
 
 class PrivateCheckoutFixtureApp(PrivatePreviewApp):
@@ -29,9 +35,21 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
         self._ticket_countdown = self._ticket_status = None
         self._ticket_receipt_pending = self._ticket_dismiss_pending = False
         self._payment_check_at = 0
+        self._pilot_admission = None
+        self._pilot_note = ''
+        self._pilot_popup = self._pilot_input = None
         super().__init__(private_root, private_service=private_service, **kwargs)
 
+    def _close_pilot_popup(self):
+        if self._pilot_input is not None:
+            self._pilot_input.text = ''
+            self._pilot_input = None
+        popup,self._pilot_popup=self._pilot_popup,None
+        if popup is not None:
+            popup.dismiss()
+
     def _show(self):
+        self._close_pilot_popup()
         if self._claim_card is not None:
             self._claim_card.retire()
             self._claim_card = None
@@ -41,6 +59,7 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
         return super()._show()
 
     def _private_hold(self):
+        self._close_pilot_popup()
         self._claim_pending = self._ticket_pending = None
         self._ticket_receipt_pending = self._ticket_dismiss_pending = False
         if self._ticket_window is not None:
@@ -48,7 +67,108 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
         if self._ticket_card is not None:
             self._ticket_card.retire()
             self._ticket_card = None
-        return super()._private_hold()
+        result = super()._private_hold(show_ads=self._pilot_admission is not None)
+        if self._pilot_admission is not None:
+            self._pilot_note = ''
+        return result
+
+    def attach_synthetic_pilot_admission(self, coordinator):
+        """Only the explicit owner MOCK pilot can enable private Ads admission."""
+        if (not isinstance(coordinator,OriginalPilotAdmission)
+                or self._pilot_admission is not None
+                or coordinator.jobs is not self._photo_jobs
+                or coordinator.claim.ledger is not self._photo_jobs.service.ledger):
+            raise DraftHeld('Exact synthetic pilot coordinator required')
+        self._pilot_admission=coordinator
+        if self.navigation.page==ADVERT:
+            self._show()
+
+    def _pilot_prepare_new(self):
+        if self._pilot_admission is None or self.navigation.page!=ADVERT:
+            return True
+        try:
+            self._pilot_admission.ensure_new_visitor_ready()
+        except (DraftHeld,ValueError,OSError,RuntimeError):
+            self._pilot_note='Sesi sebelumnya belum bisa diamankan. Pembayaran baru ditahan.'
+            self._show()
+            return False
+        self._pilot_note=''
+        self._photo_view={'phase':'confirm'}
+        self._ticket_window=self._ticket_card=self._ticket_pending=None
+        self._ticket_receipt_pending=self._ticket_dismiss_pending=False
+        return True
+
+    def _choose_photo(self, source='manual'):
+        if self._pilot_prepare_new():
+            return super()._choose_photo(source)
+
+    def _choose_game(self, source='manual'):
+        if self._pilot_prepare_new():
+            return super()._choose_game(source)
+
+    def _build_advert(self, canvas):
+        super()._build_advert(canvas)
+        if self._pilot_admission is None:
+            return
+        shell=self._advert_host.parent.parent
+        shell.add_widget(self._photo_action(
+            'PUNYA TIKET PEMULIHAN • SIMULASI',self._pilot_open_claim,
+            variant='tertiary',height=dp(44)))
+        if self._pilot_note:
+            shell.add_widget(text_label(self._pilot_note,size=12,height=dp(50),color=GOLD))
+
+    def _pilot_open_claim(self):
+        if (self._pilot_admission is None or self.navigation.page!=ADVERT
+                or self._closed or self._suspended):
+            return
+        self._close_pilot_popup()
+        panel=BoxLayout(orientation='vertical',padding=dp(12),spacing=dp(10))
+        panel.add_widget(text_label(
+            'Scan tiket asli atau masukkan kode lengkap. '
+            'Kode tidak disimpan di aplikasi.',
+            size=14,height=dp(85),color=MUTED))
+        field=TextInput(multiline=False,password=True,hint_text='CCP atau Recovery Ticket',
+                        size_hint_y=None,height=dp(52))
+        panel.add_widget(field)
+        panel.add_widget(self._photo_action(
+            'VALIDASI TIKET',lambda: self._pilot_submit_claim(field.text),height=dp(50)))
+        panel.add_widget(self._photo_action(
+            'BATAL',self._close_pilot_popup,variant='tertiary',height=dp(48)))
+        popup=Popup(title='PEMULIHAN PRIVAT • SIMULASI',content=panel,
+                    size_hint=(.92,.65),auto_dismiss=False)
+        self._pilot_input,self._pilot_popup=field,popup
+        popup.open()
+        field.focus=True
+
+    def _pilot_submit_claim(self,payload):
+        if self._pilot_admission is None or self.navigation.page!=ADVERT:
+            return
+        self._close_pilot_popup()
+        try:
+            result=self._pilot_admission.recover_paid(
+                payload.strip() if isinstance(payload,str) else '')
+        except (PermissionError,DraftHeld,ValueError,OSError,RuntimeError):
+            self._pilot_note='Tiket tidak dapat diverifikasi. Foto privat tetap terlindungi.'
+            self._show()
+            return
+        if result['state']=='WAIT':
+            self._pilot_note='Photobooth sedang digunakan. Silakan coba lagi nanti.'
+            self._show()
+            return
+        if result['state']!='RESTORED':
+            self._pilot_note='Pemulihan sementara belum tersedia.'
+            self._show()
+            return
+        self._pilot_note=''
+        self._ticket_window=None
+        self._ticket_pending=self._ticket_card=None
+        self._ticket_receipt_pending=self._ticket_dismiss_pending=False
+        self._photo_view=result['snapshot']
+        self._photo_error=''
+        self.navigation.page=RESULT
+        self._show()
+        if not self._photo_view.get('ticket_dismissed'):
+            self._photo_submit('prepare_ticket')
 
     def _photo_action(self, title, callback, **kwargs):
         if title == 'PEMBAYARAN BELUM TERHUBUNG':
@@ -73,6 +193,11 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
         self._photo_submit('check_payment','connectivity')
 
     def _sandbox_photo_outcome(self, outcome):
+        if self._pilot_admission is not None and outcome.action=='retire':
+            self.navigation.page=ADVERT
+            self._reset_visit()
+            self._show()
+            return True
         view = outcome.value or {}
         phase = view.get('phase')
         if outcome.action == 'ticket_visible':

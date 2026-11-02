@@ -135,6 +135,24 @@ def main(argv=None):
                 # This must run at native build, not against fixture camera
                 # and worker objects before the real App constructs its owner.
                 fixture.bind_app(self)
+                from photobooth.post_preview_isolation import OriginalMockIsolation
+                from photobooth.post_preview_claim import OriginalMockClaim
+                from photobooth.post_preview_ccp import OriginalCCPService
+                from photobooth.post_preview_ticket import OriginalRecoveryTicketService
+                from photobooth.post_preview_pilot_admission import OriginalPilotAdmission
+                isolation=OriginalMockIsolation(
+                    fixture.service.ledger,fixture.backend,self._photo_jobs,
+                    fixture.launch_lease,printer_lane=fixture.service._receipt_lane,
+                    delivery=fixture.paid_monitor,allow_incomplete_fixture=True)
+                claim=OriginalMockClaim(
+                    fixture.backend,
+                    OriginalCCPService(fixture.service.ledger,fixture.protector,'MTEST',
+                                       allow_synthetic=True),
+                    OriginalRecoveryTicketService(fixture.backend,fixture.protector,
+                                                  allow_synthetic=True),
+                    allow_incomplete_fixture=True)
+                self.attach_synthetic_pilot_admission(
+                    OriginalPilotAdmission(isolation,claim,allow_synthetic_pilot=True))
                 return stage
 
         app=BoundPilotApp(

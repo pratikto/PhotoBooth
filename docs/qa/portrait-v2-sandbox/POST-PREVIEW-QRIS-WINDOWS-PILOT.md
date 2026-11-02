@@ -68,3 +68,21 @@ customer return-claim and refunds remain separate software readiness gates.
 
 Important: turning on this option makes **real cloud writes**. No external
 upload is performed by GitHub CI or by these documentation instructions.
+
+## Supervised synthetic A/B handoff and original proof (new pilot)
+
+The owner-only synthetic launcher now adds `PUNYA TIKET PEMULIHAN • SIMULASI`
+to Advertising. Scan or paste the entire genuine CCP/Recovery Ticket into
+the **masked entry**; raw codes must not be put in terminal logs or screenshots.
+After a privacy-retired visit, Advertising is shown while the original
+backend occupancy remains protected. A new Photo or Meong Fly tap performs
+the original in-process PREPARE → ACK before allowing a new visit. A current
+visitor is never preempted; PENDING/UNKNOWN, worker, uncertain print or Drive
+conflicts leave new admission blocked.
+
+A ticket holder returning while B is genuinely using the booth receives
+WAIT; after safe isolation of a protected old visit the same original PAID
+and OWED service may be reclaimed without another charge or capture.
+This is still synthetic proof/financial authority in the existing process,
+not a production scanner or real Midtrans recovery. Physical paper/Drive,
+restart, rate limits and refund require their separate supervised gates.

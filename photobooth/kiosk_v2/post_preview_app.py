@@ -12,7 +12,7 @@ from kivy.uix.image import Image
 from kivy.uix.scrollview import ScrollView
 
 from .app import PortraitKioskV2App
-from .flow import BROWSING_PAGES, CAPTURE, RESULT, TEMPLATES
+from .flow import ADVERT, BROWSING_PAGES, CAPTURE, RESULT, TEMPLATES
 from .photo_views import image_texture
 from .photos import PhotoJobs
 from .post_preview_photos import PrivatePhotoService
@@ -72,7 +72,7 @@ class PrivatePreviewApp(PortraitKioskV2App):
             if self._photo_jobs.submit('retire', event):
                 self._private_pending_event = None
 
-    def _private_hold(self):
+    def _private_hold(self, *, show_ads=False):
         service = self._photo_jobs.service
         if service is not None:
             service.hide_private()
@@ -83,7 +83,9 @@ class PrivatePreviewApp(PortraitKioskV2App):
         self._last_live_frame = self._last_preview = None
         if self._live_image is not None:
             self._live_image.texture = None
-        self.navigation.page = RESULT
+        self.navigation.page = ADVERT if show_ads else RESULT
+        if show_ads:
+            self._reset_visit()
         self._show()
 
     def _sandbox_lock_customer(self):
