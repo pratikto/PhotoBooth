@@ -1,5 +1,34 @@
 # Meong Photobooth — Bug register
 
+## BUG-033 — Uncertain original paid print permitted next design to dispatch (2 November 2026)
+
+**Severity:** S1 / financial fulfillment and physical paper safety; one job may already have reached the printer.  
+**Status:** SOURCE FIXED, **matching-source CI PENDING**, physical technician/printer resolution NOT_RUN.  
+**Scope:** new synthetic/mock-only post-preview paid-output workflow. No legacy source, merchant provider or production deployment changed.
+
+**Before:** `OriginalPaidPrintDispatcher` correctly persisted design A as `SENDING` then `UNCERTAIN` after a transport timeout and denied a replay of A. However, `PrivateCheckoutService.paid_print_next` and the GUI allowed a different `PREPARED` design B to dispatch while the first job's physical outcome remained unclassified. This was discovered by source review against PP-050/052/095 and owner-approved no-blind-paper rule.
+
+**Fix:** independently enforce `needs_operator_review` in the service before selecting any later PREPARED design. Disable customer print-next in the paid-delivery native UI on any SENDING/UNCERTAIN original job. No auto-reprint, refund, PAID deletion or forced operator reset was introduced. Later recovery requires separately authorized human/device evidence; the original paid service remains `OWED`.
+
+**New test:** `test_native_uncertain_design_print_quarantines_remaining_batches` simulates two designs, one synthetic PAID, one ticket, first print transport timeout, A=`UNCERTAIN`, B=`PREPARED`, disabled button, rejected direct backend call, unchanged send count on upload-status refresh, no physical-paper success claim. Matching-source CI: [workflow #41402925221](https://github.com/pratikto/PhotoBooth/actions/runs/41402925221), code `c86a8e64` — **check final job logs**; never call this PASS based on commit alone.
+
+**Follow-up:** real POS80 timeout/jam, restart at SENDING, physical job classification, worker-lane concurrency and safe claim/admission are still separate tests.
+
+## BUG-032 — Expired third QRIS offered an unusable QR4 continuation (2 November 2026)
+
+**Severity:** S2 / customer-facing checkout logic and failed-action risk; backend financial boundary already enforced.  
+**Status:** SOURCE FIXED, **matching-source CI PENDING**, real merchant expiry NOT_RUN.
+
+**Before:** The underlying `PostPreviewPayments` safely enforced QR1→QR2→QR3 maximum, but the native `payment_hold` page offered `LANJUTKAN PESANAN ASLI` for any verified `EXPIRED_UNPAID`, including terminal QR3. Clicking the button could only produce a backend refusal; it could confuse a customer or operator.
+
+**Fix:** offer continuation only while fewer than three durable original QR attempts exist. Once QR3 expires, display a truthful three-QR limit notice, without creating QR4, recapturing photos, cancelling an uncertain provider order or erasing original records. Original merchant/account settlement remains verified independently.
+
+**New test:** `test_native_expiry_qr1_qr2_qr3_never_offers_qr4_or_recaptures` sends three distinct **synthetic** provider QR attempts through the native GUI, explicitly verifies each expiry and authorized continuation, asserts six original photos unchanged, one frozen group/quote and no fourth-action button or false PAID obligation. Matching-source CI: [workflow #41402925221](https://github.com/pratikto/PhotoBooth/actions/runs/41402925221), source `c86a8e64` — **pending exact-source results**.
+
+**Follow-up:** real Midtrans Sandbox expiry, late webhook/settlement during QR2/3, actual customer presence and terminal unpaid-admission UX remain unverified.
+
+**Full scenario specification:** [PP-07 adversarial GUI fault injection](qa/portrait-v2-sandbox/PP07-ADVERSARIAL-GUI-FAULTS-2026-11-02.md). Automated subassertions do not promote the 112-case complete acceptance matrix or physical owner UAT to PASS.
+
 ## BUG-031 — Synthetic Drive QR could look like a real customer download link (2 November 2026)
 
 **Severity: S3, supervised pilot clarity and false-positive acceptance risk.**  
