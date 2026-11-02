@@ -1,5 +1,7 @@
 # Meong Photobooth — GUI v2
 
+> **Latest verified synthetic test snapshot (2 November 2026):** [CI #41404106134](https://github.com/pratikto/PhotoBooth/actions/runs/41404106134) at code `0548bc89`: **494 Windows + 494 Ubuntu + 54 native Kivy = 1,042 test executions PASS**, zero failures/errors/skips, 3/3 jobs SUCCESS. Covers QR3, uncertain paper, late original QR1/QR2 duplicate settlement and persistent SENDING model; **no real payment, paper, Drive, refund or physical acceptance**. [Full P0 fault report](docs/qa/portrait-v2-sandbox/PP07-ADVERSARIAL-GUI-FAULTS-2026-11-02.md).
+
 > **PP-07 P0 checkout/print fault simulations (2 November 2026):** [Source-pinned adversarial GUI and journal test record](docs/qa/portrait-v2-sandbox/PP07-ADVERSARIAL-GUI-FAULTS-2026-11-02.md) covers QR1→QR3 terminal expiry/no QR4, partial/uncertain print quarantine, late old-QR1 settlement while QR2 is live, and a durable paid-strip SENDING crash-seam restart model. See that record for source-matched CI outcomes; none are proof of real Midtrans payment, POS80 paper, cloud upload or owner physical acceptance.
 
 > **Latest automated pilot simulation — 2 November 2026:** Exact-source [GitHub Actions #41393795509](https://github.com/pratikto/PhotoBooth/actions/runs/41393795509) at `67dc3eb5` executed **493 Windows + 493 Ubuntu + 51 native Kivy = 1,037 successful test executions** (0 failures/errors/skips, 3/3 jobs SUCCESS).
