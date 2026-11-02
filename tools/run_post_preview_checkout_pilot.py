@@ -82,6 +82,12 @@ def main(argv=None):
             'PHOTOBOOTH_V2_CHECKOUT_SANDBOX','PHOTOBOOTH_V2_CHECKOUT_MOCK',
             'PHOTOBOOTH_V2_PRINT','PHOTOBOOTH_V2_DRIVE')):
         p.error('Disable all merchant/paid-first/Drive launch profiles')
+    # Reject unsafe or reused data roots before importing the Kivy runtime.
+    # Neither a camera nor a printer/cloud fixture can be initialized here.
+    try:
+        root=validate_private_root(args.private_root)
+    except ValueError as error:
+        p.error(str(error))
     os.environ.setdefault('KIVY_NO_ARGS','1')
     os.environ.setdefault('KIVY_LOG_MODE','MIXED')
     from photobooth.kiosk_v2.recovery import LaunchLease
@@ -95,10 +101,6 @@ def main(argv=None):
         return 2
     with launch:
         configure_kivy(Config)
-        try:
-            root=validate_private_root(args.private_root)
-        except ValueError as error:
-            p.error(str(error))
         fixture=CheckoutFixture(root)
         fixture.enable_paid_ticket()
         if args.enable_real_drive:
