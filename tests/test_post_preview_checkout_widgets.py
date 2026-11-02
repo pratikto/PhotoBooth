@@ -297,6 +297,58 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
                 getattr(w,'text',None)=='CETAK FOTO YANG SUDAH DIBAYAR'
                 and not w.disabled for w in app.stage.walk()))
 
+    def test_native_late_qr1_paid_while_qr2_active_never_grants_twice(self):
+        """A late PAID from expired QR1 overrides QR2's pending public QR."""
+        with self.booth() as (app, fixture):
+            Window.size = (452, 900)
+            self.proof(app)
+            original_group = fixture.service.group
+            originals = sorted(str(p) for p in fixture.service.root.rglob('*.jpg'))
+            self.assertEqual(6, len(originals))
+            self.click(app, 'SUDAH SIMPAN BUKTI • LANJUT SIMULASI')
+            self.settle(app)
+            first = app._photo_view['payment']['attempts'][0]['provider_order_id']
+            fixture.provider.state(first, 'expire')
+            self.click(app, 'PERIKSA STATUS')
+            self.settle(app)
+            self.assertEqual('EXPIRED_UNPAID', app._photo_view['payment']['state'])
+            self.click(app, 'LANJUTKAN PESANAN ASLI')
+            self.settle(app)
+            self.assertEqual('payment_pending', app._photo_view['phase'])
+            second = app._photo_view['payment']['attempts'][-1]['provider_order_id']
+            self.assertNotEqual(first, second)
+            self.assertEqual(2, fixture.provider.charges)
+
+            # The first charge can settle late even after QR2 was displayed.
+            fixture.provider.state(first, 'settlement')
+            self.click(app, 'PERIKSA STATUS')
+            self.settle(app)
+            self.assertEqual('paid_hold', app._photo_view['phase'])
+            payment = app._photo_view['payment']
+            original_entitlement = payment['entitlement_id']
+            self.assertIsNotNone(original_entitlement)
+            self.assertEqual('OWED', payment['obligation_state'])
+            self.assertIsNone(app._photo_view['payment_qr'])
+            self.assertFalse(app._photo_view['fulfillment_authorized'])
+
+            # An eventual second settlement is a finance excess, not a second
+            # customer service or a new ticket/print/download entitlement.
+            fixture.provider.state(second, 'settlement')
+            app._photo_submit('check_payment', 'connectivity')
+            self.settle(app)
+            payment = app._photo_view['payment']
+            self.assertEqual('paid_hold', app._photo_view['phase'])
+            self.assertEqual(original_group, payment['purchase_group_id'])
+            self.assertEqual(original_entitlement, payment['entitlement_id'])
+            self.assertEqual(1, len(payment['excess_paid_attempts']))
+            self.assertEqual(1, fixture.service.ledger.db.execute(
+                'SELECT count(*) FROM pp_purchase_finance WHERE entitlement_id IS NOT NULL'
+            ).fetchone()[0])
+            self.assertEqual(2, fixture.provider.charges)
+            self.assertEqual(0, fixture.provider.cancels)
+            self.assertEqual(originals, sorted(
+                str(p) for p in fixture.service.root.rglob('*.jpg')))
+
     def test_native_expiry_qr1_qr2_qr3_never_offers_qr4_or_recaptures(self):
         """A live original visitor can renew only verified expired QR1/2."""
         with self.booth() as (app, fixture):
