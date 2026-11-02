@@ -1,5 +1,10 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — PP-06 restart/ACK test stale-lease correction (CI rerun pending)
+
+The fully containing-source run `41366352162` had 475 Linux tests, **one fixture test error** and no other assertion failures; native desktop passed, Windows was cancelled. The failing new ACK-retry test tried to read `service.lease.generation` **after successful isolation**, although the implementation correctly retires and clears the old lease before admitting B. The regression now saves `old_lease` before retirement, asserts the active service lease is None after ACK, and compares the persisted original_generation against `old_lease.generation+1`. **No source or financial guard is weakened**; full CI must prove the corrected case.
+
+
 ## 2 November 2026 — PP-06 post-retirement generation fence correction (new; CI pending)
 
 Native CI `41366103964` failed the new protected Ads→new photo assertion because the auto-isolation coordinator correctly **did not** release a previous customer when its ACK generation could not be matched. The reason was a developer mismatch: `retire(APP_SUSPENDED/USER_CANCEL)` increases the DB generation once above the original lease; `isolation.ACK` increases it again. Corrected both the coordinator's same-operation retry query (use `old_lease.generation+1`) and the guarded reset's exact two-generation chain: `ACK.original_generation=old_lease.generation+1`, `closed_old.generation=ACK.original_generation+1`. Tests now explicitly assert this sequence. No generic generation bypass, forced release, refund or print replay; the old lease remains unusable. Full Linux/Windows/native rerun is pending.

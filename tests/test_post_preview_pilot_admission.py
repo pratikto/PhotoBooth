@@ -96,13 +96,15 @@ class PilotAdmissionTests(unittest.TestCase):
     def test_prepared_ack_reply_loss_uses_same_operation_id(self):
         self.service.prepare()
         self.service.start(get_templates(),{'template_a':1})
+        old_lease=self.service.lease
         self.service.retire('APP_SUSPENDED')
         original=self.iso.prepare('PB001')
         self.assertTrue(self.admission.ensure_new_visitor_ready())
         recorded=self.service.ledger.db.execute(
             'SELECT operation_id FROM pp_isolation_ops').fetchone()[0]
         self.assertEqual(original,recorded)
-        self.assertEqual(self.service.lease.generation+1,
+        self.assertIsNone(self.service.lease)
+        self.assertEqual(old_lease.generation+1,
                          self.service.ledger.db.execute(
                              'SELECT original_generation FROM pp_isolation_ops'
                          ).fetchone()[0])
