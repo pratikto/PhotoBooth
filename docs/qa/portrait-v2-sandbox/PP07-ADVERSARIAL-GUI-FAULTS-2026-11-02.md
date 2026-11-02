@@ -52,6 +52,8 @@
 
 **New exact-source test commit:** `9220940e` and `7f018dba` (test-only source additions, no merchant code/payment/refund production changes). Matching-source [CI 41403886185](https://github.com/pratikto/PhotoBooth/actions/runs/41403886185) at `7f018dba` is **PENDING** until exact Windows/Linux/native summaries are inspected.
 
+**Failed first attempt and correction (transparent evidence):** [CI 41403886185](https://github.com/pratikto/PhotoBooth/actions/runs/41403886185) at `7f018dba` failed its native step because the new test accessed `app._photo_view['payment_qr']` after the already-verified `paid_hold` state intentionally omitted that private QR field. This produced `KeyError` in the test itself, not a second charge, privacy leak or merchant API failure. Test-only micro-commit `0548bc89` now uses `.get('payment_qr')` to assert the QR is absent whether the key is omitted or set to `None`. No payment behavior was weakened. [Latest exact-source CI 41404106134](https://github.com/pratikto/PhotoBooth/actions/runs/41404106134) is **PENDING** for both new tests; do not count a previous failed run as PASS.
+
 ### F3 — original expired QR1 pays late while QR2 is pending
 
 **PP mapping:** PP-021, PP-024, PP-028–030 and the no-second-service invariants in PP-035.  
