@@ -1,5 +1,22 @@
 # PP-07 adversarial native-GUI fault injection — 2 November 2026
 
+## Latest verified automated test evidence (same code as current branch)
+
+**Code SHA:** [`0548bc894fd19064984122bed04860d207e1ed51`](https://github.com/pratikto/PhotoBooth/commit/0548bc894fd19064984122bed04860d207e1ed51)  
+**Source-matched GitHub Actions:** [#41404106134](https://github.com/pratikto/PhotoBooth/actions/runs/41404106134), **COMPLETED SUCCESS, 3/3 jobs**.
+
+| Runner | Tests | Failures | Errors | Skips | Verified result |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Windows private-state | **494** | 0 | 0 | 0 | **PASS** |
+| Ubuntu private-state | **494** | 0 | 0 | 0 | **PASS** |
+| Ubuntu native Kivy + Xvfb | **54** | 0 | 0 | 0 | **PASS** |
+| **Total executions** | **1,042** | **0** | **0** | **0** | **3/3 SUCCESS** |
+
+These are repeated automatic test executions across environments, not 1,042 unique user acceptance scenarios. Two newly added native P0 GUI tests, one new backend restart-state test, and the pre-existing regression suite all pass on the tested code. No real customer photos, Midtrans charges/refunds, physical POS80 paper, actual cloud upload, true OS process-kill receipt uncertainty or actual 30-second customer observation was performed. All 112 canonical PP acceptance cases and the 26 owner Windows UAT cases remain separate `NOT_RUN` at their full acceptance scope.
+
+**Historical failed run remains documented below:** first F3 test attempt at `7f018dba` failed on a test-only `KeyError` due to expecting a deliberately omitted private QR key. The corrected assertion `0548bc89` passed 3/3 without weakening payment/privacy guards. GitHub HEAD after that code SHA contains documentation-only updates.
+
+---
 ## Source, authority, and evidence boundary
 
 - **Authorized branch:** `feature/post-preview-qris-checkout` only. No new branch, master merge, deployment, merchant charge, refund, physical paper or external cloud request.
@@ -50,9 +67,9 @@
 
 **Previous source validation:** [CI 41402925221](https://github.com/pratikto/PhotoBooth/actions/runs/41402925221) at `c86a8e64` has **493 Windows + 493 Ubuntu + 53 native Kivy = 1,039 test executions PASS**, all 3 jobs SUCCESS, no failures/errors/skips. This validates the two earlier new GUI tests and their protective fixes, not the new tests below.
 
-**New exact-source test commit:** `9220940e` and `7f018dba` (test-only source additions, no merchant code/payment/refund production changes). Matching-source [CI 41403886185](https://github.com/pratikto/PhotoBooth/actions/runs/41403886185) at `7f018dba` is **PENDING** until exact Windows/Linux/native summaries are inspected.
+**New exact-source test commit:** `9220940e` and `7f018dba` (test-only source additions, no merchant code/payment/refund production changes). First matching-source [CI 41403886185](https://github.com/pratikto/PhotoBooth/actions/runs/41403886185) at `7f018dba` **FAILED native** on the test-only assertion described next; corrected source `0548bc89` passed [CI 41404106134](https://github.com/pratikto/PhotoBooth/actions/runs/41404106134) **3/3 SUCCESS**.
 
-**Failed first attempt and correction (transparent evidence):** [CI 41403886185](https://github.com/pratikto/PhotoBooth/actions/runs/41403886185) at `7f018dba` failed its native step because the new test accessed `app._photo_view['payment_qr']` after the already-verified `paid_hold` state intentionally omitted that private QR field. This produced `KeyError` in the test itself, not a second charge, privacy leak or merchant API failure. Test-only micro-commit `0548bc89` now uses `.get('payment_qr')` to assert the QR is absent whether the key is omitted or set to `None`. No payment behavior was weakened. [Latest exact-source CI 41404106134](https://github.com/pratikto/PhotoBooth/actions/runs/41404106134) is **PENDING** for both new tests; do not count a previous failed run as PASS.
+**Failed first attempt and correction (transparent evidence):** [CI 41403886185](https://github.com/pratikto/PhotoBooth/actions/runs/41403886185) at `7f018dba` failed its native step because the new test accessed `app._photo_view['payment_qr']` after the already-verified `paid_hold` state intentionally omitted that private QR field. This produced `KeyError` in the test itself, not a second charge, privacy leak or merchant API failure. Test-only micro-commit `0548bc89` now uses `.get('payment_qr')` to assert the QR is absent whether the key is omitted or set to `None`. No payment behavior was weakened. [Latest exact-source CI 41404106134](https://github.com/pratikto/PhotoBooth/actions/runs/41404106134) is **VERIFIED 3/3 SUCCESS** with 494 Windows + 494 Ubuntu + 54 native PASS and no failures/errors/skips. This supersedes the first failed test run, which remains an audit record.
 
 ### F3 — original expired QR1 pays late while QR2 is pending
 
@@ -76,4 +93,4 @@ Even when all above tests pass, complete owner PP-001–112 acceptance and 26-ca
 
 The matching-source GitHub Actions [run 41402925221](https://github.com/pratikto/PhotoBooth/actions/runs/41402925221) is **completed SUCCESS** on all 3 jobs. Both newly added native tests are present in the output and all 53 native tests PASS. Windows and Ubuntu each execute 493 backend regression tests with zero failures/errors/skips. Do not promote these to physical/merchant or full PP-001..112 acceptance. If a test fails, fix root cause, micro-push and rerun exact-source CI. Older full 112 PP matrix and 26 owner Windows UAT cases remain **NOT_RUN** at their acceptance scope, despite individual automated coverage.
 
-Next **independent** P0 candidates: power-loss/restart while original ticket receipt or purchased strip is SENDING (no replay); end-to-end late provider settlement during QR2/3 continuation; A/B return during active B photo work and old PAID upload; true machine-fence/ACK failure injection. Device gates remain explicit: POS80, webcam/touchscreen, real Drive ACL/upload/retention, and separately authorized merchant Midtrans Sandbox and refund API.
+Next **independent** P0 candidates: actual process death/reopen while original ticket receipt or purchased strip is SENDING; provider QR2 late-settles while QR3 is pending; A/B return while B's capture or old A's upload remains active; worker fence/ACK failure injection. The committed F4 test models an existing SENDING journal but does **not** itself kill a process. Device gates remain explicit: POS80, webcam/touchscreen, real Drive ACL/upload/retention, and separately authorized merchant Midtrans Sandbox and refund API.
