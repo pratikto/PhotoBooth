@@ -1,5 +1,7 @@
 # Meong Photobooth documentation — GUI v2
 
+> **Newest PP-07 adversarial QA and recovery edges:** [Expiry, delayed PAID, uncertain paper and print-journal restart tests](qa/portrait-v2-sandbox/PP07-ADVERSARIAL-GUI-FAULTS-2026-11-02.md). This evidence has its own source SHAs and CI results; do not confuse it with the earlier 1,037-execution baseline, 112 full acceptance tests or actual device/merchant UAT.
+
 > **PP-07 automated source verification — 2 November 2026:** [GitHub Actions #41393795509](https://github.com/pratikto/PhotoBooth/actions/runs/41393795509) at `67dc3eb5` executed **493 Windows + 493 Ubuntu + 51 native Kivy = 1,037 PASS** (no failures/errors/skips, 3/3 SUCCESS).
 > **New PP-07 automated test evidence (2 November 2026):** [Executed synthetic CI and native Kivy QA](qa/portrait-v2-sandbox/PP07-AUTOMATED-SIMULATION-2026-11-02.md). Counts are source- and job-specific; the full 112-case owner acceptance, printer and real-provider gates are separate.
 
