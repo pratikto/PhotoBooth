@@ -1,5 +1,16 @@
 # Meong Photobooth — Bug register
 
+## BUG-035 — New customer inherited previous customer's tutorial/cart transient UI state after safe isolation (2 November 2026)
+
+**Severity:** S1 privacy/visit lifecycle UX regression.  
+**Status:** SOURCE FIXED [`15659c94`](https://github.com/pratikto/PhotoBooth/commit/15659c94d96fa1429811082ecd71258e9df18bd5); exact-source [CI #41409614158](https://github.com/pratikto/PhotoBooth/actions/runs/41409614158) **PENDING** until native logs confirm N23/N24. Owner physical check NOT_RUN.
+
+**Root cause:** `PrivateCheckoutFixtureApp._pilot_prepare_new` correctly required previous customer A's safe isolation/ACK before allowing B, but after ACK only reset the temporary photo/ticket view; it did not reset `navigation.tutorial_seen`, `entry_source`, selected copy quantities or game state. Thus a new B visit could jump directly from advertising to A's `TEMPLATES` without B's own required tutorial and could inherit stale visible UI choices. Detected through N23 native Kivy multi-customer test (first failed as `NavigationError` when expected new B tutorial was skipped).
+
+**Fix:** after **successful guarded** `ensure_new_visitor_ready()` only, use existing `_reset_visit()` and explicitly clear tutorial_seen/entry_source. This touches only customer UI state, never original A photo, ticket/proof, provider settlement, PAID/OWED or print/Drive liabilities. If isolation is not safe, reset does **not** occur and B remains blocked.
+
+**New verification:** [N23/N24 native Kivy and P01/P02 OS-boundary test report](qa/portrait-v2-sandbox/PP07-BROAD-SIMULATION-MATRIX-2026-11-02.md). N23 requires fresh B tutorial/zero carried quantities after safe A receipt, then validates no A proof/paid media leak during B capture. N24 injects actual receipt printer TimeoutError to persist original `UNCERTAIN` and asserts B **cannot** be admitted from public Ads. Full physical test and original live merchant/provider release not performed.
+
 ## BUG-034 — Direct paid printer dispatcher bypassed purchase-wide uncertainty quarantine (2 November 2026)
 
 **Severity:** S1, paid photo duplicate/overlapping paper risk.  
