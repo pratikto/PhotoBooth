@@ -117,6 +117,23 @@ These tests do **not** replace a real touchscreen usability check, human-readabl
 
 ---
 
+## Canonical PP acceptance crosswalk — new native and OS-death scenarios
+
+The identifiers below are **partial automated subassertions**, not completion of the full owner PP case. They must be accompanied by the exact code SHA and source-matched CI job before marking any automated evidence verified.
+
+| New case | Related canonical acceptance cases | Required additional full-case evidence |
+| --- | --- | --- |
+| N21 | PP-002, PP-004, PP-033, PP-041, PP-048, PP-054, PP-080 | Actual camera pixels, thermal ticket and three physical paid strips, real Drive accessibility, real provider status |
+| N22 | PP-053, PP-054, PP-057, PP-093 | Actual Apps Script cloud outage/recovery, ACL/public viewer, upload bytes and unique original folder |
+| N23 | PP-036, PP-037, PP-063, PP-064, PP-070 | Physical proof scanning, safe camera fence and customer A/B presence under real worker/device load |
+| N24 | PP-042, PP-044, PP-065, PP-071, PP-091 | Actual POS80 partial receipt transport and technician classification while B waits |
+| P01 | PP-043, PP-044, PP-065, PP-079, PP-086 | External print head/cutter/receipt outcome, genuine 30-second visible ticket, full boot & process reactivation |
+| P02 | PP-050, PP-052, PP-065, PP-078, PP-095 | Reopened authorized dispatcher, real POS80 partial bytes, other design ordering, printer lane and operator-safe resolution |
+
+**No payment, provider refund, production upload, printer output or customer secrets are transmitted by these synthetic fixtures.** The accepted 112-case matrix is still incomplete and must not be auto-populated with PASS from this crosswalk.
+
+---
+
 ## Deliberately separate full acceptance and test debt
 
 The canonical [PP-001..112](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md) are complete-system acceptance scenarios, not a percentage that can be inferred from 20 composed tests or 1,000 repeated runs. This package adds evidence to multiple PP numbers but does **not** turn any complete PP row into a physical/customer-provider PASS.
