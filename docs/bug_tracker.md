@@ -3,7 +3,7 @@
 ## BUG-031 — Synthetic Drive QR could look like a real customer download link (2 November 2026)
 
 **Severity: S3, supervised pilot clarity and false-positive acceptance risk.**  
-**Status: SOURCE FIXED; native Kivy 51/51 PASS at `67dc3eb5`; actual owner-screen acceptance NOT_RUN.**
+**Status: SOURCE FIXED / MATCHING-SOURCE CI VERIFIED (493 Windows + 493 Ubuntu + 51 native, 3/3 SUCCESS); actual owner-screen acceptance NOT_RUN.**
 
 **Observed by source audit:** the mock paid-delivery page rendered the synthetic fixture folder URL as a QR under a general "delivery" label. That QR is intentionally **not downloadable**, but the original native label did not clearly say so; a physical tester could confuse expected fixture behavior with a broken Google Drive link.
 
@@ -14,7 +14,7 @@
 ## BUG-030 — Pilot preflight could falsely report READY with missing checkout dependencies or conflicting legacy modes (2 November 2026)
 
 **Severity: S2, test-admission correctness; not a demonstrated payment safety regression.**  
-**Status: SOURCE FIXED; Linux 493/493 PASS at `67dc3eb5`; exact Windows matching-source CI/physical installation verification pending.**
+**Status: SOURCE FIXED / MATCHING-SOURCE CI VERIFIED (493 Windows + 493 Ubuntu + 51 native, 3/3 SUCCESS, zero failures/errors/skips); physical Windows installation still NOT_RUN.**
 
 **Observed by source review:** `tools/check_post_preview_pilot.py` checked only five Python imports and ignored ambient `PHOTOBOOTH_V2_CHECKOUT_SANDBOX/MOCK/PRINT/DRIVE` flags. The real launcher refuses conflicting flags and requires additional QR/backend/audio dependencies, so earlier "READY" could still fail before GUI test.
 
