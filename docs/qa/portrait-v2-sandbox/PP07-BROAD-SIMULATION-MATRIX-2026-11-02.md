@@ -8,6 +8,15 @@ The owner correctly rejected treating 1,042 Windows/Linux/Kivy unittest **execut
 
 **Authority reviewed:** `AGENTS.md`; `docs/DEVELOPMENT_PROTOCOL.md`; `docs/DECISIONS.md`; `docs/FEATURE_STATUS.md`; `docs/next_step.md`; `docs/DEVELOPMENT_HANDOVER.md`; [complete decision ledger](POST-PREVIEW-QRIS-COMPLETE-DECISION-LEDGER.md); [approved master product flow](POST-PREVIEW-QRIS-OWNER-APPROVED.md); [durable security/financial state contract](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md); [112-case acceptance matrix](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md); [26-case owner Windows UAT](PP07-SUPERVISED-WINDOWS-UAT.md); [prior P0 fault injection](PP07-ADVERSARIAL-GUI-FAULTS-2026-11-02.md).
 
+## First execution and corrections — transparent history
+
+[Initial CI 41407278546](https://github.com/pratikto/PhotoBooth/actions/runs/41407278546), source `eb9bbecf`, executed all **J01–J20** on Ubuntu. **18 PASS, 1 FAIL, 1 ERROR** (backend job failed; native GUI baseline 54/54 PASS; Windows run did not reach a final passing result). Neither issue was a proven payment/print vulnerability:
+
+- **J02:** the first test incorrectly counted all JPEGs in the complete root as *shutter activations*. The paid pipeline intentionally **imports and preserves nine original JPG bytes into its own staging root** in addition to the nine original capture files. The corrected test distinguishes **9 camera-original JPEGs + 9 separate paid-import JPEGs** rather than weakening copy-count assertions. It still verifies one charge, exactly three purchased batch sends [2,1,3], and `OWED`.
+- **J06:** deliberate corruption of a saved paid JPEG correctly raised the narrow safety exception `CaptureRecoveryRequired('Saved media hash mismatch')`, which the test's original expected exception tuple omitted. The corrected test explicitly requires that exact recovery exception, while ensuring zero paid print output and `OWED` remains.
+
+The **test-only correction** is [`bd70593f`](https://github.com/pratikto/PhotoBooth/commit/bd70593f20eb62e9da432ba962bd1f59e8265bf5); source hardening BUG-034 remains unchanged. [Corrected-source GitHub Actions #41407613830](https://github.com/pratikto/PhotoBooth/actions/runs/41407613830) is **PENDING** until all CI job logs are read. Do not label J01–J20 PASS from the first failed run. Both findings illustrate why a full multi-stage simulation adds value beyond isolated backend tests.
+
 ## Why additional work was necessary
 
 The verified prior baseline [CI #41404106134](https://github.com/pratikto/PhotoBooth/actions/runs/41404106134) at `0548bc89` was **494 Windows + 494 Ubuntu + 54 native** (1,042 successful test executions, 0 failures/errors/skips). This baseline included substantial unit testing, but several *composed*, customer-scale failure cases were not executed as a single connected journey.
@@ -41,7 +50,7 @@ The verified prior baseline [CI #41404106134](https://github.com/pratikto/PhotoB
 | J19 | Stall worker at A paid/protected handoff; attempt B and original A proof; release worker | Both paths fail closed during busy; afterward A may reclaim original rights | PP-037,062,064,071 |
 | J20 | 12 successive unpaid protected visits through PREPARE/ACK/isolation and new admission | Unique drafts, exactly one ACK per release, zero merchant charges, no old visitor leak | PP-059,063,064,069,071 |
 
-**Execution status:** Newly registered full CI [GitHub Actions #41407278546](https://github.com/pratikto/PhotoBooth/actions/runs/41407278546) started on source `eb9bbecf`. **PENDING** at the time this report was first published. Until the actual `J01..J20` test names, PASS/FAIL and jobs are verified from matching-source logs, every new row above is `IMPLEMENTED / NOT YET VERIFIED`, not PASS. If a test fails, preserve the failure and fix actual root cause; never delete a legitimate safety assertion simply to make CI green.
+**Execution status:** The first full run [#41407278546](https://github.com/pratikto/PhotoBooth/actions/runs/41407278546) **FAILED** (18/20 new Ubuntu tests PASS) due the two test assumptions documented above. The corrected suite at `bd70593f` is running in [CI #41407613830](https://github.com/pratikto/PhotoBooth/actions/runs/41407613830), **PENDING** before source-matched verification. Until the actual `J01..J20` test names, PASS/FAIL and jobs are verified from matching-source logs, every new row above is `IMPLEMENTED / NOT YET VERIFIED`, not PASS. If a test fails, preserve the failure and fix actual root cause; never delete a legitimate safety assertion simply to make CI green.
 
 ## Deliberately separate full acceptance and test debt
 
