@@ -1,5 +1,7 @@
 # Meong Photobooth documentation — GUI v2
 
+> **Expanded PP-07 coverage matrix:** [20 executable multi-system customer/failure journeys](qa/portrait-v2-sandbox/PP07-BROAD-SIMULATION-MATRIX-2026-11-02.md) cover 12-template checkout, Drive, paper, delayed/duplicate payment, camera generation, and A/B recovery. Initial CI had two incorrectly specified test expectations, and corrected-source [CI #41407613830](https://github.com/pratikto/PhotoBooth/actions/runs/41407613830) is the separate verification gate. The 112 full PP acceptance and 26 real Windows owner tests are **not** automatically PASS.
+
 > **Latest executed P0 regression (2 November 2026):** [CI #41404106134](https://github.com/pratikto/PhotoBooth/actions/runs/41404106134) code `0548bc89`, **494 Windows + 494 Ubuntu + 54 native Kivy = 1,042 PASS** (0 failure/error/skip, 3/3 SUCCESS). Detailed [fault-injection evidence and remaining hardware/provider gates](qa/portrait-v2-sandbox/PP07-ADVERSARIAL-GUI-FAULTS-2026-11-02.md). This is synthetic source evidence, not full owner UAT.
 
 > **Newest PP-07 adversarial QA and recovery edges:** [Expiry, delayed PAID, uncertain paper and print-journal restart tests](qa/portrait-v2-sandbox/PP07-ADVERSARIAL-GUI-FAULTS-2026-11-02.md). This evidence has its own source SHAs and CI results; do not confuse it with the earlier 1,037-execution baseline, 112 full acceptance tests or actual device/merchant UAT.
