@@ -1,5 +1,11 @@
 # Supervised Windows pilot — synthetic payment, webcam, optional POS80
 
+## 2 November 2026 — PP-07 early fail-closed pilot-root safety
+
+The supervised synthetic pilot `tools/run_post_preview_checkout_pilot.py` now calls the **existing strict** `validate_private_root` before Kivy, camera, launcher lease or checkout-fixture imports. Occupied prior customer folders, file paths, unsafe parent/archives and symlinks are rejected before device-runtime initialization. No directory is created or old PAID/OWED journal touched by this validation; it is not an allowance to reset any previous test. Existing dual-opt-in printer/Drive flags and the synthetic-only payment gate remain unchanged. New `tests/test_post_preview_pilot_early_root.py` tests assert both an occupied customer root and a file path fail with exit 2 and original bytes remain intact. Changes micro-pushed to **this branch only**, not master.
+
+**Evidence:** source/test creation and GitHub remote writes are verified, but execution of these new tests and exact-source Windows/Linux/native CI is **NOT_RUN** in this session. Run `python -m unittest tests.test_post_preview_pilot_early_root tests.test_post_preview_pilot_preflight -v` in the owner's environment before physical UAT. Do not mistake this safe-startup increment for proof that camera, printer, real Drive, original customer return, refund, actual Midtrans or all PP-001..112 are accepted. Continue the 26-case [supervised owner worksheet](qa/portrait-v2-sandbox/PP07-SUPERVISED-WINDOWS-UAT.md) after an appropriate matching-source CI pass.
+
 ## 2 November 2026 — safest continuation from your existing Windows checkout
 
 **Do not recreate an already working virtual environment.** The earlier example below using `py -3.12 -m venv .venv` applies **only if that environment does not exist**. If you already use `.venv-kivy`, retain it and run its Python executable. First preserve any local source edits; do not overwrite them with `git switch` or `git pull`. A separate test data root is mandatory on each run, but is **not** a new code branch.
