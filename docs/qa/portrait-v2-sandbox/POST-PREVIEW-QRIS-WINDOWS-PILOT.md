@@ -1,5 +1,11 @@
 # Supervised Windows pilot — synthetic payment, webcam, optional POS80
 
+## 2 November 2026 — expanded test campaign before owner device work
+
+[PP-07 broad test matrix](PP07-BROAD-SIMULATION-MATRIX-2026-11-02.md) tracks the additional **J01–J20** integrated capture/checkout/paid-delivery/abandonment cases, **N21–N24** Kivy GUI cases and **P01/P02** actual child-process exit/reopen cases. The Windows and Ubuntu backend J01–J20 suite ran 520/520 each and base Kivy 54/54 in [CI #41407613830](https://github.com/pratikto/PhotoBooth/actions/runs/41407613830); newer Kivy four native cases passed in [CI #41409614158](https://github.com/pratikto/PhotoBooth/actions/runs/41409614158). Hard-exit P cases are under separate corrected-source [CI #41409982930](https://github.com/pratikto/PhotoBooth/actions/runs/41409982930). Do not treat automated simulation as evidence of physical POS80, cloud permissions, real provider settlement or production suitability.
+
+For physical testing keep an entirely new private root, default synthetic payment only, no-print/no-Drive first, then explicitly gated opt-in actions with redacted evidence. In particular, if one purchased strip or ticket has **SENDING/UNCERTAIN** paper outcome, do not bypass the hold or forcibly trigger the next batch; original PAID/OWED remains until safe manual classification.
+
 ## 2 November — final P0 native/Windows/Linux adversarial simulation evidence
 
 The newest `feature/post-preview-qris-checkout` code at `0548bc89` has **matching-source [CI #41404106134](https://github.com/pratikto/PhotoBooth/actions/runs/41404106134) 3/3 SUCCESS**: **494 Windows + 494 Ubuntu + 54 native Kivy test executions PASS**, zero failures/errors/skips. The [adversarial scenario report](PP07-ADVERSARIAL-GUI-FAULTS-2026-11-02.md) details QR1→QR3 no QR4, uncertain A print blocking B, late old QR1 PAID while QR2 is pending without a second entitlement, and persisted `SENDING` restart-state no replay. A failed first native test at `7f018dba` was corrected as a test-only private QR assertion and reverified at `0548bc89`.
