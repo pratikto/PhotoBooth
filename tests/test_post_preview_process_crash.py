@@ -15,13 +15,14 @@ import unittest
 class OriginalPrintProcessCrashTests(unittest.TestCase):
     def run_hard_exit_and_reopen(self, stage):
         with tempfile.TemporaryDirectory() as folder:
-            fixture = Path(__file__).with_name('post_preview_process_fault_fixture.py')
+            repo_root = Path(__file__).resolve().parents[1]
+            command = [sys.executable, '-m', 'tests.post_preview_process_fault_fixture']
             result = subprocess.run(
-                [sys.executable, str(fixture), folder, stage],
+                command + [folder, stage], cwd=repo_root,
                 text=True, capture_output=True, timeout=50)
             self.assertEqual(73, result.returncode, result.stderr[-3000:])
             reopened = subprocess.run(
-                [sys.executable, str(fixture), folder, 'inspect-' + stage],
+                command + [folder, 'inspect-' + stage], cwd=repo_root,
                 text=True, capture_output=True, timeout=15)
             self.assertEqual(0, reopened.returncode, reopened.stderr[-3000:])
             return json.loads(reopened.stdout)
