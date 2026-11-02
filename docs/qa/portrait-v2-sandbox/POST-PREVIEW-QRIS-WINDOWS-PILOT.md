@@ -86,3 +86,10 @@ and OWED service may be reclaimed without another charge or capture.
 This is still synthetic proof/financial authority in the existing process,
 not a production scanner or real Midtrans recovery. Physical paper/Drive,
 restart, rate limits and refund require their separate supervised gates.
+
+## Formal pilot checklist
+
+Follow [PP07-SUPERVISED-WINDOWS-UAT.md](PP07-SUPERVISED-WINDOWS-UAT.md) for
+the numbered 26-case owner's local test worksheet, safe test-root hygiene,
+device-specific expectations and redacted evidence. The pilot is **synthetic
+payment only** even with real printer and real Drive enabled.

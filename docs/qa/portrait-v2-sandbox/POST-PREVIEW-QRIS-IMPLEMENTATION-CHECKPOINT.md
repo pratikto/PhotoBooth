@@ -1,5 +1,10 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — Owner Windows PP-07 supervised execution worksheet (prepared; exact-source CI pending)
+
+Added a 26-row `PP07-SUPERVISED-WINDOWS-UAT.md` checklist with precise PowerShell setup, synthetic payment vs optional actual POS80/Drive separation, original A/B recovery cases, printed-paper vs transport ACK, Drive folder vs upload completion, no-replay/restart stop conditions, truthful NOT_RUN/BLOCKED accounting and redacted evidence fields. Added one new **native** A genuinely saved CCP → verified synthetic PAID → privacy Ads → original self-claim return test to validate real Kivy boundaries and prevent duplicate mock charge or photos. These test results are **NOT_RUN until the containing CI executes**. Actual Midtrans Sandbox/refund remain BLOCKED, not silently replaced by mocks.
+
+
 ## 2 November 2026 — PP-06 restart/ACK test stale-lease correction (CI rerun pending)
 
 The fully containing-source run `41366352162` had 475 Linux tests, **one fixture test error** and no other assertion failures; native desktop passed, Windows was cancelled. The failing new ACK-retry test tried to read `service.lease.generation` **after successful isolation**, although the implementation correctly retires and clears the old lease before admitting B. The regression now saves `old_lease` before retirement, asserts the active service lease is None after ACK, and compares the persisted original_generation against `old_lease.generation+1`. **No source or financial guard is weakened**; full CI must prove the corrected case.

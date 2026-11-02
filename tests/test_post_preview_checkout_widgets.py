@@ -309,3 +309,52 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
             self.assertIn('Tiket tidak dapat diverifikasi',app._pilot_note)
             self.assertEqual(0,fixture.provider.charges)
 
+
+    def test_native_paid_A_reclaims_original_ccp_after_protected_advert(self):
+        """Kivy → original PAID → privacy lock → proof claim, no duplicate charge."""
+        with self.booth(paid_ticket=True,unattended=True) as (app,fixture):
+            Window.size=(452,900)
+            self.proof(app)
+            original_proof=app._photo_view['ccp_offer'].qr_payload
+            original_lease=fixture.service.lease
+            self.click(app,'SUDAH SIMPAN BUKTI • LANJUT SIMULASI')
+            self.settle(app)
+            payment=app._photo_view['payment']
+            fixture.provider.state(
+                payment['attempts'][0]['provider_order_id'],'settlement')
+            self.click(app,'PERIKSA STATUS')
+            deadline=time.monotonic()+10
+            while time.monotonic()<deadline and (
+                    app._photo_view.get('phase') not in {'ticket_offer','ticket_visible'}
+                    or app._photo_jobs.busy):
+                app._poll_photos()
+                EventLoop.idle()
+                time.sleep(.01)
+            self.assertIn(app._photo_view['phase'],('ticket_offer','ticket_visible'))
+            self.assertEqual(1,fixture.provider.charges)
+            app._sandbox_lock_customer()
+            deadline=time.monotonic()+10
+            while time.monotonic()<deadline:
+                app._poll_photos()
+                EventLoop.idle()
+                if (app.navigation.page=='advert' and not app._photo_jobs.busy
+                        and fixture.service._hidden.is_set()):
+                    break
+                time.sleep(.01)
+            self.assertEqual('advert',app.navigation.page)
+            self.assertTrue(fixture.service._hidden.is_set())
+            self.assertFalse(any(
+                getattr(widget,'text','').startswith('MEONG:CCP:')
+                for widget in app.stage.walk()))
+            app._pilot_submit_claim(original_proof)
+            self.assertEqual(original_lease.draft_id,fixture.service.lease.draft_id)
+            self.assertGreater(fixture.service.lease.generation,original_lease.generation)
+            self.assertEqual(1,fixture.provider.charges)
+            self.assertEqual('OWED',fixture.service.ledger.db.execute(
+                'SELECT status FROM pp_paid_services').fetchone()[0])
+            self.assertEqual(1,fixture.service.ledger.db.execute(
+                "SELECT count(*) FROM pp_isolation_ops WHERE state='ACKED'").fetchone()[0])
+            self.assertEqual('result',app.navigation.page)
+            self.assertIn(app._photo_view.get('phase'),
+                          ('paid_hold','ticket_offer','ticket_visible'))
+
