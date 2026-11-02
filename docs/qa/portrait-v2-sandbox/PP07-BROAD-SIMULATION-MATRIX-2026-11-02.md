@@ -1,5 +1,20 @@
 # PP-07 broad synthetic simulation coverage matrix — 2 November 2026
 
+## Fourth-layer test triage and source corrections
+
+The first native run of N21–N23 at [CI #41408717395](https://github.com/pratikto/PhotoBooth/actions/runs/41408717395) executed **N21 PASS**, **N22 PASS**, **N23 ERROR**. N23 tried starting B while A's Recovery Ticket was still unresolved; the application correctly blocked B rather than granting camera ownership. The test was modified to verify an original genuinely visible ticket and receipt status first, while adding a separate **N24** to test an uncertain receipt blocking B.
+
+At [CI #41409149264](https://github.com/pratikto/PhotoBooth/actions/runs/41409149264), native **N21/N22 PASS** and **N23/N24 ERROR**. The errors revealed two distinct problems:
+
+1. **BUG-035 genuine cross-visit GUI state leak:** even after safe original A isolation/ACK, the new visitor B could inherit A's transient `tutorial_seen=True`, skipping B's required tutorial (the test attempted to complete it and received `NavigationError`). Source [fix `15659c94`](https://github.com/pratikto/PhotoBooth/commit/15659c94d96fa1429811082ecd71258e9df18bd5) resets the per-visit quantities, game, tutorial state and entry source **only after** the admission coordinator has safely completed the original PREPARE/ACK. It does not alter any durable original customer payment, Recovery Ticket, Drive claim or paid photo evidence. New native test explicitly asserts B starts with tutorial and zero inherited quantities.
+2. **N24 invalid fault injection:** the first attempt tried to mutate an already `SUBMITTED` ticket receipt back to `UNCERTAIN`. A SQLite integrity trigger correctly rejected that impossible reversal (`Original ticket receipt cannot replay`). The corrected native test instead patches the original receipt printer callback to throw `TimeoutError` at first dispatch so the legitimate transport state becomes `UNCERTAIN` through the actual sender. Then it verifies public Advertising still refuses B's new camera and preserves A's `OWED`.
+
+**Hard-exit P01/P02 first attempt:** In the same source [CI #41409149264](https://github.com/pratikto/PhotoBooth/actions/runs/41409149264), the two newly registered actual-process-death tests **FAILED before reaching any printer journal** because the child used `python tests/post_preview_process_fault_fixture.py` and could not import repository package `photobooth` from the `tests` sys.path. The parent process tests were fixed in [`cad9253d`](https://github.com/pratikto/PhotoBooth/commit/cad9253d4254df72dec55b42fb9b84fabd10e46e) to use `python -m tests.post_preview_process_fault_fixture` with an explicit repo-root working directory in *both* the hard-exit child and independent reopen process.
+
+The current exact-source run for these corrections is [GitHub Actions #41409614158](https://github.com/pratikto/PhotoBooth/actions/runs/41409614158), **PENDING**; do not promote N23/N24 or P01/P02 to PASS until matching native/Windows/Ubuntu logs are verified. Earlier failed tests are deliberately retained in the evidence history. A real OS `os._exit(73)` verifies a process boundary, not the actual print head/cutter/peripheral state.
+
+---
+
 ## Verified initial 20/20 integration journeys PASS on Windows and Ubuntu
 
 **Tested source:** [`bd70593f20eb62e9da432ba962bd1f59e8265bf5`](https://github.com/pratikto/PhotoBooth/commit/bd70593f20eb62e9da432ba962bd1f59e8265bf5)  
