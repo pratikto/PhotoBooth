@@ -1,5 +1,10 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — PP-06R1 no-I/O refund-first decision gate (new software, provider BLOCKED)
+
+Add an explicitly **nonbinding, pure** `OriginalRefundEvidence`→`RefundAssessment` evaluator for the owner-approved new-order refund-first policy. It **never issues refunds or writes an intent** (`can_issue_refund=False` always): candidate full refund only when original PAID/OWED, independently verified merchant/amount, genuine permanent merchant failure, all workers fenced, no ambiguous physical paper, no verified/unknown public upload, merchant refund feature confirmed and approved commercial/abuse policy; candidate duplicate charge only for separately verified **excess** settlement attempts, preserving the rightful original. Lost genuine proof alone -> `NO_AUTO_REFUND_PROOF_LOST`; transient outages -> WAIT; conflicted/partial print, wrong source/merchant, unknown provider, missing policy -> REVIEW. Unit cases are source-pinned and required to pass Windows/Linux CI. **This does not connect Midtrans refund API**: merchant-specific enablement/idempotent request key and provider confirmation remain BLOCKED. PP-06R is therefore not complete.
+
+
 ## 2 November 2026 — Owner Windows PP-07 supervised execution worksheet (prepared; exact-source CI pending)
 
 Added a 26-row `PP07-SUPERVISED-WINDOWS-UAT.md` checklist with precise PowerShell setup, synthetic payment vs optional actual POS80/Drive separation, original A/B recovery cases, printed-paper vs transport ACK, Drive folder vs upload completion, no-replay/restart stop conditions, truthful NOT_RUN/BLOCKED accounting and redacted evidence fields. Added one new **native** A genuinely saved CCP → verified synthetic PAID → privacy Ads → original self-claim return test to validate real Kivy boundaries and prevent duplicate mock charge or photos. These test results are **NOT_RUN until the containing CI executes**. Actual Midtrans Sandbox/refund remain BLOCKED, not silently replaced by mocks.
