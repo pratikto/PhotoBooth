@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -21,7 +22,16 @@ REQUIRED_FILES = (
     "requirements-qris.txt",
     "docs/qa/portrait-v2-sandbox/PP07-SUPERVISED-WINDOWS-UAT.md",
 )
-IMPORTS = ("kivy", "PIL", "numpy", "requests", "cryptography")
+# These are required for the real-camera synthetic Kivy + HTTP checkout fixture.
+# A successful check is about installed modules, not device/provider readiness.
+IMPORTS = (
+    "kivy", "PIL", "numpy", "requests", "cryptography",
+    "fastapi", "httpx", "pydantic", "qrcode", "cv2", "ffpyplayer",
+)
+CONFLICTING_PROFILES = (
+    "PHOTOBOOTH_V2_CHECKOUT_SANDBOX", "PHOTOBOOTH_V2_CHECKOUT_MOCK",
+    "PHOTOBOOTH_V2_PRINT", "PHOTOBOOTH_V2_DRIVE",
+)
 
 
 def inspect(root: Path = ROOT, check_imports: bool = True) -> dict:
@@ -41,6 +51,11 @@ def inspect(root: Path = ROOT, check_imports: bool = True) -> dict:
         branch = ""
     record("Authorized branch", branch == EXPECTED_BRANCH,
            branch or "Git branch could not be read")
+    # Report only flag names, never secret or credential values.
+    conflicting = [flag for flag in CONFLICTING_PROFILES if os.environ.get(flag) == "1"]
+    record("Isolated synthetic launch profile", not conflicting,
+           "legacy modes disabled" if not conflicting
+           else "disable " + ", ".join(conflicting))
     for path in REQUIRED_FILES:
         record(f"File: {path}", (root / path).is_file(),
                "present" if (root / path).is_file() else "missing")
