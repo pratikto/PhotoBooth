@@ -1,5 +1,13 @@
 # PP-07 broad synthetic simulation coverage matrix — 2 November 2026
 
+## Fifth-layer OS termination verification — running exact database reopen
+
+[GitHub Actions #41409614158](https://github.com/pratikto/PhotoBooth/actions/runs/41409614158) at source `cad9253d` has **native Kivy 58/58 PASS** including all four new N21–N24 journeys, with no native failures/errors/skips. The actual child-process exit P01/P02 returned the expected hard-exit code `73`, but the *separate reopening process* looked at `drafts.db` rather than the application's canonical `drafts.sqlite3` and therefore reported `no such table: pp_paid_services`. This is an evidence-harness file selection error, not proof that financial records were lost; it also does **not** establish survival until the corrected independent reopening test passes.
+
+[Fix `238012f7`](https://github.com/pratikto/PhotoBooth/commit/238012f7e4a25f7841fc4aa536f01dd0d151ecb1) changes the inspector to reopen the **existing canonical ledger file**, never creating a new customer transaction. It is a test-only correction and does not mutate production data. [Matching-source CI #41409982930](https://github.com/pratikto/PhotoBooth/actions/runs/41409982930) is **RUNNING**. Do not mark P01/P02 PASS before its exact Windows and Linux logs explicitly confirm the ledger rows, and keep real POS80/physical printer classification blocked.
+
+---
+
 ## Fourth-layer test triage and source corrections
 
 The first native run of N21–N23 at [CI #41408717395](https://github.com/pratikto/PhotoBooth/actions/runs/41408717395) executed **N21 PASS**, **N22 PASS**, **N23 ERROR**. N23 tried starting B while A's Recovery Ticket was still unresolved; the application correctly blocked B rather than granting camera ownership. The test was modified to verify an original genuinely visible ticket and receipt status first, while adding a separate **N24** to test an uncertain receipt blocking B.
