@@ -1,5 +1,13 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — Second P0 fault-injection increment: late QR1 PAID and persisted print SENDING
+
+**Source changes are test-only**, still on `feature/post-preview-qris-checkout` without any merchant/production/refund action. Native `test_native_late_qr1_paid_while_qr2_active_never_grants_twice` models verified QR1 expiry, original QR2 creation, late QR1 PAID followed by excess QR2 PAID. Assert a single original entitlement, one `OWED` purchase, no new recapture/service/QR release, and separate excess paid-attempt evidence. Backend `test_persisted_sending_after_worker_crash_blocks_new_dispatcher_replay` injects a persisted `SENDING` original purchased-strip journal and creates a fresh dispatcher; it must reject transport replay and retain `OWED`. That is **not** an OS-level kill or physical POS80 restart.
+
+**First test attempt:** [CI #41403886185](https://github.com/pratikto/PhotoBooth/actions/runs/41403886185), source `7f018dba`, native test raised `KeyError` because the test indexed an intentionally absent `payment_qr` in protected `paid_hold`. The test-only assertion was corrected at `0548bc89` to accept missing/None, without changing payment code. The latest matching-source [CI #41404106134](https://github.com/pratikto/PhotoBooth/actions/runs/41404106134) is **PENDING** and must be independently inspected before PASS. Previous first-increment `c86a8e64` remains independently verified **493 Windows + 493 Ubuntu + 53 native = 1,039 PASS**.
+
+**Detailed scenario/evidence and remaining gates:** [PP-07 adversarial GUI report](PP07-ADVERSARIAL-GUI-FAULTS-2026-11-02.md). Real Midtrans payment, financial duplicate reconciliation with merchant, real process power loss, POS80 paper and full 112/26 owner acceptance remain separately NOT_RUN/BLOCKED. Never use a unit test to mark an owner's physical case complete.
+
 ## 2 November 2026 — P0 original QR3/paid-print fault-injection continuation
 
 **Code on `feature/post-preview-qris-checkout` only:** `1bc5c02d` adds two native GUI adversarial scenarios; `0e7a1f0b` blocks any additional purchased batch while an original job requires paper outcome review; `c86a8e64` disables the customer print-next button during `SENDING/UNCERTAIN` and removes the invalid QR4 continuation action after verified QR3 expiry. The original frozen purchase, up-to-3 separately verified QRIS identities, PAID/OWED, one Recovery Ticket, print no-replay journal, and customer privacy protections remain authoritative.
