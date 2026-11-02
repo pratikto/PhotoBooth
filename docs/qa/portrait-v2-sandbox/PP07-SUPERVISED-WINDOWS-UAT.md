@@ -1,5 +1,7 @@
 # PP-07 supervised Windows owner test — photo-before-QRIS kiosk
 
+> **2 November preflight addition:** Before PILOT-01, on the checked-out authorized branch run `python -m unittest tests.test_post_preview_pilot_preflight -v` and `python tools/check_post_preview_pilot.py` using the **same Python interpreter that will launch Kivy** (your pre-existing `.venv-kivy` is acceptable; don't recreate it). Static `READY_FOR_SUPERVISED_SYNTHETIC_PILOT` is not an owner PASS and does not test live devices. If code, branch, or dependency status is BLOCKED, stop before acquiring the camera; preserve all previous test roots. See [reconciled Windows guide](POST-PREVIEW-QRIS-WINDOWS-PILOT.md). The new unit tests and the 26 owner steps are distinct evidence tracks; do not promote test creation to test execution.
+
 **Scope:** `feature/post-preview-qris-checkout`, versioned post-preview checkout, **synthetic payment only**. This is an owner execution worksheet and **all rows below start NOT_RUN**. GitHub CI on fake camera/payment/printer/cloud cannot establish physical PASS. The legacy paid-before-photo app remains separate.
 
 ## 1. Safety and preparation (do not skip)
