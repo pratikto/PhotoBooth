@@ -1,5 +1,15 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — 20 integrated journey simulations instead of unit-test-count proxy
+
+**Source and scope:** [J01–J20 comprehensive simulation design, code, exact failure-injection and acceptance mapping](PP07-BROAD-SIMULATION-MATRIX-2026-11-02.md). Source `tests/test_post_preview_journey_matrix.py` drives real local SQLite, authenticated test HTTP API, the original camera capture/compose services, multi-template quote, original ticket, paid Drive transaction/purchased strip staging, printer dispatcher and guarded A/B admission. CI entry registered on both Windows and Ubuntu; no merchant account/device network calls. These do **not** replace full 112 owner acceptance cases or the 26 actual Windows UAT observations.
+
+**New security finding BUG-034:** A separate paid strip dispatcher could previously directly send design B when design A was `SENDING/UNCERTAIN`, bypassing the kiosk-level hold. Fixed `92717d25` with an atomic original-purchase-wide journal gate inside the dispatcher. J09/J10 verify a new direct dispatcher with a different PREPARED design and no printer I/O on unsafe original state.
+
+**Observed tests:** First source `eb9bbecf` [CI #41407278546](https://github.com/pratikto/PhotoBooth/actions/runs/41407278546) ran J01–J20 with 18 PASS, 1 FAIL and 1 ERROR due two test setup/expectation issues (counting paid imported media as new camera captures, and not catching the precise original `CaptureRecoveryRequired`). Corrected in *test-only* `bd70593f`, retaining strict camera/import separation and hash-tamper rejection. New matching-source [CI #41407613830](https://github.com/pratikto/PhotoBooth/actions/runs/41407613830) has **20/20 J cases PASS on Ubuntu**, **520/520 backend** and **54/54 existing native Kivy PASS**; **Windows matching-source result remains pending** in this checkpoint. Never extend the Ubuntu result into a Windows PASS without logs.
+
+**Next:** finish Windows evidence; add native 3-design 2+1+3 customer journey and Drive loss/recovery across GUI; pursue process-death/reopening print journal, A/B upload/worker races, game/discount integration, longer-term soak. Real merchant Midtrans, POS80 output, Drive public sharing/retention, refund I/O and production remain separate gates.
+
 ## 2 November 2026 — Second P0 fault-injection increment: late QR1 PAID and persisted print SENDING
 
 **Source changes are test-only**, still on `feature/post-preview-qris-checkout` without any merchant/production/refund action. Native `test_native_late_qr1_paid_while_qr2_active_never_grants_twice` models verified QR1 expiry, original QR2 creation, late QR1 PAID followed by excess QR2 PAID. Assert a single original entitlement, one `OWED` purchase, no new recapture/service/QR release, and separate excess paid-attempt evidence. Backend `test_persisted_sending_after_worker_crash_blocks_new_dispatcher_replay` injects a persisted `SENDING` original purchased-strip journal and creates a fresh dispatcher; it must reject transport replay and retain `OWED`. That is **not** an OS-level kill or physical POS80 restart.
