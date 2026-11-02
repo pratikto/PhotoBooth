@@ -260,6 +260,39 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
                 self.assertEqual('OWED',fixture.service.ledger.db.execute(
                     'SELECT status FROM pp_paid_services').fetchone()[0])
 
+
+    def test_native_two_templates_pay_once_and_print_exact_original_copies(self):
+        """Full native mock flow: two approved designs, one purchase, two safe batches."""
+        with self.booth(paid_delivery=True) as (app,fixture):
+            Window.size=(452,900)
+            self.paid_ticket_screen(app,fixture)
+            self.assertEqual(1,fixture.provider.charges)
+            self.click(app,'LANJUT • SIMPAN TIKET')
+            deadline=time.monotonic()+15
+            while time.monotonic()<deadline and app._photo_view.get('phase')!='paid_delivery':
+                app._poll_photos();EventLoop.idle();time.sleep(.01)
+            self.assertEqual('paid_delivery',app._photo_view['phase'],app._photo_error)
+            self.assertEqual({'template_a':'PREPARED','template_b':'PREPARED'},
+                             app._photo_view['delivery']['print_states'])
+            for number in (1,2):
+                self.click(app,'CETAK FOTO YANG SUDAH DIBAYAR')
+                deadline=time.monotonic()+10
+                while time.monotonic()<deadline and len(fixture.paid_print_sends)<number:
+                    app._poll_photos();EventLoop.idle();time.sleep(.01)
+                self.assertEqual(number,len(fixture.paid_print_sends))
+                self.settle(app)
+            self.assertEqual([2,1],[copies for _path,copies in fixture.paid_print_sends])
+            self.assertEqual({'template_a':'SUBMITTED','template_b':'SUBMITTED'},
+                             app._photo_view['delivery']['print_states'])
+            self.assertEqual(1,fixture.provider.charges)
+            self.assertEqual(1,len(fixture.receipt_sizes))
+            self.assertEqual('OWED',fixture.service.ledger.db.execute(
+                'SELECT status FROM pp_paid_services').fetchone()[0])
+            self.assertFalse(app._photo_view['delivery']['physical_paper_verified'])
+            self.assertFalse(any(
+                getattr(w,'text',None)=='CETAK FOTO YANG SUDAH DIBAYAR'
+                and not w.disabled for w in app.stage.walk()))
+
     def test_native_paid_drive_failure_does_not_offer_print_button(self):
         with self.booth(paid_delivery=True) as (app,fixture):
             Window.size=(452,900)
