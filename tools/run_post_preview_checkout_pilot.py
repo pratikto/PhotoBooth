@@ -33,8 +33,11 @@ def validate_private_root(selected, *, project_root=ROOT):
     customer's pilot or reset to make the welcome page work.
     """
     path=Path(selected).expanduser()
-    if path.is_symlink():
-        raise ValueError('Pilot private root must not be a symlink')
+    # A parent symlink is as unsafe as a symlink at the selected leaf:
+    # resolving it could redirect a "fresh" test into unrelated storage.
+    candidate=path.absolute()
+    if any(parent.is_symlink() for parent in (candidate, *candidate.parents)):
+        raise ValueError('Pilot private root or ancestor must not be a symlink')
     root=path.resolve()
     project=Path(project_root).resolve()
     if (root==project or root in project.parents or root==Path.home().resolve()
