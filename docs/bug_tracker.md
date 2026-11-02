@@ -1,5 +1,16 @@
 # Meong Photobooth — Bug register
 
+## BUG-034 — Direct paid printer dispatcher bypassed purchase-wide uncertainty quarantine (2 November 2026)
+
+**Severity:** S1, paid photo duplicate/overlapping paper risk.  
+**Status:** source fix `92717d25` pushed; **new cross-component tests J09/J10 pending execution**, matching-source [CI #41407278546](https://github.com/pratikto/PhotoBooth/actions/runs/41407278546) initially pending. **Do not claim verified until job logs PASS.**
+
+**Reproduction path (source audit):** if design A was `SENDING` or `UNCERTAIN`, kiosk GUI and `PrivateCheckoutService.paid_print_next` blocked printing design B. But a separate direct `OriginalPaidPrintDispatcher.send_once` call only checked **B's job state PREPARED**, with no query for earlier unsettled A. A second dispatcher instance/worker route could therefore send B while A's physical paper outcome remained unknown. This was a lower-layer enforcement gap, not proof an actual customer's paper was duplicated.
+
+**Fix:** within the durable ledger transaction and before changing B state or initiating printer I/O, dispatcher checks *all* `pp_paid_strip_jobs` for the original purchase group and rejects when **any SENDING or UNCERTAIN** row remains. This preserves the original job, PAID/OWED obligation, exact copy count, and no-blind-replay policy, independent of UI/service caller. Normal A=`SUBMITTED` allows the following approved B submission, but no paper is thereby verified physically. No production payment, merchant refund or physical test operation.
+
+**Evidence:** [20-case broad simulation matrix, J09/J10](qa/portrait-v2-sandbox/PP07-BROAD-SIMULATION-MATRIX-2026-11-02.md), new `test_post_preview_journey_matrix` source and exact CI run. Controlled live POS80 classifications, restarts with two actual worker processes, and technician escalation remain physical/unverified gates.
+
 ## BUG-033 — Uncertain original paid print permitted next design to dispatch (2 November 2026)
 
 **Severity:** S1 / financial fulfillment and physical paper safety; one job may already have reached the printer.  
