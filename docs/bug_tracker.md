@@ -1,5 +1,27 @@
 # Meong Photobooth — Bug register
 
+## BUG-031 — Synthetic Drive QR could look like a real customer download link (2 November 2026)
+
+**Severity: S3, supervised pilot clarity and false-positive acceptance risk.**  
+**Status: SOURCE FIXED; native Kivy 51/51 PASS at `67dc3eb5`; actual owner-screen acceptance NOT_RUN.**
+
+**Observed by source audit:** the mock paid-delivery page rendered the synthetic fixture folder URL as a QR under a general "delivery" label. That QR is intentionally **not downloadable**, but the original native label did not clearly say so; a physical tester could confuse expected fixture behavior with a broken Google Drive link.
+
+**Fix:** `photobooth/kiosk_v2/post_preview_checkout_app.py` now uses an explicit boolean synthetic-Drive display mode, and `tools/run_post_preview_checkout_pilot.py` sets it based on the existing double-consent real Drive opt-in. The virtual QR is visibly labeled `QR DEMO • BUKAN LINK DOWNLOAD`; the real test-Drive route is `DRIVE TEST • BAYAR SIMULASI`. The mock checkout remains incapable of making a real Midtrans payment. Existing native multi-template QA asserts the demo label. No cloud operation, real print or charge was executed to make this fix.
+
+**Evidence:** [Source-pinned CI report and exclusions](qa/portrait-v2-sandbox/PP07-AUTOMATED-SIMULATION-2026-11-02.md). Actual phone scan/public Drive share and paper QR still require owner's physical pilot.
+
+## BUG-030 — Pilot preflight could falsely report READY with missing checkout dependencies or conflicting legacy modes (2 November 2026)
+
+**Severity: S2, test-admission correctness; not a demonstrated payment safety regression.**  
+**Status: SOURCE FIXED; Linux 493/493 PASS at `67dc3eb5`; exact Windows matching-source CI/physical installation verification pending.**
+
+**Observed by source review:** `tools/check_post_preview_pilot.py` checked only five Python imports and ignored ambient `PHOTOBOOTH_V2_CHECKOUT_SANDBOX/MOCK/PRINT/DRIVE` flags. The real launcher refuses conflicting flags and requires additional QR/backend/audio dependencies, so earlier "READY" could still fail before GUI test.
+
+**Fix:** full module availability checks for Kivy, Pillow, numpy, requests, cryptography, FastAPI, httpx, Pydantic, qrcode, cv2 and ffpyplayer; fail-closed, redacted flag-name reporting when legacy payment/delivery profiles remain enabled. Existing branch/file/Python checks are retained. Three new unit tests verify a genuine positive READY fixture, missing FastAPI and an incompatible legacy mode. No merchant key or secrets are echoed.
+
+**Evidence:** [Exact CI 41393795509](https://github.com/pratikto/PhotoBooth/actions/runs/41393795509) and [QA ledger](qa/portrait-v2-sandbox/PP07-AUTOMATED-SIMULATION-2026-11-02.md). A passing static preflight is never hardware/payment/Drive acceptance.
+
 ## BUG-029 — animated Meong header restarts during Sandbox QRIS polling (1 November 2026)
 
 **Severity: S2 (visual / customer experience; no demonstrated payment integrity issue).**
