@@ -409,7 +409,11 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
             shell.add_widget(text_label(
                 'Data cetak terkirim. Kertas fisik harus diperiksa.',
                 size=13,height=45,color=MUTED))
-        outstanding=any(state=='PREPARED' for state in states.values())
+        # A transport timeout may still mean paper left the printer. Do not
+        # offer another paid batch until the original physical outcome is
+        # classified by the approved recovery/operator path.
+        outstanding=(any(state=='PREPARED' for state in states.values())
+                     and not data.get('needs_operator_review'))
         shell.add_widget(self._photo_action(
             'CETAK FOTO YANG SUDAH DIBAYAR',
             lambda: self._photo_submit('paid_print_next'),
@@ -475,8 +479,14 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
                     'SIMULASI PAID • TANPA TRANSFER',
                     self._simulate_verified_paid, variant='secondary'))
             if payment.get('state') == 'EXPIRED_UNPAID':
-                shell.add_widget(self._photo_action('LANJUTKAN PESANAN ASLI',
-                    lambda: self._photo_submit('continue_payment', True)))
+                if len(payment.get('attempts') or []) < 3:
+                    shell.add_widget(self._photo_action('LANJUTKAN PESANAN ASLI',
+                        lambda: self._photo_submit('continue_payment', True)))
+                else:
+                    shell.add_widget(text_label(
+                        'Batas 3 QR tercapai. Tidak ada QRIS baru. '
+                        'Pesanan asli tetap tercatat untuk pemeriksaan.',
+                        size=14,height=74,color=GOLD))
         shell.add_widget(self._photo_action('BATAL • LINDUNGI SESI',
                                             lambda: self._photo_submit('abort'), variant='tertiary'))
         self._photo_message = text_label(self._photo_error, size=13, height=62, color=GOLD)
