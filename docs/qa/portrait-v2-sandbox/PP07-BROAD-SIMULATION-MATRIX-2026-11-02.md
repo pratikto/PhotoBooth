@@ -1,5 +1,20 @@
 # PP-07 broad synthetic simulation coverage matrix — 2 November 2026
 
+## Latest executed evidence — 20/20 scenarios PASS on Ubuntu
+
+**Tested source:** [`bd70593f20eb62e9da432ba962bd1f59e8265bf5`](https://github.com/pratikto/PhotoBooth/commit/bd70593f20eb62e9da432ba962bd1f59e8265bf5)  
+**Matching-source workflow:** [GitHub Actions #41407613830](https://github.com/pratikto/PhotoBooth/actions/runs/41407613830).
+
+| Job | Executed | New J01–J20 | Failures | Errors | Skipped | State |
+| --- | ---: | --- | ---: | ---: | ---: | --- |
+| Ubuntu backend/private-state | **520** | **20/20 PASS** (test names verified from job logs) | 0 | 0 | 0 | **PASS** |
+| Ubuntu native Kivy/Xvfb | **54** | This new module is backend; existing 54 GUI tests | 0 | 0 | 0 | **PASS** |
+| Windows backend/private-state | — | Matching-source Windows job | — | — | — | **PENDING at this checkpoint** |
+
+The previous first run had 18 PASS + 1 FAIL + 1 ERROR among J01–J20; the exact two test specification corrections and their reasons remain documented below. These newer PASS results do not include actual local Kivy 12-template rendering, actual payment webhook provider, POS80 output, cloud upload, real OS process kill, refund or completion of the 112 complete owner acceptance cases.
+
+---
+
 ## Purpose and evidence standard
 
 The owner correctly rejected treating 1,042 Windows/Linux/Kivy unittest **executions** as if they proved 112 complete customer journeys. This new work package extends test coverage across the **actual local checkout service, durable SQLite ledger, authenticated local HTTP API, selected printer/Drive adapters, and guarded return-admission coordinator**. It does not invent screenshots, physical paper, cloud confirmations, real merchant charges, or operator approval.
@@ -50,7 +65,7 @@ The verified prior baseline [CI #41404106134](https://github.com/pratikto/PhotoB
 | J19 | Stall worker at A paid/protected handoff; attempt B and original A proof; release worker | Both paths fail closed during busy; afterward A may reclaim original rights | PP-037,062,064,071 |
 | J20 | 12 successive unpaid protected visits through PREPARE/ACK/isolation and new admission | Unique drafts, exactly one ACK per release, zero merchant charges, no old visitor leak | PP-059,063,064,069,071 |
 
-**Execution status:** The first full run [#41407278546](https://github.com/pratikto/PhotoBooth/actions/runs/41407278546) **FAILED** (18/20 new Ubuntu tests PASS) due the two test assumptions documented above. The corrected suite at `bd70593f` is running in [CI #41407613830](https://github.com/pratikto/PhotoBooth/actions/runs/41407613830), **PENDING** before source-matched verification. Until the actual `J01..J20` test names, PASS/FAIL and jobs are verified from matching-source logs, every new row above is `IMPLEMENTED / NOT YET VERIFIED`, not PASS. If a test fails, preserve the failure and fix actual root cause; never delete a legitimate safety assertion simply to make CI green.
+**Execution status:** The first full run [#41407278546](https://github.com/pratikto/PhotoBooth/actions/runs/41407278546) **FAILED** (18/20 new Ubuntu tests PASS) due the two test assumptions documented above. The corrected source `bd70593f` has **Ubuntu 20/20 J cases PASS, backend 520/520 PASS and native 54/54 PASS** in [CI #41407613830](https://github.com/pratikto/PhotoBooth/actions/runs/41407613830). The distinct Windows job remains pending at this checkpoint. Until the actual `J01..J20` test names, PASS/FAIL and jobs are verified from matching-source logs, every new row above is `IMPLEMENTED / NOT YET VERIFIED`, not PASS. If a test fails, preserve the failure and fix actual root cause; never delete a legitimate safety assertion simply to make CI green.
 
 ## Deliberately separate full acceptance and test debt
 
