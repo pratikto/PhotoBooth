@@ -109,6 +109,10 @@ class OriginalMockIsolationTests(unittest.TestCase):
         with self.assertRaises(DraftHeld):
             self.service.reset_after_acked_isolation(op)
         self.assertTrue(self.iso.acknowledge('PB001',op))
+        row=self.service.ledger.db.execute(
+            'SELECT original_generation FROM pp_isolation_ops WHERE operation_id=?',
+            (op,)).fetchone()
+        self.assertEqual(old.generation+1,row[0])
         new_idle=self.service.reset_after_acked_isolation(op)
         self.assertEqual('confirm',new_idle['phase'])
         self.assertFalse(self.service._hidden.is_set())

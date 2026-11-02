@@ -52,7 +52,7 @@ class OriginalPilotAdmission:
             with self.claim.ledger.write():
                 rows=list(self.claim.ledger.db.execute('''SELECT * FROM pp_isolation_ops
                     WHERE draft_id=? AND original_generation=?''',
-                    (old.draft_id,old.generation)))
+                    (old.draft_id,old.generation+1)))
             if len(rows)>1:
                 raise DraftHeld('Conflicting original isolation operation')
             if rows:

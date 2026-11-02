@@ -102,6 +102,10 @@ class PilotAdmissionTests(unittest.TestCase):
         recorded=self.service.ledger.db.execute(
             'SELECT operation_id FROM pp_isolation_ops').fetchone()[0]
         self.assertEqual(original,recorded)
+        self.assertEqual(self.service.lease.generation+1,
+                         self.service.ledger.db.execute(
+                             'SELECT original_generation FROM pp_isolation_ops'
+                         ).fetchone()[0])
         self.assertEqual(1,self.service.ledger.db.execute(
             'SELECT count(*) FROM pp_isolation_ops').fetchone()[0])
 

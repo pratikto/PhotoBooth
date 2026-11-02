@@ -1,5 +1,10 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — PP-06 post-retirement generation fence correction (new; CI pending)
+
+Native CI `41366103964` failed the new protected Ads→new photo assertion because the auto-isolation coordinator correctly **did not** release a previous customer when its ACK generation could not be matched. The reason was a developer mismatch: `retire(APP_SUSPENDED/USER_CANCEL)` increases the DB generation once above the original lease; `isolation.ACK` increases it again. Corrected both the coordinator's same-operation retry query (use `old_lease.generation+1`) and the guarded reset's exact two-generation chain: `ACK.original_generation=old_lease.generation+1`, `closed_old.generation=ACK.original_generation+1`. Tests now explicitly assert this sequence. No generic generation bypass, forced release, refund or print replay; the old lease remains unusable. Full Linux/Windows/native rerun is pending.
+
+
 ## 2 November 2026 — Native pilot protected Ads and masked original proof entry (CI pending)
 
 The explicit nonmerchant Windows **synthetic** pilot connects `OriginalPilotAdmission` to actual Kivy PhotoJobs, launch lease and original backend ledger. Privacy retire hides pixels and shows Advertising without assuming backend occupancy is free; new Photo/Game must obtain mock PREPARE→ACK first. A masked original proof panel accepts only CCP/Recovery Ticket and reclaims exact PAID/OWED after fresh proof and provider rechecks; a genuinely active customer B is never preempted. Wrong proof returns generic denial without leaking photos. This route is opt-in only through `tools/run_post_preview_checkout_pilot.py`; parent/legacy and actual Midtrans paths remain unchanged.

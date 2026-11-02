@@ -188,9 +188,12 @@ class PrivateCheckoutService(PrivatePhotoService):
             new=self.ledger.db.execute('SELECT 1 FROM pp_drafts WHERE booth_id=? AND closed=0',
                                        (original.booth_id,)).fetchone()
             if (not receipt or receipt['state']!='ACKED'
-                    or receipt['original_generation']!=original.generation
+                    # Privacy retirement fenced the old lease (+1) before
+                    # isolation prepared a second, strictly newer fence (+1).
+                    # Never compare the ACK with the stale pre-retire lease.
+                    or receipt['original_generation']!=original.generation+1
                     or not old or old['closed']!=1 or old['lifecycle']!='ISOLATED'
-                    or old['generation']!=original.generation+1 or new):
+                    or old['generation']!=receipt['original_generation']+1 or new):
                 raise DraftHeld('Original release not ACKed or another visitor owns booth')
         # PhotoJobs must be quiescent here; preserve the same ledger and fenced
         # print/Drive lane, but give the new visitor a fresh private capability.
