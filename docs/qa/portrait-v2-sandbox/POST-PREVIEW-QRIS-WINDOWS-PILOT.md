@@ -1,5 +1,11 @@
 # Supervised Windows pilot — synthetic payment, webcam, optional POS80
 
+## 2 November — P0 test conditions added after the first 1,037 PASS baseline
+
+Review [adversarial QR3 / uncertain print record](PP07-ADVERSARIAL-GUI-FAULTS-2026-11-02.md) before running optional real-paper checks. The newer pilot source `c86a8e64` removes customer QR4 after verified third expiry and quarantines all remaining purchased print batches when any original job is `SENDING/UNCERTAIN`. Matching-source [CI #41402925221](https://github.com/pratikto/PhotoBooth/actions/runs/41402925221) has **native 53/53 PASS** and Ubuntu **493/493 PASS**; Windows result not yet verified in this record. The existing 26-case physical worksheet remains separate from automated coverage and requires owner observation.
+
+Do not simulate printer faults by unplugging an actively printing POS80 unless you have isolated test hardware, authorized test-only images, safe access to paper/cutter and a technician plan. An uncertain job cannot be reset/printed again merely because the next template is ready. Never reuse the same `--private-root` for a new customer or trial.
+
 ## 2 November 2026 — automated test evidence and exact owner preflight order
 
 [Automated PP-07 simulation report](PP07-AUTOMATED-SIMULATION-2026-11-02.md): at `b071a5cc`, 490 Windows + 490 Ubuntu + 51 native Kivy tests PASS with zero failure/error/skip. A subsequent source-hardening release adds stronger dependency/profile checks and explicit synthetic Drive QR labels; its matching-source [CI run 41393795509](https://github.com/pratikto/PhotoBooth/actions/runs/41393795509) is now VERIFIED 493 Windows + 493 Ubuntu + 51 native PASS, with 3/3 jobs SUCCESS; no physical acceptance is implied.
