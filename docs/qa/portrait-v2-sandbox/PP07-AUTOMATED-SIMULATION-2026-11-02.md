@@ -17,19 +17,19 @@ Code commit `2d3a40f048d9969998e2478d9ed3d08d6b90facb` added both modules to the
 | --- | ---: | ---: | ---: | ---: | --- |
 | Ubuntu private-state (Python 3.12) | 490 | 0 | 0 | 0 | **PASS** — CI job completed successfully |
 | Ubuntu private-desktop Xvfb/Kivy | 51 | 0 | 0 | 0 | **PASS** — CI job completed successfully |
-| Windows private-state (Python 3.12) | — | — | — | — | **PENDING** — do not infer PASS before log verification |
+| Windows private-state (Python 3.12) | 490 | 0 | 0 | 0 | **PASS** — CI job completed successfully |
 
 The counts are read from the exact GitHub Actions `KIOSK_UNITTEST_SUMMARY` lines, not calculated from the number of files or the workflow badge.
 
 ## New checks executed
 
-**Preflight and data-root regression (5 tests on Ubuntu, Windows separately pending):**
+**Preflight and data-root regression (five tests PASS on Ubuntu AND Windows):**
 
 1. Missing required checkout files must BLOCK.
 2. Wrong current Git branch must BLOCK even if files are otherwise present.
 3. A previously occupied private customer root must be rejected before app/device import without changing its original file.
 4. A regular file cannot be used as a directory; original bytes remain untouched.
-5. A symbolic-link ancestor cannot redirect the test root, and the target data is left untouched. On Windows, this case may SKIP if the runner cannot create symlinks; record the outcome accurately.
+5. A symbolic-link ancestor cannot redirect the test root, and the target data is left untouched. On this Windows runner, the symbolic-link case executed and PASSed with **zero skips**; not all Windows installations have the same symlink permissions.
 
 **Original two-template native synthetic flow (one new GUI test, PASS on Ubuntu):**
 
@@ -50,6 +50,12 @@ The existing native suite additionally exercises smaller/larger portrait layouts
 - No real refund API capability, automatic refund request or finance/legal approval.
 - No evidence that all **PP-001–112** are individually executed or accepted: the complete canonical matrix remains **NOT_RUN** as end-to-end owner acceptance cases.
 - Owner `PP07-SUPERVISED-WINDOWS-UAT.md` 26 scenarios remain **NOT_RUN/BLOCKED** until independently observed and reported.
+
+## Additional source increments after the verified 1,031 executions
+
+**Do not combine these newer commits with the successful b071 counts.** Follow-on changes added the missing checkout runtime dependency checks (FastAPI/httpx/Pydantic/qrcode/cv2/ffpyplayer), fail-closed legacy checkout profile detection, three new preflight regression cases, and a visibly labeled **QR DEMO / BUKAN LINK DOWNLOAD** versus actual opt-in Drive-test header in the native mock GUI. The launcher explicitly supplies the display mode. Source SHA `67dc3eb502dbb1bb65b0a7139f728a4d05e5b664` is running [CI 41393795509](https://github.com/pratikto/PhotoBooth/actions/runs/41393795509): **PENDING / no PASS claim until matching Windows, Ubuntu and native log checks**.
+
+The first verified b071 run totals **1,031 executed successful test instances** (490 Windows + 490 Ubuntu + 51 native). Windows/Linux reuse many identical test cases; 1,031 does **not** mean 1,031 distinct scenarios or 112 owner PP acceptance cases.
 
 ## Release / continuation gate
 
