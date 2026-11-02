@@ -1,5 +1,13 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+## 2 November 2026 — Verified automated simulation; safer pilot dependency/Drive labeling follow-up
+
+**Source `b071a5cc` verified in [CI 41392821079](https://github.com/pratikto/PhotoBooth/actions/runs/41392821079): Windows 490/490 PASS, Ubuntu 490/490 PASS, native headless Kivy 51/51 PASS, no failures/errors/skips (1,031 executions across OS, not 1,031 distinct acceptance cases).** The native test includes two separate photo templates, one original synthetic paid order, mandatory Recovery Ticket, a synthetic Drive QR and **2+1 exactly-once virtual print batches**. This resolves the previous **CI test allowlist omission**: the five earlier preflight/occupied/symlink startup tests now actually run and pass on both OS. Full details and verified scope: [PP-07 automated simulation evidence](qa/portrait-v2-sandbox/PP07-AUTOMATED-SIMULATION-2026-11-02.md).
+
+**Later code `67dc3eb5` — CI [41393795509](https://github.com/pratikto/PhotoBooth/actions/runs/41393795509) PENDING:** correct false-READY preflight by checking all critical Kivy/synthetic checkout modules and rejecting conflicting paid-first/legacy delivery flags, with three new isolated regression cases including a positive READY fixture. Also distinguish the mocked Drive QR from an explicitly opted-in real test Drive link in the native paid result header. The existing standalone pilot remains **synthetic-payment-only**; no production provider, physical paper, cloud upload, refund, account keys or customer data were touched in these changes. Do **not** roll forward the earlier 490/51 PASS counts to this new SHA before rechecking logs.
+
+**Next:** verify final latest-source Linux/Windows/native CI and fix any failures; then owner executes the [26-item supervised Windows pilot worksheet](qa/portrait-v2-sandbox/PP07-SUPERVISED-WINDOWS-UAT.md) using the [updated Windows guide](qa/portrait-v2-sandbox/POST-PREVIEW-QRIS-WINDOWS-PILOT.md). Canonical full PP-001–112 acceptance stays NOT_RUN, actual Midtrans QRIS/refunds remain BLOCKED, and real POS80/Drive/public ACL/retention require independent owner evidence.
+
 ## 2 November 2026 — PP-07 reject symlinked parent test roots
 
 The supervised, **synthetic-payment-only** pilot now rejects any symbolic link in the selected data-root's full existing ancestor chain, not merely a symlink at the final leaf. A fresh-looking directory underneath a symlink cannot redirect capture/payment/receipt journals into unrelated or previously owned filesystem data. Validation still occurs before Kivy/device runtime imports, and no occupied root is reset. See `tools/run_post_preview_checkout_pilot.py` `validate_private_root`.
