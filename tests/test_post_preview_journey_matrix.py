@@ -15,6 +15,7 @@ from types import SimpleNamespace
 import numpy as np
 
 from photobooth.catalog import get_templates
+from photobooth.capture_journal import CaptureRecoveryRequired
 from photobooth.post_preview_paid_print import OriginalPaidPrintDispatcher
 from photobooth.post_preview_store import DraftHeld
 from tests.post_preview_checkout_fixture import CheckoutFixture
@@ -109,7 +110,15 @@ class CustomerJourneyMatrixTests(unittest.TestCase):
 
     def test_j02_three_designs_copies_2_1_3_one_charge_three_exact_batches(self):
         view = self.ready_to_print({'template_a': 2, 'template_b': 1, 'template_c': 3})
-        self.assertEqual(9, len(self.jpeg_paths()))
+        # Nine camera captures are intentionally imported into the separate
+        # PAID delivery staging tree. Verify each category separately: this
+        # is not 18 shutter activations and copies do not create sessions.
+        staged = sorted(self.fixture.workspace.root.rglob('*.jpg'))
+        camera_originals = sorted(
+            p for p in self.service.root.rglob('*.jpg')
+            if not p.is_relative_to(self.fixture.workspace.root))
+        self.assertEqual(9, len(camera_originals))
+        self.assertEqual(9, len(staged))
         self.assertEqual({'template_a': 'PREPARED', 'template_b': 'PREPARED',
                           'template_c': 'PREPARED'}, view['delivery']['print_states'])
         for _ in range(3):
@@ -200,7 +209,7 @@ class CustomerJourneyMatrixTests(unittest.TestCase):
         self.service.ticket_dismiss()
         source = Path(self.jpeg_paths()[0])
         source.write_bytes(b'NOT A PHOTO: synthetic corruption')
-        with self.assertRaises((DraftHeld, ValueError, OSError)):
+        with self.assertRaises(CaptureRecoveryRequired):
             self.service.prepare_paid_delivery()
         self.assertEqual([], self.fixture.paid_print_sends)
         self.assertEqual(1, self.fixture.provider.charges)
