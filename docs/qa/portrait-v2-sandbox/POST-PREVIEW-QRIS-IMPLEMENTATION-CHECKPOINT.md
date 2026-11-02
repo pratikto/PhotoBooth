@@ -1,5 +1,10 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — Windows PP-07 pilot root canonical-path assertion (CI rerun required)
+
+Source run `41367406430` passed Ubuntu (485 tests) and native desktop, but Windows had one test failure in `test_dedicated_private_root_never_reopens_customer_data`: Windows normalized the same temp directory from `RUNNER~1` to `runneradmin` on `Path.resolve()`. The production `validate_private_root` intentionally returns the canonical root and rejects occupied, symlink, unsafe archive and parent paths. Corrected **only the test's two success expectations** to compare `clean.resolve()` to the canonical return. No admission, billing, privacy or directory guard relaxed. New exact-source Windows/Linux/native CI must pass before marking this test resolved; device, actual Midtrans Sandbox and full PP-001..112 acceptance remain separate gates.
+
+
 ## 2 November 2026 — PP-06R1 no-I/O refund-first decision gate (new software, provider BLOCKED)
 
 Add an explicitly **nonbinding, pure** `OriginalRefundEvidence`→`RefundAssessment` evaluator for the owner-approved new-order refund-first policy. It **never issues refunds or writes an intent** (`can_issue_refund=False` always): candidate full refund only when original PAID/OWED, independently verified merchant/amount, genuine permanent merchant failure, all workers fenced, no ambiguous physical paper, no verified/unknown public upload, merchant refund feature confirmed and approved commercial/abuse policy; candidate duplicate charge only for separately verified **excess** settlement attempts, preserving the rightful original. Lost genuine proof alone -> `NO_AUTO_REFUND_PROOF_LOST`; transient outages -> WAIT; conflicted/partial print, wrong source/merchant, unknown provider, missing policy -> REVIEW. Unit cases are source-pinned and required to pass Windows/Linux CI. **This does not connect Midtrans refund API**: merchant-specific enablement/idempotent request key and provider confirmation remain BLOCKED. PP-06R is therefore not complete.

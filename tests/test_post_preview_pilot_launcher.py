@@ -58,9 +58,9 @@ class PilotArgsTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d)
             clean=root/'new-pilot'
-            self.assertEqual(clean,validate_private_root(clean,project_root=root/'repo'))
+            self.assertEqual(clean.resolve(),validate_private_root(clean,project_root=root/'repo'))
             clean.mkdir()
-            self.assertEqual(clean,validate_private_root(clean,project_root=root/'repo'))
+            self.assertEqual(clean.resolve(),validate_private_root(clean,project_root=root/'repo'))
             (clean/'drafts.sqlite3').write_bytes(b'prior paid customer')
             with self.assertRaisesRegex(ValueError,'occupied'):
                 validate_private_root(clean,project_root=root/'repo')
