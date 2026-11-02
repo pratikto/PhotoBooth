@@ -9,17 +9,18 @@ import unittest
 from kivy.base import EventLoop
 from kivy.core.window import Window
 
-from tests.test_post_preview_checkout_widgets import PrivateCheckoutWidgetTests
+from tests import test_post_preview_checkout_widgets as checkout_helpers
 
 
 class NativeCustomerJourneyMatrixTests(unittest.TestCase):
-    booth = PrivateCheckoutWidgetTests.booth
-    settle = PrivateCheckoutWidgetTests.settle
-    click = PrivateCheckoutWidgetTests.click
-    shot = PrivateCheckoutWidgetTests.shot
-    final = PrivateCheckoutWidgetTests.final
-    proof = PrivateCheckoutWidgetTests.proof
-    paid_ticket_screen = PrivateCheckoutWidgetTests.paid_ticket_screen
+    booth = checkout_helpers.PrivateCheckoutWidgetTests.booth
+    settle = checkout_helpers.PrivateCheckoutWidgetTests.settle
+    click = checkout_helpers.PrivateCheckoutWidgetTests.click
+    shot = checkout_helpers.PrivateCheckoutWidgetTests.shot
+    start = checkout_helpers.PrivateCheckoutWidgetTests.start
+    final = checkout_helpers.PrivateCheckoutWidgetTests.final
+    proof = checkout_helpers.PrivateCheckoutWidgetTests.proof
+    paid_ticket_screen = checkout_helpers.PrivateCheckoutWidgetTests.paid_ticket_screen
 
     def await_phase(self, app, phase, timeout=15):
         deadline = time.monotonic() + timeout
