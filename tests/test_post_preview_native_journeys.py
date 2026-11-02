@@ -171,7 +171,9 @@ class NativeCustomerJourneyMatrixTests(unittest.TestCase):
                     break
                 time.sleep(.01)
             self.assertEqual('advert', app.navigation.page)
+            self.assertTrue(app.navigation.tutorial_seen)
             self.start_B(app)
+            self.assertTrue(app.navigation.tutorial_seen)
             b = fixture.service.lease
             self.assertNotEqual(old.draft_id, b.draft_id)
             self.shot(app)
@@ -196,21 +198,29 @@ class NativeCustomerJourneyMatrixTests(unittest.TestCase):
         """Public Ads cannot admit another customer when A receipt is unsafe."""
         with self.booth(paid_ticket=True, unattended=True) as (app, fixture):
             Window.size = (452, 900)
+            sends = []
+            def uncertain_receipt(_bitmap, *, copies):
+                sends.append(copies)
+                raise TimeoutError('synthetic receipt might have emerged')
+            fixture.service._receipt_printer.print_bitmap = uncertain_receipt
             self.paid_ticket_screen(app, fixture)
             deadline = time.monotonic() + 10
-            while time.monotonic() < deadline and not fixture.receipt_sizes:
+            while time.monotonic() < deadline:
                 app._poll_photos()
                 EventLoop.idle()
+                row = fixture.service.ledger.db.execute(
+                    'SELECT receipt_state FROM pp_ticket_presentations').fetchone()
+                if row and row[0] == 'UNCERTAIN' and not app._photo_jobs.busy:
+                    break
                 time.sleep(.01)
             self.settle(app)
-            self.assertEqual(1, len(fixture.receipt_sizes))
+            self.assertEqual([1], sends)
+            self.assertEqual(0, len(fixture.receipt_sizes))
+            self.assertEqual('UNCERTAIN', fixture.service.ledger.db.execute(
+                'SELECT receipt_state FROM pp_ticket_presentations').fetchone()[0])
             old = fixture.service.lease
-            # The paper may have emerged, but a lost transport outcome must
-            # remain quarantined even if the public screen is Advertising.
-            with fixture.service.ledger.write():
-                fixture.service.ledger.db.execute(
-                    "UPDATE pp_ticket_presentations SET receipt_state='UNCERTAIN' "
-                    "WHERE purchase_group_id=?", (fixture.service.group,))
+            # The paper may have emerged, but a real uncertain adapter outcome
+            # must block new B even if public Advertising is visible.
             app._sandbox_lock_customer()
             deadline = time.monotonic() + 10
             while time.monotonic() < deadline:
@@ -233,6 +243,9 @@ class NativeCustomerJourneyMatrixTests(unittest.TestCase):
 
     def start_B(self, app):
         app._choose_photo()
+        self.assertEqual('tutorial', app.navigation.page)
+        self.assertFalse(app.navigation.tutorial_seen)
+        self.assertEqual(0, sum(app.quantities.values()))
         app._complete_tutorial()
         app.quantities.update(template_a=2, template_b=1)
         app._enter_photo_test()
