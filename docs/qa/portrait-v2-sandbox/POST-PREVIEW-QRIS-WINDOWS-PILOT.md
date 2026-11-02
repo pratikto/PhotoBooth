@@ -1,5 +1,36 @@
 # Supervised Windows pilot — synthetic payment, webcam, optional POS80
 
+## 2 November 2026 — safest continuation from your existing Windows checkout
+
+**Do not recreate an already working virtual environment.** The earlier example below using `py -3.12 -m venv .venv` applies **only if that environment does not exist**. If you already use `.venv-kivy`, retain it and run its Python executable. First preserve any local source edits; do not overwrite them with `git switch` or `git pull`. A separate test data root is mandatory on each run, but is **not** a new code branch.
+
+From PowerShell, after confirming `git status --short` is clean or preserving local changes:
+
+```powershell
+git branch --show-current
+git status --short
+git pull --ff-only origin feature/post-preview-qris-checkout
+.\.venv-kivy\Scripts\python.exe -m pip install -r requirements.txt -r requirements-post-preview.txt -r requirements-qris.txt
+.\.venv-kivy\Scripts\python.exe -m unittest tests.test_post_preview_pilot_preflight -v
+.\.venv-kivy\Scripts\python.exe tools/check_post_preview_pilot.py
+```
+
+If using `.venv` instead, replace `.venv-kivy` in every command with `.venv`. The preflight is **read-only**: it checks branch, required project files, Python version and installed modules; it does not contact Midtrans, send paper, access Drive, open a webcam, create a session or validate a real customer experience. The report `READY_FOR_SUPERVISED_SYNTHETIC_PILOT` means only static preparation passed. If BLOCKED, correct the stated source/environment problem before launching.
+
+For the **first no-paper/no-cloud trial**, with a **new empty root** and payment still mocked:
+
+```powershell
+$env:PHOTOBOOTH_V2_CHECKOUT_SANDBOX='0'
+$env:PHOTOBOOTH_V2_CHECKOUT_MOCK='0'
+$env:PHOTOBOOTH_V2_PRINT='0'
+$env:PHOTOBOOTH_V2_DRIVE='0'
+.\.venv-kivy\Scripts\python.exe tools/run_post_preview_checkout_pilot.py --synthetic-payment-only --private-root work\postpay-owner-trial-001
+```
+
+For each later attempt increment `-001` to `-002`, etc. **Never delete an old root** to make the new test pass: it may hold original customer recovery proof, PAID/OWED or uncertain printer state. Do not include raw CCP/ticket QR, keys or identifiable customer photographs in logs/screenshots. Real POS80 output and public test Drive uploads are opt-in with **two independent flags each**, as documented below. This launcher **never makes a real Midtrans payment or refund**.
+
+**Evidence boundary:** The independent new preflight tests and Windows walkthrough need GitHub Actions and actual-owner execution at the containing source SHA. Added source files alone are not proof of a passing CI or device UAT. The full PP-001–112 matrix is not automatically completed by this short pilot.
+
 This is a **local supervised pilot**, not the full PP-07 customer UAT. Use
 a **new empty** storage root for **each** trial. The launcher refuses a previously used/nonempty root, including a prior customer's encrypted credentials, payment journal or print jobs. The old visit remains privacy-fenced after shutdown; NEVER delete or reset that data to restart a test.
 
