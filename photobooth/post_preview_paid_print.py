@@ -44,6 +44,15 @@ class OriginalPaidPrintDispatcher:
                 if (presentation is None or presentation['screen_state']!='DISMISSED'
                         or presentation['receipt_state'] in {'PREPARED','SENDING'}):
                     raise DraftHeld('Original Recovery Ticket presentation is incomplete')
+                # Defense in depth: direct dispatchers, retired workers or a
+                # second dispatcher instance must not bypass the kiosk-level
+                # quarantine. This is a durable per-purchase gate, not a UI flag.
+                uncertain=self.binder.ledger.db.execute(
+                    "SELECT template_id FROM pp_paid_strip_jobs "
+                    "WHERE purchase_group_id=? AND state IN ('SENDING','UNCERTAIN') "
+                    "LIMIT 1",(group,)).fetchone()
+                if uncertain is not None:
+                    raise DraftHeld('Original paid print pipeline has unclassified paper; hold all batches')
                 job=self.binder.ledger.db.execute('''SELECT * FROM pp_paid_strip_jobs
                     WHERE purchase_group_id=? AND template_id=?''',(group,template_id)).fetchone()
                 if job is None or job['state']!='PREPARED':
