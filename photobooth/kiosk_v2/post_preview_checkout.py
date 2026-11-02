@@ -152,6 +152,11 @@ class PrivateCheckoutService(PrivatePhotoService):
         if self.phase!='paid_delivery' or not self.paid_delivery_enabled:
             raise DraftHeld('Original paid strip is unavailable')
         before=self._paid_delivery.inspect(self.lease,self.group)
+        # A previous batch may already be emerging from the printer.
+        # Do not dispatch another purchased design while its paper outcome
+        # requires physical/technician classification. Never auto-replay it.
+        if before['needs_operator_review']:
+            raise DraftHeld('Original purchased print outcome uncertain; preserve all batches for review')
         if self._paid_printer is None:
             raise DraftHeld('No configured photo printer; preserve all original print jobs')
         pending=[t.template_id for t in self.templates
