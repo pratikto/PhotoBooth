@@ -1,6 +1,6 @@
 # PP-07 broad synthetic simulation coverage matrix — 2 November 2026
 
-## Latest executed evidence — 20/20 scenarios PASS on Ubuntu
+## Verified initial 20/20 integration journeys PASS on Windows and Ubuntu
 
 **Tested source:** [`bd70593f20eb62e9da432ba962bd1f59e8265bf5`](https://github.com/pratikto/PhotoBooth/commit/bd70593f20eb62e9da432ba962bd1f59e8265bf5)  
 **Matching-source workflow:** [GitHub Actions #41407613830](https://github.com/pratikto/PhotoBooth/actions/runs/41407613830).
@@ -9,7 +9,7 @@
 | --- | ---: | --- | ---: | ---: | ---: | --- |
 | Ubuntu backend/private-state | **520** | **20/20 PASS** (test names verified from job logs) | 0 | 0 | 0 | **PASS** |
 | Ubuntu native Kivy/Xvfb | **54** | This new module is backend; existing 54 GUI tests | 0 | 0 | 0 | **PASS** |
-| Windows backend/private-state | — | Matching-source Windows job | — | — | — | **PENDING at this checkpoint** |
+| Windows backend/private-state | **520** | **20/20 PASS** (individual test names and 520/520 summary verified) | 0 | 0 | 0 | **PASS** |
 
 The previous first run had 18 PASS + 1 FAIL + 1 ERROR among J01–J20; the exact two test specification corrections and their reasons remain documented below. These newer PASS results do not include actual local Kivy 12-template rendering, actual payment webhook provider, POS80 output, cloud upload, real OS process kill, refund or completion of the 112 complete owner acceptance cases.
 
@@ -65,7 +65,7 @@ The verified prior baseline [CI #41404106134](https://github.com/pratikto/PhotoB
 | J19 | Stall worker at A paid/protected handoff; attempt B and original A proof; release worker | Both paths fail closed during busy; afterward A may reclaim original rights | PP-037,062,064,071 |
 | J20 | 12 successive unpaid protected visits through PREPARE/ACK/isolation and new admission | Unique drafts, exactly one ACK per release, zero merchant charges, no old visitor leak | PP-059,063,064,069,071 |
 
-**Execution status:** The first full run [#41407278546](https://github.com/pratikto/PhotoBooth/actions/runs/41407278546) **FAILED** (18/20 new Ubuntu tests PASS) due the two test assumptions documented above. The corrected source `bd70593f` has **Ubuntu 20/20 J cases PASS, backend 520/520 PASS and native 54/54 PASS** in [CI #41407613830](https://github.com/pratikto/PhotoBooth/actions/runs/41407613830). The distinct Windows job remains pending at this checkpoint. Until the actual `J01..J20` test names, PASS/FAIL and jobs are verified from matching-source logs, every new row above is `IMPLEMENTED / NOT YET VERIFIED`, not PASS. If a test fails, preserve the failure and fix actual root cause; never delete a legitimate safety assertion simply to make CI green.
+**Execution status:** The first full run [#41407278546](https://github.com/pratikto/PhotoBooth/actions/runs/41407278546) **FAILED** (18/20 new Ubuntu tests PASS) due the two test assumptions documented above. The corrected source `bd70593f` has **Ubuntu 20/20 J cases PASS, backend 520/520 PASS and native 54/54 PASS** in [CI #41407613830](https://github.com/pratikto/PhotoBooth/actions/runs/41407613830). The distinct Windows job later **completed SUCCESS**: 520/520 PASS, 0 failures/errors/skips. Matching-source native 54/54 also PASS. Both backend jobs include all 20 J cases (not 20 extra scenarios on each OS). Until the actual `J01..J20` test names, PASS/FAIL and jobs are verified from matching-source logs, every new row above is `IMPLEMENTED / NOT YET VERIFIED`, not PASS. If a test fails, preserve the failure and fix actual root cause; never delete a legitimate safety assertion simply to make CI green.
 
 ## Second test layer — Native Kivy customer journeys N21–N23
 
@@ -78,6 +78,19 @@ The source now includes `tests/test_post_preview_native_journeys.py`, introduced
 | N23 | A has paid, is privacy-locked to protected Ads, B enters and captures; A tries to invoke private recovery claim while B owns camera | Claim modal restricted to protected Ads only, no A proof/media leakage or camera takeover, original A remains `OWED`, one charge | **ADDED; CI PENDING** |
 
 These tests do **not** replace a real touchscreen usability check, human-readable QR scanning, true wall-clock 30-second presentation timing, cloud ACL, or physical printer-paper observation. They add an actual native GUI evidence layer missing from the first integration run.
+
+## Third test layer — actual OS process termination P01–P02 and protected GUI N24
+
+**Current matching-source code:** `aa6ce68c` ([commit](https://github.com/pratikto/PhotoBooth/commit/aa6ce68c778e8c5c13005201597abdc9b318d319)); [CI #41409149264](https://github.com/pratikto/PhotoBooth/actions/runs/41409149264) is **RUNNING** until actual per-job logs prove outcomes.
+
+- **N23 test correction:** The initial GUI test attempted to let B begin while A's original ticket receipt had not yet been genuinely displayed and reliably `SUBMITTED`. The guard correctly refused B, so the test's unconditional tutorial completion raised `NavigationError` (run [#41408717395](https://github.com/pratikto/PhotoBooth/actions/runs/41408717395)). This is an expected protective block, not something to override. At `7944a4fc`, N23 now waits for A's legitimate visible Recovery Ticket and exactly one recorded `SUBMITTED` receipt before proceeding to protected Ads → B capture and checking that A's proof cannot preempt B. **Pending source-aligned CI**.
+- **N24 new negative admission:** Simulate A's original receipt as `UNCERTAIN`, protect public Ads, request B's photo journey and assert B is **not admitted**, the original A draft remains, no release ACK/new charge, and original `PAID/OWED` survives. A public Ads screen does not certify financial or printer release. **Pending source-aligned CI**.
+- **P01 actual OS process death while original Recovery Ticket receipt printing:** A separate child `tests/post_preview_process_fault_fixture.py` uses `os._exit(73)` *inside* the printer callback, without finally/cleanup after the durable ticket `SENDING` write. An entirely separate Python process reopens SQLite and checks one PAID attempt, ticket `SENDING`, original `OWED`. Test is `tests/test_post_preview_process_crash.py::test_p01_actual_process_exit_during_recovery_receipt_preserves_owed`. No physical printer is connected. **Pending CI on Windows and Ubuntu**.
+- **P02 actual OS process death while purchased strip printing:** After original PAID and ticket completion, exit inside strip printer callback, then independent process reopen checks purchased strip `SENDING`, original `OWED`, original receipt `SUBMITTED`, one PAID attempt and original copy count two. The crash is real process termination, not simulated exception; actual printer bytes/cutter state still cannot be known. Test `test_p02_actual_process_exit_during_paid_strip_preserves_sending`. **Pending CI on Windows and Ubuntu**.
+
+**New source and CI registration:** `7944a4fc` (native N23 safety-positive and N24 rejection), `137dddb2` (child process), `9d417fab` (parent OS death/reopen assertions), `aa6ce68c` (register process-crash test module in Windows/Linux CI). If any test fails, fix the actual root cause and rerun matching-source CI; do not weaken the durable journal/visitor-release invariants.
+
+---
 
 ## Deliberately separate full acceptance and test debt
 
