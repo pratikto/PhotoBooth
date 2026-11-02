@@ -7,7 +7,7 @@ a **new empty** storage root for **each** trial. The launcher refuses a previous
 git switch feature/post-preview-qris-checkout
 git pull --ff-only origin feature/post-preview-qris-checkout
 py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt -r requirements-post-preview.txt -r requirements-qris.txt
 $env:PHOTOBOOTH_V2_CHECKOUT_SANDBOX = '0'
 $env:PHOTOBOOTH_V2_CHECKOUT_MOCK = '0'
 $env:PHOTOBOOTH_V2_PRINT = '0'
