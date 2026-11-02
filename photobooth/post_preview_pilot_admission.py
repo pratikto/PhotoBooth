@@ -79,9 +79,9 @@ class OriginalPilotAdmission:
         booth=self.jobs.service.booth_id
         match=re.fullmatch(
             r'MEONG:(?:CCP|RECOVERY):1:'+re.escape(booth)
-            +r':([a-f0-9]{32}):[a-f0-9]{32}:[A-Za-z0-9_-]{43}',
+            +r':([a-f0-9]{32}):[A-Za-z0-9_-]{43}',
             qr_payload)
-        # Actual issued proof order is booth:GROUP:RANDOM32:RANDOM43;
+        # Actual issued proof order is booth:GROUP:RANDOM43;
         # do not infer authorization from this syntactic match.
         if match is None:
             raise PermissionError('Original customer proof role or scope invalid')

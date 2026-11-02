@@ -1,5 +1,10 @@
 # Post-preview QRIS implementation checkpoint
 
+## 2 November 2026 — Pilot claim QR canonical format correction (CI pending)
+
+Correct a syntactic receipt/CCP parser mismatch **before native GUI exposure**: the original issued proof profile is exactly `MEONG:<CCP|RECOVERY>:1:<booth>:<group-32hex>:<token-43>`, not a second 32-byte token. The parser extracts only the original purchase group; the existing cryptographic hash/rate-limited proof verifier remains authoritative. This is a scoped fix of the new synthetic coordinator, not any relaxation of the credential, payment or media guards.
+
+
 ## 2 November 2026 — PP-06 mock-only guarded Ads admission and proof return coordinator
 
 Added `OriginalPilotAdmission`, a strictly isolated in-process coordinator for the supervised Windows pilot. A Photo/Game entry is permitted only if the booth is empty or a genuinely protected old session has completed its **original** PREPARE→ACK; its ACK crash-retry reuses the same operation ID and calls `reset_after_acked_isolation`. Pending/UNKNOWN payment, unretired live customer, in-flight worker, ambiguous paper or Drive keeps the payment gate closed. Customer CCP or Recovery Ticket proof may rehydrate the same old PAID/OWED (no rephotograph/no recharge) after fresh synthetic provider reconciliation and only when booth free; if B is genuinely active, return WAIT without interrupting. Proof payload is only passed to verifier, never logged or persisted by the coordinator.
