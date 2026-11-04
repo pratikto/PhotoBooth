@@ -5,6 +5,7 @@ root, real camera, printer, merchant or cloud account is used. Only allowlisted
 counts, phases and timings are emitted; no private proof is saved or logged.
 """
 from pathlib import Path
+import argparse
 import json
 import os
 import sys
@@ -28,9 +29,13 @@ from tests.post_preview_checkout_fixture import CheckoutFixture
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--size', choices=('452x900', '800x1280'), default='452x900')
+    args = parser.parse_args()
+    layout = tuple(int(value) for value in args.size.split('x'))
     began = time.monotonic()
     record = {'state': 'RUNNING', 'mode': 'SYNTHETIC_ONLY', 'clock': 'REAL_MONOTONIC',
-              'countdowns_started': 0, 'retakes_requested': 0}
+              'countdowns_started': 0, 'retakes_requested': 0, 'layout': args.size}
     with tempfile.TemporaryDirectory(prefix='meong-timed-synthetic-') as folder:
         fixture = CheckoutFixture(Path(folder))
         fixture.enable_paid_ticket()
@@ -141,7 +146,7 @@ def main():
                 stop_error('AUTOMATION_EXCEPTION_AT_'+str(record.get('last_phase')))
 
         def start(_app):
-            Window.size = (452, 900)
+            Window.size = layout
             automation[0] = Clock.schedule_interval(drive, .05)
 
         app.bind(on_start=start)

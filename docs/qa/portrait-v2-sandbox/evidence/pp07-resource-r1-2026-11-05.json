@@ -1,0 +1,79 @@
+{
+  "source": "36ec0cc83f65940bd78e8865c0ded6329a2522e3",
+  "scope": "Synthetic local J21 repeated complete paid visits, fresh per-method temporary fixtures cleaned after each cycle; not multi-hour soak, real worker/device or performance qualification",
+  "performance_acceptance": "BLOCKED_NO_APPROVED_BUDGET",
+  "samples": [
+    {
+      "cycle": 1,
+      "paid_visits": 12,
+      "elapsed_seconds": 40.423,
+      "run": 1,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "rss_bytes": 201134080,
+      "traced_bytes": 8382805,
+      "threads": 1,
+      "open_descriptors": 4
+    },
+    {
+      "cycle": 2,
+      "paid_visits": 12,
+      "elapsed_seconds": 85.044,
+      "run": 1,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "rss_bytes": 202620928,
+      "traced_bytes": 8463189,
+      "threads": 1,
+      "open_descriptors": 4
+    },
+    {
+      "cycle": 3,
+      "paid_visits": 12,
+      "elapsed_seconds": 135.179,
+      "run": 1,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "rss_bytes": 202723328,
+      "traced_bytes": 8522817,
+      "threads": 1,
+      "open_descriptors": 4
+    },
+    {
+      "cycle": 4,
+      "paid_visits": 12,
+      "elapsed_seconds": 192.743,
+      "run": 1,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "rss_bytes": 202739712,
+      "traced_bytes": 8571224,
+      "threads": 1,
+      "open_descriptors": 4
+    },
+    {
+      "cycle": 5,
+      "paid_visits": 12,
+      "elapsed_seconds": 237.048,
+      "run": 1,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "rss_bytes": 202772480,
+      "traced_bytes": 8611310,
+      "threads": 1,
+      "open_descriptors": 4
+    }
+  ],
+  "seconds": 237.048,
+  "disk_free_bytes_after": 31268364288,
+  "measurement_limits": [
+    "Disk sample is post-run shared-workspace capacity, not isolated per-cycle disk growth.",
+    "Queues are not numerically sampled after fixture cleanup; J21 asserts original per-visit obligations and output isolation.",
+    "Concurrent broad regression affected elapsed time; no performance threshold or multi-hour qualification claimed."
+  ]
+}

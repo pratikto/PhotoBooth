@@ -127,6 +127,34 @@
         "ticket_visible_seconds": 30.002
       },
       "artifact_sha256": "9e0034ee86026fe9c5bff91c487b0481731acacc856f05c6fae18e33b6015319"
+    },
+    {
+      "run_id": "PP07-R1-E-timed800",
+      "tested_runtime_source": "36ec0cc83f65940bd78e8865c0ded6329a2522e3",
+      "result": "PASS",
+      "observations": {
+        "charges": 1,
+        "clock": "REAL_MONOTONIC",
+        "countdowns_started": 8,
+        "last_phase": "paid_delivery",
+        "layout": "800x1280",
+        "mode": "SYNTHETIC_ONLY",
+        "obligation": "OWED",
+        "physical_paper_verified": false,
+        "preview_amount": 25000,
+        "print_copies": [
+          2,
+          1
+        ],
+        "private_jpegs": 8,
+        "receipts": 1,
+        "retakes_requested": 2,
+        "seconds": 79.353,
+        "state": "PASS",
+        "ticket_auto_dismissed": true,
+        "ticket_visible_seconds": 30.008
+      },
+      "artifact_sha256": "44afb631e5740395670c9f2adf6085143ba958561e3fdde964967578b3150533"
     }
   ],
   "environment_failures": [
@@ -138,7 +166,8 @@
     "photobooth/post_preview_refund_assessment.py": "0448c263e574e4e77759930f640063220d537ad271c80249235787134247ead8",
     "tests/test_post_preview_refund_assessment.py": "47c41931a95fb71d8c824c742ce52f85622c1bc470d650278410aaa3b2ff122d",
     "tests/post_preview_process_fault_fixture.py": "46bb44c60bf4a5339fac11db209833d79c98ee70dac7254673c2da68a76436ea",
-    "tests/test_post_preview_process_crash.py": "7ee794e8e8b672b6293a7f9c02c74ed6d4faa512a98b0633a6453bb82c3e6913"
+    "tests/test_post_preview_process_crash.py": "7ee794e8e8b672b6293a7f9c02c74ed6d4faa512a98b0633a6453bb82c3e6913",
+    "docs/qa/portrait-v2-sandbox/evidence/run_timed_synthetic_journey.py": "43479b2a92f0c2eb8233ccf3c48618d756765754980748af56b43548b11ae5c3"
   },
   "case_register": "pp07-execution-register-r1-2026-11-05.csv",
   "full_acceptance_pass": 0,
@@ -236,5 +265,53 @@
     "observed": "CONNECT tunnel denied HTTP 403 by session proxy",
     "affected": "3 optional native inference methods; asset/model not downloaded; no fake inference counted",
     "policy_bypass": false
+  },
+  "resource_probe": "pp07-resource-r1-2026-11-05.json",
+  "ci_evidence": "pp07-ci-r1-2026-11-05.json",
+  "renders": {
+    "source": "36ec0cc83f65940bd78e8865c0ded6329a2522e3",
+    "process_exit_codes": [
+      0,
+      0
+    ],
+    "images": [
+      {
+        "name": "private-all-designs-800x12800001.png",
+        "sha256": "a85ea398abd1d9299bedd9ddc2383ad8a8d1d68204c7392ffd662b538001ec93"
+      },
+      {
+        "name": "private-capture-800x12800001.png",
+        "sha256": "ec994eda2f321c3a5c0bf907c86b01b696dd64774a7d4566fc035d66c332a448"
+      },
+      {
+        "name": "private-review-800x12800001.png",
+        "sha256": "8c1bb8d62e9d1328498326f5b5f3d39de6ae67687d6500e6cd0e67b81f15e392"
+      },
+      {
+        "name": "private-review-800x12800002.png",
+        "sha256": "b8fabddeb7c78139c8452cdb769031f5d84e4cd74892920a2399f29ef331d1ac"
+      },
+      {
+        "name": "private-all-designs-452x9000001.png",
+        "sha256": "355afb7e5b81bd1aaf35cc515098002d394aea4fbf9356fc6e741361704f3ef1"
+      },
+      {
+        "name": "private-capture-452x9000001.png",
+        "sha256": "b48a3a72078d67c6ef2a9a59a3dfa1617146b0cbd51808af0a06a39ca1143f3f"
+      },
+      {
+        "name": "private-review-452x9000001.png",
+        "sha256": "7f535eaefbd6e94da455bd2b79841b8ba4f3b65891823b3e3418d2ae41515139"
+      },
+      {
+        "name": "private-review-452x9000002.png",
+        "sha256": "bf2c452e50b80df0f32a7fef71168c1a5d45d43e3ee6d1aea78a7acbf8ed9df0"
+      }
+    ],
+    "visually_inspected": [
+      "private-all-designs-800x12800001.png",
+      "private-all-designs-452x9000001.png"
+    ],
+    "private_proof_screenshots": false
   }
 }

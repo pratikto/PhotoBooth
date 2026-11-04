@@ -151,6 +151,40 @@ fake inference is not a substitute. GUI/audio/video opt-ins are enabled for
 the current full regression. Its result and final source-matched CI are pending,
 not inferred from this timed PASS or historical acbac15.
 
+## Increment E — final functional-source CI and second timed layout
+
+**[CI 41920786730](https://github.com/pratikto/PhotoBooth/actions/runs/41920786730)
+at 36ec0cc completed 3/3 SUCCESS.** All completed logs independently inspected:
+556 Windows PASS (422.000s), 556 Ubuntu PASS (174.551s), 65 native Kivy PASS
+(109.763s), each zero failures/errors/skips. These are 1,177 platform executions,
+not unique acceptance cases. The nine new connected assessment/native methods
+and four process methods are individually present in their applicable logs.
+[CI/artifact evidence](evidence/pp07-ci-r1-2026-11-05.json) pins the actual source
+and synthetic preview artifact digest; the archive was not downloaded.
+
+The timed harness now accepts `--size 800x1280` (default remains 452x900).
+The 800x1280 actual-event-loop replay **PASS in 79.353s**, with **30.008s**
+genuine ticket visibility, eight real countdowns, one charge/receipt, 2+1 copies
+and unchanged OWED/no physical paper claim. Both requested portrait sizes now
+have independent actual-monotonic complete replays. Eight private-preview PNGs
+rendered successfully in two fresh processes; the two all-design previews were
+visually inspected. No private CCP/paid-ticket screenshot was saved.
+
+[Bounded resource observations](evidence/pp07-resource-r1-2026-11-05.json): five
+repetitions of existing J21, **60 synthetic paid visits in 237.048s**, fresh
+temporary fixtures with cleanup. Every J21 invariant passes. After GC, threads
+stay 1 and open descriptors stay 4; first/last RSS is 201,134,080/202,772,480
+bytes, traced Python memory 8,382,805/8,611,310 bytes. No leak-free claim or
+invented resource ceiling. This is not the proposed two-hour/four-hour soak.
+Disk is a post-run shared-workspace sample; numeric queue depths are not sampled
+after cleanup. Full qualification remains blocked on budgets and real lifecycle
+observations. To reproduce, run the J21 method five times in one process with
+`tracemalloc`, GC, `/proc/self/status`, `/proc/self/fd` and thread counts.
+
+The broader local GUI/audio/video regression is still running. No final local
+full result is inferred from matching CI. Documentation-only pushes do not
+retrigger or cancel the successful functional workflow.
+
 ## Remaining execution and external gates
 
 Next: independent-process crash/handoff barriers; virtual receipt/strip/Drive races; final native complete
