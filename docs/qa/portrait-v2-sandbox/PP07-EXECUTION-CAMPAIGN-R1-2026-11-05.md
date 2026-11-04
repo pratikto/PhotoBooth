@@ -185,6 +185,27 @@ The broader local GUI/audio/video regression is still running. No final local
 full result is inferred from matching CI. Documentation-only pushes do not
 retrigger or cancel the successful functional workflow.
 
+## Increment F — actual-time receipt barrier
+
+The timed harness adds `--slow-receipt`: a virtual printer worker holds its
+original receipt call for **45 real seconds**, without blocking the Kivy loop.
+The complete 452x900 replay **PASS in 95.080s**. The original ticket actually
+remained visible **33.207s** under concurrent broad-regression load, and was
+wiped while the original receipt was **still in flight**. This is not described
+as exactly 30s or a performance-budget PASS. The single receipt then completed
+before the original 2+1 strip batches; charge/receipt counts remain one and
+OWED/`physical_paper_verified=False` remain honest. Eight real capture countdowns
+and two independent retakes are retained. This run uses natural expiry; it does
+not claim the early-NEXT sub-scope of PP-051 or physical printer acceptance.
+
+The 45-second fixture delay is a fault stimulus, not a product timeout policy.
+No actual device/provider/Drive transport is enabled. Runtime source remains
+36ec0cc; only the versioned diagnostic harness/documentation changes.
+
+```text
+python docs/qa/portrait-v2-sandbox/evidence/run_timed_synthetic_journey.py --slow-receipt
+```
+
 ## Remaining execution and external gates
 
 Next: independent-process crash/handoff barriers; virtual receipt/strip/Drive races; final native complete

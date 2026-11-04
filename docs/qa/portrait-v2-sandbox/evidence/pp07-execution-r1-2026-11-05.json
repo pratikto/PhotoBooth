@@ -155,6 +155,44 @@
         "ticket_visible_seconds": 30.008
       },
       "artifact_sha256": "44afb631e5740395670c9f2adf6085143ba958561e3fdde964967578b3150533"
+    },
+    {
+      "run_id": "PP07-R1-F-slow-receipt",
+      "tested_runtime_source": "36ec0cc83f65940bd78e8865c0ded6329a2522e3",
+      "result": "PASS",
+      "virtual_receipt_delay_seconds": 45,
+      "observations": {
+        "charges": 1,
+        "clock": "REAL_MONOTONIC",
+        "countdowns_started": 8,
+        "last_phase": "paid_delivery",
+        "layout": "452x900",
+        "mode": "SYNTHETIC_ONLY",
+        "obligation": "OWED",
+        "physical_paper_verified": false,
+        "preview_amount": 25000,
+        "print_copies": [
+          2,
+          1
+        ],
+        "private_jpegs": 8,
+        "receipts": 1,
+        "retakes_requested": 2,
+        "seconds": 95.08,
+        "state": "PASS",
+        "ticket_auto_dismissed": true,
+        "ticket_visible_seconds": 33.207,
+        "ticket_wiped_while_receipt_inflight": true
+      },
+      "partial_case_ids": [
+        "PP-041",
+        "PP-042",
+        "PP-051",
+        "PP-079",
+        "PP-080"
+      ],
+      "scope": "Natural visible-timer expiry during held virtual receipt; not early NEXT or paper acceptance",
+      "artifact_sha256": "4febe5bde3dc35beb473ee943487d8b3ee2b49b76546c54210ff1635052c44b8"
     }
   ],
   "environment_failures": [
@@ -167,7 +205,7 @@
     "tests/test_post_preview_refund_assessment.py": "47c41931a95fb71d8c824c742ce52f85622c1bc470d650278410aaa3b2ff122d",
     "tests/post_preview_process_fault_fixture.py": "46bb44c60bf4a5339fac11db209833d79c98ee70dac7254673c2da68a76436ea",
     "tests/test_post_preview_process_crash.py": "7ee794e8e8b672b6293a7f9c02c74ed6d4faa512a98b0633a6453bb82c3e6913",
-    "docs/qa/portrait-v2-sandbox/evidence/run_timed_synthetic_journey.py": "43479b2a92f0c2eb8233ccf3c48618d756765754980748af56b43548b11ae5c3"
+    "docs/qa/portrait-v2-sandbox/evidence/run_timed_synthetic_journey.py": "e6ceb5e16035e55100cbcc3768e02f5f26e28895523ca2a87ce9b242bf1ca84a"
   },
   "case_register": "pp07-execution-register-r1-2026-11-05.csv",
   "full_acceptance_pass": 0,

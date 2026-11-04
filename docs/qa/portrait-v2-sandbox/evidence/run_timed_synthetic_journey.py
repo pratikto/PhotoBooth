@@ -10,6 +10,7 @@ import json
 import os
 import sys
 import tempfile
+import threading
 import time
 from unittest.mock import Mock
 
@@ -31,6 +32,8 @@ from tests.post_preview_checkout_fixture import CheckoutFixture
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--size', choices=('452x900', '800x1280'), default='452x900')
+    parser.add_argument('--slow-receipt', action='store_true',
+                        help='Hold the virtual receipt for 45 real seconds; never a device timeout policy')
     args = parser.parse_args()
     layout = tuple(int(value) for value in args.size.split('x'))
     began = time.monotonic()
@@ -40,6 +43,17 @@ def main():
         fixture = CheckoutFixture(Path(folder))
         fixture.enable_paid_ticket()
         fixture.enable_paid_delivery()
+        receipt_entered, receipt_completed = threading.Event(), threading.Event()
+        if args.slow_receipt:
+            original_send = fixture.service._receipt_printer.print_bitmap
+            def slow_receipt(*values, **options):
+                receipt_entered.set()
+                time.sleep(45)  # Synthetic transport fault; UI must keep ticking.
+                try:
+                    return original_send(*values, **options)
+                finally:
+                    receipt_completed.set()
+            fixture.service._receipt_printer.print_bitmap = slow_receipt
         camera = Mock()
         camera.read.side_effect = lambda: np.zeros((32, 48, 3), dtype=np.uint8)
         camera.preview.return_value = None
@@ -71,6 +85,9 @@ def main():
                 # excluding later dismissal/Drive/print worker processing.
                 record['ticket_visible_seconds'] = round(time.monotonic()-started, 3)
                 record['ticket_auto_dismissed'] = user is False
+                if args.slow_receipt:
+                    record['ticket_wiped_while_receipt_inflight'] = (
+                        receipt_entered.is_set() and not receipt_completed.is_set())
 
         app._ticket_next = ticket_next
 
@@ -139,6 +156,7 @@ def main():
                                 or record['preview_amount'] != 25000
                                 or record.get('ticket_visible_seconds', 0) < 30
                                 or not record.get('ticket_auto_dismissed')
+                                or args.slow_receipt and not record.get('ticket_wiped_while_receipt_inflight')
                                 or record['obligation'] != 'OWED' or record['physical_paper_verified']):
                             return stop_error('FINAL_INVARIANT_MISMATCH')
                         app.stop()
