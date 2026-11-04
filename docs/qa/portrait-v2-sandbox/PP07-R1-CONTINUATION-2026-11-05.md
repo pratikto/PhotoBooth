@@ -1,5 +1,12 @@
 # R1 durable continuation — 5 November 2026 (Asia/Jakarta)
 
+> **Latest verification:** fec4f7f CI 41927170321 is now COMPLETED 3/3 SUCCESS:
+> 557 Windows, 557 Ubuntu, 67 native PASS; zero failure/error/skip; all logs
+> inspected. The local broad run/session 72311 remains RUNNING, not PASS yet.
+> Next: read full-final-r1.log/full-final-report.txt and publish its actual result.
+> This supersedes Windows-pending notes below; previous failures/cancellations
+> remain historical. [CI evidence](evidence/pp07-ci-final-r1-2026-11-05.json).
+
 ## Latest checkpoint — BUG-044 source fec4f7f supersedes the active-job notes below
 
 Last remote independently verified:

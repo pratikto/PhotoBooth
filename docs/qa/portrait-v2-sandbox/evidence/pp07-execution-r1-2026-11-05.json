@@ -403,7 +403,7 @@
       "definition": "release controls"
     }
   ],
-  "next": "Finish active fec4f7f full regression and CI 41927170321; preserve old failed/cancelled runs. Then publish final case-method register and exact continuation; no large new tasks.",
+  "next": "Finish the active fec4f7f broad local run (no competing probes); record actual summary and exact mapped case scopes, then push final checkpoint. CI is verified separately, not substituted for local result.",
   "raw_artifacts": "task scratch only, not committed; hashes and allowlisted observations preserved",
   "delivery": [
     {
@@ -575,8 +575,15 @@
     "ci": {
       "id": 41927170321,
       "tested_sha": "fec4f7f9d3169d1421a704813d83355bee12f4d1",
+      "result": "COMPLETED_3_OF_3_SUCCESS",
+      "windows": {
+        "run": 557,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "seconds": 493.965
+      },
       "ubuntu": {
-        "result": "PASS",
         "run": 557,
         "fail": 0,
         "error": 0,
@@ -584,14 +591,13 @@
         "seconds": 172.505
       },
       "native": {
-        "result": "PASS",
         "run": 67,
         "fail": 0,
         "error": 0,
         "skip": 0,
         "seconds": 112.044
       },
-      "windows": "PENDING"
+      "logs_independently_inspected": true
     }
   },
   "superseded_ci": [
@@ -611,5 +617,6 @@
       "result": "CANCELLED_NOT_PASS_OR_PRODUCT_FAIL",
       "partial_completed_jobs": "Ubuntu 557/native 65 PASS; Windows incomplete, no 3/3 claim"
     }
-  ]
+  ],
+  "final_ci_evidence": "pp07-ci-final-r1-2026-11-05.json"
 }

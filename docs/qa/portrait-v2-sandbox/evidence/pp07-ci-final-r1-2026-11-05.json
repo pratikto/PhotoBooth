@@ -1,0 +1,59 @@
+{
+  "run": {
+    "id": 41927170321,
+    "sha": "fec4f7f9d3169d1421a704813d83355bee12f4d1",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/41927170321"
+  },
+  "jobs": [
+    {
+      "job_id": 126914470352,
+      "result": "success",
+      "summaries": [
+        "2026-11-04T22:48:16.8287187Z Ran 557 tests in 493.965s\r",
+        "2026-11-04T22:48:16.8287565Z KIOSK_UNITTEST_SUMMARY: run=557 failures=0 errors=0 skipped=0 success=True\r"
+      ]
+    },
+    {
+      "job_id": 126914470136,
+      "result": "success",
+      "summaries": [
+        "2026-11-04T22:42:35.3593531Z Ran 557 tests in 172.505s",
+        "2026-11-04T22:42:35.3594302Z KIOSK_UNITTEST_SUMMARY: run=557 failures=0 errors=0 skipped=0 success=True"
+      ]
+    },
+    {
+      "job_id": 126914470052,
+      "result": "success",
+      "summaries": [
+        "2026-11-04T22:41:47.9850502Z Ran 67 tests in 112.044s",
+        "2026-11-04T22:41:47.9851336Z KIOSK_UNITTEST_SUMMARY: run=67 failures=0 errors=0 skipped=0 success=True"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 13368659079,
+      "name": "meong-private-preview-synthetic",
+      "size_in_bytes": 241932,
+      "url": "https://api.github.com/repos/pratikto/PhotoBooth/actions/artifacts/13368659079",
+      "archive_download_url": "https://api.github.com/repos/pratikto/PhotoBooth/actions/artifacts/13368659079/zip",
+      "expired": false,
+      "created_at": "2026-11-04T22:41:55Z",
+      "expires_at": "2026-11-11T22:41:54Z",
+      "updated_at": "2026-11-04T22:41:55Z",
+      "digest": "sha256:2fa82ce308f3f79176f82a04177ab06077e523cf307e46bfc18ca6f02455259a",
+      "workflow_run": {
+        "id": 41927170321,
+        "repository_id": 1416436951,
+        "head_repository_id": 1416436951,
+        "head_branch": "feature/post-preview-qris-checkout",
+        "head_sha": "fec4f7f9d3169d1421a704813d83355bee12f4d1"
+      }
+    }
+  ],
+  "logs_independently_inspected": true,
+  "total_platform_executions": 1181,
+  "unique_acceptance_case_count_inferred": false
+}

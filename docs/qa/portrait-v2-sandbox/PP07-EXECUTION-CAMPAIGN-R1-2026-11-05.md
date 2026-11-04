@@ -285,6 +285,21 @@ run at the same source started 05:43:59 Asia/Jakarta and is still RUNNING.
 No full result or 3/3 CI is claimed yet. Follow the
 [exact active verification checkpoint](PP07-R1-CONTINUATION-2026-11-05.md).
 
+## Final functional-source CI gate — complete; local broad run still pending
+
+**[CI 41927170321](https://github.com/pratikto/PhotoBooth/actions/runs/41927170321)
+at fec4f7f completed 3/3 SUCCESS:** Windows **557 PASS** / 493.965s, Ubuntu
+**557 PASS** / 172.505s, native **67 PASS** / 112.044s. All zero failures/errors/
+skips; every completed log independently inspected. This is **1,181 platform
+executions**, not unique acceptance cases. New BUG-044 native cases and the
+original privacy case/new guarded setup case are individually present in logs.
+[Exact-source CI/artifact record](evidence/pp07-ci-final-r1-2026-11-05.json).
+
+The local broad run at fec4f7f remains RUNNING without a summary at this
+checkpoint. No local full PASS is inferred from CI, no owner row is promoted,
+and the first ERROR/cancelled run remain in the ledger. Documentation-only
+checkpoints preserve the successful functional CI without rerunning it.
+
 ## Remaining execution and external gates
 
 Next: independent-process crash/handoff barriers; virtual receipt/strip/Drive races; final native complete
