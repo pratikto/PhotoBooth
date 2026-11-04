@@ -1,5 +1,17 @@
 # Meong Photobooth — Bug register
 
+## BUG-043 — Stencil-clipped private proof recorded as genuinely offered (5 November 2026)
+
+**Severity:** S1 proof-opportunity/checkout integrity. **Status:** SOURCE FIXED /
+focused software VERIFIED; complete source-matched regression/CI pending.
+Two connected native regressions initially FAIL: clipped CCP sets offered_at,
+and clipped paid ticket sets VISIBLE despite unusable QR/full code. The shared
+card now checks stencil ancestors before its original visibility callback.
+Three new methods plus affected native/payment/ticket/classifier scope:
+68 PASS, zero failures/errors/skips. Original PAID/OWED remains; printer ACK
+alone is not screen evidence. No physical fault, live charge or refund claimed.
+[Exact reproduction, evidence and next step](qa/portrait-v2-sandbox/PP07-EXECUTION-CAMPAIGN-R1-2026-11-05.md).
+
 ## BUG-042 — Proof-loss label masked independent merchant/financial failure evidence (5 November 2026)
 
 **Severity:** S1 nonbinding policy classification. **Status:** SOURCE FIXED /

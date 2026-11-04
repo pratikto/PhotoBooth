@@ -1,0 +1,117 @@
+{
+  "campaign_id": "PP07-R1",
+  "status": "IN_PROGRESS",
+  "recorded_at": "2026-11-05T04:48:43.323805+07:00",
+  "timezone": "Asia/Jakarta",
+  "source_base": "291d5227f1bc7bc050cd0ad1028c3af1b2d1c8ca",
+  "authorized_branch": "feature/post-preview-qris-checkout",
+  "checkout": "isolated existing-branch clone; original work checkout preserved; old excluded",
+  "environment": {
+    "os": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "python": "3.12.14",
+    "interpreter": "fresh task-only Python 3.12 venv",
+    "display": "SDL offscreen Mesa llvmpipe",
+    "credentials": "none provisioned in environment status",
+    "external_effects": "OFF: camera, paper, provider, Drive, refund, production"
+  },
+  "runs": [
+    {
+      "run_id": "PP07-R1-A-before",
+      "result": "FAIL",
+      "run": 2,
+      "fail": 2,
+      "errors": 0,
+      "skip": 0,
+      "seconds": 2.023,
+      "observed": "clipped CCP offered_at=1000; clipped ticket screen_state=VISIBLE",
+      "artifact_sha256": "46017a4ae110115910e9eedc85854207fade5d00b21acf020bcb4d7bc8bf84bf"
+    },
+    {
+      "run_id": "PP07-R1-A",
+      "result": "PASS",
+      "run": 68,
+      "fail": 0,
+      "errors": 0,
+      "skip": 0,
+      "seconds": 31.265,
+      "unique_new_methods": 3,
+      "new_partial_case_ids": [
+        "PP-033",
+        "PP-040",
+        "PP-087",
+        "PP-088"
+      ],
+      "artifact_sha256": "a6901357a6a8f9ff0da5ab7477fffa1310102959112f5864415eb4bb0193e19b"
+    }
+  ],
+  "environment_failures": [
+    "Initial network-restricted shell tests did not complete; terminated, no PASS inferred. Network-enabled execution resolved local fixture/TestClient operations. No proxy bypass."
+  ],
+  "source_file_sha256": {
+    "photobooth/kiosk_v2/ccp_view.py": "30df5fafc6e80e695e1c05608633bb1c2216f616b17e8927d58e00be8102c647",
+    "tests/test_ccp_view.py": "8b42695b67f67f754c2c51865a2c501167a8319cf0759c2d7c482c4e1c4728cf"
+  },
+  "case_register": "pp07-execution-register-r1-2026-11-05.csv",
+  "full_acceptance_pass": 0,
+  "case_count": 188,
+  "ar_gates": [
+    {
+      "stage_id": "AR-00",
+      "definition": "contract and fixture freeze"
+    },
+    {
+      "stage_id": "AR-01",
+      "definition": "uncertain charge creation / provider idempotency"
+    },
+    {
+      "stage_id": "AR-02",
+      "definition": "provider evidence and automatic reconciliation"
+    },
+    {
+      "stage_id": "AR-03",
+      "definition": "distinct ledgers and durable atomic admission"
+    },
+    {
+      "stage_id": "AR-04",
+      "definition": "photo write-ahead capture"
+    },
+    {
+      "stage_id": "AR-05",
+      "definition": "reconstruct original customer photo workflow"
+    },
+    {
+      "stage_id": "AR-06",
+      "definition": "secure customer self-claim"
+    },
+    {
+      "stage_id": "AR-07",
+      "definition": "native unattended UX"
+    },
+    {
+      "stage_id": "AR-08",
+      "definition": "readiness and paid remedy"
+    },
+    {
+      "stage_id": "AR-09",
+      "definition": "operator path and safe customer release"
+    },
+    {
+      "stage_id": "AR-10",
+      "definition": "watchdog & recovery supervisor"
+    },
+    {
+      "stage_id": "AR-11",
+      "definition": "webhook/backend separation"
+    },
+    {
+      "stage_id": "AR-12",
+      "definition": "comprehensive validation"
+    },
+    {
+      "stage_id": "AR-13",
+      "definition": "release controls"
+    }
+  ],
+  "next": "finish connected never-offered late-PAID/remedy classification, crash/handoff and final native/timed/regression/CI verification; no owner test request yet",
+  "raw_artifacts": "task scratch only, not committed; hashes and allowlisted observations preserved"
+}

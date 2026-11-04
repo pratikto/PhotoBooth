@@ -9,6 +9,7 @@ from kivy.clock import Clock
 from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
+from kivy.uix.stencilview import StencilView
 
 from photobooth.post_preview_ccp import PendingCCPOffer, render_private_ccp
 from .photo_views import image_texture
@@ -76,6 +77,15 @@ class PrivateCCPCard(BoxLayout):
                 seen.add(id(parent))
                 if getattr(parent, 'opacity', 1) < 1:
                     return
+                if isinstance(parent, StencilView):
+                    # A texture inside the window may still be clipped by a
+                    # ScrollView/stencil ancestor. Only a complete private QR
+                    # and full code are evidence of an actual opportunity.
+                    clip_x, clip_y = parent.to_window(0, 0, relative=True)
+                    if (x < clip_x-.5 or y < clip_y-.5
+                            or x+widget.width > clip_x+parent.width+.5
+                            or y+widget.height > clip_y+parent.height+.5):
+                        return
                 parent = parent.parent
         # Full text must fit; generating a QR or owning a texture is not an offer.
         if self.code.texture_size[1] > self.code.height or min(self.qr_image.size) < dp(160):

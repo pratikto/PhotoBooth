@@ -15,6 +15,114 @@ from photobooth.qr_code import _render_qr, create_qr_image
 
 
 class CCPViewTests(unittest.TestCase):
+    def _clipped_card(self, card):
+        from kivy.uix.stencilview import StencilView
+        Window.size = (452, 900)
+        # The private card fits the window, but its actual stencil viewport
+        # clips the QR and code. Textures and ancestor opacity remain valid.
+        viewport = StencilView(size_hint=(None, None), size=(452, 80))
+        card.size_hint = (None, None)
+        card.size = (452, 900)
+        card._ready_at = time.monotonic()+1000
+        viewport.add_widget(card)
+        Window.add_widget(viewport)
+        self.addCleanup(Window.remove_widget, viewport)
+        self.addCleanup(card.retire)
+        for _ in range(5):
+            EventLoop.idle()
+        card._ready_at = 0
+        card._rendered(0)
+        return viewport
+
+    def test_stencil_clipped_ccp_cannot_record_offer_or_authorize_charge(self):
+        from tests.test_post_preview_ccp import OriginalCCPTests
+        from tests.test_post_preview_payments import SyntheticProvider
+        from photobooth.post_preview_checkout import ChargeReadiness
+        from photobooth.post_preview_payments import PostPreviewPayments
+        from photobooth.post_preview_store import DraftHeld
+        fixture = OriginalCCPTests()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        offer = fixture.offer()
+        card = PrivateCCPCard(offer, render_private_ccp(offer),
+            lambda value: fixture.service.mark_visible(fixture.lease, value),
+            is_current=lambda: True)
+        viewport = self._clipped_card(card)
+        self.assertIsNone(fixture.row()['offered_at'])
+        provider = SyntheticProvider()
+        payments = PostPreviewPayments(fixture.ledger, provider, 'MTEST',
+            readiness=lambda _group: ChargeReadiness(True, True, True, True, True, True, True, 25),
+            poll_seconds=0)
+        with self.assertRaises(DraftHeld):
+            payments.begin(fixture.lease)
+        self.assertEqual(0, provider.charges)
+        self.assertEqual(0, fixture.ledger.db.execute(
+            "SELECT count(*) FROM pp_events WHERE event='CCP_OFFERED'").fetchone()[0])
+        viewport.size = (452, 900)
+        for _ in range(5):
+            EventLoop.idle()
+        card._rendered(0)
+        self.assertEqual(1000, fixture.row()['offered_at'])
+        self.assertEqual('PENDING', payments.begin(fixture.lease)['state'])
+        self.assertEqual(1, provider.charges)
+
+    def test_stencil_clipped_paid_ticket_retains_owed_without_visible_or_receipt(self):
+        from tests.test_post_preview_checkout_ticket import PrivateTicketCheckoutTests
+        from photobooth.kiosk_v2.ccp_view import PrivateRecoveryTicketCard
+        from photobooth.post_preview_store import DraftHeld
+        fixture = PrivateTicketCheckoutTests()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        fixture.paid()
+        view = fixture.service.prepare_ticket()
+        card = PrivateRecoveryTicketCard(view['ticket_offer'], view['ticket_qr'],
+            fixture.service.ticket_visible, is_current=lambda: True)
+        self._clipped_card(card)
+        ledger = fixture.service.ledger
+        self.assertEqual('NOT_OFFERED', ledger.db.execute(
+            'SELECT screen_state FROM pp_ticket_presentations').fetchone()[0])
+        self.assertIsNone(ledger.db.execute(
+            'SELECT offered_at FROM pp_ticket_credentials').fetchone()[0])
+        self.assertEqual('OWED', ledger.db.execute(
+            'SELECT status FROM pp_paid_services').fetchone()[0])
+        with self.assertRaises(DraftHeld):
+            fixture.service.ticket_send_receipt()
+        self.assertEqual([], fixture.fixture.receipt_sizes)
+
+    def test_submitted_receipt_without_ticket_render_is_not_a_genuine_offer(self):
+        from tests.test_post_preview_checkout_ticket import PrivateTicketCheckoutTests
+        from photobooth.kiosk_v2.ccp_view import PrivateRecoveryTicketCard
+        fixture = PrivateTicketCheckoutTests()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        fixture.paid()
+        view = fixture.service.prepare_ticket()
+        ledger = fixture.service.ledger
+        # Inject an independent old/out-of-band transport ACK. Current sending
+        # code correctly refuses this ordering; ACK alone must never invent a
+        # visible opportunity, discharge OWED, or bypass the first screen.
+        with ledger.write():
+            for state in ('SENDING', 'SUBMITTED'):
+                ledger.db.execute('UPDATE pp_ticket_presentations SET receipt_state=?', (state,))
+        card = PrivateRecoveryTicketCard(view['ticket_offer'], view['ticket_qr'],
+            fixture.service.ticket_visible, is_current=lambda: True)
+        viewport = self._clipped_card(card)
+        self.assertEqual(('NOT_OFFERED', 'SUBMITTED'), tuple(ledger.db.execute(
+            'SELECT screen_state,receipt_state FROM pp_ticket_presentations').fetchone()))
+        self.assertIsNone(ledger.db.execute(
+            'SELECT offered_at FROM pp_ticket_credentials').fetchone()[0])
+        self.assertEqual(0, ledger.db.execute(
+            "SELECT count(*) FROM pp_events WHERE event='TICKET_QR_VISIBLE'").fetchone()[0])
+        self.assertEqual('OWED', ledger.db.execute(
+            'SELECT status FROM pp_paid_services').fetchone()[0])
+        viewport.size = (452, 900)
+        for _ in range(5):
+            EventLoop.idle()
+        card._rendered(0)
+        self.assertEqual(('VISIBLE', 'SUBMITTED'), tuple(ledger.db.execute(
+            'SELECT screen_state,receipt_state FROM pp_ticket_presentations').fetchone()))
+        self.assertEqual([], fixture.fixture.receipt_sizes)
+
     def test_private_encoder_bypasses_shared_recent_content_cache(self):
         _render_qr.cache_clear()
         before = _render_qr.cache_info()
