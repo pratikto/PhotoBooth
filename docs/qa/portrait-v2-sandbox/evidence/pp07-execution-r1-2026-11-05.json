@@ -193,6 +193,43 @@
       ],
       "scope": "Natural visible-timer expiry during held virtual receipt; not early NEXT or paper acceptance",
       "artifact_sha256": "4febe5bde3dc35beb473ee943487d8b3ee2b49b76546c54210ff1635052c44b8"
+    },
+    {
+      "run_id": "PP07-R1-full-1",
+      "tested_sha": "36ec0cc83f65940bd78e8865c0ded6329a2522e3",
+      "result": "ERROR_SETUP_WITH_EXPLICIT_SKIPS",
+      "run": 1757,
+      "pass": 1753,
+      "fail": 0,
+      "errors": 1,
+      "skip": 3,
+      "seconds": 1204.513,
+      "normalized_unique_test_ids": 1667,
+      "error_method": "test_post_preview_checkout_ticket.PrivateTicketCheckoutTests.test_retired_private_owner_cannot_offer_receipt_or_restore_pixels",
+      "observed": "payment setup returned no observation; old positive helper indexed None before privacy assertions",
+      "root_cause_of_original_occurrence": "NOT_PROVEN; no detailed original readiness observation was retained",
+      "artifact_sha256": "cd6c57d11fe07fd92d71bfa69e34d18454262eab69083fb2aa4cd133702a0b4d"
+    },
+    {
+      "run_id": "PP07-R1-H-before",
+      "result": "ERROR_EXPECTED_REPRODUCTION",
+      "run": 1,
+      "fail": 0,
+      "errors": 1,
+      "skip": 0,
+      "seconds": 1.26,
+      "scope": "New controlled original-readiness expiry reproduces identical positive-helper NoneType error; backend holds with zero POSTs"
+    },
+    {
+      "run_id": "PP07-R1-H",
+      "result": "PASS",
+      "run": 41,
+      "fail": 0,
+      "errors": 0,
+      "skip": 0,
+      "seconds": 16.887,
+      "unique_new_methods": 1,
+      "scope": "Positive test helper only: one fresh retry of proven UNSENT original attempt; real two-second source guard unchanged; no SENT/UNKNOWN retry"
     }
   ],
   "environment_failures": [
@@ -205,7 +242,8 @@
     "tests/test_post_preview_refund_assessment.py": "47c41931a95fb71d8c824c742ce52f85622c1bc470d650278410aaa3b2ff122d",
     "tests/post_preview_process_fault_fixture.py": "46bb44c60bf4a5339fac11db209833d79c98ee70dac7254673c2da68a76436ea",
     "tests/test_post_preview_process_crash.py": "7ee794e8e8b672b6293a7f9c02c74ed6d4faa512a98b0633a6453bb82c3e6913",
-    "docs/qa/portrait-v2-sandbox/evidence/run_timed_synthetic_journey.py": "e6ceb5e16035e55100cbcc3768e02f5f26e28895523ca2a87ce9b242bf1ca84a"
+    "docs/qa/portrait-v2-sandbox/evidence/run_timed_synthetic_journey.py": "e6ceb5e16035e55100cbcc3768e02f5f26e28895523ca2a87ce9b242bf1ca84a",
+    "tests/test_post_preview_checkout_ticket.py": "8d2945182620114ef9f324f6b5d6f64e4f952db7f2babeb4056c67cd9c4a9013"
   },
   "case_register": "pp07-execution-register-r1-2026-11-05.csv",
   "full_acceptance_pass": 0,
@@ -268,7 +306,7 @@
       "definition": "release controls"
     }
   ],
-  "next": "Independent crash/handoff and complete native/timed journeys; one final complete regression and matching Windows/Ubuntu/native CI. Protected OS original-worker restore and durable refund protocol remain incomplete.",
+  "next": "Repeat broad regression without concurrent diagnostic load after the source-pinned fixture-only change; inspect exact new CI. Keep first full-run ERROR and 3 model SKIPs explicit.",
   "raw_artifacts": "task scratch only, not committed; hashes and allowlisted observations preserved",
   "delivery": [
     {
@@ -351,5 +389,80 @@
       "private-all-designs-452x9000001.png"
     ],
     "private_proof_screenshots": false
-  }
+  },
+  "privacy_setup_diagnostics": [
+    {
+      "iteration": 1,
+      "controlled_readiness_delay": false,
+      "run": 1,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "observation": {
+        "guard": null,
+        "charges": null
+      }
+    },
+    {
+      "iteration": 2,
+      "controlled_readiness_delay": false,
+      "run": 1,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "observation": {
+        "guard": null,
+        "charges": null
+      }
+    },
+    {
+      "iteration": 3,
+      "controlled_readiness_delay": false,
+      "run": 1,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "observation": {
+        "guard": null,
+        "charges": null
+      }
+    },
+    {
+      "iteration": 4,
+      "controlled_readiness_delay": false,
+      "run": 1,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "observation": {
+        "guard": null,
+        "charges": null
+      }
+    },
+    {
+      "iteration": 5,
+      "controlled_readiness_delay": false,
+      "run": 1,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "observation": {
+        "guard": null,
+        "charges": null
+      }
+    },
+    {
+      "iteration": 6,
+      "controlled_readiness_delay": true,
+      "run": 1,
+      "fail": 0,
+      "error": 1,
+      "skip": 0,
+      "observation": {
+        "guard": "DraftHeld",
+        "charges": 0,
+        "guard_message": "Fresh independent readiness is not established"
+      }
+    }
+  ]
 }

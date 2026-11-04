@@ -3,6 +3,7 @@ from pathlib import Path
 import tempfile
 import threading
 import unittest
+from unittest.mock import patch
 
 import numpy as np
 from photobooth.credential_vault import VaultUnavailable
@@ -27,6 +28,21 @@ class PrivateTicketCheckoutTests(unittest.TestCase):
 
     def paid(self):
         view=self.ready()
+        if view['phase'] == 'payment_hold' and view['payment'] is None:
+            # This positive privacy fixture may encounter the real two-second
+            # readiness fence on a loaded host. Retry only a proven UNSENT
+            # setup, through the original service's fresh checks, once.
+            self.assertEqual(0, self.fixture.provider.charges)
+            before = self.service.ledger.db.execute(
+                'SELECT attempt_id,create_phase FROM pp_payment_attempts').fetchall()
+            self.assertTrue(all(row['create_phase'] == 'PREPARED' for row in before))
+            view = self.service.begin_payment()
+            if before:
+                self.assertEqual([row['attempt_id'] for row in before], [row[0] for row in
+                    self.service.ledger.db.execute('SELECT attempt_id FROM pp_payment_attempts')])
+        self.assertEqual('payment_pending', view['phase'])
+        self.assertIsNotNone(view['payment'])
+        self.assertEqual(1, self.fixture.provider.charges)
         original=view['payment']['attempts'][0]['provider_order_id']
         self.fixture.provider.state(original,'settlement')
         view=self.service.check_payment('connectivity')
@@ -88,6 +104,29 @@ class PrivateTicketCheckoutTests(unittest.TestCase):
         self.assertEqual(1,len(self.fixture.receipt_sizes))
         self.assertEqual('ACTIVE',self.service.ledger.db.execute(
             'SELECT lifecycle FROM pp_drafts').fetchone()[0])
+
+    def test_paid_setup_reobserves_expired_readiness_without_replacing_unsent_attempt(self):
+        clock = [1000.0]
+        self.service.ledger.now = lambda: clock[0]
+        prepare = self.fixture.backend._prepare
+        attempts = []
+        def delayed_once(*args, **kwargs):
+            result = prepare(*args, **kwargs)
+            attempts.append(result[1]['attempt_id'])
+            if len(attempts) == 1:
+                clock[0] += 3  # Existing two-second guard must HOLD before POST.
+            else:
+                self.assertEqual(0, self.fixture.provider.charges)
+                self.assertEqual('PREPARED', self.service.ledger.db.execute(
+                    'SELECT create_phase FROM pp_payment_attempts').fetchone()[0])
+            return result
+        with patch.object(self.fixture.backend, '_prepare', side_effect=delayed_once):
+            self.paid()
+        self.assertEqual(2, len(attempts))
+        self.assertEqual(attempts[0], attempts[1])
+        self.assertEqual(1, self.fixture.provider.charges)
+        self.assertEqual(1, self.service.ledger.db.execute(
+            'SELECT count(*) FROM pp_payment_attempts').fetchone()[0])
 
 
 if __name__=='__main__': unittest.main()

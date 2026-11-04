@@ -206,6 +206,38 @@ No actual device/provider/Drive transport is enabled. Runtime source remains
 python docs/qa/portrait-v2-sandbox/evidence/run_timed_synthetic_journey.py --slow-receipt
 ```
 
+## Increment H — broad-run setup error preserved and fixture retest
+
+The first complete local GUI/audio/video run at 36ec0cc finished in 1,204.513s:
+**1,757 run, 1,753 PASS, zero FAIL, one ERROR, three SKIP**. The model SKIPs are
+the three explicitly blocked real MediaPipe methods, not PASS. There are 1,667
+normalized distinct method IDs. The error was in positive PAID setup for
+`PrivateTicketCheckoutTests.test_retired_private_owner_cannot_offer_receipt_or_restore_pixels`:
+`payment` was None and the helper indexed it before reaching privacy assertions.
+This full run is **not PASS**, even though 36ec0cc CI is independently green.
+
+Five isolated repeats of that exact case PASS. A sixth diagnostic holds
+readiness beyond the existing two-second bound: the backend correctly raises
+DraftHeld, sends **zero charges**, and reproduces the same helper TypeError.
+The first occurrence lacked detailed readiness telemetry; its exact cause
+remains **unproven**, not silently attributed to that controlled reproduction.
+
+The positive privacy-test helper now permits one fresh original setup retry
+**only** after proving zero provider calls and no attempt beyond PREPARED.
+It asserts original attempt identity, PENDING and exactly one charge before
+proceeding. It never retries SENT/UNKNOWN or alters a production guard. No
+assertion, durability check, timeout or safety requirement is removed. A new
+connected regression ages the original readiness after PREPARE, checks zero
+POST before the second observation, and proves the same original attempt pays
+once after fresh readiness. Before repair: one ERROR; after: affected ticket/
+checkout/readiness scope **41 PASS**, zero failures/errors/skips, 16.887s.
+
+This is a **test-fixture assumption repair**, not a new product defect ID or a
+relaxation of the two-second readiness fence. Runtime remains unchanged from
+36ec0cc. The complete local regression must now be repeated without concurrent
+resource probes/replays, and the new test-source CI must be inspected before
+final status. The original failure and all diagnostics stay in the run ledger.
+
 ## Remaining execution and external gates
 
 Next: independent-process crash/handoff barriers; virtual receipt/strip/Drive races; final native complete
