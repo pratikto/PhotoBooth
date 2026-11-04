@@ -1,5 +1,7 @@
 # PP-07 software continuation and device readiness — 4 November 2026
 
+> **5 November software continuation:** [latest verified source and next engineering task](PP07-CONTINUATION-2026-11-05.md): c20479d / CI 41901827925 all 3 SUCCESS (544 Windows, 544 Ubuntu, 61 native). Owner launch procedure and separate merchant/secure-worker/hardware/refund/production gates remain unchanged.
+
 ## Final verified checkpoint — supervised synthetic device candidate
 
 **READY_FOR_SUPERVISED_SYNTHETIC_DEVICE_TEST**, subject to owner installation,

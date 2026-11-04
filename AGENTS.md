@@ -1,6 +1,6 @@
 # Repository working instructions
 
-> [Latest continuation — 5 November: read this source-specific checkpoint first. BUG-040 local regression PASS; exact-source CI pending. Existing branch and all payment/vault/hardware gates remain binding.](docs/qa/portrait-v2-sandbox/PP07-CONTINUATION-2026-11-05.md)
+> [Latest continuation — 5 November: BUG-040 and eleven new methods verified at c20479d, CI 41901827925 all 3 SUCCESS (544 Windows/544 Ubuntu/61 native). Read the exact next task and separate integration/device gates first.](docs/qa/portrait-v2-sandbox/PP07-CONTINUATION-2026-11-05.md)
 
 > **Current post-preview continuation — 4 November 2026:** Work stays on existing `feature/post-preview-qris-checkout`. Start with the [current device guide](docs/qa/portrait-v2-sandbox/POST-PREVIEW-DEVICE-TEST-START-HERE.md), [source-specific evidence and known limits](docs/qa/portrait-v2-sandbox/PP07-DEVICE-READINESS-2026-11-04.md), and [112-case / AR traceability](docs/qa/portrait-v2-sandbox/PP07-SOFTWARE-TRACEABILITY-2026-11-04.md). The later implementation and evidence record takes precedence over older status snapshots below; approved policy and dated history remain preserved. The owner pilot uses synthetic payment. Actual merchant Sandbox, protected cross-process recovery, physical acceptance and production are separate gates. No prior test root, uncertain print or PAID/OWED may be reset to bypass them.
 

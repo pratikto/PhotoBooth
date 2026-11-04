@@ -30,17 +30,31 @@ Before each trial:
 From the repository root in Windows PowerShell:
 
 ```powershell
-git switch feature/post-preview-qris-checkout
+if ((git branch --show-current).Trim() -ne 'feature/post-preview-qris-checkout') {
+    throw 'Wrong checkout. Preserve it and use the authorized existing branch.'
+}
+if (git status --porcelain) { throw 'Preserve local changes before updating.' }
 git pull --ff-only origin feature/post-preview-qris-checkout
+if ($LASTEXITCODE -ne 0) { throw 'Git update failed; preserve this checkout.' }
 git rev-parse --short HEAD
 
-py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt -r requirements-post-preview.txt -r requirements-qris.txt
+if (Test-Path '.\.venv-kivy\Scripts\python.exe') {
+    $meongPython = '.\.venv-kivy\Scripts\python.exe'
+} elseif (Test-Path '.\.venv\Scripts\python.exe') {
+    $meongPython = '.\.venv\Scripts\python.exe'
+} else {
+    py -3.12 -m venv .venv-kivy
+    $meongPython = '.\.venv-kivy\Scripts\python.exe'
+}
+& $meongPython -m pip install -r requirements.txt -r requirements-post-preview.txt -r requirements-qris.txt
+if ($LASTEXITCODE -ne 0) { throw 'Resolve dependency installation before preflight.' }
 $env:PHOTOBOOTH_V2_CHECKOUT_SANDBOX = '0'
 $env:PHOTOBOOTH_V2_CHECKOUT_MOCK = '0'
 $env:PHOTOBOOTH_V2_PRINT = '0'
 $env:PHOTOBOOTH_V2_DRIVE = '0'
-.\.venv\Scripts\python.exe tools/run_post_preview_checkout_pilot.py --synthetic-payment-only --private-root work\postpay-owner-trial-001
+& $meongPython tools/check_post_preview_pilot.py --json
+if ($LASTEXITCODE -ne 0) { throw 'Resolve preflight before acquiring devices.' }
+& $meongPython tools/run_post_preview_checkout_pilot.py --synthetic-payment-only --private-root work\postpay-owner-trial-001
 ```
 
 For another trial change the suffix to `-002` etc. **Do not delete prior data**.
@@ -63,6 +77,12 @@ Combine the real Drive and real POS80 flags only after each has been tested inde
 
 ## 2. Owner smoke/UAT matrix
 
+PILOT-17/24 fault injection uses virtual adapters or isolated test equipment
+under a controlled onsite procedure. Never deliberately jam, disconnect or
+power-cycle a production printer during an active send. Preserve every original
+test root; current pilot refusal to reopen it is a safety guard, not proof of
+complete protected restart/worker recovery.
+
 | ID | Scenario | Expected result | Initial result |
 | --- | --- | --- | --- |
 | PILOT-01 | Start without `--synthetic-payment-only` | Launcher refuses; no real QRIS charge | NOT_RUN |
@@ -81,14 +101,14 @@ Combine the real Drive and real POS80 flags only after each has been tested inde
 | PILOT-14 | Purchased strip with POS80 option | One batch per design; selected copy count and QR correct | NOT_RUN |
 | PILOT-15 | Virtual Drive fixture | Clearly synthetic URL, never represented as downloadable | NOT_RUN |
 | PILOT-16 | Real Drive opt-in and public viewer | Correct original folder, verified link and upload progress | NOT_RUN |
-| PILOT-17 | Disconnect printer/network in test | Uncertain output is held, no blind automatic print replay | NOT_RUN |
+| PILOT-17 | Controlled printer/network failure using virtual or isolated test equipment | Uncertain output is held, no blind automatic print replay; no active production-printer disconnection | NOT_RUN |
 | PILOT-18 | A privacy-locks/abandons; Ads shown | Prior photos/QR gone, old PAID/OWED remains | NOT_RUN |
 | PILOT-19 | B taps Mulai Foto while old session protected | PREPARE→ACK; no new purchase until old safely released | NOT_RUN |
 | PILOT-20 | A returns while B is active | WAIT/defer, no camera takeover or old media display | NOT_RUN |
 | PILOT-21 | A returns with original CCP/ticket when free | Exact old paid group/media/grant restored, no new mock charge | NOT_RUN |
 | PILOT-22 | Invalid/DEMO/QRIS ticket used for old recovery | Generic denial without private data/renewed ticket | NOT_RUN |
 | PILOT-23 | Original PENDING/UNKNOWN payment on old visit | New checkout refused until original financial reconciliation | NOT_RUN |
-| PILOT-24 | Restart process mid-print or upload | No duplicate send; old journal and original rights preserved | NOT_RUN |
+| PILOT-24 | Controlled synthetic process interruption during print/upload; preserve original root | No duplicate send; journal/OWED retained; occupied root refused; full protected restore remains a separate blocked gate | NOT_RUN |
 | PILOT-25 | Actual Midtrans Sandbox paid QRIS | **BLOCKED**: not provided by this synthetic-payment-only launcher | BLOCKED |
 | PILOT-26 | Actual merchant refund/duplicate-charge resolution | **BLOCKED**: account-specific refund provider capability unverified | BLOCKED |
 

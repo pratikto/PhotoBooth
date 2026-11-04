@@ -3,6 +3,111 @@
 Authorized branch: `feature/post-preview-qris-checkout`. Starting remote source:
 `5fc73bc025327a5ecf55a6673722cdb089e1eaeb`. Dates use Asia/Jakarta.
 
+## Current verification checkpoint — final test source c20479d
+
+All three functional/test micro-pushes were read back from the existing remote
+ref and matched: `637b67d`, `fdf044d`, `c20479d`. Final runtime/test source:
+`c20479d21ba601dfcb3b3cd3025977584a745ff1`. Subsequent worksheet/evidence edits
+are documentation only. No branch was created/switched, no history rewritten,
+and the original local `work` checkout/index/files remain unchanged.
+
+- Final local registered backend: **544 PASS**, zero failures/errors/skips,
+  88.852s, Python 3.12.14. This contains all eleven new methods, not eleven
+  newly completed full acceptance cases.
+- Same-source [CI 41901827925](https://github.com/pratikto/PhotoBooth/actions/runs/41901827925):
+  Ubuntu backend **544 PASS**, zero failures/errors/skips, 136.085s; native Kivy
+  **61 PASS**, zero failures/errors/skips, 95.589s. Both completed job logs were
+  independently inspected. Windows backend **544 PASS**, zero failures/errors/
+  skips, 475.961s; its completed job log was also independently inspected.
+  **All 3/3 jobs COMPLETED SUCCESS**: 1,149 platform executions, not unique
+  acceptance cases. Both new Windows DPAPI independent-process methods PASS;
+  this is protected-byte evidence, not original-worker/device acceptance.
+- Earlier source-matched CI runs `41900853098` and `41901102286` were superseded
+  and CANCELLED by later micro-pushes. Neither is a failure or a passing run.
+- Existing local native suite on `fdf044d`: 61 PASS/63.239s. Native CI above
+  verifies the final source including the subsequent provider test increment.
+- Apps Script syntax and offline Node VM suite PASS; no cloud deployment,
+  account interaction or retention deletion.
+
+Machine-readable [execution evidence](evidence/pp07-continuation-2026-11-05.json)
+records exact commits, source file digests, counts, limitations and CI identity.
+
+### Bounded resource observations
+
+A separate same-process diagnostic reran the existing complete J21 journey
+three times: **36 synthetic paid visits in 48.154s** with fresh unit-test roots
+and cleanup, no owner root touched. `gc.collect()` preceded each sample;
+`tracemalloc`, Linux `/proc/self/status`, `/proc/self/fd` and
+`threading.enumerate()` supplied observed counters. See
+[raw numeric samples](evidence/pp07-resource-probe-2026-11-05.json).
+
+| After cycle | Paid visits in cycle | Python traced bytes | RSS bytes | Threads | Open descriptors |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 1 (warm-up included) | 12 | 7,406,059 | 190,418,944 | 1 | 4 |
+| 2 | 12 | 7,483,601 | 196,927,488 | 1 | 4 |
+| 3 | 12 | 7,541,756 | 197,115,904 | 1 | 4 |
+
+Threads/descriptors did not grow in these samples. Traced bytes grew by 135,697
+and RSS by 6,696,960 between first/last cleanup; these short measurements do not
+establish a leak-free or unbounded-growth conclusion. This is neither multi-hour
+soak nor real camera/background Drive/printer-worker/hardware acceptance.
+Every repeated J21 assertion passed; repeated executions are not new PP cases.
+To reproduce, run `CustomerJourneyMatrixTests` method
+`test_j21_twelve_paid_visits_complete_without_folder_or_payment_contamination`
+three times in one Python process, collecting the listed counters after each
+fixture's unittest cleanup. Preserve source/environment and numerical results.
+
+### Independent readiness after this continuation
+
+| Gate | Current status |
+| --- | --- |
+| A — supervised synthetic device candidate | READY_FOR_SUPERVISED_SYNTHETIC_DEVICE_TEST, subject to owner preflight; matching source all 3 CI jobs SUCCESS |
+| B — actual post-preview merchant Sandbox | PROVIDER_BLOCKED / integrated separate launch profile still NOT_IMPLEMENTED; actual credentials/webhook/account evidence absent |
+| C — protected original restart/recovery | Full pilot original-worker restore NOT_IMPLEMENTED; Windows DPAPI protected-byte process contract AUTOMATED_VERIFIED, Ubuntu protector unsupported here; device/reboot/reinstall NOT_RUN |
+| D — comprehensive software acceptance | Partial AUTOMATED_VERIFIED (11 new methods); all 112 full acceptance rows still NOT_RUN |
+| E — owner physical acceptance | HARDWARE_PENDING: PILOT-01..24 NOT_RUN, PILOT-25/26 BLOCKED |
+| F — production | NOT_APPROVED; actual refunds NOT_ENABLED |
+
+### Owner worksheet corrections
+
+The existing [26-case worksheet](PP07-SUPERVISED-WINDOWS-UAT.md) had a blind
+`git switch` and unconditional venv recreation in its old example, despite newer
+branch/environment safeguards. Its executable example now checks the correct
+branch and clean tree, reuses the existing interpreter, and checks preflight
+before devices. PILOT-17/24 now explicitly require virtual/isolated equipment,
+never active production-printer disconnection, and explain that occupied-root
+refusal is not full protected restoration. All **24 NOT_RUN + 2 BLOCKED** row
+states are preserved and programmatically checked; no owner result is invented.
+
+**Verification is complete for this milestone.** This final documentation-only
+checkpoint preserves the matching functional CI; it does not rerun or cancel it.
+Highest unfinished implementation remains the separately guarded actual
+post-preview Sandbox launch/secure original-worker restore profile. Reuse the
+now-tested transport and vault seams; obtain supported target OS protection and
+actual merchant/account evidence before external transactions. Full PP coverage,
+refund journal/capability gates and multi-hour device soak remain unfinished.
+
+**Next implementation seam:** inspect `tools/run_post_preview_checkout_pilot.py`,
+`photobooth/kiosk_v2/post_preview_checkout.py`, `post_preview_payments.py`,
+`post_preview_claim.py`, `post_preview_isolation.py` and `credential_vault.py`.
+Design a separate disabled-by-default Sandbox composition; keep the synthetic
+launch command and protected-root refusal unchanged. Preserve the strict
+synthetic-only gates until an independently verified supported OS escrow and
+original-worker reconstruction path can replace them safely. Relevant cases:
+PP-021..046/063..065/070..084. First focused command:
+
+```text
+python tools/run_kiosk_unittests.py test_post_preview_payments test_post_preview_readiness test_credential_vault test_post_preview_claim test_post_preview_isolation
+```
+
+Provider account/webhook reachability, target-platform protected storage and
+original-worker restoration, new-order policy/security validation and owner
+physical observations are independent prerequisites. No real Sandbox charge or
+refund should be used to bypass any missing software or external acceptance.
+
+The increment sections below preserve their delivery-time observations; the
+verified checkpoint above supersedes their pending CI/next-verification notes.
+
 ## Increment 3 — actual Sandbox transport seam, isolated HTTP contract
 
 **Increment 2 push verified:** `fdf044d52c9d219fa2856bb12ed2929410401802`.

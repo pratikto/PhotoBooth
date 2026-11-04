@@ -3,7 +3,8 @@
 ## BUG-040 — Claim accepted proof invalidated during provider settlement checks (5 November 2026)
 
 **Severity:** S0 protected-session authorization. **Status:** SOURCE FIXED /
-AUTOMATED_VERIFIED locally; exact-source CI pending, owner physical UAT NOT_RUN.
+AUTOMATED_VERIFIED at c20479d / CI 41901827925: 544 Windows, 544 Ubuntu,
+61 native PASS; zero failures/errors/skips, 3/3 SUCCESS. Owner physical UAT NOT_RUN.
 
 The original CCP or Recovery Ticket could expire or be revoked during the last
 provider GET, yet its stale initial verdict still reacquired old occupancy.

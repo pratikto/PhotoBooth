@@ -1,5 +1,7 @@
 # Start here — supervised post-preview device testing
 
+> **5 November software continuation:** [latest verified source and next engineering task](PP07-CONTINUATION-2026-11-05.md): c20479d / CI 41901827925 all 3 SUCCESS (544 Windows, 544 Ubuntu, 61 native). Owner launch procedure and separate merchant/secure-worker/hardware/refund/production gates remain unchanged.
+
 **Software candidate gate verified:** [CI 41826366906](https://github.com/pratikto/PhotoBooth/actions/runs/41826366906)
 at source `0601354` completed 3/3 SUCCESS: Windows 533, Ubuntu 533, native Kivy
 61 PASS, zero failures/errors/skips. Owner preflight and real observations are

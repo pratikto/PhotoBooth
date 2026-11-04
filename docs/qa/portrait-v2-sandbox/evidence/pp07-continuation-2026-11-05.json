@@ -1,0 +1,178 @@
+{
+  "date": "2026-11-05",
+  "timezone": "Asia/Jakarta",
+  "branch": "feature/post-preview-qris-checkout",
+  "starting_sha": "5fc73bc025327a5ecf55a6673722cdb089e1eaeb",
+  "source_sha": "c20479d21ba601dfcb3b3cd3025977584a745ff1",
+  "micro_commits": [
+    {
+      "sha": "637b67d1a33042d32597eff43caf4fb47be51b81",
+      "push_verified": true
+    },
+    {
+      "sha": "fdf044d52c9d219fa2856bb12ed2929410401802",
+      "push_verified": true
+    },
+    {
+      "sha": "c20479d21ba601dfcb3b3cd3025977584a745ff1",
+      "push_verified": true
+    }
+  ],
+  "new_test_methods": 11,
+  "source_file_sha256": {
+    "photobooth/post_preview_ccp.py": "e0c7b3c5b58fc4b6a04f6fca5fe50314c8574c10bf16a7510c0723d4337beef8",
+    "photobooth/post_preview_claim.py": "8c481025024336f236c366f8b4c5d945249cd1542c7df394011e7a9af9cdcc58",
+    "tests/test_post_preview_claim.py": "57c028cb4fa9aa852b36c339ac015aca17db750ca2a3b8c0e5705f07cb3a8945",
+    "tests/test_credential_vault.py": "274f9bf790454955b93bd3c6f6dbb15c552a30324ab9c8ee44762aa546130d54",
+    "tests/credential_vault_process_fixture.py": "eba2c8fc54cd1bf158a44a16beb4229dd7dd6a56c1cf17687d2f124dc152afa2",
+    "tests/test_post_preview_payments.py": "96cf5c28dc14819fa93b361d3664937764967b1392b2bdcb0c5fcf40e70e8889"
+  },
+  "local_runs": [
+    {
+      "scope": "claim expiry/revocation reproduction before fix",
+      "run": 4,
+      "pass": 0,
+      "failure": 4,
+      "error": 0,
+      "skip": 0
+    },
+    {
+      "scope": "corrected claim/CCP/ticket/isolation/admission",
+      "source": "637b67d1a33042d32597eff43caf4fb47be51b81",
+      "run": 81,
+      "pass": 81,
+      "failure": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 13.437
+    },
+    {
+      "scope": "vault platform process checks on Linux",
+      "source": "fdf044d52c9d219fa2856bb12ed2929410401802",
+      "run": 9,
+      "pass": 9,
+      "failure": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 0.051
+    },
+    {
+      "scope": "actual Sandbox transport with local fake HTTP",
+      "source": "c20479d21ba601dfcb3b3cd3025977584a745ff1",
+      "run": 5,
+      "pass": 5,
+      "failure": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 0.692
+    },
+    {
+      "scope": "payment/readiness/process crashes",
+      "source": "c20479d21ba601dfcb3b3cd3025977584a745ff1",
+      "run": 54,
+      "pass": 54,
+      "failure": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 7.309
+    },
+    {
+      "scope": "full registered backend",
+      "source": "c20479d21ba601dfcb3b3cd3025977584a745ff1",
+      "run": 544,
+      "pass": 544,
+      "failure": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 88.852
+    },
+    {
+      "scope": "native Kivy registered suite",
+      "source": "fdf044d52c9d219fa2856bb12ed2929410401802",
+      "run": 61,
+      "pass": 61,
+      "failure": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 63.239
+    }
+  ],
+  "ci": {
+    "run_id": 41901827925,
+    "source": "c20479d21ba601dfcb3b3cd3025977584a745ff1",
+    "state": "COMPLETED_3_OF_3_SUCCESS",
+    "logs_independently_inspected": true,
+    "total_platform_executions": 1149,
+    "ubuntu_backend": {
+      "job_id": 126826196456,
+      "pass": 544,
+      "failure": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 136.085
+    },
+    "native": {
+      "job_id": 126826196125,
+      "pass": 61,
+      "failure": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 95.589
+    },
+    "windows_backend": {
+      "job_id": 126826195770,
+      "pass": 544,
+      "failure": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 475.961,
+      "dpapi_independent_process_methods": "2_PASS"
+    }
+  },
+  "superseded_ci": [
+    {
+      "run_id": 41900853098,
+      "source": "637b67d1a33042d32597eff43caf4fb47be51b81",
+      "conclusion": "CANCELLED_NOT_PASS_OR_FAIL"
+    },
+    {
+      "run_id": 41901102286,
+      "source": "fdf044d52c9d219fa2856bb12ed2929410401802",
+      "conclusion": "CANCELLED_NOT_PASS_OR_FAIL"
+    }
+  ],
+  "resource_probe": {
+    "path": "pp07-resource-probe-2026-11-05.json",
+    "visits": 36,
+    "seconds": 48.154,
+    "multi_hour_soak": false,
+    "hardware": false
+  },
+  "limitations": [
+    "No actual merchant charge, refund, camera acquisition, paper, customer media, public Drive upload or retention deletion.",
+    "Linux vault process results prove unsupported-platform rejection; Windows cross-process DPAPI branches now PASS in matching-source CI; owner device/reboot/reinstall remain unverified.",
+    "Protected bytes are not full original claimant/worker restore or reboot/device/reinstall acceptance.",
+    "Full PP-001..112 and owner PILOT-01..24 remain NOT_RUN; PILOT-25/26 BLOCKED.",
+    "Thread and Linux descriptor samples are after synthetic fixture cleanup, not physical worker or multi-hour soak acceptance."
+  ],
+  "ci_artifact": {
+    "id": 13357384694,
+    "name": "meong-private-preview-synthetic",
+    "source": "c20479d21ba601dfcb3b3cd3025977584a745ff1",
+    "digest": "sha256:ead13c76970a22c4f2878486413d3e6d824f5c054ebe6738f4f1166ab28f9814",
+    "expires_at": "2026-11-11T19:59:24Z",
+    "metadata_verified": true,
+    "archive_downloaded": false
+  },
+  "readiness": {
+    "synthetic_device_candidate": "READY_FOR_SUPERVISED_SYNTHETIC_DEVICE_TEST",
+    "actual_merchant_sandbox": "BLOCKED_PROFILE_SECURE_RESTORE_AND_ACCOUNT_EVIDENCE",
+    "protected_pilot_worker_restore": "NOT_IMPLEMENTED",
+    "windows_dpapi_byte_process_contract": "AUTOMATED_VERIFIED_IN_WINDOWS_CI",
+    "ubuntu_platform_protector": "UNSUPPORTED_IN_THIS_RUNTIME",
+    "full_PP_acceptance": "NOT_RUN",
+    "owner_physical_acceptance": "HARDWARE_PENDING",
+    "actual_refund": "NOT_ENABLED",
+    "production": "NOT_APPROVED"
+  }
+}

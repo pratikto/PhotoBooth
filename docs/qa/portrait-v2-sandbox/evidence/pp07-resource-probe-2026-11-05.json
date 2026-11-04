@@ -1,0 +1,37 @@
+{
+  "source_sha": "c20479d21ba601dfcb3b3cd3025977584a745ff1",
+  "cycles": 3,
+  "total_visits": 36,
+  "seconds": 48.154,
+  "mode": "synthetic_provider_camera_printer_drive",
+  "scope": "bounded_repeated_fixture_lifecycle_not_multi_hour_or_hardware_soak",
+  "samples": [
+    {
+      "cycle": 1,
+      "visits": 12,
+      "python_bytes": 7406059,
+      "peak_python_bytes": 8888902,
+      "rss_bytes": 190418944,
+      "threads": 1,
+      "fds": 4
+    },
+    {
+      "cycle": 2,
+      "visits": 12,
+      "python_bytes": 7483601,
+      "peak_python_bytes": 8962691,
+      "rss_bytes": 196927488,
+      "threads": 1,
+      "fds": 4
+    },
+    {
+      "cycle": 3,
+      "visits": 12,
+      "python_bytes": 7541756,
+      "peak_python_bytes": 9025834,
+      "rss_bytes": 197115904,
+      "threads": 1,
+      "fds": 4
+    }
+  ]
+}
