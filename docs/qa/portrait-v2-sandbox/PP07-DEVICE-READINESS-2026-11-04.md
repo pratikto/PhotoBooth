@@ -1,5 +1,18 @@
 # PP-07 software continuation and device readiness — 4 November 2026
 
+## Windows retry and publication follow-up
+
+The targeted retry (`126530625319`) was again cancelled at the 10-minute budget,
+this time during late `test_checkout_backend` database setup; no backend summary
+was emitted. Neither cancelled attempt is a Windows PASS. The test list remains
+unchanged. Direct Git transport succeeds with the managed runtime's network
+permission, unlike the earlier sandbox-isolated terminal call. This increment
+therefore publishes the bounded Windows 15-minute/Linux 10-minute workflow via
+Git plumbing, using a separate index and explicit fast-forward target ref.
+The stale local `work` branch/index/working files are not switched or staged.
+Prior connector timeout/internal-error attempts remain recorded below as history.
+The workflow-budget commit needs its own actual CI result before a 3/3 claim.
+
 **Current source:** `267fc437e082afc581066c9408901c42669480ee`.
 Five functional/test micro-pushes are verified. Local full discovery and
 subsequent opt-ins all have executed outcomes below. Matching CI Ubuntu backend

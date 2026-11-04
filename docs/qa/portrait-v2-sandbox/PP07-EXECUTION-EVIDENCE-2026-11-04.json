@@ -90,8 +90,9 @@
       "job_id": 126524759811
     },
     "windows_backend": {
-      "state": "PENDING_RETRY_AFTER_CANCELLED_10_MINUTE_JOB",
-      "original_job_id": 126524760182
+      "state": "SECOND_10_MINUTE_ATTEMPT_CANCELLED_NO_SUMMARY",
+      "original_job_id": 126524760182,
+      "retry_job_id": 126530625319
     }
   },
   "unpublished_workflow_proposal": {
@@ -169,5 +170,13 @@
     "metadata_verified": true,
     "archive_downloaded": false,
     "expires_at": "2026-11-11T10:39:48Z"
+  },
+  "workflow_budget_followup": {
+    "method": "Direct Git with managed runtime network permission; isolated index, explicit fast-forward branch target",
+    "parent_documentation_head": "6253dcf823ba64df36a9984a7e1141995426c9d4",
+    "windows_minutes": 15,
+    "ubuntu_minutes": 10,
+    "tests_removed": false,
+    "ci": "PENDING_FOR_BUDGET_COMMIT"
   }
 }

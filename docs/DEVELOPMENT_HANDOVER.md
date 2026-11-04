@@ -1,5 +1,15 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 4 November 2026 — publish bounded Windows CI budget through direct Git
+
+Documentation package micro-pushed/verified at `6253dcf`. The targeted Windows
+retry at functional 267fc437 again exceeded 10 minutes (late legacy database
+setup), with no complete test summary. Direct Git works with runtime network
+access; publish the Windows 15-minute/Linux 10-minute bound using a separate
+index, parent 6253dcf and explicit fast-forward target, retaining every test.
+Local `work` remains unchanged. Inspect the new commit's CI before any final
+Windows/supervised candidate PASS; actual merchant/restart/hardware gates remain.
+
 ## 4 November 2026 — comprehensive device package and truthful verification gates
 
 Read [Start here: Windows/Ubuntu supervised device guide](qa/portrait-v2-sandbox/POST-PREVIEW-DEVICE-TEST-START-HERE.md),
