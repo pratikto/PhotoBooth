@@ -125,6 +125,32 @@ Those implementation and target-OS dependencies remain explicit.
 python tools/run_kiosk_unittests.py test_post_preview_process_crash test_post_preview_isolation
 ```
 
+## Increment D — actual-time replay and environment verification
+
+Increment C pushed and remote-verified at `36ec0cc83f65940bd78e8865c0ded6329a2522e3`.
+The inspected, existing timed harness completed **PASS in 96.553s**, using
+actual Kivy `App.run()` and monotonic time: eight real five-second countdowns,
+six initial captures + two retakes, one Rp25,000 synthetic charge, one receipt,
+2+1 virtual strip copies, eight private JPEGs. The original ticket remained
+visible **30.002 seconds** before automatic private-card wipe. OWED remained
+and `physical_paper_verified=False`. No countdown deadline was advanced or NEXT
+forced. The replay started at 07b8664; runtime/CheckoutFixture files are byte
+identical in 36ec0cc (C adds only process tests/documentation).
+
+Static pilot preflight reports READY_FOR_SUPERVISED_SYNTHETIC_PILOT at 36ec0cc.
+`pip check` has no broken requirements. Original Apps Script syntax and offline
+Node VM pass (1 Node test, zero failure/skip); no account/deployment/deletion.
+Dependencies are freshly installed, with OpenCV constrained below 5 to match
+the existing CI workflow; exact versions are in the execution JSON.
+
+The pinned public MediaPipe model host `storage.googleapis.com` is unavailable:
+an ordinary HEAD request through the session proxy receives CONNECT **403**.
+No route/proxy/TLS workaround is attempted. The three optional real inference
+methods require those model/sample assets and remain explicitly blocked here;
+fake inference is not a substitute. GUI/audio/video opt-ins are enabled for
+the current full regression. Its result and final source-matched CI are pending,
+not inferred from this timed PASS or historical acbac15.
+
 ## Remaining execution and external gates
 
 Next: independent-process crash/handoff barriers; virtual receipt/strip/Drive races; final native complete
