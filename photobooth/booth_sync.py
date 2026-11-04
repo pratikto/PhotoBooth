@@ -9,6 +9,7 @@ import logging
 import re
 import time
 import threading
+from contextlib import contextmanager
 
 from photobooth.delivery_timing import event, span
 from photobooth.delivery_retry import DeliveryRetries
@@ -143,6 +144,7 @@ class BoothDriveWorker(DriveSyncWorker):
         self._reconcile_at = None
         self._content_checked = 0
         self._queue_lock = threading.Lock()
+        self._cycle_lock = threading.Lock()
         self._queued = {}
         self.retries = DeliveryRetries()
 
@@ -312,7 +314,26 @@ class BoothDriveWorker(DriveSyncWorker):
                     self._record_failure(path, tx, 'MANIFEST_INVALID', 'manifest', error)
         return customers, recovery
 
+    @contextmanager
+    def quiescent(self):
+        """Hold a nonblocking request-boundary fence without stopping uploads.
+
+        A live but idle daemon is not an active cloud request. The caller may
+        persist its ownership ACK while this lock excludes every worker cycle;
+        queued exact-transaction work resumes unchanged after the fence exits.
+        """
+        if not self._cycle_lock.acquire(blocking=False):
+            raise RuntimeError('Original Drive request is still active')
+        try:
+            yield
+        finally:
+            self._cycle_lock.release()
+
     def run_once(self):
+        with self._cycle_lock:
+            return self._run_once()
+
+    def _run_once(self):
         customers, recovery = self._pending_deliveries()
         # Stable monotonic transaction IDs provide FIFO across customer sessions.
         # Keep the head through its files and two short retries; no old recovery,

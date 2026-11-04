@@ -136,6 +136,68 @@ This does not make an old receipt SUBMITTED physical paper proof, forgive a
 review/uncertain job, start real merchant payments, refund A, or authorize
 proof-free access. Actual device/merchant/Drive/vault acceptance remains separate.
 
+## Increment 3 — BUG-038: idle Drive daemon versus active request fence
+
+**Requirements:** PP-057/062/063/064/071/078; PP-D18; exact paid folder and
+worker ownership safeguards. No external Drive operation was executed.
+
+**Reproduction:** real-test Drive mode starts a long-lived `BoothDriveWorker`
+for reserves/uploads. Isolation checked `_thread.is_alive()` and therefore
+rejected every handoff even while the worker was safely sleeping between
+requests. Stopping the thread permanently is not a valid fix: the inherited
+worker is one-shot and queued paid uploads/reserve maintenance must survive.
+
+**Change:** reuse the same worker with a nonblocking cycle/request-boundary
+mutex. `run_once()` owns it for every upload/reserve/content cycle.
+`quiescent()` temporarily fences new cycles only when no cycle is active.
+Original isolation holds this exact owner's fence until after SQLite commit or
+rollback for PREPARE and ACK. A request starting between PREPARE and ACK blocks
+ACK; there is no time-of-check gap. The worker is neither stopped nor replaced,
+and queued immutable transaction work continues after the guarded section.
+Already-ACKED operation replay remains idempotent. Existing camera/printer and
+financial checks still independently block unsafe release. Supplied delivery
+monitor/worker must belong to the exact ledger/workspace/client.
+
+**Executed regression:** initial two new cases ERROR on the original
+`Original Drive worker is still active` hold. After the fix, 85 affected
+Drive/isolation/claim/authority/delivery tests PASS with zero failure/error/skip.
+Three new event-synchronized real-thread tests demonstrate:
+
+1. A live idle worker allows PREPARE/ACK and keeps running, with no restart or
+   stop flag; repeat ACK does not create another release.
+2. A deliberately blocked synthetic request between PREPARE and ACK blocks both
+   repeated PREPARE and ACK, preserves PREPARED/closed=0, and permits the same
+   ACK only after the request completes and the worker becomes idle.
+3. A financial HOLD rolls back without creating an operation, releases the
+   Drive fence and allows the same worker to continue; it is not mislabeled as
+   an active-request error.
+
+Existing Drive regression covers FIFO upload/retry/reserve behavior, original
+folder binding and no print replay. This validates synchronization in software,
+not real Google permission, customer file upload or owner hardware acceptance.
+
+```mermaid
+sequenceDiagram
+    participant W as Original Drive worker
+    participant I as Isolation coordinator
+    participant L as Original SQLite ledger
+    I->>W: Try request-boundary fence (nonblocking)
+    alt Original API/upload cycle active
+        W-->>I: Busy
+        I-->>I: HOLD, no release ACK
+    else Worker idle
+        W-->>I: Exact worker fence acquired
+        I->>L: Recheck workers, finance, paper and original generation
+        alt All evidence safe
+            I->>L: Commit PREPARE or ACK
+        else Any ambiguity
+            I->>L: Roll back; preserve original owner
+        end
+        I->>W: Release fence after commit/rollback
+        W->>W: Resume same queued transaction work
+    end
+```
+
 ## Current readiness and next action
 
 The prior 522/522/58 CI at `238012f7` remains historical source-specific evidence.

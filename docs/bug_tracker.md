@@ -1,5 +1,21 @@
 # Meong Photobooth — Bug register
 
+## BUG-038 — Long-lived idle Drive worker blocked every automatic handoff (4 November 2026)
+
+**Severity:** S1 live-Drive pilot admission failure. **Status:** SOURCE FIXED;
+85 affected synchronization/Drive/isolation checks PASS locally; current-source
+CI pending; actual Drive/device tests NOT_RUN.
+
+Isolation equated a living daemon thread with an active Drive request, so the
+normal always-running reserve/upload worker prevented any session ACK even
+while idle. A nonblocking request-boundary fence now excludes worker cycles
+through the original PREPARE/ACK ledger commit. Active requests still HOLD;
+idle worker resumes unchanged without shutdown, lost queue or replacement.
+Three real-thread/event regressions cover idle admission, a request racing
+PREPARE→ACK, and fence cleanup after financial HOLD. Original paper/finance
+guards, folder identity and no-replay remain in force.
+[Detailed contract, sequence diagram and executed limits](qa/portrait-v2-sandbox/PP07-DEVICE-READINESS-2026-11-04.md).
+
 ## BUG-037 — Historical purchase blocked B's checkout after A's safe isolation ACK (4 November 2026)
 
 **Severity:** S1 repeated-customer checkout failure. **Status:** SOURCE FIXED;

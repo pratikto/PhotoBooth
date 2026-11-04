@@ -1,5 +1,17 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 4 November 2026 — BUG-038 request-boundary Drive isolation fence
+
+BUG-037 micro-pushed/verified at `0032958`. Further live-Drive source audit
+reproduced every handoff blocked merely because the idle upload daemon was
+alive. The original worker now exposes a nonblocking cycle fence held through
+PREPARE/ACK commit/rollback. Active requests still block; idle daemon/queued
+exact-folder work continue without shutdown/replacement. Three synchronized
+thread regressions and affected suite: 85 PASS, zero failures/errors/skips.
+No real Drive API/upload or hardware claim. Next: bounded complete repeat-paid
+journeys, native all-template checks, final matching-source CI and reconciled
+owner device guide. [Comprehensive 4 November continuation record](qa/portrait-v2-sandbox/PP07-DEVICE-READINESS-2026-11-04.md).
+
 ## 4 November 2026 — BUG-037 verified safe A→B checkout continuation
 
 BUG-036 was micro-pushed and remote-verified at `759d141`; its CI is

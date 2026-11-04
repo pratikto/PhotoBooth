@@ -1,6 +1,7 @@
 """PP-06 mock-only privacy fencing never resets a financial/print obligation."""
 import threading
 import unittest
+from unittest.mock import patch
 import numpy as np
 from pathlib import Path
 import tempfile
@@ -141,6 +142,106 @@ class OriginalMockIsolationTests(unittest.TestCase):
                 self.service.reset_after_acked_isolation(key)
         self.assertTrue(self.service._hidden.is_set())
         self.assertIsNotNone(self.service.lease)
+
+    def drive_isolation(self):
+        self.fixture.enable_paid_ticket()
+        self.fixture.enable_paid_delivery(real_drive=True)
+        self.service.prepare()
+        self.service.start(get_templates(),{'template_a':1})
+        self.service.retire('APP_SUSPENDED')
+        self.iso=OriginalMockIsolation(
+            self.service.ledger,self.fixture.backend,self.fixture.jobs,
+            self.fixture.launch_lease,printer_lane=self.service._receipt_lane,
+            delivery=self.fixture.paid_monitor,allow_incomplete_fixture=True)
+        worker=self.fixture.paid_monitor.worker
+        def close_worker():
+            worker.stop()
+            if worker._thread.ident is not None:worker._thread.join(5)
+            self.assertFalse(worker._thread.is_alive())
+        self.addCleanup(close_worker)
+        return worker
+
+    def test_idle_live_Drive_worker_does_not_require_shutdown_to_ack_isolation(self):
+        worker=self.drive_isolation()
+        idle=threading.Event()
+        original_wait=worker._wake.wait
+        def waiting(timeout):
+            idle.set()
+            return original_wait(timeout)
+        with patch.object(worker,'_maintain_reserves',return_value=None), \
+                patch.object(worker._wake,'wait',side_effect=waiting):
+            worker.start()
+            self.assertTrue(idle.wait(3))
+            self.assertTrue(worker._thread.is_alive())
+            operation=self.iso.prepare('PB001')
+            self.assertTrue(self.iso.acknowledge('PB001',operation))
+            self.assertFalse(self.iso.acknowledge('PB001',operation))
+            self.assertTrue(worker._thread.is_alive())
+            self.assertFalse(worker._stop.is_set())
+            self.assertEqual('ISOLATED',self.service.ledger.db.execute(
+                'SELECT lifecycle FROM pp_drafts').fetchone()[0])
+            worker.stop();worker._thread.join(3)
+
+    def test_active_Drive_request_between_prepare_and_ack_still_blocks_release(self):
+        worker=self.drive_isolation()
+        idle,entered,release=threading.Event(),threading.Event(),threading.Event()
+        active=[False]
+        original_wait=worker._wake.wait
+        def waiting(timeout):
+            idle.set()
+            return original_wait(timeout)
+        def request():
+            if active[0]:
+                entered.set()
+                if not release.wait(5):raise AssertionError('Synthetic request was not released')
+        with patch.object(worker,'_maintain_reserves',side_effect=request), \
+                patch.object(worker._wake,'wait',side_effect=waiting):
+            worker.start()
+            try:
+                self.assertTrue(idle.wait(3))
+                operation=self.iso.prepare('PB001')
+                idle.clear();active[0]=True;worker.kick()
+                self.assertTrue(entered.wait(3))
+                with self.assertRaises(DraftHeld):self.iso.prepare('PB001')
+                with self.assertRaises(DraftHeld):self.iso.acknowledge('PB001',operation)
+                self.assertEqual('PREPARED',self.service.ledger.db.execute(
+                    'SELECT state FROM pp_isolation_ops').fetchone()[0])
+                self.assertEqual(0,self.service.ledger.db.execute(
+                    'SELECT closed FROM pp_drafts').fetchone()[0])
+                active[0]=False;release.set()
+                self.assertTrue(idle.wait(3))
+                self.assertTrue(self.iso.acknowledge('PB001',operation))
+                self.assertTrue(worker._thread.is_alive())
+                self.assertEqual(0,self.fixture.provider.charges)
+                self.assertEqual([],self.fixture.receipt_sizes)
+            finally:
+                release.set();worker.stop();worker._thread.join(3)
+
+    def test_Drive_fence_releases_on_financial_hold_without_stopping_retry_worker(self):
+        worker=self.drive_isolation()
+        idle=threading.Event()
+        original_wait=worker._wake.wait
+        def waiting(timeout):
+            idle.set()
+            return original_wait(timeout)
+        with patch.object(worker,'_maintain_reserves',return_value=None), \
+                patch.object(worker._wake,'wait',side_effect=waiting), \
+                patch.object(self.iso,'_financial',side_effect=DraftHeld('Synthetic finance HOLD')):
+            worker.start()
+            try:
+                self.assertTrue(idle.wait(3))
+                with self.assertRaisesRegex(DraftHeld,'Synthetic finance HOLD'):
+                    self.iso.prepare('PB001')
+                self.assertEqual(0,self.service.ledger.db.execute(
+                    'SELECT count(*) FROM pp_isolation_ops').fetchone()[0])
+                self.assertEqual(0,self.service.ledger.db.execute(
+                    'SELECT closed FROM pp_drafts').fetchone()[0])
+                idle.clear();worker.kick()
+                self.assertTrue(idle.wait(3))
+                self.assertTrue(worker._thread.is_alive())
+                self.assertFalse(worker._stop.is_set())
+            finally:
+                worker.stop();worker._thread.join(3)
 
 
 if __name__=='__main__':unittest.main()

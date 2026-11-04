@@ -7,11 +7,14 @@ until separately authenticated production support exists.
 """
 import threading
 import uuid
+from contextlib import ExitStack, contextmanager
 
 from photobooth.kiosk_v2.photos import PhotoJobs
 from photobooth.kiosk_v2.recovery import LaunchLease
 from photobooth.post_preview_payments import PostPreviewPayments
 from photobooth.post_preview_store import DraftHeld,PostPreviewStore
+from photobooth.post_preview_paid_delivery import OriginalPaidDeliveryMonitor
+from photobooth.booth_sync import BoothDriveWorker
 
 
 class OriginalMockIsolation:
@@ -24,12 +27,32 @@ class OriginalMockIsolation:
                 not isinstance(jobs,PhotoJobs) or jobs.service is None
                 or jobs.service.ledger is not ledger or
                 not isinstance(launcher,LaunchLease)
-                or not isinstance(printer_lane, type(threading.Lock()))):
+                or not isinstance(printer_lane, type(threading.Lock()))
+                or delivery is not None and
+                   (not isinstance(delivery,OriginalPaidDeliveryMonitor)
+                    or delivery.binder.ledger is not ledger)):
             raise DraftHeld('Exact original synthetic booth/worker/finance fence required')
         self.ledger,self.payments,self.jobs,self.launcher=ledger,payments,jobs,launcher
         self.lane=printer_lane
         self.delivery=delivery
         self._lock=threading.RLock()
+
+    @contextmanager
+    def _drive_guard(self):
+        worker=self.delivery.worker if self.delivery is not None else None
+        if worker is None:
+            yield
+            return
+        if (not isinstance(worker,BoothDriveWorker)
+                or worker.workspace is not self.delivery.binder.workspace
+                or worker.client is not self.delivery.binder.client):
+            raise DraftHeld('Exact original Drive worker fence required')
+        with ExitStack() as guard:
+            try:
+                guard.enter_context(worker.quiescent())
+            except RuntimeError:
+                raise DraftHeld('Original Drive request is still active') from None
+            yield
 
     def _quiescent(self, draft):
         service=self.jobs.service
@@ -37,9 +60,6 @@ class OriginalMockIsolation:
                 service.lease.draft_id!=draft['draft_id'] or
                 not service._hidden.is_set()):
             raise DraftHeld('Private worker must retire before original booth release')
-        if (self.delivery is not None and self.delivery.worker is not None
-                and self.delivery.worker._thread.is_alive()):
-            raise DraftHeld('Original Drive worker is still active')
         if not self.lane.acquire(blocking=False):
             raise DraftHeld('Original thermal paper transport is still sending')
         self.lane.release()
@@ -99,8 +119,10 @@ class OriginalMockIsolation:
 
     def prepare(self,booth_id):
         """Durable PREPARED only; NEVER allows new visitor before ACK."""
-        with self._lock,self.ledger.write():
+        # ExitStack releases the Drive fence only AFTER ledger commit/rollback.
+        with self._lock,ExitStack() as fences,self.ledger.write():
             draft=self._owner(booth_id)
+            fences.enter_context(self._drive_guard())
             self._quiescent(draft)
             financial=self._financial(draft)
             existing=self.ledger.db.execute(
@@ -122,7 +144,7 @@ class OriginalMockIsolation:
 
     def acknowledge(self,booth_id,operation_id):
         """Recheck all source statuses and fence before freeing the booth."""
-        with self._lock,self.ledger.write():
+        with self._lock,ExitStack() as fences,self.ledger.write():
             stored=self.ledger.db.execute(
                 'SELECT * FROM pp_isolation_ops WHERE operation_id=? AND booth_id=?',
                 (operation_id,booth_id)).fetchone()
@@ -133,6 +155,7 @@ class OriginalMockIsolation:
             draft=self._owner(booth_id)
             if draft['draft_id']!=stored['draft_id']:
                 raise DraftHeld('Different original visitor owns the booth')
+            fences.enter_context(self._drive_guard())
             self._quiescent(draft)
             if (draft['generation']!=stored['original_generation']
                     or self._financial(draft)!=stored['financial_class']):
