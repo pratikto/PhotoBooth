@@ -830,6 +830,9 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, SandboxViews, Ope
         self._carousel.show(tuple(self._textures[item.template_id] for item in neighbours), step=step)
         self._update_order()
 
+    def _gallery_discount_eligible(self):
+        return is_demo_winner(self._game_result) and not self._game_discount_used
+
     def _update_order(self):
         template = self.templates[self.template_index]
         self._copy_value.text = str(self.quantities[template.template_id])
@@ -839,7 +842,7 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, SandboxViews, Ope
             self._mock_checkout_button.disabled = quote.session_count == 0
         # The result was acknowledged by the durable game worker. This preview
         # shares amount math with MOCK; checkout still revalidates its ledger.
-        eligible = is_demo_winner(self._game_result) and not self._game_discount_used
+        eligible = self._gallery_discount_eligible()
         amount = self._gallery_amount = demo_amount(quote.total_amount, eligible)
         money = lambda value:'Rp'+f'{value:,}'.replace(',', '.')
         self._order_total_label.text = money(amount.total)

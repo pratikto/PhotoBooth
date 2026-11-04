@@ -1,5 +1,21 @@
 # Meong Photobooth — Bug register
 
+## BUG-041 — DEMO game win advertised a different post-preview gallery price (5 November 2026)
+
+**Severity:** S1 customer quote consistency. **Status:** SOURCE FIXED / focused
+AUTOMATED_VERIFIED locally; full all-opt-in regression and matching-source CI
+pending. No actual charge or physical owner result.
+
+An actual persisted DEMO win followed by two designs/2+1 copies showed Rp22,500
+in the gallery, but final post-preview/server pricing was Rp25,000. Both
+portrait sizes reproduce it. The private profile now declines DEMO-only gallery
+discount eligibility through a small shared policy seam; legacy DEMO/MOCK
+eligibility and backend promotion authority are preserved. New N27 runs the
+complete game -> tutorial -> capture/retake -> preview -> paid ticket -> virtual
+2+1 strip journey. N27 plus existing game-offer/followup checks: 17 PASS, zero
+failures/errors/skips.
+[Reproduction, evidence and remaining simulation phases](qa/portrait-v2-sandbox/PP07-END-TO-END-SIMULATION-2026-11-05.md).
+
 ## BUG-040 — Claim accepted proof invalidated during provider settlement checks (5 November 2026)
 
 **Severity:** S0 protected-session authorization. **Status:** SOURCE FIXED /

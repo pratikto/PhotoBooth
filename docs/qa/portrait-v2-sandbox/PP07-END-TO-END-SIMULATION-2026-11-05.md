@@ -10,6 +10,50 @@ Starting/current tested source: `9ae4ec1874c43c56325bf4254679e7feaca2ba77`.
 Original attached local `work` branch/index remains untouched. Exact-source
 snapshot and external Git index retain the already verified delivery procedure.
 
+## Phase 2 — BUG-041 reproduced and repaired; campaign still IN PROGRESS
+
+**Phase 1 push verified:** `273cd802c7b930515a34a41c029111a3080e9184`.
+A new actual Meong Fly DEMO win -> photo gallery probe fails at both 800x1280
+and 452x900: two designs/2+1 copies advertise **Rp22,500**, while the existing
+post-preview final preview/provider quote requires **Rp25,000**. The payment
+backend does not accept that DEMO discount; this is a reproduced customer-price
+consistency bug, not evidence of an unauthorized real charge.
+
+The original portrait gallery reused DEMO discount eligibility in the isolated
+post-preview subclass, although that profile has no trusted promotion adapter.
+A small policy seam retains the original DEMO/MOCK behavior in `kiosk_v2/app.py`;
+`post_preview_app.py` rejects DEMO-only gallery eligibility, matching its existing
+server quote. No pricing formula, real discount authority, game attempt,
+payment guard, merchant flag or legacy checkout changes.
+
+**N27 new connected regression:** at both portrait sizes, run the actual durable
+DEMO game worker/recorded win and tutorial, select two designs/2+1 copies, take
+six initial shots plus one selected-slot retake per design, reject another
+retake, confirm final preview and original CCP, settle one synthetic Rp25,000
+order, display original ticket and dispatch one receipt, then submit two virtual
+strip batches with exact 2+1 copies. Gallery, preview and provider amount must
+agree; the game code remains consumed and service remains OWED because virtual
+submission is not physical paper. Original DEMO/MOCK discount regression remains.
+
+**Focused execution:** N27 plus game-offer and existing game-followup modules
+**17 PASS, 0 failures/errors/skips, 9.709s**. The initial price-only probe was
+**1 method / 2 failed portrait subcases** before the fix. A new full journey
+closes the previously absent game-to-post-preview quote seam, rather than
+replacing an existing working test with a weaker assertion.
+
+The broad all-opt-in baseline is still running on the untouched prior source in
+an independent snapshot. Its result does not verify this fix. After inspecting
+it, execute the complete all-opt-in suite on this repaired source, then inspect
+matching Windows/Ubuntu/native CI. Keep this campaign IN PROGRESS until those
+results and all remaining simulation classifications are recorded.
+
+```text
+python tools/run_kiosk_unittests.py test_post_preview_native_journeys.NativeCustomerJourneyMatrixTests.test_n27_demo_win_retakes_and_paid_delivery_keep_one_consistent_quote test_kiosk_v2_game_offer test_kiosk_v2_game_followup
+```
+
+Partial acceptance references: PP-002/004/010/020/033/041/048/068. No full
+hardware/provider acceptance row is promoted to PASS.
+
 ## Phase 1 — complete synthetic journeys and interruption cases
 
 Executed on Linux/Python 3.12.14 with real Kivy/SQLite/test HTTP and synthetic

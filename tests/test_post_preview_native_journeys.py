@@ -320,6 +320,75 @@ class NativeCustomerJourneyMatrixTests(unittest.TestCase):
                 self.assertEqual(0,fixture.service.ledger.db.execute(
                     'SELECT count(*) FROM pp_checkout_intents').fetchone()[0])
 
+    def test_n27_demo_win_retakes_and_paid_delivery_keep_one_consistent_quote(self):
+        from photobooth.kiosk_v2.demo_game import DemoClaimError, DemoGameStore, GameJobs
+        from tests import test_kiosk_v2_game_widgets as game_helpers
+        for size in ((800,1280),(452,900)):
+            with self.subTest(size=size), self.booth(paid_delivery=True) as (app,fixture):
+                Window.size=size
+                app._game_jobs.close()
+                store=DemoGameStore(fixture.service.root/'isolated-game-fixture')
+                jobs=app._game_jobs=GameJobs(lambda:store)
+                self.addCleanup(jobs.wait_closed)
+                game=game_helpers.GameWidgetTests()
+                game.claim(app,'DEMO-POSTPAY-QUOTE')
+                attempt=app._game_attempt['attempt_id']
+                game.finish(app,True)
+                self.assertEqual('won',store.get(attempt)['result'])
+                app._continue_game_photo()
+                app._complete_tutorial()
+                app.quantities.update(template_a=2,template_b=1)
+                app._update_order()
+                # A genuine local DEMO win is not a trusted merchant promotion.
+                self.assertEqual((25000,0),(app._gallery_amount.total,app._gallery_amount.discount))
+                self.assertEqual('Rp25.000',app._order_total_label.text)
+                app._enter_photo_test();self.settle(app)
+                app._admit_photo_test();self.settle(app)
+                for _ in range(2):
+                    for _ in range(3):self.shot(app)
+                    app._photo_submit('retake',1);self.settle(app)
+                    self.assertTrue(app._photo_view['retake'])
+                    self.shot(app)
+                    buttons=[w for w in app.stage.walk() if getattr(w,'text',None)=='RETAKE']
+                    self.assertEqual(3,len(buttons))
+                    self.assertTrue(all(button.disabled for button in buttons))
+                    self.click(app,'PAKAI FOTO INI • BUAT STRIP');self.settle(app)
+                    self.click(app,'LANJUT');self.settle(app)
+                self.assertEqual('final_preview',app._photo_view['phase'])
+                self.assertEqual(app._gallery_amount.total,app._photo_view['amount'])
+                self.assertEqual(8,len(list(fixture.service.photos.root.rglob('*.jpg'))))
+                self.assertEqual(0,fixture.provider.charges)
+                self.click(app,'LANJUT CHECKOUT SIMULASI')
+                self.await_phase(app,'checkout_ready')
+                self.click(app,'SUDAH SIMPAN BUKTI • LANJUT SIMULASI')
+                self.await_phase(app,'payment_pending')
+                payment=app._photo_view['payment']
+                self.assertEqual(25000,payment['amount'])
+                order=payment['attempts'][0]['provider_order_id']
+                self.assertEqual('25000',fixture.provider.rows[order]['gross_amount'])
+                fixture.provider.state(order,'settlement')
+                self.click(app,'PERIKSA STATUS')
+                self.await_phase(app,'ticket_offer')
+                app._ticket_card._ready_at=0
+                deadline=time.monotonic()+10
+                while time.monotonic()<deadline and app._photo_view.get('phase')!='ticket_visible':
+                    EventLoop.idle()
+                    if app._ticket_card is not None:app._ticket_card._rendered(0)
+                    app._poll_photos();time.sleep(.01)
+                self.assertEqual('ticket_visible',app._photo_view['phase'])
+                self.assertTrue(app._ticket_window.active)
+                self.click(app,'LANJUT • SIMPAN TIKET')
+                self.await_phase(app,'paid_delivery')
+                for _ in range(2):
+                    self.click(app,'CETAK FOTO YANG SUDAH DIBAYAR');self.settle(app)
+                self.assertEqual([2,1],[copies for _path,copies in fixture.paid_print_sends])
+                self.assertEqual(1,len(fixture.receipt_sizes))
+                self.assertEqual(1,fixture.provider.charges)
+                self.assertEqual('OWED',app._photo_view['delivery']['service_status'])
+                self.assertFalse(app._photo_view['delivery']['physical_paper_verified'])
+                self.assertEqual('won',store.get(attempt)['result'])
+                with self.assertRaises(DemoClaimError):store.claim('DEMO-POSTPAY-QUOTE')
+
     def start_B(self, app):
         app._choose_photo()
         self.assertEqual('tutorial', app.navigation.page)

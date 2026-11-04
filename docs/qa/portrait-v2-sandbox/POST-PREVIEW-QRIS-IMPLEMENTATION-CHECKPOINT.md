@@ -1,6 +1,6 @@
 # Post-preview QRIS implementation checkpoint
 
-> **5 November full simulation campaign IN PROGRESS:** [phase 1 evidence and exact next step](PP07-END-TO-END-SIMULATION-2026-11-05.md): 51 synthetic journey/fault tests PASS, zero failures/errors/skips. Complete the remaining software simulations before owner device UAT; preserve independent provider/secure-restart/physical/refund gates.
+> **5 November full simulation campaign IN PROGRESS:** [phase 1 evidence and exact next step](PP07-END-TO-END-SIMULATION-2026-11-05.md): phase 1 51 PASS; BUG-041 DEMO/gallery price mismatch repaired with N27 plus 16 existing checks PASS. Full all-opt-in simulation and matching-source CI still pending; owner UAT remains deferred.
 
 > [5 November continuation: BUG-040 atomic original-proof admission and eleven new methods; c20479d CI 41901827925 verified all 3 SUCCESS (544 Windows/544 Ubuntu/61 native). Separate merchant/restart/hardware gates remain open.](PP07-CONTINUATION-2026-11-05.md)
 

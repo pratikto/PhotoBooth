@@ -1,5 +1,7 @@
 # PP-07 consolidated software traceability — 4 November 2026
 
+> [5 November complete-simulation campaign](PP07-END-TO-END-SIMULATION-2026-11-05.md): N27 adds actual game-win/retake/post-preview quote/paid-delivery coverage for PP-002/004/010/020/033/041/048/068. BUG-041 locally verified; campaign and matching-source CI IN PROGRESS. Full acceptance remains NOT_RUN.
+
 > [5 November partial software evidence: four atomic-proof races, two platform-process cases and five actual-transport/fake-HTTP cases. All full PP acceptance rows remain NOT_RUN.](PP07-CONTINUATION-2026-11-05.md)
 
 **Executed source gate:** 0601354 / CI 41826366906, all 3/3 SUCCESS; Windows

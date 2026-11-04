@@ -48,6 +48,11 @@ class PrivatePreviewApp(PortraitKioskV2App):
         super()._build_templates(canvas)
         self._test_photo_button.text = 'MULAI FOTO'
 
+    def _gallery_discount_eligible(self):
+        # This profile has no trusted post-preview promotion adapter. A DEMO
+        # game win must not advertise a discount absent from the server quote.
+        return False
+
     def _photo_capture_allowed(self):
         service = self._photo_jobs.service
         return (not self._closed and not self._suspended and service is not None
