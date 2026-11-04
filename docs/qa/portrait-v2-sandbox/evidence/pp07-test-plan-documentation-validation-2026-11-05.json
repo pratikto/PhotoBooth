@@ -1,0 +1,23 @@
+{
+  "recorded_at_utc": "2026-11-04T21:18:09.231109+00:00",
+  "scope": "documentation_validation_only",
+  "application_tests_rerun": false,
+  "baseline_tested_source": "acbac15842b59d5005075f2fbc7e87978323b158",
+  "checks": {
+    "unique_pp_ids_and_exact_canonical_scenarios_criteria": 112,
+    "mapped_partial_evidence_cases": 103,
+    "missing_executable_or_external_scope_cases": 9,
+    "existing_mapped_test_ids_verified_against_python_ast": true,
+    "pilot_ids_and_original_outcomes_preserved": 26,
+    "uah_ids_and_original_criteria_preserved": 50,
+    "actual_ar_stage_definitions": 14,
+    "execution_register_rows": 188,
+    "execution_register_outcomes": {
+      "NOT_RUN": 186,
+      "BLOCKED": 2
+    },
+    "fabricated_execution_data": false,
+    "relative_plan_links_resolve": true
+  },
+  "note": "Planning labels and executed outcomes are separate. Prior application software evidence is retained; this task executed documentation checks only."
+}

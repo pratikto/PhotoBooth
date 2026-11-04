@@ -127,3 +127,5 @@ Use one record per case/platform/profile execution; overlapping case IDs may lin
 The synthetic supervised candidate remains a conditional device-test candidate. Full acceptance requires every applicable case's exact-source evidence, resolved P0 defects, protected Windows/Ubuntu original-worker restore, actual paper/cloud/provider/security observations and the appropriate merchant/legal/release reviews. Refund and production gates remain disabled/unapproved until separately satisfied. Do not infer a release from 1,744 passing software executions or from this plan.
 
 Sources reviewed: canonical 112 matrix, complete owner decision ledger, security/state contract, refund/lost-proof policy, executed 5 November simulation and JSON case review, supervised 26-row worksheet, 50-row unattended handoff contract, AR traceability/readiness and repository development protocol. Canonical meanings and historical evidence remain unchanged.
+
+Documentation validation: [record of inventory, source-method and link checks](evidence/pp07-test-plan-documentation-validation-2026-11-05.json). This record does not contain application-test execution results.

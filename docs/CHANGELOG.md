@@ -1,5 +1,12 @@
 # Meong Photobooth — changelog
 
+## 5 November 2026 — complete post-preview test planning (documentation only)
+
+Added the [complete test plan](qa/portrait-v2-sandbox/PP07-COMPLETE-TEST-PLAN-2026-11-05.md), 112 detailed PP procedures, 26 owner PILOT plans, 50 versioned UAH plans, 14 retained AR stage gates and a blank 188-row execution register. Each PP procedure records setup, trigger, expected result, executor, priority, partial software evidence and remaining dependency. Existing results remain 103 partial / 9 missing PP scopes; all 112 full PP acceptance outcomes stay NOT_RUN and owner PILOT remains 24 NOT_RUN / 2 BLOCKED.
+
+Validated case IDs, canonical criteria, mapped test identifiers against source AST, links and unfilled execution records. No application source or tests changed; no application suite rerun, hardware/cloud/provider operation, refund activation or production approval. Linked the plan from current start/index/status/handover documents while preserving dated evidence.
+
+
 ## 4 November 2026 — post-preview device-test continuation
 
 Authorized branch remains `feature/post-preview-qris-checkout`; no branch switch/master merge/production activation.

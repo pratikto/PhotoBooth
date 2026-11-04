@@ -1,5 +1,7 @@
 # Start here — supervised post-preview device testing
 
+> **5 November complete test plan (documentation only):** [188 case rows and remaining priorities](PP07-COMPLETE-TEST-PLAN-2026-11-05.md), with detailed 112 PP procedures, 26 owner PILOT cases, 50 versioned UAH cases and 14 AR stage gates. Existing software evidence remains 103 partial / 9 missing PP scopes; all 112 full PP acceptance outcomes remain NOT_RUN, PILOT remains 24 NOT_RUN / 2 BLOCKED. No new execution, refund activation or production approval.
+
 > **5 November final software simulation:** [executed full campaign and all 112 case classifications](PP07-END-TO-END-SIMULATION-2026-11-05.md), acbac15 / CI 41906929920: 1,744 all-opt-in local PASS; 546 Windows, 546 Ubuntu, 62 native PASS; no failures/errors/skips. Full provider/device/refund/legal acceptance remains separate; no owner UAT row is promoted.
 
 > **5 November software continuation:** [latest verified source and next engineering task](PP07-CONTINUATION-2026-11-05.md): c20479d / CI 41901827925 all 3 SUCCESS (544 Windows, 544 Ubuntu, 61 native). Owner launch procedure and separate merchant/secure-worker/hardware/refund/production gates remain unchanged.

@@ -1,5 +1,7 @@
 # Complete simulation campaign — 5 November 2026
 
+> **5 November complete test plan (documentation only):** [188 case rows and remaining priorities](PP07-COMPLETE-TEST-PLAN-2026-11-05.md), with detailed 112 PP procedures, 26 owner PILOT cases, 50 versioned UAH cases and 14 AR stage gates. Existing software evidence remains 103 partial / 9 missing PP scopes; all 112 full PP acceptance outcomes remain NOT_RUN, PILOT remains 24 NOT_RUN / 2 BLOCKED. No new execution, refund activation or production approval.
+
 **Owner request:** simulate the complete journey and failures, repair reproduced
 problems, then finish software simulations before asking the owner to test.
 **EXECUTABLE SOFTWARE SIMULATIONS COMPLETE / PASS.** All available synthetic
