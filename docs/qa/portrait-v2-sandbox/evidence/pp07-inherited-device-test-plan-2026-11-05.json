@@ -1,0 +1,673 @@
+{
+  "execution_performed_by_this_plan": false,
+  "pilot_cases": [
+    {
+      "case_id": "PILOT-01",
+      "action": "Start without `--synthetic-payment-only`",
+      "criterion": "Launcher refuses; no real QRIS charge",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner; fresh-root synthetic device preflight",
+      "evidence": "Refusal/exit status; zero device/provider side effects; existing root unchanged"
+    },
+    {
+      "case_id": "PILOT-02",
+      "action": "Use old/nonempty/symlink private root",
+      "criterion": "Launcher refuses without resetting previous data",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner; fresh-root synthetic device preflight",
+      "evidence": "Refusal/exit status; zero device/provider side effects; existing root unchanged"
+    },
+    {
+      "case_id": "PILOT-03",
+      "action": "Ads -> Mulai Foto -> tutorial -> templates",
+      "criterion": "Correct portrait UI and responsive gestures",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner; fresh-root synthetic device preflight",
+      "evidence": "Observed screen/input sequence and original counters/journal; redacted device/layout record"
+    },
+    {
+      "case_id": "PILOT-04",
+      "action": "Select 2 different designs with 2/1 copies",
+      "criterion": "2 independent photo sessions; one combined total",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner; fresh-root synthetic device preflight",
+      "evidence": "Observed screen/input sequence and original counters/journal; redacted device/layout record"
+    },
+    {
+      "case_id": "PILOT-05",
+      "action": "Take 3 photos/template with real webcam",
+      "criterion": "Preview mirrors; saved original does not mirror unexpectedly",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner; fresh-root synthetic device preflight",
+      "evidence": "Real camera orientation, selected slot and retake lineage; no private images in shared evidence"
+    },
+    {
+      "case_id": "PILOT-06",
+      "action": "Use exactly 1 retake/template",
+      "criterion": "Only selected frame changes; source lineage intact",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner; fresh-root synthetic device preflight",
+      "evidence": "Real camera orientation, selected slot and retake lineage; no private images in shared evidence"
+    },
+    {
+      "case_id": "PILOT-07",
+      "action": "Review all purchased designs before QRIS",
+      "criterion": "All previews shown; edit/cart permitted before freeze",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner; fresh-root synthetic device preflight",
+      "evidence": "Observed screen/input sequence and original counters/journal; redacted device/layout record"
+    },
+    {
+      "case_id": "PILOT-08",
+      "action": "Freeze checkout and display CCP",
+      "criterion": "Original private QR/code visible; no raw proof in logs",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner; fresh-root synthetic device preflight",
+      "evidence": "Actual visible render/timer and one dismissal; no raw proof; receipt send count distinct from paper"
+    },
+    {
+      "case_id": "PILOT-09",
+      "action": "Begin synthetic QRIS and press SIMULASI PAID",
+      "criterion": "Exactly 1 mock payment; original photos remain private",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner; fresh-root synthetic device preflight",
+      "evidence": "Observed screen/input sequence and original counters/journal; redacted device/layout record"
+    },
+    {
+      "case_id": "PILOT-10",
+      "action": "First PAID \u2192 Recovery Ticket",
+      "criterion": "Original QR/code genuinely visible 30s, independent printer",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner; fresh-root synthetic device preflight",
+      "evidence": "Actual visible render/timer and one dismissal; no raw proof; receipt send count distinct from paper"
+    },
+    {
+      "case_id": "PILOT-11",
+      "action": "NEXT at 5 seconds vs full countdown",
+      "criterion": "Exactly one dismissal; no token redisplay/reissue",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner; fresh-root synthetic device preflight",
+      "evidence": "Actual visible render/timer and one dismissal; no raw proof; receipt send count distinct from paper"
+    },
+    {
+      "case_id": "PILOT-12",
+      "action": "Ticket/receipt print with POS80 option",
+      "criterion": "At most one ticket send; actual paper manually inspected",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner; separate dual-consent isolated POS80 option",
+      "evidence": "Manual physical paper/copy/cutter/QR observation and serialized transport count"
+    },
+    {
+      "case_id": "PILOT-13",
+      "action": "Mock paid photo result",
+      "criterion": "Correct 3 photos + original folder QR; no second shutter",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner; fresh-root synthetic device preflight",
+      "evidence": "Observed screen/input sequence and original counters/journal; redacted device/layout record"
+    },
+    {
+      "case_id": "PILOT-14",
+      "action": "Purchased strip with POS80 option",
+      "criterion": "One batch per design; selected copy count and QR correct",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner; separate dual-consent isolated POS80 option",
+      "evidence": "Manual physical paper/copy/cutter/QR observation and serialized transport count"
+    },
+    {
+      "case_id": "PILOT-15",
+      "action": "Virtual Drive fixture",
+      "criterion": "Clearly synthetic URL, never represented as downloadable",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner; fresh-root synthetic device preflight",
+      "evidence": "Synthetic-link label and zero public upload/download claims"
+    },
+    {
+      "case_id": "PILOT-16",
+      "action": "Real Drive opt-in and public viewer",
+      "criterion": "Correct original folder, verified link and upload progress",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner/integration tester; separate dual-consent approved test Drive",
+      "evidence": "Original folder binding/checksum, signed-out approved test viewer and truthful upload state"
+    },
+    {
+      "case_id": "PILOT-17",
+      "action": "Controlled printer/network failure using virtual or isolated test equipment",
+      "criterion": "Uncertain output is held, no blind automatic print replay; no active production-printer disconnection",
+      "status": "NOT_RUN",
+      "executor_dependency": "Engineer + owner; virtual transport or isolated lab only; full secure restore separate",
+      "evidence": "Controlled barrier/process exit, durable SENDING/UNCERTAIN and no duplicate send; original root retained"
+    },
+    {
+      "case_id": "PILOT-18",
+      "action": "A privacy-locks/abandons; Ads shown",
+      "criterion": "Prior photos/QR gone, old PAID/OWED remains",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner; fresh-root synthetic device preflight",
+      "evidence": "A/B pixels private, original proof/provider/worker identities, exact ACK/denial/WAIT and retained liability"
+    },
+    {
+      "case_id": "PILOT-19",
+      "action": "B taps Mulai Foto while old session protected",
+      "criterion": "PREPARE\u2192ACK; no new purchase until old safely released",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner; fresh-root synthetic device preflight",
+      "evidence": "A/B pixels private, original proof/provider/worker identities, exact ACK/denial/WAIT and retained liability"
+    },
+    {
+      "case_id": "PILOT-20",
+      "action": "A returns while B is active",
+      "criterion": "WAIT/defer, no camera takeover or old media display",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner; fresh-root synthetic device preflight",
+      "evidence": "A/B pixels private, original proof/provider/worker identities, exact ACK/denial/WAIT and retained liability"
+    },
+    {
+      "case_id": "PILOT-21",
+      "action": "A returns with original CCP/ticket when free",
+      "criterion": "Exact old paid group/media/grant restored, no new mock charge",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner; fresh-root synthetic device preflight",
+      "evidence": "A/B pixels private, original proof/provider/worker identities, exact ACK/denial/WAIT and retained liability"
+    },
+    {
+      "case_id": "PILOT-22",
+      "action": "Invalid/DEMO/QRIS ticket used for old recovery",
+      "criterion": "Generic denial without private data/renewed ticket",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner; fresh-root synthetic device preflight",
+      "evidence": "A/B pixels private, original proof/provider/worker identities, exact ACK/denial/WAIT and retained liability"
+    },
+    {
+      "case_id": "PILOT-23",
+      "action": "Original PENDING/UNKNOWN payment on old visit",
+      "criterion": "New checkout refused until original financial reconciliation",
+      "status": "NOT_RUN",
+      "executor_dependency": "Owner; fresh-root synthetic device preflight",
+      "evidence": "A/B pixels private, original proof/provider/worker identities, exact ACK/denial/WAIT and retained liability"
+    },
+    {
+      "case_id": "PILOT-24",
+      "action": "Controlled synthetic process interruption during print/upload; preserve original root",
+      "criterion": "No duplicate send; journal/OWED retained; occupied root refused; full protected restore remains a separate blocked gate",
+      "status": "NOT_RUN",
+      "executor_dependency": "Engineer + owner; virtual transport or isolated lab only; full secure restore separate",
+      "evidence": "Controlled barrier/process exit, durable SENDING/UNCERTAIN and no duplicate send; original root retained"
+    },
+    {
+      "case_id": "PILOT-25",
+      "action": "Actual Midtrans Sandbox paid QRIS",
+      "criterion": "**BLOCKED**: not provided by this synthetic-payment-only launcher",
+      "status": "BLOCKED",
+      "executor_dependency": "Provider engineer; guarded actual post-preview merchant Sandbox profile absent",
+      "evidence": "Provider simulator and fresh independent original-order state; no actual bank payment"
+    },
+    {
+      "case_id": "PILOT-26",
+      "action": "Actual merchant refund/duplicate-charge resolution",
+      "criterion": "**BLOCKED**: account-specific refund provider capability unverified",
+      "status": "BLOCKED",
+      "executor_dependency": "Finance/security/provider engineer; durable refund protocol/account capability absent",
+      "evidence": "Original-charge keyed intent, verified refund state and worker safety; actual money transport remains disabled"
+    }
+  ],
+  "uah_cases": [
+    {
+      "case_id": "UAH-001",
+      "criterion": "Fresh PAID + configured printer ACK: one persisted receipt intent, one transport send, direct camera preparation, no mandatory ticket overlay",
+      "crosswalk": "PP-041\u2013046, 049\u2013051, 079\u2013080",
+      "executor_dependency": "Engineer + owner; explicit legacy profile, virtual receipt then isolated paper",
+      "required_observations": "Visible-screen timing, exact same ticket identity, one receipt send and manual paper truth; apply profile precedence above",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-002",
+      "criterion": "Printer missing/not configured: original ticket QR + full code displayed in 30s fallback; no new token, charge or print",
+      "crosswalk": "PP-041\u2013046, 049\u2013051, 079\u2013080",
+      "executor_dependency": "Engineer + owner; explicit legacy profile, virtual receipt then isolated paper",
+      "required_observations": "Visible-screen timing, exact same ticket identity, one receipt send and manual paper truth; apply profile precedence above",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-003",
+      "criterion": "Printer exception/timeout/no response: same fallback, original uncertain job retained, no automatic resend",
+      "crosswalk": "PP-041\u2013046, 049\u2013051, 079\u2013080",
+      "executor_dependency": "Engineer + owner; explicit legacy profile, virtual receipt then isolated paper",
+      "required_observations": "Visible-screen timing, exact same ticket identity, one receipt send and manual paper truth; apply profile precedence above",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-004",
+      "criterion": "After-send UNCERTAIN survives restart: no second physical send; no raw token recreation or private exposure",
+      "crosswalk": "PP-041\u2013046, 049\u2013051, 079\u2013080",
+      "executor_dependency": "Engineer + owner; explicit legacy profile, virtual receipt then isolated paper",
+      "required_observations": "Visible-screen timing, exact same ticket identity, one receipt send and manual paper truth; apply profile precedence above",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-005",
+      "criterion": "Countdown actually displays 30..0 at 800x1280 and 452x900; starts on visible render, never resets on polling",
+      "crosswalk": "PP-041\u2013046, 049\u2013051, 079\u2013080",
+      "executor_dependency": "Engineer + owner; explicit legacy profile, virtual receipt then isolated paper",
+      "required_observations": "Visible-screen timing, exact same ticket identity, one receipt send and manual paper truth; apply profile precedence above",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-006",
+      "criterion": "NEXT at second 29, 1 and exact zero race: exactly one exit; no double STARTED or camera admission",
+      "crosswalk": "PP-041\u2013046, 049\u2013051, 079\u2013080",
+      "executor_dependency": "Engineer + owner; explicit legacy profile, virtual receipt then isolated paper",
+      "required_observations": "Visible-screen timing, exact same ticket identity, one receipt send and manual paper truth; apply profile precedence above",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-007",
+      "criterion": "Original QR decodes to exact synthetic ticket; full code readable; QR payment/claim/operator/DEMO identities rejected cross-context",
+      "crosswalk": "PP-041\u2013046, 049\u2013051, 079\u2013080",
+      "executor_dependency": "Engineer + owner; explicit legacy profile, virtual receipt then isolated paper",
+      "required_observations": "Visible-screen timing, exact same ticket identity, one receipt send and manual paper truth; apply profile precedence above",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-008",
+      "criterion": "Fallback cleared on NEXT/zero/minimize/privacy lock/exit/restart and no stale callback can reveal ticket",
+      "crosswalk": "PP-041\u2013046, 049\u2013051, 079\u2013080",
+      "executor_dependency": "Engineer + owner; explicit legacy profile, virtual receipt then isolated paper",
+      "required_observations": "Visible-screen timing, exact same ticket identity, one receipt send and manual paper truth; apply profile precedence above",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-009",
+      "criterion": "Enter camera only after original backend STARTED and local readiness; never auto-trigger shutter",
+      "crosswalk": "PP-041\u2013046, 049\u2013051, 079\u2013080",
+      "executor_dependency": "Engineer + owner; explicit legacy profile, virtual receipt then isolated paper",
+      "required_observations": "Visible-screen timing, exact same ticket identity, one receipt send and manual paper truth; apply profile precedence above",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-010",
+      "criterion": "Owner-reported missing real printed paper despite SUBMITTED: real hardware acceptance flags sensor/physical ambiguity; no invented paper-proof status",
+      "crosswalk": "PP-041\u2013046, 049\u2013051, 079\u2013080",
+      "executor_dependency": "Engineer + owner; explicit legacy profile, virtual receipt then isolated paper",
+      "required_observations": "Visible-screen timing, exact same ticket identity, one receipt send and manual paper truth; apply profile precedence above",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-011",
+      "criterion": "Eligible idle 60s during protected photo stage: old pixels wiped immediately; public ADS_PROTECTED shown, not automatic SESI TERSIMPAN",
+      "crosswalk": "PP-059\u2013063, 075\u2013077",
+      "executor_dependency": "Engineer + device owner; A/B privacy and active-work fixtures",
+      "required_observations": "Ads/private pixel boundary, original financial state, actual camera owner and rejected stale callbacks",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-012",
+      "criterion": "Minimize/resume during protected photo: stale camera preview, token, thumbnail, download QR and old callbacks hidden",
+      "crosswalk": "PP-059\u2013063, 075\u2013077",
+      "executor_dependency": "Engineer + device owner; A/B privacy and active-work fixtures",
+      "required_observations": "Ads/private pixel boundary, original financial state, actual camera owner and rejected stale callbacks",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-013",
+      "criterion": "Restart with previously locked PAID journal: no old private media or ticket; public advertising with protected occupancy",
+      "crosswalk": "PP-059\u2013063, 075\u2013077",
+      "executor_dependency": "Engineer + device owner; A/B privacy and active-work fixtures",
+      "required_observations": "Ads/private pixel boundary, original financial state, actual camera owner and rejected stale callbacks",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-014",
+      "criterion": "Original live PENDING and BUG-028 STARTING stay on same valid original flow when eligible; no spurious ad detour",
+      "crosswalk": "PP-059\u2013063, 075\u2013077",
+      "executor_dependency": "Engineer + device owner; A/B privacy and active-work fixtures",
+      "required_observations": "Ads/private pixel boundary, original financial state, actual camera owner and rejected stale callbacks",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-015",
+      "criterion": "Face invitation, game entry, shortcut, rapid double tap and stale button revision cannot bypass protected admission",
+      "crosswalk": "PP-059\u2013063, 075\u2013077",
+      "executor_dependency": "Engineer + device owner; A/B privacy and active-work fixtures",
+      "required_observations": "Ads/private pixel boundary, original financial state, actual camera owner and rejected stale callbacks",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-016",
+      "criterion": "ADS_PROTECTED looks like ads yet new QRIS order remains blocked until backend ACK/archive",
+      "crosswalk": "PP-059\u2013063, 075\u2013077",
+      "executor_dependency": "Engineer + device owner; A/B privacy and active-work fixtures",
+      "required_observations": "Ads/private pixel boundary, original financial state, actual camera owner and rejected stale callbacks",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-017",
+      "criterion": "PAID/OWED, valid original capability, safe local worker: machine PREPARE -> local receipt -> ACK -> archive -> new visit admitted",
+      "crosswalk": "PP-063\u2013065, 071\u2013072, 077\u2013078",
+      "executor_dependency": "Engineer/security; supported protected original-worker process restore",
+      "required_observations": "Exact PREPARE/local receipt/ACK/archive, generation fences, no unsafe release/send or lost OWED",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-018",
+      "criterion": "Auto-release machine principal has exact booth/order/operation scope, auditing and explicit Sandbox guard; operator PIN untouched",
+      "crosswalk": "PP-063\u2013065, 071\u2013072, 077\u2013078",
+      "executor_dependency": "Engineer/security; supported protected original-worker process restore",
+      "required_observations": "Exact PREPARE/local receipt/ACK/archive, generation fences, no unsafe release/send or lost OWED",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-019",
+      "criterion": "PREPARE succeeds / worker isolation fails: old service fence stays suspended, booth remains blocked, OWED survives",
+      "crosswalk": "PP-063\u2013065, 071\u2013072, 077\u2013078",
+      "executor_dependency": "Engineer/security; supported protected original-worker process restore",
+      "required_observations": "Exact PREPARE/local receipt/ACK/archive, generation fences, no unsafe release/send or lost OWED",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-020",
+      "criterion": "Worker isolate succeeds / ACK times out: requery same operation, never create new grant/order/print",
+      "crosswalk": "PP-063\u2013065, 071\u2013072, 077\u2013078",
+      "executor_dependency": "Engineer/security; supported protected original-worker process restore",
+      "required_observations": "Exact PREPARE/local receipt/ACK/archive, generation fences, no unsafe release/send or lost OWED",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-021",
+      "criterion": "ACK succeeds / local reply lost: discover same ACK identity, finish exact archive and free only once",
+      "crosswalk": "PP-063\u2013065, 071\u2013072, 077\u2013078",
+      "executor_dependency": "Engineer/security; supported protected original-worker process restore",
+      "required_observations": "Exact PREPARE/local receipt/ACK/archive, generation fences, no unsafe release/send or lost OWED",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-022",
+      "criterion": "Archive fsync fails after backend ACK: preserve history and block until durable local archival integrity verified",
+      "crosswalk": "PP-063\u2013065, 071\u2013072, 077\u2013078",
+      "executor_dependency": "Engineer/security; supported protected original-worker process restore",
+      "required_observations": "Exact PREPARE/local receipt/ACK/archive, generation fences, no unsafe release/send or lost OWED",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-023",
+      "criterion": "Stale generation/old callback after release: cannot mutate protected media, send print, allocate again or disclose images",
+      "crosswalk": "PP-063\u2013065, 071\u2013072, 077\u2013078",
+      "executor_dependency": "Engineer/security; supported protected original-worker process restore",
+      "required_observations": "Exact PREPARE/local receipt/ACK/archive, generation fences, no unsafe release/send or lost OWED",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-024",
+      "criterion": "Two concurrent new visitors / rapid Photo+Game taps: only one new admission after single valid release",
+      "crosswalk": "PP-063\u2013065, 071\u2013072, 077\u2013078",
+      "executor_dependency": "Engineer/security; supported protected original-worker process restore",
+      "required_observations": "Exact PREPARE/local receipt/ACK/archive, generation fences, no unsafe release/send or lost OWED",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-025",
+      "criterion": "PAID with print SENDING/UNCERTAIN: cannot falsely produce isolation receipt; physical inspection when necessary",
+      "crosswalk": "PP-063\u2013065, 071\u2013072, 077\u2013078",
+      "executor_dependency": "Engineer/security; supported protected original-worker process restore",
+      "required_observations": "Exact PREPARE/local receipt/ACK/archive, generation fences, no unsafe release/send or lost OWED",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-026",
+      "criterion": "Drive or external work active: isolation preserves original queue and immutable folder; no false green while transport unsafe",
+      "crosswalk": "PP-063\u2013065, 071\u2013072, 077\u2013078",
+      "executor_dependency": "Engineer/security; supported protected original-worker process restore",
+      "required_observations": "Exact PREPARE/local receipt/ACK/archive, generation fences, no unsafe release/send or lost OWED",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-027",
+      "criterion": "Expired Sandbox capability with outstanding PAID/OWED: no token invention, no deletion, scoped aged-claim policy holds or escalates safely",
+      "crosswalk": "PP-063\u2013065, 071\u2013072, 077\u2013078",
+      "executor_dependency": "Engineer/security; supported protected original-worker process restore",
+      "required_observations": "Exact PREPARE/local receipt/ACK/archive, generation fences, no unsafe release/send or lost OWED",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-028",
+      "criterion": "Verified unpaid terminal cancel/expire/fail with no rights: durable old close, new checkout safe",
+      "crosswalk": "PP-021\u2013032, 062, 073\u2013075, 083",
+      "executor_dependency": "Provider engineer; fake HTTP first, actual guarded merchant profile separately",
+      "required_observations": "Independent fresh provider state, original order/attempt/operation and no duplicate billing or entitlement",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-029",
+      "criterion": "Old PENDING and new visitor intent: cancel/reconcile **same original order**, release only on fresh terminal provider proof",
+      "crosswalk": "PP-021\u2013032, 062, 073\u2013075, 083",
+      "executor_dependency": "Provider engineer; fake HTTP first, actual guarded merchant profile separately",
+      "required_observations": "Independent fresh provider state, original order/attempt/operation and no duplicate billing or entitlement",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-030",
+      "criterion": "Old unknown create, lost POST response, 404, provider offline: no new checkout or duplicate charge while ambiguous",
+      "crosswalk": "PP-021\u2013032, 062, 073\u2013075, 083",
+      "executor_dependency": "Provider engineer; fake HTTP first, actual guarded merchant profile separately",
+      "required_observations": "Independent fresh provider state, original order/attempt/operation and no duplicate billing or entitlement",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-031",
+      "criterion": "Cancel/settlement race: late PAID retained under original identity; never treat cancel request as financial proof",
+      "crosswalk": "PP-021\u2013032, 062, 073\u2013075, 083",
+      "executor_dependency": "Provider engineer; fake HTTP first, actual guarded merchant profile separately",
+      "required_observations": "Independent fresh provider state, original order/attempt/operation and no duplicate billing or entitlement",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-032",
+      "criterion": "Refund/partial_refund/review and wrong merchant/amount/reference: no old grant, no automatic refund or new unverified admission",
+      "crosswalk": "PP-021\u2013032, 062, 073\u2013075, 083",
+      "executor_dependency": "Provider engineer; fake HTTP first, actual guarded merchant profile separately",
+      "required_observations": "Independent fresh provider state, original order/attempt/operation and no duplicate billing or entitlement",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-033",
+      "criterion": "QR1/QR2/QR3 verified expiry semantics unchanged and previous order keys not reused",
+      "crosswalk": "PP-021\u2013032, 062, 073\u2013075, 083",
+      "executor_dependency": "Provider engineer; fake HTTP first, actual guarded merchant profile separately",
+      "required_observations": "Independent fresh provider state, original order/attempt/operation and no duplicate billing or entitlement",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-034",
+      "criterion": "Independent backend/client restart with same original operation remains idempotent, no double billing",
+      "crosswalk": "PP-021\u2013032, 062, 073\u2013075, 083",
+      "executor_dependency": "Provider engineer; fake HTTP first, actual guarded merchant profile separately",
+      "required_observations": "Independent fresh provider state, original order/attempt/operation and no duplicate billing or entitlement",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-035",
+      "criterion": "From Ads, valid ticket opens a locked still-active visit only after exact proof and no other camera owner",
+      "crosswalk": "PP-033\u2013040, 043\u2013046, 066, 070",
+      "executor_dependency": "Engineer/security; original protected claim/media/worker integration",
+      "required_observations": "Original proof scope, one entitlement, busy WAIT, no tokenless reveal; original slot/retake lineage",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-036",
+      "criterion": "From Ads, valid ticket reopens archived SUSPENDED+ACKED original claim at exact transaction/retake checkpoint",
+      "crosswalk": "PP-033\u2013040, 043\u2013046, 066, 070",
+      "executor_dependency": "Engineer/security; original protected claim/media/worker integration",
+      "required_observations": "Original proof scope, one entitlement, busy WAIT, no tokenless reveal; original slot/retake lineage",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-037",
+      "criterion": "Valid ticket but other customer active: busy/wait response, no operator by default and no camera preemption",
+      "crosswalk": "PP-033\u2013040, 043\u2013046, 066, 070",
+      "executor_dependency": "Engineer/security; original protected claim/media/worker integration",
+      "required_observations": "Original proof scope, one entitlement, busy WAIT, no tokenless reveal; original slot/retake lineage",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-038",
+      "criterion": "Invalid, guessed, replayed, wrong-booth, expired token or numeric reference: generic denial, rate limit, no photo/token disclosure",
+      "crosswalk": "PP-033\u2013040, 043\u2013046, 066, 070",
+      "executor_dependency": "Engineer/security; original protected claim/media/worker integration",
+      "required_observations": "Original proof scope, one entitlement, busy WAIT, no tokenless reveal; original slot/retake lineage",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-039",
+      "criterion": "Customer did not save offered ticket: no self-service private restoration or substitute token; separate OWED remedy retained",
+      "crosswalk": "PP-033\u2013040, 043\u2013046, 066, 070",
+      "executor_dependency": "Engineer/security; original protected claim/media/worker integration",
+      "required_observations": "Original proof scope, one entitlement, busy WAIT, no tokenless reveal; original slot/retake lineage",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-040",
+      "criterion": "Lost/missing/corrupt manifest, orphan JPEG or stale template: preserve evidence and service claim, never invent photos or overwrite",
+      "crosswalk": "PP-033\u2013040, 043\u2013046, 066, 070",
+      "executor_dependency": "Engineer/security; original protected claim/media/worker integration",
+      "required_observations": "Original proof scope, one entitlement, busy WAIT, no tokenless reveal; original slot/retake lineage",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-041",
+      "criterion": "Restored one/two/three photos and retake quota: correct original frozen template/copies, no double retake or print",
+      "crosswalk": "PP-033\u2013040, 043\u2013046, 066, 070",
+      "executor_dependency": "Engineer/security; original protected claim/media/worker integration",
+      "required_observations": "Original proof scope, one entitlement, busy WAIT, no tokenless reveal; original slot/retake lineage",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-042",
+      "criterion": "Customer remedy for PAID_UNFULFILLED is distinct from private media recovery and does not falsely claim refund/completion",
+      "crosswalk": "PP-040, 085\u2013112",
+      "executor_dependency": "Finance/security; service/remedy integration",
+      "required_observations": "Source-specific observed criterion, original ledger/privacy/output evidence and external reviewer record where required",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-043",
+      "criterion": "Financial review, tech inspection, lost ticket support and admin investigation are separately authorized and audited",
+      "crosswalk": "PP-038\u2013040, 098, 103",
+      "executor_dependency": "Security/operations; actual configured role scopes",
+      "required_observations": "Source-specific observed criterion, original ledger/privacy/output evidence and external reviewer record where required",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-044",
+      "criterion": "Full relevant payment/AR-00\u201313/BUG-027/BUG-028/QR1\u2013QR3/game/photo/Drive/print regression PASS at actual new source SHA",
+      "crosswalk": "PP-001\u2013112 + AR-00\u201313",
+      "executor_dependency": "Engineer; relevant changed-source regressions and required CI",
+      "required_observations": "Source-specific observed criterion, original ledger/privacy/output evidence and external reviewer record where required",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-045",
+      "criterion": "Actual owner Windows, 800x1280 and compact 452x900 (and actual laptop sizing): readable and safe ads, fallback, protected busy/claim",
+      "crosswalk": "PP-001\u2013020, 041\u2013042, 059\u2013063",
+      "executor_dependency": "Owner; Windows device and Ubuntu separate",
+      "required_observations": "Source-specific observed criterion, original ledger/privacy/output evidence and external reviewer record where required",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-046",
+      "criterion": "Actual POS80 80mm physical send, paper absent, disconnect/timeout, manual inspect: original-only ticket and no duplicate print",
+      "crosswalk": "PP-041\u2013052, 065",
+      "executor_dependency": "Owner + engineer; isolated POS80, no production fault injection",
+      "required_observations": "Source-specific observed criterion, original ledger/privacy/output evidence and external reviewer record where required",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-047",
+      "criterion": "Actual Midtrans Sandbox simulator successful/expired/cancel/timeout/restart same-order lifecycle; never use actual bank payment during tests",
+      "crosswalk": "PP-021\u2013032, 073\u2013075, 083",
+      "executor_dependency": "Provider engineer; guarded merchant Sandbox simulator profile",
+      "required_observations": "Source-specific observed criterion, original ledger/privacy/output evidence and external reviewer record where required",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-048",
+      "criterion": "Actual webcam/video/Windows minimize/restore/real storage/restart; real private pixels never leak",
+      "crosswalk": "PP-001\u2013010, 059\u2013065, 075\u2013078",
+      "executor_dependency": "Owner + security engineer; real device, isolated roots",
+      "required_observations": "Source-specific observed criterion, original ledger/privacy/output evidence and external reviewer record where required",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-049",
+      "criterion": "Real Drive/local retention and signed-out phone download access remain separate external gates; no unapproved deletion",
+      "crosswalk": "PP-019, 053\u2013057, 081\u2013084",
+      "executor_dependency": "Drive integration owner; approved test ACL/retention scope, no unapproved deletion",
+      "required_observations": "Source-specific observed criterion, original ledger/privacy/output evidence and external reviewer record where required",
+      "status": "NOT_RUN"
+    },
+    {
+      "case_id": "UAH-050",
+      "criterion": "AR-13 pilot/security/support/merchant readiness stays BLOCKED/CONDITIONAL until explicit release authorization",
+      "crosswalk": "All applicable PP gates; AR-13",
+      "executor_dependency": "Release/merchant/security/support reviewers; no implicit production approval",
+      "required_observations": "Source-specific observed criterion, original ledger/privacy/output evidence and external reviewer record where required",
+      "status": "NOT_RUN"
+    }
+  ],
+  "ar_stages": [
+    {
+      "stage_id": "AR-00",
+      "definition": "contract and fixture freeze"
+    },
+    {
+      "stage_id": "AR-01",
+      "definition": "uncertain charge creation / provider idempotency"
+    },
+    {
+      "stage_id": "AR-02",
+      "definition": "provider evidence and automatic reconciliation"
+    },
+    {
+      "stage_id": "AR-03",
+      "definition": "distinct ledgers and durable atomic admission"
+    },
+    {
+      "stage_id": "AR-04",
+      "definition": "photo write-ahead capture"
+    },
+    {
+      "stage_id": "AR-05",
+      "definition": "reconstruct original customer photo workflow"
+    },
+    {
+      "stage_id": "AR-06",
+      "definition": "secure customer self-claim"
+    },
+    {
+      "stage_id": "AR-07",
+      "definition": "native unattended UX"
+    },
+    {
+      "stage_id": "AR-08",
+      "definition": "readiness and paid remedy"
+    },
+    {
+      "stage_id": "AR-09",
+      "definition": "operator path and safe customer release"
+    },
+    {
+      "stage_id": "AR-10",
+      "definition": "watchdog & recovery supervisor"
+    },
+    {
+      "stage_id": "AR-11",
+      "definition": "webhook/backend separation"
+    },
+    {
+      "stage_id": "AR-12",
+      "definition": "comprehensive validation"
+    },
+    {
+      "stage_id": "AR-13",
+      "definition": "release controls"
+    }
+  ]
+}
