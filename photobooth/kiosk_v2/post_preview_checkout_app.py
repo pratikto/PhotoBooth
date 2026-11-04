@@ -488,6 +488,17 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
                                            size=18, height=120, color=MUTED))
             shell.add_widget(self._photo_action('PERIKSA STATUS',
                 lambda: self._photo_submit('check_payment', 'connectivity'), variant='secondary'))
+            attempts = payment.get('attempts') or []
+            if phase == 'payment_hold' and (
+                    not payment or payment.get('state') == 'NOT_CREATED'
+                    or payment.get('state') == 'UNKNOWN' and attempts
+                    and attempts[-1].get('create_phase') == 'PREPARED'):
+                # An initial readiness/HTTP hold may precede provider I/O.
+                # Explicit original-owner action reuses backend begin: only
+                # PREPARED can send; SENT/UNKNOWN reconcile without a new POST.
+                # Status polling itself must never create a payment attempt.
+                shell.add_widget(self._photo_action('COBA LAGI CHECKOUT ASLI',
+                    lambda: self._photo_submit('begin_payment')))
             if phase == 'payment_pending' and self._synthetic_pay_callback is not None:
                 shell.add_widget(self._photo_action(
                     'SIMULASI PAID • TANPA TRANSFER',

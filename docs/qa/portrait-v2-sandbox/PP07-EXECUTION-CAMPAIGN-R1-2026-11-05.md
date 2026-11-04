@@ -238,6 +238,37 @@ relaxation of the two-second readiness fence. Runtime remains unchanged from
 resource probes/replays, and the new test-source CI must be inspected before
 final status. The original failure and all diagnostics stay in the run ledger.
 
+## Increment I — BUG-044: native original checkout recovery action
+
+Follow-up UI inspection found an independently reproduced product dead end:
+after initial begin is held before sending, PERIKSA STATUS only reconciles an
+existing attempt. With no attempt, restoring readiness cannot get the visitor
+to QRIS; the screen had no original begin retry. The same action was unavailable
+after a lost initial HTTP reply. Two actual Kivy/API regressions initially FAIL
+(2 run, zero errors/skips, 38.727s).
+
+The original page now offers **COBA LAGI CHECKOUT ASLI** for an initial missing
+observation/NOT_CREATED or UNKNOWN+PREPARED attempt. It reuses the existing
+serialized `begin_payment` command and authenticated backend begin, preserving
+the original frozen group and lease. Backend PREPARED is freshly checked before
+POST; SENT/UNKNOWN never POST again. Status polling still cannot create a
+payment. Verified expiry/cancel/review do not get this action; QR3 still offers
+no QR4. No new provider semantics, ticket, discount or public output.
+
+The entire native checkout widget module now **17 PASS**, zero failures/errors/
+skips, 161.703s. Assertions witness zero charges during readiness HOLD/status
+poll, explicit user retry after readiness returns, one original attempt/charge,
+unchanged six captured files, and same attempt/order after an accepted create
+whose HTTP reply was lost. The existing QR1–3 regression also rejects the new
+retry action after QR3 expiry. Partial mapping: PP-019/021/083.
+
+This product defect is distinct from the positive-helper assumption in H; the
+first broad run's precise original cause remains unproven. The running 2ac2380
+broad retest was deliberately **SUPERSEDED/CANCELLED** (exit 137, no summary),
+because a runtime repair now requires final-source verification. It is neither
+PASS nor product FAIL. Final runtime/test CI and broad replay must use the new
+BUG-044 source; earlier source-specific successful evidence remains historical.
+
 ## Remaining execution and external gates
 
 Next: independent-process crash/handoff barriers; virtual receipt/strip/Drive races; final native complete

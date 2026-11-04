@@ -1,5 +1,6 @@
 """Native synthetic checkout through real API; never save proof screenshots."""
 from contextlib import contextmanager
+from dataclasses import replace
 import os
 from pathlib import Path
 import tempfile
@@ -92,6 +93,52 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
             app._poll_photos(); EventLoop.idle(); time.sleep(.01)
         self.settle(app)
         self.assertEqual('checkout_ready', app._photo_view['phase'])
+
+    def test_native_precreate_readiness_hold_can_explicitly_retry_original_checkout(self):
+        with self.booth() as (app, fixture):
+            Window.size = (452, 900)
+            self.proof(app)
+            group = fixture.service.group
+            originals = sorted(str(p) for p in fixture.service.root.rglob('*.jpg'))
+            ready = fixture.ready
+            fixture.ready = replace(ready, unclaimed_ready_capacity=0)
+            self.click(app, 'SUDAH SIMPAN BUKTI • LANJUT SIMULASI')
+            self.settle(app)
+            self.assertEqual('payment_hold', app._photo_view['phase'])
+            self.assertEqual(0, fixture.provider.charges)
+            fixture.ready = ready
+            # Status reconciliation alone cannot create an unsent attempt.
+            self.click(app, 'PERIKSA STATUS')
+            self.settle(app)
+            self.assertEqual('payment_hold', app._photo_view['phase'])
+            self.assertEqual(0, fixture.provider.charges)
+            self.click(app, 'COBA LAGI CHECKOUT ASLI')
+            self.settle(app)
+            self.assertEqual('payment_pending', app._photo_view['phase'])
+            self.assertEqual(group, app._photo_view['payment']['purchase_group_id'])
+            self.assertEqual(1, fixture.provider.charges)
+            self.assertEqual(1, len(app._photo_view['payment']['attempts']))
+            self.assertEqual(originals, sorted(str(p) for p in fixture.service.root.rglob('*.jpg')))
+
+    def test_native_explicit_retry_after_lost_create_reply_never_reposts(self):
+        with self.booth() as (app, fixture):
+            Window.size = (452, 900)
+            self.proof(app)
+            group = fixture.service.group
+            fixture.session.lose_response = True
+            self.click(app, 'SUDAH SIMPAN BUKTI • LANJUT SIMULASI')
+            self.settle(app)
+            self.assertEqual('payment_hold', app._photo_view['phase'])
+            self.assertEqual(1, fixture.provider.charges)
+            original = fixture.service.ledger.db.execute(
+                'SELECT attempt_id,provider_order_id FROM pp_payment_attempts').fetchone()
+            self.click(app, 'COBA LAGI CHECKOUT ASLI')
+            self.settle(app)
+            self.assertEqual('payment_pending', app._photo_view['phase'])
+            self.assertEqual(group, app._photo_view['payment']['purchase_group_id'])
+            self.assertEqual(1, fixture.provider.charges)
+            self.assertEqual(original, fixture.service.ledger.db.execute(
+                'SELECT attempt_id,provider_order_id FROM pp_payment_attempts').fetchone())
 
     def test_full_native_proof_to_http_payment_and_paid_owed_at_both_portrait_sizes(self):
         for size in ((800,1280),(452,900)):
@@ -430,6 +477,8 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
                     actions = [w for w in app.stage.walk()
                                if getattr(w, 'text', None) == 'LANJUTKAN PESANAN ASLI']
                     self.assertFalse(actions)
+                    self.assertFalse(any(getattr(w, 'text', None) == 'COBA LAGI CHECKOUT ASLI'
+                                         for w in app.stage.walk()))
                 self.assertEqual(original_images, sorted(
                     str(p) for p in fixture.service.root.rglob('*.jpg')))
             self.assertEqual(3, fixture.provider.charges)

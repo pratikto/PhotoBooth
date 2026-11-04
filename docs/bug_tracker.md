@@ -1,5 +1,21 @@
 # Meong Photobooth — Bug register
 
+## BUG-044 — Original checkout stuck after a pre-create readiness/response hold (5 November 2026)
+
+**Severity:** S1 synthetic pilot checkout availability. **Status:** SOURCE FIXED /
+focused native VERIFIED; final new-source regression/CI pending.
+When initial begin returned no observation (including a readiness HOLD before
+POST), the page offered only status reconciliation. Reconcile cannot start an
+unsent checkout, so restored readiness left the customer stuck. Two connected
+Kivy regressions initially FAIL because no retry action exists. The page now
+offers an explicit original-owner retry through the existing backend begin
+operation, which sends only PREPARED and reconciles SENT/UNKNOWN without another
+POST. Automatic status polling remains read-only. Complete widget scope:
+17 PASS, zero failures/errors/skips; same frozen group/media, one charge, exact
+old attempt after lost HTTP reply, and no QR4. This is distinct from the earlier
+positive-fixture setup error; the initial full-run cause remains unproven.
+[Reproduction and continuation](qa/portrait-v2-sandbox/PP07-EXECUTION-CAMPAIGN-R1-2026-11-05.md).
+
 ## BUG-043 — Stencil-clipped private proof recorded as genuinely offered (5 November 2026)
 
 **Severity:** S1 proof-opportunity/checkout integrity. **Status:** SOURCE FIXED /

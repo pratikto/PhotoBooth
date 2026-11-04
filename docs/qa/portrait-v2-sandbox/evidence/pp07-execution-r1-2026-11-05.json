@@ -230,6 +230,42 @@
       "seconds": 16.887,
       "unique_new_methods": 1,
       "scope": "Positive test helper only: one fresh retry of proven UNSENT original attempt; real two-second source guard unchanged; no SENT/UNKNOWN retry"
+    },
+    {
+      "run_id": "PP07-R1-full-2",
+      "tested_sha": "2ac2380e53e7738de59220f756bd46770565535a",
+      "result": "SUPERSEDED_CANCELLED",
+      "summary_available": false,
+      "exit_code": 137,
+      "reason": "New independently reproduced native checkout dead end BUG-044 requires another runtime change and final source-matched regression. No partial run counted PASS or product FAIL."
+    },
+    {
+      "run_id": "PP07-R1-I-before",
+      "result": "FAIL",
+      "run": 2,
+      "fail": 2,
+      "errors": 0,
+      "skip": 0,
+      "seconds": 38.727,
+      "scope": "Actual native missing retry action after pre-create readiness hold and lost create reply",
+      "artifact_sha256": "ae67efd12b5bf2ae5009de7db5129b49d7a5b2bff0790403c65b699307a5a25d"
+    },
+    {
+      "run_id": "PP07-R1-I",
+      "result": "PASS",
+      "run": 17,
+      "fail": 0,
+      "errors": 0,
+      "skip": 0,
+      "seconds": 161.703,
+      "unique_new_methods": 2,
+      "partial_case_ids": [
+        "PP-019",
+        "PP-021",
+        "PP-083"
+      ],
+      "scope": "Complete native checkout widget module; explicit original retry, same attempt after lost reply, preserved no QR4",
+      "artifact_sha256": "39d30544d166d4097de633b3772bdcbdc1233033a6c748bf57d6172c2ea83438"
     }
   ],
   "environment_failures": [
@@ -243,7 +279,9 @@
     "tests/post_preview_process_fault_fixture.py": "46bb44c60bf4a5339fac11db209833d79c98ee70dac7254673c2da68a76436ea",
     "tests/test_post_preview_process_crash.py": "7ee794e8e8b672b6293a7f9c02c74ed6d4faa512a98b0633a6453bb82c3e6913",
     "docs/qa/portrait-v2-sandbox/evidence/run_timed_synthetic_journey.py": "e6ceb5e16035e55100cbcc3768e02f5f26e28895523ca2a87ce9b242bf1ca84a",
-    "tests/test_post_preview_checkout_ticket.py": "8d2945182620114ef9f324f6b5d6f64e4f952db7f2babeb4056c67cd9c4a9013"
+    "tests/test_post_preview_checkout_ticket.py": "8d2945182620114ef9f324f6b5d6f64e4f952db7f2babeb4056c67cd9c4a9013",
+    "photobooth/kiosk_v2/post_preview_checkout_app.py": "a2c41b42f754cacb8944a2ac13fecf84223ec06dfa4768c324a18a3f05631152",
+    "tests/test_post_preview_checkout_widgets.py": "9c2494e73acb495a9ceb4e608f724107a91df86295f033d0b56f42889abe83b8"
   },
   "case_register": "pp07-execution-register-r1-2026-11-05.csv",
   "full_acceptance_pass": 0,
@@ -306,7 +344,7 @@
       "definition": "release controls"
     }
   ],
-  "next": "Repeat broad regression without concurrent diagnostic load after the source-pinned fixture-only change; inspect exact new CI. Keep first full-run ERROR and 3 model SKIPs explicit.",
+  "next": "Push BUG-044; complete new exact-source native/backend CI, actual-time final replay and one final broad regression without competing local probes. Preserve earlier ERROR and superseded run.",
   "raw_artifacts": "task scratch only, not committed; hashes and allowlisted observations preserved",
   "delivery": [
     {
