@@ -1,5 +1,10 @@
 """Protected ciphertext unit tests; real Windows DPAPI only on Windows CI."""
 import os
+import json
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
 import unittest
 
 from photobooth.credential_vault import (ProtectedCredential, SyntheticAeadProtector,
@@ -66,6 +71,50 @@ class CredentialProtectionTests(unittest.TestCase):
                 self.protector.protect(secret, scope)
         with self.assertRaises(VaultUnavailable):
             self.protector.unprotect(ProtectedCredential('another-protector', b'data'), self.scope)
+
+    def run_platform_process(self, path, action):
+        result = subprocess.run(
+            [sys.executable, '-m', 'tests.credential_vault_process_fixture', str(path), action],
+            cwd=Path(__file__).resolve().parents[1],
+            capture_output=True, text=True, timeout=20)
+        self.assertIn(result.returncode, (0, 78), result.stderr[-2000:])
+        return result.returncode, json.loads(result.stdout)
+
+    def test_independent_os_process_restores_same_protected_bytes_or_fails_closed(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / 'original.protected'
+            code, original = self.run_platform_process(path, 'seal')
+            if os.name != 'nt':
+                self.assertEqual((78, {'state': 'VAULT_UNAVAILABLE'}), (code, original))
+                self.assertEqual([], list(Path(folder).iterdir()))
+                return
+            self.assertEqual(0, code)
+            sealed = path.read_bytes()
+            self.assertTrue(sealed)
+            for _ in range(2):
+                code, restored = self.run_platform_process(path, 'open')
+                self.assertEqual(0, code)
+                self.assertEqual(original, restored)
+                self.assertEqual(sealed, path.read_bytes())
+
+    def test_independent_os_process_wrong_scope_or_corrupt_ciphertext_never_restores(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / 'original.protected'
+            code, original = self.run_platform_process(path, 'seal')
+            if os.name != 'nt':
+                self.assertEqual((78, {'state': 'VAULT_UNAVAILABLE'}), (code, original))
+                self.assertFalse(path.exists())
+                return
+            self.assertEqual(0, code)
+            sealed = path.read_bytes()
+            self.assertEqual((78, {'state': 'VAULT_UNAVAILABLE'}),
+                             self.run_platform_process(path, 'wrong-scope'))
+            self.assertEqual(sealed, path.read_bytes())
+            corrupt = sealed[:-1] + bytes([sealed[-1] ^ 1])
+            path.write_bytes(corrupt)
+            self.assertEqual((78, {'state': 'VAULT_UNAVAILABLE'}),
+                             self.run_platform_process(path, 'open'))
+            self.assertEqual(corrupt, path.read_bytes())
 
 
 if __name__ == '__main__': unittest.main()

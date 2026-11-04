@@ -3,6 +3,36 @@
 Authorized branch: `feature/post-preview-qris-checkout`. Starting remote source:
 `5fc73bc025327a5ecf55a6673722cdb089e1eaeb`. Dates use Asia/Jakarta.
 
+## Increment 2 — independent-process protected-storage contract
+
+**Increment 1 push verified:** `637b67d1a33042d32597eff43caf4fb47be51b81`
+(the remote ref was read back and matched). This second increment is test-only;
+no vault adapter, platform support, launch flag or payment route is enabled.
+
+Two new cases in the existing CI-registered `test_credential_vault` module run
+`tests.credential_vault_process_fixture` as independent Python processes. On
+Windows the first child protects random nonredeemable bytes with current-user
+DPAPI and exits; new children must restore the same digest without changing
+ciphertext. Wrong original scope and corrupted ciphertext must fail closed.
+Only OS-protected ciphertext is written; raw bytes/keys never enter commands,
+environment variables, diagnostics or artifacts. No synthetic persistent key is
+substituted. On unsupported Linux, fresh children must reject platform protection
+before creating any file; these are executed denials, not skipped Windows passes.
+
+**Local evidence:** Linux `python tools/run_kiosk_unittests.py test_credential_vault`
+ran **9 PASS, 0 failures/errors/skips in 0.051s**, including both independent
+unsupported-platform checks. The actual Windows cross-process DPAPI branches
+remain **NOT_RUN locally**, awaiting the pushed Windows CI and later owner OS
+acceptance. This is protected-byte evidence only: full original session/worker
+restore, malicious OS account/reinstall and device acceptance remain unverified.
+Partial mapping: PP-043/045/077/078/084/103; no full PP row promoted to PASS.
+
+**Current next action:** run full registered backend/native regression on this
+functional source; inspect the corresponding Windows/Ubuntu/native CI and record
+exact SHA/results. Actual provider account and supported target-platform escrow
+still gate merchant/restart acceptance. Continue provider transport contract
+coverage with isolated fake HTTP, never a real charge or refund.
+
 ## Increment 1 — BUG-040 atomic returning-proof validity
 
 **IMPLEMENTED / AUTOMATED_VERIFIED locally; matching-source CI pending.**

@@ -1,5 +1,7 @@
 # Meong Photobooth — GUI v2 development handover
 
+> [5 November vault-process increment: 9 Linux PASS; Windows DPAPI cross-process branches await exact-source CI. First claim fix pushed/verified at 637b67d.](qa/portrait-v2-sandbox/PP07-CONTINUATION-2026-11-05.md)
+
 > [5 November continuation: BUG-040 local 81 PASS; next independent-process vault evidence, then exact-source CI. Keep synthetic readiness and all provider/device gates separate.](qa/portrait-v2-sandbox/PP07-CONTINUATION-2026-11-05.md)
 
 ## Final 4 November 2026 — current synthetic device candidate verified

@@ -1,5 +1,7 @@
 # PP-07 consolidated software traceability — 4 November 2026
 
+> [5 November vault-process supplement: PP-043/045/077/078/084/103 gain explicit cross-process OS-protection/fail-closed tests. Linux denial branches verified; Windows branches pending CI; full acceptance NOT_RUN.](PP07-CONTINUATION-2026-11-05.md)
+
 > [5 November supplement: PP-036/038/039/070/072/084/103 gain four connected expiry/revocation race regressions (AUTOMATED_VERIFIED locally); full acceptance remains NOT_RUN.](PP07-CONTINUATION-2026-11-05.md)
 
 **Executed source gate:** 0601354 / CI 41826366906, all 3/3 SUCCESS; Windows
