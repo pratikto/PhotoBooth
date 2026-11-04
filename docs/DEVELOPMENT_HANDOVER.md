@@ -1,5 +1,27 @@
 # Meong Photobooth — GUI v2 development handover
 
+## Final 4 November 2026 — current synthetic device candidate verified
+
+**CI source 0601354 / [41826366906](https://github.com/pratikto/PhotoBooth/actions/runs/41826366906):
+3/3 SUCCESS, 533 Windows + 533 Ubuntu + 61 native PASS, zero failures/errors/skips.**
+All three logs inspected; source-matched artifact metadata verified. Functional
+runtime/test changes remain those at 267fc437; workflow budget Windows 15/Linux
+10 is published. Local full discovery and subsequent opt-ins cover all original
+skip cases without failures, as separately reported. Earlier cancelled/failed
+attempts remain historical, not current results.
+
+READY_FOR_SUPERVISED_SYNTHETIC_DEVICE_TEST using the [Windows/Ubuntu guide](qa/portrait-v2-sandbox/POST-PREVIEW-DEVICE-TEST-START-HERE.md)
+and real owner preflight. Actual merchant QRIS, persistent OS-key cross-process
+pilot restore and refunds remain blocked/not enabled; real camera/touch/audio/
+paper/Drive/retention and full PP owner acceptance remain pending. No production
+release. BUG-036–039 source/automated verified, physical closure pending.
+[Full report](qa/portrait-v2-sandbox/PP07-DEVICE-READINESS-2026-11-04.md) ·
+[112 PP / 14 AR traceability](qa/portrait-v2-sandbox/PP07-SOFTWARE-TRACEABILITY-2026-11-04.md) ·
+[exact execution JSON](qa/portrait-v2-sandbox/PP07-EXECUTION-EVIDENCE-2026-11-04.json).
+Next: owner no-paper/no-cloud fresh-root device trial; separate engineering for
+guarded actual provider and supported persistent escrow/restore. Never reapply
+old fixes, create/switch branches, erase old OWED or replay uncertain paper.
+
 ## 4 November 2026 — resume at Windows CI 41826366906
 
 Published CI-budget commit `0601354`, parent documentation `6253dcf`, retains

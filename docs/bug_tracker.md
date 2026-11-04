@@ -1,5 +1,13 @@
 # Meong Photobooth — Bug register
 
+> **4 November final automated evidence:** BUG-036–039 are source-fixed and
+> verified in matching-source [CI 41826366906](https://github.com/pratikto/PhotoBooth/actions/runs/41826366906)
+> at `0601354`: 533 Windows + 533 Ubuntu + 61 native PASS, all jobs SUCCESS,
+> zero failures/errors/skips. Earlier per-entry pending notes retain their
+> checkpoint scope. Physical owner closure remains NOT_RUN. Supervised payment
+> simulation is ready for device testing; actual merchant/restart/refund and
+> production gates remain separate in the current report.
+
 ## BUG-039 — Synthetic pilot reused one fake Drive folder across paid visitors (4 November 2026)
 
 **Severity:** S1 supervised synthetic repeat-visit delivery failure. **Status:**

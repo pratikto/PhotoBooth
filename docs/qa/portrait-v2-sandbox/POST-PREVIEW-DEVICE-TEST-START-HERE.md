@@ -1,5 +1,11 @@
 # Start here — supervised post-preview device testing
 
+**Software candidate gate verified:** [CI 41826366906](https://github.com/pratikto/PhotoBooth/actions/runs/41826366906)
+at source `0601354` completed 3/3 SUCCESS: Windows 533, Ubuntu 533, native Kivy
+61 PASS, zero failures/errors/skips. Owner preflight and real observations are
+still required. Readiness applies only to the supervised synthetic-payment
+pilot described here, not actual merchant/restart/refund/production approval.
+
 Updated 4 November 2026. Branch: `feature/post-preview-qris-checkout`.
 Read the [current engineering evidence](PP07-DEVICE-READINESS-2026-11-04.md)
 for the exact tested source and CI status before selecting a checkout.

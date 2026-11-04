@@ -1,5 +1,10 @@
 # PP-07 consolidated software traceability — 4 November 2026
 
+**Executed source gate:** 0601354 / CI 41826366906, all 3/3 SUCCESS; Windows
+533, Ubuntu 533, native Kivy 61 PASS, zero failures/errors/skips. This verifies
+the registered synthetic/component regression, including 14 new test methods;
+it does not promote the 112 complete acceptance rows below to PASS.
+
 Branch: `feature/post-preview-qris-checkout`. This index preserves all **112** canonical PP cases and the actual **14** AR stage definitions. It is not a replacement for the canonical acceptance contract or a claim that all acceptance has passed.
 
 Implementation, automated subassertions, complete acceptance and actual device/provider evidence are separate. Priority below is this continuation's engineering risk ranking, not a renaming of approved requirement IDs. All full PP cases remain **NOT_RUN at full acceptance scope**; mapped synthetic execution is partial evidence only. Unmapped rows are **NOT_MAPPED here**, not proof no unit test exists. Refund classification is not a working refund API.

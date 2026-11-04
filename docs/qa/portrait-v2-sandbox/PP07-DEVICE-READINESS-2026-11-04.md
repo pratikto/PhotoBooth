@@ -1,5 +1,59 @@
 # PP-07 software continuation and device readiness — 4 November 2026
 
+## Final verified checkpoint — supervised synthetic device candidate
+
+**READY_FOR_SUPERVISED_SYNTHETIC_DEVICE_TEST**, subject to owner installation,
+correct branch/interpreter preflight and the explicit no-real-money scope.
+This is not actual merchant Sandbox, cross-process pilot recovery, full hardware
+acceptance or production readiness.
+
+**Tested source:** `06013545d31582b2db4ecf60384b4e2afaab98c3` (same runtime/test
+fixes as functional 267fc437; bounded CI budget published).
+**[CI 41826366906](https://github.com/pratikto/PhotoBooth/actions/runs/41826366906):
+COMPLETED SUCCESS, all 3/3 jobs.** Actual logs independently inspected:
+
+| Matching-source job | PASS | Failures | Errors | Skips |
+| --- | ---: | ---: | ---: | ---: |
+| Windows backend / original paid-first regression | 533 | 0 | 0 | 0 |
+| Ubuntu backend / original paid-first regression | 533 | 0 | 0 | 0 |
+| Native Kivy / private proof / photo and flow regression | 61 | 0 | 0 | 0 |
+
+These are **1,127 platform executions**, not 1,127 unique journeys. This
+continuation adds **14 test methods**: seven authority handoffs, three Drive
+thread/fence cases, J21, N25, N26 and the blocked-receipt automatic-expiry case.
+The 12-visit loop and two-size subcases are not counted as separate methods.
+
+BUG-036–039 are source-fixed/automatically verified; owner physical checks remain
+pending. No critical failure is hidden by removing a test or marking paper from
+SUBMITTED. The previous 10-minute cancelled runs and fixture compatibility
+failure remain below as dated history, superseded only by this verified source.
+
+CI artifact `13318549684`, `meong-private-preview-synthetic`, is source-matched
+to 0601354 and expires 11 November. Metadata/digest were inspected; archive ZIP
+was not downloaded. Locally reproduced eight PNGs and both inspected final
+preview images are recorded separately. See the evidence JSON for both artifacts.
+
+**Current independent modes:** software verification PASS in the executed
+scopes; supervised synthetic device candidate READY; physical webcam/touch/
+speaker/POS80/test-Drive observations HARDWARE_PENDING; actual post-preview
+merchant Sandbox and protected cross-process recovery still BLOCKED/not supplied
+by this launcher; refunds NOT_ENABLED; full PP-001–112/owner acceptance NOT_RUN;
+production NOT_APPROVED. Those software/integration limits are explicitly
+retained, not attributed solely to absent hardware.
+
+**Next owner action:** follow [Start here](POST-PREVIEW-DEVICE-TEST-START-HERE.md)
+using the current authorized branch, reuse the working environment, run full
+preflight and start a new private no-paper/no-cloud trial. Then optional owned
+POS80 and approved test Drive each need their two consent flags. Record actual
+results in the 26-case worksheet without sharing private QR/credentials.
+
+**Next separate engineering stream:** guarded real-provider post-preview
+mounting and supported persistent OS escrow/original-worker restore, with
+merchant-specific verification and existing PP/AR/UAH regression, before actual
+QRIS/restart acceptance. No payment, key fallback, refund or root reset is
+enabled by this checkpoint. Routine synthetic device testing can begin without
+another source-fix session for BUG-036–039.
+
 ## Current checkpoint — published CI budget at 0601354
 
 The bounded workflow change is now **pushed and remote-verified** at

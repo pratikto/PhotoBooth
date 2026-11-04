@@ -11,7 +11,8 @@
     "412bebd237ab42a0c87f844a784811dcd187bd0c",
     "267fc437e082afc581066c9408901c42669480ee",
     "6253dcf823ba64df36a9984a7e1141995426c9d4",
-    "06013545d31582b2db4ecf60384b4e2afaab98c3"
+    "06013545d31582b2db4ecf60384b4e2afaab98c3",
+    "063213b65f6bbd39ab44e2a3a99076a2f871828a"
   ],
   "local_runs": [
     {
@@ -179,12 +180,12 @@
     "windows_minutes": 15,
     "ubuntu_minutes": 10,
     "tests_removed": false,
-    "ci": "UBUNTU_533_NATIVE_61_PASS_WINDOWS_PENDING",
+    "ci": "COMPLETED_3_OF_3_SUCCESS",
     "published_commit": "06013545d31582b2db4ecf60384b4e2afaab98c3",
     "branch_push_verified": true,
     "ci_run_id": 41826366906
   },
-  "checkpoint_parent_head": "06013545d31582b2db4ecf60384b4e2afaab98c3",
+  "checkpoint_parent_head": "063213b65f6bbd39ab44e2a3a99076a2f871828a",
   "current_ci": {
     "run_id": 41826366906,
     "source": "06013545d31582b2db4ecf60384b4e2afaab98c3",
@@ -205,8 +206,35 @@
     },
     "windows": {
       "job_id": 126562004957,
-      "state": "PENDING",
-      "timeout_minutes": 15
-    }
+      "state": "COMPLETED_SUCCESS",
+      "timeout_minutes": 15,
+      "pass": 533,
+      "fail": 0,
+      "error": 0,
+      "skip": 0
+    },
+    "conclusion": "SUCCESS_3_OF_3",
+    "total_platform_executions": 1127,
+    "new_test_methods": 14,
+    "logs_independently_inspected": true
+  },
+  "ready_modes": {
+    "software_verification": "PASS_IN_EXECUTED_SCOPES",
+    "supervised_synthetic_device_candidate": "READY_SUBJECT_TO_OWNER_PREFLIGHT",
+    "actual_merchant_sandbox": "BLOCKED_GUARDED_INTEGRATION_AND_ACCOUNT_EVIDENCE",
+    "protected_cross_process_pilot_restore": "NOT_IMPLEMENTED_PLATFORM_ESCROW_AND_WORKER_RESTORE_REQUIRED",
+    "physical_owner_acceptance": "HARDWARE_PENDING",
+    "actual_refund": "NOT_ENABLED",
+    "full_PP_acceptance": "NOT_RUN_AT_FULL_SCOPE",
+    "production": "NOT_APPROVED"
+  },
+  "current_ci_artifact": {
+    "id": 13318549684,
+    "name": "meong-private-preview-synthetic",
+    "source": "06013545d31582b2db4ecf60384b4e2afaab98c3",
+    "digest": "sha256:9b85aae947985235ce80714b1ded10643684b2f726721bf7863213e41e6558ca",
+    "metadata_verified": true,
+    "archive_downloaded": false,
+    "expires_at": "2026-11-11T12:08:23Z"
   }
 }
