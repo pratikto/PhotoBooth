@@ -1,6 +1,6 @@
 # PP-07 consolidated software traceability — 4 November 2026
 
-> [5 November complete-simulation campaign](PP07-END-TO-END-SIMULATION-2026-11-05.md): N27 adds actual game-win/retake/post-preview quote/paid-delivery coverage for PP-002/004/010/020/033/041/048/068. BUG-041 locally verified; BUG-042 adds two conflicting proof-loss/service/excess regressions for PP-089/097. Campaign and matching-source CI IN PROGRESS. Full acceptance remains NOT_RUN.
+> [5 November complete-simulation campaign](PP07-END-TO-END-SIMULATION-2026-11-05.md): N27 adds actual game-win/retake/post-preview quote/paid-delivery coverage for PP-002/004/010/020/033/041/048/068. BUG-041 locally verified; BUG-042 adds two conflicting proof-loss/service/excess regressions for PP-089/097. Final all-opt-in 1,744 PASS and matching CI 41906929920 all 3 SUCCESS. All 112 PP rows reviewed: 103 partial software evidence, 9 unimplemented/external scope. Full acceptance remains NOT_RUN.
 
 > [5 November partial software evidence: four atomic-proof races, two platform-process cases and five actual-transport/fake-HTTP cases. All full PP acceptance rows remain NOT_RUN.](PP07-CONTINUATION-2026-11-05.md)
 

@@ -1,6 +1,6 @@
 # Meong Photobooth — GUI v2 development handover
 
-> **5 November full simulation campaign IN PROGRESS:** [phase 1 evidence and exact next step](qa/portrait-v2-sandbox/PP07-END-TO-END-SIMULATION-2026-11-05.md): baseline all-opt-in 1,741 PASS; BUG-041 price seam and BUG-042 conflicting proof-loss classification repaired with focused PASS. Final repaired-source full simulation/CI pending; owner UAT remains deferred.
+> **5 November executable simulation campaign PASS:** [final evidence and remaining gates](qa/portrait-v2-sandbox/PP07-END-TO-END-SIMULATION-2026-11-05.md): acbac15 has 1,744 full all-opt-in local PASS and CI 41906929920 all 3 SUCCESS (546 Windows/546 Ubuntu/62 native), zero failures/errors/skips. BUG-041/042 fixed. All 112 PP rows reviewed; partial/missing scope and owner/provider/secure-restart/refund gates remain explicit.
 
 > [5 November continuation: atomic proof fix, independent-process vault tests and actual Sandbox transport with fake HTTP; exact-source results and unfinished gates.](qa/portrait-v2-sandbox/PP07-CONTINUATION-2026-11-05.md)
 

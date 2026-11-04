@@ -1,5 +1,7 @@
 # Post-preview QRIS — acceptance and adversarial QA matrix
 
+> **5 November final software simulation:** [executed full campaign and all 112 case classifications](PP07-END-TO-END-SIMULATION-2026-11-05.md), acbac15 / CI 41906929920: 1,744 all-opt-in local PASS; 546 Windows, 546 Ubuntu, 62 native PASS; no failures/errors/skips. Full provider/device/refund/legal acceptance remains separate; no owner UAT row is promoted.
+
 > **2 November expanded cross-system simulation evidence:** [Broad J01–J20, native N21–N24 and actual process-death P01–P02 traceability](PP07-BROAD-SIMULATION-MATRIX-2026-11-02.md). At matching-source [CI #41407613830](https://github.com/pratikto/PhotoBooth/actions/runs/41407613830), J01–J20 each PASS on Windows and Ubuntu, with 520/520 per OS and existing Kivy 54/54. Latest native 4 new cases N21–N24 PASS in [CI #41409614158](https://github.com/pratikto/PhotoBooth/actions/runs/41409614158), 58/58 total; P01–P02 exact hard-exit + independent SQLite reopen awaiting [CI #41409982930](https://github.com/pratikto/PhotoBooth/actions/runs/41409982930), source `238012f7`. **These are regression subassertions, NOT full PP-001–112 acceptance**. No physical paper, actual merchant settlement/refund, cloud ACL/retention deletion or 26 physical owner UAT has been verified; keep all complete acceptance rows NOT_RUN at those scopes.
 
 ## 2 November 2026 — 20 integrated journey simulations instead of unit-test-count proxy

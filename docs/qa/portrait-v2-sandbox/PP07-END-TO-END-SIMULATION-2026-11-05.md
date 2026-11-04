@@ -2,13 +2,143 @@
 
 **Owner request:** simulate the complete journey and failures, repair reproduced
 problems, then finish software simulations before asking the owner to test.
-**IN PROGRESS** — this is an incremental safety checkpoint, not a completed
-campaign or physical acceptance. Dates use Asia/Jakarta.
+**EXECUTABLE SOFTWARE SIMULATIONS COMPLETE / PASS.** All available synthetic
+software checks below were executed; full provider/device/legal acceptance and
+unimplemented refund protocol cases remain separate. Dates use Asia/Jakarta.
 
 Authorized existing branch: `feature/post-preview-qris-checkout`.
-Starting/current tested source: `9ae4ec1874c43c56325bf4254679e7feaca2ba77`.
+Starting source: `9ae4ec1874c43c56325bf4254679e7feaca2ba77`.
+Final verified runtime/test source: `acbac15842b59d5005075f2fbc7e87978323b158`.
 Original attached local `work` branch/index remains untouched. Exact-source
 snapshot and external Git index retain the already verified delivery procedure.
+
+## Final campaign checkpoint — all executable software checks PASS
+
+Both reproduced defects are repaired and pushed: BUG-041 at `7ad68ee` and
+BUG-042 at `acbac15`. Each completed increment was immediately pushed to the
+existing authorized branch and its remote SHA read back. No branch creation,
+switch, force push or master merge. No unrelated checkout/user data was changed.
+
+| Executed scope | Exact source | Result |
+| --- | --- | --- |
+| Complete all-opt-in Python discovery | acbac15 | **1,744 PASS**, zero failures/errors/skips; 476.832s |
+| Windows backend / retained original prepaid guards | acbac15, CI job 126844155709 | **546 PASS**, zero failures/errors/skips; 542.463s |
+| Ubuntu backend / original regression | acbac15, CI job 126844155593 | **546 PASS**, zero failures/errors/skips; 124.219s |
+| Native Kivy registered customer journeys | acbac15, CI job 126844155221 | **62 PASS**, zero failures/errors/skips; 115.252s |
+| Real event-loop/timer complete replay | acbac15 runtime, versioned evidence harness | **PASS**, 73.362s total; eight real five-second countdowns and **30.033s** genuine ticket visibility before automatic private-card wipe |
+| Apps Script syntax / offline Node VM | acbac15 | PASS; no account, deployment or deletion |
+| Two-size private preview render | 7ad68ee; GUI files identical in acbac15 | Both processes exit 0; eight synthetic PNGs, final previews visually inspected at 800x1280 and 452x900 |
+
+**[CI 41906929920](https://github.com/pratikto/PhotoBooth/actions/runs/41906929920)
+COMPLETED 3/3 SUCCESS.** All three completed job logs were independently
+inspected, including N27 and both new proof-loss conflict cases. This is 1,154
+CI platform executions; local full discovery contains 1,654 normalized distinct
+test IDs within 1,744 executions due existing imported fixture classes. Do not
+add overlapping runs or call those totals unique customer acceptance scenarios.
+Superseded run `41906166693` was cancelled by the necessary BUG-042 push and is
+neither PASS nor FAIL.
+
+The full run enables GUI, native SDL audio with a dummy output driver, generated
+video and the actual pinned MediaPipe 0.10.32 recognizer/public sample images.
+There are **no remaining skips** in that executed run. Model size/SHA-256 and all
+public fixture provenance were independently verified; samples, weights, real
+photos and raw credentials are not committed. Dependency validation reports no
+broken requirements. Camera acquisition, merchant, printer and cloud stay fake.
+
+### Actual-time application replay
+
+The [versioned replay harness](evidence/run_timed_synthetic_journey.py) runs the
+actual Kivy `App.run()` loop with a fresh temporary synthetic fixture. It goes
+Advertising -> tutorial -> two templates/2+1 copies -> six initial captures +
+one selected-slot retake per design -> final Rp25,000 preview -> genuinely
+rendered CCP -> one simulated PAID -> original ticket -> automatic 30-second
+wipe -> original receipt/paid Drive fixture -> two exact virtual print batches.
+The replay never rewinds a clock, forces a countdown deadline or presses NEXT.
+It observes one charge, one receipt, eight private JPEGs, 2+1 copies and retained
+OWED/`physical_paper_verified=False`. It does not mark simulated paper delivered.
+
+The final visibility stopwatch starts at the original genuine-visible monotonic
+ACK and stops at the original `_ticket_next` card wipe. A preliminary stopwatch
+included subsequent worker time and was refined before final evidence; an early
+harness-only navigation literal was corrected to the shared constants. Neither
+was called an application defect or a passing original visibility measurement.
+No private CCP/ticket screenshots are produced.
+
+```bash
+KIVY_HOME=work/simulation-kivy KIVY_NO_ARGS=1 KIVY_NO_FILELOG=1 SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 python docs/qa/portrait-v2-sandbox/evidence/run_timed_synthetic_journey.py
+```
+
+Actual code/CI behavior, render dimensions/hashes, public model provenance and
+allowlisted counts/timings are recorded in [machine-readable execution evidence](evidence/pp07-full-simulation-2026-11-05.json)
+and [timed replay evidence](evidence/pp07-timed-synthetic-journey-2026-11-05.json).
+The existing private-preview renderer does not mount paid checkout; paid UI
+behavior is exercised by actual native N27 and the timed replay, without saving
+private proof. Rendered black input pixels are deliberate synthetic camera data.
+
+### All 112 acceptance scenarios reviewed without inflating coverage
+
+The [112-row case review](evidence/pp07-simulation-case-review-2026-11-05.json)
+records canonical expectations, concrete source/test references, observed
+software status, partial scope, full-acceptance status and remaining boundaries.
+Every referenced method was checked against the successful final full-run IDs.
+**103 rows have executed partial software evidence; 9 remain non-executable in
+the present implementation/external scope. No full acceptance row is marked PASS.**
+
+| Remaining case | Precise missing scope |
+| --- | --- |
+| PP-101 | Real refund-window/issuer/acquirer/balance eligibility is not modeled or merchant-verified |
+| PP-104 | Durable original refund-intent preparation and financial worker are not implemented |
+| PP-105 | Original refund-key reconciliation after lost POST/duplicate webhook is not implemented |
+| PP-106 | Refund request/processing/provider-confirmed state transport is not implemented |
+| PP-107 | Completed-refund versus stale fulfillment callback protocol is not implemented |
+| PP-108 | Actual refund-action/print/Drive worker fencing protocol is not implemented |
+| PP-109 | Refund completion with an independently held booth is not implemented/tested as a refund protocol |
+| PP-110 | Authenticated customer refund-status/reference UI is not implemented |
+| PP-112 | Final commercial copy and legal/merchant approval require independent review |
+
+Existing guards/classifier coverage in other refund rows is explicitly partial,
+not a substitute for these missing protocols. No fake refund provider or insecure
+vault/key fallback was invented merely to make every row appear simulated.
+
+### State and authority corrections
+
+```mermaid
+flowchart TD
+    GAME[Durable DEMO win] --> PROFILE{Post-preview profile?}
+    PROFILE -->|Yes| FULL[Keep existing server quote; no DEMO-only discount]
+    PROFILE -->|No| LEGACY[Retain original DEMO/MOCK offer rules]
+    FULL --> MATCH[Gallery, final preview and provider amount agree]
+```
+
+```mermaid
+flowchart TD
+    LOST[Proof-loss-only classification input] --> FACTS{Independent irrecoverable service or excess settlement facts?}
+    FACTS -->|Yes| REVIEW[REVIEW_REQUIRED; preserve remedy, no payout authority]
+    FACTS -->|No| POLICY[Existing NO_AUTO_REFUND_PROOF_LOST policy]
+```
+
+### Independent readiness and exact next action
+
+| Gate | Status after simulation |
+| --- | --- |
+| A supervised synthetic device candidate | READY_FOR_SUPERVISED_SYNTHETIC_DEVICE_TEST after owner preflight; executable software campaign complete |
+| B actual post-preview merchant Sandbox | BLOCKED: integrated real-provider launch/merchant configuration and actual account evidence incomplete |
+| C protected original restart/worker recovery | NOT_IMPLEMENTED as a complete pilot path; Windows DPAPI protected-byte process CI passes, Ubuntu facility unavailable here; no insecure fallback |
+| D comprehensive software acceptance | Executable 1,744-test campaign PASS; all 112 reviewed with partial/missing scope, no full acceptance PASS |
+| E owner hardware acceptance | Still NOT_RUN/HARDWARE_PENDING; owner was not asked to test during this campaign |
+| F production/refunds | NOT_APPROVED / NOT_ENABLED |
+
+No reproduced failure remains in the executed synthetic scopes. The next
+implementation work is the separately guarded merchant/secure-original-worker
+profile and, after verified provider/policy authority, missing refund protocols.
+Relevant seams remain `post_preview_payments.py`, `credential_vault.py`,
+`post_preview_claim.py`, `post_preview_isolation.py`, private checkout worker and
+launcher. Actual merchant credentials/webhook/account contracts, supported
+platform vault and independent owner physical observations remain external
+requirements; full UAT/production is not declared complete by this campaign.
+
+All sections below preserve delivery-time IN PROGRESS notes and earlier results;
+this final checkpoint supersedes those historical pending statements.
 
 ## Phase 3 — BUG-042 conflicting proof-loss classification repaired
 
@@ -114,7 +244,7 @@ admission fixture tests; it is not 51 new acceptance scenarios.
 No failure was reproduced in this phase. Existing source fixes are retained;
 there is no speculative product patch or hardware readiness upgrade.
 
-## Remaining phases — not yet claimed complete
+## Original phase plan — historical (final outcome above)
 
 1. Full Python discovery with GUI/audio/video opt-ins; use only dummy/synthetic
    acquisition. Record every skip and resolve executable optional dependencies.

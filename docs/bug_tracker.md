@@ -3,8 +3,9 @@
 ## BUG-042 — Proof-loss label masked independent merchant/financial failure evidence (5 November 2026)
 
 **Severity:** S1 nonbinding policy classification. **Status:** SOURCE FIXED /
-focused AUTOMATED_VERIFIED locally; full repaired-source simulation and CI
-pending. Refund API remains disabled; no actual funds changed.
+AUTOMATED_VERIFIED at acbac15: full all-opt-in 1,744 PASS; CI 41906929920
+all 3 SUCCESS (546 Windows/546 Ubuntu/62 native), zero failures/errors/skips.
+Refund API remains disabled; no actual funds changed.
 
 The classifier accepted PROOF_LOST_ONLY alongside an independently irrecoverable
 service or verified excess settlement and returned NO_AUTO_REFUND_PROOF_LOST.
@@ -18,8 +19,9 @@ skips.
 ## BUG-041 — DEMO game win advertised a different post-preview gallery price (5 November 2026)
 
 **Severity:** S1 customer quote consistency. **Status:** SOURCE FIXED / focused
-AUTOMATED_VERIFIED locally; full all-opt-in regression and matching-source CI
-pending. No actual charge or physical owner result.
+AUTOMATED_VERIFIED at acbac15: full all-opt-in 1,744 PASS; CI 41906929920
+all 3 SUCCESS (546 Windows/546 Ubuntu/62 native), zero failures/errors/skips.
+No actual charge or physical owner result.
 
 An actual persisted DEMO win followed by two designs/2+1 copies showed Rp22,500
 in the gallery, but final post-preview/server pricing was Rp25,000. Both

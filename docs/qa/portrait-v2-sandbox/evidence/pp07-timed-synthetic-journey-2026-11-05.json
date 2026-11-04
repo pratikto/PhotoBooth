@@ -1,0 +1,24 @@
+{
+  "charges": 1,
+  "clock": "REAL_MONOTONIC",
+  "countdowns_started": 8,
+  "last_phase": "paid_delivery",
+  "mode": "SYNTHETIC_ONLY",
+  "obligation": "OWED",
+  "physical_paper_verified": false,
+  "preview_amount": 25000,
+  "print_copies": [
+    2,
+    1
+  ],
+  "private_jpegs": 8,
+  "receipts": 1,
+  "retakes_requested": 2,
+  "seconds": 73.362,
+  "state": "PASS",
+  "ticket_auto_dismissed": true,
+  "ticket_visible_seconds": 30.033,
+  "runtime_test_source": "acbac15842b59d5005075f2fbc7e87978323b158",
+  "replay_script_sha256": "56c7848ae201024fe54be380dea7cfc8dede0202e54d807acd5d6d4e9b4c42ce",
+  "measurement": "Original genuine-visible monotonic ACK to actual private QR/card wipe; excludes later delivery worker time."
+}
