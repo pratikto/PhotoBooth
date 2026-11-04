@@ -1,5 +1,18 @@
 # PP-07 software continuation and device readiness — 4 November 2026
 
+**Current source:** `267fc437e082afc581066c9408901c42669480ee`.
+Five functional/test micro-pushes are verified. Local full discovery and
+subsequent opt-ins all have executed outcomes below. Matching CI Ubuntu backend
+533/native 61 PASS; Windows cancelled at its 10-minute budget and is under a
+targeted retry. **Do not claim a current 3/3 PASS until that retry is inspected.**
+The proposed workflow timeout change did not publish successfully.
+
+Start with the [complete device guide](POST-PREVIEW-DEVICE-TEST-START-HERE.md),
+[112-case / AR traceability](PP07-SOFTWARE-TRACEABILITY-2026-11-04.md), and
+[machine-readable executed evidence](PP07-EXECUTION-EVIDENCE-2026-11-04.json).
+Sections below preserve each increment's then-current result rather than
+retroactively labeling every checkpoint PASS.
+
 ## Scope, authority and source
 
 Authorized branch: `feature/post-preview-qris-checkout`. Starting remote HEAD:
@@ -200,7 +213,7 @@ sequenceDiagram
 
 ## Increment 4 — BUG-039 synthetic folder identity and complete repeat visits
 
-**Requirements:** PP-048/053/056/063/064/069 and PP-003/011/012 native preview.
+**Requirements:** PP-048/053/056/063/064/069 and PP-003/010 native all-design preview.
 
 **Reproduction:** the default supervised synthetic pilot reused the exact
 `syntheticPaidFolder123` folder for every transaction. On the second paid visit,
@@ -238,6 +251,44 @@ CI. Full final source/CI counts must be measured, not inferred from additions.
 
 ## Current readiness and next action
 
+### Windows CI time budget — no test removed
+
+Corrected source `267fc437` [CI 41815346502](https://github.com/pratikto/PhotoBooth/actions/runs/41815346502)
+passed **533 Ubuntu backend** and **61 native Kivy**, but the Windows matrix job
+was cancelled at its 10-minute total budget before the backend summary. Logs
+show cancellation/KeyboardInterrupt during `CheckoutStore` schema setup in the
+late `test_checkout_durability` module, then a Windows file-in-use error while
+the interrupted fixture was being cleaned up. This is not a passing Windows
+result and does not by itself establish a product data-corruption defect.
+The proposed fix gives Windows a bounded 15-minute allowance and keeps Linux
+at 10, but its publication did not succeed: two guarded ref updates returned
+ReadTimeout and the supported contents update returned Internal error. Remote
+HEAD was re-read after each attempt and remained `267fc437`. The prepared
+commit object `290c4b933415c5b12412edd452465fed62971622` is NOT a verified branch
+push. No workflow permission/policy rejection reason was supplied, so none is
+inferred. The execution snapshot was returned to the published 10-minute
+workflow; the proposed one-line change remains reviewable here:
+
+```yaml
+timeout-minutes: ${{ matrix.os == 'windows-latest' && 15 || 10 }}
+```
+
+Only cancelled Windows job `126524760182` was requested for rerun, preserving
+successful Linux/native results. No tests/assertions are removed, no retry
+weakens payment/printing guarantees, and Windows remains pending until its
+actual final result/log is inspected. Earlier 0032958 CI independently
+completed 3/3 SUCCESS; cancelled superseded runs are not counted as PASS.
+
+Local corrected-source discovery completed **1,730 run, 1,653 PASS, 77 SKIP,
+zero failures/errors** in 343.345s. The 75 selected GUI/audio opt-in cases then
+ran **73 PASS, 2 SKIP** (one additionally gated video and one nested palm model).
+The video case subsequently **1 PASS**, and all three native palm/model cases
+**3 PASS** using existing public MediaPipe fixture assets. Thus each original
+skip received a subsequent executed result; these are separate runs, not a
+fabricated single 1,730/zero-skip execution. No physical camera, speaker, printer,
+customer photograph, merchant or cloud operation is implied. Corrected focused
+native suite separately **61 PASS**, zero failure/error/skip (68.072s).
+
 ### Final-regression compatibility correction after increment 4
 
 At `412bebd`, the full local backend **533 PASS** (88.202s), while native
@@ -251,14 +302,61 @@ sequence. Focused first-folder native checks at both sizes plus J21 **2 PASS**
 guard change. The failed full run remains recorded; final corrected source must
 receive its own native/full CI evidence before broad PASS is claimed.
 
-The prior 522/522/58 CI at `238012f7` remains historical source-specific evidence.
-Current full backend and affected native checks must finish and new CI must be
-inspected before claiming this new source has the same broad verification.
+### Final local coverage, screenshots and platform limits
 
-Next: complete baseline/affected integration verification; inspect remaining
-restart, proof/isolation, native-template and bounded repeated-session gaps;
-continue safe micro-increments. Reconcile stale current-looking status banners
-and owner launch instructions as the device package is finalized.
+| Evidence | Source / result | What it does not establish |
+| --- | --- | --- |
+| Full discovery | 267fc437: 1,730 run; 1,653 PASS; 77 opt-in SKIP; zero failures/errors | A single zero-skip full run, unique acceptance cases or hardware |
+| GUI/audio opt-ins | Same source: 75 run; 73 PASS; 2 SKIP | Real speaker or remaining nested video/model gates |
+| Video follow-up | Same source: 1 PASS | Real advertisement playback on owner display/speakers |
+| Native palm follow-up | Same source: 3 PASS; existing public sample provenance hashes checked | Real enclosed webcam/lighting/palm capture |
+| Native PP plus legacy photo/flow | Same source: 61 PASS, zero failure/error/skip | Full owner PP/device acceptance |
+| CI Ubuntu backend/native | 41815346502: 533/61 PASS, logs inspected | Cancelled Windows run is not PASS |
+| Windows | Targeted cancelled-job retry pending | No final 3/3 or Windows signoff until exact logs |
+| Apps Script | Syntax + offline Node suite PASS | Installed account deployment, ACL or actual retention deletion |
+| Native synthetic renders | 8 PNGs at 452×900/800×1280, both renderer processes exit 0 | Real camera pixels or full approved-artboard parity |
+
+Local render commands use the existing `tools/render_post_preview_private.py`
+with `--width 800 --height 1280` and `--width 452 --height 900`, separate fresh
+SDL offscreen processes and software GL. Capture/review/final two-design fixture
+images contain synthetic black input pixels and no claim/ticket credentials.
+The two all-design images were visually inspected: correct 2+1 labels/Rp25,000,
+usable controls, scroll at the smaller size and disabled payment in this
+private-preview renderer. The actual paid pilot is separately exercised by N25;
+N26 covers all 12 native previews without producing claim screenshots.
+
+CI artifact metadata for `meong-private-preview-synthetic` / `13313279975`
+matches 267fc437 and expires 11 November. Metadata/digest were verified; its ZIP
+was not downloaded or falsely reported inspected. Local PNG dimensions/hashes
+are preserved in the evidence JSON so renders can be reproduced without adding
+photos/binaries to Git.
+
+### Readiness by mode
+
+| Gate | Current status | Exact remaining work |
+| --- | --- | --- |
+| Software verification | Local PASS within listed scopes; current Windows CI pending | Inspect targeted retry; if time budget still blocks, publish the bounded workflow proposal through a working authorized path |
+| Supervised synthetic device candidate | Package complete; await matching Windows CI before declaring final candidate gate PASS | Owner runs preflight on correct branch/interpreter, then actual webcam/touch/audio with fresh test root |
+| Real POS80 / authorized test Drive | HARDWARE_PENDING | Explicit dual opt-ins, test-only paper/cloud, physical count and public-link/upload observations |
+| Actual post-preview Midtrans Sandbox | BLOCKED; integrated kiosk mock-only | Guarded real-provider integration, account evidence and supported protected escrow; do not enable legacy flags or remove mock-only checks |
+| Original customer recovery across pilot process restart | NOT_IMPLEMENTED in this launcher | Persistent supported OS-key adapter/provisioning and exact original worker/claim restoration; occupied-root refusal and OWED must remain safe |
+| Actual refunds | NOT_ENABLED / BLOCKED | Provider/account eligibility, idempotent financial worker, exact safe fencing and legal policy; classifier alone is not transport |
+| Multi-hour physical soak / retention / consumer acceptance | NOT_RUN | Owner device/installed-cloud/merchant/security observations; no ordinary customer data deletion |
+| Production | NOT_APPROVED | Full separate release controls and owner decision |
+
+Protected cross-process recovery and actual merchant mounting are explicit
+software/integration limitations, not mislabeled completed features or merely
+missing paper. No automatic restore/new key/plaintext fallback was introduced
+to make a synthetic device test pass. The current package allows supervised
+physical component testing with simulated payment, subject to its stated gates.
+
+**Exact next engineering action:** inspect the Windows retry for source
+267fc437 in run 41815346502. If successful, publish that source-specific result
+and the supervised candidate status without promoting actual merchant/restart
+gates. If cancelled again, retain the logs and bounded Windows-timeout proposal,
+report the workflow-write connector failure and keep Windows gate blocked.
+The owner's next independent action is the new device guide/26-case worksheet;
+never rerun an occupied root or bypass an uncertain-paper hold.
 
 Full PP-001–112 and the 26 owner physical cases are not promoted to PASS by these
 subassertions. Synthetic pilot, actual merchant Sandbox, physical acceptance and

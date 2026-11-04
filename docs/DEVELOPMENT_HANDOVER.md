@@ -1,5 +1,35 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 4 November 2026 — comprehensive device package and truthful verification gates
+
+Read [Start here: Windows/Ubuntu supervised device guide](qa/portrait-v2-sandbox/POST-PREVIEW-DEVICE-TEST-START-HERE.md),
+[all 112 PP rows / actual 14 AR definitions](qa/portrait-v2-sandbox/PP07-SOFTWARE-TRACEABILITY-2026-11-04.md),
+[executed evidence JSON](qa/portrait-v2-sandbox/PP07-EXECUTION-EVIDENCE-2026-11-04.json)
+and [full source/failure/fix/readiness report](qa/portrait-v2-sandbox/PP07-DEVICE-READINESS-2026-11-04.md).
+Functional source 267fc437 is micro-pushed/verified; the local full suite and
+all original opt-in skips have subsequent executed results, zero test failures.
+Current CI Ubuntu 533/native 61 PASS; Windows cancelled at 10-minute budget and
+has been retried alone. Proposed 15-minute workflow update failed connector
+publication (prepared object 290c4b9 is NOT a branch push); published workflow
+still uses 10 minutes. Inspect run 41815346502 before a 3/3 or final Windows gate
+claim. No actual merchant/restart-vault/refund/hardware acceptance is supplied
+by the synthetic pilot. All owner 112/26 full cases remain separately tracked.
+
+## 4 November 2026 — full local regression and Windows CI timeout follow-up
+
+Functional compatibility correction micro-pushed/verified at `267fc437`.
+Its CI Ubuntu backend 533 PASS/native 61 PASS, Windows cancelled at 10-minute
+budget during late legacy database tests, without a final summary. Proposed
+15-minute Windows budget publication returned connector timeout/internal errors;
+remote HEAD remains 267fc437 and the workflow still uses 10. Only cancelled
+Windows job was requested for rerun; its final result must be checked.
+Local broad discovery: 1,730 run / 1,653 PASS / 77 opt-in SKIP / zero failure/error;
+subsequent GUI/audio 73 PASS + 2 SKIP, video 1 PASS and native model 3 PASS cover
+the original skips. Corrected native 61 PASS separately. Eight synthetic PNGs
+rendered in both sizes; all-design images visually inspected. No hardware,
+merchant, actual cloud, OS-vault or production acceptance is inferred.
+[Full commands/evidence/limitations](qa/portrait-v2-sandbox/PP07-DEVICE-READINESS-2026-11-04.md).
+
 ## 4 November 2026 — first synthetic folder namespace compatibility correction
 
 Increment 4 micro-pushed/verified at `412bebd`. Its full local backend passes

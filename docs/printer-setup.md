@@ -1,13 +1,17 @@
 # Thermal printer setup
 
+> **Current post-preview continuation — 4 November 2026:** Work stays on existing `feature/post-preview-qris-checkout`. Start with the [current device guide](qa/portrait-v2-sandbox/POST-PREVIEW-DEVICE-TEST-START-HERE.md), [source-specific evidence and known limits](qa/portrait-v2-sandbox/PP07-DEVICE-READINESS-2026-11-04.md), and [112-case / AR traceability](qa/portrait-v2-sandbox/PP07-SOFTWARE-TRACEABILITY-2026-11-04.md). The later implementation and evidence record takes precedence over older status snapshots below; approved policy and dated history remain preserved. The owner pilot uses synthetic payment. Actual merchant Sandbox, protected cross-process recovery, physical acceptance and production are separate gates. No prior test root, uncertain print or PAID/OWED may be reset to bypass them.
+
 **Scope — shared printer transport/configuration plus v1 operator UI.**
 Network/Windows RAW settings and uncertain-send rules apply to the reused backend.
 Gear-menu setup, automatic result printing and CETAK ULANG below are v1 UI
 instructions. V2 local photo tests require operator print opt-in (`--print` or
 `PHOTOBOOTH_V2_PRINT=1`), then automatically print each approved design as v1.
 Use `--manual-print` / `PHOTOBOOTH_V2_AUTO_PRINT=0` for an explicit CETAK action.
-The dedicated Sandbox launcher
-forces printing off. V2 Device Health observes routes/queues but does not change
+Historical Sandbox printer-OFF guidance is superseded for the separately approved
+BUG-027 paid-first profile. The post-preview owner pilot requires both explicit
+real-printer consent flags from the current guide. This does not authorize a
+reprint of any original SENDING/UNCERTAIN purchased job. V2 Device Health observes routes/queues but does not change
 saved devices or prove paper output. The source below describes product-listing
 claims, not a newly verified printer specification or device acceptance.
 [Current v2 print/Drive runbook](qa/portrait-v2-print-drive/README.md) · [current status](FEATURE_STATUS.md).

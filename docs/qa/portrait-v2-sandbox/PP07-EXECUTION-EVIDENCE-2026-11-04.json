@@ -1,0 +1,173 @@
+{
+  "date": "2026-11-04",
+  "timezone": "Asia/Jakarta",
+  "branch": "feature/post-preview-qris-checkout",
+  "starting_remote_head": "4b1c12ac173fa4cb64d7940a1679ff280b26f055",
+  "functional_source": "267fc437e082afc581066c9408901c42669480ee",
+  "micro_commits": [
+    "759d141a1fe5b487159f2754f93c734f59618dad",
+    "0032958f019f54377db4f1bca4f94e92dea0394e",
+    "19eab1011b205ad9f5f57f91efaeab3979f2df45",
+    "412bebd237ab42a0c87f844a784811dcd187bd0c",
+    "267fc437e082afc581066c9408901c42669480ee"
+  ],
+  "local_runs": [
+    {
+      "scope": "original backend baseline",
+      "source": "4b1c12ac",
+      "run": 522,
+      "pass": 522,
+      "fail": 0,
+      "error": 0,
+      "skip": 0
+    },
+    {
+      "scope": "corrected functional source full discovery",
+      "source": "267fc437",
+      "run": 1730,
+      "pass": 1653,
+      "fail": 0,
+      "error": 0,
+      "skip": 77,
+      "seconds": 343.345
+    },
+    {
+      "scope": "selected prior GUI/audio skips with opt-ins",
+      "source": "267fc437",
+      "run": 75,
+      "pass": 73,
+      "fail": 0,
+      "error": 0,
+      "skip": 2,
+      "seconds": 97.927
+    },
+    {
+      "scope": "remaining native video opt-in",
+      "source": "267fc437",
+      "run": 1,
+      "pass": 1,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 3.696
+    },
+    {
+      "scope": "three existing public-asset native model cases",
+      "source": "267fc437",
+      "run": 3,
+      "pass": 3,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 4.816
+    },
+    {
+      "scope": "corrected native PP and legacy photo/flow modules",
+      "source": "267fc437",
+      "run": 61,
+      "pass": 61,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 68.072
+    }
+  ],
+  "ci": {
+    "run_id": 41815346502,
+    "source": "267fc437e082afc581066c9408901c42669480ee",
+    "ubuntu_backend": {
+      "pass": 533,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "job_id": 126524760304
+    },
+    "ubuntu_native": {
+      "pass": 61,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "job_id": 126524759811
+    },
+    "windows_backend": {
+      "state": "PENDING_RETRY_AFTER_CANCELLED_10_MINUTE_JOB",
+      "original_job_id": 126524760182
+    }
+  },
+  "unpublished_workflow_proposal": {
+    "commit_object": "290c4b933415c5b12412edd452465fed62971622",
+    "branch_push_verified": false,
+    "errors": [
+      "ReadTimeout on guarded ref update",
+      "Internal error on supported file update"
+    ],
+    "published_timeout_minutes": 10
+  },
+  "limits": [
+    "Counts are executions within stated runs, not a unique-scenario total.",
+    "No real merchant charge/refund, printer paper or Drive API/upload/deletion executed.",
+    "Audio used SDL dummy; camera acquisition was synthetic.",
+    "Local cryptography 50.0.0 is outside declared >=46,<50; successful CI Linux/native used declared dependency installation.",
+    "Full PP-001..112 and owner device acceptance remain NOT_RUN/BLOCKED.",
+    "Protected cross-process original customer recovery and actual merchant checkout are not supplied by the synthetic pilot."
+  ],
+  "local_synthetic_render": [
+    {
+      "name": "private-all-designs-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "e0dc145d53cafcbaf2ee3a776dbef54a9f2f010dbdd048c973eb041aaf03bcf6"
+    },
+    {
+      "name": "private-all-designs-800x12800001.png",
+      "width": 800,
+      "height": 1280,
+      "sha256": "b69f909d1efcb89890ba9afe1dc456d23ecd38d8da5d01cae7109bdd3d818f0f"
+    },
+    {
+      "name": "private-capture-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "a51a835e61fc8dddd941ecb4993e91ccf6428025b35e5e575c9fcf3307abe01b"
+    },
+    {
+      "name": "private-capture-800x12800001.png",
+      "width": 800,
+      "height": 1280,
+      "sha256": "e35827a783c7e4a5a7a4a79aff0c32ec8146f87e1acda667f4357350bf0c0836"
+    },
+    {
+      "name": "private-review-452x9000001.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "7f535eaefbd6e94da455bd2b79841b8ba4f3b65891823b3e3418d2ae41515139"
+    },
+    {
+      "name": "private-review-452x9000002.png",
+      "width": 452,
+      "height": 900,
+      "sha256": "bf2c452e50b80df0f32a7fef71168c1a5d45d43e3ee6d1aea78a7acbf8ed9df0"
+    },
+    {
+      "name": "private-review-800x12800001.png",
+      "width": 800,
+      "height": 1280,
+      "sha256": "8c1bb8d62e9d1328498326f5b5f3d39de6ae67687d6500e6cd0e67b81f15e392"
+    },
+    {
+      "name": "private-review-800x12800002.png",
+      "width": 800,
+      "height": 1280,
+      "sha256": "b8fabddeb7c78139c8452cdb769031f5d84e4cd74892920a2399f29ef331d1ac"
+    }
+  ],
+  "ci_artifact": {
+    "id": 13313279975,
+    "name": "meong-private-preview-synthetic",
+    "source": "267fc437e082afc581066c9408901c42669480ee",
+    "digest": "sha256:4ddb5787cea58d7a442d8e805d845bfe3d23e1bc80cee09409a1b9ed428b297a",
+    "metadata_verified": true,
+    "archive_downloaded": false,
+    "expires_at": "2026-11-11T10:39:48Z"
+  }
+}
