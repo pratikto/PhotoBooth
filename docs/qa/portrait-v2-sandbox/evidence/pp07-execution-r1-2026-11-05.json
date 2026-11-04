@@ -12,7 +12,19 @@
     "interpreter": "fresh task-only Python 3.12 venv",
     "display": "SDL offscreen Mesa llvmpipe",
     "credentials": "none provisioned in environment status",
-    "external_effects": "OFF: camera, paper, provider, Drive, refund, production"
+    "external_effects": "OFF: camera, paper, provider, Drive, refund, production",
+    "packages": {
+      "Kivy": "2.3.1",
+      "ffpyplayer": "4.5.3",
+      "Pillow": "13.0.0",
+      "numpy": "2.5.4",
+      "opencv-contrib-python": "4.14.0.94",
+      "cryptography": "49.0.0",
+      "fastapi": "0.128.2",
+      "pydantic": "2.13.5",
+      "httpx": "0.28.1",
+      "requests": "2.32.5"
+    }
   },
   "runs": [
     {
@@ -85,7 +97,36 @@
         "UAH-022"
       ],
       "scope": "Independent hard exit/reopen at local isolation prepare/ACK/worker/rollback barriers; not full OS worker restore or fsync acceptance",
-      "artifact_sha256": "b173ebeb9d4c24abec29faf78ce374c86d2fb5731dc7e72e1809fc4451c7ca2a"
+      "artifact_sha256": "b173ebeb9d4c24abec29faf78ce374c86d2fb5731dc7e72e1809fc4451c7ca2a",
+      "tested_sha": "36ec0cc83f65940bd78e8865c0ded6329a2522e3"
+    },
+    {
+      "run_id": "PP07-R1-D",
+      "tested_runtime_source": "36ec0cc83f65940bd78e8865c0ded6329a2522e3",
+      "scope": "Actual Kivy App.run/monotonic replay, isolated synthetic hardware; runtime files identical to 07b8664 at start",
+      "result": "PASS",
+      "observations": {
+        "charges": 1,
+        "clock": "REAL_MONOTONIC",
+        "countdowns_started": 8,
+        "last_phase": "paid_delivery",
+        "mode": "SYNTHETIC_ONLY",
+        "obligation": "OWED",
+        "physical_paper_verified": false,
+        "preview_amount": 25000,
+        "print_copies": [
+          2,
+          1
+        ],
+        "private_jpegs": 8,
+        "receipts": 1,
+        "retakes_requested": 2,
+        "seconds": 96.553,
+        "state": "PASS",
+        "ticket_auto_dismissed": true,
+        "ticket_visible_seconds": 30.002
+      },
+      "artifact_sha256": "9e0034ee86026fe9c5bff91c487b0481731acacc856f05c6fae18e33b6015319"
     }
   ],
   "environment_failures": [
@@ -170,6 +211,30 @@
     {
       "sha": "07b8664b91443f37fbc6f72db88247e2d94c11bd",
       "push_verified": true
+    },
+    {
+      "sha": "36ec0cc83f65940bd78e8865c0ded6329a2522e3",
+      "push_verified": true
     }
-  ]
+  ],
+  "preflight": {
+    "result": "READY_FOR_SUPERVISED_SYNTHETIC_PILOT",
+    "source": "36ec0cc83f65940bd78e8865c0ded6329a2522e3",
+    "scope": "Static branch/import/profile readiness only; no device observation"
+  },
+  "apps_script": {
+    "syntax": "PASS",
+    "offline_node_vm": "PASS",
+    "tests": 1,
+    "fail": 0,
+    "skip": 0,
+    "seconds": 0.878744,
+    "live_deployment": false
+  },
+  "model_blocker": {
+    "host": "storage.googleapis.com",
+    "observed": "CONNECT tunnel denied HTTP 403 by session proxy",
+    "affected": "3 optional native inference methods; asset/model not downloaded; no fake inference counted",
+    "policy_bypass": false
+  }
 }
