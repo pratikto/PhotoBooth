@@ -1,5 +1,23 @@
 # Meong Photobooth — Bug register
 
+## BUG-036 — Recovery Ticket automatic timeout froze during slow receipt send (4 November 2026)
+
+**Severity:** S1 private-proof visibility/lifecycle. **Status:** SOURCE FIXED;
+focused local native regression PASS at 800×1280 and 452×900; matching-source CI
+pending and physical owner acceptance NOT_RUN.
+
+`PrivateCheckoutFixtureApp._poll_photos` returned on a busy printer worker before
+updating the ticket countdown or checking zero. Manual NEXT still wiped the
+code, but automatic 30-second expiry could wait for the slow receipt callback.
+The fix advances visible-ticket UI/expiry before the worker-busy return while
+keeping durable dismissal serialized after the same original receipt.
+No repeat send, paper-success claim, charge or booth release is added.
+
+New native test holds receipt I/O behind an event and injects the ticket clock;
+before fix both sizes fail, after fix it and five related checks PASS. Original
+receipt SENDING, one submission and PAID/OWED remain intact.
+[Exact reproduction, source/environment limits and next checks](qa/portrait-v2-sandbox/PP07-DEVICE-READINESS-2026-11-04.md).
+
 ## BUG-035 — New customer inherited previous customer's tutorial/cart transient UI state after safe isolation (2 November 2026)
 
 **Severity:** S1 privacy/visit lifecycle UX regression.  

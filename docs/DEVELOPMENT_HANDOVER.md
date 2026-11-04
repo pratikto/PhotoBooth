@@ -1,5 +1,16 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 4 November 2026 — Device-readiness continuation; BUG-036 ticket timer
+
+Owner-authorized implementation continues only on `feature/post-preview-qris-checkout`.
+Starting remote HEAD `4b1c12ac`; stale local `work` remains untouched. BUG-036
+reproduced at both portrait sizes: slow receipt I/O froze the mandatory ticket
+countdown/automatic privacy wipe. UI expiry now runs independently of worker
+busy while original durable receipt/dismissal stay serialized. Six focused
+Linux/offscreen Kivy/unit checks PASS; new matching-source CI pending. No physical
+paper, merchant payment/refund, upload or owner acceptance is inferred.
+[Current source/evidence/traceability and exact next action](qa/portrait-v2-sandbox/PP07-DEVICE-READINESS-2026-11-04.md).
+
 ## 2 November 2026 — Broad campaign N21–N24 and P01–P02 source-specific evidence
 
 **Current code `238012f7`** has matching-source [CI #41409982930](https://github.com/pratikto/PhotoBooth/actions/runs/41409982930). **Ubuntu backend 522/522 PASS** (including 20 new J cases and P01/P02 actual process termination + independent SQLite reopening); **Ubuntu native Kivy 58/58 PASS**, including four additional genuine customer-button journeys N21–N24 (three design 2+1+3 paid output, Drive offline/retry, safe A→B handoff with fresh B tutorial, and blocked B on A ticket UNCERTAIN). **Windows 522/522 PASS verified** by matching-source [CI #41409982930](https://github.com/pratikto/PhotoBooth/actions/runs/41409982930). All three source-matched jobs **COMPLETED 3/3 SUCCESS** (Windows 522, Ubuntu 522, native Kivy 58; **1,102 executions, zero failures/errors/skips**). This is not 1,102 unique scenarios: the campaign adds 26 distinct new J/N/P cases.

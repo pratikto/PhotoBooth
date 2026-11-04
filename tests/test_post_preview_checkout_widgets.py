@@ -230,6 +230,52 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
                 'SELECT receipt_state FROM pp_ticket_presentations').fetchone()[0])
 
 
+    def test_ticket_countdown_and_auto_wipe_continue_during_blocked_receipt(self):
+        """PP-042/051: printer I/O cannot extend private QR visibility."""
+        for size in ((800,1280),(452,900)):
+            with self.subTest(size=size), self.booth(paid_ticket=True) as (app,fixture):
+                Window.size=size
+                fixture.receipt_entered=threading.Event()
+                fixture.receipt_release=threading.Event()
+                try:
+                    self.paid_ticket_screen(app,fixture)
+                    deadline=time.monotonic()+5
+                    while not fixture.receipt_entered.is_set() and time.monotonic()<deadline:
+                        app._poll_photos(); EventLoop.idle(); time.sleep(.01)
+                    self.assertTrue(fixture.receipt_entered.is_set())
+                    self.assertTrue(app._photo_jobs.busy)
+                    card=app._ticket_card
+                    began=app._ticket_window._started_at
+                    with patch.object(app._ticket_window,'_clock',return_value=began+20):
+                        app._poll_photos()
+                        self.assertIn('10 detik',app._ticket_countdown.text)
+                    with patch.object(app._ticket_window,'_clock',return_value=began+31):
+                        app._poll_photos()
+                    self.assertTrue(app._ticket_dismiss_pending)
+                    self.assertIsNone(card.qr_image.texture)
+                    self.assertEqual('',card.code.text)
+                    self.assertIsNone(app._ticket_card)
+                    self.assertFalse(app._ticket_window.active)
+                    self.assertTrue(app._photo_jobs.busy)
+                    self.assertEqual('SENDING',fixture.service.ledger.db.execute(
+                        'SELECT receipt_state FROM pp_ticket_presentations').fetchone()[0])
+                    self.assertEqual(1,fixture.provider.charges)
+                    self.assertEqual([],fixture.receipt_sizes)
+                finally:
+                    fixture.receipt_release.set()
+                deadline=time.monotonic()+10
+                while time.monotonic()<deadline and app._photo_view.get('phase')!='paid_hold':
+                    app._poll_photos(); EventLoop.idle(); time.sleep(.01)
+                self.assertEqual('paid_hold',app._photo_view['phase'])
+                self.assertEqual(1,len(fixture.receipt_sizes))
+                self.assertEqual(('SUBMITTED','DISMISSED'),tuple(
+                    fixture.service.ledger.db.execute(
+                        'SELECT receipt_state,screen_state FROM pp_ticket_presentations'
+                    ).fetchone()))
+                self.assertEqual('OWED',fixture.service.ledger.db.execute(
+                    'SELECT status FROM pp_paid_services').fetchone()[0])
+                self.assertIsNone(app._ticket_card)
+
     def test_native_paid_ticket_to_verified_drive_qr_and_original_single_print(self):
         for size in ((800,1280),(452,900)):
             with self.subTest(size=size), self.booth(paid_delivery=True) as (app,fixture):

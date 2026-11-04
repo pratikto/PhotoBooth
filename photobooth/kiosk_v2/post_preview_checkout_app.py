@@ -309,7 +309,18 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
 
     def _poll_photos(self):
         super()._poll_photos()
-        if self._closed or self._suspended or self._photo_jobs.busy:
+        if self._closed or self._suspended:
+            return
+        # QR lifetime belongs to the visible UI, not the serialized printer
+        # worker. A slow receipt send must not freeze the countdown or leave
+        # the original private code onscreen after its 30-second deadline.
+        # Only the later durable dismissal waits for the original send to end.
+        if self._photo_view.get('phase') == 'ticket_visible':
+            self._update_ticket_countdown()
+            if (self._ticket_window is not None and self._ticket_window.active
+                    and self._ticket_window.remaining() == 0):
+                self._ticket_next(user=False)
+        if self._photo_jobs.busy:
             return
         if self._claim_pending is not None:
             offer, self._claim_pending = self._claim_pending, None
@@ -324,10 +335,6 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
             self._payment_check_at = time.monotonic()+10
             self._photo_submit('check_payment')
         if self._photo_view.get('phase') == 'ticket_visible':
-            self._update_ticket_countdown()
-            if (self._ticket_window is not None and self._ticket_window.active
-                    and self._ticket_window.remaining() == 0):
-                self._ticket_next(user=False)
             # Direct PhotoJobs submit (not _photo_submit) keeps NEXT usable
             # during the slow physical send, while maintaining single-flight.
             if self._ticket_receipt_pending and not self._photo_jobs.busy:
