@@ -3,6 +3,44 @@
 Authorized branch: `feature/post-preview-qris-checkout`. Starting remote source:
 `5fc73bc025327a5ecf55a6673722cdb089e1eaeb`. Dates use Asia/Jakarta.
 
+## Increment 3 — actual Sandbox transport seam, isolated HTTP contract
+
+**Increment 2 push verified:** `fdf044d52c9d219fa2856bb12ed2929410401802`.
+On that exact source, the complete registered local backend ran **539 PASS,
+0 failures/errors/skips (88.207s)**; native Kivy ran **61 PASS,
+0 failures/errors/skips (63.239s)**. Apps Script syntax and the offline Node VM
+suite PASS. Native execution used SDL offscreen/software GL, dummy audio and a
+writable scratch Kivy/cache directory; an initial environment startup exited
+without a test summary before that configuration was supplied (not a PASS).
+
+Five new cases in `test_post_preview_payments.MidtransPostPreviewContractTests`
+combine the existing frozen-photo/CCP ledger, trusted scoped readiness,
+`PostPreviewPayments` in **sandbox** mode and the actual
+`MidtransSandboxClient` JSON/request implementation. Its injected HTTP transport
+is strictly local: no merchant request or usable credential exists. Assertions
+retain the fixed Sandbox host, request shape, real HTTPError 404 behavior,
+no invented provider idempotency headers, same original order after lost create
+and service reconstruction, independently verified expiry through QR3/no QR4,
+no PAID authority from create response, and late PAID/OWED after cancellation.
+The suite adds evidence at a previously unexercised transport/coordinator seam;
+it does not substitute the old prepaid GUI or enable the post-preview launcher.
+
+**Executed focused evidence:** 5 new contract cases PASS in 0.692s; full affected
+payment/readiness/process-crash scope **54 PASS in 7.309s**, zero failures/errors/
+skips. Partial mapping PP-021/022/024/025/026/028/031/032/073/074/083.
+The complete acceptance matrix remains NOT_RUN at full scope.
+
+```text
+python tools/run_kiosk_unittests.py test_post_preview_payments test_post_preview_readiness test_post_preview_payment_crashes
+```
+
+**Current next action:** inspect exact-source Windows/Ubuntu/native CI after this
+micro-push and run final registered backend regression. Merchant Sandbox remains
+blocked by missing guarded integrated launch profile, supported persistent
+escrow/restore and actual merchant credentials/configuration/provider evidence;
+passing fake HTTP cannot close those source or external dependencies. Refund
+transport remains disabled. Physical tests remain owner-observed only.
+
 ## Increment 2 — independent-process protected-storage contract
 
 **Increment 1 push verified:** `637b67d1a33042d32597eff43caf4fb47be51b81`

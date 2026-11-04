@@ -420,4 +420,139 @@ class PostPreviewPaymentTests(unittest.TestCase):
             self.ledger.db.execute('UPDATE pp_purchase_finance SET paid_first_observed_at=2000')
 
 
+class MidtransPostPreviewContractTests(unittest.TestCase):
+    """Real Sandbox transport/JSON seam with fake HTTP; no merchant network."""
+
+    def setUp(self):
+        from photobooth.midtrans_sandbox import MidtransSandboxClient
+        from photobooth.post_preview_readiness import (
+            CheckObservation, ReadinessScope, TrustedChargeReadiness, REQUIRED_CHECKS)
+        self.fixture = PostPreviewPaymentTests()
+        self.fixture.setUp()
+        self.addCleanup(self.fixture.doCleanups)
+        self.ledger, self.lease = self.fixture.ledger, self.fixture.lease
+        self.group, self.remote = self.fixture.group, self.fixture.provider
+        self.clock = self.fixture.fixture.clock
+        self.requests = []
+        self.create_reports_paid = False
+        intent = self.fixture.fixture.intent
+        scope = ReadinessScope(self.group, 'PB001', intent['contract_sha256'], self.lease.generation)
+
+        def readiness(_group):
+            probes = {name: lambda _: CheckObservation('READY', self.clock[0])
+                      for name in REQUIRED_CHECKS}
+            return TrustedChargeReadiness.observe(scope, probes)
+
+        self.readiness = readiness
+        self.provider = MidtransSandboxClient('SYNTHETIC-NOT-A-MERCHANT-KEY', transport=self.transport)
+        self.service = PostPreviewPayments(self.ledger, self.provider, 'MTEST', readiness=readiness)
+        self.fixture.offered()
+
+    def transport(self, request, *, timeout):
+        import json
+        from urllib.error import HTTPError
+        from photobooth.midtrans_sandbox import SANDBOX_BASE
+        from tests.test_midtrans_sandbox import Response
+        self.assertTrue(request.full_url.startswith(SANDBOX_BASE + '/v2/'))
+        self.assertEqual(10, timeout)
+        headers = {name.lower() for name, _ in request.header_items()}
+        self.assertFalse({'idempotency-key', 'x-idempotency-key', 'x-external-id'} & headers)
+        path = request.full_url[len(SANDBOX_BASE):]
+        method = request.get_method()
+        self.requests.append((method, path))  # Never retain credentials/headers.
+        if (method, path) == ('POST', '/v2/charge'):
+            body = json.loads(request.data)
+            self.assertEqual({'payment_type', 'transaction_details'}, set(body))
+            self.assertEqual('qris', body['payment_type'])
+            details = body['transaction_details']
+            response = self.remote.create_qris(details['order_id'], details['gross_amount'])
+            if self.create_reports_paid:
+                response = dict(response, transaction_status='settlement', status_code='200')
+        else:
+            order, action = path.removeprefix('/v2/').split('/')
+            if (method, action) == ('GET', 'status'):
+                response = self.remote.get_status(order)
+                if response.get('status_code') == '404':
+                    # urllib raises HTTPError for real non-2xx HTTP responses.
+                    raise HTTPError(request.full_url, 404, 'Not found', {}, None)
+            elif (method, action) == ('POST', 'cancel'):
+                response = self.remote.cancel(order)
+            else:
+                self.fail('Unexpected provider operation')
+        return Response(response)
+
+    @staticmethod
+    def order(view):
+        return view['attempts'][-1]['provider_order_id']
+
+    def test_sandbox_lost_create_and_http404_restart_never_reposts_original(self):
+        self.remote.lost_create = True
+        self.remote.not_found = 1
+        first = self.service.begin(self.lease)
+        self.assertEqual('UNKNOWN', first['state'])
+        self.clock[0] += 10
+        restarted = PostPreviewPayments(self.ledger, self.provider, 'MTEST', readiness=self.readiness)
+        recovered = restarted.begin(self.lease)
+        self.assertEqual('PENDING', recovered['state'])
+        self.assertEqual(self.order(first), self.order(recovered))
+        self.assertEqual('sandbox', restarted.mode)
+        self.assertEqual(1, self.remote.charges)
+        self.assertEqual([('POST', '/v2/charge')], [r for r in self.requests if r[0] == 'POST'])
+        self.assertIsNone(recovered['entitlement_id'])
+
+    def test_sandbox_expiry_contract_creates_qr2_qr3_but_never_qr4(self):
+        current = self.service.begin(self.lease)
+        for ordinal in (2, 3):
+            self.remote.state(self.order(current), 'expire')
+            self.clock[0] += 10
+            current = self.service.continue_expired(self.lease, actively_continuing=True)
+            self.assertEqual(ordinal, current['attempts'][-1]['ordinal'])
+            self.assertEqual((self.group, 10000), (current['purchase_group_id'], current['amount']))
+        self.remote.state(self.order(current), 'expire')
+        self.clock[0] += 10
+        with self.assertRaises(DraftHeld):
+            self.service.continue_expired(self.lease, actively_continuing=True)
+        self.assertEqual(3, self.remote.charges)
+        self.assertEqual(1, self.ledger.db.execute('SELECT count(*) FROM pp_purchase_finance').fetchone()[0])
+
+    def test_sandbox_http404_cannot_authorize_expiry_replacement(self):
+        first = self.service.begin(self.lease)
+        self.remote.not_found = 1
+        self.clock[0] += 10
+        with self.assertRaises(DraftHeld):
+            self.service.continue_expired(self.lease, actively_continuing=True)
+        self.assertEqual(1, self.remote.charges)
+        self.assertEqual(self.order(first), self.order(self.service.inspect(self.group, 'PB001')))
+
+    def test_sandbox_create_response_cannot_grant_paid_without_independent_get(self):
+        self.create_reports_paid = True
+        first = self.service.begin(self.lease)
+        self.assertEqual('PENDING', first['state'])
+        self.assertIsNone(first['entitlement_id'])
+        self.assertFalse(first['paid_verified'])
+        self.remote.state(self.order(first), 'settlement')
+        self.clock[0] += 10
+        paid = self.service.reconcile_all(self.group, 'PB001', force=True)
+        self.assertTrue(paid['paid_verified'])
+        self.assertIsNotNone(paid['entitlement_id'])
+        self.assertFalse(paid['fulfillment_authorized'])
+        self.assertEqual(1, self.remote.charges)
+
+    def test_sandbox_cancel_then_late_settlement_keeps_original_paid_owed(self):
+        first = self.service.begin(self.lease)
+        self.clock[0] += 10
+        cancelled = self.service.signal_lifecycle(self.lease, 'USER_CANCEL')
+        self.assertEqual('CANCELLED_UNPAID', cancelled['state'])
+        self.assertEqual(1, self.remote.cancels)
+        self.remote.state(self.order(first), 'settlement')
+        self.clock[0] += 10
+        paid = self.service.reconcile_all(self.group, 'PB001', force=True)
+        self.assertEqual(('PAID_UNCLAIMED', 'OWED'), (paid['state'], paid['obligation_state']))
+        self.assertIsNone(paid['qr_url'])
+        self.assertFalse(paid['fulfillment_authorized'])
+        self.assertEqual(1, self.remote.charges)
+        with self.assertRaises(DraftHeld):
+            self.service.continue_expired(self.lease, actively_continuing=True)
+
+
 if __name__ == '__main__': unittest.main()
