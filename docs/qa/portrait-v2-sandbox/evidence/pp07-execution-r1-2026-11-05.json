@@ -1,7 +1,7 @@
 {
   "campaign_id": "PP07-R1",
   "status": "IN_PROGRESS",
-  "recorded_at": "2026-11-05T04:48:43.323805+07:00",
+  "recorded_at": "2026-11-05T06:05:53.056391+07:00",
   "timezone": "Asia/Jakarta",
   "source_base": "291d5227f1bc7bc050cd0ad1028c3af1b2d1c8ca",
   "authorized_branch": "feature/post-preview-qris-checkout",
@@ -325,6 +325,48 @@
         "ticket_visible_seconds": 30.024
       },
       "artifact_sha256": "5dc41218e1a00490120368d4badebc83809ccd61e0983f03f5db073f5fec46fd"
+    },
+    {
+      "run": 1760,
+      "fail": 1,
+      "error": 0,
+      "skip": 3,
+      "passed": 1756,
+      "success": false,
+      "seconds": 1141.769,
+      "normalized_unique_test_ids": 1670,
+      "run_id": "PP07-R1-full-fec4f7f",
+      "tested_sha": "fec4f7f9d3169d1421a704813d83355bee12f4d1",
+      "result": "FAIL",
+      "started_at": "2026-11-05T05:43:59.442601+07:00",
+      "report_sha256": "8b14692821728cdc3bb9707b6f3afee0e930f0041fdd8cc593fe3359c4f34b14",
+      "log_sha256": "46ab79e509a2a6335343aaa9cb6ac1b3059541c11346e13a18ace72b6f4eefb6",
+      "nonpass_methods": {
+        "test_camera_recovery.CameraRecoveryTests.test_real_model_worker_drives_the_actual_controller_and_keeps_button_capture": [
+          "SKIP"
+        ],
+        "test_kiosk_v2_delivery_widgets.DeliveryWidgetTests.test_boot_preparation_is_background_no_ad_reset_no_second_service_and_live_ready_gate": [
+          "FAIL"
+        ],
+        "test_kiosk_v2_widgets.PortraitKivySmokeTests.test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture": [
+          "SKIP"
+        ],
+        "test_palm_gesture.NativePalmModelTests.test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image": [
+          "SKIP"
+        ]
+      }
+    },
+    {
+      "run_id": "PP07-R1-K-helper",
+      "result": "PASS",
+      "run": 11,
+      "passed": 11,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 24.256,
+      "scope": "Native delivery widgets; test-only helper fix, runtime unchanged from fec4f7f",
+      "report_sha256": "38a449af5becd29ccf4257565b651f5c9019e52603f0bcd750b9707f859605c4"
     }
   ],
   "environment_failures": [
@@ -340,7 +382,8 @@
     "docs/qa/portrait-v2-sandbox/evidence/run_timed_synthetic_journey.py": "e6ceb5e16035e55100cbcc3768e02f5f26e28895523ca2a87ce9b242bf1ca84a",
     "tests/test_post_preview_checkout_ticket.py": "8d2945182620114ef9f324f6b5d6f64e4f952db7f2babeb4056c67cd9c4a9013",
     "photobooth/kiosk_v2/post_preview_checkout_app.py": "a2c41b42f754cacb8944a2ac13fecf84223ec06dfa4768c324a18a3f05631152",
-    "tests/test_post_preview_checkout_widgets.py": "9c2494e73acb495a9ceb4e608f724107a91df86295f033d0b56f42889abe83b8"
+    "tests/test_post_preview_checkout_widgets.py": "9c2494e73acb495a9ceb4e608f724107a91df86295f033d0b56f42889abe83b8",
+    "tests/test_kiosk_v2_delivery_widgets.py": "54cc9750345b15d348d00a53bf84b3d14324d95a75050a9ffa31b4d1d9043ad4"
   },
   "case_register": "pp07-execution-register-r1-2026-11-05.csv",
   "full_acceptance_pass": 0,
@@ -403,7 +446,7 @@
       "definition": "release controls"
     }
   ],
-  "next": "Finish the active fec4f7f broad local run (no competing probes); record actual summary and exact mapped case scopes, then push final checkpoint. CI is verified separately, not substituted for local result.",
+  "next": "Commit/push checked test-only idle helper repair, then rerun full opt-in suite alone at resulting SHA. Preserve fec4f7f FAIL and all earlier history. Model assets remain blocked; protected original-worker restore remains first unfinished implementation.",
   "raw_artifacts": "task scratch only, not committed; hashes and allowlisted observations preserved",
   "delivery": [
     {
@@ -567,9 +610,7 @@
       "tested_sha": "fec4f7f9d3169d1421a704813d83355bee12f4d1",
       "started_at": "2026-11-05T05:43:59.442601+07:00",
       "profile": "GUI/audio/video opt-in; model assets unavailable; no competing local probes/replays",
-      "status": "RUNNING_NO_RESULT",
-      "session": 72311,
-      "process": 18784,
+      "status": "COMPLETED_FAIL_1_RECORDED_RETEST_REQUIRED",
       "report": "current task scratch: full-final-report.txt"
     },
     "ci": {
@@ -618,5 +659,23 @@
       "partial_completed_jobs": "Ubuntu 557/native 65 PASS; Windows incomplete, no 3/3 claim"
     }
   ],
-  "final_ci_evidence": "pp07-ci-final-r1-2026-11-05.json"
+  "final_ci_evidence": "pp07-ci-final-r1-2026-11-05.json",
+  "delivery_idle_diagnostics": {
+    "isolated_original": {
+      "run": 1,
+      "passed": 1,
+      "seconds": 1.651
+    },
+    "controlled_expired_refresh_before": {
+      "run": 1,
+      "fail": 1,
+      "seconds": 1.507
+    },
+    "controlled_idle_refresh_after": {
+      "run": 1,
+      "passed": 1,
+      "seconds": 1.358
+    },
+    "finding": "Trailing idle poll can enqueue a normal periodic snapshot before assertFalse(busy); helper stops at observed idle instead. Original full occurrence lacks action telemetry; precise cause unproven. Five-second limit, all assertions and runtime unchanged."
+  }
 }

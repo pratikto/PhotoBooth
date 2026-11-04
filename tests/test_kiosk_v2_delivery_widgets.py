@@ -51,8 +51,13 @@ class DeliveryWidgetTests(unittest.TestCase):
     def settle(self,app):
         end=time.monotonic()+5
         while app._photo_jobs and app._photo_jobs.busy and time.monotonic()<end:
-            app._poll_photos();EventLoop.idle();time.sleep(.003)
-        app._poll_photos()
+            app._poll_photos()
+            # An idle poll can enqueue the next periodic Drive snapshot.
+            # Stop at the idle observation instead of starting new work just
+            # before asserting that this command has settled.
+            if not app._photo_jobs.busy:
+                break
+            EventLoop.idle();time.sleep(.003)
         self.assertFalse(app._photo_jobs.busy)
     def enter(self,app,*,two=False):
         app._choose_photo();app._complete_tutorial();app._change_copies(2)

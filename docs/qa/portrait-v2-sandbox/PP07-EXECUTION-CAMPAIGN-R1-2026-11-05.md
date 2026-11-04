@@ -317,3 +317,23 @@ classifier candidates are not refunds. Refund and production stay disabled.
 Owner PILOT remains 24 NOT_RUN / 2 BLOCKED. The supervised synthetic worksheet
 remains conditional on its actual device preflight; this in-progress campaign
 does not request owner testing or declare final readiness at the new source.
+
+## Increment K — broad regression failure and idle-helper diagnosis
+
+The fec4f7f broad run completed **1,760 executions: 1,756 PASS, 1 FAIL,
+zero errors, three model SKIP**, 1,141.769s; 1,670 normalized method IDs.
+The failing original delivery-widget preparation case observed `busy=True`
+after its settle helper. Preserve this FAIL, independently of successful CI.
+An isolated original repetition PASS (1.651s). A controlled ordinary refresh
+deadline at the helper's trailing idle poll reproduces the same assertion
+(1 FAIL, 1.507s): polling while idle can submit a new Drive snapshot.
+The original full occurrence lacks action telemetry, so its precise cause is
+**unproven**; this controlled reproduction is not silently substituted for it.
+
+The test-only helper now stops as soon as it observes idle, without a second
+unconditional idle poll. Five-second bound, busy assertion and all readiness,
+thread identity, one-service and no-transaction checks remain intact. There is
+no production timeout/worker/readiness change and no new product bug ID.
+The entire native delivery-widget module **11 PASS**, zero failure/error/skip,
+24.256s; a controlled idle-refresh boundary replay also **1 PASS**, 1.358s.
+A new source-matched broad run is still required; this is not a full local PASS.

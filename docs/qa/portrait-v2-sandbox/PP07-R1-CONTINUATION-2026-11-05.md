@@ -1,5 +1,16 @@
 # R1 durable continuation — 5 November 2026 (Asia/Jakarta)
 
+> **Latest checkpoint K supersedes all RUNNING notes below:** fec4f7f broad
+> regression completed 1,760 run / 1,756 PASS / 1 FAIL / zero errors / three
+> model SKIP in 1,141.769s. The failing delivery idle-helper case is preserved.
+> Test-only repair removes its trailing idle poll (which can start a normal
+> periodic snapshot); all 11 delivery-widget tests PASS, unchanged five-second
+> bound. Controlled deadline reproduces before / PASS after; precise original
+> full occurrence cause remains unproven. Runtime remains fec4f7f, successful
+> CI 41927170321 remains exact runtime evidence. Next: immediately push checked
+> increment K and run the broad opt-in suite alone at its new test source.
+> No active local test process at this checkpoint; no full acceptance promoted.
+
 > **Latest verification:** fec4f7f CI 41927170321 is now COMPLETED 3/3 SUCCESS:
 > 557 Windows, 557 Ubuntu, 67 native PASS; zero failure/error/skip; all logs
 > inspected. The local broad run/session 72311 remains RUNNING, not PASS yet.
