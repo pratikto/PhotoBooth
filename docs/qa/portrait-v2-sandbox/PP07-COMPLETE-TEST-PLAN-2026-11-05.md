@@ -1,5 +1,7 @@
 # Complete post-preview test plan — 5 November 2026
 
+[Start a fresh Codex execution session with this comprehensive prompt](PP07-CODEX-TEST-EXECUTION-PROMPT-2026-11-05.md); it resumes this plan from repository evidence without the previous chat.
+
 This is the execution plan and remaining-test register for the active `feature/post-preview-qris-checkout` workstream. It changes documentation only. **All 112 canonical PP full acceptance cases remain NOT_RUN.** Their existing software evidence is partial: 103 cases have source-matched automated evidence; nine have no executable required implementation or external review evidence. Those nine are not the entire remaining test backlog.
 
 Tested runtime/test source: `acbac15842b59d5005075f2fbc7e87978323b158`; documentation baseline: `3bedcb66e0e001cd2d77fea039c20452fdacc831`. The [executed campaign](PP07-END-TO-END-SIMULATION-2026-11-05.md) records 1,744 local PASS and [matching CI](https://github.com/pratikto/PhotoBooth/actions/runs/41906929920) with 546 Windows, 546 Ubuntu and 62 native PASS, zero failures/errors/skips. These are executions, not acceptance-case counts. No new execution or production signoff is claimed by this plan.

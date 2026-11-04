@@ -1,5 +1,7 @@
 # Meong Photobooth — GUI v2 development handover
 
+> **Cross-account Codex continuation:** [complete test execution prompt](qa/portrait-v2-sandbox/PP07-CODEX-TEST-EXECUTION-PROMPT-2026-11-05.md) carries repository/branch verification, all case inventories, execution/repair waves, safety boundaries, evidence rules and immediate verified pushes. This prompt publication is documentation only; no new case execution is claimed.
+
 > **5 November complete test plan (documentation only):** [188 case rows and remaining priorities](qa/portrait-v2-sandbox/PP07-COMPLETE-TEST-PLAN-2026-11-05.md), with detailed 112 PP procedures, 26 owner PILOT cases, 50 versioned UAH cases and 14 AR stage gates. Existing software evidence remains 103 partial / 9 missing PP scopes; all 112 full PP acceptance outcomes remain NOT_RUN, PILOT remains 24 NOT_RUN / 2 BLOCKED. No new execution, refund activation or production approval.
 
 > **5 November executable simulation campaign PASS:** [final evidence and remaining gates](qa/portrait-v2-sandbox/PP07-END-TO-END-SIMULATION-2026-11-05.md): acbac15 has 1,744 full all-opt-in local PASS and CI 41906929920 all 3 SUCCESS (546 Windows/546 Ubuntu/62 native), zero failures/errors/skips. BUG-041/042 fixed. All 112 PP rows reviewed; partial/missing scope and owner/provider/secure-restart/refund gates remain explicit.
