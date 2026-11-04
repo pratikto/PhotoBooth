@@ -1,5 +1,7 @@
 # Meong Photobooth — GUI v2 development handover
 
+> **5 November full simulation campaign IN PROGRESS:** [phase 1 evidence and exact next step](qa/portrait-v2-sandbox/PP07-END-TO-END-SIMULATION-2026-11-05.md): 51 synthetic journey/fault tests PASS, zero failures/errors/skips. Complete the remaining software simulations before owner device UAT; preserve independent provider/secure-restart/physical/refund gates.
+
 > [5 November continuation: atomic proof fix, independent-process vault tests and actual Sandbox transport with fake HTTP; exact-source results and unfinished gates.](qa/portrait-v2-sandbox/PP07-CONTINUATION-2026-11-05.md)
 
 ## Final 4 November 2026 — current synthetic device candidate verified

@@ -1,5 +1,7 @@
 # Meong Photobooth — current feature status
 
+> **5 November full simulation campaign IN PROGRESS:** [phase 1 evidence and exact next step](qa/portrait-v2-sandbox/PP07-END-TO-END-SIMULATION-2026-11-05.md): 51 synthetic journey/fault tests PASS, zero failures/errors/skips. Complete the remaining software simulations before owner device UAT; preserve independent provider/secure-restart/physical/refund gates.
+
 > [5 November continuation: atomic proof fix, independent-process vault tests and actual Sandbox transport with fake HTTP; exact-source results and unfinished gates.](qa/portrait-v2-sandbox/PP07-CONTINUATION-2026-11-05.md)
 
 > **Current post-preview continuation — 4 November 2026:** Work stays on existing `feature/post-preview-qris-checkout`. Start with the [current device guide](qa/portrait-v2-sandbox/POST-PREVIEW-DEVICE-TEST-START-HERE.md), [source-specific evidence and known limits](qa/portrait-v2-sandbox/PP07-DEVICE-READINESS-2026-11-04.md), and [112-case / AR traceability](qa/portrait-v2-sandbox/PP07-SOFTWARE-TRACEABILITY-2026-11-04.md). The later implementation and evidence record takes precedence over older status snapshots below; approved policy and dated history remain preserved. The owner pilot uses synthetic payment. Actual merchant Sandbox, protected cross-process recovery, physical acceptance and production are separate gates. No prior test root, uncertain print or PAID/OWED may be reset to bypass them.
