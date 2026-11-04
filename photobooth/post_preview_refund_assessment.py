@@ -141,3 +141,74 @@ def assess_refund(evidence):
             return RefundAssessment('REVIEW_REQUIRED',())
         return RefundAssessment('CANDIDATE_FULL_SERVICE_FAILURE',(source.attempt_id,))
     return RefundAssessment('REVIEW_REQUIRED',())
+
+
+def assess_proof_loss_from_journal(ledger, evidence):
+    """Nonbinding proof-loss assessment from original settlement/offer journals.
+
+    This read-only integration seam is not a customer endpoint, settlement
+    verifier or refund worker. Callers still need independently verified facts;
+    it can only narrow the pure classifier, never authorize money or media.
+    Missing/contradictory presentation evidence preserves PAID/OWED remedy.
+    No credential verifier, ciphertext, payload or customer media is read.
+    """
+    from photobooth.post_preview_store import PostPreviewStore
+    if type(ledger) is not PostPreviewStore or type(evidence) is not OriginalRefundEvidence:
+        raise TypeError('Exact original ledger and immutable assessment facts required')
+    e = evidence
+    if e.reason != 'PROOF_LOST_ONLY':
+        raise ValueError('This seam only assesses claimed loss of original proof')
+    with ledger.write():
+        row = ledger.db.execute('''SELECT i.draft_id,d.booth_id,f.merchant_id,f.amount,
+            f.entitlement_id,f.legitimate_paid_attempt,f.review_required
+            FROM pp_checkout_intents i JOIN pp_drafts d USING(draft_id)
+            JOIN pp_purchase_finance f USING(purchase_group_id)
+            WHERE i.purchase_group_id=?''', (e.purchase_group_id,)).fetchone()
+        if (row is None or row['review_required'] or not row['entitlement_id']
+                or row['merchant_id'] != e.merchant_id or row['amount'] != e.amount_idr
+                or e.original is None or row['legitimate_paid_attempt'] != e.original.attempt_id):
+            return RefundAssessment('REVIEW_REQUIRED', ())
+        paid = ledger.db.execute('''SELECT attempt_id,provider_ref,payment_state,
+            verified_at,last_provider_state FROM pp_payment_attempts
+            WHERE purchase_group_id=? AND payment_state='PAID' ''',
+            (e.purchase_group_id,)).fetchall()
+        expected = {p.attempt_id: p for p in (e.original, *e.excess)}
+        if ({p['attempt_id'] for p in paid} != set(expected)
+                or any(p['provider_ref'] != expected[p['attempt_id']].provider_ref
+                    or p['verified_at'] is None or p['last_provider_state'] != 'settlement'
+                    for p in paid)):
+            return RefundAssessment('REVIEW_REQUIRED', ())
+        decision = assess_refund(e)
+        if decision.disposition != 'NO_AUTO_REFUND_PROOF_LOST':
+            return decision  # Preserve BUG-042 independent failure/conflict review.
+
+        def offered(table, event):
+            credential = ledger.db.execute(f'''SELECT booth_id,merchant_id,issued_at,
+                offered_at,expires_at FROM {table} WHERE purchase_group_id=?''',
+                (e.purchase_group_id,)).fetchone()
+            if (credential is None or credential['booth_id'] != row['booth_id']
+                    or credential['merchant_id'] != row['merchant_id']
+                    or credential['offered_at'] is None
+                    or not credential['issued_at'] <= credential['offered_at'] < credential['expires_at']
+                    or credential['offered_at'] > ledger.now()):
+                return None
+            event_row = ledger.db.execute('''SELECT 1 FROM pp_events
+                WHERE draft_id=? AND event=? AND created_at=?''',
+                (row['draft_id'], event, credential['offered_at'])).fetchone()
+            return credential['offered_at'] if event_row else None
+
+        ccp = offered('pp_ccp_credentials', 'CCP_OFFERED')
+        ticket = offered('pp_ticket_credentials', 'TICKET_QR_VISIBLE')
+        screen = ledger.db.execute('''SELECT screen_state,shown_at,dismissed_at,render_permit_id
+            FROM pp_ticket_presentations WHERE purchase_group_id=?''',
+            (e.purchase_group_id,)).fetchone()
+        if (ccp is None or ticket is None or screen is None
+                or screen['screen_state'] != 'DISMISSED'
+                or screen['shown_at'] != ticket or not screen['render_permit_id']
+                or screen['dismissed_at'] is None
+                or not ticket <= screen['dismissed_at'] <= ledger.now()
+                or not ledger.db.execute('''SELECT 1 FROM pp_events
+                    WHERE draft_id=? AND event='TICKET_DISMISSED' AND created_at=?''',
+                    (row['draft_id'], screen['dismissed_at'])).fetchone()):
+            return RefundAssessment('PAID_OWED_REMEDY', ())
+        return decision

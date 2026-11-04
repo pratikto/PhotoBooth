@@ -59,10 +59,49 @@ Network-enabled execution resolved the in-process HTTP fixture operations.
 TLS/proxy and all application delivery guards remain enabled. Raw logs remain
 in task scratch; only redacted observations and checksums are committed.
 
+## Increment B — connected never-offered PAID remedy assessment
+
+Increment A pushed and remote-verified at `808a8dc28ce8907a277f21902b4e5031186bd3f2`.
+The existing pure refund classifier lacked an original-journal offer integration.
+`assess_proof_loss_from_journal` now reads original purchase/merchant/amount,
+exact verified settled attempts, CCP offer event and ticket presentation/dismissal
+events in one transaction. It does not read secrets/ciphertext or mutate rows.
+It only narrows the nonbinding classifier; no endpoint, financial transport,
+protected-media access or occupancy change is enabled.
+
+Absent/incomplete genuine offer evidence yields `PAID_OWED_REMEDY`. A receipt
+SUBMITTED never supplies screen evidence. The first visible frame alone does
+not finish the mandatory opportunity: the original trusted dismissal journal
+must also exist before the narrow lost-proof-only label can apply. Independent
+merchant failure/financial conflicts still require review (BUG-042 preserved).
+Old revoked/expired proof can still have been genuinely offered; this historical
+offer assessment does not make the old proof valid for any future access.
+
+Six new connected tests plus the payment/ticket/claim/classifier regression:
+**80 PASS**, zero failures/errors/skips, 42.210s. A preliminary version also ran
+80 PASS/29.269s; the final version adds the completed-dismissal guard before
+delivery. These are overlapping runs, not 160 distinct cases.
+
+The late-PAID case explicitly provisions an abnormal pre-existing UNKNOWN
+attempt *without ever recording a CCP offer*, then uses real coordinator
+reconciliation against the fake provider's settlement. It preserves one original
+attempt/entitlement and OWED. Today's normal create guard already prevents this
+state; no production escape or real provider settlement is claimed. The second
+abnormal-state case injects an independent receipt ACK with no screen render.
+Other tests retain actual original events, isolate missing-event corruption,
+reject foreign finance facts and preserve independent merchant-failure review.
+Partial mapping: PP-040/085/086/087/088/089. Full acceptance stays NOT_RUN.
+
+```text
+python tools/run_kiosk_unittests.py test_post_preview_refund_assessment test_post_preview_payments test_post_preview_ticket test_post_preview_claim
+```
+
+The versioned CSV is normalized to LF after the initial CSV writer used CRLF;
+there is no change to original historical rows or acceptance criteria.
+
 ## Remaining execution and external gates
 
-Next: connected never-offered late-PAID remedy evidence; independent-process
-crash/handoff barriers; virtual receipt/strip/Drive races; final native complete
+Next: independent-process crash/handoff barriers; virtual receipt/strip/Drive races; final native complete
 journeys and actual-monotonic ticket replay; one complete appropriate regression
 and exact-source Windows/Ubuntu/native CI. Continue software work before asking
 the owner to test. Historical acbac15 results remain historical.

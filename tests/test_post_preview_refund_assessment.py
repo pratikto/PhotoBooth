@@ -3,7 +3,7 @@ from dataclasses import replace
 import unittest
 
 from photobooth.post_preview_refund_assessment import (
-    VerifiedPaidAttempt,OriginalRefundEvidence,assess_refund
+    VerifiedPaidAttempt,OriginalRefundEvidence,assess_refund,assess_proof_loss_from_journal
 )
 
 
@@ -109,6 +109,103 @@ class RefundAssessmentTests(unittest.TestCase):
             assess_refund({'mode':'refund'})
         with self.assertRaises(ValueError):
             VerifiedPaidAttempt('not-an-id','p','MTEST',15000,True)
+
+
+class ConnectedProofRemedyTests(unittest.TestCase):
+    def setUp(self):
+        from tests.test_post_preview_ticket import OriginalPaidTicketTests
+        self.f = OriginalPaidTicketTests()
+        self.f.setUp()
+        self.addCleanup(self.f.doCleanups)
+        self.ledger = self.f.ledger
+
+    def evidence(self):
+        row = self.ledger.db.execute('''SELECT f.*,a.provider_ref FROM pp_purchase_finance f
+            JOIN pp_payment_attempts a ON a.attempt_id=f.legitimate_paid_attempt''').fetchone()
+        return OriginalRefundEvidence(self.f.group, row['merchant_id'], row['amount'],
+            VerifiedPaidAttempt(row['legitimate_paid_attempt'], row['provider_ref'],
+                row['merchant_id'], row['amount'], True),
+            reason='PROOF_LOST_ONLY', financial_integrity_verified=True)
+
+    def assess(self, evidence=None):
+        before = self.ledger.db.total_changes
+        decision = assess_proof_loss_from_journal(self.ledger, evidence or self.evidence())
+        self.assertEqual(before, self.ledger.db.total_changes)
+        self.assertFalse(decision.can_issue_refund)
+        self.assertEqual((), decision.candidates)
+        self.assertEqual('OWED', self.ledger.db.execute(
+            'SELECT status FROM pp_paid_services').fetchone()[0])
+        return decision.disposition
+
+    def offered_ticket(self, *, dismiss=True):
+        self.f.paid()
+        self.f.ticket.prepare(self.f.lease)
+        offer = self.f.ticket.private_offer(self.f.lease)
+        self.f.ticket.mark_visible(self.f.lease, offer)
+        if dismiss:
+            self.f.ticket.dismiss(self.f.lease, offer)
+        return offer
+
+    def test_preexisting_late_paid_without_ever_offered_ccp_preserves_remedy(self):
+        pf = self.f.fixture
+        pf.fixture.issue()  # Issuance is deliberately never marked visible.
+        # Fault/import fixture: an existing external attempt escaped today's
+        # pre-create CCP gate. Never erase a real prior offer to simulate this.
+        attempt, order = 'a'*32, 'PPSYNTHETICEXISTING'
+        with self.ledger.write():
+            self.ledger.db.execute('''INSERT INTO pp_purchase_finance
+                (purchase_group_id,merchant_id,provider_mode,amount) VALUES(?,'MTEST','mock',10000)''',
+                (self.f.group,))
+            self.ledger.db.execute('''INSERT INTO pp_payment_attempts
+                (attempt_id,purchase_group_id,ordinal,provider_order_id,create_phase)
+                VALUES(?,?,1,?,'UNKNOWN')''', (attempt, self.f.group, order))
+        pf.provider.create_qris(order, 10000)
+        pf.provider.state(order, 'settlement')
+        paid = pf.service.reconcile_all(self.f.group, 'PB001', force=True)
+        self.assertTrue(paid['paid_verified'])
+        self.f.ticket.prepare(self.f.lease)
+        self.assertIsNone(pf.fixture.row()['offered_at'])
+        self.assertEqual(0, self.ledger.db.execute(
+            "SELECT count(*) FROM pp_events WHERE event='CCP_OFFERED'").fetchone()[0])
+        self.assertEqual('PAID_OWED_REMEDY', self.assess())
+        self.assertEqual(1, pf.provider.charges)
+        self.assertEqual(1, len(paid['attempts']))
+
+    def test_submitted_receipt_without_screen_is_remedy_not_customer_loss(self):
+        self.f.paid()
+        self.f.ticket.prepare(self.f.lease)
+        with self.ledger.write():
+            for state in ('SENDING', 'SUBMITTED'):
+                self.ledger.db.execute('UPDATE pp_ticket_presentations SET receipt_state=?', (state,))
+        self.assertEqual('PAID_OWED_REMEDY', self.assess())
+        self.assertEqual(('NOT_OFFERED', 'SUBMITTED'), tuple(self.f.row()[k]
+            for k in ('screen_state', 'receipt_state')))
+
+    def test_genuine_original_offers_allow_only_narrow_loss_policy(self):
+        offer = self.offered_ticket(dismiss=False)
+        self.assertEqual('PAID_OWED_REMEDY', self.assess())
+        self.f.ticket.dismiss(self.f.lease, offer)
+        self.assertEqual('NO_AUTO_REFUND_PROOF_LOST', self.assess())
+
+    def test_offer_timestamp_without_original_event_is_not_genuine_evidence(self):
+        self.offered_ticket()
+        with self.ledger.write():
+            self.ledger.db.execute("DELETE FROM pp_events WHERE event='TICKET_QR_VISIBLE'")
+        self.assertEqual('PAID_OWED_REMEDY', self.assess())
+
+    def test_foreign_payment_facts_cannot_use_original_offer_journal(self):
+        self.offered_ticket()
+        e = self.evidence()
+        for wrong in (replace(e, purchase_group_id='0'*32),
+                      replace(e, merchant_id='FOREIGN'),
+                      replace(e, original=replace(e.original, provider_ref='foreign'))):
+            with self.subTest(field=wrong.merchant_id):
+                self.assertEqual('REVIEW_REQUIRED', self.assess(wrong))
+
+    def test_independent_service_failure_never_hidden_by_genuine_proof_loss(self):
+        self.offered_ticket()
+        self.assertEqual('REVIEW_REQUIRED', self.assess(replace(
+            self.evidence(), service_irrecoverable=True)))
 
 
 if __name__ == '__main__':unittest.main()
