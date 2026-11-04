@@ -208,28 +208,42 @@ class OriginalCCPService:
         """Hash verifier only, no decrypt/media/payment/booth-release authority."""
         identifier(purchase_group_id)
         identifier(booth_id)
+        with self.ledger.write():
+            proof = self._verify_locked(purchase_group_id, booth_id, payload)
+        # Keep denied-attempt accounting committed before reporting rejection.
+        if proof is None:
+            raise PermissionError('Original Checkout Claim Proof required')
+        return proof
+
+    def _verify_locked(self, purchase_group_id, booth_id, payload):
+        """Trusted atomic claim recheck; caller owns the ledger transaction.
+
+        Provider I/O may outlive a proof or race revocation. Reuse the exact
+        verifier inside occupancy acquisition, without opening a nested write.
+        """
+        if not self.ledger.db.in_transaction:
+            raise RuntimeError('Original claim verification requires a ledger transaction')
         allowed = False
         scope = None
-        with self.ledger.write():
-            row = self.ledger.db.execute(f'SELECT * FROM {self._table} WHERE purchase_group_id=?',
-                                          (purchase_group_id,)).fetchone()
-            now = self._now()
-            if row:
-                window, attempts = row['window_at'], row['attempts']
-                if now-window >= self.policy.window_seconds:
-                    window, attempts = now, 0
-                shape = (isinstance(payload, str) and len(payload) <= 256 and
-                         re.fullmatch(r'MEONG:'+re.escape(self.KIND)+r':1:[A-Za-z0-9_-]{1,64}:[a-f0-9]{32}:[A-Za-z0-9_-]{43}', payload))
-                candidate = self._verifier(row['scope_json'], payload) if shape else '0'*64
-                allowed = (row['booth_id'] == booth_id and row['merchant_id'] == self.merchant_id
-                    and not row['revoked'] and row['issued_at'] <= now < row['expires_at']
-                    and window <= now and attempts < self.policy.max_attempts
-                    and hmac.compare_digest(row['verifier'], candidate))
-                self.ledger.db.execute(f'UPDATE {self._table} SET attempts=?,window_at=? WHERE purchase_group_id=?',
-                    (attempts if allowed else attempts+1, window, purchase_group_id))
-                if allowed: scope = json.loads(row['scope_json'])
+        row = self.ledger.db.execute(f'SELECT * FROM {self._table} WHERE purchase_group_id=?',
+                                      (purchase_group_id,)).fetchone()
+        now = self._now()
+        if row:
+            window, attempts = row['window_at'], row['attempts']
+            if now-window >= self.policy.window_seconds:
+                window, attempts = now, 0
+            shape = (isinstance(payload, str) and len(payload) <= 256 and
+                     re.fullmatch(r'MEONG:'+re.escape(self.KIND)+r':1:[A-Za-z0-9_-]{1,64}:[a-f0-9]{32}:[A-Za-z0-9_-]{43}', payload))
+            candidate = self._verifier(row['scope_json'], payload) if shape else '0'*64
+            allowed = (row['booth_id'] == booth_id and row['merchant_id'] == self.merchant_id
+                and not row['revoked'] and row['issued_at'] <= now < row['expires_at']
+                and window <= now and attempts < self.policy.max_attempts
+                and hmac.compare_digest(row['verifier'], candidate))
+            self.ledger.db.execute(f'UPDATE {self._table} SET attempts=?,window_at=? WHERE purchase_group_id=?',
+                (attempts if allowed else attempts+1, window, purchase_group_id))
+            if allowed: scope = json.loads(row['scope_json'])
         if not allowed:
-            raise PermissionError('Original Checkout Claim Proof required')
+            return None
         return self.VERIFIED_TYPE(purchase_group_id, booth_id, scope['draft_id'])
 
     def revoke(self, lease):

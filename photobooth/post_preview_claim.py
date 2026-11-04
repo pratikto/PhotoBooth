@@ -35,11 +35,12 @@ class OriginalMockClaim:
         if not isinstance(payload,str):
             raise PermissionError('Exact original private CCP or Recovery Ticket is required')
         if payload.startswith('MEONG:CCP:1:'):
-            proof=self.ccp.verify(purchase_group_id,booth_id,payload)
+            verifier=self.ccp
         elif payload.startswith('MEONG:RECOVERY:1:'):
-            proof=self.ticket.verify(purchase_group_id,booth_id,payload)
+            verifier=self.ticket
         else:
             raise PermissionError('Customer claim QR has the wrong identity role')
+        proof=verifier.verify(purchase_group_id,booth_id,payload)
         # A verified QR alone is not settlement. A fresh independently signed
         # provider GET is mandatory after the original private proof.
         observed=self.payments.reconcile_all(purchase_group_id,booth_id,force=True)
@@ -58,6 +59,11 @@ class OriginalMockClaim:
                 or confirmed['entitlement_id']!=observed['entitlement_id']):
             raise DraftHeld('Fresh exact original settlement cannot be verified')
         with self.ledger.write():
+            # No provider I/O or transaction gap between current proof validity
+            # and the original booth's occupancy compare-and-swap below.
+            current_proof=verifier._verify_locked(purchase_group_id,booth_id,payload)
+            if current_proof is None or current_proof!=proof:
+                raise PermissionError('Original Checkout Claim Proof required')
             intent,finance=self.payments._group(purchase_group_id,booth_id)
             if (proof.draft_id!=intent['draft_id'] or finance['review_required']
                     or finance['entitlement_id']!=confirmed['entitlement_id']):

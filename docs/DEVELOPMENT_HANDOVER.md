@@ -1,5 +1,7 @@
 # Meong Photobooth — GUI v2 development handover
 
+> [5 November continuation: BUG-040 local 81 PASS; next independent-process vault evidence, then exact-source CI. Keep synthetic readiness and all provider/device gates separate.](qa/portrait-v2-sandbox/PP07-CONTINUATION-2026-11-05.md)
+
 ## Final 4 November 2026 — current synthetic device candidate verified
 
 **CI source 0601354 / [41826366906](https://github.com/pratikto/PhotoBooth/actions/runs/41826366906):

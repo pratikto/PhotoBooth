@@ -1,5 +1,7 @@
 # Post-preview QRIS implementation checkpoint
 
+> [5 November continuation: BUG-040 fixes proof expiry/revocation during provider I/O with atomic original-claim admission; 81 focused local PASS, current CI pending.](PP07-CONTINUATION-2026-11-05.md)
+
 > **Current post-preview continuation — 4 November 2026:** Work stays on existing `feature/post-preview-qris-checkout`. Start with the [current device guide](POST-PREVIEW-DEVICE-TEST-START-HERE.md), [source-specific evidence and known limits](PP07-DEVICE-READINESS-2026-11-04.md), and [112-case / AR traceability](PP07-SOFTWARE-TRACEABILITY-2026-11-04.md). The later implementation and evidence record takes precedence over older status snapshots below; approved policy and dated history remain preserved. The owner pilot uses synthetic payment. Actual merchant Sandbox, protected cross-process recovery, physical acceptance and production are separate gates. No prior test root, uncertain print or PAID/OWED may be reset to bypass them.
 
 ## 2 November 2026 — Broad campaign N21–N24 and P01–P02 source-specific evidence

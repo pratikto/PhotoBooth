@@ -1,5 +1,19 @@
 # Meong Photobooth — Bug register
 
+## BUG-040 — Claim accepted proof invalidated during provider settlement checks (5 November 2026)
+
+**Severity:** S0 protected-session authorization. **Status:** SOURCE FIXED /
+AUTOMATED_VERIFIED locally; exact-source CI pending, owner physical UAT NOT_RUN.
+
+The original CCP or Recovery Ticket could expire or be revoked during the last
+provider GET, yet its stale initial verdict still reacquired old occupancy.
+Four connected tests originally FAIL. Shared current-proof verification now
+runs in the same SQLite transaction as original lease acquisition, after every
+provider call. The 81-case affected suite PASS with no failures/errors/skips;
+original PAID/OWED, rate-limit behavior, B ownership and no-print/no-charge guards
+remain. No actual merchant or persistent pilot restore is enabled.
+[Reproduction, flow, evidence and next action](qa/portrait-v2-sandbox/PP07-CONTINUATION-2026-11-05.md).
+
 > **4 November final automated evidence:** BUG-036–039 are source-fixed and
 > verified in matching-source [CI 41826366906](https://github.com/pratikto/PhotoBooth/actions/runs/41826366906)
 > at `0601354`: 533 Windows + 533 Ubuntu + 61 native PASS, all jobs SUCCESS,
