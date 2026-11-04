@@ -10,6 +10,41 @@ Starting/current tested source: `9ae4ec1874c43c56325bf4254679e7feaca2ba77`.
 Original attached local `work` branch/index remains untouched. Exact-source
 snapshot and external Git index retain the already verified delivery procedure.
 
+## Phase 3 — BUG-042 conflicting proof-loss classification repaired
+
+**BUG-041 push verified:** `7ad68eea14b269c307284aa95538f548111c7ee0`.
+The untouched broad baseline on source 273cd80 completed **1,741 PASS,
+0 failures/errors/skips, 465.436s**, with GUI/audio/video and all native public
+model checks enabled. That pre-fix suite lacked the newly discovered seams;
+its success is not proof that BUG-041 or BUG-042 was absent. Full verification
+of the repaired sources is still pending.
+
+**BUG-042 reproduction:** valid immutable assessment facts can carry
+`reason=PROOF_LOST_ONLY` together with an independently irrecoverable service or
+a distinct verified excess settlement. The nonbinding classifier incorrectly
+returned `NO_AUTO_REFUND_PROOF_LOST`, hiding the independent issue behind loss
+of proof. Two new regression methods initially FAIL (12 run: 10 PASS, 2 FAIL,
+zero errors/skips). These tests assert RF-D07/21 and PP-089/097 behavior, not
+actual merchant API capability.
+
+The classifier now returns `REVIEW_REQUIRED`, no candidates and
+`can_issue_refund=False` when that reason contradicts irreversible-service or
+excess-settlement facts. Genuine proof loss alone retains its existing
+`NO_AUTO_REFUND_PROOF_LOST` policy. No payout, refund intent, new transaction,
+private-media grant, debt erasure or occupancy release is introduced.
+
+**Focused corrected regression:** refund assessment + payments + original claim
+**64 PASS, zero failures/errors/skips, 8.750s**, including both new cases.
+
+```text
+python tools/run_kiosk_unittests.py test_post_preview_refund_assessment test_post_preview_payments test_post_preview_claim
+```
+
+**Next:** run the complete all-opt-in suite on this source (expected count must
+be measured), classify all 112 PP rows without confusing software partial
+assertions with full acceptance, and inspect the final Windows/Ubuntu/native
+CI. The current campaign remains IN PROGRESS; owner hardware UAT stays deferred.
+
 ## Phase 2 — BUG-041 reproduced and repaired; campaign still IN PROGRESS
 
 **Phase 1 push verified:** `273cd802c7b930515a34a41c029111a3080e9184`.

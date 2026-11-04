@@ -113,6 +113,11 @@ def assess_refund(evidence):
     if e.fulfillment=='REVIEW':
         return RefundAssessment('REVIEW_REQUIRED',())
     if e.reason=='PROOF_LOST_ONLY':
+        # Lost proof is not the sole issue when independent service failure or
+        # excess settlement evidence exists. Do not hide those remedies behind
+        # the proof-loss label, or infer a payout from contradictory facts.
+        if e.service_irrecoverable or e.excess:
+            return RefundAssessment('REVIEW_REQUIRED',())
         return RefundAssessment('NO_AUTO_REFUND_PROOF_LOST',())
     if e.reason=='TEMPORARY_SERVICE_OUTAGE':
         return RefundAssessment('WAIT_RECOVERY',())

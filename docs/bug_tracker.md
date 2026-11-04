@@ -1,5 +1,20 @@
 # Meong Photobooth — Bug register
 
+## BUG-042 — Proof-loss label masked independent merchant/financial failure evidence (5 November 2026)
+
+**Severity:** S1 nonbinding policy classification. **Status:** SOURCE FIXED /
+focused AUTOMATED_VERIFIED locally; full repaired-source simulation and CI
+pending. Refund API remains disabled; no actual funds changed.
+
+The classifier accepted PROOF_LOST_ONLY alongside an independently irrecoverable
+service or verified excess settlement and returned NO_AUTO_REFUND_PROOF_LOST.
+That contradicts RF-D07: proof loss cannot hide independent merchant failure.
+Both combinations now require review, with no candidates or refund authority;
+sole proof loss retains the approved no-automatic-refund rule. Two new tests
+initially FAIL; corrected refund/payment/claim scope 64 PASS, no failures/errors/
+skips.
+[Reproduction, exact evidence and remaining campaign](qa/portrait-v2-sandbox/PP07-END-TO-END-SIMULATION-2026-11-05.md).
+
 ## BUG-041 — DEMO game win advertised a different post-preview gallery price (5 November 2026)
 
 **Severity:** S1 customer quote consistency. **Status:** SOURCE FIXED / focused

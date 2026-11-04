@@ -1,6 +1,6 @@
 # Repository working instructions
 
-> **5 November full simulation campaign IN PROGRESS:** [phase 1 evidence and exact next step](docs/qa/portrait-v2-sandbox/PP07-END-TO-END-SIMULATION-2026-11-05.md): phase 1 51 PASS; BUG-041 DEMO/gallery price mismatch repaired with N27 plus 16 existing checks PASS. Full all-opt-in simulation and matching-source CI still pending; owner UAT remains deferred.
+> **5 November full simulation campaign IN PROGRESS:** [phase 1 evidence and exact next step](docs/qa/portrait-v2-sandbox/PP07-END-TO-END-SIMULATION-2026-11-05.md): baseline all-opt-in 1,741 PASS; BUG-041 price seam and BUG-042 conflicting proof-loss classification repaired with focused PASS. Final repaired-source full simulation/CI pending; owner UAT remains deferred.
 
 > [Latest continuation — 5 November: BUG-040 and eleven new methods verified at c20479d, CI 41901827925 all 3 SUCCESS (544 Windows/544 Ubuntu/61 native). Read the exact next task and separate integration/device gates first.](docs/qa/portrait-v2-sandbox/PP07-CONTINUATION-2026-11-05.md)
 

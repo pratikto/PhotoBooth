@@ -36,6 +36,20 @@ class RefundAssessmentTests(unittest.TestCase):
             self.e,reason='TEMPORARY_SERVICE_OUTAGE',
             service_irrecoverable=False)).disposition)
 
+    def test_lost_proof_cannot_mask_independent_irrecoverable_service_failure(self):
+        decision=assess_refund(replace(self.e,reason='PROOF_LOST_ONLY'))
+        self.assertEqual('REVIEW_REQUIRED',decision.disposition)
+        self.assertEqual((),decision.candidates)
+        self.assertFalse(decision.can_issue_refund)
+
+    def test_lost_proof_cannot_mask_distinct_verified_excess_settlement(self):
+        extra=VerifiedPaidAttempt('b'*32,'sandbox-provider-2','MTEST',15000,True)
+        decision=assess_refund(replace(self.e,reason='PROOF_LOST_ONLY',
+            service_irrecoverable=False,excess=(extra,)))
+        self.assertEqual('REVIEW_REQUIRED',decision.disposition)
+        self.assertEqual((),decision.candidates)
+        self.assertFalse(decision.can_issue_refund)
+
     def test_printer_submission_or_uncertain_physical_paper_blocks_full_refund(self):
         for name in ('SUBMITTED','UNCERTAIN','PHYSICAL_VERIFIED'):
             with self.subTest(name=name):
