@@ -24,7 +24,8 @@
       "pydantic": "2.13.5",
       "httpx": "0.28.1",
       "requests": "2.32.5"
-    }
+    },
+    "node": "24.19.0"
   },
   "runs": [
     {
@@ -265,7 +266,65 @@
         "PP-083"
       ],
       "scope": "Complete native checkout widget module; explicit original retry, same attempt after lost reply, preserved no QR4",
-      "artifact_sha256": "39d30544d166d4097de633b3772bdcbdc1233033a6c748bf57d6172c2ea83438"
+      "artifact_sha256": "39d30544d166d4097de633b3772bdcbdc1233033a6c748bf57d6172c2ea83438",
+      "tested_sha": "fec4f7f9d3169d1421a704813d83355bee12f4d1"
+    },
+    {
+      "run_id": "PP07-R1-J-452x900",
+      "tested_sha": "fec4f7f9d3169d1421a704813d83355bee12f4d1",
+      "result": "PASS",
+      "observations": {
+        "charges": 1,
+        "clock": "REAL_MONOTONIC",
+        "countdowns_started": 8,
+        "last_phase": "paid_delivery",
+        "layout": "452x900",
+        "mode": "SYNTHETIC_ONLY",
+        "obligation": "OWED",
+        "physical_paper_verified": false,
+        "preview_amount": 25000,
+        "print_copies": [
+          2,
+          1
+        ],
+        "private_jpegs": 8,
+        "receipts": 1,
+        "retakes_requested": 2,
+        "seconds": 94.168,
+        "state": "PASS",
+        "ticket_auto_dismissed": true,
+        "ticket_visible_seconds": 30.031,
+        "ticket_wiped_while_receipt_inflight": true
+      },
+      "artifact_sha256": "7528a961ce1fc6c0e91f2d3916cf14a82577e406d57d367f8052a22979a2fee5"
+    },
+    {
+      "run_id": "PP07-R1-J-800x1280",
+      "tested_sha": "fec4f7f9d3169d1421a704813d83355bee12f4d1",
+      "result": "PASS",
+      "observations": {
+        "charges": 1,
+        "clock": "REAL_MONOTONIC",
+        "countdowns_started": 8,
+        "last_phase": "paid_delivery",
+        "layout": "800x1280",
+        "mode": "SYNTHETIC_ONLY",
+        "obligation": "OWED",
+        "physical_paper_verified": false,
+        "preview_amount": 25000,
+        "print_copies": [
+          2,
+          1
+        ],
+        "private_jpegs": 8,
+        "receipts": 1,
+        "retakes_requested": 2,
+        "seconds": 79.731,
+        "state": "PASS",
+        "ticket_auto_dismissed": true,
+        "ticket_visible_seconds": 30.024
+      },
+      "artifact_sha256": "5dc41218e1a00490120368d4badebc83809ccd61e0983f03f5db073f5fec46fd"
     }
   ],
   "environment_failures": [
@@ -344,7 +403,7 @@
       "definition": "release controls"
     }
   ],
-  "next": "Push BUG-044; complete new exact-source native/backend CI, actual-time final replay and one final broad regression without competing local probes. Preserve earlier ERROR and superseded run.",
+  "next": "Finish active fec4f7f full regression and CI 41927170321; preserve old failed/cancelled runs. Then publish final case-method register and exact continuation; no large new tasks.",
   "raw_artifacts": "task scratch only, not committed; hashes and allowlisted observations preserved",
   "delivery": [
     {
@@ -501,6 +560,56 @@
         "charges": 0,
         "guard_message": "Fresh independent readiness is not established"
       }
+    }
+  ],
+  "active_verification": {
+    "full_run": {
+      "tested_sha": "fec4f7f9d3169d1421a704813d83355bee12f4d1",
+      "started_at": "2026-11-05T05:43:59.442601+07:00",
+      "profile": "GUI/audio/video opt-in; model assets unavailable; no competing local probes/replays",
+      "status": "RUNNING_NO_RESULT",
+      "session": 72311,
+      "process": 18784,
+      "report": "current task scratch: full-final-report.txt"
+    },
+    "ci": {
+      "id": 41927170321,
+      "tested_sha": "fec4f7f9d3169d1421a704813d83355bee12f4d1",
+      "ubuntu": {
+        "result": "PASS",
+        "run": 557,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "seconds": 172.505
+      },
+      "native": {
+        "result": "PASS",
+        "run": 67,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "seconds": 112.044
+      },
+      "windows": "PENDING"
+    }
+  },
+  "superseded_ci": [
+    {
+      "id": 41919614265,
+      "sha": "808a8dc28ce8907a277f21902b4e5031186bd3f2",
+      "result": "CANCELLED_NOT_PASS_OR_PRODUCT_FAIL"
+    },
+    {
+      "id": 41920361280,
+      "sha": "07b8664b91443f37fbc6f72db88247e2d94c11bd",
+      "result": "CANCELLED_NOT_PASS_OR_PRODUCT_FAIL"
+    },
+    {
+      "id": 41924955940,
+      "sha": "2ac2380e53e7738de59220f756bd46770565535a",
+      "result": "CANCELLED_NOT_PASS_OR_PRODUCT_FAIL",
+      "partial_completed_jobs": "Ubuntu 557/native 65 PASS; Windows incomplete, no 3/3 claim"
     }
   ]
 }

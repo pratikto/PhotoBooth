@@ -269,6 +269,22 @@ because a runtime repair now requires final-source verification. It is neither
 PASS nor product FAIL. Final runtime/test CI and broad replay must use the new
 BUG-044 source; earlier source-specific successful evidence remains historical.
 
+## Increment J — final-source replays and verification in progress
+
+BUG-044 was immediately pushed and remote-verified at
+`fec4f7f9d3169d1421a704813d83355bee12f4d1`. Final-source actual-monotonic replays:
+452x900 with held receipt **PASS / 94.168s**, ticket visible **30.031s** and
+wiped before the 45s virtual receipt returns; 800x1280 **PASS / 79.731s**, ticket
+visible **30.024s**. Each preserves eight real countdowns, one charge/receipt,
+2+1 strips, OWED and no physical-paper claim.
+
+[CI 41927170321](https://github.com/pratikto/PhotoBooth/actions/runs/41927170321)
+at fec4f7f has completed Ubuntu **557 PASS** and native **67 PASS**; logs inspected,
+zero failures/errors/skips. Windows pending. The broad local GUI/audio/video
+run at the same source started 05:43:59 Asia/Jakarta and is still RUNNING.
+No full result or 3/3 CI is claimed yet. Follow the
+[exact active verification checkpoint](PP07-R1-CONTINUATION-2026-11-05.md).
+
 ## Remaining execution and external gates
 
 Next: independent-process crash/handoff barriers; virtual receipt/strip/Drive races; final native complete

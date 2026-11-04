@@ -1,5 +1,47 @@
 # R1 durable continuation — 5 November 2026 (Asia/Jakarta)
 
+## Latest checkpoint — BUG-044 source fec4f7f supersedes the active-job notes below
+
+Last remote independently verified:
+`fec4f7f9d3169d1421a704813d83355bee12f4d1`.
+BUG-044 native recovery action is repaired: two initial FAIL, complete checkout
+widget module 17 PASS. An explicit original retry recovers an unsent checkout;
+the existing backend never repeats SENT/UNKNOWN POST and QR3 cannot offer QR4.
+Runtime/test source is now **fec4f7f**, not 36ec0cc/2ac2380.
+
+Final source-matched actual-time replays both PASS: 452x900 **30.031s** visibility
+while a 45s virtual receipt remains in flight (94.168s total); 800x1280
+**30.024s** visibility (79.731s total). Both retain one charge/receipt, 2+1 copies
+and OWED/no physical paper claim. No competing probes/replays run during the
+final broad regression.
+
+**First unfinished action:** finish full source **fec4f7f** verification.
+[CI 41927170321](https://github.com/pratikto/PhotoBooth/actions/runs/41927170321):
+completed log inspection confirms Ubuntu **557 PASS** / native **67 PASS**,
+zero failures/errors/skips; Windows still pending. No 3/3 claim yet.
+The local final broad run began **2026-11-05 05:43:59 Asia/Jakarta**, current
+shell session **72311**, process **18784**, same selected task venv/checkout.
+Read `full-final-r1.log` and `full-final-report.txt` under current task scratch.
+No summary means no result. Exact next command in this environment:
+
+```bash
+tail -30 /workspace/work/pp07-evidence/full-final-r1.log
+```
+
+The earlier local 2ac2380 retest was **SUPERSEDED/CANCELLED** without a summary;
+its CI 41924955940 was cancelled by this necessary runtime push. Neither is
+PASS nor product failure. Keep the first 1,757-run ERROR and all controlled
+diagnostics in history. The 16 new methods across R1 do not represent 16 full
+acceptance cases. All owner/device/provider/refund/legal gates remain separate.
+Do not start another large feature until this verification is recorded/pushed.
+
+The dated checkpoint below remains historical. Current environment session IDs
+and scratch paths are not portable; if absent, use the committed source and
+source-specific CI before reconstructing an unfinished run. Local-only raw logs,
+venv and PNGs remain uncommitted; source/tests and sanitized evidence are remote.
+
+---
+
 **IN PROGRESS; do not infer a complete local PASS.**
 Authorized existing branch: `feature/post-preview-qris-checkout`.
 Last independently verified remote before this documentation checkpoint:
