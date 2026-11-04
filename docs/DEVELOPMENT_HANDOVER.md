@@ -1,5 +1,7 @@
 # Meong Photobooth — GUI v2 development handover
 
+> **Current R1 verification checkpoint:** [exact unfinished retest, pushed source and blockers](qa/portrait-v2-sandbox/PP07-R1-CONTINUATION-2026-11-05.md). 2ac2380 test-fixture repair is pushed; first broad run retained 1 ERROR/3 model SKIP. New broad retest and CI 41924955940 are pending. Do not report full local PASS from the older successful 36ec0cc CI.
+
 > **5 November R1 execution IN PROGRESS:** [BUG-043 connected native proof-visibility repair and versioned 188-case register](qa/portrait-v2-sandbox/PP07-EXECUTION-CAMPAIGN-R1-2026-11-05.md). Two initial failures; corrected focused scope 68 PASS, zero failures/errors/skips. Full acceptance and final new-source regression/CI remain separate; owner testing has not been requested.
 
 > **Cross-account Codex continuation:** [complete test execution prompt](qa/portrait-v2-sandbox/PP07-CODEX-TEST-EXECUTION-PROMPT-2026-11-05.md) carries repository/branch verification, all case inventories, execution/repair waves, safety boundaries, evidence rules and immediate verified pushes. This prompt publication is documentation only; no new case execution is claimed.
