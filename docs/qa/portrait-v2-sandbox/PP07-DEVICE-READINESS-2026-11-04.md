@@ -76,6 +76,66 @@ Restricted socket access initially stalled the in-process HTTP test client;
 that run was stopped and repeated with local socket support. Neither that
 infrastructure stall nor an initially omitted snapshot asset is a product bug.
 
+## Increment 2 — BUG-037: exact isolation ACK permits the next checkout
+
+**Requirements:** PP-059/063/064/069/071, PP-D18 and retained AR/UAH safe
+ownership requirements. Acknowledged resource release and historical money/OWED
+are independent axes; an archived purchase must not be deleted to admit B.
+
+**Reproduction:** `OriginalWorkerReadiness` rejected any earlier post-preview
+finance row for the booth. PP-06 could correctly isolate A, ACK and admit B to
+capture, yet B's actual authenticated `/begin` always entered payment hold.
+This occurred both after a verified cancelled-unpaid A and after safely
+isolated PAID/OWED A. Prior N23 stopped at B's camera frame, missing this boundary.
+
+**Minimal change:** observe all prior checkout drafts read-only. Each must be
+closed/ISOLATED, with an ACK for its exact booth/draft and immediately preceding
+generation, finite ordered PREPARE/ACK timestamps not in the future, no current
+financial-review flag, no PENDING/UNKNOWN/nonterminal attempt and no original
+receipt/strip SENDING/UNCERTAIN. Public Ads, a closed flag alone, an older
+generation ACK, missing ACK or incomplete timestamp cannot satisfy readiness.
+All existing current owner/worker, authenticated request, legacy release,
+camera/media/Drive/printer checks remain. No payment/service/proof row is removed
+or rewritten by this probe, and A's original claim and OWED remain intact.
+
+**New verification:** seven backend integration cases cover paid A and terminal
+unpaid A followed by B's actual HTTP checkout, plus wrong-generation, missing,
+incomplete/future ACK and financial-conflict denials. Before the source fix,
+the two legitimate handoffs fail READY; afterward all seven pass. Tests assert
+the probe makes no ledger mutations, there are exactly two legitimate purchase
+creates, no duplicate old receipt, and old financial views/OWED stay unchanged.
+
+Native N25 now completes B's six captures, final preview, CCP and actual mock
+payment admission after A's original ticket and safe isolation. It asserts a
+new immutable group, two total charges (one per customer), exactly one old
+receipt, no old Recovery Ticket in B's UI and A's preserved OWED.
+
+| Executed check | Result | Scope |
+| --- | --- | --- |
+| Initial five handoff cases before fix | 2 FAIL, 3 PASS | Valid paid/unpaid safe handoffs incorrectly denied |
+| Authority/isolation/claim/readiness/checkout-worker regression | 89 PASS, 0 failure/error/skip | Includes seven new handoff cases and original guards |
+| Native N25 actual A→B checkout | 1 PASS, 0 failure/error/skip | Real Kivy/HTTP/SQLite with synthetic provider/camera/receipt |
+| Increment-1 affected native/legacy regression | 59 PASS, 0 failure/error/skip | Before N25 addition; source-specific result |
+| Baseline backend at original 4b1c12ac | 522 PASS, 0 failure/error/skip | Previous source; not a final new-source claim |
+| New source matching CI | PENDING until inspected | No Windows result inferred from local Linux |
+
+```mermaid
+flowchart TD
+    A[Original A privacy-retired] --> Q{Workers and financial/print outcomes safe?}
+    Q -->|No| HOLD[ADS_PROTECTED; no B charge]
+    Q -->|Yes| PREP[Persist exact original PREPARE]
+    PREP --> ACK[Recheck and persist original ACK; archive A]
+    ACK --> B[Admit B and capture B designs]
+    B --> READY{Fresh current readiness and all prior exact ACKs valid?}
+    READY -->|No or uncertainty| HOLD
+    READY -->|Yes| PAY[Create B's own original payment attempt]
+    PAY --> KEEP[A original PAID/OWED, proofs and media remain recoverable]
+```
+
+This does not make an old receipt SUBMITTED physical paper proof, forgive a
+review/uncertain job, start real merchant payments, refund A, or authorize
+proof-free access. Actual device/merchant/Drive/vault acceptance remains separate.
+
 ## Current readiness and next action
 
 The prior 522/522/58 CI at `238012f7` remains historical source-specific evidence.

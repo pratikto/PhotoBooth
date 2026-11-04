@@ -99,4 +99,123 @@ class OriginalAuthorityTests(unittest.TestCase):
         self.assertEqual(0, self.fixture.provider.charges)
 
 
+class HandoffChargeAuthorityTests(unittest.TestCase):
+    """PP-063/064: actual second checkout after exact original isolation ACK."""
+    final=worker_fixtures.PrivateCheckoutWorkerTests.final
+    freeze=worker_fixtures.PrivateCheckoutWorkerTests.freeze
+    ready=worker_fixtures.PrivateCheckoutWorkerTests.ready
+
+    def setUp(self):
+        import numpy as np
+        from photobooth.post_preview_isolation import OriginalMockIsolation
+        self.temp=TemporaryDirectory(); self.addCleanup(self.temp.cleanup)
+        self.fixture=CheckoutFixture(Path(self.temp.name))
+        self.addCleanup(self.fixture.close)
+        self.fixture.enable_paid_ticket()
+        self.service=self.fixture.service
+        self.frame=np.zeros((32,48,3),dtype=np.uint8)
+        self.isolation=OriginalMockIsolation(
+            self.service.ledger,self.fixture.backend,self.fixture.jobs,
+            self.fixture.launch_lease,printer_lane=self.service._receipt_lane,
+            allow_incomplete_fixture=True)
+
+    def next_checkout(self, *, paid):
+        first=self.ready()
+        old=self.service.lease
+        group=self.service.group
+        if paid:
+            order=first['payment']['attempts'][0]['provider_order_id']
+            self.fixture.provider.state(order,'settlement')
+            self.service.check_payment('connectivity')
+            offer=self.service.prepare_ticket()['ticket_offer']
+            self.service.ticket_visible(offer)
+            self.service.ticket_send_receipt()
+            self.service.ticket_dismiss()
+        self.service.retire('APP_SUSPENDED' if paid else 'USER_CANCEL')
+        op=self.isolation.prepare('PB001')
+        self.isolation.acknowledge('PB001',op)
+        self.service.reset_after_acked_isolation(op)
+        original=dict(self.fixture.backend.inspect(group,'PB001'))
+        view=self.freeze()
+        self.service.ccp_visible(view['ccp_offer'])
+        contract=self.service.ledger.db.execute(
+            'SELECT contract_sha256 FROM pp_checkout_intents WHERE purchase_group_id=?',
+            (self.service.group,)).fetchone()[0]
+        scope=ReadinessScope(self.service.group,'PB001',contract,self.service.lease.generation)
+        self.assertNotEqual(old.draft_id,self.service.lease.draft_id)
+        return old,group,op,scope,original
+
+    def test_B_can_pay_after_paid_A_is_safely_acked_without_erasing_A_owed(self):
+        old,group,op,scope,original=self.next_checkout(paid=True)
+        before=self.service.ledger.db.total_changes
+        self.assertEqual('READY',self.fixture.authority(scope).state)
+        self.assertEqual(before,self.service.ledger.db.total_changes)
+        second=self.service.begin_payment()
+        self.assertEqual('payment_pending',second['phase'])
+        self.assertEqual(2,self.fixture.provider.charges)
+        self.assertEqual(original,self.fixture.backend.inspect(group,'PB001'))
+        self.assertEqual('OWED',self.service.ledger.db.execute(
+            'SELECT status FROM pp_paid_services WHERE purchase_group_id=?',(group,)).fetchone()[0])
+        self.assertEqual(1,len(self.fixture.receipt_sizes))
+        self.assertEqual(1,self.service.ledger.db.execute(
+            "SELECT count(*) FROM pp_isolation_ops WHERE operation_id=? AND state='ACKED'",(op,)
+        ).fetchone()[0])
+        with self.assertRaises(DraftHeld):self.service.ledger.inspect(old)
+
+    def test_B_can_pay_after_verified_cancelled_A_is_safely_acked(self):
+        old,group,op,scope,original=self.next_checkout(paid=False)
+        self.assertEqual('NONE',original['obligation_state'])
+        self.assertEqual('READY',self.fixture.authority(scope).state)
+        self.assertEqual('payment_pending',self.service.begin_payment()['phase'])
+        self.assertEqual(2,self.fixture.provider.charges)
+        self.assertEqual(original,self.fixture.backend.inspect(group,'PB001'))
+        self.assertEqual([],self.fixture.receipt_sizes)
+
+    def test_generation_mismatch_after_old_ack_still_blocks_B_charge(self):
+        old,group,op,scope,original=self.next_checkout(paid=True)
+        with self.service.ledger.write():
+            self.service.ledger.db.execute(
+                'UPDATE pp_drafts SET generation=generation+1 WHERE draft_id=?',(old.draft_id,))
+        self.assertEqual('NOT_READY',self.fixture.authority(scope).state)
+        self.assertEqual('payment_hold',self.service.begin_payment()['phase'])
+        self.assertEqual(1,self.fixture.provider.charges)
+
+    def test_ack_without_completion_timestamp_is_not_a_safe_prior_release(self):
+        old,group,op,scope,original=self.next_checkout(paid=True)
+        with self.service.ledger.write():
+            self.service.ledger.db.execute(
+                'UPDATE pp_isolation_ops SET acknowledged_at=NULL WHERE operation_id=?',(op,))
+        self.assertEqual('NOT_READY',self.fixture.authority(scope).state)
+        self.assertEqual('payment_hold',self.service.begin_payment()['phase'])
+        self.assertEqual(1,self.fixture.provider.charges)
+
+    def test_financial_conflict_after_ack_still_blocks_B_charge(self):
+        old,group,op,scope,original=self.next_checkout(paid=True)
+        with self.service.ledger.write():
+            self.service.ledger.db.execute(
+                'UPDATE pp_purchase_finance SET review_required=1 WHERE purchase_group_id=?',(group,))
+        self.assertEqual('NOT_READY',self.fixture.authority(scope).state)
+        self.assertEqual('payment_hold',self.service.begin_payment()['phase'])
+        self.assertEqual(1,self.fixture.provider.charges)
+
+    def test_missing_exact_ack_still_blocks_B_charge(self):
+        old,group,op,scope,original=self.next_checkout(paid=True)
+        with self.service.ledger.write():
+            self.service.ledger.db.execute(
+                'DELETE FROM pp_isolation_ops WHERE operation_id=?',(op,))
+        self.assertEqual('NOT_READY',self.fixture.authority(scope).state)
+        self.assertEqual('payment_hold',self.service.begin_payment()['phase'])
+        self.assertEqual(1,self.fixture.provider.charges)
+
+    def test_future_ack_timestamp_still_blocks_B_charge(self):
+        old,group,op,scope,original=self.next_checkout(paid=True)
+        with self.service.ledger.write():
+            self.service.ledger.db.execute(
+                'UPDATE pp_isolation_ops SET acknowledged_at=? WHERE operation_id=?',
+                (self.service.ledger.now()+3600,op))
+        self.assertEqual('NOT_READY',self.fixture.authority(scope).state)
+        self.assertEqual('payment_hold',self.service.begin_payment()['phase'])
+        self.assertEqual(1,self.fixture.provider.charges)
+
+
 if __name__ == '__main__': unittest.main()

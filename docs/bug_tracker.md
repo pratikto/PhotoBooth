@@ -1,5 +1,24 @@
 # Meong Photobooth — Bug register
 
+## BUG-037 — Historical purchase blocked B's checkout after A's safe isolation ACK (4 November 2026)
+
+**Severity:** S1 repeated-customer checkout failure. **Status:** SOURCE FIXED;
+89 affected backend/integration checks and native A→B checkout PASS locally;
+matching-source Windows/Linux/native CI pending; device UAT NOT_RUN.
+
+The worker readiness adapter rejected any earlier PP finance row, even for a
+closed/ISOLATED visit with a valid exact-generation ACK. B could capture photos
+but could never create its own payment. Both original PAID/OWED and verified
+cancelled-unpaid A reproduce the failure. Earlier N23 covered only B capture.
+
+Readiness now requires all prior purchases to have exact current-generation
+ACKs with complete nonfuture timestamps, no finance review/nonterminal attempt
+and no uncertain original paper. The probe remains read-only; historical
+PAID/OWED, original proof/media and legacy/current-worker guards are preserved.
+Seven new backend cases include malformed/missing/stale ACK and conflict holds;
+native N25 completes B through independent payment, preserving A's OWED.
+[Full reproduction, contract mapping, flowchart and evidence](qa/portrait-v2-sandbox/PP07-DEVICE-READINESS-2026-11-04.md).
+
 ## BUG-036 — Recovery Ticket automatic timeout froze during slow receipt send (4 November 2026)
 
 **Severity:** S1 private-proof visibility/lifecycle. **Status:** SOURCE FIXED;

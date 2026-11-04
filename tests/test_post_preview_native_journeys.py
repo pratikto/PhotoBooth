@@ -241,6 +241,49 @@ class NativeCustomerJourneyMatrixTests(unittest.TestCase):
                 "SELECT count(*) FROM pp_isolation_ops WHERE state='ACKED'"
             ).fetchone()[0])
 
+    def test_n25_native_second_customer_reaches_checkout_after_safe_paid_handoff(self):
+        """Complete B's payment admission, beyond N23's first camera frame."""
+        with self.booth(paid_ticket=True,unattended=True) as (app,fixture):
+            Window.size=(452,900)
+            self.paid_ticket_screen(app,fixture)
+            old=fixture.service.lease
+            group=fixture.service.group
+            self.click(app,'LANJUT • SIMPAN TIKET')
+            self.await_phase(app,'paid_hold')
+            self.assertEqual(1,len(fixture.receipt_sizes))
+            app._sandbox_lock_customer()
+            deadline=time.monotonic()+10
+            while time.monotonic()<deadline:
+                app._poll_photos(); EventLoop.idle()
+                if app.navigation.page=='advert' and not app._photo_jobs.busy:
+                    break
+                time.sleep(.01)
+            self.assertEqual('advert',app.navigation.page)
+            self.start_B(app)
+            for _ in range(2):
+                for _ in range(3):self.shot(app)
+                app._photo_submit('compose');self.settle(app)
+                app._photo_submit('next');self.settle(app)
+            self.assertEqual('final_preview',app._photo_view['phase'])
+            self.click(app,'LANJUT CHECKOUT SIMULASI')
+            self.settle(app)
+            self.await_phase(app,'checkout_ready')
+            self.click(app,'SUDAH SIMPAN BUKTI • LANJUT SIMULASI')
+            self.settle(app)
+            self.assertEqual('payment_pending',app._photo_view['phase'])
+            self.assertEqual(2,fixture.provider.charges)
+            self.assertNotEqual(old.draft_id,fixture.service.lease.draft_id)
+            self.assertNotEqual(group,fixture.service.group)
+            self.assertEqual('OWED',fixture.service.ledger.db.execute(
+                'SELECT status FROM pp_paid_services WHERE purchase_group_id=?',(group,)
+            ).fetchone()[0])
+            self.assertEqual(1,len(fixture.receipt_sizes))
+            self.assertEqual(1,fixture.service.ledger.db.execute(
+                "SELECT count(*) FROM pp_isolation_ops WHERE draft_id=? AND state='ACKED'",
+                (old.draft_id,)).fetchone()[0])
+            self.assertFalse(any('MEONG:RECOVERY:' in getattr(w,'text','')
+                                 for w in app.stage.walk()))
+
     def start_B(self, app):
         app._choose_photo()
         self.assertEqual('tutorial', app.navigation.page)

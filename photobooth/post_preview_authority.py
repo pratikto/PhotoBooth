@@ -7,7 +7,7 @@ from contextlib import contextmanager
 from contextvars import ContextVar
 from pathlib import Path
 
-from photobooth.post_preview_readiness import CheckObservation, ReadinessScope
+from photobooth.post_preview_readiness import CheckObservation, ReadinessScope, finite_number
 from photobooth.post_preview_store import DraftHeld
 
 _authenticated_charge = ContextVar('postpay_authenticated_charge', default=None)
@@ -64,14 +64,39 @@ class OriginalWorkerReadiness:
                 if (not row or ReadinessScope(row['purchase_group_id'], lease.booth_id,
                         row['contract_sha256'], lease.generation) != scope):
                     return denied
-                # Prior PP financial/service rights cannot be silently treated
-                # as free. Later paid release must provide its own exact proof.
-                if ledger.db.execute('''SELECT 1 FROM pp_purchase_finance f
-                    JOIN pp_checkout_intents i ON i.purchase_group_id=f.purchase_group_id
-                    JOIN pp_drafts d ON d.draft_id=i.draft_id
-                    WHERE d.booth_id=? AND i.purchase_group_id!=? LIMIT 1''',
-                    (scope.booth_id, scope.purchase_group_id)).fetchone():
-                    return denied
+                # Historical money/OWED must survive a safe handoff, but its
+                # existence alone does not mean the old visit still owns the
+                # booth. Require the exact generation's completed PP-06 ACK;
+                # closed/public Ads or an ACK from a prior claim are not proof.
+                prior=ledger.db.execute('''SELECT d.*,i.purchase_group_id,f.review_required
+                    FROM pp_drafts d JOIN pp_checkout_intents i ON i.draft_id=d.draft_id
+                    LEFT JOIN pp_purchase_finance f ON f.purchase_group_id=i.purchase_group_id
+                    WHERE d.booth_id=? AND i.purchase_group_id!=?''',
+                    (scope.booth_id,scope.purchase_group_id)).fetchall()
+                for old in prior:
+                    if (not old['closed'] or old['lifecycle']!='ISOLATED'
+                            or old['review_required']):
+                        return denied
+                    receipt=ledger.db.execute('''SELECT * FROM pp_isolation_ops
+                        WHERE draft_id=? AND booth_id=? AND original_generation=?
+                        AND state='ACKED' ''',
+                        (old['draft_id'],scope.booth_id,old['generation']-1)).fetchone()
+                    if (not receipt or not finite_number(receipt['prepared_at'])
+                            or not finite_number(receipt['acknowledged_at'])
+                            or not receipt['prepared_at']<=receipt['acknowledged_at']<=stamp):
+                        return denied
+                    group=old['purchase_group_id']
+                    if ledger.db.execute('''SELECT 1 FROM pp_payment_attempts
+                        WHERE purchase_group_id=? AND payment_state NOT IN
+                        ('CANCELLED_UNPAID','EXPIRED_UNPAID','TERMINAL_UNPAID','NOT_CREATED','PAID')
+                        LIMIT 1''',(group,)).fetchone():
+                        return denied
+                    if ledger.db.execute('''SELECT 1 FROM pp_ticket_presentations
+                        WHERE purchase_group_id=? AND receipt_state IN ('SENDING','UNCERTAIN')
+                        UNION ALL SELECT 1 FROM pp_paid_strip_jobs
+                        WHERE purchase_group_id=? AND state IN ('SENDING','UNCERTAIN')
+                        LIMIT 1''',(group,group)).fetchone():
+                        return denied
             with self.legacy.lock:
                 rows = self.legacy.db.execute('SELECT * FROM checkouts WHERE booth_id=?', (scope.booth_id,)).fetchall()
                 for old in rows:

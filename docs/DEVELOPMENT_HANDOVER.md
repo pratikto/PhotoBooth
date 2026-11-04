@@ -1,5 +1,19 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 4 November 2026 — BUG-037 verified safe A→B checkout continuation
+
+BUG-036 was micro-pushed and remote-verified at `759d141`; its CI is
+[41812452346](https://github.com/pratikto/PhotoBooth/actions/runs/41812452346).
+New BUG-037 exposed an obsolete blanket worker-readiness hold on any historical
+PP finance row. B could capture after A's safe ACK but could not pay. Exact
+generation/booth/draft ACK and financial/print safety now gate historical visits,
+preserving all original PAID/OWED without blanket blocking. Seven new backend
+handoff checks and N25 complete the second checkout. Local affected regression:
+89 backend/integration PASS and N25 native PASS, no failures/errors/skips.
+Previous increment native regression: 59 PASS; original backend baseline: 522
+PASS. These are separate source scopes; current final CI/device not yet claimed.
+[Complete change/evidence record and continuation](qa/portrait-v2-sandbox/PP07-DEVICE-READINESS-2026-11-04.md).
+
 ## 4 November 2026 — Device-readiness continuation; BUG-036 ticket timer
 
 Owner-authorized implementation continues only on `feature/post-preview-qris-checkout`.
