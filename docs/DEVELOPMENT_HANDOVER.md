@@ -1,5 +1,19 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 4 November 2026 — resume at Windows CI 41826366906
+
+Published CI-budget commit `0601354`, parent documentation `6253dcf`, retains
+every test with Windows 15/Linux 10 minutes. [Run 41826366906](https://github.com/pratikto/PhotoBooth/actions/runs/41826366906)
+Ubuntu backend **533 PASS**, native **61 PASS**, logs inspected; Windows pending.
+Runtime/test source is unchanged from functional 267fc437. The two earlier
+10-minute cancellations and connector publication failures are historical, not
+the current budget. Original local `work` branch/index/working tree remain clean.
+Continue with the new source-aware [execution prompt](DEVELOPMENT_PROMPT.md),
+[device guide](qa/portrait-v2-sandbox/POST-PREVIEW-DEVICE-TEST-START-HERE.md) and
+[full report](qa/portrait-v2-sandbox/PP07-DEVICE-READINESS-2026-11-04.md).
+Exact next action: inspect current Windows job before final candidate status;
+do not repeat completed software fixes or infer physical/merchant acceptance.
+
 ## 4 November 2026 — publish bounded Windows CI budget through direct Git
 
 Documentation package micro-pushed/verified at `6253dcf`. The targeted Windows

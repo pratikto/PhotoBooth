@@ -1,5 +1,22 @@
 # PP-07 software continuation and device readiness — 4 November 2026
 
+## Current checkpoint — published CI budget at 0601354
+
+The bounded workflow change is now **pushed and remote-verified** at
+`06013545d31582b2db4ecf60384b4e2afaab98c3`, after documentation package
+`6253dcf`. [Matching-source CI 41826366906](https://github.com/pratikto/PhotoBooth/actions/runs/41826366906)
+has Ubuntu **533 PASS** and native Kivy **61 PASS** (logs inspected, no
+failure/error/skip); Windows is still pending with its actual 15-minute budget.
+All original functional fixes at 267fc437 are unchanged. Current next action is
+to inspect this new Windows job, not rerun the superseded 10-minute attempts.
+Older pending/unpublished statements below preserve the earlier delivery history.
+
+The complete device guide, PP/AR traceability and revised repository continuation
+prompt are published/prepared in the same documentation stream. The original
+`work` checkout/index/working files remain unchanged. Direct Git delivery uses
+an external temporary index, an exact verified parent and an explicit normal
+fast-forward target ref; no local/remote branch creation, switch or force push.
+
 ## Windows retry and publication follow-up
 
 The targeted retry (`126530625319`) was again cancelled at the 10-minute budget,

@@ -1,5 +1,40 @@
 # Continue Meong Photobooth GUI v2
 
+## Current post-preview continuation — 4 November 2026
+
+The current owner execution task is on **existing `feature/post-preview-qris-checkout`**. The earlier parent-branch AR/Settings prompts below are preserved historical/scoped material, not instructions to switch this task to the parent or start OPS. Read [the current source/evidence report](qa/portrait-v2-sandbox/PP07-DEVICE-READINESS-2026-11-04.md), [device guide](qa/portrait-v2-sandbox/POST-PREVIEW-DEVICE-TEST-START-HERE.md), [112-case / AR traceability](qa/portrait-v2-sandbox/PP07-SOFTWARE-TRACEABILITY-2026-11-04.md) and latest handover before selecting work.
+
+```text
+Repository: pratikto/PhotoBooth.
+Authorized existing branch: feature/post-preview-qris-checkout.
+Continue from the latest verified remote HEAD and unfinished checkpoint.
+Owner authorizes routine implementation, tests, English documentation,
+micro-commit + immediate micro-push + remote verification through device-test
+preparation. Do not create/switch branches, reset work/data, force-push, merge
+master or enable real money, refunds, cloud deletion or production.
+Read AGENTS and current PP-D/RF-D/AR/UAH contracts before code. Preserve legacy
+paid-first rights; new orders capture/review before immutable checkout.
+Keep private CCP, original 30-visible-second ticket + one concurrent receipt,
+exact paid Drive URL, uncertain-paper quarantine and safe generation ACKs.
+A stale local work checkout is not the target. Use a pinned isolated snapshot
+and explicit existing-branch writes if needed. Direct Git requires the runtime
+network permission; do not misdiagnose a sandbox socket block as a missing branch.
+Preserve unrelated checkout/index and every original PAID/OWED obligation.
+Continue actionable software work; do not repeat already verified increments.
+Report exact source, commands, executed/failed/skipped tests, CI and remaining
+mode-specific gates. Synthetic pilot is not actual merchant Sandbox or full
+cross-process protected recovery; hardware/merchant/OS-vault evidence remains
+independent. Before ending, push safe work and a precise continuation checkpoint.
+```
+
+Functional fixes were verified locally at `267fc437`; the bounded Windows CI
+budget is published at `0601354`. Check its actual CI result in the current
+report before declaring final candidate readiness. Do not reapply BUG-036–039
+or restart the old AR-00 baseline merely because older notes below say pending.
+
+## Historical parent-branch continuation prompts
+
+
 ## Current owner priority and future Settings decision — 29 October
 
 **FIRST: finish the owner-approved AR-00 → AR-13 autonomous recovery work**, continuing at the first unfinished verified substep from the [recovery checkpoint](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md), [AR roadmap](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-ROADMAP.md), real Git HEAD and current [handover](DEVELOPMENT_HANDOVER.md). The October 25 historical material below is not today's implementation order; do not redo already verified AR source or stop financial safety validation for a new menu.
@@ -103,3 +138,4 @@ secrets just for a checkpoint. No new branch or master merge."
 [P5 form](qa/portrait-v2-p5/windows-checklist.html) ·
 [operator form](qa/portrait-v2-operator-health/windows-checklist.html) ·
 [branch audit](gui-v2-branch-audit.md) · [promotion plan](gui-v2-promotion-plan.md).
+

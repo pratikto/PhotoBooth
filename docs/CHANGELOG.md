@@ -1,5 +1,19 @@
 # Meong Photobooth — changelog
 
+## 4 November 2026 — post-preview device-test continuation
+
+Authorized branch remains `feature/post-preview-qris-checkout`; no branch switch/master merge/production activation.
+
+- `759d141` — BUG-036: visible ticket countdown/automatic privacy wipe continues while original receipt sender is busy; no duplicate send.
+- `0032958` — BUG-037: B may enter its own checkout after A's exact safe-generation ACK, preserving A's PAID/OWED; missing/stale/conflicting evidence still holds.
+- `19eab10` — BUG-038: nonblocking Drive request-boundary fence permits idle daemon handoff through commit/rollback without stopping queued uploads.
+- `412bebd` / `267fc437` — BUG-039: transaction-specific synthetic folder identities; preserve the first namespaced fixture URL. J21 completes 12 paid visits, N25 completes B checkout, N26 exercises all 12 native previews at both portrait sizes.
+- `6253dcf` — comprehensive Windows/Ubuntu owner device guide, full PP/AR traceability, machine-readable executed evidence and status/documentation reconciliation.
+- `0601354` — direct-Git micro-push retains all Windows durability tests with a bounded 15-minute budget; Linux stays 10. Earlier 10-minute cancellations and failed connector workflow writes remain recorded, not relabeled PASS.
+
+At functional `267fc437`, local broad discovery ran 1,730 entries (1,653 PASS/77 opt-in SKIP, no failure/error); separate GUI/audio/video/model runs execute the original skips without failures. Corrected native 61 PASS independently. Latest matching CI and exact physical/provider/restart limits are maintained in [the current evidence report](qa/portrait-v2-sandbox/PP07-DEVICE-READINESS-2026-11-04.md) and [JSON](qa/portrait-v2-sandbox/PP07-EXECUTION-EVIDENCE-2026-11-04.json). No physical paper, merchant charge/refund, actual Drive API/upload/deletion or hardware release is implied.
+
+
 ## 31 October — BUG-028 live preparation / matching CI verified
 
 Functional52d69fd: original live STARTING retains ownership through idle/pause
@@ -1647,4 +1661,5 @@ For changes made before the documentation effort, inspect Git commits and the da
 **Verified code-level QA:** [GitHub Actions 39555036023](https://github.com/pratikto/PhotoBooth/actions/runs/39555036023) at code/test SHA **c4e4703a**: **21/21** pure tests PASS; Kivy widget smoke PASS; 12 synthetic portrait screenshots PASS at 800×1280 and 452×900; two jobs SUCCESS. An earlier CI run between gallery changes and updated assertions failed due *stale test expectation* of 1 texture; after updating test to cover 3 previews the current run succeeded. Screenshot artifacts visually inspected, including legible compact-height game introduction. No new device/hardware tests were performed.
 
 **Explicitly NOT delivered:** Real face detection, playable Meong Fly/POS struk/one-attempt backend and redeemable discount, provider QRIS, camera capture, thermal paper print and Drive delivery inside v2. Remaining P2.5 design pixel-font/animation polish plus physical Windows 10.1-inch audio/video and touch/swipe acceptance are still open; owner approval is required before master promotion.
+
 

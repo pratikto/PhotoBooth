@@ -9,7 +9,9 @@
     "0032958f019f54377db4f1bca4f94e92dea0394e",
     "19eab1011b205ad9f5f57f91efaeab3979f2df45",
     "412bebd237ab42a0c87f844a784811dcd187bd0c",
-    "267fc437e082afc581066c9408901c42669480ee"
+    "267fc437e082afc581066c9408901c42669480ee",
+    "6253dcf823ba64df36a9984a7e1141995426c9d4",
+    "06013545d31582b2db4ecf60384b4e2afaab98c3"
   ],
   "local_runs": [
     {
@@ -177,6 +179,34 @@
     "windows_minutes": 15,
     "ubuntu_minutes": 10,
     "tests_removed": false,
-    "ci": "PENDING_FOR_BUDGET_COMMIT"
+    "ci": "UBUNTU_533_NATIVE_61_PASS_WINDOWS_PENDING",
+    "published_commit": "06013545d31582b2db4ecf60384b4e2afaab98c3",
+    "branch_push_verified": true,
+    "ci_run_id": 41826366906
+  },
+  "checkpoint_parent_head": "06013545d31582b2db4ecf60384b4e2afaab98c3",
+  "current_ci": {
+    "run_id": 41826366906,
+    "source": "06013545d31582b2db4ecf60384b4e2afaab98c3",
+    "functional_code_unchanged_from": "267fc437e082afc581066c9408901c42669480ee",
+    "ubuntu_backend": {
+      "job_id": 126562005290,
+      "pass": 533,
+      "fail": 0,
+      "error": 0,
+      "skip": 0
+    },
+    "native": {
+      "job_id": 126562004694,
+      "pass": 61,
+      "fail": 0,
+      "error": 0,
+      "skip": 0
+    },
+    "windows": {
+      "job_id": 126562004957,
+      "state": "PENDING",
+      "timeout_minutes": 15
+    }
   }
 }
