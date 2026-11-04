@@ -1,5 +1,15 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 4 November 2026 — first synthetic folder namespace compatibility correction
+
+Increment 4 micro-pushed/verified at `412bebd`. Its full local backend passes
+533, but native 61-run regression found two first-URL subcase failures because
+fixture IDs include `PB001V2S2_` before the sequence. Correct the fixture's
+first-transaction comparison, preserving the original strict URL assertion.
+Focused first-folder native and complete J21 repeat regression now 2 PASS;
+corrected-source final native/CI remain required. No actual Drive/provider
+effects. [Transparent failed/fixed evidence](qa/portrait-v2-sandbox/PP07-DEVICE-READINESS-2026-11-04.md).
+
 ## 4 November 2026 — BUG-039 repeated complete paid visits and N26 preview
 
 BUG-038 micro-pushed/verified at `19eab10`. J21 then reproduced correct privacy

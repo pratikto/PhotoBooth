@@ -117,7 +117,8 @@ class CheckoutFixture:
             # correctly trips the original binder's privacy guard. Keep the
             # historical first fixture URL, then allocate stable unique fakes.
             transaction=manifest['transaction_id']
-            folder='syntheticPaidFolder123'+('' if transaction=='00000001' else '_'+transaction)
+            first=self.workspace.booth_id+'_00000001'
+            folder='syntheticPaidFolder123'+('' if transaction==first else '_'+transaction)
             return {'transaction_id':manifest['transaction_id'],
                     'folder_id':folder,
                     'folder_url':'https://drive.google.com/drive/folders/'+folder,

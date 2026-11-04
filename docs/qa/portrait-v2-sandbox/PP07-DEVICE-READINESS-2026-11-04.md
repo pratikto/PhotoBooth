@@ -238,6 +238,19 @@ CI. Full final source/CI counts must be measured, not inferred from additions.
 
 ## Current readiness and next action
 
+### Final-regression compatibility correction after increment 4
+
+At `412bebd`, the full local backend **533 PASS** (88.202s), while native
+**61 run, 2 failed portrait subcases** exposed a fixture compatibility mistake:
+the first local transaction identity is `PB001V2S2_00000001`, not bare
+`00000001`. Thus the unique-folder fix worked for repeated customers but did
+not retain the existing first URL as intended. The old strict native assertion
+was preserved. The fixture now compares the actual workspace namespace plus
+sequence. Focused first-folder native checks at both sizes plus J21 **2 PASS**
+(15.378s). This is a fixture-only correction, with no real Drive or privacy
+guard change. The failed full run remains recorded; final corrected source must
+receive its own native/full CI evidence before broad PASS is claimed.
+
 The prior 522/522/58 CI at `238012f7` remains historical source-specific evidence.
 Current full backend and affected native checks must finish and new CI must be
 inspected before claiming this new source has the same broad verification.
