@@ -90,6 +90,68 @@ class CustomerJourneyMatrixTests(unittest.TestCase):
     def jpeg_paths(self):
         return sorted(str(p) for p in self.service.root.rglob('*.jpg'))
 
+    def test_j21_twelve_paid_visits_complete_without_folder_or_payment_contamination(self):
+        """Bounded repeated complete visits, not a physical/time-based soak."""
+        import hashlib
+        from photobooth.post_preview_isolation import OriginalMockIsolation
+        self.fixture.enable_paid_ticket()
+        self.fixture.enable_paid_delivery()
+        isolation=OriginalMockIsolation(
+            self.service.ledger,self.fixture.backend,self.fixture.jobs,
+            self.fixture.launch_lease,printer_lane=self.service._receipt_lane,
+            delivery=self.fixture.paid_monitor,allow_incomplete_fixture=True)
+        groups,folders,transactions,entitlements=set(),set(),set(),set()
+        preserved={}
+        for visit in range(12):
+            self.frame.fill(visit*17)
+            quantities={'template_a':visit%3+1,'template_b':1}
+            final=self.capture_all(quantities)
+            proof=self.service.freeze_checkout(final['revision'],final['amount'])
+            self.service.ccp_visible(proof['ccp_offer'])
+            pending=self.service.begin_payment()
+            self.assertEqual('payment_pending',pending['phase'])
+            order=pending['payment']['attempts'][0]['provider_order_id']
+            self.fixture.provider.state(order,'settlement')
+            paid=self.service.check_payment('connectivity')['payment']
+            group=self.service.group
+            self.assertNotIn(group,groups);groups.add(group)
+            self.assertNotIn(paid['entitlement_id'],entitlements)
+            entitlements.add(paid['entitlement_id'])
+            offer=self.service.prepare_ticket()['ticket_offer']
+            self.service.ticket_visible(offer)
+            self.service.ticket_send_receipt()
+            self.service.ticket_dismiss()
+            delivery=self.service.prepare_paid_delivery()['delivery']
+            self.assertNotIn(delivery['folder_url'],folders)
+            folders.add(delivery['folder_url'])
+            self.assertNotIn(delivery['transaction_id'],transactions)
+            transactions.add(delivery['transaction_id'])
+            for _ in range(2):self.service.paid_print_next()
+            self.assertEqual([quantities['template_a'],1],
+                             [x[1] for x in self.fixture.paid_print_sends[-2:]])
+            self.assertEqual(2*(visit+1),len(self.fixture.paid_print_sends))
+            self.assertEqual(visit+1,len(self.fixture.receipt_sizes))
+            self.assertEqual(visit+1,self.fixture.provider.charges)
+            for path,digest in preserved.items():
+                self.assertEqual(digest,hashlib.sha256(path.read_bytes()).hexdigest())
+            for path in self.service.photos.root.rglob('*.jpg'):
+                preserved[path]=hashlib.sha256(path.read_bytes()).hexdigest()
+            self.service.retire('APP_SUSPENDED')
+            operation=isolation.prepare('PB001')
+            self.assertTrue(isolation.acknowledge('PB001',operation))
+            self.service.reset_after_acked_isolation(operation)
+            self.assertEqual('confirm',self.service.phase)
+        self.assertEqual(72,len(preserved))
+        self.assertEqual(12,len(folders))
+        self.assertEqual(12,self.service.ledger.db.execute(
+            "SELECT count(*) FROM pp_paid_services WHERE status='OWED'").fetchone()[0])
+        self.assertEqual(12,self.service.ledger.db.execute(
+            "SELECT count(*) FROM pp_isolation_ops WHERE state='ACKED'").fetchone()[0])
+        self.assertEqual(24,self.service.ledger.db.execute(
+            "SELECT count(*) FROM pp_paid_strip_jobs WHERE state='SUBMITTED'").fetchone()[0])
+        self.assertEqual(0,self.service.ledger.db.execute(
+            'SELECT count(*) FROM pp_drafts WHERE closed=0').fetchone()[0])
+
     def test_j01_all_twelve_designs_capture_36_originals_before_one_charge(self):
         quantities = {t.template_id: (i % 3) + 1 for i, t in enumerate(get_templates())}
         self.assertEqual(12, len(quantities))

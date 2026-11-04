@@ -198,6 +198,44 @@ sequenceDiagram
     end
 ```
 
+## Increment 4 — BUG-039 synthetic folder identity and complete repeat visits
+
+**Requirements:** PP-048/053/056/063/064/069 and PP-003/011/012 native preview.
+
+**Reproduction:** the default supervised synthetic pilot reused the exact
+`syntheticPaidFolder123` folder for every transaction. On the second paid visit,
+the existing folder-ownership guard correctly rejected binding that same folder
+to another transaction. This was a fixture/pilot defect, not a failed privacy
+guard or evidence of actual Google Drive reuse. The no-paper/no-cloud owner
+pilot uses this fixture, so it must support repeated visitors correctly.
+
+**Fix:** keep the first historical fixture URL for compatibility, and derive a
+stable unique non-downloadable synthetic folder ID from each later original
+transaction ID. Retry of the same transaction keeps the same identity. The
+explicit real-test Drive branch still uses the original real client unchanged;
+the folder conflict rejection is not weakened.
+
+**J21 executed:** 12 consecutive complete paid visits in the same fixture,
+two designs each, 72 original private captures, one quote/CCP/charge/Recovery
+Ticket per visitor, 24 original purchased print batches, 12 distinct folders,
+12 distinct paid entitlements and 12 exact isolation ACKs. Previous original
+JPEG hashes remain unchanged at every iteration; all 12 services remain OWED
+because synthetic transport is not physical delivery, and no draft remains
+active after the final ACK. Before the fix, the second paid binding ERRORs;
+after the fix, the repeat case plus affected Drive/delivery cases **18 PASS**,
+zero failures/errors/skips. This is a bounded repeated-visit test, not an
+hours-long thermal, network, resource-leak or power-loss soak.
+
+**N26 executed:** native Kivy all-12-design final preview at 800×1280 and
+452×900; each size runs 36 deliberate synthetic shots, all 12 composed previews,
+correct Rp120,000 total, 160×480 preview rasters, all design labels and an
+actual scrollable viewport from first to last designs. No checkout intent or
+provider charge exists before final confirmation. One test/two portrait
+subcases PASS; no screenshot or private proof is saved.
+
+Both tests are in modules already registered in Windows/Linux backend or native
+CI. Full final source/CI counts must be measured, not inferred from additions.
+
 ## Current readiness and next action
 
 The prior 522/522/58 CI at `238012f7` remains historical source-specific evidence.

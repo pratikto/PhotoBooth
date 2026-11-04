@@ -1,5 +1,21 @@
 # Meong Photobooth — Bug register
 
+## BUG-039 — Synthetic pilot reused one fake Drive folder across paid visitors (4 November 2026)
+
+**Severity:** S1 supervised synthetic repeat-visit delivery failure. **Status:**
+FIXTURE SOURCE FIXED; J21 complete 12-paid-visit regression and affected cases
+18 PASS locally; native N26 all-12 preview PASS at both sizes; final CI pending.
+
+The default synthetic `CheckoutFixture` returned the same folder identity for
+every paid transaction. The real ownership guard correctly rejected visit B's
+binding. The default owner pilot also uses this fixture. It now returns stable
+transaction-specific fake folder identities after the historical first URL.
+Actual Drive client and privacy/conflict guards remain unchanged.
+J21 checks 72 original captures, 24 exact copy-aware batches, 12 separate folders,
+charges, tickets, entitlements/ACKs and unchanged old JPEG hashes. This does not
+prove real upload/paper or long-duration hardware soak.
+[Full scope, before/after evidence and native preview coverage](qa/portrait-v2-sandbox/PP07-DEVICE-READINESS-2026-11-04.md).
+
 ## BUG-038 — Long-lived idle Drive worker blocked every automatic handoff (4 November 2026)
 
 **Severity:** S1 live-Drive pilot admission failure. **Status:** SOURCE FIXED;

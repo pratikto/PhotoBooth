@@ -284,6 +284,42 @@ class NativeCustomerJourneyMatrixTests(unittest.TestCase):
             self.assertFalse(any('MEONG:RECOVERY:' in getattr(w,'text','')
                                  for w in app.stage.walk()))
 
+    def test_n26_native_all_twelve_final_previews_scroll_at_both_portrait_sizes(self):
+        """Actual all-design prepayment UI, not only backend J01 coverage."""
+        from kivy.uix.scrollview import ScrollView
+        for size in ((800,1280),(452,900)):
+            with self.subTest(size=size),self.booth() as (app,fixture):
+                Window.size=size
+                app._choose_photo();app._complete_tutorial()
+                app.quantities.update({t.template_id:1 for t in app.templates})
+                self.assertEqual(12,sum(app.quantities.values()))
+                app._enter_photo_test();self.settle(app)
+                app._admit_photo_test();self.settle(app)
+                for _ in range(12):
+                    for _ in range(3):self.shot(app)
+                    app._photo_submit('compose');self.settle(app)
+                    app._photo_submit('next');self.settle(app)
+                self.assertEqual('final_preview',app._photo_view['phase'])
+                designs=app._photo_view['designs']
+                self.assertEqual(12,len(designs))
+                self.assertEqual(120000,app._photo_view['amount'])
+                self.assertEqual(36,len(list(fixture.service.photos.root.rglob('*.jpg'))))
+                labels={w.text for w in app.stage.walk() if isinstance(getattr(w,'text',None),str)}
+                for design in designs:
+                    self.assertEqual(1,design['copies'])
+                    self.assertEqual((160,480),design['strip'].size)
+                    self.assertIn(design['name']+'\n1 lembar',labels)
+                scrolls=[w for w in app.stage.walk() if isinstance(w,ScrollView)
+                         and len(w.children)==1 and len(w.children[0].children)==12]
+                self.assertEqual(1,len(scrolls))
+                for position in (1,0):
+                    scrolls[0].scroll_y=position
+                    for _ in range(3):EventLoop.idle()
+                    self.assertGreater(scrolls[0].viewport_size[1],scrolls[0].height)
+                self.assertEqual(0,fixture.provider.charges)
+                self.assertEqual(0,fixture.service.ledger.db.execute(
+                    'SELECT count(*) FROM pp_checkout_intents').fetchone()[0])
+
     def start_B(self, app):
         app._choose_photo()
         self.assertEqual('tutorial', app.navigation.page)

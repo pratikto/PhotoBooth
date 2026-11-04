@@ -112,9 +112,15 @@ class CheckoutFixture:
         if not hasattr(self,'ticket') or hasattr(self,'paid_monitor'):
             raise AssertionError('One original paid ticket fixture required first')
         def simulated_remote(manifest):
+            # The supervised pilot can serve more than one visitor in the
+            # same process. Reusing a folder across distinct transaction IDs
+            # correctly trips the original binder's privacy guard. Keep the
+            # historical first fixture URL, then allocate stable unique fakes.
+            transaction=manifest['transaction_id']
+            folder='syntheticPaidFolder123'+('' if transaction=='00000001' else '_'+transaction)
             return {'transaction_id':manifest['transaction_id'],
-                    'folder_id':'syntheticPaidFolder123',
-                    'folder_url':'https://drive.google.com/drive/folders/syntheticPaidFolder123',
+                    'folder_id':folder,
+                    'folder_url':'https://drive.google.com/drive/folders/'+folder,
                     'link_verified':True,'photo_number_layout':1}
         # Only an explicit pilot override may use the actual Apps Script
         # client. Default unit tests keep every cloud operation synthetic.

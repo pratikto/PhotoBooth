@@ -1,5 +1,18 @@
 # Meong Photobooth — GUI v2 development handover
 
+## 4 November 2026 — BUG-039 repeated complete paid visits and N26 preview
+
+BUG-038 micro-pushed/verified at `19eab10`. J21 then reproduced correct privacy
+rejection of a synthetic fixture reusing one folder across customers. Fixture
+IDs are now stable per original transaction; real Drive/conflict guards stay
+unchanged. Complete 12-paid-visit J21 and affected delivery suite: 18 PASS,
+including 72 original captures, 24 batches, 12 folders/entitlements/ACKs and old
+JPEG preservation. N26 real native all-12 final-preview/scroll tests PASS at
+800×1280 and 452×900 without any charge. Bounded repeat visits are not timed
+hardware soak. Next: final backend/native regression, exact-source CI inspection
+and final owner device guide/status reconciliation.
+[Detailed source/evidence record](qa/portrait-v2-sandbox/PP07-DEVICE-READINESS-2026-11-04.md).
+
 ## 4 November 2026 — BUG-038 request-boundary Drive isolation fence
 
 BUG-037 micro-pushed/verified at `0032958`. Further live-Drive source audit
