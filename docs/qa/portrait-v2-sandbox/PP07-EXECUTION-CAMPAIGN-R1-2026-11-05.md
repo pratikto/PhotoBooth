@@ -99,6 +99,32 @@ python tools/run_kiosk_unittests.py test_post_preview_refund_assessment test_pos
 The versioned CSV is normalized to LF after the initial CSV writer used CRLF;
 there is no change to original historical rows or acceptance criteria.
 
+## Increment C — independent-process isolation fault barriers
+
+Increment B pushed and remote-verified at `07b8664b91443f37fbc6f72db88247e2d94c11bd`.
+Four new tests reuse the original process-death fixture and actually terminate
+the worker with `os._exit(73)`, then inspect original SQLite in another process:
+
+- Death after committed PREPARE retains PREPARED, OWED and blocked local B admission.
+- Death after ACK commit/before reply retains one ACKED identity/event, increments
+  the original generation once and permits a distinct local B draft.
+- A printer lane becoming busy after PREPARE prevents ACK and B admission.
+- Failure writing the archive event inside the ACK transaction rolls back its
+  close/generation mutation; after hard exit, PREPARED/OWED and blocked B remain.
+
+Affected process/isolation scope: **26 PASS**, zero failures/errors/skips,
+23.818s. Four new methods are distinct from 26 overlapping executions.
+Partial mapping: PP-064/071/077 and UAH-019/021/022. The UAH-022 sub-scope is
+transaction rollback; this is **not** an injected real archive fsync failure.
+No protected key is recreated, restored or persisted by the independent reader.
+It checks local ledger admission only, not original-worker restoration, full
+backend PREPARE/local-receipt/ACK/archive protocol or a new payable B checkout.
+Those implementation and target-OS dependencies remain explicit.
+
+```text
+python tools/run_kiosk_unittests.py test_post_preview_process_crash test_post_preview_isolation
+```
+
 ## Remaining execution and external gates
 
 Next: independent-process crash/handoff barriers; virtual receipt/strip/Drive races; final native complete

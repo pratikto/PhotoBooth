@@ -41,6 +41,32 @@ class OriginalPrintProcessCrashTests(unittest.TestCase):
         self.assertEqual(1, state['paid_attempts'])
         self.assertEqual([['SENDING', 2]], state['jobs'])
 
+    def assert_isolation_crash(self, stage, *, acked):
+        state = self.run_hard_exit_and_reopen(stage)
+        self.assertEqual('OWED', state['owed'])
+        self.assertEqual(1, state['paid_attempts'])
+        self.assertEqual('SUBMITTED', state['receipt'])
+        self.assertEqual([], state['jobs'])
+        self.assertRegex(state['operation_id'], r'^[a-f0-9]{32}$')
+        self.assertEqual('PAID_OWED', state['financial_class'])
+        self.assertEqual('ACKED' if acked else 'PREPARED', state['operation_state'])
+        self.assertEqual(int(acked), state['original_closed'])
+        self.assertEqual(state['operation_generation']+int(acked), state['original_generation'])
+        self.assertEqual(acked, state['new_local_admission'])
+        self.assertEqual(int(acked), state['ack_events'])
+
+    def test_p03_process_death_after_prepare_keeps_original_owed_and_blocks_B(self):
+        self.assert_isolation_crash('isolation-prepared', acked=False)
+
+    def test_p04_ack_commit_then_reply_loss_keeps_one_durable_local_release(self):
+        self.assert_isolation_crash('isolation-acked', acked=True)
+
+    def test_p05_prepare_then_worker_failure_cannot_commit_ack_or_admit_B(self):
+        self.assert_isolation_crash('isolation-worker-failed', acked=False)
+
+    def test_p06_archive_event_failure_rolls_back_ack_before_hard_exit(self):
+        self.assert_isolation_crash('isolation-rollback', acked=False)
+
 
 if __name__ == '__main__':
     unittest.main()

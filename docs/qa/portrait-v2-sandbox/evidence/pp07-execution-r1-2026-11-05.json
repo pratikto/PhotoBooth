@@ -63,7 +63,29 @@
         "PP-089"
       ],
       "scope": "Read-only original settlement/presentation journal assessment; fake provider; no payout or media authority",
-      "artifact_sha256": "a4cf65e0c0c36e648316c3a4a0d10417286d0ae65dab6785d8e4150d8c3c4f91"
+      "artifact_sha256": "a4cf65e0c0c36e648316c3a4a0d10417286d0ae65dab6785d8e4150d8c3c4f91",
+      "tested_sha": "07b8664b91443f37fbc6f72db88247e2d94c11bd"
+    },
+    {
+      "run_id": "PP07-R1-C",
+      "result": "PASS",
+      "source_base": "07b8664b91443f37fbc6f72db88247e2d94c11bd",
+      "run": 26,
+      "fail": 0,
+      "errors": 0,
+      "skip": 0,
+      "seconds": 23.818,
+      "unique_new_methods": 4,
+      "partial_case_ids": [
+        "PP-064",
+        "PP-071",
+        "PP-077",
+        "UAH-019",
+        "UAH-021",
+        "UAH-022"
+      ],
+      "scope": "Independent hard exit/reopen at local isolation prepare/ACK/worker/rollback barriers; not full OS worker restore or fsync acceptance",
+      "artifact_sha256": "b173ebeb9d4c24abec29faf78ce374c86d2fb5731dc7e72e1809fc4451c7ca2a"
     }
   ],
   "environment_failures": [
@@ -73,7 +95,9 @@
     "photobooth/kiosk_v2/ccp_view.py": "30df5fafc6e80e695e1c05608633bb1c2216f616b17e8927d58e00be8102c647",
     "tests/test_ccp_view.py": "8b42695b67f67f754c2c51865a2c501167a8319cf0759c2d7c482c4e1c4728cf",
     "photobooth/post_preview_refund_assessment.py": "0448c263e574e4e77759930f640063220d537ad271c80249235787134247ead8",
-    "tests/test_post_preview_refund_assessment.py": "47c41931a95fb71d8c824c742ce52f85622c1bc470d650278410aaa3b2ff122d"
+    "tests/test_post_preview_refund_assessment.py": "47c41931a95fb71d8c824c742ce52f85622c1bc470d650278410aaa3b2ff122d",
+    "tests/post_preview_process_fault_fixture.py": "46bb44c60bf4a5339fac11db209833d79c98ee70dac7254673c2da68a76436ea",
+    "tests/test_post_preview_process_crash.py": "7ee794e8e8b672b6293a7f9c02c74ed6d4faa512a98b0633a6453bb82c3e6913"
   },
   "case_register": "pp07-execution-register-r1-2026-11-05.csv",
   "full_acceptance_pass": 0,
@@ -141,6 +165,10 @@
   "delivery": [
     {
       "sha": "808a8dc28ce8907a277f21902b4e5031186bd3f2",
+      "push_verified": true
+    },
+    {
+      "sha": "07b8664b91443f37fbc6f72db88247e2d94c11bd",
       "push_verified": true
     }
   ]
