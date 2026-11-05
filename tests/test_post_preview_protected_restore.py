@@ -41,10 +41,10 @@ class OriginalProtectedRestoreTests(unittest.TestCase):
         if os.name != 'nt':
             self.assert_rejected(protector)
 
-    def restored_process(self, action):
+    def restored_process(self, action, *, preack=False, uncertain=False):
         with tempfile.TemporaryDirectory() as folder:
             command = [sys.executable, '-m', 'tests.post_preview_restore_process_fixture', folder]
-            produced = subprocess.run(command+['produce'], input='{}', text=True, capture_output=True,
+            produced = subprocess.run(command+['produce'], input=json.dumps({'checkpoint':'prepared' if preack else 'acked', 'uncertain_after_prepare':uncertain}), text=True, capture_output=True,
                                       cwd=Path(__file__).resolve().parents[1], timeout=60)
             # Never include the producer stdout (private simulated customer
             # proof/key) in assertion messages or shared logs.
@@ -58,14 +58,15 @@ class OriginalProtectedRestoreTests(unittest.TestCase):
             self.assertFalse(observed['boot_private_offer'])
             self.assertEqual(0, observed['new_charges'])
             self.assertEqual(0, observed['new_receipt_sends'])
-            self.assertGreaterEqual(observed['provider_reads'], 2)
+            if action != 'preack-foreign-lock':
+                self.assertGreaterEqual(observed['provider_reads'], 1 if uncertain else 2)
             self.assertTrue(observed['media_unchanged'])
             self.assertEqual('OWED', observed['owed'])
             self.assertEqual(1, observed['attempts'])
             self.assertEqual(1, observed['retakes'])
             self.assertEqual(2, observed['copies'])
             self.assertEqual(1, observed['ticket_issues'])
-            self.assertEqual('PREPARED', observed['receipt_state'])
+            self.assertEqual('UNCERTAIN' if uncertain else 'PREPARED', observed['receipt_state'])
             self.assertTrue(observed['original_ack'])
             return observed
 
@@ -81,6 +82,25 @@ class OriginalProtectedRestoreTests(unittest.TestCase):
         view = self.restored_process('busy')
         self.assertEqual('WAIT', view['state'])
         self.assertNotIn('same_original_ticket', view)
+
+    def test_preack_crash_reconstructs_original_worker_then_exact_ack_and_customer_claim(self):
+        view=self.restored_process('preack',preack=True)
+        self.assertEqual('REACQUIRED',view['state'])
+        self.assertEqual('ACKED',view['operation_state'])
+        self.assertEqual(view['old_generation']+2,view['generation'])
+        self.assertTrue(view['same_original_ticket'])
+
+    def test_preack_crash_cannot_use_an_unrelated_kernel_launch_lock(self):
+        view=self.restored_process('preack-foreign-lock',preack=True)
+        self.assertEqual('ISOLATION_HOLD',view['state'])
+        self.assertEqual('PREPARED',view['operation_state'])
+        self.assertNotIn('same_original_ticket',view)
+
+    def test_preack_crash_with_uncertain_receipt_never_acknowledges_or_replays(self):
+        view=self.restored_process('preack',preack=True,uncertain=True)
+        self.assertEqual('ISOLATION_HOLD',view['state'])
+        self.assertEqual('PREPARED',view['operation_state'])
+        self.assertNotIn('same_original_ticket',view)
 
     def test_independent_process_unavailable_vault_fails_closed_without_reissue(self):
         view = self.restored_process('vault-failure')

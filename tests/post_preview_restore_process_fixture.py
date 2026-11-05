@@ -19,6 +19,7 @@ from photobooth.post_preview_ccp import OriginalCCPService
 from photobooth.post_preview_claim import OriginalMockClaim
 from photobooth.post_preview_isolation import OriginalMockIsolation
 from photobooth.post_preview_ticket import OriginalRecoveryTicketService
+from photobooth.post_preview_store import DraftHeld
 from tests.post_preview_checkout_fixture import CheckoutFixture
 
 
@@ -63,7 +64,11 @@ def run(root, action, data):
         isolation = OriginalMockIsolation(service.ledger, fixture.backend, fixture.jobs,
             fixture.launch_lease, printer_lane=service._receipt_lane, allow_incomplete_fixture=True)
         op = isolation.prepare('PB001')
-        isolation.acknowledge('PB001', op)
+        if data.get('checkpoint') != 'prepared':
+            isolation.acknowledge('PB001', op)
+        if data.get('uncertain_after_prepare'):
+            with service.ledger.write():
+                service.ledger.db.execute("UPDATE pp_ticket_presentations SET receipt_state='UNCERTAIN'")
         original['operation_id'] = op
         original['generation'] = service.ledger.db.execute('SELECT generation FROM pp_drafts').fetchone()[0]
         # Private fixture channel only: the parent retains simulated customer
@@ -86,8 +91,27 @@ def run(root, action, data):
         claim = OriginalMockClaim(fixture.backend, ccp, ticket, allow_incomplete_fixture=True,
                                   allow_windows_protected_mock=protected)
         before_reads = fixture.provider.reads
-        result = claim.claim(data['group'], 'PB001', data['proof'])
+        result = None
+        if action.startswith('preack'):
+            from photobooth.kiosk_v2.recovery import LaunchLease
+            foreign = LaunchLease(root/'foreign') if action == 'preack-foreign-lock' else None
+            isolation = OriginalMockIsolation(service.ledger, fixture.backend, fixture.jobs,
+                foreign or fixture.launch_lease, printer_lane=service._receipt_lane,
+                allow_incomplete_fixture=True)
+            try:
+                operation = isolation.restore_prepared_after_process_exit('PB001', data['operation_id'])
+                if operation != data['operation_id']:
+                    raise AssertionError('Original operation identity changed')
+                isolation.acknowledge('PB001', operation)
+                service.reset_after_acked_isolation(operation)
+            except DraftHeld:
+                result = {'state':'ISOLATION_HOLD'}
+            finally:
+                if foreign is not None: foreign.close()
+        if result is None:
+            result = claim.claim(data['group'], 'PB001', data['proof'])
         observation = {'scope': data['scope'], 'boot_phase': initial['phase'],
+            'operation_state':service.ledger.db.execute('SELECT state FROM pp_isolation_ops').fetchone()[0],
             'boot_private_offer': 'ticket_offer' in initial or 'ccp_offer' in initial,
             'state': result['state'], 'new_charges': fixture.provider.charges,
             'provider_reads': fixture.provider.reads-before_reads,

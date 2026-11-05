@@ -7,6 +7,7 @@ until separately authenticated production support exists.
 """
 import threading
 import uuid
+from pathlib import Path
 from contextlib import ExitStack, contextmanager
 
 from photobooth.kiosk_v2.photos import PhotoJobs
@@ -36,6 +37,70 @@ class OriginalMockIsolation:
         self.lane=printer_lane
         self.delivery=delivery
         self._lock=threading.RLock()
+
+    def restore_prepared_after_process_exit(self, booth_id, operation_id):
+        """Reconstruct only the hidden original MOCK worker before its ACK.
+
+        Call during bootstrap, before exposing PhotoJobs/camera/UI. The exact
+        private-root kernel lock proves the previous owner process has exited;
+        an unrelated repository lock or merely reopened SQLite is insufficient.
+        No credential is decrypted, photo loaded, print sent or lease freed.
+        Customer claim and original media verification still follow a safe ACK.
+        """
+        from photobooth.kiosk_v2.post_preview_checkout import PrivateCheckoutService
+        from photobooth.post_preview_store import DraftLease, LIFECYCLE_EVENTS
+        service = self.jobs.service
+        stream = self.launcher.stream
+        if (not isinstance(service, PrivateCheckoutService) or stream.closed
+                or Path(stream.name).resolve() != (service.root/'data'/'kiosk-v2-launch.lock').resolve()
+                or self.jobs.busy or self.jobs._thread is not None or self.jobs._closed
+                or service._closed.is_set() or service.lease is not None
+                or not service.paid_ticket_enabled or service.booth_id != booth_id):
+            raise DraftHeld('Exact fresh original worker and private-root process lock required')
+        with self._lock:
+            with self.ledger.write():
+                operation = self.ledger.db.execute('''SELECT o.*,i.purchase_group_id
+                    FROM pp_isolation_ops o JOIN pp_checkout_intents i ON i.draft_id=o.draft_id
+                    WHERE o.operation_id=? AND o.booth_id=?''', (operation_id,booth_id)).fetchone()
+                if not operation or operation['state'] != 'PREPARED' or operation['financial_class'] != 'PAID_OWED':
+                    raise DraftHeld('Exact original prepared paid operation required')
+                group = operation['purchase_group_id']
+                generation = operation['original_generation']
+            observed = self.payments.reconcile_all(group,booth_id,force=True)
+            if (observed['obligation_state'] != 'OWED' or not observed['entitlement_id']
+                    or observed['state'] == 'REVIEW_REQUIRED'):
+                raise DraftHeld('Original paid obligation cannot be verified')
+            with self.ledger.write():
+                _, finance = self.payments._group(group,booth_id)
+                attempt = finance['legitimate_paid_attempt']
+            confirmed = self.payments.reconcile(group,booth_id,attempt_id=attempt,force=True)
+            if (not confirmed['fresh_checked'] or not confirmed['paid_verified']
+                    or confirmed['entitlement_id'] != observed['entitlement_id']):
+                raise DraftHeld('Fresh exact original settlement required')
+            with ExitStack() as fences, self.ledger.write():
+                current = self.ledger.db.execute('SELECT * FROM pp_isolation_ops WHERE operation_id=?',
+                                                 (operation_id,)).fetchone()
+                draft = self._owner(booth_id)
+                if (not current or current['state'] != 'PREPARED'
+                        or current['original_generation'] != generation
+                        or draft['draft_id'] != operation['draft_id'] or draft['generation'] != generation
+                        or generation < 2 or draft['lifecycle'] not in LIFECYCLE_EVENTS-{'INACTIVITY_WARNING'}
+                        or self.jobs.busy or self.jobs._thread is not None or service.lease is not None
+                        or self._financial(draft) != 'PAID_OWED'):
+                    raise DraftHeld('Original prepared worker context changed')
+                fences.enter_context(self._drive_guard())
+                if not self.lane.acquire(blocking=False):
+                    raise DraftHeld('Original printer lane is still active')
+                fences.callback(self.lane.release)
+                # Privacy retirement had already fenced the original live
+                # lease by +1. Restore that exact retired lease, never the new
+                # booth generation and never a customer media capability.
+                service.hide_private()
+                service.lease = DraftLease(draft['draft_id'],booth_id,draft['visit_id'],generation-1)
+                service.group = group
+                service.phase = 'hold'
+                self.ledger._event(draft['draft_id'],'BOOT_PREPARED_CONTEXT_RESTORED')
+            return operation_id
 
     @contextmanager
     def _drive_guard(self):

@@ -1,0 +1,37 @@
+{
+  "scope": "R4-A mock pre-ACK original-worker reconstruction",
+  "new_methods": 3,
+  "partial_case_ids": [
+    "PP-043",
+    "PP-064",
+    "PP-071",
+    "PP-077",
+    "UAH-019",
+    "UAH-021",
+    "UAH-036"
+  ],
+  "focused": {
+    "run": 55,
+    "passed": 55,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 18.812
+  },
+  "before": {
+    "run": 1,
+    "failures": 1,
+    "errors": 0,
+    "skips": 0,
+    "reason": "Missing original boot context reconstruction interface"
+  },
+  "log_sha256": "fc554f569635fcea0cf507329296ca2299ffb1c9814a980fa802d37864a107ba",
+  "source_sha256": {
+    "photobooth/post_preview_isolation.py": "c3681de961e5e28ee0a875ff7ea51936b77b97cdd48f8fc2cf8620c9795f511c",
+    "tests/post_preview_restore_process_fixture.py": "e4fcbdd2b3249fd0f36e4b63b6b96f616affafdefc5455505c8399946f6ad009",
+    "tests/test_post_preview_protected_restore.py": "d2c4bbfa08e58e145b82fdd9242756830552f738de88ee938c938463fa46772b"
+  },
+  "windows_ci": "PENDING",
+  "campaign": "IN_PROGRESS",
+  "full_acceptance_promoted": false
+}
