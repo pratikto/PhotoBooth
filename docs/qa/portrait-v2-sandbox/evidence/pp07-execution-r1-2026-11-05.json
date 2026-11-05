@@ -1,7 +1,7 @@
 {
   "campaign_id": "PP07-R1",
-  "status": "IN_PROGRESS",
-  "recorded_at": "2026-11-05T06:05:53.056391+07:00",
+  "status": "HISTORICAL_R1_SUPERSEDED_BY_R2_R4",
+  "recorded_at": "2026-11-05T13:35:36.980869+07:00",
   "timezone": "Asia/Jakarta",
   "source_base": "291d5227f1bc7bc050cd0ad1028c3af1b2d1c8ca",
   "authorized_branch": "feature/post-preview-qris-checkout",
@@ -367,6 +367,62 @@
       "seconds": 24.256,
       "scope": "Native delivery widgets; test-only helper fix, runtime unchanged from fec4f7f",
       "report_sha256": "38a449af5becd29ccf4257565b651f5c9019e52603f0bcd750b9707f859605c4"
+    },
+    {
+      "run": 1760,
+      "fail": 1,
+      "error": 0,
+      "skip": 3,
+      "passed": 1756,
+      "success": false,
+      "seconds": 1199.371,
+      "normalized_unique_test_ids": 1670,
+      "run_id": "PP07-R1-full-K",
+      "tested_sha": "38254738cf0724655aea61dfd3bb1beb5812b5cb",
+      "result": "FAIL",
+      "started_at": "2026-11-05T06:06:28.588146+07:00",
+      "report_sha256": "5b7050613aabdcf79ea5863647c82bfeb92777bf84f3297403f83d9d15e4365b",
+      "log_sha256": "68f9b79e3fd127f30dfcf4a8803856b7a4dd3015b8f830eba983efcf72bb4303",
+      "nonpass_methods": {
+        "test_camera_recovery.CameraRecoveryTests.test_real_model_worker_drives_the_actual_controller_and_keeps_button_capture": [
+          "SKIP"
+        ],
+        "test_kiosk_v2_native_audio.NativeChannelReuseTests.test_repeated_muted_video_channel_reuse_has_real_pcm_and_keeps_active_ad_gain": [
+          "FAIL"
+        ],
+        "test_kiosk_v2_widgets.PortraitKivySmokeTests.test_real_palm_model_starts_v2_countdown_without_blocking_manual_capture": [
+          "SKIP"
+        ],
+        "test_palm_gesture.NativePalmModelTests.test_actual_model_accepts_a_palm_and_rejects_other_gestures_and_empty_image": [
+          "SKIP"
+        ]
+      }
+    },
+    {
+      "run_id": "PP07-R1-L-audio-isolated",
+      "tested_sha": "38254738cf0724655aea61dfd3bb1beb5812b5cb",
+      "result": "PASS",
+      "run": 2,
+      "passed": 2,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 14.017,
+      "scope": "Actual dummy SDL PCM callback; no physical speaker. Does not clear broad-run failure.",
+      "report_sha256": "d7117cbe1130ac7d4c6a126a7bf79308b34a9b98ed69ddfa986e58f51a08ef0e"
+    },
+    {
+      "run_id": "PP07-R1-L-audio-repeat",
+      "tested_sha": "38254738cf0724655aea61dfd3bb1beb5812b5cb",
+      "result": "PASS",
+      "run": 3,
+      "passed": 3,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "seconds": 38.572,
+      "scope": "Actual dummy SDL PCM callback; no physical speaker. Does not clear broad-run failure.",
+      "report_sha256": "31a6a07ad340686afdaae8337e767a2672c254551ac8e08dcff1d07074ce6e09"
     }
   ],
   "environment_failures": [
@@ -446,7 +502,7 @@
       "definition": "release controls"
     }
   ],
-  "next": "Commit/push checked test-only idle helper repair, then rerun full opt-in suite alone at resulting SHA. Preserve fec4f7f FAIL and all earlier history. Model assets remain blocked; protected original-worker restore remains first unfinished implementation.",
+  "next": "Follow latest R4 continuation/timed qualification and physical quick start, not the historical R1 diagnostic next steps.",
   "raw_artifacts": "task scratch only, not committed; hashes and allowlisted observations preserved",
   "delivery": [
     {
@@ -607,38 +663,41 @@
   ],
   "active_verification": {
     "full_run": {
-      "tested_sha": "fec4f7f9d3169d1421a704813d83355bee12f4d1",
-      "started_at": "2026-11-05T05:43:59.442601+07:00",
-      "profile": "GUI/audio/video opt-in; model assets unavailable; no competing local probes/replays",
-      "status": "COMPLETED_FAIL_1_RECORDED_RETEST_REQUIRED",
-      "report": "current task scratch: full-final-report.txt"
+      "tested_sha": "38254738cf0724655aea61dfd3bb1beb5812b5cb",
+      "status": "COMPLETED_FAIL_1_NATIVE_PCM_3_MODEL_SKIP",
+      "run_id": "PP07-R1-full-K",
+      "no_active_broad_process": true
     },
     "ci": {
-      "id": 41927170321,
-      "tested_sha": "fec4f7f9d3169d1421a704813d83355bee12f4d1",
+      "id": 41930961409,
+      "tested_sha": "38254738cf0724655aea61dfd3bb1beb5812b5cb",
       "result": "COMPLETED_3_OF_3_SUCCESS",
       "windows": {
         "run": 557,
-        "fail": 0,
-        "error": 0,
-        "skip": 0,
-        "seconds": 493.965
+        "passed": 557,
+        "seconds": 446.437
       },
       "ubuntu": {
         "run": 557,
-        "fail": 0,
-        "error": 0,
-        "skip": 0,
-        "seconds": 172.505
+        "passed": 557,
+        "seconds": 179.632
       },
       "native": {
         "run": 67,
-        "fail": 0,
-        "error": 0,
-        "skip": 0,
-        "seconds": 112.044
+        "passed": 67,
+        "seconds": 82.835
       },
-      "logs_independently_inspected": true
+      "failure": 0,
+      "error": 0,
+      "skip": 0,
+      "logs_independently_inspected": true,
+      "scope_warning": "Native SDL PCM / legacy delivery widgets are outside registered CI scope; full local results separate."
+    },
+    "audio": {
+      "status": "ISOLATED_MODULE_2_PASS_AND_THREE_REPEATS_PASS_BROAD_CAUSE_UNPROVEN",
+      "no_active_process": true,
+      "failure": "sample_output returned [] during game soundtrack sample; no zero-valued PCM buffer was observed in that failed sample",
+      "next": "Instrument existing bounded native probe to distinguish absent callback from silent PCM and include cycle/page/provider/spec/timing diagnostics. Reproduce cross-suite ordering without altering runtime or weakening PCM assertion. Inspect native lifecycle/audio docs before edits; no full rerun until evidence motivates change."
     }
   },
   "superseded_ci": [
@@ -659,7 +718,7 @@
       "partial_completed_jobs": "Ubuntu 557/native 65 PASS; Windows incomplete, no 3/3 claim"
     }
   ],
-  "final_ci_evidence": "pp07-ci-final-r1-2026-11-05.json",
+  "final_ci_evidence": "pp07-ci-k-r1-2026-11-05.json",
   "delivery_idle_diagnostics": {
     "isolated_original": {
       "run": 1,
@@ -677,5 +736,23 @@
       "seconds": 1.358
     },
     "finding": "Trailing idle poll can enqueue a normal periodic snapshot before assertFalse(busy); helper stops at observed idle instead. Original full occurrence lacks action telemetry; precise cause unproven. Five-second limit, all assertions and runtime unchanged."
+  },
+  "case_evidence": "pp07-case-evidence-r1-2026-11-05.json",
+  "case_mapping_summary": {
+    "pp_partial": 103,
+    "unique_mapped_pp_method_ids": 154,
+    "uah_partial": 3,
+    "pilot_owner_not_run": 24,
+    "pilot_blocked": 2,
+    "all_full_acceptance_pass": 0,
+    "case_rows": 188,
+    "ar_stage_gates": 14
+  },
+  "superseded_by": {
+    "remote_observed": "59748065b01501de3b4d070313c3eb6c4868dd69",
+    "functional_source": "824b6ae7636578332664abf5507456338e59c8ef",
+    "report": "../PP07-SIMULATION-CLOSURE-R4-2026-11-05.md",
+    "verification": "pp07-r4-final-verification-2026-11-05.json",
+    "note": "R1 source-specific failure/skip counts remain historical. R2/R4 later complete all-opt-in PASS and actual model runs; do not treat old R1 missing scope/model access as current blockers."
   }
 }

@@ -1,0 +1,38 @@
+{
+  "tested_sha": "38254738cf0724655aea61dfd3bb1beb5812b5cb",
+  "runtime_sha": "fec4f7f9d3169d1421a704813d83355bee12f4d1",
+  "run_id": 41930961409,
+  "url": "https://github.com/pratikto/PhotoBooth/actions/runs/41930961409",
+  "result": "COMPLETED_3_OF_3_SUCCESS",
+  "logs_independently_inspected": true,
+  "note": "CI does not register legacy delivery-widget/native SDL PCM test modules; full local suite results are separate.",
+  "jobs": [
+    {
+      "name": "private-state (windows-latest)",
+      "job_id": 126927410640,
+      "result": "success",
+      "summaries": [
+        "2026-11-04T23:14:22.4154723Z Ran 557 tests in 446.437s\r",
+        "2026-11-04T23:14:22.4155107Z KIOSK_UNITTEST_SUMMARY: run=557 failures=0 errors=0 skipped=0 success=True\r"
+      ]
+    },
+    {
+      "name": "private-state (ubuntu-latest)",
+      "job_id": 126927411225,
+      "result": "success",
+      "summaries": [
+        "2026-11-04T23:09:44.2568385Z Ran 557 tests in 179.632s",
+        "2026-11-04T23:09:44.2568939Z KIOSK_UNITTEST_SUMMARY: run=557 failures=0 errors=0 skipped=0 success=True"
+      ]
+    },
+    {
+      "name": "private-desktop",
+      "job_id": 126927411272,
+      "result": "success",
+      "summaries": [
+        "2026-11-04T23:08:02.1213998Z Ran 67 tests in 82.835s",
+        "2026-11-04T23:08:02.1215224Z KIOSK_UNITTEST_SUMMARY: run=67 failures=0 errors=0 skipped=0 success=True"
+      ]
+    }
+  ]
+}

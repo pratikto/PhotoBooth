@@ -1,5 +1,27 @@
 # PP-07 execution campaign R1 — 5 November 2026
 
+> **Latest remote R2–R4 supersedes this historical R1 checkpoint.**
+> At source 824b6ae, [R4](PP07-SIMULATION-CLOSURE-R4-2026-11-05.md) records
+> 1,801 all-opt-in local PASS, zero failure/error/skip, and CI 41960994370
+> 3/3 SUCCESS (597 Windows/597 Ubuntu/68 native). R2 separately completed
+> exact-source all-model/audio verification; the R1 FAIL/SKIP history below
+> is retained without reopening it as a current blocker. Latest mapping is
+> 110 partial PP scopes, all full outcomes unchanged. Supervised fresh-root
+> [physical trial](PP07-PHYSICAL-QUICK-START.md) can begin after device preflight.
+> Two-hour synthetic qualification has only an interim remote record; do not
+> infer completion. [Latest verification](evidence/pp07-r4-final-verification-2026-11-05.json).
+
+> **Historical R1 software checkpoint — superseded:** source `3825473`, runtime
+> `fec4f7f`. Latest broad run: **1,760 run / 1,756 PASS / 1 FAIL / zero errors /
+> three model SKIP**, 1,199.371s. Delivery helper now PASS; native SDL PCM probe
+> failed with an empty callback sample. Isolated audio module 2 PASS and three
+> further repetitions PASS; broad occurrence remains unexplained and FAIL.
+> CI [41930961409](https://github.com/pratikto/PhotoBooth/actions/runs/41930961409)
+> **3/3 SUCCESS**, 557 Windows + 557 Ubuntu + 67 native; these registered jobs
+> do not include the failing legacy native PCM module. No full local PASS.
+> [Current continuation](PP07-R1-CONTINUATION-2026-11-05.md) supersedes older
+> RUNNING/pending notes below. No active test job or owner-testing request.
+
 **IN PROGRESS.** Authorized branch: `feature/post-preview-qris-checkout`.
 Remote baseline independently verified as `291d5227f1bc7bc050cd0ad1028c3af1b2d1c8ca`.
 The unrelated clean `/workspace/PhotoBooth` checkout remains on `work` at
@@ -9,7 +31,7 @@ excludes `old` before checkout. No reset, merge, branch creation or deployment.
 [Execution evidence](evidence/pp07-execution-r1-2026-11-05.json) and
 [versioned 188-case register](evidence/pp07-execution-register-r1-2026-11-05.csv)
 preserve the original blank/historical register. All full acceptance outcomes
-remain NOT_RUN/BLOCKED. Four newly mapped IDs have **partial** software evidence;
+remain NOT_RUN/BLOCKED. Current evidence maps 103 PP IDs and three UAH IDs to **partial** software scope;
 14 AR gates retain their actual original definitions, with no blanket PASS.
 
 ## Increment A — BUG-043: clipped private proof incorrectly counted as offered
@@ -302,10 +324,11 @@ checkpoints preserve the successful functional CI without rerunning it.
 
 ## Remaining execution and external gates
 
-Next: independent-process crash/handoff barriers; virtual receipt/strip/Drive races; final native complete
-journeys and actual-monotonic ticket replay; one complete appropriate regression
-and exact-source Windows/Ubuntu/native CI. Continue software work before asking
-the owner to test. Historical acbac15 results remain historical.
+Next: investigate the native SDL PCM callback failure, then complete protected
+original-worker restoration and remaining implementation scopes. Independent
+local hard-exit barriers, virtual delivery races and actual-monotonic replays
+have executed within their recorded scope; none supplies full device acceptance.
+Historical acbac15 results remain historical.
 
 Full protected original-worker restoration is not implemented; Windows DPAPI
 byte tests alone do not supply it, and the Ubuntu protector remains unsupported.
@@ -337,3 +360,52 @@ no production timeout/worker/readiness change and no new product bug ID.
 The entire native delivery-widget module **11 PASS**, zero failure/error/skip,
 24.256s; a controlled idle-refresh boundary replay also **1 PASS**, 1.358s.
 A new source-matched broad run is still required; this is not a full local PASS.
+
+## Increment L — exact-source CI, broad PCM failure and reconciled register
+
+At `38254738cf0724655aea61dfd3bb1beb5812b5cb`, the broad GUI/audio/video run
+completed **1,760 executions / 1,756 PASS / 1 FAIL / zero errors / three model
+SKIP**, 1,199.371s, **1,670 normalized method IDs** (including non-PASS IDs).
+It started 06:06:28 Asia/Jakarta. The delivery helper case now PASS.
+The failing method is
+`test_kiosk_v2_native_audio.NativeChannelReuseTests.test_repeated_muted_video_channel_reuse_has_real_pcm_and_keeps_active_ad_gain`: the game soundtrack
+probe returned **no callback samples (`[]`)** in its 0.12s observation window.
+That is not an observed zero-amplitude buffer and does not prove silent physical
+audio. It remains an unexplained broad-run FAIL. Do not change playback, enlarge
+a product timeout, skip the assertion or label a product defect without evidence.
+
+Fresh isolated complete audio module **2 PASS / 14.017s**, followed by the
+original native case repeated three times **3 PASS / 38.572s**, all zero failure/
+error/skip. Actual dummy SDL PCM was measured; physical speakers remain pending.
+These scoped retests do **not** turn the earlier full run green. No further
+runtime/test change was made after `3825473`. No active local/CI test remains.
+
+Exact-source [CI 41930961409](https://github.com/pratikto/PhotoBooth/actions/runs/41930961409)
+completed **3/3 SUCCESS**: Windows 557 PASS / 446.437s, Ubuntu 557 PASS /
+179.632s, native 67 PASS / 82.835s; zero failure/error/skip, all logs individually
+inspected. [CI record](evidence/pp07-ci-k-r1-2026-11-05.json). This is 1,181
+platform executions, not acceptance cases. The registered workflow excludes
+the legacy native SDL PCM/delivery-widget modules; it cannot resolve that FAIL.
+
+All canonical PP mappings were checked against actual per-method outcomes at
+this source, with current AST locations. **103 PP IDs / 154 distinct mapped
+method IDs** have individually observed PASS within partial software scope,
+even though the overall suite failed. Nine PP required scopes remain missing:
+**PP-101, PP-104–110, PP-112**. Three UAH IDs (019/021/022) have local-only
+SQLite process-barrier evidence. The timed final-runtime replays add actual
+30.031s/30.024s ticket observations, with one charge/receipt, 2+1 virtual copies
+and OWED; they do not discharge paper obligations.
+[Per-case evidence](evidence/pp07-case-evidence-r1-2026-11-05.json) and the
+[versioned register](evidence/pp07-execution-register-r1-2026-11-05.csv) preserve
+all **188 identities and full statuses: 186 NOT_RUN / 2 BLOCKED**, zero full
+acceptance PASS. PILOT remains 24 NOT_RUN/2 BLOCKED; the 14 original AR stage
+definitions/approvals are unchanged. Sixteen new R1 methods are not sixteen
+acceptance cases. No owner observation is inferred or requested.
+
+**Owner readiness:** do not begin full device UAT on a claim of all-green
+software. The existing supervised synthetic worksheet remains a conditional
+route after device preflight, but this continuation first investigates the
+remaining independently testable PCM failure. Real paper/cloud/provider/refund,
+protected restore and production/AR-13 remain separately unapproved or blocked.
+Raw logs, venv and synthetic render PNGs are task-local only; sanitized counts,
+checksums, source/tests and exact continuation are committed.
