@@ -1,5 +1,11 @@
 # Meong Photobooth — changelog
 
+## 5 November 2026 — directly usable supervised physical-test entry
+
+Added cross-platform fresh-root launcher, a Windows PowerShell setup/start entry, redacted local session records and Git exclusion for private pilot roots/reports. Reuses the original synthetic-payment pilot and dual paper/Drive consents; camera/index/audio and manual capture are isolated to the child, stale headless drivers are cleared, portrait size is configured before native import after acquiring the existing launch lock. OpenCV is bounded below 5 consistently with verified CI. Check-only creates no trial data or device effects; exit zero is not hardware acceptance.
+
+Source 8901bbc verified 1,778 all-opt-in local PASS and CI 41952947024 all 3 SUCCESS (574 Windows/574 Ubuntu/68 native), zero failures/errors/skips. CI executed the actual Windows setup/check-only and Linux packaged check-only. [Quick start](qa/portrait-v2-sandbox/PP07-PHYSICAL-QUICK-START.md) and [full provenance/remaining gates](qa/portrait-v2-sandbox/PP07-PHYSICAL-TEST-READINESS-2026-11-05.md). No actual hardware/provider/refund/production acceptance was promoted.
+
 ## 5 November 2026 — R2 regression closure and protected Windows mock restoration
 
 Closed the unfinished 3825473 full-regression gate with 1,760 all-opt-in local PASS, including all three real-model methods using verified retained public assets. Added explicit Windows DPAPI protection to the original mock checkout/claim integration, with exact adapter/platform opt-in guards and six new methods for independent-process original service restoration, busy claimant deferral, vault failure and mode isolation. The owner launcher stays unchanged and actual merchant/refund/production remain disabled.

@@ -1,5 +1,7 @@
 # Meong Photobooth — current feature status
 
+> **Physical-test software candidate verified:** [start here](qa/portrait-v2-sandbox/PP07-PHYSICAL-QUICK-START.md). Source 8901bbc: 1,778 full local PASS; CI 41952947024 all 3 SUCCESS (574 Windows/574 Ubuntu/68 native). Actual Windows PowerShell setup/check-only and Linux entry verified. Real camera/manual capture trial can begin after owner preflight; optional paper/Drive require their original dual consents. Payment remains synthetic; hardware/full recovery/merchant/refund/production acceptance is separate. [Evidence](qa/portrait-v2-sandbox/PP07-PHYSICAL-TEST-READINESS-2026-11-05.md).
+
 > **Final R2 verification:** [source-matched campaign](qa/portrait-v2-sandbox/PP07-EXECUTION-CAMPAIGN-R2-2026-11-05.md) at 17f7863: 1,766 all-opt-in local PASS; CI 41944005227 all 3 SUCCESS (563 Windows/563 Ubuntu/67 native), zero failures/errors/skips. Windows protected mock service restart is verified after original local ACK; full pre-ACK worker/device/Ubuntu/merchant/refund acceptance remains separate. Next boundary and exact evidence are in the campaign; historical pending notes below are superseded.
 
 > **R2 supersedes pending broad-regression notes:** [exact-source 3825473 execution](qa/portrait-v2-sandbox/PP07-EXECUTION-CAMPAIGN-R2-2026-11-05.md): 1,760 local PASS, zero failures/errors/skips including all three real-model methods; CI 41930961409 inspected 557 Windows / 557 Ubuntu / 67 native PASS. Protected original-worker restoration remains next; full owner/provider/refund acceptance is unchanged.

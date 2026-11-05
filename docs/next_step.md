@@ -1,5 +1,7 @@
 # Meong Photobooth — outstanding work and feature backlog
 
+> **Physical trial ready to start:** [two-command Windows setup/start and optional paper/Drive](qa/portrait-v2-sandbox/PP07-PHYSICAL-QUICK-START.md). Source 8901bbc verified 1,778 local PASS; CI 41952947024 all 3 SUCCESS (574 Windows/574 Ubuntu/68 native), including actual Windows PowerShell setup/check-only. Next: owner fresh-root manual-camera observations; hardware acceptance remains NOT_RUN, actual payment/refund/production remain disabled. Separate pre-ACK worker/Ubuntu/merchant implementation gates are recorded in the readiness report.
+
 > **5 November R2:** [complete source-matched verification and next boundary](qa/portrait-v2-sandbox/PP07-EXECUTION-CAMPAIGN-R2-2026-11-05.md): 1,766 all-opt-in local PASS; CI 41944005227 all 3 SUCCESS (563 Windows/563 Ubuntu/67 native), zero failures/errors/skips. Protected Windows mock service restart after local ACK is verified; pre-ACK full-worker/Ubuntu/device/merchant/refund gates remain separate.
 
 > **5 November complete test plan (documentation only):** [188 case rows and remaining priorities](qa/portrait-v2-sandbox/PP07-COMPLETE-TEST-PLAN-2026-11-05.md), with detailed 112 PP procedures, 26 owner PILOT cases, 50 versioned UAH cases and 14 AR stage gates. Existing software evidence remains 103 partial / 9 missing PP scopes; all 112 full PP acceptance outcomes remain NOT_RUN, PILOT remains 24 NOT_RUN / 2 BLOCKED. No new execution, refund activation or production approval.

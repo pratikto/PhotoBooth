@@ -26,8 +26,81 @@
     ".github/workflows/post-preview-qris.yml": "36bc332b43da82368aaab978f5fa032280598a167c2d3d8ca540c75c6ca00668",
     ".gitignore": "06060cc826ba7c1c0183faae40d53442e1bc229e096cfd742a9aec20bb7ca38b"
   },
-  "ci": "PENDING",
-  "final_full": "PENDING",
+  "ci": {
+    "run_id": 41952947024,
+    "source": "8901bbcd2fb302e278106a7b49aa5d4f4c9a726d",
+    "all_success": true,
+    "completed_logs_inspected": true,
+    "windows_owner_setup_verified": true,
+    "linux_owner_check_verified": true,
+    "windows": {
+      "job_id": 127000926474,
+      "pass": 574,
+      "seconds": 502.863,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "ubuntu": {
+      "job_id": 127000926180,
+      "pass": 574,
+      "seconds": 180.812,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "native": {
+      "job_id": 127000926609,
+      "pass": 68,
+      "seconds": 121.548,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "final_full": {
+    "source": "8901bbcd2fb302e278106a7b49aa5d4f4c9a726d",
+    "start_utc": "2026-11-05T02:06:36.042635+00:00",
+    "verified_public_assets": [
+      {
+        "file": "gesture_recognizer.task",
+        "sha256": "97952348cf6a6a4915c2ea1496b4b37ebabc50cbbf80571435643c455f2b0482"
+      },
+      {
+        "file": "left_hands.jpg",
+        "sha256": "240c082e80128ff1ca8a83ce645e2ba4d8bc30f0967b7991cf5fa375bab489e1"
+      },
+      {
+        "file": "fist.jpg",
+        "sha256": "43fa1cabf3f90d574accc9a56986e2ee48638ce59fc65af1846487f73bb2ef24"
+      },
+      {
+        "file": "thumb_up.jpg",
+        "sha256": "5d673c081ab13b8a1812269ff57047066f9c33c07db5f4178089e8cb3fdc0291"
+      },
+      {
+        "file": "pointing_up.jpg",
+        "sha256": "ecf8ca2611d08fa25948a4fc10710af9120e88243a54da6356bacea17ff3e36e"
+      }
+    ],
+    "command": [
+      "/workspace/work/postpay-venv/bin/python",
+      "tools/run_kiosk_unittests.py"
+    ],
+    "profile": "all GUI/audio/video/model optins; virtual devices only",
+    "exit_code": 0,
+    "seconds": 488.262,
+    "end_utc": "2026-11-05T02:14:44.305033+00:00",
+    "run": 1778,
+    "passed": 1778,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "report_sha256": "48a70796e95c067dbe4fafeb2e1b398bf0a22333a5cd35b036c9de4ffc06109a",
+    "log_sha256": "2b0ddc2eba68b4a9600727ec16c093a4bf06caaa73edee7dec60666ddf98fe49"
+  },
   "hardware_acceptance": "NOT_RUN",
-  "actual_merchant_refund_production": "NOT_ENABLED"
+  "actual_merchant_refund_production": "NOT_ENABLED",
+  "tested_source": "8901bbcd2fb302e278106a7b49aa5d4f4c9a726d",
+  "status": "SOFTWARE_READY_FOR_SUPERVISED_PHYSICAL_TEST"
 }
