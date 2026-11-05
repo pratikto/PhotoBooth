@@ -3,16 +3,19 @@
 Only the original CCP or PAID Recovery Ticket type may identify a returning
 customer. Proof verification alone NEVER authorizes photos or releases
 another visitor's occupancy. Provider settlement must be freshly rechecked.
-No real Midtrans/Sandbox or camera restart is activated by this component.
+The optional exact Windows DPAPI mock profile changes credential protection
+only. No real Midtrans/Sandbox or camera restart is activated here.
 """
 from photobooth.post_preview_ccp import OriginalCCPService
 from photobooth.post_preview_ticket import OriginalRecoveryTicketService
 from photobooth.post_preview_payments import PostPreviewPayments
 from photobooth.post_preview_store import DraftHeld,DraftLease,PostPreviewStore
+from photobooth.credential_vault import mock_protector_allowed
 
 
 class OriginalMockClaim:
-    def __init__(self, payments, ccp, ticket, *, allow_incomplete_fixture=False):
+    def __init__(self, payments, ccp, ticket, *, allow_incomplete_fixture=False,
+                 allow_windows_protected_mock=False):
         if (allow_incomplete_fixture is not True
                 or not isinstance(payments,PostPreviewPayments) or payments.mode!='mock'
                 or not isinstance(ccp,OriginalCCPService)
@@ -20,9 +23,11 @@ class OriginalMockClaim:
                 or ccp.ledger is not payments.ledger or ticket.ledger is not payments.ledger
                 or ccp.merchant_id!=payments.merchant_id
                 or ticket.merchant_id!=payments.merchant_id
-                or not getattr(ccp.protector,'synthetic',False)
-                or not getattr(ticket.protector,'synthetic',False)):
-            raise DraftHeld('Exact original synthetic claim verifiers required')
+                or not mock_protector_allowed(ccp.protector,
+                    windows_protected=allow_windows_protected_mock)
+                or not mock_protector_allowed(ticket.protector,
+                    windows_protected=allow_windows_protected_mock)):
+            raise DraftHeld('Exact original mock claim verifiers required')
         self.payments,self.ccp,self.ticket=payments,ccp,ticket
         self.ledger=payments.ledger
 

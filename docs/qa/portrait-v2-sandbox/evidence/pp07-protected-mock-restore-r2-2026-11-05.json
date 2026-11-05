@@ -1,0 +1,58 @@
+{
+  "date": "2026-11-05",
+  "timezone": "Asia/Jakarta",
+  "parent": "f67add09495c93b463bd9d1e696e0ff4ed5519d4",
+  "scope": "Explicit Windows DPAPI mock service/claim integration; synthetic independent-process plumbing on Linux. No launcher/merchant/reboot or full worker restoration acceptance.",
+  "new_methods": 6,
+  "focused": {
+    "run": 66,
+    "passed": 66,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 10.827,
+    "platform": "Linux",
+    "report_sha256": "8d31cb1b510db059cf3d5df93dfa99d85865aa42fb209cae7ab1c5a16f640cb8"
+  },
+  "development_history": [
+    {
+      "scope": "New interface/fixture before implementation",
+      "run": 5,
+      "failed": 3,
+      "errors": 1,
+      "passed": 1,
+      "seconds": 1.07
+    },
+    {
+      "scope": "First implementation; two fixture expectations incorrect",
+      "run": 5,
+      "failed": 3,
+      "errors": 0,
+      "passed": 2,
+      "seconds": 3.168,
+      "details": "Actual unsent ticket state is PREPARED, not NOT_SENT. Immutable ciphertext SQL guard rejected corruption injection. Corrected state assertion and inject OS-vault unavailable at unprotect without altering original ciphertext/guards."
+    }
+  ],
+  "source_file_sha256": {
+    "photobooth/credential_vault.py": "30ede89dded2bc113781cb229d944275560a2fb68b82ddc1f576e70479a53cf3",
+    "photobooth/kiosk_v2/post_preview_checkout.py": "5c293a4ba12560e2b9fac8584d7ece1d36d20d10c9827241b9c7f94bb95ea9ac",
+    "photobooth/post_preview_claim.py": "0f70a896f32a39c9bd949bbbedf461f9c54fe576c95131d7e80cb368e891b91d",
+    "tests/post_preview_checkout_fixture.py": "948e0f134b2a59b31820132eaf33b74f36836f342f2f0bcf08cf95b95872152f",
+    "tests/post_preview_restore_process_fixture.py": "413999b8e5f04b230cfe98911375a26f17cd6146bef8a042e82f8a21fcda2135",
+    "tests/test_post_preview_protected_restore.py": "e22bc3fa70632eed5cc1d7e1b1309d33ec8e340c583f402680c6589249496956",
+    ".github/workflows/post-preview-qris.yml": "c1ef25b0c08957cdb5bead50e31e1ad7353db51eb29e867541851b1234868fd1"
+  },
+  "windows_ci": "PENDING",
+  "full_regression": "PENDING_AFTER_THIS_INCREMENT",
+  "full_acceptance_promoted": false,
+  "partial_case_ids": [
+    "PP-036",
+    "PP-037",
+    "PP-043",
+    "PP-045",
+    "PP-070",
+    "UAH-036",
+    "UAH-037",
+    "UAH-041"
+  ]
+}

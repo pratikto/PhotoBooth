@@ -1,6 +1,7 @@
 """Serialized private capture -> original CCP -> authenticated payment seam.
 
-Currently restricted to explicit incomplete mock fixtures. No Sandbox customer
+Restricted to explicit incomplete mock fixtures, optionally using the exact
+Windows DPAPI adapter under a separate mock-only opt-in. No Sandbox customer
 can pay until original-ticket/paid-delivery/release integration is implemented.
 Never constructs provider, printer or Drive transports in the kiosk process.
 """
@@ -8,6 +9,7 @@ from photobooth.post_preview_ccp import OriginalCCPService, render_private_ccp
 from photobooth.post_preview_checkout import ChargeReadiness
 from photobooth.post_preview_client import PostPreviewClient
 from photobooth.post_preview_store import DraftHeld
+from photobooth.credential_vault import mock_protector_allowed
 from photobooth.post_preview_ticket import OriginalRecoveryTicketService
 from photobooth.post_preview_paid_delivery import OriginalPaidDeliveryMonitor
 from photobooth.post_preview_paid_print import OriginalPaidPrintDispatcher
@@ -20,14 +22,17 @@ CHECKOUT_PHASES = frozenset({'claim_proof', 'checkout_ready', 'payment_pending',
 
 class PrivateCheckoutService(PrivatePhotoService):
     def __init__(self, root, *, payment_client, protector, merchant_id, readiness,
-                 qr_loader, allow_incomplete_fixture=False, **kwargs):
+                 qr_loader, allow_incomplete_fixture=False,
+                 allow_windows_protected_mock=False, **kwargs):
         if (not isinstance(payment_client, PostPreviewClient)
                 or payment_client.mode != 'mock' or allow_incomplete_fixture is not True
-                or not getattr(protector, 'synthetic', False)):
-            raise DraftHeld('Incomplete checkout is restricted to explicit synthetic fixtures')
+                or not mock_protector_allowed(protector,
+                    windows_protected=allow_windows_protected_mock)):
+            raise DraftHeld('Incomplete checkout requires an explicit mock credential profile')
         if not callable(readiness) or not callable(qr_loader):
             raise TypeError('Trusted readiness and QR adapters required')
         self.client, self.readiness, self.qr_loader = payment_client, readiness, qr_loader
+        self._windows_protected_mock = allow_windows_protected_mock
         self.group = self._offer = self._claim_qr = self._payment = self._payment_qr = None
         self._ccp = None
         self._paid_ticket = self._receipt_printer = self._receipt_lane = None
@@ -44,14 +49,16 @@ class PrivateCheckoutService(PrivatePhotoService):
         return self._paid_ticket is not None
 
     def attach_paid_ticket(self, service, *, printer=None, shared_lane=None):
-        """Explicit synthetic-only injection until paid-delivery/claim is complete.
+        """Explicit mock-only injection until paid-delivery/claim is complete.
 
         No customer/Sandbox launch can attach a money or printer transport here.
         The service must use our original backend payment ledger and merchant.
         """
         if (self._paid_ticket is not None or not isinstance(service, OriginalRecoveryTicketService)
                 or service.ledger is not self.ledger or service.merchant_id != self._ccp.merchant_id
-                or not getattr(service.protector, 'synthetic', False)
+                or service.protector is not self._ccp.protector
+                or not mock_protector_allowed(service.protector,
+                    windows_protected=self._windows_protected_mock)
                 or self.phase not in {'confirm', 'final_preview'}):
             raise DraftHeld('Exact original fixture ticket authority required')
         self._paid_ticket, self._receipt_printer, self._receipt_lane = (
@@ -108,7 +115,7 @@ class PrivateCheckoutService(PrivatePhotoService):
         return self._paid_delivery is not None and self._paid_print is not None
 
     def attach_paid_delivery(self, monitor, dispatcher, *, printer=None, shared_lane=None):
-        """Bind exact *synthetic* paid delivery only before checkout admission.
+        """Bind exact mock paid delivery only before checkout admission.
 
         A real Sandbox/merchant launcher must use a separately verified adapter
         and cannot accidentally select the incomplete fixture-only path.

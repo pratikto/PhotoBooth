@@ -116,6 +116,20 @@ def platform_protector():
     return WindowsDPAPIProtector()
 
 
+def mock_protector_allowed(protector, *, windows_protected=False):
+    """Explicit mock-only integration gate; never a merchant launch approval.
+
+    Do not trust a caller's protector ID or synthetic=False assertion as OS
+    protection. The protected integration uses the exact implemented DPAPI
+    adapter on Windows; other platforms and fixture keys fail closed.
+    """
+    if windows_protected is True:
+        return os.name == 'nt' and type(protector) is WindowsDPAPIProtector
+    if windows_protected is not False:
+        return False
+    return getattr(protector, 'synthetic', None) is True
+
+
 def protection_status():
     return {'os_protection': 'WINDOWS_DPAPI_USER' if os.name == 'nt' else 'UNSUPPORTED',
             'device_acceptance': 'NOT_VERIFIED'}

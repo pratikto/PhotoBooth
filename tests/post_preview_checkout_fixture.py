@@ -54,14 +54,15 @@ class SessionAdapter:
 
 
 class CheckoutFixture:
-    def __init__(self, root):
+    def __init__(self, root, *, protector=None, windows_protected_mock=False):
         self.ready = ChargeReadiness(True, True, True, True, True, True, True, 25)
         self.client = PostPreviewClient('https://fixture.invalid', 'PB001', 'SYNTHETIC-BOOTH-'+'a'*48,
                                         expected_mode='mock')
-        self.protector = SyntheticAeadProtector(os.urandom(32), fixture=True)
+        self.protector = protector if protector is not None else SyntheticAeadProtector(os.urandom(32), fixture=True)
         self.service = PrivateCheckoutService(root, payment_client=self.client, protector=self.protector,
             merchant_id='MTEST', readiness=lambda: self.ready,
-            qr_loader=lambda _: Image.new('RGB', (180,180), 'white'), allow_incomplete_fixture=True)
+            qr_loader=lambda _: Image.new('RGB', (180,180), 'white'), allow_incomplete_fixture=True,
+            allow_windows_protected_mock=windows_protected_mock)
         self.jobs = PhotoJobs(self.service)
         self.launch_lease = LaunchLease(root)
         self.legacy = CheckoutStore(root/'legacy-fixture.sqlite3')
