@@ -1,0 +1,20 @@
+{
+  "status": "IN_PROGRESS_NOT_MULTI_HOUR_PASS",
+  "source_sha": "824b6ae7636578332664abf5507456338e59c8ef",
+  "runtime_sha256": "cf992cfa4d74f0c1dbc17465fbee9d53c7e87c5dccf10fb421862c0604dcd21a",
+  "started_utc": "2026-11-05T03:29:25.514363+00:00",
+  "target_seconds": 7200,
+  "checkpoint_elapsed_seconds": 274.975,
+  "completed_cycles": 19,
+  "successful_test_executions": 133,
+  "completed_synthetic_paid_visits": 228,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "latest_resources": {
+    "threads": 1,
+    "file_descriptors": 5,
+    "rss_bytes": 202735616
+  },
+  "remaining": "Wait for full 7200-second result and verify runtime fingerprint; finish Windows CI log review and final documentation. No complete timed qualification or full acceptance PASS yet."
+}
