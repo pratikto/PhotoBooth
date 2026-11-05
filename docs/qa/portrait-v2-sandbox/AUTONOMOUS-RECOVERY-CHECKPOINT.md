@@ -1,3 +1,5 @@
+> **R4 simulation IN PROGRESS:** [current work packages and verified increments](PP07-SIMULATION-CLOSURE-R4-2026-11-05.md). Resume final source regression/CI, timed qualification and case audit; mock refund protocol is unmounted, not actual payout or full acceptance.
+
 # Autonomous recovery — session checkpoint and resume contract
 
 ## 31 October — BUG-028 source/full/current CI verified; owner retest next

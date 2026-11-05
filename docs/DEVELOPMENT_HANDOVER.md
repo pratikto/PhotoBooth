@@ -1,3 +1,5 @@
+> **R4 simulation IN PROGRESS:** [current work packages and verified increments](qa/portrait-v2-sandbox/PP07-SIMULATION-CLOSURE-R4-2026-11-05.md). Pre-ACK reconstruction, BUG-045 and unmounted mock refund lifecycle focused checks passed; final source regression/CI, timed qualification and case audit remain pending. No actual refund/customer route/production acceptance.
+
 # Meong Photobooth — GUI v2 development handover
 
 > **Physical-test software candidate verified:** [start here](qa/portrait-v2-sandbox/PP07-PHYSICAL-QUICK-START.md). Source 8901bbc: 1,778 full local PASS; CI 41952947024 all 3 SUCCESS (574 Windows/574 Ubuntu/68 native). Actual Windows PowerShell setup/check-only and Linux entry verified. Real camera/manual capture trial can begin after owner preflight; optional paper/Drive require their original dual consents. Payment remains synthetic; hardware/full recovery/merchant/refund/production acceptance is separate. [Evidence](qa/portrait-v2-sandbox/PP07-PHYSICAL-TEST-READINESS-2026-11-05.md).

@@ -32,6 +32,8 @@ class OriginalPaidDriveBinding:
         self._lock=threading.RLock()
 
     def _record(self,lease,group):
+        from photobooth.post_preview_refund_fence import deny_full_mock_refund_fulfillment
+        deny_full_mock_refund_fulfillment(self.ledger,group)
         self.ledger._owned(lease)
         intent,finance=self.payments._group(group,lease.booth_id)
         service=self.ledger.db.execute(

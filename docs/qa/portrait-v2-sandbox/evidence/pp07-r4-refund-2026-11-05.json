@@ -1,0 +1,25 @@
+{
+  "scope": "UNMOUNTED_LOCAL_SQLITE_REFUND_SIMULATOR_ONLY",
+  "new_methods": 19,
+  "focused": {
+    "run": 96,
+    "passed": 96,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 20.351
+  },
+  "actual_money_io": false,
+  "actual_customer_endpoint": false,
+  "live_cloud_compensation_implemented": false,
+  "full_acceptance_promoted": false,
+  "logs": {
+    "postpay-r4-refund-first.log": "89e7138724ecd72aa9e7235487bedf93c54d32f113528c14f170a57c05e330f3",
+    "postpay-r4-refund-auth-harness-error.log": "4638a61aceef0aeea8d3d2c49332b64bc664d46a040504096948e7df45e5ac3c",
+    "postpay-r4-refund-expanded-fixed.log": "b881b6417deb6cfeb6f2b0a623355f7fddd95bd619b97a6da518177ad535b428",
+    "postpay-r4-refund-process-first.log": "2cc3151f0504f96f1fc5b663a16482ceacc2c9a2883d3ba8bc7f15216dcb9d6f",
+    "postpay-r4-refund-connected-first.log": "8097709213066669c587aad2e9db82e585ea804ebca5ba1cb4ec5cc08137e1e7",
+    "postpay-r4-refund-worker-fixed.log": "d85f662652b62ee948491c5a26b04bd09708f8250145cc7e6754ff5d53fd8f94",
+    "postpay-r4-refund-connected-fixed.log": "dc75bcf662c945e6b3fd0f44abffa724fd6e2eab6d01a7fc49bc4e06e186277a"
+  }
+}

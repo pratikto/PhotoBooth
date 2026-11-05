@@ -66,6 +66,8 @@ class OriginalMockClaim:
         with self.ledger.write():
             # No provider I/O or transaction gap between current proof validity
             # and the original booth's occupancy compare-and-swap below.
+            from photobooth.post_preview_refund_fence import deny_full_mock_refund_fulfillment
+            deny_full_mock_refund_fulfillment(self.ledger,purchase_group_id)
             current_proof=verifier._verify_locked(purchase_group_id,booth_id,payload)
             if current_proof is None or current_proof!=proof:
                 raise PermissionError('Original Checkout Claim Proof required')
