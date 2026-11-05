@@ -1,0 +1,69 @@
+{
+  "source": "17f7863ec685d803c5e11f08d2409e3cb196390d",
+  "start_utc": "2026-11-05T00:48:25.388780+00:00",
+  "verified_public_assets": [
+    {
+      "file": "gesture_recognizer.task",
+      "sha256": "97952348cf6a6a4915c2ea1496b4b37ebabc50cbbf80571435643c455f2b0482"
+    },
+    {
+      "file": "left_hands.jpg",
+      "sha256": "240c082e80128ff1ca8a83ce645e2ba4d8bc30f0967b7991cf5fa375bab489e1"
+    },
+    {
+      "file": "fist.jpg",
+      "sha256": "43fa1cabf3f90d574accc9a56986e2ee48638ce59fc65af1846487f73bb2ef24"
+    },
+    {
+      "file": "thumb_up.jpg",
+      "sha256": "5d673c081ab13b8a1812269ff57047066f9c33c07db5f4178089e8cb3fdc0291"
+    },
+    {
+      "file": "pointing_up.jpg",
+      "sha256": "ecf8ca2611d08fa25948a4fc10710af9120e88243a54da6356bacea17ff3e36e"
+    }
+  ],
+  "command": [
+    "/workspace/work/postpay-venv/bin/python",
+    "tools/run_kiosk_unittests.py"
+  ],
+  "profile": "all GUI/audio/video/model optins; virtual devices only",
+  "exit_code": 0,
+  "seconds": 478.89,
+  "end_utc": "2026-11-05T00:56:24.279131+00:00",
+  "result": "PASS",
+  "run": 1766,
+  "passed": 1766,
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "normalized_unique_test_ids": 1676,
+  "report_sha256": "d12d5a045c9168dd6b43d702ea2a5d7212d46a15ae0295a0b249e17ba48e7645",
+  "log_sha256": "287470577c90e6228978f9dbc69f61669dc3d3d3682d56b75f2991119f37b0af",
+  "ci": {
+    "run_id": 41944005227,
+    "source": "17f7863ec685d803c5e11f08d2409e3cb196390d",
+    "all_success": true,
+    "completed_logs_inspected": true,
+    "each_failures_errors_skips": 0,
+    "windows": {
+      "job_id": 126971578193,
+      "pass": 563,
+      "seconds": 549.873,
+      "new_method_passes": 6
+    },
+    "ubuntu": {
+      "job_id": 126971578004,
+      "pass": 563,
+      "seconds": 180.041,
+      "new_method_passes": 6
+    },
+    "native": {
+      "job_id": 126971577703,
+      "pass": 67,
+      "seconds": 84.792,
+      "new_method_passes": 0
+    }
+  },
+  "full_acceptance_promoted": false
+}

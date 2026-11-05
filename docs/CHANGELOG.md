@@ -1,5 +1,11 @@
 # Meong Photobooth — changelog
 
+## 5 November 2026 — R2 regression closure and protected Windows mock restoration
+
+Closed the unfinished 3825473 full-regression gate with 1,760 all-opt-in local PASS, including all three real-model methods using verified retained public assets. Added explicit Windows DPAPI protection to the original mock checkout/claim integration, with exact adapter/platform opt-in guards and six new methods for independent-process original service restoration, busy claimant deferral, vault failure and mode isolation. The owner launcher stays unchanged and actual merchant/refund/production remain disabled.
+
+Functional/test source `17f7863`: final 1,766 local PASS; matching CI 41944005227 all 3 SUCCESS (563 Windows/563 Ubuntu/67 native), zero failures/errors/skips, all completed logs inspected. Windows performs actual DPAPI producer/consumer tests; Linux positive restart plumbing remains synthetic. The versioned R2 188-case register retains all full acceptance statuses and adds eight specific partial-scope observations. Full pre-ACK original-worker restoration, Ubuntu OS protection, actual devices/cloud/provider, qualification and refund/legal gates remain outstanding. [Campaign and evidence](qa/portrait-v2-sandbox/PP07-EXECUTION-CAMPAIGN-R2-2026-11-05.md).
+
 ## 5 November 2026 — complete post-preview test planning (documentation only)
 
 Added the [complete test plan](qa/portrait-v2-sandbox/PP07-COMPLETE-TEST-PLAN-2026-11-05.md), 112 detailed PP procedures, 26 owner PILOT plans, 50 versioned UAH plans, 14 retained AR stage gates and a blank 188-row execution register. Each PP procedure records setup, trigger, expected result, executor, priority, partial software evidence and remaining dependency. Existing results remain 103 partial / 9 missing PP scopes; all 112 full PP acceptance outcomes stay NOT_RUN and owner PILOT remains 24 NOT_RUN / 2 BLOCKED.

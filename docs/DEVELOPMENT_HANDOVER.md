@@ -1,5 +1,7 @@
 # Meong Photobooth — GUI v2 development handover
 
+> **Final R2 verification:** [source-matched campaign](qa/portrait-v2-sandbox/PP07-EXECUTION-CAMPAIGN-R2-2026-11-05.md) at 17f7863: 1,766 all-opt-in local PASS; CI 41944005227 all 3 SUCCESS (563 Windows/563 Ubuntu/67 native), zero failures/errors/skips. Windows protected mock service restart is verified after original local ACK; full pre-ACK worker/device/Ubuntu/merchant/refund acceptance remains separate. Next boundary and exact evidence are in the campaign; historical pending notes below are superseded.
+
 > **R2 supersedes pending broad-regression notes:** [exact-source 3825473 execution](qa/portrait-v2-sandbox/PP07-EXECUTION-CAMPAIGN-R2-2026-11-05.md): 1,760 local PASS, zero failures/errors/skips including all three real-model methods; CI 41930961409 inspected 557 Windows / 557 Ubuntu / 67 native PASS. Protected original-worker restoration remains next; full owner/provider/refund acceptance is unchanged.
 
 > **Latest R1 active source fec4f7f:** [current exact verification checkpoint](qa/portrait-v2-sandbox/PP07-R1-CONTINUATION-2026-11-05.md). BUG-043/044 fixed; 16 new methods; final actual-time replays PASS at both sizes. CI 41927170321 Ubuntu 557/native 67 PASS, Windows pending; local full final run still RUNNING. Older pending/cancelled notes below retain their historical source.

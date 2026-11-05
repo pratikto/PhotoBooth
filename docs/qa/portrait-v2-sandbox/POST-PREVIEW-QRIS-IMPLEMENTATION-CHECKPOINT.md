@@ -1,5 +1,7 @@
 # Post-preview QRIS implementation checkpoint
 
+> **Final R2 verification:** [source-matched campaign](PP07-EXECUTION-CAMPAIGN-R2-2026-11-05.md) at 17f7863: 1,766 all-opt-in local PASS; CI 41944005227 all 3 SUCCESS (563 Windows/563 Ubuntu/67 native), zero failures/errors/skips. Windows protected mock service restart is verified after original local ACK; full pre-ACK worker/device/Ubuntu/merchant/refund acceptance remains separate. Next boundary and exact evidence are in the campaign; historical pending notes below are superseded.
+
 > **5 November R1 execution IN PROGRESS:** [BUG-043 connected native proof-visibility repair and versioned 188-case register](PP07-EXECUTION-CAMPAIGN-R1-2026-11-05.md). Two initial failures; corrected focused scope 68 PASS, zero failures/errors/skips. Full acceptance and final new-source regression/CI remain separate; owner testing has not been requested.
 
 > **5 November complete test plan (documentation only):** [188 case rows and remaining priorities](PP07-COMPLETE-TEST-PLAN-2026-11-05.md), with detailed 112 PP procedures, 26 owner PILOT cases, 50 versioned UAH cases and 14 AR stage gates. Existing software evidence remains 103 partial / 9 missing PP scopes; all 112 full PP acceptance outcomes remain NOT_RUN, PILOT remains 24 NOT_RUN / 2 BLOCKED. No new execution, refund activation or production approval.

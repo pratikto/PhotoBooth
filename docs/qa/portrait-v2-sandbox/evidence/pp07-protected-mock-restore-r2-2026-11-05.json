@@ -42,8 +42,8 @@
     "tests/test_post_preview_protected_restore.py": "e22bc3fa70632eed5cc1d7e1b1309d33ec8e340c583f402680c6589249496956",
     ".github/workflows/post-preview-qris.yml": "c1ef25b0c08957cdb5bead50e31e1ad7353db51eb29e867541851b1234868fd1"
   },
-  "windows_ci": "PENDING",
-  "full_regression": "PENDING_AFTER_THIS_INCREMENT",
+  "windows_ci": "VERIFIED_ACTUAL_DPAPI_MOCK_SERVICE_PROCESSES",
+  "full_regression": "PASS_ALL_OPT_INS",
   "full_acceptance_promoted": false,
   "partial_case_ids": [
     "PP-036",
@@ -54,5 +54,7 @@
     "UAH-036",
     "UAH-037",
     "UAH-041"
-  ]
+  ],
+  "tested_source_sha": "17f7863ec685d803c5e11f08d2409e3cb196390d",
+  "verification_evidence": "pp07-final-verification-r2-2026-11-05.json"
 }
