@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-05",
+  "timezone": "Asia/Jakarta",
+  "baseline": "4e637e3186d6b3a23f4b02499b591b89c8334e54",
+  "scope": "Physical-test packaging of existing synthetic-payment pilot; no physical acceptance performed",
+  "focused": {
+    "run": 28,
+    "passed": 28,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 4.861,
+    "report_sha256": "0fadd40125ec21d4f1138aa80b03ed7083f11b74e6194be73939f3f62adeeafb"
+  },
+  "native_scope": "Actual pilot main/build/binding and payment button at both portrait sizes; App.run intercepted; synthetic camera and virtual transports; accelerated capture helper and early NEXT, not real-time timer measurement",
+  "check_only": "READY_FOR_SUPERVISED_SYNTHETIC_PILOT in actual authorized-branch checkout; no device operations",
+  "git_ignore": "Default trial and report paths verified ignored with git check-ignore",
+  "source_sha256": {
+    "Start-PostPreviewDeviceTest.ps1": "c4a3880612af3f40d55efebf387c2b5c0e86d911808fde145c9f55292514dbcc",
+    "tools/start_post_preview_device_test.py": "aebf851b04000150b2328d1ea95a9943bf934ae015eb99296a69fcf0dd450fde",
+    "tools/check_post_preview_pilot.py": "c50656ca51355165eceab38e9f9a0ffd43f54055c6d7928de389cf821dcdbfed",
+    "tools/run_post_preview_checkout_pilot.py": "446f0603fc4d205937e5479995b3b4786a4c93f256c7fb49cf1d26680159be07",
+    "tests/test_post_preview_device_entry.py": "e8523f6f74597af089be873c863a7899eda3c79f2844bb0e0abd81d3235429ab",
+    "tests/test_post_preview_pilot_runtime.py": "bb497eabb49febf7d459cb99edf0806f29f853fbef0c2b39fa1c3cf697c2b881",
+    "requirements.txt": "93f27b73fbe6ab4917b1cb867a4b55db7a24d3e527a396d9aa1069e50b3ed5b4",
+    ".github/workflows/post-preview-qris.yml": "36bc332b43da82368aaab978f5fa032280598a167c2d3d8ca540c75c6ca00668",
+    ".gitignore": "06060cc826ba7c1c0183faae40d53442e1bc229e096cfd742a9aec20bb7ca38b"
+  },
+  "ci": "PENDING",
+  "final_full": "PENDING",
+  "hardware_acceptance": "NOT_RUN",
+  "actual_merchant_refund_production": "NOT_ENABLED"
+}

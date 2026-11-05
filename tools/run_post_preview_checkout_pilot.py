@@ -10,6 +10,8 @@ sys.path.insert(0,str(ROOT))
 
 def build_parser():
     p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--size', choices=('452x900', '800x1280'), default='800x1280',
+                   help='Initial portrait window size; native resizing stays available')
     p.add_argument('--private-root',type=Path,required=True,
                    help='New dedicated, unoccupied local test folder')
     p.add_argument('--synthetic-payment-only',action='store_true',required=True,
@@ -94,16 +96,21 @@ def main(argv=None):
     os.environ.setdefault('KIVY_NO_ARGS','1')
     os.environ.setdefault('KIVY_LOG_MODE','MIXED')
     from photobooth.kiosk_v2.recovery import LaunchLease
-    from tools.run_portrait_v2 import configure_kivy
-    from kivy.config import Config
-    from tests.post_preview_checkout_fixture import CheckoutFixture
-    from photobooth.kiosk_v2.post_preview_checkout_app import PrivateCheckoutFixtureApp
     try: launch=LaunchLease(ROOT)
     except (OSError,ValueError):
         print('Startup blocked: another kiosk is active.',file=sys.stderr)
         return 2
     with launch:
+        # Set the initial size before importing any Window/widgets, and do
+        # not initialize native providers when another launcher holds the lock.
+        from tools.run_portrait_v2 import configure_kivy
+        from kivy.config import Config
         configure_kivy(Config)
+        width, height = args.size.split('x')
+        Config.set('graphics', 'width', width)
+        Config.set('graphics', 'height', height)
+        from tests.post_preview_checkout_fixture import CheckoutFixture
+        from photobooth.kiosk_v2.post_preview_checkout_app import PrivateCheckoutFixtureApp
         fixture=CheckoutFixture(root)
         fixture.enable_paid_ticket()
         if args.enable_real_drive:

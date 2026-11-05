@@ -18,3 +18,6 @@ photobooth/local_settings.py
 *.[mM][kK][vV]
 *.[mM][oO][vV]
 *.[wW][eE][bB][mM]
+
+# Private supervised post-preview trial media, journals and local reports.
+/work/postpay-*/

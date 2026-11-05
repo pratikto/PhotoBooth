@@ -34,7 +34,8 @@ CONFLICTING_PROFILES = (
 )
 
 
-def inspect(root: Path = ROOT, check_imports: bool = True) -> dict:
+def inspect(root: Path = ROOT, check_imports: bool = True, *, environment=None) -> dict:
+    environment = os.environ if environment is None else environment
     checks = []
     def record(name: str, passed: bool, detail: str) -> None:
         checks.append({"name": name, "status": "PASS" if passed else "BLOCKED", "detail": detail})
@@ -52,7 +53,7 @@ def inspect(root: Path = ROOT, check_imports: bool = True) -> dict:
     record("Authorized branch", branch == EXPECTED_BRANCH,
            branch or "Git branch could not be read")
     # Report only flag names, never secret or credential values.
-    conflicting = [flag for flag in CONFLICTING_PROFILES if os.environ.get(flag) == "1"]
+    conflicting = [flag for flag in CONFLICTING_PROFILES if environment.get(flag) == "1"]
     record("Isolated synthetic launch profile", not conflicting,
            "legacy modes disabled" if not conflicting
            else "disable " + ", ".join(conflicting))

@@ -1,5 +1,5 @@
 # MediaPipe uses this OpenCV superset too; keep a single cv2 distribution.
-opencv-contrib-python
+opencv-contrib-python>=4.10,<5
 Pillow
 requests
 qrcode[pil]
