@@ -1,5 +1,5 @@
 {
-  "status": "LOCAL_VERIFIED_CI_AND_TIMED_QUALIFICATION_PENDING",
+  "status": "LOCAL_AND_CI_VERIFIED_TIMED_QUALIFICATION_PENDING",
   "source_sha": "824b6ae7636578332664abf5507456338e59c8ef",
   "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
   "python": "3.12.14",
@@ -42,7 +42,7 @@
   },
   "ci": {
     "run_id": 41960994370,
-    "status": "WINDOWS_PENDING",
+    "status": "COMPLETED_ALL_THREE_SUCCESS",
     "ubuntu": {
       "job_id": 127027245232,
       "passed": 597,
@@ -58,7 +58,19 @@
       "errors": 0,
       "skipped": 0,
       "log_inspected": true
-    }
+    },
+    "windows": {
+      "job_id": 127027244962,
+      "passed": 597,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "log_inspected": true,
+      "actual_dpapi_preack_process_branch": true,
+      "new_refund_methods_observed": 19,
+      "owner_powershell_setup_check_only": "READY_FOR_SUPERVISED_SYNTHETIC_PILOT"
+    },
+    "total_pass_executions": 1262
   },
   "timed_qualification": {
     "status": "IN_PROGRESS",
