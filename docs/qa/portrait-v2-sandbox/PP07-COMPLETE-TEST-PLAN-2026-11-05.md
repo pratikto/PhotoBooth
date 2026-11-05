@@ -1,3 +1,5 @@
+> **Later R4 execution:** [source-matched simulation campaign](PP07-SIMULATION-CLOSURE-R4-2026-11-05.md), [112-case partial review](evidence/pp07-r4-case-review-2026-11-05.json), [188-row register](evidence/pp07-execution-register-r4-2026-11-05.csv). Historical mappings below remain dated; all full acceptance outcomes are unchanged.
+
 # Complete post-preview test plan — 5 November 2026
 
 [Start a fresh Codex execution session with this comprehensive prompt](PP07-CODEX-TEST-EXECUTION-PROMPT-2026-11-05.md); it resumes this plan from repository evidence without the previous chat.

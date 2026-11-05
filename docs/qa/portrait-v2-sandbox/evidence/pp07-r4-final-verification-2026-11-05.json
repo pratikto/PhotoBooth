@@ -1,0 +1,76 @@
+{
+  "status": "LOCAL_VERIFIED_CI_AND_TIMED_QUALIFICATION_PENDING",
+  "source_sha": "824b6ae7636578332664abf5507456338e59c8ef",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "local": {
+    "run": 1801,
+    "passed": 1801,
+    "normalized_distinct_pass_ids": 1711,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 504.339,
+    "all_gui_audio_video_model_optins": true,
+    "public_model_assets": [
+      {
+        "file": "gesture_recognizer.task",
+        "sha256": "97952348cf6a6a4915c2ea1496b4b37ebabc50cbbf80571435643c455f2b0482"
+      },
+      {
+        "file": "left_hands.jpg",
+        "sha256": "240c082e80128ff1ca8a83ce645e2ba4d8bc30f0967b7991cf5fa375bab489e1"
+      },
+      {
+        "file": "fist.jpg",
+        "sha256": "43fa1cabf3f90d574accc9a56986e2ee48638ce59fc65af1846487f73bb2ef24"
+      },
+      {
+        "file": "thumb_up.jpg",
+        "sha256": "5d673c081ab13b8a1812269ff57047066f9c33c07db5f4178089e8cb3fdc0291"
+      },
+      {
+        "file": "pointing_up.jpg",
+        "sha256": "ecf8ca2611d08fa25948a4fc10710af9120e88243a54da6356bacea17ff3e36e"
+      }
+    ],
+    "logs": {
+      "full.log": "0b444bcd9971d044424c9724709d63c94e284af237d84d2a562120f935254b14",
+      "full-report.txt": "92875fd47548c10729ad11edc734d21c66aca4a0fb2ee5f026f4586cc473b113",
+      "full-metadata.json": "440d4e2982c46f422cc497153cdff9a0a5f8f4cd407d7e20bb8053425979eee8"
+    }
+  },
+  "ci": {
+    "run_id": 41960994370,
+    "status": "WINDOWS_PENDING",
+    "ubuntu": {
+      "job_id": 127027245232,
+      "passed": 597,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "log_inspected": true
+    },
+    "native": {
+      "job_id": 127027244961,
+      "passed": 68,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "log_inspected": true
+    }
+  },
+  "timed_qualification": {
+    "status": "IN_PROGRESS",
+    "target_seconds": 7200,
+    "result_is_not_yet_pass": true
+  },
+  "full_acceptance_promoted": false,
+  "actual_financial_or_device_io": false,
+  "unrelated_checkout": {
+    "path": "/workspace/PhotoBooth",
+    "branch": "work",
+    "sha": "0fbf15829d1537a7f18990b492b1e5934f21c0f8",
+    "status": "CLEAN_UNTOUCHED"
+  }
+}

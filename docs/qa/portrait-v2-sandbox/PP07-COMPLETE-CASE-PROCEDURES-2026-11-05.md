@@ -1,3 +1,5 @@
+> **Later R4 execution:** [source-matched simulation campaign](PP07-SIMULATION-CLOSURE-R4-2026-11-05.md), [112-case partial review](evidence/pp07-r4-case-review-2026-11-05.json), [188-row register](evidence/pp07-execution-register-r4-2026-11-05.csv). Historical mappings below remain dated; all full acceptance outcomes are unchanged.
+
 # Detailed PP-001–112 procedures — 5 November 2026
 
 Use the [master plan](PP07-COMPLETE-TEST-PLAN-2026-11-05.md) COMMON protocol, E1–E9 record and referenced group setup for every case. Canonical scenarios and expected results are preserved verbatim from the source-specific review of the [acceptance matrix](POST-PREVIEW-QRIS-ACCEPTANCE-MATRIX.md). All full acceptance outcomes remain **NOT_RUN**. A planning label is not an observed outcome. Existing methods below are partial evidence at `acbac15842b59d5005075f2fbc7e87978323b158`, not proof of the additional steps or hardware/provider lifecycle. The machine-readable companion retains all mapped method IDs.

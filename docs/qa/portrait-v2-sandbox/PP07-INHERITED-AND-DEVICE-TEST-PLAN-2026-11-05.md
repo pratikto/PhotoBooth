@@ -1,3 +1,5 @@
+> **Later R4 execution:** [source-matched simulation campaign](PP07-SIMULATION-CLOSURE-R4-2026-11-05.md), [112-case partial review](evidence/pp07-r4-case-review-2026-11-05.json), [188-row register](evidence/pp07-execution-register-r4-2026-11-05.csv). Historical mappings below remain dated; all full acceptance outcomes are unchanged.
+
 # Inherited, device and release test plan — 5 November 2026
 
 Companion to the [complete plan](PP07-COMPLETE-TEST-PLAN-2026-11-05.md). Execute its COMMON protocol and E1–E9 evidence fields. This appendix accounts for all 26 PILOT and all 50 UAH identifiers plus the 14 AR stage definitions. These are plans, not new executions. Use the [blank execution register](evidence/pp07-acceptance-execution-register-2026-11-05.csv) for the first observation and retain separate later run records; its full acceptance fields start at NOT_RUN/BLOCKED.
