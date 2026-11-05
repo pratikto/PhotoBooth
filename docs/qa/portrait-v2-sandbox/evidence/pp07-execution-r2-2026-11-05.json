@@ -1,0 +1,67 @@
+{
+  "source": "38254738cf0724655aea61dfd3bb1beb5812b5cb",
+  "start_utc": "2026-11-04T23:19:38.514735+00:00",
+  "verified_public_assets": [
+    {
+      "file": "gesture_recognizer.task",
+      "sha256": "97952348cf6a6a4915c2ea1496b4b37ebabc50cbbf80571435643c455f2b0482"
+    },
+    {
+      "file": "left_hands.jpg",
+      "sha256": "240c082e80128ff1ca8a83ce645e2ba4d8bc30f0967b7991cf5fa375bab489e1"
+    },
+    {
+      "file": "fist.jpg",
+      "sha256": "43fa1cabf3f90d574accc9a56986e2ee48638ce59fc65af1846487f73bb2ef24"
+    },
+    {
+      "file": "thumb_up.jpg",
+      "sha256": "5d673c081ab13b8a1812269ff57047066f9c33c07db5f4178089e8cb3fdc0291"
+    },
+    {
+      "file": "pointing_up.jpg",
+      "sha256": "ecf8ca2611d08fa25948a4fc10710af9120e88243a54da6356bacea17ff3e36e"
+    }
+  ],
+  "command": [
+    "/workspace/work/postpay-venv/bin/python",
+    "tools/run_kiosk_unittests.py"
+  ],
+  "profile": "all GUI/audio/video/model optins; virtual devices only",
+  "exit_code": 0,
+  "seconds": 478.519,
+  "end_utc": "2026-11-04T23:27:37.033922+00:00",
+  "result": "PASS",
+  "run": 1760,
+  "passed": 1760,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "unittest_seconds": 476.895,
+  "report_sha256": "62480f6605e3eb6e61b4eeb24ec1f963496e277dcc9bdd51224bdf277d9cf775",
+  "log_sha256": "52d3af1b24508450b3747e5fe399adc01eb75d2981f7a2b3d789f14249845ce4",
+  "full_acceptance_promoted": false,
+  "ci": {
+    "run_id": 41930961409,
+    "source": "38254738cf0724655aea61dfd3bb1beb5812b5cb",
+    "result": "COMPLETED_3_OF_3_SUCCESS",
+    "completed_logs_inspected": true,
+    "windows": {
+      "job_id": 126927410640,
+      "pass": 557,
+      "seconds": 446.437
+    },
+    "ubuntu": {
+      "job_id": 126927411225,
+      "pass": 557,
+      "seconds": 179.632
+    },
+    "native": {
+      "job_id": 126927411272,
+      "pass": 67,
+      "seconds": 82.835
+    },
+    "each_failures_errors_skips": 0
+  },
+  "scope": "All opt-in synthetic software execution; actual model inference uses verified existing public assets. No actual merchant, physical device, cloud or refund operation."
+}

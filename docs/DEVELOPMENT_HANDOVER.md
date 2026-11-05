@@ -1,5 +1,7 @@
 # Meong Photobooth — GUI v2 development handover
 
+> **R2 supersedes pending broad-regression notes:** [exact-source 3825473 execution](qa/portrait-v2-sandbox/PP07-EXECUTION-CAMPAIGN-R2-2026-11-05.md): 1,760 local PASS, zero failures/errors/skips including all three real-model methods; CI 41930961409 inspected 557 Windows / 557 Ubuntu / 67 native PASS. Protected original-worker restoration remains next; full owner/provider/refund acceptance is unchanged.
+
 > **Latest R1 active source fec4f7f:** [current exact verification checkpoint](qa/portrait-v2-sandbox/PP07-R1-CONTINUATION-2026-11-05.md). BUG-043/044 fixed; 16 new methods; final actual-time replays PASS at both sizes. CI 41927170321 Ubuntu 557/native 67 PASS, Windows pending; local full final run still RUNNING. Older pending/cancelled notes below retain their historical source.
 
 > **Current R1 verification checkpoint:** [exact unfinished retest, pushed source and blockers](qa/portrait-v2-sandbox/PP07-R1-CONTINUATION-2026-11-05.md). 2ac2380 test-fixture repair is pushed; first broad run retained 1 ERROR/3 model SKIP. New broad retest and CI 41924955940 are pending. Do not report full local PASS from the older successful 36ec0cc CI.

@@ -1,5 +1,7 @@
 # R1 durable continuation — 5 November 2026 (Asia/Jakarta)
 
+> **R2 supersedes pending broad-regression notes:** [exact-source 3825473 execution](PP07-EXECUTION-CAMPAIGN-R2-2026-11-05.md): 1,760 local PASS, zero failures/errors/skips including all three real-model methods; CI 41930961409 inspected 557 Windows / 557 Ubuntu / 67 native PASS. Protected original-worker restoration remains next; full owner/provider/refund acceptance is unchanged.
+
 > **Latest checkpoint K supersedes all RUNNING notes below:** fec4f7f broad
 > regression completed 1,760 run / 1,756 PASS / 1 FAIL / zero errors / three
 > model SKIP in 1,141.769s. The failing delivery idle-helper case is preserved.
