@@ -42,7 +42,7 @@ class OriginalPaidPrintDispatcher:
                     'SELECT * FROM pp_ticket_presentations WHERE purchase_group_id=?',
                     (group,)).fetchone()
                 if (presentation is None or presentation['screen_state']!='DISMISSED'
-                        or presentation['receipt_state'] in {'PREPARED','SENDING'}):
+                        or presentation['receipt_state'] in {'PREPARED','SENDING','UNCERTAIN'}):
                     raise DraftHeld('Original Recovery Ticket presentation is incomplete')
                 # Defense in depth: direct dispatchers, retired workers or a
                 # second dispatcher instance must not bypass the kiosk-level

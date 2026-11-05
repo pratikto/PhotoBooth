@@ -65,6 +65,28 @@ class OriginalPaidPrintTests(unittest.TestCase):
                                  'template_a',printer,shared_lane=threading.Lock())
         printer.print_image.assert_called_once()
 
+    def test_uncertain_original_receipt_blocks_even_direct_paid_strip_dispatch(self):
+        from photobooth.post_preview_store import DraftHeld
+        fixture,dispatcher,_=self.prepped()
+        offer=fixture.service.prepare_ticket()['ticket_offer']
+        fixture.service.ticket_visible(offer)
+        fixture.service._receipt_printer.print_bitmap=lambda *_args, **_kwargs: (_ for _ in ()).throw(TimeoutError('Synthetic receipt response loss'))
+        view=fixture.service.ticket_send_receipt()
+        self.assertEqual('UNCERTAIN',view['ticket_receipt']['receipt_state'])
+        fixture.service.ticket_dismiss()
+        from photobooth.post_preview_paid_delivery import OriginalPaidDeliveryMonitor
+        monitor=OriginalPaidDeliveryMonitor(dispatcher.preparer,allow_incomplete_fixture=True)
+        self.assertTrue(monitor.inspect(fixture.service.lease,fixture.service.group)['needs_operator_review'])
+        printer=Mock()
+        with self.assertRaises(DraftHeld):
+            dispatcher.send_once(fixture.service.lease,fixture.service.group,
+                                 'template_a',printer,shared_lane=threading.Lock())
+        printer.print_image.assert_not_called()
+        self.assertEqual('PREPARED',fixture.service.ledger.db.execute(
+            'SELECT state FROM pp_paid_strip_jobs').fetchone()[0])
+        self.assertEqual('OWED',fixture.service.ledger.db.execute(
+            'SELECT status FROM pp_paid_services').fetchone()[0])
+
     def test_unknown_print_outcome_is_never_replayed(self):
         fixture,dispatcher,_=self.prepped()
         self.paid_ticket(fixture)

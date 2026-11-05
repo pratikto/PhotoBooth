@@ -1,0 +1,32 @@
+{
+  "bug": "BUG-045",
+  "before": {
+    "run": 1,
+    "failures": 1,
+    "errors": 0,
+    "skips": 0
+  },
+  "after": {
+    "run": 54,
+    "passed": 54,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 16.646
+  },
+  "scope": "Synthetic receipt transport uncertainty; prevent later paid photo bytes and expose existing review flag",
+  "partial_case_ids": [
+    "PP-042",
+    "PP-044",
+    "PP-049",
+    "PP-050",
+    "PP-051",
+    "PP-071",
+    "PP-095"
+  ],
+  "physical_paper_verified": false,
+  "logs": {
+    "postpay-r4-receipt-before.log": "863578f1dd0892ec8d8a2416dfd63509ba859b3f72ac6422b7df5353e341a3bf",
+    "postpay-r4-receipt-after.log": "8524ff22e8ea5fafa96f64c9e79e5df78c7ccde68a2dfe8f9b40b9ac27cd7110"
+  }
+}

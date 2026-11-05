@@ -118,6 +118,8 @@ class OriginalPaidDeliveryMonitor:
                 elif service['drive_state']=='UPLOADED' and not complete:
                     raise DraftHeld('Previously verified paid Drive outcome is inconsistent')
                 states={j['template_id']:j['state'] for j in jobs}
+                receipt=self.binder.ledger.db.execute(
+                    'SELECT receipt_state FROM pp_ticket_presentations WHERE purchase_group_id=?',(group,)).fetchone()
                 return {
                     'transaction_id':service['transaction_id'],
                     'folder_url':service['folder_url'],
@@ -129,6 +131,7 @@ class OriginalPaidDeliveryMonitor:
                     'service_status':'OWED',
                     'safe_to_release_without_original_claim':False,
                     'needs_operator_review':any(v in {'SENDING','UNCERTAIN'} for v in states.values())
+                        or bool(receipt and receipt['receipt_state']=='UNCERTAIN')
                 }
 
     def enqueue(self,lease,group,templates):
