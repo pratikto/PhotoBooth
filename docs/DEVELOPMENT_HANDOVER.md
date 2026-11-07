@@ -1,3 +1,12 @@
+# 8 November 2026 — BUG-046 automatic result return
+
+Owner requires the paid results page to return to Ads automatically after 30
+seconds, without a new finish button. Source correction and focused native/API
+verification are in [BUG-046](qa/portrait-v2-sandbox/BUG046-RESULT-AUTO-RETURN.md).
+The timer is separate from the mandatory Recovery Ticket window. Original
+privacy retirement, PAID/OWED and PREPARE/ACK admission remain authoritative.
+Final regression/CI and owner retest are pending; keep prior evidence dated.
+
 > **R4 remote checkpoint — active timed qualification:** runtime/test source `824b6ae7636578332664abf5507456338e59c8ef`; 1,801 local PASS, zero failure/error/skip. [Campaign](qa/portrait-v2-sandbox/PP07-SIMULATION-CLOSURE-R4-2026-11-05.md) and [timed checkpoint](qa/portrait-v2-sandbox/evidence/pp07-r4-soak-checkpoint-2026-11-05.json). Current two-hour run is IN_PROGRESS, not PASS. On this environment continue observing `/workspace/work/postpay-r4-soak-qualified/{progress,result}.json` (result appears only at completion); original session 70769. Do not restart an already running test or change runtime during qualification. In another environment the private running process/report cannot transfer through GitHub: preserve existing journals; use the committed harness in a new output directory and rerun the missing duration. Full source-matched Windows CI/log review and final result publication remain pending. All safe code/tests/docs are pushed incrementally; no local runtime WIP.
 
 > **R4 simulation IN PROGRESS:** [current work packages and verified increments](qa/portrait-v2-sandbox/PP07-SIMULATION-CLOSURE-R4-2026-11-05.md). Pre-ACK reconstruction, BUG-045 and unmounted mock refund lifecycle focused checks passed; final source regression/CI, timed qualification and case audit remain pending. No actual refund/customer route/production acceptance.
@@ -3367,4 +3376,3 @@ trial keeps printer/Drive off. Local MOCK remains a simulation.
 ## Historical record
 
 The [pre-audit version](https://github.com/pratikto/PhotoBooth/blob/5f09eff9998c942ed54feef0cf0563fc3944611b/docs/DEVELOPMENT_HANDOVER.md) preserves the complete dated history. Its former “current”, approval, branch and next-step statements apply only to their recorded stage. Use the current documents linked above for continuation.
-

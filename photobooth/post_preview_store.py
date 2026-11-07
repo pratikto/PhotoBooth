@@ -22,7 +22,7 @@ ORDER_VERSION = 'post_preview_v1'
 MAX_COPIES = 9  # New-order policy matches the existing gallery; legacy stays 10.
 LIFECYCLE_EVENTS = frozenset({'USER_CANCEL', 'APP_SUSPENDED',
                              'INACTIVITY_WARNING', 'INACTIVITY_EXPIRED',
-                             'VISIT_ABANDONED'})
+                             'VISIT_ABANDONED', 'RESULT_TIMEOUT'})
 
 
 def quote_post_preview(quantities):

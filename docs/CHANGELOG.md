@@ -1,3 +1,13 @@
+# 8 November 2026 — BUG-046 automatic paid-result return
+
+- Fixed the supervised post-preview results page remaining open indefinitely:
+  return to protected Ads after 30 seconds with a visible countdown, no extra
+  finish button and no reset on status refresh or redraw.
+- Reused original privacy retirement and added RESULT_TIMEOUT lifecycle evidence;
+  preserve PAID/OWED, no-replay output and safe next-visitor PREPARE/ACK.
+- Added native deadline/slow-print/late-reply and paid lifecycle API regression.
+  [Detailed evidence and owner retest](qa/portrait-v2-sandbox/BUG046-RESULT-AUTO-RETURN.md).
+
 # Meong Photobooth — changelog
 
 ## 5 November 2026 — directly usable supervised physical-test entry
@@ -1680,5 +1690,3 @@ For changes made before the documentation effort, inspect Git commits and the da
 **Verified code-level QA:** [GitHub Actions 39555036023](https://github.com/pratikto/PhotoBooth/actions/runs/39555036023) at code/test SHA **c4e4703a**: **21/21** pure tests PASS; Kivy widget smoke PASS; 12 synthetic portrait screenshots PASS at 800×1280 and 452×900; two jobs SUCCESS. An earlier CI run between gallery changes and updated assertions failed due *stale test expectation* of 1 texture; after updating test to cover 3 previews the current run succeeded. Screenshot artifacts visually inspected, including legible compact-height game introduction. No new device/hardware tests were performed.
 
 **Explicitly NOT delivered:** Real face detection, playable Meong Fly/POS struk/one-attempt backend and redeemable discount, provider QRIS, camera capture, thermal paper print and Drive delivery inside v2. Remaining P2.5 design pixel-font/animation polish plus physical Windows 10.1-inch audio/video and touch/swipe acceptance are still open; owner approval is required before master promotion.
-
-

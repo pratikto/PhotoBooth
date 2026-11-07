@@ -1,3 +1,10 @@
+# 8 November 2026 — post-preview paid-result timeout
+
+[BUG-046](qa/portrait-v2-sandbox/BUG046-RESULT-AUTO-RETURN.md): owner-approved
+automatic return from paid results to protected Ads after 30 seconds; no new
+button. Focused native/API 3 PASS; final regression/CI and owner retest pending.
+Ticket timing, original PAID/OWED and guarded next-customer admission are preserved.
+
 # Meong Photobooth — current feature status
 
 > **Physical-test software candidate verified:** [start here](qa/portrait-v2-sandbox/PP07-PHYSICAL-QUICK-START.md). Source 8901bbc: 1,778 full local PASS; CI 41952947024 all 3 SUCCESS (574 Windows/574 Ubuntu/68 native). Actual Windows PowerShell setup/check-only and Linux entry verified. Real camera/manual capture trial can begin after owner preflight; optional paper/Drive require their original dual consents. Payment remains synthetic; hardware/full recovery/merchant/refund/production acceptance is separate. [Evidence](qa/portrait-v2-sandbox/PP07-PHYSICAL-TEST-READINESS-2026-11-05.md).
@@ -1375,4 +1382,3 @@ availability. [Test ledger](test_checklist.md) · [bug register](bug_tracker.md)
 ## Historical record
 
 The [pre-audit version](https://github.com/pratikto/PhotoBooth/blob/5f09eff9998c942ed54feef0cf0563fc3944611b/docs/FEATURE_STATUS.md) preserves the complete dated history. Its former “current”, approval, branch and next-step statements apply only to their recorded stage. Use the current documents linked above for continuation.
-

@@ -1,5 +1,19 @@
 # Meong Photobooth — Bug register
 
+## BUG-046 — Paid results never automatically returned to Advertising (8 November 2026)
+
+**Severity:** S2 session navigation/privacy exposure. **Status:** SOURCE FIXED /
+focused synthetic VERIFIED; final regression/CI and owner retest pending.
+Owner reports 11 scoped laptop checklist PASS, PILOT-03 NOT_RUN, and no return
+from the paid result screen; laptop SHA unknown. Owner explicitly requires an
+automatic return after 30 seconds with no new button. One result deadline now
+reuses privacy retirement/protected Ads, survives redraws/status refreshes and
+does not reset on interaction. RESULT_TIMEOUT preserves PAID/OWED and exact
+worker/ACK admission guards; late delivery replies cannot reopen private pixels.
+Three focused methods PASS (both portrait sizes, deadline boundary, blocked
+print/UNCERTAIN and original paid API); no actual device acceptance inferred.
+[Scope, evidence and retest](qa/portrait-v2-sandbox/BUG046-RESULT-AUTO-RETURN.md).
+
 ## BUG-045 — Uncertain Recovery Ticket receipt did not quarantine paid strip output (5 November 2026)
 
 **Severity:** S1 physical-output integrity. **Status:** SOURCE FIXED / focused software VERIFIED; final new-source full regression/CI pending. A synthetic receipt transport timeout produced durable UNCERTAIN and the mandatory ticket screen was dismissed. The direct original paid-strip dispatcher accepted a new strip because its receipt guard only denied PREPARED/SENDING. The paid-delivery snapshot also omitted receipt uncertainty from its review flag, leaving the print action apparently available. One meaningful regression initially FAIL (expected DraftHeld was not raised). No physical paper incident is asserted.

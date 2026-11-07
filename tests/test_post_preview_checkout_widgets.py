@@ -353,6 +353,100 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
                 self.assertEqual('OWED',fixture.service.ledger.db.execute(
                     'SELECT status FROM pp_paid_services').fetchone()[0])
 
+    def paid_delivery_screen(self, app, fixture):
+        self.paid_ticket_screen(app, fixture)
+        self.click(app, 'LANJUT • SIMPAN TIKET')
+        deadline = time.monotonic() + 15
+        while time.monotonic() < deadline and app._photo_view.get('phase') != 'paid_delivery':
+            app._poll_photos(); EventLoop.idle(); time.sleep(.01)
+        self.settle(app)
+        self.assertEqual('paid_delivery', app._photo_view['phase'], app._photo_error)
+
+    def test_native_paid_result_returns_to_ads_after_30_seconds(self):
+        for size in ((452, 900), (800, 1280)):
+            with self.subTest(size=size), self.booth(paid_delivery=True, unattended=True) as (app, fixture):
+                Window.size = size
+                self.paid_delivery_screen(app, fixture)
+                deadline = app._paid_result_deadline
+                self.assertAlmostEqual(30, deadline - time.monotonic(), delta=2)
+                self.click(app, 'CEK STATUS UPLOAD'); self.settle(app)
+                self.assertEqual(deadline, app._paid_result_deadline)
+                app._show()  # A resize/status rebuild must not buy another 30s.
+                self.assertEqual(deadline, app._paid_result_deadline)
+                with patch('photobooth.kiosk_v2.post_preview_checkout_app.time.monotonic',
+                           return_value=deadline - .001):
+                    app._poll_photos()
+                self.assertEqual('result', app.navigation.page)
+                self.assertIn('1 detik', app._paid_result_countdown.text)
+                widget_helpers.PrivateWidgetTests.capture_screen(
+                    self, app, 'paid-result-countdown', size)
+                with patch('photobooth.kiosk_v2.post_preview_checkout_app.time.monotonic',
+                           return_value=deadline):
+                    app._poll_photos()
+                self.assertEqual('advert', app.navigation.page)
+                self.settle(app)
+                self.assertTrue(fixture.service._hidden.is_set())
+                self.assertEqual('RESULT_TIMEOUT', fixture.service.ledger.db.execute(
+                    'SELECT lifecycle FROM pp_drafts').fetchone()[0])
+                self.assertNotIn('HASIL FOTO BERBAYAR',
+                    [getattr(w, 'text', '') for w in app.stage.walk()])
+                self.assertEqual('OWED', fixture.service.ledger.db.execute(
+                    'SELECT status FROM pp_paid_services').fetchone()[0])
+                self.assertEqual(1, fixture.provider.charges)
+                self.assertEqual(0, fixture.provider.cancels)
+                self.assertEqual(1, len(fixture.receipt_sizes))
+                self.assertEqual([], fixture.paid_print_sends)
+                self.start(app)  # Existing PREPARE/ACK admits B with fresh photos.
+                self.assertIsNone(app._paid_result_deadline)
+                with patch('photobooth.kiosk_v2.post_preview_checkout_app.time.monotonic',
+                           return_value=deadline + 60):
+                    app._poll_photos()
+                self.assertEqual('capture', app._photo_view['phase'])
+                self.assertEqual('capture', app.navigation.page)
+                self.assertEqual(1, fixture.provider.charges)
+
+    def test_result_timeout_hides_during_slow_print_and_late_reply_cannot_reopen(self):
+        with self.booth(paid_delivery=True, unattended=True) as (app, fixture):
+            Window.size = (452, 900)
+            self.paid_delivery_screen(app, fixture)
+            entered, release = threading.Event(), threading.Event()
+            sends = []
+            def blocked_print(_bitmap, *, copies):
+                sends.append(copies)
+                entered.set()
+                if not release.wait(10):
+                    raise RuntimeError('Test barrier timed out')
+                raise TimeoutError('Synthetic paper outcome is uncertain')
+            fixture.service._paid_printer.print_image = blocked_print
+            self.click(app, 'CETAK FOTO YANG SUDAH DIBAYAR')
+            try:
+                self.assertTrue(entered.wait(5))
+                self.assertTrue(app._photo_jobs.busy)
+                with patch('photobooth.kiosk_v2.post_preview_checkout_app.time.monotonic',
+                           return_value=app._paid_result_deadline):
+                    app._poll_photos()
+                self.assertEqual('advert', app.navigation.page)
+                self.assertTrue(fixture.service._hidden.is_set())
+                old = fixture.service.lease
+                app._choose_photo()
+                self.assertEqual('advert', app.navigation.page)
+                self.assertEqual(old, fixture.service.lease)
+            finally:
+                release.set()
+            self.settle(app)
+            self.assertEqual('advert', app.navigation.page)
+            self.assertEqual('hold', app._photo_view['phase'])
+            self.assertEqual([2], sends)
+            self.assertEqual('UNCERTAIN', fixture.service.ledger.db.execute(
+                'SELECT state FROM pp_paid_strip_jobs WHERE template_id="template_a"').fetchone()[0])
+            app._choose_photo()  # Public Ads still cannot bypass uncertain paper.
+            self.assertEqual('advert', app.navigation.page)
+            self.assertEqual(old, fixture.service.lease)
+            self.assertEqual('OWED', fixture.service.ledger.db.execute(
+                'SELECT status FROM pp_paid_services').fetchone()[0])
+            self.assertEqual(1, fixture.provider.charges)
+            self.assertEqual(0, fixture.provider.cancels)
+
 
     def test_native_two_templates_pay_once_and_print_exact_original_copies(self):
         """Full native mock flow: two approved designs, one purchase, two safe batches."""

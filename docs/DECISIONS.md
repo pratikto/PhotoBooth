@@ -1,3 +1,12 @@
+# 8 November 2026 — paid results automatically return after 30 seconds
+
+Owner explicitly requires **30 seconds on the paid results screen, then automatic
+return to the main Advertising page, with no additional finish button**.
+This is independent of the original Recovery Ticket's 30 visible seconds/NEXT.
+Returning hides private pixels and preserves the original order; public Ads
+does not bypass worker isolation/ACK or imply completed delivery/refund.
+[Implementation and acceptance boundary](qa/portrait-v2-sandbox/BUG046-RESULT-AUTO-RETURN.md).
+
 # Meong Photobooth — product and technical decisions
 
 ## 1 November 2026 — NEWER owner-approved refund-first, lost proof, and operator-last-resort policy (NEW post-preview orders)
@@ -319,4 +328,3 @@ for a local simulator trial.
 
 [Protocol](DEVELOPMENT_PROTOCOL.md) · [current features](FEATURE_STATUS.md) ·
 [backlog](next_step.md) · [handover](DEVELOPMENT_HANDOVER.md) · [changelog](CHANGELOG.md).
-

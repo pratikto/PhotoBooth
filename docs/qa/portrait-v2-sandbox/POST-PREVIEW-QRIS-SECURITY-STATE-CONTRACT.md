@@ -79,6 +79,7 @@ Use exact original release operation, worker fence, typed local receipt, backend
 | --- | --- | --- | --- | --- |
 | `USER_CANCEL` (explicit customer intent) | Yes, immediately | Yes, original attempt only; verify outcome | **No**, even if visitor remains near camera | Only after terminal unpaid OR separately safe PAID/OWED isolation + worker fence + ACK |
 | `APP_SUSPENDED` / minimized | Yes, immediately | **No**, not by itself | Not automatically; retain original status | Only after separately proven lost ownership and release rules |
+| `RESULT_TIMEOUT` (owner-approved 8 November: paid result display reaches 30s) | Yes, immediately; protected Ads | **No** | No | Only after original worker fence and PREPARE/ACK; PAID/OWED preserved |
 | `INACTIVITY_WARNING` | No automatic abandonment | No | Original live visitor retains continuity | No |
 | `INACTIVITY_EXPIRED` after warning | Yes | Only after a distinct durable abandonment decision | **No** once abandoned | No until original finance/worker/release proof |
 | `VISIT_ABANDONED` (classified) | Yes | Yes, only for current original attempt | **No** | Only on proven safe closure/release |

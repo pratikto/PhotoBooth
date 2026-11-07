@@ -31,7 +31,7 @@ class ContinueRequest(OwnerRequest):
 
 
 class LifecycleRequest(OwnerRequest):
-    event: Literal['USER_CANCEL', 'APP_SUSPENDED', 'INACTIVITY_WARNING', 'INACTIVITY_EXPIRED', 'VISIT_ABANDONED']
+    event: Literal['USER_CANCEL', 'APP_SUSPENDED', 'INACTIVITY_WARNING', 'INACTIVITY_EXPIRED', 'VISIT_ABANDONED', 'RESULT_TIMEOUT']
 
 
 class ReconcileRequest(BaseModel):

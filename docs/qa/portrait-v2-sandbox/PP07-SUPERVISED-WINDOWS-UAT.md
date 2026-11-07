@@ -1,5 +1,13 @@
 # PP-07 supervised Windows owner test — photo-before-QRIS kiosk
 
+> **8 November owner result/return correction:** 11 guided laptop steps reported
+> PASS, PILOT-03 NOT_RUN; source/device metadata unknown. The QR demo label
+> passed, but the owner could not leave the result page. [BUG-046](BUG046-RESULT-AUTO-RETURN.md)
+> implements the owner's correction: the paid results page returns to Ads
+> automatically after its own 30 seconds, with no added button. Retest the
+> countdown, no-reset on refresh and disappearance of old photos/QR separately;
+> do not infer it from PILOT-15 PASS or rewrite the historical initial matrix.
+
 > **Physical-test software candidate verified:** [start here](PP07-PHYSICAL-QUICK-START.md). Source 8901bbc: 1,778 full local PASS; CI 41952947024 all 3 SUCCESS (574 Windows/574 Ubuntu/68 native). Actual Windows PowerShell setup/check-only and Linux entry verified. Real camera/manual capture trial can begin after owner preflight; optional paper/Drive require their original dual consents. Payment remains synthetic; hardware/full recovery/merchant/refund/production acceptance is separate. [Evidence](PP07-PHYSICAL-TEST-READINESS-2026-11-05.md).
 
 > **Physical trial entry:** [short setup/start guide](PP07-PHYSICAL-QUICK-START.md) reuses the existing pilot with automatic fresh trial folders, isolated child camera profile and explicit paper/Drive consent. [Current verification](PP07-PHYSICAL-TEST-READINESS-2026-11-05.md) records focused PASS and final/Windows checks; owner acceptance remains NOT_RUN until observed.

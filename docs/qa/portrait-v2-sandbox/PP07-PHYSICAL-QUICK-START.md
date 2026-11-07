@@ -44,7 +44,8 @@ If the intended USB camera is not index 0, close the trial and select its known 
 4. Use **SIMULASI PAID • TANPA TRANSFER**. Do not transfer money or scan the mock payment as a real merchant QRIS.
 5. Inspect the mandatory original Recovery Ticket QR/full code. It remains visible for 30 real visible seconds or until NEXT; virtual receipt success must not skip it. In a separate fresh trial, observe early NEXT.
 6. Inspect the purchased output and the 2+1 copy plan. Default QR says **QR DEMO • BUKAN LINK DOWNLOAD**; it is intentionally not a working cloud link. Virtual SUBMITTED is not paper and does not close the original OWED liability.
-7. Complete same-process A/B privacy, busy WAIT and original-proof recovery observations using the [26-case owner worksheet](PP07-SUPERVISED-WINDOWS-UAT.md). Neither the helper's exit code nor session record marks an owner case PASS.
+7. On the paid results page, observe its separate 30-second countdown and automatic return to Ads. Do not close the app; no new finish button is needed. Status refresh must not restart the timer. Confirm old photos/QR disappear; the original order remains preserved. See [BUG-046 retest](BUG046-RESULT-AUTO-RETURN.md).
+8. Complete same-process A/B privacy, busy WAIT and original-proof recovery observations using the [26-case owner worksheet](PP07-SUPERVISED-WINDOWS-UAT.md). Neither the helper's exit code nor session record marks an owner case PASS.
 
 Record source SHA, platform, layout, camera, expected/observed and PASS/FAIL/BLOCKED in the worksheet. Keep proof codes/QRs/private photographs out of shared logs or screenshots. The local session JSON records profile, source HEAD, timestamps and exit state only; it is not a clean-tree attestation, hardware result or financial receipt.
 

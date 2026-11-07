@@ -109,6 +109,19 @@ class PostPreviewApiTests(unittest.TestCase):
         self.assertIsNone(r.json()['qr_url'])
         self.assertEqual(409, self.post('begin').status_code)
 
+    def test_result_timeout_preserves_paid_entitlement_without_cancel_or_release(self):
+        self.begin()
+        self.fixture.provider.state(self.fixture.order(), 'settlement')
+        paid = self.post('reconcile', {'trigger': 'connectivity'}).json()
+        response = self.post('lifecycle', dict(self.owner, event='RESULT_TIMEOUT'))
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(0, self.fixture.provider.cancels)
+        self.assertEqual(1, self.fixture.provider.charges)
+        self.assertEqual(paid['entitlement_id'], response.json()['entitlement_id'])
+        row = self.ledger.db.execute('SELECT lifecycle,closed FROM pp_drafts').fetchone()
+        self.assertEqual(('RESULT_TIMEOUT', 0), tuple(row))
+        self.assertEqual(409, self.post('begin').status_code)
+
     def test_webhook_ack_is_durable_deduplicated_and_contains_no_provider_get(self):
         self.begin()
         data = self.notification()

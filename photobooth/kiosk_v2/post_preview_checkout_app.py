@@ -3,6 +3,7 @@
 Reuses original portrait shell/controls and private proof card. No launcher or
 production configuration mounts this incomplete paid-delivery flow.
 """
+import math
 import time
 
 from kivy.metrics import dp
@@ -39,6 +40,8 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
         self._ticket_countdown = self._ticket_status = None
         self._ticket_receipt_pending = self._ticket_dismiss_pending = False
         self._payment_check_at = 0
+        self._paid_result_deadline = None
+        self._paid_result_countdown = None
         self._pilot_admission = None
         self._pilot_note = ''
         self._pilot_popup = self._pilot_input = None
@@ -53,6 +56,12 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
             popup.dismiss()
 
     def _show(self):
+        # Status refreshes/resize retain this visit's original result deadline.
+        # Leaving it retires the timer, so it cannot affect a later customer.
+        if (self.navigation.page != RESULT
+                or self._photo_view.get('phase') != 'paid_delivery'):
+            self._paid_result_deadline = None
+        self._paid_result_countdown = None
         self._close_pilot_popup()
         if self._claim_card is not None:
             self._claim_card.retire()
@@ -209,6 +218,11 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
             self._reset_visit()
             self._show()
             return True
+        if (self._private_pending_event is not None
+                or self._photo_jobs.service._hidden.is_set()):
+            # A result timeout hides pixels immediately, even with a live
+            # worker. Its late delivery reply must not reopen A over Ads/B.
+            return super()._sandbox_photo_outcome(outcome)
         view = outcome.value or {}
         phase = view.get('phase')
         if outcome.action == 'ticket_visible':
@@ -308,6 +322,10 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
             self._ticket_countdown.text = 'Tiket ditutup. Menyelesaikan pengiriman tiket...'
 
     def _poll_photos(self):
+        if self._closed or self._suspended:
+            return
+        if self._poll_paid_result_timeout():
+            return
         super()._poll_photos()
         if self._closed or self._suspended:
             return
@@ -344,6 +362,23 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
                   not self._ticket_receipt_pending and not self._photo_jobs.busy):
                 if self._photo_jobs.submit('ticket_dismiss'):
                     self._ticket_dismiss_pending = False
+
+    def _poll_paid_result_timeout(self):
+        if (self._paid_result_deadline is None
+                or self.navigation.page != RESULT
+                or self._photo_view.get('phase') != 'paid_delivery'):
+            return False
+        remaining = max(0, math.ceil(self._paid_result_deadline - time.monotonic()))
+        if self._paid_result_countdown is not None:
+            self._paid_result_countdown.text = (
+                f'Kembali ke halaman utama dalam {remaining} detik.\n'
+                'Pesanan tetap tersimpan.')
+        if remaining:
+            return False
+        # Reuse privacy retirement and the existing separate PREPARE/ACK
+        # admission gate. This event never cancels/refunds/discharges PAID.
+        self._queue_private_retirement('RESULT_TIMEOUT')
+        return True
 
     def _build_ticket_page(self, canvas):
         self._live_image = None
@@ -386,6 +421,8 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
         self._camera_texture = None
         self._last_live_frame = self._last_preview = None
         shell = self._frame(canvas, brand_height=65)
+        if self._paid_result_deadline is None:
+            self._paid_result_deadline = time.monotonic() + 30
         # A synthetic Drive QR exercises rendering but is NOT a real download link.
         # Keep the actual opt-in test Drive route distinct and visible to the owner.
         subtitle = ('QR DEMO • BUKAN LINK DOWNLOAD' if self._synthetic_drive_url
@@ -435,9 +472,11 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
         shell.add_widget(self._photo_action(
             'CEK STATUS UPLOAD',lambda: self._photo_submit('paid_delivery_status'),
             variant='secondary'))
-        shell.add_widget(text_label(
-            'Status PAID/OWED dilindungi. Menutup UI tidak menghapus pesanan.',
-            size=12,height=48,color=MUTED))
+        self._paid_result_countdown = text_label('', size=12,height=48,color=MUTED)
+        shell.add_widget(self._paid_result_countdown)
+        self._paid_result_countdown.text = (
+            f'Kembali ke halaman utama dalam {max(0, math.ceil(self._paid_result_deadline - time.monotonic()))} detik.\n'
+            'Pesanan tetap tersimpan.')
         self._photo_message=text_label(self._photo_error,size=13,height=55,color=GOLD)
         shell.add_widget(self._photo_message)
 
