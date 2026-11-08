@@ -68,9 +68,32 @@ The initial slow-print test used `print_bitmap` against an adapter exposing
 `print_image`; its barrier did not run (one test FAIL). Corrected the test to use
 the actual original printer API; no product guard was weakened.
 
-Final registered backend/native regression and matching-source CI: PENDING.
-The boundary checks use a controlled monotonic clock; they are not a measured
-30-second physical laptop result. No real paper, Drive, merchant or refund I/O.
+Final runtime/test source `1be8d0b1013f2e9e875593e635880662abf21ac0`:
+**598 registered backend PASS (207.447s) + 70 registered native PASS (169.346s)**,
+zero failures/errors/skips in each process. This is 668 software executions;
+focused methods overlap this total. Both use the existing workflow's module
+lists. A separate unmodified-monotonic native replay returned to protected Ads
+in **30.089 actual seconds**, with hidden original media, one charge, zero
+cancels, one original receipt, no photo send and original service OWED.
+[Machine-readable evidence](evidence/bug046-result-timeout-2026-11-08.json).
+
+Published functional commit: **`fc8853bfe0fab8358535fec13911832853b43fd9`**.
+Its Git tree `d8664b684d269ec10be05fb1990e49853015dc28` is byte-for-byte
+identical to locally tested commit `1be8d0b1013f2e9e875593e635880662abf21ac0`.
+Every uploaded blob and the entire tree were independently matched before the
+existing branch ref advanced from `5307e58`, without force or a new branch.
+[Matching-source CI](https://github.com/pratikto/PhotoBooth/actions/runs/42427430090)
+is IN_PROGRESS. Owner Windows retest remains NOT_RUN.
+
+Publication history: automatic approval review blocked two original Git push
+attempts pending explicit authorization. The owner explicitly approved publication
+of code/tests/docs to this public repository and branch on 8 November. The
+subsequent ordinary Git push could not authenticate (no username credential in
+this executor). The connected GitHub integration published the exact verified
+source to the same repository after approval; no alternate destination or force
+push was used. The original local commits remain preserved.
+The boundary tests use a controlled clock; the separate 30.089s replay uses
+actual monotonic time. Neither is a measured physical laptop acceptance result. No real paper, Drive, merchant or refund I/O.
 
 ## Owner retest after the published fix
 

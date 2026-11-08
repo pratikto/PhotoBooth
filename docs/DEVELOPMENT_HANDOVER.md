@@ -5,7 +5,14 @@ seconds, without a new finish button. Source correction and focused native/API
 verification are in [BUG-046](qa/portrait-v2-sandbox/BUG046-RESULT-AUTO-RETURN.md).
 The timer is separate from the mandatory Recovery Ticket window. Original
 privacy retirement, PAID/OWED and PREPARE/ACK admission remain authoritative.
-Final regression/CI and owner retest are pending; keep prior evidence dated.
+Local final regression: 598 backend + 70 native PASS, zero failures/errors/skips;
+actual timed return 30.089s. Published code commit `fc8853bfe0fab8358535fec13911832853b43fd9`
+has exactly the same Git tree as locally tested `1be8d0b`.
+[CI 42427430090](https://github.com/pratikto/PhotoBooth/actions/runs/42427430090)
+is IN_PROGRESS. Owner Windows retest is NOT_RUN. Earlier publication approval
+blocks were resolved by the owner's explicit approval on 8 November.
+[STAR product-readiness roadmap](qa/portrait-v2-sandbox/PRODUCT-READINESS-STAR.md)
+tracks the remaining work without treating test counts as product acceptance.
 
 > **R4 remote checkpoint — active timed qualification:** runtime/test source `824b6ae7636578332664abf5507456338e59c8ef`; 1,801 local PASS, zero failure/error/skip. [Campaign](qa/portrait-v2-sandbox/PP07-SIMULATION-CLOSURE-R4-2026-11-05.md) and [timed checkpoint](qa/portrait-v2-sandbox/evidence/pp07-r4-soak-checkpoint-2026-11-05.json). Current two-hour run is IN_PROGRESS, not PASS. On this environment continue observing `/workspace/work/postpay-r4-soak-qualified/{progress,result}.json` (result appears only at completion); original session 70769. Do not restart an already running test or change runtime during qualification. In another environment the private running process/report cannot transfer through GitHub: preserve existing journals; use the committed harness in a new output directory and rerun the missing duration. Full source-matched Windows CI/log review and final result publication remain pending. All safe code/tests/docs are pushed incrementally; no local runtime WIP.
 

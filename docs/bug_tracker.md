@@ -3,7 +3,9 @@
 ## BUG-046 — Paid results never automatically returned to Advertising (8 November 2026)
 
 **Severity:** S2 session navigation/privacy exposure. **Status:** SOURCE FIXED /
-focused synthetic VERIFIED; final regression/CI and owner retest pending.
+local software VERIFIED: 598 backend + 70 native PASS, zero failures/errors/
+skips, actual timer 30.089s. Published `fc8853b` has the identical tested Git tree
+as local `1be8d0b`. CI 42427430090 IN_PROGRESS; owner retest NOT_RUN.
 Owner reports 11 scoped laptop checklist PASS, PILOT-03 NOT_RUN, and no return
 from the paid result screen; laptop SHA unknown. Owner explicitly requires an
 automatic return after 30 seconds with no new button. One result deadline now

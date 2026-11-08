@@ -2,7 +2,11 @@
 
 [BUG-046](qa/portrait-v2-sandbox/BUG046-RESULT-AUTO-RETURN.md): owner-approved
 automatic return from paid results to protected Ads after 30 seconds; no new
-button. Focused native/API 3 PASS; final regression/CI and owner retest pending.
+button. Local final 598 backend + 70 native PASS (zero failure/error/skip);
+actual timed return 30.089s. Code published at `fc8853b` with the exact tested
+Git tree. CI 42427430090 IN_PROGRESS; owner retest NOT_RUN.
+See the [STAR readiness roadmap](qa/portrait-v2-sandbox/PRODUCT-READINESS-STAR.md)
+for remaining product work.
 Ticket timing, original PAID/OWED and guarded next-customer admission are preserved.
 
 # Meong Photobooth — current feature status

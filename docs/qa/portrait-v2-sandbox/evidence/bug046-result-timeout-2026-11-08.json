@@ -1,0 +1,61 @@
+{
+  "date": "2026-11-08",
+  "branch": "feature/post-preview-qris-checkout",
+  "base_sha": "5307e582485bca03c4e7acbb449c049151893695",
+  "runtime_test_source_sha": "fc8853bfe0fab8358535fec13911832853b43fd9",
+  "environment": {
+    "python": "3.12.14",
+    "kivy": "2.3.1",
+    "window": "SDL offscreen / software GL",
+    "hardware_io": false,
+    "merchant_io": false,
+    "cloud_io": false
+  },
+  "focused": {
+    "methods": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 11.917,
+    "overlaps_final_regression": true
+  },
+  "registered_backend": {
+    "run": 598,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 207.447
+  },
+  "registered_native": {
+    "run": 70,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 169.346
+  },
+  "measured_monotonic_result_window": {
+    "elapsed_seconds": 30.089,
+    "page": "advert",
+    "old_private_hidden": true,
+    "charges": 1,
+    "cancels": 0,
+    "receipt_sends": 1,
+    "photo_sends": 0,
+    "service_status": "OWED"
+  },
+  "remote_publication": "PUBLISHED_AFTER_EXPLICIT_USER_APPROVAL",
+  "ci": {
+    "run_id": 42427430090,
+    "source_sha": "fc8853bfe0fab8358535fec13911832853b43fd9",
+    "status": "IN_PROGRESS"
+  },
+  "owner_retest": "NOT_RUN",
+  "log_sha256": {
+    "auto-home-before.log": "d37c69fa204eaa2016c59d7e8116f3cee39a543809485435632f5068750577f2",
+    "auto-home-focused.log": "f4bd5c0b7db5669eb80d56fcf8090c95eb4375b796cd5f1defc479edde213934",
+    "auto-home-backend-regression.log": "2c01c448410d9832f87bca025f523b00890547aa6c898e72ec7e7290338444df",
+    "auto-home-native-regression.log": "0e9cbeed2edc4540646a6fd9953f6860096b555f01b8eda6d196234c5608c360"
+  },
+  "local_tested_commit": "1be8d0b1013f2e9e875593e635880662abf21ac0",
+  "verified_identical_tree": "d8664b684d269ec10be05fb1990e49853015dc28"
+}
