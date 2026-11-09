@@ -1,0 +1,118 @@
+{
+  "status": "LOCAL_FULL_AND_UBUNTU_NATIVE_CI_VERIFIED_WINDOWS_PENDING",
+  "source_sha": "8e976a9a8b5ac697a05cce5ca8e6057fdf70deb1",
+  "local": {
+    "run": 1934,
+    "passed": 1934,
+    "normalized_distinct_pass_ids": 1843,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 622.324,
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "python": "3.12.14",
+    "profile": "all GUI/audio/video/model optins; virtual devices only",
+    "public_model_assets": [
+      {
+        "file": "gesture_recognizer.task",
+        "sha256": "97952348cf6a6a4915c2ea1496b4b37ebabc50cbbf80571435643c455f2b0482"
+      },
+      {
+        "file": "left_hands.jpg",
+        "sha256": "240c082e80128ff1ca8a83ce645e2ba4d8bc30f0967b7991cf5fa375bab489e1"
+      },
+      {
+        "file": "fist.jpg",
+        "sha256": "43fa1cabf3f90d574accc9a56986e2ee48638ce59fc65af1846487f73bb2ef24"
+      },
+      {
+        "file": "thumb_up.jpg",
+        "sha256": "5d673c081ab13b8a1812269ff57047066f9c33c07db5f4178089e8cb3fdc0291"
+      },
+      {
+        "file": "pointing_up.jpg",
+        "sha256": "ecf8ca2611d08fa25948a4fc10710af9120e88243a54da6356bacea17ff3e36e"
+      }
+    ],
+    "new_methods_verified": [
+      "test_post_preview_sandbox_delivery.SandboxPaidDeliveryTests.test_construction_has_no_provider_drive_or_printer_effect",
+      "test_post_preview_sandbox_delivery.SandboxPaidDeliveryTests.test_original_mock_constructor_cannot_select_sandbox_with_fixture_flag",
+      "test_post_preview_sandbox_delivery.SandboxPaidDeliveryTests.test_self_described_dependencies_and_wrong_backend_identity_are_refused",
+      "test_post_preview_sandbox_delivery.SandboxPaidDeliveryTests.test_unpaid_or_undismissed_ticket_does_not_consume_a_ready_folder",
+      "test_post_preview_sandbox_delivery.SandboxPaidDeliveryTests.test_fresh_independent_paid_get_and_restart_keep_one_original_folder",
+      "test_post_preview_sandbox_delivery.SandboxPaidDeliveryTests.test_lost_bind_response_retries_same_original_transaction_not_another_slot",
+      "test_post_preview_sandbox_delivery.SandboxPaidDeliveryTests.test_unverified_link_and_lost_payment_authority_cannot_prepare_media",
+      "test_post_preview_sandbox_delivery.SandboxPaidDeliveryTests.test_wrong_owner_generation_and_retirement_precede_any_cloud_effect",
+      "test_post_preview_sandbox_delivery.SandboxPaidDeliveryTests.test_original_media_strip_pending_upload_and_once_only_print_reuse_same_lane",
+      "test_post_preview_sandbox_delivery.SandboxPaidDeliveryTests.test_foreign_printer_lane_is_rejected_before_photo_bytes",
+      "test_post_preview_sandbox_delivery.SandboxPaidDeliveryTests.test_uncertain_original_receipt_blocks_binding_without_pool_consumption",
+      "test_post_preview_sandbox_delivery.SandboxPaidDeliveryTests.test_immediate_ticket_next_reuses_recent_get_without_breaking_provider_poll_floor",
+      "test_post_preview_sandbox_delivery.SandboxPaidDeliveryTests.test_missing_os_custody_type_and_changed_provider_cannot_select_delivery",
+      "test_post_preview_sandbox_delivery.SandboxPaidDeliveryTests.test_partial_photo_bytes_remain_uncertain_and_owed_without_replay",
+      "test_post_preview_sandbox_delivery_api.SandboxDeliveryApiTests.test_authenticated_prepare_status_print_retry_keep_original_output",
+      "test_post_preview_sandbox_delivery_api.SandboxDeliveryApiTests.test_auth_owner_and_strict_body_precede_drive_or_paper_effect",
+      "test_post_preview_sandbox_delivery_api.SandboxDeliveryApiTests.test_routes_absent_by_default_and_mock_actor_cannot_be_injected",
+      "test_post_preview_sandbox_delivery_api.SandboxDeliveryApiTests.test_trusted_factory_explicitly_assembles_only_exact_backend_chain",
+      "test_post_preview_sandbox_delivery_api.SandboxDeliveryApiTests.test_original_partial_print_remains_uncertain_and_repeated_api_never_resends",
+      "test_post_preview_sandbox_delivery_api.SandboxDeliveryApiTests.test_stopped_actor_cannot_accept_later_request_or_restart",
+      "test_post_preview_sandbox_delivery_api.SandboxDeliveryApiTests.test_blocked_original_bind_keeps_stop_false_until_request_finishes",
+      "test_post_preview_sandbox_delivery_api.SandboxDeliveryApiTests.test_live_uploader_thread_not_stop_return_value_controls_quiescence",
+      "test_post_preview_sandbox_delivery_api.SandboxDeliveryApiTests.test_api_lifespan_keeps_shutdown_callback_and_ledger_while_upload_is_active",
+      "test_post_preview_sandbox_delivery_api.SandboxDeliveryApiTests.test_idle_original_uploader_gets_bounded_exit_time_before_normal_api_close",
+      "test_post_preview_sandbox_delivery_api.SandboxDeliveryApiTests.test_actual_host_keeps_original_kernel_owner_until_its_delivery_thread_exits",
+      "test_post_preview_sandbox_delivery_api.SandboxDeliveryApiTests.test_native_transport_adapter_reuses_original_authenticated_observations",
+      "test_post_preview_sandbox_delivery_api.SandboxDeliveryApiTests.test_native_rejects_scope_grants_paths_and_inconsistent_status",
+      "test_post_preview_sandbox_delivery_api.SandboxDeliveryApiTests.test_native_late_reply_after_privacy_retirement_is_not_exposed"
+    ],
+    "logs": {
+      "full.log": "55e45b3fa69b59170c24d2c21cb5a39f833d114cc7efe0767ad63fbcc840d4b5",
+      "full-report.txt": "3cce8e32e031f7b0928de18018dc2a4df1485a8b4a111ae3074a88462b4bd771",
+      "full-metadata.json": "31252e24f6b36e850859e4c15edf967b352160c1e75077a213210ac24a4045dd"
+    }
+  },
+  "ci": {
+    "run_id": 42627272293,
+    "source_sha": "8e976a9a8b5ac697a05cce5ca8e6057fdf70deb1",
+    "status": "WINDOWS_PENDING",
+    "ubuntu": {
+      "job_id": 129194190758,
+      "passed": 717,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "new_methods_observed_pass": 28,
+      "log_inspected": true
+    },
+    "native": {
+      "job_id": 129194191127,
+      "passed": 81,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "log_inspected": true,
+      "packaged_owner_preflight_pass": true
+    }
+  },
+  "source_file_sha256": {
+    ".github/workflows/post-preview-qris.yml": "0c926a6ff747168df7f6ff4ef8ffb2b198e8ac6799b32dda7f059d83c3e72d40",
+    "photobooth/post_preview_api.py": "37f0c669ff80640baaa8abb5e4903902871240fe4c33eb1375b46018bd19a154",
+    "photobooth/post_preview_delivery_client.py": "10f7373b1c99bec75bd3067bf384dcd0aab8979febd0aaf2c09ef984db459894",
+    "photobooth/post_preview_host.py": "c4935d0a68787a0afd655ddb59d050d98933656de3b4d1ece2a37c29b325f2ea",
+    "photobooth/post_preview_paid_delivery.py": "90e059b0b50bb5331058578e7a912ed074700ef2592b184697a8be2362729842",
+    "photobooth/post_preview_paid_drive.py": "13187bc52763d1e24abef8cc1099f7be71b5ddb7f94a6260ab00e23815ec223a",
+    "photobooth/post_preview_paid_media.py": "82f8ca31c76e95884150db9028ea65a3989775dbe8eb03b5f83fec3b4c0d8173",
+    "photobooth/post_preview_paid_print.py": "a979632abe552dc4dc021485151609eac8e0dc349f0a6017de04ce04a423e176",
+    "photobooth/post_preview_paid_strips.py": "c251068aa7fa098a20ae82d4b4d1321cc5b164a2bbca123adc49328e0410bcf4",
+    "photobooth/post_preview_sandbox_delivery.py": "78786502b65a0885809fcb38f2c076f08d3c27ba87f15edfbf414261ac769caa",
+    "photobooth/post_preview_server.py": "021a77b3e544367434417cc475a7d5807ae0afe686376b58a0ad1388b8af1fcb",
+    "tests/test_post_preview_sandbox_delivery.py": "15e93cc41fb1213f73442f9e4fa4ec688a73da7ab407ad364468d1843e1286db",
+    "tests/test_post_preview_sandbox_delivery_api.py": "af738572acc05fa45c0af533df88a08fb369f869d002e87da2a0f902ee26c01c"
+  },
+  "new_final_source_two_hour_qualification": false,
+  "historical_r4_two_hour_source": "824b6ae7636578332664abf5507456338e59c8ef",
+  "full_customer_native_profile_mounted": false,
+  "default_factory_delivery_routes_mounted": false,
+  "actual_money_paper_cloud_io": false,
+  "full_acceptance_promoted": false,
+  "remaining_source": "Protected native facade/screens/automatic delivery, original proof-gated claim/WAIT/worker/collector PREPARE/ACK and supported restore; complete launcher/real printer config; refund/status/ops; final fully mounted source qualification."
+}

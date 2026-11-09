@@ -145,3 +145,9 @@ run at41707ae9 was deliberately interrupted after293.454s when this missing case
 was discovered; exit-2/KeyboardInterrupt, no full verdict. Logs/metadata retained.
 That source's superseded CI is not the final verification. Run final regression
 and current CI against the corrected source; no old count is relabeled new PASS.
+
+## Corrected-source final local regression
+
+Source `8e976a9a8b5ac697a05cce5ca8e6057fdf70deb1`: **1,934 all-opt-in local PASS**, 1843 normalized distinct method IDs, zero failures/errors/skips; **622.324s** process duration. All 28 new method IDs observed PASS. GUI/audio/video/model opt-ins enabled, public assets independently size/hash-verified, virtual transports/devices only. No new actual merchant/paper/cloud or two-hour final-profile qualification. [Exact source hashes, methods, commands/log digests and CI](evidence/pp05-sandbox-paid-delivery-final-2026-11-09.json).
+
+CI42627272293 at the SAME source: Ubuntu717 PASS and native81 PASS, completed logs inspected, zero failure/error/skip; all28 new methods observed PASS in Ubuntu. Native owner packaged preflight and screenshot steps succeeded. Windows remains pending at this checkpoint. Superseded2e38f207/41707ae9 runs were cancelled by normal workflow concurrency; no complete PASS is assigned to them.

@@ -1,3 +1,5 @@
+> **9 November corrected B4 source8e976a9a:** [protected backend delivery/API/client and BUG-049](qa/portrait-v2-sandbox/PP05-SANDBOX-PAID-DELIVERY-2026-11-09.md). 1,934 all-opt-in local PASS; CI42627272293 Ubuntu717/native81 PASS, zero failures/errors/skips, completed logs inspected; Windows pending. All28 new methods executed PASS. Default native merchant profile/health remains gated. Next protected native facade/screens/automatic delivery and original claim/WAIT/collector/worker PREPARE/ACK, full launcher/printer config/restore/refund/status/ops and final-profile qualification. No runtime WIP or new local test process.
+
 # 9 November — final native ticket/once-only receipt checkpoint
 
 Runtime/tests89df55a pushed/remote-verified; local689 backend +81 native PASS.
