@@ -1,0 +1,97 @@
+{
+  "branch": "feature/post-preview-qris-checkout",
+  "source": "0fe373401ba3cb2501abf3a305df62f8c4054eac",
+  "base": "f926fc99d469fc11f138a96d12e64bdd31318bcb",
+  "date": "2026-11-09",
+  "environment": {
+    "os": "Linux",
+    "python": "3.12.14",
+    "Kivy": "2.3.1",
+    "cryptography": "49.0.0",
+    "SDL_VIDEODRIVER": "offscreen",
+    "SDL_AUDIODRIVER": "dummy",
+    "LIBGL_ALWAYS_SOFTWARE": "1"
+  },
+  "registered_workflow_regression": {
+    "backend": {
+      "run": 598,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 269.942,
+      "sha256": "3f0758a231cf4850003e33815d6cf97f2f6dfd37d1eace119492496f21f9f692",
+      "process_exit": 0
+    },
+    "native": {
+      "run": 72,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 192.626,
+      "sha256": "272a2c4c3d55220c558a08a95293219ddf9bd1a21384140e90522e4401f14606",
+      "process_exit": 0
+    }
+  },
+  "method_counts_are_not_full_acceptance": true,
+  "source_sha256": {
+    "photobooth/kiosk_v2/post_preview_checkout_app.py": "7a852427cbfd2acd7e8f91dc65bfd6fff6f40edd907402bd57d2ca6403d86bd8",
+    "tests/test_post_preview_checkout_widgets.py": "9c052b9469072a016d9914e9fee88bd283767f43e90a351d52ebedf9309796c6",
+    "tests/test_post_preview_native_journeys.py": "7c484eed782af31d4ca34a4697960837f62132345bddfcb85a15739964c7a19a",
+    "tests/test_post_preview_pilot_runtime.py": "1b8e1a39622e67231c50804e7d67b1cd16b93d18b4ce3d0709224fd29d902482",
+    ".github/workflows/post-preview-qris.yml": "f86d0409f19cab47fa4fa21eb52b040ac227349259c21b7beeedcd47ae3bb6de"
+  },
+  "visual_evidence": {
+    "result-800x1280.png": "ec52753d903492cc84fcc7b4efcefb8b3be655ab636163be02de9fc3f9095c24",
+    "result-452x900.png": "8a04ae8fabbf296260d51c6fc3a3d8b6e682dcce9d3e55eb8b7841666233224e"
+  },
+  "visual_review": "Two separate clean native processes, size configured before Window import; both selected result screens reviewed. Multi-resize offscreen captures had corrupt text textures and are not visual PASS evidence; xvfb-run unavailable. Clean per-size captures used instead.",
+  "before": {
+    "new_automatic_method": 1,
+    "failing_subtests": 2,
+    "errors": 0,
+    "observed_sends": 0,
+    "expected_copies": [
+      2,
+      1
+    ]
+  },
+  "limits": {
+    "real_paper": "NOT_RUN",
+    "real_drive": "NOT_RUN",
+    "Midtrans_post_preview": "NOT_INTEGRATED",
+    "refund": "NOT_ENABLED",
+    "production": "NOT_READY"
+  },
+  "ci": {
+    "run_id": 42552901917,
+    "head_sha": "0fe373401ba3cb2501abf3a305df62f8c4054eac",
+    "status": "IN_PROGRESS",
+    "conclusion": null,
+    "jobs": [
+      {
+        "id": 128952189379,
+        "name": "private-state (windows-latest)",
+        "head_sha": "0fe373401ba3cb2501abf3a305df62f8c4054eac",
+        "status": "in_progress",
+        "conclusion": null,
+        "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/42552901917/job/128952189379"
+      },
+      {
+        "id": 128952189748,
+        "name": "private-state (ubuntu-latest)",
+        "head_sha": "0fe373401ba3cb2501abf3a305df62f8c4054eac",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/42552901917/job/128952189748"
+      },
+      {
+        "id": 128952189789,
+        "name": "private-desktop",
+        "head_sha": "0fe373401ba3cb2501abf3a305df62f8c4054eac",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/42552901917/job/128952189789"
+      }
+    ]
+  }
+}

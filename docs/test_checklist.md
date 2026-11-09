@@ -1,3 +1,10 @@
+# 9 November 2026 — automatic paid-strip dispatch
+
+Source 0fe3734: existing registered workflow groups **598 backend + 72 native
+PASS**, zero failures/errors/skips. Both portrait result views reviewed in clean
+contexts. Matching CI42552901917 IN_PROGRESS; actual paper/Drive/provider/owner
+acceptance stays NOT_RUN. [Detailed evidence](qa/portrait-v2-sandbox/PP05-AUTOMATIC-PAID-PRINT-2026-11-09.md).
+
 # Meong Photobooth — test evidence and acceptance
 
 > **Physical trial ready to start:** [two-command Windows setup/start and optional paper/Drive](qa/portrait-v2-sandbox/PP07-PHYSICAL-QUICK-START.md). Source 8901bbc verified 1,778 local PASS; CI 41952947024 all 3 SUCCESS (574 Windows/574 Ubuntu/68 native), including actual Windows PowerShell setup/check-only. Next: owner fresh-root manual-camera observations; hardware acceptance remains NOT_RUN, actual payment/refund/production remain disabled. Separate pre-ACK worker/Ubuntu/merchant implementation gates are recorded in the readiness report.

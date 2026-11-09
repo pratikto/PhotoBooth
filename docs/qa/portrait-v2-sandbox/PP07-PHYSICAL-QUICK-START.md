@@ -43,7 +43,7 @@ If the intended USB camera is not index 0, close the trial and select its known 
 3. Inspect all previews. Total must be **Rp25,000**, consistently through the frozen checkout. Save the privately offered CCP; it is not the payment QR.
 4. Use **SIMULASI PAID • TANPA TRANSFER**. Do not transfer money or scan the mock payment as a real merchant QRIS.
 5. Inspect the mandatory original Recovery Ticket QR/full code. It remains visible for 30 real visible seconds or until NEXT; virtual receipt success must not skip it. In a separate fresh trial, observe early NEXT.
-6. Inspect the purchased output and the 2+1 copy plan. Default QR says **QR DEMO • BUKAN LINK DOWNLOAD**; it is intentionally not a working cloud link. Virtual SUBMITTED is not paper and does not close the original OWED liability.
+6. After the ticket closes and the customer folder URL is verified, observe automatic purchased-strip dispatch for the **2+1** copy plan; there is no customer print button. An uncertain receipt/strip holds remaining batches, without resend. Default QR says **QR DEMO • BUKAN LINK DOWNLOAD**; it is intentionally not a working cloud link. Virtual SUBMITTED is not paper and does not close the original OWED liability. [9 November implementation/evidence](PP05-AUTOMATIC-PAID-PRINT-2026-11-09.md).
 7. On the paid results page, observe its separate 30-second countdown and automatic return to Ads. Do not close the app; no new finish button is needed. Status refresh must not restart the timer. Confirm old photos/QR disappear; the original order remains preserved. See [BUG-046 retest](BUG046-RESULT-AUTO-RETURN.md).
 8. Complete same-process A/B privacy, busy WAIT and original-proof recovery observations using the [26-case owner worksheet](PP07-SUPERVISED-WINDOWS-UAT.md). Neither the helper's exit code nor session record marks an owner case PASS.
 
@@ -58,7 +58,7 @@ Reuse the existing configured printer route from [printer setup](../../printer-s
 .\Start-PostPreviewDeviceTest.ps1 -EnableRealPrinter -AcceptRealPaper
 ```
 
-Both flags are mandatory. Expect one original ticket receipt and the purchased strip batches with selected copies. Inspect actual paper, QR, orientation and cuts. Transport SUBMITTED is not physical delivery. On uncertain output, stop and retain the original journal; do not resend, reset a root or unplug/jam an active production printer.
+Both flags are mandatory. Expect one original ticket receipt and automatic purchased-strip batches with selected copies after the ticket stage and verified URL. Inspect actual paper, QR, orientation and cuts. Transport SUBMITTED is not physical delivery. On uncertain output, stop and retain the original journal; do not resend, reset a root or unplug/jam an active production printer.
 
 ## 5. Add approved test Drive independently
 

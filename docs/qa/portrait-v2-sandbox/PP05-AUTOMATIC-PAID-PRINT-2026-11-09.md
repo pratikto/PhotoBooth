@@ -40,8 +40,20 @@ Original PAID/OWED remains separate from submitted bytes and physical paper.
 - Expanded native checkout/customer/actual-launcher regression: 28 methods
   PASS, zero failures/errors/skips; this started before the additional hold
   method, which was separately verified above.
-- Final registered native/backend regression and visual review: PENDING at this
-  working checkpoint. No final-source full PASS or new matching CI claimed yet.
+- Published/remote-verified source **0fe373401ba3cb2501abf3a305df62f8c4054eac**:
+  existing registered workflow groups **598 backend PASS (269.942s) + 72 native
+  PASS (192.626s)**, zero failures/errors/skips. No later runtime changes.
+- Both portrait paid-result views reviewed in separate clean native processes:
+  original 2+1 submitted jobs, truthful upload/demo QR and result countdown;
+  no customer print button. Multi-resize offscreen text artifacts are not PASS
+  evidence; unavailable xvfb-run was replaced with clean per-size native capture.
+  [Source/results/hashes](automatic-paid-print-2026-11-09/verification.json),
+  [452×900](automatic-paid-print-2026-11-09/result-452x900.png),
+  [800×1280](automatic-paid-print-2026-11-09/result-800x1280.png),
+  [exact rendering driver](automatic-paid-print-2026-11-09/render-driver.py.txt).
+- Matching-source [CI42552901917](https://github.com/pratikto/PhotoBooth/actions/runs/42552901917)
+  is IN_PROGRESS; no remote PASS inferred. Earlier BUG-046 CI42427430090 was
+  independently verified completed SUCCESS at fc8853b.
 
 Tests use original Kivy widgets, actual local service/API/ledger/dispatcher and
 synthetic camera/provider/paper/Drive. Linux SDL offscreen/software GL/dummy audio

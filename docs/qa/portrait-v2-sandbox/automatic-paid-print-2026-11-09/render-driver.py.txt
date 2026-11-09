@@ -1,0 +1,19 @@
+import os,sys,time
+from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
+width,height=map(int,sys.argv[1].split('x'))
+from kivy.config import Config
+Config.set('graphics','width',str(width));Config.set('graphics','height',str(height))
+from kivy.base import EventLoop
+from kivy.core.window import Window
+from tests.test_post_preview_checkout_widgets import PrivateCheckoutWidgetTests
+helper=PrivateCheckoutWidgetTests(methodName='runTest')
+with helper.booth(paid_delivery=True) as (app,fixture):
+    helper.paid_delivery_screen(app,fixture)
+    helper.settle(app)
+    assert app._photo_view['delivery']['print_all_submitted']
+    assert [n for _,n in fixture.paid_print_sends]==[2,1]
+    assert tuple(app.stage.size)==(width,height)
+    for _ in range(8):EventLoop.idle()
+    Window.screenshot(name=str(Path('work')/('auto-print-clean-'+sys.argv[1]+'.png')))
+    print('Saved synthetic paid result',sys.argv[1])
