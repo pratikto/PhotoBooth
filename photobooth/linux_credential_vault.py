@@ -92,7 +92,12 @@ def _items(collection, key_id):
 
 
 def _item_key(item, key_id):
-    if item.is_locked() or item.get_attributes() != _attributes(key_id):
+    attributes = item.get_attributes()
+    # Secret Service matches required attributes as a subset. GNOME persists
+    # its own xdg:schema metadata on reload; it does not change our key identity.
+    # Every application identity field must still match the original exactly.
+    if (item.is_locked() or type(attributes) is not dict
+            or any(attributes.get(name) != value for name, value in _attributes(key_id).items())):
         raise VaultUnavailable('Original Ubuntu vault key is unavailable')
     key = item.get_secret()
     if type(key) is not bytes or len(key) != 32:

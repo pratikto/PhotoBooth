@@ -1,0 +1,38 @@
+{
+  "cases": [
+    {
+      "action": "ready",
+      "exit": 0,
+      "expected_exit": 0,
+      "result": "{\"state\": \"PASS\", \"action\": \"ready\"}"
+    },
+    {
+      "action": "diagnose",
+      "exit": 0,
+      "expected_exit": 0,
+      "result": "{\"collections\": [\"/org/freedesktop/secrets/collection/session\", \"/org/freedesktop/secrets/collection/login\"], \"default_label\": \"Login\", \"own_item_count\": 1, \"item_locked\": [false], \"attribute_keys\": [[\"application\", \"key_id\", \"purpose\", \"version\", \"xdg:schema\"]], \"required_fields_match\": [true]}\n{\"state\": \"PASS\", \"action\": \"diagnose\"}"
+    },
+    {
+      "action": "open",
+      "exit": 0,
+      "expected_exit": 0,
+      "result": "{\"state\": \"PASS\", \"action\": \"open\"}"
+    },
+    {
+      "action": "wrong-scope",
+      "exit": 78,
+      "expected_exit": 78,
+      "result": "{\"state\": \"VAULT_UNAVAILABLE\", \"action\": \"wrong-scope\", \"reason\": \"Original credential authentication failed\"}"
+    },
+    {
+      "action": "open",
+      "exit": 0,
+      "expected_exit": 0,
+      "result": "{\"state\": \"PASS\", \"action\": \"open\"}"
+    }
+  ],
+  "ciphertext_sha256_before": "7365269fbb6fa32e20993d0faff03f8ea2008837178a63a98bf25da04e6a6d6f",
+  "ciphertext_sha256_after": "7365269fbb6fa32e20993d0faff03f8ea2008837178a63a98bf25da04e6a6d6f",
+  "no_provision_or_reseal": true,
+  "processes_stopped": true
+}

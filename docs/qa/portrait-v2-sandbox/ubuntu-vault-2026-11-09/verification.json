@@ -141,5 +141,58 @@
       "tests/credential_vault_process_fixture.py": "2aa1111a05c2db4a3e0b7779706aa27ee27e9614c9a2a9d9e941646d8a5e3401",
       "tests/test_credential_vault.py": "6e9ab3bedb83f476d794fcb4e8a9782fddf80c2269ce45126c59371e4ce76dac"
     }
+  },
+  "restart_correction": {
+    "bug": "BUG-047",
+    "credential_tests": {
+      "run": 24,
+      "seconds": 0.487,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "exit": 0
+    },
+    "actual_restart": {
+      "cases": [
+        {
+          "action": "ready",
+          "exit": 0,
+          "expected_exit": 0,
+          "result": "{\"state\": \"PASS\", \"action\": \"ready\"}"
+        },
+        {
+          "action": "diagnose",
+          "exit": 0,
+          "expected_exit": 0,
+          "result": "{\"collections\": [\"/org/freedesktop/secrets/collection/session\", \"/org/freedesktop/secrets/collection/login\"], \"default_label\": \"Login\", \"own_item_count\": 1, \"item_locked\": [false], \"attribute_keys\": [[\"application\", \"key_id\", \"purpose\", \"version\", \"xdg:schema\"]], \"required_fields_match\": [true]}\n{\"state\": \"PASS\", \"action\": \"diagnose\"}"
+        },
+        {
+          "action": "open",
+          "exit": 0,
+          "expected_exit": 0,
+          "result": "{\"state\": \"PASS\", \"action\": \"open\"}"
+        },
+        {
+          "action": "wrong-scope",
+          "exit": 78,
+          "expected_exit": 78,
+          "result": "{\"state\": \"VAULT_UNAVAILABLE\", \"action\": \"wrong-scope\", \"reason\": \"Original credential authentication failed\"}"
+        },
+        {
+          "action": "open",
+          "exit": 0,
+          "expected_exit": 0,
+          "result": "{\"state\": \"PASS\", \"action\": \"open\"}"
+        }
+      ],
+      "ciphertext_sha256_before": "7365269fbb6fa32e20993d0faff03f8ea2008837178a63a98bf25da04e6a6d6f",
+      "ciphertext_sha256_after": "7365269fbb6fa32e20993d0faff03f8ea2008837178a63a98bf25da04e6a6d6f",
+      "no_provision_or_reseal": true,
+      "processes_stopped": true
+    },
+    "source_sha256": {
+      "photobooth/linux_credential_vault.py": "e3c5bf349cbef8e0bd1f1d4beb57baf1b093966a7540e9028a75ff0230b11e91",
+      "tests/test_credential_vault.py": "574f7b0b7587aaccc48fa401f6b8c078aa415e2256e854eb9ce93d325bb8ce4c"
+    }
   }
 }

@@ -1,3 +1,17 @@
+## BUG-047 — Ubuntu original vault key rejected after keyring daemon restart (9 November 2026)
+
+**Severity:** S1 protected recovery availability. **Status:** SOURCE FIXED /
+local isolated Secret Service VERIFIED; final source regression/CI pending.
+The same persisted original key gains provider-owned xdg:schema metadata on
+GNOME Keyring reload. Whole-dictionary equality rejected it although all four
+application identity fields matched. Actual restart returned VAULT_UNAVAILABLE;
+a one-method regression ERRORed before correction. Required identity fields
+now match exactly while provider metadata is ignored, using the service's
+subset-search contract. Original ciphertext restores after daemon restart,
+unchanged hash, no new key/proof; wrong scope and key guards remain. 24 credential
+PASS, zero failures/errors/skips. No owner mini-PC/real-money incident is claimed.
+[Evidence and limitations](qa/portrait-v2-sandbox/PP03-UBUNTU-VAULT-2026-11-09.md).
+
 # Meong Photobooth — Bug register
 
 ## BUG-046 — Paid results never automatically returned to Advertising (8 November 2026)

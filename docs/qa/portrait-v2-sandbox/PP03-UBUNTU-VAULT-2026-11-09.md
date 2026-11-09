@@ -93,3 +93,28 @@ store an unlock passphrase in app files or disable keyring encryption to pass
 startup. These device/OS acceptance facts remain NOT_RUN here. Child backend
 bootstrap and protected native payment/ticket/delivery/claim/release integration
 are still unfinished source work.
+
+## BUG-047 — persistent provider schema after Secret Service restart
+
+An additional actual daemon restart first failed to restore the original
+ciphertext: expected successful open, observed VAULT_UNAVAILABLE. The original
+key still existed, was unlocked, and every required application attribute
+matched. GNOME Keyring adds its standard xdg:schema attribute when loading
+persistent items; the adapter's whole-dictionary equality incorrectly rejected
+that same original key. A one-method regression reproduced one ERROR before fix.
+
+The adapter now checks every required application/purpose/version/key_id field
+exactly, following Secret Service subset-search semantics; provider metadata
+does not change key identity. Duplicate/missing/foreign/locked/wrong-key,
+verifier, scope and ciphertext guards remain. No replacement key or resealing.
+The same original persisted ciphertext then restored twice after an actual
+daemon restart, while wrong scope remained refused. Before/after ciphertext
+SHA256 is identical; both test daemons stopped. The test performs explicit
+fixture login unlock, not unattended cold boot on the final device.
+
+Corrected credential suite: **24 PASS in 0.487s**, zero failures/errors/skips.
+[Original failure](ubuntu-vault-2026-11-09/restart-first-failure.json),
+[verified restart](ubuntu-vault-2026-11-09/restart-verified.json),
+[exact restart driver](ubuntu-vault-2026-11-09/restart-driver.py.txt).
+New-source full regression/CI must be checked after this fix. The source remains
+not commercially accepted until native/worker/real-device/provider gates close.

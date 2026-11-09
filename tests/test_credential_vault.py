@@ -269,6 +269,19 @@ class LinuxSecretServiceProtectionTests(unittest.TestCase):
             with self.assertRaises(VaultUnavailable): self.linux.LinuxSecretServiceProtector.provision()
             create.assert_not_called()
 
+    def test_persistent_provider_schema_keeps_exact_required_key_identity(self):
+        item = self.item()
+        attributes = dict(self.linux._attributes(self.linux.DEFAULT_KEY_ID),
+                          **{'xdg:schema':'org.freedesktop.Secret.Generic'})
+        item.get_attributes = lambda: attributes
+        self.assertEqual(self.key, self.linux._item_key(item, self.linux.DEFAULT_KEY_ID))
+        for name in self.linux._attributes(self.linux.DEFAULT_KEY_ID):
+            original = attributes[name]
+            attributes[name] = 'foreign'
+            with self.subTest(field=name), self.assertRaises(VaultUnavailable):
+                self.linux._item_key(item, self.linux.DEFAULT_KEY_ID)
+            attributes[name] = original
+
     def test_runtime_kernel_lock_is_exclusive_and_contains_no_key_bytes(self):
         import sys
         from unittest.mock import patch

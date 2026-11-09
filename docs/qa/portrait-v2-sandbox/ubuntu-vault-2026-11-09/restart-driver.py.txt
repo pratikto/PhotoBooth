@@ -1,0 +1,30 @@
+import json,os,subprocess,time,hashlib
+from pathlib import Path
+root=Path('/workspace/work/keyring-lab-selector')
+env=dict(os.environ)
+env.update(XDG_RUNTIME_DIR=str(root/'runtime'),XDG_DATA_HOME=str(root/'data'),XDG_CONFIG_HOME=str(root/'config'),XDG_CACHE_HOME=str(root/'cache'),DBUS_SESSION_BUS_ADDRESS='unix:path='+str(root/'runtime'/'bus'),LD_LIBRARY_PATH='/workspace/work/keyring-lab/extracted/usr/lib/x86_64-linux-gnu',GSETTINGS_BACKEND='memory',PYTHONPATH='/workspace/work/PhotoBooth')
+original=hashlib.sha256((root/'original.protected.json').read_bytes()).hexdigest()
+processes=[];outcomes=[]
+with (root/'restart-bus.log').open('w') as buslog,(root/'restart-keyring.log').open('w') as keylog:
+ try:
+  bus=subprocess.Popen(['dbus-daemon','--session','--nofork','--address='+env['DBUS_SESSION_BUS_ADDRESS']],env=env,stdout=buslog,stderr=buslog);processes.append(bus)
+  until=time.monotonic()+3
+  while not (root/'runtime'/'bus').exists() and time.monotonic()<until:time.sleep(.03)
+  daemon=subprocess.Popen(['/workspace/work/keyring-lab/extracted/usr/bin/gnome-keyring-daemon','--foreground','--components=secrets','--control-directory='+str(root/'runtime'/'keyring'),'--unlock'],env=env,stdin=subprocess.PIPE,stdout=keylog,stderr=keylog);processes.append(daemon)
+  daemon.stdin.write(b'MEONG-EPHEMERAL-TEST-ONLY');daemon.stdin.close()
+  for action,expected in [('ready',0),('diagnose',0),('open',0),('wrong-scope',78),('open',0)]:
+   until=time.monotonic()+5
+   while True:
+    result=subprocess.run(['/workspace/work/PhotoBooth/.venv/bin/python',str(root/'exercise.py'),action],env=env,capture_output=True,text=True,timeout=5)
+    if result.returncode==expected or action!='ready' or time.monotonic()>until:break
+    time.sleep(.05)
+   outcomes.append({'action':action,'exit':result.returncode,'expected_exit':expected,'result':result.stdout.strip()})
+   if result.returncode!=expected:raise RuntimeError('Original encrypted fixture did not survive service restart')
+  if original!=hashlib.sha256((root/'original.protected.json').read_bytes()).hexdigest():raise RuntimeError('Original ciphertext changed')
+ finally:
+  for process in reversed(processes):
+   if process.poll() is None:
+    process.terminate()
+    try:process.wait(timeout=3)
+    except subprocess.TimeoutExpired:process.kill();process.wait(timeout=3)
+  (root/'restart-results.json').write_text(json.dumps({'cases':outcomes,'ciphertext_sha256_before':original,'ciphertext_sha256_after':hashlib.sha256((root/'original.protected.json').read_bytes()).hexdigest(),'no_provision_or_reseal':True,'processes_stopped':all(p.poll() is not None for p in processes)},indent=2)+'\n')

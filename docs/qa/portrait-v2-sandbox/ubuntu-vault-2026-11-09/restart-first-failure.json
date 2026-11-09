@@ -1,0 +1,18 @@
+{
+  "cases": [
+    {
+      "action": "ready",
+      "exit": 0,
+      "expected_exit": 0
+    },
+    {
+      "action": "open",
+      "exit": 78,
+      "expected_exit": 0
+    }
+  ],
+  "ciphertext_sha256_before": "7365269fbb6fa32e20993d0faff03f8ea2008837178a63a98bf25da04e6a6d6f",
+  "ciphertext_sha256_after": "7365269fbb6fa32e20993d0faff03f8ea2008837178a63a98bf25da04e6a6d6f",
+  "no_provision_or_reseal": true,
+  "processes_stopped": true
+}
