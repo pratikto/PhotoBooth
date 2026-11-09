@@ -37,6 +37,12 @@ class OriginalMockClaim:
     def _require_worker_receipt(self, receipt):
         pass  # Mock release already checked its original in-process workers.
 
+    def _record_reacquired(self, result):
+        pass  # Protected transport adds its original request identity atomically.
+
+    def _release_class_allows_claim(self, receipt):
+        return receipt['financial_class']=='PAID_OWED'
+
     def _fresh_confirmation(self, purchase_group_id, booth_id):
         observed=self.payments.reconcile_all(purchase_group_id,booth_id,force=True)
         if (observed['obligation_state']!='OWED'
@@ -103,7 +109,7 @@ class OriginalMockClaim:
                 (purchase_group_id,)).fetchone()
             if (not receipt or old['closed']!=1 or old['lifecycle']!='ISOLATED'
                     or old['generation']!=receipt['original_generation']+1
-                    or receipt['financial_class']!='PAID_OWED'
+                    or not self._release_class_allows_claim(receipt)
                     or (paid and paid['status']!='OWED')):
                 raise DraftHeld('Original paid visit was not safely isolated')
             self._require_worker_receipt(receipt)
@@ -114,5 +120,7 @@ class OriginalMockClaim:
             self.ledger._event(proof.draft_id,'ORIGINAL_PAID_CLAIM_REACQUIRED')
             lease=DraftLease(proof.draft_id,booth_id,old['visit_id'],old['generation']+1)
             self.ledger._owned(lease)
-            return {'state':'REACQUIRED','lease':lease,'purchase_group_id':purchase_group_id,
+            result={'state':'REACQUIRED','lease':lease,'purchase_group_id':purchase_group_id,
                     'entitlement_id':finance['entitlement_id'],'service_still_owed':True}
+            self._record_reacquired(result)
+            return result

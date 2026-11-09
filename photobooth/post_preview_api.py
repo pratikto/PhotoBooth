@@ -43,9 +43,15 @@ class ReconcileRequest(BaseModel):
     trigger: Literal['poll', 'restart', 'connectivity'] = 'poll'
 
 
+class ClaimRequest(BaseModel):
+    model_config = ConfigDict(extra='forbid', strict=True)
+    request_id: str = Field(pattern=r'^[a-f0-9]{32}$')
+    proof: str = Field(min_length=1,max_length=256)
+
+
 def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_limit=120,
                background_worker=True, ccp_presentation=None, ticket_presentation=None,
-               paid_delivery=None):
+               paid_delivery=None, protected_isolation=None, protected_claim=None):
     if type(background_worker) is not bool:
         raise ValueError('Explicit lifecycle worker selection required')
     if ccp_presentation is not None:
@@ -67,6 +73,16 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
                 or paid_delivery.binder.payments is not payments
                 or paid_delivery.binder.presentation is not ticket_presentation):
             raise ValueError('Exact same original protected ticket/delivery backend required')
+    if protected_isolation is not None or protected_claim is not None:
+        from photobooth.post_preview_sandbox_handoff import OriginalSandboxIsolation,OriginalSandboxClaim
+        if (type(protected_isolation) is not OriginalSandboxIsolation
+                or type(protected_claim) is not OriginalSandboxClaim
+                or protected_isolation.payments is not payments or protected_claim.payments is not payments
+                or protected_isolation.delivery is not paid_delivery
+                or ccp_presentation is None or ticket_presentation is None
+                or protected_claim.ccp is not ccp_presentation.credentials
+                or protected_claim.ticket is not ticket_presentation.credentials):
+            raise ValueError('Exact original protected handoff authority required')
     worker = PostPreviewLifecycleWorker(payments, inbox) if background_worker else None
     limiter = LocalRateLimit(rate_limit)
 
@@ -157,6 +173,61 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
     async def health():
         return {'api_version': 1, 'order_version': ORDER_VERSION, 'mode': payments.mode,
                 'fulfillment_enabled': False}
+
+    if protected_isolation is not None:
+        def original_operation(operation,booth,owner=None):
+            with payments.ledger.write():
+                row=payments.ledger.db.execute('''SELECT o.*,d.visit_id FROM pp_isolation_ops o
+                    JOIN pp_drafts d USING(draft_id) WHERE o.operation_id=? AND o.booth_id=?''',
+                    (operation,booth)).fetchone()
+                if (not row or owner is not None and
+                        (row['visit_id']!=owner.visit_id or row['original_generation']!=owner.generation)):
+                    raise DraftHeld('Exact original release operation required')
+                return dict(kind='ORIGINAL_ISOLATION',operation_id=operation,booth_id=booth,
+                    draft_id=row['draft_id'],visit_id=row['visit_id'],generation=row['original_generation'],
+                    state=row['state'],mode=payments.mode,order_version=ORDER_VERSION)
+
+        @app.post('/api/postpay/drafts/{draft_id}/isolation/prepare')
+        async def isolation_prepare(draft_id: str,request:Request,
+                x_booth_id: str=Header(default=''),authorization: str=Header(default='')):
+            booth=identity(request,x_booth_id,authorization)
+            owner=await body(request,OwnerRequest)
+            operation=await invoke(protected_isolation.prepare,booth,
+                expected_owner=DraftLease(draft_id,booth,owner.visit_id,owner.generation))
+            return await invoke(original_operation,operation,booth,owner)
+
+        @app.post('/api/postpay/isolation/{operation}/ack')
+        async def isolation_ack(operation: str,request:Request,
+                x_booth_id: str=Header(default=''),authorization: str=Header(default='')):
+            booth=identity(request,x_booth_id,authorization)
+            owner=await body(request,OwnerRequest)
+            await invoke(original_operation,operation,booth,owner)
+            await invoke(protected_isolation.acknowledge,booth,operation)
+            return await invoke(original_operation,operation,booth,owner)
+
+        @app.post('/api/postpay/groups/{group}/claim')
+        async def original_claim(group: str,request:Request,
+                x_booth_id: str=Header(default=''),authorization: str=Header(default='')):
+            booth=identity(request,x_booth_id,authorization)
+            command=await body(request,ClaimRequest)
+            try:
+                result=await run_in_threadpool(protected_claim.claim_once,command.request_id,group,booth,command.proof)
+            except PermissionError:
+                raise HTTPException(403,'Original private customer proof required') from None
+            except DraftHeld:
+                raise HTTPException(409,'Original claim is held') from None
+            except ValueError:
+                raise HTTPException(422,'Invalid request') from None
+            except Exception:
+                raise HTTPException(503,'Original claim temporarily unavailable') from None
+            base=dict(kind='ORIGINAL_CLAIM',request_id=command.request_id,purchase_group_id=group,
+                      booth_id=booth,mode=payments.mode,order_version=ORDER_VERSION,state=result['state'])
+            if result['state']=='WAIT':
+                return dict(base,reason='BOOTH_BUSY')
+            lease=result['lease']
+            return dict(base,lease=dict(draft_id=lease.draft_id,booth_id=lease.booth_id,
+                visit_id=lease.visit_id,generation=lease.generation),entitlement_id=result['entitlement_id'],
+                service_still_owed=True)
 
     if paid_delivery is not None:
         @app.post('/api/postpay/groups/{group}/delivery/{action}')

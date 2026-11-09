@@ -1,0 +1,50 @@
+{
+  "base": "fdc8d04d150b39adadca8f417f723a2643835b6f",
+  "stage": "B6-C original durable claim/optional guarded HTTP; native mounting pending",
+  "run": 169,
+  "seconds": 86.6,
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "command": "python tools/run_kiosk_unittests.py test_post_preview_handoff_api test_post_preview_claim_requests test_post_preview_sandbox_handoff test_post_preview_claim test_post_preview_isolation test_post_preview_pilot_admission test_post_preview_api test_post_preview_host test_post_preview_sandbox_delivery_api test_post_preview_worker_fence",
+  "log_sha256": "4aaaa7cd7157631c3f6282f663e726b69c69d69a8b35a0d8c4a8f579e15b6724",
+  "source_sha256": {
+    ".github/workflows/post-preview-qris.yml": "2fc35c921c0034be8c58bbe29145f9662196702cea8df5d382d69c8f2e324d9f",
+    "photobooth/post_preview_api.py": "3b40234acf3436ab1fa76e72b1a4058d7de76401a9c9d0caf13975014dc4a702",
+    "photobooth/post_preview_claim.py": "2b0a440068bb9093a30ee72b82f951faa8908cd1f62aa1ed69a1629cbecdb1d0",
+    "photobooth/post_preview_sandbox_handoff.py": "6fd907b21abf6c8e64b85c1595d4a1ca2692576ae3865b54a2939695a1e0d4b0",
+    "photobooth/post_preview_server.py": "d0161f6e6a4e28edc862d386635060a769aaa191b7cb09323349fbdc3ff9330c",
+    "tests/test_post_preview_claim_requests.py": "7512beb66b4ded9af421287617a3e26968002ecc419ea55cbe72bd90e3867c18",
+    "tests/test_post_preview_handoff_api.py": "b2122213e6379bf7c71c04d04b6d522d08c970e4f2e80e5bd8b743a680ef5d6b",
+    "tests/test_post_preview_sandbox_handoff.py": "ac4c51ef53e45e1232e1c949d04dc1bec79805f7f409138ca58baa5b6eabe618"
+  },
+  "new_methods": [
+    "test_auth_wrong_proof_and_strict_body_cannot_create_release_or_grant (test_post_preview_handoff_api.ProtectedHandoffApiTests.test_auth_wrong_proof_and_strict_body_cannot_create_release_or_grant)",
+    "test_busy_claim_wait_does_not_read_provider_or_reveal_lease (test_post_preview_handoff_api.ProtectedHandoffApiTests.test_busy_claim_wait_does_not_read_provider_or_reveal_lease)",
+    "test_duplicate_and_oversize_bodies_never_echo_private_proof (test_post_preview_handoff_api.ProtectedHandoffApiTests.test_duplicate_and_oversize_bodies_never_echo_private_proof)",
+    "test_factory_mount_requires_private_typed_key_and_original_paid_dependencies (test_post_preview_handoff_api.ProtectedHandoffApiTests.test_factory_mount_requires_private_typed_key_and_original_paid_dependencies)",
+    "test_handoff_routes_absent_without_exact_trusted_pair (test_post_preview_handoff_api.ProtectedHandoffApiTests.test_handoff_routes_absent_without_exact_trusted_pair)",
+    "test_original_prepare_receipt_ack_claim_and_lost_responses_are_idempotent (test_post_preview_handoff_api.ProtectedHandoffApiTests.test_original_prepare_receipt_ack_claim_and_lost_responses_are_idempotent)",
+    "test_provider_failure_is_redacted_and_same_request_can_recover (test_post_preview_handoff_api.ProtectedHandoffApiTests.test_provider_failure_is_redacted_and_same_request_can_recover)",
+    "test_wrong_retired_owner_rejected_before_provider_get (test_post_preview_handoff_api.ProtectedHandoffApiTests.test_wrong_retired_owner_rejected_before_provider_get)",
+    "test_busy_request_stays_prepared_and_can_retry_after_original_safe_ack (test_post_preview_claim_requests.ProtectedClaimRequestTests.test_busy_request_stays_prepared_and_can_retry_after_original_safe_ack)",
+    "test_lost_original_response_replays_same_lease_and_only_one_claim_after_reopen (test_post_preview_claim_requests.ProtectedClaimRequestTests.test_lost_original_response_replays_same_lease_and_only_one_claim_after_reopen)",
+    "test_owed_finance_cannot_replay_a_review_required_original_delivery (test_post_preview_claim_requests.ProtectedClaimRequestTests.test_owed_finance_cannot_replay_a_review_required_original_delivery)",
+    "test_partial_existing_request_schema_holds_without_repair_or_occupancy_change (test_post_preview_claim_requests.ProtectedClaimRequestTests.test_partial_existing_request_schema_holds_without_repair_or_occupancy_change)",
+    "test_provider_outage_on_replay_keeps_same_grant_and_owed_without_a_second_claim (test_post_preview_claim_requests.ProtectedClaimRequestTests.test_provider_outage_on_replay_keeps_same_grant_and_owed_without_a_second_claim)",
+    "test_record_failure_rolls_back_both_occupancy_and_original_request_result (test_post_preview_claim_requests.ProtectedClaimRequestTests.test_record_failure_rolls_back_both_occupancy_and_original_request_result)",
+    "test_replay_cannot_resurrect_a_superseded_generation (test_post_preview_claim_requests.ProtectedClaimRequestTests.test_replay_cannot_resurrect_a_superseded_generation)",
+    "test_request_is_durable_before_provider_get_and_contains_no_plaintext_proof (test_post_preview_claim_requests.ProtectedClaimRequestTests.test_request_is_durable_before_provider_get_and_contains_no_plaintext_proof)",
+    "test_same_request_cannot_be_rebound_even_to_another_valid_original_proof_role (test_post_preview_claim_requests.ProtectedClaimRequestTests.test_same_request_cannot_be_rebound_even_to_another_valid_original_proof_role)",
+    "test_successful_original_request_identity_and_lease_cannot_be_rewritten (test_post_preview_claim_requests.ProtectedClaimRequestTests.test_successful_original_request_identity_and_lease_cannot_be_rewritten)",
+    "test_unknown_or_invalid_proof_does_not_create_a_request (test_post_preview_claim_requests.ProtectedClaimRequestTests.test_unknown_or_invalid_proof_does_not_create_a_request)",
+    "test_late_paid_after_verified_unpaid_isolation_preserves_original_proof_claim (test_post_preview_sandbox_handoff.ProtectedSandboxHandoffTests.test_late_paid_after_verified_unpaid_isolation_preserves_original_proof_claim)"
+  ],
+  "initial_reproductions": {
+    "pp06-stale-request-before.log": "a699b6353d1767d050a4e34503fc34331bf141b1fb243c95b30e6b41911376ff",
+    "pp06-late-after-ack-before.log": "217097813f6953c3b9c1488454cfd259e6a69c635963eafa438bb6d68b4edbab",
+    "pp06-request-core-final.log": "c47f100888f7210a0b7c1cb37bd92aa3d92b0df8cd45c942cf4c5c2b7fc66e09",
+    "pp06-request-api-final.log": "f08dbc90a52dd488e37137ce9df4d443374759f6822fba4660f63440cf663ca6"
+  },
+  "limits": "Fake external provider/cloud/paper; exact original API/core/threads/shared local SQL. No complete protected native cycle, capability rotation, default merchant activation, actual money/paper/cloud/refund/deployment."
+}

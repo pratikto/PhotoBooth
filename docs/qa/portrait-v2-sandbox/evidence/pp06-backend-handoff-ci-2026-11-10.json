@@ -1,0 +1,31 @@
+{
+  "source": "fdc8d04d150b39adadca8f417f723a2643835b6f",
+  "run_id": 42722257944,
+  "conclusion": "success",
+  "jobs": [
+    {
+      "job": 129518878089,
+      "name": "Windows backend",
+      "run": 755,
+      "seconds": 600.371
+    },
+    {
+      "job": 129518878598,
+      "name": "Ubuntu backend",
+      "run": 755,
+      "seconds": 289.014
+    },
+    {
+      "job": 129518878571,
+      "name": "Ubuntu native",
+      "run": 88,
+      "seconds": 160.451
+    }
+  ],
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "apps_script": 34,
+  "combined_log_sha256": "3c55f3233e1c6a1c72b2860f0f29e96762d9d7e939e5935964bb754f6a0b2d59",
+  "scope": "B6-B exact source only; B6-C and later require own changed-source regression/CI"
+}

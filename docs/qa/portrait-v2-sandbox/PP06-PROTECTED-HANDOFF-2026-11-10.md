@@ -115,3 +115,67 @@ complete trusted launcher/configuration/restore and refund/status/ops remain ope
 Core methods alone do not solve lost claim-response recovery or enable a customer
 profile. Current native new admission/default merchant health remain gated.
 Final changed-source regression/CI is pending; old B5 results retain their scope.
+
+## B6-C durable original claim request and guarded HTTP contract
+
+The backend records the exact request ID, original booth/group and SHA-256 of
+the independently verified private proof BEFORE provider GET. The reacquired
+lease/entitlement and original ACK operation commit in the SAME SQL transaction
+as occupancy CAS. A failed commit rolls back both; a lost HTTP reply reuses the
+same original request/lease, including after backend verifier reconstruction.
+Every grant retry still requires current original proof and fresh legitimate
+settlement; a superseded owner returns WAIT without provider I/O or any lease.
+Neither raw proof nor worker capability is stored in the request journal.
+Partial schema or changed identity/result holds without repair/reset/reissue.
+
+Optional authenticated prepare/ACK/claim routes require the exact paired
+protected authorities and original delivery/CCP/ticket dependencies. Prepare
+binds the caller's exact retired DraftLease inside the original authority lock
+before merchant I/O; ACK accepts no worker booleans, signature or key. Claim
+uses only the durable claim_once entry point. Strict bounded JSON, redacted
+errors, booth authentication and private no-store/no-referrer responses remain.
+Trusted factory mounting requires a private typed ephemeral worker capability
+AND original paid-delivery chain; neither is mounted in the default launcher.
+Health still reports fulfillment_enabled=False. This is backend transport only,
+not new native admission, device readiness or commercial activation.
+
+BUG-052: a superseded request initially called the merchant before its owner
+check; provider outage raised instead of WAIT (one reproduced ERROR). The
+protected retry now verifies proof/current owner first, without preempting B.
+BUG-053: an original verified unpaid release followed by late independent PAID
+could not claim (one reproduced ERROR). Only protected claim accepts that
+TERMINAL_UNPAID release after fresh legitimate PAID, original proof and durable
+backend-validated worker evidence. NO_PAYMENT and uncertain releases remain
+denied; original mock financial policy is unchanged.
+
+An intermediate46-test run reached the corrected late claim successfully, then
+errored in an incorrect assertion assuming paid_services existed before paid
+delivery preparation; the assertion now checks the actual financial obligation.
+An intermediate169-test run had one fixture ERROR using REVIEW_REQUIRED instead
+of the existing paid-service state REVIEW; no runtime enum was changed.
+These are recorded separately from the two source defects above.
+
+**20 new methods /169 affected PASS86.600s**, zero failures/errors/skips.
+[Source/log/failure/method evidence](evidence/pp06-claim-request-api-2026-11-10.json).
+The backend B6-B sourcefdc8d04 separately completed CI42722257944:755 Windows
+PASS600.371s,755 Ubuntu PASS289.014s,88 native PASS160.451s;34 Apps Script
+PASS, all job conclusions SUCCESS and completed logs inspected.
+[Exact historical source CI](evidence/pp06-backend-handoff-ci-2026-11-10.json).
+These CI results do not verify B6-C; its final source/CI remains pending.
+
+## Next native restore contract (not implemented by B6-C)
+
+Use a strict authenticated handoff client. A typed client-owned claim grant must
+be issued only after a complete scoped claim_once response; arbitrary lease/
+dictionary, forged/cross-client/stale or privacy-retired results cannot restore
+pixels. The fresh protected facade must check the SAME local durable request,
+original ACK/worker receipt, entitlement, current owner and frozen media hashes,
+then reuse existing original restore behavior without mock custody or a new
+photo/charge/receipt. Failed/late responses stay private. Accepted grants are
+consumed once; lost response retries keep the original request ID.
+
+This still does not rotate the original collector/worker/backend capability,
+admit B, mount protected freeze or turn on a customer profile. Complete actual
+native A-to-B-to-A and separate-process capability rotation remain mandatory
+after the strict client/restore seam; source work must not be called hardware
+blocked merely because actual devices/accounts are also unverified.

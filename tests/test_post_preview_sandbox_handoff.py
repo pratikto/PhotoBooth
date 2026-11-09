@@ -171,5 +171,18 @@ class ProtectedSandboxHandoffTests(unittest.TestCase):
         self.assertEqual(0,self.f.ledger.db.execute('SELECT closed FROM pp_drafts').fetchone()[0])
         self.assertEqual('PREPARED',self.f.ledger.db.execute('SELECT state FROM pp_isolation_ops').fetchone()[0])
 
+    def test_late_paid_after_verified_unpaid_isolation_preserves_original_proof_claim(self):
+        h=self.fixture(settled=False)
+        order=self.f.ledger.db.execute('SELECT provider_order_id FROM pp_payment_attempts').fetchone()[0]
+        self.f.remote.state(order,'expire')
+        op=h.prepare();h.ack(op)
+        self.assertEqual('TERMINAL_UNPAID',self.f.ledger.db.execute('SELECT financial_class FROM pp_isolation_ops').fetchone()[0])
+        self.f.remote.state(order,'settlement')
+        result=h.recover()
+        self.assertEqual('REACQUIRED',result['state'])
+        self.assertEqual(self.f.lease.draft_id,result['lease'].draft_id)
+        self.assertEqual(1,self.f.remote.charges)
+        self.assertEqual('OWED',h.payments.inspect(self.f.group,'PB001')['obligation_state'])
+
 
 if __name__=='__main__':unittest.main()

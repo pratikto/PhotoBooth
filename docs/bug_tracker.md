@@ -1,3 +1,22 @@
+## BUG-053 — late settlement after original unpaid ACK stranded proof claim (10 November 2026)
+
+S1 / protected integration SOURCE FIXED, software fixture only. An actual
+independent late settlement after a verified TERMINAL_UNPAID release could not
+reacquire the original visit; focused reproduction errored at the release-class
+guard. Protected claim now accepts that original ACK only with fresh legitimate
+PAID, the original CCP/ticket, FREE occupancy and backend-validated native worker
+receipt. NO_PAYMENT/uncertain releases remain held, mock policy unchanged.
+[Scope/evidence](qa/portrait-v2-sandbox/PP06-PROTECTED-HANDOFF-2026-11-10.md).
+
+## BUG-052 — superseded claim retry consulted merchant before busy check (10 November 2026)
+
+S2 / new transport SOURCE FIXED, software fixture only. One stale-generation
+outage reproduction errored rather than returning WAIT. Original request replay
+now verifies original private proof and current owner before merchant I/O; it
+cannot restore a superseded lease or preempt another customer. Exact grant/CAS
+result remains durable and retries never allocate another generation.
+[Scope/evidence](qa/portrait-v2-sandbox/PP06-PROTECTED-HANDOFF-2026-11-10.md).
+
 ## BUG-051 — protected ACK clock rollback could close occupancy (10 November 2026)
 
 S1 / new integration SOURCE FIXED, focused software verification only. One

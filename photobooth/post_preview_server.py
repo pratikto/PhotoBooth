@@ -19,12 +19,14 @@ from photobooth.post_preview_ticket_presentation import OriginalRecoveryPresenta
 from photobooth.post_preview_readiness import ReadOnlyDriveReadiness
 from photobooth.post_preview_readiness_bridge import BackendChargeReadiness, WorkerReadinessClient
 from photobooth.post_preview_store import DraftHeld, DraftLease
+from photobooth.post_preview_worker_fence import WorkerFenceKey,WorkerReceiptVerifier
 
 
 def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
                       server_key, booth_id, booth_token, provider_transport=None,
                       on_shutdown=None, background_worker=True,
-                      receipt_printer=None, printer_lane=None, paid_delivery_enabled=False):
+                      receipt_printer=None, printer_lane=None, paid_delivery_enabled=False,
+                      worker_fence_key=None):
     """Install server-owned authority; never accept readiness/PAID from callers.
 
     The original ledger remains owned by the backend host. On successful assembly
@@ -38,6 +40,8 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
             or drive_probe.workspace.physical_id != booth_id
             or type(background_worker) is not bool
             or type(paid_delivery_enabled) is not bool
+            or worker_fence_key is not None and
+               (type(worker_fence_key) is not WorkerFenceKey or not paid_delivery_enabled)
             or on_shutdown is not None and not callable(on_shutdown)):
         raise ValueError('Original isolated backend dependencies required')
     if (not isinstance(server_key, str) or not server_key.strip() or len(server_key) > 512
@@ -90,6 +94,11 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
         from photobooth.post_preview_sandbox_delivery import OriginalSandboxPaidDriveBinding,OriginalSandboxPaidDelivery
         delivery=OriginalSandboxPaidDelivery(
             OriginalSandboxPaidDriveBinding(payments,checkout,drive_probe,ticket_presentation),templates)
+    isolation=claim=None
+    if worker_fence_key is not None:
+        from photobooth.post_preview_sandbox_handoff import OriginalSandboxIsolation,OriginalSandboxClaim
+        isolation=OriginalSandboxIsolation(payments,delivery,WorkerReceiptVerifier(ledger,worker_fence_key))
+        claim=OriginalSandboxClaim(payments,credentials,ticket_presentation.credentials)
 
     def close():
         bridge.close()
@@ -98,4 +107,4 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
 
     return create_app(payments, auth, on_shutdown=close, background_worker=background_worker,
                       ccp_presentation=presentation, ticket_presentation=ticket_presentation,
-                      paid_delivery=delivery)
+                      paid_delivery=delivery,protected_isolation=isolation,protected_claim=claim)
