@@ -1,7 +1,7 @@
 """Verified post-preview cloud delivery status, never physical-print proof.
 
-Called only inside the isolated post-preview synthetic worker until the exact
-original recovery/booth-release protocol is implemented. Uploads are performed
+Used by the isolated mock or exact protected Sandbox backend chain. Complete
+customer-profile recovery/release remains separately gated. Uploads are performed
 by the established BoothDriveWorker, not from UI or printer callbacks.
 """
 import hashlib
@@ -20,8 +20,9 @@ from photobooth.post_preview_store import DraftHeld
 
 class OriginalPaidDeliveryMonitor:
     def __init__(self, preparer, *, worker=None, allow_incomplete_fixture=False):
+        from photobooth.post_preview_sandbox_delivery import original_paid_core_allowed
         if (type(preparer) is not OriginalPaidStripPreparer or
-                allow_incomplete_fixture is not True or
+                not original_paid_core_allowed(preparer.binder,allow_incomplete_fixture) or
                 (worker is not None and
                  (not isinstance(worker,BoothDriveWorker) or
                   worker.workspace is not preparer.binder.workspace or

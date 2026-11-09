@@ -20,13 +20,17 @@ from photobooth.post_preview_store import DraftHeld
 class OriginalPaidDriveBinding:
     def __init__(self,payments,checkout,workspace,client,*,allow_incomplete_fixture=False):
         if (allow_incomplete_fixture is not True or
-                not isinstance(payments,PostPreviewPayments) or payments.mode!='mock'
-                or not isinstance(checkout,PrivateDraftCheckout) or
+                not isinstance(payments,PostPreviewPayments) or payments.mode!='mock'):
+            raise DraftHeld('Only exact original synthetic Drive binding is available')
+        self._initialize(payments,checkout,workspace,client)
+
+    def _initialize(self,payments,checkout,workspace,client):
+        if (not isinstance(checkout,PrivateDraftCheckout) or
                 checkout.ledger is not payments.ledger or
                 not isinstance(workspace,BoothWorkspace) or
                 not isinstance(client,BoothDriveClient) or
                 client.booth_id!=workspace.booth_id):
-            raise DraftHeld('Only exact original synthetic Drive binding is available')
+            raise DraftHeld('Original paid Drive dependencies must share ledger and booth')
         self.payments,self.checkout,self.workspace,self.client=payments,checkout,workspace,client
         self.ledger=payments.ledger
         self._lock=threading.RLock()

@@ -1,0 +1,23 @@
+{
+  "status": "FOCUSED_VERIFIED_FINAL_REGRESSION_CI_PENDING",
+  "base_runtime_sha": "89df55a2e885a58ba81a08262ad974211b681407",
+  "new_methods": 14,
+  "focused": {
+    "run": 85,
+    "passed": 85,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 25.836
+  },
+  "public_delivery_routes_mounted": false,
+  "native_delivery_adapter_mounted": false,
+  "upload_worker_started_by_tests": false,
+  "actual_money_paper_cloud_io": false,
+  "logs": {
+    "postpay-b4-first.log": "123c76b7ee990b0b61ab05a8b55e386437b82f3345fc3158b1395fe6c4c0b2f5",
+    "postpay-b4-second.log": "1af282c9037119fc5d978bc9478a8dd7f447fa4b0682cc43e6681f5f5645da9a",
+    "postpay-b4-focused.log": "a0ae83822a941378c936e2e49c6c93ab67c801d8402ec6e002adad6ea5f04309",
+    "postpay-b4-focused-fixed.log": "63d3bdc9450c973f3696019dc60b884848b63d97bd22981b394a049c58ab0815"
+  }
+}

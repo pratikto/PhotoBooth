@@ -1,3 +1,5 @@
+> **9 November B4-A core increment:** [protected Sandbox paid-delivery core](PP05-SANDBOX-PAID-DELIVERY-2026-11-09.md) has 14 new methods /85 focused PASS, zero failures/errors/skips. Original shared Drive/media/strip/monitor/dispatcher reused under exact backend authority; same receipt printer/lane required. Default factory health stays disabled. Final new-source regression/CI pending; next authenticated delivery routes/native adapter and exact worker shutdown/claim/release integration. Earlier B3 counts remain at their original source.
+
 > **9 November historical evidence recovery:** original 5 November R4 batch run completed two hours: 498 cycles / 5,976 synthetic visits / zero failures, errors or skips at `824b6ae7`; raw log digest and historical Git fingerprint reverified. [Evidence](evidence/pp07-r4-soak-final-2026-11-05.json). This does not qualify newer provider/native code or change the current next implementation task. Continue paid delivery from [the latest source checkpoint](PROVIDER-NATIVE-CONTINUATION-2026-11-09.md).
 
 # 9 November — final native ticket/once-only receipt checkpoint

@@ -1,4 +1,4 @@
-"""Mock-only original paid strip dispatch over the existing ThermalPrinter API.
+"""Backend-owned original paid strip dispatch over the existing ThermalPrinter API.
 
 One paid design yields one immutable ESC/POS submission for ALL purchased copies.
 Physical paper is not proven by a successful transport ACK. Persist SENDING
@@ -18,9 +18,10 @@ from photobooth.post_preview_store import DraftHeld
 
 class OriginalPaidPrintDispatcher:
     def __init__(self,preparer,*,allow_incomplete_fixture=False):
+        from photobooth.post_preview_sandbox_delivery import original_paid_core_allowed
         if (type(preparer) is not OriginalPaidStripPreparer
-                or allow_incomplete_fixture is not True):
-            raise DraftHeld('Only isolated mock original paid print dispatch is available')
+                or not original_paid_core_allowed(preparer.binder,allow_incomplete_fixture)):
+            raise DraftHeld('Exact original paid print authority required')
         self.preparer=preparer
         self.binder=preparer.binder
         self._lock=threading.RLock()
@@ -30,8 +31,12 @@ class OriginalPaidPrintDispatcher:
 
         The source customer must have truly seen and dismissed the original
         ticket, and the original ticket receipt lane must no longer be sending.
-        This is a dev/mock service, never exposed as an API/customer action.
+        Only the owned worker may call this shared core; callers cannot select
+        another backend receipt printer or thermal lane.
         """
+        from photobooth.post_preview_sandbox_delivery import OriginalSandboxPaidDriveBinding
+        if type(self.binder) is OriginalSandboxPaidDriveBinding:
+            self.binder.require_printer_lane(printer,shared_lane)
         with self._lock,self.preparer._lock,self.binder._lock:
             with self.binder.ledger.write():
                 service,_=self.binder._record(lease,group)

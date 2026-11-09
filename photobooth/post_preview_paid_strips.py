@@ -1,7 +1,7 @@
 """Compose original bought strips only after verified PAID and individual Drive URL.
 
-This is a MOCK-only workstream. No actual printer bytes, public Drive upload,
-customer media release or paid completion occurs. Every original strip is
+Explicit mock or protected backend binding authorizes this shared core. No
+printer bytes or upload is sent by preparation. Every original strip is
 recorded with the source photo binding, output digest and one immutable job ID.
 """
 import hashlib
@@ -23,9 +23,10 @@ from photobooth.workflow import build_session_plans
 
 class OriginalPaidStripPreparer:
     def __init__(self,importer,*,allow_incomplete_fixture=False):
+        from photobooth.post_preview_sandbox_delivery import original_paid_core_allowed
         if (type(importer) is not OriginalPaidMediaImporter
-                or allow_incomplete_fixture is not True):
-            raise DraftHeld('Only original synthetic paid strip preparation is available')
+                or not original_paid_core_allowed(importer.binder,allow_incomplete_fixture)):
+            raise DraftHeld('Exact original paid strip preparation authority required')
         self.importer=importer
         self.binder=importer.binder
         self._lock=threading.RLock()

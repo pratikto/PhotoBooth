@@ -1,4 +1,4 @@
-"""Synthetic paid source-media import for a single original verified Drive folder.
+"""Original paid source-media import for a single original verified Drive folder.
 
 Private draft media is never uploaded, photographed again, printed or deleted.
 The immutable PAID folder transaction is created before copied bytes are used.
@@ -25,9 +25,9 @@ from photobooth.workflow import build_session_plans
 
 class OriginalPaidMediaImporter:
     def __init__(self, binder, *, allow_incomplete_fixture=False):
-        if (type(binder) is not OriginalPaidDriveBinding or
-                allow_incomplete_fixture is not True):
-            raise DraftHeld('Original mock-only paid media authorization required')
+        from photobooth.post_preview_sandbox_delivery import original_paid_core_allowed
+        if not original_paid_core_allowed(binder,allow_incomplete_fixture):
+            raise DraftHeld('Exact original paid media authority required')
         self.binder=binder
         self._lock=threading.RLock()
 
