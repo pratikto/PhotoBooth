@@ -1,3 +1,18 @@
+# 9 November 2026 — connected native A → B → A verification
+
+[New connected customer-cycle evidence](qa/portrait-v2-sandbox/PP06-NATIVE-CUSTOMER-CYCLE-2026-11-09.md)
+extends the existing native fixture through A's paid automatic output/result
+return, B's ACK-gated visit, valid-A busy WAIT, B cancellation and original-A
+popup recovery at both portrait sizes. Same entitlement/folder/photo hashes,
+one charge/receipt/2+1 sends; no old-ticket redisplay or strip resend.
+598 backend + 74 final native PASS; 56 focused admission/isolation/claim PASS,
+zero failures/errors/skips.
+Full device/provider acceptance remains separate. Current launcher is synthetic;
+actual post-preview Sandbox profile remains unmounted and is the next source
+work, followed by supported-platform restore and refund/status integration.
+No configured merchant/Drive keys or printer route on this executor; no real
+transactions, paper, cloud effects, production release or original data reset.
+
 # Meong Photobooth — outstanding work and feature backlog
 
 > **Physical trial ready to start:** [two-command Windows setup/start and optional paper/Drive](qa/portrait-v2-sandbox/PP07-PHYSICAL-QUICK-START.md). Source 8901bbc verified 1,778 local PASS; CI 41952947024 all 3 SUCCESS (574 Windows/574 Ubuntu/68 native), including actual Windows PowerShell setup/check-only. Next: owner fresh-root manual-camera observations; hardware acceptance remains NOT_RUN, actual payment/refund/production remain disabled. Separate pre-ACK worker/Ubuntu/merchant implementation gates are recorded in the readiness report.

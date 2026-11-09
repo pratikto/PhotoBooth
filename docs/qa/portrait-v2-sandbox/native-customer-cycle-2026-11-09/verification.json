@@ -1,0 +1,72 @@
+{
+  "branch": "feature/post-preview-qris-checkout",
+  "base": "0e70b4b02112f6ef03d71422df126076a6ea2c6b",
+  "N28": {
+    "run": 1,
+    "portrait_subcases": 2,
+    "seconds": 10.457,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0
+  },
+  "native": {
+    "run": 74,
+    "seconds": 168.605,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "exit": 0,
+    "command": "python tools/run_kiosk_unittests.py test_post_preview_widgets test_post_preview_checkout_widgets test_post_preview_native_journeys test_post_preview_pilot_runtime test_post_preview_ticket_view test_ccp_view test_qr_code test_kiosk_v2_photos test_kiosk_v2_flow"
+  },
+  "admission_isolation_claim": {
+    "run": 56,
+    "seconds": 19.478,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "exit": 0
+  },
+  "backend": {
+    "run": 598,
+    "seconds": 180.435,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "exit": 0,
+    "command": "python tools/run_kiosk_unittests.py test_post_preview_store test_post_preview_photos test_post_preview_checkout test_post_preview_resources test_post_preview_worker test_post_preview_idle test_credential_vault test_post_preview_ccp test_post_preview_payments test_post_preview_api test_post_preview_payment_crashes test_post_preview_process_crash test_post_preview_protected_restore test_post_preview_checkout_worker test_post_preview_lifecycle_worker test_post_preview_readiness test_post_preview_drive_readiness test_post_preview_paid_drive test_post_preview_paid_media test_post_preview_paid_strips test_post_preview_paid_print test_post_preview_paid_upload_status test_post_preview_paid_delivery test_post_preview_checkout_delivery test_post_preview_journey_matrix test_post_preview_pilot_launcher test_post_preview_pilot_preflight test_post_preview_device_entry test_post_preview_pilot_early_root test_post_preview_isolation test_post_preview_pilot_admission test_post_preview_refund_assessment test_post_preview_refund_simulation test_post_preview_claim test_post_preview_authority test_post_preview_ticket test_post_preview_ticket_receipt test_post_preview_ticket_window test_post_preview_checkout_ticket test_booth_sync test_booth_storage test_apps_script_drive test_retention_readiness test_checkout_backend test_checkout_durability test_payment_quote test_workflow test_capture_journal test_photo_reconstruction"
+  },
+  "sha256": {
+    "tests/test_post_preview_native_journeys.py": "d69512273d2b0720533c8d46f022bfa67be514c441ed4b536ae0bf9c543d0bb3",
+    "photobooth/kiosk_v2/photo_views.py": "0d534a2c101ed530e01f492ac6c3cc4994c133f058dfacafb64cbe1fc3794487",
+    "photobooth/kiosk_v2/post_preview_app.py": "e3c006418e409f7760ef1e74b7f40caffdb4f0099f29f7e127f4c9328259a367",
+    "photobooth/kiosk_v2/post_preview_checkout_app.py": "69c48046aa33fdee84a6217ff171a034817c2293682ceec4644814888657d95c"
+  },
+  "limits": {
+    "actual_Midtrans": "NOT_RUN / PROFILE_UNMOUNTED",
+    "paper": "NOT_RUN",
+    "Drive": "NOT_RUN",
+    "full_stage_acceptance": "NOT_RUN",
+    "two_hour_qualification": "NOT_RUN_THIS_SESSION",
+    "four_hour_device_qualification": "NOT_RUN",
+    "production": "NOT_READY"
+  },
+  "environment": {
+    "platform": "Linux",
+    "python": "3.12",
+    "Kivy": "2.3.2",
+    "cryptography": "49.0.0",
+    "KIVY_HOME": "workspace work directory",
+    "SDL_VIDEODRIVER": "offscreen",
+    "SDL_AUDIODRIVER": "dummy",
+    "LIBGL_ALWAYS_SOFTWARE": "1",
+    "PHOTOBOOTH_CAMERA": "0",
+    "PHOTOBOOTH_AUDIO": "0",
+    "PHOTOBOOTH_AD_VIDEO": "0"
+  },
+  "report_sha256": {
+    "stage2-cycle.log": "ac95ceb7be627b8e398a8a5eadd592a289dbf66796d94221d0ad55906ac5e660",
+    "stage2-admission.log": "a023d11b2655b83750f6a27754d30e1bca337fcb00df3dea6815c0693cfd2bbf",
+    "stage2-final-native.log": "00a0ca4f978a61edf6a2ddaaf718899872607f19ae040661e591cfc5ae5ccdd2",
+    "stage2-final-backend.log": "843905c6d3216abc36cdc6e9973a0528272b0286fac1f88656efd262d80a2a85"
+  }
+}

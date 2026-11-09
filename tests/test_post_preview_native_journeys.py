@@ -5,6 +5,7 @@ the actual paid output screen must remain a protected OWED liability.
 """
 import time
 import unittest
+from unittest.mock import patch
 
 from kivy.base import EventLoop
 from kivy.core.window import Window
@@ -393,6 +394,97 @@ class NativeCustomerJourneyMatrixTests(unittest.TestCase):
         self.settle(app)
         app._admit_photo_test()
         self.settle(app)
+
+    def test_n28_native_A_B_A_original_claim_preserves_output_at_both_sizes(self):
+        """One connected native journey, including real popup controls on return."""
+        import hashlib
+        for size in ((452, 900), (800, 1280)):
+            with self.subTest(size=size), self.booth(paid_delivery=True, unattended=True) as (app, fixture):
+                Window.size = size
+                self.proof(app)
+                proof = app._photo_view['ccp_offer'].qr_payload
+                original = fixture.service.lease
+                group = fixture.service.group
+                photos = {p: hashlib.sha256(p.read_bytes()).hexdigest()
+                          for p in fixture.service.photos.root.rglob('*.jpg')}
+                self.assertEqual(6, len(photos))
+                self.click(app, 'SUDAH SIMPAN BUKTI • LANJUT SIMULASI')
+                self.settle(app)
+                payment = app._photo_view['payment']
+                fixture.provider.state(payment['attempts'][0]['provider_order_id'], 'settlement')
+                self.click(app, 'PERIKSA STATUS')
+                self.await_phase(app, 'ticket_offer')
+                app._ticket_card._ready_at = 0
+                deadline = time.monotonic() + 10
+                while time.monotonic() < deadline and app._photo_view.get('phase') != 'ticket_visible':
+                    EventLoop.idle()
+                    if app._ticket_card is not None:
+                        app._ticket_card._rendered(0)
+                    app._poll_photos(); time.sleep(.01)
+                self.assertEqual('ticket_visible', app._photo_view['phase'])
+                self.click(app, 'LANJUT • SIMPAN TIKET')
+                self.await_phase(app, 'paid_delivery')
+                self.settle(app)
+                self.assertEqual([2, 1], [n for _, n in fixture.paid_print_sends])
+                folder = app._photo_view['delivery']['folder_url']
+                entitlement = app._photo_view['payment']['entitlement_id']
+                with patch('photobooth.kiosk_v2.post_preview_checkout_app.time.monotonic',
+                           return_value=app._paid_result_deadline):
+                    app._poll_photos()
+                self.settle(app)
+                self.assertEqual('advert', app.navigation.page)
+                self.assertIsNone(app._ticket_card)
+                self.assertNotIn('HASIL FOTO BERBAYAR',
+                                 [getattr(w, 'text', '') for w in app.stage.walk()])
+                self.start_B(app)
+                other = fixture.service.lease
+                self.assertNotEqual(original.draft_id, other.draft_id)
+                ack = fixture.service.ledger.db.execute(
+                    'SELECT state FROM pp_isolation_ops WHERE draft_id=?',
+                    (original.draft_id,)).fetchone()[0]
+                self.assertEqual('ACKED', ack)
+                self.shot(app)
+                # Authenticated A proof cannot preempt B's actual capture page.
+                self.assertEqual('WAIT', app._pilot_admission.recover_paid(proof)['state'])
+                app._pilot_open_claim()
+                self.assertIsNone(app._pilot_popup)
+                self.assertEqual(other, fixture.service.lease)
+                self.assertEqual('capture', app._photo_view['phase'])
+                self.assertIsNone(app._paid_result_deadline)
+                self.click(app, 'BATAL • LINDUNGI SESI')
+                self.settle(app)
+                self.assertEqual('advert', app.navigation.page)
+                self.click(app, 'PUNYA TIKET PEMULIHAN • SIMULASI')
+                field = app._pilot_input
+                self.assertTrue(field.password)
+                field.text = proof
+                buttons = [w for w in app._pilot_popup.content.walk()
+                           if getattr(w, 'text', None) == 'VALIDASI TIKET']
+                self.assertEqual(1, len(buttons))
+                buttons[0].dispatch('on_release')
+                self.assertEqual('', field.text)
+                self.assertIsNone(app._pilot_popup)
+                self.assertEqual(original.draft_id, fixture.service.lease.draft_id)
+                self.assertGreater(fixture.service.lease.generation, original.generation)
+                self.assertEqual(group, fixture.service.group)
+                self.assertEqual('paid_hold', app._photo_view['phase'])
+                self.assertTrue(app._photo_view['ticket_dismissed'])
+                self.assertIsNone(app._ticket_card)
+                self.click(app, 'COBA SIAPKAN DELIVERY')
+                self.await_phase(app, 'paid_delivery')
+                self.settle(app)
+                self.assertEqual(folder, app._photo_view['delivery']['folder_url'])
+                self.assertEqual(entitlement, app._photo_view['payment']['entitlement_id'])
+                self.assertEqual([2, 1], [n for _, n in fixture.paid_print_sends])
+                self.assertEqual(1, len(fixture.receipt_sizes))
+                self.assertEqual(1, fixture.provider.charges)
+                self.assertEqual('OWED', app._photo_view['delivery']['service_status'])
+                self.assertFalse(app._photo_view['delivery']['physical_paper_verified'])
+                self.assertEqual(photos, {p: hashlib.sha256(p.read_bytes()).hexdigest()
+                                         for p in photos})
+                self.assertEqual('ACKED', fixture.service.ledger.db.execute(
+                    'SELECT state FROM pp_isolation_ops WHERE draft_id=?',
+                    (other.draft_id,)).fetchone()[0])
 
 
 if __name__ == '__main__':

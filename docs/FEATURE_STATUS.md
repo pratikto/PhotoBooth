@@ -1,3 +1,18 @@
+# 9 November 2026 — connected native A → B → A verification
+
+[New connected customer-cycle evidence](qa/portrait-v2-sandbox/PP06-NATIVE-CUSTOMER-CYCLE-2026-11-09.md)
+extends the existing native fixture through A's paid automatic output/result
+return, B's ACK-gated visit, valid-A busy WAIT, B cancellation and original-A
+popup recovery at both portrait sizes. Same entitlement/folder/photo hashes,
+one charge/receipt/2+1 sends; no old-ticket redisplay or strip resend.
+598 backend + 74 final native PASS; 56 focused admission/isolation/claim PASS,
+zero failures/errors/skips.
+Full device/provider acceptance remains separate. Current launcher is synthetic;
+actual post-preview Sandbox profile remains unmounted and is the next source
+work, followed by supported-platform restore and refund/status integration.
+No configured merchant/Drive keys or printer route on this executor; no real
+transactions, paper, cloud effects, production release or original data reset.
+
 # 9 November 2026 — unpaid preview / simulation presentation
 
 [Bounded correction and evidence](qa/portrait-v2-sandbox/PP02-PREVIEW-PAYMENT-CLARITY-2026-11-09.md):

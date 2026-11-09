@@ -78,8 +78,11 @@ increment has 598 backend + 72 native PASS and matching CI42552901917 all three
 jobs SUCCESS. The remaining stage-1 unpaid preview/synthetic-payment presentation now has
 [a bounded source correction](PP02-PREVIEW-PAYMENT-CLARITY-2026-11-09.md),
 35 affected native PASS and clean both-size visual review. Full stage acceptance
-remains separate. Next complete the native A→B→A lifecycle using original
-admission/claim/worker fixtures, then mount guarded post-preview merchant integration.
+remains separate. A connected native A→B→A cycle now passes at both sizes; see
+[the source-specific report](PP06-NATIVE-CUSTOMER-CYCLE-2026-11-09.md).
+Stage-2 device/operational acceptance remains open. Next mount the guarded
+post-preview merchant profile with protected original-worker readiness,
+escrow, paid-ticket/delivery and release; keep mock and merchant authority separate.
 
 References: [BUG-046 evidence/retest](BUG046-RESULT-AUTO-RETURN.md),
 [current 112-case R4 review](evidence/pp07-r4-case-review-2026-11-05.json),
