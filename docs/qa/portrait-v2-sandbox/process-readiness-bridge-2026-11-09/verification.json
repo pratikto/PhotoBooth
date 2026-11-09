@@ -23,5 +23,13 @@
     "Drive": "NOT_RUN",
     "Windows_process": "CI_PENDING",
     "production": "NOT_READY"
+  },
+  "spawn_start_refinement": {
+    "methods": 12,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "command": "python tools/run_kiosk_unittests.py test_post_preview_readiness.ProcessReadinessBridgeTests",
+    "source_sha256": "a2d8963aaca9a713cab4cdf95fad813d2f37d0e65e850f0869e6852c16372256"
   }
 }

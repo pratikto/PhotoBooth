@@ -72,3 +72,13 @@ bridge and the existing fixed MidtransSandboxClient, API, private ledger and
 read-only Drive probe, then wire the supported protected native profile. No
 production/money activation follows from this increment. Roll back only this
 new module and associated tests; preserve original financial/media journals.
+
+## Windows spawn-start boundary refinement
+
+Before final source qualification, the independent-process fixture now waits
+for the actual child's ready Event before measuring a readiness request. Spawn
+and module-import latency are not the protocol latency. The production socket
+round-trip deadline remains two seconds; startup has a separate bounded 10s
+fixture wait. This prevents Windows cold import from being mislabeled as an
+incorrect transport response. All twelve bridge methods PASS after the change;
+final exact-source full regression/CI is recorded in the continuation checkpoint.

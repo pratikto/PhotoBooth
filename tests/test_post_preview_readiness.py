@@ -241,10 +241,11 @@ def _bridge_ready(scope, stamp=None):
         name: lambda _: CheckObservation('READY', observed) for name in REQUIRED_CHECKS})
 
 
-def _bridge_child(channel, stopped):
+def _bridge_child(channel, stopped, ready):
     from photobooth.post_preview_readiness_bridge import WorkerReadinessServer
     server = WorkerReadinessServer(channel, _bridge_ready)
     server.start()
+    ready.set()
     try:
         stopped.wait(5)
     finally:
@@ -263,11 +264,15 @@ class ProcessReadinessBridgeTests(unittest.TestCase):
         context = multiprocessing.get_context('spawn')
         backend, worker = socket.socketpair()
         stopped = context.Event()
-        process = context.Process(target=_bridge_child, args=(worker, stopped))
+        ready = context.Event()
+        process = context.Process(target=_bridge_child, args=(worker, stopped, ready))
         process.start()
         worker.close()
         bridge = WorkerReadinessClient(backend, timeout=2)
         try:
+            # Spawn/import time is not transport latency, especially on Windows.
+            # Keep the two-second protocol deadline after actual worker startup.
+            self.assertTrue(ready.wait(10), 'Original readiness child did not start')
             result = bridge.observe(self.scope)
             self.assertEqual(LOCAL_CHECKS, set(result))
             self.assertEqual({'READY'}, {o.state_at(time.time(), max_age=2) for o in result.values()})
