@@ -1,3 +1,13 @@
+# 9 November 2026 — native original backend ticket B2
+
+Original protected paid ticket routes and typed native card/window session are
+connected, including actual separate-child/API/native-card verification.
+73 related +8 ticket-focused +11 native PASS (overlapping scopes). [Exact scope,
+evidence and next task](qa/portrait-v2-sandbox/PP04-NATIVE-REMOTE-TICKET-2026-11-09.md). Next original once-only receipt/shared printer
+lane, paid delivery/claim/release and full native provider profile. New-source
+full regression/CI pending; prior c096504 evidence remains unchanged.
+Production NOT_READY. Local work/ artifacts are not pushed.
+
 # 9 November 2026 — original provider host / protected native checkpoint
 
 Source/tests **c096504** pushed and remote-verified on the existing post-preview

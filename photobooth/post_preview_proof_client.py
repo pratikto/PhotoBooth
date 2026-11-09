@@ -9,9 +9,14 @@ import threading
 from photobooth.post_preview_ccp import PendingCCPOffer
 from photobooth.post_preview_client import PostPreviewClient
 from photobooth.post_preview_store import DraftHeld, ORDER_VERSION
+from photobooth.post_preview_ticket import PendingRecoveryOffer
 
 
 class PostPreviewCCPClient:
+    KIND = 'CCP'
+    ROUTE = 'ccp'
+    OFFER_TYPE = PendingCCPOffer
+
     def __init__(self, payments):
         if type(payments) is not PostPreviewClient:
             raise ValueError('Exact authenticated original payment client required')
@@ -29,10 +34,10 @@ class PostPreviewCCPClient:
             payload['presentation_id'] = presentation_id
         try:
             result = self._payments._transport._call('POST',
-                '/api/postpay/groups/'+group+'/ccp/'+action, payload=payload)
+                '/api/postpay/groups/'+group+'/'+self.ROUTE+'/'+action, payload=payload)
         except Exception:
             raise DraftHeld('Original private proof request held') from None
-        base = dict(kind='CCP', purchase_group_id=group, booth_id=lease.booth_id,
+        base = dict(kind=self.KIND, purchase_group_id=group, booth_id=lease.booth_id,
                     generation=lease.generation, mode=self._payments.mode,
                     order_version=ORDER_VERSION)
         if any(type(result.get(k)) is not type(v) or result[k] != v for k,v in base.items()):
@@ -44,7 +49,7 @@ class PostPreviewCCPClient:
                 or type(result['presentation_id']) is not str
                 or re.fullmatch(r'[a-f0-9]{32}', result['presentation_id']) is None
                 or type(result['qr_payload']) is not str
-                or re.fullmatch(r'MEONG:CCP:1:'+re.escape(lease.booth_id)+':'+group
+                or re.fullmatch(r'MEONG:'+self.KIND+r':1:'+re.escape(lease.booth_id)+':'+group
                     +r':[A-Za-z0-9_-]{43}', result['qr_payload']) is None):
             raise DraftHeld('Original private display permit required')
         return result
@@ -54,7 +59,7 @@ class PostPreviewCCPClient:
             if self._hidden.is_set():
                 raise DraftHeld('Original private display retired')
             result = self._call(group, lease, 'offer')
-            offer = PendingCCPOffer(result['presentation_id'], group,
+            offer = self.OFFER_TYPE(result['presentation_id'], group,
                                     lease.generation, result['qr_payload'])
             self._pending = (lease, offer)
             if self._hidden.is_set():
@@ -85,3 +90,15 @@ class PostPreviewCCPClient:
         # Backend lifecycle/permit retirement remains a separate worker action.
         self._hidden.set()
         self._pending = None
+
+
+class PostPreviewRecoveryClient(PostPreviewCCPClient):
+    """Fixed paid-ticket role, using the same authenticated bounded transport."""
+    KIND = 'RECOVERY'
+    ROUTE = 'ticket'
+    OFFER_TYPE = PendingRecoveryOffer
+
+    def dismiss(self, lease, offer):
+        with self._lock:
+            self._original(lease, offer)
+            self._call(offer.purchase_group_id, lease, 'dismiss', offer.presentation_id)

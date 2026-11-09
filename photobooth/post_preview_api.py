@@ -44,7 +44,7 @@ class ReconcileRequest(BaseModel):
 
 
 def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_limit=120,
-               background_worker=True, ccp_presentation=None):
+               background_worker=True, ccp_presentation=None, ticket_presentation=None):
     if type(background_worker) is not bool:
         raise ValueError('Explicit lifecycle worker selection required')
     if ccp_presentation is not None:
@@ -53,6 +53,12 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
                 or ccp_presentation.ledger is not payments.ledger
                 or ccp_presentation.credentials.merchant_id != payments.merchant_id):
             raise ValueError('Exact original backend proof authority required')
+    if ticket_presentation is not None:
+        from photobooth.post_preview_ticket_presentation import OriginalRecoveryPresentation
+        if (type(ticket_presentation) is not OriginalRecoveryPresentation
+                or ticket_presentation.ledger is not payments.ledger
+                or ticket_presentation.credentials.payments is not payments):
+            raise ValueError('Exact original backend paid ticket authority required')
     inbox = inbox or PostPreviewNotificationInbox(payments)
     worker = PostPreviewLifecycleWorker(payments, inbox) if background_worker else None
     limiter = LocalRateLimit(rate_limit)
@@ -69,6 +75,8 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
                 raise RuntimeError('Original lifecycle worker remains active')
             if ccp_presentation is not None:
                 await run_in_threadpool(ccp_presentation.close)
+            if ticket_presentation is not None:
+                await run_in_threadpool(ticket_presentation.close)
             if on_shutdown:
                 await run_in_threadpool(on_shutdown)
 
@@ -160,6 +168,31 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
             function = ccp_presentation.visible if action == 'visible' else ccp_presentation.retire
             await invoke(function, group, token, owner.presentation_id)
             return dict(kind='CCP', purchase_group_id=group, booth_id=booth,
+                generation=owner.generation, presentation_id=owner.presentation_id,
+                action=action, mode=payments.mode, order_version=ORDER_VERSION)
+
+    if ticket_presentation is not None:
+        @app.post('/api/postpay/groups/{group}/ticket/offer')
+        async def ticket_offer(group: str, request: Request, x_booth_id: str = Header(default=''), authorization: str = Header(default='')):
+            booth = identity(request, x_booth_id, authorization)
+            owner = await body(request, OwnerRequest)
+            token = await invoke(lease, group, booth, owner)
+            offer = await invoke(ticket_presentation.offer, group, token)
+            return dict(kind='RECOVERY', purchase_group_id=group, booth_id=booth,
+                generation=offer.generation, presentation_id=offer.presentation_id,
+                qr_payload=offer.qr_payload, mode=payments.mode, order_version=ORDER_VERSION)
+
+        @app.post('/api/postpay/groups/{group}/ticket/{action}')
+        async def ticket_ack(group: str, action: Literal['visible', 'dismiss', 'retire'], request: Request,
+                             x_booth_id: str = Header(default=''), authorization: str = Header(default='')):
+            booth = identity(request, x_booth_id, authorization)
+            owner = await body(request, PresentationRequest)
+            token = await invoke(lease, group, booth, owner)
+            function = {'visible': ticket_presentation.visible,
+                        'dismiss': ticket_presentation.dismiss,
+                        'retire': ticket_presentation.retire}[action]
+            await invoke(function, group, token, owner.presentation_id)
+            return dict(kind='RECOVERY', purchase_group_id=group, booth_id=booth,
                 generation=owner.generation, presentation_id=owner.presentation_id,
                 action=action, mode=payments.mode, order_version=ORDER_VERSION)
 

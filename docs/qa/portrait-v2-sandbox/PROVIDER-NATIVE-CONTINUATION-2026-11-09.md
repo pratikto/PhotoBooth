@@ -1,3 +1,8 @@
+> **Later B2 increment:** original backend paid-ticket display and existing native
+> card/window are connected; [new implementation/evidence/next task](PP04-NATIVE-REMOTE-TICKET-2026-11-09.md).
+> Receipt/shared lane and full customer provider profile remain unfinished.
+> The c096504 report below preserves its original tested scope.
+
 # Post-preview child host / protected native continuation
 
 9 November 2026. Work ONLY on feature/post-preview-qris-checkout.

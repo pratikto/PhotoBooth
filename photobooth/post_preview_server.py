@@ -14,6 +14,8 @@ from photobooth.post_preview_ccp import OriginalCCPService
 from photobooth.post_preview_checkout import PrivateDraftCheckout
 from photobooth.post_preview_payments import PostPreviewPayments
 from photobooth.post_preview_presentation import OriginalCCPPresentation
+from photobooth.post_preview_ticket import OriginalRecoveryTicketService
+from photobooth.post_preview_ticket_presentation import OriginalRecoveryPresentation
 from photobooth.post_preview_readiness import ReadOnlyDriveReadiness
 from photobooth.post_preview_readiness_bridge import BackendChargeReadiness, WorkerReadinessClient
 from photobooth.post_preview_store import DraftHeld, DraftLease
@@ -53,6 +55,9 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
                 WHERE merchant_id!=? OR provider_mode!='sandbox' LIMIT 1''', (merchant_id,)).fetchone()
             or ledger.db.execute('''SELECT 1 FROM pp_ccp_credentials WHERE booth_id!=?
                 OR merchant_id!=? OR protector_id!=? LIMIT 1''',
+                (booth_id, merchant_id, protector.protector_id)).fetchone()
+            or ledger.db.execute('''SELECT 1 FROM pp_ticket_credentials WHERE booth_id!=?
+                OR merchant_id!=? OR protector_id!=? LIMIT 1''',
                 (booth_id, merchant_id, protector.protector_id)).fetchone())
         if foreign:
             raise DraftHeld('Original isolated merchant/booth/protected Sandbox ledger required')
@@ -76,6 +81,7 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
     payments = PostPreviewPayments(ledger, provider, merchant_id,
                                    readiness=charge_readiness, server_key=server_key)
     presentation = OriginalCCPPresentation(credentials)
+    ticket_presentation = OriginalRecoveryPresentation(OriginalRecoveryTicketService(payments, protector))
 
     def close():
         bridge.close()
@@ -83,4 +89,4 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
             on_shutdown()
 
     return create_app(payments, auth, on_shutdown=close, background_worker=background_worker,
-                      ccp_presentation=presentation)
+                      ccp_presentation=presentation, ticket_presentation=ticket_presentation)

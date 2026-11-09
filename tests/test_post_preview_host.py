@@ -331,9 +331,27 @@ class SandboxHostTests(unittest.TestCase):
             self.assertIn(paid['state'],{'PENDING','PAID_LIVE'})
             self.assertTrue(self.fresh_paid(later,group,'connectivity')['paid_verified'])
             with self.assertRaises(DraftHeld):restored.private_offer(group,lease)
+            from photobooth.post_preview_proof_client import PostPreviewRecoveryClient
+            recovery=PostPreviewRecoveryClient(later)
+            ticket=recovery.private_offer(group,lease)
+            ciphertext=bytes(ledger.db.execute('SELECT ciphertext FROM pp_ticket_credentials').fetchone()[0])
+            self.assertNotIn(ticket.qr_payload.encode(),ciphertext)
+            self.assertTrue(again.stop())
+            final_process=self.launch(config)
+            final_client=client(final_process.endpoint)
+            final_proof=PostPreviewRecoveryClient(final_client)
+            original_ticket=final_proof.private_offer(group,lease)
+            self.assertEqual(ticket.qr_payload,original_ticket.qr_payload)
+            self.assertNotEqual(ticket.presentation_id,original_ticket.presentation_id)
+            final_proof.mark_visible(lease,original_ticket)
+            final_proof.dismiss(lease,original_ticket)
+            final_proof.dismiss(lease,original_ticket)
+            with self.assertRaises(DraftHeld):final_proof.private_offer(group,lease)
+            self.assertEqual('DISMISSED',ledger.db.execute('SELECT screen_state FROM pp_ticket_presentations').fetchone()[0])
+            self.assertEqual(ciphertext,bytes(ledger.db.execute('SELECT ciphertext FROM pp_ticket_credentials').fetchone()[0]))
             self.assertEqual(1,ledger.db.execute('SELECT COUNT(*) FROM pp_ccp_credentials').fetchone()[0])
             self.assertEqual(1,ledger.db.execute('SELECT COUNT(*) FROM pp_payment_attempts').fetchone()[0])
-            self.assertTrue(again.stop())
+            self.assertTrue(final_process.stop())
 
     def test_actual_private_bridge_api_and_client_preserve_paid_once_across_child_restart(self):
         import requests

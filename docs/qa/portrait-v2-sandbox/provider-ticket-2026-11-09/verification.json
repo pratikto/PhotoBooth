@@ -1,0 +1,60 @@
+{
+  "date": "2026-11-09",
+  "base": "79d2bb1d5ae3a76935a100feb5ab78dbcbb393fe",
+  "sha256": {
+    "photobooth/post_preview_ticket_presentation.py": "140ec7b2e2cacd17b329b4fa0df5eea13b997fde8d694ef297cabeda9cdab8e9",
+    "photobooth/post_preview_api.py": "0db58f5db6d3e62496ad7800dd4fd4b529857c94fee59bf8a0412fe488c7e470",
+    "photobooth/post_preview_server.py": "f33a3eb37d77fe49896ac62f8bd986ad25e36ff5e107ebc7be97215008a1cf48",
+    "photobooth/post_preview_proof_client.py": "0f380998f31efe5116234d127004fd8e4f7ab2a6b046c9c5697ebc18dc244736",
+    "photobooth/kiosk_v2/post_preview_remote_ticket.py": "321938c3de973d6120aa7225dfa0f7f768897ce077113220e27dbd24f84030fd",
+    "tests/test_post_preview_ticket_presentation.py": "4342a1f36878672d4061495c1cb0fb218d2d82583a8975344f02e4b0907e38a7",
+    "tests/test_post_preview_remote_ticket_view.py": "65bd2d054e7a14024af04a2a0918313880749eba3772851e8ba5578e378a977e",
+    "tests/test_post_preview_host.py": "a8e4d9dc13340f069e48660e33154b32f583d04daec9b17d82f41b04069647ad",
+    ".github/workflows/post-preview-qris.yml": "b9b99add6386450007bd2861c8eb989c156a0abafd518cf7f9d346491558c4aa"
+  },
+  "checks": {
+    "before": {
+      "run": 1,
+      "errors": 1,
+      "reason": "new adapter not implemented"
+    },
+    "host_related": {
+      "run": 73,
+      "seconds": 49.717,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "ticket_focused": {
+      "run": 8,
+      "seconds": 2.71,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "native_related": {
+      "run": 11,
+      "seconds": 5.626,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "commands": {
+    "host_related": ".venv/bin/python tools/run_kiosk_unittests.py test_post_preview_host test_post_preview_ticket_presentation test_post_preview_presentation test_post_preview_ticket test_post_preview_api",
+    "ticket_focused": ".venv/bin/python tools/run_kiosk_unittests.py test_post_preview_ticket_presentation",
+    "native_related": "xvfb-run -a .venv/bin/python tools/run_kiosk_unittests.py test_post_preview_remote_ticket_view test_post_preview_ticket_view test_post_preview_ticket_window"
+  },
+  "log_sha256": {
+    "before.txt": "9dae21d46487f4f84960f642b1cdd2b99c931f6dead1b6ee6af86c7bf25d5ff4",
+    "host-related.txt": "f26d0841168089c2a5dd77755d6b820816b313233dd92b5b2cfbafd20fbc91ea",
+    "backend-final-focused.txt": "e43751247a376e59aea04248f78c7d04b27fea13301f2d375d1fd03682838dd8",
+    "native-final-focused.txt": "e4441c848fc6c0c31f15a1fc81720c6711ad5830291cfdf2480a759bba8e7c1b"
+  },
+  "limits": [
+    "Synthetic provider/Drive/Linux key lookup, actual child HTTP and native card",
+    "Display seam only: original receipt remains PREPARED; full customer launcher unmounted",
+    "New-source full regression and CI pending",
+    "No actual money/paper/cloud/account/device acceptance"
+  ]
+}
