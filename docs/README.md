@@ -1,3 +1,5 @@
+> **Portable Codex execution prompt:** [complete cross-account continuation](qa/portrait-v2-sandbox/CODEX-CROSS-ACCOUNT-CONTINUATION-2026-11-09.md) contains the verified8e976a9a/c8640a0b baseline, original contracts, exact next native source task, remaining gates, testing and immediate micro-push policy. Read the actual latest remote before execution; this publication is documentation only.
+
 > **Latest protected backend delivery:** [B4 original paid core/API/client/shutdown results and next source boundary](qa/portrait-v2-sandbox/PP05-SANDBOX-PAID-DELIVERY-2026-11-09.md); [source/CI evidence](qa/portrait-v2-sandbox/evidence/pp05-sandbox-paid-delivery-final-2026-11-09.json). Full native merchant profile remains gated.
 
 # Meong Photobooth documentation — GUI v2
