@@ -1,3 +1,8 @@
+> **Later A1/A2 continuation:** original stable host and credential-isolated
+> child backend are implemented with 105 focused PASS. Native provider mounting
+> remains next. See [current child-host report](PP04-CHILD-BACKEND-BOOTSTRAP-2026-11-09.md).
+> The status table below retains its original a748db2 checkpoint scope.
+
 # Post-preview provider / Ubuntu continuation — 9 November 2026
 
 Branch: `feature/post-preview-qris-checkout`. Base remote `6c0ee19`.

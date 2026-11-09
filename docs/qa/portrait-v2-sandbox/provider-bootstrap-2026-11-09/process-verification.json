@@ -1,0 +1,34 @@
+{
+  "date": "2026-11-09",
+  "branch": "feature/post-preview-qris-checkout",
+  "base_source": "ebbad73a159702a9415f822488242c871baafce4",
+  "sha256": {
+    "photobooth/post_preview_host.py": "14f5668e5e7ceac6eb282d59b01f4c8dea562a8d30dd2a32911f578013d0112c",
+    "photobooth/post_preview_bootstrap.py": "8222cf5ccd10dcee3ac48ce2ecb65f2c0177f49d3f55d228200dfa83a9307ba5",
+    "tests/test_post_preview_host.py": "4331dac16d117d53b3587603b63daeb764c3121b195123dd4872cd2ccee55cd5",
+    "tests/post_preview_host_process_fixture.py": "83a30d150b080da63c955b7e9ddb03200c8d010e1d18c19c26c620c15315d527",
+    ".github/workflows/post-preview-qris.yml": "81a82cb880080813dabbfbb080a3da966830db2adc35952245672521e50d0235"
+  },
+  "command": ".venv/bin/python tools/run_kiosk_unittests.py test_post_preview_host test_post_preview_api test_post_preview_authority test_post_preview_readiness test_post_preview_ccp",
+  "result": {
+    "run": 105,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 57.181
+  },
+  "local_log_sha256": "14a0cd7b4f294b108daf671c3bc8465c2f3cc9985d841cd45b4966855e2b3fae",
+  "prior_ci": {
+    "run": 42575112638,
+    "source": "ebbad73a159702a9415f822488242c871baafce4",
+    "ubuntu": "SUCCESS",
+    "native": "SUCCESS",
+    "windows": "FAILED: two TemporaryDirectory cleanup WinError32 errors; corrected cleanup order in A2"
+  },
+  "limits": [
+    "Synthetic provider HTTP/Drive and Linux custody fixtures, actual child processes and HTTP",
+    "Current full regression and source-matched CI pending",
+    "Native merchant facade not mounted; no device/account/production acceptance",
+    "No force kill, customer journal reset or uncertain replay"
+  ]
+}

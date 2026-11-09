@@ -1,3 +1,14 @@
+# 9 November 2026 — credential-isolated child backend A2
+
+Original Sandbox API now runs in a separately owned child over private sockets;
+credentials stay out of argv/environment/GUI. **105 focused PASS**, including
+actual HTTP settlement, original-root restart and truthful shutdown holds.
+[A2 scope, evidence and next source action](PP04-CHILD-BACKEND-BOOTSTRAP-2026-11-09.md).
+A1 Windows CI exposed two fixture cleanup errors; ordering is corrected in A2,
+fresh CI/full regression pending. Native provider mounting remains unfinished.
+No merchant/device operation or production approval. Local work/ artifacts are
+not pushed; preserve original ledgers, custody and uncertain jobs.
+
 # 9 November 2026 — provider child-host ownership A1
 
 Stable original Sandbox runtime/ledger/media and independent kernel ownership

@@ -35,13 +35,45 @@ release contracts, latest bridge/host/vault reports, original ledger/photos/
 checkout factory and LaunchLease. Prior a748db2 full/CI evidence remains at its
 original source; do not rerun startup baseline solely to confirm it.
 
+## A2: isolated child process and actual HTTP integration
+
+Implemented post_preview_bootstrap.SandboxBackendProcess/run_child. Merchant and
+Drive credentials travel only over a bounded anonymous private socket after
+spawn, never argv/environment/stdout. Separate original readiness capability is
+transferred by inherited POSIX descriptors or Windows shared socket handles.
+Child mounts the original API/factory/ledger, binds only loopback on an OS chosen
+port, and acknowledges exact startup nonce/PID/mode/version. Parent environment
+is allowlisted; no GUI is imported in the child. Startup failures are redacted.
+
+STOP/parent disconnect requests graceful shutdown. A bounded parent stop returns
+False while any financial worker or HTTP thread remains; there is no force kill,
+replacement host or premature original database/kernel-lock release. Uvicorn
+must wait for original HTTP threadpool calls as well as the lifecycle worker.
+Backend exit still does not prove native collector stop or booth FREE.
+
+Actual subprocess/socket/HTTP tests cover typed client PENDING to original
+settlement/one entitlement, lost create-response reconciliation after restart,
+crash preserving the same lease/media, parent disconnect, secret redaction and
+worker/foreground-call shutdown holds. Provider HTTP/Drive and Linux key lookup
+are explicitly synthetic child-only fixtures; Windows uses actual DPAPI. No
+production runtime test switch or mock-only guard removal was introduced.
+
+**105 focused PASS, zero FAIL/ERROR/SKIP, 57.181s**, including 17 host/process
+methods. An initial integration assertion expected fresh settlement immediately;
+the fixture now respects the original one-second reconciliation pacing. A1
+CI42575112638 passed Ubuntu/native but Windows failed two fixture cleanups
+(WinError32: TemporaryDirectory removed before original lock cleanup). A2 fixes
+cleanup ordering, retaining kernel-lock behavior; fresh Windows CI is pending.
+[Exact source/log hashes and limits](provider-bootstrap-2026-11-09/process-verification.json).
+
 ## Next exact increment
 
-A2: credential-isolated subprocess bootstrap with private bounded configuration
-and original readiness capability transfer, loopback-only API, bounded startup,
-truthful shutdown/crash and original-root restart tests. Then protected native
-provider facade/QR/ticket/delivery/claim/release. No merchant profile is mounted
-by A1 alone. Collector stop=False must remain a separate admission hold.
+Protected native provider facade/QR/ticket/delivery/claim/release, using original
+backend settlement/protected proof authority and existing native UI. Do not put
+a dummy provider in the GUI or remove mock-only admission guards. No native
+merchant profile is mounted by A2 alone. Collector stop=False remains a separate
+admission hold. Full final-source regression/current CI and actual Ubuntu device,
+merchant/Drive/refund acceptance remain separate and unfinished.
 
 Rollback scoped inverse source only; preserve original ledgers, contexts,
 customer media, secrets/keyrings, paid rights and uncertain print/upload jobs.
