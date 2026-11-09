@@ -1,6 +1,6 @@
 """In-memory original post-preview Recovery Ticket receipt (not legacy PAID-first).
 
-No plaintext/QR bitmap is saved to disk, logged or transferred to the backend.
+No plaintext/QR bitmap is saved to disk, logged or put in ordinary API responses.
 Physical paper receipt is distinct from successful transport submission.
 """
 import textwrap

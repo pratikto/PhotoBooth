@@ -23,6 +23,8 @@ class RemoteRecoveryTicketSession:
         self._offer = self._qr = self.card = self._rendered_offer = None
         self._dismiss_pending = False
         self._prepared = False
+        self._visible_acknowledged = False
+        self.receipt = None
 
     def _active(self):
         if self._hidden.is_set():
@@ -70,6 +72,16 @@ class RemoteRecoveryTicketSession:
             raise DraftHeld('Genuine original card rendering required')
         self.client.mark_visible(self.lease, offer)
         self._active()
+        self._visible_acknowledged = True
+
+    def send_receipt_once(self):
+        self._active()
+        if not self._visible_acknowledged or self._offer is None:
+            raise DraftHeld('Original backend-visible ticket required before receipt')
+        result = self.client.send_receipt_once(self.lease, self._offer)
+        self._active()
+        self.receipt = result
+        return result
 
     def finish(self, *, next_pressed=False):
         self._active()

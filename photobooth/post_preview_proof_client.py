@@ -42,7 +42,17 @@ class PostPreviewCCPClient:
                     order_version=ORDER_VERSION)
         if any(type(result.get(k)) is not type(v) or result[k] != v for k,v in base.items()):
             raise DraftHeld('Original private proof response scope changed')
-        if action != 'offer':
+        if action == 'receipt':
+            if (set(result) != set(base)|{'action','presentation_id','receipt_job_id',
+                                          'receipt_state','physical_paper_verified'}
+                    or result['action'] != action or result['presentation_id'] != presentation_id
+                    or type(result['receipt_job_id']) is not str
+                    or re.fullmatch(r'[a-f0-9]{32}',result['receipt_job_id']) is None
+                    or type(result['receipt_state']) is not str
+                    or result['receipt_state'] not in {'SENDING','SUBMITTED','NOT_SENT','UNCERTAIN'}
+                    or result['physical_paper_verified'] is not False):
+                raise DraftHeld('Original receipt observation changed')
+        elif action != 'offer':
             if result != dict(base, action=action, presentation_id=presentation_id):
                 raise DraftHeld('Original private display acknowledgement changed')
         elif (set(result) != set(base)|{'presentation_id','qr_payload'}
@@ -102,3 +112,8 @@ class PostPreviewRecoveryClient(PostPreviewCCPClient):
         with self._lock:
             self._original(lease, offer)
             self._call(offer.purchase_group_id, lease, 'dismiss', offer.presentation_id)
+
+    def send_receipt_once(self, lease, offer):
+        with self._lock:
+            self._original(lease, offer)
+            return self._call(offer.purchase_group_id, lease, 'receipt', offer.presentation_id)

@@ -344,6 +344,10 @@ class SandboxHostTests(unittest.TestCase):
             self.assertEqual(ticket.qr_payload,original_ticket.qr_payload)
             self.assertNotEqual(ticket.presentation_id,original_ticket.presentation_id)
             final_proof.mark_visible(lease,original_ticket)
+            receipt=final_proof.send_receipt_once(lease,original_ticket)
+            self.assertEqual('NOT_SENT',receipt['receipt_state'])  # No owned device configured in this child.
+            self.assertFalse(receipt['physical_paper_verified'])
+            self.assertEqual(receipt,final_proof.send_receipt_once(lease,original_ticket))
             final_proof.dismiss(lease,original_ticket)
             final_proof.dismiss(lease,original_ticket)
             with self.assertRaises(DraftHeld):final_proof.private_offer(group,lease)
@@ -352,6 +356,37 @@ class SandboxHostTests(unittest.TestCase):
             self.assertEqual(1,ledger.db.execute('SELECT COUNT(*) FROM pp_ccp_credentials').fetchone()[0])
             self.assertEqual(1,ledger.db.execute('SELECT COUNT(*) FROM pp_payment_attempts').fetchone()[0])
             self.assertTrue(final_process.stop())
+
+    def test_actual_child_receipt_prints_once_and_restart_only_observes_original_job(self):
+        import requests
+        from photobooth.post_preview_client import PostPreviewClient
+        from photobooth.post_preview_proof_client import PostPreviewRecoveryClient
+        with self.temporary() as directory:
+            config=self.config(directory,server_key='Mid-server-RECEIPT-FIXTURE')
+            process=self.launch(config)
+            ledger,lease,group=self.prepare_original_checkout(config)
+            def client(endpoint):
+                session=requests.Session();session.trust_env=False
+                value=PostPreviewClient(endpoint,'PB001',config.booth_token,
+                    allow_local_http=True,session=session)
+                self.addCleanup(value.close);return value
+            payment=client(process.endpoint);payment.begin(group,lease)
+            self.assertTrue(self.fresh_paid(payment,group,'connectivity')['paid_verified'])
+            proof=PostPreviewRecoveryClient(payment)
+            offer=proof.private_offer(group,lease);proof.mark_visible(lease,offer)
+            first=proof.send_receipt_once(lease,offer)
+            self.assertEqual('SUBMITTED',first['receipt_state'])
+            self.assertFalse(first['physical_paper_verified'])
+            self.assertEqual(first,proof.send_receipt_once(lease,offer))
+            self.assertEqual('1',(config.private_root/'fixture-ticket-send-count').read_text())
+            self.assertTrue(process.stop());again=self.launch(config)
+            later=client(again.endpoint)
+            observed=later._transport._call('POST','/api/postpay/groups/'+group+'/ticket/receipt',
+                payload=dict(later._owner(lease),presentation_id=offer.presentation_id))
+            self.assertEqual(first,observed)
+            self.assertEqual('1',(config.private_root/'fixture-ticket-send-count').read_text())
+            self.assertEqual('VISIBLE',ledger.db.execute('SELECT screen_state FROM pp_ticket_presentations').fetchone()[0])
+            self.assertTrue(again.stop())
 
     def test_actual_private_bridge_api_and_client_preserve_paid_once_across_child_restart(self):
         import requests

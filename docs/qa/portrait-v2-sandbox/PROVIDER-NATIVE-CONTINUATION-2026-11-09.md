@@ -1,3 +1,8 @@
+> **Later B3 increment:** original receipt/shared-lane RPC and native dispatch are
+> connected; [exact new scope, verification and next source action](PP04-ORIGINAL-REMOTE-RECEIPT-2026-11-09.md).
+> Real printer configuration/full customer profile and paid delivery/claim/release
+> remain unfinished. Earlier B2 checkpoints below retain their source scope.
+
 # 9 November — B2 backend/native original Recovery Ticket checkpoint
 
 Branch remains feature/post-preview-qris-checkout, Ubuntu mini-PC target with

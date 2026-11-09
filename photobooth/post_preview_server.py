@@ -23,7 +23,8 @@ from photobooth.post_preview_store import DraftHeld, DraftLease
 
 def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
                       server_key, booth_id, booth_token, provider_transport=None,
-                      on_shutdown=None, background_worker=True):
+                      on_shutdown=None, background_worker=True,
+                      receipt_printer=None, printer_lane=None):
     """Install server-owned authority; never accept readiness/PAID from callers.
 
     The original ledger remains owned by the backend host. On successful assembly
@@ -81,7 +82,8 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
     payments = PostPreviewPayments(ledger, provider, merchant_id,
                                    readiness=charge_readiness, server_key=server_key)
     presentation = OriginalCCPPresentation(credentials)
-    ticket_presentation = OriginalRecoveryPresentation(OriginalRecoveryTicketService(payments, protector))
+    ticket_presentation = OriginalRecoveryPresentation(OriginalRecoveryTicketService(payments, protector),
+                                                       printer=receipt_printer, shared_lane=printer_lane)
 
     def close():
         bridge.close()

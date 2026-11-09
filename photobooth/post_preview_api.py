@@ -183,11 +183,16 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
                 qr_payload=offer.qr_payload, mode=payments.mode, order_version=ORDER_VERSION)
 
         @app.post('/api/postpay/groups/{group}/ticket/{action}')
-        async def ticket_ack(group: str, action: Literal['visible', 'dismiss', 'retire'], request: Request,
+        async def ticket_ack(group: str, action: Literal['visible', 'dismiss', 'retire', 'receipt'], request: Request,
                              x_booth_id: str = Header(default=''), authorization: str = Header(default='')):
             booth = identity(request, x_booth_id, authorization)
             owner = await body(request, PresentationRequest)
             token = await invoke(lease, group, booth, owner)
+            if action == 'receipt':
+                result = await invoke(ticket_presentation.receipt, group, token, owner.presentation_id)
+                return dict(result, kind='RECOVERY', purchase_group_id=group, booth_id=booth,
+                    generation=owner.generation, presentation_id=owner.presentation_id,
+                    action=action, mode=payments.mode, order_version=ORDER_VERSION)
             function = {'visible': ticket_presentation.visible,
                         'dismiss': ticket_presentation.dismiss,
                         'retire': ticket_presentation.retire}[action]

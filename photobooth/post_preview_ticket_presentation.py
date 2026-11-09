@@ -8,17 +8,22 @@ import threading
 from photobooth.post_preview_presentation import OriginalCCPPresentation
 from photobooth.post_preview_ticket import OriginalRecoveryTicketService
 from photobooth.post_preview_store import DraftHeld
+from photobooth.printer import ThermalPrinter
 
 
 class OriginalRecoveryPresentation(OriginalCCPPresentation):
-    def __init__(self, credentials):
+    def __init__(self, credentials, *, printer=None, shared_lane=None):
         # Different explicit authority from the CCP constructor, never a mode flag.
         if type(credentials) is not OriginalRecoveryTicketService:
             raise ValueError('Exact original paid ticket custody required')
+        if not (printer is None and shared_lane is None) and (
+                type(printer) is not ThermalPrinter or type(shared_lane) is not type(threading.Lock())):
+            raise ValueError('Original thermal printer and shared owned lane required')
         self.credentials = credentials
         self.ledger = credentials.ledger
         self._lock = threading.RLock()
         self._pending = None
+        self._printer, self._printer_lane = printer, shared_lane
 
     def offer(self, group, lease):
         with self._lock, self.ledger.lock:
@@ -49,3 +54,25 @@ class OriginalRecoveryPresentation(OriginalCCPPresentation):
             original = self._original(group, lease, presentation_id)
             self.credentials.dismiss(lease, original)
             self._pending = None
+
+    def receipt(self, group, lease, presentation_id):
+        """One durable original send; a repeated request only observes the job.
+
+        Hold this ticket's actor across I/O, never the SQLite lock. The native
+        screen has its own UI clock and does not acquire this actor/printer lane.
+        """
+        with self._lock:
+            with self.ledger.lock:
+                self._scope(group, lease)
+                row = self.ledger.db.execute('''SELECT * FROM pp_ticket_presentations
+                    WHERE purchase_group_id=?''', (group,)).fetchone()
+                if (not row or row['render_permit_id'] != presentation_id
+                        or row['screen_state'] not in {'VISIBLE', 'DISMISSED'}):
+                    raise DraftHeld('Original genuinely visible receipt required')
+                if row['receipt_state'] in {'SENDING', 'SUBMITTED', 'NOT_SENT', 'UNCERTAIN'}:
+                    return dict(receipt_job_id=row['receipt_job_id'], receipt_state=row['receipt_state'],
+                                physical_paper_verified=False)
+                original = self._original(group, lease, presentation_id)
+            result = self.credentials.send_receipt_once(lease, original, self._printer,
+                                                         send_lock=self._printer_lane)
+            return dict(result, physical_paper_verified=False)

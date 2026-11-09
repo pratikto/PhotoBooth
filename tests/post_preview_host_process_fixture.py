@@ -55,6 +55,19 @@ def assembled(checkout,templates,bridge,drive,**kwargs):
                 'url':'https://api.sandbox.midtrans.com/v4/qris/fixture_'+order+'/qr-code'}])
         return io.BytesIO(json.dumps(payload).encode())
     kwargs['provider_transport']=transport
+    if kwargs['server_key']=='Mid-server-RECEIPT-FIXTURE':
+        import threading
+        from photobooth.printer import PrinterConfig,ThermalPrinter
+        root=checkout.photos.root.parent
+        count=root/'fixture-ticket-send-count'
+        def send(_host,_port,_payload):
+            # Only a non-secret count persists; no bitmap, bytes or proof.
+            count.write_text(str((int(count.read_text()) if count.exists() else 0)+1))
+        def no_usb(_payload):
+            raise AssertionError('No USB fixture route')
+        kwargs['receipt_printer']=ThermalPrinter(PrinterConfig(lan_host='fixture-printer'),
+            network_sender=send,usb_sender=no_usb)
+        kwargs['printer_lane']=threading.Lock()
     if kwargs['server_key']=='Mid-server-HTTP-HOLD-FIXTURE':kwargs['background_worker']=False
     drive.client.storage_readiness=lambda slots:{'drive_api':'READY','drive_sharing':'READY',
                                                  'capacity_state':'READY'}

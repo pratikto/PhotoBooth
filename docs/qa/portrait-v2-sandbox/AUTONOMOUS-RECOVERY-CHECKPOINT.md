@@ -1,3 +1,13 @@
+# 9 November — original backend/native once-only receipt B3
+
+Original receipt RPC/shared lane and typed native worker dispatch connected.
+Same original in-memory renderer/driver, durable SENDING before I/O, no replay
+on repeat/restart/uncertainty.80 related backend +7 native PASS; actual child
+and blocked-receipt timeout/NEXT at both sizes tested with fake transports.
+[Exact evidence and next paid delivery/claim/release task](PP04-ORIGINAL-REMOTE-RECEIPT-2026-11-09.md).
+Real child printer configuration/full customer profile remain unmounted.
+New-source full regression/CI pending; commercial NOT_READY. No live paper/money.
+
 # 9 November — original backend/native ticket B2 and BUG-048
 
 Source65208c3 / corrected3ea1d8c pushed, remote verified. Protected original

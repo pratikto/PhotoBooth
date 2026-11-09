@@ -82,7 +82,7 @@ class RemoteTicketViewTests(unittest.TestCase):
         from tests import test_post_preview_host as hosts
         helper=hosts.SandboxHostTests();self.addCleanup(helper.doCleanups)
         with helper.temporary() as directory:
-            config=helper.config(directory)
+            config=helper.config(directory,server_key='Mid-server-RECEIPT-FIXTURE')
             process=helper.launch(config)
             ledger,lease,group=helper.prepare_original_checkout(config)
             transport=requests.Session();transport.trust_env=False
@@ -100,6 +100,10 @@ class RemoteTicketViewTests(unittest.TestCase):
             self.addCleanup(lambda:Window.remove_widget(card) if card.parent else None)
             self.render(session,card)
             self.assertEqual('VISIBLE',ledger.db.execute('SELECT screen_state FROM pp_ticket_presentations').fetchone()[0])
+            receipt=session.send_receipt_once()
+            self.assertEqual('SUBMITTED',receipt['receipt_state'])
+            self.assertFalse(receipt['physical_paper_verified'])
+            self.assertEqual('1',(config.private_root/'fixture-ticket-send-count').read_text())
             self.assertTrue(session.finish(next_pressed=True))
             self.assertIsNone(card.qr_image.texture);self.assertEqual('',card.code.text)
             session.dismiss()

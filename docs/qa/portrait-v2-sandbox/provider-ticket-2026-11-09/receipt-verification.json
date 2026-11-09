@@ -1,0 +1,52 @@
+{
+  "base": "fd0da65ad55e2cafbfe75747c81dfdfcee331fdf",
+  "date": "2026-11-09",
+  "sha256": {
+    "photobooth/post_preview_ticket_presentation.py": "782959bc54aaa756fd9db3e266e2390a24cd2498c96798d8e85f7f00c23d5c71",
+    "photobooth/post_preview_api.py": "a6b894f4a25ad49f72cc1aef50a722b3b39a5a0f993bfcaa58d04c17a5066370",
+    "photobooth/post_preview_server.py": "cac7bd15aa0774fa244fefd6fe99b767cfff63dc7433d2d9df0a5f02e9d365b8",
+    "photobooth/post_preview_proof_client.py": "e5a5064e18d2d58cfe0bf11f4ba4d7ce110a9ab64c562a850a5ff618cea911de",
+    "photobooth/kiosk_v2/post_preview_remote_ticket.py": "8f658d98d05e69aa1af7ae26f6edfc1730c312c0cdbd1924e8f9420c768bb6ac",
+    "photobooth/post_preview_ticket_receipt.py": "a29dc6a1dd0c26c09b8b97641ac996d9fbea182c7fffbdb76a8fc3a214ae86cc",
+    "tests/post_preview_host_process_fixture.py": "819eea966ce0fbedb84c5783bca4e656b87b0ec05ca9d910a66cecc7f24063b3",
+    "tests/test_post_preview_host.py": "423b4f2c917dcf32dad5f140080dbeed47759580c3558ed96946adf3d6abb8d9",
+    "tests/test_post_preview_remote_ticket_view.py": "4c8d9ab0dae5b4b8bf71724e62758f4e742998095977bcc8b9d8af98c3d0e51b",
+    "tests/test_post_preview_remote_receipt.py": "7a113ee1f34022dd5e4eaa1ad3f571e96aa1f13fc3f872bac4271046523813fc",
+    "tests/test_post_preview_remote_receipt_view.py": "f9f0b3ed6c1a2334b1864f8822f0ebbdf2af39a309fa4a1cf7669f19fbe13400",
+    ".github/workflows/post-preview-qris.yml": "553ef61b5be8c4dd8ebc8d9162ab0f7cc4410400e189dd131f63b440b4bf9dcb"
+  },
+  "before": {
+    "run": 5,
+    "errors": 5,
+    "failures": 0,
+    "seconds": 2.0,
+    "reason": "Missing printer presentation constructor seam"
+  },
+  "backend": {
+    "run": 80,
+    "seconds": 52.694,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "command": ".venv/bin/python tools/run_kiosk_unittests.py test_post_preview_remote_receipt test_post_preview_ticket_presentation test_post_preview_ticket_receipt test_post_preview_api test_post_preview_host"
+  },
+  "native": {
+    "run": 7,
+    "seconds": 9.356,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "command": "xvfb-run -a .venv/bin/python tools/run_kiosk_unittests.py test_post_preview_remote_receipt_view test_post_preview_remote_ticket_view"
+  },
+  "log_sha256": {
+    "receipt-before.txt": "ee237aeefbbd4abbb9300e375d4dfc1886e664253ae5f28f8a5b91a174d16149",
+    "receipt-related-final.txt": "04572b6f27f898ad78dcb831b1f6779143c0e28dc9aa67fa7da4184dc2f17437",
+    "receipt-native-final.txt": "77359e84c957e5384fe0a4a2d78a8d3cb719c2d7b71575fb9ac7cee463538143"
+  },
+  "runtime_driver": "Original ThermalPrinter/python-escpos3.1 real bitmap raster, fake network/USB transports only",
+  "limits": [
+    "No actual money/paper/cloud",
+    "Default host printer remains unconfigured; full launcher/paid delivery/claim/release not mounted",
+    "Final new-source full regression/CI pending"
+  ]
+}
