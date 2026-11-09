@@ -234,4 +234,232 @@ class TrustedReadinessTests(unittest.TestCase):
         self.assertEqual(before, manifest.read_bytes())
 
 
+def _bridge_ready(scope, stamp=None):
+    import time
+    observed = time.time() if stamp is None else stamp
+    return TrustedChargeReadiness.observe(scope, {
+        name: lambda _: CheckObservation('READY', observed) for name in REQUIRED_CHECKS})
+
+
+def _bridge_child(channel, stopped):
+    from photobooth.post_preview_readiness_bridge import WorkerReadinessServer
+    server = WorkerReadinessServer(channel, _bridge_ready)
+    server.start()
+    try:
+        stopped.wait(5)
+    finally:
+        server.stop()
+
+
+class ProcessReadinessBridgeTests(unittest.TestCase):
+    def setUp(self):
+        self.scope = ReadinessScope('a'*32, 'PB001', 'b'*64, 7)
+
+    def test_independent_spawned_worker_supplies_only_local_observations(self):
+        import multiprocessing
+        import socket
+        import time
+        from photobooth.post_preview_readiness_bridge import WorkerReadinessClient, LOCAL_CHECKS
+        context = multiprocessing.get_context('spawn')
+        backend, worker = socket.socketpair()
+        stopped = context.Event()
+        process = context.Process(target=_bridge_child, args=(worker, stopped))
+        process.start()
+        worker.close()
+        bridge = WorkerReadinessClient(backend, timeout=2)
+        try:
+            result = bridge.observe(self.scope)
+            self.assertEqual(LOCAL_CHECKS, set(result))
+            self.assertEqual({'READY'}, {o.state_at(time.time(), max_age=2) for o in result.values()})
+            self.assertNotIn('payment_authorization', result)
+            self.assertNotIn('drive_api', result)
+        finally:
+            stopped.set()
+            bridge.close()
+            process.join(5)
+            if process.is_alive():
+                process.terminate(); process.join(5)
+        self.assertEqual(0, process.exitcode)
+        self.assertEqual({'UNKNOWN'}, {o.state for o in bridge.observe(self.scope).values()})
+
+    def channel(self, collector):
+        import socket
+        from photobooth.post_preview_readiness_bridge import WorkerReadinessClient, WorkerReadinessServer
+        backend, worker = socket.socketpair()
+        server = WorkerReadinessServer(worker, collector)
+        server.start()
+        client = WorkerReadinessClient(backend, timeout=.2)
+        self.addCleanup(server.stop)
+        self.addCleanup(client.close)
+        return client, server
+
+    def test_foreign_group_booth_manifest_or_generation_is_never_ready(self):
+        for change in ({'purchase_group_id':'c'*32}, {'booth_id':'PB002'},
+                       {'contract_sha256':'d'*64}, {'generation':8}):
+            with self.subTest(field=next(iter(change))):
+                client, server = self.channel(lambda scope: _bridge_ready(replace(scope, **change)))
+                self.assertEqual({'UNKNOWN'}, {o.state for o in client.observe(self.scope).values()})
+                self.assertTrue(server.stop())
+
+    def test_cached_observation_is_not_restamped_by_transport(self):
+        import time
+        stamp = time.time()-4
+        client, _ = self.channel(lambda scope: _bridge_ready(scope, stamp))
+        observations = client.observe(self.scope)
+        self.assertEqual({stamp}, {o.observed_at for o in observations.values()})
+        self.assertEqual({'STALE'}, {o.state_at(time.time(), max_age=2) for o in observations.values()})
+
+    def test_failed_collector_has_no_exception_or_ready_fallback(self):
+        def failed(_):
+            raise OSError('PRIVATE-MERCHANT-DETAIL-MUST-NOT-CROSS')
+        client, _ = self.channel(failed)
+        observations = client.observe(self.scope)
+        self.assertEqual({'UNKNOWN'}, {o.state for o in observations.values()})
+        self.assertNotIn('PRIVATE-MERCHANT', repr(observations))
+
+    def test_timeout_closes_channel_and_late_worker_reply_cannot_be_reused(self):
+        import threading
+        entered, release = threading.Event(), threading.Event()
+        def stalled(scope):
+            entered.set(); release.wait(3)
+            return _bridge_ready(scope)
+        client, server = self.channel(stalled)
+        try:
+            self.assertEqual({'UNKNOWN'}, {o.state for o in client.observe(self.scope).values()})
+            self.assertTrue(entered.is_set())
+        finally:
+            release.set()
+        self.assertEqual({'UNKNOWN'}, {o.state for o in client.observe(self.scope).values()})
+        self.assertTrue(server.stop())
+
+    def test_concurrent_request_cannot_consume_another_requests_response(self):
+        import threading
+        entered, release = threading.Event(), threading.Event()
+        def stalled(scope):
+            entered.set(); release.wait(3)
+            return _bridge_ready(scope)
+        client, _ = self.channel(stalled)
+        first = []
+        thread = threading.Thread(target=lambda: first.append(client.observe(self.scope)))
+        thread.start()
+        try:
+            self.assertTrue(entered.wait(2))
+            self.assertEqual({'UNKNOWN'}, {o.state for o in client.observe(self.scope).values()})
+        finally:
+            release.set(); thread.join(3)
+        self.assertEqual({'READY'}, {o.state for o in first[0].values()})
+
+    def test_backend_replaces_payment_and_drive_authority_independently(self):
+        import time
+        from photobooth.post_preview_authority import authenticated_charge_request
+        from photobooth.post_preview_readiness_bridge import BackendChargeReadiness
+        client, _ = self.channel(_bridge_ready)
+        checkout = SimpleNamespace(verify_frozen=lambda group, templates: self.scope)
+        drive = SimpleNamespace(observe=lambda scope: {
+            name: CheckObservation('READY', time.time()) for name in
+            ('drive_api', 'drive_sharing', 'unclaimed_ready_capacity')})
+        readiness = BackendChargeReadiness(checkout, (), client, drive_probe=drive)
+        report = readiness(self.scope.purchase_group_id)
+        with self.assertRaises(DraftHeld): report.require(self.scope, now=time.time())
+        with authenticated_charge_request(self.scope, time.time()):
+            readiness(self.scope.purchase_group_id).require(self.scope, now=time.time())
+        drive.observe = lambda scope: {'drive_api':CheckObservation('READY', time.time())}
+        with authenticated_charge_request(self.scope, time.time()), self.assertRaises(DraftHeld):
+            readiness(self.scope.purchase_group_id).require(self.scope, now=time.time())
+
+    def test_malformed_or_oversized_replies_never_produce_ready(self):
+        import json
+        import socket
+        import struct
+        import threading
+        from photobooth.post_preview_readiness_bridge import WorkerReadinessClient, LOCAL_CHECKS
+        for fault in ('nonce', 'extra', 'bool-time', 'partial', 'oversize', 'bad-json', 'duplicate'):
+            with self.subTest(fault=fault):
+                backend, worker = socket.socketpair()
+                client = WorkerReadinessClient(backend, timeout=.2)
+                def forged():
+                    try:
+                        header = worker.recv(4)
+                        size = struct.unpack('!I', header)[0]
+                        payload = b''
+                        while len(payload)<size: payload += worker.recv(size-len(payload))
+                        request = json.loads(payload)
+                        reply = dict(request, observations={name:{'state':'READY','observed_at':True if fault=='bool-time' else 1.0} for name in LOCAL_CHECKS})
+                        reply['kind'] = 'OBSERVATIONS'
+                        if fault=='nonce': reply['request_id']='0'*32
+                        if fault=='extra': reply['observations']['payment_authorization']={'state':'READY','observed_at':1.0}
+                        raw = b'not-json' if fault=='bad-json' else json.dumps(reply).encode()
+                        if fault=='duplicate': raw = raw.replace(b'"version": 1', b'"version": 0, "version": 1')
+                        if fault=='oversize': worker.sendall(struct.pack('!I', 65536))
+                        elif fault=='partial': worker.sendall(struct.pack('!I', len(raw))+raw[:3])
+                        else: worker.sendall(struct.pack('!I', len(raw))+raw)
+                    finally:
+                        worker.close()
+                thread=threading.Thread(target=forged);thread.start()
+                try:
+                    self.assertEqual({'UNKNOWN'}, {o.state for o in client.observe(self.scope).values()})
+                finally:
+                    client.close();thread.join(3)
+
+    def test_slow_fragmented_reply_cannot_extend_the_absolute_deadline(self):
+        import socket
+        import struct
+        import threading
+        import time
+        from photobooth.post_preview_readiness_bridge import WorkerReadinessClient
+        backend, worker = socket.socketpair()
+        client = WorkerReadinessClient(backend, timeout=.1)
+        def trickle():
+            try:
+                worker.recv(8192)
+                for byte in struct.pack('!I', 100)+b' '*100:
+                    worker.sendall(bytes([byte]))
+                    time.sleep(.03)
+            except OSError:
+                pass
+            finally:
+                worker.close()
+        thread = threading.Thread(target=trickle); thread.start()
+        started = time.monotonic()
+        try:
+            self.assertEqual({'UNKNOWN'}, {o.state for o in client.observe(self.scope).values()})
+            self.assertLess(time.monotonic()-started, .3)
+        finally:
+            client.close(); thread.join(2)
+
+    def test_unconnected_or_datagram_endpoint_is_not_a_private_bridge(self):
+        import socket
+        from photobooth.post_preview_readiness_bridge import WorkerReadinessClient
+        for kind in (socket.SOCK_STREAM, socket.SOCK_DGRAM):
+            with self.subTest(kind=kind), socket.socket(socket.AF_INET, kind) as endpoint:
+                with self.assertRaises(ValueError): WorkerReadinessClient(endpoint)
+
+    def test_incomplete_duplicate_or_untyped_original_report_holds(self):
+        original = _bridge_ready(self.scope)
+        for observations in (original.observations[:-1],
+                             (original.observations[0],)*len(original.observations),
+                             tuple((name, True) for name, _ in original.observations)):
+            with self.subTest(observations_type=type(observations[0]).__name__):
+                client, server = self.channel(lambda scope: TrustedChargeReadiness(scope, observations))
+                self.assertEqual({'UNKNOWN'}, {o.state for o in client.observe(self.scope).values()})
+                self.assertTrue(server.stop())
+
+    def test_shutdown_does_not_claim_a_stalled_collector_has_stopped(self):
+        import threading
+        entered, release = threading.Event(), threading.Event()
+        def stalled(scope):
+            entered.set(); release.wait(3)
+            return _bridge_ready(scope)
+        client, server = self.channel(stalled)
+        thread = threading.Thread(target=lambda: client.observe(self.scope))
+        thread.start()
+        try:
+            self.assertTrue(entered.wait(2))
+            self.assertFalse(server.stop(timeout=.01))
+        finally:
+            release.set();thread.join(3)
+        self.assertTrue(server.stop())
+        self.assertEqual({'UNKNOWN'}, {o.state for o in client.observe(self.scope).values()})
+
+
 if __name__ == '__main__': unittest.main()

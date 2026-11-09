@@ -99,6 +99,48 @@ class OriginalAuthorityTests(unittest.TestCase):
         self.assertEqual(0, self.fixture.provider.charges)
 
 
+    def test_private_process_bridge_keeps_original_worker_and_backend_authorities(self):
+        import socket
+        from types import SimpleNamespace
+        from photobooth.post_preview_authority import authenticated_charge_request
+        from photobooth.post_preview_readiness import LocalChargeReadiness, ReadOnlyDriveReadiness
+        from photobooth.post_preview_readiness_bridge import (
+            BackendChargeReadiness, WorkerReadinessClient, WorkerReadinessServer)
+        from photobooth.printer import PrinterConfig
+        local = LocalChargeReadiness(self.service.checkout, self.service.templates,
+            probes={'worker_ownership':self.fixture.authority}, camera=self.fixture.camera,
+            printer_config=PrinterConfig(lan_host='synthetic-no-paper'),
+            printer_dial=lambda *args: SimpleNamespace(close=lambda:None))
+        backend, worker = socket.socketpair()
+        server = WorkerReadinessServer.from_original_worker(worker, local)
+        client = WorkerReadinessClient(backend, timeout=2)
+        self.addCleanup(server.stop)
+        self.addCleanup(client.close)
+        server.start()
+        self.fixture.backend.readiness = BackendChargeReadiness(
+            self.service.checkout, self.service.templates, client,
+            drive_probe=ReadOnlyDriveReadiness(self.fixture.drive, self.fixture.workspace,
+                                             now=self.service.ledger.now))
+        # The worker channel cannot substitute for authenticated backend scope.
+        with self.assertRaises(DraftHeld): self.fixture.backend.begin(self.service.lease)
+        self.assertEqual(0, self.fixture.provider.charges)
+        self.assertEqual('payment_pending', self.service.begin_payment()['phase'])
+        self.assertEqual(1, self.fixture.provider.charges)
+        # A later capture worker is not a valid original charge owner, even
+        # though payment authorization and Drive are independently healthy.
+        self.fixture.jobs.busy = True
+        self.fixture.jobs.current_action = 'capture'
+        try:
+            with authenticated_charge_request(self.scope, self.service.ledger.now()):
+                report = self.fixture.backend.readiness(self.service.group)
+            with self.assertRaises(DraftHeld):
+                report.require(self.scope, now=self.service.ledger.now())
+        finally:
+            self.fixture.jobs.busy = False
+            self.fixture.jobs.current_action = None
+        self.assertEqual(1, self.fixture.provider.charges)
+
+
 class HandoffChargeAuthorityTests(unittest.TestCase):
     """PP-063/064: actual second checkout after exact original isolation ACK."""
     final=worker_fixtures.PrivateCheckoutWorkerTests.final

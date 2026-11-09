@@ -1,0 +1,27 @@
+{
+  "base": "6c0ee19d05ab9315708272a4f851ce26cd5f344d",
+  "branch": "feature/post-preview-qris-checkout",
+  "source_scope": "unmounted original-worker process readiness",
+  "focused": {
+    "run": 93,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 23.087,
+    "exit": 0,
+    "command": "python tools/run_kiosk_unittests.py test_post_preview_readiness test_post_preview_authority test_post_preview_payments test_post_preview_api"
+  },
+  "source_sha256": {
+    "photobooth/post_preview_readiness_bridge.py": "b086511495d78fbd0b113b695802fd0ba2ca5cccb603028149d425e36f96658d",
+    "tests/test_post_preview_readiness.py": "ce54c68af9126cc7b73fd1588367ff6623c6efe6f6eb03e5a942750c57d96637",
+    "tests/test_post_preview_authority.py": "4852b0816c5bfac1e682b9488d8caea8440aa3d3b655a77c3a81c928b42d521d"
+  },
+  "limitations": {
+    "mounted_provider": "NOT_IMPLEMENTED",
+    "real_merchant": "NOT_RUN",
+    "paper": "NOT_RUN",
+    "Drive": "NOT_RUN",
+    "Windows_process": "CI_PENDING",
+    "production": "NOT_READY"
+  }
+}

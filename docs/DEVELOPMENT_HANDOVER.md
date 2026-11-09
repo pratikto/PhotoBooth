@@ -1,3 +1,14 @@
+# 9 November 2026 — private original-worker readiness bridge
+
+[Bounded process seam and evidence](qa/portrait-v2-sandbox/PP04-PROCESS-READINESS-BRIDGE-2026-11-09.md):
+separate backend can receive only original scoped local-worker observations;
+payment/Drive authority stays backend-owned, no HTTP readiness booleans or
+merchant secrets in the GUI. 93 related tests PASS, zero failures/errors/skips,
+including actual spawned process and original worker/HTTP checkout. Bridge is
+not yet mounted: next isolated post-preview backend host and protected native
+profile remain source work. Prior a97feda CI42558244702 now all three SUCCESS
+(598 Windows/598 Ubuntu/74 native); not evidence for the new bridge source.
+
 > **Published 9 November checkpoint:** source/tests `a97feda` pushed and remote
 > verified; local 598 backend + 74 native PASS, zero failures/errors/skips.
 > Matching CI42558244702 IN_PROGRESS; prior CI42557449363 superseded/cancelled

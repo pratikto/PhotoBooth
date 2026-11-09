@@ -1,3 +1,14 @@
+# 9 November 2026 — private original-worker readiness bridge
+
+[Bounded process seam and evidence](qa/portrait-v2-sandbox/PP04-PROCESS-READINESS-BRIDGE-2026-11-09.md):
+separate backend can receive only original scoped local-worker observations;
+payment/Drive authority stays backend-owned, no HTTP readiness booleans or
+merchant secrets in the GUI. 93 related tests PASS, zero failures/errors/skips,
+including actual spawned process and original worker/HTTP checkout. Bridge is
+not yet mounted: next isolated post-preview backend host and protected native
+profile remain source work. Prior a97feda CI42558244702 now all three SUCCESS
+(598 Windows/598 Ubuntu/74 native); not evidence for the new bridge source.
+
 # 9 November 2026 — connected native A → B → A verification
 
 [New connected customer-cycle evidence](qa/portrait-v2-sandbox/PP06-NATIVE-CUSTOMER-CYCLE-2026-11-09.md)
