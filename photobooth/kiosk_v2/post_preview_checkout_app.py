@@ -362,6 +362,18 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
                   not self._ticket_receipt_pending and not self._photo_jobs.busy):
                 if self._photo_jobs.submit('ticket_dismiss'):
                     self._ticket_dismiss_pending = False
+        elif (self.navigation.page == RESULT
+                and self._photo_view.get('phase') == 'paid_delivery'
+                and not self._photo_jobs.busy and not self._photo_error
+                and self._private_pending_event is None
+                and not self._photo_jobs.service._hidden.is_set()):
+            delivery = self._photo_view.get('delivery') or {}
+            # Only PREPARED original jobs advance. The serialized service
+            # rechecks PAID, URL, ticket, ownership and the durable print lane;
+            # SENDING/UNCERTAIN holds every remaining design without replay.
+            if (not delivery.get('needs_operator_review')
+                    and 'PREPARED' in (delivery.get('print_states') or {}).values()):
+                self._photo_submit('paid_print_next')
 
     def _poll_paid_result_timeout(self):
         if (self._paid_result_deadline is None
@@ -463,12 +475,10 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
         # A transport timeout may still mean paper left the printer. Do not
         # offer another paid batch until the original physical outcome is
         # classified by the approved recovery/operator path.
-        outstanding=(any(state=='PREPARED' for state in states.values())
-                     and not data.get('needs_operator_review'))
-        shell.add_widget(self._photo_action(
-            'CETAK FOTO YANG SUDAH DIBAYAR',
-            lambda: self._photo_submit('paid_print_next'),
-            disabled=not outstanding))
+        if ('PREPARED' in states.values() and not data.get('needs_operator_review')):
+            shell.add_widget(text_label(
+                'Foto dicetak otomatis sesuai jumlah yang dibeli.',
+                size=13, height=45, color=MUTED))
         shell.add_widget(self._photo_action(
             'CEK STATUS UPLOAD',lambda: self._photo_submit('paid_delivery_status'),
             variant='secondary'))

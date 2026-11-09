@@ -57,8 +57,7 @@ class OwnerPilotRuntimeTests(unittest.TestCase):
                         while time.monotonic()<deadline and app._photo_view.get('phase')!='paid_delivery':
                             app._poll_photos();EventLoop.idle();time.sleep(.01)
                         self.assertEqual('paid_delivery',app._photo_view.get('phase'),app._photo_error)
-                        for _ in range(2):
-                            helper.click(app,'CETAK FOTO YANG SUDAH DIBAYAR');helper.settle(app)
+                        helper.settle(app)  # Paid output advances automatically.
                         self.assertEqual(1,fixture.provider.charges)
                         self.assertEqual(1,len(fixture.receipt_sizes))
                         self.assertEqual([2,1],[copies for _,copies in fixture.paid_print_sends])

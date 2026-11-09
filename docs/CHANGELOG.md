@@ -1,3 +1,12 @@
+# 9 November 2026 — automatic post-preview purchased printing
+
+- Replace per-design customer print taps with serialized original PREPARED-job
+  dispatch, preserving paid/URL/ticket/ownership/no-replay checks and result timeout.
+- Reuse native two/three-design, uncertain paper, busy timeout, upload recovery,
+  game-price and actual pilot journeys with automatic output; add no-tap/replay
+  and unavailable-printer/uncertain-receipt checks.
+- [Evidence and remaining product work](qa/portrait-v2-sandbox/PP05-AUTOMATIC-PAID-PRINT-2026-11-09.md).
+
 # 8 November 2026 — BUG-046 automatic paid-result return
 
 - Fixed the supervised post-preview results page remaining open indefinitely:

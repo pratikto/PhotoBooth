@@ -80,13 +80,8 @@ class NativeCustomerJourneyMatrixTests(unittest.TestCase):
                 isinstance(getattr(w, 'text', None), str)
                 and 'BUKAN LINK DOWNLOAD' in w.text
                 for w in app.stage.walk()))
-            states = app._photo_view['delivery']['print_states']
-            self.assertEqual({'template_a': 'PREPARED', 'template_b': 'PREPARED',
-                              'template_c': 'PREPARED'}, states)
-            for expected in (1, 2, 3):
-                self.click(app, 'CETAK FOTO YANG SUDAH DIBAYAR')
-                self.settle(app)
-                self.assertEqual(expected, len(fixture.paid_print_sends))
+            self.settle(app)  # All original batches advance without customer taps.
+            self.assertEqual(3, len(fixture.paid_print_sends))
             self.assertEqual([2, 1, 3],
                              [copies for _path, copies in fixture.paid_print_sends])
             self.assertTrue(app._photo_view['delivery']['print_all_submitted'])
@@ -124,9 +119,8 @@ class NativeCustomerJourneyMatrixTests(unittest.TestCase):
             self.assertEqual(1, fixture.provider.charges)
             self.assertEqual(1, len(fixture.receipt_sizes))
             self.assertEqual('OWED', app._photo_view['delivery']['service_status'])
-            self.click(app, 'CETAK FOTO YANG SUDAH DIBAYAR')
             self.settle(app)
-            self.assertEqual(1, len(fixture.paid_print_sends))
+            self.assertEqual([2, 1], [n for _, n in fixture.paid_print_sends])
             self.assertFalse(app._photo_view['delivery']['physical_paper_verified'])
 
     def test_n23_paid_A_locked_then_B_active_cannot_open_claim_popup_or_show_A(self):
@@ -379,8 +373,7 @@ class NativeCustomerJourneyMatrixTests(unittest.TestCase):
                 self.assertTrue(app._ticket_window.active)
                 self.click(app,'LANJUT • SIMPAN TIKET')
                 self.await_phase(app,'paid_delivery')
-                for _ in range(2):
-                    self.click(app,'CETAK FOTO YANG SUDAH DIBAYAR');self.settle(app)
+                self.settle(app)
                 self.assertEqual([2,1],[copies for _path,copies in fixture.paid_print_sends])
                 self.assertEqual(1,len(fixture.receipt_sizes))
                 self.assertEqual(1,fixture.provider.charges)

@@ -337,11 +337,10 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
                 self.assertEqual('https://drive.google.com/drive/folders/syntheticPaidFolder123',
                                  app._photo_view['delivery']['folder_url'])
                 self.assertEqual('OWED',app._photo_view['delivery']['service_status'])
-                self.click(app,'CETAK FOTO YANG SUDAH DIBAYAR')
                 deadline=time.monotonic()+10
-                while time.monotonic()<deadline and not fixture.paid_print_sends:
+                while time.monotonic()<deadline and not app._photo_view['delivery']['print_all_submitted']:
                     app._poll_photos();EventLoop.idle();time.sleep(.01)
-                self.assertEqual(1,len(fixture.paid_print_sends))
+                self.assertEqual([2,1],[n for _,n in fixture.paid_print_sends])
                 self.settle(app)
                 self.assertEqual('SUBMITTED',app._photo_view['delivery']['print_states']['template_a'])
                 self.assertEqual(1,fixture.provider.charges)
@@ -349,7 +348,7 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
                 self.assertFalse(app._photo_view['fulfillment_authorized'])
                 self.click(app,'CEK STATUS UPLOAD')
                 self.settle(app)
-                self.assertEqual(1,len(fixture.paid_print_sends))
+                self.assertEqual(2,len(fixture.paid_print_sends))
                 self.assertEqual('OWED',fixture.service.ledger.db.execute(
                     'SELECT status FROM pp_paid_services').fetchone()[0])
 
@@ -361,6 +360,35 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
             app._poll_photos(); EventLoop.idle(); time.sleep(.01)
         self.settle(app)
         self.assertEqual('paid_delivery', app._photo_view['phase'], app._photo_error)
+
+    def test_native_automatic_paid_batches_need_no_customer_print_tap(self):
+        for size in ((452, 900), (800, 1280)):
+            with self.subTest(size=size), self.booth(paid_delivery=True) as (app, fixture):
+                Window.size = size
+                self.paid_delivery_screen(app, fixture)
+                deadline = time.monotonic() + 3
+                while time.monotonic() < deadline:
+                    app._poll_photos(); EventLoop.idle(); time.sleep(.01)
+                    if app._photo_view['delivery']['print_all_submitted']:
+                        break
+                self.settle(app)
+                self.assertEqual([2, 1], [n for _, n in fixture.paid_print_sends])
+                self.assertTrue(app._photo_view['delivery']['print_all_submitted'])
+                self.assertFalse(any(getattr(w, 'text', '') == 'CETAK FOTO YANG SUDAH DIBAYAR'
+                                     for w in app.stage.walk()))
+                widget_helpers.PrivateWidgetTests.capture_screen(
+                    self, app, 'paid-automatic-print', size)
+                # Redraw and upload observations cannot dispatch either batch again.
+                original_deadline = app._paid_result_deadline
+                app._show()
+                self.click(app, 'CEK STATUS UPLOAD'); self.settle(app)
+                for _ in range(3): app._poll_photos(); EventLoop.idle()
+                self.assertEqual(original_deadline, app._paid_result_deadline)
+                self.assertEqual([2, 1], [n for _, n in fixture.paid_print_sends])
+                self.assertEqual(1, fixture.provider.charges)
+                self.assertEqual(1, len(fixture.receipt_sizes))
+                self.assertEqual('OWED', app._photo_view['delivery']['service_status'])
+                self.assertFalse(app._photo_view['delivery']['physical_paper_verified'])
 
     def test_native_paid_result_returns_to_ads_after_30_seconds(self):
         for size in ((452, 900), (800, 1280)):
@@ -395,7 +423,7 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
                 self.assertEqual(1, fixture.provider.charges)
                 self.assertEqual(0, fixture.provider.cancels)
                 self.assertEqual(1, len(fixture.receipt_sizes))
-                self.assertEqual([], fixture.paid_print_sends)
+                self.assertEqual([2,1], [n for _,n in fixture.paid_print_sends])
                 self.start(app)  # Existing PREPARE/ACK admits B with fresh photos.
                 self.assertIsNone(app._paid_result_deadline)
                 with patch('photobooth.kiosk_v2.post_preview_checkout_app.time.monotonic',
@@ -405,10 +433,45 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
                 self.assertEqual('capture', app.navigation.page)
                 self.assertEqual(1, fixture.provider.charges)
 
+    def test_native_auto_print_holds_missing_printer_and_uncertain_receipt(self):
+        for fault in ('missing_printer', 'uncertain_receipt'):
+            with self.subTest(fault=fault), self.booth(paid_delivery=True) as (app, fixture):
+                Window.size = (452, 900)
+                if fault == 'uncertain_receipt':
+                    fixture.service._receipt_printer.print_bitmap = Mock(
+                        return_value=Mock(success=False))
+                self.paid_ticket_screen(app, fixture)
+                if fault == 'missing_printer':
+                    fixture.service._paid_printer = None
+                else:
+                    # One already-uncertain ticket must hold the shared photo lane.
+                    self.settle(app)
+                    self.assertEqual('UNCERTAIN', fixture.service.ledger.db.execute(
+                        'SELECT receipt_state FROM pp_ticket_presentations').fetchone()[0])
+                send = Mock(wraps=fixture.service.paid_print_next)
+                fixture.service.paid_print_next = send
+                self.click(app, 'LANJUT • SIMPAN TIKET')
+                deadline = time.monotonic() + 10
+                while time.monotonic() < deadline:
+                    app._poll_photos(); EventLoop.idle(); time.sleep(.01)
+                    if (not app._photo_jobs.busy and app._photo_view.get('phase') == 'paid_delivery'
+                            and (app._photo_error or app._photo_view['delivery']['needs_operator_review'])):
+                        break
+                self.assertEqual('paid_delivery', app._photo_view.get('phase'))
+                for _ in range(10): app._poll_photos(); EventLoop.idle()
+                self.assertEqual(1 if fault == 'missing_printer' else 0, send.call_count)
+                self.assertEqual([], fixture.paid_print_sends)
+                self.assertEqual({'template_a':'PREPARED', 'template_b':'PREPARED'},
+                                 app._photo_view['delivery']['print_states'])
+                self.assertEqual('OWED', app._photo_view['delivery']['service_status'])
+                self.assertEqual(1, fixture.provider.charges)
+                if fault == 'uncertain_receipt':
+                    fixture.service._receipt_printer.print_bitmap.assert_called_once()
+
     def test_result_timeout_hides_during_slow_print_and_late_reply_cannot_reopen(self):
         with self.booth(paid_delivery=True, unattended=True) as (app, fixture):
             Window.size = (452, 900)
-            self.paid_delivery_screen(app, fixture)
+            self.paid_ticket_screen(app, fixture)
             entered, release = threading.Event(), threading.Event()
             sends = []
             def blocked_print(_bitmap, *, copies):
@@ -418,8 +481,11 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
                     raise RuntimeError('Test barrier timed out')
                 raise TimeoutError('Synthetic paper outcome is uncertain')
             fixture.service._paid_printer.print_image = blocked_print
-            self.click(app, 'CETAK FOTO YANG SUDAH DIBAYAR')
+            self.click(app, 'LANJUT • SIMPAN TIKET')
             try:
+                deadline = time.monotonic() + 10
+                while time.monotonic() < deadline and not entered.is_set():
+                    app._poll_photos(); EventLoop.idle(); time.sleep(.01)
                 self.assertTrue(entered.wait(5))
                 self.assertTrue(app._photo_jobs.busy)
                 with patch('photobooth.kiosk_v2.post_preview_checkout_app.time.monotonic',
@@ -463,15 +529,10 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
                 isinstance(getattr(w,'text',None),str)
                 and 'QR DEMO' in w.text and 'BUKAN LINK DOWNLOAD' in w.text
                 for w in app.stage.walk()))
-            self.assertEqual({'template_a':'PREPARED','template_b':'PREPARED'},
-                             app._photo_view['delivery']['print_states'])
-            for number in (1,2):
-                self.click(app,'CETAK FOTO YANG SUDAH DIBAYAR')
-                deadline=time.monotonic()+10
-                while time.monotonic()<deadline and len(fixture.paid_print_sends)<number:
-                    app._poll_photos();EventLoop.idle();time.sleep(.01)
-                self.assertEqual(number,len(fixture.paid_print_sends))
-                self.settle(app)
+            deadline=time.monotonic()+10
+            while time.monotonic()<deadline and not app._photo_view['delivery']['print_all_submitted']:
+                app._poll_photos();EventLoop.idle();time.sleep(.01)
+            self.settle(app)
             self.assertEqual([2,1],[copies for _path,copies in fixture.paid_print_sends])
             self.assertEqual({'template_a':'SUBMITTED','template_b':'SUBMITTED'},
                              app._photo_view['delivery']['print_states'])
@@ -585,17 +646,16 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
         with self.booth(paid_delivery=True) as (app, fixture):
             Window.size = (452, 900)
             self.paid_ticket_screen(app, fixture)
-            self.click(app, 'LANJUT • SIMPAN TIKET')
-            deadline = time.monotonic() + 15
-            while time.monotonic() < deadline and app._photo_view.get('phase') != 'paid_delivery':
-                app._poll_photos(); EventLoop.idle(); time.sleep(.01)
-            self.assertEqual('paid_delivery', app._photo_view['phase'], app._photo_error)
             sends = []
             def uncertain_send(path, *, copies):
                 sends.append(copies)
                 raise TimeoutError('synthetic: bytes may have left the printer')
             fixture.service._paid_printer.print_image = uncertain_send
-            self.click(app, 'CETAK FOTO YANG SUDAH DIBAYAR')
+            self.click(app, 'LANJUT • SIMPAN TIKET')
+            deadline = time.monotonic() + 15
+            while time.monotonic() < deadline and app._photo_view.get('phase') != 'paid_delivery':
+                app._poll_photos(); EventLoop.idle(); time.sleep(.01)
+            self.assertEqual('paid_delivery', app._photo_view['phase'], app._photo_error)
             self.settle(app)
             delivery = app._photo_view['delivery']
             self.assertEqual({'template_a': 'UNCERTAIN', 'template_b': 'PREPARED'},
@@ -604,8 +664,7 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
             self.assertEqual([2], sends)
             buttons = [w for w in app.stage.walk()
                        if getattr(w, 'text', None) == 'CETAK FOTO YANG SUDAH DIBAYAR']
-            self.assertEqual(1, len(buttons))
-            self.assertTrue(buttons[0].disabled)
+            self.assertEqual([], buttons)
             self.click(app, 'CEK STATUS UPLOAD')
             self.settle(app)
             with self.assertRaises(DraftHeld):

@@ -44,7 +44,7 @@ capture, ticket presentation and print replay.
 
 | Stage | Work | Evidence required to finish | Current boundary |
 | --- | --- | --- | --- |
-| 1. Complete the application journey | Deliver BUG-046; clarify unpaid preview heading and the blank synthetic-payment placeholder; reconcile the current manual paid-strip action with the agreed automatic-print policy. | Native full journey from Ads through original ticket/results back to Ads, with readable states and correct frozen price/copies. No finish button added. | Automatic result return published; remaining UI/output seams still need source work and verification. |
+| 1. Complete the application journey | Deliver BUG-046; clarify unpaid preview heading and the blank synthetic-payment placeholder; reconcile the current manual paid-strip action with the agreed automatic-print policy. | Native full journey from Ads through original ticket/results back to Ads, with readable states and correct frozen price/copies. No finish button added. | Automatic result return published; Automatic paid-strip dispatch now implemented; see [9 November evidence](PP05-AUTOMATIC-PAID-PRINT-2026-11-09.md). Remaining UI clarity and full stage acceptance stay open. |
 | 2. A → B → A customer lifecycle | Exercise actual native controls, both portrait sizes, status redraws, original proof return, busy booth, delayed worker replies and safety holds. | B never sees A media/proof; valid A proof restores only A's original service when free; no extra charge/capture/output. Test final exit and safe next admission explicitly. | Existing partial simulations and BUG-046 race regression pass; comprehensive case acceptance remains open. |
 | 3. Real post-preview Midtrans Sandbox integration | Mount a guarded after-preview provider profile using secure existing merchant configuration; verify successful/expired/cancelled/unknown/lost-response/late and duplicate settlement paths. | Provider independently verifies the same original attempt and exact amount; one entitlement; QR1/2/3 cap; no mock PAID authority or duplicate POST after uncertainty. | Current owner launcher remains synthetic-only. Legacy paid-first Sandbox is not this integration. |
 | 4. Real paper and Drive | Reuse configured printer and deployed test storage. Verify original ticket and automatic strips, selected copies/cuts, exact customer folder/URL, checksums, background upload and signed-out phone access. | Manually counted real paper matches the purchase; correct photos open from the verified URL; pending upload remains truthful. No foreign-folder binding or uncertain resend. | Requires separately opted-in owned test printer/Drive and actual owner observations. |
@@ -73,9 +73,9 @@ be named specifically. A new source push is not release approval.
 
 ## Current next action
 
-Verify the published BUG-046 source's Windows/Ubuntu/native CI, then finish the
-remaining stage-1 customer-facing/output seams with small checked commits on the
-same branch. Reuse the original services and current acceptance plans.
+BUG-046 CI 42427430090 is verified SUCCESS. Finish verification of the
+9 November automatic-print increment, then clarify the remaining stage-1 unpaid
+preview/synthetic-payment presentation with small checked commits on the same branch. Reuse the original services and current acceptance plans.
 
 References: [BUG-046 evidence/retest](BUG046-RESULT-AUTO-RETURN.md),
 [current 112-case R4 review](evidence/pp07-r4-case-review-2026-11-05.json),

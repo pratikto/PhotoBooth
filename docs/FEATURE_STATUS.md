@@ -1,3 +1,14 @@
+# 9 November 2026 — automatic post-preview purchased printing
+
+The paid-output page now advances original PREPARED strip jobs automatically
+through the existing serialized service after ticket dismissal and verified
+Drive binding. No customer print taps; uncertain paper, errors and privacy
+retirement hold further dispatch. [Scope and exact evidence](qa/portrait-v2-sandbox/PP05-AUTOMATIC-PAID-PRINT-2026-11-09.md).
+Registered regression is being completed; current launcher remains synthetic
+payment only. Real merchant/paper/cloud/recovery/release gates remain open.
+Baseline BUG-046 CI 42427430090 was independently checked: completed SUCCESS
+at exact fc8853b; its prior IN_PROGRESS statements below are historical.
+
 # 8 November 2026 — post-preview paid-result timeout
 
 [BUG-046](qa/portrait-v2-sandbox/BUG046-RESULT-AUTO-RETURN.md): owner-approved
