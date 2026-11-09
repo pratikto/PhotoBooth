@@ -1,3 +1,5 @@
+> **9 November B4-B increment:** [original protected delivery API/client/shutdown](PP05-SANDBOX-PAID-DELIVERY-2026-11-09.md): 13 new methods /100 affected PASS, no failures/errors/skips. Optional trusted backend routes and typed client delivered; default launcher/health remains gated. Actual live uploader blocks API close and original host lease release. Next protected native facade/screens/automatic delivery and original proof/collector/worker claim/release; final new-source regression/CI pending.
+
 > **9 November B4-A core increment:** [protected Sandbox paid-delivery core](PP05-SANDBOX-PAID-DELIVERY-2026-11-09.md) has 14 new methods /85 focused PASS, zero failures/errors/skips. Original shared Drive/media/strip/monitor/dispatcher reused under exact backend authority; same receipt printer/lane required. Default factory health stays disabled. Final new-source regression/CI pending; next authenticated delivery routes/native adapter and exact worker shutdown/claim/release integration. Earlier B3 counts remain at their original source.
 
 # 9 November — FINAL PUSHED native ticket/receipt checkpoint

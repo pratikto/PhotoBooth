@@ -74,3 +74,56 @@ is asserted. No customer HTTP delivery route, scoped native adapter, worker
 shutdown/claim/release integration, complete merchant launcher or real printer
 configuration is mounted. Host health remains fulfillment_enabled=False. Those
 are next SOURCE tasks. Final new-source regression/CI remain pending here.
+
+## B4-B contract before mounting the backend seam
+
+Add an optional exact backend actor over B4-A and original BoothDriveWorker.
+Expose only authenticated original-owner prepare/status/next-batch requests;
+amount, copy count, printer, folder, path and provider evidence are not inputs.
+Default factory/host remains unmounted and fulfillment_enabled=False. Trusted
+factory opt-in assembles the original chain; a bounded native transport adapter
+accepts only exact scoped redacted status, not photo paths or financial authority.
+
+Stop retires new commands immediately, signals the original uploader and checks
+its ACTUAL thread completion. stop() returning None or a closed socket is not
+quiescence. In-flight binding/printing/upload keeps the ledger/process lease;
+API lifespan/host callback must not close beneath it. Preserve one original
+receipt/photo printer lane, verified URL, no replay after lost response or
+UNCERTAIN, and original OWED. Tests use fake external transports/work queues;
+real worker lifecycle is exercised separately at a controlled thread barrier.
+Full native screen/profile and proof-gated worker claim/release remain next.
+
+## B4-B focused execution
+
+OriginalSandboxPaidDelivery now serializes original prepare/status/next-batch
+operations and owns the actual BoothDriveWorker. Optional authenticated delivery
+routes accept only original owner visit/generation; no amount, copy count,
+printer, folder, path or provider evidence is caller input. build_sandbox_app
+assembles it only with explicit trusted paid_delivery_enabled=True. Default
+host/customer launcher stays unmounted and health fulfillment_enabled=False.
+The typed PostPreviewDeliveryClient accepts only the exact Sandbox/role/group/
+booth/generation envelope, verified-folder URL, bounded counters/original print
+states and consistent redacted observations. Retired late responses are denied;
+no local paths, physical-paper success, media/financial grant or release claims.
+
+Shutdown retires commands, signals the original worker, refuses while an actor
+operation holds its lock, and checks the uploader's actual thread after stop().
+The uploader's None-returning stop method is not mistaken for quiescence. API
+lifespan suppresses its close callback while active; SandboxHostRuntime retains
+its original ledger/kernel lease. Actual live-thread barrier tests prove stop
+False, competing-host refusal and successful original release after thread exit.
+
+Thirteen new API/client/lifecycle methods and affected core/host/API/receipt/
+print/delivery scope: **100 PASS /zero failures/errors/skips,42.727s**. Initial
+25-method API/core probe also PASS (6.787s). External upload scheduling is
+explicitly stubbed in request tests; actual worker-thread lifecycle is verified
+separately. This is not actual upload, merchant, paper, native-screen or device
+acceptance. Final source-matched broad regression and CI remain pending.
+
+NEXT: connect the scoped delivery adapter into the protected native facade and
+screens/automatic dispatch, bind exact original collector/worker shutdown into
+proof-gated fresh-PAID claim/WAIT/FREE/PREPARE/ACK, then complete customer launcher
+and real printer configuration. No dummy provider or mock-guard removal. Default
+health remains disabled until the full customer profile is safe. Real refund/
+status/operations, supported-device restore and final new-source qualification
+remain unfinished. Historical R4 two-hour evidence applies only to824b6ae7.

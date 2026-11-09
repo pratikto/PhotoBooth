@@ -3,8 +3,9 @@
 Construction performs no financial/Drive/device I/O and mounts no customer
 route. Exact backend-owned components replace neither provider nor OS custody.
 """
+import threading
 from photobooth.booth_storage import BoothWorkspace
-from photobooth.booth_sync import BoothDriveClient
+from photobooth.booth_sync import BoothDriveClient,BoothDriveWorker
 from photobooth.credential_vault import WindowsDPAPIProtector
 from photobooth.linux_credential_vault import LinuxSecretServiceProtector
 from photobooth.midtrans_sandbox import MidtransSandboxClient
@@ -89,3 +90,70 @@ def original_paid_core_allowed(binder,allow_incomplete_fixture):
         binder._backend_context()
         return True
     return False
+
+
+class OriginalSandboxPaidDelivery:
+    """Serialized backend actor; financial success never proves worker exit."""
+    def __init__(self,binder,templates):
+        if type(binder) is not OriginalSandboxPaidDriveBinding:
+            raise DraftHeld('Exact protected backend delivery binding required')
+        from photobooth.post_preview_paid_media import OriginalPaidMediaImporter
+        from photobooth.post_preview_paid_strips import OriginalPaidStripPreparer
+        from photobooth.post_preview_paid_print import OriginalPaidPrintDispatcher
+        from photobooth.post_preview_paid_delivery import OriginalPaidDeliveryMonitor
+        binder._backend_context()
+        self.binder=binder
+        self.templates=tuple(templates)
+        preparer=OriginalPaidStripPreparer(OriginalPaidMediaImporter(binder))
+        self.worker=BoothDriveWorker(binder.workspace,binder.client)
+        self.monitor=OriginalPaidDeliveryMonitor(preparer,worker=self.worker)
+        self.dispatcher=OriginalPaidPrintDispatcher(preparer)
+        self._lock=threading.Lock()
+        self._closing=threading.Event()
+
+    def _active(self):
+        if self._closing.is_set():
+            raise DraftHeld('Original backend delivery worker is retiring')
+
+    def prepare(self,group,lease):
+        with self._lock:
+            self._active()
+            self.binder.bind(lease,group,self.templates)
+            self._active()
+            status=self.monitor.enqueue(lease,group,self.templates)
+            self._active()
+            return status
+
+    def inspect(self,group,lease):
+        with self._lock:
+            self._active()
+            return self.monitor.inspect(lease,group)
+
+    def print_next(self,group,lease):
+        with self._lock:
+            self._active()
+            status=self.monitor.inspect(lease,group)
+            if status['needs_operator_review']:
+                raise DraftHeld('Original output requires review; never replay uncertain bytes')
+            pending=next((key for key,state in status['print_states'].items() if state=='PREPARED'),None)
+            if pending is not None:
+                self.dispatcher.send_once(lease,group,pending,self.binder.presentation._printer,
+                    shared_lane=self.binder.presentation._printer_lane)
+            self._active()
+            return self.monitor.inspect(lease,group)
+
+    def stop(self,*,timeout=0):
+        self._closing.set()
+        self.worker.stop()
+        # Active actor work and the uploader thread are independent fences.
+        if not self._lock.acquire(blocking=False):
+            return False
+        try:
+            thread=self.worker._thread
+            if thread is threading.current_thread():
+                return False
+            if thread.ident is not None:
+                thread.join(timeout=timeout)
+            return not thread.is_alive()
+        finally:
+            self._lock.release()

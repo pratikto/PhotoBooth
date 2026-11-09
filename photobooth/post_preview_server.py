@@ -24,7 +24,7 @@ from photobooth.post_preview_store import DraftHeld, DraftLease
 def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
                       server_key, booth_id, booth_token, provider_transport=None,
                       on_shutdown=None, background_worker=True,
-                      receipt_printer=None, printer_lane=None):
+                      receipt_printer=None, printer_lane=None, paid_delivery_enabled=False):
     """Install server-owned authority; never accept readiness/PAID from callers.
 
     The original ledger remains owned by the backend host. On successful assembly
@@ -37,6 +37,7 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
             or type(drive_probe) is not ReadOnlyDriveReadiness
             or drive_probe.workspace.physical_id != booth_id
             or type(background_worker) is not bool
+            or type(paid_delivery_enabled) is not bool
             or on_shutdown is not None and not callable(on_shutdown)):
         raise ValueError('Original isolated backend dependencies required')
     if (not isinstance(server_key, str) or not server_key.strip() or len(server_key) > 512
@@ -84,6 +85,11 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
     presentation = OriginalCCPPresentation(credentials)
     ticket_presentation = OriginalRecoveryPresentation(OriginalRecoveryTicketService(payments, protector),
                                                        printer=receipt_printer, shared_lane=printer_lane)
+    delivery=None
+    if paid_delivery_enabled:
+        from photobooth.post_preview_sandbox_delivery import OriginalSandboxPaidDriveBinding,OriginalSandboxPaidDelivery
+        delivery=OriginalSandboxPaidDelivery(
+            OriginalSandboxPaidDriveBinding(payments,checkout,drive_probe,ticket_presentation),templates)
 
     def close():
         bridge.close()
@@ -91,4 +97,5 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
             on_shutdown()
 
     return create_app(payments, auth, on_shutdown=close, background_worker=background_worker,
-                      ccp_presentation=presentation, ticket_presentation=ticket_presentation)
+                      ccp_presentation=presentation, ticket_presentation=ticket_presentation,
+                      paid_delivery=delivery)

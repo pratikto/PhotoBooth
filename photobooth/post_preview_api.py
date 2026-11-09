@@ -44,7 +44,8 @@ class ReconcileRequest(BaseModel):
 
 
 def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_limit=120,
-               background_worker=True, ccp_presentation=None, ticket_presentation=None):
+               background_worker=True, ccp_presentation=None, ticket_presentation=None,
+               paid_delivery=None):
     if type(background_worker) is not bool:
         raise ValueError('Explicit lifecycle worker selection required')
     if ccp_presentation is not None:
@@ -60,6 +61,12 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
                 or ticket_presentation.credentials.payments is not payments):
             raise ValueError('Exact original backend paid ticket authority required')
     inbox = inbox or PostPreviewNotificationInbox(payments)
+    if paid_delivery is not None:
+        from photobooth.post_preview_sandbox_delivery import OriginalSandboxPaidDelivery
+        if (type(paid_delivery) is not OriginalSandboxPaidDelivery
+                or paid_delivery.binder.payments is not payments
+                or paid_delivery.binder.presentation is not ticket_presentation):
+            raise ValueError('Exact same original protected ticket/delivery backend required')
     worker = PostPreviewLifecycleWorker(payments, inbox) if background_worker else None
     limiter = LocalRateLimit(rate_limit)
 
@@ -70,6 +77,8 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
         try:
             yield
         finally:
+            if paid_delivery is not None and not await run_in_threadpool(paid_delivery.stop):
+                raise RuntimeError('Original paid delivery worker remains active')
             if worker and not await run_in_threadpool(worker.stop):
                 # Never close a ledger underneath an unfinished provider call.
                 raise RuntimeError('Original lifecycle worker remains active')
@@ -83,6 +92,7 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
     app = FastAPI(title='MEONG post-preview isolated backend', lifespan=lifespan)
     app.state.notification_inbox = inbox
     app.state.lifecycle_worker = worker
+    app.state.paid_delivery = paid_delivery
 
     @app.middleware('http')
     async def private_responses(request, call_next):
@@ -147,6 +157,20 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
     async def health():
         return {'api_version': 1, 'order_version': ORDER_VERSION, 'mode': payments.mode,
                 'fulfillment_enabled': False}
+
+    if paid_delivery is not None:
+        @app.post('/api/postpay/groups/{group}/delivery/{action}')
+        async def delivery(group: str, action: Literal['prepare','status','print-next'], request: Request,
+                           x_booth_id: str = Header(default=''), authorization: str = Header(default='')):
+            booth=identity(request,x_booth_id,authorization)
+            owner=await body(request,OwnerRequest)
+            token=await invoke(lease,group,booth,owner)
+            function={'prepare':paid_delivery.prepare,'status':paid_delivery.inspect,
+                      'print-next':paid_delivery.print_next}[action]
+            status=await invoke(function,group,token)
+            return dict(kind='PAID_DELIVERY',purchase_group_id=group,booth_id=booth,
+                generation=owner.generation,action=action,mode=payments.mode,
+                order_version=ORDER_VERSION,delivery=status)
 
     if ccp_presentation is not None:
         @app.post('/api/postpay/groups/{group}/ccp/offer')

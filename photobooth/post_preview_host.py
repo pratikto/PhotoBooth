@@ -128,6 +128,9 @@ class SandboxHostRuntime:
     def close(self, *, timeout=0):
         if self._closed:
             return True
+        delivery=getattr(self.app.state,'paid_delivery',None) if self.app is not None else None
+        if delivery is not None and not delivery.stop(timeout=timeout):
+            return False
         worker = self.app.state.lifecycle_worker if self.app is not None else None
         if worker is not None and not worker.stop(timeout=timeout):
             return False  # Retain the original DB/lock under unfinished I/O.
