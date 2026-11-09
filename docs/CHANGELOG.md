@@ -1,3 +1,7 @@
+## 9 November 2026 — protected backend paid-delivery seam
+
+Original Drive/media/strip/monitor/dispatcher reused under exact Sandbox backend authority; optional strict original-owner API and typed delivery client added. Actual uploader liveness holds original host/ledger release. BUG-049 gives idle uploader a bounded graceful exit while retaining busy I/O. Runtime8e976a9a:1,934 local PASS and CI717 Windows/717 Ubuntu/81 native PASS, zero failures/errors/skips. Native merchant facade/claim/release/default launcher mounting and actual account/device acceptance remain unfinished. [Exact results and continuation](qa/portrait-v2-sandbox/PP05-SANDBOX-PAID-DELIVERY-2026-11-09.md). Historical5Nov R4 two-hour evidence also recovered separately; it does not qualify newer source.
+
 # 9 November 2026 — automatic post-preview purchased printing
 
 - Replace per-design customer print taps with serialized original PREPARED-job

@@ -1,3 +1,5 @@
+> **Final corrected-source verification:** `8e976a9a`: 1,934 all-opt-in local PASS; [CI42627272293](https://github.com/pratikto/PhotoBooth/actions/runs/42627272293) all three SUCCESS (717 Windows/717 Ubuntu/81 native), zero failures/errors/skips; all completed logs inspected. All28 new methods execute PASS in both backend jobs. Windows actual owner setup/check-only and Linux packaged preflight pass. [Exact source hashes/commands/log digests](evidence/pp05-sandbox-paid-delivery-final-2026-11-09.json). Earlier pending/interrupted statements below retain their historical source scope.
+
 # PP-05 B4 — original Sandbox paid-delivery authority
 
 9 November 2026. Existing feature/post-preview-qris-checkout; starting source
@@ -151,3 +153,32 @@ and current CI against the corrected source; no old count is relabeled new PASS.
 Source `8e976a9a8b5ac697a05cce5ca8e6057fdf70deb1`: **1,934 all-opt-in local PASS**, 1843 normalized distinct method IDs, zero failures/errors/skips; **622.324s** process duration. All 28 new method IDs observed PASS. GUI/audio/video/model opt-ins enabled, public assets independently size/hash-verified, virtual transports/devices only. No new actual merchant/paper/cloud or two-hour final-profile qualification. [Exact source hashes, methods, commands/log digests and CI](evidence/pp05-sandbox-paid-delivery-final-2026-11-09.json).
 
 CI42627272293 at the SAME source: Ubuntu717 PASS and native81 PASS, completed logs inspected, zero failure/error/skip; all28 new methods observed PASS in Ubuntu. Native owner packaged preflight and screenshot steps succeeded. Windows remains pending at this checkpoint. Superseded2e38f207/41707ae9 runs were cancelled by normal workflow concurrency; no complete PASS is assigned to them.
+
+## Final boundary and exact continuation
+
+This increment completes its declared original backend core, optional RPC,
+typed transport and worker/host shutdown scope. It does not complete the entire
+customer product. The default SandboxHostRuntime/bootstrap still mounts no paid
+delivery actor or real receipt/photo printer configuration; full health remains
+fulfillment_enabled=False. The transport adapter is not yet connected to native
+screens/automatic delivery or a protected native merchant facade. Existing mock
+native UI/automatic print regression is passing; do not borrow that evidence as
+an actual Sandbox-native end-to-end customer journey.
+
+FIRST unfinished source task: connect the original scoped delivery adapter into
+a distinct protected native facade, reusing current cards/views/PhotoJobs and
+frozen photos; no dummy provider, synthetic-protector flag or mock-guard removal.
+Complete original proof-gated fresh-PAID claim/WAIT/FREE and exact collector/
+camera/file/print/upload PREPARE/local receipt/ACK/archive release, retaining
+ownership when stop=False. Mount trusted child-host delivery/printer settings
+only after that complete paid path is safe. Then finish supported restore,
+refund/status/ops and final fully mounted source qualification. Actual account/
+Ubuntu mini-PC/login/reboot/encrypted backup, real paper/Drive and separate4h
+owner acceptance remain independent. No unchanged repeat of the owner's11
+reported passing checks is requested. Commercial status remains NOT_READY.
+
+All runtime/tests are pushed; final companion commit is documentation only.
+No active local test/backend/qualification/keyring process or runtime WIP.
+Private local synthetic logs/drivers/caches are not in GitHub and do not migrate
+across accounts. Preserve original journal/WAL/SHM/media/custody/PAID/OWED and
+SENDING/UNCERTAIN; rollback only reviewed source changes, never reset/replay.

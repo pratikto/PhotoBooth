@@ -1,5 +1,5 @@
 {
-  "status": "LOCAL_FULL_AND_UBUNTU_NATIVE_CI_VERIFIED_WINDOWS_PENDING",
+  "status": "FINAL_LOCAL_AND_CI_VERIFIED_BOUNDED_BACKEND_SCOPE",
   "source_sha": "8e976a9a8b5ac697a05cce5ca8e6057fdf70deb1",
   "local": {
     "run": 1934,
@@ -73,7 +73,7 @@
   "ci": {
     "run_id": 42627272293,
     "source_sha": "8e976a9a8b5ac697a05cce5ca8e6057fdf70deb1",
-    "status": "WINDOWS_PENDING",
+    "status": "COMPLETED_ALL_THREE_SUCCESS",
     "ubuntu": {
       "job_id": 129194190758,
       "passed": 717,
@@ -91,7 +91,20 @@
       "skipped": 0,
       "log_inspected": true,
       "packaged_owner_preflight_pass": true
-    }
+    },
+    "windows": {
+      "job_id": 129194191248,
+      "passed": 717,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "new_methods_observed_pass": 28,
+      "log_inspected": true,
+      "actual_dpapi_platform_branch": true,
+      "packaged_owner_setup_preflight_pass": true,
+      "pip_check": "No broken requirements found"
+    },
+    "total_pass_executions": 1515
   },
   "source_file_sha256": {
     ".github/workflows/post-preview-qris.yml": "0c926a6ff747168df7f6ff4ef8ffb2b198e8ac6799b32dda7f059d83c3e72d40",
@@ -114,5 +127,6 @@
   "default_factory_delivery_routes_mounted": false,
   "actual_money_paper_cloud_io": false,
   "full_acceptance_promoted": false,
-  "remaining_source": "Protected native facade/screens/automatic delivery, original proof-gated claim/WAIT/worker/collector PREPARE/ACK and supported restore; complete launcher/real printer config; refund/status/ops; final fully mounted source qualification."
+  "remaining_source": "Protected native facade/screens/automatic delivery, original proof-gated claim/WAIT/worker/collector PREPARE/ACK and supported restore; complete launcher/real printer config; refund/status/ops; final fully mounted source qualification.",
+  "documentation_only_after_runtime": true
 }

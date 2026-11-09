@@ -1,3 +1,5 @@
+> **Latest protected backend delivery:** [B4 original paid core/API/client/shutdown results and next source boundary](qa/portrait-v2-sandbox/PP05-SANDBOX-PAID-DELIVERY-2026-11-09.md); [source/CI evidence](qa/portrait-v2-sandbox/evidence/pp05-sandbox-paid-delivery-final-2026-11-09.json). Full native merchant profile remains gated.
+
 # Meong Photobooth documentation — GUI v2
 
 > **Physical-test software candidate verified:** [start here](qa/portrait-v2-sandbox/PP07-PHYSICAL-QUICK-START.md). Source 8901bbc: 1,778 full local PASS; CI 41952947024 all 3 SUCCESS (574 Windows/574 Ubuntu/68 native). Actual Windows PowerShell setup/check-only and Linux entry verified. Real camera/manual capture trial can begin after owner preflight; optional paper/Drive require their original dual consents. Payment remains synthetic; hardware/full recovery/merchant/refund/production acceptance is separate. [Evidence](qa/portrait-v2-sandbox/PP07-PHYSICAL-TEST-READINESS-2026-11-05.md).

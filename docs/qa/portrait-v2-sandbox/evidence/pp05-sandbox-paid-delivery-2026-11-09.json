@@ -1,5 +1,5 @@
 {
-  "status": "FOCUSED_VERIFIED_FINAL_REGRESSION_CI_PENDING",
+  "status": "FINAL_LOCAL_CI_VERIFIED_BOUNDED_BACKEND_SCOPE",
   "base_runtime_sha": "89df55a2e885a58ba81a08262ad974211b681407",
   "new_methods": 14,
   "focused": {
@@ -49,5 +49,7 @@
     "exit_code": -2,
     "seconds": 293.454,
     "full_verdict": "NONE_CONTROLLED_INTERRUPTION_AFTER_NEW_REGRESSION_DISCOVERY"
-  }
+  },
+  "verified_runtime_source": "8e976a9a8b5ac697a05cce5ca8e6057fdf70deb1",
+  "final_evidence": "pp05-sandbox-paid-delivery-final-2026-11-09.json"
 }

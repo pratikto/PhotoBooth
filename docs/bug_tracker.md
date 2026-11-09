@@ -1,6 +1,6 @@
 ## BUG-049 — idle backend uploader could block graceful API shutdown (9 November 2026)
 
-S2 / source fixed, focused software verified; final corrected-source regression/CI pending. Zero-wait shutdown checked the original uploader before its idle thread could respond to stop, raising RuntimeError and withholding the shutdown callback. New regression reproduces one ERROR. API grants one bounded second for actual thread exit; blocked original I/O still retains ledger/kernel ownership and stop=False. Corrected101 affected PASS, zero failures/errors/skips. No actual operational/device incident claimed. [Scope and evidence](qa/portrait-v2-sandbox/PP05-SANDBOX-PAID-DELIVERY-2026-11-09.md).
+S2 / source fixed and software VERIFIED at8e976a9a: 1,934 local PASS; CI42627272293 all three SUCCESS (717 Windows/717 Ubuntu/81 native), zero failures/errors/skips. Physical/account acceptance remains separate. Zero-wait shutdown checked the original uploader before its idle thread could respond to stop, raising RuntimeError and withholding the shutdown callback. New regression reproduces one ERROR. API grants one bounded second for actual thread exit; blocked original I/O still retains ledger/kernel ownership and stop=False. Corrected101 affected PASS, zero failures/errors/skips. No actual operational/device incident claimed. [Scope and evidence](qa/portrait-v2-sandbox/PP05-SANDBOX-PAID-DELIVERY-2026-11-09.md).
 
 ## BUG-048 — native remote ticket countdown waited for backend ACK (9 November 2026)
 

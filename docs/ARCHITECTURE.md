@@ -1,3 +1,5 @@
+> **9 November B4 backend seam:** [source8e976a9a and evidence](qa/portrait-v2-sandbox/PP05-SANDBOX-PAID-DELIVERY-2026-11-09.md) adds exact protected Sandbox binding over the shared original paid core, optional owner-scoped delivery RPC, bounded native transport observations and actual uploader/host shutdown ownership. Both receipt and strips use the same original printer/lane. Default host/native customer profile remains gated; this is not completed claim/release or commercial mounting.
+
 # 9 November — final native ticket/once-only receipt checkpoint
 
 Runtime/tests89df55a pushed/remote-verified; local689 backend +81 native PASS.
