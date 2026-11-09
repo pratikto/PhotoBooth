@@ -59,6 +59,18 @@ class CredentialProtectionTests(unittest.TestCase):
             self.assertEqual(self.secret, WindowsDPAPIProtector().unprotect(protected, self.scope))
             self.assertNotIn(self.secret, protected.ciphertext)
             with self.assertRaises(VaultUnavailable): protector.unprotect(protected, b'wrong-order')
+        elif sys.platform.startswith('linux'):
+            from unittest.mock import patch
+            from photobooth.linux_credential_vault import LinuxSecretServiceProtector
+            with patch('photobooth.linux_credential_vault._read_key', side_effect=VaultUnavailable('Missing key')):
+                with self.assertRaises(VaultUnavailable): platform_protector()
+            with patch('photobooth.linux_credential_vault._read_key', return_value=self.key):
+                protector = platform_protector()
+                self.assertIs(type(protector), LinuxSecretServiceProtector)
+                protected = protector.protect(self.secret, self.scope)
+                self.assertEqual(self.secret, protector.unprotect(protected, self.scope))
+            self.assertEqual('LINUX_SECRET_SERVICE', protection_status()['os_protection'])
+            self.assertEqual('NOT_CHECKED', protection_status()['readiness'])
         else:
             with self.assertRaises(VaultUnavailable): platform_protector()
             self.assertEqual('UNSUPPORTED', protection_status()['os_protection'])
@@ -84,7 +96,7 @@ class CredentialProtectionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / 'original.protected'
             code, original = self.run_platform_process(path, 'seal')
-            if os.name != 'nt':
+            if os.name != 'nt' and code == 78:
                 self.assertEqual((78, {'state': 'VAULT_UNAVAILABLE'}), (code, original))
                 self.assertEqual([], list(Path(folder).iterdir()))
                 return
@@ -101,7 +113,7 @@ class CredentialProtectionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / 'original.protected'
             code, original = self.run_platform_process(path, 'seal')
-            if os.name != 'nt':
+            if os.name != 'nt' and code == 78:
                 self.assertEqual((78, {'state': 'VAULT_UNAVAILABLE'}), (code, original))
                 self.assertFalse(path.exists())
                 return

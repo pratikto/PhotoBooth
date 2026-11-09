@@ -6,6 +6,7 @@ an injected ephemeral test key and never claims OS/device protection.
 """
 from dataclasses import dataclass, field
 import os
+import sys
 
 
 class VaultUnavailable(RuntimeError):
@@ -111,9 +112,13 @@ class SyntheticAeadProtector:
 
 
 def platform_protector():
-    # No plaintext/key-file fallback on headless Linux, reinstall or missing keyring.
-    # Ubuntu Secret Service/TPM support needs a verified adapter and real OS tests.
-    return WindowsDPAPIProtector()
+    if os.name == 'nt':
+        return WindowsDPAPIProtector()
+    if sys.platform.startswith('linux'):
+        from photobooth.linux_credential_vault import LinuxSecretServiceProtector
+        # Lookup only. Provisioning/unlock is never a runtime fallback.
+        return LinuxSecretServiceProtector()
+    raise VaultUnavailable('Supported credential protection is unavailable')
 
 
 def mock_protector_allowed(protector, *, windows_protected=False):
@@ -131,5 +136,7 @@ def mock_protector_allowed(protector, *, windows_protected=False):
 
 
 def protection_status():
-    return {'os_protection': 'WINDOWS_DPAPI_USER' if os.name == 'nt' else 'UNSUPPORTED',
+    implementation = ('WINDOWS_DPAPI_USER' if os.name == 'nt' else
+                      'LINUX_SECRET_SERVICE' if sys.platform.startswith('linux') else 'UNSUPPORTED')
+    return {'os_protection': implementation, 'readiness': 'NOT_CHECKED',
             'device_acceptance': 'NOT_VERIFIED'}

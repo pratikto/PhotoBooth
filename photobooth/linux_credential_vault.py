@@ -3,7 +3,8 @@
 Routine construction/operations only read the existing unlocked app key. Explicit
 operator provision() creates it once under a private runtime kernel lock. No
 unlock/prompt, default-collection creation, overwrite or deletion is performed.
-This first adapter is not mounted by platform_protector or merchant/native paths.
+The platform selector and Sandbox backend accept this protector. Native merchant
+admission and complete worker recovery remain separate guarded integration.
 """
 from contextlib import contextmanager
 import hmac

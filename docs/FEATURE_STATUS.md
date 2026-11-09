@@ -1,3 +1,13 @@
+# 9 November 2026 — Ubuntu OS custody selector and backend
+
+Owner confirms Ubuntu mini PC. [Linux vault and actual isolated-service evidence](qa/portrait-v2-sandbox/PP03-UBUNTU-VAULT-2026-11-09.md):
+lookup-only platform selection and exact Linux protector support in the guarded
+Sandbox host; 87 related PASS and eight real isolated Secret Service outcomes,
+including original protected CCP/backend PENDING→PAID with fake HTTP. Original
+Windows support preserved. No auto key creation/unlock or plaintext fallback.
+Mini-PC login/reboot/backup acceptance, child host and native merchant/recovery
+integration remain open; this is not commercial readiness.
+
 # 9 November 2026 — isolated post-preview Sandbox backend assembly
 
 [Host assembly and exact limits](qa/portrait-v2-sandbox/PP04-SANDBOX-HOST-2026-11-09.md):

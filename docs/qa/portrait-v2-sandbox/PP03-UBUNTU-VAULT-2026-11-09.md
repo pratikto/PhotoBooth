@@ -62,3 +62,34 @@ merchant host still require the next reviewed integration; native payment, claim
 and worker restart remain separately guarded. No real merchant, cloud, paper or
 refund operation occurred. Roll back only this candidate/dependency/tests, never
 original protected credentials, paid rights or keyring records.
+
+## Platform selector and backend integration
+
+After the real isolated-service exercise, platform_protector now selects the
+Linux Secret Service adapter on Linux and preserves Windows DPAPI on Windows.
+It performs lookup only; missing keyring/key never provisions or unlocks during
+runtime. protection_status identifies the implemented provider but explicitly
+returns readiness NOT_CHECKED and device_acceptance NOT_VERIFIED. The guarded
+Sandbox backend accepts only exact implemented Windows/Linux protector types.
+Existing synthetic/Windows-mock admission and restore opt-ins stay unchanged.
+
+Focused credential/API/CCP/ticket/protected-restore scope: **87 PASS in 22.344s**,
+zero failures/errors/skips, exit 0. Independent ordinary OS fixtures use their
+own QA key identity on Linux; they never read the commercial app master key.
+
+A fresh isolated GNOME Keyring/D-Bus lab then passed eight expected outcomes,
+including the actual platform selector and Sandbox backend with an original CCP
+protected by the real Linux keyring. Its authenticated original API moved from
+PENDING to independently verified PAID/OWED through the real fixed Sandbox
+transport with fake HTTP only; one synthetic charge. No fake Windows protector
+was used for this Linux backend exercise. Both test daemons stopped cleanly.
+Source-matched full regression/Windows CI follows separately.
+
+Deployment boundary: an encrypted login keyring needs a valid OS unlock path.
+Desktop auto-login alone does not establish unlocked custody. Verify mini-PC
+login/PAM or an approved hardware-protected unlock, encrypted keyring backup,
+reboot and service environment before unattended commercial operation. Do not
+store an unlock passphrase in app files or disable keyring encryption to pass
+startup. These device/OS acceptance facts remain NOT_RUN here. Child backend
+bootstrap and protected native payment/ticket/delivery/claim/release integration
+are still unfinished source work.

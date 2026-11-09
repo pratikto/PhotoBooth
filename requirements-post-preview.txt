@@ -1,5 +1,5 @@
 # Optional post-preview synthetic encrypted-vault fixtures; no merchant activation.
 cryptography>=46,<50
 
-# Ubuntu OS-keyring vault candidate; never a plaintext or synthetic key fallback.
+# Ubuntu OS-keyring vault adapter; never a plaintext or synthetic key fallback.
 SecretStorage==3.5.0; sys_platform == "linux"

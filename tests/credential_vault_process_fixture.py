@@ -17,7 +17,13 @@ SCOPE = b'fixture-merchant/PB001/original-purchase/CCP/v1'
 
 def main(path, action):
     try:
-        protector = platform_protector()
+        if sys.platform.startswith('linux'):
+            from photobooth.linux_credential_vault import LinuxSecretServiceProtector
+            # Independent OS fixture owns a separate, never-auto-provisioned QA
+            # key. Routine tests cannot read the commercial application's key.
+            protector = LinuxSecretServiceProtector('qa-process-fixture-v1')
+        else:
+            protector = platform_protector()
         if action == 'seal':
             plaintext = os.urandom(32)
             protected = protector.protect(plaintext, SCOPE)

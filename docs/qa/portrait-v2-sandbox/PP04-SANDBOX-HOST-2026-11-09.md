@@ -38,7 +38,7 @@ Implemented `photobooth/post_preview_server.py::build_sandbox_app` over the
 existing PP API, coordinator, fixed Sandbox HTTP transport, original checkout,
 private worker readiness and independently observed Drive readiness. It checks
 original merchant/booth/provider/protector ledger context and rejects mixed
-synthetic/foreign history. It constructs no listener and performs no I/O until
+synthetic/foreign history. It constructs no listener and performs no provider/Drive I/O until
 an authenticated original API action. No simulated-PAID or legacy route exists.
 
 The exact platform protector must be WindowsDPAPIProtector from the existing
@@ -76,3 +76,13 @@ post-preview commercial journey. Ubuntu protected-vault support, actual merchant
 credentials/acceptance, real paper/cloud/refund, timed qualification and operating
 package remain open. Rollback only this factory, shared CCP extraction and tests;
 never alter original paid, credential, provider, print or media journals.
+
+## Ubuntu target integration supplement
+
+Owner confirms Ubuntu mini PC. The later OS selector/backend update accepts the
+exact LinuxSecretServiceProtector alongside Windows DPAPI, after isolated real
+GNOME Keyring tests. Runtime lookup never provisions/unlocks or accepts a
+synthetic protector. The eight-case Linux integration exercise includes original
+protected CCP plus authenticated backend PENDING→PAID/OWED with fake provider
+HTTP. Earlier Windows-only factory paragraphs describe its original increment;
+actual target-device login/reboot and full native commercial mounting remain open.

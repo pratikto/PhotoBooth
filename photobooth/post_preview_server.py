@@ -8,6 +8,7 @@ paid delivery/claim/release and production are not enabled by this assembly.
 from photobooth.booth_auth import BoothAuthenticator
 from photobooth.credential_vault import WindowsDPAPIProtector, platform_protector
 from photobooth.midtrans_sandbox import MidtransSandboxClient
+from photobooth.linux_credential_vault import LinuxSecretServiceProtector
 from photobooth.post_preview_api import create_app
 from photobooth.post_preview_ccp import OriginalCCPService
 from photobooth.post_preview_checkout import PrivateDraftCheckout
@@ -41,7 +42,7 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
     auth = BoothAuthenticator({booth_id: booth_token})
     # Missing/unsupported OS custody fails before constructing provider authority.
     protector = platform_protector()
-    if type(protector) is not WindowsDPAPIProtector:
+    if type(protector) not in {WindowsDPAPIProtector, LinuxSecretServiceProtector}:
         raise ValueError('Supported original OS credential protection required')
     ledger = checkout.ledger
     with ledger.write():
