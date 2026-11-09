@@ -16,11 +16,12 @@ from photobooth.post_preview_payments import PostPreviewPayments
 from photobooth.post_preview_store import DraftHeld,PostPreviewStore
 from photobooth.post_preview_paid_delivery import OriginalPaidDeliveryMonitor
 from photobooth.booth_sync import BoothDriveWorker
+from photobooth.post_preview_readiness_bridge import WorkerReadinessServer
 
 
 class OriginalMockIsolation:
     def __init__(self, ledger, payments, jobs, launcher, *, printer_lane,
-                 delivery=None, allow_incomplete_fixture=False):
+                 delivery=None, readiness=None, allow_incomplete_fixture=False):
         if (allow_incomplete_fixture is not True or
                 not isinstance(ledger,PostPreviewStore) or
                 not isinstance(payments,PostPreviewPayments) or payments.mode!='mock'
@@ -29,6 +30,7 @@ class OriginalMockIsolation:
                 or jobs.service.ledger is not ledger or
                 not isinstance(launcher,LaunchLease)
                 or not isinstance(printer_lane, type(threading.Lock()))
+                or readiness is not None and type(readiness) is not WorkerReadinessServer
                 or delivery is not None and
                    (not isinstance(delivery,OriginalPaidDeliveryMonitor)
                     or delivery.binder.ledger is not ledger)):
@@ -36,6 +38,7 @@ class OriginalMockIsolation:
         self.ledger,self.payments,self.jobs,self.launcher=ledger,payments,jobs,launcher
         self.lane=printer_lane
         self.delivery=delivery
+        self.readiness=readiness
         self._lock=threading.RLock()
 
     def restore_prepared_after_process_exit(self, booth_id, operation_id):
@@ -78,6 +81,7 @@ class OriginalMockIsolation:
                     or confirmed['entitlement_id'] != observed['entitlement_id']):
                 raise DraftHeld('Fresh exact original settlement required')
             with ExitStack() as fences, self.ledger.write():
+                fences.enter_context(self._readiness_guard())
                 current = self.ledger.db.execute('SELECT * FROM pp_isolation_ops WHERE operation_id=?',
                                                  (operation_id,)).fetchone()
                 draft = self._owner(booth_id)
@@ -101,6 +105,23 @@ class OriginalMockIsolation:
                 service.phase = 'hold'
                 self.ledger._event(draft['draft_id'],'BOOT_PREPARED_CONTEXT_RESTORED')
             return operation_id
+
+    @contextmanager
+    def _readiness_guard(self):
+        if self.readiness is None:
+            yield
+            return
+        with ExitStack() as guard:
+            try:
+                guard.enter_context(self.readiness.quiescent())
+            except RuntimeError:
+                raise DraftHeld('Original readiness collector is still active') from None
+            yield
+
+    def fence_readiness(self):
+        """Also required when recovering an already ACKed original operation."""
+        with self._readiness_guard():
+            pass
 
     @contextmanager
     def _drive_guard(self):
@@ -187,6 +208,7 @@ class OriginalMockIsolation:
         # ExitStack releases the Drive fence only AFTER ledger commit/rollback.
         with self._lock,ExitStack() as fences,self.ledger.write():
             draft=self._owner(booth_id)
+            fences.enter_context(self._readiness_guard())
             fences.enter_context(self._drive_guard())
             self._quiescent(draft)
             financial=self._financial(draft)
@@ -215,6 +237,7 @@ class OriginalMockIsolation:
                 (operation_id,booth_id)).fetchone()
             if stored is None:
                 raise DraftHeld('Exact original isolation PREPARED operation required')
+            fences.enter_context(self._readiness_guard())
             if stored['state']=='ACKED':
                 return False
             draft=self._owner(booth_id)

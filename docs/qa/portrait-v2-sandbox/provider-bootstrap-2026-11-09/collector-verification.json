@@ -1,0 +1,27 @@
+{
+  "date": "2026-11-09",
+  "base": "8398b53117f1192b7c5406e1b1856dc2cb20f433",
+  "branch": "feature/post-preview-qris-checkout",
+  "sha256": {
+    "photobooth/post_preview_readiness_bridge.py": "7fd1bb2b16f2c069984fd4de4e4a001fb99a73144b77bae4f9d33c5270c2524e",
+    "photobooth/post_preview_isolation.py": "1fd64d52ec47b878d06c416bf6034e8648197ed096ac78a08547d7ea6df696a5",
+    "photobooth/post_preview_pilot_admission.py": "07b6fadd049f3ffe968cfba32a0c6925ec60896b2abd445b4bc10d108ff780d0",
+    "tests/test_post_preview_readiness.py": "7401a8866eeb2f4d6b723cfb46ed9d38e813a1b1370b4bfb0a1404508d7da20c",
+    "tests/test_post_preview_isolation.py": "c147cdc4a410cdf354cd75734bb108ff79b0b75eddd1bbc42e88f92fa1d2774a",
+    "tests/test_post_preview_pilot_admission.py": "216223a7c1291f784a94737baa1a9a58c9410bf4e64280ba491ffbf9bab1f169"
+  },
+  "command": ".venv/bin/python tools/run_kiosk_unittests.py test_post_preview_readiness test_post_preview_isolation test_post_preview_pilot_admission",
+  "result": {
+    "run": 69,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 18.328
+  },
+  "local_log_sha256": "02414a662c601a1acb5ab0b96008a51b9877c1655d25df3655cee470ee16faeb",
+  "limits": [
+    "Mock admission integration; future native Sandbox assembly must bind exact original collector",
+    "No actual hardware or accounts",
+    "Final-source full regression/CI pending"
+  ]
+}

@@ -13,6 +13,7 @@ import struct
 import threading
 import time
 import uuid
+from contextlib import contextmanager
 
 from photobooth.post_preview_authority import authenticated_payment_readiness
 from photobooth.post_preview_readiness import (
@@ -187,6 +188,7 @@ class WorkerReadinessServer:
         self._channel, self._collector = channel, collector
         self._stop = threading.Event()
         self._thread = None
+        self._lifecycle_lock = threading.Lock()
 
     @classmethod
     def from_original_worker(cls, channel, collector):
@@ -195,19 +197,34 @@ class WorkerReadinessServer:
         return cls(channel, lambda scope: collector(scope.purchase_group_id))
 
     def start(self):
-        if self._thread is not None:
-            raise RuntimeError('Readiness worker cannot be restarted')
-        self._thread = threading.Thread(target=self._run, name='postpay-readiness', daemon=True)
-        self._thread.start()
+        with self._lifecycle_lock:
+            if self._thread is not None or self._stop.is_set():
+                raise RuntimeError('Readiness worker cannot be restarted')
+            self._thread = threading.Thread(target=self._run, name='postpay-readiness', daemon=True)
+            self._thread.start()
 
     def stop(self, *, timeout=2):
         if not finite_number(timeout) or not 0 <= timeout <= 5:
             raise ValueError('Bounded readiness shutdown required')
-        self._stop.set()
-        _retire(self._channel)
-        if self._thread is not None:
-            self._thread.join(timeout)
-        return self._thread is None or not self._thread.is_alive()
+        with self._lifecycle_lock:
+            self._stop.set()
+            _retire(self._channel)
+            thread = self._thread
+        if thread is not None:
+            thread.join(timeout)
+        return thread is None or not thread.is_alive()
+
+    @contextmanager
+    def quiescent(self):
+        """Permanently retire this original capability before occupancy ACK.
+
+        Closing a socket alone does not stop its collector callback. A later
+        visitor needs a new private channel/collector; this one never restarts.
+        No shutdown deadline is relabelled as successful worker completion.
+        """
+        if not self.stop(timeout=0):
+            raise RuntimeError('Original readiness collector remains active')
+        yield
 
     def _run(self):
         try:

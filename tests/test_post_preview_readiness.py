@@ -466,5 +466,36 @@ class ProcessReadinessBridgeTests(unittest.TestCase):
         self.assertTrue(server.stop())
         self.assertEqual({'UNKNOWN'}, {o.state for o in client.observe(self.scope).values()})
 
+    def test_collector_fence_holds_until_callback_exits_and_cannot_restart(self):
+        import threading
+        entered, release = threading.Event(), threading.Event()
+        def stalled(scope):
+            entered.set(); release.wait(3)
+            return _bridge_ready(scope)
+        client, server = self.channel(stalled)
+        thread = threading.Thread(target=lambda: client.observe(self.scope))
+        thread.start()
+        try:
+            self.assertTrue(entered.wait(2))
+            with self.assertRaises(RuntimeError):
+                with server.quiescent():
+                    self.fail('A live original collector cannot acknowledge release')
+        finally:
+            release.set(); thread.join(3)
+        self.assertTrue(server.stop())
+        with server.quiescent():
+            self.assertEqual({'UNKNOWN'}, {o.state for o in client.observe(self.scope).values()})
+        with self.assertRaises(RuntimeError):server.start()
+
+    def test_stop_before_start_permanently_retires_original_capability(self):
+        import socket
+        from photobooth.post_preview_readiness_bridge import WorkerReadinessServer
+        peer,child = socket.socketpair()
+        self.addCleanup(peer.close)
+        server=WorkerReadinessServer(child,_bridge_ready)
+        self.addCleanup(server.stop)
+        self.assertTrue(server.stop(timeout=0))
+        with self.assertRaises(RuntimeError):server.start()
+
 
 if __name__ == '__main__': unittest.main()

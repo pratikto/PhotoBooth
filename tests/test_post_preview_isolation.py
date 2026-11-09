@@ -95,6 +95,57 @@ class OriginalMockIsolationTests(unittest.TestCase):
         finally:self.fixture.jobs.busy=False
         self.assertEqual(0,self.service.ledger.db.execute('SELECT closed FROM pp_drafts').fetchone()[0])
 
+    def stalled_collector(self):
+        import socket
+        from photobooth.post_preview_readiness import ReadinessScope
+        from photobooth.post_preview_readiness_bridge import WorkerReadinessClient,WorkerReadinessServer
+        from tests.test_post_preview_readiness import _bridge_ready
+        entered,release=threading.Event(),threading.Event()
+        def collect(scope):
+            entered.set();release.wait(3)
+            return _bridge_ready(scope)
+        peer,child=socket.socketpair()
+        server=WorkerReadinessServer(child,collect);server.start()
+        client=WorkerReadinessClient(peer,timeout=.2)
+        scope=ReadinessScope('a'*32,'PB001','b'*64,1)
+        request=threading.Thread(target=lambda:client.observe(scope))
+        def cleanup():
+            release.set();request.join(3);client.close();server.stop()
+        self.addCleanup(cleanup)
+        request.start()
+        self.assertTrue(entered.wait(2))
+        return server,release,client,scope
+
+    def test_original_collector_stop_false_blocks_prepare_and_new_visitor(self):
+        self.service.prepare()
+        self.service.start(get_templates(),{'template_a':1})
+        self.service.retire('APP_SUSPENDED')
+        server,release,client,scope=self.stalled_collector()
+        self.iso.readiness=server
+        with self.assertRaises(DraftHeld):self.iso.prepare('PB001')
+        self.assertEqual(0,self.service.ledger.db.execute('SELECT COUNT(*) FROM pp_isolation_ops').fetchone()[0])
+        with self.assertRaises(DraftHeld):self.service.ledger.create('PB001','visitorB',{'template_a':1})
+        release.set();self.assertTrue(server.stop())
+        key=self.iso.prepare('PB001')
+        self.assertTrue(self.iso.acknowledge('PB001',key))
+        new=self.service.ledger.create('PB001','visitorB',{'template_a':1})
+        self.assertNotEqual(new.draft_id,self.service.lease.draft_id)
+        self.assertEqual({'UNKNOWN'},{value.state for value in client.observe(scope).values()})
+        with self.assertRaises(RuntimeError):server.start()
+
+    def test_original_collector_stop_false_blocks_existing_prepared_ack(self):
+        self.service.prepare()
+        self.service.start(get_templates(),{'template_a':1})
+        self.service.retire('APP_SUSPENDED')
+        key=self.iso.prepare('PB001')
+        server,release,_,_=self.stalled_collector()
+        self.iso.readiness=server
+        with self.assertRaises(DraftHeld):self.iso.acknowledge('PB001',key)
+        self.assertEqual(('PREPARED',0),tuple(self.service.ledger.db.execute(
+            'SELECT o.state,d.closed FROM pp_isolation_ops o JOIN pp_drafts d USING(draft_id)').fetchone()))
+        release.set();self.assertTrue(server.stop())
+        self.assertTrue(self.iso.acknowledge('PB001',key))
+
 
     def test_acked_isolation_allows_next_visitor_without_reopening_old_media(self):
         self.fixture.enable_paid_ticket()

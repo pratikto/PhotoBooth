@@ -69,6 +69,24 @@ class PilotAdmissionTests(unittest.TestCase):
         self.assertEqual(1,self.service.ledger.db.execute(
             "SELECT count(*) FROM pp_isolation_ops WHERE state='ACKED'").fetchone()[0])
 
+    def test_acked_reply_recovery_cannot_skip_original_collector_fence(self):
+        from tests.test_post_preview_isolation import OriginalMockIsolationTests
+        old,proof,group=self.paid_private_A()
+        operation=self.iso.prepare('PB001')
+        self.iso.acknowledge('PB001',operation)
+        server,release,_,_=OriginalMockIsolationTests.stalled_collector(self)
+        self.iso.readiness=server
+        with self.assertRaises(DraftHeld):self.admission.ensure_new_visitor_ready()
+        self.assertEqual(old,self.service.lease)
+        self.assertTrue(self.service._hidden.is_set())
+        self.assertEqual('OWED',self.service.ledger.db.execute(
+            'SELECT status FROM pp_paid_services WHERE purchase_group_id=?',(group,)).fetchone()[0])
+        release.set();self.assertTrue(server.stop())
+        self.assertTrue(self.admission.ensure_new_visitor_ready())
+        new=self.service.start(get_templates(),{'template_a':1})
+        self.assertNotEqual(old.draft_id,self.service.lease.draft_id)
+        self.assertGreater(new['generation'],old.generation)
+
     def test_original_A_proof_waits_while_B_live(self):
         old,proof,group=self.paid_private_A()
         self.admission.ensure_new_visitor_ready()

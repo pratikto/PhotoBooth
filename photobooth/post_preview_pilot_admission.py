@@ -47,6 +47,7 @@ class OriginalPilotAdmission:
                 return True
             if not service._hidden.is_set():
                 raise DraftHeld('Live customer cannot be preempted')
+            self.isolation.fence_readiness()
             old=service.lease
             # Crash/reply-loss recovery is bound to the very same operation.
             with self.claim.ledger.write():

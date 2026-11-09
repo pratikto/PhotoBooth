@@ -1,3 +1,11 @@
+# 9 November 2026 — original readiness collector admission fence
+
+Original collector stop=False now holds PREPARE/ACK and retired-visitor reset,
+including already-ACKed reply recovery. **69 related PASS**; [exact scope and
+remaining native mounting](PP06-READINESS-COLLECTOR-FENCE-2026-11-09.md). Full final-source regression/CI pending.
+Protected native ticket/delivery/claim/release remains the next implementation;
+production is NOT_READY. Preserve all original paid/custody/uncertain journals.
+
 # 9 November 2026 — protected backend/native CCP presentation B1
 
 Backend retains original protected CCP/display permits; typed native adapter
