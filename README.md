@@ -1,3 +1,9 @@
+> **Current post-preview QRIS implementation:** [9 November exact checkpoint](docs/qa/portrait-v2-sandbox/PROVIDER-NATIVE-CONTINUATION-2026-11-09.md).
+> Work stays on feature/post-preview-qris-checkout; commercial target is Ubuntu
+> mini PC. Isolated provider backend/protected CCP are delivered; full native
+> paid delivery/recovery and commercial acceptance are unfinished. **NOT_READY
+> for commercial launch.** Earlier software trial notes keep their dated scope.
+
 # Meong Photobooth — GUI v2
 
 > **Physical-test software candidate verified:** [start here](docs/qa/portrait-v2-sandbox/PP07-PHYSICAL-QUICK-START.md). Source 8901bbc: 1,778 full local PASS; CI 41952947024 all 3 SUCCESS (574 Windows/574 Ubuntu/68 native). Actual Windows PowerShell setup/check-only and Linux entry verified. Real camera/manual capture trial can begin after owner preflight; optional paper/Drive require their original dual consents. Payment remains synthetic; hardware/full recovery/merchant/refund/production acceptance is separate. [Evidence](docs/qa/portrait-v2-sandbox/PP07-PHYSICAL-TEST-READINESS-2026-11-05.md).

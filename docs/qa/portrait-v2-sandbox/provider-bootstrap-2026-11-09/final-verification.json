@@ -1,0 +1,111 @@
+{
+  "date": "2026-11-09",
+  "branch": "feature/post-preview-qris-checkout",
+  "tested_source": "c096504ed87259cd49c5aacd9cab73906a6b5646",
+  "runtime_source": "f098c0510118b82195bde5f01d518b98a34c1c98",
+  "sha256": {
+    ".github/workflows/post-preview-qris.yml": "0ea1f463965af97477d65ee6218b272cf366d41227975dc7c9961f229ff417b1",
+    "photobooth/post_preview_api.py": "fdf357af295b17a6cef73ee79054d6453693103d9ae7cd8fa78f75283b55fa82",
+    "photobooth/post_preview_bootstrap.py": "8222cf5ccd10dcee3ac48ce2ecb65f2c0177f49d3f55d228200dfa83a9307ba5",
+    "photobooth/post_preview_ccp.py": "1d595c5117906b9adaa2e4af7d78d3d6e88c489f306e77a080c4901721975b0a",
+    "photobooth/post_preview_host.py": "14f5668e5e7ceac6eb282d59b01f4c8dea562a8d30dd2a32911f578013d0112c",
+    "photobooth/post_preview_isolation.py": "1fd64d52ec47b878d06c416bf6034e8648197ed096ac78a08547d7ea6df696a5",
+    "photobooth/post_preview_pilot_admission.py": "07b6fadd049f3ffe968cfba32a0c6925ec60896b2abd445b4bc10d108ff780d0",
+    "photobooth/post_preview_presentation.py": "8a0a4eff9ddb8c68a351030cef31079fbef953f19ff2022d1e89de88c622a67d",
+    "photobooth/post_preview_proof_client.py": "78e3883ee9758e8e26a287f9d9197ef89b16294edeba7c536f1baf0f4fa175a0",
+    "photobooth/post_preview_readiness_bridge.py": "7fd1bb2b16f2c069984fd4de4e4a001fb99a73144b77bae4f9d33c5270c2524e",
+    "photobooth/post_preview_server.py": "a930cea55b6d66c67e4df615ac77c470db5a9b13eb35cba93320283b89523a59",
+    "tests/post_preview_host_process_fixture.py": "83a30d150b080da63c955b7e9ddb03200c8d010e1d18c19c26c620c15315d527",
+    "tests/test_post_preview_checkout_widgets.py": "1fe605f6502c0b907179fbdc510571adc111b69a34edc8926d7f4cc99a018384",
+    "tests/test_post_preview_host.py": "1e9be8156478db343da170e8335fd9b2601b050d706296f206882ef61b031244",
+    "tests/test_post_preview_isolation.py": "c147cdc4a410cdf354cd75734bb108ff79b0b75eddd1bbc42e88f92fa1d2774a",
+    "tests/test_post_preview_pilot_admission.py": "216223a7c1291f784a94737baa1a9a58c9410bf4e64280ba491ffbf9bab1f169",
+    "tests/test_post_preview_presentation.py": "411de75a5c04746faee217f96f5d2fff69eb0304c7cab02d032213cf65ed7eda",
+    "tests/test_post_preview_readiness.py": "7401a8866eeb2f4d6b723cfb46ed9d38e813a1b1370b4bfb0a1404508d7da20c"
+  },
+  "local_full_at_runtime_source": {
+    "backend": {
+      "command": "python tools/run_kiosk_unittests.py (complete registered backend module list)",
+      "run": 672,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 292.753
+    },
+    "native": {
+      "command": "xvfb-run -a python tools/run_kiosk_unittests.py (complete registered native module list)",
+      "run": 74,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 210.32
+    },
+    "apps_script": {
+      "syntax": "PASS",
+      "run": 34,
+      "failures": 0,
+      "skipped": 0
+    }
+  },
+  "current_source_focused": {
+    "native_exact_countdown_method": {
+      "run": 1,
+      "portrait_sizes": [
+        [
+          800,
+          1280
+        ],
+        [
+          452,
+          900
+        ]
+      ],
+      "seconds": 6.364,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "ci_prior": {
+    "run_id": 42579045180,
+    "source": "f098c0510118b82195bde5f01d518b98a34c1c98",
+    "windows": {
+      "job_id": 129033283816,
+      "run": 672,
+      "seconds": 765.252,
+      "status": "SUCCESS"
+    },
+    "ubuntu": {
+      "job_id": 129033284195,
+      "run": 672,
+      "seconds": 231.13,
+      "status": "SUCCESS"
+    },
+    "native": {
+      "job_id": 129033284348,
+      "run": 74,
+      "seconds": 151.359,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0,
+      "status": "FAILED: two size subtests of uptime-dependent fixture; corrected at c096504"
+    }
+  },
+  "ci_current": {
+    "run_id": 42580705346,
+    "source": "c096504ed87259cd49c5aacd9cab73906a6b5646",
+    "status": "IN_PROGRESS"
+  },
+  "local_processes": "No active test/backend/qualification/keyring processes; CI remote only",
+  "local_only": "Untracked work/: synthetic logs/drivers/display packages/Kivy caches; not pushed",
+  "commercial": "NOT_READY",
+  "remaining_source": [
+    "Protected native ticket/receipt and paid Drive/strip/upload/claim/release mounting",
+    "Actual refund/status and final operating package",
+    "Supported Ubuntu worker restore and source-matched final qualification"
+  ],
+  "external": [
+    "No merchant/Drive secrets or owned device/printer route configured",
+    "Target Ubuntu/account/device/legal/production acceptance not proven"
+  ]
+}

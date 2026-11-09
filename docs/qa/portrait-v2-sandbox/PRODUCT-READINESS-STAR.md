@@ -1,3 +1,8 @@
+> **9 November implementation checkpoint:** [child host/protected native status,
+> exact source/CI and remaining code](PROVIDER-NATIVE-CONTINUATION-2026-11-09.md).
+> The commercial gates below remain open. A backend/CCP adapter is not a fully
+> mounted native provider profile or production approval.
+
 # Meong Photobooth — STAR product-readiness roadmap
 
 8 November 2026 · Existing branch `feature/post-preview-qris-checkout`.

@@ -1,36 +1,16 @@
-# 9 November 2026 — original readiness collector admission fence
+# 9 November 2026 — original provider host / protected native checkpoint
 
-Original collector stop=False now holds PREPARE/ACK and retired-visitor reset,
-including already-ACKed reply recovery. **69 related PASS**; [exact scope and
-remaining native mounting](qa/portrait-v2-sandbox/PP06-READINESS-COLLECTOR-FENCE-2026-11-09.md). Full final-source regression/CI pending.
-Protected native ticket/delivery/claim/release remains the next implementation;
-production is NOT_READY. Preserve all original paid/custody/uncertain journals.
-
-# 9 November 2026 — protected backend/native CCP presentation B1
-
-Backend retains original protected CCP/display permits; typed native adapter
-reuses existing private renderer offer type. **88 related PASS**, including
-actual child restart/HTTP and stale-callback/privacy checks. [Scope and next
-source action](qa/portrait-v2-sandbox/PP04-PROTECTED-PRESENTATION-2026-11-09.md). Native provider launcher/ticket/delivery/claim/release
-remain unfinished; readiness collector fencing is next. No production approval.
-
-# 9 November 2026 — credential-isolated child backend A2
-
-Original Sandbox API now runs in a separately owned child over private sockets;
-credentials stay out of argv/environment/GUI. **105 focused PASS**, including
-actual HTTP settlement, original-root restart and truthful shutdown holds.
-[A2 scope, evidence and next source action](qa/portrait-v2-sandbox/PP04-CHILD-BACKEND-BOOTSTRAP-2026-11-09.md).
-A1 Windows CI exposed two fixture cleanup errors; ordering is corrected in A2,
-fresh CI/full regression pending. Native provider mounting remains unfinished.
-No merchant/device operation or production approval. Local work/ artifacts are
-not pushed; preserve original ledgers, custody and uncertain jobs.
-
-# 9 November — separately owned original post-preview host
-
-post_preview_host reconstructs original checkout over stable merchant/booth
-ledger/media, holds independent backend kernel ownership and mounts the existing
-Sandbox app factory without a listener. Child/native mounting remains next.
-[Source/evidence](qa/portrait-v2-sandbox/PP04-CHILD-BACKEND-BOOTSTRAP-2026-11-09.md).
+Source/tests **c096504** pushed and remote-verified on the existing post-preview
+branch. Stable child backend/ownership, protected original CCP display adapter
+and collector admission fence delivered. **672 backend +74 native local PASS**,
+zero failures/errors/skips at runtime sourcef098c05; corrected native clock test
+PASS at c096504. Prior CI Windows672/Ubuntu672 PASS; native fixture failure fixed.
+Current CI42580705346 at c096504 IN_PROGRESS. [Exact current continuation,
+source hashes and next unfinished implementation](qa/portrait-v2-sandbox/PROVIDER-NATIVE-CONTINUATION-2026-11-09.md).
+Native provider ticket/delivery/claim/release, refunds/ops and actual Ubuntu/
+merchant/device/final qualification remain unfinished. Production NOT_READY.
+Local work/ is not pushed; no local test/backend process remains active.
+Earlier dated snapshots below retain their original source-specific scope.
 
 # Meong Photobooth — GUI v2 architecture
 
