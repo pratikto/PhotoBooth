@@ -1,3 +1,5 @@
+> **9 November source/evidence update:** [B4 backend paid delivery core/API/client/shutdown](PP05-SANDBOX-PAID-DELIVERY-2026-11-09.md) is delivered in bounded source increments; protected native screens/profile/claim/release remain unfinished. The [recovered original R4 two-hour result](evidence/pp07-r4-soak-final-2026-11-05.json) applies only to 5 November source824b6ae7 and does not satisfy stage6 for the newer provider/native implementation. Earlier interim-only statements below retain their dated observation. Commercial NOT_READY.
+
 > **9 November implementation checkpoint:** [child host/protected native status,
 > exact source/CI and remaining code](PROVIDER-NATIVE-CONTINUATION-2026-11-09.md).
 > The commercial gates below remain open. A backend/CCP adapter is not a fully

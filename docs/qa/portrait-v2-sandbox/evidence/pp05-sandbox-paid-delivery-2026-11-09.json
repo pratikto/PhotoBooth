@@ -20,9 +20,12 @@
     "postpay-b4-focused.log": "a0ae83822a941378c936e2e49c6c93ab67c801d8402ec6e002adad6ea5f04309",
     "postpay-b4-focused-fixed.log": "63d3bdc9450c973f3696019dc60b884848b63d97bd22981b394a049c58ab0815",
     "postpay-b4-api-first.log": "4ce6fdb54da7204ea107c617ae3dc283ccf26b1b4b739b96aceae06bf687a307",
-    "postpay-b4-api-focused.log": "267ba407f6c0a6ebefa858a1110b9dd5033e1865d8061e7ca9711ee2d0f95c06"
+    "postpay-b4-api-focused.log": "267ba407f6c0a6ebefa858a1110b9dd5033e1865d8061e7ca9711ee2d0f95c06",
+    "postpay-b4-idle-shutdown-before.log": "aa5ee48acfeda07c6def9b92a343f1f2cae429b2e4ff23decefedd4e6242fa56",
+    "postpay-b4-idle-regression-before.log": "9a696966c06f7793bf5c4792ee19c1261ea15c41140fa79519798edcac10afae",
+    "postpay-b4-shutdown-fixed.log": "ffaeaf35654076be8ce343f960a9bc125205c4fa567ace931f778c31376091b5"
   },
-  "api_client_new_methods": 13,
+  "api_client_new_methods": 14,
   "api_connected": {
     "run": 100,
     "passed": 100,
@@ -31,5 +34,20 @@
     "skipped": 0,
     "seconds": 42.727
   },
-  "actual_host_worker_thread_stop_barrier_verified": true
+  "actual_host_worker_thread_stop_barrier_verified": true,
+  "bug": "BUG-049",
+  "shutdown_corrected": {
+    "run": 101,
+    "passed": 101,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 43.116
+  },
+  "interrupted_broad_diagnostic": {
+    "source": "41707ae9bfe0329b7107e33845a51d43f32790b5",
+    "exit_code": -2,
+    "seconds": 293.454,
+    "full_verdict": "NONE_CONTROLLED_INTERRUPTION_AFTER_NEW_REGRESSION_DISCOVERY"
+  }
 }

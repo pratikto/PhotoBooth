@@ -1,3 +1,7 @@
+## BUG-049 — idle backend uploader could block graceful API shutdown (9 November 2026)
+
+S2 / source fixed, focused software verified; final corrected-source regression/CI pending. Zero-wait shutdown checked the original uploader before its idle thread could respond to stop, raising RuntimeError and withholding the shutdown callback. New regression reproduces one ERROR. API grants one bounded second for actual thread exit; blocked original I/O still retains ledger/kernel ownership and stop=False. Corrected101 affected PASS, zero failures/errors/skips. No actual operational/device incident claimed. [Scope and evidence](qa/portrait-v2-sandbox/PP05-SANDBOX-PAID-DELIVERY-2026-11-09.md).
+
 ## BUG-048 — native remote ticket countdown waited for backend ACK (9 November 2026)
 
 FIXED / SOFTWARE VERIFICATION; customer profile still unmounted. Genuine card
@@ -43,7 +47,7 @@ print/UNCERTAIN and original paid API); no actual device acceptance inferred.
 
 ## BUG-045 — Uncertain Recovery Ticket receipt did not quarantine paid strip output (5 November 2026)
 
-**Severity:** S1 physical-output integrity. **Status:** SOURCE FIXED / focused software VERIFIED; final new-source full regression/CI pending. A synthetic receipt transport timeout produced durable UNCERTAIN and the mandatory ticket screen was dismissed. The direct original paid-strip dispatcher accepted a new strip because its receipt guard only denied PREPARED/SENDING. The paid-delivery snapshot also omitted receipt uncertainty from its review flag, leaving the print action apparently available. One meaningful regression initially FAIL (expected DraftHeld was not raised). No physical paper incident is asserted.
+**Severity:** S1 physical-output integrity. **Status:** SOURCE FIXED / historical SOFTWARE VERIFIED at824b6ae7: 1,801 local PASS and CI41960994370 all three SUCCESS (597 Windows/597 Ubuntu/68 native), zero failures/errors/skips. Original two-hour batch result is now recovered; actual physical paper acceptance remains separate. A synthetic receipt transport timeout produced durable UNCERTAIN and the mandatory ticket screen was dismissed. The direct original paid-strip dispatcher accepted a new strip because its receipt guard only denied PREPARED/SENDING. The paid-delivery snapshot also omitted receipt uncertainty from its review flag, leaving the print action apparently available. One meaningful regression initially FAIL (expected DraftHeld was not raised). No physical paper incident is asserted.
 
 The dispatcher now refuses UNCERTAIN original receipts; delivery inspection propagates the same uncertainty to its existing review flag. Mandatory ticket/NEXT behavior is unchanged, no receipt reprint is introduced, and known non-sending receipt failure remains distinct. Regression asserts zero photo transport calls, original strip PREPARED and PAID/OWED retained. Receipt/paid-output/restoration scope: 54 PASS, zero failure/error/skip, 16.646s. [Campaign](qa/portrait-v2-sandbox/PP07-SIMULATION-CLOSURE-R4-2026-11-05.md).
 

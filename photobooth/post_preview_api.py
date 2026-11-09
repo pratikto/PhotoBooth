@@ -77,7 +77,7 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
         try:
             yield
         finally:
-            if paid_delivery is not None and not await run_in_threadpool(paid_delivery.stop):
+            if paid_delivery is not None and not await run_in_threadpool(paid_delivery.stop,timeout=1):
                 raise RuntimeError('Original paid delivery worker remains active')
             if worker and not await run_in_threadpool(worker.stop):
                 # Never close a ledger underneath an unfinished provider call.

@@ -133,6 +133,20 @@ class SandboxDeliveryApiTests(unittest.TestCase):
         finally:release.set();self.actor.worker._thread.join(6)
         self.assertTrue(self.actor.stop())
 
+    def test_idle_original_uploader_gets_bounded_exit_time_before_normal_api_close(self):
+        closed=[]
+        self.actor.worker._thread=threading.Thread(target=self.actor.worker._stop.wait)
+        self.actor.worker._thread.start()
+        app=create_app(self.f.payments,BoothAuthenticator({'PB001':self.f.h.token}),
+            background_worker=False,ticket_presentation=self.f.presentation,
+            paid_delivery=self.actor,on_shutdown=lambda:closed.append(True))
+        try:
+            with TestClient(app):pass
+            self.assertEqual([True],closed)
+            self.assertFalse(self.actor.worker._thread.is_alive())
+        finally:
+            self.actor.worker.stop();self.actor.worker._thread.join(3)
+
     def test_actual_host_keeps_original_kernel_owner_until_its_delivery_thread_exits(self):
         from photobooth.post_preview_host import SandboxHostRuntime
         from photobooth.post_preview_server import build_sandbox_app

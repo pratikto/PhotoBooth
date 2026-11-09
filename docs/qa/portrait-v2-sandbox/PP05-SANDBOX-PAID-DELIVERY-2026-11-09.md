@@ -127,3 +127,21 @@ and real printer configuration. No dummy provider or mock-guard removal. Default
 health remains disabled until the full customer profile is safe. Real refund/
 status/operations, supported-device restore and final new-source qualification
 remain unfinished. Historical R4 two-hour evidence applies only to824b6ae7.
+
+## BUG-049 — graceful idle-uploader shutdown
+
+A separate lifecycle probe found that zero-wait API shutdown could classify an
+idle original uploader as active immediately after stop signalling, suppressing
+the shutdown callback. A meaningful new normal-close regression reproduced one
+ERROR (RuntimeError), zero skips. API lifespan now grants a bounded one-second
+exit wait; direct host close remains nonblocking/truthful by default. The live
+blocked-I/O tests still require stop=False and keep ledger/kernel ownership.
+No timeout permits force-kill, false worker ACK, booth release or print replay.
+
+Corrected affected scope **101 PASS /zero failures/errors/skips,43.116s**,
+including normal idle exit, genuine active-thread refusal, API close callback
+retention and actual host kernel-owner retention. The first all-opt-in diagnostic
+run at41707ae9 was deliberately interrupted after293.454s when this missing case
+was discovered; exit-2/KeyboardInterrupt, no full verdict. Logs/metadata retained.
+That source's superseded CI is not the final verification. Run final regression
+and current CI against the corrected source; no old count is relabeled new PASS.
