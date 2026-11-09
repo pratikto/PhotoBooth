@@ -130,3 +130,32 @@ class RemoteTicketViewTests(unittest.TestCase):
             finally:release.set();thread.join(3)
         self.assertEqual(['held'],errors)
         self.assertFalse(session.window.active);self.assertIsNone(session._offer)
+
+    def test_genuine_screen_deadline_does_not_wait_for_backend_visible_ack(self):
+        import threading
+        Window.size=(452,900)
+        fixture,session,card,tick=self.fixture()
+        card._ready_at=0
+        for _ in range(6):EventLoop.idle()
+        card._rendered(0)
+        entered,release=threading.Event(),threading.Event()
+        original=session.client.mark_visible
+        errors=[]
+        def held(*args):
+            entered.set();release.wait(3);return original(*args)
+        def acknowledge():
+            try:session.acknowledge_visible()
+            except Exception as error:errors.append(type(error).__name__)
+        with patch.object(session.client,'mark_visible',side_effect=held):
+            thread=threading.Thread(target=acknowledge);thread.start()
+            try:
+                self.assertTrue(entered.wait(2))
+                self.assertTrue(session.window.active)
+                tick[0]=130.
+                self.assertEqual(0,session.poll())
+                self.assertIsNone(card.qr_image.texture);self.assertEqual('',card.code.text)
+                self.assertTrue(thread.is_alive())
+            finally:release.set();thread.join(3)
+        self.assertEqual([],errors);self.assertFalse(session.window.active)
+        session.dismiss()
+        self.assertEqual('DISMISSED',fixture.row()['screen_state'])

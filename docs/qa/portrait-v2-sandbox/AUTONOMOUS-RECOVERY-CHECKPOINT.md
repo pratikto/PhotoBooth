@@ -1,3 +1,10 @@
+# 9 November — BUG-048 remote ticket privacy clock
+
+Genuine native rendering now starts30s immediately, independently of backend
+visible ACK. A delayed-ACK regression first FAILed;12 related native PASS after
+correction. [Exact source and evidence](BUG048-REMOTE-TICKET-VISIBILITY-CLOCK.md). Final new-source verification
+pending; next original receipt/shared lane and full paid profile remain open.
+
 # 9 November 2026 — native original backend ticket B2
 
 Original protected paid ticket routes and typed native card/window session are

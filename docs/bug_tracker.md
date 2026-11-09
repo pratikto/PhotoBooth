@@ -1,3 +1,11 @@
+## BUG-048 — native remote ticket countdown waited for backend ACK (9 November 2026)
+
+FIXED / SOFTWARE VERIFICATION; customer profile still unmounted. Genuine card
+visibility now starts the original30s privacy clock immediately; slow backend
+ACK cannot extend the screen or reopen it. Regression first FAIL;12 related
+native PASS. [Exact failure/fix/evidence](qa/portrait-v2-sandbox/BUG048-REMOTE-TICKET-VISIBILITY-CLOCK.md).
+Full corrected-source regression/CI and commercial acceptance remain pending.
+
 ## BUG-047 — Ubuntu original vault key rejected after keyring daemon restart (9 November 2026)
 
 **Severity:** S1 protected recovery availability. **Status:** SOURCE FIXED /

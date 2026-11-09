@@ -1,0 +1,31 @@
+{
+  "base": "65208c3082513bcdbcd88b361ecbe70986a647e4",
+  "sha256": {
+    "photobooth/kiosk_v2/post_preview_remote_ticket.py": "ccd8d7ff217b919b3fceaa3099296007631bea58e7ad2421fde83fc9a1c4e9a6",
+    "tests/test_post_preview_remote_ticket_view.py": "488e16dd4644af427b8e10a99b747c5086680098198dee6ccf833d9364c48fda"
+  },
+  "before": {
+    "run": 1,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 1.462
+  },
+  "after": {
+    "run": 12,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 8.548
+  },
+  "command": "xvfb-run -a .venv/bin/python tools/run_kiosk_unittests.py test_post_preview_remote_ticket_view test_post_preview_ticket_view test_post_preview_ticket_window",
+  "logs_sha256": {
+    "ack-clock-before.txt": "b61fa21f426aad565319df53ecc174b879219f63cc08ef5d50c36755269eea8c",
+    "ack-clock-after.txt": "e11d4c504902c7beca5c0043f7c68c08dd885737bdb1d3a524641b811e98ab50"
+  },
+  "limits": [
+    "Component not mounted in customer launcher",
+    "No actual paper or merchant/device acceptance",
+    "Final corrected-source regression/CI pending"
+  ]
+}

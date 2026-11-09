@@ -1,3 +1,8 @@
+> **Subsequent BUG-048 correction:** [genuine-render clock now independent of
+> backend ACK latency](BUG048-REMOTE-TICKET-VISIBILITY-CLOCK.md). The original
+> B2 execution record below retains its source65208c3 scope; the corrected native
+> session starts its timer at the genuine UI callback, then ACKs independently.
+
 # PP-04 B2 original backend Recovery Ticket and native card
 
 9 November 2026; feature/post-preview-qris-checkout; base79d2bb1.

@@ -52,6 +52,9 @@ class RemoteRecoveryTicketSession:
         def rendered(actual):
             if actual is offer and self._current(offer):
                 self._rendered_offer = offer
+                # Genuine UI rendering starts the privacy deadline immediately.
+                # Network acknowledgement must never extend this opportunity.
+                self.window.start(genuine_visible=True)
         self.card = PrivateRecoveryTicketCard(offer, self._qr, rendered,
                                              is_current=lambda:self._current(offer))
         self._qr = None
@@ -67,7 +70,6 @@ class RemoteRecoveryTicketSession:
             raise DraftHeld('Genuine original card rendering required')
         self.client.mark_visible(self.lease, offer)
         self._active()
-        self.window.start(genuine_visible=True)
 
     def finish(self, *, next_pressed=False):
         self._active()
