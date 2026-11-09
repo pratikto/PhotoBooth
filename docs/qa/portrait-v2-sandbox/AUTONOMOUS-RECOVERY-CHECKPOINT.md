@@ -1,12 +1,14 @@
-# 9 November — original backend/native once-only receipt B3
+# 9 November — final native ticket/once-only receipt checkpoint
 
-Original receipt RPC/shared lane and typed native worker dispatch connected.
-Same original in-memory renderer/driver, durable SENDING before I/O, no replay
-on repeat/restart/uncertainty.80 related backend +7 native PASS; actual child
-and blocked-receipt timeout/NEXT at both sizes tested with fake transports.
-[Exact evidence and next paid delivery/claim/release task](PP04-ORIGINAL-REMOTE-RECEIPT-2026-11-09.md).
-Real child printer configuration/full customer profile remain unmounted.
-New-source full regression/CI pending; commercial NOT_READY. No live paper/money.
+Runtime/tests89df55a pushed/remote-verified; local689 backend +81 native PASS.
+CI42595385433 ALL THREE SUCCESS (689 Windows/689 Ubuntu/81 native), zero
+failures/errors/skips, completed logs inspected. Original protected ticket/card/
+clock and once-only shared-lane receipt RPC/worker delivered. [Exact hashes,
+results, local-only files and FIRST unfinished paid delivery/claim/release task](PROVIDER-NATIVE-CONTINUATION-2026-11-09.md).
+Full customer launcher/real printer bootstrap configuration, paid delivery/
+recovery, refund/status/ops and actual Ubuntu/account/device/final qualification
+remain unfinished. Commercial NOT_READY. No local runtime WIP/process; work/
+artifacts not pushed. Resume source work, not this already-passing baseline.
 
 # 9 November — original backend/native ticket B2 and BUG-048
 

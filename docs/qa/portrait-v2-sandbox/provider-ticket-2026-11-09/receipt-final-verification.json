@@ -1,0 +1,117 @@
+{
+  "base": "fd0da65ad55e2cafbfe75747c81dfdfcee331fdf",
+  "date": "2026-11-09",
+  "sha256": {
+    "photobooth/post_preview_ticket_presentation.py": "782959bc54aaa756fd9db3e266e2390a24cd2498c96798d8e85f7f00c23d5c71",
+    "photobooth/post_preview_api.py": "a6b894f4a25ad49f72cc1aef50a722b3b39a5a0f993bfcaa58d04c17a5066370",
+    "photobooth/post_preview_server.py": "cac7bd15aa0774fa244fefd6fe99b767cfff63dc7433d2d9df0a5f02e9d365b8",
+    "photobooth/post_preview_proof_client.py": "e5a5064e18d2d58cfe0bf11f4ba4d7ce110a9ab64c562a850a5ff618cea911de",
+    "photobooth/kiosk_v2/post_preview_remote_ticket.py": "8f658d98d05e69aa1af7ae26f6edfc1730c312c0cdbd1924e8f9420c768bb6ac",
+    "photobooth/post_preview_ticket_receipt.py": "a29dc6a1dd0c26c09b8b97641ac996d9fbea182c7fffbdb76a8fc3a214ae86cc",
+    "tests/post_preview_host_process_fixture.py": "819eea966ce0fbedb84c5783bca4e656b87b0ec05ca9d910a66cecc7f24063b3",
+    "tests/test_post_preview_host.py": "423b4f2c917dcf32dad5f140080dbeed47759580c3558ed96946adf3d6abb8d9",
+    "tests/test_post_preview_remote_ticket_view.py": "4c8d9ab0dae5b4b8bf71724e62758f4e742998095977bcc8b9d8af98c3d0e51b",
+    "tests/test_post_preview_remote_receipt.py": "7a113ee1f34022dd5e4eaa1ad3f571e96aa1f13fc3f872bac4271046523813fc",
+    "tests/test_post_preview_remote_receipt_view.py": "f9f0b3ed6c1a2334b1864f8822f0ebbdf2af39a309fa4a1cf7669f19fbe13400",
+    ".github/workflows/post-preview-qris.yml": "553ef61b5be8c4dd8ebc8d9162ab0f7cc4410400e189dd131f63b440b4bf9dcb"
+  },
+  "before": {
+    "run": 5,
+    "errors": 5,
+    "failures": 0,
+    "seconds": 2.0,
+    "reason": "Missing printer presentation constructor seam"
+  },
+  "backend": {
+    "run": 80,
+    "seconds": 52.694,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "command": ".venv/bin/python tools/run_kiosk_unittests.py test_post_preview_remote_receipt test_post_preview_ticket_presentation test_post_preview_ticket_receipt test_post_preview_api test_post_preview_host"
+  },
+  "native": {
+    "run": 7,
+    "seconds": 9.356,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "command": "xvfb-run -a .venv/bin/python tools/run_kiosk_unittests.py test_post_preview_remote_receipt_view test_post_preview_remote_ticket_view"
+  },
+  "log_sha256": {
+    "receipt-before.txt": "ee237aeefbbd4abbb9300e375d4dfc1886e664253ae5f28f8a5b91a174d16149",
+    "receipt-related-final.txt": "04572b6f27f898ad78dcb831b1f6779143c0e28dc9aa67fa7da4184dc2f17437",
+    "receipt-native-final.txt": "77359e84c957e5384fe0a4a2d78a8d3cb719c2d7b71575fb9ac7cee463538143"
+  },
+  "runtime_driver": "Original ThermalPrinter/python-escpos3.1 real bitmap raster, fake network/USB transports only",
+  "limits": [
+    "Controlled provider/Drive/Linux custody and fake printer transports; actual native card/child HTTP/original printer raster",
+    "Full customer launcher and real printer configuration not mounted",
+    "Paid delivery/claim/release, refund/status/operating package and supported Ubuntu restore source remain unfinished",
+    "Actual merchant/device/final measured qualification and production acceptance not complete"
+  ],
+  "runtime_test_source": "89df55a2e885a58ba81a08262ad974211b681407",
+  "full_local": {
+    "backend": {
+      "run": 689,
+      "seconds": 328.144,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "native": {
+      "run": 81,
+      "seconds": 252.645,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "ci": {
+    "run_id": 42595385433,
+    "source": "89df55a2e885a58ba81a08262ad974211b681407",
+    "status": "COMPLETED SUCCESS",
+    "all_completed_logs_inspected": true,
+    "jobs": {
+      "windows": {
+        "job_id": 129086644127,
+        "run": 689,
+        "seconds": 501.674,
+        "status": "SUCCESS",
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "ubuntu": {
+        "job_id": 129086644054,
+        "run": 689,
+        "seconds": 238.957,
+        "status": "SUCCESS",
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "native": {
+        "job_id": 129086643699,
+        "run": 81,
+        "seconds": 176.375,
+        "status": "SUCCESS",
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "commercial": "NOT_READY",
+  "processes": "No local test/backend/keyring/qualification processes; remote CI complete.",
+  "local_only": "Untracked work/ synthetic logs/drivers/display tools/caches, not pushed.",
+  "next_source": "Original backend Sandbox paid Drive/strip/upload authority, typed native delivery client, proof-gated claim/release and complete protected launcher/real printer bootstrap configuration.",
+  "full_commands": [
+    "python tools/run_kiosk_unittests.py test_post_preview_store test_post_preview_photos test_post_preview_checkout test_post_preview_resources test_post_preview_worker test_post_preview_idle test_credential_vault test_post_preview_ccp test_post_preview_payments test_post_preview_api test_post_preview_host test_post_preview_presentation test_post_preview_ticket_presentation test_post_preview_remote_receipt test_post_preview_payment_crashes test_post_preview_process_crash test_post_preview_protected_restore test_post_preview_checkout_worker test_post_preview_lifecycle_worker test_post_preview_readiness test_post_preview_drive_readiness test_post_preview_paid_drive test_post_preview_paid_media test_post_preview_paid_strips test_post_preview_paid_print test_post_preview_paid_upload_status test_post_preview_paid_delivery test_post_preview_checkout_delivery test_post_preview_journey_matrix test_post_preview_pilot_launcher test_post_preview_pilot_preflight test_post_preview_device_entry test_post_preview_pilot_early_root test_post_preview_isolation test_post_preview_pilot_admission test_post_preview_refund_assessment test_post_preview_refund_simulation test_post_preview_claim test_post_preview_authority test_post_preview_ticket test_post_preview_ticket_receipt test_post_preview_ticket_window test_post_preview_checkout_ticket test_booth_sync test_booth_storage test_apps_script_drive test_retention_readiness test_checkout_backend test_checkout_durability test_payment_quote test_workflow test_capture_journal test_photo_reconstruction",
+    "xvfb-run -a python tools/run_kiosk_unittests.py test_post_preview_widgets test_post_preview_checkout_widgets test_post_preview_native_journeys test_post_preview_pilot_runtime test_post_preview_ticket_view test_post_preview_remote_ticket_view test_post_preview_remote_receipt_view test_ccp_view test_qr_code test_kiosk_v2_photos test_kiosk_v2_flow"
+  ],
+  "full_log_sha256": {
+    "receipt-full-backend.txt": "920c0d7437f9ee36ece4a920f2d3ca9262322dc046ad4db1ab19903a92231151",
+    "receipt-full-native.txt": "4ac2d87399e06ba8d5f2c335fecbd49c60eb93c040d7bb73988724efd4a69a12"
+  }
+}

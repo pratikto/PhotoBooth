@@ -1,3 +1,63 @@
+# 9 November — FINAL PUSHED native ticket/receipt checkpoint
+
+Runtime/tests **89df55a2e885a58ba81a08262ad974211b681407**; later documentation
+HEAD. Work ONLY feature/post-preview-qris-checkout; Ubuntu mini-PC target,
+Windows preserved. Commercial **NOT_READY**. User requests immediate checkpoint
+before usage limit; do not start another large source task in this session.
+
+Delivered and micro-pushed:65208c3 original backend/native Recovery Ticket card/
+window;3ea1d8c BUG-048 genuine-render clock independent of delayed backend ACK;
+89df55a original once-only receipt API/client/worker using original in-memory
+renderer/ThermalPrinter/shared lane. Auth/current owner/role/generation enforced;
+SENDING before I/O; repeats/restarts observe the same job without resend;
+UNCERTAIN never becomes paper success. Genuine30s/NEXT wipes while receipt blocks.
+Actual separate-child/HTTP/native-card/original-driver tests use explicit fake
+provider/Drive/Linux custody/printer transports, no actual money/paper/cloud.
+
+Local full: **689 backend PASS (328.144s),81 native PASS (252.645s)**, zero
+failures/errors/skips. [CI42595385433](https://github.com/pratikto/PhotoBooth/actions/runs/42595385433)
+at exact89df55a **ALL THREE SUCCESS**:689 Windows (501.674s),689 Ubuntu (238.957s),
+81 native (176.375s); all three completed logs inspected. Original owner check-only
+and screenshot steps also passed. [Exact source hashes/commands/evidence](provider-ticket-2026-11-09/receipt-final-verification.json).
+Do not rerun this successful baseline merely to resume.
+
+**First unfinished source task:** mount original backend Sandbox paid Drive/
+approved-strip/upload authority and a scoped native delivery client. Review
+post_preview_paid_drive/media/strips/print/delivery and original constructors
+first; reuse shared original core through explicit backend authority. Never put
+a dummy provider in GUI or simply remove mock-only guards. B3 already provides
+the shared receipt lane; keep the same lane for purchased strips, original
+SENDING/UNCERTAIN quarantine, verified individual Drive URL and exact frozen
+photos/copies. Then proof-gated fresh-PAID claim/WAIT/FREE/PREPARE/ACK release,
+complete protected native customer launcher and real printer configuration in
+child bootstrap/readiness. Bind original collector; stop=False cannot free booth.
+
+Native owner launcher remains mock-only; factory health fulfillment_enabled=False.
+B3 supports trusted printer dependency injection, but real printer configuration
+is not mounted in default host/launcher. These are unfinished SOURCE tasks, not
+hardware excuses. Actual refund/status/operating package and supported Ubuntu
+worker restore remain open; actual merchant/Drive/printer/mini-PC/login/reboot/
+encrypted backup, full PP/UAH and final measured2h/separate4h acceptance remain
+unproven. No production approval inferred. Preserve owner's eleven prior checks;
+prior R4 1,848.279s is not a completed2h qualification.
+
+All completed source is pushed. No runtime WIP or active local test/backend/
+qualification/keyring process remains; remote CI completed. Untracked work/
+contains synthetic logs/drivers/display packages/Kivy caches and prior lab
+artifacts, NOT pushed/portable. No credentials, proof images, ciphertext,
+customer data or raw operational logs committed. Preserve original ledger/WAL/
+SHM, host context, OS custody/media, PAID/OWED and original Drive/print jobs.
+Rollback scoped source only; no replacement roots/keys/proofs or uncertain replay.
+
+[Receipt scope](PP04-ORIGINAL-REMOTE-RECEIPT-2026-11-09.md) ·
+[Ticket scope](PP04-NATIVE-REMOTE-TICKET-2026-11-09.md) ·
+[BUG-048](BUG048-REMOTE-TICKET-VISIBILITY-CLOCK.md) ·
+[Approved flow](POST-PREVIEW-QRIS-OWNER-APPROVED.md).
+
+---
+
+Earlier dated source checkpoints below retain historical scope.
+
 > **Later B3 increment:** original receipt/shared-lane RPC and native dispatch are
 > connected; [exact new scope, verification and next source action](PP04-ORIGINAL-REMOTE-RECEIPT-2026-11-09.md).
 > Real printer configuration/full customer profile and paid delivery/claim/release

@@ -1,3 +1,11 @@
+> **Final exact-source verification:** source89df55a; local689 backend PASS
+> (328.144s) +81 native PASS (252.645s), zero failures/errors/skips.
+> CI42595385433 all three SUCCESS:689 Windows (501.674s),689 Ubuntu (238.957s),
+> 81 native (176.375s); all completed logs inspected. Original owner check-only
+> and screenshot steps passed; real merchant/device acceptance remains separate.
+> [Final source hashes/commands/results and continuation](provider-ticket-2026-11-09/receipt-final-verification.json).
+> Earlier publication-time pending statements below retain their original scope.
+
 # PP-04 B3 original receipt RPC and shared printer lane
 
 9 November 2026, feature/post-preview-qris-checkout; basefd0da65.
