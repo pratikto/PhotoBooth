@@ -36,5 +36,20 @@
       "paid-status-452x9000001.png": "49cda9e03c382d3efca9ca64953bfbcc7d2c3fa3e9f1669b929e2931f2e75105"
     },
     "external_effects": "Fake only; no production launcher or protected claim/release mounting"
+  },
+  "B5_C": {
+    "base": "43b4c2a2b1a3832f047a224a71d32f80ab251ea2",
+    "run": 1,
+    "seconds": 3.279,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "command": "python tools/run_kiosk_unittests.py test_post_preview_protected_widgets.ProtectedNativeWidgetTests.test_actual_separate_backend_child_to_native_original_paid_delivery",
+    "log_sha256": "dba852cb0a64772a0818594f6d2e6f1c24cc0a2658eb82a28fd16089584377f6",
+    "source_sha256": {
+      "tests/post_preview_host_process_fixture.py": "468eb30d6dce6bf84de20323404ccac08cd5f7d894e667e17fec309ec0faebb9",
+      "tests/test_post_preview_protected_widgets.py": "4bb9f6694001dfc90504c182cd2c1749a6757b3640d80068d7d5609c071fb3ec"
+    },
+    "profile": "Actual separate child/loopback HTTP/native original card/paid folder/batch; fake provider, Drive, Linux key lookup, printer; external uploader scheduling stubbed"
   }
 }

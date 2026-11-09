@@ -199,5 +199,78 @@ class ProtectedNativeWidgetTests(unittest.TestCase):
                 ProtectedCheckoutApp(f.root,private_service=f.service,synthetic_pay_callback=lambda _:None)
             self.assertFalse(f.http.get('/api/postpay/health').json()['fulfillment_enabled'])
 
+    def test_actual_separate_backend_child_to_native_original_paid_delivery(self):
+        import hashlib
+        import requests
+        import numpy as np
+        from photobooth.catalog import get_templates
+        from photobooth.post_preview_checkout import ChargeReadiness
+        from photobooth.post_preview_client import PostPreviewClient
+        from photobooth.kiosk_v2.post_preview_protected_checkout import ProtectedCheckoutService
+        from tests.test_post_preview_host import SandboxHostTests
+        helper=SandboxHostTests(methodName='runTest');self.addCleanup(helper.doCleanups)
+        with helper.temporary() as directory,patch.dict(os.environ,{
+                'PHOTOBOOTH_V2_CHECKOUT_SANDBOX':'0','PHOTOBOOTH_V2_CHECKOUT_MOCK':'0',
+                'PHOTOBOOTH_V2_PRINT':'0','PHOTOBOOTH_V2_DRIVE':'0',
+                'PHOTOBOOTH_AUDIO':'0','PHOTOBOOTH_AD_VIDEO':'0'}):
+            config=helper.config(directory,server_key='Mid-server-DELIVERY-FIXTURE')
+            process=helper.launch(config)
+            http=requests.Session();http.trust_env=False
+            client=PostPreviewClient(process.endpoint,'PB001',config.booth_token,
+                                    allow_local_http=True,session=http)
+            self.addCleanup(client.close)
+            service=ProtectedCheckoutService(config.private_root,payment_client=client,
+                                              qr_loader=lambda _:None)
+            self.addCleanup(service.ledger.close)
+            templates=get_templates()
+            service.start(templates,{'template_a':2})
+            frame=np.zeros((32,48,3),dtype=np.uint8)
+            def shot():
+                view=service.snapshot()
+                service.capture(frame,view['capture_slot'],view['revision'],view['retake'],view['generation'])
+            for _ in range(3):shot()
+            service.retake(1);frame[:,:,1]=200;shot()
+            service.compose();service.next()
+            preview=service.snapshot()
+            intent=service.checkout.freeze(service.lease,templates,revision=preview['revision'],
+                expected_amount=15000,readiness=ChargeReadiness(True,True,True,True,True,True,True,25))
+            group=intent['purchase_group_id']
+            hashes={str(p.relative_to(service.root)):hashlib.sha256(p.read_bytes()).hexdigest()
+                    for p in service.photos.root.rglob('*.jpg')}
+            Window.size=(452,900)
+            camera=Mock();camera.read.return_value=frame;camera.preview.return_value=None
+            app=ProtectedCheckoutApp(service.root,private_service=service,camera_device=camera)
+            try:
+                app.build();app.root=app.stage;Window.add_widget(app.stage)
+                app._photo_view=preview;app.navigation.page=RESULT;app._show()
+                app._photo_submit('accept_frozen_checkout',group)
+                self.idle(app,lambda:app._photo_view.get('phase')=='checkout_ready')
+                self.click(app,'SUDAH SIMPAN BUKTI • LANJUT QRIS')
+                # This existing child transport settles on its independent GET,
+                # including the GET performed immediately after CREATE. Do not
+                # invent a mandatory intervening PENDING screen.
+                self.idle(app,lambda:app._photo_view.get('phase')=='ticket_visible')
+                self.assertEqual('settlement',service.ledger.db.execute(
+                    'SELECT last_provider_state FROM pp_payment_attempts').fetchone()[0])
+                self.click(app,'LANJUT • SIMPAN TIKET')
+                self.idle(app,lambda:bool((app._photo_view.get('delivery') or {}).get('print_all_submitted')))
+                self.idle(app)
+                self.assertEqual('2',(config.private_root/'fixture-output-send-count').read_text())
+                self.assertFalse(app._photo_view['delivery']['physical_paper_verified'])
+                self.assertFalse(app._photo_view['delivery']['drive_verified'])
+                self.assertEqual(1,service.ledger.db.execute('SELECT COUNT(*) FROM pp_payment_attempts').fetchone()[0])
+                self.assertEqual(1,service.ledger.db.execute('SELECT COUNT(*) FROM pp_ticket_credentials').fetchone()[0])
+                self.assertEqual(1,service.ledger.db.execute('SELECT retake_consumed FROM pp_templates').fetchone()[0])
+                self.assertEqual(hashes,{str(p.relative_to(service.root)):hashlib.sha256(p.read_bytes()).hexdigest()
+                    for p in service.photos.root.rglob('*.jpg')})
+                self.assertEqual(intent['contract_sha256'],service.ledger.db.execute(
+                    'SELECT contract_sha256 FROM pp_checkout_intents').fetchone()[0])
+                self.assertTrue(process.stop(timeout=10))
+                self.assertEqual('OWED',service.ledger.db.execute('SELECT status FROM pp_paid_services').fetchone()[0])
+            finally:
+                app._photo_jobs.wait_closed(12);app.on_stop()
+                if app.stage.parent:Window.remove_widget(app.stage)
+                app._photo_jobs.wait_closed(12);service.wait_closed(12)
+
 
 if __name__=='__main__':unittest.main()

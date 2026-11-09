@@ -102,3 +102,29 @@ claim and exact collector/camera/file/print/upload release with PREPARE/ACK;
 protected freeze and trusted launcher/configuration remain gated. This native
 increment is not full merchant/customer or commercial readiness. Full changed-
 source regression and exact-source CI remain pending.
+
+## B5-C actual child/HTTP/native boundary
+
+One additional actual separate backend-child/loopback HTTP/native proof/card/
+original receipt/folder/purchased-strip journey PASS3.279s. Native captures three
+originals and one selected-slot retake, freezes the same original approved quote,
+then original protected backend authority permits genuine ticket and exactly one
+receipt plus one two-copy purchased batch. Contract hash and all raw/retaken JPEG
+hashes survive unchanged, one attempt/ticket, upload remains pending/OWED; actual
+backend shutdown succeeds after original requests finish. Test-only assembly
+injects fake provider/Drive/Linux key lookup/printer and stubs external uploader
+scheduling; no production runtime test switch or merchant launcher was added.
+
+First child test failed readiness because its isolated workspace reserve state
+was unprepared. Explicit fixture preparation repaired that missing prerequisite.
+Next two attempts wrongly required an intermediate PENDING screen: this existing
+child fake settles on the independent GET immediately after CREATE. The final
+test requires actual independent settlement instead of inventing a visible
+PENDING period. No product settlement/readiness/pacing guards changed.
+
+All B5 runtime is published; B5-C test fixture now also pushed. NEXT source:
+original protected proof-gated claim/recovery and exact collector/PhotoJobs/
+camera/receipt/strip/upload PREPARE/local receipt/ACK handoff. Do not use mock
+admission or proofless reopening. Protected freeze and full trusted launcher/
+printer/configuration remain explicitly unmounted; new-customer admission holds.
+Final changed-source registered regression/CI will be recorded separately.

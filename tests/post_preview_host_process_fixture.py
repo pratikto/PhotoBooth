@@ -55,11 +55,12 @@ def assembled(checkout,templates,bridge,drive,**kwargs):
                 'url':'https://api.sandbox.midtrans.com/v4/qris/fixture_'+order+'/qr-code'}])
         return io.BytesIO(json.dumps(payload).encode())
     kwargs['provider_transport']=transport
-    if kwargs['server_key']=='Mid-server-RECEIPT-FIXTURE':
+    delivery_fixture=kwargs['server_key']=='Mid-server-DELIVERY-FIXTURE'
+    if kwargs['server_key']=='Mid-server-RECEIPT-FIXTURE' or delivery_fixture:
         import threading
         from photobooth.printer import PrinterConfig,ThermalPrinter
         root=checkout.photos.root.parent
-        count=root/'fixture-ticket-send-count'
+        count=root/('fixture-output-send-count' if delivery_fixture else 'fixture-ticket-send-count')
         def send(_host,_port,_payload):
             # Only a non-secret count persists; no bitmap, bytes or proof.
             count.write_text(str((int(count.read_text()) if count.exists() else 0)+1))
@@ -68,10 +69,28 @@ def assembled(checkout,templates,bridge,drive,**kwargs):
         kwargs['receipt_printer']=ThermalPrinter(PrinterConfig(lan_host='fixture-printer'),
             network_sender=send,usb_sender=no_usb)
         kwargs['printer_lane']=threading.Lock()
+    if delivery_fixture:
+        from types import SimpleNamespace
+        drive.workspace.prepare()  # Explicit isolated fixture reserve state.
+        def post(_url,**request):
+            body=request['json']
+            assert body['action']=='bind_transaction'
+            folder='syntheticChildB5_'+body['transaction_id']
+            return SimpleNamespace(status_code=200,json=lambda:dict(ok=True,storage_layout=2,
+                photo_number_layout=1,transaction_id=body['transaction_id'],folder_id=folder,
+                folder_url='https://drive.google.com/drive/folders/'+folder,link_verified=True))
+        drive.client.session=SimpleNamespace(post=post)
+        kwargs['paid_delivery_enabled']=True
+        kwargs['background_worker']=False  # Settlement is explicitly driven by this fixture.
     if kwargs['server_key']=='Mid-server-HTTP-HOLD-FIXTURE':kwargs['background_worker']=False
     drive.client.storage_readiness=lambda slots:{'drive_api':'READY','drive_sharing':'READY',
                                                  'capacity_state':'READY'}
     app=original(checkout,templates,bridge,drive,**kwargs)
+    if delivery_fixture:
+        # No external uploading in this native/process transport fixture.
+        # Original worker lifetime is covered by the independent B4 tests.
+        app.state.paid_delivery.worker.start=lambda:None
+        app.state.paid_delivery.worker.notify_transaction=lambda _:None
     if kwargs['server_key']=='Mid-server-HOLD-FIXTURE':
         stop=app.state.lifecycle_worker.stop
         release=checkout.photos.root.parent/'fixture-release'
