@@ -1,0 +1,25 @@
+{
+  "base": "71d816026093f9ccb1f5994ed8b43a0c2b8a3009",
+  "stage": "A1 stable backend runtime; child process not yet mounted",
+  "focused": {
+    "run": 96,
+    "seconds": 28.508,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "command": ".venv/bin/python tools/run_kiosk_unittests.py test_post_preview_host test_post_preview_api test_post_preview_authority test_post_preview_readiness test_post_preview_ccp",
+    "report_sha256": "0f9716aa9e3697d3a9bf46e8f6778b2d0d9995e85f5a1ea5a934757bd6a5198d"
+  },
+  "test_first": "new host import failed before implementation: 1 ERROR/0 FAIL/0 SKIP",
+  "source_sha256": {
+    "photobooth/post_preview_host.py": "14f5668e5e7ceac6eb282d59b01f4c8dea562a8d30dd2a32911f578013d0112c",
+    "tests/test_post_preview_host.py": "f75237f9d20fe6b53376c6e49d1f2d17e9eea206747f7ac2a2d18958f90ed938",
+    ".github/workflows/post-preview-qris.yml": "81a82cb880080813dabbfbb080a3da966830db2adc35952245672521e50d0235"
+  },
+  "limits": [
+    "No listener/child/native provider mounting yet",
+    "No real merchant/Drive/paper request",
+    "Linux custody in host fixture mocked; prior actual keyring evidence retained",
+    "Full final-source regression and current CI pending"
+  ]
+}

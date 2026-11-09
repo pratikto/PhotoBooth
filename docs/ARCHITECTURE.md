@@ -1,3 +1,10 @@
+# 9 November — separately owned original post-preview host
+
+post_preview_host reconstructs original checkout over stable merchant/booth
+ledger/media, holds independent backend kernel ownership and mounts the existing
+Sandbox app factory without a listener. Child/native mounting remains next.
+[Source/evidence](qa/portrait-v2-sandbox/PP04-CHILD-BACKEND-BOOTSTRAP-2026-11-09.md).
+
 # Meong Photobooth — GUI v2 architecture
 
 > **Current post-preview continuation — 4 November 2026:** Work stays on existing `feature/post-preview-qris-checkout`. Start with the [current device guide](qa/portrait-v2-sandbox/POST-PREVIEW-DEVICE-TEST-START-HERE.md), [source-specific evidence and known limits](qa/portrait-v2-sandbox/PP07-DEVICE-READINESS-2026-11-04.md), and [112-case / AR traceability](qa/portrait-v2-sandbox/PP07-SOFTWARE-TRACEABILITY-2026-11-04.md). The later implementation and evidence record takes precedence over older status snapshots below; approved policy and dated history remain preserved. The owner pilot uses synthetic payment. Actual merchant Sandbox, protected cross-process recovery, physical acceptance and production are separate gates. No prior test root, uncertain print or PAID/OWED may be reset to bypass them.

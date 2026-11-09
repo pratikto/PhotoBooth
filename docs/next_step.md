@@ -1,3 +1,12 @@
+# 9 November 2026 — provider child-host ownership A1
+
+Stable original Sandbox runtime/ledger/media and independent kernel ownership
+are implemented. **96 focused PASS**, zero failure/error/skip. Child bootstrap
+and protected native provider facade remain next, not already delivered.
+[Current increment and exact continuation](qa/portrait-v2-sandbox/PP04-CHILD-BACKEND-BOOTSTRAP-2026-11-09.md).
+Full final-source regression/current CI remain pending. No live account/device
+operation or production approval; prior provider/Ubuntu evidence preserved.
+
 # 9 November 2026 — final provider/Ubuntu software checkpoint
 
 [Current exact continuation and remaining implementation](qa/portrait-v2-sandbox/PROVIDER-UBUNTU-CONTINUATION-2026-11-09.md):
