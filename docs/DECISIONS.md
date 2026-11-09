@@ -1,3 +1,11 @@
+# 9 November 2026 — commercial booth target confirmed
+
+The owner explicitly confirms **Ubuntu on the mini PC** as the commercial
+deployment target. Preserve Windows development/support and its existing
+evidence. This supersedes generic Windows-booth assumptions in dated summaries;
+Android remains outside the current scope. Ubuntu OS-key custody/startup/reboot
+and device acceptance must be verified independently.
+
 # 8 November 2026 — paid results automatically return after 30 seconds
 
 Owner explicitly requires **30 seconds on the paid results screen, then automatic

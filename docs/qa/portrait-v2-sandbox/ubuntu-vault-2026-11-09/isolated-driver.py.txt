@@ -1,0 +1,68 @@
+import json,os,subprocess,sys,time
+from pathlib import Path
+root=Path('/workspace/work/keyring-lab')
+env=dict(os.environ)
+env.update(XDG_RUNTIME_DIR=str(root/'runtime'),XDG_DATA_HOME=str(root/'data'),
+ XDG_CONFIG_HOME=str(root/'config'),XDG_CACHE_HOME=str(root/'cache'),
+ DBUS_SESSION_BUS_ADDRESS='unix:path='+str(root/'runtime'/'bus'),
+ LD_LIBRARY_PATH=str(root/'extracted/usr/lib/x86_64-linux-gnu'),GSETTINGS_BACKEND='memory')
+for name in ['data','config','cache']: (root/name).mkdir(exist_ok=True,mode=0o700)
+python='/workspace/work/PhotoBooth/.venv/bin/python'
+helper=root/'exercise.py'
+helper.write_text('''import sys,json,base64,hashlib
+from pathlib import Path
+from photobooth.linux_credential_vault import LinuxSecretServiceProtector,_collection
+from photobooth.credential_vault import ProtectedCredential,VaultUnavailable
+from photobooth.post_preview_store import PostPreviewStore
+root=Path('/workspace/work/keyring-lab')
+action=sys.argv[1]
+try:
+ if action=='ready':
+  with _collection():pass
+ elif action=='provision':
+  ledger=PostPreviewStore(root/'fixture.sqlite3')
+  try:LinuxSecretServiceProtector.provision(ledger=ledger)
+  finally:ledger.close()
+ elif action=='seal':
+  vault=LinuxSecretServiceProtector();value=vault.protect(b'ephemeral-keyring-selftest',b'fixture/PB001/group/CCP')
+  (root/'original.protected.json').write_text(json.dumps({'id':value.protector_id,'cipher':base64.b64encode(value.ciphertext).decode()}))
+ elif action in {'open','wrong-scope'}:
+  data=json.loads((root/'original.protected.json').read_text())
+  value=LinuxSecretServiceProtector().unprotect(ProtectedCredential(data['id'],base64.b64decode(data['cipher'])),b'fixture/PB001/group/CCP' if action=='open' else b'foreign/order')
+  if value!=b'ephemeral-keyring-selftest':raise RuntimeError('Wrong original fixture')
+ elif action=='lock':
+  from secretstorage.util import DBusAddressWrapper
+  with _collection() as collection:
+   service=DBusAddressWrapper('/org/freedesktop/secrets','org.freedesktop.Secret.Service',collection.connection)
+   service.call('Lock','ao',[collection.collection_path])
+ print(json.dumps({'state':'PASS','action':action}))
+except VaultUnavailable:
+ print(json.dumps({'state':'VAULT_UNAVAILABLE','action':action}));raise SystemExit(78)
+''')
+env['PYTHONPATH']='/workspace/work/PhotoBooth'
+processes=[];records=[]
+with (root/'bus.log').open('w') as buslog,(root/'keyring.log').open('w') as keylog:
+ try:
+  bus=subprocess.Popen(['dbus-daemon','--session','--nofork','--address='+env['DBUS_SESSION_BUS_ADDRESS']],env=env,stdout=buslog,stderr=buslog);processes.append(bus)
+  until=time.monotonic()+3
+  while not (root/'runtime'/'bus').exists() and time.monotonic()<until:time.sleep(.03)
+  daemon=subprocess.Popen([str(root/'extracted/usr/bin/gnome-keyring-daemon'),'--foreground','--components=secrets','--control-directory='+str(root/'runtime'/'keyring'),'--unlock'],env=env,stdin=subprocess.PIPE,stdout=keylog,stderr=keylog);processes.append(daemon)
+  daemon.stdin.write(b'MEONG-EPHEMERAL-TEST-ONLY');daemon.stdin.close()
+  until=time.monotonic()+5
+  while True:
+   ready=subprocess.run([python,str(helper),'ready'],env=env,capture_output=True,text=True,timeout=4)
+   if ready.returncode==0:break
+   if time.monotonic()>until:raise RuntimeError('Isolated Secret Service did not become ready')
+   time.sleep(.05)
+  for action,expected in [('provision',0),('seal',0),('open',0),('open',0),('wrong-scope',78),('lock',0),('open',78)]:
+   result=subprocess.run([python,str(helper),action],env=env,capture_output=True,text=True,timeout=5)
+   records.append({'action':action,'exit':result.returncode,'expected_exit':expected,'result':result.stdout.strip()})
+   if result.returncode!=expected:raise RuntimeError('Isolated keyring case failed: '+action)
+  print(json.dumps({'state':'PASS','cases':records}))
+ finally:
+  for process in reversed(processes):
+   if process.poll() is None:
+    process.terminate()
+    try:process.wait(timeout=3)
+    except subprocess.TimeoutExpired:process.kill();process.wait(timeout=3)
+  (root/'results.json').write_text(json.dumps({'cases':records,'processes_stopped':all(p.poll() is not None for p in processes)},indent=2)+'\n')
