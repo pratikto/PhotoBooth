@@ -25,7 +25,7 @@
   },
   "local_full_at_runtime_source": {
     "backend": {
-      "command": "python tools/run_kiosk_unittests.py (complete registered backend module list)",
+      "command": "python tools/run_kiosk_unittests.py test_post_preview_store test_post_preview_photos test_post_preview_checkout test_post_preview_resources test_post_preview_worker test_post_preview_idle test_credential_vault test_post_preview_ccp test_post_preview_payments test_post_preview_api test_post_preview_host test_post_preview_presentation test_post_preview_payment_crashes test_post_preview_process_crash test_post_preview_protected_restore test_post_preview_checkout_worker test_post_preview_lifecycle_worker test_post_preview_readiness test_post_preview_drive_readiness test_post_preview_paid_drive test_post_preview_paid_media test_post_preview_paid_strips test_post_preview_paid_print test_post_preview_paid_upload_status test_post_preview_paid_delivery test_post_preview_checkout_delivery test_post_preview_journey_matrix test_post_preview_pilot_launcher test_post_preview_pilot_preflight test_post_preview_device_entry test_post_preview_pilot_early_root test_post_preview_isolation test_post_preview_pilot_admission test_post_preview_refund_assessment test_post_preview_refund_simulation test_post_preview_claim test_post_preview_authority test_post_preview_ticket test_post_preview_ticket_receipt test_post_preview_ticket_window test_post_preview_checkout_ticket test_booth_sync test_booth_storage test_apps_script_drive test_retention_readiness test_checkout_backend test_checkout_durability test_payment_quote test_workflow test_capture_journal test_photo_reconstruction",
       "run": 672,
       "failures": 0,
       "errors": 0,
@@ -33,7 +33,7 @@
       "seconds": 292.753
     },
     "native": {
-      "command": "xvfb-run -a python tools/run_kiosk_unittests.py (complete registered native module list)",
+      "command": "xvfb-run -a python tools/run_kiosk_unittests.py test_post_preview_widgets test_post_preview_checkout_widgets test_post_preview_native_journeys test_post_preview_pilot_runtime test_post_preview_ticket_view test_ccp_view test_qr_code test_kiosk_v2_photos test_kiosk_v2_flow",
       "run": 74,
       "failures": 0,
       "errors": 0,
@@ -94,9 +94,42 @@
   "ci_current": {
     "run_id": 42580705346,
     "source": "c096504ed87259cd49c5aacd9cab73906a6b5646",
-    "status": "IN_PROGRESS"
+    "status": "COMPLETED SUCCESS",
+    "logs_inspected": true,
+    "jobs": {
+      "windows": {
+        "job_id": 129038455316,
+        "status": "SUCCESS",
+        "run": 672,
+        "seconds": 648.69,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "owner_entry_check_only": "READY_FOR_SUPERVISED_SYNTHETIC_PILOT"
+      },
+      "ubuntu": {
+        "job_id": 129038455131,
+        "status": "SUCCESS",
+        "run": 672,
+        "seconds": 171.647,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "native": {
+        "job_id": 129038454912,
+        "status": "SUCCESS",
+        "run": 74,
+        "seconds": 149.791,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "owner_entry_check_only": "READY_FOR_SUPERVISED_SYNTHETIC_PILOT",
+        "original_screenshot_steps": "SUCCESS"
+      }
+    }
   },
-  "local_processes": "No active test/backend/qualification/keyring processes; CI remote only",
+  "local_processes": "No active local test/backend/qualification/keyring processes; remote CI complete.",
   "local_only": "Untracked work/: synthetic logs/drivers/display packages/Kivy caches; not pushed",
   "commercial": "NOT_READY",
   "remaining_source": [
@@ -107,5 +140,6 @@
   "external": [
     "No merchant/Drive secrets or owned device/printer route configured",
     "Target Ubuntu/account/device/legal/production acceptance not proven"
-  ]
+  ],
+  "local_command_note": "Local commands use .venv/bin/python in place of python; native uses local extracted Debian Xvfb PATH, local KIVY_HOME and the exact registered device-opt-out environment."
 }

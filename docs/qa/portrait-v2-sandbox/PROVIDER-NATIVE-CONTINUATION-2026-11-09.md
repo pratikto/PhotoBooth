@@ -37,9 +37,12 @@ Corrected exact method at c096504: **1 PASS /both portrait sizes,6.364s**,
 retains card at29.999s and requires wipe at30.000s while receipt is SENDING.
 
 [Current CI42580705346](https://github.com/pratikto/PhotoBooth/actions/runs/42580705346)
-at exact c096504 is **IN_PROGRESS**. Do not infer all-three PASS yet; inspect
-completed jobs/logs next and update this checkpoint without changing source
-merely to rerun CI. No second unchanged local broad suite is required.
+at exact c096504 is **COMPLETED SUCCESS in all three jobs**: Windows672 PASS
+(648.690s), Ubuntu672 PASS (171.647s), native74 PASS (149.791s), each zero
+failures/errors/skips. All three completed logs inspected; Windows/Linux owner
+check-only and original native screenshot steps succeeded. This does not prove
+physical paper, Drive ACL, merchant or target mini-PC acceptance. Documentation
+HEAD is later; runtime/test hashes are unchanged. No unchanged local rerun.
 [Source hashes, commands and exact status](provider-bootstrap-2026-11-09/final-verification.json).
 
 Focused scopes overlap, not acceptance percentages: A1 96, A2 105, B1 88,
@@ -67,7 +70,8 @@ record; its process/root is absent here, not a finished2h qualification.
 
 ## Exact next source action
 
-1. Finish reading current c096504 CI job logs; fix any actual failure first.
+1. Current c096504 CI is fully verified; do not rerun that successful baseline.
+   Continue the first unfinished native protected ticket increment below.
 2. Extend original backend protected presentation to OriginalRecoveryTicketService
    using the SAME actual PostPreviewPayments/protector/ledger. Add authenticated
    original-owner scoped offer/visible/dismiss/retire and connect the existing
@@ -95,7 +99,7 @@ Start with this next unfinished source action, not another general audit.
 ## Resources, rollback and cross-account handoff
 
 No local test/qualification/backend/keyring process is active at this checkpoint.
-CI above is remote and remains running. Local untracked work/ includes synthetic
+CI above is remote and has completed successfully. Local untracked work/ includes synthetic
 logs/drivers, Debian display packages/Kivy cache and earlier lab artifacts; none
 is backed up through GitHub. No safely completed runtime source remains unpushed.
 A different executor must reconstruct its own test tools; do not assume local
