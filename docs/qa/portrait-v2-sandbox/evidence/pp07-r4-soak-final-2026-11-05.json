@@ -1,0 +1,49 @@
+{
+  "status": "PASS_HISTORICAL_FINITE_SYNTHETIC_QUALIFICATION_ONLY",
+  "published_date": "2026-11-09",
+  "source_sha": "824b6ae7636578332664abf5507456338e59c8ef",
+  "runtime_sha256": "cf992cfa4d74f0c1dbc17465fbee9d53c7e87c5dccf10fb421862c0604dcd21a",
+  "original_run_runtime_unchanged": true,
+  "historical_git_object_fingerprint_reverified": true,
+  "started_utc": "2026-11-05T03:29:25.514363+00:00",
+  "ended_utc": "2026-11-05T05:29:27.593390+00:00",
+  "target_seconds": 7200,
+  "actual_seconds": 7202.079,
+  "cycles": 498,
+  "test_executions": 3486,
+  "completed_paid_visits": 5976,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "metrics": {
+    "threads": {
+      "first_cycle": 1,
+      "last_cycle": 1,
+      "min": 1,
+      "max": 1
+    },
+    "file_descriptors": {
+      "first_cycle": 5,
+      "last_cycle": 5,
+      "min": 5,
+      "max": 5
+    },
+    "rss_bytes": {
+      "first_cycle": 195522560,
+      "last_cycle": 218853376,
+      "min": 195522560,
+      "max": 223232000
+    }
+  },
+  "resource_budget_status": "NOT_SPECIFIED_NO_PERFORMANCE_ACCEPTANCE",
+  "tests": [
+    "tests.test_post_preview_journey_matrix.CustomerJourneyMatrixTests.test_j21_twelve_paid_visits_complete_without_folder_or_payment_contamination",
+    "tests.test_post_preview_refund_simulation.MockRefundProcessTests",
+    "tests.test_post_preview_refund_simulation.MockRefundWorkerFenceTests",
+    "tests.test_post_preview_refund_simulation.MockRefundLifecycleTests.test_lost_reply_and_repeated_notifications_reconcile_same_key_without_second_request"
+  ],
+  "raw_result_sha256": "7532518a65e2180451a20bf6c497fc162d103183978322f0f29732d167313bd4",
+  "raw_log_sha256": "80773b5729b003352e6760dbdbd2c3c0c43473b2446ba1777ffff8009abcc2c0",
+  "scope": "Original 5 November Linux Python batch simulation, disposable roots per cycle. Not current 9 November provider/native source, one growing DB, native GUI/device endurance, actual reboot, paper, merchant/Drive or performance acceptance.",
+  "full_acceptance_promoted": false
+}
