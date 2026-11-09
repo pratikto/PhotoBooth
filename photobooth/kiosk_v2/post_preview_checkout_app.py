@@ -18,7 +18,7 @@ from .flow import ADVERT, RESULT
 from .photo_views import image_texture
 from .post_preview_app import PrivatePreviewApp
 from .post_preview_checkout import CHECKOUT_PHASES, TICKET_PHASES, PrivateCheckoutService
-from .theme import GOLD, MUTED, text_label
+from .theme import GOLD, MUTED, PixelCard, text_label
 from photobooth.post_preview_pilot_admission import OriginalPilotAdmission
 from photobooth.post_preview_store import DraftHeld
 
@@ -530,8 +530,21 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
         else:
             payment = view.get('payment') or {}
             shell.add_widget(text_label('MENUNGGU PEMBAYARAN SIMULASI', size=19, height=65, color=GOLD))
-            if view.get('payment_qr') is not None:
-                shell.add_widget(Image(texture=image_texture(view['payment_qr']), fit_mode='contain'))
+            if phase == 'payment_pending':
+                # This service accepts only mock authority. Its white fixture
+                # image is not a payment QR; do not present a blank scanner target.
+                card = PixelCard(orientation='vertical', padding=dp(16), spacing=dp(8))
+                card.add_widget(text_label('SIMULASI PEMBAYARAN • TANPA TRANSFER',
+                                           size=20, height=90, color=GOLD))
+                card.add_widget(text_label(
+                    'QRIS asli belum terhubung. Tidak perlu scan atau transfer uang.',
+                    size=17, height=95, color=MUTED))
+                card.add_widget(text_label(
+                    'Gunakan SIMULASI PAID di bawah untuk melanjutkan uji.'
+                    if self._synthetic_pay_callback is not None else
+                    'Status diperiksa melalui penyedia simulasi.',
+                    size=15, height=85, color=MUTED))
+                shell.add_widget(card)
             else:
                 shell.add_widget(text_label('Status belum pasti. Pesanan asli tetap dilindungi.',
                                            size=18, height=120, color=MUTED))

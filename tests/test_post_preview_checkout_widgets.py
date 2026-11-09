@@ -94,6 +94,48 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
         self.settle(app)
         self.assertEqual('checkout_ready', app._photo_view['phase'])
 
+    def test_unpaid_preview_and_synthetic_payment_are_explicit_at_both_sizes(self):
+        sizes = ((452, 900), (800, 1280))
+        requested = os.environ.get('MEONG_PRIVATE_PREVIEW_SIZE')
+        if requested:
+            sizes = (tuple(map(int, requested.split('x'))),)
+        for size in sizes:
+            with self.subTest(size=size), self.booth() as (app, fixture):
+                Window.size = size
+                self.final(app)
+                labels = [getattr(w, 'text', '') for w in app.stage.walk()]
+                self.assertIn('PREVIEW FOTO', labels)
+                self.assertNotIn('STRIP KAMU SUDAH SIAP', labels)
+                self.assertIn('TOTAL Rp25.000', labels)
+                widget_helpers.PrivateWidgetTests.capture_screen(self, app, 'unpaid-preview', size)
+                self.assertEqual(0, fixture.provider.charges)
+                self.assertFalse(app._photo_view['print_available'])
+                self.click(app, 'LANJUT CHECKOUT SIMULASI')
+                self.settle(app)
+                deadline = time.monotonic() + 4
+                while app._photo_view['phase'] != 'checkout_ready' and time.monotonic() < deadline:
+                    app._poll_photos(); EventLoop.idle(); time.sleep(.01)
+                self.settle(app)
+                self.click(app, 'SUDAH SIMPAN BUKTI • LANJUT SIMULASI')
+                self.settle(app)
+                self.assertEqual('payment_pending', app._photo_view['phase'])
+                labels = [getattr(w, 'text', '') for w in app.stage.walk()]
+                self.assertIn('SIMULASI PEMBAYARAN • TANPA TRANSFER', labels)
+                self.assertIn('QRIS asli belum terhubung. Tidak perlu scan atau transfer uang.', labels)
+                widget_helpers.PrivateWidgetTests.capture_screen(self, app, 'synthetic-payment', size)
+                self.assertEqual(1, fixture.provider.charges)
+                self.assertFalse(app._photo_view['fulfillment_authorized'])
+                # A failed status request must still show uncertainty, rather
+                # than disguise it as a usable simulated payment screen.
+                with patch.object(fixture.session, 'request', side_effect=OSError('synthetic HTTP outage')):
+                    self.click(app, 'PERIKSA STATUS')
+                    self.settle(app)
+                self.assertEqual('payment_hold', app._photo_view['phase'])
+                labels = [getattr(w, 'text', '') for w in app.stage.walk()]
+                self.assertIn('Status belum pasti. Pesanan asli tetap dilindungi.', labels)
+                self.assertNotIn('SIMULASI PEMBAYARAN • TANPA TRANSFER', labels)
+                self.assertEqual(1, fixture.provider.charges)
+
     def test_native_precreate_readiness_hold_can_explicitly_retry_original_checkout(self):
         with self.booth() as (app, fixture):
             Window.size = (452, 900)

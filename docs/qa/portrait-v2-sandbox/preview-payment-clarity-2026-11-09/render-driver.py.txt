@@ -1,0 +1,26 @@
+import os,sys,time
+from pathlib import Path
+sys.path.insert(0,'/workspace/work/PhotoBooth')
+size=tuple(map(int,sys.argv[1].split('x')))
+os.environ['MEONG_PRIVATE_PREVIEW_SIZE']=sys.argv[1]
+from kivy.config import Config
+Config.set('graphics','width',str(size[0]));Config.set('graphics','height',str(size[1]))
+from kivy.core.window import Window
+from kivy.base import EventLoop
+from tests.test_post_preview_checkout_widgets import PrivateCheckoutWidgetTests
+helper=PrivateCheckoutWidgetTests(methodName='runTest')
+with helper.booth() as (app,fixture):
+ Window.size=size
+ helper.final(app)
+ for _ in range(6):EventLoop.idle()
+ Window.screenshot(name=f'/workspace/work/stage1-visual/unpaid-{size[0]}x{size[1]}.png')
+ app._synthetic_pay_callback=lambda payment:fixture.provider.state(payment['attempts'][-1]['provider_order_id'],'settlement')
+ helper.click(app,'LANJUT CHECKOUT SIMULASI');helper.settle(app)
+ deadline=time.monotonic()+5
+ while app._photo_view['phase']!='checkout_ready' and time.monotonic()<deadline:
+  app._poll_photos();EventLoop.idle();time.sleep(.01)
+ helper.settle(app)
+ helper.click(app,'SUDAH SIMPAN BUKTI • LANJUT SIMULASI');helper.settle(app)
+ for _ in range(6):EventLoop.idle()
+ Window.screenshot(name=f'/workspace/work/stage1-visual/payment-{size[0]}x{size[1]}.png')
+ print('VISUAL_SAFE_PREVIEW_AND_MOCK_ONLY',size)

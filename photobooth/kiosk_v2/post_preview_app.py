@@ -193,6 +193,11 @@ class PrivatePreviewApp(PortraitKioskV2App):
             return
         return super()._build_photo_page(canvas)
 
+    def _photo_page_brand(self):
+        if self.navigation.page == RESULT:
+            return 'PREVIEW FOTO', 'BELUM DIBAYAR • BELUM DICETAK'
+        return super()._photo_page_brand()
+
     def _build_result(self, shell):
         view = self._photo_view
         if view['phase'] == 'final_preview':

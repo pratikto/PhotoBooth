@@ -1,0 +1,37 @@
+{
+  "base": "af510d0b8fee88413a626b0d9b6377fd7ca8bc44",
+  "branch": "feature/post-preview-qris-checkout",
+  "focused": {
+    "run": 1,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 4.357
+  },
+  "affected_native": {
+    "run": 35,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 146.884,
+    "exit": 0,
+    "command": "tools/run_kiosk_unittests.py test_post_preview_widgets test_post_preview_checkout_widgets test_post_preview_native_journeys test_post_preview_pilot_runtime"
+  },
+  "limits": {
+    "Midtrans_post_preview": "NOT_INTEGRATED",
+    "paper": "NOT_RUN",
+    "Drive": "NOT_RUN",
+    "production": "NOT_READY"
+  },
+  "sha256": {
+    "photobooth/kiosk_v2/photo_views.py": "0d534a2c101ed530e01f492ac6c3cc4994c133f058dfacafb64cbe1fc3794487",
+    "photobooth/kiosk_v2/post_preview_app.py": "e3c006418e409f7760ef1e74b7f40caffdb4f0099f29f7e127f4c9328259a367",
+    "photobooth/kiosk_v2/post_preview_checkout_app.py": "69c48046aa33fdee84a6217ff171a034817c2293682ceec4644814888657d95c",
+    "tests/test_post_preview_checkout_widgets.py": "6f6962044093c25c47fd2caa36a869bf7c4a548bf7dbcca26f565e676b3af428",
+    "docs/qa/portrait-v2-sandbox/preview-payment-clarity-2026-11-09/payment-452x900.png": "583a40fed40358a427f3da1bf0ea4d145e3804c08b30147fb21cf8bb04d07158",
+    "docs/qa/portrait-v2-sandbox/preview-payment-clarity-2026-11-09/payment-800x1280.png": "21d181530e55d4145432618891f904f0464e54591691cc97048d498c6a51bf48",
+    "docs/qa/portrait-v2-sandbox/preview-payment-clarity-2026-11-09/unpaid-452x900.png": "b161277172b5c86aeb075845c2700d463323fab7ba6c6bf422ffb591e396ea98",
+    "docs/qa/portrait-v2-sandbox/preview-payment-clarity-2026-11-09/render-driver.py.txt": "1f9dda013e2186380449d474ae97769a61dff3dfa0ed3f439e4ccadfce75606d",
+    "docs/qa/portrait-v2-sandbox/preview-payment-clarity-2026-11-09/unpaid-800x1280.png": "a961f449e24024d964107439386986aec960d839ab2e1e57e825d07104898c26"
+  }
+}

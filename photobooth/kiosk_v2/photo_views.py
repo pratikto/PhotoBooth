@@ -254,15 +254,19 @@ class PhotoViews:
         if self._countdown_event is None:
             self._capture_button.disabled = not self._photo_capture_allowed() or frame is None or self._photo_jobs.busy
 
+    def _photo_page_brand(self):
+        title = {PHOTO_CONFIRM: 'UJI FOTO', CAPTURE: 'SENYUM DULU, MEONG!',
+                 REVIEW: 'PILIH MOMEN TERBAIK', RESULT: 'STRIP KAMU SUDAH SIAP'}[self.navigation.page]
+        subtitle = 'MODE UJI • QRIS SANDBOX' if self._sandbox_consent else 'MODE UJI • TANPA PEMBAYARAN'
+        return title, subtitle
+
     def _build_photo_page(self, canvas):
         self._live_image = None
         self._last_live_frame = None
         self._last_preview = None
         shell = self._frame(canvas, brand_height=65)
         page = self.navigation.page
-        title = {PHOTO_CONFIRM: 'UJI FOTO', CAPTURE: 'SENYUM DULU, MEONG!',
-                 REVIEW: 'PILIH MOMEN TERBAIK', RESULT: 'STRIP KAMU SUDAH SIAP'}[page]
-        self._brand(shell, title, 'MODE UJI • QRIS SANDBOX' if self._sandbox_consent else 'MODE UJI • TANPA PEMBAYARAN')
+        self._brand(shell, *self._photo_page_brand())
         view = self._photo_view
         if view.get('session_number'):
             shell.add_widget(text_label(

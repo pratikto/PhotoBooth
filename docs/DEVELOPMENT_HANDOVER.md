@@ -1,3 +1,14 @@
+# 9 November 2026 — unpaid preview / simulation presentation
+
+[Bounded correction and evidence](qa/portrait-v2-sandbox/PP02-PREVIEW-PAYMENT-CLARITY-2026-11-09.md):
+private preview now clearly says PREVIEW FOTO / BELUM DIBAYAR; MOCK payment
+shows no-transfer instructions instead of a white QR fixture. 35 native
+regression methods PASS, zero failures/errors/skips; four clean native views
+reviewed. Payment authority, original PAID/OWED and no-replay guards retained.
+Actual post-preview merchant integration, full A→B→A acceptance, supported
+platform recovery, devices/cloud/refund and measured qualification remain open.
+Next: complete native A→B→A across original claim and guarded admission.
+
 # 9 November 2026 — automatic post-preview purchased printing
 
 The paid-output page now advances original PREPARED strip jobs automatically

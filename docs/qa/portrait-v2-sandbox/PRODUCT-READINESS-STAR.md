@@ -75,8 +75,11 @@ be named specifically. A new source push is not release approval.
 
 BUG-046 CI 42427430090 is verified SUCCESS. The 9 November automatic-print
 increment has 598 backend + 72 native PASS and matching CI42552901917 all three
-jobs SUCCESS. Next clarify the remaining stage-1 unpaid
-preview/synthetic-payment presentation with small checked commits on the same branch. Reuse the original services and current acceptance plans.
+jobs SUCCESS. The remaining stage-1 unpaid preview/synthetic-payment presentation now has
+[a bounded source correction](PP02-PREVIEW-PAYMENT-CLARITY-2026-11-09.md),
+35 affected native PASS and clean both-size visual review. Full stage acceptance
+remains separate. Next complete the native A→B→A lifecycle using original
+admission/claim/worker fixtures, then mount guarded post-preview merchant integration.
 
 References: [BUG-046 evidence/retest](BUG046-RESULT-AUTO-RETURN.md),
 [current 112-case R4 review](evidence/pp07-r4-case-review-2026-11-05.json),
