@@ -7,6 +7,7 @@ mark an order paid, or write to its counters, manifests or Drive pool.
 from dataclasses import dataclass
 import json
 import logging
+import math
 from pathlib import Path
 import queue
 import threading
@@ -518,6 +519,7 @@ class PhotoJobs:
         self._closed = False
         self.busy = False
         self.current_action = None
+        self._state_lock = threading.Lock()
 
     @property
     def foreground_busy(self):
@@ -525,6 +527,10 @@ class PhotoJobs:
         return self.busy and self.current_action != 'snapshot'
 
     def submit(self, action, *args):
+        with self._state_lock:
+            return self._submit(action, *args)
+
+    def _submit(self, action, *args):
         if self.busy or self._closed:
             return False
         self.busy = True
@@ -563,9 +569,35 @@ class PhotoJobs:
         return result
 
     def close(self):
-        self._closed = True
+        with self._state_lock:
+            self._closed = True
         if self.service is not None:
             self.service.close()
+
+    def retire(self, *, timeout=0):
+        """Retire command admission and drain the actual thread, without DB close.
+
+        Called by the original privacy/worker coordinator, never a financial or
+        booth-FREE assertion. A retired PhotoJobs instance cannot be restarted.
+        """
+        if type(timeout) not in (int, float) or not math.isfinite(timeout) or not 0 <= timeout <= 5:
+            raise ValueError('Bounded original worker drain required')
+        with self._state_lock:
+            self._closed = True
+            thread = self._thread
+        if thread is threading.current_thread():
+            return False
+        if thread is not None:
+            thread.join(timeout)
+            if thread.is_alive():
+                return False
+        # No further producer can start; discard retired private outcomes.
+        while True:
+            try:self._results.get_nowait()
+            except queue.Empty:break
+        self.busy = False
+        self.current_action = None
+        return True
 
     def wait_closed(self, timeout=3):
         if self._thread:

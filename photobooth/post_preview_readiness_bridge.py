@@ -189,12 +189,15 @@ class WorkerReadinessServer:
         self._stop = threading.Event()
         self._thread = None
         self._lifecycle_lock = threading.Lock()
+        self._original_collector = None
 
     @classmethod
     def from_original_worker(cls, channel, collector):
         if type(collector) is not LocalChargeReadiness:
             raise ValueError('Original local media/device readiness collector required')
-        return cls(channel, lambda scope: collector(scope.purchase_group_id))
+        server = cls(channel, lambda scope: collector(scope.purchase_group_id))
+        server._original_collector = collector
+        return server
 
     def start(self):
         with self._lifecycle_lock:

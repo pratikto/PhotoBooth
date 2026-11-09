@@ -1,0 +1,74 @@
+# PP-06 protected original worker receipt and claim/handoff
+
+10 November 2026 Asia/Jakarta. Base16f2e71, ONLY existing
+feature/post-preview-qris-checkout. B5 runtimeac804fd726 backend/88 native and
+matching CI are verified; no unchanged baseline rerun for onboarding.
+
+## Contract before implementation
+
+Implement original typed native-worker retirement evidence before protected
+backend ACK/claim mounting. Reuse original PhotoJobs, readiness collector,
+LaunchLease, private ledger, isolation operation/generation and financial guards.
+No mock constructor is relaxed and no provider/custody secret enters the GUI.
+
+A trusted launcher provides an ephemeral private worker-fence capability to the
+native retirement coordinator and backend verifier, never via customer HTTP,
+argv, ordinary environment or plaintext key file. The native coordinator signs
+only the exact original PREPARED operation after its actual PhotoJobs thread and
+original bound readiness collector finish. The immutable receipt is in the SAME
+original shared local ledger; ACK input cannot supply worker booleans or replace
+receipt content. A receipt alone never proves PAID, backend I/O stopped, booth
+FREE, media access or delivery. Backend must independently recheck original
+finance, paid receipt/strip uncertainty and actual delivery-worker exit before
+atomically ACKing. Missing/foreign/forged/stale evidence holds the original visit.
+
+Next increments: guarded backend isolation and original proof-gated fresh-PAID
+claim, lost-ACK/restart identity, authenticated transport and native A/B/A;
+capability/readiness rotation and trusted launcher/freeze mounting remain explicit
+until connected. New native commands cannot start after retirement. Original
+capture/file workers are drained without closing their SQLite beneath I/O.
+No force-kill, new charge, uncertain resend, key/root replacement or OWED reset.
+
+Test actual blocked collectors/PhotoJobs, wrong scope/generation/root/capability,
+signed-content tamper, command-start/retire races, once-only durable receipt and
+backend stop=False. Use separate native/backend SQLite connections to the same
+original root. Preserve mock regression, process boundaries, real DPAPI versus
+explicit Linux fixtures, and all owner/device/refund/qualification gates.
+Focused tested increments are committed/pushed immediately with remote SHA check;
+one final changed-source regression/CI follows the functional phase. Rollback
+source only; retain all original journals, ciphertext, raw media and rights.
+
+Reviewed current AGENTS/protocol/B5 handover, complete cross-account prompt,
+owner/security-state/CCP/ticket/shared-lane and original claim/isolation/collector
+contracts; original PhotoJobs/LaunchLease/ledger/host/bootstrap/client/source and
+relevant tests. Source work remains incomplete; account/device gaps are separate.
+
+## B6-A execution
+
+NativeWorkerRetirement binds the exact protected service/PhotoJobs/original
+LocalChargeReadiness/OriginalWorkerReadiness/LaunchLease. It signs only the same
+original PREPARED generation after actual collector and photo threads stop.
+Receipt schema has exact PK/FK and immutable payload/MAC; partial schemas are
+held without repair/reset. Capability is32 random bytes, memory only, omitted
+from repr; its HMAC is a worker receipt, never a customer/payment/media grant.
+Native/backend use separate SQLite connections to the same original root.
+
+PhotoJobs submit/retire are serialized across thread-start admission. Retirement
+permanently rejects commands, joins the actual original thread and discards old
+private outcomes without closing its SQL connection under I/O. Existing close
+and mock authority contracts remain; old capture/retake/P3 regression passes.
+
+Initial import ERROR proved the missing module.13 new methods and **112 affected
+PASS33.566s**, zero failures/errors/skips. Includes actual delayed collector/file
+threads, command-start/retire race, wrong generation/kernel root, foreign keys,
+authenticated but wrong scope/timestamp, immutable and forged receipts, unchanged
+OWED and preserved original schema/data. Fake external transports only; source-
+matched full regression/Windows CI remains pending for this increment.
+[Exact commands/source/log/method evidence](evidence/pp06-worker-fence-2026-11-10.json).
+
+This primitive does not yet create/ACK a protected release or grant a claim.
+NEXT: exact original Sandbox backend isolation/ACK over this receipt plus actual
+backend delivery stop and existing financial/uncertainty guards; original proof-
+gated fresh legitimate settlement claim. Then authenticated/native transport,
+capability rotation/bootstrap, complete protected freeze/launcher and recovery.
+No customer new-admission or merchant profile is enabled by B6-A.
