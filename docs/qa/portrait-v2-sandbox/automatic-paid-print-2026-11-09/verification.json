@@ -65,16 +65,17 @@
   "ci": {
     "run_id": 42552901917,
     "head_sha": "0fe373401ba3cb2501abf3a305df62f8c4054eac",
-    "status": "IN_PROGRESS",
-    "conclusion": null,
+    "status": "COMPLETED",
+    "conclusion": "success",
     "jobs": [
       {
         "id": 128952189379,
         "name": "private-state (windows-latest)",
         "head_sha": "0fe373401ba3cb2501abf3a305df62f8c4054eac",
-        "status": "in_progress",
-        "conclusion": null,
-        "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/42552901917/job/128952189379"
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/42552901917/job/128952189379",
+        "completed_at": "2026-11-09T02:56:57Z"
       },
       {
         "id": 128952189748,
@@ -82,7 +83,8 @@
         "head_sha": "0fe373401ba3cb2501abf3a305df62f8c4054eac",
         "status": "completed",
         "conclusion": "success",
-        "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/42552901917/job/128952189748"
+        "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/42552901917/job/128952189748",
+        "completed_at": "2026-11-09T02:51:46Z"
       },
       {
         "id": 128952189789,
@@ -90,7 +92,8 @@
         "head_sha": "0fe373401ba3cb2501abf3a305df62f8c4054eac",
         "status": "completed",
         "conclusion": "success",
-        "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/42552901917/job/128952189789"
+        "html_url": "https://github.com/pratikto/PhotoBooth/actions/runs/42552901917/job/128952189789",
+        "completed_at": "2026-11-09T02:51:09Z"
       }
     ]
   }

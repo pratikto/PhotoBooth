@@ -52,7 +52,7 @@ Original PAID/OWED remains separate from submitted bytes and physical paper.
   [800×1280](automatic-paid-print-2026-11-09/result-800x1280.png),
   [exact rendering driver](automatic-paid-print-2026-11-09/render-driver.py.txt).
 - Matching-source [CI42552901917](https://github.com/pratikto/PhotoBooth/actions/runs/42552901917)
-  is IN_PROGRESS; no remote PASS inferred. Earlier BUG-046 CI42427430090 was
+  is verified COMPLETED SUCCESS in all three jobs at exact source 0fe3734. Earlier BUG-046 CI42427430090 was
   independently verified completed SUCCESS at fc8853b.
 
 Tests use original Kivy widgets, actual local service/API/ledger/dispatcher and

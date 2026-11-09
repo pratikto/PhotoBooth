@@ -73,8 +73,9 @@ be named specifically. A new source push is not release approval.
 
 ## Current next action
 
-BUG-046 CI 42427430090 is verified SUCCESS. Finish verification of the
-9 November automatic-print increment, then clarify the remaining stage-1 unpaid
+BUG-046 CI 42427430090 is verified SUCCESS. The 9 November automatic-print
+increment has 598 backend + 72 native PASS and matching CI42552901917 all three
+jobs SUCCESS. Next clarify the remaining stage-1 unpaid
 preview/synthetic-payment presentation with small checked commits on the same branch. Reuse the original services and current acceptance plans.
 
 References: [BUG-046 evidence/retest](BUG046-RESULT-AUTO-RETURN.md),

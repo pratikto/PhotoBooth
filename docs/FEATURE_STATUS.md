@@ -5,7 +5,7 @@ through the existing serialized service after ticket dismissal and verified
 Drive binding. No customer print taps; uncertain paper, errors and privacy
 retirement hold further dispatch. [Scope and exact evidence](qa/portrait-v2-sandbox/PP05-AUTOMATIC-PAID-PRINT-2026-11-09.md).
 Published source 0fe3734 has 598 backend + 72 native PASS, zero failures/errors/
-skips. Matching CI42552901917 IN_PROGRESS; current launcher remains synthetic
+skips. Matching CI42552901917 all three jobs SUCCESS; current launcher remains synthetic
 payment only. Real merchant/paper/cloud/recovery/release gates remain open.
 Baseline BUG-046 CI 42427430090 was independently checked: completed SUCCESS
 at exact fc8853b; its prior IN_PROGRESS statements below are historical.

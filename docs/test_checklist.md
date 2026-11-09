@@ -2,7 +2,7 @@
 
 Source 0fe3734: existing registered workflow groups **598 backend + 72 native
 PASS**, zero failures/errors/skips. Both portrait result views reviewed in clean
-contexts. Matching CI42552901917 IN_PROGRESS; actual paper/Drive/provider/owner
+contexts. Matching CI42552901917 all three jobs SUCCESS; actual paper/Drive/provider/owner
 acceptance stays NOT_RUN. [Detailed evidence](qa/portrait-v2-sandbox/PP05-AUTOMATIC-PAID-PRINT-2026-11-09.md).
 
 # Meong Photobooth — test evidence and acceptance
