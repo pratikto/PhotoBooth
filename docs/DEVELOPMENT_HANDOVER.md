@@ -1,3 +1,13 @@
+# 9 November 2026 — isolated post-preview Sandbox backend assembly
+
+[Host assembly and exact limits](qa/portrait-v2-sandbox/PP04-SANDBOX-HOST-2026-11-09.md):
+existing PP API/coordinator/real fixed Sandbox transport now assemble with the
+private worker bridge, independent backend Drive observations and original
+protected CCP custody validation. 145 focused PASS, zero failures/errors/skips.
+Already-UNKNOWN original payments reconcile despite later escrow failure; new
+charges hold. Native merchant admission remains unmounted/mock-only. Next child
+host/bootstrap and supported protected native ticket/delivery/claim/release.
+
 # 9 November 2026 — private original-worker readiness bridge
 
 [Bounded process seam and evidence](qa/portrait-v2-sandbox/PP04-PROCESS-READINESS-BRIDGE-2026-11-09.md):

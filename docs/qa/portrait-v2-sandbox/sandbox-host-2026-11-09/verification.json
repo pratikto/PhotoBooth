@@ -1,0 +1,30 @@
+{
+  "base": "ad2f47724475403d1e6a16b3047ba327158a2d50",
+  "branch": "feature/post-preview-qris-checkout",
+  "scope": "unmounted isolated post-preview Sandbox backend assembly",
+  "focused": {
+    "run": 145,
+    "seconds": 39.909,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "exit": 0,
+    "command": "python tools/run_kiosk_unittests.py test_post_preview_api test_post_preview_ccp test_post_preview_ticket test_post_preview_checkout_ticket test_post_preview_authority test_post_preview_readiness test_post_preview_payments"
+  },
+  "sha256": {
+    "photobooth/post_preview_server.py": "2dbb6a0c39af67fbea88fb02407343f7d80e2d0be37c5967073ab47ffb02766f",
+    "photobooth/post_preview_ccp.py": "cba258623922eaf26c1c999cfe6bebdce83859728fc8e33745105c18eb49a89b",
+    "tests/test_post_preview_api.py": "285ec0db0df599dbd735203f4fb1aebfe5c711534b7afd9c9db320e3b41cc9a8",
+    "tests/test_post_preview_ccp.py": "bd88b673175ab7707984d6e02f243e768e5e4b01073f4d1f8b97bdd75e915c23"
+  },
+  "limits": {
+    "native_provider_profile": "NOT_MOUNTED",
+    "child_process_bootstrap": "NOT_IMPLEMENTED",
+    "actual_Midtrans": "NOT_RUN",
+    "Ubuntu_OS_custody": "UNSUPPORTED",
+    "Windows_OS_custody": "CI_PENDING",
+    "real_paper": "NOT_RUN",
+    "real_Drive": "NOT_RUN",
+    "production": "NOT_READY"
+  }
+}

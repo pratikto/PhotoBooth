@@ -157,22 +157,28 @@ class OriginalCCPService:
             self.ledger._event(lease.draft_id, self._event_prefix+'_CREATED')
             return {'purchase_group_id': group, 'kind': self.KIND, 'expires_at': expires}
 
+    def _original_payload(self, lease):
+        # Caller holds the ledger transaction. Both presentation and backend
+        # escrow validation use the exact same original verifier/decrypt path.
+        scope, intent = self._scope(lease)
+        row = self.ledger.db.execute(f'SELECT * FROM {self._table} WHERE purchase_group_id=?',
+                                      (intent['purchase_group_id'],)).fetchone()
+        self._live(row, self._now())
+        if row['scope_json'] != canonical(scope):
+            raise VaultUnavailable('Original claim scope changed')
+        protected = ProtectedCredential(row['protector_id'], bytes(row['ciphertext']))
+        try:
+            payload = self.protector.unprotect(protected, row['scope_json'].encode('utf-8')).decode('utf-8')
+        except (UnicodeError, ValueError):
+            raise VaultUnavailable('Original claim escrow is unavailable') from None
+        if not hmac.compare_digest(row['verifier'], self._verifier(row['scope_json'], payload)):
+            raise VaultUnavailable('Original claim verifier mismatch')
+        return intent, payload
+
     def private_offer(self, lease):
         """Decrypt only for a live current checkout, with an in-memory render permit."""
         with self.ledger.write():
-            scope, intent = self._scope(lease)
-            row = self.ledger.db.execute(f'SELECT * FROM {self._table} WHERE purchase_group_id=?',
-                                          (intent['purchase_group_id'],)).fetchone()
-            self._live(row, self._now())
-            if row['scope_json'] != canonical(scope):
-                raise VaultUnavailable('Original claim scope changed')
-            protected = ProtectedCredential(row['protector_id'], bytes(row['ciphertext']))
-            try:
-                payload = self.protector.unprotect(protected, row['scope_json'].encode('utf-8')).decode('utf-8')
-            except (UnicodeError, ValueError):
-                raise VaultUnavailable('Original claim escrow is unavailable') from None
-            if not hmac.compare_digest(row['verifier'], self._verifier(row['scope_json'], payload)):
-                raise VaultUnavailable('Original claim verifier mismatch')
+            intent, payload = self._original_payload(lease)
             offer = self.OFFER_TYPE(uuid.uuid4().hex, intent['purchase_group_id'], lease.generation, payload)
             with self._privacy_lock:
                 if self._hidden:
@@ -180,6 +186,15 @@ class OriginalCCPService:
                 self._offers.clear()
                 self._offers[offer.presentation_id] = (offer, self.monotonic(), None)
             return offer
+
+    def validate_escrow(self, lease):
+        """Validate original custody without returning or re-offering a secret.
+
+        This does not establish a customer offer; the original offered_at and
+        presentation journal remain independent. No render permit is created.
+        """
+        with self.ledger.write():
+            self._original_payload(lease)
 
     def mark_visible(self, lease, offer):
         """Trusted renderer callback only; creation/decryption never means offered."""

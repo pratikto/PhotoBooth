@@ -237,3 +237,217 @@ class PostPreviewApiTests(unittest.TestCase):
         self.assertEqual(200, client.get(self.path, headers=HEADERS).status_code)
         self.assertEqual(429, client.get(self.path, headers=HEADERS).status_code)
         self.assertEqual(404, self.client.post('/api/orders', json={}, headers=HEADERS).status_code)
+
+
+class SandboxBackendAssemblyTests(unittest.TestCase):
+    """Actual PP API/transport; Linux OS adapter is explicitly fixture plumbing."""
+    def setUp(self):
+        import os
+        import socket
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from photobooth.booth_storage import BoothWorkspace
+        from photobooth.credential_vault import (
+            WindowsDPAPIProtector, ProtectedCredential, SyntheticAeadProtector,
+            VaultUnavailable, platform_protector)
+        from photobooth.post_preview_checkout import PrivateDraftCheckout
+        from photobooth.post_preview_photos import PrivateDraftPhotos
+        from photobooth.post_preview_readiness import ReadOnlyDriveReadiness
+        from photobooth.post_preview_readiness_bridge import WorkerReadinessClient, WorkerReadinessServer
+        from photobooth.post_preview_server import build_sandbox_app
+        from tests import test_post_preview_ccp as ccp_cases
+        from tests import test_post_preview_payments as payment_cases
+        from tests.test_post_preview_readiness import _bridge_ready
+        self.fixture = ccp_cases.OriginalCCPTests()
+        self.fixture.setUp()
+        self.addCleanup(self.fixture.doCleanups)
+        self.ledger, self.lease = self.fixture.ledger, self.fixture.lease
+        self.group = self.fixture.intent['purchase_group_id']
+        self.clock = self.fixture.clock
+        if os.name == 'nt':
+            self.protector = platform_protector()  # Actual current-user DPAPI on Windows CI.
+        else:
+            # Fixture only: exercise assembly/control flow without claiming OS
+            # protection on Linux. The production factory has no such opt-in.
+            synthetic = SyntheticAeadProtector(os.urandom(32), fixture=True)
+            self.protector = object.__new__(WindowsDPAPIProtector)
+            self.protector.protect = lambda value, scope: ProtectedCredential(
+                self.protector.protector_id, synthetic.protect(value, scope).ciphertext)
+            def unprotect(envelope, scope):
+                if envelope.protector_id != self.protector.protector_id:
+                    raise VaultUnavailable('Original OS protector is unavailable')
+                return synthetic.unprotect(ProtectedCredential(synthetic.protector_id, envelope.ciphertext), scope)
+            self.protector.unprotect = unprotect
+        self.fixture.service.protector = self.protector
+        offer = self.fixture.offer()
+        self.fixture.service.mark_visible(self.lease, offer)
+        self.checkout = PrivateDraftCheckout(PrivateDraftPhotos(self.ledger, self.fixture.root/'private'))
+        self.templates = __import__('photobooth.catalog', fromlist=['get_templates']).get_templates()
+        self.workspace = BoothWorkspace(self.fixture.root/'storage', 'PB001V2S2')
+        self.workspace.prepare()
+        drive = SimpleNamespace(booth_id='PB001V2S2', storage_readiness=lambda slots: {
+            'drive_api':'READY','drive_sharing':'READY','capacity_state':'READY'})
+        self.drive = ReadOnlyDriveReadiness(drive, self.workspace, now=self.ledger.now)
+        backend, worker = socket.socketpair()
+        self.server = WorkerReadinessServer(worker, lambda scope: _bridge_ready(scope, self.clock[0]))
+        self.server.start()
+        self.bridge = WorkerReadinessClient(backend, timeout=2)
+        self.addCleanup(self.server.stop)
+        self.addCleanup(self.bridge.close)
+        self.remote = payment_cases.SyntheticProvider()
+        self.requests = []
+        self.create_reports_paid = False
+        self.transport = payment_cases.MidtransPostPreviewContractTests.transport.__get__(self)
+        self.key = 'SB-Mid-server-SYNTHETIC-NOT-A-MERCHANT'
+        self.token = 'SYNTHETIC-BOOTH-'+('a'*48)
+        self.factory_args = dict(merchant_id='MTEST', server_key=self.key,
+                                booth_id='PB001', booth_token=self.token,
+                                provider_transport=self.transport, background_worker=False)
+        with patch('photobooth.post_preview_server.platform_protector', return_value=self.protector):
+            self.app = build_sandbox_app(self.checkout, self.templates, self.bridge, self.drive,
+                                         **self.factory_args)
+        self.http = TestClient(self.app)
+        self.http.__enter__()
+        self.addCleanup(self.http.__exit__, None, None, None)
+        self.headers = {'X-Booth-Id':'PB001','Authorization':'Bearer '+self.token}
+
+    def call(self, suffix, payload=None):
+        body = payload if payload is not None else {
+            'visit_id':self.lease.visit_id,'generation':self.lease.generation}
+        return self.http.post('/api/postpay/groups/'+self.group+suffix,
+                              headers=self.headers, json=body)
+
+    @staticmethod
+    def order(view):
+        return view['attempts'][-1]['provider_order_id']
+
+    def test_factory_has_no_io_and_no_legacy_or_synthetic_paid_endpoint(self):
+        self.assertEqual([], self.requests)
+        response = self.http.get('/api/postpay/health')
+        self.assertEqual('sandbox', response.json()['mode'])
+        self.assertFalse(response.json()['fulfillment_enabled'])
+        for path in ('/api/orders', '/api/postpay/simulate-paid'):
+            self.assertEqual(404, self.http.post(path).status_code)
+        self.assertNotIn(self.key, response.text)
+        self.assertNotIn(self.token, response.text)
+        denied = self.http.post('/api/postpay/groups/'+self.group+'/begin', json={})
+        self.assertEqual(401, denied.status_code)
+        self.assertEqual([], self.requests)
+
+    def test_authentic_original_charge_requires_independent_get_and_grants_once(self):
+        self.create_reports_paid = True
+        first = self.call('/begin').json()
+        self.assertEqual('PENDING', first['state'])
+        self.assertIsNone(first['entitlement_id'])
+        self.remote.state(self.order(first), 'settlement')
+        self.clock[0] += 10
+        paid = self.call('/reconcile', {'trigger':'connectivity'}).json()
+        self.assertEqual(('PAID_LIVE', 'OWED'), (paid['state'], paid['obligation_state']))
+        self.assertTrue(paid['paid_verified'])
+        self.assertFalse(paid['fulfillment_authorized'])
+        self.clock[0] += 10
+        again = self.call('/reconcile', {'trigger':'connectivity'}).json()
+        self.assertEqual(paid['entitlement_id'], again['entitlement_id'])
+        self.assertEqual(1, self.remote.charges)
+
+    def test_corrupt_original_escrow_before_charge_holds_without_reissuing(self):
+        self.ledger.db.execute("UPDATE pp_ccp_credentials SET ciphertext=?", (b'corrupt',))
+        before = list(self.ledger.db.execute('SELECT * FROM pp_events'))
+        self.assertEqual(503, self.call('/begin').status_code)
+        self.assertEqual([], self.requests)
+        self.assertEqual(0, self.ledger.db.execute('SELECT count(*) FROM pp_payment_attempts').fetchone()[0])
+        self.assertEqual(before, list(self.ledger.db.execute('SELECT * FROM pp_events')))
+        self.assertEqual(1, self.ledger.db.execute('SELECT count(*) FROM pp_ccp_credentials').fetchone()[0])
+
+    def test_lost_create_http404_then_escrow_fault_still_reconciles_original(self):
+        self.remote.lost_create = True
+        self.remote.not_found = 1
+        first = self.call('/begin').json()
+        self.assertEqual('UNKNOWN', first['state'])
+        original = self.order(first)
+        self.ledger.db.execute('UPDATE pp_ccp_credentials SET ciphertext=?', (b'corrupt',))
+        self.clock[0] += 10
+        recovered = self.call('/begin').json()
+        self.assertEqual('PENDING', recovered['state'])
+        self.assertEqual(original, self.order(recovered))
+        self.remote.state(original, 'settlement')
+        self.clock[0] += 10
+        paid = self.call('/reconcile', {'trigger':'connectivity'}).json()
+        self.assertEqual('OWED', paid['obligation_state'])
+        self.assertEqual(1, self.remote.charges)
+        self.assertEqual([('POST','/v2/charge')], [r for r in self.requests if r[1]=='/v2/charge'])
+
+    def test_expiry_late_and_duplicate_settlement_share_one_original_entitlement(self):
+        first = self.call('/begin').json()
+        self.remote.state(self.order(first), 'expire')
+        self.clock[0] += 10
+        owner = {'visit_id':self.lease.visit_id,'generation':self.lease.generation,
+                 'actively_continuing':True}
+        second = self.call('/continue', owner).json()
+        self.assertEqual(2, len(second['attempts']))
+        self.remote.state(self.order(first), 'settlement')
+        self.clock[0] += 10
+        original_paid = self.call('/reconcile', {'trigger':'connectivity'}).json()
+        self.remote.state(self.order(second), 'settlement')
+        self.clock[0] += 10
+        excess = self.call('/reconcile', {'trigger':'connectivity'}).json()
+        self.assertEqual(original_paid['entitlement_id'], excess['entitlement_id'])
+        self.assertEqual(1, len(excess['excess_paid_attempts']))
+        self.assertEqual('OWED', excess['obligation_state'])
+        self.assertEqual(2, self.remote.charges)
+        self.assertFalse(excess['fulfillment_authorized'])
+
+    def test_cancel_late_paid_is_original_unclaimed_owed_without_replacement(self):
+        first = self.call('/begin').json()
+        self.clock[0] += 10
+        cancelled = self.call('/lifecycle', {'visit_id':self.lease.visit_id,
+            'generation':self.lease.generation,'event':'USER_CANCEL'}).json()
+        self.assertEqual('CANCELLED_UNPAID', cancelled['state'])
+        self.remote.state(self.order(first), 'settlement')
+        self.clock[0] += 10
+        paid = self.call('/reconcile', {'trigger':'connectivity'}).json()
+        self.assertEqual(('PAID_UNCLAIMED','OWED'), (paid['state'],paid['obligation_state']))
+        self.assertEqual(1, self.remote.charges)
+        self.assertEqual(1, self.remote.cancels)
+
+    def test_foreign_or_synthetic_ledger_is_refused_before_provider_io(self):
+        from unittest.mock import patch
+        from photobooth.post_preview_server import build_sandbox_app
+        from photobooth.post_preview_store import DraftHeld
+        for sql, value in (("UPDATE pp_ccp_credentials SET merchant_id=?", 'OTHER'),
+                           ("UPDATE pp_ccp_credentials SET protector_id=?", 'synthetic-aesgcm-fixture-v1')):
+            with self.subTest(change=sql):
+                self.ledger.db.execute(sql, (value,))
+                with patch('photobooth.post_preview_server.platform_protector', return_value=self.protector), self.assertRaises(DraftHeld):
+                    build_sandbox_app(self.checkout, self.templates, self.bridge, self.drive, **self.factory_args)
+                self.ledger.db.execute('UPDATE pp_ccp_credentials SET merchant_id=?,protector_id=?',
+                                       ('MTEST',self.protector.protector_id))
+        self.assertEqual([], self.requests)
+
+    def test_missing_platform_custody_has_no_synthetic_fallback(self):
+        from unittest.mock import patch
+        from photobooth.credential_vault import VaultUnavailable
+        from photobooth.post_preview_server import build_sandbox_app
+        with patch('photobooth.post_preview_server.platform_protector', side_effect=VaultUnavailable('Unsupported OS')), self.assertRaises(VaultUnavailable):
+            build_sandbox_app(self.checkout, self.templates, self.bridge, self.drive, **self.factory_args)
+        self.assertEqual([], self.requests)
+
+    def test_lost_worker_or_drive_health_cannot_be_replaced_by_caller_flags(self):
+        self.bridge.close()
+        response = self.call('/begin')
+        self.assertEqual(409, response.status_code)
+        self.assertEqual([], self.requests)
+        forged = self.call('/begin', {'visit_id':self.lease.visit_id,
+            'generation':self.lease.generation, 'ready':True, 'paid':True})
+        self.assertEqual(422, forged.status_code)
+        self.assertEqual(0, self.ledger.db.execute('SELECT count(*) FROM pp_payment_attempts').fetchone()[0])
+
+    def test_backend_drive_failure_holds_even_with_healthy_original_worker(self):
+        self.drive.client.storage_readiness = lambda slots: {
+            'drive_api':'READY','drive_sharing':'NOT_READY','capacity_state':'NOT_READY'}
+        self.assertEqual(409, self.call('/begin').status_code)
+        self.assertEqual([], self.requests)
+        self.assertEqual(0, self.ledger.db.execute('SELECT count(*) FROM pp_payment_attempts').fetchone()[0])
+
+
+if __name__ == '__main__': unittest.main()

@@ -73,6 +73,27 @@ class OriginalCCPTests(unittest.TestCase):
             path = self.root/name
             if path.exists(): self.assertFalse(offer.qr_payload.encode() in path.read_bytes())
 
+    def test_backend_escrow_validation_does_not_offer_issue_or_return_secret(self):
+        self.issue()
+        before = dict(self.row())
+        events = list(self.ledger.db.execute('SELECT * FROM pp_events'))
+        self.assertIsNone(self.service.validate_escrow(self.lease))
+        self.assertEqual(before, dict(self.row()))
+        self.assertEqual(events, list(self.ledger.db.execute('SELECT * FROM pp_events')))
+        self.assertEqual({}, self.service._offers)
+        self.assertIsNone(self.row()['offered_at'])
+
+    def test_backend_escrow_validation_refuses_tampered_ciphertext_or_wrong_key(self):
+        self.issue()
+        original = bytes(self.row()['ciphertext'])
+        self.ledger.db.execute('UPDATE pp_ccp_credentials SET ciphertext=?', (b'broken',))
+        with self.assertRaises(VaultUnavailable): self.service.validate_escrow(self.lease)
+        self.ledger.db.execute('UPDATE pp_ccp_credentials SET ciphertext=?', (original,))
+        other = self.new_service(SyntheticAeadProtector(os.urandom(32), fixture=True))
+        with self.assertRaises(VaultUnavailable): other.validate_escrow(self.lease)
+        self.assertEqual(1, self.ledger.db.execute('SELECT count(*) FROM pp_ccp_credentials').fetchone()[0])
+        self.assertEqual({}, self.service._offers)
+
     def test_idempotent_issue_and_restart_keep_exact_original_and_expiry(self):
         first = self.offer()
         cipher = self.row()['ciphertext']
