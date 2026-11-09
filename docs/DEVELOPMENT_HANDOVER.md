@@ -1,3 +1,8 @@
+> **Published 9 November checkpoint:** source/tests `a97feda` pushed and remote
+> verified; local 598 backend + 74 native PASS, zero failures/errors/skips.
+> Matching CI42558244702 IN_PROGRESS; prior CI42557449363 superseded/cancelled
+> before Windows completion. [Exact continuation and remaining code/account gates](qa/portrait-v2-sandbox/AUTONOMOUS-RECOVERY-CHECKPOINT.md).
+
 # 9 November 2026 — connected native A → B → A verification
 
 [New connected customer-cycle evidence](qa/portrait-v2-sandbox/PP06-NATIVE-CUSTOMER-CYCLE-2026-11-09.md)

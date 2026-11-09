@@ -68,5 +68,12 @@
     "stage2-admission.log": "a023d11b2655b83750f6a27754d30e1bca337fcb00df3dea6815c0693cfd2bbf",
     "stage2-final-native.log": "00a0ca4f978a61edf6a2ddaaf718899872607f19ae040661e591cfc5ae5ccdd2",
     "stage2-final-backend.log": "843905c6d3216abc36cdc6e9973a0528272b0286fac1f88656efd262d80a2a85"
+  },
+  "published_source": "a97fedaa7fd33c28afc22f8850df40f8d267b154",
+  "latest_ci": {
+    "run_id": 42558244702,
+    "source": "a97fedaa7fd33c28afc22f8850df40f8d267b154",
+    "status": "IN_PROGRESS",
+    "conclusion": null
   }
 }

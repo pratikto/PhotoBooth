@@ -1,3 +1,51 @@
+## 9 November 2026 — post-preview continuation checkpoint
+
+Authorized branch remains `feature/post-preview-qris-checkout`. Starting remote
+was af510d0; source increment `0e70b4b02112f6ef03d71422df126076a6ea2c6b`
+clarifies unpaid preview/synthetic payment; test increment
+`a97fedaa7fd33c28afc22f8850df40f8d267b154` adds connected native A→B→A.
+Both commits were pushed and independently remote-verified. Working tree clean
+before this documentation checkpoint; no local runtime WIP or unpushed source.
+
+Actual final local checks at a97feda: 598 backend PASS (180.435s) + 74 native
+PASS (168.605s), zero failures/errors/skips, both processes exit 0. Focused
+N28 both portrait sizes PASS; admission/isolation/claim 56 PASS. Four clean
+native preview/payment views reviewed. Exact commands, hashes, initial failures,
+fixture corrections, source and limits are linked in the two reports below.
+
+[CI42558244702](https://github.com/pratikto/PhotoBooth/actions/runs/42558244702)
+at a97feda is IN_PROGRESS, all three jobs; do not label it PASS without completed
+logs. Earlier CI42557449363 at 0e70b4b completed Ubuntu 598/native 73 PASS;
+its Windows job was superseded/cancelled by the next test-source push through
+the existing concurrency policy. That cancelled run is not three-job PASS.
+No manual broad rerun or workflow change was requested.
+
+Next exact action: inspect the current CI jobs/logs for a97feda, repair only any
+actual failure, then implement the separately guarded post-preview merchant
+profile. Existing Midtrans transport/API/backend are present; native service,
+claim/isolation and owner launcher remain mock-only. Wire protected credential
+escrow, original-worker readiness, original paid ticket/delivery and release;
+keep all synthetic callbacks out of provider authority. Removing a guard is
+not a complete integration. Do not redo the already verified UI/automatic-print
+work or the owner's eleven accepted checks.
+
+Source work still outstanding: actual provider-profile mounting; supported
+full Windows/Ubuntu worker/vault restore; real refund/customer-status protocol;
+final measured qualification and operational package. External facts absent on
+this fresh executor: merchant secret pair, approved deployed test Drive URL/token,
+printer route and target device; merchant refund/legal/production acceptance.
+No secrets were printed or requested in chat. No actual paper, upload, charge,
+refund, deployment/deletion or production was performed. PAID/OWED, uncertain
+jobs and all historical evidence remain intact; excluded old was not inspected.
+
+The historical R4 process/root below was not running on this new executor.
+Only its 1,848.279s interim record is available in Git; a complete two-hour run
+and four-hour device qualification remain unfinished, not transferred PASS.
+
+[Preview correction](PP02-PREVIEW-PAYMENT-CLARITY-2026-11-09.md) ·
+[Connected native cycle](PP06-NATIVE-CUSTOMER-CYCLE-2026-11-09.md) ·
+[STAR roadmap](PRODUCT-READINESS-STAR.md).
+
 > **R4 remote checkpoint — active timed qualification:** runtime/test source `824b6ae7636578332664abf5507456338e59c8ef`; 1,801 local PASS, zero failure/error/skip. [Campaign](PP07-SIMULATION-CLOSURE-R4-2026-11-05.md) and [timed checkpoint](evidence/pp07-r4-soak-checkpoint-2026-11-05.json). Current two-hour run is IN_PROGRESS, not PASS. On this environment continue observing `/workspace/work/postpay-r4-soak-qualified/{progress,result}.json` (result appears only at completion); original session 70769. Do not restart an already running test or change runtime during qualification. In another environment the private running process/report cannot transfer through GitHub: preserve existing journals; use the committed harness in a new output directory and rerun the missing duration. Full source-matched Windows CI/log review and final result publication remain pending. All safe code/tests/docs are pushed incrementally; no local runtime WIP.
 
 > **R4 simulation IN PROGRESS:** [current work packages and verified increments](PP07-SIMULATION-CLOSURE-R4-2026-11-05.md). Resume final source regression/CI, timed qualification and case audit; mock refund protocol is unmounted, not actual payout or full acceptance.

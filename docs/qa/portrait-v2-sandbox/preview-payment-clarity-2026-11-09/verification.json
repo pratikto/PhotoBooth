@@ -33,5 +33,12 @@
     "docs/qa/portrait-v2-sandbox/preview-payment-clarity-2026-11-09/unpaid-452x900.png": "b161277172b5c86aeb075845c2700d463323fab7ba6c6bf422ffb591e396ea98",
     "docs/qa/portrait-v2-sandbox/preview-payment-clarity-2026-11-09/render-driver.py.txt": "1f9dda013e2186380449d474ae97769a61dff3dfa0ed3f439e4ccadfce75606d",
     "docs/qa/portrait-v2-sandbox/preview-payment-clarity-2026-11-09/unpaid-800x1280.png": "a961f449e24024d964107439386986aec960d839ab2e1e57e825d07104898c26"
+  },
+  "published_source": "0e70b4b02112f6ef03d71422df126076a6ea2c6b",
+  "latest_ci": {
+    "run_id": 42558244702,
+    "source": "a97fedaa7fd33c28afc22f8850df40f8d267b154",
+    "status": "IN_PROGRESS",
+    "conclusion": null
   }
 }
