@@ -1,3 +1,5 @@
+> **Windows CI update:** the first Windows job129268536077 was CANCELLED at its existing15-minute budget, no suite summary; interrupted inside unchanged retention-readiness inventory/Git status. Completed log inspected; not a PASS or a proven application assertion failure. Earlier B4 Windows717 completed653.838s. A single failed/cancelled-job-only retry at the SAME ac804fd is running as129278840319; original timeout/tests/guards unchanged. Ubuntu726 and native88 remain verified SUCCESS. The retry result must be inspected separately.
+
 # PP-05 B5 protected native delivery continuation
 
 9 November 2026. Base9d372804, existing feature/post-preview-qris-checkout.
@@ -128,3 +130,54 @@ camera/receipt/strip/upload PREPARE/local receipt/ACK handoff. Do not use mock
 admission or proofless reopening. Protected freeze and full trusted launcher/
 printer/configuration remain explicitly unmounted; new-customer admission holds.
 Final changed-source registered regression/CI will be recorded separately.
+
+## Final registered source regression
+
+Exact source **ac804fd008162a34e0b14ad32f23e6693794ee1c**: **726 backend
+PASS270.631s +88 native PASS224.936s**, zero failures/errors/skips and both
+process exits0.34 original Apps Script VM PASS, syntax PASS, pip check clean.
+Actual Xvfb/X11, software GL and original device-off profile. These are the
+complete current registered PP backend/native workflow groups, not a claim to
+rerun the older1,934 all-opt-in whole-repository suite. Commands, log digests,
+all eight changed source/test/workflow hashes and CI are in
+[the final manifest](evidence/pp05-protected-native-final-2026-11-09.json).
+
+CI42648574582 at the SAME ac804fd: Ubuntu726 PASS201.258s; native88 PASS181.353s,
+zero failures/errors/skips, both jobs SUCCESS and completed logs inspected.
+All nine new backend and seven new native methods observed PASS, including
+actual child delivery and BUG-050. Owner Linux packaged preflight and screenshot
+steps succeeded. Windows is still pending; do not infer three-job PASS yet.
+Earlier88114a0/43b4c2a CI was superseded normally by the next source/test push.
+
+## New method to scenario traceability (partial software evidence only)
+
+Names below are method suffixes in ProtectedCheckoutTests (backend) or
+ProtectedNativeWidgetTests (native); the final manifest identifies full IDs.
+No full PP/provider/device acceptance row is promoted from these subassertions.
+
+| Added scenario/method | Existing acceptance scope | Actual boundary |
+| --- | --- | --- |
+| same_frozen_photos_paid_ticket_original_folder_and_batches_over_http | PP-004/014/041/049/054/058 | Original2+1 contract/jobs, one charge/ticket/folder, pending bytes, OWED |
+| native_original_ticket_then_automatic_2_1_delivery_and_protected_result_return | PP-041/049/054/058/071 | Both actual native layouts, auto original batches, protected Ads; no admitted B |
+| next_and_exact_30_seconds_wipe_ticket_while_receipt_http_is_blocked | PP-042/051/079 | Original native NEXT/exact30s independent of real request barrier |
+| slow_visible_ack_cannot_delay_genuine_native_timer_or_next | PP-041/042/051 | Genuine native callback starts clock; blocked backend ACK cannot disable NEXT |
+| actual_separate_backend_child_to_native_original_paid_delivery | PP-001/004/014/041/054/058 | Actual child/HTTP/native original retake and hashes; fake external effects |
+| partial_photo_holds_all_following_batches_and_never_replays; uncertain_first_photo_prevents_every_later_native_automatic_batch | PP-050/052/071 | Partial original driver bytes, quarantine later designs, no paper assumption |
+| original_receipt_uncertainty_holds_delivery_without_replay | PP-042/050/051 | UNCERTAIN original receipt prevents folder/photo work |
+| lost_bind_reply_retries_same_original_purchase | PP-053/054/081 | Same original transaction after lost binding response, no recharge |
+| late_delivery_reply_cannot_restore_private_snapshot_after_hide; result_timeout_wipes_during_blocked_original_strip_and_late_reply_stays_private | PP-063/071 | Old response cannot reopen retired A; protected B admission remains disabled |
+| wrong_mode_and_reopened_root_do_not_authorize_original_takeover; original_fixture_guard_and_protected_profile_reject_cross_authority | PP-038/046/062 | No mock/provider authority mix, tokenless reboot adoption or synthetic admission |
+
+Still NOT IMPLEMENTED/MOUNTED: protected original customer claim/free/busy WAIT
+and exact local worker/collector PREPARE-receipt-ACK/archive protocol; protected
+freeze orchestration and complete trusted customer launcher/printer configuration.
+The existing mock A-to-B-to-A remains regression only. Actual provider/refund/
+Drive ACL/retention/paper/Ubuntu startup/backup and final-profile2h/actual4h remain
+separate. No unchanged repetition of the owner's eleven passing smoke steps.
+
+All completed runtime/tests are pushed, no local runtime/test WIP remains.
+Final documentation is a companion checkpoint; local logs/display packages,
+private fixture roots/caches/screenshots are not portable through GitHub.
+No active local test/backend process after regression; Xvfb is a test display
+only and will be stopped before handoff. Roll back reviewed source only; never
+reset or replace original journals/custody/photos/PAID/OWED or replay uncertainty.

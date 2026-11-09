@@ -5,8 +5,8 @@ blocked-ACK test failed because generic PhotoJobs submission disabled every
 button after genuine ticket rendering. Protected profile now submits the same
 ACK on its original serialized worker while its independent30s/NEXT controls
 stay usable. Backend visible-before-receipt, original permit/generation and
-once-only output guards remain unchanged. Corrected35 affected native PASS,
-zero failures/errors/skips; full source/CI pending. Existing mock guard retained.
+once-only output guards remain unchanged. Corrected35 affected native PASS; final sourceac804fd726 backend/88 native local PASS,
+zero failures/errors/skips. CI42648574582 Ubuntu/native SUCCESS; Windows pending. Existing mock guard retained.
 [Exact scope and failure/correction](qa/portrait-v2-sandbox/PP05-PROTECTED-NATIVE-DELIVERY-2026-11-09.md).
 
 ## BUG-049 — idle backend uploader could block graceful API shutdown (9 November 2026)

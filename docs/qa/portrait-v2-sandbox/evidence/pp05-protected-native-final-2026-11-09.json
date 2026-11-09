@@ -1,0 +1,119 @@
+{
+  "ci": {
+    "run_id": 42648574582,
+    "source": "ac804fd008162a34e0b14ad32f23e6693794ee1c",
+    "status": "WINDOWS_CANCELLED_AT_JOB_BUDGET; SAME_SOURCE_FAILED_JOB_RETRY_IN_PROGRESS",
+    "jobs": [
+      {
+        "job_id": 129268536077,
+        "name": "private-state (windows-latest)",
+        "status": "completed",
+        "conclusion": "cancelled",
+        "completed_log_inspected": true,
+        "summary": null,
+        "reason": "15-minute job budget; KeyboardInterrupt during test_retention_readiness inventory/git status; no suite summary; not a PASS or a proven application assertion failure"
+      },
+      {
+        "job_id": 129268536603,
+        "name": "private-desktop",
+        "status": "completed",
+        "conclusion": "success",
+        "run": 88,
+        "seconds": 181.353,
+        "summary": "run=88 failures=0 errors=0 skipped=0 success=True",
+        "new_methods_pass": [
+          "test_post_preview_protected_widgets.ProtectedNativeWidgetTests.test_actual_separate_backend_child_to_native_original_paid_delivery",
+          "test_post_preview_protected_widgets.ProtectedNativeWidgetTests.test_native_original_ticket_then_automatic_2_1_delivery_and_protected_result_return",
+          "test_post_preview_protected_widgets.ProtectedNativeWidgetTests.test_next_and_exact_30_seconds_wipe_ticket_while_receipt_http_is_blocked",
+          "test_post_preview_protected_widgets.ProtectedNativeWidgetTests.test_original_fixture_guard_and_protected_profile_reject_cross_authority",
+          "test_post_preview_protected_widgets.ProtectedNativeWidgetTests.test_result_timeout_wipes_during_blocked_original_strip_and_late_reply_stays_private",
+          "test_post_preview_protected_widgets.ProtectedNativeWidgetTests.test_slow_visible_ack_cannot_delay_genuine_native_timer_or_next",
+          "test_post_preview_protected_widgets.ProtectedNativeWidgetTests.test_uncertain_first_photo_prevents_every_later_native_automatic_batch"
+        ],
+        "completed_log_inspected": true
+      },
+      {
+        "job_id": 129268536942,
+        "name": "private-state (ubuntu-latest)",
+        "status": "completed",
+        "conclusion": "success",
+        "run": 726,
+        "seconds": 201.258,
+        "summary": "run=726 failures=0 errors=0 skipped=0 success=True",
+        "new_methods_pass": [
+          "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_hide_does_not_wait_for_original_receipt_http_and_no_late_private_result",
+          "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_late_delivery_reply_cannot_restore_private_snapshot_after_hide",
+          "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_lost_bind_reply_retries_same_original_purchase",
+          "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_no_new_visitor_after_result_timeout_and_original_rights_survive",
+          "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_original_receipt_uncertainty_holds_delivery_without_replay",
+          "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_partial_photo_holds_all_following_batches_and_never_replays",
+          "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_same_frozen_photos_paid_ticket_original_folder_and_batches_over_http",
+          "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_unpaid_and_undismissed_ticket_cannot_allocate_folder",
+          "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_wrong_mode_and_reopened_root_do_not_authorize_original_takeover"
+        ],
+        "completed_log_inspected": true
+      }
+    ],
+    "windows_retry": {
+      "job_id": 129278840319,
+      "status": "in_progress",
+      "source": "ac804fd008162a34e0b14ad32f23e6693794ee1c",
+      "trigger": "Re-run failed/cancelled jobs only after actual first cancellation; no timeout/test/guard changes",
+      "other_jobs_not_manually_rerun": true
+    }
+  },
+  "source": "ac804fd008162a34e0b14ad32f23e6693794ee1c",
+  "groups": {
+    "backend": {
+      "exit": 0,
+      "summary": "run=726 failures=0 errors=0 skipped=0 success=True",
+      "run": 726,
+      "seconds": 270.631,
+      "log_sha256": "66abba41cca256a00f1f1395a9b1cb25ce1ad5ecd6d1131a8616fbced3c09f21"
+    },
+    "native": {
+      "exit": 0,
+      "summary": "run=88 failures=0 errors=0 skipped=0 success=True",
+      "run": 88,
+      "seconds": 224.936,
+      "log_sha256": "7b354f49c18ee9cd2c681293772eccd8ca23fbb98b473564d80b5c4a767585a0"
+    }
+  },
+  "commands": {
+    "backend": "python tools/run_kiosk_unittests.py test_post_preview_store test_post_preview_photos test_post_preview_checkout test_post_preview_resources test_post_preview_worker test_post_preview_idle test_credential_vault test_post_preview_ccp test_post_preview_payments test_post_preview_api test_post_preview_host test_post_preview_presentation test_post_preview_ticket_presentation test_post_preview_remote_receipt test_post_preview_payment_crashes test_post_preview_process_crash test_post_preview_protected_restore test_post_preview_checkout_worker test_post_preview_lifecycle_worker test_post_preview_readiness test_post_preview_drive_readiness test_post_preview_paid_drive test_post_preview_sandbox_delivery test_post_preview_sandbox_delivery_api test_post_preview_protected_checkout test_post_preview_paid_media test_post_preview_paid_strips test_post_preview_paid_print test_post_preview_paid_upload_status test_post_preview_paid_delivery test_post_preview_checkout_delivery test_post_preview_journey_matrix test_post_preview_pilot_launcher test_post_preview_pilot_preflight test_post_preview_device_entry test_post_preview_pilot_early_root test_post_preview_isolation test_post_preview_pilot_admission test_post_preview_refund_assessment test_post_preview_refund_simulation test_post_preview_claim test_post_preview_authority test_post_preview_ticket test_post_preview_ticket_receipt test_post_preview_ticket_window test_post_preview_checkout_ticket test_booth_sync test_booth_storage test_apps_script_drive test_retention_readiness test_checkout_backend test_checkout_durability test_payment_quote test_workflow test_capture_journal test_photo_reconstruction",
+    "native": "xvfb-run -a python tools/run_kiosk_unittests.py test_post_preview_widgets test_post_preview_checkout_widgets test_post_preview_native_journeys test_post_preview_pilot_runtime test_post_preview_ticket_view test_post_preview_remote_ticket_view test_post_preview_remote_receipt_view test_post_preview_protected_widgets test_ccp_view test_qr_code test_kiosk_v2_photos test_kiosk_v2_flow"
+  },
+  "environment": "Debian13 cloud; Xvfb/X11; fake external transports; no real devices",
+  "wall_seconds": 271.567,
+  "source_sha256": {
+    ".github/workflows/post-preview-qris.yml": "7cd4b3f6552a17737a4a746f1f36a5ed3a005685aa7894d9e1f70f40fd1aade7",
+    "photobooth/kiosk_v2/post_preview_checkout_app.py": "aceff94895245b842d712740e07e3afcc73a3ea7b341b05a9c54e58e9771fc95",
+    "photobooth/kiosk_v2/post_preview_protected_app.py": "ac867a8bf5ea20f11de967342c20df58015bb497279ff15344c9a8981bc49fa5",
+    "photobooth/kiosk_v2/post_preview_protected_checkout.py": "f9954a27d9d774fca94b61f89f2b51612c8baf123348149d549443557e36d9b4",
+    "tests/post_preview_host_process_fixture.py": "468eb30d6dce6bf84de20323404ccac08cd5f7d894e667e17fec309ec0faebb9",
+    "tests/post_preview_protected_fixture.py": "d3dde408d18a6ff55a7c9d2721fa2dca5f58a121a706befda21e3e34547c7dd8",
+    "tests/test_post_preview_protected_checkout.py": "b8aca2ac61b58853e03d31c2467090834036b0bd9dd54f46a8cfbef518cdb0b5",
+    "tests/test_post_preview_protected_widgets.py": "4bb9f6694001dfc90504c182cd2c1749a6757b3640d80068d7d5609c071fb3ec"
+  },
+  "apps_script": {
+    "run": 34,
+    "pass": 34,
+    "failures": 0,
+    "skips": 0,
+    "log_sha256": "6cb2127db779cbdf6290c3408c67701ea50e425c2876a2f28ca0451eb7ce5548",
+    "syntax": "PASS"
+  },
+  "pip_check": "No broken requirements found.",
+  "status": "BOUNDED_NATIVE_SCOPE_LOCAL_AND_UBUNTU_NATIVE_VERIFIED; WINDOWS_RETRY_PENDING",
+  "limits": {
+    "live_frozen_native_delivery": "VERIFIED_FAKE_EXTERNAL_TRANSPORTS",
+    "original_provider_CCP_ticket_receipt_folder_batches": "ACTUAL_API_AND_SEPARATE_CHILD_VERIFIED_FAKE_TRANSPORTS",
+    "protected_freeze": "NOT_MOUNTED",
+    "protected_claim_and_release": "NOT_IMPLEMENTED",
+    "customer_merchant_launcher": "DISABLED",
+    "actual_merchant_money_refund_paper_cloud": "NOT_RUN",
+    "Ubuntu_login_reboot_backup": "NOT_RUN",
+    "final_mounted_two_hour_and_device_four_hour": "NOT_RUN",
+    "production": "NOT_READY"
+  }
+}
