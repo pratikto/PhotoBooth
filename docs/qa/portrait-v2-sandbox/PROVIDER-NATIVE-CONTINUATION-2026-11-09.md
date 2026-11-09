@@ -28,15 +28,17 @@ new delayed-ACK test and is not claimed to detect BUG-048. Explicit synthetic
 provider/Drive/Linux custody fixtures; actual native rendering and child HTTP.
 
 [CI42591856392](https://github.com/pratikto/PhotoBooth/actions/runs/42591856392)
-at exact3ea1d8c is IN_PROGRESS: Ubuntu680 PASS (236.296s), native80 PASS
-(164.720s); both completed logs inspected. Windows remains IN_PROGRESS.
+at exact3ea1d8c is COMPLETED SUCCESS in all three jobs: Ubuntu680 PASS
+(236.296s), native80 PASS (164.720s), Windows680 PASS (548.934s); each zero
+failures/errors/skips. All three completed logs inspected. Original owner
+check-only and screenshot steps passed; no real device acceptance is inferred.
 Earlier65208c3 CI42591021814 was superseded/cancelled; do not invent a complete
 Windows verdict for it. [Current source hashes/exact commands/results](provider-ticket-2026-11-09/final-verification.json).
 
 ## First unfinished source action
 
-Finish reading current Windows CI log and repair any real failure first; do
-not rerun unchanged successful baseline groups. Then implement original once-only
+Current3ea1d8c CI is fully verified; do not rerun unchanged successful baseline
+groups. Next implement original once-only
 receipt dispatch over the SAME owned receipt/photo printer lane. Reuse
 OriginalRecoveryTicketService.send_receipt_once and original ThermalPrinter
 in-memory bitmap path. Backend owns payment/proof; native code must never get
@@ -62,8 +64,7 @@ retest. Prior R4 1,848.279s is an interim record, not a completed2h result.
 
 ## Cross-account / process and rollback state
 
-No active local test/backend/qualification/keyring processes. Current remote
-Windows CI still runs. Local untracked work/ synthetic logs/drivers/display
+No active local test/backend/qualification/keyring processes. Remote CI has completed successfully. Local untracked work/ synthetic logs/drivers/display
 packages/Kivy caches are NOT pushed or portable. No completed runtime source
 remains unpushed. Continue from the first unfinished source action above.
 Rollback scoped source only; retain ledger/WAL/SHM, host context, protected

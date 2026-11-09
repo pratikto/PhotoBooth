@@ -35,7 +35,7 @@
   "current_ci": {
     "run_id": 42591856392,
     "source": "3ea1d8c71977ba8e186b70b3a3b5e345b56ac603",
-    "status": "IN_PROGRESS",
+    "status": "COMPLETED SUCCESS",
     "jobs": {
       "ubuntu": {
         "job_id": 129075161072,
@@ -59,7 +59,14 @@
       },
       "windows": {
         "job_id": 129075161412,
-        "status": "IN_PROGRESS"
+        "status": "SUCCESS",
+        "run": 680,
+        "seconds": 548.934,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "completed_log_inspected": true,
+        "owner_entry_check_only": "READY_FOR_SUPERVISED_SYNTHETIC_PILOT"
       }
     }
   },
@@ -69,7 +76,7 @@
     "ack-clock-before.txt": "b61fa21f426aad565319df53ecc174b879219f63cc08ef5d50c36755269eea8c",
     "ack-clock-after.txt": "e11d4c504902c7beca5c0043f7c68c08dd885737bdb1d3a524641b811e98ab50"
   },
-  "processes": "No active local test/backend/keyring/qualification process; remote Windows CI running",
+  "processes": "No active local test/backend/keyring/qualification process; remote CI completed successfully.",
   "local_only": "Untracked work/ synthetic reports/drivers/display tools/caches, not pushed",
   "commercial": "NOT_READY",
   "next": "Original once-only receipt on shared owned printer lane; then paid Drive/strip/upload and claim/release/full customer profile",
