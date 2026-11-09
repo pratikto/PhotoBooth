@@ -1,0 +1,64 @@
+{
+  "date": "2026-11-09",
+  "runtime_source": "f098c0510118b82195bde5f01d518b98a34c1c98",
+  "source_sha256": {
+    "tests/test_post_preview_checkout_widgets.py": "1fe605f6502c0b907179fbdc510571adc111b69a34edc8926d7f4cc99a018384",
+    "photobooth/post_preview_ticket_window.py": "1e2bcd8fc6deaeb51195c192d1d0c205ee8ca3a72681a1a97a9965f3c37fe92a"
+  },
+  "local_full": {
+    "backend": {
+      "run": 672,
+      "seconds": 292.753,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "native": {
+      "run": 74,
+      "seconds": 210.32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "apps_script": {
+      "run": 34,
+      "failures": 0,
+      "skipped": 0
+    }
+  },
+  "corrected_native_method": {
+    "name": "test_post_preview_checkout_widgets.PrivateCheckoutWidgetTests.test_ticket_countdown_and_auto_wipe_continue_during_blocked_receipt",
+    "run": 1,
+    "sizes": [
+      [
+        800,
+        1280
+      ],
+      [
+        452,
+        900
+      ]
+    ],
+    "seconds": 6.364,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "prior_collector_regression": {
+    "source": "8398b53117f1192b7c5406e1b1856dc2cb20f433",
+    "expected_assertion_failures": 2,
+    "errors": 0
+  },
+  "log_sha256": {
+    "final-backend.txt": "e30c0d9c3f46540906bd05cc83f210cd749944c6250a3cecdada3dcaad9c1cc8",
+    "final-native.txt": "c21b7b98414252054f352807bf123dfd72ff80033aab59d08302e5d49f9d77b4",
+    "final-apps-script.txt": "89fba45c3c973abc5332987a22921832c06a7c7acccb2994182128ef416ba45a",
+    "countdown-exact-focused.txt": "1fa96ff619c4eec6a020dcc88360917f1a260508bb630f733f367beea2e5e0a8",
+    "collector-prior-source.txt": "c3473858da909dbd7fd8743d9a3578ddb653efd72e05631b9511394c9dee8cd2"
+  },
+  "limits": [
+    "Only a native fixture clock changed; no production runtime change",
+    "Fresh final source-matched CI pending",
+    "No real merchant/Drive/device or full native provider launch"
+  ]
+}

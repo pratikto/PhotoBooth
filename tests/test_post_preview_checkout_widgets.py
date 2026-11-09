@@ -15,6 +15,7 @@ from kivy.clock import Clock
 from kivy.core.window import Window
 
 from photobooth.kiosk_v2.post_preview_checkout_app import PrivateCheckoutFixtureApp
+from photobooth.post_preview_ticket_window import VisibleTicketWindow
 from tests.post_preview_checkout_fixture import CheckoutFixture
 from tests import test_post_preview_widgets as widget_helpers
 
@@ -322,7 +323,14 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
     def test_ticket_countdown_and_auto_wipe_continue_during_blocked_receipt(self):
         """PP-042/051: printer I/O cannot extend private QR visibility."""
         for size in ((800,1280),(452,900)):
-            with self.subTest(size=size), self.booth(paid_ticket=True) as (app,fixture):
+            tick=[100.0]
+            # An arbitrary host uptime plus 20 can subtract to just below 20
+            # at a floating-point exponent boundary. Use an exact test clock;
+            # leave the production monotonic clock and ceil/deadline unchanged.
+            with self.subTest(size=size), patch(
+                    'photobooth.kiosk_v2.post_preview_checkout_app.VisibleTicketWindow',
+                    side_effect=lambda:VisibleTicketWindow(monotonic=lambda:tick[0])), \
+                    self.booth(paid_ticket=True) as (app,fixture):
                 Window.size=size
                 fixture.receipt_entered=threading.Event()
                 fixture.receipt_release=threading.Event()
@@ -334,12 +342,17 @@ class PrivateCheckoutWidgetTests(unittest.TestCase):
                     self.assertTrue(fixture.receipt_entered.is_set())
                     self.assertTrue(app._photo_jobs.busy)
                     card=app._ticket_card
-                    began=app._ticket_window._started_at
-                    with patch.object(app._ticket_window,'_clock',return_value=began+20):
-                        app._poll_photos()
-                        self.assertIn('10 detik',app._ticket_countdown.text)
-                    with patch.object(app._ticket_window,'_clock',return_value=began+31):
-                        app._poll_photos()
+                    self.assertEqual(100.0,app._ticket_window._started_at)
+                    tick[0]=120.0
+                    app._poll_photos()
+                    self.assertIn('10 detik',app._ticket_countdown.text)
+                    tick[0]=129.999
+                    app._poll_photos()
+                    self.assertIn('1 detik',app._ticket_countdown.text)
+                    self.assertIs(card,app._ticket_card)
+                    self.assertTrue(app._ticket_window.active)
+                    tick[0]=130.0
+                    app._poll_photos()
                     self.assertTrue(app._ticket_dismiss_pending)
                     self.assertIsNone(card.qr_image.texture)
                     self.assertEqual('',card.code.text)
