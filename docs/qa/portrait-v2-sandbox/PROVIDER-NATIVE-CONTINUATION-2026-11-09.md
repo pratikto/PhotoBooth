@@ -1,7 +1,85 @@
-> **Later B2 increment:** original backend paid-ticket display and existing native
-> card/window are connected; [new implementation/evidence/next task](PP04-NATIVE-REMOTE-TICKET-2026-11-09.md).
-> Receipt/shared lane and full customer provider profile remain unfinished.
-> The c096504 report below preserves its original tested scope.
+# 9 November — B2 backend/native original Recovery Ticket checkpoint
+
+Branch remains feature/post-preview-qris-checkout, Ubuntu mini-PC target with
+Windows support. **NOT_READY for commercial launch.** Latest runtime/tests
+**3ea1d8c71977ba8e186b70b3a3b5e345b56ac603**; source65208c3 delivers the original
+backend/native ticket, source3ea1d8c fixes its genuine-render privacy clock.
+Both safe increments are pushed and remote-verified. No new branch/default/
+master/production operation and no original journal/custody/media reset.
+
+## What changed and what actually passed
+
+Original Sandbox payment/protector/ledger now owns scoped Recovery Ticket
+presentation APIs. Typed native client and RemoteRecoveryTicketSession reuse
+the original PrivateRecoveryTicketCard/VisibleTicketWindow, including an ACTUAL
+separate backend child -> original settlement -> HTTP/client -> native card ->
+visible/dismiss journey. Same ciphertext after restart; no ticket replay after
+visibility/dismissal, wrong role/generation/mode held, no dummy provider in GUI.
+
+BUG-048 regression first FAILed: a backend visible-ACK delay could defer the
+screen timer. Fixed: the genuine native rendered callback starts30s immediately;
+HTTP ACK stays on the worker. QR/full code wipe at30s/NEXT never waits for that
+ACK. Delayed ACK cannot restart the screen.12 related native PASS after fix.
+
+Local: **680 backend PASS (401.476s)** at65208c3; all current backend/test hashes
+identical after UI-only3ea1d8c fix. **80 corrected-source native PASS (276.252s)**
+at3ea1d8c; zero failures/errors/skips. Previous79 native PASS at65208c3 lacked the
+new delayed-ACK test and is not claimed to detect BUG-048. Explicit synthetic
+provider/Drive/Linux custody fixtures; actual native rendering and child HTTP.
+
+[CI42591856392](https://github.com/pratikto/PhotoBooth/actions/runs/42591856392)
+at exact3ea1d8c is IN_PROGRESS: Ubuntu680 PASS (236.296s), native80 PASS
+(164.720s); both completed logs inspected. Windows remains IN_PROGRESS.
+Earlier65208c3 CI42591021814 was superseded/cancelled; do not invent a complete
+Windows verdict for it. [Current source hashes/exact commands/results](provider-ticket-2026-11-09/final-verification.json).
+
+## First unfinished source action
+
+Finish reading current Windows CI log and repair any real failure first; do
+not rerun unchanged successful baseline groups. Then implement original once-only
+receipt dispatch over the SAME owned receipt/photo printer lane. Reuse
+OriginalRecoveryTicketService.send_receipt_once and original ThermalPrinter
+in-memory bitmap path. Backend owns payment/proof; native code must never get
+merchant/Drive keys or a dummy provider. Preserve SENDING before I/O, no replay
+on lost response/restart/UNCERTAIN, and UI countdown/NEXT independent of printer.
+
+Then finish original paid Drive binding/strip/upload, proof-gated fresh-PAID
+claim/WAIT/FREE/PREPARE/ACK release and the complete protected native customer
+profile. Mount the actual readiness collector into that profile; stop=False
+must still hold release/reset. Do not relax mock-only constructors as a shortcut.
+
+Receipt is still PREPARED in this display seam. Original owner launcher stays
+mock-only and backend health fulfillment_enabled=False. The source integration
+rows above are unfinished code, NOT hardware blockers. Actual refund/status,
+final operating package and supported Ubuntu worker/restore remain open, as do
+account/device acceptance and measured final2h simulation/separate4h device run.
+No new long qualification started on this incomplete customer profile.
+
+No configured merchant/Drive secrets or owned printer/device on this executor.
+No actual money/refund/paper/cloud publication/deletion/deployment occurred.
+Keep the owner's eleven prior reported checks; do not demand an unchanged full
+retest. Prior R4 1,848.279s is an interim record, not a completed2h result.
+
+## Cross-account / process and rollback state
+
+No active local test/backend/qualification/keyring processes. Current remote
+Windows CI still runs. Local untracked work/ synthetic logs/drivers/display
+packages/Kivy caches are NOT pushed or portable. No completed runtime source
+remains unpushed. Continue from the first unfinished source action above.
+Rollback scoped source only; retain ledger/WAL/SHM, host context, protected
+keyring/ciphertext, approved media, original paid/Drive/print bindings and all
+PAID/OWED/SENDING/UNCERTAIN. Never invent replacement roots/keys/proofs or replay
+uncertain hardware. Real mini-PC login/PAM/unlock/encrypted backup remains a
+separate verification; Debian cloud and Windows CI do not establish it.
+
+[Original B2 implementation/evidence](PP04-NATIVE-REMOTE-TICKET-2026-11-09.md) ·
+[BUG-048 failure/fix](BUG048-REMOTE-TICKET-VISIBILITY-CLOCK.md) ·
+[Approved flowchart](POST-PREVIEW-QRIS-OWNER-APPROVED.md) ·
+[Security contract](POST-PREVIEW-QRIS-SECURITY-STATE-CONTRACT.md).
+
+---
+
+The earlier c096504 checkpoint below retains its original historical scope.
 
 # Post-preview child host / protected native continuation
 

@@ -1,0 +1,82 @@
+{
+  "date": "2026-11-09",
+  "branch": "feature/post-preview-qris-checkout",
+  "runtime_test_source": "3ea1d8c71977ba8e186b70b3a3b5e345b56ac603",
+  "sha256": {
+    ".github/workflows/post-preview-qris.yml": "b9b99add6386450007bd2861c8eb989c156a0abafd518cf7f9d346491558c4aa",
+    "photobooth/kiosk_v2/post_preview_remote_ticket.py": "ccd8d7ff217b919b3fceaa3099296007631bea58e7ad2421fde83fc9a1c4e9a6",
+    "photobooth/post_preview_api.py": "0db58f5db6d3e62496ad7800dd4fd4b529857c94fee59bf8a0412fe488c7e470",
+    "photobooth/post_preview_proof_client.py": "0f380998f31efe5116234d127004fd8e4f7ab2a6b046c9c5697ebc18dc244736",
+    "photobooth/post_preview_server.py": "f33a3eb37d77fe49896ac62f8bd986ad25e36ff5e107ebc7be97215008a1cf48",
+    "photobooth/post_preview_ticket_presentation.py": "140ec7b2e2cacd17b329b4fa0df5eea13b997fde8d694ef297cabeda9cdab8e9",
+    "tests/test_post_preview_host.py": "a8e4d9dc13340f069e48660e33154b32f583d04daec9b17d82f41b04069647ad",
+    "tests/test_post_preview_remote_ticket_view.py": "488e16dd4644af427b8e10a99b747c5086680098198dee6ccf833d9364c48fda",
+    "tests/test_post_preview_ticket_presentation.py": "4342a1f36878672d4061495c1cb0fb218d2d82583a8975344f02e4b0907e38a7"
+  },
+  "local_backend": {
+    "run": 680,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 401.476,
+    "source": "65208c3082513bcdbcd88b361ecbe70986a647e4",
+    "current_backend_hashes_identical": true,
+    "command": "python tools/run_kiosk_unittests.py test_post_preview_store test_post_preview_photos test_post_preview_checkout test_post_preview_resources test_post_preview_worker test_post_preview_idle test_credential_vault test_post_preview_ccp test_post_preview_payments test_post_preview_api test_post_preview_host test_post_preview_presentation test_post_preview_ticket_presentation test_post_preview_payment_crashes test_post_preview_process_crash test_post_preview_protected_restore test_post_preview_checkout_worker test_post_preview_lifecycle_worker test_post_preview_readiness test_post_preview_drive_readiness test_post_preview_paid_drive test_post_preview_paid_media test_post_preview_paid_strips test_post_preview_paid_print test_post_preview_paid_upload_status test_post_preview_paid_delivery test_post_preview_checkout_delivery test_post_preview_journey_matrix test_post_preview_pilot_launcher test_post_preview_pilot_preflight test_post_preview_device_entry test_post_preview_pilot_early_root test_post_preview_isolation test_post_preview_pilot_admission test_post_preview_refund_assessment test_post_preview_refund_simulation test_post_preview_claim test_post_preview_authority test_post_preview_ticket test_post_preview_ticket_receipt test_post_preview_ticket_window test_post_preview_checkout_ticket test_booth_sync test_booth_storage test_apps_script_drive test_retention_readiness test_checkout_backend test_checkout_durability test_payment_quote test_workflow test_capture_journal test_photo_reconstruction"
+  },
+  "local_native": {
+    "run": 80,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 276.252,
+    "source": "3ea1d8c71977ba8e186b70b3a3b5e345b56ac603",
+    "command": "xvfb-run -a python tools/run_kiosk_unittests.py test_post_preview_widgets test_post_preview_checkout_widgets test_post_preview_native_journeys test_post_preview_pilot_runtime test_post_preview_ticket_view test_post_preview_remote_ticket_view test_ccp_view test_qr_code test_kiosk_v2_photos test_kiosk_v2_flow"
+  },
+  "current_ci": {
+    "run_id": 42591856392,
+    "source": "3ea1d8c71977ba8e186b70b3a3b5e345b56ac603",
+    "status": "IN_PROGRESS",
+    "jobs": {
+      "ubuntu": {
+        "job_id": 129075161072,
+        "status": "SUCCESS",
+        "run": 680,
+        "seconds": 236.296,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "completed_log_inspected": true
+      },
+      "native": {
+        "job_id": 129075161438,
+        "status": "SUCCESS",
+        "run": 80,
+        "seconds": 164.72,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "completed_log_inspected": true
+      },
+      "windows": {
+        "job_id": 129075161412,
+        "status": "IN_PROGRESS"
+      }
+    }
+  },
+  "log_sha256": {
+    "full-backend.txt": "a27cc7aeac46194ee60592e16dd98a45e33bad4a54a8c77d22d48ff6a6ea06b1",
+    "corrected-full-native.txt": "1beced743c913588eab7750c98094feb72dc0fbddc02ba6109c46670de4d0cc8",
+    "ack-clock-before.txt": "b61fa21f426aad565319df53ecc174b879219f63cc08ef5d50c36755269eea8c",
+    "ack-clock-after.txt": "e11d4c504902c7beca5c0043f7c68c08dd885737bdb1d3a524641b811e98ab50"
+  },
+  "processes": "No active local test/backend/keyring/qualification process; remote Windows CI running",
+  "local_only": "Untracked work/ synthetic reports/drivers/display tools/caches, not pushed",
+  "commercial": "NOT_READY",
+  "next": "Original once-only receipt on shared owned printer lane; then paid Drive/strip/upload and claim/release/full customer profile",
+  "limits": [
+    "Synthetic provider, Drive and Linux custody; actual original child HTTP/native card",
+    "No actual receipt/strip printing or money/cloud effects",
+    "Customer launcher remains mock-only; display seam does not enable full merchant flow",
+    "Target Ubuntu login/reboot/backup/device and actual accounts/refunds/final measured qualification not accepted"
+  ]
+}

@@ -1,6 +1,6 @@
 > **Current post-preview QRIS implementation:** [9 November exact checkpoint](docs/qa/portrait-v2-sandbox/PROVIDER-NATIVE-CONTINUATION-2026-11-09.md).
 > Work stays on feature/post-preview-qris-checkout; commercial target is Ubuntu
-> mini PC. Isolated provider backend/protected CCP are delivered; full native
+> mini PC. Isolated provider backend/protected CCP/native ticket display are delivered; full native
 > paid delivery/recovery and commercial acceptance are unfinished. **NOT_READY
 > for commercial launch.** Earlier software trial notes keep their dated scope.
 

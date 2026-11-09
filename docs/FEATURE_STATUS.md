@@ -1,19 +1,15 @@
-# 9 November — BUG-048 remote ticket privacy clock
+# 9 November — original backend/native ticket B2 and BUG-048
 
-Genuine native rendering now starts30s immediately, independently of backend
-visible ACK. A delayed-ACK regression first FAILed;12 related native PASS after
-correction. [Exact source and evidence](qa/portrait-v2-sandbox/BUG048-REMOTE-TICKET-VISIBILITY-CLOCK.md). Final new-source verification
-pending; next original receipt/shared lane and full paid profile remain open.
-
-# 9 November 2026 — native original backend ticket B2
-
-Original protected paid ticket routes and typed native card/window session are
-connected, including actual separate-child/API/native-card verification.
-73 related +8 ticket-focused +11 native PASS (overlapping scopes). [Exact scope,
-evidence and next task](qa/portrait-v2-sandbox/PP04-NATIVE-REMOTE-TICKET-2026-11-09.md). Next original once-only receipt/shared printer
-lane, paid delivery/claim/release and full native provider profile. New-source
-full regression/CI pending; prior c096504 evidence remains unchanged.
-Production NOT_READY. Local work/ artifacts are not pushed.
+Source65208c3 / corrected3ea1d8c pushed, remote verified. Protected original
+paid-ticket API/client/native card/window connected; actual child HTTP/native
+journey and genuine-render30s/NEXT tested. BUG-048 delayed-ACK privacy deadline
+fixed after regression FAIL.680 backend +80 native local PASS; current source
+CI42591856392 Ubuntu680/native80 SUCCESS, Windows IN_PROGRESS.
+[Exact source/commands/CI and next unfinished receipt integration](qa/portrait-v2-sandbox/PROVIDER-NATIVE-CONTINUATION-2026-11-09.md).
+Customer launcher/full paid delivery/claim/release, refund/status/ops and real
+account/Ubuntu device/final qualification remain open; commercial NOT_READY.
+No active local test/backend process or runtime WIP; untracked work/ not pushed.
+Earlier source-specific checkpoints below retain historical scope.
 
 # 9 November 2026 — original provider host / protected native checkpoint
 
