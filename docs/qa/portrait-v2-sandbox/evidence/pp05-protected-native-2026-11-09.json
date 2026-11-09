@@ -1,0 +1,16 @@
+{
+  "base": "9d372804421682ca3113ba4e19401f1938e4cd4e",
+  "stage": "B5-A facade only; native/profile/claim/release not yet mounted",
+  "command": "python tools/run_kiosk_unittests.py test_post_preview_protected_checkout test_post_preview_sandbox_delivery test_post_preview_sandbox_delivery_api test_post_preview_checkout_worker test_post_preview_checkout_ticket test_post_preview_checkout_delivery test_post_preview_remote_receipt",
+  "run": 84,
+  "seconds": 44.387,
+  "summary": "run=84 failures=0 errors=0 skipped=0 success=True",
+  "log_sha256": "65d119a1775e81af1c6e8c7b75831f904a5bcf7b92114e36a44ef8a566831784",
+  "source_sha256": {
+    "photobooth/kiosk_v2/post_preview_protected_checkout.py": "779262e655b3960dbb3649588f9ac42807143e0769b2a396bd22bc149efd32a8",
+    "tests/post_preview_protected_fixture.py": "b1b68c0bab637a1d66f673aebbf2a2cc9236ce00c86e4924863d5ed24a1ed68e",
+    "tests/test_post_preview_protected_checkout.py": "b8aca2ac61b58853e03d31c2467090834036b0bd9dd54f46a8cfbef518cdb0b5",
+    ".github/workflows/post-preview-qris.yml": "8a1e9092872e8eb8858e451b0c99792a2b39d80be4d8fcffeeb1fe1d468db7cb"
+  },
+  "limits": "Fake provider/Drive/printer/key lookup; actual original API/core; no live money/paper/cloud/production"
+}
