@@ -62,3 +62,43 @@ orchestration is mounted. Existing customer launcher and health stay disabled.
 NEXT: reuse shared checkout view/controller code in a protected native app with
 genuine-render timer, automatic batches, truthful status and protected Ads; then
 implement the original claim/collector/worker release protocol.
+
+## B5-B original native views and automatic output
+
+Shared checkout controls are reused through an internal base. The original
+PrivateCheckoutFixtureApp still requires PrivateCheckoutService; the distinct
+ProtectedCheckoutApp requires the exact protected facade and refuses synthetic
+admission/callback injection. No launcher enables it. Original live/frozen proof
+and payment, mandatory ticket/one receipt, paid folder/status/automatic batches
+now run through real native controls and the authenticated API/client boundary.
+Results retain their independent30s timeout; privacy-retired Ads cannot admit B.
+
+Six new methods plus original checkout/remote-ticket/receipt scope: **35 PASS,
+zero failures/errors/skips,119.812s**. Both portrait sizes complete original
+2+1 batch submission without a print button, truthful pending upload and paper
+uncertainty, then protected result return. NEXT/exact30s wipe during held receipt;
+held strip completion cannot restore old pixels or dispatch the remaining design.
+
+BUG-050 reproduced one assertion FAIL: shared generic worker submission disabled
+NEXT while the genuine-visible backend ACK blocked. The protected profile now
+submits that ACK on the SAME serialized worker without freezing ticket controls;
+its clock starts at the original genuine-render callback. Original ACK/receipt
+ordering remains required. The five-method correction PASS19.254s precedes the
+six-method/35 affected final scope. Earlier new fixture errors were diagnosed:
+submission before constructing a photo page and trying to recompute editable
+previews after freeze; tests now retain actual pre-freeze preview snapshots.
+No immutability/render/financial guard was weakened.
+
+Actual Xvfb/X11 additional journey PASS at452x900/800x1280; both status views
+visually inspected. Initial offscreen framebuffer screenshots had black/corrupt
+upper regions and are NOT visual acceptance. Official Debian Xvfb package was
+extracted under task-private work/ (no sudo/system mutation); real X11 views show
+original branding, synthetic-download fixture, pending bytes, transport-only
+paper observation and independent result countdown. No private proof screenshots
+were saved. Private status captures/logs are not portable; sanitized hashes only.
+
+Next: actual separate backend-child/native delivery test, original proof-gated
+claim and exact collector/camera/file/print/upload release with PREPARE/ACK;
+protected freeze and trusted launcher/configuration remain gated. This native
+increment is not full merchant/customer or commercial readiness. Full changed-
+source regression and exact-source CI remain pending.

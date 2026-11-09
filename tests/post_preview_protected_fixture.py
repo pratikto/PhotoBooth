@@ -57,6 +57,7 @@ class ProtectedNativeHarness:
         # Existing trusted freeze primitive; this explicit fixture observation
         # is NOT a production native/backend freeze mounting or readiness claim.
         view = self.service.snapshot()
+        self.preview_view = view  # Original rendered previews retained across freeze.
         self.intent = self.service.checkout.freeze(self.service.lease, self.templates,
             revision=view['revision'], expected_amount=view['amount'],
             readiness=ChargeReadiness(True,True,True,True,True,True,True,25))

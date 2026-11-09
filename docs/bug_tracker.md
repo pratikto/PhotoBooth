@@ -1,3 +1,14 @@
+## BUG-050 — protected native NEXT disabled during visible ACK (9 November 2026)
+
+S2 / new integration SOFTWARE FIXED, no physical incident. A meaningful native
+blocked-ACK test failed because generic PhotoJobs submission disabled every
+button after genuine ticket rendering. Protected profile now submits the same
+ACK on its original serialized worker while its independent30s/NEXT controls
+stay usable. Backend visible-before-receipt, original permit/generation and
+once-only output guards remain unchanged. Corrected35 affected native PASS,
+zero failures/errors/skips; full source/CI pending. Existing mock guard retained.
+[Exact scope and failure/correction](qa/portrait-v2-sandbox/PP05-PROTECTED-NATIVE-DELIVERY-2026-11-09.md).
+
 ## BUG-049 — idle backend uploader could block graceful API shutdown (9 November 2026)
 
 S2 / source fixed and software VERIFIED at8e976a9a: 1,934 local PASS; CI42627272293 all three SUCCESS (717 Windows/717 Ubuntu/81 native), zero failures/errors/skips. Physical/account acceptance remains separate. Zero-wait shutdown checked the original uploader before its idle thread could respond to stop, raising RuntimeError and withholding the shutdown callback. New regression reproduces one ERROR. API grants one bounded second for actual thread exit; blocked original I/O still retains ledger/kernel ownership and stop=False. Corrected101 affected PASS, zero failures/errors/skips. No actual operational/device incident claimed. [Scope and evidence](qa/portrait-v2-sandbox/PP05-SANDBOX-PAID-DELIVERY-2026-11-09.md).

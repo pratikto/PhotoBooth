@@ -35,6 +35,14 @@ class ProtectedCheckoutService(PrivatePhotoService):
     paid_ticket_enabled = property(lambda self: True)
     paid_delivery_enabled = property(lambda self: True)
 
+    def prepare(self):
+        if self.lease is None:
+            return super().prepare()
+        self._active()
+        with self.ledger.write():
+            self.ledger._owned(self.lease)
+        return self.snapshot()
+
     def accept_frozen_checkout(self, group):
         """Worker-only continuation of our live capture, never a restore API.
 

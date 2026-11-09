@@ -23,7 +23,13 @@ from photobooth.post_preview_pilot_admission import OriginalPilotAdmission
 from photobooth.post_preview_store import DraftHeld
 
 
-class PrivateCheckoutFixtureApp(PrivatePreviewApp):
+class _CheckoutAppBase(PrivatePreviewApp):
+    """Shared original checkout controls; concrete profiles validate authority."""
+    _sandbox_transport = False
+
+    def _validate_checkout_service(self, service):
+        raise TypeError('Concrete checkout profile required')
+
     def __init__(self, private_root, *, private_service, synthetic_pay_callback=None,
                  synthetic_drive_url=True, **kwargs):
         if synthetic_pay_callback is not None and not callable(synthetic_pay_callback):
@@ -32,8 +38,7 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
             raise TypeError('Explicit Drive display mode must be boolean')
         self._synthetic_drive_url = synthetic_drive_url
         self._synthetic_pay_callback = synthetic_pay_callback
-        if not isinstance(private_service, PrivateCheckoutService):
-            raise TypeError('Explicit incomplete mock checkout service required')
+        self._validate_checkout_service(private_service)
         self._claim_card = self._claim_pending = None
         self._ticket_card = self._ticket_pending = None
         self._ticket_window = self._ticket_next_button = None
@@ -192,8 +197,11 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
 
     def _photo_action(self, title, callback, **kwargs):
         if title == 'PEMBAYARAN BELUM TERHUBUNG':
-            title, callback = 'LANJUT CHECKOUT SIMULASI', self._freeze_checkout
-            kwargs['disabled'] = False
+            if self._sandbox_transport:
+                title = 'CHECKOUT SANDBOX BELUM DIAKTIFKAN'
+            else:
+                title, callback = 'LANJUT CHECKOUT SIMULASI', self._freeze_checkout
+                kwargs['disabled'] = False
         return super()._photo_action(title, callback, **kwargs)
 
     def _freeze_checkout(self):
@@ -286,12 +294,12 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
         if self._claim_current(offer) and self._photo_view.get('phase') == 'claim_proof':
             self._claim_pending = offer
 
-    def _ticket_current(self, offer):
+    def _ticket_current(self, offer, *, visible_ack=False):
         service = self._photo_jobs.service
         return (not self._closed and not self._suspended and not service._hidden.is_set()
                 and self.navigation.page == RESULT
                 and self._photo_view.get('phase') in TICKET_PHASES
-                and not self._ticket_dismiss_pending
+                and (visible_ack or not self._ticket_dismiss_pending)
                 and self._photo_view.get('ticket_offer') is offer)
 
     def _ticket_rendered(self, offer):
@@ -346,7 +354,7 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
                 self._photo_submit('ccp_visible', offer)
         elif self._ticket_pending is not None:
             offer, self._ticket_pending = self._ticket_pending, None
-            if self._ticket_current(offer):
+            if self._ticket_current(offer, visible_ack=True):
                 self._photo_submit('ticket_visible', offer)
         elif (self._photo_view.get('phase') in {'payment_pending', 'payment_hold'}
                 and time.monotonic() >= self._payment_check_at):
@@ -397,7 +405,9 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
         self._camera_texture = None
         self._last_live_frame = self._last_preview = None
         shell = self._frame(canvas, brand_height=65)
-        self._brand(shell, 'TIKET PEMULIHAN', 'SIMULASI • SIMPAN QR SEBELUM LANJUT')
+        self._brand(shell, 'TIKET PEMULIHAN',
+            'SANDBOX • SIMPAN QR SEBELUM LANJUT' if self._sandbox_transport else
+            'SIMULASI • SIMPAN QR SEBELUM LANJUT')
         view = self._photo_view
         offer = view.get('ticket_offer')
         if offer is not None and view.get('ticket_qr') is not None:
@@ -437,7 +447,8 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
             self._paid_result_deadline = time.monotonic() + 30
         # A synthetic Drive QR exercises rendering but is NOT a real download link.
         # Keep the actual opt-in test Drive route distinct and visible to the owner.
-        subtitle = ('QR DEMO • BUKAN LINK DOWNLOAD' if self._synthetic_drive_url
+        subtitle = ('SANDBOX • STATUS LAYANAN' if self._sandbox_transport else
+                    'QR DEMO • BUKAN LINK DOWNLOAD' if self._synthetic_drive_url
                     else 'DRIVE TEST • BAYAR SIMULASI')
         self._brand(shell, 'HASIL FOTO BERBAYAR', subtitle)
         data=self._photo_view.get('delivery') or {}
@@ -501,7 +512,8 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
         self._camera_texture = None
         self._last_live_frame = self._last_preview = None
         shell = self._frame(canvas, brand_height=65)
-        self._brand(shell, 'CHECKOUT PRIVAT', 'SIMULASI • BUKAN PEMBAYARAN QRIS')
+        self._brand(shell, 'CHECKOUT PRIVAT', 'MIDTRANS SANDBOX • UJI PEMBAYARAN' if
+                    self._sandbox_transport else 'SIMULASI • BUKAN PEMBAYARAN QRIS')
         view = self._photo_view
         phase = view['phase']
         if phase in {'claim_proof', 'checkout_ready'}:
@@ -515,10 +527,12 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
                                            size=18, height=120, color=MUTED))
                 shell.add_widget(self._photo_action('COBA TAMPILKAN BUKTI',
                                                    lambda: self._photo_submit('offer_claim')))
-            shell.add_widget(self._photo_action('SUDAH SIMPAN BUKTI • LANJUT SIMULASI',
+            shell.add_widget(self._photo_action('SUDAH SIMPAN BUKTI • LANJUT QRIS' if
+                self._sandbox_transport else 'SUDAH SIMPAN BUKTI • LANJUT SIMULASI',
                 lambda: self._photo_submit('begin_payment'), disabled=phase != 'checkout_ready'))
         elif phase == 'paid_hold':
-            shell.add_widget(text_label('PEMBAYARAN SIMULASI TERVERIFIKASI', size=20, height=100, color=GOLD))
+            shell.add_widget(text_label('PEMBAYARAN SANDBOX TERVERIFIKASI' if self._sandbox_transport
+                else 'PEMBAYARAN SIMULASI TERVERIFIKASI', size=20, height=100, color=GOLD))
             if view.get('ticket_dismissed') and self._photo_jobs.service.paid_delivery_enabled:
                 shell.add_widget(self._photo_action('COBA SIAPKAN DELIVERY',
                     lambda: self._photo_submit('prepare_paid_delivery')))
@@ -529,8 +543,17 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
                 size=17, height=160, color=MUTED))
         else:
             payment = view.get('payment') or {}
-            shell.add_widget(text_label('MENUNGGU PEMBAYARAN SIMULASI', size=19, height=65, color=GOLD))
-            if phase == 'payment_pending':
+            shell.add_widget(text_label('MENUNGGU PEMBAYARAN SANDBOX' if self._sandbox_transport
+                else 'MENUNGGU PEMBAYARAN SIMULASI', size=19, height=65, color=GOLD))
+            if phase == 'payment_pending' and self._sandbox_transport:
+                qr = view.get('payment_qr')
+                if qr is not None:
+                    shell.add_widget(Image(texture=image_texture(qr),fit_mode='contain',
+                                           size_hint_y=None,height=dp(240)))
+                else:
+                    shell.add_widget(text_label('QR pesanan asli belum tersedia. Periksa status.',
+                                               size=17,height=120,color=MUTED))
+            elif phase == 'payment_pending':
                 # This service accepts only mock authority. Its white fixture
                 # image is not a payment QR; do not present a blank scanner target.
                 card = PixelCard(orientation='vertical', padding=dp(16), spacing=dp(8))
@@ -578,3 +601,10 @@ class PrivateCheckoutFixtureApp(PrivatePreviewApp):
                                             lambda: self._photo_submit('abort'), variant='tertiary'))
         self._photo_message = text_label(self._photo_error, size=13, height=62, color=GOLD)
         shell.add_widget(self._photo_message)
+
+
+class PrivateCheckoutFixtureApp(_CheckoutAppBase):
+    """Original explicit mock-only application; no Sandbox guard is relaxed."""
+    def _validate_checkout_service(self, service):
+        if not isinstance(service, PrivateCheckoutService):
+            raise TypeError('Explicit incomplete mock checkout service required')

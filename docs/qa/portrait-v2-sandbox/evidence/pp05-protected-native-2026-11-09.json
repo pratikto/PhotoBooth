@@ -1,16 +1,40 @@
 {
-  "base": "9d372804421682ca3113ba4e19401f1938e4cd4e",
-  "stage": "B5-A facade only; native/profile/claim/release not yet mounted",
-  "command": "python tools/run_kiosk_unittests.py test_post_preview_protected_checkout test_post_preview_sandbox_delivery test_post_preview_sandbox_delivery_api test_post_preview_checkout_worker test_post_preview_checkout_ticket test_post_preview_checkout_delivery test_post_preview_remote_receipt",
-  "run": 84,
-  "seconds": 44.387,
-  "summary": "run=84 failures=0 errors=0 skipped=0 success=True",
-  "log_sha256": "65d119a1775e81af1c6e8c7b75831f904a5bcf7b92114e36a44ef8a566831784",
-  "source_sha256": {
-    "photobooth/kiosk_v2/post_preview_protected_checkout.py": "779262e655b3960dbb3649588f9ac42807143e0769b2a396bd22bc149efd32a8",
-    "tests/post_preview_protected_fixture.py": "b1b68c0bab637a1d66f673aebbf2a2cc9236ce00c86e4924863d5ed24a1ed68e",
-    "tests/test_post_preview_protected_checkout.py": "b8aca2ac61b58853e03d31c2467090834036b0bd9dd54f46a8cfbef518cdb0b5",
-    ".github/workflows/post-preview-qris.yml": "8a1e9092872e8eb8858e451b0c99792a2b39d80be4d8fcffeeb1fe1d468db7cb"
+  "B5_A": {
+    "base": "9d372804421682ca3113ba4e19401f1938e4cd4e",
+    "stage": "B5-A facade only; native/profile/claim/release not yet mounted",
+    "command": "python tools/run_kiosk_unittests.py test_post_preview_protected_checkout test_post_preview_sandbox_delivery test_post_preview_sandbox_delivery_api test_post_preview_checkout_worker test_post_preview_checkout_ticket test_post_preview_checkout_delivery test_post_preview_remote_receipt",
+    "run": 84,
+    "seconds": 44.387,
+    "summary": "run=84 failures=0 errors=0 skipped=0 success=True",
+    "log_sha256": "65d119a1775e81af1c6e8c7b75831f904a5bcf7b92114e36a44ef8a566831784",
+    "source_sha256": {
+      "photobooth/kiosk_v2/post_preview_protected_checkout.py": "779262e655b3960dbb3649588f9ac42807143e0769b2a396bd22bc149efd32a8",
+      "tests/post_preview_protected_fixture.py": "b1b68c0bab637a1d66f673aebbf2a2cc9236ce00c86e4924863d5ed24a1ed68e",
+      "tests/test_post_preview_protected_checkout.py": "b8aca2ac61b58853e03d31c2467090834036b0bd9dd54f46a8cfbef518cdb0b5",
+      ".github/workflows/post-preview-qris.yml": "8a1e9092872e8eb8858e451b0c99792a2b39d80be4d8fcffeeb1fe1d468db7cb"
+    },
+    "limits": "Fake provider/Drive/printer/key lookup; actual original API/core; no live money/paper/cloud/production"
   },
-  "limits": "Fake provider/Drive/printer/key lookup; actual original API/core; no live money/paper/cloud/production"
+  "B5_B": {
+    "base": "88114a0eee75e313acb8cf021dae92c1663f3c64",
+    "run": 35,
+    "seconds": 119.812,
+    "summary": "run=35 failures=0 errors=0 skipped=0 success=True",
+    "command": "python tools/run_kiosk_unittests.py test_post_preview_protected_widgets test_post_preview_checkout_widgets test_post_preview_remote_ticket_view test_post_preview_remote_receipt_view",
+    "log_sha256": "c92ab8705a4971edf01faa8a0f89c795eb3f5db6805fa5b8f3329d84b0ffa190",
+    "source_sha256": {
+      "photobooth/kiosk_v2/post_preview_checkout_app.py": "aceff94895245b842d712740e07e3afcc73a3ea7b341b05a9c54e58e9771fc95",
+      "photobooth/kiosk_v2/post_preview_protected_app.py": "ac867a8bf5ea20f11de967342c20df58015bb497279ff15344c9a8981bc49fa5",
+      "photobooth/kiosk_v2/post_preview_protected_checkout.py": "f9954a27d9d774fca94b61f89f2b51612c8baf123348149d549443557e36d9b4",
+      "tests/post_preview_protected_fixture.py": "d3dde408d18a6ff55a7c9d2721fa2dca5f58a121a706befda21e3e34547c7dd8",
+      "tests/test_post_preview_protected_widgets.py": "3c54f2f174b95fb995dbe0bbcadb67cd9a6d096926d8b226431c5f77a579c195",
+      ".github/workflows/post-preview-qris.yml": "7cd4b3f6552a17737a4a746f1f36a5ed3a005685aa7894d9e1f70f40fd1aade7"
+    },
+    "display": "SDL offscreen native controls; additional actual Xvfb :93 X11 journey both portrait sizes PASS, screenshots reviewed privately; offscreen framebuffer captures unusable and not accepted",
+    "screenshots": {
+      "paid-status-800x12800001.png": "e5d1e7f995a159ab713e6141907cc3dbc1f8378f5e97843d869d91cb26bd721c",
+      "paid-status-452x9000001.png": "49cda9e03c382d3efca9ca64953bfbcc7d2c3fa3e9f1669b929e2931f2e75105"
+    },
+    "external_effects": "Fake only; no production launcher or protected claim/release mounting"
+  }
 }
