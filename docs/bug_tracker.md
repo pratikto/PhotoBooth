@@ -1,7 +1,8 @@
 ## BUG-047 — Ubuntu original vault key rejected after keyring daemon restart (9 November 2026)
 
 **Severity:** S1 protected recovery availability. **Status:** SOURCE FIXED /
-local isolated Secret Service VERIFIED; final source regression/CI pending.
+local isolated Secret Service and final 638 backend/74 native VERIFIED;
+matching CI42563214405 all three SUCCESS, completed logs inspected.
 The same persisted original key gains provider-owned xdg:schema metadata on
 GNOME Keyring reload. Whole-dictionary equality rejected it although all four
 application identity fields matched. Actual restart returned VAULT_UNAVAILABLE;

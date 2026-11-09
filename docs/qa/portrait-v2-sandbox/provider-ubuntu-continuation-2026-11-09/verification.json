@@ -1,0 +1,106 @@
+{
+  "source": "a748db2b1fc7a31e484cec9cc5b72a78a4f5286c",
+  "groups": {
+    "backend": {
+      "exit": 0,
+      "command": "python tools/run_kiosk_unittests.py test_post_preview_store test_post_preview_photos test_post_preview_checkout test_post_preview_resources test_post_preview_worker test_post_preview_idle test_credential_vault test_post_preview_ccp test_post_preview_payments test_post_preview_api test_post_preview_payment_crashes test_post_preview_process_crash test_post_preview_protected_restore test_post_preview_checkout_worker test_post_preview_lifecycle_worker test_post_preview_readiness test_post_preview_drive_readiness test_post_preview_paid_drive test_post_preview_paid_media test_post_preview_paid_strips test_post_preview_paid_print test_post_preview_paid_upload_status test_post_preview_paid_delivery test_post_preview_checkout_delivery test_post_preview_journey_matrix test_post_preview_pilot_launcher test_post_preview_pilot_preflight test_post_preview_device_entry test_post_preview_pilot_early_root test_post_preview_isolation test_post_preview_pilot_admission test_post_preview_refund_assessment test_post_preview_refund_simulation test_post_preview_claim test_post_preview_authority test_post_preview_ticket test_post_preview_ticket_receipt test_post_preview_ticket_window test_post_preview_checkout_ticket test_booth_sync test_booth_storage test_apps_script_drive test_retention_readiness test_checkout_backend test_checkout_durability test_payment_quote test_workflow test_capture_journal test_photo_reconstruction",
+      "run": 638,
+      "seconds": 180.541,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "sha256": "6f66173e57c4641cfe98c8252c7836ec6a02427f52c77325f9b76b362ac33c14"
+    },
+    "native": {
+      "exit": 0,
+      "command": "python tools/run_kiosk_unittests.py test_post_preview_widgets test_post_preview_checkout_widgets test_post_preview_native_journeys test_post_preview_pilot_runtime test_post_preview_ticket_view test_ccp_view test_qr_code test_kiosk_v2_photos test_kiosk_v2_flow",
+      "run": 74,
+      "seconds": 169.035,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "sha256": "18ccac6ad3da43b87523c0916582e2a897c166d958417f2da8f7c92fa6132922"
+    }
+  },
+  "branch": "feature/post-preview-qris-checkout",
+  "owner_target": "Ubuntu mini PC",
+  "source_sha256": {
+    "photobooth/credential_vault.py": "27f809215234d39ba06e2ec49158cd60d81476b6dc8a20f0e6a3b3946e3a9fb5",
+    "photobooth/linux_credential_vault.py": "e3c5bf349cbef8e0bd1f1d4beb57baf1b093966a7540e9028a75ff0230b11e91",
+    "photobooth/post_preview_ccp.py": "cba258623922eaf26c1c999cfe6bebdce83859728fc8e33745105c18eb49a89b",
+    "photobooth/post_preview_readiness_bridge.py": "b086511495d78fbd0b113b695802fd0ba2ca5cccb603028149d425e36f96658d",
+    "photobooth/post_preview_server.py": "fd292be087de5da55822a302d0976134bf30c4a837ee188427e1624af388b6b0",
+    "requirements-post-preview.txt": "1a4115671aa862a0f41f5caa88f449105ee23a73f9c059cc85a8d4ff269e787f",
+    "tests/credential_vault_process_fixture.py": "2aa1111a05c2db4a3e0b7779706aa27ee27e9614c9a2a9d9e941646d8a5e3401",
+    "tests/test_credential_vault.py": "574f7b0b7587aaccc48fa401f6b8c078aa415e2256e854eb9ce93d325bb8ce4c",
+    "tests/test_post_preview_api.py": "285ec0db0df599dbd735203f4fb1aebfe5c711534b7afd9c9db320e3b41cc9a8",
+    "tests/test_post_preview_authority.py": "4852b0816c5bfac1e682b9488d8caea8440aa3d3b655a77c3a81c928b42d521d",
+    "tests/test_post_preview_ccp.py": "bd88b673175ab7707984d6e02f243e768e5e4b01073f4d1f8b97bdd75e915c23",
+    "tests/test_post_preview_readiness.py": "a2d8963aaca9a713cab4cdf95fad813d2f37d0e65e850f0869e6852c16372256"
+  },
+  "ci": {
+    "run_id": 42563214405,
+    "source": "a748db2b1fc7a31e484cec9cc5b72a78a4f5286c",
+    "status": "COMPLETED",
+    "jobs": [
+      {
+        "name": "private-state (windows-latest)",
+        "job_id": 128983998803,
+        "run": 638,
+        "seconds": 744.553,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "conclusion": "success"
+      },
+      {
+        "name": "private-state (ubuntu-latest)",
+        "job_id": 128983998683,
+        "run": 638,
+        "seconds": 204.946,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "conclusion": "success"
+      },
+      {
+        "name": "private-desktop",
+        "job_id": 128983998501,
+        "run": 74,
+        "seconds": 145.731,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "conclusion": "success"
+      }
+    ],
+    "conclusion": "success"
+  },
+  "limits": {
+    "child_backend_bootstrap": "NOT_IMPLEMENTED",
+    "native_provider_profile": "NOT_MOUNTED",
+    "actual_Midtrans": "NOT_RUN",
+    "actual_refund": "NOT_IMPLEMENTED / MERCHANT_UNVERIFIED",
+    "physical_Ubuntu_camera_printer_Drive": "NOT_RUN",
+    "Ubuntu_login_reboot_backup": "NOT_RUN",
+    "two_hour_final_qualification": "NOT_RUN",
+    "four_hour_device_qualification": "NOT_RUN",
+    "production": "NOT_READY"
+  },
+  "environment": {
+    "os": "Debian 13 cloud lab",
+    "python": "3.12.14",
+    "packages": {
+      "Kivy": "2.3.2",
+      "cryptography": "49.0.0",
+      "SecretStorage": "3.5.0",
+      "jeepney": "0.9.0",
+      "fastapi": "0.128.2",
+      "pydantic": "2.13.5"
+    },
+    "SDL_VIDEODRIVER": "offscreen",
+    "SDL_AUDIODRIVER": "dummy",
+    "LIBGL_ALWAYS_SOFTWARE": "1",
+    "camera_provider_paper_Drive": "synthetic / fake HTTP except isolated real Secret Service"
+  }
+}

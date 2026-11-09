@@ -1,3 +1,13 @@
+# 9 November 2026 — final provider/Ubuntu software checkpoint
+
+[Current exact continuation and remaining implementation](qa/portrait-v2-sandbox/PROVIDER-UBUNTU-CONTINUATION-2026-11-09.md):
+a748db2 pushed/remote-verified; **638 backend + 74 native local PASS**, no
+failures/errors/skips. Isolated real Linux keyring/backend and unchanged-cipher
+daemon restart verified; BUG-047 fixed. CI42563214405 all three SUCCESS
+(638 Windows/638 Ubuntu/74 native), completed logs inspected. Native merchant profile/child host/recovery/refund and
+real target-device/account/long-duration acceptance remain unfinished. Ubuntu
+mini PC is the owner-confirmed commercial target. Production is NOT_READY.
+
 # 9 November 2026 — Ubuntu OS custody selector and backend
 
 Owner confirms Ubuntu mini PC. [Linux vault and actual isolated-service evidence](qa/portrait-v2-sandbox/PP03-UBUNTU-VAULT-2026-11-09.md):

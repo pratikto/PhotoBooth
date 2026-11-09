@@ -1,3 +1,23 @@
+## 9 November 2026 — provider/Ubuntu verified continuation
+
+Runtime/test source **a748db2b1fc7a31e484cec9cc5b72a78a4f5286c**, pushed and
+remote-verified after six bounded increments. Owner confirms Ubuntu mini PC.
+Local **638 backend PASS (180.541s) + 74 native PASS (169.035s)**, zero failures,
+errors or skips. Actual isolated GNOME Keyring/D-Bus original-custody/backend and
+daemon-restart evidence is retained; BUG-047 fixed without replacing key/proof.
+Current CI42563214405: all three SUCCESS, Windows638/Ubuntu638/native74;
+completed logs inspected, zero failures/errors/skips. Earlier
+27860a8 CI42560624598 all three SUCCESS is a separate earlier source.
+
+**Read [this exact continuation](PROVIDER-UBUNTU-CONTINUATION-2026-11-09.md) next.**
+Next unfinished source: credential-isolated child backend/bootstrap, then protected
+native real-provider ticket/delivery/claim/exact-release integration. Owner
+launcher remains synthetic-only. Ubuntu login/unlock/reboot/backup and actual
+merchant/printer/Drive/refund/device/qualification/release gates remain open.
+No missing account/hardware is used to claim the unfinished source is complete.
+All safe code/tests are published, no runtime WIP or unpushed source. Only this
+companion documentation checkpoint was prepared after final regression.
+
 ## 9 November 2026 — post-preview continuation checkpoint
 
 Authorized branch remains `feature/post-preview-qris-checkout`. Starting remote
