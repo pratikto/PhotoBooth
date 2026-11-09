@@ -259,7 +259,7 @@ class SandboxHostTests(unittest.TestCase):
             finally:ledger.close()
             self.assertTrue(again.stop())
 
-    def prepare_original_checkout(self, config):
+    def prepare_original_checkout(self, config, *, offered=True):
         import os
         from contextlib import nullcontext
         from unittest.mock import patch
@@ -286,10 +286,54 @@ class SandboxHostTests(unittest.TestCase):
         custody=patch('photobooth.linux_credential_vault._read_key',return_value=b'k'*32) if os.name!='nt' else nullcontext()
         with custody:
             ccp=OriginalCCPService(ledger,platform_protector(),'MTEST')
-            ccp.issue_once(lease)
-            offer=ccp.private_offer(lease);ccp.mark_visible(lease,offer)
+            if offered:
+                ccp.issue_once(lease)
+                offer=ccp.private_offer(lease);ccp.mark_visible(lease,offer)
         BoothWorkspace(config.storage_root/'post-preview-sandbox'/'MTEST'/'delivery','PB001V2S2').prepare()
         return ledger,lease,intent['purchase_group_id']
+
+    def test_actual_child_owns_original_ccp_and_rejects_old_permit_after_restart(self):
+        import requests
+        from photobooth.post_preview_client import PostPreviewClient
+        from photobooth.post_preview_proof_client import PostPreviewCCPClient
+        from photobooth.post_preview_store import DraftHeld
+        with self.temporary() as directory:
+            config=self.config(directory)
+            process=self.launch(config)
+            ledger,lease,group=self.prepare_original_checkout(config,offered=False)
+            def client(endpoint):
+                session=requests.Session();session.trust_env=False
+                value=PostPreviewClient(endpoint,'PB001',config.booth_token,
+                    allow_local_http=True,session=session)
+                self.addCleanup(value.close)
+                return value
+            original=client(process.endpoint)
+            proof=PostPreviewCCPClient(original)
+            with self.assertRaises(RuntimeError):original.begin(group,lease)
+            offer=proof.private_offer(group,lease)
+            before=dict(ledger.db.execute('SELECT * FROM pp_ccp_credentials').fetchone())
+            self.assertIsNone(before['offered_at'])
+            with self.assertRaises(RuntimeError):original.begin(group,lease)
+            self.assertTrue(process.stop())
+            again=self.launch(config)
+            later=client(again.endpoint)
+            restored=PostPreviewCCPClient(later)
+            with self.assertRaises(RuntimeError):
+                later._transport._call('POST','/api/postpay/groups/'+group+'/ccp/visible',
+                    payload=dict(later._owner(lease),presentation_id=offer.presentation_id))
+            returned=restored.private_offer(group,lease)
+            self.assertEqual(offer.qr_payload,returned.qr_payload)
+            self.assertNotEqual(offer.presentation_id,returned.presentation_id)
+            after=dict(ledger.db.execute('SELECT * FROM pp_ccp_credentials').fetchone())
+            self.assertEqual(before,after)
+            restored.mark_visible(lease,returned)
+            paid=later.begin(group,lease)
+            self.assertIn(paid['state'],{'PENDING','PAID_LIVE'})
+            self.assertTrue(self.fresh_paid(later,group,'connectivity')['paid_verified'])
+            with self.assertRaises(DraftHeld):restored.private_offer(group,lease)
+            self.assertEqual(1,ledger.db.execute('SELECT COUNT(*) FROM pp_ccp_credentials').fetchone()[0])
+            self.assertEqual(1,ledger.db.execute('SELECT COUNT(*) FROM pp_payment_attempts').fetchone()[0])
+            self.assertTrue(again.stop())
 
     def test_actual_private_bridge_api_and_client_preserve_paid_once_across_child_restart(self):
         import requests

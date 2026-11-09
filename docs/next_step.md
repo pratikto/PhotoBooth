@@ -1,3 +1,11 @@
+# 9 November 2026 — protected backend/native CCP presentation B1
+
+Backend retains original protected CCP/display permits; typed native adapter
+reuses existing private renderer offer type. **88 related PASS**, including
+actual child restart/HTTP and stale-callback/privacy checks. [Scope and next
+source action](qa/portrait-v2-sandbox/PP04-PROTECTED-PRESENTATION-2026-11-09.md). Native provider launcher/ticket/delivery/claim/release
+remain unfinished; readiness collector fencing is next. No production approval.
+
 # 9 November 2026 — credential-isolated child backend A2
 
 Original Sandbox API now runs in a separately owned child over private sockets;

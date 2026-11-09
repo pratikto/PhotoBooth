@@ -13,6 +13,7 @@ from photobooth.post_preview_api import create_app
 from photobooth.post_preview_ccp import OriginalCCPService
 from photobooth.post_preview_checkout import PrivateDraftCheckout
 from photobooth.post_preview_payments import PostPreviewPayments
+from photobooth.post_preview_presentation import OriginalCCPPresentation
 from photobooth.post_preview_readiness import ReadOnlyDriveReadiness
 from photobooth.post_preview_readiness_bridge import BackendChargeReadiness, WorkerReadinessClient
 from photobooth.post_preview_store import DraftHeld, DraftLease
@@ -74,10 +75,12 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
     provider = MidtransSandboxClient(server_key, transport=provider_transport)
     payments = PostPreviewPayments(ledger, provider, merchant_id,
                                    readiness=charge_readiness, server_key=server_key)
+    presentation = OriginalCCPPresentation(credentials)
 
     def close():
         bridge.close()
         if on_shutdown is not None:
             on_shutdown()
 
-    return create_app(payments, auth, on_shutdown=close, background_worker=background_worker)
+    return create_app(payments, auth, on_shutdown=close, background_worker=background_worker,
+                      ccp_presentation=presentation)

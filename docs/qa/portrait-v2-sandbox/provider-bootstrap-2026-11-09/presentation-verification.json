@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-09",
+  "branch": "feature/post-preview-qris-checkout",
+  "base": "7f612a44d591e60f02991bcfc2a04d0cb0554e10",
+  "source_sha256": {
+    "photobooth/post_preview_presentation.py": "8a0a4eff9ddb8c68a351030cef31079fbef953f19ff2022d1e89de88c622a67d",
+    "photobooth/post_preview_proof_client.py": "78e3883ee9758e8e26a287f9d9197ef89b16294edeba7c536f1baf0f4fa175a0",
+    "photobooth/post_preview_api.py": "fdf357af295b17a6cef73ee79054d6453693103d9ae7cd8fa78f75283b55fa82",
+    "photobooth/post_preview_ccp.py": "1d595c5117906b9adaa2e4af7d78d3d6e88c489f306e77a080c4901721975b0a",
+    "photobooth/post_preview_server.py": "a930cea55b6d66c67e4df615ac77c470db5a9b13eb35cba93320283b89523a59",
+    "tests/test_post_preview_host.py": "1e9be8156478db343da170e8335fd9b2601b050d706296f206882ef61b031244",
+    "tests/test_post_preview_presentation.py": "411de75a5c04746faee217f96f5d2fff69eb0304c7cab02d032213cf65ed7eda",
+    ".github/workflows/post-preview-qris.yml": "0ea1f463965af97477d65ee6218b272cf366d41227975dc7c9961f229ff417b1"
+  },
+  "command": ".venv/bin/python tools/run_kiosk_unittests.py test_post_preview_host test_post_preview_presentation test_post_preview_api test_post_preview_ccp test_post_preview_authority",
+  "result": {
+    "run": 88,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 58.646
+  },
+  "local_log_sha256": "39038854e4088ce7a25f1c303303a1fee5a20854be398cbce8b6d5352cdae645",
+  "limits": [
+    "Synthetic provider/Drive/Linux custody; actual subprocess/HTTP",
+    "Complete native provider profile and final-source regression/CI pending",
+    "No actual accounts, devices, money, refunds or deployment"
+  ]
+}

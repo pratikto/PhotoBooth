@@ -30,6 +30,10 @@ class ContinueRequest(OwnerRequest):
     actively_continuing: bool
 
 
+class PresentationRequest(OwnerRequest):
+    presentation_id: str = Field(pattern=r'^[a-f0-9]{32}$')
+
+
 class LifecycleRequest(OwnerRequest):
     event: Literal['USER_CANCEL', 'APP_SUSPENDED', 'INACTIVITY_WARNING', 'INACTIVITY_EXPIRED', 'VISIT_ABANDONED', 'RESULT_TIMEOUT']
 
@@ -40,9 +44,15 @@ class ReconcileRequest(BaseModel):
 
 
 def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_limit=120,
-               background_worker=True):
+               background_worker=True, ccp_presentation=None):
     if type(background_worker) is not bool:
         raise ValueError('Explicit lifecycle worker selection required')
+    if ccp_presentation is not None:
+        from photobooth.post_preview_presentation import OriginalCCPPresentation
+        if (type(ccp_presentation) is not OriginalCCPPresentation
+                or ccp_presentation.ledger is not payments.ledger
+                or ccp_presentation.credentials.merchant_id != payments.merchant_id):
+            raise ValueError('Exact original backend proof authority required')
     inbox = inbox or PostPreviewNotificationInbox(payments)
     worker = PostPreviewLifecycleWorker(payments, inbox) if background_worker else None
     limiter = LocalRateLimit(rate_limit)
@@ -57,12 +67,22 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
             if worker and not await run_in_threadpool(worker.stop):
                 # Never close a ledger underneath an unfinished provider call.
                 raise RuntimeError('Original lifecycle worker remains active')
+            if ccp_presentation is not None:
+                await run_in_threadpool(ccp_presentation.close)
             if on_shutdown:
                 await run_in_threadpool(on_shutdown)
 
     app = FastAPI(title='MEONG post-preview isolated backend', lifespan=lifespan)
     app.state.notification_inbox = inbox
     app.state.lifecycle_worker = worker
+
+    @app.middleware('http')
+    async def private_responses(request, call_next):
+        response = await call_next(request)
+        response.headers['Cache-Control'] = 'no-store'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Referrer-Policy'] = 'no-referrer'
+        return response
 
     @app.exception_handler(RequestValidationError)
     async def validation_error(_request, _error):
@@ -119,6 +139,29 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
     async def health():
         return {'api_version': 1, 'order_version': ORDER_VERSION, 'mode': payments.mode,
                 'fulfillment_enabled': False}
+
+    if ccp_presentation is not None:
+        @app.post('/api/postpay/groups/{group}/ccp/offer')
+        async def ccp_offer(group: str, request: Request, x_booth_id: str = Header(default=''), authorization: str = Header(default='')):
+            booth = identity(request, x_booth_id, authorization)
+            owner = await body(request, OwnerRequest)
+            token = await invoke(lease, group, booth, owner)
+            offer = await invoke(ccp_presentation.offer, group, token)
+            return dict(kind='CCP', purchase_group_id=group, booth_id=booth,
+                generation=offer.generation, presentation_id=offer.presentation_id,
+                qr_payload=offer.qr_payload, mode=payments.mode, order_version=ORDER_VERSION)
+
+        @app.post('/api/postpay/groups/{group}/ccp/{action}')
+        async def ccp_ack(group: str, action: Literal['visible', 'retire'], request: Request,
+                          x_booth_id: str = Header(default=''), authorization: str = Header(default='')):
+            booth = identity(request, x_booth_id, authorization)
+            owner = await body(request, PresentationRequest)
+            token = await invoke(lease, group, booth, owner)
+            function = ccp_presentation.visible if action == 'visible' else ccp_presentation.retire
+            await invoke(function, group, token, owner.presentation_id)
+            return dict(kind='CCP', purchase_group_id=group, booth_id=booth,
+                generation=owner.generation, presentation_id=owner.presentation_id,
+                action=action, mode=payments.mode, order_version=ORDER_VERSION)
 
     @app.get('/api/postpay/groups/{group}')
     async def inspect(group: str, request: Request, x_booth_id: str = Header(default=''), authorization: str = Header(default='')):

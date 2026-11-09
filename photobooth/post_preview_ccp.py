@@ -269,6 +269,17 @@ class OriginalCCPService:
             self.ledger._event(lease.draft_id, self._event_prefix+'_REVOKED')
         self._offers.clear()
 
+    def retire_offer(self, offer):
+        """Retire one exact render permit without disabling later visitors.
+
+        This removes only an in-memory display callback, never original escrow,
+        offered-at evidence, financial obligations or a booth generation.
+        """
+        with self._privacy_lock:
+            entry = self._offers.get(getattr(offer, 'presentation_id', None))
+            if entry and entry[0] is offer:
+                del self._offers[offer.presentation_id]
+
     def hide_private(self):
         with self._privacy_lock:
             self._hidden = True
