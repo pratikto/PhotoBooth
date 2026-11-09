@@ -1,0 +1,37 @@
+{
+  "base": "059b509036ff27df6975905a88ffd252fcae17c6",
+  "stage": "B6-B backend isolation/claim core; HTTP/native/bootstrap mounting not complete",
+  "run": 156,
+  "seconds": 56.764,
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "command": "python tools/run_kiosk_unittests.py test_post_preview_sandbox_handoff test_post_preview_worker_fence test_post_preview_claim test_post_preview_isolation test_post_preview_pilot_admission test_post_preview_protected_restore test_post_preview_ticket test_post_preview_ccp test_post_preview_payments",
+  "log_sha256": "2ae13830156632d4ee6ae4a0f18474c830cf46b858a3d47b64766add9592f8ab",
+  "source_sha256": {
+    "photobooth/post_preview_sandbox_handoff.py": "09ecd8721c03fdfbe4325aca67a611607a7c5f18ac63e19b656922724e36787d",
+    "photobooth/post_preview_claim.py": "113bca852d8ad681393bce30616e1f742c6844834df2bb1ca45e9d04fe866ce1",
+    "tests/post_preview_handoff_fixture.py": "17574ea7895cbbcb81ecaa56102f4c5029b5cadb3efadb7b8179e7861e3ab116",
+    "tests/test_post_preview_sandbox_handoff.py": "336670b39483847b2dae30fb3b3e22b5ff8213b9acad305947206bbb2b24b7b5",
+    ".github/workflows/post-preview-qris.yml": "f9684f102c763f5616dc61a78ad13502d9664ca92d4ff0b36c1b3875aa6d90e5"
+  },
+  "new_methods_pass": [
+    "test_post_preview_sandbox_handoff.ProtectedSandboxHandoffTests.test_busy_original_or_B_returns_wait_without_provider_io_or_preemption",
+    "test_post_preview_sandbox_handoff.ProtectedSandboxHandoffTests.test_clock_rollback_during_ack_cannot_close_original_occupancy",
+    "test_post_preview_sandbox_handoff.ProtectedSandboxHandoffTests.test_financial_review_after_prepare_cannot_be_acked_as_safe_release",
+    "test_post_preview_sandbox_handoff.ProtectedSandboxHandoffTests.test_foreign_worker_key_cannot_ack_a_genuine_other_receipt",
+    "test_post_preview_sandbox_handoff.ProtectedSandboxHandoffTests.test_forged_ack_row_without_backend_validated_worker_cannot_grant_claim",
+    "test_post_preview_sandbox_handoff.ProtectedSandboxHandoffTests.test_late_original_paid_can_isolate_and_claim_without_ticket_reissue",
+    "test_post_preview_sandbox_handoff.ProtectedSandboxHandoffTests.test_live_backend_thread_keeps_ack_false_and_owed_after_native_receipt",
+    "test_post_preview_sandbox_handoff.ProtectedSandboxHandoffTests.test_mock_constructor_still_rejects_protected_sandbox_context",
+    "test_post_preview_sandbox_handoff.ProtectedSandboxHandoffTests.test_new_backend_verifiers_preserve_durably_validated_original_receipt_and_proof",
+    "test_post_preview_sandbox_handoff.ProtectedSandboxHandoffTests.test_original_paid_ticket_is_a_valid_distinct_claim_role",
+    "test_post_preview_sandbox_handoff.ProtectedSandboxHandoffTests.test_original_worker_receipt_ack_and_proof_restore_same_paid_output",
+    "test_post_preview_sandbox_handoff.ProtectedSandboxHandoffTests.test_pending_unknown_and_outage_hold_original_before_any_release",
+    "test_post_preview_sandbox_handoff.ProtectedSandboxHandoffTests.test_provider_outage_after_ack_preserves_closed_owed_and_original_proof",
+    "test_post_preview_sandbox_handoff.ProtectedSandboxHandoffTests.test_receipt_uncertainty_and_photo_uncertainty_never_prepare_release",
+    "test_post_preview_sandbox_handoff.ProtectedSandboxHandoffTests.test_same_original_ack_retries_after_provider_pacing_without_new_operation",
+    "test_post_preview_sandbox_handoff.ProtectedSandboxHandoffTests.test_wrong_proof_role_wrong_booth_and_forgery_cannot_reacquire"
+  ],
+  "limits": "Actual original API/core and separate SQL connections/thread barriers; fake external effects; no native merchant admission/actual money/refund/paper/cloud"
+}

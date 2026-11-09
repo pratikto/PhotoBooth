@@ -72,3 +72,46 @@ backend delivery stop and existing financial/uncertainty guards; original proof-
 gated fresh legitimate settlement claim. Then authenticated/native transport,
 capability rotation/bootstrap, complete protected freeze/launcher and recovery.
 No customer new-admission or merchant profile is enabled by B6-A.
+
+## B6-B original backend isolation and proof claim
+
+Distinct exact Sandbox isolation validates the original native receipt AND actual
+backend delivery-thread exit, freshly reconciles every original attempt, then
+atomically ACKs the SAME operation/worker marker/occupancy generation. Receipt
+or provider uncertainty holds; no worker flag is customer input. Lost ACK replays
+observe the original validated operation without releasing B. Original payment
+pacing is retained: a too-early ACK holds until a fresh original GET is permitted.
+
+Distinct protected claim reuses original proof-verification/occupancy/CAS logic
+without invoking a mock constructor. A busy original/B visit yields WAIT after
+valid proof, without another merchant request. A FREE original claim requires
+fresh legitimate independent settlement, current proof checked atomically with
+occupancy, and original backend-validated native release evidence. New original
+verifiers can read the durable accepted receipt after capability restart; no new
+proof/key/root/charge is minted. Existing mock order/guards remain unchanged.
+Original delivered media/URL/copies/jobs survive the reclaimed generation;
+SUBMITTED jobs never resend on a fresh backend actor.
+
+**16 new methods /156 affected PASS56.764s**, zero failures/errors/skips. Real
+receipt/photo partial-send uncertainty, late PAID, original CCP and ticket roles,
+B busy, forged ACK/key/proof, provider outage, pacing, actual live backend-thread
+hold, durable verifier reopening, same entitlement/folder/photo hashes and no
+new charge/receipt/batch are exercised with fake external transports. Mock
+claim/isolation/admission/restore/ticket/CCP/payment regression remains passing.
+[Exact command/source/log/method evidence](evidence/pp06-backend-handoff-2026-11-10.json).
+
+BUG-051: one fault-injection regression initially FAILed: clock rollback after
+receipt verification but before ACK persistence could close occupancy with a
+causally invalid ACK timestamp. The original operation now holds until a finite
+clock at/after PREPARE/native observation is available; no timestamp clamping,
+journal reset or forced closure. Corrected156 affected PASS includes that case.
+Earlier15-method affected155 PASS60.559s lacked this new regression and is not
+relabeled as its verification. No operational/device incident is claimed.
+
+NEXT: durable idempotent claim-request identity and scoped HTTP/native transport
+(before exposing claim RPC), then exact original native proof/collector/worker
+A-to-B-to-A mounting and private capability/readiness rotation. Protected freeze,
+complete trusted launcher/configuration/restore and refund/status/ops remain open.
+Core methods alone do not solve lost claim-response recovery or enable a customer
+profile. Current native new admission/default merchant health remain gated.
+Final changed-source regression/CI is pending; old B5 results retain their scope.

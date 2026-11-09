@@ -31,6 +31,27 @@ class OriginalMockClaim:
         self.payments,self.ccp,self.ticket=payments,ccp,ticket
         self.ledger=payments.ledger
 
+    def _busy_after_proof(self, purchase_group_id, booth_id, payload, proof, verifier):
+        return False  # Preserve the original mock reconciliation order.
+
+    def _require_worker_receipt(self, receipt):
+        pass  # Mock release already checked its original in-process workers.
+
+    def _fresh_confirmation(self, purchase_group_id, booth_id):
+        observed=self.payments.reconcile_all(purchase_group_id,booth_id,force=True)
+        if (observed['obligation_state']!='OWED'
+                or observed['entitlement_id'] is None
+                or observed['state']=='REVIEW_REQUIRED'):
+            raise DraftHeld('Original independently PAID unfulfilled entitlement required')
+        with self.ledger.write():
+            intent,finance=self.payments._group(purchase_group_id,booth_id)
+            original_attempt=finance['legitimate_paid_attempt']
+        if not original_attempt:
+            raise DraftHeld('Original settled attempt unavailable')
+        confirmed=self.payments.reconcile(
+            purchase_group_id,booth_id,attempt_id=original_attempt,force=True)
+        return observed,confirmed
+
     def claim(self,purchase_group_id,booth_id,payload):
         """Return the original trusted DraftLease or WAIT, never media bytes.
 
@@ -48,18 +69,9 @@ class OriginalMockClaim:
         proof=verifier.verify(purchase_group_id,booth_id,payload)
         # A verified QR alone is not settlement. A fresh independently signed
         # provider GET is mandatory after the original private proof.
-        observed=self.payments.reconcile_all(purchase_group_id,booth_id,force=True)
-        if (observed['obligation_state']!='OWED'
-                or observed['entitlement_id'] is None
-                or observed['state']=='REVIEW_REQUIRED'):
-            raise DraftHeld('Original independently PAID unfulfilled entitlement required')
-        with self.ledger.write():
-            intent,finance=self.payments._group(purchase_group_id,booth_id)
-            original_attempt=finance['legitimate_paid_attempt']
-        if not original_attempt:
-            raise DraftHeld('Original settled attempt unavailable')
-        confirmed=self.payments.reconcile(
-            purchase_group_id,booth_id,attempt_id=original_attempt,force=True)
+        if self._busy_after_proof(purchase_group_id,booth_id,payload,proof,verifier):
+            return {'state':'WAIT','reason':'BOOTH_BUSY','lease':None}
+        observed,confirmed=self._fresh_confirmation(purchase_group_id,booth_id)
         if (not confirmed['fresh_checked'] or not confirmed['paid_verified']
                 or confirmed['entitlement_id']!=observed['entitlement_id']):
             raise DraftHeld('Fresh exact original settlement cannot be verified')
@@ -94,6 +106,7 @@ class OriginalMockClaim:
                     or receipt['financial_class']!='PAID_OWED'
                     or (paid and paid['status']!='OWED')):
                 raise DraftHeld('Original paid visit was not safely isolated')
+            self._require_worker_receipt(receipt)
             self.ledger.db.execute('''UPDATE pp_drafts SET closed=0,lifecycle='ACTIVE',
                 generation=generation+1,updated_at=? WHERE draft_id=? AND closed=1
                 AND generation=?''',

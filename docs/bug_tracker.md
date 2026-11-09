@@ -1,3 +1,12 @@
+## BUG-051 — protected ACK clock rollback could close occupancy (10 November 2026)
+
+S1 / new integration SOURCE FIXED, focused software verification only. One
+actual backend-ACK fault regression FAILed when the clock moved backward after
+worker-receipt verification and before SQL close. Preparation/ACK now reject
+invalid or causally earlier time; original PREPARED/OWED/occupancy remain held.
+Corrected156 affected PASS, zero failures/errors/skips; full source/CI pending.
+No actual customer/device incident. [Scope and evidence](qa/portrait-v2-sandbox/PP06-PROTECTED-HANDOFF-2026-11-10.md).
+
 ## BUG-050 — protected native NEXT disabled during visible ACK (9 November 2026)
 
 S2 / new integration SOFTWARE FIXED, no physical incident. A meaningful native
