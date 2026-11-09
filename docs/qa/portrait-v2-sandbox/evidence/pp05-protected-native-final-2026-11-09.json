@@ -2,16 +2,33 @@
   "ci": {
     "run_id": 42648574582,
     "source": "ac804fd008162a34e0b14ad32f23e6693794ee1c",
-    "status": "WINDOWS_CANCELLED_AT_JOB_BUDGET; SAME_SOURCE_FAILED_JOB_RETRY_IN_PROGRESS",
+    "status": "COMPLETED_ALL_THREE_SUCCESS_AFTER_WINDOWS_ONLY_RETRY",
     "jobs": [
       {
-        "job_id": 129268536077,
+        "job_id": 129278840319,
         "name": "private-state (windows-latest)",
         "status": "completed",
-        "conclusion": "cancelled",
+        "conclusion": "success",
+        "run": 726,
+        "seconds": 665.67,
+        "summary": "run=726 failures=0 errors=0 skipped=0 success=True",
+        "new_methods_pass": [
+          "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_hide_does_not_wait_for_original_receipt_http_and_no_late_private_result",
+          "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_late_delivery_reply_cannot_restore_private_snapshot_after_hide",
+          "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_lost_bind_reply_retries_same_original_purchase",
+          "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_no_new_visitor_after_result_timeout_and_original_rights_survive",
+          "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_original_receipt_uncertainty_holds_delivery_without_replay",
+          "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_partial_photo_holds_all_following_batches_and_never_replays",
+          "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_same_frozen_photos_paid_ticket_original_folder_and_batches_over_http",
+          "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_unpaid_and_undismissed_ticket_cannot_allocate_folder",
+          "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_wrong_mode_and_reopened_root_do_not_authorize_original_takeover"
+        ],
         "completed_log_inspected": true,
-        "summary": null,
-        "reason": "15-minute job budget; KeyboardInterrupt during test_retention_readiness inventory/git status; no suite summary; not a PASS or a proven application assertion failure"
+        "run_attempt": 2,
+        "pip_check": "No broken requirements found",
+        "owner_setup_preflight": "READY_FOR_SUPERVISED_SYNTHETIC_PILOT",
+        "source": "ac804fd008162a34e0b14ad32f23e6693794ee1c",
+        "trigger": "Only failed/cancelled Windows job retried after first15-minute budget cancellation; no source/timeout/test/guard change"
       },
       {
         "job_id": 129268536603,
@@ -56,11 +73,42 @@
     ],
     "windows_retry": {
       "job_id": 129278840319,
-      "status": "in_progress",
+      "name": "private-state (windows-latest)",
+      "status": "completed",
+      "conclusion": "success",
+      "run": 726,
+      "seconds": 665.67,
+      "summary": "run=726 failures=0 errors=0 skipped=0 success=True",
+      "new_methods_pass": [
+        "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_hide_does_not_wait_for_original_receipt_http_and_no_late_private_result",
+        "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_late_delivery_reply_cannot_restore_private_snapshot_after_hide",
+        "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_lost_bind_reply_retries_same_original_purchase",
+        "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_no_new_visitor_after_result_timeout_and_original_rights_survive",
+        "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_original_receipt_uncertainty_holds_delivery_without_replay",
+        "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_partial_photo_holds_all_following_batches_and_never_replays",
+        "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_same_frozen_photos_paid_ticket_original_folder_and_batches_over_http",
+        "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_unpaid_and_undismissed_ticket_cannot_allocate_folder",
+        "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_wrong_mode_and_reopened_root_do_not_authorize_original_takeover"
+      ],
+      "completed_log_inspected": true,
+      "run_attempt": 2,
+      "pip_check": "No broken requirements found",
+      "owner_setup_preflight": "READY_FOR_SUPERVISED_SYNTHETIC_PILOT",
       "source": "ac804fd008162a34e0b14ad32f23e6693794ee1c",
-      "trigger": "Re-run failed/cancelled jobs only after actual first cancellation; no timeout/test/guard changes",
-      "other_jobs_not_manually_rerun": true
-    }
+      "trigger": "Only failed/cancelled Windows job retried after first15-minute budget cancellation; no source/timeout/test/guard change"
+    },
+    "run_attempt": 2,
+    "cancelled_history": [
+      {
+        "job_id": 129268536077,
+        "name": "private-state (windows-latest)",
+        "status": "completed",
+        "conclusion": "cancelled",
+        "completed_log_inspected": true,
+        "summary": null,
+        "reason": "15-minute job budget; KeyboardInterrupt during test_retention_readiness inventory/git status; no suite summary; not a PASS or a proven application assertion failure"
+      }
+    ]
   },
   "source": "ac804fd008162a34e0b14ad32f23e6693794ee1c",
   "groups": {
@@ -69,14 +117,34 @@
       "summary": "run=726 failures=0 errors=0 skipped=0 success=True",
       "run": 726,
       "seconds": 270.631,
-      "log_sha256": "66abba41cca256a00f1f1395a9b1cb25ce1ad5ecd6d1131a8616fbced3c09f21"
+      "log_sha256": "66abba41cca256a00f1f1395a9b1cb25ce1ad5ecd6d1131a8616fbced3c09f21",
+      "new_methods_pass": [
+        "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_hide_does_not_wait_for_original_receipt_http_and_no_late_private_result",
+        "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_late_delivery_reply_cannot_restore_private_snapshot_after_hide",
+        "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_lost_bind_reply_retries_same_original_purchase",
+        "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_no_new_visitor_after_result_timeout_and_original_rights_survive",
+        "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_original_receipt_uncertainty_holds_delivery_without_replay",
+        "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_partial_photo_holds_all_following_batches_and_never_replays",
+        "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_same_frozen_photos_paid_ticket_original_folder_and_batches_over_http",
+        "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_unpaid_and_undismissed_ticket_cannot_allocate_folder",
+        "test_post_preview_protected_checkout.ProtectedCheckoutTests.test_wrong_mode_and_reopened_root_do_not_authorize_original_takeover"
+      ]
     },
     "native": {
       "exit": 0,
       "summary": "run=88 failures=0 errors=0 skipped=0 success=True",
       "run": 88,
       "seconds": 224.936,
-      "log_sha256": "7b354f49c18ee9cd2c681293772eccd8ca23fbb98b473564d80b5c4a767585a0"
+      "log_sha256": "7b354f49c18ee9cd2c681293772eccd8ca23fbb98b473564d80b5c4a767585a0",
+      "new_methods_pass": [
+        "test_post_preview_protected_widgets.ProtectedNativeWidgetTests.test_actual_separate_backend_child_to_native_original_paid_delivery",
+        "test_post_preview_protected_widgets.ProtectedNativeWidgetTests.test_native_original_ticket_then_automatic_2_1_delivery_and_protected_result_return",
+        "test_post_preview_protected_widgets.ProtectedNativeWidgetTests.test_next_and_exact_30_seconds_wipe_ticket_while_receipt_http_is_blocked",
+        "test_post_preview_protected_widgets.ProtectedNativeWidgetTests.test_original_fixture_guard_and_protected_profile_reject_cross_authority",
+        "test_post_preview_protected_widgets.ProtectedNativeWidgetTests.test_result_timeout_wipes_during_blocked_original_strip_and_late_reply_stays_private",
+        "test_post_preview_protected_widgets.ProtectedNativeWidgetTests.test_slow_visible_ack_cannot_delay_genuine_native_timer_or_next",
+        "test_post_preview_protected_widgets.ProtectedNativeWidgetTests.test_uncertain_first_photo_prevents_every_later_native_automatic_batch"
+      ]
     }
   },
   "commands": {
@@ -104,7 +172,7 @@
     "syntax": "PASS"
   },
   "pip_check": "No broken requirements found.",
-  "status": "BOUNDED_NATIVE_SCOPE_LOCAL_AND_UBUNTU_NATIVE_VERIFIED; WINDOWS_RETRY_PENDING",
+  "status": "BOUNDED_NATIVE_SCOPE_LOCAL_AND_EXACT_SOURCE_CI_VERIFIED",
   "limits": {
     "live_frozen_native_delivery": "VERIFIED_FAKE_EXTERNAL_TRANSPORTS",
     "original_provider_CCP_ticket_receipt_folder_batches": "ACTUAL_API_AND_SEPARATE_CHILD_VERIFIED_FAKE_TRANSPORTS",
