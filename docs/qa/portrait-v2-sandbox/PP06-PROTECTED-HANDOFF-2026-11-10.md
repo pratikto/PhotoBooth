@@ -746,3 +746,38 @@ current-source2h and separate actual-device4h qualification remain pending.
 Full changed-source backend/native regression is running for this increment;
 commercial NOT_READY, merchant defaults/fulfillment health remain gated. Prior
 owner observations stay credited without requesting unchanged repetitions.
+
+
+## B6-H4 final source verification and portable continuation
+
+Runtime/test source`b433a7e457b9f181279af66f1bbee04943c384f8` is pushed and
+remote-verified, following f057620 and b6692a8. **832 full local backend
+PASS508.633s +93 actual-X11 native PASS338.820s**, zero failures/errors/skips.
+This supersedes the H4 running-local snapshot above. Backend used the exact
+65-module ordered registry (including inherited repeats); native used the exact
+registered93-method command, with isolated local Xvfb packages/Python3.12/Kivy2.3.1.
+No runtime change followed either full run. Both final portrait images inspected.
+
+CI42746552117 matches b433a7e: Ubuntu832 PASS422.125s; native93 PASS228.587s;
+Windows core311 PASS305.290s +delivery521 PASS495.055s, exact832 total.
+**All FOUR completed jobs SUCCESS, all completed logs inspected**, zero unit
+failures/errors/skips. Original Apps Script34 PASS and Windows owner setup/check-
+only completed successfully. The Windows partition fixed the cancellation
+without raising the15min budget or removing any test/durability guard. Earlier
+cancelled H3 evidence remains historical, not recast as PASS. No runtime change
+followed the exact-source checks; this final record supersedes earlier pending
+H4/full/CI lines above.
+[Final exact source, commands, log hashes and CI evidence](evidence/pp06-h-final-2026-11-10.json).
+
+No runtime/test WIP or active local test/backend remains. The pre-existing
+untracked work/ contains local synthetic logs, extracted display packages and
+other earlier local artifacts; it is not portable, not source and not pushed.
+Do not reset/delete roots, keys, journals, paid rights, uncertain output or
+unrelated local artifacts. The next account must fetch/inspect current remote,
+read these latest sections and the complete current owner/security/refund
+contracts, then continue protected freeze/readiness/backend/client/native source,
+followed by the full trusted launcher/global lease/configuration/boot/remedy.
+Existing owner observations remain credited. Customer defaults remain gated;
+commercial NOT_READY, actual final-source2h/device4h/account/hardware acceptance
+still pending. Do not ask the owner to retest unchanged source or replace missing
+source implementation with another mock-only campaign.

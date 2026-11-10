@@ -54,6 +54,6 @@
     "native": "88 PASS191.099s",
     "windows": "CANCELLED15min, no summary, last completed case511, not PASS"
   },
-  "full_current": "RUNNING backend/native; new CI pending",
+  "full_current": "Completed: local832 backend/93 native PASS; CI42746552117 all four SUCCESS. Exact final source/commands/jobs in pp06-h-final-2026-11-10.json.",
   "limits": "Actual native original child/HTTP/facade, fake external transports/custody; explicit fixture freeze. Complete protected freeze/customer launcher/global ownership/boot/remedy/device qualification unfinished, commercial NOT_READY."
 }

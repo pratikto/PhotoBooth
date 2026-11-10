@@ -1,0 +1,121 @@
+{
+  "source": "b433a7e457b9f181279af66f1bbee04943c384f8",
+  "stage": "B6-H4 final source regression",
+  "source_sha256": {
+    "photobooth/post_preview_sandbox_visits.py": "aaf1c0c4ae1ef0dc0b840259529cba887755c1fc2e667c01ce127fe26175dc05",
+    "photobooth/post_preview_visit_control.py": "813c50e26bfa793c3c7555f09d87fdaa4213161cbac70fce0c364b30958381bd",
+    "photobooth/kiosk_v2/app.py": "3f60682cdc866f5a6164d78395168d628fe2a04517a9b9620227a606a88d424d",
+    "photobooth/kiosk_v2/photo_views.py": "0af13ac831c4b1d4a82465d1e6a16f413df940b4c5ce8674a66918ad6ba639d6",
+    "photobooth/kiosk_v2/post_preview_checkout_app.py": "3804ef4d684d070ffea00f8a6692b1cf01edb4d9f6fbd038385d1ae123c6cf5b",
+    "photobooth/kiosk_v2/post_preview_visits_app.py": "c3aa03353b10ea3e7ffbf77ecc95c24fe33a63a3926eb43a7367420cd0ef2491",
+    "tests/test_post_preview_visit_control.py": "0ad79ab5c207d4e9ff0bd98b62261a4c5d80a294f2a58783f60dd116d126e612",
+    "tests/test_post_preview_visits_widgets.py": "97e7adf86f316673e21af8f951e6bcf1f7562854232dcb09e21263a477e1aba2",
+    "tools/run_post_preview_ci.py": "8345f7da32d60a1b5c8f6b1ce14dd141190bf47fe5fb458a34ba26d773cc6568",
+    ".github/workflows/post-preview-qris.yml": "58b794645ea4d379ae8bbc4ee69dc5ccd660a47508f4b2628134b8a33ad0b763"
+  },
+  "backend": {
+    "run": 832,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 508.633,
+    "actual_command": ".venv/bin/python tools/run_kiosk_unittests.py test_kiosk_unittest_progress test_post_preview_store test_post_preview_photos test_post_preview_checkout test_post_preview_resources test_post_preview_worker test_post_preview_idle test_credential_vault test_post_preview_ccp test_post_preview_payments test_post_preview_api test_post_preview_host test_post_preview_host_fulfillment test_post_preview_sandbox_visits test_post_preview_visit_control test_post_preview_presentation test_post_preview_ticket_presentation test_post_preview_remote_receipt test_post_preview_payment_crashes test_post_preview_process_crash test_post_preview_protected_restore test_post_preview_checkout_worker test_post_preview_lifecycle_worker test_post_preview_readiness test_post_preview_worker_fence test_post_preview_sandbox_handoff test_post_preview_claim_requests test_post_preview_handoff_api test_post_preview_handoff_client test_post_preview_drive_readiness test_post_preview_paid_drive test_post_preview_sandbox_delivery test_post_preview_sandbox_delivery_api test_post_preview_protected_checkout test_post_preview_paid_media test_post_preview_paid_strips test_post_preview_paid_print test_post_preview_paid_upload_status test_post_preview_paid_delivery test_post_preview_checkout_delivery test_post_preview_journey_matrix test_post_preview_pilot_launcher test_post_preview_pilot_preflight test_post_preview_device_entry test_post_preview_pilot_early_root test_post_preview_isolation test_post_preview_pilot_admission test_post_preview_refund_assessment test_post_preview_refund_simulation test_post_preview_claim test_post_preview_authority test_post_preview_ticket test_post_preview_ticket_receipt test_post_preview_ticket_window test_post_preview_checkout_ticket test_booth_sync test_booth_storage test_apps_script_drive test_retention_readiness test_checkout_backend test_checkout_durability test_payment_quote test_workflow test_capture_journal test_photo_reconstruction",
+    "equivalent_registered_command": ".venv/bin/python tools/run_post_preview_ci.py all"
+  },
+  "native": {
+    "run": 93,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 338.82,
+    "actual_command": "xvfb-run -a .venv/bin/python tools/run_kiosk_unittests.py test_post_preview_widgets test_post_preview_checkout_widgets test_post_preview_native_journeys test_post_preview_pilot_runtime test_post_preview_ticket_view test_post_preview_remote_ticket_view test_post_preview_remote_receipt_view test_post_preview_protected_widgets test_post_preview_visits_widgets test_ccp_view test_qr_code test_kiosk_v2_photos test_kiosk_v2_flow",
+    "environment": "Actual Xvfb/X11, original native window/widgets. Synthetic external transports/custody only."
+  },
+  "logs_sha256": {
+    "full-backend.txt": "c7993a1f45bb4ee8fe3c6d7a29419a215693e9864d15f36d504386dc83d843d6",
+    "full-native.txt": "9a375e4afc612773e83e801f0a184b402b2754c659fcb9f5e56c0bc980f7dd21"
+  },
+  "ci": {
+    "run": 42746552117,
+    "source": "b433a7e457b9f181279af66f1bbee04943c384f8",
+    "status": "COMPLETED_SUCCESS",
+    "expected_jobs": [
+      "Ubuntu all832",
+      "Windows core311",
+      "Windows delivery521",
+      "Ubuntu native93"
+    ],
+    "all_completed_logs_inspected": true,
+    "jobs": [
+      {
+        "name": "private-state (ubuntu-latest, all)",
+        "job_id": 129599935182,
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-10T03:00:33Z",
+        "completed_at": "2026-11-10T03:07:58Z"
+      },
+      {
+        "name": "private-desktop",
+        "job_id": 129599935399,
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-10T03:00:32Z",
+        "completed_at": "2026-11-10T03:05:20Z"
+      },
+      {
+        "name": "private-state (windows-latest, core)",
+        "job_id": 129599935443,
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-10T03:00:32Z",
+        "completed_at": "2026-11-10T03:06:28Z"
+      },
+      {
+        "name": "private-state (windows-latest, delivery)",
+        "job_id": 129599935492,
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-10T03:00:32Z",
+        "completed_at": "2026-11-10T03:10:19Z"
+      }
+    ],
+    "ubuntu": {
+      "run": 832,
+      "seconds": 422.125,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "native": {
+      "run": 93,
+      "seconds": 228.587,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "windows_core": {
+      "run": 311,
+      "seconds": 305.29,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "windows_delivery": {
+      "run": 521,
+      "seconds": 495.055,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "windows_total": 832,
+    "apps_script_observed": {
+      "run": 34,
+      "pass_count": 34,
+      "failures": 0
+    },
+    "owner_setup_check_only": "SUCCESS",
+    "budgets": "Windows15min unchanged, disjoint shards; Ubuntu10min and native15min unchanged"
+  },
+  "limits": "No full commercial launcher/protected freeze/global device ownership/supported boot/remedy/actual accounts/hardware or final current-source2h/device4h qualification. Commercial NOT_READY."
+}

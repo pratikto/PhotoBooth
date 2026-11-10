@@ -5,7 +5,8 @@ a queued claim ran, STOPPED cleared pending/results but retained the unconsumed
 proof command. One controlled case reproduced FAIL1.140s; actual worker shutdown
 now drains both bounded queues, retaining original I/O/kernel ownership until
 real exit.10 public-control PASS38.615s, zero failures/errors/skips. No proof was
-logged or echoed and no new money/media grant occurred. Full current CI pending.
+logged or echoed and no new money/media grant occurred. Final b433a7e:832 local
+backend/93 local native PASS; CI42746552117 all four SUCCESS, logs inspected.
 [Scope/source evidence](qa/portrait-v2-sandbox/PP06-PROTECTED-HANDOFF-2026-11-10.md).
 
 ## BUG-057 — privacy during accepted original ledger close could hold forever (10 November 2026)
@@ -17,7 +18,9 @@ that dead context. Finish ONLY its already accepted original close/open before
 current-owner retirement, retaining original worker/history gates. Repeated
 privacy during actual shutdown also cannot block the remaining drain.
 Corrected first6 PASS24.176s;77 affected PASS148.702s, zero failures/errors/skips.
-New full/CI and native mounting pending; no customer/money incident.
+Final b433a7e:832 local backend/93 local native PASS; CI42746552117 all four
+SUCCESS, logs inspected. Original native mounting now verified; full protected
+freeze/commercial launcher remains gated. No customer/money incident.
 [Exact scope/source evidence](qa/portrait-v2-sandbox/PP06-PROTECTED-HANDOFF-2026-11-10.md).
 
 ## BUG-056 — returning proof could redeem before finishing a lost original ACK (10 November 2026)
