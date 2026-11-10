@@ -505,3 +505,64 @@ while transition is pending and reject late/stale results after privacy hide.
 Then implement the proper protected freeze/trusted complete launcher/global
 ownership, supported boot/remedy/status/ops and actual final qualification.
 Do not claim commercial readiness or enable merchant defaults from this core.
+
+## B6-H async native control/privacy contract before source
+
+Put blocking visit-manager calls on one trusted launcher worker, never a Kivy
+callback or another PhotoJobs facade. The public control object contains only
+bounded command/result queues, static request IDs/epochs/events and the original
+NativeVisitBinding. It must not retain the private manager, backend config,
+worker key, provider, custody protector or launcher thread object. The trusted
+launcher keeps the private worker handle separately; shutdown retains it and
+global/private kernel ownership until actual original I/O/child exit.
+
+Use a single pending customer command. Privacy retirement is an immediate,
+nonblocking event independent of that command; clear/hide GUI proof/pixels and
+discard stale results by visibility epoch. A late claim may commit its original
+lease before the response is hidden/lost. Keep only the original pending request
+ID/group/proof hash in the trusted manager, never raw proof. If needed, retire
+ONLY that exact current durable REACQUIRED owner as hidden metadata after the
+actual original PhotoJobs/collector finish. This is same-process continuation of
+an operation initiated here, not boot adoption, photo restoration or a financial
+grant; unknown/foreign owners still hold. No media is loaded for this retirement.
+
+A fresh empty hidden facade with no current owner may drain/replace its actual
+old handles after checking all original release history. It needs no invented
+customer ACK; a pending acquired owner cannot use that path. Preserve first real
+retirement reason (cancel/result-timeout/minimize); do not turn window minimization
+or a stopped listener into cancel, release or proof of fulfillment. Once actual
+retirement finishes, original backend reconciliation/receipt/ACK still gates
+READY. Financial unknown returns bounded HOLD while safe background polling
+respects pacing; customer Photo/game triggers remain guarded.
+
+The original protected app must reuse the manager's EXACT PhotoJobs object bound
+to its original collector, not construct a second worker around the same service.
+Reuse the original Ads/recovery popup/cards/input, with explicit protected titles
+and async validation; keep mock-only admission constructors and default launcher
+guards unchanged. Resume/resize/late outcome cannot reveal a prior customer's
+pixels or overwrite a newer binding. On GUI stop do not call ledger-close under
+an unfinished worker; let the retained trusted control drain it first.
+
+Test the public proxy with actual manager/child, nonblocking blocked I/O/privacy,
+lost/late claim response and durable scoped metadata retirement, empty privacy
+cycle and unknown-owner denial, shutdown stop=False, stale/forged reply, no key/
+raw-proof in public outcomes/fields. Then exercise the original native Ads →
+claim popup → restored original ticket/delivery and A/B/A at both portrait sizes.
+Explicit fixture freeze remains separately labeled until protected freeze and
+the complete trusted launcher/global lease/device/configuration path is done.
+
+## B6-G complete source regression checkpoint
+
+Runtime/testse2373e7b8b958c1d2222816945ab43107af785b9: **816 full local backend
+PASS335.038s**, zero failures/errors/skips. All original and new methods remain
+registered. Exact-source CI42732030594 Ubuntu816 PASS368.952s and native88
+PASS238.833s, completed logs inspected; Apps Script remains34 PASS in CI.
+Windows129552155829 is still running and has NO completed verdict. Its new
+static per-test progress must be inspected if the budget recurs. No runtime
+file changed during this full run; the following H contract is not implemented.
+[Exact source/log evidence](evidence/pp06-g-full-2026-11-10.json).
+
+NEXT implementation is precisely the bounded async control/native integration
+contract above, not another backend rewrite. Complete freeze/launcher/global
+lease/boot/remedy and actual qualification are separate source/device gates.
+Current customer profile remains unmounted; commercial NOT_READY.
