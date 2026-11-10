@@ -377,4 +377,104 @@ class OriginalSandboxVisitTests(unittest.TestCase):
         self.assertEqual('RESTORED',self.retry(lambda:self.visits.recover_paid(proof))['state'])
 
 
+    def test_empty_hidden_facade_rotates_without_inventing_customer_ack(self):
+        old=self.binding;process=self.visits._backend.process
+        old.service.hide_private()
+        self.retry(lambda:self.visits.retire_current('APP_SUSPENDED'))
+        fresh=self.retry(self.visits.ensure_new_visitor_ready)
+        self.assertEqual(old.epoch+1,fresh.epoch)
+        self.assertEqual(0,process.returncode)
+        self.assertTrue(old.jobs._closed)
+        self.assertIsNone(fresh.service.lease)
+        self.assertEqual(0,self.visits.ledger.db.execute('SELECT COUNT(*) FROM pp_isolation_ops').fetchone()[0])
+
+    def test_late_original_claim_can_retire_only_its_exact_durable_owner_without_media(self):
+        group,proof=self.paid(self.binding);self.binding.service.retire('RESULT_TIMEOUT')
+        fresh=self.retry(self.visits.ensure_new_visitor_ready)
+        service=fresh.service;entered=threading.Event();release=threading.Event();errors=[]
+        original=service._handoff.claim
+        def blocked(*args):
+            grant=original(*args);entered.set();release.wait(6);return grant
+        def claim():
+            deadline=time.monotonic()+12
+            while True:
+                try:self.visits.recover_paid(proof);return
+                except DraftHeld:
+                    if entered.is_set():errors.append('held');return
+                    if time.monotonic()>=deadline:errors.append('preflight held');return
+                    time.sleep(.05)
+        with patch.object(service._handoff,'claim',side_effect=blocked):
+            worker=threading.Thread(target=claim);worker.start()
+            try:
+                self.assertTrue(entered.wait(12));service.hide_private()
+            finally:release.set();worker.join(8)
+        self.assertEqual(['held'],errors);self.assertIsNone(service.lease)
+        with patch.object(service.photos,'inspect',side_effect=AssertionError('No media for retirement')):
+            self.retry(lambda:self.visits.retire_current('APP_SUSPENDED'))
+        self.assertEqual({'phase':'hold'},service.snapshot())
+        self.assertEqual(group,service.group)
+        self.assertEqual(4,service.lease.generation)
+        row=service.ledger.db.execute('SELECT * FROM pp_drafts WHERE draft_id=?',(service.lease.draft_id,)).fetchone()
+        self.assertEqual(('APP_SUSPENDED',5),(row['lifecycle'],row['generation']))
+        self.visits.retire_current('USER_CANCEL')
+        self.assertEqual('APP_SUSPENDED',service.ledger.db.execute('SELECT lifecycle FROM pp_drafts WHERE draft_id=?',
+            (service.lease.draft_id,)).fetchone()[0])
+        newest=self.retry(self.visits.ensure_new_visitor_ready)
+        self.assertIsNone(newest.service.lease)
+        self.assertEqual(1,newest.service.ledger.db.execute('SELECT COUNT(*) FROM pp_payment_attempts').fetchone()[0])
+
+    def test_unknown_active_owner_cannot_be_adopted_for_privacy_retirement(self):
+        owner=self.visits.ledger.create('PB001','unknown-owner',{'template_a':1})
+        self.binding.service.hide_private()
+        with self.assertRaises(DraftHeld):self.visits.retire_current('APP_SUSPENDED')
+        self.assertIsNone(self.binding.service.lease)
+        row=self.visits.ledger.db.execute('SELECT * FROM pp_drafts WHERE draft_id=?',(owner.draft_id,)).fetchone()
+        self.assertEqual(('ACTIVE',1,0),(row['lifecycle'],row['generation'],row['closed']))
+        with self.assertRaises(DraftHeld):self.visits.ensure_new_visitor_ready()
+
+
+    def test_privacy_retirement_waits_for_original_photo_thread_before_durable_event(self):
+        service=self.binding.service;service.start(get_templates(),{'template_a':1})
+        entered,release=threading.Event(),threading.Event();original=service.snapshot
+        def blocked():entered.set();release.wait(6);return original()
+        with patch.object(service,'snapshot',side_effect=blocked):
+            self.assertTrue(self.binding.jobs.submit('snapshot'))
+            try:
+                self.assertTrue(entered.wait(2));service.hide_private()
+                with self.assertRaises(DraftHeld):self.visits.retire_current('APP_SUSPENDED')
+                row=service.ledger.db.execute('SELECT * FROM pp_drafts').fetchone()
+                self.assertEqual(('ACTIVE',1),(row['lifecycle'],row['generation']))
+                self.assertTrue(self.binding.jobs._thread.is_alive())
+            finally:release.set();self.binding.jobs._thread.join(7)
+        self.retry(lambda:self.visits.retire_current('APP_SUSPENDED'))
+        self.assertEqual('APP_SUSPENDED',service.ledger.db.execute('SELECT lifecycle FROM pp_drafts').fetchone()[0])
+
+    def test_foreign_pending_claim_metadata_cannot_retire_original_owner(self):
+        group,proof=self.paid(self.binding);self.binding.service.retire('RESULT_TIMEOUT')
+        fresh=self.retry(self.visits.ensure_new_visitor_ready);service=fresh.service;interrupted=[]
+        def interrupt(_grant):
+            interrupted.append(True);service.hide_private();raise DraftHeld('Synthetic lost native claim response')
+        with patch.object(service,'recover_original_owed',side_effect=interrupt):
+            def acquire():
+                try:self.visits.recover_paid(proof)
+                except DraftHeld:
+                    if interrupted:return
+                    raise
+                self.fail('Expected original restore interruption')
+            self.retry(acquire)
+        pending=self.visits._pending_claim
+        self.assertFalse(proof in repr(pending));self.assertIsNone(service.lease)
+        self.assertTrue(self.visits._server.stop(timeout=2));self.assertTrue(fresh.jobs.retire(timeout=0))
+        for changed in (('0'*32,*pending[1:]),(pending[0],'0'*32,*pending[2:]),
+                        (*pending[:2],'0'*64,pending[3]),(*pending[:3],pending[3]+1)):
+            self.visits._pending_claim=changed
+            with self.assertRaises(DraftHeld):self.visits.retire_current('APP_SUSPENDED')
+            self.assertIsNone(service.lease)
+            self.assertEqual(('ACTIVE',4),tuple(service.ledger.db.execute(
+                'SELECT lifecycle,generation FROM pp_drafts').fetchone()))
+        self.visits._pending_claim=pending
+        self.retry(lambda:self.visits.retire_current('APP_SUSPENDED'))
+        self.assertEqual(4,service.lease.generation)
+
+
 if __name__=='__main__':unittest.main()

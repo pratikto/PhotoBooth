@@ -602,3 +602,40 @@ pending. NEXT remains H's actual privacy/late-claim hooks and async public
 control, then original Kivy Ads/recovery A/B/A at both sizes. Freeze/complete
 launcher/global lease/boot/remedy/actual qualification remain unfinished and
 default merchant health remains False. No unrelated runtime WIP is included.
+
+## B6-H2 original privacy/late-claim retirement core
+
+Base2f9fb1c. This increment implements the trusted-manager privacy hooks required
+by H before adding public async control or changing Kivy/customer admission.
+Manager keeps only request/group/proof SHA256/current binding epoch. After an
+original claim commits but its response is hidden/lost, retire_current may recover
+ONLY the SAME durable REACQUIRED owner for metadata retirement. It checks request,
+proof hash/epoch, owner/generation, original accepted worker receipt and entitlement;
+no credential/media/grant is decrypted, loaded or fabricated. Unknown/foreign boot
+owners remain held. Native collector and PhotoJobs must ACTUALLY finish before
+metadata adoption or durable retirement. First durable retirement reason remains.
+
+A genuinely empty hidden facade may drain/replace its original child/collector/
+PhotoJobs after validating all original released history; no fake customer ACK
+is created. Partial actual close stays held and retains kernel ownership. New
+child/private capability/worker use the SAME original root and existing journals.
+
+Five new methods: actual empty rotation/no ACK; original claim HTTP response
+interrupted by privacy then metadata-only retirement; wrong request/group/hash/
+epoch denial; actual blocked PhotoJobs drain; unknown active-owner denial.
+First3 methods had2 missing-method ERRORs and1 fixture pacing FAIL (12.285s).
+The claim fixture now respects existing original GET pacing before its response
+barrier, without changing runtime pacing. Corrected3 PASS12.622s, expanded
+**68 affected PASS117.272s**, zero failures/errors/skips. Actual child/HTTP/native
+facade core with explicit fake external transports, not full UI/device acceptance.
+[Exact source/log/command evidence](evidence/pp06-privacy-retirement-2026-11-10.json).
+
+NEXT H3: bounded public async control + separately retained trusted worker,
+immediate privacy epoch and late outcome rejection, stop=False ownership, then
+original protected Ads/recovery popup/PhotoJobs A/B/A at both sizes. Worker must
+apply these retirement hooks before handling privacy-late results/shutdown;
+this core alone does not mount that integration. Full protected freeze/global
+launcher/boot/remedy/actual qualification remain open; health/defaults gated,
+commercial NOT_READY. Current new-source full regression/CI pending; previous
+G exact-source816/816/88 SUCCESS remains historical. Latest base2f9fb1c CI was
+Ubuntu817/native88 SUCCESS, Windows cancelled without a summary, not PASS.

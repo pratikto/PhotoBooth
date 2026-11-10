@@ -1,0 +1,36 @@
+{
+  "base": "2f9fb1c59b92bf1a2f62c5baa0560f14cb1f8f84",
+  "stage": "B6-H2 privacy/late-claim retirement manager core",
+  "source_sha256": {
+    "photobooth/post_preview_sandbox_visits.py": "646c1868d066dac7bfa73337a7d0d5f60db29ec6e0e944ec7300f29dc2708095",
+    "tests/test_post_preview_sandbox_visits.py": "e795f70074e3753296729526c0698e264a47e0d73842cb771633334484a18462"
+  },
+  "before": {
+    "run": 3,
+    "errors": 2,
+    "failures": 1,
+    "seconds": 12.285,
+    "fixture_failure": "Existing provider pacing before claim response barrier"
+  },
+  "corrected_first": {
+    "run": 3,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 12.622
+  },
+  "affected": {
+    "run": 68,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 117.272
+  },
+  "command": ".venv/bin/python tools/run_kiosk_unittests.py test_post_preview_sandbox_visits test_post_preview_handoff_client test_post_preview_claim_requests test_post_preview_sandbox_handoff",
+  "logs_sha256": {
+    "privacy-before.txt": "bbd6fce81bdc82efdff57234b0d4b271652380502a9bba4874e7508685882590",
+    "privacy-corrected.txt": "91876762f59df36eeedfb2bbe617be1639ca6b6d5c59e6d323d9fae63835ad6c",
+    "manager-related.txt": "6103f76ab9397fdc607beb9052d3c1ca63cf12d1ee45213e635da5e3494b4f60"
+  },
+  "limits": "Actual child/facade core, fake external provider/Drive/printer/Linux custody. No public async control/customer UI/global launcher/boot/refund/production acceptance; new full CI pending."
+}

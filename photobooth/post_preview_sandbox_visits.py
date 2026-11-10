@@ -55,6 +55,8 @@ class OriginalSandboxVisits:
         self._binding=None
         self._admitted=self._closed=self._stopping=False
         self._closing=self._opening=False
+        self._empty_rotating=False
+        self._pending_claim=None  # request/group/proof hash/epoch only, never raw proof.
 
     def __repr__(self):
         return '<OriginalSandboxVisits: trusted private launcher; not a GUI service>'
@@ -179,6 +181,13 @@ class OriginalSandboxVisits:
     def ensure_new_visitor_ready(self):
         with self._lock:
             self._active()
+            if self._empty_rotating:
+                if not self._close_handles():
+                    raise DraftHeld('Original empty private worker is still stopping')
+                self._opening=True
+                self._open();self._opening=False;self._empty_rotating=False
+                self._free_history()
+                return self._binding
             if self._opening and self._admitted:
                 if not self._close_handles():
                     raise DraftHeld('Original attempted child startup is still stopping')
@@ -193,6 +202,15 @@ class OriginalSandboxVisits:
                 self._free_history()
                 return self._binding
             service=self._service;lease=service.lease
+            if lease is None and service._hidden.is_set():
+                thread=self._jobs._thread
+                if self._jobs.busy or thread is not None and thread.is_alive():
+                    raise DraftHeld('Original empty private command is still active')
+                # No current owner means no customer release may be invented.
+                # Old released history is still independently verified.
+                self._free_history()
+                self._empty_rotating=True
+                return self.ensure_new_visitor_ready()
             if lease is None or not service._hidden.is_set() or service.phase!='hold':
                 raise DraftHeld('Original live visitor cannot be preempted')
             # Durable retirement must already have run on the original worker.
@@ -233,9 +251,12 @@ class OriginalSandboxVisits:
                 if (allow_reacquired and request['state']=='REACQUIRED' and owner and owner['lifecycle']=='ACTIVE'
                         and (owner['draft_id'],owner['visit_id'],owner['generation'])==
                         (request['draft_id'],request['visit_id'],request['generation'])):
+                    self._pending_claim=(request['request_id'],group,proof_hash,self._epoch)
                     return request['request_id']
             prepared=next((r for r in requests if r['state']=='PREPARED'),None)
-            return prepared['request_id'] if prepared else uuid.uuid4().hex
+            identity=prepared['request_id'] if prepared else uuid.uuid4().hex
+            self._pending_claim=(identity,group,proof_hash,self._epoch)
+            return identity
 
     def recover_paid(self,payload):
         """Trusted worker only; returned binding/snapshot contains no raw proof."""
@@ -275,9 +296,74 @@ class OriginalSandboxVisits:
                     raise DraftHeld('Original retired claim context changed')
                 self.ensure_new_visitor_ready()
                 service=self._service
+            # Rotation may have replaced the original facade/epoch after proof
+            # preflight. Remember only this actual request on the CURRENT one.
+            self._pending_claim=(request,group,hashlib.sha256(payload.encode()).hexdigest(),self._epoch)
             view=service.claim_original(group,payload,request)
             if view.get('state')=='WAIT':return view
             return dict(state='RESTORED',snapshot=view,binding=self._binding,purchase_group_id=group)
+
+    def retire_current(self,event):
+        """Trusted worker: retire current metadata after immediate GUI hide.
+
+        A late claim can commit occupancy before its hidden/lost HTTP response.
+        Only our exact pending durable REACQUIRED operation may supply its lease
+        for retirement; no media/credential is read or grant reconstructed.
+        Unknown boot/foreign owners remain held. This method never ACKs/FREEs.
+        """
+        if event not in {'USER_CANCEL','APP_SUSPENDED','INACTIVITY_EXPIRED',
+                         'VISIT_ABANDONED','RESULT_TIMEOUT'}:
+            raise ValueError('Original privacy retirement event required')
+        with self._lock:
+            self._active()
+            service=self._service
+            if service is None:
+                raise DraftHeld('Original native context unavailable')
+            service.hide_private()
+            collector_done=self._server.stop(timeout=0)
+            jobs_done=self._jobs.retire(timeout=0)
+            if not collector_done or not jobs_done:
+                raise DraftHeld('Original collector/native command must drain before retirement')
+            with self.ledger.write():
+                owner=self.ledger.db.execute('SELECT * FROM pp_drafts WHERE booth_id=? AND closed=0',
+                                             (self._config.booth_id,)).fetchone()
+                if service.lease is None and owner is not None:
+                    pending=self._pending_claim
+                    request=(self.ledger.db.execute('SELECT * FROM pp_protected_claim_ops WHERE request_id=?',
+                        (pending[0],)).fetchone() if pending and pending[3]==self._epoch else None)
+                    if (not request or request['state']!='REACQUIRED'
+                            or (request['purchase_group_id'],request['proof_sha256'])!=(pending[1],pending[2])
+                            or (request['draft_id'],request['booth_id'],request['visit_id'],request['generation'])
+                               !=(owner['draft_id'],owner['booth_id'],owner['visit_id'],owner['generation'])
+                            or owner['lifecycle']!='ACTIVE'):
+                        raise DraftHeld('Original exact pending claim owner required')
+                    release=self.ledger.db.execute('SELECT * FROM pp_isolation_ops WHERE operation_id=?',
+                                                   (request['release_operation'],)).fetchone()
+                    if (not release or release['draft_id']!=owner['draft_id']
+                            or release['booth_id']!=owner['booth_id']
+                            or release['original_generation']+2!=owner['generation']):
+                        raise DraftHeld('Original pending claim worker evidence changed')
+                    require_acked_worker_receipt(self.ledger,release)
+                    finance=self.ledger.db.execute('SELECT entitlement_id FROM pp_purchase_finance '
+                        'WHERE purchase_group_id=?',(pending[1],)).fetchone()
+                    if not finance or finance['entitlement_id']!=request['entitlement_id']:
+                        raise DraftHeld('Original pending claim identity changed')
+                    service.lease=DraftLease(owner['draft_id'],owner['booth_id'],owner['visit_id'],owner['generation'])
+                    service.group=pending[1]
+                lease=service.lease
+                if lease is None:
+                    service.phase='hold'
+                    return {'phase':'hold'}
+                if (not owner or (owner['draft_id'],owner['visit_id'])!=(lease.draft_id,lease.visit_id)):
+                    raise DraftHeld('Original current native owner changed')
+                if owner['lifecycle']!='ACTIVE':
+                    if owner['generation']!=lease.generation+1:
+                        raise DraftHeld('Original retirement generation changed')
+                    service.phase='hold'
+                    return {'phase':'hold'}  # Preserve the FIRST durable retirement reason.
+                if owner['generation']!=lease.generation:
+                    raise DraftHeld('Original current native generation changed')
+            return service.retire(event)
 
     def stop(self):
         with self._lock:
