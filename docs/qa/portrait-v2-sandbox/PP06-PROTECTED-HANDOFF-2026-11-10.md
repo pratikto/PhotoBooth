@@ -286,3 +286,21 @@ that exact graceful rotation and native A/B/A integration over original journals
 boot/pre-ACK recovery must be separately scoped and fault tested. Then finish
 trusted launcher/configuration and refund/status/ops and final qualification.
 Full changed-source/CI verification remains pending for the current source.
+
+## B6-E complete local source regression
+
+Runtime/testscb6449117b55d582112ec652f20a668acdcecbd8: **795 backend
+PASS303.023s +88 native PASS210.225s +34 Apps Script PASS**, zero failures,
+errors or skips. Native ran the original registered group on actual private
+X11 Xvfb; no offscreen visual substitute. Source stayed unchanged throughout.
+CI42726468657 completed Ubuntu795 PASS245.482s and native88 PASS184.483s;
+completed job logs inspected. Windows129533300402 remains pending and is NOT
+claimed successful. [Exact source/log evidence](evidence/pp06-e-full-2026-11-10.json).
+Micro-increment C/D CI runs were superseded by normal source concurrency; their
+cancelled jobs are not called passing. Current E includes all registered C/D/E
+methods and original regression; no test/timeout/guard was removed.
+
+Source completeness remains separate: this verified checkpoint still lacks
+automatic native customer rotation, complete freeze/launcher/boot/remedy and
+actual target-device/account acceptance. Native mock A/B/A evidence cannot be
+relabeled as a protected merchant cycle. No commercial activation is authorized.

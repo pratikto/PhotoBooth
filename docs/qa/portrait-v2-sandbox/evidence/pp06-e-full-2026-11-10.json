@@ -1,0 +1,47 @@
+{
+  "source": "cb6449117b55d582112ec652f20a668acdcecbd8",
+  "local": {
+    "backend": {
+      "run": 795,
+      "seconds": 303.023
+    },
+    "native": {
+      "run": 88,
+      "seconds": 210.225,
+      "display": "actual private X11 Xvfb :93"
+    },
+    "apps_script": {
+      "run": 34
+    }
+  },
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "ci": {
+    "run_id": 42726468657,
+    "ubuntu": {
+      "job_id": 129533300702,
+      "run": 795,
+      "seconds": 245.482,
+      "conclusion": "success"
+    },
+    "native": {
+      "job_id": 129533300779,
+      "run": 88,
+      "seconds": 184.483,
+      "conclusion": "success"
+    },
+    "windows": {
+      "job_id": 129533300402,
+      "status": "pending; not yet claimed verified"
+    }
+  },
+  "log_sha256": {
+    "backend": "5f56b7b98479923f474c5c8ab61fdcda065fff7cf4e7a670fdd01b7685063612",
+    "native": "f53fa66fb9c917d071db68feb5c00ff7c87d045aee2b88a16798d4cc34416c8f",
+    "apps_script": "f39af2475662ab53ac046bdc404949520f5329a590fdf64c9c25ae9e12b85774",
+    "ci_ubuntu": "9d9828c3b01ffd7f8d9101c88a311fc54a5df9a9bcff224e1a12bd5071be878c",
+    "ci_native": "504087f9e5226e1c514694d6b4684c6df505636ce28a81283f3aa753e3958bd4"
+  },
+  "limits": "Full current registered groups, original fake-external fixtures only; protected customer cycle/freeze/trusted launcher/boot/refund/status/ops and device/account/final qualification remain open. No money/refund/paper/cloud/deploy."
+}
