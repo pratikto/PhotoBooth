@@ -7,7 +7,7 @@ from contextlib import contextmanager
 from contextvars import ContextVar
 from pathlib import Path
 
-from photobooth.post_preview_readiness import CheckObservation, ReadinessScope, finite_number
+from photobooth.post_preview_readiness import CheckObservation, ReadinessScope, FreezeScope, finite_number
 from photobooth.post_preview_store import DraftHeld
 
 _authenticated_charge = ContextVar('postpay_authenticated_charge', default=None)
@@ -50,19 +50,27 @@ class OriginalWorkerReadiness:
         stamp = ledger.now()
         denied = CheckObservation('NOT_READY', stamp)
         try:
+            freezing=type(scope) is FreezeScope
+            if type(scope) not in {ReadinessScope,FreezeScope}:return denied
             if (self.launch_lease.stream.closed or self.jobs._closed or self.jobs.service is not self.service
                     or self.service._hidden.is_set() or self.service._closed.is_set()
                     or self.service.lease is None or self.service.phase not in
-                    {'claim_proof','checkout_ready','payment_pending','payment_hold','paid_hold'}
+                    ({'final_preview'} if freezing else
+                     {'claim_proof','checkout_ready','payment_pending','payment_hold','paid_hold'})
+                    or freezing and (not self.jobs.busy or self.jobs.current_action!='freeze_checkout')
                     or self.jobs.busy and self.jobs.current_action not in
                     {'freeze_checkout','ccp_visible','begin_payment','continue_payment','check_payment','snapshot'}):
                 return denied
+            if freezing:
+                actual=self.service.checkout.freeze_scope(self.service.lease,self.service.templates,
+                    revision=scope.revision,expected_amount=scope.amount)
+                if actual!=scope:return denied
             with ledger.write():
                 lease = self.service.lease
                 ledger._owned(lease)
                 row = ledger.db.execute('SELECT * FROM pp_checkout_intents WHERE draft_id=?', (lease.draft_id,)).fetchone()
-                if (not row or ReadinessScope(row['purchase_group_id'], lease.booth_id,
-                        row['contract_sha256'], lease.generation) != scope):
+                if (not freezing and (not row or ReadinessScope(row['purchase_group_id'], lease.booth_id,
+                        row['contract_sha256'], lease.generation) != scope)):
                     return denied
                 # Historical money/OWED must survive a safe handoff, but its
                 # existence alone does not mean the old visit still owns the
@@ -71,8 +79,8 @@ class OriginalWorkerReadiness:
                 prior=ledger.db.execute('''SELECT d.*,i.purchase_group_id,f.review_required
                     FROM pp_drafts d JOIN pp_checkout_intents i ON i.draft_id=d.draft_id
                     LEFT JOIN pp_purchase_finance f ON f.purchase_group_id=i.purchase_group_id
-                    WHERE d.booth_id=? AND i.purchase_group_id!=?''',
-                    (scope.booth_id,scope.purchase_group_id)).fetchall()
+                    WHERE d.booth_id=? AND d.draft_id!=?''',
+                    (scope.booth_id,lease.draft_id)).fetchall()
                 for old in prior:
                     if (not old['closed'] or old['lifecycle']!='ISOLATED'
                             or old['review_required']):

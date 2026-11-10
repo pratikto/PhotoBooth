@@ -39,6 +39,25 @@ class ReadinessScope:
 
 
 @dataclass(frozen=True)
+class FreezeScope:
+    draft_id: str
+    booth_id: str
+    visit_id: str
+    generation: int
+    revision: int
+    amount: int
+    contract_sha256: str
+
+    def __post_init__(self):
+        for value in (self.draft_id,self.booth_id,self.visit_id):identifier(value)
+        if (any(type(value) is not int or not 1<=value<=2147483647
+                for value in (self.generation,self.revision,self.amount))
+                or type(self.contract_sha256) is not str
+                or re.fullmatch(r'[a-f0-9]{64}',self.contract_sha256) is None):
+            raise ValueError('Exact original pre-freeze candidate required')
+
+
+@dataclass(frozen=True)
 class CheckObservation:
     state: str
     observed_at: float | None
@@ -73,7 +92,10 @@ class TrustedChargeReadiness:
         return cls(scope, tuple(observations))
 
     def require(self, scope, *, now, max_age=2):
-        if type(self.scope) is not ReadinessScope or self.scope != scope:
+        self._require(scope,ReadinessScope,now=now,max_age=max_age)
+
+    def _require(self,scope,scope_type,*,now,max_age):
+        if type(self.scope) is not scope_type or type(scope) is not scope_type or self.scope != scope:
             raise DraftHeld('Readiness belongs to another original purchase or worker')
         if (type(self.observations) is not tuple
                 or len(self.observations) != len(REQUIRED_CHECKS)):
@@ -87,6 +109,14 @@ class TrustedChargeReadiness:
                     or signal.state_at(now, max_age=max_age) != 'READY'):
                 raise DraftHeld('Fresh independent readiness is not established')
             seen.add(name)
+
+
+@dataclass(frozen=True)
+class TrustedFreezeReadiness(TrustedChargeReadiness):
+    scope: FreezeScope
+
+    def require(self,scope,*,now,max_age=2):
+        self._require(scope,FreezeScope,now=now,max_age=max_age)
 
 
 class LocalChargeReadiness:
@@ -110,7 +140,6 @@ class LocalChargeReadiness:
         self.printer_dial = printer_dial
 
     def __call__(self, group):
-        from photobooth.device_health import check_camera, check_printer
         from photobooth.booth_storage import checked_path
         ledger = self.checkout.ledger
         started = ledger.now()
@@ -121,6 +150,24 @@ class LocalChargeReadiness:
             if not row:
                 raise DraftHeld('Original private storage required')
             private = checked_path(self.checkout.photos.root/row['draft_id'])
+        return self._observe(scope,private,started,TrustedChargeReadiness)
+
+    def for_freeze(self,scope):
+        from photobooth.booth_storage import checked_path
+        from photobooth.post_preview_store import DraftLease
+        if type(scope) is not FreezeScope:
+            raise DraftHeld('Original pre-freeze scope required')
+        started=self.checkout.ledger.now()
+        lease=DraftLease(scope.draft_id,scope.booth_id,scope.visit_id,scope.generation)
+        actual=self.checkout.freeze_scope(lease,self.templates,revision=scope.revision,
+                                         expected_amount=scope.amount)
+        if actual!=scope:raise DraftHeld('Original pre-freeze bytes or quote changed')
+        private=checked_path(self.checkout.photos.root/scope.draft_id)
+        return self._observe(scope,private,started,TrustedFreezeReadiness)
+
+    def _observe(self,scope,private,started,report_type):
+        from photobooth.device_health import check_camera, check_printer
+        ledger=self.checkout.ledger
         # Only an exclusively created durability probe is written/removed. No
         # saved media, manifest, reserve, counter or payment journal is changed.
         self.checkout.photos.policy.inspect(private, probe=True)
@@ -153,7 +200,7 @@ class LocalChargeReadiness:
             return device(check_camera, self.camera)
         probes['camera'] = camera
         probes['printer_route'] = lambda _scope: device(check_printer, self.printer_config, dial=self.printer_dial)
-        return TrustedChargeReadiness.observe(scope, probes)
+        return report_type.observe(scope, probes)
 
 
 class ReadOnlyDriveReadiness:

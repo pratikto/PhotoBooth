@@ -191,7 +191,57 @@ class PrivateDraftCheckout:
                 self.photos._changed(lease, 'PREVIEW_APPROVED')
             return result
 
-    def freeze(self, lease, templates, *, revision, readiness, expected_amount):
+    def _freeze_contract(self, lease, templates, revision, expected_amount):
+        available = {t.template_id: t for t in templates}
+        selected = self.ledger.db.execute('SELECT * FROM pp_templates WHERE draft_id=? AND selected=1 ORDER BY template_id',
+                                           (lease.draft_id,)).fetchall()
+        quantities = {r['template_id']: r['copies'] for r in selected}
+        quote = quote_post_preview(quantities)
+        if type(expected_amount) is not int or expected_amount != quote.total_amount:
+            raise DraftHeld('Original server-side quote mismatch')
+        designs = []
+        for row in selected:
+            if not row['approved'] or row['template_id'] not in available:
+                raise DraftHeld('Every selected design must be approved')
+            result = self._preview(lease, available[row['template_id']], row)
+            designs.append({'template_id': row['template_id'], 'copies': row['copies'],
+                'lineage_id': row['lineage_id'], 'retake_consumed': bool(row['retake_consumed']),
+                'retake_slot': row['retake_slot'], 'binding': result['binding'],
+                'preview_key': result['preview_key'], 'preview_sha256': result['preview_sha256']})
+        contract = {'version': ORDER_VERSION, 'draft_id': lease.draft_id,
+                    'booth_id': lease.booth_id, 'revision': revision, 'currency': 'IDR',
+                    'amount': quote.total_amount, 'quantities': quantities, 'designs': designs}
+        return contract
+
+    def freeze_scope(self, lease, templates, *, revision, expected_amount):
+        """Inspect the exact original approved candidate without creating a group.
+
+        Existing frozen intents are revalidated, never reconstructed/reset. This
+        scope carries no payment/media authority and no filesystem paths.
+        """
+        from photobooth.post_preview_readiness import FreezeScope
+        with self.ledger.write():
+            self.ledger._owned(lease, revision=revision)
+            existing=self.ledger.db.execute('SELECT * FROM pp_checkout_intents WHERE draft_id=?',
+                                            (lease.draft_id,)).fetchone()
+            if existing:
+                existing=dict(existing)
+            else:
+                self.ledger._owned(lease, editable=True)
+                contract=self._freeze_contract(lease,templates,revision,expected_amount)
+        if existing:
+            self.verify_frozen(existing['purchase_group_id'],templates)
+            contract=json.loads(existing['contract_json'])
+            if type(expected_amount) is not int or contract['amount']!=expected_amount:
+                raise DraftHeld('Original immutable quote mismatch')
+        scope=FreezeScope(lease.draft_id,lease.booth_id,lease.visit_id,lease.generation,
+                          revision,contract['amount'],digest(contract))
+        with self.ledger.write():
+            self.ledger._owned(lease,revision=revision)
+        return scope
+
+    def freeze(self, lease, templates, *, revision, readiness, expected_amount,
+               expected_contract_sha256=None):
         if not isinstance(readiness, ChargeReadiness):
             raise DraftHeld('Trusted typed readiness observation required')
         readiness.require()
@@ -203,27 +253,13 @@ class PrivateDraftCheckout:
                 result = dict(existing)
                 if type(expected_amount) is not int or json.loads(result['contract_json'])['amount'] != expected_amount:
                     raise DraftHeld('Original immutable quote mismatch')
+                if expected_contract_sha256 is not None and result['contract_sha256']!=expected_contract_sha256:
+                    raise DraftHeld('Original immutable freeze candidate changed')
                 return result
             self.ledger._owned(lease, editable=True)
-            available = {t.template_id: t for t in templates}
-            selected = self.ledger.db.execute('SELECT * FROM pp_templates WHERE draft_id=? AND selected=1 ORDER BY template_id',
-                                               (lease.draft_id,)).fetchall()
-            quantities = {r['template_id']: r['copies'] for r in selected}
-            quote = quote_post_preview(quantities)
-            if type(expected_amount) is not int or expected_amount != quote.total_amount:
-                raise DraftHeld('Original server-side quote mismatch')
-            designs = []
-            for row in selected:
-                if not row['approved'] or row['template_id'] not in available:
-                    raise DraftHeld('Every selected design must be approved')
-                result = self._preview(lease, available[row['template_id']], row)
-                designs.append({'template_id': row['template_id'], 'copies': row['copies'],
-                    'lineage_id': row['lineage_id'], 'retake_consumed': bool(row['retake_consumed']),
-                    'retake_slot': row['retake_slot'], 'binding': result['binding'],
-                    'preview_key': result['preview_key'], 'preview_sha256': result['preview_sha256']})
-            contract = {'version': ORDER_VERSION, 'draft_id': lease.draft_id,
-                        'booth_id': lease.booth_id, 'revision': revision, 'currency': 'IDR',
-                        'amount': quote.total_amount, 'quantities': quantities, 'designs': designs}
+            contract = self._freeze_contract(lease, templates, revision, expected_amount)
+            if expected_contract_sha256 is not None and digest(contract)!=expected_contract_sha256:
+                raise DraftHeld('Original approved freeze candidate changed')
             group = uuid.uuid4().hex
             self.ledger.db.execute('''INSERT INTO pp_checkout_intents
                 VALUES(?,?,?,?,?,'CREATE_PREPARED',?)''',

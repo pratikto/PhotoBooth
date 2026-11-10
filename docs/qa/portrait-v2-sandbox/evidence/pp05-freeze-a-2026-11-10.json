@@ -1,0 +1,28 @@
+{
+  "base": "029c6185e36927f29480af07e6aaafcf69c94294",
+  "stage": "H5-A pre-freeze candidate/private readiness",
+  "source_sha256": {
+    "photobooth/post_preview_checkout.py": "aad18673d9cb3520c60380c7ce5bc79297a02705eaded310550c38e5be53fda0",
+    "photobooth/post_preview_readiness.py": "59ac1cc4f4842ba037416865fed53ba79fe679e3068043646ca5f645388ec892",
+    "photobooth/post_preview_readiness_bridge.py": "db46a46d4cb2436ce887d3b568b86e67382c6ce824c80402295014eb17b7a974",
+    "photobooth/post_preview_authority.py": "10314b9b411648db13ce0a9e7594168365151cb314ce486794a046eaa92eac54",
+    "tests/test_post_preview_freeze.py": "1598091148a413224c4dc8cc4e141a7be391e97533a588ffd655b3649344405c",
+    "tools/run_post_preview_ci.py": "340e66c3f6431481ae597b627a553fa3aac36cbb693172931987f5a2b4f4497d"
+  },
+  "affected": {
+    "run": 94,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 75.351
+  },
+  "command": "MEONG_CI_PROGRESS=1 .venv/bin/python tools/run_kiosk_unittests.py test_post_preview_freeze test_post_preview_checkout test_post_preview_readiness test_post_preview_authority test_post_preview_host test_post_preview_host_fulfillment",
+  "logs_sha256": {
+    "candidate-related.txt": "43118e492cf672e604f882877136676f9854ae4b07fe141c5bc5e384d655fbfa",
+    "races-before.txt": "d7b72f8955160ec66a24bb4bff4ef62a860e8f36c979fb721f319a981ea96e9f",
+    "candidate-final.txt": "2aa79a50814a65f8815c3d97bdf9ce8b2f827ac4f780a617bcbe2f6418aedfd7",
+    "worker-retry.txt": "fcf9d1f54fe8902de5fad06a4ea1d83f7403c215d4a47ef7bd26b86f286a97f5",
+    "candidate-verified.txt": "70849266729db76930c055dde16814d8bf1d942144aac36ddcc2c0b8aeb16f5c"
+  },
+  "limits": "Backend freeze auth/Drive/coordinator/API/client/native action not yet mounted. No default/customer/commercial activation; actual external transports fake. Full new-source regression/CI pending."
+}

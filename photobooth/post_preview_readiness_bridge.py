@@ -18,6 +18,7 @@ from contextlib import contextmanager
 from photobooth.post_preview_authority import authenticated_payment_readiness
 from photobooth.post_preview_readiness import (
     CheckObservation, LocalChargeReadiness, ReadinessScope, TrustedChargeReadiness,
+    FreezeScope, TrustedFreezeReadiness,
     REQUIRED_CHECKS, finite_number,
 )
 
@@ -55,6 +56,10 @@ def _unknown():
 
 
 def _scope_data(scope):
+    if type(scope) is FreezeScope:
+        return dict(draft_id=scope.draft_id,booth_id=scope.booth_id,visit_id=scope.visit_id,
+                    generation=scope.generation,revision=scope.revision,amount=scope.amount,
+                    contract_sha256=scope.contract_sha256)
     if type(scope) is not ReadinessScope:
         raise ValueError('Exact original worker scope required')
     return dict(purchase_group_id=scope.purchase_group_id, booth_id=scope.booth_id,
@@ -62,6 +67,9 @@ def _scope_data(scope):
 
 
 def _scope(value):
+    if type(value) is dict and set(value)=={
+            'draft_id','booth_id','visit_id','generation','revision','amount','contract_sha256'}:
+        return FreezeScope(**value)
     if type(value) is not dict or set(value) != {
             'purchase_group_id', 'booth_id', 'contract_sha256', 'generation'}:
         raise ValueError('Original readiness scope required')
@@ -195,7 +203,8 @@ class WorkerReadinessServer:
     def from_original_worker(cls, channel, collector):
         if type(collector) is not LocalChargeReadiness:
             raise ValueError('Original local media/device readiness collector required')
-        server = cls(channel, lambda scope: collector(scope.purchase_group_id))
+        server = cls(channel, lambda scope: collector.for_freeze(scope) if type(scope) is FreezeScope
+                     else collector(scope.purchase_group_id))
         server._original_collector = collector
         return server
 
@@ -240,7 +249,8 @@ class WorkerReadinessServer:
                 values = _unknown()
                 try:
                     report = self._collector(scope)
-                    if (type(report) is TrustedChargeReadiness and report.scope == scope
+                    report_type=TrustedFreezeReadiness if type(scope) is FreezeScope else TrustedChargeReadiness
+                    if (type(report) is report_type and report.scope == scope
                             and type(report.observations) is tuple
                             and len(report.observations) == len(REQUIRED_CHECKS)):
                         original = {}

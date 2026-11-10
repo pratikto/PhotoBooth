@@ -12,6 +12,7 @@ CORE_MODULES=(
     'test_post_preview_store',
     'test_post_preview_photos',
     'test_post_preview_checkout',
+    'test_post_preview_freeze',
     'test_post_preview_resources',
     'test_post_preview_worker',
     'test_post_preview_idle',
