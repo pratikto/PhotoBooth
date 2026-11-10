@@ -2,9 +2,10 @@
 
 No provider, custody or Drive transport belongs here. This is not a customer
 launcher or admission authority. Original proof recovery requires our exact
-typed backend claim result and durable evidence. Complete protected freeze/
-claim/release mounting remains gated; an existing frozen visit is never inferred
-from a reopened database or reconstructed at startup.
+typed backend claim result and durable evidence. Freeze requires the original
+protected backend/worker profile; a complete customer launcher remains gated.
+An existing frozen visit is never inferred from a reopened database or
+reconstructed at startup.
 """
 import re
 
@@ -51,7 +52,7 @@ class ProtectedCheckoutService(PrivatePhotoService):
 
         The trusted checkout orchestrator must already have frozen this exact
         draft. A new/reopened facade has no lease and cannot take over old media.
-        Full protected checkout freezing/admission is a separate mounting gate.
+        Called only after protected backend freeze or explicit isolated fixtures.
         """
         self._active()
         if self.phase != 'final_preview' or self.lease is None or self.group is not None:
@@ -71,8 +72,20 @@ class ProtectedCheckoutService(PrivatePhotoService):
         self.phase = 'claim_proof'
         return self.offer_claim()
 
-    def freeze_checkout(self, *args):
-        raise DraftHeld('Protected original freeze/admission mounting is not enabled')
+    def freeze_checkout(self,revision,expected_amount):
+        self._active()
+        if self.phase!='final_preview' or self.lease is None or self.group is not None:
+            raise DraftHeld('Original live all-design preview required')
+        frozen=self.client.freeze_checkout(self.lease,revision=revision,expected_amount=expected_amount)
+        self._active()  # A late HTTP response cannot offer CCP over private Ads.
+        with self.ledger.write():
+            self.ledger._owned(self.lease,revision=revision)
+            intent=self.ledger.db.execute('SELECT * FROM pp_checkout_intents WHERE draft_id=?',
+                                          (self.lease.draft_id,)).fetchone()
+            if (not intent or intent['purchase_group_id']!=frozen['purchase_group_id']
+                    or intent['contract_sha256']!=frozen['contract_sha256']):
+                raise DraftHeld('Exact durable original frozen candidate required')
+        return self.accept_frozen_checkout(frozen['purchase_group_id'])
 
     def claim_original(self,group,proof,request_id):
         """Off-UI-thread proof claim; a busy result never changes private views."""

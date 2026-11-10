@@ -15,7 +15,7 @@ import time
 import uuid
 from contextlib import contextmanager
 
-from photobooth.post_preview_authority import authenticated_payment_readiness
+from photobooth.post_preview_authority import authenticated_payment_readiness,authenticated_freeze_readiness
 from photobooth.post_preview_readiness import (
     CheckObservation, LocalChargeReadiness, ReadinessScope, TrustedChargeReadiness,
     FreezeScope, TrustedFreezeReadiness,
@@ -293,6 +293,17 @@ class BackendChargeReadiness:
     def __call__(self, group):
         scope = self.checkout.verify_frozen(group, self.templates)
         observations = self.bridge.observe(scope)
+        return self._report(scope,observations,TrustedChargeReadiness,authenticated_payment_readiness)
+
+    def for_freeze(self,scope):
+        from photobooth.post_preview_store import DraftLease,DraftHeld
+        if type(scope) is not FreezeScope:raise DraftHeld('Exact original freeze scope required')
+        lease=DraftLease(scope.draft_id,scope.booth_id,scope.visit_id,scope.generation)
+        actual=self.checkout.freeze_scope(lease,self.templates,revision=scope.revision,expected_amount=scope.amount)
+        if actual!=scope:raise DraftHeld('Original approved candidate changed')
+        return self._report(scope,self.bridge.observe(scope),TrustedFreezeReadiness,authenticated_freeze_readiness)
+
+    def _report(self,scope,observations,report_type,authorization):
         if self.drive_probe is not None:
             try:
                 drive = self.drive_probe.observe(scope)
@@ -300,6 +311,6 @@ class BackendChargeReadiness:
                     observations.update(drive)
             except Exception:
                 pass
-        observations['payment_authorization'] = authenticated_payment_readiness(scope)
+        observations['payment_authorization'] = authorization(scope)
         probes = {name: lambda _scope, value=value: value for name, value in observations.items()}
-        return TrustedChargeReadiness.observe(scope, probes)
+        return report_type.observe(scope, probes)

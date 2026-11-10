@@ -11,6 +11,23 @@ from photobooth.post_preview_readiness import CheckObservation, ReadinessScope, 
 from photobooth.post_preview_store import DraftHeld
 
 _authenticated_charge = ContextVar('postpay_authenticated_charge', default=None)
+_authenticated_freeze = ContextVar('postpay_authenticated_freeze', default=None)
+
+
+@contextmanager
+def authenticated_freeze_request(scope,observed_at):
+    if type(scope) is not FreezeScope:raise ValueError('Exact original freeze request required')
+    token=_authenticated_freeze.set((scope,observed_at))
+    try:yield
+    finally:_authenticated_freeze.reset(token)
+
+
+def authenticated_freeze_readiness(scope):
+    original=_authenticated_freeze.get()
+    if original is None:return CheckObservation('UNKNOWN',None)
+    expected,stamp=original
+    return CheckObservation('READY' if type(scope) is FreezeScope and expected==scope
+                            else 'NOT_READY',stamp)
 
 
 @contextmanager

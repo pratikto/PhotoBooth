@@ -241,7 +241,9 @@ class PrivateDraftCheckout:
         return scope
 
     def freeze(self, lease, templates, *, revision, readiness, expected_amount,
-               expected_contract_sha256=None):
+               expected_contract_sha256=None, before_commit=None):
+        if before_commit is not None and not callable(before_commit):
+            raise DraftHeld('Trusted freeze commit check required')
         if not isinstance(readiness, ChargeReadiness):
             raise DraftHeld('Trusted typed readiness observation required')
         readiness.require()
@@ -255,11 +257,13 @@ class PrivateDraftCheckout:
                     raise DraftHeld('Original immutable quote mismatch')
                 if expected_contract_sha256 is not None and result['contract_sha256']!=expected_contract_sha256:
                     raise DraftHeld('Original immutable freeze candidate changed')
+                if before_commit is not None:before_commit()
                 return result
             self.ledger._owned(lease, editable=True)
             contract = self._freeze_contract(lease, templates, revision, expected_amount)
             if expected_contract_sha256 is not None and digest(contract)!=expected_contract_sha256:
                 raise DraftHeld('Original approved freeze candidate changed')
+            if before_commit is not None:before_commit()
             group = uuid.uuid4().hex
             self.ledger.db.execute('''INSERT INTO pp_checkout_intents
                 VALUES(?,?,?,?,?,'CREATE_PREPARED',?)''',

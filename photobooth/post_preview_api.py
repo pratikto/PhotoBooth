@@ -14,7 +14,7 @@ from starlette.concurrency import run_in_threadpool
 
 from photobooth.post_preview_inbox import PostPreviewNotificationInbox
 from photobooth.post_preview_lifecycle import PostPreviewLifecycleWorker
-from photobooth.post_preview_authority import authenticated_charge_request
+from photobooth.post_preview_authority import authenticated_charge_request,authenticated_freeze_request
 from photobooth.post_preview_readiness import ReadinessScope
 from photobooth.post_preview_store import DraftHeld, DraftLease, ORDER_VERSION
 from photobooth.qris_api import LocalRateLimit, bounded_json
@@ -28,6 +28,11 @@ class OwnerRequest(BaseModel):
 
 class ContinueRequest(OwnerRequest):
     actively_continuing: bool
+
+
+class FreezeRequest(OwnerRequest):
+    revision:int=Field(ge=1,le=2147483647)
+    expected_amount:int=Field(ge=1,le=2147483647)
 
 
 class PresentationRequest(OwnerRequest):
@@ -51,7 +56,7 @@ class ClaimRequest(BaseModel):
 
 def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_limit=120,
                background_worker=True, ccp_presentation=None, ticket_presentation=None,
-               paid_delivery=None, protected_isolation=None, protected_claim=None):
+               paid_delivery=None, protected_isolation=None, protected_claim=None, protected_freeze=None):
     if type(background_worker) is not bool:
         raise ValueError('Explicit lifecycle worker selection required')
     if ccp_presentation is not None:
@@ -84,6 +89,12 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
                 or protected_claim.ticket is not ticket_presentation.credentials):
             raise ValueError('Exact original protected handoff authority required')
     worker = PostPreviewLifecycleWorker(payments, inbox) if background_worker else None
+    if protected_freeze is not None:
+        from photobooth.post_preview_freeze import OriginalSandboxFreeze
+        if (type(protected_freeze) is not OriginalSandboxFreeze
+                or protected_freeze.checkout.ledger is not payments.ledger
+                or protected_isolation is None):
+            raise ValueError('Exact original protected freeze backend required')
     limiter = LocalRateLimit(rate_limit)
 
     @asynccontextmanager
@@ -173,6 +184,25 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
     async def health():
         return {'api_version': 1, 'order_version': ORDER_VERSION, 'mode': payments.mode,
                 'fulfillment_enabled': False}
+
+    if protected_freeze is not None:
+        def freeze_call(token,command):
+            scope=protected_freeze.scope(token,revision=command.revision,expected_amount=command.expected_amount)
+            with authenticated_freeze_request(scope,payments._now()):
+                intent=protected_freeze.freeze(token,revision=command.revision,
+                    expected_amount=command.expected_amount,expected_scope=scope)
+            return dict(kind='FROZEN_CHECKOUT',purchase_group_id=intent['purchase_group_id'],
+                draft_id=token.draft_id,booth_id=token.booth_id,visit_id=token.visit_id,
+                generation=token.generation,revision=command.revision,amount=scope.amount,
+                contract_sha256=intent['contract_sha256'],phase='CREATE_PREPARED',
+                mode=payments.mode,order_version=ORDER_VERSION,fulfillment_authorized=False)
+
+        @app.post('/api/postpay/drafts/{draft_id}/freeze')
+        async def original_freeze(draft_id:str,request:Request,
+                x_booth_id:str=Header(default=''),authorization:str=Header(default='')):
+            booth=identity(request,x_booth_id,authorization)
+            command=await body(request,FreezeRequest)
+            return await invoke(freeze_call,DraftLease(draft_id,booth,command.visit_id,command.generation),command)
 
     if protected_isolation is not None:
         def original_operation(operation,booth,owner=None):

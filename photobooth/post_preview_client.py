@@ -52,6 +52,26 @@ class PostPreviewClient:
     def inspect(self, group):
         return self._request('GET', group)
 
+    def freeze_checkout(self,lease,*,revision,expected_amount):
+        from photobooth.post_preview_store import DraftLease
+        if (type(lease) is not DraftLease or lease.booth_id!=self.booth_id
+                or type(lease.draft_id) is not str or re.fullmatch(r'[a-f0-9]{32}',lease.draft_id) is None
+                or any(type(v) is not int or not 1<=v<=2147483647 for v in (revision,expected_amount))):
+            raise ValueError('Exact original preview owner and quote required')
+        payload=dict(self._owner(lease),revision=revision,expected_amount=expected_amount)
+        result=self._transport._call('POST','/api/postpay/drafts/'+lease.draft_id+'/freeze',payload=payload)
+        expected=dict(kind='FROZEN_CHECKOUT',draft_id=lease.draft_id,booth_id=self.booth_id,
+            visit_id=lease.visit_id,generation=lease.generation,revision=revision,amount=expected_amount,
+            mode=self.mode,order_version=ORDER_VERSION,phase='CREATE_PREPARED',fulfillment_authorized=False)
+        if (type(result) is not dict or set(result)!=set(expected)|{'purchase_group_id','contract_sha256'}
+                or any(type(result[k]) is not type(v) or result[k]!=v for k,v in expected.items())
+                or type(result['purchase_group_id']) is not str
+                or re.fullmatch(r'[a-f0-9]{32}',result['purchase_group_id']) is None
+                or type(result['contract_sha256']) is not str
+                or re.fullmatch(r'[a-f0-9]{64}',result['contract_sha256']) is None):
+            raise ValueError('Unexpected original freeze observation')
+        return result
+
     def begin(self, group, lease):
         return self._request('POST', group, '/begin', self._owner(lease))
 

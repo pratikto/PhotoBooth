@@ -1,0 +1,29 @@
+{
+  "base": "4b86dfe61e89151988146785c42e6484b8df638b",
+  "stage": "H5-B backend authenticated freeze/API/client/native worker",
+  "source_sha256": {
+    "photobooth/post_preview_freeze.py": "b248a9a5f258ace1367293eb3eabe9ed89ebab674d5728a16ff66f637045009f",
+    "photobooth/post_preview_checkout.py": "3565013b506e45c0804b75d1d035fb94d76430a1a77d2bb3ac6a695af45aba1f",
+    "photobooth/post_preview_authority.py": "7af555f5fb9767c0ff772340f18dcbfee4e6c2daccdabfb4459f98e992e08a1a",
+    "photobooth/post_preview_readiness_bridge.py": "c9c1c776488a2dd63b64274903756ffab2190286433f104f5fde8094e241f0b9",
+    "photobooth/post_preview_api.py": "8c93089d9ee387482202366748d2af7ce09af3b70a581824b96388e2f1fa30f9",
+    "photobooth/post_preview_server.py": "3836a7e7d19fd16a07f478195df27c45bf6b2dde23162682919e6ee1a0bce725",
+    "photobooth/post_preview_client.py": "125f80f4e5a983dcd075942b62eda58a3407983462dd669949574da836b4a1a7",
+    "photobooth/kiosk_v2/post_preview_protected_checkout.py": "61dd995f8b723d74de8105c5339a477561a64eced2af1a094817ed8340d0e28f",
+    "tests/test_post_preview_freeze_backend.py": "e0f8467b1e9f045d73af790bec60e9f00b183e6271425a72727c67443b645488",
+    "tools/run_post_preview_ci.py": "e1261646c614cd497f7b627859454e9f47cc8ef76afb4b3efce3b80c5c09c1d1"
+  },
+  "affected": {
+    "run": 84,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 71.821
+  },
+  "command": "MEONG_CI_PROGRESS=1 .venv/bin/python tools/run_kiosk_unittests.py test_post_preview_freeze_backend test_post_preview_freeze test_post_preview_api test_post_preview_protected_checkout test_post_preview_authority test_post_preview_checkout",
+  "logs_sha256": {
+    "backend-first.txt": "911f41b72128b748ccdbb266e13481364c915041c00a38333eebd8ce8143865d",
+    "backend-related.txt": "6d198db99ae481156ed82b7f0ea095e8f409681b76b9eee0cf98b1d470d2d5b3"
+  },
+  "limits": "Native trusted-visits checkout button not mounted yet. Fake external transports/custody; complete customer launcher/global lease/boot/remedy/account/device qualification unfinished. Full new-source/CI pending."
+}

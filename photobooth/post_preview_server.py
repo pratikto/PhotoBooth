@@ -2,8 +2,9 @@
 
 Constructing this factory opens no listener and makes no provider/Drive request.
 The launcher must supply its original private checkout, connected worker bridge
-and read-only Drive probe inside the backend child process. Native admission,
-paid delivery/claim/release and production are not enabled by this assembly.
+and read-only Drive probe inside the backend child process. Optional protected
+freeze/delivery/claim/release require original private worker capabilities;
+this assembly does not enable a customer launcher or production.
 """
 from photobooth.booth_auth import BoothAuthenticator
 from photobooth.credential_vault import WindowsDPAPIProtector, platform_protector
@@ -94,11 +95,13 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
         from photobooth.post_preview_sandbox_delivery import OriginalSandboxPaidDriveBinding,OriginalSandboxPaidDelivery
         delivery=OriginalSandboxPaidDelivery(
             OriginalSandboxPaidDriveBinding(payments,checkout,drive_probe,ticket_presentation),templates)
-    isolation=claim=None
+    isolation=claim=freeze=None
     if worker_fence_key is not None:
         from photobooth.post_preview_sandbox_handoff import OriginalSandboxIsolation,OriginalSandboxClaim
         isolation=OriginalSandboxIsolation(payments,delivery,WorkerReceiptVerifier(ledger,worker_fence_key))
         claim=OriginalSandboxClaim(payments,credentials,ticket_presentation.credentials)
+        from photobooth.post_preview_freeze import OriginalSandboxFreeze
+        freeze=OriginalSandboxFreeze(checkout,templates,readiness,booth_id)
 
     def close():
         bridge.close()
@@ -107,4 +110,5 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
 
     return create_app(payments, auth, on_shutdown=close, background_worker=background_worker,
                       ccp_presentation=presentation, ticket_presentation=ticket_presentation,
-                      paid_delivery=delivery,protected_isolation=isolation,protected_claim=claim)
+                      paid_delivery=delivery,protected_isolation=isolation,protected_claim=claim,
+                      protected_freeze=freeze)

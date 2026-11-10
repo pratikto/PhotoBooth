@@ -89,3 +89,42 @@ Then C actual native full journey and privacy/lost-response faults, one final
 changed-source regression/CI. Full commercial launcher/global lease/boot/remedy/
 status/ops/device/account qualification remain separate unfinished source gates;
 commercial NOT_READY, default health unchanged. No unrelated source WIP.
+
+
+## B — protected backend/API/client/native freeze implemented
+
+Only the original protected worker-fence assembly mounts the authenticated draft
+freeze route. Body accepts only visit/generation/revision/expected amount; auth,
+booth, quote/bytes/owner validation precede mutation. Extra readiness flags and
+boolean amounts are422; foreign auth401 and wrong owner/quote/revision409.
+Backend combines original native private facts with authenticated FREEZE context
+and independent read-only Drive API/sharing/unclaimed capacity. Freeze context
+cannot authorize a charge and always resets. Missing/foreign/stale facts hold.
+Atomic original freeze rechecks the exact candidate and report freshness AFTER
+its media I/O, immediately before commit (or returning the original existing
+intent). No purchase group on failed readiness; no provider create, Drive bind,
+paid entitlement or print on freeze. Existing mock primitive/guards remain.
+
+PostPreviewClient strictly binds the complete typed response to original mode,
+version, draft/booth/visit/generation/revision/amount/group/hash. Native exact
+PhotoJobs.freeze_checkout requires its live all-design preview, then validates
+the SAME durable intent/media before offering original encrypted-escrow CCP.
+Idle native callers cannot pass the original worker-action check. Lost HTTP reply
+retains final_preview and retries the same immutable group. Privacy after commit
+but before response hides immediately, offers no CCP, creates no payment and
+allows exact original unpaid worker retirement/ACK without deleting the intent.
+No raw credential/path/media or ready flag in the freeze response. Merchant
+health/default launcher stay disabled; existing ProtectedCheckoutApp's checkout
+button stays disabled until C mounts ONLY the trusted visits profile.
+
+8 new backend methods: actual original child/HTTP/PhotoJobs freeze→CCP with
+zero money/output; auth/strict field/type/owner/quote/revision denial; lost reply
+same group; committed-reply privacy/retirement; strict client/native SQL binding;
+independent auth context; unknown Drive/wrong scope; stale-during-media-I/O atomic
+rollback. First8 PASS21.879s; expanded **84 affected PASS71.821s**, zero failures/
+errors/skips. [Source/command/log evidence](evidence/pp05-freeze-b-2026-11-10.json).
+Full new-source regression/CI pending. External transports/custody fake; no actual
+merchant/account/device acceptance. NEXT C original native full capture/preview/
+freeze/CCP/QRIS/ticket/delivery at both sizes and privacy/lost-response faults;
+then final complete regression. Complete launcher/global lease/configuration/
+boot/remedy/status/ops/actual qualification remain unfinished, commercial NOT_READY.
