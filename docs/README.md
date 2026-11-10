@@ -1,3 +1,5 @@
+> **Windows first (10 November):** [protected Sandbox launcher guide](qa/portrait-v2-sandbox/WINDOWS-PROTECTED-QUICK-START.md), with exact119c321/four-job CI evidence and explicit setup/boot limits. The [original camera/synthetic-payment guide](qa/portrait-v2-sandbox/PP07-PHYSICAL-QUICK-START.md) remains available. Ubuntu launcher packaging is deferred by the owner.
+
 > **9 November protected native delivery:** [B5 facade/views/actual child evidence and exact remaining source](qa/portrait-v2-sandbox/PP05-PROTECTED-NATIVE-DELIVERY-2026-11-09.md). Current sourceac804fd:726 backend/88 native local PASS; merchant customer profile and protected claim/release remain gated.
 
 > **Portable Codex execution prompt:** [complete cross-account continuation](qa/portrait-v2-sandbox/CODEX-CROSS-ACCOUNT-CONTINUATION-2026-11-09.md) contains the verified8e976a9a/c8640a0b baseline, original contracts, exact next native source task, remaining gates, testing and immediate micro-push policy. Read the actual latest remote before execution; this publication is documentation only.

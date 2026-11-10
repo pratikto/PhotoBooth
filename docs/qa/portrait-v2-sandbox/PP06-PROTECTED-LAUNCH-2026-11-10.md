@@ -272,3 +272,46 @@ startup; do not imply transparent restart from this entry. No root/key reset to
 make it start. Actual Windows camera/POS80/DPAPI restart/account/phone acceptance
 and final qualification remain open; commercial NOT_READY, health False. Ubuntu
 launcher/autostart packaging deferred by the owner.
+
+
+## Windows-first L2 final source verification
+
+Source119c321e4ff4be708fdd5fae506cdd715196fb22 is pushed/remote verified after
+L2-A544d9c3. **897 full local backend PASS428.097s +99 full native actual-X11
+PASS298.694s**, zero failures/errors/skips;34 Apps Script PASS. Every original
+860 backend execution is retained, plus10 settings/6 entry and21 existing
+shared-merchant-launcher methods. One new native method exercises both sizes.
+
+[CI42779790541](https://github.com/pratikto/PhotoBooth/actions/runs/42779790541)
+at EXACT119c321 is **ALL FOUR SUCCESS**: Windows core376/439.853s +delivery
+521/537.656s (897 total), Ubuntu897/403.437s, native99/299.122s; all four
+completed logs inspected, zero unit failures/errors/skips. All16 new settings/
+entry methods execute on Windows core. The actual Windows PowerShell setup/
+original preflight passes; new Start-PostPreviewSandbox.ps1 executes through
+the selected venv and correctly returns redacted BLOCKED2 without accounts.
+This expected refusal is a safety result, NOT actual account readiness or a
+Windows GUI/device PASS. Native rendering is actual Linux X11 with fake external
+transports; Windows child/custody tests use the original Windows DPAPI path.
+Earlier L2-A CI42778772702 was cancelled by the next source push, not claimed PASS.
+[Exact source/case/log/limits evidence](evidence/pp06-windows-entry-final-2026-11-10.json).
+
+Windows instructions are in [the separate protected guide](WINDOWS-PROTECTED-QUICK-START.md);
+original synthetic camera guide/helper are unchanged and still usable. Owner
+availability of Windows merchant/Drive/POS80 configuration is not known; an
+optional availability-only question is pending, no credentials requested.
+
+FIRST next source task: explicit safe Windows first-install/canonical legacy
+enrollment and supported original normal-stop/pre-ACK/orphan boot/recovery,
+using original journals/custody/receipts. Do not invent empty history or move a
+synthetic root. Then finish remedy/status/refund operations and final source
+qualification. Ubuntu launcher/autostart packaging is explicitly DEFERRED by
+owner; retained Linux support/CI is regression only. Real Windows camera/paper/
+phone/account acceptance remains separate; old owner observations stay credited.
+Commercial NOT_READY and default fulfillment health remains False.
+
+No source/test WIP or active local test/backend remains. The lab display stays
+available. Private logs/caches and the superseded older stash are local-only;
+no proofs/customer photos/databases/keys were published. This containing final
+publication is documentation-only; get SHA from history and verify remote. Do
+not rerun this passing baseline merely for onboarding. Rollback source only;
+preserve all original keys/roots/WAL/SHM/media/PAID/OWED and uncertain output.

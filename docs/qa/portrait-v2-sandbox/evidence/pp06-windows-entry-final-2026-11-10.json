@@ -1,0 +1,110 @@
+{
+  "source": "119c321e4ff4be708fdd5fae506cdd715196fb22",
+  "stage": "L2 Windows-first protected settings/entry/native shutdown verified",
+  "source_sha256": {
+    "Start-PostPreviewSandbox.ps1": "cbe99417113ad6cee3ee8dce1c2d967206c01daefb2b9a3feb97e8583ffb8f4e",
+    "tools/run_post_preview_sandbox.py": "5fa6dc0301cdfffa76dfbf90eba0d5130da45414350af90cf6617aa2e7871ca1",
+    "photobooth/post_preview_native_exit.py": "afbbfc304080d10362ca0c4b36e030592027ffbd602e10756038cb00075a94f2",
+    "photobooth/post_preview_launch_settings.py": "46bcbd086e4aefd9c979175853a87dfb8b4f285199eb0e20cb5acbf2b28f513d",
+    "photobooth/post_preview_legacy_history.py": "622c689e4dbb4bd583f25575fb01e1957fd159137142dff1ebb49b3e05a4ddb7",
+    "photobooth/post_preview_authority.py": "b7e29d43d48267f84ff8a7d777809b0a058b206146deb3fefc5872f50d7d6f0a",
+    "tools/run_qris_sandbox.py": "a1c9c986a28cb116cd089dbeffd2624f91cbaf9835639c658c226a858a230c49",
+    "tests/test_post_preview_windows_entry.py": "0bb620498a40be2666fbd27b1abed3985f998adb43232b7191abf40c63ab5a27",
+    "tests/test_post_preview_windows_widgets.py": "77466f9331708eac87ab973b1c21c98666d316f6594c53f3c15de3b0e7c93397",
+    "tests/test_post_preview_launch_settings.py": "393d06650c43947890cdfe5a183b71efa28e3e7808f6d2908aff4f228191ccfb",
+    "tools/run_post_preview_ci.py": "f1989e3c29f6551a8559dde77612c8b77f0df45646269f4579b952eeb78a1d0c",
+    ".github/workflows/post-preview-qris.yml": "fed3f44505d1935981aa4f58aa4e6db190d4cb275c6fdda677785d42352de44c"
+  },
+  "local": {
+    "backend": {
+      "run": 897,
+      "seconds": 428.097,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "native_actual_x11": {
+      "run": 99,
+      "seconds": 298.694,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "apps_script": {
+      "run": 34,
+      "failures": 0,
+      "skips": 0
+    }
+  },
+  "local_logs_sha256": {
+    "pp06-windows-final-backend.log": "82d6947e0acc0bb6224298181deb6aa7f485129b334b9b0f7ab4d53bc6e8b54a",
+    "pp06-windows-final-native.log": "8ebc966163f1d46dcbc5e881137ac04895dfb417abed9105df6d1b088815d031",
+    "pp06-windows-final-apps-script.log": "a74ec0e8883a1b886b275ee8b86ce492a2ce3a86c59aa97639546e29d7e2e5ed"
+  },
+  "ci": {
+    "run_id": 42779790541,
+    "head_sha": "119c321e4ff4be708fdd5fae506cdd715196fb22",
+    "conclusion": "ALL_FOUR_SUCCESS",
+    "all_completed_logs_inspected": true,
+    "jobs": [
+      {
+        "job_id": 129706820416,
+        "name": "Windows core",
+        "run": 376,
+        "seconds": 439.853,
+        "new_settings_entry_methods_observed": 16,
+        "conclusion": "success"
+      },
+      {
+        "job_id": 129706820827,
+        "name": "Windows delivery",
+        "run": 521,
+        "seconds": 537.656,
+        "conclusion": "success",
+        "actual_original_powershell_setup_check_only": "SUCCESS",
+        "actual_new_protected_powershell_check_only": "EXPECTED_BLOCKED2_WITHOUT_ACCOUNTS_SUCCESS"
+      },
+      {
+        "job_id": 129706820122,
+        "name": "native",
+        "run": 99,
+        "seconds": 299.122,
+        "conclusion": "success"
+      },
+      {
+        "job_id": 129706820571,
+        "name": "Ubuntu all",
+        "run": 897,
+        "seconds": 403.437,
+        "conclusion": "success"
+      }
+    ],
+    "windows_total": 897,
+    "unit_failures": 0,
+    "unit_errors": 0,
+    "unit_skips": 0
+  },
+  "micro_pushes": [
+    "544d9c388135b341119cd5cdc900b826959f36cf",
+    "119c321e4ff4be708fdd5fae506cdd715196fb22"
+  ],
+  "earlier_ci": {
+    "run_id": 42778772702,
+    "source": "544d9c388135b341119cd5cdc900b826959f36cf",
+    "status": "CANCELLED by later source push; not a full verdict"
+  },
+  "case_mapping": {
+    "settings": "10 new methods: original literals/no execution, global lock, complete/no-mixed pairs, original bytes, missing/canonical/older history, active SQL behind terminal journal, original PAID/OWED ACK/fence guards, explicit printer, archive/nonliteral denial.",
+    "entry": "6 new methods: local-only check, full consents, occupied global lock/redaction, actual child/control/camera mounting and shutdown, real blocked game thread, real blocked preview pool.",
+    "native": "1 new method, 2 portrait sizes, actual original capture/freeze/CCP/QRIS/ticket/automatic2+1 delivery via new native factory."
+  },
+  "limits": [
+    "Windows-first manual candidate only; original camera/synthetic-payment launcher unchanged.",
+    "Actual Windows GUI/camera/POS80/Drive-phone/account qualification NOT_RUN. Windows CI verifies real PowerShell/preflight, original child/DPAPI path and fake external transports; native GUI is actual X11 on Linux.",
+    "Protected profile requires original configured accounts/routes and existing safe canonical legacy history. Missing/corrupt/foreign/older v1 history remains held; first-install initialization is NOT implemented.",
+    "Normal close during an unresolved visit, pre-ACK/orphan boot, backup/restore/remedy/status/refund operations and final2h/4h qualification remain unfinished. No journal/root/key replacement or uncertain replay.",
+    "Ubuntu launcher/autostart packaging deferred by owner; no existing Linux support removed.",
+    "Default fulfillment_enabled remains False; commercial NOT_READY. No actual payment/refund/paper/public photo upload/deployment occurred.",
+    "Question about owner Windows account/device configuration availability is optional/pending; no secret values requested or assumed."
+  ]
+}

@@ -1,3 +1,7 @@
+## 10 November 2026 — Windows protected Sandbox entry
+
+Owner prioritizes Windows and defers Ubuntu launcher packaging. Add separate Start-PostPreviewSandbox.ps1/Python entry with original dependency setup, literal private settings, canonical read-only legacy checks, exact native app/control/camera and real auxiliary shutdown drain. Preserve original synthetic entry, backend guards, PAID/OWED and held unknown boot states. Source119c321:897 backend/99 native/34 Apps Script local PASS; CI42779790541 all FOUR SUCCESS (Windows376+521, native99, Ubuntu897), zero failures/errors/skips. Windows PowerShell actual unconfigured check-only safely returns BLOCKED2. First-install/supported boot/remedy and actual device/account qualification remain open. [Windows guide](qa/portrait-v2-sandbox/WINDOWS-PROTECTED-QUICK-START.md).
+
 ## 10 November 2026 — launch core final verification
 
 Runtimeea2554c and Windows test fixture correction34726b7:860 full local backend PASS; corrected8 focused PASS. CI42771399228 all FOUR SUCCESS (Ubuntu860, Windows339+521, native98), zero failures/errors/skips. Initial Windows SQLite fixture cleanup failure preserved and explicitly closed; no runtime/assertion/lock change. L1 is the trusted owner core; L2 executable/configuration/boot/remedy and actual qualification remain unfinished. [Evidence and exact continuation](qa/portrait-v2-sandbox/PP06-PROTECTED-LAUNCH-2026-11-10.md).

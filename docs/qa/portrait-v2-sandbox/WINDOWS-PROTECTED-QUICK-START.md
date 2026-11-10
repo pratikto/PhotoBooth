@@ -80,3 +80,17 @@ refund/status operations and final qualification remain separate unfinished work
 No production endpoint/default activation, real money/refund or deployment is
 authorized by these source instructions. Existing owner smoke observations stay
 credited; only new/unresolved Windows/profile observations need recording.
+
+## Source-specific verification
+
+Runtime119c321:897 backend/99 actual-X11 native/34 Apps Script local PASS.
+CI42779790541 all four jobs SUCCESS (Windows376+521, native99, Ubuntu897),
+zero failures/errors/skips, completed logs inspected. Actual new PowerShell
+check-only returned the expected BLOCKED2 without account configuration. This
+is not actual Windows GUI/hardware/merchant acceptance.
+[Evidence and exact remaining source work](PP06-PROTECTED-LAUNCH-2026-11-10.md).
+
+The local history result covers canonical legacy checkout history. Protected
+session boot/recovery is checked separately by original backend startup; the
+preflight does not certify a restart. Normal closing during an unresolved visit
+can also leave startup held. Never reset that visit to open a fresh customer.
