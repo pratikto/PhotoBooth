@@ -32,8 +32,7 @@ def _configuration(owner,*,storage_root,booth_id):
     try:
         from tools.run_qris_sandbox import local_sandbox_credentials,local_literal_fields
         from photobooth.post_preview_host import SandboxHostConfig
-        from photobooth.post_preview_host_fulfillment import SandboxHostFulfillment
-        from photobooth.post_preview_worker_fence import WorkerFenceKey
+        from photobooth.post_preview_host_fulfillment import validate_original_printer_config
         from photobooth.printer_settings import load_printer_config
         local=checked_path(owner.project_root/'photobooth'/'local_settings.py')
         def pair(names,reader):
@@ -54,7 +53,7 @@ def _configuration(owner,*,storage_root,booth_id):
         if not (printer.windows_printer_name or printer.lan_host or printer.wifi_host
                 or printer.usb_vendor_id is not None and printer.usb_product_id is not None):
             raise ValueError
-        SandboxHostFulfillment(printer,WorkerFenceKey.create())  # Original strict pure validation.
+        validate_original_printer_config(printer)  # No worker key for passive settings.
         history=checked_path(owner.project_root/'data'/'kiosk-v2-sandbox'/merchant/booth_id/'orders.sqlite')
         return ProtectedLaunchSettings(config,printer,history)
     except Exception:

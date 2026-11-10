@@ -70,6 +70,19 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Explicit local new-booth enrollment failed' }
           & ./Start-PostPreviewSandbox.ps1 -StorageRoot (Join-Path $env:RUNNER_TEMP 'meong-protected-check') -CheckOnly
           if ($LASTEXITCODE -ne 0) { throw 'Enrolled local history preflight failed' }
+          # Acceptance preflight is passive: actual current-user DPAPI only,
+          # no camera/backend/provider/Drive/printer access or owner PASS claim.
+          $meongAcceptanceOutput = & ./Start-PostPreviewAcceptance.ps1 -Action Preflight -StorageRoot (Join-Path $env:RUNNER_TEMP 'meong-protected-check')
+          if ($LASTEXITCODE -ne 0) { throw 'Owned acceptance passive preflight failed' }
+          $meongAcceptanceSession = ($meongAcceptanceOutput | Where-Object { $_ -match '^ACCEPTANCE_SESSION=[a-f0-9]{32}$' } | Select-Object -Last 1) -replace '^ACCEPTANCE_SESSION=', ''
+          if (-not $meongAcceptanceSession) { throw 'Redacted acceptance session missing' }
+          & ./Start-PostPreviewAcceptance.ps1 -Action Record -Session $meongAcceptanceSession -Case WN02 -Result BLOCKED
+          if ($LASTEXITCODE -ne 0) { throw 'Allowlisted owner observation failed' }
+          & ./Start-PostPreviewAcceptance.ps1 -Action Show -Session $meongAcceptanceSession
+          if ($LASTEXITCODE -ne 0) { throw 'Redacted owner report failed' }
+          & ./Start-PostPreviewAcceptance.ps1 -Action Run -Session $meongAcceptanceSession -StorageRoot (Join-Path $env:RUNNER_TEMP 'meong-protected-check')
+          if ($LASTEXITCODE -ne 2) { throw 'Acceptance bypassed original external consent pairs' }
+          $global:LASTEXITCODE = 0
 
 
   private-desktop:

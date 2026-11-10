@@ -14,6 +14,13 @@ from photobooth.post_preview_launch_settings import load_settings
 
 
 class ProtectedLaunchSettingsTests(unittest.TestCase):
+    def test_passive_settings_validation_never_mints_a_worker_key(self):
+        with self.fixture() as (owner,root,local,history), patch(
+                'photobooth.post_preview_worker_fence.WorkerFenceKey.create',
+                side_effect=AssertionError('Passive checks cannot mint worker capability')) as mint:
+            self.load(owner,root)
+            self.assertEqual(0,mint.call_count)
+
     @contextmanager
     def fixture(self):
         system={k:v for k,v in os.environ.items() if k in
