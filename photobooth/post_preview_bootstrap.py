@@ -21,6 +21,7 @@ import time
 import uuid
 
 from photobooth.post_preview_host import SandboxHostConfig, SandboxHostRuntime
+from photobooth.post_preview_host_fulfillment import SandboxHostFulfillment
 from photobooth.post_preview_readiness_bridge import (
     MAX_MESSAGE, WorkerReadinessClient, _private_channel, _receive, _send,
 )
@@ -70,10 +71,12 @@ class SandboxBackendProcess:
     reports backend exit only; original native readiness collector/worker stop
     and PREPARE/ACK remain separate obligations before admitting another visitor.
     """
-    def __init__(self, config):
-        if type(config) is not SandboxHostConfig:
+    def __init__(self, config, *, fulfillment=None):
+        if (type(config) is not SandboxHostConfig
+                or fulfillment is not None and type(fulfillment) is not SandboxHostFulfillment):
             raise ValueError('Exact private backend configuration required')
         self._config = config
+        self._fulfillment = fulfillment
         self.process = self._control = None
         self.endpoint = None
         self._nonce = uuid.uuid4().hex
@@ -96,6 +99,8 @@ class SandboxBackendProcess:
             raise BackendStartupHeld('Original backend process already started')
         request = dict(version=1, kind='START', nonce=self._nonce,
                        config=_config_data(self._config))
+        if self._fulfillment is not None:
+            request['fulfillment']=self._fulfillment.to_private_startup()
         if len(json.dumps(request).encode('utf-8')) > MAX_MESSAGE:
             raise ValueError('Private backend configuration exceeds transport bound')
         parent, child = socket.socketpair()
@@ -176,7 +181,8 @@ def run_child(control, readiness):
     try:
         _private_channel(control); _private_channel(readiness)
         request = _receive(control,time.monotonic()+20)
-        if (set(request) != {'version','kind','nonce','config'}
+        if (set(request) not in ({'version','kind','nonce','config'},
+                                {'version','kind','nonce','config','fulfillment'})
                 or type(request['version']) is not int or request['version'] != 1
                 or request['kind'] != 'START' or type(request['nonce']) is not str
                 or len(request['nonce']) != 32
@@ -184,9 +190,12 @@ def run_child(control, readiness):
             raise ValueError('Original startup capability required')
         nonce = request['nonce']
         config = _config(request['config'])
+        fulfillment=(SandboxHostFulfillment.from_private_startup(request['fulfillment'])
+                     if 'fulfillment' in request else None)
         if os.name != 'nt':
             os.umask(0o077)
-        runtime = SandboxHostRuntime(config,WorkerReadinessClient(readiness,timeout=2))
+        runtime = SandboxHostRuntime(config,WorkerReadinessClient(readiness,timeout=2),
+                                     fulfillment=fulfillment)
         import uvicorn
         listener = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         listener.bind(('127.0.0.1',0)); listener.listen(32); listener.setblocking(False)

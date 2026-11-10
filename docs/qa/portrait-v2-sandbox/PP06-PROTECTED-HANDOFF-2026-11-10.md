@@ -219,3 +219,70 @@ A-to-B-to-A flow without relaxing any mock guard. Follow with protected freeze,
 complete trusted launcher/configuration, supported recovery/refund/status/ops,
 and actual final-profile/device/account qualification. A source push or unit
 count is not commercial readiness.
+
+## B6-E private child-host assembly contract before source
+
+Extend the existing trusted Sandbox child protocol with an OPTIONAL exact typed
+fulfillment bundle: original PrinterConfig and ephemeral WorkerFenceKey. Default
+startup stays unchanged and unmounted. Only the anonymous private startup socket
+may carry that key; no HTTP payload, argv, ordinary environment, repr, stdout or
+plaintext file. Reject partial/foreign/unknown fields and malformed capability
+before host root construction. Reuse the original ThermalPrinter, one backend
+shared lane, original paid-delivery/isolation/claim factory and same stable
+merchant/booth root. Configuration construction itself performs no I/O.
+
+Preserve graceful actual HTTP/financial/delivery-worker exit and backend kernel
+ownership. A stopped child is not native quiescence, ACK or FREE. Subsequent
+rotation must stop the old native collector/PhotoJobs, record/ACK the original
+operation, fully stop the original child, then create a NEW private channel,
+collector, PhotoJobs and backend capability over the SAME root, journals and
+ciphertext. No stopped capability restarts. Failure retains ADS_PROTECTED/HOLD;
+there is no kill/reset/new-root shortcut or automatic media restoration.
+
+Exercise exact typed serialization, unknown/partial fields, no ambient opt-in,
+shared printer/lane, actual subprocess/private socket/HTTP handoff routes,
+lost response, separate native/backend SQL and blocked original worker exit.
+External provider/Drive/key lookup/paper remain explicit fixture transports;
+Windows uses actual original DPAPI. Do not claim bootstrap rotation or native
+A/B/A from an optional child bundle alone. Complete changed-source regression
+and exact-source CI follow the functional phase.
+
+### B6-E execution
+
+SandboxHostFulfillment carries only an exact original PrinterConfig and private
+WorkerFenceKey through the existing anonymous START socket. Strict complete
+schema/types/version, bounded routes/USB device path/timeout and existing576-dot
+POS80 raster configuration are required. Private deserialization rejects legacy
+printer normalizations rather than silently substituting a default. Construction
+has no I/O; bundle/process repr omits capability and device configuration. This
+first trusted bundle supports the existing576-dot profile; other widths are held,
+not claimed ready. Printer route configuration does not prove paper/device health.
+
+SandboxHostRuntime reuses one original ThermalPrinter/shared lock for ticket and
+paid strips, enables the exact existing protected delivery/isolation/claim chain
+only with this optional typed bundle, and preserves original root/context/host
+kernel ownership. Default startup still omits all fulfillment/handoff routes.
+Neither mode permits caller worker booleans, keys, dummy PAID or legacy routes.
+The existing POSIX descriptors/Windows socket-sharing mechanism and bounded
+nonce/PID/loopback startup/shutdown protocol are retained. No argv/environment/
+file persistence of the worker key and no new customer-launcher opt-in exists.
+
+**6 new methods /99 affected PASS73.443s**, zero failures/errors/skips.
+[Exact source/log/method evidence](evidence/pp06-private-child-handoff-2026-11-10.json).
+The actual spawned original child receives the key privately; original native
+capture/freeze fixture, genuine CCP/ticket ACK, independent fake-provider GET,
+actual bound LocalChargeReadiness/PhotoJobs/kernel owner retirement, missing
+receipt rejection, exact backend ACK and same-proof native claim traverse real
+private sockets/HTTP and separate SQL connections. One original attempt/receipt,
+OWED, original generation and no persisted worker secret are checked. Typed
+malformed startup is rejected before any root is constructed. Existing actual
+HTTP/financial-worker shutdown-hold/restart and native privacy regressions pass.
+Initial six methods also passed4.619s; polling helper was then made explicitly
+respectful of original merchant pacing (no runtime timing/guard changes).
+
+This does NOT automatically rotate the stopped child/collector/worker, admit B,
+mount protected freeze or prove a complete native customer cycle. NEXT implement
+that exact graceful rotation and native A/B/A integration over original journals;
+boot/pre-ACK recovery must be separately scoped and fault tested. Then finish
+trusted launcher/configuration and refund/status/ops and final qualification.
+Full changed-source/CI verification remains pending for the current source.

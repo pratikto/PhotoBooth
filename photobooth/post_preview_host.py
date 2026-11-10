@@ -9,6 +9,7 @@ import json
 import os
 from pathlib import Path
 import re
+import threading
 
 from photobooth.booth_storage import BoothWorkspace, checked_path
 from photobooth.booth_sync import BoothDriveClient
@@ -21,6 +22,7 @@ from photobooth.post_preview_readiness import ReadOnlyDriveReadiness
 from photobooth.post_preview_readiness_bridge import WorkerReadinessClient
 from photobooth.post_preview_server import build_sandbox_app
 from photobooth.post_preview_store import ORDER_VERSION, PostPreviewStore
+from photobooth.post_preview_host_fulfillment import SandboxHostFulfillment
 
 
 @dataclass(frozen=True)
@@ -93,8 +95,9 @@ class SandboxHostRuntime:
     The independent native worker/collector still needs its own fence/ACK.
     Closing this host never proves booth FREE, fulfilled or refunded.
     """
-    def __init__(self, config, bridge):
-        if type(config) is not SandboxHostConfig or type(bridge) is not WorkerReadinessClient:
+    def __init__(self, config, bridge, *, fulfillment=None):
+        if (type(config) is not SandboxHostConfig or type(bridge) is not WorkerReadinessClient
+                or fulfillment is not None and type(fulfillment) is not SandboxHostFulfillment):
             raise ValueError('Exact original host configuration and private bridge required')
         self._owner = self.ledger = self.drive = self.app = None
         self.bridge = bridge
@@ -111,10 +114,16 @@ class SandboxHostRuntime:
             self.drive = AppsScriptDriveClient(config.drive_url, config.drive_token)
             probe = ReadOnlyDriveReadiness(BoothDriveClient(self.drive, workspace.booth_id),
                                           workspace, now=self.ledger.now)
+            delivery={}
+            if fulfillment is not None:
+                from photobooth.printer import ThermalPrinter
+                delivery=dict(receipt_printer=ThermalPrinter(fulfillment.printer_config),
+                    printer_lane=threading.Lock(),paid_delivery_enabled=True,
+                    worker_fence_key=fulfillment.worker_key)
             self.app = build_sandbox_app(self.checkout, self.templates, bridge, probe,
                 merchant_id=config.merchant_id, server_key=config.server_key,
                 booth_id=config.booth_id, booth_token=config.booth_token,
-                on_shutdown=self.close)
+                on_shutdown=self.close,**delivery)
         except BaseException:
             # Failed assembly has not started any worker or external effect.
             if self.drive is not None:

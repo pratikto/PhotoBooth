@@ -18,6 +18,10 @@ def assembled(checkout,templates,bridge,drive,**kwargs):
     assert all(secret not in os.environ.values() and
                not any(secret in arg for arg in sys.argv) for secret in secrets)
     assert 'kivy' not in sys.modules
+    worker_key=kwargs.get('worker_fence_key')
+    if worker_key is not None:
+        assert worker_key.secret.hex() not in os.environ.values()
+        assert not any(worker_key.secret.hex() in arg for arg in sys.argv)
     if kwargs['server_key']=='Mid-server-FAIL-FIXTURE':
         raise RuntimeError('Never echo '+kwargs['server_key'])
     ledger=checkout.ledger

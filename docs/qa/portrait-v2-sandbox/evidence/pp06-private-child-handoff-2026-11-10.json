@@ -1,0 +1,28 @@
+{
+  "base": "cbfe11a96198cd91640d78815491b915467754a1",
+  "stage": "B6-E private child fulfillment bundle and actual original worker/proof RPC; rotation/mounting pending",
+  "run": 99,
+  "seconds": 73.443,
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "new_methods": [
+    "test_actual_private_child_accepts_only_original_native_receipt_then_same_proof_claim (test_post_preview_host_fulfillment.PrivateHostFulfillmentTests.test_actual_private_child_accepts_only_original_native_receipt_then_same_proof_claim) ... ok",
+    "test_exact_private_roundtrip_hides_capability_and_printer_from_repr (test_post_preview_host_fulfillment.PrivateHostFulfillmentTests.test_exact_private_roundtrip_hides_capability_and_printer_from_repr) ... ok",
+    "test_malformed_private_startup_never_creates_original_host (test_post_preview_host_fulfillment.PrivateHostFulfillmentTests.test_malformed_private_startup_never_creates_original_host) ... ok",
+    "test_original_host_shares_exact_printer_lane_and_default_stays_unmounted (test_post_preview_host_fulfillment.PrivateHostFulfillmentTests.test_original_host_shares_exact_printer_lane_and_default_stays_unmounted) ... ok",
+    "test_partial_foreign_and_untyped_private_protocol_is_rejected_without_fallback (test_post_preview_host_fulfillment.PrivateHostFulfillmentTests.test_partial_foreign_and_untyped_private_protocol_is_rejected_without_fallback) ... ok",
+    "test_untrusted_dependency_is_rejected_before_host_root_creation (test_post_preview_host_fulfillment.PrivateHostFulfillmentTests.test_untrusted_dependency_is_rejected_before_host_root_creation) ... ok"
+  ],
+  "command": "python tools/run_kiosk_unittests.py test_post_preview_host_fulfillment test_post_preview_host test_post_preview_handoff_client test_post_preview_handoff_api test_post_preview_protected_checkout test_post_preview_readiness test_post_preview_worker_fence",
+  "source_sha256": {
+    ".github/workflows/post-preview-qris.yml": "b93ff2d5b189f625e5636180cf83ad7341718bd3c549e04de664441b2e216719",
+    "photobooth/post_preview_host_fulfillment.py": "40c405aa6f02b4f6cce2f5fe7e367704cfc821609b1a5d0dbc835a2a17d0a197",
+    "photobooth/post_preview_host.py": "a28f8f8f77c16ed1e3178cb898803d86b917bcb15cff434a3b1f77d4f00a3550",
+    "photobooth/post_preview_bootstrap.py": "542ff27431f9c2d5c9e1f978ebea3db3f2292d5ef4fcf54cb8c55fd8c75ec3f7",
+    "tests/test_post_preview_host_fulfillment.py": "0b692e1e8e9b9c206569afdbf566de03ad682add77b97eb0fa50cbc5f01a25b3",
+    "tests/post_preview_host_process_fixture.py": "d832e6670fbf59020189c2996bf7eb9774ca76f0f196812f90c416fd9cd0ee23"
+  },
+  "log_sha256": "a9a530b52040a7ad7ac7ca2aad101f12114b851a607302db39ba42db9abcb172",
+  "limits": "Actual separate child/private sockets/loopback HTTP and independent native SQL/original collector/PhotoJobs/LaunchLease. Fake provider/Drive/paper, Linux key lookup fixture or actual Windows DPAPI. Explicit fixture freeze; no actual account/device/refund/deploy, automatic child rotation or complete native customer profile."
+}
