@@ -1,0 +1,220 @@
+{
+  "source": "bef2381592850dcaa501ffaf0c0a3114f68ff8e1",
+  "stage": "Windows L3-C2c1 pre-key original history + C2c2 pre-START process witness",
+  "source_sha256": {
+    "photobooth/post_preview_financial_history.py": "2753b809044b017c2fe89577113094384521885fe2e4c3b7503f2e9df5019553",
+    "photobooth/post_preview_visit_history.py": "163828275707767f9470b81f40b3c29d083ef4b08623ec1758d069434f61c2fd",
+    "photobooth/post_preview_host.py": "bf2cf376815432c75c276b4603e7c2c6d620ca98e944cfeb503538879a0d4ade",
+    "photobooth/post_preview_host_fulfillment.py": "75b8b6e537fd94cd44c4474e3417a062de722c979cb34985e2e276d3de1ff6ba",
+    "photobooth/post_preview_isolation.py": "a1a3ceef2ff66c488f2e54d3e787dcd0bce7f7e8592c3ad166006d71edb7ceb8",
+    "photobooth/post_preview_sandbox_handoff.py": "db78a15ba8ea56662da0385e25270c40a353b4ffb2b83bb2ab4cd21951daa367",
+    "photobooth/post_preview_worker_fence.py": "2a27f6150d4c4d3696fa6fff9f30b67530c489d62f3151189fc6f7023b5530dd",
+    "photobooth/post_preview_sandbox_visits.py": "9e8b41318e846ee1c1927ab710342263989b5a318cd6b20f5bac1b8f09458469",
+    "photobooth/post_preview_bootstrap.py": "d7f957fbd480ba5c299684ba50a82fb62b3f1dcf6ce5726364c622ce906e2300",
+    "photobooth/post_preview_worker_start.py": "b6fa3dba9643e93c57be0955030c6c7d60a5b9d91a622f078cf396e291eabf85",
+    "tests/test_post_preview_sandbox_visits.py": "7d55d969872a1d8f88800b7a279ef0e8dc3f19310baf1feed36a75238b1049a2",
+    "tests/test_post_preview_worker_start.py": "4268b58681e73f72997c80117ec615d3d3ca97fb41820fdaa56bff31546e91de",
+    "tools/run_post_preview_ci.py": "a9d8970cdce517ee7e9b208a7a2c4f520d02c5cb92667fbcc840e838a8095ddc",
+    ".gitignore": "aa577926d4391b65f7fff4a2b1ddfc2824db8f577f1d84f442e677c4eabd31e0",
+    ".github/workflows/post-preview-qris.yml": "6b495dc2bbd2084a0a9b7ce02f068246daa44e739a9c29c547217f9f3c1ce3b3"
+  },
+  "new_backend_methods": 19,
+  "expected_new_windows_methods": [
+    "test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_actual_live_backend_orphan_holds_before_key_or_second_child",
+    "test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_constructor_validates_original_printer_without_minting_a_key",
+    "test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_corrupt_original_context_holds_before_key_and_is_preserved",
+    "test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_late_history_after_precheck_still_hits_original_post_open_hold",
+    "test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_missing_db_orphan_wal_and_unknown_root_never_create_history",
+    "test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_original_child_identity_is_durable_before_private_start",
+    "test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_readonly_review_observes_unacked_owner_committed_in_original_wal",
+    "test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_unacked_boot_holds_before_minting_a_replacement_key_or_child",
+    "test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_witness_sync_failure_withholds_start_and_retains_original_handles",
+    "test_post_preview_worker_start.WorkerStartWitnessTests.test_actual_child_parent_birth_original_key_and_scope_are_bound",
+    "test_post_preview_worker_start.WorkerStartWitnessTests.test_same_live_owner_child_and_key_retry_preserves_bytes_and_timestamp",
+    "test_post_preview_worker_start.WorkerStartWitnessTests.test_new_or_same_id_replacement_key_and_foreign_root_are_held",
+    "test_post_preview_worker_start.WorkerStartWitnessTests.test_role_tamper_even_with_valid_mac_is_not_a_retirement_receipt",
+    "test_post_preview_worker_start.WorkerStartWitnessTests.test_corrupt_partial_or_linked_original_record_is_never_replaced",
+    "test_post_preview_worker_start.WorkerStartWitnessTests.test_hardlinked_record_and_alias_are_preserved_and_held",
+    "test_post_preview_worker_start.WorkerStartWitnessTests.test_failed_sync_preserves_original_bytes_and_same_owner_can_resync",
+    "test_post_preview_worker_start.WorkerStartWitnessTests.test_dead_child_cannot_be_retroactively_signed",
+    "test_post_preview_worker_start.WorkerStartWitnessTests.test_closed_native_owner_prevents_bootstrap_popen",
+    "test_post_preview_worker_start.WorkerStartWitnessTests.test_authenticated_old_metadata_is_not_current_live_or_dead_worker_authority"
+  ],
+  "local": {
+    "backend": {
+      "run": 967,
+      "seconds": 447.909,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "native_actual_x11": {
+      "run": 100,
+      "seconds": 296.401,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "apps_script": {
+      "run": 34,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    }
+  },
+  "focused": {
+    "prekey_first_failure": {
+      "run": 1,
+      "failures": 1,
+      "seconds": 0.897
+    },
+    "prekey_manager": {
+      "run": 27,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 70.801
+    },
+    "shared_policy": {
+      "run": 64,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 30.558
+    },
+    "callers": {
+      "run": 38,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 45.946
+    },
+    "prestart_first_failure": {
+      "run": 1,
+      "failures": 1,
+      "seconds": 1.489
+    },
+    "prestart_corrected": {
+      "run": 1,
+      "failures": 0,
+      "seconds": 1.511
+    },
+    "witness_focused": {
+      "run": 11,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 2.913
+    },
+    "closed_native_owner": {
+      "run": 1,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 0.014
+    },
+    "prestart_affected": {
+      "run": 79,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 121.593
+    }
+  },
+  "ci": {
+    "run_id": 42823706397,
+    "state": "PENDING",
+    "windows_core": {
+      "job_id": 129855388358,
+      "run": 444,
+      "seconds": 397.465,
+      "conclusion": "success",
+      "completed_log_inspected": true,
+      "new_methods_observed": 19,
+      "missing_new_methods": []
+    },
+    "windows_delivery": {
+      "job_id": 129855388921,
+      "state": "PENDING"
+    },
+    "ubuntu": {
+      "job_id": 129855388706,
+      "run": 967,
+      "seconds": 430.082,
+      "conclusion": "success",
+      "completed_log_inspected": true,
+      "new_methods_observed": 19,
+      "missing_new_methods": []
+    },
+    "native": {
+      "job_id": 129855388597,
+      "run": 100,
+      "seconds": 237.097,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "conclusion": "success",
+      "completed_log_inspected": true
+    },
+    "head_sha": "bef2381592850dcaa501ffaf0c0a3114f68ff8e1"
+  },
+  "previous_ci": {
+    "source": "326062fc3e9fa4e751a0428ff5ab4ea5d0327b7a",
+    "run_id": 42822045379,
+    "state": "ALL_FOUR_SUCCESS",
+    "all_completed_logs_inspected": true,
+    "windows_core": {
+      "job_id": 129849755373,
+      "run": 432,
+      "seconds": 387.925
+    },
+    "windows_delivery": {
+      "job_id": 129849755233,
+      "run": 523,
+      "seconds": 420.837
+    },
+    "ubuntu": {
+      "job_id": 129849755404,
+      "run": 955,
+      "seconds": 454.646
+    },
+    "native": {
+      "job_id": 129849754884,
+      "run": 100,
+      "seconds": 292.908
+    }
+  },
+  "limitations": [
+    "Original OS key escrow UNMOUNTED",
+    "Immutable draft/generation-to-worker-epoch binding NOT_IMPLEMENTED",
+    "Supported pre-ACK/orphan boot recovery NOT_IMPLEMENTED",
+    "Witness authenticates metadata only, never retirement/exit/ACK/finance/media authority",
+    "Windows directory sync unsupported; no power-loss qualification",
+    "Actual owner Windows account/camera/POS80/merchant/Drive acceptance NOT_RUN",
+    "Commercial NOT_READY; default fulfillment health False",
+    "Ubuntu packaging DEFERRED_BY_OWNER"
+  ],
+  "state": "LOCAL_FULL_PASS_CI_THREE_SUCCESS_WINDOWS_DELIVERY_PENDING",
+  "logs_sha256": {
+    "meong-prekey-first-failure.log": "8242ac72b764d47b9bef499ecd1597c6067a8a3b16640e934e441481fac41692",
+    "meong-prekey-corrected-first.log": "ed9f865852404306a3ef35b5a2e0527386c4b7eaff906d4fcac02d76ec149489",
+    "meong-prekey-visits.log": "5dde6475c54672a5badea86125cd7f024493efce33eb5a2e7c7272cc21e5c1a9",
+    "meong-prekey-shared-policy.log": "c65a74da4b8559936f6f760732aad085593aaf58e099c9f610cb918730b3fd5f",
+    "meong-prekey-callers.log": "d8f8b59e453394b2b0ca09de43e9620b8b5027f4f1b0df97436b3aac99d3974f",
+    "meong-child-witness-first-failure.log": "1e7d0bf8c197fc7bd0bd06b93236a277be6969314254cd895a8e02737dc958b5",
+    "meong-child-witness-corrected.log": "3862d253f0600bc42e7427169ca8c435da3f91dd0ca74782a1cb1ce13db7f930",
+    "meong-child-witness-focused.log": "392166b18be9b10f39b94471098c30f0a34b730d72605e469a6600131147a168",
+    "meong-child-witness-closed-owner.log": "f2ceeaaf1bea2c84456e173d438f2564d7f004a173749c001a6f64120035e50b",
+    "meong-child-witness-affected.log": "b7569d047f7dfe8b3c51e65d1fb92264e0d6b40700a005f602cb41cbea6625c4",
+    "meong-prestart-final-backend.log": "cbc05cb6063f078e32e090baaf3b549976f9cff5904fd1c845d932c509d96bd1",
+    "meong-prestart-final-native.log": "ef518c1fa05f1e31a21fb5e8546b9b9c21a3ad595c5159cbf304af7d130bbdcb",
+    "meong-prestart-final-apps-script.log": "72a79c20d4ad829dfb60d7438b5bfb9cc1c65a16d654a39eae2cdcabe9ae3682"
+  },
+  "continuation": {
+    "first_unfinished": "C2c3 OS-protected original key BEFORE camera/native/backend work, immutable original draft/generation epoch binding and safe rotation",
+    "then": "C3 original key/receipt/OS exit/kernel/finance/uncertainty reconciliation before supported pre-ACK/orphan recovery",
+    "source_or_test_wip": false,
+    "active_local_app_backend_test": false,
+    "obsolete_privacy_stash": "SUPERSEDED_DO_NOT_APPLY"
+  }
+}

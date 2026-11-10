@@ -1,6 +1,6 @@
 # Original worker capability custody — Windows-first L3-C
 
-> **Latest C2c1/C2c2 mounted lifecycle increment:** pre-key original history/backend-orphan review and same-key actual child witness before START implemented; focused checks PASS, full967 backend/100 native/CI pending. Original OS key escrow remains UNMOUNTED; C2c3/C3 recovery incomplete, commercial NOT_READY. See latest sections below; older final/pending notes retain their original source.
+> **Latest C2c1/C2c2 mounted lifecycle increment:** pre-key original history/backend-orphan review and same-key actual child witness before START implemented; full967 local backend/100 actual-X11 native/34 Apps Script PASS; CI42823706397 three SUCCESS, Windows delivery pending. Original OS key escrow remains UNMOUNTED; C2c3/C3 recovery incomplete, commercial NOT_READY. See latest sections below; older final/pending notes retain their original source.
 
 > **FINAL VERIFIED — source9de0dcd213f741b19cda493cc30d80e9b5c38598:** 948 local backend/100 actual-X11 native/34 offline Apps Script PASS. CI42812100193 ALL FOUR SUCCESS, all completed logs inspected. C1/C2a/C2b remain UNMOUNTED; C2c/C3 recovery incomplete; commercial NOT_READY, default health False. [Machine-readable evidence](evidence/pp06-windows-worker-custody-2026-11-10.json). Earlier pending/failure snapshots below are retained history.
 
@@ -398,7 +398,7 @@ still retains handles and waits for actual child exit on failure, never kills.
 
 Role ORIGINAL_WORKER_START is distinct from ORIGINAL_WORKER_RETIRED. Its epoch
 is the existing unique original key ID, not a new visit/draft generation grant.
-The frame binds actual parent/child PID+birthday, root, merchant, booth, fixed
+The frame binds actual parent/child PID+process-birth identity, root, merchant, booth, fixed
 Sandbox/version and key ID. Record authentication is metadata ONLY; no process
 death, backend/global kernel ownership, retirement, ACK or media authority.
 OS key escrow and original immutable draft/generation epoch mapping remain
@@ -430,3 +430,28 @@ customer/prior-epoch roots and is not safe to enable by inserting one call in
 process exits; then C3 original receipt/finance/uncertainty reconciliation.
 Unknown roots without ORIGINAL capability/binding stay held. Never sign a dead
 old worker's retirement retroactively or mint a replacement for its obligation.
+
+The original ProtectedSandboxLaunch.start currently constructs its SAME
+AsyncCamera before OriginalSandboxVisits starts. C2c3 must establish original
+global/native ownership, eligible original history and durable original key
+BEFORE camera/native/backend work; inserting escrow only in `_open` is not that
+ordering guarantee. Retain the SAME actual camera/worker and private control,
+never a substitute synthetic device/provider or a late retroactive key.
+
+## C2c1/C2c2 full local checkpoint
+
+Sourcebef2381592850dcaa501ffaf0c0a3114f68ff8e1, source hashes unchanged after
+final functional checks.967 full local backend PASS447.909s,100 actual-X11 native
+PASS296.401s,34 Apps Script offline VM PASS. Zero failures/errors/skips.
+CI42823706397 Windows core444 PASS397.465s, Ubuntu967 PASS430.082s, native100
+PASS237.097s; completed logs inspected. All19 new backend methods observed on
+Windows and Ubuntu, none omitted. Windows delivery129855388921 remains PENDING
+at this checkpoint; no all-four verdict. FIRST inspect that completed log/entry
+steps and reconcile exact source, then publish final evidence without repeating
+the passing baseline for documentation.
+
+[Machine-readable source/test evidence](evidence/pp06-windows-worker-start-2026-11-10.json).
+No source/test WIP or active local app/backend/test. Private logs/cache/venv/lab
+Xvfb remain local, not Git backups. Old superseded privacy stash must not apply.
+C2c3 OS key escrow and immutable draft/epoch lifecycle remains unfinished; C3
+pre-ACK/orphan recovery is not enabled. Commercial NOT_READY; default health False.
