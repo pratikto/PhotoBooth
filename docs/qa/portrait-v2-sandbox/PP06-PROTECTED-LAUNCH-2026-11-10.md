@@ -232,3 +232,43 @@ because its literal reader is shared; every old860 execution retained.
 [Exact hashes/scope](evidence/pp06-windows-settings-2026-11-10.json). NEXT L2-B
 explicit Windows Python/PowerShell entry and original native shutdown drain.
 Ubuntu packaging deferred by owner. Full final-source regression/CI pending.
+
+L2-B before source: add a SEPARATE Start-PostPreviewSandbox.ps1 / Python entry,
+leaving the original synthetic device helper unchanged. Reuse its dependency
+setup/check-only, L1 owner/L2-A settings, original native app and QR loader.
+Require explicit Sandbox and BOTH original paper/Drive consent pairs for a run;
+check-only is local settings/history validation, not credential/device readiness.
+Manual camera/audio profile, face/palm disabled as the existing Windows trial;
+no Ubuntu service/autostart work. No fixture/provider/test flag in production GUI.
+Keep the original global lease while original auxiliary game/report/preview/health
+threads stop, then actual L1 control/collector/PhotoJobs/child/camera shutdown.
+Use actual thread objects, not wait_closed's None or elapsed time. A held drain
+keeps the SAME process/owner until it finishes, never force kills or frees booth.
+Missing first-install history remains an explicit setup gate; no blank fallback.
+Test exact native control/camera injection, local-only preflight/lock conflict/
+consents, actual child start/stop, blocked auxiliary threads and both-size UI.
+
+L2-B implemented: separate Python/PowerShell protected entry, original dependency
+setup reuse, explicit Sandbox + BOTH original external consent pairs, local-only
+settings/history check and exact native control/camera injection. Original Windows
+manual environment helper removes inherited offscreen/dummy drivers. GUI never
+receives the settings/manager/worker/key. Auxiliary game/report/preview/health
+actual threads must finish before L1 releases global/camera/child ownership.
+Blocked original game I/O and preview pool remain held after nonblocking close.
+**24 affected backend PASS4.412s +1 new native method PASS12.117s** at BOTH sizes,
+zero failures/errors/skips. Actual original child/control plus original native
+capture→freeze→CCP→QRIS→ticket→automatic2+1 output exercised, OWED retained.
+Windows test fixtures preserve OS runtime variables without merchant credentials.
+[Commands/source/log hashes](evidence/pp06-windows-entry-2026-11-10.json).
+Native/source modules registered; new full backend897/native99 and exact-source
+CI pending. Windows CI also invokes the actual PowerShell entry and expects a
+redacted BLOCKED2 without account configuration, after original venv setup.
+[Windows guide](WINDOWS-PROTECTED-QUICK-START.md). Old synthetic entry unchanged.
+
+Remaining: explicit first-install/legacy migration policy, supported original
+pre-ACK/orphan/normal interrupted-visit boot and complete operational remedies.
+Normal close during an unresolved visit also preserves a held owner for next
+startup; do not imply transparent restart from this entry. No root/key reset to
+make it start. Actual Windows camera/POS80/DPAPI restart/account/phone acceptance
+and final qualification remain open; commercial NOT_READY, health False. Ubuntu
+launcher/autostart packaging deferred by the owner.

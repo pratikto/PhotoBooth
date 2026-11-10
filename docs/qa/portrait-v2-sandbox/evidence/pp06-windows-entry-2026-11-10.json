@@ -1,0 +1,47 @@
+{
+  "base": "544d9c388135b341119cd5cdc900b826959f36cf",
+  "stage": "L2-B separate Windows protected Sandbox entry/native mounting/auxiliary drain",
+  "focused_backend": {
+    "run": 24,
+    "seconds": 4.412,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0
+  },
+  "focused_native_actual_x11": {
+    "run": 1,
+    "sizes": [
+      [
+        452,
+        900
+      ],
+      [
+        800,
+        1280
+      ]
+    ],
+    "seconds": 12.117,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0
+  },
+  "source_sha256": {
+    "Start-PostPreviewSandbox.ps1": "cbe99417113ad6cee3ee8dce1c2d967206c01daefb2b9a3feb97e8583ffb8f4e",
+    "tools/run_post_preview_sandbox.py": "5fa6dc0301cdfffa76dfbf90eba0d5130da45414350af90cf6617aa2e7871ca1",
+    "photobooth/post_preview_native_exit.py": "afbbfc304080d10362ca0c4b36e030592027ffbd602e10756038cb00075a94f2",
+    "tests/test_post_preview_windows_entry.py": "0bb620498a40be2666fbd27b1abed3985f998adb43232b7191abf40c63ab5a27",
+    "tests/test_post_preview_windows_widgets.py": "77466f9331708eac87ab973b1c21c98666d316f6594c53f3c15de3b0e7c93397",
+    "tests/test_post_preview_launch_settings.py": "393d06650c43947890cdfe5a183b71efa28e3e7808f6d2908aff4f228191ccfb",
+    ".github/workflows/post-preview-qris.yml": "fed3f44505d1935981aa4f58aa4e6db190d4cb275c6fdda677785d42352de44c",
+    "tools/run_post_preview_ci.py": "f1989e3c29f6551a8559dde77612c8b77f0df45646269f4579b952eeb78a1d0c"
+  },
+  "logs_sha256": {
+    "pp06-windows-entry-final-focused.log": "91092665b7e47b5be8d9f31378d40872320e6ba8ccec88fbeeb7805aa3480d52",
+    "pp06-windows-native-focused.log": "568c0ee90529c37e74456ea15635e95cf8ad65826e971bd50a4cac7996112209"
+  },
+  "commands": [
+    ".venv/bin/python tools/run_kiosk_unittests.py test_post_preview_windows_entry test_post_preview_launch_settings test_post_preview_launch",
+    "DISPLAY=:93 KIVY_HOME=/workspace/work/kivy-home KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 PHOTOBOOTH_LOCAL_ONLY=1 PHOTOBOOTH_CAMERA=0 PHOTOBOOTH_AUDIO=0 PHOTOBOOTH_AD_VIDEO=0 PHOTOBOOTH_FACE_TRIGGER=0 PHOTOBOOTH_PALM_TRIGGER=0 .venv/bin/python tools/run_kiosk_unittests.py test_post_preview_windows_widgets"
+  ],
+  "limits": "Actual original child/control and existing native capture/checkout/CCP/ticket/automatic output; external transports and Linux key lookup are fixtures. New PowerShell actual execution and full final-source regression/CI pending. Windows-first manual candidate, no default/commercial activation; real accounts/devices and first-install/supported boot/remedy/status/qualification remain open. No actual payment/refund/paper/public upload/deploy."
+}

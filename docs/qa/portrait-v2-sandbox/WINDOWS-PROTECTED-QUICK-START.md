@@ -1,0 +1,82 @@
+# Windows protected Sandbox entry
+
+10 November 2026: Windows is the immediate owner priority. Ubuntu launcher/
+autostart packaging is deferred. This is an explicit merchant Sandbox integration
+entry, not commercial release or a replacement for the original synthetic trial.
+
+For the already-working camera trial with no merchant/Drive/paper, keep using
+`Start-PostPreviewDeviceTest.ps1` and the [existing guide](PP07-PHYSICAL-QUICK-START.md).
+It remains synthetic payment. Do not scan its mock QR with a banking app.
+
+## Check the protected configuration
+
+Use the existing `feature/post-preview-qris-checkout` Windows checkout. Close any
+other kiosk. Preserve local modifications and original data before updating with
+`git pull --ff-only origin feature/post-preview-qris-checkout`.
+
+```powershell
+.\Start-PostPreviewSandbox.ps1 -StorageRoot 'C:\MeongData' -Setup -CheckOnly
+```
+
+Use the SAME stable existing storage root on later runs; the example is not a
+request to replace/recover old storage. Setup reuses the original Python3.12
+venv/dependency helper in check-only mode, then checks this protected profile.
+It does not open either GUI. Without setup, use `-CheckOnly` with the existing venv.
+
+The protected loader reads complete pairs from secure environment OR the existing
+ignored `photobooth/local_settings.py`: `MIDTRANS_SANDBOX_MERCHANT_ID` /
+`MIDTRANS_SANDBOX_SERVER_KEY`, and `WEB_APP_URL` / `UPLOAD_TOKEN`. Environment
+names are `MIDTRANS_MERCHANT_ID` / `MIDTRANS_SERVER_KEY` and
+`PHOTOBOOTH_WEB_APP_URL` / `PHOTOBOOTH_UPLOAD_TOKEN`. Partial environment pairs
+are rejected instead of mixed with file settings. Never put credentials in
+arguments, chat, screenshots or repository files. Local settings are parsed as
+literal fields without executing Python code. Reuse the deployed test Drive
+account and original `data/printer_settings.json` or explicit printer environment
+configuration; no route/device is guessed.
+
+The canonical prior v2 merchant history is
+`data/kiosk-v2-sandbox/<merchant>/<booth>/orders.sqlite` with its original
+`visit.json`. Missing, foreign, unresolved or corrupt history holds startup.
+The older v1 trial directory also holds until separately reconciled. **Do not
+copy a synthetic root, create an empty DB/journal, edit a payment to CANCELLED,
+or delete history to pass this check.** First-install history initialization is
+not supplied by this increment. Preserve the blocked state for that setup work.
+
+Success says **LOCAL CONFIGURATION/HISTORY VALID**. Custody/merchant/Drive
+sharing/printer/camera remain **NOT_CHECKED**. It is not account/device acceptance.
+The backend later requires actual Windows DPAPI custody and independent original
+freeze/charge/device/Drive readiness. No replacement key or plaintext fallback.
+
+## Explicitly run an owned Sandbox test
+
+Only after local prerequisites and applicable account/paper/public-test-upload
+authorization, use the original double consents for BOTH external effects:
+
+```powershell
+.\Start-PostPreviewSandbox.ps1 -StorageRoot 'C:\MeongData' -SandboxOnly `
+  -EnableRealPrinter -AcceptRealPaper -EnableRealDrive -AcceptPublicTestUpload
+```
+
+This profile needs the real configured test printer and Drive for its original
+paid-delivery readiness; it supplies no virtual substitute. Use only your own
+test photographs. **Use the official Midtrans Sandbox simulator; never scan/pay
+with a real banking/wallet app.** Default booth PB001 and window452x900; optional
+`-BoothId PB001 -Size 800x1280 -CameraIndex 1` select the intended values. The
+manual camera/audio setup reuses the original Windows trial helper and removes
+inherited offscreen/dummy drivers. Face/palm triggers are disabled for this
+bounded manual-entry candidate; their automatic activation is not qualified here.
+
+Native screens are the original protected visits app: capture/all previews,
+original private CCP, QRIS, mandatory original Recovery Ticket and automatic paid
+output. Keep proof codes/QRs/private photos out of shared diagnostics. SUBMITTED
+is not physical paper delivery and preserves the original OWED status.
+
+Closing the window requests original private retirement. A held camera/file/
+preview/health/backend worker keeps the SAME launcher/global lock alive until
+actual exit; `SHUTDOWN HELD` is not permission to restart, force-kill or resend.
+After a crash/unresolved boot, preserve original roots/custody and use supported
+recovery only. Pre-ACK/orphan boot setup/remedy, full first-install onboarding,
+refund/status operations and final qualification remain separate unfinished work.
+No production endpoint/default activation, real money/refund or deployment is
+authorized by these source instructions. Existing owner smoke observations stay
+credited; only new/unresolved Windows/profile observations need recording.

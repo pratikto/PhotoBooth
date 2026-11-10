@@ -27,6 +27,7 @@ CORE_MODULES=(
     'test_post_preview_visit_control',
     'test_post_preview_launch',
     'test_post_preview_launch_settings',
+    'test_post_preview_windows_entry',
     'test_qris_sandbox_launcher',
     'test_post_preview_presentation',
     'test_post_preview_ticket_presentation',

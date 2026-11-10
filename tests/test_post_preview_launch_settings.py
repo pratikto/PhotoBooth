@@ -16,7 +16,9 @@ from photobooth.post_preview_launch_settings import load_settings
 class ProtectedLaunchSettingsTests(unittest.TestCase):
     @contextmanager
     def fixture(self):
-        with tempfile.TemporaryDirectory() as directory,patch.dict(os.environ,{},clear=True):
+        system={k:v for k,v in os.environ.items() if k in
+                {'PATH','SYSTEMROOT','WINDIR','TEMP','TMP','TMPDIR','HOME','USERPROFILE','LOCALAPPDATA','APPDATA'}}
+        with tempfile.TemporaryDirectory() as directory,patch.dict(os.environ,system,clear=True):
             root=Path(directory);(root/'photobooth').mkdir()
             local=root/'photobooth'/'local_settings.py'
             local.write_text("MIDTRANS_SANDBOX_MERCHANT_ID='MTEST'\nMIDTRANS_SANDBOX_SERVER_KEY='Mid-server-SETTINGS-FIXTURE'\nWEB_APP_URL='https://script.google.com/macros/s/SETTINGS_FIXTURE/exec'\nUPLOAD_TOKEN='synthetic-settings-token'\nraise AssertionError('Settings must never execute')\n")
