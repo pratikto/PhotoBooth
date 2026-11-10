@@ -185,4 +185,63 @@ class ProtectedSandboxHandoffTests(unittest.TestCase):
         self.assertEqual('OWED',h.payments.inspect(self.f.group,'PB001')['obligation_state'])
 
 
+class ProtectedOriginalCancelHandoffTests(unittest.TestCase):
+    def test_cancel_reply_alone_and_pending_get_never_create_release_or_resend_cancel(self):
+        h=ProtectedHandoffHarness(self,settled=False,retire_event='USER_CANCEL')
+        def ignored(order):
+            h.f.remote.cancels+=1
+            return dict(h.f.remote.rows[order],transaction_status='cancel')
+        with patch.object(h.f.remote,'cancel',side_effect=ignored):
+            for _ in range(2):
+                with self.assertRaises(DraftHeld):h.prepare()
+        self.assertEqual(1,h.f.remote.cancels)
+        self.assertEqual(0,h.f.ledger.db.execute('SELECT COUNT(*) FROM pp_isolation_ops').fetchone()[0])
+        self.assertEqual(0,h.f.ledger.db.execute('SELECT closed FROM pp_drafts').fetchone()[0])
+        self.assertEqual('PENDING',h.f.ledger.db.execute('SELECT payment_state FROM pp_payment_attempts').fetchone()[0])
+
+    def test_cancel_then_get_outage_keeps_original_occupancy_until_fresh_terminal_observed(self):
+        h=ProtectedHandoffHarness(self,settled=False,retire_event='USER_CANCEL')
+        h.f.remote.outage=True
+        with self.assertRaises(DraftHeld):h.prepare()
+        self.assertEqual(1,h.f.remote.cancels)
+        self.assertEqual(0,h.f.ledger.db.execute('SELECT closed FROM pp_drafts').fetchone()[0])
+        h.f.remote.outage=False
+        op=h.prepare();h.ack(op)
+        self.assertEqual(1,h.f.remote.cancels);self.assertEqual(1,h.f.remote.charges)
+
+    def test_minimize_and_result_timeout_never_cancel_a_pending_original_attempt(self):
+        for event in ('APP_SUSPENDED','RESULT_TIMEOUT'):
+            with self.subTest(event=event):
+                h=ProtectedHandoffHarness(self,settled=False,retire_event=event)
+                with self.assertRaises(DraftHeld):h.prepare()
+                self.assertEqual(0,h.f.remote.cancels)
+                self.assertEqual(0,h.f.ledger.db.execute('SELECT closed FROM pp_drafts').fetchone()[0])
+
+    def test_explicit_pending_cancel_is_reconciled_without_a_background_scheduler_tick(self):
+        h=ProtectedHandoffHarness(self,settled=False,retire_event='USER_CANCEL')
+        op=h.prepare()
+        self.assertEqual(1,h.f.remote.cancels)
+        self.assertEqual('TERMINAL_UNPAID',h.f.ledger.db.execute('SELECT financial_class FROM pp_isolation_ops').fetchone()[0])
+        h.ack(op)
+        self.assertEqual((1,3),tuple(h.f.ledger.db.execute('SELECT closed,generation FROM pp_drafts').fetchone()))
+        self.assertEqual(1,h.f.remote.charges);self.assertEqual(1,h.f.remote.cancels)
+
+    def test_lost_original_cancel_reply_still_requires_independent_get_and_never_resends(self):
+        h=ProtectedHandoffHarness(self,settled=False,retire_event='USER_CANCEL')
+        h.f.remote.lose_cancel_response=True
+        op=h.prepare();h.ack(op)
+        self.assertEqual(1,h.f.remote.cancels)
+        self.assertEqual('CANCELLED_UNPAID',h.f.ledger.db.execute('SELECT payment_state FROM pp_payment_attempts').fetchone()[0])
+        self.assertGreaterEqual(h.f.remote.reads,2)
+
+    def test_settlement_racing_original_cancel_keeps_owed_proof_and_claim_identity(self):
+        h=ProtectedHandoffHarness(self,settled=False,retire_event='USER_CANCEL')
+        h.f.remote.settle_on_cancel=True
+        op=h.prepare();h.ack(op)
+        self.assertEqual('PAID_OWED',h.f.ledger.db.execute('SELECT financial_class FROM pp_isolation_ops').fetchone()[0])
+        result=h.recover();self.assertEqual('REACQUIRED',result['state'])
+        self.assertEqual(h.f.lease.draft_id,result['lease'].draft_id)
+        self.assertEqual(1,h.f.remote.charges);self.assertEqual(1,h.f.remote.cancels)
+
+
 if __name__=='__main__':unittest.main()

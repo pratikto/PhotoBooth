@@ -304,3 +304,112 @@ Source completeness remains separate: this verified checkpoint still lacks
 automatic native customer rotation, complete freeze/launcher/boot/remedy and
 actual target-device/account acceptance. Native mock A/B/A evidence cannot be
 relabeled as a protected merchant cycle. No commercial activation is authorized.
+
+## Next bounded cancellation check before customer rotation
+
+Verify a protected native USER_CANCEL while the original charge is PENDING with
+the optional background scheduler disabled. The local durable lifecycle intent
+must drive only that original prepared cancel through the existing coordinator,
+then independently GET its original status before any release classification.
+Isolation must not silently depend on another scheduler tick to send the durable
+intent. A cancel response alone, ignored cancel, PENDING/UNKNOWN/404/outage or
+partial paper remains held; APP_SUSPENDED/RESULT_TIMEOUT do not cancel. A
+settlement racing cancel remains original PAID/OWED with original proof and no
+new charge. Reuse original _send_cancel/reconcile_all ordering, once-only phase
+and pacing; do not invent a second transport or cancellation idempotency key.
+Record a failing reproduction before claiming a source defect or applying a fix.
+
+### B6-F BUG-054 reproduction and correction
+
+Three actual original pending-cancel methods ERRORed before a source fix:
+explicit USER_CANCEL, lost cancel response, and settlement racing cancellation.
+The protected isolation refresher was only calling reconcile, whereas the
+existing original reconcile_all first calls _send_cancel for each original
+attempt. Durable cancel intent therefore remained PREPARED with no transport
+when no background scheduler tick occurred. Financial safety correctly held
+PENDING; the defect was missing progress, never a false FREE or lost PAID claim.
+
+The refresher now reuses that exact original _send_cancel-before-reconcile
+ordering. No new cancel transport, retry ID or financial classifier is added.
+Fresh independent GET is still mandatory for every attempt and each PREPARE/ACK;
+a cancellation response alone never proves terminal unpaid. Existing once-only
+cancel-phase/pacing and original proof/receipt/uncertainty guards remain.
+
+**6 new methods /137 affected PASS57.137s**, zero failures/errors/skips. Includes
+cancel reply falsely claiming success while GET stays PENDING (no release or
+resend), lost cancel response independently verified by GET, cancel then GET
+outage (same occupancy held), racing original settlement/OWED proof claim, and
+APP_SUSPENDED/RESULT_TIMEOUT never sending cancel. External effects are fake;
+the exact original API/core/independent native/backend SQL remain in use.
+New changed-source full backend regression is running; current CI is still the
+earlier B6-E source and must not be relabeled as verification of this correction.
+Customer rotation/freeze/full launcher/boot/remedy and final real qualification
+remain unfinished; BUG-054 repair does not activate any merchant profile.
+
+## Next trusted visit-manager contract (not implemented)
+
+Keep the existing separate backend process and native views. A trusted launcher
+worker owns SandboxHostConfig, the backend handle, ephemeral fence capability,
+native LaunchLease, original readiness collector and bounded rotation state.
+Never attach merchant/custody configuration, a provider or that private launcher
+object to a GUI service. A future UI proxy carries only commands and bounded
+typed service/PhotoJobs bindings; native facade still receives booth credentials
+only. Do not describe object scoping as additional OS/process isolation.
+
+First scope is a fresh or fully ACKed original root, NOT automatic orphan/pre-ACK
+boot adoption. One manager serializes transitions; no live visitor is preempted.
+Hidden pixels/Ads alone cannot create a new binding. Require the actual original
+retire event/generation, drain original collector/PhotoJobs, prepare the exact
+operation, publish native receipt and obtain protected backend ACK. A lost ACK
+reply must inspect the original durable ACK and retry its exact HTTP observation;
+it must not try to publish another PREPARED receipt against an already ACKed row.
+
+Only after the original backend child actually exits may its client/ledger close
+and a new child/private channel/collector/PhotoJobs/fence capability open over
+the SAME root. Retain native kernel ownership through the entire transition;
+stop=False keeps HOLD and the original handle. Never restart a stopped collector
+or PhotoJobs or infer safe release from socket/listener closure. Recheck every
+prior closed generation's protected ACK/receipt and unresolved finance/output
+before new admission. Root/keyring/media/rights/journals are never replaced.
+
+Proof claim must verify the original role/scope through existing backend claim
+before using a retired local visit's release path. A live B always yields WAIT.
+Reuse a durable PREPARED request, or an exact active REACQUIRED request after a
+lost reply, only when its original group/booth/proof hash/current generation
+match; otherwise create a new request for a newly eligible original release.
+Each actual grant still needs original proof/fresh settlement and strict native
+restore. No raw proof is logged, persisted to a new file, returned in UI result
+or retained in a popup/command after completion. Unsupported boot states hold
+without adoption; supported restart is a later required commercial gate.
+
+Test actual spawned-child A-to-B-to-A, distinct old/new child PIDs and private
+capabilities, permanent old collector/PhotoJobs retirement, original entitlement/
+folder/photo hashes/output counters, lost ACK and blocked stop/worker, invalid
+proof and live-B WAIT, and same-root failure preservation. Then connect the
+original native recovery popup and async UI proxy at both portrait sizes, keeping
+all Photo/game/admission controls held during rotation. Existing mock-only
+constructors/launchers remain unchanged. Complete protected freeze and boot/
+remedy/actual final qualification still follow; no commercial enablement here.
+
+### B6-E Windows CI update
+
+Run42726468657 Windows129533300402 was cancelled at its15-minute job budget
+(operation canceled00:27:19 UTC); there is no unittest summary, so no full PASS
+or assertion diagnosis is claimed. Ubuntu795 and native88 remain SUCCESS with
+completed logs inspected. [Updated exact-source record](evidence/pp06-e-full-2026-11-10.json).
+No timeout was raised, no test was removed and this cancellation is retained.
+The newer BUG-054 source must receive its own full CI; do not repeatedly rerun
+outdated E solely to obtain a green badge or borrow its partial results for F.
+
+### B6-F complete backend regression checkpoint
+
+**801 registered backend PASS292.168s**, zero failures/errors/skips, after
+BUG-054 correction; original payments/legacy regression and actual child/native
+primitive methods remain registered. Runtime/test files stayed unchanged during
+this run. [Failure/focused/full source evidence](evidence/pp06-original-cancel-2026-11-10.json).
+New exact-source native/CI remains pending; E88 local/CI and E795 Ubuntu are
+retained only at their original source. E Windows cancellation is not hidden.
+Next source step remains the trusted original visit manager contract above,
+followed by async original native A/B/A mounting, protected freeze/launcher,
+supported boot/remedy and final actual qualification. No runtime WIP outside
+this bounded correction is included or claimed complete.

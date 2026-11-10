@@ -19,7 +19,7 @@ from tests.post_preview_protected_fixture import ProtectedNativeHarness
 
 class ProtectedHandoffHarness:
     def __init__(self, owner, *, settled=True, delivery=False,
-                 uncertain_receipt=False, uncertain_photo=False):
+                 uncertain_receipt=False, uncertain_photo=False,retire_event=None):
         self.f=ProtectedNativeHarness(owner,{'template_a':1})
         self.source=self.f.service
         self.proof=self.ticket_proof=None
@@ -60,7 +60,7 @@ class ProtectedHandoffHarness:
         ticket=self.f.actor.binder.presentation.credentials
         self.claim=OriginalSandboxClaim(self.payments,
             OriginalCCPService(self.f.ledger,ticket.protector,'MTEST'),ticket)
-        self.source.retire('RESULT_TIMEOUT' if settled else 'APP_SUSPENDED')
+        self.source.retire(retire_event or ('RESULT_TIMEOUT' if settled else 'APP_SUSPENDED'))
 
     def prepare(self):
         self.f.clock[0]+=2

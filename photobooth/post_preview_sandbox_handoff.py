@@ -93,6 +93,9 @@ class OriginalSandboxIsolation:
         # Fresh original observations only; pacing/404/outage never fabricates
         # an unpaid terminal. Retrying is the SAME PREPARED operation.
         for attempt in attempts:
+            # Match original reconcile_all ordering: recover ONLY the durable
+            # original cancel intent before GET, without requiring a scheduler.
+            self.payments._send_cancel(group,booth,attempt[0])
             observed=self.payments.reconcile(group,booth,attempt_id=attempt[0],force=True)
             if not observed['fresh_checked']:
                 raise DraftHeld('Fresh original release reconciliation required')

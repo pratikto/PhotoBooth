@@ -1,3 +1,16 @@
+## BUG-054 — protected USER_CANCEL depended on a scheduler to send original cancel (10 November 2026)
+
+S2 / integration SOURCE FIXED;137 focused PASS57.137s, zero failures/errors/skips.
+Three original protected pending-cancel reproductions ERRORed because isolation
+only GET-reconciled and never sent the durable original PREPARED cancellation.
+It now reuses the existing coordinator's _send_cancel then GET ordering for
+each SAME original attempt; no second transport/key or forced terminal status.
+Lost cancel response, cancel ignored/pending GET, subsequent GET outage, racing
+settlement and non-cancelling minimize/result events are covered by six new
+methods. UNKNOWN/partial output still holds; PAID/OWED/proof retained.
+Full registered backend801 PASS292.168s; current native/CI pending. No actual customer/money incident.
+[Scope/evidence](qa/portrait-v2-sandbox/PP06-PROTECTED-HANDOFF-2026-11-10.md).
+
 ## BUG-053 — late settlement after original unpaid ACK stranded proof claim (10 November 2026)
 
 S1 / protected integration SOURCE FIXED, software fixture only. An actual

@@ -1,0 +1,45 @@
+{
+  "base": "3302821dc7f4466f57f0dc27cb7c0ac8cac6e659",
+  "bug": "BUG-054",
+  "initial": {
+    "run": 3,
+    "failures": 0,
+    "errors": 3,
+    "seconds": 1.558
+  },
+  "focused": {
+    "run": 137,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 57.137,
+    "command": "python tools/run_kiosk_unittests.py test_post_preview_sandbox_handoff test_post_preview_claim_requests test_post_preview_handoff_api test_post_preview_handoff_client test_post_preview_payments test_post_preview_lifecycle_worker test_post_preview_isolation test_post_preview_pilot_admission"
+  },
+  "full_backend": {
+    "run": 801,
+    "seconds": 292.168,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "command": "original complete registered private-state workflow command"
+  },
+  "source_sha256": {
+    "photobooth/post_preview_sandbox_handoff.py": "a1090a81a271763be970fa6c7071721e529662844b75b769974968f2acdddabf",
+    "tests/post_preview_handoff_fixture.py": "f24b350ee9e73ab905a85c63e223c432ffae15fbaeb46ff34597579e618d3920",
+    "tests/test_post_preview_sandbox_handoff.py": "8afd43159e2eac7ce3f3da59a77c7b922d3c9f69375f9373349f7fdc5398e54d"
+  },
+  "log_sha256": {
+    "initial": "d56a572d82e3e9f3549b96829ac6ea6ad952f01fd8a99c89dcf7f254c2f996d5",
+    "focused": "285a773f93cdeae1fa84c96c7110f6867fc09c7b1a4eda305802538767380823",
+    "full": "de43b5a4b3bad591951472ae8f2fd493565da0640a286bb61dee41e6eb8a7845"
+  },
+  "new_methods": [
+    "test_cancel_reply_alone_and_pending_get_never_create_release_or_resend_cancel (test_post_preview_sandbox_handoff.ProtectedOriginalCancelHandoffTests.test_cancel_reply_alone_and_pending_get_never_create_release_or_resend_cancel) ... ok",
+    "test_cancel_then_get_outage_keeps_original_occupancy_until_fresh_terminal_observed (test_post_preview_sandbox_handoff.ProtectedOriginalCancelHandoffTests.test_cancel_then_get_outage_keeps_original_occupancy_until_fresh_terminal_observed) ... ok",
+    "test_explicit_pending_cancel_is_reconciled_without_a_background_scheduler_tick (test_post_preview_sandbox_handoff.ProtectedOriginalCancelHandoffTests.test_explicit_pending_cancel_is_reconciled_without_a_background_scheduler_tick) ... ok",
+    "test_lost_original_cancel_reply_still_requires_independent_get_and_never_resends (test_post_preview_sandbox_handoff.ProtectedOriginalCancelHandoffTests.test_lost_original_cancel_reply_still_requires_independent_get_and_never_resends) ... ok",
+    "test_minimize_and_result_timeout_never_cancel_a_pending_original_attempt (test_post_preview_sandbox_handoff.ProtectedOriginalCancelHandoffTests.test_minimize_and_result_timeout_never_cancel_a_pending_original_attempt) ... ok",
+    "test_settlement_racing_original_cancel_keeps_owed_proof_and_claim_identity (test_post_preview_sandbox_handoff.ProtectedOriginalCancelHandoffTests.test_settlement_racing_original_cancel_keeps_owed_proof_and_claim_identity) ... ok"
+  ],
+  "limits": "Fake external provider/cloud/paper; original coordinator/HTTP/SQL/native primitives. Current complete native/source-matched CI pending; E local88 native and E Ubuntu795/native88 CI retain older source scope. No merchant/profile/actual money/refund/paper/cloud/deploy."
+}
