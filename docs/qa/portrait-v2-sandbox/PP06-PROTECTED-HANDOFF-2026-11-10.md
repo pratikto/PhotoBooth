@@ -179,3 +179,43 @@ admit B, mount protected freeze or turn on a customer profile. Complete actual
 native A-to-B-to-A and separate-process capability rotation remain mandatory
 after the strict client/restore seam; source work must not be called hardware
 blocked merely because actual devices/accounts are also unverified.
+
+## B6-D strict client and protected native restore seam
+
+Implemented the preceding native restore contract as a bounded seam, without
+mounting the customer launcher. PostPreviewHandoffClient validates complete
+original scope/types, only accepts the same live prepared release object for
+ACK, and exposes no worker capability/FREE grant. Lost original ACK and claim
+replies retry the same operation/request. A client-owned claim grant is bounded
+to30 local monotonic seconds, identity-checked, once-consumed, and invalidated
+by privacy hide. Reconstructed, cross-client, stale, malformed and extra-field
+responses cannot restore. Hiding is immediate and never waits for network I/O.
+
+ProtectedCheckoutService.claim_original runs off the UI thread and restores
+only through that grant. It checks the SAME durable original request/proof hash,
+owner/generation, entitlement, release generation and backend-validated native
+worker evidence before and after reused original frozen-media/status/ticket
+restoration. Changed hashes/owner/finance hold with hidden snapshots; no new
+photo, proof, charge or receipt is created. A genuinely dismissed ticket stays
+dismissed. Existing original submitted output/folder and entitlement survive.
+No arbitrary lease, cached PAID or bare HTTP dictionary can boot-adopt media.
+
+**14 new methods /74 affected PASS55.623s**, zero failures/errors/skips.
+[Source/log/method evidence](evidence/pp06-native-restore-seam-2026-11-10.json).
+Includes actual PhotoJobs execution, separate native/backend SQL, blocked actual
+HTTP response/privacy deadline, lost claim/ACK, malformed scopes, expired/forged
+objects, valid-shaped response without a durable request, owner mutation during
+status HTTP, and frozen-media hash corruption. The explicit fixture rotates a
+backend delivery actor to test original submitted-output no-replay; this is NOT
+an implemented bootstrap rotation or mounted Kivy A/B/A acceptance. Initial10
+new methods PASS10.087s predates the four added regressions. Default launcher,
+merchant health and complete protected freeze remain gated; full final-source
+regression/current CI remains pending.
+
+NEXT: trusted child-host printer/paid-delivery/private worker-capability assembly,
+then graceful stopped-child/new private readiness/PhotoJobs rotation over the
+same original root after exact ACK. Bind it to original native proof input and
+A-to-B-to-A flow without relaxing any mock guard. Follow with protected freeze,
+complete trusted launcher/configuration, supported recovery/refund/status/ops,
+and actual final-profile/device/account qualification. A source push or unit
+count is not commercial readiness.

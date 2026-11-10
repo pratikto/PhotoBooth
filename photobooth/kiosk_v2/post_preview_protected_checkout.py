@@ -1,7 +1,8 @@
-"""Protected native continuation of the SAME live original frozen photo visit.
+"""Protected native continuation of the SAME original frozen photo visit.
 
 No provider, custody or Drive transport belongs here. This is not a customer
-launcher, proof recovery or admission authority. The complete protected freeze/
+launcher or admission authority. Original proof recovery requires our exact
+typed backend claim result and durable evidence. Complete protected freeze/
 claim/release mounting remains gated; an existing frozen visit is never inferred
 from a reopened database or reconstructed at startup.
 """
@@ -10,6 +11,7 @@ import re
 from photobooth.post_preview_ccp import render_private_ccp
 from photobooth.post_preview_client import PostPreviewClient
 from photobooth.post_preview_delivery_client import PostPreviewDeliveryClient
+from photobooth.post_preview_handoff_client import PostPreviewHandoffClient,ProtectedClaimGrant
 from photobooth.post_preview_proof_client import PostPreviewCCPClient, PostPreviewRecoveryClient
 from photobooth.post_preview_store import DraftHeld
 from .post_preview_checkout import CHECKOUT_PHASES, TICKET_PHASES
@@ -26,6 +28,7 @@ class ProtectedCheckoutService(PrivatePhotoService):
         self._ccp = PostPreviewCCPClient(payment_client)
         self._ticket = PostPreviewRecoveryClient(payment_client)
         self._delivery = PostPreviewDeliveryClient(payment_client)
+        self._handoff = PostPreviewHandoffClient(payment_client)
         self.group = self._offer = self._claim_qr = self._payment = self._payment_qr = None
         self._ticket_offer = self._ticket_qr = self._ticket_receipt = None
         self._ticket_was_dismissed = False
@@ -70,6 +73,63 @@ class ProtectedCheckoutService(PrivatePhotoService):
 
     def freeze_checkout(self, *args):
         raise DraftHeld('Protected original freeze/admission mounting is not enabled')
+
+    def claim_original(self,group,proof,request_id):
+        """Off-UI-thread proof claim; a busy result never changes private views."""
+        self._active()
+        if self.lease is not None or self.group is not None or self.phase!='confirm':
+            raise DraftHeld('Fresh protected claimant facade required')
+        grant=self._handoff.claim(group,proof,request_id)
+        if grant is None:
+            return {'state':'WAIT','reason':'BOOTH_BUSY'}
+        return self.recover_original_owed(grant)
+
+    def _original_claim_grant(self,grant):
+        from photobooth.post_preview_sandbox_handoff import require_acked_worker_receipt
+        with self.ledger.write():
+            self.ledger._owned(grant.lease)
+            request=self.ledger.db.execute('SELECT * FROM pp_protected_claim_ops WHERE request_id=?',
+                                          (grant.request_id,)).fetchone()
+            expected=dict(state='REACQUIRED',purchase_group_id=grant.purchase_group_id,
+                booth_id=grant.lease.booth_id,draft_id=grant.lease.draft_id,visit_id=grant.lease.visit_id,
+                generation=grant.lease.generation,entitlement_id=grant.entitlement_id,
+                proof_sha256=grant.proof_sha256)
+            if not request or any(request[k]!=v for k,v in expected.items()):
+                raise DraftHeld('Original durable claim grant changed')
+            receipt=self.ledger.db.execute('SELECT * FROM pp_isolation_ops WHERE operation_id=?',
+                                           (request['release_operation'],)).fetchone()
+            if (not receipt or receipt['draft_id']!=grant.lease.draft_id
+                    or receipt['booth_id']!=grant.lease.booth_id
+                    or receipt['original_generation']+2!=grant.lease.generation):
+                raise DraftHeld('Original claimed worker generation changed')
+            require_acked_worker_receipt(self.ledger,receipt)
+            finance=self.ledger.db.execute('SELECT * FROM pp_purchase_finance WHERE purchase_group_id=?',
+                                           (grant.purchase_group_id,)).fetchone()
+            paid=self.ledger.db.execute('SELECT status FROM pp_paid_services WHERE purchase_group_id=?',
+                                        (grant.purchase_group_id,)).fetchone()
+            if (not finance or finance['review_required'] or finance['entitlement_id']!=grant.entitlement_id
+                    or paid and paid['status']!='OWED'):
+                raise DraftHeld('Original claimed paid obligation changed')
+
+    def recover_original_owed(self,grant):
+        """No bare lease/DB boot adoption; consume our typed backend result once."""
+        self._active()
+        if (type(grant) is not ProtectedClaimGrant or self.lease is not None
+                or self.group is not None or self.phase!='confirm'):
+            raise DraftHeld('Fresh protected original claim facade required')
+        def restore(original):
+            from .post_preview_checkout import PrivateCheckoutService
+            self._original_claim_grant(original)
+            # Reuse frozen-hash validation and original ticket visibility policy;
+            # do not construct a mock service or attach local proof/provider keys.
+            PrivateCheckoutService.recover_original_owed(self,original.lease,original.purchase_group_id)
+            self._original_claim_grant(original)
+            self._active()
+            return self.snapshot()
+        try:return self._handoff.consume(grant,restore)
+        except Exception:
+            self.hide_private()
+            raise DraftHeld('Original private claim restoration held') from None
 
     def offer_claim(self):
         self._active()
@@ -162,7 +222,7 @@ class ProtectedCheckoutService(PrivatePhotoService):
 
     def hide_private(self):
         super().hide_private()
-        for client in (self._ccp, self._ticket, self._delivery):
+        for client in (self._ccp, self._ticket, self._delivery, self._handoff):
             client.hide_private()
         self._offer = self._claim_qr = self._payment = self._payment_qr = None
         self._ticket_offer = self._ticket_qr = self._ticket_receipt = None

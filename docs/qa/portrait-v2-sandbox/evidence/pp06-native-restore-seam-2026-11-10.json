@@ -1,0 +1,34 @@
+{
+  "base": "e538049303db157af499a1fb64dfcc2ff8cd6f53",
+  "stage": "B6-D strict handoff client and protected native restore seam; complete customer mounting pending",
+  "run": 74,
+  "seconds": 55.623,
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "new_methods": [
+    "test_actual_original_photojobs_restores_without_storing_or_returning_customer_proof (test_post_preview_handoff_client.ProtectedHandoffClientTests.test_actual_original_photojobs_restores_without_storing_or_returning_customer_proof) ... ok",
+    "test_cross_scope_release_and_caller_ready_flags_never_become_ack_observation (test_post_preview_handoff_client.ProtectedHandoffClientTests.test_cross_scope_release_and_caller_ready_flags_never_become_ack_observation) ... ok",
+    "test_expired_genuine_grant_is_held_and_cannot_reveal_private_snapshot (test_post_preview_handoff_client.ProtectedHandoffClientTests.test_expired_genuine_grant_is_held_and_cannot_reveal_private_snapshot) ... ok",
+    "test_foreign_or_reconstructed_grant_cannot_restore_even_same_original_lease (test_post_preview_handoff_client.ProtectedHandoffClientTests.test_foreign_or_reconstructed_grant_cannot_restore_even_same_original_lease) ... ok",
+    "test_hidden_inflight_claim_returns_no_grant_and_privacy_hide_never_waits_for_network (test_post_preview_handoff_client.ProtectedHandoffClientTests.test_hidden_inflight_claim_returns_no_grant_and_privacy_hide_never_waits_for_network) ... ok",
+    "test_lost_claim_reply_retries_same_original_request_without_second_grant (test_post_preview_handoff_client.ProtectedHandoffClientTests.test_lost_claim_reply_retries_same_original_request_without_second_grant) ... ok",
+    "test_lost_original_ack_reply_retries_same_operation_without_another_release (test_post_preview_handoff_client.ProtectedHandoffClientTests.test_lost_original_ack_reply_retries_same_operation_without_another_release) ... ok",
+    "test_malformed_cross_scope_and_paid_flags_cannot_issue_any_claim_grant (test_post_preview_handoff_client.ProtectedHandoffClientTests.test_malformed_cross_scope_and_paid_flags_cannot_issue_any_claim_grant) ... ok",
+    "test_original_busy_wait_never_restores_or_contacts_provider (test_post_preview_handoff_client.ProtectedHandoffClientTests.test_original_busy_wait_never_restores_or_contacts_provider) ... ok",
+    "test_original_media_tamper_after_paid_grant_holds_without_print_or_charge (test_post_preview_handoff_client.ProtectedHandoffClientTests.test_original_media_tamper_after_paid_grant_holds_without_print_or_charge) ... ok",
+    "test_owner_change_during_payment_inspect_is_rechecked_before_restored_snapshot (test_post_preview_handoff_client.ProtectedHandoffClientTests.test_owner_change_during_payment_inspect_is_rechecked_before_restored_snapshot) ... ok",
+    "test_protected_restore_keeps_original_hashes_ticket_folder_and_no_resends (test_post_preview_handoff_client.ProtectedHandoffClientTests.test_protected_restore_keeps_original_hashes_ticket_folder_and_no_resends) ... ok",
+    "test_stale_owner_after_genuine_grant_cannot_restore_original_pixels (test_post_preview_handoff_client.ProtectedHandoffClientTests.test_stale_owner_after_genuine_grant_cannot_restore_original_pixels) ... ok",
+    "test_valid_shaped_http_lease_without_durable_original_result_cannot_restore (test_post_preview_handoff_client.ProtectedHandoffClientTests.test_valid_shaped_http_lease_without_durable_original_result_cannot_restore) ... ok"
+  ],
+  "command": "python tools/run_kiosk_unittests.py test_post_preview_handoff_client test_post_preview_protected_checkout test_post_preview_checkout_worker test_post_preview_protected_restore test_post_preview_claim_requests test_post_preview_handoff_api test_post_preview_worker_fence",
+  "source_sha256": {
+    ".github/workflows/post-preview-qris.yml": "51d52e2e54647a51e1bba3585d50dbf53e42fe9869f52ebd2ede60f5b724013e",
+    "photobooth/post_preview_handoff_client.py": "ec83cd87a9e2291e7bf2da5129e4e12257d2186386984f444f92fbfe2cf55504",
+    "photobooth/kiosk_v2/post_preview_protected_checkout.py": "f82cce2db38ec2ad6faf7221c8d0aa7dd4d2311b2d172aaec92b7db71b22eb48",
+    "tests/test_post_preview_handoff_client.py": "88f4a5a720f147b4d61d510013f4ad2e1ee979414c77cc6f8a5412a6a719e420"
+  },
+  "log_sha256": "6cf68a1ef303fd9be8a4d32e2641d1378fc5665048c7f09709c99fd6faccbc39",
+  "limits": "No mounted Kivy claim popup, customer A/B/A or automatic bootstrap rotation. Actual original API/core/PhotoJobs/SQL, explicit fake provider/cloud/paper; Linux key lookup fixture/actual Windows DPAPI by platform. No actual money/refund/paper/cloud/deploy."
+}
