@@ -1,5 +1,15 @@
 # Owned Windows Sandbox acceptance entry
 
+**11 November 2026 (WIB): verified software candidate to BEGIN supervised
+normal-flow owned Windows Sandbox acceptance after the original checks pass.**
+Runtime source `2d26e0abb305edd5ef70775cb2ca73032efbe2ee`; final local983 backend,
+101 actual-X11 native,34 Apps Script PASS. CI42924820179 ALL FOUR SUCCESS and
+all completed logs inspected, including actual Windows PowerShell entry.
+[Go directly to Windows commands](#start-here-on-the-owners-windows-pc).
+Actual owner/account/device observations remain NOT_RUN. Commercial release,
+intentional power-loss/fault trials and unsupported recovery remain blocked.
+Older PENDING sections below are historical; this checkpoint supersedes them.
+
 10 November 2026. Authorized existing post-preview branch only. Goal: let the
 owner BEGIN supervised normal-flow acceptance with their Windows account,
 camera, POS80 and approved test Drive using the ALREADY IMPLEMENTED protected
@@ -351,3 +361,44 @@ SUCCESS; core501 FAILED one original pre-ACK restore fixture: producer saw
 payment=None before indexing attempts. No timeout this time. Inspect and
 reproduce the asynchronous fixture boundary before any additional source fix.
 No owner/device/commercial PASS inferred.
+
+## Final verification — runtime2d26e0a, 11 November 2026 (WIB)
+
+Optional clipboard cleanup first ERROR1.124s, then corrected32 focused PASS
+2.426s and2 actual-native PASS30.084s. Original owner/worker shutdown still
+finishes on bridge-close error; unbind error still attempts owned-value cleanup.
+A later owner-copied proof/text remains preserved. No authority/consent change.
+
+Final local983 backend PASS442.540s;101 actual-X11 native PASS307.757s;34 offline
+Apps Script PASS. Zero failures/errors/skips. Discovery983=Windows502+481;
+original ALL order and all methods/multiplicities retained by the budget fix.
+
+[Exact-source CI42924820179](https://github.com/pratikto/PhotoBooth/actions/runs/42924820179):
+
+| Job | Tests | Seconds | Result |
+| --- | ---: | ---: | --- |
+| Windows core130208499330 | 502 | 575.501 | SUCCESS |
+| Windows delivery130208499640 | 481 | 301.606 | SUCCESS |
+| Ubuntu130208498825 | 983 | 341.662 | SUCCESS |
+| Actual native130208499174 | 101 | 301.362 | SUCCESS |
+
+All completed logs inspected. All16 new backend methods observed on Windows/
+Ubuntu; native F8 case observed. Windows delivery also completes actual
+PowerShell local setup/enrollment/check-only/passive DPAPI preflight/Record
+BLOCKED/Show/missing-consent hold. CI uses public fixtures, no actual external
+account/device acceptance. This is software entry verification only.
+
+Preserve the earlier source22fb235 CI42839219467 core501 failure: producer
+view payment=None before indexing attempts in original pre-ACK restore fixture.
+Local9 restore methods PASS10.319s, and SAME original Windows method PASS3.234s
+in final CI. Root cause remains unproven: no restore fixture/payment source
+change, arbitrary retry or guard waiver was introduced to claim it fixed.
+Sourcef4b8c07 delivery deadline cancellation also remains in the evidence.
+
+All application/test source SHA256 values match final verification. Only
+documentation/evidence change afterward; no test rerun needed for docs. Actual
+owner normal cases still NOT_RUN. Use SAME original root/account and the
+commands above. Preserve earlier eleven smoke observations and every original
+ledger/key/uncertain output. No active local app/backend/test or source/test
+WIP. C2c3 original OS worker-key/draft-epoch lifecycle, C3 supported interrupted
+recovery, remedy/refund and commercial qualification remain unfinished.

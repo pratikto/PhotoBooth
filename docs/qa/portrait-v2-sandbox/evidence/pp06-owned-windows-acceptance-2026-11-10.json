@@ -1,21 +1,21 @@
 {
-  "source": "f4b8c07b0fb3bc7c163cc988c187bd0484777a2b",
+  "source": "2d26e0abb305edd5ef70775cb2ca73032efbe2ee",
   "stage": "Owned Windows supervised normal-flow Sandbox acceptance, passive checks/redacted owner reports/current QR clipboard handoff",
-  "scope": "READY_FOR_SOFTWARE_VERIFICATION_NOT_OWNER_PASS_OR_COMMERCIAL",
+  "scope": "READY_TO_BEGIN_SUPERVISED_NORMAL_WINDOWS_SANDBOX_UAT_AFTER_ORIGINAL_GUARDS_NOT_COMMERCIAL",
   "source_sha256": {
     "Start-PostPreviewAcceptance.ps1": "72c366bc0715410c99dfbf4b01e634d5debc224f7fa8400685e8ef50daadd9e5",
     "Start-PostPreviewSandbox.ps1": "c736bb635848a1a4f95e22b3b0f76dc1ae6e20baed98c55e18645636db98d83a",
     "photobooth/post_preview_acceptance.py": "c34a4ba0f9b8b554c8b64ddc7841233bc45348520056bb3cc5752425a27dc1b9",
     "photobooth/post_preview_launch_settings.py": "ebb8dbd03adf8e7f8c51b67393b6e191c8ef17f84cdaee4921c45d012a91a8d6",
-    "photobooth/kiosk_v2/owned_sandbox_simulator.py": "39717671f738374d1ba9d69b6146c2a0ab33220c3fbb110896d26d02cb3b8bc3",
+    "photobooth/kiosk_v2/owned_sandbox_simulator.py": "b7245878985cf21ab4d76ee6cfb359864d7f949283e892e19fd62f348b9e3b99",
     "tools/run_post_preview_acceptance.py": "4f1ac8ce74832df69c0690358c2c870f5941e877bd22ade5f4c943fd5f201d59",
-    "tools/run_post_preview_sandbox.py": "d95bf8cadc42b3dde70c60dc77106332174e12a4ad54f761b08ebb78c878036c",
+    "tools/run_post_preview_sandbox.py": "2630b54c1a42baeca1ff1137faed0605dd44acc3268a3cf091386d0c7686888b",
     "tests/test_post_preview_acceptance.py": "cf78f3d5b6aa1e44fc50795228e5cfccda0313189f8792cc8258d86614c8d40b",
     "tests/test_post_preview_launch_settings.py": "4f073b86b46b9cb7fd1f48516e550ae148cd486137df653ce9af3e711e64fb6c",
-    "tests/test_post_preview_windows_entry.py": "2f544ae1f1fd5189138ab07bf1ed95e4d5d431c7e7a6675e145781857d2a670c",
-    "tests/test_post_preview_windows_widgets.py": "73db3abbb624a2cdcdbeabf3efa08ae5c8fbe9f83894ed7976d2bee29665f49b",
+    "tests/test_post_preview_windows_entry.py": "349dddaa75fded64e28bff681985dab7334c10ad074607382023574ab5d71670",
+    "tests/test_post_preview_windows_widgets.py": "6611ff92a4c6da4fc86c4082f69fa1dbbf99c101236297bfd19aafd1f905ccdc",
     "tests/post_preview_host_process_fixture.py": "4d13d4b7433886ade805054e34f8a3b72669a72fbfb4ff4471d64a6769cc1587",
-    "tools/run_post_preview_ci.py": "c98108db85cea711f97459f4630adaa22a3845ce77b9484535aa74bb4f5e4877",
+    "tools/run_post_preview_ci.py": "9947f2d18ccc9344d1ce430cc38063c812f3860d7a97770a460ee14967b83122",
     ".github/workflows/post-preview-qris.yml": "9c0ca3d560f5a4ef1bad57e3fb51e971cc57be05d92f1774043d707f51f7e91c"
   },
   "expected_new_backend_methods": [
@@ -33,9 +33,10 @@
     "test_post_preview_acceptance.OwnedAcceptanceTests.test_source_checks_allow_documentation_changes_but_hold_runtime_changes",
     "test_post_preview_acceptance.OwnedAcceptanceTests.test_unknown_blocked_or_free_text_observations_do_not_create_a_session",
     "test_post_preview_launch_settings.ProtectedLaunchSettingsTests.test_passive_settings_validation_never_mints_a_worker_key",
-    "test_post_preview_windows_entry.ProtectedWindowsEntryTests.test_acceptance_clipboard_session_is_not_a_check_only_or_consent_bypass"
+    "test_post_preview_windows_entry.ProtectedWindowsEntryTests.test_acceptance_clipboard_session_is_not_a_check_only_or_consent_bypass",
+    "test_post_preview_windows_entry.ProtectedWindowsEntryTests.test_optional_clipboard_cleanup_error_cannot_interrupt_original_owner_drain"
   ],
-  "new_backend_methods": 15,
+  "new_backend_methods": 16,
   "new_native_methods": 1,
   "focused": {
     "settings_first_reproduction": {
@@ -83,19 +84,47 @@
       "errors": 0,
       "skips": 0,
       "seconds": 29.221
+    },
+    "clipboard_cleanup_first": {
+      "run": 1,
+      "errors": 1,
+      "seconds": 1.124,
+      "reason": "Optional close exception bypassed original owner drain"
+    },
+    "clipboard_cleanup_corrected": {
+      "run": 32,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 2.426
+    },
+    "clipboard_cleanup_actual_native": {
+      "run": 2,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 30.084
+    },
+    "original_restore_reprobe": {
+      "run": 9,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 10.319,
+      "scope": "Local platform, not Windows DPAPI evidence"
     }
   },
   "local": {
     "backend": {
-      "run": 982,
-      "seconds": 453.586,
+      "run": 983,
+      "seconds": 442.54,
       "failures": 0,
       "errors": 0,
       "skips": 0
     },
     "native_actual_x11": {
       "run": 101,
-      "seconds": 322.262,
+      "seconds": 307.757,
       "failures": 0,
       "errors": 0,
       "skips": 0
@@ -108,45 +137,49 @@
     }
   },
   "ci": {
-    "run_id": 42835198124,
-    "head_sha": "f4b8c07b0fb3bc7c163cc988c187bd0484777a2b",
-    "state": "THREE_SUCCESS_WINDOWS_DELIVERY_CANCELLED_15_MINUTE_DEADLINE",
+    "run_id": 42924820179,
+    "head_sha": "2d26e0abb305edd5ef70775cb2ca73032efbe2ee",
+    "state": "ALL_FOUR_SUCCESS",
     "native": {
-      "job_id": 129895437105,
+      "job_id": 130208499174,
       "run": 101,
-      "seconds": 315.239,
+      "seconds": 301.362,
       "conclusion": "success",
       "completed_log_inspected": true,
       "f8_original_native_method_observed": true
     },
-    "windows_core": {
-      "job_id": 129895437096,
-      "run": 459,
-      "seconds": 506.754,
+    "ubuntu": {
+      "job_id": 130208498825,
+      "run": 983,
+      "seconds": 341.662,
       "conclusion": "success",
       "completed_log_inspected": true,
-      "new_backend_methods_observed": 15,
+      "new_backend_methods_observed": 16,
       "missing_new_methods": []
     },
     "windows_delivery": {
-      "job_id": 129895436413,
-      "state": "CANCELLED_15_MINUTE_DEADLINE",
-      "started_at": "2026-11-10T14:33:02Z",
-      "completed_at": "2026-11-10T14:48:07Z",
-      "completed_progress_events": 418,
-      "final_unit_verdict": "UNAVAILABLE_NOT_PASS",
-      "completed_log_inspected": true,
-      "owner_powershell_step": "NOT_RUN"
-    },
-    "ubuntu": {
-      "job_id": 129895437255,
-      "run": 982,
-      "seconds": 522.296,
+      "job_id": 130208499640,
+      "run": 481,
+      "seconds": 301.606,
       "conclusion": "success",
       "completed_log_inspected": true,
-      "new_backend_methods_observed": 15,
-      "missing_new_methods": []
-    }
+      "owner_powershell_step": "success"
+    },
+    "windows_core": {
+      "job_id": 130208499330,
+      "run": 502,
+      "seconds": 575.501,
+      "conclusion": "success",
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "completed_log_inspected": true,
+      "new_backend_methods_observed": 16,
+      "missing_new_methods": [],
+      "clipboard_cleanup_method_observed": true,
+      "original_preack_restore_method_observed": true
+    },
+    "all_completed_logs_inspected": true
   },
   "previous_source": {
     "source": "bd763a4f5faa56d3011099a2fd1dbf0928bb33ca",
@@ -202,7 +235,7 @@
     "Default health False; no production activation/deployment",
     "Ubuntu packaging deferred by owner"
   ],
-  "state": "APP_FULL_LOCAL_PASS_PRIOR_CI_THREE_SUCCESS_BUDGET_FIX_PENDING",
+  "state": "FULL_LOCAL_AND_ALL_FOUR_EXACT_SOURCE_CI_PASS_OWNER_ACCEPTANCE_NOT_RUN",
   "owner_acceptance": "NOT_RUN_REQUIRES_OWNED_WINDOWS_PC_AND_ORIGINAL_CONSENTS",
   "logs_sha256": {
     "meong-acceptance-settings-first-failure.log": "83106615aed469517a65e907b5fa548e3254304d720e81782c07775746975067",
@@ -214,7 +247,14 @@
     "meong-acceptance-handoff-native-final.log": "38bb066ba61e025a886f84a91b9f714e71ccb9027daa6850ef3a0dd942cf4c53",
     "meong-owned-uat-final-backend.log": "30dba64068a459d7c44829e36cd75a10a5c654a78c55b5df8487164b83526f0b",
     "meong-owned-uat-final-native.log": "d440900e5c198e9f89adea70fae5894a6233cee8fa5c3dfaed27cee9e79d1f4f",
-    "meong-owned-uat-final-apps-script.log": "d3d2a82ecfcca2858752d5fc44d9fe89a04dfcdcdae0b4b27b3aeb5bb6933307"
+    "meong-owned-uat-final-apps-script.log": "d3d2a82ecfcca2858752d5fc44d9fe89a04dfcdcdae0b4b27b3aeb5bb6933307",
+    "meong-acceptance-cleanup-first-failure.log": "992b9954aa1e84032aeae948ff8f72809e0948fb6e5f606e722e9d342d961371",
+    "meong-acceptance-cleanup-corrected.log": "b4741dd3a389ea54b831c355c496c8bfa164fb7dcd25305e2ee9d9b3e2afc0fd",
+    "meong-acceptance-cleanup-native.log": "2f4d2fdb016244d7b8b6d34ac81efcf7b663ba1526a9f0bcb660e08003ef0a5d",
+    "meong-restore-probe.log": "50544f609d92683b540a993786dcf9e06c488cfefc4ce22bdf4d09a86b34d5fc",
+    "meong-acceptance-final983-backend.log": "0fd413f70b2013db0e05db52e48063d63635b723cd27cf4228cdd99510001d91",
+    "meong-acceptance-final101-native.log": "bcd8cfb7516ceb3ad7217312fad9cafc122f71e13b44bc7e30ff14beeff55d8d",
+    "meong-acceptance-final34-node.log": "80ab170516747fccc3c6ca02d3383ceefe9fcb67252e851b79961a822d6d5cfe"
   },
   "windows_budget_correction": {
     "module_transfer": [
@@ -236,6 +276,130 @@
       "timeout_minutes_unchanged": 15
     },
     "application_and_native_source_changed": false,
-    "new_exact_source_ci": "PENDING"
-  }
+    "new_exact_source_ci": "ALL_FOUR_SUCCESS_AT_2d26e0a_WINDOWS_502_PLUS_481_EQUALS_983"
+  },
+  "historical_f4b8c07": {
+    "source": "f4b8c07b0fb3bc7c163cc988c187bd0484777a2b",
+    "source_sha256": {
+      "Start-PostPreviewAcceptance.ps1": "72c366bc0715410c99dfbf4b01e634d5debc224f7fa8400685e8ef50daadd9e5",
+      "Start-PostPreviewSandbox.ps1": "c736bb635848a1a4f95e22b3b0f76dc1ae6e20baed98c55e18645636db98d83a",
+      "photobooth/post_preview_acceptance.py": "c34a4ba0f9b8b554c8b64ddc7841233bc45348520056bb3cc5752425a27dc1b9",
+      "photobooth/post_preview_launch_settings.py": "ebb8dbd03adf8e7f8c51b67393b6e191c8ef17f84cdaee4921c45d012a91a8d6",
+      "photobooth/kiosk_v2/owned_sandbox_simulator.py": "39717671f738374d1ba9d69b6146c2a0ab33220c3fbb110896d26d02cb3b8bc3",
+      "tools/run_post_preview_acceptance.py": "4f1ac8ce74832df69c0690358c2c870f5941e877bd22ade5f4c943fd5f201d59",
+      "tools/run_post_preview_sandbox.py": "d95bf8cadc42b3dde70c60dc77106332174e12a4ad54f761b08ebb78c878036c",
+      "tests/test_post_preview_acceptance.py": "cf78f3d5b6aa1e44fc50795228e5cfccda0313189f8792cc8258d86614c8d40b",
+      "tests/test_post_preview_launch_settings.py": "4f073b86b46b9cb7fd1f48516e550ae148cd486137df653ce9af3e711e64fb6c",
+      "tests/test_post_preview_windows_entry.py": "2f544ae1f1fd5189138ab07bf1ed95e4d5d431c7e7a6675e145781857d2a670c",
+      "tests/test_post_preview_windows_widgets.py": "73db3abbb624a2cdcdbeabf3efa08ae5c8fbe9f83894ed7976d2bee29665f49b",
+      "tests/post_preview_host_process_fixture.py": "4d13d4b7433886ade805054e34f8a3b72669a72fbfb4ff4471d64a6769cc1587",
+      "tools/run_post_preview_ci.py": "c98108db85cea711f97459f4630adaa22a3845ce77b9484535aa74bb4f5e4877",
+      ".github/workflows/post-preview-qris.yml": "9c0ca3d560f5a4ef1bad57e3fb51e971cc57be05d92f1774043d707f51f7e91c"
+    },
+    "local": {
+      "backend": {
+        "run": 982,
+        "seconds": 453.586,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      "native_actual_x11": {
+        "run": 101,
+        "seconds": 322.262,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      "apps_script": {
+        "run": 34,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      }
+    },
+    "ci": {
+      "run_id": 42835198124,
+      "head_sha": "f4b8c07b0fb3bc7c163cc988c187bd0484777a2b",
+      "state": "THREE_SUCCESS_WINDOWS_DELIVERY_CANCELLED_15_MINUTE_DEADLINE",
+      "native": {
+        "job_id": 129895437105,
+        "run": 101,
+        "seconds": 315.239,
+        "conclusion": "success",
+        "completed_log_inspected": true,
+        "f8_original_native_method_observed": true
+      },
+      "windows_core": {
+        "job_id": 129895437096,
+        "run": 459,
+        "seconds": 506.754,
+        "conclusion": "success",
+        "completed_log_inspected": true,
+        "new_backend_methods_observed": 15,
+        "missing_new_methods": []
+      },
+      "windows_delivery": {
+        "job_id": 129895436413,
+        "state": "CANCELLED_15_MINUTE_DEADLINE",
+        "started_at": "2026-11-10T14:33:02Z",
+        "completed_at": "2026-11-10T14:48:07Z",
+        "completed_progress_events": 418,
+        "final_unit_verdict": "UNAVAILABLE_NOT_PASS",
+        "completed_log_inspected": true,
+        "owner_powershell_step": "NOT_RUN"
+      },
+      "ubuntu": {
+        "job_id": 129895437255,
+        "run": 982,
+        "seconds": 522.296,
+        "conclusion": "success",
+        "completed_log_inspected": true,
+        "new_backend_methods_observed": 15,
+        "missing_new_methods": []
+      }
+    }
+  },
+  "final_discovery": {
+    "all": 983,
+    "core": 502,
+    "delivery": 481
+  },
+  "historical_22fb235": {
+    "source": "22fb235e808845c35eae9abec30bceedb62a15e0",
+    "run_id": 42839219467,
+    "all_completed_logs_inspected": true,
+    "native": {
+      "job_id": 129909587468,
+      "run": 101,
+      "seconds": 333.398,
+      "conclusion": "success"
+    },
+    "ubuntu": {
+      "job_id": 129909587913,
+      "run": 982,
+      "seconds": 479.957,
+      "conclusion": "success"
+    },
+    "windows_delivery": {
+      "job_id": 129909588285,
+      "run": 481,
+      "seconds": 463.924,
+      "conclusion": "success",
+      "owner_powershell_step": "success"
+    },
+    "windows_core": {
+      "job_id": 129909588228,
+      "run": 501,
+      "seconds": 607.591,
+      "conclusion": "failure",
+      "failures": 1,
+      "errors": 0,
+      "skips": 0,
+      "case": "test_preack_crash_reconstructs_original_worker_then_exact_ack_and_customer_claim",
+      "reason": "Fixture producer payment None before attempts indexing; cause unproven. Local9 method reprobe passed; do not claim source fix for this historical failure.",
+      "status_after_final_verification": "Same original Windows method passes in final exact-source CI. Historical cause remains unproven; no fixture/payment/recovery source change made to waive it."
+    }
+  },
+  "owner_next_action": "Run the documented passive Preflight on the SAME original Windows account/root. Actual camera/paper/Drive/provider acceptance remains NOT_RUN."
 }
