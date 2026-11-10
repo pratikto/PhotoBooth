@@ -1,0 +1,45 @@
+{
+  "base": "39b9e6fa06b127d07fc45913f31a49b327e96e81",
+  "stage": "H5-C protected native checkout button and complete native journey",
+  "source_sha256": {
+    "photobooth/kiosk_v2/post_preview_visits_app.py": "0be04ce0800618eb33229995f3594168e6994f70686c963d6d6f96b28bbd5dda",
+    "tests/test_post_preview_freeze_widgets.py": "ef81e28873556dc6446685bcae975de883f7d149f4bda5cc9c5dc648b2cd8ac1",
+    ".github/workflows/post-preview-qris.yml": "68561fd0e543111a54c816899bbe4f10a7be85d81c032a35e8da839d0cdba368"
+  },
+  "focused": {
+    "run": 5,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 27.754
+  },
+  "prior_red": "Missing native button: 1 method, 2 subtest failures before implementation; initial corrected 1 PASS6.858s; expanded 5 PASS26.799s precedes final guard/geometry assertions.",
+  "command": "DISPLAY=:93 KIVY_HOME=/workspace/work/kivy-home KIVY_NO_ARGS=1 KIVY_NO_CONSOLELOG=1 SDL_AUDIODRIVER=dummy LIBGL_ALWAYS_SOFTWARE=1 PHOTOBOOTH_LOCAL_ONLY=1 PHOTOBOOTH_CAMERA=0 PHOTOBOOTH_AUDIO=0 PHOTOBOOTH_AD_VIDEO=0 PHOTOBOOTH_FACE_TRIGGER=0 PHOTOBOOTH_PALM_TRIGGER=0 .venv/bin/python tools/run_kiosk_unittests.py test_post_preview_freeze_widgets",
+  "logs_sha256": {
+    "pp05-freeze-c-before.log": "2769f680a953b710df545ebcbd5769ba1bcb8f1345d7bddab47dea81e1dde904",
+    "pp05-freeze-c-button.log": "fe5cf670919f89f0192b8a6e37219c0fe954e6e968a60b546a5011811f38edc2",
+    "pp05-freeze-c-expanded.log": "6cbd3c0ceba1ac1a92697d687396967dd92b519e9afe2ba76b491afedecca893",
+    "pp05-freeze-c-final-focused.log": "886368475db7d0f109f5ebb61e4976553298d6dff08fce93f83d88ad27189ba4"
+  },
+  "screenshots": {
+    "visually_inspected": true,
+    "sizes": [
+      [
+        800,
+        1280
+      ],
+      [
+        452,
+        900
+      ]
+    ],
+    "private_local_only_sha256": {
+      "final-preview-452x9000001.png": "b9521e0f425e80b17178811d9fd8ce018dffaa42b4e484d469a2c0ed7e70ddcf",
+      "final-preview-800x12800001.png": "6750c389d8a28dc82630cf27f52129352b8cb62a2ae7e8239995e696f54bdfcd",
+      "paid-result-452x9000001.png": "c35c3e21035095510fa374794a4f52d9bf50b5dc22b3164bcff31d7e73685df0",
+      "paid-result-800x12800001.png": "dcdfafe72c153cd40e58922245cca780f73655974e5566aa686ea401e4016d62"
+    },
+    "scope": "Final preview and paid result only; no proof/ticket screenshots published. Preview scrolls at narrow height; footer buttons remain in window. Synthetic media/QR/external transports."
+  },
+  "limits": "Full current-source regression/CI pending. Explicit protected visits profile only; ordinary/default launcher disabled, fulfillment_enabled=False. Complete launcher/global lease/custody/config/boot/remedy/status/ops and actual account/device/final qualification unfinished. No actual payment/paper/upload/refund/deploy."
+}

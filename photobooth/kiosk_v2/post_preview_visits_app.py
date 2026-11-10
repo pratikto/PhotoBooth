@@ -1,7 +1,7 @@
 """Original protected views with bounded public visit control.
 
 Explicit integration profile only. The trusted launcher retains the worker;
-this app has no manager/config/key/provider handle. Complete protected freeze,
+this app has no manager/config/key/provider handle. Complete customer launcher,
 global launch ownership and supported boot remain separately gated.
 """
 from kivy.metrics import dp
@@ -187,3 +187,26 @@ class ProtectedVisitsApp(ProtectedCheckoutApp):
     def _photo_capture_allowed(self):
         return (self._visit_ready and not self._visit_control.busy
                 and super()._photo_capture_allowed())
+
+    def _original_freeze_ready(self):
+        binding=self._visit_control.binding
+        return (not self._closed and not self._suspended and self._visit_ready
+                and not self._visit_control.busy and self._visit_control.state=='READY'
+                and binding is not None and binding.jobs is self._photo_jobs
+                and binding.service is self._photo_jobs.service
+                and binding.service.phase=='final_preview' and binding.service.group is None
+                and not binding.service._hidden.is_set() and not self._photo_jobs._closed
+                and not self._photo_jobs.busy and self.navigation.page==RESULT
+                and self._photo_view.get('phase')=='final_preview')
+
+    def _photo_action(self,title,callback,**kwargs):
+        if title=='PEMBAYARAN BELUM TERHUBUNG':
+            title,callback='LANJUT PEMBAYARAN QRIS',self._freeze_checkout
+            kwargs['disabled']=not self._original_freeze_ready()
+        return super()._photo_action(title,callback,**kwargs)
+
+    def _freeze_checkout(self):
+        # Button visibility is never authority. The exact original worker and
+        # backend independently recheck scope/media/device/Drive before commit.
+        if not self._original_freeze_ready():return
+        return super()._freeze_checkout()

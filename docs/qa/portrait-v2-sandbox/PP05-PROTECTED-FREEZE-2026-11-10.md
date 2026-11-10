@@ -128,3 +128,64 @@ merchant/account/device acceptance. NEXT C original native full capture/preview/
 freeze/CCP/QRIS/ticket/delivery at both sizes and privacy/lost-response faults;
 then final complete regression. Complete launcher/global lease/configuration/
 boot/remedy/status/ops/actual qualification remain unfinished, commercial NOT_READY.
+
+## C — native checkout integration contract before source
+
+Continue from runtime39b9e6f, whose completed CI42752996968 is verified852 Ubuntu,
+Windows331+521 (852 total),93 native, all four jobs SUCCESS/zero unit failures,
+errors or skips. Preserve that source-specific baseline without another onboarding
+rerun. The older local privacy draft was saved in a local stash/patch and is not
+applied; remote H2/H3/H4 already supersedes it.
+
+Expose the existing protected freeze action ONLY in ProtectedVisitsApp's accepted
+original public-control/PhotoJobs binding. Reuse all original gallery/preview,
+private CCP, QRIS, ticket/NEXT30s and automatic delivery controls. No fallback
+readiness, new backend/provider, mock constructor relaxation, global merchant
+enablement or ordinary ProtectedCheckoutApp button activation. Stale/hidden/busy/
+foreign bindings cannot initiate freeze. Backend candidate/readiness/commit and
+genuine-visible CCP remain the financial boundary, regardless of button state.
+
+Drive actual native capture/compose/approval, visible checkout, backend freeze,
+genuine original CCP, original Sandbox charge/independent GET, original ticket
+and automatic2+1 output at both portrait sizes using fake external transports.
+Do NOT call the fixture freeze primitive in the new complete-journey tests.
+Verify no money/output/folder allocation at freeze, same intent after lost reply,
+private wipe during committed reply and correct original retirement/ACK, no late
+repaint, no reprint/recharge and old-profile guards. Inspect new final-preview
+and paid-result screenshots without publishing private proof images. Then run
+one final registered backend/native regression and exact-source CI. Complete
+global launcher/configuration/boot/remedy and actual qualification remain open;
+commercial NOT_READY and default fulfillment health stays False.
+
+
+## C — protected native checkout button and complete journey implemented
+
+Only ProtectedVisitsApp now exposes LANJUT PEMBAYARAN QRIS on the original
+live final preview with accepted exact control/jobs/service binding. Hidden,
+suspended, busy, foreign, already frozen or stale-page callbacks cannot submit.
+Original backend freeze/readiness and genuine-visible CCP remain authoritative.
+Ordinary ProtectedCheckoutApp keeps its disabled checkout; no default merchant
+activation or fulfillment health change. Reuses the original UI and facade.
+
+Five new native methods cover real native capture/compose/all-design approval
+through actual separate child HTTP freeze, genuine CCP, independently verified
+synthetic payment, original ticket/NEXT and automatic2+1 SUBMITTED output at
+800x1280 and452x900. Frontend local freeze is patched to fail in that journey
+to prove the backend path. No money/output/folder claim at freeze. Same group
+after a dropped reply; committed-reply privacy returns to Ads, offers no CCP
+and completes actual worker retirement/ACK; foreign PhotoJobs cannot submit.
+Original bytes remain unchanged, one payment/ticket only, OWED and physical
+paper unverified even after SUBMITTED.
+
+Before source:1 method/2 missing-button subtest FAIL6.121s. Initial button
+1 PASS6.858s; expanded5 PASS26.799s. Final guard + footer geometry assertions:
+**5 PASS27.754s**, zero failures/errors/skips on actual X11. Four final-preview/
+paid-result screenshots visually inspected at both sizes; scrollable preview
+and footer controls fit. Synthetic images remain private local diagnostics.
+[Exact source/log hashes and limits](evidence/pp05-freeze-c-2026-11-10.json).
+New module registered in native CI. Full final functional regression/CI pending.
+
+Next: one full registered backend/native/Apps Script regression and exact-source
+four-job CI; do not borrow39b9e6f's PASS. Then complete trusted launch ownership
+BEFORE devices, custody/configuration, supported boot/remedy/status/ops and final
+qualification. Commercial NOT_READY. No real external operation performed.
