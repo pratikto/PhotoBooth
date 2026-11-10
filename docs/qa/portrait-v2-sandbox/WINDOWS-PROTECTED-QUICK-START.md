@@ -39,13 +39,34 @@ The canonical prior v2 merchant history is
 `visit.json`. Missing, foreign, unresolved or corrupt history holds startup.
 The older v1 trial directory also holds until separately reconciled. **Do not
 copy a synthetic root, create an empty DB/journal, edit a payment to CANCELLED,
-or delete history to pass this check.** First-install history initialization is
-not supplied by this increment. Preserve the blocked state for that setup work.
+or delete history to pass this check.** For a genuinely new booth with no original history, use explicit enrollment
+below. Existing or partial history must stay preserved and held.
 
 Success says **LOCAL CONFIGURATION/HISTORY VALID**. Custody/merchant/Drive
 sharing/printer/camera remain **NOT_CHECKED**. It is not account/device acceptance.
 The backend later requires actual Windows DPAPI custody and independent original
 freeze/charge/device/Drive readiness. No replacement key or plaintext fallback.
+
+## First install: explicitly enroll a genuinely new booth
+
+Only if this is a NEW booth with no previous canonical legacy/payment/photo or
+protected installation, use local-only enrollment. The source audits known roots
+and configured external legacy paths; any old/partial history blocks. Never
+delete it or choose a replacement root to pass. Keep the SAME selected storage.
+
+```powershell
+.\Start-PostPreviewSandbox.ps1 -StorageRoot 'C:\MeongData' -Setup -SetupOnly -EnrollNewBooth -SandboxOnly
+.\Start-PostPreviewSandbox.ps1 -StorageRoot 'C:\MeongData' -CheckOnly
+```
+
+`-Setup` reuses dependency preparation; `-SetupOnly -EnrollNewBooth` is a separate
+explicit LOCAL enrollment and never starts a GUI/backend/camera/printer/Drive or
+provider request. Do not combine with CheckOnly or external run flags. It creates
+non-secret original enrollment metadata and a dedicated original empty baseline,
+not a fabricated legacy visit.json/order. Retrying completes only the same intact
+intent; corrupt/foreign/nonempty/partial evidence stays held. Normal launch and
+check-only NEVER initialize automatically. Enrollment cannot grant old photos,
+payment or booth FREE. Backend custody and protected boot remain NOT_CHECKED.
 
 ## Explicitly run an owned Sandbox test
 

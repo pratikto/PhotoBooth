@@ -20,6 +20,8 @@ def parser():
     p.add_argument('--size',choices=('452x900','800x1280'),default='452x900')
     p.add_argument('--camera-index',type=int,choices=range(33),default=0)
     p.add_argument('--check-only',action='store_true')
+    p.add_argument('--setup-only',action='store_true')
+    p.add_argument('--enroll-new-booth',action='store_true')
     p.add_argument('--sandbox-only',action='store_true')
     for flag in ('enable-real-printer','accept-real-paper','enable-real-drive','accept-public-test-upload'):
         p.add_argument('--'+flag,action='store_true')
@@ -43,7 +45,13 @@ def native_app(control,camera,private_root,size):
 
 def main(argv=None):
     args=parser().parse_args(argv)
-    if not args.check_only and not all((args.sandbox_only,args.enable_real_printer,
+    setup=args.setup_only or args.enroll_new_booth
+    external=(args.enable_real_printer,args.accept_real_paper,args.enable_real_drive,args.accept_public_test_upload)
+    if setup and (not args.setup_only or not args.enroll_new_booth or not args.sandbox_only
+                  or args.check_only or any(external)):
+        print('BLOCKED: local setup requires --setup-only --enroll-new-booth --sandbox-only, without run/check flags.',file=sys.stderr)
+        return 2
+    if not args.check_only and not setup and not all((args.sandbox_only,args.enable_real_printer,
             args.accept_real_paper,args.enable_real_drive,args.accept_public_test_upload)):
         print('BLOCKED: explicit Sandbox and both original paper/Drive consent pairs required.',file=sys.stderr)
         return 2
@@ -55,6 +63,11 @@ def main(argv=None):
     owner=app=None
     try:
         owner=ProtectedSandboxLaunch(ROOT)
+        if setup:
+            from photobooth.post_preview_enrollment import enroll_new_booth
+            enroll_new_booth(owner,storage_root=args.storage_root,booth_id=args.booth_id)
+            print('NEW BOOTH ENROLLED LOCALLY. No payment/device/cloud operation. Custody and original protected boot: NOT_CHECKED.')
+            return 0
         settings=load_settings(owner,storage_root=args.storage_root,booth_id=args.booth_id)
         if args.check_only:
             print('LOCAL CONFIGURATION/HISTORY VALID. Custody, merchant, Drive sharing, printer, camera: NOT_CHECKED.')

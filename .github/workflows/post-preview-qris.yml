@@ -59,6 +59,17 @@ jobs:
           & ./Start-PostPreviewSandbox.ps1 -StorageRoot (Join-Path $env:RUNNER_TEMP 'meong-protected-check') -CheckOnly
           if ($LASTEXITCODE -ne 2) { throw 'Unconfigured protected entry did not fail closed' }
           $global:LASTEXITCODE = 0
+          # Explicit local-only NEW-BOOTH enrollment with public fixture values.
+          # No backend, device, provider or Drive operation is launched here.
+          $env:MIDTRANS_MERCHANT_ID = 'MCIENROLL'
+          $env:MIDTRANS_SERVER_KEY = 'Mid-server-CI-ENROLLMENT-FIXTURE'
+          $env:PHOTOBOOTH_WEB_APP_URL = 'https://script.google.com/macros/s/CI_ENROLLMENT_FIXTURE/exec'
+          $env:PHOTOBOOTH_UPLOAD_TOKEN = 'synthetic-ci-enrollment-token'
+          $env:PHOTOBOOTH_PRINTER_WINDOWS_NAME = 'CI enrollment fixture - no device access'
+          & ./Start-PostPreviewSandbox.ps1 -StorageRoot (Join-Path $env:RUNNER_TEMP 'meong-protected-check') -SetupOnly -EnrollNewBooth -SandboxOnly
+          if ($LASTEXITCODE -ne 0) { throw 'Explicit local new-booth enrollment failed' }
+          & ./Start-PostPreviewSandbox.ps1 -StorageRoot (Join-Path $env:RUNNER_TEMP 'meong-protected-check') -CheckOnly
+          if ($LASTEXITCODE -ne 0) { throw 'Enrolled local history preflight failed' }
 
 
   private-desktop:

@@ -1,0 +1,30 @@
+{
+  "base": "d7aa13a8aa3303d02eb7a1b84669ce75f7da3227",
+  "stage": "L3-A explicit Windows new-booth enrollment",
+  "affected": {
+    "run": 57,
+    "seconds": 7.395,
+    "new_methods": 12,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0
+  },
+  "command": ".venv/bin/python tools/run_kiosk_unittests.py test_post_preview_enrollment test_post_preview_launch_settings test_post_preview_windows_entry test_post_preview_launch test_qris_sandbox_launcher",
+  "source_sha256": {
+    "photobooth/post_preview_enrollment.py": "0551f461184e8ae2de50649c46da7ba86f7268d3ef6cbd3e29eeab4c1684bbbf",
+    "photobooth/post_preview_launch_settings.py": "c4ca51a152c1720da191ce0b14d4b4e4785b91937d6f1c1f18778440b88b3fe5",
+    "tools/run_post_preview_sandbox.py": "1a6de55d03dcb0d204b684628ffbda51bc43d386b4d3e8edf9c514dff7c30750",
+    "Start-PostPreviewSandbox.ps1": "50f8fbe11254bddef9e5f04b79888d6030bcb5ab700cc972023149617f40856d",
+    "tests/test_post_preview_enrollment.py": "34ecfc34ea8b94e93d1449344aca879e6c5a3ab9bd83b017feb92a271d400ea1",
+    "tools/run_post_preview_ci.py": "3e75d8e5c3c3b76bfa8352173c15c08a444e95bc7fc752bbb6713ba081febe38",
+    ".github/workflows/post-preview-qris.yml": "6b495dc2bbd2084a0a9b7ce02f068246daa44e739a9c29c547217f9f3c1ce3b3"
+  },
+  "logs_sha256": {
+    "pp06-enrollment-before.log": "fb93c6d7e46aa3861001f800fed7e8bbff060de0695d43c9aa7d2812b1fd91fa",
+    "pp06-enrollment-focused.log": "51486f16569a02f3139a1b6f08b8ac36b73e1f4e487fad5088f539ac5006d2fb",
+    "pp06-enrollment-related.log": "be5f46cf8a4cebb930bb450215cfe3e11c9c40a6b1363c321380f14f0c29cf26",
+    "pp06-enrollment-final-focused.log": "d01f121313bc4fce29000bb95fc598bbfcfb5cb3807cfa2040a9bd782d78f152"
+  },
+  "history": "Initial import ERROR before new module. First18 PASS0.656s; expanded55 PASS5.212s precedes final actual child restart/external-path cases. Final57 PASS7.395s.",
+  "limits": "Local explicit setup only, no fake legacy terminal journal, account/device/provider/boot readiness not granted. Actual Windows PowerShell positive enrollment and full final-source/CI pending. Normal-stop/PREPARE-ACK and pre-ACK/orphan recovery remain separate. No actual payment/refund/paper/upload/deploy; Ubuntu packaging deferred."
+}

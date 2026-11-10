@@ -4,6 +4,8 @@ param(
     [Parameter(Mandatory=$true)][string]$StorageRoot,
     [switch]$Setup,
     [switch]$CheckOnly,
+    [switch]$SetupOnly,
+    [switch]$EnrollNewBooth,
     [switch]$SandboxOnly,
     [string]$BoothId = 'PB001',
     [ValidateSet('452x900','800x1280')][string]$Size = '452x900',
@@ -20,7 +22,11 @@ try {
     if ($LASTEXITCODE -ne 0 -or "$meongBranch".Trim() -ne 'feature/post-preview-qris-checkout') {
         throw 'Use the existing feature/post-preview-qris-checkout. No branch was changed.'
     }
-    if (-not $CheckOnly -and -not ($SandboxOnly -and $EnableRealPrinter -and $AcceptRealPaper -and $EnableRealDrive -and $AcceptPublicTestUpload)) {
+    $meongLocalSetup = $SetupOnly -or $EnrollNewBooth
+    if ($meongLocalSetup -and (-not ($SetupOnly -and $EnrollNewBooth -and $SandboxOnly) -or $CheckOnly -or $EnableRealPrinter -or $AcceptRealPaper -or $EnableRealDrive -or $AcceptPublicTestUpload)) {
+        throw 'Local setup requires -SetupOnly -EnrollNewBooth -SandboxOnly, without run/check flags.'
+    }
+    if (-not $CheckOnly -and -not $meongLocalSetup -and -not ($SandboxOnly -and $EnableRealPrinter -and $AcceptRealPaper -and $EnableRealDrive -and $AcceptPublicTestUpload)) {
         throw 'Explicit Sandbox and both original paper/Drive consent pairs are required.'
     }
     if ($Setup) {
@@ -35,6 +41,8 @@ try {
     if (-not $meongPython) { throw 'Run once with -Setup -CheckOnly using Python 3.12.' }
     $meongArgs = @('tools/run_post_preview_sandbox.py','--storage-root',$StorageRoot,'--booth-id',$BoothId,'--size',$Size,'--camera-index',"$CameraIndex")
     if ($CheckOnly) { $meongArgs += '--check-only' }
+    if ($SetupOnly) { $meongArgs += '--setup-only' }
+    if ($EnrollNewBooth) { $meongArgs += '--enroll-new-booth' }
     if ($SandboxOnly) { $meongArgs += '--sandbox-only' }
     if ($EnableRealPrinter) { $meongArgs += '--enable-real-printer' }
     if ($AcceptRealPaper) { $meongArgs += '--accept-real-paper' }
