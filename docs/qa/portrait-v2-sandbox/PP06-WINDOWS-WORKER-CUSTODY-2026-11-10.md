@@ -1,5 +1,7 @@
 # Original worker capability custody — Windows-first L3-C
 
+> **FINAL VERIFIED — source9de0dcd213f741b19cda493cc30d80e9b5c38598:** 948 local backend/100 actual-X11 native/34 offline Apps Script PASS. CI42812100193 ALL FOUR SUCCESS, all completed logs inspected. C1/C2a/C2b remain UNMOUNTED; C2c/C3 recovery incomplete; commercial NOT_READY, default health False. [Machine-readable evidence](evidence/pp06-windows-worker-custody-2026-11-10.json). Earlier pending/failure snapshots below are retained history.
+
 10 November 2026. Base5f9e52e, runtime9054053, existing authorized post-preview
 branch only. Pasted continuation fully read; latest remote reconciled, final
 L3-A/B CI42801312247 completed logs inspected:917 backend on both platforms,
@@ -254,3 +256,44 @@ Only after that C3 original receipt/finance/uncertainty reconciliation may admit
 a new visitor. Old customer media still needs original role-correct proof and
 fresh independently verified legitimate PAID. Source rollback never deletes
 escrow, keys, ledger/WAL/SHM, media, receipts, OWED or uncertain jobs.
+
+## Final source-matched verification
+
+Runtime/source9de0dcd213f741b19cda493cc30d80e9b5c38598; following commits
+are documentation/evidence only. All new source/tests and original workflow
+hashes are retained in the linked JSON. No passing baseline was repeated for
+onboarding; broad verification repeated only after actual functional increments
+and the CI-discovered BUG-061 correction. Superseded/cancelled runs and both
+first failures remain recorded, not relabelled PASS.
+
+| Execution | Tests | Seconds | Result |
+| --- | ---: | ---: | --- |
+| Local complete backend | 948 | 439.734 | PASS |
+| Local actual X11 native | 100 | 302.852 | PASS |
+| Local Apps Script offline VM | 34 | — | PASS |
+| CI Windows core129815889212 | 425 | 441.270 | SUCCESS |
+| CI Windows delivery129815889586 | 523 | 506.117 | SUCCESS |
+| CI Ubuntu129815889385 | 948 | 331.172 | SUCCESS |
+| CI native129815889407 | 100 | 255.159 | SUCCESS |
+
+[Final CI42812100193](https://github.com/pratikto/PhotoBooth/actions/runs/42812100193)
+ALL FOUR SUCCESS at the exact source, all completed logs and step outcomes
+inspected. Zero unit failures/errors/skips. Windows core ran all29 new custody/
+process/escrow methods, Windows delivery ran both new timer methods. Native ran
+the deterministic genuine-card/blocked-receipt boundary case. Actual Windows
+PowerShell existing-entry setup, unconfigured protected-entry hold, explicit
+new-booth local enrollment and subsequent check-only all succeeded using public
+fixture settings without device/provider/Drive effects. CI native also completed
+the original entry preflight and both original portrait screenshot renders.
+
+These are software/test-runner results, not owner Windows account/DPAPI backup,
+reboot/power-loss, real camera/POS80/paper, merchant Sandbox, phone/Drive, full
+112/26 acceptance or commercial qualification. The eleven credited owner smoke
+observations stay credited; do not demand repeat of unchanged checks. Owner
+configurations are available; their values are not requested in chat.
+
+No runtime/test WIP or active local app/backend/test remains. Private raw logs,
+venv/cache and lab Xvfb are local only; obsolete privacy stash is superseded and
+must not be applied. Source rollback only; retain all original data/custody.
+FIRST next task is C2c above, then C3; never enable recovery from a restored key
+or claimed process birth alone. Windows remains first; Ubuntu packaging deferred.

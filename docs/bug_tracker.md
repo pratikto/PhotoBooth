@@ -9,7 +9,7 @@ reported1 second at original start+30. Timer now subtracts from that same absolu
 deadline, with no epsilon, early timeout, reset or visibility bypass. Unrepresentable
 deadlines are refused. Corrected8 unit/actual-native cases PASS11.363s, including
 a genuine rendered card, blocked receipt and both sides of the float boundary.
-Final948 backend/100 native/Windows CI pending here. No PAID/receipt replay change.
+Final9de0dcd:948 local backend/100 native/34 Apps Script PASS. CI42812100193 ALL FOUR SUCCESS (Windows425+523=948, Ubuntu948, native100), all completed logs inspected, zero failures/errors/skips. No PAID/receipt replay change.
 [Exact contract and evidence](qa/portrait-v2-sandbox/PP06-WINDOWS-WORKER-CUSTODY-2026-11-10.md).
 
 ## BUG-060 — new escrow reader accepted a multiply linked file (10 November 2026)
@@ -21,7 +21,7 @@ now requires a bounded regular file with exactly one link and consistent
 path/descriptor device+inode, using no-follow/nonblocking open where available.
 Directories and Linux actual FIFO hold before open; original/alias bytes remain
 unchanged. Corrected66 combined custody/process/escrow/vault/worker methods PASS
-8.500s, zero failures/errors/skips. Final regression/Windows CI pending here.
+8.500s, zero failures/errors/skips. Final9de0dcd:948 local backend/100 native/34 Apps Script PASS; CI42812100193 ALL FOUR SUCCESS, all completed logs inspected, zero failures/errors/skips.
 No launcher/ACK/customer mounting or actual key/media/money incident.
 [Contract and evidence](qa/portrait-v2-sandbox/PP06-WINDOWS-WORKER-CUSTODY-2026-11-10.md).
 

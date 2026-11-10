@@ -54,7 +54,7 @@
   },
   "ci": {
     "run_id": 42812100193,
-    "state": "PENDING",
+    "state": "ALL_FOUR_SUCCESS",
     "native": {
       "job_id": 129815889407,
       "run": 100,
@@ -75,12 +75,25 @@
     },
     "windows_core": {
       "job_id": 129815889212,
-      "state": "PENDING"
+      "run": 425,
+      "seconds": 441.27,
+      "conclusion": "success",
+      "completed_log_inspected": true,
+      "new_custody_methods_observed": 29
     },
     "windows_delivery": {
       "job_id": 129815889586,
-      "state": "PENDING"
-    }
+      "run": 523,
+      "seconds": 506.117,
+      "conclusion": "success",
+      "completed_log_inspected": true,
+      "new_deadline_methods_observed": 2,
+      "powershell_existing_entry_setup": "success",
+      "unconfigured_protected_entry_holds": "success",
+      "explicit_new_booth_enrollment": "success",
+      "subsequent_check_only": "success"
+    },
+    "head_sha": "9de0dcd213f741b19cda493cc30d80e9b5c38598"
   },
   "limitations": [
     "UNMOUNTED: no launcher/GUI/backend/ACK admission changes",
@@ -178,5 +191,13 @@
     "meong-worker-custody-final-native.log": "c7d5654ff7dd894178bec5ffa650fadc4c83118d15c1c9b89b9704c23d3fecd6",
     "meong-custody-final-apps-script.log": "2d1b1b05da90420f30cf322286f0a9fd9d8f1ac5b7520f0542665f7755b37778"
   },
-  "state": "LOCAL_FULL_PASS_CI_NATIVE_UBUNTU_PASS_WINDOWS_PENDING"
+  "state": "FINAL_LOCAL_FULL_PASS_CI_ALL_FOUR_SUCCESS",
+  "previous_docs_checkpoint": "9f50336cc8f2e80a08a7010439bf9a3e28832708",
+  "continuation": {
+    "first_unfinished": "C2c original history eligibility, durable pre-START backend-child identity and original kernel owner lifecycle",
+    "next": "C3 original receipt and finance/uncertainty reconciliation before supported pre-ACK/orphan admission",
+    "runtime_or_test_wip": false,
+    "actual_windows_owner_account_devices": "NOT_RUN",
+    "ubuntu_packaging": "DEFERRED_BY_OWNER"
+  }
 }
