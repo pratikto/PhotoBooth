@@ -1,0 +1,182 @@
+{
+  "source": "9de0dcd213f741b19cda493cc30d80e9b5c38598",
+  "stage": "Windows L3-C1/C2a/C2b UNMOUNTED candidates",
+  "source_sha256": {
+    "photobooth/post_preview_worker_custody.py": "545841a7fb9a8a74f321a972002ab3e5126bdda084f0e512d83b41ac236e07c1",
+    "photobooth/post_preview_process_identity.py": "177e4641c0f13f22c5275fcd4d15c4e9138481d082f8703095a203973061f22e",
+    "photobooth/post_preview_worker_escrow.py": "c1b5a6d524b3c6481d4b5a522f587d686a6af7276f98b72b8cac116fa699c5a3",
+    "tests/test_post_preview_worker_custody.py": "1c4ac9f9e368e7ebc6ad82dc9add21b7162335e185dbb535452492ccf8a69a5a",
+    "tests/post_preview_worker_custody_process_fixture.py": "c7c65f6dfac1416506715467262052c3066662be3d0248a241e71e08fe74ee4b",
+    "tests/test_post_preview_process_identity.py": "e95514c58c0d5f083c791aa2153c1e5dead03e4c83cd33248c87c73ffe13b5d8",
+    "tests/test_post_preview_worker_escrow.py": "e15bcc4588ee2ab3ad12228821f073173c81c652273fdca48b0e6f3de2399832",
+    "tools/run_post_preview_ci.py": "d7631d001448b2b3f441334e6f014086f0f2ab88a09cc100fcb6a5ef32f96e7d",
+    ".github/workflows/post-preview-qris.yml": "6b495dc2bbd2084a0a9b7ce02f068246daa44e739a9c29c547217f9f3c1ce3b3",
+    "photobooth/post_preview_ticket_window.py": "f9d6e406a9c9be3339c52bca2300897eee01d804eefaf750ea5c5952e0aebcc2",
+    "tests/test_post_preview_ticket_window.py": "64213dacf528711c6ad5a924c28d32bc91c95bd9ea282ce1fc48721f1b608b12",
+    "tests/test_post_preview_protected_widgets.py": "5e028eb8026f91ce65e0c6eb9d1b7dec653b5caafa6d710905cd9f11a6729041"
+  },
+  "new_methods": 29,
+  "focused": {
+    "run": 66,
+    "seconds": 8.5,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0
+  },
+  "first_failure": {
+    "bug": "BUG-060",
+    "source": "d9876d840e0a136e1dd9ab57f528e4f4b61d3bd2",
+    "run": 1,
+    "seconds": 0.012,
+    "failures": 1,
+    "reason": "Multiply linked escrow file accepted by unmounted candidate reader"
+  },
+  "local": {
+    "backend": {
+      "run": 948,
+      "seconds": 439.734,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "native_actual_x11": {
+      "run": 100,
+      "seconds": 302.852,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "apps_script": {
+      "run": 34,
+      "failures": 0,
+      "skips": 0
+    }
+  },
+  "ci": {
+    "run_id": 42812100193,
+    "state": "PENDING",
+    "native": {
+      "job_id": 129815889407,
+      "run": 100,
+      "seconds": 255.159,
+      "conclusion": "success",
+      "completed_log_inspected": true,
+      "deterministic_boundary_method_observed": true,
+      "entry_and_two_portrait_render_steps": "success"
+    },
+    "ubuntu": {
+      "job_id": 129815889385,
+      "run": 948,
+      "seconds": 331.172,
+      "conclusion": "success",
+      "completed_log_inspected": true,
+      "new_custody_methods_observed": 29,
+      "deadline_method_observed": true
+    },
+    "windows_core": {
+      "job_id": 129815889212,
+      "state": "PENDING"
+    },
+    "windows_delivery": {
+      "job_id": 129815889586,
+      "state": "PENDING"
+    }
+  },
+  "limitations": [
+    "UNMOUNTED: no launcher/GUI/backend/ACK admission changes",
+    "No full pre-ACK/orphan recovery; C2c history eligibility and durable backend-child identity still pending",
+    "Windows directory fsync unsupported, no physical power-loss acceptance",
+    "Linux vault lookup fixtures are not OS vault qualification",
+    "Commercial NOT_READY; default fulfillment health False"
+  ],
+  "previous_local": {
+    "cb5f73b_backend": {
+      "run": 933,
+      "seconds": 444.591,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "be44bd5_backend": {
+      "run": 946,
+      "seconds": 442.997,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "native_before_timer_fix": {
+      "run": 99,
+      "seconds": 297.454,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    }
+  },
+  "bug_061": {
+    "ci_before_fix": {
+      "run_id": 42810724202,
+      "job_id": 129811284579,
+      "source": "be44bd5a04ff123b328f3d7817f0c0e3d1e2e84f",
+      "run": 99,
+      "seconds": 281.942,
+      "failures": 1
+    },
+    "deterministic_first_failure": {
+      "run": 1,
+      "seconds": 0.0,
+      "failures": 1,
+      "reason": "Elapsed subtraction rounds below 30 at start+30 across float exponent boundary"
+    },
+    "corrected_focused_unit_and_actual_native": {
+      "run": 8,
+      "seconds": 11.363,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    }
+  },
+  "previous_ci": {
+    "run_id": 42810724202,
+    "head_sha": "be44bd5a04ff123b328f3d7817f0c0e3d1e2e84f",
+    "state": "SUPERSEDED_CANCELLED_WITH_NATIVE_FAILURE",
+    "windows_core": {
+      "job_id": 129811284935,
+      "run": 425,
+      "seconds": 377.136,
+      "conclusion": "success",
+      "new_methods_observed": 29,
+      "completed_log_inspected": true
+    },
+    "ubuntu": {
+      "job_id": 129811285023,
+      "run": 946,
+      "seconds": 471.621,
+      "conclusion": "success",
+      "completed_log_inspected": true
+    },
+    "native": {
+      "run_id": 42810724202,
+      "job_id": 129811284579,
+      "source": "be44bd5a04ff123b328f3d7817f0c0e3d1e2e84f",
+      "run": 99,
+      "seconds": 281.942,
+      "failures": 1
+    },
+    "windows_delivery": {
+      "job_id": 129811285122,
+      "state": "SUPERSEDED_NO_PASS_CLAIM"
+    }
+  },
+  "new_backend_methods": 31,
+  "new_native_methods": 1,
+  "logs_sha256": {
+    "meong-escrow-hardlink-first-failure.log": "d19f0906fe4eb8f883cec40bf13b65eaf372ed4c1b6d5ea846b17269b5baf4f1",
+    "meong-escrow-corrected-related.log": "7a6c749f27bf08b742e5d9db6d9a9c071b117c04097c52e7c0aa08dc24f3d97c",
+    "meong-ticket-deadline-first-failure.log": "12f39488509a9c132e26041060ffc3f2ed94eec7a0313a32dc39d19c824c91b8",
+    "meong-ticket-deadline-corrected-focused.log": "f88690baad20b7b1cd6ff79c566788e3f2beef381f318d8527da37c4ecaba572",
+    "meong-worker-custody-final-backend.log": "4b22f830cc3bc291c57599a97f4b2211652c7c5996906a203206b49a768ece86",
+    "meong-worker-custody-final-native.log": "c7d5654ff7dd894178bec5ffa650fadc4c83118d15c1c9b89b9704c23d3fecd6",
+    "meong-custody-final-apps-script.log": "2d1b1b05da90420f30cf322286f0a9fd9d8f1ac5b7520f0542665f7755b37778"
+  },
+  "state": "LOCAL_FULL_PASS_CI_NATIVE_UBUNTU_PASS_WINDOWS_PENDING"
+}

@@ -219,3 +219,38 @@ all29 custody/process/escrow methods observed (actual DPAPI and Windows ctypes);
 Ubuntu946 PASS471.621s. Native99 had1 FAILURE281.942s as above. Windows delivery
 was still running at the fix checkpoint; this run is NOT ALL FOUR SUCCESS.
 Keep this failed CI evidence and require new source-matched final verification.
+
+## Exact next mounting boundary (C2c, NOT implemented)
+
+Review the actual original `OriginalSandboxVisits._open` and `start` before
+mounting. Current code creates a new WorkerFenceKey and starts its child BEFORE
+`_free_history`. Do not insert the new-root writer there and call old boot safe.
+First share the original history/financial/verified-receipt eligibility policy,
+without creating replacement DBs or copying an independent finance engine.
+Unresolved roots with no original escrow stay held. Preserve all prior epochs.
+Later visitor rotations need a separately checked immutable epoch-to-original
+draft/generation binding; the present new-root-only writer intentionally refuses
+prior epochs/customer roots and cannot provide that policy by itself.
+
+The original private bootstrap has a useful pre-work boundary: after actual
+Popen, capture child creation identity and persist its original epoch binding
+BEFORE `_send(parent, request, deadline)`. `run_child` waits for that original
+START before constructing SandboxHostRuntime. No config/key is to move into
+argv/env/files, no synthetic child/provider, and no START may bypass durable
+original child identity. Partial bootstrap/custody must retain handles and hold;
+never terminate/recreate a possibly live old worker merely to obtain a lock.
+
+Global project LaunchLease, original private-root native lease and original
+backend-owner lease are independent. A dead parent/key unseal proves none of
+the others. Verify fresh actual OS identity/exit and actual original kernel
+ownership, including live backend orphan, before metadata retirement. Prove
+collector/PhotoJobs/camera/file/HTTP/printer/upload obligations independently.
+Do not retroactively publish the old native's receipt or sign it with a new key.
+Original already-published PREPARED receipts may only be verified with their
+original capability under independently established ownership; no receipt/key/
+epoch history may be fabricated. Durable ACKED verification remains unchanged.
+
+Only after that C3 original receipt/finance/uncertainty reconciliation may admit
+a new visitor. Old customer media still needs original role-correct proof and
+fresh independently verified legitimate PAID. Source rollback never deletes
+escrow, keys, ledger/WAL/SHM, media, receipts, OWED or uncertain jobs.
