@@ -1,6 +1,7 @@
 """Original native controls with protected API/facade; external effects fake."""
 from contextlib import contextmanager
 import os
+import math
 from pathlib import Path
 import threading
 import time
@@ -14,6 +15,7 @@ from photobooth.kiosk_v2.flow import ADVERT, RESULT
 from photobooth.kiosk_v2.post_preview_protected_app import ProtectedCheckoutApp
 from photobooth.kiosk_v2.post_preview_checkout_app import PrivateCheckoutFixtureApp
 from tests.post_preview_protected_fixture import ProtectedNativeHarness
+from photobooth.post_preview_ticket_window import VisibleTicketWindow
 
 
 class ProtectedNativeWidgetTests(unittest.TestCase):
@@ -156,6 +158,31 @@ class ProtectedNativeWidgetTests(unittest.TestCase):
                     self.idle(app)
                 self.assertEqual(3,len(f.sends))
             finally:release.set()
+
+    def test_float_boundary_deadline_wipes_genuine_card_during_blocked_receipt(self):
+        origin = math.nextafter(127., math.inf)
+        with self.booth() as (app, f), patch(
+                'photobooth.kiosk_v2.post_preview_checkout_app.VisibleTicketWindow',
+                side_effect=lambda: VisibleTicketWindow(monotonic=lambda: origin)):
+            f.receipt_entered = threading.Event()
+            f.receipt_release = threading.Event()
+            self.paid(app, f); self.visible(app)
+            self.idle(app, lambda: f.receipt_entered.is_set())
+            card = app._ticket_card
+            deadline = origin+30.
+            app._ticket_window._clock = lambda: math.nextafter(deadline, -math.inf)
+            app._poll_photos()
+            self.assertIsNotNone(card.qr_image.texture)
+            app._ticket_window._clock = lambda: deadline
+            app._poll_photos()
+            self.assertIsNone(card.qr_image.texture)
+            self.assertEqual('', card.code.text)
+            self.assertTrue(app._photo_jobs.busy)
+            self.assertEqual([], f.binds)
+            f.receipt_release.set()
+            self.idle(app, lambda: app._photo_view.get('phase') == 'paid_delivery')
+            self.idle(app)
+            self.assertEqual(3, len(f.sends))
 
     def test_uncertain_first_photo_prevents_every_later_native_automatic_batch(self):
         with self.booth() as (app,f):

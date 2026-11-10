@@ -1,3 +1,17 @@
+## BUG-061 — float rounding retained private ticket at its exact deadline (10 November 2026)
+
+S2 / original visible-ticket timer SOURCE FIXED. At be44bd5, CI42810724202
+native job129811284579 ran99 tests with1 FAILURE281.942s: ticket QR remained
+at exact30 seconds while receipt HTTP was blocked. Local99 PASS297.454s is
+preserved, not used to erase the CI failure. Deterministic unit reproduction
+with start=nextafter(127,+infinity) FAILed0.000s: rounded elapsed subtraction
+reported1 second at original start+30. Timer now subtracts from that same absolute
+deadline, with no epsilon, early timeout, reset or visibility bypass. Unrepresentable
+deadlines are refused. Corrected8 unit/actual-native cases PASS11.363s, including
+a genuine rendered card, blocked receipt and both sides of the float boundary.
+Final948 backend/100 native/Windows CI pending here. No PAID/receipt replay change.
+[Exact contract and evidence](qa/portrait-v2-sandbox/PP06-WINDOWS-WORKER-CUSTODY-2026-11-10.md).
+
 ## BUG-060 — new escrow reader accepted a multiply linked file (10 November 2026)
 
 S2 / UNMOUNTED worker-custody candidate SOURCE FIXED. An adversarial actual

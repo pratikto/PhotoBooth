@@ -27,7 +27,8 @@ class VisibleTicketWindow:
         if self._retired or self._finished or self._started_at is not None:
             return False
         now = self._clock()
-        if type(now) not in (float,int) or not math.isfinite(now):
+        if (type(now) not in (float,int) or not math.isfinite(now)
+                or not math.isfinite(now+30) or now+30 <= now):
             raise ValueError('Monotonic screen clock unavailable')
         self._started_at = now
         return True
@@ -40,7 +41,10 @@ class VisibleTicketWindow:
         now = self._clock()
         if type(now) not in (float,int) or not math.isfinite(now):
             return None
-        return max(0, math.ceil(30 - max(0, now-self._started_at)))
+        # Subtract from the same absolute deadline used by a monotonic timer.
+        # (now-start) can round below 30 when start+30 crosses a float exponent
+        # boundary, leaving a private QR visible at its exact deadline.
+        return math.ceil(min(30, max(0, (self._started_at+30)-now)))
 
     def dismiss(self, *, next_pressed=False):
         if not self.active:

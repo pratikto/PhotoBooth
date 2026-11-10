@@ -186,3 +186,36 @@ zero failures/errors/skips. New methods now29 (10 custody,6 process,13 escrow),
 so final complete backend registry946. Final broad source-matched regression
 and Windows actual DPAPI/process/escrow CI remain PENDING at this checkpoint.
 Superseded micro-push CI runs must not be represented as final source results.
+
+## CI-discovered original ticket timer investigation (before source correction)
+
+Final-candidate be44bd5 CI42810724202 native job129811284579 completed99
+tests with1 FAILURE281.942s: original protected widget's exact30-second timeout
+left QR texture present while receipt HTTP was blocked (NEXT case passed).
+Local99 PASS297.454s is retained and does not supersede the CI failure.
+Investigate the original VisibleTicketWindow arithmetic with deterministic
+clock values crossing a float exponent boundary. Reproduce before source fix;
+if confirmed, compare the same absolute original start+30 deadline, never add
+an epsilon, reduce genuine visibility, reset time or weaken widget assertions.
+Preserve real visibility gating, NEXT and independent receipt worker semantics.
+
+### BUG-061 confirmed and corrected
+
+Deterministic unit test at be44bd5: start=math.nextafter(127,+infinity), exact
+deadline=start+30. Elapsed subtraction rounded below30 and returned remaining1:
+1 FAIL0.000s. Original timer now uses the same absolute start+30 deadline,
+clamped before ceil, no epsilon or shorter visible window. Nonrepresentable
+deadlines refuse start rather than instantly finishing. Genuine native rendering
+and NEXT/receipt journal semantics are unchanged.
+
+Corrected8 tests PASS11.363s (six original/new timer methods plus original
+blocked-HTTP NEXT/timeout case and new deterministic actual-native boundary
+case). New case verifies visible QR immediately before deadline, immediate
+texture/code wipe exactly at deadline while worker remains busy, then original
+once-only automatic output. Full final source now expects948 backend/100 native.
+
+Pre-fix be44bd5 CI completed logs inspected: Windows core425 PASS377.136s,
+all29 custody/process/escrow methods observed (actual DPAPI and Windows ctypes);
+Ubuntu946 PASS471.621s. Native99 had1 FAILURE281.942s as above. Windows delivery
+was still running at the fix checkpoint; this run is NOT ALL FOUR SUCCESS.
+Keep this failed CI evidence and require new source-matched final verification.

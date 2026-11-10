@@ -1,10 +1,31 @@
 """30 actually visible seconds, one NEXT/timeout transition, no restart."""
 import unittest
+import math
 
 from photobooth.post_preview_ticket_window import VisibleTicketWindow
 
 
 class VisibleTicketWindowTests(unittest.TestCase):
+    def test_unrepresentable_deadline_never_starts_visible_window(self):
+        for value in (1e308, -1e308, float('inf'), float('nan')):
+            window = VisibleTicketWindow(monotonic=lambda: value)
+            with self.assertRaises(ValueError):
+                window.start(genuine_visible=True)
+            self.assertFalse(window.active)
+
+    def test_exact_absolute_deadline_across_float_precision_boundary(self):
+        origin = math.nextafter(127., math.inf)
+        tick = [origin]
+        window = VisibleTicketWindow(monotonic=lambda: tick[0])
+        window.start(genuine_visible=True)
+        deadline = origin+30.
+        tick[0] = math.nextafter(deadline, -math.inf)
+        self.assertEqual(1, window.remaining())
+        self.assertFalse(window.dismiss())
+        tick[0] = deadline
+        self.assertEqual(0, window.remaining())
+        self.assertTrue(window.dismiss())
+
     def setUp(self):
         self.tick=[100.]
         self.window=VisibleTicketWindow(monotonic=lambda:self.tick[0])
