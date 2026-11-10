@@ -1,0 +1,76 @@
+{
+  "source": "6e059cd7eb0ff716517c0d007edbe805ef3819c4",
+  "source_sha256": {
+    "photobooth/kiosk_v2/post_preview_visits_app.py": "0be04ce0800618eb33229995f3594168e6994f70686c963d6d6f96b28bbd5dda",
+    "tests/test_post_preview_freeze_widgets.py": "ef81e28873556dc6446685bcae975de883f7d149f4bda5cc9c5dc648b2cd8ac1",
+    ".github/workflows/post-preview-qris.yml": "68561fd0e543111a54c816899bbe4f10a7be85d81c032a35e8da839d0cdba368",
+    "tools/run_post_preview_ci.py": "e1261646c614cd497f7b627859454e9f47cc8ef76afb4b3efce3b80c5c09c1d1"
+  },
+  "local": {
+    "backend": {
+      "run": 852,
+      "seconds": 421.43,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "native_actual_x11": {
+      "run": 98,
+      "seconds": 287.963,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "apps_script": {
+      "run": 34,
+      "failures": 0,
+      "skips": 0
+    }
+  },
+  "logs_sha256": {
+    "pp05-freeze-c-full-backend.log": "466a308969b563d16cba9cb15ac888333e6858e833898bf1987fa01efb35b1d7",
+    "pp05-freeze-c-full-native.log": "6ed04c60eda0a6ddeda7c2dffd365619df0c31fc0debd9aa2209d9a55bb5d192",
+    "pp05-freeze-c-apps-script.log": "f770fc4c8728fbd45b13ef23b25ade15bdda15ed26b2013f5a10d827ad179aed"
+  },
+  "ci": {
+    "run_id": 42768843056,
+    "head_sha": "6e059cd7eb0ff716517c0d007edbe805ef3819c4",
+    "all_four_completed_logs_inspected": true,
+    "jobs": [
+      {
+        "id": 129671646034,
+        "name": "native",
+        "run": 98,
+        "seconds": 257.21,
+        "conclusion": "success"
+      },
+      {
+        "id": 129671646388,
+        "name": "Ubuntu all",
+        "run": 852,
+        "seconds": 433.275,
+        "conclusion": "success"
+      },
+      {
+        "id": 129671646460,
+        "name": "Windows core",
+        "run": 331,
+        "seconds": 401.56,
+        "conclusion": "success"
+      },
+      {
+        "id": 129671646328,
+        "name": "Windows delivery",
+        "run": 521,
+        "seconds": 584.709,
+        "conclusion": "success"
+      }
+    ],
+    "unit_failures": 0,
+    "unit_errors": 0,
+    "unit_skips": 0,
+    "new_native_methods_observed": 5,
+    "log_access": "Completed logs read with GitHub connector. CLI redirected log download was HTTP403; it is not the verification source."
+  },
+  "limits": "Actual native original backend/HTTP with fake external transports. No real payment/refund/paper/upload/deploy. No commercial/default activation. L1 new launch core is a separate later source increment; this evidence applies only to 6e059cd."
+}

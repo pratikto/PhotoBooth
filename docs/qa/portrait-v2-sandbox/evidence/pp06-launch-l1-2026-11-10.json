@@ -1,0 +1,30 @@
+{
+  "base": "6e059cd7eb0ff716517c0d007edbe805ef3819c4",
+  "stage": "L1 trusted global pre-device launch owner core",
+  "source_sha256": {
+    "photobooth/post_preview_launch.py": "4ccce780c09820e96d2970891c18ca53b04f953048f39241589a2c92edd843df",
+    "tests/test_post_preview_launch.py": "b17f4a53985200f832d73dfbcda3fb094a9bdaa1a43815197696ef89a29d7eef",
+    "tools/run_post_preview_ci.py": "d3e1903d13b81bf1e7ad71c9fd7f17d2a55f9bc36a306353025827c129858f6a"
+  },
+  "affected": {
+    "run": 38,
+    "new_launch_methods": 8,
+    "seconds": 94.981,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0
+  },
+  "command": ".venv/bin/python tools/run_kiosk_unittests.py test_post_preview_launch test_post_preview_visit_control test_post_preview_sandbox_visits",
+  "logs_sha256": {
+    "pp06-launch-l1-before.log": "53c5519ecc91ad71f3a58466ec4a9ca17753fd3c097ac47a70a3388d8859217e",
+    "pp06-launch-l1-focused.log": "9031ad63156aa13dcb0c7343bbb1875d89feab1d180894993a21812367ee133d",
+    "pp06-launch-l1-history-before.log": "133e46e6f46b3b29f2c960ea51a47bc8015ce3007ac6fef2c03a5bdb76ac26c9",
+    "pp06-launch-l1-related.log": "0b75d3b0b3baf69622fc1b40e5098bd42bf02a4b38feb6c49bae8c88693d61ec"
+  },
+  "failures_preserved": [
+    "Initial new module import ERROR before implementation",
+    "First6 PASS2.729s",
+    "Expanded empty/foreign original-history test:1 method/2 subtest FAIL1.724s before read-only validation"
+  ],
+  "limits": "Explicit owner core only, no executable/default activation. Actual original child/worker/camera-manager thread with synthetic external transport/Linux custody lookup. Full860 backend running; exact-source CI pending. L2 settings/native entry/stop, supported boot/remedy/status/ops and actual qualification unfinished."
+}

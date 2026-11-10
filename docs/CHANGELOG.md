@@ -1,3 +1,9 @@
+## 10 November 2026 — protected native checkout and launch ownership core
+
+- Connect the exact protected visits preview button to original backend freeze, genuine CCP, QRIS, ticket and automatic purchased output. H5-C runtime6e059cd:852 backend/98 native/34 Apps Script local PASS; exact four-job CI42768843056 SUCCESS.
+- Add trusted global pre-device launch-owner core; preserve original child/worker/camera/history until actual drain, reject empty/foreign history read-only. Eight new launch methods/38 affected PASS; final new-source regression/CI pending.
+- Reuse original engines/guards; no default merchant activation or commercial/account/device acceptance. [Scope/evidence/next L2 entry](qa/portrait-v2-sandbox/PP06-PROTECTED-LAUNCH-2026-11-10.md).
+
 > **2026-11-09 B5:** protected live-frozen native continuation and reused checkout views now drive original backend proof/ticket/receipt/paid delivery with automatic batches. BUG-050 preserves NEXT during delayed visible ACK. Actual child/native original retake/output verified; default launcher/health and protected claim/release/freeze remain gated. [Evidence](qa/portrait-v2-sandbox/PP05-PROTECTED-NATIVE-DELIVERY-2026-11-09.md).
 
 ## 9 November 2026 — protected backend paid-delivery seam
