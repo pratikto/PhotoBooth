@@ -74,19 +74,27 @@ def _original_context(root, config):
             stream.flush()
             os.fsync(stream.fileno())
     except FileExistsError:
-        with path.open('rb') as stream:
-            raw = stream.read(4097)
-        def unique(pairs):
-            value = {}
-            for key, item in pairs:
-                if key in value:
-                    raise ValueError('Ambiguous original host context')
-                value[key] = item
-            return value
-        saved = json.loads(raw, object_pairs_hook=unique) if len(raw) <= 4096 else None
-        if (type(saved) is not dict or type(saved.get('version')) is not int
-                or saved != expected):
-            raise ValueError('Original Sandbox host context requires review')
+        require_original_host_context(root, config)
+
+
+def require_original_host_context(root, config):
+    """Read/validate the SAME original context without its create branch."""
+    expected = {'version': 1, 'mode': 'sandbox', 'merchant_id': config.merchant_id,
+                'booth_id': config.booth_id, 'order_version': ORDER_VERSION}
+    path = checked_path(root/'host-context.json')
+    with path.open('rb') as stream:
+        raw = stream.read(4097)
+    def unique(pairs):
+        value = {}
+        for key, item in pairs:
+            if key in value:
+                raise ValueError('Ambiguous original host context')
+            value[key] = item
+        return value
+    saved = json.loads(raw, object_pairs_hook=unique) if len(raw) <= 4096 else None
+    if (type(saved) is not dict or type(saved.get('version')) is not int
+            or saved != expected):
+        raise ValueError('Original Sandbox host context requires review')
 
 
 class SandboxHostRuntime:

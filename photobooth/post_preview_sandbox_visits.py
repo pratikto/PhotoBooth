@@ -20,13 +20,14 @@ from photobooth.post_preview_bootstrap import SandboxBackendProcess
 from photobooth.post_preview_client import PostPreviewClient
 from photobooth.post_preview_handoff_client import PostPreviewHandoffClient
 from photobooth.post_preview_host import SandboxHostConfig
-from photobooth.post_preview_host_fulfillment import SandboxHostFulfillment
+from photobooth.post_preview_host_fulfillment import SandboxHostFulfillment,validate_original_printer_config
 from photobooth.post_preview_isolation import OriginalMockIsolation
 from photobooth.post_preview_readiness import LocalChargeReadiness
 from photobooth.post_preview_readiness_bridge import WorkerReadinessServer
 from photobooth.post_preview_sandbox_handoff import require_acked_worker_receipt
 from photobooth.post_preview_store import DraftHeld,DraftLease
 from photobooth.post_preview_worker_fence import WorkerFenceKey,NativeWorkerRetirement
+from photobooth.post_preview_visit_history import require_free_visit_history,review_before_original_worker
 from photobooth.printer import PrinterConfig
 
 _RETIRE_EVENTS=frozenset({'USER_CANCEL','APP_SUSPENDED','INACTIVITY_EXPIRED',
@@ -46,7 +47,7 @@ class OriginalSandboxVisits:
                 or type(legacy) is not CheckoutStore or not callable(qr_loader)
                 or printer_dial is not None and not callable(printer_dial)):
             raise DraftHeld('Exact trusted original launcher dependencies required')
-        SandboxHostFulfillment(printer_config,WorkerFenceKey.create())  # Pure validation before root I/O.
+        validate_original_printer_config(printer_config)  # No key minted for validation.
         self._config,self._printer,self._legacy=config,printer_config,legacy
         self._camera,self._qr_loader,self._dial=camera,qr_loader,printer_dial
         self._lock=threading.RLock()
@@ -80,25 +81,12 @@ class OriginalSandboxVisits:
 
     def _free_history(self):
         with self.ledger.write():
-            drafts=list(self.ledger.db.execute('SELECT * FROM pp_drafts'))
-            for draft in drafts:
-                if (draft['booth_id']!=self._config.booth_id
-                        or not draft['closed'] or draft['lifecycle']!='ISOLATED'):
-                    raise DraftHeld('Original booth has an unresolved visitor')
-                operation=self.ledger.db.execute('''SELECT * FROM pp_isolation_ops
-                    WHERE draft_id=? AND booth_id=? AND original_generation=? AND state='ACKED' ''',
-                    (draft['draft_id'],draft['booth_id'],draft['generation']-1)).fetchone()
-                if not operation:
-                    raise DraftHeld('Original exact protected release required')
-                require_acked_worker_receipt(self.ledger,operation)
-                financial=self._financial(draft)
-                if (financial!=operation['financial_class'] and
-                        (operation['financial_class'],financial)!=('TERMINAL_UNPAID','PAID_OWED')):
-                    raise DraftHeld('Original released financial classification changed')
+            require_free_visit_history(self.ledger.db,self._config.booth_id)
 
     def _open(self):
         if self._backend is not None or self._service is not None:
             raise DraftHeld('Original child/native handles must finish first')
+        review_before_original_worker(self._launcher,self._config)
         self._key=WorkerFenceKey.create()
         fulfillment=SandboxHostFulfillment(self._printer,self._key)
         worker,child=socket.socketpair()

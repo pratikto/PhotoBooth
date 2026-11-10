@@ -41,7 +41,12 @@ def require_acked_worker_receipt(ledger, operation):
     authenticated with the private current capability BEFORE original ACK.
     No customer-provided content or current-key reissuance is accepted here.
     """
-    rows=ledger.db.execute('SELECT * FROM pp_worker_retirements WHERE operation_id=? '
+    return require_acked_worker_receipt_from_db(ledger.db, operation)
+
+
+def require_acked_worker_receipt_from_db(db, operation):
+    """Same original immutable SQL verifier in a caller-owned read snapshot."""
+    rows=db.execute('SELECT * FROM pp_worker_retirements WHERE operation_id=? '
         'AND backend_verified_at IS NOT NULL',(operation['operation_id'],)).fetchall()
     if (operation['state']!='ACKED' or len(rows)!=1
             or rows[0]['backend_verified_at']!=operation['acknowledged_at']):
@@ -49,8 +54,8 @@ def require_acked_worker_receipt(ledger, operation):
     receipt=rows[0]
     try:
         frame=json.loads(receipt['frame_json'])
-        from photobooth.post_preview_worker_fence import _original
-        original=_original(ledger,operation['operation_id'])
+        from photobooth.post_preview_worker_fence import _original_from_db
+        original=_original_from_db(db,operation['operation_id'])
         stamp=frame['observed_at']
         if (type(frame) is not dict or type(frame.get('version')) is not int
                 or type(frame.get('generation')) is not int

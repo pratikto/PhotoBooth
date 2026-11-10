@@ -1,5 +1,8 @@
 """Trusted original manager with actual child replacement; external effects fake."""
 import hashlib
+from contextlib import closing
+from dataclasses import replace
+import sqlite3
 from pathlib import Path
 import tempfile
 import threading
@@ -23,6 +26,115 @@ from photobooth.printer import PrinterConfig
 
 
 class OriginalSandboxVisitTests(unittest.TestCase):
+    def saved_row(self, query, parameters=()):
+        path = self.config.private_root/'drafts.sqlite3'
+        with closing(sqlite3.connect(path.as_uri()+'?mode=ro', uri=True)) as db:
+            db.row_factory = sqlite3.Row
+            row = db.execute(query, parameters).fetchone()
+            return dict(row) if row else None
+
+    def test_constructor_validates_original_printer_without_minting_a_key(self):
+        self.shutdown(self.visits)
+        with patch('photobooth.post_preview_sandbox_visits.WorkerFenceKey.create',
+                   side_effect=AssertionError('Validation is not an epoch')) as mint:
+            manager = self.manager()
+            self.addCleanup(self.shutdown, manager)
+            self.assertEqual(0, mint.call_count)
+        self.assertIsNone(manager._key)
+
+    def test_unacked_boot_holds_before_minting_a_replacement_key_or_child(self):
+        service = self.binding.service
+        service.start(get_templates(), {'template_a': 1})
+        service.retire('USER_CANCEL')
+        draft = dict(service.ledger.db.execute('SELECT * FROM pp_drafts').fetchone())
+        self.shutdown(self.visits)
+        manager = self.manager()
+        self.addCleanup(self.shutdown, manager)
+        with patch('photobooth.post_preview_sandbox_visits.WorkerFenceKey.create',
+                   side_effect=AssertionError('Unknown boot must not mint a key')) as mint:
+            with self.assertRaises(DraftHeld):
+                manager.start()
+            self.assertEqual(0, mint.call_count)
+        self.assertIsNone(manager._backend)
+        self.assertEqual(draft, self.saved_row('SELECT * FROM pp_drafts'))
+
+    def test_actual_live_backend_orphan_holds_before_key_or_second_child(self):
+        from tests.test_post_preview_host import SandboxHostTests
+        self.shutdown(self.visits)
+        helper = SandboxHostTests(methodName='runTest')
+        self.addCleanup(helper.doCleanups)
+        orphan = helper.launch(self.config)
+        manager = self.manager()
+        self.addCleanup(self.shutdown, manager)
+        with patch('photobooth.post_preview_sandbox_visits.WorkerFenceKey.create',
+                   side_effect=AssertionError('Live orphan cannot mint')) as mint:
+            with self.assertRaises(DraftHeld):
+                manager.start()
+            self.assertEqual(0, mint.call_count)
+        self.assertIsNone(manager._backend)
+        self.assertIsNone(orphan.process.poll())
+        self.assertTrue(orphan.stop(timeout=10))
+
+    def test_corrupt_original_context_holds_before_key_and_is_preserved(self):
+        self.shutdown(self.visits)
+        path = self.config.private_root/'host-context.json'
+        path.write_bytes(b'{"version":1,"version":1}')  # Isolated corrupt fixture.
+        manager = self.manager(); self.addCleanup(self.shutdown, manager)
+        with patch('photobooth.post_preview_sandbox_visits.WorkerFenceKey.create') as mint:
+            with self.assertRaises(DraftHeld): manager.start()
+            self.assertEqual(0, mint.call_count)
+        self.assertTrue(path.read_bytes() == b'{"version":1,"version":1}')
+        self.assertIsNone(manager._backend)
+
+    def test_missing_db_orphan_wal_and_unknown_root_never_create_history(self):
+        for merchant, name in (('MWAL', 'drafts.sqlite3-wal'), ('MUNKNOWN', 'customer-photo.jpg')):
+            config = replace(self.config, merchant_id=merchant)
+            manager = self.manager(config); self.addCleanup(self.shutdown, manager)
+            path = config.private_root/name
+            path.write_bytes(b'original-public-fixture-preserved')
+            with patch('photobooth.post_preview_sandbox_visits.WorkerFenceKey.create') as mint:
+                with self.assertRaises(DraftHeld): manager.start()
+                self.assertEqual(0, mint.call_count)
+            self.assertIsNone(manager._backend)
+            self.assertFalse((config.private_root/'drafts.sqlite3').exists())
+            self.assertTrue(path.read_bytes() == b'original-public-fixture-preserved')
+
+    def test_readonly_review_observes_unacked_owner_committed_in_original_wal(self):
+        from photobooth.post_preview_store import PostPreviewStore
+        self.shutdown(self.visits)
+        store = PostPreviewStore(self.config.private_root/'drafts.sqlite3')
+        self.addCleanup(store.close)
+        lease = store.create('PB001', 'wal-original-owner', {'template_a': 1})
+        path = self.config.private_root/'drafts.sqlite3'
+        wal = Path(str(path)+'-wal'); shm = Path(str(path)+'-shm')
+        before = {p: hashlib.sha256(p.read_bytes()).hexdigest() for p in (path, wal)}
+        self.assertTrue(shm.exists())
+        manager = self.manager(); self.addCleanup(self.shutdown, manager)
+        with patch('photobooth.post_preview_sandbox_visits.WorkerFenceKey.create') as mint:
+            with self.assertRaises(DraftHeld): manager.start()
+            self.assertEqual(0, mint.call_count)
+        self.assertEqual(before, {p: hashlib.sha256(p.read_bytes()).hexdigest() for p in before})
+        self.assertTrue(shm.exists())
+        self.assertEqual(lease.draft_id, self.saved_row('SELECT * FROM pp_drafts')['draft_id'])
+
+    def test_late_history_after_precheck_still_hits_original_post_open_hold(self):
+        from photobooth.post_preview_store import PostPreviewStore
+        from photobooth.post_preview_visit_history import review_before_original_worker
+        self.shutdown(self.visits)
+        manager = self.manager(); self.addCleanup(self.shutdown, manager)
+        def changed(*args):
+            review_before_original_worker(*args)
+            store = PostPreviewStore(self.config.private_root/'drafts.sqlite3')
+            try: store.create('PB001', 'late-original-owner', {'template_a': 1})
+            finally: store.close()
+        with patch('photobooth.post_preview_sandbox_visits.review_before_original_worker', side_effect=changed):
+            with self.assertRaises(DraftHeld): manager.start()
+        self.assertIsNotNone(manager._backend)
+        self.assertFalse(manager._admitted)
+        self.assertIsNone(manager._service.lease)
+        self.assertEqual('late-original-owner', self.saved_row('SELECT * FROM pp_drafts')['visit_id'])
+
+
     def setUp(self):
         directory=tempfile.TemporaryDirectory();self.addCleanup(directory.cleanup)
         self.root=Path(directory.name)
@@ -37,8 +149,8 @@ class OriginalSandboxVisitTests(unittest.TestCase):
         self.addCleanup(self.shutdown,self.visits)
         self.binding=self.visits.start()
 
-    def manager(self):
-        return OriginalSandboxVisits(self.config,self.printer,self.legacy,
+    def manager(self,config=None):
+        return OriginalSandboxVisits(config or self.config,self.printer,self.legacy,
             camera=CachedCamera(self.frame,0),qr_loader=lambda _:Image.new('RGB',(200,200),'white'),
             printer_dial=lambda *_:SimpleNamespace(close=lambda:None))
 
@@ -237,11 +349,12 @@ class OriginalSandboxVisitTests(unittest.TestCase):
         other=self.manager();self.addCleanup(self.shutdown,other)
         with self.assertRaises(DraftHeld):other.start()
         with self.assertRaises(DraftHeld):other.ensure_new_visitor_ready()
-        self.assertIsNone(other._service.lease)
-        row=other.ledger.db.execute('SELECT * FROM pp_drafts').fetchone()
+        self.assertIsNone(other._service)
+        self.assertIsNone(other._backend)
+        row=self.saved_row('SELECT * FROM pp_drafts')
         self.assertEqual(lease.draft_id,row['draft_id']);self.assertEqual(0,row['closed'])
         self.assertEqual('APP_SUSPENDED',row['lifecycle'])
-        self.assertEqual(self.config.private_root,other._service.root)
+        self.assertFalse(other._admitted)
 
     def test_actual_original_collector_callback_must_exit_before_any_release_or_new_child(self):
         service=self.binding.service;self.frozen(self.binding)
@@ -337,14 +450,15 @@ class OriginalSandboxVisitTests(unittest.TestCase):
         def review_holds():
             try:self.visits.ensure_new_visitor_ready()
             except DraftHeld:
-                if self.visits._epoch>original_epoch:return
+                if self.visits._service is None:return
                 raise
             self.fail('Financial review permitted new native admission')
         self.retry(review_holds)
         with self.assertRaises(DraftHeld):self.visits.ensure_new_visitor_ready()
-        self.assertIsNone(self.visits._service.lease)
-        self.assertEqual(self.config.private_root,self.visits._service.root)
-        self.assertEqual(1,self.visits.ledger.db.execute('SELECT review_required FROM pp_purchase_finance').fetchone()[0])
+        self.assertEqual(original_epoch,self.visits._epoch)
+        self.assertIsNone(self.visits._service)
+        self.assertIsNone(self.visits._backend)
+        self.assertEqual(1,self.saved_row('SELECT review_required FROM pp_purchase_finance')['review_required'])
 
     def test_fresh_native_command_blocks_new_admission_without_rotating_original_child(self):
         service=self.binding.service;old=self.visits._backend.process

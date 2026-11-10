@@ -1,3 +1,19 @@
+## BUG-062 — unresolved boot could mint a replacement worker key before hold (10 November 2026)
+
+S2 / original trusted startup SOURCE FIXED, full recovery remains unavailable.
+At d4d64a4 the manager generated a new key and started a backend before original
+history review. Test-first actual unACKed-root case FAIL0.897s on key creation.
+The same manager now reviews original history read-only (including WAL) and
+probes the exact backend-owner kernel lease before mint/spawn. The original
+post-open check remains to hold a late history change. Unknown/corrupt/foreign
+history and live backend orphan retain their original files/state; no new key,
+child, ACK or media adoption. Pure printer validation no longer mints an unused
+key. Original finance and durable verified-receipt SQL are shared verbatim.
+27 manager PASS70.801s,64 policy/receipt/printer PASS30.558s,38 caller/enrollment/
+shutdown PASS45.946s, zero failures/errors/skips. Final regression/CI pending.
+OS escrow remains UNMOUNTED, no real provider/device effects.
+[Bounded contract and next original pre-START child identity task](qa/portrait-v2-sandbox/PP06-WINDOWS-WORKER-CUSTODY-2026-11-10.md).
+
 ## BUG-061 — float rounding retained private ticket at its exact deadline (10 November 2026)
 
 S2 / original visible-ticket timer SOURCE FIXED. At be44bd5, CI42810724202

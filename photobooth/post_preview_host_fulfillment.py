@@ -15,25 +15,7 @@ class SandboxHostFulfillment:
     def __post_init__(self):
         if type(self.printer_config) is not PrinterConfig or type(self.worker_key) is not WorkerFenceKey:
             raise ValueError('Exact private original fulfillment dependencies required')
-        config=self.printer_config
-        for host in (config.lan_host,config.wifi_host):
-            if type(host) is not str or host and re.fullmatch(r'[A-Za-z0-9.-]{1,253}',host) is None:
-                raise ValueError('Bounded original printer configuration required')
-        if (any(type(port) is not int or not 1<=port<=65535 for port in (config.lan_port,config.wifi_port))
-                or not finite_number(config.network_timeout) or not .1<=config.network_timeout<=30
-                or type(config.windows_printer_name) is not str or len(config.windows_printer_name)>256
-                or any(ord(c)<32 or ord(c)==127 for c in config.windows_printer_name)
-                or any(value is not None and (type(value) is not int or not 1<=value<=65535)
-                       for value in (config.usb_vendor_id,config.usb_product_id))
-                or (config.usb_vendor_id is None)!=(config.usb_product_id is None)
-                or config.usb_device_path is not None and (type(config.usb_device_path) is not str
-                    or re.fullmatch(r'/dev/usb/lp[0-9]{1,3}',config.usb_device_path) is None)
-                or type(config.print_width_dots) is not int or config.print_width_dots!=576
-                or type(config.dither_mode) is not str or config.dither_mode not in DITHER_MODES
-                or type(config.dither_threshold) is not int or not 0<=config.dither_threshold<=255
-                or not (config.lan_host or config.wifi_host or config.windows_printer_name
-                        or config.usb_vendor_id is not None or config.usb_device_path)):
-            raise ValueError('Explicit original POS80 printer configuration required')
+        validate_original_printer_config(self.printer_config)
 
     def __repr__(self):
         return '<SandboxHostFulfillment: private original child dependencies>'
@@ -66,3 +48,27 @@ class SandboxHostFulfillment:
             return bundle
         except (ValueError,TypeError,KeyError):
             raise ValueError('Exact private original fulfillment bundle required') from None
+
+
+def validate_original_printer_config(config):
+    """Pure original configuration policy; never mint a worker capability."""
+    if type(config) is not PrinterConfig:
+        raise ValueError('Exact private original fulfillment dependencies required')
+    for host in (config.lan_host,config.wifi_host):
+        if type(host) is not str or host and re.fullmatch(r'[A-Za-z0-9.-]{1,253}',host) is None:
+            raise ValueError('Bounded original printer configuration required')
+    if (any(type(port) is not int or not 1<=port<=65535 for port in (config.lan_port,config.wifi_port))
+            or not finite_number(config.network_timeout) or not .1<=config.network_timeout<=30
+            or type(config.windows_printer_name) is not str or len(config.windows_printer_name)>256
+            or any(ord(c)<32 or ord(c)==127 for c in config.windows_printer_name)
+            or any(value is not None and (type(value) is not int or not 1<=value<=65535)
+                   for value in (config.usb_vendor_id,config.usb_product_id))
+            or (config.usb_vendor_id is None)!=(config.usb_product_id is None)
+            or config.usb_device_path is not None and (type(config.usb_device_path) is not str
+                or re.fullmatch(r'/dev/usb/lp[0-9]{1,3}',config.usb_device_path) is None)
+            or type(config.print_width_dots) is not int or config.print_width_dots!=576
+            or type(config.dither_mode) is not str or config.dither_mode not in DITHER_MODES
+            or type(config.dither_threshold) is not int or not 0<=config.dither_threshold<=255
+            or not (config.lan_host or config.wifi_host or config.windows_printer_name
+                    or config.usb_vendor_id is not None or config.usb_device_path)):
+        raise ValueError('Explicit original POS80 printer configuration required')

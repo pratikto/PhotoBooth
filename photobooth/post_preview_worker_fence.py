@@ -76,9 +76,13 @@ def install_worker_receipts(ledger):
 
 
 def _original(ledger, operation_id):
+    return _original_from_db(ledger.db, operation_id)
+
+
+def _original_from_db(db, operation_id):
     if not _hex(operation_id, 32):
         raise DraftHeld('Exact original isolation operation required')
-    row=ledger.db.execute('''SELECT o.*,d.visit_id,d.generation,d.lifecycle,d.closed,
+    row=db.execute('''SELECT o.*,d.visit_id,d.generation,d.lifecycle,d.closed,
         i.purchase_group_id,i.contract_sha256 FROM pp_isolation_ops o
         JOIN pp_drafts d USING(draft_id) LEFT JOIN pp_checkout_intents i USING(draft_id)
         WHERE o.operation_id=?''',(operation_id,)).fetchone()

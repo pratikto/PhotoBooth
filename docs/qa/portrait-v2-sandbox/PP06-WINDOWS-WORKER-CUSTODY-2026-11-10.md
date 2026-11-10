@@ -297,3 +297,59 @@ venv/cache and lab Xvfb are local only; obsolete privacy stash is superseded and
 must not be applied. Source rollback only; retain all original data/custody.
 FIRST next task is C2c above, then C3; never enable recovery from a restored key
 or claimed process birth alone. Windows remains first; Ubuntu packaging deferred.
+
+## C2c1 contract BEFORE source — original pre-key history/orphan hold
+
+At base d4d64a4, first share the original financial classification and ACKed
+receipt SQL policy between live `_free_history` and read-only pre-open review.
+No replacement engine or fake ledger/provider: extract original SQL to helpers
+and retain the original guarded entry wrappers. Reuse exact original host-context
+validation without its create branch. Read-only SQLite must observe WAL, never
+use immutable=1 to hide it, migrate schema, synthesize history or modify rows.
+
+Under the same actual native LaunchLease, reject unknown/missing/corrupt context/
+DB, orphan WAL/SHM or unresolved/foreign/missing-receipt history before generating
+a worker key or spawning the backend. A genuinely empty root permits only the
+known original lock directories; it does not manufacture a FREE/customer row.
+Probe the exact original backend-owner kernel lease to hold a live orphan before
+key creation. Actual child must still acquire its own original lease; retain
+the post-open original history check and all fresh backend admission guards.
+The outer protected launcher still owns the original global lease independently.
+
+Remove constructor's unused random worker key for printer validation by sharing
+the exact existing pure printer validator, not supplying a dummy key/provider.
+Test-first actual unACKed-root and actual orphan cases must show no new key/
+child, preserved DB/WAL/SHM/media, same-root accepted restart, original receipt/
+financial cases and actual kernel contention. Keep C1/C2a/C2b custody UNMOUNTED;
+this increment does not restore an old worker, sign a receipt or enable recovery.
+Next C2c2 is durable original child identity before START plus epoch lifecycle.
+
+### C2c1 implemented and focused verification
+
+BUG-062 test-first actual unresolved-root case FAIL0.897s at d4d64a4:
+WorkerFenceKey.create was called before hold. Corrected case PASS0.859s.
+Mounted original pre-key review uses the original native lease, actual independent
+backend-owner lease, same host-context validation and read-only original DB/WAL
+snapshot. It cannot create/migrate history, retire a visit, ACK or grant media.
+The original post-open review still catches a concurrent late owner change.
+
+Original financial SQL extracted verbatim after db-receiver substitution;
+original guarded mock/protected wrappers remain. Original durable verified-ACK
+SQL is shared with the preflight, not replaced by a fresh key. Existing policy
+checks remain, with explicit schema/version/required-table review even for empty
+history. Genuine fresh root permits only known original native/backend lock
+metadata. Constructor printer validation reuses the original pure validator and
+no longer creates an unused random worker key or substitutes a dummy key.
+
+Seven new methods plus strengthened existing assertions prove no key/child for
+unACKed boot, actual live backend orphan, corrupt context, missing DB/orphan WAL
+and unknown media; read-only review sees the original WAL owner and preserves
+DB/WAL bytes and SHM presence. Late state after precheck still hits the original
+post-open hold. Existing finance-after-ACK case now holds before a new epoch/
+child rather than after it; same-root A-to-B-to-A and original proof remain.
+
+Focused27 manager PASS70.801s;64 finance/receipt/printer PASS30.558s;38 original
+launcher/shutdown/enrollment PASS45.946s. Zero failures/errors/skips. Complete
+registry now955 backend methods (previous948+7), native100 unchanged. Final
+full regression/CI pending at this micro-checkpoint. C1/C2a/C2b escrow remains
+UNMOUNTED; C2c2/C3 recovery is NOT implemented. Commercial NOT_READY, health False.
