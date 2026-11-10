@@ -150,6 +150,15 @@ class OriginalSandboxVisits:
                 raise DraftHeld('Original accepted release generation changed')
             require_acked_worker_receipt(self.ledger,operation)
 
+    def _release_ack_is_durable(self):
+        if self._release is None:return False
+        with self.ledger.write():
+            operation=self.ledger.db.execute('SELECT state FROM pp_isolation_ops WHERE operation_id=?',
+                                             (self._release.operation_id,)).fetchone()
+            accepted=bool(operation and operation['state']=='ACKED')
+        if accepted:self._accepted_release()
+        return accepted
+
     def _close_handles(self):
         """Actual collector/file/child exit before any original ledger close."""
         if self._server is not None and not self._server.stop(timeout=0):return False
@@ -242,7 +251,7 @@ class OriginalSandboxVisits:
             if self._opening:self.ensure_new_visitor_ready()
             if self._service is None:raise DraftHeld('Original native claim context unavailable')
             service=self._service;group=match.group(1)
-            if service._hidden.is_set() and (self._acked or self._closing):
+            if service._hidden.is_set() and (self._acked or self._closing or self._release_ack_is_durable()):
                 # Finish ONLY the already accepted close/open. Its old HTTP or
                 # SQLite handle may have closed. New backend proof verification
                 # below remains mandatory before any original media restore.

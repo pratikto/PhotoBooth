@@ -23,15 +23,22 @@
     },
     "windows": {
       "job_id": 129552155829,
-      "status": "in_progress",
-      "conclusion": null,
-      "unit_summary": null
-    }
+      "status": "completed",
+      "conclusion": "success",
+      "run": 816,
+      "seconds": 797.434,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "timed_case_ids": 816
+    },
+    "conclusion": "success"
   },
   "log_sha256": {
     "local_backend": "050c9aa02e91b6e386322c541179dc05f8e0cbf3e0fa8b2fdb3b16f9c06e96c9",
     "ci_ubuntu": "1329d4139419725da7ab4435cfa2e054342b6093aed3dbeaca846e3cd2bef305",
-    "ci_native": "937f57dcee1861cfc5a2b40e4974997d650a7fe40d05d1a26b827f9f28c46d96"
+    "ci_native": "937f57dcee1861cfc5a2b40e4974997d650a7fe40d05d1a26b827f9f28c46d96",
+    "ci_windows": "ec8c7976be1574b87731e57c71a1c8a92516e96e03efb243dad6c45d7969f6cd"
   },
-  "limits": "Current registered backend full; exact-source CI native, full completed logs inspected. Windows pending, not PASS. Actual Kivy customer cycle/proxy/freeze/full launcher/global ownership/boot/remedy and actual device/account/final qualification open. Source unmounted, merchant health False."
+  "limits": "All three exact-source jobs SUCCESS; completed logs inspected. Existing15-minute Windows budget retained; earlier E/F cancellations preserved. Original native/facade core cycle only; async UI/freeze/full launcher/global ownership/boot/remedy/device/account/final qualification still open, commercial NOT_READY."
 }

@@ -1,0 +1,35 @@
+{
+  "base": "2beeb3914036ce944d31d71b80ba07482780cf78",
+  "bug": "BUG-056",
+  "stage": "B6-H1 original returning claim after lost ACK; async UI/privacy hooks still pending",
+  "initial": {
+    "run": 1,
+    "errors": 1,
+    "seconds": 15.621
+  },
+  "corrected_single": {
+    "run": 1,
+    "seconds": 4.604,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0
+  },
+  "focused": {
+    "run": 64,
+    "seconds": 83.362,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0
+  },
+  "command": "MEONG_CI_PROGRESS=1 python tools/run_kiosk_unittests.py test_post_preview_sandbox_visits test_post_preview_handoff_client test_post_preview_claim_requests test_post_preview_sandbox_handoff test_kiosk_unittest_progress",
+  "source_sha256": {
+    "photobooth/post_preview_sandbox_visits.py": "11817a7dce1d35b77e001098a1327551cc728822b49592281580b3b466cba026",
+    "tests/test_post_preview_sandbox_visits.py": "78df4a7c46d8175304d1d8a47d687749911e1252752e206a4abb3799ccc4af88"
+  },
+  "log_sha256": {
+    "pp06-return-lost-ack-before.log": "f8f6db164d1390923deb7caf6a7468e470fa124f50d5507ecc467617557eaff0",
+    "pp06-return-lost-ack-corrected.log": "74b01ffd04984a9b2a25ae513bf7d03bd21e25983a4d0b2cefcc14852b46afec",
+    "pp06-return-lost-ack-related.log": "60fad16151932f66304b0bd6dea82e92dd858dbd75b951557334b4f7e14e92f4"
+  },
+  "limits": "Actual separate fake-external child/native-facade cycle; no default/merchant/real money/refund/paper/cloud/deploy. New full-source/CI pending. G CI SUCCESS remains older exact source e2373e7."
+}

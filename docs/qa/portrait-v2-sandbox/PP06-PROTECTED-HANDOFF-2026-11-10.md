@@ -566,3 +566,39 @@ NEXT implementation is precisely the bounded async control/native integration
 contract above, not another backend rewrite. Complete freeze/launcher/global
 lease/boot/remedy and actual qualification are separate source/device gates.
 Current customer profile remains unmounted; commercial NOT_READY.
+
+## B6-G final exact-source CI
+
+CI42732030594 is now **all three SUCCESS** at runtime/testse2373e7: Windows816
+PASS797.434s, Ubuntu816 PASS368.952s, native88 PASS238.833s; completed logs
+inspected, zero unit failures/errors/skips. Windows logged all816 static timing
+IDs within the existing15-minute budget. Earlier E/F cancellations remain in
+the record; diagnostics are not claimed to have caused a performance cure.
+[Final source-matched evidence](evidence/pp06-g-full-2026-11-10.json).
+This green source is a validated core checkpoint, not commercial/native-launcher
+acceptance; the following new correction has its own verification scope.
+
+## B6-H1 returning claim after a lost ACK
+
+BUG-056 reproduced as one actual returning-claim ERROR15.621s. Lost ACK was
+already handled by ensure_new_visitor_ready, but the returning-proof path first
+called backend claim preflight. If the original ACK had committed while its
+reply was lost, preflight could legitimately reacquire the free original owner
+before the manager finished retiring the old context, leaving the returning
+native flow held. No new money/photo/receipt or second entitlement occurred.
+
+Before preflight, the manager now checks its SAME original release operation for
+durable ACK and validates the accepted worker/owner/generation evidence. It then
+replays that exact original ACK/close/open, rather than performing another claim
+against the old context. Only the new backend's original proof and fresh
+settlement may grant the native restore. The request identity/lease are retained:
+corrected case returns generation4, one request and one original isolation,
+OWED unchanged. It does not treat a caller boolean or socket closure as ACK.
+
+Corrected single PASS4.604s; **64 affected PASS83.362s**, zero failures/errors/
+skips. [Exact failure/source/log evidence](evidence/pp06-return-lost-ack-2026-11-10.json).
+G complete CI remains scoped to e2373e7; this new source's final full/CI is
+pending. NEXT remains H's actual privacy/late-claim hooks and async public
+control, then original Kivy Ads/recovery A/B/A at both sizes. Freeze/complete
+launcher/global lease/boot/remedy/actual qualification remain unfinished and
+default merchant health remains False. No unrelated runtime WIP is included.

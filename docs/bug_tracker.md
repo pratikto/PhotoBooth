@@ -1,3 +1,15 @@
+## BUG-056 — returning proof could redeem before finishing a lost original ACK (10 November 2026)
+
+S2 / trusted-manager integration SOURCE FIXED; original customer profile unmounted.
+One actual returning-claim reproduction ERRORed after the backend ACK committed
+but its reply was lost: claim preflight could reacquire the original owner before
+old-context rotation finished. The manager now validates/replays the SAME durable
+original ACK before preflight; the new backend still requires original proof and
+fresh settlement. One request/original operation/generation4 and OWED retained.
+Corrected single PASS4.604s;64 affected PASS83.362s, zero failures/errors/skips.
+New full/CI pending; no actual customer/money incident.
+[Scope/failure/source evidence](qa/portrait-v2-sandbox/PP06-PROTECTED-HANDOFF-2026-11-10.md).
+
 ## BUG-055 — returning proof retried the stopped original HTTP listener after ACK (10 November 2026)
 
 S2 / new launcher integration SOURCE FIXED before customer mounting. Initial

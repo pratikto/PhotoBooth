@@ -163,6 +163,30 @@ class OriginalSandboxVisitTests(unittest.TestCase):
         self.assertEqual(1,fresh.service.ledger.db.execute('SELECT COUNT(*) FROM pp_isolation_ops').fetchone()[0])
         self.assertEqual((1,3),tuple(fresh.service.ledger.db.execute('SELECT closed,generation FROM pp_drafts').fetchone()))
 
+    def test_returning_paid_claim_finishes_lost_ack_before_preflight_can_reacquire_old_owner(self):
+        group,proof=self.paid(self.binding);self.binding.service.retire('RESULT_TIMEOUT')
+        original=self.visits._client._transport._call;lost=[]
+        def reply(*args,**kwargs):
+            result=original(*args,**kwargs)
+            if args[1].endswith('/ack') and not lost:
+                lost.append(True);raise OSError('Synthetic lost original ACK reply')
+            return result
+        with patch.object(self.visits._client._transport,'_call',side_effect=reply):
+            def lost_ack():
+                try:self.visits.recover_paid(proof)
+                except DraftHeld:
+                    if lost:return
+                    raise
+                self.fail('Expected original ACK response loss')
+            self.retry(lost_ack)
+            result=self.retry(lambda:self.visits.recover_paid(proof))
+        self.assertEqual('RESTORED',result['state'])
+        service=result['binding'].service
+        self.assertEqual(4,service.lease.generation)
+        self.assertEqual(1,service.ledger.db.execute('SELECT COUNT(*) FROM pp_protected_claim_ops').fetchone()[0])
+        self.assertEqual(1,service.ledger.db.execute('SELECT COUNT(*) FROM pp_isolation_ops').fetchone()[0])
+        self.assertEqual('OWED',service.ledger.db.execute('SELECT status FROM pp_paid_services').fetchone()[0])
+
     def test_true_stop_flag_without_actual_child_exit_cannot_publish_new_binding(self):
         service=self.binding.service;service.start(get_templates(),{'template_a':1});service.retire('USER_CANCEL')
         process=self.visits._backend
