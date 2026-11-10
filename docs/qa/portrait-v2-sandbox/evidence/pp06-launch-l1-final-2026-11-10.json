@@ -1,0 +1,66 @@
+{
+  "source": "ea2554cc828257e8b6157d3cfd8277240f76fdc3",
+  "source_sha256": {
+    "photobooth/post_preview_launch.py": "4ccce780c09820e96d2970891c18ca53b04f953048f39241589a2c92edd843df",
+    "tests/test_post_preview_launch.py": "b17f4a53985200f832d73dfbcda3fb094a9bdaa1a43815197696ef89a29d7eef",
+    "tools/run_post_preview_ci.py": "d3e1903d13b81bf1e7ad71c9fd7f17d2a55f9bc36a306353025827c129858f6a",
+    "photobooth/kiosk_v2/post_preview_visits_app.py": "0be04ce0800618eb33229995f3594168e6994f70686c963d6d6f96b28bbd5dda",
+    "tests/test_post_preview_freeze_widgets.py": "ef81e28873556dc6446685bcae975de883f7d149f4bda5cc9c5dc648b2cd8ac1",
+    ".github/workflows/post-preview-qris.yml": "68561fd0e543111a54c816899bbe4f10a7be85d81c032a35e8da839d0cdba368"
+  },
+  "local_backend": {
+    "run": 860,
+    "seconds": 410.733,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "command": "MEONG_CI_PROGRESS=1 .venv/bin/python tools/run_post_preview_ci.py all",
+    "log_sha256": "07e28916a70e0bfdb1dd774117e584c45a4471ce7f5b6293faee2a32de1c215c"
+  },
+  "native_source": "Original native sources/test command unchanged since6e059cd;98 local PASS287.963s and34 Apps Script PASS retained at that exact source. Latest ea2554c native CI98 PASS268.746s, completed log inspected.",
+  "ci": {
+    "run_id": 42770363978,
+    "head_sha": "ea2554cc828257e8b6157d3cfd8277240f76fdc3",
+    "state": "FAILED_WINDOWS_FIXTURE",
+    "native": {
+      "job_id": 129676473075,
+      "run": 98,
+      "seconds": 268.746,
+      "conclusion": "success",
+      "completed_log_inspected": true
+    },
+    "windows_core": {
+      "job_id": 129676473325,
+      "run": 339,
+      "seconds": 367.015,
+      "failures": 0,
+      "errors": 2,
+      "skips": 0,
+      "completed_log_inspected": true,
+      "cause": "Test SQLite transaction context did not close its fixture connection; WinError32 during TemporaryDirectory cleanup. Runtime uses closing already."
+    },
+    "ubuntu_and_windows_delivery": "CANCELLED by matrix failure; no full verdict"
+  },
+  "environment_readiness": {
+    "ignored_local_settings_present": false,
+    "sandbox_merchant_env_pair_present": false,
+    "drive_env_pair_present": false,
+    "printer_env_route_explicit": false,
+    "scope": "Presence checks only; no settings/secret values printed, no account/device operation."
+  },
+  "limits": "L1 owner core only. L2 executable/secure configuration/native stop and supported pre-ACK/orphan boot/remedy/status/ops/final qualification remain unfinished. Not hardware-only blockers; commercial NOT_READY, default health False. No actual money/refund/paper/public upload/deploy. Original owner observations preserved.",
+  "correction": {
+    "runtime_unchanged": true,
+    "test_file_sha256": "69d4964fc4264a535ea54d61309059529c0c6fbfed87e18c8b451b7d3d636588",
+    "affected": {
+      "run": 8,
+      "seconds": 3.51,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "command": ".venv/bin/python tools/run_kiosk_unittests.py test_post_preview_launch",
+    "log_sha256": "7eea1ef70d07a55016d12afbaafaa2ee63c5d9502fd1780e3e820e05eb00a249",
+    "new_source_ci": "PENDING"
+  }
+}

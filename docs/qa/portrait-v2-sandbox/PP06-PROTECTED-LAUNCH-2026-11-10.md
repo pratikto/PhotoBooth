@@ -82,3 +82,22 @@ reader/booth identity/printer/legacy selection and explicit account/external
 consents remain source work. Default merchant health stays False; original
 synthetic pilot remains synthetic-only. Supported boot before ACK, Ubuntu keyring
 login/autostart/reboot/backup, remedy/status/ops and final qualification are open.
+
+## Windows fixture correction contract
+
+L1 runtime/testsea2554c: full local860 PASS410.733s. CI42770363978 native98
+PASS268.746s; Windows core339 had0 failures/2 ERROR367.015s. Both errors are
+WinError32 removing wrong.sqlite3 after the empty/foreign-history subtests.
+Ubuntu and Windows delivery were cancelled by matrix failure; NOT PASS.
+Completed Windows/native logs inspected. The fixture used sqlite3.Connection's
+transaction context manager, which does not close the connection. Runtime's
+read-only validation already uses contextlib.closing; no runtime guard change
+is indicated. Correct the fixture with explicit closing, keep every assertion,
+verify affected methods and matching new-source CI. Do not suppress cleanup,
+collect garbage as a workaround, weaken file locks or drop tests.
+
+Fixture corrected with contextlib.closing; all assertions retained. **8 affected
+PASS3.510s**, zero failures/errors/skips. Runtime is unchanged fromea2554c's
+860 full local PASS; corrected-test exact-source CI pending. First Windows
+failure/cancelled jobs remain in [the final record](evidence/pp06-launch-l1-final-2026-11-10.json).
+Next verify corrected source CI, then L2 secure executable/native mounting.

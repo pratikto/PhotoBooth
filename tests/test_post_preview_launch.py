@@ -1,5 +1,5 @@
 """Actual global launch/child/control/camera ownership; external effects fake."""
-from contextlib import contextmanager
+from contextlib import closing,contextmanager
 from dataclasses import replace
 from pathlib import Path
 import tempfile
@@ -87,7 +87,7 @@ class ProtectedLaunchTests(unittest.TestCase):
         for foreign in (False,True):
             with self.subTest(foreign=foreign),self.fixture() as (launch,config,legacy):
                 history=legacy.parent/'wrong.sqlite3'
-                with sqlite3.connect(history) as db:
+                with closing(sqlite3.connect(history)) as db:
                     if foreign:db.execute('CREATE TABLE foreign_table(value TEXT)')
                 before=history.read_bytes()
                 with self.assertRaises(ProtectedLaunchHeld):self.start(launch,config,history)
