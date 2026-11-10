@@ -42,6 +42,34 @@ or give native/HTTP callers an unseal/release shortcut.
 
 ## Required following boundaries
 
+### C1 implementation and focused verification
+
+Implemented `photobooth/post_preview_worker_custody.py`, still UNMOUNTED.
+It serializes only protected original key ciphertext/non-secret metadata and
+restores the original WorkerFenceKey using the exact existing OS adapters.
+No launcher/backend/GUI/ACK route changed. No key is created by this module.
+Both protectors reject non-exact adapter types, including synthetic/forged
+adapters and subclasses. Errors are fixed/redacted and payloads are bounded.
+
+Local Linux lookup fixture: 10 new tests PASS (0.353s), then 47 combined original
+vault/worker-fence/new custody tests PASS (7.994s), zero failures/errors/skips.
+Includes independent Python process restoration, changed six scope bindings
+with forged public digest, malformed/noncanonical/duplicate/foreign-role inner
+payloads, envelope corruption, unavailable/wrong custody, replacement prohibition
+and redacted representations. Child pipes carry ciphertext and a test-vector
+MAC only; no plaintext secret argv/env/file/stdout. Windows CI will exercise
+actual DPAPI; that result is PENDING here. Linux fixtures do not prove OS vault
+acceptance. Existing backend CI registry now includes the ten methods without
+omitting the original 917. Full final regression/CI remains pending at this
+micro-checkpoint. No commercial/recovery/OS process qualification inferred.
+
+Next C2 first bounded seam: observe original process identity from actual OS
+(Windows process creation FILETIME plus PID; Linux boot ID/start ticks for
+existing support), require fail-closed read-only exit observation, no claimed
+PID/birth accepted as a kernel/descendant-drain proof. Keep this separate from
+custody and unmounted until tested. Then immutable pre-work escrow and original
+kernel/collector/backend receipt reconciliation; unknown old roots stay held.
+
 Persist original protected capability and immutable owner/epoch binding BEFORE
 child/native work begins. Reuse original private bootstrap and exact worker
 receipt/handoff authority. New or legacy-root eligibility must be independently

@@ -18,6 +18,7 @@ CORE_MODULES=(
     'test_post_preview_worker',
     'test_post_preview_idle',
     'test_credential_vault',
+    'test_post_preview_worker_custody',
     'test_post_preview_ccp',
     'test_post_preview_payments',
     'test_post_preview_api',
