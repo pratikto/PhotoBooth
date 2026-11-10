@@ -141,3 +141,25 @@ class WorkerEscrowTests(unittest.TestCase):
         self.path.write_text(json.dumps(value))  # Deliberate public corrupt fixture.
         self.held(lambda: read_worker_escrow(self.lease, 'a'*32))
         self.held(lambda: read_worker_escrow(self.lease, '../old'))
+
+    def test_hardlinked_escrow_is_unknown_custody_and_never_accepted(self):
+        self.write()
+        raw = self.path.read_bytes()
+        alias = Path(self.temporary.name)/'foreign-alias.json'
+        os.link(self.path, alias)
+        self.held(lambda: read_worker_escrow(self.lease, 'a'*32))
+        self.held(self.write)
+        self.assertTrue(self.path.read_bytes() == raw and alias.read_bytes() == raw)
+
+    def test_nonregular_escrow_holds_before_opening_or_reading_it(self):
+        self.path.parent.mkdir()
+        # Actual named pipe on Linux; a directory on Windows. Neither is opened.
+        if os.name == 'nt':
+            self.path.mkdir()
+        else:
+            os.mkfifo(self.path)
+        with patch('photobooth.post_preview_worker_escrow.os.open',
+                   side_effect=AssertionError('Do not open a special file')):
+            self.held(lambda: read_worker_escrow(self.lease, 'a'*32))
+            self.held(self.write)
+        self.assertTrue(self.path.exists())

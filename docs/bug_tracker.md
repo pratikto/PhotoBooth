@@ -1,3 +1,16 @@
+## BUG-060 — new escrow reader accepted a multiply linked file (10 November 2026)
+
+S2 / UNMOUNTED worker-custody candidate SOURCE FIXED. An adversarial actual
+hard-link fixture at d9876d8 was structurally valid and was accepted as an escrow
+file. One new test reproduced FAIL0.012s before the fix. The reader/re-sync path
+now requires a bounded regular file with exactly one link and consistent
+path/descriptor device+inode, using no-follow/nonblocking open where available.
+Directories and Linux actual FIFO hold before open; original/alias bytes remain
+unchanged. Corrected66 combined custody/process/escrow/vault/worker methods PASS
+8.500s, zero failures/errors/skips. Final regression/Windows CI pending here.
+No launcher/ACK/customer mounting or actual key/media/money incident.
+[Contract and evidence](qa/portrait-v2-sandbox/PP06-WINDOWS-WORKER-CUSTODY-2026-11-10.md).
+
 ## BUG-059 — repeated privacy after committed shutdown ACK could hold forever (10 November 2026)
 
 S2 / new Windows normal-exit integration SOURCE FIXED before candidate publication.
@@ -7,7 +20,9 @@ shutdown now finishes only the SAME durable backend-verified ACK or accepted
 same-process transition before actual handle drain, without reopening a child or
 querying closed SQL. Default abrupt-stop/unknown boot holds remain unchanged.
 8 new graceful methods PASS15.291s;82 affected PASS127.890s, zero failures/errors/
-skips. Full final-source native/CI pending. No customer/money/media incident.
+skips. Final source9054053:917 local backend/99 native/34 Apps Script PASS;
+CI42801312247 all FOUR SUCCESS, all completed logs inspected, zero failures/
+errors/skips. No customer/money/media incident.
 [Contract, reproduction and source evidence](qa/portrait-v2-sandbox/PP06-WINDOWS-SETUP-RECOVERY-2026-11-10.md).
 
 ## BUG-058 — stopped async control retained a queued customer proof (10 November 2026)

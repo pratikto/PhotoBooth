@@ -170,3 +170,19 @@ history eligibility, global/native/backend kernel ownership and durable child
 identity BEFORE original backend work, using original manager/bootstrap.
 Do not simply enable this writer in `_open`: that method currently mints a key
 and starts a child before `_free_history`; unknown boot could be misbound.
+
+### BUG-060 adversarial reproduction and correction
+
+At d9876d8 one actual hard-link fixture was accepted by the new candidate's
+metadata read. New test-first case FAIL0.012s (`WorkerEscrowHeld not raised`).
+Corrected original candidate file reader/re-sync: bounded regular file, one
+link, same path/descriptor device+inode, no-follow/nonblocking open when the OS
+supports them. Actual Linux FIFO and Windows directory fixtures hold before
+open; original and alias bytes are preserved. Still UNMOUNTED; no operational
+customer/key/finance incident or worker-release bypass occurred.
+
+Corrected66 combined original vault/worker-fence/C1/C2a/C2b methods PASS8.500s,
+zero failures/errors/skips. New methods now29 (10 custody,6 process,13 escrow),
+so final complete backend registry946. Final broad source-matched regression
+and Windows actual DPAPI/process/escrow CI remain PENDING at this checkpoint.
+Superseded micro-push CI runs must not be represented as final source results.

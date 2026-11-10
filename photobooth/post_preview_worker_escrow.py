@@ -6,10 +6,12 @@ same-process retry. Readers receive protected metadata, never an unsealed key.
 Manager mounting, safe-history rotation and backend-child custody are separate.
 """
 from dataclasses import dataclass, field
+from contextlib import contextmanager
 import hmac
 import json
 import os
 from pathlib import Path
+import stat
 
 from photobooth.capture_journal import sync_directory
 from photobooth.kiosk_v2.recovery import LaunchLease, checked_path
@@ -63,8 +65,31 @@ def _unique(pairs):
     return result
 
 
+@contextmanager
+def _regular_file(path, mode):
+    path = checked_path(path)
+    before = path.lstat()
+    _require(stat.S_ISREG(before.st_mode) and before.st_nlink == 1
+             and 1 <= before.st_size <= 100000)
+    flags = os.O_RDWR if mode == 'r+b' else os.O_RDONLY
+    descriptor = os.open(path, flags | getattr(os, 'O_NOFOLLOW', 0)
+                         | getattr(os, 'O_NONBLOCK', 0) | getattr(os, 'O_BINARY', 0))
+    try:
+        actual = os.fstat(descriptor)
+        _require(stat.S_ISREG(actual.st_mode) and actual.st_nlink == 1
+                 and 1 <= actual.st_size <= 100000
+                 and (actual.st_dev, actual.st_ino) == (before.st_dev, before.st_ino))
+        stream = os.fdopen(descriptor, mode)
+        descriptor = None
+        with stream:
+            yield stream
+    finally:
+        if descriptor is not None:
+            os.close(descriptor)
+
+
 def _read(path, root, epoch):
-    with checked_path(path).open('rb') as stream:
+    with _regular_file(path, 'rb') as stream:
         raw = stream.read(100001)
     _require(1 <= len(raw) <= 100000)
     value = json.loads(raw, object_pairs_hook=_unique)
@@ -136,7 +161,7 @@ def write_new_worker_escrow(lease, key, scope):
         _require(hmac.compare_digest(restored.sign({'kind': 'ESCROW_TEST_NO_AUTHORITY'}),
                                      key.sign({'kind': 'ESCROW_TEST_NO_AUTHORITY'})))
         # Retrying a complete but previously unsynced write retains every byte.
-        with checked_path(path).open('r+b') as stream:
+        with _regular_file(path, 'r+b') as stream:
             os.fsync(stream.fileno())
         sync_directory(path.parent)
         sync_directory(root)
