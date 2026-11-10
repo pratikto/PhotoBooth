@@ -20,6 +20,7 @@ CORE_MODULES=(
     'test_credential_vault',
     'test_post_preview_worker_custody',
     'test_post_preview_process_identity',
+    'test_post_preview_worker_escrow',
     'test_post_preview_ccp',
     'test_post_preview_payments',
     'test_post_preview_api',

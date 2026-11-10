@@ -114,3 +114,59 @@ kernel owner lifecycle. Carefully review first-key eligibility BEFORE mounting:
 existing unresolved roots without an original escrow must stay held. Then C3
 same original backend receipt reconciliation before supported pre-ACK/orphan
 recovery. Current boot behavior is unchanged; complete recovery NOT implemented.
+
+## C2b bounded contract BEFORE source
+
+Implement an UNMOUNTED, new-root-only immutable ciphertext file seam. Require
+the exact original LaunchLease for that private root and actual current process
+birth from C2a, then protect the caller's existing key with C1. No key minting,
+new provider, history adoption, startup flag or GUI API. Allow only the original
+lock's known data directory and this one epoch's escrow entry; any ledger,
+WAL/SHM, media, prior epoch or foreign file holds before writes. Never descend
+old or inventory customer files. Preserve partial/foreign files and fail closed.
+
+Use exclusive creation, original checked_path, canonical bounded/duplicate-free
+JSON, file fsync and original directory-sync helper. Same-scope/same-original-key
+retry may validate/re-sync the same bytes; never overwrite or replace them.
+Ciphertext record binds the full scope and original key ID. Reading returns
+protected metadata only, under the exact original root lease; no unseal, worker
+death, ACK, finance or media admission is implied. A restarted writer cannot
+claim the old process birth, mint a replacement or overwrite an old epoch.
+
+Tests must prove actual kernel contention, fresh-root write, immutable retry,
+wrong original key/scope, foreign/partial history and file preservation,
+failed OS custody before file creation, interrupted/failed sync preservation,
+strict reads, same epoch/account/root binding and archive exclusion. Windows
+directory fsync is NOT a physical power-loss guarantee. This narrow seam does
+NOT support safe-history rotation yet, and is NOT mounted into the manager.
+Next integration needs independent original-history eligibility and a durable
+backend-child identity before any backend work; then actual global/native/
+backend locks and worker/finance reconciliation. Unknown old roots stay held.
+
+### C2b implemented new-root-only file seam
+
+Implemented `photobooth/post_preview_worker_escrow.py`, UNMOUNTED, with11 new
+methods. C1+C2a+C2b focused27 PASS in0.430s on Linux lookup fixtures, zero
+failures/errors/skips. Actual original kernel contention, child process birth/
+exit and ciphertext restoration are exercised; no worker kill or old-root reset.
+Fault injection of file fsync failure holds the writer and retains the complete
+original envelope. Same live writer/same original key retry re-syncs identical
+bytes. Empty/truncated/foreign/oversized metadata remains held and unchanged.
+Replacing a key with the same public key ID but a different secret also holds.
+No production defect/recovery PASS is inferred from deliberate fault fixtures.
+
+Storage uses exclusive create and actual file fsync; the retry opens the same
+file read/write solely for Windows-compatible fsync and does not write bytes.
+Directory sync reuses the existing helper; Windows returns unsupported/False,
+so this is not power-loss qualification. `read_worker_escrow` returns structurally
+checked ciphertext/non-secret metadata ONLY. Its public metadata is not an OS
+authenticated identity observation; actual unseal and independent ownership
+must still succeed before any future use. No key is minted or logged.
+
+This candidate intentionally refuses all existing customer/history roots and
+prior epochs. It does not support rotation, backend-child birth capture, manager
+mounting, startup recovery, ACK or booth release yet. C2c must prove original
+history eligibility, global/native/backend kernel ownership and durable child
+identity BEFORE original backend work, using original manager/bootstrap.
+Do not simply enable this writer in `_open`: that method currently mints a key
+and starts a child before `_free_history`; unknown boot could be misbound.
