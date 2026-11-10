@@ -105,7 +105,10 @@ def main(argv=None):
         print('BLOCKED: protected startup held. Preserve original history/custody; check local configuration.',file=sys.stderr)
         return 2
     finally:
-        if simulator is not None: simulator.close()
+        if simulator is not None:
+            try: simulator.close()
+            except (Exception,KeyboardInterrupt):
+                pass  # Optional clipboard cleanup must NEVER bypass original drain.
         if owner is not None:
             from photobooth.post_preview_native_exit import drain_native_app
             noted=False

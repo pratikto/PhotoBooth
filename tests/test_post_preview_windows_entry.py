@@ -18,6 +18,31 @@ from tools import run_post_preview_sandbox as entry
 
 
 class ProtectedWindowsEntryTests(unittest.TestCase):
+    def test_optional_clipboard_cleanup_error_cannot_interrupt_original_owner_drain(self):
+        from photobooth.post_preview_launch import ProtectedSandboxLaunch
+        original=ProtectedSandboxLaunch.__init__;owners=[]
+        def capture(owner,root):original(owner,root);owners.append(owner)
+        def broken():raise RuntimeError('PRIVATE CLIPBOARD DIAGNOSTIC')
+        bridge=SimpleNamespace(install=lambda:None,close=broken)
+        with self.fixture() as (root,local,history,output,error):
+            flags=['--sandbox-only','--enable-real-printer','--accept-real-paper',
+                   '--enable-real-drive','--accept-public-test-upload','--owned-acceptance-session','a'*32]
+            try:
+                with patch.object(ProtectedSandboxLaunch,'__init__',capture), \
+                     patch('photobooth.post_preview_acceptance.validate_runtime_session'), \
+                     patch('photobooth.post_preview_bootstrap.CHILD_MODULE','tests.post_preview_host_process_fixture'), \
+                     patch('photobooth.kiosk_v2.owned_sandbox_simulator.OwnedSandboxSimulatorClipboard',return_value=bridge), \
+                     patch.object(entry,'native_app',return_value=SimpleNamespace(_closed=True,run=lambda:None)):
+                    self.assertEqual(0,entry.main(self.args(root)+flags))
+                self.assertTrue(owners[0]._closed)
+                self.assertTrue(owners[0]._control.stopped)
+                self.assertNotIn('PRIVATE CLIPBOARD',output.getvalue()+error.getvalue())
+                with LaunchLease(root):pass
+            finally:
+                for owner in owners:
+                    deadline=time.monotonic()+12
+                    while not owner.stop(timeout=.2):
+                        if time.monotonic()>deadline:self.fail('Original fixture owner did not drain')
     def test_acceptance_clipboard_session_is_not_a_check_only_or_consent_bypass(self):
         with patch('sys.stderr',new_callable=io.StringIO), patch(
                 'photobooth.post_preview_launch.ProtectedSandboxLaunch',side_effect=AssertionError('No private owner')):

@@ -5,6 +5,7 @@ from contextlib import closing
 import unittest
 from unittest.mock import Mock,patch
 import io
+from types import SimpleNamespace
 
 from kivy.core.window import Window
 
@@ -65,6 +66,13 @@ class ProtectedWindowsWidgetTests(unittest.TestCase):
                     app._photo_view['payment']['qr_url']='https://other.invalid/qr-code'
                     self.assertFalse(bridge.copy_current())
                     app._photo_view['payment']['qr_url']=expected
+                    self.assertTrue(bridge.copy_current())
+                    def unbind_failed(**kwargs):raise RuntimeError('PRIVATE WINDOW DIAGNOSTIC')
+                    with patch('kivy.core.window.Window',SimpleNamespace(unbind=unbind_failed)):
+                        bridge.close()
+                    self.assertEqual('',buffer[0]);self.assertIsNone(bridge._app)
+                    bridge=OwnedSandboxSimulatorClipboard(app);bridge.install()
+                    self.assertTrue(bridge.copy_current())
                     marker.unlink();helper.ui.click(app,'PERIKSA STATUS')
                     helper.ui.idle(app,lambda:app._photo_view.get('phase')=='ticket_visible')
                     self.assertFalse(bridge.copy_current())

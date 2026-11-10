@@ -311,6 +311,16 @@ Application/native files and original ALL order are unchanged: local982 backend/
 101 native/34 Apps Script PASS remain credited; final rebalanced exact-source
 Windows/Ubuntu/native CI and actual PowerShell step remain PENDING.
 
+## Optional clipboard shutdown invariant BEFORE correction
+
+The owned handoff is optional: an OS/window/clipboard cleanup error must NEVER
+interrupt the original native/backend/camera drain or drop its global ownership.
+Test an injected cleanup exception with the actual original child/control and
+retained owner, then ensure the original shutdown still finishes. Clipboard
+unbind failure must still attempt owned-value cleanup and discard its app/
+cached URL references. Preserve later owner-copied proof and static diagnostics.
+No provider, price, print, media or worker-release guard changes are permitted.
+
 ## Full local checkpoint — sourcef4b8c07
 
 982 complete local backend PASS453.586s,101 actual-X11 native PASS322.262s,34
@@ -327,3 +337,17 @@ No source/test WIP or active local app/backend/test; private raw logs, venv/cach
 and lab Xvfb remain local artifacts. Old superseded privacy stash must not apply.
 This is a candidate to BEGIN owned NORMAL-flow Sandbox acceptance after original
 guards pass, not an executed owner result or commercial/fault/recovery approval.
+
+## Clipboard shutdown correction verified — 11 November
+
+Injected optional bridge.close failure first reproduced ERROR1.124s: it escaped
+before original owner drain. Corrected launcher always reaches original drain;
+window-unbind failure also permits owned clipboard cleanup.32 focused backend
+PASS2.426s and2 actual-X11 native PASS30.084s, zero failures/errors/skips.
+Full983 backend/101 native and exact-source CI still PENDING.
+
+Budget-only source22fb235 CI42839219467 delivery/PowerShell, Ubuntu and native
+SUCCESS; core501 FAILED one original pre-ACK restore fixture: producer saw
+payment=None before indexing attempts. No timeout this time. Inspect and
+reproduce the asynchronous fixture boundary before any additional source fix.
+No owner/device/commercial PASS inferred.

@@ -72,8 +72,10 @@ class OwnedSandboxSimulatorClipboard:
         return True
 
     def close(self):
-        from kivy.core.window import Window
-        if self._installed: Window.unbind(on_key_down=self._key_down)
+        try:
+            from kivy.core.window import Window
+            if self._installed: Window.unbind(on_key_down=self._key_down)
+        except Exception: pass
         self._installed=False
         try:
             from kivy.core.clipboard import Clipboard
