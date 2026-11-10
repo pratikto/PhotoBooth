@@ -90,3 +90,27 @@ protected custody/CCP contracts, host/fulfillment/private bootstrap, original
 launch/visits/control and process fixtures; current owner/security/handoff/boot
 contracts already read in this continuation. Rollback source only, retain every
 original key/ciphertext/root/DB/WAL/SHM/media/PAID/OWED/receipt and uncertain job.
+
+## C2a read-only process identity implementation
+
+Implemented `photobooth/post_preview_process_identity.py`, also UNMOUNTED.
+Windows uses one actual read/wait-only process handle to bind creation FILETIME
+and wait status, closes its handle and never terminates a process. Missing valid
+PID is distinct from access/query/wait failure; failures hold. Linux observes
+numeric /proc stat start ticks plus kernel boot ID for existing support. PID
+reuse/birth mismatch holds; live original processes never count as exited.
+Neither this module nor an arbitrary identity is a worker/descendant drain,
+kernel lease, financial release, authenticated escrow or admission proof.
+
+Six new tests cover actual current process, actual independent child cooperative
+exit, fresh read before exit, foreign birth/platform, invalid PID, denied OS
+access/redaction and exited observations. Combined C1+C2a:16 PASS in0.325s,
+zero failures/errors/skips on local Linux. Windows ctypes path and real DPAPI
+are PENDING CI, not claimed from Linux. Existing core registry includes all16
+new methods plus original917; native99 remain unchanged.
+
+NEXT: C2b immutable pre-work escrow plus actual original global/native/backend
+kernel owner lifecycle. Carefully review first-key eligibility BEFORE mounting:
+existing unresolved roots without an original escrow must stay held. Then C3
+same original backend receipt reconciliation before supported pre-ACK/orphan
+recovery. Current boot behavior is unchanged; complete recovery NOT implemented.
