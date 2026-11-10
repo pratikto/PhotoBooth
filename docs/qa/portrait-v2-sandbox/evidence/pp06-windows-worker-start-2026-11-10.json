@@ -123,7 +123,7 @@
   },
   "ci": {
     "run_id": 42823706397,
-    "state": "PENDING",
+    "state": "ALL_FOUR_SUCCESS",
     "windows_core": {
       "job_id": 129855388358,
       "run": 444,
@@ -135,7 +135,14 @@
     },
     "windows_delivery": {
       "job_id": 129855388921,
-      "state": "PENDING"
+      "run": 523,
+      "seconds": 719.399,
+      "conclusion": "success",
+      "completed_log_inspected": true,
+      "powershell_existing_entry_setup": "success",
+      "unconfigured_protected_entry_holds": "success",
+      "explicit_local_new_booth_enrollment": "success",
+      "subsequent_check_only": "success"
     },
     "ubuntu": {
       "job_id": 129855388706,
@@ -194,7 +201,7 @@
     "Commercial NOT_READY; default fulfillment health False",
     "Ubuntu packaging DEFERRED_BY_OWNER"
   ],
-  "state": "LOCAL_FULL_PASS_CI_THREE_SUCCESS_WINDOWS_DELIVERY_PENDING",
+  "state": "FINAL_LOCAL_FULL_PASS_CI_ALL_FOUR_SUCCESS",
   "logs_sha256": {
     "meong-prekey-first-failure.log": "8242ac72b764d47b9bef499ecd1597c6067a8a3b16640e934e441481fac41692",
     "meong-prekey-corrected-first.log": "ed9f865852404306a3ef35b5a2e0527386c4b7eaff906d4fcac02d76ec149489",
@@ -216,5 +223,6 @@
     "source_or_test_wip": false,
     "active_local_app_backend_test": false,
     "obsolete_privacy_stash": "SUPERSEDED_DO_NOT_APPLY"
-  }
+  },
+  "previous_docs_checkpoint": "0b0793cac35ad03dfcb7a799e58ff64e2a3a2641"
 }

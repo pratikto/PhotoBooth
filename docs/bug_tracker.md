@@ -12,7 +12,7 @@ key. Original finance and durable verified-receipt SQL are shared verbatim.
 27 manager PASS70.801s,64 policy/receipt/printer PASS30.558s,38 caller/enrollment/
 shutdown PASS45.946s, zero failures/errors/skips. Source326062f CI42822045379
 ALL FOUR SUCCESS (Windows432+523=955, Ubuntu955, native100), all completed logs
-inspected, zero failures/errors/skips. Later C2c2 final regression/CI is separate.
+inspected, zero failures/errors/skips. Final C2c2 sourcebef2381:967 full local backend/100 actual-X11 native/34 Apps Script PASS; CI42823706397 ALL FOUR SUCCESS (Windows444+523=967, Ubuntu967, native100), all completed logs inspected, all19 new methods observed on Windows/Ubuntu.
 OS escrow remains UNMOUNTED, no real provider/device effects.
 [Bounded contract and next original pre-START child identity task](qa/portrait-v2-sandbox/PP06-WINDOWS-WORKER-CUSTODY-2026-11-10.md).
 

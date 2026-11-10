@@ -1,6 +1,6 @@
 # Original worker capability custody — Windows-first L3-C
 
-> **Latest C2c1/C2c2 mounted lifecycle increment:** pre-key original history/backend-orphan review and same-key actual child witness before START implemented; full967 local backend/100 actual-X11 native/34 Apps Script PASS; CI42823706397 three SUCCESS, Windows delivery pending. Original OS key escrow remains UNMOUNTED; C2c3/C3 recovery incomplete, commercial NOT_READY. See latest sections below; older final/pending notes retain their original source.
+> **Latest C2c1/C2c2 mounted lifecycle increment:** pre-key original history/backend-orphan review and same-key actual child witness before START implemented; full967 local backend/100 actual-X11 native/34 Apps Script PASS; CI42823706397 ALL FOUR SUCCESS atbef2381, all completed logs inspected. Original OS key escrow remains UNMOUNTED; C2c3/C3 recovery incomplete, commercial NOT_READY. See latest sections below; older final/pending notes retain their original source.
 
 > **FINAL VERIFIED — source9de0dcd213f741b19cda493cc30d80e9b5c38598:** 948 local backend/100 actual-X11 native/34 offline Apps Script PASS. CI42812100193 ALL FOUR SUCCESS, all completed logs inspected. C1/C2a/C2b remain UNMOUNTED; C2c/C3 recovery incomplete; commercial NOT_READY, default health False. [Machine-readable evidence](evidence/pp06-windows-worker-custody-2026-11-10.json). Earlier pending/failure snapshots below are retained history.
 
@@ -455,3 +455,50 @@ No source/test WIP or active local app/backend/test. Private logs/cache/venv/lab
 Xvfb remain local, not Git backups. Old superseded privacy stash must not apply.
 C2c3 OS key escrow and immutable draft/epoch lifecycle remains unfinished; C3
 pre-ACK/orphan recovery is not enabled. Commercial NOT_READY; default health False.
+
+## C2c1/C2c2 final verification — sourcebef2381
+
+Sourcebef2381592850dcaa501ffaf0c0a3114f68ff8e1 is the last functional source;
+following changes are documentation/evidence only. Source hashes unchanged
+after the full final local runs. Previous pending notes above are historical.
+
+| Execution | Tests | Seconds | Verdict |
+| --- | ---: | ---: | --- |
+| Local complete backend | 967 | 447.909 | PASS |
+| Local actual X11 native | 100 | 296.401 | PASS |
+| Local offline Apps Script | 34 | — | PASS |
+| Windows core129855388358 | 444 | 397.465 | SUCCESS |
+| Windows delivery129855388921 | 523 | 719.399 | SUCCESS |
+| Ubuntu129855388706 | 967 | 430.082 | SUCCESS |
+| Native129855388597 | 100 | 237.097 | SUCCESS |
+
+[CI42823706397](https://github.com/pratikto/PhotoBooth/actions/runs/42823706397)
+ALL FOUR SUCCESS at the exact source; all completed logs and step outcomes
+inspected. Zero unit failures/errors/skips. All19 new methods explicitly
+observed in Windows core and Ubuntu, none omitted. Windows PowerShell existing
+entry setup, unconfigured protected-entry hold, explicit local new-booth
+enrollment and subsequent check-only succeeded with public fixture settings.
+Native entry preflight and both original portrait screenshot renders succeeded.
+No real device/provider/Drive effect or commercial acceptance is inferred.
+
+[Machine-readable source/failure/verification evidence](evidence/pp06-windows-worker-start-2026-11-10.json).
+No source/test WIP or active local app/backend/test remains. Xvfb/private raw
+logs/cache/venv are local artifacts, not Git backups; old superseded privacy
+stash must not be applied. Source-only rollback must retain every original
+key/ciphertext/witness/DB/WAL/SHM/media/receipt/counter/PAID/OWED/uncertain job.
+
+FIRST remaining implementation is C2c3: original OS key custody before ALL
+camera/native/backend work, immutable original draft/generation epoch binding,
+safe same-root rotations. Then C3 independently proves original process exit,
+global/native/backend kernel ownership, receipt, fresh finance and output/
+upload uncertainty before supported pre-ACK/orphan recovery. Current witnesses
+are metadata only; original key escrow remains UNMOUNTED. Unknown old roots
+without original capability/binding stay held, with proof-gated old-media access
+and independent legitimate PAID still mandatory. No retroactive old-worker
+retirement signature, replacement key or mock-guard bypass is allowed.
+
+Windows owner configurations are available, but actual account/device/DPAPI
+backup/reboot/power-loss/phone acceptance and operational qualification remain
+separate. The eleven credited owner smoke checks remain credited. Do not rerun
+unchanged passing baselines simply to onboard. Commercial NOT_READY, default
+health False; Windows first, Ubuntu launcher/packaging deferred by the owner.
