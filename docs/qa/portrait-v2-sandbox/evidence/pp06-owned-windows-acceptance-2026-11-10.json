@@ -1,0 +1,213 @@
+{
+  "source": "f4b8c07b0fb3bc7c163cc988c187bd0484777a2b",
+  "stage": "Owned Windows supervised normal-flow Sandbox acceptance, passive checks/redacted owner reports/current QR clipboard handoff",
+  "scope": "READY_FOR_SOFTWARE_VERIFICATION_NOT_OWNER_PASS_OR_COMMERCIAL",
+  "source_sha256": {
+    "Start-PostPreviewAcceptance.ps1": "72c366bc0715410c99dfbf4b01e634d5debc224f7fa8400685e8ef50daadd9e5",
+    "Start-PostPreviewSandbox.ps1": "c736bb635848a1a4f95e22b3b0f76dc1ae6e20baed98c55e18645636db98d83a",
+    "photobooth/post_preview_acceptance.py": "c34a4ba0f9b8b554c8b64ddc7841233bc45348520056bb3cc5752425a27dc1b9",
+    "photobooth/post_preview_launch_settings.py": "ebb8dbd03adf8e7f8c51b67393b6e191c8ef17f84cdaee4921c45d012a91a8d6",
+    "photobooth/kiosk_v2/owned_sandbox_simulator.py": "39717671f738374d1ba9d69b6146c2a0ab33220c3fbb110896d26d02cb3b8bc3",
+    "tools/run_post_preview_acceptance.py": "4f1ac8ce74832df69c0690358c2c870f5941e877bd22ade5f4c943fd5f201d59",
+    "tools/run_post_preview_sandbox.py": "d95bf8cadc42b3dde70c60dc77106332174e12a4ad54f761b08ebb78c878036c",
+    "tests/test_post_preview_acceptance.py": "cf78f3d5b6aa1e44fc50795228e5cfccda0313189f8792cc8258d86614c8d40b",
+    "tests/test_post_preview_launch_settings.py": "4f073b86b46b9cb7fd1f48516e550ae148cd486137df653ce9af3e711e64fb6c",
+    "tests/test_post_preview_windows_entry.py": "2f544ae1f1fd5189138ab07bf1ed95e4d5d431c7e7a6675e145781857d2a670c",
+    "tests/test_post_preview_windows_widgets.py": "73db3abbb624a2cdcdbeabf3efa08ae5c8fbe9f83894ed7976d2bee29665f49b",
+    "tests/post_preview_host_process_fixture.py": "4d13d4b7433886ade805054e34f8a3b72669a72fbfb4ff4471d64a6769cc1587",
+    "tools/run_post_preview_ci.py": "c98108db85cea711f97459f4630adaa22a3845ce77b9484535aa74bb4f5e4877",
+    ".github/workflows/post-preview-qris.yml": "9c0ca3d560f5a4ef1bad57e3fb51e971cc57be05d92f1774043d707f51f7e91c"
+  },
+  "expected_new_backend_methods": [
+    "test_post_preview_acceptance.OwnedAcceptanceTests.test_actual_current_platform_dpapi_probe_never_provisions_or_claims_backup",
+    "test_post_preview_acceptance.OwnedAcceptanceTests.test_cli_preflight_record_show_are_redacted_and_bad_arguments_never_echo_proofs",
+    "test_post_preview_acceptance.OwnedAcceptanceTests.test_failed_report_sync_keeps_partial_bytes_and_never_replaces_original",
+    "test_post_preview_acceptance.OwnedAcceptanceTests.test_malformed_extra_private_fields_and_linked_manifest_are_held_without_echo",
+    "test_post_preview_acceptance.OwnedAcceptanceTests.test_nonwindows_or_missing_dependency_blocks_before_private_reads",
+    "test_post_preview_acceptance.OwnedAcceptanceTests.test_original_history_or_custody_failure_is_fixed_and_redacted",
+    "test_post_preview_acceptance.OwnedAcceptanceTests.test_original_profile_conflict_is_not_silently_disabled",
+    "test_post_preview_acceptance.OwnedAcceptanceTests.test_owner_results_append_and_never_claim_commercial_or_backend_authority",
+    "test_post_preview_acceptance.OwnedAcceptanceTests.test_passive_checks_preserve_history_and_open_no_native_backend_or_worker_key",
+    "test_post_preview_acceptance.OwnedAcceptanceTests.test_runtime_handoff_requires_same_original_prestart_owner_and_scope",
+    "test_post_preview_acceptance.OwnedAcceptanceTests.test_session_run_validation_binds_original_root_account_and_source",
+    "test_post_preview_acceptance.OwnedAcceptanceTests.test_source_checks_allow_documentation_changes_but_hold_runtime_changes",
+    "test_post_preview_acceptance.OwnedAcceptanceTests.test_unknown_blocked_or_free_text_observations_do_not_create_a_session",
+    "test_post_preview_launch_settings.ProtectedLaunchSettingsTests.test_passive_settings_validation_never_mints_a_worker_key",
+    "test_post_preview_windows_entry.ProtectedWindowsEntryTests.test_acceptance_clipboard_session_is_not_a_check_only_or_consent_bypass"
+  ],
+  "new_backend_methods": 15,
+  "new_native_methods": 1,
+  "focused": {
+    "settings_first_reproduction": {
+      "run": 1,
+      "errors": 1,
+      "seconds": 0.294,
+      "reason": "Original passive settings minted unused WorkerFenceKey"
+    },
+    "corrected_settings": {
+      "run": 1,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 0.304
+    },
+    "passive_focused": {
+      "run": 29,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 1.561
+    },
+    "handoff_focused_unit": {
+      "run": 31,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 1.491
+    },
+    "handoff_native_first": {
+      "run": 1,
+      "errors": 1,
+      "seconds": 5.719,
+      "reason": "Test-only zero-send counter file absent before any print; fixture corrected to assert absence"
+    },
+    "handoff_native_corrected": {
+      "run": 1,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 16.631
+    },
+    "handoff_native_expanded": {
+      "run": 2,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 29.221
+    }
+  },
+  "local": {
+    "backend": {
+      "run": 982,
+      "seconds": 453.586,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "native_actual_x11": {
+      "run": 101,
+      "seconds": 322.262,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "apps_script": {
+      "run": 34,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    }
+  },
+  "ci": {
+    "run_id": 42835198124,
+    "head_sha": "f4b8c07b0fb3bc7c163cc988c187bd0484777a2b",
+    "state": "PENDING",
+    "native": {
+      "job_id": 129895437105,
+      "run": 101,
+      "seconds": 315.239,
+      "conclusion": "success",
+      "completed_log_inspected": true,
+      "f8_original_native_method_observed": true
+    },
+    "windows_core": {
+      "job_id": 129895437096,
+      "run": 459,
+      "seconds": 506.754,
+      "conclusion": "success",
+      "completed_log_inspected": true,
+      "new_backend_methods_observed": 15,
+      "missing_new_methods": []
+    },
+    "windows_delivery": {
+      "job_id": 129895436413,
+      "state": "PENDING"
+    },
+    "ubuntu": {
+      "job_id": 129895437255,
+      "run": 982,
+      "seconds": 522.296,
+      "conclusion": "success",
+      "completed_log_inspected": true,
+      "new_backend_methods_observed": 15,
+      "missing_new_methods": []
+    }
+  },
+  "previous_source": {
+    "source": "bd763a4f5faa56d3011099a2fd1dbf0928bb33ca",
+    "local_backend": {
+      "run": 980,
+      "seconds": 464.25,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "local_native": {
+      "run": 100,
+      "seconds": 318.983,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "ci": {
+      "run_id": 42830743614,
+      "state": "ALL_FOUR_SUCCESS",
+      "all_completed_logs_inspected": true,
+      "windows_core": {
+        "job_id": 129879770695,
+        "run": 457,
+        "seconds": 483.007
+      },
+      "windows_delivery": {
+        "job_id": 129879770795,
+        "run": 523,
+        "seconds": 734.501,
+        "powershell_preflight_record_show_and_consent_hold": "success"
+      },
+      "ubuntu": {
+        "job_id": 129879770716,
+        "run": 980,
+        "seconds": 363.059
+      },
+      "native": {
+        "job_id": 129879770657,
+        "run": 100,
+        "seconds": 301.921
+      }
+    }
+  },
+  "limits": [
+    "Only begin supervised NORMAL-flow Windows Sandbox UAT after original guards pass",
+    "Local prerequisite PASS is not actual merchant/device/protected-boot acceptance",
+    "No owner hardware/account acceptance executed by Codex cloud",
+    "Reports OWNER_REPORTED, no payment/media/worker/ACK authority, commercial_ready always False",
+    "Current-account DPAPI self-test does not certify original key backup/decryption/reboot/power loss",
+    "C2c3 OS worker-key/draft-epoch lifecycle and C3 interrupted recovery unfinished, intentional fault tests BLOCKED",
+    "Remedy/refund/full commercial qualification unfinished",
+    "Default health False; no production activation/deployment",
+    "Ubuntu packaging deferred by owner"
+  ],
+  "state": "LOCAL_FULL_PASS_CI_THREE_SUCCESS_WINDOWS_DELIVERY_PENDING",
+  "owner_acceptance": "NOT_RUN_REQUIRES_OWNED_WINDOWS_PC_AND_ORIGINAL_CONSENTS",
+  "logs_sha256": {
+    "meong-acceptance-settings-first-failure.log": "83106615aed469517a65e907b5fa548e3254304d720e81782c07775746975067",
+    "meong-acceptance-settings-corrected.log": "f732b5142173d0edadf394668f3fc988072c773d708744bbcd9ac179484f1f53",
+    "meong-acceptance-focused-final.log": "7ec96b835738541ca2b84fa9a3eb1e2cf3a68da93039ed474f292e56aaaabd3a",
+    "meong-acceptance-simulator-focused.log": "a4627dc404e3d2b7c76d61292cf0e37b93dbe9627bf05d5a6664a2191f68339d",
+    "meong-acceptance-simulator-corrected.log": "fd03ef63920c056196023acc63849d9d7a7405adde0d58860c00ef642207ccae",
+    "meong-acceptance-handoff-unit-final.log": "f1a3ec9f1b720e1485eace3d0ec3bba23c52c7f379a80c8519c25d67f8085c57",
+    "meong-acceptance-handoff-native-final.log": "38bb066ba61e025a886f84a91b9f714e71ccb9027daa6850ef3a0dd942cf4c53",
+    "meong-owned-uat-final-backend.log": "30dba64068a459d7c44829e36cd75a10a5c654a78c55b5df8487164b83526f0b",
+    "meong-owned-uat-final-native.log": "d440900e5c198e9f89adea70fae5894a6233cee8fa5c3dfaed27cee9e79d1f4f",
+    "meong-owned-uat-final-apps-script.log": "d3d2a82ecfcca2858752d5fc44d9fe89a04dfcdcdae0b4b27b3aeb5bb6933307"
+  }
+}

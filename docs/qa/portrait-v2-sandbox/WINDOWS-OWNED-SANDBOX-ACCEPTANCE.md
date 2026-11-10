@@ -76,7 +76,9 @@ Manifest and observations are exclusively written/fsynced, bounded and checked
 for malformed/extra/linked content. Owner observations are append-only and remain
 OWNER_REPORTED_NOT_INDEPENDENTLY_VERIFIED. Even all normal-case PASS values do
 not make commercial_ready true. Runtime source changes hold further recording/
-run validation; documentation-only edits do not invalidate unchanged software.
+run validation. Uncommitted documentation-only edits do not block preflight;
+changing the Git checkout revision requires a new report session, preserving
+earlier observations. Never replay a payment/uncertain print to recreate a report.
 
 ## Start here on the owner's Windows PC
 
@@ -113,8 +115,8 @@ If original history is missing on a genuinely NEW booth, use ONLY the existing
 then repeat preflight with the SAME root. Existing/partial/unresolved history
 must be preserved and reconciled. Do not enroll over it or select a replacement
 storage root. A missing dependency/source/configuration check is not fixed by
-deleting a customer journal. Runtime source changes require review; documentation
-changes and ignored local settings/reports do not change the runtime revision.
+deleting a customer journal. Runtime source changes require review; uncommitted documentation
+changes and ignored local settings/reports do not block that check.
 
 4. Copy the generated `ACCEPTANCE_SESSION=<32 hex characters>` into a variable.
    The session ID is local report metadata, not a customer proof:
@@ -271,3 +273,20 @@ PASS301.921s. Actual Windows PowerShell passive preflight/record/show, current-
 account DPAPI and missing-consent hold succeeded; no physical/account PASS claim.
 This is prior pre-F8 verification, not final simulator-handoff source evidence.
 Final source now expects982 complete backend and101 native; full checks pending.
+
+## Full local checkpoint — sourcef4b8c07
+
+982 complete local backend PASS453.586s,101 actual-X11 native PASS322.262s,34
+offline Apps Script PASS. Zero failures/errors/skips. CI42835198124 Windows
+core459 PASS506.754s, Ubuntu982 PASS522.296s, native101 PASS315.239s; completed
+logs inspected, all15 new backend methods and the native original F8 case
+explicitly observed. Windows delivery129895436413 remains PENDING at this
+checkpoint. FIRST inspect its completed log and actual PowerShell step; do not
+claim all-four PASS yet or rerun the passing baseline for documentation.
+
+[Machine-readable source/failure/verification evidence](evidence/pp06-owned-windows-acceptance-2026-11-10.json).
+Original software source hashes unchanged after final local functional tests.
+No source/test WIP or active local app/backend/test; private raw logs, venv/cache
+and lab Xvfb remain local artifacts. Old superseded privacy stash must not apply.
+This is a candidate to BEGIN owned NORMAL-flow Sandbox acceptance after original
+guards pass, not an executed owner result or commercial/fault/recovery approval.
