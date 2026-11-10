@@ -1,3 +1,13 @@
+## BUG-058 — stopped async control retained a queued customer proof (10 November 2026)
+
+S2 / privacy SOURCE FIXED before customer mounting. If trusted stop won before
+a queued claim ran, STOPPED cleared pending/results but retained the unconsumed
+proof command. One controlled case reproduced FAIL1.140s; actual worker shutdown
+now drains both bounded queues, retaining original I/O/kernel ownership until
+real exit.10 public-control PASS38.615s, zero failures/errors/skips. No proof was
+logged or echoed and no new money/media grant occurred. Full current CI pending.
+[Scope/source evidence](qa/portrait-v2-sandbox/PP06-PROTECTED-HANDOFF-2026-11-10.md).
+
 ## BUG-057 — privacy during accepted original ledger close could hold forever (10 November 2026)
 
 S2 / async control integration SOURCE FIXED before customer mounting.

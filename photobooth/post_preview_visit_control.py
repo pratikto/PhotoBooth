@@ -103,6 +103,11 @@ class VisitControl:
             try:self._results.get_nowait()
             except queue.Empty:return
 
+    def _discard_commands(self):
+        while True:
+            try:self._commands.get_nowait()
+            except queue.Empty:return
+
     def _current(self,command):
         with self._lock:
             return self._pending==(command.request_id,command.epoch,command.action) and command.epoch==self._epoch and not self._stop.is_set()
@@ -207,6 +212,7 @@ class TrustedVisitWorker:
                 if closed and visits._closed and visits._launcher.stream.closed:
                     with control._lock:
                         control._pending=control._issued=None;control._discard_results()
+                        control._discard_commands()
                         control._reason=None;control._privacy.clear()
                         control._state='STOPPED';control._stopped.set()
                     return

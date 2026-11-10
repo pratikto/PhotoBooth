@@ -146,6 +146,10 @@ class _CheckoutAppBase(PrivatePreviewApp):
         if (self._pilot_admission is None or self.navigation.page!=ADVERT
                 or self._closed or self._suspended):
             return
+        self._open_private_claim_popup('PEMULIHAN PRIVAT • SIMULASI')
+
+    def _open_private_claim_popup(self, title):
+        """Original private input shared by explicit mock/protected profiles."""
         self._close_pilot_popup()
         panel=BoxLayout(orientation='vertical',padding=dp(12),spacing=dp(10))
         panel.add_widget(text_label(
@@ -159,7 +163,7 @@ class _CheckoutAppBase(PrivatePreviewApp):
             'VALIDASI TIKET',lambda: self._pilot_submit_claim(field.text),height=dp(50)))
         panel.add_widget(self._photo_action(
             'BATAL',self._close_pilot_popup,variant='tertiary',height=dp(48)))
-        popup=Popup(title='PEMULIHAN PRIVAT • SIMULASI',content=panel,
+        popup=Popup(title=title,content=panel,
                     size_hint=(.92,.65),auto_dismiss=False)
         self._pilot_input,self._pilot_popup=field,popup
         popup.open()
@@ -500,6 +504,19 @@ class _CheckoutAppBase(PrivatePreviewApp):
             'Pesanan tetap tersimpan.')
         self._photo_message=text_label(self._photo_error,size=13,height=55,color=GOLD)
         shell.add_widget(self._photo_message)
+        # Keep the original QR/fonts/buttons while fitting the supported short
+        # portrait canvas. Resize changes geometry only, never the result clock
+        # or an HTTP/payment/print operation.
+        original_heights=[(widget,widget.height) for widget in shell.children]
+        compact_heights={dp(55):dp(42),dp(50):dp(40),dp(48):dp(40),
+                         dp(45):dp(40),dp(36):dp(28)}
+        def fit_result(*_args):
+            compact=canvas.height<dp(1100)
+            shell.spacing=dp(6 if compact else 13)
+            for widget,height in original_heights:
+                widget.height=compact_heights.get(height,height) if compact else height
+        canvas.bind(height=fit_result)
+        fit_result()
 
     def _build_photo_page(self, canvas):
         if self._photo_view.get('phase') == 'paid_delivery':

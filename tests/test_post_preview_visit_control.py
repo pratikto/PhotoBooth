@@ -4,7 +4,7 @@ import time
 import unittest
 from unittest.mock import patch
 from photobooth.kiosk_v2.recovery import LaunchLease
-from photobooth.post_preview_visit_control import VisitControlOutcome,create_visit_control
+from photobooth.post_preview_visit_control import VisitControl,TrustedVisitWorker,VisitControlOutcome,create_visit_control
 from tests import test_post_preview_sandbox_visits as fixtures
 
 class VisitControlTests(unittest.TestCase):
@@ -109,6 +109,20 @@ class VisitControlTests(unittest.TestCase):
         self.assertEqual('DENIED',result.state)
         self.assertIsNone(result.snapshot);self.assertIsNone(result.binding)
         self.assertNotIn(proof,repr(vars(self.control)))
+
+    def test_stop_before_queued_claim_runs_drops_transient_proof_command(self):
+        self.assertTrue(self.worker.stop(timeout=12))
+        visits=self.fixture.manager()
+        self.addCleanup(self.fixture.shutdown,visits)
+        control=VisitControl();worker=TrustedVisitWorker(visits,control)
+        proof='MEONG:CCP:1:PB001:'+('a'*32)+':'+('b'*43)
+        self.assertTrue(control.claim(proof))
+        control.request_stop();worker.start()
+        try:
+            self.assertTrue(worker.stop(timeout=12))
+            self.assertTrue(control._commands.empty())
+            self.assertFalse(control.busy)
+        finally:self.assertTrue(worker.stop(timeout=12))
     def test_late_committed_claim_is_hidden_then_retired_without_public_private_result(self):
         group,proof=self.fixture.paid(self.control.binding)
         self.control.hide_private('RESULT_TIMEOUT');self.idle()

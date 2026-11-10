@@ -1,0 +1,59 @@
+{
+  "base": "b6692a8632fa88dc89dcd434138391c924fd8f64",
+  "stage": "B6-H4 original native protected visits",
+  "source_sha256": {
+    "photobooth/kiosk_v2/app.py": "3f60682cdc866f5a6164d78395168d628fe2a04517a9b9620227a606a88d424d",
+    "photobooth/kiosk_v2/photo_views.py": "0af13ac831c4b1d4a82465d1e6a16f413df940b4c5ce8674a66918ad6ba639d6",
+    "photobooth/kiosk_v2/post_preview_checkout_app.py": "3804ef4d684d070ffea00f8a6692b1cf01edb4d9f6fbd038385d1ae123c6cf5b",
+    "photobooth/kiosk_v2/post_preview_visits_app.py": "c3aa03353b10ea3e7ffbf77ecc95c24fe33a63a3926eb43a7367420cd0ef2491",
+    "photobooth/post_preview_visit_control.py": "813c50e26bfa793c3c7555f09d87fdaa4213161cbac70fce0c364b30958381bd",
+    "tests/test_post_preview_visit_control.py": "0ad79ab5c207d4e9ff0bd98b62261a4c5d80a294f2a58783f60dd116d126e612",
+    "tests/test_post_preview_visits_widgets.py": "97e7adf86f316673e21af8f951e6bcf1f7562854232dcb09e21263a477e1aba2",
+    "tools/run_post_preview_ci.py": "8345f7da32d60a1b5c8f6b1ce14dd141190bf47fe5fb458a34ba26d773cc6568",
+    ".github/workflows/post-preview-qris.yml": "58b794645ea4d379ae8bbc4ee69dc5ccd660a47508f4b2628134b8a33ad0b763"
+  },
+  "native_affected": {
+    "run": 39,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 205.388
+  },
+  "control": {
+    "run": 10,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 38.615
+  },
+  "logs_sha256": {
+    "queued-stop-before.txt": "8c99509af98b76a496178b181d14598d0e39bf6ed92975800c0f34cd78e4ba98",
+    "control-final.txt": "73096d305544fa3aa30be241f2cc881e68775fe5f17ac9210fec88aea6c0a184",
+    "native-first.txt": "bfff98df3c5e3dcc23ac097f4d974190f9ddc065cef53ccfa86a07e2127f2678",
+    "native-corrected.txt": "b7e8587ca4a93d062c1fac8bf616efb4a49f0bd74f75ac7d1f62358f1b9a521d",
+    "native-related.txt": "e7bfda78ca7c91bd88150a4c89f650635348a15f7d72bdd81b169c61693a46b3",
+    "registry-check.json": "f6fcf07203452d88464c5c701e50e3ec3c1fc3e77dfdf69cc04c62a925e2ac48"
+  },
+  "visual_sha256": {
+    "restored-452x9000001.png": "7afd6415d50029c18075ad231511db52e9e2ed5ac5ebb34b4fcfbbe76d4223e1",
+    "restored-800x12800001.png": "dcdfafe72c153cd40e58922245cca780f73655974e5566aa686ea401e4016d62"
+  },
+  "registry": {
+    "modules": 65,
+    "core": 311,
+    "delivery": 521,
+    "all": 832,
+    "disjoint_shards": true,
+    "exact_ordered_union": true,
+    "inherited_duplicate_executions_preserved": 52
+  },
+  "prior_ci": {
+    "source": "b6692a8632fa88dc89dcd434138391c924fd8f64",
+    "run": 42744296000,
+    "ubuntu": "831 PASS425.476s",
+    "native": "88 PASS191.099s",
+    "windows": "CANCELLED15min, no summary, last completed case511, not PASS"
+  },
+  "full_current": "RUNNING backend/native; new CI pending",
+  "limits": "Actual native original child/HTTP/facade, fake external transports/custody; explicit fixture freeze. Complete protected freeze/customer launcher/global ownership/boot/remedy/device qualification unfinished, commercial NOT_READY."
+}

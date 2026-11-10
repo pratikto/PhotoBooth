@@ -309,8 +309,7 @@ class PortraitKioskV2App(PhotoViews, GameViews, CheckoutViews, SandboxViews, Ope
             self._sandbox_jobs.close()
         self.live_preview.close()
         self.performance.flush()
-        if self._photo_jobs is not None:
-            self._photo_jobs.close()
+        self._close_photo_jobs()
         Window.unbind(on_minimize=self._window_minimized, on_restore=self._window_restored)
         self._retire_gestures()
         if getattr(self, "_heartbeat", None):

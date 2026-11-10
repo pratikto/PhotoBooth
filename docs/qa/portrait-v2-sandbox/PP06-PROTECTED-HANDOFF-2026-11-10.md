@@ -677,3 +677,72 @@ No customer launcher/default activation from this checkpoint. Protected freeze,
 complete trusted global launch ownership/configuration, supported boot/remedy/
 status/ops and actual final qualification remain unfinished. Full current-source
 regression/CI pending; commercial NOT_READY. External effects remain fake in QA.
+
+
+## B6-H4 original protected native Ads / recovery / exact PhotoJobs
+
+ProtectedVisitsApp now mounts ONLY the accepted public VisitControl into the
+original protected app, Ads shell, private recovery popup/input, original ticket
+and delivery cards. The trusted worker/manager/configuration stay outside GUI
+objects. The exact manager PhotoJobs is reused, including its bound readiness
+collector; no second wrapper is constructed. Default/mock constructors and
+customer launcher remain unchanged. This is an explicit integration profile,
+not the completed merchant entry point.
+
+Photo/game/recovery entry stays guarded during async transition. Original result
+timeout/privacy immediately wipes private UI, preserves the real retirement
+reason and queues actual retirement/ACK/close/open off the GUI thread. Late
+claims cannot repaint after minimize/resume. Original CCP OR Recovery Ticket can
+restore the SAME purchase. An unserved paid return renders the genuine original
+ticket then resumes automatic delivery. A previously dismissed ticket instead
+reopens its SAME immutable delivery/status; submitted/uncertain output cannot
+be replayed. On GUI stop the original close hook requests trusted drain; it
+never closes the original ledger under unfinished PhotoJobs. Complete device/
+global-launch lifecycle remains gated until the trusted launcher work below.
+
+Actual native/child/HTTP A/B/A passes at800x1280 AND452x900; preserved nonempty
+media hashes, entitlement and original payment/send counts are checked. Real
+native input is cleared on submission; actual late-claim/minimize and blocked
+native I/O/stop retain privacy/kernel ownership. An additional original paid
+claim exercises genuine ticket visibility/NEXT and automatic2+1 output. Live
+resize checks logo/QR/status-button geometry and retains the same result deadline
+and payment count. Initial fresh small-screen screenshot showed clipped logo;
+paid-result spacing/label heights now adapt to the canvas without changing QR,
+fonts, touch controls, timer or performing I/O. Both corrected images inspected.
+
+First native discovery accidentally included20 imported fixture methods (fixed
+by importing the fixture module). That run23 had3 FAILs156.747s: two new UI
+returns stopped at paid_hold rather than opening original delivery, and one
+shutdown assertion used the storage parent instead of the actual private root.
+The return now requests original delivery preparation; root/media assertions
+use the actual private root and require nonempty hashes. Corrected4 PASS49.072s;
+expanded **39 affected native PASS205.388s**, zero failures/errors/skips.
+No provider/paper/cloud acceptance follows from fake external transports.
+
+BUG-058: stopping before a queued claim ran retained its transient proof command
+in the public queue. Reproduced1 FAIL1.140s. Actual STOPPED now drains commands
+as well as results; **10 public-control PASS38.615s**, zero failures/errors/skips.
+The new cases are registered in backend/native CI.
+
+H3 sourceb6692a8 CI42744296000: Ubuntu831 PASS425.476s; native88 PASS191.099s.
+Windows129592597640 cancelled at the unchanged15min budget after case511,
+without a final summary; NOT PASS. Static per-case progress shows783.638s across
+41 observed modules, not a hung case; WinError32 occurred during interruption
+cleanup. Windows is now split into core311 / delivery521 executions under the
+SAME15min per-job budget. Ubuntu keeps all832. The mechanically preserved65-
+module registry and actual discovery prove disjoint shard identities and the
+EXACT original ordered832 union, including52 inherited repeated executions;
+no test, fsync, durability guard or job budget removed. New CI pending.
+[Exact source/log/visual/registry evidence](evidence/pp06-native-visits-2026-11-10.json).
+
+NEXT: protected backend freeze/readiness orchestration, strict client and native
+freeze action; then complete trusted launcher/global LaunchLease BEFORE devices,
+configuration/custody, supported orphan/pre-ACK boot and remedy/status/ops. Never
+replace freeze's missing trusted readiness with caller booleans or enable the
+checkout button alone. Existing ChargeScope depends on an already frozen group;
+pre-freeze ownership/media/resource collection needs its original trusted
+contract. Do not revert to synthetic admission or reset existing roots. Final
+current-source2h and separate actual-device4h qualification remain pending.
+Full changed-source backend/native regression is running for this increment;
+commercial NOT_READY, merchant defaults/fulfillment health remain gated. Prior
+owner observations stay credited without requesting unchanged repetitions.

@@ -30,6 +30,10 @@ def image_texture(photo):
 
 
 class PhotoViews:
+    def _close_photo_jobs(self):
+        if self._photo_jobs is not None:
+            self._photo_jobs.close()
+
     def _init_photos(self):
         self._photo_jobs = None
         self._photo_view = {}
