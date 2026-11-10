@@ -10,7 +10,9 @@ history and live backend orphan retain their original files/state; no new key,
 child, ACK or media adoption. Pure printer validation no longer mints an unused
 key. Original finance and durable verified-receipt SQL are shared verbatim.
 27 manager PASS70.801s,64 policy/receipt/printer PASS30.558s,38 caller/enrollment/
-shutdown PASS45.946s, zero failures/errors/skips. Final regression/CI pending.
+shutdown PASS45.946s, zero failures/errors/skips. Source326062f CI42822045379
+ALL FOUR SUCCESS (Windows432+523=955, Ubuntu955, native100), all completed logs
+inspected, zero failures/errors/skips. Later C2c2 final regression/CI is separate.
 OS escrow remains UNMOUNTED, no real provider/device effects.
 [Bounded contract and next original pre-START child identity task](qa/portrait-v2-sandbox/PP06-WINDOWS-WORKER-CUSTODY-2026-11-10.md).
 

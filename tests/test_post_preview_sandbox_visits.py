@@ -26,6 +26,44 @@ from photobooth.printer import PrinterConfig
 
 
 class OriginalSandboxVisitTests(unittest.TestCase):
+    def test_witness_sync_failure_withholds_start_and_retains_original_handles(self):
+        import photobooth.post_preview_bootstrap as bootstrap
+        self.shutdown(self.visits)
+        manager = self.manager(); self.addCleanup(self.shutdown, manager)
+        original = bootstrap._send; sent = []
+        def send(channel, frame, deadline):
+            sent.append(frame['kind'])  # Static kind only, never key/config/proof.
+            return original(channel, frame, deadline)
+        with patch.object(bootstrap, '_send', side_effect=send), patch(
+                'photobooth.post_preview_worker_start.os.fsync', side_effect=OSError('PRIVATE IO DETAIL')):
+            with self.assertRaises(DraftHeld): manager.start()
+        self.assertNotIn('START', sent)
+        self.assertIsNotNone(manager._backend)
+        self.assertIsNone(manager._backend._worker_start_frame)
+        self.assertFalse(manager._admitted)
+        path = self.config.private_root/'worker-starts'/(manager._key.key_id+'.json')
+        self.assertTrue(path.is_file())
+        with self.assertRaises(OSError): LaunchLease(self.config.private_root)
+        process = manager._backend.process
+        self.shutdown(manager)
+        self.assertIsNotNone(process.poll())
+        self.assertTrue(path.is_file())
+
+    def test_original_child_identity_is_durable_before_private_start(self):
+        import photobooth.post_preview_bootstrap as bootstrap
+        self.shutdown(self.visits)
+        manager = self.manager(); self.addCleanup(self.shutdown, manager)
+        original = bootstrap._send
+        observed = []
+        def send(channel, frame, deadline):
+            if frame.get('kind') == 'START':
+                key_id = frame['fulfillment']['worker_key']['key_id']
+                observed.append((self.config.private_root/'worker-starts'/(key_id+'.json')).is_file())
+            return original(channel, frame, deadline)
+        with patch.object(bootstrap, '_send', side_effect=send):
+            manager.start()
+        self.assertEqual([True], observed, 'Original witness must precede private START')
+
     def saved_row(self, query, parameters=()):
         path = self.config.private_root/'drafts.sqlite3'
         with closing(sqlite3.connect(path.as_uri()+'?mode=ro', uri=True)) as db:

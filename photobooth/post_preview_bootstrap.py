@@ -26,6 +26,8 @@ from photobooth.post_preview_readiness_bridge import (
     MAX_MESSAGE, WorkerReadinessClient, _private_channel, _receive, _send,
 )
 from photobooth.post_preview_store import ORDER_VERSION
+from photobooth.kiosk_v2.recovery import LaunchLease
+from photobooth.post_preview_worker_start import record_worker_start,require_worker_start_owner
 
 CHILD_MODULE = 'photobooth.post_preview_bootstrap'
 REPOSITORY = Path(__file__).resolve().parents[1]
@@ -71,12 +73,16 @@ class SandboxBackendProcess:
     reports backend exit only; original native readiness collector/worker stop
     and PREPARE/ACK remain separate obligations before admitting another visitor.
     """
-    def __init__(self, config, *, fulfillment=None):
+    def __init__(self, config, *, fulfillment=None, worker_launcher=None):
         if (type(config) is not SandboxHostConfig
-                or fulfillment is not None and type(fulfillment) is not SandboxHostFulfillment):
+                or fulfillment is not None and type(fulfillment) is not SandboxHostFulfillment
+                or worker_launcher is not None and
+                   (type(worker_launcher) is not LaunchLease or fulfillment is None)):
             raise ValueError('Exact private backend configuration required')
         self._config = config
         self._fulfillment = fulfillment
+        self._worker_launcher = worker_launcher
+        self._worker_start_frame = None
         self.process = self._control = None
         self.endpoint = None
         self._nonce = uuid.uuid4().hex
@@ -97,6 +103,8 @@ class SandboxBackendProcess:
         _private_channel(readiness_channel)
         if self.process is not None:
             raise BackendStartupHeld('Original backend process already started')
+        if self._worker_launcher is not None:
+            require_worker_start_owner(self._worker_launcher,self._config,self._fulfillment.worker_key)
         request = dict(version=1, kind='START', nonce=self._nonce,
                        config=_config_data(self._config))
         if self._fulfillment is not None:
@@ -126,6 +134,9 @@ class SandboxBackendProcess:
                     '--readiness-fd',str(readiness_channel.fileno())], **kwargs)
             child.close(); readiness_channel.close()
             deadline = time.monotonic()+timeout
+            if self._worker_launcher is not None:
+                self._worker_start_frame = record_worker_start(
+                    self._worker_launcher,self._config,self._fulfillment.worker_key,self.process)
             _send(parent, request, deadline)
             result = _receive(parent, deadline)
             if (set(result) != {'version','kind','nonce','pid','port','mode','order_version'}

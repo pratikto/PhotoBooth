@@ -1,5 +1,7 @@
 # Original worker capability custody — Windows-first L3-C
 
+> **Latest C2c1/C2c2 mounted lifecycle increment:** pre-key original history/backend-orphan review and same-key actual child witness before START implemented; focused checks PASS, full967 backend/100 native/CI pending. Original OS key escrow remains UNMOUNTED; C2c3/C3 recovery incomplete, commercial NOT_READY. See latest sections below; older final/pending notes retain their original source.
+
 > **FINAL VERIFIED — source9de0dcd213f741b19cda493cc30d80e9b5c38598:** 948 local backend/100 actual-X11 native/34 offline Apps Script PASS. CI42812100193 ALL FOUR SUCCESS, all completed logs inspected. C1/C2a/C2b remain UNMOUNTED; C2c/C3 recovery incomplete; commercial NOT_READY, default health False. [Machine-readable evidence](evidence/pp06-windows-worker-custody-2026-11-10.json). Earlier pending/failure snapshots below are retained history.
 
 10 November 2026. Base5f9e52e, runtime9054053, existing authorized post-preview
@@ -353,3 +355,78 @@ launcher/shutdown/enrollment PASS45.946s. Zero failures/errors/skips. Complete
 registry now955 backend methods (previous948+7), native100 unchanged. Final
 full regression/CI pending at this micro-checkpoint. C1/C2a/C2b escrow remains
 UNMOUNTED; C2c2/C3 recovery is NOT implemented. Commercial NOT_READY, health False.
+
+## C2c2 contract BEFORE source — original child witness before START
+
+Mount a non-secret, immutable original process-start witness in the trusted
+manager's existing bootstrap only. Pass the exact existing native LaunchLease
+privately to SandboxBackendProcess, never GUI/HTTP or child argv/environment.
+Generic standalone host callers retain no claim of original native ownership.
+After actual Popen and before original START/config send, capture actual parent
+and child PID/birth through C2a. Persist a role-distinct canonical frame bound
+to original root/account/booth/Sandbox/version and SAME original WorkerFenceKey
+ID, HMAC with that existing key. No plaintext key/config/token file and no new
+key/provider/OS provision. Use original bounded regular-file helpers, exclusive
+creation/fsync and directory sync; retain partial/foreign records. Same exact
+live parent/child/key may re-sync identical bytes only. No process kill or lock
+release beneath a late child on failure. Preserve all prior witnesses/epochs.
+
+This witness is NOT a retirement receipt, process-death assertion, kernel fence,
+ACK, finance, customer proof or boot authority. Original custody/key escrow and
+immutable draft/generation-to-epoch binding remain UNMOUNTED/unfinished; a new
+key/witness can never substitute for old work. Already ACKed receipt verification
+is unchanged. Read returns authenticated metadata only after same original key
+verification, never an old media lease. No recovery toggle/default activation.
+
+Test actual independent child identity/live state, pre-START ordering (the child
+must not construct host/work before witness persistence), same-key HMAC/role/
+scope, immutable retry and tamper/partial/sync-failure preservation, denied native
+lease/current parent ownership and original child stop. Windows actual process
+birth and Linux read-only observations are required; external transports remain
+fake in existing tests only. Re-run affected original bootstrap/manager/launch
+tests, then one full final regression and completed exact-source CI logs.
+
+### C2c2 implemented and focused verification
+
+Mounted in OriginalSandboxVisits -> SAME original SandboxBackendProcess only,
+with the exact original native LaunchLease supplied privately. The original
+Popen child is observed, same-key HMAC witness exclusively written/fsynced, and
+only then may the original private START/config send run. No key/config/token
+is persisted, passed by argv/environment or given to GUI/HTTP. Generic standalone
+hosts do not acquire an invented native-owner assertion. The original bootstrap
+still retains handles and waits for actual child exit on failure, never kills.
+
+Role ORIGINAL_WORKER_START is distinct from ORIGINAL_WORKER_RETIRED. Its epoch
+is the existing unique original key ID, not a new visit/draft generation grant.
+The frame binds actual parent/child PID+birthday, root, merchant, booth, fixed
+Sandbox/version and key ID. Record authentication is metadata ONLY; no process
+death, backend/global kernel ownership, retirement, ACK or media authority.
+OS key escrow and original immutable draft/generation epoch mapping remain
+UNMOUNTED/unfinished. A new key/witness never authorizes old work. Prior records
+remain intact and operational witness folders are Git-ignored.
+
+Test-first original child case FAIL1.489s: file absent at private START.
+Corrected case PASS1.511s.11 focused witness/ordering/sync-failure tests PASS
+2.913s, plus final closed-owner-before-Popen case PASS0.014s.79 expanded original
+manager/bootstrap/fulfillment/shutdown/launch/witness methods PASS121.593s,
+zero failures/errors/skips. Includes actual independent processes, original
+OS birth/exit observations, same-key immutable retry, role/corruption/hard-link/
+wrong-key refusal, sync-failure byte preservation and NO START on failed sync.
+Partial files are retained; actual native lease remains held until child drain.
+After child exit, authenticated metadata remains readable but cannot be signed
+again for that dead child. Full registry now967 backend, native100 unchanged;
+final full regression/CI pending at this micro-checkpoint.
+
+C2c1 source326062f final CI42822045379 ALL FOUR SUCCESS, all completed logs
+inspected: Windows432 PASS387.925s +523 PASS420.837s=955, Ubuntu955 PASS454.646s,
+native100 PASS292.908s. Zero unit failures/errors/skips. This is prior C2c1
+evidence, not final C2c2 source verification.
+
+NEXT C2c3: original OS-protected key escrow BEFORE all original work, immutable
+draft/generation-to-worker-epoch binding, and eligible same-root rotations using
+the shared C2c1 history policy. Current new-root-only escrow refuses existing
+customer/prior-epoch roots and is not safe to enable by inserting one call in
+`_open`. Reconcile global/native/backend locks and independently verified old
+process exits; then C3 original receipt/finance/uncertainty reconciliation.
+Unknown roots without ORIGINAL capability/binding stay held. Never sign a dead
+old worker's retirement retroactively or mint a replacement for its obligation.

@@ -90,7 +90,8 @@ class OriginalSandboxVisits:
         self._key=WorkerFenceKey.create()
         fulfillment=SandboxHostFulfillment(self._printer,self._key)
         worker,child=socket.socketpair()
-        self._backend=SandboxBackendProcess(self._config,fulfillment=fulfillment)
+        self._backend=SandboxBackendProcess(self._config,fulfillment=fulfillment,
+                                           worker_launcher=self._launcher)
         try:
             endpoint=self._backend.start(child)
             self._client=PostPreviewClient(endpoint,self._config.booth_id,self._config.booth_token,

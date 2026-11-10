@@ -21,3 +21,6 @@ photobooth/local_settings.py
 
 # Private supervised post-preview trial media, journals and local reports.
 /work/postpay-*/
+
+# Private original worker lifecycle journals, wherever local storage is selected.
+worker-starts/
