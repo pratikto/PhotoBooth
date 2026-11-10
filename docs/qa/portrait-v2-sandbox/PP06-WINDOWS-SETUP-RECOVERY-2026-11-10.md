@@ -166,3 +166,61 @@ and subsequent check-only pass with public fixture settings and no device/backen
 provider call. This does NOT substitute for L3-B final changed-source regression.
 Next run final917 backend/99 native/current Windows CI, then L3-C supported
 original pre-ACK/orphan boot/custody design. Commercial NOT_READY; health False.
+
+
+## L3-C first unfinished boundary after final L3-A/B verification
+
+Supported pre-ACK/orphan recovery must retain original authority, not declare
+process/socket exit equivalent to an ACK. Current WorkerFenceKey is deliberately
+ephemeral and shared privately with the exact child; an unverified PREPARED
+receipt cannot be authenticated after losing that key by minting another key.
+Already backend-ACKed immutable receipts remain verifiable by the existing
+durable original verifier and do not need key replacement.
+
+Before new code, design the original owner/key/receipt lifecycle and OS-protected
+escrow BEFORE native/backend work starts. Bind exact root/account/booth/mode/
+version/worker epoch, actual global/native/backend kernel ownership and original
+process exit. Missing/locked/corrupt/foreign custody, a live orphan or lost
+original un-ACKed capability remains held. Preserve old roots without escrow;
+never retroactively sign for an old process, reset metadata or adopt media.
+Reconcile original finance/paper/upload uncertainty independently before ACK.
+No customer image restoration without original proof/fresh legitimate PAID.
+
+Separate safe key-lifecycle/core increments, exact process/lease death tests and
+original local receipt verification from GUI admission. Reuse original Windows
+DPAPI/private bootstrap/worker receipt/handoff engine. Do not relax mock guards,
+add a dummy native provider, enable default health or start Ubuntu packaging.
+No new whole-suite onboarding rerun of an unchanged verified source. Actual
+Windows process/reboot/device/custody qualification and encrypted backup/restore
+remain separate; first-install availability is not that acceptance.
+
+
+## Urgent owner micro-push checkpoint — 10 November 2026
+
+Owner requests immediate backup before ChatGPT limit. Runtime9054053ed54bb99e631d7ee60032fb115a513817
+is already pushed/remote verified, following enrollment63fc6c8. **917 full local
+backend PASS436.848s +99 full native PASS294.861s**, zero failures/errors/skips;
+34 Apps Script PASS. No runtime/test WIP or active local test/backend.
+
+CI42801312247 at exact9054053: Windows core396 PASS392.060s and native99
+PASS268.546s, completed logs inspected; all20 new enrollment/graceful methods
+observed on Windows core. Ubuntu job129779249847 SUCCESS by metadata, completed
+log still to inspect. Windows delivery129779249670 IN_PROGRESS: no full four-job
+verdict claimed. Enrollment63fc6c8's earlier CI42798579893 is already all-four
+SUCCESS with all completed logs inspected, including actual Windows PowerShell
+new-booth enrollment/check-only. Do not borrow its verdict for9054053.
+
+FIRST next action: inspect final Windows delivery and Ubuntu completed logs for
+CI42801312247, fix any actual failure, publish source-specific final evidence.
+Do not rerun passing baseline merely for onboarding. Then L3-C original custody/
+key/receipt/kernel process-exit design for pre-ACK/orphan recovery above. No
+unknown owner adoption, new replacement key/root, uncertain print replay or
+default merchant-health activation. Owner confirms all Windows configuration
+available, not actual acceptance. Ubuntu packaging remains deferred.
+
+This containing publication is documentation-only; obtain SHA from Git history
+and verify actual remote before continuation. Private work/logs/screenshots/old
+superseded stash are local-only, not required for the source checkpoint. Only
+the lab X11 and read-only gh CI watcher remain; all application tests/backends
+finished. [Exact local/CI/source evidence](evidence/pp06-windows-setup-exit-checkpoint-2026-11-10.json).
+Commercial NOT_READY; no real payment/refund/paper/public upload/deploy performed.

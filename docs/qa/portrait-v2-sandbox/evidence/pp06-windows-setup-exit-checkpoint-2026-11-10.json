@@ -1,0 +1,77 @@
+{
+  "source": "9054053ed54bb99e631d7ee60032fb115a513817",
+  "stage": "L3-A enrollment/L3-B normal shutdown urgent owner checkpoint",
+  "source_sha256": {
+    "photobooth/post_preview_enrollment.py": "0551f461184e8ae2de50649c46da7ba86f7268d3ef6cbd3e29eeab4c1684bbbf",
+    "photobooth/post_preview_launch_settings.py": "c4ca51a152c1720da191ce0b14d4b4e4785b91937d6f1c1f18778440b88b3fe5",
+    "photobooth/post_preview_launch.py": "4a6a67dd00ba0fdedfd71a4421f0e3392203741cc78325e65da6ac0e7733dadd",
+    "photobooth/post_preview_sandbox_visits.py": "a7edb13ed9372198f14ff3896ad9339e3dc787486776951b178f04c0f4a4acf1",
+    "photobooth/post_preview_visit_control.py": "43b69aed8588593da9bda2871df2b134c128a1f3ae0234126514fe5fb56083b2",
+    "tools/run_post_preview_sandbox.py": "26b5c857e1af5e185f742c2165a6477d45c551eb7f4d595bfef766030c029489",
+    "Start-PostPreviewSandbox.ps1": "50f8fbe11254bddef9e5f04b79888d6030bcb5ab700cc972023149617f40856d",
+    "tests/test_post_preview_enrollment.py": "34ecfc34ea8b94e93d1449344aca879e6c5a3ab9bd83b017feb92a271d400ea1",
+    "tests/test_post_preview_graceful_exit.py": "b6914cb010186f62738d8649d8a108f017d3b69f6d4038f9a52fb253e02d66f4",
+    "tests/test_post_preview_windows_widgets.py": "6926c4eafde06a64d02363cc802d2f60f3c817f3b1ef38cbbd35d4e642f4ae1d",
+    "tests/post_preview_host_process_fixture.py": "00ff3e57e7ad6f92152d78f155f4b9086ac3bac9913d9d2433545790cdd1e4b7",
+    "tools/run_post_preview_ci.py": "4a4b49f4c86e72cf689b05a5b480a9bffdc3a92af4e9b328712953f601eeb129",
+    ".github/workflows/post-preview-qris.yml": "6b495dc2bbd2084a0a9b7ce02f068246daa44e739a9c29c547217f9f3c1ce3b3"
+  },
+  "local": {
+    "backend": {
+      "run": 917,
+      "seconds": 436.848,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "native_actual_x11": {
+      "run": 99,
+      "seconds": 294.861,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "apps_script": {
+      "run": 34,
+      "failures": 0,
+      "skips": 0
+    }
+  },
+  "logs_sha256": {
+    "pp06-setup-exit-final-backend.log": "abda8d807f9f2f864d6c749822f8aa6e782ce4580259bdc86a40e391cc58fd9f",
+    "pp06-setup-exit-final-native.log": "414749fa92cccb012a5e05fdf1b7d869141c30cd5a10f6abc82d0e1736f75867",
+    "pp06-setup-exit-final-apps-script.log": "abeda3472d7b286e9c1943aa628dcc4221e47d14ebf58acc7e1147f70c9cc071"
+  },
+  "ci": {
+    "run_id": 42801312247,
+    "head_sha": "9054053ed54bb99e631d7ee60032fb115a513817",
+    "state": "PENDING_WINDOWS_DELIVERY",
+    "windows_core": {
+      "job_id": 129779249259,
+      "run": 396,
+      "seconds": 392.06,
+      "conclusion": "success",
+      "completed_log_inspected": true,
+      "new_methods_observed": 20
+    },
+    "native": {
+      "job_id": 129779249515,
+      "run": 99,
+      "seconds": 268.546,
+      "conclusion": "success",
+      "completed_log_inspected": true
+    },
+    "ubuntu": {
+      "job_id": 129779249847,
+      "conclusion": "success",
+      "completed_log_inspected": false
+    },
+    "windows_delivery": {
+      "job_id": 129779249670,
+      "state": "IN_PROGRESS",
+      "full_verdict_not_claimed": true
+    }
+  },
+  "first_next_action": "Inspect final CI42801312247 Windows delivery129779249670 and Ubuntu129779249847 completed logs, record exact verdict; fix actual failure if any. No unchanged baseline rerun. Then L3-C original protected key/receipt/kernel ownership design for pre-ACK/orphan recovery.",
+  "limits": "Source fully pushed, no runtime/test WIP. Local raw logs/caches/old superseded stash not pushed. No local test/backend running; only lab X11 and read-only CI watcher. Default health False/commercial NOT_READY. Owner Windows accounts/printer/Drive available but device/account/reboot acceptance NOT_RUN. No actual payment/refund/paper/public upload/deploy; Ubuntu packaging deferred."
+}

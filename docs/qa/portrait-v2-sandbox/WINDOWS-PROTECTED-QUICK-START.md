@@ -96,8 +96,8 @@ Closing the window requests original private retirement. A held camera/file/
 preview/health/backend worker keeps the SAME launcher/global lock alive until
 actual exit; `SHUTDOWN HELD` is not permission to restart, force-kill or resend.
 After a crash/unresolved boot, preserve original roots/custody and use supported
-recovery only. Pre-ACK/orphan boot setup/remedy, full first-install onboarding,
-refund/status operations and final qualification remain separate unfinished work.
+recovery only. Pre-ACK/orphan boot, legacy migration/reconciliation, refund/status
+operations and final qualification remain separate unfinished work.
 No production endpoint/default activation, real money/refund or deployment is
 authorized by these source instructions. Existing owner smoke observations stay
 credited; only new/unresolved Windows/profile observations need recording.
@@ -111,7 +111,32 @@ check-only returned the expected BLOCKED2 without account configuration. This
 is not actual Windows GUI/hardware/merchant acceptance.
 [Evidence and exact remaining source work](PP06-PROTECTED-LAUNCH-2026-11-10.md).
 
-The local history result covers canonical legacy checkout history. Protected
-session boot/recovery is checked separately by original backend startup; the
-preflight does not certify a restart. Normal closing during an unresolved visit
-can also leave startup held. Never reset that visit to open a fresh customer.
+The local history result covers the selected original canonical legacy history
+or an exact explicit new-booth enrollment baseline. Protected session boot is
+checked separately by original backend startup; preflight does not certify a
+restart. Never reset a held visit to open a fresh customer.
+
+## Normal shutdown and restart after the L3-B increment
+
+The protected Windows entry opts into original privacy retirement → PREPARE →
+actual local worker receipt → independently verified backend ACK before final
+handle/global close. It does not open a new visitor just to archive the old one.
+An empty idle booth creates no fake customer release. Safe unpaid or original
+paid/OWED visits retain their media/rights and verified release on the SAME root.
+Restart starts protected Ads; accessing paid originals still requires the SAME
+original CCP/Recovery Ticket and fresh independent settlement. Submitted ticket/
+strips are never replayed. Save genuine customer proof as before.
+
+A pending/unknown payment, financial discrepancy, uncertain paper or actual live
+worker keeps **SHUTDOWN HELD**. This is not a successful release; do not force-kill
+or restart a second instance. Actual process death before a valid original ACK
+still leaves boot held pending supported recovery. Enrollment cannot repair it:
+never use EnrollNewBooth against a prior protected install or switch storage roots.
+Do not delete keys, DB/WAL/SHM, enrollment files, media or print jobs. The
+first-install command only applies to genuinely new, audited history absence.
+
+The owner confirms all three configurations are available on Windows. Their
+actual readiness, paper/phone access and account qualification remain to be
+observed on that PC; no secret values are needed in chat. Existing owner smoke
+observations remain credited. See [the current source/evidence](PP06-WINDOWS-SETUP-RECOVERY-2026-11-10.md)
+for exact qualification and known unsupported interrupted-boot cases.
