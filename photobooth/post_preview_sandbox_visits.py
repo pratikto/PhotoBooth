@@ -316,6 +316,11 @@ class OriginalSandboxVisits:
             raise ValueError('Original privacy retirement event required')
         with self._lock:
             self._active()
+            # Privacy can interrupt an already accepted release while its old
+            # SQL handle is closing. Finish only that original transition
+            # before inspecting the current owner; never query the dead handle.
+            if self._closing or self._acked or self._opening or self._empty_rotating:
+                self.ensure_new_visitor_ready()
             service=self._service
             if service is None:
                 raise DraftHeld('Original native context unavailable')

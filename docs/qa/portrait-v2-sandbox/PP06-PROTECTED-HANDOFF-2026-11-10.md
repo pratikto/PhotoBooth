@@ -639,3 +639,41 @@ launcher/boot/remedy/actual qualification remain open; health/defaults gated,
 commercial NOT_READY. Current new-source full regression/CI pending; previous
 G exact-source816/816/88 SUCCESS remains historical. Latest base2f9fb1c CI was
 Ubuntu817/native88 SUCCESS, Windows cancelled without a summary, not PASS.
+
+
+## B6-H3 bounded async public control and exact privacy drain
+
+The GUI-facing VisitControl contains only bounded queues, request IDs/visibility
+epochs/events and the original NativeVisitBinding. One separately retained
+TrustedVisitWorker owns the actual OriginalSandboxVisits manager and serializes
+blocking child/HTTP/collector/ledger calls. No manager, merchant configuration,
+provider, worker key or thread handle is retained by the public control. It uses
+the manager's EXACT PhotoJobs; no second facade or customer/default launcher is
+created. Proof exists only in its transient command; exceptions become static
+DENIED/HOLD and private outcomes are never logged or echoed.
+
+Immediate privacy increments its epoch and hides the original service without
+waiting for a pending call. Late/stale and forged queue outcomes cannot publish
+private snapshots or replace bindings. A late committed original claim goes
+through H2's exact metadata-only retirement after actual native I/O drains.
+The first privacy reason survives repeated minimize/cancel. stop=False retains
+actual worker/child/private kernel ownership; a True flag alone cannot declare
+STOPPED. Repeated privacy after shutdown has begun cannot prevent actual drain.
+
+BUG-057: one controlled actual old-ledger-close/privacy race reproduced as
+FAIL21.380s: retirement retried the closing/closed old SQL context forever.
+The manager now finishes ONLY its already accepted original close/open before
+inspecting the current owner. Existing accepted receipt/history gates remain;
+no unknown boot owner or new money/media authority is introduced. Corrected
+first6 PASS24.176s; expanded **77 affected PASS148.702s**, zero failures/errors/
+skips (9 public-control tests plus68 manager/client/claim/handoff methods).
+The backend CI registry includes the new methods on Ubuntu and Windows.
+[Source and log evidence](evidence/pp06-async-control-2026-11-10.json).
+
+NEXT H4: mount only this public control into the original protected native Ads /
+recovery popup / input / cards, reuse the exact original PhotoJobs, gate entry
+while pending, test A/B/A and blocked I/O/privacy/shutdown at BOTH portrait sizes.
+No customer launcher/default activation from this checkpoint. Protected freeze,
+complete trusted global launch ownership/configuration, supported boot/remedy/
+status/ops and actual final qualification remain unfinished. Full current-source
+regression/CI pending; commercial NOT_READY. External effects remain fake in QA.

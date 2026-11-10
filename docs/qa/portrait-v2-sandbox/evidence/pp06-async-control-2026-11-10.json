@@ -1,0 +1,36 @@
+{
+  "base": "f057620dd5b9ac456e216798b890e147c2360a79",
+  "stage": "B6-H3 bounded async public control",
+  "source_sha256": {
+    "photobooth/post_preview_sandbox_visits.py": "aaf1c0c4ae1ef0dc0b840259529cba887755c1fc2e667c01ce127fe26175dc05",
+    "photobooth/post_preview_visit_control.py": "13b3a4293552153cf10b091e7cc9ebbe6b9b8e1020e253e1a40a8577bacf3fa5",
+    "tests/test_post_preview_visit_control.py": "488d5a84845839e0d7570b3b030960c7a09d0f74fe4a53b6bc210e21c6b2a842",
+    ".github/workflows/post-preview-qris.yml": "b92da381fa1e593e5d009b8c21cd87a01a7e3614fee28615fcac063911303ff3"
+  },
+  "before": {
+    "run": 1,
+    "failures": 1,
+    "seconds": 21.38
+  },
+  "corrected_first": {
+    "run": 6,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 24.176
+  },
+  "affected": {
+    "run": 77,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 148.702
+  },
+  "command": ".venv/bin/python tools/run_kiosk_unittests.py test_post_preview_visit_control test_post_preview_sandbox_visits test_post_preview_handoff_client test_post_preview_claim_requests test_post_preview_sandbox_handoff",
+  "logs_sha256": {
+    "closing-before.txt": "4a58262adc4e3a6f19de1a4b708d7defc6e42d657b7a6f0143ef26d9ad9f07e5",
+    "control-after.txt": "372813f97ac7a703bc02cb69e7ded9854b9cc21c554cabee976746036fdde6b7",
+    "control-related.txt": "e82bac65867e464ecc22e8f7afc5b3c66b0946c3f2a3d7508cb32e281c4b5656"
+  },
+  "limits": "Actual original child/native facade, fake external transports/custody. GUI mounting/full protected launcher/freeze/global ownership/boot/remedy/device qualification unfinished; full current regression/CI pending."
+}

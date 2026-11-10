@@ -1,3 +1,15 @@
+## BUG-057 — privacy during accepted original ledger close could hold forever (10 November 2026)
+
+S2 / async control integration SOURCE FIXED before customer mounting.
+One actual child/native fixture reproduced FAIL21.380s when privacy arrived
+while the ACKed original ledger was closing; subsequent retirement inspected
+that dead context. Finish ONLY its already accepted original close/open before
+current-owner retirement, retaining original worker/history gates. Repeated
+privacy during actual shutdown also cannot block the remaining drain.
+Corrected first6 PASS24.176s;77 affected PASS148.702s, zero failures/errors/skips.
+New full/CI and native mounting pending; no customer/money incident.
+[Exact scope/source evidence](qa/portrait-v2-sandbox/PP06-PROTECTED-HANDOFF-2026-11-10.md).
+
 ## BUG-056 — returning proof could redeem before finishing a lost original ACK (10 November 2026)
 
 S2 / trusted-manager integration SOURCE FIXED; original customer profile unmounted.
