@@ -1,3 +1,7 @@
+## 10 November 2026 — launch core final verification
+
+Runtimeea2554c and Windows test fixture correction34726b7:860 full local backend PASS; corrected8 focused PASS. CI42771399228 all FOUR SUCCESS (Ubuntu860, Windows339+521, native98), zero failures/errors/skips. Initial Windows SQLite fixture cleanup failure preserved and explicitly closed; no runtime/assertion/lock change. L1 is the trusted owner core; L2 executable/configuration/boot/remedy and actual qualification remain unfinished. [Evidence and exact continuation](qa/portrait-v2-sandbox/PP06-PROTECTED-LAUNCH-2026-11-10.md).
+
 ## 10 November 2026 — protected native checkout and launch ownership core
 
 - Connect the exact protected visits preview button to original backend freeze, genuine CCP, QRIS, ticket and automatic purchased output. H5-C runtime6e059cd:852 backend/98 native/34 Apps Script local PASS; exact four-job CI42768843056 SUCCESS.
