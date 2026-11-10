@@ -502,3 +502,14 @@ backup/reboot/power-loss/phone acceptance and operational qualification remain
 separate. The eleven credited owner smoke checks remain credited. Do not rerun
 unchanged passing baselines simply to onboard. Commercial NOT_READY, default
 health False; Windows first, Ubuntu launcher/packaging deferred by the owner.
+
+## Owner priority: BEGIN normal owned Windows acceptance (10 November)
+
+The owner next explicitly asks to reach acceptance on their own Windows/account/
+devices, with micro-push reminders. The existing explicit protected Sandbox
+entry already supports the normal journey. The [owned acceptance entry and
+worksheet](WINDOWS-OWNED-SANDBOX-ACCEPTANCE.md) now prepare that bounded test
+without enabling commercial release, default health or unsupported fault paths.
+Do not make BEGINNING normal-flow acceptance wait on every commercial roadmap
+gate; also do not label incomplete C2c3/C3/remedy/fault scopes PASS. They remain
+explicitly BLOCKED/NOT_RUN. Original keys/history/uncertain paper are preserved.

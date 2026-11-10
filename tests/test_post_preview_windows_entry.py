@@ -18,6 +18,12 @@ from tools import run_post_preview_sandbox as entry
 
 
 class ProtectedWindowsEntryTests(unittest.TestCase):
+    def test_acceptance_clipboard_session_is_not_a_check_only_or_consent_bypass(self):
+        with patch('sys.stderr',new_callable=io.StringIO), patch(
+                'photobooth.post_preview_launch.ProtectedSandboxLaunch',side_effect=AssertionError('No private owner')):
+            args=['--storage-root',str(Path.cwd()),'--owned-acceptance-session','a'*32]
+            self.assertEqual(2,entry.main(args+['--check-only']))
+            self.assertEqual(2,entry.main(args+['--sandbox-only']))
     @contextmanager
     def fixture(self):
         helper=fixtures.ProtectedLaunchSettingsTests(methodName='runTest')

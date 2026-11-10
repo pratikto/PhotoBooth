@@ -47,7 +47,7 @@ try {
     $meongAcceptanceCode = $LASTEXITCODE
     if ($Action -eq 'Run' -and $meongAcceptanceCode -eq 0) {
         # SAME original launcher and explicit original consent flags; no new GUI.
-        & "$PSScriptRoot\Start-PostPreviewSandbox.ps1" -StorageRoot $StorageRoot -BoothId $BoothId -Size $Size -CameraIndex $CameraIndex `
+        & "$PSScriptRoot\Start-PostPreviewSandbox.ps1" -StorageRoot $StorageRoot -BoothId $BoothId -Size $Size -CameraIndex $CameraIndex -OwnedAcceptanceSession $Session `
             -SandboxOnly -EnableRealPrinter -AcceptRealPaper -EnableRealDrive -AcceptPublicTestUpload
         $meongAcceptanceCode = $LASTEXITCODE
     }

@@ -23,6 +23,7 @@ def parser():
     p.add_argument('--setup-only',action='store_true')
     p.add_argument('--enroll-new-booth',action='store_true')
     p.add_argument('--sandbox-only',action='store_true')
+    p.add_argument('--owned-acceptance-session')
     for flag in ('enable-real-printer','accept-real-paper','enable-real-drive','accept-public-test-upload'):
         p.add_argument('--'+flag,action='store_true')
     return p
@@ -47,6 +48,9 @@ def main(argv=None):
     args=parser().parse_args(argv)
     setup=args.setup_only or args.enroll_new_booth
     external=(args.enable_real_printer,args.accept_real_paper,args.enable_real_drive,args.accept_public_test_upload)
+    if args.owned_acceptance_session and (setup or args.check_only):
+        print('BLOCKED: owned acceptance handoff requires the original explicitly consented run.',file=sys.stderr)
+        return 2
     if setup and (not args.setup_only or not args.enroll_new_booth or not args.sandbox_only
                   or args.check_only or any(external)):
         print('BLOCKED: local setup requires --setup-only --enroll-new-booth --sandbox-only, without run/check flags.',file=sys.stderr)
@@ -60,7 +64,7 @@ def main(argv=None):
         print('BLOCKED: close/disable the other checkout profiles.',file=sys.stderr);return 2
     from photobooth.post_preview_launch import ProtectedSandboxLaunch
     from photobooth.post_preview_launch_settings import load_settings
-    owner=app=None
+    owner=app=simulator=None
     try:
         owner=ProtectedSandboxLaunch(ROOT)
         if setup:
@@ -72,6 +76,9 @@ def main(argv=None):
         if args.check_only:
             print('LOCAL CONFIGURATION/HISTORY VALID. Custody, merchant, Drive sharing, printer, camera: NOT_CHECKED.')
             return 0
+        if args.owned_acceptance_session:
+            from photobooth.post_preview_acceptance import validate_runtime_session
+            validate_runtime_session(owner,settings,args.owned_acceptance_session)
         # Native-only profile values. Backend private environment is independently
         # allowlisted by the original process host, never passed a GUI fixture.
         from tools.start_post_preview_device_test import child_environment
@@ -85,6 +92,11 @@ def main(argv=None):
         print('MIDTRANS SANDBOX ONLY: use official simulator; never pay with a real banking/wallet app.')
         print('Owned test printer and public test Drive enabled by explicit consents. Preserve original journals.')
         app=native_app(control,owner.camera,settings.config.private_root,args.size)
+        if args.owned_acceptance_session:
+            from photobooth.kiosk_v2.owned_sandbox_simulator import OwnedSandboxSimulatorClipboard
+            simulator=OwnedSandboxSimulatorClipboard(app); simulator.install()
+            print('OWNED SANDBOX: F8 copies ONLY the current QRIS image URL to local clipboard.')
+            print('Paste into the official Sandbox simulator. Keep clipboard data out of shared reports.')
         app.run()
         return 0
     except KeyboardInterrupt:
@@ -93,6 +105,7 @@ def main(argv=None):
         print('BLOCKED: protected startup held. Preserve original history/custody; check local configuration.',file=sys.stderr)
         return 2
     finally:
+        if simulator is not None: simulator.close()
         if owner is not None:
             from photobooth.post_preview_native_exit import drain_native_app
             noted=False

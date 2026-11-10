@@ -85,6 +85,20 @@ class OwnedAcceptanceTests(unittest.TestCase):
                     acceptance.record_result(root,session,'WN02','PASS')
                 self.assertEqual('SOURCE_CHANGED_RETEST_NEEDED',acceptance.summary(root,session)['normal_flow'])
 
+    def test_runtime_handoff_requires_same_original_prestart_owner_and_scope(self):
+        from photobooth.post_preview_launch import ProtectedSandboxLaunch
+        from photobooth.post_preview_launch_settings import load_settings
+        with self.fixture() as (root,local,history):
+            session=self.session(root)
+            owner=ProtectedSandboxLaunch(root)
+            try:
+                settings=load_settings(owner,storage_root=root/'protected',booth_id='PB001')
+                acceptance.validate_runtime_session(owner,settings,session)
+                owner._started=True
+                with self.assertRaises(acceptance.AcceptanceHeld):
+                    acceptance.validate_runtime_session(owner,settings,session)
+            finally: self.assertTrue(owner.stop(timeout=0))
+
     def test_owner_results_append_and_never_claim_commercial_or_backend_authority(self):
         with self.fixture() as (root,local,history):
             session = self.session(root)

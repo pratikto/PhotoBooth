@@ -1,5 +1,11 @@
 # Windows protected Sandbox entry
 
+> **Owned Windows normal-flow acceptance entry:** use [the focused preflight,
+> original-run and redacted observation worksheet](WINDOWS-OWNED-SANDBOX-ACCEPTANCE.md).
+> It preserves this original launcher and all consent/history guards. Normal-flow
+> owner observations are separate from incomplete interrupted-recovery/remedy
+> and full commercial qualification. See its current source/CI status before use.
+
 10 November 2026: Windows is the immediate owner priority. Ubuntu launcher/
 autostart packaging is deferred. This is an explicit merchant Sandbox integration
 entry, not commercial release or a replacement for the original synthetic trial.

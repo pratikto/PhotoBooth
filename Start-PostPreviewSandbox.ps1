@@ -7,6 +7,7 @@ param(
     [switch]$SetupOnly,
     [switch]$EnrollNewBooth,
     [switch]$SandboxOnly,
+    [string]$OwnedAcceptanceSession,
     [string]$BoothId = 'PB001',
     [ValidateSet('452x900','800x1280')][string]$Size = '452x900',
     [ValidateRange(0,32)][int]$CameraIndex = 0,
@@ -44,6 +45,7 @@ try {
     if ($SetupOnly) { $meongArgs += '--setup-only' }
     if ($EnrollNewBooth) { $meongArgs += '--enroll-new-booth' }
     if ($SandboxOnly) { $meongArgs += '--sandbox-only' }
+    if ($OwnedAcceptanceSession) { $meongArgs += @('--owned-acceptance-session',$OwnedAcceptanceSession) }
     if ($EnableRealPrinter) { $meongArgs += '--enable-real-printer' }
     if ($AcceptRealPaper) { $meongArgs += '--accept-real-paper' }
     if ($EnableRealDrive) { $meongArgs += '--enable-real-drive' }

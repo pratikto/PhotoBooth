@@ -51,6 +51,7 @@ def assembled(checkout,templates,bridge,drive,**kwargs):
             assert row
             amount=json.loads(row['contract_json'])['amount']
             state='settlement'
+            if (checkout.photos.root.parent/'fixture-keep-pending').exists(): state='pending'
         payload=dict(status_code='201' if state=='pending' else '200',
             transaction_status=state,order_id=order,gross_amount=str(amount),currency='IDR',
             payment_type='qris',merchant_id='MTEST',fraud_status='accept',

@@ -228,6 +228,22 @@ def validate_for_run(root, storage_root, booth, session):
     except Exception: raise AcceptanceHeld(_FAILURE) from None
 
 
+def validate_runtime_session(owner, settings, session):
+    """Recheck under SAME original pre-start owner, without nesting its lock."""
+    try:
+        from photobooth.post_preview_launch import ProtectedSandboxLaunch
+        from photobooth.post_preview_launch_settings import ProtectedLaunchSettings
+        _require(type(owner) is ProtectedSandboxLaunch and not owner._started
+                 and not owner._closed and not owner._stopping and not owner._global.stream.closed
+                 and type(settings) is ProtectedLaunchSettings)
+        report = load_session(owner.project_root,session)
+        revision,clean = _source(owner.project_root)
+        _require(_windows_host() and _isolated() and clean and _dpapi_self_test()
+                 and report['status']=='LOCAL_PREREQUISITES_PASS'
+                 and report['source_sha']==revision and report['local_scope']==_scope(settings))
+    except Exception: raise AcceptanceHeld(_FAILURE) from None
+
+
 def _observations(root, session):
     folder = checked_path(_folder(root,session)/'events')
     rows = []
