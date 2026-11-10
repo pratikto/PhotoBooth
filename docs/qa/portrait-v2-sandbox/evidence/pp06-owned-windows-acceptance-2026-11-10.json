@@ -110,7 +110,7 @@
   "ci": {
     "run_id": 42835198124,
     "head_sha": "f4b8c07b0fb3bc7c163cc988c187bd0484777a2b",
-    "state": "PENDING",
+    "state": "THREE_SUCCESS_WINDOWS_DELIVERY_CANCELLED_15_MINUTE_DEADLINE",
     "native": {
       "job_id": 129895437105,
       "run": 101,
@@ -130,7 +130,13 @@
     },
     "windows_delivery": {
       "job_id": 129895436413,
-      "state": "PENDING"
+      "state": "CANCELLED_15_MINUTE_DEADLINE",
+      "started_at": "2026-11-10T14:33:02Z",
+      "completed_at": "2026-11-10T14:48:07Z",
+      "completed_progress_events": 418,
+      "final_unit_verdict": "UNAVAILABLE_NOT_PASS",
+      "completed_log_inspected": true,
+      "owner_powershell_step": "NOT_RUN"
     },
     "ubuntu": {
       "job_id": 129895437255,
@@ -196,7 +202,7 @@
     "Default health False; no production activation/deployment",
     "Ubuntu packaging deferred by owner"
   ],
-  "state": "LOCAL_FULL_PASS_CI_THREE_SUCCESS_WINDOWS_DELIVERY_PENDING",
+  "state": "APP_FULL_LOCAL_PASS_PRIOR_CI_THREE_SUCCESS_BUDGET_FIX_PENDING",
   "owner_acceptance": "NOT_RUN_REQUIRES_OWNED_WINDOWS_PC_AND_ORIGINAL_CONSENTS",
   "logs_sha256": {
     "meong-acceptance-settings-first-failure.log": "83106615aed469517a65e907b5fa548e3254304d720e81782c07775746975067",
@@ -209,5 +215,27 @@
     "meong-owned-uat-final-backend.log": "30dba64068a459d7c44829e36cd75a10a5c654a78c55b5df8487164b83526f0b",
     "meong-owned-uat-final-native.log": "d440900e5c198e9f89adea70fae5894a6233cee8fa5c3dfaed27cee9e79d1f4f",
     "meong-owned-uat-final-apps-script.log": "d3d2a82ecfcca2858752d5fc44d9fe89a04dfcdcdae0b4b27b3aeb5bb6933307"
+  },
+  "windows_budget_correction": {
+    "module_transfer": [
+      "test_post_preview_journey_matrix",
+      "test_post_preview_handoff_client"
+    ],
+    "measured_seconds": [
+      215.164,
+      37.078
+    ],
+    "discovery_proof": {
+      "all_cases": 982,
+      "windows_core_cases": 501,
+      "windows_delivery_cases": 481,
+      "all_original_order_preserved": true,
+      "same_method_multiset_and_multiplicity": true,
+      "module_partition_disjoint": true,
+      "ordered_all_sha256": "c2be5ecccdd378767d0f3276b106b5e5a353aff5bf5f1564f7274af16cae1ef6",
+      "timeout_minutes_unchanged": 15
+    },
+    "application_and_native_source_changed": false,
+    "new_exact_source_ci": "PENDING"
   }
 }

@@ -93,6 +93,13 @@ DELIVERY_MODULES=(
 
 ALL_MODULES=CORE_MODULES+DELIVERY_MODULES
 
+# Preserve ALL's original execution order; rebalance only Windows shards.
+# Sourcef4b8c07 delivery reached15min while advancing. Its measured215s journey
+# and37s handoff client fit the lighter core job; no methods/fsync/budget waived.
+_WINDOWS_TRANSFER=('test_post_preview_journey_matrix','test_post_preview_handoff_client')
+CORE_MODULES=CORE_MODULES+_WINDOWS_TRANSFER
+DELIVERY_MODULES=tuple(name for name in DELIVERY_MODULES if name not in _WINDOWS_TRANSFER)
+
 
 def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)

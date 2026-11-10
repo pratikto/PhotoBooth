@@ -274,6 +274,43 @@ account DPAPI and missing-consent hold succeeded; no physical/account PASS claim
 This is prior pre-F8 verification, not final simulator-handoff source evidence.
 Final source now expects982 complete backend and101 native; full checks pending.
 
+## Windows CI budget correction contract BEFORE source
+
+At sourcef4b8c07 CI42835198124, Windows delivery129895436413 hit its existing
+15-minute deadline (14:33:02Z--14:48:07Z), cancelled while advancing through418
+cases; no unit verdict/PowerShell step completed and no all-four PASS is claimed.
+Core459/Ubuntu982/native101 completed SUCCESS, logs inspected. Full local982/
+101/34 also PASS. Actual per-case timing identifies journey_matrix215.164s and
+handoff_client37.078s in the overloaded shard. This is a bounded CI scheduling
+failure, not a new payment/GUI/printer assertion failure or owner test outcome.
+
+Transfer these SAME two whole modules to Windows core, retain the original
+ALL_MODULES order for Ubuntu/local, and prove discovery identity/order/count and
+both Windows shard union unchanged982 before/after. Keep every test and original
+fd-safe runner, fsync, guards, workflow timeout and original Windows PowerShell
+acceptance checks. Do not raise budgets, skip methods or alter application code.
+Final candidate must reverify actual completed Windows delivery/PowerShell logs.
+
+### Budget correction implemented and discovery verified
+
+Windows module transfer only: journey_matrix and handoff_client now run in core.
+Original ALL_MODULES order is captured BEFORE the Windows redistribution, so
+the already-passing Ubuntu/local full suite remains identical in order/cases.
+Actual discovery proves982 total, Windows501+481=982, disjoint module partitions
+and identical test-ID multiset INCLUDING imported-fixture multiplicities. No
+case removed, skipped, deduplicated, fsync disabled or timeout raised. Ordered
+ALL discovery SHA256=c2be5ecccdd378767d0f3276b106b5e5a353aff5bf5f1564f7274af16cae1ef6.
+The transfer includes42 discovered cases (some are original imported fixture
+methods), rather than estimating counts from only direct class methods.
+
+Cancelled f4 delivery had418 completed progress events but no final unit verdict;
+its incomplete results are NOT PASS. Current run timing projects about603s of
+delivery test time after transfer, while the former core had506.754s before the
+transferred workload. This scheduling estimate is not a completed-run claim.
+Application/native files and original ALL order are unchanged: local982 backend/
+101 native/34 Apps Script PASS remain credited; final rebalanced exact-source
+Windows/Ubuntu/native CI and actual PowerShell step remain PENDING.
+
 ## Full local checkpoint — sourcef4b8c07
 
 982 complete local backend PASS453.586s,101 actual-X11 native PASS322.262s,34
