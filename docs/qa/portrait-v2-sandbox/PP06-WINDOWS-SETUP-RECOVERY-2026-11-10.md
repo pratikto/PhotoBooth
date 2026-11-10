@@ -224,3 +224,19 @@ superseded stash are local-only, not required for the source checkpoint. Only
 the lab X11 and read-only gh CI watcher remain; all application tests/backends
 finished. [Exact local/CI/source evidence](evidence/pp06-windows-setup-exit-checkpoint-2026-11-10.json).
 Commercial NOT_READY; no real payment/refund/paper/public upload/deploy performed.
+
+
+## Final L3-A/B CI closure — subsequent continuation
+
+Runtime9054053ed54bb99e631d7ee60032fb115a513817 remains unchanged. Pending
+CI42801312247 is now verified **ALL FOUR SUCCESS**, all completed logs inspected:
+Windows core396/392.060s +delivery521/749.865s (917 total), Ubuntu917/463.628s,
+native99/268.546s; zero unit failures/errors/skips. Actual Windows PowerShell
+explicit new-booth enrollment and subsequent check-only succeed without a
+backend/device/provider operation. All20 new enrollment/graceful methods ran on
+Windows core. Local917 backend/99 native/34 Apps Script PASS remains credited.
+[Final exact evidence](evidence/pp06-windows-setup-exit-final-2026-11-10.json).
+No unchanged baseline rerun was performed. The prior urgent pending checkpoint
+is preserved as dated history. NEXT L3-C custody/owner/receipt lifecycle core;
+[bounded contract](PP06-WINDOWS-WORKER-CUSTODY-2026-11-10.md). No commercial/default
+activation, actual device/account acceptance, or money/paper/cloud operation.
