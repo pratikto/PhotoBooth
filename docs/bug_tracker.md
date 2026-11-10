@@ -1,3 +1,15 @@
+## BUG-059 — repeated privacy after committed shutdown ACK could hold forever (10 November 2026)
+
+S2 / new Windows normal-exit integration SOURCE FIXED before candidate publication.
+Original ACK commits, its reply is held/lost, then a second privacy epoch tries
+to retire an already closed owner. One actual child case FAIL4.024s. Opt-in trusted
+shutdown now finishes only the SAME durable backend-verified ACK or accepted
+same-process transition before actual handle drain, without reopening a child or
+querying closed SQL. Default abrupt-stop/unknown boot holds remain unchanged.
+8 new graceful methods PASS15.291s;82 affected PASS127.890s, zero failures/errors/
+skips. Full final-source native/CI pending. No customer/money/media incident.
+[Contract, reproduction and source evidence](qa/portrait-v2-sandbox/PP06-WINDOWS-SETUP-RECOVERY-2026-11-10.md).
+
 ## BUG-058 — stopped async control retained a queued customer proof (10 November 2026)
 
 S2 / privacy SOURCE FIXED before customer mounting. If trusted stop won before

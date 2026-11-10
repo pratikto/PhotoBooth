@@ -1,0 +1,55 @@
+{
+  "base": "63fc6c8e3b52c8b0e245b20ae178e3827cc60dff",
+  "stage": "L3-B original trusted normal-exit PREPARE/receipt/ACK and BUG-059",
+  "affected_backend": {
+    "run": 82,
+    "seconds": 127.89,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0
+  },
+  "new_graceful_methods": 8,
+  "focused": {
+    "run": 8,
+    "seconds": 15.291,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0
+  },
+  "native_prior_to_bug059_correction": {
+    "run": 6,
+    "seconds": 57.528,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "scope": "Both sizes through original checkout and actual graceful ledger ACK; final current-source native regression pending."
+  },
+  "commands": [
+    "MEONG_CI_PROGRESS=1 .venv/bin/python tools/run_kiosk_unittests.py test_post_preview_enrollment test_post_preview_launch_settings test_post_preview_windows_entry test_post_preview_graceful_exit test_post_preview_sandbox_visits test_post_preview_visit_control test_post_preview_launch test_post_preview_freeze_backend",
+    ".venv/bin/python tools/run_kiosk_unittests.py test_post_preview_graceful_exit"
+  ],
+  "source_sha256": {
+    "photobooth/post_preview_sandbox_visits.py": "a7edb13ed9372198f14ff3896ad9339e3dc787486776951b178f04c0f4a4acf1",
+    "photobooth/post_preview_visit_control.py": "43b69aed8588593da9bda2871df2b134c128a1f3ae0234126514fe5fb56083b2",
+    "photobooth/post_preview_launch.py": "4a6a67dd00ba0fdedfd71a4421f0e3392203741cc78325e65da6ac0e7733dadd",
+    "tools/run_post_preview_sandbox.py": "26b5c857e1af5e185f742c2165a6477d45c551eb7f4d595bfef766030c029489",
+    "tests/test_post_preview_graceful_exit.py": "b6914cb010186f62738d8649d8a108f017d3b69f6d4038f9a52fb253e02d66f4",
+    "tests/post_preview_host_process_fixture.py": "00ff3e57e7ad6f92152d78f155f4b9086ac3bac9913d9d2433545790cdd1e4b7",
+    "tests/test_post_preview_windows_widgets.py": "6926c4eafde06a64d02363cc802d2f60f3c817f3b1ef38cbbd35d4e642f4ae1d",
+    "tools/run_post_preview_ci.py": "4a4b49f4c86e72cf689b05a5b480a9bffdc3a92af4e9b328712953f601eeb129"
+  },
+  "logs_sha256": {
+    "pp06-graceful-exit-focused.log": "94d75a7ffe63a9a434a0892370d76ee50625ffa7213f345a9ee0af183b4df890",
+    "pp06-graceful-exit-related.log": "a6278c9864f8154a9ff68dc1bd7847b241da9871e3be5a5f991ac915bc1dbfa9",
+    "pp06-graceful-exit-corrected.log": "85a634ef93cc8b8fccbab26f8543cb4e72acd8bc603c8e4f53eefea29197c327",
+    "pp06-graceful-repeat-privacy-before.log": "d91588a62b574e8fa4f42997a6234ef582a84f2e63bd8121dbee6356db7ac025",
+    "pp06-graceful-exit-final-focused.log": "b006e0b0e90961fee67a1f6425c062a0d4e89df5ff1b304256b16fea64ab4d72",
+    "pp06-graceful-exit-final-related.log": "9be61ba2dabe1d9284aa2cf2b07289bef813d47df2d1c08f57c5470e3b27b367",
+    "pp06-graceful-exit-native.log": "a012b92262ae4668bd752fecff85799490a14f0646c7221d397c53e74703679d"
+  },
+  "failures": [
+    "First45 and81 each1 ERROR: fixture tried illegal SUBMITTED transition; no-replay trigger correctly denied. Corrected fixture uses original send-time NetworkSendError -> UNCERTAIN, production guards unchanged.",
+    "BUG-059 actual child1 FAIL4.024s: repeated privacy after committed/lost ACK deadlocked new graceful shutdown. Exact durable ACK/accepted transition now finishes without new child or stale SQL read."
+  ],
+  "limits": "Opt-in trusted Windows normal exit only, original default abrupt stop/unknown boot holds preserved. Fresh independent finance and actual native/backend/camera/auxiliary exit remain required. Full final917 backend/99 native and exact-source CI pending. Pre-ACK/orphan boot/custody recovery remains separate; no actual money/paper/cloud/refund/deploy."
+}

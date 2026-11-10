@@ -1,5 +1,7 @@
 """New Windows entry factory mounts the original native checkout at both sizes."""
 import time
+import sqlite3
+from contextlib import closing
 import unittest
 from unittest.mock import Mock,patch
 
@@ -19,7 +21,7 @@ class ProtectedWindowsWidgetTests(unittest.TestCase):
                     'PHOTOBOOTH_V2_CHECKOUT_MOCK':'0','PHOTOBOOTH_V2_PRINT':'0','PHOTOBOOTH_V2_DRIVE':'0',
                     'PHOTOBOOTH_AUDIO':'0','PHOTOBOOTH_FACE_TRIGGER':'0','PHOTOBOOTH_PALM_TRIGGER':'0'}):
                 f=fixtures.OriginalSandboxVisitTests(methodName='runTest');f.setUp()
-                control,worker=create_visit_control(f.visits);app=None
+                control,worker=create_visit_control(f.visits,finish_on_stop=True);app=None
                 helper=native.ProtectedFreezeWidgetTests(methodName='runTest');helper.setUp()
                 try:
                     self.assertTrue(control.start());deadline=time.monotonic()+12;outcome=None
@@ -46,7 +48,12 @@ class ProtectedWindowsWidgetTests(unittest.TestCase):
                         app.on_stop()
                         if app.stage.parent:Window.remove_widget(app.stage)
                         self.assertTrue(drain_native_app(app,timeout=3))
-                    self.assertTrue(worker.stop(timeout=12));f.doCleanups()
+                    self.assertTrue(worker.stop(timeout=12))
+                    with closing(sqlite3.connect((f.config.private_root/'drafts.sqlite3').as_uri()+'?mode=ro',uri=True)) as db:
+                        self.assertEqual([(1,'ISOLATED')],db.execute('SELECT closed,lifecycle FROM pp_drafts').fetchall())
+                        self.assertEqual([('ACKED',)],db.execute('SELECT state FROM pp_isolation_ops').fetchall())
+                        self.assertEqual([('OWED',)],db.execute('SELECT status FROM pp_paid_services').fetchall())
+                    f.doCleanups()
 
 
 if __name__=='__main__':unittest.main()

@@ -29,6 +29,9 @@ from photobooth.post_preview_store import DraftHeld,DraftLease
 from photobooth.post_preview_worker_fence import WorkerFenceKey,NativeWorkerRetirement
 from photobooth.printer import PrinterConfig
 
+_RETIRE_EVENTS=frozenset({'USER_CANCEL','APP_SUSPENDED','INACTIVITY_EXPIRED',
+                          'VISIT_ABANDONED','RESULT_TIMEOUT'})
+
 
 @dataclass(frozen=True)
 class NativeVisitBinding:
@@ -178,6 +181,68 @@ class OriginalSandboxVisits:
         self._binding=None;self._acked=False
         return True
 
+    def _ack_retired(self):
+        """Reuse exact original handoff; no new visitor or child is created."""
+        service=self._service;lease=service.lease if service is not None else None
+        if lease is None or not service._hidden.is_set() or service.phase!='hold':
+            raise DraftHeld('Original retired owner required')
+        if not self._closing and not self._acked:
+            if not self._server.stop(timeout=0) or not self._jobs.retire(timeout=0):
+                raise DraftHeld('Original collector/photo worker is still active')
+            if self._release is None:
+                retired=DraftLease(lease.draft_id,lease.booth_id,lease.visit_id,lease.generation+1)
+                self._release=self._handoff.prepare(retired)
+            with self.ledger.write():
+                operation=self.ledger.db.execute('SELECT state FROM pp_isolation_ops WHERE operation_id=?',
+                    (self._release.operation_id,)).fetchone()
+            if operation and operation['state']=='ACKED':
+                self._accepted_release()  # Lost reply, never republish a PREPARED receipt.
+            else:
+                self._native.publish(self._release.operation_id,timeout=0)
+            self._release=self._handoff.acknowledge(self._release)
+            self._acked=True
+        if not self._closing:
+            self._accepted_release()
+            self._closing=True
+
+    def finish_for_shutdown(self):
+        """Trusted serialized normal exit only; uncertain original state holds."""
+        with self._lock:
+            self._active()
+            if not self._admitted:
+                raise DraftHeld('Original admitted same-process owner required')
+            if self._closing or self._opening or self._empty_rotating:
+                # These private flags witness an already accepted same-process
+                # transition. Its old SQL handle can be closed; do not reopen a
+                # child or query that dead context merely to finish shutdown.
+                return True
+            if self._service is None:raise DraftHeld('Original shutdown context unavailable')
+            service=self._service
+            if not service._hidden.is_set() or service.phase!='hold':
+                raise DraftHeld('Original immediate privacy retirement required')
+            if not self._server.stop(timeout=0) or not self._jobs.retire(timeout=0):
+                raise DraftHeld('Original native workers must actually finish')
+            if service.lease is None:
+                self._free_history()  # Empty owner cannot invent a release.
+            else:
+                self._ack_retired()
+            return True
+
+    def retire_for_shutdown(self,event):
+        """Opt-in trusted stop: finish exact accepted ACK, never rotate/repaint."""
+        if event not in _RETIRE_EVENTS:raise ValueError('Original privacy retirement event required')
+        with self._lock:
+            self._active()
+            if not self._admitted:raise DraftHeld('Original admitted shutdown required')
+            if self._closing or self._opening or self._empty_rotating:
+                if self._service is not None:self._service.hide_private()
+                return {'phase':'hold'}
+            if self._acked:
+                self._accepted_release()
+                return {'phase':'hold'}
+            if self._release_ack_is_durable():return {'phase':'hold'}
+            return self.retire_current(event)
+
     def ensure_new_visitor_ready(self):
         with self._lock:
             self._active()
@@ -214,24 +279,7 @@ class OriginalSandboxVisits:
             if lease is None or not service._hidden.is_set() or service.phase!='hold':
                 raise DraftHeld('Original live visitor cannot be preempted')
             # Durable retirement must already have run on the original worker.
-            if not self._closing and not self._acked:
-                if not self._server.stop(timeout=0) or not self._jobs.retire(timeout=0):
-                    raise DraftHeld('Original collector/photo worker is still active')
-                if self._release is None:
-                    retired=DraftLease(lease.draft_id,lease.booth_id,lease.visit_id,lease.generation+1)
-                    self._release=self._handoff.prepare(retired)
-                with self.ledger.write():
-                    operation=self.ledger.db.execute('SELECT state FROM pp_isolation_ops WHERE operation_id=?',
-                        (self._release.operation_id,)).fetchone()
-                if operation and operation['state']=='ACKED':
-                    self._accepted_release()  # Lost reply; do not republish a PREPARED receipt.
-                else:
-                    self._native.publish(self._release.operation_id,timeout=0)
-                self._release=self._handoff.acknowledge(self._release)
-                self._acked=True
-            if not self._closing:
-                self._accepted_release()
-                self._closing=True
+            self._ack_retired()
             if not self._close_handles():
                 raise DraftHeld('Original child/native handles are still stopping')
             self._closing=False;self._opening=True
@@ -311,8 +359,7 @@ class OriginalSandboxVisits:
         for retirement; no media/credential is read or grant reconstructed.
         Unknown boot/foreign owners remain held. This method never ACKs/FREEs.
         """
-        if event not in {'USER_CANCEL','APP_SUSPENDED','INACTIVITY_EXPIRED',
-                         'VISIT_ABANDONED','RESULT_TIMEOUT'}:
+        if event not in _RETIRE_EVENTS:
             raise ValueError('Original privacy retirement event required')
         with self._lock:
             self._active()

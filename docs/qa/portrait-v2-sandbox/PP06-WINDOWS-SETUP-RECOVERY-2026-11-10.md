@@ -100,3 +100,69 @@ Actual Windows PowerShell new-booth enrollment+subsequent check-only added to CI
 with public local fixture values, NO backend/device/cloud start. Full final
 regression/CI pending. NEXT L3-B opt-in trusted normal-exit original PREPARE/ACK;
 L3-C unknown pre-ACK/orphan boot remains held and separate.
+
+## L3-B concrete contract before source
+
+Normal Windows entry opts into trusted finish-on-stop BEFORE the original worker
+starts, never through public GUI flags/HTTP. Keep default historical stop/unknown
+boot behavior for other callers. Extract the existing exact retired-owner
+PREPARE/native receipt/ACK routine from ensure_new_visitor_ready for reuse;
+shutdown must NOT open a new visitor/child merely to archive the old one.
+
+After immediate privacy and actual original collector/PhotoJobs drain, the SAME
+trusted worker may finish only its original retired owner. Backend independently
+reconciles original attempts and rejects PENDING/UNKNOWN/discrepancy or uncertain
+receipt/strip output. Reuse original report/key/operation/generation and durable
+lost-ACK recovery. Only verified ACK plus actual child/native/camera/auxiliary
+exit allows normal launcher completion. Unknown bootstrap remains unadmitted;
+no tokenless restore, new charge, receipt/strip replay or new proof is permitted.
+An unclear financial/paper state keeps SHUTDOWN HELD and original ownership.
+
+Test unpaid original raw media preserved through graceful close and SAME-root
+restart; paid OWED/entitlement/proof/bundle/copies/output preserved through close
+and proof-gated return; lost ACK same operation; live original photo/collector/
+backend holds; uncertain paper retains rights and cannot ACK; old default abrupt
+stop still holds boot. New trusted worker option carries no financial/FREE
+assertion. Existing GUI receives only original public control/camera. Verify
+actual native entry/close and ledger ACK at both portrait sizes, retaining the
+original ticket/card/timer and no-print-replay assertions.
+
+L3-B fault investigation: initial45 and expanded81 each had1 ERROR because the
+fixture tried to change an immutable SUBMITTED strip; the existing no-replay
+trigger correctly refused. Fixture now keeps the original job PREPARED and uses
+an actual test-child network send that raises NetworkSendError after its counted
+send, producing original SENDING→UNCERTAIN. Production guards unchanged;
+corrected7 PASS13.769s. Both-size native6 affected PASS57.528s.
+
+BUG-059 reproduced separately: after original shutdown ACK commits but its HTTP
+response is held/lost, a second privacy epoch makes normal-exit retirement look
+for an already closed owner forever. One actual child case FAIL4.024s. Fix only
+the opt-in trusted shutdown path: finish its SAME durable backend-verified ACK or
+already accepted same-process close/open transition, without another customer/
+child or querying a dead handle. Unknown/unadmitted boot stays held. Recheck
+actual final worker/child/kernel exit; no receipt/key reissue or finance change.
+
+L3-B implemented: original exact ACK routine shared with next-visitor handoff;
+Windows entry selects trusted finish-on-stop before worker start. Public GUI
+receives no new authority/manager/key. Actual privacy and collector/PhotoJobs
+drain precede original backend fresh-finance/receipt/drive-worker ACK; actual
+child/camera/auxiliary exit still gates global close. Default old abrupt stop
+and unknown/unadmitted boot remain unchanged. Normal stop creates no spare
+child just to archive. PENDING/UNKNOWN/discrepancy and uncertain paper keep
+SHUTDOWN HELD, with original liability/jobs preserved.
+
+BUG-059 fixed only for opt-in shutdown: verify SAME durable original backend ACK
+or finish an already accepted same-process transition before final handle drain;
+no old-handle query, new key/receipt/customer or tokenless restoration. Corrected
+**8 new methods PASS15.291s;82 affected PASS127.890s**, zero failures/errors/skips.
+The earlier6 native PASS57.528s proves both-size original flow/ACK before this
+race correction; final current-source full native/CI remains pending.
+[Exact failures, source hashes and limits](evidence/pp06-windows-graceful-exit-2026-11-10.json).
+
+L3-A enrollment source63fc6c8 CI42798579893 is now fully verified ALL FOUR SUCCESS:
+Ubuntu909/440.740s, Windows core388/392.296s +delivery521/617.065s, native99/
+238.721s. All completed logs inspected. Actual Windows PowerShell local enrollment
+and subsequent check-only pass with public fixture settings and no device/backend/
+provider call. This does NOT substitute for L3-B final changed-source regression.
+Next run final917 backend/99 native/current Windows CI, then L3-C supported
+original pre-ACK/orphan boot/custody design. Commercial NOT_READY; health False.

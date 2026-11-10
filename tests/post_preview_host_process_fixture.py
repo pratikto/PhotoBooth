@@ -68,6 +68,9 @@ def assembled(checkout,templates,bridge,drive,**kwargs):
         def send(_host,_port,_payload):
             # Only a non-secret count persists; no bitmap, bytes or proof.
             count.write_text(str((int(count.read_text()) if count.exists() else 0)+1))
+            if delivery_fixture and (root/'fixture-output-uncertain-after-send').exists():
+                from photobooth.printer import NetworkSendError
+                raise NetworkSendError('Synthetic partial physical output')
         def no_usb(_payload):
             raise AssertionError('No USB fixture route')
         kwargs['receipt_printer']=ThermalPrinter(PrinterConfig(lan_host='fixture-printer'),

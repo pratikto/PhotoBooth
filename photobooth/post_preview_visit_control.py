@@ -138,10 +138,12 @@ class VisitControl:
 
 class TrustedVisitWorker:
     """Launcher-only handle. stop=False retains thread/manager/kernel ownership."""
-    def __init__(self,visits,control):
-        if type(visits) is not OriginalSandboxVisits or type(control) is not VisitControl:
+    def __init__(self,visits,control,*,finish_on_stop=False):
+        if (type(visits) is not OriginalSandboxVisits or type(control) is not VisitControl
+                or type(finish_on_stop) is not bool):
             raise TypeError('Exact original trusted visit manager/control required')
         self._visits,self._control=visits,control
+        self._finish_on_stop=finish_on_stop
         self._thread=threading.Thread(target=self._run,name='postpay-native-control',daemon=True)
 
     def start(self):self._thread.start()
@@ -157,7 +159,10 @@ class TrustedVisitWorker:
         control=self._control
         with control._lock:serial,reason=control._privacy_serial,control._reason
         if reason is None:return True
-        try:self._visits.retire_current(reason)
+        try:
+            if self._finish_on_stop and control._stop.is_set():
+                self._visits.retire_for_shutdown(reason)
+            else:self._visits.retire_current(reason)
         except Exception:return False  # No private exception/proof/config in GUI output.
         with control._lock:
             if serial==control._privacy_serial:
@@ -207,6 +212,10 @@ class TrustedVisitWorker:
                 # first complete its exact metadata retirement.
                 if visits._admitted and not visits._stopping and control._privacy.is_set() and not self._retire():
                     control._stop.wait(.05);time.sleep(.05);continue
+                if self._finish_on_stop and visits._admitted and not visits._stopping:
+                    try:visits.finish_for_shutdown()
+                    except Exception:
+                        time.sleep(.05);continue  # Original financial/receipt uncertainty is NOT a release.
                 try:closed=visits.stop()
                 except Exception:closed=False
                 if closed and visits._closed and visits._launcher.stream.closed:
@@ -233,7 +242,7 @@ class TrustedVisitWorker:
                 command=outcome=None  # Drop transient private proof/snapshot references.
 
 
-def create_visit_control(visits):
+def create_visit_control(visits,*,finish_on_stop=False):
     """Trusted launcher retains worker; only control is supplied to the GUI."""
-    control=VisitControl();worker=TrustedVisitWorker(visits,control);worker.start()
+    control=VisitControl();worker=TrustedVisitWorker(visits,control,finish_on_stop=finish_on_stop);worker.start()
     return control,worker

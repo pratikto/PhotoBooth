@@ -81,7 +81,7 @@ def main(argv=None):
         os.environ.update(environment)
         from photobooth.kiosk_v2.qr_branding import branded_sandbox_qr_image
         control=owner.start(settings.config,settings.printer_config,legacy_path=settings.legacy_path,
-                            qr_loader=branded_sandbox_qr_image,camera_index=args.camera_index)
+                            qr_loader=branded_sandbox_qr_image,camera_index=args.camera_index,finish_on_stop=True)
         print('MIDTRANS SANDBOX ONLY: use official simulator; never pay with a real banking/wallet app.')
         print('Owned test printer and public test Drive enabled by explicit consents. Preserve original journals.')
         app=native_app(control,owner.camera,settings.config.private_root,args.size)
