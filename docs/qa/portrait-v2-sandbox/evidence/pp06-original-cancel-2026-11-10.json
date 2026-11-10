@@ -31,7 +31,11 @@
   "log_sha256": {
     "initial": "d56a572d82e3e9f3549b96829ac6ea6ad952f01fd8a99c89dcf7f254c2f996d5",
     "focused": "285a773f93cdeae1fa84c96c7110f6867fc09c7b1a4eda305802538767380823",
-    "full": "de43b5a4b3bad591951472ae8f2fd493565da0640a286bb61dee41e6eb8a7845"
+    "full": "de43b5a4b3bad591951472ae8f2fd493565da0640a286bb61dee41e6eb8a7845",
+    "native": "6e7a1a51e1f432afa8c8a3fc27df303b9171a38d50780d2a6d06a0fd90fe5368",
+    "ci_ubuntu": "6fa735f627e89c93f27df9e0780acefb07cb4f6ae7fec6ddf6fd8c5bd4ac83d7",
+    "ci_native": "02be8e954c449b60ee3b4331ef11e7ad717341679576be3f3404a5cccf5ec313",
+    "ci_windows_cancel": "208afa260f03d083c5e8783ffc107ce6c99108525190571a508039ae57524e42"
   },
   "new_methods": [
     "test_cancel_reply_alone_and_pending_get_never_create_release_or_resend_cancel (test_post_preview_sandbox_handoff.ProtectedOriginalCancelHandoffTests.test_cancel_reply_alone_and_pending_get_never_create_release_or_resend_cancel) ... ok",
@@ -41,5 +45,36 @@
     "test_minimize_and_result_timeout_never_cancel_a_pending_original_attempt (test_post_preview_sandbox_handoff.ProtectedOriginalCancelHandoffTests.test_minimize_and_result_timeout_never_cancel_a_pending_original_attempt) ... ok",
     "test_settlement_racing_original_cancel_keeps_owed_proof_and_claim_identity (test_post_preview_sandbox_handoff.ProtectedOriginalCancelHandoffTests.test_settlement_racing_original_cancel_keeps_owed_proof_and_claim_identity) ... ok"
   ],
-  "limits": "Fake external provider/cloud/paper; original coordinator/HTTP/SQL/native primitives. Current complete native/source-matched CI pending; E local88 native and E Ubuntu795/native88 CI retain older source scope. No merchant/profile/actual money/refund/paper/cloud/deploy."
+  "limits": "Full local backend801/native88; CI Ubuntu801/native88 completed SUCCESS, Windows cancelled without summary. Fake external effects. Native customer mounting/freeze/trusted launcher/supported boot/remedy/device/account/final qualification open; commercial NOT_READY.",
+  "source": "8c9847f095403a90f270f2fdde9aeebc2dfe0a0a",
+  "local_native": {
+    "run": 88,
+    "seconds": 199.809,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "display": "actual private X11 Xvfb :93"
+  },
+  "ci": {
+    "run_id": 42728696270,
+    "conclusion": "cancelled",
+    "ubuntu": {
+      "job_id": 129540884096,
+      "run": 801,
+      "seconds": 317.648,
+      "conclusion": "success"
+    },
+    "native": {
+      "job_id": 129540883778,
+      "run": 88,
+      "seconds": 174.94,
+      "conclusion": "success"
+    },
+    "windows": {
+      "job_id": 129540884142,
+      "conclusion": "cancelled",
+      "unit_summary": null,
+      "note": "15-minute job budget; KeyboardInterrupt during CheckoutFixture/CheckoutStore schema setup, then WinError32 cleanup of original launch lock; no full verdict or pre-cancel assertion diagnosis"
+    }
+  }
 }

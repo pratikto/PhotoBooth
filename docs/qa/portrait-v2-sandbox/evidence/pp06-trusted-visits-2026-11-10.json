@@ -1,0 +1,44 @@
+{
+  "base": "8c9847f095403a90f270f2fdde9aeebc2dfe0a0a",
+  "stage": "B6-G trusted launcher visit manager core; UI proxy/mounting/freeze/boot still pending",
+  "bug": "BUG-055",
+  "run": 115,
+  "seconds": 126.943,
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "new_methods": [
+    "test_blocked_case_emits_static_start_before_finish_and_keeps_real_exit_status (test_kiosk_unittest_progress.KioskRunnerProgressTests.test_blocked_case_emits_static_start_before_finish_and_keeps_real_exit_status) ... ok",
+    "test_actual_A_to_B_to_A_uses_new_children_workers_and_same_original_output (test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_actual_A_to_B_to_A_uses_new_children_workers_and_same_original_output) ... ok",
+    "test_actual_live_photo_worker_keeps_manager_child_and_root_owner_held (test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_actual_live_photo_worker_keeps_manager_child_and_root_owner_held) ... ok",
+    "test_actual_original_collector_callback_must_exit_before_any_release_or_new_child (test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_actual_original_collector_callback_must_exit_before_any_release_or_new_child) ... ok",
+    "test_changed_financial_review_after_ack_holds_new_binding_over_same_root (test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_changed_financial_review_after_ack_holds_new_binding_over_same_root) ... ok",
+    "test_foreign_booth_row_in_original_root_is_preserved_and_holds_new_admission (test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_foreign_booth_row_in_original_root_is_preserved_and_holds_new_admission) ... ok",
+    "test_fresh_native_command_blocks_new_admission_without_rotating_original_child (test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_fresh_native_command_blocks_new_admission_without_rotating_original_child) ... ok",
+    "test_invalid_proof_after_ack_can_finish_only_original_close_without_media_grant (test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_invalid_proof_after_ack_can_finish_only_original_close_without_media_grant) ... ok",
+    "test_invalid_proof_cannot_release_a_retired_original_paid_visit (test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_invalid_proof_cannot_release_a_retired_original_paid_visit) ... ok",
+    "test_lost_actual_ack_reply_replays_same_operation_before_child_rotation (test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_lost_actual_ack_reply_replays_same_operation_before_child_rotation) ... ok",
+    "test_lost_original_claim_response_is_recovered_with_same_persisted_request (test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_lost_original_claim_response_is_recovered_with_same_persisted_request) ... ok",
+    "test_original_boot_owner_stays_held_without_tokenless_adoption_or_new_root (test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_original_boot_owner_stays_held_without_tokenless_adoption_or_new_root) ... ok",
+    "test_pending_fresh_native_snapshot_must_finish_before_original_claim_mutates_facade (test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_pending_fresh_native_snapshot_must_finish_before_original_claim_mutates_facade) ... ok",
+    "test_slow_original_native_ledger_close_cannot_reopen_pixels_or_block_same_claim_forever (test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_slow_original_native_ledger_close_cannot_reopen_pixels_or_block_same_claim_forever) ... ok",
+    "test_true_stop_flag_without_actual_child_exit_cannot_publish_new_binding (test_post_preview_sandbox_visits.OriginalSandboxVisitTests.test_true_stop_flag_without_actual_child_exit_cannot_publish_new_binding) ... ok"
+  ],
+  "command": "MEONG_CI_PROGRESS=1 python tools/run_kiosk_unittests.py test_kiosk_unittest_progress test_post_preview_sandbox_visits test_post_preview_host_fulfillment test_post_preview_host test_post_preview_handoff_client test_post_preview_handoff_api test_post_preview_worker_fence test_post_preview_sandbox_handoff test_post_preview_pilot_admission",
+  "source_sha256": {
+    ".github/workflows/post-preview-qris.yml": "bf86e24ea19d793ae66636c13a653c936cd5613ca10aadf25a1ea2cbf87c88b2",
+    "photobooth/post_preview_sandbox_visits.py": "9bad1bd68b29711b0f82f4a73d1bdaeb37d4e30d722173dff5e7ee8c4c5cf7b9",
+    "tests/test_post_preview_sandbox_visits.py": "df501fe041f4df9f8897ee8fba0b020d80e49c88eb3c788085466ac7caba4ec2",
+    "tools/run_kiosk_unittests.py": "70643ae818925aa7acef59b903a0b2281a95a129362666d06153f0ffca222680",
+    "tests/test_kiosk_unittest_progress.py": "233f69dfd8faca3dd88cc769d7058fb932e52b520aa09c3b1eb7b0c35527e338"
+  },
+  "log_sha256": {
+    "pp06-visit-manager-first.log": "96c079e6908ea5092d734ce6bcad9a05ca59ac02cd3713195dd6fc18e3474e86",
+    "pp06-visit-manager-corrected.log": "e476f75b9174fa909c6d1db54272288829d5b0b07c2995c3f22e6c10b495c780",
+    "pp06-visit-manager-expanded.log": "f568bf962b5d59563c120fa155ae667131e29f366d4370770e8279c25ef1132f",
+    "pp06-visit-manager-final.log": "e8e26f69274b5d76921d76aacf020af0aa5e3cf46cdc51a94aff8ce7a9abdc46",
+    "pp06-runner-progress.log": "a1b93e6e35c4bcef26f133b2ca8f5b7414460ac66c3ba2e37df08c004126c322",
+    "pp06-visit-manager-related.log": "d89d2bdd8630bf1f2304530775bf5deebfd436681b81ff1dc9fa6591d74e0420"
+  },
+  "limits": "Actual child replacement/private sockets/HTTP/native facades/PhotoJobs/collectors/kernel root over same journals; explicit fake provider/cloud/paper and fixture freeze. No actual Kivy popup/customer launcher mounting, automatic orphan/pre-ACK boot, real device/account/refund/cloud/deploy or commercial enablement. New full source/CI pending."
+}

@@ -16,8 +16,32 @@ import argparse
 import io
 import os
 from pathlib import Path
+import re
 import sys
+import time
 import unittest
+
+
+def _progress(message):
+    os.write(1,(message+'\n').encode('ascii'))
+
+
+class _ProgressResult(unittest.TextTestResult):
+    """Static case identity only; final unittest verdict remains authoritative."""
+    def startTest(self,test):
+        super().startTest(test)
+        try:identity=test.id()
+        except Exception:identity='unknown_test'
+        if (type(identity) is not str or len(identity)>512
+                or re.fullmatch(r'[A-Za-z0-9_.]+',identity) is None):
+            identity='unknown_test'
+        self._progress_case=(identity,time.perf_counter())
+        _progress(f'KIOSK_TEST_START {self.testsRun}: {identity}')
+
+    def stopTest(self,test):
+        identity,started=self._progress_case
+        super().stopTest(test)
+        _progress(f'KIOSK_TEST_END {self.testsRun}: {identity} elapsed={max(0,time.perf_counter()-started):.3f}s')
 
 
 def main(argv=None) -> int:
@@ -40,11 +64,15 @@ def main(argv=None) -> int:
     parser.add_argument('tests', nargs='*', help='Optional focused unittest module/test names')
     args = parser.parse_args(argv)
     sys.path.insert(0, str(repository_root / 'tests'))
+    progress=os.environ.get('MEONG_CI_PROGRESS')=='1'
+    if progress:_progress(f'KIOSK_DISCOVERY_START: requested_modules={len(args.tests)}')
     suite = (unittest.defaultTestLoader.loadTestsFromNames(args.tests) if args.tests else
              unittest.defaultTestLoader.discover(str(repository_root / "tests"), pattern="test_*.py"))
+    if progress:_progress(f'KIOSK_DISCOVERY_END: cases={suite.countTestCases()}')
     output = io.StringIO()
     result = unittest.TextTestRunner(
-        stream=output, verbosity=2, buffer=False
+        stream=output, verbosity=2, buffer=False,
+        resultclass=_ProgressResult if progress else unittest.TextTestResult,
     ).run(suite)
 
     # The POSIX file descriptor is not affected by Kivy's logger redirects.

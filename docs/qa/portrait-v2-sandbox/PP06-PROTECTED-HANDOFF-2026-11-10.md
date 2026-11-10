@@ -391,6 +391,20 @@ all Photo/game/admission controls held during rotation. Existing mock-only
 constructors/launchers remain unchanged. Complete protected freeze and boot/
 remedy/actual final qualification still follow; no commercial enablement here.
 
+### Windows diagnostic contract before the next CI push
+
+Both E and F Windows jobs reached their existing15-minute budget without a
+unittest summary, while Ubuntu/native completed. Do not weaken tests, durability,
+timeouts or source guards, or claim an assertion diagnosis from cancellation.
+Add optional true-stdout per-test START/END identity/duration and discovery
+progress to the existing diagnostic runner, enabled in backend CI only. Preserve
+its original captured final report, artifact, verdict/counts and exit status.
+Emit only bounded static unittest IDs, never arguments/proof/config/exception
+payloads; END is not a PASS claim. A controlled blocked subprocess must expose
+START before it finishes and retain a deliberate failure's nonzero verdict.
+The next exact-source logs must identify the last/slow Windows method if its
+budget recurs; do not blindly repeat another opaque job or raise its budget.
+
 ### B6-E Windows CI update
 
 Run42726468657 Windows129533300402 was cancelled at its15-minute job budget
@@ -413,3 +427,81 @@ Next source step remains the trusted original visit manager contract above,
 followed by async original native A/B/A mounting, protected freeze/launcher,
 supported boot/remedy and final actual qualification. No runtime WIP outside
 this bounded correction is included or claimed complete.
+
+## B6-F final source evidence update
+
+Runtime/tests8c9847f: local801 backend PASS292.168s and88 actual-X11 native
+PASS199.809s, zero failures/errors/skips. CI42728696270 Ubuntu801 PASS317.648s
+and native88 PASS174.940s, completed logs inspected. Windows129540884142 was
+cancelled at15 minutes with no summary; a cancellation KeyboardInterrupt in
+CheckoutFixture/CheckoutStore schema setup was followed by WinError32 original
+launch-lock cleanup. This is not a full unit verdict or a diagnosed pre-cancel
+assertion failure. [Exact updated source evidence](evidence/pp06-original-cancel-2026-11-10.json).
+Neither the E nor F Windows cancellation is hidden or relabeled as PASS. The
+next source includes the optional progress runner so its exact/slow case becomes
+observable without changing any test, durability or job timeout.
+
+## B6-G trusted original visit-manager core execution
+
+OriginalSandboxVisits is launcher-worker-only. It retains the original native
+kernel lease through each transition and keeps merchant configuration/backend
+handles/fence keys outside NativeVisitBinding/service/PhotoJobs returned to GUI
+integration. This follows the existing trusted-launcher boundary, not additional
+OS/process isolation. One original camera/legacy store is supplied by that
+launcher; this core constructs no camera, GUI, customer launcher or provider.
+The final launcher must also retain the existing GLOBAL application LaunchLease
+before opening devices; the private-root receipt lease alone does not exclude
+another ordinary profile using a different root. That assembly remains pending.
+
+A→B→A now runs in the actual spawned-child integration:6 original A photos and
+2+1 copies, original CCP/ticket and deterministic fixture Drive output; privacy
+retire, exact receipt/ACK, actual old child exit, fresh private channel/key/
+collector/PhotoJobs at the SAME root, B's fresh cart/photo, valid A proof WAIT
+while B is live, B cancel/no-payment release, fresh child and A's original
+proof/entitlement/folder/photo hashes restored with no charge or output replay.
+No mock constructor guard changes. The fixture still freezes explicitly; this
+is a native-facade/worker/launcher core cycle, NOT a mounted Kivy customer flow.
+
+Old PhotoJobs/collectors cannot restart. A stop flag without actual child exit
+cannot publish a binding. Actual blocked collector/file workers retain ownership
+and cannot PREPARE; partial child/native-ledger close stays held. Prior roots
+with a live/orphan owner, foreign booth or financial review are preserved and
+held. Supported orphan/pre-ACK boot remains deliberately unimplemented. Current
+native commands/queued results must finish before admission/claim can mutate
+that facade; otherwise WAIT/HOLD preserves its original binding.
+
+Original request selection reuses a matching PREPARED identity or exact ACTIVE
+REACQUIRED result after lost replies, never a superseded old grant. Busy B uses
+backend proof verification without provider I/O or preemption. Returning proof
+is verified before beginning a retired visit's release and again by the new
+backend before any grant. Completing an ALREADY ACKed close/open may proceed
+without calling its stopped HTTP/SQLite handles; it cannot start a new release
+or grant media to an invalid proof.
+
+BUG-055: the initial7-method run had one actual recovery ERROR: after ACK began
+child shutdown, the next valid-proof retry called the old HTTP listener again
+and could not finish rotation. The manager now resumes only that accepted
+close/open first, then requires new-backend proof/fresh settlement for restore.
+Corrected7 PASS23.628s; expanded12 initially had one fixture FAIL (expecting an
+exception instead of the original graceful hidden snapshot) and one fixture
+ERROR (repeated invalid-proof polling exhausted the original rate limit).
+Fixture corrections accept the genuine hidden result and stop polling once the
+expected denial/closing boundary is observed; no rate limit or guard weakened.
+Corrected12 PASS40.738s predates two added native-command race cases.
+
+**15 new methods /115 affected PASS126.943s**, zero failures/errors/skips.
+Includes14 visit-manager methods and one diagnostic-runner subprocess method;
+[exact source/log/method evidence](evidence/pp06-trusted-visits-2026-11-10.json).
+The runner emits optional bounded static IDs/timing on real stdout at START/END
+and discovery, retains its original final report/exit status and proves a
+blocked controlled failure stays nonzero. Backend CI enables it; default/native
+output is unchanged. No test, fsync, safety guard or job budget was removed.
+Current complete regression/CI remains pending for this new source.
+
+NEXT source: a bounded async UI proxy over this trusted manager, keeping the
+private manager/configuration outside GUI objects; reuse original protected Ads,
+recovery input and PhotoJobs/views at BOTH portrait sizes. Gate Photo/game/claim
+while transition is pending and reject late/stale results after privacy hide.
+Then implement the proper protected freeze/trusted complete launcher/global
+ownership, supported boot/remedy/status/ops and actual final qualification.
+Do not claim commercial readiness or enable merchant defaults from this core.

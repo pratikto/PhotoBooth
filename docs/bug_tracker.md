@@ -1,3 +1,14 @@
+## BUG-055 — returning proof retried the stopped original HTTP listener after ACK (10 November 2026)
+
+S2 / new launcher integration SOURCE FIXED before customer mounting. Initial
+seven-method actual child/manager run had one recovery ERROR: a valid original
+proof could not finish rotation after ACK initiated old listener shutdown.
+Resume only the exact accepted close/open before touching old handles; new
+backend proof/fresh settlement and durable native grant checks remain mandatory.
+15 new methods/115 affected PASS126.943s, zero failures/errors/skips. Actual UI,
+new full-source/Windows qualification pending; no customer/money incident.
+[Exact scope and failure/correction evidence](qa/portrait-v2-sandbox/PP06-PROTECTED-HANDOFF-2026-11-10.md).
+
 ## BUG-054 — protected USER_CANCEL depended on a scheduler to send original cancel (10 November 2026)
 
 S2 / integration SOURCE FIXED;137 focused PASS57.137s, zero failures/errors/skips.
