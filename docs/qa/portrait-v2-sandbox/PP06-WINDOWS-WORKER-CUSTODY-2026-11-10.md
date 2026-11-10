@@ -513,3 +513,55 @@ without enabling commercial release, default health or unsupported fault paths.
 Do not make BEGINNING normal-flow acceptance wait on every commercial roadmap
 gate; also do not label incomplete C2c3/C3/remedy/fault scopes PASS. They remain
 explicitly BLOCKED/NOT_RUN. Original keys/history/uncertain paper are preserved.
+
+## C2c3a contract BEFORE source — immutable original generation/epoch binding
+
+11 November 2026 (WIB). Owner authorizes continued interrupted recovery and
+remedy/refund engineering while normal Windows acceptance is independent.
+First add an explicit, initially UNMOUNTED binding ledger core: one original
+worker key/epoch may bind only ONE original draft/visit/active generation.
+Persist scope digest, actual original pre-START witness digest and original-key
+HMAC in an append-only original SQLite table. Reuse original OS ciphertext and
+pre-START witness readers, current process identity and exact original ledger/
+lease. No new key, provider, customer proof or OS secret provisioning here.
+
+Binding writer must require the SAME live original parent/child, restored SAME
+capability, same root/account/booth/version and exact ACTIVE original lease.
+It must refuse cross-root, dead worker, missing/partial custody, stale generation,
+replacement key and a second generation/draft under the same worker epoch.
+Idempotent retry retains exact bytes. Schema/triggers prevent replacement or
+removal. Read verification may inspect an old recorded generation but confers
+NO live ownership, retirement/ACK, finance, private media or admission authority.
+Never reconstruct a missing old binding retroactively during recovery.
+
+Test original ciphertext/witness/SQLite boundaries with fake external effects.
+Actual Windows DPAPI remains a Windows CI gate; Linux uses an isolated test-only
+Secret Service key seam. This core alone is not C2c3 complete: eligible-history
+escrow rotation, original pre-work mounting and then C3 receipt reconciliation
+remain required. Micro-push this bounded core after focused checks; don't repeat
+the previously passing full baseline for onboarding.
+
+### C2c3a implemented, still UNMOUNTED
+
+Original SQLite pp_worker_generations append-only core now binds ONE original
+draft/visit/active generation per original key/epoch. Same original OS escrow
+and actual pre-START witness are required for writer; original root, account,
+booth, parent/child birth and same restored capability checked. No raw key,
+customer proof or storage path in the binding row. Exact same-key retry changes
+no rows; a new key cannot replace a generation or reuse an old epoch.
+
+Explicit schema/trigger verification refuses foreign/weakened definitions.
+BEFORE INSERT conflict guard also blocks SQLite INSERT OR REPLACE, whose
+implicit DELETE otherwise need not invoke delete triggers. Original UPDATE/
+DELETE remain refused. Independent reader rejects wrong-role/version/scoped
+frames even with valid HMAC; post-insert failure rolls back original metadata.
+Historical binding verification does not prove ACK, finance or safe admission.
+
+14 new methods; final53 combined binding/custody/escrow/start/process PASS
+0.965s, zero failures/errors/skips. Earlier51 PASS1.012s credited before two
+additional fault cases. Complete backend registry983->997; original ALL order
+retained, Windows core516 + delivery481. Full final regression/Windows DPAPI CI
+PENDING; no completed-owner or full-recovery claim. Original app flow unchanged.
+NEXT C2c3b: durable original epoch escrow on eligible same-root history; then
+mount original pre-work binding and independently prove C3 reconciliation.
+Remedy/refund software follows that safety boundary; no real refund authorized.
