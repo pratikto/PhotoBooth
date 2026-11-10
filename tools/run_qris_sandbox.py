@@ -39,13 +39,17 @@ class LocalSandboxSettingsError(ValueError):
 
 def local_sandbox_credentials(path: Path) -> tuple[str, str]:
     """Read literal Sandbox fields without importing/executing shared Drive settings."""
+    return local_literal_fields(path, ('MIDTRANS_SANDBOX_MERCHANT_ID', 'MIDTRANS_SANDBOX_SERVER_KEY'))
+
+
+def local_literal_fields(path: Path, names: tuple[str, ...]) -> tuple[str, ...]:
+    """Reuse the original non-executing reader for explicitly named private fields."""
     try:
         tree = ast.parse(path.read_text(encoding='utf-8-sig'))
     except FileNotFoundError:
-        return '', ''
+        return tuple('' for _ in names)
     except (OSError, UnicodeError, SyntaxError, ValueError, RecursionError):
         raise LocalSandboxSettingsError from None
-    names = ('MIDTRANS_SANDBOX_MERCHANT_ID', 'MIDTRANS_SANDBOX_SERVER_KEY')
     values = {}
     for node in tree.body:
         if isinstance(node, ast.Assign):
@@ -60,7 +64,7 @@ def local_sandbox_credentials(path: Path) -> tuple[str, str]:
             if not isinstance(node.value, ast.Constant) or not isinstance(node.value.value, str):
                 raise LocalSandboxSettingsError from None
             values[target.id] = node.value.value
-    return values.get(names[0], ''), values.get(names[1], '')
+    return tuple(values.get(name, '') for name in names)
 
 
 def trial_environments(parent: dict[str, str], merchant: str, key: str,

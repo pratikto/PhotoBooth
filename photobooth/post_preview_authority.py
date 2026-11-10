@@ -123,20 +123,8 @@ class OriginalWorkerReadiness:
                         LIMIT 1''',(group,group)).fetchone():
                         return denied
             with self.legacy.lock:
-                rows = self.legacy.db.execute('SELECT * FROM checkouts WHERE booth_id=?', (scope.booth_id,)).fetchall()
-                for old in rows:
-                    if not old['closed'] or old['state'] not in {'PAID','EXPIRED','CANCELLED','FAILED'}:
-                        return denied
-                    if old['state'] == 'PAID':
-                        rights = self.legacy.fulfillment(old['id'], scope.booth_id)
-                        if rights['obligation_state'] == 'FULFILLED':
-                            continue
-                        from photobooth.checkout_release import latest
-                        release = latest(self.legacy, old['id'], scope.booth_id)
-                        fence = self.legacy.service_fence(old['id'], scope.booth_id)
-                        if (not release or release['state'] != 'ACKED' or not release['isolation_id']
-                                or not fence or not fence['suspended'] or fence['generation'] != release['generation']):
-                            return denied
+                from photobooth.post_preview_legacy_history import legacy_history_clear
+                if not legacy_history_clear(self.legacy.db,scope.booth_id):return denied
             root = Path(self.launch_lease.stream.name).parent.parent
             if review_recovery(root, environ=self.environ)['status'] != 'CLEAR_FOR_MANUAL_START':
                 return denied

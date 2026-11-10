@@ -1,0 +1,24 @@
+{
+  "base": "3e76ac29dda3ae891ea61e7fef6fbb86f4abaad6",
+  "stage": "L2-A Windows-first protected settings and original legacy readiness",
+  "affected": {
+    "run": 69,
+    "seconds": 24.536,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0
+  },
+  "new_settings_methods": 10,
+  "command": ".venv/bin/python tools/run_kiosk_unittests.py test_post_preview_launch_settings test_qris_sandbox_launcher test_post_preview_launch test_post_preview_authority test_post_preview_freeze_backend test_checkout_release",
+  "log_sha256": "c7fa3937aa5e9eff6888d6c8c37d7b336a65f01a5ee00cb6a494e45c24c43b70",
+  "source_sha256": {
+    "photobooth/post_preview_launch_settings.py": "46bcbd086e4aefd9c979175853a87dfb8b4f285199eb0e20cb5acbf2b28f513d",
+    "photobooth/post_preview_legacy_history.py": "622c689e4dbb4bd583f25575fb01e1957fd159137142dff1ebb49b3e05a4ddb7",
+    "photobooth/post_preview_authority.py": "b7e29d43d48267f84ff8a7d777809b0a058b206146deb3fefc5872f50d7d6f0a",
+    "tools/run_qris_sandbox.py": "a1c9c986a28cb116cd089dbeffd2624f91cbaf9835639c658c226a858a230c49",
+    "tests/test_post_preview_launch_settings.py": "f5c1f88aef4f473e42d0ef665538e81fe4b96e4d1b74901d20abf144571ac796",
+    "tools/run_post_preview_ci.py": "8db1b9be071214812b4336d3da6404f9c7fc2a79948f38e23311912bfcd77927"
+  },
+  "failure_history": "First37 affected PASS3.871s; terminal journal with active SQL order then reproduced1 FAIL before shared original legacy readiness extraction; expanded68 PASS24.925s before final ACK/fence case; final69 PASS24.536s.",
+  "limits": "Settings/core only; L2-B Windows executable/native exit remains next. No actual account/devices/merchant/default activation. Missing/foreign/corrupt/older v1 history is held, never reset. Full final source regression/CI pending."
+}

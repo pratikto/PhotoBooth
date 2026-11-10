@@ -182,3 +182,53 @@ above; no new onboarding regression of this unchanged baseline. All actual
 account/device/boot/remedy/status/ops/qualification gates stay open; commercial
 NOT_READY, default fulfillment_enabled=False. Rollback source only, retain every
 original journal/key/media/paid right/uncertain job.
+
+## Owner priority update — Windows first, 10 November 2026
+
+Owner explicitly defers the Ubuntu launcher and requests continued development
+for Windows execution first. Preserve Linux support/tests already delivered, but
+do not build Ubuntu service/autostart packaging ahead of Windows. Existing
+Start-PostPreviewDeviceTest.ps1 remains the working synthetic-camera trial.
+It must not silently become a merchant entry or adopt its old synthetic roots.
+
+L2-A: reuse the existing literal-only Sandbox settings parser for both merchant
+and Drive fields, original printer configuration and L1 global owner. Configuration
+must be read only after the exact active global owner exists, with complete
+pairs selected from environment OR original ignored settings, never partial
+account mixing. Return a redacted trusted bundle, never hand it to GUI. Require
+explicit usable POS80 route and fixed Sandbox identity/storage. Inspect the
+canonical existing v2 legacy database read-only, plus original project recovery
+review and older v1 history boundary. Unknown/missing/foreign history holds;
+this increment must not manufacture an empty legacy DB or replace custody.
+
+Test settings/partial pairs/invalid identity/archive/link/legacy holds, redacted
+errors, actual original file bytes unchanged and no network/device/native imports.
+Then L2-B explicit Windows PowerShell/Python entry, original native app and full
+shutdown drain. First-install history initialization is a separate explicit
+reviewed setup, not a bypass. No merchant/default activation, actual provider
+operation, payment, paper, public upload or deployment in cloud development.
+
+L2-A must also compare canonical journal status with actual legacy SQL finance/
+release history. Reproduce terminal-looking CANCELLED journal + active original
+checkout; loading must hold without changing file bytes. Extract/reuse the exact
+OriginalWorkerReadiness legacy closed/terminal/FULFILLED-or-original-ACK+fence
+checks into one read-only SQL helper shared with settings. No new financial
+classification, mock provider or release authority; original readiness keeps all
+scope/native/media/worker guards. Verify original authority/checkout-release
+regression alongside new settings cases. Initial37 settings/launcher/L1 PASS is
+before this additional historical-state denial, not the final scope.
+
+L2-A implemented: exact active global owner before settings, complete environment
+OR original literal local pairs, original saved POS80 configuration, redacted
+private bundle and canonical read-only legacy history. Original merchant parser
+is reused/extracted for named Drive fields without executing local_settings.py.
+Original legacy closed/terminal/paid obligation/release-fence guard now has one
+shared read-only implementation for startup and charge readiness. Active SQL
+order behind a terminal-looking journal first reproduced1 FAIL; fixed without
+changing original finance/release/media guards. Original PAID/OWED survives ACK;
+a mismatched fence denies. **69 affected PASS24.536s**,10 new settings methods,
+zero failures/errors/skips. Original21 launcher methods also registered in CI
+because its literal reader is shared; every old860 execution retained.
+[Exact hashes/scope](evidence/pp06-windows-settings-2026-11-10.json). NEXT L2-B
+explicit Windows Python/PowerShell entry and original native shutdown drain.
+Ubuntu packaging deferred by owner. Full final-source regression/CI pending.
