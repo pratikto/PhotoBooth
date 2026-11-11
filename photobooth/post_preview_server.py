@@ -27,7 +27,7 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
                       server_key, booth_id, booth_token, provider_transport=None,
                       on_shutdown=None, background_worker=True,
                       receipt_printer=None, printer_lane=None, paid_delivery_enabled=False,
-                      worker_fence_key=None):
+                      worker_fence_key=None, worker_generations=None):
     """Install server-owned authority; never accept readiness/PAID from callers.
 
     The original ledger remains owned by the backend host. On successful assembly
@@ -55,6 +55,13 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
     if type(protector) not in {WindowsDPAPIProtector, LinuxSecretServiceProtector}:
         raise ValueError('Supported original OS credential protection required')
     ledger = checkout.ledger
+    if worker_generations is not None:
+        from photobooth.post_preview_worker_binding import BackendWorkerEpoch
+        if (type(worker_generations) is not BackendWorkerEpoch or worker_generations.ledger is not ledger
+                or worker_generations.key is not worker_fence_key
+                or worker_generations.scope.merchant_id != merchant_id
+                or worker_generations.scope.booth_id != booth_id):
+            raise DraftHeld('Exact original private backend epoch required')
     with ledger.write():
         foreign = (ledger.db.execute('SELECT 1 FROM pp_drafts WHERE booth_id!=? LIMIT 1',
                                      (booth_id,)).fetchone()
@@ -81,6 +88,7 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
             if not row:
                 raise DraftHeld('Original booth checkout required')
             lease = DraftLease(row['draft_id'], booth_id, row['visit_id'], row['generation'])
+            if worker_generations is not None: worker_generations.require_locked(lease)
         credentials.validate_escrow(lease)
         return readiness(group)
 
@@ -99,7 +107,8 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
     if worker_fence_key is not None:
         from photobooth.post_preview_sandbox_handoff import OriginalSandboxIsolation,OriginalSandboxClaim
         isolation=OriginalSandboxIsolation(payments,delivery,WorkerReceiptVerifier(ledger,worker_fence_key))
-        claim=OriginalSandboxClaim(payments,credentials,ticket_presentation.credentials)
+        claim=OriginalSandboxClaim(payments,credentials,ticket_presentation.credentials,
+                                  worker_generations=worker_generations)
         from photobooth.post_preview_freeze import OriginalSandboxFreeze
         freeze=OriginalSandboxFreeze(checkout,templates,readiness,booth_id)
 
@@ -111,4 +120,4 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
     return create_app(payments, auth, on_shutdown=close, background_worker=background_worker,
                       ccp_presentation=presentation, ticket_presentation=ticket_presentation,
                       paid_delivery=delivery,protected_isolation=isolation,protected_claim=claim,
-                      protected_freeze=freeze)
+                      protected_freeze=freeze,worker_generations=worker_generations)

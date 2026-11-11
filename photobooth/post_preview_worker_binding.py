@@ -145,14 +145,85 @@ def bind_original_worker_generation(ledger, lease, launcher, config, key):
                  and observe_process(witness['child_pid']).birth == witness['child_birth'])
         frame = _frame(lease, key, scope, witness)
         with ledger.write():
-            _context(ledger, lease, key, scope)
-            ledger._owned(lease)  # Historical rows cannot be bound retroactively.
-            existing = ledger.db.execute('SELECT 1 FROM pp_worker_generations WHERE draft_id=? AND generation=?',
-                                         (lease.draft_id, lease.generation)).fetchone()
-            if not existing:
-                ledger.db.execute('INSERT INTO pp_worker_generations VALUES(?,?,?,?,?)',
-                    (lease.draft_id, lease.generation, key.key_id, canonical(frame), key.sign(frame)))
-            _require(verify_worker_generation_binding(ledger, lease, key, scope) == frame)
+            _record_binding_locked(ledger, lease, key, scope, frame)
         return frame
     except Exception:
         raise DraftHeld(_HELD) from None
+
+
+def _record_binding_locked(ledger, lease, key, scope, frame):
+    _context(ledger, lease, key, scope)
+    ledger._owned(lease)  # Historical rows cannot be bound retroactively.
+    existing = ledger.db.execute('SELECT 1 FROM pp_worker_generations WHERE draft_id=? AND generation=?',
+                                 (lease.draft_id, lease.generation)).fetchone()
+    if not existing:
+        ledger.db.execute('INSERT INTO pp_worker_generations VALUES(?,?,?,?,?)',
+            (lease.draft_id, lease.generation, key.key_id, canonical(frame), key.sign(frame)))
+    _require(verify_worker_generation_binding(ledger, lease, key, scope) == frame)
+
+
+class BackendWorkerEpoch:
+    """Private SAME original child authority. Never pass to native/GUI code."""
+    def __init__(self, ledger, owner, config, key):
+        try:
+            from photobooth.post_preview_host import SandboxHostConfig
+            from photobooth.post_preview_worker_escrow import _root, _read as read_escrow
+            from photobooth.post_preview_worker_start import _read as read_start
+            _require(type(ledger) is PostPreviewStore and type(config) is SandboxHostConfig
+                     and type(key) is WorkerFenceKey and _root(owner) == config.private_root/'backend-owner')
+            root = config.private_root
+            stored = read_escrow(root/'worker-custody'/(key.key_id+'.json'), root, key.key_id)
+            scope = stored.scope
+            _require(scope.merchant_id == config.merchant_id and scope.booth_id == config.booth_id
+                     and scope.worker_epoch == key.key_id and stored.envelope.key_id == key.key_id)
+            original = restore_worker_key(stored.envelope, scope)
+            vector = {'kind':'BACKEND_EPOCH_KEY_TEST_NO_AUTHORITY'}
+            _require(hmac.compare_digest(original.sign(vector), key.sign(vector)))
+            witness = read_start(root/'worker-starts'/(key.key_id+'.json'), config, key)
+            _require(witness['parent_pid'] == scope.owner_pid and witness['parent_birth'] == scope.process_birth
+                     and witness['child_pid'] == os.getpid())
+            self.ledger, self.key, self.scope = ledger, key, scope
+            self._owner, self._witness = owner, witness
+            self._live()
+            install_worker_generation_bindings(ledger)
+        except Exception:
+            raise DraftHeld(_HELD) from None
+
+    def __repr__(self):
+        return '<BackendWorkerEpoch: original private child only>'
+
+    def _live(self):
+        _require(not self._owner.stream.closed
+                 and observe_process(os.getpid()).birth == self._witness['child_birth']
+                 and observe_process(self.scope.owner_pid).birth == self.scope.process_birth)
+
+    def bind_locked(self, lease):
+        """Caller owns original transaction, including atomic proven claim CAS."""
+        try:
+            self._live()
+            frame = _frame(lease, self.key, self.scope, self._witness)
+            _record_binding_locked(self.ledger, lease, self.key, self.scope, frame)
+        except Exception:
+            raise DraftHeld(_HELD) from None
+
+    def bind(self, lease):
+        with self.ledger.write(): self.bind_locked(lease)
+
+    def require_locked(self, lease):
+        try:
+            self._live()
+            frame = verify_worker_generation_binding(self.ledger, lease, self.key, self.scope)
+            _require(frame == _frame(lease, self.key, self.scope, self._witness))
+        except Exception:
+            raise DraftHeld(_HELD) from None
+
+    def require(self, lease):
+        with self.ledger.write(): self.require_locked(lease)
+
+    def require_retired(self, lease):
+        """Retirement generation is exactly one after bound ACTIVE generation."""
+        try:
+            _require(type(lease) is DraftLease and type(lease.generation) is int and lease.generation > 1)
+            self.require(DraftLease(lease.draft_id, lease.booth_id, lease.visit_id, lease.generation-1))
+        except Exception:
+            raise DraftHeld(_HELD) from None

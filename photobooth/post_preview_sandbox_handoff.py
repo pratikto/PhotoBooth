@@ -183,7 +183,7 @@ class OriginalSandboxIsolation:
 
 
 class OriginalSandboxClaim:
-    def __init__(self, payments, ccp, ticket):
+    def __init__(self, payments, ccp, ticket, *, worker_generations=None):
         _payments(payments)
         if (type(ccp) is not OriginalCCPService or type(ticket) is not OriginalRecoveryTicketService
                 or ccp.ledger is not payments.ledger or ticket.payments is not payments
@@ -193,6 +193,12 @@ class OriginalSandboxClaim:
             raise DraftHeld('Exact original protected claim custody required')
         self.payments,self.ccp,self.ticket=payments,ccp,ticket
         self.ledger=payments.ledger
+        if worker_generations is not None:
+            from photobooth.post_preview_worker_binding import BackendWorkerEpoch
+            if (type(worker_generations) is not BackendWorkerEpoch or worker_generations.ledger is not self.ledger
+                    or worker_generations.scope.merchant_id != payments.merchant_id):
+                raise DraftHeld('Exact original private backend epoch required')
+        self._worker_generations=worker_generations
         self._request_lock=threading.RLock()
         install_worker_receipts(self.ledger)
         self._install_requests()
@@ -243,6 +249,8 @@ class OriginalSandboxClaim:
         raise PermissionError('Original private customer proof required')
 
     def _record_reacquired(self, result):
+        if self._worker_generations is not None:
+            self._worker_generations.bind_locked(result['lease'])
         context=_claim_request.get()
         if context is None:
             return  # Trusted core-only call, never an exposed transport route.
@@ -331,6 +339,8 @@ class OriginalSandboxClaim:
                 require_acked_worker_receipt(self.ledger,release)
                 lease=DraftLease(owner['draft_id'],booth,owner['visit_id'],owner['generation'])
                 self.ledger._owned(lease)
+                if self._worker_generations is not None:
+                    self._worker_generations.require_locked(lease)
                 return dict(state='REACQUIRED',lease=lease,purchase_group_id=group,
                             entitlement_id=request['entitlement_id'],service_still_owed=True)
 

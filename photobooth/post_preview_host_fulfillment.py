@@ -11,9 +11,11 @@ from photobooth.post_preview_worker_fence import WorkerFenceKey
 class SandboxHostFulfillment:
     printer_config: PrinterConfig
     worker_key: WorkerFenceKey
+    durable_worker_epochs: bool = False
 
     def __post_init__(self):
-        if type(self.printer_config) is not PrinterConfig or type(self.worker_key) is not WorkerFenceKey:
+        if (type(self.printer_config) is not PrinterConfig or type(self.worker_key) is not WorkerFenceKey
+                or type(self.durable_worker_epochs) is not bool):
             raise ValueError('Exact private original fulfillment dependencies required')
         validate_original_printer_config(self.printer_config)
 
@@ -22,13 +24,17 @@ class SandboxHostFulfillment:
 
     def to_private_startup(self):
         """Only for the original anonymous startup socket; never log/persist."""
-        return dict(version=1,printer=asdict(self.printer_config),
+        value = dict(version=1,printer=asdict(self.printer_config),
                     worker_key=dict(key_id=self.worker_key.key_id,secret_hex=self.worker_key.secret.hex()))
+        if self.durable_worker_epochs: value['durable_worker_epochs'] = True
+        return value
 
     @classmethod
     def from_private_startup(cls,value):
         try:
-            if (type(value) is not dict or set(value)!={'version','printer','worker_key'}
+            if (type(value) is not dict or set(value) not in (
+                    {'version','printer','worker_key'}, {'version','printer','worker_key','durable_worker_epochs'})
+                    or type(value.get('durable_worker_epochs',False)) is not bool
                     or type(value['version']) is not int or value['version']!=1
                     or type(value['printer']) is not dict
                     or set(value['printer'])!={f.name for f in fields(PrinterConfig)}
@@ -39,7 +45,8 @@ class SandboxHostFulfillment:
                 raise ValueError
             printer=PrinterConfig(**value['printer'])
             bundle=cls(printer,WorkerFenceKey(value['worker_key']['key_id'],
-                                           bytes.fromhex(value['worker_key']['secret_hex'])))
+                                           bytes.fromhex(value['worker_key']['secret_hex'])),
+                       value.get('durable_worker_epochs',False))
             # Original permissive printer normalization is for legacy settings.
             # This private protocol requires exact typed values, no fallbacks.
             actual=asdict(printer)

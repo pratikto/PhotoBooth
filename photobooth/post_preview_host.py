@@ -115,6 +115,10 @@ class SandboxHostRuntime:
             self._owner = LaunchLease(self.root/'backend-owner')
             _original_context(self.root, config)
             self.ledger = PostPreviewStore(self.root/'drafts.sqlite3')
+            generations=None
+            if fulfillment is not None and fulfillment.durable_worker_epochs:
+                from photobooth.post_preview_worker_binding import BackendWorkerEpoch
+                generations=BackendWorkerEpoch(self.ledger,self._owner,config,fulfillment.worker_key)
             self.checkout = PrivateDraftCheckout(PrivateDraftPhotos(self.ledger, self.root/'media'))
             self.templates = tuple(get_templates())
             workspace = BoothWorkspace(config.storage_root/'post-preview-sandbox'/config.merchant_id/'delivery',
@@ -131,7 +135,7 @@ class SandboxHostRuntime:
             self.app = build_sandbox_app(self.checkout, self.templates, bridge, probe,
                 merchant_id=config.merchant_id, server_key=config.server_key,
                 booth_id=config.booth_id, booth_token=config.booth_token,
-                on_shutdown=self.close,**delivery)
+                on_shutdown=self.close,worker_generations=generations,**delivery)
         except BaseException:
             # Failed assembly has not started any worker or external effect.
             if self.drive is not None:

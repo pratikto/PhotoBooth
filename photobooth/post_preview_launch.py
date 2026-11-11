@@ -47,7 +47,8 @@ class ProtectedSandboxLaunch:
         return self._camera
 
     def start(self,config,printer_config,*,legacy_path,qr_loader,
-              camera_index=0,camera_enabled=True,timeout=25,finish_on_stop=False):
+              camera_index=0,camera_enabled=True,timeout=25,finish_on_stop=False,
+              durable_worker_epochs=False):
         """One bounded trusted startup; preserve partial handles on any failure.
 
         Caller must retain this owner and retry stop() until True on startup
@@ -61,6 +62,7 @@ class ProtectedSandboxLaunch:
             if (type(timeout) not in (int,float) or not 0<timeout<=30
                     or type(camera_index) is not int or not 0<=camera_index<=32
                     or type(camera_enabled) is not bool or type(finish_on_stop) is not bool
+                    or type(durable_worker_epochs) is not bool
                     or not callable(qr_loader)):
                 raise ValueError
             # These imports/constructions happen only AFTER global ownership.
@@ -84,7 +86,7 @@ class ProtectedSandboxLaunch:
             self._legacy=CheckoutStore(history)
             self._camera=AsyncCamera(enabled=camera_enabled,index=camera_index)
             self._visits=OriginalSandboxVisits(config,printer_config,self._legacy,
-                                              camera=self._camera,qr_loader=qr_loader)
+                camera=self._camera,qr_loader=qr_loader,durable_worker_epochs=durable_worker_epochs)
             self._control,self._worker=create_visit_control(self._visits,finish_on_stop=finish_on_stop)
             if not self._control.start():raise ValueError
             deadline=time.monotonic()+timeout

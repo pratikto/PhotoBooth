@@ -42,14 +42,17 @@ class NativeVisitBinding:
 
 
 class OriginalSandboxVisits:
-    def __init__(self,config,printer_config,legacy,*,camera,qr_loader,printer_dial=None):
+    def __init__(self,config,printer_config,legacy,*,camera,qr_loader,printer_dial=None,
+                 durable_worker_epochs=False):
         if (type(config) is not SandboxHostConfig or type(printer_config) is not PrinterConfig
                 or type(legacy) is not CheckoutStore or not callable(qr_loader)
-                or printer_dial is not None and not callable(printer_dial)):
+                or printer_dial is not None and not callable(printer_dial)
+                or type(durable_worker_epochs) is not bool):
             raise DraftHeld('Exact trusted original launcher dependencies required')
         validate_original_printer_config(printer_config)  # No key minted for validation.
         self._config,self._printer,self._legacy=config,printer_config,legacy
         self._camera,self._qr_loader,self._dial=camera,qr_loader,printer_dial
+        self._durable_worker_epochs=durable_worker_epochs
         self._lock=threading.RLock()
         self._launcher=LaunchLease(config.private_root)
         self._backend=self._client=self._service=self._jobs=self._server=None
@@ -86,9 +89,16 @@ class OriginalSandboxVisits:
     def _open(self):
         if self._backend is not None or self._service is not None:
             raise DraftHeld('Original child/native handles must finish first')
-        review_before_original_worker(self._launcher,self._config)
+        if self._durable_worker_epochs:
+            from photobooth.post_preview_visit_history import original_prework_history
+            with original_prework_history(self._launcher,self._config,allow_custody=True): pass
+        else:
+            review_before_original_worker(self._launcher,self._config)
         self._key=WorkerFenceKey.create()
-        fulfillment=SandboxHostFulfillment(self._printer,self._key)
+        if self._durable_worker_epochs:
+            from photobooth.post_preview_worker_epochs import write_eligible_worker_escrow
+            write_eligible_worker_escrow(self._launcher,self._config,self._key)
+        fulfillment=SandboxHostFulfillment(self._printer,self._key,self._durable_worker_epochs)
         worker,child=socket.socketpair()
         self._backend=SandboxBackendProcess(self._config,fulfillment=fulfillment,
                                            worker_launcher=self._launcher)
@@ -98,7 +108,8 @@ class OriginalSandboxVisits:
                 expected_mode='sandbox',allow_local_http=True)
             self._client._transport.session.trust_env=False  # Original authenticated loopback only.
             self._service=ProtectedCheckoutService(self._config.private_root,
-                payment_client=self._client,qr_loader=self._qr_loader)
+                payment_client=self._client,qr_loader=self._qr_loader,
+                require_worker_binding=self._durable_worker_epochs)
             self._jobs=PhotoJobs(self._service)
             ownership=OriginalWorkerReadiness(self._service,self._jobs,self._launcher,self._legacy)
             from photobooth.catalog import get_templates

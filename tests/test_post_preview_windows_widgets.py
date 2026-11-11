@@ -2,6 +2,8 @@
 import time
 import sqlite3
 from contextlib import closing
+from contextlib import nullcontext
+import os
 import unittest
 from unittest.mock import Mock,patch
 import io
@@ -17,6 +19,27 @@ from tools.run_post_preview_sandbox import native_app
 
 
 class ProtectedWindowsWidgetTests(unittest.TestCase):
+    def test_private_durable_epoch_runs_original_native_entry_at_both_sizes(self):
+        from photobooth.post_preview_sandbox_visits import OriginalSandboxVisits
+        from photobooth.post_preview_photos import PrivateDraftPhotos
+        original_init=OriginalSandboxVisits.__init__; original_prepare=PrivateDraftPhotos.prepare
+        observed=[]
+        def advanced(manager,*args,**kwargs):
+            kwargs['durable_worker_epochs']=True
+            original_init(manager,*args,**kwargs)
+        def before_photo(photos,lease):
+            row=photos.ledger.db.execute('SELECT * FROM pp_worker_generations WHERE draft_id=? AND generation=?',
+                (lease.draft_id,lease.generation)).fetchone()
+            self.assertIsNotNone(row,'Actual backend binding must precede original native photo files')
+            observed.append(True)
+            return original_prepare(photos,lease)
+        custody=nullcontext() if os.name=='nt' else patch(
+            'photobooth.linux_credential_vault._read_key',return_value=b'k'*32)
+        with custody,patch.object(OriginalSandboxVisits,'__init__',advanced),patch.object(
+                PrivateDraftPhotos,'prepare',before_photo):
+            self.test_entry_factory_drives_original_native_checkout_and_automatic_output_at_both_sizes()
+        self.assertGreaterEqual(len(observed),2)
+
     def test_owned_F8_copies_only_current_original_pending_qr_without_money_or_log(self):
         from kivy.core.clipboard import Clipboard
         from photobooth.kiosk_v2.owned_sandbox_simulator import OwnedSandboxSimulatorClipboard

@@ -1,0 +1,86 @@
+{
+  "stage": "C2c3 private original opt-in epoch custody/binding integration",
+  "default_enabled": false,
+  "public_cli_toggle": false,
+  "commercial_ready": false,
+  "base": "ffe123bfd788e87b2f443c4cc09b21f1b3b81117",
+  "source_sha256": {
+    "photobooth/post_preview_worker_binding.py": "53a42bb0a7f6475d066e11b8187734d8efc901fec36d7b1eb0f093736bc23cbc",
+    "photobooth/post_preview_worker_epochs.py": "f7e174aeaeb5421ec5d694283a26c113e5759ef8e70a50a494baab4da6eea3e1",
+    "photobooth/post_preview_worker_escrow.py": "b5c185b42b8e168a3d05549dc463a98a36a158134a43c7c7ae9d51783c0cd1aa",
+    "photobooth/post_preview_visit_history.py": "bb68fbce2659439c364f3b095624b87ecdc9e8b5559f90096b9ab570d4da0662",
+    "photobooth/post_preview_host.py": "c1fc2cead9999c0bd0da1473a5c92f1817ec1d8a575f24a6e7042f0032a0b6d8",
+    "photobooth/post_preview_host_fulfillment.py": "6f47a70f112481c16a7398c5bc9a465a764ece8a101fced6c0d59a4a2ff1f74a",
+    "photobooth/post_preview_bootstrap.py": "4b70ee3bf0522979b0aaa8e40b7f6d4441a7fe1903a20fe40186d5546249c046",
+    "photobooth/post_preview_launch.py": "5cabb1538608ccb8e59a0f683d05db5ae312c1976b34f7b9f03e50f42bd30449",
+    "photobooth/post_preview_sandbox_visits.py": "03226b823cf79bf93b641c918b68477f505d4d1c6a02b167e2110d9b58d3ebc1",
+    "photobooth/post_preview_server.py": "696d2a19ded551c685c4f03fa1b71880cb519c49cf429fa9341eff1663104573",
+    "photobooth/post_preview_api.py": "3885f4ad09527b7241fc9a10aa9befdf16447edd34575b8d3fcf2a21168d5180",
+    "photobooth/post_preview_sandbox_handoff.py": "7a56321676f33f33eeaaec3bf1e97e755a85cde8e1f39d364734479c48e98fad",
+    "photobooth/post_preview_client.py": "709c459a48e8d525302c6e41b6e4d82ce0a5acbd81e1fe5e56ad2bc6c14b60d5",
+    "photobooth/kiosk_v2/post_preview_photos.py": "925cf356c62b7a988df768f76587b53c8ae3d3f97d68f69465fabcb0bb8dffd8",
+    "photobooth/kiosk_v2/post_preview_protected_checkout.py": "c231d98e629713bd6dcd24a44c67f802f0ba852f3e7a8b5822a41adf6891993e",
+    "tests/test_post_preview_worker_binding.py": "87e78c03d8b51dbf541ca836617fea831a0989e3256c5910eacf629b431f258d",
+    "tests/test_post_preview_worker_epochs.py": "476b17bd10b2e47a23105e3859bfec19f2cbf4556ce9f3e4def6c33f1d510e21",
+    "tests/test_post_preview_durable_worker.py": "1b422e8ffbec9dc60d679fc4ebe801ba99d87f69c068dabdf3ec348abe7ac333",
+    "tests/post_preview_host_process_fixture.py": "8efc65fbbc3ba24febe48d39d2abdd1e2fde0dd92e2b4a1d7a1a9d0792cb3add",
+    "tests/test_post_preview_windows_widgets.py": "7e40ad531f9d93a01d32c5e3543ba906e8165f104773bd5d5cb0e44d1130ce14",
+    "tools/run_post_preview_ci.py": "fd65388404c4b0995b1c0faaf9b9fa797d5dac323b4326c9e765aadc5c222025"
+  },
+  "discovery": {
+    "all": 1022,
+    "core": 541,
+    "delivery": 481
+  },
+  "focused": {
+    "binding_custody_start_process": {
+      "run": 53,
+      "seconds": 0.965,
+      "result": "PASS"
+    },
+    "epochs_combined": {
+      "run": 66,
+      "seconds": 3.131,
+      "result": "PASS"
+    },
+    "shared_original_manager": {
+      "run": 56,
+      "seconds": 74.046,
+      "result": "PASS"
+    },
+    "private_integration_initial": {
+      "run": 7,
+      "seconds": 20.311,
+      "errors": 2,
+      "reason": "Test expected raw RuntimeError instead of original redacted DraftHeld; positive fixture omitted original Sandbox poll pacing. Fixture corrected; no application guard relaxed."
+    },
+    "private_integration_corrected": {
+      "run": 7,
+      "seconds": 20.909,
+      "result": "PASS"
+    },
+    "private_launch_protocol": {
+      "run": 5,
+      "seconds": 1.071,
+      "result": "PASS"
+    },
+    "expanded_backend": {
+      "run": 68,
+      "seconds": 38.677,
+      "result": "PASS"
+    },
+    "actual_native": {
+      "run": 3,
+      "seconds": 44.154,
+      "result": "PASS"
+    }
+  },
+  "full_final_verification": "PENDING",
+  "owner_devices_accounts": "NOT_RUN",
+  "remaining": [
+    "C3 supported interrupted original receipt/process/kernel/finance/output reconciliation",
+    "Unknown legacy start records without ORIGINAL custody remain held; no retroactive original keys or generation bindings",
+    "Remedy/refund software and merchant-specific capability remain unfinished",
+    "No actual device/provider/public upload/refund/cloud deletion performed"
+  ]
+}

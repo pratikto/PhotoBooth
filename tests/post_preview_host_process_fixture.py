@@ -25,6 +25,16 @@ def assembled(checkout,templates,bridge,drive,**kwargs):
     if kwargs['server_key']=='Mid-server-FAIL-FIXTURE':
         raise RuntimeError('Never echo '+kwargs['server_key'])
     ledger=checkout.ledger
+    generations=kwargs.get('worker_generations')
+    if generations is not None:
+        original_bind=generations.bind_locked
+        def traced_binding(lease):
+            # Test-only actual-child fault witness, never key/proof/media.
+            root=checkout.photos.root.parent
+            if (root/'fixture-trace-binding').exists():
+                (root/'fixture-binding-entered').write_text('synthetic binding entered')
+            return original_bind(lease)
+        generations.bind_locked=traced_binding
     lost=[kwargs['server_key']=='Mid-server-LOST-FIXTURE']
     def transport(request,timeout):
         assert request.full_url.startswith('https://api.sandbox.midtrans.com/')

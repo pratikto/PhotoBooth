@@ -68,6 +68,7 @@ class PrivatePhotoService:
             self.lease = self.ledger.create(self.booth_id, uuid.uuid4().hex, cart)
         else:
             self.ledger.edit(self.lease, cart, revision=self._revision())
+        self._before_private_work()
         self.photos.prepare(self.lease)
         self.templates = list(templates)
         self.selected = [t for t in templates if t.template_id in cart]
@@ -75,6 +76,10 @@ class PrivatePhotoService:
         self._preview = None
         self.phase = self._phase_for_current()
         return self.snapshot()
+
+    def _before_private_work(self):
+        """Original default path needs no extra backend worker binding."""
+        pass
 
     def _revision(self):
         return self.ledger.inspect(self.lease)['revision']

@@ -77,7 +77,8 @@ class SandboxBackendProcess:
         if (type(config) is not SandboxHostConfig
                 or fulfillment is not None and type(fulfillment) is not SandboxHostFulfillment
                 or worker_launcher is not None and
-                   (type(worker_launcher) is not LaunchLease or fulfillment is None)):
+                   (type(worker_launcher) is not LaunchLease or fulfillment is None)
+                or fulfillment is not None and fulfillment.durable_worker_epochs and worker_launcher is None):
             raise ValueError('Exact private backend configuration required')
         self._config = config
         self._fulfillment = fulfillment

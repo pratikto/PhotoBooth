@@ -75,6 +75,21 @@ class PostPreviewClient:
     def begin(self, group, lease):
         return self._request('POST', group, '/begin', self._owner(lease))
 
+    def bind_worker_generation(self, lease):
+        from photobooth.post_preview_store import DraftLease
+        if (type(lease) is not DraftLease or lease.booth_id != self.booth_id
+                or type(lease.draft_id) is not str or re.fullmatch(r'[a-f0-9]{32}',lease.draft_id) is None):
+            raise ValueError('Exact original draft owner required')
+        result=self._transport._call('POST','/api/postpay/drafts/'+lease.draft_id+'/worker-binding',
+                                    payload=self._owner(lease))
+        expected=dict(kind='ORIGINAL_WORKER_BOUND',draft_id=lease.draft_id,booth_id=self.booth_id,
+            visit_id=lease.visit_id,generation=lease.generation,mode=self.mode,
+            order_version=ORDER_VERSION,fulfillment_authorized=False)
+        if (type(result) is not dict or set(result)!=set(expected)
+                or any(type(result[k]) is not type(v) or result[k]!=v for k,v in expected.items())):
+            raise ValueError('Unexpected original worker binding observation')
+        return result
+
     def continue_expired(self, group, lease, *, actively_continuing):
         if type(actively_continuing) is not bool:
             raise ValueError('Explicit continuation required')

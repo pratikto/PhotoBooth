@@ -612,3 +612,68 @@ NEXT C2c3c: connect these cores to SAME original private launch/backend and
 record binding BEFORE first native file/capture or proof-restored media. Keep
 keys/managers out of native facade; no default merchant/health activation.
 C3 interrupted receipt reconciliation and remedy/refund remain unfinished.
+
+## C2c3c contract BEFORE source — original private opt-in pre-work integration
+
+Integrate the SAME original launch/manager/bootstrap/host/backend/native facade,
+behind an explicit trusted durable_worker_epochs boolean DEFAULT FALSE. No GUI
+or public CLI toggle yet, no merchant/health/profile activation. Preserve the
+existing normal Windows acceptance runtime. Advanced unknown legacy roots must
+hold with original evidence, never automatic migration/replacement custody.
+
+Advanced manager writes eligible ORIGINAL epoch ciphertext before socket/child
+spawn. Existing actual pre-START witness stays mandatory. Child-only authority
+requires its actual backend-owner kernel lease, SAME key restored from original
+ciphertext, actual recorded child identity=current process and live exact
+original parent. Install/record binding only in private backend, never attach a
+key/custody callback/manager handle to native service or GUI. Initial native
+start creates its original draft then calls an authenticated typed backend bind
+BEFORE photos.prepare/capture/files. Retries keep original draft and binding.
+Proof-gated return binds the new generation in SAME original claim transaction
+before any grant/native old-media adoption. Existing grants still require exact
+private proof and fresh independent legitimate PAID; no tokenless restore.
+
+Backend requires current binding before protected freeze/payment/proof/delivery
+and original prepare/ACK. No caller-supplied key, PID, scope or readiness flags.
+No original receipt is invented. All original consent/drain/collector/uncertain
+output guards retained. Test actual original child processes plus fake external
+effects, capture/file ordering, missing custody/old bindings and forged HTTP
+roles. C3 supported interrupted reconciliation and remedy/refund stay separate;
+this opt-in integration alone is not power-loss/commercial acceptance.
+
+### C2c3c original private opt-in integration implemented
+
+SAME ProtectedSandboxLaunch/OriginalSandboxVisits now accept typed private
+durable_worker_epochs=False by default. No GUI/CLI exposure or default profile
+activation. Opt-in writes original escrow before original child spawn and keeps
+original pre-START process witness. Actual child-only BackendWorkerEpoch owns
+key/custody context; native service receives only a boolean and existing typed
+authenticated client. Original global/private/backend leases and camera/drain
+ordering remain intact; no camera I/O on OS custody failure.
+
+Initial native start binds via authenticated backend BEFORE original
+photos.prepare. Original backend claim CAS and new generation binding commit
+atomically before native media adoption. Failed bind rolls back generation and
+claim ownership. Existing proof/fresh legitimate PAID checks retained. Original
+freeze/payment/proof/delivery/prepare/ACK paths require current binding in this
+private opt-in profile. Binding HTTP accepts only original visit/generation;
+no key/PID/readiness flags and no fulfillment permission. Health stays False.
+
+Initial7-test integration probe20.311s had2 test fixture errors (expected raw
+RuntimeError rather than redacted DraftHeld; omitted original Sandbox GET
+pacing). Corrected fixtures use original retry window, no production timing/
+proof guard relaxation. Corrected7 PASS20.909s;5 private launch/protocol PASS
+1.071s; expanded68 backend PASS38.677s;3 actual-X11 native PASS44.154s, including
+private opt-in original entry/capture/freeze/ticket/automatic2+1 output at BOTH
+portrait sizes and original F8/default entry regressions. Zero final failures/
+errors/skips. Actual child trace proves injected claim-binding failure reached
+the binding writer before asserting full original transaction rollback.
+
+Registry1022 backend (Windows541+481),102 native. Full final regression and
+exact-source Windows/Ubuntu/native CI remain PENDING. Earlier isolated cores'
+UNMOUNTED notes are historical; opt-in path is now integrated. It is NOT exposed
+for owner power-loss trials. C3 recovery/reconciliation and remedy/refund remain
+unfinished; unknown old roots stay held. No receipt fabricated or old-media
+access without original proof enabled. Micro-push this safe disabled increment.
+
+[Machine-readable bounded verification](evidence/pp06-durable-worker-integration-2026-11-11.json).

@@ -20,7 +20,10 @@ from .post_preview_photos import PrivatePhotoService
 
 
 class ProtectedCheckoutService(PrivatePhotoService):
-    def __init__(self, root, *, payment_client, qr_loader, **kwargs):
+    def __init__(self, root, *, payment_client, qr_loader, require_worker_binding=False, **kwargs):
+        if type(require_worker_binding) is not bool:
+            raise DraftHeld('Exact original worker-binding selection required')
+        self._requires_worker_binding=require_worker_binding
         if type(payment_client) is not PostPreviewClient or payment_client.mode != 'sandbox':
             raise DraftHeld('Exact original Sandbox client required')
         if not callable(qr_loader):
@@ -35,6 +38,11 @@ class ProtectedCheckoutService(PrivatePhotoService):
         self._ticket_was_dismissed = False
         self._delivery_state = None
         super().__init__(root, booth_id=payment_client.booth_id, **kwargs)
+
+    def _before_private_work(self):
+        if self._requires_worker_binding:
+            self.client.bind_worker_generation(self.lease)
+            self._active()
 
     paid_ticket_enabled = property(lambda self: True)
     paid_delivery_enabled = property(lambda self: True)

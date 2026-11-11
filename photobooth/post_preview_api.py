@@ -56,9 +56,17 @@ class ClaimRequest(BaseModel):
 
 def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_limit=120,
                background_worker=True, ccp_presentation=None, ticket_presentation=None,
-               paid_delivery=None, protected_isolation=None, protected_claim=None, protected_freeze=None):
+               paid_delivery=None, protected_isolation=None, protected_claim=None, protected_freeze=None,
+               worker_generations=None):
     if type(background_worker) is not bool:
         raise ValueError('Explicit lifecycle worker selection required')
+    if worker_generations is not None:
+        from photobooth.post_preview_worker_binding import BackendWorkerEpoch
+        if (type(worker_generations) is not BackendWorkerEpoch or worker_generations.ledger is not payments.ledger
+                or worker_generations.scope.merchant_id != payments.merchant_id
+                or protected_isolation is None or protected_claim is None or protected_freeze is None
+                or protected_claim._worker_generations is not worker_generations):
+            raise ValueError('Exact original private backend epoch required')
     if ccp_presentation is not None:
         from photobooth.post_preview_presentation import OriginalCCPPresentation
         if (type(ccp_presentation) is not OriginalCCPPresentation
@@ -164,7 +172,9 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
             intent, _ = payments._group(group, booth)
             if intent['visit_id'] != owner.visit_id:
                 raise DraftHeld('Original visit required')
-            return DraftLease(intent['draft_id'], booth, owner.visit_id, owner.generation)
+            token=DraftLease(intent['draft_id'], booth, owner.visit_id, owner.generation)
+            if worker_generations is not None: worker_generations.require_locked(token)
+            return token
 
     def envelope(view):
         return dict(view, mode=payments.mode, order_version=ORDER_VERSION)
@@ -174,6 +184,7 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
         # flag, bearer secret or caller observation enters the readiness report.
         with payments.ledger.write():
             payments.ledger._owned(token)
+            if worker_generations is not None: worker_generations.require_locked(token)
             intent, _ = payments._group(group, token.booth_id)
             scope = ReadinessScope(group, token.booth_id, intent['contract_sha256'], token.generation)
             stamp = payments._now()
@@ -185,8 +196,21 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
         return {'api_version': 1, 'order_version': ORDER_VERSION, 'mode': payments.mode,
                 'fulfillment_enabled': False}
 
+    if worker_generations is not None:
+        @app.post('/api/postpay/drafts/{draft_id}/worker-binding')
+        async def original_worker_binding(draft_id:str,request:Request,
+                x_booth_id:str=Header(default=''),authorization:str=Header(default='')):
+            booth=identity(request,x_booth_id,authorization)
+            command=await body(request,OwnerRequest)
+            token=DraftLease(draft_id,booth,command.visit_id,command.generation)
+            await invoke(worker_generations.bind,token)
+            return dict(kind='ORIGINAL_WORKER_BOUND',draft_id=draft_id,booth_id=booth,
+                visit_id=token.visit_id,generation=token.generation,mode=payments.mode,
+                order_version=ORDER_VERSION,fulfillment_authorized=False)
+
     if protected_freeze is not None:
         def freeze_call(token,command):
+            if worker_generations is not None: worker_generations.require(token)
             scope=protected_freeze.scope(token,revision=command.revision,expected_amount=command.expected_amount)
             with authenticated_freeze_request(scope,payments._now()):
                 intent=protected_freeze.freeze(token,revision=command.revision,
@@ -222,6 +246,9 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
                 x_booth_id: str=Header(default=''),authorization: str=Header(default='')):
             booth=identity(request,x_booth_id,authorization)
             owner=await body(request,OwnerRequest)
+            if worker_generations is not None:
+                await invoke(worker_generations.require_retired,
+                             DraftLease(draft_id,booth,owner.visit_id,owner.generation))
             operation=await invoke(protected_isolation.prepare,booth,
                 expected_owner=DraftLease(draft_id,booth,owner.visit_id,owner.generation))
             return await invoke(original_operation,operation,booth,owner)
@@ -231,7 +258,10 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
                 x_booth_id: str=Header(default=''),authorization: str=Header(default='')):
             booth=identity(request,x_booth_id,authorization)
             owner=await body(request,OwnerRequest)
-            await invoke(original_operation,operation,booth,owner)
+            original=await invoke(original_operation,operation,booth,owner)
+            if worker_generations is not None:
+                await invoke(worker_generations.require_retired,DraftLease(
+                    original['draft_id'],booth,owner.visit_id,owner.generation))
             await invoke(protected_isolation.acknowledge,booth,operation)
             return await invoke(original_operation,operation,booth,owner)
 
