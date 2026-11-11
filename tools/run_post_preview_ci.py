@@ -25,6 +25,7 @@ CORE_MODULES=(
     'test_post_preview_worker_binding',
     'test_post_preview_worker_epochs',
     'test_post_preview_durable_worker',
+    'test_post_preview_interrupted_worker',
     'test_post_preview_ccp',
     'test_post_preview_payments',
     'test_post_preview_api',

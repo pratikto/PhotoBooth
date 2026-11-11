@@ -47,7 +47,8 @@ def assembled(checkout,templates,bridge,drive,**kwargs):
             state='pending'
         else:
             order=request.full_url.split('/')[-2]
-            if kwargs['server_key']=='Mid-server-HTTP-HOLD-FIXTURE':
+            if (kwargs['server_key']=='Mid-server-HTTP-HOLD-FIXTURE'
+                    or (checkout.photos.root.parent/'fixture-force-http-hold').exists()):
                 root=checkout.photos.root.parent
                 (root/'fixture-http-entered').write_text('synthetic HTTP thread entered')
                 deadline=time.monotonic()+30

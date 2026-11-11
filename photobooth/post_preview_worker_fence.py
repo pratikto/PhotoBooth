@@ -107,27 +107,34 @@ class WorkerReceiptVerifier:
 
     def verify(self, operation_id):
         """Call inside backend ACK transaction; never creates/ACKs an operation."""
-        row=_original(self.ledger,operation_id)
-        receipt=self.ledger.db.execute('SELECT * FROM pp_worker_retirements '
-            'WHERE operation_id=? AND key_id=?',(operation_id,self.key.key_id)).fetchone()
-        if receipt is None:
-            raise DraftHeld('Original native worker has not retired')
-        try:
-            frame=json.loads(receipt['frame_json'])
-            stamp=frame['observed_at']
-            if (type(frame) is not dict or type(frame.get('version')) is not int
-                    or type(frame.get('generation')) is not int
-                    or type(row['original_generation']) is not int or row['original_generation']<2
-                    or not finite_number(row['prepared_at'])
-                    or not finite_number(stamp) or not row['prepared_at']<=stamp<=self.ledger.now()
-                    or canonical(frame)!=receipt['frame_json']
-                    or frame!=_frame(row,self.key.key_id,stamp)
-                    or not _hex(receipt['mac'],64)
-                    or not hmac.compare_digest(receipt['mac'],self.key.sign(frame))):
-                raise ValueError('Original worker receipt changed')
-        except (ValueError, TypeError, KeyError, RecursionError):
-            raise DraftHeld('Original worker receipt cannot be verified') from None
-        return dict(receipt)
+        return verify_worker_receipt_from_db(self.ledger.db,self.key,operation_id,now=self.ledger.now())
+
+
+def verify_worker_receipt_from_db(db, key, operation_id, *, now):
+    """SAME original read verifier for an already-owned read-only snapshot."""
+    if type(key) is not WorkerFenceKey or not finite_number(now):
+        raise DraftHeld('Exact backend worker receipt authority required')
+    row=_original_from_db(db,operation_id)
+    receipt=db.execute('SELECT * FROM pp_worker_retirements '
+        'WHERE operation_id=? AND key_id=?',(operation_id,key.key_id)).fetchone()
+    if receipt is None:
+        raise DraftHeld('Original native worker has not retired')
+    try:
+        frame=json.loads(receipt['frame_json'])
+        stamp=frame['observed_at']
+        if (type(frame) is not dict or type(frame.get('version')) is not int
+                or type(frame.get('generation')) is not int
+                or type(row['original_generation']) is not int or row['original_generation']<2
+                or not finite_number(row['prepared_at'])
+                or not finite_number(stamp) or not row['prepared_at']<=stamp<=now
+                or canonical(frame)!=receipt['frame_json']
+                or frame!=_frame(row,key.key_id,stamp)
+                or not _hex(receipt['mac'],64)
+                or not hmac.compare_digest(receipt['mac'],key.sign(frame))):
+            raise ValueError('Original worker receipt changed')
+    except (ValueError, TypeError, KeyError, RecursionError):
+        raise DraftHeld('Original worker receipt cannot be verified') from None
+    return dict(receipt)
 
 
 class NativeWorkerRetirement:

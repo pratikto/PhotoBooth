@@ -677,3 +677,57 @@ unfinished; unknown old roots stay held. No receipt fabricated or old-media
 access without original proof enabled. Micro-push this safe disabled increment.
 
 [Machine-readable bounded verification](evidence/pp06-durable-worker-integration-2026-11-11.json).
+
+## C3a contract BEFORE source — read-only interrupted original receipt review
+
+Add a bounded reviewer under SAME actual native + backend-owner leases. Require
+original context/schema/DB/WAL, exact PREPARED retired generation, prior immutable
+ACTIVE-generation binding and original OS escrow/start witness. Observe BOTH
+old parent and old child actual exit independently; PID reuse/access failures
+hold. Verify ONLY an already-published ORIGINAL native retirement receipt using
+the SAME original receipt verifier/HMAC. Never mint or retroactively sign one.
+
+Return private metadata only, no key/proof/photo/ACK/FREE permission. Shared
+original finance classification must equal PREPARED class; a later restricted
+backend must still refresh independent provider status before any ACK. Initial
+supported review deliberately refuses any purchased paid-service/Drive binding
+until its remote/upload/manifest uncertainty can be independently reconciled.
+Known or ambiguous ticket/strip SENDING/UNCERTAIN holds under original policy.
+Missing receipt/binding/custody, ACTIVE/non-PREPARED or foreign history holds,
+with every byte retained. No payment/provider/file repair, new ledger, print,
+upload or refund effect. This reviewer alone does not enable startup recovery.
+
+### C3a implemented, read-only ONLY
+
+SAME original WorkerReceiptVerifier now shares its exact read algorithm with
+read-only review, no new receipt algorithm or signing path. Reviewer requires
+actual native/backend-owner leases, original DB/context/scope, immutable old
+ACTIVE-generation binding, SAME OS capability/witness and actual independent
+old parent/child exit. Existing PREPARED receipt only; backend_verified_at must
+still be NULL. Shared original finance class checked; purchased paid-service/
+Drive binding initially held. Return contains private metadata, no key, proof,
+ACK or FREE permission. Current owner launch remains unchanged/default-off.
+
+Actual original crash fixture uses fake external effects and os._exit ONLY in
+its own isolated test producer. Original backend may retain live HTTP worker;
+test proves its kernel lease holds until cooperative release and actual exit.
+Initial9 probe47.872s:3 fixture profile failures (wrong fixture lacked prepared
+Drive readiness) and1 actual child-exit timing error (lock closes before full
+exit). Corrected original fixture profile, wait for actual exit, retain all
+production guards. Next9 probe24.047s:1 fixture failure omitted original status
+pacing before blocking HTTP; corrected fixture retries only original GET.
+Corrected9 PASS16.835s. Expanded12 probe21.822s:1 fixture error attempted to
+rewrite terminal SUBMITTED ticket state, correctly rejected by original SQL
+trigger; now inject uncertainty into PREPARED pending intent, never terminal
+output. Final12 PASS22.727s. Shared receipt/fence/protected handoff/binding50
+PASS20.362s. Zero final failures/errors/skips. No production guard relaxed.
+
+Complete backend registry1034 (Windows553+481), native102; full final regression
+and exact-source CI pending. Private integration29f2570 CI42929845035 native/
+Ubuntu/Windows delivery SUCCESS metadata; Windows core still PENDING, logs not
+yet inspected, no all-four claim. NEXT C3b restricted SAME original backend
+role may verify/ACK ONLY the already-published original operation after fresh
+independent finance and repeated actual old-process/kernel checks. No charge,
+print, upload, proof/media display or new original retirement in that role.
+Then original fresh-epoch startup may run only after that child actually exits.
+Remedy/refund engineering remains unfinished and no real refund authorized.
