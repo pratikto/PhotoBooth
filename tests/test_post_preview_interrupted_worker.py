@@ -1,5 +1,5 @@
 """Read-only review after actual fake-effects original process loss."""
-from contextlib import nullcontext, ExitStack
+from contextlib import nullcontext, ExitStack, closing
 from dataclasses import replace
 import hashlib
 import json
@@ -76,7 +76,7 @@ class InterruptedWorkerReviewTests(unittest.TestCase):
             for folder in ('worker-custody','worker-starts') for p in (self.root/folder).iterdir()}
 
     def rows(self):
-        with sqlite3.connect(self.root/'drafts.sqlite3') as db:
+        with closing(sqlite3.connect((self.root/'drafts.sqlite3').as_uri()+'?mode=ro',uri=True)) as db:
             return {name:db.execute('SELECT * FROM '+name).fetchall() for name in
                     ('pp_drafts','pp_worker_generations','pp_isolation_ops','pp_worker_retirements','pp_purchase_finance')}
 
@@ -128,7 +128,7 @@ class InterruptedWorkerReviewTests(unittest.TestCase):
 
     def test_missing_original_binding_or_ciphertext_never_creates_replacements(self):
         self.produce(); owners=self.acquire()
-        with sqlite3.connect(self.root/'drafts.sqlite3') as db:
+        with closing(sqlite3.connect(self.root/'drafts.sqlite3')) as db,db:
             db.execute('DROP TRIGGER pp_worker_generation_no_delete')
             db.execute('DELETE FROM pp_worker_generations')
         before=self.rows(); self.held(owners); self.assertEqual(before,self.rows())
@@ -150,7 +150,7 @@ class InterruptedWorkerReviewTests(unittest.TestCase):
 
     def test_partial_backend_verified_receipt_never_normalizes_original_prepare(self):
         self.produce(); owners=self.acquire()
-        with sqlite3.connect(self.root/'drafts.sqlite3') as db:
+        with closing(sqlite3.connect(self.root/'drafts.sqlite3')) as db,db:
             db.execute('UPDATE pp_worker_retirements SET backend_verified_at=?',(time.time(),))
         before=self.rows(); self.held(owners); self.assertEqual(before,self.rows())
 
@@ -166,7 +166,7 @@ class InterruptedWorkerReviewTests(unittest.TestCase):
 
     def test_original_customer_receipt_uncertainty_holds_despite_valid_native_retirement(self):
         self.produce('receipt'); owners=self.acquire()
-        with sqlite3.connect(self.root/'drafts.sqlite3') as db:
+        with closing(sqlite3.connect(self.root/'drafts.sqlite3')) as db,db:
             db.execute("UPDATE pp_ticket_presentations SET receipt_state='UNCERTAIN'")
         before=self.rows(); self.assertEqual(1,len(before['pp_worker_retirements']))
         self.held(owners); self.assertEqual(before,self.rows())

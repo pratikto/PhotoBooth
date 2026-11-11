@@ -731,3 +731,60 @@ independent finance and repeated actual old-process/kernel checks. No charge,
 print, upload, proof/media display or new original retirement in that role.
 Then original fresh-epoch startup may run only after that child actually exits.
 Remedy/refund engineering remains unfinished and no real refund authorized.
+
+## C3b contract BEFORE source — restricted original ACK-only recovery process
+
+Reuse SAME original private bootstrap/host/Sandbox payment and isolation code.
+Add a private recovery_operation role, mutually exclusive with new-work durable
+epoch mode. No public CLI/GUI activation. Restrict HTTP to health and ACK of
+ONE already-verified original operation; no charge/renew/cancel/proof/media/
+print/upload/refund/webhook routes or background payment scheduler. Existing
+original ACK still refreshes independent finance and verifies SAME original
+PREPARED retirement receipt. No receipt creation/signing for dead old native.
+
+Recovery child acquires BOTH actual original native and backend-owner leases;
+its trusted parent retains original global owner and actual Popen until exit.
+Repeat C3a review independently inside child; verify SAME restored original key.
+Before private START, persist separate ORIGINAL_RECOVERY_PROCESS_START metadata
+with original operation/epoch, bootstrap nonce and actual NEW parent/child birth,
+HMAC under original capability. This is NEW process provenance, never old native
+retirement. Retain incomplete journals; no START on sync failure. Every later
+recovery/new-work attempt must verify prior recovery process identities actually
+exited, including after a parent loss; same live parent may rotate only after
+actual child exit. Never erase a journal to bypass a hold.
+
+Only after exact original ACK and actual recovery child exit may original fresh
+epoch startup occur. Any timeout/lost HTTP/blocked backend retains process and
+global ownership for original drain. Lost ACK retries SAME operation, never new
+worker receipt/order/output. Purchased delivery/upload/manifest cases remain
+held under C3a's explicit initial restriction. No owner fault/power-loss claim.
+
+### C3b1 separate recovery provenance core implemented, runtime role NOT mounted
+
+New immutable recovery INTENT must be fsynced BEFORE Popen; distinct actual
+NEW parent/child birth witness must be fsynced BEFORE private START. Both use
+original capability HMAC with distinct roles, not old native retirement.
+Unmatched intent/partial/foreign/hardlinked records hold; same live original
+writer may only re-sync exact bytes. Independent actual prior role-child exit
+required. Only actual current child/getppid may exempt its exact bootstrap
+nonce. No raw key/config/proof persisted. New namespace ignored by Git.
+C3 read review and eligible epoch writer now check these journals; complete
+durable roots cannot downgrade to ephemeral mode before key mint/spawn.
+
+8 provenance methods,22 provenance/epoch/downgrade focused PASS5.919s;20
+interrupted-review/provenance PASS25.419s. Windows CI42931390153 source8695bd6
+core553 FAILED with10 fixture cleanup errors (WinError32 open SQLite handles),
+zero assertion failures. All completed core failure traces inspected. Its
+delivery cancelled; Ubuntu/native SUCCESS metadata only, not all-four PASS.
+Runtime read reviewer already uses explicit closing; fixture rows/injections
+used SQLite transaction contexts without closing connections. Deterministic
+local connection probe reproduced1 handle still open; corrected all fixture
+contexts to explicit closing, snapshot read-only. Corrected probe0 open;34
+interrupted/provenance/epoch/downgrade PASS27.533s. No ignore-cleanup, deletion
+retry, weakened original DB/lease/receipt guard or test omission introduced.
+
+Backend registry1043 (Windows562+481), native102. Full final regression and
+exact-source CI pending. C3b1 is provenance only; restricted recovery role and
+original parent coordinator NOT implemented yet. FIRST wire these guards into
+SAME original bootstrap/host ACK-only role, retain global owner through actual
+child exit, then integrate private opt-in launch. Remedy/refund still unfinished.

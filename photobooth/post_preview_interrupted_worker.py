@@ -40,11 +40,13 @@ class InterruptedWorkerReview:
         return '<InterruptedWorkerReview: original metadata, not admission or ACK>'
 
 
-def read_interrupted_worker(native_owner, backend_owner, config):
+def read_interrupted_worker(native_owner, backend_owner, config, *, recovery_nonce=None):
     """Caller retains actual ORIGINAL global owner separately; HOLD-only read."""
     try:
         _require(type(config) is SandboxHostConfig and _root(native_owner) == config.private_root
                  and _root(backend_owner) == config.private_root/'backend-owner')
+        from photobooth.post_preview_recovery_start import review_recovery_processes
+        review_recovery_processes(native_owner,config,current_nonce=recovery_nonce)
         root = config.private_root
         path = _regular(root/'drafts.sqlite3')
         _regular(root/'host-context.json'); require_original_host_context(root,config)

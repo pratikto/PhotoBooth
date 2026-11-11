@@ -41,6 +41,8 @@ def _epochs(folder):
 
 def _policy(launcher, config, current, db):
     root = config.private_root
+    from photobooth.post_preview_recovery_start import review_recovery_processes
+    review_recovery_processes(launcher,config)
     custody = _epochs(root/'worker-custody')
     starts = _epochs(root/'worker-starts')
     _require(starts <= custody)  # Missing original capability is not legacy adoption.

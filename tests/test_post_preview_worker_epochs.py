@@ -176,6 +176,7 @@ class OriginalWorkerEpochTests(unittest.TestCase):
                 service.start(get_templates(), {'template_a': 1})
                 bind_original_worker_generation(service.ledger, service.lease,
                     manager._launcher, helper.config, manager._key)
+                manager._durable_worker_epochs=True  # Same-process fixture now uses the actual private integration.
                 old = manager._key.key_id; old_scope = helper.config.private_root/'worker-custody'/(old+'.json')
                 digest = hashlib.sha256(old_scope.read_bytes()).hexdigest()
                 service.retire('USER_CANCEL')

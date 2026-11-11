@@ -136,6 +136,14 @@ class DurableOriginalWorkerTests(unittest.TestCase):
         rows = self.bindings()
         self.assertEqual(3, len(rows)); self.assertEqual(3, len({row['key_id'] for row in rows}))
 
+    def test_original_durable_root_cannot_downgrade_to_ephemeral_default(self):
+        from photobooth.post_preview_worker_fence import WorkerFenceKey
+        self.f.shutdown(self.manager)
+        default=self.f.manager(); self.addCleanup(self.f.shutdown,default)
+        with patch.object(WorkerFenceKey,'create',side_effect=AssertionError('No downgrade key')) as mint:
+            with self.assertRaises(DraftHeld): default.start()
+        self.assertEqual(0,mint.call_count); self.assertIsNone(default._backend)
+
 
 class DurableWorkerProtocolTests(unittest.TestCase):
     def test_private_opt_in_is_strict_and_default_protocol_stays_unchanged(self):

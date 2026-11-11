@@ -14,7 +14,7 @@ import uuid
 from photobooth.checkout_store import CheckoutStore
 from photobooth.kiosk_v2.photos import PhotoJobs
 from photobooth.kiosk_v2.post_preview_protected_checkout import ProtectedCheckoutService
-from photobooth.kiosk_v2.recovery import LaunchLease
+from photobooth.kiosk_v2.recovery import LaunchLease,checked_path
 from photobooth.post_preview_authority import OriginalWorkerReadiness
 from photobooth.post_preview_bootstrap import SandboxBackendProcess
 from photobooth.post_preview_client import PostPreviewClient
@@ -89,6 +89,13 @@ class OriginalSandboxVisits:
     def _open(self):
         if self._backend is not None or self._service is not None:
             raise DraftHeld('Original child/native handles must finish first')
+        if not self._durable_worker_epochs:
+            try:
+                durable=any(checked_path(self._config.private_root/name).exists()
+                    for name in ('worker-custody','worker-recoveries'))
+            except (OSError,ValueError):
+                raise DraftHeld('Original durable worker history cannot downgrade to ephemeral startup') from None
+            if durable: raise DraftHeld('Original durable worker history cannot downgrade to ephemeral startup')
         if self._durable_worker_epochs:
             from photobooth.post_preview_visit_history import original_prework_history
             with original_prework_history(self._launcher,self._config,allow_custody=True): pass
