@@ -24,3 +24,4 @@ photobooth/local_settings.py
 
 # Private original worker lifecycle journals, wherever local storage is selected.
 worker-starts/
+worker-custody/

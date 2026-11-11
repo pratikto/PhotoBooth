@@ -131,13 +131,17 @@ def write_new_worker_escrow(lease, key, scope):
     file. Partial/foreign history is never rewritten or removed. A restart
     cannot write under a dead owner's identity. No safe-history rotation yet.
     """
+    return _write_worker_escrow(lease, key, scope, _new_root_only)
+
+
+def _write_worker_escrow(lease, key, scope, policy):
     try:
         root = _root(lease)
         _require(type(key) is WorkerFenceKey and type(scope) is WorkerCustodyScope
                  and scope.private_root == root and scope.owner_pid == os.getpid())
         _require(observe_process(os.getpid()).birth == scope.process_birth)
         path = _path(root, scope.worker_epoch)
-        _new_root_only(root, path)
+        policy(root, path)
         if path.exists():
             stored = _read(path, root, scope.worker_epoch)
             _require(stored.scope == scope and stored.envelope.key_id == key.key_id)
@@ -149,7 +153,7 @@ def write_new_worker_escrow(lease, key, scope):
             _require(hmac.compare_digest(restored.sign({'kind': 'ESCROW_TEST_NO_AUTHORITY'}),
                                          key.sign({'kind': 'ESCROW_TEST_NO_AUTHORITY'})))
             path.parent.mkdir(exist_ok=True, mode=0o700)
-            _new_root_only(root, path)
+            policy(root, path)
             descriptor = os.open(checked_path(path), os.O_WRONLY | os.O_CREAT | os.O_EXCL
                                  | getattr(os, 'O_NOFOLLOW', 0), 0o600)
             with os.fdopen(descriptor, 'wb') as stream:

@@ -4,7 +4,7 @@ Reuse original finance and backend-verified ACK algorithms. Read-only review
 does not migrate/create journals or publish a FREE row; post-open and original
 fresh worker/provider admission checks remain independently required.
 """
-from contextlib import closing
+from contextlib import closing, contextmanager
 from pathlib import Path
 import sqlite3
 import stat
@@ -65,14 +65,15 @@ def _lock_directory(root):
     _regular(data/'kiosk-v2-launch.lock')
 
 
-def review_before_original_worker(launcher, config):
+@contextmanager
+def original_prework_history(launcher, config, *, allow_custody=False):
     """Before key/spawn, under actual native and backend-owner kernel leases.
 
     This is a HOLD preflight only; it cannot restore old workers, create a
     release or prove global/remote/device safety. Original post-open checks stay.
     """
     try:
-        if (type(launcher) is not LaunchLease or launcher.stream.closed
+        if (type(allow_custody) is not bool or type(launcher) is not LaunchLease or launcher.stream.closed
                 or type(config) is not SandboxHostConfig
                 or checked_path(Path(launcher.stream.name)) !=
                     config.private_root/'data'/'kiosk-v2-launch.lock'):
@@ -87,7 +88,8 @@ def review_before_original_worker(launcher, config):
                     raise DraftHeld('Original history is missing beside its journal')
         existing = path.exists()
         if not existing:
-            if {p.name for p in root.iterdir()} - {'data', 'backend-owner'}:
+            allowed = {'data', 'backend-owner'} | ({'worker-custody'} if allow_custody else set())
+            if {p.name for p in root.iterdir()} - allowed:
                 raise DraftHeld('Missing original protected history')
             if (root/'backend-owner').exists():
                 _lock_directory(root/'backend-owner')
@@ -108,7 +110,16 @@ def review_before_original_worker(launcher, config):
                     db.execute('BEGIN')  # Observe original WAL in the same snapshot.
                     try:
                         require_free_visit_history(db, config.booth_id)
+                        yield db  # Keep the actual backend lease and SAME read snapshot.
                     finally:
                         db.rollback()
+            else:
+                yield None
     except Exception:
         raise DraftHeld('Original pre-key history or backend owner is held') from None
+
+
+def review_before_original_worker(launcher, config):
+    """Original HOLD-only probe; retains default strict fresh-root policy."""
+    with original_prework_history(launcher, config):
+        pass

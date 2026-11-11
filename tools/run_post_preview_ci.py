@@ -23,6 +23,7 @@ CORE_MODULES=(
     'test_post_preview_worker_escrow',
     'test_post_preview_worker_start',
     'test_post_preview_worker_binding',
+    'test_post_preview_worker_epochs',
     'test_post_preview_ccp',
     'test_post_preview_payments',
     'test_post_preview_api',

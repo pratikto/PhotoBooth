@@ -565,3 +565,50 @@ PENDING; no completed-owner or full-recovery claim. Original app flow unchanged.
 NEXT C2c3b: durable original epoch escrow on eligible same-root history; then
 mount original pre-work binding and independently prove C3 reconciliation.
 Remedy/refund software follows that safety boundary; no real refund authorized.
+
+## C2c3b contract BEFORE source — eligible same-root pre-work escrow
+
+Keep the original new-root-only writer strict. Add a separate trusted writer
+using the shared original read-only history policy while retaining actual native
+and backend-owner kernel leases throughout seal/write/sync. Never infer safe
+history from an empty/replacement DB or unlock from process metadata alone.
+Existing unresolved/uncertain history and live backend/old child hold before any
+new ciphertext. A fresh root may retry ONLY its same original current epoch;
+prior start witnesses without original DB hold as missing history.
+
+Every retained prior escrow/start pair must validate original root/account/
+booth/epoch and restore SAME capability; actual old child exit required. A
+foreign still-live parent holds; same-process rotation may retain its actual
+parent identity only after actual old child exit. Partial/missing/foreign prior
+records and PID reuse hold, preserve bytes. Do not fabricate legacy bindings or
+retirement. Existing already-ACKED legacy history remains classified by the SAME
+original financial/receipt policy; this does not enable its unsupported recovery.
+Validate any existing new generation bindings against original stored epochs.
+Add bounded metadata scanning, no recursion/old descent, no silent pruning.
+This writer remains UNMOUNTED until original pre-work lifecycle integration.
+
+### C2c3b implemented, still UNMOUNTED
+
+Separate write_eligible_worker_escrow keeps the SAME original read-only finance/
+verified-ACK history snapshot and backend-owner kernel lease through OS seal,
+write and fsync. Existing new-root writer stays strict. No key is minted here.
+Retained prior escrow/start pairs require scope/original-key authentication,
+actual old child exit and original parent exit or SAME current parent birth.
+Existing generation bindings use the SAME read verifier on original read-only
+SQLite connection; witness digest must match. Partial/missing records, live
+orphans, unknown filenames and metadata limit10000 hold without pruning.
+Unknown legacy start records lacking original escrow remain held; no legacy
+key or binding is retroactively invented. This limits advanced recovery scope
+and must be retained explicitly when later integrating the existing launcher.
+
+13 new epoch methods PASS2.048s, including SAME original manager child/ACK/
+signed-generation binding then eligible same-root next epoch (test-only pre-work
+interception, not production mounting).66 combined custody/binding/start/epoch/
+process methods PASS3.131s. Shared original binding/escrow/visit manager56 PASS
+74.046s after the history context refactor. Zero failures/errors/skips.
+Private worker-custody artifacts now ignored by Git. Complete backend registry
+1010, Windows529+481; final full regression/Windows CI pending.
+NEXT C2c3c: connect these cores to SAME original private launch/backend and
+record binding BEFORE first native file/capture or proof-restored media. Keep
+keys/managers out of native facade; no default merchant/health activation.
+C3 interrupted receipt reconciliation and remedy/refund remain unfinished.

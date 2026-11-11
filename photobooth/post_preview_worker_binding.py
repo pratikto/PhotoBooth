@@ -64,14 +64,19 @@ def install_worker_generation_bindings(ledger):
 
 
 def _context(ledger, lease, key, scope):
-    _require(type(ledger) is PostPreviewStore and type(lease) is DraftLease
+    _require(type(ledger) is PostPreviewStore)
+    _context_db(ledger.db, lease, key, scope)
+
+
+def _context_db(db, lease, key, scope):
+    _require(type(lease) is DraftLease
              and type(key) is WorkerFenceKey and type(scope) is WorkerCustodyScope)
     _require(type(lease.generation) is int and 1 <= lease.generation <= 2147483647
              and key.key_id == scope.worker_epoch and lease.booth_id == scope.booth_id)
-    files = list(ledger.db.execute('PRAGMA database_list'))
+    files = list(db.execute('PRAGMA database_list'))
     _require(len(files) >= 1 and files[0]['name'] == 'main' and files[0]['file']
              and checked_path(Path(files[0]['file'])) == scope.private_root/'drafts.sqlite3')
-    row = ledger.db.execute('SELECT * FROM pp_drafts WHERE draft_id=?', (lease.draft_id,)).fetchone()
+    row = db.execute('SELECT * FROM pp_drafts WHERE draft_id=?', (lease.draft_id,)).fetchone()
     _require(row and row['version'] == ORDER_VERSION and row['booth_id'] == lease.booth_id
              and row['visit_id'] == lease.visit_id and row['generation'] >= lease.generation)
 
@@ -93,7 +98,16 @@ def verify_worker_generation_binding(ledger, lease, key, scope):
     """
     try:
         _context(ledger, lease, key, scope)
-        row = ledger.db.execute('SELECT * FROM pp_worker_generations WHERE draft_id=? AND generation=?',
+        return verify_worker_generation_binding_from_db(ledger.db, lease, key, scope)
+    except Exception:
+        raise DraftHeld(_HELD) from None
+
+
+def verify_worker_generation_binding_from_db(db, lease, key, scope):
+    """SAME read algorithm in original read-only snapshot; never opens/migrates."""
+    try:
+        _context_db(db, lease, key, scope)
+        row = db.execute('SELECT * FROM pp_worker_generations WHERE draft_id=? AND generation=?',
                                 (lease.draft_id, lease.generation)).fetchone()
         _require(row and row['key_id'] == key.key_id)
         # Duplicate keys and noncanonical or extra JSON are rejected by exact
