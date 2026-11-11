@@ -788,3 +788,46 @@ exact-source CI pending. C3b1 is provenance only; restricted recovery role and
 original parent coordinator NOT implemented yet. FIRST wire these guards into
 SAME original bootstrap/host ACK-only role, retain global owner through actual
 child exit, then integrate private opt-in launch. Remedy/refund still unfinished.
+
+### C3b original private ACK-only process + global coordinator implemented
+
+SAME private bundle/bootstrap/host now supports exact recovery_operation,
+mutually exclusive with new-work durable mode. Pre-Popen intent and pre-START
+NEW role witness are now enforced in actual original bootstrap. Recovery child
+acquires BOTH original native/backend leases and independently rechecks C3a
+with its actual private startup nonce and SAME original OS key. Only health
+and ACK of ONE original operation are exposed; all charge/renew/claim/proof/
+print/upload/webhook/docs routes denied. No scheduler/readiness collector claims
+are used to pretend a new photo worker is healthy. Original Sandbox isolation
+and provider reconciliation perform the SAME ACK, not a new financial engine.
+
+ProtectedSandboxLaunch private durable opt-in now runs the trusted coordinator
+before camera construction/native admission, inside its bounded startup budget.
+Global owner retains actual recovery Popen; HTTP loss retries SAME idempotent
+operation with bounded backoff. Recovery child must actually exit before fresh
+worker key/epoch startup. Blocked HTTP preserves global and BOTH child leases
+until actual drain; intent sync failure withholds Popen. All prior worker and
+recovery provenance is reviewed BEFORE fresh epoch minting and again at seal.
+Original receipt digest excludes only once-updated backend verification time,
+so lost ACK replay still verifies the SAME immutable original frame/HMAC.
+No old retirement signed; new process witnesses have separate explicit roles.
+
+9 actual original recovery tests,4 private protocol tests PASS31.257s. Earlier
+7 original tests PASS29.647s credited.21 pre-key epoch/provenance PASS5.276s;
+expanded65 original recovery/host/API/launch/protocol PASS70.847s;3 actual-X11
+native PASS45.146s (original normal entry/F8/private durable entry at both sizes).
+Zero failures/errors/skips. Actual tests prove NO_PAYMENT ACK then neutral new
+worker; PAID stays private until original proof and fresh provider settlement;
+lost ACK never adds a retirement; forbidden routes have no effect; blocked
+actual HTTP retains ownership; wrong original secret and intent sync fail hold.
+
+Backend registry1053 (Windows572+481), native102. Full final verification and
+exact-source Windows CI PENDING. Default durable flag remains FALSE, no public
+recovery switch or merchant activation. Scope is explicitly limited: ACTIVE/
+no original receipt, missing custody/binding, unknown legacy root, purchased
+paid-service/Drive manifest/upload and uncertain paper still HOLD. These are
+not claimed supported or ready for owner power-loss trials. Broader C3 output
+reconciliation and remedy/refund remain unfinished; actual account/device
+acceptance and production approval are separate.
+
+[Machine-readable C3 scope and checks](evidence/pp06-interrupted-recovery-2026-11-11.json).

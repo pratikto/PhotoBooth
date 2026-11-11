@@ -27,7 +27,7 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
                       server_key, booth_id, booth_token, provider_transport=None,
                       on_shutdown=None, background_worker=True,
                       receipt_printer=None, printer_lane=None, paid_delivery_enabled=False,
-                      worker_fence_key=None, worker_generations=None):
+                      worker_fence_key=None, worker_generations=None,recovery_authority=None):
     """Install server-owned authority; never accept readiness/PAID from callers.
 
     The original ledger remains owned by the backend host. On successful assembly
@@ -55,6 +55,14 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
     if type(protector) not in {WindowsDPAPIProtector, LinuxSecretServiceProtector}:
         raise ValueError('Supported original OS credential protection required')
     ledger = checkout.ledger
+    if recovery_authority is not None:
+        from photobooth.post_preview_interrupted_worker import OriginalRecoveryAuthority
+        if (type(recovery_authority) is not OriginalRecoveryAuthority or recovery_authority.ledger is not ledger
+                or recovery_authority.key is not worker_fence_key or worker_generations is not None
+                or background_worker or not paid_delivery_enabled
+                or recovery_authority.review.scope.merchant_id!=merchant_id
+                or recovery_authority.review.scope.booth_id!=booth_id):
+            raise DraftHeld('Exact private original recovery-only authority required')
     if worker_generations is not None:
         from photobooth.post_preview_worker_binding import BackendWorkerEpoch
         if (type(worker_generations) is not BackendWorkerEpoch or worker_generations.ledger is not ledger
@@ -120,4 +128,5 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
     return create_app(payments, auth, on_shutdown=close, background_worker=background_worker,
                       ccp_presentation=presentation, ticket_presentation=ticket_presentation,
                       paid_delivery=delivery,protected_isolation=isolation,protected_claim=claim,
-                      protected_freeze=freeze,worker_generations=worker_generations)
+                      protected_freeze=freeze,worker_generations=worker_generations,
+                      recovery_authority=recovery_authority)

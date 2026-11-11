@@ -1,0 +1,94 @@
+{
+  "stage": "C3 private existing-receipt ACK-only original process recovery",
+  "default_enabled": false,
+  "public_cli_toggle": false,
+  "commercial_ready": false,
+  "source_parent": "0cb4a04b347c8d483ac2b808429461a4e297ef8b",
+  "source_sha256": {
+    "photobooth/post_preview_interrupted_recovery.py": "0897c01846ca5e74e86dbd8bf21acf11b3dc62e2143ae7a802b353c314afe3dc",
+    "photobooth/post_preview_interrupted_worker.py": "edf7de576b4caeede2e38c26311f3dd9e72ba574e8fc449d37916f822852819d",
+    "photobooth/post_preview_recovery_start.py": "7f9eb6588abf41ba52a0101fb1f87544554a0ef323bc0a653572c939288deb69",
+    "photobooth/post_preview_worker_epochs.py": "0dcc2a0d2f940525cae1c1445acac782ad5e28fff909bbb408ba8d37aae29ad7",
+    "photobooth/post_preview_host_fulfillment.py": "0bc6700bb02f048904850ad6f2aa267c4349ad165784890790e712f1eafc8b24",
+    "photobooth/post_preview_bootstrap.py": "4bef7b73c1b52dc7a43150b8c08c95f07db67d1fa51127b400b3dc6f63a1412e",
+    "photobooth/post_preview_host.py": "ce3095926b171dcf6a529d4883ec61d3179f495e24b20aebf8a1be31e65d06e2",
+    "photobooth/post_preview_server.py": "b1a400d4a30035e0efe3d881797d37581ca573710e1e1bea1655d2ebc5384fb5",
+    "photobooth/post_preview_api.py": "f5da1949323eb7f413ee519cb061a55c00d41ddf5a24b9df1a09d1238c85ffe2",
+    "photobooth/post_preview_launch.py": "6d9cee4cd3edbf109c79093d8a51e1923480e85b57b8c44079b6c09adf2afe09",
+    "photobooth/post_preview_sandbox_visits.py": "799f91a8d1b1bada6b330e71ad44bb9b8bc57cfcd4b669971008a159705b151b",
+    "tests/post_preview_interrupted_process_fixture.py": "64821064fdc0db10f32b23db0adbba47799394745205c8692a8fd747333e8424",
+    "tests/test_post_preview_interrupted_recovery.py": "837a362a8c0e6ec8266119363c540872bb8f6e6c794f25f1ec33126616d1cb5b",
+    "tests/test_post_preview_interrupted_worker.py": "8c3fb0f43e636fc3bca9668bc0cac9da27a9943fda5c3d7ccab9f823b9a5f4f7",
+    "tests/test_post_preview_durable_worker.py": "0e7f4157c6b4bdac08348996f59fe91a5ea6a052a749b1b0817f928345ddf317",
+    "tools/run_post_preview_ci.py": "d8b85a1c2a391e57a43df17e816a52b734fac5f20c0aa029a144f3cfd2109984"
+  },
+  "discovery": {
+    "all": 1053,
+    "core": 572,
+    "delivery": 481
+  },
+  "focused": {
+    "c3_read_only": {
+      "run": 12,
+      "seconds": 22.727,
+      "result": "PASS"
+    },
+    "provenance_and_fixture_correction": {
+      "run": 34,
+      "seconds": 27.533,
+      "result": "PASS"
+    },
+    "existing_receipt_shared_verifier": {
+      "run": 50,
+      "seconds": 20.362,
+      "result": "PASS"
+    },
+    "original_recovery_first": {
+      "run": 7,
+      "seconds": 29.647,
+      "result": "PASS"
+    },
+    "recovery_with_faults_and_protocol": {
+      "run": 13,
+      "seconds": 31.257,
+      "result": "PASS"
+    },
+    "prekey_epoch_provenance": {
+      "run": 21,
+      "seconds": 5.276,
+      "result": "PASS"
+    },
+    "expanded_original_backend": {
+      "run": 65,
+      "seconds": 70.847,
+      "result": "PASS"
+    },
+    "actual_native": {
+      "run": 3,
+      "seconds": 45.146,
+      "result": "PASS"
+    }
+  },
+  "full_final_verification": "PENDING",
+  "owner_devices_accounts": "NOT_RUN",
+  "supported": [
+    "Already-published original PREPARED retirement receipt with immutable original generation binding and OS custody",
+    "Old original parent and backend child actually exited, actual global/native/backend ownership verified",
+    "No purchased paid-service/Drive binding yet, independent fresh original finance and SAME original ACK",
+    "Same original ACK retry after reply loss, actual recovery Popen exit before fresh native epoch",
+    "Original paid customer proof and fresh independent legitimate settlement before any old-media restoration"
+  ],
+  "held": [
+    "ACTIVE or retired without original PREPARED receipt",
+    "Missing/partial original key/binding/receipt/process identity",
+    "Live backend/recovery orphan, PID reuse/access failure",
+    "Original purchased delivery/upload histories pending independent manifest reconciliation",
+    "Uncertain customer receipt/photo paper",
+    "Unknown legacy roots without original custody; no automatic migration"
+  ],
+  "remaining": [
+    "Broader output/upload/manifest interrupted reconciliation",
+    "Sandbox remedy/refund workflow and merchant-specific execution gates",
+    "Owned Windows physical/account/reboot/power-loss qualification"
+  ]
+}

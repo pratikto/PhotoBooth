@@ -12,10 +12,13 @@ class SandboxHostFulfillment:
     printer_config: PrinterConfig
     worker_key: WorkerFenceKey
     durable_worker_epochs: bool = False
+    recovery_operation: str | None = None
 
     def __post_init__(self):
         if (type(self.printer_config) is not PrinterConfig or type(self.worker_key) is not WorkerFenceKey
-                or type(self.durable_worker_epochs) is not bool):
+                or type(self.durable_worker_epochs) is not bool
+                or self.recovery_operation is not None and (type(self.recovery_operation) is not str
+                    or re.fullmatch(r'[a-f0-9]{32}',self.recovery_operation) is None or self.durable_worker_epochs)):
             raise ValueError('Exact private original fulfillment dependencies required')
         validate_original_printer_config(self.printer_config)
 
@@ -27,14 +30,18 @@ class SandboxHostFulfillment:
         value = dict(version=1,printer=asdict(self.printer_config),
                     worker_key=dict(key_id=self.worker_key.key_id,secret_hex=self.worker_key.secret.hex()))
         if self.durable_worker_epochs: value['durable_worker_epochs'] = True
+        if self.recovery_operation is not None: value['recovery_operation'] = self.recovery_operation
         return value
 
     @classmethod
     def from_private_startup(cls,value):
         try:
             if (type(value) is not dict or set(value) not in (
-                    {'version','printer','worker_key'}, {'version','printer','worker_key','durable_worker_epochs'})
+                    {'version','printer','worker_key'}, {'version','printer','worker_key','durable_worker_epochs'},
+                    {'version','printer','worker_key','recovery_operation'})
                     or type(value.get('durable_worker_epochs',False)) is not bool
+                    or 'recovery_operation' in value and (type(value['recovery_operation']) is not str
+                        or re.fullmatch(r'[a-f0-9]{32}',value['recovery_operation']) is None)
                     or type(value['version']) is not int or value['version']!=1
                     or type(value['printer']) is not dict
                     or set(value['printer'])!={f.name for f in fields(PrinterConfig)}
@@ -46,7 +53,7 @@ class SandboxHostFulfillment:
             printer=PrinterConfig(**value['printer'])
             bundle=cls(printer,WorkerFenceKey(value['worker_key']['key_id'],
                                            bytes.fromhex(value['worker_key']['secret_hex'])),
-                       value.get('durable_worker_epochs',False))
+                       value.get('durable_worker_epochs',False),value.get('recovery_operation'))
             # Original permissive printer normalization is for legacy settings.
             # This private protocol requires exact typed values, no fallbacks.
             actual=asdict(printer)

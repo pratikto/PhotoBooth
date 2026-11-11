@@ -73,17 +73,22 @@ class SandboxBackendProcess:
     reports backend exit only; original native readiness collector/worker stop
     and PREPARE/ACK remain separate obligations before admitting another visitor.
     """
-    def __init__(self, config, *, fulfillment=None, worker_launcher=None):
+    def __init__(self, config, *, fulfillment=None, worker_launcher=None,recovery_launcher=None):
         if (type(config) is not SandboxHostConfig
                 or fulfillment is not None and type(fulfillment) is not SandboxHostFulfillment
                 or worker_launcher is not None and
                    (type(worker_launcher) is not LaunchLease or fulfillment is None)
-                or fulfillment is not None and fulfillment.durable_worker_epochs and worker_launcher is None):
+                or fulfillment is not None and fulfillment.durable_worker_epochs and worker_launcher is None
+                or recovery_launcher is not None and (type(recovery_launcher) is not LaunchLease
+                    or fulfillment is None or fulfillment.recovery_operation is None or worker_launcher is not None)
+                or fulfillment is not None and fulfillment.recovery_operation is not None and recovery_launcher is None):
             raise ValueError('Exact private backend configuration required')
         self._config = config
         self._fulfillment = fulfillment
         self._worker_launcher = worker_launcher
         self._worker_start_frame = None
+        self._recovery_launcher=recovery_launcher
+        self._recovery_start_frame=None
         self.process = self._control = None
         self.endpoint = None
         self._nonce = uuid.uuid4().hex
@@ -118,6 +123,10 @@ class SandboxBackendProcess:
         kwargs = dict(cwd=str(REPOSITORY), env=backend_environment(os.environ),
                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         try:
+            if self._recovery_launcher is not None:
+                from photobooth.post_preview_recovery_start import record_recovery_intent
+                record_recovery_intent(self._recovery_launcher,self._config,self._fulfillment.worker_key,
+                                       self._fulfillment.recovery_operation,self._nonce)
             if os.name == 'nt':
                 kwargs.update(stdin=subprocess.PIPE, creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
                 self.process = subprocess.Popen(command+['--socket-bootstrap'], **kwargs)
@@ -138,6 +147,10 @@ class SandboxBackendProcess:
             if self._worker_launcher is not None:
                 self._worker_start_frame = record_worker_start(
                     self._worker_launcher,self._config,self._fulfillment.worker_key,self.process)
+            if self._recovery_launcher is not None:
+                from photobooth.post_preview_recovery_start import record_recovery_start
+                self._recovery_start_frame=record_recovery_start(self._recovery_launcher,self._config,
+                    self._fulfillment.worker_key,self._fulfillment.recovery_operation,self._nonce,self.process)
             _send(parent, request, deadline)
             result = _receive(parent, deadline)
             if (set(result) != {'version','kind','nonce','pid','port','mode','order_version'}
@@ -206,8 +219,9 @@ def run_child(control, readiness):
                      if 'fulfillment' in request else None)
         if os.name != 'nt':
             os.umask(0o077)
+        recovery_options={} if fulfillment is None or fulfillment.recovery_operation is None else dict(recovery_nonce=nonce)
         runtime = SandboxHostRuntime(config,WorkerReadinessClient(readiness,timeout=2),
-                                     fulfillment=fulfillment)
+            fulfillment=fulfillment,**recovery_options)
         import uvicorn
         listener = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         listener.bind(('127.0.0.1',0)); listener.listen(32); listener.setblocking(False)

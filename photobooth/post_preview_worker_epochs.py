@@ -47,7 +47,7 @@ def _policy(launcher, config, current, db):
     starts = _epochs(root/'worker-starts')
     _require(starts <= custody)  # Missing original capability is not legacy adoption.
     if db is None:
-        _require(custody <= {current.worker_epoch} and not starts)
+        _require(custody <= ({current.worker_epoch} if current is not None else set()) and not starts)
     keys = {}
     for epoch in custody:
         stored = read_worker_escrow(launcher, epoch)
@@ -56,7 +56,7 @@ def _policy(launcher, config, current, db):
                  and scope.private_root == root and stored.envelope.key_id == epoch)
         original = restore_worker_key(stored.envelope, scope)
         keys[epoch] = (original, scope)
-        if epoch == current.worker_epoch:
+        if current is not None and epoch == current.worker_epoch:
             _require(scope == current)
             continue  # SAME original writer's complete pre-START sync retry.
         _require(epoch in starts)
@@ -84,6 +84,15 @@ def _policy(launcher, config, current, db):
             from photobooth.post_preview_worker_fence import canonical
             witness = read_worker_start(launcher, config, key)
             _require(frame['worker_start_sha256'] == hashlib.sha256(canonical(witness).encode()).hexdigest())
+
+
+def review_eligible_worker_history(launcher,config):
+    """Same original history/provenance policy BEFORE minting a fresh epoch."""
+    try:
+        with original_prework_history(launcher,config,allow_custody=True) as db:
+            _policy(launcher,config,None,db)
+    except Exception:
+        raise WorkerEscrowHeld(_HELD) from None
 
 
 def write_eligible_worker_escrow(launcher, config, key):

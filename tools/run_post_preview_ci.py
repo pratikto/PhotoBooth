@@ -27,6 +27,7 @@ CORE_MODULES=(
     'test_post_preview_durable_worker',
     'test_post_preview_interrupted_worker',
     'test_post_preview_recovery_start',
+    'test_post_preview_interrupted_recovery',
     'test_post_preview_ccp',
     'test_post_preview_payments',
     'test_post_preview_api',

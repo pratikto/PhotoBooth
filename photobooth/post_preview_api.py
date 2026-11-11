@@ -57,9 +57,16 @@ class ClaimRequest(BaseModel):
 def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_limit=120,
                background_worker=True, ccp_presentation=None, ticket_presentation=None,
                paid_delivery=None, protected_isolation=None, protected_claim=None, protected_freeze=None,
-               worker_generations=None):
+               worker_generations=None,recovery_authority=None):
     if type(background_worker) is not bool:
         raise ValueError('Explicit lifecycle worker selection required')
+    if recovery_authority is not None:
+        from photobooth.post_preview_interrupted_worker import OriginalRecoveryAuthority
+        if (type(recovery_authority) is not OriginalRecoveryAuthority or recovery_authority.ledger is not payments.ledger
+                or recovery_authority.review.scope.merchant_id!=payments.merchant_id or background_worker
+                or worker_generations is not None or protected_isolation is None
+                or protected_isolation.receipts.key is not recovery_authority.key):
+            raise ValueError('Exact private original recovery-only authority required')
     if worker_generations is not None:
         from photobooth.post_preview_worker_binding import BackendWorkerEpoch
         if (type(worker_generations) is not BackendWorkerEpoch or worker_generations.ledger is not payments.ledger
@@ -131,7 +138,11 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
 
     @app.middleware('http')
     async def private_responses(request, call_next):
-        response = await call_next(request)
+        allowed = recovery_authority is None or (
+            request.method=='GET' and request.url.path=='/api/postpay/health' or
+            request.method=='POST' and request.url.path==
+                '/api/postpay/isolation/'+recovery_authority.review.operation_id+'/ack')
+        response = await call_next(request) if allowed else JSONResponse(status_code=404,content={'detail':'Not found'})
         response.headers['Cache-Control'] = 'no-store'
         response.headers['Pragma'] = 'no-cache'
         response.headers['Referrer-Policy'] = 'no-referrer'
@@ -259,6 +270,9 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
             booth=identity(request,x_booth_id,authorization)
             owner=await body(request,OwnerRequest)
             original=await invoke(original_operation,operation,booth,owner)
+            if recovery_authority is not None:
+                await invoke(recovery_authority.require,operation,
+                    DraftLease(original['draft_id'],booth,owner.visit_id,owner.generation))
             if worker_generations is not None:
                 await invoke(worker_generations.require_retired,DraftLease(
                     original['draft_id'],booth,owner.visit_id,owner.generation))

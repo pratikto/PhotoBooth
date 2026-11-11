@@ -103,18 +103,33 @@ class SandboxHostRuntime:
     The independent native worker/collector still needs its own fence/ACK.
     Closing this host never proves booth FREE, fulfilled or refunded.
     """
-    def __init__(self, config, bridge, *, fulfillment=None):
+    def __init__(self, config, bridge, *, fulfillment=None,recovery_nonce=None):
         if (type(config) is not SandboxHostConfig or type(bridge) is not WorkerReadinessClient
-                or fulfillment is not None and type(fulfillment) is not SandboxHostFulfillment):
+                or fulfillment is not None and type(fulfillment) is not SandboxHostFulfillment
+                or recovery_nonce is not None and (type(recovery_nonce) is not str
+                    or re.fullmatch(r'[a-f0-9]{32}',recovery_nonce) is None)
+                or (recovery_nonce is not None)!=(fulfillment is not None and fulfillment.recovery_operation is not None)):
             raise ValueError('Exact original host configuration and private bridge required')
         self._owner = self.ledger = self.drive = self.app = None
+        self._recovery_native=self._recovery_authority=None
         self.bridge = bridge
         self._closed = False
         self.root = config.private_root
         try:
+            if recovery_nonce is not None:
+                from photobooth.post_preview_visit_history import _regular
+                _regular(self.root/'drafts.sqlite3');_regular(self.root/'host-context.json')
+                require_original_host_context(self.root,config)
+                if not checked_path(self.root/'media').is_dir():
+                    raise ValueError('Original private media root is unavailable')
+                self._recovery_native=LaunchLease(self.root)
             self._owner = LaunchLease(self.root/'backend-owner')
-            _original_context(self.root, config)
+            if recovery_nonce is None: _original_context(self.root, config)
             self.ledger = PostPreviewStore(self.root/'drafts.sqlite3')
+            if recovery_nonce is not None:
+                from photobooth.post_preview_interrupted_worker import OriginalRecoveryAuthority
+                self._recovery_authority=OriginalRecoveryAuthority(self.ledger,self._recovery_native,self._owner,
+                    config,fulfillment.worker_key,recovery_nonce,fulfillment.recovery_operation)
             generations=None
             if fulfillment is not None and fulfillment.durable_worker_epochs:
                 from photobooth.post_preview_worker_binding import BackendWorkerEpoch
@@ -132,10 +147,12 @@ class SandboxHostRuntime:
                 delivery=dict(receipt_printer=ThermalPrinter(fulfillment.printer_config),
                     printer_lane=threading.Lock(),paid_delivery_enabled=True,
                     worker_fence_key=fulfillment.worker_key)
+            recovery_options={} if self._recovery_authority is None else dict(
+                recovery_authority=self._recovery_authority,background_worker=False)
             self.app = build_sandbox_app(self.checkout, self.templates, bridge, probe,
                 merchant_id=config.merchant_id, server_key=config.server_key,
                 booth_id=config.booth_id, booth_token=config.booth_token,
-                on_shutdown=self.close,worker_generations=generations,**delivery)
+                on_shutdown=self.close,worker_generations=generations,**recovery_options,**delivery)
         except BaseException:
             # Failed assembly has not started any worker or external effect.
             if self.drive is not None:
@@ -144,6 +161,7 @@ class SandboxHostRuntime:
                 self.ledger.close()
             if self._owner is not None:
                 self._owner.close()
+            if self._recovery_native is not None:self._recovery_native.close()
             raise
 
     def close(self, *, timeout=0):
@@ -160,5 +178,6 @@ class SandboxHostRuntime:
             self.drive.session.close()
         self.ledger.close()
         self._owner.close()
+        if self._recovery_native is not None:self._recovery_native.close()
         self._closed = True
         return True

@@ -97,8 +97,8 @@ class OriginalSandboxVisits:
                 raise DraftHeld('Original durable worker history cannot downgrade to ephemeral startup') from None
             if durable: raise DraftHeld('Original durable worker history cannot downgrade to ephemeral startup')
         if self._durable_worker_epochs:
-            from photobooth.post_preview_visit_history import original_prework_history
-            with original_prework_history(self._launcher,self._config,allow_custody=True): pass
+            from photobooth.post_preview_worker_epochs import review_eligible_worker_history
+            review_eligible_worker_history(self._launcher,self._config)
         else:
             review_before_original_worker(self._launcher,self._config)
         self._key=WorkerFenceKey.create()

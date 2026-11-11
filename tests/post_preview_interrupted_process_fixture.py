@@ -1,6 +1,7 @@
 """Crash ONLY an isolated fake-effects original manager, never customer data."""
 from contextlib import nullcontext
 import os
+import json
 from pathlib import Path
 import sys
 import threading
@@ -35,10 +36,10 @@ def run(storage, mode):
         binding=manager.start(); service=binding.service
         release=config.private_root/'fixture-http-release'; release.touch()
         helper=helpers.OriginalSandboxVisitTests(methodName='runTest'); helper.frame=frame
-        if mode in {'paid','delivery','orphan','receipt'}:
+        if mode in {'paid','delivery','orphan','receipt','claim'}:
             if mode=='delivery': group,_=helper.paid(binding)
             else:
-                group,_=helper.frozen(binding)
+                group,proof=helper.frozen(binding)
                 service.begin_payment()
                 def paid():
                     if service.check_payment('connectivity')['phase']!='paid_hold': raise DraftHeld('Fixture pacing')
@@ -74,7 +75,11 @@ def run(storage, mode):
             while not (config.private_root/'fixture-http-entered').exists():
                 if time.monotonic()>deadline: raise AssertionError('Actual fixture backend HTTP did not enter')
                 time.sleep(.01)
-        print('READY',flush=True)  # Static status ONLY: no key/proof/order/photo.
+        if mode=='claim':
+            # Existing private test pipe pattern: parent retains proof ONLY in
+            # memory; never echo stdout into assertion/shared logs or reports.
+            print(json.dumps(dict(proof=proof,group=group)),flush=True)
+        else: print('READY',flush=True)
         os._exit(73)  # Intentional isolated test process loss; no force-killed worker.
 
 

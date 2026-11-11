@@ -19,6 +19,7 @@ class ProtectedLaunchHeld(RuntimeError):
 class ProtectedSandboxLaunch:
     def __init__(self,project_root):
         self._legacy=self._camera=self._visits=self._worker=self._control=None
+        self._recovery=None
         self._started=self._ready=self._stopping=self._closed=False
         try:
             root=Path(project_root)
@@ -65,6 +66,7 @@ class ProtectedSandboxLaunch:
                     or type(durable_worker_epochs) is not bool
                     or not callable(qr_loader)):
                 raise ValueError
+            deadline=time.monotonic()+timeout
             # These imports/constructions happen only AFTER global ownership.
             from photobooth.checkout_store import CheckoutStore
             from photobooth.kiosk_v2.devices import AsyncCamera
@@ -84,12 +86,18 @@ class ProtectedSandboxLaunch:
             with closing(sqlite3.connect(history.as_uri()+'?mode=ro',uri=True,timeout=.2)) as db:
                 db.execute('SELECT id,booth_id,checkout_key,state FROM checkouts LIMIT 0')
             self._legacy=CheckoutStore(history)
+            if durable_worker_epochs:
+                from photobooth.post_preview_interrupted_recovery import OriginalInterruptedRecovery
+                self._recovery=OriginalInterruptedRecovery(self,config,printer_config)
+                remaining=deadline-time.monotonic()
+                if remaining<=0:raise ValueError
+                self._recovery.finish(timeout=remaining)
+                if time.monotonic()>=deadline:raise ValueError
             self._camera=AsyncCamera(enabled=camera_enabled,index=camera_index)
             self._visits=OriginalSandboxVisits(config,printer_config,self._legacy,
                 camera=self._camera,qr_loader=qr_loader,durable_worker_epochs=durable_worker_epochs)
             self._control,self._worker=create_visit_control(self._visits,finish_on_stop=finish_on_stop)
             if not self._control.start():raise ValueError
-            deadline=time.monotonic()+timeout
             while time.monotonic()<deadline:
                 outcome=self._control.poll()
                 if outcome is not None:
@@ -116,6 +124,8 @@ class ProtectedSandboxLaunch:
         try:
             if self._control is not None:self._control.request_stop()
             if self._camera is not None:self._camera.close()
+            if self._recovery is not None and not self._recovery.stop(timeout=max(0,deadline-time.monotonic())):
+                return False
             if self._worker is not None:
                 if not self._worker.stop(timeout=max(0,deadline-time.monotonic())):return False
                 if (self._worker._thread.is_alive() or not self._control.stopped

@@ -146,6 +146,25 @@ class DurableOriginalWorkerTests(unittest.TestCase):
 
 
 class DurableWorkerProtocolTests(unittest.TestCase):
+    def test_recovery_role_requires_exact_operation_and_cannot_be_new_work_epoch(self):
+        from photobooth.post_preview_host_fulfillment import SandboxHostFulfillment
+        from photobooth.post_preview_worker_fence import WorkerFenceKey
+        from photobooth.post_preview_bootstrap import SandboxBackendProcess
+        from photobooth.post_preview_host import SandboxHostConfig
+        from photobooth.printer import PrinterConfig
+        bundle=SandboxHostFulfillment(PrinterConfig(lan_host='fixture-printer'),WorkerFenceKey.create())
+        recovery=replace(bundle,recovery_operation='a'*32)
+        self.assertEqual('a'*32,SandboxHostFulfillment.from_private_startup(recovery.to_private_startup()).recovery_operation)
+        with self.assertRaises(ValueError):replace(recovery,durable_worker_epochs=True)
+        for invalid in (None,True,1,'wrong'):
+            with self.assertRaises(ValueError):SandboxHostFulfillment.from_private_startup(
+                dict(bundle.to_private_startup(),recovery_operation=invalid))
+        with tempfile.TemporaryDirectory() as directory:
+            config=SandboxHostConfig(Path(directory),'MTEST','PB001','Mid-server-PROTOCOL-FIXTURE',
+                'b'*48,'https://script.google.com/macros/s/PROTOCOL_FIXTURE/exec','fixture-drive')
+            with self.assertRaises(ValueError):SandboxBackendProcess(config,fulfillment=recovery)
+            self.assertFalse(config.private_root.exists())
+
     def test_private_opt_in_is_strict_and_default_protocol_stays_unchanged(self):
         from photobooth.post_preview_host_fulfillment import SandboxHostFulfillment
         from photobooth.post_preview_worker_fence import WorkerFenceKey

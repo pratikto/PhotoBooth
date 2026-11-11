@@ -49,6 +49,10 @@ class InterruptedWorkerReviewTests(unittest.TestCase):
             str(self.storage),mode],cwd=Path(__file__).resolve().parents[1],
             env=backend_environment(os.environ),capture_output=True,text=True,timeout=35)
         self.assertEqual(73,result.returncode,result.stderr[-1500:])
+        if mode=='claim':
+            private=json.loads(result.stdout)
+            self.assertEqual({'proof','group'},set(private))
+            return private
         self.assertEqual('READY',result.stdout.strip())
 
     def acquire(self):
