@@ -1,7 +1,7 @@
 {
   "stage": "Protected original proof-gated remedy CASE, no actual refund execution",
   "date_wib": "2026-11-12",
-  "runtime_commit": "37e24ae02300e095c131d09ae14b2caff17fa777",
+  "runtime_commit": "f59776c1d3db7fe3c16d26024113ee7fb36453f7",
   "backend_commit": "bb8dac595bb9d127316a942ac2a5de8b333cd8c8",
   "commercial_ready": false,
   "merchant_refund_capability": "OWNER_NOT_CONFIRMED",
@@ -10,7 +10,7 @@
   "real_external_effects": "NOT_RUN",
   "owner_windows_devices_accounts": "NOT_RUN",
   "source_sha256": {
-    "photobooth/post_preview_remedy.py": "c00415845120d5014963207bffd56c449c04e049d22b6149c5cb4153153b9b69",
+    "photobooth/post_preview_remedy.py": "1abeb27512f93528f2e6a2a3894d46cace136a70aad6525e6a4f0b0ad63efb99",
     "photobooth/post_preview_remedy_client.py": "b9cf00258d56c8feac2b74fb414fafcea10629fc203e969defecae82dd87e223",
     "photobooth/post_preview_remedy_contract.py": "72c3149dc68166e8b851109a4a8cba5e0823ddef8adc8b4a3d1a87bb2de36cf7",
     "photobooth/post_preview_api.py": "d4b4d8b0d10c3f5603cae06506ef5f14cc02b3616f47d1edfadc85afbb44e79b",
@@ -21,10 +21,10 @@
     "photobooth/post_preview_worker_epochs.py": "dba5374494b5efe512daa29728f1d6610ac0c159936ff3f739bd76070f5c4b19",
     "photobooth/kiosk_v2/post_preview_checkout_app.py": "a01619c04efe5ac1305fa7ece4b3f7c736aa72ae6f37f67bf60d2eca655661a4",
     "photobooth/kiosk_v2/post_preview_visits_app.py": "c2498cb78ea3ce1e28677733c22d23389c753a59d1befbc77c5c7a79d1609557",
-    "tests/test_post_preview_remedy.py": "7db756cf261ceb3a5c45204adfcd9d69b24933b065a1ae66a41689176b5c9c90",
+    "tests/test_post_preview_remedy.py": "a8c49924e5dd42dab59dd705e27bbf133f6f0ae2da1de349d7ec9fd00b164eb6",
     "tests/test_post_preview_visits_widgets.py": "1e1de3a9a7b4395f531dea4152bd7d6cdce25db481ebee507417a4729b1af8ac",
     "tests/test_post_preview_durable_worker.py": "115b8727ab867b67815a8797d8648c12556ac9aab0ace2c375a7fda619be8020",
-    "tests/post_preview_host_process_fixture.py": "ae40453b84ab68505ff0e3ce275b5ac2285ce03f05956c4ceb7cb2bd97d075f6",
+    "tests/post_preview_host_process_fixture.py": "1c8ae9b07e54408f27eec1a87764619fccf2b3edc697010dbf88b590e2360442",
     "tools/run_post_preview_ci.py": "dfbb64faa4339e123e59e59d6bb5da8773e8c2216cf373196c2df00ddbe3468d"
   },
   "discovery": {
@@ -56,6 +56,24 @@
     "apps_script": {
       "run": 34,
       "result": "PASS"
+    },
+    "scheduling_correction": {
+      "run": 17,
+      "seconds": 45.257,
+      "result": "PASS"
+    },
+    "slow_provider_partially_eligible_case": {
+      "run": 1,
+      "seconds": 6.966,
+      "result": "PASS"
+    },
+    "corrected_native": {
+      "run": 3,
+      "seconds": 34.318,
+      "result": "PASS",
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
     }
   },
   "full_local": {
@@ -66,7 +84,8 @@
       "result": "PASS",
       "failures": 0,
       "errors": 0,
-      "skipped": 0
+      "skipped": 0,
+      "source": "37e24ae02300e095c131d09ae14b2caff17fa777"
     },
     "apps_script": {
       "run": 34,
@@ -74,7 +93,7 @@
     }
   },
   "exact_source_ci": {
-    "run_id": 43144397503,
+    "run_id": 43145998489,
     "result": "PENDING"
   },
   "prior_recovery_ci": {
@@ -104,5 +123,35 @@
     "Cloud photo publishing or deletion",
     "Merchant/commercial profile activation",
     "Deployment/merge/default branch change"
+  ],
+  "previous_runtime_commit": "37e24ae02300e095c131d09ae14b2caff17fa777",
+  "preserved_failures": [
+    {
+      "source": "37e24ae02300e095c131d09ae14b2caff17fa777",
+      "local": {
+        "run": 1071,
+        "seconds": 580.241,
+        "errors": 1,
+        "failures": 0,
+        "skipped": 0
+      },
+      "ci": {
+        "run_id": 43144397503,
+        "windows_delivery": {
+          "run": 498,
+          "seconds": 444.166,
+          "errors": 1
+        },
+        "windows_core": "CANCELLED",
+        "ubuntu": "CANCELLED",
+        "native": {
+          "run": 105,
+          "seconds": 388.774,
+          "result": "PASS"
+        }
+      },
+      "cause": "Partial-attempt original GET eligibility starvation, rapid test polling reaches HTTP429; two FAIL and one PASS actual-process reproductions. Original paid states and proof unchanged.",
+      "correction": "Wait for all original scheduling guards before any GET; still require actual original fresh verdict for each attempt. Bounded test case polling .25s; original API limiter unchanged."
+    }
   ]
 }

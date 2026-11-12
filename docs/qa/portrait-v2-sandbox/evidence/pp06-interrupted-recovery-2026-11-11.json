@@ -69,7 +69,32 @@
       "result": "PASS"
     }
   },
-  "full_final_verification": "PENDING",
+  "full_final_verification": {
+    "source": "6fbc650ce32b11256aa92b2c037d5905cce49cdd",
+    "local_full": "NOT_RUN",
+    "ci": {
+      "run_id": 42935238737,
+      "result": "ALL_FOUR_SUCCESS",
+      "completed_unit_summaries_inspected": true,
+      "windows_core": {
+        "run": 572,
+        "seconds": 515.054
+      },
+      "windows_delivery": {
+        "run": 481,
+        "seconds": 481.18
+      },
+      "ubuntu": {
+        "run": 1053,
+        "seconds": 432.718
+      },
+      "native": {
+        "run": 102,
+        "seconds": 287.99
+      },
+      "windows_owner_entry_step": "SUCCESS"
+    }
+  },
   "owner_devices_accounts": "NOT_RUN",
   "supported": [
     "Already-published original PREPARED retirement receipt with immutable original generation binding and OS custody",
