@@ -37,7 +37,13 @@ class OriginalRemedyProcessTests(unittest.TestCase):
             value=self.client.review(request or self.request,self.group,self.proof,reason)
             if expected is not None and value['status']!=expected:raise DraftHeld('Original fixture status pacing')
             return value
-        return self.f.retry(checked) if expected is not None else checked()
+        if expected is None:return checked()
+        deadline=time.monotonic()+12
+        while True:
+            try:return checked()
+            except DraftHeld:
+                if time.monotonic()>=deadline:raise
+                time.sleep(.25)  # Keep the original API limiter/GET guards.
 
     def rows(self,table):
         return [tuple(row) for row in self.manager.ledger.db.execute('SELECT * FROM '+table)]
@@ -149,18 +155,37 @@ class OriginalRemedyProcessTests(unittest.TestCase):
             if value['payment']['state']!='EXPIRED_UNPAID':raise DraftHeld('Original fixture status pacing')
             return value
         self.f.retry(expired)
+        (self.f.config.private_root/'fixture-delay-charge-response').touch()
         def renew():
             try:return self.service.continue_payment(True)
             except RuntimeError:raise DraftHeld('Original fixture expiry recheck pacing') from None
         renewed=self.f.retry(renew)
         second=renewed['payment']['attempts'][-1]['provider_order_id']
+        # The renewed attempt was just checked; the old one can become ready
+        # first. An assessment must not consume only that eligible subset.
+        root=self.f.config.private_root
+        (root/'fixture-trace-provider-methods').touch()
+        before=[tuple(row) for row in self.manager.ledger.db.execute(
+            'SELECT attempt_id,priority_after FROM pp_payment_attempts ORDER BY ordinal')]
+        self.assertLessEqual(before[0][1],self.manager.ledger.now())
+        self.assertGreater(before[1][1],self.manager.ledger.now())
+        held=self.review('EXCESS_SETTLED_ATTEMPTS')
+        self.assertFalse(held['financial_evidence_fresh'])
+        self.assertFalse((root/'fixture-provider-methods').exists())
+        self.assertEqual(before,[tuple(row) for row in self.manager.ledger.db.execute(
+            'SELECT attempt_id,priority_after FROM pp_payment_attempts ORDER BY ordinal')])
         statuses.write_text(json.dumps({first:'settlement',second:'settlement'}))
         value=self.review('EXCESS_SETTLED_ATTEMPTS',expected='REFUND_REVIEW_REQUIRED')
         def both():
             result=self.review('EXCESS_SETTLED_ATTEMPTS')
             if not result['financial_evidence_fresh']:raise DraftHeld('Original fixture status pacing')
             return result
-        value=self.f.retry(both)
+        deadline=time.monotonic()+12
+        while True:
+            try:value=both();break
+            except DraftHeld:
+                if time.monotonic()>=deadline:raise
+                time.sleep(.25)
         self.assertFalse(value['can_issue_refund']);self.assertEqual('NOT_REQUESTED',value['refund_state'])
         self.assertEqual(2,self.manager.ledger.db.execute("SELECT COUNT(*) FROM pp_payment_attempts WHERE payment_state='PAID'").fetchone()[0])
         self.assertEqual(1,len(self.rows('pp_purchase_finance')));self.assertEqual(1,len(self.rows('pp_ccp_credentials')))

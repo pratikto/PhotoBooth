@@ -44,6 +44,8 @@ def assembled(checkout,templates,bridge,drive,**kwargs):
         if request.method=='POST' and request.full_url.endswith('/v2/charge'):
             data=json.loads(request.data)['transaction_details']
             order,amount=data['order_id'],data['gross_amount']
+            if (root/'fixture-delay-charge-response').exists():
+                time.sleep(1.1)  # Test-only network latency, original guards stay intact.
             if lost[0]:
                 lost[0]=False
                 raise OSError('synthetic provider accepted but reply lost')
@@ -113,6 +115,22 @@ def assembled(checkout,templates,bridge,drive,**kwargs):
     drive.client.storage_readiness=lambda slots:{'drive_api':'READY','drive_sharing':'READY',
                                                  'capacity_state':'READY'}
     app=original(checkout,templates,bridge,drive,**kwargs)
+    remedy=getattr(app.state,'remedy',None)
+    if remedy is not None:
+        original_case=remedy.request_case
+        def traced_case(*args,**kw):
+            try:return original_case(*args,**kw)
+            except Exception as exc:
+                root=checkout.photos.root.parent
+                if (root/'fixture-trace-remedy-error').exists():
+                    import traceback
+                    # Static stack positions ONLY; no exception text/locals.
+                    frames=traceback.extract_tb(exc.__traceback__)
+                    with (root/'fixture-remedy-error-types').open('a') as stream:
+                        stream.write(type(exc).__name__+' '+','.join(
+                            frame.name+':'+str(frame.lineno) for frame in frames)+'\n')
+                raise
+        remedy.request_case=traced_case
     if delivery_fixture:
         # No external uploading in this native/process transport fixture.
         # Original worker lifetime is covered by the independent B4 tests.

@@ -126,3 +126,45 @@ still running; no full/all-four result claimed yet. Documentation-only
 checkpoint does not alter tested runtime or trigger redundant CI.
 
 [Machine-readable current scope, source hashes and outcomes](evidence/pp06-sandbox-remedy-2026-11-12.json).
+
+## Full-regression failure retained — 12 November (WIB)
+
+Runtime37e24ae full1071 local backend finished580.241s with1 ERROR in the new
+double-settlement remedy case (1070 other outcomes passed; no full-pass claim).
+Windows delivery498 CI43144397503 reproduced SAME error in444.166s. Native105
+CI PASS388.774s; core/Ubuntu cancelled by fail-fast, not PASS. Client correctly
+redacts the underlying HTTP failure; do not weaken that boundary or paid
+monotonicity. Add opt-in test-child-only static exception type/function/line
+trace (never exception text, request, IDs, credentials, proof or media) to
+identify the original held condition, reproduce, repair and reverify.
+
+### Reproduced scheduling failure and correction contract BEFORE source
+
+Three actual original-child probes produced two FAIL and one PASS; rejected
+requests included original HTTP429, while both original settlements remained
+PAID and CCP denied-attempt count remained zero. No money or proof downgrade.
+The new all-attempt review can consume GET eligibility on only one attempt
+while another is inside its original one-second priority guard. Repeated
+requests can keep those attempts out of phase, then rapid fixture polling
+exhausts the ORIGINAL API limiter. Do not disable rate limits or force timing.
+
+Before GET, read the original scheduling metadata for ALL attempts and perform
+no provider GET if any attempt is currently ineligible. That scheduling gate
+NEVER certifies freshness: every attempt must still return its original fresh
+GET verdict within the same assessment. Concurrent lost eligibility stays
+WAITING_PROVIDER. Use a bounded, slower test-only case poll, not a policy waiver.
+Verify zero provider GET for a partially eligible set, then fresh independent
+double settlement once all original guards permit; retain original entitlement.
+
+### Scheduling correction locally verified
+
+Original guards/financial GET semantics unchanged.17 remedy methods PASS45.257s;
+strengthened slow-provider/partially eligible double-settlement method PASS
+6.966s. It asserts original old-attempt priority is due while the latest is
+not, zero provider GET or priority mutation in that case, then both original
+independent fresh settlements with one entitlement and no refund. Test-only
+charge response delay1.1s creates that actual scheduling condition. Case test
+polling bounded .25s keeps ORIGINAL API rate guard. Full corrected backend/CI
+pending; original source37e24ae failure retained above. Original native105
+source37e24ae still PASS locally/CI; rerun three affected native remedy cases
+and inspect corrected-source full native CI. No actual device/account/refund.

@@ -117,9 +117,20 @@ class OriginalSandboxRemedy:
         # wall-clock freshness assertion. No CREATE/cancel/refund is invoked.
         with self.ledger.write():
             self.payments._group(group,booth)
-            ids=[row[0] for row in self.ledger.db.execute('SELECT attempt_id FROM pp_payment_attempts '
+            attempts=[dict(row) for row in self.ledger.db.execute('SELECT attempt_id,create_phase,'
+                'reconcile_token,lease_until,priority_after,verified_at FROM pp_payment_attempts '
                 'WHERE purchase_group_id=? ORDER BY ordinal',(group,))]
-            _require(len(ids)<=3)
+            _require(len(attempts)<=3)
+            now=self.payments._now()
+            # Scheduling only, never fresh financial evidence. Consuming an
+            # eligible subset on every retry can keep attempts out of phase.
+            # The SAME original reconcile still independently enforces each
+            # lease/priority guard and supplies every actual fresh GET verdict.
+            eligible=all(not (row['create_phase']=='WITHHELD'
+                or row['reconcile_token'] and row['lease_until']>now
+                or row['priority_after']>now
+                or row['verified_at'] is not None and now<row['verified_at']) for row in attempts)
+            ids=[row['attempt_id'] for row in attempts] if eligible else []
         observations={}
         for attempt in ids:
             try:observations[attempt]=self.payments.reconcile(group,booth,attempt_id=attempt,force=True)
