@@ -853,3 +853,16 @@ invent dead old retirement receipts, reconstruct missing bindings or activate
 the private/default-off profile to evade these holds. First unfinished software
 work remains independent original output/manifest reconciliation; actual
 refund sender also requires verified merchant capability and original fences.
+
+
+## Final later-source verification — 12 November (WIB)
+
+Runtimef59776c / workflowfca6dc2 full local1071 backend PASS557.705s;
+CI43147548887 ALL FOUR SUCCESS (Windows573+498, Ubuntu1071, native105), all
+completed logs and all new methods inspected. Source hashes and original
+custody/receipt/process/finance guards remain intact. See the
+[final remedy/recovery evidence and release gates](PP06-SANDBOX-REMEDY-2026-11-11.md).
+This verifies the documented restricted existing-receipt recovery only.
+Broader ACTIVE/no original receipt/purchased-delivery manifest/upload or
+uncertain paper still HOLD; default private flag FALSE. No owner power-loss
+qualification, actual refund or commercial activation is inferred.

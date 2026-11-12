@@ -423,3 +423,18 @@ already-signed original PREPARED receipts; do not simulate power cuts against
 real customer data using this help flow. Physical/account observations remain
 NOT_RUN. Exact-source CI/full current-source verification is pending; see the
 [remedy checkpoint](PP06-SANDBOX-REMEDY-2026-11-11.md) for current evidence.
+
+
+## Current software checks complete — 12 November 2026 (WIB)
+
+Runtimef59776c / workflowfca6dc2 has1071 local backend PASS and
+[CI43147548887 ALL FOUR SUCCESS](https://github.com/pratikto/PhotoBooth/actions/runs/43147548887):
+Windows573+498, Ubuntu1071, native105. All completed logs inspected; original
+Windows owner-entry/DPAPI/preflight/record/show/consent hold SUCCESS. Original
+normal acceptance commands/consents/storage root above remain applicable.
+The helper records a nonbinding report and truthfully says refund has not been
+requested; it does not execute a refund or qualify broader interrupted output.
+Actual owner Windows camera/paper/phone/Drive/Midtrans results remain NOT_RUN.
+Merchant refund capability remains explicitly NOT CONFIRMED. Use the
+[release gates and remaining software table](PP06-SANDBOX-REMEDY-2026-11-11.md)
+to distinguish this usable normal-UAT entry from commercial approval.

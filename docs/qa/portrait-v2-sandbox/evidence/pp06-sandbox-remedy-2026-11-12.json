@@ -39,19 +39,22 @@
     "backend": {
       "run": 32,
       "seconds": 46.893,
-      "result": "PASS"
+      "result": "PASS",
+      "source": "bb8dac595bb9d127316a942ac2a5de8b333cd8c8"
     },
     "native_initial": {
       "run": 18,
       "seconds": 100.581,
       "passed": 17,
       "failures": 1,
-      "cause": "Incorrect test expectation DENIED vs original transport-redacted HOLD; no runtime rejection guard changed"
+      "cause": "Incorrect test expectation DENIED vs original transport-redacted HOLD; no runtime rejection guard changed",
+      "source": "37e24ae02300e095c131d09ae14b2caff17fa777"
     },
     "native_corrected": {
       "run": 1,
       "seconds": 17.56,
-      "result": "PASS"
+      "result": "PASS",
+      "source": "37e24ae02300e095c131d09ae14b2caff17fa777"
     },
     "apps_script": {
       "run": 34,
@@ -60,12 +63,14 @@
     "scheduling_correction": {
       "run": 17,
       "seconds": 45.257,
-      "result": "PASS"
+      "result": "PASS",
+      "stage": "Before strengthened slow-provider phase assertions; the strengthened case was then separately verified"
     },
     "slow_provider_partially_eligible_case": {
       "run": 1,
       "seconds": 6.966,
-      "result": "PASS"
+      "result": "PASS",
+      "source": "f59776c1d3db7fe3c16d26024113ee7fb36453f7"
     },
     "corrected_native": {
       "run": 3,
@@ -73,7 +78,8 @@
       "result": "PASS",
       "failures": 0,
       "errors": 0,
-      "skipped": 0
+      "skipped": 0,
+      "source": "f59776c1d3db7fe3c16d26024113ee7fb36453f7"
     }
   },
   "full_local": {
@@ -158,7 +164,8 @@
   "remaining_software": [
     "Broader interrupted recovery without an already-published original PREPARED retirement receipt",
     "Original purchased-delivery/Drive manifest/upload and uncertain physical output reconciliation",
-    "Actual provider refund intent/key/status lifecycle with original worker fences, confirmed merchant capability and approved policies"
+    "Actual provider refund intent/key/status lifecycle with original worker fences, confirmed merchant capability and approved policies",
+    "Operator review/resolution of nonbinding cases remains separate from intake; no tokenless media/refund bypass"
   ],
   "not_authorized_or_executed": [
     "Real transaction/refund",
@@ -196,5 +203,58 @@
       "correction": "Wait for all original scheduling guards before any GET; still require actual original fresh verdict for each attempt. Bounded test case polling .25s; original API limiter unchanged."
     }
   ],
-  "corrected_workflow_ci": "PENDING"
+  "corrected_workflow_ci": {
+    "run_id": 43147548887,
+    "commit": "fca6dc2dd23d6626601f81480f396ff6cb2752a5",
+    "result": "ALL_FOUR_SUCCESS",
+    "runtime_test_source_unchanged": true,
+    "job_timeout_minutes": 15,
+    "all_completed_logs_inspected": true,
+    "jobs": {
+      "native": {
+        "job_id": 130948802235,
+        "run": 105,
+        "seconds": 307.507,
+        "result": "PASS",
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "new_methods_observed": 3
+      },
+      "ubuntu": {
+        "job_id": 130948802432,
+        "run": 1071,
+        "seconds": 597.611,
+        "result": "PASS",
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "new_methods_observed": 18
+      },
+      "windows_delivery": {
+        "job_id": 130948802522,
+        "run": 498,
+        "seconds": 503.639,
+        "result": "PASS",
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "new_methods_observed": 17,
+        "windows_owner_entry_step": "SUCCESS"
+      },
+      "windows_core": {
+        "job_id": 130948802602,
+        "run": 573,
+        "seconds": 671.448,
+        "result": "PASS",
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "new_methods_observed": 1
+      }
+    }
+  },
+  "workflow_sha256": "2d18703e1f061de96c377a72bdbd81d02a000192e2b09b3c95e8a7f034865402",
+  "final_verification": "PASS_SOFTWARE_SCOPE_ONLY",
+  "source_test_wip": false
 }

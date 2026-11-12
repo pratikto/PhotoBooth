@@ -209,3 +209,70 @@ verdict. Replacement15-minute workflow parses and preserves all matrix/jobs/
 methods/fsync/concurrency. Application/test source unchanged; no local suite
 rerun for a workflow-only budget correction. Replacement exact-source CI
 still PENDING. Owner device/account acceptance remains NOT_RUN.
+
+## Current release gates and dependencies
+
+These are separate gates within the earlier three umbrella areas; CASE intake
+must not be mistaken for a complete refund or interrupted-output solution.
+
+| Gate | Current result | Dependency / next action |
+| --- | --- | --- |
+| Original normal checkout, proof-gated return, original 2+1 print/Drive path | Software/fixture evidence delivered; actual owner results NOT_RUN | Owner Windows camera, POS80 paper, phone, Midtrans Sandbox and Drive acceptance using the existing original-root guide |
+| Restricted interrupted original PREPARED ACK | Private/default-off integration verified in original process tests and CI | Preserve exact original custody/binding/receipt and actual old process exits; no real power-loss qualification credited |
+| ACTIVE/no original retirement receipt, purchased-delivery manifest/upload or uncertain physical output | HOLD; broader software recovery unfinished | Independent original output/manifest reconciliation and safe observer authority; never fabricate a dead old native receipt or blindly replay paper/upload |
+| Proof-gated reported issue/status | CASE API, immutable observations, typed client and native original helper delivered | A case reference is only an audit reference; operator review/resolution and executable remedies remain separate |
+| Actual QRIS/POS refund intent/key/send/status | NOT IMPLEMENTED/NOT ENABLED | Owner reports merchant capability NOT CONFIRMED; verify actual provider feature/window/status/idempotency semantics, original worker fences and approved commercial/abuse policy before outbound refund work |
+| Real commercial account/device/fault qualification and activation | NOT_READY/NOT_RUN | Owner/account/device evidence plus remaining software gates; no release, deployment or real transaction/refund authorization inferred |
+| Ubuntu launcher/autostart | Deferred by owner | Windows remains the immediate target; do not divert this continuation into Ubuntu packaging |
+
+The owner does not need to send credentials/tokens to answer a feature-status
+question. The explicit NOT CONFIRMED answer is already recorded; do not repeat
+that question or infer feature activation from existing Sandbox configuration.
+
+## Workflow-budget replacement completed
+
+CI43147548887 tests commitfca6dc2 (application/test source identical to verified
+runtimef59776c). Only the measured Linux job timeout/comments and documentation
+changed. All four final results are SUCCESS; completed logs inspected. Prior
+Windows573+498/native105 passes remain separately credited above.
+
+
+## FINAL VERIFIED — 12 November 2026 (WIB)
+
+Runtimef59776c application/test source is byte-identical in workflow source
+fca6dc2 (only measured timeout/comments/docs changed). All16 recorded source
+hashes match. Full local1071 backend PASS557.705s, zero failures/errors/skips.
+Three affected actual-native PASS34.318s after the correction; full105 local
+native PASS357.386s stays credited at37e24ae. Apps Script34 local PASS, unchanged.
+
+[Final CI43147548887](https://github.com/pratikto/PhotoBooth/actions/runs/43147548887):
+
+| Job | Tests | Seconds | Result |
+| --- | ---: | ---: | --- |
+| Windows core130948802602 | 573 | 671.448 | PASS |
+| Windows delivery130948802522 | 498 | 503.639 | PASS |
+| Ubuntu130948802432 | 1071 | 597.611 | PASS |
+| Actual native130948802235 | 105 | 307.507 | PASS |
+
+ALL FOUR SUCCESS, zero failures/errors/skips. Every completed unit log read;
+all17 remedy methods observed on Windows delivery/Ubuntu, missing original
+closed-binding case observed on Windows core/Ubuntu, all3 new native methods
+observed. Original Windows owner-entry setup/enrollment/preflight/DPAPI/record/
+show/missing-consent hold SUCCESS. Linux owner-entry preflight/screenshots also
+SUCCESS. These are software/fixture observations, no owned hardware/account PASS.
+
+The original source37e24ae local/Windows double-settlement error, actual
+reproductions and correction, plus f59776c Ubuntu10-minute cancellation remain
+recorded above and in the machine-readable evidence. No guard, fsync, test,
+ledger/counter, proof or uncertain external effect was waived or reset.
+
+Source/test WIP NONE; actual local fixture children NONE. Only documentation/
+evidence changes after final verification; no repeated local suite or redundant
+GUI workflow is required for this final docs push. Preserve original rights and
+all current data. Actual merchant refund capability NOT CONFIRMED, provider
+refund sender NOT IMPLEMENTED, advanced recovery still private/default-off,
+fulfillment health False and commercial NOT_READY. The release-gate table above
+is the current list of owner dependencies and remaining software work. FIRST
+unfinished software: original purchased output/manifest/upload reconciliation
+and safe broader recovery without fabricated dead-old-worker receipts; then
+operator resolution and properly gated provider refund lifecycle.
