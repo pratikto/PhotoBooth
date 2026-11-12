@@ -168,3 +168,14 @@ polling bounded .25s keeps ORIGINAL API rate guard. Full corrected backend/CI
 pending; original source37e24ae failure retained above. Original native105
 source37e24ae still PASS locally/CI; rerun three affected native remedy cases
 and inspect corrected-source full native CI. No actual device/account/refund.
+
+## Corrected complete local backend verified — runtimef59776c
+
+All1071 local backend methods PASS557.705s, zero failures/errors/skips. All18
+new backend methods observed; all16 source/test hashes match the recorded
+runtime. Corrected3 affected actual-native PASS34.318s; original105 native
+local357.386s remains credited at37e24ae. Exact-source f59776c CI43145998489
+native105 PASS358.524s, completed log inspected and all3 new methods observed.
+Windows573/498 and Ubuntu1071 final CI results still PENDING. Apps Script34
+local PASS remains credited; its source is unchanged. No broad local rerun
+is needed without a new source change or unresolved failure.

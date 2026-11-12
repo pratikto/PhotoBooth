@@ -77,7 +77,15 @@
     }
   },
   "full_local": {
-    "backend": "PENDING",
+    "backend": {
+      "run": 1071,
+      "seconds": 557.705,
+      "result": "PASS",
+      "source": "f59776c1d3db7fe3c16d26024113ee7fb36453f7",
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
     "native": {
       "run": 105,
       "seconds": 357.386,
@@ -94,7 +102,15 @@
   },
   "exact_source_ci": {
     "run_id": 43145998489,
-    "result": "PENDING"
+    "result": "PENDING",
+    "native": {
+      "job_id": 130943817111,
+      "run": 105,
+      "seconds": 358.524,
+      "result": "PASS",
+      "completed_unit_summary_inspected": true,
+      "new_native_methods_observed": 3
+    }
   },
   "prior_recovery_ci": {
     "source": "6fbc650ce32b11256aa92b2c037d5905cce49cdd",
