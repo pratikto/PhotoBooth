@@ -70,8 +70,17 @@ def _policy(launcher, config, current, db):
             _require(observe_process(os.getpid()) == parent)
         else:
             _require(original_process_exited(parent))
-    if db is not None and db.execute(
-            "SELECT 1 FROM sqlite_master WHERE name='pp_worker_generations'").fetchone():
+    has_bindings=db is not None and db.execute(
+            "SELECT 1 FROM sqlite_master WHERE name='pp_worker_generations'").fetchone()
+    if db is not None and db.execute('SELECT 1 FROM pp_drafts LIMIT 1').fetchone():
+        _require(has_bindings)
+        for operation in db.execute("SELECT * FROM pp_isolation_ops WHERE state='ACKED'"):
+            bound=db.execute('SELECT key_id FROM pp_worker_generations WHERE draft_id=? AND generation=?',
+                (operation['draft_id'],operation['original_generation']-1)).fetchone()
+            receipt=db.execute('SELECT key_id FROM pp_worker_retirements WHERE operation_id=? '
+                'AND backend_verified_at IS NOT NULL',(operation['operation_id'],)).fetchall()
+            _require(bound and len(receipt)==1 and bound['key_id']==receipt[0]['key_id'])
+    if has_bindings:
         for row in db.execute('SELECT draft_id,generation,key_id FROM pp_worker_generations'):
             _require(row['key_id'] in keys)
             key, scope = keys[row['key_id']]

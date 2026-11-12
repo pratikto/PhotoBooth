@@ -144,6 +144,18 @@ class DurableOriginalWorkerTests(unittest.TestCase):
             with self.assertRaises(DraftHeld): default.start()
         self.assertEqual(0,mint.call_count); self.assertIsNone(default._backend)
 
+    def test_missing_original_closed_generation_binding_holds_before_new_epoch_mint(self):
+        from photobooth.post_preview_worker_fence import WorkerFenceKey
+        self.service.start(get_templates(),{'template_a':1});self.service.retire('USER_CANCEL')
+        self.f.retry(self.manager.ensure_new_visitor_ready)
+        with self.manager.ledger.write():
+            self.manager.ledger.db.execute('DROP TRIGGER pp_worker_generation_no_delete')
+            self.manager.ledger.db.execute('DELETE FROM pp_worker_generations')
+        self.manager._service.hide_private()
+        with patch.object(WorkerFenceKey,'create',side_effect=AssertionError('No key for missing original binding')) as mint:
+            with self.assertRaises(DraftHeld):self.manager.ensure_new_visitor_ready()
+        self.assertEqual(0,mint.call_count)
+
 
 class DurableWorkerProtocolTests(unittest.TestCase):
     def test_recovery_role_requires_exact_operation_and_cannot_be_new_work_epoch(self):

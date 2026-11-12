@@ -54,6 +54,7 @@ CORE_MODULES=(
 )
 
 DELIVERY_MODULES=(
+    'test_post_preview_remedy',
     'test_post_preview_worker_fence',
     'test_post_preview_sandbox_handoff',
     'test_post_preview_claim_requests',

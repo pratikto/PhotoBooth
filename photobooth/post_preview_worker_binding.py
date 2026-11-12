@@ -52,6 +52,9 @@ def install_worker_generation_bindings(ledger):
                 WHERE key_id=NEW.key_id OR (draft_id=NEW.draft_id AND generation=NEW.generation))
             BEGIN SELECT RAISE(ABORT,'Original worker binding is immutable'); END'''))
         with ledger.write():
+            present=[bool(ledger.db.execute('SELECT 1 FROM sqlite_master WHERE name=?',(name,)).fetchone())
+                     for name,_ in definitions]
+            _require(not any(present) or all(present))
             # Validate every existing definition before creating anything.
             for name, definition in definitions:
                 saved = ledger.db.execute('SELECT sql FROM sqlite_master WHERE name=?', (name,)).fetchone()

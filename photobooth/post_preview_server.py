@@ -111,12 +111,15 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
         from photobooth.post_preview_sandbox_delivery import OriginalSandboxPaidDriveBinding,OriginalSandboxPaidDelivery
         delivery=OriginalSandboxPaidDelivery(
             OriginalSandboxPaidDriveBinding(payments,checkout,drive_probe,ticket_presentation),templates)
-    isolation=claim=freeze=None
+    isolation=claim=freeze=remedy=None
     if worker_fence_key is not None:
         from photobooth.post_preview_sandbox_handoff import OriginalSandboxIsolation,OriginalSandboxClaim
         isolation=OriginalSandboxIsolation(payments,delivery,WorkerReceiptVerifier(ledger,worker_fence_key))
         claim=OriginalSandboxClaim(payments,credentials,ticket_presentation.credentials,
                                   worker_generations=worker_generations)
+        if recovery_authority is None:
+            from photobooth.post_preview_remedy import OriginalSandboxRemedy
+            remedy=OriginalSandboxRemedy(claim)
         from photobooth.post_preview_freeze import OriginalSandboxFreeze
         freeze=OriginalSandboxFreeze(checkout,templates,readiness,booth_id)
 
@@ -129,4 +132,4 @@ def build_sandbox_app(checkout, templates, bridge, drive_probe, *, merchant_id,
                       ccp_presentation=presentation, ticket_presentation=ticket_presentation,
                       paid_delivery=delivery,protected_isolation=isolation,protected_claim=claim,
                       protected_freeze=freeze,worker_generations=worker_generations,
-                      recovery_authority=recovery_authority)
+                      recovery_authority=recovery_authority,remedy=remedy)

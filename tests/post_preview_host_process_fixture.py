@@ -38,6 +38,9 @@ def assembled(checkout,templates,bridge,drive,**kwargs):
     lost=[kwargs['server_key']=='Mid-server-LOST-FIXTURE']
     def transport(request,timeout):
         assert request.full_url.startswith('https://api.sandbox.midtrans.com/')
+        root=checkout.photos.root.parent
+        if (root/'fixture-trace-provider-methods').exists():
+            with (root/'fixture-provider-methods').open('a') as stream:stream.write(request.method+'\n')
         if request.method=='POST' and request.full_url.endswith('/v2/charge'):
             data=json.loads(request.data)['transaction_details']
             order,amount=data['order_id'],data['gross_amount']
@@ -46,6 +49,7 @@ def assembled(checkout,templates,bridge,drive,**kwargs):
                 raise OSError('synthetic provider accepted but reply lost')
             state='pending'
         else:
+            if (root/'fixture-provider-outage').exists():raise OSError('Synthetic provider status outage')
             order=request.full_url.split('/')[-2]
             if (kwargs['server_key']=='Mid-server-HTTP-HOLD-FIXTURE'
                     or (checkout.photos.root.parent/'fixture-force-http-hold').exists()):
@@ -63,12 +67,16 @@ def assembled(checkout,templates,bridge,drive,**kwargs):
             amount=json.loads(row['contract_json'])['amount']
             state='settlement'
             if (checkout.photos.root.parent/'fixture-keep-pending').exists(): state='pending'
+            states=checkout.photos.root.parent/'fixture-provider-statuses.json'
+            if states.exists():state=json.loads(states.read_text()).get(order,state)
         payload=dict(status_code='201' if state=='pending' else '200',
             transaction_status=state,order_id=order,gross_amount=str(amount),currency='IDR',
             payment_type='qris',merchant_id='MTEST',fraud_status='accept',
             transaction_id='fixture_'+order,
             actions=[{'name':'generate-qr-code','method':'GET',
                 'url':'https://api.sandbox.midtrans.com/v4/qris/fixture_'+order+'/qr-code'}])
+        if request.method=='GET' and (root/'fixture-provider-wrong-amount').exists():
+            payload['gross_amount']=str(amount+1)
         return io.BytesIO(json.dumps(payload).encode())
     kwargs['provider_transport']=transport
     delivery_fixture=kwargs['server_key']=='Mid-server-DELIVERY-FIXTURE'

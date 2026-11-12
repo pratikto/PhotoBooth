@@ -54,12 +54,22 @@ class ClaimRequest(BaseModel):
     proof: str = Field(min_length=1,max_length=256)
 
 
+class RemedyRequest(ClaimRequest):
+    reported_reason: Literal['PROOF_LOST_ONLY','TEMPORARY_SERVICE_OUTAGE',
+        'IRRECOVERABLE_MERCHANT_SERVICE','EXCESS_SETTLED_ATTEMPTS','UNKNOWN_OR_DISPUTED']
+
+
 def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_limit=120,
                background_worker=True, ccp_presentation=None, ticket_presentation=None,
                paid_delivery=None, protected_isolation=None, protected_claim=None, protected_freeze=None,
-               worker_generations=None,recovery_authority=None):
+               worker_generations=None,recovery_authority=None,remedy=None):
     if type(background_worker) is not bool:
         raise ValueError('Explicit lifecycle worker selection required')
+    if remedy is not None:
+        from photobooth.post_preview_remedy import OriginalSandboxRemedy
+        if (type(remedy) is not OriginalSandboxRemedy or remedy.claim is not protected_claim
+                or remedy.ledger is not payments.ledger or recovery_authority is not None):
+            raise ValueError('Exact original protected remedy review required')
     if recovery_authority is not None:
         from photobooth.post_preview_interrupted_worker import OriginalRecoveryAuthority
         if (type(recovery_authority) is not OriginalRecoveryAuthority or recovery_authority.ledger is not payments.ledger
@@ -135,6 +145,7 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
     app.state.notification_inbox = inbox
     app.state.lifecycle_worker = worker
     app.state.paid_delivery = paid_delivery
+    app.state.remedy = remedy
 
     @app.middleware('http')
     async def private_responses(request, call_next):
@@ -206,6 +217,24 @@ def create_app(payments, authenticator, *, inbox=None, on_shutdown=None, rate_li
     async def health():
         return {'api_version': 1, 'order_version': ORDER_VERSION, 'mode': payments.mode,
                 'fulfillment_enabled': False}
+
+    if remedy is not None:
+        @app.post('/api/postpay/groups/{group}/remedy')
+        async def original_remedy(group:str,request:Request,
+                x_booth_id:str=Header(default=''),authorization:str=Header(default='')):
+            booth=identity(request,x_booth_id,authorization)
+            command=await body(request,RemedyRequest)
+            try:
+                return await run_in_threadpool(remedy.request_case,command.request_id,group,booth,
+                                               command.proof,command.reported_reason)
+            except PermissionError:
+                raise HTTPException(403,'Original private customer proof required') from None
+            except DraftHeld:
+                raise HTTPException(409,'Original remedy review is held') from None
+            except ValueError:
+                raise HTTPException(422,'Invalid request') from None
+            except Exception:
+                raise HTTPException(503,'Original remedy review temporarily unavailable') from None
 
     if worker_generations is not None:
         @app.post('/api/postpay/drafts/{draft_id}/worker-binding')
