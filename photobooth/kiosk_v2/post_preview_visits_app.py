@@ -54,6 +54,9 @@ class ProtectedVisitsApp(ProtectedCheckoutApp):
         self._advert_host.parent.parent.add_widget(self._photo_action(
             'PUNYA TIKET PEMULIHAN',self._pilot_open_claim,
             variant='tertiary',height=dp(44),disabled=self._visit_control.busy))
+        self._advert_host.parent.parent.add_widget(self._photo_action(
+            'BANTUAN LAYANAN',self._pilot_open_remedy,
+            variant='tertiary',height=dp(44),disabled=self._visit_control.busy))
 
     def _entry_allowed(self,action,source):
         if self._closed or self._suspended or self._visit_control.busy:return False
@@ -99,6 +102,45 @@ class ProtectedVisitsApp(ProtectedCheckoutApp):
             self._pilot_note='Tiket tidak dapat diverifikasi. Foto privat tetap terlindungi.'
         self._show()
 
+    def _pilot_open_remedy(self):
+        if (self.navigation.page!=ADVERT or self._closed or self._suspended or self._visit_control.busy):return
+        self._open_private_claim_popup('BANTUAN LAYANAN',submit=self._pilot_submit_remedy,submit_title='CATAT KENDALA',
+            notice='Gunakan CCP atau Recovery Ticket asli untuk mencatat kendala. '
+                   'Jika kedua bukti hilang, minta bantuan petugas. Foto tetap privat.',
+            choices=(('Layanan belum selesai','TEMPORARY_SERVICE_OUTAGE'),
+                     ('Pembayaran terpotong ganda','EXCESS_SETTLED_ATTEMPTS'),
+                     ('Tiket pemulihan hilang','PROOF_LOST_ONLY')))
+
+    def _pilot_submit_remedy(self,payload,reason):
+        if (self.navigation.page!=ADVERT or self._closed or self._suspended or self._visit_control.busy):return
+        self._close_pilot_popup()
+        try:submitted=self._visit_control.remedy(payload.strip() if type(payload) is str else '',reason)
+        except ValueError:submitted=False
+        self._pilot_note='Mencatat kendala. Mohon tunggu.' if submitted else 'Bukti tidak dapat diverifikasi. Foto tetap privat.'
+        self._show()
+
+    def _show_remedy_status(self,snapshot):
+        from kivy.uix.boxlayout import BoxLayout
+        from kivy.uix.popup import Popup
+        from kivy.uix.textinput import TextInput
+        from .theme import text_label,MUTED
+        messages={
+            'WAITING_PROVIDER':'Status pembayaran perlu diperiksa. Kendala sudah tercatat.',
+            'PAID_OWED_DELIVERY':'Pembayaran terverifikasi. Layanan masih perlu diselesaikan.',
+            'PAID_OWED_REMEDY':'Kendala tercatat untuk pemeriksaan layanan.',
+            'REFUND_REVIEW_REQUIRED':'Kendala pembayaran atau layanan perlu diperiksa.',
+            'PRINT_INSPECTION_REQUIRED':'Hasil cetak perlu diperiksa oleh petugas.',
+            'SERVICE_REVIEW_REQUIRED':'Kendala layanan tercatat untuk pemeriksaan.'}
+        self._close_pilot_popup()
+        panel=BoxLayout(orientation='vertical',padding=dp(12),spacing=dp(10))
+        panel.add_widget(text_label(messages[snapshot['status']]+' Refund belum diajukan.',size=14,height=dp(100),color=MUTED))
+        field=TextInput(text=snapshot['case_id'],readonly=True,multiline=False,size_hint_y=None,height=dp(52))
+        panel.add_widget(field)
+        panel.add_widget(self._photo_action('SELESAI',self._close_pilot_popup,height=dp(48)))
+        popup=Popup(title='STATUS LAPORAN',content=panel,size_hint=(.92,.55),auto_dismiss=False)
+        self._pilot_input,self._pilot_popup=field,popup
+        popup.open()
+
     def _queue_private_retirement(self,event):
         self._visit_entry=None;self._visit_ready=False
         self._visit_needs_ready=True
@@ -137,6 +179,13 @@ class ProtectedVisitsApp(ProtectedCheckoutApp):
         control=self._visit_control
         outcome=control.poll()
         if outcome is not None:
+            if outcome.action=='remedy':
+                self._pilot_note='Kendala tercatat.' if outcome.state=='REMEDY_REVIEW' else (
+                    'Bukti tidak dapat diverifikasi. Foto tetap privat.' if outcome.state=='DENIED'
+                    else 'Laporan belum dapat diperiksa. Silakan coba lagi.')
+                self._show()
+                if outcome.state=='REMEDY_REVIEW' and self.navigation.page==ADVERT:self._show_remedy_status(outcome.snapshot)
+                return  # CASE does not change original binding/admission/privacy state.
             entry,self._visit_entry=self._visit_entry,None
             self._visit_needs_ready=False
             if outcome.state in {'READY','RESTORED'}:

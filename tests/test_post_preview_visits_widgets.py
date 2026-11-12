@@ -95,6 +95,63 @@ class ProtectedVisitWidgetTests(unittest.TestCase):
         self.assertEqual(1,len(buttons));buttons[0].dispatch('on_release')
         self.assertEqual('',field.text);self.assertIsNone(app._pilot_input)
 
+    def report(self,app,proof):
+        self.click(app,'BANTUAN LAYANAN')
+        popup,field=app._pilot_popup,app._pilot_input
+        self.assertTrue(field.password)
+        field.text=proof
+        buttons=[w for w in popup.content.walk() if getattr(w,'text',None)=='CATAT KENDALA']
+        self.assertEqual(1,len(buttons));buttons[0].dispatch('on_release')
+        self.assertEqual('',field.text);self.assertIsNone(app._pilot_input)
+
+    def test_original_remedy_popup_at_both_sizes_preserves_neutral_visit_and_payment(self):
+        for size in ((452,900),(800,1280)):
+            with self.subTest(size=size),self.booth(size) as (app,f,control,worker):
+                group,proof=self.paid_result(app,f)
+                self.expire(app)
+                binding=control.binding;sends=f.output_count()
+                attempts=f.visits.ledger.db.execute('SELECT COUNT(*) FROM pp_payment_attempts').fetchone()[0]
+                self.report(app,proof)
+                self.idle(app,lambda:app._pilot_popup is not None and app._pilot_popup.title=='STATUS LAPORAN')
+                self.assertIs(binding,control.binding);self.assertTrue(app._visit_ready)
+                self.assertIsNone(binding.service.lease);self.assertEqual(ADVERT,app.navigation.page)
+                self.assertNotIn(group,repr(app._photo_view));self.assertNotIn(proof,app._pilot_note)
+                labels=' '.join(str(getattr(w,'text','')) for w in app._pilot_popup.content.walk())
+                self.assertIn('Refund belum diajukan.',labels);self.assertNotIn(proof,labels)
+                field=app._pilot_input;self.assertTrue(field.readonly);self.assertRegex(field.text,r'^[a-f0-9]{32}$')
+                self.assertEqual(sends,f.output_count())
+                self.assertEqual(attempts,f.visits.ledger.db.execute('SELECT COUNT(*) FROM pp_payment_attempts').fetchone()[0])
+                app._close_pilot_popup();self.assertEqual('',field.text)
+                app._choose_photo();self.assertNotEqual(ADVERT,app.navigation.page)
+
+    def test_original_remedy_forged_proof_cannot_open_status_or_private_photos(self):
+        with self.booth() as (app,f,control,worker):
+            group,proof=self.paid_result(app,f);self.expire(app)
+            binding=control.binding
+            forged=proof[:-1]+('A' if proof[-1]!='A' else 'B')
+            self.report(app,forged);self.idle(app)
+            # Original transport intentionally redacts all HTTP rejection details;
+            # it must remain a nonbinding HOLD rather than a fabricated success.
+            self.assertIsNone(app._pilot_popup);self.assertEqual('HOLD',control.state)
+            self.assertIs(binding,control.binding);self.assertTrue(app._visit_ready)
+            self.assertEqual(ADVERT,app.navigation.page);self.assertIsNone(binding.service.lease)
+
+    def test_original_late_remedy_result_is_discarded_after_native_minimize(self):
+        with self.booth() as (app,f,control,worker):
+            group,proof=self.paid_result(app,f);self.expire(app)
+            entered,release=threading.Event(),threading.Event();original=f.visits.review_remedy
+            def held(*args):
+                result=original(*args);entered.set();release.wait(8);return result
+            try:
+                with patch.object(f.visits,'review_remedy',side_effect=held):
+                    self.report(app,proof);self.idle(app,entered.is_set)
+                    app.on_pause();self.assertIsNone(app._pilot_input)
+                    app.on_resume();release.set()
+                    self.idle(app,lambda:app._visit_ready and not control.busy)
+                self.assertIsNone(app._pilot_popup);self.assertEqual(ADVERT,app.navigation.page)
+                self.assertNotIn(group,repr(app._photo_view));self.assertNotIn(proof,repr(vars(control)))
+            finally:release.set()
+
     def test_actual_native_A_B_A_original_popup_and_jobs_at_both_portrait_sizes(self):
         for size in ((800,1280),(452,900)):
             with self.subTest(size=size),self.booth(size) as (app,f,control,worker):

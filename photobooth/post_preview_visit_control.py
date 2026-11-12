@@ -23,6 +23,7 @@ class _Command:
     epoch:int
     action:str
     proof:str|None=field(default=None,repr=False)
+    reported_reason:str|None=None
 
 
 @dataclass(frozen=True)
@@ -63,10 +64,10 @@ class VisitControl:
     @property
     def state(self):return self._state
 
-    def _submit(self,action,proof=None):
+    def _submit(self,action,proof=None,reported_reason=None):
         with self._lock:
             if self._pending is not None or self._privacy.is_set() or self._stop.is_set():return False
-            command=_Command(uuid.uuid4().hex,self._epoch,action,proof)
+            command=_Command(uuid.uuid4().hex,self._epoch,action,proof,reported_reason)
             self._pending=(command.request_id,command.epoch,action)
             self._state='BUSY'
             self._commands.put_nowait(command)
@@ -80,6 +81,14 @@ class VisitControl:
                 r'MEONG:(?:CCP|RECOVERY):1:PB[0-9]{3,8}:[a-f0-9]{32}:[A-Za-z0-9_-]{43}',proof) is None):
             raise ValueError('Original private customer proof required')
         return self._submit('claim',proof)
+
+    def remedy(self,proof,reported_reason):
+        from photobooth.post_preview_refund_assessment import REFUND_REASONS
+        if (type(proof) is not str or len(proof)>256 or re.fullmatch(
+                r'MEONG:(?:CCP|RECOVERY):1:PB[0-9]{3,8}:[a-f0-9]{32}:[A-Za-z0-9_-]{43}',proof) is None
+                or type(reported_reason) is not str or reported_reason not in REFUND_REASONS):
+            raise ValueError('Original customer proof and reported reason required')
+        return self._submit('remedy',proof,reported_reason)
 
     def hide_private(self,event):
         if type(event) is not str or event not in _EVENTS:
@@ -187,6 +196,9 @@ class TrustedVisitWorker:
         while True:
             if not self._control._current(command):raise DraftHeld('Original UI request retired')
             try:
+                if command.action=='remedy':
+                    snapshot=visits.review_remedy(command.proof,command.reported_reason,command.request_id)
+                    return VisitControlOutcome(command.request_id,command.epoch,command.action,'REMEDY_REVIEW',snapshot=snapshot)
                 if command.action in {'start','ready'}:
                     binding=visits.start() if command.action=='start' and not visits._admitted else visits.ensure_new_visitor_ready()
                     state,snapshot='READY',None

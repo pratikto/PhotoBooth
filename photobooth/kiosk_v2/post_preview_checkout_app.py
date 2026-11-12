@@ -148,19 +148,26 @@ class _CheckoutAppBase(PrivatePreviewApp):
             return
         self._open_private_claim_popup('PEMULIHAN PRIVAT • SIMULASI')
 
-    def _open_private_claim_popup(self, title):
+    def _open_private_claim_popup(self, title, *, submit=None, submit_title='VALIDASI TIKET',notice=None,choices=None):
         """Original private input shared by explicit mock/protected profiles."""
         self._close_pilot_popup()
         panel=BoxLayout(orientation='vertical',padding=dp(12),spacing=dp(10))
-        panel.add_widget(text_label(
+        panel.add_widget(text_label(notice or (
             'Scan tiket asli atau masukkan kode lengkap. '
-            'Kode tidak disimpan di aplikasi.',
+            'Kode tidak disimpan di aplikasi.'),
             size=14,height=dp(85),color=MUTED))
         field=TextInput(multiline=False,password=True,hint_text='CCP atau Recovery Ticket',
                         size_hint_y=None,height=dp(52))
         panel.add_widget(field)
+        if choices:
+            from kivy.uix.spinner import Spinner
+            chooser=Spinner(text=choices[0][0],values=[label for label,_ in choices],size_hint_y=None,height=dp(48))
+            panel.add_widget(chooser)
+            callback=lambda:submit(field.text,dict(choices)[chooser.text])
+        else:
+            callback=lambda:(submit or self._pilot_submit_claim)(field.text)
         panel.add_widget(self._photo_action(
-            'VALIDASI TIKET',lambda: self._pilot_submit_claim(field.text),height=dp(50)))
+            submit_title,callback,height=dp(50)))
         panel.add_widget(self._photo_action(
             'BATAL',self._close_pilot_popup,variant='tertiary',height=dp(48)))
         popup=Popup(title=title,content=panel,

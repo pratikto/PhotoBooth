@@ -86,3 +86,34 @@ privacy, micro-push, then one final regression and exact-source CI. No actual
 refund sender, commercial activation or broader interrupted purchased-delivery
 recovery is claimed. Existing ACTIVE/no original receipt and purchased-delivery
 uncertainty remain held as documented in the worker-custody checkpoint.
+
+## Native integration micro-increment — 12 November 2026 (WIB)
+
+SAME original trusted VisitControl worker now calls the typed remedy client;
+native GUI has no merchant/custody/provider handle. Original private popup is
+reused for masked proof, allowlisted reason selection and immediate clearing.
+Ads exposes BANTUAN LAYANAN. Truthful static status and read-only case reference
+appear only after original proof-gated backend observation. Closing/minimizing
+clears fields and late outcomes cannot repaint a private result. Case status
+does not replace the current original binding or admission readiness.
+
+Three actual-native cases cover both452x900/800x1280, immutable neutral visit,
+no payment/copy replay, forged proof and minimize during a late case response.
+Focused original native/control batch first ran18 in100.581s with17 PASS and
+one test expectation failure: original redacted HTTP adapter returns HOLD,
+not DENIED, for forged proof. Production rejection guards remain unchanged;
+assertion corrected to require HOLD and no popup/photos/admission change.
+Full source local backend1071/native105 and exact-source CI still pending.
+Registry multiset preserved exactly: Windows core573 + delivery498 =1071,
+zero loader errors. Historical repeated fixture methods are preserved rather
+than silently deduplicated. Offline Apps Script34 PASS, no skips.
+
+Remaining software work: broaden interrupted recovery beyond existing original
+signed PREPARED receipts, reconcile original purchased-delivery/upload/manifest
+and paper uncertainty, and implement a genuinely authorized provider refund
+lifecycle only after merchant-specific capability and original worker fences.
+Neither this case intake nor the restricted recovery role completes those gates.
+
+Corrected forged-proof native rerun: 1 PASS; exact fd-safe summary retained in
+local QA log. All18 focused method outcomes now pass across the two probes.
+No application guard was relaxed to satisfy the test.

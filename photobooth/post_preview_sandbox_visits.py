@@ -358,6 +358,18 @@ class OriginalSandboxVisits:
             if view.get('state')=='WAIT':return view
             return dict(state='RESTORED',snapshot=view,binding=self._binding,purchase_group_id=group)
 
+    def review_remedy(self,payload,reason,request_id):
+        """Nonbinding CASE only; no visit claim/rotation/retirement or media."""
+        with self._lock:
+            self._active()
+            if not self._admitted or self._client is None:
+                raise DraftHeld('Original review backend is unavailable')
+            match=re.fullmatch(r'MEONG:(?:CCP|RECOVERY):1:'+re.escape(self._config.booth_id)
+                +r':([a-f0-9]{32}):[A-Za-z0-9_-]{43}',payload) if type(payload) is str else None
+            if match is None:raise PermissionError('Original private customer proof required')
+            from photobooth.post_preview_remedy_client import PostPreviewRemedyClient
+            return PostPreviewRemedyClient(self._client).review(request_id,match.group(1),payload,reason)
+
     def retire_current(self,event):
         """Trusted worker: retire current metadata after immediate GUI hide.
 
