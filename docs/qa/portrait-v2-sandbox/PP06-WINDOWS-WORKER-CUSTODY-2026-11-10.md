@@ -831,3 +831,25 @@ reconciliation and remedy/refund remain unfinished; actual account/device
 acceptance and production approval are separate.
 
 [Machine-readable C3 scope and checks](evidence/pp06-interrupted-recovery-2026-11-11.json).
+
+
+## Later verified recovery CI and remedy checkpoint — 12 November (WIB)
+
+Source6fbc650 CI42935238737 completed ALL FOUR SUCCESS: Windows core572
+515.054s; delivery481 481.180s; Ubuntu1053 432.718s; native102 287.990s.
+All completed unit summaries inspected, Windows original owner-entry step
+SUCCESS. These qualify the restricted original existing-receipt recovery scope
+only, not actual power-loss/accounts/devices or broader purchased delivery.
+Historical earlier failures and partial source checkpoints remain preserved.
+
+Remedy source37e24ae additionally holds missing closed original-generation
+bindings BEFORE any new epoch key mint, records protected proof-gated cases,
+and integrates the same original native worker/popup. Merchant refund feature
+is explicitly NOT CONFIRMED. See [remedy scope/evidence](PP06-SANDBOX-REMEDY-2026-11-11.md).
+Current full1071 backend/105 native/CI still pending. Broader C3 ACTIVE/no
+original receipt, original purchased-delivery manifest/upload/uncertain paper
+reconciliation and actual provider refund lifecycle remain unfinished. Do not
+invent dead old retirement receipts, reconstruct missing bindings or activate
+the private/default-off profile to evade these holds. First unfinished software
+work remains independent original output/manifest reconciliation; actual
+refund sender also requires verified merchant capability and original fences.

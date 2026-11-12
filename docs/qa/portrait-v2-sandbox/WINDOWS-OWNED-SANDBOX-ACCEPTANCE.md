@@ -402,3 +402,24 @@ commands above. Preserve earlier eleven smoke observations and every original
 ledger/key/uncertain output. No active local app/backend/test or source/test
 WIP. C2c3 original OS worker-key/draft-epoch lifecycle, C3 supported interrupted
 recovery, remedy/refund and commercial qualification remain unfinished.
+
+
+## Additional truthful help flow — 12 November 2026 (WIB)
+
+Runtime37e24ae adds BANTUAN LAYANAN on the original protected Ads screen. It
+accepts the original CCP or Recovery Ticket and an allowlisted issue, clears
+the masked input on submission, and displays a private report reference plus
+truthful status. This is a CASE, not a refund request or payment/media ticket.
+It does not replace the current visit, reopen photos or retry printing. Keep
+that reference for a supervised service review; dismissing/minimizing clears it.
+If both original proofs are lost, ask the operator; no tokenless photo bypass.
+
+Owner explicitly reports Midtrans QRIS/POS refund capability NOT CONFIRMED.
+Refund status remains NOT_REQUESTED and capability NOT_VERIFIED. No claim of
+refund eligibility, processing or bank settlement is made. Existing normal
+Windows acceptance commands/consents and original storage root stay applicable.
+Advanced interrupted recovery remains private/default-off and limited to
+already-signed original PREPARED receipts; do not simulate power cuts against
+real customer data using this help flow. Physical/account observations remain
+NOT_RUN. Exact-source CI/full current-source verification is pending; see the
+[remedy checkpoint](PP06-SANDBOX-REMEDY-2026-11-11.md) for current evidence.

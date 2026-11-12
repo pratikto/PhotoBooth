@@ -117,3 +117,12 @@ Neither this case intake nor the restricted recovery role completes those gates.
 Corrected forged-proof native rerun: 1 PASS; exact fd-safe summary retained in
 local QA log. All18 focused method outcomes now pass across the two probes.
 No application guard was relaxed to satisfy the test.
+
+## Full native checkpoint — runtime37e24ae
+
+All105 actual-X11 native methods PASS357.386s, zero failures/errors/skips.
+Offline Apps Script34 PASS. Full1071 backend and exact-source CI43144397503
+still running; no full/all-four result claimed yet. Documentation-only
+checkpoint does not alter tested runtime or trigger redundant CI.
+
+[Machine-readable current scope, source hashes and outcomes](evidence/pp06-sandbox-remedy-2026-11-12.json).

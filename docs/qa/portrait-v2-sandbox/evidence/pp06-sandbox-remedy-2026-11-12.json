@@ -1,0 +1,108 @@
+{
+  "stage": "Protected original proof-gated remedy CASE, no actual refund execution",
+  "date_wib": "2026-11-12",
+  "runtime_commit": "37e24ae02300e095c131d09ae14b2caff17fa777",
+  "backend_commit": "bb8dac595bb9d127316a942ac2a5de8b333cd8c8",
+  "commercial_ready": false,
+  "merchant_refund_capability": "OWNER_NOT_CONFIRMED",
+  "actual_refund_sender": "NOT_IMPLEMENTED",
+  "refund_post_count": 0,
+  "real_external_effects": "NOT_RUN",
+  "owner_windows_devices_accounts": "NOT_RUN",
+  "source_sha256": {
+    "photobooth/post_preview_remedy.py": "c00415845120d5014963207bffd56c449c04e049d22b6149c5cb4153153b9b69",
+    "photobooth/post_preview_remedy_client.py": "b9cf00258d56c8feac2b74fb414fafcea10629fc203e969defecae82dd87e223",
+    "photobooth/post_preview_remedy_contract.py": "72c3149dc68166e8b851109a4a8cba5e0823ddef8adc8b4a3d1a87bb2de36cf7",
+    "photobooth/post_preview_api.py": "d4b4d8b0d10c3f5603cae06506ef5f14cc02b3616f47d1edfadc85afbb44e79b",
+    "photobooth/post_preview_server.py": "4fbf36e12be85f366838498a99c9059e90e78e3f3a52761987ba0aca340275a3",
+    "photobooth/post_preview_visit_control.py": "b8ea68466a38e99d324a48e5acfe39a1c1dbb90a6163748c53102d212b389588",
+    "photobooth/post_preview_sandbox_visits.py": "2ed39e40674e16ff4624720903566696d28c330c18f016574bbae690215194cd",
+    "photobooth/post_preview_worker_binding.py": "8d3a9e653a6d7ec8165ef0da62d920c5e1b288fe9dd13faa405ed2c2f71aaa3a",
+    "photobooth/post_preview_worker_epochs.py": "dba5374494b5efe512daa29728f1d6610ac0c159936ff3f739bd76070f5c4b19",
+    "photobooth/kiosk_v2/post_preview_checkout_app.py": "a01619c04efe5ac1305fa7ece4b3f7c736aa72ae6f37f67bf60d2eca655661a4",
+    "photobooth/kiosk_v2/post_preview_visits_app.py": "c2498cb78ea3ce1e28677733c22d23389c753a59d1befbc77c5c7a79d1609557",
+    "tests/test_post_preview_remedy.py": "7db756cf261ceb3a5c45204adfcd9d69b24933b065a1ae66a41689176b5c9c90",
+    "tests/test_post_preview_visits_widgets.py": "1e1de3a9a7b4395f531dea4152bd7d6cdce25db481ebee507417a4729b1af8ac",
+    "tests/test_post_preview_durable_worker.py": "115b8727ab867b67815a8797d8648c12556ac9aab0ace2c375a7fda619be8020",
+    "tests/post_preview_host_process_fixture.py": "ae40453b84ab68505ff0e3ce275b5ac2285ce03f05956c4ceb7cb2bd97d075f6",
+    "tools/run_post_preview_ci.py": "dfbb64faa4339e123e59e59d6bb5da8773e8c2216cf373196c2df00ddbe3468d"
+  },
+  "discovery": {
+    "all": 1071,
+    "windows_core": 573,
+    "windows_delivery": 498,
+    "native": 105,
+    "loader_errors": 0,
+    "original_multiset_preserved": true
+  },
+  "focused": {
+    "backend": {
+      "run": 32,
+      "seconds": 46.893,
+      "result": "PASS"
+    },
+    "native_initial": {
+      "run": 18,
+      "seconds": 100.581,
+      "passed": 17,
+      "failures": 1,
+      "cause": "Incorrect test expectation DENIED vs original transport-redacted HOLD; no runtime rejection guard changed"
+    },
+    "native_corrected": {
+      "run": 1,
+      "seconds": 17.56,
+      "result": "PASS"
+    },
+    "apps_script": {
+      "run": 34,
+      "result": "PASS"
+    }
+  },
+  "full_local": {
+    "backend": "PENDING",
+    "native": {
+      "run": 105,
+      "seconds": 357.386,
+      "result": "PASS",
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "apps_script": {
+      "run": 34,
+      "result": "PASS"
+    }
+  },
+  "exact_source_ci": {
+    "run_id": 43144397503,
+    "result": "PENDING"
+  },
+  "prior_recovery_ci": {
+    "source": "6fbc650ce32b11256aa92b2c037d5905cce49cdd",
+    "run_id": 42935238737,
+    "result": "ALL_FOUR_SUCCESS",
+    "completed_unit_summaries_inspected": true,
+    "windows_core": 572,
+    "windows_delivery": 481,
+    "ubuntu": 1053,
+    "native": 102,
+    "windows_entry_step": "SUCCESS"
+  },
+  "supported": [
+    "Original role-correct CCP/Recovery Ticket on every request; case does not unlock media or money",
+    "Original GET-only independent reconciliation; outage/amount mismatch/uncertain paper/double settlement preserve rights",
+    "Immutable bounded case/request/observation audit, original request retries and redacted client",
+    "Same trusted native worker/private popup, immediate input clearing, late-result privacy and neutral current visit"
+  ],
+  "remaining_software": [
+    "Broader interrupted recovery without an already-published original PREPARED retirement receipt",
+    "Original purchased-delivery/Drive manifest/upload and uncertain physical output reconciliation",
+    "Actual provider refund intent/key/status lifecycle with original worker fences, confirmed merchant capability and approved policies"
+  ],
+  "not_authorized_or_executed": [
+    "Real transaction/refund",
+    "Cloud photo publishing or deletion",
+    "Merchant/commercial profile activation",
+    "Deployment/merge/default branch change"
+  ]
+}
