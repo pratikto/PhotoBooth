@@ -438,3 +438,16 @@ Actual owner Windows camera/paper/phone/Drive/Midtrans results remain NOT_RUN.
 Merchant refund capability remains explicitly NOT CONFIRMED. Use the
 [release gates and remaining software table](PP06-SANDBOX-REMEDY-2026-11-11.md)
 to distinguish this usable normal-UAT entry from commercial approval.
+
+
+## Optional offline worksheet — 12 November 2026 (WIB)
+
+Owner-requested [Indonesian standalone HTML checklist](artifacts/meong-windows-acceptance-offline.html)
+provides110 detailed items, manual PASS/FAIL/BLOCKED, browser autosave, JSON
+backup and generated TXT/copy for another Codex account. Open locally in a
+browser; all code/styles are included. This is a personal worksheet, distinct
+from the strict original Record/Show journal above. No command is executed by
+the HTML, and no payment/printing/upload/report is sent. Use your actual tested
+SHA, not an automatically assumed baseline. Actual device observations remain
+OWNER-REPORTED; deferred fault/refund cases stay BLOCKED and commercial_ready
+stays false. See the [artifact QA and usage](OFFLINE-WINDOWS-CHECKLIST.md).
