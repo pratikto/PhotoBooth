@@ -102,7 +102,7 @@
   },
   "exact_source_ci": {
     "run_id": 43145998489,
-    "result": "PENDING",
+    "result": "WINDOWS_AND_NATIVE_PASS_UBUNTU_BUDGET_CANCELLED",
     "native": {
       "job_id": 130943817111,
       "run": 105,
@@ -110,6 +110,32 @@
       "result": "PASS",
       "completed_unit_summary_inspected": true,
       "new_native_methods_observed": 3
+    },
+    "windows_core": {
+      "job_id": 130943817344,
+      "run": 573,
+      "seconds": 683.892,
+      "result": "PASS",
+      "completed_unit_summary_inspected": true,
+      "new_binding_method_observed": true
+    },
+    "windows_delivery": {
+      "job_id": 130943817421,
+      "run": 498,
+      "seconds": 613.19,
+      "result": "PASS",
+      "completed_unit_summary_inspected": true,
+      "new_remedy_methods_observed": 17,
+      "windows_owner_entry_step": "SUCCESS"
+    },
+    "ubuntu": {
+      "job_id": 130943817491,
+      "result": "CANCELLED_ORIGINAL_10_MINUTE_BUDGET",
+      "completed_methods": 858,
+      "started_method": 859,
+      "final_unit_verdict": "ABSENT",
+      "last_completed_at": "2026-11-12T03:17:16Z",
+      "cancel_at": "2026-11-12T03:17:17Z"
     }
   },
   "prior_recovery_ci": {
@@ -169,5 +195,6 @@
       "cause": "Partial-attempt original GET eligibility starvation, rapid test polling reaches HTTP429; two FAIL and one PASS actual-process reproductions. Original paid states and proof unchanged.",
       "correction": "Wait for all original scheduling guards before any GET; still require actual original fresh verdict for each attempt. Bounded test case polling .25s; original API limiter unchanged."
     }
-  ]
+  ],
+  "corrected_workflow_ci": "PENDING"
 }

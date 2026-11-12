@@ -31,8 +31,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       MEONG_CI_PROGRESS: '1'
-    # Retain every durable/fsync test; Windows needs a bounded larger budget.
-    timeout-minutes: ${{ matrix.os == 'windows-latest' && 15 || 10 }}
+    # Full durable tests exceeded Linux's 10-minute budget at sourcef59776c
+    # (858 completed, no final verdict). Preserve every test/fsync and use
+    # the same bounded 15-minute budget already required on Windows.
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

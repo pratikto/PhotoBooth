@@ -179,3 +179,33 @@ native105 PASS358.524s, completed log inspected and all3 new methods observed.
 Windows573/498 and Ubuntu1071 final CI results still PENDING. Apps Script34
 local PASS remains credited; its source is unchanged. No broad local rerun
 is needed without a new source change or unresolved failure.
+
+## Measured CI job budget correction contract BEFORE workflow change
+
+Runtimef59776c CI43145998489 Ubuntu job130943817491 CANCELLED after the original
+10-minute job budget: job start03:07:04Z, last completed method858 at03:17:16Z,
+method859 began, cancellation03:17:17Z. No unit final verdict was produced.
+Completed progress retained; do not count this as1071 PASS. Full local1071
+PASS557.705s and exact-source native105 PASS358.524s remain credited. Both
+Windows jobs are still running within their original15-minute budget.
+
+Wait for those actual Windows jobs before a new workflow push to avoid
+cancelling useful in-flight work. Set the Linux full job to the same bounded
+15-minute budget; do not omit tests, weaken fsync/safety or alter runtime.
+Only the CI budget changes; source hashes and existing local results remain
+valid. Inspect all completed replacement-run logs; no all-four claim until
+that actual corrected workflow finishes. This repeat is required by the
+observed timeout, not a documentation-only rerun of passing application code.
+
+### Original Windows jobs completed before budget push
+
+Runtimef59776c CI43145998489 Windows core573 PASS683.892s, delivery498
+PASS613.190s, native105 PASS358.524s; all completed unit summaries inspected.
+All17 remedy methods observed on Windows delivery and the new missing closed
+binding case observed on core. Actual original Windows owner-entry step also
+SUCCESS (setup/enrollment/preflight/DPAPI/record/show/missing-consent hold).
+Ubuntu's10-minute cancellation is retained with858 completed methods, no final
+verdict. Replacement15-minute workflow parses and preserves all matrix/jobs/
+methods/fsync/concurrency. Application/test source unchanged; no local suite
+rerun for a workflow-only budget correction. Replacement exact-source CI
+still PENDING. Owner device/account acceptance remains NOT_RUN.
